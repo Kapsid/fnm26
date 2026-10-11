@@ -26,8 +26,12 @@ class _RecordingSeason extends SeasonService {
   // ignore: use_super_parameters
   _RecordingSeason(Ref ref) : super(ref);
 
+  /// Every roll asked for: the save, the job (null: stay), and the board's
+  /// verdict carried into the new cycle's opening message.
+  final List<(int, int?, MsgPart?, MsgPart?)> rolls = [];
+
   /// The job each roll was asked for (null: stay).
-  final List<int?> rolledTo = [];
+  List<int?> get rolledTo => [for (final r in rolls) r.$2];
 
   /// Armed by a test AFTER [seedSave], so nothing the seeding does waits on it.
   Completer<void>? gate;
@@ -52,7 +56,7 @@ class _RecordingSeason extends SeasonService {
     FederationInvestment? nextInvestment,
   }) async {
     await gate?.future;
-    rolledTo.add(switchToNationId);
+    rolls.add((careerId, switchToNationId, boardTitle, boardBody));
   }
 }
 
@@ -126,6 +130,25 @@ Future<void> _release(WidgetTester tester, _RecordingSeason season) async {
   await settle(tester);
 }
 
+/// Asserts the one roll recorded was for [save], to [job], carrying
+/// [verdict]'s headline and detail. MsgPart has no value equality, so the
+/// two are compared as the words they make.
+void _expectRolled(
+  SeededSave save,
+  int? job,
+  RolloverVerdict verdict,
+) {
+  final rolls = _season(save).rolls;
+  expect(rolls, hasLength(1));
+  final (careerId, switchTo, title, body) = rolls.single;
+  expect(careerId, save.careerId);
+  expect(switchTo, job);
+  expect(title, isNotNull);
+  expect(body, isNotNull);
+  expect(renderMsgPart(enL, title!), renderMsgPart(enL, verdict.headline));
+  expect(renderMsgPart(enL, body!), renderMsgPart(enL, verdict.detail));
+}
+
 void main() {
   for (final size in kTabletSizes) {
     testWidgets('every step in two columns, a way out on each, $size', (
@@ -173,7 +196,8 @@ void main() {
 
   testWidgets('the job picked is the job the save rolls to', (tester) async {
     final save = await _open(tester, kTabletSize);
-    final offer = (await _verdict(tester, save)).offers[1].nation;
+    final verdict = await _verdict(tester, save);
+    final offer = verdict.offers[1].nation;
     await _continue(tester);
     // The last match is the tile in the right-hand column (the verdict is
     // built first, on the left).
@@ -184,7 +208,7 @@ void main() {
     expect(_season(save).rolledTo, isEmpty);
     await tester.tap(find.byKey(CycleRolloverScreen.beginKey));
     await settle(tester);
-    expect(_season(save).rolledTo, [offer.id]);
+    _expectRolled(save, offer.id, verdict);
     expect(_uri(save).path, Routes.hub);
     expect(_uri(save).queryParameters['careerId'], '${save.careerId}');
     await tester.pumpWidget(const SizedBox());
@@ -303,6 +327,7 @@ void main() {
   ]) {
     testWidgets('a double tap on the roll rolls once, $label', (tester) async {
       final save = await _open(tester, size, formFactor: formFactor);
+      final verdict = await _verdict(tester, save);
       await _continue(tester);
       await tester.tap(find.byType(PrimaryButton).last);
       await settle(tester);
@@ -317,7 +342,7 @@ void main() {
       await tester.pump();
       season.checkGate!.complete();
       await settle(tester);
-      expect(_season(save).rolledTo, [null]);
+      _expectRolled(save, null, verdict);
       expect(_uri(save).path, Routes.hub);
       await tester.pumpWidget(const SizedBox());
     });
