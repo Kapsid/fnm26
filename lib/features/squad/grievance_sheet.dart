@@ -26,7 +26,7 @@ String grievanceToneLabel(AppLocalizations l, GrievanceTone t) => switch (t) {
 /// Modelled on the press sheet, because it is the same kind of decision: every
 /// answer trades the dressing room against the manager's own standing, and
 /// there is no reply that pleases everyone.
-class GrievanceSheet extends ConsumerWidget {
+class GrievanceSheet extends ConsumerStatefulWidget {
   const GrievanceSheet({
     required this.careerId,
     required this.grievance,
@@ -37,8 +37,32 @@ class GrievanceSheet extends ConsumerWidget {
   final Grievance grievance;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GrievanceSheet> createState() => _GrievanceSheetState();
+}
+
+class _GrievanceSheetState extends ConsumerState<GrievanceSheet> {
+  /// Set while an answer is being written: a second tap (another tone, or
+  /// the same one twice) would record a second answer, and the dressing room
+  /// and the board would count it twice.
+  bool _answering = false;
+
+  Future<void> _answer(GrievanceTone tone) async {
+    if (_answering) return;
+    _answering = true;
+    final service = ref.read(grievanceServiceProvider);
+    final navigator = Navigator.of(context);
+    try {
+      await service.answer(widget.careerId, widget.grievance, tone);
+      if (mounted) navigator.pop();
+    } finally {
+      if (mounted) _answering = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final grievance = widget.grievance;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.marginMobile),
@@ -57,12 +81,7 @@ class GrievanceSheet extends ConsumerWidget {
             const SizedBox(height: AppSpacing.lg),
             for (final tone in GrievanceTone.values) ...[
               OutlinedButton(
-                onPressed: () async {
-                  await ref
-                      .read(grievanceServiceProvider)
-                      .answer(careerId, grievance, tone);
-                  if (context.mounted) Navigator.of(context).pop();
-                },
+                onPressed: () => _answer(tone),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
                   foregroundColor: AppColors.onSurface,
