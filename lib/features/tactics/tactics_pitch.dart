@@ -574,8 +574,14 @@ class TacticsPitch extends StatelessWidget {
   final Set<int> injuredIds;
 
   /// Slots a sending-off has taken out of the shape. They are drawn as holes
-  /// the side has to live with rather than as empty positions to fill, and
-  /// they answer no gesture: no tap, no drop, no drag from another slot.
+  /// the side has to live with rather than as empty positions to fill. They
+  /// take no tap and no substitute off the bench.
+  ///
+  /// They DO take a team-mate already on the pitch: dragging an outfield
+  /// player into the hole (or the hole onto him) swaps the two places, so the
+  /// red-carded centre-back's place is covered by a midfielder and the side
+  /// plays a man short in midfield instead. Still ten men, still a hole, only
+  /// moved to where the manager would rather have it.
   ///
   /// An empty slot means "put somebody here" everywhere else on this pitch,
   /// which is exactly how a red card came to cost nothing — see [deadSlots].
@@ -695,6 +701,12 @@ class TacticsPitch extends StatelessWidget {
             // Whether a name needs its initial is a question about the OTHER
             // ten, so it is answered once for the whole eleven rather than per
             // node.
+            // The keeper's place, which a hole never moves into or out of
+            // by way of the keeper himself: the man in goal stays in goal.
+            final keeperSlot = positions.indexWhere(
+              (p) => p.category == PositionCategory.goalkeeper,
+            );
+
             final names = pitchNameLabels([
               for (final id in lineup)
                 if (id != null && byId[id] != null) byId[id]!,
@@ -741,6 +753,8 @@ class TacticsPitch extends StatelessWidget {
                         absent: absentIds.contains(lineup[slot]),
                         injured: injuredIds.contains(lineup[slot]),
                         dead: deadSlots.contains(slot),
+                        deadSlots: deadSlots,
+                        keeperSlot: keeperSlot,
                         energy: energyByPlayer[lineup[slot]],
                         teamColors: teamColors,
                         onTap: () => onTapSlot(slot),
@@ -825,6 +839,8 @@ class _PlayerNode extends StatelessWidget {
     this.absent = false,
     this.injured = false,
     this.dead = false,
+    this.deadSlots = const {},
+    this.keeperSlot = -1,
     this.energy,
   });
 
@@ -858,6 +874,13 @@ class _PlayerNode extends StatelessWidget {
   /// unfilled slot and means the opposite of one, so it is drawn as a red
   /// barred spot rather than as the "+" that invites a player into it.
   final bool dead;
+
+  /// Every hole on the pitch, so a node can tell a hole being dragged onto it
+  /// from a team-mate.
+  final Set<int> deadSlots;
+
+  /// The goalkeeper's slot, or -1 when the shape has none.
+  final int keeperSlot;
   final VoidCallback onTap;
   final void Function(int slotA, int slotB) onSwap;
   final void Function(int slot, int playerId) onBenchIn;
@@ -866,14 +889,27 @@ class _PlayerNode extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return DragTarget<Object>(
-      // A dead slot takes nothing: not a substitute off the bench, and not a
-      // team-mate dragged across into the space. Refusing it here is what
-      // stops the drop highlighting as if it would work; the editor refuses
-      // it again over the rules, which is where the answer actually lives.
+      // A dead slot takes no substitute off the bench: nobody comes on for a
+      // man sent off. It does take a team-mate dragged across from another
+      // place, which swaps the hole into his old one, as long as he is not
+      // the keeper (the man in goal stays there) and not another hole.
+      // Refusing here is what stops the drop highlighting as if it would
+      // work; the editor checks the rules again, which is where the answer
+      // actually lives.
       onWillAcceptWithDetails: (details) {
-        if (dead) return false;
         final data = details.data;
-        if (data is _SlotDrag) return data.slot != slot;
+        if (dead) {
+          return data is _SlotDrag &&
+              data.slot != slot &&
+              data.slot != keeperSlot &&
+              !deadSlots.contains(data.slot);
+        }
+        if (data is _SlotDrag) {
+          // A hole dragged onto a team-mate is the same swap the other way
+          // round, so the same keeper rule holds.
+          if (deadSlots.contains(data.slot)) return slot != keeperSlot;
+          return data.slot != slot;
+        }
         return data is _BenchDrag;
       },
       onAcceptWithDetails: (details) {
@@ -886,7 +922,7 @@ class _PlayerNode extends StatelessWidget {
       },
       builder: (context, candidate, rejected) {
         final node = _node(l, highlighted: candidate.isNotEmpty);
-        if (player == null) {
+        if (player == null && !dead) {
           return GestureDetector(onTap: onTap, child: node);
         }
         return GestureDetector(

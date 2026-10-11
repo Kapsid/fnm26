@@ -411,12 +411,23 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
 
   void _swap(int a, int b) {
     if (a == b) return;
-    // Moving sideways into the hole a red card left would put eleven men back
-    // on the pitch in all but name — the side would simply be playing a
-    // different shape with a full complement. The place is gone, not vacant.
+    // A team-mate moved into the hole a red card left takes it, and leaves
+    // his own place as the hole: the side is still ten, and still a man down,
+    // only now in the line the manager chose. The red-carded centre-back's
+    // place goes to a midfielder, and midfield plays short instead. Nobody
+    // comes on, so it costs no substitution, and the man sent off stays off.
+    //
+    // What may not move is the keeper (the man in goal stays in goal) or a
+    // second hole: two holes swapped is still two holes, and an empty slot
+    // has nobody to move.
     if (_dead.contains(a) || _dead.contains(b)) {
-      _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
-      return;
+      final mover = _dead.contains(a) ? b : a;
+      final keeper =
+          _formation.positions[mover].category == PositionCategory.goalkeeper;
+      if (_dead.contains(mover) || _lineup[mover] == null || keeper) {
+        _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
+        return;
+      }
     }
     setState(() {
       _pushUndo();
@@ -680,6 +691,13 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     deadSlots: _dead,
     onTapSlot: _pickPlayer,
     onSwap: (a, b) {
+      // A hole swapped with a team-mate is a straight swap whatever the two
+      // lines: the point is to move the hole into his line, and a reshape
+      // would refit the whole side and put the hole wherever it liked.
+      if (_dead.contains(a) || _dead.contains(b)) {
+        _swap(a, b);
+        return;
+      }
       switch (resolveDrag(_formation, a, b)) {
         case SwapSlots():
           _swap(a, b);
@@ -689,6 +707,8 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     },
     onBenchIn: _setSlot,
     onMoveToSpace: (slot, dropY) {
+      // A hole dropped in open space is nobody moving anywhere.
+      if (_dead.contains(slot)) return;
       final outcome = resolveSpaceDrag(
         _formation,
         _instructions,
