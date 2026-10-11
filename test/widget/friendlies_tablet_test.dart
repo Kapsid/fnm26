@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -28,6 +29,9 @@ class _GatedFriendlies extends FriendliesService {
   final Completer<void> gate = Completer<void>();
   int calls = 0;
 
+  /// The first write fails once let through, before anything is stored.
+  bool failFirst = false;
+
   @override
   Future<void> arrange(
     int careerId, {
@@ -38,6 +42,7 @@ class _GatedFriendlies extends FriendliesService {
   }) async {
     calls++;
     await gate.future;
+    if (failFirst && calls == 1) throw StateError('the disk is full');
     return super.arrange(
       careerId,
       nationId: nationId,
@@ -52,12 +57,14 @@ Future<SeededSave> _open(
   WidgetTester tester,
   Size size, {
   bool gated = false,
+  FormFactor formFactor = FormFactor.tablet,
+  Override? plan,
 }) async {
   final save = await seedSave(
     tester,
-    formFactor: FormFactor.tablet,
+    formFactor: formFactor,
     overrides: [
-      fakeFriendliesOverride(),
+      plan ?? fakeFriendliesOverride(),
       if (gated) friendliesServiceProvider.overrideWith(_GatedFriendlies.new),
     ],
   );
@@ -297,6 +304,112 @@ void main() {
     expect(await _friendlies(tester, save), isEmpty, reason: 'no past game');
     expect(await _decided(tester, save, march), isFalse);
     expect(await _decided(tester, save, june), isTrue);
+    await tester.pumpWidget(const SizedBox());
+  });
+  // The plan offers up to six windows (the ceiling in friendliesPlanProvider).
+  for (final size in kTabletSizes) {
+    testWidgets('six windows fit, $size', (tester) async {
+      final base = fakeFriendliesPlan();
+      final six = FriendliesPlan(
+        windows: [
+          DateTime(2027, 3, 14),
+          DateTime(2027, 6, 14),
+          DateTime(2027, 9, 14),
+          DateTime(2027, 10, 14),
+          DateTime(2027, 11, 14),
+          DateTime(2028, 3, 14),
+        ],
+        rivals: base.rivals,
+        reason: base.reason,
+        opponents: base.opponents,
+        nations: base.nations,
+        playerNationId: base.playerNationId,
+        cycle: base.cycle,
+      );
+      await _open(
+        tester,
+        size,
+        // No awaits, as fakeFriendliesOverride: see it for why.
+        plan: friendliesPlanProvider(
+          kSeededCareerId,
+        ).overrideWith((ref) async => six),
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(FriendliesScreen.tabletLayoutKey), findsOneWidget);
+      // Each window is free twice: on its card and in the picks panel.
+      expect(find.text(enL.friendliesFree), findsNWidgets(12));
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  testWidgets('on a phone too, a second tap on Confirm before the first '
+      'lands books the game once', (tester) async {
+    final save = await _open(
+      tester,
+      kPhoneSize,
+      gated: true,
+      formFactor: FormFactor.phone,
+    );
+    final service =
+        save.container.read(friendliesServiceProvider) as _GatedFriendlies;
+    expect(find.byKey(FriendliesScreen.tabletLayoutKey), findsNothing);
+    expect(await _friendlies(tester, save), isEmpty);
+    await tester.tap(find.text(_firstOpponentCode).first);
+    await settle(tester);
+    final confirm = find.widgetWithText(
+      PrimaryButton,
+      enL.friendliesConfirmCount(1),
+    );
+    // Both taps in one frame: the button has not yet redrawn disabled.
+    await tester.tap(confirm);
+    await tester.tap(confirm);
+    await tester.pump();
+    service.gate.complete();
+    await settle(tester);
+    expect(service.calls, 1);
+    expect(await _friendlies(tester, save), hasLength(1));
+    expect(_uri(save).path, Routes.hub);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a write that fails leaves Confirm working, and the retry '
+      'books the game once', (tester) async {
+    final save = await _open(tester, kTabletSize, gated: true);
+    final service =
+        save.container.read(friendliesServiceProvider) as _GatedFriendlies
+          ..failFirst = true;
+    final march = fakeFriendliesPlan().windows.first;
+    expect(await _friendlies(tester, save), isEmpty);
+    expect(await _decided(tester, save, march), isFalse);
+    await tester.tap(find.text(_firstOpponentCode).first);
+    await settle(tester);
+    PrimaryButton button() =>
+        tester.widget<PrimaryButton>(find.byKey(FriendliesScreen.confirmKey));
+    // The write runs in the zone its tap started in. Guarding that zone
+    // catches the failure, which the page leaves uncaught as before (in the
+    // app it reaches the platform's error handler).
+    Object? failure;
+    await runZonedGuarded(
+      () => tester.tap(find.byKey(FriendliesScreen.confirmKey)),
+      (e, _) => failure = e,
+    );
+    await tester.pump();
+    expect(button().onPressed, isNull, reason: 'off while saving');
+    service.gate.complete();
+    await settle(tester);
+    expect(failure, isStateError);
+    expect(await _friendlies(tester, save), isEmpty);
+    expect(_uri(save).path, Routes.friendlies);
+    expect(button().onPressed, isNotNull, reason: 'on again');
+    expect(find.text(enL.friendliesConfirmCount(1)), findsOneWidget);
+    await tester.tap(find.byKey(FriendliesScreen.confirmKey));
+    await settle(tester);
+    expect(service.calls, 2);
+    final games = await _friendlies(tester, save);
+    expect(games, hasLength(1));
+    expect(games.single.date, march);
+    expect(await _decided(tester, save, march), isTrue);
+    expect(_uri(save).path, Routes.hub);
     await tester.pumpWidget(const SizedBox());
   });
 }

@@ -56,17 +56,21 @@ class _FriendliesScreenState extends ConsumerState<FriendliesScreen> {
     // to the hub. `router.state` is the top-most route, pushed ones too.
     final router = GoRouter.of(context);
     final careerId = widget.careerId;
-    await ref
-        .read(friendliesServiceProvider)
-        .arrange(
-          careerId,
-          nationId: plan.playerNationId,
-          cycle: plan.cycle,
-          picks: _picks,
-          allWindows: plan.windows,
-        );
-    if (router.state.uri.path == Routes.friendlies) {
-      router.go('${Routes.hub}?careerId=$careerId');
+    final service = ref.read(friendliesServiceProvider);
+    try {
+      await service.arrange(
+        careerId,
+        nationId: plan.playerNationId,
+        cycle: plan.cycle,
+        picks: _picks,
+        allWindows: plan.windows,
+      );
+      if (router.state.uri.path == Routes.friendlies) {
+        router.go('${Routes.hub}?careerId=$careerId');
+      }
+    } finally {
+      // A write that fails leaves Confirm working, so he can try again.
+      if (mounted) setState(() => _saving = false);
     }
   }
 
