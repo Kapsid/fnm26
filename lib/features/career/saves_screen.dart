@@ -76,6 +76,22 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
     }
   }
 
+  /// Whether "Back up all" is writing. That button sits outside [_busy] (it
+  /// shows no spinner), so a second tap while the first export was still
+  /// writing wrote the whole database again and opened a second share sheet.
+  /// Checked and set with no rebuild: the button looks exactly as before.
+  bool _backingUp = false;
+
+  Future<void> _backUpAllOnce(Rect? origin) async {
+    if (_backingUp) return;
+    _backingUp = true;
+    try {
+      await _backupAll(context, ref, origin: origin);
+    } finally {
+      _backingUp = false;
+    }
+  }
+
   void _select(Career save) => setState(() => _selectedId = save.id);
 
   /// Opens [save] where the manager left it. Stamps the open before
@@ -275,8 +291,7 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
         if (saves.isNotEmpty)
           Builder(
             builder: (button) => TextButton.icon(
-              onPressed: () =>
-                  _backupAll(context, ref, origin: shareOriginOf(button)),
+              onPressed: () => _backUpAllOnce(shareOriginOf(button)),
               icon: const Icon(Icons.backup_outlined, size: 18),
               label: Text(l.careerBackupAll),
             ),

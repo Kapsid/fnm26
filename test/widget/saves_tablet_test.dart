@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,6 +12,7 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/career/career_transfer_providers.dart';
 import 'package:fnm/features/career/saves_screen.dart';
+import 'package:fnm/features/settings/save_backup_providers.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 
@@ -31,6 +35,69 @@ Future<(SeededSave, int?)> _open(
   final secondId = second ? await addSecondSave(tester, save) : null;
   await pumpRoute(tester, save, Routes.saves, size: size);
   return (save, secondId);
+}
+
+/// A backup whose export is counted and held at [gate] until the test lets
+/// it go, so a second tap can land while the first is still writing.
+class _GatedBackup extends SaveBackupService {
+  _GatedBackup(super._ref);
+
+  int exports = 0;
+  final Completer<void> gate = Completer<void>();
+
+  @override
+  Future<File> export({DateTime? at}) async {
+    exports++;
+    await gate.future;
+    return File('fnm-test-backup.fnmbackup');
+  }
+}
+
+/// "Back up all" tapped twice, no frame between, while the first export is
+/// held: one export, one share sheet.
+Future<void> _backUpAllTwice(
+  WidgetTester tester,
+  Size size,
+  FormFactor formFactor,
+) async {
+  final save = await seedSave(
+    tester,
+    formFactor: formFactor,
+    overrides: [saveBackupServiceProvider.overrideWith(_GatedBackup.new)],
+  );
+  await pumpRoute(tester, save, Routes.saves, size: size);
+  const channel = MethodChannel('dev.fluttercommunity.plus/share');
+  final calls = <MethodCall>[];
+  tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+    call,
+  ) async {
+    calls.add(call);
+    return 'dev.fluttercommunity.plus/share/unavailable';
+  });
+  addTearDown(
+    () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      channel,
+      null,
+    ),
+  );
+  final backup = save.container.read(saveBackupServiceProvider) as _GatedBackup;
+  expect(backup.exports, 0);
+  expect(calls, isEmpty);
+  final button = find.text(enL.careerBackupAll);
+  await tester.ensureVisible(button);
+  await tester.pump();
+  // No frame between the taps: the button still holds the handler it was
+  // built with, so only the handler itself can refuse the second.
+  await tester.tap(button);
+  await tester.tap(button);
+  expect(backup.exports, 1);
+  backup.gate.complete();
+  await settle(tester);
+  expect(tester.takeException(), isNull);
+  expect(backup.exports, 1);
+  expect(calls, hasLength(1));
+  expect(find.text(enL.careerBackupAllFailed), findsNothing);
+  await tester.pumpWidget(const SizedBox());
 }
 
 Finder get _grid => find.byType(DataGrid<Career>);
@@ -292,6 +359,16 @@ void main() {
     );
     expect(find.text(enL.careerShareFailed), findsNothing);
     await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('Back up all twice at once backs up once', (tester) async {
+    await _backUpAllTwice(tester, kTabletSize, FormFactor.tablet);
+  });
+
+  testWidgets('Back up all twice at once backs up once, phone', (
+    tester,
+  ) async {
+    await _backUpAllTwice(tester, kPhoneSize, FormFactor.phone);
   });
 
   testWidgets('a resize keeps the pick (Review Focus 4)', (tester) async {
