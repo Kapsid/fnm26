@@ -10,6 +10,7 @@ import 'package:fnm/shared/tablet/tablet.dart';
 
 import '../helpers/competition_fixtures.dart';
 import '../helpers/history_fixtures.dart';
+import '../helpers/active_column_check.dart';
 import '../helpers/seeded_save.dart';
 
 Future<SeededSave> _open(WidgetTester tester, Size size) async {
@@ -49,6 +50,16 @@ void main() {
         tester.getCenter(_grid).dx,
         lessThan(tester.getCenter(find.text(enL.panePickPlayer)).dx),
       );
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  for (final size in const [Size(1080, 810), Size(1366, 1024)]) {
+    testWidgets('the active badge stands clear of the goals at $size', (
+      tester,
+    ) async {
+      await _open(tester, size);
+      expectActiveBadgesClear(tester, enL.playerStatGoals);
       await tester.pumpWidget(const SizedBox());
     });
   }

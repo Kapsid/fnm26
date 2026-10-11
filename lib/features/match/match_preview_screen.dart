@@ -268,7 +268,8 @@ class _PreviewParts {
   // Head-to-head and the scouting report share one card as two tabs: they
   // were stacked, which pushed the starting XI (the thing the manager is
   // actually here to check) below the fold.
-  Widget briefing() => OpponentBriefing(
+  Widget briefing({bool capitals = false}) => OpponentBriefing(
+    capitals: capitals,
     careerId: careerId,
     myNationId: myNationId,
     oppNationId: oppNationId,
@@ -350,6 +351,7 @@ class OpponentBriefing extends StatefulWidget {
     required this.oppCode,
     required this.keyMen,
     required this.saveSeed,
+    this.capitals = false,
     super.key,
   });
 
@@ -360,6 +362,11 @@ class OpponentBriefing extends StatefulWidget {
   final String oppCode;
   final List<Player> keyMen;
   final int saveSeed;
+
+  /// Writes the two tab labels in capitals, as the tablet writes its tabs.
+  /// The copy has one in capitals and one not; the phone keeps them as they
+  /// are.
+  final bool capitals;
 
   @override
   State<OpponentBriefing> createState() => _OpponentBriefingState();
@@ -446,7 +453,7 @@ class _OpponentBriefingState extends State<OpponentBriefing> {
             const SizedBox(width: AppSpacing.xs),
             Flexible(
               child: Text(
-                label,
+                widget.capitals ? label.toUpperCase() : label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.labelSmall.copyWith(

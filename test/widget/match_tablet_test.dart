@@ -6,6 +6,7 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 import '../helpers/seeded_save.dart';
 
@@ -36,21 +37,130 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.byKey(MatchScreen.tabletLayoutKey), findsOneWidget);
     expect(find.byType(FullScreenPhoneFrame), findsNothing);
-    expect(find.byType(TacticsPitch), findsOneWidget);
     expect(find.byType(MatchStatsPanel), findsOneWidget);
     expect(find.byType(MatchControlBar), findsOneWidget);
     expect(find.byType(MatchDetailTabs), findsNothing);
-    // Commentary left of the pitch, stats right of it.
-    final pitch = tester.getCenter(find.byType(TacticsPitch));
-    expect(
-      tester.getCenter(find.text(enL.matchTabTimeline.toUpperCase())).dx,
-      lessThan(pitch.dx),
-    );
+    // Stats on the left, the score and the commentary down the centre, the
+    // line-ups on the right.
+    final score = tester.getRect(find.byType(MatchScoreboard));
     expect(
       tester.getCenter(find.byType(MatchStatsPanel)).dx,
-      greaterThan(pitch.dx),
+      lessThan(score.left),
+    );
+    final lineups = tester.getCenter(find.text(enL.matchTabLineups));
+    expect(lineups.dx, greaterThan(score.right));
+    final timeline = tester.getCenter(
+      find.text(enL.matchTabTimeline.toUpperCase()),
+    );
+    expect(timeline.dx, inExclusiveRange(score.left, score.right));
+    expect(timeline.dy, greaterThan(score.bottom));
+    // The momentum sits above the score.
+    expect(
+      tester.getCenter(find.text(enL.matchMomentum.toUpperCase())).dy,
+      lessThan(score.top),
+    );
+    // Both names whole, never their codes.
+    final preview = save.container
+        .read(matchPreviewProvider(save.careerId))
+        .value!;
+    for (final id in [
+      preview.fixture.homeNationId,
+      preview.fixture.awayNationId,
+    ]) {
+      expect(
+        find.descendant(
+          of: find.byType(MatchScoreboard),
+          matching: find.text(preview.nations[id]!.name),
+        ),
+        findsOneWidget,
+      );
+    }
+    // The manager's own shape is a tab away, beside the line-ups.
+    expect(find.byType(TacticsPitch), findsNothing);
+    await tester.tap(find.text(enL.matchYourXi));
+    await tester.pumpAndSettle();
+    expect(find.byType(TacticsPitch), findsOneWidget);
+    expect(
+      tester.getCenter(find.byType(TacticsPitch)).dx,
+      greaterThan(score.right),
     );
     await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the tablet scoreboard writes a long name whole in the centre '
+      'column at 1024', (tester) async {
+    const home = 'Bosnia and Herzegovina';
+    const away = 'Saint Vincent and the Grenadines';
+    await tester.pumpWidget(
+      const MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(
+              // The centre column at 1024 wide.
+              width: 410,
+              child: MatchScoreboard(
+                homeCode: 'BIH',
+                awayCode: 'VIN',
+                homeName: home,
+                awayName: away,
+                homeScore: 2,
+                awayScore: 1,
+                clock: '67',
+                live: true,
+                wholeNames: true,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text(home), findsOneWidget);
+    expect(find.text(away), findsOneWidget);
+    expect(find.text('BIH'), findsNothing);
+    expect(find.text('VIN'), findsNothing);
+    final style = tester.widget<Text>(find.text(away)).style!;
+    // Wrapped, not shrunk to nothing, and both sides at one size.
+    expect(style.fontSize, greaterThan(12));
+    expect(
+      tester.widget<Text>(find.text(home)).style!.fontSize,
+      style.fontSize,
+    );
+  });
+
+  test('a whole name never shrinks below 0.6, and says when nothing fits', () {
+    expect(wholeNameScaleAt(0), 1.0);
+    for (var step = 0; step <= 20; step++) {
+      expect(wholeNameScaleAt(step), greaterThanOrEqualTo(wholeNameMinScale));
+    }
+    expect(
+      wholeNameScaleAt(wholeNameMaxSteps),
+      closeTo(wholeNameMinScale, 1e-9),
+    );
+    expect(wholeNameScaleAt(99), closeTo(wholeNameMinScale, 1e-9));
+    // A box too narrow for one word even at the floor: no scale, so the
+    // widget ellipsises rather than clipping in silence.
+    expect(
+      wholeNameScale(
+        text: 'Liechtenstein',
+        other: 'Andorra',
+        style: const TextStyle(fontSize: 20),
+        maxWidth: 30,
+        textDirection: TextDirection.ltr,
+      ),
+      isNull,
+    );
+    final s = wholeNameScale(
+      text: 'Bosnia and Herzegovina',
+      other: 'Saint Vincent and the Grenadines',
+      style: const TextStyle(fontSize: 16),
+      maxWidth: 130,
+      textDirection: TextDirection.ltr,
+    );
+    expect(s, isNotNull);
+    expect(s, greaterThanOrEqualTo(wholeNameMinScale));
   });
 
   testWidgets('a phone build keeps the phone match even in a tablet-sized '

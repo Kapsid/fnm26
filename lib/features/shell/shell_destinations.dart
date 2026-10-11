@@ -14,7 +14,6 @@ enum ShellDestinationId {
   callUps,
   youth,
   tournaments,
-  nationsCup,
   ranking,
   results,
   finances,
@@ -113,15 +112,12 @@ const List<ShellDestination> shellDestinations = [
     alsoActiveOn: {
       Routes.cup,
       Routes.continental,
+      // No item of its own: the sidebar's current-competition shortcut and
+      // Tournaments both lead there.
+      Routes.nationsCup,
       Routes.continentalClash,
       Routes.intercontinentalPlayoff,
     },
-  ),
-  ShellDestination(
-    id: ShellDestinationId.nationsCup,
-    section: ShellSection.competitions,
-    icon: Icons.layers,
-    path: Routes.nationsCup,
   ),
   ShellDestination(
     id: ShellDestinationId.ranking,
@@ -232,7 +228,6 @@ String shellDestinationLabel(AppLocalizations l, ShellDestinationId id) =>
       ShellDestinationId.callUps => l.sideCallUps,
       ShellDestinationId.youth => l.youthTitle,
       ShellDestinationId.tournaments => l.sideTournaments,
-      ShellDestinationId.nationsCup => l.resultsCategoryNationsCup,
       ShellDestinationId.ranking => l.sideRanking,
       ShellDestinationId.results => l.sideResults,
       ShellDestinationId.finances => l.sideFinances,

@@ -65,26 +65,38 @@ class _RecordBookTabletLayoutState
                     children: [
                       LegacyTiles(careerId: careerId, dense: true),
                       const SizedBox(height: AppSpacing.md),
-                      // Every tile must report an intrinsic height: no
-                      // lists, no LayoutBuilder, no WholeText.
-                      DashboardGrid(
-                        tiles: [
-                          DashboardTile(
-                            span: rivalry == null ? 12 : 6,
-                            child: Panel(
-                              title: l.careerTeamRecords,
-                              child: _TeamRecordRows(book: book),
-                            ),
-                          ),
-                          if (rivalry != null)
-                            DashboardTile(
-                              span: 6,
-                              child: Panel(
-                                title: l.recordsFiercestRival,
-                                child: _RivalryLine(rivalry: rivalry),
+                      // Side by side only when the team records get room
+                      // for their values whole; otherwise one over the
+                      // other. The LayoutBuilder sits outside the grid:
+                      // every tile must report an intrinsic height (no
+                      // lists, no LayoutBuilder, no WholeText).
+                      LayoutBuilder(
+                        builder: (context, box) {
+                          final span =
+                              rivalry == null ||
+                                  box.maxWidth < _sideBySideRecordsWidth
+                              ? 12
+                              : 6;
+                          return DashboardGrid(
+                            tiles: [
+                              DashboardTile(
+                                span: span,
+                                child: Panel(
+                                  title: l.careerTeamRecords,
+                                  child: _TeamRecordTable(book: book),
+                                ),
                               ),
-                            ),
-                        ],
+                              if (rivalry != null)
+                                DashboardTile(
+                                  span: span,
+                                  child: Panel(
+                                    title: l.recordsFiercestRival,
+                                    child: _RivalryLine(rivalry: rivalry),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
                       ),
                       const SizedBox(height: AppSpacing.md),
                       Expanded(
@@ -144,6 +156,84 @@ class _RecordBookTabletLayoutState
           );
         },
       ),
+    );
+  }
+}
+
+/// The master column's least width for the team records and the rival side
+/// by side: below it each half is too narrow for "2-0 v Argentina" whole.
+const double _sideBySideRecordsWidth = 640;
+
+/// The team's headline records on a tablet: the labels in one column, the
+/// values in one column beside them, left-aligned so they read down as a
+/// list; a nation's flag in a slot of its own between the two, so a value
+/// with a flag starts where the others do. Nothing is cut: a long label or
+/// value wraps to a second line.
+class _TeamRecordTable extends StatelessWidget {
+  const _TeamRecordTable({required this.book});
+
+  final RecordBook book;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final win = book.biggestWin;
+    final rows = <(String, String, String?)>[
+      (l.recordsBestFinish, book.bestFinish, null),
+      (
+        l.recordsLongestUnbeaten,
+        l.recordsMatchesCount(book.longestUnbeaten),
+        null,
+      ),
+      if (win != null)
+        (
+          l.recordsBiggestWin,
+          l.recordsBiggestWinValue(
+            win.gf,
+            win.ga,
+            book.nations[win.oppId]?.name ?? 'Unknown',
+          ),
+          book.nations[win.oppId]?.code ?? '??',
+        ),
+    ];
+    final flags = rows.any((r) => r.$3 != null);
+    return Table(
+      columnWidths: {
+        // As wide as the longest label, but never more than 45%: a long
+        // label wraps rather than starve the values.
+        0: const MinColumnWidth(
+          IntrinsicColumnWidth(),
+          FractionColumnWidth(0.45),
+        ),
+        if (flags) 1: const FixedColumnWidth(26),
+        (flags ? 2 : 1): const FlexColumnWidth(),
+      },
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: [
+        for (final (label, value, code) in rows)
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, AppSpacing.md, 5),
+                child: Text(
+                  label.toUpperCase(),
+                  maxLines: 2,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              if (flags)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: code == null
+                      ? const SizedBox.shrink()
+                      : FlagDisc(code, size: 18),
+                ),
+              Text(value, maxLines: 2, style: AppTypography.bodyMedium),
+            ],
+          ),
+      ],
     );
   }
 }
@@ -224,12 +314,9 @@ GridColumnSet<RecordLeader> _leaderColumns(
         sortKey: (r) => r.value,
         cell: (r) => Text('${r.value}'),
       ),
-      GridColumn<RecordLeader>(
-        id: 'active',
+      activeGridColumn<RecordLeader>(
         label: l.gridColActive,
-        width: 84,
-        sortKey: (r) => r.active ? 1 : 0,
-        cell: (r) => r.active ? const ActiveBadge() : const SizedBox.shrink(),
+        isActive: (r) => r.active,
       ),
     ],
   );

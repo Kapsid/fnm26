@@ -135,14 +135,6 @@ class _WorldRankingTabletLayoutState
                               ),
                             ),
                           ),
-                          RankMovementHeader(
-                            baseline: data.baseline,
-                            from: now == null
-                                ? null
-                                : now +
-                                      (data.movement[data.playerNationId] ?? 0),
-                            now: now,
-                          ),
                           _RegionFilter(
                             selected: region,
                             onSelect: (r) =>
@@ -157,6 +149,10 @@ class _WorldRankingTabletLayoutState
                             child: DataGrid<Nation>(
                               rows: rows,
                               columnSets: sets,
+                              // The nations arrive in ranking order: the
+                              // arrow says so, and a tap on Rank reverses it.
+                              initialSortId: rankingDefaultSortId,
+                              initialAscending: true,
                               selected: selected,
                               rowsController: _rowsController,
                               onSelect: (n) => openNation(
@@ -187,8 +183,16 @@ class _WorldRankingTabletLayoutState
   }
 }
 
+/// The column the ranking's rows arrive sorted by, best place first.
+const String rankingDefaultSortId = 'rank';
+
 /// The ranking table's one view: place, movement, nation, region, points.
 /// Rank sorts best first on the first tap; movement and points biggest first.
+///
+/// The place is a narrow right-aligned figure, the movement its own compact
+/// column (an arrow and the places, coloured), and the nation set off from it
+/// by a clear gap. What the movement is measured from is the Move header's
+/// tooltip, not a sentence over the table.
 List<GridColumnSet<Nation>> rankingColumnSets(
   AppLocalizations l,
   RankingData data,
@@ -201,25 +205,30 @@ List<GridColumnSet<Nation>> rankingColumnSets(
         GridColumn<Nation>(
           id: 'rank',
           label: l.gridColRank,
-          width: 64,
+          width: 48,
+          numeric: true,
+          firstAscending: true,
           sortKey: (n) => data.position[n.id] ?? 1 << 20,
-          cell: (n) => Text(
-            '${data.position[n.id] ?? data.nations.indexOf(n) + 1}',
-            style: TabletText.cellNumeric,
-          ),
+          cell: (n) =>
+              Text('${data.position[n.id] ?? data.nations.indexOf(n) + 1}'),
         ),
         GridColumn<Nation>(
           id: 'move',
           label: l.gridColMove,
-          width: 72,
+          tooltip: switch (data.baseline) {
+            RankBaseline.worldChampionshipDraw => l.rankingSinceWcDraw,
+            RankBaseline.cycleStart => l.rankingSinceCycleStart,
+          },
+          width: 64,
           numeric: true,
           sortKey: (n) => data.movement[n.id] ?? 0,
-          cell: (n) => RankMovement(data.movement[n.id] ?? 0),
+          cell: (n) => RankMovementInline(data.movement[n.id] ?? 0),
         ),
         GridColumn<Nation>(
           id: 'nation',
           label: l.gridColNation,
           flex: 3,
+          gapBefore: 20,
           sortKey: (n) => n.name,
           cell: (n) {
             final mine = n.id == data.playerNationId;
@@ -262,4 +271,44 @@ List<GridColumnSet<Nation>> rankingColumnSets(
       ],
     ),
   ];
+}
+
+/// A nation's movement on one line, for the tablet table: a coloured arrow
+/// and the places beside it (3 up, 2 down), or a dash for no change. The
+/// phone's [RankMovement] stacks the two, which a table row has no room for.
+class RankMovementInline extends StatelessWidget {
+  const RankMovementInline(this.delta, {super.key});
+
+  /// Places climbed (positive) or dropped (negative).
+  final int delta;
+
+  @override
+  Widget build(BuildContext context) {
+    if (delta == 0) {
+      return const Icon(
+        Icons.remove,
+        size: 14,
+        color: AppColors.outlineVariant,
+      );
+    }
+    final up = delta > 0;
+    final color = up ? AppColors.up : AppColors.down;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          up ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+          size: 18,
+          color: color,
+        ),
+        Text(
+          '${delta.abs()}',
+          style: TabletText.cellNumeric.copyWith(
+            color: color,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    );
+  }
 }

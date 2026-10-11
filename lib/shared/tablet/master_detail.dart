@@ -80,8 +80,7 @@ class _MasterDetailState extends State<MasterDetail> {
                 dragStartBehavior: DragStartBehavior.down,
                 onHorizontalDragStart: (_) => _dragFraction = fraction,
                 onHorizontalDragUpdate: (d) => setState(() {
-                  final raw =
-                      (_dragFraction ?? fraction) + d.delta.dx / width;
+                  final raw = (_dragFraction ?? fraction) + d.delta.dx / width;
                   _dragFraction = raw;
                   _fraction = raw.clamp(minFraction, maxFraction);
                 }),

@@ -70,6 +70,7 @@ Future<void> _pump(
   List<GridColumnSet<P>>? sets,
   ValueChanged<P>? onSelect,
   P? selected,
+  String? initialSortId,
 }) async {
   tester.view.physicalSize = const Size(800, 700);
   tester.view.devicePixelRatio = 1;
@@ -81,6 +82,7 @@ Future<void> _pump(
         columnSets: sets ?? _sets,
         onSelect: onSelect,
         selected: selected,
+        initialSortId: initialSortId,
       ),
     ),
   );
@@ -249,6 +251,99 @@ void main() {
       containsSemantics(isButton: true, isSelected: true),
     );
     semantics.dispose();
+  });
+
+  testWidgets('a tap near the top of a header cell still sorts', (
+    tester,
+  ) async {
+    await _pump(tester);
+    final header = tester.getRect(find.byKey(DataGrid.headerKey));
+    final ovr = tester.getRect(find.text('OVR'));
+    await tester.tapAt(Offset(ovr.center.dx, header.top + 3));
+    await tester.pump();
+    expect(_order(tester), ['Rejthar', 'Staněk', 'Kubišta']);
+  });
+
+  testWidgets('a column can sort low to high first, and explain itself in a '
+      'tooltip', (tester) async {
+    final sets = <GridColumnSet<P>>[
+      GridColumnSet(
+        id: 'overview',
+        label: 'Overview',
+        columns: [
+          GridColumn(
+            id: 'name',
+            label: 'Name',
+            flex: 3,
+            cell: (p) => Text(p.name),
+          ),
+          GridColumn(
+            id: 'ovr',
+            label: 'OVR',
+            width: 48,
+            numeric: true,
+            firstAscending: true,
+            tooltip: 'Overall rating',
+            cell: (p) => Text('${p.ovr}'),
+            sortKey: (p) => p.ovr,
+          ),
+        ],
+      ),
+    ];
+    await _pump(tester, sets: sets);
+    expect(find.byTooltip('Overall rating'), findsOneWidget);
+    await tester.tap(find.text('OVR'));
+    await tester.pump();
+    expect(_order(tester), ['Kubišta', 'Staněk', 'Rejthar']);
+  });
+
+  group('an initial sort', () {
+    const presorted = <P>[
+      (name: 'Rejthar', ovr: 80, age: 30),
+      (name: 'Staněk', ovr: 79, age: 29),
+      (name: 'Kubišta', ovr: 76, age: 23),
+    ];
+    Finder arrow(IconData icon) => find.descendant(
+      of: find.byKey(DataGrid.headerKey),
+      matching: find.byIcon(icon),
+    );
+
+    testWidgets('shows its arrow and keeps the order; a tap reverses it', (
+      tester,
+    ) async {
+      await _pump(tester, rows: presorted, initialSortId: 'ovr');
+      expect(_order(tester), ['Rejthar', 'Staněk', 'Kubišta']);
+      expect(arrow(Icons.arrow_drop_down), findsOneWidget);
+      await tester.tap(find.text('OVR'));
+      await tester.pump();
+      expect(_order(tester), ['Kubišta', 'Staněk', 'Rejthar']);
+      expect(arrow(Icons.arrow_drop_up), findsOneWidget);
+    });
+
+    testWidgets('a view without the column shows no arrow, and returning '
+        'restores it', (tester) async {
+      await _pump(tester, rows: presorted, initialSortId: 'ovr');
+      await tester.tap(find.text('CAREER'));
+      await tester.pump();
+      expect(_order(tester), ['Rejthar', 'Staněk', 'Kubišta']);
+      expect(arrow(Icons.arrow_drop_down), findsNothing);
+      // A sort only the career view has, given back when leaving it.
+      await tester.tap(find.text('Age'));
+      await tester.pump();
+      await tester.tap(find.text('Age'));
+      await tester.pump();
+      expect(_order(tester), ['Kubišta', 'Staněk', 'Rejthar']);
+      await tester.tap(find.text('OVERVIEW'));
+      await tester.pump();
+      expect(_order(tester), ['Rejthar', 'Staněk', 'Kubišta']);
+      expect(arrow(Icons.arrow_drop_down), findsOneWidget);
+    });
+
+    testWidgets('without one, no header carries an arrow', (tester) async {
+      await _pump(tester);
+      expect(arrow(Icons.arrow_drop_down), findsNothing);
+      expect(arrow(Icons.arrow_drop_up), findsNothing);
+    });
   });
 
   testWidgets('the selected row is highlighted', (tester) async {

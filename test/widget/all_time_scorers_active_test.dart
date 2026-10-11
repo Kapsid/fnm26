@@ -283,9 +283,11 @@ void main() {
       'lib/features/stats/team_stats_screen.dart',
     ];
     for (final path in lists) {
+      // A tablet grid marks it through the shared column, which renders the
+      // same badge.
       expect(
         File(path).readAsStringSync(),
-        contains('ActiveBadge'),
+        anyOf(contains('ActiveBadge'), contains('activeGridColumn')),
         reason: '$path shows an all-time chart without marking who still plays',
       );
     }

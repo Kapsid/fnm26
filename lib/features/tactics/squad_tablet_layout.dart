@@ -166,6 +166,10 @@ class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
                     child: DataGrid<NationSquadRow>(
                       rows: rows,
                       columnSets: sets,
+                      // The squad arrives best first: say so on the header,
+                      // so a tap on OVERALL reverses it rather than seeming
+                      // to do nothing.
+                      initialSortId: squadDefaultSortId,
                       // His own page, pushed over the squad: back returns
                       // here with the view, sort and filter as they were.
                       onSelect: (r) => unawaited(
@@ -185,6 +189,9 @@ class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
     );
   }
 }
+
+/// The column the squad's rows arrive sorted by, high to low.
+const String squadDefaultSortId = 'ovr';
 
 /// The squad table's four views of the same rows: who they are, what they
 /// are made of, how they are going, and what they have done for the country.

@@ -68,6 +68,7 @@ class MatchScoreboard extends StatelessWidget {
     required this.awayScore,
     required this.clock,
     required this.live,
+    this.wholeNames = false,
   });
 
   final String homeCode;
@@ -79,10 +80,20 @@ class MatchScoreboard extends StatelessWidget {
   final String clock;
   final bool live;
 
+  /// The tablet's scoreboard, set in the match's centre column: no margin of
+  /// its own (the column has one), the two sides given more of the row than
+  /// the scoreline, and each name written out WHOLE on up to three lines,
+  /// scaled down before it is ever cut or swapped for its code.
+  final bool wholeNames;
+
   @override
   Widget build(BuildContext context) {
+    final sideFlex = wholeNames ? 3 : 1;
+    final scoreFlex = wholeNames ? 2 : 1;
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      padding: wholeNames
+          ? EdgeInsets.zero
+          : const EdgeInsets.all(AppSpacing.marginMobile),
       child: AppCard(
         child: Column(
           children: [
@@ -146,7 +157,12 @@ class MatchScoreboard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: _Side(code: homeCode, label: homeName),
+                  flex: sideFlex,
+                  child: _Side(
+                    code: homeCode,
+                    label: homeName,
+                    other: wholeNames ? awayName : null,
+                  ),
                 ),
                 // The scoreline still shrinks rather than shove the two sides
                 // out of the card: a long name next to a 4:3 used to run the
@@ -161,6 +177,7 @@ class MatchScoreboard extends StatelessWidget {
                 // Each number now fills a half of its own, pinned against the
                 // colon, and scales down inside that half if it must.
                 Expanded(
+                  flex: scoreFlex,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.sm,
@@ -185,7 +202,12 @@ class MatchScoreboard extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: _Side(code: awayCode, label: awayName),
+                  flex: sideFlex,
+                  child: _Side(
+                    code: awayCode,
+                    label: awayName,
+                    other: wholeNames ? homeName : null,
+                  ),
                 ),
               ],
             ),
@@ -450,28 +472,167 @@ class _ScoreFigure extends StatelessWidget {
 
 class _Side extends StatelessWidget {
   // No team rating here: the pre-match screen shows it, and that is enough.
-  const _Side({required this.code, required this.label});
+  const _Side({required this.code, required this.label, this.other});
   final String code;
   final String label;
 
+  /// The name on the other side, when the names are written whole (see
+  /// [MatchScoreboard.wholeNames]): both are set at the size the longer of
+  /// the two needs, so they never read out of step.
+  final String? other;
+
   @override
   Widget build(BuildContext context) {
+    final other = this.other;
     return Column(
       children: [
         FlagDisc(code, size: 56),
         const SizedBox(height: AppSpacing.xs),
-        // A name too long for its third is written as its code, at the same
-        // size, rather than cut off with an ellipsis or shrunk out of step
-        // with the name on the other side.
-        WholeText(
-          label,
-          maxLines: 1,
-          textAlign: TextAlign.center,
-          shortText: code,
-          shrinkBeforeShortening: 1,
-          style: AppTypography.titleMedium,
-        ),
+        if (other != null)
+          _WholeName(label, other: other, style: AppTypography.titleMedium)
+        else
+          // A name too long for its third is written as its code, at the same
+          // size, rather than cut off with an ellipsis or shrunk out of step
+          // with the name on the other side.
+          WholeText(
+            label,
+            maxLines: 1,
+            textAlign: TextAlign.center,
+            shortText: code,
+            shrinkBeforeShortening: 1,
+            style: AppTypography.titleMedium,
+          ),
       ],
     );
   }
+}
+
+/// The scale (1.0 down to 0.6, in 0.05 steps) at which both [text] and
+/// [other] fit [maxWidth] whole: wrapped at spaces onto up to [maxLines]
+/// lines, no word wider than the box. Null when even the floor does not fit
+/// both, so the caller can fall back to an ellipsis rather than clip.
+@visibleForTesting
+double? wholeNameScale({
+  required String text,
+  required String other,
+  required TextStyle style,
+  required double maxWidth,
+  required TextDirection textDirection,
+  TextScaler textScaler = TextScaler.noScaling,
+  int maxLines = 3,
+}) {
+  if (!maxWidth.isFinite) return 1.0;
+  final base = style.fontSize ?? 16;
+  final painter = TextPainter(
+    textDirection: textDirection,
+    textScaler: textScaler,
+  );
+  try {
+    bool fits(String s, TextStyle sized) {
+      painter
+        ..text = TextSpan(text: s, style: sized)
+        ..maxLines = maxLines
+        ..layout(maxWidth: maxWidth);
+      if (painter.didExceedMaxLines) return false;
+      // A word wider than the box would be broken inside itself.
+      painter.maxLines = null;
+      for (final w in s.split(' ')) {
+        painter
+          ..text = TextSpan(text: w, style: sized)
+          ..layout();
+        if (painter.width > maxWidth) return false;
+      }
+      return true;
+    }
+
+    for (var step = 0; step <= wholeNameMaxSteps; step++) {
+      final sized = style.copyWith(fontSize: base * wholeNameScaleAt(step));
+      if (fits(text, sized) && fits(other, sized)) {
+        return wholeNameScaleAt(step);
+      }
+    }
+    return null;
+  } finally {
+    painter.dispose();
+  }
+}
+
+/// The smallest a whole name is ever set, as a share of its style's size.
+const double wholeNameMinScale = 0.6;
+const double _wholeNameStep = 0.05;
+
+/// Steps from 1.0 down to [wholeNameMinScale], the floor included (8).
+const int wholeNameMaxSteps = 8;
+
+/// The scale at [step], clamped to the floor: never below 0.6.
+@visibleForTesting
+double wholeNameScaleAt(int step) =>
+    (1 - step.clamp(0, wholeNameMaxSteps) * _wholeNameStep).clamp(
+      wholeNameMinScale,
+      1.0,
+    );
+
+/// A nation's name, whole: wrapped at its spaces onto up to [maxLines] lines,
+/// and only if it still will not fit (or one word is wider than the box) set
+/// a step smaller. Never broken inside a word, never swapped for its code.
+/// The size is the one that fits BOTH [text] and [other] in the same width,
+/// so the two sides match. Only when nothing down to the floor fits is it
+/// ellipsised, so it is never clipped silently.
+///
+/// The measured scale is kept until the width, the names, the style or the
+/// text settings change: the scoreboard rebuilds on every match tick.
+class _WholeName extends StatefulWidget {
+  const _WholeName(this.text, {required this.other, required this.style});
+
+  final String text;
+  final String other;
+  final TextStyle style;
+
+  static const int maxLines = 3;
+
+  @override
+  State<_WholeName> createState() => _WholeNameState();
+}
+
+class _WholeNameState extends State<_WholeName> {
+  Object? _key;
+  double? _scale;
+
+  double? _scaleFor(double width, TextDirection dir, TextScaler scaler) {
+    final key = (width, widget.text, widget.other, widget.style, dir, scaler);
+    if (key != _key) {
+      _key = key;
+      _scale = wholeNameScale(
+        text: widget.text,
+        other: widget.other,
+        style: widget.style,
+        maxWidth: width,
+        textDirection: dir,
+        textScaler: scaler,
+      );
+    }
+    return _scale;
+  }
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final scale = _scaleFor(
+        constraints.maxWidth,
+        Directionality.of(context),
+        MediaQuery.textScalerOf(context),
+      );
+      final base = widget.style.fontSize ?? 16;
+      return Text(
+        widget.text,
+        textAlign: TextAlign.center,
+        maxLines: _WholeName.maxLines,
+        // Nothing fits even at the floor: an ellipsis, never a silent clip.
+        overflow: scale == null ? TextOverflow.ellipsis : null,
+        style: widget.style.copyWith(
+          fontSize: base * (scale ?? wholeNameMinScale),
+        ),
+      );
+    },
+  );
 }

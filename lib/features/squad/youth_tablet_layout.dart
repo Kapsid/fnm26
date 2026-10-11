@@ -70,7 +70,8 @@ class _YouthTabletLayoutState extends ConsumerState<_YouthTabletLayout> {
                     children: [
                       TabletTabBar(
                         tabs: [
-                          Tab(text: l.youthWatching),
+                          // In capitals, as its neighbours U-13 to U-21 are.
+                          Tab(text: l.youthWatching.toUpperCase()),
                           for (final level in YouthLevel.values)
                             Tab(text: level.label),
                         ],

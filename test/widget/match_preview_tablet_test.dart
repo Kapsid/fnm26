@@ -8,6 +8,7 @@ import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 
 import '../helpers/seeded_save.dart';
 
@@ -119,11 +120,127 @@ void main() {
     final theirs = tester.getCenter(find.byType(OpponentBriefing));
     expect(mine.dx, lessThan(theirs.dx));
     expect(find.text(enL.matchKickOff), findsOneWidget);
-    // The sidebar has a Tactics item too, so look inside the bottom bar.
+    // The sidebar has a Tactics item too, so look for the button.
+    final tactics = find.descendant(
+      of: find.byType(OutlinedButton),
+      matching: find.text(enL.matchTactics),
+    );
+    expect(tactics, findsOneWidget);
+    // No bar across the foot of the screen: the two actions are stacked at
+    // the bottom of the right-hand column, each its full width, Kick-off
+    // last.
+    final scaffold = tester.widget<Scaffold>(
+      find.byKey(MatchPreviewScreen.tabletLayoutKey),
+    );
+    expect(scaffold.bottomNavigationBar, isNull);
+    final column = tester.getRect(find.byType(OpponentBriefing));
+    final tacticsBox = tester.getRect(find.byType(OutlinedButton));
+    final kickOff = tester.getRect(
+      find.ancestor(
+        of: find.text(enL.matchKickOff),
+        matching: find.byType(PrimaryButton),
+      ),
+    );
+    for (final r in [tacticsBox, kickOff]) {
+      expect(r.left, closeTo(column.left, 1));
+      expect(r.right, closeTo(column.right, 1));
+      expect(r.height, greaterThanOrEqualTo(60));
+    }
+    expect(kickOff.top, greaterThan(tacticsBox.bottom));
+    expect(kickOff.bottom, greaterThan(kTabletSize.height - 40));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('Tactics and Kick-off stay when there is no preview to show, '
+      'and an error offers a retry', (tester) async {
+    Finder tactics() => find.descendant(
+      of: find.byType(OutlinedButton),
+      matching: find.text(enL.matchTactics),
+    );
+
+    // No upcoming match.
+    final none = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [
+        matchPreviewProvider(
+          kSeededCareerId,
+        ).overrideWith((ref) async => null),
+      ],
+    );
+    await pumpRoute(
+      tester,
+      none,
+      '${Routes.matchPreview}?careerId=${none.careerId}',
+      size: kTabletSize,
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text(enL.matchNoUpcoming), findsOneWidget);
+    expect(tactics(), findsOneWidget);
+    expect(find.text(enL.matchKickOff), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+
+    // The preview failed to load.
+    var calls = 0;
+    final failed = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [
+        matchPreviewProvider(kSeededCareerId).overrideWith((ref) async {
+          calls++;
+          throw StateError('boom');
+        }),
+      ],
+    );
+    await pumpRoute(
+      tester,
+      failed,
+      '${Routes.matchPreview}?careerId=${failed.careerId}',
+      size: kTabletSize,
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text(enL.matchCouldNotLoad('Bad state: boom')), findsOneWidget);
+    expect(tactics(), findsOneWidget);
+    expect(find.text(enL.matchKickOff), findsOneWidget);
+    final before = calls;
+    await tester.tap(find.text(enL.commonRetry));
+    await tester.pump();
+    await tester.pump();
+    expect(calls, greaterThan(before));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the briefing tabs are both in capitals on a tablet only', (
+    tester,
+  ) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.matchPreview}?careerId=${save.careerId}',
+      size: kTabletSize,
+    );
+    final briefing = find.byType(OpponentBriefing);
+    for (final label in [enL.matchHeadToHead, enL.matchDossierTitle]) {
+      expect(
+        find.descendant(of: briefing, matching: find.text(label.toUpperCase())),
+        findsOneWidget,
+        reason: label,
+      );
+    }
+    await tester.pumpWidget(const SizedBox());
+
+    // The phone keeps the copy as written.
+    final phone = await seedSave(tester);
+    await pumpRoute(
+      tester,
+      phone,
+      '${Routes.matchPreview}?careerId=${phone.careerId}',
+    );
     expect(
       find.descendant(
-        of: find.byType(OutlinedButton),
-        matching: find.text(enL.matchTactics),
+        of: find.byType(OpponentBriefing),
+        matching: find.text(enL.matchDossierTitle),
       ),
       findsOneWidget,
     );

@@ -119,10 +119,13 @@ class _TeamStatsTabletLayoutState
                               children: [
                                 TabletTabBar(
                                   tabs: [
-                                    Tab(text: l.statsTopScorersShort),
-                                    Tab(text: l.statsMostGames),
-                                    Tab(text: l.statsBestRated),
-                                    Tab(text: l.statsMyCareer),
+                                    Tab(
+                                      text: l.statsTopScorersShort
+                                          .toUpperCase(),
+                                    ),
+                                    Tab(text: l.statsMostGames.toUpperCase()),
+                                    Tab(text: l.statsBestRated.toUpperCase()),
+                                    Tab(text: l.statsMyCareer.toUpperCase()),
                                   ],
                                 ),
                                 Expanded(
@@ -239,14 +242,9 @@ class _BoardGrid extends StatelessWidget {
               sortKey: (r) => r.value,
               cell: (r) => Text('${r.value}'),
             ),
-            GridColumn<TeamStatEntry>(
-              id: 'active',
+            activeGridColumn<TeamStatEntry>(
               label: l.gridColActive,
-              width: 84,
-              sortKey: (r) => view.active.contains(r.playerId) ? 1 : 0,
-              cell: (r) => view.active.contains(r.playerId)
-                  ? const ActiveBadge()
-                  : const SizedBox.shrink(),
+              isActive: (r) => view.active.contains(r.playerId),
             ),
           ],
         ),
