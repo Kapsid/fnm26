@@ -912,6 +912,11 @@ class _InstructionsTabState extends ConsumerState<_InstructionsTab> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    // On a tablet both headings are in capitals, like its tabs and panel
+    // titles; the copy has one in capitals and one in sentence case, which
+    // the phone keeps.
+    final tablet = TabletShellScope.isActive(context);
+    String heading(String s) => tablet ? s.toUpperCase() : s;
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.lg,
@@ -921,7 +926,7 @@ class _InstructionsTabState extends ConsumerState<_InstructionsTab> {
       ),
       children: [
         Text(
-          l.tacticsTeamInstructions,
+          heading(l.tacticsTeamInstructions),
           style: AppTypography.titleMedium.copyWith(color: AppColors.primary),
         ),
         const SizedBox(height: AppSpacing.xs),
@@ -936,7 +941,7 @@ class _InstructionsTabState extends ConsumerState<_InstructionsTab> {
         // which are then there to trim it. Managing a side by six unlabelled
         // sliders asked the manager to reverse-engineer a way of playing they
         // could simply have named.
-        Text(l.tacticsPlaystyle, style: AppTypography.titleMedium),
+        Text(heading(l.tacticsPlaystyle), style: AppTypography.titleMedium),
         const SizedBox(height: AppSpacing.xs),
         Text(
           l.tacticsPlaystyleBlurb,
