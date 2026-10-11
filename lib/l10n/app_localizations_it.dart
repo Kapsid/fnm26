@@ -795,7 +795,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tacticsSlotLostToRedCard =>
-      'Hai perso questo posto per un cartellino rosso. Non può essere coperto.';
+      'Hai perso questo posto per un cartellino rosso. Trascina qui un compagno per spostare il buco.';
 
   @override
   String get tacticsSentOffShort => 'ESPULSO';

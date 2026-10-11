@@ -795,7 +795,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tacticsSlotLostToRedCard =>
-      'Eine Rote Karte hat Sie diese Position gekostet. Sie kann nicht besetzt werden.';
+      'Eine Rote Karte hat Sie diese Position gekostet. Ziehen Sie einen Mitspieler hierher, um die Lücke zu verschieben.';
 
   @override
   String get tacticsSentOffShort => 'PLATZVERWEIS';

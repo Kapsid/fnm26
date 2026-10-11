@@ -1437,7 +1437,7 @@ abstract class AppLocalizations {
   /// Refusal shown when the manager tries to put somebody into the hole a sending-off left.
   ///
   /// In en, this message translates to:
-  /// **'A red card cost you this place. It cannot be filled.'**
+  /// **'A red card cost you this place. Drag a team-mate here to move the gap.'**
   String get tacticsSlotLostToRedCard;
 
   /// Badge on the empty spot a sent-off player left on the pitch.

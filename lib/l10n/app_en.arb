@@ -1276,7 +1276,7 @@
       }
     }
   },
-  "tacticsSlotLostToRedCard": "A red card cost you this place. It cannot be filled.",
+  "tacticsSlotLostToRedCard": "A red card cost you this place. Drag a team-mate here to move the gap.",
   "@tacticsSlotLostToRedCard": {
     "description": "Refusal shown when the manager tries to put somebody into the hole a sending-off left."
   },

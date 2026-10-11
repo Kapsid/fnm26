@@ -221,7 +221,7 @@
   "tacticsRowSubstitute": "Eingewechselt",
   "tacticsEnergyLabel": "ENERGIE",
   "tacticsPickReplacementFor": "Tippen Sie auf einen Ersatz für {name} oder erneut auf ihn, um abzubrechen.",
-  "tacticsSlotLostToRedCard": "Eine Rote Karte hat Sie diese Position gekostet. Sie kann nicht besetzt werden.",
+  "tacticsSlotLostToRedCard": "Eine Rote Karte hat Sie diese Position gekostet. Ziehen Sie einen Mitspieler hierher, um die Lücke zu verschieben.",
   "tacticsSentOffShort": "PLATZVERWEIS",
   "tacticsSubsUsed": "WECHSEL · {used}/{max}",
   "tacticsDragSubOn": "Tippen Sie auf einen Spieler, um ihn auszuwechseln, oder ziehen Sie einen Ersatz auf ihn.",

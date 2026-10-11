@@ -221,7 +221,7 @@
   "tacticsRowSubstitute": "Entrato",
   "tacticsEnergyLabel": "ENERGIA",
   "tacticsPickReplacementFor": "Tocca un sostituto per {name}, o toccalo di nuovo per annullare.",
-  "tacticsSlotLostToRedCard": "Hai perso questo posto per un cartellino rosso. Non può essere coperto.",
+  "tacticsSlotLostToRedCard": "Hai perso questo posto per un cartellino rosso. Trascina qui un compagno per spostare il buco.",
   "tacticsSentOffShort": "ESPULSO",
   "tacticsSubsUsed": "CAMBI · {used}/{max}",
   "tacticsDragSubOn": "Tocca un giocatore in campo per toglierlo, o tieni premuto e trascina un panchinaro su di lui.",

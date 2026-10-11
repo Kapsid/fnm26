@@ -789,7 +789,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tacticsSlotLostToRedCard =>
-      'Una roja te ha costado este puesto. No se puede cubrir.';
+      'Una roja te ha costado este puesto. Arrastra aquí a un compañero para mover el hueco.';
 
   @override
   String get tacticsSentOffShort => 'EXPULSADO';
