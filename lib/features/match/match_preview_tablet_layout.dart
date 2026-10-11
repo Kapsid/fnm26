@@ -85,13 +85,22 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
                       ),
                       const SizedBox(width: AppSpacing.md),
                       Expanded(
-                        child: ListView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            p.briefing(),
-                            const SizedBox(height: AppSpacing.lg),
-                            p.groundTitle(),
-                            const SizedBox(height: AppSpacing.sm),
-                            p.ground(),
+                            Expanded(
+                              child: ListView(
+                                children: [
+                                  p.briefing(),
+                                  const SizedBox(height: AppSpacing.lg),
+                                  p.groundTitle(),
+                                  const SizedBox(height: AppSpacing.sm),
+                                  p.ground(),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.md),
+                            _actions(context, ref, l10n),
                           ],
                         ),
                       ),
@@ -103,43 +112,46 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
           );
         },
       ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Row(
-            children: [
-              const Spacer(),
-              SizedBox(
-                width: 220,
-                child: OutlinedButton.icon(
-                  onPressed: () => screen._openTactics(context, ref),
-                  icon: const Icon(Icons.tune, size: 18),
-                  label: Text(l10n.matchTactics, maxLines: 1),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(
-                      MatchPreviewScreen._barButtonHeight,
-                    ),
-                    foregroundColor: AppColors.primary,
-                    side: const BorderSide(color: AppColors.outlineVariant),
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              SizedBox(
-                width: 220,
-                child: PrimaryButton(
-                  label: l10n.matchKickOff,
-                  icon: Icons.sports_soccer,
-                  height: MatchPreviewScreen._barButtonHeight,
-                  onPressed: () =>
-                      context.go('${Routes.match}?careerId=$careerId'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
+
+  /// How tall the two actions stand: well over the phone bar's, as the one
+  /// thing on the screen to do next.
+  static const double _actionHeight = 64;
+
+  /// Tactics over Kick-off, each the full width of the right-hand column, at
+  /// the foot of it: no bar of their own across the bottom of the screen.
+  Widget _actions(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) => SafeArea(
+    top: false,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        OutlinedButton.icon(
+          onPressed: () => screen._openTactics(context, ref),
+          icon: const Icon(Icons.tune, size: 20),
+          label: Text(l10n.matchTactics, maxLines: 1),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size.fromHeight(_actionHeight),
+            foregroundColor: AppColors.primary,
+            backgroundColor: AppColors.surfaceContainer,
+            textStyle: AppTypography.labelLarge,
+            side: const BorderSide(color: AppColors.primary),
+            // Kick-off's own corners, so the two read as one pair.
+            shape: const RoundedRectangleBorder(borderRadius: AppRadii.mdAll),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        PrimaryButton(
+          label: l10n.matchKickOff,
+          icon: Icons.sports_soccer,
+          height: _actionHeight,
+          onPressed: () => context.go('${Routes.match}?careerId=$careerId'),
+        ),
+      ],
+    ),
+  );
 }

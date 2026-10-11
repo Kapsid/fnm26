@@ -8,6 +8,7 @@ import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 
 import '../helpers/seeded_save.dart';
 
@@ -119,14 +120,34 @@ void main() {
     final theirs = tester.getCenter(find.byType(OpponentBriefing));
     expect(mine.dx, lessThan(theirs.dx));
     expect(find.text(enL.matchKickOff), findsOneWidget);
-    // The sidebar has a Tactics item too, so look inside the bottom bar.
-    expect(
-      find.descendant(
-        of: find.byType(OutlinedButton),
-        matching: find.text(enL.matchTactics),
-      ),
-      findsOneWidget,
+    // The sidebar has a Tactics item too, so look for the button.
+    final tactics = find.descendant(
+      of: find.byType(OutlinedButton),
+      matching: find.text(enL.matchTactics),
     );
+    expect(tactics, findsOneWidget);
+    // No bar across the foot of the screen: the two actions are stacked at
+    // the bottom of the right-hand column, each its full width, Kick-off
+    // last.
+    final scaffold = tester.widget<Scaffold>(
+      find.byKey(MatchPreviewScreen.tabletLayoutKey),
+    );
+    expect(scaffold.bottomNavigationBar, isNull);
+    final column = tester.getRect(find.byType(OpponentBriefing));
+    final tacticsBox = tester.getRect(find.byType(OutlinedButton));
+    final kickOff = tester.getRect(
+      find.ancestor(
+        of: find.text(enL.matchKickOff),
+        matching: find.byType(PrimaryButton),
+      ),
+    );
+    for (final r in [tacticsBox, kickOff]) {
+      expect(r.left, closeTo(column.left, 1));
+      expect(r.right, closeTo(column.right, 1));
+      expect(r.height, greaterThanOrEqualTo(60));
+    }
+    expect(kickOff.top, greaterThan(tacticsBox.bottom));
+    expect(kickOff.bottom, greaterThan(kTabletSize.height - 40));
     await tester.pumpWidget(const SizedBox());
   });
 
