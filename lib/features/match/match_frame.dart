@@ -507,12 +507,81 @@ class _Side extends StatelessWidget {
   }
 }
 
+/// The scale (1.0 down to 0.6, in 0.05 steps) at which both [text] and
+/// [other] fit [maxWidth] whole: wrapped at spaces onto up to [maxLines]
+/// lines, no word wider than the box. Null when even the floor does not fit
+/// both, so the caller can fall back to an ellipsis rather than clip.
+@visibleForTesting
+double? wholeNameScale({
+  required String text,
+  required String other,
+  required TextStyle style,
+  required double maxWidth,
+  required TextDirection textDirection,
+  TextScaler textScaler = TextScaler.noScaling,
+  int maxLines = 3,
+}) {
+  if (!maxWidth.isFinite) return 1.0;
+  final base = style.fontSize ?? 16;
+  final painter = TextPainter(
+    textDirection: textDirection,
+    textScaler: textScaler,
+  );
+  try {
+    bool fits(String s, TextStyle sized) {
+      painter
+        ..text = TextSpan(text: s, style: sized)
+        ..maxLines = maxLines
+        ..layout(maxWidth: maxWidth);
+      if (painter.didExceedMaxLines) return false;
+      // A word wider than the box would be broken inside itself.
+      painter.maxLines = null;
+      for (final w in s.split(' ')) {
+        painter
+          ..text = TextSpan(text: w, style: sized)
+          ..layout();
+        if (painter.width > maxWidth) return false;
+      }
+      return true;
+    }
+
+    for (var step = 0; step <= wholeNameMaxSteps; step++) {
+      final sized = style.copyWith(fontSize: base * wholeNameScaleAt(step));
+      if (fits(text, sized) && fits(other, sized)) {
+        return wholeNameScaleAt(step);
+      }
+    }
+    return null;
+  } finally {
+    painter.dispose();
+  }
+}
+
+/// The smallest a whole name is ever set, as a share of its style's size.
+const double wholeNameMinScale = 0.6;
+const double _wholeNameStep = 0.05;
+
+/// Steps from 1.0 down to [wholeNameMinScale], the floor included (8).
+const int wholeNameMaxSteps = 8;
+
+/// The scale at [step], clamped to the floor: never below 0.6.
+@visibleForTesting
+double wholeNameScaleAt(int step) =>
+    (1 - step.clamp(0, wholeNameMaxSteps) * _wholeNameStep).clamp(
+      wholeNameMinScale,
+      1.0,
+    );
+
 /// A nation's name, whole: wrapped at its spaces onto up to [maxLines] lines,
 /// and only if it still will not fit (or one word is wider than the box) set
-/// a step smaller. Never ellipsised, never broken inside a word, never
-/// swapped for its code. The size is the one that fits BOTH [text] and
-/// [other] in the same width, so the two sides match.
-class _WholeName extends StatelessWidget {
+/// a step smaller. Never broken inside a word, never swapped for its code.
+/// The size is the one that fits BOTH [text] and [other] in the same width,
+/// so the two sides match. Only when nothing down to the floor fits is it
+/// ellipsised, so it is never clipped silently.
+///
+/// The measured scale is kept until the width, the names, the style or the
+/// text settings change: the scoreboard rebuilds on every match tick.
+class _WholeName extends StatefulWidget {
   const _WholeName(this.text, {required this.other, required this.style});
 
   final String text;
@@ -520,45 +589,49 @@ class _WholeName extends StatelessWidget {
   final TextStyle style;
 
   static const int maxLines = 3;
-  static const double _minScale = 0.6;
+
+  @override
+  State<_WholeName> createState() => _WholeNameState();
+}
+
+class _WholeNameState extends State<_WholeName> {
+  Object? _key;
+  double? _scale;
+
+  double? _scaleFor(double width, TextDirection dir, TextScaler scaler) {
+    final key = (width, widget.text, widget.other, widget.style, dir, scaler);
+    if (key != _key) {
+      _key = key;
+      _scale = wholeNameScale(
+        text: widget.text,
+        other: widget.other,
+        style: widget.style,
+        maxWidth: width,
+        textDirection: dir,
+        textScaler: scaler,
+      );
+    }
+    return _scale;
+  }
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
-      final width = constraints.maxWidth;
-      final dir = Directionality.of(context);
-      final scaler = MediaQuery.textScalerOf(context);
-      final base = style.fontSize ?? 16;
-      bool fits(String s, TextStyle sized) {
-        final wrapped = TextPainter(
-          text: TextSpan(text: s, style: sized),
-          textDirection: dir,
-          textScaler: scaler,
-          maxLines: maxLines,
-        )..layout(maxWidth: width);
-        if (wrapped.didExceedMaxLines) return false;
-        // A word wider than the box would be broken inside itself.
-        return s.split(' ').every((w) {
-          final one = TextPainter(
-            text: TextSpan(text: w, style: sized),
-            textDirection: dir,
-            textScaler: scaler,
-          )..layout();
-          return one.width <= width;
-        });
-      }
-
-      var scale = 1.0;
-      while (width.isFinite && scale > _minScale) {
-        final sized = style.copyWith(fontSize: base * scale);
-        if (fits(text, sized) && fits(other, sized)) break;
-        scale -= 0.05;
-      }
+      final scale = _scaleFor(
+        constraints.maxWidth,
+        Directionality.of(context),
+        MediaQuery.textScalerOf(context),
+      );
+      final base = widget.style.fontSize ?? 16;
       return Text(
-        text,
+        widget.text,
         textAlign: TextAlign.center,
-        maxLines: maxLines,
-        style: style.copyWith(fontSize: base * scale),
+        maxLines: _WholeName.maxLines,
+        // Nothing fits even at the floor: an ellipsis, never a silent clip.
+        overflow: scale == null ? TextOverflow.ellipsis : null,
+        style: widget.style.copyWith(
+          fontSize: base * (scale ?? wholeNameMinScale),
+        ),
       );
     },
   );

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/features/shell/current_competition.dart';
 
 void main() {
@@ -54,6 +55,21 @@ void main() {
     final c = of('NGROUP', 'North America Nations Cup')!;
     expect(c.location, '${Routes.nationsCup}?careerId=7');
     expect(c.name, 'North America Nations Cup');
+  });
+
+  test("with no stored name, the Nations Cup is the manager's own", () {
+    expect(of('NGROUP', null)!.name, NationsCups.europe);
+    expect(
+      of('NGROUP', null, conf: Confederation.africa)!.name,
+      NationsCups.africa,
+    );
+    expect(
+      of('NL', null, conf: Confederation.northAmerica)!.name,
+      NationsCups.northAmerica,
+    );
+    // No cup for his confederation (or none known): no link, never "Europe".
+    expect(of('NGROUP', null, conf: Confederation.asia), isNull);
+    expect(of('NGROUP', null, conf: null), isNull);
   });
 
   test('the Clash and the play-off open their own screens', () {

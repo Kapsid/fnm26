@@ -24,11 +24,36 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
     return Scaffold(
       key: MatchPreviewScreen.tabletLayoutKey,
       body: previewAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l10n.matchCouldNotLoad('$e'))),
+        loading: () => _withActions(
+          context,
+          ref,
+          l10n,
+          const CircularProgressIndicator(),
+        ),
+        error: (e, _) => _withActions(
+          context,
+          ref,
+          l10n,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(l10n.matchCouldNotLoad('$e'), textAlign: TextAlign.center),
+              const SizedBox(height: AppSpacing.sm),
+              TextButton(
+                onPressed: () => ref.invalidate(matchPreviewProvider(careerId)),
+                child: Text(l10n.commonRetry),
+              ),
+            ],
+          ),
+        ),
         data: (preview) {
           if (preview == null) {
-            return Center(child: Text(l10n.matchNoUpcoming));
+            return _withActions(
+              context,
+              ref,
+              l10n,
+              Text(l10n.matchNoUpcoming, textAlign: TextAlign.center),
+            );
           }
           final p = _PreviewParts(
             preview: preview,
@@ -114,6 +139,32 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
       ),
     );
   }
+
+  /// [message] centred while there is no preview to show (loading, an error,
+  /// no match), with the two actions still at the foot of the right-hand
+  /// half where the preview puts them: the manager can always kick off.
+  Widget _withActions(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    Widget message,
+  ) => Padding(
+    padding: const EdgeInsets.all(AppSpacing.md),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(child: Center(child: message)),
+        const SizedBox(height: AppSpacing.md),
+        Row(
+          children: [
+            const Spacer(),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(child: _actions(context, ref, l10n)),
+          ],
+        ),
+      ],
+    ),
+  );
 
   /// How tall the two actions stand: well over the phone bar's, as the one
   /// thing on the screen to do next.

@@ -151,6 +151,65 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('Tactics and Kick-off stay when there is no preview to show, '
+      'and an error offers a retry', (tester) async {
+    Finder tactics() => find.descendant(
+      of: find.byType(OutlinedButton),
+      matching: find.text(enL.matchTactics),
+    );
+
+    // No upcoming match.
+    final none = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [
+        matchPreviewProvider(
+          kSeededCareerId,
+        ).overrideWith((ref) async => null),
+      ],
+    );
+    await pumpRoute(
+      tester,
+      none,
+      '${Routes.matchPreview}?careerId=${none.careerId}',
+      size: kTabletSize,
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text(enL.matchNoUpcoming), findsOneWidget);
+    expect(tactics(), findsOneWidget);
+    expect(find.text(enL.matchKickOff), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+
+    // The preview failed to load.
+    var calls = 0;
+    final failed = await seedSave(
+      tester,
+      formFactor: FormFactor.tablet,
+      overrides: [
+        matchPreviewProvider(kSeededCareerId).overrideWith((ref) async {
+          calls++;
+          throw StateError('boom');
+        }),
+      ],
+    );
+    await pumpRoute(
+      tester,
+      failed,
+      '${Routes.matchPreview}?careerId=${failed.careerId}',
+      size: kTabletSize,
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text(enL.matchCouldNotLoad('Bad state: boom')), findsOneWidget);
+    expect(tactics(), findsOneWidget);
+    expect(find.text(enL.matchKickOff), findsOneWidget);
+    final before = calls;
+    await tester.tap(find.text(enL.commonRetry));
+    await tester.pump();
+    await tester.pump();
+    expect(calls, greaterThan(before));
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('the briefing tabs are both in capitals on a tablet only', (
     tester,
   ) async {

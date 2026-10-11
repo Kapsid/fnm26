@@ -130,6 +130,39 @@ void main() {
     );
   });
 
+  test('a whole name never shrinks below 0.6, and says when nothing fits', () {
+    expect(wholeNameScaleAt(0), 1.0);
+    for (var step = 0; step <= 20; step++) {
+      expect(wholeNameScaleAt(step), greaterThanOrEqualTo(wholeNameMinScale));
+    }
+    expect(
+      wholeNameScaleAt(wholeNameMaxSteps),
+      closeTo(wholeNameMinScale, 1e-9),
+    );
+    expect(wholeNameScaleAt(99), closeTo(wholeNameMinScale, 1e-9));
+    // A box too narrow for one word even at the floor: no scale, so the
+    // widget ellipsises rather than clipping in silence.
+    expect(
+      wholeNameScale(
+        text: 'Liechtenstein',
+        other: 'Andorra',
+        style: const TextStyle(fontSize: 20),
+        maxWidth: 30,
+        textDirection: TextDirection.ltr,
+      ),
+      isNull,
+    );
+    final s = wholeNameScale(
+      text: 'Bosnia and Herzegovina',
+      other: 'Saint Vincent and the Grenadines',
+      style: const TextStyle(fontSize: 16),
+      maxWidth: 130,
+      textDirection: TextDirection.ltr,
+    );
+    expect(s, isNotNull);
+    expect(s, greaterThanOrEqualTo(wholeNameMinScale));
+  });
+
   testWidgets('a phone build keeps the phone match even in a tablet-sized '
       'test window (Review Focus 5)', (tester) async {
     final save = await _warm(tester, FormFactor.phone);

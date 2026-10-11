@@ -34,11 +34,13 @@ CurrentCompetition? currentCompetitionFor({
   if ((n != null && NationsCups.isNationsCup(n)) ||
       round == 'NL' ||
       (round != null && round.startsWith('N'))) {
-    // The manager's own cup, as the hub opens it.
-    return (
-      name: n ?? NationsCups.europe,
-      location: at(Routes.nationsCup),
-    );
+    // The manager's own cup, as the hub opens it. With no stored name, the
+    // cup is his confederation's; a confederation without one has no link.
+    final own = NationsCups.ofManager(confederation);
+    final cupName =
+        n ?? (own == null ? null : NationsCups.forConfederation(own)!.name);
+    if (cupName == null) return null;
+    return (name: cupName, location: at(Routes.nationsCup));
   }
   if (round == 'FFINAL' || n == 'Continental Clash') {
     return (
