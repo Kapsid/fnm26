@@ -107,6 +107,9 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
     reason: 'an in-shell route with no tablet layout',
   );
 
+  /// Tablet layouts that legitimately keep an AppBar (reason beside each).
+  final appBarAllowed = <String>{};
+
   /// Routes allowed to keep an ambient spinner (reason beside each).
   final stillLoading = <String>{};
 
@@ -146,6 +149,13 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
       find.byType(PhoneWidthFrame),
       tabletReadyPaths.contains(path) ? findsNothing : findsOneWidget,
       reason: 'frame: $location',
+    );
+    // A tablet layout carries its title and back arrow in the tablet header
+    // (TabletPage); a Material app bar would mean the phone layout was drawn.
+    expect(
+      find.byType(AppBar),
+      appBarAllowed.contains(path) ? findsWidgets : findsNothing,
+      reason: 'an AppBar on a tablet layout: $location',
     );
   }
 

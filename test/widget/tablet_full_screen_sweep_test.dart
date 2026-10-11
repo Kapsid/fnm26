@@ -54,6 +54,12 @@ Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
 
   // Every full-screen route is either swept here or named above.
   expect({...locations.keys, ...elsewhere}, Routes.fullScreen);
+  // After Stage 6 only the dev-only style gallery is still phone-framed.
+  expect(
+    Routes.fullScreen.difference(tabletReadyPaths),
+    {Routes.gallery},
+    reason: 'a full-screen route with no tablet layout',
+  );
 
   /// Routes allowed to keep a spinner as their content (reason beside each).
   final stillLoading = <String>{
