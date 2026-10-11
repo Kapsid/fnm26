@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -23,6 +25,59 @@ File _logFile() {
     dir.deleteSync(recursive: true);
   });
   return file;
+}
+
+/// A log file whose clear (an empty write) waits at [gate] and is counted,
+/// so a second tap can land while the first clear is still running.
+class _GatedLog implements File {
+  _GatedLog(this.text);
+
+  String text;
+  int clears = 0;
+  final Completer<void> gate = Completer<void>();
+
+  @override
+  Future<String> readAsString({Encoding encoding = utf8}) async => text;
+
+  @override
+  Future<File> writeAsString(
+    String contents, {
+    FileMode mode = FileMode.write,
+    Encoding encoding = utf8,
+    bool flush = false,
+  }) async {
+    clears++;
+    await gate.future;
+    text = contents;
+    return this;
+  }
+
+  // Nothing else is touched by reading and clearing the log.
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+/// Taps Clear twice with no frame between while the first clear is held:
+/// one clear, no exception, and the log empty once it lands.
+Future<void> _clearTwice(WidgetTester tester, Size size, FormFactor ff) async {
+  final log = _GatedLog('--- [hub:advance]\nBad state: an example failure\n');
+  AppLog.debugUse(log);
+  addTearDown(() => AppLog.debugUse(null));
+  final save = await seedSave(tester, formFactor: ff);
+  await pumpRoute(tester, save, Routes.diagnostics, size: size);
+  expect(find.textContaining('an example failure'), findsOneWidget);
+  expect(log.clears, 0);
+  final clear = find.text(enL.diagnosticsClear);
+  await tester.tap(clear);
+  await tester.tap(clear);
+  expect(log.clears, 1, reason: 'the second tap found the first clearing');
+  log.gate.complete();
+  await settle(tester);
+  expect(tester.takeException(), isNull);
+  expect(log.clears, 1);
+  expect(log.text, isEmpty);
+  expect(find.text(enL.diagnosticsEmpty), findsOneWidget);
+  await tester.pumpWidget(const SizedBox());
 }
 
 Future<SeededSave> _open(WidgetTester tester, Size size) async {
@@ -67,6 +122,18 @@ void main() {
     expect(file.readAsStringSync(), isEmpty);
     expect(find.text(enL.diagnosticsEmpty), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a second Clear while the first runs does nothing', (
+    tester,
+  ) async {
+    await _clearTwice(tester, kTabletSize, FormFactor.tablet);
+  });
+
+  testWidgets('a second Clear while the first runs does nothing, phone', (
+    tester,
+  ) async {
+    await _clearTwice(tester, kPhoneSize, FormFactor.phone);
   });
 
   testWidgets('Copy puts the log on the clipboard and says so', (tester) async {
