@@ -145,11 +145,16 @@ int _ncLiveTab(NationsCupData? v) {
 mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
   bool get grid;
 
+  /// On a tablet, in capitals like every tablet tab and heading.
+  String _case(String label) => grid ? label.toUpperCase() : label;
+
   List<Tab> _tabs(AppLocalizations l, {required bool zones}) => [
-    Tab(text: zones ? l.tourContTabZones : l.tourContTabLeagues),
-    Tab(text: zones ? l.tourContTabFinalsEight : l.tourContTabFinalsFour),
-    Tab(text: l.tourContTabScorers),
-    Tab(text: l.tourContTabHistory),
+    Tab(text: _case(zones ? l.tourContTabZones : l.tourContTabLeagues)),
+    Tab(
+      text: _case(zones ? l.tourContTabFinalsEight : l.tourContTabFinalsFour),
+    ),
+    Tab(text: _case(l.tourContTabScorers)),
+    Tab(text: _case(l.tourContTabHistory)),
   ];
 
   List<Widget> _tabViews(NationsCupData v) {
@@ -221,6 +226,7 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
     }.toList()..sort();
 
     return _LeagueTabs(
+      capitals: grid,
       leagues: leagues,
       playerLeague: v.isMine ? v.playerLeague : '',
       builder: (context, league) {
@@ -412,6 +418,7 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
 /// tabbed, so these are tabs too, at the same [kTournamentTabBarHeight].
 class _LeagueTabs extends StatelessWidget {
   const _LeagueTabs({
+    required this.capitals,
     required this.leagues,
     required this.playerLeague,
     required this.builder,
@@ -426,6 +433,9 @@ class _LeagueTabs extends StatelessWidget {
   final String playerLeague;
 
   final Widget Function(BuildContext context, String league) builder;
+
+  /// A tablet's tabs are in capitals.
+  final bool capitals;
 
   @override
   Widget build(BuildContext context) {
@@ -454,9 +464,12 @@ class _LeagueTabs extends StatelessWidget {
                     // label with softWrap off and no maxLines, so a width
                     // guard reading didExceedMaxLines never fires on it.
                     child: Text(
-                      league == playerLeague
-                          ? l.tourContLeagueChipStar(league)
-                          : l.tourContLeagueChip(league),
+                      () {
+                        final label = league == playerLeague
+                            ? l.tourContLeagueChipStar(league)
+                            : l.tourContLeagueChip(league);
+                        return capitals ? label.toUpperCase() : label;
+                      }(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

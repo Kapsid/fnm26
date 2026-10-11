@@ -92,13 +92,15 @@ class _MessagesTabletLayout extends StatelessWidget {
                         children: [
                           for (final f in InboxFilter.values)
                             ChoiceChip(
-                              label: Text(switch (f) {
-                                InboxFilter.all => l.inboxFilterAll,
-                                InboxFilter.board => l.sideBoard,
-                                InboxFilter.competitions =>
-                                  l.sideGroupCompetitions,
-                                InboxFilter.squad => l.sideSquad,
-                              }),
+                              label: Text(
+                                switch (f) {
+                                  InboxFilter.all => l.inboxFilterAll,
+                                  InboxFilter.board => l.sideBoard,
+                                  InboxFilter.competitions =>
+                                    l.sideGroupCompetitions,
+                                  InboxFilter.squad => l.sideSquad,
+                                }.toUpperCase(),
+                              ),
                               visualDensity: VisualDensity.compact,
                               selected: f == filter,
                               onSelected: (_) => onFilter(f),

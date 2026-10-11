@@ -119,10 +119,13 @@ class _TeamStatsTabletLayoutState
                               children: [
                                 TabletTabBar(
                                   tabs: [
-                                    Tab(text: l.statsTopScorersShort),
-                                    Tab(text: l.statsMostGames),
-                                    Tab(text: l.statsBestRated),
-                                    Tab(text: l.statsMyCareer),
+                                    Tab(
+                                      text: l.statsTopScorersShort
+                                          .toUpperCase(),
+                                    ),
+                                    Tab(text: l.statsMostGames.toUpperCase()),
+                                    Tab(text: l.statsBestRated.toUpperCase()),
+                                    Tab(text: l.statsMyCareer.toUpperCase()),
                                   ],
                                 ),
                                 Expanded(
