@@ -77,7 +77,7 @@ void main() {
         );
 
         // A filter keeps only its own group in the list.
-        await tester.tap(find.text(enL.sideGroupCompetitions));
+        await tester.tap(find.text(enL.sideGroupCompetitions.toUpperCase()));
         await settle(tester);
         for (final m in messages) {
           final row = find.byKey(ValueKey('inbox.row.${m.id}'));
