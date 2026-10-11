@@ -28,7 +28,6 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
-import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -74,17 +73,8 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   /// The tablet pool's line filter (null: everyone).
   PositionCategory? _tabletLine;
 
-  /// The tablet's right-hand pane.
-  final DetailPaneController _pane = DetailPaneController();
-
   void _setTabletLine(PositionCategory? line) =>
       setState(() => _tabletLine = line);
-
-  @override
-  void dispose() {
-    _pane.dispose();
-    super.dispose();
-  }
 
   /// How many are named, how many of them can play in the period, and
   /// whether that is a squad that may be confirmed.
