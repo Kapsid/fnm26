@@ -87,7 +87,9 @@ class _TeamStatsTabletLayoutState
                                 )
                               : null;
                           if (curve == null) return header;
-                          if (constraints.maxWidth >= 2 * 320 + AppSpacing.md) {
+                          // Side by side only when each card gets 364: the
+                          // record values ("160-70-60") must fit unclipped.
+                          if (constraints.maxWidth >= 2 * 364 + AppSpacing.md) {
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

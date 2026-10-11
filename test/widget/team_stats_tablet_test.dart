@@ -97,11 +97,11 @@ void main() {
       expect(find.text(enL.statsPlayed.toUpperCase()), findsOneWidget);
       final curve = find.byKey(const Key('team-overall-history'));
       expect(curve, findsOneWidget);
-      // Side by side only when each card gets 320: otherwise stacked.
+      // Side by side only when each card gets 364: otherwise stacked.
       final md = tester.widget<MasterDetail>(find.byType(MasterDetail));
       final master = tester.getSize(find.byWidget(md.master)).width;
       final played = tester.getRect(find.text(enL.statsPlayed.toUpperCase()));
-      if (master >= 2 * 320 + AppSpacing.md) {
+      if (master >= 2 * 364 + AppSpacing.md) {
         expect(tester.getRect(curve).left, greaterThan(played.right));
       } else {
         expect(tester.getRect(curve).top, greaterThanOrEqualTo(played.bottom));
@@ -109,6 +109,20 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     });
   }
+
+  testWidgets('wide enough, the header and the curve sit side by side', (
+    tester,
+  ) async {
+    await _open(tester, const Size(1600, 900), played: true);
+    expect(tester.takeException(), isNull);
+    final md = tester.widget<MasterDetail>(find.byType(MasterDetail));
+    final master = tester.getSize(find.byWidget(md.master)).width;
+    expect(master, greaterThanOrEqualTo(2 * 364 + AppSpacing.md));
+    final played = tester.getRect(find.text(enL.statsPlayed.toUpperCase()));
+    final curve = tester.getRect(find.byKey(const Key('team-overall-history')));
+    expect(curve.left, greaterThan(played.right));
+    await tester.pumpWidget(const SizedBox());
+  });
 
   testWidgets('the master at its narrowest still fits both, 1024x768', (
     tester,
