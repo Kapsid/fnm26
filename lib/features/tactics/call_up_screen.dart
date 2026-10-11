@@ -19,6 +19,7 @@ import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/services/squad/squad_selection.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_form_look.dart';
@@ -27,7 +28,6 @@ import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
-import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -73,17 +73,8 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
   /// The tablet pool's line filter (null: everyone).
   PositionCategory? _tabletLine;
 
-  /// The tablet's right-hand pane.
-  final DetailPaneController _pane = DetailPaneController();
-
   void _setTabletLine(PositionCategory? line) =>
       setState(() => _tabletLine = line);
-
-  @override
-  void dispose() {
-    _pane.dispose();
-    super.dispose();
-  }
 
   /// How many are named, how many of them can play in the period, and
   /// whether that is a squad that may be confirmed.
@@ -225,6 +216,10 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
       : '${Routes.tactics}?careerId=${widget.careerId}';
 
   Future<void> _confirm(Set<int> selected) async {
+    // Captured before the awaits: the refresh below must happen even when
+    // this page is gone by then.
+    final container = ProviderScope.containerOf(context, listen: false);
+    final router = GoRouter.of(context);
     final saved = await ref
         .read(squadServiceProvider)
         .setCallUps(widget.careerId, selected);
@@ -256,7 +251,15 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
           .read(competitionRepositoryProvider)
           .markDrawWatched(widget.careerId, cycle, kind);
     }
-    if (mounted) context.go(_exitRoute);
+    // The next event reads the watched marks straight from the database and
+    // never notices this write. On tablet the top bar keeps watching it, so
+    // without this it stays on the retired call-up and loops back here.
+    container.invalidate(hubDataProvider(widget.careerId));
+    // Only from call-ups itself: a player page pushed over it while this
+    // saved keeps the manager where he went.
+    if (mounted && router.state.uri.path == Routes.callUps) {
+      router.go(_exitRoute);
+    }
   }
 
   @override

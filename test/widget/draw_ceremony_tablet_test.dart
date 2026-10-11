@@ -203,4 +203,89 @@ void main() {
     );
     await tester.pumpWidget(const SizedBox());
   });
+  testWidgets("the manager's ball sits on the same line as the others in its "
+      'pot', (tester) async {
+    final save = await _qualifying(tester, kTabletSize);
+    final code = save.nations.firstWhere((n) => n.id == save.nationId).code;
+    // The labelled pill's flag, out in a pot (the stage is still empty).
+    final pill = find.byWidgetPredicate(
+      (w) => w is FlagDisc && w.code == code && w.highlighted,
+    );
+    expect(pill, findsOneWidget);
+    final pot = find.ancestor(of: pill, matching: find.byType(Wrap)).first;
+    final others = find.descendant(
+      of: pot,
+      matching: find.byWidgetPredicate((w) => w is FlagDisc && !w.highlighted),
+    );
+    expect(others, findsWidgets);
+    final mine = tester.getCenter(pill).dy;
+    final theirs = tester.getCenter(others.first).dy;
+    expect(mine, closeTo(theirs, 0.5));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets("the manager's row in a group card is the height of every other "
+      'row, its flag and name on the same line', (tester) async {
+    final save = await _qualifying(tester, kTabletSize);
+    final me = save.nations.firstWhere((n) => n.id == save.nationId);
+    final mine = find.descendant(
+      of: find.byType(GridView),
+      matching: find.text(me.name),
+    );
+    // Ball by ball (a tap pauses the autoplay) until the manager's nation
+    // has been drawn and placed.
+    for (var i = 0; i < 300 && mine.evaluate().isEmpty; i++) {
+      await tester.tap(find.byType(GridView));
+      await tester.pump();
+    }
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(mine, findsOneWidget);
+
+    // A group card's slot rows: the Expanded children of its column, as
+    // wide as the column (the name's own Expanded is narrower).
+    Rect slotOf(Finder name) {
+      final column = tester.getRect(
+        find.ancestor(of: name, matching: find.byType(Column)).first,
+      );
+      return find
+          .ancestor(of: name, matching: find.byType(Expanded))
+          .evaluate()
+          .map((e) => tester.getRect(find.byWidget(e.widget)))
+          .firstWhere((r) => (r.width - column.width).abs() < 0.5);
+    }
+
+    final other = save.nations.firstWhere(
+      (n) =>
+          n.id != me.id &&
+          find
+              .descendant(
+                of: find.byType(GridView),
+                matching: find.text(n.name),
+              )
+              .evaluate()
+              .isNotEmpty,
+    );
+    final theirs = find.descendant(
+      of: find.byType(GridView),
+      matching: find.text(other.name),
+    );
+    final mySlot = slotOf(mine);
+    final theirSlot = slotOf(theirs);
+    expect(mySlot.height, closeTo(theirSlot.height, 0.01));
+    // The name and the flag sit at the same height within the slot.
+    expect(
+      tester.getRect(mine).top - mySlot.top,
+      closeTo(tester.getRect(theirs).top - theirSlot.top, 0.01),
+    );
+    Finder flagIn(Finder name) => find.descendant(
+      of: find.ancestor(of: name, matching: find.byType(Row)).first,
+      matching: find.byType(FlagDisc),
+    );
+    expect(
+      tester.getCenter(flagIn(mine)).dy - mySlot.top,
+      closeTo(tester.getCenter(flagIn(theirs)).dy - theirSlot.top, 0.01),
+    );
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
 }

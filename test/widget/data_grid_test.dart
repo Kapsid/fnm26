@@ -116,7 +116,7 @@ void main() {
   testWidgets('switching views swaps the columns', (tester) async {
     await _pump(tester);
     expect(find.text('OVR'), findsOneWidget);
-    await tester.tap(find.text('Career'));
+    await tester.tap(find.text('CAREER'));
     await tester.pump();
     expect(find.text('OVR'), findsNothing);
     expect(find.text('Age'), findsOneWidget);
@@ -205,7 +205,7 @@ void main() {
     tester,
   ) async {
     await _pump(tester);
-    await tester.tap(find.text('Career'));
+    await tester.tap(find.text('CAREER'));
     await tester.pump();
     expect(find.text('Age'), findsOneWidget);
     await _pump(tester, sets: [_sets.first]);

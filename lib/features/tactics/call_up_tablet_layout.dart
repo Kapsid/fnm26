@@ -1,8 +1,9 @@
 part of 'call_up_screen.dart';
 
-/// Call-ups on a tablet: the pool as a table, the squad being named with its
-/// summary and the confirm button, and the focused player's card. All state
-/// is the screen's own (selection, draft, line filter, focused player).
+/// Call-ups on a tablet: the pool as a table and the squad being named with
+/// its summary and the confirm button. A name opens the player's own page,
+/// and back returns here. All state is the screen's own (selection, draft,
+/// line filter).
 class _CallUpTabletLayout extends StatelessWidget {
   const _CallUpTabletLayout({
     required this.state,
@@ -15,11 +16,12 @@ class _CallUpTabletLayout extends StatelessWidget {
     required this.condition,
   });
 
-  // The pool takes what the two fixed columns leave. At the narrowest
-  // tablet content width (a 10.2in iPad: about 840, 808 inside the padding)
-  // that is still about 270.
-  static const double _squadWidth = 230;
-  static const double _paneWidth = 290;
+  // The squad panel takes a share of the width, so its names read whole;
+  // the pool takes the rest. At the narrowest tablet content width (about
+  // 800 inside the padding) the pool keeps about 480, room for its columns.
+  static const double _squadShare = 0.4;
+  static const double _squadMinWidth = 300;
+  static const double _squadMaxWidth = 440;
 
   final _CallUpScreenState state;
   final SquadData data;
@@ -40,68 +42,56 @@ class _CallUpTabletLayout extends StatelessWidget {
         if (state._tabletLine == null || p.category == state._tabletLine) p,
     ]..sort((a, b) => b.overall.compareTo(a.overall));
     final status = state._squadStatus(selected, data, coverage);
-    return DetailPaneScope(
-      controller: state._pane,
-      child: ListenableBuilder(
-        listenable: state._pane,
-        builder: (context, _) {
-          final focusedId = switch (state._pane.value) {
-            PlayerTarget(:final playerId) => playerId,
-            _ => null,
-          };
-          final focused = rows.where((p) => p.id == focusedId).firstOrNull;
-          return Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Panel(
-                    title: l.squadStatPool,
-                    expand: true,
-                    padding: EdgeInsets.zero,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _lineChips(context, l),
-                        Expanded(
-                          child: DataGrid<Player>(
-                            rows: rows,
-                            columnSets: [_columns(context, l)],
-                            selected: focused,
-                            onSelect: (p) => openPlayer(
-                              context,
-                              careerId: careerId,
-                              playerId: p.id,
-                            ),
-                          ),
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: LayoutBuilder(
+        builder: (context, box) {
+          const gap = AppSpacing.md - 4;
+          final squadWidth = (box.maxWidth * _squadShare).clamp(
+            _squadMinWidth,
+            _squadMaxWidth,
+          );
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Panel(
+                  title: l.squadStatPool,
+                  expand: true,
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _lineChips(context, l),
+                      Expanded(
+                        child: DataGrid<Player>(
+                          rows: rows,
+                          columnSets: [_columns(context, l)],
+                          onSelect: (p) => _openPlayer(context, p),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.md - 4),
-                SizedBox(
-                  width: _squadWidth,
-                  child: _squadPanel(context, l, status),
-                ),
-                const SizedBox(width: AppSpacing.md - 4),
-                SizedBox(
-                  width: _paneWidth,
-                  child: PanelBox(
-                    child: DetailPaneHost(
-                      careerId: careerId,
-                      target: state._pane.value,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: gap),
+              SizedBox(
+                width: squadWidth,
+                child: _squadPanel(context, l, status),
+              ),
+            ],
           );
         },
       ),
     );
   }
+
+  /// His own page, pushed over the call-ups: back pops to this screen with
+  /// its State, so the squad being named is exactly as it was (and drafted
+  /// besides).
+  void _openPlayer(BuildContext context, Player p) => unawaited(
+    context.push('${Routes.player}?careerId=$careerId&playerId=${p.id}'),
+  );
 
   int _named(PositionCategory c) =>
       data.pool.where((p) => p.category == c && selected.contains(p.id)).length;
@@ -120,7 +110,7 @@ class _CallUpTabletLayout extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.sm),
       child: Wrap(
         children: [
-          chip(l.squadLineAll, null),
+          chip(l.squadLineAll.toUpperCase(), null),
           for (final c in _CallUpScreenState._order)
             chip(
               '${state._shortHeading(l, c)} '
@@ -158,14 +148,14 @@ class _CallUpTabletLayout extends StatelessWidget {
           ),
           GridColumn<Player>(
             id: 'pos',
-            label: l.squadDevPosition,
+            label: l.squadDevPosition.toUpperCase(),
             width: 48,
             sortKey: (p) => p.position.index,
             cell: (p) => TacticalChip(p.position.label),
           ),
           GridColumn<Player>(
             id: 'name',
-            label: l.squadSortName,
+            label: l.squadSortName.toUpperCase(),
             flex: 3,
             sortKey: (p) => p.name,
             cell: (p) => Row(
@@ -190,7 +180,7 @@ class _CallUpTabletLayout extends StatelessWidget {
           ),
           GridColumn<Player>(
             id: 'age',
-            label: l.playerAge,
+            label: l.playerAge.toUpperCase(),
             width: 44,
             numeric: true,
             sortKey: (p) => p.age,
@@ -198,7 +188,7 @@ class _CallUpTabletLayout extends StatelessWidget {
           ),
           GridColumn<Player>(
             id: 'ovr',
-            label: l.teamOverall,
+            label: l.teamOverall.toUpperCase(),
             width: 64,
             numeric: true,
             sortKey: (p) => p.overall,
@@ -209,7 +199,7 @@ class _CallUpTabletLayout extends StatelessWidget {
           ),
           GridColumn<Player>(
             id: 'form',
-            label: l.playerStatForm,
+            label: l.playerStatForm.toUpperCase(),
             width: 48,
             numeric: true,
             sortKey: (p) => condition[p.id]?.formRating ?? 0,
@@ -344,11 +334,7 @@ class _CallUpTabletLayout extends StatelessWidget {
                               ),
                           ],
                         ),
-                        onTap: () => openPlayer(
-                          context,
-                          careerId: careerId,
-                          playerId: p.id,
-                        ),
+                        onTap: () => _openPlayer(context, p),
                       ),
                   ],
               ],

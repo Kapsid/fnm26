@@ -457,7 +457,7 @@ class _ConfederationChip extends StatelessWidget {
 }
 
 /// One nation as a tile: the world rank top left, the strength top right,
-/// the flag, the name, and the best player's position and rating.
+/// the flag, the name, and the squad's overall rating.
 class _NationTile extends StatelessWidget {
   const _NationTile({
     required this.nation,
@@ -545,10 +545,7 @@ class _NationTile extends StatelessWidget {
                         ),
                         if (s != null) ...[
                           const SizedBox(height: 2),
-                          _StarLine(
-                            position: s.best.position.label,
-                            rating: s.best.overall,
-                          ),
+                          _OverallLine(overall: s.overall),
                         ],
                       ],
                     ),
@@ -613,41 +610,29 @@ class _TileFlag extends StatelessWidget {
   );
 }
 
-/// "Star ST 93" with the position and rating in the brighter weight. The
-/// label is whatever the copy puts before the position (found by rendering
-/// the copy with a marker in its place), so no new copy is needed; a
-/// translation that puts the position first reads as one plain line.
-class _StarLine extends StatelessWidget {
-  const _StarLine({required this.position, required this.rating});
+/// "Overall 78": the squad's overall rating (the mean of its best XI), the
+/// number in the brighter weight.
+class _OverallLine extends StatelessWidget {
+  const _OverallLine({required this.overall});
 
-  final String position;
-  final int rating;
-
-  static const _marker = '\u{E000}';
+  final int overall;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final full = l.nationsStarTile(position, rating);
-    final template = l.nationsStarTile(_marker, rating);
-    final at = template.indexOf(_marker);
-    final label = at > 0 ? template.substring(0, at) : '';
-    final split = label.isNotEmpty && full.startsWith(label);
     return Text.rich(
-      split
-          ? TextSpan(
-              text: label,
-              children: [
-                TextSpan(
-                  text: full.substring(label.length),
-                  style: const TextStyle(
-                    color: AppColors.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            )
-          : TextSpan(text: full),
+      TextSpan(
+        text: '${l.teamOverall} ',
+        children: [
+          TextSpan(
+            text: '$overall',
+            style: const TextStyle(
+              color: AppColors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: AppTypography.bodySmall.copyWith(

@@ -9375,6 +9375,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get sideTactics => 'Taktika';
 
   @override
+  String get sideMainMenu => 'Hlavní nabídka';
+
+  @override
   String get sideCallUps => 'Nominace';
 
   @override

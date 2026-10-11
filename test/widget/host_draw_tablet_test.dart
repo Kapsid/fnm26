@@ -23,17 +23,41 @@ Future<SeededSave> _open(WidgetTester tester, Size size) async {
 
 void main() {
   for (final size in kTabletSizes) {
-    testWidgets('the envelope left, the candidates right, $size', (
-      tester,
-    ) async {
+    testWidgets('the envelope on top, the candidates across the full width '
+        'below, $size', (tester) async {
       await _open(tester, size);
       expect(tester.takeException(), isNull);
       expect(find.byKey(HostDrawScreen.landscapeKey), findsOneWidget);
       expect(find.byType(FullScreenPhoneFrame), findsNothing);
-      expect(
-        tester.getCenter(find.byIcon(Icons.mail_outline_rounded).first).dx,
-        lessThan(tester.getCenter(find.text(enL.tourCandidates)).dx),
+      final envelope = tester.getRect(
+        find.byIcon(Icons.mail_outline_rounded).first,
       );
+      final label = tester.getRect(find.text(enL.tourCandidates));
+      expect(envelope.bottom, lessThan(label.top));
+      // Centred on the screen, not in a left column.
+      expect(envelope.center.dx, closeTo(size.width / 2, 1));
+      // The candidate tiles span the full width: the grid runs from the
+      // left margin to (about) the right one.
+      final grid = tester.getRect(find.byType(GridView));
+      expect(grid.top, greaterThan(label.top));
+      expect(grid.width, greaterThan(size.width * 0.9));
+      // Large tiles: every candidate flag is far bigger than the old 20px.
+      for (final disc in tester.widgetList<FlagDisc>(
+        find.descendant(
+          of: find.byType(GridView),
+          matching: find.byType(FlagDisc),
+        ),
+      )) {
+        expect(disc.size, greaterThanOrEqualTo(34));
+      }
+      // Every bid is on screen without scrolling.
+      final scrollable = tester.state<ScrollableState>(
+        find.descendant(
+          of: find.byType(GridView),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      expect(scrollable.position.maxScrollExtent, 0);
       await tester.pumpWidget(const SizedBox());
     });
   }

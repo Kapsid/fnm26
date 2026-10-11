@@ -12,6 +12,7 @@ import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/department_effect.dart';
+import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
@@ -119,7 +120,8 @@ Slider _slider(WidgetTester tester, int i) =>
     tester.widget<Slider>(find.byType(Slider).at(i));
 
 /// Drags the [i]th slider (Youth first) to [level], as a finger would. The
-/// sliders run in whole levels of [FederationFinance.investLevelPrice].
+/// tablet's sliders run in whole levels of
+/// [FederationFinance.investLevelPrice] (€1M), one a notch.
 Future<void> _set(WidgetTester tester, int i, double level) async {
   _slider(tester, i).onChanged!(level);
   await tester.pump();
@@ -171,7 +173,7 @@ void main() {
 
   testWidgets('a slider moves its effect on the right', (tester) async {
     await _open(tester, kTabletSize);
-    await _set(tester, 0, 2); // two levels: €8M
+    await _set(tester, 0, 8); // eight levels: €8M
     final line = DepartmentEffect.describe(enL, Department.youth, 8000000);
     expect(tester.widget<Text>(_effect(Department.youth)).data, line);
     // Said once: the slider's own effect line is hidden on a tablet.
@@ -179,17 +181,59 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('a tablet slider moves €1M a notch', (tester) async {
+    await _open(tester, kTabletSize);
+    final youth = _slider(tester, 0);
+    expect(youth.max, 40);
+    expect(youth.divisions, 40);
+    expect(_slider(tester, 2).max, 24); // Medical
+    await _set(tester, 0, 1);
+    expect(_slider(tester, 0).value, 1);
+    expect(find.text(enL.deptLevelCost(1, '€1M')), findsOneWidget);
+    // The drag bubble names the sum, so forty stops still read.
+    expect(_slider(tester, 0).label, '€1M');
+    expect(
+      tester.widget<Text>(_effect(Department.youth)).data,
+      DepartmentEffect.describe(enL, Department.youth, 1000000),
+    );
+    await _set(tester, 0, 7);
+    expect(find.text(enL.deptLevelCost(7, '€7M')), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a tablet banks €0.5M: under a million is spent', (
+    tester,
+  ) async {
+    final save = await _open(tester, kTabletSize);
+    await tester.runAsync(
+      () => save.container
+          .read(careerRepositoryProvider)
+          .setBudget(save.careerId, 10500000),
+    );
+    save.container.invalidate(federationFundsProvider(save.careerId));
+    await settle(tester);
+    await _set(tester, 0, 9);
+    // €1.5M left: another million fits.
+    expect(_confirmButton(tester).onPressed, isNull);
+    await _set(tester, 0, 10);
+    // €0.5M left: no million fits, so it is banked.
+    expect(find.text(enL.deptLevelCost(10, '€10M')), findsOneWidget);
+    expect(_confirmButton(tester).onPressed, isNotNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('a resize keeps the allocation', (tester) async {
     await _open(tester, kTabletSize);
-    await _set(tester, 0, 2); // two levels: €8M
+    await _set(tester, 0, 8); // eight €1M levels: €8M
     tester.view.physicalSize = const Size(900, 810);
     await settle(tester);
     expect(find.byKey(BudgetSetupScreen.tabletLayoutKey), findsNothing);
+    // The phone reads the same €8M on its €4M notches: the second.
     expect(_slider(tester, 0).value, 2);
     tester.view.physicalSize = kTabletSize;
     await settle(tester);
     expect(find.byKey(BudgetSetupScreen.tabletLayoutKey), findsOneWidget);
-    expect(_slider(tester, 0).value, 2);
+    expect(_slider(tester, 0).value, 8);
     expect(
       tester.widget<Text>(_effect(Department.youth)).data,
       DepartmentEffect.describe(enL, Department.youth, 8000000),
@@ -241,7 +285,14 @@ void main() {
           stored.naturalization +
           stored.boardRelations;
       expect(spent, greaterThan(0));
-      expect(budgetReady(available: budget, allocated: spent), isTrue);
+      expect(
+        budgetReady(
+          available: budget,
+          allocated: spent,
+          stepLevels: kTabletBudgetStepLevels,
+        ),
+        isTrue,
+      );
       expect(career.budget, budget - spent);
     });
     // ...and not after.

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
+import 'package:fnm/features/federation/investment_editor.dart';
 
 /// When the federation's money may be considered distributed.
 ///
@@ -9,16 +10,34 @@ import 'package:fnm/features/federation/budget_setup_screen.dart';
 void main() {
   const million = 1000000;
 
+  /// The phone's notch, €4M: the step these cases were written against.
+  final phoneStep = budgetStepEuros(kPhoneBudgetStepLevels);
+
+  bool phoneReady({required int available, required int allocated}) =>
+      budgetReady(
+        available: available,
+        allocated: allocated,
+        stepLevels: kPhoneBudgetStepLevels,
+      );
+
+  test('a phone notch is €4M and a tablet notch €1M', () {
+    expect(phoneStep, 4 * million);
+    expect(budgetStepEuros(kTabletBudgetStepLevels), million);
+  });
+
   group('a budget is ready when it is spent, not when it is overspent', () {
     test('spent to the last step', () {
-      expect(budgetReady(available: 12 * million, allocated: 12 * million), isTrue);
+      expect(
+        phoneReady(available: 12 * million, allocated: 12 * million),
+        isTrue,
+      );
     });
 
     test('within one step of the bottom', () {
       expect(
-        budgetReady(
+        phoneReady(
           available: 12 * million,
-          allocated: 12 * million - (kBudgetStep - 1),
+          allocated: 12 * million - (phoneStep - 1),
         ),
         isTrue,
       );
@@ -26,21 +45,21 @@ void main() {
 
     test('a whole step still unspent is not finished', () {
       expect(
-        budgetReady(
+        phoneReady(
           available: 12 * million,
-          allocated: 12 * million - kBudgetStep,
+          allocated: 12 * million - phoneStep,
         ),
         isFalse,
       );
     });
 
     test('nothing allocated at all is not finished', () {
-      expect(budgetReady(available: 12 * million, allocated: 0), isFalse);
+      expect(phoneReady(available: 12 * million, allocated: 0), isFalse);
     });
 
     test('a euro over is refused', () {
       expect(
-        budgetReady(available: 12 * million, allocated: 12 * million + 1),
+        phoneReady(available: 12 * million, allocated: 12 * million + 1),
         isFalse,
       );
     });
@@ -49,17 +68,51 @@ void main() {
       // Allocate the lot, then hire an elite assistant on the same screen and
       // watch the ceiling drop underneath the allocation.
       expect(
-        budgetReady(available: 9 * million, allocated: 12 * million),
+        phoneReady(available: 9 * million, allocated: 12 * million),
         isFalse,
       );
     });
 
     test('nothing available and nothing promised is finished', () {
-      expect(budgetReady(available: 0, allocated: 0), isTrue);
+      expect(phoneReady(available: 0, allocated: 0), isTrue);
     });
 
     test('nothing available and something promised is refused', () {
-      expect(budgetReady(available: 0, allocated: million), isFalse);
+      expect(phoneReady(available: 0, allocated: million), isFalse);
+    });
+  });
+
+  group('the notch decides what is left over', () {
+    bool tabletReady({required int available, required int allocated}) =>
+        budgetReady(
+          available: available,
+          allocated: allocated,
+          stepLevels: kTabletBudgetStepLevels,
+        );
+
+    test('a tablet banks €0.5M: no million fits in it', () {
+      expect(
+        tabletReady(available: 12500000, allocated: 12 * million),
+        isTrue,
+      );
+    });
+
+    test('a tablet with a whole €1M left is not finished', () {
+      expect(
+        tabletReady(available: 13 * million, allocated: 12 * million),
+        isFalse,
+      );
+    });
+
+    test('a phone still banks anything under €4M', () {
+      expect(
+        phoneReady(available: 15 * million, allocated: 12 * million),
+        isTrue,
+      );
+      expect(
+        phoneReady(available: 16 * million, allocated: 12 * million),
+        isFalse,
+      );
     });
   });
 }

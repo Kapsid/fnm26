@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_bracket.dart';
 import 'package:fnm/features/tournaments/intercontinental_playoff_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -24,6 +25,7 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
   final int careerId;
 
   Future<void> _continue(BuildContext context, WidgetRef ref) async {
+    final container = ProviderScope.containerOf(context, listen: false);
     final career = await ref.read(careerRepositoryProvider).byId(careerId);
     if (career != null) {
       await ref
@@ -34,6 +36,8 @@ class IntercontinentalPlayoffScreen extends ConsumerWidget {
             worldCupPlayoffKind,
           );
     }
+    // Retires the event in the top bar too (see CallUpScreen._confirm).
+    container.invalidate(hubDataProvider(careerId));
     if (context.mounted) context.go('${Routes.hub}?careerId=$careerId');
   }
 

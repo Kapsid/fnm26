@@ -232,18 +232,32 @@ abstract final class FederationFinance {
   /// capped here, and the invest UI uses it as the slider ceiling.
   static const int maxInvestPerDepartment = 40000000;
 
-  /// What one level of a department costs. Money is invested in whole levels,
-  /// so every euro spent buys an effect the manager can see: a free slider let
-  /// a few hundred thousand buy a figure that rounded to nothing, and rounding
-  /// it up instead would have paid out for spreading crumbs everywhere.
-  static const int investLevelPrice = 4000000;
+  /// The most Medical can usefully absorb: its injury reduction reaches its
+  /// floor (×0.30) just past €23.3M, so the 24th million is the last one that
+  /// buys anything.
+  static const int maxInvestMedical = 24000000;
 
-  /// How many levels [dept] has. Ten for most, so the top level is
-  /// [maxInvestPerDepartment]; Medical stops at six, where its injury
-  /// reduction reaches its floor, so no level of it buys nothing.
-  static int maxLevels(Department dept) => dept == Department.medical
-      ? 6
-      : maxInvestPerDepartment ~/ investLevelPrice;
+  /// What one level of a department costs: €1M. Money is invested in whole
+  /// levels, so every euro spent buys an effect: a free slider let a few
+  /// hundred thousand buy a figure that rounded to nothing, and rounding it up
+  /// instead would have paid out for spreading crumbs everywhere.
+  ///
+  /// A level used to cost €4M (ten of them, Medical six). The ceilings in
+  /// euros did not move, so the euro-keyed effect curves below read exactly
+  /// as before, and a stored allocation (euros, never levels) stays valid:
+  /// every €4M multiple is a €1M one. The phone's sliders still move four
+  /// levels at a time (see `kPhoneBudgetStepLevels`); the tablet's move one.
+  static const int investLevelPrice = 1000000;
+
+  /// How many levels [dept] has: forty for most, so the top level is
+  /// [maxInvestPerDepartment]; Medical stops at twenty-four
+  /// ([maxInvestMedical]), where its injury reduction reaches its floor, so
+  /// no level of it buys nothing.
+  static int maxLevels(Department dept) =>
+      (dept == Department.medical
+          ? maxInvestMedical
+          : maxInvestPerDepartment) ~/
+      investLevelPrice;
 
   /// The talent scale bonus applied to a nation's newgen intake for a cycle,
   /// from the euros invested in the Youth Academy. Diminishing, capped so an

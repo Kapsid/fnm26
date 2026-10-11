@@ -9478,6 +9478,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get sideTactics => 'Taktyka';
 
   @override
+  String get sideMainMenu => 'Menu główne';
+
+  @override
   String get sideCallUps => 'Powołania';
 
   @override

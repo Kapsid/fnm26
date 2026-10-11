@@ -148,6 +148,8 @@ void main() {
                   boardRelations: 0,
                 ),
                 onChanged: (_) {},
+                // The phone's notch, as this always rendered.
+                stepLevels: kPhoneBudgetStepLevels,
               ),
             ),
             width: width,

@@ -633,6 +633,11 @@ class _Pot extends StatelessWidget {
             spacing: 3,
             runSpacing: 3,
             alignment: WrapAlignment.center,
+            // The pill is taller than a bare flag (its padding and border).
+            // Top-aligned, it hung below the line of flags beside it, so the
+            // manager's own ball sat low in the pot; centred, every flag in a
+            // run shares one centre line.
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               for (final id in waiting)
                 if (id == highlightNationId)

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,31 +63,30 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
     ),
   ];
 
+  /// A bid wins as a whole, so it's chosen only when it IS the winning bid,
+  /// not merely overlapping it.
+  bool _won(HostDrawData data, List<int> bid) =>
+      _revealed &&
+      bid.length == data.hostIds.length &&
+      bid.every(data.hostIds.contains);
+
   /// Every bid on the table, the winning one lit once revealed.
   Widget _candidates(HostDrawData data) => Wrap(
     spacing: AppSpacing.sm,
     runSpacing: AppSpacing.sm,
     children: [
       for (final bid in data.bids)
-        () {
-          // A bid wins as a whole, so it's chosen only when
-          // it IS the winning bid — not merely overlapping.
-          final won =
-              _revealed &&
-              bid.length == data.hostIds.length &&
-              bid.every(data.hostIds.contains);
-          return _Candidate(
-            nations: [
-              for (final id in bid)
-                (
-                  code: data.nations[id]?.code ?? '??',
-                  name: data.nations[id]?.name ?? '—',
-                ),
-            ],
-            chosen: won,
-            dimmed: _revealed && !won,
-          );
-        }(),
+        _Candidate(
+          nations: [
+            for (final id in bid)
+              (
+                code: data.nations[id]?.code ?? '??',
+                name: data.nations[id]?.name ?? '—',
+              ),
+          ],
+          chosen: _won(data, bid),
+          dimmed: _revealed && !_won(data, bid),
+        ),
     ],
   );
 
@@ -103,8 +103,8 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
           onPressed: () => unawaited(_reveal(data)),
         );
 
-  /// A tablet: the edition and the envelope on the left, the bids on the
-  /// right, the action bottom right.
+  /// A tablet: the edition and the envelope centred on top, the bids as large
+  /// tiles across the full width below, the action bottom right.
   Widget _landscape(
     AppLocalizations l,
     HostDrawData data,
@@ -116,43 +116,26 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          DefaultTextStyle.merge(
+            textAlign: TextAlign.center,
+            child: Column(children: _heading(l, data, hosts.length)),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560),
+              child: _Envelope(revealed: _revealed, hosts: hosts, large: true),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            l.tourCandidates,
+            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        ..._heading(l, data, hosts.length),
-                        const SizedBox(height: AppSpacing.lg),
-                        _Envelope(revealed: _revealed, hosts: hosts),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.xl),
-                Expanded(
-                  flex: 6,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l.tourCandidates,
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        _candidates(data),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            child: LayoutBuilder(
+              builder: (context, box) => _candidateGrid(data, box),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -162,6 +145,52 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  /// The bids as large tiles filling [box]: as many columns as fit at about
+  /// 200 wide, more (down to about 140 wide) when the rows would not fit
+  /// otherwise, each tile as tall as the rows allow between a floor and a cap,
+  /// scrolling only when even the floor will not fit.
+  Widget _candidateGrid(HostDrawData data, BoxConstraints box) {
+    const gap = AppSpacing.sm;
+    const minTile = 96.0;
+    const maxTile = 180.0;
+    final count = max(1, data.bids.length);
+    int rowsFor(int columns) => (count / columns).ceil();
+    bool fits(int columns) =>
+        rowsFor(columns) * (minTile + gap) - gap <= box.maxHeight;
+    var columns = min(max(2, (box.maxWidth / 200).floor()), count);
+    final most = min(max(columns, (box.maxWidth / 140).floor()), count);
+    while (columns < most && !fits(columns)) {
+      columns++;
+    }
+    final rows = rowsFor(columns);
+    final fit = (box.maxHeight - (rows - 1) * gap) / rows;
+    final tileHeight = fit.clamp(minTile, maxTile);
+    final tileWidth = (box.maxWidth - (columns - 1) * gap) / columns;
+    // The flags grow with the tile, so a tall tile is not an empty one.
+    final flag = (tileHeight * 0.36).clamp(40.0, 64.0);
+    return GridView.count(
+      crossAxisCount: columns,
+      childAspectRatio: tileWidth / tileHeight,
+      mainAxisSpacing: gap,
+      crossAxisSpacing: gap,
+      children: [
+        for (final bid in data.bids)
+          _CandidateTile(
+            nations: [
+              for (final id in bid)
+                (
+                  code: data.nations[id]?.code ?? '??',
+                  name: data.nations[id]?.name ?? '—',
+                ),
+            ],
+            chosen: _won(data, bid),
+            dimmed: _revealed && !_won(data, bid),
+            flagSize: flag,
+          ),
+      ],
     );
   }
 
@@ -242,10 +271,17 @@ class _HostDrawScreenState extends ConsumerState<HostDrawScreen> {
 }
 
 class _Envelope extends StatefulWidget {
-  const _Envelope({required this.revealed, required this.hosts});
+  const _Envelope({
+    required this.revealed,
+    required this.hosts,
+    this.large = false,
+  });
 
   final bool revealed;
   final List<({String code, String name})> hosts;
+
+  /// The tablet stage's bigger envelope: taller, with bigger flags and name.
+  final bool large;
 
   @override
   State<_Envelope> createState() => _EnvelopeState();
@@ -281,10 +317,11 @@ class _EnvelopeState extends State<_Envelope>
   @override
   Widget build(BuildContext context) {
     final multi = widget.hosts.length > 1;
+    final large = widget.large;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 350),
       curve: Curves.easeOut,
-      constraints: const BoxConstraints(minHeight: 160),
+      constraints: BoxConstraints(minHeight: large ? 200 : 160),
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: widget.revealed
@@ -301,9 +338,9 @@ class _EnvelopeState extends State<_Envelope>
         animation: _c,
         builder: (context, _) {
           if (!widget.revealed) {
-            return const Icon(
+            return Icon(
               Icons.mail_outline_rounded,
-              size: 56,
+              size: large ? 72 : 56,
               color: AppColors.onSurfaceVariant,
             );
           }
@@ -330,7 +367,7 @@ class _EnvelopeState extends State<_Envelope>
                     flap < 0.5
                         ? Icons.mail_outline_rounded
                         : Icons.drafts_rounded,
-                    size: 40,
+                    size: large ? 48 : 40,
                     color: AppColors.primary,
                   ),
                 ),
@@ -354,7 +391,9 @@ class _EnvelopeState extends State<_Envelope>
                                 for (final h in widget.hosts) ...[
                                   FlagDisc(
                                     h.code,
-                                    size: multi ? 44 : 56,
+                                    size: large
+                                        ? (multi ? 64 : 80)
+                                        : (multi ? 44 : 56),
                                     highlighted: true,
                                   ),
                                   const SizedBox(width: AppSpacing.sm),
@@ -365,7 +404,7 @@ class _EnvelopeState extends State<_Envelope>
                             Text(
                               widget.hosts.map((h) => h.name).join(' · '),
                               textAlign: TextAlign.center,
-                              style: multi
+                              style: multi && !large
                                   ? AppTypography.titleMedium
                                   : AppTypography.headlineMedium,
                             ),
@@ -459,6 +498,85 @@ class _Candidate extends StatelessWidget {
                 ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The tablet's candidature tile: the bid's flags and names large and
+/// centred, lit when it wins and dimmed when it loses, like [_Candidate].
+class _CandidateTile extends StatelessWidget {
+  const _CandidateTile({
+    required this.nations,
+    required this.chosen,
+    required this.dimmed,
+    required this.flagSize,
+  });
+
+  final List<({String code, String name})> nations;
+  final bool chosen;
+  final bool dimmed;
+
+  /// A lone nation's flag; a joint bid's flags are a little smaller.
+  final double flagSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final joint = nations.length > 1;
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 350),
+      opacity: dimmed ? 0.35 : 1,
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.sm),
+        decoration: BoxDecoration(
+          color: chosen
+              ? AppColors.secondaryContainer
+              : AppColors.surfaceContainer,
+          borderRadius: AppRadii.baseAll,
+          border: Border.all(
+            color: chosen ? AppColors.primary : AppColors.outlineVariant,
+            width: chosen ? 2 : 1,
+          ),
+        ),
+        // Scaled down only when a floor-height tile cannot hold it all.
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final (i, n) in nations.indexed) ...[
+                    if (i > 0) const SizedBox(width: AppSpacing.xs),
+                    FlagDisc(
+                      n.code,
+                      size: joint ? flagSize * 0.85 : flagSize,
+                      highlighted: chosen,
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                nations.map((n) => n.name).join(' & '),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                style: AppTypography.titleMedium.copyWith(
+                  color: chosen ? AppColors.primary : AppColors.onSurface,
+                  fontWeight: chosen ? FontWeight.w700 : null,
+                ),
+              ),
+              if (joint)
+                Text(
+                  AppLocalizations.of(context).tourJointBid,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

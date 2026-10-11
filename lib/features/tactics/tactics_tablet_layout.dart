@@ -8,6 +8,14 @@ class _TacticsTabletLayout extends ConsumerWidget {
 
   static const double _pitchColumnWidth = 452;
 
+  /// The tabs' type: capitals, a little tracked, as the panel titles.
+  static const _tabLabel = TextStyle(
+    fontFamily: AppFonts.sans,
+    fontSize: 13,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.6,
+  );
+
   final TacticsScreen screen;
 
   int get careerId => screen.careerId;
@@ -165,10 +173,24 @@ class _TacticsTabletLayout extends ConsumerWidget {
                                     unselectedLabelColor:
                                         AppColors.onSurfaceVariant,
                                     indicatorColor: AppColors.primary,
+                                    // In capitals the theme's tab type is too
+                                    // wide for all three to fit.
+                                    labelStyle: _tabLabel,
+                                    unselectedLabelStyle: _tabLabel,
+                                    // One case for every tab, as the kit's
+                                    // panel titles: the copy itself mixes
+                                    // capitals and sentence case.
                                     tabs: [
-                                      Tab(text: l.tacticsFormation),
-                                      Tab(text: l.tacticsTabRolesSetPieces),
-                                      Tab(text: l.matchDossierTitle),
+                                      Tab(
+                                        text: l.tacticsFormation.toUpperCase(),
+                                      ),
+                                      Tab(
+                                        text: l.tacticsTabRolesSetPieces
+                                            .toUpperCase(),
+                                      ),
+                                      Tab(
+                                        text: l.matchDossierTitle.toUpperCase(),
+                                      ),
                                     ],
                                   ),
                                 ),

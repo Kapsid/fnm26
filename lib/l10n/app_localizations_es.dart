@@ -9379,6 +9379,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sideTactics => 'Táctica';
 
   @override
+  String get sideMainMenu => 'Menú principal';
+
+  @override
   String get sideCallUps => 'Convocatorias';
 
   @override

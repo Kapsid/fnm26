@@ -9419,6 +9419,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sideTactics => 'Tactique';
 
   @override
+  String get sideMainMenu => 'Menu principal';
+
+  @override
   String get sideCallUps => 'Convocations';
 
   @override

@@ -25,9 +25,7 @@ void main() {
       final data = (await save.container.read(
         tacticDataProvider(save.careerId).future,
       ))!;
-      bench = data.pool
-          .where((p) => !data.tactic.lineup.contains(p.id))
-          .length;
+      bench = data.pool.where((p) => !data.tactic.lineup.contains(p.id)).length;
     });
     await pumpRoute(
       tester,
@@ -89,7 +87,7 @@ void main() {
       '${Routes.tactics}?careerId=${save.careerId}',
       size: kTabletSize,
     );
-    await tester.tap(find.text(enL.matchDossierTitle));
+    await tester.tap(find.text(enL.matchDossierTitle.toUpperCase()));
     await settle(tester);
     expect(find.byType(OpponentBriefing), findsNothing);
     expect(find.textContaining(oppName), findsNothing);

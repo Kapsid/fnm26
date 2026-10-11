@@ -15,8 +15,15 @@ import 'package:fnm/l10n/app_localizations.dart';
 abstract final class DepartmentEffect {
   /// The academy bonus expressed as approximate overall points (~+12 at full
   /// investment), which is a far more tangible read than a talent multiplier.
-  static int youthOverall(int euros) =>
-      overallFromTalentBonus(FederationFinance.youthTalentBonus(euros));
+  ///
+  /// Never 0 for real money: a single €1M level buys about a third of a point,
+  /// and "about 0 overall better" reads as money thrown away.
+  static int youthOverall(int euros) {
+    final points = overallFromTalentBonus(
+      FederationFinance.youthTalentBonus(euros),
+    );
+    return euros > 0 && points < 1 ? 1 : points;
+  }
 
   /// Any talent-scale bonus on the newgen intake, put on the same overall-point
   /// scale the academy slider reads in.

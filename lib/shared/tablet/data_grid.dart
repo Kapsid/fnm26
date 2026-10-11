@@ -13,6 +13,7 @@ class GridColumn<T> {
     this.width,
     this.flex = 1,
     this.numeric = false,
+    this.gapBefore = 0,
   });
 
   final String id;
@@ -28,6 +29,10 @@ class GridColumn<T> {
 
   /// Right-aligned, and sorted high to low on the first tap.
   final bool numeric;
+
+  /// Empty room at the column's left edge, header and cells alike, so a
+  /// left-aligned column never runs into a right-aligned number before it.
+  final double gapBefore;
 }
 
 /// A named set of columns: one "view" of the same rows (Overview, Attributes).
@@ -244,7 +249,10 @@ class _DataGridState<T> extends State<DataGrid<T>> {
               children: [
                 for (final s in widget.columnSets)
                   ChoiceChip(
-                    label: Text(s.label),
+                    // In capitals like every tablet tab and heading: the
+                    // labels come from copy written for the phone, where some
+                    // are capitals and some are not.
+                    label: Text(s.label.toUpperCase()),
                     selected: s.id == set.id,
                     onSelected: (_) => _pickSet(s),
                   ),
@@ -277,7 +285,8 @@ class _DataGridState<T> extends State<DataGrid<T>> {
   double _minContentWidth(List<GridColumn<T>> columns) {
     var w = 24.0;
     for (final c in columns) {
-      w += c.width ?? DataGrid.minFlexWidth;
+      // A fixed column's gap sits inside its width; a flexible one's on top.
+      w += c.width ?? DataGrid.minFlexWidth + c.gapBefore;
     }
     return w;
   }
@@ -398,7 +407,12 @@ class _DataGridState<T> extends State<DataGrid<T>> {
     );
   }
 
-  Widget _cellBox(GridColumn<T> c, Widget child) => c.width != null
-      ? SizedBox(width: c.width, child: child)
-      : Expanded(flex: c.flex, child: child);
+  Widget _cellBox(GridColumn<T> c, Widget child) {
+    final padded = c.gapBefore > 0
+        ? Padding(padding: EdgeInsets.only(left: c.gapBefore), child: child)
+        : child;
+    return c.width != null
+        ? SizedBox(width: c.width, child: padded)
+        : Expanded(flex: c.flex, child: padded);
+  }
 }

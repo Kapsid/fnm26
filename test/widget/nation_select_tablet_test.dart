@@ -65,7 +65,7 @@ void main() {
     });
   }
 
-  testWidgets('a tile shows the rank, the strength and the best player', (
+  testWidgets('a tile shows the rank, the strength and the overall', (
     tester,
   ) async {
     final save = await _open(tester, kTabletSize);
@@ -89,9 +89,7 @@ void main() {
     expect(
       find.descendant(
         of: tile,
-        matching: find.text(
-          enL.nationsStarTile(s.best.position.label, s.best.overall),
-        ),
+        matching: find.text('${enL.teamOverall} ${s.overall}'),
       ),
       findsOneWidget,
     );
