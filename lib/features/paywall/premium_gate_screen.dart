@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -43,67 +44,83 @@ class PremiumGateScreen extends ConsumerWidget {
       canPop: false,
       child: Scaffold(
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Centred in the space left over. The page used to be a
-                // scroll view of a paragraph, five benefit lines and a price
-                // — enough text that the decision was buried in it, and on a
-                // small phone the price sat below the fold on the one screen
-                // where the price is the point. It still scrolls, but only
-                // once the words genuinely do not fit: a long language on a
-                // short phone must not cost anybody the buttons.
-                Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, box) => SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: box.maxHeight),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            const Icon(
-                              Icons.sports_soccer,
-                              size: 56,
-                              color: AppColors.primary,
-                            ),
-                            const SizedBox(height: AppSpacing.md),
-                            Text(
-                              l.gateTitle,
-                              textAlign: TextAlign.center,
-                              style: AppTypography.headlineMedium.copyWith(
+          child: _widthCap(
+            context,
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.marginMobile),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Centred in the space left over. The page used to be a
+                  // scroll view of a paragraph, five benefit lines and a price
+                  // — enough text that the decision was buried in it, and on a
+                  // small phone the price sat below the fold on the one screen
+                  // where the price is the point. It still scrolls, but only
+                  // once the words genuinely do not fit: a long language on a
+                  // short phone must not cost anybody the buttons.
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, box) => SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: box.maxHeight),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Icon(
+                                Icons.sports_soccer,
+                                size: 56,
                                 color: AppColors.primary,
                               ),
-                            ),
-                            const SizedBox(height: AppSpacing.sm),
-                            Text(
-                              l.gateLead,
-                              textAlign: TextAlign.center,
-                              style: AppTypography.bodyMedium.copyWith(
-                                color: AppColors.onSurfaceVariant,
+                              const SizedBox(height: AppSpacing.md),
+                              Text(
+                                l.gateTitle,
+                                textAlign: TextAlign.center,
+                                style: AppTypography.headlineMedium.copyWith(
+                                  color: AppColors.primary,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
-                            const PaywallBenefits(iconSize: 22),
-                          ],
+                              const SizedBox(height: AppSpacing.sm),
+                              Text(
+                                l.gateLead,
+                                textAlign: TextAlign.center,
+                                style: AppTypography.bodyMedium.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.lg),
+                              const PaywallBenefits(iconSize: 22),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                const PaywallActions(prominentPrice: true),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(l.gateExit),
-                ),
-              ],
+                  const SizedBox(height: AppSpacing.md),
+                  const PaywallActions(prominentPrice: true),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text(l.gateExit),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
+  /// On a wide tablet window the wall is the same page held to 560 in the
+  /// middle: stretched across a landscape iPad it was a phone page over a
+  /// thousand wide. A phone gets [body] exactly as it was.
+  static Widget _widthCap(BuildContext context, Widget body) =>
+      context.isWideTabletWindow
+      ? Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: body,
+          ),
+        )
+      : body;
 }
