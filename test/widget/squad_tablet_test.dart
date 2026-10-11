@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -15,9 +16,8 @@ import 'package:fnm/shared/tablet/tablet.dart';
 import '../helpers/seeded_save.dart';
 
 void main() {
-  testWidgets('the pool as a table, the picked player beside it', (
-    tester,
-  ) async {
+  testWidgets('the squad as a full-width table; a row opens his page and '
+      'back returns to the table', (tester) async {
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
     late NationSquadData data;
     await tester.runAsync(() async {
@@ -35,42 +35,47 @@ void main() {
     expect(find.byKey(SquadTabletLayout.layoutKey), findsOneWidget);
     expect(find.byType(PhoneWidthFrame), findsNothing);
     expect(find.byType(DataGrid<NationSquadRow>), findsOneWidget);
-    expect(find.byType(MasterDetail), findsOneWidget);
+    // No pane beside it: the table has the whole content area.
+    expect(find.byType(MasterDetail), findsNothing);
+    expect(find.byType(DetailPaneHost), findsNothing);
+    expect(find.byType(PlayerView), findsNothing);
 
-    // Nothing picked yet: the best-rated player fills the pane.
-    final pane = find.byType(DetailPaneHost);
-    expect(
-      find.descendant(
-        of: pane,
-        matching: find.text(data.rows.first.player.name),
-      ),
-      findsOneWidget,
-    );
-
-    // Picking the third fills it with him.
-    final third = data.rows[2].player.name;
-    await tester.tap(
-      find
-          .descendant(
-            of: find.byType(DataGrid<NationSquadRow>),
-            matching: find.text(third),
-          )
-          .first,
-    );
-    await settle(tester);
-    expect(
-      find.descendant(of: find.byType(PlayerView), matching: find.text(third)),
-      findsOneWidget,
-    );
-
-    // The Attributes view swaps the columns.
+    // The Attributes view swaps the columns (headers in capitals).
     final grid = find.byType(DataGrid<NationSquadRow>);
     await tester.tap(
       find.descendant(of: grid, matching: find.text(enL.playerAttributes)),
     );
     await tester.pump();
     expect(
-      find.descendant(of: grid, matching: find.text(enL.playerAttrPhysical)),
+      find.descendant(
+        of: grid,
+        matching: find.text(enL.playerAttrPhysical.toUpperCase()),
+      ),
+      findsOneWidget,
+    );
+
+    // Tapping the third pushes his own page over the squad.
+    final third = data.rows[2].player;
+    await tester.tap(
+      find.descendant(of: grid, matching: find.text(third.name)).first,
+    );
+    await settle(tester);
+    final router = save.container.read(routerProvider);
+    expect(router.state.uri.path, Routes.player);
+    expect(router.state.uri.queryParameters['playerId'], '${third.id}');
+    expect(find.byKey(PlayerDetailScreen.tabletLayoutKey), findsOneWidget);
+
+    // Back pops to the squad, still on the Attributes view.
+    await tester.tap(find.byKey(TabletScreenHeader.backKey));
+    await settle(tester);
+    expect(router.state.uri.path, Routes.tactics);
+    expect(find.byKey(PlayerDetailScreen.tabletLayoutKey), findsNothing);
+    expect(find.byKey(SquadTabletLayout.layoutKey), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(DataGrid<NationSquadRow>),
+        matching: find.text(enL.playerAttrPhysical.toUpperCase()),
+      ),
       findsOneWidget,
     );
 
@@ -82,6 +87,32 @@ void main() {
       ),
       findsOneWidget,
     );
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('every header is in the same case', (tester) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.tactics}?careerId=${save.careerId}&tab=3',
+      size: const Size(1080, 810),
+    );
+    final header = find.byKey(DataGrid.headerKey);
+    for (final label in [
+      enL.squadDevPosition,
+      enL.squadSortName,
+      enL.playerAge,
+      enL.playerClub,
+      enL.teamOverall,
+      enL.squadSortCaps,
+    ]) {
+      expect(
+        find.descendant(of: header, matching: find.text(label.toUpperCase())),
+        findsOneWidget,
+        reason: label,
+      );
+    }
     await tester.pumpWidget(const SizedBox());
   });
 
@@ -109,8 +140,7 @@ void main() {
   });
 
   for (final size in [const Size(1080, 810), kTabletSize]) {
-    testWidgets('every view fits with the divider dragged to its minimum at '
-        '$size', (tester) async {
+    testWidgets('every view fits and no name is cut at $size', (tester) async {
       final save = await seedSave(tester, formFactor: FormFactor.tablet);
       await pumpRoute(
         tester,
@@ -118,11 +148,9 @@ void main() {
         '${Routes.tactics}?careerId=${save.careerId}&tab=3',
         size: size,
       );
-      await tester.drag(
-        find.byKey(MasterDetail.dividerKey),
-        const Offset(-900, 0),
-      );
-      await tester.pump();
+      final data = save.container
+          .read(nationSquadProvider(save.careerId))
+          .value!;
       final grid = find.byType(DataGrid<NationSquadRow>);
       for (final v in [
         enL.gridViewOverview,
@@ -135,22 +163,31 @@ void main() {
         );
         await tester.pump();
         expect(tester.takeException(), isNull, reason: v);
+        expect(find.byKey(DataGrid.scrollKey), findsNothing, reason: v);
+        // Every name on screen, the widest included, is drawn whole.
+        var checked = 0;
+        for (final r in data.rows) {
+          final name = find.descendant(
+            of: grid,
+            matching: find.text(r.player.name),
+          );
+          if (name.evaluate().isEmpty) continue;
+          final paragraph = tester.renderObject<RenderParagraph>(name.first);
+          expect(
+            paragraph.didExceedMaxLines,
+            isFalse,
+            reason: '${r.player.name} cut in $v',
+          );
+          checked++;
+        }
+        expect(checked, greaterThan(5), reason: v);
       }
       await tester.pumpWidget(const SizedBox());
     });
   }
 
-  // Real 9.7 inch iPads and the divider pushed to its limit: the player pane
-  // keeps room for its own header whatever the split.
-  for (final (size, drag) in <(Size, double)>[
-    (const Size(1000, 750), 0),
-    (const Size(1024, 768), 0),
-    (const Size(1080, 810), 900),
-    (const Size(1194, 834), 900),
-  ]) {
-    testWidgets('the player pane does not overflow at $size, drag $drag', (
-      tester,
-    ) async {
+  for (final size in const [Size(1000, 750), Size(1024, 768)]) {
+    testWidgets('the table does not overflow at $size', (tester) async {
       final save = await seedSave(tester, formFactor: FormFactor.tablet);
       await pumpRoute(
         tester,
@@ -158,13 +195,6 @@ void main() {
         '${Routes.tactics}?careerId=${save.careerId}&tab=3',
         size: size,
       );
-      if (drag != 0) {
-        await tester.drag(
-          find.byKey(MasterDetail.dividerKey),
-          Offset(drag, 0),
-        );
-        await tester.pump();
-      }
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     });
