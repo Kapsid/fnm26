@@ -23,6 +23,8 @@ void main() {
 
   test('screens under a destination light it up', () {
     expect(activeDestination(u('${Routes.cup}?careerId=1')), ShellDestinationId.tournaments);
+    // The Nations Cup has no item of its own; it sits under Tournaments.
+    expect(activeDestination(u('${Routes.nationsCup}?careerId=1')), ShellDestinationId.tournaments);
     expect(activeDestination(u('${Routes.careerSummary}?careerId=1')), ShellDestinationId.career);
   });
 

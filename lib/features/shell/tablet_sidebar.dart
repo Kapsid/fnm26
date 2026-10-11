@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
+import 'package:fnm/features/shell/current_competition.dart';
 import 'package:fnm/features/shell/shell_destinations.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet_text.dart';
@@ -21,6 +24,9 @@ class TabletSidebar extends StatelessWidget {
 
   /// The bottom item that leaves for the main menu.
   static const Key mainMenuKey = ValueKey('sidebar.mainMenu');
+
+  /// The quick link to the competition the nation is in right now.
+  static const Key currentCompetitionKey = ValueKey('sidebar.current');
 
   final int careerId;
   final Uri location;
@@ -74,6 +80,8 @@ class TabletSidebar extends StatelessWidget {
                         onTap: () => context.go(d.location(careerId)),
                       ),
                     ),
+                  if (section == ShellSection.competitions)
+                    _CurrentCompetition(careerId: careerId),
                 ],
               ],
             ),
@@ -103,6 +111,67 @@ class TabletSidebar extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// The competition of the nation's next fixture, as a tinted pill under the
+/// competition items: a quick link, not another section. Absent when there is
+/// no such competition (a friendly next, the cycle over).
+class _CurrentCompetition extends ConsumerWidget {
+  const _CurrentCompetition({required this.careerId});
+
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = ref.watch(currentCompetitionProvider(careerId)).valueOrNull;
+    if (current == null) return const SizedBox.shrink();
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+      child: Material(
+        key: TabletSidebar.currentCompetitionKey,
+        color: AppColors.primaryContainer.withValues(alpha: 0.16),
+        shape: StadiumBorder(
+          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.4)),
+        ),
+        child: InkWell(
+          customBorder: const StadiumBorder(),
+          onTap: () => context.go(current.location),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: AppSpacing.minHitArea - 8,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 6, 8, 6),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.emoji_events,
+                    size: 16,
+                    color: AppColors.medalGold,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      competitionLabel(l, current.name),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TabletText.navItem.copyWith(
+                        color: AppColors.onSurface,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
