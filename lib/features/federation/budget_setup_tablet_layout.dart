@@ -48,6 +48,8 @@ class _BudgetSetupTabletLayout extends StatelessWidget {
                     available: budget.available,
                     initial: budget.alloc,
                     onChanged: state._onAllocated,
+                    // A million a notch: the tablet's slider is long enough.
+                    stepLevels: kTabletBudgetStepLevels,
                     // Said once, on the right.
                     showEffects: false,
                   ),

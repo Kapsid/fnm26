@@ -18,8 +18,18 @@ String formatEuros(int euros) {
   return '€$euros';
 }
 
-/// The department allocation editor: one slider per department, in whole
-/// levels (see [FederationFinance.investLevelPrice]), that together cannot
+/// How many levels one notch of the phone's budget sliders moves: €4M a
+/// notch, ten notches (Medical six), as the phone always had. A phone slider
+/// is too short for forty notches under a thumb.
+const int kPhoneBudgetStepLevels = 4;
+
+/// How many levels one notch of the tablet's budget sliders moves: €1M a
+/// notch, every level its own stop.
+const int kTabletBudgetStepLevels = 1;
+
+/// The department allocation editor: one slider per department, moving
+/// [InvestmentEditor.stepLevels] levels (see
+/// [FederationFinance.investLevelPrice]) a notch, that together cannot
 /// exceed the available balance. Reports the
 /// current split on every change. Youth can be disabled (e.g. the opening
 /// cycle, which has no academy intake yet).
@@ -28,6 +38,7 @@ class InvestmentEditor extends StatefulWidget {
     required this.available,
     required this.initial,
     required this.onChanged,
+    required this.stepLevels,
     this.youthEnabled = true,
     this.showEffects = true,
     super.key,
@@ -38,6 +49,10 @@ class InvestmentEditor extends StatefulWidget {
   final FederationInvestment initial;
   final ValueChanged<FederationInvestment> onChanged;
   final bool youthEnabled;
+
+  /// Levels per slider notch: [kPhoneBudgetStepLevels] or
+  /// [kTabletBudgetStepLevels], by form factor.
+  final int stepLevels;
 
   /// Whether each slider states, under its blurb, what its money buys. The
   /// tablet says that once, beside the sliders, and turns this off.
@@ -54,7 +69,12 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
   late int _naturalization = widget.initial.naturalization;
   late int _boardRelations = widget.initial.boardRelations;
 
-  static const _price = FederationFinance.investLevelPrice;
+  /// What one notch of a slider costs.
+  int get _price => widget.stepLevels * FederationFinance.investLevelPrice;
+
+  /// How many notches [dept]'s slider has.
+  int _notches(Department dept) =>
+      FederationFinance.maxLevels(dept) ~/ widget.stepLevels;
 
   int get _allocated =>
       _youth + _commercial + _medical + _naturalization + _boardRelations;
@@ -71,14 +91,14 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
   int _valueOf(Department dept) => investmentIn(_current, dept);
 
   void _set(Department dept, double rawLevel) {
-    // Whole levels only, and never more than the balance left once the other
+    // Whole notches only, and never more than the balance left once the other
     // departments are paid for.
     final room = widget.available - (_allocated - _valueOf(dept));
     final level = affordableLevel(
       wanted: rawLevel.round(),
       room: room,
       price: _price,
-      max: FederationFinance.maxLevels(dept),
+      max: _notches(dept),
     );
     final euros = level * _price;
     setState(() {
@@ -130,10 +150,14 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
 
   Widget _slider(Department dept, int value, {bool enabled = true}) {
     final l = AppLocalizations.of(context);
-    // A FIXED scale per slider (the department's own levels) so moving one
+    // A FIXED scale per slider (the department's own notches) so moving one
     // slider never shifts the others' thumbs: the total is enforced on change
     // in [_set] instead.
-    final levels = FederationFinance.maxLevels(dept);
+    //
+    // The number shown is the notch: on a phone 0 to 10 as it always was, on
+    // a tablet the level itself, one per million. A sum set on a tablet off
+    // the phone's €4M grid shows its notch rounded down beside its true euros.
+    final levels = _notches(dept);
     final level = (value ~/ _price).clamp(0, levels);
     return Opacity(
       opacity: enabled ? 1 : 0.5,
@@ -162,6 +186,11 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
             value: level.toDouble(),
             max: levels.toDouble(),
             divisions: levels,
+            // Forty stops are too close to read under a finger: the bubble
+            // names the sum the thumb is on while it is dragged.
+            label: widget.stepLevels == kTabletBudgetStepLevels
+                ? formatEuros(level * _price)
+                : null,
             onChanged: enabled ? (v) => _set(dept, v) : null,
           ),
           Padding(

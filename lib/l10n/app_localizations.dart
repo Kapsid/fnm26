@@ -14521,7 +14521,7 @@ abstract class AppLocalizations {
   /// **'The press want to hear your aims for the {competition}'**
   String hubEventPressPreviewSub(String competition);
 
-  /// Budget setup: a department's investment level and what it costs. {level} is 0 to 10, {amount} the euros.
+  /// Budget setup: a department's investment level and what it costs. {level} is the slider notch: 0 to 10 on a phone (€4M a notch), 0 to 40 on a tablet (€1M a notch); {amount} the euros.
   ///
   /// In en, this message translates to:
   /// **'Level {level} · {amount}'**

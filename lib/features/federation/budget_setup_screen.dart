@@ -63,9 +63,6 @@ final AutoDisposeFutureProviderFamily<bool, int> budgetSettledProvider =
           .hasWatchedDraw(careerId, career.cyclePointer, budgetSetupKind);
     });
 
-/// The smallest slice of the budget a department can be given: one level.
-const int kBudgetStep = FederationFinance.investLevelPrice;
-
 /// Whether an allocation of [allocated] out of [available] may be confirmed.
 ///
 /// BOTH ends matter, and only one of them used to. The rule was "the remainder
@@ -78,17 +75,24 @@ const int kBudgetStep = FederationFinance.investLevelPrice;
 /// and then hiring an elite assistant moves the ceiling down underneath an
 /// allocation that was legal when it was made.
 ///
-/// Spent means "no further level fits": less than one level's price left, or
+/// Spent means "no further notch fits": less than one slider notch
+/// ([stepLevels] levels, so €4M on a phone and €1M on a tablet) left, or
 /// every department already at its top level. What is left over stays in the
 /// bank rather than being forced into a department it cannot buy anything in.
 bool budgetReady({
   required int available,
   required int allocated,
+  required int stepLevels,
   bool levelsLeft = true,
 }) {
   final remaining = available - allocated;
-  return remaining >= 0 && (remaining < kBudgetStep || !levelsLeft);
+  return remaining >= 0 &&
+      (remaining < budgetStepEuros(stepLevels) || !levelsLeft);
 }
+
+/// What one slider notch of [stepLevels] levels costs.
+int budgetStepEuros(int stepLevels) =>
+    stepLevels * FederationFinance.investLevelPrice;
 
 /// Everything both layouts read off the allocation in progress, worked out
 /// once (see [_BudgetSetupScreenState._budgetFor]).
@@ -159,7 +163,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
 
   /// The money there is, the split so far, and whether it may be confirmed.
   /// Both layouts read these and nothing else, so the rules live here once.
-  _Budget _budgetFor(Career career) {
+  /// [stepLevels] is the layout's slider notch (see [InvestmentEditor]).
+  _Budget _budgetFor(Career career, {required int stepLevels}) {
     // The wage bill comes off the top. Staff are a standing cost the
     // federation pays at the rollover, so money already promised to
     // people is not money there is to hand to a department — showing it
@@ -194,18 +199,20 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
       alloc: alloc,
       allocated: allocated,
       overCommitted: allocated > available,
-      // Untouched is fine when there is nothing a level could be bought
-      // with: a federation with less than one level to spend confirms an
+      // Untouched is fine when there is nothing a notch could be bought
+      // with: a federation with less than one notch to spend confirms an
       // empty allocation rather than being stuck on this screen.
       ready:
-          (_alloc != null || available < kBudgetStep) &&
+          (_alloc != null || available < budgetStepEuros(stepLevels)) &&
           budgetReady(
             available: available,
             allocated: allocated,
+            stepLevels: stepLevels,
             levelsLeft: Department.values.any(
               (d) =>
                   investmentIn(alloc, d) <
-                  FederationFinance.maxLevels(d) * kBudgetStep,
+                  FederationFinance.maxLevels(d) *
+                      FederationFinance.investLevelPrice,
             ),
           ),
       settled: settled,
@@ -275,7 +282,10 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
               : _BudgetSetupTabletLayout(
                   state: this,
                   career: career,
-                  budget: _budgetFor(career),
+                  budget: _budgetFor(
+                    career,
+                    stepLevels: kTabletBudgetStepLevels,
+                  ),
                 ),
         ),
       );
@@ -309,7 +319,10 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           if (career == null) {
             return Center(child: Text(l.federationSaveNotFound));
           }
-          final b = _budgetFor(career);
+          final b = _budgetFor(
+            career,
+            stepLevels: kPhoneBudgetStepLevels,
+          );
           return Column(
             children: [
               Expanded(
@@ -331,6 +344,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                         available: b.available,
                         initial: b.alloc,
                         onChanged: _onAllocated,
+                        stepLevels: kPhoneBudgetStepLevels,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
