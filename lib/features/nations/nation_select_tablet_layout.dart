@@ -6,11 +6,18 @@ part of 'nation_select_screen.dart';
 /// player); and the previewed nation beside them. A tap only previews; Manage
 /// takes the job. The search, the confederation, Random team and From the
 /// bottom are the phone's own (the same providers and functions), and the
-/// preview is the screen State's, so a resize keeps it.
+/// preview is held by the screen State and handed in, so a resize keeps it.
 class _NationSelectTabletLayout extends ConsumerStatefulWidget {
-  const _NationSelectTabletLayout({required this.state});
+  const _NationSelectTabletLayout({
+    required this.previewId,
+    required this.onPreview,
+  });
 
-  final _NationSelectScreenState state;
+  /// The nation the manager last tapped, or null before the first tap.
+  final int? previewId;
+
+  /// Previews the nation with this id.
+  final ValueChanged<int> onPreview;
 
   @override
   ConsumerState<_NationSelectTabletLayout> createState() =>
@@ -72,7 +79,7 @@ class _NationSelectTabletLayoutState
                   // pane is never empty while there are tiles.
                   final previewed =
                       shown
-                          .where((n) => n.id == widget.state._previewId)
+                          .where((n) => n.id == widget.previewId)
                           .firstOrNull ??
                       shown.firstOrNull;
                   return Row(
@@ -103,12 +110,7 @@ class _NationSelectTabletLayoutState
                               ),
                               child: Row(
                                 children: [
-                                  Text(
-                                    l
-                                        .nationsShownCount(shown.length)
-                                        .toUpperCase(),
-                                    style: TabletText.sectionLabel,
-                                  ),
+                                  _ShownCount(count: shown.length),
                                   const Spacer(),
                                   Text(
                                     l.nationsSortedByRank.toUpperCase(),
@@ -137,8 +139,7 @@ class _NationSelectTabletLayoutState
                                           nation: n,
                                           strength: strengths[n.id],
                                           selected: n.id == previewed?.id,
-                                          onTap: () =>
-                                              widget.state._preview(n.id),
+                                          onTap: () => widget.onPreview(n.id),
                                         );
                                       },
                                     ),
@@ -152,7 +153,7 @@ class _NationSelectTabletLayoutState
                         color: AppColors.outlineVariant,
                       ),
                       SizedBox(
-                        width: 340,
+                        width: 330,
                         child: Material(
                           color: AppColors.surfaceContainerLow,
                           child: previewed == null
@@ -199,22 +200,43 @@ class _TabletTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return Container(
-      height: 64,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      key: NationSelectScreen.topBarKey,
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: const BoxDecoration(
         color: AppColors.surfaceContainerLow,
-        border: Border(bottom: BorderSide(color: AppColors.outlineVariant)),
+        border: Border(
+          bottom: BorderSide(color: AppColors.surfaceContainerHigh),
+        ),
       ),
       child: Row(
         children: [
-          IconButton(
+          SizedBox.square(
             key: NationSelectScreen.backKey,
-            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-            icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-            onPressed: () =>
-                context.canPop() ? context.pop() : context.go(Routes.home),
+            dimension: 36,
+            child: Tooltip(
+              message: MaterialLocalizations.of(context).backButtonTooltip,
+              child: Material(
+                color: Colors.transparent,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: AppRadii.baseAll,
+                  side: BorderSide(color: AppColors.outlineVariant),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: () => context.canPop()
+                      ? context.pop()
+                      : context.go(Routes.home),
+                  child: const Icon(
+                    Icons.arrow_back,
+                    size: 18,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -237,32 +259,40 @@ class _TabletTopBar extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(width: 12),
           SizedBox(
             width: 260,
+            height: 36,
             child: TextField(
               controller: search,
               onChanged: onSearch,
+              textAlignVertical: TextAlignVertical.center,
               style: AppTypography.bodyMedium.copyWith(
                 color: AppColors.onSurface,
               ),
               decoration: InputDecoration(
                 isDense: true,
                 hintText: l.nationsSearchHint,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                 prefixIcon: const Icon(
                   Icons.search,
-                  size: 18,
+                  size: 16,
                   color: AppColors.outline,
+                ),
+                prefixIconConstraints: const BoxConstraints(
+                  minWidth: 32,
+                  minHeight: 36,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: 12),
           _BarModeButton(
             icon: Icons.casino_outlined,
             label: l.nationsRandomTeam,
             onTap: onRandom,
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: 12),
           _BarModeButton(
             icon: Icons.trending_down_rounded,
             label: l.nationsFromTheBottom,
@@ -274,7 +304,9 @@ class _TabletTopBar extends StatelessWidget {
   }
 }
 
-/// The phone's [_ModeButton] at its own width, for a row it shares.
+/// The phone's [_ModeButton] at its own width, for a row it shares. A long
+/// label (a translation) is capped and ellipsized, so it never squeezes the
+/// title out.
 class _BarModeButton extends StatelessWidget {
   const _BarModeButton({
     required this.icon,
@@ -287,20 +319,27 @@ class _BarModeButton extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => OutlinedButton.icon(
-    onPressed: onTap,
-    icon: Icon(icon, size: 16),
-    label: Text(
-      label,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: AppTypography.labelSmall,
-    ),
-    style: OutlinedButton.styleFrom(
-      foregroundColor: AppColors.primary,
-      side: const BorderSide(color: AppColors.outlineVariant),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      minimumSize: const Size(0, 40),
+  Widget build(BuildContext context) => ConstrainedBox(
+    constraints: const BoxConstraints(maxWidth: 170),
+    child: OutlinedButton.icon(
+      onPressed: onTap,
+      icon: Icon(icon, size: 15),
+      label: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTypography.labelSmall,
+      ),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.primary,
+        side: const BorderSide(color: AppColors.outlineVariant),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadii.baseAll),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        minimumSize: const Size(0, 36),
+        maximumSize: const Size(170, 36),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.standard,
+      ),
     ),
   );
 }
@@ -372,7 +411,7 @@ class _ConfederationChip extends StatelessWidget {
         onTap: onTap,
         borderRadius: AppRadii.xlAll,
         child: Container(
-          height: 32,
+          height: 30,
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
             color: active
@@ -390,7 +429,7 @@ class _ConfederationChip extends StatelessWidget {
                 label,
                 style: AppTypography.labelSmall.copyWith(
                   color: active
-                      ? AppColors.onSecondaryContainer
+                      ? AppColors.onSurface
                       : AppColors.onSurfaceVariant,
                 ),
               ),
@@ -428,7 +467,6 @@ class _NationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
     final s = strength;
     return Semantics(
       button: true,
@@ -445,21 +483,21 @@ class _NationTile extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: selected
-                    ? const [
-                        AppColors.surfaceContainerHighest,
-                        AppColors.surfaceContainerHigh,
-                      ]
+                    ? const [_selectedTileTop, _selectedTileBottom]
                     : const [
                         AppColors.surfaceContainerHigh,
                         AppColors.surfaceContainerLow,
                       ],
               ),
+              // Selected: the mockup's 1 px primary border plus its inset
+              // 1 px primary ring, which together paint a 2 px primary edge.
               border: Border.all(
                 color: selected
                     ? AppColors.primary
                     : AppColors.surfaceContainerHighest,
-                width: selected ? 1.5 : 1,
+                width: selected ? 2 : 1,
               ),
+              boxShadow: [if (selected) _tileLiftShadow else _tileRestShadow],
             ),
             child: Stack(
               children: [
@@ -486,7 +524,7 @@ class _NationTile extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FlagDisc(nation.code, size: 56, highlighted: selected),
+                        _TileFlag(code: nation.code, selected: selected),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
                           nation.name,
@@ -500,16 +538,9 @@ class _NationTile extends StatelessWidget {
                         ),
                         if (s != null) ...[
                           const SizedBox(height: 2),
-                          Text(
-                            l.nationsStarTile(
-                              s.best.position.label,
-                              s.best.overall,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.outline,
-                            ),
+                          _StarLine(
+                            position: s.best.position.label,
+                            rating: s.best.overall,
                           ),
                         ],
                       ],
@@ -521,6 +552,134 @@ class _NationTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The selected tile's gradient, top left to bottom right. The mockup's
+/// steel-tinted greys have no theme token.
+const _selectedTileTop = Color(0xFF3A3F45);
+const _selectedTileBottom = Color(0xFF23272B);
+
+/// Every tile sits on a small drop shadow; the selected one lifts higher.
+const _tileRestShadow = BoxShadow(
+  color: Color(0x4D000000),
+  offset: Offset(0, 3),
+  blurRadius: 6,
+);
+const _tileLiftShadow = BoxShadow(
+  color: Color(0x73000000),
+  offset: Offset(0, 6),
+  blurRadius: 14,
+);
+
+/// A tile's flag: the shared [FlagDisc] with a light 2 px ring painted over
+/// its own and a small drop shadow, so every tile's disc reads as enamel.
+/// Wrapped here so [FlagDisc]'s own look (phones) is untouched.
+class _TileFlag extends StatelessWidget {
+  const _TileFlag({required this.code, required this.selected});
+
+  final String code;
+  final bool selected;
+
+  static const double _size = 56;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: _size,
+    height: _size,
+    decoration: const BoxDecoration(
+      shape: BoxShape.circle,
+      boxShadow: [
+        BoxShadow(
+          color: Color(0x80000000),
+          offset: Offset(0, 2),
+          blurRadius: 6,
+        ),
+      ],
+    ),
+    foregroundDecoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(color: const Color(0x2EFFFFFF), width: 2),
+    ),
+    child: FlagDisc(code, size: _size, highlighted: selected),
+  );
+}
+
+/// "Star ST 93" with the position and rating in the brighter weight. The
+/// label is whatever the copy puts before the position (found by rendering
+/// the copy with a marker in its place), so no new copy is needed; a
+/// translation that puts the position first reads as one plain line.
+class _StarLine extends StatelessWidget {
+  const _StarLine({required this.position, required this.rating});
+
+  final String position;
+  final int rating;
+
+  static const _marker = '\u{E000}';
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final full = l.nationsStarTile(position, rating);
+    final template = l.nationsStarTile(_marker, rating);
+    final at = template.indexOf(_marker);
+    final label = at > 0 ? template.substring(0, at) : '';
+    final split = label.isNotEmpty && full.startsWith(label);
+    return Text.rich(
+      split
+          ? TextSpan(
+              text: label,
+              children: [
+                TextSpan(
+                  text: full.substring(label.length),
+                  style: const TextStyle(
+                    color: AppColors.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            )
+          : TextSpan(text: full),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: AppTypography.labelSmall.copyWith(color: AppColors.outline),
+    );
+  }
+}
+
+/// "16 NATIONS" with the number in primary. The number is found in the
+/// rendered copy, so no new copy is needed; copy without the digits (a
+/// spelled-out "one") reads as one plain label.
+class _ShownCount extends StatelessWidget {
+  const _ShownCount({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final full = AppLocalizations.of(
+      context,
+    ).nationsShownCount(count).toUpperCase();
+    final digits = '$count';
+    final at = full.indexOf(digits);
+    return Text.rich(
+      at < 0
+          ? TextSpan(text: full)
+          : TextSpan(
+              children: [
+                TextSpan(text: full.substring(0, at)),
+                TextSpan(
+                  text: digits,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                TextSpan(text: full.substring(at + digits.length)),
+              ],
+            ),
+      style: TabletText.sectionLabel,
     );
   }
 }

@@ -283,7 +283,7 @@ class _BestPlayer extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainer,
         borderRadius: AppRadii.baseAll,
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: AppColors.surfaceContainerHigh),
       ),
       child: Row(
         children: [

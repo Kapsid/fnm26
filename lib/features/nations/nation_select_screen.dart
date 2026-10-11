@@ -36,6 +36,7 @@ class NationSelectScreen extends ConsumerStatefulWidget {
   const NationSelectScreen({super.key});
 
   static const Key tabletLayoutKey = Key('nationSelect.tabletLayout');
+  static const Key topBarKey = Key('nationSelect.topBar');
   static const Key backKey = Key('nationSelect.back');
   static const Key gridKey = Key('nationSelect.grid');
   static const Key previewKey = Key('nationSelect.preview');
@@ -62,7 +63,10 @@ class _NationSelectScreenState extends ConsumerState<NationSelectScreen> {
   @override
   Widget build(BuildContext context) {
     if (useTabletLayout(context, ref)) {
-      return _NationSelectTabletLayout(state: this);
+      return _NationSelectTabletLayout(
+        previewId: _previewId,
+        onPreview: _preview,
+      );
     }
     final nationsAsync = ref.watch(nationsProvider);
     final stars = ref.watch(starPlayersProvider).valueOrNull ?? const {};

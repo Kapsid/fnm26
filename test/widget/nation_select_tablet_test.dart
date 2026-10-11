@@ -196,6 +196,66 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('the bar, chips, pane and selected tile match the mockup', (
+    tester,
+  ) async {
+    final save = await _open(tester, kTabletSize);
+    expect(tester.getSize(find.byKey(NationSelectScreen.topBarKey)).height, 56);
+    expect(
+      tester.getSize(find.byKey(NationSelectScreen.backKey)),
+      const Size(36, 36),
+    );
+    for (final label in [enL.nationsRandomTeam, enL.nationsFromTheBottom]) {
+      expect(
+        tester
+            .getSize(
+              find.ancestor(
+                of: find.text(label),
+                matching: find.byType(OutlinedButton),
+              ),
+            )
+            .height,
+        36,
+        reason: label,
+      );
+    }
+    for (final c in Confederation.values) {
+      expect(
+        tester.getSize(find.byKey(NationSelectScreen.chipKey(c))).height,
+        30,
+        reason: '$c',
+      );
+    }
+    expect(
+      tester.getSize(find.byKey(NationSelectScreen.previewKey)).width,
+      330,
+    );
+    BoxDecoration tileDecoration(int nationId) =>
+        tester
+                .widget<Ink>(
+                  find.descendant(
+                    of: find.byKey(NationSelectScreen.tileKey(nationId)),
+                    matching: find.byType(Ink),
+                  ),
+                )
+                .decoration!
+            as BoxDecoration;
+    const lift = BoxShadow(
+      color: Color(0x73000000),
+      offset: Offset(0, 6),
+      blurRadius: 14,
+    );
+    final europe = _europe(save);
+    // Before the tap the second tile rests; after it, it is lifted.
+    expect(tileDecoration(europe.first.id).boxShadow, [lift]);
+    expect(tileDecoration(europe[1].id).boxShadow, isNot(contains(lift)));
+    await tester.tap(find.byKey(NationSelectScreen.tileKey(europe[1].id)));
+    await settle(tester);
+    expect(tileDecoration(europe[1].id).boxShadow, [lift]);
+    expect(tileDecoration(europe.first.id).boxShadow, isNot(contains(lift)));
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('a resize keeps the preview and the search (Review Focus 3)', (
     tester,
   ) async {
