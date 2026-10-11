@@ -115,10 +115,11 @@ void main() {
       findsOneWidget,
     );
     expect(_in(NationPreview.briefKey, enL.objectiveWorldCup), findsOneWidget);
-    // The world's reading of the best eleven; the save's own pool also feels
-    // club minutes, which move it by a point or two.
+    // The world's reading of the best eleven is the save's own on day one:
+    // the seed renames and re-clubs, and club minutes weigh only career
+    // starts, of which there are none yet.
     final strength = c.read(nationStrengthsProvider).requireValue[me.id]!;
-    expect((strength.overall - saveOverall).abs(), lessThanOrEqualTo(2));
+    expect(strength.overall, saveOverall);
     expect(
       _in(NationPreview.overallKey, '${strength.overall}'),
       findsOneWidget,

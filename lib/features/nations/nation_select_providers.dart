@@ -35,9 +35,11 @@ final nationSearchProvider = StateProvider<String>((_) => '');
 
 /// A nation as it stands before any career exists.
 ///
-/// `overall` is the mean of its best eleven in the seed-free pool, the one
-/// every save starts from before its own club minutes move it by a point or
-/// two (no save exists yet, so there is no seed to read). `tier` is the
+/// `overall` is the mean of its best eleven in the seed-free pool (no save
+/// exists yet, so there is no seed to read). A save's day one carries these
+/// same world-sim ratings: its seed only renames the players and gives them
+/// clubs, and club minutes weigh only career starts, of which there are none
+/// yet. So this is the number the save opens on. `tier` is the
 /// fifth of the world that puts it in, 5 the strongest fifth. `best` is its
 /// highest-rated player; only his position, age and rating are shown, never
 /// his name, because every save names its players afresh.
