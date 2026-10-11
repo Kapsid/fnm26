@@ -3,10 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/features/federation/budget_setup_screen.dart'
+    show budgetSetupKind;
+import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/shell/tablet_sidebar.dart';
+import 'package:fnm/features/shell/tablet_top_bar.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart' show kMaxSquadSize;
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -127,5 +131,48 @@ void main() {
     expect(find.byType(TabletSidebar), findsNothing);
     expect(find.byKey(CallUpScreen.tabletLayoutKey), findsNothing);
     await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('confirming the call-up event moves the top bar on', (
+    tester,
+  ) async {
+    // The shell's top bar keeps watching the next event while call-ups is
+    // open, so nothing recomputed it: it stayed on the retired event and
+    // tapping it came straight back here, forever.
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.hub}?careerId=${save.careerId}',
+      size: kTabletSize,
+    );
+    final before = (await tester.runAsync(
+      () => save.container.read(nextEventProvider(save.careerId).future),
+    ))!;
+    // Opened as the very event the bar shows, so confirming retires it the
+    // way a real call-up event is retired.
+    save.container
+        .read(routerProvider)
+        .go(
+          '${Routes.callUps}?careerId=${save.careerId}'
+          '&event=$budgetSetupKind&cycle=${save.career.cyclePointer}',
+        );
+    await settle(tester);
+    await tester.tap(find.text(enL.tacticsBestQuality));
+    await settle(tester);
+    await tester.tap(find.text(enL.tacticsConfirmSquad));
+    await settle(tester);
+
+    expect(
+      save.container.read(routerProvider).state.uri.path,
+      Routes.hub,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(TabletTopBar),
+        matching: find.text(before.label),
+      ),
+      findsNothing,
+    );
   });
 }

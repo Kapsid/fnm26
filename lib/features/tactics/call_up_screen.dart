@@ -19,6 +19,7 @@ import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/services/squad/squad_selection.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_form_look.dart';
@@ -225,6 +226,9 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
       : '${Routes.tactics}?careerId=${widget.careerId}';
 
   Future<void> _confirm(Set<int> selected) async {
+    // Captured before the awaits: the refresh below must happen even when
+    // this page is gone by then.
+    final container = ProviderScope.containerOf(context, listen: false);
     final saved = await ref
         .read(squadServiceProvider)
         .setCallUps(widget.careerId, selected);
@@ -256,6 +260,10 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
           .read(competitionRepositoryProvider)
           .markDrawWatched(widget.careerId, cycle, kind);
     }
+    // The next event reads the watched marks straight from the database and
+    // never notices this write. On tablet the top bar keeps watching it, so
+    // without this it stays on the retired call-up and loops back here.
+    container.invalidate(hubDataProvider(widget.careerId));
     if (mounted) context.go(_exitRoute);
   }
 
