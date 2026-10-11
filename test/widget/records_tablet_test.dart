@@ -10,6 +10,7 @@ import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 
 import '../helpers/history_fixtures.dart';
+import '../helpers/active_column_check.dart';
 import '../helpers/seeded_save.dart';
 
 Future<SeededSave> _open(
@@ -119,6 +120,16 @@ void main() {
       expect(labelLefts, hasLength(1));
       expect(valueLefts, hasLength(1));
       expect(valueLefts.single, greaterThan(labelLefts.single));
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  for (final size in const [Size(1080, 810), Size(1366, 1024)]) {
+    testWidgets('the active badge stands clear of the caps at $size', (
+      tester,
+    ) async {
+      await _open(tester, size);
+      expectActiveBadgesClear(tester, enL.playerStatCaps);
       await tester.pumpWidget(const SizedBox());
     });
   }

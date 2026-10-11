@@ -11,6 +11,7 @@ import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/features/stats/team_stats_screen.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 
+import '../helpers/active_column_check.dart';
 import '../helpers/seeded_save.dart';
 import '../helpers/team_fixtures.dart';
 
@@ -66,6 +67,16 @@ DetailTarget? _pane(WidgetTester tester) =>
 
 void main() {
   for (final size in kTabletSizes) {
+    for (final size in const [Size(1080, 810), Size(1366, 1024)]) {
+      testWidgets('the active badge stands clear of the goals at $size', (
+        tester,
+      ) async {
+        await _open(tester, size);
+        expectActiveBadgesClear(tester, enL.playerStatGoals);
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
+
     testWidgets('the boards as grids beside the player pane, $size', (
       tester,
     ) async {

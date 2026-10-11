@@ -314,12 +314,9 @@ GridColumnSet<RecordLeader> _leaderColumns(
         sortKey: (r) => r.value,
         cell: (r) => Text('${r.value}'),
       ),
-      GridColumn<RecordLeader>(
-        id: 'active',
+      activeGridColumn<RecordLeader>(
         label: l.gridColActive,
-        width: 84,
-        sortKey: (r) => r.active ? 1 : 0,
-        cell: (r) => r.active ? const ActiveBadge() : const SizedBox.shrink(),
+        isActive: (r) => r.active,
       ),
     ],
   );
