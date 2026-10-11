@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+
+part 'new_game_tablet_layout.dart';
 
 /// Step 2 of starting a game: name the manager, then create the save (which
 /// starts the 2026→2030 cycle in September 2026).
 class NewGameScreen extends ConsumerStatefulWidget {
   const NewGameScreen({required this.nationId, super.key});
+
+  static const Key tabletLayoutKey = Key('newGame.tabletLayout');
+  static const Key startKey = Key('newGame.start');
 
   final int nationId;
 
@@ -32,6 +41,11 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 
   Future<void> _start() async {
     setState(() => _creating = true);
+    // Taken before the await: a resize across 1000 px rebuilds this page in
+    // the other layout meanwhile, and a manager who has gone elsewhere (a
+    // pushed Settings, the back arrow) is left there rather than pulled into
+    // the new save. `router.state` is the top-most route, pushed ones too.
+    final router = GoRouter.of(context);
     final result = await ref
         .read(careerServiceProvider)
         .create(
@@ -43,7 +57,11 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     final l = AppLocalizations.of(context);
 
     result.fold(
-      (career) => context.go('${Routes.hub}?careerId=${career.id}'),
+      (career) {
+        if (router.state.uri.path == Routes.newGame) {
+          router.go('${Routes.hub}?careerId=${career.id}');
+        }
+      },
       (failure) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
@@ -64,6 +82,9 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final nationAsync = ref.watch(nationByIdProvider(widget.nationId));
+    if (useTabletLayout(context, ref)) {
+      return _NewGameTabletLayout(state: this, nationAsync: nationAsync);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -140,28 +161,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                           // years later: a player who finds out what is paid
                           // for at the moment he is asked to pay reads it as a
                           // trap, even when the free part was the whole game.
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 1),
-                                child: Icon(
-                                  Icons.info_outline_rounded,
-                                  size: 13,
-                                  color: AppColors.onSurfaceVariant,
-                                ),
-                              ),
-                              const SizedBox(width: AppSpacing.xs),
-                              Expanded(
-                                child: Text(
-                                  l.careerFreeCycleNote,
-                                  style: AppTypography.labelSmall.copyWith(
-                                    color: AppColors.onSurfaceVariant,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          const _FreeCycleNote(),
                           const SizedBox(height: AppSpacing.md),
                           PrimaryButton(
                             label: l.careerStartCareer,
@@ -180,6 +180,39 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// What the manager is getting for nothing, and what the one payment is for:
+/// the phone's note under the name, shared with the tablet's form.
+class _FreeCycleNote extends StatelessWidget {
+  const _FreeCycleNote();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(top: 1),
+          child: Icon(
+            Icons.info_outline_rounded,
+            size: 13,
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        Expanded(
+          child: Text(
+            l.careerFreeCycleNote,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
