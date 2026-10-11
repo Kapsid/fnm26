@@ -905,6 +905,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// the async callback (which would make the Continue button appear dead).
   Future<void> _continue(MatchPreview preview, MatchResult r) async {
     if (_committing) return;
+    // Read before any await: the tablet's unlocked card is a compact one.
+    // (useTabletLayout's own test, with a read: this is not a build.)
+    final compactUnlocked =
+        ref.read(formFactorProvider) == FormFactor.tablet &&
+        context.isWideTabletWindow;
     setState(() => _committing = true);
     try {
       await ref
@@ -923,7 +928,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       final unlocked = await ref
           .read(achievementServiceProvider)
           .checkAndRecord(widget.careerId);
-      if (mounted) await showAchievementsUnlocked(context, unlocked);
+      if (mounted) {
+        await showAchievementsUnlocked(
+          context,
+          unlocked,
+          compact: compactUnlocked,
+        );
+      }
       if (mounted) {
         // Show the round's other results (grouped) before returning to the hub.
         context.go('${Routes.roundResults}?careerId=${widget.careerId}');
