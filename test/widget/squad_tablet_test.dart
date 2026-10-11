@@ -43,7 +43,10 @@ void main() {
     // The Attributes view swaps the columns (headers in capitals).
     final grid = find.byType(DataGrid<NationSquadRow>);
     await tester.tap(
-      find.descendant(of: grid, matching: find.text(enL.playerAttributes)),
+      find.descendant(
+        of: grid,
+        matching: find.text(enL.playerAttributes.toUpperCase()),
+      ),
     );
     await tester.pump();
     expect(
@@ -158,8 +161,12 @@ void main() {
         enL.playerStatForm,
         enL.sideCareer,
       ]) {
+        // The view chips, not a column header of the same name ("FORM").
         await tester.tap(
-          find.descendant(of: grid, matching: find.text(v)).first,
+          find.descendant(
+            of: find.byType(ChoiceChip),
+            matching: find.text(v.toUpperCase()),
+          ),
         );
         await tester.pump();
         expect(tester.takeException(), isNull, reason: v);

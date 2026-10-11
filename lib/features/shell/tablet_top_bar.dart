@@ -84,11 +84,15 @@ class TopBarTint {
   BoxDecoration get decoration => BoxDecoration(
     gradient: start == end ? null : LinearGradient(colors: [start, end]),
     color: start == end ? start : null,
-    border: strip == null
-        ? null
-        : Border(
-            bottom: BorderSide(color: strip!, width: stripWidth),
-          ),
+    // Always there, see-through until a nation is known: the border is part
+    // of the padding, and a strip arriving with the nation would otherwise
+    // nudge the whole row up as the save loads.
+    border: Border(
+      bottom: BorderSide(
+        color: strip ?? const Color(0x00000000),
+        width: stripWidth,
+      ),
+    ),
   );
 }
 

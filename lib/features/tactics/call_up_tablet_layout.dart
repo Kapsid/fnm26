@@ -110,7 +110,7 @@ class _CallUpTabletLayout extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.sm),
       child: Wrap(
         children: [
-          chip(l.squadLineAll, null),
+          chip(l.squadLineAll.toUpperCase(), null),
           for (final c in _CallUpScreenState._order)
             chip(
               '${state._shortHeading(l, c)} '

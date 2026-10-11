@@ -146,7 +146,7 @@ class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
                       spacing: AppSpacing.xs,
                       children: [
                         ChoiceChip(
-                          label: Text(l.squadLineAll),
+                          label: Text(l.squadLineAll.toUpperCase()),
                           visualDensity: VisualDensity.compact,
                           selected: _line == null,
                           onSelected: (_) => setState(() => _line = null),

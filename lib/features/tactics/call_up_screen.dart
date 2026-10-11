@@ -219,6 +219,7 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     // Captured before the awaits: the refresh below must happen even when
     // this page is gone by then.
     final container = ProviderScope.containerOf(context, listen: false);
+    final router = GoRouter.of(context);
     final saved = await ref
         .read(squadServiceProvider)
         .setCallUps(widget.careerId, selected);
@@ -254,7 +255,11 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     // never notices this write. On tablet the top bar keeps watching it, so
     // without this it stays on the retired call-up and loops back here.
     container.invalidate(hubDataProvider(widget.careerId));
-    if (mounted) context.go(_exitRoute);
+    // Only from call-ups itself: a player page pushed over it while this
+    // saved keeps the manager where he went.
+    if (mounted && router.state.uri.path == Routes.callUps) {
+      router.go(_exitRoute);
+    }
   }
 
   @override

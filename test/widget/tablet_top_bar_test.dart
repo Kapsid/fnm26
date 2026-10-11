@@ -149,7 +149,7 @@ void main() {
     final d = box.decoration! as BoxDecoration;
     expect(d.color, AppColors.surfaceContainerLowest);
     expect(d.gradient, isNull);
-    expect(d.border, isNull);
+    expect((d.border! as Border).bottom.color.a, 0);
   });
 
   test('the unread badge caps at 99+', () {

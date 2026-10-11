@@ -105,6 +105,6 @@ void main() {
     final d = TopBarTint.none.decoration;
     expect(d.color, base);
     expect(d.gradient, isNull);
-    expect(d.border, isNull);
+    expect((d.border! as Border).bottom.color.a, 0);
   });
 }

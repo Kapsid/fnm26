@@ -249,7 +249,10 @@ class _DataGridState<T> extends State<DataGrid<T>> {
               children: [
                 for (final s in widget.columnSets)
                   ChoiceChip(
-                    label: Text(s.label),
+                    // In capitals like every tablet tab and heading: the
+                    // labels come from copy written for the phone, where some
+                    // are capitals and some are not.
+                    label: Text(s.label.toUpperCase()),
                     selected: s.id == set.id,
                     onSelected: (_) => _pickSet(s),
                   ),
