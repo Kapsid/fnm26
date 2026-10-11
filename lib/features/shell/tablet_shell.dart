@@ -43,6 +43,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.trainingCamp,
   Routes.naturalization,
   Routes.records,
+  Routes.player,
   Routes.allTimeRecords,
   Routes.legends,
   Routes.headToHead,
