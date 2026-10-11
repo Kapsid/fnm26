@@ -77,7 +77,13 @@ void main() {
         );
 
         // A filter keeps only its own group in the list.
-        await tester.tap(find.text(enL.sideGroupCompetitions));
+        // The chip, not the sidebar's COMPETITIONS heading.
+        await tester.tap(
+          find.descendant(
+            of: find.byType(ChoiceChip),
+            matching: find.text(enL.sideGroupCompetitions.toUpperCase()),
+          ),
+        );
         await settle(tester);
         for (final m in messages) {
           final row = find.byKey(ValueKey('inbox.row.${m.id}'));

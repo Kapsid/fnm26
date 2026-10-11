@@ -786,7 +786,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tacticsSlotLostToRedCard =>
-      'Za červenou kartu jste přišli o toto místo. Nelze ho obsadit.';
+      'Za červenou kartu jste přišli o toto místo. Přetáhněte sem spoluhráče a mezera se přesune.';
 
   @override
   String get tacticsSentOffShort => 'VYLOUČEN';

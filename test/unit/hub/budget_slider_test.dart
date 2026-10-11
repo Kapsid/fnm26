@@ -10,14 +10,14 @@ import 'package:fnm/l10n/app_localizations_en.dart';
 /// rounded to nothing; rounding it up instead would have paid out for
 /// spreading crumbs over every department.
 ///
-/// A level is €1M. The phone's sliders move four of them a notch (€4M, ten
-/// notches, Medical six, as before); the tablet's move one.
+/// A level is €1M, and the sliders on a phone and on a tablet move one a
+/// notch (the phone used to move four, €4M).
 void main() {
   const million = 1000000;
   const price = FederationFinance.investLevelPrice;
 
-  /// What one phone notch costs: the old level price.
-  final phoneNotch = budgetStepEuros(kPhoneBudgetStepLevels);
+  /// The old €4M level price, which the arithmetic below was written in.
+  final phoneNotch = budgetStepEuros(4);
 
   test('a level is €1M: forty of them, Medical twenty-four', () {
     expect(price, million);
@@ -42,17 +42,17 @@ void main() {
     }
   });
 
-  test('a phone slider still has ten notches of €4M, Medical six', () {
-    expect(phoneNotch, 4 * million);
+  test('a phone slider has forty notches of €1M, Medical twenty-four', () {
+    expect(budgetStepEuros(kPhoneBudgetStepLevels), million);
     for (final dept in Department.values) {
       expect(
         FederationFinance.maxLevels(dept) ~/ kPhoneBudgetStepLevels,
-        dept == Department.medical ? 6 : 10,
+        dept == Department.medical ? 24 : 40,
       );
     }
   });
 
-  // Priced per phone notch (€4M), the arithmetic these cases always pinned:
+  // Priced per old €4M notch, the arithmetic these cases always pinned:
   // the editor hands [affordableLevel] its notch price and notch count.
   group('affordableLevel', () {
     test('takes the level asked for when it is paid for', () {
@@ -122,12 +122,11 @@ void main() {
   });
 
   test(
-    'every phone notch of every department visibly improves on the last',
+    'every €4M of every department visibly improves on the last',
     () {
       final l = AppLocalizationsEn();
       for (final dept in Department.values) {
-        final notches =
-            FederationFinance.maxLevels(dept) ~/ kPhoneBudgetStepLevels;
+        final notches = FederationFinance.maxLevels(dept) ~/ 4;
         final lines = [
           for (var n = 1; n <= notches; n++)
             DepartmentEffect.describe(l, dept, n * phoneNotch),

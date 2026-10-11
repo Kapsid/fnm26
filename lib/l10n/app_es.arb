@@ -221,7 +221,7 @@
   "tacticsRowSubstitute": "Entró",
   "tacticsEnergyLabel": "ENERGÍA",
   "tacticsPickReplacementFor": "Toca un sustituto para {name}, o tócalo de nuevo para cancelar.",
-  "tacticsSlotLostToRedCard": "Una roja te ha costado este puesto. No se puede cubrir.",
+  "tacticsSlotLostToRedCard": "Una roja te ha costado este puesto. Arrastra aquí a un compañero para mover el hueco.",
   "tacticsSentOffShort": "EXPULSADO",
   "tacticsSubsUsed": "CAMBIOS · {used}/{max}",
   "tacticsDragSubOn": "Toca a un jugador del campo para sustituirlo, o mantén pulsado y arrastra un suplente sobre él.",

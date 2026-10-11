@@ -104,6 +104,7 @@ class TacticalChange {
     required this.formation,
     required this.instructions,
     required this.xi,
+    this.slots,
     this.takers,
   });
 
@@ -112,6 +113,25 @@ class TacticalChange {
   final Formation formation;
   final TacticalInstructions instructions;
   final List<Player> xi;
+
+  /// The place each man in [xi] plays, one per entry, or null to read them
+  /// off [formation] in order.
+  ///
+  /// Reading them in order is right for a full eleven and wrong for a side a
+  /// man short: [xi] holds only the men on the pitch, so a hole anywhere but
+  /// the last slot shifted everybody after it up a place, and the side the
+  /// engine played was not the one on the manager's pitch. A team-mate moved
+  /// into a red card's hole lost the move altogether.
+  final List<PlayerPosition>? slots;
+
+  /// The place the [i]th man in [xi] plays: his entry in [slots] when given,
+  /// otherwise the formation's [i]th place, otherwise his own position.
+  PlayerPosition slotOf(int i) {
+    final given = slots;
+    if (given != null && i < given.length) return given[i];
+    final positions = formation.positions;
+    return i < positions.length ? positions[i] : xi[i].position;
+  }
 
   /// New set-piece takers from this minute on, or null to leave the side's
   /// existing pair alone. Either id inside may itself be null, which hands that
@@ -952,14 +972,13 @@ class MatchEngine {
 
     // Rebuild the XI in the new formation's slot order, dropping anyone sent
     // off so a change can never field an ineligible player.
-    final positions = c.formation.positions;
     final newXi = <Player>[];
     final newSlots = <PlayerPosition>[];
     for (var i = 0; i < c.xi.length; i++) {
       final p = c.xi[i];
       if (live.sentOff.contains(p.id)) continue;
       newXi.add(p);
-      newSlots.add(i < positions.length ? positions[i] : p.position);
+      newSlots.add(c.slotOf(i));
     }
 
     // Timeline: pair each incoming player with a player who dropped off.

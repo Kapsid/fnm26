@@ -204,6 +204,9 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                                 trailing: view.active.contains(s.playerId)
                                     ? const ActiveBadge()
                                     : null,
+                                reserveTrailing: list.any(
+                                  (r) => view.active.contains(r.playerId),
+                                ),
                                 onTap: () => context.push(
                                   '${Routes.player}?careerId=${widget.careerId}'
                                   '&playerId=${s.playerId}',

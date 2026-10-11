@@ -313,6 +313,40 @@ void main() {
     },
   );
 
+  test('a side a man short keeps each man in the place he was put', () {
+    // Ten men in a 4-4-2 with the hole moved into midfield (slot 6): read in
+    // order, everybody from slot 6 on would slide up a place and the hole
+    // would land on the last striker instead.
+    final home = team(1, 78);
+    const formation = Formation.f442;
+    final placed = [
+      for (var i = 0; i < 11; i++)
+        if (i != 6) formation.positions[i],
+    ];
+    final change = TacticalChange(
+      teamNationId: 1,
+      minute: 60,
+      formation: formation,
+      instructions: const TacticalInstructions(),
+      xi: home.xi.take(10).toList(),
+      slots: placed,
+    );
+    expect([for (var i = 0; i < 10; i++) change.slotOf(i)], placed);
+
+    // Without places, a full eleven still reads them off the formation.
+    final full = TacticalChange(
+      teamNationId: 1,
+      minute: 60,
+      formation: formation,
+      instructions: const TacticalInstructions(),
+      xi: home.xi,
+    );
+    expect(
+      [for (var i = 0; i < 11; i++) full.slotOf(i)],
+      formation.positions,
+    );
+  });
+
   test('every player who takes part gets a rating, both teams', () {
     final home = team(1, 80);
     final away = team(2, 78);

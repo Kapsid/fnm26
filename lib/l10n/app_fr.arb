@@ -221,7 +221,7 @@
   "tacticsRowSubstitute": "Entré en jeu",
   "tacticsEnergyLabel": "ÉNERGIE",
   "tacticsPickReplacementFor": "Touchez un remplaçant pour {name}, ou touchez-le à nouveau pour annuler.",
-  "tacticsSlotLostToRedCard": "Un carton rouge vous a coûté ce poste. Il ne peut pas être pourvu.",
+  "tacticsSlotLostToRedCard": "Un carton rouge vous a coûté ce poste. Faites glisser un coéquipier ici pour déplacer le trou.",
   "tacticsSentOffShort": "EXPULSÉ",
   "tacticsSubsUsed": "CHANGEMENTS · {used}/{max}",
   "tacticsDragSubOn": "Touchez un joueur sur le terrain pour le sortir, ou maintenez et glissez un remplaçant sur lui.",

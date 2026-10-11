@@ -789,7 +789,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get tacticsSlotLostToRedCard =>
-      'Straciłeś to miejsce przez czerwoną kartkę. Nie można go uzupełnić.';
+      'Straciłeś to miejsce przez czerwoną kartkę. Przeciągnij tu kolegę z drużyny, aby przesunąć lukę.';
 
   @override
   String get tacticsSentOffShort => 'CZERWONA';

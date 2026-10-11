@@ -23,9 +23,11 @@ import '../helpers/fixtures.dart';
 /// count a sending-off as a change: the replacement was free in both senses
 /// and the red card cost nothing at all.
 ///
-/// The place is dead for the rest of the match. These hold every way into it
-/// shut, and hold the hole itself visible, because an empty slot that refuses
-/// a tap without saying why is the same misreading one step later.
+/// The place is dead for the rest of the match. These hold every way of
+/// filling it from the bench shut, and hold the hole itself visible, because
+/// an empty slot that refuses a tap without saying why is the same misreading
+/// one step later. A team-mate already on the pitch may move into it, which
+/// moves the hole to his place rather than closing it.
 void main() {
   const formation = Formation.f442;
 
@@ -165,24 +167,105 @@ void main() {
     expect(find.text(l.tacticsSentOffShort), findsOneWidget);
   });
 
-  testWidgets('a team-mate cannot be moved into the hole either', (
+  /// Whether [slot] shows the man called [pitchName] (the pitch writes
+  /// surnames in capitals).
+  Finder named(int slot, String pitchName) => find.descendant(
+    of: find.byKey(ValueKey('pitchName$slot')),
+    matching: find.text(pitchName),
+  );
+
+  /// Whether [slot] is drawn as the hole a red card left.
+  Finder hole(int slot) => find.descendant(
+    of: find.byKey(ValueKey('pitchName$slot')),
+    matching: find.byIcon(Icons.block_rounded),
+  );
+
+  // "Drag-and-drop substitution should allow swapping positions with the
+  // sent-off player to solve the problem (of course he stays sent off; it has
+  // to cost another outfield player)."
+  testWidgets('a team-mate moved into the hole leaves the hole at his place', (
     tester,
   ) async {
-    // Sideways into the empty place is the same eleven-man side under another
-    // shape, and it leaves the hole somewhere else instead of closing it.
-    final l = await openSheet(tester, sentOffIds: {11});
+    // Starter4, a centre-back (slot 3), walks. A midfielder covers him.
+    final l = await openSheet(tester, sentOffIds: {4});
+    expect(hole(3), findsOneWidget);
 
-    await dragOnto(tester, disc(9), disc(10));
+    await dragOnto(tester, disc(6), disc(3));
 
-    expect(find.text('10/11'), findsOneWidget);
+    expect(named(3, 'STARTER7'), findsOneWidget);
+    expect(hole(3), findsNothing);
+    expect(hole(6), findsOneWidget, reason: 'midfield now plays short');
+    expect(find.text('10/11'), findsOneWidget, reason: 'still a man down');
+    expect(find.text(l.tacticsSubsUsed(0, 5)), findsOneWidget);
     expect(find.text(l.tacticsSentOffShort), findsOneWidget);
+  });
+
+  testWidgets('the hole dragged onto a team-mate swaps the same way', (
+    tester,
+  ) async {
+    await openSheet(tester, sentOffIds: {4});
+
+    await dragOnto(tester, disc(3), disc(6));
+
+    expect(named(3, 'STARTER7'), findsOneWidget);
+    expect(hole(6), findsOneWidget);
+    expect(find.text('10/11'), findsOneWidget);
+  });
+
+  testWidgets('a hole moved across lines is a swap, never a reshape', (
+    tester,
+  ) async {
+    // A striker (slot 9) into the centre-back's hole: the shape stays a
+    // 4-4-2 and the hole goes up front.
+    await openSheet(tester, sentOffIds: {4});
+
+    await dragOnto(tester, disc(9), disc(3));
+
+    expect(named(3, 'STARTER10'), findsOneWidget);
+    expect(hole(9), findsOneWidget);
+    for (var slot = 0; slot < 11; slot++) {
+      if (slot == 3 || slot == 9) continue;
+      expect(named(slot, 'STARTER${slot + 1}'), findsOneWidget);
+    }
+  });
+
+  testWidgets('the keeper stays in goal', (tester) async {
+    await openSheet(tester, sentOffIds: {4});
+
+    await dragOnto(tester, disc(0), disc(3));
+    expect(named(0, 'STARTER1'), findsOneWidget);
+    expect(hole(3), findsOneWidget);
+
+    await dragOnto(tester, disc(3), disc(0));
+    expect(named(0, 'STARTER1'), findsOneWidget);
+    expect(hole(3), findsOneWidget);
+  });
+
+  testWidgets("a sent-off keeper's goal can be taken by an outfield man", (
+    tester,
+  ) async {
+    await openSheet(tester, sentOffIds: {1});
+
+    await dragOnto(tester, disc(2), disc(0));
+
+    expect(named(0, 'STARTER3'), findsOneWidget);
+    expect(hole(2), findsOneWidget);
+    expect(find.text('10/11'), findsOneWidget);
+  });
+
+  testWidgets('the moved hole is still a hole to the bench', (tester) async {
+    final l = await openSheet(tester, sentOffIds: {4});
+
+    await dragOnto(tester, disc(6), disc(3));
+    await dragOnto(tester, find.text('Bench12'), disc(6));
+
+    expect(hole(6), findsOneWidget);
+    expect(find.text('10/11'), findsOneWidget);
+    expect(find.text(l.tacticsSubsUsed(0, 5)), findsOneWidget);
     expect(
-      find.byWidgetPredicate(
-        (w) => w is Text && w.data == 'STARTER10',
-        description: 'the pitch name STARTER10',
-      ),
-      findsOneWidget,
-      reason: 'the man dragged at must still be standing where he was',
+      find.text('Starter4'),
+      findsNothing,
+      reason: 'the man sent off is never offered to come back on',
     );
   });
 

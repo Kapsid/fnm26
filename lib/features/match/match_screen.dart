@@ -1133,11 +1133,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     InMatchTacticsResult r,
   ) async {
     final byId = {for (final p in _playerPool(preview)) p.id: p};
-    final xi = r.lineup
-        .whereType<int>()
-        .map((id) => byId[id])
-        .whereType<Player>()
-        .toList();
+    // Each man with the place he was put in, so a hole a red card left stays
+    // where the manager moved it rather than sliding to the last slot.
+    final xi = <Player>[];
+    final slots = <PlayerPosition>[];
+    for (var i = 0; i < r.lineup.length; i++) {
+      final p = byId[r.lineup[i]];
+      if (p == null) continue;
+      xi.add(p);
+      slots.add(r.formation.positions[i]);
+    }
     // Take effect from the NEXT minute, never the one just played. A change
     // stamped on the current minute made the re-sim replay that minute with the
     // new XI — so a goal the manager had already watched go in (popup and all)
@@ -1163,6 +1168,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           formation: r.formation,
           instructions: r.instructions,
           xi: xi,
+          slots: slots,
           // From this minute on, never retroactively: the penalty already
           // taken stays taken by whoever took it.
           takers: takersChanged ? r.takers : null,

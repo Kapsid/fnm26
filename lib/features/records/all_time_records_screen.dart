@@ -254,6 +254,7 @@ class _Board extends StatelessWidget {
                     flagCode: leaders[i].nationCode,
                     value: '${leaders[i].value} $unit',
                     trailing: leaders[i].active ? const ActiveBadge() : null,
+                    reserveTrailing: leaders.any((r) => r.active),
                     highlighted: highlightNations.contains(
                       leaders[i].nationId,
                     ),

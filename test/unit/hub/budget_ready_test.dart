@@ -10,18 +10,21 @@ import 'package:fnm/features/federation/investment_editor.dart';
 void main() {
   const million = 1000000;
 
-  /// The phone's notch, €4M: the step these cases were written against.
-  final phoneStep = budgetStepEuros(kPhoneBudgetStepLevels);
+  /// A four-level (€4M) notch: the step these cases were written against
+  /// when the phone still moved €4M. The rule is the same for any notch.
+  const fourLevels = 4;
+  final phoneStep = budgetStepEuros(fourLevels);
 
   bool phoneReady({required int available, required int allocated}) =>
       budgetReady(
         available: available,
         allocated: allocated,
-        stepLevels: kPhoneBudgetStepLevels,
+        stepLevels: fourLevels,
       );
 
-  test('a phone notch is €4M and a tablet notch €1M', () {
+  test('a phone notch and a tablet notch are both €1M', () {
     expect(phoneStep, 4 * million);
+    expect(budgetStepEuros(kPhoneBudgetStepLevels), million);
     expect(budgetStepEuros(kTabletBudgetStepLevels), million);
   });
 

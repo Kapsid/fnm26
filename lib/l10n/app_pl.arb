@@ -221,7 +221,7 @@
   "tacticsRowSubstitute": "Wszedł z ławki",
   "tacticsEnergyLabel": "ENERGIA",
   "tacticsPickReplacementFor": "Wybierz zmiennika. Schodzi: {name}. Dotknij go ponownie, by anulować.",
-  "tacticsSlotLostToRedCard": "Straciłeś to miejsce przez czerwoną kartkę. Nie można go uzupełnić.",
+  "tacticsSlotLostToRedCard": "Straciłeś to miejsce przez czerwoną kartkę. Przeciągnij tu kolegę z drużyny, aby przesunąć lukę.",
   "tacticsSentOffShort": "CZERWONA",
   "tacticsSubsUsed": "ZMIANY · {used}/{max}",
   "tacticsDragSubOn": "Dotknij zawodnika na boisku, by go zdjąć, albo przytrzymaj i przeciągnij na niego rezerwowego.",

@@ -1437,7 +1437,7 @@ abstract class AppLocalizations {
   /// Refusal shown when the manager tries to put somebody into the hole a sending-off left.
   ///
   /// In en, this message translates to:
-  /// **'A red card cost you this place. It cannot be filled.'**
+  /// **'A red card cost you this place. Drag a team-mate here to move the gap.'**
   String get tacticsSlotLostToRedCard;
 
   /// Badge on the empty spot a sent-off player left on the pitch.
@@ -14521,7 +14521,7 @@ abstract class AppLocalizations {
   /// **'The press want to hear your aims for the {competition}'**
   String hubEventPressPreviewSub(String competition);
 
-  /// Budget setup: a department's investment level and what it costs. {level} is the slider notch: 0 to 10 on a phone (€4M a notch), 0 to 40 on a tablet (€1M a notch); {amount} the euros.
+  /// Budget setup: a department's investment level and what it costs. {level} is the slider notch: 0 to 40 (€1M a notch), Medical 0 to 24; {amount} the euros.
   ///
   /// In en, this message translates to:
   /// **'Level {level} · {amount}'**

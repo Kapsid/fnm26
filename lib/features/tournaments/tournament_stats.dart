@@ -263,6 +263,7 @@ class _LeaderboardState extends State<_Leaderboard> {
                   value: '${rows[i].count}',
                   // Still playing: the same badge every all-time list uses.
                   trailing: rows[i].active ? const ActiveBadge() : null,
+                  reserveTrailing: rows.any((r) => r.active),
                   // A player of one of the manager's nations, now or in the
                   // past, so his own records stand out of a world chart.
                   highlighted: widget.highlightNations.contains(

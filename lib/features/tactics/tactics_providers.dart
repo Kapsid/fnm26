@@ -9,6 +9,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/hub/hub_event.dart';
 
 /// Smallest squad a manager may call up (must field an XI plus cover).
 const int kMinSquadSize = 16;
@@ -248,7 +249,14 @@ class TacticService {
     if (current == null) return;
     final pool = await _availablePool(careerId);
     await repo.saveTactic(careerId, change(current, pool));
-    _ref.invalidate(tacticDataProvider);
+    _ref
+      ..invalidate(tacticDataProvider)
+      // The forced "reshape your XI" event reads the saved lineup. On a phone
+      // the hub is rebuilt on the way back and asks again, but the tablet
+      // keeps the event button in the shell's top bar for the whole session,
+      // so its answer was never thrown away: the manager fixed the XI and the
+      // button went on sending him back to fix it.
+      ..invalidate(nextEventProvider(careerId));
   }
 
   Future<List<Player>> _availablePool(int careerId) async {
@@ -426,7 +434,9 @@ class SquadService {
 
     _ref
       ..invalidate(squadDataProvider)
-      ..invalidate(tacticDataProvider);
+      ..invalidate(tacticDataProvider)
+      // The call-up can repair the XI too; see [TacticService._update].
+      ..invalidate(nextEventProvider(careerId));
     return true;
   }
 }

@@ -117,9 +117,14 @@ class _MatchTabletLayout extends StatelessWidget {
 
   /// Both line-ups, with the manager's own shape on the pitch a tab away
   /// (a tap on it opens the tactics, as the bar's Tactics button does).
+  ///
+  /// Opens on YOUR XI: the manager's own shape, with its energy and its
+  /// holes, is what he watches a match through. Both line-ups are the tab he
+  /// looks up now and then.
   Widget _lineupsColumn(AppLocalizations l) => PanelBox(
     child: DefaultTabController(
       length: 2,
+      initialIndex: 1,
       // Recreated at the whistle, like the phone's.
       key: ValueKey(ft),
       child: Column(
