@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/features/hub/hub_event.dart';
@@ -93,6 +94,62 @@ void main() {
     expect(button.width, 260);
     final text = tester.getSize(find.text('Continue'));
     expect(text.height, greaterThan(14));
+  });
+
+  testWidgets("the bar wears the managed nation's colours", (tester) async {
+    final hub = _hub(drawWatched: true);
+    final czech = HubData(
+      career: hub.career,
+      group: null,
+      next: hub.next,
+      fixtures: const [],
+      nations: {
+        1: nation(
+          id: 1,
+          name: 'Czechia',
+        ).copyWith(primaryColor: '#D7141A', secondaryColor: '#11457E'),
+        2: nation(id: 2, name: 'Norway'),
+      },
+      squadSize: 23,
+      squadRating: 75,
+      championNationId: null,
+      hasFinals: false,
+    );
+    await _pump(tester, czech);
+    final want = TopBarTint.of('#D7141A', '#11457E');
+    final box = tester.widget<Container>(find.byKey(TabletTopBar.barKey));
+    final d = box.decoration! as BoxDecoration;
+    expect((d.gradient! as LinearGradient).colors, [want.start, want.end]);
+    expect((d.border! as Border).bottom.color, want.strip);
+    expect((d.border! as Border).bottom.width, TopBarTint.stripWidth);
+    expect(tester.getSize(find.byType(TabletTopBar)).height, 64);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('no save loaded yet: the plain bar, no strip', (tester) async {
+    tester.view.physicalSize = const Size(1194, 834);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpApp(
+      const Scaffold(body: TabletTopBar(careerId: 1)),
+      overrides: [
+        hubDataProvider(1).overrideWith((ref) async => null),
+        unreadMessagesProvider(1).overrideWith((ref) async => 0),
+        nextEventProvider(1).overrideWith(
+          (ref) async => const HubEvent(
+            kind: HubEventKind.advance,
+            label: 'Continue',
+            icon: Icons.play_arrow_rounded,
+          ),
+        ),
+      ],
+    );
+    await tester.pump();
+    final box = tester.widget<Container>(find.byKey(TabletTopBar.barKey));
+    final d = box.decoration! as BoxDecoration;
+    expect(d.color, AppColors.surfaceContainerLowest);
+    expect(d.gradient, isNull);
+    expect(d.border, isNull);
   });
 
   test('the unread badge caps at 99+', () {
