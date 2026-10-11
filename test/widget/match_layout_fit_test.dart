@@ -99,8 +99,6 @@ void main() {
                       awayCode: 'CHA',
                       homeName: home,
                       awayName: away,
-                      homeOverall: 71,
-                      awayOverall: 58,
                       homeScore: hs,
                       awayScore: as_,
                       clock: 'PO PRODLOUŽENÍ',

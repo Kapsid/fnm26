@@ -1553,7 +1553,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get careerFreeCycleNote =>
-      'Il primo ciclo completo è gratuito su due salvataggi: qualificazioni, campionato continentale e Campionato del mondo, con tutte le nazionali del mondo. Cicli infiniti e salvataggi illimitati si sbloccano una volta sola.';
+      'Gratis per un intero ciclo di quattro anni: qualificazioni, campionato continentale e Campionato del mondo, su due salvataggi. Dopo, un solo pagamento sblocca i cicli infiniti.';
 
   @override
   String get careerStartCareer => 'Inizia la carriera';
@@ -2990,8 +2990,8 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questo salvataggio riprende esattamente da dove si era fermato, con ogni presenza, record e rivalità intatti.';
 
   @override
-  String get paywallBenefitOffline =>
-      'Niente abbonamento, niente pubblicità, niente account, niente rete. Un solo pagamento ed è tuo per sempre.';
+  String get paywallBenefitNoAds =>
+      'Niente pubblicità, niente microtransazioni, niente abbonamento. Un solo pagamento e ogni aggiornamento futuro è tuo.';
 
   @override
   String get paywallBenefitSaves =>
@@ -3784,12 +3784,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String yEliminated0(String opponent) {
-    return '$opponent: fuori. Stesso copione, anno diverso.';
+    return '$opponent: fuori. Questa farà male per un po\'.';
   }
 
   @override
   String yEliminated1(String opponent) {
-    return '$opponent: finisce qui. Di nuovo.';
+    return '$opponent: per noi finisce qui.';
   }
 
   @override
@@ -7169,7 +7169,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Non sono più neanche arrabbiato. È questo che preoccupa.';
 
   @override
-  String get yReactionDespair7 => 'Stessa sensazione, anno diverso.';
+  String get yReactionDespair7 => 'Questa brucerà a lungo.';
 
   @override
   String get yReactionDespair8 =>
@@ -7720,6 +7720,17 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get settingsUnlockedBlurb =>
       'Cicli infiniti, salvataggi illimitati e tutti gli aggiornamenti futuri. Grazie.';
+
+  @override
+  String get settingsFromDeveloperTitle => 'Dallo sviluppatore';
+
+  @override
+  String get settingsFromDeveloperBlurb =>
+      'Football Nations Manager è realizzato da una sola persona e sarà supportato a lungo termine. Non ci saranno mai pubblicità né microtransazioni. Se il gioco ti piace, valuta di acquistare la versione completa. È ciò che fa arrivare gli aggiornamenti.';
+
+  @override
+  String get settingsFromDeveloperThanksBlurb =>
+      'Football Nations Manager è realizzato da una sola persona e sarà supportato a lungo termine. Non ci saranno mai pubblicità né microtransazioni. Grazie per aver acquistato la versione completa. È ciò che fa arrivare gli aggiornamenti.';
 
   @override
   String friendliesLikeYourCampaign(String rivals) {
@@ -9118,6 +9129,254 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get finishNcChampionsAfrica => 'Vincitori della Coppa delle Nazioni';
+
+  @override
+  String pressAimQualWarm1(String competition) {
+    return 'Qualificazioni: $competition. Tutto il paese crede in questa squadra. Dove vuoi arrivare?';
+  }
+
+  @override
+  String pressAimQualWarm2(String competition) {
+    return 'Nuove qualificazioni, $competition, e il morale è alto. Fin dove può arrivare questa squadra?';
+  }
+
+  @override
+  String pressAimQualNeutral1(String competition) {
+    return 'Iniziano le qualificazioni, $competition. Qual è l’obiettivo di questa campagna?';
+  }
+
+  @override
+  String pressAimQualNeutral2(String competition) {
+    return 'Le qualificazioni sono arrivate, $competition. Dove vedi questa squadra alla fine?';
+  }
+
+  @override
+  String pressAimQualHostile1(String competition) {
+    return 'Iniziano le qualificazioni, $competition, e in tanti dubitano che ce la farai. Cosa rispondi?';
+  }
+
+  @override
+  String pressAimQualHostile2(String competition) {
+    return 'Altre qualificazioni, $competition. Perché dovremmo credere che questa volta sarà diverso?';
+  }
+
+  @override
+  String pressAimFinalsWarm1(String competition) {
+    return 'Ci siamo: $competition. Tutto il paese è con te. Fin dove puoi arrivare?';
+  }
+
+  @override
+  String pressAimFinalsWarm2(String competition) {
+    return 'Ci sei: $competition. I tifosi sognano. Qual è l’obiettivo?';
+  }
+
+  @override
+  String pressAimFinalsNeutral1(String competition) {
+    return 'Questa settimana si parte: $competition. Cosa sarebbe un successo?';
+  }
+
+  @override
+  String pressAimFinalsNeutral2(String competition) {
+    return 'La tua prima partita si avvicina, $competition. Dacci un obiettivo.';
+  }
+
+  @override
+  String pressAimFinalsHostile1(String competition) {
+    return 'Ci siamo: $competition, e nessuno si aspetta molto. Cosa speri davvero?';
+  }
+
+  @override
+  String pressAimFinalsHostile2(String competition) {
+    return 'Ci sei: $competition, ma i dubbi restano. Qual è il tuo obiettivo?';
+  }
+
+  @override
+  String pressBeatRivalWarm1(String rival) {
+    return 'Nel tuo girone c’è $rival. Ti preoccupa?';
+  }
+
+  @override
+  String pressBeatRivalWarm2(String rival) {
+    return 'Il sorteggio ti mette di fronte $rival. Come vedi quella partita?';
+  }
+
+  @override
+  String pressBeatRivalNeutral1(String rival) {
+    return '$rival sembra la squadra più forte del girone. È la favorita?';
+  }
+
+  @override
+  String pressBeatRivalNeutral2(String rival) {
+    return 'Che idea ti sei fatto di $rival?';
+  }
+
+  @override
+  String pressBeatRivalHostile1(String rival) {
+    return 'Nel tuo girone c’è $rival. Sii onesto, puoi starle dietro?';
+  }
+
+  @override
+  String pressBeatRivalHostile2(String rival) {
+    return 'Quasi tutti si aspettano che $rival vi batta. Si sbagliano?';
+  }
+
+  @override
+  String pressBeatKeyPlayerWarm1(String player) {
+    return '$player è in gran forma. È il suo momento?';
+  }
+
+  @override
+  String pressBeatKeyPlayerWarm2(String player) {
+    return '$player è su tutti i titoli. Può trascinare questa squadra?';
+  }
+
+  @override
+  String pressBeatKeyPlayerNeutral1(String player) {
+    return 'Quanto dipende questa campagna da $player?';
+  }
+
+  @override
+  String pressBeatKeyPlayerNeutral2(String player) {
+    return '$player è pronto a guidare questa squadra?';
+  }
+
+  @override
+  String pressBeatKeyPlayerHostile1(String player) {
+    return 'Se $player non è al meglio, questa squadra ha qualcos’altro?';
+  }
+
+  @override
+  String pressBeatKeyPlayerHostile2(String player) {
+    return '$player ha molto sulle spalle. Troppo?';
+  }
+
+  @override
+  String get pressReplyAimHigher1 =>
+      'Arriveremo più lontano di quanto tutti si aspettino.';
+
+  @override
+  String get pressReplyAimHigher2 =>
+      'Voglio più di quanto chieda la federazione, e lo dico ad alta voce.';
+
+  @override
+  String get pressReplyMatchBrief1 =>
+      'Conosciamo l’obiettivo e lo raggiungeremo.';
+
+  @override
+  String get pressReplyMatchBrief2 =>
+      'La federazione ha fissato un obiettivo. Lo centreremo.';
+
+  @override
+  String get pressReplyPlayDown1 => 'Pensiamo a una partita alla volta.';
+
+  @override
+  String get pressReplyPlayDown2 =>
+      'Nessuna grande promessa. Vedremo dove saremo.';
+
+  @override
+  String get pressReplyPromiseQualify1 =>
+      'Ci qualificheremo. Potete scriverlo.';
+
+  @override
+  String get pressReplyPromiseQualify2 =>
+      'Questa squadra sarà alla fase finale.';
+
+  @override
+  String get pressReplyFearNobody1 => 'Non temiamo nessuno.';
+
+  @override
+  String get pressReplyFearNobody2 =>
+      'Anche loro devono giocare contro di noi.';
+
+  @override
+  String get pressReplyRespectRival1 => 'Sono i favoriti, e li rispettiamo.';
+
+  @override
+  String get pressReplyRespectRival2 =>
+      'Un’ottima squadra. Servirà il nostro meglio.';
+
+  @override
+  String get pressReplyTeamFirst1 =>
+      'Conta tutta la squadra, non un solo giocatore.';
+
+  @override
+  String get pressReplyTeamFirst2 => 'Nessuno vince da solo.';
+
+  @override
+  String pressOnRecordTarget(String aim) {
+    return 'Agli atti: $aim.';
+  }
+
+  @override
+  String get pressOnRecordPlayDown => 'Agli atti: nessuna promessa.';
+
+  @override
+  String get pressThrowbackTargetKeptWarm =>
+      'Avevi fissato un obiettivo prima della campagna e l’hai centrato. Il momento di cui vai più fiero?';
+
+  @override
+  String get pressThrowbackTargetKeptNeutral =>
+      'Avevi detto cosa avresti ottenuto, e ci sei riuscito. Hai mai avuto dubbi?';
+
+  @override
+  String get pressThrowbackTargetKeptHostile =>
+      'Hai centrato il tuo obiettivo. Fortuna, o era davvero il piano?';
+
+  @override
+  String get pressThrowbackTargetBrokenWarm =>
+      'Avevi fissato un obiettivo e l’hai mancato. Cosa non ha funzionato?';
+
+  @override
+  String get pressThrowbackTargetBrokenNeutral =>
+      'Avevi promesso più di quanto la squadra abbia dato. Ti penti di averlo detto?';
+
+  @override
+  String get pressThrowbackTargetBrokenHostile =>
+      'Prima della campagna avevi parlato in grande e hai fallito. Perché dovremmo crederti ora?';
+
+  @override
+  String hubEventPressPreviewSub(String competition) {
+    return 'La stampa vuole sapere i tuoi obiettivi: $competition';
+  }
+
+  @override
+  String deptLevelCost(int level, String amount) {
+    return 'Livello $level · $amount';
+  }
+
+  @override
+  String get formOnFire => 'In stato di grazia';
+
+  @override
+  String get formGood => 'In forma';
+
+  @override
+  String get formSteady => 'Regolare';
+
+  @override
+  String get formPoor => 'Fuori forma';
+
+  @override
+  String get formCold => 'In crisi nera';
+
+  @override
+  String get playerFormTitle => 'FORMA E CONDIZIONE';
+
+  @override
+  String playerFormAverage(String rating) {
+    return 'Media di $rating nelle ultime partite';
+  }
+
+  @override
+  String get playerFormNoGames => 'Troppe poche partite recenti per giudicare';
+
+  @override
+  String playerFormNextMatch(String delta) {
+    return '$delta alla sua valutazione nella prossima partita';
+  }
+
+  @override
+  String get playerFormNoEffect => 'Nessuna variazione nella prossima partita';
 
   @override
   String get sideGroupHome => 'Home';

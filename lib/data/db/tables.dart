@@ -798,6 +798,10 @@ class PressStatements extends Table {
   TextColumn get status => text().withDefault(const Constant('open'))();
   DateTimeColumn get judgedOn => dateTime().nullable()();
   BoolColumn get thrownBack => boolean().withDefault(const Constant(false))();
+
+  /// A `target` statement's stated finish (the board's 0–7 ordinal); null for
+  /// every other kind.
+  IntColumn get target => integer().nullable()();
 }
 
 /// A press conference the season has called. Stored when it is triggered, so

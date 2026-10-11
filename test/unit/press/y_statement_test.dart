@@ -18,6 +18,7 @@ PressStatement _s(
   status: status,
   judgedOn: status == StatementStatus.open ? null : DateTime(2027, 3, 9),
   thrownBack: false,
+  target: null,
 );
 
 List<YPost> _roots(List<YPost> posts) => [

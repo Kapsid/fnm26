@@ -4,11 +4,12 @@
 //   dart run tool/export_copy.dart          → copy/strings.csv
 //   dart run tool/export_copy.dart out.csv  → somewhere else
 //
-// CSV, eight columns: key, where, placeholders, en, cs, fr, it, pl. It opens by
+// CSV, ten columns: key, where, placeholders, en, cs, fr, it, pl, es, de. It opens by
 // double-click in Numbers and Excel, and quoting is handled properly, so a
 // comma inside a sentence is just a comma.
 //
-// WHAT YOU MAY CHANGE: the language columns (`en`, `cs`, `fr`, `it`, `pl`), and nothing else. The key is
+// WHAT YOU MAY CHANGE: the language columns (`en`, `cs`, `fr`, `it`, `pl`,
+// `es`, `de`), and nothing else. The key is
 // what the code asks for, `where` and `placeholders` are notes for you, and
 // the importer checks the placeholders you leave behind against the ones the
 // string started with — a `{player}` renamed or dropped compiles fine and

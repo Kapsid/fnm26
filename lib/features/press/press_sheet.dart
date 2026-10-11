@@ -8,6 +8,7 @@ import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/features/press/press_copy.dart';
+import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -23,6 +24,8 @@ class PressSheet extends ConsumerStatefulWidget {
     required this.conference,
     required this.playerNames,
     required this.opponentName,
+    this.competitionName = '',
+    this.rivalName = '',
     super.key,
   });
 
@@ -32,6 +35,10 @@ class PressSheet extends ConsumerStatefulWidget {
   /// Player id to name, for the ids the conference can mention.
   final Map<int, String> playerNames;
   final String opponentName;
+
+  /// A preview's competition and group rival, named in its questions.
+  final String competitionName;
+  final String rivalName;
 
   @override
   ConsumerState<PressSheet> createState() => _PressSheetState();
@@ -44,10 +51,17 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   late final List<PressReporter> _room = Press.roomFor(_seed);
   late final Beat? _throwback = ConferenceBuilder.throwback(_c.facts);
 
-  /// Fixed up front: two questions, or three when an old statement is due.
-  late final int _length = _throwback == null ? 2 : 3;
+  bool get _isPreview => _c.facts.preview != null;
 
-  late final List<Beat> _beats = [ConferenceBuilder.opening(_c.facts)];
+  /// Fixed up front: two questions, or three when an old statement is due. A
+  /// preview's beats are all known before the first is asked.
+  late final int _length = _isPreview
+      ? _beats.length
+      : (_throwback == null ? 2 : 3);
+
+  late final List<Beat> _beats = _isPreview
+      ? ConferenceBuilder.previewBeats(_c.facts)
+      : [ConferenceBuilder.opening(_c.facts)];
   final List<AnswerKind> _said = [];
   PressEffect _total = (morale: 0, board: 0);
   bool _busy = false;
@@ -55,7 +69,7 @@ class _PressSheetState extends ConsumerState<PressSheet> {
   bool _finished = false;
 
   bool get _over => _said.length >= _length;
-  Beat get _beat => _beats.last;
+  Beat get _beat => _beats[_said.length.clamp(0, _beats.length - 1)];
 
   String? _nameOf(Beat beat) =>
       beat.playerId == null ? null : widget.playerNames[beat.playerId];
@@ -74,7 +88,9 @@ class _PressSheetState extends ConsumerState<PressSheet> {
           morale: _total.morale + effect.morale,
           board: _total.board + effect.board,
         );
-        if (_said.length == 1) {
+        if (_isPreview) {
+          // Every beat is already in place.
+        } else if (_said.length == 1) {
           _beats.add(ConferenceBuilder.reaction(_c.facts, a));
         } else if (_said.length == 2 && _throwback != null) {
           _beats.add(_throwback);
@@ -102,6 +118,15 @@ class _PressSheetState extends ConsumerState<PressSheet> {
     if (!mounted) return;
     setState(() => _finished = true);
     navigator.pop();
+  }
+
+  /// The target an aim answer puts on the record, worded as the board's own
+  /// objective ("Reach the semi-finals").
+  String _aimText(AppLocalizations l, AnswerKind a) {
+    final p = _c.facts.preview;
+    final stated = p == null ? null : ConferenceBuilder.statedTarget(a, p);
+    if (p == null || stated == null) return '';
+    return objectiveDemandText(l, previewTier(p.campaign), stated);
   }
 
   String _headline(AppLocalizations l) {
@@ -192,6 +217,8 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                                   playerName: playerName,
                                   opponentName: widget.opponentName,
                                   seed: _seed + index,
+                                  competitionName: widget.competitionName,
+                                  rivalName: widget.rivalName,
                                 ),
                                 style: AppTypography.bodyMedium,
                               ),
@@ -212,6 +239,7 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                                     l,
                                     a,
                                     playerName: playerName,
+                                    aim: _aimText(l, a),
                                   ),
                                   onTap: () => _answer(a),
                                 ),
@@ -313,11 +341,18 @@ class AnswerTile extends StatelessWidget {
               children: [
                 Text('“$label”', style: AppTypography.bodyMedium),
                 const SizedBox(height: AppSpacing.sm),
-                Row(
+                // Wraps rather than runs off the tile: with "no effect"
+                // beside both swings, French, Polish and German were wider
+                // than a 320 phone.
+                Wrap(
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    _Swing(label: l.pressSquad, value: effect.morale),
-                    const SizedBox(width: AppSpacing.md),
-                    _Swing(label: l.pressBoard, value: effect.board),
+                    if (Press.arrowsFor(effect.morale) != 0)
+                      _Swing(label: l.pressSquad, value: effect.morale),
+                    if (Press.arrowsFor(effect.board) != 0)
+                      _Swing(label: l.pressBoard, value: effect.board),
                     if (effect.morale == 0 && effect.board == 0)
                       Text(
                         l.pressNoEffect,

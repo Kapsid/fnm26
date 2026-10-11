@@ -118,9 +118,10 @@ Future<void> _spendAndConfirm(WidgetTester tester) async {
 Slider _slider(WidgetTester tester, int i) =>
     tester.widget<Slider>(find.byType(Slider).at(i));
 
-/// Drags the [i]th slider (Youth first) to [euros], as a finger would.
-Future<void> _set(WidgetTester tester, int i, double euros) async {
-  _slider(tester, i).onChanged!(euros);
+/// Drags the [i]th slider (Youth first) to [level], as a finger would. The
+/// sliders run in whole levels of [FederationFinance.investLevelPrice].
+Future<void> _set(WidgetTester tester, int i, double level) async {
+  _slider(tester, i).onChanged!(level);
   await tester.pump();
 }
 
@@ -170,7 +171,7 @@ void main() {
 
   testWidgets('a slider moves its effect on the right', (tester) async {
     await _open(tester, kTabletSize);
-    await _set(tester, 0, 8000000);
+    await _set(tester, 0, 2); // two levels: €8M
     final line = DepartmentEffect.describe(enL, Department.youth, 8000000);
     expect(tester.widget<Text>(_effect(Department.youth)).data, line);
     // Said once: the slider's own effect line is hidden on a tablet.
@@ -180,15 +181,15 @@ void main() {
 
   testWidgets('a resize keeps the allocation', (tester) async {
     await _open(tester, kTabletSize);
-    await _set(tester, 0, 8000000);
+    await _set(tester, 0, 2); // two levels: €8M
     tester.view.physicalSize = const Size(900, 810);
     await settle(tester);
     expect(find.byKey(BudgetSetupScreen.tabletLayoutKey), findsNothing);
-    expect(_slider(tester, 0).value, 8000000);
+    expect(_slider(tester, 0).value, 2);
     tester.view.physicalSize = kTabletSize;
     await settle(tester);
     expect(find.byKey(BudgetSetupScreen.tabletLayoutKey), findsOneWidget);
-    expect(_slider(tester, 0).value, 8000000);
+    expect(_slider(tester, 0).value, 2);
     expect(
       tester.widget<Text>(_effect(Department.youth)).data,
       DepartmentEffect.describe(enL, Department.youth, 8000000),

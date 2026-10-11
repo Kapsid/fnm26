@@ -36,6 +36,8 @@ const Map<String, String> _languageEndonyms = {
   'fr': 'Français',
   'it': 'Italiano',
   'pl': 'Polski',
+  'es': 'Español',
+  'de': 'Deutsch',
 };
 
 /// Opens the language picker: "System" plus one radio row per language.
@@ -139,6 +141,8 @@ class SettingsScreen extends ConsumerWidget {
           _LanguageCard(),
           SizedBox(height: AppSpacing.md),
           _FreeScopeCard(),
+          SizedBox(height: AppSpacing.md),
+          _FromDeveloperCard(),
           SizedBox(height: AppSpacing.md),
           _TourCard(),
           SizedBox(height: AppSpacing.md),
@@ -279,6 +283,52 @@ class _FreeScopeCard extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   premium ? l.settingsUnlockedBlurb : l.settingsFreeScopeBlurb,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The developer's note, in his own voice, for everyone. A manager who has
+/// not bought gets the ask; one who has gets a thank-you instead, so nobody
+/// is asked twice.
+class _FromDeveloperCard extends ConsumerWidget {
+  const _FromDeveloperCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final premium = ref.watch(premiumUnlockedProvider);
+    return AppCard(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.favorite_border_rounded,
+            size: 18,
+            color: AppColors.primary,
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.settingsFromDeveloperTitle,
+                  style: AppTypography.bodyMedium,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  premium
+                      ? l.settingsFromDeveloperThanksBlurb
+                      : l.settingsFromDeveloperBlurb,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),

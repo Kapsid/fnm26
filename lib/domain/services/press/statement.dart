@@ -1,7 +1,7 @@
 import 'package:fnm/domain/services/press/press.dart' show PressEffect;
 
 /// What the manager can put on the record at a press conference.
-enum StatementKind { winNext, jobOnTheLine, backPlayer, blamePlayer }
+enum StatementKind { winNext, jobOnTheLine, backPlayer, blamePlayer, target }
 
 /// Where a statement stands: waiting on its window, or judged by what followed.
 enum StatementStatus { open, kept, broken, lapsed }
@@ -19,7 +19,16 @@ typedef PressStatement = ({
   StatementStatus status,
   DateTime? judgedOn,
   bool thrownBack,
+
+  /// For a [StatementKind.target]: the stated finish, on the board's 0–7
+  /// ordinal scale. Null for every other kind.
+  int? target,
 });
+
+/// How a campaign a [StatementKind.target] was made about stands now: the
+/// board's [brief] and the side's [actual] finish (both capped at "qualify",
+/// 2, for a qualifying campaign) and whether that is [settled].
+typedef TargetOutcome = ({int brief, int actual, bool settled});
 
 typedef JudgedMatch = ({
   int fixtureId,
@@ -48,6 +57,35 @@ abstract final class StatementJudge {
   static const PressEffect backKept = (morale: 2, board: 0);
   static const PressEffect backBroken = (morale: 0, board: -2);
   static const PressEffect blameStood = (morale: 0, board: 2);
+  static const PressEffect aimHigherKept = (morale: 0, board: 10);
+  static const PressEffect aimHigherBroken = (morale: 0, board: -10);
+  static const PressEffect matchBriefKept = (morale: 0, board: 4);
+  static const PressEffect matchBriefBroken = (morale: 0, board: -6);
+  static const PressEffect playDownBeaten = (morale: 0, board: 2);
+
+  /// A stated target, judged once its campaign has [TargetOutcome.settled].
+  ///
+  /// Read against the brief: above it is a bold claim that wins or costs big,
+  /// at it is a promise to deliver what was asked, and below it is playing it
+  /// down, which risks nothing and earns a little only if the brief itself is
+  /// beaten (otherwise it lapses unjudged, and the room forgets it).
+  static StatementVerdict? judgeTarget(int stated, TargetOutcome o) {
+    if (!o.settled) return null;
+    final reached = o.actual >= stated;
+    if (stated < o.brief) {
+      return o.actual > o.brief
+          ? (status: StatementStatus.kept, effect: playDownBeaten)
+          : (status: StatementStatus.lapsed, effect: none);
+    }
+    if (stated == o.brief) {
+      return reached
+          ? (status: StatementStatus.kept, effect: matchBriefKept)
+          : (status: StatementStatus.broken, effect: matchBriefBroken);
+    }
+    return reached
+        ? (status: StatementStatus.kept, effect: aimHigherKept)
+        : (status: StatementStatus.broken, effect: aimHigherBroken);
+  }
 
   static StatementVerdict? judge(
     PressStatement s, {
@@ -55,12 +93,20 @@ abstract final class StatementJudge {
     required List<Appearance> appearances,
     required int currentNationId,
     required int currentCycle,
+
+    /// Where the campaign a [StatementKind.target] was made about stands;
+    /// null leaves a target open.
+    TargetOutcome? target,
   }) {
     if (s.status != StatementStatus.open) return null;
     const lapsed = (status: StatementStatus.lapsed, effect: none);
     if (s.nationId != currentNationId) return lapsed;
     if (s.cycle < currentCycle) return lapsed;
     switch (s.kind) {
+      case StatementKind.target:
+        final stated = s.target;
+        if (stated == null) return lapsed;
+        return target == null ? null : judgeTarget(stated, target);
       case StatementKind.winNext:
       case StatementKind.jobOnTheLine:
         final after = [

@@ -12,6 +12,7 @@
 typedef HistoryEdition = ({
   int year,
   String competition,
+
   /// Every host, primary first. Single-element for an ordinary edition; an
   /// edition that recorded no host at all (the 1975-1983 South America Cups,
   /// played home-and-away with no fixed venue) still carries one element, an

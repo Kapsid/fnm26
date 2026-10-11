@@ -22,7 +22,6 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
-import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -1336,19 +1335,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
               awayCode: code(awayId),
               homeName: name(homeId),
               awayName: name(awayId),
-              // The manager's own side is rated off the XI actually on the
-              // pitch, so the number moves with his changes; the opponent's
-              // off the team they named.
-              homeOverall: squadOverall(
-                preview.playerIsHome
-                    ? _currentXi(preview)
-                    : preview.homeTeam.xi,
-              ),
-              awayOverall: squadOverall(
-                preview.playerIsHome
-                    ? preview.awayTeam.xi
-                    : _currentXi(preview),
-              ),
               homeScore: homeScore,
               awayScore: awayScore,
               clock: ft

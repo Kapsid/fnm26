@@ -59,7 +59,7 @@ void main() {
         l.paywallBenefitEndless,
         l.paywallBenefitSaves,
         l.paywallBenefitCarryOn,
-        l.paywallBenefitOffline,
+        l.paywallBenefitNoAds,
         l.gateLead,
       ]) {
         expect(

@@ -37,7 +37,8 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
         // the manager looks at it and different next time round.
         for (final n
             in (nations.toList()
-              ..sort((a, b) => a.ranking.compareTo(b.ranking))).take(20))
+                  ..sort((a, b) => a.ranking.compareTo(b.ranking)))
+                .take(20))
           n.id,
       }.take(8).toList();
 
@@ -88,9 +89,8 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
         // is right there. Hired in an earlier cycle, the id alone still knows
         // his tier and his job — so the post reads as filled by somebody of
         // that standing rather than going mysteriously empty.
-        hired[role] = applicants[role]!
-            .where((c) => c.id == id)
-            .firstOrNull ??
+        hired[role] =
+            applicants[role]!.where((c) => c.id == id).firstOrNull ??
             (
               id: id,
               name: '',

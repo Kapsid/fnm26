@@ -232,6 +232,19 @@ abstract final class FederationFinance {
   /// capped here, and the invest UI uses it as the slider ceiling.
   static const int maxInvestPerDepartment = 40000000;
 
+  /// What one level of a department costs. Money is invested in whole levels,
+  /// so every euro spent buys an effect the manager can see: a free slider let
+  /// a few hundred thousand buy a figure that rounded to nothing, and rounding
+  /// it up instead would have paid out for spreading crumbs everywhere.
+  static const int investLevelPrice = 4000000;
+
+  /// How many levels [dept] has. Ten for most, so the top level is
+  /// [maxInvestPerDepartment]; Medical stops at six, where its injury
+  /// reduction reaches its floor, so no level of it buys nothing.
+  static int maxLevels(Department dept) => dept == Department.medical
+      ? 6
+      : maxInvestPerDepartment ~/ investLevelPrice;
+
   /// The talent scale bonus applied to a nation's newgen intake for a cycle,
   /// from the euros invested in the Youth Academy. Diminishing, capped so an
   /// academy lifts prospects without breaking the curve (~+12 overall at most).

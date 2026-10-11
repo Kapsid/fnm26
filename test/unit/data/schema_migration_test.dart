@@ -263,7 +263,7 @@ void main() {
 
     final db = AppDatabase.forTesting(schema.newConnection());
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 49);
+    await verifier.migrateAndValidate(db, AppDatabase.currentSchemaVersion);
 
     Future<int> count(String table) async =>
         (await db.customSelect('SELECT COUNT(*) AS n FROM $table').getSingle())
@@ -271,6 +271,36 @@ void main() {
     expect(await count('press_answers'), 1);
     expect(await count('press_statements'), 0);
     expect(await count('press_conferences'), 0);
+  });
+
+  test('v50 gives a v49 save\'s statements an empty target', () async {
+    // 49 → 50 adds the stated target a preview conference puts on the record.
+    // Purely additive: every statement already said keeps its words.
+    final schema = await verifier.schemaAt(49);
+    final old = schema.newConnection();
+    final raw = AppDatabase.forTesting(old);
+    await raw.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget) '
+      'VALUES (1, 1, ?, 0, 0, 7, 0, 0)',
+      ['Archivist'],
+    );
+    await raw.customStatement(
+      'INSERT INTO press_statements (career_id, cycle, nation_id, kind, '
+      'player_id, made_on, made_after_fixture_id) '
+      'VALUES (1, 0, 1, ?, 9, 0, 3)',
+      ['backPlayer'],
+    );
+    await raw.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, AppDatabase.currentSchemaVersion);
+
+    final rows = await db.customSelect('SELECT * FROM press_statements').get();
+    expect(rows, hasLength(1));
+    expect(rows.single.read<String>('kind'), 'backPlayer');
+    expect(rows.single.read<int?>('target'), isNull);
   });
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {

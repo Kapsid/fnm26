@@ -2333,7 +2333,7 @@
     "description": "Hint text for the manager-name field."
   },
   "careerBeginsBlurb": "Your career begins in September 2026, on the road to the 2030 World Championship.",
-  "careerFreeCycleNote": "The first full cycle is free on two saves: qualifying, your continental championship and the World Championship, every nation in the world. Endless cycles and unlimited saves unlock once.",
+  "careerFreeCycleNote": "Free for one full four-year cycle: qualifying, your continental championship and the World Championship, on two saves. After that, one payment unlocks endless cycles.",
   "@careerFreeCycleNote": {
     "description": "Note under the new-game blurb saying what is free and what the one-time purchase unlocks."
   },
@@ -4054,9 +4054,9 @@
   "@paywallBenefitCarryOn": {
     "description": "Paywall benefit line: the existing career continues."
   },
-  "paywallBenefitOffline": "No subscription, no ads, no account, no network. One payment, and it is yours forever.",
-  "@paywallBenefitOffline": {
-    "description": "Paywall benefit line: one payment and nothing collected."
+  "paywallBenefitNoAds": "No ads, no microtransactions, no subscription. One payment, and every future update is yours.",
+  "@paywallBenefitNoAds": {
+    "description": "Paywall benefit line: no ads or microtransactions, one payment covers every update."
   },
   "paywallBenefitSaves": "As many saves as you want. Run a favourite and a minnow at once, and find out how differently the same game reads.",
   "@paywallBenefitSaves": {
@@ -5560,7 +5560,7 @@
       }
     }
   },
-  "yEliminated0": "Out at {opponent}. Same script, different year.",
+  "yEliminated0": "Out at {opponent}. That one will hurt for a while.",
   "@yEliminated0": {
     "description": "Y post: eliminated, variant 0.",
     "placeholders": {
@@ -5569,7 +5569,7 @@
       }
     }
   },
-  "yEliminated1": "{opponent} is where it ends. Again.",
+  "yEliminated1": "{opponent} is where it ends for us.",
   "@yEliminated1": {
     "description": "Y post: eliminated, variant 1.",
     "placeholders": {
@@ -10720,7 +10720,7 @@
   "@yReactionDespair6": {
     "description": "Y reply: despair, variant 6."
   },
-  "yReactionDespair7": "Same feeling, different year.",
+  "yReactionDespair7": "That one is going to sting for a long time.",
   "@yReactionDespair7": {
     "description": "Y reply: despair, variant 7."
   },
@@ -11444,6 +11444,18 @@
   "@settingsUnlockedBlurb": {
     "description": "Settings: what the free game covers."
   },
+  "settingsFromDeveloperTitle": "From the developer",
+  "@settingsFromDeveloperTitle": {
+    "description": "Settings: heading of the developer's note on long-term support, shown to every player."
+  },
+  "settingsFromDeveloperBlurb": "Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. If you enjoy the game, please consider buying the full version. It is what keeps the updates coming.",
+  "@settingsFromDeveloperBlurb": {
+    "description": "Settings: the developer's note. No ads or microtransactions ever, please consider buying the full version."
+  },
+  "settingsFromDeveloperThanksBlurb": "Football Nations Manager is made by one person and will be supported for the long term. There will never be ads or microtransactions. Thank you for buying the full version. It is what keeps the updates coming.",
+  "@settingsFromDeveloperThanksBlurb": {
+    "description": "Settings: the developer's note for a player who has bought the full version. No ads or microtransactions ever, thank you for buying."
+  },
   "friendliesLikeYourCampaign": "Marked below: sides who play like {rivals}, who you still have to face.",
   "@friendliesLikeYourCampaign": {
     "description": "Friendlies: why these opponents are suggested first, when the group is a qualifying campaign rather than a finals draw.",
@@ -11586,7 +11598,7 @@
       }
     }
   },
-  "ySameOldStory0": "That is the {count}th time this has happened lately. At what point is it just what we are?",
+  "ySameOldStory0": "That is {count} times this has happened lately. At what point is it just what we are?",
   "@ySameOldStory0": {
     "description": "Y post: sameOldStory, variant 0.",
     "placeholders": {
@@ -11613,7 +11625,7 @@
       }
     }
   },
-  "ySameOldStory3": "The {count}th version of the same ninety minutes. Nobody is fixing it.",
+  "ySameOldStory3": "{count} versions of the same ninety minutes now. Nobody is fixing it.",
   "@ySameOldStory3": {
     "description": "Y post: sameOldStory, variant 3.",
     "placeholders": {
@@ -13472,6 +13484,386 @@
   "@finishNcChampionsAfrica": {
     "description": "African Nations Cup objective result: won the competition."
   },
+  "pressAimQualWarm1": "{competition} qualifying starts now, and the country believes in this side. What are you aiming for?",
+  "@pressAimQualWarm1": {
+    "description": "Press preview: the opening question before a qualifying campaign, warm tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimQualWarm2": "A new {competition} qualifying campaign, and spirits are high. How far can this team go?",
+  "@pressAimQualWarm2": {
+    "description": "Press preview: the opening question before a qualifying campaign, warm tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimQualNeutral1": "{competition} qualifying begins. What is the target for this campaign?",
+  "@pressAimQualNeutral1": {
+    "description": "Press preview: the opening question before a qualifying campaign, neutral tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimQualNeutral2": "The {competition} qualifiers are here. Where do you see this side finishing?",
+  "@pressAimQualNeutral2": {
+    "description": "Press preview: the opening question before a qualifying campaign, neutral tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimQualHostile1": "{competition} qualifying starts, and plenty of people doubt you will get there. What do you say to them?",
+  "@pressAimQualHostile1": {
+    "description": "Press preview: the opening question before a qualifying campaign, hostile tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimQualHostile2": "Another {competition} qualifying campaign. Why should anyone believe this one will be different?",
+  "@pressAimQualHostile2": {
+    "description": "Press preview: the opening question before a qualifying campaign, hostile tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimFinalsWarm1": "The {competition} is here and the whole country is behind you. How far can you go?",
+  "@pressAimFinalsWarm1": {
+    "description": "Press preview: the opening question before a finals tournament, warm tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimFinalsWarm2": "You are at the {competition} and the fans are dreaming. What is the aim?",
+  "@pressAimFinalsWarm2": {
+    "description": "Press preview: the opening question before a finals tournament, warm tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimFinalsNeutral1": "The {competition} starts this week. What would count as a success?",
+  "@pressAimFinalsNeutral1": {
+    "description": "Press preview: the opening question before a finals tournament, neutral tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimFinalsNeutral2": "Your first game at the {competition} is close. Set us a target.",
+  "@pressAimFinalsNeutral2": {
+    "description": "Press preview: the opening question before a finals tournament, neutral tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimFinalsHostile1": "The {competition} is here and nobody expects much. What are you really hoping for?",
+  "@pressAimFinalsHostile1": {
+    "description": "Press preview: the opening question before a finals tournament, hostile tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAimFinalsHostile2": "You are at the {competition}, but the doubts have not gone away. What is your target?",
+  "@pressAimFinalsHostile2": {
+    "description": "Press preview: the opening question before a finals tournament, hostile tone. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatRivalWarm1": "{rival} are in your group. Do they worry you?",
+  "@pressBeatRivalWarm1": {
+    "description": "Press preview: question about the strongest other side in the group, warm tone. {rival} is that nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatRivalWarm2": "The draw put {rival} in your way. How do you see that game?",
+  "@pressBeatRivalWarm2": {
+    "description": "Press preview: question about the strongest other side in the group, warm tone. {rival} is that nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatRivalNeutral1": "{rival} look the strongest side in your group. Are they the favourites?",
+  "@pressBeatRivalNeutral1": {
+    "description": "Press preview: question about the strongest other side in the group, neutral tone. {rival} is that nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatRivalNeutral2": "What do you make of {rival}?",
+  "@pressBeatRivalNeutral2": {
+    "description": "Press preview: question about the strongest other side in the group, neutral tone. {rival} is that nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatRivalHostile1": "{rival} are in your group. Be honest, can you live with them?",
+  "@pressBeatRivalHostile1": {
+    "description": "Press preview: question about the strongest other side in the group, hostile tone. {rival} is that nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatRivalHostile2": "Most people expect {rival} to beat you. Are they wrong?",
+  "@pressBeatRivalHostile2": {
+    "description": "Press preview: question about the strongest other side in the group, hostile tone. {rival} is that nation.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatKeyPlayerWarm1": "{player} is in fine form. Is this his moment?",
+  "@pressBeatKeyPlayerWarm1": {
+    "description": "Press preview: question about the manager's best player, warm tone. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatKeyPlayerWarm2": "{player} is in every headline. Can he carry this side?",
+  "@pressBeatKeyPlayerWarm2": {
+    "description": "Press preview: question about the manager's best player, warm tone. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatKeyPlayerNeutral1": "How much does this campaign depend on {player}?",
+  "@pressBeatKeyPlayerNeutral1": {
+    "description": "Press preview: question about the manager's best player, neutral tone. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatKeyPlayerNeutral2": "Is {player} ready to lead this team?",
+  "@pressBeatKeyPlayerNeutral2": {
+    "description": "Press preview: question about the manager's best player, neutral tone. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatKeyPlayerHostile1": "If {player} is not at his best, does this side have anything?",
+  "@pressBeatKeyPlayerHostile1": {
+    "description": "Press preview: question about the manager's best player, hostile tone. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatKeyPlayerHostile2": "{player} has a lot on his shoulders. Too much?",
+  "@pressBeatKeyPlayerHostile2": {
+    "description": "Press preview: question about the manager's best player, hostile tone. {player} is the player.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pressReplyAimHigher1": "We are going further than anyone expects.",
+  "@pressReplyAimHigher1": {
+    "description": "Press preview: the manager's answer, aiming higher than the board asked."
+  },
+  "pressReplyAimHigher2": "I want more than the federation asked for, and I will say it out loud.",
+  "@pressReplyAimHigher2": {
+    "description": "Press preview: the manager's answer, aiming higher than the board asked."
+  },
+  "pressReplyMatchBrief1": "We know the target and we will reach it.",
+  "@pressReplyMatchBrief1": {
+    "description": "Press preview: the manager's answer, promising exactly what the board asked."
+  },
+  "pressReplyMatchBrief2": "The federation set a target. We will deliver it.",
+  "@pressReplyMatchBrief2": {
+    "description": "Press preview: the manager's answer, promising exactly what the board asked."
+  },
+  "pressReplyPlayDown1": "Let us take it one game at a time.",
+  "@pressReplyPlayDown1": {
+    "description": "Press preview: the manager's answer, playing expectations down."
+  },
+  "pressReplyPlayDown2": "No big promises. We will see where we are.",
+  "@pressReplyPlayDown2": {
+    "description": "Press preview: the manager's answer, playing expectations down."
+  },
+  "pressReplyPromiseQualify1": "We will qualify. You can write that down.",
+  "@pressReplyPromiseQualify1": {
+    "description": "Press preview: the manager's answer, promising qualification."
+  },
+  "pressReplyPromiseQualify2": "This side will be at the finals.",
+  "@pressReplyPromiseQualify2": {
+    "description": "Press preview: the manager's answer, promising qualification."
+  },
+  "pressReplyFearNobody1": "We fear nobody.",
+  "@pressReplyFearNobody1": {
+    "description": "Press preview: the manager's answer, saying the group rival holds no fear."
+  },
+  "pressReplyFearNobody2": "They have to play us too.",
+  "@pressReplyFearNobody2": {
+    "description": "Press preview: the manager's answer, saying the group rival holds no fear."
+  },
+  "pressReplyRespectRival1": "They are the favourites, and we respect them.",
+  "@pressReplyRespectRival1": {
+    "description": "Press preview: the manager's answer, respecting the group rival."
+  },
+  "pressReplyRespectRival2": "A very good side. We will need our best.",
+  "@pressReplyRespectRival2": {
+    "description": "Press preview: the manager's answer, respecting the group rival."
+  },
+  "pressReplyTeamFirst1": "It is about the whole team, not one player.",
+  "@pressReplyTeamFirst1": {
+    "description": "Press preview: the manager's answer, putting the team before the key player."
+  },
+  "pressReplyTeamFirst2": "Nobody wins this alone.",
+  "@pressReplyTeamFirst2": {
+    "description": "Press preview: the manager's answer, putting the team before the key player."
+  },
+  "pressOnRecordTarget": "On the record: {aim}.",
+  "@pressOnRecordTarget": {
+    "description": "Press preview: note that the stated target is on the record and will be judged. {aim} is the target, worded like a board objective.",
+    "placeholders": {
+      "aim": {
+        "type": "String"
+      }
+    }
+  },
+  "pressOnRecordPlayDown": "On the record: no promises.",
+  "@pressOnRecordPlayDown": {
+    "description": "Press preview: note under the play-it-down answer; it only counts if the brief is beaten."
+  },
+  "pressThrowbackTargetKeptWarm": "You set a target before the campaign and you hit it. Is that your proudest moment yet?",
+  "@pressThrowbackTargetKeptWarm": {
+    "description": "Press: a later question throwing back a stated campaign target that was hit, warm tone."
+  },
+  "pressThrowbackTargetKeptNeutral": "You said what you would achieve, and you did. Was it ever in doubt?",
+  "@pressThrowbackTargetKeptNeutral": {
+    "description": "Press: a later question throwing back a stated campaign target that was hit, neutral tone."
+  },
+  "pressThrowbackTargetKeptHostile": "You hit the target you set. Lucky, or was it really the plan?",
+  "@pressThrowbackTargetKeptHostile": {
+    "description": "Press: a later question throwing back a stated campaign target that was hit, hostile tone."
+  },
+  "pressThrowbackTargetBrokenWarm": "You set a target and fell short. What went wrong?",
+  "@pressThrowbackTargetBrokenWarm": {
+    "description": "Press: a later question throwing back a stated campaign target that was missed, warm tone."
+  },
+  "pressThrowbackTargetBrokenNeutral": "You promised more than this side delivered. Do you regret saying it?",
+  "@pressThrowbackTargetBrokenNeutral": {
+    "description": "Press: a later question throwing back a stated campaign target that was missed, neutral tone."
+  },
+  "pressThrowbackTargetBrokenHostile": "You talked big before the campaign and fell short. Why should we believe you now?",
+  "@pressThrowbackTargetBrokenHostile": {
+    "description": "Press: a later question throwing back a stated campaign target that was missed, hostile tone."
+  },
+  "hubEventPressPreviewSub": "The press want to hear your aims for the {competition}",
+  "@hubEventPressPreviewSub": {
+    "description": "Hub event subtitle: the press want to hear the manager's aims before a campaign. {competition} is the competition.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "deptLevelCost": "Level {level} · {amount}",
+  "@deptLevelCost": {
+    "description": "Budget setup: a department's investment level and what it costs. {level} is 0 to 10, {amount} the euros.",
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "formOnFire": "On fire",
+  "@formOnFire": {
+    "description": "Player form: label for the best form (flame icon)."
+  },
+  "formGood": "In form",
+  "@formGood": {
+    "description": "Player form: label for good form (arrow up)."
+  },
+  "formSteady": "Steady",
+  "@formSteady": {
+    "description": "Player form: label for ordinary form."
+  },
+  "formPoor": "Out of form",
+  "@formPoor": {
+    "description": "Player form: label for poor form (arrow down)."
+  },
+  "formCold": "Ice cold",
+  "@formCold": {
+    "description": "Player form: label for the worst form (snowflake icon)."
+  },
+  "playerFormTitle": "FORM AND FITNESS",
+  "@playerFormTitle": {
+    "description": "Player page: heading of the current form and fitness section."
+  },
+  "playerFormAverage": "Averaging {rating} in his recent games",
+  "@playerFormAverage": {
+    "description": "Player page: his average match rating over recent games. {rating} like 7.4.",
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "playerFormNoGames": "Not enough recent games to judge",
+  "@playerFormNoGames": {
+    "description": "Player page: not enough recent games to judge form."
+  },
+  "playerFormNextMatch": "{delta} to his rating next match",
+  "@playerFormNextMatch": {
+    "description": "Player page: what form and fatigue do to his rating in the next match. {delta} is signed, like +2 or −1.",
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "playerFormNoEffect": "No change to his rating next match",
+  "@playerFormNoEffect": {
+    "description": "Player page: form and fatigue leave his rating unchanged next match."
+  },
   "sideGroupHome": "Home",
   "@sideGroupHome": {
     "description": "Tablet sidebar: section heading over Hub, Inbox and Y."
@@ -13727,7 +14119,11 @@
   "nationsShownCount": "{count, plural, =1{1 nation} other{{count} nations}}",
   "@nationsShownCount": {
     "description": "Tablet nation pick: how many nation tiles are on show for the current confederation or search.",
-    "placeholders": {"count": { "type": "int" }}
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "nationsSortedByRank": "Sorted by world rank",
   "@nationsSortedByRank": {
@@ -13740,7 +14136,11 @@
   "nationsStrengthOf": "{tier} of 5",
   "@nationsStrengthOf": {
     "description": "Tablet nation preview: the strength value, out of five.",
-    "placeholders": {"tier": { "type": "int" }}
+    "placeholders": {
+      "tier": {
+        "type": "int"
+      }
+    }
   },
   "nationsSquadOverall": "Squad overall",
   "@nationsSquadOverall": {
@@ -13757,12 +14157,23 @@
   "nationsStarTile": "Star {position} {rating}",
   "@nationsStarTile": {
     "description": "Tablet nation tile: the best player's position code and rating, e.g. 'Star ST 93'.",
-    "placeholders": {"position": { "type": "String" }, "rating": { "type": "int" }}
+    "placeholders": {
+      "position": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "int"
+      }
+    }
   },
   "nationsStarAge": "Age {age}",
   "@nationsStarAge": {
     "description": "Tablet nation preview: the best player's age.",
-    "placeholders": {"age": { "type": "int" }}
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
   },
   "nationsBoardExpects": "The board expects",
   "@nationsBoardExpects": {
@@ -13771,7 +14182,11 @@
   "nationsManage": "Manage {nation}",
   "@nationsManage": {
     "description": "Tablet nation pick: the button that takes the previewed nation's job.",
-    "placeholders": {"nation": { "type": "String" }}
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
   },
   "nationsManagerNext": "You name your manager next",
   "@nationsManagerNext": {

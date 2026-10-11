@@ -19,6 +19,7 @@ PressStatement st(
   status: status,
   judgedOn: judgedOn,
   thrownBack: false,
+  target: null,
 );
 JudgedMatch m(int day, int scored, int conceded) => (
   fixtureId: day,

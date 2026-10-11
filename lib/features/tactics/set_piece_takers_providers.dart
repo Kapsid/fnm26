@@ -132,7 +132,7 @@ setPieceTakersProvider = FutureProvider.autoDispose.family<SetPieceTakers, int>(
 /// acknowledgement means "nobody named is fine", so it holds only while
 /// nobody IS named: a manager who later picks a penalty taker and then loses
 /// him to a ban must be told, and an old acknowledgement must not swallow it.
-final AutoDisposeFutureProviderFamily<bool, int>
-setPieceAutoAcceptedProvider = FutureProvider.autoDispose.family<bool, int>(
-  (ref, careerId) => _loadAuto(careerId),
-);
+final AutoDisposeFutureProviderFamily<bool, int> setPieceAutoAcceptedProvider =
+    FutureProvider.autoDispose.family<bool, int>(
+      (ref, careerId) => _loadAuto(careerId),
+    );

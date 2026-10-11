@@ -19,7 +19,7 @@ void main() {
     await tester.tap(find.byKey(const Key('settings-language-tile')));
     await tester.pumpAndSettle();
 
-    for (final code in ['system', 'en', 'cs', 'fr', 'it', 'pl']) {
+    for (final code in ['system', 'en', 'cs', 'fr', 'it', 'pl', 'es', 'de']) {
       expect(find.byKey(Key('language-option-$code')), findsOneWidget);
     }
     for (final name in [
@@ -28,6 +28,8 @@ void main() {
       'Français',
       'Italiano',
       'Polski',
+      'Español',
+      'Deutsch',
     ]) {
       expect(find.text(name), findsOneWidget);
     }

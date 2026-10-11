@@ -1,7 +1,7 @@
 # Editing the game's text
 
 `strings.csv` is every string in the game — in one file.
-**Double-click it**: it opens in Numbers or Excel as an eight-column
+**Double-click it**: it opens in Numbers or Excel as a ten-column
 spreadsheet. Change the words, save, hand it back.
 
 ## The loop
@@ -25,7 +25,7 @@ always safe to regenerate the file and start again.
 | `where` | a note saying where the string appears. Yours to read, not to edit. |
 | `placeholders` | which `{words}` this string must keep. Also just a note. |
 | `en` | the English. **Edit freely.** |
-| `cs` `fr` `it` `pl` | Czech, French, Italian, Polish. **Edit freely.** Leave a cell blank to keep what's there. A language whose `lib/l10n/app_<code>.arb` does not exist is skipped on import. |
+| `cs` `fr` `it` `pl` `es` `de` | Czech, French, Italian, Polish, Spanish, German. **Edit freely.** Leave a cell blank to keep what's there. A language whose `lib/l10n/app_<code>.arb` does not exist is skipped on import. |
 
 ## The rules
 

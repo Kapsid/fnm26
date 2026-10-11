@@ -115,7 +115,7 @@ class _EffectsList extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                Expanded(child: _line(l, d, _spentOn(alloc, d))),
+                Expanded(child: _line(l, d, investmentIn(alloc, d))),
               ],
             ),
           ),
@@ -132,12 +132,3 @@ class _EffectsList extends StatelessWidget {
     ),
   );
 }
-
-/// What [i] puts into [d].
-int _spentOn(FederationInvestment i, Department d) => switch (d) {
-  Department.youth => i.youth,
-  Department.commercial => i.commercial,
-  Department.medical => i.medical,
-  Department.naturalization => i.naturalization,
-  Department.boardRelations => i.boardRelations,
-};

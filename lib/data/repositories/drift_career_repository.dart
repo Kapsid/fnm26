@@ -416,6 +416,7 @@ class DriftCareerRepository implements CareerRepository {
     int? playerId,
     required DateTime madeOn,
     required int madeAfterFixtureId,
+    int? target,
   }) => _db
       .into(_db.pressStatements)
       .insert(
@@ -427,6 +428,7 @@ class DriftCareerRepository implements CareerRepository {
           playerId: Value(playerId),
           madeOn: madeOn,
           madeAfterFixtureId: madeAfterFixtureId,
+          target: Value(target),
         ),
       );
 
@@ -450,6 +452,7 @@ class DriftCareerRepository implements CareerRepository {
           status: StatementStatus.values.byName(r.status),
           judgedOn: r.judgedOn,
           thrownBack: r.thrownBack,
+          target: r.target,
         ),
     ];
   }
