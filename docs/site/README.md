@@ -68,21 +68,27 @@ Two things that go wrong with FTP in particular:
   the authority for every other name the site uses, too. A site that calls a
   thing one name and the app another reads as two products.
 
-## When the app ships
+## The store badges
 
-Nothing on the page is a placeholder any more. One thing is WAITING, and it
-is the launch:
+iOS is LIVE: the hero's App Store badge links to
+https://apps.apple.com/app/football-nations-manager/id6814666162 .
+Android is still WAITING: the Google Play badge sits beside it greyed out
+(`.store-soon`), with a "Coming in October" / "Vychází v říjnu" stamp across
+its corner (`.stamp`). When Android ships, in BOTH `index.html` and
+`cs/index.html`, turn that `<span class="store-soon">` into an `<a>` with the
+Play URL and drop the stamp. The Google badge has had its built-in clear
+space trimmed off, so both badges are set to the same height and genuinely
+match; do not replace that file with a fresh download without trimming it
+again.
 
-The hero carries a stamped plate, "Coming in October" / "Vychází v říjnu",
-where the store badges used to be, because a dead App Store link looks worse
-than an honest date. On release day, in BOTH `index.html` and
-`cs/index.html`, swap the `<div class="soon">` block back for the badge
-markup and fill in the two URLs. The artwork is still here,
-`badge-appstore.svg` and `badge-googleplay.png`, and so are the `.stores`,
-`.b-apple` and `.b-google` rules in `_style.css`, all of them unused until
-then. The Google badge has had its built-in clear space trimmed off, so both
-badges are set to the same height and genuinely match; do not replace that
-file with a fresh download without trimming it again.
+The Czech page has its OWN official Czech badges, `cs/badge-appstore.svg`
+("Stáhnout v App Store", from Apple's marketing toolbox) and
+`cs/badge-googleplay.png` ("Rozjeďte to na Google Play", clear space trimmed
+the same way). Do not point `cs/index.html` back at the English ones.
+
+Under the badges, `.devices` shows the hub on a tablet with a phone leaning
+on its corner: `hero-tablet.jpg` / `hero-phone.jpg`, one pair per language
+(`cs/` has its own Czech pair).
 
 ### Search and sharing
 

@@ -93,7 +93,7 @@ section:first-of-type { border-top: 0; }
    both were forced to 210px wide and their heights fell out of their own
    aspect ratios, 70px against 64px. That is why the badges never matched
    however their heights were set. */
-.hero > img { width: min(210px, 46vw); height: auto; filter: drop-shadow(0 18px 40px rgba(0,0,0,.6)); }
+.hero-text > img { width: min(210px, 46vw); height: auto; filter: drop-shadow(0 18px 40px rgba(0,0,0,.6)); }
 /* One line, always. The wordmark is 24 characters, so the size is driven off
    the viewport and the whole thing is allowed to get small on a narrow phone
    rather than wrap into three decks and push everything below the fold. */
@@ -164,7 +164,13 @@ section:first-of-type { border-top: 0; }
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding-bottom: 14px;
+  /* A scrolling box clips everything outside it, so the bezels get room on
+     every side: the 3px lift on hover and the first and last slides' edges
+     were being cut off. The negative margin keeps the slides where they
+     were. */
+  padding: 8px 6px 14px;
+  margin: -8px -6px 0;
+  scroll-padding: 0 6px;
   scrollbar-width: none;
 }
 .track::-webkit-scrollbar { display: none; }
@@ -200,6 +206,22 @@ section:first-of-type { border-top: 0; }
   color: var(--muted);
   text-align: center;
   margin-top: 10px;
+}
+
+/* The iPad shots are landscape, so their slides are wider and shaped 4:3.
+   The bezel is a tablet's: thinner corners than the handset's. */
+.track.wide .slide { width: clamp(290px, 84vw, 720px); }
+.track.wide .slide img { aspect-ratio: 960 / 720; border-radius: 14px; }
+.track.wide .shot { border-radius: 24px; }
+.track.wide .slide.empty::before { aspect-ratio: 960 / 720; border-radius: 22px; }
+
+/* Which device a carousel shows. Small and quiet: the shots say the rest. */
+.device {
+  margin: 26px 0 0;
+  font-size: 13px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 /* A slide still waiting for its screenshot keeps a phone-shaped frame, so the
@@ -309,7 +331,7 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
   color: var(--muted);
 }
 
-/* ---------- store badges (unused until the app ships; see README) ---------- */
+/* ---------- store badges ---------- */
 
 .stores {
   display: flex; gap: 14px; justify-content: center; align-items: center;
@@ -327,6 +349,72 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
    Store". */
 .b-apple  { height: 56px; width: auto; display: block; }
 .b-google { height: 56px; width: auto; display: block; }
+
+/* Google Play is not open yet: the real badge, greyed out, with the date
+   stamped across it, so the row already shows both stores. */
+.store-soon { position: relative; display: inline-flex; }
+.store-soon img { filter: grayscale(1); opacity: .62; }
+.stamp {
+  position: absolute;
+  right: -14px;
+  top: -13px;
+  transform: rotate(6deg);
+  padding: 3px 8px;
+  border: 2px solid rgba(228, 230, 233, .8);
+  border-radius: 6px;
+  background: rgba(14, 16, 18, .72);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .55);
+  color: var(--text);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---------- hero devices ---------- */
+
+/* The tablet with the phone leaning on its corner: both form factors at a
+   glance, framed in the same bezel the carousel shots wear. */
+.devices {
+  position: relative;
+  width: min(860px, 100%);
+  margin: clamp(26px, 4vw, 44px) auto 0;
+  padding: 0 9% 7% 0;
+}
+.dev {
+  border: 1px solid var(--line-bright);
+  background: linear-gradient(168deg, #30353c, #15181c 60%);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .6);
+}
+.dev img { display: block; width: 100%; height: auto; }
+.dev-tablet { padding: clamp(5px, 1vw, 10px); border-radius: clamp(14px, 2.4vw, 26px); }
+.dev-tablet img { border-radius: clamp(8px, 1.4vw, 16px); }
+.dev-phone {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24%;
+  padding: clamp(3px, .6vw, 6px);
+  border-radius: clamp(12px, 2vw, 24px);
+}
+.dev-phone img { border-radius: clamp(9px, 1.5vw, 18px); }
+
+/* On a wide screen the devices stand BESIDE the words instead of under them,
+   so the first screen shows the game, not a column of title above it. The
+   wordmark may then break onto two lines, which keeps it its full size. */
+@media (min-width: 1000px) {
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    column-gap: clamp(32px, 4vw, 72px);
+    align-items: center;
+    text-align: center;
+  }
+  .hero h1 { white-space: normal; font-size: clamp(40px, 4vw, 60px); }
+  .hero .claim { white-space: normal; text-wrap: balance; font-size: clamp(20px, 1.8vw, 26px); }
+  .devices { margin: 0; width: 100%; }
+}
 
 /* ---------- portrait ---------- */
 
@@ -466,6 +554,7 @@ footer nav { display: flex; gap: 18px; flex-wrap: wrap; }
   border: 1px solid var(--line-bright);
   box-shadow: 0 30px 80px rgba(0, 0, 0, .7);
 }
+#lb img.wide { max-width: min(100%, 1500px); }
 /* The controls sit on the backdrop, not on the picture, so they never cover
    the thing you opened the lightbox to see. */
 #lb button {

@@ -1,5 +1,11 @@
 # The carousel shots
 
+There are two carousels now: iPhone (`shot-1` … `shot-12`) and iPad
+(`ipad-1` … `ipad-10`, 960 x 720 thumbnails and 2000 x 1500 full size, 4:3,
+marked `data-wide` so the lightbox opens them at full width). Shots 7 to 12
+and every iPad shot came from the render harness, EN here and CS in
+`cs/shots/`. What follows was written for the original six.
+
 Six of them, `shot-1.jpg` … `shot-6.jpg`, plus a `-full.jpg` beside each for
 the lightbox. Both language trees show the SAME files, so they live here at
 the root and the Czech pages reach them as `../shots/`.
