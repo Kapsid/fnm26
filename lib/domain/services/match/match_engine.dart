@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/performance_mark.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
@@ -1647,27 +1648,36 @@ class MatchEngine {
   ///     a DIRECT team plays straight through it.
   ///  3. Attacking WIDE against a NARROW defence stretches it (and narrow
   ///     against a wide one overloads the middle).
-  double _matchup(_Live atk, _Live def) {
-    double n(int v) => (v - 50) / 50.0;
-    final a = atk.instructions;
-    final d = def.instructions;
-
-    final fwdPace = _lineAttr(atk, PositionCategory.forward, (x) => x.physical);
-    final defPace = _lineAttr(
-      def,
-      PositionCategory.defender,
-      (x) => x.physical,
-    );
-    final midPass = _lineAttr(
-      atk,
-      PositionCategory.midfielder,
-      (x) => x.technical,
-    );
-    final pressEngine = _lineAttr(
+  double _matchup(_Live atk, _Live def) => matchupBonus(
+    attacker: atk.instructions,
+    defender: def.instructions,
+    fwdPace: _lineAttr(atk, PositionCategory.forward, (x) => x.physical),
+    defPace: _lineAttr(def, PositionCategory.defender, (x) => x.physical),
+    midPass: _lineAttr(atk, PositionCategory.midfielder, (x) => x.technical),
+    pressEngine: _lineAttr(
       def,
       PositionCategory.midfielder,
       (x) => x.stamina,
-    );
+    ),
+  );
+
+  /// The body of [_matchup], on the two plans and the four line attributes it
+  /// reads, so the live engine and the skip path ([planEffect]) run the SAME
+  /// arithmetic and can never drift apart. [_matchup] measures the lines off
+  /// the pitch; [planEffect] has no players, so it passes
+  /// [kNeutralLineAttribute] for all four, where every attribute term reads
+  /// zero and only the plans speak.
+  static double matchupBonus({
+    required TacticalInstructions attacker,
+    required TacticalInstructions defender,
+    required double fwdPace,
+    required double defPace,
+    required double midPass,
+    required double pressEngine,
+  }) {
+    double n(int v) => (v - 50) / 50.0;
+    final a = attacker;
+    final d = defender;
 
     // MAGNITUDE (2026-09): every coefficient below was tripled, and the clamp
     // widened with them. The shapes and signs are unchanged — what changed is
@@ -1848,6 +1858,17 @@ class MatchEngine {
     TacticalInstructions i, {
     Formation formation = Formation.f433,
   }) {
+    final t = _planTerms(i, formation);
+    return (t.attack + t.defence) / 2;
+  }
+
+  /// The flat attack and defence lifts behind [planRatingDelta], apart:
+  /// [planEffect] needs them separately, because a plan that buys attack with
+  /// defence opens a game the one-number mean cannot show.
+  static ({double attack, double defence}) _planTerms(
+    TacticalInstructions i,
+    Formation formation,
+  ) {
     double off(int v) => (v - 50).toDouble();
     final shape = ShapeProfile.of(formation.positions);
     final extraAttackers = shape.attackers - ShapeProfile.neutralAttackers;
@@ -1864,8 +1885,114 @@ class MatchEngine {
         off(i.width) * kWidthDefence +
         extraDefenders * kShapeDefence -
         extraAttackers * kShapeAttackCost;
-    return (attack + defence) / 2;
+    return (attack: attack, defence: defence);
   }
+
+  /// The line attribute [planEffect] feeds [matchupBonus] for every line: the
+  /// value at which the pace duel, the passers' relief and the pressers'
+  /// engine all read zero (and what [_lineAttr] returns for an empty line).
+  /// The skip path has no players to measure, so the plans alone speak.
+  static const double kNeutralLineAttribute = 55;
+
+  /// What [plan] in [formation] is worth against [opponent] in
+  /// [opponentFormation], for a match played out by `RatingMatchSimulator`
+  /// (the manager's skipped matches): a rating delta for his side's single
+  /// strength number, and how open the game is, as a multiplier on both
+  /// sides' expected goals.
+  ///
+  /// It is the engine's own arithmetic, nothing restated:
+  ///  * the FLAT terms ([planRatingDelta]'s) for both sides. In the engine
+  ///    both sides' sliders and shapes move their own attack and defence; the
+  ///    simulator's opponent strength carries none of that, so his side is
+  ///    credited the difference.
+  ///  * the MATCH-UP, [matchupBonus] both ways round at neutral attributes:
+  ///    what his plan finds against theirs lifts his attack, what theirs finds
+  ///    against his lifts theirs.
+  ///
+  /// That gives his side an attack lift and a defence lift, which the
+  /// simulator cannot hold apart. Their MEAN is the rating delta; their
+  /// DIFFERENCE is how much the plan opens the game (attack bought with
+  /// defence puts goals in at both ends), so it goes into the openness on the
+  /// simulator's own scale: a strength shift of x moves one side's xG by
+  /// `exp(gapResponse * x)` and the other's by the inverse, so adding
+  /// `exp(gapResponse * (attack - defence) / 2)` on both lands each side on
+  /// exactly the xG its own lift alone would give it. On top of that sits
+  /// [openness] itself, which the engine applies to both chance rates.
+  ///
+  /// Engine points are converted with [_skipPoints] first: the engine's goals
+  /// answer a rating point less than the simulator's do, and not linearly.
+  /// `test/unit/match/skip_parity_test.dart` holds the two paths to the same
+  /// story.
+  static ({double ratingDelta, double openness}) planEffect({
+    required TacticalInstructions plan,
+    required Formation formation,
+    required TacticalInstructions opponent,
+    required Formation opponentFormation,
+  }) {
+    double matchup(TacticalInstructions atk, TacticalInstructions def) =>
+        matchupBonus(
+          attacker: atk,
+          defender: def,
+          fwdPace: kNeutralLineAttribute,
+          defPace: kNeutralLineAttribute,
+          midPass: kNeutralLineAttribute,
+          pressEngine: kNeutralLineAttribute,
+        );
+    final mine = _planTerms(plan, formation);
+    final theirs = _planTerms(opponent, opponentFormation);
+    final attack = _skipPoints(
+      mine.attack - theirs.defence + matchup(plan, opponent),
+    );
+    final defence = _skipPoints(
+      mine.defence - theirs.attack - matchup(opponent, plan),
+    );
+    final spread = exp(
+      RatingMatchSimulator.gapResponse * (attack - defence) / 2,
+    );
+    return (
+      ratingDelta: (attack + defence) / 2,
+      openness:
+          openness(
+            home: plan,
+            away: opponent,
+            homeAttackers: ShapeProfile.ofFormation(formation).attackers,
+            awayAttackers: ShapeProfile.ofFormation(
+              opponentFormation,
+            ).attackers,
+          ) *
+          spread,
+    );
+  }
+
+  /// [enginePoints] of attack (or defence) lift as `RatingMatchSimulator`
+  /// strength points.
+  ///
+  /// The engine's goals grow about as `(rating - 26)^1.45`: the chance rate
+  /// to the 1.2 in [_chance] and the conversion to the 0.25 in
+  /// [_goalProbability], both over [_ratio]'s replacement baseline. So a lift
+  /// moves ln(goals) by `1.45 * ln(1 + points / headroom)`, which is CONCAVE:
+  /// a big attacking lift earns less than its points, a big defensive hole
+  /// costs more. The simulator moves ln(xG) by
+  /// [RatingMatchSimulator.gapResponse] per point, so dividing by that lands
+  /// the same goals on its scale. The floor mirrors [_ratio]'s 8-point floor.
+  static double _skipPoints(double enginePoints) {
+    final ratio = (1 + enginePoints / kSkipHeadroom).clamp(
+      8 / kSkipHeadroom,
+      double.infinity,
+    );
+    return _skipGoalExponent * log(ratio) / RatingMatchSimulator.gapResponse;
+  }
+
+  /// The chance-rate and conversion exponents of [_chance] and
+  /// [_goalProbability], summed: how goals scale with the attack-to-defence
+  /// ratio in the engine.
+  static const double _skipGoalExponent = 1.2 + 0.25;
+
+  /// A typical side's rating above [_ratio]'s replacement baseline of 26 (a
+  /// 76-rated side), the level [_skipPoints] reads its curve at: the skip
+  /// path has one strength per side and no lines to measure. Start value,
+  /// tuned in Task 8.
+  static const double kSkipHeadroom = 50;
 
   double _attack(_Live t) {
     final i = t.instructions;

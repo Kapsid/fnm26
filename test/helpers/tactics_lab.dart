@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 
@@ -166,22 +167,12 @@ LabStats runCell({
   var gdSum = 0;
   var gdSquares = 0;
   for (var i = 0; i < seeds; i++) {
-    final base = AiTactics.forOpponent(
-      opponentStrength: opponentRating,
-      playerStrength: managerRating,
+    final setup = _opponentSetup(
       seed: i,
-      style: NationStyle.balanced,
+      managerRating: managerRating,
+      opponentRating: opponentRating,
+      scouted: aiCounters ? scouted : null,
     );
-    final setup = aiCounters
-        ? AiCounter.apply(
-            base: base,
-            scouted: scouted,
-            opponentStrength: opponentRating,
-            style: NationStyle.balanced,
-            // A separate stream from the posture's, as in a real fixture.
-            seed: i ^ 0x5C0D7,
-          )
-        : base;
     final opponentPlan = (
       name: 'ai',
       formation: setup.formation,
@@ -204,6 +195,137 @@ LabStats runCell({
         rng: SeededRng.forFixture(0x7AB0, i),
         neutralVenue: true,
         chemistryByNation: chemistry,
+      );
+      final forMe = managerAtHome ? r.homeScore : r.awayScore;
+      final against = managerAtHome ? r.awayScore : r.homeScore;
+      gf += forMe;
+      ga += against;
+      final gd = forMe - against;
+      gdSum += gd;
+      gdSquares += gd * gd;
+      if (gd > 0) {
+        wins++;
+      } else if (gd < 0) {
+        losses++;
+      } else {
+        draws++;
+      }
+      if (forMe + against >= 4) fourPlus++;
+    }
+  }
+  final n = seeds * 2;
+  final meanGd = gdSum / n;
+  return (
+    gf: gf / n,
+    ga: ga / n,
+    total: (gf + ga) / n,
+    win: wins / n,
+    draw: draws / n,
+    loss: losses / n,
+    gdSpread: math.sqrt(math.max(0, gdSquares / n - meanGd * meanGd)),
+    fourPlus: fourPlus / n,
+  );
+}
+
+/// The AI opponent's setup for lab seed [seed]: `AiTactics.forOpponent` from
+/// the two ratings, then, when [scouted] is set, `AiCounter.apply` against it
+/// on a separate stream, as in a real fixture. Shared by [runCell] and
+/// [runSkipCell] so a played and a skipped cell meet the same opponent.
+AiSetup _opponentSetup({
+  required int seed,
+  required double managerRating,
+  required double opponentRating,
+  required ScoutedPlan? scouted,
+}) {
+  final base = AiTactics.forOpponent(
+    opponentStrength: opponentRating,
+    playerStrength: managerRating,
+    seed: seed,
+    style: NationStyle.balanced,
+  );
+  return AiCounter.apply(
+    base: base,
+    scouted: scouted,
+    opponentStrength: opponentRating,
+    style: NationStyle.balanced,
+    // A separate stream from the posture's, as in a real fixture.
+    seed: seed ^ 0x5C0D7,
+  );
+}
+
+/// The mean overall of an XI built the way [runCell] builds one: the rating
+/// the skip path's strength is derived from, so both halves of a parity
+/// comparison read the same squads.
+double _xiOverall(LabPlan plan, int nationId, double rating) {
+  final xi = _team(nationId: nationId, plan: plan, rating: rating).xi;
+  return xi.fold<int>(0, (s, p) => s + p.overall) / xi.length;
+}
+
+/// [runCell]'s twin for a SKIPPED match: the same seeds, the same opponent
+/// setups and the same squads, played through `RatingMatchSimulator` the way
+/// the skip path plays the manager's match (`SeasonService._withManagerTactics`):
+/// each side's strength is its XI's mean overall, the manager's is lifted by
+/// [MatchEngine.planEffect] (rounded, as the skip path rounds it), and the
+/// effect's openness widens or narrows both sides' xG.
+///
+/// Neutral venue, every seed both ways round, as in [runCell]. Only the
+/// figures a parity check reads are reported, but in the same [LabStats].
+LabStats runSkipCell({
+  required LabPlan manager,
+  required double managerRating,
+  required double opponentRating,
+  required bool aiCounters,
+  int seeds = 1000,
+  double predictability = 0,
+}) {
+  const sim = RatingMatchSimulator();
+  const managerId = 1;
+  const opponentId = 2;
+  final scouted = ScoutedPlan(
+    formation: manager.formation,
+    instructions: manager.instructions,
+    predictability: predictability,
+  );
+  final mine = _xiOverall(manager, managerId, managerRating);
+
+  var gf = 0;
+  var ga = 0;
+  var wins = 0;
+  var draws = 0;
+  var losses = 0;
+  var fourPlus = 0;
+  var gdSum = 0;
+  var gdSquares = 0;
+  for (var i = 0; i < seeds; i++) {
+    final setup = _opponentSetup(
+      seed: i,
+      managerRating: managerRating,
+      opponentRating: opponentRating,
+      scouted: aiCounters ? scouted : null,
+    );
+    final theirs = _xiOverall(
+      (
+        name: 'ai',
+        formation: setup.formation,
+        instructions: setup.instructions,
+      ),
+      opponentId,
+      opponentRating,
+    ).round();
+    final effect = MatchEngine.planEffect(
+      plan: manager.instructions,
+      formation: manager.formation,
+      opponent: setup.instructions,
+      opponentFormation: setup.formation,
+    );
+    final boosted = (mine + effect.ratingDelta).round();
+    for (final managerAtHome in const [true, false]) {
+      final r = sim.simulate(
+        homeStrength: managerAtHome ? boosted : theirs,
+        awayStrength: managerAtHome ? theirs : boosted,
+        rng: SeededRng.forFixture(0x7AB0, i),
+        homeAdvantage: false,
+        openness: effect.openness,
       );
       final forMe = managerAtHome ? r.homeScore : r.awayScore;
       final against = managerAtHome ? r.awayScore : r.homeScore;

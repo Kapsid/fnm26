@@ -25,12 +25,16 @@ import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
+import 'package:fnm/domain/services/match/ai_counter.dart';
+import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/background_match.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
@@ -296,7 +300,15 @@ typedef _ManagerSetup = ({
   Set<int> callUps,
   Tactic? tactic,
   double familiarity,
-  double predictability,
+
+  /// The stored history per shape, which is what an opponent scouts (see
+  /// `AiCounter.forFixture`): his skipped matches are countered from it
+  /// exactly as his played ones are.
+  Map<Formation, ShapeDrilling> drilling,
+
+  /// The save's seed, which keys the opponent's posture and counter per
+  /// fixture the same way the live match does.
+  int rngSeed,
 
   /// Who is reading the opposition for him: his dossier is worth
   /// `Staff.dossierBonus` on the day, watched or skipped.
@@ -446,7 +458,8 @@ class SeasonService {
       callUps: await _ref.read(squadRepositoryProvider).callUps(careerId),
       tactic: tactic,
       familiarity: shape?.familiarity ?? 0,
-      predictability: shape?.predictability ?? 0,
+      drilling: drilling,
+      rngSeed: career.rngSeed,
       scout: career.staffScout,
     );
     _managerSetupCareer = careerId;
@@ -839,16 +852,32 @@ class SeasonService {
     // subs change who is on the pitch, not how good the side is.
     final homeSubs = await _fieldedSubs(f.careerId, f.homeNationId, homeXi);
     final awaySubs = await _fieldedSubs(f.careerId, f.awayNationId, awayXi);
-    final homeStrength = await _withManagerTactics(
+    // Both sides' strengths first; then, if either is the manager's, his
+    // side is converted against the other (his plan, the opponent's counter
+    // to it, and how open the two make the game). Every other fixture comes
+    // back as it went in, with no openness, so the world plays as before.
+    final homeBase = _squadStrength(homeXi, home);
+    final awayBase = _squadStrength(awayXi, away);
+    final asHome = await _withManagerTactics(
       f.careerId,
       f.homeNationId,
-      _squadStrength(homeXi, home),
+      homeBase,
+      xi: homeXi,
+      opponent: away,
+      opponentXi: awayXi,
+      fixtureId: f.id,
     );
-    final awayStrength = await _withManagerTactics(
+    final asAway = await _withManagerTactics(
       f.careerId,
       f.awayNationId,
-      _squadStrength(awayXi, away),
+      awayBase,
+      xi: awayXi,
+      opponent: home,
+      opponentXi: homeXi,
+      fixtureId: f.id,
     );
+    final homeStrength = asHome?.strength ?? homeBase;
+    final awayStrength = asAway?.strength ?? awayBase;
     const sim = RatingMatchSimulator();
     final outcome = sim.simulate(
       homeStrength: homeStrength,
@@ -856,6 +885,7 @@ class SeasonService {
       rng: SeededRng.forFixture(rngSeed, f.id),
       // A finals is played at a neutral host — no automatic home advantage.
       homeAdvantage: !isNeutralFinalsRound(f.round),
+      openness: asHome?.openness ?? asAway?.openness ?? 1.0,
     );
     await _comp.recordAppearances(
       f.careerId,
@@ -1094,54 +1124,94 @@ class SeasonService {
     return (mean * 0.75 + ranked * 0.25).round().clamp(40, 92);
   }
 
-  /// [strength] as the manager's own side plays it: his instructions and his
-  /// tactical standing applied, exactly as the live engine would apply them.
-  /// Returned unchanged for every other nation — nobody drills them.
+  /// [strength] as the manager's own side plays it against [opponent]: his
+  /// plan, the opponent's counter to it and his tactical standing applied, as
+  /// the live engine would apply them. Null for every other nation, which
+  /// tells the caller to play the fixture exactly as before: nobody set a
+  /// plan for them.
   ///
   /// The drilled bonus used to arrive only when he WATCHED, because a skipped
   /// match goes through [RatingMatchSimulator], which has no formation, no
   /// instructions and no chemistry at all. So a manager who had spent four
-  /// years drilling a shape gave the benefit back the moment he pressed skip —
+  /// years drilling a shape gave the benefit back the moment he pressed skip,
   /// and the more tactics were made to matter, the bigger that hole grew.
   ///
-  /// Two conversions, neither of them invented here:
-  ///  * the plan, via [MatchEngine.planRatingDelta] — the engine's own slider
-  ///    coefficients, read as the one number this simulator works in;
-  ///  * the drilling, via [TeamChemistry.factor] — a multiplier on a side's
+  /// The opponent is set up EXACTLY as the live match sets it up
+  /// (`match_providers`): `AiTactics.forOpponent` from the two sides' average
+  /// overall, bent by `AiCounter.forFixture` against the stored drilling rows,
+  /// with the same per-fixture seeds. The averages are read off the XIs the
+  /// two sides field here, which is the live path's notion (the opponent's
+  /// best eleven, his named eleven).
+  ///
+  /// Then the conversions, none of them invented here:
+  ///  * the plan against that setup, via [MatchEngine.planEffect]: a rating
+  ///    delta, and an openness the simulator applies to both sides' xG;
+  ///  * the drilling, via [TeamChemistry.factor]: a multiplier on a side's
   ///    attack and defence in the engine, credited here as the flat rating
-  ///    lift it is measured to be worth there. Predictability goes in with it: the engine passes
-  ///    the stored figure, so a side the world has worked out gives the same
-  ///    part of it back whether or not he watched.
+  ///    lift it is measured to be worth there. Predictability is NOT part of
+  ///    it: it acts through the opponent's counter only, as in a played match.
   ///
   /// And one flat lift: the scout's opponent dossier, [Staff.dossierBonus],
   /// already in rating points.
   ///
-  /// The result is deliberately NOT re-clamped to the 40–92 ranking scale that
-  /// [_squadStrength] ends on: that scale describes a nation, and this is what
-  /// his side is worth on the day.
-  Future<int> _withManagerTactics(
+  /// The strength is deliberately NOT re-clamped to the 40-92 ranking scale
+  /// that [_squadStrength] ends on: that scale describes a nation, and this
+  /// is what his side is worth on the day.
+  Future<({int strength, double openness})?> _withManagerTactics(
     int careerId,
     int nationId,
-    int strength,
-  ) async {
+    int strength, {
+    required List<Player> xi,
+    required Nation opponent,
+    required List<Player> opponentXi,
+    required int fixtureId,
+  }) async {
     final setup = await _ensureManagerSetup(careerId);
-    if (setup == null || setup.nationId != nationId) return strength;
+    if (setup == null || setup.nationId != nationId) return null;
+    double avg(List<Player> ps) =>
+        ps.isEmpty ? 0 : ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
+    final oppStrength = avg(opponentXi);
+    final oppStyle = NationIdentity.styleOf(opponent.code);
+    final ai = AiCounter.forFixture(
+      base: AiTactics.forOpponent(
+        opponentStrength: oppStrength,
+        playerStrength: avg(xi),
+        seed: AiTactics.fixtureSeed(
+          opponentId: opponent.id,
+          fixtureId: fixtureId,
+          rngSeed: setup.rngSeed,
+        ),
+        style: oppStyle,
+      ),
+      drilling: setup.drilling,
+      opponentStrength: oppStrength,
+      style: oppStyle,
+      seed: AiCounter.fixtureSeed(
+        opponentId: opponent.id,
+        fixtureId: fixtureId,
+        rngSeed: setup.rngSeed,
+      ),
+    );
+    final effect = MatchEngine.planEffect(
+      plan: setup.tactic?.instructions ?? const TacticalInstructions(),
+      formation: setup.tactic?.formation ?? Formation.f433,
+      opponent: ai.instructions,
+      opponentFormation: ai.formation,
+    );
     // The scout's dossier is a flat rating lift, the same points the live
     // engine adds to each fielded man (`MatchTeam.ratingBonus`), so it goes in
-    // beside the plan, before the chemistry multiplies the side.
+    // beside the plan, before the chemistry lift.
     final plan =
-        strength +
-        MatchEngine.planRatingDelta(
-          setup.tactic?.instructions ?? const TacticalInstructions(),
-        ) +
-        Staff.dossierBonus(setup.scout);
+        strength + effect.ratingDelta + Staff.dossierBonus(setup.scout);
     // Chemistry as a LIFT, not a multiplier on the whole rating: 80 x 1.04
     // was +3.2 points here, about three times what the same chemistry wins a
     // side when the match is played out, so skipping beat playing. 30 points
     // per unit of factor is what the engine actually delivers (+1.2 at 1.04).
-    final chemistry =
-        TeamChemistry.factor(setup.familiarity, setup.predictability) - 1;
-    return (plan + chemistry * _chemistryPoints).round();
+    final chemistry = TeamChemistry.factor(setup.familiarity) - 1;
+    return (
+      strength: (plan + chemistry * _chemistryPoints).round(),
+      openness: effect.openness,
+    );
   }
 
   /// Rating points a skipped match credits per unit of chemistry factor.

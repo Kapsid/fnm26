@@ -51,10 +51,10 @@ class RatingMatchSimulator implements MatchSimulator {
   static const int _eliteBand = 20;
 
   /// How loudly a strength gap speaks: expected goals scale by
-  /// `exp(_gapResponse * gap)` (0.026 → 0.028 → 0.06). At 0.028 a top-six
+  /// `exp(gapResponse * gap)` (0.026 → 0.028 → 0.06). At 0.028 a top-six
   /// side beat a 34th-ranked one only 55% of the time at a neutral ground and
   /// lost one in five — the World Championship was a lottery.
-  static const double _gapResponse = 0.06;
+  static const double gapResponse = 0.06;
 
   /// The gap stops compounding past roughly this many points (it runs through
   /// `tanh`). With the steeper response a 25-point qualifier would otherwise
@@ -91,6 +91,7 @@ class RatingMatchSimulator implements MatchSimulator {
     required int awayStrength,
     required SeededRng rng,
     bool homeAdvantage = true,
+    double openness = 1.0,
   }) {
     // +5 home advantage — but a neutral-venue finals gives neither side one.
     final diff = (homeStrength + (homeAdvantage ? 5 : 0)) - awayStrength;
@@ -104,13 +105,18 @@ class RatingMatchSimulator implements MatchSimulator {
     // match_balance_test for the bands this now holds. MatchEngine — the
     // manager's own matches — was deliberately left alone.
     final gap = _gapCeiling * _tanh(diff / _gapCeiling);
-    final x = _gapResponse * gap;
+    final x = gapResponse * gap;
     final edge = exp(x);
     final total = pow((edge + 1 / edge) / 2, _totalDamping);
     final homeBase = homeAdvantage ? _homeBaseXg : _neutralBaseXg;
     final awayBase = homeAdvantage ? _awayBaseXg : _neutralBaseXg;
-    final homeXg = (homeBase * edge / total).clamp(0.10, 5.5);
-    final awayXg = (awayBase / edge / total).clamp(0.10, 5.5);
+    // [openness] is how open the two PLANS make the game (see
+    // `MatchEngine.openness`), and only the manager's own skipped match ever
+    // passes one: his plan is the only one anybody set. Every background
+    // fixture leaves it at 1.0, where multiplying by it changes nothing, so
+    // the world's results do not move by a single goal.
+    final homeXg = (homeBase * edge / total * openness).clamp(0.10, 5.5);
+    final awayXg = (awayBase / edge / total * openness).clamp(0.10, 5.5);
     return _scoreline(homeXg, awayXg, rng);
   }
 
