@@ -358,6 +358,67 @@ LabStats runSkipCell({
   );
 }
 
+/// Plays lab plan [a] at [aRating] against lab plan [b] at [bRating], no AI
+/// on either side: [seeds] x 2 neutral-venue matches, every seed both ways
+/// round, reported from [a]'s side. The plan-against-plan grid the lab's
+/// guards read ("no dominant plan", "squad still decides").
+LabStats runPair(
+  LabPlan a,
+  LabPlan b, {
+  double aRating = 80,
+  double bRating = 80,
+  int seeds = 1000,
+}) {
+  const engine = MatchEngine();
+  var gf = 0;
+  var ga = 0;
+  var wins = 0;
+  var draws = 0;
+  var losses = 0;
+  var fourPlus = 0;
+  var gdSum = 0;
+  var gdSquares = 0;
+  for (var i = 0; i < seeds; i++) {
+    for (final aAtHome in const [true, false]) {
+      final x = _team(nationId: 1, plan: a, rating: aRating);
+      final y = _team(nationId: 2, plan: b, rating: bRating);
+      final r = engine.play(
+        home: aAtHome ? x : y,
+        away: aAtHome ? y : x,
+        rng: SeededRng.forFixture(0x7AB1, i),
+        neutralVenue: true,
+      );
+      final forA = aAtHome ? r.homeScore : r.awayScore;
+      final forB = aAtHome ? r.awayScore : r.homeScore;
+      gf += forA;
+      ga += forB;
+      final gd = forA - forB;
+      gdSum += gd;
+      gdSquares += gd * gd;
+      if (gd > 0) {
+        wins++;
+      } else if (gd < 0) {
+        losses++;
+      } else {
+        draws++;
+      }
+      if (forA + forB >= 4) fourPlus++;
+    }
+  }
+  final n = seeds * 2;
+  final meanGd = gdSum / n;
+  return (
+    gf: gf / n,
+    ga: ga / n,
+    total: (gf + ga) / n,
+    win: wins / n,
+    draw: draws / n,
+    loss: losses / n,
+    gdSpread: math.sqrt(math.max(0, gdSquares / n - meanGd * meanGd)),
+    fourPlus: fourPlus / n,
+  );
+}
+
 /// Renders [rows] (label to stats) as a markdown table.
 String labTable(Map<String, LabStats> rows) {
   String f(double v) => v.toStringAsFixed(2);
