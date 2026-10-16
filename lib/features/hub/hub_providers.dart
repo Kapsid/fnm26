@@ -1609,6 +1609,7 @@ class SeasonService {
     // The press: judge what he said and decide whether the room is called,
     // now that his result is in (both ways a match of his is committed).
     await _ref.read(pressDeskProvider).afterMatches(careerId);
+    await _recordAchievementsForHub(careerId);
     await _flushRank(careerId);
     await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a
@@ -1637,6 +1638,26 @@ class SeasonService {
     _invalidateCompetitionViews();
   }
 
+  /// Records whatever achievements this step unlocked and queues them for the
+  /// hub to show (see [pendingAchievementUnlocksProvider]).
+  ///
+  /// They used to be checked only on the live match screen, so anything the
+  /// world settled between two watched matches waited for the second one: the
+  /// finals draw puts the side into the World Championship, and "World
+  /// Championship Qualifier" then popped up after the first game AT the
+  /// finals. The live match path does not call this; its screen celebrates
+  /// its own match.
+  Future<void> _recordAchievementsForHub(int careerId) async {
+    final unlocked = await _ref
+        .read(achievementServiceProvider)
+        .checkAndRecord(careerId);
+    if (unlocked.isEmpty) return;
+    final pending = _ref.read(
+      pendingAchievementUnlocksProvider(careerId).notifier,
+    );
+    pending.state = [...pending.state, ...unlocked];
+  }
+
   /// Fast-forwards straight to the World Cup champion — the "skip to the final"
   /// option when the player is watching the finals rather than playing them.
   ///
@@ -1663,6 +1684,7 @@ class SeasonService {
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
+    await _recordAchievementsForHub(careerId);
     await _flushRank(careerId);
     await _flushAbsences(careerId);
     // The ranking screen's data is auto-disposed but can be kept alive by a

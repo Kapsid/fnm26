@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
@@ -6,6 +8,28 @@ import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet_text.dart';
+
+/// Shows the achievements the season unlocked while stepping the world (see
+/// [pendingAchievementUnlocksProvider]), then clears the queue.
+///
+/// Called with the hub's news, so an achievement arrives with the event that
+/// earned it (the finals draw's "World Championship Qualifier" alongside the
+/// qualification news) rather than after the next watched match.
+Future<void> showPendingAchievementUnlocks(
+  BuildContext context,
+  WidgetRef ref,
+  int careerId,
+) async {
+  final pending = ref.read(pendingAchievementUnlocksProvider(careerId));
+  if (pending.isEmpty) return;
+  // Cleared before showing, so a hub rebuild meanwhile cannot show them twice.
+  ref.read(pendingAchievementUnlocksProvider(careerId).notifier).state =
+      const [];
+  final compact =
+      ref.read(formFactorProvider) == FormFactor.tablet &&
+      context.isWideTabletWindow;
+  await showAchievementsUnlocked(context, pending, compact: compact);
+}
 
 /// Shows a celebratory dialog listing achievements the player just unlocked.
 /// Returns once dismissed. A no-op when [defs] is empty.

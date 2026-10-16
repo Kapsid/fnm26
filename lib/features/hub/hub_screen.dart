@@ -217,8 +217,13 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     // news it held back through [_tourHoldsNews] pop.
     ref.watch(tourStepProvider);
 
+    // Achievements the last step unlocked, shown with its news.
+    final pendingAchievements = ref
+        .watch(pendingAchievementUnlocksProvider(careerId))
+        .isNotEmpty;
+
     // Surface news the moment it lands, rather than leaving it to be found.
-    if (unread > 0 && !_popping) {
+    if ((unread > 0 || pendingAchievements) && !_popping) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _popMessages());
     }
 

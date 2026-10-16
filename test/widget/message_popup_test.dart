@@ -6,6 +6,8 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/achievements/achievements.dart';
+import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/messages/message_popup.dart';
 import 'package:fnm/features/messages/message_sheet.dart';
 import 'package:fnm/features/messages/message_providers.dart';
@@ -202,6 +204,44 @@ void main() {
     // it unread made the cap a queue: three popups on every visit to the hub,
     // for ever, which is what a backlog after a tournament produced.
     expect(await comp.unreadMessageCount(careerId), 0);
+  });
+
+  testWidgets(
+    'an achievement the step unlocked pops after its news, then is cleared',
+    (tester) async {
+      // The finals draw files the qualification news and unlocks "World
+      // Championship Qualifier" in the same step. Both belong to the draw:
+      // the achievement used to wait for the next watched match, which was
+      // the first game AT the finals.
+      await addMessage('qual', 'Through to the World Championship');
+      container
+          .read(pendingAchievementUnlocksProvider(careerId).notifier)
+          .state = [
+        AchievementCatalog.all.firstWhere((a) => a.id == 'qual_wc'),
+      ];
+      await pumpAndPop(tester);
+
+      expect(find.text('Through to the World Championship'), findsOneWidget);
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('World Championship Qualifier'), findsOneWidget);
+      expect(
+        container.read(pendingAchievementUnlocksProvider(careerId)),
+        isEmpty,
+        reason: 'shown once, never again on the next hub rebuild',
+      );
+    },
+  );
+
+  testWidgets('an achievement pops even when the step made no news', (
+    tester,
+  ) async {
+    container.read(pendingAchievementUnlocksProvider(careerId).notifier).state =
+        [AchievementCatalog.all.firstWhere((a) => a.id == 'qual_wc')];
+    await pumpAndPop(tester);
+
+    expect(find.text('World Championship Qualifier'), findsOneWidget);
   });
 }
 

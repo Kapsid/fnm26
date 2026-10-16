@@ -544,3 +544,17 @@ achievementsViewProvider = FutureProvider.autoDispose
           }(),
       ];
     });
+
+/// Achievements the season unlocked while stepping the world, waiting for the
+/// hub to show them.
+///
+/// The live match screen celebrates what its own match unlocked. Everything
+/// else (a finals draw that puts the side into the World Championship, a match
+/// the skip played) is recorded by the season the moment it happens and queued
+/// here, so the hub can announce it with the news it arrived with rather than
+/// after whatever match the manager next watches.
+final StateProviderFamily<List<AchievementDef>, int>
+pendingAchievementUnlocksProvider =
+    StateProvider.family<List<AchievementDef>, int>(
+      (ref, careerId) => const [],
+    );

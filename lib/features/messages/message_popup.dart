@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -57,7 +58,14 @@ Future<int> showUnreadMessagePopups(
         // The inbox is newest first; a run of events reads better in the order
         // it happened.
         ..sort((a, b) => a.id.compareTo(b.id));
-  if (unread.isEmpty) return 0;
+  if (unread.isEmpty) {
+    // Achievements the step unlocked come after the news it made (there may
+    // be none: an achievement can arrive on its own).
+    if (context.mounted) {
+      await showPendingAchievementUnlocks(context, ref, careerId);
+    }
+    return 0;
+  }
 
   final showing = unread.take(kMaxMessagePopups).toList();
   for (var i = 0; i < showing.length; i++) {
@@ -97,5 +105,10 @@ Future<int> showUnreadMessagePopups(
   ref
     ..invalidate(messageInboxProvider(careerId))
     ..invalidate(unreadMessagesProvider(careerId));
+  // Then the achievements the same step unlocked: the qualification news
+  // first, the "World Championship Qualifier" it earned after it.
+  if (context.mounted) {
+    await showPendingAchievementUnlocks(context, ref, careerId);
+  }
   return showing.length;
 }
