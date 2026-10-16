@@ -1685,11 +1685,20 @@ class MatchEngine {
     //    control instead, so it takes nothing from this term.
     final directAttack = n(a.directness).clamp(0.0, 1.0);
     final paceDuel = ((fwdPace - defPace) / 40).clamp(-1.0, 1.0);
-    bonus += directAttack * n(d.defensiveLine) * (10.5 + 7.5 * paceDuel);
+    //    The line is read with a [kNeutralExposure] offset: a MID line is still
+    //    exposed, and only a genuinely deep one (about 35 or below) closes the
+    //    space. Without it a neutral 50 reads as zero and is a safe harbour.
+    final lineExposure = (n(d.defensiveLine) + kNeutralExposure).clamp(
+      -1.0,
+      1.0,
+    );
+    bonus += directAttack * lineExposure * (10.5 + 7.5 * paceDuel);
 
     // 2) Press vs build-up, bypassed by directness.
     final press = n(d.pressing).clamp(0.0, 1.0);
-    final slow = (-n(a.directness)).clamp(0.0, 1.0); // possession-minded
+    // possession-minded; a neutral build-up still counts as part-slow, so a
+    // press has something to bite on (see [kNeutralExposure]).
+    final slow = (-n(a.directness) + kNeutralExposure).clamp(0.0, 1.0);
     final passRelief = ((midPass - 55) / 60).clamp(0.0, 0.6);
     final engine = ((pressEngine - 55) / 45).clamp(-0.4, 1.0);
     bonus -= press * slow * (7.5 + 6.0 * engine) * (1 - passRelief);
@@ -1729,11 +1738,17 @@ class MatchEngine {
     //    The wide reading is worth more because the attacker also pays for it:
     //    a stretched shape costs at the back (see [kWidthDefence] in
     //    [_defence]), where a narrow one is paid there instead.
-    final wideAttack = n(a.width).clamp(0.0, 1.0);
-    final narrowAttack = (-n(a.width)).clamp(0.0, 1.0);
+    //
+    //    A neutral 50 counts as part-stretched on BOTH readings
+    //    ([kNeutralExposure]), so a side that has not committed on width can
+    //    be exploited by one that has; two neutral sides still cancel exactly.
+    final wideAttack = (n(a.width) + kNeutralExposure).clamp(0.0, 1.0);
+    final narrowAttack = (-n(a.width) + kNeutralExposure).clamp(0.0, 1.0);
+    final narrowDef = (-n(d.width) + kNeutralExposure).clamp(0.0, 1.0);
+    final wideDef = (n(d.width) + kNeutralExposure).clamp(0.0, 1.0);
     // wide vs narrow, then narrow vs wide
-    bonus += (wideAttack * -n(d.width)).clamp(0.0, 1.0) * 7.5;
-    bonus += (narrowAttack * n(d.width)).clamp(0.0, 1.0) * 6.0;
+    bonus += wideAttack * narrowDef * 7.5;
+    bonus += narrowAttack * wideDef * 6.0;
 
     // 4) Mentality clash. Committing men forward against a side that has ALSO
     //    committed forward leaves space everywhere and the game opens up;
@@ -1749,6 +1764,13 @@ class MatchEngine {
     // case is held well short of the rating gulf that makes a rout.
     return bonus.clamp(-18.0, 22.0);
   }
+
+  /// How much of a dial's neutral 50 still counts as "exposed" in [_matchup]
+  /// (direct vs a mid line, a press vs a neutral build-up, width vs a neutral
+  /// shape). Start value: Task 8 of the tactics impact build tunes it. It
+  /// exists so there is no safe middle: a committed plan can always find the
+  /// side that has committed to nothing.
+  static const double kNeutralExposure = 0.3;
 
   /// How far the mentality slider moves a side's attack, per point away from
   /// the neutral 50. At the extremes this is the difference between a side that
