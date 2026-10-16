@@ -2983,7 +2983,8 @@ class AppLocalizationsCs extends AppLocalizations {
       'Žádné reklamy, žádné mikrotransakce, žádné předplatné. Jedna platba a všechny budoucí aktualizace jsou vaše.';
 
   @override
-  String get paywallBenefitSaves => 'Zkoušejte klidně 10 různých kariér.';
+  String get paywallBenefitSaves =>
+      'Zkoušejte klidně 10 různých kariér. Favorita i outsidera najednou, a uvidíte, jak jinak se stejná hra hraje.';
 
   @override
   String get paywallBenefitEndless =>
