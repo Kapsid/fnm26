@@ -76,15 +76,20 @@ void main() {
       final r = _versus433(Formation.f424);
       final base = _versus433(Formation.f433);
       expect(base.goalsFor, closeTo(base.goalsAgainst, 0.05));
-      expect(r.goalsFor, greaterThan(base.goalsFor));
-      expect(r.goalsAgainst, greaterThan(base.goalsAgainst));
+      // 1.423 for and 1.428 against, on 1.302 each way (2026-10-16): a pure
+      // trade, attack for defence, and a more open game. The margins are
+      // about half the measured lift, so a shape that stops counting fails
+      // rather than scraping through on noise.
+      expect(r.goalsFor, greaterThan(base.goalsFor + 0.06));
+      expect(r.goalsAgainst, greaterThan(base.goalsAgainst + 0.06));
     });
 
     test('5-4-1 scores less and concedes less than an identical 4-3-3', () {
       final r = _versus433(Formation.f541);
       final base = _versus433(Formation.f433);
-      expect(r.goalsFor, lessThan(base.goalsFor));
-      expect(r.goalsAgainst, lessThan(base.goalsAgainst));
+      // 1.109 for and 1.108 against, on 1.302 each way (2026-10-16).
+      expect(r.goalsFor, lessThan(base.goalsFor - 0.1));
+      expect(r.goalsAgainst, lessThan(base.goalsAgainst - 0.1));
     });
   });
 }

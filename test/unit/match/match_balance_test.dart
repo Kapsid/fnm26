@@ -73,6 +73,10 @@ Sample sample(int homeRating, int awayRating, {int n = 600}) {
 
 void main() {
   group('MatchEngine balance', () {
+    // Neutral plans in a 4-3-3 on both sides, so the 2026-10-16 tactics impact
+    // build leaves this group exactly where it was: every term it added or
+    // retuned reads zero between two neutral sides (pinned goal for goal in
+    // `tactics_tradeoffs_test.dart`). Checked, not re-pinned.
     test('evenly matched sides play a realistic, tight game', () {
       final s = sample(84, 84);
       // ~2.7 goals a game between two good sides, split evenly.

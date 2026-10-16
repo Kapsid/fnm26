@@ -178,21 +178,28 @@ void main() {
   group('openness', () {
     final neutral = _mirror(_lab('neutral'), _lab('neutral'));
     test('two attacking sides play a wild game', () {
+      // 4.70 goals a game against the neutral mirror's 2.58 (1.82x). The
+      // ceiling is the other half of the bar: before the 2026-10-16 tuning
+      // this mirror ran to 8 goals a game, a basketball score.
       final wild = _mirror(_lab('allOutAttack'), _lab('allOutAttack'));
       expect(wild.total, greaterThanOrEqualTo(neutral.total * 1.4));
+      expect(wild.total, lessThanOrEqualTo(neutral.total * 2.0));
     });
     test('two buses play a tight one', () {
+      // 1.19 goals a game.
       final tight = _mirror(_lab('parkTheBus'), _lab('parkTheBus'));
       expect(tight.total, lessThanOrEqualTo(neutral.total * 0.7));
     });
-    // Skipped: the mirror is already 8.3 goals a game and 14.5% routs with
-    // openness switched OFF (Tasks 1-2 mentality/shape costs hit both sides of
-    // a 4-2-4 mirror at once), so no openness value inside [0.7, 1.45] can
-    // reach 6%. Needs the Task 1-2 costs retuned first.
     test('openness never turns equals into routs', () {
+      // 5.3% of all-out mirrors are decided by four or more (the neutral
+      // mirror: 3.4%). Goals arriving at a steady rate would give about 10%
+      // at 4.7 a game; what holds it down is the scoreline bend in the engine
+      // (`MatchEngine._scorelineOpenness`): in an open game the side in front
+      // sits on its lead and the side behind chases. Until 2026-10-16 this
+      // mirror was 8 goals a game with 14.5% routs.
       final wild = _mirror(_lab('allOutAttack'), _lab('allOutAttack'));
       expect(wild.bigMargin, lessThanOrEqualTo(0.06));
-    }, skip: 'Re-pinned in Task 8 (tactics impact)');
+    });
     double mult(LabPlan h, LabPlan a) => MatchEngine.openness(
       home: h.instructions,
       away: a.instructions,
@@ -233,8 +240,18 @@ void main() {
         homeAttackers: att,
         awayAttackers: att,
       );
-      expect(both(bold, 6), closeTo(1.45, 1e-9));
-      expect(both(meek, 0), closeTo(0.7, 1e-9));
+      expect(both(bold, 6), closeTo(1 + kOpenUp, 1e-9));
+      expect(both(meek, 0), closeTo(1 - kOpenDown, 1e-9));
+    });
+    test('one bold side opens a game, it takes both to shut it', () {
+      // The bolder side's commitment sets how open the game is, so a second
+      // all-out side adds nothing to the MULTIPLIER (it adds its own flat
+      // terms). Caution is averaged: one bus closes the game halfway.
+      final allOut = _lab('allOutAttack');
+      final bus = _lab('parkTheBus');
+      final n = _lab('neutral');
+      expect(mult(allOut, n), closeTo(mult(allOut, allOut), 1e-9));
+      expect(mult(bus, n), closeTo((1 + mult(bus, bus)) / 2, 1e-9));
     });
     test('neutral against neutral is exactly 1.0', () {
       expect(
@@ -251,25 +268,46 @@ void main() {
 
   group('mentality trade-off', () {
     test('all-out mentality concedes clearly more', () {
+      // Concedes 1.59 a game against 1.29 (1.23x), and that is close to all
+      // it gains: it scores 1.61. Before the 2026-10-16 build the same
+      // mentality conceded 1.257x but scored far more than it let in, because
+      // its flat attacking gain was twice its defensive cost; the second
+      // assertion is the one that would catch that coming back.
       final allOut = _plan(const TacticalInstructions(mentality: 90));
       final mirror = _plan(const TacticalInstructions(mentality: 50));
       expect(
         allOut.goalsAgainst,
-        greaterThanOrEqualTo(mirror.goalsAgainst * 1.25),
+        greaterThanOrEqualTo(mirror.goalsAgainst * 1.2),
       );
+      final gained = allOut.goalsFor - mirror.goalsFor;
+      final conceded = allOut.goalsAgainst - mirror.goalsAgainst;
+      expect(conceded, greaterThanOrEqualTo(gained * 0.85));
+    });
+    test('all-out is still a slight net positive against a passive side', () {
+      // +0.033 a game against a side at mentality 30. Attacking must not be
+      // a loss everywhere, or nobody would ever do it; it must not be a
+      // clear win either, or everybody would.
+      final gd = _goalDifference(
+        const TacticalInstructions(mentality: 90),
+        const TacticalInstructions(mentality: 30),
+        forwardPhysical: 80,
+        defenderPhysical: 80,
+      );
+      expect(gd, inInclusiveRange(0.0, 0.15));
     });
   });
 
   group('pressing trade-off', () {
-    // Skipped: the Task 5 re-anchor lets a press bite a NEUTRAL build-up, so
-    // it now concedes 1.2865 a game against base 1.2905 (goalsFor still
-    // rises). Task 8 re-balances the press bill against the neutral opponent.
     test('a high press creates more and concedes more', () {
+      // 1.340 for and 1.347 against, on a base of 1.290 each way: the press
+      // bites the neutral build-up and the neutral side finds the space
+      // behind it (both read with the neutral exposure), and the press opens
+      // the game. Before the 2026-10-16 tuning it conceded LESS than the base.
       final base = _plan(const TacticalInstructions());
       final press = _plan(const TacticalInstructions(pressing: 90));
-      expect(press.goalsFor, greaterThan(base.goalsFor));
-      expect(press.goalsAgainst, greaterThan(base.goalsAgainst));
-    }, skip: 'Re-pinned in Task 8 (tactics impact)');
+      expect(press.goalsFor, greaterThan(base.goalsFor + 0.03));
+      expect(press.goalsAgainst, greaterThan(base.goalsAgainst + 0.03));
+    });
     test('a press is punished by direct pace', () {
       const press = TacticalInstructions(pressing: 90, defensiveLine: 80);
       final fast = _goalDifference(
@@ -284,7 +322,21 @@ void main() {
         forwardPhysical: 90,
         defenderPhysical: 70,
       );
+      // -1.05 against -0.11.
       expect(fast, lessThan(slow - 0.25));
+    });
+    test('a press against slow forwards still loses to a direct side', () {
+      // The space-behind term is SIGNED by the pace duel, so a press with
+      // quick backs against slow forwards gains rather than pays. It must not
+      // make pressing the answer to every slow side: the counter-attacking
+      // plan still beats it (-0.10 for the press at 1000 seeds).
+      final gd = _goalDifference(
+        _lab('highPress').instructions,
+        _lab('counter').instructions,
+        forwardPhysical: 60,
+        defenderPhysical: 80,
+      );
+      expect(gd, lessThan(0));
     });
     test('the punishment grows with the pace of the side pressed', () {
       // Defender pace is the only thing that moves, and it moves for a
@@ -303,14 +355,18 @@ void main() {
             forwardPhysical: 90,
             defenderPhysical: 90,
           );
+      // -0.46 against -0.33.
       final pressed = outrun(const TacticalInstructions(pressing: 90));
       final unpressed = outrun(const TacticalInstructions());
       expect(pressed, lessThan(unpressed - 0.08));
     });
     test('pressing tires a side', () {
+      // 5.8 points of energy down at the final whistle. The press's share of
+      // the drain settled at /200 in the 2026-10-16 tuning (see
+      // `MatchEngine._deplete`); it was /150 when this bound was 6.
       final pressing = _finalEnergy(const TacticalInstructions(pressing: 90));
       final normal = _finalEnergy(const TacticalInstructions());
-      expect(pressing, lessThan(normal - 6));
+      expect(pressing, lessThan(normal - 5));
     });
   });
 
@@ -347,10 +403,9 @@ void main() {
         expect(m.total * 4000, closeTo(10324, 1e-6));
       },
     );
-    // Skipped: with the Task 5 re-anchor (kNeutralExposure 0.3) the four
-    // committed plans average -0.03 GD against neutral (counter -0.09,
-    // highPress +0.22, possession +0.01, wide -0.26). The wide plan's loss is
-    // the 3-4-3 shape plus width costs, not the match-up; Task 8 tunes.
+    // +0.093 on average (counter +0.127, highPress +0.020, possession +0.169,
+    // wide +0.057). It read -0.03 before the 2026-10-16 tuning, when the
+    // 3-4-3's shape costs alone lost the wide plan 0.26 a game.
     test('a committed plan beats neutral on average', () {
       final neutral = _lab('neutral');
       const names = ['counter', 'highPress', 'possession', 'wide'];
@@ -358,7 +413,7 @@ void main() {
           names.map((n) => _planGd(_lab(n), neutral)).reduce((a, b) => a + b) /
           names.length;
       expect(mean, greaterThan(0.05));
-    }, skip: 'Re-pinned in Task 8 (tactics impact)');
+    });
 
     /// Best goal difference any other lab plan achieves against [target]
     /// between equal squads, with that plan's name.
@@ -388,9 +443,11 @@ void main() {
       }
     });
 
-    // Skipped: after the re-anchor, allOutAttack (best counter highPress,
-    // +0.087), highPress (counter, +0.006) and counter (possession, +0.097)
-    // still have no counter at 0.15. Needs Task 8 tuning, not a new term.
+    // Best counters (2026-10-16): allOutAttack by counter +0.35, highPress by
+    // counter +0.49, counter by possession +0.21 (the patience term), and in
+    // the case above neutral by possession +0.17, parkTheBus by possession
+    // +0.32, possession by highPress +0.23, wide by counter +0.18 (the back
+    // three term).
     test('allOutAttack, highPress and counter have a counter', () {
       for (final target in const ['allOutAttack', 'highPress', 'counter']) {
         final best = bestCounter(target);
@@ -400,6 +457,6 @@ void main() {
           reason: '$target: best counter ${best.name} at ${best.gd}',
         );
       }
-    }, skip: 'Re-pinned in Task 8 (tactics impact)');
+    });
   });
 }

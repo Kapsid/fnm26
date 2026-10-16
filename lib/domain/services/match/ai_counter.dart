@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
@@ -70,10 +71,14 @@ class ScoutedPlan {
 /// with a rigid identity ([AiTactics.flexibility]).
 abstract final class AiCounter {
   /// How far a fully read counter pushes a slider per point the scouted dial
-  /// sits away from 50. Start value (Task 8 tunes it): half a point, so a
-  /// manager at 80 on a dial draws a 15-point answer from a side that reads
-  /// him completely.
-  static const double counterGain = 0.5;
+  /// sits away from 50 (or from the exposed edge of the middle, see
+  /// [apply]). Tuned 0.5 -> 0.8 on 2026-10-16: at 0.5 being read cost a
+  /// predictable manager almost nothing outside the press, so varying the plan
+  /// was no reason at all. At 0.8 a side that reads him completely answers a
+  /// line at 80 with 36 more points of directness (45 points past the exposed
+  /// edge at 35), and a fully predictable plan does clearly worse against a
+  /// countering side than an unread one (`tactics_lab_test.dart`).
+  static const double counterGain = 0.8;
 
   /// The scouted mentality from which an opponent reads "all-out attack" and
   /// answers by sitting deeper and less ambitiously.
@@ -128,14 +133,29 @@ abstract final class AiCounter {
     // it. Two rules that point the same dial the same way take the larger,
     // not the sum: the high line and the high press are one reason to go
     // long, not two.
-    double above(int v) => (v - 50).clamp(0, 50).toDouble();
-    double below(int v) => (50 - v).clamp(0, 50).toDouble();
+    //
+    // The line, the press and the build-up are read the way the engine reads
+    // them ([MatchEngine.kNeutralExposure]): the middle is still exposed, so
+    // the shift is measured from the exposed edge (35 or 65), not from 50. A
+    // neutral plan therefore still draws a small answer, which is what "no
+    // safe middle" means for the counter. The two answers that only a
+    // COMMITTED plan invites (patience against a deep block, a deeper line
+    // against a direct side) read from 50.
+    const edge = MatchEngine.kNeutralExposure * 50;
+    double above(int v) => (v - 50 + edge).clamp(0, 50).toDouble();
+    double below(int v) => (50 - v + edge).clamp(0, 50).toDouble();
+    double committedAbove(int v) => (v - 50).clamp(0, 50).toDouble();
+    double committedBelow(int v) => (50 - v).clamp(0, 50).toDouble();
 
-    // A high line or a high press leaves space in behind: go direct.
-    final directness = [
-      above(s.defensiveLine),
-      above(s.pressing),
-    ].reduce((a, c) => a > c ? a : c);
+    // A high line or a high press leaves space in behind: go direct. A deep
+    // line smothers the long ball, so against one keep it on the ground and
+    // be patient (the engine's patience term).
+    final directness =
+        [
+          above(s.defensiveLine),
+          above(s.pressing),
+        ].reduce((a, c) => a > c ? a : c) -
+        committedBelow(s.defensiveLine);
     // A patient, short-passing side is pressed in its own build-up.
     final pressing = below(s.directness);
     // Width is answered with the opposite: crowd the middle against a wide
@@ -145,6 +165,12 @@ abstract final class AiCounter {
     final allOut = s.mentality >= attackingMentality
         ? (s.mentality - 50).toDouble()
         : 0.0;
+    // A direct side is met with a deeper line: no space behind to run into
+    // (the engine's smother). Shares the line with the answer above.
+    final dropLine = [
+      allOut,
+      committedAbove(s.directness),
+    ].reduce((a, c) => a > c ? a : c);
 
     int move(int v, double shift) =>
         (v + shift * counterGain * r).round().clamp(8, 92);
@@ -154,7 +180,7 @@ abstract final class AiCounter {
       pressing: move(b.pressing, pressing),
       width: move(b.width, width),
       mentality: move(b.mentality, -allOut),
-      defensiveLine: move(b.defensiveLine, -allOut),
+      defensiveLine: move(b.defensiveLine, -dropLine),
     );
 
     return (

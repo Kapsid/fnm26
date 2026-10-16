@@ -168,11 +168,98 @@ void main() {
           (a.defensiveLine, b.defensiveLine),
           (a.directness, b.directness),
         ]) {
-          expect((x - y).abs(), lessThanOrEqualTo(6));
+          // The weakest read is 0.3 of a full one (`AiCounter.read`), so no
+          // slider moves more than 30% of the largest full answer (a dial at
+          // the edge, 50 points of shift). A full read moves up to 40.
+          expect(
+            (x - y).abs(),
+            lessThanOrEqualTo((50 * AiCounter.counterGain * 0.3).ceil()),
+          );
         }
         if (out.formation == _base.formation) unchanged++;
       }
       expect(unchanged / 200, greaterThanOrEqualTo(0.95));
+    });
+
+    test('a weak, rigid side rarely answers a lopsided shape in kind', () {
+      // Unlike the case above, the scouted shape here IS lopsided enough to be
+      // worth a back five, so the formation roll is live. A weak side (read
+      // 0.3) with a rigid identity (flexibility 0.4) takes it at most 12% of
+      // the time.
+      final scouted = _scouted(
+        Formation.f424,
+        const TacticalInstructions(mentality: 90),
+      );
+      var changed = 0;
+      for (var seed = 0; seed < 500; seed++) {
+        final out = AiCounter.apply(
+          base: _base,
+          scouted: scouted,
+          opponentStrength: 60,
+          style: NationStyle.defensive,
+          seed: seed,
+        );
+        if (out.formation != _base.formation) changed++;
+      }
+      expect(changed / 500, lessThanOrEqualTo(0.15));
+    });
+
+    test('a deep block draws a patient opponent', () {
+      final out = AiCounter.apply(
+        base: _base,
+        scouted: _scouted(
+          Formation.f433,
+          const TacticalInstructions(defensiveLine: 20),
+        ),
+        opponentStrength: 85,
+        style: NationStyle.balanced,
+        seed: 1,
+      );
+      // Ten points shorter (the scouted press, at a neutral 50, still reads
+      // as part-exposed and pulls the other way by a little).
+      expect(
+        out.instructions.directness,
+        lessThan(_base.instructions.directness - 5),
+      );
+    });
+
+    test('a direct side draws a deeper line', () {
+      final out = AiCounter.apply(
+        base: _base,
+        scouted: _scouted(
+          Formation.f433,
+          const TacticalInstructions(directness: 80),
+        ),
+        opponentStrength: 85,
+        style: NationStyle.balanced,
+        seed: 1,
+      );
+      expect(
+        out.instructions.defensiveLine,
+        lessThan(_base.instructions.defensiveLine - 10),
+      );
+    });
+
+    test('even a neutral plan draws a small answer', () {
+      // No safe middle: the middle of the line, the press and the build-up
+      // is still exposed, so a side that reads a neutral plan leans into it
+      // a little (going longer, pressing more), and no further.
+      final out = AiCounter.apply(
+        base: _base,
+        scouted: _scouted(Formation.f433, const TacticalInstructions()),
+        opponentStrength: 85,
+        style: NationStyle.balanced,
+        seed: 1,
+      );
+      final i = out.instructions;
+      final b = _base.instructions;
+      expect(
+        i.directness,
+        inInclusiveRange(b.directness + 3, b.directness + 15),
+      );
+      expect(i.pressing, inInclusiveRange(b.pressing + 3, b.pressing + 15));
+      expect(i.width, b.width);
+      expect(i.mentality, b.mentality);
     });
 
     test('three up front meets a back five, sometimes', () {
