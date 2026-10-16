@@ -2839,13 +2839,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get achQualWc => 'World Championship Qualifier';
 
   @override
-  String get achQualWcDesc => 'Reach the World Championship finals.';
+  String get achQualWcDesc => 'Qualify for the World Championship.';
 
   @override
   String get achQualCont => 'Continental Qualifier';
 
   @override
-  String get achQualContDesc => 'Reach your continental championship finals.';
+  String get achQualContDesc => 'Qualify for your continental championship.';
 
   @override
   String get achTitleWc => 'World Champions';

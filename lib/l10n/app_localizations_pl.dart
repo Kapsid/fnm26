@@ -2893,15 +2893,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get achQualWc => 'Awans na Mistrzostwa Świata';
 
   @override
-  String get achQualWcDesc =>
-      'Awansuj do turnieju finałowego Mistrzostw Świata.';
+  String get achQualWcDesc => 'Awansuj na Mistrzostwa Świata.';
 
   @override
   String get achQualCont => 'Awans na mistrzostwa kontynentu';
 
   @override
-  String get achQualContDesc =>
-      'Awansuj do turnieju finałowego mistrzostw kontynentu.';
+  String get achQualContDesc => 'Awansuj na mistrzostwa kontynentu.';
 
   @override
   String get achTitleWc => 'Mistrzowie świata';

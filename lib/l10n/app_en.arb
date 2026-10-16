@@ -3902,7 +3902,7 @@
   "@achQualWc": {
     "description": "Achievement title."
   },
-  "achQualWcDesc": "Reach the World Championship finals.",
+  "achQualWcDesc": "Qualify for the World Championship.",
   "@achQualWcDesc": {
     "description": "Achievement description."
   },
@@ -3910,7 +3910,7 @@
   "@achQualCont": {
     "description": "Achievement title."
   },
-  "achQualContDesc": "Reach your continental championship finals.",
+  "achQualContDesc": "Qualify for your continental championship.",
   "@achQualContDesc": {
     "description": "Achievement description."
   },

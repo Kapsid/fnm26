@@ -2861,14 +2861,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get achQualWc => 'WM-Teilnehmer';
 
   @override
-  String get achQualWcDesc => 'Erreichen Sie die WM-Endrunde.';
+  String get achQualWcDesc =>
+      'Qualifizieren Sie sich für die Weltmeisterschaft.';
 
   @override
   String get achQualCont => 'Kontinentaler Teilnehmer';
 
   @override
   String get achQualContDesc =>
-      'Erreichen Sie die Endrunde Ihrer Kontinentalmeisterschaft.';
+      'Qualifizieren Sie sich für Ihre Kontinentalmeisterschaft.';
 
   @override
   String get achTitleWc => 'Weltmeister';

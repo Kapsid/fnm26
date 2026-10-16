@@ -4851,7 +4851,7 @@ abstract class AppLocalizations {
   /// Achievement description.
   ///
   /// In en, this message translates to:
-  /// **'Reach the World Championship finals.'**
+  /// **'Qualify for the World Championship.'**
   String get achQualWcDesc;
 
   /// Achievement title.
@@ -4863,7 +4863,7 @@ abstract class AppLocalizations {
   /// Achievement description.
   ///
   /// In en, this message translates to:
-  /// **'Reach your continental championship finals.'**
+  /// **'Qualify for your continental championship.'**
   String get achQualContDesc;
 
   /// Achievement title.

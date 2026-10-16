@@ -2853,14 +2853,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get achQualWc => 'Clasificado para el Mundial';
 
   @override
-  String get achQualWcDesc => 'Llega a la fase final del Campeonato del Mundo.';
+  String get achQualWcDesc => 'Clasifícate para el Campeonato del Mundo.';
 
   @override
   String get achQualCont => 'Clasificado continental';
 
   @override
-  String get achQualContDesc =>
-      'Llega a la fase final de tu campeonato continental.';
+  String get achQualContDesc => 'Clasifícate para tu campeonato continental.';
 
   @override
   String get achTitleWc => 'Campeones del Mundo';

@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -2860,14 +2859,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get achQualWc => 'Účast na MS';
 
   @override
-  String get achQualWcDesc => 'Postupte na závěrečný turnaj mistrovství světa.';
+  String get achQualWcDesc => 'Postupte na mistrovství světa.';
 
   @override
   String get achQualCont => 'Účast na kontinentálním šampionátu';
 
   @override
-  String get achQualContDesc =>
-      'Postupte na závěrečný turnaj svého kontinentálního šampionátu.';
+  String get achQualContDesc => 'Postupte na svůj kontinentální šampionát.';
 
   @override
   String get achTitleWc => 'Mistři světa';
