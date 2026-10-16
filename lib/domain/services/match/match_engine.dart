@@ -1696,6 +1696,17 @@ class MatchEngine {
     bonus +=
         press * n(a.directness).clamp(0.0, 1.0) * 7.5; // direct beats press
 
+    //    SPACE BEHIND a press. The turnovers above are the presser's reward;
+    //    this is its bill. A side that has thrown its midfield forward leaves
+    //    the channels open, and the opponent's pace and willingness to go
+    //    long decide how much it is punished. It scales with the press itself
+    //    (so a half-hearted press risks little) and is signed by the pace
+    //    duel: slow forwards against quick defenders find nothing, and the
+    //    clamp below still bounds the total. This replaces the flat defensive
+    //    gain pressing used to carry, which made it free.
+    bonus +=
+        press * (directAttack * kPressSpaceDirect + paceDuel * kPressSpacePace);
+
     // 3) Width mismatch. BOTH cases are a gain for the attacker, and that is
     //    deliberate: stretching a narrow block and overloading the middle of a
     //    stretched one are both real ways to find a chance, so a width mismatch
@@ -1760,10 +1771,16 @@ class MatchEngine {
   static const double kLineAttack = 0.10;
   static const double kLineDefence = 0.12;
 
-  /// What pressing is worth at the back, and what a stretched, wide shape costs
-  /// there, per point off the neutral 50.
-  static const double kPressingDefence = 0.06;
+  /// What a stretched, wide shape costs at the back, per point off the neutral
+  /// 50. Pressing no longer has a flat term here: it wins the ball in
+  /// [_matchup] and leaves space behind there, so it is a gamble, not a gift.
   static const double kWidthDefence = 0.06;
+
+  /// The space a press leaves behind, as an attack bonus for the pressed side
+  /// in [_matchup], at a full press: for a fully direct opponent, and for a
+  /// pace duel won outright. Starting values, tuned in Task 8.
+  static const double kPressSpaceDirect = 3.0;
+  static const double kPressSpacePace = 4.5;
 
   /// Formation shape, in rating points per man off the 4-3-3 count (see
   /// [ShapeProfile]). Each extra attacker lifts the attack by [kShapeAttack]
@@ -1806,7 +1823,6 @@ class MatchEngine {
         extraDefenders * kShapeDefenceCost;
     final defence =
         -off(i.mentality) * kMentalityDefence +
-        off(i.pressing) * kPressingDefence -
         off(i.defensiveLine) * kLineDefence -
         off(i.width) * kWidthDefence +
         extraDefenders * kShapeDefence -
@@ -1863,7 +1879,6 @@ class MatchEngine {
     final v =
         base -
         (i.mentality - 50) * kMentalityDefence +
-        (i.pressing - 50) * kPressingDefence -
         (i.defensiveLine - 50) * kLineDefence -
         (i.width - 50) * kWidthDefence +
         (t.shape.defenders - ShapeProfile.neutralDefenders) * kShapeDefence -
@@ -1942,7 +1957,7 @@ class MatchEngine {
     // a sending-off also burns the side out faster.
     final shortHanded = 1 + 0.30 * t.sentOff.length;
     final workload =
-        (1 + (i.tempo - 50) / 250 + (i.pressing - 50) / 250) * shortHanded;
+        (1 + (i.tempo - 50) / 250 + (i.pressing - 50) / 150) * shortHanded;
     for (final p in t.xi) {
       if (t.sentOff.contains(p.id)) continue;
       final stamina = p.attributes.stamina.clamp(20, 99);
