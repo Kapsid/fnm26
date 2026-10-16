@@ -107,6 +107,49 @@ void main() {
       final wild = _mirror(_lab('allOutAttack'), _lab('allOutAttack'));
       expect(wild.bigMargin, lessThanOrEqualTo(0.06));
     }, skip: 'Re-pinned in Task 8 (tactics impact)');
+    double mult(LabPlan h, LabPlan a) => MatchEngine.openness(
+      home: h.instructions,
+      away: a.instructions,
+      homeAttackers: ShapeProfile.of(h.formation.positions).attackers,
+      awayAttackers: ShapeProfile.of(a.formation.positions).attackers,
+    );
+    test('the multiplier itself opens bold pairs and closes cautious ones', () {
+      expect(
+        mult(_lab('allOutAttack'), _lab('allOutAttack')),
+        greaterThan(1.2),
+      );
+      expect(mult(_lab('parkTheBus'), _lab('parkTheBus')), lessThan(0.85));
+      expect(mult(_lab('neutral'), _lab('neutral')), 1.0);
+    });
+    test('the multiplier is symmetric in home and away', () {
+      final ab = mult(_lab('allOutAttack'), _lab('parkTheBus'));
+      final ba = mult(_lab('parkTheBus'), _lab('allOutAttack'));
+      expect(ab, ba);
+    });
+    test('the multiplier rises with one side\'s mentality', () {
+      double at(int m) => MatchEngine.openness(
+        home: TacticalInstructions(mentality: m),
+        away: const TacticalInstructions(),
+        homeAttackers: ShapeProfile.neutralAttackers,
+        awayAttackers: ShapeProfile.neutralAttackers,
+      );
+      for (var m = 0; m < 100; m += 10) {
+        expect(at(m + 10), greaterThanOrEqualTo(at(m)));
+      }
+      expect(at(100), greaterThan(at(0)));
+    });
+    test('the extremes reach the documented range', () {
+      const bold = TacticalInstructions(mentality: 100, pressing: 100);
+      const meek = TacticalInstructions(mentality: 0, pressing: 0);
+      double both(TacticalInstructions i, double att) => MatchEngine.openness(
+        home: i,
+        away: i,
+        homeAttackers: att,
+        awayAttackers: att,
+      );
+      expect(both(bold, 6), closeTo(1.45, 1e-9));
+      expect(both(meek, 0), closeTo(0.7, 1e-9));
+    });
     test('neutral against neutral is exactly 1.0', () {
       expect(
         MatchEngine.openness(

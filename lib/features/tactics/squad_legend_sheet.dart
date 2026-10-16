@@ -19,13 +19,14 @@ import 'package:fnm/shared/tablet/adaptive_sheet.dart';
 /// The trait half is not restated here. It comes from [describeTrait], the
 /// same mapping the player screen prints, so the legend cannot drift into
 /// describing an icon the list no longer uses.
-Future<void> showSquadLegend(BuildContext context) => showAdaptiveSheet<void>(
-  context: context,
-  backgroundColor: AppColors.surfaceContainer,
-  showDragHandle: true,
-  isScrollControlled: true,
-  builder: (context) => const _SquadLegendSheet(),
-);
+Future<void> showSquadLegend(BuildContext context) =>
+    showAdaptiveSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surfaceContainer,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => const _SquadLegendSheet(),
+    );
 
 class _SquadLegendSheet extends StatelessWidget {
   const _SquadLegendSheet();

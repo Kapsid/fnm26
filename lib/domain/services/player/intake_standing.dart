@@ -73,7 +73,8 @@ abstract final class IntakeStanding {
     // What the move was worth in ranking points, which is the only honest way
     // to compare a climb at the top of the table with one at the bottom.
     final gained =
-        Elo.seedFromRanking(now) - Elo.seedFromRanking(before < 1 ? 1 : before);
+        Elo.seedFromRanking(now) -
+        Elo.seedFromRanking(before < 1 ? 1 : before);
     final climb = (gained / fullClimbPoints * maxClimbBonus).clamp(
       minBonus,
       maxClimbBonus,

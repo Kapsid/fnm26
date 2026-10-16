@@ -16,7 +16,8 @@ enum FinalsPlacing {
   fourth(0.48),
   third(0.56),
   runnerUp(0.72),
-  champion(1);
+  champion(1)
+  ;
 
   const FinalsPlacing(this.credit);
 

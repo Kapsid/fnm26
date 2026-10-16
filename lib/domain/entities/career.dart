@@ -69,5 +69,6 @@ abstract class Career with _$Career {
     /// Where the board's gauge finished the previous cycle, or null before a
     /// cycle has closed.
     int? lastCycleBoard,
+
   }) = _Career;
 }

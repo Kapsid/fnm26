@@ -73,10 +73,11 @@ final AutoDisposeFutureProviderFamily<ResultsData?, int> resultsProvider =
       final byNation = <int, List<Fixture>>{};
       final fixtures = <Fixture>[];
       for (final entry in nationByCycle.entries) {
-        final all = byNation[entry.value] ??= await comp.fixturesForNation(
-          careerId,
-          entry.value,
-        );
+        final all =
+            byNation[entry.value] ??= await comp.fixturesForNation(
+              careerId,
+              entry.value,
+            );
         fixtures.addAll(
           all.where(
             (f) => cycleOfDate(f.date, career.cyclePointer) == entry.key,

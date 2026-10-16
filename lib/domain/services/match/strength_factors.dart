@@ -247,9 +247,7 @@ abstract final class StrengthFactors {
   static int _staff(Map<StaffRole, StaffTier> staff) {
     final factor =
         Staff.injuryFactor(staff[StaffRole.fitnessCoach] ?? StaffTier.none) *
-        Staff.assistantInjuryFactor(
-          staff[StaffRole.assistant] ?? StaffTier.none,
-        );
+        Staff.assistantInjuryFactor(staff[StaffRole.assistant] ?? StaffTier.none);
     final knocksAvoided = MatchEngine.injuryPerMinute * 90 * (1 - factor);
     return (knocksAvoided * MatchEngine.shortHandedAttackPenalty * 0.5).round();
   }

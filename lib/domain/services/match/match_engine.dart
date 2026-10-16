@@ -459,8 +459,8 @@ class _Live {
 const double kOpenMentality = 0.6;
 const double kOpenPressing = 0.25;
 const double kOpenAttackers = 0.25;
-const double kOpenUp = 0.25;
-const double kOpenDown = 0.2;
+const double kOpenUp = 0.45;
+const double kOpenDown = 0.3;
 
 /// A deterministic, lightweight tactical match engine. It derives attack and
 /// defence ratings from each team's XI and instructions, then plays out 90
@@ -1226,7 +1226,9 @@ class MatchEngine {
   /// side's commitment (mentality, pressing, extra attackers off the 4-3-3)
   /// is averaged, so one bold side opens the game halfway and it takes both
   /// to make a shootout. Neutral against neutral is exactly 1.0. Opening is
-  /// worth more than closing, and the bounds keep equals out of routs.
+  /// worth more than closing. Commitment is clamped to +-1, so the range is
+  /// 1 - [kOpenDown] .. 1 + [kOpenUp] = 0.7 .. 1.45, reached only when both
+  /// sides sit at the extreme; the outer clamp is a safety net on retuning.
   static double openness({
     required TacticalInstructions home,
     required TacticalInstructions away,

@@ -169,7 +169,8 @@ enum YouthLevel {
   u19(17, 18),
 
   /// 19–20.
-  u21(19, 20);
+  u21(19, 20)
+  ;
 
   const YouthLevel(this.minAge, this.maxAge);
 
