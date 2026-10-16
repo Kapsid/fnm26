@@ -218,7 +218,9 @@ abstract final class StaffMarket {
     ]..sort();
     if (countries.isEmpty) return const [];
     final rng = SeededRng(
-      (saveSeed * 0x9E3779B1) ^ (cycle * 0x85EBCA77) ^ (role.index * 0x27D4EB2F),
+      (saveSeed * 0x9E3779B1) ^
+          (cycle * 0x85EBCA77) ^
+          (role.index * 0x27D4EB2F),
     );
     // Basic / good / elite, in that order: the cheap option first, because
     // that is the one a manager reads past on his way to what he cannot yet

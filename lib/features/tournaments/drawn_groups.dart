@@ -34,11 +34,12 @@ List<CeremonyGroup> drawnGroups(
   for (final g in stored)
     (
       name: g.name,
-      nationIds: [for (final s in g.standings) s.nationId]..sort((a, b) {
-        final ha = hosts.contains(a), hb = hosts.contains(b);
-        if (ha != hb) return ha ? -1 : 1;
-        return (rankById[a] ?? 9999).compareTo(rankById[b] ?? 9999);
-      }),
+      nationIds: [for (final s in g.standings) s.nationId]
+        ..sort((a, b) {
+          final ha = hosts.contains(a), hb = hosts.contains(b);
+          if (ha != hb) return ha ? -1 : 1;
+          return (rankById[a] ?? 9999).compareTo(rankById[b] ?? 9999);
+        }),
     ),
 ];
 

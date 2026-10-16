@@ -455,6 +455,13 @@ class _Live {
   int get nationId => team.nationId;
 }
 
+/// Openness weights (see [MatchEngine.openness]); Task 8 tunes them.
+const double kOpenMentality = 0.6;
+const double kOpenPressing = 0.25;
+const double kOpenAttackers = 0.25;
+const double kOpenUp = 0.25;
+const double kOpenDown = 0.2;
+
 /// A deterministic, lightweight tactical match engine. It derives attack and
 /// defence ratings from each team's XI and instructions, then plays out 90
 /// minute-ticks: each tick either side may create a chance and score, with the
@@ -671,7 +678,9 @@ class MatchEngine {
         awayDefence,
         liveHome.instructions,
         homeShare,
-        damping: _blowoutDamping(homeScore, awayScore),
+        damping:
+            _blowoutDamping(homeScore, awayScore) *
+            _openness(liveHome, liveAway),
       )) {
         homeShots++;
         // The player taking the shot is chosen now, so their fatigue can affect
@@ -703,7 +712,9 @@ class MatchEngine {
         homeDefence,
         liveAway.instructions,
         1 - homeShare,
-        damping: _blowoutDamping(awayScore, homeScore),
+        damping:
+            _blowoutDamping(awayScore, homeScore) *
+            _openness(liveHome, liveAway),
       )) {
         awayShots++;
         final shooter = _pickScorer(liveAway, rng);
@@ -1197,6 +1208,40 @@ class MatchEngine {
       _mean(t, PositionCategory.midfielder) +
       (t.instructions.tempo - 50) * 0.05 -
       (t.instructions.directness - 50) * 0.06;
+
+  /// [openness] for the two sides as they stand this minute (live
+  /// instructions and shape, so in-match changes count).
+  double _openness(_Live home, _Live away) => openness(
+    home: home.instructions,
+    away: away.instructions,
+    homeAttackers: home.shape.attackers,
+    awayAttackers: away.shape.attackers,
+  );
+
+  /// How open the game is, as a multiplier on BOTH sides' chance rate.
+  ///
+  /// A rating-based mentality penalty alone lets a bold side pay at the back
+  /// but never makes the GAME wilder: two sides throwing men forward should
+  /// trade chances, two sides sitting in should strangle each other. Each
+  /// side's commitment (mentality, pressing, extra attackers off the 4-3-3)
+  /// is averaged, so one bold side opens the game halfway and it takes both
+  /// to make a shootout. Neutral against neutral is exactly 1.0. Opening is
+  /// worth more than closing, and the bounds keep equals out of routs.
+  static double openness({
+    required TacticalInstructions home,
+    required TacticalInstructions away,
+    required double homeAttackers,
+    required double awayAttackers,
+  }) {
+    double commitment(TacticalInstructions i, double attackers) =>
+        ((i.mentality - 50) / 50 * kOpenMentality +
+                (i.pressing - 50) / 50 * kOpenPressing +
+                (attackers - ShapeProfile.neutralAttackers) * kOpenAttackers)
+            .clamp(-1.0, 1.0);
+    final c =
+        (commitment(home, homeAttackers) + commitment(away, awayAttackers)) / 2;
+    return (1 + c * (c >= 0 ? kOpenUp : kOpenDown)).clamp(0.7, 1.45);
+  }
 
   bool _chance(
     SeededRng rng,

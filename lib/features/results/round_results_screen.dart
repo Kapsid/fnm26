@@ -36,8 +36,7 @@ typedef RoundResultsView = ({
 /// The last round the manager played, grouped, with the zones each table
 /// colours. Public so a test can hand the screen a round without playing one.
 final AutoDisposeFutureProviderFamily<RoundResultsView?, int>
-roundResultsViewProvider = FutureProvider.autoDispose
-    .family<RoundResultsView?, int>((
+roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, int>((
   ref,
   careerId,
 ) async {

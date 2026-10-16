@@ -113,7 +113,11 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
               rankById: rankingById,
               hosts: hosts.toSet(),
             ))
-              FinalsGroupDraw(name: g.name, nationIds: g.nationIds, fixtures: []),
+              FinalsGroupDraw(
+                name: g.name,
+                nationIds: g.nationIds,
+                fixtures: [],
+              ),
           ],
         );
 

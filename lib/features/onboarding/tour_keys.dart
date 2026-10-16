@@ -26,10 +26,14 @@ abstract final class TourKeys {
   );
 
   /// The shape the side plays.
-  static final tacticsFormation = GlobalKey(debugLabel: 'tour.tacticsFormation');
+  static final tacticsFormation = GlobalKey(
+    debugLabel: 'tour.tacticsFormation',
+  );
 
   /// Its way of playing.
-  static final tacticsPlaystyle = GlobalKey(debugLabel: 'tour.tacticsPlaystyle');
+  static final tacticsPlaystyle = GlobalKey(
+    debugLabel: 'tour.tacticsPlaystyle',
+  );
 
   /// The tab that holds the whole pool.
   static final squadTab = GlobalKey(debugLabel: 'tour.squadTab');
