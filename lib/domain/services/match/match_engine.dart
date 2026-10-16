@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/performance_mark.dart';
+import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 
@@ -362,6 +363,7 @@ class _Live {
   _Live(this.team)
     : xi = [...team.xi],
       slots = [...team.formation.positions],
+      shape = ShapeProfile.of(team.formation.positions),
       instructions = team.instructions,
       penaltyTakerId = team.penaltyTakerId,
       deadBallTakerId = team.deadBallTakerId;
@@ -382,6 +384,13 @@ class _Live {
   /// Stable across substitutions (a sub inherits the slot of the player they
   /// replace) and reset by a live change that reshapes the team.
   List<PlayerPosition> slots;
+
+  /// The formation's attacker / defender counts, fixed when the shape is set
+  /// and refreshed by a formation change. Deliberately NOT recomputed from
+  /// [slots] each minute: a sending-off removes a slot, and the man down is
+  /// already paid for by the short-handed penalty, so counting him again as a
+  /// lost defender or attacker would charge twice.
+  ({double attackers, double defenders}) shape;
 
   /// The team's current instructions, changeable live during the match. For an
   /// AI-managed side this is recomputed each minute from [team] instructions by
@@ -1001,6 +1010,7 @@ class MatchEngine {
     live
       ..xi = newXi
       ..slots = newSlots
+      ..shape = ShapeProfile.of(newSlots)
       ..instructions = c.instructions;
     if (c.takers case final t?) {
       live
@@ -1705,6 +1715,16 @@ class MatchEngine {
   static const double kPressingDefence = 0.06;
   static const double kWidthDefence = 0.06;
 
+  /// Formation shape, in rating points per man off the 4-3-3 count (see
+  /// [ShapeProfile]). Each extra attacker lifts the attack by [kShapeAttack]
+  /// and thins the back by [kShapeAttackCost]; each extra defender does the
+  /// reverse with [kShapeDefence] / [kShapeDefenceCost]. Starting values,
+  /// tuned in Task 8.
+  static const double kShapeAttack = 4.0;
+  static const double kShapeAttackCost = 2.5;
+  static const double kShapeDefence = 4.0;
+  static const double kShapeDefenceCost = 2.5;
+
   /// What a plan is worth to a side described by a SINGLE strength number, in
   /// rating points.
   ///
@@ -1720,17 +1740,27 @@ class MatchEngine {
   /// and width carry no flat term in the attack for the same reason they carry
   /// none there: their value is decided by the match-up (see [_matchup]), which
   /// a scalar simulator has no shape to compare against.
-  static double planRatingDelta(TacticalInstructions i) {
+  static double planRatingDelta(
+    TacticalInstructions i, {
+    Formation formation = Formation.f433,
+  }) {
     double off(int v) => (v - 50).toDouble();
+    final shape = ShapeProfile.of(formation.positions);
+    final extraAttackers = shape.attackers - ShapeProfile.neutralAttackers;
+    final extraDefenders = shape.defenders - ShapeProfile.neutralDefenders;
     final attack =
         off(i.mentality) * kMentalityAttack +
         off(i.tempo) * kTempoAttack +
-        off(i.defensiveLine) * kLineAttack;
+        off(i.defensiveLine) * kLineAttack +
+        extraAttackers * kShapeAttack -
+        extraDefenders * kShapeDefenceCost;
     final defence =
         -off(i.mentality) * kMentalityDefence +
         off(i.pressing) * kPressingDefence -
         off(i.defensiveLine) * kLineDefence -
-        off(i.width) * kWidthDefence;
+        off(i.width) * kWidthDefence +
+        extraDefenders * kShapeDefence -
+        extraAttackers * kShapeAttackCost;
     return (attack + defence) / 2;
   }
 
@@ -1760,7 +1790,10 @@ class MatchEngine {
         base +
         (i.mentality - 50) * kMentalityAttack +
         (i.tempo - 50) * kTempoAttack +
-        (i.defensiveLine - 50) * kLineAttack -
+        (i.defensiveLine - 50) * kLineAttack +
+        (t.shape.attackers - ShapeProfile.neutralAttackers) * kShapeAttack -
+        (t.shape.defenders - ShapeProfile.neutralDefenders) *
+            kShapeDefenceCost -
         _shortHandedPenalty(t);
     return v * t.chemistry;
   }
@@ -1782,7 +1815,9 @@ class MatchEngine {
         (i.mentality - 50) * kMentalityDefence +
         (i.pressing - 50) * kPressingDefence -
         (i.defensiveLine - 50) * kLineDefence -
-        (i.width - 50) * kWidthDefence -
+        (i.width - 50) * kWidthDefence +
+        (t.shape.defenders - ShapeProfile.neutralDefenders) * kShapeDefence -
+        (t.shape.attackers - ShapeProfile.neutralAttackers) * kShapeAttackCost -
         _shortHandedPenalty(t) * _shortHandedDefenceShare;
     return v * t.chemistry;
   }
