@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -2984,12 +2985,11 @@ class AppLocalizationsCs extends AppLocalizations {
       'Žádné reklamy, žádné mikrotransakce, žádné předplatné. Jedna platba a všechny budoucí aktualizace jsou vaše.';
 
   @override
-  String get paywallBenefitSaves =>
-      'Tolik uložených her, kolik chcete. Veďte favorita i outsidera zároveň a zjistěte, jak jinak se ta samá hra čte.';
+  String get paywallBenefitSaves => 'Zkoušejte klidně 10 různých kariér.';
 
   @override
   String get paywallBenefitEndless =>
-      'Každý další cyklus. Nasaďte dnes sedmnáctiletého a v roce 2034 se dozvíte, jestli jste to viděl dobře.';
+      'Nekonečná hra. Nasaďte dnes sedmnáctiletého a v roce 2034 se dozvíte, jestli jste to viděl dobře.';
 
   @override
   String get paywallUnlocked => 'Neomezené FNM je odemčené. Užijte si ho!';
