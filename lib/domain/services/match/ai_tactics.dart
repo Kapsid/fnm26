@@ -1,3 +1,4 @@
+import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
@@ -16,6 +17,15 @@ typedef AiSetup = ({Formation formation, TacticalInstructions instructions});
 /// underdogs sit deep and hit on the break. A small per-field jitter keeps two
 /// teams in the same band from looking identical.
 abstract final class AiTactics {
+  /// The posture seed for one fixture. The live match (`match_providers`) and
+  /// the skip path (`hub_providers`) must agree on it: the string is
+  /// `'aitac:<opponentId>:<fixtureId>:<career rngSeed>'`.
+  static int fixtureSeed({
+    required int opponentId,
+    required int fixtureId,
+    required int rngSeed,
+  }) => varietySeed('aitac:$opponentId:$fixtureId:$rngSeed');
+
   static AiSetup forOpponent({
     required double opponentStrength,
     required double playerStrength,
@@ -59,6 +69,19 @@ abstract final class AiTactics {
       ),
     );
   }
+
+  /// How readily a side of [style] changes SHAPE to counter the manager
+  /// (0..1; `AiCounter` multiplies its read by this). Pragmatic sides
+  /// (balanced, possession, counter) will; sides whose identity IS a way of
+  /// lining up (a pressing or a defensive nation) mostly won't.
+  static double flexibility(NationStyle style) => switch (style) {
+    NationStyle.balanced ||
+    NationStyle.possession ||
+    NationStyle.counter => 1.0,
+    NationStyle.direct || NationStyle.physical => 0.7,
+    NationStyle.flair => 0.5,
+    NationStyle.defensive || NationStyle.highPress => 0.4,
+  };
 
   /// Per-style instruction shifts (mentality, pressing, tempo, width,
   /// defensiveLine, directness) layered on top of the strength-chosen posture.

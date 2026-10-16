@@ -253,15 +253,10 @@ void main() {
         counterPlan: _outplanned,
       );
       expect(s.goalDiffPerGame, lessThan(0.70));
-      // …and still clearly better than being read, or there is no reason to
-      // vary the plan.
-      final read = swing(
-        familiarity: 1,
-        predictability: 1,
-        plan: _wellJudged,
-        counterPlan: _outplanned,
-      );
-      expect(s.goalDiffPerGame, greaterThan(read.goalDiffPerGame));
+      // The reason to vary the plan used to be pinned here too (a read side
+      // gave chemistry back). Predictability is now charged only in the AI's
+      // counter (`AiCounter`, see ai_counter_test.dart), which this harness's
+      // fixed opponent plan does not model.
     });
 
     test('the instruction dials carry a real share of it on their own', () {
@@ -426,35 +421,28 @@ void main() {
       expect(extremeLift, greaterThan(ordinaryLift));
     }, skip: 'Re-pinned in Task 8 (tactics impact)');
 
-    test('a side that has been read gives part of it back, never all of it', () {
-      // Four years of the same eleven and the same plan: the video room has it.
-      // The drilled side should still be ahead — continuity has to stay worth
-      // having — but by clearly less.
-      final fresh = swing(
-        familiarity: 1,
-        predictability: 0,
-        plan: _outplanned,
-        counterPlan: _outplanned,
-      );
-      final read = swing(
-        familiarity: 1,
-        predictability: 1,
-        plan: _outplanned,
-        counterPlan: _outplanned,
-      );
-      expect(read.goalDiffPerGame, lessThan(fresh.goalDiffPerGame));
-      expect(
-        read.goalDiffPerGame,
-        greaterThan(0),
-        reason: 'being read must never cost more than the drilling was worth',
-      );
-      // The same thing said about the constants, so a future tuning pass cannot
-      // quietly invert them — nor let the video room take a bigger share of the
-      // drilling than it does today.
-      expect(
-        TeamChemistry.readPenalty / TeamChemistry.drilledBonus,
-        lessThanOrEqualTo(0.5),
-      );
-    });
+    test(
+      'being read costs nothing in chemistry: it is charged in the counter',
+      () {
+        // Predictability used to take part of the drilled bonus back here AND
+        // (from Task 6) sharpen the AI's counter: the same thing charged twice.
+        // It now lives only in `AiCounter`, so a drilled side that the world
+        // has worked out is exactly as cohesive as one it has not.
+        final fresh = swing(
+          familiarity: 1,
+          predictability: 0,
+          plan: _outplanned,
+          counterPlan: _outplanned,
+        );
+        final read = swing(
+          familiarity: 1,
+          predictability: 1,
+          plan: _outplanned,
+          counterPlan: _outplanned,
+        );
+        expect(read.goalDiffPerGame, fresh.goalDiffPerGame);
+        expect(read.goalDiffPerGame, greaterThan(0));
+      },
+    );
   });
 }

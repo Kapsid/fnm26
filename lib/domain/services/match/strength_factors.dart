@@ -134,12 +134,9 @@ abstract final class StrengthFactors {
   /// multiplier is worth `(factor - 1) x the side's rating` in points, which is
   /// exactly how it lands.
   ///
-  /// Predictability is left at its default of zero ON PURPOSE. The engine
-  /// passes the stored figure, and the side really is giving part of the
-  /// drilled bonus back — but predictability is hidden by design, and a
-  /// manager handed both this line and the engine's own chemistry could read it
-  /// straight off the difference. So this is what the drilling is worth, not
-  /// what survives the opposition's video room.
+  /// Predictability plays no part: `TeamChemistry.factor` no longer charges
+  /// it (it sharpens the AI's counter instead, see `AiCounter`), so this line
+  /// is exactly the chemistry the engine uses and reveals nothing hidden.
   static int _familiarity(double familiarity, int sideRating) =>
       ((TeamChemistry.factor(familiarity) - 1) * sideRating).round();
 

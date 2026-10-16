@@ -1,9 +1,18 @@
 import 'package:fnm/domain/entities/formation.dart';
 
 /// How drilled the manager is in each shape, and how well opponents have read
-/// it. Both figures are `0..1`; see `TeamChemistry` for how they combine into a
-/// match multiplier and how each rises and decays.
-typedef ShapeDrilling = ({double familiarity, double predictability});
+/// it. Both figures are `0..1`; see `TeamChemistry` for how each rises and
+/// decays.
+///
+/// [lastPlanKey] is the fingerprint (`TeamChemistry.planKey`) of the plan the
+/// shape was last fielded with, 0 when it never stored one. It is what an
+/// opponent's video room has on the manager: `ScoutedPlan.fromDrilling` decodes
+/// it into the plan the AI counters.
+typedef ShapeDrilling = ({
+  double familiarity,
+  double predictability,
+  int lastPlanKey,
+});
 
 /// Persisted tactical familiarity per formation, per career.
 abstract interface class TacticFamiliarityRepository {

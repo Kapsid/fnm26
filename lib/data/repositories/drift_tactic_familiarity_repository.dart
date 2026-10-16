@@ -19,6 +19,7 @@ class DriftTacticFamiliarityRepository implements TacticFamiliarityRepository {
         r.formation: (
           familiarity: r.familiarity,
           predictability: r.predictability,
+          lastPlanKey: r.lastPlanKey,
         ),
     };
   }

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
@@ -132,8 +133,11 @@ MatchTeam _team({
 /// ratings and the seed, as a real fixture would, with a balanced nation style.
 /// All players on a side sit at that side's rating.
 ///
-/// [aiCounters] is accepted but has NO EFFECT yet: the AI counter-plan does
-/// not exist until a later task, which will wire it in here.
+/// With [aiCounters] the opponent then bends that setup with
+/// `AiCounter.apply`, scouting the manager's own lab plan at [predictability]
+/// (as if he had fielded exactly this plan in his recent matches). Without it
+/// the opponent plays the uncountered posture. [predictability] no longer
+/// moves the chemistry (`TeamChemistry.factor` ignores it), only the counter.
 LabStats runCell({
   required LabPlan manager,
   required double managerRating,
@@ -146,9 +150,12 @@ LabStats runCell({
   const engine = MatchEngine();
   const managerId = 1;
   const opponentId = 2;
-  final chemistry = {
-    managerId: TeamChemistry.factor(familiarity, predictability),
-  };
+  final chemistry = {managerId: TeamChemistry.factor(familiarity)};
+  final scouted = ScoutedPlan(
+    formation: manager.formation,
+    instructions: manager.instructions,
+    predictability: predictability,
+  );
 
   var gf = 0;
   var ga = 0;
@@ -159,12 +166,22 @@ LabStats runCell({
   var gdSum = 0;
   var gdSquares = 0;
   for (var i = 0; i < seeds; i++) {
-    final setup = AiTactics.forOpponent(
+    final base = AiTactics.forOpponent(
       opponentStrength: opponentRating,
       playerStrength: managerRating,
       seed: i,
       style: NationStyle.balanced,
     );
+    final setup = aiCounters
+        ? AiCounter.apply(
+            base: base,
+            scouted: scouted,
+            opponentStrength: opponentRating,
+            style: NationStyle.balanced,
+            // A separate stream from the posture's, as in a real fixture.
+            seed: i ^ 0x5C0D7,
+          )
+        : base;
     final opponentPlan = (
       name: 'ai',
       formation: setup.formation,

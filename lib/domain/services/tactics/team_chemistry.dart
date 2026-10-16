@@ -7,45 +7,32 @@ import 'package:fnm/domain/entities/tactics.dart';
 /// input, mutated after each match by [bumpFamiliarity].
 ///
 /// Familiarity does not act alone. Naming the same eleven in the same shape with
-/// the same instructions for four years is not just drilling — it is a plan
+/// the same instructions for four years is not just drilling: it is a plan
 /// every scout in the world has on video, so a second stored figure,
-/// [bumpPredictability], tracks how well opponents have read the side and takes
-/// part of the drilled bonus back. Predictability is deliberately HIDDEN: it is
-/// what the opposition knows, not what the manager is told.
+/// [bumpPredictability], tracks how well opponents have read the side.
+/// Predictability is deliberately HIDDEN (it is what the opposition knows, not
+/// what the manager is told) and is charged in ONE place: `AiCounter`, where it
+/// sharpens the opponent's counter to his recent plans. It used to take part of
+/// the drilled bonus back here as well, which charged the same thing twice.
 abstract final class TeamChemistry {
   /// The most a perfectly drilled shape adds.
   ///
-  /// 0.07 → 0.08. The ceiling deliberately barely moves: at 0.07 a perfectly
-  /// drilled, unread side was ALREADY worth about a third of a goal a game,
-  /// which is plenty. The problem was that almost nobody plays at the ceiling —
-  /// a manager who names the same shape for years also gets read, and against
-  /// the old 0.04 [readPenalty] that left a settled side a net 0.03, one goal
-  /// every seven games, which is below what a human being can detect across a
-  /// career. So the change here is mostly in the RATIO below, not in this
-  /// number.
+  /// 0.07 → 0.08. At 0.07 a perfectly drilled side was already worth about a
+  /// third of a goal a game, so the ceiling barely moves. Being read no longer
+  /// takes part of it back here (see the class doc): a settled side keeps all
+  /// of it, and pays for its predictability through the sharper counter it
+  /// meets instead.
   static const double drilledBonus = 0.08;
 
-  /// The most a completely read side gives back. Smaller than [drilledBonus],
-  /// so continuity is still worth having — it just stops being free.
-  ///
-  /// Held at 0.04 while [drilledBonus] rose, which is the point of the pair:
-  /// the RATIO moves from 4/7 to 1/2, so the video room now takes half of the
-  /// drilling rather than four sevenths of it. A settled, thoroughly scouted
-  /// side nets 0.04 instead of 0.03 — a third again as much — while the ceiling
-  /// for a manager who keeps his shape but varies his plan moves only 0.07 →
-  /// 0.08. The dial grew where it was invisible, not where it was already loud.
-  static const double readPenalty = 0.04;
-
   /// The attack/defence multiplier for a side whose current formation sits at
-  /// [familiarity] (0..1) and has been read to [predictability] (0..1).
+  /// [familiarity] (0..1): neutral (1.0) for an unfamiliar/new side, up to
+  /// 1.08 for a long-settled shape.
   ///
-  /// Neutral (1.0) for an unfamiliar/new side, up to ~1.08 for a long-settled
-  /// shape nobody has worked out, settling around ~1.04 for a manager who has
-  /// named the same team and the same plan for years.
+  /// [predictability] is IGNORED. It is kept only so existing call sites
+  /// compile; predictability is charged once, in `AiCounter`, which reads it
+  /// from the stored history.
   static double factor(double familiarity, [double predictability = 0]) =>
-      1 +
-      familiarity.clamp(0, 1) * drilledBonus -
-      predictability.clamp(0, 1) * readPenalty;
+      1 + familiarity.clamp(0, 1) * drilledBonus;
 
   /// The rolling per-match update to a formation's familiarity: the shape the
   /// manager actually fielded climbs; every other stored shape decays a little,
@@ -89,5 +76,35 @@ abstract final class TeamChemistry {
       key = key * 11 + band(v);
     }
     return key;
+  }
+
+  /// The inverse of [planKey]: the plan behind a stored fingerprint, each
+  /// dial at the centre of its band (a multiple of ten). It is what an
+  /// opponent's video room reconstructs from the manager's last outing in a
+  /// shape (see `ScoutedPlan.fromDrilling`).
+  ///
+  /// Throws [ArgumentError] for 0 ("never fielded") or anything [planKey]
+  /// could not have produced.
+  static TacticalInstructions decodePlanKey(int key) {
+    if (key == 0) {
+      throw ArgumentError.value(key, 'key', '0 means no stored plan');
+    }
+    final bands = List<int>.filled(6, 0);
+    var rest = key;
+    for (var i = 5; i >= 0; i--) {
+      bands[i] = rest % 11;
+      rest ~/= 11;
+    }
+    if (rest != 1) {
+      throw ArgumentError.value(key, 'key', 'not a plan key');
+    }
+    return TacticalInstructions(
+      mentality: bands[0] * 10,
+      pressing: bands[1] * 10,
+      tempo: bands[2] * 10,
+      width: bands[3] * 10,
+      defensiveLine: bands[4] * 10,
+      directness: bands[5] * 10,
+    );
   }
 }
