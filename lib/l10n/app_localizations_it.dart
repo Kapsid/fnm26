@@ -6862,6 +6862,22 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String matchShootoutKickScored(String name) {
+    return '$name: SEGNATO';
+  }
+
+  @override
+  String matchShootoutKickMissed(String name) {
+    return '$name: SBAGLIATO';
+  }
+
+  @override
+  String get matchFeedKickOff => 'Calcio d\'inizio!';
+
+  @override
+  String get matchFeedNoEvents => 'Ancora nessun evento.';
+
+  @override
   String get tourVenues => 'STADI';
 
   @override
@@ -7347,6 +7363,14 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get careerImportFailedNewer =>
       'Quella carriera è stata esportata da una versione più recente dell\'app. Aggiorna prima.';
+
+  @override
+  String get careerImportFailedSlotsFull =>
+      'Tutti gli slot di salvataggio sono occupati. Elimina un salvataggio o sblocca i salvataggi illimitati.';
+
+  @override
+  String get careerImportFailedNeedsPremium =>
+      'Quella carriera ha già superato il primo ciclo gratuito. Sblocca il gioco completo per importarla.';
 
   @override
   String get careerShareFailed => 'Impossibile esportare quella carriera.';

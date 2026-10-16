@@ -6862,6 +6862,22 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String matchShootoutKickScored(String name) {
+    return '$name : MARQUÉ';
+  }
+
+  @override
+  String matchShootoutKickMissed(String name) {
+    return '$name : RATÉ';
+  }
+
+  @override
+  String get matchFeedKickOff => 'Coup d’envoi !';
+
+  @override
+  String get matchFeedNoEvents => 'Aucun événement pour l’instant.';
+
+  @override
   String get tourVenues => 'STADES';
 
   @override
@@ -7355,6 +7371,14 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get careerImportFailedNewer =>
       'Cette carrière a été exportée par une version plus récente de l’app. Mettez-la à jour d’abord.';
+
+  @override
+  String get careerImportFailedSlotsFull =>
+      'Tous vos emplacements de sauvegarde sont pris. Supprimez une partie ou débloquez les sauvegardes illimitées.';
+
+  @override
+  String get careerImportFailedNeedsPremium =>
+      'Cette carrière a dépassé le premier cycle gratuit. Débloquez le jeu complet pour l’importer.';
 
   @override
   String get careerShareFailed => 'Impossible d’exporter cette carrière.';

@@ -6812,6 +6812,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String matchShootoutKickScored(String name) {
+    return '$name: SCORED';
+  }
+
+  @override
+  String matchShootoutKickMissed(String name) {
+    return '$name: MISSED';
+  }
+
+  @override
+  String get matchFeedKickOff => 'Kick-off!';
+
+  @override
+  String get matchFeedNoEvents => 'No events yet.';
+
+  @override
   String get tourVenues => 'VENUES';
 
   @override
@@ -7300,6 +7316,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get careerImportFailedNewer =>
       'That career was exported by a newer version of the app. Update first.';
+
+  @override
+  String get careerImportFailedSlotsFull =>
+      'All your save slots are in use. Delete a save to make room, or unlock unlimited saves.';
+
+  @override
+  String get careerImportFailedNeedsPremium =>
+      'That career is past the free first cycle. Unlock the full game to take it in.';
 
   @override
   String get careerShareFailed => 'Could not export that career.';

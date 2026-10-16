@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -74,9 +75,27 @@ class CareerTransferService {
 
   /// Adds the career in [path] as a new save. Returns why it was refused, or
   /// null once it is in.
+  ///
+  /// A free player is held to the same two limits here as everywhere else: an
+  /// import takes a save slot, and a career past the free cycle is what the
+  /// purchase sells, whoever played it.
   Future<BundleRejection?> import(String path) async {
     final read = await CareerBundle.readFile(File(path));
     if (read.rejection != null) return read.rejection;
+    final premium = _ref.read(premiumUnlockedProvider);
+    final existing = await _ref.read(careerRepositoryProvider).all();
+    if (!canCreateSave(
+      existingSaves: existing.length,
+      premiumUnlocked: premium,
+    )) {
+      return BundleRejection.slotsFull;
+    }
+    if (importNeedsPremium(
+      cyclePointer: CareerBundle.cyclePointerOf(read.bundle!),
+      premiumUnlocked: premium,
+    )) {
+      return BundleRejection.needsPremium;
+    }
     await CareerBundle.import(_ref.read(appDatabaseProvider), read.bundle!);
     _ref.invalidate(savesProvider);
     return null;

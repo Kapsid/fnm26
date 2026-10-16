@@ -6928,6 +6928,22 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String matchShootoutKickScored(String name) {
+    return '$name: TRAFIA';
+  }
+
+  @override
+  String matchShootoutKickMissed(String name) {
+    return '$name: PUDŁUJE';
+  }
+
+  @override
+  String get matchFeedKickOff => 'Początek meczu!';
+
+  @override
+  String get matchFeedNoEvents => 'Na razie brak zdarzeń.';
+
+  @override
   String get tourVenues => 'STADIONY';
 
   @override
@@ -7417,6 +7433,14 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get careerImportFailedNewer =>
       'Ta kariera pochodzi z nowszej wersji aplikacji. Najpierw zaktualizuj.';
+
+  @override
+  String get careerImportFailedSlotsFull =>
+      'Wszystkie miejsca na zapis są zajęte. Usuń zapis albo odblokuj nielimitowane zapisy.';
+
+  @override
+  String get careerImportFailedNeedsPremium =>
+      'Ta kariera jest już za pierwszym darmowym cyklem. Odblokuj pełną grę, aby ją zaimportować.';
 
   @override
   String get careerShareFailed => 'Nie udało się wyeksportować tej kariery.';

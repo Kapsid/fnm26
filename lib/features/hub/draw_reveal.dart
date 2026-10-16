@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
@@ -19,6 +20,12 @@ String? drawKindForFixture(Fixture f) {
     // with neither round nor group is a friendly (always shown).
     return f.groupId != null ? worldCupQualDrawKind : null;
   }
+  // Arranged one-offs: no ceremony picks the opponent. Friendlies are stored
+  // as 'FRIENDLY', not null, so without this they fell through to the World
+  // Championship key at the bottom and the hub hid their opponent behind
+  // "draw pending" until the finals draw was watched. The Continental Clash
+  // ('FFINAL') is the same: two champions, nothing drawn.
+  if (round == Rounds.friendly || round == 'FFINAL') return null;
   if (round == 'CQ') return continentalQualDrawKind;
   if (round.startsWith('C')) return continentalFinalsDrawKind; // CGROUP, CR16…
   // NGROUP/NSF/NFINAL — the Nations Cup has its own ceremony. Without this they

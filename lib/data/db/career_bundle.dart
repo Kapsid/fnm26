@@ -13,6 +13,14 @@ enum BundleRejection {
   /// heard of, and there is no migration path for a bundle — only for a
   /// database.
   fromANewerBuild,
+
+  /// Every save slot this entitlement allows is in use. An import takes a slot
+  /// like a new game does, so the same ceiling applies.
+  slotsFull,
+
+  /// The career is past the free cycle and this player has not bought the
+  /// upgrade. Taking it in would hand him a cycle the trial does not cover.
+  needsPremium,
 }
 
 /// Moving ONE career between devices, as a file.
@@ -273,6 +281,20 @@ abstract final class CareerBundle {
     } on Object {
       return (bundle: null, rejection: BundleRejection.unreadable);
     }
+  }
+
+  /// The cycle the bundled career is sitting in. A bundle that does not say
+  /// (an old one, or a hand-edited one) reads as 0, the cycle every career
+  /// starts in.
+  static int cyclePointerOf(Map<String, Object?> bundle) {
+    final tables = bundle['tables'];
+    if (tables is! Map) return 0;
+    final rows = tables[rootTable];
+    if (rows is! List || rows.isEmpty) return 0;
+    final career = rows.first;
+    if (career is! Map) return 0;
+    final pointer = career['cycle_pointer'];
+    return pointer is int ? pointer : 0;
   }
 
   /// A name that says which career it holds.

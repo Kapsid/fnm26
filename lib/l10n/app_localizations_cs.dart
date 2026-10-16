@@ -6854,6 +6854,22 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String matchShootoutKickScored(String name) {
+    return '$name: PROMĚNIL';
+  }
+
+  @override
+  String matchShootoutKickMissed(String name) {
+    return '$name: NEPROMĚNIL';
+  }
+
+  @override
+  String get matchFeedKickOff => 'Výkop!';
+
+  @override
+  String get matchFeedNoEvents => 'Zatím žádné události.';
+
+  @override
   String get tourVenues => 'STADIONY';
 
   @override
@@ -7326,6 +7342,14 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get careerImportFailedNewer =>
       'Tato kariéra byla exportována novější verzí aplikace. Nejprve aplikaci aktualizujte.';
+
+  @override
+  String get careerImportFailedSlotsFull =>
+      'Všechny sloty pro uložení jsou obsazené. Smažte nějakou hru, nebo si odemkněte neomezené ukládání.';
+
+  @override
+  String get careerImportFailedNeedsPremium =>
+      'Tato kariéra už je za prvním bezplatným cyklem. Pro import si odemkněte plnou hru.';
 
   @override
   String get careerShareFailed => 'Kariéru se nepodařilo exportovat.';

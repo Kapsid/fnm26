@@ -456,9 +456,12 @@ class _TeamRecordRows extends StatelessWidget {
         children: [
           // Flexible, because a Row hands a plain Text every pixel it asks for
           // and the label is the piece nobody thinks about: "NEJVĚTŠÍ VÍTĚZSTVÍ"
-          // is nearly twice "BIGGEST WIN", and a Spacer has nothing to give
-          // back once the label has taken the row.
-          Flexible(
+          // is nearly twice "BIGGEST WIN". No Spacer between the two: a Spacer
+          // is a third flex child, so it took an equal share of the row and
+          // left the label a third of a phone's width, which cut "NEJLEPŠÍ
+          // UMÍSTĚNÍ" and "NEJDELŠÍ NEPORAZITELNOST" short. Label and value
+          // now split the row, and both wrap before they ellipsize.
+          Expanded(
             child: Text(
               label.toUpperCase(),
               maxLines: 2,
@@ -468,16 +471,16 @@ class _TeamRecordRows extends StatelessWidget {
               ),
             ),
           ),
-          const Spacer(),
+          const SizedBox(width: AppSpacing.sm),
           if (code != null) ...[
             FlagDisc(code, size: 18),
             const SizedBox(width: AppSpacing.sm),
           ],
-          Flexible(
+          Expanded(
             child: Text(
               value,
               textAlign: TextAlign.end,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: AppTypography.bodyMedium,
             ),

@@ -492,12 +492,25 @@ Future<void> _importCareer(BuildContext context, WidgetRef ref) async {
       return;
     }
   }
+  // The two refusals the purchase lifts point at it, rather than leaving the
+  // manager to work out where more saves and more cycles are sold.
+  final sellable =
+      refusal == BundleRejection.slotsFull ||
+      refusal == BundleRejection.needsPremium;
   messenger.showSnackBar(
     SnackBar(
       content: Text(switch (refusal) {
         BundleRejection.unreadable => l.careerImportFailedUnreadable,
         BundleRejection.fromANewerBuild => l.careerImportFailedNewer,
+        BundleRejection.slotsFull => l.careerImportFailedSlotsFull,
+        BundleRejection.needsPremium => l.careerImportFailedNeedsPremium,
       }),
+      action: sellable && context.mounted
+          ? SnackBarAction(
+              label: l.paywallGoPro,
+              onPressed: () => unawaited(showPaywall(context)),
+            )
+          : null,
     ),
   );
 }

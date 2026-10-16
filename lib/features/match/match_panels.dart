@@ -22,7 +22,9 @@ class _Timeline extends StatelessWidget {
     if (visible.isEmpty) {
       return Center(
         child: Text(
-          live ? 'Kick-off!' : 'No events yet.',
+          live
+              ? AppLocalizations.of(context).matchFeedKickOff
+              : AppLocalizations.of(context).matchFeedNoEvents,
           style: AppTypography.bodyMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
@@ -1142,7 +1144,13 @@ class _ShootoutStrip extends StatelessWidget {
           if (lastName != null && lastScored != null) ...[
             const SizedBox(height: AppSpacing.xs),
             Text(
-              '$lastName: ${lastScored ? 'SCORED' : 'MISSED'}',
+              lastScored
+                  ? AppLocalizations.of(
+                      context,
+                    ).matchShootoutKickScored(lastName)
+                  : AppLocalizations.of(
+                      context,
+                    ).matchShootoutKickMissed(lastName),
               style: AppTypography.labelSmall.copyWith(
                 color: lastScored ? AppColors.positive : AppColors.error,
                 fontWeight: FontWeight.w700,

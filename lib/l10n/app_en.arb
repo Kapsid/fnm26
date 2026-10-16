@@ -10297,6 +10297,32 @@
       }
     }
   },
+  "matchShootoutKickScored": "{name}: SCORED",
+  "@matchShootoutKickScored": {
+    "description": "Live match shoot-out: the last taker scored.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchShootoutKickMissed": "{name}: MISSED",
+  "@matchShootoutKickMissed": {
+    "description": "Live match shoot-out: the last taker missed.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchFeedKickOff": "Kick-off!",
+  "@matchFeedKickOff": {
+    "description": "Live match event feed before anything has happened."
+  },
+  "matchFeedNoEvents": "No events yet.",
+  "@matchFeedNoEvents": {
+    "description": "Event feed of a match with no events."
+  },
   "tourVenues": "VENUES",
   "@tourVenues": {
     "description": "Tournament screen: venues card heading."
@@ -10935,6 +10961,14 @@
   "careerImportFailedNewer": "That career was exported by a newer version of the app. Update first.",
   "@careerImportFailedNewer": {
     "description": "Import refused: the bundle is from a later build."
+  },
+  "careerImportFailedSlotsFull": "All your save slots are in use. Delete a save to make room, or unlock unlimited saves.",
+  "@careerImportFailedSlotsFull": {
+    "description": "Import refused: a free player has no save slot left."
+  },
+  "careerImportFailedNeedsPremium": "That career is past the free first cycle. Unlock the full game to take it in.",
+  "@careerImportFailedNeedsPremium": {
+    "description": "Import refused: the career is past the free cycle and the player has not bought the upgrade."
   },
   "careerShareFailed": "Could not export that career.",
   "@careerShareFailed": {

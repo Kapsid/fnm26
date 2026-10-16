@@ -10759,6 +10759,30 @@ abstract class AppLocalizations {
   /// **'SHOOTOUT {home}–{away}'**
   String matchShootoutScore(int home, int away);
 
+  /// Live match shoot-out: the last taker scored.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: SCORED'**
+  String matchShootoutKickScored(String name);
+
+  /// Live match shoot-out: the last taker missed.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: MISSED'**
+  String matchShootoutKickMissed(String name);
+
+  /// Live match event feed before anything has happened.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off!'**
+  String get matchFeedKickOff;
+
+  /// Event feed of a match with no events.
+  ///
+  /// In en, this message translates to:
+  /// **'No events yet.'**
+  String get matchFeedNoEvents;
+
   /// Tournament screen: venues card heading.
   ///
   /// In en, this message translates to:
@@ -11622,6 +11646,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That career was exported by a newer version of the app. Update first.'**
   String get careerImportFailedNewer;
+
+  /// Import refused: a free player has no save slot left.
+  ///
+  /// In en, this message translates to:
+  /// **'All your save slots are in use. Delete a save to make room, or unlock unlimited saves.'**
+  String get careerImportFailedSlotsFull;
+
+  /// Import refused: the career is past the free cycle and the player has not bought the upgrade.
+  ///
+  /// In en, this message translates to:
+  /// **'That career is past the free first cycle. Unlock the full game to take it in.'**
+  String get careerImportFailedNeedsPremium;
 
   /// Snackbar when a per-career export fails.
   ///

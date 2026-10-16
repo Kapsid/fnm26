@@ -69,3 +69,16 @@ bool trialExhausted({
   required int cyclePointer,
   required bool premiumUnlocked,
 }) => !premiumUnlocked && cyclePointer + 1 >= kFreeCycles;
+
+/// Whether a save sitting in cycle [cyclePointer] is past the free trial, so a
+/// free player may not take it in from a file.
+///
+/// The rollover wall only ever asks about the NEXT cycle, so a save imported
+/// from a paid device would otherwise play out the whole cycle it arrived in
+/// for nothing: a shared file at the start of cycle 3 is a free cycle 3. A
+/// save still in its first cycle is exactly what the trial gives anyway, so it
+/// comes in.
+bool importNeedsPremium({
+  required int cyclePointer,
+  required bool premiumUnlocked,
+}) => !premiumUnlocked && cyclePointer >= kFreeCycles;
