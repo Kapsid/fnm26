@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -1734,21 +1735,17 @@ class MatchEngine {
     //    So each case is now gated on which side of 50 the ATTACKER is: a wide
     //    side gets the wide-vs-narrow term and nothing else, a narrow side the
     //    narrow-vs-wide term and nothing else. Two sides on the same side of 50
-    //    still get neither, exactly as before, and a neutral 50 is untouched.
+    //    still get neither, exactly as before. A neutral 50 attacker gets
+    //    neither either (see [widthMatchup]).
     //    The wide reading is worth more because the attacker also pays for it:
     //    a stretched shape costs at the back (see [kWidthDefence] in
     //    [_defence]), where a narrow one is paid there instead.
     //
-    //    A neutral 50 counts as part-stretched on BOTH readings
-    //    ([kNeutralExposure]), so a side that has not committed on width can
-    //    be exploited by one that has; two neutral sides still cancel exactly.
-    final wideAttack = (n(a.width) + kNeutralExposure).clamp(0.0, 1.0);
-    final narrowAttack = (-n(a.width) + kNeutralExposure).clamp(0.0, 1.0);
-    final narrowDef = (-n(d.width) + kNeutralExposure).clamp(0.0, 1.0);
-    final wideDef = (n(d.width) + kNeutralExposure).clamp(0.0, 1.0);
-    // wide vs narrow, then narrow vs wide
-    bonus += wideAttack * narrowDef * 7.5;
-    bonus += narrowAttack * wideDef * 6.0;
+    //    A neutral 50 is EXPOSED, not a source of gain: it is exploited only
+    //    by an attacker COMMITTED on width ([kNeutralExposure] is read off the
+    //    defender's side only). Two neutral sides therefore get exactly
+    //    nothing from this term, as before the offset existed.
+    bonus += widthMatchup(attackerWidth: a.width, defenderWidth: d.width);
 
     // 4) Mentality clash. Committing men forward against a side that has ALSO
     //    committed forward leaves space everywhere and the game opens up;
@@ -1763,6 +1760,24 @@ class MatchEngine {
     // match-up gets its full new weight while the all-dials-to-the-extreme
     // case is held well short of the rating gulf that makes a rout.
     return bonus.clamp(-18.0, 22.0);
+  }
+
+  /// The width part of [_matchup], split out so the "neutral gives nothing"
+  /// guarantee can be tested directly. The attacker must be committed (a 50
+  /// reads 0); the defender's neutral 50 counts as part-stretched on both
+  /// readings, which is what makes a neutral shape counterable.
+  @visibleForTesting
+  static double widthMatchup({
+    required int attackerWidth,
+    required int defenderWidth,
+  }) {
+    double n(int v) => (v - 50) / 50.0;
+    final wideAttack = n(attackerWidth).clamp(0.0, 1.0);
+    final narrowAttack = (-n(attackerWidth)).clamp(0.0, 1.0);
+    final narrowDef = (-n(defenderWidth) + kNeutralExposure).clamp(0.0, 1.0);
+    final wideDef = (n(defenderWidth) + kNeutralExposure).clamp(0.0, 1.0);
+    // wide vs narrow, then narrow vs wide
+    return wideAttack * narrowDef * 7.5 + narrowAttack * wideDef * 6.0;
   }
 
   /// How much of a dial's neutral 50 still counts as "exposed" in [_matchup]
