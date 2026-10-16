@@ -1699,9 +1699,12 @@ class MatchEngine {
   static const double kMentalityAttack = 0.35;
 
   /// The other half of the same bargain: what committing forward costs at the
-  /// back. Deliberately about half the attacking gain, so attacking is a
-  /// favourable-but-real trade and parking the bus genuinely shuts a game down.
-  static const double kMentalityDefence = 0.18;
+  /// back. Raised 0.18 -> 0.28 in the 2026-10-16 tactics impact build: at about
+  /// half the attacking gain, all-out attack was a near-free +6.7pp of wins in
+  /// the lab baseline. Attacking has to cost close to what it gains, so it stays
+  /// a slight net positive only against a passive side, and parking the bus
+  /// genuinely shuts a game down.
+  static const double kMentalityDefence = 0.28;
 
   /// What a quick tempo is worth going forward, and a high line either way
   /// (it wins the ball higher and leaves more behind it), per point off the
