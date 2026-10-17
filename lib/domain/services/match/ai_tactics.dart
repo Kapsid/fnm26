@@ -1,5 +1,6 @@
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 
@@ -17,6 +18,23 @@ typedef AiSetup = ({Formation formation, TacticalInstructions instructions});
 /// underdogs sit deep and hit on the break. A small per-field jitter keeps two
 /// teams in the same band from looking identical.
 abstract final class AiTactics {
+  /// The opponent's strength as its posture and counter read it: the mean
+  /// overall of its best eleven players by overall, positions ignored, from
+  /// [available] (the men fit to play). 0 for an empty pool.
+  ///
+  /// One reading for both routes: the live match (`match_providers`) and the
+  /// skip path (`hub_providers`) both call this, so a skipped match meets
+  /// the opponent the played one would. Until 2026-10-17 the skip path read
+  /// the mean of the XI the opponent fields (its best 4-3-3), which is
+  /// lower whenever its best players crowd one line.
+  static double readStrength(Iterable<Player> available) {
+    final top = ([
+      ...available,
+    ]..sort((a, b) => b.overall.compareTo(a.overall))).take(11).toList();
+    if (top.isEmpty) return 0;
+    return top.fold<int>(0, (s, p) => s + p.overall) / top.length;
+  }
+
   /// The posture seed for one fixture. The live match (`match_providers`) and
   /// the skip path (`hub_providers`) must agree on it: the string is
   /// `'aitac:<opponentId>:<fixtureId>:<career rngSeed>'`.

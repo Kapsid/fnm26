@@ -301,12 +301,10 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     return list.map((p) => p.overall).reduce((a, b) => a + b) / list.length;
   }
 
-  final oppTop11 = ([
-    ...oppPool,
-  ]..sort((a, b) => b.overall.compareTo(a.overall))).take(11);
   final oppNation = allNations.firstWhere((n) => n.id == opponentId);
   final oppStyle = NationIdentity.styleOf(oppNation.code);
-  final oppStrength = avg(oppTop11);
+  // Shared with the skip path, so both read the opponent the same way.
+  final oppStrength = AiTactics.readStrength(oppPool);
   // The manager's stored history per shape: how drilled he is (chemistry,
   // below) and what the opposition has on video (the counter, here). Loaded
   // BEFORE the AI picks its setup, because the counter reads it.

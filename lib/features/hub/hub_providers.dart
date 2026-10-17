@@ -14,6 +14,7 @@ import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
@@ -25,7 +26,8 @@ import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
-import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/background_match.dart';
@@ -33,9 +35,7 @@ import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/venue.dart';
-import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
-import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
@@ -864,7 +864,6 @@ class SeasonService {
       homeBase,
       xi: homeXi,
       opponent: away,
-      opponentXi: awayXi,
       fixtureId: f.id,
     );
     final asAway = await _withManagerTactics(
@@ -873,7 +872,6 @@ class SeasonService {
       awayBase,
       xi: awayXi,
       opponent: home,
-      opponentXi: homeXi,
       fixtureId: f.id,
     );
     final homeStrength = asHome?.strength ?? homeBase;
@@ -1038,24 +1036,39 @@ class SeasonService {
   /// handles a given fixture once and never both (a played match catches the
   /// world up with his nation excluded), so each match is recorded once.
   ///
+  /// What is recorded is the plan he actually FIELDED: [fielded], the plan a
+  /// played match held for the most minutes ([MatchResult.homePlan]), so a
+  /// decoy named on the team sheet and switched away from at 1' is not what
+  /// the opposition has on video. A skipped match has no live changes, so it
+  /// passes nothing and the stored tactic is the plan; so does a played
+  /// match whose result carries no plan.
+  ///
   /// The cached manager setup is dropped afterwards: it holds the drilling the
   /// counter reads, and one skip can simulate several of his matches in a row,
   /// each of which must be countered from the drilling before IT.
-  Future<void> _recordDrilling(int careerId) async {
-    final tactic = await _ref
-        .read(tacticsRepositoryProvider)
-        .tacticForCareer(careerId);
+  Future<void> _recordDrilling(int careerId, {FieldedPlan? fielded}) async {
+    final plan = fielded ?? await _storedPlan(careerId);
     await _ref
         .read(tacticFamiliarityRepositoryProvider)
         .recordMatch(
           careerId,
-          tactic?.formation ?? Formation.f433,
-          planKey: TeamChemistry.planKey(
-            tactic?.instructions ?? const TacticalInstructions(),
-          ),
+          plan.formation,
+          planKey: TeamChemistry.planKey(plan.instructions),
         );
     _managerSetup = null;
     _managerSetupCareer = null;
+  }
+
+  /// The plan on the manager's team sheet (the stored tactic), the 4-3-3 with
+  /// neutral instructions when he has none.
+  Future<FieldedPlan> _storedPlan(int careerId) async {
+    final tactic = await _ref
+        .read(tacticsRepositoryProvider)
+        .tacticForCareer(careerId);
+    return (
+      formation: tactic?.formation ?? Formation.f433,
+      instructions: tactic?.instructions ?? const TacticalInstructions(),
+    );
   }
 
   /// Gives a background match everything the tactical engine would have given
@@ -1177,9 +1190,9 @@ class SeasonService {
   /// The opponent is set up EXACTLY as the live match sets it up
   /// (`match_providers`): `AiTactics.forOpponent` from the two sides' average
   /// overall, bent by `AiCounter.forFixture` against the stored drilling rows,
-  /// with the same per-fixture seeds. The averages are read off the XIs the
-  /// two sides field here, which is the live path's notion (the opponent's
-  /// best eleven, his named eleven).
+  /// with the same per-fixture seeds. The opponent's strength is read the
+  /// live path's way, [AiTactics.readStrength] over its men fit to play (its
+  /// best eleven by overall), and his own is the mean of the eleven he named.
   ///
   /// Then the conversions, none of them invented here:
   ///  * the plan against that setup, via [MatchEngine.planEffect]: a rating
@@ -1201,14 +1214,17 @@ class SeasonService {
     int strength, {
     required List<Player> xi,
     required Nation opponent,
-    required List<Player> opponentXi,
     required int fixtureId,
   }) async {
     final setup = await _ensureManagerSetup(careerId);
     if (setup == null || setup.nationId != nationId) return null;
     double avg(List<Player> ps) =>
         ps.isEmpty ? 0 : ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
-    final oppStrength = avg(opponentXi);
+    // The opponent read as the live match reads it: its best eleven by
+    // overall among the men fit to play (`AiTactics.readStrength`).
+    final oppPool = await _pool(opponent.id);
+    final oppAvailable = selectable(oppPool, await _ensureAbsences(careerId));
+    final oppStrength = AiTactics.readStrength(oppAvailable);
     final oppStyle = NationIdentity.styleOf(opponent.code);
     final ai = AiCounter.forFixture(
       base: AiTactics.forOpponent(
@@ -1827,9 +1843,15 @@ class SeasonService {
     _simYears = CareerService.agingYears(career);
     await _ensureRank(careerId);
 
-    // Credit the drilling with the match he just played: see
-    // [_recordDrilling].
-    await _recordDrilling(careerId);
+    // Credit the drilling with the match he just played, as he played it:
+    // the plan his side held for most of the ninety, live changes included
+    // (see [_recordDrilling]).
+    await _recordDrilling(
+      careerId,
+      fielded: fixture.homeNationId == career.nationId
+          ? result.homePlan
+          : result.awayPlan,
+    );
 
     var hs = result.homeScore;
     var as = result.awayScore;

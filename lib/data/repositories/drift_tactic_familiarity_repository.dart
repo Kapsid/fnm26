@@ -30,39 +30,11 @@ class DriftTacticFamiliarityRepository implements TacticFamiliarityRepository {
     Formation used, {
     int planKey = 0,
   }) async {
-    final rows = await (_db.select(
-      _db.tacticFamiliarities,
-    )..where((t) => t.careerId.equals(careerId))).get();
-    final current = {for (final r in rows) r.formation: r};
-    final was = current[used];
-    // The same plan again only counts as such when there IS a previous plan —
-    // a shape's first outing can't already have been scouted.
-    final samePlan =
-        was != null && was.lastPlanKey != 0 && was.lastPlanKey == planKey;
-
-    final next = <Formation, ({double fam, double pred, int plan})>{
-      // The fielded shape climbs; every other stored shape decays a little.
-      used: (
-        fam: TeamChemistry.bumpFamiliarity(was?.familiarity ?? 0, used: true),
-        pred: TeamChemistry.bumpPredictability(
-          was?.predictability ?? 0,
-          used: true,
-          samePlan: samePlan,
-        ),
-        plan: planKey,
-      ),
-      for (final r in rows)
-        if (r.formation != used)
-          r.formation: (
-            fam: TeamChemistry.bumpFamiliarity(r.familiarity, used: false),
-            pred: TeamChemistry.bumpPredictability(
-              r.predictability,
-              used: false,
-              samePlan: false,
-            ),
-            plan: r.lastPlanKey,
-          ),
-    };
+    final next = TeamChemistry.afterMatch(
+      await forCareer(careerId),
+      used,
+      planKey: planKey,
+    );
     await _db.transaction(() async {
       for (final e in next.entries) {
         await _db
@@ -71,9 +43,9 @@ class DriftTacticFamiliarityRepository implements TacticFamiliarityRepository {
               TacticFamiliaritiesCompanion.insert(
                 careerId: careerId,
                 formation: e.key,
-                familiarity: Value(e.value.fam),
-                predictability: Value(e.value.pred),
-                lastPlanKey: Value(e.value.plan),
+                familiarity: Value(e.value.familiarity),
+                predictability: Value(e.value.predictability),
+                lastPlanKey: Value(e.value.lastPlanKey),
               ),
             );
       }

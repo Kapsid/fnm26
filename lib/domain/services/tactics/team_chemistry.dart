@@ -1,4 +1,6 @@
+import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 
 /// Tactical familiarity → a whole-team match multiplier. A side that plays the
 /// same shape week after week grows drilled and cohesive; a manager who keeps
@@ -40,20 +42,105 @@ abstract final class TeamChemistry {
   static double bumpFamiliarity(double current, {required bool used}) =>
       (used ? current + 0.08 : current - 0.03).clamp(0, 1);
 
-  /// The rolling per-match update to a formation's predictability.
+  /// How much one more match on the SAME plan adds to predictability: twenty
+  /// in a row and opponents have it completely.
+  static const double predictabilityStep = 0.05;
+
+  /// The rolling per-match update to a formation's predictability, which is
+  /// how sharply opponents read the manager's MOST RECENT plan.
   ///
-  /// Fielding it again with the SAME plan feeds the video: opponents learn a
-  /// little more every time. Fielding it with a genuinely different plan — or
-  /// not fielding it at all — makes what they had learned stale, and it fades
-  /// faster than it built, so a manager is always one change of approach away
-  /// from being hard to prepare for again.
+  /// It measures one thing: how many consecutive matches that exact plan
+  /// (shape and [planKey]) has been played. Fielding it again feeds the
+  /// video, [predictabilityStep] a match. A change of plan resets it to 0,
+  /// the weak, general read anybody gets (`AiCounter.read`), and a shape not
+  /// fielded is not on anybody's video any more, so it reads 0 as well.
+  ///
+  /// Until 2026-10-17 a change only took 0.12 off, so a manager read at 1.0
+  /// who changed plan met a counter to his NEW plan, seen once, at 0.91 of the
+  /// sharpest read; and the read stayed on the most familiar shape, so after
+  /// a change of formation the AI kept countering the abandoned one for about
+  /// nine matches. "Varying your approach is a real way to stay hard to
+  /// read" (spec, owner's answers) needs the reset.
   static double bumpPredictability(
     double current, {
     required bool used,
     required bool samePlan,
   }) {
-    if (!used) return (current - 0.07).clamp(0, 1);
-    return (samePlan ? current + 0.05 : current - 0.12).clamp(0, 1);
+    if (!used || !samePlan) return 0;
+    return (current + predictabilityStep).clamp(0, 1);
+  }
+
+  /// The shape the manager fielded in his most recent recorded match, or
+  /// null when no stored shape carries a plan.
+  ///
+  /// [afterMatch] keeps a plan key on that one row only, so normally exactly
+  /// one row has one. Saves recorded before 2026-10-17 kept a key on every
+  /// shape ever fielded; among several, the most predictable is the one most
+  /// likely played last (an unused shape's figure decayed), then the most
+  /// familiar, then the first in [Formation]. The next recorded match
+  /// normalises the rows.
+  static Formation? lastFielded(Map<Formation, ShapeDrilling> rows) {
+    Formation? best;
+    ShapeDrilling? bestRow;
+    for (final f in Formation.values) {
+      final r = rows[f];
+      if (r == null || r.lastPlanKey == 0) continue;
+      if (bestRow == null ||
+          r.predictability > bestRow.predictability ||
+          (r.predictability == bestRow.predictability &&
+              r.familiarity > bestRow.familiarity)) {
+        best = f;
+        bestRow = r;
+      }
+    }
+    return best;
+  }
+
+  /// The stored drilling after one more match fielded in [used] with the plan
+  /// fingerprinted by [planKey] ([planKey] 0 records no plan).
+  ///
+  /// The fielded shape climbs in familiarity and every other stored shape
+  /// decays ([bumpFamiliarity]). Predictability follows [bumpPredictability]:
+  /// it climbs only when this is the same shape AND plan as the most recent
+  /// match ([lastFielded]); a different plan in the same shape, or any other
+  /// shape, starts again from 0. Only the fielded shape keeps its plan key,
+  /// so the stored history always names the most recent plan: older plans
+  /// are not what the opposition is preparing for.
+  static Map<Formation, ShapeDrilling> afterMatch(
+    Map<Formation, ShapeDrilling> rows,
+    Formation used, {
+    required int planKey,
+  }) {
+    final was = rows[used];
+    // The same plan again only counts when it is the plan of the match just
+    // before; a shape's first outing can't already have been scouted.
+    final samePlan =
+        planKey != 0 &&
+        lastFielded(rows) == used &&
+        was != null &&
+        was.lastPlanKey == planKey;
+    return {
+      for (final e in rows.entries)
+        if (e.key != used)
+          e.key: (
+            familiarity: bumpFamiliarity(e.value.familiarity, used: false),
+            predictability: bumpPredictability(
+              e.value.predictability,
+              used: false,
+              samePlan: false,
+            ),
+            lastPlanKey: 0,
+          ),
+      used: (
+        familiarity: bumpFamiliarity(was?.familiarity ?? 0, used: true),
+        predictability: bumpPredictability(
+          was?.predictability ?? 0,
+          used: true,
+          samePlan: samePlan,
+        ),
+        lastPlanKey: planKey,
+      ),
+    };
   }
 
   /// A fingerprint of the plan behind a tactic, used to tell "the same again"
@@ -80,24 +167,31 @@ abstract final class TeamChemistry {
 
   /// The inverse of [planKey]: the plan behind a stored fingerprint, each
   /// dial at the centre of its band (a multiple of ten). It is what an
-  /// opponent's video room reconstructs from the manager's last outing in a
-  /// shape (see `ScoutedPlan.fromDrilling`).
+  /// opponent's video room reconstructs from the manager's last outing (see
+  /// `ScoutedPlan.fromDrilling`).
   ///
   /// Throws [ArgumentError] for 0 ("never fielded") or anything [planKey]
-  /// could not have produced.
+  /// could not have produced; [tryDecodePlanKey] returns null instead.
   static TacticalInstructions decodePlanKey(int key) {
-    if (key == 0) {
-      throw ArgumentError.value(key, 'key', '0 means no stored plan');
+    final plan = tryDecodePlanKey(key);
+    if (plan == null) {
+      throw ArgumentError.value(key, 'key', 'not a plan key');
     }
+    return plan;
+  }
+
+  /// [decodePlanKey] for stored data: null for 0 or for a key [planKey] could
+  /// not have produced, so one unreadable row reads as "no history" instead
+  /// of breaking every match preview and advance that scouts it.
+  static TacticalInstructions? tryDecodePlanKey(int key) {
+    if (key <= 0) return null;
     final bands = List<int>.filled(6, 0);
     var rest = key;
     for (var i = 5; i >= 0; i--) {
       bands[i] = rest % 11;
       rest ~/= 11;
     }
-    if (rest != 1) {
-      throw ArgumentError.value(key, 'key', 'not a plan key');
-    }
+    if (rest != 1) return null;
     return TacticalInstructions(
       mentality: bands[0] * 10,
       pressing: bands[1] * 10,

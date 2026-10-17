@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/seed/seed_source.dart';
@@ -10,7 +11,10 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -186,6 +190,112 @@ void main() {
             .forCareer(career.id),
         await refFam.forCareer(refCareer.id),
       );
+    },
+  );
+  test(
+    'skipped knockouts (extra time) and finals matches record once each',
+    () async {
+      // A finals match goes through the neutral-venue branch of the skip path
+      // and a level knockout through extra time and maybe penalties
+      // (`decideKnockout`); both are still ONE recording of his plan. Seed 80
+      // reaches Czechia's first continental finals match at the 9th advance
+      // and a round of 16 there settled after extra time at the 12th.
+      final w = open();
+      await w.c.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await w.c
+                  .read(careerServiceProvider)
+                  .create(nationId: czechia, managerName: 'M', rngSeed: 80))
+              .valueOrNull!;
+      await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
+      await w.c.read(tacticServiceProvider).setInstructions(career.id, plan);
+
+      final ref = open();
+      await ref.c.read(seedLoaderProvider).ensureSeeded();
+      final refCareer =
+          (await ref.c
+                  .read(careerServiceProvider)
+                  .create(nationId: czechia, managerName: 'M', rngSeed: 80))
+              .valueOrNull!;
+      final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
+      final fam = w.c.read(tacticFamiliarityRepositoryProvider);
+
+      var recorded = 0;
+      var finals = false;
+      var extraTime = false;
+      for (var step = 0; step < 20 && !(finals && extraTime); step++) {
+        await w.c.read(seasonServiceProvider).advance(career.id);
+        var ours = 0;
+        for (final f in await w.db.select(w.db.fixtures).get()) {
+          if (!f.played) continue;
+          if (f.homeNationId != czechia && f.awayNationId != czechia) continue;
+          ours++;
+          if (isNeutralFinalsRound(f.round)) finals = true;
+          if (Rounds.isKnockout(f.round) && f.afterExtraTime) extraTime = true;
+        }
+        for (; recorded < ours; recorded++) {
+          await refFam.recordMatch(
+            refCareer.id,
+            shape,
+            planKey: TeamChemistry.planKey(plan),
+          );
+        }
+        expect(
+          await fam.forCareer(career.id),
+          await refFam.forCareer(refCareer.id),
+          reason: 'after $ours of his matches (step $step)',
+        );
+      }
+      expect(finals, isTrue, reason: 'no finals match was skipped');
+      expect(extraTime, isTrue, reason: 'no knockout went to extra time');
+    },
+    timeout: const Timeout(Duration(minutes: 3)),
+  );
+
+  test(
+    'a played match records the plan held longest, not the team sheet',
+    () async {
+      // The decoy: name one plan on the sheet, switch to another at 1'. The
+      // opposition's video shows the plan played, so that is what's recorded.
+      final w = open();
+      await w.c.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await w.c
+                  .read(careerServiceProvider)
+                  .create(nationId: czechia, managerName: 'M', rngSeed: 78))
+              .valueOrNull!;
+      await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
+      await w.c.read(tacticServiceProvider).setInstructions(career.id, plan);
+      final held = w.c.listen(matchPreviewProvider(career.id), (_, _) {});
+      addTearDown(held.close);
+      final preview = (await w.c.read(matchPreviewProvider(career.id).future))!;
+      final mine = preview.playerIsHome ? preview.homeTeam : preview.awayTeam;
+      const live = TacticalInstructions(directness: 20, tempo: 40);
+      final result = const MatchEngine().play(
+        home: preview.homeTeam,
+        away: preview.awayTeam,
+        rng: SeededRng(1),
+        changes: [
+          TacticalChange(
+            teamNationId: mine.nationId,
+            minute: 1,
+            formation: Formation.f442,
+            instructions: live,
+            xi: mine.xi,
+          ),
+        ],
+      );
+      await w.c
+          .read(seasonServiceProvider)
+          .playPlayerMatch(career.id, preview.fixture, result);
+
+      final rows = await w.c
+          .read(tacticFamiliarityRepositoryProvider)
+          .forCareer(career.id);
+      expect(rows.keys, [
+        Formation.f442,
+      ], reason: 'the sheet shape was a decoy');
+      expect(rows[Formation.f442]!.lastPlanKey, TeamChemistry.planKey(live));
     },
   );
 }

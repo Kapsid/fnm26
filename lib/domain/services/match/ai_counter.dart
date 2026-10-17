@@ -9,9 +9,10 @@ import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 
-/// What an opponent's video room has on the manager: the shape he has drilled
-/// most, the plan he last fielded it with, and how predictable he has been in
-/// it (0..1, the stored `predictability`).
+/// What an opponent's video room has on the manager: the plan of his most
+/// recent match (its shape and instructions), and how predictable he has been
+/// with it (0..1, the stored `predictability`: how many matches in a row he
+/// has played that exact plan).
 ///
 /// A class rather than a record typedef so it can carry [fromDrilling]: Dart
 /// has no static members on a typedef.
@@ -28,30 +29,31 @@ class ScoutedPlan {
 
   /// The plan an opponent would prepare for, read from the stored history.
   ///
-  /// The shape with the highest familiarity whose `lastPlanKey` is set (0
-  /// means "never fielded with a recorded plan", so it has nothing to decode);
-  /// a tie keeps the shape listed first in [Formation]. Null when no stored
-  /// shape carries a plan, which is a manager with no history yet.
+  /// The MOST RECENTLY fielded plan ([TeamChemistry.lastFielded]), never the
+  /// most familiar shape: after a change of formation the video shows the new
+  /// shape, and the abandoned one is not what anybody prepares for. How
+  /// sharply it is read is its predictability, which a change of plan resets
+  /// (see [TeamChemistry.bumpPredictability]), so changing plan escapes a
+  /// sharp counter and sticking with one invites it.
+  ///
+  /// Null when no stored shape carries a plan (a manager with no history
+  /// yet), and also when the stored key can't be decoded: one unreadable row
+  /// means "no history", never an exception in the match preview or in an
+  /// advance that scouts it.
   ///
   /// This reads RECENT matches only, never the tactic set for the match about
   /// to be played: a decoy plan for today is not what the opposition has on
   /// video.
   static ScoutedPlan? fromDrilling(Map<Formation, ShapeDrilling> rows) {
-    Formation? best;
-    ShapeDrilling? bestRow;
-    for (final f in Formation.values) {
-      final r = rows[f];
-      if (r == null || r.lastPlanKey == 0) continue;
-      if (bestRow == null || r.familiarity > bestRow.familiarity) {
-        best = f;
-        bestRow = r;
-      }
-    }
-    if (best == null || bestRow == null) return null;
+    final last = TeamChemistry.lastFielded(rows);
+    if (last == null) return null;
+    final row = rows[last]!;
+    final instructions = TeamChemistry.tryDecodePlanKey(row.lastPlanKey);
+    if (instructions == null) return null;
     return ScoutedPlan(
-      formation: best,
-      instructions: TeamChemistry.decodePlanKey(bestRow.lastPlanKey),
-      predictability: bestRow.predictability.clamp(0, 1),
+      formation: last,
+      instructions: instructions,
+      predictability: row.predictability.clamp(0, 1),
     );
   }
 }

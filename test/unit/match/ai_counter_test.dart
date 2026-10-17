@@ -70,7 +70,9 @@ void main() {
   });
 
   group('ScoutedPlan.fromDrilling', () {
-    test('reads the most drilled shape that has a stored plan', () {
+    test('legacy rows (a key on several shapes): the most predictable', () {
+      // Saves recorded before 2026-10-17 kept a key on every shape fielded.
+      // The most predictable is the one most likely played last.
       const plan = TacticalInstructions(width: 80, directness: 20);
       final scouted = ScoutedPlan.fromDrilling({
         // Most drilled, but never stored a plan (a pre-plan-key row).
@@ -82,7 +84,7 @@ void main() {
         ),
         Formation.f442: (
           familiarity: 0.2,
-          predictability: 0.8,
+          predictability: 0.1,
           lastPlanKey: TeamChemistry.planKey(const TacticalInstructions()),
         ),
       });
@@ -90,6 +92,27 @@ void main() {
       expect(scouted!.formation, Formation.f343);
       expect(scouted.instructions, plan);
       expect(scouted.predictability, 0.4);
+    });
+
+    test('an unreadable stored key means no history, not an exception', () {
+      // 5 is no plan key (the leading 1 of a key sits six base-11 digits
+      // up). One such row must not break the preview or an advance.
+      final rows = <Formation, ShapeDrilling>{
+        Formation.f433: (familiarity: 0.8, predictability: 0.8, lastPlanKey: 5),
+      };
+      expect(ScoutedPlan.fromDrilling(rows), isNull);
+      expect(
+        AiCounter.forFixture(
+          base: _base,
+          drilling: rows,
+          opponentStrength: 90,
+          style: NationStyle.balanced,
+          seed: 1,
+        ),
+        _base,
+      );
+      expect(TeamChemistry.tryDecodePlanKey(5), isNull);
+      expect(TeamChemistry.tryDecodePlanKey(-3), isNull);
     });
 
     test('no stored plan, nothing to scout', () {
@@ -104,6 +127,108 @@ void main() {
         }),
         isNull,
       );
+    });
+  });
+
+  group('AiTactics.readStrength', () {
+    test('the best eleven by overall, positions ignored', () {
+      // Eleven forwards at 90 and four defenders at 60: a best 4-3-3 would
+      // field the defenders and read lower; the posture and the counter read
+      // the eleven best men, on the live path and the skip path alike.
+      final pool = [
+        for (var i = 0; i < 11; i++)
+          player(
+            id: i,
+            nationId: 1,
+            position: PlayerPosition.st,
+            attributes: flatAttributes(90),
+          ),
+        for (var i = 11; i < 15; i++)
+          player(
+            id: i,
+            nationId: 1,
+            position: PlayerPosition.cb,
+            attributes: flatAttributes(60),
+          ),
+      ];
+      expect(AiTactics.readStrength(pool), 90);
+      expect(AiTactics.readStrength(pool.skip(5)), (6 * 90 + 4 * 60) / 10);
+      expect(AiTactics.readStrength(const []), 0);
+    });
+  });
+
+  group('reading the most recent plan', () {
+    const a = TacticalInstructions(pressing: 85, defensiveLine: 75);
+    const b = TacticalInstructions(directness: 20, tempo: 40);
+
+    Map<Formation, ShapeDrilling> play(
+      Map<Formation, ShapeDrilling> rows,
+      Formation shape,
+      TacticalInstructions plan,
+      int matches,
+    ) {
+      var out = rows;
+      for (var i = 0; i < matches; i++) {
+        out = TeamChemistry.afterMatch(
+          out,
+          shape,
+          planKey: TeamChemistry.planKey(plan),
+        );
+      }
+      return out;
+    }
+
+    // Full-quality opponent, so the read is just the predictability term.
+    double readOf(ScoutedPlan s) =>
+        AiCounter.read(predictability: s.predictability, opponentStrength: 90);
+    final weak = AiCounter.read(predictability: 0, opponentStrength: 90);
+
+    test('a long run on one plan is read sharply', () {
+      final rows = play(const {}, Formation.f433, a, 20);
+      final s = ScoutedPlan.fromDrilling(rows)!;
+      expect(s.formation, Formation.f433);
+      expect(
+        s.instructions,
+        TeamChemistry.decodePlanKey(TeamChemistry.planKey(a)),
+      );
+      expect(s.predictability, closeTo(0.95, 1e-9));
+      expect(readOf(s), greaterThan(0.9));
+    });
+
+    test('a change of plan is read weakly, as the new plan', () {
+      var rows = play(const {}, Formation.f433, a, 15);
+      rows = play(rows, Formation.f433, b, 1);
+      final s = ScoutedPlan.fromDrilling(rows)!;
+      expect(
+        s.instructions,
+        TeamChemistry.decodePlanKey(TeamChemistry.planKey(b)),
+      );
+      expect(readOf(s), closeTo(weak, 1e-9));
+      // ...and a second match on it is the first step of a new run.
+      final again = ScoutedPlan.fromDrilling(play(rows, Formation.f433, b, 1))!;
+      expect(again.predictability, closeTo(0.05, 1e-9));
+    });
+
+    test('returning to an old plan is not a continued run', () {
+      var rows = play(const {}, Formation.f433, a, 15);
+      rows = play(rows, Formation.f433, b, 1);
+      rows = play(rows, Formation.f433, a, 1);
+      final s = ScoutedPlan.fromDrilling(rows)!;
+      expect(readOf(s), closeTo(weak, 1e-9));
+    });
+
+    test('a formation change is read from the new shape', () {
+      var rows = play(const {}, Formation.f433, a, 15);
+      rows = play(rows, Formation.f532, a, 1);
+      // The 4-3-3 is still far more familiar (0.9 against 0.08)...
+      expect(
+        rows[Formation.f433]!.familiarity,
+        greaterThan(rows[Formation.f532]!.familiarity),
+      );
+      // ...but the video shows the back five.
+      final s = ScoutedPlan.fromDrilling(rows)!;
+      expect(s.formation, Formation.f532);
+      expect(readOf(s), closeTo(weak, 1e-9));
     });
   });
 

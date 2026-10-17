@@ -49,17 +49,17 @@ void main() {
       );
     });
 
-    test('a change of plan makes what opponents knew stale', () {
+    test('a change of plan starts the read again from nothing', () {
       expect(
         TeamChemistry.bumpPredictability(0.5, used: true, samePlan: false),
-        closeTo(0.38, 1e-9),
+        0.0,
       );
     });
 
-    test('a shape not fielded fades from the scouting reports', () {
+    test('a shape not fielded is off the scouting reports', () {
       expect(
         TeamChemistry.bumpPredictability(0.5, used: false, samePlan: true),
-        closeTo(0.43, 1e-9),
+        0.0,
       );
     });
 
