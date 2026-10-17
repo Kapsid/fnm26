@@ -76,8 +76,7 @@ class _NewGameTabletLayout extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: AppSpacing.lg),
-                              const _FreeCycleNote(),
-                              const SizedBox(height: AppSpacing.lg),
+                              const _FreeCycleNote(gapBelow: AppSpacing.lg),
                               PrimaryButton(
                                 key: NewGameScreen.startKey,
                                 label: l.careerStartCareer,

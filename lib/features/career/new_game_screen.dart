@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -170,8 +171,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                           // years later: a player who finds out what is paid
                           // for at the moment he is asked to pay reads it as a
                           // trap, even when the free part was the whole game.
-                          const _FreeCycleNote(),
-                          const SizedBox(height: AppSpacing.md),
+                          const _FreeCycleNote(gapBelow: AppSpacing.md),
                           PrimaryButton(
                             label: l.careerStartCareer,
                             icon: Icons.play_arrow_rounded,
@@ -194,14 +194,19 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 }
 
 /// What the manager is getting for nothing, and what the one payment is for:
-/// the phone's note under the name, shared with the tablet's form.
-class _FreeCycleNote extends StatelessWidget {
-  const _FreeCycleNote();
+/// the phone's note under the name, shared with the tablet's form. A manager
+/// who has already paid has nothing left to be told, so it (and the gap
+/// under it) is gone for him.
+class _FreeCycleNote extends ConsumerWidget {
+  const _FreeCycleNote({required this.gapBelow});
+
+  final double gapBelow;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(premiumUnlockedProvider)) return const SizedBox.shrink();
     final l = AppLocalizations.of(context);
-    return Row(
+    final note = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
@@ -217,6 +222,10 @@ class _FreeCycleNote extends StatelessWidget {
           child: Text(l.careerFreeCycleNote, style: AppTypography.bodyMedium),
         ),
       ],
+    );
+    return Padding(
+      padding: EdgeInsets.only(bottom: gapBelow),
+      child: note,
     );
   }
 }
