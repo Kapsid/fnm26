@@ -36,25 +36,72 @@ const TacticalInstructions chaseInstructions = TacticalInstructions(
   tempo: 75,
 );
 
-MatchTeam _side(int nationId, double rating) => MatchTeam(
-  nationId: nationId,
-  instructions: const TacticalInstructions(),
+/// The posture of the side the manager chases: a shape and its dials.
+typedef ChaseOpponent = ({
+  Formation formation,
+  TacticalInstructions instructions,
+});
+
+/// The neutral 4-3-3.
+const ChaseOpponent neutralOpponent = (
   formation: Formation.f433,
+  instructions: TacticalInstructions(),
+);
+
+/// `AiTactics`' dominant archetype (a favourite taking the game to you).
+const ChaseOpponent dominantOpponent = (
+  formation: Formation.f433,
+  instructions: TacticalInstructions(
+    mentality: 68,
+    pressing: 66,
+    tempo: 58,
+    width: 60,
+    defensiveLine: 66,
+    directness: 40,
+  ),
+);
+
+/// `AiTactics`' gegenPress archetype.
+const ChaseOpponent gegenPressOpponent = (
+  formation: Formation.f4231,
+  instructions: TacticalInstructions(
+    mentality: 64,
+    pressing: 80,
+    tempo: 66,
+    width: 58,
+    defensiveLine: 72,
+    directness: 44,
+  ),
+);
+
+MatchTeam _side(
+  int nationId,
+  double rating, [
+  ChaseOpponent plan = neutralOpponent,
+]) => MatchTeam(
+  nationId: nationId,
+  instructions: plan.instructions,
+  formation: plan.formation,
   xi: [
     for (var i = 0; i < 11; i++)
       player(
         id: nationId * 100 + i,
         nationId: nationId,
-        position: Formation.f433.positions[i],
+        position: plan.formation.positions[i],
         attributes: flatAttributes(rating.round()),
       ),
   ],
 );
 
+/// [opponent] is the posture the opponent starts in (the engine then
+/// manages it by the scoreline and clock), at [opponentRating] (default:
+/// [rating]).
 ChaseStats runChase({
   int seeds = 4000,
   int chaseMinute = 60,
   double rating = 80,
+  ChaseOpponent opponent = neutralOpponent,
+  double? opponentRating,
 }) {
   const engine = MatchEngine();
   const me = 1;
@@ -69,7 +116,7 @@ ChaseStats runChase({
   for (var i = 0; i < seeds; i++) {
     for (final atHome in const [true, false]) {
       final mine = _side(me, rating);
-      final theirs = _side(them, rating);
+      final theirs = _side(them, opponentRating ?? rating, opponent);
       MatchResult play(List<TacticalChange> changes) => engine.play(
         home: atHome ? mine : theirs,
         away: atHome ? theirs : mine,

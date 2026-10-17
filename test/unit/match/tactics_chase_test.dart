@@ -12,37 +12,54 @@ import '../../helpers/chase_lab.dart';
 /// conceded only 0.10 more after it while scoring 0.38 more, and turned 14pp
 /// more of those matches into draws or wins (+5.3pp before the tactics impact
 /// build, at 1574f85). The spec wants bold plans to be "crazier at both ends".
+/// A first fix (bend only when both sides are committed) held against a
+/// neutral side but not against a committed leader (a favourite taking the
+/// game to you): +12-14pp and nothing extra conceded. Hence the four cells.
 ///
-/// The cell: equal 80v80 sides, both neutral, the opponent AI-managed as in a
-/// live match, 4000 seeds both ways round; where the manager is one down at
-/// 60', staying neutral is compared with switching live to all-out (see
-/// `runChase`). Figures at the fix (2026-10-17, 1705 chase cases): not
-/// losing 22.5% -> 27.9% (+5.5pp), goals after 60' for +0.22 and against
-/// +0.35. Before the fix the same cell conceded +0.10 against +0.37 scored.
+/// Each cell: the manager's side at 80 on the neutral 4-3-3, the opponent in
+/// the given posture and AI-managed as in a live match, 4000 seeds both ways
+/// round; where the manager is one down at 60', staying neutral is compared
+/// with switching live to all-out (see `runChase`). Figures at the fix
+/// (2026-10-17), not losing / extra for / extra against: neutral 80 +5.5pp
+/// +0.22 +0.35; dominant 80 +5.2pp +0.23 +0.28; gegenPress 80 +4.5pp +0.21
+/// +0.26; dominant 86 +3.6pp +0.18 +0.32. Base 1574f85: +5.2 / +7.9 / +7.3 /
+/// +4.3pp.
 ///
-/// Set FNM_LAB=1 to print the 60' and 75' cells.
+/// Set FNM_LAB=1 to print the cells.
 void main() {
-  test('chasing a game costs what it earns', () {
-    final s = runChase(seeds: 4000, chaseMinute: 60);
-    if (Platform.environment['FNM_LAB'] == '1') {
-      // ignore: avoid_print
-      print("60': ${chaseReport(s)}");
-      // ignore: avoid_print
-      print("75': ${chaseReport(runChase(seeds: 4000, chaseMinute: 75))}");
-    }
-    expect(s.matches, greaterThan(1500), reason: 'too few chase cases');
-    final scored = s.chaseGfAfter - s.stayGfAfter;
-    final conceded = s.chaseGaAfter - s.stayGaAfter;
-    expect(scored, greaterThan(0), reason: 'chasing must still create');
-    expect(
-      conceded,
-      greaterThanOrEqualTo(scored * 0.8),
-      reason: 'chasing must cost at the back: ${chaseReport(s)}',
-    );
-    expect(
-      s.chaseNotLose - s.stayNotLose,
-      lessThanOrEqualTo(0.09),
-      reason: 'chasing must not be a free comeback: ${chaseReport(s)}',
-    );
-  }, timeout: const Timeout(Duration(minutes: 5)));
+  for (final (name, opponent, rating) in const [
+    ('neutral 80', neutralOpponent, 80.0),
+    ('dominant 80', dominantOpponent, 80.0),
+    ('gegenPress 80', gegenPressOpponent, 80.0),
+    ('dominant 86', dominantOpponent, 86.0),
+  ]) {
+    test('chasing a game costs what it earns: $name', () {
+      final s = runChase(
+        seeds: 4000,
+        chaseMinute: 60,
+        opponent: opponent,
+        opponentRating: rating,
+      );
+      final report = '$name: ${chaseReport(s)}';
+      if (Platform.environment['FNM_LAB'] == '1') {
+        // The figures are the point of the lab run.
+        // ignore: avoid_print
+        print(report);
+      }
+      expect(s.matches, greaterThan(1500), reason: 'too few chase cases');
+      final scored = s.chaseGfAfter - s.stayGfAfter;
+      final conceded = s.chaseGaAfter - s.stayGaAfter;
+      expect(scored, greaterThan(0), reason: 'chasing must still create');
+      expect(
+        conceded,
+        greaterThanOrEqualTo(scored * 0.8),
+        reason: 'chasing must cost at the back: $report',
+      );
+      expect(
+        s.chaseNotLose - s.stayNotLose,
+        lessThanOrEqualTo(0.09),
+        reason: 'chasing must not be a free comeback: $report',
+      );
+    }, timeout: const Timeout(Duration(minutes: 5)));
+  }
 }

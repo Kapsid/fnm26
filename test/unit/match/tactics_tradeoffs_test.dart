@@ -448,7 +448,7 @@ void main() {
     // Best counters (2026-10-17): allOutAttack by counter +0.44, highPress by
     // counter +0.49, counter by possession +0.21 (the patience term), and in
     // the case above neutral by possession +0.17, parkTheBus by possession
-    // +0.32, possession by highPress +0.23, wide by counter +0.18 (the back
+    // +0.32, possession by highPress +0.17, wide by counter +0.18 (the back
     // three term).
     test('allOutAttack, highPress and counter have a counter', () {
       for (final target in const ['allOutAttack', 'highPress', 'counter']) {

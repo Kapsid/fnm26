@@ -1369,25 +1369,29 @@ class MatchEngine {
   /// [margin] goals up (negative: down), [own] and [opponent] being the two
   /// sides' [commitment]s.
   ///
-  /// When BOTH sides have opened the game (each commitment above neutral),
-  /// the side in front stops trading blows and sits on its lead (its rate
-  /// falls to `1 / open`) and the side behind throws even more forward
-  /// (`open` squared). That is what a wild game between two bold sides looks
-  /// like: goals at both ends, the lead changing hands, not a 6-1. Without it
-  /// an all-out mirror at 4.9 goals a game had one match in ten decided by
-  /// four or more. With it, 5%.
+  /// When BOTH sides have opened the game (each commitment above neutral)
+  /// and the side in front is at least as committed as the side behind, the
+  /// leader stops trading blows and sits on its lead (its rate falls to
+  /// `1 / open`) and the side behind throws even more forward (`open`
+  /// squared). That is what a wild game between two bold sides looks like:
+  /// goals at both ends, the lead changing hands, not a 6-1. Without it an
+  /// all-out mirror at 4.9 goals a game had one match in ten decided by four
+  /// or more. With it, 5%.
   ///
-  /// When only ONE side has opened the game, nothing bends: both keep
-  /// `open`, whoever is ahead. The bold side opened it and pays for that at
-  /// the back like anyone else, leading or trailing. Until 2026-10-17 the bend
+  /// Otherwise nothing bends: both keep `open`. A lone bold side opened the
+  /// game and pays for that at the back like anyone else, leading or
+  /// trailing; and a side BEHIND that is bolder than the leader is chasing,
+  /// which must not also make the leader sit. Until 2026-10-17 the bend
   /// applied whoever had opened the game, so a manager a goal down who went
-  /// all-out against a side protecting its lead got his own rate doubled and
-  /// the leader's cut to 0.7 at the same time: the late chase cost a tenth of
-  /// a goal and earned three times what it had before this build
-  /// (`tactics_chase_test.dart`). Bending only for the leader when the leader
-  /// was the bolder side fixed the chase but charged a bold plan twice over a
-  /// match (the bend against it when ahead, none for it when behind), which
-  /// broke the committed plans' guards; the mutual rule is symmetric.
+  /// all-out got his own rate doubled and the leader's cut to 0.7 at the same
+  /// time: the late chase cost nothing at the back and earned three times
+  /// what it had before this build (`tactics_chase_test.dart`, against a
+  /// neutral side and against committed favourites). Neither condition alone
+  /// was enough: "leader at least as bold" alone charged a bold plan the
+  /// bend when ahead of a neutral side and gave it none when behind, which
+  /// broke the committed plans' guards; "both committed" alone switched the
+  /// free chase back on against any committed leader (the dominant and
+  /// gegenPress postures).
   ///
   /// A level game, or a closed one (`open` <= 1), is untouched, so a neutral
   /// match is exactly as before.
@@ -1399,6 +1403,8 @@ class MatchEngine {
   }) {
     if (open <= 1 || margin == 0) return open;
     if (own <= 0 || opponent <= 0) return open;
+    final leaderIsBold = margin > 0 ? own >= opponent : opponent >= own;
+    if (!leaderIsBold) return open;
     return margin > 0 ? 1 / open : open * open;
   }
 
