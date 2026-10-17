@@ -13698,13 +13698,16 @@ class TacticFamiliarityRow extends DataClass
 
   /// How thoroughly opponents have worked this shape out, `0..1` — the hidden
   /// counterweight to [familiarity]. It climbs while the manager keeps naming
-  /// the same shape with the same plan and falls away as soon as they vary it
-  /// or field something else, so a side that never changes anything is drilled
-  /// but read, and one that mixes it up is fresher but less settled.
+  /// the same shape with the same plan, match after match, and starts again
+  /// from 0 as soon as they vary it or field something else, so a side that
+  /// never changes anything is drilled but read, and one that mixes it up is
+  /// fresher but less settled (see `TeamChemistry.bumpPredictability`).
   final double predictability;
 
-  /// A fingerprint of the instructions last used with this shape, so a genuine
-  /// change of plan can be told from the same plan again. 0 = never fielded.
+  /// A fingerprint of the instructions of the manager's most recent match,
+  /// kept on the shape he fielded in it, so a genuine change of plan can be
+  /// told from the same plan again. 0 = not his most recent shape (or never
+  /// fielded). See `TeamChemistry.afterMatch`.
   final int lastPlanKey;
   const TacticFamiliarityRow({
     required this.careerId,

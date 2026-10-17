@@ -16,15 +16,13 @@ void main() {
       expect(TeamChemistry.factor(-1), 1.0);
     });
 
-    test('a side that has been read gives part of the bonus back', () {
-      // Drilled but completely worked out: still ahead of a raw side, but by
-      // half of what it would otherwise be worth — continuity stays worth
-      // having, it is just never free. The HALF is the guarantee (see
-      // `readPenalty`); the old figures took four sevenths.
-      expect(TeamChemistry.factor(1, 1), closeTo(1.04, 1e-9));
-      expect(TeamChemistry.factor(1, 1), lessThan(TeamChemistry.factor(1)));
-      expect(TeamChemistry.factor(1, 1), greaterThan(TeamChemistry.factor(0)));
-      expect(TeamChemistry.factor(1, 2), closeTo(1.04, 1e-9));
+    test('predictability is ignored: it is charged in the AI counter', () {
+      // Being read used to take half the drilled bonus back here; it now
+      // sharpens the opponent's counter instead (`AiCounter`), so it is
+      // charged once. The parameter survives only for call-site
+      // compatibility.
+      expect(TeamChemistry.factor(1, 1), TeamChemistry.factor(1));
+      expect(TeamChemistry.factor(0.5, 0.7), TeamChemistry.factor(0.5));
     });
   });
 
@@ -51,17 +49,17 @@ void main() {
       );
     });
 
-    test('a change of plan makes what opponents knew stale', () {
+    test('a change of plan starts the read again from nothing', () {
       expect(
         TeamChemistry.bumpPredictability(0.5, used: true, samePlan: false),
-        closeTo(0.38, 1e-9),
+        0.0,
       );
     });
 
-    test('a shape not fielded fades from the scouting reports', () {
+    test('a shape not fielded is off the scouting reports', () {
       expect(
         TeamChemistry.bumpPredictability(0.5, used: false, samePlan: true),
-        closeTo(0.43, 1e-9),
+        0.0,
       );
     });
 

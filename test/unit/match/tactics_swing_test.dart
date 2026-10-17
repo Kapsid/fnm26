@@ -26,12 +26,23 @@ import '../../helpers/fixtures.dart';
 /// complaint), too large and squad quality stops deciding football matches (the
 /// risk this change introduces).
 ///
-/// The two sides are deliberately IDENTICAL in every flat term. The plans are
-/// chosen so that the flat attack/defence contributions in `MatchEngine._attack`
-/// and `._defence` cancel exactly (see [_wellJudged] / [_outplanned]): the only
-/// things separating them are the match-up (`MatchEngine._matchup`) and the
-/// chemistry multiplier (`TeamChemistry.factor`). That is what makes this a
-/// guard on TACTICS and not an accidental guard on the mentality slider.
+/// RE-PINNED 2026-10-16 (tactics impact). The owner's new bar is that a
+/// well-judged plan against a badly-judged one, between equal squads, is worth
+/// 0.3-0.5 of a goal a game on its own: the plan-only case below now pins that
+/// band, and the drilled cases sit on top of it. What stops this running away
+/// is no longer this file's ceiling alone: `tactics_lab_test.dart` checks that
+/// a 10-point-better squad on the plan most exposed to its opponent's still
+/// wins more than it loses.
+///
+/// The two sides are deliberately IDENTICAL in every flat term that matters.
+/// The plans are chosen so that the flat attack/defence contributions in
+/// `MatchEngine._attack` and `._defence` (nearly) cancel (see [_wellJudged] /
+/// [_outplanned]): what separates them is the match-up (`MatchEngine._matchup`),
+/// the chemistry multiplier (`TeamChemistry.factor`), and two small leftovers
+/// the press and width now carry (the press's extra drain, the wide shape's
+/// small cost at the back), both against the well-judged side. That is what
+/// makes this a guard on TACTICS and not an accidental guard on the mentality
+/// slider.
 
 /// The counter-plan: direct into a high line, pressing the build-up, and
 /// stretching a narrow block. Every dial that carries a flat bonus is left
@@ -215,11 +226,11 @@ void main() {
         counterPlan: _outplanned,
       );
 
-      // THE BAND. Roughly a goal every three or four games (0.25-0.33), with
-      // room either side. Measures 0.3255 as written (0.311 before the two
-      // width terms in `_matchup` were separated — see the width case below;
-      // the wide reading is worth a shade more than the narrow one, so the
-      // drilled side keeps a little of what it used to hand back).
+      // THE BAND. Measures 0.710: the plan alone is worth 0.36 (the dial
+      // guard below) and the drilling 0.27 on top. It measured 0.3255 before
+      // the 2026-10-16 tactics impact build, whose bar raised the plan's share
+      // from about a sixth of a goal to 0.3-0.5; the band keeps the old
+      // relative room either side.
       //
       // Lower bound: below this the manager is right — the dials do nothing.
       // On the constants that drew the feedback, and on THIS corrected harness,
@@ -231,37 +242,34 @@ void main() {
       // a goal a game.
       expect(
         s.goalDiffPerGame,
-        inInclusiveRange(0.18, 0.45),
+        inInclusiveRange(0.45, 0.95),
         reason:
-            'a drilled, well-judged side should be worth about a goal every '
-            'three or four games — not nothing, and not one a game',
+            'a drilled, well-judged side should be worth well over a goal '
+            'every three games, and never a goal a game',
       );
 
       // The same statement in the currency the manager actually reads.
-      expect(s.pointsPerGameEdge, inInclusiveRange(0.22, 0.70));
+      // Measures +0.92 points a game.
+      expect(s.pointsPerGameEdge, inInclusiveRange(0.55, 1.30));
     });
 
     test('the best a manager can do still does not run away with it', () {
       // The ceiling: the same drilled shape, kept unpredictable by varying the
       // plan behind it, plus the right plan on the day. This is the most
       // tactics can ever be worth between two identical squads, and it must
-      // stay well short of a goal a game. Measures 0.4815.
+      // stay short of a goal a game. Measures 0.710 (0.4815 before the
+      // 2026-10-16 build raised the plan's share; see the file header).
       final s = swing(
         familiarity: 1,
         predictability: 0,
         plan: _wellJudged,
         counterPlan: _outplanned,
       );
-      expect(s.goalDiffPerGame, lessThan(0.70));
-      // …and still clearly better than being read, or there is no reason to
-      // vary the plan.
-      final read = swing(
-        familiarity: 1,
-        predictability: 1,
-        plan: _wellJudged,
-        counterPlan: _outplanned,
-      );
-      expect(s.goalDiffPerGame, greaterThan(read.goalDiffPerGame));
+      expect(s.goalDiffPerGame, lessThan(0.95));
+      // The reason to vary the plan used to be pinned here too (a read side
+      // gave chemistry back). Predictability is now charged only in the AI's
+      // counter (`AiCounter`, see ai_counter_test.dart), which this harness's
+      // fixed opponent plan does not model.
     });
 
     test('the instruction dials carry a real share of it on their own', () {
@@ -272,15 +280,13 @@ void main() {
       // This is what the feedback was about. On the old constants, measured on
       // this corrected harness, picking the textbook counter was worth −0.038
       // of a goal a game — not merely nothing, marginally WORSE than not
-      // bothering. Measures +0.090 now (+0.056 before the width terms in
-      // `_matchup` were separated: the double pay was identical on both sides
-      // and so cancelled here, and paying each side once leaves the wide
-      // reading its intended 7.5-against-6.0 edge).
+      // bothering. It then measured +0.090 (a goal every eleven games), which
+      // the owner judged still invisible.
       //
-      // The band is small on purpose. Out-thinking an opponent should be worth
-      // about a goal every twenty games by itself; the rest of what a good
-      // manager gets comes from drilling the shape, which is the slower and
-      // more expensive thing to earn.
+      // THE BAND (2026-10-16, tactics impact): 0.3-0.5 of a goal a game, the
+      // owner's bar for a well-judged plan against a badly-judged one between
+      // equal squads. Measures +0.362. Below it the dials are back to being
+      // decoration; above it a plan starts to stand in for a squad.
       final planOnly = swing(
         familiarity: 0,
         predictability: 0,
@@ -289,10 +295,10 @@ void main() {
       );
       expect(
         planOnly.goalDiffPerGame,
-        inInclusiveRange(0.025, 0.11),
+        inInclusiveRange(0.3, 0.5),
         reason:
-            'reading the opponent right should be worth something real and '
-            'small — and never, as it once did, less than nothing',
+            'reading the opponent right should be worth a third to a half of '
+            'a goal a game, on its own',
       );
 
       // And it must be a genuine ADDITION to the drilling, not absorbed by it.
@@ -308,9 +314,10 @@ void main() {
         plan: _wellJudged,
         counterPlan: _outplanned,
       );
+      // Measures +0.438.
       expect(
         both.goalDiffPerGame - drillingOnly.goalDiffPerGame,
-        greaterThan(0.05),
+        greaterThan(0.25),
       );
     });
 
@@ -339,18 +346,21 @@ void main() {
         counterPlan: _cautious,
       );
       final lift = onesided.goalsPerGame - base.goalsPerGame;
-      // Measures +0.20 goals a match on a 2.52 baseline. On the old, halved
-      // constants it was +0.13 — the sliders moved an attack about two rating
-      // points end to end, which is a decoration rather than a decision.
+      // Measures +0.111 goals a match on a 2.52 baseline (+0.20 before the
+      // 2026-10-16 tactics impact build). The line and tempo terms were cut
+      // to a third there, and the line's defensive term turned from a gain
+      // into a cost: what opens a game now is mostly mentality and shape,
+      // through `MatchEngine.openness`, which this pair barely moves (its
+      // presses cancel). The band keeps the old relative room.
       expect(
         lift,
-        inInclusiveRange(0.15, 0.35),
+        inInclusiveRange(0.08, 0.20),
         reason:
             'committing forward should visibly open the game up, without '
             'turning every match into a basketball score',
       );
       // The bargain stays fair: committing forward is favourable, never a
-      // free win. Measures +0.15.
+      // free win. Measures +0.19.
       expect(onesided.goalDiffPerGame.abs(), lessThan(0.30));
     });
 
@@ -370,6 +380,11 @@ void main() {
       // difference and so out of every other measurement in this file.
       // Separating the two cases halved it. The figures below are what each
       // case reads with each side paid once.
+      //
+      // RE-PINNED 2026-10-16: the whole match-up is weighted by
+      // `MatchEngine.kMatchupWeight` (1.85), width included, and a wide shape
+      // costs less at the back, so both lifts grew. The double pay would still
+      // read about twice the ordinary figure and fail both bands.
       final base = swing(
         familiarity: 0,
         predictability: 0,
@@ -398,63 +413,55 @@ void main() {
       // silently eating the headroom.
       //
       // An ordinary mismatch — wing play at 70-80 against a narrow counter,
-      // which real playstyles produce constantly — is worth +0.166 of a goal
-      // a game. Call it a goal every six matches: felt over a season, not over
-      // a match. The double-paid version read +0.327 and fails this.
+      // which real playstyles produce constantly — is worth +0.438 of a goal
+      // a game (+0.166 before 2026-10-16): a goal every two or three matches,
+      // at both ends, which is the visible open game the owner asked for.
       final ordinaryLift = mismatch.goalsPerGame - base.goalsPerGame;
       expect(
         ordinaryLift,
-        inInclusiveRange(0.06, 0.28),
+        inInclusiveRange(0.25, 0.65),
         reason:
             'a routine width mismatch should open a game by a fraction of a '
             'goal — neither invisible nor a third of a scoreline',
       );
 
       // The extreme, which no sane plan reaches: touchline-to-touchline
-      // against a side in a phone box. +0.467. Double-paid it read +0.874, a
-      // third of the whole baseline scoreline, and fails this.
+      // against a side in a phone box. +0.810 (+0.467 before 2026-10-16).
       final extremeLift = extreme.goalsPerGame - base.goalsPerGame;
       expect(
         extremeLift,
-        inInclusiveRange(0.25, 0.70),
+        inInclusiveRange(0.45, 1.10),
         reason:
-            'even the most lopsided width mismatch imaginable must stay under '
-            'half a goal-and-a-bit a game',
+            'even the most lopsided width mismatch imaginable must stay well '
+            'under half the baseline scoreline',
       );
 
       // And the shape has to stay monotonic: more mismatch, more open game.
       expect(extremeLift, greaterThan(ordinaryLift));
     });
 
-    test('a side that has been read gives part of it back, never all of it', () {
-      // Four years of the same eleven and the same plan: the video room has it.
-      // The drilled side should still be ahead — continuity has to stay worth
-      // having — but by clearly less.
-      final fresh = swing(
-        familiarity: 1,
-        predictability: 0,
-        plan: _outplanned,
-        counterPlan: _outplanned,
-      );
-      final read = swing(
-        familiarity: 1,
-        predictability: 1,
-        plan: _outplanned,
-        counterPlan: _outplanned,
-      );
-      expect(read.goalDiffPerGame, lessThan(fresh.goalDiffPerGame));
-      expect(
-        read.goalDiffPerGame,
-        greaterThan(0),
-        reason: 'being read must never cost more than the drilling was worth',
-      );
-      // The same thing said about the constants, so a future tuning pass cannot
-      // quietly invert them — nor let the video room take a bigger share of the
-      // drilling than it does today.
-      expect(
-        TeamChemistry.readPenalty / TeamChemistry.drilledBonus,
-        lessThanOrEqualTo(0.5),
-      );
-    });
+    test(
+      'being read costs nothing in chemistry: it is charged in the counter',
+      () {
+        // Predictability used to take part of the drilled bonus back here AND
+        // (from Task 6) sharpen the AI's counter: the same thing charged twice.
+        // It now lives only in `AiCounter`, so a drilled side that the world
+        // has worked out is exactly as cohesive as one it has not.
+        final fresh = swing(
+          familiarity: 1,
+          predictability: 0,
+          plan: _outplanned,
+          counterPlan: _outplanned,
+        );
+        final read = swing(
+          familiarity: 1,
+          predictability: 1,
+          plan: _outplanned,
+          counterPlan: _outplanned,
+        );
+        expect(read.goalDiffPerGame, fresh.goalDiffPerGame);
+        expect(read.goalDiffPerGame, greaterThan(0));
+      },
+    );
   });
 }

@@ -22,6 +22,13 @@ MatchTeam _team(int nationId, int rating) => MatchTeam(
 
 /// A mismatch rather than two equals: a blowout needs a favourite, so this is
 /// the fixture the tail actually shows up in.
+///
+/// Both sides play the neutral plan in a 4-3-3, so the 2026-10-16 tactics
+/// impact build leaves every figure here exactly where it was: each term it
+/// added or retuned (openness, the scoreline bend, the match-up weight, the
+/// flat dials, the press drain) reads zero for two neutral sides, which
+/// `tactics_tradeoffs_test.dart` pins goal for goal. The bounds were checked
+/// and not re-pinned.
 MatchResult _simulateOneMatch(int seed) => const MatchEngine().play(
   home: _team(1, 84),
   away: _team(2, 66),

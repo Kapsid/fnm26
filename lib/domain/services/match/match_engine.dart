@@ -7,9 +7,13 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/performance_mark.dart';
+import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/services/tactics/team_chemistry.dart';
+import 'package:meta/meta.dart' show visibleForTesting;
 
 /// A team as it lines up for a match: its starting XI and instructions.
 class MatchTeam {
@@ -281,6 +285,12 @@ class PlayerRating {
   final PlayerPosition position;
 }
 
+/// A side's plan as it was actually fielded: a shape and its instructions.
+typedef FieldedPlan = ({
+  Formation formation,
+  TacticalInstructions instructions,
+});
+
 /// The outcome of a simulated match.
 class MatchResult {
   const MatchResult({
@@ -300,6 +310,8 @@ class MatchResult {
     this.homeShotsByMinute = const [],
     this.awayShotsByMinute = const [],
     this.momentumByMinute = const [],
+    this.homePlan,
+    this.awayPlan,
   });
 
   final int homeScore;
@@ -348,6 +360,18 @@ class MatchResult {
 
   int get awayPossession => 100 - homePossession;
 
+  /// The plan each side held for the most minutes of the ninety, live changes
+  /// included: the shape and the instructions it was actually playing, not
+  /// the ones on its team sheet. Two plans are the same when they share a
+  /// formation and a [TeamChemistry.planKey], and a tie goes to the one held
+  /// later (what the side finished on). Null when not recorded.
+  ///
+  /// This is what the opposition's video room sees of a match, so it is what
+  /// the manager's drilling records: a decoy plan named on the sheet and
+  /// switched away from at 1' is a minute of football, not the plan.
+  final FieldedPlan? homePlan;
+  final FieldedPlan? awayPlan;
+
   /// The best individual performance of the match, or null if nobody played.
   PlayerRating? get manOfTheMatch {
     if (ratings.isEmpty) return null;
@@ -362,6 +386,8 @@ class _Live {
   _Live(this.team)
     : xi = [...team.xi],
       slots = [...team.formation.positions],
+      formation = team.formation,
+      shape = ShapeProfile.of(team.formation.positions),
       instructions = team.instructions,
       penaltyTakerId = team.penaltyTakerId,
       deadBallTakerId = team.deadBallTakerId;
@@ -382,6 +408,54 @@ class _Live {
   /// Stable across substitutions (a sub inherits the slot of the player they
   /// replace) and reset by a live change that reshapes the team.
   List<PlayerPosition> slots;
+
+  /// The formation the side is set up in right now: the team sheet's, until
+  /// a live change names another.
+  Formation formation;
+
+  /// Minutes played per plan (formation + [TeamChemistry.planKey]), with the
+  /// instructions the plan was first held with and the last minute it was
+  /// held: what [dominantPlan] reads.
+  final Map<
+    (Formation, int),
+    ({int minutes, int last, TacticalInstructions instructions})
+  >
+  _planMinutes = {};
+
+  /// Credits [minute] to the plan the side is playing now.
+  void tallyPlan(int minute) {
+    final key = (formation, TeamChemistry.planKey(instructions));
+    final was = _planMinutes[key];
+    _planMinutes[key] = (
+      minutes: (was?.minutes ?? 0) + 1,
+      last: minute,
+      instructions: was?.instructions ?? instructions,
+    );
+  }
+
+  /// The plan held for the most minutes; a tie goes to the one held later.
+  FieldedPlan get dominantPlan {
+    (Formation, int)? best;
+    for (final e in _planMinutes.entries) {
+      final b = best == null ? null : _planMinutes[best]!;
+      if (b == null ||
+          e.value.minutes > b.minutes ||
+          (e.value.minutes == b.minutes && e.value.last > b.last)) {
+        best = e.key;
+      }
+    }
+    if (best == null) {
+      return (formation: formation, instructions: instructions);
+    }
+    return (formation: best.$1, instructions: _planMinutes[best]!.instructions);
+  }
+
+  /// The formation's attacker / defender counts, fixed when the shape is set
+  /// and refreshed by a formation change. Deliberately NOT recomputed from
+  /// [slots] each minute: a sending-off removes a slot, and the man down is
+  /// already paid for by the short-handed penalty, so counting him again as a
+  /// lost defender or attacker would charge twice.
+  ({double attackers, double defenders}) shape;
 
   /// The team's current instructions, changeable live during the match. For an
   /// AI-managed side this is recomputed each minute from [team] instructions by
@@ -445,6 +519,23 @@ class _Live {
 
   int get nationId => team.nationId;
 }
+
+/// Openness weights (see [MatchEngine.openness]). The three commitment weights
+/// are per unit off neutral: a mentality or press at 100 is one unit, an extra
+/// attacker off the 4-3-3 count is one unit.
+///
+/// [kOpenUp] is what the bolder side's full commitment adds to both chance
+/// rates; [kOpenDown] what two fully cautious sides take off. Tuned on
+/// 2026-10-16 (0.45 -> 0.42, 0.3 -> 0.6) with the max-and-mean combination in
+/// [MatchEngine.openness]: one all-out side lifts the lab's total goals by
+/// about 45%, an all-out mirror by about 80%, and parking the bus cuts them by
+/// about a third. Closing needed the bigger weight because it is averaged over
+/// both sides where opening is not.
+const double kOpenMentality = 0.6;
+const double kOpenPressing = 0.25;
+const double kOpenAttackers = 0.25;
+const double kOpenUp = 0.42;
+const double kOpenDown = 0.6;
 
 /// A deterministic, lightweight tactical match engine. It derives attack and
 /// defence ratings from each team's XI and instructions, then plays out 90
@@ -607,6 +698,13 @@ class MatchEngine {
         );
       }
 
+      // Each minute of the ninety is credited to the plan each side is
+      // playing in it (see [MatchResult.homePlan]).
+      if (stoppage == 0) {
+        liveHome.tallyPlan(manageMinute);
+        liveAway.tallyPlan(manageMinute);
+      }
+
       // Players tire as the match wears on, weakening the side until fresh legs
       // come on — so a well-timed substitution genuinely helps.
       _deplete(liveHome);
@@ -656,13 +754,26 @@ class MatchEngine {
       final controlTotal = homeControl + awayControl;
       final homeShare = controlTotal <= 0 ? 0.5 : homeControl / controlTotal;
 
+      // How open the game is this minute, and how committed each side is: one
+      // reading for both chance rolls (neither depends on the score).
+      final homeCommit = _commitment(liveHome);
+      final awayCommit = _commitment(liveAway);
+      final open = opennessOf(homeCommit, awayCommit);
+
       if (_chance(
         rng,
         homeAttack,
         awayDefence,
         liveHome.instructions,
         homeShare,
-        damping: _blowoutDamping(homeScore, awayScore),
+        damping:
+            _blowoutDamping(homeScore, awayScore) *
+            _scorelineOpenness(
+              open,
+              homeScore - awayScore,
+              own: homeCommit,
+              opponent: awayCommit,
+            ),
       )) {
         homeShots++;
         // The player taking the shot is chosen now, so their fatigue can affect
@@ -694,7 +805,14 @@ class MatchEngine {
         homeDefence,
         liveAway.instructions,
         1 - homeShare,
-        damping: _blowoutDamping(awayScore, homeScore),
+        damping:
+            _blowoutDamping(awayScore, homeScore) *
+            _scorelineOpenness(
+              open,
+              awayScore - homeScore,
+              own: awayCommit,
+              opponent: homeCommit,
+            ),
       )) {
         awayShots++;
         final shooter = _pickScorer(liveAway, rng);
@@ -827,6 +945,8 @@ class MatchEngine {
     return MatchResult(
       homeScore: homeScore,
       awayScore: awayScore,
+      homePlan: liveHome.dominantPlan,
+      awayPlan: liveAway.dominantPlan,
       events: events,
       homeShots: homeShots,
       awayShots: awayShots,
@@ -1001,6 +1121,12 @@ class MatchEngine {
     live
       ..xi = newXi
       ..slots = newSlots
+      ..formation = c.formation
+      // From the formation, not [newSlots]: a man sent off is missing from
+      // [newSlots], and he is already paid for by the short-handed penalty
+      // (see [_Live.shape]). Counting the slots would charge him again the
+      // moment the manager touched anything.
+      ..shape = ShapeProfile.ofFormation(c.formation)
       ..instructions = c.instructions;
     if (c.takers case final t?) {
       live
@@ -1187,6 +1313,100 @@ class MatchEngine {
       _mean(t, PositionCategory.midfielder) +
       (t.instructions.tempo - 50) * 0.05 -
       (t.instructions.directness - 50) * 0.06;
+
+  /// [commitment] for a side as it stands this minute (live instructions and
+  /// shape, so in-match changes count).
+  double _commitment(_Live t) => commitment(t.instructions, t.shape.attackers);
+
+  /// How far forward one side commits, -1..1: mentality, pressing and extra
+  /// attackers off the 4-3-3, each weighted, the sum clamped. 0 is neutral.
+  static double commitment(TacticalInstructions i, double attackers) =>
+      ((i.mentality - 50) / 50 * kOpenMentality +
+              (i.pressing - 50) / 50 * kOpenPressing +
+              (attackers - ShapeProfile.neutralAttackers) * kOpenAttackers)
+          .clamp(-1.0, 1.0);
+
+  /// [openness] from the two sides' [commitment]s.
+  static double opennessOf(double home, double away) {
+    final opening = max(max(home, away), 0.0);
+    final closing = (min(home, 0.0) + min(away, 0.0)) / 2;
+    return 1 + opening * kOpenUp + closing * kOpenDown;
+  }
+
+  /// How open the game is, as a multiplier on BOTH sides' chance rate.
+  ///
+  /// A rating-based mentality penalty alone lets a bold side pay at the back
+  /// but never makes the GAME wilder: two sides throwing men forward should
+  /// trade chances, two sides sitting in should strangle each other. Each
+  /// side's commitment (mentality, pressing, extra attackers off the 4-3-3)
+  /// is clamped to +-1. Neutral against neutral is exactly 1.0.
+  ///
+  /// It takes ONE side to open a game and BOTH to shut it: the bolder side's
+  /// forward commitment sets how open it is (the max), and the two sides'
+  /// caution is averaged. Until 2026-10-16 both were averaged, and that made
+  /// an all-out mirror pay twice: each side's flat attacking lift already
+  /// meets the other's flat defensive hole, so a second bold side on top
+  /// doubled the multiplier as well, and the mirror ran to 8 goals a game
+  /// with one in seven a four-goal rout. With the max, a lone all-out side
+  /// opens the game about as much as two do, and what the second adds is its
+  /// own flat terms. A bold side against a cautious one is open by the bold
+  /// side's commitment less half the cautious one's.
+  ///
+  /// The range is 1 - [kOpenDown] .. 1 + [kOpenUp] = 0.4 .. 1.42 by
+  /// construction; the top needs one side at full commitment, the bottom
+  /// both. In play the scoreline bends it further (see [_scorelineOpenness]).
+  static double openness({
+    required TacticalInstructions home,
+    required TacticalInstructions away,
+    required double homeAttackers,
+    required double awayAttackers,
+  }) => opennessOf(
+    commitment(home, homeAttackers),
+    commitment(away, awayAttackers),
+  );
+
+  /// [open] (see [openness]) as one side's chance-rate multiplier when it is
+  /// [margin] goals up (negative: down), [own] and [opponent] being the two
+  /// sides' [commitment]s.
+  ///
+  /// When BOTH sides have opened the game (each commitment above neutral)
+  /// and the side in front is at least as committed as the side behind, the
+  /// leader stops trading blows and sits on its lead (its rate falls to
+  /// `1 / open`) and the side behind throws even more forward (`open`
+  /// squared). That is what a wild game between two bold sides looks like:
+  /// goals at both ends, the lead changing hands, not a 6-1. Without it an
+  /// all-out mirror at 4.9 goals a game had one match in ten decided by four
+  /// or more. With it, 5%.
+  ///
+  /// Otherwise nothing bends: both keep `open`. A lone bold side opened the
+  /// game and pays for that at the back like anyone else, leading or
+  /// trailing; and a side BEHIND that is bolder than the leader is chasing,
+  /// which must not also make the leader sit. Until 2026-10-17 the bend
+  /// applied whoever had opened the game, so a manager a goal down who went
+  /// all-out got his own rate doubled and the leader's cut to 0.7 at the same
+  /// time: the late chase cost nothing at the back and earned three times
+  /// what it had before this build (`tactics_chase_test.dart`, against a
+  /// neutral side and against committed favourites). Neither condition alone
+  /// was enough: "leader at least as bold" alone charged a bold plan the
+  /// bend when ahead of a neutral side and gave it none when behind, which
+  /// broke the committed plans' guards; "both committed" alone switched the
+  /// free chase back on against any committed leader (the dominant and
+  /// gegenPress postures).
+  ///
+  /// A level game, or a closed one (`open` <= 1), is untouched, so a neutral
+  /// match is exactly as before.
+  static double _scorelineOpenness(
+    double open,
+    int margin, {
+    required double own,
+    required double opponent,
+  }) {
+    if (open <= 1 || margin == 0) return open;
+    if (own <= 0 || opponent <= 0) return open;
+    final leaderIsBold = margin > 0 ? own >= opponent : opponent >= own;
+    if (!leaderIsBold) return open;
+    return margin > 0 ? 1 / open : open * open;
+  }
 
   bool _chance(
     SeededRng rng,
@@ -1577,39 +1797,52 @@ class MatchEngine {
   }
 
   /// The tactical MATCH-UP: an attack-rating swing for [atk] from how its plan
-  /// and its players' attributes fare against [def]'s. Three rock-paper-scissors
+  /// and its players' attributes fare against [def]'s. Rock-paper-scissors
   /// counters, so a plan beats some setups and loses to others rather than being
   /// universally good:
   ///
-  ///  1. DIRECT into a HIGH LINE opens space in behind — but a deep block
-  ///     smothers it, and who wins the ball there is a PACE duel between the
-  ///     attackers and the back line.
+  ///  1. DIRECT into a HIGH LINE (or a back three) opens space in behind — but
+  ///     a deep block smothers it, and who wins the ball there is a PACE duel
+  ///     between the attackers and the back line.
   ///  2. A HIGH PRESS strangles a slow, possession build-up (worse the poorer
   ///     the passers, and only as far as the pressers' STAMINA carries it) — but
   ///     a DIRECT team plays straight through it.
   ///  3. Attacking WIDE against a NARROW defence stretches it (and narrow
   ///     against a wide one overloads the middle).
-  double _matchup(_Live atk, _Live def) {
-    double n(int v) => (v - 50) / 50.0;
-    final a = atk.instructions;
-    final d = def.instructions;
-
-    final fwdPace = _lineAttr(atk, PositionCategory.forward, (x) => x.physical);
-    final defPace = _lineAttr(
-      def,
-      PositionCategory.defender,
-      (x) => x.physical,
-    );
-    final midPass = _lineAttr(
-      atk,
-      PositionCategory.midfielder,
-      (x) => x.technical,
-    );
-    final pressEngine = _lineAttr(
+  ///  4. A PATIENT build-up picks a DEEP block apart.
+  double _matchup(_Live atk, _Live def) => matchupBonus(
+    attacker: atk.instructions,
+    defender: def.instructions,
+    fwdPace: _lineAttr(atk, PositionCategory.forward, (x) => x.physical),
+    defPace: _lineAttr(def, PositionCategory.defender, (x) => x.physical),
+    midPass: _lineAttr(atk, PositionCategory.midfielder, (x) => x.technical),
+    pressEngine: _lineAttr(
       def,
       PositionCategory.midfielder,
       (x) => x.stamina,
-    );
+    ),
+    backLine: def.shape.defenders,
+  );
+
+  /// The body of [_matchup], on the two plans and the four line attributes it
+  /// reads, so the live engine and the skip path ([planEffect]) run the SAME
+  /// arithmetic and can never drift apart. [_matchup] measures the lines off
+  /// the pitch; [planEffect] has no players, so it passes
+  /// [kNeutralLineAttribute] for all four, where every attribute term reads
+  /// zero and only the plans speak. [backLine] is the defending side's
+  /// defender count ([ShapeProfile]); both callers read it off the shape.
+  static double matchupBonus({
+    required TacticalInstructions attacker,
+    required TacticalInstructions defender,
+    required double fwdPace,
+    required double defPace,
+    required double midPass,
+    required double pressEngine,
+    double backLine = ShapeProfile.neutralDefenders,
+  }) {
+    double n(int v) => (v - 50) / 50.0;
+    final a = attacker;
+    final d = defender;
 
     // MAGNITUDE (2026-09): every coefficient below was tripled, and the clamp
     // widened with them. The shapes and signs are unchanged — what changed is
@@ -1621,6 +1854,13 @@ class MatchEngine {
     // games from out-thinking the opponent alone, on top of what drilling the
     // shape is worth. See test/unit/match/tactics_swing_test.dart, which pins
     // the band from both sides.
+    //
+    // 2026-10-16 (tactics impact): the whole bonus is now weighted by
+    // [kMatchupWeight] after the clamp, and the terms below grew two
+    // relations (the patient build-up, the back three in behind) and lost one
+    // (the mentality clash). The owner's bar is that a well-judged plan
+    // against a badly-judged one between equal squads is worth 0.3-0.5 of a
+    // goal a game, and that every plan has a counter.
     var bonus = 0.0;
 
     // 1) DIRECT play into a high line finds space in behind (deep block smothers
@@ -1628,16 +1868,55 @@ class MatchEngine {
     //    control instead, so it takes nothing from this term.
     final directAttack = n(a.directness).clamp(0.0, 1.0);
     final paceDuel = ((fwdPace - defPace) / 40).clamp(-1.0, 1.0);
-    bonus += directAttack * n(d.defensiveLine) * (10.5 + 7.5 * paceDuel);
+    //    The line is read with a [kNeutralExposure] offset: a MID line is still
+    //    exposed, and only a genuinely deep one (about 35 or below) closes the
+    //    space. Without it a neutral 50 reads as zero and is a safe harbour.
+    //    A back THREE is exposed in the channels like a higher line, and a
+    //    back five shuts them like a deeper one ([kBackLineExposure] per
+    //    defender off the 4-3-3 count).
+    final lineExposure =
+        (n(d.defensiveLine) +
+                kNeutralExposure +
+                (ShapeProfile.neutralDefenders - backLine) * kBackLineExposure)
+            .clamp(-1.0, 1.0);
+    //    A deep block does not just deny the space, it SMOTHERS long balls
+    //    into it ([kDeepLineSmother]): this is the counter-attacking side's
+    //    weakness. Without it nothing beat a direct, deep-lying plan, which
+    //    takes from every committed line and gives nothing back.
+    final exposure = lineExposure < 0
+        ? lineExposure * kDeepLineSmother
+        : lineExposure;
+    bonus += directAttack * exposure * (10.5 + 7.5 * paceDuel);
 
     // 2) Press vs build-up, bypassed by directness.
     final press = n(d.pressing).clamp(0.0, 1.0);
-    final slow = (-n(a.directness)).clamp(0.0, 1.0); // possession-minded
+    // possession-minded; a neutral build-up still counts as part-slow, so a
+    // press has something to bite on (see [kNeutralExposure]).
+    final slow = (-n(a.directness) + kNeutralExposure).clamp(0.0, 1.0);
     final passRelief = ((midPass - 55) / 60).clamp(0.0, 0.6);
     final engine = ((pressEngine - 55) / 45).clamp(-0.4, 1.0);
     bonus -= press * slow * (7.5 + 6.0 * engine) * (1 - passRelief);
+
+    //    SPACE BEHIND a press, and a direct side playing straight through it.
+    //    The turnovers above are the presser's reward; this is its bill. A
+    //    side that has thrown its midfield forward leaves the channels open,
+    //    and the opponent's pace and willingness to go long decide how much
+    //    it is punished. It scales with the press itself (so a half-hearted
+    //    press risks little) and is signed by the pace duel: slow forwards
+    //    against quick defenders find nothing, and the clamp below still
+    //    bounds the total. This replaces the flat defensive gain pressing
+    //    used to carry, which made it free.
+    //
+    //    The long ball is read with the [kNeutralExposure] offset, like the
+    //    build-up above: a press bites a neutral build-up, so a neutral side
+    //    also finds some of the space behind it. Without it a press against
+    //    a neutral side conceded no more than not pressing (1.287 a game
+    //    against 1.291), and "a gamble" was a free lunch. This term also
+    //    absorbs the old separate "direct beats press" (7.5 at full
+    //    directness), which paid a direct side twice for the same space.
+    final longBall = (n(a.directness) + kNeutralExposure).clamp(0.0, 1.0);
     bonus +=
-        press * n(a.directness).clamp(0.0, 1.0) * 7.5; // direct beats press
+        press * (longBall * kPressSpaceDirect + paceDuel * kPressSpacePace);
 
     // 3) Width mismatch. BOTH cases are a gain for the attacker, and that is
     //    deliberate: stretching a narrow block and overloading the middle of a
@@ -1657,53 +1936,165 @@ class MatchEngine {
     //    So each case is now gated on which side of 50 the ATTACKER is: a wide
     //    side gets the wide-vs-narrow term and nothing else, a narrow side the
     //    narrow-vs-wide term and nothing else. Two sides on the same side of 50
-    //    still get neither, exactly as before, and a neutral 50 is untouched.
+    //    still get neither, exactly as before. A neutral 50 attacker gets
+    //    neither either (see [widthMatchup]).
     //    The wide reading is worth more because the attacker also pays for it:
     //    a stretched shape costs at the back (see [kWidthDefence] in
     //    [_defence]), where a narrow one is paid there instead.
-    final wideAttack = n(a.width).clamp(0.0, 1.0);
-    final narrowAttack = (-n(a.width)).clamp(0.0, 1.0);
-    // wide vs narrow, then narrow vs wide
-    bonus += (wideAttack * -n(d.width)).clamp(0.0, 1.0) * 7.5;
-    bonus += (narrowAttack * n(d.width)).clamp(0.0, 1.0) * 6.0;
+    //
+    //    A neutral 50 is EXPOSED, not a source of gain: it is exploited only
+    //    by an attacker COMMITTED on width ([kNeutralExposure] is read off the
+    //    defender's side only). Two neutral sides therefore get exactly
+    //    nothing from this term, as before the offset existed.
+    bonus += widthMatchup(attackerWidth: a.width, defenderWidth: d.width);
 
-    // 4) Mentality clash. Committing men forward against a side that has ALSO
-    //    committed forward leaves space everywhere and the game opens up;
-    //    against a team sitting deep there is no space to attack, and the
-    //    same commitment buys much less. Makes the choice of mentality read
-    //    off the opponent rather than being a flat "more is better" dial.
-    bonus += n(a.mentality).clamp(0.0, 1.0) * n(d.mentality) * 10.5;
+    // 4) PATIENCE against a deep block. A side that keeps the ball and works
+    //    it short can pick a low block apart: it has the time to move the
+    //    ball until a gap opens, where a long ball runs into a wall (see the
+    //    smother in 1). The defence is read with the [kNeutralExposure]
+    //    offset, so a mid line still gives a patient side something; the
+    //    attacker must be committed (a neutral build-up gets nothing). This
+    //    is what beats parking the bus and the counter-attacking plan, which
+    //    until 2026-10-16 had no counter at all.
+    final patient = (-n(a.directness)).clamp(0.0, 1.0);
+    final deepBlock = (-n(d.defensiveLine) + kNeutralExposure).clamp(0.0, 1.0);
+    bonus += patient * deepBlock * kPatience;
 
-    // The safety valve: a plan can win or lose a match, but it can never
-    // replace a squad. Widened from ±9/11 with the coefficients above, and
-    // deliberately by LESS than they grew (2x, not 3x), so the ordinary
-    // match-up gets its full new weight while the all-dials-to-the-extreme
-    // case is held well short of the rating gulf that makes a rout.
-    return bonus.clamp(-18.0, 22.0);
+    //    There used to be a fifth term here, the MENTALITY CLASH: commitment
+    //    paid extra against a committed side and less against a deep one.
+    //    [openness] now carries "two bold sides open the game", so its upper
+    //    half counted that twice, and its lower half made all-out attack a
+    //    LOSS against a passive side, which the build's bar says it must not
+    //    be. Removed on 2026-10-16.
+
+    // The safety valve: a plan can win or lose a match, but it should never
+    // replace a squad. The clamp is -18..+22 before [kMatchupWeight], so
+    // -33.3..+40.7 rating points after it: since 2026-10-16 the valve scales
+    // with the weight, and at the extremes it is no longer "well short of the
+    // rating gulf that makes a rout". What it bounds now is a stack of every
+    // term at once, attribute terms (pace duel, pass relief, press engine)
+    // included. Between real squads those are small (the forward/defender
+    // physical gap within a nation runs -5..0, about +-0.12 of the duel), so
+    // in practice the bonus sits far inside the valve, and "squad still
+    // decides" is guarded by the lab with both flat and real squads
+    // (`tactics_lab_test.dart`) rather than promised by this clamp.
+    return bonus.clamp(-18.0, 22.0) * kMatchupWeight;
   }
 
+  /// The width part of [_matchup], split out so the "neutral gives nothing"
+  /// guarantee can be tested directly. The attacker must be committed (a 50
+  /// reads 0); the defender's neutral 50 counts as part-stretched on both
+  /// readings, which is what makes a neutral shape counterable.
+  @visibleForTesting
+  static double widthMatchup({
+    required int attackerWidth,
+    required int defenderWidth,
+  }) {
+    double n(int v) => (v - 50) / 50.0;
+    final wideAttack = n(attackerWidth).clamp(0.0, 1.0);
+    final narrowAttack = (-n(attackerWidth)).clamp(0.0, 1.0);
+    final narrowDef = (-n(defenderWidth) + kNeutralExposure).clamp(0.0, 1.0);
+    final wideDef = (n(defenderWidth) + kNeutralExposure).clamp(0.0, 1.0);
+    // wide vs narrow, then narrow vs wide
+    return wideAttack * narrowDef * 7.5 + narrowAttack * wideDef * 6.0;
+  }
+
+  /// How much of a dial's neutral 50 still counts as "exposed" in [_matchup]
+  /// (direct vs a mid line, a press vs a neutral build-up, width vs a neutral
+  /// shape, a long ball behind a press, patience vs a mid line). It exists so
+  /// there is no safe middle: a committed plan can always find the side that
+  /// has committed to nothing. Kept at its Task 5 value of 0.3 on 2026-10-16:
+  /// the counters that needed more reach got their own terms instead.
+  static const double kNeutralExposure = 0.3;
+
+  /// The 2026-10-16 weight on the whole [_matchup] bonus (applied after its
+  /// clamp). At 1.0 the textbook counter-plan in `tactics_swing_test.dart`
+  /// was worth 0.08 of a goal a game against the plan it is built to beat,
+  /// with drilling set aside; the owner's bar is 0.3-0.5. At 1.85 it reads
+  /// about 0.37, the strongest counter in the lab's plan grid about half a
+  /// goal, and a 10-point-better squad on the plan most exposed to it still
+  /// wins more than it loses (`tactics_lab_test.dart` guards both).
+  static const double kMatchupWeight = 1.85;
+
+  /// How much harder a DEEP line smothers a long ball than a high one invites
+  /// it: the negative side of the line exposure in [_matchup] is multiplied by
+  /// this. 3 is what gives the counter-attacking plan a counter (a back five
+  /// sitting deep); much more and that one pairing turns 0-0 so often that a
+  /// better squad stops beating it.
+  static const double kDeepLineSmother = 3;
+
+  /// How much a back line one defender short of the 4-3-3 count (or one over)
+  /// reads like a line 10 points higher (or deeper) in the direct-ball term of
+  /// [_matchup]. It is what a back three pays for its extra attacker, beyond
+  /// the flat shape cost, and it gives the 3-4-3 a counter: the direct side
+  /// that runs the channels behind it.
+  static const double kBackLineExposure = 0.2;
+
+  /// A fully patient build-up against a fully deep block, in raw [_matchup]
+  /// points (before [kMatchupWeight]). Sized so possession is the bus's
+  /// counter and the counter-attacking plan's (about +0.3 and +0.2 a game
+  /// between equal squads) without making possession dominant: the press
+  /// still beats it.
+  static const double kPatience = 18;
+
   /// How far the mentality slider moves a side's attack, per point away from
-  /// the neutral 50. At the extremes this is the difference between a side that
-  /// throws everyone forward and one that sits in — the single most consequential
-  /// tactical choice a manager makes, and sized to feel like it.
-  static const double kMentalityAttack = 0.35;
+  /// the neutral 50.
+  ///
+  /// Cut from 0.35 to 0.10 on 2026-10-16. Mentality's WILDNESS now lives in
+  /// [openness], which lifts both ends at once; this flat term is only what a
+  /// bolder side gains on the other. At 0.35 (with [kMentalityDefence] at
+  /// 0.28) every all-out side's flat lift met the other's flat hole and the
+  /// all-out mirror ran to 8 goals a game.
+  static const double kMentalityAttack = 0.10;
 
   /// The other half of the same bargain: what committing forward costs at the
-  /// back. Deliberately about half the attacking gain, so attacking is a
-  /// favourable-but-real trade and parking the bus genuinely shuts a game down.
-  static const double kMentalityDefence = 0.18;
+  /// back. It sits a little under [kMentalityAttack] (0.07 to 0.10), so all-out
+  /// attack stays a slight net positive against a passive side and about break
+  /// even against a neutral one: through [openness] it concedes nearly as many
+  /// extra goals as it scores (`tactics_tradeoffs_test.dart`).
+  static const double kMentalityDefence = 0.07;
 
-  /// What a quick tempo is worth going forward, and a high line either way
-  /// (it wins the ball higher and leaves more behind it), per point off the
-  /// neutral 50.
-  static const double kTempoAttack = 0.08;
-  static const double kLineAttack = 0.10;
-  static const double kLineDefence = 0.12;
+  /// What a quick tempo is worth going forward, and what a high line is worth
+  /// going forward (it wins the ball higher) and COSTS at the back (the space
+  /// behind it), per point off the neutral 50.
+  ///
+  /// Until 2026-10-16 the line's defensive term was ADDED, so a high line made
+  /// a side harder to score against, which contradicted every comment around
+  /// it and made a high line a free lunch against anyone who did not go long.
+  /// It is now a cost, and all three are smaller (0.08 / 0.10 / 0.12 ->
+  /// 0.03 / 0.04 / 0.04): like mentality, what they add to the all-out plan
+  /// stacks in a mirror.
+  static const double kTempoAttack = 0.03;
+  static const double kLineAttack = 0.04;
+  static const double kLineDefence = 0.04;
 
-  /// What pressing is worth at the back, and what a stretched, wide shape costs
-  /// there, per point off the neutral 50.
-  static const double kPressingDefence = 0.06;
-  static const double kWidthDefence = 0.06;
+  /// What a stretched, wide shape costs at the back, per point off the neutral
+  /// 50. Pressing no longer has a flat term here: it wins the ball in
+  /// [_matchup] and leaves space behind there, so it is a gamble, not a gift.
+  /// Cut 0.06 -> 0.015 on 2026-10-16: at 0.06 width cost what its match-up
+  /// against a neutral shape earned, so committing to it bought nothing.
+  static const double kWidthDefence = 0.015;
+
+  /// The space a press leaves behind, as an attack bonus for the pressed side
+  /// in [_matchup], at a full press: for a fully direct long ball (read with
+  /// the neutral offset), and for a pace duel won outright.
+  static const double kPressSpaceDirect = 2.5;
+  static const double kPressSpacePace = 4.5;
+
+  /// Formation shape, in rating points per man off the 4-3-3 count (see
+  /// [ShapeProfile]). Each extra attacker lifts the attack by [kShapeAttack]
+  /// and thins the back by [kShapeAttackCost]; each extra defender does the
+  /// reverse with [kShapeDefence] / [kShapeDefenceCost].
+  ///
+  /// Equal gain and cost since 2026-10-16 (was 4.0 gain / 2.5 cost): a shape
+  /// is a TRADE, attack for defence, and what it changes most is how open the
+  /// game is (extra attackers count in [openness]). With the gain bigger than
+  /// the cost every extra man was a net plus, so the 4-2-4 beat the 4-3-3 for
+  /// free and the 3-4-3 lost 0.26 a game to its missing defenders alone.
+  static const double kShapeAttack = 1.25;
+  static const double kShapeAttackCost = 1.25;
+  static const double kShapeDefence = 1.25;
+  static const double kShapeDefenceCost = 1.25;
 
   /// What a plan is worth to a side described by a SINGLE strength number, in
   /// rating points.
@@ -1720,19 +2111,154 @@ class MatchEngine {
   /// and width carry no flat term in the attack for the same reason they carry
   /// none there: their value is decided by the match-up (see [_matchup]), which
   /// a scalar simulator has no shape to compare against.
-  static double planRatingDelta(TacticalInstructions i) {
+  static double planRatingDelta(
+    TacticalInstructions i, {
+    Formation formation = Formation.f433,
+  }) {
+    final t = _planTerms(i, formation);
+    return (t.attack + t.defence) / 2;
+  }
+
+  /// The flat attack and defence lifts behind [planRatingDelta], apart:
+  /// [planEffect] needs them separately, because a plan that buys attack with
+  /// defence opens a game the one-number mean cannot show.
+  static ({double attack, double defence}) _planTerms(
+    TacticalInstructions i,
+    Formation formation,
+  ) {
     double off(int v) => (v - 50).toDouble();
+    final shape = ShapeProfile.of(formation.positions);
+    final extraAttackers = shape.attackers - ShapeProfile.neutralAttackers;
+    final extraDefenders = shape.defenders - ShapeProfile.neutralDefenders;
     final attack =
         off(i.mentality) * kMentalityAttack +
         off(i.tempo) * kTempoAttack +
-        off(i.defensiveLine) * kLineAttack;
+        off(i.defensiveLine) * kLineAttack +
+        extraAttackers * kShapeAttack -
+        extraDefenders * kShapeDefenceCost;
     final defence =
-        -off(i.mentality) * kMentalityDefence +
-        off(i.pressing) * kPressingDefence -
+        -off(i.mentality) * kMentalityDefence -
         off(i.defensiveLine) * kLineDefence -
-        off(i.width) * kWidthDefence;
-    return (attack + defence) / 2;
+        off(i.width) * kWidthDefence +
+        extraDefenders * kShapeDefence -
+        extraAttackers * kShapeAttackCost;
+    return (attack: attack, defence: defence);
   }
+
+  /// The line attribute [planEffect] feeds [matchupBonus] for every line: the
+  /// value at which the pace duel, the passers' relief and the pressers'
+  /// engine all read zero (and what [_lineAttr] returns for an empty line).
+  /// The skip path has no players to measure, so the plans alone speak.
+  static const double kNeutralLineAttribute = 55;
+
+  /// What [plan] in [formation] is worth against [opponent] in
+  /// [opponentFormation], for a match played out by `RatingMatchSimulator`
+  /// (the manager's skipped matches): a rating delta for his side's single
+  /// strength number, and how open the game is, as a multiplier on both
+  /// sides' expected goals.
+  ///
+  /// It is the engine's own arithmetic, nothing restated:
+  ///  * the FLAT terms ([planRatingDelta]'s) for both sides. In the engine
+  ///    both sides' sliders and shapes move their own attack and defence; the
+  ///    simulator's opponent strength carries none of that, so his side is
+  ///    credited the difference.
+  ///  * the MATCH-UP, [matchupBonus] both ways round at neutral attributes:
+  ///    what his plan finds against theirs lifts his attack, what theirs finds
+  ///    against his lifts theirs.
+  ///
+  /// That gives his side an attack lift and a defence lift, which the
+  /// simulator cannot hold apart. Their MEAN is the rating delta; their
+  /// DIFFERENCE is how much the plan opens the game (attack bought with
+  /// defence puts goals in at both ends), so it goes into the openness on the
+  /// simulator's own scale: a strength shift of x moves one side's xG by
+  /// `exp(gapResponse * x)` and the other's by the inverse, so adding
+  /// `exp(gapResponse * (attack - defence) / 2)` on both lands each side on
+  /// exactly the xG its own lift alone would give it. On top of that sits
+  /// [openness] itself, which the engine applies to both chance rates.
+  ///
+  /// Engine points are converted with [_skipPoints] first: the engine's goals
+  /// answer a rating point less than the simulator's do, and not linearly.
+  /// `test/unit/match/skip_parity_test.dart` holds the two paths to the same
+  /// story.
+  static ({double ratingDelta, double openness}) planEffect({
+    required TacticalInstructions plan,
+    required Formation formation,
+    required TacticalInstructions opponent,
+    required Formation opponentFormation,
+  }) {
+    double matchup(
+      TacticalInstructions atk,
+      TacticalInstructions def,
+      Formation defFormation,
+    ) => matchupBonus(
+      attacker: atk,
+      defender: def,
+      backLine: ShapeProfile.ofFormation(defFormation).defenders,
+      fwdPace: kNeutralLineAttribute,
+      defPace: kNeutralLineAttribute,
+      midPass: kNeutralLineAttribute,
+      pressEngine: kNeutralLineAttribute,
+    );
+    final mine = _planTerms(plan, formation);
+    final theirs = _planTerms(opponent, opponentFormation);
+    final attack = _skipPoints(
+      mine.attack - theirs.defence + matchup(plan, opponent, opponentFormation),
+    );
+    final defence = _skipPoints(
+      mine.defence - theirs.attack - matchup(opponent, plan, formation),
+    );
+    final spread = exp(
+      RatingMatchSimulator.gapResponse * (attack - defence) / 2,
+    );
+    return (
+      ratingDelta: (attack + defence) / 2,
+      openness:
+          openness(
+            home: plan,
+            away: opponent,
+            homeAttackers: ShapeProfile.ofFormation(formation).attackers,
+            awayAttackers: ShapeProfile.ofFormation(
+              opponentFormation,
+            ).attackers,
+          ) *
+          spread,
+    );
+  }
+
+  /// [enginePoints] of attack (or defence) lift as `RatingMatchSimulator`
+  /// strength points.
+  ///
+  /// The engine's goals grow about as `(rating - 26)^1.45`: the chance rate
+  /// to the 1.2 in [_chance] and the conversion to the 0.25 in
+  /// [_goalProbability], both over [_ratio]'s replacement baseline. So a lift
+  /// moves ln(goals) by `1.45 * ln(1 + points / headroom)`, which is CONCAVE:
+  /// a big attacking lift earns less than its points, a big defensive hole
+  /// costs more. The simulator moves ln(xG) by
+  /// [RatingMatchSimulator.gapResponse] per point, so dividing by that lands
+  /// the same goals on its scale. The floor mirrors [_ratio]'s 8-point floor.
+  static double _skipPoints(double enginePoints) {
+    final ratio = (1 + enginePoints / kSkipHeadroom).clamp(
+      8 / kSkipHeadroom,
+      double.infinity,
+    );
+    return _skipGoalExponent * log(ratio) / RatingMatchSimulator.gapResponse;
+  }
+
+  /// The chance-rate and conversion exponents of [_chance] and
+  /// [_goalProbability], summed: how goals scale with the attack-to-defence
+  /// ratio in the engine.
+  static const double _skipGoalExponent = 1.2 + 0.25;
+
+  /// A typical side's rating above [_ratio]'s replacement baseline of 26, the
+  /// level [_skipPoints] reads its curve at: the skip path has one strength
+  /// per side and no lines to measure. Raised 50 -> 65 on 2026-10-16 with the
+  /// retuned plan terms: at 50 the curve was concave enough that a skipped
+  /// bus lost 3pp more of its win rate than a played one; at 65 every lab
+  /// plan's skipped effect is within 2pp of its played effect, at 75 and at
+  /// 65 rated squads (`skip_parity_test.dart`). Its meaning is a fit, not a
+  /// squad level: the engine's in-match scoreline effects have no skip
+  /// counterpart, and this absorbs them.
+  static const double kSkipHeadroom = 65;
 
   double _attack(_Live t) {
     final i = t.instructions;
@@ -1741,17 +2267,10 @@ class MatchEngine {
         _mean(t, PositionCategory.midfielder) * 0.30 +
         _mean(t, PositionCategory.defender) * 0.15;
     // Attacking mentality, a quick tempo and a high defensive line (winning the
-    // ball higher) lift the attacking threat. Mentality is by far the biggest
-    // dial: at full attack it is worth ~+17 rating points here (and ~−9 at the
-    // back), so committing men forward is a real, felt decision rather than the
-    // ~±10/±4 nudge it used to be — which was small enough next to squad
-    // quality that the slider barely changed a match.
-    //
-    // Tempo and the defensive line were doubled (0.04 → 0.08, 0.05 → 0.10) for
-    // the same reason mentality was raised before them: at the old weights a
-    // manager could drag either slider from end to end and move his attack by
-    // two rating points, which is not a decision, it is a decoration. Mentality
-    // is untouched — it was already the loud one.
+    // ball higher) lift the attacking threat. Since 2026-10-16 these flat
+    // terms are deliberately modest (see [kMentalityAttack]): what mentality
+    // mostly does now is open the game at BOTH ends ([openness]), so going
+    // forward is visible in the scoreline rather than a quiet rating edge.
     //
     // Directness and width carry NO flat bonus here — their value is entirely
     // situational, decided by the match-up against the opponent's shape (see
@@ -1760,7 +2279,10 @@ class MatchEngine {
         base +
         (i.mentality - 50) * kMentalityAttack +
         (i.tempo - 50) * kTempoAttack +
-        (i.defensiveLine - 50) * kLineAttack -
+        (i.defensiveLine - 50) * kLineAttack +
+        (t.shape.attackers - ShapeProfile.neutralAttackers) * kShapeAttack -
+        (t.shape.defenders - ShapeProfile.neutralDefenders) *
+            kShapeDefenceCost -
         _shortHandedPenalty(t);
     return v * t.chemistry;
   }
@@ -1772,17 +2294,19 @@ class MatchEngine {
         _mean(t, PositionCategory.goalkeeper) * 0.25 +
         _mean(t, PositionCategory.midfielder) * 0.20;
     // Attacking mentality, a high line (space in behind) and a stretched, wide
-    // shape all leave the defence more exposed; heavy pressing wins it back.
-    // Pressing, the line and width were doubled here alongside their attacking
-    // counterparts, so the bargain each slider offers keeps its shape: a high
-    // line is worth more going forward AND costs more at the back than it did,
-    // rather than quietly becoming a free lunch.
+    // shape all leave the defence more exposed. The line and width were
+    // doubled here alongside their attacking counterparts, so the bargain each
+    // slider offers keeps its shape: a high line is worth more going forward
+    // AND costs more at the back, rather than quietly becoming a free lunch.
+    // (Until 2026-10-16 the line was ADDED here, so it was exactly that free
+    // lunch; see [kLineDefence].) Pressing has no flat term: see [_matchup].
     final v =
         base -
-        (i.mentality - 50) * kMentalityDefence +
-        (i.pressing - 50) * kPressingDefence -
+        (i.mentality - 50) * kMentalityDefence -
         (i.defensiveLine - 50) * kLineDefence -
-        (i.width - 50) * kWidthDefence -
+        (i.width - 50) * kWidthDefence +
+        (t.shape.defenders - ShapeProfile.neutralDefenders) * kShapeDefence -
+        (t.shape.attackers - ShapeProfile.neutralAttackers) * kShapeAttackCost -
         _shortHandedPenalty(t) * _shortHandedDefenceShare;
     return v * t.chemistry;
   }
@@ -1856,8 +2380,14 @@ class MatchEngine {
     // A man down means the ten who are left cover the missing man's ground, so
     // a sending-off also burns the side out faster.
     final shortHanded = 1 + 0.30 * t.sentOff.length;
+    // Pressing's share was /250, then /150 in the 2026-10-16 build (Task 4)
+    // to make the press cost legs, and settled at /200 in its tuning: at /150
+    // the drain alone ate most of what a press wins, so the textbook
+    // counter-plan (which presses) read 0.2 of a goal instead of 0.33. A full
+    // press still ends a match about 7 points of energy down on a neutral one
+    // (`tactics_tradeoffs_test.dart`).
     final workload =
-        (1 + (i.tempo - 50) / 250 + (i.pressing - 50) / 250) * shortHanded;
+        (1 + (i.tempo - 50) / 250 + (i.pressing - 50) / 200) * shortHanded;
     for (final p in t.xi) {
       if (t.sentOff.contains(p.id)) continue;
       final stamina = p.attributes.stamina.clamp(20, 99);

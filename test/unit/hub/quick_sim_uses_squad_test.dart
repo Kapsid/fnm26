@@ -11,6 +11,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -161,10 +162,20 @@ void main() {
           ),
         );
         // Years of the same shape, with a plan that keeps changing, so the
-        // side is drilled without being read (see TeamChemistry).
+        // side is drilled without being read (see TeamChemistry). The keys
+        // are real plans: the skip path now scouts the last one (AiCounter),
+        // so it has to decode.
         final fam = c.read(tacticFamiliarityRepositoryProvider);
+        final plans = [
+          TeamChemistry.planKey(Playstyle.gegenpress.instructions!),
+          TeamChemistry.planKey(const TacticalInstructions()),
+        ];
         for (var i = 0; i < 15; i++) {
-          await fam.recordMatch(career.id, Formation.f433, planKey: 7 + i % 2);
+          await fam.recordMatch(
+            career.id,
+            Formation.f433,
+            planKey: plans[i % 2],
+          );
         }
       }
       final season = c.read(seasonServiceProvider);

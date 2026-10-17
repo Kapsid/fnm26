@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
-import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -12,6 +11,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -301,17 +301,40 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     return list.map((p) => p.overall).reduce((a, b) => a + b) / list.length;
   }
 
-  final oppTop11 = ([
-    ...oppPool,
-  ]..sort((a, b) => b.overall.compareTo(a.overall))).take(11);
   final oppNation = allNations.firstWhere((n) => n.id == opponentId);
-  final aiSetup = AiTactics.forOpponent(
-    opponentStrength: avg(oppTop11),
-    playerStrength: avg(playerXi),
-    seed: varietySeed('aitac:$opponentId:${fixture.id}:${career.rngSeed}'),
-    // The opponent's national playing identity stamps its character onto
-    // the strength-appropriate posture.
-    style: NationIdentity.styleOf(oppNation.code),
+  final oppStyle = NationIdentity.styleOf(oppNation.code);
+  // Shared with the skip path, so both read the opponent the same way.
+  final oppStrength = AiTactics.readStrength(oppPool);
+  // The manager's stored history per shape: how drilled he is (chemistry,
+  // below) and what the opposition has on video (the counter, here). Loaded
+  // BEFORE the AI picks its setup, because the counter reads it.
+  final drilling = await ref
+      .watch(tacticFamiliarityRepositoryProvider)
+      .forCareer(careerId);
+  // Then bend that posture towards the counter to what the manager has been
+  // fielding recently. Only the stored rows are read, never [tactic]: the
+  // plan set for today is not something the opposition has seen.
+  final aiSetup = AiCounter.forFixture(
+    base: AiTactics.forOpponent(
+      opponentStrength: oppStrength,
+      playerStrength: avg(playerXi),
+      seed: AiTactics.fixtureSeed(
+        opponentId: opponentId,
+        fixtureId: fixture.id,
+        rngSeed: career.rngSeed,
+      ),
+      // The opponent's national playing identity stamps its character onto
+      // the strength-appropriate posture.
+      style: oppStyle,
+    ),
+    drilling: drilling,
+    opponentStrength: oppStrength,
+    style: oppStyle,
+    seed: AiCounter.fixtureSeed(
+      opponentId: opponentId,
+      fixtureId: fixture.id,
+      rngSeed: career.rngSeed,
+    ),
   );
   final oppXi = _xiFrom(oppPool, bestEleven(aiSetup.formation, oppPool));
   final oppStartingIds = oppXi.map((p) => p.id).toSet();
@@ -363,18 +386,12 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
         (1 + avgFatigue * 0.14),
   };
 
-  // A settled side that keeps its shape is a little sharper — but a side that
-  // has named the same shape and the same plan for years has been worked out,
-  // and gives part of that back. Both figures are per-formation and stored;
-  // opponents play at neutral chemistry.
-  final drilling = await ref
-      .watch(tacticFamiliarityRepositoryProvider)
-      .forCareer(careerId);
-  final shape = drilling[playerFormation];
+  // A settled side that keeps its shape is a little sharper. Being worked out
+  // is no longer charged here: predictability already sharpened the AI's
+  // counter above. Opponents play at neutral chemistry.
   final chemistryByNation = {
     playerNationId: TeamChemistry.factor(
-      shape?.familiarity ?? 0,
-      shape?.predictability ?? 0,
+      drilling[playerFormation]?.familiarity ?? 0,
     ),
   };
 

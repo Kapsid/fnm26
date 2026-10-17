@@ -301,8 +301,8 @@ const _bandWords = {
 class _ReadSideRepository implements TacticFamiliarityRepository {
   @override
   Future<Map<Formation, ShapeDrilling>> forCareer(int careerId) async => {
-    Formation.f433: (familiarity: 0.88, predictability: 0.91),
-    Formation.f442: (familiarity: 0.48, predictability: 0.63),
+    Formation.f433: (familiarity: 0.88, predictability: 0.91, lastPlanKey: 0),
+    Formation.f442: (familiarity: 0.48, predictability: 0.63, lastPlanKey: 0),
   };
 
   @override
