@@ -53,24 +53,24 @@ Date: 2026-10-16, branch `feature/tactics-impact` at 1574f85 (engine untouched).
 
 ## After
 
-Date: 2026-10-16, branch `feature/tactics-impact`, Task 8 (tune and re-pin). Every cell 2000 seeds both ways round, neutral venue, as above. The "countering AI" tables have the opponent bend its posture with `AiCounter.apply`, reading the manager's lab plan at predictability 1 (he has fielded nothing else).
+Date: 2026-10-16, branch `feature/tactics-impact`, Task 8 (tune and re-pin); tables and targets re-run 2026-10-17 after the final fix wave (scoreline bend keyed to both sides, see below). Every cell 2000 seeds both ways round, neutral venue, as above. The "countering AI" tables have the opponent bend its posture with `AiCounter.apply`, reading the manager's lab plan at predictability 1 (he has fielded nothing else).
 
 ### Targets against the final numbers
 
 | Target (spec) | Achieved |
 |---|---|
-| All-out attack vs neutral, equal: total goals +40-60%, goals against clearly up | +43.8% (3.94 vs 2.74); against 2.00 vs 1.41 |
+| All-out attack vs neutral, equal: total goals +40-60%, goals against clearly up | +47.4% (4.04 vs 2.74); against 2.07 vs 1.41 |
 | Park the bus: total goals -30-40% | -33.6% (1.82); loses least of any plan but the counter (35.0%) and wins least (32.9%) |
-| High press: for and against both above neutral | 1.46 / 1.56 vs 1.33 / 1.41 in the lab; 1.340 / 1.347 vs 1.290 / 1.290 alone against a neutral side |
+| High press: for and against both above neutral | 1.47 / 1.58 vs 1.33 / 1.41 in the lab; 1.353 / 1.362 vs 1.290 / 1.290 alone against a neutral side |
 | High press worse vs direct pace, better vs slow possession | -1.05 vs -0.11 a game (`tactics_tradeoffs_test`); beats possession +0.23, loses to counter -0.49 |
-| Well-judged vs badly-judged plan, equal squads: 0.3-0.5 goals | +0.362 (`tactics_swing_test` dial guard); strongest pair in the grid +0.49 |
-| Neutral vs countering AI measurably worse than before; a committed plan beats neutral on average | neutral -0.08 a game (W 35.7%, L 39.1%) against -0.02 (37.8% / 38.7%) before; committed mean +0.093 |
+| Well-judged vs badly-judged plan, equal squads: 0.3-0.5 goals | +0.383 (`tactics_swing_test` dial guard); strongest pair in the grid +0.49 |
+| Neutral vs countering AI measurably worse than before; a committed plan beats neutral on average | neutral -0.09 a game (W 36.1%, L 39.6%) against -0.02 (37.8% / 38.7%) before; committed mean +0.092 |
 | 10-point-better squad on a bad plan still wins more than it loses | 80 highPress v 70 counter: W 48.4% L 28.5%; 80 counter v 70 bus: W 36.1% L 22.3% |
-| Skip vs play within ~3pp | largest gap 1.8pp over six plans at 75v75 and 65v65 (4000 seeds) |
-| Every plan has a counter >= 0.15 (equal squads) | neutral 0.17, allOut 0.35, bus 0.32, press 0.49, possession 0.23, counter 0.21, wide 0.18 |
+| Skip vs play within ~3pp | largest gap 1.2pp over six plans at 75v75 and 65v65 (4000 seeds) |
+| Every plan has a counter >= 0.15 (equal squads) | neutral 0.17, allOut 0.44, bus 0.32, press 0.49, possession 0.23, counter 0.21, wide 0.18 |
 | No dominant plan | none beats every other |
-| All-out mirror wild (>= 1.4x neutral) but never routs (4+ margins <= 6%) | 4.70 goals (1.82x), 5.3% routs |
-| A predictable plan does worse against a countering side | committed plans' mean GD -0.157 at predictability 1 against -0.046 at 0 |
+| All-out mirror wild (>= 1.4x neutral) but never routs (4+ margins <= 6%) | 4.70 goals (1.82x), 5.2% routs |
+| A predictable plan does worse against a countering side | committed plans' mean GD -0.172 at predictability 1 against -0.060 at 0 |
 | World / `RatingMatchSimulator` default path untouched | `world_variance_test` and the `RatingMatchSimulator balance` group unchanged and green |
 
 ### What changed, and why
@@ -78,7 +78,7 @@ Date: 2026-10-16, branch `feature/tactics-impact`, Task 8 (tune and re-pin). Eve
 The constants alone could not reach the bar; four terms changed shape (each is explained where it lives, in `match_engine.dart` and `ai_counter.dart`):
 
 - **Openness: one side opens a game, it takes both to shut it.** The bolder side's commitment sets how open the game is (a max), caution is averaged. With both averaged, an all-out mirror paid twice (each side's flat lift met the other's flat hole, and the multiplier doubled on top): 8-9 goals a game.
-- **The scoreline bends openness.** In an open game the side in front sits on its lead (`1 / open`) and the side behind chases (`open^2`). Goals at a constant rate spread margins as widely as totals (10% routs at 4.9 goals); with the bend, 5%.
+- **The scoreline bends openness.** When both sides have opened the game, the side in front sits on its lead (`1 / open`) and the side behind chases (`open^2`). Goals at a constant rate spread margins as widely as totals (10% routs at 4.9 goals); with the bend, 5%. Until 2026-10-17 the bend applied whenever the game was open, whoever opened it, which made a late all-out chase nearly free (see "Final fix wave" below); now a lone bold side gets no bend either way.
 - **The line's defensive term was a gain, not a cost.** `_defence` added `(line - 50) * kLineDefence`, contradicting every comment around it; a high line is now a cost at the back.
 - **New match-up relations.** A patient build-up against a deep block (`kPatience`), a deep line smothering long balls (`kDeepLineSmother`), and a back three exposed in behind like a higher line (`kBackLineExposure`): without them the counter-attacking plan beat everything and the 3-4-3 had no counter. The mentality clash term was removed (openness carries its upper half; its lower half made all-out attack a loss against a passive side). "Direct beats press" folded into the space-behind term, which now reads a neutral build-up as part-direct, so a press concedes against a neutral side too.
 - **The AI counter** answers a deep block with patience and a direct side with a deeper line, reads the middle as part-exposed, and moves 0.8 of a point per point (was 0.5).
@@ -99,46 +99,46 @@ The constants alone could not reach the bar; four terms changed shape (each is e
 
 | Cell | GF | GA | Total | Win | Draw | Loss | GD sd | 4+ goals |
 |---|---|---|---|---|---|---|---|---|
-| neutral | 1.33 | 1.41 | 2.74 | 35.6% | 25.1% | 39.3% | 1.73 | 29.2% |
-| allOutAttack | 1.94 | 2.00 | 3.94 | 36.0% | 26.1% | 37.9% | 1.69 | 54.9% |
+| neutral | 1.33 | 1.41 | 2.74 | 36.1% | 24.1% | 39.8% | 1.77 | 29.1% |
+| allOutAttack | 1.97 | 2.07 | 4.04 | 37.8% | 21.5% | 40.7% | 1.99 | 57.2% |
 | parkTheBus | 0.89 | 0.93 | 1.82 | 32.9% | 32.1% | 35.0% | 1.41 | 11.8% |
-| highPress | 1.46 | 1.56 | 3.02 | 36.9% | 23.0% | 40.2% | 1.81 | 35.4% |
-| possession | 1.50 | 1.44 | 2.94 | 39.4% | 23.7% | 36.9% | 1.77 | 33.6% |
+| highPress | 1.47 | 1.58 | 3.04 | 36.5% | 22.9% | 40.6% | 1.86 | 36.1% |
+| possession | 1.51 | 1.44 | 2.95 | 39.5% | 23.6% | 36.9% | 1.79 | 33.8% |
 | counter | 1.21 | 1.11 | 2.32 | 38.8% | 27.5% | 33.8% | 1.62 | 20.9% |
-| wide | 1.51 | 1.58 | 3.09 | 36.4% | 23.8% | 39.8% | 1.81 | 37.0% |
+| wide | 1.51 | 1.58 | 3.09 | 36.4% | 23.9% | 39.6% | 1.83 | 37.2% |
 
 ### equal 80v80, countering AI (predictability 1)
 
 | Cell | GF | GA | Total | Win | Draw | Loss | GD sd | 4+ goals |
 |---|---|---|---|---|---|---|---|---|
-| neutral | 1.34 | 1.42 | 2.76 | 35.7% | 25.2% | 39.1% | 1.73 | 30.1% |
-| allOutAttack | 1.71 | 1.91 | 3.62 | 33.6% | 24.2% | 42.2% | 1.76 | 48.2% |
+| neutral | 1.33 | 1.42 | 2.75 | 36.1% | 24.2% | 39.6% | 1.77 | 29.3% |
+| allOutAttack | 1.74 | 1.99 | 3.73 | 34.7% | 21.8% | 43.5% | 2.06 | 50.7% |
 | parkTheBus | 0.89 | 1.05 | 1.95 | 30.7% | 30.6% | 38.7% | 1.48 | 13.7% |
-| highPress | 1.46 | 1.92 | 3.37 | 29.1% | 21.9% | 49.0% | 1.86 | 43.4% |
-| possession | 1.42 | 1.43 | 2.85 | 37.1% | 25.1% | 37.9% | 1.71 | 31.4% |
+| highPress | 1.47 | 1.94 | 3.41 | 29.8% | 20.9% | 49.3% | 1.91 | 44.5% |
+| possession | 1.42 | 1.43 | 2.85 | 37.1% | 24.7% | 38.2% | 1.74 | 31.5% |
 | counter | 1.08 | 1.10 | 2.18 | 35.0% | 29.2% | 35.8% | 1.57 | 18.2% |
-| wide | 1.60 | 1.69 | 3.29 | 37.0% | 22.7% | 40.3% | 1.87 | 41.9% |
+| wide | 1.61 | 1.70 | 3.31 | 37.1% | 22.6% | 40.3% | 1.89 | 41.9% |
 
 ### stronger 80v86
 
 | Cell | GF | GA | Total | Win | Draw | Loss | GD sd | 4+ goals |
 |---|---|---|---|---|---|---|---|---|
-| neutral | 1.23 | 1.74 | 2.96 | 26.5% | 23.3% | 50.2% | 1.71 | 34.4% |
-| allOutAttack | 1.76 | 2.21 | 3.97 | 26.7% | 25.5% | 47.8% | 1.64 | 55.1% |
+| neutral | 1.23 | 1.79 | 3.02 | 27.5% | 21.8% | 50.7% | 1.84 | 35.3% |
+| allOutAttack | 1.77 | 2.23 | 3.99 | 26.8% | 25.3% | 47.9% | 1.69 | 55.7% |
 | parkTheBus | 0.83 | 1.26 | 2.09 | 24.5% | 28.9% | 46.6% | 1.53 | 16.2% |
-| highPress | 1.28 | 1.82 | 3.10 | 26.6% | 22.6% | 50.8% | 1.72 | 37.1% |
-| possession | 1.27 | 1.74 | 3.01 | 27.6% | 23.8% | 48.6% | 1.71 | 35.3% |
+| highPress | 1.28 | 1.82 | 3.10 | 26.7% | 22.5% | 50.8% | 1.73 | 37.3% |
+| possession | 1.27 | 1.74 | 3.01 | 27.7% | 23.6% | 48.7% | 1.71 | 35.2% |
 | counter | 1.18 | 1.46 | 2.64 | 31.9% | 23.8% | 44.3% | 1.71 | 27.0% |
-| wide | 1.34 | 1.88 | 3.22 | 26.7% | 22.8% | 50.5% | 1.75 | 40.2% |
+| wide | 1.34 | 1.89 | 3.23 | 26.7% | 22.8% | 50.5% | 1.75 | 40.3% |
 
 ### stronger 80v86, countering AI (predictability 1)
 
 | Cell | GF | GA | Total | Win | Draw | Loss | GD sd | 4+ goals |
 |---|---|---|---|---|---|---|---|---|
-| neutral | 1.23 | 1.74 | 2.97 | 26.2% | 23.2% | 50.6% | 1.69 | 34.8% |
-| allOutAttack | 1.46 | 2.15 | 3.61 | 22.9% | 23.0% | 54.0% | 1.71 | 48.0% |
+| neutral | 1.24 | 1.80 | 3.04 | 27.0% | 21.6% | 51.4% | 1.84 | 36.4% |
+| allOutAttack | 1.42 | 2.30 | 3.71 | 24.2% | 18.3% | 57.5% | 2.02 | 50.7% |
 | parkTheBus | 0.84 | 1.49 | 2.33 | 21.8% | 25.3% | 52.8% | 1.62 | 21.0% |
-| highPress | 1.32 | 2.34 | 3.66 | 18.7% | 19.2% | 62.1% | 1.78 | 49.8% |
+| highPress | 1.32 | 2.34 | 3.66 | 18.7% | 19.2% | 62.1% | 1.78 | 49.9% |
 | possession | 1.14 | 1.73 | 2.87 | 23.8% | 24.4% | 51.8% | 1.62 | 31.9% |
 | counter | 1.01 | 1.47 | 2.48 | 26.7% | 25.6% | 47.8% | 1.68 | 24.1% |
 | wide | 1.45 | 2.03 | 3.49 | 26.0% | 22.5% | 51.5% | 1.78 | 45.0% |
@@ -148,31 +148,31 @@ The constants alone could not reach the bar; four terms changed shape (each is e
 | Cell | GF | GA | Total | Win | Draw | Loss | GD sd | 4+ goals |
 |---|---|---|---|---|---|---|---|---|
 | neutral | 1.40 | 1.02 | 2.42 | 46.4% | 25.3% | 28.3% | 1.66 | 22.1% |
-| allOutAttack | 2.07 | 1.68 | 3.75 | 47.6% | 22.8% | 29.5% | 1.81 | 50.7% |
+| allOutAttack | 2.18 | 1.68 | 3.86 | 50.6% | 18.9% | 30.5% | 2.15 | 53.6% |
 | parkTheBus | 0.89 | 0.62 | 1.51 | 39.1% | 37.0% | 23.9% | 1.27 | 7.4% |
-| highPress | 1.54 | 1.29 | 2.82 | 43.1% | 24.1% | 32.8% | 1.79 | 30.9% |
-| possession | 1.70 | 1.06 | 2.76 | 52.3% | 22.9% | 24.9% | 1.77 | 29.4% |
+| highPress | 1.55 | 1.29 | 2.85 | 43.5% | 23.7% | 32.8% | 1.83 | 31.6% |
+| possession | 1.70 | 1.07 | 2.77 | 52.0% | 23.1% | 24.9% | 1.78 | 29.6% |
 | counter | 1.19 | 0.75 | 1.94 | 46.1% | 29.3% | 24.7% | 1.48 | 13.4% |
-| wide | 1.61 | 1.24 | 2.84 | 46.1% | 23.1% | 30.8% | 1.82 | 31.2% |
+| wide | 1.61 | 1.24 | 2.85 | 46.3% | 22.9% | 30.9% | 1.83 | 31.3% |
 
 ### weaker 80v74, countering AI (predictability 1)
 
 | Cell | GF | GA | Total | Win | Draw | Loss | GD sd | 4+ goals |
 |---|---|---|---|---|---|---|---|---|
 | neutral | 1.42 | 1.04 | 2.46 | 46.5% | 25.0% | 28.5% | 1.68 | 22.9% |
-| allOutAttack | 1.94 | 1.67 | 3.60 | 44.9% | 23.0% | 32.1% | 1.82 | 48.4% |
+| allOutAttack | 2.01 | 1.70 | 3.71 | 46.9% | 19.0% | 34.1% | 2.10 | 50.8% |
 | parkTheBus | 0.91 | 0.66 | 1.57 | 39.1% | 35.9% | 25.1% | 1.30 | 7.8% |
-| highPress | 1.58 | 1.54 | 3.12 | 39.4% | 22.5% | 38.1% | 1.86 | 37.0% |
-| possession | 1.70 | 1.07 | 2.77 | 51.7% | 23.4% | 24.9% | 1.77 | 29.5% |
+| highPress | 1.60 | 1.56 | 3.16 | 39.9% | 22.0% | 38.1% | 1.93 | 38.1% |
+| possession | 1.71 | 1.07 | 2.79 | 51.8% | 23.2% | 25.1% | 1.79 | 30.1% |
 | counter | 1.07 | 0.76 | 1.82 | 41.9% | 31.3% | 26.8% | 1.45 | 11.6% |
-| wide | 1.71 | 1.33 | 3.04 | 46.6% | 22.4% | 31.0% | 1.83 | 35.5% |
+| wide | 1.72 | 1.33 | 3.06 | 46.6% | 22.3% | 31.1% | 1.86 | 36.0% |
 
 ## Whole-career check (Task 9)
 
 Date: 2026-10-17. Harness: `test/unit/match/tactics_career_lab_test.dart` (env-gated, `FNM_CAREER_LAB`). Each career is `careerService.create(nationId: 12 /* Czechia, world ranking 36 */, rngSeed: 1000 + k)` with the real nation and player data, the plan stored through `TacticService.setFormation` + `setInstructions` (as the tactics screen does), then `SeasonService.advance` (skip) until the first World Championship has a champion: one cycle, about 26-30 manager matches (continental qualifying, Euro, Nations Cup, World Championship qualifying and finals). Every manager match is therefore played by the skip path (`_withManagerTactics`). 200 careers per row, seeds 1000-1199, the same seeds for every plan and for both commits, so rows are paired. Run in 8 shards:
 
     FNM_CAREER_LAB=neutral,possession,highPress FNM_CAREER_LAB_CAREERS=200 \
-      FNM_CAREER_LAB_MODE=skip FNM_SHARD=i/8 FNM_CAREER_LAB_OUT=build/career_lab \
+      FNM_SHARD=i/8 FNM_CAREER_LAB_OUT=build/career_lab \
       flutter test test/unit/match/tactics_career_lab_test.dart
     FNM_CAREER_LAB=report FNM_CAREER_LAB_OUT=build/career_lab \
       flutter test test/unit/match/tactics_career_lab_test.dart
@@ -250,6 +250,7 @@ Reading it: the build removed today's "high press is free" (it was the best plan
 - [ ] Live match, high press: gets caught on the break by a direct, pacey opponent (goals conceded from balls in behind).
 - [ ] Same plan for many matches in a row: opponents visibly counter it (their setup shifts against it; results get harder).
 - [ ] Changing plan escapes the counter (the next opponents stop answering the old plan).
+- [ ] Possession may feel like the always-right plan against weaker sides (best plan against weaker opposition, countered or not; +0.25 GD a game over neutral in the career lab). Watch whether it reads as a dominant default for a mid nation.
 - [ ] Skipped matches tell the same story as played ones for the same plan (all-out attack skipped still produces open scorelines).
 - [ ] Skip-only career: after many skipped matches on one plan, opponents counter it as they would if the matches had been played (skipped matches now record the drilling).
 
@@ -270,4 +271,25 @@ Confirmation run: skip mode, 100 careers per plan, seeds 1000-1099 (the first ha
 GD a game: neutral +0.509, possession +0.762, high press +0.535. Paired (n=100): possession - neutral +0.252 ± 0.018 GD and +12.0 ± 5.7 pp qualification; high press - neutral +0.025 ± 0.022 and -2.0 ± 6.0 pp; high press - possession -0.227 ± 0.020 and -14.0 ± 6.8 pp. Against the baseline's skip rows (1574f85): neutral -0.092 ± 0.021 GD (-3.0 pp qualification), possession +0.166 ± 0.019 (+14.0 pp), high press -0.265 ± 0.023 (-24.0 pp). Top-8 champion share 67.3% ± 2.7 (n=300), against 70.4% ± 1.3 before: unchanged within noise.
 
 So after the fix: neutral is still below today's baseline (by less than in the no-counter first run, since drilling now also brings familiarity), the sensible plan is clearly above neutral, the high-press gamble sits level with neutral and well below possession, and the world's top-8 share has not moved.
+
+## Final fix wave (2026-10-17)
+
+From the whole-branch review (`.superpowers/sdd/2026-10-16-tactics-impact/final-review.md`). The tables in "After" above were re-run with these changes.
+
+**The chase cell** (`test/unit/match/tactics_chase_test.dart`, helper `test/helpers/chase_lab.dart`): equal 80v80 sides, both neutral 4-3-3, the opponent AI-managed as in a live match, every seed both ways round at a neutral venue. Where the manager is one down at the chase minute, staying neutral is compared with switching live to all-out (4-2-4, mentality 100, line 75, tempo 75). 10000 seeds (about 4300 chase cases):
+
+| Commit | Minute | Not losing (stay -> chase) | Goals for after | Goals against after |
+|---|---|---|---|---|
+| Base 1574f85 | 60' | 23.3% -> 28.6% (+5.3pp) | +0.240 | +0.267 |
+| Base 1574f85 | 75' | 15.3% -> 19.8% (+4.4pp) | +0.113 | +0.149 |
+| Before fix (ce30528) | 60' | 23.3% -> 37.3% (+14.1pp) | +0.377 | +0.099 |
+| Before fix (ce30528) | 75' | 15.2% -> 26.6% (+11.4pp) | +0.217 | +0.050 |
+| After fix | 60' | 23.3% -> 28.9% (+5.6pp) | +0.231 | +0.341 |
+| After fix | 75' | 15.2% -> 21.3% (+6.1pp) | +0.133 | +0.197 |
+
+The guard (4000 seeds, 60') requires goals conceded after the switch to rise by at least 0.8x what it adds scored, and the not-losing gain to stay at or under 9pp (about twice the base). It reads +5.5pp, +0.22 for and +0.35 against.
+
+The fix: the scoreline bend (`MatchEngine._scorelineOpenness`) now applies only when BOTH sides' commitment is above neutral. A first attempt (bend only when the leader is the bolder side) fixed the chase but broke six guards, because a bold plan then met the bend against it when ahead and none for it when behind. No constant changed.
+
+**Other fixes:** the drilling records the plan the manager held for most minutes, live changes included (`MatchResult.homePlan`/`awayPlan`); the AI reads the most recently played plan, at a sharpness set by how many matches in a row he has played it (a change resets it to the weak, general read), with no schema change; an unreadable stored plan key means no history; a live change after a red card no longer charges the sent-off man's shape twice; the skip path reads the opponent's strength as the live match does (`AiTactics.readStrength`, best eleven by overall); a guard with real squads (Switzerland v Peru from `players.json`) checks that the 10-point-better squad still wins more than it loses on its most exposed plans.
 
