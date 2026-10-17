@@ -179,9 +179,9 @@ Date: 2026-10-17. Harness: `test/unit/match/tactics_career_lab_test.dart` (env-g
 
 About 8 s a career alone, 15-30 s with 8-16 shards sharing 8 cores; the whole check (2400 careers) took about 2 h of wall clock.
 
-**Plans** (the match lab's `labPlans`): `neutral` (control), `possession` as the sensible committed plan (4-2-3-1, directness 20, tempo 40: positive GD in the equal and weaker After cells, and the best mean GD of any plan against a countering AI, -0.01 / +0.63 / -0.59), and `highPress` as the badly-judged one (the plan a countering side punishes hardest in the After tables: -0.46 a game at equal strength, 49% losses).
+**Plans** (the match lab's `labPlans`): `neutral` (control), `possession` as the sensible committed plan (4-2-3-1, directness 20, tempo 40: positive GD in the equal and weaker After cells, and the best mean GD of any plan against a countering AI, -0.01 / +0.63 / -0.59), and `highPress` as the high-press gamble (the plan a countering side punishes hardest in the After tables: -0.46 a game at equal strength, 49% losses). It was first labelled the badly-judged plan; the career numbers below show it is not one for this side (see the verdict).
 
-**Two modes, because a skipped match records no drilling.** Only `playPlayerMatch` calls `TacticFamiliarityRepository.recordMatch`, so a manager who skips everything never builds familiarity or predictability, `ScoutedPlan.fromDrilling` finds nothing, and the AI never counters him.
+**Two modes in the first run, because a skipped match recorded no drilling** (fixed afterwards, see "Fix round 1" below). Only `playPlayerMatch` calls `TacticFamiliarityRepository.recordMatch`, so a manager who skips everything never builds familiarity or predictability, `ScoutedPlan.fromDrilling` finds nothing, and the AI never counters him.
 - `skip`: the app exactly as it is for a manager who skips every match. No counter.
 - `drilled`: after each manager match the harness calls `recordMatch` with his shape and plan key, as the played path would, so the next match is countered as it would be for a manager who plays live and never changes plan.
 
@@ -236,10 +236,12 @@ Per-career GD a game: after skip neutral +0.363, possession +0.618, highPress +0
 |---|---|
 | Neutral below today's baseline | **Met.** -0.26 GD a game and -17 pp WC qualification skipped; -0.22 and -7 pp drilled. |
 | Sensible plan >= neutral | **Met.** Possession +0.24 to +0.26 GD a game and +13.5 to +16 pp WC qualification over neutral, in both modes. |
-| Bad plan clearly worst | **Not met.** High press is clearly below possession (-0.15 / -0.23 GD a game) but not below neutral: +0.11 GD and +9.5 pp qualification when skipped, level when drilled (+0.01 GD, -2.5 pp qualification, WC knockouts 13.5% vs 22.5%). Neutral is the worst plan of the three in the skip mode. |
+| Bad plan clearly worst | **Not met, and accepted (see below).** High press is clearly below possession (-0.15 / -0.23 GD a game) but not below neutral: +0.11 GD and +9.5 pp qualification when skipped, level when drilled (+0.01 GD, -2.5 pp qualification, WC knockouts 13.5% vs 22.5%). Neutral is the worst plan of the three in the skip mode. |
 | World top-8 winner share unchanged | **Met within noise.** 68.5% after vs 70.4% before over all 1200 careers each (±1.3 each); per-row shares (63.5-76%) are 200-career noise (±3.3). |
 
-Reading it: the build removed today's "high press is free" (it was the best plan before, +0.20 GD a game over neutral when skipped) and made neutral costly, but over a Czechia career the press is not punished below neutral. Two reasons visible in the code: in a skip-only career no drilling is recorded so nothing is countered at all, and when it is drilled most of Czechia's opponents (qualifying, Nations Cup) are weaker sides whose read quality is scaled down towards its 0.3 floor (`AiCounter.read`: quality `(strength - 60) / 30`), while the match lab's "countering AI" cells read at predictability 1 and full quality. Not retuned here (Task 9 is measure-only); flagged for the controller.
+Reading it: the build removed today's "high press is free" (it was the best plan before, +0.20 GD a game over neutral when skipped) and made neutral costly, but over a Czechia career the press is not punished below neutral. Two reasons visible in the code: in a skip-only career no drilling is recorded so nothing is countered at all, and when it is drilled most of Czechia's opponents (qualifying, Nations Cup) are weaker sides whose read quality is scaled down towards its 0.3 floor (`AiCounter.read`: quality `(strength - 60) / 30`), while the match lab's "countering AI" cells read at predictability 1 and full quality. Not retuned.
+
+**Ruling (2026-10-17):** for a mid side that mostly faces weaker opponents, a high press is a reasonable gamble, not a misjudged plan: it scores more and concedes more, and over a career it comes out level with neutral and below a well-chosen plan. The "a misjudged plan costs" target is carried by the match lab's plan-against-counter cells (+0.362 goals a game between a well-judged and a badly-judged plan, `tactics_swing_test` dial guard), not by this career row. That weaker opponents read the manager less sharply (read quality towards the 0.3 floor) is by design: weak sides read worse.
 
 ### Device playtest checklist
 
@@ -249,4 +251,23 @@ Reading it: the build removed today's "high press is free" (it was the best plan
 - [ ] Same plan for many matches in a row: opponents visibly counter it (their setup shifts against it; results get harder).
 - [ ] Changing plan escapes the counter (the next opponents stop answering the old plan).
 - [ ] Skipped matches tell the same story as played ones for the same plan (all-out attack skipped still produces open scorelines).
-- [ ] Skip-only career: decide whether skipped matches should add to drilling/predictability (today they do not, so a manager who skips is never countered).
+- [ ] Skip-only career: after many skipped matches on one plan, opponents counter it as they would if the matches had been played (skipped matches now record the drilling).
+
+### Fix round 1: skipped matches record the drilling
+
+Skipping must never be the way to dodge a counter. A skipped manager match now records the plan into the stored drilling exactly as a played one does: both routes call one helper, `SeasonService._recordDrilling` in `hub_providers.dart` (the played route from `_playPlayerMatch`, the skipped one at the end of `_simAndRecord` when either side is his). It runs after the result, so each match is countered from the drilling before it, and it drops the cached manager setup so the next of his matches in the same skip reads the updated drilling. Background fixtures record nothing. Guarded by `test/unit/hub/skip_records_drilling_test.dart`.
+
+With that, the career lab's old `drilled` mode (the harness recording each match itself) became the app's own behaviour and was removed; the lab now has one mode.
+
+Confirmation run: skip mode, 100 careers per plan, seeds 1000-1099 (the first half of the earlier seeds), date 2026-10-17. Every career reproduces the earlier `drilled` row for its seed exactly (paired difference 0.000 on every career), which confirms the app now records what the harness used to.
+
+| Plan | Careers | WC qualify | Euro finals | WC KO | WC QF+ | WC won | Win | Draw | Loss | GF/g | GA/g | Goals/g | Top-8 champion |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| skip-neutral | 100 | 45.0% | 89.0% | 23.0% | 3.0% | 0.0% | 53.0% | 18.6% | 28.4% | 1.51 | 1.00 | 2.52 | 70.0% |
+| skip-possession | 100 | 57.0% | 91.0% | 26.0% | 0.0% | 0.0% | 58.6% | 15.1% | 26.3% | 1.78 | 1.02 | 2.80 | 73.0% |
+| skip-highPress (gamble) | 100 | 43.0% | 86.0% | 12.0% | 2.0% | 0.0% | 53.7% | 15.7% | 30.5% | 1.77 | 1.23 | 2.99 | 59.0% |
+
+GD a game: neutral +0.509, possession +0.762, high press +0.535. Paired (n=100): possession - neutral +0.252 ± 0.018 GD and +12.0 ± 5.7 pp qualification; high press - neutral +0.025 ± 0.022 and -2.0 ± 6.0 pp; high press - possession -0.227 ± 0.020 and -14.0 ± 6.8 pp. Against the baseline's skip rows (1574f85): neutral -0.092 ± 0.021 GD (-3.0 pp qualification), possession +0.166 ± 0.019 (+14.0 pp), high press -0.265 ± 0.023 (-24.0 pp). Top-8 champion share 67.3% ± 2.7 (n=300), against 70.4% ± 1.3 before: unchanged within noise.
+
+So after the fix: neutral is still below today's baseline (by less than in the no-counter first run, since drilling now also brings familiarity), the sensible plan is clearly above neutral, the high-press gamble sits level with neutral and well below possession, and the world's top-8 share has not moved.
+

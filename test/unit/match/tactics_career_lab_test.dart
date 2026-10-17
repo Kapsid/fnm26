@@ -11,7 +11,6 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
-import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -37,24 +36,20 @@ import '../../helpers/test_database.dart';
 /// The plans are the match lab's own (`labPlans`), so both labs name the same
 /// thing: `neutral` (the control), `possession` (the committed plan with the
 /// best mean goal difference across the lab's After tables, countered or
-/// not) and `highPress` (the plan a countering side punishes hardest there).
+/// not) and `highPress`, the high-press gamble: the plan a countering side
+/// punishes hardest in the match lab, which for a mid side mostly facing
+/// weaker opponents is a reasonable gamble rather than a misjudged plan (the
+/// "misjudged plan costs" bar is the match lab's plan-against-counter cells).
 ///
-/// Two modes, because a skipped match does not add to the stored drilling
-/// (only `playPlayerMatch` calls `recordMatch`):
-///  * `skip` (default): the app exactly as it is for a manager who skips
-///    everything. With no history the AI has no plan to scout, so there is no
-///    counter at all.
-///  * `drilled`: after each of his matches the harness records the plan into
-///    `tactic_familiarities` the way the played path does, so the next skipped
-///    match is countered as it would be for a manager who plays his matches
-///    and never changes plan.
+/// A skipped manager match records the plan into the stored drilling exactly
+/// as a played one does (`SeasonService._recordDrilling`), so a career that
+/// never changes plan grows predictable and is countered, skipped or played.
 ///
 /// Opt-in and slow (about 10 s a career). Every career appends one JSON line
-/// to `<out>/<mode>-<plan>-shard<i>.jsonl`; the report run reads them all:
+/// to `<out>/skip-<plan>-shard<i>.jsonl`; the report run reads them all:
 ///
 ///     FNM_CAREER_LAB=neutral,possession,highPress FNM_SHARD=0/8 \
-///       FNM_CAREER_LAB_CAREERS=200 FNM_CAREER_LAB_MODE=skip \
-///       FNM_CAREER_LAB_OUT=build/career_lab \
+///       FNM_CAREER_LAB_CAREERS=200 FNM_CAREER_LAB_OUT=build/career_lab \
 ///       flutter test test/unit/match/tactics_career_lab_test.dart
 ///     FNM_CAREER_LAB=report FNM_CAREER_LAB_OUT=build/career_lab \
 ///       flutter test test/unit/match/tactics_career_lab_test.dart
@@ -75,7 +70,6 @@ void main() {
   }
 
   final careers = int.parse(env['FNM_CAREER_LAB_CAREERS'] ?? '200');
-  final mode = env['FNM_CAREER_LAB_MODE'] ?? 'skip';
   final shard = (env['FNM_SHARD'] ?? '0/1').split('/').map(int.parse).toList();
   final plans = [
     for (final name in (lab ?? '').split(','))
@@ -83,7 +77,7 @@ void main() {
   ];
 
   test(
-    'career lab ($mode, shard ${shard[0]}/${shard[1]})',
+    'career lab (shard ${shard[0]}/${shard[1]})',
     () async {
       final nations =
           (jsonDecode(File('assets/data/nations.json').readAsStringSync())
@@ -98,7 +92,7 @@ void main() {
       Directory(out).createSync(recursive: true);
       for (final plan in plans) {
         final sink = File(
-          '$out/$mode-${plan.name}-shard${shard[0]}.jsonl',
+          '$out/skip-${plan.name}-shard${shard[0]}.jsonl',
         ).openWrite(mode: FileMode.append);
         for (var k = shard[0]; k < careers; k += shard[1]) {
           final watch = Stopwatch()..start();
@@ -107,7 +101,6 @@ void main() {
             players: players,
             plan: plan,
             rngSeed: 1000 + k,
-            drilled: mode == 'drilled',
           );
           sink.writeln(
             jsonEncode({...row, 'ms': watch.elapsedMilliseconds}),
@@ -144,7 +137,6 @@ Future<Map<String, Object?>> _career({
   required List<Player> players,
   required LabPlan plan,
   required int rngSeed,
-  required bool drilled,
 }) async {
   final db = createTestDatabase();
   final c = ProviderContainer(
@@ -183,24 +175,10 @@ Future<Map<String, Object?>> _career({
     ];
 
     final season = c.read(seasonServiceProvider);
-    final fam = c.read(tacticFamiliarityRepositoryProvider);
-    var recorded = 0;
     int? champion;
     var lastDate = DateTime(1900);
     for (var i = 0; i < 600 && champion == null; i++) {
       await season.advance(career.id);
-      if (drilled) {
-        // Each of his matches since the last step goes into the drilling,
-        // as `playPlayerMatch` would have recorded it.
-        final n = (await ours()).length;
-        for (; recorded < n; recorded++) {
-          await fam.recordMatch(
-            career.id,
-            plan.formation,
-            planKey: TeamChemistry.planKey(plan.instructions),
-          );
-        }
-      }
       champion = await _champion(db);
       final now = (await c.read(careerRepositoryProvider).byId(career.id))!;
       if (!now.inGameDate.isAfter(lastDate) && champion == null) break;
@@ -285,7 +263,7 @@ Future<int?> _champion(AppDatabase db) async {
 }
 
 /// Reads every JSONL file under [dir] and prints one table row per
-/// (mode, plan), ready for the results doc.
+/// file prefix (`skip-<plan>`), ready for the results doc.
 void _report(String dir) {
   final rows = <String, List<Map<String, dynamic>>>{};
   for (final f in Directory(dir).listSync().whereType<File>()) {
