@@ -1018,6 +1018,44 @@ class SeasonService {
       scorers: scorers,
       rngSeed: rngSeed,
     );
+    // One of HIS matches, skipped rather than played: it drills (and reads)
+    // his side exactly as playing it would have. Recorded after the result,
+    // so this match was countered from the drilling before it, as a played
+    // one is. Background fixtures (neither side his) record nothing.
+    if (asHome != null || asAway != null) await _recordDrilling(f.careerId);
+  }
+
+  /// Records one manager match into the stored drilling: the shape he fielded
+  /// climbs in familiarity (a settled side grows drilled, see TeamChemistry)
+  /// and every other shape decays; the plan behind it goes in too, since
+  /// naming the same shape with the same instructions again is what lets
+  /// opponents read the side (`AiCounter`).
+  ///
+  /// The ONE place a manager match is recorded, for both routes: a played
+  /// match ([_playPlayerMatch]) and a skipped one ([_simAndRecord]). They used
+  /// to differ (only a played match recorded), so a manager who skipped every
+  /// match was never read: skipping was a way to dodge the counter. Each route
+  /// handles a given fixture once and never both (a played match catches the
+  /// world up with his nation excluded), so each match is recorded once.
+  ///
+  /// The cached manager setup is dropped afterwards: it holds the drilling the
+  /// counter reads, and one skip can simulate several of his matches in a row,
+  /// each of which must be countered from the drilling before IT.
+  Future<void> _recordDrilling(int careerId) async {
+    final tactic = await _ref
+        .read(tacticsRepositoryProvider)
+        .tacticForCareer(careerId);
+    await _ref
+        .read(tacticFamiliarityRepositoryProvider)
+        .recordMatch(
+          careerId,
+          tactic?.formation ?? Formation.f433,
+          planKey: TeamChemistry.planKey(
+            tactic?.instructions ?? const TacticalInstructions(),
+          ),
+        );
+    _managerSetup = null;
+    _managerSetupCareer = null;
   }
 
   /// Gives a background match everything the tactical engine would have given
@@ -1789,22 +1827,9 @@ class SeasonService {
     _simYears = CareerService.agingYears(career);
     await _ensureRank(careerId);
 
-    // Credit tactical familiarity with the shape the manager just fielded — a
-    // settled side grows drilled (see TeamChemistry); other shapes decay. The
-    // plan behind it goes in too: naming the same shape with the same
-    // instructions again is what lets opponents read the side.
-    final playedTactic = await _ref
-        .read(tacticsRepositoryProvider)
-        .tacticForCareer(careerId);
-    await _ref
-        .read(tacticFamiliarityRepositoryProvider)
-        .recordMatch(
-          careerId,
-          playedTactic?.formation ?? Formation.f433,
-          planKey: TeamChemistry.planKey(
-            playedTactic?.instructions ?? const TacticalInstructions(),
-          ),
-        );
+    // Credit the drilling with the match he just played: see
+    // [_recordDrilling].
+    await _recordDrilling(careerId);
 
     var hs = result.homeScore;
     var as = result.awayScore;
