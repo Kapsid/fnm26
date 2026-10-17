@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -13,6 +12,8 @@ import 'package:fnm/domain/services/match/performance_mark.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/services/tactics/team_chemistry.dart';
+import 'package:meta/meta.dart' show visibleForTesting;
 
 /// A team as it lines up for a match: its starting XI and instructions.
 class MatchTeam {
@@ -284,6 +285,12 @@ class PlayerRating {
   final PlayerPosition position;
 }
 
+/// A side's plan as it was actually fielded: a shape and its instructions.
+typedef FieldedPlan = ({
+  Formation formation,
+  TacticalInstructions instructions,
+});
+
 /// The outcome of a simulated match.
 class MatchResult {
   const MatchResult({
@@ -303,6 +310,8 @@ class MatchResult {
     this.homeShotsByMinute = const [],
     this.awayShotsByMinute = const [],
     this.momentumByMinute = const [],
+    this.homePlan,
+    this.awayPlan,
   });
 
   final int homeScore;
@@ -351,6 +360,18 @@ class MatchResult {
 
   int get awayPossession => 100 - homePossession;
 
+  /// The plan each side held for the most minutes of the ninety, live changes
+  /// included: the shape and the instructions it was actually playing, not
+  /// the ones on its team sheet. Two plans are the same when they share a
+  /// formation and a [TeamChemistry.planKey], and a tie goes to the one held
+  /// later (what the side finished on). Null when not recorded.
+  ///
+  /// This is what the opposition's video room sees of a match, so it is what
+  /// the manager's drilling records: a decoy plan named on the sheet and
+  /// switched away from at 1' is a minute of football, not the plan.
+  final FieldedPlan? homePlan;
+  final FieldedPlan? awayPlan;
+
   /// The best individual performance of the match, or null if nobody played.
   PlayerRating? get manOfTheMatch {
     if (ratings.isEmpty) return null;
@@ -365,6 +386,7 @@ class _Live {
   _Live(this.team)
     : xi = [...team.xi],
       slots = [...team.formation.positions],
+      formation = team.formation,
       shape = ShapeProfile.of(team.formation.positions),
       instructions = team.instructions,
       penaltyTakerId = team.penaltyTakerId,
@@ -386,6 +408,47 @@ class _Live {
   /// Stable across substitutions (a sub inherits the slot of the player they
   /// replace) and reset by a live change that reshapes the team.
   List<PlayerPosition> slots;
+
+  /// The formation the side is set up in right now: the team sheet's, until
+  /// a live change names another.
+  Formation formation;
+
+  /// Minutes played per plan (formation + [TeamChemistry.planKey]), with the
+  /// instructions the plan was first held with and the last minute it was
+  /// held: what [dominantPlan] reads.
+  final Map<
+    (Formation, int),
+    ({int minutes, int last, TacticalInstructions instructions})
+  >
+  _planMinutes = {};
+
+  /// Credits [minute] to the plan the side is playing now.
+  void tallyPlan(int minute) {
+    final key = (formation, TeamChemistry.planKey(instructions));
+    final was = _planMinutes[key];
+    _planMinutes[key] = (
+      minutes: (was?.minutes ?? 0) + 1,
+      last: minute,
+      instructions: was?.instructions ?? instructions,
+    );
+  }
+
+  /// The plan held for the most minutes; a tie goes to the one held later.
+  FieldedPlan get dominantPlan {
+    (Formation, int)? best;
+    for (final e in _planMinutes.entries) {
+      final b = best == null ? null : _planMinutes[best]!;
+      if (b == null ||
+          e.value.minutes > b.minutes ||
+          (e.value.minutes == b.minutes && e.value.last > b.last)) {
+        best = e.key;
+      }
+    }
+    if (best == null) {
+      return (formation: formation, instructions: instructions);
+    }
+    return (formation: best.$1, instructions: _planMinutes[best]!.instructions);
+  }
 
   /// The formation's attacker / defender counts, fixed when the shape is set
   /// and refreshed by a formation change. Deliberately NOT recomputed from
@@ -635,6 +698,13 @@ class MatchEngine {
         );
       }
 
+      // Each minute of the ninety is credited to the plan each side is
+      // playing in it (see [MatchResult.homePlan]).
+      if (stoppage == 0) {
+        liveHome.tallyPlan(manageMinute);
+        liveAway.tallyPlan(manageMinute);
+      }
+
       // Players tire as the match wears on, weakening the side until fresh legs
       // come on — so a well-timed substitution genuinely helps.
       _deplete(liveHome);
@@ -684,6 +754,12 @@ class MatchEngine {
       final controlTotal = homeControl + awayControl;
       final homeShare = controlTotal <= 0 ? 0.5 : homeControl / controlTotal;
 
+      // How open the game is this minute, and how committed each side is: one
+      // reading for both chance rolls (neither depends on the score).
+      final homeCommit = _commitment(liveHome);
+      final awayCommit = _commitment(liveAway);
+      final open = opennessOf(homeCommit, awayCommit);
+
       if (_chance(
         rng,
         homeAttack,
@@ -693,8 +769,10 @@ class MatchEngine {
         damping:
             _blowoutDamping(homeScore, awayScore) *
             _scorelineOpenness(
-              _openness(liveHome, liveAway),
+              open,
               homeScore - awayScore,
+              own: homeCommit,
+              opponent: awayCommit,
             ),
       )) {
         homeShots++;
@@ -730,8 +808,10 @@ class MatchEngine {
         damping:
             _blowoutDamping(awayScore, homeScore) *
             _scorelineOpenness(
-              _openness(liveHome, liveAway),
+              open,
               awayScore - homeScore,
+              own: awayCommit,
+              opponent: homeCommit,
             ),
       )) {
         awayShots++;
@@ -865,6 +945,8 @@ class MatchEngine {
     return MatchResult(
       homeScore: homeScore,
       awayScore: awayScore,
+      homePlan: liveHome.dominantPlan,
+      awayPlan: liveAway.dominantPlan,
       events: events,
       homeShots: homeShots,
       awayShots: awayShots,
@@ -1039,7 +1121,12 @@ class MatchEngine {
     live
       ..xi = newXi
       ..slots = newSlots
-      ..shape = ShapeProfile.of(newSlots)
+      ..formation = c.formation
+      // From the formation, not [newSlots]: a man sent off is missing from
+      // [newSlots], and he is already paid for by the short-handed penalty
+      // (see [_Live.shape]). Counting the slots would charge him again the
+      // moment the manager touched anything.
+      ..shape = ShapeProfile.ofFormation(c.formation)
       ..instructions = c.instructions;
     if (c.takers case final t?) {
       live
@@ -1227,14 +1314,24 @@ class MatchEngine {
       (t.instructions.tempo - 50) * 0.05 -
       (t.instructions.directness - 50) * 0.06;
 
-  /// [openness] for the two sides as they stand this minute (live
-  /// instructions and shape, so in-match changes count).
-  double _openness(_Live home, _Live away) => openness(
-    home: home.instructions,
-    away: away.instructions,
-    homeAttackers: home.shape.attackers,
-    awayAttackers: away.shape.attackers,
-  );
+  /// [commitment] for a side as it stands this minute (live instructions and
+  /// shape, so in-match changes count).
+  double _commitment(_Live t) => commitment(t.instructions, t.shape.attackers);
+
+  /// How far forward one side commits, -1..1: mentality, pressing and extra
+  /// attackers off the 4-3-3, each weighted, the sum clamped. 0 is neutral.
+  static double commitment(TacticalInstructions i, double attackers) =>
+      ((i.mentality - 50) / 50 * kOpenMentality +
+              (i.pressing - 50) / 50 * kOpenPressing +
+              (attackers - ShapeProfile.neutralAttackers) * kOpenAttackers)
+          .clamp(-1.0, 1.0);
+
+  /// [openness] from the two sides' [commitment]s.
+  static double opennessOf(double home, double away) {
+    final opening = max(max(home, away), 0.0);
+    final closing = (min(home, 0.0) + min(away, 0.0)) / 2;
+    return 1 + opening * kOpenUp + closing * kOpenDown;
+  }
 
   /// How open the game is, as a multiplier on BOTH sides' chance rate.
   ///
@@ -1263,33 +1360,45 @@ class MatchEngine {
     required TacticalInstructions away,
     required double homeAttackers,
     required double awayAttackers,
-  }) {
-    double commitment(TacticalInstructions i, double attackers) =>
-        ((i.mentality - 50) / 50 * kOpenMentality +
-                (i.pressing - 50) / 50 * kOpenPressing +
-                (attackers - ShapeProfile.neutralAttackers) * kOpenAttackers)
-            .clamp(-1.0, 1.0);
-    final h = commitment(home, homeAttackers);
-    final a = commitment(away, awayAttackers);
-    final opening = max(max(h, a), 0.0);
-    final closing = (min(h, 0.0) + min(a, 0.0)) / 2;
-    return 1 + opening * kOpenUp + closing * kOpenDown;
-  }
+  }) => opennessOf(
+    commitment(home, homeAttackers),
+    commitment(away, awayAttackers),
+  );
 
   /// [open] (see [openness]) as one side's chance-rate multiplier when it is
-  /// [margin] goals up (negative: down).
+  /// [margin] goals up (negative: down), [own] and [opponent] being the two
+  /// sides' [commitment]s.
   ///
-  /// In an OPEN game the side in front stops trading blows and sits on its
-  /// lead (its rate falls to `1 / open`), and the side behind throws even
-  /// more forward (`open` squared). That is what a wild game between equals
-  /// looks like: goals at both ends, the lead changing hands, not a 6-1.
-  /// Without it the multiplier lifted both sides' rates for all 90 minutes,
-  /// and goals arriving at a constant rate spread the margins as widely as
-  /// the total: an all-out mirror at 4.9 goals a game had one match in ten
-  /// decided by four or more. With it, 5%. A level game, or a closed one
-  /// (`open` <= 1), is untouched, so a neutral match is exactly as before.
-  static double _scorelineOpenness(double open, int margin) {
+  /// When BOTH sides have opened the game (each commitment above neutral),
+  /// the side in front stops trading blows and sits on its lead (its rate
+  /// falls to `1 / open`) and the side behind throws even more forward
+  /// (`open` squared). That is what a wild game between two bold sides looks
+  /// like: goals at both ends, the lead changing hands, not a 6-1. Without it
+  /// an all-out mirror at 4.9 goals a game had one match in ten decided by
+  /// four or more. With it, 5%.
+  ///
+  /// When only ONE side has opened the game, nothing bends: both keep
+  /// `open`, whoever is ahead. The bold side opened it and pays for that at
+  /// the back like anyone else, leading or trailing. Until 2026-10-17 the bend
+  /// applied whoever had opened the game, so a manager a goal down who went
+  /// all-out against a side protecting its lead got his own rate doubled and
+  /// the leader's cut to 0.7 at the same time: the late chase cost a tenth of
+  /// a goal and earned three times what it had before this build
+  /// (`tactics_chase_test.dart`). Bending only for the leader when the leader
+  /// was the bolder side fixed the chase but charged a bold plan twice over a
+  /// match (the bend against it when ahead, none for it when behind), which
+  /// broke the committed plans' guards; the mutual rule is symmetric.
+  ///
+  /// A level game, or a closed one (`open` <= 1), is untouched, so a neutral
+  /// match is exactly as before.
+  static double _scorelineOpenness(
+    double open,
+    int margin, {
+    required double own,
+    required double opponent,
+  }) {
     if (open <= 1 || margin == 0) return open;
+    if (own <= 0 || opponent <= 0) return open;
     return margin > 0 ? 1 / open : open * open;
   }
 
@@ -1852,12 +1961,17 @@ class MatchEngine {
     //    LOSS against a passive side, which the build's bar says it must not
     //    be. Removed on 2026-10-16.
 
-    // The safety valve: a plan can win or lose a match, but it can never
-    // replace a squad. Widened from ±9/11 with the coefficients above, and
-    // deliberately by LESS than they grew (2x, not 3x), so the ordinary
-    // match-up gets its full new weight while the all-dials-to-the-extreme
-    // case is held well short of the rating gulf that makes a rout. The
-    // weight comes after the clamp, so the valve scales with it.
+    // The safety valve: a plan can win or lose a match, but it should never
+    // replace a squad. The clamp is -18..+22 before [kMatchupWeight], so
+    // -33.3..+40.7 rating points after it: since 2026-10-16 the valve scales
+    // with the weight, and at the extremes it is no longer "well short of the
+    // rating gulf that makes a rout". What it bounds now is a stack of every
+    // term at once, attribute terms (pace duel, pass relief, press engine)
+    // included. Between real squads those are small (the forward/defender
+    // physical gap within a nation runs -5..0, about +-0.12 of the duel), so
+    // in practice the bonus sits far inside the valve, and "squad still
+    // decides" is guarded by the lab with both flat and real squads
+    // (`tactics_lab_test.dart`) rather than promised by this clamp.
     return bonus.clamp(-18.0, 22.0) * kMatchupWeight;
   }
 

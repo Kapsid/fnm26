@@ -2,12 +2,14 @@ import 'dart:math' as math;
 
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
+import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 
 import 'fixtures.dart';
@@ -386,6 +388,80 @@ LabStats runPair(
         home: aAtHome ? x : y,
         away: aAtHome ? y : x,
         rng: SeededRng.forFixture(0x7AB1, i),
+        neutralVenue: true,
+      );
+      final forA = aAtHome ? r.homeScore : r.awayScore;
+      final forB = aAtHome ? r.awayScore : r.homeScore;
+      gf += forA;
+      ga += forB;
+      final gd = forA - forB;
+      gdSum += gd;
+      gdSquares += gd * gd;
+      if (gd > 0) {
+        wins++;
+      } else if (gd < 0) {
+        losses++;
+      } else {
+        draws++;
+      }
+      if (forA + forB >= 4) fourPlus++;
+    }
+  }
+  final n = seeds * 2;
+  final meanGd = gdSum / n;
+  return (
+    gf: gf / n,
+    ga: ga / n,
+    total: (gf + ga) / n,
+    win: wins / n,
+    draw: draws / n,
+    loss: losses / n,
+    gdSpread: math.sqrt(math.max(0, gdSquares / n - meanGd * meanGd)),
+    fourPlus: fourPlus / n,
+  );
+}
+
+/// [runPair] with real squads instead of flat ones: each side fields the
+/// `bestEleven` of its [aSquad] / [bSquad] pool in its plan's shape, so every
+/// attribute term of the match-up (pace duel, pass relief, press engine)
+/// reads the real spread. Same seeds and venue handling as [runPair].
+LabStats runSquadPair(
+  LabPlan a,
+  LabPlan b, {
+  required List<Player> aSquad,
+  required List<Player> bSquad,
+  int seeds = 1000,
+}) {
+  MatchTeam team(LabPlan plan, List<Player> pool) {
+    final byId = {for (final p in pool) p.id: p};
+    return MatchTeam(
+      nationId: pool.first.nationId,
+      formation: plan.formation,
+      instructions: plan.instructions,
+      xi: [
+        for (final id in bestEleven(plan.formation, pool))
+          if (id != null) byId[id]!,
+      ],
+    );
+  }
+
+  final x = team(a, aSquad);
+  final y = team(b, bSquad);
+  const engine = MatchEngine();
+  var gf = 0;
+  var ga = 0;
+  var wins = 0;
+  var draws = 0;
+  var losses = 0;
+  var fourPlus = 0;
+  var gdSum = 0;
+  var gdSquares = 0;
+  for (var i = 0; i < seeds; i++) {
+    for (final aAtHome in const [true, false]) {
+      final r = engine.play(
+        home: aAtHome ? x : y,
+        away: aAtHome ? y : x,
+        rng: SeededRng.forFixture(0x7AB2, i),
         neutralVenue: true,
       );
       final forA = aAtHome ? r.homeScore : r.awayScore;

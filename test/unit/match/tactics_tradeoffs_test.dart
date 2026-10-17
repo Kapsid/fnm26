@@ -194,8 +194,9 @@ void main() {
       // 5.3% of all-out mirrors are decided by four or more (the neutral
       // mirror: 3.4%). Goals arriving at a steady rate would give about 10%
       // at 4.7 a game; what holds it down is the scoreline bend in the engine
-      // (`MatchEngine._scorelineOpenness`): in an open game the side in front
-      // sits on its lead and the side behind chases. Until 2026-10-16 this
+      // (`MatchEngine._scorelineOpenness`): when both sides have opened the
+      // game, the side in front sits on its lead and the side behind chases.
+      // Until 2026-10-16 this
       // mirror was 8 goals a game with 14.5% routs.
       final wild = _mirror(_lab('allOutAttack'), _lab('allOutAttack'));
       expect(wild.bigMargin, lessThanOrEqualTo(0.06));
@@ -268,11 +269,11 @@ void main() {
 
   group('mentality trade-off', () {
     test('all-out mentality concedes clearly more', () {
-      // Concedes 1.59 a game against 1.29 (1.23x), and that is close to all
-      // it gains: it scores 1.61. Before the 2026-10-16 build the same
-      // mentality conceded 1.257x but scored far more than it let in, because
-      // its flat attacking gain was twice its defensive cost; the second
-      // assertion is the one that would catch that coming back.
+      // Concedes 1.65 a game against 1.29 (1.28x), and that is close to all
+      // it gains: it scores 1.67 (2026-10-17). Before the 2026-10-16 build
+      // the same mentality conceded 1.257x but scored far more than it let
+      // in, because its flat attacking gain was twice its defensive cost; the
+      // second assertion is the one that would catch that coming back.
       final allOut = _plan(const TacticalInstructions(mentality: 90));
       final mirror = _plan(const TacticalInstructions(mentality: 50));
       expect(
@@ -284,9 +285,9 @@ void main() {
       expect(conceded, greaterThanOrEqualTo(gained * 0.85));
     });
     test('all-out is still a slight net positive against a passive side', () {
-      // +0.033 a game against a side at mentality 30. Attacking must not be
-      // a loss everywhere, or nobody would ever do it; it must not be a
-      // clear win either, or everybody would.
+      // +0.040 a game against a side at mentality 30 (2026-10-17). Attacking
+      // must not be a loss everywhere, or nobody would ever do it; it must
+      // not be a clear win either, or everybody would.
       final gd = _goalDifference(
         const TacticalInstructions(mentality: 90),
         const TacticalInstructions(mentality: 30),
@@ -299,10 +300,11 @@ void main() {
 
   group('pressing trade-off', () {
     test('a high press creates more and concedes more', () {
-      // 1.340 for and 1.347 against, on a base of 1.290 each way: the press
-      // bites the neutral build-up and the neutral side finds the space
-      // behind it (both read with the neutral exposure), and the press opens
-      // the game. Before the 2026-10-16 tuning it conceded LESS than the base.
+      // 1.353 for and 1.362 against (2026-10-17), on a base of 1.290 each
+      // way: the press bites the neutral build-up and the neutral side finds
+      // the space behind it (both read with the neutral exposure), and the
+      // press opens the game. Before the 2026-10-16 tuning it conceded LESS
+      // than the base.
       final base = _plan(const TacticalInstructions());
       final press = _plan(const TacticalInstructions(pressing: 90));
       expect(press.goalsFor, greaterThan(base.goalsFor + 0.03));
@@ -403,9 +405,9 @@ void main() {
         expect(m.total * 4000, closeTo(10324, 1e-6));
       },
     );
-    // +0.093 on average (counter +0.127, highPress +0.020, possession +0.169,
-    // wide +0.057). It read -0.03 before the 2026-10-16 tuning, when the
-    // 3-4-3's shape costs alone lost the wide plan 0.26 a game.
+    // +0.092 on average (counter +0.127, highPress +0.020, possession +0.171,
+    // wide +0.051; 2026-10-17). It read -0.03 before the 2026-10-16 tuning,
+    // when the 3-4-3's shape costs alone lost the wide plan 0.26 a game.
     test('a committed plan beats neutral on average', () {
       final neutral = _lab('neutral');
       const names = ['counter', 'highPress', 'possession', 'wide'];
@@ -443,7 +445,7 @@ void main() {
       }
     });
 
-    // Best counters (2026-10-16): allOutAttack by counter +0.35, highPress by
+    // Best counters (2026-10-17): allOutAttack by counter +0.44, highPress by
     // counter +0.49, counter by possession +0.21 (the patience term), and in
     // the case above neutral by possession +0.17, parkTheBus by possession
     // +0.32, possession by highPress +0.23, wide by counter +0.18 (the back

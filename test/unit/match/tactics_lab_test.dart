@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/entities/player.dart';
 
 import '../../helpers/tactics_lab.dart';
 
@@ -70,6 +72,43 @@ void main() {
           r.win,
           greaterThan(r.loss),
           reason: '80 on $bad against 70 on $best: W ${r.win} L ${r.loss}',
+        );
+      }
+    });
+
+    test('squad still decides with real players', () {
+      // The guard above uses flat attributes, where every attribute term of
+      // the match-up (the pace duel, pass relief, the press engine) reads 0.
+      // These are real squads from `players.json`: Switzerland's best XI
+      // (82.5) against Peru's (72.7), each fielded by `bestEleven` in the
+      // plan's own shape. The three pairings below are the tightest of all
+      // 49 plan-against-plan cells (300 seeds each, 2026-10-17): the
+      // stronger side on its most exposed plan against the weaker side's
+      // best answer to it. Each still goes to the better squad.
+      final players =
+          (jsonDecode(File('assets/data/players.json').readAsStringSync())
+                  as List<dynamic>)
+              .map((e) => Player.fromJson(e as Map<String, Object?>))
+              .toList();
+      List<Player> squad(int nationId) =>
+          players.where((p) => p.nationId == nationId).toList();
+      const switzerland = 52;
+      const peru = 63;
+      for (final (bad, best) in const [
+        ('counter', 'parkTheBus'),
+        ('parkTheBus', 'possession'),
+        ('highPress', 'counter'),
+      ]) {
+        final r = runSquadPair(
+          lab(bad),
+          lab(best),
+          aSquad: squad(switzerland),
+          bSquad: squad(peru),
+        );
+        expect(
+          r.win,
+          greaterThan(r.loss),
+          reason: 'SUI on $bad against PER on $best: W ${r.win} L ${r.loss}',
         );
       }
     });
