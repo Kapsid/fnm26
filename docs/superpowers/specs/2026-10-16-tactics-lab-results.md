@@ -166,3 +166,87 @@ The constants alone could not reach the bar; four terms changed shape (each is e
 | possession | 1.70 | 1.07 | 2.77 | 51.7% | 23.4% | 24.9% | 1.77 | 29.5% |
 | counter | 1.07 | 0.76 | 1.82 | 41.9% | 31.3% | 26.8% | 1.45 | 11.6% |
 | wide | 1.71 | 1.33 | 3.04 | 46.6% | 22.4% | 31.0% | 1.83 | 35.5% |
+
+## Whole-career check (Task 9)
+
+Date: 2026-10-17. Harness: `test/unit/match/tactics_career_lab_test.dart` (env-gated, `FNM_CAREER_LAB`). Each career is `careerService.create(nationId: 12 /* Czechia, world ranking 36 */, rngSeed: 1000 + k)` with the real nation and player data, the plan stored through `TacticService.setFormation` + `setInstructions` (as the tactics screen does), then `SeasonService.advance` (skip) until the first World Championship has a champion: one cycle, about 26-30 manager matches (continental qualifying, Euro, Nations Cup, World Championship qualifying and finals). Every manager match is therefore played by the skip path (`_withManagerTactics`). 200 careers per row, seeds 1000-1199, the same seeds for every plan and for both commits, so rows are paired. Run in 8 shards:
+
+    FNM_CAREER_LAB=neutral,possession,highPress FNM_CAREER_LAB_CAREERS=200 \
+      FNM_CAREER_LAB_MODE=skip FNM_SHARD=i/8 FNM_CAREER_LAB_OUT=build/career_lab \
+      flutter test test/unit/match/tactics_career_lab_test.dart
+    FNM_CAREER_LAB=report FNM_CAREER_LAB_OUT=build/career_lab \
+      flutter test test/unit/match/tactics_career_lab_test.dart
+
+About 8 s a career alone, 15-30 s with 8-16 shards sharing 8 cores; the whole check (2400 careers) took about 2 h of wall clock.
+
+**Plans** (the match lab's `labPlans`): `neutral` (control), `possession` as the sensible committed plan (4-2-3-1, directness 20, tempo 40: positive GD in the equal and weaker After cells, and the best mean GD of any plan against a countering AI, -0.01 / +0.63 / -0.59), and `highPress` as the badly-judged one (the plan a countering side punishes hardest in the After tables: -0.46 a game at equal strength, 49% losses).
+
+**Two modes, because a skipped match records no drilling.** Only `playPlayerMatch` calls `TacticFamiliarityRepository.recordMatch`, so a manager who skips everything never builds familiarity or predictability, `ScoutedPlan.fromDrilling` finds nothing, and the AI never counters him.
+- `skip`: the app exactly as it is for a manager who skips every match. No counter.
+- `drilled`: after each manager match the harness calls `recordMatch` with his shape and plan key, as the played path would, so the next match is countered as it would be for a manager who plays live and never changes plan.
+
+**Baseline** ("today", before the build): the same test file run unchanged on 1574f85 in a separate worktree (only `test/helpers/tactics_lab.dart` reduced to the plan definitions, since the lab helper did not exist yet). The old skip path stores and applies the plan the same way (via `MatchEngine.planRatingDelta`, no opponent, no counter, predictability charged in chemistry).
+
+Columns: WC qualify = in the World Championship finals; Euro finals = in the European Championship finals; WC KO = reached the WC knockout rounds; WC QF+ = quarter-final or better; W/D/L and goals over all the manager's matches (a shootout counts as a draw); Top-8 champion = share of careers whose world champion has a start ranking of 8 or better.
+
+### After (feature/tactics-impact, cc2f385)
+
+| Mode-plan | Careers | WC qualify | Euro finals | WC KO | WC QF+ | WC won | Win | Draw | Loss | GF/g | GA/g | Goals/g | Top-8 champion |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| skip-neutral | 200 | 28.5% | 88.5% | 10.5% | 0.0% | 0.0% | 49.6% | 20.0% | 30.5% | 1.40 | 1.03 | 2.43 | 69.5% |
+| skip-possession | 200 | 44.5% | 93.5% | 19.5% | 0.5% | 0.0% | 55.2% | 15.8% | 29.0% | 1.71 | 1.09 | 2.80 | 73.0% |
+| skip-highPress | 200 | 38.0% | 86.0% | 14.0% | 0.0% | 0.0% | 50.9% | 18.3% | 30.8% | 1.62 | 1.14 | 2.76 | 63.5% |
+| drilled-neutral | 200 | 45.0% | 91.5% | 22.5% | 2.5% | 0.0% | 53.5% | 18.8% | 27.7% | 1.51 | 0.98 | 2.49 | 67.0% |
+| drilled-possession | 200 | 58.5% | 94.5% | 29.5% | 0.5% | 0.0% | 58.4% | 15.2% | 26.4% | 1.79 | 1.01 | 2.80 | 72.5% |
+| drilled-highPress | 200 | 42.5% | 88.0% | 13.5% | 1.0% | 0.0% | 53.4% | 16.3% | 30.3% | 1.75 | 1.21 | 2.96 | 65.5% |
+
+### Before (1574f85)
+
+| Mode-plan | Careers | WC qualify | Euro finals | WC KO | WC QF+ | WC won | Win | Draw | Loss | GF/g | GA/g | Goals/g | Top-8 champion |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| skip-neutral | 200 | 45.5% | 94.0% | 20.0% | 0.5% | 0.0% | 54.0% | 17.2% | 28.8% | 1.65 | 1.02 | 2.67 | 68.5% |
+| skip-possession | 200 | 41.5% | 94.5% | 18.0% | 1.5% | 0.0% | 54.0% | 17.1% | 28.9% | 1.65 | 1.02 | 2.67 | 68.0% |
+| skip-highPress | 200 | 61.0% | 97.5% | 39.5% | 1.0% | 0.0% | 58.3% | 15.8% | 25.9% | 1.76 | 0.93 | 2.69 | 75.0% |
+| drilled-neutral | 200 | 52.0% | 94.5% | 27.5% | 1.0% | 0.0% | 56.8% | 16.3% | 26.9% | 1.71 | 0.96 | 2.68 | 69.0% |
+| drilled-possession | 200 | 46.0% | 94.5% | 24.0% | 1.0% | 0.0% | 56.0% | 16.8% | 27.2% | 1.69 | 0.98 | 2.67 | 66.0% |
+| drilled-highPress | 200 | 61.0% | 97.5% | 43.0% | 1.5% | 0.0% | 59.5% | 15.8% | 24.7% | 1.79 | 0.90 | 2.70 | 76.0% |
+
+### Paired differences (same seeds; mean ± standard error over 200 careers)
+
+| Comparison | GD per game | WC qualify |
+|---|---|---|
+| skip: possession - neutral | +0.255 ± 0.014 | +16.0 ± 4.0 pp |
+| skip: highPress - neutral | +0.108 ± 0.015 | +9.5 ± 4.0 pp |
+| skip: highPress - possession | -0.147 ± 0.014 | -6.5 ± 3.9 pp |
+| drilled: possession - neutral | +0.241 ± 0.013 | +13.5 ± 4.1 pp |
+| drilled: highPress - neutral | +0.012 ± 0.016 | -2.5 ± 4.0 pp |
+| drilled: highPress - possession | -0.229 ± 0.015 | -16.0 ± 4.3 pp |
+| skip-neutral: after - before | -0.263 ± 0.015 | -17.0 ± 4.2 pp |
+| drilled-neutral: after - before | -0.216 ± 0.013 | -7.0 ± 4.5 pp |
+| skip-possession: after - before | -0.002 ± 0.012 | +3.0 ± 3.6 pp |
+| drilled-possession: after - before | +0.063 ± 0.013 | +12.5 ± 3.9 pp |
+| skip-highPress: after - before | -0.350 ± 0.015 | -23.0 ± 4.1 pp |
+| drilled-highPress: after - before | -0.345 ± 0.016 | -18.5 ± 4.6 pp |
+
+Per-career GD a game: after skip neutral +0.363, possession +0.618, highPress +0.471; drilled neutral +0.528, possession +0.769, highPress +0.540. Before skip +0.626 / +0.620 / +0.821; drilled +0.743 / +0.706 / +0.885.
+
+### Against the expectations
+
+| Expectation | Result |
+|---|---|
+| Neutral below today's baseline | **Met.** -0.26 GD a game and -17 pp WC qualification skipped; -0.22 and -7 pp drilled. |
+| Sensible plan >= neutral | **Met.** Possession +0.24 to +0.26 GD a game and +13.5 to +16 pp WC qualification over neutral, in both modes. |
+| Bad plan clearly worst | **Not met.** High press is clearly below possession (-0.15 / -0.23 GD a game) but not below neutral: +0.11 GD and +9.5 pp qualification when skipped, level when drilled (+0.01 GD, -2.5 pp qualification, WC knockouts 13.5% vs 22.5%). Neutral is the worst plan of the three in the skip mode. |
+| World top-8 winner share unchanged | **Met within noise.** 68.5% after vs 70.4% before over all 1200 careers each (±1.3 each); per-row shares (63.5-76%) are 200-career noise (±3.3). |
+
+Reading it: the build removed today's "high press is free" (it was the best plan before, +0.20 GD a game over neutral when skipped) and made neutral costly, but over a Czechia career the press is not punished below neutral. Two reasons visible in the code: in a skip-only career no drilling is recorded so nothing is countered at all, and when it is drilled most of Czechia's opponents (qualifying, Nations Cup) are weaker sides whose read quality is scaled down towards its 0.3 floor (`AiCounter.read`: quality `(strength - 60) / 30`), while the match lab's "countering AI" cells read at predictability 1 and full quality. Not retuned here (Task 9 is measure-only); flagged for the controller.
+
+### Device playtest checklist
+
+- [ ] Live match, all-out attack: feels wild (chances both ways, big scorelines possible, not routs every game).
+- [ ] Live match, park the bus: feels tight (few chances, 0-0 / 1-0 games, hard to lose and hard to win).
+- [ ] Live match, high press: gets caught on the break by a direct, pacey opponent (goals conceded from balls in behind).
+- [ ] Same plan for many matches in a row: opponents visibly counter it (their setup shifts against it; results get harder).
+- [ ] Changing plan escapes the counter (the next opponents stop answering the old plan).
+- [ ] Skipped matches tell the same story as played ones for the same plan (all-out attack skipped still produces open scorelines).
+- [ ] Skip-only career: decide whether skipped matches should add to drilling/predictability (today they do not, so a manager who skips is never countered).
