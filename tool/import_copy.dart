@@ -164,15 +164,15 @@ String? _shapeProblem(
   String language,
 ) {
   final wasPlural = _isPlural(original);
-  if (wasPlural != _isPlural(replacement)) {
-    return '"$key" ($language): the {count, plural, …} skeleton was '
-        '${wasPlural ? "removed" : "added"} — keep it exactly as exported and '
-        'translate only the words inside its branches';
-  }
+  // A language may need a plural the English never had (Bulgarian and
+  // Croatian count their nouns) or have none where English does (Vietnamese
+  // does not inflect for number). Either is fine so long as the string still
+  // uses exactly the values it is passed: the plural's variable counts as one.
+  final reshaped = wasPlural != _isPlural(replacement);
   // Inside a plural the branch selectors ({count}, one, other) are machinery,
   // and languages have different categories (Polish adds few and many), so
   // only the variable and the mandatory `other{` branch are checked.
-  if (wasPlural) {
+  if (wasPlural && !reshaped) {
     final variable = _pluralVariable(original);
     if (_pluralVariable(replacement) != variable) {
       return '"$key" ($language): the plural must count {$variable}';
@@ -182,8 +182,13 @@ String? _shapeProblem(
     }
     return null;
   }
-  final before = _placeholders(original);
-  final after = _placeholders(replacement);
+  final before = _placeholders(original, withPluralVariable: reshaped);
+  final after = _placeholders(replacement, withPluralVariable: reshaped);
+  if (reshaped &&
+      _isPlural(replacement) &&
+      !RegExp(r'\bother\s*\{').hasMatch(replacement)) {
+    return '"$key" ($language): the plural has no other{…} branch';
+  }
   if (before.difference(after).isNotEmpty) {
     final lost = before.difference(after).map((p) => '{$p}').join(', ');
     return '"$key" ($language): lost $lost — the code passes it and the '
@@ -203,8 +208,11 @@ String? _pluralVariable(String v) =>
 bool _isPlural(String v) =>
     RegExp(r'\{\s*\w+\s*,\s*(plural|select)').hasMatch(v);
 
-Set<String> _placeholders(String v) => {
+Set<String> _placeholders(String v, {bool withPluralVariable = false}) => {
   for (final m in RegExp(r'\{(\w+)\}').allMatches(v)) m.group(1)!,
+  if (withPluralVariable)
+    for (final m in RegExp(r'\{\s*(\w+)\s*,\s*(?:plural|select)').allMatches(v))
+      m.group(1)!,
 };
 
 Map<String, Object?> _readArb(String path) =>

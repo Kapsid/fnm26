@@ -6,10 +6,12 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
@@ -53,7 +55,12 @@ final AutoDisposeFutureProviderFamily<PressEffect, int> pressEffectProvider =
       PressEffect of(PressAnswerRow a) =>
           (morale: a.moraleDelta, board: a.boardDelta);
       final now = await repo.pressAnswers(careerId, cycle: career.cyclePointer);
-      final before = career.cyclePointer == 0
+      // Last cycle's words linger only in the job they were said in: a new
+      // board and a new dressing room never heard them.
+      final arrived =
+          (await currentSpell(repo, career)).arrivalCycle ==
+          career.cyclePointer;
+      final before = career.cyclePointer == 0 || arrived
           ? const <PressAnswerRow>[]
           : await repo.pressAnswers(careerId, cycle: career.cyclePointer - 1);
       return Press.carryOver(
@@ -171,8 +178,10 @@ Future<PreviewFacts> _previewFacts(
               career.nationId,
               agingYears: CareerService.agingYears(career),
               saveSeed: career.rngSeed,
-              minAge: 15,
-            );
+              careerId: career.id,
+              minAge: PlayerLifecycle.callUpMinAge,
+            ) +
+        await naturalizedPlayersFor(ref, career);
   final picked = [
     for (final p in squad)
       if (called.contains(p.id)) p,

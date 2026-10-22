@@ -318,6 +318,18 @@
   "@settingsContactCopied": {
     "description": "Snackbar shown after the address is copied."
   },
+  "settingsCommunityTitle": "Community",
+  "@settingsCommunityTitle": {
+    "description": "Settings card heading for the Discord and Instagram links."
+  },
+  "settingsDiscordSubtitle": "Join the community",
+  "@settingsDiscordSubtitle": {
+    "description": "Subtitle under the Discord row in Settings."
+  },
+  "settingsLinkCopied": "Link copied.",
+  "@settingsLinkCopied": {
+    "description": "Snackbar when a community link could not be opened and was copied instead."
+  },
   "@settingsDiagnosticsBlurb": {
     "description": "Explains what the diagnostics log is and that it stays local."
   },
@@ -1338,10 +1350,6 @@
   "@tacticsDrillingDrilled": {
     "description": "Familiarity band for a shape the side knows inside out."
   },
-  "matchInstructionsLocked": "Set before kick-off. You can change shape and make substitutions, but not rewrite your approach mid-match.",
-  "@matchInstructionsLocked": {
-    "description": "Shown in place of the instruction sliders during a live match, where they cannot be changed."
-  },
   "tacticsInstrMentality": "Mentality",
   "@tacticsInstrMentality": {
     "description": "Instruction slider: overall mentality."
@@ -1951,6 +1959,14 @@
   "@hubEventNaturalizationSub": {
     "description": "Hub subtitle for the naturalisation step."
   },
+  "hubEventCampaignVerdict": "Campaign settled: see the verdict",
+  "@hubEventCampaignVerdict": {
+    "description": "Hub action: a campaign's goal is settled; open its verdict."
+  },
+  "hubEventCampaignComplete": "Campaign complete",
+  "@hubEventCampaignComplete": {
+    "description": "Hub action at the end of a campaign's cycle: back to the campaigns list."
+  },
   "hubEventIntercontinentalPlayoff": "The intercontinental play-off",
   "@hubEventIntercontinentalPlayoff": {
     "description": "Hub action: the intercontinental play-off."
@@ -2178,10 +2194,6 @@
   "hubNoMoreFixtures": "No more fixtures this cycle.",
   "@hubNoMoreFixtures": {
     "description": "Shown when no fixtures remain this cycle."
-  },
-  "hubNextMatch": "NEXT MATCH",
-  "@hubNextMatch": {
-    "description": "Heading above the next match card."
   },
   "hubVs": "VS",
   "@hubVs": {
@@ -10970,6 +10982,10 @@
   "@careerImportFailedNeedsPremium": {
     "description": "Import refused: the career is past the free cycle and the player has not bought the upgrade."
   },
+  "careerImportFailedCampaignRun": "That campaign already has a run in progress. Resume or abandon it first.",
+  "@careerImportFailedCampaignRun": {
+    "description": "Import refused: that campaign already has a run in progress."
+  },
   "careerShareFailed": "Could not export that career.",
   "@careerShareFailed": {
     "description": "Snackbar when a per-career export fails."
@@ -14241,5 +14257,463 @@
   "friendliesYourGames": "Your friendlies",
   "@friendliesYourGames": {
     "description": "Tablet friendlies: heading of the panel listing each open window and the opponent picked for it."
+  },
+  "hubEventInjuryCover": "Replace the injured {player}",
+  "@hubEventInjuryCover": {
+    "description": "Hub action: call up a replacement for a squad player injured mid-window.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "hubEventInjuryCoverSub": "{matches, plural, =1{Out for the next match} other{Out for {matches} matches}}. Call someone up, or play on without him.",
+  "@hubEventInjuryCoverSub": {
+    "description": "Hub subtitle under the replacement action.",
+    "placeholders": {
+      "matches": {
+        "type": "int"
+      }
+    }
+  },
+  "injuryCoverTitle": "REPLACEMENT",
+  "@injuryCoverTitle": {
+    "description": "App-bar title of the replacement call-up screen."
+  },
+  "injuryCoverBanner": "{player} is injured. Call up anyone from outside the squad, in any position, or keep him and play on.",
+  "@injuryCoverBanner": {
+    "description": "Banner on the replacement call-up screen.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "injuryCoverConfirm": "Call up {player}",
+  "@injuryCoverConfirm": {
+    "description": "Button: call up the selected replacement.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "injuryCoverKeep": "Keep {player} and play on",
+  "@injuryCoverKeep": {
+    "description": "Button: decline, keep the injured player in the squad.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "injuryCoverPick": "Pick a replacement",
+  "@injuryCoverPick": {
+    "description": "Disabled confirm button before a replacement is picked."
+  },
+  "injuryCoverNone": "Nobody outside the squad is fit to join.",
+  "@injuryCoverNone": {
+    "description": "Empty state: no fit player outside the squad."
+  },
+  "nationNowRanking": "World ranking",
+  "@nationNowRanking": {
+    "description": "Label over the nation's world rank and points in the team page's now block."
+  },
+  "nationNowForm": "Form",
+  "@nationNowForm": {
+    "description": "Label over the last five results."
+  },
+  "nationNowNoForm": "No matches played yet",
+  "@nationNowNoForm": {
+    "description": "Shown in place of the form chips when the nation has played nothing."
+  },
+  "nationNowNext": "Next match",
+  "@nationNowNext": {
+    "description": "Label over the next scheduled match."
+  },
+  "nationNowNoNext": "Nothing scheduled",
+  "@nationNowNoNext": {
+    "description": "Shown when no match is left to play this cycle."
+  },
+  "nationNowSquad": "Squad",
+  "@nationNowSquad": {
+    "description": "Label over the squad strength and its three best players."
+  },
+  "nationNowAgainstYou": "Against you",
+  "@nationNowAgainstYou": {
+    "description": "Label over the manager's record against this nation."
+  },
+  "nationNowRecord": "{w}W {d}D {l}L",
+  "@nationNowRecord": {
+    "description": "The manager's record against a nation: wins, draws, losses.",
+    "placeholders": {
+      "w": {
+        "type": "int"
+      },
+      "d": {
+        "type": "int"
+      },
+      "l": {
+        "type": "int"
+      }
+    }
+  },
+  "nationNowLastMeeting": "Last meeting",
+  "@nationNowLastMeeting": {
+    "description": "Label over the score and date of the latest meeting."
+  },
+  "nationNowOverall": "Overall {value}",
+  "@nationNowOverall": {
+    "description": "The squad strength in the team page's now block.",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "hubUpcoming": "UPCOMING",
+  "@hubUpcoming": {
+    "description": "Heading of the hub card listing the next few fixtures."
+  },
+  "hubFullSchedule": "Full schedule",
+  "@hubFullSchedule": {
+    "description": "Button on the hub card that opens the full schedule screen."
+  },
+  "scheduleTitle": "Schedule",
+  "@scheduleTitle": {
+    "description": "Title of the schedule screen."
+  },
+  "scheduleToday": "Today",
+  "@scheduleToday": {
+    "description": "Marker on the schedule screen at the match the nation is on now."
+  },
+  "scheduleKnockoutPending": "Knockout stage, if you go through",
+  "@scheduleKnockoutPending": {
+    "description": "Schedule row for a knockout stage whose fixtures are not drawn yet."
+  },
+  "scheduleNextRoundPending": "Next round",
+  "@scheduleNextRoundPending": {
+    "description": "Schedule row for the next knockout round, not drawn until the current one is won."
+  },
+  "scheduleFromDate": "From {date}",
+  "@scheduleFromDate": {
+    "description": "Date a pending schedule stage starts from.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "scheduleHomeShort": "H",
+  "@scheduleHomeShort": {
+    "description": "One-letter home marker on a schedule row."
+  },
+  "scheduleAwayShort": "A",
+  "@scheduleAwayShort": {
+    "description": "One-letter away marker on a schedule row."
+  },
+  "tacticsNoPresetsInMatch": "No saved tactics yet. Save one from the Tactics screen before the match.",
+  "@tacticsNoPresetsInMatch": {
+    "description": "Empty state of the in-match tactic presets sheet, which cannot save presets itself."
+  },
+  "homeCampaigns": "Campaigns",
+  "@homeCampaigns": {
+    "description": "Home screen button opening the list of campaigns."
+  },
+  "homeContinueCampaign": "CONTINUE CAMPAIGN",
+  "@homeContinueCampaign": {
+    "description": "Heading over the continue-campaign card on the home screen."
+  },
+  "homeCampaignCycle": "{date} · Cycle {cycle} of {total}",
+  "@homeCampaignCycle": {
+    "description": "Continue-campaign card subtitle: the in-game month and year, then the campaign cycle being played.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "cycle": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "campaignsTitle": "Campaigns",
+  "@campaignsTitle": {
+    "description": "Title of the campaigns list and brief screens."
+  },
+  "campaignTransplantTitle": "The Transplant",
+  "@campaignTransplantTitle": {
+    "description": "Name of the Transplant campaign (San Marino with eight Italians)."
+  },
+  "campaignTransplantTwist": "Eight of Italy's best switch allegiance to San Marino",
+  "@campaignTransplantTwist": {
+    "description": "One-line twist of the Transplant campaign."
+  },
+  "campaignTransplantGoal": "Qualify for the European Championship",
+  "@campaignTransplantGoal": {
+    "description": "Goal of the Transplant campaign."
+  },
+  "campaignGrudgeTitle": "Grudge",
+  "@campaignGrudgeTitle": {
+    "description": "Name of the Grudge campaign (Georgia versus Albania)."
+  },
+  "campaignGrudgeTwist": "Georgia and Albania, drawn together",
+  "@campaignGrudgeTwist": {
+    "description": "One-line twist of the Grudge campaign."
+  },
+  "campaignGrudgeGoal": "Finish above Albania in qualifying",
+  "@campaignGrudgeGoal": {
+    "description": "Goal of the Grudge campaign."
+  },
+  "campaignTransplantIntro": "San Marino have never had a qualifying campaign worth the name. Then eight of Italy's best take up the passport and walk in. You have one cycle to turn a curiosity into a team.",
+  "@campaignTransplantIntro": {
+    "description": "Brief screen introduction of the Transplant campaign."
+  },
+  "campaignGrudgeIntro": "Georgia and Albania have been drawn into the same qualifying group, and neither will forgive a defeat. Finish above Albania, then see how far you can carry it.",
+  "@campaignGrudgeIntro": {
+    "description": "Brief screen introduction of the Grudge campaign."
+  },
+  "campaignStars1Transplant": "Qualify",
+  "@campaignStars1Transplant": {
+    "description": "What earns the first star in the Transplant campaign."
+  },
+  "campaignStars2Transplant": "Reach the knockouts",
+  "@campaignStars2Transplant": {
+    "description": "What earns the second star in the Transplant campaign."
+  },
+  "campaignStars3Transplant": "Win the European Championship",
+  "@campaignStars3Transplant": {
+    "description": "What earns the third star in the Transplant campaign."
+  },
+  "campaignStars1Grudge": "Above Albania",
+  "@campaignStars1Grudge": {
+    "description": "What earns the first star in the Grudge campaign."
+  },
+  "campaignStars2Grudge": "And qualify",
+  "@campaignStars2Grudge": {
+    "description": "What earns the second star in the Grudge campaign."
+  },
+  "campaignStars3Grudge": "And beat them twice",
+  "@campaignStars3Grudge": {
+    "description": "What earns the third star in the Grudge campaign."
+  },
+  "campaignFree": "Free",
+  "@campaignFree": {
+    "description": "Badge on a campaign that costs nothing."
+  },
+  "campaignStart": "Start",
+  "campaignPartOfUnlimited": "Part of Unlimited",
+  "@campaignStart": {
+    "description": "Button starting a campaign."
+  },
+  "@campaignPartOfUnlimited": {
+    "description": "Label of the Start button on a Pro-only campaign card while Unlimited is not owned; tapping it opens the paywall. Short: a button."
+  },
+  "campaignResume": "Resume",
+  "@campaignResume": {
+    "description": "Button resuming a campaign run in progress."
+  },
+  "campaignAbandon": "Abandon",
+  "@campaignAbandon": {
+    "description": "Button (and dialog title) abandoning a campaign run."
+  },
+  "campaignAbandonConfirm": "Abandon this run? Its progress is lost; your stamp stays.",
+  "@campaignAbandonConfirm": {
+    "description": "Confirmation text before abandoning a campaign run."
+  },
+  "campaignMoveToSaves": "Move to saves",
+  "@campaignMoveToSaves": {
+    "description": "Button moving a settled campaign run into the save slots."
+  },
+  "campaignCannotContinue": "This campaign's world is too far from the real one to carry on as a career.",
+  "@campaignCannotContinue": {
+    "description": "Verdict screen note for a campaign that cannot be moved into the saves."
+  },
+  "campaignMoveSlotsFull": "Your save slots are full. Free one first.",
+  "@campaignMoveSlotsFull": {
+    "description": "Snackbar when a campaign cannot be moved because the save slots are full."
+  },
+  "campaignStampConquered": "Conquered",
+  "@campaignStampConquered": {
+    "description": "Stamp text on a campaign that was won."
+  },
+  "campaignStampFailed": "Failed",
+  "@campaignStampFailed": {
+    "description": "Stamp text on a campaign that was failed."
+  },
+  "campaignDifficultyHard": "Hard",
+  "@campaignDifficultyHard": {
+    "description": "Difficulty label of a hard campaign."
+  },
+  "campaignDifficultyMedium": "Medium",
+  "@campaignDifficultyMedium": {
+    "description": "Difficulty label of a medium campaign."
+  },
+  "campaignGoalLabel": "Goal",
+  "@campaignGoalLabel": {
+    "description": "Label above a campaign's goal."
+  },
+  "campaignStarsLabel": "Stars",
+  "@campaignStarsLabel": {
+    "description": "Label above the list of what earns each star."
+  },
+  "campaignRunInProgress": "This campaign already has a run in progress.",
+  "@campaignRunInProgress": {
+    "description": "Brief screen note: this campaign already has a run in progress."
+  },
+  "campaignVerdictWon": "Conquered",
+  "@campaignVerdictWon": {
+    "description": "Headline and stamp word of a campaign that was conquered."
+  },
+  "campaignVerdictLost": "Not this time",
+  "@campaignVerdictLost": {
+    "description": "Headline of a campaign that was failed."
+  },
+  "campaignVerdictContinue": "Continue",
+  "@campaignVerdictContinue": {
+    "description": "Verdict screen button: acknowledge and return to the hub."
+  },
+  "campaignProgressQualifying": "Qualifying: {position}",
+  "@campaignProgressQualifying": {
+    "description": "Hub campaign card: the nation's place in its qualifying group.",
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "campaignProgressRival": "{rival}: {position}",
+  "@campaignProgressRival": {
+    "description": "Hub campaign card: the rival's place in the qualifying group.",
+    "placeholders": {
+      "rival": {
+        "type": "String"
+      },
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "campaignProgressFinals": "Finals: {stage}",
+  "@campaignProgressFinals": {
+    "description": "Hub campaign card: how far the nation has got in the finals.",
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "campaignRunInNumbers": "The run in numbers",
+  "@campaignRunInNumbers": {
+    "description": "Verdict screen heading above the played/won/goals figures."
+  },
+  "campaignRunMeetings": "Meetings won: {won} of {played}",
+  "@campaignRunMeetings": {
+    "description": "Verdict screen: meetings with the rival that were won.",
+    "placeholders": {
+      "won": {
+        "type": "int"
+      },
+      "played": {
+        "type": "int"
+      }
+    }
+  },
+  "campaignPlace": "{which, select, first{1st} second{2nd} third{3rd} other{{n}th}}",
+  "@campaignPlace": {
+    "description": "A group place as an ordinal, 1-based.",
+    "placeholders": {
+      "which": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "campaignGuineasTitle": "Best of Guineas",
+  "@campaignGuineasTitle": {
+    "description": "Name of the Best of Guineas campaign (Equatorial Guinea against the other Guineas)."
+  },
+  "campaignGuineasTwist": "Equatorial Guinea, the lowest-ranked of Africa's Guineas, for two cycles",
+  "@campaignGuineasTwist": {
+    "description": "One-line twist of the Best of Guineas campaign."
+  },
+  "campaignGuineasGoal": "Beat Guinea and Guinea-Bissau",
+  "@campaignGuineasGoal": {
+    "description": "Goal of the Best of Guineas campaign."
+  },
+  "campaignGuineasIntro": "Three African nations carry the name Guinea, and Equatorial Guinea are ranked the lowest of them. You have two cycles to beat Guinea and Guinea-Bissau at least once each, then see how far you can go in the African Championship. Papua New Guinea, the fourth Guinea, are already booked for a friendly.",
+  "@campaignGuineasIntro": {
+    "description": "Brief screen introduction of the Best of Guineas campaign; mentions the friendly booked against Papua New Guinea."
+  },
+  "campaignStars1Guineas": "Beat Guinea and Guinea-Bissau",
+  "@campaignStars1Guineas": {
+    "description": "What earns the first star in the Best of Guineas campaign."
+  },
+  "campaignStars2Guineas": "And qualify for an African Championship",
+  "@campaignStars2Guineas": {
+    "description": "What earns the second star in the Best of Guineas campaign."
+  },
+  "campaignStars3Guineas": "And reach an African Championship quarter-final",
+  "@campaignStars3Guineas": {
+    "description": "What earns the third star in the Best of Guineas campaign."
+  },
+  "campaignYoungFinnsTitle": "Young Finns",
+  "@campaignYoungFinnsTitle": {
+    "description": "Name of the Young Finns campaign (Finland with a golden generation of teenagers)."
+  },
+  "campaignYoungFinnsTwist": "Finland's golden generation of teenagers, for three cycles",
+  "@campaignYoungFinnsTwist": {
+    "description": "One-line twist of the Young Finns campaign."
+  },
+  "campaignYoungFinnsGoal": "Qualify for a World Championship",
+  "@campaignYoungFinnsGoal": {
+    "description": "Goal of the Young Finns campaign."
+  },
+  "campaignYoungFinnsIntro": "Finland's senior players have stepped aside and a golden generation has taken their place: every player you can pick is 18 or younger. Raw today, they have the talent to become one of the best sides in the world, just as Norway's young generation did. You have three cycles to take them to a World Championship, then win the European Championship and the World Championship.",
+  "@campaignYoungFinnsIntro": {
+    "description": "Brief screen introduction of the Young Finns campaign: Finland's seniors replaced by a golden generation, all 18 or younger, who can rise the way Norway's young generation did. Names no real player."
+  },
+  "campaignStars1YoungFinns": "Qualify for a World Championship",
+  "@campaignStars1YoungFinns": {
+    "description": "What earns the first star in the Young Finns campaign."
+  },
+  "campaignStars2YoungFinns": "Win the European Championship",
+  "@campaignStars2YoungFinns": {
+    "description": "What earns the second star in the Young Finns campaign (any of the three cycles)."
+  },
+  "campaignStars3YoungFinns": "Win the World Championship",
+  "@campaignStars3YoungFinns": {
+    "description": "What earns the third star in the Young Finns campaign (any of the three cycles)."
+  },
+  "campaignPro": "Pro",
+  "@campaignPro": {
+    "description": "Badge on a campaign that needs the full game (Pro)."
+  },
+  "campaignProgressCup": "{cup} {year}: {status}",
+  "@campaignProgressCup": {
+    "description": "Hub campaign card: one cycle of the continental championship. {cup} is its name, {year} its year, {status} how it went.",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "campaignCupNotQualified": "Did not qualify",
+  "@campaignCupNotQualified": {
+    "description": "Hub campaign card: the nation did not qualify for that continental championship."
+  },
+  "campaignCupOpen": "To be decided",
+  "@campaignCupOpen": {
+    "description": "Hub campaign card: that continental championship is still to be decided for the nation."
   }
 }

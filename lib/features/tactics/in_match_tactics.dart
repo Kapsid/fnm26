@@ -9,13 +9,16 @@ import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
+import 'package:fnm/features/tactics/tactic_preset_tile.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
@@ -43,6 +46,7 @@ class InMatchTacticsResult {
 
 abstract final class InMatchTacticsKeys {
   static const Key tabletLayout = Key('inMatchTactics.tabletLayout');
+  static const Key presetsButton = Key('inMatchTactics.presets');
 }
 
 /// Opens the full in-match tactics editor (shape, XI, subs and instructions) as
@@ -59,11 +63,13 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   ({int? penalty, int? deadBall}) takers = (penalty: null, deadBall: null),
   Set<int> injuredIds = const {},
   Set<int> sentOffIds = const {},
+  Map<int, MatchCard> cardsByPlayer = const {},
   Map<int, int> energyByPlayer = const {},
   Map<int, int> cameOnAt = const {},
   Map<int, int> wentOffAt = const {},
   List<Color>? teamColors,
   bool tabletLayout = false,
+  List<TacticPreset> presets = const [],
 }) {
   return Navigator.of(context).push<InMatchTacticsResult>(
     MaterialPageRoute(
@@ -79,11 +85,13 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         takers: takers,
         injuredIds: injuredIds,
         sentOffIds: sentOffIds,
+        cardsByPlayer: cardsByPlayer,
         energyByPlayer: energyByPlayer,
         cameOnAt: cameOnAt,
         wentOffAt: wentOffAt,
         teamColors: teamColors,
         tabletLayout: tabletLayout,
+        presets: presets,
       ),
     ),
   );
@@ -101,11 +109,13 @@ class _InMatchTacticsEditor extends StatefulWidget {
     required this.takers,
     this.injuredIds = const {},
     this.sentOffIds = const {},
+    this.cardsByPlayer = const {},
     this.energyByPlayer = const {},
     this.cameOnAt = const {},
     this.wentOffAt = const {},
     this.teamColors,
     this.tabletLayout = false,
+    this.presets = const [],
   });
 
   final int minute;
@@ -132,6 +142,13 @@ class _InMatchTacticsEditor extends StatefulWidget {
   /// used to sit in the squad list unmarked and could be subbed on again.
   final Set<int> sentOffIds;
 
+  /// The card each player is carrying at this minute (see [cardStatusFor]),
+  /// drawn on his ball AND beside his name in every list a substitution is
+  /// made from. A manager reported seeing the cards on the formation and
+  /// having to go back to it from the substitution lists to find out who was
+  /// booked, which is the question half of all substitutions start from.
+  final Map<int, MatchCard> cardsByPlayer;
+
   /// The minute each man already on the pitch came on, for those who were not
   /// in the starting eleven, and the minute each man already taken off went
   /// off. Both are read off the changes the manager has made earlier in this
@@ -150,6 +167,10 @@ class _InMatchTacticsEditor extends StatefulWidget {
   /// match screen from useTabletLayout; false everywhere else, so phones and
   /// tests keep the tabbed page.
   final bool tabletLayout;
+
+  /// The manager's saved tactic presets, offered from the app bar. Apply only:
+  /// saving a style is a pre-match job, and the list is read once on opening.
+  final List<TacticPreset> presets;
 
   @override
   State<_InMatchTacticsEditor> createState() => _InMatchTacticsEditorState();
@@ -385,6 +406,76 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     });
   }
 
+  /// A preset is a shape plus the six sliders, never a squad. The shape goes
+  /// through [_setFormation], so only the players already on the pitch are
+  /// re-placed: with ten men it stays ten and no substitution is spent.
+  void _applyPreset(TacticPreset p) {
+    _setFormation(p.formation);
+    setState(() => _instructions = p.instructions);
+  }
+
+  Future<void> _openPresets() {
+    final l = AppLocalizations.of(context);
+    return showAdaptiveSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheet) => SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(sheet).size.height * 0.8,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              AppSpacing.lg,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.tacticsTacticPresets,
+                  style: AppTypography.titleMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  // Nothing can be saved from here, so the empty case must not
+                  // promise a save the sheet does not offer.
+                  widget.presets.isEmpty
+                      ? l.tacticsNoPresetsInMatch
+                      : l.tacticsPresetsBlurb,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Flexible(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      for (final p in widget.presets)
+                        TacticPresetTile(
+                          preset: p,
+                          onApply: () {
+                            Navigator.of(sheet).pop();
+                            _applyPreset(p);
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void _setFormation(Formation f) {
     if (f == _formation) return;
     // Refits the players who are ALREADY ON THE PITCH to the new shape, and
@@ -587,6 +678,19 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+            key: InMatchTacticsKeys.presetsButton,
+            icon: const Icon(Icons.bookmark_border, color: AppColors.primary),
+            tooltip: l.tacticsTooltipPresets,
+            // Compact: the title and Apply already share a 320px bar, and a
+            // full 48px button squeezed the minute into an ellipsis.
+            style: IconButton.styleFrom(
+              minimumSize: const Size(36, 48),
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            onPressed: _openPresets,
+          ),
           TextButton(
             onPressed: _apply,
             child: Text(
@@ -682,6 +786,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     byId: _byId,
     teamColors: widget.teamColors,
     energyByPlayer: widget.energyByPlayer,
+    cardsByPlayer: widget.cardsByPlayer,
     // Mark the hurt players absent AND injured so their node renders the
     // orange "INJURED — REPLACE" flag, exactly like a pre-match injury.
     absentIds: widget.injuredIds,
@@ -870,6 +975,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                       player: p,
                       detail: _pitchDetail(l, p.id),
                       energy: widget.energyByPlayer[p.id],
+                      card: widget.cardsByPlayer[p.id],
                       selected: comingOff?.id == p.id,
                       // Picking a man to come off moves the sheet to the
                       // men who could replace him. Otherwise choosing him
@@ -894,6 +1000,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                     for (final p in other)
                       SubDragRow(
                         player: p,
+                        card: widget.cardsByPlayer[p.id],
                         trailing: _fitTrailing(p),
                         note: l.tacticsOutOfPositionNote,
                         noteColor: AppColors.warning,
@@ -907,6 +1014,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                       final standing = _standing(p);
                       return SubDragRow(
                         player: p,
+                        card: widget.cardsByPlayer[p.id],
                         trailing: _energyTrailing(p.id),
                         note: standing.note,
                         noteColor: standing.color,
@@ -1378,8 +1486,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       dense: true,
       enabled: !standing.blocked,
       leading: TacticalChip(p.position.label),
-      title: Text(
+      title: playerNameWithCard(
         p.name,
+        widget.cardsByPlayer[p.id],
         style: AppTypography.bodyMedium.copyWith(
           color: onPitch.contains(p.id) || standing.blocked
               ? AppColors.onSurfaceVariant
@@ -1721,12 +1830,16 @@ class _OnPitchRow extends StatelessWidget {
     required this.energy,
     required this.selected,
     required this.onTap,
+    this.card,
   });
 
   final Player player;
 
   /// How he got here: "Started", or the minute he came on.
   final String detail;
+
+  /// The card he is carrying, drawn beside his name.
+  final MatchCard? card;
 
   /// His remaining energy, or null when energy is not being tracked.
   final int? energy;
@@ -1771,11 +1884,21 @@ class _OnPitchRow extends StatelessWidget {
                   children: [
                     // Never cut: a name that ends in an ellipsis is not a name,
                     // and this list is read to find a man by his.
-                    WholeText(
-                      player.name,
-                      maxLines: 1,
-                      shortText: initialledName(player.name),
-                      style: AppTypography.bodyMedium,
+                    Row(
+                      children: [
+                        Flexible(
+                          child: WholeText(
+                            player.name,
+                            maxLines: 1,
+                            shortText: initialledName(player.name),
+                            style: AppTypography.bodyMedium,
+                          ),
+                        ),
+                        if (card case final c?) ...[
+                          const SizedBox(width: AppSpacing.xs),
+                          CardMark(c, size: 14),
+                        ],
+                      ],
                     ),
                     Text(
                       detail,

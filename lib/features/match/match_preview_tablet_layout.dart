@@ -24,6 +24,8 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
     return Scaffold(
       key: MatchPreviewScreen.tabletLayoutKey,
       body: previewAsync.when(
+        // See the phone layout: never the old teamsheet while it refreshes.
+        skipLoadingOnRefresh: false,
         loading: () => _withActions(
           context,
           ref,

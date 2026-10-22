@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -110,11 +111,11 @@ final wcHostThemeProvider = FutureProvider.autoDispose.family<WcHostTheme, int>(
       colors: hostGradientColors(hostNations),
       hostIds: hostIds,
       hostLabel: hostIds
-          .map((h) => byId[h]?.name.toUpperCase() ?? '')
+          .map((h) => byId[h]?.name.capsIn(l.localeName) ?? '')
           .where((s) => s.isNotEmpty)
           .join(' · '),
       competitionLabel: l.tourHostCompetitionYear(
-        l.compWorldCup.toUpperCase(),
+        l.compWorldCup.capsIn(l.localeName),
         year,
       ),
       year: year,
@@ -186,11 +187,11 @@ final continentalHostThemeProvider = FutureProvider.autoDispose
         colors: hostGradientColors(hostNations),
         hostIds: hostIds,
         hostLabel: hostIds
-            .map((h) => byId[h]?.name.toUpperCase() ?? '')
+            .map((h) => byId[h]?.name.capsIn(l.localeName) ?? '')
             .where((s) => s.isNotEmpty)
             .join(' · '),
         competitionLabel: l.tourHostCompetitionYear(
-          continentalCupLabel(l, me.confederation).toUpperCase(),
+          continentalCupLabel(l, me.confederation).capsIn(l.localeName),
           year,
         ),
         year: year,

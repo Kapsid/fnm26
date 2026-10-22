@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
+import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
@@ -1672,6 +1673,16 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<({int careerId, String kind})>> watchedKindsWithPrefix(
+    String prefix,
+  ) async {
+    final rows = await (_db.select(
+      _db.drawsWatched,
+    )..where((t) => t.kind.like('$prefix%'))).get();
+    return [for (final r in rows) (careerId: r.careerId, kind: r.kind)];
+  }
+
+  @override
   Future<void> markDrawWatched(int careerId, int cycle, String kind) async {
     await _db
         .into(_db.drawsWatched)
@@ -1706,12 +1717,25 @@ class DriftCompetitionRepository implements CompetitionRepository {
                     OrderingTerm(expression: t.year, mode: OrderingMode.desc),
               ]))
             .get();
+    // A title two successor states share: the second is attached here rather
+    // than stored (see RealHistory.sharedTitles).
+    final sharedIdByName = <String, int>{
+      for (final n
+          in await (_db.select(_db.nations)..where(
+                (t) => t.name.isIn(RealHistory.sharedTitles.values),
+              ))
+              .get())
+        n.name: n.id,
+    };
     return [
       for (final r in rows)
         (
           year: r.year,
           competition: r.competition,
           championId: r.championId,
+          coChampionId:
+              sharedIdByName[RealHistory
+                  .sharedTitles['${r.competition}|${r.year}']],
           runnerUpId: r.runnerUpId,
           thirdId: r.thirdId,
           thirdId2: r.thirdId2,
@@ -1743,18 +1767,53 @@ class DriftCompetitionRepository implements CompetitionRepository {
     // `excluded.count` is the 1 each row carries in, so
     // `count + excluded.count` is exactly the `count + 1` the per-row
     // statement did.
+    //
+    // The row is one per player. In a career marked [capsFollowNationKind]
+    // it carries the nation he plays for NOW: a naturalised man used to keep
+    // the nation of his first cap, so everything he won for his new country
+    // was credited to the old one's records and missing from the new one's
+    // squad list. The caps he won before the switch (at most
+    // `kMaxCapsToSwitch`) travel with the row; his per-match lines and goals
+    // keep the nation they were logged under. An unmarked (older) career
+    // keeps the first-cap nation, exactly as it always has.
+    final follow = await _capsFollowNation(careerId);
     for (final pass in _distinctPasses(playerIds, (id) => id)) {
       final values = List.filled(pass.length, '(?, ?, ?, 1)').join(', ');
       await _db.customStatement(
         'INSERT INTO appearances (career_id, nation_id, player_id, count) '
         'VALUES $values '
         'ON CONFLICT(career_id, player_id) DO UPDATE SET '
-        'count = count + excluded.count',
+        'count = count + excluded.count'
+        '${follow ? ', nation_id = excluded.nation_id' : ''}',
         [
           for (final id in pass) ...[careerId, nationId, id],
         ],
       );
     }
+  }
+
+  /// Careers known to carry [capsFollowNationKind]. Only the yes is kept: the
+  /// mark is written right after the career row, and a read in between must
+  /// not pin a no for the rest of the session.
+  final Set<int> _capsFollowCareers = {};
+
+  /// Whether [careerId]'s caps log follows the nation a man plays for now
+  /// (see [capsFollowNationKind]).
+  Future<bool> _capsFollowNation(int careerId) async {
+    if (_capsFollowCareers.contains(careerId)) return true;
+    final row =
+        await (_db.select(_db.drawsWatched)
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    t.cycle.equals(0) &
+                    t.kind.equals(capsFollowNationKind),
+              )
+              ..limit(1))
+            .getSingleOrNull();
+    if (row == null) return false;
+    _capsFollowCareers.add(careerId);
+    return true;
   }
 
   /// [items] split into runs that each hold a distinct [key], in order.
@@ -1807,6 +1866,19 @@ class DriftCompetitionRepository implements CompetitionRepository {
               ..limit(limit))
             .get();
     return [for (final r in rows) (playerId: r.playerId, games: r.count)];
+  }
+
+  @override
+  Future<int> capsFor(int careerId, int nationId, int playerId) async {
+    final row =
+        await (_db.select(_db.appearances)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.playerId.equals(playerId) &
+                  t.nationId.equals(nationId),
+            ))
+            .getSingleOrNull();
+    return row?.count ?? 0;
   }
 
   @override
@@ -2380,6 +2452,7 @@ class DriftCompetitionRepository implements CompetitionRepository {
             date: f.date,
             homeNationId: f.homeNationId,
             awayNationId: f.awayNationId,
+            nationId: r.nationId,
             homeScore: f.homeScore,
             awayScore: f.awayScore,
             round: f.round,

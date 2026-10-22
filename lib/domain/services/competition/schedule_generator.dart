@@ -3,6 +3,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/round_robin.dart';
+import 'package:fnm/domain/services/competition/window_plan.dart';
 
 /// A generated fixture, before persistence.
 class GeneratedFixture {
@@ -52,7 +53,7 @@ class ScheduleGenerator {
   const ScheduleGenerator();
 
   /// International match windows (month numbers), in season order.
-  static const _windowMonths = [9, 10, 11, 3, 6];
+  static const _windowMonths = internationalWindowMonths;
 
   /// Days played within each window. Three matchdays, not two: South America's
   /// 10-team single group runs 18 matchdays, and at two per window that spills
@@ -66,6 +67,11 @@ class ScheduleGenerator {
     DateTime? start,
     int? groupSize,
     Map<int, int>? rankById,
+
+    /// Plays the campaign in fluid windows across this span (see
+    /// [WindowPlan]); without it every window holds three matchdays, as a
+    /// cycle opened before 1.0.6 has them.
+    WindowSpan? windows,
   }) {
     final rng = SeededRng(rngSeed ^ 0x5151A);
     final format = QualificationFormat.forConfederation(confederation);
@@ -80,7 +86,9 @@ class ScheduleGenerator {
     final maxRounds = groups
         .map((g) => _roundCount(g.length))
         .fold(0, (m, r) => r > m ? r : m);
-    final dates = _matchdayDates(start ?? DateTime(2026, 9), maxRounds);
+    final dates =
+        (windows == null ? null : WindowPlan.dates(windows, maxRounds)) ??
+        _matchdayDates(start ?? DateTime(2026, 9), maxRounds);
 
     final result = <GeneratedGroup>[];
     for (var gi = 0; gi < groups.length; gi++) {

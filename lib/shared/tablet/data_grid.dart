@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/shared/tablet/tablet_text.dart';
 
 /// One column of a [DataGrid].
@@ -291,7 +292,11 @@ class _DataGridState<T> extends State<DataGrid<T>> {
                     // In capitals like every tablet tab and heading: the
                     // labels come from copy written for the phone, where some
                     // are capitals and some are not.
-                    label: Text(s.label.toUpperCase()),
+                    label: Text(
+                      s.label.capsIn(
+                        Localizations.localeOf(context).languageCode,
+                      ),
+                    ),
                     selected: s.id == set.id,
                     onSelected: (_) => _pickSet(s),
                   ),

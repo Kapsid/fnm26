@@ -1,7 +1,10 @@
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 
 /// Reusable test fixtures so tests stay terse and consistent.
 
@@ -51,3 +54,22 @@ Player player({
   position: position,
   attributes: attributes ?? flatAttributes(),
 );
+
+/// A flat 4-3-3 XI for [nationId] with every attribute at [rating] and
+/// default instructions: the balance guards' and the extra-time tests' side.
+MatchTeam ratedTeam(int nationId, int rating) {
+  final positions = Formation.f433.positions;
+  return MatchTeam(
+    nationId: nationId,
+    instructions: const TacticalInstructions(),
+    xi: [
+      for (var i = 0; i < 11; i++)
+        player(
+          id: nationId * 100 + i,
+          nationId: nationId,
+          position: positions[i],
+          attributes: flatAttributes(rating),
+        ),
+    ],
+  );
+}

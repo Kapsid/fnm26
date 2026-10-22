@@ -15,6 +15,7 @@ import 'package:fnm/domain/services/competition/tournament_holders.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tournaments/drawn_groups.dart';
@@ -462,14 +463,14 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
   final honours = allHonours.where((h) => h.competition == config.name).toList()
     ..sort((a, b) => b.year.compareTo(a.year));
   // A continental edition is staged two years before the World Championship
-  // that closes the cycle. Who held the trophy walking into THIS edition is
-  // the newest honour older than it — never the edition itself, even once its
-  // own final has been recorded (see `TournamentHolders`).
+  // that closes the cycle (the January cups in January of that year). Its
+  // champion holds the trophy once its final is played, the previous one
+  // before (see `TournamentHolders`).
   final editionYear = CareerService.worldCupYear(career.cyclePointer) - 2;
   final holders = TournamentHolders.forEdition(
     honours: honours,
     competition: config.name,
-    beforeYear: editionYear,
+    editionYear: editionYear,
   );
 
   final playerRepo = ref.watch(playerRepositoryProvider);
@@ -499,6 +500,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
         r.playerId,
         agingYears: aging,
         saveSeed: career.rngSeed,
+        careerId: career.id,
         youthBonusByCycle: youth,
         careerStartsByPlayer: careerDev,
       );
@@ -523,6 +525,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
       id,
       agingYears: aging,
       saveSeed: career.rngSeed,
+      careerId: career.id,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );
@@ -589,11 +592,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
       }
     }
     if (meanest != null) {
-      final squad = await playerRepo.byNation(
-        meanest,
-        agingYears: aging,
-        saveSeed: career.rngSeed,
-      );
+      final squad = await careerPoolOf(ref, career, meanest);
       final keeper = squad
           .where((p) => p.category == PositionCategory.goalkeeper)
           .firstOrNull;
@@ -615,11 +614,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
     };
     final candidates = <Player>[];
     for (final nid in candidateNations) {
-      final squad = await playerRepo.byNation(
-        nid,
-        agingYears: aging,
-        saveSeed: career.rngSeed,
-      );
+      final squad = await careerPoolOf(ref, career, nid);
       candidates.addAll(
         formByPlayer.isEmpty
             ? squad.take(16)
@@ -657,6 +652,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
       s.playerId,
       agingYears: aging,
       saveSeed: career.rngSeed,
+      careerId: career.id,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );

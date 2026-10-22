@@ -4,12 +4,15 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/match/match_providers.dart';
 
 /// Smallest squad a manager may call up (must field an XI plus cover).
 const int kMinSquadSize = 16;
@@ -30,10 +33,17 @@ const int kMinFitPlayers = 11;
 /// zero is never something a manager chose — it means the call-ups belong to
 /// another nation (ids are partitioned per nation, so a stale set selects
 /// nothing). Fielding the pool is wrong-ish; fielding nobody is fatal.
+///
+/// The manager's pools read down to [PlayerLifecycle.callUpMinAge] so a U-17
+/// he called up can be fielded; both fallbacks are the SENIORS of [pool], so a
+/// squad nobody named never sweeps in the academy (the same rule as
+/// [defaultCallUpIds]). A pool that stops at seventeen is unaffected.
 List<Player> availableSquad(List<Player> pool, Set<int> callUps) {
-  if (callUps.isEmpty) return pool;
+  List<Player> seniors() =>
+      pool.where((p) => p.age >= PlayerLifecycle.seniorMinAge).toList();
+  if (callUps.isEmpty) return seniors();
   final selected = pool.where((p) => callUps.contains(p.id)).toList();
-  return selected.isEmpty ? pool : selected;
+  return selected.isEmpty ? seniors() : selected;
 }
 
 /// The members of [pool] who can actually play the next match — dropping anyone
@@ -100,19 +110,25 @@ tacticDataProvider = FutureProvider.autoDispose.family<TacticData?, int>((
   // naturalised player could be picked in the squad and then never appear on
   // the tactics screen — nominated, but impossible to field.
   final fullPool = [
-    ...await ref
-        .watch(playerRepositoryProvider)
-        .byNation(
-          career.nationId,
-          agingYears: CareerService.agingYears(career),
-          saveSeed: career.rngSeed,
-          youthBonusByCycle: await ref.watch(
-            youthBonusByCycleProvider(careerId).future,
+    ...await withoutNaturalizedAway(
+      ref,
+      careerId,
+      await ref
+          .watch(playerRepositoryProvider)
+          .byNation(
+            career.nationId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+            careerId: career.id,
+            minAge: PlayerLifecycle.callUpMinAge,
+            youthBonusByCycle: await ref.watch(
+              youthBonusByCycleProvider(careerId).future,
+            ),
+            careerStartsByPlayer: await ref.watch(
+              careerDevBonusProvider(careerId).future,
+            ),
           ),
-          careerStartsByPlayer: await ref.watch(
-            careerDevBonusProvider(careerId).future,
-          ),
-        ),
+    ),
     ...await naturalizedPlayersFor(ref, career),
   ]..sort((a, b) => b.overall.compareTo(a.overall));
   // A man who walked away cannot be fielded, whatever the saved XI says.
@@ -187,7 +203,7 @@ final AutoDisposeFutureProviderFamily<Formation, int> currentFormationProvider =
 /// auto-select its whole academy.
 Set<int> defaultCallUpIds(List<Player> pool) => {
   for (final p in pool)
-    if (p.age >= 17) p.id,
+    if (p.age >= PlayerLifecycle.seniorMinAge) p.id,
 };
 
 final AutoDisposeFutureProviderFamily<SquadData?, int>
@@ -200,22 +216,28 @@ squadDataProvider = FutureProvider.autoDispose.family<SquadData?, int>((
   if (career == null) return null;
   final pool = [
     // Down to fifteen: the U-17s are selectable, tagged, so a genuine wonderkid
-    // is a decision the manager can make. Every other caller keeps the default
+    // is a decision the manager can make. The pools his XI is picked from read
+    // down as far (see [availableSquad]); the world keeps the default
     // seventeen — see [PlayerLifecycle.poolAt].
-    ...await ref
-        .watch(playerRepositoryProvider)
-        .byNation(
-          career.nationId,
-          agingYears: CareerService.agingYears(career),
-          saveSeed: career.rngSeed,
-          minAge: 15,
-          youthBonusByCycle: await ref.watch(
-            youthBonusByCycleProvider(careerId).future,
+    ...await withoutNaturalizedAway(
+      ref,
+      careerId,
+      await ref
+          .watch(playerRepositoryProvider)
+          .byNation(
+            career.nationId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+            careerId: career.id,
+            minAge: PlayerLifecycle.callUpMinAge,
+            youthBonusByCycle: await ref.watch(
+              youthBonusByCycleProvider(careerId).future,
+            ),
+            careerStartsByPlayer: await ref.watch(
+              careerDevBonusProvider(careerId).future,
+            ),
           ),
-          careerStartsByPlayer: await ref.watch(
-            careerDevBonusProvider(careerId).future,
-          ),
-        ),
+    ),
     ...await naturalizedPlayersFor(ref, career),
   ]..sort((a, b) => b.overall.compareTo(a.overall));
   // A man who walked away is not available to be called up again.
@@ -257,25 +279,35 @@ class TacticService {
       // so its answer was never thrown away: the manager fixed the XI and the
       // button went on sending him back to fix it.
       ..invalidate(nextEventProvider(careerId));
+    // And the match about to be played. The pre-match screen holds it open
+    // underneath tactics, and refreshing it on the way back missed every other
+    // way in (the set-up warning) and any write still landing.
+    _refreshMatchPreview(_ref, careerId);
   }
 
   Future<List<Player>> _availablePool(int careerId) async {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return const [];
     final pool = [
-      ...await _ref
-          .read(playerRepositoryProvider)
-          .byNation(
-            career.nationId,
-            agingYears: CareerService.agingYears(career),
-            saveSeed: career.rngSeed,
-            youthBonusByCycle: await _ref.read(
-              youthBonusByCycleProvider(careerId).future,
+      ...await withoutNaturalizedAway(
+        _ref,
+        careerId,
+        await _ref
+            .read(playerRepositoryProvider)
+            .byNation(
+              career.nationId,
+              agingYears: CareerService.agingYears(career),
+              saveSeed: career.rngSeed,
+              careerId: career.id,
+              minAge: PlayerLifecycle.callUpMinAge,
+              youthBonusByCycle: await _ref.read(
+                youthBonusByCycleProvider(careerId).future,
+              ),
+              careerStartsByPlayer: await _ref.read(
+                careerDevBonusProvider(careerId).future,
+              ),
             ),
-            careerStartsByPlayer: await _ref.read(
-              careerDevBonusProvider(careerId).future,
-            ),
-          ),
+      ),
       ...await naturalizedPlayersFor(_ref, career),
     ]..sort((a, b) => b.overall.compareTo(a.overall));
     final callUps = await _ref.read(squadRepositoryProvider).callUps(careerId);
@@ -399,19 +431,25 @@ class SquadService {
       final pool = career == null
           ? <Player>[]
           : [
-              ...await _ref
-                  .read(playerRepositoryProvider)
-                  .byNation(
-                    career.nationId,
-                    agingYears: CareerService.agingYears(career),
-                    saveSeed: career.rngSeed,
-                    youthBonusByCycle: await _ref.read(
-                      youthBonusByCycleProvider(careerId).future,
+              ...await withoutNaturalizedAway(
+                _ref,
+                careerId,
+                await _ref
+                    .read(playerRepositoryProvider)
+                    .byNation(
+                      career.nationId,
+                      agingYears: CareerService.agingYears(career),
+                      saveSeed: career.rngSeed,
+                      careerId: career.id,
+                      minAge: PlayerLifecycle.callUpMinAge,
+                      youthBonusByCycle: await _ref.read(
+                        youthBonusByCycleProvider(careerId).future,
+                      ),
+                      careerStartsByPlayer: await _ref.read(
+                        careerDevBonusProvider(careerId).future,
+                      ),
                     ),
-                    careerStartsByPlayer: await _ref.read(
-                      careerDevBonusProvider(careerId).future,
-                    ),
-                  ),
+              ),
               ...await naturalizedPlayersFor(_ref, career),
             ];
       // A squad may now legitimately include banned/injured players (the
@@ -437,8 +475,51 @@ class SquadService {
       ..invalidate(tacticDataProvider)
       // The call-up can repair the XI too; see [TacticService._update].
       ..invalidate(nextEventProvider(careerId));
+    _refreshMatchPreview(_ref, careerId);
     return true;
+  }
+
+  /// Sends [outId], injured mid-window, home and calls [inId] up in his place:
+  /// the squad stays the same size, so its limits hold.
+  ///
+  /// Not through [setCallUps], which re-picks the whole XI when a starter is
+  /// dropped. Only the injured man's slot is emptied; the forced "reshape your
+  /// XI" step then asks the manager to fill it, as it would have anyway.
+  Future<void> replaceInjured(
+    int careerId, {
+    required int outId,
+    required int inId,
+  }) async {
+    final squads = _ref.read(squadRepositoryProvider);
+    final current = await squads.callUps(careerId);
+    await squads.setCallUps(careerId, {...current}
+      ..remove(outId)
+      ..add(inId));
+    final tacticRepo = _ref.read(tacticsRepositoryProvider);
+    final tactic = await tacticRepo.tacticForCareer(careerId);
+    if (tactic != null && tactic.lineup.contains(outId)) {
+      await tacticRepo.saveTactic(
+        careerId,
+        tactic.copyWith(
+          lineup: [for (final id in tactic.lineup) id == outId ? null : id],
+        ),
+      );
+    }
+    _ref
+      ..invalidate(squadDataProvider)
+      ..invalidate(tacticDataProvider)
+      ..invalidate(nextEventProvider(careerId));
+    _refreshMatchPreview(_ref, careerId);
   }
 }
 
 final Provider<SquadService> squadServiceProvider = Provider(SquadService.new);
+
+/// Refreshes the pre-match preview after a change to the teamsheet, if one is
+/// open. Only if: invalidating one nobody holds would build it, squads and a
+/// whole simulated match, for every tweak made from anywhere.
+void _refreshMatchPreview(Ref ref, int careerId) {
+  if (ref.exists(matchPreviewProvider(careerId))) {
+    ref.invalidate(matchPreviewProvider(careerId));
+  }
+}

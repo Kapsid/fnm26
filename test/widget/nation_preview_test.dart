@@ -74,7 +74,11 @@ void main() {
       saveOverall = squadOverall(
         await c
             .read(playerRepositoryProvider)
-            .byNation(me.id, saveSeed: save.career.rngSeed),
+            .byNation(
+              me.id,
+              saveSeed: save.career.rngSeed,
+              careerId: save.career.id,
+            ),
       );
       await c.read(nationStrengthsProvider.future);
       await c.read(nationsProvider.future);

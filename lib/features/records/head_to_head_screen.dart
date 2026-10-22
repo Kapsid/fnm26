@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
@@ -77,6 +78,7 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
                 children: [
                   Expanded(
                     child: _NationSlot(
+                      careerId: widget.careerId,
                       label: l.recordsHome,
                       nation: _a == null ? null : byId[_a],
                       onTap: () =>
@@ -96,6 +98,7 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
                   ),
                   Expanded(
                     child: _NationSlot(
+                      careerId: widget.careerId,
                       label: l.recordsAway,
                       nation: _b == null ? null : byId[_b],
                       onTap: () =>
@@ -153,13 +156,18 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
 
 class _NationSlot extends StatelessWidget {
   const _NationSlot({
+    required this.careerId,
     required this.label,
     required this.nation,
     required this.onTap,
   });
 
+  final int careerId;
   final String label;
   final Nation? nation;
+
+  /// Opens the nation picker. The flag and name of a chosen nation open that
+  /// nation's page instead; the label and the card's edge still pick.
   final VoidCallback onTap;
 
   @override
@@ -176,17 +184,31 @@ class _NationSlot extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          FlagDisc(nation?.code ?? '??', size: 40),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            nation?.name ?? l.recordsSelect,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: AppTypography.bodyMedium.copyWith(
-              color: nation == null ? AppColors.onSurfaceVariant : null,
-            ),
-          ),
+          () {
+            final chosen = nation;
+            final identity = Column(
+              children: [
+                FlagDisc(chosen?.code ?? '??', size: 40),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  chosen?.name ?? l.recordsSelect,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: chosen == null ? AppColors.onSurfaceVariant : null,
+                  ),
+                ),
+              ],
+            );
+            return chosen == null
+                ? identity
+                : NationTap(
+                    careerId: careerId,
+                    nationId: chosen.id,
+                    child: identity,
+                  );
+          }(),
         ],
       ),
     );
@@ -457,11 +479,13 @@ class _Record extends ConsumerWidget {
             ),
           ),
           Expanded(
-            child: Text(
-              label.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
+            child: Builder(
+              builder: (context) => Text(
+                label.capsIn(Localizations.localeOf(context).languageCode),
+                textAlign: TextAlign.center,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
               ),
             ),
           ),

@@ -32,6 +32,7 @@ void main() {
     year: year,
     competition: 'European Championship',
     championId: champion,
+    coChampionId: null,
     runnerUpId: runnerUp,
     thirdId: third,
     thirdId2: null,

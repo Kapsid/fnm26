@@ -6,13 +6,14 @@ Fixture _f({
   required int md,
   String? round,
   required int day,
+  int month = 1,
   bool played = false,
 }) => Fixture(
-  id: day,
+  id: month * 100 + day,
   careerId: 1,
   competitionId: 1,
   matchday: md,
-  date: DateTime(2026, 1, day),
+  date: DateTime(2026, month, day),
   homeNationId: 1,
   awayNationId: 2,
   round: round,
@@ -58,93 +59,123 @@ void main() {
     });
 
     test(
-      'period starts before qualifying, every window, friendlies, tournaments',
+      'period starts at each campaign, each window, friendlies, tournaments',
       () {
-        // Qualifying re-opens at MD1, 3, 5, … — every international WINDOW,
-        // which is two matches. It used to be every four matchdays, so a
-        // manager named one squad and lived with it through four or six
-        // qualifiers spread over half a year, which nobody does.
+        // A window is a calendar month, whatever it holds: two, three or four
+        // matches. It used to be every second matchday, which opened a call-up
+        // in the middle of a three-match window.
         expect(
-          Nomination.isPeriodStart(_f(md: 1, round: null, day: 1), null),
+          Nomination.isPeriodStart(_f(md: 1, round: null, day: 6), null),
           isTrue,
         );
-        // The second match of a gathering is played by the side named for it.
+        // The rest of the window is played by the side named for it.
         expect(
           Nomination.isPeriodStart(
-            _f(md: 2, round: null, day: 2),
-            _f(md: 1, round: null, day: 1),
+            _f(md: 2, round: null, day: 9),
+            _f(md: 1, round: null, day: 6),
           ),
           isFalse,
         );
         expect(
           Nomination.isPeriodStart(
-            _f(md: 3, round: null, day: 3),
-            _f(md: 2, round: null, day: 2),
-          ),
-          isTrue,
-        );
-        expect(
-          Nomination.isPeriodStart(
-            _f(md: 5, round: null, day: 5),
-            _f(md: 4, round: null, day: 4),
-          ),
-          isTrue,
-        );
-        // MD6 is the second match of the MD5 gathering, not a new one.
-        expect(
-          Nomination.isPeriodStart(
-            _f(md: 6, round: null, day: 6),
-            _f(md: 5, round: null, day: 5),
+            _f(md: 3, round: null, day: 12),
+            _f(md: 2, round: null, day: 9),
           ),
           isFalse,
+          reason: 'a third match in the same window',
+        );
+        // The next month is the next window.
+        expect(
+          Nomination.isPeriodStart(
+            _f(md: 4, round: 'CQ', day: 6, month: 2),
+            _f(md: 3, round: 'CQ', day: 12),
+          ),
+          isTrue,
+        );
+        // A Nations Cup window too.
+        expect(
+          Nomination.isPeriodStart(
+            _f(md: 3, round: 'NGROUP', day: 6, month: 2),
+            _f(md: 2, round: 'NGROUP', day: 9),
+          ),
+          isTrue,
         );
         // A friendly opening a window (previous wasn't a friendly).
         expect(
           Nomination.isPeriodStart(
-            _f(md: 1, round: 'FRIENDLY', day: 20),
-            _f(md: 10, round: null, day: 10),
+            _f(md: 1, round: 'FRIENDLY', day: 14, month: 3),
+            _f(md: 10, round: null, day: 9, month: 2),
+          ),
+          isTrue,
+        );
+        // Friendlies in different windows are different gatherings.
+        expect(
+          Nomination.isPeriodStart(
+            _f(md: 2, round: 'FRIENDLY', day: 14, month: 6),
+            _f(md: 1, round: 'FRIENDLY', day: 14, month: 3),
           ),
           isTrue,
         );
         // A tournament group's first match.
         expect(
-          Nomination.isPeriodStart(_f(md: 1, round: 'GROUP', day: 30), null),
+          Nomination.isPeriodStart(
+            _f(md: 1, round: 'GROUP', day: 11, month: 6),
+            null,
+          ),
           isTrue,
         );
-        // A knockout round mid-tournament is NOT a new window.
+        // A knockout round is NOT a new window, even in the next month.
         expect(
           Nomination.isPeriodStart(
-            _f(md: 1, round: 'QF', day: 40),
-            _f(md: 3, round: 'GROUP', day: 39),
+            _f(md: 1, round: 'QF', day: 2, month: 7),
+            _f(md: 3, round: 'GROUP', day: 28, month: 6),
           ),
           isFalse,
         );
       },
     );
 
-    test('currentPeriod covers up to the next window', () {
+    test('currentPeriod covers the rest of the window', () {
       final fixtures = [
-        _f(md: 1, round: null, day: 1, played: true), // played qualifier
-        _f(md: 2, round: null, day: 2), // next unplayed
-        _f(md: 3, round: null, day: 3),
-        _f(md: 4, round: null, day: 4),
-        _f(md: 5, round: null, day: 5),
-        _f(md: 6, round: null, day: 6),
+        _f(md: 1, round: null, day: 6, played: true), // played qualifier
+        _f(md: 2, round: null, day: 9), // next unplayed
+        _f(md: 3, round: null, day: 12),
+        _f(md: 4, round: null, day: 6, month: 2),
+        _f(md: 5, round: null, day: 9, month: 2),
+        _f(md: 6, round: null, day: 6, month: 3),
       ];
       final period = Nomination.currentPeriod(fixtures);
-      // MD2 is the back half of the MD1 gathering; MD3 opens the next one, so
-      // the squad currently named has exactly one match left to play.
-      expect(period.map((f) => f.matchday), [2]);
+      // The rest of the first window; the second opens in month 2.
+      expect(period.map((f) => f.matchday), [2, 3]);
       // Mid-period → the nomination window is closed.
       expect(Nomination.windowOpen(fixtures), isFalse);
     });
 
     test('window is open when the next fixture starts a period', () {
       final fixtures = [
-        _f(md: 4, round: null, day: 4, played: true),
-        _f(md: 5, round: null, day: 5), // next unplayed = MD5 boundary
+        _f(md: 4, round: null, day: 12, played: true),
+        _f(md: 5, round: null, day: 6, month: 2), // the next window
       ];
       expect(Nomination.windowOpen(fixtures), isTrue);
+    });
+
+    test('the matches already played in this window', () {
+      final fixtures = [
+        _f(md: 1, round: null, day: 6, played: true),
+        _f(md: 2, round: null, day: 9, played: true),
+        _f(md: 3, round: null, day: 12),
+        _f(md: 4, round: null, day: 6, month: 2),
+      ];
+      expect(
+        Nomination.playedInCurrentPeriod(fixtures).map((f) => f.matchday),
+        [1, 2],
+      );
+      // Between windows: nothing played in the next one yet.
+      final between = [
+        _f(md: 1, round: null, day: 6, played: true),
+        _f(md: 2, round: null, day: 6, month: 2),
+      ];
+      expect(Nomination.playedInCurrentPeriod(between), isEmpty);
     });
   });
 }

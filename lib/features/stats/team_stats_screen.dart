@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/features/records/record_book_screen.dart';
@@ -308,13 +309,15 @@ class _TeamHeader extends ConsumerWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label.toUpperCase(),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: AppTypography.labelSmall.copyWith(
-            fontSize: 9,
-            color: AppColors.onSurfaceVariant,
+        Builder(
+          builder: (context) => Text(
+            label.capsIn(Localizations.localeOf(context).languageCode),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall.copyWith(
+              fontSize: 9,
+              color: AppColors.onSurfaceVariant,
+            ),
           ),
         ),
         Text(
@@ -502,10 +505,12 @@ class _CareerRecord extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title.toUpperCase(),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.primary,
+          Builder(
+            builder: (context) => Text(
+              title.capsIn(Localizations.localeOf(context).languageCode),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.primary,
+              ),
             ),
           ),
           const SizedBox(height: AppSpacing.sm),

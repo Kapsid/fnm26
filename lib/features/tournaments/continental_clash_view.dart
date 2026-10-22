@@ -28,7 +28,12 @@ class ContinentalClashView extends ConsumerWidget {
                   return Center(child: Text(l.tourContNoSaveFound));
                 }
                 return TabBarView(
-                  children: _clashTabViews(context, data, wide: true),
+                  children: _clashTabViews(
+                    context,
+                    data,
+                    careerId: careerId,
+                    wide: true,
+                  ),
                 );
               },
             ),

@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -83,12 +85,35 @@ class CareerTransferService {
     final read = await CareerBundle.readFile(File(path));
     if (read.rejection != null) return read.rejection;
     final premium = _ref.read(premiumUnlockedProvider);
+    // An unmoved campaign run holds no slot and may not duplicate a run.
+    final kinds = CareerBundle.watchedKindsOf(read.bundle!);
+    final campaign = kinds.contains(campaignMovedKind)
+        ? null
+        : kinds
+              .map(
+                (k) => k.startsWith('campaign:')
+                    ? Campaigns.byId(k.substring('campaign:'.length))
+                    : null,
+              )
+              .nonNulls
+              .firstOrNull;
     final existing = await _ref.read(careerRepositoryProvider).all();
-    if (!canCreateSave(
-      existingSaves: existing.length,
-      premiumUnlocked: premium,
-    )) {
-      return BundleRejection.slotsFull;
+    final tags = await campaignTags(_ref.read(competitionRepositoryProvider));
+    if (campaign != null) {
+      final runExists = existing.any((c) {
+        final t = tags[c.id];
+        return t != null && !t.moved && t.def.id == campaign.id;
+      });
+      if (runExists) return BundleRejection.campaignRunExists;
+    } else {
+      // An unmoved campaign run holds no slot (see countsAsSave).
+      final slotsUsed = existing.where((c) => countsAsSave(tags[c.id])).length;
+      if (!canCreateSave(
+        existingSaves: slotsUsed,
+        premiumUnlocked: premium,
+      )) {
+        return BundleRejection.slotsFull;
+      }
     }
     if (importNeedsPremium(
       cyclePointer: CareerBundle.cyclePointerOf(read.bundle!),
@@ -97,7 +122,9 @@ class CareerTransferService {
       return BundleRejection.needsPremium;
     }
     await CareerBundle.import(_ref.read(appDatabaseProvider), read.bundle!);
-    _ref.invalidate(savesProvider);
+    _ref
+      ..invalidate(savesProvider)
+      ..invalidate(campaignRunsProvider);
     return null;
   }
 }

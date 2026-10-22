@@ -86,6 +86,7 @@ Future<({int playerId, int sourceNationId})> offerNaturalization(
           source.id,
           agingYears: CareerService.agingYears(save.career),
           saveSeed: save.career.rngSeed,
+          careerId: save.career.id,
         );
     final best = pool.reduce((a, b) => a.overall >= b.overall ? a : b);
     await save.container

@@ -81,6 +81,25 @@ void main() {
       expect(await written(tester, 'en', AppDate.monthYear), 'Nov 2030');
     });
 
+    testWidgets('Turkish and Greek dates have their intl data and capitals', (
+      tester,
+    ) async {
+      // intl's date symbols for the later languages ship with
+      // flutter_localizations like the first seven; a locale without them
+      // throws here rather than in front of a player. The caps stamp goes
+      // through capsFor: Greek drops the tonos (Σάβ → ΣΑΒ).
+      expect(await written(tester, 'tr', AppDate.dayMonthYear), '30 Kas 2030');
+      expect(
+        await written(tester, 'tr', AppDate.weekdayDayMonthCaps),
+        'CMT 30 KAS',
+      );
+      expect(await written(tester, 'el', AppDate.dayMonthYear), '30 Νοε 2030');
+      expect(
+        await written(tester, 'el', AppDate.weekdayDayMonthCaps),
+        'ΣΑΒ 30 ΝΟΕ',
+      );
+    });
+
     testWidgets('the kick-off stamp keeps its diacritics in upper case', (
       tester,
     ) async {
@@ -109,9 +128,9 @@ void main() {
     testWidgets('a date follows the language the screen around it is in', (
       tester,
     ) async {
-      // Portuguese is neither of the two languages this app speaks. Flutter
+      // Romanian is not a language this app speaks. Flutter
       // resolves an unknown one to the FIRST entry in `supportedLocales`,
-      // which gen-l10n sorts alphabetically, so a Portuguese phone is shown
+      // which gen-l10n sorts alphabetically, so a Romanian phone was shown
       // Czech. Whatever one thinks of that, the date has to agree with the
       // words around it rather than going off on its own — which is what it
       // did before [AppDate], when every screen in the game could be Czech
@@ -124,10 +143,10 @@ void main() {
             return const SizedBox.shrink();
           },
         ),
-        locale: const Locale('pt'),
+        locale: const Locale('ro'),
       );
       expect(
-        await written(tester, 'pt', AppDate.dayMonthYear),
+        await written(tester, 'ro', AppDate.dayMonthYear),
         resolved.languageCode == 'cs' ? '30. lis 2030' : '30 Nov 2030',
       );
     });

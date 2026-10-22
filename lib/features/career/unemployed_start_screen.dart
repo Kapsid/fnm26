@@ -6,6 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
@@ -205,7 +206,7 @@ class _OfferCard extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Text(
-            l.bottomStartAccept.toUpperCase(),
+            l.bottomStartAccept.capsIn(l.localeName),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.w700,

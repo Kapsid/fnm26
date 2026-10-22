@@ -85,24 +85,31 @@ class _TimelineRow extends StatelessWidget {
 
   Widget _entry(BuildContext context, {required bool alignEnd}) {
     final isGoal = event.type == MatchEventType.goal;
-    final iconData = switch (event.type) {
-      MatchEventType.goal => Icons.sports_soccer,
-      MatchEventType.substitution => Icons.swap_horiz,
-      MatchEventType.yellowCard ||
-      MatchEventType.redCard => Icons.square_rounded,
-      MatchEventType.injury => Icons.medical_services,
+    // A card is the shared [CardMark], the same one the pitch and the
+    // substitution lists wear. A second booking shows both cards, the way it
+    // happened; a straight red shows one. The manager can tell at a glance
+    // which one cost him the man.
+    final icon = switch (event.type) {
+      MatchEventType.goal => const Icon(
+        Icons.sports_soccer,
+        size: 16,
+        color: AppColors.primary,
+      ),
+      MatchEventType.substitution => const Icon(
+        Icons.swap_horiz,
+        size: 16,
+        color: AppColors.onSurfaceVariant,
+      ),
+      MatchEventType.injury => const Icon(
+        Icons.medical_services,
+        size: 16,
+        color: AppColors.onSurfaceVariant,
+      ),
+      MatchEventType.yellowCard => const CardMark(MatchCard.yellow),
+      MatchEventType.redCard => CardMark(
+        event.secondYellow ? MatchCard.secondYellow : MatchCard.red,
+      ),
     };
-    final iconColor = switch (event.type) {
-      MatchEventType.goal => AppColors.primary,
-      MatchEventType.yellowCard => _yellowCard,
-      MatchEventType.redCard => _redCard,
-      _ => AppColors.onSurfaceVariant,
-    };
-    // A second booking shows both cards, the way it happened; a straight red
-    // shows one. The manager can tell at a glance which one cost him the man.
-    final icon = event.type == MatchEventType.redCard && event.secondYellow
-        ? const _SecondYellowIcon()
-        : Icon(iconData, size: 16, color: iconColor);
     final label = switch (event.type) {
       MatchEventType.substitution =>
         '${_abbrevName(event.playerName)} ↔ '
@@ -141,33 +148,6 @@ class _TimelineRow extends StatelessWidget {
       ),
     );
   }
-}
-
-const Color _yellowCard = Color(0xFFEFC94C);
-const Color _redCard = Color(0xFFD64545);
-
-/// The two-card mark of a second booking: the yellow he was already on, with
-/// the red that followed it overlapping in front.
-class _SecondYellowIcon extends StatelessWidget {
-  const _SecondYellowIcon();
-
-  @override
-  Widget build(BuildContext context) => const SizedBox(
-    width: 22,
-    height: 16,
-    child: Stack(
-      children: [
-        Positioned(
-          left: 0,
-          child: Icon(Icons.square_rounded, size: 14, color: _yellowCard),
-        ),
-        Positioned(
-          right: 0,
-          child: Icon(Icons.square_rounded, size: 16, color: _redCard),
-        ),
-      ],
-    ),
-  );
 }
 
 /// The clock label for an event: a stoppage-time event reads "90+3", everything
@@ -520,7 +500,7 @@ class _StatBar extends StatelessWidget {
                     horizontal: AppSpacing.sm,
                   ),
                   child: Text(
-                    label.toUpperCase(),
+                    label.capsIn(Localizations.localeOf(context).languageCode),
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1244,6 +1224,7 @@ class HalfTimePrompt extends StatelessWidget {
     required this.onTalk,
     required this.onTactics,
     required this.onContinue,
+    this.maxSubs = kMaxSubs,
   });
 
   /// Which interval this is — half time, the break before extra time, or the
@@ -1257,6 +1238,10 @@ class HalfTimePrompt extends StatelessWidget {
   final bool playerIsHome;
   final int possession;
   final int subsUsed;
+
+  /// The substitutions allowed: one more at the extra-time breaks
+  /// ([kMaxSubsExtraTime]) than at half time.
+  final int maxSubs;
   final TeamTalkTone? selectedTalk;
 
   /// The tones offered this interval — a seeded, varied subset of the full set
@@ -1389,7 +1374,7 @@ class HalfTimePrompt extends StatelessWidget {
                     label: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        l10n.matchTacticsWithSubs(subsUsed, kMaxSubs),
+                        l10n.matchTacticsWithSubs(subsUsed, maxSubs),
                         maxLines: 1,
                         softWrap: false,
                       ),

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
@@ -33,6 +34,35 @@ String? drawKindForFixture(Fixture f) {
   // the cycle's third year, long after they were played.
   if (round.startsWith('N')) return nationsCupDrawKind;
   return worldCupDrawKind; // WC finals: GROUP/R32/R16/QF/SF/3RD/FINAL
+}
+
+/// Which of the draws that gate fixtures the player has watched in [cycle].
+///
+/// The Results feed and a nation's team page both filter fixtures through this,
+/// so neither shows an opponent the balls have not yet picked.
+Future<Set<String>> watchedFixtureDraws(
+  CompetitionRepository comp,
+  int careerId,
+  int cycle,
+) async {
+  final watched = <String>{};
+  for (final kind in const [
+    worldCupQualDrawKind,
+    continentalQualDrawKind,
+    continentalFinalsDrawKind,
+    worldCupDrawKind,
+    nationsCupDrawKind,
+  ]) {
+    if (await comp.hasWatchedDraw(careerId, cycle, kind)) watched.add(kind);
+  }
+  return watched;
+}
+
+/// Whether [f] may be shown: played, a friendly, or its draw has been watched.
+bool fixtureRevealed(Fixture f, Set<String> watched) {
+  if (f.played) return true; // results already played are history
+  final kind = drawKindForFixture(f);
+  return kind == null || watched.contains(kind);
 }
 
 /// The watched-draw key that unlocks a group table, from its competition

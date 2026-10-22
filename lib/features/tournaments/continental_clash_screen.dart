@@ -64,7 +64,9 @@ class ContinentalClashScreen extends ConsumerWidget {
             if (data == null) {
               return Center(child: Text(l.tourContNoSaveFound));
             }
-            return TabBarView(children: _clashTabViews(context, data));
+            return TabBarView(
+              children: _clashTabViews(context, data, careerId: careerId),
+            );
           },
         ),
       ),
@@ -83,6 +85,7 @@ List<Tab> _clashTabs(AppLocalizations l) => [
 List<Widget> _clashTabViews(
   BuildContext context,
   ContinentalClashData data, {
+  required int careerId,
   bool wide = false,
 }) {
   final l = AppLocalizations.of(context);
@@ -91,6 +94,7 @@ List<Widget> _clashTabViews(
   final thisCycle = data.tie == null
       ? TournamentSoon(message: l.tourContClashSoon)
       : _ThisCycle(
+          careerId: careerId,
           tie: data.tie!,
           playerNationId: data.playerNationId,
           code: code,
@@ -119,12 +123,14 @@ List<Widget> _clashTabViews(
 /// This cycle's tie: both champions face to face, with the result once played.
 class _ThisCycle extends StatelessWidget {
   const _ThisCycle({
+    required this.careerId,
     required this.tie,
     required this.playerNationId,
     required this.code,
     required this.name,
   });
 
+  final int careerId;
   final Fixture tie;
   final int playerNationId;
   final String Function(int) code;
@@ -197,21 +203,25 @@ class _ThisCycle extends StatelessWidget {
     );
   }
 
-  Widget _side(int nationId) => Column(
-    children: [
-      FlagDisc(
-        code(nationId),
-        size: 44,
-        highlighted: nationId == playerNationId,
-      ),
-      const SizedBox(height: AppSpacing.sm),
-      Text(
-        name(nationId),
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: AppTypography.titleMedium,
-      ),
-    ],
+  Widget _side(int nationId) => NationTap(
+    careerId: careerId,
+    nationId: nationId,
+    child: Column(
+      children: [
+        FlagDisc(
+          code(nationId),
+          size: 44,
+          highlighted: nationId == playerNationId,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(
+          name(nationId),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.titleMedium,
+        ),
+      ],
+    ),
   );
 }

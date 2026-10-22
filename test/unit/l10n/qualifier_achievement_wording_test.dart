@@ -14,11 +14,34 @@ import 'package:flutter_test/flutter_test.dart';
 /// target was the finals tournament. They are now worded as the board's own
 /// qualify brief is: "Qualify for the World Championship".
 void main() {
-  const locales = ['en', 'cs', 'de', 'es', 'fr', 'it', 'pl'];
+  const locales = [
+    'en',
+    'cs',
+    'de',
+    'es',
+    'fr',
+    'it',
+    'pl',
+    'pt',
+    'tr',
+    'nl',
+    'id',
+    'el',
+    'sv',
+    'nb',
+    'vi',
+    'bg',
+    'da',
+    'fi',
+    'hu',
+    'hr',
+    'uk',
+    'fil',
+  ];
   const keys = ['achQualWcDesc', 'achQualContDesc'];
   // Every locale's word for a final, a finals stage or a final tournament.
   final finalWords = RegExp(
-    'final|finál|finał|závěrečn|endrunde',
+    'final|finál|finał|závěrečn|endrunde|eindtoernooi|eindronde|τελικ|финал|фінал|chung kết|finaali|loppukilpailu|döntő|završni|huling|pangwakas|finále',
     caseSensitive: false,
   );
 

@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -201,7 +202,8 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
                 hub.career.nationId,
                 agingYears: CareerService.agingYears(hub.career),
                 saveSeed: hub.career.rngSeed,
-                minAge: 15,
+                careerId: hub.career.id,
+                minAge: PlayerLifecycle.callUpMinAge,
               );
           final names = {
             for (final p in pool)
@@ -262,6 +264,7 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
         // the player was staring at a black screen.
         if (event.route != null) context.push(event.route!);
       case HubEventKind.cycleRollover:
+      case HubEventKind.campaignVerdict:
       case HubEventKind.draw:
       case HubEventKind.tournamentKickoff:
       case HubEventKind.callUp:

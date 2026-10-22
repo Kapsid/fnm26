@@ -80,7 +80,12 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
               child: Column(
                 children: [
                   for (final f in friendlies)
-                    _FriendlyRow(result: f, code: code, name: name),
+                    _FriendlyRow(
+                      result: f,
+                      code: code,
+                      name: name,
+                      careerId: careerId,
+                    ),
                 ],
               ),
             ),
@@ -93,12 +98,12 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          competitionLabel(l, results.competition).toUpperCase(),
+          competitionLabel(l, results.competition).capsIn(l.localeName),
           style: TabletText.panelTitle.copyWith(color: AppColors.primary),
         ),
         Text(
           isKnockout
-              ? (results.stage ?? l.resultsKnockout).toUpperCase()
+              ? (results.stage ?? l.resultsKnockout).capsIn(l.localeName)
               : l.resultsMatchday(results.matchday),
           style: AppTypography.headlineMedium,
         ),
@@ -123,6 +128,7 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
                           fixture: f,
                           code: code,
                           emphasiseNationId: view.playerNationId,
+                          careerId: careerId,
                         ),
                     ],
                   ),
@@ -134,8 +140,13 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
       );
     }
     final groups = results.groups;
-    Widget panel(RoundResultGroup g) =>
-        _GroupResultsPanel(group: g, view: view, code: code, name: name);
+    Widget panel(RoundResultGroup g) => _GroupResultsPanel(
+      careerId: careerId,
+      group: g,
+      view: view,
+      code: code,
+      name: name,
+    );
     return ListView(
       children: [
         heading,
@@ -166,12 +177,14 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
 /// One group: this matchday's scores on the left, the table on the right.
 class _GroupResultsPanel extends StatelessWidget {
   const _GroupResultsPanel({
+    required this.careerId,
     required this.group,
     required this.view,
     required this.code,
     required this.name,
   });
 
+  final int careerId;
   final RoundResultGroup group;
   final RoundResultsView view;
   final String Function(int) code;
@@ -196,6 +209,7 @@ class _GroupResultsPanel extends StatelessWidget {
                     fixture: f,
                     code: code,
                     emphasiseNationId: view.playerNationId,
+                    careerId: careerId,
                   ),
               ],
             ),
@@ -217,6 +231,7 @@ class _GroupResultsPanel extends StatelessWidget {
                         i + 1 > group.standings.length - relegateCount,
                     name: name,
                     code: code,
+                    careerId: careerId,
                   ),
               ],
             ),

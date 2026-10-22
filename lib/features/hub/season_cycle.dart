@@ -1086,6 +1086,7 @@ extension SeasonCycle on SeasonService {
                     boot.first.playerId,
                     agingYears: _simYears,
                     saveSeed: _simSeed,
+                    careerId: _simCareer,
                   ))
               ?.name;
       bootGoals = boot.first.goals;
@@ -1154,6 +1155,7 @@ extension SeasonCycle on SeasonService {
             boot.first.playerId,
             agingYears: _simYears,
             saveSeed: _simSeed,
+            careerId: _simCareer,
           );
       bootName = p?.name;
       bootGoals = boot.first.goals;
@@ -1371,6 +1373,7 @@ extension SeasonCycle on SeasonService {
                     boot.first.playerId,
                     agingYears: _simYears,
                     saveSeed: _simSeed,
+                    careerId: _simCareer,
                   ))
               ?.name;
       bootGoals = boot.first.goals;

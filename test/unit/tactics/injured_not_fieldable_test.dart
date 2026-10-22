@@ -201,8 +201,11 @@ void main() {
       final playerRepo = setup.read(playerRepositoryProvider);
       final hurt = <int>{};
       for (final n in [first.homeNationId, first.awayNationId]) {
-        final pool = (await playerRepo.byNation(n, saveSeed: career.rngSeed))
-          ..sort((a, b) => b.overall.compareTo(a.overall));
+        final pool = (await playerRepo.byNation(
+          n,
+          saveSeed: career.rngSeed,
+          careerId: career.id,
+        ))..sort((a, b) => b.overall.compareTo(a.overall));
         // The eleven a best XI would certainly pick, all carrying a knock.
         hurt.addAll(pool.take(11).map((p) => p.id));
       }

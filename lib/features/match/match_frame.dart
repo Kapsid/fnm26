@@ -244,12 +244,17 @@ class MatchControlBar extends StatelessWidget {
     required this.onSpeed,
     required this.onTactics,
     this.onSkip,
+    this.maxSubs = kMaxSubs,
     super.key,
   });
 
   final bool playing;
   final int speed;
   final int subsUsed;
+
+  /// The substitutions allowed so far: [kMaxSubs], or [kMaxSubsExtraTime]
+  /// once a level knockout has reached extra time.
+  final int maxSubs;
 
   /// How many of the manager's players on the pitch are running on empty.
   final int spent;
@@ -273,7 +278,7 @@ class MatchControlBar extends StatelessWidget {
     // and counts the players who have nothing left, so a fading side is
     // something the manager sees rather than something they only notice in
     // the full-time ratings.
-    final tired = spent > 0 && subsUsed < kMaxSubs;
+    final tired = spent > 0 && subsUsed < maxSubs;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.marginMobile,
@@ -312,7 +317,11 @@ class MatchControlBar extends StatelessWidget {
             expand: true,
             onTap: onTactics,
             accent: tired ? AppColors.warning : null,
-            child: MatchTacticsPillContent(subsUsed: subsUsed, spent: spent),
+            child: MatchTacticsPillContent(
+              subsUsed: subsUsed,
+              spent: spent,
+              maxSubs: maxSubs,
+            ),
           ),
           if (onSkip != null) ...[
             const SizedBox(width: AppSpacing.sm),
@@ -346,6 +355,7 @@ class MatchTacticsPillContent extends StatelessWidget {
     super.key,
     required this.subsUsed,
     required this.spent,
+    this.maxSubs = kMaxSubs,
   });
 
   final int subsUsed;
@@ -353,10 +363,13 @@ class MatchTacticsPillContent extends StatelessWidget {
   /// How many of the manager's players on the pitch are running on empty.
   final int spent;
 
+  /// The substitutions allowed so far (see [MatchControlBar.maxSubs]).
+  final int maxSubs;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final tired = spent > 0 && subsUsed < kMaxSubs;
+    final tired = spent > 0 && subsUsed < maxSubs;
     final tone = tired ? AppColors.warning : AppColors.primary;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -380,7 +393,7 @@ class MatchTacticsPillContent extends StatelessWidget {
         // reading, so the label gives way to it rather than the other way
         // round.
         Text(
-          '$subsUsed/$kMaxSubs',
+          '$subsUsed/$maxSubs',
           style: AppTypography.labelMedium.copyWith(color: tone),
         ),
       ],

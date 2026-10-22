@@ -29,6 +29,7 @@ void main() {
     year: 2026,
     competition: 'World Championship',
     championId: 1,
+    coChampionId: null,
     runnerUpId: 2,
     thirdId: null,
     thirdId2: null,

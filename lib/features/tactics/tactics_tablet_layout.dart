@@ -182,14 +182,19 @@ class _TacticsTabletLayout extends ConsumerWidget {
                                     // capitals and sentence case.
                                     tabs: [
                                       Tab(
-                                        text: l.tacticsFormation.toUpperCase(),
+                                        text: l.tacticsFormation.capsIn(
+                                          l.localeName,
+                                        ),
                                       ),
                                       Tab(
-                                        text: l.tacticsTabRolesSetPieces
-                                            .toUpperCase(),
+                                        text: l.tacticsTabRolesSetPieces.capsIn(
+                                          l.localeName,
+                                        ),
                                       ),
                                       Tab(
-                                        text: l.matchDossierTitle.toUpperCase(),
+                                        text: l.matchDossierTitle.capsIn(
+                                          l.localeName,
+                                        ),
                                       ),
                                     ],
                                   ),

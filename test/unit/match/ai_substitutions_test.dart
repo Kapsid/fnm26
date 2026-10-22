@@ -77,4 +77,52 @@ void main() {
     );
     expect(subs, isEmpty);
   });
+  group('extra time', () {
+    test('one sub at minute 91, never the keeper, fresh legs only', () {
+      for (var seed = 0; seed < 50; seed++) {
+        final sub = AiSubstitutions.planExtraTime(
+          nationId: 1,
+          onPitchAt90: xi,
+          bench: bench,
+          rng: SeededRng(seed ^ 0x5196),
+        )!;
+        expect(sub.minute, 91);
+        expect(sub.teamNationId, 1);
+        expect(xi.map((p) => p.id), contains(sub.offId));
+        expect(bench.map((p) => p.id), contains(sub.on.id));
+        expect(sub.on.position, isNot(PlayerPosition.gk));
+        final gkId = xi.firstWhere((p) => p.position == PlayerPosition.gk).id;
+        expect(sub.offId, isNot(gkId));
+      }
+    });
+
+    test('deterministic for the same seed', () {
+      String key(int seed) {
+        final s = AiSubstitutions.planExtraTime(
+          nationId: 1,
+          onPitchAt90: xi,
+          bench: bench,
+          rng: SeededRng(seed ^ 0x5196),
+        )!;
+        return '${s.minute}:${s.offId}:${s.on.id}';
+      }
+
+      expect(key(17), key(17));
+    });
+
+    test('no fresh outfield legs means no sub', () {
+      final keeperOnly = bench
+          .where((p) => p.position == PlayerPosition.gk)
+          .toList();
+      expect(
+        AiSubstitutions.planExtraTime(
+          nationId: 1,
+          onPitchAt90: xi,
+          bench: keeperOnly,
+          rng: SeededRng(1),
+        ),
+        isNull,
+      );
+    });
+  });
 }

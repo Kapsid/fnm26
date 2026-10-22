@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/current_competition.dart';
@@ -51,7 +52,7 @@ class TabletSidebar extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
                     child: Text(
-                      shellSectionTitle(l, section).toUpperCase(),
+                      shellSectionTitle(l, section).capsIn(l.localeName),
                       style: TabletText.sectionLabel,
                     ),
                   ),

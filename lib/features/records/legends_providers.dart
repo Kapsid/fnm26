@@ -65,6 +65,7 @@ legendsProvider = FutureProvider.autoDispose.family<LegendsView?, int>((
       id,
       agingYears: aging,
       saveSeed: career.rngSeed,
+      careerId: career.id,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );

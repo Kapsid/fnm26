@@ -26,6 +26,7 @@ class IntercontinentalPlayoffBracket extends StatelessWidget {
     required this.code,
     required this.name,
     required this.playerNationId,
+    this.careerId,
     super.key,
   });
 
@@ -33,6 +34,9 @@ class IntercontinentalPlayoffBracket extends StatelessWidget {
   final String Function(int) code;
   final String Function(int) name;
   final int playerNationId;
+
+  /// When given, each team (flag and name) opens that nation's page.
+  final int? careerId;
 
   @override
   Widget build(BuildContext context) {
@@ -167,33 +171,45 @@ class IntercontinentalPlayoffBracket extends StatelessWidget {
           ),
           child: Row(
             children: [
-              FlagDisc(code(id), size: 18, highlighted: isPlayer),
-              const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      bracketName(name(id), code(id)),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: color,
-                        fontWeight: won ? FontWeight.w700 : FontWeight.w400,
-                      ),
-                    ),
-                    if (seeded)
-                      Text(
-                        l.tourContPlayoffSeeded,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.labelSmall.copyWith(
-                          fontSize: 9,
-                          color: AppColors.onSurfaceVariant,
+                child: NationTap.maybe(
+                  careerId: careerId,
+                  nationId: id,
+                  child: Row(
+                    children: [
+                      FlagDisc(code(id), size: 18, highlighted: isPlayer),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              bracketName(name(id), code(id)),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.labelSmall.copyWith(
+                                color: color,
+                                fontWeight: won
+                                    ? FontWeight.w700
+                                    : FontWeight.w400,
+                              ),
+                            ),
+                            if (seeded)
+                              Text(
+                                l.tourContPlayoffSeeded,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.labelSmall.copyWith(
+                                  fontSize: 9,
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               // The winner of a play-off final books a World Cup place.

@@ -39,6 +39,19 @@ abstract final class RealHistory {
     'Turkey': 'Türkiye',
   };
 
+  /// Titles a successor state shares with the one [aliases] maps the winner
+  /// onto, keyed `"competition|year"`: the nation also credited with it.
+  ///
+  /// Czechoslovakia's 1976 European Championship belongs to the Czech Republic
+  /// AND to Slovakia: UEFA recognises both as its successors for that title.
+  /// One honour row holds one champion, so the second is attached when the
+  /// roll of honour is read (`CompetitionRepository.honours`), never stored:
+  /// every save, old and new, gets it, and the runner-up and the bronzes are
+  /// still counted once.
+  static const sharedTitles = <String, String>{
+    'European Championship|1976': 'Slovakia',
+  };
+
   /// The two beaten semi-finalists (who share the bronze) for continental-cup
   /// editions. The European Championship and South America Cup rows carry no
   /// single third place in [editions] — they have no third-place match — so

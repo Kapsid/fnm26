@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/y/y_post_detail.dart';

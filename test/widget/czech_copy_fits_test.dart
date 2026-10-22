@@ -21,7 +21,30 @@ import '../helpers/expect_whole.dart';
 /// in `cs`, and the locale is read back off the screen before anything is
 /// measured.
 const _widths = [320.0, 360.0, 400.0];
-const _locales = ['en', 'cs', 'fr', 'it', 'pl', 'es', 'de'];
+const _locales = [
+  'en',
+  'cs',
+  'fr',
+  'it',
+  'pl',
+  'es',
+  'de',
+  'pt',
+  'tr',
+  'nl',
+  'id',
+  'el',
+  'sv',
+  'nb',
+  'vi',
+  'bg',
+  'da',
+  'fi',
+  'hu',
+  'hr',
+  'uk',
+  'fil',
+];
 
 Future<void> _pump(
   WidgetTester tester,

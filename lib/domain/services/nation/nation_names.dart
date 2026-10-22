@@ -1,8 +1,23 @@
 import 'package:fnm/domain/services/nation/nation_names_de.dart';
+import 'package:fnm/domain/services/nation/nation_names_el.dart';
 import 'package:fnm/domain/services/nation/nation_names_es.dart';
 import 'package:fnm/domain/services/nation/nation_names_fr.dart';
+import 'package:fnm/domain/services/nation/nation_names_id.dart';
 import 'package:fnm/domain/services/nation/nation_names_it.dart';
+import 'package:fnm/domain/services/nation/nation_names_nl.dart';
 import 'package:fnm/domain/services/nation/nation_names_pl.dart';
+import 'package:fnm/domain/services/nation/nation_names_pt.dart';
+import 'package:fnm/domain/services/nation/nation_names_tr.dart';
+import 'package:fnm/domain/services/nation/nation_names_sv.dart';
+import 'package:fnm/domain/services/nation/nation_names_nb.dart';
+import 'package:fnm/domain/services/nation/nation_names_vi.dart';
+import 'package:fnm/domain/services/nation/nation_names_bg.dart';
+import 'package:fnm/domain/services/nation/nation_names_da.dart';
+import 'package:fnm/domain/services/nation/nation_names_fi.dart';
+import 'package:fnm/domain/services/nation/nation_names_hu.dart';
+import 'package:fnm/domain/services/nation/nation_names_hr.dart';
+import 'package:fnm/domain/services/nation/nation_names_uk.dart';
+import 'package:fnm/domain/services/nation/nation_names_fil.dart';
 
 /// How a nation's name is WRITTEN, as opposed to what it is called in the seed
 /// data.
@@ -512,6 +527,21 @@ abstract final class NationNames {
       'pl' => nationNamesPl,
       'es' => nationNamesEs,
       'de' => nationNamesDe,
+      'pt' => nationNamesPt,
+      'tr' => nationNamesTr,
+      'nl' => nationNamesNl,
+      'id' => nationNamesId,
+      'el' => nationNamesEl,
+      'sv' => nationNamesSv,
+      'nb' => nationNamesNb,
+      'vi' => nationNamesVi,
+      'bg' => nationNamesBg,
+      'da' => nationNamesDa,
+      'fi' => nationNamesFi,
+      'hu' => nationNamesHu,
+      'hr' => nationNamesHr,
+      'uk' => nationNamesUk,
+      'fil' => nationNamesFil,
       _ => null,
     };
     return table?[key] ?? enByCode[key] ?? seedName;

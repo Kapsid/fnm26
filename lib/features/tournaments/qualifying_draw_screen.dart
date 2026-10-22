@@ -89,6 +89,7 @@ class _QualifyingDrawScreenState extends ConsumerState<QualifyingDrawScreen> {
             ],
             nations: data.nations,
             highlightNationId: data.playerNationId,
+            careerId: careerId,
             potCount: potCount,
             onContinue: leave,
             landscape: useTabletLayout(context, ref),

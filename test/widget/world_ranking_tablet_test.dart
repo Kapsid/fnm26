@@ -152,6 +152,26 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('on a phone a ranking row opens that nation via openNation', (
+    tester,
+  ) async {
+    final save = await seedSave(tester);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.ranking}?careerId=${save.careerId}',
+    );
+    final row = find.byType(RankRow).first;
+    final tapped = tester.widget<RankRow>(row).nation;
+    await tester.tap(row);
+    await settle(tester);
+    expect(
+      tester.widget<NationView>(find.byType(NationView)).nationId,
+      tapped.id,
+    );
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('a region chip narrows the grid', (tester) async {
     await _open(tester, kTabletSize);
     // The chips come before the grid in the tree, and scroll sideways: Asia

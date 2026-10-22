@@ -61,7 +61,11 @@ void main() {
     final pools = <Player>[
       ...(await container.read(squadDataProvider(career.id).future))!.pool,
       for (final n in [nations[nations.length ~/ 2], nations.last])
-        ...await repo.byNation(n.id, saveSeed: career.rngSeed),
+        ...await repo.byNation(
+          n.id,
+          saveSeed: career.rngSeed,
+          careerId: career.id,
+        ),
     ];
     expect(pools, isNotEmpty);
 

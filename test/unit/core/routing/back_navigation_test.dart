@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/routing/back_navigation.dart';
@@ -21,6 +22,14 @@ void main() {
         _at('${Routes.newGame}?nationId=4'),
         const GoBackTo(Routes.nations),
       );
+    });
+
+    test('the campaign screens match their AppBar arrows', () {
+      expect(
+        _at('${Routes.campaignBrief}?id=grudge'),
+        const GoBackTo(Routes.campaigns),
+      );
+      expect(_at(Routes.campaigns), const GoBackTo(Routes.home));
     });
 
     test('the hub leaves the save for home', () {
@@ -90,7 +99,12 @@ void main() {
       );
       handler = SystemBackHandler(router)..attach();
       addTearDown(handler.dispose);
-      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerConfig: router,
+          onNavigationNotification: handler.onNavigationNotification,
+        ),
+      );
       await tester.pumpAndSettle();
     }
 
@@ -141,6 +155,89 @@ void main() {
     testWidgets('home lets the app close', (tester) async {
       await pump(tester);
       expect(await back(tester), isFalse);
+    });
+  });
+
+  // Android 16 runs predictive back for an app targeting API 36: the press
+  // only reaches Flutter while the framework has told the platform it handles
+  // back. Flutter's own report is "the navigator can pop", which after a
+  // `context.go` is false on almost every screen, so Android sent the app home
+  // and the handler above never heard the press.
+  group('the platform is told the app handles back', () {
+    late GoRouter router;
+    late List<bool> reported;
+
+    Future<void> pump(WidgetTester tester, String initial) async {
+      reported = [];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'SystemNavigator.setFrameworkHandlesBack') {
+            reported.add(call.arguments as bool);
+          }
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      router = GoRouter(
+        initialLocation: initial,
+        routes: [
+          for (final path in [
+            Routes.home,
+            Routes.hub,
+            Routes.tactics,
+            Routes.finalsDraw,
+          ])
+            GoRoute(path: path, builder: (_, _) => Text(path)),
+        ],
+      );
+      final handler = SystemBackHandler(router)..attach();
+      addTearDown(handler.dispose);
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerConfig: router,
+          onNavigationNotification: handler.onNavigationNotification,
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('on a gone-to screen with nothing to pop', (tester) async {
+      await pump(tester, '${Routes.tactics}?careerId=7');
+      expect(reported.last, isTrue);
+    });
+
+    testWidgets('on the hub, whose back leaves the save', (tester) async {
+      await pump(tester, '${Routes.hub}?careerId=7');
+      expect(reported.last, isTrue);
+    });
+
+    testWidgets('on an event screen that swallows the press', (tester) async {
+      await pump(tester, '${Routes.finalsDraw}?careerId=7');
+      expect(reported.last, isTrue);
+    });
+
+    testWidgets('not on home, which closes the app', (tester) async {
+      await pump(tester, '${Routes.hub}?careerId=7');
+      router.go(Routes.home);
+      await tester.pumpAndSettle();
+      expect(reported.last, isFalse);
+    });
+
+    testWidgets('again after a go that only changes the query', (
+      tester,
+    ) async {
+      await pump(tester, Routes.home);
+      expect(reported.last, isFalse);
+      router.go('${Routes.hub}?careerId=7');
+      await tester.pumpAndSettle();
+      expect(reported.last, isTrue);
     });
   });
 }

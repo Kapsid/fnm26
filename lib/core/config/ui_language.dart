@@ -18,6 +18,21 @@ const List<String> supportedLanguageCodes = [
   'pl',
   'es',
   'de',
+  'pt',
+  'tr',
+  'nl',
+  'id',
+  'el',
+  'sv',
+  'nb',
+  'vi',
+  'bg',
+  'da',
+  'fi',
+  'hu',
+  'hr',
+  'uk',
+  'fil',
 ];
 
 /// The UI language override, or null to follow the device locale. Read by the

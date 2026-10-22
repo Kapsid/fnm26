@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 
 /// A recessed "inset" text field with an optional monospace label above it.
 /// The inset look comes from the app's [InputDecorationTheme].
@@ -44,7 +45,7 @@ class AppTextField extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          label!.toUpperCase(),
+          label!.capsIn(Localizations.localeOf(context).languageCode),
           style: AppTypography.labelMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),

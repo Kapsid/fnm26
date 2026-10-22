@@ -16,7 +16,29 @@ void main() {
   final en = arb('lib/l10n/app_en.arb');
   // Every non-English language whose ARB exists.
   final others = <String, Map<String, Object?>>{
-    for (final code in ['cs', 'fr', 'it', 'pl', 'es', 'de'])
+    for (final code in [
+      'cs',
+      'fr',
+      'it',
+      'pl',
+      'es',
+      'de',
+      'pt',
+      'tr',
+      'nl',
+      'id',
+      'el',
+      'sv',
+      'nb',
+      'vi',
+      'bg',
+      'da',
+      'fi',
+      'hu',
+      'hr',
+      'uk',
+      'fil',
+    ])
       if (File('lib/l10n/app_$code.arb').existsSync())
         code: arb('lib/l10n/app_$code.arb'),
   };
@@ -67,6 +89,24 @@ void main() {
         // A plural's braces are branch machinery, and languages differ in
         // their branches (Polish has few and many) — so only the variable
         // and the mandatory other{ branch are comparable.
+        // A language may add a plural the English lacks (Bulgarian, Croatian)
+        // or drop one it has (Vietnamese): then the values used must match.
+        if (isPlural(e.value) != isPlural(translated)) {
+          Set<String> all(String v) => {
+            ...holders(v),
+            for (final m in RegExp(
+              r'\{\s*(\w+)\s*,\s*(?:plural|select)',
+            ).allMatches(v))
+              m.group(1)!,
+          };
+          expect(
+            all(translated),
+            all(e.value),
+            reason: '${lang.key} "${e.key}" reshapes its plural but does not '
+                'use the same values as the English',
+          );
+          continue;
+        }
         if (isPlural(e.value)) {
           expect(
             isPlural(translated) &&

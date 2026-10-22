@@ -95,6 +95,7 @@ void main() {
         year: year,
         competition: 'World Championship',
         championId: 10,
+        coChampionId: null,
         runnerUpId: 11,
         thirdId: null,
         thirdId2: null,

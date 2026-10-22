@@ -6,6 +6,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
+import 'package:fnm/features/hub/schedule_providers.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/shell/tablet_sidebar.dart';
@@ -30,7 +31,7 @@ void main() {
     expect(find.byType(PhoneWidthFrame), findsNothing);
     expect(find.byType(AppBar), findsNothing);
     for (final title in [
-      enL.hubNextMatch,
+      enL.hubUpcoming,
       enL.sideBoard,
       enL.playerStatForm,
       enL.sideInbox,
@@ -81,6 +82,15 @@ void main() {
         ? next.awayNationId
         : next.homeNationId;
     final oppName = hub.nations[oppId]!.name;
+    late int windowSize;
+    await tester.runAsync(() async {
+      final d = (await save.container.read(
+        scheduleProvider(save.careerId).future,
+      ))!;
+      windowSize = d.blocks[d.currentIndex].fixtures
+          .where((f) => drawKindForFixture(f) != null)
+          .length;
+    });
 
     await pumpRoute(
       tester,
@@ -94,8 +104,10 @@ void main() {
       findsNothing,
     );
     expect(
+      // One per undrawn match of the window (the whole first window is
+      // qualifiers of the one undrawn qualifying draw).
       find.descendant(of: panel, matching: find.text(enL.topBarDrawPending)),
-      findsOneWidget,
+      findsNWidgets(windowSize),
     );
 
     await tester.runAsync(

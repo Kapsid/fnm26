@@ -18,6 +18,17 @@ typedef GroupTable = ({
   List<GroupStanding> standings,
 });
 
+/// Marks a career created by 1.0.6 or later, whose caps log follows the
+/// nation a player plays for now (see `recordAppearances`).
+///
+/// The log keeps one row per player. Older saves credit every cap to the
+/// nation of his first one, so a naturalised man's caps for his new country
+/// sat in the old country's records. Changing that under an existing save
+/// would move caps between nations' records, so only careers created with
+/// the mark get it. Stored with the career's watched events at cycle 0 (no
+/// schema change) and carried by a career bundle with the rest of them.
+const capsFollowNationKind = 'capsFollowNation1';
+
 /// The competitions EVERY confederation contests, and so the only fair basis
 /// for a world-wide all-time chart.
 ///
@@ -140,6 +151,11 @@ typedef PlayerMatchStat = ({
   DateTime date,
   int homeNationId,
   int awayNationId,
+
+  /// The nation he played for in this match, 0 on a line logged before the
+  /// rating table kept one. A naturalised man's history holds both sides of
+  /// the switch, so his nation today cannot say which side he was on.
+  int nationId,
   int? homeScore,
   int? awayScore,
   String? round,
@@ -212,6 +228,11 @@ typedef Honour = ({
   int year,
   String competition,
   int championId,
+
+  /// A second nation credited with the same title, for the rare edition whose
+  /// winner has two successors that both hold it (see
+  /// `RealHistory.sharedTitles`). Null for every other edition.
+  int? coChampionId,
   int runnerUpId,
   int? thirdId,
   // A second bronze, for a cup with no third-place match (both beaten
@@ -227,6 +248,12 @@ typedef Honour = ({
   String? topScorerName,
   int? topScorerGoals,
 });
+
+/// Who is credited with an [Honour]'s title: its champion, and the
+/// co-champion of a shared title. A medal table counts both.
+extension HonourChampions on Honour {
+  List<int> get champions => [championId, ?coChampionId];
+}
 
 /// Persists and queries the competition schedule for a save.
 abstract interface class CompetitionRepository {
@@ -373,6 +400,12 @@ abstract interface class CompetitionRepository {
   /// Whether the manager has already watched a given draw ([kind] is
   /// 'worldCupFinals' or a confederation name) for [cycle] — draws play once.
   Future<bool> hasWatchedDraw(int careerId, int cycle, String kind);
+
+  /// Every draw-watched marker whose kind starts with [prefix], across all
+  /// careers and cycles. Campaign markers (`campaign:<id>`) live here too.
+  Future<List<({int careerId, String kind})>> watchedKindsWithPrefix(
+    String prefix,
+  );
 
   /// Records that a draw ceremony has been watched (idempotent).
   Future<void> markDrawWatched(int careerId, int cycle, String kind);
@@ -639,6 +672,11 @@ abstract interface class CompetitionRepository {
     int nationId, {
     int limit,
   });
+
+  /// [playerId]'s caps for [nationId]: the count [nationTopAppearances] lists
+  /// him with, or 0 when his caps are logged for another nation or not at all.
+  /// The one-player read of the same log, for the naturalisation caps rule.
+  Future<int> capsFor(int careerId, int nationId, int playerId);
 
   /// All-time most-capped players across EVERY nation (most games first) — the
   /// save's global appearance record, best first.

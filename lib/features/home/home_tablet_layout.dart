@@ -1,27 +1,25 @@
 part of 'home_screen.dart';
 
 /// The home screen on a landscape tablet: the logo and the title on the
-/// left; on the right the way back into the last save, a new game, and the
-/// saves list. Every button is the phone's own; settings stay top right.
+/// left; on the right the way back into the last save or campaign, a new
+/// game, and the saves list. Every button is the phone's own; settings stay
+/// top right.
 class _HomeTabletLayout extends StatelessWidget {
   const _HomeTabletLayout({
-    required this.lastSave,
-    required this.lastNation,
-    required this.onResume,
+    required this.hasSave,
+    required this.cards,
   });
 
-  final Career? lastSave;
-  final Nation? lastNation;
+  /// Whether a normal save exists (the secondary button then says "All saves").
+  final bool hasSave;
 
-  /// Opens [lastSave]; null when there is none.
-  final VoidCallback? onResume;
+  /// The continue cards, most recently played first; none for a fresh install.
+  final List<Widget> cards;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
-    final save = lastSave;
-    final resume = onResume;
     return Scaffold(
       key: HomeScreen.tabletLayoutKey,
       body: SafeArea(
@@ -88,15 +86,8 @@ class _HomeTabletLayout extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              if (save != null && resume != null) ...[
-                                _ContinueCard(
-                                  nationName:
-                                      lastNation?.name ?? l.homeYourNation,
-                                  nationCode: lastNation?.code,
-                                  inGameDate: save.inGameDate,
-                                  cyclePointer: save.cyclePointer,
-                                  onResume: resume,
-                                ),
+                              for (final card in cards) ...[
+                                card,
                                 const SizedBox(height: AppSpacing.md),
                               ],
                               PrimaryButton(
@@ -108,10 +99,13 @@ class _HomeTabletLayout extends StatelessWidget {
                               TextButton(
                                 onPressed: () => context.go(Routes.saves),
                                 child: Text(
-                                  save != null
-                                      ? l.homeAllSaves
-                                      : l.homeLoadGame,
+                                  hasSave ? l.homeAllSaves : l.homeLoadGame,
                                 ),
+                              ),
+                              TextButton(
+                                key: HomeScreen.campaignsKey,
+                                onPressed: () => context.go(Routes.campaigns),
+                                child: Text(l.homeCampaigns),
                               ),
                             ],
                           ),

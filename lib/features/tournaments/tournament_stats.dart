@@ -51,10 +51,11 @@ class TournamentStatsTab extends StatelessWidget {
     final titles = <int, int>{};
     final finals = <int, int>{};
     for (final h in honours) {
-      titles.update(h.championId, (v) => v + 1, ifAbsent: () => 1);
-      finals
-        ..update(h.championId, (v) => v + 1, ifAbsent: () => 1)
-        ..update(h.runnerUpId, (v) => v + 1, ifAbsent: () => 1);
+      for (final c in h.champions) {
+        titles.update(c, (v) => v + 1, ifAbsent: () => 1);
+        finals.update(c, (v) => v + 1, ifAbsent: () => 1);
+      }
+      finals.update(h.runnerUpId, (v) => v + 1, ifAbsent: () => 1);
     }
     final topTitles = _top(titles);
     final topFinals = _top(finals);

@@ -50,22 +50,22 @@ void main() {
   testWidgets('a language the app does not speak reads English', (
     tester,
   ) async {
-    final portuguese = await render(tester, [const Locale('pt', 'BR')]);
+    final romanian = await render(tester, [const Locale('ro', 'RO')]);
 
     expect(
-      portuguese.locale.languageCode,
+      romanian.locale.languageCode,
       'en',
-      reason: 'a Portuguese phone is being handed a language nobody asked for',
+      reason: 'a Romanian phone is being handed a language nobody asked for',
     );
-    expect(portuguese.greeting, 'MATCH PREVIEW');
+    expect(romanian.greeting, 'MATCH PREVIEW');
   });
 
-  testWidgets('every unsupported language reads English, not just Portuguese', (
+  testWidgets('every unsupported language reads English, not just Romanian', (
     tester,
   ) async {
     // One test on one language would pass on an accident of alphabetisation:
     // any of these sorting before "cs" would be read as a fix that is not one.
-    for (final code in ['nl', 'sv', 'ja', 'ar', 'ab']) {
+    for (final code in ['ro', 'sk', 'ja', 'ar', 'ab']) {
       final rendered = await render(tester, [Locale(code)]);
       expect(
         rendered.greeting,
@@ -89,11 +89,11 @@ void main() {
   testWidgets('a supported language further down the device list still wins', (
     tester,
   ) async {
-    // A phone set to Portuguese with Czech second: Czech is SUPPORTED and the
+    // A phone set to Romanian with Czech second: Czech is SUPPORTED and the
     // manager asked for it, so it beats the fallback. This is what separates
     // "English is the fallback" from "English always".
     final rendered = await render(tester, [
-      const Locale('pt', 'BR'),
+      const Locale('ro', 'RO'),
       const Locale('cs', 'CZ'),
     ]);
 

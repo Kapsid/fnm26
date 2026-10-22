@@ -11,7 +11,12 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/career/nation_offers_providers.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -78,8 +83,10 @@ void main() {
       final europeans =
           nations.where((n) => n.confederation == Confederation.europe).toList()
             ..sort((a, b) => a.ranking.compareTo(b.ranking));
-      final from = europeans.first;
-      final to = europeans[1];
+      // A minnow and a mid-table side, the kind of job a sacked manager is
+      // offered next.
+      final from = europeans.last;
+      final to = europeans[25];
 
       final career =
           (await container
@@ -97,6 +104,7 @@ void main() {
       final fromPool = await playerRepo.byNation(
         from.id,
         saveSeed: career.rngSeed,
+        careerId: career.id,
       );
       final fromIds = fromPool.take(23).map((p) => p.id).toSet();
       await squadRepo.setCallUps(career.id, fromIds);
@@ -127,12 +135,45 @@ void main() {
       final oldBoy = (await playerRepo.youthByNation(
         from.id,
         saveSeed: career.rngSeed,
+        careerId: career.id,
       )).first;
       await container.read(youthWatchStoreProvider).mark(career.id, oldBoy, 0);
       expect(
         await loadYouthMarks(career.id),
         hasLength(1),
         reason: 'the boy must really be on the list before the move',
+      );
+
+      // He naturalises a foreign star for the old nation, and has a second
+      // offer still on the table. The star switched allegiance to the OLD
+      // nation: he stays there when the manager leaves.
+      final third = europeans[6];
+      final thirdPool = await playerRepo.byNation(
+        third.id,
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+      );
+      final star = thirdPool.first;
+      final suitor = thirdPool[1];
+      await careerRepo.addNaturalizationOffer(
+        careerId: career.id,
+        playerId: star.id,
+        sourceNationId: third.id,
+        cycle: 0,
+      );
+      await careerRepo.setNaturalizationStatus(career.id, star.id, 'accepted');
+      await careerRepo.addNaturalizationOffer(
+        careerId: career.id,
+        playerId: suitor.id,
+        sourceNationId: third.id,
+        cycle: 0,
+      );
+      expect(
+        (await container.read(
+          squadDataProvider(career.id).future,
+        ))!.pool.map((p) => p.id),
+        contains(star.id),
+        reason: 'the star must really be in the old squad before the move',
       );
 
       // Play out the cycle so the next one can begin.
@@ -155,6 +196,25 @@ void main() {
         reason: 'the cycle must finish before the manager can move',
       );
 
+      // And he leaves having said things the board hated.
+      await careerRepo.recordPressAnswer(
+        careerId: career.id,
+        cycle: 0,
+        questionKey: 'conf:1:0',
+        tone: 'deflect',
+        moraleDelta: -40,
+        boardDelta: -100,
+        answeredAt: DateTime(2030, 7, 20),
+      );
+      // The rollover screen keeps the verdict, and the board's mood under
+      // it, alive and cached while the manager picks his next job.
+      final verdict = container.listen(
+        rolloverVerdictProvider(career.id),
+        (_, _) {},
+      );
+      addTearDown(verdict.close);
+      await container.read(rolloverVerdictProvider(career.id).future);
+
       // The manager takes a new job.
       await season.startNextCycle(career.id, switchToNationId: to.id);
 
@@ -171,6 +231,7 @@ void main() {
         to.id,
         agingYears: CareerService.agingYears(moved),
         saveSeed: moved.rngSeed,
+        careerId: moved.id,
         minAge: 15,
       );
       final toIds = toPool.map((p) => p.id).toSet();
@@ -230,6 +291,82 @@ void main() {
         named.toSet().difference(toIds),
         isEmpty,
         reason: 'the XI must name the new nation\'s players',
+      );
+
+      // A new job opens on a clean slate with its new board: not the old
+      // board's verdict carried over, not the old job's press, and not the
+      // new nation's results from before he arrived.
+      expect(
+        moved.lastCycleBoard,
+        isNull,
+        reason: 'the old board\'s closing mood must not follow him',
+      );
+      expect(
+        (await container.read(pressEffectProvider(career.id).future)).board,
+        0,
+        reason: 'what he told the old board is no business of the new one',
+      );
+      container.invalidate(satisfactionProvider(career.id));
+      expect(
+        await container.read(satisfactionProvider(career.id).future),
+        greaterThanOrEqualTo(BoardSatisfaction.neutral),
+        reason: 'a new job starts from the neutral mark, not near zero',
+      );
+
+      // The naturalised star stays with the old nation, and the open offer
+      // lapses with the old job.
+      expect(
+        squad.pool.map((p) => p.id),
+        isNot(contains(star.id)),
+        reason: 'a player naturalised for the old nation must not follow him',
+      );
+      expect(
+        tactic.pool.map((p) => p.id),
+        isNot(contains(star.id)),
+      );
+      expect(
+        await container.read(naturalizedCountProvider(career.id).future),
+        0,
+      );
+      expect(
+        await careerRepo.pendingNaturalization(career.id),
+        isNull,
+        reason: 'an offer made to the old federation lapses with the job',
+      );
+
+      // A save that moved BEFORE this was fixed: the old board's 0 stored as
+      // the new job's carry-over, and the old federation's offer still
+      // pending. It must heal on reading, with no migration.
+      await careerRepo.advanceCycle(
+        career.id,
+        moved.cyclePointer,
+        moved.inGameDate,
+        closingBoard: 0,
+      );
+      final stale = thirdPool[2];
+      await careerRepo.addNaturalizationOffer(
+        careerId: career.id,
+        playerId: stale.id,
+        sourceNationId: third.id,
+        cycle: 0,
+      );
+      container
+        ..invalidate(satisfactionProvider(career.id))
+        ..invalidate(pendingNaturalizationProvider(career.id));
+      expect(
+        await container.read(satisfactionProvider(career.id).future),
+        greaterThanOrEqualTo(BoardSatisfaction.neutral),
+        reason: 'a carry-over stored before the fix is not this job\'s',
+      );
+      expect(
+        await container.read(pendingNaturalizationProvider(career.id).future),
+        isNull,
+        reason: 'the old federation\'s offer is not put to the new one',
+      );
+      expect(
+        await careerRepo.pendingNaturalization(career.id),
+        isNull,
+        reason: 'and it is lapsed, once, rather than hidden for ever',
       );
     },
     timeout: const Timeout(Duration(minutes: 6)),

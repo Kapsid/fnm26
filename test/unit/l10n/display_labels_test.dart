@@ -152,10 +152,6 @@ void main() {
           AppLocalizationsDe(),
         ];
         for (final l in all) {
-          final names = [
-            for (final stored in NationsCups.allNames)
-              competitionLabel(l, stored),
-          ];
           // Europe and North America are named apart. Africa prints as the plain
           // Nations Cup: "African Nations Cup" (and "Africký pohár národů",
           // "Coupe d'Afrique des Nations"...) is how the real AFCON is known.

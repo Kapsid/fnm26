@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
@@ -82,6 +85,8 @@ const Map<String, String> _outOfSaveParents = {
   Routes.diagnostics: Routes.settings,
   Routes.newGame: Routes.nations,
   Routes.startFromBottom: Routes.nations,
+  Routes.campaigns: Routes.home,
+  Routes.campaignBrief: Routes.campaigns,
 };
 
 /// Where system back goes from [uri] when the navigator has nothing to pop.
@@ -115,11 +120,22 @@ BackAction systemBackAction(Uri uri) {
 /// would pop does [systemBackAction] pick the screen the AppBar arrow leads
 /// to. The root dispatcher has no callback until the router has built, so
 /// [attach] takes priority after the first frame.
+///
+/// The press has to reach Flutter at all, too. Under predictive back (on by
+/// default on Android 16 for an app targeting API 36) the platform delivers
+/// it only while the framework has said it handles back, and Flutter's own
+/// answer is "the navigator can pop": false after almost every `context.go`,
+/// so Android sent the app home from every screen. Hand
+/// [onNavigationNotification] to the app so the answer is "back goes
+/// somewhere" instead, and only home lets the platform take it.
 class SystemBackHandler {
   SystemBackHandler(this._router);
 
   final GoRouter _router;
   ChildBackButtonDispatcher? _dispatcher;
+  AppLifecycleListener? _lifecycle;
+  bool _navigatorCanPop = false;
+  bool? _reported;
 
   void attach() {
     if (_dispatcher != null) return;
@@ -130,12 +146,43 @@ class SystemBackHandler {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (identical(_dispatcher, dispatcher)) dispatcher.takePriority();
     });
+    // A `go` that only changes the query (home to the hub) leaves the
+    // navigator's history as it was, so no notification follows it.
+    _router.routeInformationProvider.addListener(_report);
+    // Reports made before the engine was ready were dropped (see [_report]).
+    _lifecycle = AppLifecycleListener(onStateChange: (_) => _report());
   }
 
   /// Dropping the last callback also detaches it from the root dispatcher.
   void dispose() {
     _dispatcher?.removeCallback(_onBack);
     _dispatcher = null;
+    _router.routeInformationProvider.removeListener(_report);
+    _lifecycle?.dispose();
+    _lifecycle = null;
+  }
+
+  /// For `MaterialApp.onNavigationNotification`, in place of the default.
+  bool onNavigationNotification(NavigationNotification notification) {
+    _navigatorCanPop = notification.canHandlePop;
+    _report();
+    return true;
+  }
+
+  void _report() {
+    // As the default handler does: the engine is not listening yet.
+    final state = WidgetsBinding.instance.lifecycleState;
+    if (state == null || state == AppLifecycleState.detached) {
+      _reported = null;
+      return;
+    }
+    final handles =
+        _navigatorCanPop ||
+        systemBackAction(_router.routerDelegate.currentConfiguration.uri)
+            is! ExitApp;
+    if (handles == _reported) return;
+    _reported = handles;
+    unawaited(SystemNavigator.setFrameworkHandlesBack(handles));
   }
 
   Future<bool> _onBack() async {

@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -73,14 +74,9 @@ class AwardService {
     for (final l in shortlist) {
       (byNation[l.nationId] ??= []).add(l);
     }
-    final repo = _ref.read(playerRepositoryProvider);
     final resolved = <AwardLine>[];
     for (final entry in byNation.entries) {
-      final pool = await repo.byNation(
-        entry.key,
-        agingYears: CareerService.agingYears(career),
-        saveSeed: career.rngSeed,
-      );
+      final pool = await careerPoolOf(_ref, career, entry.key);
       final byId = {for (final p in pool) p.id: p};
       for (final l in entry.value) {
         final p = byId[l.playerId];
@@ -180,6 +176,7 @@ class AwardService {
         w.playerId,
         agingYears: CareerService.agingYears(career),
         saveSeed: career.rngSeed,
+        careerId: career.id,
         youthBonusByCycle: youth,
         careerStartsByPlayer: careerDev,
       );

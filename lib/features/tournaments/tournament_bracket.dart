@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -38,6 +39,7 @@ class TournamentBracket extends StatefulWidget {
     this.groupSeeds = const {},
     this.extraHeader,
     this.wide = false,
+    this.careerId,
     super.key,
   });
 
@@ -67,6 +69,9 @@ class TournamentBracket extends StatefulWidget {
   /// round columns across the width when they fit (they scroll sideways, as
   /// on a phone, when they do not).
   final bool wide;
+
+  /// When given, each team (flag and name) opens that nation's page.
+  final int? careerId;
 
   @override
   State<TournamentBracket> createState() => _TournamentBracketState();
@@ -214,7 +219,7 @@ class _TournamentBracketState extends State<TournamentBracket> {
               child: Column(
                 children: [
                   Text(
-                    label.toUpperCase(),
+                    label.capsIn(Localizations.localeOf(context).languageCode),
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -379,24 +384,39 @@ class _TournamentBracketState extends State<TournamentBracket> {
     final isPlayer = nationId == widget.playerNationId;
     return Row(
       children: [
-        FlagDisc(widget.code(nationId), size: 16, highlighted: isPlayer),
-        const SizedBox(width: 4),
         Expanded(
-          child: Text(
-            widget.code(nationId),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.labelSmall.copyWith(
-              // The side that goes through, in the same green the tables use
-              // for an advancing place; your own nation in the accent colour.
-              color: winner
-                  ? AppColors.positive
-                  : isPlayer
-                  ? AppColors.primary
-                  : AppColors.onSurfaceVariant,
-              fontWeight: winner || isPlayer
-                  ? FontWeight.w700
-                  : FontWeight.w400,
+          child: NationTap.maybe(
+            careerId: widget.careerId,
+            nationId: nationId,
+            child: Row(
+              children: [
+                FlagDisc(
+                  widget.code(nationId),
+                  size: 16,
+                  highlighted: isPlayer,
+                ),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    widget.code(nationId),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.labelSmall.copyWith(
+                      // The side that goes through, in the same green the
+                      // tables use for an advancing place; your own nation in
+                      // the accent colour.
+                      color: winner
+                          ? AppColors.positive
+                          : isPlayer
+                          ? AppColors.primary
+                          : AppColors.onSurfaceVariant,
+                      fontWeight: winner || isPlayer
+                          ? FontWeight.w700
+                          : FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -525,9 +545,15 @@ class _TournamentBracketState extends State<TournamentBracket> {
             const SizedBox(width: 4),
             label,
           ];
-    return Row(
-      mainAxisAlignment: end ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: children,
+    return NationTap.maybe(
+      careerId: widget.careerId,
+      nationId: nationId,
+      child: Row(
+        mainAxisAlignment: end
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
+        children: children,
+      ),
     );
   }
 }

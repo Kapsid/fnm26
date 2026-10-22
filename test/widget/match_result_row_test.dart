@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/shared/widgets/match_result_row.dart';
+import 'package:go_router/go_router.dart';
 
 import '../helpers/pump_app.dart';
 
@@ -135,5 +136,47 @@ void main() {
     );
     expect(find.text('-:-'), findsOneWidget);
     expect(find.text('0 - 0'), findsNothing);
+  });
+
+  Future<void> pumpRouted(WidgetTester tester, {int? careerId}) async {
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (_, _) => Scaffold(
+            body: MatchResultRow(
+              fixture: level('NGROUP'),
+              code: code,
+              careerId: careerId,
+            ),
+          ),
+        ),
+        GoRoute(
+          path: '/nation',
+          builder: (_, state) =>
+              Text('nation page ${state.uri.queryParameters['nationId']}'),
+        ),
+      ],
+    );
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('MatchResultRow sides tap through when given a careerId', (
+    tester,
+  ) async {
+    await pumpRouted(tester, careerId: 5);
+    await tester.tap(find.text('N2').last);
+    await tester.pumpAndSettle();
+    expect(find.text('nation page 2'), findsOneWidget);
+  });
+
+  testWidgets('MatchResultRow without a careerId navigates nowhere', (
+    tester,
+  ) async {
+    await pumpRouted(tester);
+    await tester.tap(find.text('N2').last);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('nation page'), findsNothing);
   });
 }

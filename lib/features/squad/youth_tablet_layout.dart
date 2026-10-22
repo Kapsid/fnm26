@@ -71,7 +71,7 @@ class _YouthTabletLayoutState extends ConsumerState<_YouthTabletLayout> {
                       TabletTabBar(
                         tabs: [
                           // In capitals, as its neighbours U-13 to U-21 are.
-                          Tab(text: l.youthWatching.toUpperCase()),
+                          Tab(text: l.youthWatching.capsIn(l.localeName)),
                           for (final level in YouthLevel.values)
                             Tab(text: level.label),
                         ],
@@ -183,7 +183,7 @@ class _LevelGrid extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  l.youthReleased.toUpperCase(),
+                  l.youthReleased.capsIn(l.localeName),
                   style: TabletText.sectionLabel,
                 ),
                 const SizedBox(height: 2),

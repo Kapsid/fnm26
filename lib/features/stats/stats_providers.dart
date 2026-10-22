@@ -5,6 +5,7 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/stats/career_stats.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 
 /// Finals-tournament rounds — played at a neutral venue. Qualifiers (round null
@@ -137,14 +138,24 @@ teamOverallHistoryProvider = FutureProvider.autoDispose
       final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
       final starts = await ref.watch(careerDevBonusProvider(careerId).future);
 
+      // A man naturalised away from the nation is not counted in its curve,
+      // as he is in none of its pools (see `careerPoolOf`).
+      final away = await naturalizedAwayIds(
+        ref.watch(careerRepositoryProvider),
+        careerId,
+      );
       final out = <TeamOverallPoint>[];
       for (var y = 0; y <= years; y++) {
-        final pool = await repo.byNation(
-          career.nationId,
-          agingYears: y,
-          saveSeed: career.rngSeed,
-          youthBonusByCycle: youth,
-          careerStartsByPlayer: starts,
+        final pool = dropNaturalizedAway(
+          await repo.byNation(
+            career.nationId,
+            agingYears: y,
+            saveSeed: career.rngSeed,
+            careerId: career.id,
+            youthBonusByCycle: youth,
+            careerStartsByPlayer: starts,
+          ),
+          away,
         );
         if (pool.isEmpty) continue;
         out.add((
@@ -240,6 +251,7 @@ final AutoDisposeFutureProviderFamily<TeamStatsData?, int> teamStatsProvider =
           id,
           agingYears: aging,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           youthBonusByCycle: youth,
           careerStartsByPlayer: careerDev,
         );

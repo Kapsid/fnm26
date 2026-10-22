@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -309,7 +310,7 @@ class _RoundSheetState extends State<_RoundSheet> {
               // The record carries the CANONICAL stored name (a test keys on
               // it); the heading is written for the manager, like every other
               // competition name in the app.
-              competitionLabel(l, popup.competition).toUpperCase(),
+              competitionLabel(l, popup.competition).capsIn(l.localeName),
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.primary,
               ),
@@ -318,7 +319,7 @@ class _RoundSheetState extends State<_RoundSheet> {
               children: [
                 Expanded(
                   child: Text(
-                    stageLabelFor(l, round).toUpperCase(),
+                    stageLabelFor(l, round).capsIn(l.localeName),
                     style: AppTypography.headlineMedium,
                   ),
                 ),
@@ -345,7 +346,7 @@ class _RoundSheetState extends State<_RoundSheet> {
                           bottom: AppSpacing.xs,
                         ),
                         child: Text(
-                          l.tourCupGroupName(name).toUpperCase(),
+                          l.tourCupGroupName(name).capsIn(l.localeName),
                           style: AppTypography.labelSmall.copyWith(
                             color: AppColors.primary,
                           ),

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -140,7 +141,7 @@ qualifyingDrawProvider = FutureProvider.autoDispose
           rankById: rankById,
         );
         title = l.tourDrawContQualifying(
-          continentalCupLabel(l, conf).toUpperCase(),
+          continentalCupLabel(l, conf).capsIn(l.localeName),
         );
         watchedKind = continentalQualDrawKind;
       }

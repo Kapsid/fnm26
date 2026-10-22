@@ -211,6 +211,47 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
   },
 );
 
+/// The first international window of [career]'s current cycle, from today on,
+/// in which its nation has nothing on the calendar, no finals tournament can
+/// land (see [_finalsWindows]), no friendly has been decided, and a friendly
+/// would be at home ([friendlyIsHome]). Null when there is none.
+///
+/// Unlike [friendliesPlanProvider] it looks across the whole cycle rather
+/// than the gap before the next competitive block: it books a campaign's
+/// opening friendly the moment the run is made, before any gap exists.
+Future<DateTime?> firstFreeHomeFriendlyWindow(
+  CompetitionRepository comp,
+  Career career,
+  Map<int, Nation> nations,
+) async {
+  final occupied = {
+    for (final f in await comp.fixturesForNation(career.id, career.nationId))
+      (f.date.year, f.date.month),
+  };
+  final blocked = await _finalsWindows(comp, career, nations);
+  final now = career.inGameDate;
+  final end = CareerService.cycleOpens(career.cyclePointer + 1);
+  for (var year = now.year; year < end.year + 1; year++) {
+    for (final month in [..._windowMonths]..sort()) {
+      final d = DateTime(year, month, 14);
+      if (!d.isAfter(now) || !d.isBefore(end) || !friendlyIsHome(d)) continue;
+      if (occupied.contains((d.year, d.month)) ||
+          blocked.contains((d.year, d.month))) {
+        continue;
+      }
+      if (await comp.hasWatchedDraw(
+        career.id,
+        career.cyclePointer,
+        friendlyWindowKey(d),
+      )) {
+        continue;
+      }
+      return d;
+    }
+  }
+  return null;
+}
+
 /// The `(year, month)` windows this cycle's finals tournaments occupy, for a
 /// nation that might still be playing in them.
 ///
@@ -244,7 +285,10 @@ Future<Set<(int, int)>> _finalsWindows(
         CompetitionKind.continentalFinals,
         confederation: conf,
       )) {
-    blocked.add((wcYear - 2, cup.month));
+    blocked.add((
+      CareerService.continentalFinalsYear(career.cyclePointer),
+      cup.month,
+    ));
   }
   return blocked;
 }

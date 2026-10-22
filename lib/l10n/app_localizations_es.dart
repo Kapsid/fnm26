@@ -233,6 +233,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsContactCopied => 'Dirección copiada.';
 
   @override
+  String get settingsCommunityTitle => 'Comunidad';
+
+  @override
+  String get settingsDiscordSubtitle => 'Únete a la comunidad';
+
+  @override
+  String get settingsLinkCopied => 'Enlace copiado.';
+
+  @override
   String get diagnosticsEmpty => 'No hay errores registrados. Así debe ser.';
 
   @override
@@ -831,10 +840,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tacticsDrillingDrilled => 'DOMINADO';
 
   @override
-  String get matchInstructionsLocked =>
-      'Se fijan antes del saque inicial. Puedes cambiar el sistema y hacer cambios, pero no rehacer tu planteamiento a mitad de partido.';
-
-  @override
   String get tacticsInstrMentality => 'Mentalidad';
 
   @override
@@ -1255,6 +1260,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Un jugador extranjero quiere cambiar de selección para jugar contigo';
 
   @override
+  String get hubEventCampaignVerdict =>
+      'Campaña decidida: consulta el veredicto';
+
+  @override
+  String get hubEventCampaignComplete => 'Campaña completada';
+
+  @override
   String get hubEventIntercontinentalPlayoff => 'La repesca intercontinental';
 
   @override
@@ -1431,9 +1443,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get hubNoMoreFixtures => 'No quedan partidos en este ciclo.';
-
-  @override
-  String get hubNextMatch => 'PRÓXIMO PARTIDO';
 
   @override
   String get hubVs => 'VS';
@@ -7349,6 +7358,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esa carrera ya ha pasado el primer ciclo gratuito. Desbloquea el juego completo para importarla.';
 
   @override
+  String get careerImportFailedCampaignRun =>
+      'Esa campaña ya tiene una partida en curso. Reanúdala o abandónala primero.';
+
+  @override
   String get careerShareFailed => 'No se pudo exportar esa carrera.';
 
   @override
@@ -9631,4 +9644,331 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get friendliesYourGames => 'Tus amistosos';
+
+  @override
+  String hubEventInjuryCover(String player) {
+    return 'Sustituir al lesionado $player';
+  }
+
+  @override
+  String hubEventInjuryCoverSub(int matches) {
+    String _temp0 = intl.Intl.pluralLogic(
+      matches,
+      locale: localeName,
+      other: 'Se pierde $matches partidos',
+      one: 'Se pierde el próximo partido',
+    );
+    return '$_temp0. Convoca a otro o sigue sin él.';
+  }
+
+  @override
+  String get injuryCoverTitle => 'SUSTITUTO';
+
+  @override
+  String injuryCoverBanner(String player) {
+    return '$player está lesionado. Convoca a cualquiera de fuera de la lista, en cualquier posición, o mantenlo y sigue adelante.';
+  }
+
+  @override
+  String injuryCoverConfirm(String player) {
+    return 'Convocar a $player';
+  }
+
+  @override
+  String injuryCoverKeep(String player) {
+    return 'Mantener a $player y seguir';
+  }
+
+  @override
+  String get injuryCoverPick => 'Elige un sustituto';
+
+  @override
+  String get injuryCoverNone =>
+      'No hay nadie en forma fuera de la convocatoria.';
+
+  @override
+  String get nationNowRanking => 'Ranking mundial';
+
+  @override
+  String get nationNowForm => 'Forma';
+
+  @override
+  String get nationNowNoForm => 'Aún sin partidos jugados';
+
+  @override
+  String get nationNowNext => 'Próximo partido';
+
+  @override
+  String get nationNowNoNext => 'Nada programado';
+
+  @override
+  String get nationNowSquad => 'Plantilla';
+
+  @override
+  String get nationNowAgainstYou => 'Contra ti';
+
+  @override
+  String nationNowRecord(int w, int d, int l) {
+    return '${w}G ${d}E ${l}P';
+  }
+
+  @override
+  String get nationNowLastMeeting => 'Último duelo';
+
+  @override
+  String nationNowOverall(int value) {
+    return 'Media $value';
+  }
+
+  @override
+  String get hubUpcoming => 'PRÓXIMOS';
+
+  @override
+  String get hubFullSchedule => 'Calendario completo';
+
+  @override
+  String get scheduleTitle => 'Calendario';
+
+  @override
+  String get scheduleToday => 'Hoy';
+
+  @override
+  String get scheduleKnockoutPending => 'Fase eliminatoria, si pasáis';
+
+  @override
+  String get scheduleNextRoundPending => 'Siguiente ronda';
+
+  @override
+  String scheduleFromDate(String date) {
+    return 'Desde el $date';
+  }
+
+  @override
+  String get scheduleHomeShort => 'L';
+
+  @override
+  String get scheduleAwayShort => 'V';
+
+  @override
+  String get tacticsNoPresetsInMatch =>
+      'Aún no hay tácticas guardadas. Guarda una desde la pantalla de Tácticas antes del partido.';
+
+  @override
+  String get homeCampaigns => 'Campañas';
+
+  @override
+  String get homeContinueCampaign => 'CONTINUAR CAMPAÑA';
+
+  @override
+  String homeCampaignCycle(String date, int cycle, int total) {
+    return '$date · Ciclo $cycle de $total';
+  }
+
+  @override
+  String get campaignsTitle => 'Campañas';
+
+  @override
+  String get campaignTransplantTitle => 'El Trasplante';
+
+  @override
+  String get campaignTransplantTwist =>
+      'Ocho de los mejores de Italia cambian de bandera por San Marino';
+
+  @override
+  String get campaignTransplantGoal => 'Clasificarse para la Eurocopa';
+
+  @override
+  String get campaignGrudgeTitle => 'Rencor';
+
+  @override
+  String get campaignGrudgeTwist => 'Georgia y Albania, sorteadas juntas';
+
+  @override
+  String get campaignGrudgeGoal =>
+      'Acabar por encima de Albania en la clasificación';
+
+  @override
+  String get campaignTransplantIntro =>
+      'San Marino nunca ha tenido una clasificación digna de ese nombre. Entonces ocho de los mejores de Italia cogen el pasaporte y entran. Tienes un ciclo para convertir una curiosidad en un equipo.';
+
+  @override
+  String get campaignGrudgeIntro =>
+      'Georgia y Albania han caído en el mismo grupo de clasificación, y ninguna perdona una derrota. Acaba por encima de Albania y mira hasta dónde llegas.';
+
+  @override
+  String get campaignStars1Transplant => 'Clasificarse';
+
+  @override
+  String get campaignStars2Transplant => 'Llegar a las eliminatorias';
+
+  @override
+  String get campaignStars3Transplant => 'Ganar la Eurocopa';
+
+  @override
+  String get campaignStars1Grudge => 'Por encima de Albania';
+
+  @override
+  String get campaignStars2Grudge => 'Y clasificarse';
+
+  @override
+  String get campaignStars3Grudge => 'Y ganarles dos veces';
+
+  @override
+  String get campaignFree => 'Gratis';
+
+  @override
+  String get campaignStart => 'Empezar';
+
+  @override
+  String get campaignPartOfUnlimited => 'Incluido en Ilimitado';
+
+  @override
+  String get campaignResume => 'Reanudar';
+
+  @override
+  String get campaignAbandon => 'Abandonar';
+
+  @override
+  String get campaignAbandonConfirm =>
+      '¿Abandonar esta partida? Se pierde su progreso; tu sello se queda.';
+
+  @override
+  String get campaignMoveToSaves => 'Mover a partidas';
+
+  @override
+  String get campaignCannotContinue =>
+      'El mundo de esta campaña está demasiado lejos del real para seguir como carrera.';
+
+  @override
+  String get campaignMoveSlotsFull =>
+      'Tus ranuras de partida están llenas. Libera una primero.';
+
+  @override
+  String get campaignStampConquered => 'Conquistada';
+
+  @override
+  String get campaignStampFailed => 'Fallida';
+
+  @override
+  String get campaignDifficultyHard => 'Difícil';
+
+  @override
+  String get campaignDifficultyMedium => 'Media';
+
+  @override
+  String get campaignGoalLabel => 'Objetivo';
+
+  @override
+  String get campaignStarsLabel => 'Estrellas';
+
+  @override
+  String get campaignRunInProgress =>
+      'Esta campaña ya tiene una partida en curso.';
+
+  @override
+  String get campaignVerdictWon => 'Conquistada';
+
+  @override
+  String get campaignVerdictLost => 'Esta vez no';
+
+  @override
+  String get campaignVerdictContinue => 'Continuar';
+
+  @override
+  String campaignProgressQualifying(String position) {
+    return 'Clasificación: $position';
+  }
+
+  @override
+  String campaignProgressRival(String rival, String position) {
+    return '$rival: $position';
+  }
+
+  @override
+  String campaignProgressFinals(String stage) {
+    return 'Fase final: $stage';
+  }
+
+  @override
+  String get campaignRunInNumbers => 'El recorrido en cifras';
+
+  @override
+  String campaignRunMeetings(int won, int played) {
+    return 'Duelos ganados: $won de $played';
+  }
+
+  @override
+  String campaignPlace(String which, int n) {
+    String _temp0 = intl.Intl.selectLogic(
+      which,
+      {
+        'other': '$n.º',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignGuineasTitle => 'La mejor Guinea';
+
+  @override
+  String get campaignGuineasTwist =>
+      'Guinea Ecuatorial, la Guinea africana peor clasificada, durante dos ciclos';
+
+  @override
+  String get campaignGuineasGoal => 'Vencer a Guinea y a Guinea-Bisáu';
+
+  @override
+  String get campaignGuineasIntro =>
+      'Tres selecciones africanas llevan el nombre de Guinea, y Guinea Ecuatorial es la peor clasificada de ellas. Tienes dos ciclos para vencer al menos una vez a Guinea y a Guinea-Bisáu, y luego ver hasta dónde llegas en el Campeonato de África. Papúa Nueva Guinea, la cuarta Guinea, ya tiene un amistoso cerrado contigo.';
+
+  @override
+  String get campaignStars1Guineas => 'Vencer a Guinea y a Guinea-Bisáu';
+
+  @override
+  String get campaignStars2Guineas =>
+      'Y clasificarse para un Campeonato de África';
+
+  @override
+  String get campaignStars3Guineas =>
+      'Y llegar a unos cuartos de final del Campeonato de África';
+
+  @override
+  String get campaignYoungFinnsTitle => 'Jóvenes finlandeses';
+
+  @override
+  String get campaignYoungFinnsTwist =>
+      'La generación dorada de adolescentes de Finlandia, durante tres ciclos';
+
+  @override
+  String get campaignYoungFinnsGoal =>
+      'Clasificarse para un Campeonato del Mundo';
+
+  @override
+  String get campaignYoungFinnsIntro =>
+      'Los veteranos de Finlandia se han hecho a un lado y una generación dorada ocupa su lugar: todos los jugadores que puedes convocar tienen 18 años o menos. Hoy aún están verdes, pero tienen talento para convertirse en una de las mejores selecciones del mundo, como hizo la joven generación de Noruega. Tienes tres ciclos para llevarlos a un Campeonato del Mundo y después ganar el Campeonato de Europa y el Campeonato del Mundo.';
+
+  @override
+  String get campaignStars1YoungFinns =>
+      'Clasificarse para un Campeonato del Mundo';
+
+  @override
+  String get campaignStars2YoungFinns => 'Ganar el Campeonato de Europa';
+
+  @override
+  String get campaignStars3YoungFinns => 'Ganar el Campeonato del Mundo';
+
+  @override
+  String get campaignPro => 'Pro';
+
+  @override
+  String campaignProgressCup(String cup, String year, String status) {
+    return '$cup $year: $status';
+  }
+
+  @override
+  String get campaignCupNotQualified => 'No clasificada';
+
+  @override
+  String get campaignCupOpen => 'Por decidir';
 }

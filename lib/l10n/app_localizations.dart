@@ -5,13 +5,28 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_bg.dart';
 import 'app_localizations_cs.dart';
+import 'app_localizations_da.dart';
 import 'app_localizations_de.dart';
+import 'app_localizations_el.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
+import 'app_localizations_fi.dart';
+import 'app_localizations_fil.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_hr.dart';
+import 'app_localizations_hu.dart';
+import 'app_localizations_id.dart';
 import 'app_localizations_it.dart';
+import 'app_localizations_nb.dart';
+import 'app_localizations_nl.dart';
 import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_sv.dart';
+import 'app_localizations_tr.dart';
+import 'app_localizations_uk.dart';
+import 'app_localizations_vi.dart';
 
 // ignore_for_file: type=lint
 
@@ -100,12 +115,27 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('bg'),
     Locale('cs'),
+    Locale('da'),
     Locale('de'),
+    Locale('el'),
     Locale('es'),
+    Locale('fi'),
+    Locale('fil'),
     Locale('fr'),
+    Locale('hr'),
+    Locale('hu'),
+    Locale('id'),
     Locale('it'),
+    Locale('nb'),
+    Locale('nl'),
     Locale('pl'),
+    Locale('pt'),
+    Locale('sv'),
+    Locale('tr'),
+    Locale('uk'),
+    Locale('vi'),
   ];
 
   /// App-bar title on the pre-match preview screen.
@@ -509,6 +539,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Address copied.'**
   String get settingsContactCopied;
+
+  /// Settings card heading for the Discord and Instagram links.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get settingsCommunityTitle;
+
+  /// Subtitle under the Discord row in Settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Join the community'**
+  String get settingsDiscordSubtitle;
+
+  /// Snackbar when a community link could not be opened and was copied instead.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied.'**
+  String get settingsLinkCopied;
 
   /// Placeholder when the error log is empty.
   ///
@@ -1512,12 +1560,6 @@ abstract class AppLocalizations {
   /// **'DRILLED'**
   String get tacticsDrillingDrilled;
 
-  /// Shown in place of the instruction sliders during a live match, where they cannot be changed.
-  ///
-  /// In en, this message translates to:
-  /// **'Set before kick-off. You can change shape and make substitutions, but not rewrite your approach mid-match.'**
-  String get matchInstructionsLocked;
-
   /// Instruction slider: overall mentality.
   ///
   /// In en, this message translates to:
@@ -2250,6 +2292,18 @@ abstract class AppLocalizations {
   /// **'A foreign player wants to switch allegiance to you'**
   String get hubEventNaturalizationSub;
 
+  /// Hub action: a campaign's goal is settled; open its verdict.
+  ///
+  /// In en, this message translates to:
+  /// **'Campaign settled: see the verdict'**
+  String get hubEventCampaignVerdict;
+
+  /// Hub action at the end of a campaign's cycle: back to the campaigns list.
+  ///
+  /// In en, this message translates to:
+  /// **'Campaign complete'**
+  String get hubEventCampaignComplete;
+
   /// Hub action: the intercontinental play-off.
   ///
   /// In en, this message translates to:
@@ -2519,12 +2573,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No more fixtures this cycle.'**
   String get hubNoMoreFixtures;
-
-  /// Heading above the next match card.
-  ///
-  /// In en, this message translates to:
-  /// **'NEXT MATCH'**
-  String get hubNextMatch;
 
   /// Versus separator between two teams.
   ///
@@ -11659,6 +11707,12 @@ abstract class AppLocalizations {
   /// **'That career is past the free first cycle. Unlock the full game to take it in.'**
   String get careerImportFailedNeedsPremium;
 
+  /// Import refused: that campaign already has a run in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'That campaign already has a run in progress. Resume or abandon it first.'**
+  String get careerImportFailedCampaignRun;
+
   /// Snackbar when a per-career export fails.
   ///
   /// In en, this message translates to:
@@ -15096,6 +15150,540 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your friendlies'**
   String get friendliesYourGames;
+
+  /// Hub action: call up a replacement for a squad player injured mid-window.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace the injured {player}'**
+  String hubEventInjuryCover(String player);
+
+  /// Hub subtitle under the replacement action.
+  ///
+  /// In en, this message translates to:
+  /// **'{matches, plural, =1{Out for the next match} other{Out for {matches} matches}}. Call someone up, or play on without him.'**
+  String hubEventInjuryCoverSub(int matches);
+
+  /// App-bar title of the replacement call-up screen.
+  ///
+  /// In en, this message translates to:
+  /// **'REPLACEMENT'**
+  String get injuryCoverTitle;
+
+  /// Banner on the replacement call-up screen.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is injured. Call up anyone from outside the squad, in any position, or keep him and play on.'**
+  String injuryCoverBanner(String player);
+
+  /// Button: call up the selected replacement.
+  ///
+  /// In en, this message translates to:
+  /// **'Call up {player}'**
+  String injuryCoverConfirm(String player);
+
+  /// Button: decline, keep the injured player in the squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep {player} and play on'**
+  String injuryCoverKeep(String player);
+
+  /// Disabled confirm button before a replacement is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a replacement'**
+  String get injuryCoverPick;
+
+  /// Empty state: no fit player outside the squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody outside the squad is fit to join.'**
+  String get injuryCoverNone;
+
+  /// Label over the nation's world rank and points in the team page's now block.
+  ///
+  /// In en, this message translates to:
+  /// **'World ranking'**
+  String get nationNowRanking;
+
+  /// Label over the last five results.
+  ///
+  /// In en, this message translates to:
+  /// **'Form'**
+  String get nationNowForm;
+
+  /// Shown in place of the form chips when the nation has played nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches played yet'**
+  String get nationNowNoForm;
+
+  /// Label over the next scheduled match.
+  ///
+  /// In en, this message translates to:
+  /// **'Next match'**
+  String get nationNowNext;
+
+  /// Shown when no match is left to play this cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing scheduled'**
+  String get nationNowNoNext;
+
+  /// Label over the squad strength and its three best players.
+  ///
+  /// In en, this message translates to:
+  /// **'Squad'**
+  String get nationNowSquad;
+
+  /// Label over the manager's record against this nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Against you'**
+  String get nationNowAgainstYou;
+
+  /// The manager's record against a nation: wins, draws, losses.
+  ///
+  /// In en, this message translates to:
+  /// **'{w}W {d}D {l}L'**
+  String nationNowRecord(int w, int d, int l);
+
+  /// Label over the score and date of the latest meeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Last meeting'**
+  String get nationNowLastMeeting;
+
+  /// The squad strength in the team page's now block.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall {value}'**
+  String nationNowOverall(int value);
+
+  /// Heading of the hub card listing the next few fixtures.
+  ///
+  /// In en, this message translates to:
+  /// **'UPCOMING'**
+  String get hubUpcoming;
+
+  /// Button on the hub card that opens the full schedule screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Full schedule'**
+  String get hubFullSchedule;
+
+  /// Title of the schedule screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get scheduleTitle;
+
+  /// Marker on the schedule screen at the match the nation is on now.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get scheduleToday;
+
+  /// Schedule row for a knockout stage whose fixtures are not drawn yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Knockout stage, if you go through'**
+  String get scheduleKnockoutPending;
+
+  /// Schedule row for the next knockout round, not drawn until the current one is won.
+  ///
+  /// In en, this message translates to:
+  /// **'Next round'**
+  String get scheduleNextRoundPending;
+
+  /// Date a pending schedule stage starts from.
+  ///
+  /// In en, this message translates to:
+  /// **'From {date}'**
+  String scheduleFromDate(String date);
+
+  /// One-letter home marker on a schedule row.
+  ///
+  /// In en, this message translates to:
+  /// **'H'**
+  String get scheduleHomeShort;
+
+  /// One-letter away marker on a schedule row.
+  ///
+  /// In en, this message translates to:
+  /// **'A'**
+  String get scheduleAwayShort;
+
+  /// Empty state of the in-match tactic presets sheet, which cannot save presets itself.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved tactics yet. Save one from the Tactics screen before the match.'**
+  String get tacticsNoPresetsInMatch;
+
+  /// Home screen button opening the list of campaigns.
+  ///
+  /// In en, this message translates to:
+  /// **'Campaigns'**
+  String get homeCampaigns;
+
+  /// Heading over the continue-campaign card on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'CONTINUE CAMPAIGN'**
+  String get homeContinueCampaign;
+
+  /// Continue-campaign card subtitle: the in-game month and year, then the campaign cycle being played.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · Cycle {cycle} of {total}'**
+  String homeCampaignCycle(String date, int cycle, int total);
+
+  /// Title of the campaigns list and brief screens.
+  ///
+  /// In en, this message translates to:
+  /// **'Campaigns'**
+  String get campaignsTitle;
+
+  /// Name of the Transplant campaign (San Marino with eight Italians).
+  ///
+  /// In en, this message translates to:
+  /// **'The Transplant'**
+  String get campaignTransplantTitle;
+
+  /// One-line twist of the Transplant campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Eight of Italy\'s best switch allegiance to San Marino'**
+  String get campaignTransplantTwist;
+
+  /// Goal of the Transplant campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for the European Championship'**
+  String get campaignTransplantGoal;
+
+  /// Name of the Grudge campaign (Georgia versus Albania).
+  ///
+  /// In en, this message translates to:
+  /// **'Grudge'**
+  String get campaignGrudgeTitle;
+
+  /// One-line twist of the Grudge campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Georgia and Albania, drawn together'**
+  String get campaignGrudgeTwist;
+
+  /// Goal of the Grudge campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish above Albania in qualifying'**
+  String get campaignGrudgeGoal;
+
+  /// Brief screen introduction of the Transplant campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'San Marino have never had a qualifying campaign worth the name. Then eight of Italy\'s best take up the passport and walk in. You have one cycle to turn a curiosity into a team.'**
+  String get campaignTransplantIntro;
+
+  /// Brief screen introduction of the Grudge campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Georgia and Albania have been drawn into the same qualifying group, and neither will forgive a defeat. Finish above Albania, then see how far you can carry it.'**
+  String get campaignGrudgeIntro;
+
+  /// What earns the first star in the Transplant campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify'**
+  String get campaignStars1Transplant;
+
+  /// What earns the second star in the Transplant campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach the knockouts'**
+  String get campaignStars2Transplant;
+
+  /// What earns the third star in the Transplant campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the European Championship'**
+  String get campaignStars3Transplant;
+
+  /// What earns the first star in the Grudge campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Above Albania'**
+  String get campaignStars1Grudge;
+
+  /// What earns the second star in the Grudge campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'And qualify'**
+  String get campaignStars2Grudge;
+
+  /// What earns the third star in the Grudge campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'And beat them twice'**
+  String get campaignStars3Grudge;
+
+  /// Badge on a campaign that costs nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get campaignFree;
+
+  /// Button starting a campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get campaignStart;
+
+  /// Label of the Start button on a Pro-only campaign card while Unlimited is not owned; tapping it opens the paywall. Short: a button.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of Unlimited'**
+  String get campaignPartOfUnlimited;
+
+  /// Button resuming a campaign run in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get campaignResume;
+
+  /// Button (and dialog title) abandoning a campaign run.
+  ///
+  /// In en, this message translates to:
+  /// **'Abandon'**
+  String get campaignAbandon;
+
+  /// Confirmation text before abandoning a campaign run.
+  ///
+  /// In en, this message translates to:
+  /// **'Abandon this run? Its progress is lost; your stamp stays.'**
+  String get campaignAbandonConfirm;
+
+  /// Button moving a settled campaign run into the save slots.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to saves'**
+  String get campaignMoveToSaves;
+
+  /// Verdict screen note for a campaign that cannot be moved into the saves.
+  ///
+  /// In en, this message translates to:
+  /// **'This campaign\'s world is too far from the real one to carry on as a career.'**
+  String get campaignCannotContinue;
+
+  /// Snackbar when a campaign cannot be moved because the save slots are full.
+  ///
+  /// In en, this message translates to:
+  /// **'Your save slots are full. Free one first.'**
+  String get campaignMoveSlotsFull;
+
+  /// Stamp text on a campaign that was won.
+  ///
+  /// In en, this message translates to:
+  /// **'Conquered'**
+  String get campaignStampConquered;
+
+  /// Stamp text on a campaign that was failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get campaignStampFailed;
+
+  /// Difficulty label of a hard campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get campaignDifficultyHard;
+
+  /// Difficulty label of a medium campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get campaignDifficultyMedium;
+
+  /// Label above a campaign's goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get campaignGoalLabel;
+
+  /// Label above the list of what earns each star.
+  ///
+  /// In en, this message translates to:
+  /// **'Stars'**
+  String get campaignStarsLabel;
+
+  /// Brief screen note: this campaign already has a run in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'This campaign already has a run in progress.'**
+  String get campaignRunInProgress;
+
+  /// Headline and stamp word of a campaign that was conquered.
+  ///
+  /// In en, this message translates to:
+  /// **'Conquered'**
+  String get campaignVerdictWon;
+
+  /// Headline of a campaign that was failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not this time'**
+  String get campaignVerdictLost;
+
+  /// Verdict screen button: acknowledge and return to the hub.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get campaignVerdictContinue;
+
+  /// Hub campaign card: the nation's place in its qualifying group.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualifying: {position}'**
+  String campaignProgressQualifying(String position);
+
+  /// Hub campaign card: the rival's place in the qualifying group.
+  ///
+  /// In en, this message translates to:
+  /// **'{rival}: {position}'**
+  String campaignProgressRival(String rival, String position);
+
+  /// Hub campaign card: how far the nation has got in the finals.
+  ///
+  /// In en, this message translates to:
+  /// **'Finals: {stage}'**
+  String campaignProgressFinals(String stage);
+
+  /// Verdict screen heading above the played/won/goals figures.
+  ///
+  /// In en, this message translates to:
+  /// **'The run in numbers'**
+  String get campaignRunInNumbers;
+
+  /// Verdict screen: meetings with the rival that were won.
+  ///
+  /// In en, this message translates to:
+  /// **'Meetings won: {won} of {played}'**
+  String campaignRunMeetings(int won, int played);
+
+  /// A group place as an ordinal, 1-based.
+  ///
+  /// In en, this message translates to:
+  /// **'{which, select, first{1st} second{2nd} third{3rd} other{{n}th}}'**
+  String campaignPlace(String which, int n);
+
+  /// Name of the Best of Guineas campaign (Equatorial Guinea against the other Guineas).
+  ///
+  /// In en, this message translates to:
+  /// **'Best of Guineas'**
+  String get campaignGuineasTitle;
+
+  /// One-line twist of the Best of Guineas campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Equatorial Guinea, the lowest-ranked of Africa\'s Guineas, for two cycles'**
+  String get campaignGuineasTwist;
+
+  /// Goal of the Best of Guineas campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat Guinea and Guinea-Bissau'**
+  String get campaignGuineasGoal;
+
+  /// Brief screen introduction of the Best of Guineas campaign; mentions the friendly booked against Papua New Guinea.
+  ///
+  /// In en, this message translates to:
+  /// **'Three African nations carry the name Guinea, and Equatorial Guinea are ranked the lowest of them. You have two cycles to beat Guinea and Guinea-Bissau at least once each, then see how far you can go in the African Championship. Papua New Guinea, the fourth Guinea, are already booked for a friendly.'**
+  String get campaignGuineasIntro;
+
+  /// What earns the first star in the Best of Guineas campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Beat Guinea and Guinea-Bissau'**
+  String get campaignStars1Guineas;
+
+  /// What earns the second star in the Best of Guineas campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'And qualify for an African Championship'**
+  String get campaignStars2Guineas;
+
+  /// What earns the third star in the Best of Guineas campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'And reach an African Championship quarter-final'**
+  String get campaignStars3Guineas;
+
+  /// Name of the Young Finns campaign (Finland with a golden generation of teenagers).
+  ///
+  /// In en, this message translates to:
+  /// **'Young Finns'**
+  String get campaignYoungFinnsTitle;
+
+  /// One-line twist of the Young Finns campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Finland\'s golden generation of teenagers, for three cycles'**
+  String get campaignYoungFinnsTwist;
+
+  /// Goal of the Young Finns campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignYoungFinnsGoal;
+
+  /// Brief screen introduction of the Young Finns campaign: Finland's seniors replaced by a golden generation, all 18 or younger, who can rise the way Norway's young generation did. Names no real player.
+  ///
+  /// In en, this message translates to:
+  /// **'Finland\'s senior players have stepped aside and a golden generation has taken their place: every player you can pick is 18 or younger. Raw today, they have the talent to become one of the best sides in the world, just as Norway\'s young generation did. You have three cycles to take them to a World Championship, then win the European Championship and the World Championship.'**
+  String get campaignYoungFinnsIntro;
+
+  /// What earns the first star in the Young Finns campaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignStars1YoungFinns;
+
+  /// What earns the second star in the Young Finns campaign (any of the three cycles).
+  ///
+  /// In en, this message translates to:
+  /// **'Win the European Championship'**
+  String get campaignStars2YoungFinns;
+
+  /// What earns the third star in the Young Finns campaign (any of the three cycles).
+  ///
+  /// In en, this message translates to:
+  /// **'Win the World Championship'**
+  String get campaignStars3YoungFinns;
+
+  /// Badge on a campaign that needs the full game (Pro).
+  ///
+  /// In en, this message translates to:
+  /// **'Pro'**
+  String get campaignPro;
+
+  /// Hub campaign card: one cycle of the continental championship. {cup} is its name, {year} its year, {status} how it went.
+  ///
+  /// In en, this message translates to:
+  /// **'{cup} {year}: {status}'**
+  String campaignProgressCup(String cup, String year, String status);
+
+  /// Hub campaign card: the nation did not qualify for that continental championship.
+  ///
+  /// In en, this message translates to:
+  /// **'Did not qualify'**
+  String get campaignCupNotQualified;
+
+  /// Hub campaign card: that continental championship is still to be decided for the nation.
+  ///
+  /// In en, this message translates to:
+  /// **'To be decided'**
+  String get campaignCupOpen;
 }
 
 class _AppLocalizationsDelegate
@@ -15109,13 +15697,28 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
+    'bg',
     'cs',
+    'da',
     'de',
+    'el',
     'en',
     'es',
+    'fi',
+    'fil',
     'fr',
+    'hr',
+    'hu',
+    'id',
     'it',
+    'nb',
+    'nl',
     'pl',
+    'pt',
+    'sv',
+    'tr',
+    'uk',
+    'vi',
   ].contains(locale.languageCode);
 
   @override
@@ -15125,20 +15728,50 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'bg':
+      return AppLocalizationsBg();
     case 'cs':
       return AppLocalizationsCs();
+    case 'da':
+      return AppLocalizationsDa();
     case 'de':
       return AppLocalizationsDe();
+    case 'el':
+      return AppLocalizationsEl();
     case 'en':
       return AppLocalizationsEn();
     case 'es':
       return AppLocalizationsEs();
+    case 'fi':
+      return AppLocalizationsFi();
+    case 'fil':
+      return AppLocalizationsFil();
     case 'fr':
       return AppLocalizationsFr();
+    case 'hr':
+      return AppLocalizationsHr();
+    case 'hu':
+      return AppLocalizationsHu();
+    case 'id':
+      return AppLocalizationsId();
     case 'it':
       return AppLocalizationsIt();
+    case 'nb':
+      return AppLocalizationsNb();
+    case 'nl':
+      return AppLocalizationsNl();
     case 'pl':
       return AppLocalizationsPl();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'sv':
+      return AppLocalizationsSv();
+    case 'tr':
+      return AppLocalizationsTr();
+    case 'uk':
+      return AppLocalizationsUk();
+    case 'vi':
+      return AppLocalizationsVi();
   }
 
   throw FlutterError(

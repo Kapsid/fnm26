@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
@@ -220,7 +221,7 @@ class _RecordResult extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  label.toUpperCase(),
+                  label.capsIn(l.localeName),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),
@@ -500,7 +501,7 @@ class _Finish extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label.toUpperCase(),
+          label.capsIn(Localizations.localeOf(context).languageCode),
           style: AppTypography.labelSmall.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
@@ -562,7 +563,7 @@ class _Stat extends StatelessWidget {
         // Scales into its fifth of the card rather than demanding the width a
         // long word wants — see [WholeText].
         WholeText(
-          label.toUpperCase(),
+          label.capsIn(Localizations.localeOf(context).languageCode),
           maxLines: 1,
           textAlign: TextAlign.center,
           style: AppTypography.labelSmall.copyWith(

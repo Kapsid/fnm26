@@ -184,11 +184,17 @@ void main() {
       nationId,
       agingYears: aging,
       saveSeed: career.rngSeed,
+      careerId: career.id,
     );
     int? lateNewgen;
     for (final p in pool) {
       if (!PlayerLifecycle.isNewgenId(p.id)) continue;
-      if (await players.byId(p.id, saveSeed: career.rngSeed) == null) {
+      if (await players.byId(
+            p.id,
+            saveSeed: career.rngSeed,
+            careerId: career.id,
+          ) ==
+          null) {
         lateNewgen = p.id;
         break;
       }

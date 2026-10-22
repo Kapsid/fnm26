@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/routing/back_navigation.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -78,6 +79,7 @@ _playerDetailProvider = FutureProvider.autoDispose
             arg.playerId,
             agingYears: career == null ? 0 : CareerService.agingYears(career),
             saveSeed: career?.rngSeed ?? 0,
+            careerId: career?.id,
             youthBonusByCycle: career == null
                 ? const {}
                 : await ref.watch(
@@ -101,15 +103,27 @@ _playerDetailProvider = FutureProvider.autoDispose
           nationsById[n.id] = n;
         }
         nation = nationsById[player.nationId];
-        // All-time goals for this player in the career (across every competition).
-        final tallies = await comp.nationTopScorers(
-          arg.careerId,
+        // All-time goals for this player in the career (across every
+        // competition). A naturalised man reads as his new nation, but the
+        // goals he scored for the old one were logged under it: count both.
+        final scoredFor = {
           player.nationId,
-          limit: 500,
-        );
-        goals = tallies
-            .where((t) => t.playerId == player.id)
-            .fold(0, (s, t) => s + t.goals);
+          for (final link
+              in await ref
+                  .watch(careerRepositoryProvider)
+                  .acceptedNaturalizations(arg.careerId))
+            if (link.playerId == player.id) link.sourceNationId,
+        };
+        for (final nid in scoredFor) {
+          final tallies = await comp.nationTopScorers(
+            arg.careerId,
+            nid,
+            limit: 500,
+          );
+          goals += tallies
+              .where((t) => t.playerId == player.id)
+              .fold(0, (s, t) => s + t.goals);
+        }
         stats = await comp.playerCareerStats(arg.careerId, player.id);
         history = await comp.playerMatchHistory(arg.careerId, player.id);
       }
@@ -364,7 +378,7 @@ _playerSections(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l.playerAttributes.toUpperCase(),
+              l.playerAttributes.capsIn(l.localeName),
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.primary,
               ),
@@ -538,10 +552,14 @@ Widget _fact(String label, String value) => Padding(
   padding: const EdgeInsets.symmetric(vertical: 3),
   child: Row(
     children: [
-      Text(
-        label.toUpperCase(),
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.onSurfaceVariant,
+      // A Builder only for the locale: the label is set in the language's
+      // own capitals, and this helper is handed no context of its own.
+      Builder(
+        builder: (context) => Text(
+          label.capsIn(Localizations.localeOf(context).languageCode),
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
         ),
       ),
       // Takes the rest of the row and keeps the value at its right edge,
@@ -591,7 +609,7 @@ class _HeadlineStat extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            label.toUpperCase(),
+            label.capsIn(Localizations.localeOf(context).languageCode),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTypography.labelSmall.copyWith(
@@ -644,7 +662,7 @@ class _AbilityRing extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          label.toUpperCase(),
+          label.capsIn(Localizations.localeOf(context).languageCode),
           textAlign: TextAlign.center,
           maxLines: 2,
           style: AppTypography.labelSmall.copyWith(
@@ -801,7 +819,10 @@ class _HistoryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final isHome = stat.homeNationId == playerNationId;
+    // The side he was on THAT day: a naturalised man's early lines were for
+    // the nation he left. [playerNationId] only for a line with no nation.
+    final side = stat.nationId != 0 ? stat.nationId : playerNationId;
+    final isHome = stat.homeNationId == side;
     final opponentId = isHome ? stat.awayNationId : stat.homeNationId;
     final opp = nationsById[opponentId];
     final my = isHome ? stat.homeScore : stat.awayScore;
@@ -987,7 +1008,7 @@ class _StatTile extends StatelessWidget {
         children: [
           Text(value, style: AppTypography.titleMedium),
           Text(
-            label.toUpperCase(),
+            label.capsIn(Localizations.localeOf(context).languageCode),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),

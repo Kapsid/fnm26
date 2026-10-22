@@ -47,6 +47,7 @@ class _HeadToHeadTabletLayout extends StatelessWidget {
                       children: [
                         Expanded(
                           child: _NationSlot(
+                            careerId: careerId,
                             label: l.recordsHome,
                             nation: a,
                             onTap: () => state._pickA(nations),
@@ -65,6 +66,7 @@ class _HeadToHeadTabletLayout extends StatelessWidget {
                         ),
                         Expanded(
                           child: _NationSlot(
+                            careerId: careerId,
                             label: l.recordsAway,
                             nation: b,
                             onTap: () => state._pickB(nations),

@@ -36,6 +36,7 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
           save.nationId,
           agingYears: CareerService.agingYears(save.career),
           saveSeed: save.career.rngSeed,
+          careerId: save.career.id,
         );
     playerId = pool.first.id;
   });
@@ -70,6 +71,8 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
     Routes.h2hMeetings: '&a=${me.id}&b=${other.id}',
     Routes.nationsCup: '',
     Routes.naturalization: '',
+    Routes.injuryCover: '',
+    Routes.schedule: '',
     Routes.managerHistory: '',
     Routes.friendlies: '',
     Routes.results: '',

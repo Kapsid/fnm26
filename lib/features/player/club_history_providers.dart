@@ -39,6 +39,7 @@ clubHistoryProvider = FutureProvider.autoDispose
           arg.playerId,
           agingYears: y,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           youthBonusByCycle: youth,
           careerStartsByPlayer: starts,
         );

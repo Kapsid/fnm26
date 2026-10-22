@@ -146,10 +146,11 @@ void main() {
     final nations = booted.nations;
     await container.read(seedLoaderProvider).ensureSeeded();
     const conf = Confederation.northAmerica;
-    // Well outside the continent's leading two dozen, so the brief is the
-    // bottom rung: the qualifying campaign itself.
+    // Outside the sixteen the Gold Cup takes but inside the pots a group's
+    // top half is drawn from, so the brief is the bottom rung: the qualifying
+    // campaign itself. (Further down there is no brief at all.)
     final player = (nations.where((n) => n.confederation == conf).toList()
-      ..sort((a, b) => a.ranking.compareTo(b.ranking)))[28];
+      ..sort((a, b) => a.ranking.compareTo(b.ranking)))[18];
     final career = (await container
             .read(careerServiceProvider)
             .create(nationId: player.id, managerName: 'M'))

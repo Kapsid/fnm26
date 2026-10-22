@@ -7,7 +7,10 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/repositories/player_repository.dart'
+    show namePoolsV2Kind;
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
@@ -17,13 +20,25 @@ import 'package:fnm/domain/services/competition/real_history.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart' show worldCupQualDrawKind;
+import 'package:fnm/features/hub/objective_providers.dart'
+    show briefRulesV2Kind;
 
 /// All save games, most recent first (seeding the DB first if needed).
+///
+/// An unmoved campaign run is not a save (it sits outside the slots, see
+/// `countsAsSave`), so it is not listed. One tag read per call, not per career.
 final savesProvider = FutureProvider<List<Career>>((ref) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
-  return ref.watch(careerRepositoryProvider).all();
+  final all = await ref.watch(careerRepositoryProvider).all();
+  final tags = await campaignTags(ref.watch(competitionRepositoryProvider));
+  return [
+    for (final c in all)
+      if (countsAsSave(tags[c.id])) c,
+  ];
 });
 
 /// A nation by id — used by the new-game and hub screens for display.
@@ -40,6 +55,15 @@ final FutureProviderFamily<Career?, int> careerByIdProvider =
     );
 
 /// Creates and deletes save games, enforcing the slot limit.
+/// Marks a cycle opened by 1.0.6 or later, whose qualifying is played in fluid
+/// windows of two to four matches (see `WindowPlan`). Stored with the cycle's
+/// watched events, so no schema change; a cycle already under way in a save
+/// from 1.0.5 has no mark and keeps three matchdays a window.
+const fluidWindowsKind = 'fluidWindows1';
+
+/// Keeps the window sizes on a stream of their own, apart from the draw's.
+const int _fluidSalt = 0xF1D0;
+
 class CareerService {
   CareerService(this._ref);
 
@@ -51,6 +75,17 @@ class CareerService {
 
   /// The World Cup year for a given cycle (clean cadence: 2030, 2034, …).
   static int worldCupYear(int cycle) => cycleStart.year + 4 * (cycle + 1);
+
+  /// The continental championships' year for a given cycle: two years before
+  /// its World Cup (2028, 2032, …). The calendar builds them there, and every
+  /// reader that names the edition asks here rather than redoing the sum.
+  static int continentalFinalsYear(int cycle) => worldCupYear(cycle) - 2;
+
+  /// The day [cycle] opens: the save's own start for the first, and the
+  /// September after the previous finals for every one after (see
+  /// `startNextCycle`).
+  static DateTime cycleOpens(int cycle) =>
+      cycle == 0 ? cycleStart : DateTime(worldCupYear(cycle - 1), 9);
 
   /// Whether an honour won in [year] is one THIS career could have won.
   ///
@@ -120,19 +155,24 @@ class CareerService {
   /// makes each new career its own world. Passing one makes a save
   /// REPRODUCIBLE, which is what a test needs before it can compare two runs
   /// and mean anything by the answer.
+  ///
+  /// A campaign run passes [countsTowardSlots] false: it takes no slot, so a
+  /// free player with both slots full can still start one. The slots it is
+  /// checked against otherwise count only careers that `countsAsSave`.
   Future<Result<Career>> create({
     required int nationId,
     required String managerName,
     int? rngSeed,
+    bool countsTowardSlots = true,
   }) async {
     final repo = _ref.read(careerRepositoryProvider);
-    final existing = await repo.all();
     final premium = _ref.read(premiumUnlockedProvider);
 
-    if (!canCreateSave(
-      existingSaves: existing.length,
-      premiumUnlocked: premium,
-    )) {
+    if (countsTowardSlots &&
+        !canCreateSave(
+          existingSaves: await _slotsUsed(),
+          premiumUnlocked: premium,
+        )) {
       final limit = saveSlotLimit(premiumUnlocked: premium);
       return Result.failure(
         Failure('All $limit save slots are in use.', code: 'slots_full'),
@@ -147,6 +187,18 @@ class CareerService {
       startDate: cycleStart,
     );
     await repo.recordStint(career.id, 0, nationId);
+    // Its briefs follow the current rules (see briefRulesV2Kind), its
+    // windows are fluid (see fluidWindowsKind), and its players are named
+    // from the richer pools (see namePoolsV2Kind). That last mark must land
+    // before anything reads the career's players: the repository reads it
+    // once per career and keeps the answer.
+    final comp = _ref.read(competitionRepositoryProvider);
+    await comp.markDrawWatched(career.id, 0, namePoolsV2Kind);
+    await comp.markDrawWatched(career.id, 0, briefRulesV2Kind);
+    await comp.markDrawWatched(career.id, 0, fluidWindowsKind);
+    // Its caps log credits a naturalised man to the nation he plays for now
+    // (see capsFollowNationKind).
+    await comp.markDrawWatched(career.id, 0, capsFollowNationKind);
     final nations = await _ref.read(nationRepositoryProvider).all();
     // Endow the federation with an opening balance sized to its world standing
     // (a mid-table default if the nation isn't in the reference set).
@@ -172,8 +224,17 @@ class CareerService {
     );
     await _generateDefaultTactic(career);
     await _seedHistory(career);
-    _ref.invalidate(savesProvider);
+    // A campaign run is no save and the saves list must not see it before its
+    // marker is written, so only a counting career invalidates here.
+    if (countsTowardSlots) _ref.invalidate(savesProvider);
     return Result.success(career);
+  }
+
+  /// How many save slots are taken: every career but an unmoved campaign run.
+  Future<int> _slotsUsed() async {
+    final all = await _ref.read(careerRepositoryProvider).all();
+    final tags = await campaignTags(_ref.read(competitionRepositoryProvider));
+    return all.where((c) => countsAsSave(tags[c.id])).length;
   }
 
   /// Builds a cycle's whole calendar in real-world order: the player's
@@ -223,7 +284,11 @@ class CareerService {
     for (final confederation in Confederation.values) {
       final cont = ContinentalCups.byConfederation[confederation];
       if (cont == null) continue;
-      final contFinalsStart = DateTime(wcYear - 2, cont.month, 8);
+      final contFinalsStart = DateTime(
+        continentalFinalsYear(cycle),
+        cont.month,
+        8,
+      );
       final members = (byConfederation[confederation] ?? <Nation>[]).toList()
         ..sort((a, b) => rankOf(a).compareTo(rankOf(b)));
       // The hosts (primary + any co-hosts) auto-qualify and sit out qualifying
@@ -268,6 +333,13 @@ class CareerService {
           // into shorter gaps between phases rather than one long block.
           groupSize: 6,
           rankById: rankById,
+          // In windows of two to four, done by the June after.
+          windows: (
+            start: DateTime(cycleStart.year, 9),
+            deadline: DateTime(cycleStart.year + 1, 6, 30),
+            seed: rngSeed ^ (cycle * 0x71) ^ 0xCAFE ^ _fluidSalt,
+            fillAll: false,
+          ),
         );
         await comp.saveSchedule(
           careerId: careerId,
@@ -365,6 +437,14 @@ class CareerService {
               start: DateTime(wcYear - 2, 9),
               groupSize: ids.length,
               rankById: rankById,
+              // Every zone on the same dates, done by October: the
+              // knockouts own November.
+              windows: (
+                start: DateTime(wcYear - 2, 9),
+                deadline: DateTime(wcYear - 2, 10, 31),
+                seed: rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ confTerm ^ _fluidSalt,
+                fillAll: false,
+              ),
             );
             allGroups.add(
               GeneratedGroup(
@@ -409,6 +489,13 @@ class CareerService {
             start: DateTime(wcYear - 2, 9),
             groupSize: 4,
             rankById: rankById,
+            // Every league on the same dates, September to November.
+            windows: (
+              start: DateTime(wcYear - 2, 9),
+              deadline: DateTime(wcYear - 2, 11, 30),
+              seed: rngSeed ^ (cycle * 0x71) ^ 0x5A17 ^ confTerm ^ _fluidSalt,
+              fillAll: false,
+            ),
           );
           final letter = NationsCup.leagueLetter(tier);
           for (var i = 0; i < gen.groups.length; i++) {
@@ -484,6 +571,9 @@ class CareerService {
       (byConfederation[n.confederation] ??= []).add(n);
     }
     final wcQualStart = DateTime(wcYear - 1, 3);
+    // A cycle opened before 1.0.6 keeps three matchdays a window: this is
+    // drawn halfway through the cycle, in saves already under way.
+    final fluid = await comp.hasWatchedDraw(careerId, cycle, fluidWindowsKind);
     // Hosts auto-qualify and skip qualifying (friendlies only), so drop them
     // from every confederation's qualifying pool.
     final wcHostIds = WorldCupHosts.worldCupHostIds(
@@ -502,6 +592,22 @@ class CareerService {
         rngSeed: rngSeed ^ (cycle * 0x1B3D) ^ (entry.key.index * 0x9E37),
         start: wcQualStart,
         rankById: rankById,
+        // Done by November, or, for South America's eighteen matchdays, in
+        // every window up to March, where the play-off follows as before.
+        windows: !fluid
+            ? null
+            : (
+                start: wcQualStart,
+                deadline: entry.key == Confederation.southAmerica
+                    ? DateTime(wcYear, 3, 31)
+                    : DateTime(wcYear - 1, 11, 30),
+                seed:
+                    rngSeed ^
+                    (cycle * 0x1B3D) ^
+                    (entry.key.index * 0x9E37) ^
+                    _fluidSalt,
+                fillAll: entry.key == Confederation.southAmerica,
+              ),
       );
       await comp.saveSchedule(
         careerId: careerId,
@@ -573,6 +679,7 @@ class CareerService {
           career.nationId,
           agingYears: CareerService.agingYears(career),
           saveSeed: career.rngSeed,
+          careerId: career.id,
         );
     const formation = Formation.f433;
     await _ref
@@ -595,7 +702,9 @@ class CareerService {
   /// Deletes a save.
   Future<void> delete(int id) async {
     await _ref.read(careerRepositoryProvider).delete(id);
-    _ref.invalidate(savesProvider);
+    _ref
+      ..invalidate(savesProvider)
+      ..invalidate(campaignRunsProvider);
   }
 
   int _seed() => DateTime.now().microsecondsSinceEpoch & 0x7fffffff;
@@ -604,3 +713,23 @@ class CareerService {
 final Provider<CareerService> careerServiceProvider = Provider(
   CareerService.new,
 );
+
+/// The manager's current spell in charge: the cycle he took [career]'s nation
+/// on, and the day that cycle opened.
+///
+/// What a board judges him on (form, results, the press) is what happened on
+/// HIS watch. Read the nation's all-time record instead and a manager taking
+/// a new job is held to the results that got his predecessor sacked. A plain
+/// function rather than a provider so it is always read fresh: a cached value
+/// would outlive the move it is meant to describe.
+Future<({int arrivalCycle, DateTime since})> currentSpell(
+  CareerRepository repo,
+  Career career,
+) async {
+  final arrival = Stints.arrivalCycle(
+    await repo.stints(career.id),
+    career.cyclePointer,
+    career.nationId,
+  );
+  return (arrivalCycle: arrival, since: CareerService.cycleOpens(arrival));
+}

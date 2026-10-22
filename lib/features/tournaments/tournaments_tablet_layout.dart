@@ -158,7 +158,10 @@ class _ListLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
-    child: Text(text.toUpperCase(), style: TabletText.sectionLabel),
+    child: Text(
+      text.capsIn(Localizations.localeOf(context).languageCode),
+      style: TabletText.sectionLabel,
+    ),
   );
 }
 
@@ -315,7 +318,7 @@ class _PaneHeader extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              competitionLabel(l, spec.championship.name).toUpperCase(),
+              competitionLabel(l, spec.championship.name).capsIn(l.localeName),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TabletText.panelTitle,

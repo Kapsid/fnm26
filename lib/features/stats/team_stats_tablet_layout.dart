@@ -120,12 +120,25 @@ class _TeamStatsTabletLayoutState
                                 TabletTabBar(
                                   tabs: [
                                     Tab(
-                                      text: l.statsTopScorersShort
-                                          .toUpperCase(),
+                                      text: l.statsTopScorersShort.capsIn(
+                                        l.localeName,
+                                      ),
                                     ),
-                                    Tab(text: l.statsMostGames.toUpperCase()),
-                                    Tab(text: l.statsBestRated.toUpperCase()),
-                                    Tab(text: l.statsMyCareer.toUpperCase()),
+                                    Tab(
+                                      text: l.statsMostGames.capsIn(
+                                        l.localeName,
+                                      ),
+                                    ),
+                                    Tab(
+                                      text: l.statsBestRated.capsIn(
+                                        l.localeName,
+                                      ),
+                                    ),
+                                    Tab(
+                                      text: l.statsMyCareer.capsIn(
+                                        l.localeName,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 Expanded(

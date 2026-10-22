@@ -1,15 +1,16 @@
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/finals_participation.dart';
 
 /// The rules for when a manager may (re-)nominate their squad. A squad is named
 /// at the start of a *period* and then locked for that whole period's matches;
 /// the next period opens the next window. Periods begin:
 ///
-///  * before a qualifying campaign (matchday 1) and again every four matchdays
-///    (5, 9, 13, …), so a long campaign is re-selected regularly rather than
-///    a squad being locked in for six games at a time;
+///  * at the start of a qualifying campaign or Nations Cup (matchday 1), and
+///    again at every new international window, which is a new calendar month;
 ///  * before a friendly window;
 ///  * before a tournament (the group stage's first match — the squad is then
-///    locked for the entire tournament, knockouts included).
+///    locked for the entire tournament, knockouts included, even when it runs
+///    from June into July).
 abstract final class Nomination {
   /// Rounds whose matchday 1 opens a fresh nomination period (a qualifying
   /// campaign or a tournament group stage).
@@ -21,31 +22,28 @@ abstract final class Nomination {
     'NGROUP', // Nations Cup group
   };
 
-  /// Qualifying rounds, which get a fresh nomination window every four matchdays
-  /// through the campaign.
-  static const _qualRounds = <String?>{null, 'CQ'};
-
-  /// How often (in matchdays) a qualifying campaign re-opens the squad.
-  ///
-  /// TWO, because that is what an international window is. At four, a manager
-  /// named one squad and lived with it through four or six qualifiers spread
-  /// across half a year — nobody does that. A country names a squad, plays the
-  /// two matches of that window with it, and names another one next time.
-  static const _qualWindowEvery = 2;
+  /// A finals tournament's rounds: one squad from the opening group match to
+  /// the final.
+  static const _tournamentRounds = <String?>{
+    ...FinalsRounds.worldChampionship,
+    ...FinalsRounds.continental,
+  };
 
   /// Whether [f] begins a new nomination period, given the fixture immediately
   /// before it by date ([previous], null if [f] is the very first).
+  ///
+  /// A window is a calendar month. It used to be every second qualifying
+  /// matchday, which held while every window was exactly three matches and
+  /// even then opened a fresh call-up in the middle of one (matchdays 1-2 in
+  /// early September, 3 on the 12th with 4 in October). Windows now hold two
+  /// to four matches, and the month is what a window is.
   static bool isPeriodStart(Fixture f, Fixture? previous) {
-    if (f.round == 'FRIENDLY') {
-      return previous == null || previous.round != 'FRIENDLY';
-    }
+    if (previous == null) return true;
     if (f.matchday == 1 && _periodStartRounds.contains(f.round)) return true;
-    if (_qualRounds.contains(f.round) &&
-        f.matchday > 1 &&
-        (f.matchday - 1) % _qualWindowEvery == 0) {
-      return true;
-    }
-    return false;
+    if (_tournamentRounds.contains(f.round)) return false;
+    if (f.round == 'FRIENDLY' && previous.round != 'FRIENDLY') return true;
+    return f.date.year != previous.date.year ||
+        f.date.month != previous.date.month;
   }
 
   /// The index of the match the nation is actually ON, in a date-sorted list:
@@ -92,5 +90,23 @@ abstract final class Nomination {
     final idx = _currentIndex(sorted);
     if (idx == -1) return false;
     return isPeriodStart(sorted[idx], idx == 0 ? null : sorted[idx - 1]);
+  }
+
+  /// The matches of the current period already played: those from the
+  /// period's first match up to the next unplayed one. Empty between periods
+  /// (the next match opens a new one) and when the season is over.
+  static List<Fixture> playedInCurrentPeriod(List<Fixture> fixtures) {
+    final sorted = [...fixtures]..sort((a, b) => a.date.compareTo(b.date));
+    final idx = _currentIndex(sorted);
+    if (idx <= 0) return const [];
+    if (isPeriodStart(sorted[idx], sorted[idx - 1])) return const [];
+    var start = idx - 1;
+    while (start > 0 && !isPeriodStart(sorted[start], sorted[start - 1])) {
+      start--;
+    }
+    return [
+      for (var i = start; i < idx; i++)
+        if (sorted[i].hasResult) sorted[i],
+    ];
   }
 }

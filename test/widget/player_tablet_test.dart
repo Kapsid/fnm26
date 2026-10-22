@@ -21,6 +21,7 @@ Future<SeededSave> _open(WidgetTester tester, Size size) async {
           save.nationId,
           agingYears: CareerService.agingYears(save.career),
           saveSeed: save.career.rngSeed,
+          careerId: save.career.id,
         );
     playerId = pool.first.id;
   });

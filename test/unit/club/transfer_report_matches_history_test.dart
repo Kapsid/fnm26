@@ -82,6 +82,7 @@ void main() {
         nation.id,
         agingYears: y,
         saveSeed: career.rngSeed,
+        careerId: career.id,
         youthBonusByCycle: youth,
         careerStartsByPlayer: starts,
       );
@@ -109,6 +110,7 @@ void main() {
           id,
           agingYears: y,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           youthBonusByCycle: youth,
           careerStartsByPlayer: starts,
         );
@@ -154,11 +156,13 @@ void main() {
         nation.id,
         agingYears: y - 1,
         saveSeed: career.rngSeed,
+        careerId: career.id,
       );
       final after = await repo.byNation(
         nation.id,
         agingYears: y,
         saveSeed: career.rngSeed,
+        careerId: career.id,
       );
       // byNation sorts by overall, so a player's index IS his rank.
       final rank = {for (var i = 0; i < after.length; i++) after[i].id: i};

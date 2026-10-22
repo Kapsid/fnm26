@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
@@ -17,12 +18,14 @@ import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/match/venue.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
@@ -85,6 +88,113 @@ final Provider<MatchSpeedStore> matchSpeedStoreProvider =
 /// How many substitutes are named on a teamsheet — the rest of a twenty-three
 /// man squad once the eleven are picked.
 const int kBenchSize = 12;
+
+/// Plays a live fixture through [play] and, when it goes to extra time, plays
+/// it once more with the AI side's one extra-time change added
+/// ([AiSubstitutions.planExtraTime] at 91').
+///
+/// The change can only be planned once the ninety are known (who finished
+/// them, who is left on the bench), so it takes a second run. That run is
+/// safe: a substitution at 91 never touches minutes 1-90, so the regulation
+/// score and events are the first run's exactly. The match preview and the
+/// live screen's every re-sim both come through here, on the same stream
+/// (`fixtureId ^ 0x5196` of the save's seed, beside the regulation plan's
+/// `0x5195`), so the extra time the preview shows and the one the screen plays
+/// after a change are the same draw.
+MatchResult playWithAiExtraTimeSub({
+  required MatchResult Function(List<Substitution> aiSubs) play,
+  required List<Substitution> aiSubs,
+  required MatchTeam aiTeam,
+  required List<Player> aiBench,
+  required int saveSeed,
+  required int fixtureId,
+}) {
+  final first = play(aiSubs);
+  if (first.extraTime == null) return first;
+  // Who the AI side finished the ninety with: its planned changes that were
+  // actually made (a sub for a man already gone is skipped by the engine),
+  // less anyone sent off or hurt. The engine takes a hurt man off exactly as
+  // it does a sent-off one, and the AI is given no injury replacement, so
+  // both are gone; picking either for the extra-time change would have the
+  // engine drop it without a word.
+  final onPitch = {for (final p in aiTeam.xi) p.id: p};
+  final cameOn = <int>{};
+  for (final s in aiSubs) {
+    final made = first.events.any(
+      (e) =>
+          e.type == MatchEventType.substitution &&
+          e.teamNationId == aiTeam.nationId &&
+          e.minute == s.minute &&
+          e.playerId == s.on.id,
+    );
+    if (!made) continue;
+    onPitch.remove(s.offId);
+    onPitch[s.on.id] = s.on;
+    cameOn.add(s.on.id);
+  }
+  for (final e in first.events) {
+    final out =
+        e.type == MatchEventType.redCard || e.type == MatchEventType.injury;
+    if (out &&
+        e.teamNationId == aiTeam.nationId &&
+        e.minute <= 90) {
+      onPitch.remove(e.playerId);
+    }
+  }
+  final sub = AiSubstitutions.planExtraTime(
+    nationId: aiTeam.nationId,
+    onPitchAt90: onPitch.values.toList(),
+    bench: [
+      for (final p in aiBench)
+        if (!cameOn.contains(p.id) && !onPitch.containsKey(p.id)) p,
+    ],
+    rng: SeededRng.forFixture(saveSeed, fixtureId ^ 0x5196),
+  );
+  if (sub == null) return first;
+  return play([...aiSubs, sub]);
+}
+
+/// Who [team] has on the pitch when the match ends: its starters, less the men
+/// it took off, plus those who came on (the [plannedSubs] and any other change
+/// the [events] record, such as the AI's extra-time one), less anyone sent off
+/// or hurt. A man taken off is found by the plan, else by the name the event
+/// carries.
+List<Player> sideOnPitchAtEnd({
+  required MatchTeam team,
+  required List<Player> bench,
+  required List<Substitution> plannedSubs,
+  required List<MatchEvent> events,
+}) {
+  final onPitch = {for (final p in team.xi) p.id: p};
+  final known = {
+    for (final p in bench) p.id: p,
+    for (final s in plannedSubs) s.on.id: s.on,
+  };
+  for (final e in events) {
+    if (e.teamNationId != team.nationId ||
+        e.type != MatchEventType.substitution) {
+      continue;
+    }
+    final on = known[e.playerId];
+    if (on == null) continue;
+    final planned = plannedSubs
+        .where((s) => s.minute == e.minute && s.on.id == on.id)
+        .firstOrNull;
+    final offId =
+        planned?.offId ??
+        onPitch.values.where((p) => p.name == e.secondaryName).firstOrNull?.id;
+    if (offId != null) onPitch.remove(offId);
+    onPitch[on.id] = on;
+  }
+  for (final e in events) {
+    if (e.teamNationId == team.nationId &&
+        (e.type == MatchEventType.redCard ||
+            e.type == MatchEventType.injury)) {
+      onPitch.remove(e.playerId);
+    }
+  }
+  return onPitch.values.toList();
+}
 
 /// The player's next fixture, simulated by the tactical engine and ready to
 /// display. Carries everything the live screen needs to re-simulate after a
@@ -201,12 +311,20 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // handed to the engine separately (MatchTeam.conditionByPlayer) so the
   // number shown is the same everywhere and the effect stays hidden.
   final fullPool = [
-    ...await playerRepo.byNation(
-      playerNationId,
-      agingYears: CareerService.agingYears(career),
-      saveSeed: career.rngSeed,
-      youthBonusByCycle: youthBonus,
-      careerStartsByPlayer: careerDev,
+    ...await withoutNaturalizedAway(
+      ref,
+      careerId,
+      await playerRepo.byNation(
+        playerNationId,
+        agingYears: CareerService.agingYears(career),
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+        // Down to the call-up floor, so a U-17 he named can start;
+        // [availableSquad] keeps the boys he did not name out.
+        minAge: PlayerLifecycle.callUpMinAge,
+        youthBonusByCycle: youthBonus,
+        careerStartsByPlayer: careerDev,
+      ),
     ),
     ...await naturalizedPlayersFor(ref, career),
   ];
@@ -284,12 +402,10 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // Opponent: a real setup, not a shapeless best XI. Drop their injured /
   // suspended players too (the human already loses theirs — this closes the
   // asymmetry where the AI always fielded a full-strength side).
+  // The opponent as the world fields it: without anyone naturalised away from
+  // it, with anyone naturalised into it (see [careerPoolOf]).
   final oppPool = selectable(
-    await playerRepo.byNation(
-      opponentId,
-      agingYears: CareerService.agingYears(career),
-      saveSeed: career.rngSeed,
-    ),
+    await careerPoolOf(ref, career, opponentId),
     absences,
   );
   // Pick the AI's posture from how its strength compares to the player's:
@@ -424,20 +540,30 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     awayStrength: _teamRating(awayTeam),
   );
 
-  final result = const MatchEngine().play(
-    home: homeTeam,
-    away: awayTeam,
-    rng: SeededRng.forFixture(career.rngSeed, fixture.id),
-    subs: opponentSubs,
-    // The AI opponent reactively manages the game by the scoreline (chases
-    // when behind, protects a lead); the player controls their own side.
-    aiManagedNationIds: {opponentId},
-    injuryFactorByNation: injuryFactorByNation,
-    chemistryByNation: chemistryByNation,
-    neutralVenue: venue.neutral,
-    venueHostId: venue.hostId,
-    bigMatch: bigMatch,
-    atmosphere: Attendance.atmosphere(ground),
+  // A knockout level at ninety plays on through extra time in the engine, so
+  // the live screen shows the extra time the manager can still change.
+  final result = playWithAiExtraTimeSub(
+    play: (subs) => const MatchEngine().play(
+      home: homeTeam,
+      away: awayTeam,
+      rng: SeededRng.forFixture(career.rngSeed, fixture.id),
+      subs: subs,
+      // The AI opponent reactively manages the game by the scoreline (chases
+      // when behind, protects a lead); the player controls their own side.
+      aiManagedNationIds: {opponentId},
+      injuryFactorByNation: injuryFactorByNation,
+      chemistryByNation: chemistryByNation,
+      neutralVenue: venue.neutral,
+      venueHostId: venue.hostId,
+      bigMatch: bigMatch,
+      atmosphere: Attendance.atmosphere(ground),
+      extraTimeIfLevel: Rounds.isKnockout(fixture.round),
+    ),
+    aiSubs: opponentSubs,
+    aiTeam: oppTeam,
+    aiBench: oppBench.take(kBenchSize).toList(),
+    saveSeed: career.rngSeed,
+    fixtureId: fixture.id,
   );
 
   final nations = {for (final n in allNations) n.id: n};

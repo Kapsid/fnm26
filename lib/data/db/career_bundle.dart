@@ -21,6 +21,10 @@ enum BundleRejection {
   /// The career is past the free cycle and this player has not bought the
   /// upgrade. Taking it in would hand him a cycle the trial does not cover.
   needsPremium,
+
+  /// An unmoved campaign run, and that campaign already has a run here. A
+  /// campaign holds one run at a time (the player resumes or abandons it).
+  campaignRunExists,
 }
 
 /// Moving ONE career between devices, as a file.
@@ -295,6 +299,19 @@ abstract final class CareerBundle {
     if (career is! Map) return 0;
     final pointer = career['cycle_pointer'];
     return pointer is int ? pointer : 0;
+  }
+
+  /// The draw-watched kinds the bundled career carries (its markers, among
+  /// them any campaign tag). Empty for a bundle that has none.
+  static List<String> watchedKindsOf(Map<String, Object?> bundle) {
+    final tables = bundle['tables'];
+    if (tables is! Map) return const [];
+    final rows = tables['draws_watched'];
+    if (rows is! List) return const [];
+    return [
+      for (final r in rows)
+        if (r is Map && r['kind'] is String) r['kind'] as String,
+    ];
   }
 
   /// A name that says which career it holds.

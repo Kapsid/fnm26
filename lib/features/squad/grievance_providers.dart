@@ -55,6 +55,7 @@ _standingProvider = FutureProvider.autoDispose.family<_Standing?, int>((
               career.nationId,
               agingYears: CareerService.agingYears(career),
               saveSeed: career.rngSeed,
+              careerId: career.id,
               youthBonusByCycle: await ref.watch(
                 youthBonusByCycleProvider(careerId).future,
               ),

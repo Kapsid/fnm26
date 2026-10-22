@@ -19,6 +19,10 @@ import '../../helpers/test_database.dart';
 
 /// A man left at home cannot score the extra-time winner.
 ///
+/// This is the fallback path: a result with no engine extra time (`extraTime`
+/// null) whose extra-time goals are attributed after the fact. A live knockout
+/// carries its own scorers (see live_extra_time_commit_test.dart).
+///
 /// The manager's own match is committed from the match screen with the extra
 /// time he watched. Its goals used to be attributed with no XI at all, so they
 /// fell back to the nation's best available 4-3-3 — the eleven the game would
@@ -77,11 +81,14 @@ void main() {
 
     final playerRepo = c.read(playerRepositoryProvider);
     Future<List<Player>> poolOf(int nationId) async =>
-        (await playerRepo.byNation(nationId, saveSeed: career.rngSeed))
-          ..sort((a, b) {
-            final byOverall = b.overall.compareTo(a.overall);
-            return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
-          });
+        (await playerRepo.byNation(
+          nationId,
+          saveSeed: career.rngSeed,
+          careerId: career.id,
+        ))..sort((a, b) {
+          final byOverall = b.overall.compareTo(a.overall);
+          return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
+        });
 
     final myPool = await poolOf(career.nationId);
     final oppNation = mineAtHome ? fixture.awayNationId : fixture.homeNationId;

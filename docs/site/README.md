@@ -70,13 +70,11 @@ Two things that go wrong with FTP in particular:
 
 ## The store badges
 
-iOS is LIVE: the hero's App Store badge links to
-https://apps.apple.com/app/football-nations-manager/id6814666162 .
-Android is still WAITING: the Google Play badge sits beside it greyed out
-(`.store-soon`), with a "Coming in October" / "Vychází v říjnu" stamp across
-its corner (`.stamp`). When Android ships, in BOTH `index.html` and
-`cs/index.html`, turn that `<span class="store-soon">` into an `<a>` with the
-Play URL and drop the stamp. The Google badge has had its built-in clear
+Both stores are LIVE. The hero's App Store badge links to
+https://apps.apple.com/app/football-nations-manager/id6814666162 and the
+Google Play badge to https://play.google.com/store/apps/details?id=com.fnm.fnm ,
+in BOTH `index.html` and `cs/index.html`. The greyed-out `.store-soon` /
+`.stamp` CSS is no longer used by any page. The Google badge has had its built-in clear
 space trimmed off, so both badges are set to the same height and genuinely
 match; do not replace that file with a fresh download without trimming it
 again.

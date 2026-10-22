@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/job_market.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
@@ -143,7 +144,13 @@ rolloverVerdictProvider = FutureProvider.autoDispose.family<RolloverVerdict?, in
     (await careerRepo.investment(careerId, career.cyclePointer)).boardRelations,
   );
   final sackBar = (rep + tolerance >= 60 ? 8 : 15) - tolerance ~/ 3;
-  final sacked = perf < sackBar && !nationalHero;
+  // A campaign longer than one cycle keeps its manager whatever the board
+  // thinks (see campaignBarsSacking): the verdict may still be scathing.
+  final shielded = await campaignBarsSacking(
+    ref.watch(competitionRepositoryProvider),
+    career,
+  );
+  final sacked = perf < sackBar && !nationalHero && !shielded;
 
   // How the offer band shifts from the current job: strong cycles unlock
   // stronger nations, weak ones only weaker.

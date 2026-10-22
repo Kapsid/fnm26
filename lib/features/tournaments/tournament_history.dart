@@ -238,7 +238,9 @@ class TournamentHistory extends StatelessWidget {
     final silver = <int, int>{};
     final bronze = <int, int>{};
     for (final h in honours) {
-      gold[h.championId] = (gold[h.championId] ?? 0) + 1;
+      for (final c in h.champions) {
+        gold[c] = (gold[c] ?? 0) + 1;
+      }
       silver[h.runnerUpId] = (silver[h.runnerUpId] ?? 0) + 1;
       // Both bronze slots count — a no-third-place cup shares bronze between
       // its two beaten semi-finalists (thirdId + thirdId2).
@@ -392,6 +394,11 @@ class TournamentHistory extends StatelessWidget {
                 ),
               ],
             ),
+            // A title two successor states share: the second, crowned too.
+            if (h.coChampionId case final co?) ...[
+              const SizedBox(height: AppSpacing.xs),
+              _podiumSide(co, champion: true),
+            ],
             // Both bronze medallists — a no-third-place cup lists its two
             // beaten semi-finalists, so the whole podium shows.
             for (final b in [h.thirdId, h.thirdId2])

@@ -48,6 +48,7 @@ class BestThirdsCard extends StatelessWidget {
     this.destination,
     this.title,
     this.adjustedForGroupSize = false,
+    this.careerId,
     super.key,
   });
 
@@ -72,6 +73,9 @@ class BestThirdsCard extends StatelessWidget {
   /// totals shown are the reduced ones the comparison actually uses. Says so on
   /// the card, otherwise a team's points here wouldn't match its group table.
   final bool adjustedForGroupSize;
+
+  /// When given, each team (flag and name) opens that nation's page.
+  final int? careerId;
 
   @override
   Widget build(BuildContext context) {
@@ -135,15 +139,27 @@ class BestThirdsCard extends StatelessWidget {
               ),
             ),
           ),
-          FlagDisc(code(s.nationId), size: 18),
-          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
-              name(s.nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+            child: NationTap.maybe(
+              careerId: careerId,
+              nationId: s.nationId,
+              child: Row(
+                children: [
+                  FlagDisc(code(s.nationId), size: 18),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      name(s.nationId),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontWeight: isPlayer
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

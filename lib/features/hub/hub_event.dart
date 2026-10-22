@@ -18,13 +18,19 @@ import 'package:fnm/features/squad/grievance_providers.dart';
 
 export 'package:fnm/domain/services/competition/kickoff_keys.dart'
     show continentalKickoffKind, worldCupKickoffKind;
+import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/features/campaign/campaign_providers.dart';
+import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/squad/injury_cover_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/squad/training_camp_providers.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
@@ -75,6 +81,9 @@ enum HubEventKind {
   /// The World Cup is decided; roll over to the next cycle.
   cycleRollover,
 
+  /// A campaign's goal is settled: see the verdict.
+  campaignVerdict,
+
   /// Nothing to present for the player — quick-sim the world forward.
   advance,
 }
@@ -118,11 +127,14 @@ const skillsPromptKind = 'skillsPrompt';
 const worldCupPlayoffKind = 'worldCupPlayoff';
 
 /// A short label for the call-up event, tailored to the period its first match
-/// [f] opens (a qualifying campaign, its matchday-6 reshuffle, a friendly
+/// [f] opens (a qualifying campaign, a later window of it, a friendly
 /// window, or a specific tournament).
 String _callUpLabel(AppLocalizations l, Fixture f) {
   if (f.round == 'FRIENDLY') return l.hubCallUpFriendlies;
-  if (f.matchday == 6) return l.hubCallUpRequalify;
+  // A later window of a campaign already under way.
+  if ((f.round == null || f.round == 'CQ') && f.matchday > 1) {
+    return l.hubCallUpRequalify;
+  }
   return switch (f.round) {
     'GROUP' => l.hubCallUpWorldCup,
     'CGROUP' => l.hubCallUpFinals,
@@ -203,8 +215,50 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     unplayedOnly: true,
   );
 
-  // 1. The World Cup is decided — roll into the next cycle.
+  // A campaign run's verdict, the moment its goal is settled and until the
+  // manager has seen it. Campaign markers live at cycle 0 whatever the
+  // pointer says. Only while the campaign lasts: a moved run rolled past it
+  // is an ordinary save.
+  final campaign = await ref.watch(activeCampaignProvider(careerId).future);
+  final verdictEvent = HubEvent(
+    kind: HubEventKind.campaignVerdict,
+    label: l.hubEventCampaignVerdict,
+    icon: Icons.verified_rounded,
+    route: '${Routes.campaignVerdict}?careerId=$careerId',
+  );
+  Future<bool> verdictPending() async =>
+      !await comp.hasWatchedDraw(careerId, 0, campaignVerdictKind) &&
+      ((await ref.watch(campaignProgressProvider(careerId).future))?.settled ??
+          false);
+  // The board has sacked the manager of a campaign run at the end of a cycle.
+  // An unmoved run is played with its own nation or not at all (it has no
+  // offers to take), so it ends there, keeping whatever it had already
+  // settled; an unsettled one is failed by the sacking.
+  Future<bool> campaignManagerSacked() async =>
+      (await ref.watch(rolloverVerdictProvider(careerId).future))?.sacked ??
+      false;
+
+  // 1. The World Cup is decided — roll into the next cycle. Not an unmoved
+  //    campaign run at the end of its last cycle (for a one-cycle campaign,
+  //    its only one): it ends in the campaigns list (after its verdict, if
+  //    that is still unseen) and never reaches the rollover or the free
+  //    cycle's wall. Nor one whose manager was sacked there, which failed it:
+  //    a campaign is played with its own nation or not at all. Moved into the
+  //    saves, it is an ordinary save and rolls over like one.
+  //    A pending verdict comes first for any campaign, moved or not, so a
+  //    moved run's stamp is never rolled past.
   if (hub.championNationId != null) {
+    if (campaign != null && await verdictPending()) return verdictEvent;
+    if (campaign != null &&
+        !campaign.moved &&
+        (!campaignMayRoll(campaign, cycle) || await campaignManagerSacked())) {
+      return HubEvent(
+        kind: HubEventKind.campaignVerdict,
+        label: l.hubEventCampaignComplete,
+        icon: Icons.flag_rounded,
+        route: Routes.campaigns,
+      );
+    }
     return HubEvent(
       kind: HubEventKind.cycleRollover,
       label: l.hubEventStartCycle(SeasonService.finalsYear(cycle + 1)),
@@ -252,9 +306,10 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
 
   // 1b. A foreign player is asking to naturalise — a one-time decision the
   //     manager makes at their leisure (accept to add them to the squad).
-  if (await ref
-          .watch(careerRepositoryProvider)
-          .pendingNaturalization(careerId) !=
+  if (await currentNaturalizationOffer(
+        ref.watch(careerRepositoryProvider),
+        hub.career,
+      ) !=
       null) {
     return HubEvent(
       kind: HubEventKind.naturalization,
@@ -264,6 +319,10 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       subtitle: l.hubEventNaturalizationSub,
     );
   }
+
+  // 1c. A campaign's goal is settled: its verdict, once, as soon as it is in
+  //     (a Grudge lost in the group need not wait for the finals).
+  if (campaign != null && await verdictPending()) return verdictEvent;
 
   // 1z. The intercontinental play-off that settled the last two finals berths,
   //     shown as its own step BEFORE the finals draw (not buried on it). Gated
@@ -815,6 +874,20 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       }
     }
 
+    // 5a. A squad player was hurt earlier in this window: the manager may call
+    //     somebody up in his place, in any position, or keep him and play on.
+    //     Offered until answered; after it, 5b asks for his slot in the XI.
+    final cover = await pendingInjuryCover(ref, careerId);
+    if (cover != null) {
+      return HubEvent(
+        kind: HubEventKind.callUp,
+        label: l.hubEventInjuryCover(cover.playerName),
+        icon: Icons.personal_injury_outlined,
+        route: '${Routes.injuryCover}?careerId=$careerId',
+        subtitle: l.hubEventInjuryCoverSub(cover.matchesOut),
+      );
+    }
+
     // 5b. A named starter is suspended or injured (or the XI is short) — the
     //     manager must reshape the side THEMSELVES before the match. Without
     //     this, the preview quietly auto-filled the gap with a best XI, so a
@@ -832,7 +905,18 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       final out = lineupIds
           .where((id) => !(absences[id]?.isAvailable ?? true))
           .length;
-      if (out > 0 || lineupIds.length < 11) {
+      // Short is only a decision while a fit man could fill the gap. With ten
+      // fit men named (allowed: a man banned for one game of a three-match
+      // camp still counts at the call-up), no reshape makes eleven, and
+      // asking for one sent the manager back to tactics for ever.
+      var full = 11;
+      if (out == 0 && lineupIds.length < full) {
+        final fit = (await ref.watch(tacticDataProvider(careerId).future))
+            ?.pool
+            .length;
+        if (fit != null && fit < full) full = fit;
+      }
+      if (out > 0 || lineupIds.length < full) {
         return HubEvent(
           kind: HubEventKind.callUp,
           label: l.hubEventReshapeXi,
@@ -840,7 +924,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
           route: '${Routes.tactics}?careerId=$careerId',
           subtitle: out > 0
               ? l.hubEventReshapeOutSub(out)
-              : l.hubEventReshapeShortSub(11 - lineupIds.length),
+              : l.hubEventReshapeShortSub(full - lineupIds.length),
         );
       }
     }

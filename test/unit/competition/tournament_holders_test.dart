@@ -17,6 +17,7 @@ void main() {
     year: year,
     competition: competition,
     championId: championId,
+    coChampionId: null,
     runnerUpId: 99,
     thirdId: null,
     thirdId2: null,
@@ -28,7 +29,10 @@ void main() {
     topScorerGoals: null,
   );
 
-  test('the edition on screen is never its own holder', () {
+  // "Cup holders is not updated when the cup ends but only after the cycle."
+  // The champion of the edition on screen holds the trophy from the night of
+  // its final, not from the turn of the cycle.
+  test('a decided edition holds its own trophy', () {
     // Newest-first, exactly as CompetitionRepository.honours returns them,
     // with 2026 already decided while 2026 is the edition being viewed.
     final honours = [
@@ -39,12 +43,33 @@ void main() {
     final holders = TournamentHolders.forEdition(
       honours: honours,
       competition: 'World Championship',
-      beforeYear: 2026,
+      editionYear: 2026,
     );
 
-    expect(holders, isNotNull);
-    expect(holders!.year, 2022);
-    expect(holders.nationId, 3);
+    expect(holders, (nationId: 7, year: 2026));
+  });
+
+  test('before its final, the previous champion holds it', () {
+    final holders = TournamentHolders.forEdition(
+      honours: [honour(year: 2022, championId: 3)],
+      competition: 'World Championship',
+      editionYear: 2026,
+    );
+
+    expect(holders, (nationId: 3, year: 2022));
+  });
+
+  test('an edition after the one on screen is never its holder', () {
+    final holders = TournamentHolders.forEdition(
+      honours: [
+        honour(year: 2030, championId: 9),
+        honour(year: 2022, championId: 3),
+      ],
+      competition: 'World Championship',
+      editionYear: 2026,
+    );
+
+    expect(holders, (nationId: 3, year: 2022));
   });
 
   test('the most recent prior edition wins over an older one', () {
@@ -57,7 +82,7 @@ void main() {
     final holders = TournamentHolders.forEdition(
       honours: honours,
       competition: 'World Championship',
-      beforeYear: 2026,
+      editionYear: 2026,
     );
 
     expect(holders, (nationId: 3, year: 2022));
@@ -72,7 +97,7 @@ void main() {
     final holders = TournamentHolders.forEdition(
       honours: honours,
       competition: 'World Championship',
-      beforeYear: 2026,
+      editionYear: 2026,
     );
 
     expect(holders, (nationId: 3, year: 2022));
@@ -87,7 +112,7 @@ void main() {
       TournamentHolders.forEdition(
         honours: honours,
         competition: 'World Championship',
-        beforeYear: 2026,
+        editionYear: 2026,
       ),
       isNull,
     );
@@ -95,7 +120,7 @@ void main() {
       TournamentHolders.forEdition(
         honours: const [],
         competition: 'World Championship',
-        beforeYear: 2026,
+        editionYear: 2026,
       ),
       isNull,
     );

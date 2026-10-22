@@ -4,12 +4,13 @@
 //   dart run tool/export_copy.dart          → copy/strings.csv
 //   dart run tool/export_copy.dart out.csv  → somewhere else
 //
-// CSV, ten columns: key, where, placeholders, en, cs, fr, it, pl, es, de. It opens by
+// CSV, fifteen columns: key, where, placeholders, en, cs, fr, it, pl, es, de,
+// pt, tr, nl, id, el. It opens by
 // double-click in Numbers and Excel, and quoting is handled properly, so a
 // comma inside a sentence is just a comma.
 //
 // WHAT YOU MAY CHANGE: the language columns (`en`, `cs`, `fr`, `it`, `pl`,
-// `es`, `de`), and nothing else. The key is
+// `es`, `de`, `pt`, `tr`, `nl`, `id`, `el`), and nothing else. The key is
 // what the code asks for, `where` and `placeholders` are notes for you, and
 // the importer checks the placeholders you leave behind against the ones the
 // string started with — a `{player}` renamed or dropped compiles fine and
@@ -67,10 +68,17 @@ Map<String, Object?> _readArbIfExists(String path) =>
 /// The placeholders a string uses, as a note for whoever is editing it.
 ///
 /// A plural or select is flagged rather than listed: its `{count, plural, …}`
-/// skeleton is machinery, not prose, and the note has to say so — a translator
-/// who rewrites the `one{}` / `other{}` branches out of it breaks the string.
+/// (or `{which, select, …}`) skeleton is machinery, not prose, and the note
+/// has to say so — a translator who rewrites the `one{}` / `other{}` branches
+/// out of it breaks the string. A select is named as one, with its own
+/// argument, so the note does not send a translator looking for a plural.
 String _placeholderNote(String value) {
-  if (RegExp(r'\{\s*\w+\s*,\s*(plural|select)').hasMatch(value)) {
+  final select = RegExp(r'\{\s*(\w+)\s*,\s*select').firstMatch(value);
+  if (select != null) {
+    return 'SELECT — keep the {${select.group(1)}, select, …} skeleton '
+        'exactly; translate only the words inside the branches';
+  }
+  if (RegExp(r'\{\s*\w+\s*,\s*plural').hasMatch(value)) {
     return 'PLURAL — keep the {count, plural, …} skeleton exactly; '
         'translate only the words inside the branches';
   }

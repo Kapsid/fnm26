@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/features/match/strength_panel.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -162,7 +163,12 @@ class SquadSetupWarning extends ConsumerWidget {
         // Straight to the tab that holds both the armband and the takers,
         // rather than the lineup the manager then has to navigate off. Index 2
         // since the instructions took a tab of their own.
-        onTap: () => context.push('${Routes.tactics}?careerId=$careerId&tab=2'),
+        onTap: () async {
+          await context.push('${Routes.tactics}?careerId=$careerId&tab=2');
+          // The strength panel reads the shape too (the preview itself is
+          // refreshed by the tactics writes).
+          if (context.mounted) ref.invalidate(strengthFactorsProvider);
+        },
         child: Row(
           children: [
             const Icon(

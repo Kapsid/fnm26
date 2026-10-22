@@ -1,13 +1,18 @@
 import 'dart:convert';
 
+import 'package:drift/drift.dart' show BooleanExpressionOperators;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
+import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/data/seed/seed_source.dart';
+import 'package:fnm/domain/entities/enums.dart' show YouthLevel;
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/manager/stints.dart';
+import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 
@@ -47,8 +52,20 @@ class DriftPlayerRepository implements PlayerRepository {
 
   static const _namesAsset = 'assets/data/country_names.json';
 
+  /// The extra names a career marked [namePoolsV2Kind] draws from as well.
+  static const _moreNamesAsset = 'assets/data/country_names_more.json';
+
   /// Per-nation name pools, loaded from the asset once.
   Map<int, _NamePool>? _namePools;
+
+  /// Per-nation richer pools (the classic ones plus the extras), built once.
+  Map<int, _NamePool>? _richNamePools;
+
+  /// Careers known to carry [namePoolsV2Kind]. Only the yes is kept: a mark
+  /// is never taken away and a career id is never reused, so a yes cannot go
+  /// stale, while a no could if anything read a career's players before its
+  /// mark landed. An unmarked career is simply asked again (one small query).
+  final Set<int> _richCareers = {};
 
   /// Per-nation city lists (biggest first), loaded once — used to name a
   /// domestic club for a country with no curated league.
@@ -62,19 +79,29 @@ class DriftPlayerRepository implements PlayerRepository {
   /// lookups don't rebuild the (large) list.
   final Map<(int, int), List<String>> _comboCache = {};
 
+  /// The richer pools' names per (nation, save), for a career marked
+  /// [namePoolsV2Kind] — a permutation, not a list (see [_PermutedNames]).
+  final Map<(int, int), _PermutedNames> _richCache = {};
+
   @override
   Future<List<Player>> byNation(
     int nationId, {
     int agingYears = 0,
     int saveSeed = 0,
+    int? careerId,
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
-    int minAge = 17,
+    int minAge = PlayerLifecycle.seniorMinAge,
   }) async {
     final seeded = await _seededRows(nationId);
     // `overall` is position-weighted and derived (not a column), so build the
-    // aged pool (seeded survivors + newgen intakes) and order in Dart.
-    final pool = PlayerLifecycle.poolAt(
+    // aged pool (seeded survivors + newgen intakes) and order in Dart. A
+    // career marked with this nation's golden generation reads the cohort in
+    // place of the seeded players (see [GoldenGeneration]).
+    final build = await _hasGoldenGeneration(careerId, nationId)
+        ? GoldenGeneration.poolAt
+        : PlayerLifecycle.poolAt;
+    final pool = build(
       seeded,
       nationId,
       agingYears,
@@ -88,7 +115,7 @@ class DriftPlayerRepository implements PlayerRepository {
       // effect.
       clubSeed: saveSeed,
     )..sort((a, b) => b.overall.compareTo(a.overall));
-    final name = await _namerFor(nationId, seeded, saveSeed);
+    final name = await _namerFor(nationId, seeded, saveSeed, careerId);
     final home = await _home(nationId);
     return [
       for (final p in pool)
@@ -106,26 +133,45 @@ class DriftPlayerRepository implements PlayerRepository {
     int nationId, {
     int agingYears = 0,
     int saveSeed = 0,
+    int? careerId,
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
   }) async {
     final seeded = await _seededRows(nationId);
     // `overall` is position-weighted and derived (not a column), so build the
     // aged pool (seeded survivors + newgen intakes) and order in Dart.
-    final pool = PlayerLifecycle.youthPoolAt(
-      seeded,
-      nationId,
-      agingYears,
-      youthBonusByCycle: youthBonusByCycle,
-      careerStartsByPlayer: careerStartsByPlayer,
-      // The save seed weights development by club minutes, but only for a
-      // player with career starts (withCareerDev leaves one with none as he
-      // is), so a save's day one carries the seed-free ratings. Save-bound
-      // callers pass it, the world simulation included; zero means no club
-      // effect.
-      clubSeed: saveSeed,
-    )..sort((a, b) => b.overall.compareTo(a.overall));
-    final name = await _namerFor(nationId, seeded, saveSeed);
+    final List<Player> pool;
+    if (await _hasGoldenGeneration(careerId, nationId)) {
+      // The golden generation's pyramid: the same band [youthPoolAt] cuts.
+      pool = [
+        for (final p in GoldenGeneration.poolAt(
+          seeded,
+          nationId,
+          agingYears,
+          youthBonusByCycle: youthBonusByCycle,
+          careerStartsByPlayer: careerStartsByPlayer,
+          minAge: PlayerLifecycle.intakeAge,
+          clubSeed: saveSeed,
+        ))
+          if (p.age <= YouthLevel.u21.maxAge) p,
+      ];
+    } else {
+      pool = PlayerLifecycle.youthPoolAt(
+        seeded,
+        nationId,
+        agingYears,
+        youthBonusByCycle: youthBonusByCycle,
+        careerStartsByPlayer: careerStartsByPlayer,
+        // The save seed weights development by club minutes, but only for a
+        // player with career starts (withCareerDev leaves one with none as he
+        // is), so a save's day one carries the seed-free ratings. Save-bound
+        // callers pass it, the world simulation included; zero means no club
+        // effect.
+        clubSeed: saveSeed,
+      );
+    }
+    pool.sort((a, b) => b.overall.compareTo(a.overall));
+    final name = await _namerFor(nationId, seeded, saveSeed, careerId);
     final home = await _home(nationId);
     return [
       for (final p in pool)
@@ -188,9 +234,89 @@ class DriftPlayerRepository implements PlayerRepository {
     int id, {
     int agingYears = 0,
     int saveSeed = 0,
+    int? careerId,
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
   }) async {
+    final p = await _byIdAsBorn(
+      id,
+      agingYears: agingYears,
+      saveSeed: saveSeed,
+      careerId: careerId,
+      youthBonusByCycle: youthBonusByCycle,
+      careerStartsByPlayer: careerStartsByPlayer,
+    );
+    if (p == null || careerId == null) return p;
+    final into = await _naturalizedInto(careerId, id);
+    return into == null ? p : p.copyWith(nationId: into);
+  }
+
+  /// The nation [playerId] switched to in [careerId], or null if he never
+  /// naturalised there.
+  ///
+  /// The pools already moved a naturalised man (see `careerPoolOf`), but
+  /// every card, list and record that looked him up by id got him back as he
+  /// was seeded: the player page flew his old flag for the rest of the save.
+  /// So the identity read re-homes him here, once, for every caller. Only his
+  /// nation moves: name, club and rating stay his own, and the facts logged
+  /// before the switch keep the nation they were logged under.
+  ///
+  /// The nation is the one the manager was in charge of in the offer's cycle,
+  /// exactly as `naturalizationsInto` reads it, so a man naturalised for a
+  /// federation the manager has since left stays with that federation.
+  Future<int?> _naturalizedInto(int careerId, int playerId) async {
+    final link =
+        await (_db.select(_db.naturalizedPlayers)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.playerId.equals(playerId) &
+                  t.status.equals('accepted'),
+            ))
+            .getSingleOrNull();
+    if (link == null) return null;
+    final career = await (_db.select(
+      _db.careers,
+    )..where((t) => t.id.equals(careerId))).getSingleOrNull();
+    if (career == null) return null;
+    final stints = await (_db.select(
+      _db.careerStints,
+    )..where((t) => t.careerId.equals(careerId))).get();
+    return Stints.nationAt(
+      {for (final s in stints) s.cycle: s.nationId},
+      link.cycle,
+      career.nationId,
+    );
+  }
+
+  /// [byId] before any naturalisation: the player as his nation seeded him.
+  Future<Player?> _byIdAsBorn(
+    int id, {
+    required int agingYears,
+    required int saveSeed,
+    required int? careerId,
+    required Map<int, double> youthBonusByCycle,
+    required Map<int, int> careerStartsByPlayer,
+  }) async {
+    if (GoldenGeneration.isGoldenId(id)) {
+      // A cohort member is resolved from his id alone, like a newgen: only a
+      // marked career ever fields him, so no marker is needed to name him.
+      final nationId = GoldenGeneration.nationOf(id);
+      final p = GoldenGeneration.byId(
+        id,
+        agingYears,
+        careerStartsByPlayer: careerStartsByPlayer,
+        clubSeed: saveSeed,
+      );
+      if (p == null) return null;
+      final seeded = await _seededRows(nationId);
+      final home = await _home(nationId);
+      return _withClub(
+        (await _namerFor(nationId, seeded, saveSeed, careerId))(p),
+        saveSeed,
+        homeCode: home.code,
+        homeCities: home.cities,
+      );
+    }
     if (PlayerLifecycle.isNewgenId(id)) {
       final nationId = PlayerLifecycle.nationIdOf(id);
       final seeded = await _seededRows(nationId);
@@ -206,7 +332,7 @@ class DriftPlayerRepository implements PlayerRepository {
       if (p == null) return null;
       final home = await _home(nationId);
       return _withClub(
-        (await _namerFor(nationId, seeded, saveSeed))(p),
+        (await _namerFor(nationId, seeded, saveSeed, careerId))(p),
         saveSeed,
         homeCode: home.code,
         homeCities: home.cities,
@@ -238,7 +364,7 @@ class DriftPlayerRepository implements PlayerRepository {
     final seeded = await _seededRows(p.nationId);
     final home = await _home(p.nationId);
     return _withClub(
-      (await _namerFor(p.nationId, seeded, saveSeed))(aged),
+      (await _namerFor(p.nationId, seeded, saveSeed, careerId))(aged),
       saveSeed,
       homeCode: home.code,
       homeCities: home.cities,
@@ -274,6 +400,89 @@ class DriftPlayerRepository implements PlayerRepository {
       _namePools = {};
     }
     return _namePools!;
+  }
+
+  /// The richer pools: each nation's classic lists with its extras from
+  /// `country_names_more.json` added, for a career marked [namePoolsV2Kind].
+  ///
+  /// The late surnames join the cross product like any other here. They were
+  /// spliced into a few slots only so as not to rename players of saves that
+  /// already existed, and a career on these pools is new: nobody in it has a
+  /// name to lose. A nation the extras file does not cover still reads its
+  /// classic names, with the late ones folded in.
+  Future<Map<int, _NamePool>> _richPools() async {
+    if (_richNamePools != null) return _richNamePools!;
+    final base = await _pools();
+    var more = const <String, Object?>{};
+    try {
+      more =
+          jsonDecode(await rootBundle.loadString(_moreNamesAsset))
+              as Map<String, Object?>;
+    } on Object {
+      // No extras bundled (pure unit tests): the classic names alone.
+    }
+    List<String> extra(int nationId, String key) =>
+        (((more['$nationId'] as Map?)?[key] as List?) ?? const [])
+            .cast<String>();
+    return _richNamePools = {
+      for (final MapEntry(key: id, value: pool) in base.entries)
+        id: (
+          first: {...pool.first, ...extra(id, 'firstMore')}.toList(),
+          sur: {
+            ...pool.sur,
+            ...pool.surLate,
+            ...extra(id, 'surMore'),
+          }.toList(),
+          surLate: const <String>[],
+        ),
+    };
+  }
+
+  /// Whether [careerId] reads the richer pools (see [namePoolsV2Kind]).
+  Future<bool> _readsRichPools(int? careerId) async {
+    if (careerId == null) return false;
+    if (_richCareers.contains(careerId)) return true;
+    final row =
+        await (_db.select(_db.drawsWatched)
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    t.cycle.equals(0) &
+                    t.kind.equals(namePoolsV2Kind),
+              )
+              ..limit(1))
+            .getSingleOrNull();
+    if (row == null) return false;
+    _richCareers.add(careerId);
+    return true;
+  }
+
+  /// Careers known to carry a golden generation, per nation (see
+  /// [GoldenGeneration.markerFor]). Only the yes is kept, for the reason
+  /// [_richCareers] gives: the campaign writes the mark right after creating
+  /// the career, and a read in between must not pin a no.
+  final Set<(int, int)> _goldenCareers = {};
+
+  /// Whether [careerId] reads [nationId]'s golden generation. Asked only for
+  /// a nation that has one, so no other read pays for the query.
+  Future<bool> _hasGoldenGeneration(int? careerId, int nationId) async {
+    if (careerId == null || !GoldenGeneration.hasCohort(nationId)) {
+      return false;
+    }
+    if (_goldenCareers.contains((careerId, nationId))) return true;
+    final row =
+        await (_db.select(_db.drawsWatched)
+              ..where(
+                (t) =>
+                    t.careerId.equals(careerId) &
+                    t.cycle.equals(0) &
+                    t.kind.equals(GoldenGeneration.markerFor(nationId)),
+              )
+              ..limit(1))
+            .getSingleOrNull();
+    if (row == null) return false;
+    _goldenCareers.add((careerId, nationId));
+    return true;
   }
 
   /// The save's shuffled name list, with each late-added surname spliced into
@@ -333,31 +542,52 @@ class DriftPlayerRepository implements PlayerRepository {
   /// first-team-adjacent player rather than the deepest reserve.
   static const int _lateSlotSpan = 96;
 
+  /// Where a golden generation's names start, past the nation's stored rows:
+  /// beyond the newgen sequence of any save shorter than a century.
+  static const int _goldenNameOffset = 1000;
+
   /// Builds a namer that assigns every player of [nationId] a unique name from
   /// the nation's pool. [seeded] gives the nation's stored rows (to rank the
   /// base + fringe players); a 0 [saveSeed] (or a missing pool) leaves names
-  /// untouched.
+  /// untouched. [careerId] picks the pools (see [namePoolsV2Kind]).
   Future<Player Function(Player)> _namerFor(
     int nationId,
     List<Player> seeded,
     int saveSeed,
+    int? careerId,
   ) async {
     if (saveSeed == 0) return _identity;
-    final pool = (await _pools())[nationId];
+    final rich = await _readsRichPools(careerId);
+    final pool = (await (rich ? _richPools() : _pools()))[nationId];
     if (pool == null || pool.first.isEmpty || pool.sur.isEmpty) {
       return _identity;
     }
     // A save-specific shuffle of every first+surname combination, so each save
-    // fields a distinct set drawn from the SAME pool. Built once per (nation,
-    // save) — the splice below is part of building it, not something done to
-    // it on every read.
-    final combos = _comboCache[(nationId, saveSeed)] ??= _combosFor(
-      pool,
-      nationId: nationId,
-      saveSeed: saveSeed,
-      stored: seeded.length,
-    );
-    if (combos.isEmpty) return _identity;
+    // fields a distinct set drawn from the SAME pool. The classic one is built
+    // once per (nation, save) — the splice below is part of building it, not
+    // something done to it on every read. The richer one is never built at
+    // all: see [_PermutedNames].
+    final String Function(int) nameAt;
+    final int length;
+    if (rich) {
+      final names = _richCache[(nationId, saveSeed)] ??= _PermutedNames(
+        pool.first,
+        pool.sur,
+        saveSeed ^ (nationId * 0x9E3779B1) ^ 0x5F5E,
+      );
+      nameAt = names.call;
+      length = names.length;
+    } else {
+      final combos = _comboCache[(nationId, saveSeed)] ??= _combosFor(
+        pool,
+        nationId: nationId,
+        saveSeed: saveSeed,
+        stored: seeded.length,
+      );
+      nameAt = (i) => combos[i];
+      length = combos.length;
+    }
+    if (length == 0) return _identity;
 
     // A stable, distinct index for every player: stored rows (base + fringe)
     // ranked by id, then newgens continuing past them by their sequence — so no
@@ -366,13 +596,95 @@ class DriftPlayerRepository implements PlayerRepository {
     final rank = {for (var i = 0; i < storedIds.length; i++) storedIds[i]: i};
     final storedCount = storedIds.length;
 
+    // A golden generation's names: the cohort in order, from a start past
+    // every newgen a save could reach (seven a year), so it shares no name
+    // with anybody of its nation. A name that would be a real international's
+    // is stepped over, and the members after it move down one, so the
+    // cohort stays distinct. Built on the first member read.
+    Map<int, String>? golden;
+    Map<int, String> goldenNames() {
+      final out = <int, String>{};
+      var j = storedCount + _goldenNameOffset;
+      for (final g in GoldenGeneration.cohort(nationId)) {
+        var name = nameAt(j++ % length);
+        // Bounded: the list is a few dozen names in a pool of thousands.
+        for (var tries = 0;
+            realFinlandInternationals.contains(name) && tries < 1000;
+            tries++) {
+          name = nameAt(j++ % length);
+        }
+        out[g.id] = name;
+      }
+      return out;
+    }
+
     Player named(Player p) {
+      if (GoldenGeneration.isGoldenId(p.id)) {
+        final name = (golden ??= goldenNames())[p.id];
+        if (name != null) return p.copyWith(name: name);
+      }
       final index = PlayerLifecycle.isNewgenId(p.id)
           ? storedCount + PlayerLifecycle.newgenSequence(p.id)
           : (rank[p.id] ?? 0);
-      return p.copyWith(name: combos[index % combos.length]);
+      return p.copyWith(name: nameAt(index % length));
     }
 
     return named;
+  }
+}
+
+/// A save-seeded shuffle of a nation's first x surname cross product that is
+/// never written out.
+///
+/// The richer pools run to about a hundred first names by a hundred and
+/// twenty surnames, twelve thousand combinations a nation, and a world
+/// simulation step touches every nation: listing them all, as the classic
+/// pools do, held some two and a half million strings (measured at roughly
+/// 90MB and 200ms on the first pass) to name the few hundred men a nation
+/// actually fields. So the k-th name is computed instead: a small Feistel
+/// network over the next power of four up from the product is a bijection
+/// there, and walking it again until the value falls inside the product (the
+/// "cycle walk") keeps it a bijection on the product itself. Distinct indices
+/// still give distinct names, which is all the namer relies on.
+class _PermutedNames {
+  _PermutedNames(this._first, this._sur, int seed)
+    : length = _first.length * _sur.length {
+    final bits = (length - 1).bitLength;
+    _half = bits < 2 ? 1 : (bits + 1) >> 1;
+    _halfMask = (1 << _half) - 1;
+    final rng = SeededRng(seed);
+    _keys = [for (var i = 0; i < _rounds; i++) rng.nextInt(1 << 30)];
+  }
+
+  final List<String> _first;
+  final List<String> _sur;
+
+  /// How many names there are: every first name with every surname.
+  final int length;
+
+  static const int _rounds = 4;
+  late final int _half;
+  late final int _halfMask;
+  late final List<int> _keys;
+
+  /// The name at [index] (in `0 <= index < length`).
+  String call(int index) {
+    var x = index;
+    do {
+      x = _permute(x);
+    } while (x >= length);
+    return '${_first[x ~/ _sur.length]} ${_sur[x % _sur.length]}';
+  }
+
+  int _permute(int x) {
+    var left = x >> _half;
+    var right = x & _halfMask;
+    for (final key in _keys) {
+      final mixed = (((right ^ key) * 0x9E3779B1) & 0xFFFFFFFF) >> 7;
+      final next = left ^ (mixed & _halfMask);
+      left = right;
+      right = next;
+    }
+    return (left << _half) | right;
   }
 }

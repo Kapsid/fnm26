@@ -10,3 +10,10 @@ const String kContactEmail = 'info@footballnationsmanager.com';
 
 /// The site, which carries the same address plus the support notes.
 const String kContactSite = 'footballnationsmanager.com';
+
+/// The community Discord invite, opened from Settings.
+const String kDiscordUrl = 'https://discord.gg/SEnYCRnU6J';
+
+/// The Instagram account, shown as its handle and opened from Settings.
+const String kInstagramHandle = '@fnm.football';
+const String kInstagramUrl = 'https://instagram.com/fnm.football';

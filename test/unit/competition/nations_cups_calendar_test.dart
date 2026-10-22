@@ -18,7 +18,9 @@ import '../../helpers/test_database.dart';
 /// Europe's cup, fingerprinted from the code as it stood BEFORE CONCACAF and
 /// Africa were added. A European save must draw the same cup for the same
 /// rngSeed, so these values must never change.
-const Map<int, int> _europeSnapshot = {12345: 3983113530, 7: 668076058};
+// Re-recorded for 1.0.6's fluid windows: the draw and pairings are unchanged
+// (window_plan_test proves it), the dates are not.
+const Map<int, int> _europeSnapshot = {12345: 2400576703, 7: 2757732075};
 
 int _fnv(String s) {
   var h = 0x811C9DC5;
@@ -124,11 +126,14 @@ void main() {
       expect(cups.keys.toSet(), NationsCups.allNames.toSet());
 
       final year = CareerService.worldCupYear(0) - 2;
-      for (final cup in cups.values) {
-        for (final fs in cup.values) {
+      for (final e in cups.entries) {
+        // Fluid windows: the ladders run September to November, Africa's
+        // zones September to October (its knockouts own November).
+        final months = e.key == NationsCups.africa ? [9, 10] : [9, 10, 11];
+        for (final fs in e.value.values) {
           for (final f in fs) {
             expect(f.date.year, year);
-            expect([9, 10], contains(f.date.month));
+            expect(months, contains(f.date.month));
           }
         }
       }
