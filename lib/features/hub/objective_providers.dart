@@ -12,6 +12,7 @@ import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -235,6 +236,15 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
     )).future,
   );
   final worldRank = baseline[career.nationId] ?? 50;
+  // Which rulebook set this cycle's briefs. A save carried over from before
+  // the 1.0.6 retune keeps the briefs its cycle opened with until that cycle
+  // ends: they are derived, so changing the rules would otherwise rewrite a
+  // brief already announced as met (see [briefRulesV2Kind]).
+  final v2 = await comp.hasWatchedDraw(
+    careerId,
+    career.cyclePointer,
+    briefRulesV2Kind,
+  );
 
   final nations = await ref.watch(nationRepositoryProvider).all();
   final me = nations.where((n) => n.id == career.nationId).firstOrNull;
@@ -259,36 +269,22 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       conf,
       career.nationId,
     );
-    final target = continentalObjectiveTarget(continentalRank);
-    // Graded the moment the manager's OWN continental championship has a
-    // winner, exactly as the World Cup objective is graded off the world
-    // champion.
-    //
-    // It used to ask whether every fixture of kind `continentalFinals` had been
-    // played — and that kind covers all six confederations' cups at once, so
-    // the manager's cup could be won and lifted while the objective still read
-    // "still to be decided" because another continent's championship was
-    // mid-knockout.
-    final contChampion = await comp.continentalChampion(
-      careerId,
+    final target = v2
+        ? continentalObjectiveTarget(
+            continentalRank,
+            cupSize: cup.size,
+            confederationSize: _sizeOf(nations, conf),
+          )
+        : _continentalTargetBefore106(continentalRank);
+    final run = await continentalRun(
+      comp: comp,
+      careerId: careerId,
+      nationId: career.nationId,
       confederation: conf,
+      fixtures: fixtures,
     );
-    // …or, sooner, the moment the manager's OWN run in it is over. Waiting for
-    // the champion meant a side knocked out in the group stage sat on "still to
-    // be decided" for the fortnight the rest of the cup took to finish, which
-    // read as a brief nobody was ever going to judge.
-    final decided =
-        contChampion != null ||
-        await _runIsOver(
-          comp: comp,
-          careerId: careerId,
-          nationId: career.nationId,
-          fixtures: fixtures,
-          prefix: 'C',
-          kind: CompetitionKind.continentalFinals,
-          confederation: conf,
-        );
-    var actual = _finishOrdinal(fixtures, career.nationId, prefix: 'C');
+    final decided = run.over;
+    var actual = run.ordinal;
     if (actual == 0) {
       actual = await _qualifyingOrdinal(
         comp: comp,
@@ -298,14 +294,17 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
         confederation: conf,
       );
     }
-    out.add((
-      tier: TournamentTier.continental,
-      competition: cup.name,
-      target: target,
-      decided: decided,
-      met: decided && actual >= target,
-      actual: actual,
-    ));
+    // No brief (0): nothing for the board to grade.
+    if (target > 0) {
+      out.add((
+        tier: TournamentTier.continental,
+        competition: cup.name,
+        target: target,
+        decided: decided,
+        met: decided && actual >= target,
+        actual: actual,
+      ));
+    }
   }
 
   // --- The Nations Cup -------------------------------------------------------
@@ -347,6 +346,9 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
         confederation: ncConf,
         nationId: career.nationId,
         groupName: myNcGroup.name,
+        groupWinnerShare: v2
+            ? (top: 0.45, below: 0.25)
+            : (top: 0.6, below: 0.35),
       );
     }
     final actual = _nationsCupOrdinal(
@@ -385,7 +387,26 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
 
   // --- The World Cup ---------------------------------------------------------
   final champion = await comp.worldChampion(careerId);
-  final wcTarget = worldObjectiveTarget(worldRank);
+  final wcTarget = !v2
+      ? _worldTargetBefore106(worldRank)
+      : me == null
+      ? worldObjectiveTarget(
+          worldRank: worldRank,
+          confederationRank: worldRank,
+          confederation: Confederation.europe,
+          confederationSize: nations.length,
+        )
+      : worldObjectiveTarget(
+          worldRank: worldRank,
+          confederationRank: _rankWithin(
+            baseline,
+            nations,
+            me.confederation,
+            me.id,
+          ),
+          confederation: me.confederation,
+          confederationSize: _sizeOf(nations, me.confederation),
+        );
   var wcActual = _finishOrdinal(fixtures, career.nationId);
   if (wcActual == 0) {
     wcActual = await _qualifyingOrdinal(
@@ -406,14 +427,16 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
         prefix: '',
         kind: CompetitionKind.worldCupFinals,
       );
-  out.add((
-    tier: TournamentTier.world,
-    competition: _worldCupName,
-    target: wcTarget,
-    decided: wcDecided,
-    met: wcDecided && wcActual >= wcTarget,
-    actual: wcActual,
-  ));
+  if (wcTarget > 0) {
+    out.add((
+      tier: TournamentTier.world,
+      competition: _worldCupName,
+      target: wcTarget,
+      decided: wcDecided,
+      met: wcDecided && wcActual >= wcTarget,
+      actual: wcActual,
+    ));
+  }
 
   return out;
 });
@@ -478,6 +501,84 @@ const _firstKnockouts = {
   '': ['R32', 'R16'],
   'C': ['CR16', 'CQF', 'CSF'],
 };
+
+/// How far [nationId] went in its OWN continental championship this cycle,
+/// and whether that run is over. [fixtures] are the nation's fixtures of the
+/// current cycle.
+///
+/// `ordinal` is the finish (0 not in the finals, 2 group, 3 last 16,
+/// 4 quarter-final, 5 semi-final, 6 final, 7 champions); a side that never
+/// qualified reads 0 here, and the board's own fallback to the qualifying
+/// group ([_qualifyingOrdinal]) stays with the board. Shared by the board
+/// brief and the campaigns, so both read one run the same way.
+Future<({int ordinal, bool over})> continentalRun({
+  required CompetitionRepository comp,
+  required int careerId,
+  required int nationId,
+  required Confederation confederation,
+  required List<Fixture> fixtures,
+}) async {
+  // Graded the moment the manager's OWN continental championship has a
+  // winner, exactly as the World Cup objective is graded off the world
+  // champion.
+  //
+  // It used to ask whether every fixture of kind `continentalFinals` had been
+  // played — and that kind covers all six confederations' cups at once, so
+  // the manager's cup could be won and lifted while the objective still read
+  // "still to be decided" because another continent's championship was
+  // mid-knockout.
+  final contChampion = await comp.continentalChampion(
+    careerId,
+    confederation: confederation,
+  );
+  // …or, sooner, the moment the manager's OWN run in it is over. Waiting for
+  // the champion meant a side knocked out in the group stage sat on "still to
+  // be decided" for the fortnight the rest of the cup took to finish, which
+  // read as a brief nobody was ever going to judge.
+  final decided =
+      contChampion != null ||
+      await _runIsOver(
+        comp: comp,
+        careerId: careerId,
+        nationId: nationId,
+        fixtures: fixtures,
+        prefix: 'C',
+        kind: CompetitionKind.continentalFinals,
+        confederation: confederation,
+      );
+  return (
+    ordinal: _finishOrdinal(fixtures, nationId, prefix: 'C'),
+    over: decided,
+  );
+}
+
+/// How far [nationId] went in the World Championship this cycle, and whether
+/// that run is over: [continentalRun]'s twin, on the same reading the board's
+/// World Championship brief uses. [fixtures] are the nation's fixtures of the
+/// current cycle.
+Future<({int ordinal, bool over})> worldRun({
+  required CompetitionRepository comp,
+  required int careerId,
+  required int nationId,
+  required List<Fixture> fixtures,
+}) async {
+  final decided =
+      await comp.worldChampion(careerId) != null ||
+      await _runIsOver(
+        comp: comp,
+        careerId: careerId,
+        nationId: nationId,
+        fixtures: fixtures,
+        prefix: '',
+        kind: CompetitionKind.worldCupFinals,
+      );
+  return (ordinal: worldFinishOrdinal(fixtures, nationId), over: decided);
+}
+
+/// [nationId]'s deepest World Championship finish in [fixtures] as an ordinal
+/// (0 not in the finals, 2 group … 7 champions), as the board reads it.
+int worldFinishOrdinal(List<Fixture> fixtures, int nationId) =>
+    _finishOrdinal(fixtures, nationId);
 
 /// Whether the manager's nation has FINISHED with the tournament whose rounds
 /// carry [prefix] — won it, been knocked out of it, or never qualified for it.
@@ -581,38 +682,105 @@ int _rankWithin(
   return idx < 0 ? peers.length + 1 : idx + 1;
 }
 
-/// What the board demands at the World Cup, by world rank — a heavyweight is
-/// told to win it, a minnow just to be there.
-///
-/// Below that there is one more rung: a nation outside the world's top fifty
-/// has no realistic route into a World Cup, and a board that demands one is
-/// setting a brief nobody in the game could meet. Those sides are judged on
-/// their qualifying campaign instead.
-int worldObjectiveTarget(int rank) {
-  if (rank <= 2) return 7; // win it
-  if (rank <= 6) return 6; // reach the final
-  if (rank <= 12) return 5; // semi-finals
-  if (rank <= 20) return 4; // quarter-finals
-  if (rank <= 32) return 3; // knockouts
-  if (rank <= 50) return 2; // qualify
-  return 1; // come through qualifying in the top half of the group
+/// Marks a cycle opened by 1.0.6 or later, whose briefs follow the retuned
+/// rules below (stored with the cycle's watched events: no schema change).
+/// Written when a save is created and when a cycle starts; a cycle already
+/// under way in a save carried over from 1.0.5 has no mark and keeps the briefs
+/// it opened with until it ends.
+const briefRulesV2Kind = 'briefRules2';
+
+/// The World Championship brief as 1.0.5 and earlier set it, for a cycle
+/// opened before the retune (see [briefRulesV2Kind]).
+int _worldTargetBefore106(int rank) {
+  if (rank <= 2) return 7;
+  if (rank <= 6) return 6;
+  if (rank <= 12) return 5;
+  if (rank <= 20) return 4;
+  if (rank <= 32) return 3;
+  if (rank <= 50) return 2;
+  return 1;
 }
+
+/// The continental brief as 1.0.5 and earlier set it (see
+/// [_worldTargetBefore106]).
+int _continentalTargetBefore106(int confederationRank) {
+  if (confederationRank <= 2) return 7;
+  if (confederationRank <= 4) return 6;
+  if (confederationRank <= 7) return 5;
+  if (confederationRank <= 11) return 4;
+  if (confederationRank <= 16) return 3;
+  if (confederationRank <= 24) return 2;
+  return 1;
+}
+
+/// What the board demands at the World Cup: a heavyweight is told to win it,
+/// a minnow just to be there.
+///
+/// The knockout rungs go by world rank. Below them, "qualify" is asked only of
+/// a side ranked inside its own confederation's share of the World
+/// Championship places ([confederationRank] against [confederation]'s
+/// berths): Europe's 20th-best had a global top-fifty rank and was told to
+/// take one of Europe's sixteen places, while Asia's 7th, with eight places to
+/// go for, was only asked to finish in the top half of its group. Everybody
+/// else is judged on the qualifying campaign itself, and a side with no
+/// realistic hope even of that (outside the top three-fifths of its
+/// confederation, the pots a group's top half is drawn from) gets no brief at
+/// all: 0, and the board judges it on its results.
+int worldObjectiveTarget({
+  required int worldRank,
+  required int confederationRank,
+  required Confederation confederation,
+  required int confederationSize,
+}) {
+  if (worldRank <= 2) return 7; // win it
+  if (worldRank <= 6) return 6; // reach the final
+  if (worldRank <= 12) return 5; // semi-finals
+  if (worldRank <= 20) return 4; // quarter-finals
+  if (worldRank <= 32) return 3; // knockouts
+  final berths = QualificationFormat.forConfederation(
+    confederation,
+  ).finalsBerths;
+  if (confederationRank <= berths) return 2; // qualify
+  return _qualifyingBrief(confederationRank, confederationSize);
+}
+
+/// The brief below "qualify": the top half of the qualifying group for a side
+/// drawn from the pots that half comes from, and nothing (0) for one drawn
+/// below them. Andorra and Bhutan were told to finish in the top half of
+/// their groups, which no side in their pots ever does.
+int _qualifyingBrief(int confederationRank, int confederationSize) =>
+    confederationRank <= (confederationSize * 3 / 5).ceil() ? 1 : 0;
 
 /// What the board demands at the continental championship, by standing within
 /// the confederation. A smaller field than the World Cup, so the bar is higher
 /// at every level: the continent's best side is expected to win its own cup.
 ///
-/// As with the World Cup, a side well outside its continent's leading two dozen
-/// is asked to compete in qualifying rather than to reach the finals.
-int continentalObjectiveTarget(int confederationRank) {
-  if (confederationRank <= 2) return 7; // win it
-  if (confederationRank <= 4) return 6; // reach the final
-  if (confederationRank <= 7) return 5; // semi-finals
-  if (confederationRank <= 11) return 4; // quarter-finals
-  if (confederationRank <= 16) return 3; // knockouts
-  if (confederationRank <= 24) return 2; // qualify
-  return 1; // come through qualifying in the top half of the group
+/// The rungs are set for a 24-team championship and scaled to the size of the
+/// confederation's own ([cupSize]): with the same absolute ranks a sixteen-team
+/// Gold Cup told its 5th-7th to reach the semi-finals, and Oceania's eight told
+/// its second-best side to win it. As with the World Cup, a side outside the
+/// finals' own field is asked to compete in qualifying instead.
+int continentalObjectiveTarget(
+  int confederationRank, {
+  required int cupSize,
+  required int confederationSize,
+}) {
+  // Rounded down, so a smaller field never asks more of a side than a 24-team
+  // one would; but a continent's top two are always asked for the final.
+  int scaled(int at24, {int atLeast = 1}) =>
+      (at24 * cupSize ~/ 24).clamp(atLeast, cupSize);
+  if (confederationRank <= scaled(2)) return 7; // win it
+  if (confederationRank <= scaled(4, atLeast: 2)) return 6; // reach the final
+  if (confederationRank <= scaled(7)) return 5; // semi-finals
+  if (confederationRank <= scaled(11)) return 4; // quarter-finals
+  if (confederationRank <= scaled(16)) return 3; // knockouts
+  if (confederationRank <= cupSize) return 2; // qualify
+  return _qualifyingBrief(confederationRank, confederationSize);
 }
+
+/// How many nations play in [conf].
+int _sizeOf(List<Nation> nations, Confederation conf) =>
+    nations.where((n) => n.confederation == conf).length;
 
 /// The board's World Championship and continental demands of [nation] for a
 /// save's FIRST cycle, known before the save exists.
@@ -622,21 +790,36 @@ int continentalObjectiveTarget(int confederationRank) {
 /// [cycleObjectiveOutcomesProvider] sets once the career starts. The tablet's
 /// nation preview states them. `continental` is null for a confederation with
 /// no continental championship.
-({int world, int? continental}) openingObjectiveTargets(
+({int? world, int? continental}) openingObjectiveTargets(
   Nation nation,
   List<Nation> nations,
 ) {
   final baseline = {for (final n in nations) n.id: n.ranking};
-  final hasCup = ContinentalCups.byConfederation.containsKey(
+  final cup = ContinentalCups.byConfederation[nation.confederation];
+  final confRank = _rankWithin(
+    baseline,
+    nations,
     nation.confederation,
+    nation.id,
   );
+  final size = _sizeOf(nations, nation.confederation);
+  final world = worldObjectiveTarget(
+    worldRank: baseline[nation.id] ?? 50,
+    confederationRank: confRank,
+    confederation: nation.confederation,
+    confederationSize: size,
+  );
+  final continental = cup == null
+      ? 0
+      : continentalObjectiveTarget(
+          confRank,
+          cupSize: cup.size,
+          confederationSize: size,
+        );
+  // Null where the board sets no brief (see [worldObjectiveTarget]).
   return (
-    world: worldObjectiveTarget(baseline[nation.id] ?? 50),
-    continental: hasCup
-        ? continentalObjectiveTarget(
-            _rankWithin(baseline, nations, nation.confederation, nation.id),
-          )
-        : null,
+    world: world > 0 ? world : null,
+    continental: continental > 0 ? continental : null,
   );
 }
 
@@ -650,6 +833,7 @@ int _nationsCupTarget({
   required Confederation confederation,
   required int nationId,
   required String groupName,
+  ({double top, double below}) groupWinnerShare = (top: 0.45, below: 0.25),
 }) {
   final tier = NationsCup.tierOfGroupName(groupName);
   final confOf = {for (final n in nations) n.id: n.confederation};
@@ -670,16 +854,19 @@ int _nationsCupTarget({
     confederationOf: (id) => confOf[id],
   );
 
+  // A league of sixteen has four group winners: only that many sides are told
+  // to win a group. League A used to tell its top 60% (nine sides for four
+  // places) and every other league its top 35%.
   if (tier == 0) {
     // League A: the top sides are expected in the Finals Four, which is what
     // winning your group there means.
     if (share <= 0.25) return 5;
-    return share <= 0.6 ? 4 : 3;
+    return share <= groupWinnerShare.top ? 4 : 3;
   }
   // Below League A the ladder is the point: the strong go up, the rest hold
   // their place. There is nothing beneath the lowest league to drop into, so
   // "avoid the drop" would be a brief that grades itself.
-  if (share <= 0.35) return 4; // win your group and go up
+  if (share <= groupWinnerShare.below) return 4; // win your group and go up
   if (share <= 0.7) return 3; // top half
   return tier >= lowest ? 3 : 2; // stay up
 }

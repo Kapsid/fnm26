@@ -158,6 +158,7 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
             best.key,
             agingYears: aging,
             saveSeed: career.rngSeed,
+            careerId: career.id,
           );
           if (p != null) {
             scorerName = p.name;
@@ -185,6 +186,7 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
             i.playerId,
             agingYears: aging,
             saveSeed: career.rngSeed,
+            careerId: career.id,
           );
           if (p == null) continue;
           incidentPosts.addAll(
@@ -262,6 +264,7 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
             a.playerId,
             agingYears: aging,
             saveSeed: career.rngSeed,
+            careerId: career.id,
           );
           if (p != null) hurt.add(p.name);
         }
@@ -478,14 +481,22 @@ class YReadService {
 final AutoDisposeFutureProviderFamily<int, int> publicMoodProvider =
     FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
       final judged = await ref.watch(_judgedProvider(careerId).future);
+      // The mood the board reads is about HIM: only the matches of his own
+      // spell (the feed still remembers the rest).
+      final repo = ref.watch(careerRepositoryProvider);
+      final career = await repo.byId(careerId);
+      final since = career == null
+          ? null
+          : (await currentSpell(repo, career)).since;
       return PublicMood.of([
         for (final j in judged)
-          (
-            nationRank: j.nationRank,
-            opponentRank: j.opponentRank,
-            won: j.scored > j.conceded,
-            drew: j.scored == j.conceded,
-          ),
+          if (since == null || !j.date.isBefore(since))
+            (
+              nationRank: j.nationRank,
+              opponentRank: j.opponentRank,
+              won: j.scored > j.conceded,
+              drew: j.scored == j.conceded,
+            ),
       ]);
     });
 

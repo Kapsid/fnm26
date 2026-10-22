@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
+import 'package:fnm/features/nations/nation_now_card.dart';
 import 'package:fnm/features/nations/nation_vitrine_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -91,6 +92,8 @@ class NationView extends ConsumerWidget {
           padding: padding,
           children: [
             _Header(v),
+            const SizedBox(height: AppSpacing.md),
+            NationNowCard(careerId: careerId, nationId: nationId),
             const SizedBox(height: AppSpacing.md),
             _sectionLabel(l.nationsHonours),
             const SizedBox(height: AppSpacing.sm),

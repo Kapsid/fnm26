@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/services/achievements/challenges.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -142,7 +143,7 @@ class ChallengesScreen extends ConsumerWidget {
                         ),
                         const SizedBox(width: AppSpacing.sm),
                         Text(
-                          challengeTierLabel(l, tier).toUpperCase(),
+                          challengeTierLabel(l, tier).capsIn(l.localeName),
                           style: AppTypography.labelMedium.copyWith(
                             color: _tierColor(tier),
                           ),

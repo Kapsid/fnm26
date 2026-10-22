@@ -7,9 +7,9 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/federation_label.dart';
-import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -20,12 +20,16 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/campaign/campaign_hub_card.dart';
+import 'package:fnm/features/campaign/campaign_providers.dart'
+    show activeCampaignProvider;
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/hub/hub_event_button.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
+import 'package:fnm/features/hub/schedule_widgets.dart';
 import 'package:fnm/features/messages/message_popup.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart' show messageStyle;
@@ -320,8 +324,6 @@ class _HubScreenState extends ConsumerState<HubScreen> {
           final date = AppDate.dayMonthYear(context, hub.career.inGameDate);
           String code(int id) => hub.nations[id]?.code ?? '??';
           String name(int id) => hub.nations[id]?.name ?? l.hubUnknown;
-          // Hide the opponent and group table until the draw has been watched.
-          final drawWatched = hub.nextDrawWatched;
           // The same figure the world ranking screen shows, read from the same
           // provider: two screens quoting different movement for one nation is
           // a bug the manager reports as "which one is right?".
@@ -374,9 +376,11 @@ class _HubScreenState extends ConsumerState<HubScreen> {
               // The primary action is whatever the next timeline event is
               // (a draw, the next match, a tournament to follow, or rollover).
               HubEventButton(careerId: careerId),
-              if (hub.championNationId == null && drawWatched) ...[
+              // A campaign career's goal and progress; nothing for a normal one.
+              CampaignHubCard(careerId: careerId, gapAbove: true),
+              if (hub.championNationId == null) ...[
                 const SizedBox(height: AppSpacing.md),
-                _NextMatch(next: hub.next, code: code),
+                _Upcoming(careerId: careerId),
               ],
               const SizedBox(height: AppSpacing.md),
               _SquadStatus(
@@ -392,6 +396,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
               if (hub.group != null)
                 if (hub.groupDrawWatched)
                   _GroupTable(
+                    careerId: careerId,
                     group: hub.group!,
                     playerNationId: hub.career.nationId,
                     directCount: hub.groupDirectCount,
@@ -551,84 +556,32 @@ class _BoardFinanceCard extends ConsumerWidget {
 
 /// Human-readable stage for a fixture (distinguishes qualifiers from finals).
 
-class _NextMatch extends StatelessWidget {
-  const _NextMatch({required this.next, required this.code});
+/// The current window's matches, then the full schedule one tap away. The
+/// rows gate themselves on the draws, so an undrawn opponent is never shown.
+class _Upcoming extends StatelessWidget {
+  const _Upcoming({required this.careerId});
 
-  final Fixture? next;
-  final String Function(int) code;
+  final int careerId;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final f = next;
-    if (f == null) {
-      return AppCard(
-        child: Center(child: Text(l.hubNoMoreFixtures)),
-      );
-    }
-    final date = AppDate.weekdayDayMonthCaps(context, f.date);
     return AppCard(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Text(l.hubUpcoming, style: AppTypography.labelMedium),
+          UpcomingRows(careerId: careerId),
           Align(
-            alignment: Alignment.centerLeft,
-            child: Text(l.hubNextMatch, style: AppTypography.labelMedium),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          // On its own full-width line, at the heading's size. Squeezed into
-          // the room beside the heading it was shrunk to fit, and players read
-          // which match this is from it: a qualifier or a semi-final.
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              MatchStage.label(l, f),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.labelMedium.copyWith(
-                color: f.round == null
-                    ? AppColors.onSurfaceVariant
-                    : AppColors.primary,
-              ),
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () =>
+                  context.push('${Routes.schedule}?careerId=$careerId'),
+              child: Text(l.hubFullSchedule),
             ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _Side(code: code(f.homeNationId)),
-              Column(
-                children: [
-                  Text(l.hubVs, style: AppTypography.labelLarge),
-                  const SizedBox(height: 2),
-                  Text(
-                    date,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-              _Side(code: code(f.awayNationId)),
-            ],
           ),
         ],
       ),
-    );
-  }
-}
-
-class _Side extends StatelessWidget {
-  const _Side({required this.code});
-  final String code;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FlagDisc(code, size: 40),
-        const SizedBox(height: AppSpacing.xs),
-        Text(code, style: AppTypography.labelMedium),
-      ],
     );
   }
 }
@@ -795,8 +748,17 @@ class _SquadStatus extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(l.hubSquadStatus, style: AppTypography.labelMedium),
-              const Spacer(),
+              // Flexible, not a Spacer: "SITUAÇÃO DO ELENCO" beside
+              // "23 jogadores" ran 3px past a 320 phone.
+              Expanded(
+                child: Text(
+                  l.hubSquadStatus,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelMedium,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
               Text(
                 l.hubPlayers(size),
                 style: AppTypography.labelSmall.copyWith(
@@ -904,7 +866,7 @@ class _GroupPlaceholder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  competitionLabel(l, competition).toUpperCase(),
+                  competitionLabel(l, competition).capsIn(l.localeName),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),
@@ -927,6 +889,7 @@ class _GroupPlaceholder extends StatelessWidget {
 
 class _GroupTable extends StatelessWidget {
   const _GroupTable({
+    required this.careerId,
     required this.group,
     required this.playerNationId,
     required this.directCount,
@@ -938,6 +901,7 @@ class _GroupTable extends StatelessWidget {
     this.framed = true,
   });
 
+  final int careerId;
   final GroupTable group;
   final int playerNationId;
 
@@ -969,7 +933,7 @@ class _GroupTable extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  competitionLabel(l, group.competition).toUpperCase(),
+                  competitionLabel(l, group.competition).capsIn(l.localeName),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
                   ),
@@ -1046,15 +1010,27 @@ class _GroupTable extends StatelessWidget {
               ),
             ),
           ),
-          FlagDisc(code(s.nationId), size: 22),
-          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
-              name(s.nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+            child: NationTap(
+              careerId: careerId,
+              nationId: s.nationId,
+              child: Row(
+                children: [
+                  FlagDisc(code(s.nationId), size: 22),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      name(s.nationId),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontWeight: isPlayer
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

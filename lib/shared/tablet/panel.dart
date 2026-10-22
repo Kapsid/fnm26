@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/shared/tablet/tablet_text.dart';
 
 /// A titled box for tablet dashboards: tighter than `AppCard`, with a header
@@ -41,7 +42,7 @@ class Panel extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    title.toUpperCase(),
+                    title.capsIn(Localizations.localeOf(context).languageCode),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TabletText.panelTitle,

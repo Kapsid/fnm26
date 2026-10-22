@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -178,6 +179,7 @@ List<Widget> _cupTabViews(
       _Soon(message: l.tourCupQualDrawSoon)
     else
       _Qualifying(
+        careerId: careerId,
         grid: grid,
         groups: data.groups,
         playerConfederation: data.playerConfederation,
@@ -192,6 +194,7 @@ List<Widget> _cupTabViews(
       _Soon(message: l.tourCupFinalsDrawSoon)
     else if (data.hasFinals)
       _FinalsGroups(
+        careerId: careerId,
         grid: grid,
         groups: data.finalsGroups,
         groupFixtures: data.groupFixtures,
@@ -203,6 +206,7 @@ List<Widget> _cupTabViews(
       _Soon(message: l.tourCupFinalsDrawnAfterQual),
     if (data.knockout.isNotEmpty)
       TournamentBracket(
+        careerId: careerId,
         wide: grid,
         fixtures: data.knockout,
         rounds: _rounds,
@@ -279,6 +283,7 @@ class _PlayoffTab extends ConsumerWidget {
         String code(int id) => data.nations[id]?.code ?? '??';
         String name(int id) => data.nations[id]?.name ?? l.tourCupUnknown;
         return _PlayoffList(
+          careerId: careerId,
           ties: data.ties,
           playerNationId: data.playerNationId,
           code: code,
@@ -291,6 +296,7 @@ class _PlayoffTab extends ConsumerWidget {
 
 class _Qualifying extends StatefulWidget {
   const _Qualifying({
+    required this.careerId,
     required this.groups,
     required this.playerConfederation,
     required this.playerNationId,
@@ -299,6 +305,7 @@ class _Qualifying extends StatefulWidget {
     this.grid = false,
   });
 
+  final int careerId;
   final List<ConfederationGroupTable> groups;
   final Confederation? playerConfederation;
   final int playerNationId;
@@ -402,6 +409,7 @@ class _QualifyingState extends State<_Qualifying> {
     final cards = [
       for (final g in _mineFirst(byConf[conf]!, widget.playerNationId))
         _GroupCard(
+          careerId: widget.careerId,
           group: g,
           playerNationId: widget.playerNationId,
           code: widget.code,
@@ -439,7 +447,7 @@ class _QualifyingState extends State<_Qualifying> {
               bottom: AppSpacing.sm,
             ),
             child: Text(
-              confederationLabel(l, conf).toUpperCase(),
+              confederationLabel(l, conf).capsIn(l.localeName),
               style: AppTypography.labelMedium.copyWith(
                 color: AppColors.primary,
               ),
@@ -465,6 +473,7 @@ class _QualifyingState extends State<_Qualifying> {
                 title: ladder.title,
                 destination: ladder.destination,
                 adjustedForGroupSize: ladder.uneven,
+                careerId: widget.careerId,
               ),
             );
           }(),
@@ -480,12 +489,14 @@ class _QualifyingState extends State<_Qualifying> {
 /// here (not only in the one-shot event) so the results stay accessible.
 class _PlayoffList extends StatelessWidget {
   const _PlayoffList({
+    required this.careerId,
     required this.ties,
     required this.playerNationId,
     required this.code,
     required this.name,
   });
 
+  final int careerId;
   final List<PlayoffTie> ties;
   final int playerNationId;
   final String Function(int) code;
@@ -509,6 +520,7 @@ class _PlayoffList extends StatelessWidget {
           code: code,
           name: name,
           playerNationId: playerNationId,
+          careerId: careerId,
         ),
       ],
     );
@@ -575,6 +587,7 @@ List<ConfederationGroupTable> _mineFirst(
 
 class _GroupCard extends StatelessWidget {
   const _GroupCard({
+    required this.careerId,
     required this.group,
     required this.playerNationId,
     required this.code,
@@ -584,6 +597,7 @@ class _GroupCard extends StatelessWidget {
     this.matches = const [],
   });
 
+  final int careerId;
   final ConfederationGroupTable group;
   final int playerNationId;
   final String Function(int) code;
@@ -614,7 +628,8 @@ class _GroupCard extends StatelessWidget {
           ),
           if (matches.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.xs),
-            for (final f in matches) MatchResultRow(fixture: f, code: code),
+            for (final f in matches)
+              MatchResultRow(fixture: f, code: code, careerId: careerId),
             const Divider(height: AppSpacing.lg),
           ],
           const SizedBox(height: AppSpacing.sm),
@@ -660,15 +675,27 @@ class _GroupCard extends StatelessWidget {
               ),
             ),
           ),
-          FlagDisc(code(s.nationId), size: 22),
-          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
-              name(s.nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+            child: NationTap(
+              careerId: careerId,
+              nationId: s.nationId,
+              child: Row(
+                children: [
+                  FlagDisc(code(s.nationId), size: 22),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      name(s.nationId),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontWeight: isPlayer
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -699,6 +726,7 @@ class _GroupCard extends StatelessWidget {
 
 class _FinalsGroups extends StatelessWidget {
   const _FinalsGroups({
+    required this.careerId,
     required this.groups,
     required this.groupFixtures,
     required this.playerNationId,
@@ -707,6 +735,7 @@ class _FinalsGroups extends StatelessWidget {
     this.grid = false,
   });
 
+  final int careerId;
   final List<FinalsGroupTable> groups;
   final List<Fixture> groupFixtures;
   final int playerNationId;
@@ -749,6 +778,7 @@ class _FinalsGroups extends StatelessWidget {
     }
 
     Widget card(FinalsGroupTable g) => _GroupCard(
+      careerId: careerId,
       group: (
         confederation: Confederation.europe,
         groupName: g.name,
@@ -780,6 +810,7 @@ class _FinalsGroups extends StatelessWidget {
             code: code,
             name: name,
             adjustedForGroupSize: uneven,
+            careerId: careerId,
           ),
         ],
         const SizedBox(height: AppSpacing.xl),
@@ -1020,7 +1051,9 @@ class _HistoryState extends State<_History> {
     final silver = <int, int>{};
     final bronze = <int, int>{};
     for (final h in editions) {
-      gold[h.championId] = (gold[h.championId] ?? 0) + 1;
+      for (final c in h.champions) {
+        gold[c] = (gold[c] ?? 0) + 1;
+      }
       silver[h.runnerUpId] = (silver[h.runnerUpId] ?? 0) + 1;
       // Both bronze slots count — a cup with no third-place match shares the
       // bronze between its two beaten semi-finalists (thirdId + thirdId2).

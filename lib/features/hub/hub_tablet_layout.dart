@@ -20,6 +20,8 @@ class _HubTabletLayout extends ConsumerWidget {
     final contHost = ref
         .watch(continentalHostThemeProvider(careerId))
         .valueOrNull;
+    final isCampaign =
+        ref.watch(activeCampaignProvider(careerId)).valueOrNull != null;
     return Scaffold(
       key: HubScreen.tabletLayoutKey,
       body: dataAsync.when(
@@ -60,6 +62,11 @@ class _HubTabletLayout extends ConsumerWidget {
                 // LayoutBuilder, no WholeText (see DashboardGrid).
                 DashboardGrid(
                   tiles: [
+                    if (isCampaign)
+                      DashboardTile(
+                        span: 12,
+                        child: CampaignHubCard(careerId: careerId),
+                      ),
                     DashboardTile(
                       span: 5,
                       child: _NextMatchPanel(
@@ -110,9 +117,10 @@ class _HubTabletLayout extends ConsumerWidget {
   }
 }
 
-/// The next fixture, both sides by flag and name, and the two places a
-/// manager goes before it. The opponent is held back until the draw that
-/// decides him has been watched, as everywhere else.
+/// The current window's matches, the full schedule, and the two places a
+/// manager goes before the next one. An opponent is held back until the draw
+/// that decides him has been watched, as everywhere else (the rows gate
+/// themselves).
 class _NextMatchPanel extends StatelessWidget {
   const _NextMatchPanel({
     required this.careerId,
@@ -127,7 +135,6 @@ class _NextMatchPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final champion = hub.championNationId;
-    final f = hub.next;
     final Widget body;
     if (champion != null) {
       body = Column(
@@ -146,38 +153,20 @@ class _NextMatchPanel extends StatelessWidget {
           ),
         ],
       );
-    } else if (f == null) {
-      body = Text(l.hubNoMoreFixtures, style: TabletText.cell);
     } else {
-      final me = hub.career.nationId;
-      Widget side(int id) => !hub.nextDrawWatched && id != me
-          ? _HiddenTeam(label: l.topBarDrawPending)
-          : _Team(
-              code: hub.nations[id]?.code ?? '??',
-              name: hub.nations[id]?.name ?? l.hubUnknown,
-            );
       body = Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            MatchStage.label(l, f),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TabletText.barMeta,
+          UpcomingRows(careerId: careerId),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () =>
+                  context.push('${Routes.schedule}?careerId=$careerId'),
+              child: Text(l.hubFullSchedule),
+            ),
           ),
-          Text(
-            AppDate.weekdayDayMonthCaps(context, f.date),
-            style: TabletText.barMeta,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Row(
-            children: [
-              Expanded(child: side(f.homeNationId)),
-              Text(l.hubVs, style: AppTypography.labelLarge),
-              Expanded(child: side(f.awayNationId)),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
               Expanded(
@@ -200,7 +189,7 @@ class _NextMatchPanel extends StatelessWidget {
         ],
       );
     }
-    return Panel(title: l.hubNextMatch, child: body);
+    return Panel(title: l.hubUpcoming, child: body);
   }
 }
 
@@ -221,36 +210,6 @@ class _Team extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
         style: TabletText.barStrong,
-      ),
-    ],
-  );
-}
-
-/// Where the opponent will be once his draw has been watched.
-class _HiddenTeam extends StatelessWidget {
-  const _HiddenTeam({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Column(
-    children: [
-      Container(
-        width: 44,
-        height: 44,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColors.surfaceContainerHigh,
-        ),
-        child: const Icon(Icons.casino, color: AppColors.onSurfaceVariant),
-      ),
-      const SizedBox(height: 6),
-      Text(
-        label,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center,
-        style: TabletText.barMeta,
       ),
     ],
   );
@@ -306,6 +265,7 @@ class _GroupPanel extends ConsumerWidget {
       action: PanelLink(label: l.panelViewAll, onTap: onOpen),
       child: _GroupTable(
         framed: false,
+        careerId: careerId,
         group: g,
         playerNationId: hub.career.nationId,
         directCount: hub.groupDirectCount,

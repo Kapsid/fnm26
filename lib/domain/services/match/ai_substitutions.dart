@@ -66,6 +66,43 @@ abstract final class AiSubstitutions {
     return subs;
   }
 
+  /// The minute an AI side makes its extra-time change: the first of the
+  /// added thirty, so the fresh legs have the whole of extra time.
+  static const extraTimeMinute = 91;
+
+  /// One extra-time [Substitution] for [nationId] at [extraTimeMinute]: one of
+  /// the two best fresh outfield players (picked by [rng], so the change is not
+  /// the same every tie) for the weakest outfield player of his line still on,
+  /// or the weakest outfield player overall. [onPitchAt90] is who finished the
+  /// ninety (after regulation subs and dismissals) and [bench] who is still
+  /// available, both the caller's to resolve. Null when no fresh outfield
+  /// player is left. The caller seeds [rng] on its own stream (the live
+  /// screen uses `fixture.id ^ 0x5196`), so the regulation [plan]'s draws are
+  /// untouched by it.
+  static Substitution? planExtraTime({
+    required int nationId,
+    required List<Player> onPitchAt90,
+    required List<Player> bench,
+    required SeededRng rng,
+  }) {
+    final available =
+        bench.where((p) => p.category != PositionCategory.goalkeeper).toList()
+          ..sort((a, b) => b.overall.compareTo(a.overall));
+    if (available.isEmpty) return null;
+    final incoming =
+        available[rng.nextInt(available.length < 2 ? available.length : 2)];
+    final off =
+        _weakestOutfield(onPitchAt90, incoming.category) ??
+        _weakestOutfield(onPitchAt90, null);
+    if (off == null) return null;
+    return Substitution(
+      teamNationId: nationId,
+      minute: extraTimeMinute,
+      offId: off.id,
+      on: incoming,
+    );
+  }
+
   /// The lowest-rated outfield player on the pitch, optionally restricted to a
   /// position category [cat]; null if there is none.
   static Player? _weakestOutfield(List<Player> onPitch, PositionCategory? cat) {

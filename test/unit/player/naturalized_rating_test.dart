@@ -56,10 +56,11 @@ void main() {
     );
     addTearDown(container.dispose);
     await container.read(seedLoaderProvider).ensureSeeded();
-    career = (await container
-            .read(careerServiceProvider)
-            .create(nationId: 1, managerName: 'M'))
-        .valueOrNull!;
+    career =
+        (await container
+                .read(careerServiceProvider)
+                .create(nationId: 1, managerName: 'M'))
+            .valueOrNull!;
     await container
         .read(careerRepositoryProvider)
         .addNaturalizationOffer(
@@ -96,7 +97,7 @@ void main() {
     // trivially and the regression below would pass for the wrong reason.
     final base = await container
         .read(playerRepositoryProvider)
-        .byId(naturalizedId, saveSeed: career.rngSeed);
+        .byId(naturalizedId, saveSeed: career.rngSeed, careerId: career.id);
     expect(await fromSquad(), greaterThan(base!.overall));
   });
 
@@ -121,11 +122,13 @@ void main() {
         final byId = await repo.byId(
           id,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           careerStartsByPlayer: byPlayer,
         );
         final pool = await repo.byNation(
           2,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           careerStartsByPlayer: byPlayer,
         );
         final fromPool = pool.singleWhere((p) => p.id == id);

@@ -42,6 +42,7 @@ youthPyramidProvider = FutureProvider.autoDispose.family<YouthPyramid, int>((
     career.nationId,
     agingYears: at,
     saveSeed: career.rngSeed,
+    careerId: career.id,
     youthBonusByCycle: youth,
     careerStartsByPlayer: starts,
   );
@@ -163,6 +164,7 @@ youthShortlistProvider = FutureProvider.autoDispose
           career.nationId,
           agingYears: years,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           youthBonusByCycle: await ref.watch(
             youthBonusByCycleProvider(careerId).future,
           ),

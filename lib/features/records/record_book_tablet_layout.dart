@@ -216,7 +216,7 @@ class _TeamRecordTable extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 5, AppSpacing.md, 5),
                 child: Text(
-                  label.toUpperCase(),
+                  label.capsIn(l.localeName),
                   maxLines: 2,
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,

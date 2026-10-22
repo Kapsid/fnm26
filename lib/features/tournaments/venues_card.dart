@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -98,7 +99,7 @@ class VenuesCard extends StatelessWidget {
                   FlagDisc(h.code, size: 14),
                   const SizedBox(width: AppSpacing.xs),
                   Text(
-                    h.name.toUpperCase(),
+                    h.name.capsIn(l.localeName),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),

@@ -4,8 +4,6 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
-import 'package:fnm/features/hub/hub_event.dart';
-import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 
 /// The player's own matches (qualifiers + finals), in date order.
 class ResultsData {
@@ -87,22 +85,15 @@ final AutoDisposeFutureProviderFamily<ResultsData?, int> resultsProvider =
 
       // A competition's schedule stays hidden until the player has watched its
       // draw, so fixtures never appear before the balls come out of the pots.
-      final cycle = career.cyclePointer;
-      final watched = <String>{};
-      for (final kind in const [
-        worldCupQualDrawKind,
-        continentalQualDrawKind,
-        continentalFinalsDrawKind,
-        worldCupDrawKind,
-      ]) {
-        if (await comp.hasWatchedDraw(careerId, cycle, kind)) watched.add(kind);
-      }
-
-      final visible = fixtures.where((f) {
-        if (f.played) return true; // results already played are history
-        final kind = drawKindForFixture(f);
-        return kind == null || watched.contains(kind);
-      }).toList();
+      final watched = await watchedFixtureDraws(
+        comp,
+        careerId,
+        career.cyclePointer,
+      );
+      final visible = [
+        for (final f in fixtures)
+          if (fixtureRevealed(f, watched)) f,
+      ];
 
       final nations = {
         for (final n in await ref.watch(nationRepositoryProvider).all())

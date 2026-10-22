@@ -504,6 +504,8 @@ Future<void> _importCareer(BuildContext context, WidgetRef ref) async {
         BundleRejection.fromANewerBuild => l.careerImportFailedNewer,
         BundleRejection.slotsFull => l.careerImportFailedSlotsFull,
         BundleRejection.needsPremium => l.careerImportFailedNeedsPremium,
+        BundleRejection.campaignRunExists =>
+          l.careerImportFailedCampaignRun,
       }),
       action: sellable && context.mounted
           ? SnackBarAction(

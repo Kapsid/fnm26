@@ -107,6 +107,9 @@ class _FnmAppState extends ConsumerState<FnmApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,
+      // Tells Android back goes somewhere on every screen but home: see
+      // [SystemBackHandler].
+      onNavigationNotification: _back!.onNavigationNotification,
       // The tour draws over whatever screen it has navigated to, so it wraps
       // the router's output rather than living on any one screen.
       builder: (context, child) =>

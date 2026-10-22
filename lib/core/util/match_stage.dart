@@ -1,3 +1,4 @@
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -71,9 +72,9 @@ abstract final class MatchStage {
     final round = f.round;
     // A friendly and a Continental Clash are one-offs: naming them twice
     // ("FRIENDLIES · FRIENDLY") reads as a bug.
-    if (round == 'FRIENDLY') return l.resultsStageFriendly.toUpperCase();
+    if (round == 'FRIENDLY') return l.resultsStageFriendly.capsIn(l.localeName);
     if (round == 'FFINAL') {
-      return l.resultsStageContinentalClash.toUpperCase();
+      return l.resultsStageContinentalClash.capsIn(l.localeName);
     }
     if (round == null || round == 'CQ') {
       final head =
@@ -82,15 +83,15 @@ abstract final class MatchStage {
                         ? l.resultsCategoryWorldCupQualifyingShort
                         : l.resultsCategoryContinentalQualifyingShort)
                   : category(l, round))
-              .toUpperCase();
-      return '$head · ${l.matchStageMatchday(f.matchday).toUpperCase()}';
+              .capsIn(l.localeName);
+      return '$head · ${l.matchStageMatchday(f.matchday).capsIn(l.localeName)}';
     }
     // A group game is just the competition: "· GROUP STAGE" adds nothing the
     // manager needs, and on the narrow cards it pushed the line over.
     if (const {'GROUP', 'CGROUP', 'NGROUP', 'NL'}.contains(round)) {
-      return category(l, round).toUpperCase();
+      return category(l, round).capsIn(l.localeName);
     }
-    return '${category(l, round).toUpperCase()} · '
-        '${stage(l, round).toUpperCase()}';
+    return '${category(l, round).capsIn(l.localeName)} · '
+        '${stage(l, round).capsIn(l.localeName)}';
   }
 }

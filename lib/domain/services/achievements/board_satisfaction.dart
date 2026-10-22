@@ -113,15 +113,36 @@ abstract final class BoardSatisfaction {
   static int trophyBonus(TournamentTier tier, Placing placing) =>
       _trophy[tier]?[placing] ?? 0;
 
+  /// What a result is worth against a clearly stronger side (see
+  /// [isUnderdog]): a board does not hold a defeat by a giant against a
+  /// minnow's manager the way it holds one by an equal, and a point taken off
+  /// one is a good day. Every minnow used to lose its job on form alone.
+  static const int winAsUnderdog = 5;
+  static const int drawAsUnderdog = 2;
+  static const int lossAsUnderdog = -1;
+
+  /// Whether a side ranked [ownRank] in the world plays [opponentRank] as the
+  /// clear underdog: the opponent at least twice as high and ten places up.
+  static bool isUnderdog({required int ownRank, required int opponentRank}) =>
+      opponentRank * 2 <= ownRank && ownRank - opponentRank >= 10;
+
   /// The form contribution of [recent] (most recent first); only the newest
-  /// [formWindow] matches count.
-  static int formPoints(Iterable<MatchOutcome> recent) {
+  /// [formWindow] matches count. [asUnderdog] runs alongside it, true for a
+  /// match played as the clear underdog; missing entries count as level.
+  static int formPoints(
+    Iterable<MatchOutcome> recent, {
+    Iterable<bool> asUnderdog = const [],
+  }) {
+    final underdog = asUnderdog.toList();
     var points = 0;
+    var i = 0;
     for (final outcome in recent.take(formWindow)) {
+      final under = i < underdog.length && underdog[i];
+      i++;
       points += switch (outcome) {
-        MatchOutcome.win => win,
-        MatchOutcome.draw => draw,
-        MatchOutcome.loss => loss,
+        MatchOutcome.win => under ? winAsUnderdog : win,
+        MatchOutcome.draw => under ? drawAsUnderdog : draw,
+        MatchOutcome.loss => under ? lossAsUnderdog : loss,
       };
     }
     return points;
@@ -155,7 +176,12 @@ abstract final class BoardSatisfaction {
   /// only to be there has far less riding on the answer. Scaling by the demand
   /// is what makes the gauge move hardest at the biggest nations — which is
   /// where a missed objective should genuinely cost a manager their job.
-  static double demandFactor(int target) => 1 + 0.18 * (target.clamp(2, 7) - 2);
+  ///
+  /// The lowest brief, the qualifying campaign of a side with no route to the
+  /// finals, weighs a little less again: missing it cost a minnow as much as a
+  /// mid-table side missing the finals, and two such misses alone took a
+  /// neutral board below the sacking bar.
+  static double demandFactor(int target) => 1 + 0.18 * (target.clamp(1, 7) - 2);
 
   /// The board's swing for one settled objective: strongly positive for hitting
   /// the brief (more so for beating it), strongly negative for falling short,
@@ -222,6 +248,10 @@ abstract final class BoardSatisfaction {
   /// gauge at 100 and stop saying anything.
   static int compute({
     required Iterable<MatchOutcome> recent,
+
+    /// Alongside [recent]: which of those matches were played as the clear
+    /// underdog (see [formPoints]).
+    Iterable<bool> recentAsUnderdog = const [],
     required Iterable<({TournamentTier tier, Placing placing})> honours,
     required int? worldRank,
     Iterable<ObjectiveResult> objectives = const [],
@@ -248,7 +278,7 @@ abstract final class BoardSatisfaction {
       fromObjectives += objectiveSwing(o);
     }
     return (openingFrom(previousCycle) +
-            formPoints(recent) +
+            formPoints(recent, asUnderdog: recentAsUnderdog) +
             lockedInLosses * lockedInLoss +
             best +
             fromObjectives +

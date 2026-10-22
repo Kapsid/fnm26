@@ -77,6 +77,19 @@ abstract final class PlayerLifecycle {
   /// and the manager could have watched him the whole way.
   static const int intakeAge = 11;
 
+  /// The senior pool's floor: the U-19 band and up. What the world simulation,
+  /// AI squads, rankings and a squad nobody has named are built from.
+  ///
+  /// Both floors are literals, not `YouthLevel.x.minAge`, only because a
+  /// default parameter must be const; a test pins them to the bands.
+  static const int seniorMinAge = 17;
+
+  /// The youngest the manager may call up — the U-17 band, tagged on the
+  /// call-up screen. A boy he names is a boy he can field: every pool his own
+  /// XI is picked from reads down to here and keeps an under-[seniorMinAge]
+  /// only if he was called up (see `availableSquad`).
+  static const int callUpMinAge = 15;
+
   /// Boys a nation takes in each year. Sized against the senior pool's
   /// equilibrium: seven a year at [releasedPercent] attrition is the ~5.5 a
   /// year that reach seventeen, which is exactly what the old
@@ -158,7 +171,7 @@ abstract final class PlayerLifecycle {
     List<Player> seeded,
     int nationId,
     int agingYears, {
-    int minAge = 17,
+    int minAge = PlayerLifecycle.seniorMinAge,
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
 

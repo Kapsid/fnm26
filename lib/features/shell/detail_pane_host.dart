@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/player/player_detail_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -71,7 +72,7 @@ class DetailPaneHost extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  title.toUpperCase(),
+                  title.capsIn(l.localeName),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TabletText.panelTitle,

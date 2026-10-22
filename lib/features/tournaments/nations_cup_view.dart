@@ -19,6 +19,9 @@ class _NationsCupViewState extends ConsumerState<NationsCupView>
   bool get grid => true;
 
   @override
+  int get careerId => widget.careerId;
+
+  @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final async = ref.watch(
@@ -82,7 +85,7 @@ class _NationsCupTabletLayout extends ConsumerWidget {
     // Europe's cup keeps the title it always had; the others are named.
     final title = view == null || view.cupName == NationsCups.europe
         ? l.tourContNationsCup
-        : competitionLabel(l, view.cupName).toUpperCase();
+        : competitionLabel(l, view.cupName).capsIn(l.localeName);
     return TabletDetailPage(
       scaffoldKey: NationsCupScreen.tabletLayoutKey,
       title: title,

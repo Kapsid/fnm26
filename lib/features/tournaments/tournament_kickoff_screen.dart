@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -52,7 +53,7 @@ tournamentKickoffProvider = FutureProvider.autoDispose
       final List<int> hosts;
       final conf = arg.conf;
       if (conf == null) {
-        title = l.compWorldCup.toUpperCase();
+        title = l.compWorldCup.capsIn(l.localeName);
         year = CareerService.worldCupYear(career.cyclePointer);
         trophy = Trophies.worldCup;
         hosts = WorldCupHosts.hostsFor(
@@ -61,7 +62,7 @@ tournamentKickoffProvider = FutureProvider.autoDispose
           seed: career.rngSeed,
         );
       } else {
-        title = continentalCupLabel(l, conf).toUpperCase();
+        title = continentalCupLabel(l, conf).capsIn(l.localeName);
         // Continental finals sit two years off the World Cup in the cycle.
         year = CareerService.worldCupYear(career.cyclePointer) - 2;
         trophy = Trophies.forConfederation(conf);
@@ -160,7 +161,7 @@ class TournamentKickoffScreen extends ConsumerWidget {
           data: (data) {
             final hostLabel = data == null || data.hostNames.isEmpty
                 ? l.tourSharedHostTbc
-                : data.hostNames.join('  ·  ').toUpperCase();
+                : data.hostNames.join('  ·  ').capsIn(l.localeName);
             final title = data == null ? '' : '${data.title} ${data.year}';
             if (landscape) {
               return Row(

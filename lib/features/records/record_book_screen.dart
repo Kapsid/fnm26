@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/features/records/record_book_providers.dart';
 import 'package:fnm/features/records/rivalry_providers.dart';
 import 'package:fnm/features/shell/detail_pane_host.dart';
@@ -258,7 +259,7 @@ class _LegacyPill extends StatelessWidget {
               Icon(icon, size: 15, color: AppColors.primary),
               const SizedBox(width: 6),
               Text(
-                title.toUpperCase(),
+                title.capsIn(Localizations.localeOf(context).languageCode),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.primary,
                 ),
@@ -297,7 +298,7 @@ class _LegacyTile extends StatelessWidget {
             Icon(icon, size: 24, color: AppColors.primary),
             const Spacer(),
             Text(
-              title.toUpperCase(),
+              title.capsIn(Localizations.localeOf(context).languageCode),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppTypography.labelMedium.copyWith(
@@ -462,12 +463,14 @@ class _TeamRecordRows extends StatelessWidget {
           // UMÍSTĚNÍ" and "NEJDELŠÍ NEPORAZITELNOST" short. Label and value
           // now split the row, and both wrap before they ellipsize.
           Expanded(
-            child: Text(
-              label.toUpperCase(),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
+            child: Builder(
+              builder: (context) => Text(
+                label.capsIn(Localizations.localeOf(context).languageCode),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
               ),
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 
 /// A small dark-pill container with a high-contrast border, used for tactical
 /// labels like player positions (`ST`, `GK`). Monospace text gives the
@@ -40,7 +41,7 @@ class TacticalChip extends StatelessWidget {
       // stacked. It gives way by overflowing its box, which is visible and
       // fixable, rather than by silently turning into nonsense.
       child: Text(
-        label.toUpperCase(),
+        label.capsIn(Localizations.localeOf(context).languageCode),
         maxLines: 1,
         softWrap: false,
         style: AppTypography.labelSmall.copyWith(color: textColor),

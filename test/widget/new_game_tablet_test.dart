@@ -36,6 +36,7 @@ class _GatedCareers extends CareerService {
     required int nationId,
     required String managerName,
     int? rngSeed,
+    bool countsTowardSlots = true,
   }) async {
     await gate?.future;
     if (throwOnce) {
@@ -46,6 +47,7 @@ class _GatedCareers extends CareerService {
       nationId: nationId,
       managerName: managerName,
       rngSeed: rngSeed,
+      countsTowardSlots: countsTowardSlots,
     );
   }
 }

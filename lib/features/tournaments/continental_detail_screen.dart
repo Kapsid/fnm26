@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -125,7 +126,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
             dataAsync.maybeWhen(
               data: (d) => d == null
                   ? l.tourContChampionship
-                  : competitionLabel(l, d.name).toUpperCase(),
+                  : competitionLabel(l, d.name).capsIn(l.localeName),
               orElse: () => l.tourContChampionship,
             ),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
@@ -159,6 +160,7 @@ class ContinentalDetailScreen extends ConsumerWidget {
               children: _continentalTabViews(
                 context,
                 data,
+                careerId: careerId,
                 confederation: confederation,
               ),
             );
@@ -203,6 +205,7 @@ List<Tab> _continentalTabs(AppLocalizations l, Confederation c) => [
 List<Widget> _continentalTabViews(
   BuildContext context,
   ContinentalData data, {
+  required int careerId,
   required Confederation confederation,
   bool grid = false,
 }) {
@@ -232,6 +235,7 @@ List<Widget> _continentalTabViews(
       data.qualifyingGroups.length,
     );
     return _Groups(
+      careerId: careerId,
       groups: data.qualifyingGroups,
       playerNationId: data.playerNationId,
       directCount: adv.direct,
@@ -270,6 +274,7 @@ List<Widget> _continentalTabViews(
             data.groups.length == 2 &&
             data.groups.every((g) => g.standings.length >= 5);
         return _ContFinalsGroups(
+          careerId: careerId,
           groups: data.groups,
           groupFixtures: data.groupFixtures,
           playerNationId: data.playerNationId,
@@ -299,13 +304,14 @@ List<Widget> _continentalTabViews(
       ),
     if (data.knockout.isNotEmpty)
       TournamentBracket(
+        careerId: careerId,
         fixtures: data.knockout,
         wide: grid,
         rounds: ContinentalDetailScreen._bracketRounds,
         ladder: ContinentalDetailScreen._ladder,
         champion: data.champion,
         championLabel: l.tourContChampionsHeading(
-          competitionLabel(l, data.name).toUpperCase(),
+          competitionLabel(l, data.name).capsIn(l.localeName),
         ),
         playerNationId: data.playerNationId,
         // Only the manager's own confederation is played out, so a
@@ -368,6 +374,7 @@ List<Widget> _continentalTabViews(
 
 class _Groups extends StatelessWidget {
   const _Groups({
+    required this.careerId,
     required this.groups,
     required this.playerNationId,
     required this.directCount,
@@ -379,6 +386,7 @@ class _Groups extends StatelessWidget {
     this.grid = false,
   });
 
+  final int careerId;
   final List<FinalsGroupTable> groups;
   final int playerNationId;
 
@@ -465,6 +473,7 @@ class _Groups extends StatelessWidget {
               destination: contentionDestination,
               title: contentionLadderTitle(l, pos),
               adjustedForGroupSize: uneven,
+              careerId: careerId,
             ),
         const SizedBox(height: AppSpacing.xl),
       ],
@@ -504,15 +513,27 @@ class _Groups extends StatelessWidget {
               ),
             ),
           ),
-          FlagDisc(code(s.nationId), size: 22),
-          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
-              name(s.nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+            child: NationTap(
+              careerId: careerId,
+              nationId: s.nationId,
+              child: Row(
+                children: [
+                  FlagDisc(code(s.nationId), size: 22),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      name(s.nationId),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontWeight: isPlayer
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -543,6 +564,7 @@ class _Groups extends StatelessWidget {
 /// scrollable page, the player's own group first, then the rest.
 class _ContFinalsGroups extends StatefulWidget {
   const _ContFinalsGroups({
+    required this.careerId,
     required this.groups,
     required this.groupFixtures,
     required this.playerNationId,
@@ -554,6 +576,7 @@ class _ContFinalsGroups extends StatefulWidget {
     this.grid = false,
   });
 
+  final int careerId;
   final List<FinalsGroupTable> groups;
   final List<Fixture> groupFixtures;
   final int playerNationId;
@@ -613,7 +636,12 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
           // Matches on top, then the table — one box per group.
           if (matchesOf(g) case final ms when ms.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.xs),
-            for (final f in ms) MatchResultRow(fixture: f, code: widget.code),
+            for (final f in ms)
+              MatchResultRow(
+                fixture: f,
+                code: widget.code,
+                careerId: widget.careerId,
+              ),
             const Divider(height: AppSpacing.lg),
           ],
           const SizedBox(height: AppSpacing.sm),
@@ -643,6 +671,7 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
             code: widget.code,
             name: widget.name,
             adjustedForGroupSize: uneven,
+            careerId: widget.careerId,
           ),
         ],
         const SizedBox(height: AppSpacing.xl),
@@ -680,15 +709,27 @@ class _ContFinalsGroupsState extends State<_ContFinalsGroups> {
               ),
             ),
           ),
-          FlagDisc(widget.code(s.nationId), size: 22),
-          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
-              widget.name(s.nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+            child: NationTap(
+              careerId: widget.careerId,
+              nationId: s.nationId,
+              child: Row(
+                children: [
+                  FlagDisc(widget.code(s.nationId), size: 22),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      widget.name(s.nationId),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontWeight: isPlayer
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

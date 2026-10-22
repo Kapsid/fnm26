@@ -58,6 +58,7 @@ allTimeRecordsProvider = FutureProvider.autoDispose.family<AllTimeRecords?, int>
       id,
       agingYears: aging,
       saveSeed: career.rngSeed,
+      careerId: career.id,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );

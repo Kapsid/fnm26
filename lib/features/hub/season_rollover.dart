@@ -17,6 +17,23 @@ extension SeasonRollover on SeasonService {
     final career = await _careers.byId(careerId);
     if (career == null) return;
     if (await _comp.worldChampion(careerId) == null) return; // not finished
+    // An unmoved campaign run ends with its last cycle, in the campaigns
+    // list; before that it rolls, but always with its own nation (an offer
+    // taken elsewhere would leave the campaign behind), and never meets the
+    // trial gate below: it is the campaign's length, not the free cycle's.
+    final campaign = await _unmovedCampaign(careerId);
+    if (campaign != null && !campaignMayRoll(campaign, career.cyclePointer)) {
+      return;
+    }
+    // Nor does one whose manager the board has just sacked: it has no job to
+    // keep and no other nation to take, so it ends here (the hub sends it to
+    // the campaigns list, never to this rollover).
+    if (campaign != null &&
+        ((await _ref.read(rolloverVerdictProvider(careerId).future))?.sacked ??
+            false)) {
+      return;
+    }
+    final moveTo = campaign == null ? switchToNationId : null;
 
     // The free tier is one complete cycle. Rolling a save from cycle 0 to
     // cycle 1 is the single thing being sold, so this is the single gate — and
@@ -24,10 +41,11 @@ extension SeasonRollover on SeasonService {
     // route. Returning (rather than throwing) leaves the save exactly as it
     // was: the manager keeps everything he has played, and declining to pay
     // costs him nothing. The caller shows the paywall.
-    if (trialExhausted(
-      cyclePointer: career.cyclePointer,
-      premiumUnlocked: _ref.read(premiumUnlockedProvider),
-    )) {
+    if (campaign == null &&
+        trialExhausted(
+          cyclePointer: career.cyclePointer,
+          premiumUnlocked: _ref.read(premiumUnlockedProvider),
+        )) {
       return;
     }
 
@@ -129,9 +147,17 @@ extension SeasonRollover on SeasonService {
       if (moved) await _careers.setNationsCupTiers(careerId, ncTiers);
     }
 
-    if (switchToNationId != null && switchToNationId != career.nationId) {
-      await _careers.switchNation(careerId, switchToNationId);
-      await _resetSquadForNewNation(careerId, switchToNationId, career);
+    // Where the board finished, read BEFORE anything moves: satisfaction is
+    // derived from this cycle's objectives and form, and a moment from now
+    // none of that will be this cycle any more. Read fresh: the rollover
+    // screen keeps the figure cached while the manager picks his next job.
+    _ref.invalidate(satisfactionProvider(careerId));
+    final closingBoard = await _ref.read(satisfactionProvider(careerId).future);
+
+    final switching = moveTo != null && moveTo != career.nationId;
+    if (switching) {
+      await _careers.switchNation(careerId, moveTo);
+      await _resetSquadForNewNation(careerId, moveTo, career);
       // A new nation means an unfamiliar squad — the drilled-shape bonus resets.
       await _ref.read(tacticFamiliarityRepositoryProvider).reset(careerId);
     }
@@ -146,7 +172,7 @@ extension SeasonRollover on SeasonService {
         year: SeasonService.finalsYear(career.cyclePointer),
       );
     }
-    final nationId = switchToNationId ?? career.nationId;
+    final nationId = moveTo ?? career.nationId;
 
     final nextCycle = career.cyclePointer + 1;
     final nextStart = DateTime(
@@ -154,17 +180,18 @@ extension SeasonRollover on SeasonService {
       9,
     );
 
-    // Where the board finished, read BEFORE the pointer moves: satisfaction is
-    // derived from this cycle's objectives and form, and a moment from now
-    // none of that will be this cycle any more.
-    final closingBoard = await _ref.read(satisfactionProvider(careerId).future);
+    // The board's memory is of the job, not the man: a new one opens neutral
+    // (switchNation has already cleared the old figure).
     await _careers.advanceCycle(
       careerId,
       nextCycle,
       nextStart,
-      closingBoard: closingBoard,
+      closingBoard: switching ? null : closingBoard,
     );
     await _careers.recordStint(careerId, nextCycle, nationId);
+    // The new cycle's briefs follow the current rules (see briefRulesV2Kind).
+    await _comp.markDrawWatched(careerId, nextCycle, briefRulesV2Kind);
+    await _comp.markDrawWatched(careerId, nextCycle, fluidWindowsKind);
 
     // Freeze the current standings as the seeding ranking for the new cycle, so
     // its draws reflect how nations have actually performed — and stay in step
@@ -212,7 +239,13 @@ extension SeasonRollover on SeasonService {
       // verdict it computed before the tournament was played.
       ..invalidate(cycleObjectiveOutcomesProvider)
       ..invalidate(cycleObjectivesProvider)
-      ..invalidate(satisfactionProvider);
+      ..invalidate(satisfactionProvider)
+      // And what feeds the mood, which the rollover screen held alive under
+      // it: left cached, a new job's board re-read the old job's press and
+      // public mood the moment it was recomputed.
+      ..invalidate(pressEffectProvider)
+      ..invalidate(publicMoodProvider)
+      ..invalidate(moraleProvider);
   }
 
   /// Posts transfer messages for the manager's nation's notable club moves over
@@ -239,6 +272,7 @@ extension SeasonRollover on SeasonService {
       nationId,
       agingYears: agingPrev,
       saveSeed: saveSeed,
+      careerId: careerId,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );
@@ -246,6 +280,7 @@ extension SeasonRollover on SeasonService {
       nationId,
       agingYears: agingNow,
       saveSeed: saveSeed,
+      careerId: careerId,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );
@@ -311,6 +346,7 @@ extension SeasonRollover on SeasonService {
             id,
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
+            careerId: career.id,
           );
       return p?.name ??
           renderMsgKey(_l, const MsgText(MsgKey.newsARecordBreaker));
@@ -412,15 +448,37 @@ extension SeasonRollover on SeasonService {
     await clearYouthMarks(careerId);
     _ref.invalidate(youthMarksProvider(careerId));
 
+    // An offer to naturalise was made to the old federation: it lapses with
+    // the job rather than turning into a player for the new one. (Accepted
+    // players stay where they switched to; see `naturalizedPlayersFor`.)
+    final careers = _ref.read(careerRepositoryProvider);
+    final pending = await careers.pendingNaturalization(careerId);
+    if (pending != null) {
+      await careers.setNaturalizationStatus(
+        careerId,
+        pending.playerId,
+        'declined',
+      );
+    }
+    _ref
+      ..invalidate(pendingNaturalizationProvider(careerId))
+      ..invalidate(naturalizedCountProvider(careerId));
+
     // Rebuild the XI from the new nation's players; saveTactic replaces the
-    // stored lineup slots, which still named the old squad.
-    final players = await _ref
-        .read(playerRepositoryProvider)
-        .byNation(
-          nationId,
-          agingYears: CareerService.agingYears(career),
-          saveSeed: career.rngSeed,
-        );
+    // stored lineup slots, which still named the old squad. Not a man he once
+    // naturalised away from it: he plays for the nation he switched to.
+    final players = await withoutNaturalizedAway(
+      _ref,
+      careerId,
+      await _ref
+          .read(playerRepositoryProvider)
+          .byNation(
+            nationId,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+            careerId: career.id,
+          ),
+    );
     const formation = Formation.f433;
     await _ref
         .read(tacticsRepositoryProvider)
@@ -538,16 +596,26 @@ extension SeasonRollover on SeasonService {
           n.id,
           agingYears: agingYears,
           saveSeed: career.rngSeed,
+          careerId: career.id,
         );
-        candidates.addAll(
-          pool.where(
-            (p) =>
-                p.age <= maxAge &&
-                p.overall >= minR &&
-                p.overall <= maxR &&
-                !taken.contains(p.id),
-          ),
-        );
+        for (final p in pool) {
+          if (p.age > maxAge ||
+              p.overall < minR ||
+              p.overall > maxR ||
+              taken.contains(p.id)) {
+            continue;
+          }
+          // A man capped more than [kMaxCapsToSwitch] times for his country
+          // is tied to it: offering him to another federation made no sense.
+          // Left out of the candidates BEFORE the pick, so an eligible man
+          // fills the slot and a cycle brings as many offers as it did.
+          if (!canSwitchAllegiance(
+            await _comp.capsFor(careerId, n.id, p.id),
+          )) {
+            continue;
+          }
+          candidates.add(p);
+        }
       }
       if (candidates.isEmpty) continue;
       final pick = candidates[rng.nextInt(candidates.length)];

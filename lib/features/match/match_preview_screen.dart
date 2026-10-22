@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -16,7 +17,7 @@ import 'package:fnm/domain/services/match/match_engine.dart' show MatchTeam;
 import 'package:fnm/domain/services/match/strength_factors.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
-import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/setup_warning.dart';
@@ -117,6 +118,9 @@ class MatchPreviewScreen extends ConsumerWidget {
         centerTitle: true,
       ),
       body: previewAsync.when(
+        // Back from tactics, show the refresh rather than the old teamsheet
+        // with a Kick off button under it.
+        skipLoadingOnRefresh: false,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(l10n.matchCouldNotLoad('$e'))),
         data: (preview) {
@@ -263,6 +267,9 @@ class _PreviewParts {
     awayCode: code(fixture.awayNationId),
     awayOverall: squadOverall(preview.awayTeam.xi),
     date: fixture.date,
+    careerId: careerId,
+    homeNationId: fixture.homeNationId,
+    awayNationId: fixture.awayNationId,
   );
 
   // Head-to-head and the scouting report share one card as two tabs: they
@@ -453,7 +460,9 @@ class _OpponentBriefingState extends State<OpponentBriefing> {
             const SizedBox(width: AppSpacing.xs),
             Flexible(
               child: Text(
-                widget.capitals ? label.toUpperCase() : label,
+                widget.capitals
+                    ? label.capsIn(Localizations.localeOf(context).languageCode)
+                    : label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.labelSmall.copyWith(
@@ -622,13 +631,9 @@ opponentKeyMenProvider = FutureProvider.autoDispose
           .watch(careerRepositoryProvider)
           .byId(key.careerId);
       if (career == null) return const <Player>[];
-      final pool = await ref
-          .watch(playerRepositoryProvider)
-          .byNation(
-            key.nationId,
-            agingYears: CareerService.agingYears(career),
-            saveSeed: career.rngSeed,
-          );
+      // As the world fields them (see [careerPoolOf]), the same pool the match
+      // preview picks their eleven from.
+      final pool = await careerPoolOf(ref, career, key.nationId);
       return _keyMen(pool);
     });
 
@@ -662,19 +667,23 @@ class _DossierBody extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            FlagDisc(oppCode, size: 18),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Text(
-                oppName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.labelMedium,
+        NationTap(
+          careerId: careerId,
+          nationId: oppNationId,
+          child: Row(
+            children: [
+              FlagDisc(oppCode, size: 18),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  oppName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelMedium,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: AppSpacing.md),
         Row(
@@ -830,7 +839,7 @@ class _Tally extends StatelessWidget {
           style: AppTypography.titleMedium.copyWith(color: color),
         ),
         Text(
-          label.toUpperCase(),
+          label.capsIn(Localizations.localeOf(context).languageCode),
           style: AppTypography.labelSmall.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
@@ -856,6 +865,9 @@ class MatchHeadline extends StatelessWidget {
     required this.awayCode,
     required this.awayOverall,
     required this.date,
+    this.careerId,
+    this.homeNationId,
+    this.awayNationId,
     super.key,
   });
 
@@ -866,6 +878,11 @@ class MatchHeadline extends StatelessWidget {
 
   /// When the match kicks off, written for the manager by [AppDate].
   final DateTime date;
+
+  /// When all three are given, each side's block opens that nation's page.
+  final int? careerId;
+  final int? homeNationId;
+  final int? awayNationId;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -881,7 +898,12 @@ class MatchHeadline extends StatelessWidget {
       // which is the one thing on this card the manager came to read. So the
       // label gave way instead: "Celkově" says the same thing in seven.
       Flexible(
-        child: _Side(code: homeCode, overall: homeOverall),
+        child: _Side(
+          code: homeCode,
+          overall: homeOverall,
+          careerId: careerId,
+          nationId: homeNationId,
+        ),
       ),
       Flexible(
         child: Column(
@@ -900,15 +922,27 @@ class MatchHeadline extends StatelessWidget {
         ),
       ),
       Flexible(
-        child: _Side(code: awayCode, overall: awayOverall),
+        child: _Side(
+          code: awayCode,
+          overall: awayOverall,
+          careerId: careerId,
+          nationId: awayNationId,
+        ),
       ),
     ],
   );
 }
 
 class _Side extends StatelessWidget {
-  const _Side({required this.code, required this.overall});
+  const _Side({
+    required this.code,
+    required this.overall,
+    this.careerId,
+    this.nationId,
+  });
   final String code;
+  final int? careerId;
+  final int? nationId;
 
   /// The side's team overall, so the two numbers sit either side of the "VS"
   /// and the manager can read the gap before kick-off.
@@ -917,7 +951,7 @@ class _Side extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Column(
+    final block = Column(
       children: [
         FlagDisc(code, size: 48),
         const SizedBox(height: AppSpacing.xs),
@@ -934,6 +968,9 @@ class _Side extends StatelessWidget {
         ),
       ],
     );
+    final id = nationId;
+    if (id == null) return block;
+    return NationTap.maybe(careerId: careerId, nationId: id, child: block);
   }
 }
 

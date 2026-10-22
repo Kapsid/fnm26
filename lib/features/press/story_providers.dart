@@ -108,6 +108,7 @@ squadStoriesProvider = FutureProvider.autoDispose.family<List<SquadStory>, int>(
                 career.nationId,
                 agingYears: aging - 1,
                 saveSeed: career.rngSeed,
+                careerId: career.id,
               )) {
         lastYear[p.id] = p.overall;
       }

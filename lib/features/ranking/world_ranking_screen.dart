@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -189,9 +190,10 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
                       points: data.points[filtered[i].id] ?? 0,
                       movement: data.movement[filtered[i].id] ?? 0,
                       isPlayer: filtered[i].id == data.playerNationId,
-                      onTap: () => context.push(
-                        '${Routes.nationVitrine}'
-                        '?careerId=$careerId&nationId=${filtered[i].id}',
+                      onTap: () => openNation(
+                        context,
+                        careerId: careerId,
+                        nationId: filtered[i].id,
                       ),
                     ),
                   ),
@@ -228,7 +230,7 @@ class _RegionFilter extends StatelessWidget {
               padding: const EdgeInsets.only(left: AppSpacing.sm),
               child: _chip(
                 context,
-                confederationLabel(l, c).toUpperCase(),
+                confederationLabel(l, c).capsIn(l.localeName),
                 selected == c,
                 () => onSelect(c),
               ),
@@ -372,7 +374,10 @@ class RankRow extends StatelessWidget {
                   // a narrow column silently made the row two lines taller
                   // than the list gives it.
                   Text(
-                    confederationLabel(l, nation.confederation).toUpperCase(),
+                    confederationLabel(
+                      l,
+                      nation.confederation,
+                    ).capsIn(l.localeName),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelSmall.copyWith(

@@ -356,6 +356,7 @@ class MessageService {
             s.playerId,
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
+            careerId: career.id,
           );
           if (p == null) continue;
           final teamBonus = s.nationId == honour.championId
@@ -394,6 +395,7 @@ class MessageService {
             s.playerId,
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
+            careerId: career.id,
           );
           if (p == null || p.age > 21) continue;
           final teamBonus = s.nationId == honour.championId
@@ -575,6 +577,7 @@ class MessageService {
         id,
         agingYears: agingYears,
         saveSeed: career.rngSeed,
+        careerId: career.id,
       );
       return milestoneNames[id] = p?.name ?? l.msgAPlayer;
     }
@@ -661,6 +664,7 @@ class MessageService {
           career.nationId,
           agingYears: y,
           saveSeed: career.rngSeed,
+          careerId: career.id,
         );
         squads[y] = {for (final p in list) p.id: p};
       }
@@ -736,6 +740,7 @@ class MessageService {
           career.nationId,
           agingYears: y,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           youthBonusByCycle: academyBonus,
           careerStartsByPlayer: careerDev,
         );
@@ -874,6 +879,7 @@ class MessageService {
           career.nationId,
           agingYears: y,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           youthBonusByCycle: academy,
           careerStartsByPlayer: devBonus,
         );

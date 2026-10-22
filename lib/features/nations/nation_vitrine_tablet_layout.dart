@@ -39,6 +39,8 @@ class _NationVitrineTabletLayout extends ConsumerWidget {
                   children: [
                     _Header(v),
                     const SizedBox(height: AppSpacing.md),
+                    NationNowCard(careerId: careerId, nationId: nationId),
+                    const SizedBox(height: AppSpacing.md),
                     _sectionLabel(l.nationsHonours),
                     const SizedBox(height: AppSpacing.sm),
                     _HonoursCard(v),

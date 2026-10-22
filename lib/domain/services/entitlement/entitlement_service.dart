@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/entitlement/integrity.dart';
 import 'package:fnm/domain/services/entitlement/store_entitlements.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// The store product id of the one-time premium unlock. Must match the
@@ -39,18 +41,36 @@ enum PurchaseFlowState { idle, loading, pending, error }
 /// because a reinstall or a second device is entitled without anyone having
 /// to find the Restore button. The cache stays as the fallback for when the
 /// store cannot answer.
+///
+/// On Android two integrity checks sit in front of all of that (see
+/// integrity.dart and [IntegrityPolicy]). A release build whose signing
+/// certificate is not ours (a repackaged APK) honours no premium at all, store
+/// or cache. A Play purchase whose signature does not hold under the app's
+/// licensing key is not owned. Both are skipped while their value in
+/// release_keys.dart is empty, and both pass whenever they cannot run.
 class EntitlementService {
   EntitlementService(
     this._ref, {
     InAppPurchase? iap,
     StoreEntitlementReader? storeEntitlements,
+    AppIntegrity? integrity,
+    IntegrityPolicy? policy,
   }) : _iap = iap ?? InAppPurchase.instance,
-       _storeEntitlements = storeEntitlements ?? readStoreEntitlements;
+       _integrity = integrity ?? const ChannelAppIntegrity(),
+       _policy = policy ?? IntegrityPolicy.current(),
+       _injectedStoreEntitlements = storeEntitlements;
 
   final Ref _ref;
   final InAppPurchase _iap;
-  final StoreEntitlementReader _storeEntitlements;
+  final AppIntegrity _integrity;
+  final IntegrityPolicy _policy;
+  final StoreEntitlementReader? _injectedStoreEntitlements;
   StreamSubscription<List<PurchaseDetails>>? _sub;
+
+  /// Whether this install's signing certificate allows premium at all. Set
+  /// once by [init] before the purchase stream is listened to, so no grant
+  /// can arrive ahead of it.
+  bool _certificateTrusted = true;
 
   /// Human-readable reason the last purchase attempt failed, for the paywall.
   String? lastError;
@@ -67,7 +87,26 @@ class EntitlementService {
   /// when the store cannot answer at all does the cached grant decide, and
   /// then it always decides in the player's favour: nothing here ever writes
   /// `false`, and a check that fails to run is not evidence of anything.
+  ///
+  /// The certificate check comes before both. An APK that is not signed by us
+  /// keeps premium locked whatever the store or the cache says, and leaves the
+  /// cache as it found it.
   Future<void> init() async {
+    _certificateTrusted = await certificateTrusted(
+      policy: _policy,
+      integrity: _integrity,
+    );
+    if (_certificateTrusted) await _decideAtLaunch();
+    try {
+      _sub ??= _iap.purchaseStream.listen(_onPurchases);
+    } on Object {
+      // No store on this device (or it refused to start). The game runs; the
+      // paywall will simply report the store as unavailable.
+    }
+  }
+
+  /// The store first, the cache when the store cannot answer.
+  Future<void> _decideAtLaunch() async {
     final cached = await _cachedGrant();
     final owned = await _storeOwnedProducts();
     if (owned != null) {
@@ -80,12 +119,6 @@ class EntitlementService {
       // leave the cache alone so the next launch can try the store again.
       _ref.read(premiumUnlockedProvider.notifier).state = true;
     }
-    try {
-      _sub ??= _iap.purchaseStream.listen(_onPurchases);
-    } on Object {
-      // No store on this device (or it refused to start). The game runs; the
-      // paywall will simply report the store as unavailable.
-    }
   }
 
   /// The products the store says this account owns, or null when it would not
@@ -93,7 +126,13 @@ class EntitlementService {
   /// question, not a denial.
   Future<Set<String>?> _storeOwnedProducts() async {
     try {
-      return await _storeEntitlements();
+      final read =
+          _injectedStoreEntitlements ??
+          () => readStoreEntitlements(
+            integrity: _integrity,
+            licensingPublicKey: _policy.licensingPublicKey,
+          );
+      return await read();
     } on Object {
       return null;
     }
@@ -188,7 +227,12 @@ class EntitlementService {
       switch (p.status) {
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
-          await _grant();
+          if (await _honours(p)) {
+            await _grant();
+          } else {
+            // Not ours to honour: the locked state is the whole answer.
+            _setFlow(PurchaseFlowState.idle);
+          }
         case PurchaseStatus.error:
           lastError = p.error?.message ?? 'Purchase failed.';
           _setFlow(PurchaseFlowState.error);
@@ -203,6 +247,19 @@ class EntitlementService {
         await _iap.completePurchase(p);
       }
     }
+  }
+
+  /// Whether a purchase the stream delivered may unlock this install: the
+  /// certificate is ours, and a Play purchase carries Play's signature.
+  /// StoreKit has verified its own transactions before they get here.
+  Future<bool> _honours(PurchaseDetails p) async {
+    if (!_certificateTrusted) return false;
+    if (p is! GooglePlayPurchaseDetails) return true;
+    return playSignatureHolds(
+      p,
+      integrity: _integrity,
+      licensingPublicKey: _policy.licensingPublicKey,
+    );
   }
 
   Future<void> _grant() async {

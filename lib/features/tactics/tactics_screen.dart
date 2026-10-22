@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -31,6 +32,7 @@ import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
+import 'package:fnm/features/tactics/tactic_preset_tile.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -916,7 +918,7 @@ class _InstructionsTabState extends ConsumerState<_InstructionsTab> {
     // titles; the copy has one in capitals and one in sentence case, which
     // the phone keeps.
     final tablet = TabletShellScope.isActive(context);
-    String heading(String s) => tablet ? s.toUpperCase() : s;
+    String heading(String s) => tablet ? s.capsIn(l.localeName) : s;
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.lg,
@@ -1216,29 +1218,12 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
                     itemCount: presets.length,
                     itemBuilder: (context, i) {
                       final p = presets[i];
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: const Icon(
-                          Icons.bookmark,
-                          color: AppColors.primary,
-                        ),
-                        title: Text(p.name, style: AppTypography.bodyMedium),
-                        subtitle: Text(
-                          p.formation.label,
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.delete_outline,
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                          onPressed: () => ref
-                              .read(tacticPresetStoreProvider)
-                              .delete(widget.careerId, p.name),
-                        ),
-                        onTap: () => _apply(p),
+                      return TacticPresetTile(
+                        preset: p,
+                        onApply: () => _apply(p),
+                        onDelete: () => ref
+                            .read(tacticPresetStoreProvider)
+                            .delete(widget.careerId, p.name),
                       );
                     },
                   );
@@ -1329,7 +1314,7 @@ class _CaptainCard extends ConsumerWidget {
           color: AppColors.primary,
         ),
         title: Text(
-          l.squadCaptain.toUpperCase(),
+          l.squadCaptain.capsIn(l.localeName),
           style: AppTypography.labelSmall.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
@@ -1366,7 +1351,7 @@ class _CaptainCard extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
-            l.squadCaptain.toUpperCase(),
+            l.squadCaptain.capsIn(l.localeName),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -1495,7 +1480,7 @@ class _PlayerTacticRow extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                l.playerAttrTechnical.toUpperCase(),
+                l.playerAttrTechnical.capsIn(l.localeName),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                   fontSize: 9,

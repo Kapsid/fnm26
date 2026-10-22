@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -292,7 +293,12 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  _ResultRow(fixture: f, code: code, isPlayer: false),
+                  _ResultRow(
+                    fixture: f,
+                    code: code,
+                    isPlayer: false,
+                    careerId: careerId,
+                  ),
                 ],
               ),
             ),
@@ -330,7 +336,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                           // and ran off the side.
                           Expanded(
                             child: Text(
-                              section.key.toUpperCase(),
+                              section.key.capsIn(l.localeName),
                               maxLines: 3,
                               style: AppTypography.labelMedium.copyWith(
                                 color: AppColors.primary,
@@ -521,8 +527,10 @@ class _ResultRow extends StatelessWidget {
     required this.fixture,
     required this.code,
     required this.isPlayer,
+    required this.careerId,
   });
 
+  final int careerId;
   final Fixture fixture;
   final String Function(int) code;
   final bool isPlayer;
@@ -540,16 +548,23 @@ class _ResultRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  code(fixture.homeNationId),
-                  style: AppTypography.bodySmall,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: NationTap(
+                careerId: careerId,
+                nationId: fixture.homeNationId,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      code(fixture.homeNationId),
+                      style: AppTypography.bodySmall,
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    FlagDisc(code(fixture.homeNationId), size: 22),
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                FlagDisc(code(fixture.homeNationId), size: 22),
-              ],
+              ),
             ),
           ),
           SizedBox(
@@ -565,15 +580,23 @@ class _ResultRow extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Row(
-              children: [
-                FlagDisc(code(fixture.awayNationId), size: 22),
-                const SizedBox(width: AppSpacing.sm),
-                Text(
-                  code(fixture.awayNationId),
-                  style: AppTypography.bodySmall,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: NationTap(
+                careerId: careerId,
+                nationId: fixture.awayNationId,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FlagDisc(code(fixture.awayNationId), size: 22),
+                    const SizedBox(width: AppSpacing.sm),
+                    Text(
+                      code(fixture.awayNationId),
+                      style: AppTypography.bodySmall,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ],

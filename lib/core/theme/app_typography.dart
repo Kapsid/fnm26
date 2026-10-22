@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 /// Bundled font families (variable TTFs; weight drives the `wght` axis).
+///
+/// Both bundled fonts stop at Latin Extended-A (U+0020-017E): they have no
+/// Greek. Greek text is drawn by the platform's font fallback, which on
+/// Android and iOS always carries Greek, so no extra font is bundled for it.
 abstract final class AppFonts {
   /// Primary sans — sharp, technical, highly legible on dark.
   static const sans = 'Hanken Grotesk';

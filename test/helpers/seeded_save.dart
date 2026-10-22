@@ -215,6 +215,7 @@ Future<void> pumpRoute(
   String location, {
   Size size = kPhoneSize,
   bool allowSpinner = false,
+  Locale locale = const Locale('en'),
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -227,7 +228,7 @@ Future<void> pumpRoute(
         container: save.container,
         child: MaterialApp.router(
           theme: AppTheme.theme,
-          locale: const Locale('en'),
+          locale: locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           routerConfig: router,

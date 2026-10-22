@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
+import 'package:fnm/core/config/release_keys.dart';
+import 'package:fnm/domain/services/entitlement/integrity.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_2_wrappers.dart';
@@ -26,11 +27,20 @@ const Duration kStoreEntitlementTimeout = Duration(seconds: 5);
 
 /// The entitlement read for whichever store this device has: StoreKit 2 on
 /// iOS, Play Billing on Android, and no answer anywhere else (the Mac that
-/// runs `flutter test` included).
-Future<Set<String>?> readStoreEntitlements() async {
+/// runs `flutter test` included). [integrity] and [licensingPublicKey] are
+/// the Play signature check (see [readGoogleEntitlements]).
+Future<Set<String>?> readStoreEntitlements({
+  AppIntegrity integrity = const ChannelAppIntegrity(),
+  String licensingPublicKey = kPlayLicensingPublicKey,
+}) async {
   if (kIsWeb) return null;
   if (Platform.isIOS) return readAppleEntitlements();
-  if (Platform.isAndroid) return readGoogleEntitlements();
+  if (Platform.isAndroid) {
+    return readGoogleEntitlements(
+      integrity: integrity,
+      licensingPublicKey: licensingPublicKey,
+    );
+  }
   return null;
 }
 
@@ -76,11 +86,19 @@ Future<Set<String>?> readAppleEntitlements() async {
 /// Only `purchased` counts. A `pending` purchase (cash at a shop, a slow card)
 /// has not been paid for yet; the purchase stream grants it when it clears.
 ///
+/// Each purchase must also carry Play's signature, checked against
+/// [licensingPublicKey] on the device (`playSignatureHolds`): a purchase that
+/// a patched billing library invented has none that holds, and is not owned.
+/// No key configured skips the check.
+///
 /// Anything bought but never acknowledged (the app died between the payment
 /// and `completePurchase`) is acknowledged here, because Play refunds an
 /// unacknowledged purchase after three days and the player would lose an
 /// unlock he paid for.
-Future<Set<String>?> readGoogleEntitlements() async {
+Future<Set<String>?> readGoogleEntitlements({
+  AppIntegrity integrity = const ChannelAppIntegrity(),
+  String licensingPublicKey = kPlayLicensingPublicKey,
+}) async {
   if (kIsWeb || !Platform.isAndroid) return null;
   try {
     final addition = InAppPurchase.instance
@@ -91,22 +109,15 @@ Future<Set<String>?> readGoogleEntitlements() async {
     // Any error is "would not say", even with a partial list beside it: the
     // cache decides then, and it only ever decides in the player's favour.
     if (response.error != null) return null;
-    final owned = <String>{};
-    for (final p in response.pastPurchases) {
-      if (p.billingClientPurchase.purchaseState !=
-          PurchaseStateWrapper.purchased) {
-        continue;
-      }
-      owned.add(p.productID);
-      if (p.pendingCompletePurchase) {
-        try {
-          await InAppPurchase.instance.completePurchase(p);
-        } on Object {
-          // The purchase stream replays it, and completes it, next time.
-        }
-      }
-    }
-    return owned;
+    return await ownedPlayProducts(
+      response.pastPurchases,
+      signatureHolds: (p) => playSignatureHolds(
+        p,
+        integrity: integrity,
+        licensingPublicKey: licensingPublicKey,
+      ),
+      complete: InAppPurchase.instance.completePurchase,
+    );
   } on Object {
     // No Play Store, no signed-in account, no channel: no answer.
     return null;

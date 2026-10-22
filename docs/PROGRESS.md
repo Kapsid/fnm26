@@ -5,7 +5,7 @@ _Last updated: 2026-07-13. Working tree is **uncommitted**; `flutter analyze` cl
 A release APK for everything below has been built (`build/app/outputs/flutter-apk/app-release.apk`)._
 
 ## How to deploy (wireless)
-1. `flutter build apk --release`
+1. `flutter build apk --release --obfuscate --split-debug-info=build/symbols/<version>` (keep the symbols, see docs/google-play-checklist.md)
 2. Phone → Settings → Developer options → Wireless debugging → copy the **current** `IP:port`
    (it changes every time the screen sleeps / debugging re-enables).
 3. `adb connect <ip:port>` → `adb -s <ip:port> install -r build/app/outputs/flutter-apk/app-release.apk`

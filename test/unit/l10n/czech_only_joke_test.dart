@@ -78,6 +78,39 @@ void main() {
     );
   });
 
+  test('no other language carries it either', () {
+    // Translations are made from the English, but a translator working from
+    // the Czech column would carry the joke over to readers who cannot get it.
+    for (final locale in const [
+      'fr',
+      'it',
+      'pl',
+      'es',
+      'de',
+      'pt',
+      'tr',
+      'nl',
+      'id',
+      'el',
+      'sv',
+      'nb',
+      'vi',
+      'bg',
+      'da',
+      'fi',
+      'hu',
+      'hr',
+      'uk',
+      'fil',
+    ]) {
+      final offenders = [
+        for (final e in copy(locale).entries)
+          if (e.value.contains('Csapl')) e.key,
+      ];
+      expect(offenders, isEmpty, reason: locale);
+    }
+  });
+
   test('the English still says something about the same afternoon', () {
     final en = copy('en');
     for (final key in joke) {
@@ -117,7 +150,29 @@ void main() {
     });
 
     test('no other language carries it, and they still report the red', () {
-      for (final locale in const ['en', 'fr', 'it', 'pl', 'es', 'de']) {
+      for (final locale in const [
+        'en',
+        'fr',
+        'it',
+        'pl',
+        'es',
+        'de',
+        'pt',
+        'tr',
+        'nl',
+        'id',
+        'el',
+        'sv',
+        'nb',
+        'vi',
+        'bg',
+        'da',
+        'fi',
+        'hu',
+        'hr',
+        'uk',
+        'fil',
+      ]) {
         final c = copy(locale);
         expect(
           c.entries.where((e) => e.value.contains('Kapří')).map((e) => e.key),

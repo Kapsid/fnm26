@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -50,6 +51,9 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen>
   @override
   bool get grid => false;
 
+  @override
+  int get careerId => widget.careerId;
+
   NationsCupKey get _key =>
       (careerId: widget.careerId, confederation: widget.confederation);
 
@@ -69,7 +73,7 @@ class _NationsCupScreenState extends ConsumerState<NationsCupScreen>
     // Europe's cup keeps the title it always had; the others are named.
     final title = view == null || view.cupName == NationsCups.europe
         ? l.tourContNationsCup
-        : competitionLabel(l, view.cupName).toUpperCase();
+        : competitionLabel(l, view.cupName).capsIn(l.localeName);
     return DefaultTabController(
       // See CupDetailScreen: initialIndex is read once, before the data lands.
       key: ValueKey((liveTab, zones)),
@@ -145,8 +149,12 @@ int _ncLiveTab(NationsCupData? v) {
 mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
   bool get grid;
 
+  /// The career whose cup this is: what a tapped nation opens against.
+  int get careerId;
+
   /// On a tablet, in capitals like every tablet tab and heading.
-  String _case(String label) => grid ? label.toUpperCase() : label;
+  String _case(String label) =>
+      grid ? label.capsIn(Localizations.localeOf(context).languageCode) : label;
 
   List<Tab> _tabs(AppLocalizations l, {required bool zones}) => [
     Tab(text: _case(zones ? l.tourContTabZones : l.tourContTabLeagues)),
@@ -241,6 +249,7 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
           return TournamentSoon(message: l.tourContLeagueNoGroups);
         }
         Widget card(FinalsGroupTable g) => _GroupCard(
+          careerId: careerId,
           group: g,
           confederation: v.confederation,
           playerNationId: v.playerNationId,
@@ -316,6 +325,7 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
           return a.name.compareTo(b.name);
         });
     Widget card(FinalsGroupTable g) => _GroupCard(
+      careerId: careerId,
       group: g,
       confederation: v.confederation,
       playerNationId: v.playerNationId,
@@ -337,9 +347,9 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
           Text(
             zone == myZone
                 ? l.tourContZoneHeadingYours(
-                    africaZoneLabel(l, zone).toUpperCase(),
+                    africaZoneLabel(l, zone).capsIn(l.localeName),
                   )
-                : africaZoneLabel(l, zone).toUpperCase(),
+                : africaZoneLabel(l, zone).capsIn(l.localeName),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTypography.labelMedium.copyWith(
@@ -368,6 +378,7 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
             title: contentionLadderTitle(l, 2),
             destination: l.tourCupDestRoundOf16,
             adjustedForGroupSize: CrossGroup.isUneven(standings),
+            careerId: careerId,
           ),
           const SizedBox(height: AppSpacing.xl),
         ],
@@ -396,6 +407,7 @@ mixin _NationsCupBodies<T extends StatefulWidget> on State<T> {
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
         _FinalsCard(
+          careerId: careerId,
           title: zones ? l.tourContTabFinalsEight : l.tourContTabFinalsFour,
           roundOf16: v.roundOf16,
           quarters: v.quarters,
@@ -468,7 +480,7 @@ class _LeagueTabs extends StatelessWidget {
                         final label = league == playerLeague
                             ? l.tourContLeagueChipStar(league)
                             : l.tourContLeagueChip(league);
-                        return capitals ? label.toUpperCase() : label;
+                        return capitals ? label.capsIn(l.localeName) : label;
                       }(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -492,6 +504,7 @@ class _LeagueTabs extends StatelessWidget {
 
 class _GroupCard extends StatelessWidget {
   const _GroupCard({
+    required this.careerId,
     required this.group,
     required this.confederation,
     required this.playerNationId,
@@ -500,6 +513,7 @@ class _GroupCard extends StatelessWidget {
     required this.isLowestLeague,
   });
 
+  final int careerId;
   final FinalsGroupTable group;
 
   /// Whose cup the group is in: a ladder group sends its winner up and its
@@ -575,15 +589,27 @@ class _GroupCard extends StatelessWidget {
               ),
             ),
           ),
-          FlagDisc(code(s.nationId), size: 20),
-          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
-              name(s.nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+            child: NationTap(
+              careerId: careerId,
+              nationId: s.nationId,
+              child: Row(
+                children: [
+                  FlagDisc(code(s.nationId), size: 20),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      name(s.nationId),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontWeight: isPlayer
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -615,6 +641,7 @@ class _GroupCard extends StatelessWidget {
 /// nation reached it.
 class _FinalsCard extends StatelessWidget {
   const _FinalsCard({
+    required this.careerId,
     required this.title,
     required this.roundOf16,
     required this.quarters,
@@ -625,6 +652,7 @@ class _FinalsCard extends StatelessWidget {
     required this.code,
   });
 
+  final int careerId;
   final String title;
   final List<Fixture> roundOf16;
   final List<Fixture> quarters;
@@ -727,13 +755,17 @@ class _FinalsCard extends StatelessWidget {
       ),
     );
     final flag = FlagDisc(code(id), size: 18);
-    return Row(
-      mainAxisAlignment: right
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
-      children: right
-          ? [label, const SizedBox(width: AppSpacing.xs), flag]
-          : [flag, const SizedBox(width: AppSpacing.xs), label],
+    return NationTap(
+      careerId: careerId,
+      nationId: id,
+      child: Row(
+        mainAxisAlignment: right
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
+        children: right
+            ? [label, const SizedBox(width: AppSpacing.xs), flag]
+            : [flag, const SizedBox(width: AppSpacing.xs), label],
+      ),
     );
   }
 }

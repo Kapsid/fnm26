@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/features/nations/nation_now_card.dart';
 import 'package:fnm/features/nations/nation_vitrine_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -30,9 +31,16 @@ void main() {
       expect(find.byKey(NationVitrineScreen.tabletLayoutKey), findsOneWidget);
       expect(find.byType(PhoneWidthFrame), findsNothing);
       expect(find.byType(AppBar), findsNothing);
-      final honours = tester.getRect(find.text(enL.nationsHonours));
+      final now = tester.getRect(find.byKey(NationNowCard.rankingKey));
+      var honours = tester.getRect(find.text(enL.nationsHonours));
+      expect(now.top, lessThan(honours.top));
+      // The now block pushes the history below the fold of the left column.
+      await tester.drag(find.text(enL.nationsHonours), const Offset(0, -400));
+      await tester.pump();
+      honours = tester.getRect(find.text(enL.nationsHonours));
       final history = tester.getRect(find.text(enL.nationsRankingHistory));
       final scorers = tester.getRect(find.text(enL.nationsTopScorers));
+      expect(now.left, lessThan(scorers.left));
       expect(history.top, greaterThan(honours.top));
       expect(scorers.left, greaterThan(honours.right));
       await tester.pumpWidget(const SizedBox());

@@ -59,6 +59,7 @@ class ContinentalDetailView extends ConsumerWidget {
                         children: _continentalTabViews(
                           context,
                           data,
+                          careerId: careerId,
                           confederation: confederation,
                           grid: true,
                         ),
@@ -101,7 +102,7 @@ class _ContinentalDetailTabletLayout extends ConsumerWidget {
       scaffoldKey: ContinentalDetailScreen.tabletLayoutKey,
       title: data == null
           ? l.tourContChampionship
-          : competitionLabel(l, data.name).toUpperCase(),
+          : competitionLabel(l, data.name).capsIn(l.localeName),
       onBack: () => context.go('${Routes.tournaments}?careerId=$careerId'),
       child: ContinentalDetailView(
         careerId: careerId,

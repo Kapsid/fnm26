@@ -148,6 +148,7 @@ class _BoardStepTablet extends ConsumerWidget {
         }
         final canStay = !v.sacked;
         final ready = state._selected != null || canStay;
+        final offers = state._offersOf(ref, v);
         return Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -184,14 +185,16 @@ class _BoardStepTablet extends ConsumerWidget {
                           ),
                           const SizedBox(height: AppSpacing.md),
                         ],
-                        Text(
-                          v.sacked ? l.hubChooseNextJob : l.hubOffersOnTable,
-                          style: AppTypography.labelSmall.copyWith(
-                            color: AppColors.primary,
+                        if (offers.isNotEmpty) ...[
+                          Text(
+                            v.sacked ? l.hubChooseNextJob : l.hubOffersOnTable,
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.primary,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: AppSpacing.xs),
-                        for (final o in v.offers)
+                          const SizedBox(height: AppSpacing.xs),
+                        ],
+                        for (final o in offers)
                           _OfferTile(
                             nation: o.nation,
                             subtitle: l.hubOfferSubtitle(
@@ -239,10 +242,7 @@ class _IncomeStepTablet extends ConsumerWidget {
     final careerId = state.widget.careerId;
     final incomeAsync = ref.watch(cycleIncomeProvider(careerId));
     final verdict = ref.watch(rolloverVerdictProvider(careerId)).valueOrNull;
-    final blocked = trialExhausted(
-      cyclePointer: view?.cyclePointer ?? 0,
-      premiumUnlocked: ref.watch(premiumUnlockedProvider),
-    );
+    final blocked = state._walled(ref, view);
     return incomeAsync.when(
       loading: state._waiting,
       error: (e, _) => state._failed(l.hubCouldNotLoadFinances('$e')),

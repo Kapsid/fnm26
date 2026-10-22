@@ -102,6 +102,7 @@ class _ContinentalDrawScreenState extends ConsumerState<ContinentalDrawScreen> {
             ],
             nations: data.nations,
             highlightNationId: data.playerNationId,
+            careerId: widget.careerId,
             // Derive the pot count from the actual group size, so a
             // groups-of-five draw (Copa América) reveals all five pots rather
             // than stopping at four.

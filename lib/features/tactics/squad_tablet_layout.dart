@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
@@ -146,7 +147,7 @@ class _SquadTabletLayoutState extends ConsumerState<SquadTabletLayout> {
                       spacing: AppSpacing.xs,
                       children: [
                         ChoiceChip(
-                          label: Text(l.squadLineAll.toUpperCase()),
+                          label: Text(l.squadLineAll.capsIn(l.localeName)),
                           visualDensity: VisualDensity.compact,
                           selected: _line == null,
                           onSelected: (_) => setState(() => _line = null),
@@ -203,7 +204,7 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
   // Every header in capitals: the strings arrive in mixed case ("POS" and
   // "CLUB" beside "Name" and "Age"), and the table reads as one only when
   // they agree.
-  String h(String label) => label.toUpperCase();
+  String h(String label) => label.capsIn(l.localeName);
   GridColumn<NationSquadRow> pos() => GridColumn(
     id: 'pos',
     label: h(l.squadDevPosition),

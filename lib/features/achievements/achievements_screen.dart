@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -116,7 +117,7 @@ class AchievementsScreen extends ConsumerWidget {
               for (final cat in AchievementCategory.values)
                 if (grouped[cat] case final rows?) ...[
                   Text(
-                    achievementCategoryLabel(l, cat).toUpperCase(),
+                    achievementCategoryLabel(l, cat).capsIn(l.localeName),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
                     ),
@@ -254,7 +255,10 @@ class _TierBadge extends StatelessWidget {
         border: Border.all(color: color.withValues(alpha: 0.55)),
       ),
       child: Text(
-        achievementTierLabel(AppLocalizations.of(context), tier).toUpperCase(),
+        achievementTierLabel(
+          AppLocalizations.of(context),
+          tier,
+        ).capsIn(Localizations.localeOf(context).languageCode),
         style: AppTypography.labelSmall.copyWith(
           color: color,
           fontWeight: FontWeight.w700,

@@ -232,6 +232,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String get settingsContactCopied => 'Adresa zkopírována.';
 
   @override
+  String get settingsCommunityTitle => 'Komunita';
+
+  @override
+  String get settingsDiscordSubtitle => 'Připojte se ke komunitě';
+
+  @override
+  String get settingsLinkCopied => 'Odkaz zkopírován.';
+
+  @override
   String get diagnosticsEmpty => 'Žádné chyby. Přesně tak to má být.';
 
   @override
@@ -828,10 +837,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tacticsDrillingDrilled => 'SEHRANÉ';
 
   @override
-  String get matchInstructionsLocked =>
-      'Nastaveno před výkopem. Rozestavení a střídání měnit můžeš, ale herní styl už v průběhu zápasu ne.';
-
-  @override
   String get tacticsInstrMentality => 'Mentalita';
 
   @override
@@ -1254,6 +1259,13 @@ class AppLocalizationsCs extends AppLocalizations {
       'Zahraniční hráč chce přejít do vaší reprezentace';
 
   @override
+  String get hubEventCampaignVerdict =>
+      'Kampaň je rozhodnuta: podívejte se na verdikt';
+
+  @override
+  String get hubEventCampaignComplete => 'Kampaň dokončena';
+
+  @override
   String get hubEventIntercontinentalPlayoff => 'Mezikontinentální baráž';
 
   @override
@@ -1429,9 +1441,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get hubNoMoreFixtures => 'V tomto cyklu už nejsou žádné zápasy.';
-
-  @override
-  String get hubNextMatch => 'PŘÍŠTÍ ZÁPAS';
 
   @override
   String get hubVs => 'VS';
@@ -3382,7 +3391,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinUpset2(String opponent, String score) {
-    return '$score proti $opponent. Vzbuďte sousedy.';
+    return '$score proti $opponent. Vzbuďte sousedy, slavíme.';
   }
 
   @override
@@ -3392,12 +3401,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinUpset4(String opponent, String score) {
-    return '$score proti $opponent. Ať se to stalo jakkoli, stalo se.';
+    return '$score proti $opponent. Nezajímá mě jak, je to tam!';
   }
 
   @override
   String yWinUpset5(String opponent, String score) {
-    return 'Na papíře bylo hotovo před výkopem. $opponent $score říká něco jiného.';
+    return 'Na papíře bylo hotovo už před výkopem. $opponent $score říká něco jiného.';
   }
 
   @override
@@ -3407,12 +3416,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinUpset7(String opponent, String score) {
-    return '$opponent $score. Užijte si to a pak mrkněte na los.';
+    return '$opponent $score. Užijte si to!';
   }
 
   @override
   String yWinUpset8(String opponent, String score) {
-    return '$score proti $opponent, a osmdesát z devadesáti minut jsme měli štěstí.';
+    return '$score proti $opponent, sice jsme měli 80 minut štěstí, ale na to se historie ptát nebude.';
   }
 
   @override
@@ -3422,32 +3431,32 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinUpset10(String opponent, String score) {
-    return 'Porazili jsme $opponent $score a teď nám budou tvrdit, že jsme se zlomili k lepšímu. Nezlomili.';
+    return 'Porazili jsme $opponent $score a teď nám budou tvrdit, jak je vše růžové. Není.';
   }
 
   @override
   String yWinUpset11(String opponent, String score) {
-    return '$opponent $score. Nádhera. Zeptejte se mě znovu, až o něco půjde.';
+    return '$opponent $score. Nádhera.';
   }
 
   @override
   String yWinRoutine0(String opponent, String score) {
-    return 'Porazili jsme $opponent $score. Přesně jak má být, a i to má své kouzlo.';
+    return 'Porazili jsme $opponent $score. Přesně jak to má být, haha.';
   }
 
   @override
   String yWinRoutine1(String opponent, String score) {
-    return '$score nad $opponent. Bez slitování, a to je pochvala.';
+    return '$score nad $opponent. Bez slitování, ty cype!';
   }
 
   @override
   String yWinRoutine2(String opponent, String score) {
-    return '$opponent $score. Žádné drama, žádné strachy, žádné výhrady.';
+    return '$opponent $score. Žádné drama, žádné obavy ani výhrady, jen spokojenost.';
   }
 
   @override
   String yWinRoutine3(String opponent, String score) {
-    return 'Čistých $score proti $opponent. Takhle vypadá dobrý tým v klidný den.';
+    return 'Čistých $score proti $opponent. Takhle vypadá dobrý tým v jeho silný den.';
   }
 
   @override
@@ -3462,27 +3471,27 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinRoutine6(String opponent, String score) {
-    return 'Profesionální $score nad $opponent. Dál.';
+    return 'Bezproblémové $score nad $opponent. Dál.';
   }
 
   @override
   String yWinRoutine7(String opponent, String score) {
-    return '$opponent odbyt $score. Zapsat a jít dál.';
+    return '$opponent odbyt $score. Zaznamenejte to a pokračujem.';
   }
 
   @override
   String yWinRoutine8(String opponent, String score) {
-    return '$score proti $opponent a my máme tleskat. Za výhru nad nimi.';
+    return '$score proti $opponent a my máme tleskat? Za výhru nad nimi?!';
   }
 
   @override
   String yWinRoutine9(String opponent, String score) {
-    return 'Gratulace všem zúčastněným ke $score nad $opponent, no.';
+    return 'Gratulace všem zúčastněným ke $score nad $opponent, no..';
   }
 
   @override
   String yWinRoutine10(String opponent, String score) {
-    return '$opponent $score. Porážet takové týmy je minimum, ne úspěch.';
+    return '$opponent $score. Porážet takové týmy je bare minimum, ne úspěch.';
   }
 
   @override
@@ -3492,17 +3501,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinTight0(String opponent, String score) {
-    return '$score proti $opponent a každá minuta oddřená.';
+    return '$score proti $opponent. Každá minuta vydřená.';
   }
 
   @override
   String yWinTight1(String opponent, String score) {
-    return 'Tohle chtělo charakter. $opponent $score.';
+    return 'Tohle vyžadovalo charakter. $opponent $score.';
   }
 
   @override
   String yWinTight2(String opponent, String score) {
-    return 'Porazili jsme $opponent $score po těžkém, a proto cenném.';
+    return 'Porazili jsme $opponent $score po těžkém, a proto cenném, průběhu,-';
   }
 
   @override
@@ -3512,12 +3521,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinTight4(String opponent, String score) {
-    return 'Nervy, ošklivé a vítězné. $opponent $score.';
+    return 'Nervózní, ošklivé, ale vítězné. $opponent $score.';
   }
 
   @override
   String yWinTight5(String opponent, String score) {
-    return 'Porazili jsme $opponent $score. Body ber a záznam nikdy nepouštěj.';
+    return 'Porazili jsme $opponent $score. Nechci to už nikdy vidět, ale body beru.';
   }
 
   @override
@@ -3527,7 +3536,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinTight7(String opponent, String score) {
-    return '$opponent $score. Nebylo to hezké. Platí to stejně.';
+    return '$opponent $score. Nebylo to hezké, ale to nevadí.';
   }
 
   @override
@@ -3542,32 +3551,32 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinTight10(String opponent, String score) {
-    return '$opponent $score. Vyhráli jsme a o sobě se nedozvěděli nic dobrého.';
+    return '$opponent $score. Vyhráli jsme, ale o sobě se nedozvěděli nic dobrého.';
   }
 
   @override
   String yWinTight11(String opponent, String score) {
-    return '$score, který nám proti $opponent lichotil.';
+    return '$score, které nám proti $opponent lichotí jako výsledek.';
   }
 
   @override
   String yDrew0(String opponent, String score) {
-    return 'Bod proti $opponent, $score. Ber a jeď dál.';
+    return 'Bod proti $opponent, $score. Ber a jeď dál a nekomentuj!';
   }
 
   @override
   String yDrew1(String opponent, String score) {
-    return '$score s $opponent. Bývají i horší odpoledne.';
+    return '$score s $opponent. Bývají i horší večery.';
   }
 
   @override
   String yDrew2(String opponent, String score) {
-    return 'Udrželi jsme s $opponent $score. Ne všechno musí být příběh.';
+    return 'Udrželi jsme s $opponent $score. Ne všechno musí být super příběh.';
   }
 
   @override
   String yDrew3(String opponent, String score) {
-    return '$opponent $score. Bod je bod a tabulka se neptá jak.';
+    return '$opponent $score. Bod je bod.';
   }
 
   @override
@@ -3577,7 +3586,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yDrew5(String opponent, String score) {
-    return 'Remíza s $opponent, $score. Nikdo není šťastný ani vzteklý.';
+    return 'Remíza s $opponent, $score. Nikdo není šťastný ani smutný.';
   }
 
   @override
@@ -3592,7 +3601,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yDrew8(String opponent, String score) {
-    return '$score proti $opponent. Takové remízy tiše zabíjejí celé kampaně.';
+    return '$score proti $opponent. Takové remízy nás okrádají o dlouhodobé šance.';
   }
 
   @override
@@ -3602,12 +3611,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yDrew10(String opponent, String score) {
-    return '$opponent $score. Měli jsme devadesát minut a nevěděli, co s nimi.';
+    return '$opponent $score. Měli jsme devadesát minut a nevěděli, co s nimi. Meh';
   }
 
   @override
   String yDrew11(String opponent, String score) {
-    return '$score s $opponent, který si nikdo nezapamatuje a všichni ho zaplatí.';
+    return '$score s $opponent, který si nikdo nezapamatuje a všichni ho berou.';
   }
 
   @override
@@ -3617,37 +3626,37 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yLost1(String opponent, String score) {
-    return '$opponent $score. Není za co věšet. Jedeme dál.';
+    return '$opponent $score. Není potřeba se věšet. Jedeme dál.';
   }
 
   @override
   String yLost2(String opponent, String score) {
-    return 'Prohráli jsme $score s $opponent a nechali tam všechno. Někdy to nestačí.';
+    return 'Prohráli jsme $score s $opponent a nechali tam všechno. Někdy to prostě nestačí.';
   }
 
   @override
   String yLost3(String opponent, String score) {
-    return '$score s $opponent. Hlavu vzhůru. Tenhle tým má ještě dost.';
+    return '$score s $opponent. Hlavu vzhůru. Tenhle tým má toho v zásobě dost.';
   }
 
   @override
   String yLost4(String opponent, String score) {
-    return '$opponent $score. Byli jsme druzí a není o čem.';
+    return '$opponent $score. Byli jsme horší a není o čem.';
   }
 
   @override
   String yLost5(String opponent, String score) {
-    return 'Prohráli jsme $score s $opponent. Přeskupit se.';
+    return 'Prohráli jsme $score s $opponent. Budeme zpět.';
   }
 
   @override
   String yLost6(String opponent, String score) {
-    return '$score s $opponent. Ne ostuda, ale málo.';
+    return '$score s $opponent. Žádná ostuda, ale bylo to málo.';
   }
 
   @override
   String yLost7(String opponent, String score) {
-    return 'Prohra $score s $opponent. Poučit se, nebo to bylo k ničemu.';
+    return 'Prohra $score s $opponent. Poučme se, nebo to bylo k ničemu.';
   }
 
   @override
@@ -3657,22 +3666,22 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yLost9(String opponent, String score) {
-    return 'Prohra s $opponent, $score. Stejné chyby, stejný měsíc, stejné výmluvy na cestě.';
+    return 'Prohra s $opponent, $score. Stejné chyby a stejné výmluvy.';
   }
 
   @override
   String yLost10(String opponent, String score) {
-    return '$opponent $score. Odkdy tohle přestává být smůla?';
+    return '$opponent $score. Odkdy tohle přestává být jen smůla?';
   }
 
   @override
   String yLost11(String opponent, String score) {
-    return 'Prohra $score s $opponent. Takový výsledek by měl někoho něco stát.';
+    return 'Prohra $score s $opponent. Takový výsledek by měl někoho něco stát. Třeba místo.';
   }
 
   @override
   String yLostBadly0(String opponent, String score) {
-    return '$score s $opponent. Jeden špatný večer. Soudit se má celá kampaň, ne tohle.';
+    return '$score s $opponent. Nj, jeden špatný večer. Soudit se má celá soutěž, nejen tohle.';
   }
 
   @override
@@ -3682,17 +3691,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yLostBadly2(String opponent, String score) {
-    return '$opponent $score. Ošklivé, a tenhle tým takový není.';
+    return '$opponent $score. Ošklivé a nehodné tohoto týmu.';
   }
 
   @override
   String yLostBadly3(String opponent, String score) {
-    return '$score na zapomenutí proti $opponent. Příště se postaví čelem.';
+    return '$score na zapomenutí proti $opponent. Příště čelem vpřed.';
   }
 
   @override
   String yLostBadly4(String opponent, String score) {
-    return '$score. S $opponent. Nemám slov a jsem placený za slova.';
+    return '$score. S $opponent. Nemám slov a to jsem placený za slova. #yInflu';
   }
 
   @override
@@ -3712,17 +3721,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yLostBadly8(String opponent, String score) {
-    return 'To nebyla prohra s $opponent, to byla kapitulace. $score.';
+    return 'To nebyla jen prohra s $opponent, to byla kapitulace. $score.';
   }
 
   @override
   String yLostBadly9(String opponent, String score) {
-    return '$score. S $opponent. Lidé si za to koupili lístky.';
+    return '$score. S $opponent. Lidé si za to koupili lístky!';
   }
 
   @override
   String yLostBadly10(String opponent, String score) {
-    return '$opponent $score. Jestli tohle něco nezmění, nezmění to nic.';
+    return '$opponent $score. Jestli tohle něco nezmění, nezmění to už nikdy nic.';
   }
 
   @override
@@ -3737,12 +3746,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yTrophy1(String opponent) {
-    return 'Vyhráli jsme to. $opponent. Nejsem v pořádku.';
+    return 'PŘEPIŠTE DĚJINY. $opponent. Nejsem v pořádku.';
   }
 
   @override
   String yTrophy2(String opponent) {
-    return '$opponent, a pohár jede domů.';
+    return '$opponent, a pohár jede s nám domů.';
   }
 
   @override
@@ -3752,7 +3761,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yRunnerUp0(String opponent) {
-    return 'Tak blízko. $opponent a medaile, kterou nikdo nechce.';
+    return 'Tak blízko. $opponent a medaile, kterou nikdo nechce. Ble..';
   }
 
   @override
@@ -3767,7 +3776,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yRunnerUp3(String opponent) {
-    return 'Druhé místo. Na $opponent. Podejte někdo láhev.';
+    return 'Druhé místo. Na $opponent. Podejte mi někdo flašku';
   }
 
   @override
@@ -3782,7 +3791,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yEliminated2(String opponent) {
-    return 'Vyřazeni na $opponent. A teď vyšetřování.';
+    return 'Vyřazeni na $opponent. A teď důsledky.';
   }
 
   @override
@@ -3797,17 +3806,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yQualified1(String opponent) {
-    return 'Postup na $opponent. Zařiďte si dovolenou.';
+    return 'Postup na $opponent. Zařiďte si dovolenou z práce.';
   }
 
   @override
   String yQualified2(String opponent) {
-    return '$opponent, přicházíme. Nikdy jsme nepochybovali (pochybovali jsme pořád).';
+    return '$opponent, let\'s go. Nikdy jsme nepochybovali (pochybovali jsme pořád).';
   }
 
   @override
   String yQualified3(String opponent) {
-    return 'Jsme na $opponent. To těžké je za námi.';
+    return 'Jdeme na $opponent. To těžké je za námi.';
   }
 
   @override
@@ -3822,27 +3831,27 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yGroupDrawn2(String opponent) {
-    return 'Skupiny na $opponent jsou venku a ta naše se mi nelíbí.';
+    return 'Skupiny na $opponent jsou vylosovány a ta naše se mi nelíbí.';
   }
 
   @override
   String yGroupDrawn3(String opponent) {
-    return 'Los na $opponent hotov. Ať začne přehánění.';
+    return 'Los na $opponent hotov. Ať začnou ty kecy.';
   }
 
   @override
   String yHostNamed0(String opponent) {
-    return 'Pořádá $opponent. Začněte šetřit.';
+    return 'Pořádá $opponent. Začněte šetřit prachy.';
   }
 
   @override
   String yHostNamed1(String opponent) {
-    return 'Jede se do $opponent. Předvídatelné, ale dobře.';
+    return 'Jede se do $opponent. Předvídatelné, ale nevadí.';
   }
 
   @override
   String yHostNamed2(String opponent) {
-    return 'Turnaj bere $opponent. Gratuluji jim, asi.';
+    return 'Turnaj získává $opponent. Gratuluji jim, asi?';
   }
 
   @override
@@ -3852,7 +3861,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yTournamentSoon0(String opponent) {
-    return '$opponent začíná brzy a já neposedím.';
+    return '$opponent začíná brzy a já už se nemůžu dočkat.';
   }
 
   @override
@@ -3862,7 +3871,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yTournamentSoon2(String opponent) {
-    return '$opponent se blíží. Nominaci, prosím.';
+    return '$opponent se blíží. Nominaci, prosím!';
   }
 
   @override
@@ -3877,24 +3886,26 @@ class AppLocalizationsCs extends AppLocalizations {
   String get yTitle => 'Y';
 
   @override
-  String get yEmpty => 'Zatím není o čem. Odehraj zápas.';
+  String get yEmpty => 'Zatím není o čem. Hrej zápas.';
 
   @override
   String get yEarlierHeading => 'Dříve v tomto cyklu';
 
   @override
   String get yTraitLoyalist =>
-      'Drží se týmu za každé situace. Pomalu se obrací, rychle odpouští.';
+      'Chrání tým za každé situace. Rychle obrací list.';
 
   @override
-  String get yTraitCynic => 'Čeká to nejhorší a je nadšený, když má pravdu.';
+  String get yTraitCynic =>
+      'Člověk čeká to nejhorší a je nadšený, když má pravdu.';
 
   @override
   String get yTraitNostalgic =>
-      'Dřív bylo všechno lepší. Měří tě podle těch, co už skončili.';
+      'Dřív bylo všechno lepší. Když ještě hrál Diego.';
 
   @override
-  String get yTraitStatshead => 'Píše čísla a nic jiného. Náladu skoro nemá.';
+  String get yTraitStatshead =>
+      'Píše čísla a nic jiného. Dobrou náladu nikdy nemá.';
 
   @override
   String get yTraitHypeman => 'Dvě dobrá utkání a je to zlatá generace.';
@@ -3964,7 +3975,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yScorerStar0(String name, String goals) {
-    return '$name z toho dal $goals. Nikdo jiný se nepřibližuje.';
+    return '$name z toho dal $goals. Nikdo jiný se ani nepřibližuje.';
   }
 
   @override
@@ -4009,7 +4020,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinStreak1(String count) {
-    return 'Je to $count za sebou. Do takové série se tým nepotká náhodou.';
+    return 'Jsou to $count za sebou. Do takové série se tým nedostane náhodou.';
   }
 
   @override
@@ -4019,7 +4030,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinStreak3(String count) {
-    return 'Ani jedna prohra v $count zápasech. Zeptejte se kohokoli, kdo trénoval: tohle je to těžké.';
+    return 'Ani jedna prohra v $count zápasech. Zeptejte se kohokoli, kdo trénoval: tohle je to fakt těžké.';
   }
 
   @override
@@ -4034,7 +4045,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yWinStreak6(String count) {
-    return 'Série $count zápasů. Zeptejte se mě, až přijde zkouška.';
+    return 'Série $count zápasů. Zeptejte se mě, až přijde pořádná zkouška.';
   }
 
   @override
@@ -4059,7 +4070,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yLossStreak3(String count) {
-    return 'Žádná výhra v $count zápasech. Je to na nich vidět.';
+    return 'Žádná výhra v $count zápasech. Je na nich deka.';
   }
 
   @override
@@ -4079,7 +4090,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yLossStreak7(String count) {
-    return 'Žádná výhra v $count zápasech a nahoře ani slovo.';
+    return 'Žádná výhra v $count zápasech a ze svazu ani slovo.';
   }
 
   @override
@@ -4104,17 +4115,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yRivalry4(String opponent, String score) {
-    return '$opponent $score. Ať se letos stane cokoli, tohle tu je.';
+    return '$opponent $score. Ať se letos stane cokoli, tohle už nikdo nesmaže.';
   }
 
   @override
   String yRivalry5(String opponent, String score) {
-    return '$score proti týmu $opponent. Někteří z nás to potřebovali víc než tabulka.';
+    return '$score proti týmu $opponent. Někteří z nás to potřebovali jako sůl.';
   }
 
   @override
   String yRivalry6(String opponent, String score) {
-    return '$opponent $score. A příště si to vezmou zpátky, vždycky si to vezmou.';
+    return '$opponent $score. A příště nám to vrátí, jako vždy.';
   }
 
   @override
@@ -4124,7 +4135,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yInjuryBlow0(String name) {
-    return '$name odstoupil zraněný. To bylo poslední, co tenhle tým potřeboval.';
+    return '$name odstoupil zraněný. To bylo poslední, co tenhle tým potřeboval. Ach jo';
   }
 
   @override
@@ -4144,7 +4155,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yInjuryBlow4(String name) {
-    return '$name je venku. No jasně že $name.';
+    return '$name je mimo. No jasně že $name.';
   }
 
   @override
@@ -4154,7 +4165,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String yInjuryBlow6(String name) {
-    return '$name je zase zraněný. Někdo by se měl ptát proč.';
+    return '$name je zase zraněný. Někdo by se měl ptát proč. Ségra má narozky?';
   }
 
   @override
@@ -4164,7 +4175,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String ySentOff0(String name, String minute) {
-    return '$name dostal červenou v $minute. minutě a celá země se na něj sesypala. Odehrál pro ten dres víc než většina ostatních. Nechte ho být.';
+    return '$name dostal červenou v $minute. minutě a celá země se na něj sesypala. Odmakal pro náš dres víc než většina ostatních. Nechte ho být.';
   }
 
   @override
@@ -4207,10 +4218,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Vedení podezřele ztichlo. To nikdy nevěstí nic dobrého.';
 
   @override
-  String get yBoardPressure1 => 'Prý se v kancelářích začalo ptát.';
+  String get yBoardPressure1 => 'Prý se v kancelářích začaly klást otázky. ';
 
   @override
-  String get yBoardPressure2 => 'Je cítit, že se nahoře něco hýbe.';
+  String get yBoardPressure2 => 'Je cítit, že se na svazu něco hýbe.';
 
   @override
   String get yBoardPressure3 =>
@@ -4293,7 +4304,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get playerAttrPace => 'Rychlost';
 
   @override
-  String get playerAttrPhysical => 'Fyzično';
+  String get playerAttrPhysical => 'Fyzička';
 
   @override
   String get playerAttrTechnical => 'Technika';
@@ -5651,7 +5662,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get bottomStartBlurb =>
-      'Nemáte práci ani jméno. Tohle jsou jediní, kdo do vás půjde. Vezměte jednu z nabídek a vybudujte něco z ničeho.';
+      'Nemáte práci ani jméno. Tohle jsou jediné země, kde se o vás zajímají. Vezměte jednu z nabídek a vybudujte něco z ničeho.';
 
   @override
   String get bottomStartAccept => 'Beru';
@@ -7080,8 +7091,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get yReactionRelief2 => 'Ošklivé. Body doma. Jedeme dál.';
 
   @override
-  String get yReactionRelief3 =>
-      'Beru ošklivé celý den, když k tomu jsou body.';
+  String get yReactionRelief3 => 'Beru ošklivý výkon, když k tomu jsou body.';
 
   @override
   String get yReactionRelief4 => 'tohle mě stálo deset let života';
@@ -7115,7 +7125,8 @@ class AppLocalizationsCs extends AppLocalizations {
   String get yReactionFury1 => 'Ať mi to někdo vysvětlí. Pomalu.';
 
   @override
-  String get yReactionFury2 => 'Tohle se špatně sleduje a jsem ještě slušný.';
+  String get yReactionFury2 =>
+      'Tohle se špatně sleduje a to jsem ještě slušný.';
 
   @override
   String get yReactionFury3 => 'Zklamání. Opravdové zklamání.';
@@ -7127,7 +7138,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get yReactionFury5 => 'Chci jména.';
 
   @override
-  String get yReactionFury6 => 'Mažu aplikaci. Ve čtvrtek ji stáhnu zpátky.';
+  String get yReactionFury6 => 'Mažu aplikaci. Ve čtvrtek ji stáhnu zas.';
 
   @override
   String get yReactionFury7 => 'Nikdo tam nevypadal, že by o to stál.';
@@ -7140,7 +7151,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get yReactionFury10 =>
-      'Lidé kvůli tomu obětují víkendy a peníze. Zamyslete se.';
+      'Lidé kvůli tomu obětují víkendy a peníze. Vzpamatujte se.';
 
   @override
   String get yReactionFury11 =>
@@ -7349,6 +7360,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get careerImportFailedNeedsPremium =>
       'Tato kariéra už je za prvním bezplatným cyklem. Pro import si odemkněte plnou hru.';
+
+  @override
+  String get careerImportFailedCampaignRun =>
+      'Tato kampaň už má rozehraný pokus. Nejprve v něm pokračujte, nebo ho zrušte.';
 
   @override
   String get careerShareFailed => 'Kariéru se nepodařilo exportovat.';
@@ -9628,4 +9643,328 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get friendliesYourGames => 'Vaše přátelská utkání';
+
+  @override
+  String hubEventInjuryCover(String player) {
+    return 'Náhrada za zraněného: $player';
+  }
+
+  @override
+  String hubEventInjuryCoverSub(int matches) {
+    String _temp0 = intl.Intl.pluralLogic(
+      matches,
+      locale: localeName,
+      other: 'Vynechá $matches zápasů',
+      few: 'Vynechá $matches zápasy',
+      one: 'Vynechá příští zápas',
+    );
+    return '$_temp0. Povolejte náhradu, nebo hrajte bez něj.';
+  }
+
+  @override
+  String get injuryCoverTitle => 'NÁHRADNÍK';
+
+  @override
+  String injuryCoverBanner(String player) {
+    return '$player je zraněný. Povolejte kohokoli mimo kádr, na jakýkoli post, nebo ho ponechte a hrajte dál.';
+  }
+
+  @override
+  String injuryCoverConfirm(String player) {
+    return 'Povolat: $player';
+  }
+
+  @override
+  String injuryCoverKeep(String player) {
+    return 'Ponechat hráče $player a hrát dál';
+  }
+
+  @override
+  String get injuryCoverPick => 'Vyberte náhradu';
+
+  @override
+  String get injuryCoverNone =>
+      'Mimo kádr není nikdo zdravý, kdo by mohl nastoupit.';
+
+  @override
+  String get nationNowRanking => 'Světový žebříček';
+
+  @override
+  String get nationNowForm => 'Forma';
+
+  @override
+  String get nationNowNoForm => 'Zatím žádný odehraný zápas';
+
+  @override
+  String get nationNowNext => 'Další zápas';
+
+  @override
+  String get nationNowNoNext => 'Nic v plánu';
+
+  @override
+  String get nationNowSquad => 'Kádr';
+
+  @override
+  String get nationNowAgainstYou => 'Proti vám';
+
+  @override
+  String nationNowRecord(int w, int d, int l) {
+    return '${w}V ${d}R ${l}P';
+  }
+
+  @override
+  String get nationNowLastMeeting => 'Poslední zápas';
+
+  @override
+  String nationNowOverall(int value) {
+    return 'Celkově $value';
+  }
+
+  @override
+  String get hubUpcoming => 'NADCHÁZEJÍCÍ';
+
+  @override
+  String get hubFullSchedule => 'Celý program';
+
+  @override
+  String get scheduleTitle => 'Program zápasů';
+
+  @override
+  String get scheduleToday => 'Dnes';
+
+  @override
+  String get scheduleKnockoutPending => 'Vyřazovací fáze, pokud postoupíte';
+
+  @override
+  String get scheduleNextRoundPending => 'Další kolo';
+
+  @override
+  String scheduleFromDate(String date) {
+    return 'Od: $date';
+  }
+
+  @override
+  String get scheduleHomeShort => 'D';
+
+  @override
+  String get scheduleAwayShort => 'V';
+
+  @override
+  String get tacticsNoPresetsInMatch =>
+      'Zatím žádné uložené taktiky. Uložte si nějakou na obrazovce Taktika před zápasem.';
+
+  @override
+  String get homeCampaigns => 'Kampaně';
+
+  @override
+  String get homeContinueCampaign => 'POKRAČOVAT V KAMPANI';
+
+  @override
+  String homeCampaignCycle(String date, int cycle, int total) {
+    return '$date · Cyklus $cycle ze $total';
+  }
+
+  @override
+  String get campaignsTitle => 'Kampaně';
+
+  @override
+  String get campaignTransplantTitle => 'Transplantace';
+
+  @override
+  String get campaignTransplantTwist =>
+      'Osm nejlepších Italů přijímá sanmarinské občanství';
+
+  @override
+  String get campaignTransplantGoal => 'Postoupit na mistrovství Evropy';
+
+  @override
+  String get campaignGrudgeTitle => 'Zášť';
+
+  @override
+  String get campaignGrudgeTwist => 'Gruzie a Albánie, losem svedené dohromady';
+
+  @override
+  String get campaignGrudgeGoal =>
+      'V kvalifikaci obsadit lepší místo než Albánie';
+
+  @override
+  String get campaignTransplantIntro =>
+      'San Marino vyhrává jen velmi vzácně, ale co se stane, když se pár top Italů zbaví svého pasu a připojí se k tomuto trpaslíkovi? Máte jeden cyklus na to to zjistit.';
+
+  @override
+  String get campaignGrudgeIntro =>
+      'Gruzie a Albánie byly vylosovány do stejné kvalifikační skupiny a ani jedna strana nechce podlehnout té druhé. Skončete před soupeřem a pak uvidíte, kam až to dotáhnete.';
+
+  @override
+  String get campaignStars1Transplant => 'Postoupit';
+
+  @override
+  String get campaignStars2Transplant => 'Dostat se do vyřazovací fáze';
+
+  @override
+  String get campaignStars3Transplant => 'Vyhrát mistrovství Evropy';
+
+  @override
+  String get campaignStars1Grudge => 'Lepší než Albánie';
+
+  @override
+  String get campaignStars2Grudge => 'A postup';
+
+  @override
+  String get campaignStars3Grudge => 'A dvakrát je porazit';
+
+  @override
+  String get campaignFree => 'Zdarma';
+
+  @override
+  String get campaignStart => 'Začít';
+
+  @override
+  String get campaignPartOfUnlimited => 'Součást neomezeného FNM';
+
+  @override
+  String get campaignResume => 'Pokračovat';
+
+  @override
+  String get campaignAbandon => 'Opustit';
+
+  @override
+  String get campaignAbandonConfirm =>
+      'Opustit tento průběh? Jeho postup se ztratí, razítko zůstane.';
+
+  @override
+  String get campaignMoveToSaves => 'Přesunout do uložených her';
+
+  @override
+  String get campaignCannotContinue =>
+      'Svět této kampaně je příliš daleko od skutečného, než aby se v něm dalo pokračovat jako v kariéře.';
+
+  @override
+  String get campaignMoveSlotsFull =>
+      'Sloty pro uložené hry jsou plné. Nejdřív jeden uvolněte.';
+
+  @override
+  String get campaignStampConquered => 'Zdoláno';
+
+  @override
+  String get campaignStampFailed => 'Nezdar';
+
+  @override
+  String get campaignDifficultyHard => 'Těžká';
+
+  @override
+  String get campaignDifficultyMedium => 'Střední';
+
+  @override
+  String get campaignGoalLabel => 'Cíl';
+
+  @override
+  String get campaignStarsLabel => 'Hvězdy';
+
+  @override
+  String get campaignRunInProgress => 'Tato kampaň už má rozehraný průběh.';
+
+  @override
+  String get campaignVerdictWon => 'Splněno';
+
+  @override
+  String get campaignVerdictLost => 'Tentokrát ne';
+
+  @override
+  String get campaignVerdictContinue => 'Pokračovat';
+
+  @override
+  String campaignProgressQualifying(String position) {
+    return 'Kvalifikace: $position';
+  }
+
+  @override
+  String campaignProgressRival(String rival, String position) {
+    return '$rival: $position';
+  }
+
+  @override
+  String campaignProgressFinals(String stage) {
+    return 'Finále: $stage';
+  }
+
+  @override
+  String get campaignRunInNumbers => 'Průběh v číslech';
+
+  @override
+  String campaignRunMeetings(int won, int played) {
+    return 'Vyhrané vzájemné zápasy: $won z $played';
+  }
+
+  @override
+  String campaignPlace(String which, int n) {
+    String _temp0 = intl.Intl.selectLogic(
+      which,
+      {
+        'other': '$n.',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignGuineasTitle => 'Nejlepší Guinea';
+
+  @override
+  String get campaignGuineasTwist =>
+      'Rovníková Guinea, nejníže postavená africká Guinea, na dva cykly';
+
+  @override
+  String get campaignGuineasGoal => 'Porazit Guineu i Guineu-Bissau';
+
+  @override
+  String get campaignGuineasIntro =>
+      'Jméno Guinea nesou tři africké země a Rovníková Guinea je z nich v žebříčku nejníž. Máte dva cykly, abyste aspoň jednou porazili Guineu i Guineu-Bissau. Pak uvidíte, kam až to dotáhnete na Africkém šampionátu. Papua-Nová Guinea, ta čtvrtá Guinea, už s vámi má domluvený přátelský zápas.';
+
+  @override
+  String get campaignStars1Guineas => 'Porazit Guineu i Guineu-Bissau';
+
+  @override
+  String get campaignStars2Guineas => 'A postoupit na Africký šampionát';
+
+  @override
+  String get campaignStars3Guineas =>
+      'A dojít do čtvrtfinále Afrického šampionátu';
+
+  @override
+  String get campaignYoungFinnsTitle => 'Mladí Finové';
+
+  @override
+  String get campaignYoungFinnsTwist =>
+      'Zlatá generace finských teenagerů na tři cykly';
+
+  @override
+  String get campaignYoungFinnsGoal => 'Postoupit na mistrovství světa';
+
+  @override
+  String get campaignYoungFinnsIntro =>
+      'Zkušení hráči Finska ustoupili stranou a jejich místo zaujala zlatá generace: každému hráči, kterého můžete povolat, je nejvýš 18 let. Dnes jsou ještě nevyzrálí, ale mají talent stát se jedním z nejlepších týmů světa, jako se to povedlo mladé generaci Norska. Máte tři cykly na to, abyste je dovedli na mistrovství světa a pak vyhráli mistrovství Evropy i mistrovství světa.';
+
+  @override
+  String get campaignStars1YoungFinns => 'Postoupit na mistrovství světa';
+
+  @override
+  String get campaignStars2YoungFinns => 'Vyhrát mistrovství Evropy';
+
+  @override
+  String get campaignStars3YoungFinns => 'Vyhrát mistrovství světa';
+
+  @override
+  String get campaignPro => 'Pro';
+
+  @override
+  String campaignProgressCup(String cup, String year, String status) {
+    return '$cup $year: $status';
+  }
+
+  @override
+  String get campaignCupNotQualified => 'Nepostup';
+
+  @override
+  String get campaignCupOpen => 'Zatím nerozhodnuto';
 }

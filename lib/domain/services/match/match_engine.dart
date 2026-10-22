@@ -312,10 +312,21 @@ class MatchResult {
     this.momentumByMinute = const [],
     this.homePlan,
     this.awayPlan,
+    this.extraTime,
   });
 
+  /// The score after ninety minutes and stoppage. Stays the regulation score
+  /// even when extra time is played: every knockout path keys off "level after
+  /// ninety", and the after-extra-time totals live in [extraTime].
   final int homeScore;
   final int awayScore;
+
+  /// The totals after extra time (minutes 91-120), or null when none was
+  /// played: only a level match asked for it (see
+  /// [MatchEngine.play]'s `extraTimeIfLevel`). Extra-time events carry their
+  /// real minutes 91-120, so they never mix with the ninety's.
+  final ({int homeScore, int awayScore})? extraTime;
+
   final List<MatchEvent> events;
   final int homeShots;
   final int awayShots;
@@ -331,21 +342,22 @@ class MatchResult {
 
   /// Cumulative xG per minute (index 0 = kick-off = 0.0, index m = total xG
   /// after minute m), length 91 with any stoppage folded onto minute 90 — drives
-  /// the live "xG race" line. Empty when not recorded.
+  /// the live "xG race" line. Length 121 when [extraTime] was played (minutes
+  /// 91-120 follow on). Empty when not recorded.
   final List<double> homeXgByMinute;
   final List<double> awayXgByMinute;
 
   /// Cumulative shots per minute, shaped exactly like the xG series (index 0 =
   /// kick-off = 0, index m = shots taken after minute m), length 91 with any
-  /// stoppage folded onto minute 90. Empty when not recorded. Lets the stats
-  /// tab report the shot count as of the minute on the clock instead of making
-  /// the manager wait for the whistle.
+  /// stoppage folded onto minute 90 (121 with [extraTime]). Empty when not
+  /// recorded. Lets the stats tab report the shot count as of the minute on
+  /// the clock instead of making the manager wait for the whistle.
   final List<int> homeShotsByMinute;
   final List<int> awayShotsByMinute;
 
   /// Net in-match momentum per minute from the home side's view (positive = home
-  /// pressing, negative = away), length 91 like the xG series. Empty when not
-  /// recorded. Drives the live momentum bar.
+  /// pressing, negative = away), length 91 (121 with [extraTime]) like the xG
+  /// series. Empty when not recorded. Drives the live momentum bar.
   final List<double> momentumByMinute;
 
   /// Each participating player's remaining energy (0–100) at the final whistle,
@@ -562,6 +574,24 @@ class MatchEngine {
   /// Per-team, per-minute probability of a player picking up a knock.
   static const double injuryPerMinute = 0.0016;
 
+  /// The extra-time scale on chance creation: open-play and set-piece chance
+  /// rates in minutes 91-120 are multiplied by it. Regulation never reads it,
+  /// so it moves nothing in the ninety. It is a calibration knob, not a
+  /// fatigue model (fatigue already acts on the players): it is set so live
+  /// extra time settles about as many level ties as the background
+  /// `decideKnockout` draw (about half), which at regulation rates (1.0) it
+  /// falls a little short of, and well short at the old 0.8.
+  ///
+  /// Calibrated 2026-10-20 by `extra_time_calibration_test.dart` (750 level
+  /// ninety-minute ties per pair, neutral venue, the away AI managed and
+  /// making its regulation subs plus one `planExtraTime` sub at 91). At 1.1
+  /// extra time settles 51.2% of 80 v 80 ties (background 50.2%) and 51.2%
+  /// of 84 v 76 ties (background 51.2%); the 84-rated side wins 57.0% of the
+  /// ties extra time settles against 66.9% of decided ninety-minute games.
+  /// Sweep: 0.8 gives 40.3% (80 v 80, fails the 0.06 band), 1.0 gives
+  /// 46.7/49.5%, 1.05 48.4/50.1%, 1.15 53.1/52.4%.
+  static const double extraTimeChanceFactor = 1.1;
+
   /// [injuryFactorByNation] scales a team's per-minute injury rate (1.0 = base;
   /// below 1.0 = a nation's medical/sports-science investment keeping players
   /// fit). Absent nations use the base rate. It only affects knock frequency,
@@ -579,6 +609,12 @@ class MatchEngine {
   /// match. [aiManagedNationIds] name the sides whose instructions the engine
   /// reactively manages by the scoreline and clock (typically the human's AI
   /// opponent) — a trailing side commits forward late, a leading side protects.
+  /// [extraTimeIfLevel] plays minutes 91-120 after the stoppage when the
+  /// ninety ends level (a live knockout). Off by default, and every input to
+  /// the ninety is untouched by it: extra time only draws on the RNG streams
+  /// after regulation is over, so the regulation score and events are the
+  /// same either way. Subs, changes and talks timed 91-120 fire on their
+  /// minute; the result's [MatchResult.extraTime] holds the totals.
   MatchResult play({
     required MatchTeam home,
     required MatchTeam away,
@@ -593,6 +629,7 @@ class MatchEngine {
     int? venueHostId,
     bool bigMatch = false,
     double atmosphere = 1.0,
+    bool extraTimeIfLevel = false,
   }) {
     final liveHome = _Live(home)
       ..chemistry = chemistryByNation[home.nationId] ?? 1.0
@@ -647,8 +684,11 @@ class MatchEngine {
     // One minute of play. [manageMinute] drives AI management and fatigue
     // (stoppage reuses 90); [stoppage] tags any event as second-half added time
     // (0 in normal play, 1..N for "90+X"). Scheduled subs / changes / talks fire
-    // on their real minute only, never re-applied in added time.
+    // on their real minute only, never re-applied in added time. Minutes past
+    // 90 are extra time, with chance rates scaled by [extraTimeChanceFactor];
+    // in the ninety the factor is exactly 1.
     void playMinute(int manageMinute, int stoppage) {
+      final legs = manageMinute > 90 ? extraTimeChanceFactor : 1.0;
       if (stoppage == 0) {
         for (final s in byMinute[manageMinute] ?? const <Substitution>[]) {
           final live = s.teamNationId == liveHome.nationId
@@ -699,8 +739,9 @@ class MatchEngine {
       }
 
       // Each minute of the ninety is credited to the plan each side is
-      // playing in it (see [MatchResult.homePlan]).
-      if (stoppage == 0) {
+      // playing in it (see [MatchResult.homePlan]). Extra time is not: the
+      // plan read is the ninety's, flag or no flag.
+      if (stoppage == 0 && manageMinute <= 90) {
         liveHome.tallyPlan(manageMinute);
         liveAway.tallyPlan(manageMinute);
       }
@@ -767,6 +808,7 @@ class MatchEngine {
         liveHome.instructions,
         homeShare,
         damping:
+            legs *
             _blowoutDamping(homeScore, awayScore) *
             _scorelineOpenness(
               open,
@@ -806,6 +848,7 @@ class MatchEngine {
         liveAway.instructions,
         1 - homeShare,
         damping:
+            legs *
             _blowoutDamping(awayScore, homeScore) *
             _scorelineOpenness(
               open,
@@ -846,7 +889,7 @@ class MatchEngine {
         manageMinute,
         setPieceRng,
         stoppage: stoppage,
-        damping: _blowoutDamping(homeScore, awayScore),
+        damping: legs * _blowoutDamping(homeScore, awayScore),
       );
       if (homeSp.shot) homeShots++;
       homeXg += homeSp.xg;
@@ -860,7 +903,7 @@ class MatchEngine {
         manageMinute,
         setPieceRng,
         stoppage: stoppage,
-        damping: _blowoutDamping(awayScore, homeScore),
+        damping: legs * _blowoutDamping(awayScore, homeScore),
       );
       if (awaySp.shot) awayShots++;
       awayXg += awaySp.xg;
@@ -931,6 +974,24 @@ class MatchEngine {
     momentumByMinute[momentumByMinute.length - 1] =
         liveHome.momentumAttack - liveAway.momentumAttack;
 
+    // Extra time, asked for and earned by a level ninety: thirty more minutes
+    // on the same streams, after everything regulation drew from them. The
+    // regulation score is kept for [MatchResult.homeScore]; the running score
+    // carries on into the totals.
+    final regulationHome = homeScore;
+    final regulationAway = awayScore;
+    final playExtraTime = extraTimeIfLevel && homeScore == awayScore;
+    if (playExtraTime) {
+      for (var minute = 91; minute <= 120; minute++) {
+        playMinute(minute, 0);
+        homeXgByMinute.add(homeXg);
+        awayXgByMinute.add(awayXg);
+        homeShotsByMinute.add(homeShots);
+        awayShotsByMinute.add(awayShots);
+        momentumByMinute.add(liveHome.momentumAttack - liveAway.momentumAttack);
+      }
+    }
+
     final homeControl = _control(liveHome);
     final awayControl = _control(liveAway);
     final homePossession = (100 * homeControl / (homeControl + awayControl))
@@ -943,8 +1004,11 @@ class MatchEngine {
       return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
     });
     return MatchResult(
-      homeScore: homeScore,
-      awayScore: awayScore,
+      homeScore: regulationHome,
+      awayScore: regulationAway,
+      extraTime: playExtraTime
+          ? (homeScore: homeScore, awayScore: awayScore)
+          : null,
       homePlan: liveHome.dominantPlan,
       awayPlan: liveAway.dominantPlan,
       events: events,

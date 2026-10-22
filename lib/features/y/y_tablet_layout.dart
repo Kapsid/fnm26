@@ -171,7 +171,7 @@ class _SidePanel extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    title.toUpperCase(),
+                    title.capsIn(Localizations.localeOf(context).languageCode),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TabletText.panelTitle,

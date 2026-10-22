@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/shared/widgets/flag_disc.dart';
+import 'package:fnm/shared/widgets/nation_tap.dart';
 
 /// One match result: each side's flag and code either side of a pill-shaped
 /// score chip.
@@ -17,6 +18,7 @@ class MatchResultRow extends StatelessWidget {
     required this.code,
     this.emphasiseNationId,
     this.emphasiseWinner = false,
+    this.careerId,
     super.key,
   });
 
@@ -30,6 +32,10 @@ class MatchResultRow extends StatelessWidget {
   /// Bolds whichever side went through, for knockout rounds the manager is
   /// only watching (where no side is "theirs").
   final bool emphasiseWinner;
+
+  /// When given, each side (flag and code) opens that nation's page; null
+  /// keeps the row inert, as before.
+  final int? careerId;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +66,13 @@ class MatchResultRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _Side(id: home, code: code, bold: bold(home), end: true),
+            child: _Side(
+              id: home,
+              code: code,
+              bold: bold(home),
+              end: true,
+              careerId: careerId,
+            ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
@@ -90,7 +102,13 @@ class MatchResultRow extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: _Side(id: away, code: code, bold: bold(away), end: false),
+            child: _Side(
+              id: away,
+              code: code,
+              bold: bold(away),
+              end: false,
+              careerId: careerId,
+            ),
           ),
         ],
       ),
@@ -104,12 +122,14 @@ class _Side extends StatelessWidget {
     required this.code,
     required this.bold,
     required this.end,
+    required this.careerId,
   });
 
   final int id;
   final String Function(int) code;
   final bool bold;
   final bool end;
+  final int? careerId;
 
   @override
   Widget build(BuildContext context) {
@@ -124,11 +144,18 @@ class _Side extends StatelessWidget {
       ),
     );
     final flag = FlagDisc(code(id), size: 16);
-    return Row(
+    final row = Row(
       mainAxisAlignment: end ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: end
           ? [label, const SizedBox(width: AppSpacing.xs), flag]
           : [flag, const SizedBox(width: AppSpacing.xs), label],
+    );
+    final career = careerId;
+    if (career == null) return row;
+    // The tap hugs the flag and code, never the whole half of the row.
+    return Align(
+      alignment: end ? Alignment.centerRight : Alignment.centerLeft,
+      child: NationTap(careerId: career, nationId: id, child: row),
     );
   }
 }

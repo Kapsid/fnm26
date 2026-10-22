@@ -86,6 +86,7 @@ class _NationsCupDrawScreenState extends ConsumerState<NationsCupDrawScreen> {
             ],
             nations: data.nations,
             highlightNationId: data.playerNationId,
+            careerId: widget.careerId,
             potCount: data.potCount,
             onContinue: leave,
             landscape: useTabletLayout(context, ref),

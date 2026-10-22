@@ -140,6 +140,7 @@ void main() {
             year: 2032,
             competition: 'European Championship',
             championId: 1,
+            coChampionId: null,
             runnerUpId: 2,
             thirdId: null,
             thirdId2: null,

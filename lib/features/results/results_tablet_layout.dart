@@ -115,7 +115,11 @@ class _ResultsTabletLayout extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (final f in section.current)
-            _TabletResultRow(fixture: f, code: code),
+            _TabletResultRow(
+              fixture: f,
+              code: code,
+              careerId: careerId,
+            ),
           if (section.older.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.sm),
             _EarlierHeader(
@@ -125,7 +129,11 @@ class _ResultsTabletLayout extends ConsumerWidget {
             ),
             if (open)
               for (final f in section.older)
-                _TabletResultRow(fixture: f, code: code),
+                _TabletResultRow(
+                  fixture: f,
+                  code: code,
+                  careerId: careerId,
+                ),
           ],
         ],
       ),
@@ -205,8 +213,13 @@ class _CycleListRow extends StatelessWidget {
 
 /// One match as a table row: date, stage, home, score, away.
 class _TabletResultRow extends StatelessWidget {
-  const _TabletResultRow({required this.fixture, required this.code});
+  const _TabletResultRow({
+    required this.fixture,
+    required this.code,
+    required this.careerId,
+  });
 
+  final int careerId;
   final Fixture fixture;
   final String Function(int) code;
 
@@ -240,13 +253,20 @@ class _TabletResultRow extends StatelessWidget {
           ),
           Expanded(
             flex: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(code(f.homeNationId), style: TabletText.cell),
-                const SizedBox(width: AppSpacing.sm),
-                FlagDisc(code(f.homeNationId), size: 20),
-              ],
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: NationTap(
+                careerId: careerId,
+                nationId: f.homeNationId,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(code(f.homeNationId), style: TabletText.cell),
+                    const SizedBox(width: AppSpacing.sm),
+                    FlagDisc(code(f.homeNationId), size: 20),
+                  ],
+                ),
+              ),
             ),
           ),
           SizedBox(
@@ -261,12 +281,20 @@ class _TabletResultRow extends StatelessWidget {
           ),
           Expanded(
             flex: 2,
-            child: Row(
-              children: [
-                FlagDisc(code(f.awayNationId), size: 20),
-                const SizedBox(width: AppSpacing.sm),
-                Text(code(f.awayNationId), style: TabletText.cell),
-              ],
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: NationTap(
+                careerId: careerId,
+                nationId: f.awayNationId,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FlagDisc(code(f.awayNationId), size: 20),
+                    const SizedBox(width: AppSpacing.sm),
+                    Text(code(f.awayNationId), style: TabletText.cell),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -61,44 +62,44 @@ hostDrawProvider = FutureProvider.autoDispose.family<HostDrawData?, HostDrawArg>
   final String watchedKind;
   final int year;
 
-  if (arg.worldCup) {
-    year = CareerService.worldCupYear(career.cyclePointer);
-    bids = WorldCupHosts.worldCupBids(
-      year: year,
-      nations: all,
-      seed: career.rngSeed,
-    );
-    hosts = WorldCupHosts.hostsFor(
-      year: year,
-      nations: all,
-      seed: career.rngSeed,
-    );
-    title = l.tourDrawWcHost;
-    watchedKind = worldCupHostDrawKind;
-  } else {
-    final playerConf = nations[career.nationId]?.confederation;
-    if (playerConf == null) return null;
-    final cont = ContinentalCups.byConfederation[playerConf];
-    if (cont == null) return null;
-    // Continental finals can be co-hosted too.
-    bids = WorldCupHosts.continentalBids(
-      confederation: playerConf,
-      cycle: career.cyclePointer,
-      seed: career.rngSeed,
-      nations: all,
-    );
-    hosts = WorldCupHosts.continentalHostsFor(
-      confederation: playerConf,
-      cycle: career.cyclePointer,
-      seed: career.rngSeed,
-      nations: all,
-    );
-    title = l.tourDrawContHost(
-      continentalCupLabel(l, playerConf).toUpperCase(),
-    );
-    watchedKind = continentalHostDrawKind;
-    year = CareerService.worldCupYear(career.cyclePointer) - 2;
-  }
+      if (arg.worldCup) {
+        year = CareerService.worldCupYear(career.cyclePointer);
+        bids = WorldCupHosts.worldCupBids(
+          year: year,
+          nations: all,
+          seed: career.rngSeed,
+        );
+        hosts = WorldCupHosts.hostsFor(
+          year: year,
+          nations: all,
+          seed: career.rngSeed,
+        );
+        title = l.tourDrawWcHost;
+        watchedKind = worldCupHostDrawKind;
+      } else {
+        final playerConf = nations[career.nationId]?.confederation;
+        if (playerConf == null) return null;
+        final cont = ContinentalCups.byConfederation[playerConf];
+        if (cont == null) return null;
+        // Continental finals can be co-hosted too.
+        bids = WorldCupHosts.continentalBids(
+          confederation: playerConf,
+          cycle: career.cyclePointer,
+          seed: career.rngSeed,
+          nations: all,
+        );
+        hosts = WorldCupHosts.continentalHostsFor(
+          confederation: playerConf,
+          cycle: career.cyclePointer,
+          seed: career.rngSeed,
+          nations: all,
+        );
+        title = l.tourDrawContHost(
+          continentalCupLabel(l, playerConf).capsIn(l.localeName),
+        );
+        watchedKind = continentalHostDrawKind;
+        year = CareerService.worldCupYear(career.cyclePointer) - 2;
+      }
 
   return HostDrawData(
     title: title,

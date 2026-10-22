@@ -509,9 +509,10 @@ abstract final class WorldCupFinals {
   }
 
   /// Plays out a level knockout: extra time (which may produce goals), then a
-  /// penalty shootout if still level. Deterministic from [rng]. The full detail
-  /// — the after-ET score and, if it went that far, the kick-by-kick shootout —
-  /// lets the match screen show the drama rather than just a nudged scoreline.
+  /// penalty shootout ([decideShootout]) if still level. Deterministic from
+  /// [rng]. The full detail — the after-ET score and, if it went that far, the
+  /// kick-by-kick shootout — lets the match screen show the drama rather than
+  /// just a nudged scoreline.
   static KnockoutOutcome decideKnockout(
     int home,
     int away,
@@ -548,12 +549,41 @@ abstract final class WorldCupFinals {
       );
     }
 
-    // Still level — a shootout. Each side's per-kick conversion is tilted by
-    // strength (the stronger side, and its keeper, edge it) and then by WHO is
-    // taking it: [homeTakerSkill]/[awayTakerSkill] are per-kick multipliers in
-    // the order the takers step up, cycled once sudden death runs past the
-    // named five. Empty lists leave the old strength-only shootout, so a
-    // background tie between two AI sides is unchanged.
+    // Still level: a shootout, on the same [rng] straight after the extra-time
+    // draws, so the outcome is exactly what it was before the split.
+    return decideShootout(
+      h,
+      a,
+      rng,
+      homeStrength: homeStrength,
+      awayStrength: awayStrength,
+      homeTakerSkill: homeTakerSkill,
+      awayTakerSkill: awayTakerSkill,
+    );
+  }
+
+  /// A penalty shootout from a level after-extra-time score [home]-[away]
+  /// (the live engine plays extra time itself, then hands the level totals
+  /// here; [decideKnockout] calls it after its own extra-time draw). The
+  /// returned score is the input score; the kicks decide the tie.
+  ///
+  /// Each side's per-kick conversion is tilted by strength (the stronger side,
+  /// and its keeper, edge it) and then by WHO is taking it:
+  /// [homeTakerSkill]/[awayTakerSkill] are per-kick multipliers in the order
+  /// the takers step up, cycled once sudden death runs past the named five.
+  /// Empty lists leave the strength-only shootout, so a background tie between
+  /// two AI sides is unchanged.
+  static KnockoutOutcome decideShootout(
+    int home,
+    int away,
+    SeededRng rng, {
+    double homeStrength = 1,
+    double awayStrength = 1,
+    List<double> homeTakerSkill = const [],
+    List<double> awayTakerSkill = const [],
+  }) {
+    final total = homeStrength + awayStrength;
+    final homeShare = total <= 0 ? 0.5 : homeStrength / total;
     final homeBase = (0.75 + 0.12 * (homeShare - 0.5) * 2).clamp(0.55, 0.9);
     final awayBase = (0.75 + 0.12 * (0.5 - homeShare) * 2).clamp(0.55, 0.9);
     double convOf(double base, List<double> skill, int kick) => skill.isEmpty
@@ -594,8 +624,8 @@ abstract final class WorldCupFinals {
     }
 
     return KnockoutOutcome(
-      homeScore: h,
-      awayScore: a,
+      homeScore: home,
+      awayScore: away,
       afterExtraTime: true,
       homeKicks: homeKicks,
       awayKicks: awayKicks,

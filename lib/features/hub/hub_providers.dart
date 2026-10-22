@@ -26,7 +26,9 @@ import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/federation/naturalization_rules.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
@@ -37,12 +39,15 @@ import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
+import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
@@ -56,6 +61,8 @@ import 'package:fnm/features/career/career_summary_providers.dart'
     show careerSummaryProvider;
 import 'package:fnm/features/career/manager_history_providers.dart'
     show managerHistoryProvider;
+import 'package:fnm/features/career/nation_offers_providers.dart'
+    show rolloverVerdictProvider;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -185,13 +192,10 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
   };
-  final squad = await ref
-      .watch(playerRepositoryProvider)
-      .byNation(
-        career.nationId,
-        agingYears: CareerService.agingYears(career),
-        saveSeed: career.rngSeed,
-      );
+  // The career's pool, players naturalised in included (a transplant must
+  // show in the rating); a career without a naturalisation reads the seeded
+  // pool as it is.
+  final squad = await careerPoolOf(ref, career, career.nationId);
   final squadRating = squad.isEmpty
       ? 0
       : (squad.fold<int>(0, (s, p) => s + p.overall) / squad.length).round();
@@ -292,6 +296,15 @@ String transferDestination(
     ? l.newsTransferAbroad(club, toCountryName)
     : club;
 
+/// One career's accepted naturalisations as the world simulation reads them:
+/// the `career` they were loaded for, every player who left his nation
+/// (`away`), and the links grouped by the nation each went to (`into`).
+typedef _Naturalized = ({
+  Career career,
+  Set<int> away,
+  Map<int, List<NaturalizationLink>> into,
+});
+
 /// What the manager has actually picked for his own nation: the squad he called
 /// up, the tactic he saved (shape, eleven, instructions) and how drilled — and
 /// how read — that shape is. See [SeasonService._ensureManagerSetup].
@@ -330,9 +343,22 @@ class SeasonService {
   CompetitionRepository get _comp => _ref.read(competitionRepositoryProvider);
   CareerRepository get _careers => _ref.read(careerRepositoryProvider);
 
-  /// Player pools cached per (nation, cycle) — cheap seed data aged to the
-  /// cycle currently being simulated.
-  final Map<(int, int), List<Player>> _poolCache = {};
+  /// Player pools cached per (career, nation, cycle, minAge) — cheap seed data
+  /// aged to the cycle currently being simulated, with the career's
+  /// naturalisations applied (see [_pool]).
+  final Map<(int, int, int, int), List<Player>> _poolCache = {};
+
+  /// The career currently being simulated (keys [_poolCache]); set beside
+  /// [_simSeed].
+  int _simCareer = 0;
+
+  /// The career's accepted naturalisations, loaded once per operation (see
+  /// [_ensureNaturalized]) and never per nation: [_pool] is read hundreds of
+  /// times a matchday.
+  _Naturalized? _naturalized;
+
+  /// The career [_naturalized] was loaded for (null: not yet this operation).
+  int? _naturalizedFor;
 
   /// The cyclePointer of the save currently being simulated (drives aging in
   /// [_pool]); set at the start of each top-level sim operation.
@@ -370,6 +396,10 @@ class SeasonService {
     Future<void> run() {
       _managerSetup = null;
       _managerSetupCareer = null;
+      // Likewise who has been naturalised: he may have accepted an offer
+      // between two operations.
+      _naturalized = null;
+      _naturalizedFor = null;
       return body();
     }
 
@@ -394,10 +424,90 @@ class SeasonService {
     for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
   };
 
-  Future<List<Player>> _pool(int nationId) async =>
-      _poolCache[(nationId, _simYears)] ??= await _ref
-          .read(playerRepositoryProvider)
-          .byNation(nationId, agingYears: _simYears, saveSeed: _simSeed);
+  /// [nationId]'s players as the world fields them: the seeded pool aged to
+  /// the cycle being simulated, minus everyone the career has naturalised away
+  /// from it, plus everyone naturalised into it — the background half of
+  /// `careerPoolOf`, so a naturalised man plays for one nation in every match
+  /// the world plays, not only in the manager's.
+  ///
+  /// A career with no naturalisation reads the seeded list exactly as before.
+  ///
+  /// [minAge] is the senior floor for every side the world fields; only the
+  /// manager's own squad asks for the call-up floor (see [_managerSquad]).
+  Future<List<Player>> _pool(
+    int nationId, {
+    int minAge = PlayerLifecycle.seniorMinAge,
+  }) async {
+    final naturalized = await _ensureNaturalized();
+    final key = (_simCareer, nationId, _simYears, minAge);
+    final cached = _poolCache[key];
+    if (cached != null) return cached;
+    final seeded = await _ref
+        .read(playerRepositoryProvider)
+        .byNation(
+          nationId,
+          agingYears: _simYears,
+          saveSeed: _simSeed,
+          careerId: _simCareer,
+          minAge: minAge,
+        );
+    final links = naturalized?.into[nationId] ?? const [];
+    final pool = naturalized == null || naturalized.away.isEmpty
+        ? seeded
+        : withNaturalizedIn(
+            dropNaturalizedAway(seeded, naturalized.away),
+            await resolveNaturalized(
+              _ref,
+              naturalized.career,
+              links,
+              nationId,
+              agingYears: _simYears,
+            ),
+          );
+    return _poolCache[key] = pool;
+  }
+
+  /// Loads (once per operation) the naturalisations of the career being
+  /// simulated: who left which nation, and who went where.
+  ///
+  /// The pool cache outlives an operation, so a set that differs from the one
+  /// the cached pools were built with drops them — a player accepted since the
+  /// last advance must not keep turning out for his old nation from the cache.
+  /// A career that has none never changes set, so its cache is never dropped.
+  Future<_Naturalized?> _ensureNaturalized() async {
+    if (_naturalizedFor == _simCareer) return _naturalized;
+    _naturalizedFor = _simCareer;
+    final career = await _careers.byId(_simCareer);
+    if (career == null) return _naturalized = null;
+    final links = await _careers.acceptedNaturalizations(career.id);
+    final stints = links.isEmpty
+        ? const <int, int>{}
+        : await _careers.stints(career.id);
+    final into = <int, List<NaturalizationLink>>{};
+    for (final link in links) {
+      (into[Stints.nationAt(stints, link.cycle, career.nationId)] ??= []).add(
+        link,
+      );
+    }
+    final next = (
+      career: career,
+      away: {for (final l in links) l.playerId},
+      into: into,
+    );
+    final signature = [
+      for (final e in into.entries)
+        for (final l in e.value) '${e.key}:${l.playerId}',
+    ].join(',');
+    if (signature != _naturalizedSignature[_simCareer]) {
+      _poolCache.removeWhere((k, _) => k.$1 == _simCareer);
+      _naturalizedSignature[_simCareer] = signature;
+    }
+    return _naturalized = next;
+  }
+
+  /// What each career's cached pools were built with (see
+  /// [_ensureNaturalized]).
+  final Map<int, String> _naturalizedSignature = {};
 
   /// Live world-ranking points for the save currently being simulated, held in
   /// memory across a whole operation and flushed once at the end (a result adds
@@ -1275,13 +1385,14 @@ class SeasonService {
   /// his call-ups, minus anyone the absences rule out. Empty when he is not the
   /// manager of [nationId], and empty when nothing he named can play — both
   /// leave the caller on the ordinary best-available path.
-  Future<List<Player>> _managerSquad(
-    int careerId,
-    int nationId,
-    List<Player> pool,
-  ) async {
+  ///
+  /// His pool reads down to the call-up floor, as the match screen's does: a
+  /// U-17 he named plays in a match he skipped. [availableSquad] keeps the boys
+  /// he did not name out.
+  Future<List<Player>> _managerSquad(int careerId, int nationId) async {
     final setup = await _ensureManagerSetup(careerId);
     if (setup == null || setup.nationId != nationId) return const [];
+    final pool = await _pool(nationId, minAge: PlayerLifecycle.callUpMinAge);
     return selectable(
       availableSquad(pool, setup.callUps),
       await _ensureAbsences(careerId),
@@ -1301,12 +1412,8 @@ class SeasonService {
   /// (throw the whole XI away the moment one name is stale) is how the live
   /// match screen does it, and it would hand a skipped match back to the
   /// automatic selection for the sake of one hamstring.
-  Future<List<Player>?> _managerXi(
-    int careerId,
-    int nationId,
-    List<Player> pool,
-  ) async {
-    final squad = await _managerSquad(careerId, nationId, pool);
+  Future<List<Player>?> _managerXi(int careerId, int nationId) async {
+    final squad = await _managerSquad(careerId, nationId);
     if (squad.isEmpty) return null;
     final setup = _managerSetup!;
     final shape = setup.tactic?.formation ?? Formation.f433;
@@ -1354,7 +1461,7 @@ class SeasonService {
   Future<List<Player>> _fieldedXi(int careerId, int nationId) async {
     final pool = await _pool(nationId);
     if (pool.isEmpty) return const [];
-    final mine = await _managerXi(careerId, nationId, pool);
+    final mine = await _managerXi(careerId, nationId);
     if (mine != null) return mine;
     // A suspended or injured player does not play — for ANY nation, not just
     // the manager's. This is what makes the world's cards and knocks mean
@@ -1392,7 +1499,7 @@ class SeasonService {
     // The manager's bench is drawn from the squad HE named, like his XI — a
     // man he left at home does not come on in the 60th minute of a match he
     // skipped. Every other nation benches its best available.
-    final mine = await _managerSquad(careerId, nationId, pool);
+    final mine = await _managerSquad(careerId, nationId);
     final fit = mine.isEmpty ? selectable(pool, absences) : mine;
     final available =
         [
@@ -1547,6 +1654,7 @@ class SeasonService {
     while (true) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
+      _simCareer = career.id;
       _simSeed = career.rngSeed;
       _simYears = CareerService.agingYears(career);
 
@@ -1794,6 +1902,7 @@ class SeasonService {
     for (var i = 0; i < 300; i++) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
+      _simCareer = career.id;
       _simSeed = career.rngSeed;
       _simYears = CareerService.agingYears(career);
       if (await _comp.worldChampion(careerId) != null) break;
@@ -1861,6 +1970,7 @@ class SeasonService {
   }) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
+    _simCareer = career.id;
     _simSeed = career.rngSeed;
     _simYears = CareerService.agingYears(career);
     await _ensureRank(careerId);
@@ -1881,38 +1991,60 @@ class SeasonService {
     int? homePens;
     int? awayPens;
     if (_isKnockout(fixture) && hs == as) {
+      final et = result.extraTime;
+      // A live knockout carries the extra time the engine played (its goals
+      // already sit in [MatchResult.events] with real scorers and minutes), so
+      // the stored score is the one the manager watched. Without it (an older
+      // caller handing a regulation-only result) the tie is decided here and
+      // its extra-time goals are attributed after the fact.
       final ko =
           knockout ??
-          WorldCupFinals.decideKnockout(
-            hs,
-            as,
-            SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x7F),
-          );
+          (et == null
+              ? WorldCupFinals.decideKnockout(
+                  hs,
+                  as,
+                  SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x7F),
+                )
+              : et.homeScore == et.awayScore
+              ? WorldCupFinals.decideShootout(
+                  et.homeScore,
+                  et.awayScore,
+                  SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x7F),
+                )
+              : KnockoutOutcome(
+                  homeScore: et.homeScore,
+                  awayScore: et.awayScore,
+                  afterExtraTime: true,
+                  homeKicks: const [],
+                  awayKicks: const [],
+                ));
       aet = true;
-      // Attribute the extra-time goals (91'–120') so they reach the scorer
-      // charts too, matching the live screen. They go to the eleven that was
-      // ACTUALLY on the pitch — the manager's own selection, subs included —
-      // and not to the best XI the game would have picked for him.
-      await _attributeGoals(
-        fixture,
-        fixture.homeNationId,
-        ko.homeScore - hs,
-        career.rngSeed,
-        0x7E01,
-        xi: await _playedXi(result, fixture.homeNationId),
-        minuteFrom: 91,
-        minuteSpan: 30,
-      );
-      await _attributeGoals(
-        fixture,
-        fixture.awayNationId,
-        ko.awayScore - as,
-        career.rngSeed,
-        0x7E02,
-        xi: await _playedXi(result, fixture.awayNationId),
-        minuteFrom: 91,
-        minuteSpan: 30,
-      );
+      if (et == null) {
+        // Attribute the extra-time goals (91'–120') so they reach the scorer
+        // charts too, matching the live screen. They go to the eleven that was
+        // ACTUALLY on the pitch — the manager's own selection, subs included —
+        // and not to the best XI the game would have picked for him.
+        await _attributeGoals(
+          fixture,
+          fixture.homeNationId,
+          ko.homeScore - hs,
+          career.rngSeed,
+          0x7E01,
+          xi: await _playedXi(result, fixture.homeNationId),
+          minuteFrom: 91,
+          minuteSpan: 30,
+        );
+        await _attributeGoals(
+          fixture,
+          fixture.awayNationId,
+          ko.awayScore - as,
+          career.rngSeed,
+          0x7E02,
+          xi: await _playedXi(result, fixture.awayNationId),
+          minuteFrom: 91,
+          minuteSpan: 30,
+        );
+      }
       if (ko.wentToShootout) {
         homePens = ko.homePens;
         awayPens = ko.awayPens;
@@ -2314,14 +2446,28 @@ class SeasonService {
   /// refuse to roll it. The rollover screen asks this to put the paywall where
   /// the roll would have been.
   ///
-  /// Fails open: a career it cannot read is not blocked.
+  /// Fails open: a career it cannot read is not blocked. Nor is an unmoved
+  /// campaign run: it rolls only within its own cycles (see
+  /// [_unmovedCampaign]), so the free cycle's wall is not its to meet; a
+  /// campaign longer than one cycle needs Pro to be started at all.
   Future<bool> trialBlocksNextCycle(int careerId) async {
     final career = await _careers.byId(careerId);
     if (career == null) return false;
+    if (await _unmovedCampaign(careerId) != null) return false;
     return trialExhausted(
       cyclePointer: career.cyclePointer,
       premiumUnlocked: _ref.read(premiumUnlockedProvider),
     );
+  }
+
+  /// The campaign of [careerId] when it is a run still outside the saves,
+  /// else null. Its cycles are the whole of it: it rolls from one into the
+  /// next while it has another (see [campaignMayRoll]), ends in the campaigns
+  /// list after its last, and only once moved into the saves does it roll on
+  /// past that, under the ordinary free/Pro rules.
+  Future<CampaignTag?> _unmovedCampaign(int careerId) async {
+    final tag = (await campaignTags(_comp))[careerId];
+    return tag != null && !tag.moved ? tag : null;
   }
 
   /// Queued, never dropped — the rollover would be lost. See [_exclusive].

@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/federation_label.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
@@ -164,7 +165,7 @@ class _Split extends StatelessWidget {
       ),
       const SizedBox(width: AppSpacing.sm),
       Text(
-        label.toUpperCase(),
+        label.capsIn(Localizations.localeOf(context).languageCode),
         style: AppTypography.labelSmall.copyWith(
           color: AppColors.onSurfaceVariant,
         ),
@@ -273,10 +274,12 @@ class _IncomeRows extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          Text(
-            label.toUpperCase(),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+          Builder(
+            builder: (context) => Text(
+              label.capsIn(Localizations.localeOf(context).languageCode),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           ),
           const Spacer(),

@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
@@ -67,15 +68,17 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
                 r.player.club.toLowerCase().contains(q))
               r,
     ];
-    rows.sort(
-      (a, b) => switch (_sort) {
+    rows.sort((a, b) {
+      final primary = switch (_sort) {
         _SquadSort.rating => b.player.overall.compareTo(a.player.overall),
         _SquadSort.caps => b.caps.compareTo(a.caps),
         _SquadSort.goals => b.goals.compareTo(a.goals),
         _SquadSort.age => a.player.age.compareTo(b.player.age),
         _SquadSort.name => a.player.name.compareTo(b.player.name),
-      },
-    );
+      };
+      // Id breaks a tie, so equal rows never swap (Dart's sort is unstable).
+      return primary != 0 ? primary : a.player.id.compareTo(b.player.id);
+    });
     return rows;
   }
 
@@ -323,7 +326,7 @@ class _Landmark extends StatelessWidget {
         Icon(icon, size: 15, color: AppColors.onSurfaceVariant),
         const SizedBox(width: AppSpacing.sm),
         Text(
-          label.toUpperCase(),
+          label.capsIn(Localizations.localeOf(context).languageCode),
           style: AppTypography.labelSmall.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
@@ -358,7 +361,7 @@ class _Stat extends StatelessWidget {
           child: Text(value, style: AppTypography.headlineMedium),
         ),
         Text(
-          label.toUpperCase(),
+          label.capsIn(Localizations.localeOf(context).languageCode),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: AppTypography.labelSmall.copyWith(
@@ -398,7 +401,7 @@ class _Chip extends StatelessWidget {
           ),
         ),
         child: Text(
-          label.toUpperCase(),
+          label.capsIn(Localizations.localeOf(context).languageCode),
           style: AppTypography.labelSmall.copyWith(
             color: on ? AppColors.onPrimary : AppColors.onSurfaceVariant,
             fontWeight: on ? FontWeight.w800 : FontWeight.w600,
@@ -466,7 +469,7 @@ class _SortButton extends StatelessWidget {
           ),
           const SizedBox(width: 3),
           Text(
-            label.toUpperCase(),
+            label.capsIn(Localizations.localeOf(context).languageCode),
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurface,
               fontWeight: FontWeight.w700,
@@ -650,7 +653,7 @@ class _Tally extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          label.toUpperCase(),
+          label.capsIn(Localizations.localeOf(context).languageCode),
           style: AppTypography.labelSmall.copyWith(
             color: AppColors.onSurfaceVariant,
             fontSize: 9,

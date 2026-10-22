@@ -113,7 +113,7 @@ class _NationSelectTabletLayoutState
                                   _ShownCount(count: shown.length),
                                   const Spacer(),
                                   Text(
-                                    l.nationsSortedByRank.toUpperCase(),
+                                    l.nationsSortedByRank.capsIn(l.localeName),
                                     style: TabletText.sectionLabel,
                                   ),
                                 ],
@@ -381,7 +381,7 @@ class _ConfederationChips extends StatelessWidget {
           for (final c in Confederation.values)
             _ConfederationChip(
               key: NationSelectScreen.chipKey(c),
-              label: confederationLabel(l, c).toUpperCase(),
+              label: confederationLabel(l, c).capsIn(l.localeName),
               count: counts[c]!,
               active: c == selected,
               onTap: () => onSelect(c),
@@ -653,9 +653,9 @@ class _ShownCount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final full = AppLocalizations.of(
-      context,
-    ).nationsShownCount(count).toUpperCase();
+    final full = AppLocalizations.of(context)
+        .nationsShownCount(count)
+        .capsIn(Localizations.localeOf(context).languageCode);
     final digits = '$count';
     final at = full.indexOf(digits);
     return Text.rich(

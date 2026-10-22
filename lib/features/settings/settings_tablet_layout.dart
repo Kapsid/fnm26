@@ -50,6 +50,8 @@ class _SettingsTabletLayout extends StatelessWidget {
                           SizedBox(height: AppSpacing.md),
                           _ContactCard(),
                           SizedBox(height: AppSpacing.md),
+                          CommunityCard(),
+                          SizedBox(height: AppSpacing.md),
                           _BackupCard(),
                         ],
                       ),

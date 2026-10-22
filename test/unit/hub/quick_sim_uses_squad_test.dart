@@ -75,7 +75,11 @@ void main() {
     final pool =
         (await c
             .read(playerRepositoryProvider)
-            .byNation(career.nationId, saveSeed: career.rngSeed))
+            .byNation(
+              career.nationId,
+              saveSeed: career.rngSeed,
+              careerId: career.id,
+            ))
           ..sort((a, b) {
             final byOverall = b.overall.compareTo(a.overall);
             return byOverall != 0 ? byOverall : a.id.compareTo(b.id);

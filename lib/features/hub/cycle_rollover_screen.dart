@@ -7,6 +7,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -15,6 +16,7 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/career/cycle_backup.dart';
+import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
@@ -91,6 +93,27 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   /// Moves to [step]; the tablet's buttons call it (the phone's set the
   /// field inline).
   void _goTo(int step) => setState(() => _step = step);
+
+  /// The wall, for either layout: a free save that has finished its one
+  /// cycle cannot roll, so the button that would have rolled it opens the
+  /// paywall instead. Not an unmoved campaign run: it rolls within its own
+  /// cycles whatever the trial says, exactly as `startNextCycle` lets it.
+  bool _walled(WidgetRef ref, _RolloverView? view) {
+    final campaign = ref.watch(campaignOfProvider(widget.careerId)).valueOrNull;
+    if (campaign != null && !campaign.moved) return false;
+    return trialExhausted(
+      cyclePointer: view?.cyclePointer ?? 0,
+      premiumUnlocked: ref.watch(premiumUnlockedProvider),
+    );
+  }
+
+  /// The offers put on the table, for either layout. None for an unmoved
+  /// campaign run: it rolls with its own nation (the rollover ignores an
+  /// offer taken). Called from a build with that build's [ref].
+  List<NationOffer> _offersOf(WidgetRef ref, RolloverVerdict v) {
+    final campaign = ref.watch(campaignOfProvider(widget.careerId)).valueOrNull;
+    return campaign != null && !campaign.moved ? const [] : v.offers;
+  }
 
   /// Picks the job (null: stay); the tablet's tiles call it.
   void _pick(int? nationId) => setState(() => _selected = nationId);
@@ -319,6 +342,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
           }
           final canStay = !v.sacked;
           final ready = _selected != null || canStay;
+          final offers = _offersOf(ref, v);
           return Column(
             children: [
               Expanded(
@@ -348,14 +372,16 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                       ),
                       const SizedBox(height: AppSpacing.md),
                     ],
-                    Text(
-                      v.sacked ? l.hubChooseNextJob : l.hubOffersOnTable,
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.primary,
+                    if (offers.isNotEmpty) ...[
+                      Text(
+                        v.sacked ? l.hubChooseNextJob : l.hubOffersOnTable,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    for (final o in v.offers)
+                      const SizedBox(height: AppSpacing.xs),
+                    ],
+                    for (final o in offers)
                       _OfferTile(
                         nation: o.nation,
                         subtitle: l.hubOfferSubtitle(
@@ -399,12 +425,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
     final verdict = ref
         .watch(rolloverVerdictProvider(widget.careerId))
         .valueOrNull;
-    // The wall: a free save that has finished its one cycle cannot roll, so
-    // the button that would have rolled it opens the paywall instead.
-    final blocked = trialExhausted(
-      cyclePointer: view?.cyclePointer ?? 0,
-      premiumUnlocked: ref.watch(premiumUnlockedProvider),
-    );
+    final blocked = _walled(ref, view);
     return SafeArea(
       child: incomeAsync.when(
         loading: _waiting,
@@ -501,7 +522,7 @@ class _ObjectivesSummary extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l.boardObjectivesTitle.toUpperCase(),
+              l.boardObjectivesTitle.capsIn(l.localeName),
               style: AppTypography.labelSmall.copyWith(
                 color: AppColors.onSurfaceVariant,
               ),
@@ -609,10 +630,12 @@ class _IncomeCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          Text(
-            label.toUpperCase(),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
+          Builder(
+            builder: (context) => Text(
+              label.capsIn(Localizations.localeOf(context).languageCode),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
           ),
           const Spacer(),
@@ -831,10 +854,12 @@ class _SummaryCard extends StatelessWidget {
         children: [
           SizedBox(
             width: 92,
-            child: Text(
-              label.toUpperCase(),
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.onSurfaceVariant,
+            child: Builder(
+              builder: (context) => Text(
+                label.capsIn(Localizations.localeOf(context).languageCode),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
               ),
             ),
           ),

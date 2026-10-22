@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -159,7 +160,12 @@ class RoundResultsScreen extends ConsumerWidget {
                     child: Column(
                       children: [
                         for (final f in friendlies)
-                          _FriendlyRow(result: f, code: code, name: name),
+                          _FriendlyRow(
+                            result: f,
+                            code: code,
+                            name: name,
+                            careerId: careerId,
+                          ),
                       ],
                     ),
                   ),
@@ -178,14 +184,14 @@ class RoundResultsScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(AppSpacing.marginMobile),
             children: [
               Text(
-                competitionLabel(l, results.competition).toUpperCase(),
+                competitionLabel(l, results.competition).capsIn(l.localeName),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.primary,
                 ),
               ),
               Text(
                 isKnockout
-                    ? (results.stage ?? l.resultsKnockout).toUpperCase()
+                    ? (results.stage ?? l.resultsKnockout).capsIn(l.localeName)
                     : l.resultsMatchday(results.matchday),
                 style: AppTypography.headlineMedium,
               ),
@@ -200,6 +206,7 @@ class RoundResultsScreen extends ConsumerWidget {
                           fixture: f,
                           code: code,
                           emphasiseNationId: view.playerNationId,
+                          careerId: careerId,
                         ),
                     ],
                   ),
@@ -216,6 +223,7 @@ class RoundResultsScreen extends ConsumerWidget {
                         : view.relegateCount,
                     code: code,
                     name: name,
+                    careerId: careerId,
                   ),
               const SizedBox(height: AppSpacing.xl),
             ],
@@ -246,8 +254,10 @@ class _GroupBlock extends StatelessWidget {
     required this.relegateCount,
     required this.code,
     required this.name,
+    required this.careerId,
   });
 
+  final int careerId;
   final RoundResultGroup group;
   final int playerNationId;
   final int directCount;
@@ -281,6 +291,7 @@ class _GroupBlock extends StatelessWidget {
                 fixture: f,
                 code: code,
                 emphasiseNationId: playerNationId,
+                careerId: careerId,
               ),
             const Divider(height: AppSpacing.md),
             // Standings snapshot (top spots advance).
@@ -296,6 +307,7 @@ class _GroupBlock extends StatelessWidget {
                     i + 1 > group.standings.length - relegateCount,
                 name: name,
                 code: code,
+                careerId: careerId,
               ),
           ],
         ),
@@ -311,8 +323,10 @@ class _FriendlyRow extends StatelessWidget {
     required this.result,
     required this.code,
     required this.name,
+    required this.careerId,
   });
 
+  final int careerId;
   final FriendlyResult result;
   final String Function(int) code;
   final String Function(int) name;
@@ -324,21 +338,28 @@ class _FriendlyRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: Text(
-                    name(result.homeId),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                    style: AppTypography.bodySmall,
-                  ),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: NationTap(
+                careerId: careerId,
+                nationId: result.homeId,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        name(result.homeId),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
+                        style: AppTypography.bodySmall,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    FlagDisc(code(result.homeId), size: 18),
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                FlagDisc(code(result.homeId), size: 18),
-              ],
+              ),
             ),
           ),
           Container(
@@ -354,19 +375,27 @@ class _FriendlyRow extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Row(
-              children: [
-                FlagDisc(code(result.awayId), size: 18),
-                const SizedBox(width: AppSpacing.sm),
-                Flexible(
-                  child: Text(
-                    name(result.awayId),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.bodySmall,
-                  ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: NationTap(
+                careerId: careerId,
+                nationId: result.awayId,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FlagDisc(code(result.awayId), size: 18),
+                    const SizedBox(width: AppSpacing.sm),
+                    Flexible(
+                      child: Text(
+                        name(result.awayId),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.bodySmall,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -385,8 +414,10 @@ class _StandingRow extends StatelessWidget {
     required this.relegated,
     required this.name,
     required this.code,
+    required this.careerId,
   });
 
+  final int careerId;
   final int pos;
   final GroupStanding standing;
   final bool isPlayer;
@@ -431,15 +462,27 @@ class _StandingRow extends StatelessWidget {
               ),
             ),
           ),
-          FlagDisc(code(standing.nationId), size: 18),
-          const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text(
-              name(standing.nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                fontWeight: isPlayer ? FontWeight.w700 : FontWeight.w400,
+            child: NationTap(
+              careerId: careerId,
+              nationId: standing.nationId,
+              child: Row(
+                children: [
+                  FlagDisc(code(standing.nationId), size: 18),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      name(standing.nationId),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.bodySmall.copyWith(
+                        fontWeight: isPlayer
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

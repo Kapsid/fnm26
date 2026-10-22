@@ -110,7 +110,7 @@ class _CallUpTabletLayout extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.sm),
       child: Wrap(
         children: [
-          chip(l.squadLineAll.toUpperCase(), null),
+          chip(l.squadLineAll.capsIn(l.localeName), null),
           for (final c in _CallUpScreenState._order)
             chip(
               '${state._shortHeading(l, c)} '
@@ -148,14 +148,14 @@ class _CallUpTabletLayout extends StatelessWidget {
           ),
           GridColumn<Player>(
             id: 'pos',
-            label: l.squadDevPosition.toUpperCase(),
+            label: l.squadDevPosition.capsIn(l.localeName),
             width: 48,
             sortKey: (p) => p.position.index,
             cell: (p) => TacticalChip(p.position.label),
           ),
           GridColumn<Player>(
             id: 'name',
-            label: l.squadSortName.toUpperCase(),
+            label: l.squadSortName.capsIn(l.localeName),
             flex: 3,
             sortKey: (p) => p.name,
             cell: (p) => Row(
@@ -180,7 +180,7 @@ class _CallUpTabletLayout extends StatelessWidget {
           ),
           GridColumn<Player>(
             id: 'age',
-            label: l.playerAge.toUpperCase(),
+            label: l.playerAge.capsIn(l.localeName),
             width: 44,
             numeric: true,
             sortKey: (p) => p.age,
@@ -188,7 +188,7 @@ class _CallUpTabletLayout extends StatelessWidget {
           ),
           GridColumn<Player>(
             id: 'ovr',
-            label: l.teamOverall.toUpperCase(),
+            label: l.teamOverall.capsIn(l.localeName),
             width: 64,
             numeric: true,
             sortKey: (p) => p.overall,
@@ -199,7 +199,7 @@ class _CallUpTabletLayout extends StatelessWidget {
           ),
           GridColumn<Player>(
             id: 'form',
-            label: l.playerStatForm.toUpperCase(),
+            label: l.playerStatForm.capsIn(l.localeName),
             width: 48,
             numeric: true,
             sortKey: (p) => condition[p.id]?.formRating ?? 0,
@@ -298,7 +298,7 @@ class _CallUpTabletLayout extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 10, 12, 2),
                       child: Text(
-                        state._shortHeading(l, c).toUpperCase(),
+                        state._shortHeading(l, c).capsIn(l.localeName),
                         style: TabletText.sectionLabel,
                       ),
                     ),

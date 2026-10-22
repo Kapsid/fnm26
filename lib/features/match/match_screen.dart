@@ -11,15 +11,18 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
+import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
@@ -32,6 +35,7 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
+import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart'
     show energyColor, TacticsPitch;
 import 'package:fnm/l10n/app_localizations.dart';
@@ -45,6 +49,21 @@ part 'match_tablet_layout.dart';
 
 /// The maximum substitutions a manager may make in a match.
 const int kMaxSubs = 5;
+
+/// The substitutions allowed once a level knockout reaches extra time: one
+/// more than [kMaxSubs], as the laws allow, for the extra thirty minutes.
+const int kMaxSubsExtraTime = 6;
+
+/// The substitutions the manager may make: the whole bench in a [friendly],
+/// else [kMaxSubs], or [kMaxSubsExtraTime] once [extraTime] is being played.
+int maxSubsAllowed({
+  required bool friendly,
+  required int benchSize,
+  required bool extraTime,
+}) {
+  if (friendly) return benchSize;
+  return extraTime ? kMaxSubsExtraTime : kMaxSubs;
+}
 
 /// The localised button label for a team-talk [tone]. The engine owns the tone's
 /// gameplay effect; its display text lives here so it can be translated.
@@ -193,7 +212,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   bool _atExtraTimeHalf = false;
   bool _extraTimeHalfTaken = false;
 
-  /// The talk given before extra time — it tilts the extra period itself.
+  /// The talk given before extra time. It is a [TeamTalk] at 91' in [_talks],
+  /// so the engine plays the extra period with it; held here to show it as
+  /// chosen on the huddle card.
   TeamTalkTone? _extraTimeTalk;
 
   /// Whether the clock is stopped at any interval — half time or either
@@ -201,15 +222,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// flash clearing, an injury sub being made) has to respect all three.
   bool get _atInterval => _atHalfTime || _atExtraTimeStart || _atExtraTimeHalf;
 
-  /// The talk given at the extra-time turnaround. Extra time is already drawn
-  /// by then (its goals have been shown), so this one steadies the takers
-  /// instead: it moves the shootout, not the score.
+  /// The talk given at the extra-time turnaround. It is a [TeamTalk] at 106'
+  /// for the second period, and it also steadies the takers: it moves the
+  /// shootout as well as the last fifteen minutes.
   TeamTalkTone? _extraTimeHalfTalk;
 
   // --- Live extra time / penalties -----------------------------------------
-  // A level knockout plays on: the clock runs to 120 (extra time) and, if still
-  // level, a shootout is revealed kick by kick — rather than the result just
-  // popping up at 90'.
+  // A level knockout plays on: the engine plays minutes 91-120 (its extra-time
+  // events are revealed by the clock like any other), and, if still level, a
+  // shootout is revealed kick by kick, rather than the result just popping up
+  // at 90'.
 
   /// The minute the clock runs to: 90 normally, 120 for a level knockout.
   int _fullTimeMinute = 90;
@@ -223,19 +245,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// meaningful while the clock sits at 90.
   int _added = 0;
 
-  /// The precomputed extra-time / shootout outcome for a level knockout.
+  /// The extra-time / shootout outcome for a level knockout.
   KnockoutOutcome? _koOutcome;
-
-  /// Guards the one-time knockout setup.
-  bool _koSetup = false;
-
-  /// Synthesised extra-time goals (minute, scoring nation) so the score builds
-  /// across 91–120 rather than jumping.
-  List<(int, int)> _etGoals = const [];
-
-  /// The same extra-time goals as timeline events (with a plausible scorer) so
-  /// they show in the TIMELINE, not only on the scoreboard.
-  List<MatchEvent> _etEvents = const [];
 
   /// How many shootout kicks have been revealed so far.
   int _penRevealed = 0;
@@ -302,74 +313,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     super.dispose();
   }
 
-  /// Prepares the extra-time / shootout sequence for a level knockout. The 90'
-  /// result can still change with live tactics, so this recomputes each build
-  /// through regulation and LOCKS once the clock reaches 90' (from then on the
-  /// ET/shootout is fixed and plays out).
+  /// Prepares the extra-time / shootout sequence for a level knockout, from
+  /// the current result. Recomputed on every build: the ninety can still
+  /// change with live tactics, and from the huddle on so can extra time,
+  /// because the engine plays it. What has already been shown never moves (a
+  /// change lands on the minute after the clock), so nothing has to be locked.
   void _ensureKnockoutSetup(MatchPreview preview, MatchResult r) {
-    if (_minute >= 90 && _koSetup) return; // locked once ET/shootout begins
-    _koSetup = true;
-    final level =
-        _isKnockoutFixture(preview.fixture) && r.homeScore == r.awayScore;
-    if (!level) {
-      _fullTimeMinute = 90;
-      _koOutcome = null;
-      _etGoals = const [];
-      _etEvents = const [];
-      return;
-    }
     final o = _knockoutOutcome(preview, r);
-    if (o == null) {
-      _fullTimeMinute = 90;
-      _koOutcome = null;
-      _etGoals = const [];
-      _etEvents = const [];
-      return;
-    }
     _koOutcome = o;
-    _fullTimeMinute = 120;
-    final etHome = o.homeScore - r.homeScore;
-    final etAway = o.awayScore - r.awayScore;
-    const homeMins = [96, 105, 113, 119];
-    const awayMins = [100, 108, 116, 120];
-    _etGoals = <(int, int)>[
-      for (var i = 0; i < etHome && i < homeMins.length; i++)
-        (homeMins[i], preview.homeTeam.nationId),
-      for (var i = 0; i < etAway && i < awayMins.length; i++)
-        (awayMins[i], preview.awayTeam.nationId),
-    ]..sort((a, b) => a.$1.compareTo(b.$1));
-
-    // Attribute each ET goal to a plausible scorer (the side's sharpest
-    // finishers, rotating) so it appears in the timeline like any other goal.
-    List<Player> finishers(List<Player> xi) => [
-      for (final p in xi)
-        if (p.position.category != PositionCategory.goalkeeper) p,
-    ]..sort((a, b) => b.attributes.technical.compareTo(a.attributes.technical));
-    final homeFin = finishers(
-      preview.playerIsHome ? _currentXi(preview) : preview.homeTeam.xi,
-    );
-    final awayFin = finishers(
-      preview.playerIsHome ? preview.awayTeam.xi : _currentXi(preview),
-    );
-    var hi = 0;
-    var ai = 0;
-    _etEvents = [
-      for (final g in _etGoals)
-        () {
-          final home = g.$2 == preview.homeTeam.nationId;
-          final pool = home ? homeFin : awayFin;
-          final scorer = pool.isEmpty
-              ? null
-              : pool[(home ? hi++ : ai++) % pool.length];
-          return MatchEvent(
-            minute: g.$1,
-            type: MatchEventType.goal,
-            teamNationId: g.$2,
-            playerId: scorer?.id ?? 0,
-            playerName: scorer?.name ?? '',
-          );
-        }(),
-    ];
+    _fullTimeMinute = o == null ? 90 : 120;
   }
 
   /// Names the five takers before the shootout, then reveals it. Dismissing
@@ -496,12 +448,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// clock until it clears; returns whether one was shown so the tick loop
   /// hands the resume to the flash timer.
   bool _flashGoalAt(int minute, int stoppage) {
-    // Include the synthesised extra-time goals so an ET goal flashes "GOAL!" and
-    // pauses the clock just like a regulation one — otherwise ET ticks by
-    // silently and looks like nothing is happening. Stoppage goals (90+X) match
-    // on the added-time index too, so they flash on their exact "90+X" tick.
-    final events = [...?_result?.events, ..._etEvents];
-    for (final e in events) {
+    // Extra-time goals are engine events with their real minutes, so they
+    // flash and pause the clock like any other. Stoppage goals (90+X) match on
+    // the added-time index too, so they flash on their exact "90+X" tick.
+    for (final e in _result?.events ?? const <MatchEvent>[]) {
       if (e.type == MatchEventType.goal &&
           e.minute == minute &&
           e.stoppage == stoppage) {
@@ -530,17 +480,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// replaced, and must not appear among the substitutes. Derived from the
   /// event list rather than accumulated, so it stays correct across the
   /// re-simulations a tactical change triggers.
-  Set<int> _sentOffIds() {
+  Set<int> _sentOffIds() => {
+    for (final e in _cardsNow().entries)
+      if (e.value.sentOff) e.key,
+  };
+
+  /// The card each of the manager's own players is carrying right now.
+  ///
+  /// The one source the pitch, the substitution lists and [_sentOffIds] all
+  /// read, so a booked man wears his card everywhere a substitution is made
+  /// from, not only on the formation, and a second booking turns his yellow
+  /// into the red that took him off in all of them at once.
+  Map<int, MatchCard> _cardsNow() {
     final events = _result?.events;
     final nation = _playerNationId;
     if (events == null || nation == null) return const {};
-    return {
-      for (final e in events)
-        if (e.type == MatchEventType.redCard &&
-            e.teamNationId == nation &&
-            e.minute <= _minute)
-          e.playerId,
-    };
+    return cardStatusFor(events, nationId: nation, upToMinute: _minute);
   }
 
   /// Pauses playback and raises the injury overlay if one of the manager's own
@@ -645,20 +600,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _restartTimer();
   }
 
-  /// How much the pre-extra-time talk tilts the extra period, as the strength
-  /// pair `decideKnockout` weights its half-chances by.
-  ///
-  /// A talk here is worth a real edge but not the tie: at its strongest it
-  /// moves a level pair to roughly 57/43, which decides some of them and none
-  /// of them on its own.
-  (double, double) _extraTimeStrengths(MatchPreview preview) {
-    final tone = _extraTimeTalk;
-    if (tone == null) return (1, 1);
-    final (atk, def) = tone.effect;
-    final edge = 1 + ((atk + def) / 2) * 0.06;
-    return preview.playerIsHome ? (edge, 1.0) : (1.0, edge);
-  }
-
   /// How much the extra-time turnaround talk steadies the manager's takers, as
   /// a multiplier on their per-kick conversion.
   double _shootoutComposure() {
@@ -676,23 +617,28 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     TeamTalkTone tone, {
     required bool atStart,
   }) {
+    // A talk for the period about to start: 91' at the huddle, 106' at the
+    // turnaround. The engine plays it from that minute, so the extra time
+    // already watched cannot move; the turnaround talk also steadies the
+    // takers ([_shootoutComposure]), read when the kicks are drawn.
+    final minute = atStart ? 91 : 106;
     setState(() {
       if (atStart) {
         _extraTimeTalk = tone;
-        // Extra time has not been played yet, so it can be redrawn wholesale
-        // with the new edge applied. Unlocking the one-time setup is what lets
-        // the recomputed goals reach the clock and the timeline.
-        _koSetup = false;
-        final r = _result ?? preview.result;
-        _ensureKnockoutSetup(preview, r);
       } else {
         _extraTimeHalfTalk = tone;
-        // Only the shootout is still open — `decideKnockout` draws extra time
-        // from the stream BEFORE the kicks, so the score the manager has just
-        // watched cannot move under them.
-        final r = _result ?? preview.result;
-        _koOutcome = _knockoutOutcome(preview, r);
       }
+      _talks
+        ..removeWhere((t) => t.minute == minute)
+        ..add(
+          TeamTalk(
+            teamNationId: preview.playerNationId,
+            minute: minute,
+            tone: tone,
+          ),
+        );
+      _result = _resim(preview);
+      _ensureKnockoutSetup(preview, _result!);
     });
   }
 
@@ -701,16 +647,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   bool _isKnockoutFixture(Fixture f) => Rounds.isKnockout(f.round);
 
   /// The extra-time-and-shootout outcome of a level knockout, or null when the
-  /// tie was decided in 90 minutes (or isn't a knockout). Built from the same
-  /// seed the season service uses, so the drama shown here and the stored
+  /// tie was decided in 90 minutes (or isn't a knockout). Extra time is the
+  /// engine's ([MatchResult.extraTime]); only a shootout is drawn here, and it
+  /// is handed to the season service as is, so the drama shown and the stored
   /// result never disagree.
   KnockoutOutcome? _knockoutOutcome(MatchPreview preview, MatchResult r) {
     if (!_isKnockoutFixture(preview.fixture) || r.homeScore != r.awayScore) {
       return null;
     }
-    // Who takes them decides them. Extra time is drawn from the same stream
-    // BEFORE the shootout, so naming takers changes the kicks and never the
-    // extra-time score — the tie the manager just watched stays as it was.
+    // A level ninety without engine extra time is only a hand-built result
+    // (the screen always asks for it): read it as extra time that changed
+    // nothing, so the tie still goes to penalties rather than nowhere.
+    final et = r.extraTime ?? (homeScore: r.homeScore, awayScore: r.awayScore);
+    if (et.homeScore != et.awayScore) {
+      return KnockoutOutcome(
+        homeScore: et.homeScore,
+        awayScore: et.awayScore,
+        afterExtraTime: true,
+        homeKicks: const [],
+        awayKicks: const [],
+      );
+    }
+    // Who takes them decides them. The kicks have a stream of their own, so
+    // naming takers changes the kicks and never the extra time the manager
+    // just watched.
     final composure = _shootoutComposure();
     final mySkill = [
       for (final s in PenaltyTakers.skillOrder(
@@ -722,19 +682,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     final oppTeam = _opponentTeam(preview);
     final oppSkill = PenaltyTakers.skillOrder(
       PenaltyTakers.autoOrder(
-        oppTeam.xi,
+        _opponentOnPitch(preview, r),
         unavailable: _sentOff(r, oppTeam.nationId),
         traitsByPlayer: oppTeam.traitsByPlayer,
       ),
       traitsByPlayer: oppTeam.traitsByPlayer,
     );
-    final (homeStrength, awayStrength) = _extraTimeStrengths(preview);
-    return WorldCupFinals.decideKnockout(
-      r.homeScore,
-      r.awayScore,
+    return WorldCupFinals.decideShootout(
+      et.homeScore,
+      et.awayScore,
       SeededRng.forFixture(_seed(preview), preview.fixture.id ^ 0x7F),
-      homeStrength: homeStrength,
-      awayStrength: awayStrength,
       homeTakerSkill: preview.playerIsHome ? mySkill : oppSkill,
       awayTakerSkill: preview.playerIsHome ? oppSkill : mySkill,
     );
@@ -743,6 +700,17 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// The opposition, as fielded (the manager's own side is [_playerTeam]).
   MatchTeam _opponentTeam(MatchPreview preview) =>
       preview.playerIsHome ? preview.awayTeam : preview.homeTeam;
+
+  /// Who the opposition has on the pitch at full time (see
+  /// [sideOnPitchAtEnd]); only they can take a kick, as with the manager's own
+  /// side.
+  List<Player> _opponentOnPitch(MatchPreview preview, MatchResult r) =>
+      sideOnPitchAtEnd(
+        team: _opponentTeam(preview),
+        bench: preview.opponentBench,
+        plannedSubs: preview.opponentSubs,
+        events: r.events,
+      );
 
   /// Players sent off — they cannot take a kick.
   Set<int> _sentOff(MatchResult r, int nationId) => {
@@ -993,12 +961,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   }
 
   /// Interpolated live energy per player (0–100). The engine only reports each
-  /// player's energy at full time, so before then we walk it from a fresh 100 at
-  /// kick-off down to that final value by 90' — everyone reads ~100 pre-match
-  /// and drains believably as the game runs.
+  /// player's energy at the final whistle, so before then we walk it from a
+  /// fresh 100 at kick-off down to that final value by the last minute played:
+  /// 90', or 120' when there is extra time (otherwise the huddle would already
+  /// show the legs the side has left after 120).
   Map<int, int> _liveEnergy(MatchResult r) {
     if (_fullTime) return r.energyByPlayer;
-    final t = _minute.clamp(0, 90) / 90;
+    final last = r.extraTime == null ? 90 : 120;
+    final t = _minute.clamp(0, last) / last;
     return {
       for (final e in r.energyByPlayer.entries)
         e.key: (100 - (100 - e.value) * t).round(),
@@ -1065,21 +1035,31 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // So the manager can see who's tiring when choosing a substitution.
     final energyNow = _liveEnergy(_result ?? preview.result);
     final minutes = _subMinutes(preview);
+    // The save's named presets, so a style is one tap away mid-match and at
+    // every break; whatever is picked comes back as an ordinary change.
+    // A failed read must never stop the editor opening (the injury pause
+    // depends on it): fall back to no presets.
+    final List<TacticPreset> presets = await ref
+        .read(tacticPresetsProvider(widget.careerId).future)
+        .catchError((Object _) => const <TacticPreset>[]);
+    if (!mounted) return;
     final result = await showInMatchTactics(
       context,
-      minute: _minute.clamp(1, 90),
+      presets: presets,
+      minute: _minute.clamp(1, _fullTimeMinute),
       formation: _liveFormation,
       lineup: _liveLineup,
       instructions: _liveInstructions,
       pool: _playerPool(preview),
       startingIds: team.xi.map((p) => p.id).toSet(),
-      maxSubs: kMaxSubs,
+      maxSubs: _maxSubsFor(preview),
       takers: _takers ??= (
         penalty: team.penaltyTakerId,
         deadBall: team.deadBallTakerId,
       ),
       injuredIds: _injuredIds,
       sentOffIds: _sentOffIds(),
+      cardsByPlayer: _cardsNow(),
       energyByPlayer: energyNow,
       // So the squad list can say who started and who came on when, rather
       // than leaving the manager to work it out from the discs on the pitch.
@@ -1096,8 +1076,19 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       tabletLayout: useTabletLayout(context, ref),
     );
     if (result != null && mounted) await _applyTactics(preview, result);
-    if (wasPlaying && _minute < 90 && !_playing) _togglePlay();
+    if (wasPlaying && !_clockDone && !_atInterval && !_playing) _togglePlay();
   }
+
+  /// The substitutions allowed right now. A friendly has no cap but the bench
+  /// (nobody comes back on, so the bench is the natural limit); otherwise one
+  /// more once a level knockout is through the ninety. Its regulation is
+  /// settled by then (a change made at 90 or in stoppage lands at 91), so the
+  /// sixth can only touch extra time.
+  int _maxSubsFor(MatchPreview preview) => maxSubsAllowed(
+    friendly: preview.fixture.round == Rounds.friendly,
+    benchSize: preview.bench.length,
+    extraTime: _fullTimeMinute > 90 && _minute >= 90,
+  );
 
   /// The nation the manager is NOT controlling in this fixture — the side whose
   /// tactics the engine reactively manages by the scoreline.
@@ -1109,23 +1100,34 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// Re-runs the whole match from its seed with every change and team talk the
   /// manager has made applied, and the AI opponent reactively managed. Shared by
   /// the tactics editor and the interval team talk so both stay deterministic.
-  MatchResult _resim(MatchPreview preview) => _engine.play(
-    home: preview.homeTeam,
-    away: preview.awayTeam,
-    rng: SeededRng.forFixture(_seed(preview), preview.fixture.id),
-    subs: preview.opponentSubs,
-    changes: _changes,
-    talks: _talks,
-    aiManagedNationIds: {_opponentNationId(preview)},
-    injuryFactorByNation: preview.injuryFactorByNation,
-    chemistryByNation: preview.chemistryByNation,
-    neutralVenue: preview.neutralVenue,
-    venueHostId: preview.venueHostId,
-    // Carried through so a re-sim after a substitution or team talk keeps
-    // the big-game trait and the crowd applied exactly as the first
-    // simulation did.
-    bigMatch: preview.bigMatch,
-    atmosphere: Attendance.atmosphere(preview.ground),
+  ///
+  /// A level knockout plays on through extra time in the engine, with the AI
+  /// side's one extra-time change folded in, exactly as the preview did.
+  MatchResult _resim(MatchPreview preview) => playWithAiExtraTimeSub(
+    play: (subs) => _engine.play(
+      home: preview.homeTeam,
+      away: preview.awayTeam,
+      rng: SeededRng.forFixture(_seed(preview), preview.fixture.id),
+      subs: subs,
+      changes: _changes,
+      talks: _talks,
+      aiManagedNationIds: {_opponentNationId(preview)},
+      injuryFactorByNation: preview.injuryFactorByNation,
+      chemistryByNation: preview.chemistryByNation,
+      neutralVenue: preview.neutralVenue,
+      venueHostId: preview.venueHostId,
+      // Carried through so a re-sim after a substitution or team talk keeps
+      // the big-game trait and the crowd applied exactly as the first
+      // simulation did.
+      bigMatch: preview.bigMatch,
+      atmosphere: Attendance.atmosphere(preview.ground),
+      extraTimeIfLevel: _isKnockoutFixture(preview.fixture),
+    ),
+    aiSubs: preview.opponentSubs,
+    aiTeam: _opponentTeam(preview),
+    aiBench: preview.opponentBench,
+    saveSeed: preview.saveSeed,
+    fixtureId: preview.fixture.id,
   );
 
   Future<void> _applyTactics(
@@ -1149,9 +1151,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // could vanish from the rebuilt event list, leaving a "GOAL!" flash with no
     // goal on the scoreboard. Past minutes are now always replayed identically.
     //
-    // Beyond 90 this lands past the regulation loop and is simply inert: the
-    // engine only applies changes on minutes 1–90 in normal time, so a sub made
-    // during stoppage updates the lineups display without rewriting the match.
+    // At 90 (stoppage included) this lands on 91: a level knockout's extra
+    // time plays it, and the ninety already watched is never rewritten. In a
+    // match with no extra time it lands past the last minute and is inert,
+    // updating the lineups display only.
     final minute = _minute + 1;
     final takersChanged = r.takers != _takers;
     setState(() {
@@ -1233,6 +1236,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   ? null
                   : KitColors.discFill(n.primaryColor, n.secondaryColor),
               energyByPlayer: _liveEnergy(r),
+              cardsByPlayer: _cardsNow(),
               absentIds: {..._injuredIds, ..._sentOffIds()},
               injuredIds: _injuredIds,
               onTapSlot: (_) {},
@@ -1269,6 +1273,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       canPop: false,
       child: Scaffold(
         body: previewAsync.when(
+          // Never kick off from a preview being worked out again: during a
+          // refresh the provider goes on handing out the previous one, and
+          // whatever this screen is handed first it plays to the end. Back
+          // from tactics with Kick off pressed quickly, that was the old XI,
+          // the old shape and the old plan.
+          skipLoadingOnRefresh: false,
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text(l.matchCouldNotLoad('$e'))),
           data: (preview) {
@@ -1294,24 +1304,21 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             String code(int id) => preview.nations[id]?.code ?? '??';
             String name(int id) => preview.nations[id]?.name ?? 'Unknown';
 
+            // Extra-time events are the engine's own, minutes 91-120, so the
+            // clock reveals them like the ninety's.
             final shown = r.events.where(_reached).toList();
-            // The event feed also shows extra-time goals (kept OUT of `shown` so
-            // the score isn't double-counted — it adds ET via _etGoals below).
-            final timelineEvents =
-                [
-                  ...shown,
-                  ..._etEvents.where(_reached),
-                ]..sort((a, b) {
-                  final byMin = a.minute.compareTo(b.minute);
-                  return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
-                });
+            final timelineEvents = [...shown]
+              ..sort((a, b) {
+                final byMin = a.minute.compareTo(b.minute);
+                return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
+              });
             final ft = _fullTime;
             final inExtraTime = _minute > 90 && _minute < _fullTimeMinute;
             final inStoppage = _minute == 90 && _added > 0 && !ft;
-            // While playing, the score is the running tally of shown goal events.
-            // In extra time it adds the synthesised ET goals up to the minute; at
-            // full time it is the true recorded result (a level knockout settled
-            // by a shootout), so the screen never disagrees with what gets saved.
+            // While playing, the score is the running tally of shown goals,
+            // extra time included; at full time it is the true recorded result
+            // (a level knockout settled by a shootout), so the screen never
+            // disagrees with what gets saved.
             final (finalHome, finalAway) = _finalScore(preview, r);
             final liveHome = shown
                 .where((e) => e.type == MatchEventType.goal)
@@ -1320,25 +1327,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             final liveAway =
                 shown.where((e) => e.type == MatchEventType.goal).length -
                 liveHome;
-            // Extra-time score: the 90' tally plus revealed ET goals.
-            final etHome = _etGoals
-                .where((g) => g.$1 <= _minute && g.$2 == homeId)
-                .length;
-            final etAway = _etGoals
-                .where((g) => g.$1 <= _minute && g.$2 == awayId)
-                .length;
-            final int homeScore;
-            final int awayScore;
-            if (ft) {
-              homeScore = finalHome;
-              awayScore = finalAway;
-            } else if (_koOutcome != null && _minute > 90) {
-              homeScore = liveHome + etHome;
-              awayScore = liveAway + etAway;
-            } else {
-              homeScore = liveHome;
-              awayScore = liveAway;
-            }
+            final homeScore = ft ? finalHome : liveHome;
+            final awayScore = ft ? finalAway : liveAway;
             final knockout = _koOutcome;
             // Reveal the shootout as it plays out (or in full once decided).
             final showingShootout = _isShootout && _minute >= _fullTimeMinute;
@@ -1504,6 +1494,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                       ? r.homePossession
                       : 100 - r.homePossession,
                   subsUsed: _subsUsed(preview),
+                  maxSubs: _maxSubsFor(preview),
                   selectedTalk: _atExtraTimeStart
                       ? _extraTimeTalk
                       : _extraTimeHalfTalk,
@@ -1571,6 +1562,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
         // the match plays, and the full-time Continue action once it ends. Pinned
         // here so it is always visible and never overflows on shorter screens.
         bottomNavigationBar: previewAsync.whenOrNull(
+          // In step with the body: no bar until the body has set the match
+          // up, or the bar reads a lineup the body never built.
+          skipLoadingOnRefresh: false,
           data: (preview) {
             if (preview == null) return null;
             final ft = _fullTime;
@@ -1592,6 +1586,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                     playing: _playing,
                     speed: _speeds[_speedIdx],
                     subsUsed: _subsUsed(preview),
+                    maxSubs: _maxSubsFor(preview),
                     spent: _spentCount(preview, r),
                     onPlayPause: _togglePlay,
                     onSpeed: _cycleSpeed,

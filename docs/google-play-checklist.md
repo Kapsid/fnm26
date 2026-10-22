@@ -51,9 +51,28 @@ storeFile=/Users/martinurbanczyk/fnm-upload-key.jks
 Build the bundle:
 
 ```
-flutter build appbundle --release
+flutter build appbundle --release --obfuscate --split-debug-info=build/symbols/<version>
 # -> build/app/outputs/bundle/release/app-release.aab
 ```
+
+Use the `version:` from `pubspec.yaml` in the symbols folder name, so every
+upload has its own. `--obfuscate` strips Dart names from the binary, which makes
+patching out the premium check meaningfully more work. The price is that crash
+stack traces come back unreadable, and only the symbols from **that exact
+build** turn them back:
+
+```
+flutter symbolize -i <stack-trace.txt> -d build/symbols/<version>/app.android-arm64.symbols
+```
+
+`flutter clean` deletes `build/`, symbols included. After each upload copy the
+folder somewhere kept (e.g. `~/fnm-symbols/<version>`); a build whose symbols are
+lost has crash reports nobody can read. The same flags go on any release APK
+you sideload (`flutter build apk --release --obfuscate --split-debug-info=...`).
+
+**Integrity keys.** Before the first production upload, paste the three values
+from section 8 into `lib/core/config/release_keys.dart` and remove the `skip:`
+in `test/unit/entitlement/release_keys_test.dart`.
 
 Without `key.properties` this build stops with an explanation, on purpose.
 
@@ -231,10 +250,31 @@ Zahrajte si celý cyklus zdarma a bez omezení. Když vám hra sedne, jedna plat
 ## 7. Order of operations
 
 1. Payments profile (and check the account type, section 0)
-2. Upload key + `key.properties`, bump `+N`, `flutter build appbundle`
+2. Upload key + `key.properties`, bump `+N`, `flutter build appbundle` (obfuscated, symbols kept, see section 1)
 3. Create the app
 4. Internal testing release, install from Play on the phone
 5. In-app product, activate, licence tester, run the four purchase tests
 6. App content + store listing (EN + CS), deploy the updated privacy page
 7. **Closed testing** with 12+ testers for 14 days (personal accounts)
 8. Production
+
+---
+
+## 8. Integrity keys (anti-piracy)
+
+Three public values go into `lib/core/config/release_keys.dart`. Each one left
+empty switches its check off, so nothing breaks before they are there.
+
+| Constant | Where in Play Console |
+|---|---|
+| `kPlayAppSigningCertSha256` | Test and release → App integrity → App signing → **App signing key certificate** → SHA-256 |
+| `kUploadCertSha256` | same page → **Upload key certificate** → SHA-256 |
+| `kPlayLicensingPublicKey` | Monetize with Play → Monetization setup → **Licensing** → Base64 public key |
+
+With them in, an Android release build signed by any other certificate (a
+repackaged APK) keeps premium locked, and a Play purchase whose signature does
+not verify is not owned. Release APKs you sideload must be built with
+`key.properties` present (upload-signed); one signed with the debug key will
+read as repackaged and stay locked. Debug and profile builds skip the
+certificate check.
+

@@ -36,6 +36,7 @@ class DrawCeremony extends StatefulWidget {
     required this.nations,
     required this.onContinue,
     this.highlightNationId,
+    this.careerId,
     this.potCount,
     this.crossAxisCount = 2,
     this.landscape = false,
@@ -52,6 +53,10 @@ class DrawCeremony extends StatefulWidget {
   /// The player's nation, kept highlighted throughout the draw so they can spot
   /// where they land.
   final int? highlightNationId;
+
+  /// When given, each nation in a FINISHED draw opens that nation's page;
+  /// while the balls are still dropping the groups are inert.
+  final int? careerId;
 
   /// Number of pots; defaults to the largest group's size.
   final int? potCount;
@@ -265,6 +270,9 @@ class DrawCeremonyState extends State<DrawCeremony> {
   Widget _groupCard(AppLocalizations l, int gi, _DrawFrame frame) {
     final last = frame.last;
     return _GroupCard(
+      // Tappable only once the draw is complete: before that a tap would be
+      // aimed at a moving target.
+      careerId: frame.done ? widget.careerId : null,
       title: l.tourSharedGroupName(widget.groups[gi].name),
       // This group's OWN size, not the pot count. The pot count is the
       // biggest group, and handing it to every card gave a group of three a
@@ -799,6 +807,7 @@ class _Stage extends StatelessWidget {
 
 class _GroupCard extends StatelessWidget {
   const _GroupCard({
+    required this.careerId,
     required this.title,
     required this.slots,
     required this.revealed,
@@ -808,6 +817,7 @@ class _GroupCard extends StatelessWidget {
     required this.name,
   });
 
+  final int? careerId;
   final String title;
   final int slots;
   final List<int> revealed;
@@ -860,22 +870,26 @@ class _GroupCard extends StatelessWidget {
               ),
             )
           : null,
-      child: Row(
-        children: [
-          FlagDisc(code(nationId), size: 18, highlighted: emphasise),
-          const SizedBox(width: AppSpacing.xs),
-          Expanded(
-            child: Text(
-              name(nationId),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.bodySmall.copyWith(
-                color: emphasise ? AppColors.primary : AppColors.onSurface,
-                fontWeight: emphasise ? FontWeight.w700 : FontWeight.w400,
+      child: NationTap.maybe(
+        careerId: careerId,
+        nationId: nationId,
+        child: Row(
+          children: [
+            FlagDisc(code(nationId), size: 18, highlighted: emphasise),
+            const SizedBox(width: AppSpacing.xs),
+            Expanded(
+              child: Text(
+                name(nationId),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodySmall.copyWith(
+                  color: emphasise ? AppColors.primary : AppColors.onSurface,
+                  fontWeight: emphasise ? FontWeight.w700 : FontWeight.w400,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

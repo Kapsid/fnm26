@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:fnm/core/config/ui_language.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:intl/intl.dart';
 
 /// Every date the manager reads, written in the manager's own language.
@@ -40,13 +42,11 @@ abstract final class AppDate {
   /// The language the widget tree is being drawn in, as `intl` names it.
   ///
   /// Anything the app does not speak is English: `supportedLocales` has
-  /// already resolved the phone's Portuguese down to one of the seven by the
+  /// already resolved the phone's Romanian down to one the app speaks by the
   /// time this is asked.
   static String _locale(BuildContext context) {
     final code = Localizations.maybeLocaleOf(context)?.languageCode;
-    return const ['en', 'cs', 'fr', 'it', 'pl', 'es', 'de'].contains(code)
-        ? code!
-        : 'en';
+    return supportedLanguageCodes.contains(code) ? code! : 'en';
   }
 
   /// Formats [date] with the pattern the language wants: Czech's, or the English one
@@ -65,8 +65,8 @@ abstract final class AppDate {
   }) {
     final locale = _locale(context);
     // German writes its day as an ordinal too (`1. Sep. 2030`), so it takes
-    // the Czech pattern.
-    final dotted = locale == 'cs' || locale == 'de';
+    // the Czech pattern; so do Danish, Norwegian, Finnish and Croatian.
+    final dotted = const {'cs', 'de', 'da', 'nb', 'fi', 'hr'}.contains(locale);
     return DateFormat(dotted ? cs : en, locale).format(date);
   }
 
@@ -96,7 +96,12 @@ abstract final class AppDate {
   /// the diacritic. A capital with a háček is ordinary Czech typography; the
   /// width tests hold the result to its line.
   static String weekdayDayMonthCaps(BuildContext context, DateTime date) =>
-      _write(context, date, en: 'EEE d MMM', cs: 'EEE d. MMM').toUpperCase();
+      _write(
+        context,
+        date,
+        en: 'EEE d MMM',
+        cs: 'EEE d. MMM',
+      ).capsIn(Localizations.localeOf(context).languageCode);
 
   /// `09/30` — a tick label on the ranking chart's x-axis.
   ///

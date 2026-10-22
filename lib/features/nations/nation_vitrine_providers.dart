@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -166,7 +167,7 @@ nationVitrineProvider = FutureProvider.autoDispose
             !NationsCups.isNationsCup(h.competition)) {
           continue; // a foreign confederation's cup — skip
         }
-        final gold = h.championId == arg.nationId;
+        final gold = h.champions.contains(arg.nationId);
         final silver = h.runnerUpId == arg.nationId;
         final bronze = h.thirdId == arg.nationId || h.thirdId2 == arg.nationId;
         if (isWc) {
@@ -229,6 +230,7 @@ nationVitrineProvider = FutureProvider.autoDispose
           t.playerId,
           agingYears: aging,
           saveSeed: career.rngSeed,
+          careerId: career.id,
           youthBonusByCycle: youth,
           careerStartsByPlayer: careerDev,
         );

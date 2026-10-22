@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -112,7 +113,10 @@ class NationPreview extends ConsumerWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    confederationLabel(l, nation.confederation).toUpperCase(),
+                    confederationLabel(
+                      l,
+                      nation.confederation,
+                    ).capsIn(l.localeName),
                     style: TabletText.sectionLabel,
                   ),
                   if (caption case final line?) ...[
@@ -190,7 +194,7 @@ class NationPreview extends ConsumerWidget {
         if (strength != null) ...[
           const SizedBox(height: AppSpacing.md),
           Text(
-            l.nationsStarPlayer.toUpperCase(),
+            l.nationsStarPlayer.capsIn(l.localeName),
             style: TabletText.sectionLabel,
           ),
           const SizedBox(height: 6),
@@ -199,7 +203,7 @@ class NationPreview extends ConsumerWidget {
         if (targets != null) ...[
           const SizedBox(height: AppSpacing.md),
           Text(
-            l.nationsBoardExpects.toUpperCase(),
+            l.nationsBoardExpects.capsIn(l.localeName),
             style: TabletText.sectionLabel,
           ),
           const SizedBox(height: 6),
@@ -207,14 +211,15 @@ class NationPreview extends ConsumerWidget {
             key: briefKey,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _Brief(
-                competition: l.objectiveWorldCup,
-                demand: objectiveDemandText(
-                  l,
-                  TournamentTier.world,
-                  targets.world,
+              if (targets.world case final world?)
+                _Brief(
+                  competition: l.objectiveWorldCup,
+                  demand: objectiveDemandText(
+                    l,
+                    TournamentTier.world,
+                    world,
+                  ),
                 ),
-              ),
               if (cup != null && continental != null)
                 _Brief(
                   competition: competitionLabel(l, cup.name),
@@ -249,7 +254,7 @@ class _Fact extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            label.toUpperCase(),
+            label.capsIn(Localizations.localeOf(context).languageCode),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TabletText.sectionLabel,

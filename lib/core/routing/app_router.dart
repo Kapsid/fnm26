@@ -7,6 +7,9 @@ import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/career/careers_screen.dart';
 import 'package:fnm/features/career/manager_history_screen.dart';
 import 'package:fnm/features/career/new_game_screen.dart';
+import 'package:fnm/features/campaign/campaign_brief_screen.dart';
+import 'package:fnm/features/campaign/campaign_verdict_screen.dart';
+import 'package:fnm/features/campaign/campaigns_screen.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/settings/diagnostics_screen.dart';
 import 'package:fnm/features/manager/manager_screen.dart';
@@ -19,12 +22,14 @@ import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/finances_screen.dart';
 import 'package:fnm/features/federation/naturalization_screen.dart';
+import 'package:fnm/features/squad/injury_cover_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/career/unemployed_start_screen.dart';
 import 'package:fnm/features/hub/cycle_rollover_screen.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
+import 'package:fnm/features/hub/schedule_screen.dart';
 import 'package:fnm/features/match/match_preview_screen.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/messages/messages_screen.dart';
@@ -212,9 +217,24 @@ abstract final class Routes {
   static const nationsCupDraw = '/nations-cup-draw';
   static const naturalization = '/naturalization';
 
+  /// Replace a squad player injured mid-window.
+  static const injuryCover = '/injury-cover';
+
+  /// The nation's whole cycle, window by window. Expects `?careerId=`.
+  static const schedule = '/schedule';
+
   /// The Continental Clash (champions-of-champions) detail. Expects
   /// `?careerId=`.
   static const continentalClash = '/continental-clash';
+
+  /// The list of campaigns, where an unmoved campaign's cycle ends.
+  static const campaigns = '/campaigns';
+
+  /// A campaign's brief, before its run starts. Expects `?id=` (the campaign).
+  static const campaignBrief = '/campaign-brief';
+
+  /// A settled campaign's verdict. Expects `?careerId=`.
+  static const campaignVerdict = '/campaign-verdict';
 
   /// Routes drawn full screen on a tablet, outside the sidebar and top bar:
   /// the menus before a save is open, the screens with no save behind them,
@@ -236,6 +256,9 @@ abstract final class Routes {
     tournamentKickoff,
     cycleRollover,
     gallery,
+    campaigns,
+    campaignBrief,
+    campaignVerdict,
   };
 }
 
@@ -256,6 +279,23 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       path: Routes.saves,
       builder: (context, state) => const SavesScreen(),
+    ),
+    GoRoute(
+      path: Routes.campaigns,
+      builder: (context, state) => const CampaignsScreen(),
+    ),
+    GoRoute(
+      path: Routes.campaignBrief,
+      builder: (context, state) => CampaignBriefScreen(
+        campaignId: state.uri.queryParameters['id'] ?? '',
+      ),
+    ),
+    GoRoute(
+      path: Routes.campaignVerdict,
+      builder: (context, state) => CampaignVerdictScreen(
+        careerId:
+            int.tryParse(state.uri.queryParameters['careerId'] ?? '') ?? 0,
+      ),
     ),
     GoRoute(
       path: Routes.settings,
@@ -606,6 +646,28 @@ final routerProvider = Provider<GoRouter>((ref) {
             ) ??
             0;
         return NaturalizationScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.injuryCover,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return InjuryCoverScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.schedule,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return ScheduleScreen(careerId: id);
       },
     ),
     GoRoute(

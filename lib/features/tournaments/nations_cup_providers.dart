@@ -147,6 +147,7 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
       id,
       agingYears: CareerService.agingYears(career),
       saveSeed: career.rngSeed,
+      careerId: career.id,
     );
     if (p != null) playerNames[id] = p.name;
   }

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -111,7 +112,8 @@ squadConditionProvider = FutureProvider.autoDispose
             career.nationId,
             agingYears: CareerService.agingYears(career),
             saveSeed: career.rngSeed,
-            minAge: 15,
+            careerId: career.id,
+            minAge: PlayerLifecycle.callUpMinAge,
           );
       final byId = {for (final p in pool) p.id: p};
       final window = ClubForm.windowIndexFor(asOf);

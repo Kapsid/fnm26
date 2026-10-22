@@ -83,6 +83,7 @@ recordBookProvider = FutureProvider.autoDispose.family<RecordBook?, int>((
       id,
       agingYears: aging,
       saveSeed: career.rngSeed,
+      careerId: career.id,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );

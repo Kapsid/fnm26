@@ -25,6 +25,7 @@ import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'settings_tablet_layout.dart';
 
@@ -38,6 +39,21 @@ const Map<String, String> _languageEndonyms = {
   'pl': 'Polski',
   'es': 'Español',
   'de': 'Deutsch',
+  'pt': 'Português',
+  'tr': 'Türkçe',
+  'nl': 'Nederlands',
+  'id': 'Bahasa Indonesia',
+  'el': 'Ελληνικά',
+  'sv': 'Svenska',
+  'nb': 'Norsk bokmål',
+  'vi': 'Tiếng Việt',
+  'bg': 'Български',
+  'da': 'Dansk',
+  'fi': 'Suomi',
+  'hu': 'Magyar',
+  'hr': 'Hrvatski',
+  'uk': 'Українська',
+  'fil': 'Filipino',
 };
 
 /// Opens the language picker: "System" plus one radio row per language.
@@ -50,15 +66,54 @@ Future<void> _pickLanguage(
   final chosen = await showAdaptiveSheet<String>(
     context: context,
     isScrollControlled: true,
+    // Capped well short of the screen: with twenty-odd languages a
+    // full-height sheet left no barrier to tap away and no hint of the rows
+    // below the fold. A header with a close button and an always-visible
+    // scrollbar make both plain.
     builder: (ctx) => SafeArea(
-      child: SingleChildScrollView(
-        child: _LanguageOptions(
-          current: current,
-          options: [
-            ('system', l.settingsLanguageSystem),
-            for (final e in _languageEndonyms.entries) (e.key, e.value),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(ctx).height * 0.7,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.sm,
+                AppSpacing.xs,
+                0,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l.settingsLanguageTitle,
+                      style: AppTypography.titleMedium,
+                    ),
+                  ),
+                  IconButton(
+                    key: const Key('language-sheet-close'),
+                    tooltip: MaterialLocalizations.of(ctx).closeButtonTooltip,
+                    icon: const Icon(Icons.close, color: AppColors.primary),
+                    onPressed: () => Navigator.of(ctx).pop(),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            Flexible(
+              child: _LanguageOptions(
+                current: current,
+                options: [
+                  ('system', l.settingsLanguageSystem),
+                  for (final e in _languageEndonyms.entries) (e.key, e.value),
+                ],
+                onPick: (v) => Navigator.of(ctx).pop(v),
+              ),
+            ),
           ],
-          onPick: (v) => Navigator.of(ctx).pop(v),
         ),
       ),
     ),
@@ -80,22 +135,27 @@ class _LanguageOptions extends StatelessWidget {
   final ValueChanged<String> onPick;
 
   @override
-  Widget build(BuildContext context) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      for (final (code, label) in options)
-        ListTile(
-          key: Key('language-option-$code'),
-          leading: Icon(
-            code == current
-                ? Icons.radio_button_checked_rounded
-                : Icons.radio_button_unchecked_rounded,
-            color: AppColors.primary,
+  Widget build(BuildContext context) => Scrollbar(
+    thumbVisibility: true,
+    child: ListView(
+      key: const Key('language-sheet-list'),
+      shrinkWrap: true,
+      primary: true,
+      children: [
+        for (final (code, label) in options)
+          ListTile(
+            key: Key('language-option-$code'),
+            leading: Icon(
+              code == current
+                  ? Icons.radio_button_checked_rounded
+                  : Icons.radio_button_unchecked_rounded,
+              color: AppColors.primary,
+            ),
+            title: Text(label, style: AppTypography.bodyMedium),
+            onTap: () => onPick(code),
           ),
-          title: Text(label, style: AppTypography.bodyMedium),
-          onTap: () => onPick(code),
-        ),
-    ],
+      ],
+    ),
   );
 }
 
@@ -149,6 +209,8 @@ class SettingsScreen extends ConsumerWidget {
           _DiagnosticsCard(),
           SizedBox(height: AppSpacing.md),
           _ContactCard(),
+          SizedBox(height: AppSpacing.md),
+          CommunityCard(),
           SizedBox(height: AppSpacing.md),
           _BackupCard(),
         ],
@@ -438,8 +500,7 @@ class _DiagnosticsCard extends StatelessWidget {
 
 /// Reaching the person who made the game.
 ///
-/// Tapping COPIES the address rather than opening a mail app. The app carries
-/// no url_launcher, and it is the better behaviour anyway: a phone with no
+/// Tapping COPIES the address rather than opening a mail app: a phone with no
 /// mail account configured swallows a `mailto:` and leaves the manager
 /// looking at nothing, while the clipboard always works and the address is
 /// what they actually need.
@@ -472,6 +533,94 @@ class _ContactCard extends StatelessWidget {
           size: 18,
           color: AppColors.primary,
         ),
+      ),
+    );
+  }
+}
+
+/// Opens [url] outside the app; false when nothing could. A provider so a
+/// test can stand in for the platform.
+final linkLauncherProvider = Provider<Future<bool> Function(Uri url)>(
+  (ref) =>
+      (url) => launchUrl(url, mode: LaunchMode.externalApplication),
+);
+
+/// Where managers gather: the Discord and the Instagram account. Tapping
+/// opens the link in the browser or app; if the phone cannot (or it throws),
+/// the link is copied instead, as the contact card does.
+class CommunityCard extends ConsumerWidget {
+  const CommunityCard({super.key});
+
+  static const Key discordKey = Key('settings.discord');
+  static const Key instagramKey = Key('settings.instagram');
+
+  Future<void> _open(BuildContext context, WidgetRef ref, String url) async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    var opened = false;
+    try {
+      opened = await ref.read(linkLauncherProvider)(Uri.parse(url));
+    } on Object {
+      opened = false;
+    }
+    if (opened) return;
+    await Clipboard.setData(ClipboardData(text: url));
+    messenger.showSnackBar(SnackBar(content: Text(l.settingsLinkCopied)));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final sub = AppTypography.labelSmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.md,
+              AppSpacing.md,
+              AppSpacing.md,
+              0,
+            ),
+            child: Text(
+              l.settingsCommunityTitle,
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+          ),
+          ListTile(
+            key: discordKey,
+            onTap: () => _open(context, ref, kDiscordUrl),
+            leading: const Icon(Icons.forum_outlined, color: AppColors.primary),
+            title: const Text('Discord', style: AppTypography.bodyMedium),
+            subtitle: Text(l.settingsDiscordSubtitle, style: sub),
+            trailing: const Icon(
+              Icons.open_in_new,
+              size: 18,
+              color: AppColors.primary,
+            ),
+          ),
+          ListTile(
+            key: instagramKey,
+            onTap: () => _open(context, ref, kInstagramUrl),
+            leading: const Icon(
+              Icons.photo_camera_outlined,
+              color: AppColors.primary,
+            ),
+            title: const Text('Instagram', style: AppTypography.bodyMedium),
+            subtitle: Text(kInstagramHandle, style: sub),
+            trailing: const Icon(
+              Icons.open_in_new,
+              size: 18,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
       ),
     );
   }

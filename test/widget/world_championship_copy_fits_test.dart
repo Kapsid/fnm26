@@ -23,7 +23,30 @@ import '../helpers/pump_app.dart';
 /// nearly everywhere else, and because its counterparts here were left alone:
 /// a heading that only ever grew in English still has to be checked in both.
 const _widths = [320.0, 360.0, 400.0];
-const _locales = ['en', 'cs', 'fr', 'it', 'pl', 'es', 'de'];
+const _locales = [
+  'en',
+  'cs',
+  'fr',
+  'it',
+  'pl',
+  'es',
+  'de',
+  'pt',
+  'tr',
+  'nl',
+  'id',
+  'el',
+  'sv',
+  'nb',
+  'vi',
+  'bg',
+  'da',
+  'fi',
+  'hu',
+  'hr',
+  'uk',
+  'fil',
+];
 
 /// The year the ceremony headings print beside themselves. Four digits wide in
 /// every language, so which year it is does not matter to a width.

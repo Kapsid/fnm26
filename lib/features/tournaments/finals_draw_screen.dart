@@ -74,6 +74,7 @@ class _FinalsDrawScreenState extends ConsumerState<FinalsDrawScreen> {
               ],
               nations: data.nations,
               highlightNationId: data.playerNationId,
+              careerId: widget.careerId,
               potCount: 4,
               landscape: landscape,
               onContinue: () => _finishWatched(data),

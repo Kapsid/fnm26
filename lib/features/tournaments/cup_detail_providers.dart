@@ -14,6 +14,7 @@ import 'package:fnm/domain/services/competition/tournament_identity.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
@@ -205,13 +206,12 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
   // pre-seeded real-world history (career summary is the career-only view).
   final honours = await comp.honours(careerId);
   final wcYear = CareerService.worldCupYear(career.cyclePointer);
-  // Who held the trophy walking into THIS edition — the newest honour older
-  // than it, never the edition itself even once its own final has been
-  // recorded (see `TournamentHolders`).
+  // Who holds the trophy: this edition's champion once its final is played,
+  // the previous one before (see `TournamentHolders`).
   final holders = TournamentHolders.forEdition(
     honours: honours,
     competition: 'World Championship',
-    beforeYear: wcYear,
+    editionYear: wcYear,
   );
   final nations = {
     for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
@@ -250,6 +250,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
       id,
       agingYears: aging,
       saveSeed: career.rngSeed,
+      careerId: career.id,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );
@@ -321,11 +322,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
       }
     }
     if (meanest != null) {
-      final squad = await playerRepo.byNation(
-        meanest,
-        agingYears: CareerService.agingYears(career),
-        saveSeed: career.rngSeed,
-      );
+      final squad = await careerPoolOf(ref, career, meanest);
       Player? keeper;
       for (final p in squad) {
         if (p.category == PositionCategory.goalkeeper) {
@@ -354,11 +351,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     };
     final candidates = <Player>[];
     for (final nid in candidateNations) {
-      final squad = await playerRepo.byNation(
-        nid,
-        agingYears: CareerService.agingYears(career),
-        saveSeed: career.rngSeed,
-      );
+      final squad = await careerPoolOf(ref, career, nid);
       // Everyone who actually appeared — not the top sixteen by rating,
       // which both included players who never got on and excluded a
       // squad player who did.
@@ -444,6 +437,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
       s.playerId,
       agingYears: aging,
       saveSeed: career.rngSeed,
+      careerId: career.id,
       youthBonusByCycle: youth,
       careerStartsByPlayer: careerDev,
     );
@@ -480,6 +474,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
         r.playerId,
         agingYears: aging,
         saveSeed: career.rngSeed,
+        careerId: career.id,
         youthBonusByCycle: youth,
         careerStartsByPlayer: careerDev,
       );

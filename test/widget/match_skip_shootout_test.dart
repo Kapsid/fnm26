@@ -28,10 +28,13 @@ import '../helpers/fixtures.dart';
 /// and must not ask again when he has. Both directions are checked here, in one
 /// run through a tie that really goes to penalties.
 
-/// A level semi-final, ready to be skipped. [saveSeed] is what decides whether
-/// extra time settles the tie or a shootout does; the one used below was picked
-/// because it gives a shootout (the test asserts it did).
-MatchPreview levelKnockout({required int saveSeed}) {
+/// A level semi-final, ready to be skipped. [extraTime] is the engine's
+/// after-extra-time score: level (the default) sends the tie to a shootout,
+/// anything else lets extra time settle it. [saveSeed] seeds the shootout.
+MatchPreview levelKnockout({
+  required int saveSeed,
+  ({int homeScore, int awayScore})? extraTime = (homeScore: 0, awayScore: 0),
+}) {
   Player at(int id, int nationId, PlayerPosition position) =>
       player(id: id, nationId: nationId, position: position);
   List<Player> xi(int base, int nationId) => [
@@ -55,13 +58,14 @@ MatchPreview levelKnockout({required int saveSeed}) {
     ),
     // Goalless, so the tie is level at the whistle and the drama is all in
     // what comes after it.
-    result: const MatchResult(
+    result: MatchResult(
       homeScore: 0,
       awayScore: 0,
-      events: [],
+      events: const [],
       homeShots: 4,
       awayShots: 4,
       homePossession: 50,
+      extraTime: extraTime,
     ),
     nations: {1: nation(id: 1), 2: nation(id: 2)},
     homeTeam: MatchTeam(nationId: 1, xi: xi(1, 1), instructions: instructions),
@@ -87,12 +91,13 @@ MatchPreview levelKnockout({required int saveSeed}) {
 Future<ProviderContainer> pumpMatch(
   WidgetTester tester, {
   required int saveSeed,
+  ({int homeScore, int awayScore}) extraTime = (homeScore: 0, awayScore: 0),
 }) async {
   final c = ProviderContainer(
     overrides: [
-      matchPreviewProvider(
-        1,
-      ).overrideWith((ref) async => levelKnockout(saveSeed: saveSeed)),
+      matchPreviewProvider(1).overrideWith(
+        (ref) async => levelKnockout(saveSeed: saveSeed, extraTime: extraTime),
+      ),
       soundHapticsEnabledProvider.overrideWith((ref) => false),
       matchAttemptSaltProvider.overrideWithValue(() => 0),
     ],
@@ -118,11 +123,14 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.setMockInitialValues(<String, Object>{});
 
-  /// A tie this seed sends all the way to penalties.
+  /// The seed of a tie that goes all the way to penalties (its engine extra
+  /// time is level, the default).
   const shootoutSeed = 42;
 
-  /// A tie this seed settles in extra time, so nothing is ever asked.
+  /// A tie extra time settles, so nothing is ever asked: the engine's extra
+  /// time ends 1-0.
   const extraTimeSeed = 2026;
+  const settledInExtraTime = (homeScore: 1, awayScore: 0);
 
   // Both tests are about the aid itself, so both stand down with it: turning
   // [kShowSkipMatch] off must stay the one edit it promises to be, not one
@@ -154,8 +162,9 @@ void main() {
       findsOneWidget,
       reason:
           'skipping past a shootout must still ask who takes them — if this '
-          'fails, either the skip bypassed the sheet again, or seed $shootoutSeed no '
-          'longer sends this tie to penalties (check the whistle, not the fix)',
+          'fails, either the skip bypassed the sheet again, or the level '
+          'extra time no longer sends this tie to penalties (check the '
+          'whistle, not the fix)',
     );
 
     // He names them (the automatic order, confirmed) and the kicks begin.
@@ -203,7 +212,11 @@ void main() {
       ..devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await pumpMatch(tester, saveSeed: extraTimeSeed);
+    await pumpMatch(
+      tester,
+      saveSeed: extraTimeSeed,
+      extraTime: settledInExtraTime,
+    );
     await tester.tap(find.byIcon(Icons.skip_next_rounded));
     await tester.pumpAndSettle();
 
@@ -227,7 +240,11 @@ void main() {
       ..devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await pumpMatch(tester, saveSeed: extraTimeSeed);
+    await pumpMatch(
+      tester,
+      saveSeed: extraTimeSeed,
+      extraTime: settledInExtraTime,
+    );
 
     // Play up to the interval.
     for (var i = 0; i < 400; i++) {

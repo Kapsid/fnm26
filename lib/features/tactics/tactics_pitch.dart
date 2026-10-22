@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -543,6 +545,7 @@ class TacticsPitch extends StatelessWidget {
     this.injuredIds = const {},
     this.deadSlots = const {},
     this.energyByPlayer = const {},
+    this.cardsByPlayer = const {},
     this.teamColors,
     super.key,
   });
@@ -564,6 +567,12 @@ class TacticsPitch extends StatelessWidget {
   /// match so the manager can see who's tiring. Empty (the default) hides it —
   /// e.g. on the pre-match tactics screen where everyone is fresh.
   final Map<int, int> energyByPlayer;
+
+  /// The card each player is carrying in a live match — see [cardStatusFor],
+  /// which the substitution lists read too, so the pitch and the lists can
+  /// never disagree about who is booked. Empty (the default) everywhere a
+  /// match is not being played.
+  final Map<int, MatchCard> cardsByPlayer;
 
   /// Players who cannot play the next match (banned or injured): their node is
   /// flagged OUT so the manager can see exactly who must be replaced.
@@ -756,6 +765,7 @@ class TacticsPitch extends StatelessWidget {
                         deadSlots: deadSlots,
                         keeperSlot: keeperSlot,
                         energy: energyByPlayer[lineup[slot]],
+                        card: cardsByPlayer[lineup[slot]],
                         teamColors: teamColors,
                         onTap: () => onTapSlot(slot),
                         onSwap: onSwap,
@@ -842,6 +852,7 @@ class _PlayerNode extends StatelessWidget {
     this.deadSlots = const {},
     this.keeperSlot = -1,
     this.energy,
+    this.card,
   });
 
   final int slot;
@@ -863,6 +874,9 @@ class _PlayerNode extends StatelessWidget {
   /// The player's live remaining energy (0–100) during a match, or null when
   /// energy isn't being tracked (pre-match) — shown as a small gauge on the node.
   final int? energy;
+
+  /// The card he is carrying in a live match, or null when he has none.
+  final MatchCard? card;
 
   /// Whether the assigned player is banned or injured for the next match.
   final bool absent;
@@ -1092,12 +1106,27 @@ class _PlayerNode extends StatelessWidget {
             Positioned(
               top: 0,
               child: _RimBadge(
+                key: ValueKey('pitchPos$slot'),
                 label: position.label,
                 color: fit,
-                background: fit.withValues(alpha: 0.18),
+                // The darkest surface rather than a tint of the cue: the
+                // label is the thing being read, so it gets the most contrast
+                // the palette has.
+                background: AppColors.surfaceContainerLowest,
                 maxWidth: metrics.node,
+                fontSize: _rimFontSize(metrics.disc),
               ),
             ),
+            // His card, on the shoulder of the ball: below the position
+            // badge and outside the interior's name line, inside his own
+            // node so it can never sit on the next man's ball.
+            if (p != null && card != null && !dead)
+              Positioned(
+                key: ValueKey('pitchCard$slot'),
+                top: overhang + metrics.disc * 0.16,
+                right: 0,
+                child: CardMark(card!, size: metrics.disc * 0.30, onKit: true),
+              ),
             // The bottom of the rim says whatever is urgent: that the place
             // is gone, that he cannot play, or — during a match — how much he
             // has left.
@@ -1125,12 +1154,19 @@ class _PlayerNode extends StatelessWidget {
               )
             else if (p != null && energy != null)
               Positioned(
-                bottom: 0,
+                bottom: _energyLift,
+                // SOLID in the energy colour with dark figures: the one
+                // number a manager reads off the pitch mid-match ("hard to
+                // see how much fitness % they have remaining"), so it is the
+                // loudest thing on the node, not a tinted 8pt caption.
                 child: _RimBadge(
+                  key: ValueKey('pitchEnergy$slot'),
                   label: '$energy%',
-                  color: energyColor(energy!),
-                  background: energyColor(energy!).withValues(alpha: 0.18),
+                  color: AppColors.surfaceContainerLowest,
+                  background: energyColor(energy!),
+                  border: energyColor(energy!),
                   maxWidth: metrics.node,
+                  fontSize: _rimFontSize(metrics.disc),
                 ),
               ),
           ],
@@ -1144,6 +1180,27 @@ class _PlayerNode extends StatelessWidget {
 /// height, so it straddles the edge: a badge sitting fully outside would add a
 /// whole extra band to the node, which is the thing being got rid of.
 const double _badgeOverhang = 7;
+
+/// The type size of the two rim labels a manager reads mid-match: the
+/// position on top and the energy underneath. A share of the disc, so a tablet
+/// draws them larger, never below 11 on a phone.
+///
+/// They were 8pt and could not be read during a match. They grow INTO the
+/// ball rather than out of it: [_badgeOverhang] (and so the node's height,
+/// the rows' spacing and the clear-air rule) is untouched, and the taller pill
+/// simply reaches further over the rim — still short of the interior, which
+/// starts at 0.26 of the diameter.
+double _rimFontSize(double disc) => (disc * 0.22).clamp(11.0, 14.0);
+
+/// How far the energy pill sits above the bottom of its node.
+///
+/// MEASURED. At [_rimFontSize] "100%" is a wider pill than the 8pt one was,
+/// and hung from the very bottom of the node its lower corner reached the
+/// ball of the centre-back beside a holding midfielder (4-3-3, narrow, high
+/// line) by 4pt at 320. Three points up clears that ball on every shape at
+/// every phone width, and still leaves the pill's top short of the name line
+/// inside its own ball (the interior ends 0.26 of the diameter above the rim).
+const double _energyLift = 3;
 
 /// The width of a disc's usable interior, as a fraction of its diameter, and
 /// the height that leaves. A rectangle fits inside a circle when its diagonal
@@ -1245,7 +1302,9 @@ class _DiscContents extends StatelessWidget {
                 ),
               if (label != null)
                 _DiscName(
-                  name: label.toUpperCase(),
+                  name: label.capsIn(
+                    Localizations.localeOf(context).languageCode,
+                  ),
                   width: inner,
                   style: AppTypography.labelSmall.copyWith(
                     fontSize: _nameFontSize,
@@ -1400,6 +1459,9 @@ class _RimBadge extends StatelessWidget {
     required this.color,
     required this.background,
     required this.maxWidth,
+    this.border,
+    this.fontSize = 8,
+    super.key,
   });
 
   final String label;
@@ -1407,29 +1469,55 @@ class _RimBadge extends StatelessWidget {
   final Color background;
   final double maxWidth;
 
+  /// The outline, which is the text colour unless said otherwise.
+  final Color? border;
+
+  /// 8 for the status words (SENT OFF, INJURED…), which are long in every
+  /// language; [_rimFontSize] for the short position and energy labels.
+  final double fontSize;
+
   @override
-  Widget build(BuildContext context) => Container(
-    constraints: BoxConstraints(maxWidth: maxWidth),
-    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-    decoration: BoxDecoration(
-      color: Color.alphaBlend(background, AppColors.surfaceContainerLowest),
-      borderRadius: AppRadii.smAll,
-      border: Border.all(color: color),
-    ),
-    child: Text(
+  Widget build(BuildContext context) {
+    final text = Text(
       label,
       maxLines: 1,
       overflow: TextOverflow.clip,
       softWrap: false,
       style: AppTypography.labelSmall.copyWith(
-        fontSize: 8,
+        fontSize: fontSize,
         height: 1.1,
-        letterSpacing: 0,
+        // The large labels close up a little: the mono face is generous
+        // between figures, and every point of pill width is a point closer
+        // to the next man's ball.
+        letterSpacing: fontSize > 8 ? -0.5 : 0,
         color: color,
         fontWeight: FontWeight.w700,
       ),
-    ),
-  );
+    );
+    return Container(
+      constraints: BoxConstraints(maxWidth: maxWidth),
+      padding: EdgeInsets.symmetric(
+        horizontal: fontSize > 8 ? 2 : 4,
+        vertical: 1,
+      ),
+      decoration: BoxDecoration(
+        color: Color.alphaBlend(background, AppColors.surfaceContainerLowest),
+        // A large label is a full pill, rounded end to end: its corners are
+        // the part that reaches toward the neighbouring balls, and a square
+        // corner on a "100%" touched the centre-back beside a holding
+        // midfielder at 320.
+        borderRadius: fontSize > 8
+            ? BorderRadius.circular(999)
+            : AppRadii.smAll,
+        border: Border.all(color: border ?? color),
+      ),
+      // A large label that ever met a node too narrow for it shrinks rather
+      // than being clipped; at every phone width it is drawn at full size.
+      child: fontSize > 8
+          ? FittedBox(fit: BoxFit.scaleDown, child: text)
+          : text,
+    );
+  }
 }
 
 /// The colour cue for a remaining-energy value: green when fresh, orange once
@@ -1488,11 +1576,17 @@ class SubDragRow extends StatelessWidget {
     this.noteColor,
     this.onTap,
     this.enabled = true,
+    this.card,
     super.key,
   });
 
   final Player player;
   final Widget? trailing;
+
+  /// The card he is carrying in this match, drawn beside his name. A manager
+  /// choosing who to bring on (or take off) asks who is one tackle from a red,
+  /// and used to have to leave for the pitch to find out.
+  final MatchCard? card;
 
   /// A short line under the name saying what is wrong with this man: already
   /// substituted, carrying a knock, no changes left. Null when nothing is.
@@ -1524,7 +1618,7 @@ class SubDragRow extends StatelessWidget {
       dense: true,
       leading: SizedBox(width: 40, child: TacticalChip(player.position.label)),
       // Position is already shown by the leading chip — no role subtitle.
-      title: Text(player.name, style: AppTypography.bodyMedium),
+      title: playerNameWithCard(player.name, card),
       onTap: onTap,
       subtitle: note == null
           ? null
@@ -1565,7 +1659,8 @@ class SubDragRow extends StatelessWidget {
           border: Border.all(color: AppColors.primary),
         ),
         child: Text(
-          surnameOf(player.name).toUpperCase(),
+          surnameOf(player.name)
+              .capsIn(Localizations.localeOf(context).languageCode),
           style: AppTypography.labelMedium,
         ),
       ),
@@ -1579,6 +1674,21 @@ class SubDragRow extends StatelessWidget {
       child: row,
     );
   }
+}
+
+/// A squad row's name with the card he is carrying beside it, or the name
+/// alone when he has none. Shared by every list a substitution is made from,
+/// so the mark sits in the same place in all of them.
+Widget playerNameWithCard(String name, MatchCard? card, {TextStyle? style}) {
+  final text = Text(name, style: style ?? AppTypography.bodyMedium);
+  if (card == null) return text;
+  return Row(
+    children: [
+      Flexible(child: text),
+      const SizedBox(width: AppSpacing.xs),
+      CardMark(card, size: 14),
+    ],
+  );
 }
 
 /// A substitute as a small chip: the tablet's bench strip under the pitch.

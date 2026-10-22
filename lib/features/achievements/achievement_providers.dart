@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals_participation.dart';
@@ -141,7 +142,16 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return BoardSatisfaction.neutral;
   final comp = ref.watch(competitionRepositoryProvider);
-  final fixtures = await comp.fixturesForNation(careerId, career.nationId);
+  // Only his own spell: a new job is not judged on the results that cost his
+  // predecessor theirs.
+  final spell = await currentSpell(
+    ref.watch(careerRepositoryProvider),
+    career,
+  );
+  final fixtures = [
+    for (final f in await comp.fixturesForNation(careerId, career.nationId))
+      if (!f.date.isBefore(spell.since)) f,
+  ];
 
   final ranking = await ref.watch(worldRankingProvider(careerId).future);
 
@@ -159,6 +169,11 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   final honours = <({TournamentTier tier, Placing placing})>[];
   for (final h in await comp.honours(careerId)) {
     if (h.year < career.inGameDate.year - 1) continue;
+    // Nor is he credited with a trophy lifted before he arrived.
+    if (spell.arrivalCycle > 0 &&
+        h.year <= CareerService.worldCupYear(spell.arrivalCycle - 1)) {
+      continue;
+    }
     final placing = h.championId == career.nationId
         ? Placing.champion
         : h.runnerUpId == career.nationId
@@ -233,6 +248,25 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
         return mine < theirs;
       })
       .length;
+  // Against whom: a defeat by a side far above is not held against him the
+  // way one by an equal is (see BoardSatisfaction.isUnderdog).
+  final rankOf = ranking?.position ?? const <int, int>{};
+  final ownRank = rankOf[career.nationId];
+  final asUnderdog = [
+    for (final f in played.take(BoardSatisfaction.formWindow))
+      () {
+        final opponent = f.homeNationId == career.nationId
+            ? f.awayNationId
+            : f.homeNationId;
+        final theirRank = rankOf[opponent];
+        return ownRank != null &&
+            theirRank != null &&
+            BoardSatisfaction.isUnderdog(
+              ownRank: ownRank,
+              opponentRank: theirRank,
+            );
+      }(),
+  ];
   final recent = [
     for (final f in played.take(BoardSatisfaction.formWindow))
       () {
@@ -252,6 +286,7 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   final base =
       (BoardSatisfaction.compute(
                 recent: recent,
+                recentAsUnderdog: asUnderdog,
                 honours: honours,
                 worldRank: ranking?.position[career.nationId],
                 objectives: settled,
@@ -262,7 +297,11 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
                   publicMoodProvider(careerId).future,
                 ),
                 // A reputation is worth a little rope, and only a little.
-                previousCycle: career.lastCycleBoard,
+                // Only the same job's: a save that moved before this was
+                // fixed still holds the old board's figure.
+                previousCycle: spell.arrivalCycle == career.cyclePointer
+                    ? null
+                    : career.lastCycleBoard,
                 lockedInLosses: lockedInLosses,
               ) +
               press.board)
@@ -485,11 +524,9 @@ class AchievementService {
     final playerRepo = _ref.read(playerRepositoryProvider);
     final candidates = <Player>[];
     for (final nid in candidateNations) {
-      final squad = await playerRepo.byNation(
-        nid,
-        agingYears: career == null ? 0 : CareerService.agingYears(career),
-        saveSeed: career?.rngSeed ?? 0,
-      );
+      final squad = career == null
+          ? await playerRepo.byNation(nid)
+          : await careerPoolOf(_ref, career, nid);
       candidates.addAll(squad.take(16));
     }
     final team = TournamentStars.teamOfTournament(

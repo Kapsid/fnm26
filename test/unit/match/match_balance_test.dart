@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
-import 'package:fnm/domain/entities/formation.dart';
-import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
@@ -14,23 +12,6 @@ import '../../helpers/fixtures.dart';
 /// the score up. The bounds below are deliberately wide; they exist to catch a
 /// tuning change that turns every mismatch into a rout, not to pin exact
 /// numbers.
-
-MatchTeam team(int nationId, int rating) {
-  final positions = Formation.f433.positions;
-  return MatchTeam(
-    nationId: nationId,
-    instructions: const TacticalInstructions(),
-    xi: [
-      for (var i = 0; i < 11; i++)
-        player(
-          id: nationId * 100 + i,
-          nationId: nationId,
-          position: positions[i],
-          attributes: flatAttributes(rating),
-        ),
-    ],
-  );
-}
 
 /// Aggregate outcome of a run of neutral-venue matches between two flat
 /// squads.
@@ -51,8 +32,8 @@ Sample sample(int homeRating, int awayRating, {int n = 600}) {
   var rout = 0;
   for (var i = 0; i < n; i++) {
     final r = engine.play(
-      home: team(1, homeRating),
-      away: team(2, awayRating),
+      home: ratedTeam(1, homeRating),
+      away: ratedTeam(2, awayRating),
       rng: SeededRng.forFixture(0x51DE, i),
       neutralVenue: true,
     );

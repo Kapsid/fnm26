@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
 
-/// A squad is named for an international WINDOW — the two matches a country
-/// plays in one gathering — and lives for exactly that. The campaign used to
+/// A squad is named for an international WINDOW — the two to four matches a
+/// country plays in one gathering — and lives for exactly that. The campaign used to
 /// re-open the squad every four matchdays, so a manager named one side and kept
 /// it through four or six qualifiers spread over half a year, which nobody does.
 void main() {
@@ -13,7 +13,8 @@ void main() {
     competitionId: 1,
     homeNationId: 1,
     awayNationId: 2,
-    date: DateTime(2026, 9 + matchday),
+    // Two matches a window here: one month per gathering.
+    date: DateTime(2026, 8 + (matchday + 1) ~/ 2, matchday.isOdd ? 6 : 9),
     matchday: matchday,
     played: played,
     homeScore: played ? 1 : null,
@@ -63,5 +64,19 @@ void main() {
     ];
     expect(Nomination.windowOpen(campaign), isTrue);
     expect(Nomination.currentPeriod(campaign).map((f) => f.matchday), [3, 4]);
+  });
+
+  test('a window of three is one gathering', () {
+    Fixture at(int md, int day) => Fixture(
+      id: md,
+      careerId: 1,
+      competitionId: 1,
+      homeNationId: 1,
+      awayNationId: 2,
+      date: DateTime(2026, 9, day),
+      matchday: md,
+    );
+    final window = [at(1, 6), at(2, 9), at(3, 12)];
+    expect(Nomination.currentPeriod(window), hasLength(3));
   });
 }

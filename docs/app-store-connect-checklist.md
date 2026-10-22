@@ -110,6 +110,20 @@ Product → Archive → Organizer → Distribute App → App Store Connect.
 Run `flutter clean` first. Stale frameworks from old dependency sets accumulate in
 `build/` and `flutter build` never removes them.
 
+Then, before archiving, build once with obfuscation (use the `version:` from
+`pubspec.yaml`):
+
+```
+flutter build ipa --release --obfuscate --split-debug-info=build/symbols/<version>
+```
+
+That writes the obfuscation settings into `ios/Flutter/Generated.xcconfig`, so the
+Xcode archive above picks them up (or upload `build/ios/archive/Runner.xcarchive`
+from the Organizer directly). Obfuscated crash traces are only readable with the
+symbols of that exact build (`flutter symbolize -i <trace> -d
+build/symbols/<version>/app.ios-arm64.symbols`), and the next `flutter clean`
+deletes them: copy the folder somewhere kept (e.g. `~/fnm-symbols/<version>`).
+
 **Export compliance** is already answered in the build
 (`ITSAppUsesNonExemptEncryption = false`), so uploads should not be held asking.
 

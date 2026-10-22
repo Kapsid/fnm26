@@ -126,6 +126,10 @@ class DriftCareerRepository implements CareerRepository {
         staffAssistantId: const Value(null),
         staffScoutId: const Value(null),
         staffFitnessCoachId: const Value(null),
+        // Nor the old board's verdict. Carrying a closing mood over is what
+        // gives a manager who stays some rope; carried to a new job it opened
+        // a sacked manager's next post on the figure that got him sacked.
+        lastCycleBoard: const Value(null),
       ),
     );
   }
@@ -588,6 +592,14 @@ class DriftCareerRepository implements CareerRepository {
 
   @override
   Future<void> delete(int id) async {
-    await (_db.delete(_db.careers)..where((t) => t.id.equals(id))).go();
+    // The database does not enforce its foreign keys, so the career's markers
+    // (which carry the campaign tag) are removed by hand: an abandoned
+    // campaign must leave no trace.
+    await _db.transaction(() async {
+      await (_db.delete(_db.drawsWatched)
+            ..where((t) => t.careerId.equals(id)))
+          .go();
+      await (_db.delete(_db.careers)..where((t) => t.id.equals(id))).go();
+    });
   }
 }

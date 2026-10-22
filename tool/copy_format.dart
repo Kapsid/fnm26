@@ -21,10 +21,48 @@ const List<String> kColumns = [
   'pl',
   'es',
   'de',
+  'pt',
+  'tr',
+  'nl',
+  'id',
+  'el',
+  'sv',
+  'nb',
+  'vi',
+  'bg',
+  'da',
+  'fi',
+  'hu',
+  'hr',
+  'uk',
+  'fil',
 ];
 
 /// The language columns, in order — each is `lib/l10n/app_<code>.arb`.
-const List<String> kLanguages = ['en', 'cs', 'fr', 'it', 'pl', 'es', 'de'];
+const List<String> kLanguages = [
+  'en',
+  'cs',
+  'fr',
+  'it',
+  'pl',
+  'es',
+  'de',
+  'pt',
+  'tr',
+  'nl',
+  'id',
+  'el',
+  'sv',
+  'nb',
+  'vi',
+  'bg',
+  'da',
+  'fi',
+  'hu',
+  'hr',
+  'uk',
+  'fil',
+];
 
 /// The column index of language [code] in a row.
 int columnOf(String code) => kColumns.indexOf(code);

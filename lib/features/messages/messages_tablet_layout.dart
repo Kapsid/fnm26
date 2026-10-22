@@ -99,7 +99,7 @@ class _MessagesTabletLayout extends StatelessWidget {
                                   InboxFilter.competitions =>
                                     l.sideGroupCompetitions,
                                   InboxFilter.squad => l.sideSquad,
-                                }.toUpperCase(),
+                                }.capsIn(l.localeName),
                               ),
                               visualDensity: VisualDensity.compact,
                               selected: f == filter,

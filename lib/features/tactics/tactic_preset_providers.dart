@@ -71,8 +71,12 @@ final Provider<TacticPresetStore> tacticPresetStoreProvider = Provider(
 );
 
 /// The saved tactic presets for one save, alphabetically ordered.
+///
+/// Reads the store rather than watching it: the store invalidates this
+/// provider after every write, and a provider that watched the store would
+/// make that a circular dependency (an error in debug builds).
 final AutoDisposeFutureProviderFamily<List<TacticPreset>, int>
 tacticPresetsProvider = FutureProvider.autoDispose
     .family<List<TacticPreset>, int>(
-      (ref, careerId) => ref.watch(tacticPresetStoreProvider).load(careerId),
+      (ref, careerId) => ref.read(tacticPresetStoreProvider).load(careerId),
     );
