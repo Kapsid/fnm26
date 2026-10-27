@@ -150,6 +150,41 @@ void main() {
     expect(find.text(l.potyTop5Heading), findsOneWidget);
   });
 
+  testWidgets('the tension line never overlaps the winner card', (
+    tester,
+  ) async {
+    final l = await _pump(tester);
+    // Intro, fifth to second: then the pause.
+    await tester.pump(const Duration(milliseconds: 1800));
+    for (var i = 0; i < 4; i++) {
+      await tester.pump(const Duration(milliseconds: 2600));
+    }
+    await tester.pump(const Duration(milliseconds: 700));
+    final tension = find.byKey(const Key('poty.tension'));
+    final card = find.byKey(const Key('poty.winnerCard'));
+    expect(tension, findsOneWidget);
+    expect(find.text(l.potyCeremonyWinnerIs), findsOneWidget);
+    // Through the rest of the pause, the hand-over and the whole winner
+    // beat, one frame at a time.
+    var sawCard = false;
+    for (var ms = 0; ms < 6000; ms += 16) {
+      await tester.pump(const Duration(milliseconds: 16));
+      final hasTension = tension.evaluate().isNotEmpty;
+      final hasCard = card.evaluate().isNotEmpty;
+      if (hasCard) sawCard = true;
+      if (hasTension && hasCard) {
+        final a = tester.getRect(tension);
+        final b = tester.getRect(card);
+        expect(
+          a.overlaps(b),
+          isFalse,
+          reason: 'tension $a overlaps the winner card $b at +${ms}ms',
+        );
+      }
+    }
+    expect(sawCard, isTrue);
+  });
+
   testWidgets('reduced motion goes straight to the list', (tester) async {
     await _pump(tester, reducedMotion: true);
     expect(find.byKey(const Key('poty.ceremony')), findsNothing);

@@ -12807,4 +12807,205 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'समूहों का ड्रॉ होते ही बोर्ड यह लक्ष्य तय करेगा।';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'अगले $count $destination में पहुँचेंगे',
+      one: 'अगली टीम $destination में पहुँचेगी',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'कमाल की रात। अपने सबसे बड़े सपनों में भी हमने यह नहीं सोचा था। $opponent के ख़िलाफ़ $score!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। मुझे चिकोटी काटो। कोई तो चिकोटी काटो, प्लीज़।';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'मैं स्टैंड में रो रहा हूँ। $opponent के ख़िलाफ़ $score। इस टीम से प्यार है।';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। एक फ़ैन के तौर पर मेरी ज़िंदगी की सबसे शानदार रात, कोई मुक़ाबला ही नहीं।';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। इस देश के इतिहास के सबसे बड़े नतीजों में से एक।';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। दुनिया में किसी ने यह आते नहीं देखा। ऐतिहासिक।';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। इसकी चर्चा दशकों तक होगी।';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'याद रखना, आज रात तुम कहाँ थे: $opponent के ख़िलाफ़ $score।';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'पूरे साल शिकायत की और कल फिर करूँगा। पर आज रात? $opponent के ख़िलाफ़ $score। अविश्वसनीय।';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'मुझे भी शिकायत करने को कुछ नहीं मिल रहा। $opponent के ख़िलाफ़ $score। अविश्वसनीय सा।';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। मैंने कहा था यह टीम ख़त्म हो चुकी है। ग़लत होकर इतनी ख़ुशी कभी नहीं हुई।';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'ठीक है, मान लेता हूँ: $opponent के ख़िलाफ़ $score किसी सपने जैसा है। अगले हफ़्ते शायद फिर वही पुराना हाल।';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। एक शब्द: अविश्वसनीय!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'दुनिया की सबसे अच्छी टीमों में से एक से एक अंक। यह हम कभी भी ले लेंगे। $opponent के ख़िलाफ़ $score।';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score! गला बैठ गया है और मुझे परवाह नहीं।';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। ड्रॉ? ऐसा लग रहा है जैसे हमने सब कुछ जीत लिया।';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return '$opponent जैसी टीम से अंक लेने की उम्मीद नहीं थी, पर हम इसे ज़रूर लेंगे। $score, शानदार नतीजा।';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। ऐसा अंक जो सालों तक याद रहेगा।';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '$opponent बड़ी दावेदार बनकर आई और $score लेकर लौटी। गर्व की रात।';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। हमारे स्तर की शायद ही कोई टीम उनसे अंक ले पाती है।';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'मुझे बड़ी हार की उम्मीद थी। $opponent के ख़िलाफ़ $score। ख़ुशी से अपनी बात वापस लेता हूँ।';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'मुझे ड्रॉ पसंद नहीं, पर $opponent के ख़िलाफ़ $score? मुस्कुराकर ले लूँगा।';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$opponent के ख़िलाफ़ $score। आज रात तो निराशावादी भी झूम रहे हैं, मैं भी।';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'हमने जान लगाकर बचाव किया और $opponent के ख़िलाफ़ $score निकाला। बदसूरत? किसे परवाह। शानदार।';
+  }
+
+  @override
+  String get potyHistorySubtitle => 'सभी विजेता और किसने सबसे ज़्यादा बार जीता';
+
+  @override
+  String get potyHistoryEmpty =>
+      'अभी तक कोई प्लेयर ऑफ़ द ईयर नहीं चुना गया है। पहला मतदान 1 दिसंबर को होगा।';
+
+  @override
+  String get potyHistoryLatest => 'ताज़ा विजेता';
+
+  @override
+  String get potyHistoryMostWins => 'सबसे ज़्यादा जीत';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count जीत',
+      one: '1 जीत',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'साल-दर-साल विजेता';
+
+  @override
+  String get potyHistoryByNation => 'देश के अनुसार';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'आपका देश: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count विजेता',
+      one: '1 विजेता',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count बार टॉप 5 में',
+      one: '1 बार टॉप 5 में',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'आपके खिलाड़ी';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'आपका कोई भी खिलाड़ी अभी तक टॉप 5 में नहीं पहुँचा है।';
+
+  @override
+  String get potyHistoryYoung => 'युवा खिलाड़ी';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'अज्ञात खिलाड़ी';
 }

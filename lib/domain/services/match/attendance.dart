@@ -48,6 +48,8 @@ abstract final class Attendance {
   /// the home supporters' mood makes a home game (`FanMood.fillShift`): the
   /// caller passes it only for a home game of its own nation, so every AI
   /// ground and every neutral finals reads exactly as before.
+  /// [venueRules] are the rules the tournament's grounds follow (see
+  /// [VenueRules]).
   static MatchGround forFixture({
     required Fixture fixture,
     required bool neutral,
@@ -60,6 +62,7 @@ abstract final class Attendance {
     Map<int, ({Venue venue, double fillBonus})> homeGrounds = const {},
     Map<int, List<Venue>> hostEstates = const {},
     double moodFill = 0,
+    VenueRules venueRules = VenueRules.original,
   }) {
     // Whose ground: at a neutral finals it belongs to the TOURNAMENT — one of
     // the host countries, whoever is playing — and everywhere else to the home
@@ -82,6 +85,7 @@ abstract final class Attendance {
                 },
                 count: venueCount,
                 estates: hostEstates,
+                rules: venueRules,
               )[owner] ??
               const <Venue>[]
         : VenueGenerator.forHost(

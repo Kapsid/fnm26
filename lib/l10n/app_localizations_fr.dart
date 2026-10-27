@@ -12901,4 +12901,206 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'La direction fixera cet objectif une fois les groupes tirés au sort.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Les $count suivants se qualifient pour $destination',
+      one: 'Le suivant se qualifie pour $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Une soirée incroyable. Même dans nos rêves les plus fous, on n\'aurait pas imaginé ça. $score face à $opponent !';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score face à $opponent. Pincez-moi. Quelqu\'un peut me pincer ?';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Je pleure en tribune. $score face à $opponent. J\'aime cette équipe.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score face à $opponent. La plus belle soirée de ma vie de supporter, et de loin.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score face à $opponent. L\'un des plus grands résultats de l\'histoire de ce pays.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score face à $opponent. Personne au monde ne l\'avait vu venir. Historique.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score face à $opponent. On en parlera encore dans des décennies.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Retenez où vous étiez ce soir : $score face à $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'J\'ai râlé toute l\'année et je râlerai encore demain. Mais ce soir ? $score face à $opponent. Incroyable.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Même moi, je ne trouve rien à redire. $score face à $opponent. Irréel.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score face à $opponent. Je disais que cette équipe était finie. Jamais je n\'ai été aussi content d\'avoir tort.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Bon, je l\'avoue : $score face à $opponent, c\'est un rêve. Retour à la normale la semaine prochaine, sans doute.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score face à $opponent. Un seul mot : incroyable !';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Un point face à l\'une des meilleures équipes du monde. On le prend tous les jours. $score face à $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$score face à $opponent ! Je n\'ai plus de voix et je m\'en fiche.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score face à $opponent. Un nul ? On dirait qu\'on a tout gagné.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Prendre un point face à une équipe comme $opponent, personne ne l\'attendait, mais on le prend volontiers. $score, grand résultat.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score face à $opponent. Un point dont on se souviendra pendant des années.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '$opponent est arrivé en grand favori et repart avec un $score. Une soirée de fierté.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score face à $opponent. Rares sont les équipes de notre niveau à leur prendre un point.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Je m\'attendais à une raclée. $score face à $opponent. Je ravale mes paroles avec plaisir.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Je n\'aime pas les nuls, mais $score face à $opponent ? Je prends, avec le sourire.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score face à $opponent. Ce soir, même les oiseaux de mauvais augure applaudissent, moi compris.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'On a défendu comme des morts de faim et on ramène $score face à $opponent. Moche ? On s\'en moque. Génial.';
+  }
+
+  @override
+  String get potyHistorySubtitle =>
+      'Tous les lauréats, et qui en compte le plus';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Aucun Joueur de l’année n’a encore été élu. Le premier vote a lieu le 1er décembre.';
+
+  @override
+  String get potyHistoryLatest => 'Dernier lauréat';
+
+  @override
+  String get potyHistoryMostWins => 'Le plus titré';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count titres',
+      one: '1 titre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Lauréats par année';
+
+  @override
+  String get potyHistoryByNation => 'Par sélection';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Votre sélection : $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lauréats',
+      one: '1 lauréat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count places dans le top 5',
+      one: '1 place dans le top 5',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Vos joueurs';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Aucun de vos joueurs n’a encore fini dans le top 5.';
+
+  @override
+  String get potyHistoryYoung => 'Espoir';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Joueur inconnu';
 }

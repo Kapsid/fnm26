@@ -12802,4 +12802,205 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'The board sets this target once the groups are drawn.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'The next $count go to $destination',
+      one: 'The next team goes to $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'An amazing night. We could not have predicted this in our wildest dreams. $score against $opponent!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score against $opponent. Pinch me. Somebody please pinch me.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'I am crying in the stands. $opponent beaten $score. I love this team.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score against $opponent. Best night of my life as a fan, and it is not close.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score against $opponent. One of the greatest results this country has ever had.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return 'Nobody anywhere saw $score against $opponent coming. Historic.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$opponent beaten $score. People will talk about this one for decades.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Remember where you were tonight: $score against $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'I have moaned all year and I will moan again tomorrow. Tonight? $score against $opponent. Incredible.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Even I cannot find anything to complain about. $score against $opponent. Unreal.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score against $opponent. I said this team was finished. Never been happier to be wrong.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Fine, I admit it: $score against $opponent is the stuff of dreams. Back to normal next week, probably.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score against $opponent. One word: incredible!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'A point off one of the best sides in the world. We\'ll take that all day. $score against $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return 'Held $opponent $score! I have no voice left and I don\'t care.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score against $opponent. A draw? It feels like we won the whole thing.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'To get a point off a side like $opponent was not expected, but we will definitely take it. $score, great result.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score against $opponent. A point people will remember for years.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '$opponent came as heavy favourites and left with $score. A proud night.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score against $opponent. Hardly anyone at our level ever takes a point off them.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'I expected a hiding. $score against $opponent. I will happily eat my words.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Not a fan of draws, but $score against $opponent? I will take it and smile.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score against $opponent. Even the doom-mongers, me included, are cheering tonight.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'We defended for our lives and got $score against $opponent. Ugly? Who cares. Brilliant.';
+  }
+
+  @override
+  String get potyHistorySubtitle => 'Every winner, and who has won the most';
+
+  @override
+  String get potyHistoryEmpty =>
+      'No Player of the Year has been voted yet. The first vote comes on 1 December.';
+
+  @override
+  String get potyHistoryLatest => 'Latest winner';
+
+  @override
+  String get potyHistoryMostWins => 'Most wins';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count wins',
+      one: '1 win',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Winners by year';
+
+  @override
+  String get potyHistoryByNation => 'By nation';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Your nation: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count winners',
+      one: '1 winner',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count top-5 finishes',
+      one: '1 top-5 finish',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Your players';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'None of your players has finished in the top five yet.';
+
+  @override
+  String get potyHistoryYoung => 'Young player';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Unknown player';
 }

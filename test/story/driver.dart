@@ -177,6 +177,12 @@ class StoryDriver {
   Future<void> Function(MatchPreview p)? beforeMatch;
   Future<void> Function(Fixture played)? afterMatch;
 
+  /// Settle a level knockout the way the live match screen does (automatic
+  /// takers, no talks) instead of letting the season service draw its own
+  /// shootout, so a replayed shootout ends as the plan recorded it. Off by
+  /// default: the earlier stories were found without it.
+  bool screenKnockouts = false;
+
   static Future<StoryDriver> start(
     ProviderContainer c,
     int seed, {
@@ -538,7 +544,9 @@ class StoryDriver {
           careerId,
           p.fixture,
           result,
-          knockout: salt == 0 ? null : _knockoutFor(p, result, salt),
+          knockout: salt == 0 && !screenKnockouts
+              ? null
+              : _knockoutFor(p, result, salt),
         );
     await c.read(achievementServiceProvider).checkAndRecord(careerId);
     final nation =

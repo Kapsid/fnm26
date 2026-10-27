@@ -259,7 +259,6 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
   // side just above was re-read the same way, from -1 to -5, so a famous win
   // could leave the board flat or even lose it a point. A frozen baseline
   // cannot move with a result.
-  final window = played.take(BoardSatisfaction.formWindow).toList();
   final baselines = <int, Map<int, int>>{};
   Future<Map<int, int>> ranksFor(Fixture f) async {
     var cycle = 0;
@@ -272,41 +271,39 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
     );
   }
 
-  final asUnderdog = <bool>[];
-  // Which of them were heavy defeats by a fellow minnow, for the minnow's
-  // form (see BoardSatisfaction.isHumiliation), on the same frozen ranks.
-  final humiliations = <bool>[];
-  for (final f in window) {
+  // Every counted result of the spell, oldest first, with whether it was
+  // played as the clear underdog and (for the minnow's form, see
+  // BoardSatisfaction.isHumiliation) whether it was a humiliation, on the
+  // same frozen ranks. The form term walks them in order (see
+  // BoardSatisfaction.stickyFormPoints), so a win never lowers it.
+  final chronological =
+      <({MatchOutcome outcome, bool underdog, bool humiliation})>[];
+  for (final f in played.reversed) {
     final ranks = await ranksFor(f);
     final isHome = f.homeNationId == career.nationId;
+    final mine = isHome ? f.homeScore! : f.awayScore!;
+    final against = isHome ? f.awayScore! : f.homeScore!;
     final own = ranks[career.nationId];
     final theirs = ranks[isHome ? f.awayNationId : f.homeNationId];
     final known = own != null && theirs != null;
-    asUnderdog.add(
-      known && BoardSatisfaction.isUnderdog(ownRank: own, opponentRank: theirs),
-    );
-    humiliations.add(
-      known &&
+    chronological.add((
+      outcome: mine > against
+          ? MatchOutcome.win
+          : mine == against
+          ? MatchOutcome.draw
+          : MatchOutcome.loss,
+      underdog:
+          known &&
+          BoardSatisfaction.isUnderdog(ownRank: own, opponentRank: theirs),
+      humiliation:
+          known &&
           BoardSatisfaction.isHumiliation(
-            margin: isHome
-                ? f.awayScore! - f.homeScore!
-                : f.homeScore! - f.awayScore!,
+            margin: against - mine,
             ownRank: own,
             opponentRank: theirs,
           ),
-    );
+    ));
   }
-  final recent = [
-    for (final f in played.take(BoardSatisfaction.formWindow))
-      () {
-        final isHome = f.homeNationId == career.nationId;
-        final mine = isHome ? f.homeScore! : f.awayScore!;
-        final theirs = isHome ? f.awayScore! : f.homeScore!;
-        if (mine > theirs) return MatchOutcome.win;
-        if (mine == theirs) return MatchOutcome.draw;
-        return MatchOutcome.loss;
-      }(),
-  ];
 
   // How much of a minnow the nation is: 0 for all but the weakest sides, whose
   // board is more patient (see BoardSatisfaction.minnowFactor).
@@ -318,8 +315,11 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
 
   final base =
       (BoardSatisfaction.compute(
-                recent: recent,
-                recentAsUnderdog: asUnderdog,
+                recent: const [],
+                form: BoardSatisfaction.stickyFormPoints(
+                  chronological,
+                  minnow: minnow,
+                ),
                 honours: honours,
                 worldRank: ranking?.position[career.nationId],
                 objectives: settled,
@@ -337,7 +337,6 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
                     : career.lastCycleBoard,
                 lockedInLosses: lockedInLosses,
                 minnow: minnow,
-                recentHumiliations: humiliations,
               ) +
               press.board)
           .clamp(0, 100);

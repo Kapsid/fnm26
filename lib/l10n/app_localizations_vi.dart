@@ -12753,4 +12753,201 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Ban lãnh đạo sẽ đặt mục tiêu này sau khi bốc thăm chia bảng.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count đội tiếp theo đi tiếp vào $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Một đêm không thể tin nổi. Ngay cả trong giấc mơ điên rồ nhất cũng không ai dám nghĩ tới. $score trước $opponent!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score trước $opponent. Véo tôi đi. Ai đó làm ơn véo tôi một cái.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Tôi đang khóc trên khán đài. $score trước $opponent. Yêu đội bóng này quá.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score trước $opponent. Đêm tuyệt vời nhất đời cổ động viên của tôi, không gì sánh bằng.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score trước $opponent. Một trong những kết quả vĩ đại nhất lịch sử đất nước này.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score trước $opponent. Không ai trên đời đoán được. Lịch sử.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score trước $opponent. Người ta sẽ còn nhắc tới trận này hàng chục năm nữa.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Hãy nhớ đêm nay bạn đã ở đâu: $score trước $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Cả năm tôi càu nhàu và mai tôi sẽ lại càu nhàu. Nhưng đêm nay? $score trước $opponent. Không thể tin nổi.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Đến tôi cũng chẳng tìm ra gì để chê. $score trước $opponent. Như mơ.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score trước $opponent. Tôi từng nói đội này hết thời rồi. Chưa bao giờ vui đến thế vì mình sai.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Thôi được, tôi thừa nhận: $score trước $opponent đúng là như mơ. Tuần sau chắc lại đâu vào đấy.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score trước $opponent. Một từ thôi: không thể tin nổi!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Một điểm trước một trong những đội mạnh nhất thế giới. Lúc nào cũng nhận. $score trước $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$score trước $opponent! Tôi khản cả giọng và chẳng quan tâm.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score trước $opponent. Hòa ư? Cảm giác như mình vừa vô địch vậy.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Giành điểm trước một đội như $opponent là điều không ai nghĩ tới, nhưng chắc chắn chúng tôi nhận. $score, kết quả tuyệt vời.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score trước $opponent. Một điểm sẽ được nhớ tới nhiều năm.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '$opponent đến với tư cách ứng viên số một và ra về với tỷ số $score. Một đêm đầy tự hào.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score trước $opponent. Hiếm đội nào cùng tầm với chúng ta lấy được điểm của họ.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Tôi tưởng sẽ thua đậm. $score trước $opponent. Xin vui vẻ rút lại lời.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Tôi không thích hòa, nhưng $score trước $opponent? Nhận với nụ cười.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score trước $opponent. Đêm nay đến cả những kẻ bi quan, kể cả tôi, cũng reo hò.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Chúng ta phòng ngự như liều mạng và có $score trước $opponent. Xấu xí? Ai quan tâm. Tuyệt vời.';
+  }
+
+  @override
+  String get potyHistorySubtitle => 'Tất cả người thắng và ai thắng nhiều nhất';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Chưa có Cầu thủ của năm nào được bầu. Cuộc bầu chọn đầu tiên diễn ra vào ngày 1 tháng 12.';
+
+  @override
+  String get potyHistoryLatest => 'Người thắng gần nhất';
+
+  @override
+  String get potyHistoryMostWins => 'Thắng nhiều nhất';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lần thắng',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Người thắng theo năm';
+
+  @override
+  String get potyHistoryByNation => 'Theo quốc gia';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Đội tuyển của bạn: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count người thắng',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lần vào top 5',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Cầu thủ của bạn';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Chưa cầu thủ nào của bạn lọt vào top 5.';
+
+  @override
+  String get potyHistoryYoung => 'Cầu thủ trẻ';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Cầu thủ không rõ';
 }

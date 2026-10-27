@@ -12810,4 +12810,206 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Styret setter dette målet når gruppene er trukket.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'De neste $count går videre til $destination',
+      one: 'Det neste laget går videre til $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'For en kveld. Ikke engang i våre villeste drømmer hadde vi sett for oss dette. $score mot $opponent!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score mot $opponent. Klyp meg. Kan noen være så snill å klype meg?';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Jeg gråter på tribunen. $score mot $opponent. Jeg elsker dette laget.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score mot $opponent. Den beste kvelden i mitt supporterliv, med god margin.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score mot $opponent. Et av de største resultatene i landets historie.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score mot $opponent. Ingen i hele verden så dette komme. Historisk.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score mot $opponent. Dette kommer folk til å snakke om i tiår.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Husk hvor dere var i kveld: $score mot $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Jeg har klaget hele året og klager igjen i morgen. Men i kveld? $score mot $opponent. Utrolig.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Selv jeg finner ingenting å klage på. $score mot $opponent. Uvirkelig.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score mot $opponent. Jeg sa at laget var ferdig. Har aldri vært gladere for å ta feil.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Greit, jeg innrømmer det: $score mot $opponent er som en drøm. Neste uke er det vel som vanlig igjen.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score mot $opponent. Ett ord: utrolig!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Ett poeng mot et av verdens beste lag. Det tar vi alle dager. $score mot $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$score mot $opponent! Stemmen er borte, og jeg bryr meg ikke.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score mot $opponent. Uavgjort? Det føles som vi vant alt.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Et poeng mot et lag som $opponent var ikke ventet, men det tar vi gjerne. $score, et sterkt resultat.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score mot $opponent. Et poeng folk vil huske i årevis.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '$opponent kom som storfavoritt og reiser hjem med $score. En stolt kveld.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score mot $opponent. Nesten ingen lag på vårt nivå tar poeng mot dem.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Jeg ventet juling. $score mot $opponent. Jeg spiser gjerne i meg ordene mine.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Jeg liker ikke uavgjort, men $score mot $opponent? Det tar jeg med et smil.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score mot $opponent. I kveld jubler til og med dommedagsprofetene, meg inkludert.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Vi forsvarte oss for livet og tok $score mot $opponent. Stygt? Hvem bryr seg. Strålende.';
+  }
+
+  @override
+  String get potyHistorySubtitle =>
+      'Alle vinnerne og hvem som har vunnet flest ganger';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Ingen Årets spiller er kåret ennå. Den første avstemningen er 1. desember.';
+
+  @override
+  String get potyHistoryLatest => 'Siste vinner';
+
+  @override
+  String get potyHistoryMostWins => 'Flest seire';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count seire',
+      one: '1 seier',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Vinnere per år';
+
+  @override
+  String get potyHistoryByNation => 'Per nasjon';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Din nasjon: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vinnere',
+      one: '1 vinner',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count topp 5-plasseringer',
+      one: '1 topp 5-plassering',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Dine spillere';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Ingen av spillerne dine har endt blant de fem beste ennå.';
+
+  @override
+  String get potyHistoryYoung => 'Ung spiller';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Ukjent spiller';
 }

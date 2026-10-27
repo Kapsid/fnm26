@@ -1,4 +1,5 @@
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 
 /// Where one nation sits in the six-team intercontinental play-off bracket.
@@ -84,3 +85,25 @@ const String playoffFinalFixtureRound = 'POFINAL';
   }
   return (results: results, scores: scores);
 }
+
+/// Draw-watched marker kind (per career, per cycle) recording that this
+/// cycle's play-off is decided on the aligned rng stream: a tie the manager
+/// played still takes its draw from the stream, so the ties he was not in keep
+/// the winners the bracket showed before he kicked off (see
+/// `WorldCupFinals._settle`).
+///
+/// Stamped by the hub the first time it looks at a cycle's play-off, which is
+/// always before that cycle's finals are drawn. A cycle whose finals were drawn
+/// without it was decided on the old stream, and its bracket must be replayed
+/// on that stream to match the field it filled.
+const wcPlayoffStreamKind = 'wcPlayoffStream';
+
+/// Whether the current cycle's play-off must be replayed on the old rng stream
+/// (see [wcPlayoffStreamKind]): its finals are drawn and it was never marked.
+Future<bool> playoffLegacyStream(
+  CompetitionRepository comp,
+  int careerId,
+  int cycle,
+) async =>
+    await comp.hasFinals(careerId) &&
+    !await comp.hasWatchedDraw(careerId, cycle, wcPlayoffStreamKind);

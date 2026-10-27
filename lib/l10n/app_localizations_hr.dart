@@ -12995,4 +12995,210 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Odbor će postaviti ovaj cilj nakon ždrijeba skupina.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sljedećih $count momčadi ide dalje u $destination',
+      few: 'Sljedeće $count momčadi idu dalje u $destination',
+      one: 'Sljedeća momčad ide dalje u $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Nevjerojatna večer. Ni u najluđim snovima ovo nismo mogli predvidjeti. $score protiv momčadi $opponent!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Uštipnite me. Neka me netko uštipne, molim vas.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Plačem na tribini. $score protiv momčadi $opponent. Volim ovu momčad.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Najljepša večer mog navijačkog života, i to uvjerljivo.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Jedan od najvećih rezultata u povijesti ove zemlje.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Nitko na svijetu to nije očekivao. Povijesno.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score protiv momčadi $opponent. O ovome će se pričati desetljećima.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Zapamtite gdje ste bili večeras: $score protiv momčadi $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Cijelu godinu gunđam i sutra ću opet. Ali večeras? $score protiv momčadi $opponent. Nevjerojatno.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Čak ni ja ne nalazim na što bih se žalio. $score protiv momčadi $opponent. Nestvarno.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Govorio sam da je ova momčad gotova. Nikad mi nije bilo draže što sam pogriješio.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Dobro, priznajem: $score protiv momčadi $opponent je kao iz sna. Sljedeći tjedan vjerojatno opet po starom.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Jednom riječju: nevjerojatno!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Bod protiv jedne od najboljih reprezentacija svijeta. Uzimamo ga svaki dan. $score protiv momčadi $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$score protiv momčadi $opponent! Ostao sam bez glasa i baš me briga.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Remi? Osjećam se kao da smo osvojili sve.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Bod protiv momčadi kao što je $opponent nitko nije očekivao, ali svakako ga uzimamo. $score, sjajan rezultat.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Bod koji će se pamtiti godinama.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return 'Došli su kao veliki favoriti ($opponent) i odlaze s $score. Ponosna večer.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Gotovo nitko naše razine ne uzme im bod.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Očekivao sam debakl. $score protiv momčadi $opponent. Rado povlačim svoje riječi.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Ne volim remije, ali $score protiv momčadi $opponent? Uzimam s osmijehom.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Večeras slave čak i crnogledi, uključujući mene.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Branili smo se kao za život i uzeli $score protiv momčadi $opponent. Ružno? Koga briga. Sjajno.';
+  }
+
+  @override
+  String get potyHistorySubtitle =>
+      'Svi dobitnici i tko je najčešće pobjeđivao';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Igrač godine još nije izabran. Prvo glasanje je 1. prosinca.';
+
+  @override
+  String get potyHistoryLatest => 'Posljednji dobitnik';
+
+  @override
+  String get potyHistoryMostWins => 'Najviše nagrada';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nagrada',
+      few: '$count nagrade',
+      one: '$count nagrada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Dobitnici po godinama';
+
+  @override
+  String get potyHistoryByNation => 'Po državama';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Tvoja država: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dobitnika',
+      few: '$count dobitnika',
+      one: '$count dobitnik',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count plasmana u top 5',
+      few: '$count plasmana u top 5',
+      one: '$count plasman u top 5',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Tvoji igrači';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Nijedan tvoj igrač još nije završio među prvih pet.';
+
+  @override
+  String get potyHistoryYoung => 'Mladi igrač';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Nepoznati igrač';
 }

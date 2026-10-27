@@ -183,7 +183,11 @@ const List<ShellDestination> shellDestinations = [
     section: ShellSection.history,
     icon: Icons.account_circle,
     path: Routes.careers,
-    alsoActiveOn: {Routes.careerSummary, Routes.managerHistory},
+    alsoActiveOn: {
+      Routes.careerSummary,
+      Routes.managerHistory,
+      Routes.potyHistory,
+    },
   ),
 ];
 

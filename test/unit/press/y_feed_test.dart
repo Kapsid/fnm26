@@ -19,6 +19,7 @@ void main() {
     competitive: true,
     stakes: YStakes.qualifier,
     shootoutWon: null,
+    away: false,
   );
 
   // A match nothing else is known about — the shape these tests were written
@@ -41,8 +42,11 @@ void main() {
     });
 
     test('an upset win is read as an upset', () {
-      final p = posts(match(mine: 70, theirs: 4, scored: 2, conceded: 1));
+      final p = posts(match(mine: 50, theirs: 25, scored: 2, conceded: 1));
       expect(p.map((x) => x.template), contains(YTemplate.winUpset));
+      // Sixty-six places up is giant killing, a tier of its own.
+      final giant = posts(match(mine: 70, theirs: 4, scored: 2, conceded: 1));
+      expect(giant.map((x) => x.template), contains(YTemplate.winEuphoric));
     });
 
     test('a routine win is read as routine', () {

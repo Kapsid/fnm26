@@ -12790,4 +12790,202 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Dewan menetapkan target ini setelah grup diundi.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count berikutnya lolos ke $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Malam yang luar biasa. Dalam mimpi terliar pun kami tak membayangkan ini. $score melawan $opponent!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score melawan $opponent. Cubit aku. Tolong seseorang cubit aku.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Aku menangis di tribun. $score melawan $opponent. Aku cinta tim ini.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score melawan $opponent. Malam terbaik dalam hidupku sebagai suporter, tak ada tandingannya.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score melawan $opponent. Salah satu hasil terbesar dalam sejarah negeri ini.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score melawan $opponent. Tak ada seorang pun di dunia yang menduganya. Bersejarah.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score melawan $opponent. Ini akan dibicarakan selama puluhan tahun.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Ingat di mana kalian malam ini: $score melawan $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Aku mengeluh sepanjang tahun dan besok akan mengeluh lagi. Tapi malam ini? $score melawan $opponent. Luar biasa.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Bahkan aku tak menemukan apa pun untuk dikeluhkan. $score melawan $opponent. Tak masuk akal.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score melawan $opponent. Aku bilang tim ini sudah habis. Belum pernah aku sesenang ini karena salah.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Baiklah, aku akui: $score melawan $opponent itu seperti mimpi. Minggu depan mungkin kembali seperti biasa.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score melawan $opponent. Satu kata: luar biasa!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Satu poin dari salah satu tim terbaik dunia. Kami terima kapan saja. $score melawan $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$score melawan $opponent! Suaraku habis dan aku tak peduli.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score melawan $opponent. Seri? Rasanya seperti kami menjuarai segalanya.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Mencuri poin dari tim seperti $opponent tidak diduga, tapi tentu kami ambil. $score, hasil hebat.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score melawan $opponent. Satu poin yang akan dikenang bertahun-tahun.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '$opponent datang sebagai unggulan berat dan pulang dengan $score. Malam yang membanggakan.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score melawan $opponent. Hampir tak ada tim selevel kami yang bisa mencuri poin dari mereka.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Aku kira kami bakal dibantai. $score melawan $opponent. Dengan senang hati kutarik kata-kataku.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Aku tak suka hasil seri, tapi $score melawan $opponent? Kuterima sambil tersenyum.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score melawan $opponent. Malam ini bahkan para pesimis ikut bersorak, termasuk aku.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Kami bertahan mati-matian dan dapat $score melawan $opponent. Jelek? Siapa peduli. Hebat.';
+  }
+
+  @override
+  String get potyHistorySubtitle =>
+      'Semua pemenang dan siapa yang paling sering menang';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Belum ada Pemain Terbaik Tahun Ini yang dipilih. Pemungutan suara pertama pada 1 Desember.';
+
+  @override
+  String get potyHistoryLatest => 'Pemenang terakhir';
+
+  @override
+  String get potyHistoryMostWins => 'Terbanyak menang';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kali menang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Pemenang per tahun';
+
+  @override
+  String get potyHistoryByNation => 'Per negara';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Negara Anda: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pemenang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kali masuk 5 besar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Pemain Anda';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Belum ada pemain Anda yang finis di lima besar.';
+
+  @override
+  String get potyHistoryYoung => 'Pemain muda';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Pemain tak dikenal';
 }

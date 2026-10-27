@@ -23,6 +23,19 @@ extension SeasonFinals on SeasonService {
   Future<void> _progressPlayoff(int careerId) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
+    // This cycle's finals are not drawn yet (the caller checks), so its
+    // play-off is decided on the aligned stream from here on.
+    if (!await _comp.hasWatchedDraw(
+      careerId,
+      career.cyclePointer,
+      wcPlayoffStreamKind,
+    )) {
+      await _comp.markDrawWatched(
+        careerId,
+        career.cyclePointer,
+        wcPlayoffStreamKind,
+      );
+    }
 
     final tables = await _comp.allGroupTablesByConfederation(careerId);
     final grouped = <Confederation, List<List<GroupStanding>>>{};
@@ -60,9 +73,19 @@ extension SeasonFinals on SeasonService {
     );
 
     // Not the standard six, or the manager sits it out → decide instantly, as
-    // the game always has.
+    // the game always has, on the very pool, frozen seeding and stream the
+    // bracket screen replays. Left to itself the finals generator re-derived
+    // the pool from the LIVE ranking, which agrees only while nothing has
+    // moved since the seeding was frozen.
     if (path == null) {
-      await _generateFinals(careerId);
+      await _generateFinals(
+        careerId,
+        playoffWinners: WorldCupFinals.playoffWinners(
+          pool,
+          rankingById,
+          _playoffRng(career),
+        ),
+      );
       return;
     }
 

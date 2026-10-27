@@ -27,6 +27,12 @@ import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart' show worldCupQualDrawKind;
 import 'package:fnm/features/hub/objective_providers.dart'
     show briefRulesV2Kind, briefRulesV3Kind;
+import 'package:fnm/features/tournaments/city_providers.dart'
+    show hostVenuesV2Kind;
+
+// The rollover (a part of hub_providers) writes it too.
+export 'package:fnm/features/tournaments/city_providers.dart'
+    show hostVenuesV2Kind;
 
 /// All save games, most recent first (seeding the DB first if needed).
 ///
@@ -248,6 +254,9 @@ class CareerService {
     await comp.markDrawWatched(career.id, 0, namePoolsV4Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV2Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV3Kind);
+    // Its finals are staged in as many real grounds as the hosts offer
+    // (see hostVenuesV2Kind).
+    await comp.markDrawWatched(career.id, 0, hostVenuesV2Kind);
     await comp.markDrawWatched(career.id, 0, fluidWindowsKind);
     // Its caps log credits a naturalised man to the nation he plays for now
     // (see capsFollowNationKind).

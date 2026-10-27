@@ -53,6 +53,7 @@ class ContinentalData {
     this.hostIds = const [],
     this.hostCities = const {},
     this.hostEstates = const {},
+    this.venueRules = VenueRules.original,
     this.qualDrawWatched = true,
     this.finalsDrawWatched = true,
     this.identity,
@@ -92,6 +93,9 @@ class ContinentalData {
   /// The grounds the career has made of its own nation's estate when that
   /// nation hosts (see `hostEstatesFor`); empty otherwise.
   final Map<int, List<Venue>> hostEstates;
+
+  /// The rules this edition's grounds follow (see `hostVenuesV2Kind`).
+  final VenueRules venueRules;
 
   /// Whether this is the player's region (the only one played in detail; other
   /// regions are simulated in the background and only appear in History).
@@ -751,6 +755,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
     playerNationId: career.nationId,
     playerNames: playerNames,
     hostCities: hostCities,
+    venueRules: await venueRulesFor(comp, key.careerId, career.cyclePointer),
     hostEstates: await hostEstatesFor(ref, key.careerId, hostIds),
     qualDrawWatched: qualDrawWatched,
     finalsDrawWatched: finalsDrawWatched,

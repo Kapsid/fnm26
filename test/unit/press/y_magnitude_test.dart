@@ -30,6 +30,7 @@ void main() {
     competitive: competitive,
     stakes: stakes,
     shootoutWon: shootoutWon,
+    away: false,
   );
 
   YContext ctx(YMatch m, {String? scorer}) => (
@@ -108,7 +109,8 @@ void main() {
       expect(
         templates(big),
         containsAll([
-          YTemplate.winUpset,
+          // Seventy-four places up: giant killing (y_giant_killing_test).
+          YTemplate.winEuphoric,
           YTemplate.knockoutWin,
           YTemplate.neutralWin,
           YTemplate.awayFansWin,
@@ -381,7 +383,7 @@ void main() {
 
     test('a point is a triumph or a disgrace depending on whose', () {
       expect(
-        YFeed.classify(match(mine: 90, theirs: 3, scored: 1, conceded: 1)),
+        YFeed.classify(match(mine: 45, theirs: 20, scored: 1, conceded: 1)),
         YTemplate.drewHeroic,
       );
       expect(

@@ -56,6 +56,7 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
     Routes.nationVitrine: '&nationId=${other.id}',
     Routes.careers: '',
     Routes.careerSummary: '',
+    Routes.potyHistory: '',
     Routes.achievements: '',
     Routes.challenges: '',
     Routes.messages: '',

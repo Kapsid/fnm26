@@ -716,11 +716,15 @@ abstract final class WorldCupFinals {
   /// and its winner stands. That is how a manager in the pool decides his own
   /// fate: without it every tie was settled here, at finalist selection, and a
   /// manager was eliminated from a World Cup he never got to play for.
+  ///
+  /// [legacyStream] replays a cycle decided before 1.0.7's fix (see
+  /// [_settle]); everything else leaves it false.
   static List<int> playoffWinners(
     List<int> pool,
     Map<int, int> rankingById,
     SeededRng rng, {
     Map<String, int> playedResults = const {},
+    bool legacyStream = false,
   }) {
     const berths = QualificationFormat.playoffBerths;
     if (pool.length <= berths) return pool;
@@ -734,6 +738,7 @@ abstract final class WorldCupFinals {
         rankingById,
         rng,
         playedResults,
+        legacyStream: legacyStream,
       );
       final w2 = _settle(
         tieKey(round: playoffSemiRound, slot: 1),
@@ -742,6 +747,7 @@ abstract final class WorldCupFinals {
         rankingById,
         rng,
         playedResults,
+        legacyStream: legacyStream,
       );
       return [
         _settle(
@@ -751,6 +757,7 @@ abstract final class WorldCupFinals {
           rankingById,
           rng,
           playedResults,
+          legacyStream: legacyStream,
         ),
         _settle(
           tieKey(round: playoffFinalRound, slot: 1),
@@ -759,6 +766,7 @@ abstract final class WorldCupFinals {
           rankingById,
           rng,
           playedResults,
+          legacyStream: legacyStream,
         ),
       ];
     }
@@ -780,20 +788,34 @@ abstract final class WorldCupFinals {
       'ICPO-$round-$slot';
 
   /// Settles one tie: a played result if there is one, otherwise the model.
+  ///
+  /// The model's draw is taken from [rng] for EVERY tie, played or not, so a
+  /// tie the manager played leaves the stream exactly where it was. It used to
+  /// be skipped, and then every tie after it drew a different number from the
+  /// one it drew while his tie was still to come: the other semi, or the other
+  /// path final, could change winner the moment he kicked off. The bracket he
+  /// had been shown (El Salvador beating the UAE) was not the one that filled
+  /// the finals, and El Salvador was missing from them.
+  ///
+  /// [legacyStream] keeps the old skip, for a cycle whose finals were drawn
+  /// under it: its stored field must go on matching the bracket shown for it.
   static int _settle(
     String key,
     int a,
     int b,
     Map<int, int> rankingById,
     SeededRng rng,
-    Map<String, int> playedResults,
-  ) {
+    Map<String, int> playedResults, {
+    bool legacyStream = false,
+  }) {
     final played = playedResults[key];
     // A played tie is the truth. A result naming somebody who is not in this
     // tie is stale — an earlier round has since been replayed — and is ignored
     // rather than allowed to put a nation into a bracket it never reached.
-    if (played != null && (played == a || played == b)) return played;
-    return _playoffMatch(a, b, rankingById, rng);
+    final stands = played != null && (played == a || played == b);
+    if (legacyStream && stands) return played;
+    final modelled = _playoffMatch(a, b, rankingById, rng);
+    return stands ? played : modelled;
   }
 
   /// One play-off tie: the stronger (lower-ranked) side is favoured, but a
@@ -830,6 +852,7 @@ abstract final class WorldCupFinals {
     List<int>? pool,
     Map<String, int> playedResults = const {},
     Map<String, (int, int)> playedScores = const {},
+    bool legacyStream = false,
   }) {
     final field =
         pool ??
@@ -852,7 +875,15 @@ abstract final class WorldCupFinals {
       // for display never shifts who actually goes through — unless the tie was
       // really played, in which case both come from the match.
       final key = tieKey(round: round, slot: slot);
-      final w = _settle(key, a, b, rankingById, rng, playedResults);
+      final w = _settle(
+        key,
+        a,
+        b,
+        rankingById,
+        rng,
+        playedResults,
+        legacyStream: legacyStream,
+      );
       final loser = w == a ? b : a;
       final (wg, lg) = playedScores[key] ?? _playoffScore(w, loser);
       ties.add((

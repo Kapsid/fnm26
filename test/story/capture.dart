@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/ui_language.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -77,8 +78,14 @@ void setPhone(WidgetTester tester) {
 Future<void> pumpApp(
   WidgetTester tester,
   ProviderContainer container,
-  String location,
-) async {
+  String location, {
+  Locale locale = const Locale('en'),
+}) async {
+  if (locale.languageCode != 'en') {
+    // As the Settings picker sets it, so screens that read the language
+    // (Settings itself, translated nation names) see it too.
+    container.read(localeProvider.notifier).state = locale;
+  }
   final router = container.read(routerProvider)..go(location);
   await tester.pumpWidget(
     RepaintBoundary(
@@ -92,7 +99,7 @@ Future<void> pumpApp(
             style: const TextStyle(fontFamilyFallback: _fallback),
             child: child!,
           ),
-          locale: const Locale('en'),
+          locale: locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           routerConfig: router,

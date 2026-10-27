@@ -29,11 +29,14 @@ import 'package:fnm/features/squad/international_retirement_providers.dart';
 /// The manager's played matches, newest first, with both sides' world
 /// positions — the raw material both Y and the public's mood are built from.
 ///
-/// Ranks are the CURRENT ones rather than the ones held on the day: the game
-/// does not store a historical position per fixture, and a feed that quietly
-/// re-judged old results as the ranking moved would be worse than one that
-/// judges them all by today's standing.
-typedef _Judged = ({
+/// Ranks are the ones frozen at the start of the cycle each match was played
+/// in (see [seedRankByIdProvider]), the reading the board uses too. They used
+/// to be today's live ranking, which already holds the match's own result:
+/// Montenegro beat Sweden 6-2, climbed while Sweden dropped, and the same
+/// night was re-read as a win between nearer equals. Every older result was
+/// re-judged each time the ranking moved, too. A frozen baseline does
+/// neither.
+typedef YJudged = ({
   String opponent,
   int nationRank,
   int opponentRank,
@@ -48,25 +51,43 @@ typedef _Judged = ({
   /// Whether it was played at home (not away, not a neutral finals ground):
   /// the only matches after which the stands can describe their own ground.
   bool home,
+
+  /// Whether it was played at the opponent's ground.
+  bool away,
 });
 
-final AutoDisposeFutureProviderFamily<List<_Judged>, int> _judgedProvider =
-    FutureProvider.autoDispose.family<List<_Judged>, int>((
+final AutoDisposeFutureProviderFamily<List<YJudged>, int> yJudgedProvider =
+    FutureProvider.autoDispose.family<List<YJudged>, int>((
       ref,
       careerId,
     ) async {
       await ref.watch(seedLoaderProvider).ensureSeeded();
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return const [];
-      final ranking = await ref.watch(worldRankingProvider(careerId).future);
+      // Watched only so a sim step refreshes this list: the hub invalidates
+      // the live ranking after every step, and the fixtures read below go
+      // through no provider that would notice a new result. Its positions
+      // are NOT used (see above); without the watch the feed and the public
+      // mood kept showing the state before the match.
+      await ref.watch(worldRankingProvider(careerId).future);
       final nations = {
         for (final n
             in await ref.watch(nationRepositoryProvider).forCareer(careerId))
           n.id: n,
       };
       final total = nations.length;
-      int rankOf(int id) =>
-          ranking?.position[id] ?? nations[id]?.ranking ?? total;
+      // The ranking frozen at the start of the cycle a match was played in.
+      final baselines = <int, Map<int, int>>{};
+      Future<Map<int, int>> ranksOn(DateTime date) async {
+        var cycle = 0;
+        while (cycle < career.cyclePointer &&
+            !date.isBefore(CareerService.cycleOpens(cycle + 1))) {
+          cycle++;
+        }
+        return baselines[cycle] ??= await ref.watch(
+          seedRankByIdProvider((careerId: careerId, cycle: cycle)).future,
+        );
+      }
 
       final fixtures = await ref
           .watch(competitionRepositoryProvider)
@@ -76,12 +97,14 @@ final AutoDisposeFutureProviderFamily<List<_Judged>, int> _judgedProvider =
           if (f.hasResult) f,
       ]..sort((a, b) => b.date.compareTo(a.date));
 
-      final out = <_Judged>[];
+      final out = <YJudged>[];
       for (final f in played) {
         final home = f.homeNationId == career.nationId;
         final opponentId = home ? f.awayNationId : f.homeNationId;
         final opponent = nations[opponentId];
         if (opponent == null) continue;
+        final ranks = await ranksOn(f.date);
+        int rankOf(int id) => ranks[id] ?? nations[id]?.ranking ?? total;
         out.add((
           opponent: opponent.name,
           nationRank: rankOf(career.nationId),
@@ -100,6 +123,7 @@ final AutoDisposeFutureProviderFamily<List<_Judged>, int> _judgedProvider =
                     : f.awayPenalties! > f.homePenalties!)
               : null,
           home: home && !isNeutralFinalsRound(f.round),
+          away: !home && !isNeutralFinalsRound(f.round),
         ));
       }
       return out;
@@ -124,7 +148,7 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
           .map((n) => n.name)
           .firstOrNull;
       if (nation == null) return empty;
-      final judged = await ref.watch(_judgedProvider(careerId).future);
+      final judged = await ref.watch(yJudgedProvider(careerId).future);
 
       // What else the world knows about each of those results: who scored,
       // what run the side was on, whether it was the neighbours. Without this
@@ -203,6 +227,7 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
           competitive: j.competitive,
           stakes: j.stakes,
           shootoutWon: j.shootoutWon,
+          away: j.away,
         );
 
         // One of ours walked. The cast reads it through the stance it held on
@@ -623,7 +648,7 @@ class YReadService {
 /// against reality rather than re-reading the results the board already weighs.
 final AutoDisposeFutureProviderFamily<int, int> publicMoodProvider =
     FutureProvider.autoDispose.family<int, int>((ref, careerId) async {
-      final judged = await ref.watch(_judgedProvider(careerId).future);
+      final judged = await ref.watch(yJudgedProvider(careerId).future);
       // The mood the board reads is about HIM: only the matches of his own
       // spell (the feed still remembers the rest).
       final repo = ref.watch(careerRepositoryProvider);
@@ -736,7 +761,7 @@ final AutoDisposeFutureProviderFamily<FanMoodReading, int> fanMoodProvider =
       if (career == null) {
         return FanMood.of(results: const [], asOf: DateTime(2000));
       }
-      final judged = await ref.watch(_judgedProvider(careerId).future);
+      final judged = await ref.watch(yJudgedProvider(careerId).future);
       final milestones = await ref.watch(
         yMilestonesProvider(careerId).future,
       );

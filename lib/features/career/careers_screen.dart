@@ -3,6 +3,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/features/awards/poty_history_screen.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -52,6 +53,10 @@ class CareersScreen extends StatelessWidget {
               onTap: () => context.go(e.location),
             ),
           ],
+          // A block of its own, not a menu line: it shows the latest winner
+          // and the most decorated man before it is opened.
+          const SizedBox(height: AppSpacing.sm),
+          PotyHistoryBlock(careerId: careerId),
         ],
       ),
     );

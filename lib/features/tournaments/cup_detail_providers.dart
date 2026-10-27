@@ -50,6 +50,7 @@ class CupData {
     this.teamOfTournament = const [],
     this.hostCities = const {},
     this.hostEstates = const {},
+    this.venueRules = VenueRules.original,
     this.goldenGlove,
     this.qualDrawWatched = true,
     this.finalsDrawWatched = true,
@@ -105,6 +106,9 @@ class CupData {
   /// The grounds the career has made of its own nation's estate when that
   /// nation hosts (see `hostEstatesFor`); empty otherwise.
   final Map<int, List<Venue>> hostEstates;
+
+  /// The rules this edition's grounds follow (see `hostVenuesV2Kind`).
+  final VenueRules venueRules;
 
   /// Whether the player has watched the qualifying / finals draw ceremonies —
   /// the groups stay hidden ("to be drawn") until they have.
@@ -515,6 +519,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     playerNames: playerNames,
     teamOfTournament: teamOfTournament,
     hostCities: hostDrawWatched ? hostCities : const {},
+    venueRules: await venueRulesFor(comp, careerId, career.cyclePointer),
     hostEstates: hostDrawWatched
         ? await hostEstatesFor(ref, careerId, hostIds)
         : const {},

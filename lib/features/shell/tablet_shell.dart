@@ -55,6 +55,7 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.achievements,
   Routes.challenges,
   Routes.careerSummary,
+  Routes.potyHistory,
   Routes.managerHistory,
   Routes.careers,
   Routes.saves,

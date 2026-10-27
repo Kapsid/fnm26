@@ -113,7 +113,9 @@ def extra_host_cities():
                         'host_cities.dart')
     with open(path, encoding='utf-8') as f:
         src = f.read()
-    body = src[src.index('extraHostCities = {'):]
+    start = src.index('extraHostCities = {')
+    # Only that map: finalsHostCities follows it and never reaches the map.
+    body = src[start:src.index('\n};', start)]
     body = re.sub(r'//[^\n]*', '', body)
     out = {}
     for m in re.finditer(r'(\d+):\s*\[(.*?)\]', body, re.S):

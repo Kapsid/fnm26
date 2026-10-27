@@ -12833,4 +12833,209 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Vedení tento cíl stanoví, jakmile se vylosují skupiny.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Dalších $count týmů jde do $destination',
+      few: 'Další $count týmy jdou do $destination',
+      one: 'Další tým jde do $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Neuvěřitelný večer. Tohle by nás nenapadlo ani v nejdivočejších snech. $score proti $opponent!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score proti $opponent. Štípněte mě. Prosím, ať mě někdo štípne.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Brečím na tribuně. $score proti $opponent. Tenhle tým miluju.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score proti $opponent. Nejlepší večer mého fanouškovského života, a s přehledem.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score proti $opponent. Jeden z největších výsledků v dějinách téhle země.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score proti $opponent. Tohle nečekal nikdo na světě. Historie.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score proti $opponent. O tomhle se bude mluvit ještě desítky let.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Zapamatujte si, kde jste dnes byli: $score proti $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Celý rok jsem remcal a zítra budu zase. Ale dnes? $score proti $opponent. Neuvěřitelné.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Ani já nenacházím, na co si stěžovat. $score proti $opponent. Šílenost.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score proti $opponent. Říkal jsem, že tenhle tým je odepsaný. Ještě nikdy jsem se tak rád nemýlil.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Dobře, přiznávám: $score proti $opponent je jako ze snu. Příští týden asi zase postaru.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score proti $opponent. Jedním slovem: neuvěřitelné!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Bod proti jednomu z nejlepších týmů světa. Ten bereme všemi deseti. $score proti $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return 'Remíza $score s týmem $opponent! Nemám hlas a je mi to jedno.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score proti $opponent. Remíza? Připadá mi to, jako bychom vyhráli všechno.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Bod proti týmu, jako je $opponent, se nečekal, ale rozhodně ho bereme. $score, skvělý výsledek.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score proti $opponent. Bod, na který se bude vzpomínat roky.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '$opponent přijel jako jasný favorit a odjel s výsledkem $score. Hrdý večer.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score proti $opponent. Týmy naší úrovně jim body skoro nikdy neseberou.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Čekal jsem výprask. $score proti $opponent. Svá slova rád spolknu.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Remízy nemusím, ale $score proti $opponent? Beru s úsměvem.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score proti $opponent. Dnes slaví i škarohlídi, já včetně.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Bránili jsme o život a máme $score proti $opponent. Ošklivé? Koho to zajímá. Paráda.';
+  }
+
+  @override
+  String get potyHistorySubtitle => 'Všichni vítězové a kdo vyhrál nejčastěji';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Hráč roku zatím nebyl zvolen. První hlasování proběhne 1. prosince.';
+
+  @override
+  String get potyHistoryLatest => 'Poslední vítěz';
+
+  @override
+  String get potyHistoryMostWins => 'Nejvíc vítězství';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vítězství',
+      few: '$count vítězství',
+      one: '1 vítězství',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Vítězové podle let';
+
+  @override
+  String get potyHistoryByNation => 'Podle zemí';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Vaše země: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vítězů',
+      few: '$count vítězové',
+      one: '1 vítěz',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count umístění v top 5',
+      few: '$count umístění v top 5',
+      one: '1 umístění v top 5',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Vaši hráči';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Žádný z vašich hráčů se zatím neumístil v první pětce.';
+
+  @override
+  String get potyHistoryYoung => 'Mladý hráč';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Neznámý hráč';
 }

@@ -12823,4 +12823,206 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Hallitus asettaa tämän tavoitteen, kun lohkot on arvottu.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Seuraavat $count etenevät $destination',
+      one: 'Seuraava etenee $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Uskomaton ilta. Tätä emme olisi osanneet ennustaa villeimmissäkään unelmissamme. $opponent-ottelu, $score!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$opponent-ottelu, $score. Nipistäkää minua. Joku nipistäköön, kiitos.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Itken katsomossa. $opponent-ottelu, $score. Rakastan tätä joukkuetta.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$opponent-ottelu, $score. Kannattajaurani paras ilta, ylivoimaisesti.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$opponent-ottelu, $score. Yksi tämän maan historian suurimmista tuloksista.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$opponent-ottelu, $score. Kukaan maailmassa ei nähnyt tätä tulevan. Historiallista.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$opponent-ottelu, $score. Tästä puhutaan vielä vuosikymmeniä.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Muistakaa, missä olitte tänä iltana: $opponent-ottelu, $score.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Olen valittanut koko vuoden ja valitan taas huomenna. Mutta tänään? $opponent-ottelu, $score. Uskomatonta.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Edes minä en löydä valitettavaa. $opponent-ottelu, $score. Epätodellista.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$opponent-ottelu, $score. Sanoin, että tämä joukkue on loppu. En ole koskaan ollut näin iloinen väärässä olemisesta.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'No hyvä, myönnän: $opponent-ottelu, $score, on kuin unta. Ensi viikolla luultavasti taas vanhaan malliin.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$opponent-ottelu, $score. Yksi sana: uskomatonta!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Piste yhtä maailman parhaista joukkueista vastaan. Otamme sen milloin tahansa. $opponent-ottelu, $score.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$opponent-ottelu, $score! Ääni on mennyt, eikä kiinnosta.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$opponent-ottelu, $score. Tasapeli? Tuntuu kuin olisimme voittaneet kaiken.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Pistettä tällaista vastustajaa vastaan ei odotettu, mutta otamme sen ilomielin. $opponent-ottelu, $score, upea tulos.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$opponent-ottelu, $score. Piste, joka muistetaan vuosia.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return 'Vastustaja $opponent tuli suurena suosikkina ja lähtee kotiin tuloksella $score. Ylpeä ilta.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$opponent-ottelu, $score. Tuskin kukaan meidän tasoltamme vie heiltä pisteitä.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Odotin selkäsaunaa. $opponent-ottelu, $score. Syön sanani mielelläni.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'En pidä tasapeleistä, mutta $opponent-ottelu, $score? Otan hymyillen.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$opponent-ottelu, $score. Tänään juhlivat jopa pessimistit, minä mukaan lukien.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Puolustimme henkemme edestä: $opponent-ottelu, $score. Rumaa? Ketä kiinnostaa. Loistavaa.';
+  }
+
+  @override
+  String get potyHistorySubtitle =>
+      'Kaikki voittajat ja kuka on voittanut eniten';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Vuoden pelaajaa ei ole vielä valittu. Ensimmäinen äänestys on 1. joulukuuta.';
+
+  @override
+  String get potyHistoryLatest => 'Viimeisin voittaja';
+
+  @override
+  String get potyHistoryMostWins => 'Eniten voittoja';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count voittoa',
+      one: '1 voitto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Voittajat vuosittain';
+
+  @override
+  String get potyHistoryByNation => 'Maittain';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Maasi: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count voittajaa',
+      one: '1 voittaja',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kärkiviisikkosijaa',
+      one: '1 kärkiviisikkosija',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Pelaajasi';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Kukaan pelaajistasi ei ole vielä sijoittunut viiden parhaan joukkoon.';
+
+  @override
+  String get potyHistoryYoung => 'Nuori pelaaja';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Tuntematon pelaaja';
 }

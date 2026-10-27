@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/features/awards/poty_history_providers.dart';
 import 'package:fnm/features/career/careers_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -50,12 +52,17 @@ void main() {
     );
     addTearDown(router.dispose);
     await tester.pumpWidget(
-      MaterialApp.router(
-        locale: Locale(locale),
-        theme: AppTheme.theme,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        routerConfig: router,
+      // The Player of the Year block below the menu reads the save; this
+      // one has none.
+      ProviderScope(
+        overrides: [potyHistoryProvider(1).overrideWith((ref) async => null)],
+        child: MaterialApp.router(
+          locale: Locale(locale),
+          theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
       ),
     );
     await tester.pumpAndSettle();

@@ -12880,4 +12880,206 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Itatakda ng board ang layuning ito kapag nabunot na ang mga grupo.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Aabante ang susunod na $count sa $destination',
+      one: 'Aabante ang susunod na koponan sa $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Isang hindi kapani-paniwalang gabi. Kahit sa pinakamaligaw naming panaginip, hindi namin ito inasahan. $score laban sa $opponent!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score laban sa $opponent. Kurutin n\'yo ako. May kumurot naman sa akin, please.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Umiiyak ako sa stands. $score laban sa $opponent. Mahal ko ang team na ito.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score laban sa $opponent. Pinakamagandang gabi ng buhay ko bilang fan, walang kalaban-laban.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score laban sa $opponent. Isa sa pinakamalaking resulta sa kasaysayan ng bansang ito.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score laban sa $opponent. Walang sinuman sa mundo ang nakakita nito. Makasaysayan.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score laban sa $opponent. Pag-uusapan ito sa loob ng mga dekada.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Tandaan kung nasaan kayo ngayong gabi: $score laban sa $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Buong taon akong nagreklamo at magrereklamo ulit ako bukas. Pero ngayong gabi? $score laban sa $opponent. Grabe.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Kahit ako, wala akong mairereklamo. $score laban sa $opponent. Parang hindi totoo.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score laban sa $opponent. Sabi ko tapos na ang team na ito. Hindi pa ako naging ganito kasaya na mali ako.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Sige, aaminin ko: $score laban sa $opponent, parang panaginip. Balik sa dati sa susunod na linggo, malamang.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score laban sa $opponent. Isang salita: grabe!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Isang puntos laban sa isa sa pinakamahuhusay na team sa mundo. Tatanggapin namin \'yan anumang araw. $score laban sa $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$score laban sa $opponent! Paos na ako at wala akong pakialam.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score laban sa $opponent. Tabla? Parang napanalunan namin ang lahat.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Hindi inasahang makakuha ng puntos laban sa isang team tulad ng $opponent, pero siguradong tatanggapin namin. $score, magandang resulta.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score laban sa $opponent. Isang puntos na maaalala sa loob ng maraming taon.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return 'Dumating ang $opponent bilang malaking paborito at umalis na may $score. Isang gabing ipinagmamalaki.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score laban sa $opponent. Halos walang team sa antas namin ang nakakakuha ng puntos sa kanila.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Akala ko tatambakan kami. $score laban sa $opponent. Masaya kong babawiin ang sinabi ko.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Hindi ako fan ng tabla, pero $score laban sa $opponent? Tatanggapin ko nang nakangiti.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score laban sa $opponent. Ngayong gabi, kahit ang mga pessimist, kasama ako, ay nagdiriwang.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Nagdepensa kami na parang buhay ang nakataya at nakuha ang $score laban sa $opponent. Pangit? Sino\'ng may pake. Napakaganda.';
+  }
+
+  @override
+  String get potyHistorySubtitle =>
+      'Lahat ng nanalo at kung sino ang pinakamaraming panalo';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Wala pang naboboto na Manlalaro ng Taon. Ang unang botohan ay sa 1 Disyembre.';
+
+  @override
+  String get potyHistoryLatest => 'Pinakahuling nanalo';
+
+  @override
+  String get potyHistoryMostWins => 'Pinakamaraming panalo';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count panalo',
+      one: '1 panalo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Mga nanalo bawat taon';
+
+  @override
+  String get potyHistoryByNation => 'Ayon sa bansa';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Bansa mo: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nanalo',
+      one: '1 nanalo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pagtatapos sa top 5',
+      one: '1 pagtatapos sa top 5',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Mga manlalaro mo';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Wala pa sa mga manlalaro mo ang nakatapos sa top 5.';
+
+  @override
+  String get potyHistoryYoung => 'Batang manlalaro';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Hindi kilalang manlalaro';
 }

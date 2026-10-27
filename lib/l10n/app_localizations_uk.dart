@@ -12924,4 +12924,213 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Рада поставить це завдання після жеребкування груп.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Наступні $count команди проходять до $destination',
+      many: 'Наступні $count команд проходять до $destination',
+      few: 'Наступні $count команди проходять до $destination',
+      one: 'Наступна команда проходить до $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Неймовірний вечір. Навіть у найсміливіших мріях ми такого не передбачили б. $score проти команди $opponent!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score проти команди $opponent. Ущипніть мене. Хтось, ущипніть мене, будь ласка.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Я плачу на трибуні. $score проти команди $opponent. Я люблю цю команду.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score проти команди $opponent. Найкращий вечір у моєму вболівальницькому житті, без сумніву.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score проти команди $opponent. Один із найбільших результатів в історії цієї країни.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score проти команди $opponent. Ніхто у світі цього не чекав. Історично.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score проти команди $opponent. Про це говоритимуть десятиліттями.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Запам\'ятайте, де ви були цього вечора: $score проти команди $opponent.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Я бурчав увесь рік і завтра знову бурчатиму. Але сьогодні? $score проти команди $opponent. Неймовірно.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Навіть я не знаходжу, до чого прискіпатися. $score проти команди $opponent. Нереально.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score проти команди $opponent. Я казав, що ця команда закінчилась. Ніколи ще так не радів, що помилився.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Гаразд, визнаю: $score проти команди $opponent як уві сні. Наступного тижня, мабуть, усе по-старому.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score проти команди $opponent. Одним словом: неймовірно!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Очко проти однієї з найкращих збірних світу. Беремо будь-коли. $score проти команди $opponent.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$score проти команди $opponent! Я зірвав голос, і мені байдуже.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score проти команди $opponent. Нічия? Таке відчуття, ніби ми виграли все.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Очко проти такої команди, як $opponent, ніхто не чекав, але ми його точно беремо. $score, чудовий результат.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score проти команди $opponent. Очко, яке пам\'ятатимуть роками.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return 'Суперник ($opponent) приїхав великим фаворитом і їде з рахунком $score. Гордий вечір.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score проти команди $opponent. Майже ніхто нашого рівня не відбирає в них очок.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Я чекав розгрому. $score проти команди $opponent. Із радістю беру свої слова назад.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Не люблю нічиїх, але $score проти команди $opponent? Беру з усмішкою.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score проти команди $opponent. Сьогодні радіють навіть песимісти, і я теж.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Ми захищалися на межі сил і взяли $score проти команди $opponent. Негарно? Кому яке діло. Блискуче.';
+  }
+
+  @override
+  String get potyHistorySubtitle => 'Усі переможці та хто вигравав найчастіше';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Гравця року ще не обрано. Перше голосування відбудеться 1 грудня.';
+
+  @override
+  String get potyHistoryLatest => 'Останній переможець';
+
+  @override
+  String get potyHistoryMostWins => 'Найбільше перемог';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count перемоги',
+      many: '$count перемог',
+      few: '$count перемоги',
+      one: '$count перемога',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Переможці за роками';
+
+  @override
+  String get potyHistoryByNation => 'За країнами';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Твоя країна: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count переможця',
+      many: '$count переможців',
+      few: '$count переможці',
+      one: '$count переможець',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count місця в топ-5',
+      many: '$count місць у топ-5',
+      few: '$count місця в топ-5',
+      one: '$count місце в топ-5',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Твої гравці';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Жоден із твоїх гравців ще не потрапляв до першої п’ятірки.';
+
+  @override
+  String get potyHistoryYoung => 'Молодий гравець';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Невідомий гравець';
 }

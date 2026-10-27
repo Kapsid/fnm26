@@ -64,7 +64,17 @@ Future<MatchGround> resolveMatchGround(
             ? managerNationalGround(ref, career)
             : memo._home ??= managerNationalGround(ref, career))
       : null;
+  // The rules this cycle's finals are staged under (see hostVenuesV2Kind).
+  Future<VenueRules> rules() => venueRulesFor(
+    ref.read(competitionRepositoryProvider),
+    career.id,
+    career.cyclePointer,
+  );
+  final venueRules = !v.neutral
+      ? VenueRules.original
+      : await (memo == null ? rules() : memo._rules ??= rules());
   return Attendance.forFixture(
+    venueRules: venueRules,
     fixture: fixture,
     neutral: v.neutral,
     tournamentHostIds: v.tournamentHostIds,
@@ -94,6 +104,7 @@ class MatchGroundMemo {
   final Map<Object, List<int>> _hosts = {};
   final Map<String, Future<Map<int, List<Venue>>>> _estates = {};
   Future<NationalStadium?>? _home;
+  Future<VenueRules>? _rules;
 }
 
 /// The conditions of [fixture] at [ground]: its altitude and the heat of

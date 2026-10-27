@@ -171,6 +171,7 @@ List<Widget> _cupTabViews(
       hostIds: data.hostIds,
       hostCities: data.hostCities,
       hostEstates: data.hostEstates,
+      venueRules: data.venueRules,
       identity: data.identity,
       trophyAsset: Trophies.worldCup,
       // The 46 direct places plus the two play-off berths: 48.
@@ -500,6 +501,8 @@ class _QualifyingState extends State<_Qualifying> {
                 name: widget.name,
                 title: ladder.title,
                 destination: ladder.destination,
+                playoffNations: ladder.playoff,
+                playoffDestination: l.tourCupDestIntercontPlayoff,
                 adjustedForGroupSize: ladder.uneven,
                 careerId: widget.careerId,
               ),
@@ -573,6 +576,7 @@ class _PlayoffList extends StatelessWidget {
   int qualify,
   String title,
   String destination,
+  Set<int> playoff,
   bool uneven,
 })?
 _contentionLadder(
@@ -593,20 +597,26 @@ _contentionLadder(
   final tables = [for (final g in groups) g.standings];
   final tier = crossGroupTier(tables, pos - 1);
   if (tier.isEmpty) return null;
-  // Whether the places at this position lead to the finals, the play-off, or
-  // both: a partly-filled tier of direct berths sends its best straight
-  // through, and the play-off entrants come from just behind them.
+  // Whether the places at this position lead to the finals or the play-off. A
+  // partly-filled tier of direct berths sends its best straight to the finals,
+  // and the play-off entrants come from just behind them: Oceania's best group
+  // winner goes to the finals and the other winner to the play-off. The card
+  // used to head both with "the finals play-off" over the one green row, which
+  // read as the best winner being the one sent to the play-off.
   final directHere = fmt.qualifyingBerths(hosts) % groups.length;
   final destination = directHere > 0
-      ? (fmt.playoffEntrants > 0
-            ? l.tourCupDestFinalsPlayoff
-            : l.tourCupDestFinals)
+      ? l.tourCupDestFinals
       : l.tourCupDestIntercontPlayoff;
   return (
     teams: tier,
     qualify: directHere > 0 ? directHere : fmt.playoffEntrants,
     title: contentionLadderTitle(l, pos),
     destination: destination,
+    // Behind a band of direct places, the rows going to the play-off are
+    // marked as such, from the same ladder the finalist selection uses.
+    playoff: directHere > 0
+        ? GroupAdvancement.worldCupPlayoffNations(conf, tables, hosts: hosts)
+        : const <int>{},
     uneven: CrossGroup.isUneven(tables),
   );
 }

@@ -41,14 +41,6 @@ class InternationalRetirementService {
 
   final Ref _ref;
 
-  /// How many other nations' retirements one wave may file as news. The
-  /// inbox is the manager's; the world's veterans are a headline, not a list.
-  static const int maxForeignNews = 6;
-
-  /// The rating from which another nation's veteran is famous enough to be
-  /// news.
-  static const int famousOverall = 84;
-
   /// Competition ids this session already knows are settled, per career: a
   /// cache that only spares re-reading their fixtures on every step. It never
   /// decides anything (the done markers do), so it may be lost freely.
@@ -222,7 +214,6 @@ class InternationalRetirementService {
     );
 
     final markers = <String>[doneMarker];
-    final foreign = <(Player, Nation, IntlRetireReason)>[];
     final mine = <IntlRetireDecision>[];
     for (final n in considered) {
       final participated = f.participants.contains(n.id);
@@ -276,12 +267,9 @@ class InternationalRetirementService {
                     record.leaders.contains(id)),
           ),
         );
-        if (n.id == career.nationId) {
-          mine.add(d);
-        } else if (d.player.overall >= famousOverall ||
-            PlayerLifecycle.isSuperstar(d.player.id)) {
-          foreign.add((d.player, n, d.reason));
-        }
+        // Only the manager's own players are announced: the owner's call,
+        // other nations' retirements filled the inbox with strangers.
+        if (n.id == career.nationId) mine.add(d);
       }
     }
     // One batch (one transaction): the retirements and the done marker land
@@ -292,8 +280,6 @@ class InternationalRetirementService {
         .addMarkers(careerId, career.cyclePointer, markers);
     if (markers.length == 1) return false;
     await _announceMine(career, mine, record);
-    foreign.sort((a, b) => b.$1.overall.compareTo(a.$1.overall));
-    await _announceForeign(career, foreign.take(maxForeignNews).toList());
     return true;
   }
 
@@ -381,30 +367,6 @@ class InternationalRetirementService {
           ?_reasonNote(d.reason),
           if (recordHolder) const MsgText(MsgKey.msgIntlRetireNoteRecord),
           if (wasCaptain) const MsgText(MsgKey.msgArmbandVacant),
-        ]),
-        year: career.inGameDate.year,
-      );
-    }
-  }
-
-  /// The world's famous veterans, as news.
-  Future<void> _announceForeign(
-    Career career,
-    List<(Player, Nation, IntlRetireReason)> foreign,
-  ) async {
-    if (foreign.isEmpty) return;
-    final comp = _ref.read(competitionRepositoryProvider);
-    final l = _ref.read(appLocalizationsProvider);
-    for (final (p, n, reason) in foreign) {
-      await comp.addTextMessage(
-        l: l,
-        careerId: career.id,
-        dedupKey: 'intlRetNews:${p.id}',
-        category: 'retirement',
-        title: MsgText(MsgKey.msgIntlRetireNewsTitle, [p.name, n.name]),
-        body: MsgJoin([
-          MsgText(MsgKey.msgIntlRetireNewsBody, [p.name, n.name, p.age]),
-          ?_reasonNote(reason),
         ]),
         year: career.inGameDate.year,
       );
@@ -551,7 +513,7 @@ class InternationalRetirementService {
 
     final comp = _ref.read(competitionRepositoryProvider);
     final l = _ref.read(appLocalizationsProvider);
-    for (final (p, n, crisis, newManager) in back) {
+    for (final (p, _, crisis, newManager) in back) {
       if (p.nationId == career.nationId) {
         await comp.addTextMessage(
           l: l,
@@ -565,21 +527,6 @@ class InternationalRetirementService {
               const MsgText(MsgKey.msgIntlComebackNoteCrisis)
             else if (newManager)
               const MsgText(MsgKey.msgIntlComebackNoteManager),
-          ]),
-          year: year,
-        );
-      } else if (n != null &&
-          (p.overall >= famousOverall || PlayerLifecycle.isSuperstar(p.id))) {
-        await comp.addTextMessage(
-          l: l,
-          careerId: careerId,
-          dedupKey: 'intlBackNews:${p.id}',
-          category: 'retirement',
-          title: MsgText(MsgKey.msgIntlComebackNewsTitle, [p.name, n.name]),
-          body: MsgText(MsgKey.msgIntlComebackNewsBody, [
-            p.name,
-            n.name,
-            p.age,
           ]),
           year: year,
         );

@@ -12797,4 +12797,205 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Yönetim bu hedefi gruplar çekildikten sonra belirleyecek.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sonraki $count takım $destination gider',
+      one: 'Sonraki takım $destination gider',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'İnanılmaz bir gece. En çılgın rüyalarımızda bile bunu göremezdik. $opponent karşısında $score!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$opponent karşısında $score. Biri beni çimdiklesin. Lütfen biri çimdiklesin.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Tribünde ağlıyorum. $opponent karşısında $score. Bu takımı seviyorum.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$opponent karşısında $score. Taraftarlık hayatımın açık ara en güzel gecesi.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$opponent karşısında $score. Bu ülkenin tarihindeki en büyük sonuçlardan biri.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$opponent karşısında $score. Dünyada kimse bunu beklemiyordu. Tarihi.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$opponent karşısında $score. Bu maç onlarca yıl konuşulacak.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Bu gece nerede olduğunuzu unutmayın: $opponent karşısında $score.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Bütün yıl söylendim, yarın yine söylenirim. Ama bu gece? $opponent karşısında $score. İnanılmaz.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Ben bile şikâyet edecek bir şey bulamıyorum. $opponent karşısında $score. Gerçek dışı.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$opponent karşısında $score. Bu takım bitti demiştim. Yanılmaktan hiç bu kadar mutlu olmamıştım.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Tamam, kabul ediyorum: $opponent karşısında $score rüya gibi. Gelecek hafta muhtemelen her şey eskisi gibi.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$opponent karşısında $score. Tek kelime: inanılmaz!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Dünyanın en iyi takımlarından birinden bir puan. Her zaman alırız. $opponent karşısında $score.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$opponent karşısında $score! Sesim kalmadı ve umurumda değil.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$opponent karşısında $score. Beraberlik mi? Her şeyi kazanmışız gibi hissediyorum.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return '$opponent gibi bir takımdan puan almak beklenmiyordu ama kesinlikle alırız. $score, harika sonuç.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$opponent karşısında $score. Yıllarca hatırlanacak bir puan.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '$opponent büyük favori olarak geldi, $score ile döndü. Gurur dolu bir gece.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$opponent karşısında $score. Bizim seviyemizdeki takımların neredeyse hiçbiri onlardan puan alamaz.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Farklı yenilgi bekliyordum. $opponent karşısında $score. Sözlerimi seve seve geri alıyorum.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Beraberlikleri sevmem ama $opponent karşısında $score mi? Gülümseyerek alırım.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$opponent karşısında $score. Bu gece karamsarlar bile sevinçten bağırıyor, ben dahil.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Canımızı dişimize takıp savunduk, $opponent karşısında $score aldık. Çirkin mi? Kimin umurunda. Harika.';
+  }
+
+  @override
+  String get potyHistorySubtitle => 'Tüm kazananlar ve en çok kim kazandı';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Henüz Yılın Oyuncusu seçilmedi. İlk oylama 1 Aralık’ta.';
+
+  @override
+  String get potyHistoryLatest => 'Son kazanan';
+
+  @override
+  String get potyHistoryMostWins => 'En çok ödül';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ödül',
+      one: '1 ödül',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Yıllara göre kazananlar';
+
+  @override
+  String get potyHistoryByNation => 'Ülkelere göre';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Ülken: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kazanan',
+      one: '1 kazanan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kez ilk 5',
+      one: '1 kez ilk 5',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Oyuncuların';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Oyuncularından hiçbiri henüz ilk beşe giremedi.';
+
+  @override
+  String get potyHistoryYoung => 'Genç oyuncu';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Bilinmeyen oyuncu';
 }

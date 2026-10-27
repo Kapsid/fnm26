@@ -12874,4 +12874,206 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'Η διοίκηση θα θέσει αυτόν τον στόχο μόλις κληρωθούν οι όμιλοι.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Οι επόμενοι $count πηγαίνουν $destination',
+      one: 'Ο επόμενος πηγαίνει $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Απίστευτη βραδιά. Ούτε στα πιο τρελά μας όνειρα δεν το φανταζόμασταν. $opponent, $score!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$opponent, $score. Τσιμπήστε με. Ας με τσιμπήσει κάποιος, σας παρακαλώ.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Κλαίω στην κερκίδα. $opponent, $score. Λατρεύω αυτή την ομάδα.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$opponent, $score. Η καλύτερη βραδιά της ζωής μου ως οπαδός, με διαφορά.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$opponent, $score. Ένα από τα μεγαλύτερα αποτελέσματα στην ιστορία αυτής της χώρας.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$opponent, $score. Κανείς στον κόσμο δεν το περίμενε. Ιστορικό.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$opponent, $score. Θα μιλάνε γι\' αυτό για δεκαετίες.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Θυμηθείτε πού ήσασταν απόψε: $opponent, $score.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Γκρίνιαζα όλη τη χρονιά και αύριο θα γκρινιάξω ξανά. Απόψε όμως; $opponent, $score. Απίστευτο.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Ούτε εγώ βρίσκω κάτι να γκρινιάξω. $opponent, $score. Εξωπραγματικό.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$opponent, $score. Έλεγα ότι αυτή η ομάδα τελείωσε. Ποτέ δεν χάρηκα τόσο που έκανα λάθος.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Καλά, το παραδέχομαι: $opponent, $score, είναι όνειρο. Την άλλη εβδομάδα μάλλον πάλι τα ίδια.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$opponent, $score. Μία λέξη: απίστευτο!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Βαθμός απέναντι σε μία από τις καλύτερες ομάδες του κόσμου. Τον παίρνουμε όποτε να \'ναι. $opponent, $score.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$opponent, $score! Έχασα τη φωνή μου και δεν με νοιάζει.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$opponent, $score. Ισοπαλία; Νιώθω σαν να τα κερδίσαμε όλα.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Βαθμός απέναντι σε ομάδα όπως η $opponent δεν αναμενόταν, αλλά σίγουρα τον κρατάμε. $score, σπουδαίο αποτέλεσμα.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$opponent, $score. Ένας βαθμός που θα θυμόμαστε για χρόνια.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return 'Αντίπαλος: $opponent. Ήρθε μεγάλο φαβορί και φεύγει με $score. Βραδιά περηφάνιας.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$opponent, $score. Σχεδόν καμία ομάδα του επιπέδου μας δεν τους παίρνει βαθμό.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Περίμενα συντριβή. $opponent, $score. Παίρνω πίσω ό,τι είπα με χαρά.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Δεν μου αρέσουν οι ισοπαλίες, αλλά $opponent, $score; Το δέχομαι χαμογελώντας.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$opponent, $score. Απόψε πανηγυρίζουν ακόμα και οι μίζεροι, μαζί κι εγώ.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Αμυνθήκαμε για τη ζωή μας και πήραμε $score με $opponent. Άσχημο; Ποιος νοιάζεται. Υπέροχο.';
+  }
+
+  @override
+  String get potyHistorySubtitle =>
+      'Όλοι οι νικητές και ποιος κέρδισε τις περισσότερες φορές';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Δεν έχει ψηφιστεί ακόμη Παίκτης της Χρονιάς. Η πρώτη ψηφοφορία γίνεται την 1η Δεκεμβρίου.';
+
+  @override
+  String get potyHistoryLatest => 'Τελευταίος νικητής';
+
+  @override
+  String get potyHistoryMostWins => 'Περισσότερες νίκες';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count βραβεύσεις',
+      one: '1 βράβευση',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Νικητές ανά χρονιά';
+
+  @override
+  String get potyHistoryByNation => 'Ανά χώρα';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'Η χώρα σου: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count νικητές',
+      one: '1 νικητής',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count θέσεις στην πρώτη 5άδα',
+      one: '1 θέση στην πρώτη 5άδα',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'Οι παίκτες σου';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Κανένας παίκτης σου δεν έχει τερματίσει ακόμη στην πρώτη πεντάδα.';
+
+  @override
+  String get potyHistoryYoung => 'Νέος';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Άγνωστος παίκτης';
 }

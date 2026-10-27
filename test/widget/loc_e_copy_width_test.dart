@@ -190,6 +190,7 @@ void main() {
               l.tourThirdsAdvance(8, l.tourCupDestFinals),
               l.tourThirdsAdvance(8, l.tourCupDestFinalsPlayoff),
               l.tourThirdsAdvance(8, l.tourCupDestIntercontPlayoff),
+              l.tourThirdsNextAdvance(8, l.tourCupDestIntercontPlayoff),
             ];
             await pumpColumn(
               tester,

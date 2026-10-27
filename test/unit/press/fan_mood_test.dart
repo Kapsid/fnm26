@@ -327,6 +327,7 @@ void main() {
         competitive: true,
         stakes: YStakes.qualifier,
         shootoutWon: null,
+        away: false,
       ),
       scorerName: null,
       scorerGoals: null,

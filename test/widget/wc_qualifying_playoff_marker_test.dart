@@ -123,7 +123,10 @@ void main() {
   });
 
   testWidgets('an Oceania table marks its play-off place yellow', (t) async {
-    expect(await _yellow(t, _data(Confederation.oceania, 2, 5)), 1);
+    // Once in its group table, and once on the "best group winners" ladder
+    // under it, where the better winner goes to the finals and this one to
+    // the play-off (the New Zealand report).
+    expect(await _yellow(t, _data(Confederation.oceania, 2, 5)), 2);
   });
 
   testWidgets('a European table has no yellow', (t) async {

@@ -19483,6 +19483,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The board sets this target once the groups are drawn.'**
   String get boardObjectiveAwaitingDrawBody;
+
+  /// Cross-group ladder: how many of the teams just below the advancing ones go to the intercontinental play-off, and where.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{The next team goes to {destination}} other{The next {count} go to {destination}}}'**
+  String tourThirdsNextAdvance(int count, String destination);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'An amazing night. We could not have predicted this in our wildest dreams. {score} against {opponent}!'**
+  String yWinEuphoric0(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Pinch me. Somebody please pinch me.'**
+  String yWinEuphoric1(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'I am crying in the stands. {opponent} beaten {score}. I love this team.'**
+  String yWinEuphoric2(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 3. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Best night of my life as a fan, and it is not close.'**
+  String yWinEuphoric3(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. One of the greatest results this country has ever had.'**
+  String yWinEuphoric4(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody anywhere saw {score} against {opponent} coming. Historic.'**
+  String yWinEuphoric5(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 6. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} beaten {score}. People will talk about this one for decades.'**
+  String yWinEuphoric6(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 7. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember where you were tonight: {score} against {opponent}.'**
+  String yWinEuphoric7(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 8. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'I have moaned all year and I will moan again tomorrow. Tonight? {score} against {opponent}. Incredible.'**
+  String yWinEuphoric8(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 9. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Even I cannot find anything to complain about. {score} against {opponent}. Unreal.'**
+  String yWinEuphoric9(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 10. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. I said this team was finished. Never been happier to be wrong.'**
+  String yWinEuphoric10(String opponent, String score);
+
+  /// Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 11. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Fine, I admit it: {score} against {opponent} is the stuff of dreams. Back to normal next week, probably.'**
+  String yWinEuphoric11(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. One word: incredible!'**
+  String yDrewGiant0(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'A point off one of the best sides in the world. We\'ll take that all day. {score} against {opponent}.'**
+  String yDrewGiant1(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Held {opponent} {score}! I have no voice left and I don\'t care.'**
+  String yDrewGiant2(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 3. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. A draw? It feels like we won the whole thing.'**
+  String yDrewGiant3(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'To get a point off a side like {opponent} was not expected, but we will definitely take it. {score}, great result.'**
+  String yDrewGiant4(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. A point people will remember for years.'**
+  String yDrewGiant5(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 6. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} came as heavy favourites and left with {score}. A proud night.'**
+  String yDrewGiant6(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 7. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Hardly anyone at our level ever takes a point off them.'**
+  String yDrewGiant7(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 8. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'I expected a hiding. {score} against {opponent}. I will happily eat my words.'**
+  String yDrewGiant8(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 9. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Not a fan of draws, but {score} against {opponent}? I will take it and smile.'**
+  String yDrewGiant9(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 10. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} against {opponent}. Even the doom-mongers, me included, are cheering tonight.'**
+  String yDrewGiant10(String opponent, String score);
+
+  /// Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 11. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'We defended for our lives and got {score} against {opponent}. Ugly? Who cares. Brilliant.'**
+  String yDrewGiant11(String opponent, String score);
+
+  /// My Career block: subtitle of the Player of the Year history entry, shown before any year has been voted.
+  ///
+  /// In en, this message translates to:
+  /// **'Every winner, and who has won the most'**
+  String get potyHistorySubtitle;
+
+  /// Player of the Year history: shown when no year has been voted yet. The vote happens every 1 December.
+  ///
+  /// In en, this message translates to:
+  /// **'No Player of the Year has been voted yet. The first vote comes on 1 December.'**
+  String get potyHistoryEmpty;
+
+  /// Player of the Year history: label before the most recent winner. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest winner'**
+  String get potyHistoryLatest;
+
+  /// Player of the Year history: heading/label for the players ranked by number of wins. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Most wins'**
+  String get potyHistoryMostWins;
+
+  /// Player of the Year history: how many times a player or nation has won the award.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 win} other{{count} wins}}'**
+  String potyHistoryWins(int count);
+
+  /// Player of the Year history: heading of the list of every year and its winner.
+  ///
+  /// In en, this message translates to:
+  /// **'Winners by year'**
+  String get potyHistoryByYear;
+
+  /// Player of the Year history: heading of the nations ranked by awards won. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'By nation'**
+  String get potyHistoryByNation;
+
+  /// Player of the Year history: the manager's nation's record. {winners} is potyHistoryWinners, {finishes} is potyHistoryTopFive.
+  ///
+  /// In en, this message translates to:
+  /// **'Your nation: {winners}, {finishes}'**
+  String potyHistoryYourNation(String winners, String finishes);
+
+  /// Player of the Year history: how many winners came from the manager's nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 winner} other{{count} winners}}'**
+  String potyHistoryWinners(int count);
+
+  /// Player of the Year history: how many times a player of the manager's nation finished in the vote's top five.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 top-5 finish} other{{count} top-5 finishes}}'**
+  String potyHistoryTopFive(int count);
+
+  /// Player of the Year history: heading of the manager's nation's top-five finishes. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Your players'**
+  String get potyHistoryYourPlayers;
+
+  /// Player of the Year history: shown when no player of the manager's nation has finished in the top five.
+  ///
+  /// In en, this message translates to:
+  /// **'None of your players has finished in the top five yet.'**
+  String get potyHistoryNoYourPlayers;
+
+  /// Player of the Year history: short label before the Young Player of the Year winner on a year row.
+  ///
+  /// In en, this message translates to:
+  /// **'Young player'**
+  String get potyHistoryYoung;
+
+  /// Player of the Year history: a winner from a very old save whose name is no longer known.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown player'**
+  String get potyHistoryUnknownPlayer;
 }
 
 class _AppLocalizationsDelegate

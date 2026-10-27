@@ -280,6 +280,15 @@ enum YTemplate {
   cameoHavir,
   cameoLzimberskyHome,
   cameoLzimberskyKept,
+
+  /// A shock win over a side far above us (see [YFeed.isGiantKilling]): not
+  /// a good result but the night of a generation, and the stands euphoric.
+  /// Tester feedback: Montenegro beating Sweden 6-2 drew a lukewarm room.
+  winEuphoric,
+
+  /// A draw with a side far above us: a point the whole country is proud
+  /// of, louder than [drewHeroic]'s "a point earned".
+  drewGiant,
 }
 
 /// What the feed remembers when it writes about a match.
@@ -389,6 +398,10 @@ typedef YMatch = ({
   /// null for every match that was not. The scoreline of such a tie is level,
   /// and read on its own it was being reported as a draw.
   bool? shootoutWon,
+
+  /// Whether it was played at the opponent's ground (not at home, not at a
+  /// neutral finals ground): an upset there is bigger still.
+  bool away,
 });
 
 /// What was riding on a match, which is half of how big it was.
@@ -542,7 +555,9 @@ abstract final class YFeed {
     YTemplate.lostRout ||
     YTemplate.knockoutLoss ||
     YTemplate.drewHeroic ||
-    YTemplate.drewShame => bigMidVariantCount,
+    YTemplate.drewShame ||
+    YTemplate.winEuphoric ||
+    YTemplate.drewGiant => bigMidVariantCount,
     YTemplate.winShootout ||
     YTemplate.upsetGap ||
     YTemplate.eatWords ||
@@ -635,6 +650,7 @@ abstract final class YFeed {
       // "Earned the hard way" is a close win. A creditable 3–0 is the margin
       // bonus talking, and was being reported as nervy and ugly.
       return switch (standing) {
+        ResultStanding.heroic when isGiantKilling(m) => YTemplate.winEuphoric,
         ResultStanding.heroic => YTemplate.winUpset,
         // Four clear is a scoreline people repeat, whoever it was against: it
         // used to be filed as routine and worded "job done, nothing learned".
@@ -646,6 +662,8 @@ abstract final class YFeed {
     if (m.scored == m.conceded) {
       // A point is a different story depending on whose point it was.
       return switch (standing) {
+        ResultStanding.heroic ||
+        ResultStanding.creditable when isGiantKilling(m) => YTemplate.drewGiant,
         ResultStanding.heroic ||
         ResultStanding.creditable => YTemplate.drewHeroic,
         ResultStanding.humiliating ||
@@ -666,6 +684,32 @@ abstract final class YFeed {
     }
     return margin >= routMargin ? YTemplate.lostRout : YTemplate.lost;
   }
+
+  /// Whether a result came against a side so far above us that holding or
+  /// beating it is giant killing: [giantKillingGap] places or more (an away
+  /// ground counts [awayUpsetBonus] places more), or one of the world's top
+  /// [topSides] a long way above us. Competitive matches only: a friendly
+  /// can be noticed, never celebrated.
+  static bool isGiantKilling(YMatch m) {
+    if (!m.competitive) return false;
+    final gap = m.nationRank - m.opponentRank;
+    if (gap <= 0) return false;
+    return gap + (m.away ? awayUpsetBonus : 0) >= giantKillingGap ||
+        (m.opponentRank <= topSides && gap >= topSideGap);
+  }
+
+  /// Ranking places below the opponent at which a win is euphoria and a
+  /// draw a point the country is proud of.
+  static const int giantKillingGap = 40;
+
+  /// What doing it on their ground is worth, in ranking places.
+  static const int awayUpsetBonus = 15;
+
+  /// The world's elite: a result against one of these needs a smaller gap.
+  static const int topSides = 10;
+
+  /// The gap below a [topSides] side that still makes it giant killing.
+  static const int topSideGap = 25;
 
   /// The round code of the manager's intercontinental play-off final (see
   /// `playoffFinalFixtureRound`).
@@ -738,6 +782,13 @@ abstract final class YFeed {
     final defied =
         (won && rankGap >= giantGap) || (lost && -rankGap >= giantGap);
     if (defied) heat++;
+    // Giant killing fills the room even when it is a draw, and doing it on
+    // their ground is louder still.
+    final template = classify(m);
+    final giant =
+        template == YTemplate.winEuphoric || template == YTemplate.drewGiant;
+    if (giant && heat < 2) heat = 2;
+    if (giant && m.away) heat++;
     // A friendly can be noticed, never celebrated.
     if (!m.competitive && heat > 1) heat = 1;
     return (
@@ -2174,6 +2225,7 @@ abstract final class YFeed {
     YTemplate.neutralWin ||
     YTemplate.scorerHero => YMood.elation,
     YTemplate.drewHeroic => YMood.relief,
+    YTemplate.winEuphoric || YTemplate.drewGiant => YMood.elation,
     // Our supporters are not sorry for theirs, and enjoy a critic being wrong.
     YTemplate.eatWords || YTemplate.awayFansWin => YMood.smugness,
     YTemplate.lostShock ||

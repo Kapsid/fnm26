@@ -46,6 +46,8 @@ class BestThirdsCard extends StatelessWidget {
     required this.code,
     required this.name,
     this.destination,
+    this.playoffNations = const {},
+    this.playoffDestination,
     this.title,
     this.adjustedForGroupSize = false,
     this.careerId,
@@ -65,6 +67,16 @@ class BestThirdsCard extends StatelessWidget {
   /// knockouts, which is the common case.
   final String? destination;
 
+  /// The teams below the advancing band that go on to the intercontinental
+  /// play-off instead (Oceania's second-best group winner, the eighth Asian
+  /// winner behind an Asian host). Marked in the play-off colour and counted
+  /// in a second line naming [playoffDestination], so the card never leaves the
+  /// manager to guess which of the two destinations the green row is bound for.
+  final Set<int> playoffNations;
+
+  /// Where [playoffNations] go, already written for the sentence around it.
+  final String? playoffDestination;
+
   /// The card heading — override for a runners-up ladder. Null names the
   /// third-placed ladder, which is what most of them are.
   final String? title;
@@ -76,6 +88,12 @@ class BestThirdsCard extends StatelessWidget {
 
   /// When given, each team (flag and name) opens that nation's page.
   final int? careerId;
+
+  /// How many of the ladder's teams are bound for the play-off.
+  int get playoffCount => [
+    for (var i = qualifyCount; i < thirds.length; i++)
+      if (playoffNations.contains(thirds[i].nationId)) i,
+  ].length;
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +115,13 @@ class BestThirdsCard extends StatelessWidget {
               color: AppColors.onSurfaceVariant,
             ),
           ),
+          if (playoffCount > 0 && playoffDestination != null)
+            Text(
+              l.tourThirdsNextAdvance(playoffCount, playoffDestination!),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
           if (adjustedForGroupSize)
             Text(
               l.tourThirdsUneven,
@@ -106,21 +131,38 @@ class BestThirdsCard extends StatelessWidget {
             ),
           const SizedBox(height: AppSpacing.xs),
           for (var i = 0; i < thirds.length; i++)
-            _thirdRow(i + 1, thirds[i], advancing: i < qualifyCount),
+            _thirdRow(
+              i + 1,
+              thirds[i],
+              advancing: i < qualifyCount,
+              playoff:
+                  i >= qualifyCount &&
+                  playoffNations.contains(thirds[i].nationId),
+            ),
         ],
       ),
     );
   }
 
-  Widget _thirdRow(int pos, GroupStanding s, {required bool advancing}) {
+  Widget _thirdRow(
+    int pos,
+    GroupStanding s, {
+    required bool advancing,
+    bool playoff = false,
+  }) {
     final isPlayer = s.nationId == playerNationId;
+    final accent = advancing
+        ? AppColors.positive
+        : playoff
+        ? AppColors.playoff
+        : null;
     final gd = s.goalDifference;
     return Container(
       decoration: BoxDecoration(
         color: isPlayer ? AppColors.surfaceContainerHigh : null,
         border: Border(
           left: BorderSide(
-            color: advancing ? AppColors.positive : Colors.transparent,
+            color: accent ?? Colors.transparent,
             width: 3,
           ),
         ),
@@ -133,9 +175,7 @@ class BestThirdsCard extends StatelessWidget {
             child: Text(
               '$pos',
               style: AppTypography.labelSmall.copyWith(
-                color: advancing
-                    ? AppColors.positive
-                    : AppColors.onSurfaceVariant,
+                color: accent ?? AppColors.onSurfaceVariant,
               ),
             ),
           ),

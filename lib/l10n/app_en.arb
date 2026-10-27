@@ -19899,5 +19899,384 @@
   "boardObjectiveAwaitingDrawBody": "The board sets this target once the groups are drawn.",
   "@boardObjectiveAwaitingDrawBody": {
     "description": "Board objectives screen: explanation under 'Target after the draw' for the Nations Cup."
+  },
+  "tourThirdsNextAdvance": "{count, plural, one{The next team goes to {destination}} other{The next {count} go to {destination}}}",
+  "@tourThirdsNextAdvance": {
+    "description": "Cross-group ladder: how many of the teams just below the advancing ones go to the intercontinental play-off, and where.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric0": "An amazing night. We could not have predicted this in our wildest dreams. {score} against {opponent}!",
+  "@yWinEuphoric0": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 0. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric1": "{score} against {opponent}. Pinch me. Somebody please pinch me.",
+  "@yWinEuphoric1": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 1. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric2": "I am crying in the stands. {opponent} beaten {score}. I love this team.",
+  "@yWinEuphoric2": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 2. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric3": "{score} against {opponent}. Best night of my life as a fan, and it is not close.",
+  "@yWinEuphoric3": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 3. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric4": "{score} against {opponent}. One of the greatest results this country has ever had.",
+  "@yWinEuphoric4": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 4. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric5": "Nobody anywhere saw {score} against {opponent} coming. Historic.",
+  "@yWinEuphoric5": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 5. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric6": "{opponent} beaten {score}. People will talk about this one for decades.",
+  "@yWinEuphoric6": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 6. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric7": "Remember where you were tonight: {score} against {opponent}.",
+  "@yWinEuphoric7": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 7. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric8": "I have moaned all year and I will moan again tomorrow. Tonight? {score} against {opponent}. Incredible.",
+  "@yWinEuphoric8": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 8. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric9": "Even I cannot find anything to complain about. {score} against {opponent}. Unreal.",
+  "@yWinEuphoric9": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 9. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric10": "{score} against {opponent}. I said this team was finished. Never been happier to be wrong.",
+  "@yWinEuphoric10": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 10. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yWinEuphoric11": "Fine, I admit it: {score} against {opponent} is the stuff of dreams. Back to normal next week, probably.",
+  "@yWinEuphoric11": {
+    "description": "Y post: winEuphoric (a shock win over a side far above us: giant killing, the stands euphoric), variant 11. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant0": "{score} against {opponent}. One word: incredible!",
+  "@yDrewGiant0": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 0. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant1": "A point off one of the best sides in the world. We'll take that all day. {score} against {opponent}.",
+  "@yDrewGiant1": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 1. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant2": "Held {opponent} {score}! I have no voice left and I don't care.",
+  "@yDrewGiant2": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 2. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant3": "{score} against {opponent}. A draw? It feels like we won the whole thing.",
+  "@yDrewGiant3": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 3. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant4": "To get a point off a side like {opponent} was not expected, but we will definitely take it. {score}, great result.",
+  "@yDrewGiant4": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 4. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant5": "{score} against {opponent}. A point people will remember for years.",
+  "@yDrewGiant5": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 5. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant6": "{opponent} came as heavy favourites and left with {score}. A proud night.",
+  "@yDrewGiant6": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 6. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant7": "{score} against {opponent}. Hardly anyone at our level ever takes a point off them.",
+  "@yDrewGiant7": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 7. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant8": "I expected a hiding. {score} against {opponent}. I will happily eat my words.",
+  "@yDrewGiant8": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 8. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant9": "Not a fan of draws, but {score} against {opponent}? I will take it and smile.",
+  "@yDrewGiant9": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 9. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant10": "{score} against {opponent}. Even the doom-mongers, me included, are cheering tonight.",
+  "@yDrewGiant10": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 10. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "yDrewGiant11": "We defended for our lives and got {score} against {opponent}. Ugly? Who cares. Brilliant.",
+  "@yDrewGiant11": {
+    "description": "Y post: drewGiant (a draw with a side far above us: a point the country is proud of), variant 11. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "potyHistorySubtitle": "Every winner, and who has won the most",
+  "@potyHistorySubtitle": {
+    "description": "My Career block: subtitle of the Player of the Year history entry, shown before any year has been voted."
+  },
+  "potyHistoryEmpty": "No Player of the Year has been voted yet. The first vote comes on 1 December.",
+  "@potyHistoryEmpty": {
+    "description": "Player of the Year history: shown when no year has been voted yet. The vote happens every 1 December."
+  },
+  "potyHistoryLatest": "Latest winner",
+  "@potyHistoryLatest": {
+    "description": "Player of the Year history: label before the most recent winner. Short."
+  },
+  "potyHistoryMostWins": "Most wins",
+  "@potyHistoryMostWins": {
+    "description": "Player of the Year history: heading/label for the players ranked by number of wins. Short."
+  },
+  "potyHistoryWins": "{count, plural, one{1 win} other{{count} wins}}",
+  "@potyHistoryWins": {
+    "description": "Player of the Year history: how many times a player or nation has won the award.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "potyHistoryByYear": "Winners by year",
+  "@potyHistoryByYear": {
+    "description": "Player of the Year history: heading of the list of every year and its winner."
+  },
+  "potyHistoryByNation": "By nation",
+  "@potyHistoryByNation": {
+    "description": "Player of the Year history: heading of the nations ranked by awards won. Short."
+  },
+  "potyHistoryYourNation": "Your nation: {winners}, {finishes}",
+  "@potyHistoryYourNation": {
+    "description": "Player of the Year history: the manager's nation's record. {winners} is potyHistoryWinners, {finishes} is potyHistoryTopFive.",
+    "placeholders": {
+      "winners": {
+        "type": "String"
+      },
+      "finishes": {
+        "type": "String"
+      }
+    }
+  },
+  "potyHistoryWinners": "{count, plural, one{1 winner} other{{count} winners}}",
+  "@potyHistoryWinners": {
+    "description": "Player of the Year history: how many winners came from the manager's nation.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "potyHistoryTopFive": "{count, plural, one{1 top-5 finish} other{{count} top-5 finishes}}",
+  "@potyHistoryTopFive": {
+    "description": "Player of the Year history: how many times a player of the manager's nation finished in the vote's top five.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "potyHistoryYourPlayers": "Your players",
+  "@potyHistoryYourPlayers": {
+    "description": "Player of the Year history: heading of the manager's nation's top-five finishes. Short."
+  },
+  "potyHistoryNoYourPlayers": "None of your players has finished in the top five yet.",
+  "@potyHistoryNoYourPlayers": {
+    "description": "Player of the Year history: shown when no player of the manager's nation has finished in the top five."
+  },
+  "potyHistoryYoung": "Young player",
+  "@potyHistoryYoung": {
+    "description": "Player of the Year history: short label before the Young Player of the Year winner on a year row."
+  },
+  "potyHistoryUnknownPlayer": "Unknown player",
+  "@potyHistoryUnknownPlayer": {
+    "description": "Player of the Year history: a winner from a very old save whose name is no longer known."
   }
 }

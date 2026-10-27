@@ -233,6 +233,7 @@ extension SeasonRollover on SeasonService {
     // The new cycle's briefs follow the current rules (see briefRulesV2Kind).
     await _comp.markDrawWatched(careerId, nextCycle, briefRulesV2Kind);
     await _comp.markDrawWatched(careerId, nextCycle, briefRulesV3Kind);
+    await _comp.markDrawWatched(careerId, nextCycle, hostVenuesV2Kind);
     await _comp.markDrawWatched(careerId, nextCycle, fluidWindowsKind);
 
     // Freeze the current standings as the seeding ranking for the new cycle, so

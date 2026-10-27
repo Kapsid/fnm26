@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/services/competition/host_cities.dart';
 import 'package:fnm/domain/services/competition/national_stadium_data.dart';
@@ -8,6 +10,24 @@ import 'package:fnm/domain/services/competition/stadium_capacity.dart';
 /// and tapers down the city list, so the marquee grounds are in the biggest
 /// cities and a small country has small ones.
 typedef Venue = ({String city, String stadium, int capacity});
+
+/// How a finals' grounds are chosen.
+///
+/// Nothing about venues is stored, so a rule change would move the grounds
+/// of a tournament already drawn. The rules a finals follows are therefore
+/// set per cycle (see `hostVenuesV2Kind`): a cycle already under way when a
+/// save is updated keeps [original].
+enum VenueRules {
+  /// Up to 1.0.7: the seed and extra host cities, split evenly between the
+  /// hosts.
+  original,
+
+  /// From 1.0.7: the [finalsHostCities] join the pool, so a host with the
+  /// real cities for it reaches the full count, and the grounds are shared
+  /// out by size (each co-host keeps a fair minimum), as the 2026 finals
+  /// split its sixteen between three countries 11, 3 and 2.
+  scaled,
+}
 
 /// Generates a host nation's tournament cities and stadiums. Deterministic in
 /// the host's id, so a given host always presents the same, stable venues
@@ -141,8 +161,12 @@ abstract final class VenueGenerator {
     Map<int, List<String>> citiesByHost = const {},
     int count = 8,
     Map<int, List<Venue>> estates = const {},
+    VenueRules rules = VenueRules.original,
   }) {
     if (hostIds.isEmpty) return const {};
+    if (rules == VenueRules.scaled) {
+      return _scaledForHosts(hostIds, citiesByHost, count, estates);
+    }
     // How many grounds each host can stage at most.
     final capacity = [
       for (final h in hostIds)
@@ -187,6 +211,102 @@ abstract final class VenueGenerator {
     };
   }
 
+  /// [VenueRules.scaled]: every ground each host can offer (its estate,
+  /// then the rest of its finals pool), then [count] of them in all, shared
+  /// out by size.
+  static Map<int, List<Venue>> _scaledForHosts(
+    List<int> hostIds,
+    Map<int, List<String>> citiesByHost,
+    int count,
+    Map<int, List<Venue>> estates,
+  ) {
+    final grounds = [
+      for (final h in hostIds) _finalsGrounds(h, citiesByHost[h], estates[h]),
+    ];
+    final take = scaledShares(
+      count: count,
+      grounds: [
+        for (final g in grounds)
+          (
+            available: g.length,
+            seats: g.take(count).fold<int>(0, (s, v) => s + v.capacity),
+          ),
+      ],
+    );
+    return {
+      for (var i = 0; i < hostIds.length; i++)
+        hostIds[i]: grounds[i].take(take[i]).toList(),
+    };
+  }
+
+  /// How many of [count] grounds each host stages under [VenueRules.scaled],
+  /// in [grounds] order: [grounds] gives how many each host can offer and
+  /// the seats of its biggest ones (its size).
+  ///
+  /// Never more than there are, in all or per host. Each co-host first gets
+  /// a fair minimum (half an even share, at least two), then the
+  /// rest go one at a time by the largest-quotient rule on the seats, so a
+  /// big partner stages most of the tournament and a small one still
+  /// stages a handful. A host with the most grounds left breaks a tie,
+  /// then the earlier (primary) one.
+  static List<int> scaledShares({
+    required int count,
+    required List<({int available, int seats})> grounds,
+  }) {
+    final n = grounds.length;
+    final take = List<int>.filled(n, 0);
+    if (n == 0 || count <= 0) return take;
+    final total = math.min(
+      count,
+      grounds.fold<int>(0, (s, g) => s + g.available),
+    );
+    final floor = n == 1 ? total : math.max(2, total ~/ (2 * n));
+    for (var i = 0; i < n; i++) {
+      take[i] = math.min(floor, grounds[i].available);
+    }
+    var left = total - take.fold<int>(0, (s, t) => s + t);
+    while (left > 0) {
+      var best = -1;
+      var bestQ = -1.0;
+      for (var i = 0; i < n; i++) {
+        if (take[i] >= grounds[i].available) continue;
+        final q = math.max(1, grounds[i].seats) / (take[i] + 1);
+        if (q > bestQ) {
+          best = i;
+          bestQ = q;
+        }
+      }
+      if (best < 0) break;
+      take[best]++;
+      left--;
+    }
+    return take;
+  }
+
+  /// Every ground [hostId] can stage a finals in under [VenueRules.scaled],
+  /// biggest first: its [estate] when the career has one for it, followed by
+  /// the cities of its finals pool that the estate does not cover; else the
+  /// whole finals pool.
+  static List<Venue> _finalsGrounds(
+    int hostId,
+    List<String>? cities,
+    List<Venue>? estate,
+  ) {
+    final pool = forHost(
+      hostId: hostId,
+      cities: cities,
+      count: 1 << 20,
+      finals: true,
+    );
+    if (estate == null || estate.isEmpty) return pool;
+    final covered = {for (final v in estate) v.city};
+    return [
+      ...estate,
+      for (final v in pool)
+        if (!covered.contains(v.city)) v,
+    ];
+  }
+
   /// The most grounds [hostId] can offer: its real cities plus the extra host
   /// cities, or the fictional list when it has no real ones.
   static int _poolSize(int hostId, List<String>? cities) {
@@ -203,9 +323,19 @@ abstract final class VenueGenerator {
   /// that are not already listed. The seed's city list stops at eight, which a
   /// 48-team finals outgrows; the extras live apart from it so the cities that
   /// also seed club names stay exactly as they were.
-  static List<String> _realCities(int hostId, List<String> cities) {
-    final extras = extraHostCities[hostId];
-    if (extras == null) return cities;
+  ///
+  /// [finals] appends the [finalsHostCities] after those, for a finals under
+  /// [VenueRules.scaled]. They never reach the estate a career builds on.
+  static List<String> _realCities(
+    int hostId,
+    List<String> cities, {
+    bool finals = false,
+  }) {
+    final extras = [
+      ...?extraHostCities[hostId],
+      if (finals) ...?finalsHostCities[hostId],
+    ];
+    if (extras.isEmpty) return cities;
     final seen = cities.toSet();
     return [
       ...cities,
@@ -225,13 +355,17 @@ abstract final class VenueGenerator {
   /// for a finals that needs more grounds than the nation has big ones. Each
   /// ground's name is fixed by its city (and its place among the grounds of
   /// a city with two), so it never moves when the list does.
+  ///
+  /// [finals] adds the [finalsHostCities] to the pool (see
+  /// [VenueRules.scaled]).
   static List<Venue> forHost({
     required int hostId,
     List<String>? cities,
     int count = 8,
+    bool finals = false,
   }) {
     if (cities != null && cities.isNotEmpty) {
-      final pool = _realCities(hostId, cities);
+      final pool = _realCities(hostId, cities, finals: finals);
       final curated = _curatedIn(hostId, pool);
       if (curated.isNotEmpty) return _curated(hostId, curated, pool, count);
       final rng = SeededRng((hostId * 0x9E3779B1) ^ 0x5714CE5);

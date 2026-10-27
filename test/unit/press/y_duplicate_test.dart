@@ -20,6 +20,7 @@ void main() {
     competitive: true,
     stakes: YStakes.qualifier,
     shootoutWon: null,
+    away: false,
   );
 
   YContext withScorer(YMatch m) => (

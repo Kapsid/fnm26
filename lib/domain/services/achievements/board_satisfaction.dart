@@ -269,6 +269,46 @@ abstract final class BoardSatisfaction {
     return points.round();
   }
 
+  /// The form term as the board actually feels it: [formPoints] over the
+  /// last [formWindow] results, walked through the spell one match at a time
+  /// so that no result ever moves it against its own sign.
+  ///
+  /// The hard window used to drop its oldest result as each new one came in,
+  /// so a narrow win that pushed an old 5-point upset out of the window LOST
+  /// the board three points: Montenegro beat Sweden 6-2 at home and its job
+  /// security went down 1%. Here the term after a win is never lower than
+  /// before it, and after a defeat never higher; a draw takes the window's
+  /// value exactly as before. Otherwise it is the window's value, so it
+  /// catches up with the window whenever a result allows, stays inside the
+  /// window's own range, and over a career tracks the same level.
+  ///
+  /// [chronological] is every counted result of the spell, OLDEST first,
+  /// with the same underdog and humiliation flags [formPoints] takes. Pure and
+  /// derived from the results alone, so nothing is stored per match.
+  static int stickyFormPoints(
+    List<({MatchOutcome outcome, bool underdog, bool humiliation})>
+    chronological, {
+    double minnow = 0,
+  }) {
+    var form = 0;
+    for (var k = 0; k < chronological.length; k++) {
+      final from = k + 1 - formWindow < 0 ? 0 : k + 1 - formWindow;
+      final window = chronological.sublist(from, k + 1).reversed.toList();
+      final value = formPoints(
+        [for (final r in window) r.outcome],
+        asUnderdog: [for (final r in window) r.underdog],
+        minnow: minnow,
+        humiliations: [for (final r in window) r.humiliation],
+      );
+      form = switch (chronological[k].outcome) {
+        MatchOutcome.win => value > form ? value : form,
+        MatchOutcome.loss => value < form ? value : form,
+        MatchOutcome.draw => value,
+      };
+    }
+    return form;
+  }
+
   /// The standing bonus for a [worldRank] (1-based); null when unranked.
   static int rankBonus(int? worldRank) => switch (worldRank) {
     null => 0,
@@ -402,6 +442,10 @@ abstract final class BoardSatisfaction {
     /// Alongside [recent]: which of those matches were humiliations (see
     /// [isHumiliation]), for the minnow's form.
     Iterable<bool> recentHumiliations = const [],
+
+    /// The form term already worked out (see [stickyFormPoints]); when given,
+    /// [recent] and its flags are not read.
+    int? form,
   }) {
     var best = 0;
     for (final h in honours) {
@@ -413,12 +457,13 @@ abstract final class BoardSatisfaction {
       fromObjectives += objectiveSwing(o, minnow: minnow);
     }
     return (openingFrom(previousCycle, minnow: minnow) +
-            formPoints(
-              recent,
-              asUnderdog: recentAsUnderdog,
-              minnow: minnow,
-              humiliations: recentHumiliations,
-            ) +
+            (form ??
+                formPoints(
+                  recent,
+                  asUnderdog: recentAsUnderdog,
+                  minnow: minnow,
+                  humiliations: recentHumiliations,
+                )) +
             lockedInLosses * lockedInLoss +
             best +
             fromObjectives +

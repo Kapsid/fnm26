@@ -12416,4 +12416,199 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get boardObjectiveAwaitingDrawBody => 'グループ抽選の後、協会がこの目標を設定します。';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '続く$countチームが$destinationへ進出',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return '信じられない夜だ。どんなに突飛な夢でも、こんな結果は想像できなかった。$opponentに$score！';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$opponentに$score。つねってくれ。誰か頼むからつねってくれ。';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'スタンドで泣いてる。$opponentに$score。このチームが大好きだ。';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$opponentに$score。サポーター人生で最高の夜、文句なしに。';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$opponentに$score。この国の歴史でも指折りの大金星だ。';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$opponentに$score。世界中の誰も予想していなかった。歴史的だ。';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$opponentに$score。この試合は何十年も語り継がれる。';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return '今夜どこにいたか覚えておこう。$opponentに$score。';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return '一年中文句を言ってきたし、明日もまた言う。でも今夜は？ $opponentに$score。信じられない。';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'この俺でさえ文句のつけようがない。$opponentに$score。現実とは思えない。';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$opponentに$score。このチームは終わったと言っていた。間違ってこれほど嬉しいことはない。';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'わかった、認めるよ。$opponentに$scoreは夢のようだ。来週にはたぶん元通りだけど。';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$opponentと$score。ひとことで言えば、信じられない！';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return '世界屈指の強豪から勝ち点1。いつでも大歓迎だ。$opponentと$score。';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$opponentと$score！声が枯れたけど、どうでもいい。';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$opponentと$score。引き分け？ まるで全部勝ち取った気分だ。';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return '$opponentのような相手から勝ち点を取れるとは思わなかったが、ありがたくいただく。$score、素晴らしい結果だ。';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$opponentと$score。何年も語られる勝ち点1だ。';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return '大本命の$opponentを相手に$score。誇らしい夜だ。';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$opponentと$score。うちのレベルで彼らから勝ち点を奪えるチームはほとんどない。';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return '大敗を覚悟していた。$opponentと$score。喜んで前言撤回する。';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return '引き分けは好きじゃないが、$opponentと$scoreなら？ 笑って受け入れる。';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$opponentと$score。今夜は悲観論者も、俺も含めて、みんな大喜びだ。';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return '命がけで守り抜いて$opponentと$score。泥臭い？ 関係ない。最高だ。';
+  }
+
+  @override
+  String get potyHistorySubtitle => '歴代受賞者と最多受賞者';
+
+  @override
+  String get potyHistoryEmpty => 'まだ年間最優秀選手は選ばれていません。最初の投票は12月1日です。';
+
+  @override
+  String get potyHistoryLatest => '最新の受賞者';
+
+  @override
+  String get potyHistoryMostWins => '最多受賞';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count回受賞',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => '年別の受賞者';
+
+  @override
+  String get potyHistoryByNation => '国別';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'あなたの国: $winners、$finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '受賞者$count人',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'トップ5入り$count回',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'あなたの選手';
+
+  @override
+  String get potyHistoryNoYourPlayers => 'あなたの選手はまだトップ5に入っていません。';
+
+  @override
+  String get potyHistoryYoung => '若手';
+
+  @override
+  String get potyHistoryUnknownPlayer => '不明な選手';
 }

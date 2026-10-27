@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/awards/awards_ceremony_screen.dart';
+import 'package:fnm/features/awards/poty_history_screen.dart';
 import 'package:fnm/features/achievements/achievements_screen.dart';
 import 'package:fnm/features/achievements/challenges_screen.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
@@ -156,6 +157,10 @@ abstract final class Routes {
 
   /// The manager's career summary + trophy cabinet. Expects `?careerId=`.
   static const careerSummary = '/career-summary';
+
+  /// Every Player of the Year, the most decorated men and nations. Expects
+  /// `?careerId=`.
+  static const potyHistory = '/poty-history';
 
   /// The per-save achievements screen. Expects `?careerId=`.
   static const achievements = '/achievements';
@@ -499,6 +504,17 @@ final routerProvider = Provider<GoRouter>((ref) {
             ) ??
             0;
         return CareerSummaryScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.potyHistory,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return PotyHistoryScreen(careerId: id);
       },
     ),
     GoRoute(

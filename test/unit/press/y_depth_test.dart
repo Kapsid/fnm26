@@ -29,6 +29,7 @@ void main() {
       competitive: true,
       stakes: YStakes.qualifier,
       shootoutWon: null,
+      away: false,
     ),
     scorerName: null,
     scorerGoals: null,
@@ -279,6 +280,7 @@ void main() {
       competitive: true,
       stakes: YStakes.qualifier,
       shootoutWon: null,
+      away: false,
     ));
     final giant = YFeed.classify((
       opponent: 'San Marino',
@@ -291,9 +293,12 @@ void main() {
       competitive: true,
       stakes: YStakes.qualifier,
       shootoutWon: null,
+      away: false,
     ));
     // A point is a different story depending on whose point it was.
-    expect(minnow, YTemplate.drewHeroic);
+    // (Holding a side 118 places above is giant killing: see
+    // y_giant_killing_test.dart.)
+    expect(minnow, YTemplate.drewGiant);
     expect(giant, YTemplate.drewShame);
     // And the shared reading underneath agrees.
     expect(

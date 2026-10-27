@@ -35,6 +35,8 @@ void main() {
     YTemplate.downGap,
     YTemplate.drewHeroic,
     YTemplate.drewShame,
+    YTemplate.winEuphoric,
+    YTemplate.drewGiant,
   ];
 
   const nation = 'Bosnia and Herzegovina';

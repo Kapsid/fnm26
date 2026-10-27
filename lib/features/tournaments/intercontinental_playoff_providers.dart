@@ -58,6 +58,29 @@ intercontinentalPlayoffProvider = FutureProvider.autoDispose
                 ),
               )).future,
             );
+      // Qualifying is over but the hub has not seeded the play-off yet (the
+      // manager's own last qualifier was the world's last, and nothing has
+      // advanced since). The seeding above then falls back to the ranking the
+      // cycle STARTED on, so this drew a bracket in the wrong order on the
+      // wrong odds and showed it as decided; the real one, seeded on the live
+      // ranking at the next step, could crown other winners. Show nothing
+      // until the play-off has really been seeded.
+      final playoffSlot = drawSeedCycle(
+        career.cyclePointer,
+        drawSlotWorldCupPlayoff,
+      );
+      final seeded =
+          (await ref
+                  .watch(seedRankingRepositoryProvider)
+                  .forCycle(careerId, playoffSlot))
+              .isNotEmpty ||
+          await comp.hasFinals(careerId);
+      if (!seeded) return null;
+      final legacyStream = await playoffLegacyStream(
+        comp,
+        careerId,
+        career.cyclePointer,
+      );
       final hostBerths = await worldCupHostBerthsFor(ref, careerId);
       final pool = WorldCupFinals.playoffPoolFor(
         byConfederation: grouped,
@@ -104,6 +127,7 @@ intercontinentalPlayoffProvider = FutureProvider.autoDispose
         pool: pool,
         playedResults: results,
         playedScores: scores,
+        legacyStream: legacyStream,
       );
       if (ties.isEmpty) return null;
       return (ties: ties, nations: nations, playerNationId: career.nationId);

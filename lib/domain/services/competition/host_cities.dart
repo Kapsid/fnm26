@@ -176,3 +176,103 @@ const Map<int, List<String>> extraHostCities = {
     'Jeju', 'Seogwipo', 'Gangneung', 'Goyang',
   ], // South Korea
 };
+
+/// More real host cities, biggest first, for the nations a 48-team World
+/// Championship can fall to whose seed and extra cities stop well short of
+/// its sixteen grounds. Appended after [extraHostCities] ONLY for a finals
+/// under `VenueRules.scaled`, never for the estate a career builds on, so
+/// the stadium screen, its map and every bid and income figure read exactly
+/// what they did.
+///
+/// Only real cities with a ground a finals could plausibly use, and none of
+/// them at altitude (see `MatchClimate`, which reads a city it does not list
+/// as low-lying). A nation that cannot credibly offer more (Curaçao, Cape
+/// Verde) is not padded: it stages a smaller finals in what it has.
+const Map<int, List<String>> finalsHostCities = {
+  // Europe
+  4: [
+    'Wiener Neustadt',
+    'Dornbirn',
+    'Bregenz',
+    'Wolfsberg',
+    'Hartberg',
+  ], // Austria
+  8: [
+    'Prijedor', 'Brčko', 'Doboj', 'Bihać', 'Cazin', //
+    'Zvornik', 'Široki Brijeg',
+  ], // Bosnia and Herzegovina
+  10: ['Karlovac', 'Dubrovnik', 'Sisak', 'Vinkovci', 'Koprivnica'], // Croatia
+  12: [
+    'Pardubice', 'České Budějovice', 'Ústí nad Labem', 'Jihlava', //
+    'Karviná', 'Jablonec nad Nisou',
+  ], // Czechia
+  22: ['Chania', 'Agrinio', 'Kavala', 'Serres', 'Xanthi'], // Greece
+  23: [
+    'Pécs', 'Nyíregyháza', 'Kecskemét', 'Szombathely', //
+    'Zalaegerszeg', 'Kaposvár', 'Paks', 'Kisvárda',
+  ], // Hungary
+  39: [
+    'Ålesund', 'Sandnes', 'Haugesund', 'Skien', 'Lillestrøm', 'Hamar', //
+  ], // Norway
+  46: ['Falkirk', 'Stirling', 'Ayr', 'Greenock', 'Dumfries'], // Scotland
+  47: ['Pančevo', 'Smederevo', 'Leskovac', 'Šabac', 'Valjevo'], // Serbia
+  52: [
+    'Biel/Bienne', 'Fribourg', 'Neuchâtel', 'Schaffhausen', 'Aarau', //
+    'Sion',
+  ], // Switzerland
+  // South America
+  62: [
+    'Capiatá', 'Lambaré', 'Pedro Juan Caballero', 'Itauguá', //
+    'Coronel Oviedo', 'Concepción', 'Villarrica', 'Pilar',
+  ], // Paraguay
+  64: [
+    'Mercedes',
+    'Minas',
+    'San José de Mayo',
+    'Durazno',
+    'Artigas',
+  ], // Uruguay
+  // North and Central America
+  76: [
+    'Ciudad Quesada', 'San Isidro de El General', 'Guápiles', //
+    'Nicoya', 'Turrialba',
+  ], // Costa Rica
+  87: ['Ocho Rios', 'Old Harbour', 'Savanna-la-Mar', 'Port Antonio'], // Jamaica
+  91: [
+    'Arraiján',
+    'Chitré',
+    'Changuinola',
+    'Aguadulce',
+    'Las Tablas',
+  ], // Panama
+  // Africa
+  102: [
+    'Moçâmedes', 'Uíge', 'Soyo', 'Sumbe', "N'dalatando", 'Caxito', //
+  ], // Angola
+  122: ['Koforidua', 'Techiman', 'Ho', 'Wa', 'Bolgatanga', 'Nkawkaw'], // Ghana
+  123: [
+    'Kamsar', 'Siguiri', 'Kissidougou', 'Guéckédougou', 'Faranah', //
+    'Macenta',
+  ], // Guinea
+  125: [
+    'Divo', 'Soubré', 'Abengourou', 'Agboville', 'Grand-Bassam', //
+    'Bondoukou', 'Séguéla',
+  ], // Ivory Coast
+  132: ['Koulikoro', 'Kati', 'Bougouni', 'Kita', 'San'], // Mali
+  142: ['Diourbel', 'Tambacounda', 'Louga', 'Kolda', 'Fatick'], // Senegal
+  151: [
+    'Nabeul', 'Gafsa', 'Mahdia', 'Medenine', 'Béja', 'Jendouba', //
+    'Zarzis',
+  ], // Tunisia
+  // Asia
+  197: [
+    'Khor Fakkan',
+    'Kalba',
+    'Dhaid',
+    'Madinat Zayed',
+  ], // United Arab Emirates
+  198: [
+    'Kokand', 'Termez', 'Navoiy', 'Jizzakh', 'Chirchiq', 'Urgench', //
+    'Almalyk',
+  ], // Uzbekistan
+};

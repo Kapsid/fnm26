@@ -12826,4 +12826,205 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get boardObjectiveAwaitingDrawBody =>
       'A vezetőség a csoportsorsolás után tűzi ki ezt a célt.';
+
+  @override
+  String tourThirdsNextAdvance(int count, String destination) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'A következő $count továbbjut $destination',
+      one: 'A következő továbbjut $destination',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yWinEuphoric0(String opponent, String score) {
+    return 'Hihetetlen este. Ezt a legvadabb álmainkban sem mertük volna elképzelni. $score $opponent ellen!';
+  }
+
+  @override
+  String yWinEuphoric1(String opponent, String score) {
+    return '$score $opponent ellen. Csípjetek meg. Valaki csípjen meg, kérem.';
+  }
+
+  @override
+  String yWinEuphoric2(String opponent, String score) {
+    return 'Sírok a lelátón. $score $opponent ellen. Imádom ezt a csapatot.';
+  }
+
+  @override
+  String yWinEuphoric3(String opponent, String score) {
+    return '$score $opponent ellen. Szurkolói életem legszebb estéje, messze.';
+  }
+
+  @override
+  String yWinEuphoric4(String opponent, String score) {
+    return '$score $opponent ellen. Az ország történetének egyik legnagyobb eredménye.';
+  }
+
+  @override
+  String yWinEuphoric5(String opponent, String score) {
+    return '$score $opponent ellen. Senki a világon nem számított erre. Történelmi.';
+  }
+
+  @override
+  String yWinEuphoric6(String opponent, String score) {
+    return '$score $opponent ellen. Erről évtizedekig beszélni fognak.';
+  }
+
+  @override
+  String yWinEuphoric7(String opponent, String score) {
+    return 'Jegyezzétek meg, hol voltatok ma este: $score $opponent ellen.';
+  }
+
+  @override
+  String yWinEuphoric8(String opponent, String score) {
+    return 'Egész évben morogtam, és holnap is fogok. De ma este? $score $opponent ellen. Hihetetlen.';
+  }
+
+  @override
+  String yWinEuphoric9(String opponent, String score) {
+    return 'Még én sem találok semmit, amibe belekötnék. $score $opponent ellen. Valószerűtlen.';
+  }
+
+  @override
+  String yWinEuphoric10(String opponent, String score) {
+    return '$score $opponent ellen. Azt mondtam, ennek a csapatnak vége. Még sosem örültem ennyire, hogy tévedtem.';
+  }
+
+  @override
+  String yWinEuphoric11(String opponent, String score) {
+    return 'Jó, beismerem: a $score $opponent ellen maga az álom. Jövő héten valószínűleg minden a régi.';
+  }
+
+  @override
+  String yDrewGiant0(String opponent, String score) {
+    return '$score $opponent ellen. Egy szó: hihetetlen!';
+  }
+
+  @override
+  String yDrewGiant1(String opponent, String score) {
+    return 'Egy pont a világ egyik legjobb csapata ellen. Bármikor elfogadjuk. $score $opponent ellen.';
+  }
+
+  @override
+  String yDrewGiant2(String opponent, String score) {
+    return '$score $opponent ellen! Elment a hangom, és nem érdekel.';
+  }
+
+  @override
+  String yDrewGiant3(String opponent, String score) {
+    return '$score $opponent ellen. Döntetlen? Olyan, mintha mindent megnyertünk volna.';
+  }
+
+  @override
+  String yDrewGiant4(String opponent, String score) {
+    return 'Egy ilyen ellenfél ($opponent) ellen senki sem várt pontot, de ezt bizony elvisszük. $score, remek eredmény.';
+  }
+
+  @override
+  String yDrewGiant5(String opponent, String score) {
+    return '$score $opponent ellen. Egy pont, amire évekig emlékezni fogunk.';
+  }
+
+  @override
+  String yDrewGiant6(String opponent, String score) {
+    return 'Az ellenfél ($opponent) nagy esélyesként jött, és $score lett a vége. Büszke este.';
+  }
+
+  @override
+  String yDrewGiant7(String opponent, String score) {
+    return '$score $opponent ellen. A mi szintünkön szinte senki nem vesz el tőlük pontot.';
+  }
+
+  @override
+  String yDrewGiant8(String opponent, String score) {
+    return 'Kiütésre számítottam. $score $opponent ellen. Boldogan visszaszívom, amit mondtam.';
+  }
+
+  @override
+  String yDrewGiant9(String opponent, String score) {
+    return 'Nem szeretem a döntetleneket, de $score $opponent ellen? Mosolyogva elfogadom.';
+  }
+
+  @override
+  String yDrewGiant10(String opponent, String score) {
+    return '$score $opponent ellen. Ma este még a károgók is ünnepelnek, én is.';
+  }
+
+  @override
+  String yDrewGiant11(String opponent, String score) {
+    return 'Életre-halálra védekeztünk, és $score lett $opponent ellen. Csúnya? Kit érdekel. Csodás.';
+  }
+
+  @override
+  String get potyHistorySubtitle => 'Minden győztes, és ki nyert a legtöbbször';
+
+  @override
+  String get potyHistoryEmpty =>
+      'Még nem választották meg az év játékosát. Az első szavazás december 1-jén lesz.';
+
+  @override
+  String get potyHistoryLatest => 'Legutóbbi győztes';
+
+  @override
+  String get potyHistoryMostWins => 'Legtöbb győzelem';
+
+  @override
+  String potyHistoryWins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count győzelem',
+      one: '1 győzelem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryByYear => 'Győztesek évente';
+
+  @override
+  String get potyHistoryByNation => 'Országonként';
+
+  @override
+  String potyHistoryYourNation(String winners, String finishes) {
+    return 'A te országod: $winners, $finishes';
+  }
+
+  @override
+  String potyHistoryWinners(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count győztes',
+      one: '1 győztes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String potyHistoryTopFive(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count top 5-ös helyezés',
+      one: '1 top 5-ös helyezés',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyHistoryYourPlayers => 'A te játékosaid';
+
+  @override
+  String get potyHistoryNoYourPlayers =>
+      'Egyik játékosod sem végzett még az első ötben.';
+
+  @override
+  String get potyHistoryYoung => 'Fiatal játékos';
+
+  @override
+  String get potyHistoryUnknownPlayer => 'Ismeretlen játékos';
 }

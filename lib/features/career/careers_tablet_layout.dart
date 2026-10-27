@@ -36,6 +36,8 @@ class _CareersTabletLayout extends StatelessWidget {
                       onTap: () => context.go(e.location),
                     ),
                   ],
+                  const SizedBox(height: AppSpacing.sm),
+                  PotyHistoryBlock(careerId: careerId),
                 ],
               ),
             ),
