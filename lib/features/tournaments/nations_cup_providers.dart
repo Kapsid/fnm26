@@ -56,7 +56,9 @@ nationsCupProvider = FutureProvider.autoDispose.family<NationsCupData?, NationsC
   if (career == null) return null;
   final comp = ref.watch(competitionRepositoryProvider);
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
   final mine = NationsCups.ofManager(nations[career.nationId]?.confederation);
   final conf = key.confederation ?? mine ?? Confederation.europe;

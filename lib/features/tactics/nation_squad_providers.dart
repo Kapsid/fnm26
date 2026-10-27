@@ -88,36 +88,37 @@ nationSquadProvider = FutureProvider.autoDispose.family<NationSquadData?, int>((
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
 
-  final pool = [
-    ...await withoutNaturalizedAway(
-      ref,
-      careerId,
-      await ref
-          .watch(playerRepositoryProvider)
-          .byNation(
-            career.nationId,
-            agingYears: CareerService.agingYears(career),
-            saveSeed: career.rngSeed,
-            careerId: career.id,
-            // Down to the call-up floor so a U-17 he named is listed with the
-            // squad he is in; the boys he did not name stay on the youth
-            // screen (filtered below).
-            minAge: PlayerLifecycle.callUpMinAge,
-            youthBonusByCycle: await ref.watch(
-              youthBonusByCycleProvider(careerId).future,
-            ),
-            careerStartsByPlayer: await ref.watch(
-              careerDevBonusProvider(careerId).future,
-            ),
-          ),
-    ),
-    ...await naturalizedPlayersFor(ref, career),
-  ]..sort((a, b) {
-    // Id breaks a tie: Dart's sort is not stable, so two men on the same
-    // rating otherwise swap places whenever the list read in changes.
-    final byOverall = b.overall.compareTo(a.overall);
-    return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
-  });
+  final pool =
+      [
+        ...await withoutNaturalizedAway(
+          ref,
+          careerId,
+          await ref
+              .watch(playerRepositoryProvider)
+              .byNation(
+                career.nationId,
+                agingYears: CareerService.agingYears(career),
+                saveSeed: career.rngSeed,
+                careerId: career.id,
+                // Down to the call-up floor so a U-17 he named is listed with the
+                // squad he is in; the boys he did not name stay on the youth
+                // screen (filtered below).
+                minAge: PlayerLifecycle.callUpMinAge,
+                youthBonusByCycle: await ref.watch(
+                  youthBonusByCycleProvider(careerId).future,
+                ),
+                careerStartsByPlayer: await ref.watch(
+                  careerDevBonusProvider(careerId).future,
+                ),
+              ),
+        ),
+        ...await naturalizedPlayersFor(ref, career),
+      ]..sort((a, b) {
+        // Id breaks a tie: Dart's sort is not stable, so two men on the same
+        // rating otherwise swap places whenever the list read in changes.
+        final byOverall = b.overall.compareTo(a.overall);
+        return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
+      });
 
   final comp = ref.watch(competitionRepositoryProvider);
   // The whole pool, not a top-N leaderboard — every player gets their own line,

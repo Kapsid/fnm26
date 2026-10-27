@@ -96,9 +96,11 @@ void main() {
     return p!;
   }
 
-  Future<int> start() async => (await container
-      .read(campaignServiceProvider)
-      .start(Campaigns.youngFinns, managerName: 'Me')).id;
+  Future<int> start() async =>
+      (await container
+              .read(campaignServiceProvider)
+              .start(Campaigns.youngFinns, managerName: 'Me'))
+          .id;
 
   Future<int> cycleOf(int careerId) async =>
       (await container.read(careerRepositoryProvider).byId(careerId))!
@@ -174,15 +176,16 @@ void main() {
         firstRound: round,
       );
     }
-    final f = (kind == CompetitionKind.worldCupFinals
-            ? await comp().fixturesByRound(careerId, round)
-            : await comp().fixturesByRound(
-                careerId,
-                round,
-                kind: kind,
-                confederation: Confederation.europe,
-              ))
-        .single;
+    final f =
+        (kind == CompetitionKind.worldCupFinals
+                ? await comp().fixturesByRound(careerId, round)
+                : await comp().fixturesByRound(
+                    careerId,
+                    round,
+                    kind: kind,
+                    confederation: Confederation.europe,
+                  ))
+            .single;
     await comp().recordResult(fixtureId: f.id, homeScore: 2, awayScore: 0);
   }
 
@@ -210,7 +213,11 @@ void main() {
       round: 'FINAL',
       home: finlandWins ? finland : others[0],
       away: others[1],
-      date: DateTime(CareerService.worldCupYear(await cycleOf(careerId)), 7, 19),
+      date: DateTime(
+        CareerService.worldCupYear(await cycleOf(careerId)),
+        7,
+        19,
+      ),
     );
   }
 
@@ -255,10 +262,11 @@ void main() {
   });
 
   test('other campaigns and normal careers keep the real Finland', () async {
-    final normal = (await container
-        .read(careerServiceProvider)
-        .create(nationId: finland, managerName: 'N', rngSeed: 17))
-        .valueOrNull!;
+    final normal =
+        (await container
+                .read(careerServiceProvider)
+                .create(nationId: finland, managerName: 'N', rngSeed: 17))
+            .valueOrNull!;
     final finns = await container
         .read(playerRepositoryProvider)
         .byNation(finland, saveSeed: 17, careerId: normal.id);

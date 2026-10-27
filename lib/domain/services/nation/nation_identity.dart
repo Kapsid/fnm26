@@ -83,6 +83,8 @@ abstract final class NationIdentity {
     'SCO': (nickname: 'Tartan Army', style: NationStyle.direct, pedigree: 3),
     'IRL': (nickname: 'Boys in Green', style: NationStyle.direct, pedigree: 4),
     'WAL': (nickname: 'The Dragons', style: NationStyle.counter, pedigree: 4),
+    // Greenland, a dormant nation (see DormantNations).
+    'GRL': (nickname: null, style: NationStyle.direct, pedigree: 5),
 
     // ---- South America ----------------------------------------------------
     'BRA': (nickname: 'Seleção', style: NationStyle.flair, pedigree: 1),

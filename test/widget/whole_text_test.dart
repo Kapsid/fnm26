@@ -183,4 +183,11 @@ void main() {
       'D​e B​r​u​y​n​e',
     );
   });
+
+  testWidgets('a zero-width slot lays out instead of hanging', (tester) async {
+    // The search for room grew it by multiplying, so from zero it never grew
+    // and the UI thread spun for ever.
+    await pumpAt(tester, 'Aubameyang', 0);
+    expect(tester.takeException(), isNull);
+  });
 }

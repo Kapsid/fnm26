@@ -237,10 +237,12 @@ List<GridColumnSet<Nation>> rankingColumnSets(
                 FlagDisc(n.code, size: 22, highlighted: mine),
                 const SizedBox(width: AppSpacing.sm),
                 Flexible(
-                  child: Text(
+                  child: WholeText(
                     n.name,
+                    shortText: n.code,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    shrinkBeforeShortening: 1,
+                    breakWords: false,
                     style: mine
                         ? TabletText.cell.copyWith(
                             fontWeight: FontWeight.w700,

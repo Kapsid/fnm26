@@ -89,7 +89,7 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
     }
     if (nextComp == null) return null;
 
-    final all = await ref.watch(nationRepositoryProvider).all();
+    final all = await ref.watch(nationRepositoryProvider).forCareer(careerId);
     final nations = {for (final n in all) n.id: n};
 
     // Windows that a finals tournament will swallow, even though nothing is on

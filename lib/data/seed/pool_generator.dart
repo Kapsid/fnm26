@@ -58,6 +58,9 @@ abstract final class PoolGenerator {
 
   static String _club(int seed) => _clubs[seed.abs() % _clubs.length];
 
+  /// [p] with the club [expand] gives a seeded squad player (by id).
+  static Player withClub(Player p) => p.copyWith(club: _club(p.id));
+
   /// Returns the players with clubs assigned, plus generated fringe players.
   ///
   /// [namesByNation] supplies culturally-authentic first/surname pools per
@@ -80,60 +83,87 @@ abstract final class PoolGenerator {
 
       // Clubs for the real squad.
       for (final p in squad) {
-        out.add(p.copyWith(club: _club(p.id)));
+        out.add(withClub(p));
       }
 
-      final rng = SeededRng((nationId * 0x9E3779B1) ^ 0xF00DBEEF);
-      final pool = namesByNation?[nationId];
-      final firsts = pool != null && pool.first.isNotEmpty
-          ? pool.first
-          : squad.map((p) => _firstName(p.name)).toList();
-      final lasts = pool != null && pool.sur.isNotEmpty
-          ? pool.sur
-          : squad.map((p) => _lastName(p.name)).toList();
-      // Anchor on the nation's stronger players (top half by overall), not the
-      // whole-squad mean — stars pull the mean down, so a mean-anchored fringe
-      // sat well below the real starters and left a cliff right after the 23.
-      final ranked = [...squad]..sort((a, b) => b.overall.compareTo(a.overall));
-      final avg = _averageAttributes(
-        ranked.take((squad.length / 2).ceil().clamp(1, squad.length)).toList(),
+      out.addAll(
+        fringeFor(
+          nationId: nationId,
+          squad: squad,
+          firstId: nextId,
+          names: namesByNation?[nationId],
+        ),
       );
+      nextId += extraPerNation;
+    }
+    return out;
+  }
 
-      // The nation's own depth chart, not one shared list — see [DepthChart].
-      // Every country used to pad its pool from the same fixed cycle of
-      // positions, so every nation in the world had an identical fringe.
-      final fringePositions = DepthChart.forNation(
-        nationId: nationId,
-        count: extraPerNation,
+  /// The [extraPerNation] generated fringe players of one nation, with ids
+  /// running from [firstId]. [names] are the nation's first/surname pools;
+  /// when absent the names are recombined from [squad]. Deterministic per
+  /// nation id: the same inputs always give the same players.
+  ///
+  /// [expand] calls this once per nation; a dormant nation (see
+  /// `DormantNations`) calls it directly with its own fixed id range.
+  static List<Player> fringeFor({
+    required int nationId,
+    required List<Player> squad,
+    required int firstId,
+    ({List<String> first, List<String> sur})? names,
+  }) {
+    final out = <Player>[];
+    var nextId = firstId;
+    final rng = SeededRng((nationId * 0x9E3779B1) ^ 0xF00DBEEF);
+    final pool = names;
+    final firsts = pool != null && pool.first.isNotEmpty
+        ? pool.first
+        : squad.map((p) => _firstName(p.name)).toList();
+    final lasts = pool != null && pool.sur.isNotEmpty
+        ? pool.sur
+        : squad.map((p) => _lastName(p.name)).toList();
+    // Anchor on the nation's stronger players (top half by overall), not the
+    // whole-squad mean — stars pull the mean down, so a mean-anchored fringe
+    // sat well below the real starters and left a cliff right after the 23.
+    final ranked = [...squad]..sort((a, b) => b.overall.compareTo(a.overall));
+    final avg = _averageAttributes(
+      ranked.take((squad.length / 2).ceil().clamp(1, squad.length)).toList(),
+    );
+
+    // The nation's own depth chart, not one shared list — see [DepthChart].
+    // Every country used to pad its pool from the same fixed cycle of
+    // positions, so every nation in the world had an identical fringe.
+    final fringePositions = DepthChart.forNation(
+      nationId: nationId,
+      count: extraPerNation,
+    );
+
+    for (var i = 0; i < extraPerNation; i++) {
+      final pos = fringePositions[i];
+      // Depth-graded quality anchored on the stronger players so the best
+      // fringe overlap the first-choice XI (a continuous curve, no cliff at
+      // the top-23 boundary) and taper gently down the depth chart to a
+      // clear-reserve floor. The slope is deliberately shallow near the top
+      // so the next tier of talent stays competitive.
+      final depth = extraPerNation == 1 ? 0.0 : i / (extraPerNation - 1);
+      final noise = (rng.nextInt(9) - 4) / 100;
+      // Shallow slope + a high floor: the next tier stays close to the XI and
+      // even the deepest reserve is a credible squad player, not a minnow.
+      final scale = (1.04 - 0.26 * depth + noise).clamp(0.74, 1.06);
+      out.add(
+        Player(
+          id: nextId,
+          nationId: nationId,
+          name:
+              '${firsts[rng.nextInt(firsts.length)]} '
+              '${lasts[rng.nextInt(lasts.length)]}',
+          age: 18 + rng.nextInt(17), // 18 … 34
+          position: pos,
+          attributes: _scale(avg, scale, rng),
+          club: _club(nextId),
+        ),
       );
-
-      for (var i = 0; i < extraPerNation; i++) {
-        final pos = fringePositions[i];
-        // Depth-graded quality anchored on the stronger players so the best
-        // fringe overlap the first-choice XI (a continuous curve, no cliff at
-        // the top-23 boundary) and taper gently down the depth chart to a
-        // clear-reserve floor. The slope is deliberately shallow near the top
-        // so the next tier of talent stays competitive.
-        final depth = extraPerNation == 1 ? 0.0 : i / (extraPerNation - 1);
-        final noise = (rng.nextInt(9) - 4) / 100;
-        // Shallow slope + a high floor: the next tier stays close to the XI and
-        // even the deepest reserve is a credible squad player, not a minnow.
-        final scale = (1.04 - 0.26 * depth + noise).clamp(0.74, 1.06);
-        out.add(
-          Player(
-            id: nextId,
-            nationId: nationId,
-            name:
-                '${firsts[rng.nextInt(firsts.length)]} '
-                '${lasts[rng.nextInt(lasts.length)]}',
-            age: 18 + rng.nextInt(17), // 18 … 34
-            position: pos,
-            attributes: _scale(avg, scale, rng),
-            club: _club(nextId),
-          ),
-        );
-        nextId++;
-      }
+      nextId++;
     }
     return out;
   }

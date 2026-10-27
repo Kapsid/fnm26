@@ -1,0 +1,2067 @@
+{
+ "2|Encamp": {
+  "lon": 1.5828,
+  "lat": 42.5361,
+  "src": "wikidata:Q24269"
+ },
+ "2|Escaldes-Engordany": {
+  "lon": 1.5408,
+  "lat": 42.5089,
+  "src": "wikidata:Q24286"
+ },
+ "2|Sant Julià de Lòria": {
+  "lon": 1.49,
+  "lat": 42.47,
+  "src": "wikidata:Q24282"
+ },
+ "3|Abovyan": {
+  "lon": 44.6256,
+  "lat": 40.2739,
+  "src": "wikidata:Q31493"
+ },
+ "3|Kapan": {
+  "lon": 46.415,
+  "lat": 39.2011,
+  "src": "wikidata:Q31583"
+ },
+ "4|Ried im Innkreis": {
+  "lon": 13.4894,
+  "lat": 48.21,
+  "src": "wikidata:Q267791"
+ },
+ "4|St. Pölten": {
+  "lon": 15.6167,
+  "lat": 48.2,
+  "src": "wikidata:Q82500"
+ },
+ "4|Wals-Siezenheim": {
+  "lon": 12.9667,
+  "lat": 47.7667,
+  "src": "wikidata:Q871414"
+ },
+ "4|Wels": {
+  "lon": 14.0167,
+  "lat": 48.15,
+  "src": "wikidata:Q178582"
+ },
+ "5|Gabala": {
+  "lon": 47.8458,
+  "lat": 40.9814,
+  "src": "hand"
+ },
+ "5|Mingachevir": {
+  "lon": 47.0595,
+  "lat": 40.764,
+  "src": "wikidata:Q230932"
+ },
+ "7|Beveren": {
+  "lon": 4.25,
+  "lat": 51.2,
+  "src": "wikidata:Q270644"
+ },
+ "7|Genk": {
+  "lon": 5.5021,
+  "lat": 50.9662,
+  "src": "wikidata:Q189692"
+ },
+ "7|Kortrijk": {
+  "lon": 3.2658,
+  "lat": 50.8275,
+  "src": "wikidata:Q12995"
+ },
+ "7|Leuven": {
+  "lon": 4.8,
+  "lat": 50.9,
+  "src": "wikidata:Q93392"
+ },
+ "7|Mechelen": {
+  "lon": 4.4803,
+  "lat": 51.0281,
+  "src": "wikidata:Q162022"
+ },
+ "7|Ostend": {
+  "lon": 2.9194,
+  "lat": 51.2258,
+  "src": "wikidata:Q12996"
+ },
+ "7|Sint-Truiden": {
+  "lon": 5.1833,
+  "lat": 50.8167,
+  "src": "wikidata:Q37792"
+ },
+ "7|Waregem": {
+  "lon": 3.4001,
+  "lat": 50.8811,
+  "src": "wikidata:Q204547"
+ },
+ "8|Bijeljina": {
+  "lon": 19.2156,
+  "lat": 44.7567,
+  "src": "wikidata:Q207801"
+ },
+ "10|Varaždin": {
+  "lon": 16.231,
+  "lat": 46.321,
+  "src": "wikidata:Q57967"
+ },
+ "10|Velika Gorica": {
+  "lon": 16.0667,
+  "lat": 45.7,
+  "src": "wikidata:Q331141"
+ },
+ "11|Paralimni": {
+  "lon": 33.9862,
+  "lat": 35.0387,
+  "src": "wikidata:Q954174"
+ },
+ "12|Mladá Boleslav": {
+  "lon": 14.9064,
+  "lat": 50.4125,
+  "src": "wikidata:Q191805"
+ },
+ "12|Teplice": {
+  "lon": 13.8167,
+  "lat": 50.6333,
+  "src": "wikidata:Q146342"
+ },
+ "13|Brøndby": {
+  "lon": 12.4164,
+  "lat": 55.6547,
+  "src": "wikidata:Q484038"
+ },
+ "13|Herning": {
+  "lon": 8.9833,
+  "lat": 56.1333,
+  "src": "wikidata:Q506877"
+ },
+ "13|Hjørring": {
+  "lon": 9.9867,
+  "lat": 57.46,
+  "src": "wikidata:Q21185"
+ },
+ "13|Horsens": {
+  "lon": 9.8519,
+  "lat": 55.8619,
+  "src": "wikidata:Q190235"
+ },
+ "13|Kolding": {
+  "lon": 9.4722,
+  "lat": 55.4908,
+  "src": "wikidata:Q27119"
+ },
+ "13|Lyngby": {
+  "lon": 12.5,
+  "lat": 55.77,
+  "src": "wikidata:Q2239"
+ },
+ "13|Næstved": {
+  "lon": 11.7667,
+  "lat": 55.2333,
+  "src": "wikidata:Q21178"
+ },
+ "13|Randers": {
+  "lon": 10.0392,
+  "lat": 56.4569,
+  "src": "wikidata:Q27168"
+ },
+ "13|Silkeborg": {
+  "lon": 9.55,
+  "lat": 56.1667,
+  "src": "wikidata:Q21180"
+ },
+ "14|Derby": {
+  "lon": -1.4722,
+  "lat": 52.9207,
+  "src": "wikidata:Q21885980"
+ },
+ "14|Wolverhampton": {
+  "lon": -2.1167,
+  "lat": 52.5833,
+  "src": "wikidata:Q21885975"
+ },
+ "16|Runavík": {
+  "lon": -6.7192,
+  "lat": 62.1094,
+  "src": "wikidata:Q754664"
+ },
+ "16|Toftir": {
+  "lon": -6.7367,
+  "lat": 62.0925,
+  "src": "wikidata:Q840631"
+ },
+ "16|Vestmanna": {
+  "lon": -7.1664,
+  "lat": 62.1564,
+  "src": "wikidata:Q608352"
+ },
+ "18|Lens": {
+  "lon": 2.8325,
+  "lat": 50.4314,
+  "src": "wikidata:Q165271"
+ },
+ "19|Gori": {
+  "lon": 44.1124,
+  "lat": 41.9817,
+  "src": "wikidata:Q19583"
+ },
+ "19|Zugdidi": {
+  "lon": 41.8725,
+  "lat": 42.5081,
+  "src": "wikidata:Q185336"
+ },
+ "20|Gelsenkirchen": {
+  "lon": 7.0942,
+  "lat": 51.5103,
+  "src": "wikidata:Q2765"
+ },
+ "20|Kaiserslautern": {
+  "lon": 7.67,
+  "lat": 49.5,
+  "src": "wikidata:Q8559"
+ },
+ "20|Mönchengladbach": {
+  "lon": 6.4333,
+  "lat": 51.2,
+  "src": "wikidata:Q2758"
+ },
+ "21|Gibraltar": {
+  "lon": -5.353,
+  "lat": 36.14,
+  "src": "hand"
+ },
+ "21|North District": {
+  "lon": -5.35,
+  "lat": 36.146,
+  "src": "hand"
+ },
+ "21|South District": {
+  "lon": -5.345,
+  "lat": 36.118,
+  "src": "hand"
+ },
+ "21|Westside": {
+  "lon": -5.3553,
+  "lat": 36.1422,
+  "src": "wikidata:Q3631499"
+ },
+ "23|Felcsút": {
+  "lon": 18.5848,
+  "lat": 47.4555,
+  "src": "wikidata:Q958805"
+ },
+ "24|Akranes": {
+  "lon": -22.1,
+  "lat": 64.3167,
+  "src": "wikidata:Q107398"
+ },
+ "24|Hafnarfjörður": {
+  "lon": -21.9606,
+  "lat": 64.0224,
+  "src": "wikidata:Q103725"
+ },
+ "24|Kópavogur": {
+  "lon": -21.9,
+  "lat": 64.1119,
+  "src": "wikidata:Q163852"
+ },
+ "25|Ashdod": {
+  "lon": 34.6503,
+  "lat": 31.7978,
+  "src": "wikidata:Q171639"
+ },
+ "25|Netanya": {
+  "lon": 34.8567,
+  "lat": 32.3286,
+  "src": "wikidata:Q192225"
+ },
+ "25|Petah Tikva": {
+  "lon": 34.8833,
+  "lat": 32.0833,
+  "src": "wikidata:Q190828"
+ },
+ "28|Drenas": {
+  "lon": 20.8939,
+  "lat": 42.6283,
+  "src": "wikidata:Q1008042"
+ },
+ "28|Gjakova": {
+  "lon": 20.4356,
+  "lat": 42.3825,
+  "src": "wikidata:Q474651"
+ },
+ "28|Gjilan": {
+  "lon": 21.4667,
+  "lat": 42.4667,
+  "src": "wikidata:Q739808"
+ },
+ "28|Mitrovica": {
+  "lon": 20.8667,
+  "lat": 42.8833,
+  "src": "wikidata:Q178168"
+ },
+ "29|Jūrmala": {
+  "lon": 23.7221,
+  "lat": 56.9665,
+  "src": "wikidata:Q178382"
+ },
+ "29|Valmiera": {
+  "lon": 25.4231,
+  "lat": 57.5381,
+  "src": "wikidata:Q108037"
+ },
+ "30|Balzers": {
+  "lon": 9.5,
+  "lat": 47.0667,
+  "src": "wikidata:Q49663"
+ },
+ "30|Eschen": {
+  "lon": 9.5167,
+  "lat": 47.2,
+  "src": "wikidata:Q4540"
+ },
+ "30|Ruggell": {
+  "lon": 9.5332,
+  "lat": 47.245,
+  "src": "wikidata:Q49659"
+ },
+ "30|Schaan": {
+  "lon": 9.5167,
+  "lat": 47.1667,
+  "src": "wikidata:Q49657"
+ },
+ "30|Triesen": {
+  "lon": 9.5167,
+  "lat": 47.1,
+  "src": "wikidata:Q49654"
+ },
+ "31|Marijampolė": {
+  "lon": 23.3544,
+  "lat": 54.5567,
+  "src": "wikidata:Q1351046"
+ },
+ "32|Differdange": {
+  "lon": 5.8917,
+  "lat": 49.5222,
+  "src": "wikidata:Q16012"
+ },
+ "32|Dudelange": {
+  "lon": 6.0833,
+  "lat": 49.4833,
+  "src": "wikidata:Q16014"
+ },
+ "32|Esch-sur-Alzette": {
+  "lon": 6.0,
+  "lat": 49.5,
+  "src": "wikidata:Q188283"
+ },
+ "32|Ettelbruck": {
+  "lon": 6.0992,
+  "lat": 49.8464,
+  "src": "wikidata:Q659351"
+ },
+ "32|Luxembourg City": {
+  "lon": 6.13,
+  "lat": 49.6114,
+  "src": "wikidata:Q1842"
+ },
+ "33|Birkirkara": {
+  "lon": 14.4667,
+  "lat": 35.9,
+  "src": "wikidata:Q39583"
+ },
+ "33|Floriana": {
+  "lon": 14.5058,
+  "lat": 35.8933,
+  "src": "wikidata:Q832807"
+ },
+ "33|Hamrun": {
+  "lon": 14.4894,
+  "lat": 35.8861,
+  "src": "wikidata:Q343001"
+ },
+ "33|Paola": {
+  "lon": 14.5075,
+  "lat": 35.8728,
+  "src": "wikidata:Q846589"
+ },
+ "33|Qormi": {
+  "lon": 14.4722,
+  "lat": 35.8794,
+  "src": "wikidata:Q39578"
+ },
+ "33|Sliema": {
+  "lon": 14.5042,
+  "lat": 35.9122,
+  "src": "wikidata:Q39526"
+ },
+ "34|Bender": {
+  "lon": 29.4833,
+  "lat": 46.8333,
+  "src": "wikidata:Q192176"
+ },
+ "34|Comrat": {
+  "lon": 28.6572,
+  "lat": 46.3003,
+  "src": "wikidata:Q241122"
+ },
+ "34|Orhei": {
+  "lon": 28.8231,
+  "lat": 47.3831,
+  "src": "wikidata:Q423258"
+ },
+ "35|Bar": {
+  "lon": 19.1,
+  "lat": 42.1,
+  "src": "wikidata:Q115276"
+ },
+ "35|Bijelo Polje": {
+  "lon": 19.7456,
+  "lat": 43.0292,
+  "src": "wikidata:Q207470"
+ },
+ "35|Budva": {
+  "lon": 18.8453,
+  "lat": 42.2847,
+  "src": "wikidata:Q174237"
+ },
+ "35|Cetinje": {
+  "lon": 18.9247,
+  "lat": 42.3894,
+  "src": "wikidata:Q173338"
+ },
+ "35|Nikšić": {
+  "lon": 18.9445,
+  "lat": 42.7731,
+  "src": "wikidata:Q200733"
+ },
+ "36|Alkmaar": {
+  "lon": 4.744,
+  "lat": 52.6289,
+  "src": "wikidata:Q972"
+ },
+ "36|Almere": {
+  "lon": 5.2256,
+  "lat": 52.3758,
+  "src": "wikidata:Q83178"
+ },
+ "36|Breda": {
+  "lon": 4.7758,
+  "lat": 51.5889,
+  "src": "wikidata:Q40844"
+ },
+ "36|Enschede": {
+  "lon": 6.8925,
+  "lat": 52.2225,
+  "src": "wikidata:Q10002"
+ },
+ "36|Heerenveen": {
+  "lon": 6.0503,
+  "lat": 52.9658,
+  "src": "wikidata:Q574558"
+ },
+ "36|Nijmegen": {
+  "lon": 5.8625,
+  "lat": 51.8475,
+  "src": "wikidata:Q47887"
+ },
+ "36|Sittard": {
+  "lon": 5.8667,
+  "lat": 51.0,
+  "src": "wikidata:Q73022"
+ },
+ "36|Tilburg": {
+  "lon": 5.0906,
+  "lat": 51.5575,
+  "src": "wikidata:Q26430"
+ },
+ "37|Kumanovo": {
+  "lon": 21.7144,
+  "lat": 42.1322,
+  "src": "wikidata:Q54452"
+ },
+ "37|Ohrid": {
+  "lon": 20.8019,
+  "lat": 41.1169,
+  "src": "wikidata:Q1223508"
+ },
+ "37|Prilep": {
+  "lon": 21.5542,
+  "lat": 41.3464,
+  "src": "wikidata:Q157032"
+ },
+ "37|Shtip": {
+  "lon": 22.1103,
+  "lat": 41.7986,
+  "src": "wikidata:Q11824767"
+ },
+ "38|Ballymena": {
+  "lon": -6.268,
+  "lat": 54.862,
+  "src": "wikidata:Q805451"
+ },
+ "38|Coleraine": {
+  "lon": -6.661,
+  "lat": 55.133,
+  "src": "wikidata:Q1108185"
+ },
+ "38|Derry": {
+  "lon": -6.85,
+  "lat": 54.92,
+  "src": "wikidata:Q192208"
+ },
+ "38|Larne": {
+  "lon": -5.8133,
+  "lat": 54.8517,
+  "src": "wikidata:Q935686"
+ },
+ "38|Portadown": {
+  "lon": -6.4582,
+  "lat": 54.421,
+  "src": "wikidata:Q768714"
+ },
+ "39|Sandefjord": {
+  "lon": 10.2197,
+  "lat": 59.1288,
+  "src": "wikidata:Q109005"
+ },
+ "40|Chorzów": {
+  "lon": 18.9628,
+  "lat": 50.2884,
+  "src": "wikidata:Q104302"
+ },
+ "40|Radom": {
+  "lon": 21.15,
+  "lat": 51.4167,
+  "src": "wikidata:Q104740"
+ },
+ "40|Zabrze": {
+  "lon": 18.7833,
+  "lat": 50.3,
+  "src": "wikidata:Q103892"
+ },
+ "41|Barcelos": {
+  "lon": -8.6167,
+  "lat": 41.5333,
+  "src": "wikidata:Q213242"
+ },
+ "41|Chaves": {
+  "lon": -7.4707,
+  "lat": 41.7399,
+  "src": "wikidata:Q504580"
+ },
+ "41|Estoril": {
+  "lon": -9.3977,
+  "lat": 38.7057,
+  "src": "wikidata:Q193305"
+ },
+ "41|Famalicão": {
+  "lon": -8.5167,
+  "lat": 41.4167,
+  "src": "wikidata:Q551658"
+ },
+ "41|Guimarães": {
+  "lon": -8.2908,
+  "lat": 41.445,
+  "src": "wikidata:Q170903"
+ },
+ "41|Vila do Conde": {
+  "lon": -8.75,
+  "lat": 41.35,
+  "src": "wikidata:Q917313"
+ },
+ "45|Borgo Maggiore": {
+  "lon": 12.4497,
+  "lat": 43.9472,
+  "src": "wikidata:Q201368"
+ },
+ "45|City of San Marino": {
+  "lon": 12.4484,
+  "lat": 43.932,
+  "src": "wikidata:Q1848"
+ },
+ "45|Domagnano": {
+  "lon": 12.4689,
+  "lat": 43.9478,
+  "src": "wikidata:Q202202"
+ },
+ "45|Fiorentino": {
+  "lon": 12.4556,
+  "lat": 43.9106,
+  "src": "wikidata:Q206968"
+ },
+ "45|Serravalle": {
+  "lon": 12.4783,
+  "lat": 43.9756,
+  "src": "wikidata:Q185412"
+ },
+ "46|Kilmarnock": {
+  "lon": -4.4944,
+  "lat": 55.6117,
+  "src": "wikidata:Q576562"
+ },
+ "46|Livingston": {
+  "lon": -3.517,
+  "lat": 55.894,
+  "src": "wikidata:Q1070116"
+ },
+ "46|Motherwell": {
+  "lon": -3.9956,
+  "lat": 55.7892,
+  "src": "wikidata:Q737547"
+ },
+ "46|Paisley": {
+  "lon": -4.434,
+  "lat": 55.8297,
+  "src": "wikidata:Q68826302"
+ },
+ "47|Bačka Topola": {
+  "lon": 19.635,
+  "lat": 45.8089,
+  "src": "wikidata:Q597513"
+ },
+ "47|Kruševac": {
+  "lon": 21.3267,
+  "lat": 43.5833,
+  "src": "wikidata:Q201442"
+ },
+ "47|Novi Pazar": {
+  "lon": 20.5167,
+  "lat": 43.15,
+  "src": "wikidata:Q202453"
+ },
+ "48|Dunajská Streda": {
+  "lon": 17.6147,
+  "lat": 47.9961,
+  "src": "wikidata:Q646393"
+ },
+ "48|Nitra": {
+  "lon": 18.0875,
+  "lat": 48.3147,
+  "src": "wikidata:Q26397"
+ },
+ "48|Ružomberok": {
+  "lon": 19.3083,
+  "lat": 49.0786,
+  "src": "wikidata:Q27541"
+ },
+ "48|Trenčín": {
+  "lon": 18.0406,
+  "lat": 48.8942,
+  "src": "wikidata:Q145002"
+ },
+ "49|Celje": {
+  "lon": 15.2667,
+  "lat": 46.2333,
+  "src": "wikidata:Q3441823"
+ },
+ "49|Domžale": {
+  "lon": 14.6,
+  "lat": 46.1333,
+  "src": "wikidata:Q15865"
+ },
+ "49|Koper": {
+  "lon": 13.7307,
+  "lat": 45.5475,
+  "src": "wikidata:Q1015"
+ },
+ "49|Kranj": {
+  "lon": 14.3556,
+  "lat": 46.2389,
+  "src": "wikidata:Q1021"
+ },
+ "49|Murska Sobota": {
+  "lon": 16.1651,
+  "lat": 46.658,
+  "src": "wikidata:Q9273677"
+ },
+ "50|Elche": {
+  "lon": -0.6983,
+  "lat": 38.2669,
+  "src": "wikidata:Q10509"
+ },
+ "52|Thun": {
+  "lon": 7.63,
+  "lat": 46.759,
+  "src": "wikidata:Q68978"
+ },
+ "52|Winterthur": {
+  "lon": 8.7267,
+  "lat": 47.4992,
+  "src": "wikidata:Q9125"
+ },
+ "55|Bangor": {
+  "lon": -4.128,
+  "lat": 53.228,
+  "src": "wikidata:Q234178"
+ },
+ "55|Llanelli": {
+  "lon": -4.2258,
+  "lat": 51.7206,
+  "src": "wikidata:Q3138076"
+ },
+ "55|Merthyr Tydfil": {
+  "lon": -3.3833,
+  "lat": 51.75,
+  "src": "wikidata:Q3306663"
+ },
+ "55|Newport": {
+  "lon": -2.997,
+  "lat": 51.588,
+  "src": "wikidata:Q5283458"
+ },
+ "55|Wrexham": {
+  "lon": -3.0094,
+  "lat": 53.0507,
+  "src": "wikidata:Q843868"
+ },
+ "56|Avellaneda": {
+  "lon": -58.3678,
+  "lat": -34.6625,
+  "src": "wikidata:Q753642"
+ },
+ "57|El Alto": {
+  "lon": -68.1633,
+  "lat": -16.5047,
+  "src": "wikidata:Q30996"
+ },
+ "61|Quevedo": {
+  "lon": -79.45,
+  "lat": -1.0333,
+  "src": "wikidata:Q1990421"
+ },
+ "61|Santo Domingo": {
+  "lon": -79.1719,
+  "lat": -0.2542,
+  "src": "wikidata:Q1015654"
+ },
+ "62|Fernando de la Mora": {
+  "lon": -57.54,
+  "lat": -25.32,
+  "src": "wikidata:Q47062"
+ },
+ "62|Luque": {
+  "lon": -57.4872,
+  "lat": -25.27,
+  "src": "wikidata:Q946497"
+ },
+ "64|Las Piedras": {
+  "lon": -56.2217,
+  "lat": -34.7265,
+  "src": "wikidata:Q615470"
+ },
+ "66|Blowing Point": {
+  "lon": -63.093,
+  "lat": 18.172,
+  "src": "hand"
+ },
+ "66|Island Harbour": {
+  "lon": -63.0068,
+  "lat": 18.2569,
+  "src": "wikidata:Q6083157"
+ },
+ "66|Sandy Ground": {
+  "lon": -63.0833,
+  "lat": 18.2,
+  "src": "wikidata:Q2989314"
+ },
+ "66|The Valley": {
+  "lon": -63.0517,
+  "lat": 18.2208,
+  "src": "wikidata:Q30994"
+ },
+ "67|All Saints": {
+  "lon": -61.7833,
+  "lat": 17.05,
+  "src": "wikidata:Q1771715"
+ },
+ "67|Bolans": {
+  "lon": -61.8833,
+  "lat": 17.0667,
+  "src": "wikidata:Q1771701"
+ },
+ "67|Liberta": {
+  "lon": -61.7833,
+  "lat": 17.0333,
+  "src": "wikidata:Q1771710"
+ },
+ "67|Piggotts": {
+  "lon": -61.8,
+  "lat": 17.1167,
+  "src": "wikidata:Q1771704"
+ },
+ "68|Noord": {
+  "lon": -70.0317,
+  "lat": 12.5633,
+  "src": "wikidata:Q2656618"
+ },
+ "68|San Nicolas": {
+  "lon": -69.9167,
+  "lat": 12.4333,
+  "src": "wikidata:Q2605285"
+ },
+ "68|Santa Cruz": {
+  "lon": -69.9814,
+  "lat": 12.5119,
+  "src": "wikidata:Q3558364"
+ },
+ "68|Savaneta": {
+  "lon": -69.9497,
+  "lat": 12.4526,
+  "src": "wikidata:Q2665720"
+ },
+ "69|Coopers Town": {
+  "lon": -77.5106,
+  "lat": 26.8658,
+  "src": "wikidata:Q1129877"
+ },
+ "69|Marsh Harbour": {
+  "lon": -77.0667,
+  "lat": 26.5333,
+  "src": "wikidata:Q1337651"
+ },
+ "69|West End": {
+  "lon": -78.975,
+  "lat": 26.6867,
+  "src": "wikidata:Q1771573"
+ },
+ "70|Bathsheba": {
+  "lon": -59.5236,
+  "lat": 13.2142,
+  "src": "wikidata:Q2114059"
+ },
+ "70|Holetown": {
+  "lon": -59.6381,
+  "lat": 13.1867,
+  "src": "wikidata:Q2290478"
+ },
+ "70|Oistins": {
+  "lon": -59.5333,
+  "lat": 13.0667,
+  "src": "wikidata:Q692475"
+ },
+ "70|Speightstown": {
+  "lon": -59.6408,
+  "lat": 13.2544,
+  "src": "wikidata:Q2544610"
+ },
+ "72|Devonshire": {
+  "lon": -64.76,
+  "lat": 32.302,
+  "src": "hand"
+ },
+ "72|Somerset": {
+  "lon": -64.875,
+  "lat": 32.295,
+  "src": "hand"
+ },
+ "72|St. George's": {
+  "lon": -64.6778,
+  "lat": 32.3794,
+  "src": "wikidata:Q28063"
+ },
+ "72|Warwick": {
+  "lon": -64.808,
+  "lat": 32.265,
+  "src": "hand"
+ },
+ "73|East End": {
+  "lon": -64.5717,
+  "lat": 18.4375,
+  "src": "wikidata:Q14214399"
+ },
+ "73|Road Town": {
+  "lon": -64.6167,
+  "lat": 18.4333,
+  "src": "wikidata:Q179431"
+ },
+ "73|Spanish Town": {
+  "lon": -64.4333,
+  "lat": 18.45,
+  "src": "wikidata:Q9340035"
+ },
+ "73|West End": {
+  "lon": -64.695,
+  "lat": 18.383,
+  "src": "hand"
+ },
+ "74|Mississauga": {
+  "lon": -79.65,
+  "lat": 43.6,
+  "src": "wikidata:Q50816"
+ },
+ "75|Bodden Town": {
+  "lon": -81.254,
+  "lat": 19.2804,
+  "src": "wikidata:Q4936407"
+ },
+ "75|East End": {
+  "lon": -81.1095,
+  "lat": 19.2975,
+  "src": "wikidata:Q5328285"
+ },
+ "75|North Side": {
+  "lon": -81.2084,
+  "lat": 19.3521,
+  "src": "wikidata:Q7056735"
+ },
+ "75|West Bay": {
+  "lon": -81.405,
+  "lat": 19.3731,
+  "src": "wikidata:Q7984402"
+ },
+ "78|Barber": {
+  "lon": -69.0667,
+  "lat": 12.2833,
+  "src": "wikidata:Q255239"
+ },
+ "78|Sint Michiel": {
+  "lon": -68.9958,
+  "lat": 12.1422,
+  "src": "wikidata:Q7525080"
+ },
+ "78|Soto": {
+  "lon": -69.1,
+  "lat": 12.2667,
+  "src": "wikidata:Q2859536"
+ },
+ "78|Westpunt": {
+  "lon": -69.1511,
+  "lat": 12.3714,
+  "src": "wikidata:Q3461992"
+ },
+ "79|Berekua": {
+  "lon": -61.3139,
+  "lat": 15.2389,
+  "src": "wikidata:Q1136090"
+ },
+ "79|Mahaut": {
+  "lon": -61.4,
+  "lat": 15.3667,
+  "src": "wikidata:Q3052683"
+ },
+ "79|Marigot": {
+  "lon": -61.3,
+  "lat": 15.5333,
+  "src": "wikidata:Q3052620"
+ },
+ "79|Portsmouth": {
+  "lon": -61.4597,
+  "lat": 15.5736,
+  "src": "wikidata:Q1014235"
+ },
+ "81|Soyapango": {
+  "lon": -89.1502,
+  "lat": 13.7036,
+  "src": "wikidata:Q956031"
+ },
+ "82|Gouyave": {
+  "lon": -61.73,
+  "lat": 12.1664,
+  "src": "wikidata:Q375507"
+ },
+ "82|Grenville": {
+  "lon": -61.6264,
+  "lat": 12.1192,
+  "src": "wikidata:Q3116519"
+ },
+ "82|Sauteurs": {
+  "lon": -61.6392,
+  "lat": 12.2183,
+  "src": "wikidata:Q1318103"
+ },
+ "82|Victoria": {
+  "lon": -61.7039,
+  "lat": 12.1953,
+  "src": "wikidata:Q12874663"
+ },
+ "83|Mixco": {
+  "lon": -90.6146,
+  "lat": 14.6338,
+  "src": "wikidata:Q948953"
+ },
+ "83|Villa Nueva": {
+  "lon": -90.5964,
+  "lat": 14.5314,
+  "src": "wikidata:Q1018584"
+ },
+ "85|Delmas": {
+  "lon": -72.3,
+  "lat": 18.55,
+  "src": "wikidata:Q997821"
+ },
+ "85|Pétion-Ville": {
+  "lon": -72.2856,
+  "lat": 18.5098,
+  "src": "wikidata:Q1001440"
+ },
+ "86|Choloma": {
+  "lon": -87.9507,
+  "lat": 15.6127,
+  "src": "wikidata:Q998218"
+ },
+ "86|El Progreso": {
+  "lon": -87.812,
+  "lat": 15.4009,
+  "src": "wikidata:Q2277161"
+ },
+ "87|Portmore": {
+  "lon": -76.8667,
+  "lat": 17.9667,
+  "src": "wikidata:Q644663"
+ },
+ "89|Brades": {
+  "lon": -62.2106,
+  "lat": 16.7928,
+  "src": "wikidata:Q31006"
+ },
+ "89|Little Bay": {
+  "lon": -62.2049,
+  "lat": 16.8029,
+  "src": "wikidata:Q18636466"
+ },
+ "89|Lookout": {
+  "lon": -62.1856,
+  "lat": 16.7953,
+  "src": "wikidata:Q123914269"
+ },
+ "89|Salem": {
+  "lon": -62.2167,
+  "lat": 16.75,
+  "src": "wikidata:Q9332895"
+ },
+ "91|La Chorrera": {
+  "lon": -79.7822,
+  "lat": 8.8792,
+  "src": "wikidata:Q774405"
+ },
+ "91|San Miguelito": {
+  "lon": -79.5,
+  "lat": 9.033,
+  "src": "hand"
+ },
+ "92|Bayamón": {
+  "lon": -66.15,
+  "lat": 18.3833,
+  "src": "wikidata:Q739675"
+ },
+ "92|Caguas": {
+  "lon": -66.0333,
+  "lat": 18.2333,
+  "src": "wikidata:Q527268"
+ },
+ "92|Carolina": {
+  "lon": -65.9667,
+  "lat": 18.3889,
+  "src": "wikidata:Q990293"
+ },
+ "93|Cayon": {
+  "lon": -62.7333,
+  "lat": 17.35,
+  "src": "wikidata:Q3316336"
+ },
+ "93|Charlestown": {
+  "lon": -62.6269,
+  "lat": 17.1431,
+  "src": "wikidata:Q992311"
+ },
+ "93|Dieppe Bay Town": {
+  "lon": -62.8167,
+  "lat": 17.4167,
+  "src": "wikidata:Q1010810"
+ },
+ "93|Sandy Point Town": {
+  "lon": -62.8333,
+  "lat": 17.35,
+  "src": "wikidata:Q1972542"
+ },
+ "94|Gros Islet": {
+  "lon": -60.953,
+  "lat": 14.081,
+  "src": "wikidata:Q3116994"
+ },
+ "94|Micoud": {
+  "lon": -60.9333,
+  "lat": 13.8,
+  "src": "wikidata:Q1240193"
+ },
+ "94|Soufrière": {
+  "lon": -61.0566,
+  "lat": 13.8562,
+  "src": "wikidata:Q493030"
+ },
+ "94|Vieux Fort": {
+  "lon": -60.954,
+  "lat": 13.728,
+  "src": "wikidata:Q3494579"
+ },
+ "95|Barrouallie": {
+  "lon": -61.2719,
+  "lat": 13.2358,
+  "src": "wikidata:Q2885705"
+ },
+ "95|Chateaubelair": {
+  "lon": -61.2403,
+  "lat": 13.2883,
+  "src": "wikidata:Q672197"
+ },
+ "95|Georgetown": {
+  "lon": -61.1228,
+  "lat": 13.2861,
+  "src": "wikidata:Q2495209"
+ },
+ "95|Layou": {
+  "lon": -61.2686,
+  "lat": 13.2033,
+  "src": "wikidata:Q2630835"
+ },
+ "96|Albina": {
+  "lon": -54.05,
+  "lat": 5.5,
+  "src": "wikidata:Q580016"
+ },
+ "96|Lelydorp": {
+  "lon": -55.2167,
+  "lat": 5.6967,
+  "src": "wikidata:Q935545"
+ },
+ "97|Arima": {
+  "lon": -61.2792,
+  "lat": 10.625,
+  "src": "wikidata:Q661405"
+ },
+ "97|Chaguanas": {
+  "lon": -61.4075,
+  "lat": 10.5144,
+  "src": "wikidata:Q1444575"
+ },
+ "97|Couva": {
+  "lon": -61.45,
+  "lat": 10.4167,
+  "src": "wikidata:Q2602007"
+ },
+ "97|Point Fortin": {
+  "lon": -61.6667,
+  "lat": 10.1667,
+  "src": "wikidata:Q786957"
+ },
+ "97|Scarborough": {
+  "lon": -60.7333,
+  "lat": 11.1833,
+  "src": "wikidata:Q966660"
+ },
+ "98|Balfour Town": {
+  "lon": -71.2151,
+  "lat": 21.3268,
+  "src": "wikidata:Q125944822"
+ },
+ "98|Bottle Creek": {
+  "lon": -71.9,
+  "lat": 21.917,
+  "src": "hand"
+ },
+ "98|Providenciales": {
+  "lon": -72.2622,
+  "lat": 21.7775,
+  "src": "wikidata:Q1616654"
+ },
+ "100|Charlotte Amalie": {
+  "lon": -64.95,
+  "lat": 18.35,
+  "src": "wikidata:Q51681"
+ },
+ "100|Cruz Bay": {
+  "lon": -64.7931,
+  "lat": 18.3333,
+  "src": "wikidata:Q2663801"
+ },
+ "100|Frederiksted": {
+  "lon": -64.8819,
+  "lat": 17.7117,
+  "src": "wikidata:Q692376"
+ },
+ "103|Abomey-Calavi": {
+  "lon": 2.3556,
+  "lat": 6.4486,
+  "src": "wikidata:Q2473939"
+ },
+ "103|Bohicon": {
+  "lon": 2.094,
+  "lat": 7.163,
+  "src": "wikidata:Q2356092"
+ },
+ "104|Selebi-Phikwe": {
+  "lon": 27.9167,
+  "lat": -21.9667,
+  "src": "wikidata:Q141263"
+ },
+ "106|Rumonge": {
+  "lon": 29.4333,
+  "lat": -3.9667,
+  "src": "wikidata:Q20669646"
+ },
+ "108|Assomada": {
+  "lon": -23.6654,
+  "lat": 15.0949,
+  "src": "wikidata:Q490573"
+ },
+ "108|Espargos": {
+  "lon": -22.9453,
+  "lat": 16.7546,
+  "src": "wikidata:Q498968"
+ },
+ "108|Pedra Badejo": {
+  "lon": -23.5333,
+  "lat": 15.1375,
+  "src": "wikidata:Q490579"
+ },
+ "108|Santa Maria": {
+  "lon": -22.9042,
+  "lat": 16.6,
+  "src": "wikidata:Q497445"
+ },
+ "109|Bimbo": {
+  "lon": 18.5163,
+  "lat": 4.3313,
+  "src": "wikidata:Q863461"
+ },
+ "110|Koumra": {
+  "lon": 17.5484,
+  "lat": 8.9182,
+  "src": "wikidata:Q1070175"
+ },
+ "111|Domoni": {
+  "lon": 43.4189,
+  "lat": -11.8787,
+  "src": "wikidata:Q139944219"
+ },
+ "111|Fomboni": {
+  "lon": 43.7419,
+  "lat": -12.2822,
+  "src": "wikidata:Q1002823"
+ },
+ "111|Mitsamiouli": {
+  "lon": 43.3,
+  "lat": -11.3819,
+  "src": "wikidata:Q3109029"
+ },
+ "111|Mutsamudu": {
+  "lon": 44.3939,
+  "lat": -12.1675,
+  "src": "wikidata:Q691016"
+ },
+ "112|Nkayi": {
+  "lon": 13.2883,
+  "lat": -4.1842,
+  "src": "wikidata:Q2088506"
+ },
+ "114|Djibouti City": {
+  "lon": 43.1481,
+  "lat": 11.595,
+  "src": "wikidata:Q3604"
+ },
+ "115|Mahalla al-Kubra": {
+  "lon": 31.1669,
+  "lat": 30.9697,
+  "src": "hand"
+ },
+ "115|Mansoura": {
+  "lon": 31.3833,
+  "lat": 31.05,
+  "src": "wikidata:Q223587"
+ },
+ "115|New Administrative Capital": {
+  "lon": 31.73,
+  "lat": 30.02,
+  "src": "hand"
+ },
+ "116|Aconibe": {
+  "lon": 10.9333,
+  "lat": 1.3,
+  "src": "wikidata:Q2549481"
+ },
+ "116|Ebebiyin": {
+  "lon": 11.3167,
+  "lat": 2.15,
+  "src": "wikidata:Q911358"
+ },
+ "117|Barentu": {
+  "lon": 37.6,
+  "lat": 15.1167,
+  "src": "wikidata:Q808100"
+ },
+ "118|Big Bend": {
+  "lon": 31.9397,
+  "lat": -26.7917,
+  "src": "wikidata:Q858539"
+ },
+ "118|Nhlangano": {
+  "lon": 31.2,
+  "lat": -27.1167,
+  "src": "wikidata:Q2029702"
+ },
+ "119|Mekelle": {
+  "lon": 39.4769,
+  "lat": 13.4969,
+  "src": "wikidata:Q332319"
+ },
+ "121|Bakau": {
+  "lon": -16.6736,
+  "lat": 13.4797,
+  "src": "wikidata:Q804275"
+ },
+ "121|Farafenni": {
+  "lon": -15.6,
+  "lat": 13.5667,
+  "src": "wikidata:Q1200999"
+ },
+ "121|Serekunda": {
+  "lon": -16.675,
+  "lat": 13.445,
+  "src": "wikidata:Q217568"
+ },
+ "124|Bissorã": {
+  "lon": -15.45,
+  "lat": 12.2167,
+  "src": "wikidata:Q572152"
+ },
+ "124|Canchungo": {
+  "lon": -16.0333,
+  "lat": 12.0672,
+  "src": "wikidata:Q1318022"
+ },
+ "127|Maputsoe": {
+  "lon": 27.9,
+  "lat": -28.8833,
+  "src": "wikidata:Q1892158"
+ },
+ "128|Ganta": {
+  "lon": -8.9814,
+  "lat": 7.2375,
+  "src": "wikidata:Q744979"
+ },
+ "129|Bayda": {
+  "lon": 21.755,
+  "lat": 32.7628,
+  "src": "wikidata:Q35784"
+ },
+ "131|Kasungu": {
+  "lon": 33.4847,
+  "lat": -13.0333,
+  "src": "wikidata:Q195309"
+ },
+ "133|Kaédi": {
+  "lon": -13.5036,
+  "lat": 16.1454,
+  "src": "wikidata:Q524984"
+ },
+ "134|Beau Bassin-Rose Hill": {
+  "lon": 57.4667,
+  "lat": -20.2333,
+  "src": "wikidata:Q813337"
+ },
+ "134|Quatre Bornes": {
+  "lon": 57.4667,
+  "lat": -20.25,
+  "src": "wikidata:Q1341194"
+ },
+ "134|Triolet": {
+  "lon": 57.5453,
+  "lat": -20.0547,
+  "src": "wikidata:Q641130"
+ },
+ "134|Vacoas-Phoenix": {
+  "lon": 57.4833,
+  "lat": -20.3,
+  "src": "wikidata:Q676724"
+ },
+ "135|Béni Mellal": {
+  "lon": -6.349,
+  "lat": 32.337,
+  "src": "hand"
+ },
+ "135|Khouribga": {
+  "lon": -6.9,
+  "lat": 32.88,
+  "src": "wikidata:Q595974"
+ },
+ "135|Nador": {
+  "lon": -2.9292,
+  "lat": 35.1739,
+  "src": "wikidata:Q824594"
+ },
+ "135|Tetouan": {
+  "lon": -5.3758,
+  "lat": 35.5697,
+  "src": "wikidata:Q185157"
+ },
+ "137|Oshakati": {
+  "lon": 15.6833,
+  "lat": -17.8,
+  "src": "wikidata:Q985622"
+ },
+ "140|Rubavu": {
+  "lon": 29.2891,
+  "lat": -1.6601,
+  "src": "wikidata:Q21334792"
+ },
+ "141|Neves": {
+  "lon": 6.7122,
+  "lat": 0.3781,
+  "src": "wikidata:Q11824630"
+ },
+ "141|Santana": {
+  "lon": 6.7414,
+  "lat": 0.2531,
+  "src": "wikidata:Q1552353"
+ },
+ "141|Santo Amaro": {
+  "lon": 6.69,
+  "lat": 0.36,
+  "src": "wikidata:Q2223622"
+ },
+ "141|Trindade": {
+  "lon": 6.6667,
+  "lat": 0.3,
+  "src": "wikidata:Q1635802"
+ },
+ "142|Mbour": {
+  "lon": -16.9649,
+  "lat": 14.4104,
+  "src": "wikidata:Q1019431"
+ },
+ "142|Rufisque": {
+  "lon": -17.2723,
+  "lat": 14.714,
+  "src": "wikidata:Q1019424"
+ },
+ "142|Saint-Louis": {
+  "lon": -16.5021,
+  "lat": 16.0257,
+  "src": "wikidata:Q178872"
+ },
+ "142|Touba": {
+  "lon": -15.8994,
+  "lat": 14.8665,
+  "src": "wikidata:Q657072"
+ },
+ "143|Anse Boileau": {
+  "lon": 55.4833,
+  "lat": -4.7083,
+  "src": "wikidata:Q569453"
+ },
+ "143|Anse Royale": {
+  "lon": 55.5167,
+  "lat": -4.7333,
+  "src": "wikidata:Q16529329"
+ },
+ "143|Beau Vallon": {
+  "lon": 55.4233,
+  "lat": -4.6155,
+  "src": "wikidata:Q83808569"
+ },
+ "143|Takamaka": {
+  "lon": 55.5167,
+  "lat": -4.7833,
+  "src": "wikidata:Q2287379"
+ },
+ "144|Lunsar": {
+  "lon": -12.5333,
+  "lat": 8.6833,
+  "src": "wikidata:Q995392"
+ },
+ "146|Soweto": {
+  "lon": 27.8586,
+  "lat": -26.2678,
+  "src": "wikidata:Q217426"
+ },
+ "147|Aweil": {
+  "lon": 27.4,
+  "lat": 8.7667,
+  "src": "wikidata:Q791685"
+ },
+ "147|Bor": {
+  "lon": 31.55,
+  "lat": 6.2167,
+  "src": "wikidata:Q893274"
+ },
+ "147|Juba": {
+  "lon": 31.5825,
+  "lat": 4.8539,
+  "src": "wikidata:Q1947"
+ },
+ "147|Malakal": {
+  "lon": 31.65,
+  "lat": 9.5333,
+  "src": "wikidata:Q220049"
+ },
+ "147|Wau": {
+  "lon": 27.9833,
+  "lat": 7.7,
+  "src": "wikidata:Q276534"
+ },
+ "147|Yei": {
+  "lon": 30.6833,
+  "lat": 4.0833,
+  "src": "wikidata:Q1561403"
+ },
+ "148|Khartoum North": {
+  "lon": 32.6333,
+  "lat": 15.6333,
+  "src": "wikidata:Q310114"
+ },
+ "150|Dapaong": {
+  "lon": 0.205,
+  "lat": 10.862,
+  "src": "hand"
+ },
+ "150|Kara": {
+  "lon": 0.9,
+  "lat": 9.6,
+  "src": "wikidata:Q316216"
+ },
+ "151|Ben Arous": {
+  "lon": 10.2189,
+  "lat": 36.7531,
+  "src": "wikidata:Q816443"
+ },
+ "157|Hamad Town": {
+  "lon": 50.5139,
+  "lat": 26.1128,
+  "src": "wikidata:Q2088687"
+ },
+ "157|Isa Town": {
+  "lon": 50.5478,
+  "lat": 26.1736,
+  "src": "wikidata:Q1017673"
+ },
+ "157|Muharraq": {
+  "lon": 50.611,
+  "lat": 26.257,
+  "src": "hand"
+ },
+ "157|Riffa": {
+  "lon": 50.555,
+  "lat": 26.13,
+  "src": "wikidata:Q1771398"
+ },
+ "157|Sitra": {
+  "lon": 50.6167,
+  "lat": 26.15,
+  "src": "wikidata:Q1416753"
+ },
+ "159|Gelephu": {
+  "lon": 90.4856,
+  "lat": 26.8706,
+  "src": "wikidata:Q1499697"
+ },
+ "159|Phuentsholing": {
+  "lon": 89.388,
+  "lat": 26.851,
+  "src": "hand"
+ },
+ "160|Bangar": {
+  "lon": 115.072,
+  "lat": 4.709,
+  "src": "hand"
+ },
+ "160|Kuala Belait": {
+  "lon": 114.1918,
+  "lat": 4.5828,
+  "src": "wikidata:Q588045"
+ },
+ "160|Seria": {
+  "lon": 114.3303,
+  "lat": 4.6142,
+  "src": "wikidata:Q2159472"
+ },
+ "160|Tutong": {
+  "lon": 114.6667,
+  "lat": 4.5833,
+  "src": "wikidata:Q40398"
+ },
+ "161|Sihanoukville": {
+  "lon": 103.5,
+  "lat": 10.6333,
+  "src": "wikidata:Q18207676"
+ },
+ "161|Ta Khmau": {
+  "lon": 104.9552,
+  "lat": 11.4639,
+  "src": "wikidata:Q25679401"
+ },
+ "164|Dededo": {
+  "lon": 144.8361,
+  "lat": 13.5153,
+  "src": "wikidata:Q1182147"
+ },
+ "164|Mangilao": {
+  "lon": 144.8003,
+  "lat": 13.4489,
+  "src": "wikidata:Q2637935"
+ },
+ "164|Tamuning": {
+  "lon": 144.7972,
+  "lat": 13.5053,
+  "src": "wikidata:Q933714"
+ },
+ "164|Yigo": {
+  "lon": 144.886,
+  "lat": 13.5344,
+  "src": "wikidata:Q2482473"
+ },
+ "165|Kowloon": {
+  "lon": 114.1833,
+  "lat": 22.3167,
+  "src": "wikidata:Q239143"
+ },
+ "165|Sha Tin": {
+  "lon": 114.183,
+  "lat": 22.375,
+  "src": "wikidata:Q855463"
+ },
+ "165|Tsuen Wan": {
+  "lon": 114.113,
+  "lat": 22.3686,
+  "src": "wikidata:Q1758914"
+ },
+ "165|Tuen Mun": {
+  "lon": 113.971,
+  "lat": 22.3916,
+  "src": "wikidata:Q1758751"
+ },
+ "165|Yuen Long": {
+  "lon": 114.0258,
+  "lat": 22.4444,
+  "src": "wikidata:Q847174"
+ },
+ "166|Goa": {
+  "lon": 74.0433,
+  "lat": 15.4019,
+  "src": "wikidata:Q1171"
+ },
+ "170|Kashima": {
+  "lon": 140.6448,
+  "lat": 35.9656,
+  "src": "wikidata:Q467471"
+ },
+ "170|Saitama": {
+  "lon": 139.6456,
+  "lat": 35.8614,
+  "src": "wikidata:Q134635"
+ },
+ "171|Madaba": {
+  "lon": 35.8,
+  "lat": 31.7167,
+  "src": "wikidata:Q1683958"
+ },
+ "171|Russeifa": {
+  "lon": 36.0464,
+  "lat": 32.0178,
+  "src": "wikidata:Q2361176"
+ },
+ "172|Ahmadi": {
+  "lon": 48.084,
+  "lat": 29.077,
+  "src": "hand"
+ },
+ "172|Farwaniya": {
+  "lon": 47.9603,
+  "lat": 29.2756,
+  "src": "wikidata:Q1195526"
+ },
+ "172|Salmiya": {
+  "lon": 48.0833,
+  "lat": 29.3333,
+  "src": "wikidata:Q3505782"
+ },
+ "175|Byblos": {
+  "lon": 35.65,
+  "lat": 34.1167,
+  "src": "wikidata:Q173532"
+ },
+ "175|Jounieh": {
+  "lon": 35.6156,
+  "lat": 33.9697,
+  "src": "wikidata:Q26155"
+ },
+ "175|Tyre": {
+  "lon": 35.2,
+  "lat": 33.2667,
+  "src": "wikidata:Q82070"
+ },
+ "176|Coloane": {
+  "lon": 113.5669,
+  "lat": 22.1261,
+  "src": "wikidata:Q1022920"
+ },
+ "176|Cotai": {
+  "lon": 113.5631,
+  "lat": 22.1408,
+  "src": "wikidata:Q1362196"
+ },
+ "176|Taipa": {
+  "lon": 113.5594,
+  "lat": 22.1597,
+  "src": "wikidata:Q1073822"
+ },
+ "178|Addu City": {
+  "lon": 73.158,
+  "lat": -0.6413,
+  "src": "wikidata:Q4681407"
+ },
+ "178|Fuvahmulah": {
+  "lon": 73.4236,
+  "lat": -0.2932,
+  "src": "wikidata:Q2060910"
+ },
+ "178|Kulhudhuffushi": {
+  "lon": 73.07,
+  "lat": 6.6226,
+  "src": "wikidata:Q3185775"
+ },
+ "178|Thinadhoo": {
+  "lon": 72.9964,
+  "lat": 0.5308,
+  "src": "wikidata:Q2147686"
+ },
+ "181|Bharatpur": {
+  "lon": 84.4333,
+  "lat": 27.6833,
+  "src": "wikidata:Q250220"
+ },
+ "181|Dharan": {
+  "lon": 87.2667,
+  "lat": 26.8167,
+  "src": "wikidata:Q8254"
+ },
+ "185|Bethlehem": {
+  "lon": 35.2061,
+  "lat": 31.7044,
+  "src": "wikidata:Q5776"
+ },
+ "185|Jenin": {
+  "lon": 35.3,
+  "lat": 32.461,
+  "src": "hand"
+ },
+ "185|Jericho": {
+  "lon": 35.4631,
+  "lat": 31.8561,
+  "src": "wikidata:Q5687"
+ },
+ "187|Al Khor": {
+  "lon": 51.3167,
+  "lat": 25.7667,
+  "src": "wikidata:Q1156471"
+ },
+ "187|Al Rayyan": {
+  "lon": 51.424,
+  "lat": 25.292,
+  "src": "hand"
+ },
+ "187|Al Wakrah": {
+  "lon": 51.61,
+  "lat": 25.18,
+  "src": "wikidata:Q310893"
+ },
+ "187|Lusail": {
+  "lon": 51.5075,
+  "lat": 25.4175,
+  "src": "wikidata:Q935886"
+ },
+ "187|Umm Salal": {
+  "lon": 51.4053,
+  "lat": 25.4167,
+  "src": "hand"
+ },
+ "188|Al-Ahsa": {
+  "lon": 49.4852,
+  "lat": 25.2853,
+  "src": "wikidata:Q2875750"
+ },
+ "188|Jazan": {
+  "lon": 42.5,
+  "lat": 17.5,
+  "src": "wikidata:Q269973"
+ },
+ "188|Khamis Mushait": {
+  "lon": 42.7333,
+  "lat": 18.3,
+  "src": "wikidata:Q759381"
+ },
+ "188|Khobar": {
+  "lon": 50.2167,
+  "lat": 26.3,
+  "src": "wikidata:Q311266"
+ },
+ "189|Bishan": {
+  "lon": 103.851,
+  "lat": 1.3508,
+  "src": "wikidata:Q3249777"
+ },
+ "189|Jurong": {
+  "lon": 103.7169,
+  "lat": 1.3167,
+  "src": "wikidata:Q14439130"
+ },
+ "189|Tampines": {
+  "lon": 103.957,
+  "lat": 1.3496,
+  "src": "wikidata:Q5110386"
+ },
+ "189|Woodlands": {
+  "lon": 103.7867,
+  "lat": 1.4363,
+  "src": "wikidata:Q5254438"
+ },
+ "190|Seogwipo": {
+  "lon": 126.56,
+  "lat": 33.2497,
+  "src": "wikidata:Q42103"
+ },
+ "191|Kurunegala": {
+  "lon": 80.3667,
+  "lat": 7.4833,
+  "src": "wikidata:Q776887"
+ },
+ "191|Negombo": {
+  "lon": 79.8386,
+  "lat": 7.2111,
+  "src": "wikidata:Q668616"
+ },
+ "193|Hisor": {
+  "lon": 68.5381,
+  "lat": 38.5264,
+  "src": "wikidata:Q655771"
+ },
+ "194|Pattaya": {
+  "lon": 100.893,
+  "lat": 12.9496,
+  "src": "wikidata:Q170919"
+ },
+ "195|Baucau": {
+  "lon": 126.5,
+  "lat": -8.5833,
+  "src": "wikidata:Q811132"
+ },
+ "195|Lospalos": {
+  "lon": 127.0333,
+  "lat": -8.5167,
+  "src": "wikidata:Q1017098"
+ },
+ "195|Maliana": {
+  "lon": 125.2197,
+  "lat": -8.9917,
+  "src": "wikidata:Q1020338"
+ },
+ "195|Suai": {
+  "lon": 125.25,
+  "lat": -9.3,
+  "src": "wikidata:Q582712"
+ },
+ "197|Ajman": {
+  "lon": 55.5,
+  "lat": 25.4,
+  "src": "wikidata:Q159477"
+ },
+ "200|Hodeidah": {
+  "lon": 42.9511,
+  "lat": 14.8022,
+  "src": "wikidata:Q270041"
+ },
+ "201|Fagatogo": {
+  "lon": -170.69,
+  "lat": -14.2825,
+  "src": "wikidata:Q1257213"
+ },
+ "201|Leone": {
+  "lon": -170.785,
+  "lat": -14.3439,
+  "src": "wikidata:Q1773774"
+ },
+ "201|Nu'uuli": {
+  "lon": -170.7236,
+  "lat": -14.3186,
+  "src": "wikidata:Q3879172"
+ },
+ "201|Tafuna": {
+  "lon": -170.72,
+  "lat": -14.3358,
+  "src": "wikidata:Q1019488"
+ },
+ "202|Amuri": {
+  "lon": -159.7667,
+  "lat": -18.8667,
+  "src": "wikidata:Q2844525"
+ },
+ "202|Arorangi": {
+  "lon": -159.8269,
+  "lat": -21.2214,
+  "src": "wikidata:Q2381360"
+ },
+ "202|Matavera": {
+  "lon": -159.7373,
+  "lat": -21.2257,
+  "src": "wikidata:Q3298238"
+ },
+ "202|Titikaveka": {
+  "lon": -159.7587,
+  "lat": -21.2686,
+  "src": "wikidata:Q3529565"
+ },
+ "203|Ba": {
+  "lon": 177.6833,
+  "lat": -17.5333,
+  "src": "wikidata:Q797434"
+ },
+ "203|Nausori": {
+  "lon": 178.5454,
+  "lat": -18.0244,
+  "src": "wikidata:Q26707"
+ },
+ "203|Sigatoka": {
+  "lon": 177.5,
+  "lat": -18.15,
+  "src": "wikidata:Q26720"
+ },
+ "204|Bourail": {
+  "lon": 165.4833,
+  "lat": -21.5667,
+  "src": "wikidata:Q9709"
+ },
+ "204|Dumbéa": {
+  "lon": 166.45,
+  "lat": -22.15,
+  "src": "wikidata:Q9712"
+ },
+ "204|Koné": {
+  "lon": 164.8667,
+  "lat": -21.0667,
+  "src": "wikidata:Q9721"
+ },
+ "204|Mont-Dore": {
+  "lon": 166.5833,
+  "lat": -22.2833,
+  "src": "wikidata:Q9732"
+ },
+ "204|Païta": {
+  "lon": 166.3667,
+  "lat": -22.1333,
+  "src": "wikidata:Q9737"
+ },
+ "206|Kokopo": {
+  "lon": 152.2736,
+  "lat": -4.35,
+  "src": "wikidata:Q1017369"
+ },
+ "207|Faleula": {
+  "lon": -171.8314,
+  "lat": -13.7944,
+  "src": "wikidata:Q12885714"
+ },
+ "207|Leulumoega": {
+  "lon": -171.9167,
+  "lat": -13.8167,
+  "src": "wikidata:Q1944685"
+ },
+ "207|Salelologa": {
+  "lon": -172.2203,
+  "lat": -13.7381,
+  "src": "wikidata:Q2214151"
+ },
+ "207|Vaitele": {
+  "lon": -171.78,
+  "lat": -13.82,
+  "src": "wikidata:Q9368101"
+ },
+ "208|Auki": {
+  "lon": 160.6969,
+  "lat": -8.7683,
+  "src": "wikidata:Q538476"
+ },
+ "208|Kirakira": {
+  "lon": 161.9204,
+  "lat": -10.4544,
+  "src": "wikidata:Q713152"
+ },
+ "208|Munda": {
+  "lon": 157.2708,
+  "lat": -8.3281,
+  "src": "wikidata:Q617069"
+ },
+ "209|Faaa": {
+  "lon": -149.6,
+  "lat": -17.55,
+  "src": "wikidata:Q1022934"
+ },
+ "209|Moorea": {
+  "lon": -149.835,
+  "lat": -17.535,
+  "src": "wikidata:Q673400"
+ },
+ "209|Pirae": {
+  "lon": -149.5231,
+  "lat": -17.5244,
+  "src": "wikidata:Q1788497"
+ },
+ "209|Punaauia": {
+  "lon": -149.6094,
+  "lat": -17.6006,
+  "src": "wikidata:Q1969812"
+ },
+ "209|Taravao": {
+  "lon": -149.317,
+  "lat": -17.733,
+  "src": "hand"
+ },
+ "210|Haveluloto": {
+  "lon": -175.2133,
+  "lat": -21.1522,
+  "src": "wikidata:Q9286778"
+ },
+ "210|Pangai": {
+  "lon": -174.3489,
+  "lat": -19.8033,
+  "src": "wikidata:Q1027037"
+ },
+ "210|Vaini": {
+  "lon": -175.1767,
+  "lat": -21.1931,
+  "src": "wikidata:Q49369814"
+ },
+ "211|Isangel": {
+  "lon": 169.2667,
+  "lat": -19.55,
+  "src": "wikidata:Q1070178"
+ },
+ "211|Norsup": {
+  "lon": 167.4004,
+  "lat": -16.0654,
+  "src": "wikidata:Q11792967"
+ },
+ "211|Sola": {
+  "lon": 167.55,
+  "lat": -13.88,
+  "src": "wikidata:Q1423143"
+ },
+ "212|Aasiaat": {
+  "lon": -52.8694,
+  "lat": 68.7097,
+  "src": "wikidata:Q211218"
+ },
+ "212|Maniitsoq": {
+  "lon": -52.9,
+  "lat": 65.4167,
+  "src": "wikidata:Q847691"
+ },
+ "212|Nanortalik": {
+  "lon": -45.2431,
+  "lat": 60.1417,
+  "src": "wikidata:Q855324"
+ },
+ "212|Narsaq": {
+  "lon": -46.0486,
+  "lat": 60.9122,
+  "src": "wikidata:Q432397"
+ }
+}

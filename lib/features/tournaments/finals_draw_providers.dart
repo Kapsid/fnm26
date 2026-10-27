@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+import 'package:fnm/features/tournaments/wc_host_berths.dart';
 
 /// The finals draw recomputed for the draw ceremony. It reuses the exact same
 /// finalist selection, seed and ranking as the season service so the ceremony
@@ -60,7 +61,9 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
   }
 
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
   // The pots use the live ranking snapshotted when the finals draw was
   // generated (post-qualifying), so the ceremony reproduces the real pots.
@@ -81,6 +84,7 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
     byConfederation: grouped,
     rankingById: rankingById,
     hosts: hosts,
+    hostBerths: await worldCupHostBerthsFor(ref, careerId),
     playoffRng: SeededRng(
       career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0,
     ),
@@ -113,7 +117,11 @@ finalsDrawProvider = FutureProvider.autoDispose.family<FinalsDrawData?, int>((
               rankById: rankingById,
               hosts: hosts.toSet(),
             ))
-              FinalsGroupDraw(name: g.name, nationIds: g.nationIds, fixtures: []),
+              FinalsGroupDraw(
+                name: g.name,
+                nationIds: g.nationIds,
+                fixtures: [],
+              ),
           ],
         );
 

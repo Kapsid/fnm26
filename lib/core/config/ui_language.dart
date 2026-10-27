@@ -33,6 +33,12 @@ const List<String> supportedLanguageCodes = [
   'hr',
   'uk',
   'fil',
+  'hi',
+  'ja',
+  'ko',
+  'ro',
+  'th',
+  'ms',
 ];
 
 /// The UI language override, or null to follow the device locale. Read by the

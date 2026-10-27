@@ -45,6 +45,43 @@ class DriftTacticsRepository implements TacticsRepository {
           ? PlaystyleX.matching(instructions)
           : row.playstyle,
       instructions: instructions,
+      fullBacks: await _fullBacks(careerId),
+    );
+  }
+
+  /// The prefix of the cycle-0 `draws_watched` marks that hold the full-back
+  /// arrows: `fullBack.left.up`, `fullBack.right.down` and so on.
+  ///
+  /// A marker rather than a column on `tactics`, so the arrows needed no
+  /// schema change and travel in every backup and career bundle that carries
+  /// the markers. Only a non-neutral arrow writes a mark: a save from before
+  /// the arrows existed has none, and reads as neutral.
+  static const String fullBackMarkPrefix = 'fullBack.';
+
+  static String fullBackMark(FullBackSide side, FullBackPush push) =>
+      '$fullBackMarkPrefix${side.name}.${push.name}';
+
+  Future<FullBackPushes> _fullBacks(int careerId) async {
+    final kinds =
+        await (_db.selectOnly(_db.drawsWatched)
+              ..addColumns([_db.drawsWatched.kind])
+              ..where(
+                _db.drawsWatched.careerId.equals(careerId) &
+                    _db.drawsWatched.cycle.equals(0) &
+                    _db.drawsWatched.kind.like('$fullBackMarkPrefix%'),
+              ))
+            .map((r) => r.read(_db.drawsWatched.kind))
+            .get();
+    FullBackPush read(FullBackSide side) {
+      for (final push in [FullBackPush.up, FullBackPush.down]) {
+        if (kinds.contains(fullBackMark(side, push))) return push;
+      }
+      return FullBackPush.neutral;
+    }
+
+    return FullBackPushes(
+      left: read(FullBackSide.left),
+      right: read(FullBackSide.right),
     );
   }
 
@@ -82,6 +119,26 @@ class DriftTacticsRepository implements TacticsRepository {
           );
         }
       });
+      await (_db.delete(_db.drawsWatched)..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.cycle.equals(0) &
+                t.kind.like('$fullBackMarkPrefix%'),
+          ))
+          .go();
+      for (final side in FullBackSide.values) {
+        final push = tactic.fullBacks.of(side);
+        if (push == FullBackPush.neutral) continue;
+        await _db
+            .into(_db.drawsWatched)
+            .insertOnConflictUpdate(
+              DrawsWatchedCompanion.insert(
+                careerId: careerId,
+                cycle: 0,
+                kind: fullBackMark(side, push),
+              ),
+            );
+      }
     });
   }
 }

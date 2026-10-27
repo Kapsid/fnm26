@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/theme/text_size.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/features/records/record_book_providers.dart';
 import 'package:fnm/features/records/rivalry_providers.dart';
@@ -187,7 +188,7 @@ class LegacyTiles extends StatelessWidget {
 
     if (dense) {
       return SizedBox(
-        height: 34,
+        height: 34 + textScaleGrowth(context, 16),
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: entries.length,
@@ -291,7 +292,9 @@ class _LegacyTile extends StatelessWidget {
     return AppCard(
       onTap: onTap,
       child: SizedBox(
-        height: 96,
+        // 96 at the normal text size, grown by what the three text lines
+        // (52px of line height) gain under a larger one.
+        height: 96 + textScaleGrowth(context, 52),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/match/match_conditions.dart';
 
 /// The result of a simulated match.
 class MatchOutcome {
@@ -92,9 +93,16 @@ class RatingMatchSimulator implements MatchSimulator {
     required SeededRng rng,
     bool homeAdvantage = true,
     double openness = 1.0,
+    MatchConditions conditions = MatchConditions.none,
   }) {
     // +5 home advantage — but a neutral-venue finals gives neither side one.
-    final diff = (homeStrength + (homeAdvantage ? 5 : 0)) - awayStrength;
+    // [conditions] add the altitude and heat: the side whose legs go first
+    // gives up [MatchConditions.strengthEdge] points. Exactly 0 at sea level
+    // in temperate weather, so the world plays as it did.
+    final diff =
+        (homeStrength + (homeAdvantage ? 5 : 0)) -
+        awayStrength +
+        conditions.strengthEdge;
     // Strength tells MULTIPLICATIVELY, not as a flat slope: a modest gap moves
     // the scoreline a little and a real gulf runs away, with the underdog's xG
     // tailing off toward zero rather than hitting a floor. Only the GAP counts,

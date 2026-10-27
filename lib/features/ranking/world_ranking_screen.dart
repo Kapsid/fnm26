@@ -9,6 +9,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/theme/text_size.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
@@ -39,21 +40,29 @@ class WorldRankingScreen extends ConsumerStatefulWidget {
 /// pushed the player's team off-screen further down a 200-nation list.
 ///
 /// The height is unchanged at 56, but the padding inside it is not: see
-/// [_rowPadV]. A moved row carries a 3px outline where a steady one carries
+/// [_rowPadV]. The player's row carries a 3px outline where the rest carry
 /// 1px, and the 8px of vertical padding the row used to have left only 36px
-/// for a 36px flag and a two-line name — so the flag came out 36x34 on
-/// exactly the rows that have MOVED, which is every row worth looking at
-/// after a championship. Trimming the padding rather than growing the row
-/// keeps the list's geometry (and the "centre on my nation" arithmetic that
-/// reads off it) exactly where it was.
+/// for a 36px flag and a two-line name — so the flag came out 36x34 on the
+/// outlined rows. Trimming the padding rather than growing the row keeps the
+/// list's geometry (and the "centre on my nation" arithmetic that reads off
+/// it) exactly where it was.
 const double kRankRowHeight = 56;
 
 /// Vertical padding inside a rank row. 4, not 8: 56 minus 8 of padding minus
-/// a moved row's 6 of border leaves 42, which carries the 36px flag and the
-/// 40px two-line name column with room to spare.
+/// the player's row's 6 of border leaves 42, which carries the 36px flag and
+/// the 40px two-line name column with room to spare.
 const double _rowPadV = AppSpacing.xs;
 const double _rowGap = 8;
-const double _rowExtent = kRankRowHeight + _rowGap;
+
+/// The rank row's height at the current text scale: [kRankRowHeight] at the
+/// normal size, grown by exactly what the two-line name column (40px of line
+/// height) gains under a larger text size, so the name never spills out of a
+/// fixed-extent row. Still one height for every row, so the centring stays
+/// arithmetic.
+double _rowHeight(BuildContext context) =>
+    kRankRowHeight + textScaleGrowth(context, 40);
+
+double _rowExtent(BuildContext context) => _rowHeight(context) + _rowGap;
 
 class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
   final _controller = ScrollController();
@@ -88,8 +97,8 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
     // Item `index` starts at listPadding + index * extent; centre its middle.
     final target =
         (AppSpacing.marginMobile +
-                index * _rowExtent +
-                kRankRowHeight / 2 -
+                index * _rowExtent(context) +
+                _rowHeight(context) / 2 -
                 viewport / 2)
             .clamp(0.0, _controller.position.maxScrollExtent);
     if (animate) {
@@ -181,7 +190,7 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
                   itemCount: filtered.length,
                   // Fixed extent: makes the centring above exact (and keeps a
                   // 200-row list cheap to scroll).
-                  itemExtent: _rowExtent,
+                  itemExtent: _rowExtent(context),
                   itemBuilder: (context, i) => Padding(
                     padding: const EdgeInsets.only(bottom: _rowGap),
                     child: RankRow(
@@ -299,14 +308,12 @@ class RankRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    // The outline highlights the row: the player's colour always, otherwise a
-    // green/red tint when the team has moved since the last ranking freeze.
+    // The outline marks only the player's row. A move since the last ranking
+    // freeze shows in the movement cell alone: a green/red outline on every
+    // row that moved turned the table after a championship into a wall of
+    // colour.
     final (edgeColor, edgeWidth) = isPlayer
         ? (AppColors.primary, 3.0)
-        : movement > 0
-        ? (AppColors.up, 3.0)
-        : movement < 0
-        ? (AppColors.down, 3.0)
         : (AppColors.outlineVariant, 1.0);
     return GestureDetector(
       onTap: onTap,
@@ -324,8 +331,6 @@ class RankRow extends StatelessWidget {
           // every row, which a release build swallows and a debug one does
           // not. (Sides that differ only in WIDTH, or where the odd one out is
           // transparent, are fine and are used elsewhere in the app.)
-          // Outlining the row also makes a climb easier to spot than a 3px
-          // stripe did.
           border: Border.all(color: edgeColor, width: edgeWidth),
         ),
         padding: const EdgeInsets.symmetric(
@@ -356,11 +361,16 @@ class RankRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
+                      // A name too long for the row gives way to its code
+                      // ("Bosnia and Herzegovina" to "BIH") rather than an
+                      // ellipsis.
                       Flexible(
-                        child: Text(
+                        child: WholeText(
                           nation.name,
+                          shortText: nation.code,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          shrinkBeforeShortening: 1,
+                          breakWords: false,
                           style: AppTypography.titleMedium,
                         ),
                       ),

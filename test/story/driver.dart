@@ -8,10 +8,12 @@ import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/seed/dormant_seed.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
@@ -21,11 +23,14 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/squad/grievances.dart';
 import 'package:fnm/domain/services/squad/squad_selection.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
@@ -34,8 +39,10 @@ import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
+import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/squad/injury_cover_providers.dart';
@@ -56,12 +63,52 @@ const int england = 14;
 
 /// The sides England measures itself against: friendlies are booked with
 /// these, in this order.
-const List<int> rivalIds = [46, 20, 56, 18, 58, 26, 55]; // SCO GER ARG FRA BRA ITA WAL
+const List<int> rivalIds = [
+  46,
+  20,
+  56,
+  18,
+  58,
+  26,
+  55,
+]; // SCO GER ARG FRA BRA ITA WAL
 
 final List<Nation> storyNations =
     (jsonDecode(File('assets/data/nations.json').readAsStringSync()) as List)
         .map((e) => Nation.fromJson(e as Map<String, Object?>))
         .toList();
+
+/// Greenland's squad, or (LAB_GREENLAND_FACTOR, the campaign lab only) the
+/// same squad rebuilt from San Marino's attributes at another factor, the way
+/// `greenlandSquad` was written.
+final List<Player> _labGreenland = () {
+  final f = double.tryParse(
+    Platform.environment['LAB_GREENLAND_FACTOR'] ?? '',
+  );
+  if (f == null) return greenlandSquad;
+  final sm = [
+    for (final p in _players)
+      if (p.nationId == 45) p,
+  ];
+  int scaled(int v) => (v * f).round().clamp(25, 99);
+  return [
+    for (var i = 0; i < greenlandSquad.length; i++)
+      greenlandSquad[i].copyWith(
+        attributes: PlayerAttributes(
+          physical: scaled(sm[i].attributes.physical),
+          technical: scaled(sm[i].attributes.technical),
+          stamina: scaled(sm[i].attributes.stamina),
+        ),
+      ),
+  ];
+}();
+
+/// LAB_ENGAGED=1 (the campaign lab only): the autopilot plays an engaged
+/// manager. All the federation money into the youth academy (the rest into
+/// the naturalisation office), every naturalisation offer accepted, every
+/// manager-skill point into youth development. Without it the autopilot
+/// spreads the money evenly, declines every offer and spends no points.
+final bool labEngaged = Platform.environment['LAB_ENGAGED'] == '1';
 final Map<int, Nation> nationById = {for (final n in storyNations) n.id: n};
 final List<Player> _players =
     (jsonDecode(File('assets/data/players.json').readAsStringSync()) as List)
@@ -99,7 +146,15 @@ ProviderContainer _storyContainer(
       premiumUnlockedProvider.overrideWith((ref) => premium),
       matchAttemptSaltProvider.overrideWithValue(() => salt),
       seedSourceProvider.overrideWithValue(
-        InMemorySeedSource(nationList: storyNations, playerList: _players),
+        InMemorySeedSource(
+          nationList: storyNations,
+          playerList: _players,
+          // As the app's asset source: Greenland is in every database, and
+          // only a Greenland campaign's world includes it. Its 23 base
+          // players, like every other nation here (players.json unexpanded).
+          dormantNations: DormantNations.all,
+          dormantPlayers: _labGreenland,
+        ),
       ),
       formFactorProvider.overrideWithValue(FormFactor.phone),
       countryCitiesProvider.overrideWith((ref) async => _cities),
@@ -126,14 +181,19 @@ class StoryDriver {
     ProviderContainer c,
     int seed, {
     int nationId = england,
+    Map<int, int> startingRanks = const {},
   }) async {
     await c.read(seedLoaderProvider).ensureSeeded();
-    final career = (await c.read(careerServiceProvider).create(
-              nationId: nationId,
-              managerName: 'M. Urbanczyk',
-              rngSeed: seed,
-            ))
-        .valueOrNull!;
+    final career =
+        (await c
+                .read(careerServiceProvider)
+                .create(
+                  nationId: nationId,
+                  managerName: 'M. Urbanczyk',
+                  rngSeed: seed,
+                  startingRanks: startingRanks,
+                ))
+            .valueOrNull!;
     return StoryDriver(c, career.id);
   }
 
@@ -220,12 +280,25 @@ class StoryDriver {
         } else {
           await _callUp(uri.queryParameters['event']);
         }
+      case HubEventKind.scandal:
+        // Keep him: the default a manager who never answers gets anyway.
+        c.invalidate(pendingScandalProvider(careerId));
+        final scandal = await _read(pendingScandalProvider(careerId));
+        if (scandal != null) {
+          await c.read(campScandalServiceProvider).keep(careerId, scandal);
+        }
       case HubEventKind.budget:
         await _budget();
       case HubEventKind.naturalization:
         final repo = c.read(careerRepositoryProvider);
         final link = await repo.pendingNaturalization(careerId);
-        await repo.setNaturalizationStatus(careerId, link!.playerId, 'declined');
+        // An engaged manager (LAB_ENGAGED) takes every offer: for a side at
+        // the bottom, any international who wants to come is an upgrade.
+        await repo.setNaturalizationStatus(
+          careerId,
+          link!.playerId,
+          labEngaged ? 'accepted' : 'declined',
+        );
       case HubEventKind.friendlies:
         await _friendlies();
       case HubEventKind.press:
@@ -236,7 +309,19 @@ class StoryDriver {
             .read(grievanceServiceProvider)
             .answer(careerId, g, GrievanceTone.reassure);
       case HubEventKind.managerSkills:
+        if (labEngaged) {
+          // Every point into youth development, the one skill that lifts
+          // the nation's own players.
+          while (await c
+              .read(managerServiceProvider)
+              .raise(careerId, ManagerSkill.youthDevelopment)) {}
+        }
         await _watch(skillsPromptKind);
+      case HubEventKind.awardsCeremony:
+        // Skip to the list: taking it either way marks it seen.
+        await c
+            .read(awardServiceProvider)
+            .takeCeremony(careerId, int.parse(uri!.queryParameters['year']!));
       case HubEventKind.trainingCamp:
         final plan = (await _read(trainingCampPlanProvider(careerId)))!;
         await c
@@ -252,7 +337,9 @@ class StoryDriver {
         if (e.route == Routes.campaigns) return false;
       case HubEventKind.cycleRollover:
         final v = await _read(rolloverVerdictProvider(careerId));
-        await c.read(seasonServiceProvider).startNextCycle(
+        await c
+            .read(seasonServiceProvider)
+            .startNextCycle(
               careerId,
               switchToNationId: null,
               boardTitle: v?.headline,
@@ -265,7 +352,8 @@ class StoryDriver {
   String _drawKind(Uri uri) {
     final wc = uri.queryParameters['worldCup'] == 'true';
     return switch (uri.path) {
-      Routes.qualifyingDraw => wc ? worldCupQualDrawKind : continentalQualDrawKind,
+      Routes.qualifyingDraw =>
+        wc ? worldCupQualDrawKind : continentalQualDrawKind,
       Routes.continentalDraw => continentalFinalsDrawKind,
       Routes.finalsDraw => worldCupDrawKind,
       Routes.hostDraw => wc ? worldCupHostDrawKind : continentalHostDrawKind,
@@ -297,17 +385,33 @@ class StoryDriver {
     final free = (await _read(federationFundsProvider(careerId))).free;
     const price = FederationFinance.investLevelPrice;
     int share(Department d) => math.min(
-          (free ~/ 5) ~/ price * price,
-          FederationFinance.maxLevels(d) * price,
-        );
-    final FederationInvestment a = (
-      youth: share(Department.youth),
-      commercial: share(Department.commercial),
-      medical: share(Department.medical),
-      naturalization: share(Department.naturalization),
-      boardRelations: share(Department.boardRelations),
+      (free ~/ 5) ~/ price * price,
+      FederationFinance.maxLevels(d) * price,
     );
-    final spend = a.youth +
+    int cap(Department d, int euros) => math.min(
+      euros ~/ price * price,
+      FederationFinance.maxLevels(d) * price,
+    );
+    // An engaged manager (LAB_ENGAGED) puts everything into the academy, and
+    // what it cannot absorb into the naturalisation office.
+    final youthAll = cap(Department.youth, free);
+    final FederationInvestment a = labEngaged
+        ? (
+            youth: youthAll,
+            commercial: 0,
+            medical: 0,
+            naturalization: cap(Department.naturalization, free - youthAll),
+            boardRelations: 0,
+          )
+        : (
+            youth: share(Department.youth),
+            commercial: share(Department.commercial),
+            medical: share(Department.medical),
+            naturalization: share(Department.naturalization),
+            boardRelations: share(Department.boardRelations),
+          );
+    final spend =
+        a.youth +
         a.commercial +
         a.medical +
         a.naturalization +
@@ -326,7 +430,9 @@ class StoryDriver {
     for (final w in plan.windows.take(2)) {
       picks[w] = rivalIds[_friendlyCursor++ % rivalIds.length];
     }
-    await c.read(friendliesServiceProvider).arrange(
+    await c
+        .read(friendliesServiceProvider)
+        .arrange(
           careerId,
           nationId: plan.playerNationId,
           cycle: plan.cycle,
@@ -426,7 +532,9 @@ class StoryDriver {
     await beforeMatch?.call(p);
     final salt = c.read(matchAttemptSaltProvider)();
     final result = _attemptFor(p, salt);
-    await c.read(seasonServiceProvider).playPlayerMatch(
+    await c
+        .read(seasonServiceProvider)
+        .playPlayerMatch(
           careerId,
           p.fixture,
           result,
@@ -435,10 +543,11 @@ class StoryDriver {
     await c.read(achievementServiceProvider).checkAndRecord(careerId);
     final nation =
         (await c.read(careerRepositoryProvider).byId(careerId))!.nationId;
-    final played = (await c
-            .read(competitionRepositoryProvider)
-            .fixturesForNation(careerId, nation))
-        .firstWhere((f) => f.id == p.fixture.id);
+    final played =
+        (await c
+                .read(competitionRepositoryProvider)
+                .fixturesForNation(careerId, nation))
+            .firstWhere((f) => f.id == p.fixture.id);
     await afterMatch?.call(played);
   }
 }
@@ -527,8 +636,8 @@ KnockoutOutcome? _knockoutFor(MatchPreview p, MatchResult r, int salt) {
   );
 }
 
-String describe(Fixture f) {
-  final home = f.homeNationId == england;
+String describe(Fixture f, {int nationId = england}) {
+  final home = f.homeNationId == nationId;
   final opp = nationById[home ? f.awayNationId : f.homeNationId]!;
   final gf = home ? f.homeScore : f.awayScore;
   final ga = home ? f.awayScore : f.homeScore;

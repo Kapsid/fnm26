@@ -1,4 +1,5 @@
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/awards/award_year.dart';
 import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
@@ -292,6 +293,14 @@ abstract interface class CompetitionRepository {
 
   /// Every fixture in the save, ordered by matchday then date.
   Future<List<Fixture>> allFixtures(int careerId);
+
+  /// The fixtures in the save dated on or after [from] and before [until]
+  /// (played or not), e.g. one international window's matches.
+  Future<List<Fixture>> fixturesBetween(
+    int careerId,
+    DateTime from,
+    DateTime until,
+  );
 
   /// All unplayed fixtures in the save due on or before [date]. When
   /// [excludeNationId] is given, fixtures involving that nation are left out —
@@ -876,10 +885,19 @@ abstract interface class CompetitionRepository {
   /// A player's trophy cabinet, newest first.
   Future<List<PlayerAward>> playerHonours(int careerId, int playerId);
 
+  /// Every individual trophy handed out for [year], all players.
+  Future<List<PlayerAward>> playerHonoursForYear(int careerId, int year);
+
   /// Every player's year across the WHOLE WORLD, for the yearly awards. Reads
   /// the per-match ratings the world simulation writes for every game played
   /// anywhere, not only the manager's own.
   Future<List<AwardLine>> awardLinesForYear(int careerId, int year);
+
+  /// The raw material of a year's Player of the Year vote: every played
+  /// fixture dated in [year] (with its competition's kind and confederation),
+  /// and every rated appearance in them, across the whole world.
+  Future<({List<AwardFixture> fixtures, List<AwardAppearance> appearances})>
+  awardYearData(int careerId, int year);
 
   /// The dedup keys of every message already recorded (so sync adds each once).
   Future<Set<String>> messageKeys(int careerId);

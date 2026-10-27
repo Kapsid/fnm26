@@ -7,20 +7,27 @@ import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/achievements/achievements.dart'
+    show worldCupHonourName;
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/tournament_holders.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
 import 'package:fnm/domain/services/competition/tournament_stars.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart'
+    show hostEstatesFor;
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
+import 'package:fnm/features/tournaments/tournament_stars_of.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
+import 'package:fnm/features/tournaments/wc_host_berths.dart';
 
 /// Data for the cup-detail (World Championship) screen.
 class CupData {
@@ -42,6 +49,7 @@ class CupData {
     this.hostIds = const [],
     this.teamOfTournament = const [],
     this.hostCities = const {},
+    this.hostEstates = const {},
     this.goldenGlove,
     this.qualDrawWatched = true,
     this.finalsDrawWatched = true,
@@ -51,7 +59,14 @@ class CupData {
     this.topGames = const [],
     this.topCups = const [],
     this.myNationIds = const {},
+    this.wcHostBerths = const {},
   });
+
+  /// How many of each confederation's nations host this World Cup: their
+  /// places come out of its qualifying allocation (see
+  /// `QualificationFormat.qualifyingBerths`), so the qualifying tables cut a
+  /// shorter ladder there.
+  final Map<Confederation, int> wcHostBerths;
 
   /// All-time player leaderboards for the World Cup finals, most first (up to
   /// ten): most finals matches played, and most finals tournaments (editions)
@@ -86,6 +101,10 @@ class CupData {
   /// show whose grounds are whose — and so one host can't consume the whole
   /// venue budget.
   final Map<int, List<String>> hostCities;
+
+  /// The grounds the career has made of its own nation's estate when that
+  /// nation hosts (see `hostEstatesFor`); empty otherwise.
+  final Map<int, List<Venue>> hostEstates;
 
   /// Whether the player has watched the qualifying / finals draw ceremonies —
   /// the groups stay hidden ("to be drawn") until they have.
@@ -165,14 +184,7 @@ typedef CupPlayerRecord = ({
 });
 
 /// Deepest knockout round each nation reached (0 = group stage only).
-const _roundDepth = {
-  'R32': 1,
-  'R16': 2,
-  'QF': 3,
-  'SF': 4,
-  '3RD': 5,
-  'FINAL': 5,
-};
+const _roundDepth = worldChampionshipRoundDepth;
 
 final AutoDisposeFutureProviderFamily<CupData?, int>
 cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
@@ -214,7 +226,9 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     editionYear: wcYear,
   );
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
 
   final hostIds = WorldCupHosts.hostsFor(
@@ -273,25 +287,6 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
       }
     }
 
-    // How everyone actually played. Every match in the world is rated now,
-    // so the awards are decided on performance rather than on reputation
-    // and goals — see `TournamentStars`.
-    final lines = await comp.competitionPlayerLines(
-      careerId,
-      knockout.first.competitionId,
-    );
-    final formByPlayer = {
-      for (final l in lines)
-        l.playerId: (
-          apps: l.apps,
-          meanRating: l.meanRating,
-          motms: l.motms,
-        ),
-    };
-    final cleanSheetsByPlayer = {
-      for (final l in lines) l.playerId: l.cleanSheets,
-    };
-
     // Golden Glove — the keeper of the meanest defence among the knockout
     // sides (goals conceded across the group stage and the knockouts).
     // Used only as a fallback when the tournament has no rating data.
@@ -322,7 +317,13 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
       }
     }
     if (meanest != null) {
-      final squad = await careerPoolOf(ref, career, meanest);
+      final squad = await careerPoolOf(
+        ref,
+        career,
+        meanest,
+        // History: a man who retired since still played here.
+        includeIntlRetired: true,
+      );
       Player? keeper;
       for (final p in squad) {
         if (p.category == PositionCategory.goalkeeper) {
@@ -336,43 +337,37 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     }
     // Candidates: every nation that reached the knockout, plus the nations
     // of the finals' leading scorers (a group-stage golden boot counts).
-    final allFinalsScorers = await comp.topScorers(
-      careerId,
-      kind: CompetitionKind.worldCupFinals,
-      limit: 500,
-    );
-    final goalsByPlayer = {
-      for (final s in allFinalsScorers) s.playerId: s.goals,
-    };
-    final candidateNations = <int>{
-      for (final n in runByNation.keys) n,
-      for (final s in allFinalsScorers) s.nationId,
-      for (final l in lines) l.nationId,
-    };
-    final candidates = <Player>[];
-    for (final nid in candidateNations) {
-      final squad = await careerPoolOf(ref, career, nid);
-      // Everyone who actually appeared — not the top sixteen by rating,
-      // which both included players who never got on and excluded a
-      // squad player who did.
-      candidates.addAll(
-        formByPlayer.isEmpty
-            ? squad.take(16)
-            : squad.where((p) => formByPlayer.containsKey(p.id)),
-      );
-    }
-    teamOfTournament = TournamentStars.teamOfTournament(
-      candidates: candidates,
-      goalsByPlayer: goalsByPlayer,
-      runByNation: runByNation,
+    // The one computation the award service stores too (see
+    // [tournamentStarsOf]), so this tab and a player's cabinet agree.
+    // The picks stored when the final was played win: re-rating since must
+    // not change who won the Golden Ball (see [tournamentStarsOf]).
+    final finalTie = knockout.where((f) => f.round == 'FINAL').firstOrNull;
+    final stored = finalTie == null
+        ? const <PlayerAward>[]
+        : await storedTournamentHonours(
+            comp,
+            careerId,
+            competition: worldCupHonourName,
+            year: finalTie.date.year,
+          );
+    final stars = await tournamentStarsOf(
+      ref,
+      career,
+      competitionId: knockout.first.competitionId,
+      knockout: [
+        for (final f in knockout) (f.round, f.homeNationId, f.awayNationId),
+      ],
+      roundDepth: _roundDepth,
       champion: champion,
-      formByPlayer: formByPlayer,
+      stored: stored,
+      fallbackGoals: () => comp.topScorers(
+        careerId,
+        kind: CompetitionKind.worldCupFinals,
+        limit: 500,
+      ),
     );
-    final bestKeeper = TournamentStars.goldenGlove(
-      candidates: candidates,
-      formByPlayer: formByPlayer,
-      cleanSheetsByPlayer: cleanSheetsByPlayer,
-    );
+    teamOfTournament = stars.team;
+    final bestKeeper = stars.keeper;
     if (bestKeeper != null) {
       goldenGlove = (
         nationId: bestKeeper.nationId,
@@ -403,6 +398,9 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
   // The intercontinental play-off ties (last two finals berths), replayed
   // with the exact seed the finalist selection used — so what's shown here
   // matches who actually went through. Only once qualifying is complete.
+  // The places this edition's hosts take out of their own confederations,
+  // which shortens those qualifying ladders.
+  final wcHostBerths = await worldCupHostBerthsFor(ref, careerId);
   var playoffTies = const <PlayoffTie>[];
   if (await comp.allQualifyingPlayed(careerId)) {
     final grouped = <Confederation, List<List<GroupStanding>>>{};
@@ -421,6 +419,7 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
       rng: SeededRng(
         career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0,
       ),
+      hostBerths: wcHostBerths,
     );
   }
 
@@ -509,12 +508,16 @@ cupDetailProvider = FutureProvider.autoDispose.family<CupData?, int>((
     // watched — before that the summary shows its "appear once drawn"
     // placeholder instead.
     hostIds: hostDrawWatched ? hostIds : const [],
+    wcHostBerths: wcHostBerths,
     scorersQualifying: scorersQualifying,
     scorersFinals: scorersFinals,
     honours: honours,
     playerNames: playerNames,
     teamOfTournament: teamOfTournament,
     hostCities: hostDrawWatched ? hostCities : const {},
+    hostEstates: hostDrawWatched
+        ? await hostEstatesFor(ref, careerId, hostIds)
+        : const {},
     goldenGlove: goldenGlove,
     qualDrawWatched: qualDrawWatched,
     finalsDrawWatched: finalsDrawWatched,

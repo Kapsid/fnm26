@@ -1,3 +1,4 @@
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -127,5 +128,136 @@ abstract class Tactic with _$Tactic {
     required List<int?> lineup, // length 11, slot order matches the formation
     @Default(TacticalInstructions()) TacticalInstructions instructions,
     @Default(Playstyle.custom) Playstyle playstyle,
+    @Default(FullBackPushes.neutral) FullBackPushes fullBacks,
   }) = _Tactic;
+}
+
+/// One full-back's individual instruction: stay put, push on, or hold back.
+///
+/// Deliberately slight. Pushing a full-back on adds a little to the side's
+/// chance creation and as much to what it concedes down that flank; holding
+/// him back is the reverse. See `MatchEngine.fullBackLift`.
+enum FullBackPush {
+  /// No instruction: he plays the side's plan (the default).
+  neutral,
+
+  /// Push on: overlap and join the attack.
+  up,
+
+  /// Hold back: stay home and mind the flank.
+  down,
+}
+
+extension FullBackPushX on FullBackPush {
+  /// +1 pushed on, -1 held back, 0 neutral.
+  int get step => switch (this) {
+    FullBackPush.neutral => 0,
+    FullBackPush.up => 1,
+    FullBackPush.down => -1,
+  };
+
+  /// The next state a tap on the pitch arrow moves to: neutral, up, down,
+  /// neutral.
+  FullBackPush get next => switch (this) {
+    FullBackPush.neutral => FullBackPush.up,
+    FullBackPush.up => FullBackPush.down,
+    FullBackPush.down => FullBackPush.neutral,
+  };
+
+  /// Reads a stored name; anything unknown or missing is
+  /// [FullBackPush.neutral], so a save or preset from before the arrows
+  /// existed plays as it always did.
+  static FullBackPush parse(Object? name) => FullBackPush.values.firstWhere(
+    (v) => v.name == name,
+    orElse: () => FullBackPush.neutral,
+  );
+}
+
+/// Which full-back an arrow belongs to.
+enum FullBackSide { left, right }
+
+/// The left and right full-backs' arrows (see [FullBackPush]).
+///
+/// An arrow only counts while the shape has a defender on that flank: the
+/// left-back's slot ([PlayerPosition.lb]) or the right-back's
+/// ([PlayerPosition.rb]), which a back four and a back five both have and a
+/// back three does not. Without one it is kept (so switching back restores it)
+/// but does nothing; see [netFor].
+@immutable
+class FullBackPushes {
+  const FullBackPushes({
+    this.left = FullBackPush.neutral,
+    this.right = FullBackPush.neutral,
+  });
+
+  /// Reads [toJson]'s form back; missing or damaged values are neutral.
+  factory FullBackPushes.fromJson(Object? json) => json is Map
+      ? FullBackPushes(
+          left: FullBackPushX.parse(json['left']),
+          right: FullBackPushX.parse(json['right']),
+        )
+      : neutral;
+
+  static const FullBackPushes neutral = FullBackPushes();
+
+  final FullBackPush left;
+  final FullBackPush right;
+
+  FullBackPush of(FullBackSide side) =>
+      side == FullBackSide.left ? left : right;
+
+  /// These arrows with [side] set to [push].
+  FullBackPushes withSide(FullBackSide side, FullBackPush push) =>
+      side == FullBackSide.left
+      ? FullBackPushes(left: push, right: right)
+      : FullBackPushes(left: left, right: push);
+
+  /// These arrows with [side] moved on one tap ([FullBackPushX.next]).
+  FullBackPushes cycled(FullBackSide side) => withSide(side, of(side).next);
+
+  /// What a loaded preset or library entry leaves: [loaded]'s arrows, unless
+  /// it has none set, when these stay. An entry saved before the arrows
+  /// existed (or saved without touching them) says nothing about the
+  /// full-backs, so loading it must not quietly clear the manager's.
+  FullBackPushes overlaidWith(FullBackPushes loaded) =>
+      loaded.isNeutral ? this : loaded;
+
+  bool get isNeutral =>
+      left == FullBackPush.neutral && right == FullBackPush.neutral;
+
+  /// The side whose full-back plays [position], or null for any other place.
+  static FullBackSide? sideOf(PlayerPosition position) => switch (position) {
+    PlayerPosition.lb => FullBackSide.left,
+    PlayerPosition.rb => FullBackSide.right,
+    _ => null,
+  };
+
+  /// Whether a side lined up in [slots] has a full-back on [side].
+  static bool hasSide(Iterable<PlayerPosition> slots, FullBackSide side) =>
+      slots.any((p) => sideOf(p) == side);
+
+  /// The net push (up = +1, down = -1 per arrow) of a side lined up in
+  /// [slots]: an arrow on a flank with no full-back counts nothing.
+  int netFor(Iterable<PlayerPosition> slots) =>
+      (hasSide(slots, FullBackSide.left) ? left.step : 0) +
+      (hasSide(slots, FullBackSide.right) ? right.step : 0);
+
+  /// Stored form: only the non-neutral sides, so an untouched tactic writes
+  /// nothing.
+  Map<String, String> toJson() => {
+    if (left != FullBackPush.neutral) 'left': left.name,
+    if (right != FullBackPush.neutral) 'right': right.name,
+  };
+
+  @override
+  bool operator ==(Object other) =>
+      other is FullBackPushes && other.left == left && other.right == right;
+
+  @override
+  int get hashCode => Object.hash(left, right);
+
+  @override
+  String toString() =>
+      'FullBackPushes(left: ${left.name}, '
+      'right: ${right.name})';
 }

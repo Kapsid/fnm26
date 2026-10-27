@@ -7,11 +7,13 @@ import 'package:fnm/data/repositories/drift_career_repository.dart';
 import 'package:fnm/data/repositories/drift_competition_repository.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/data/repositories/drift_player_repository.dart';
+import 'package:fnm/data/repositories/drift_international_retirement_repository.dart';
 import 'package:fnm/data/repositories/drift_ranking_release_repository.dart';
 import 'package:fnm/data/repositories/drift_ranking_repository.dart';
 import 'package:fnm/data/repositories/drift_seed_ranking_repository.dart';
 import 'package:fnm/data/repositories/drift_squad_repository.dart';
 import 'package:fnm/data/repositories/drift_tactic_familiarity_repository.dart';
+import 'package:fnm/data/repositories/drift_tactic_library_repository.dart';
 import 'package:fnm/data/repositories/drift_tactics_repository.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
 import 'package:fnm/data/seed/seed_source.dart';
@@ -20,11 +22,13 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
+import 'package:fnm/domain/repositories/international_retirement_repository.dart';
 import 'package:fnm/domain/repositories/ranking_release_repository.dart';
 import 'package:fnm/domain/repositories/ranking_repository.dart';
 import 'package:fnm/domain/repositories/seed_ranking_repository.dart';
 import 'package:fnm/domain/repositories/squad_repository.dart';
 import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
+import 'package:fnm/domain/repositories/tactic_library_repository.dart';
 import 'package:fnm/domain/repositories/tactics_repository.dart';
 
 /// Data-layer dependency wiring.
@@ -85,6 +89,13 @@ final playerRepositoryProvider = Provider<PlayerRepository>(
   ),
 );
 
+final internationalRetirementRepositoryProvider =
+    Provider<InternationalRetirementRepository>(
+      (ref) => DriftInternationalRetirementRepository(
+        ref.watch(appDatabaseProvider),
+      ),
+    );
+
 final careerRepositoryProvider = Provider<CareerRepository>(
   (ref) => DriftCareerRepository(ref.watch(appDatabaseProvider)),
 );
@@ -101,6 +112,11 @@ final tacticFamiliarityRepositoryProvider =
     Provider<TacticFamiliarityRepository>(
       (ref) => DriftTacticFamiliarityRepository(ref.watch(appDatabaseProvider)),
     );
+
+/// The tactics library, shared by every career (the `tactic_library` table).
+final tacticLibraryRepositoryProvider = Provider<TacticLibraryRepository>(
+  (ref) => DriftTacticLibraryRepository(ref.watch(appDatabaseProvider)),
+);
 
 final squadRepositoryProvider = Provider<SquadRepository>(
   (ref) => DriftSquadRepository(ref.watch(appDatabaseProvider)),

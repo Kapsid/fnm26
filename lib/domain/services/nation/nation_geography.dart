@@ -19,6 +19,9 @@ abstract final class NationGeography {
     'ENG': 'britishIsles',
     'EST': 'baltics',
     'FRO': 'scandinavia',
+    // Greenland, a dormant nation (see DormantNations): a realm neighbour of
+    // Iceland, the Faroes and Denmark.
+    'GRL': 'scandinavia',
     'FIN': 'scandinavia',
     'FRA': 'westEurope',
     'GEO': 'caucasus',

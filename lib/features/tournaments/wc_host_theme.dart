@@ -87,7 +87,9 @@ final wcHostThemeProvider = FutureProvider.autoDispose.family<WcHostTheme, int>(
       return _inactive();
     }
 
-    final nations = await ref.watch(nationRepositoryProvider).all();
+    final nations = await ref
+        .watch(nationRepositoryProvider)
+        .forCareer(careerId);
     final year = CareerService.worldCupYear(career.cyclePointer);
     final hostIds = WorldCupHosts.hostsFor(
       year: year,
@@ -135,7 +137,9 @@ final continentalHostThemeProvider = FutureProvider.autoDispose
       final l = ref.watch(appLocalizationsProvider);
       if (career == null) return _inactive();
       final comp = ref.watch(competitionRepositoryProvider);
-      final nations = await ref.watch(nationRepositoryProvider).all();
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(careerId);
       final byId = {for (final n in nations) n.id: n};
       final me = byId[career.nationId];
       if (me == null) return _inactive();

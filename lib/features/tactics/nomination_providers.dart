@@ -55,7 +55,9 @@ nominationWindowProvider = FutureProvider.autoDispose.family<NominationWindow, i
       .watch(competitionRepositoryProvider)
       .cycleFixturesForNation(careerId, career.nationId);
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
   return (
     open: Nomination.windowOpen(fixtures),

@@ -10,11 +10,15 @@ class TacticPreset {
     required this.name,
     required this.formation,
     required this.instructions,
+    this.fullBacks = FullBackPushes.neutral,
   });
 
   final String name;
   final Formation formation;
   final TacticalInstructions instructions;
+
+  /// The full-backs' arrows; neutral for a preset saved before they existed.
+  final FullBackPushes fullBacks;
 
   Map<String, dynamic> toJson() => {
     'name': name,
@@ -25,6 +29,7 @@ class TacticPreset {
     'width': instructions.width,
     'defensiveLine': instructions.defensiveLine,
     'directness': instructions.directness,
+    if (!fullBacks.isNeutral) 'fullBacks': fullBacks.toJson(),
   };
 
   static TacticPreset? fromJson(Map<String, dynamic> json) {
@@ -50,6 +55,7 @@ class TacticPreset {
         defensiveLine: slider('defensiveLine'),
         directness: slider('directness'),
       ),
+      fullBacks: FullBackPushes.fromJson(json['fullBacks']),
     );
   }
 }

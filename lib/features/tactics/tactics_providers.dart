@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/library_tactic.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/tactics.dart';
@@ -13,6 +14,8 @@ import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/tactics/player_roles_providers.dart';
+import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 
 /// Smallest squad a manager may call up (must field an XI plus cover).
 const int kMinSquadSize = 16;
@@ -262,7 +265,24 @@ class TacticService {
 
   final Ref _ref;
 
+  /// The write in flight, so the next waits for it.
+  ///
+  /// Every change reads the stored tactic, works, and saves; two started
+  /// together both read the same tactic and the second save threw the first
+  /// away. Nothing invited quick repeat taps until the full-back arrow, where
+  /// two taps to reach "hold back" landed as one.
+  Future<void> _tail = Future<void>.value();
+
   Future<void> _update(
+    int careerId,
+    Tactic Function(Tactic current, List<Player> pool) change,
+  ) {
+    final run = _tail.then((_) => _write(careerId, change));
+    _tail = run.then((_) {}, onError: (Object _) {});
+    return run;
+  }
+
+  Future<void> _write(
     int careerId,
     Tactic Function(Tactic current, List<Player> pool) change,
   ) async {
@@ -371,16 +391,75 @@ class TacticService {
   Future<void> applyPreset(
     int careerId,
     Formation formation,
-    TacticalInstructions instructions,
-  ) => _update(
+    TacticalInstructions instructions, {
+    FullBackPushes fullBacks = FullBackPushes.neutral,
+  }) => _update(
     careerId,
     (t, pool) => t.copyWith(
       formation: formation,
       lineup: bestEleven(formation, pool),
       instructions: instructions,
       playstyle: PlaystyleX.matching(instructions),
+      fullBacks: t.fullBacks.overlaidWith(fullBacks),
     ),
   );
+
+  /// Moves [side]'s full-back arrow on one tap (neutral, push on, hold back)
+  /// and returns the state it now holds, read off the stored tactic rather
+  /// than the screen, which may be a tap behind.
+  Future<FullBackPush> cycleFullBack(int careerId, FullBackSide side) async {
+    var now = FullBackPush.neutral;
+    await _update(careerId, (t, _) {
+      final next = t.fullBacks.cycled(side);
+      now = next.of(side);
+      return t.copyWith(fullBacks: next);
+    });
+    return now;
+  }
+
+  /// Sets [side]'s full-back arrow to [push] (the Instructions tab).
+  Future<void> setFullBack(
+    int careerId,
+    FullBackSide side,
+    FullBackPush push,
+  ) => _update(
+    careerId,
+    (t, _) => t.copyWith(fullBacks: t.fullBacks.withSide(side, push)),
+  );
+
+  /// Loads [library] from the tactics library into this save: its shape (with
+  /// the best available eleven re-picked for it), style and dials in one
+  /// write, then its roles and set-piece takers re-attached to whoever now
+  /// fills each slot (see [LibraryTactic.fit]). Returns how it fitted, or null
+  /// when the save has no tactic to load into.
+  Future<LibraryFit?> applyLibraryTactic(
+    int careerId,
+    LibraryTactic library,
+  ) async {
+    LibraryFit? fit;
+    await _update(careerId, (t, pool) {
+      final lineup = bestEleven(library.formation, pool);
+      fit = library.fit(lineup, {for (final p in pool) p.id: p});
+      return t.copyWith(
+        formation: library.formation,
+        lineup: lineup,
+        instructions: library.instructions,
+        playstyle: library.playstyle,
+        fullBacks: t.fullBacks.overlaidWith(library.fullBacks),
+      );
+    });
+    final result = fit;
+    if (result == null) return null;
+    await _ref.read(playerRolesStoreProvider).setRoles(careerId, result.roles);
+    await _ref
+        .read(setPieceTakersStoreProvider)
+        .setBoth(
+          careerId,
+          penalty: result.penaltyTaker,
+          deadBall: result.deadBallTaker,
+        );
+    return result;
+  }
 
   /// Assigns [playerId] to [slot], swapping if they already start elsewhere.
   Future<void> setSlot(int careerId, int slot, int playerId) =>
@@ -479,8 +558,8 @@ class SquadService {
     return true;
   }
 
-  /// Sends [outId], injured mid-window, home and calls [inId] up in his place:
-  /// the squad stays the same size, so its limits hold.
+  /// Sends [outId], injured (or banned) mid-window, home and calls [inId] up
+  /// in his place: the squad stays the same size, so its limits hold.
   ///
   /// Not through [setCallUps], which re-picks the whole XI when a starter is
   /// dropped. Only the injured man's slot is emptied; the forced "reshape your
@@ -489,12 +568,31 @@ class SquadService {
     int careerId, {
     required int outId,
     required int inId,
+  }) => sendHome(careerId, outId: outId, inId: inId);
+
+  /// Sends [outId] home for the rest of the window, calling [inId] up in his
+  /// place when given (the squad is one short when not). The same surgery as
+  /// [replaceInjured]: only his slot in the XI is emptied, and the forced
+  /// "reshape your XI" step asks the manager to fill it.
+  ///
+  /// Out of the stored squad is out of everything that picks from it: the
+  /// tactics board, the auto-picked XI and the quick-sim of his own matches
+  /// all read the call-ups.
+  Future<void> sendHome(
+    int careerId, {
+    required int outId,
+    int? inId,
   }) async {
     final squads = _ref.read(squadRepositoryProvider);
     final current = await squads.callUps(careerId);
-    await squads.setCallUps(careerId, {...current}
-      ..remove(outId)
-      ..add(inId));
+    await squads.setCallUps(
+      careerId,
+      {
+          ...current,
+        }
+        ..remove(outId)
+        ..addAll([?inId]),
+    );
     final tacticRepo = _ref.read(tacticsRepositoryProvider);
     final tactic = await tacticRepo.tacticForCareer(careerId);
     if (tactic != null && tactic.lineup.contains(outId)) {

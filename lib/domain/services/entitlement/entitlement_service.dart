@@ -85,8 +85,9 @@ class EntitlementService {
   /// The order is the whole point. The store is asked first, because on iOS
   /// it knows what was actually bought and the file on disk does not. Only
   /// when the store cannot answer at all does the cached grant decide, and
-  /// then it always decides in the player's favour: nothing here ever writes
-  /// `false`, and a check that fails to run is not evidence of anything.
+  /// then it always decides in the player's favour. A check that fails to run
+  /// is not evidence of anything; only a store answer without the product
+  /// clears the cache (a refund).
   ///
   /// The certificate check comes before both. An APK that is not signed by us
   /// keeps premium locked whatever the store or the cache says, and leaves the
@@ -97,6 +98,11 @@ class EntitlementService {
       integrity: _integrity,
     );
     if (_certificateTrusted) await _decideAtLaunch();
+    // Only now does a `false` premium mean "not owned": saves past the free
+    // cycle may lock from here on (see [entitlementSettledProvider]). Set
+    // after the grant, never before it, so a paying player is never shown a
+    // padlock for the moment between the two.
+    _ref.read(entitlementSettledProvider.notifier).state = true;
     try {
       _sub ??= _iap.purchaseStream.listen(_onPurchases);
     } on Object {
@@ -113,7 +119,13 @@ class EntitlementService {
       // The store answered. Its answer is the truth on this device, in both
       // directions: it entitles a reinstall nobody restored by hand, and it
       // is the one thing that can decline a boolean somebody wrote himself.
-      if (owned.contains(kPremiumProductId)) await _grant();
+      if (owned.contains(kPremiumProductId)) {
+        await _grant();
+      } else if (cached) {
+        // A refund. The store has already locked this launch; the stale
+        // grant must not unlock the next one that happens to be offline.
+        await _forgetCachedGrant();
+      }
     } else if (cached) {
       // Simulator, no store, no account, a wedged channel. Grant, and
       // leave the cache alone so the next launch can try the store again.
@@ -147,6 +159,18 @@ class EntitlementService {
     } on Object {
       // Unreadable cache: it grants nothing, and it takes nothing away.
       return false;
+    }
+  }
+
+  /// Drops the cached grant under both keys. Only a store answer that does
+  /// not list the product calls this; an unanswered question never does.
+  Future<void> _forgetCachedGrant() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_kPremiumCacheKey);
+      await prefs.remove(_kLegacyPremiumCacheKey);
+    } on Object {
+      // Still cached. The next launch the store answers clears it.
     }
   }
 

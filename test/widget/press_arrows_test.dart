@@ -5,16 +5,18 @@ import 'package:fnm/features/press/press_sheet.dart';
 
 import '../helpers/pump_app.dart';
 
-/// What an answer costs, shown as arrows rather than as a figure on a scale
-/// the manager has never been shown.
+/// How the room moved, shown as arrows rather than as a figure on a scale
+/// the manager has never been shown. Drawn once the conference is over (the
+/// answers themselves are masked; see press_conference_test).
 void main() {
   Future<void> pumpAnswer(WidgetTester tester, PressEffect effect) =>
       tester.pumpApp(
         Scaffold(
-          body: AnswerTile(
-            label: 'I back these players',
-            effect: effect,
-            onTap: () {},
+          body: Row(
+            children: [
+              PressSwing(label: 'Squad', value: effect.morale),
+              PressSwing(label: 'Board', value: effect.board),
+            ],
           ),
         ),
       );

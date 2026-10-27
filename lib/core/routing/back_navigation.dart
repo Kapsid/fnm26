@@ -74,6 +74,10 @@ const Map<String, String> _inSaveParents = {
   Routes.allTimeRecords: Routes.records,
   Routes.headToHead: Routes.records,
   Routes.h2hMeetings: Routes.headToHead,
+  Routes.hostBid: Routes.cycleRollover,
+  // Reached from the budget and from the finances; the finances are always
+  // there to land on.
+  Routes.stadiums: Routes.finances,
 };
 
 /// Screens outside a save and where they lead back to.
@@ -101,6 +105,10 @@ BackAction systemBackAction(Uri uri) {
   }
   // The hub's own arrow leaves the save for the home screen.
   if (path == Routes.hub) return const GoBackTo(Routes.home);
+  // The gate in front of a Pro-locked save is left only by its own buttons
+  // (its PopScope already holds back; Exit knows whether the save is a
+  // campaign run). Its hub parent would only redirect straight back here.
+  if (path == Routes.saveLocked) return const StayPut();
 
   final String parent;
   if (path == Routes.callUps) {

@@ -1,0 +1,5094 @@
+{
+ "1": [
+  {
+   "city": "Tirana",
+   "seats": 22500
+  },
+  {
+   "city": "Shkodër",
+   "seats": 16000
+  },
+  {
+   "city": "Elbasan",
+   "seats": 13000
+  },
+  {
+   "city": "Durrës",
+   "seats": 12000
+  },
+  {
+   "city": "Vlorë",
+   "seats": 8000
+  },
+  {
+   "city": "Korçë",
+   "seats": 6000
+  }
+ ],
+ "2": [
+  {
+   "city": "Andorra la Vella",
+   "seats": 3300
+  },
+  {
+   "city": "Encamp",
+   "seats": 1000
+  },
+  {
+   "city": "Escaldes-Engordany",
+   "seats": 1000
+  }
+ ],
+ "3": [
+  {
+   "city": "Yerevan",
+   "seats": 14400
+  },
+  {
+   "city": "Vanadzor",
+   "seats": 5000
+  },
+  {
+   "city": "Abovyan",
+   "seats": 4000
+  },
+  {
+   "city": "Kapan",
+   "seats": 3500
+  },
+  {
+   "city": "Gyumri",
+   "seats": 3000
+  }
+ ],
+ "4": [
+  {
+   "city": "Vienna",
+   "seats": 49000
+  },
+  {
+   "city": "Wals-Siezenheim",
+   "seats": 30000
+  },
+  {
+   "city": "Klagenfurt",
+   "seats": 30000
+  },
+  {
+   "city": "Vienna",
+   "seats": 28000
+  },
+  {
+   "city": "Linz",
+   "seats": 19000
+  },
+  {
+   "city": "Innsbruck",
+   "seats": 17000
+  },
+  {
+   "city": "Graz",
+   "seats": 16000
+  },
+  {
+   "city": "St. Pölten",
+   "seats": 8000
+  }
+ ],
+ "5": [
+  {
+   "city": "Baku",
+   "seats": 68700
+  },
+  {
+   "city": "Baku",
+   "seats": 31000
+  },
+  {
+   "city": "Ganja",
+   "seats": 25000
+  },
+  {
+   "city": "Sumqayit",
+   "seats": 15000
+  },
+  {
+   "city": "Lankaran",
+   "seats": 15000
+  },
+  {
+   "city": "Mingachevir",
+   "seats": 5000
+  },
+  {
+   "city": "Gabala",
+   "seats": 4500
+  }
+ ],
+ "7": [
+  {
+   "city": "Brussels",
+   "seats": 50000
+  },
+  {
+   "city": "Liège",
+   "seats": 30000
+  },
+  {
+   "city": "Bruges",
+   "seats": 29000
+  },
+  {
+   "city": "Genk",
+   "seats": 23000
+  },
+  {
+   "city": "Ghent",
+   "seats": 20000
+  },
+  {
+   "city": "Antwerp",
+   "seats": 16000
+  },
+  {
+   "city": "Mechelen",
+   "seats": 16000
+  },
+  {
+   "city": "Charleroi",
+   "seats": 15000
+  },
+  {
+   "city": "Leuven",
+   "seats": 10000
+  },
+  {
+   "city": "Kortrijk",
+   "seats": 9000
+  }
+ ],
+ "8": [
+  {
+   "city": "Sarajevo",
+   "seats": 34000
+  },
+  {
+   "city": "Zenica",
+   "seats": 15000
+  },
+  {
+   "city": "Banja Luka",
+   "seats": 10000
+  },
+  {
+   "city": "Mostar",
+   "seats": 9000
+  },
+  {
+   "city": "Tuzla",
+   "seats": 7000
+  },
+  {
+   "city": "Bijeljina",
+   "seats": 6000
+  }
+ ],
+ "9": [
+  {
+   "city": "Sofia",
+   "seats": 43000
+  },
+  {
+   "city": "Plovdiv",
+   "seats": 18000
+  },
+  {
+   "city": "Burgas",
+   "seats": 18000
+  },
+  {
+   "city": "Stara Zagora",
+   "seats": 13000
+  },
+  {
+   "city": "Ruse",
+   "seats": 13000
+  },
+  {
+   "city": "Razgrad",
+   "seats": 10000
+  },
+  {
+   "city": "Varna",
+   "seats": 8000
+  }
+ ],
+ "10": [
+  {
+   "city": "Zagreb",
+   "seats": 35000
+  },
+  {
+   "city": "Split",
+   "seats": 34000
+  },
+  {
+   "city": "Osijek",
+   "seats": 13000
+  },
+  {
+   "city": "Varaždin",
+   "seats": 9000
+  },
+  {
+   "city": "Rijeka",
+   "seats": 8000
+  },
+  {
+   "city": "Pula",
+   "seats": 8000
+  },
+  {
+   "city": "Zadar",
+   "seats": 5000
+  }
+ ],
+ "11": [
+  {
+   "city": "Nicosia",
+   "seats": 22800
+  },
+  {
+   "city": "Limassol",
+   "seats": 10700
+  },
+  {
+   "city": "Paphos",
+   "seats": 9000
+  },
+  {
+   "city": "Larnaca",
+   "seats": 7400
+  },
+  {
+   "city": "Paralimni",
+   "seats": 5800
+  }
+ ],
+ "12": [
+  {
+   "city": "Prague",
+   "seats": 19400
+  },
+  {
+   "city": "Teplice",
+   "seats": 18000
+  },
+  {
+   "city": "Ostrava",
+   "seats": 15000
+  },
+  {
+   "city": "Olomouc",
+   "seats": 12500
+  },
+  {
+   "city": "Brno",
+   "seats": 12000
+  },
+  {
+   "city": "Plzeň",
+   "seats": 11700
+  },
+  {
+   "city": "Liberec",
+   "seats": 10000
+  },
+  {
+   "city": "Hradec Králové",
+   "seats": 9300
+  },
+  {
+   "city": "Zlín",
+   "seats": 6000
+  },
+  {
+   "city": "Mladá Boleslav",
+   "seats": 5000
+  }
+ ],
+ "13": [
+  {
+   "city": "Copenhagen",
+   "seats": 38000
+  },
+  {
+   "city": "Brøndby",
+   "seats": 28000
+  },
+  {
+   "city": "Aarhus",
+   "seats": 19000
+  },
+  {
+   "city": "Esbjerg",
+   "seats": 16000
+  },
+  {
+   "city": "Odense",
+   "seats": 15000
+  },
+  {
+   "city": "Aalborg",
+   "seats": 14000
+  },
+  {
+   "city": "Herning",
+   "seats": 11000
+  },
+  {
+   "city": "Randers",
+   "seats": 10000
+  },
+  {
+   "city": "Vejle",
+   "seats": 10000
+  },
+  {
+   "city": "Viborg",
+   "seats": 9000
+  }
+ ],
+ "14": [
+  {
+   "city": "London",
+   "seats": 90000
+  },
+  {
+   "city": "Manchester",
+   "seats": 74000
+  },
+  {
+   "city": "London",
+   "seats": 62000
+  },
+  {
+   "city": "Liverpool",
+   "seats": 61000
+  },
+  {
+   "city": "Newcastle",
+   "seats": 52000
+  },
+  {
+   "city": "Sunderland",
+   "seats": 49000
+  },
+  {
+   "city": "Birmingham",
+   "seats": 42000
+  },
+  {
+   "city": "Sheffield",
+   "seats": 39000
+  },
+  {
+   "city": "Leeds",
+   "seats": 37000
+  },
+  {
+   "city": "Middlesbrough",
+   "seats": 34000
+  }
+ ],
+ "15": [
+  {
+   "city": "Tallinn",
+   "seats": 15000
+  },
+  {
+   "city": "Narva",
+   "seats": 3000
+  },
+  {
+   "city": "Tartu",
+   "seats": 2000
+  },
+  {
+   "city": "Pärnu",
+   "seats": 2000
+  }
+ ],
+ "16": [
+  {
+   "city": "Tórshavn",
+   "seats": 6000
+  },
+  {
+   "city": "Toftir",
+   "seats": 6000
+  },
+  {
+   "city": "Klaksvík",
+   "seats": 3000
+  },
+  {
+   "city": "Runavík",
+   "seats": 2000
+  }
+ ],
+ "17": [
+  {
+   "city": "Helsinki",
+   "seats": 36000
+  },
+  {
+   "city": "Tampere",
+   "seats": 16800
+  },
+  {
+   "city": "Helsinki",
+   "seats": 10000
+  },
+  {
+   "city": "Turku",
+   "seats": 9000
+  },
+  {
+   "city": "Lahti",
+   "seats": 7000
+  },
+  {
+   "city": "Kuopio",
+   "seats": 5000
+  },
+  {
+   "city": "Oulu",
+   "seats": 4000
+  },
+  {
+   "city": "Jyväskylä",
+   "seats": 4000
+  }
+ ],
+ "18": [
+  {
+   "city": "Paris",
+   "seats": 80000
+  },
+  {
+   "city": "Marseille",
+   "seats": 67000
+  },
+  {
+   "city": "Lyon",
+   "seats": 59000
+  },
+  {
+   "city": "Lille",
+   "seats": 50000
+  },
+  {
+   "city": "Bordeaux",
+   "seats": 42000
+  },
+  {
+   "city": "Saint-Étienne",
+   "seats": 42000
+  },
+  {
+   "city": "Lens",
+   "seats": 38000
+  },
+  {
+   "city": "Nice",
+   "seats": 36000
+  },
+  {
+   "city": "Nantes",
+   "seats": 35000
+  },
+  {
+   "city": "Toulouse",
+   "seats": 33000
+  }
+ ],
+ "19": [
+  {
+   "city": "Tbilisi",
+   "seats": 54500
+  },
+  {
+   "city": "Batumi",
+   "seats": 20000
+  },
+  {
+   "city": "Kutaisi",
+   "seats": 14000
+  },
+  {
+   "city": "Gori",
+   "seats": 9000
+  },
+  {
+   "city": "Rustavi",
+   "seats": 5000
+  },
+  {
+   "city": "Zugdidi",
+   "seats": 4000
+  }
+ ],
+ "20": [
+  {
+   "city": "Dortmund",
+   "seats": 81000
+  },
+  {
+   "city": "Munich",
+   "seats": 75000
+  },
+  {
+   "city": "Berlin",
+   "seats": 74000
+  },
+  {
+   "city": "Gelsenkirchen",
+   "seats": 62000
+  },
+  {
+   "city": "Stuttgart",
+   "seats": 60000
+  },
+  {
+   "city": "Frankfurt",
+   "seats": 58000
+  },
+  {
+   "city": "Hamburg",
+   "seats": 57000
+  },
+  {
+   "city": "Düsseldorf",
+   "seats": 54000
+  },
+  {
+   "city": "Mönchengladbach",
+   "seats": 54000
+  },
+  {
+   "city": "Cologne",
+   "seats": 50000
+  }
+ ],
+ "21": [
+  {
+   "city": "Gibraltar",
+   "seats": 5000
+  }
+ ],
+ "22": [
+  {
+   "city": "Athens",
+   "seats": 69000
+  },
+  {
+   "city": "Piraeus",
+   "seats": 33000
+  },
+  {
+   "city": "Athens",
+   "seats": 32000
+  },
+  {
+   "city": "Thessaloniki",
+   "seats": 28000
+  },
+  {
+   "city": "Heraklion",
+   "seats": 26000
+  },
+  {
+   "city": "Volos",
+   "seats": 22000
+  },
+  {
+   "city": "Patras",
+   "seats": 19000
+  },
+  {
+   "city": "Larissa",
+   "seats": 13000
+  },
+  {
+   "city": "Ioannina",
+   "seats": 7000
+  },
+  {
+   "city": "Tripoli",
+   "seats": 7000
+  }
+ ],
+ "23": [
+  {
+   "city": "Budapest",
+   "seats": 67000
+  },
+  {
+   "city": "Budapest",
+   "seats": 22000
+  },
+  {
+   "city": "Debrecen",
+   "seats": 20000
+  },
+  {
+   "city": "Győr",
+   "seats": 15600
+  },
+  {
+   "city": "Miskolc",
+   "seats": 15000
+  },
+  {
+   "city": "Székesfehérvár",
+   "seats": 14000
+  },
+  {
+   "city": "Szeged",
+   "seats": 8000
+  },
+  {
+   "city": "Felcsút",
+   "seats": 3800
+  }
+ ],
+ "24": [
+  {
+   "city": "Reykjavík",
+   "seats": 9800
+  },
+  {
+   "city": "Hafnarfjörður",
+   "seats": 6000
+  },
+  {
+   "city": "Keflavík",
+   "seats": 4000
+  },
+  {
+   "city": "Kópavogur",
+   "seats": 3000
+  },
+  {
+   "city": "Akranes",
+   "seats": 3000
+  },
+  {
+   "city": "Akureyri",
+   "seats": 2000
+  }
+ ],
+ "25": [
+  {
+   "city": "Jerusalem",
+   "seats": 31000
+  },
+  {
+   "city": "Haifa",
+   "seats": 30000
+  },
+  {
+   "city": "Tel Aviv",
+   "seats": 29000
+  },
+  {
+   "city": "Beersheba",
+   "seats": 16000
+  },
+  {
+   "city": "Netanya",
+   "seats": 13000
+  },
+  {
+   "city": "Petah Tikva",
+   "seats": 11000
+  },
+  {
+   "city": "Ashdod",
+   "seats": 8000
+  }
+ ],
+ "26": [
+  {
+   "city": "Milan",
+   "seats": 75000
+  },
+  {
+   "city": "Rome",
+   "seats": 72000
+  },
+  {
+   "city": "Bari",
+   "seats": 58000
+  },
+  {
+   "city": "Naples",
+   "seats": 54000
+  },
+  {
+   "city": "Florence",
+   "seats": 43000
+  },
+  {
+   "city": "Turin",
+   "seats": 41000
+  },
+  {
+   "city": "Verona",
+   "seats": 39000
+  },
+  {
+   "city": "Palermo",
+   "seats": 36000
+  },
+  {
+   "city": "Genoa",
+   "seats": 36000
+  },
+  {
+   "city": "Bologna",
+   "seats": 36000
+  }
+ ],
+ "27": [
+  {
+   "city": "Astana",
+   "seats": 30000
+  },
+  {
+   "city": "Karaganda",
+   "seats": 30000
+  },
+  {
+   "city": "Almaty",
+   "seats": 23800
+  },
+  {
+   "city": "Shymkent",
+   "seats": 20000
+  },
+  {
+   "city": "Aktobe",
+   "seats": 13000
+  },
+  {
+   "city": "Oral",
+   "seats": 8000
+  },
+  {
+   "city": "Kostanay",
+   "seats": 7000
+  }
+ ],
+ "28": [
+  {
+   "city": "Mitrovica",
+   "seats": 18000
+  },
+  {
+   "city": "Gjilan",
+   "seats": 15000
+  },
+  {
+   "city": "Pristina",
+   "seats": 13500
+  },
+  {
+   "city": "Prizren",
+   "seats": 8000
+  },
+  {
+   "city": "Peja",
+   "seats": 8000
+  },
+  {
+   "city": "Gjakova",
+   "seats": 6000
+  }
+ ],
+ "29": [
+  {
+   "city": "Riga",
+   "seats": 10000
+  },
+  {
+   "city": "Liepāja",
+   "seats": 5000
+  },
+  {
+   "city": "Daugavpils",
+   "seats": 4000
+  },
+  {
+   "city": "Jelgava",
+   "seats": 2500
+  }
+ ],
+ "30": [
+  {
+   "city": "Vaduz",
+   "seats": 7500
+  },
+  {
+   "city": "Eschen",
+   "seats": 2000
+  },
+  {
+   "city": "Balzers",
+   "seats": 1500
+  }
+ ],
+ "31": [
+  {
+   "city": "Kaunas",
+   "seats": 15000
+  },
+  {
+   "city": "Marijampolė",
+   "seats": 6000
+  },
+  {
+   "city": "Vilnius",
+   "seats": 5000
+  },
+  {
+   "city": "Klaipėda",
+   "seats": 4500
+  },
+  {
+   "city": "Panevėžys",
+   "seats": 4000
+  },
+  {
+   "city": "Šiauliai",
+   "seats": 3500
+  }
+ ],
+ "32": [
+  {
+   "city": "Luxembourg City",
+   "seats": 9400
+  },
+  {
+   "city": "Esch-sur-Alzette",
+   "seats": 6000
+  },
+  {
+   "city": "Dudelange",
+   "seats": 4500
+  },
+  {
+   "city": "Differdange",
+   "seats": 3000
+  },
+  {
+   "city": "Ettelbruck",
+   "seats": 2000
+  }
+ ],
+ "33": [
+  {
+   "city": "Valletta",
+   "seats": 17000
+  },
+  {
+   "city": "Birkirkara",
+   "seats": 2000
+  },
+  {
+   "city": "Paola",
+   "seats": 2000
+  }
+ ],
+ "34": [
+  {
+   "city": "Tiraspol",
+   "seats": 13300
+  },
+  {
+   "city": "Chișinău",
+   "seats": 10500
+  },
+  {
+   "city": "Bălți",
+   "seats": 6000
+  },
+  {
+   "city": "Orhei",
+   "seats": 3000
+  }
+ ],
+ "35": [
+  {
+   "city": "Podgorica",
+   "seats": 15200
+  },
+  {
+   "city": "Nikšić",
+   "seats": 10800
+  },
+  {
+   "city": "Cetinje",
+   "seats": 5000
+  },
+  {
+   "city": "Bijelo Polje",
+   "seats": 4000
+  },
+  {
+   "city": "Bar",
+   "seats": 2500
+  },
+  {
+   "city": "Budva",
+   "seats": 2000
+  }
+ ],
+ "36": [
+  {
+   "city": "Amsterdam",
+   "seats": 55000
+  },
+  {
+   "city": "Rotterdam",
+   "seats": 51000
+  },
+  {
+   "city": "Eindhoven",
+   "seats": 35000
+  },
+  {
+   "city": "Enschede",
+   "seats": 30000
+  },
+  {
+   "city": "Heerenveen",
+   "seats": 27000
+  },
+  {
+   "city": "Utrecht",
+   "seats": 23000
+  },
+  {
+   "city": "Groningen",
+   "seats": 22000
+  },
+  {
+   "city": "Arnhem",
+   "seats": 21000
+  },
+  {
+   "city": "Alkmaar",
+   "seats": 19000
+  },
+  {
+   "city": "The Hague",
+   "seats": 15000
+  }
+ ],
+ "37": [
+  {
+   "city": "Skopje",
+   "seats": 33000
+  },
+  {
+   "city": "Tetovo",
+   "seats": 15000
+  },
+  {
+   "city": "Bitola",
+   "seats": 7000
+  },
+  {
+   "city": "Kumanovo",
+   "seats": 7000
+  },
+  {
+   "city": "Prilep",
+   "seats": 6000
+  },
+  {
+   "city": "Shtip",
+   "seats": 4000
+  },
+  {
+   "city": "Ohrid",
+   "seats": 3000
+  }
+ ],
+ "38": [
+  {
+   "city": "Belfast",
+   "seats": 18500
+  },
+  {
+   "city": "Ballymena",
+   "seats": 4000
+  },
+  {
+   "city": "Derry",
+   "seats": 3700
+  },
+  {
+   "city": "Portadown",
+   "seats": 3000
+  },
+  {
+   "city": "Coleraine",
+   "seats": 2500
+  },
+  {
+   "city": "Lisburn",
+   "seats": 2000
+  },
+  {
+   "city": "Larne",
+   "seats": 2000
+  }
+ ],
+ "39": [
+  {
+   "city": "Oslo",
+   "seats": 28000
+  },
+  {
+   "city": "Trondheim",
+   "seats": 21000
+  },
+  {
+   "city": "Bergen",
+   "seats": 17000
+  },
+  {
+   "city": "Stavanger",
+   "seats": 16000
+  },
+  {
+   "city": "Kristiansand",
+   "seats": 14000
+  },
+  {
+   "city": "Molde",
+   "seats": 11000
+  },
+  {
+   "city": "Bodø",
+   "seats": 8000
+  },
+  {
+   "city": "Tromsø",
+   "seats": 7000
+  },
+  {
+   "city": "Drammen",
+   "seats": 6000
+  },
+  {
+   "city": "Sandefjord",
+   "seats": 6000
+  }
+ ],
+ "40": [
+  {
+   "city": "Warsaw",
+   "seats": 58000
+  },
+  {
+   "city": "Chorzów",
+   "seats": 55000
+  },
+  {
+   "city": "Wrocław",
+   "seats": 43000
+  },
+  {
+   "city": "Poznań",
+   "seats": 42000
+  },
+  {
+   "city": "Gdańsk",
+   "seats": 41000
+  },
+  {
+   "city": "Kraków",
+   "seats": 33000
+  },
+  {
+   "city": "Białystok",
+   "seats": 22000
+  },
+  {
+   "city": "Szczecin",
+   "seats": 21000
+  },
+  {
+   "city": "Łódź",
+   "seats": 18000
+  },
+  {
+   "city": "Lublin",
+   "seats": 15000
+  }
+ ],
+ "41": [
+  {
+   "city": "Lisbon",
+   "seats": 65000
+  },
+  {
+   "city": "Porto",
+   "seats": 50000
+  },
+  {
+   "city": "Lisbon",
+   "seats": 50000
+  },
+  {
+   "city": "Braga",
+   "seats": 30000
+  },
+  {
+   "city": "Guimarães",
+   "seats": 30000
+  },
+  {
+   "city": "Coimbra",
+   "seats": 30000
+  },
+  {
+   "city": "Aveiro",
+   "seats": 30000
+  },
+  {
+   "city": "Faro",
+   "seats": 30000
+  },
+  {
+   "city": "Leiria",
+   "seats": 23000
+  },
+  {
+   "city": "Setúbal",
+   "seats": 15000
+  }
+ ],
+ "42": [
+  {
+   "city": "Dublin",
+   "seats": 51700
+  },
+  {
+   "city": "Cork",
+   "seats": 45000
+  },
+  {
+   "city": "Limerick",
+   "seats": 26000
+  },
+  {
+   "city": "Galway",
+   "seats": 8000
+  },
+  {
+   "city": "Waterford",
+   "seats": 5000
+  },
+  {
+   "city": "Dundalk",
+   "seats": 4500
+  },
+  {
+   "city": "Sligo",
+   "seats": 4000
+  },
+  {
+   "city": "Drogheda",
+   "seats": 3000
+  }
+ ],
+ "43": [
+  {
+   "city": "Bucharest",
+   "seats": 55600
+  },
+  {
+   "city": "Timișoara",
+   "seats": 32000
+  },
+  {
+   "city": "Bucharest",
+   "seats": 31000
+  },
+  {
+   "city": "Cluj-Napoca",
+   "seats": 30000
+  },
+  {
+   "city": "Craiova",
+   "seats": 30000
+  },
+  {
+   "city": "Constanța",
+   "seats": 18000
+  },
+  {
+   "city": "Ploiești",
+   "seats": 15000
+  },
+  {
+   "city": "Galați",
+   "seats": 13000
+  },
+  {
+   "city": "Arad",
+   "seats": 12000
+  },
+  {
+   "city": "Iași",
+   "seats": 11000
+  }
+ ],
+ "45": [
+  {
+   "city": "Serravalle",
+   "seats": 6600
+  },
+  {
+   "city": "Fiorentino",
+   "seats": 1000
+  },
+  {
+   "city": "Domagnano",
+   "seats": 700
+  }
+ ],
+ "46": [
+  {
+   "city": "Glasgow",
+   "seats": 60000
+  },
+  {
+   "city": "Glasgow",
+   "seats": 51000
+  },
+  {
+   "city": "Edinburgh",
+   "seats": 20000
+  },
+  {
+   "city": "Aberdeen",
+   "seats": 20000
+  },
+  {
+   "city": "Kilmarnock",
+   "seats": 18000
+  },
+  {
+   "city": "Dundee",
+   "seats": 14000
+  },
+  {
+   "city": "Motherwell",
+   "seats": 13000
+  },
+  {
+   "city": "Perth",
+   "seats": 10000
+  },
+  {
+   "city": "Livingston",
+   "seats": 10000
+  },
+  {
+   "city": "Paisley",
+   "seats": 8000
+  }
+ ],
+ "47": [
+  {
+   "city": "Belgrade",
+   "seats": 53000
+  },
+  {
+   "city": "Belgrade",
+   "seats": 30000
+  },
+  {
+   "city": "Niš",
+   "seats": 18000
+  },
+  {
+   "city": "Kragujevac",
+   "seats": 15000
+  },
+  {
+   "city": "Subotica",
+   "seats": 13000
+  },
+  {
+   "city": "Novi Sad",
+   "seats": 12000
+  },
+  {
+   "city": "Čačak",
+   "seats": 8000
+  },
+  {
+   "city": "Bačka Topola",
+   "seats": 4500
+  }
+ ],
+ "48": [
+  {
+   "city": "Bratislava",
+   "seats": 22500
+  },
+  {
+   "city": "Trnava",
+   "seats": 19000
+  },
+  {
+   "city": "Dunajská Streda",
+   "seats": 12700
+  },
+  {
+   "city": "Košice",
+   "seats": 12500
+  },
+  {
+   "city": "Žilina",
+   "seats": 11000
+  },
+  {
+   "city": "Nitra",
+   "seats": 7000
+  },
+  {
+   "city": "Trenčín",
+   "seats": 6000
+  },
+  {
+   "city": "Ružomberok",
+   "seats": 5000
+  }
+ ],
+ "49": [
+  {
+   "city": "Ljubljana",
+   "seats": 16000
+  },
+  {
+   "city": "Celje",
+   "seats": 13000
+  },
+  {
+   "city": "Maribor",
+   "seats": 12700
+  },
+  {
+   "city": "Murska Sobota",
+   "seats": 5000
+  },
+  {
+   "city": "Koper",
+   "seats": 4000
+  },
+  {
+   "city": "Domžale",
+   "seats": 3000
+  },
+  {
+   "city": "Kranj",
+   "seats": 2000
+  }
+ ],
+ "50": [
+  {
+   "city": "Barcelona",
+   "seats": 99000
+  },
+  {
+   "city": "Madrid",
+   "seats": 83000
+  },
+  {
+   "city": "Madrid",
+   "seats": 70000
+  },
+  {
+   "city": "Seville",
+   "seats": 60000
+  },
+  {
+   "city": "Bilbao",
+   "seats": 53000
+  },
+  {
+   "city": "Valencia",
+   "seats": 49000
+  },
+  {
+   "city": "San Sebastián",
+   "seats": 40000
+  },
+  {
+   "city": "Zaragoza",
+   "seats": 33000
+  },
+  {
+   "city": "Málaga",
+   "seats": 30000
+  },
+  {
+   "city": "Gijón",
+   "seats": 30000
+  }
+ ],
+ "51": [
+  {
+   "city": "Stockholm",
+   "seats": 50000
+  },
+  {
+   "city": "Gothenburg",
+   "seats": 43000
+  },
+  {
+   "city": "Malmö",
+   "seats": 24000
+  },
+  {
+   "city": "Norrköping",
+   "seats": 16000
+  },
+  {
+   "city": "Helsingborg",
+   "seats": 16000
+  },
+  {
+   "city": "Borås",
+   "seats": 14000
+  },
+  {
+   "city": "Örebro",
+   "seats": 12000
+  },
+  {
+   "city": "Kalmar",
+   "seats": 12000
+  },
+  {
+   "city": "Uppsala",
+   "seats": 10000
+  },
+  {
+   "city": "Jönköping",
+   "seats": 10000
+  }
+ ],
+ "52": [
+  {
+   "city": "Basel",
+   "seats": 38000
+  },
+  {
+   "city": "Bern",
+   "seats": 32000
+  },
+  {
+   "city": "Geneva",
+   "seats": 30000
+  },
+  {
+   "city": "Zurich",
+   "seats": 26000
+  },
+  {
+   "city": "St. Gallen",
+   "seats": 19000
+  },
+  {
+   "city": "Lucerne",
+   "seats": 17000
+  },
+  {
+   "city": "Lausanne",
+   "seats": 12000
+  },
+  {
+   "city": "Thun",
+   "seats": 10000
+  },
+  {
+   "city": "Winterthur",
+   "seats": 8000
+  },
+  {
+   "city": "Lugano",
+   "seats": 6000
+  }
+ ],
+ "53": [
+  {
+   "city": "Istanbul",
+   "seats": 75000
+  },
+  {
+   "city": "Istanbul",
+   "seats": 52000
+  },
+  {
+   "city": "Izmir",
+   "seats": 51000
+  },
+  {
+   "city": "Bursa",
+   "seats": 43000
+  },
+  {
+   "city": "Konya",
+   "seats": 42000
+  },
+  {
+   "city": "Trabzon",
+   "seats": 40000
+  },
+  {
+   "city": "Antalya",
+   "seats": 33000
+  },
+  {
+   "city": "Adana",
+   "seats": 33000
+  },
+  {
+   "city": "Gaziantep",
+   "seats": 33000
+  },
+  {
+   "city": "Kayseri",
+   "seats": 33000
+  }
+ ],
+ "54": [
+  {
+   "city": "Kyiv",
+   "seats": 70000
+  },
+  {
+   "city": "Donetsk",
+   "seats": 52000
+  },
+  {
+   "city": "Kharkiv",
+   "seats": 40000
+  },
+  {
+   "city": "Lviv",
+   "seats": 34000
+  },
+  {
+   "city": "Odesa",
+   "seats": 34000
+  },
+  {
+   "city": "Dnipro",
+   "seats": 31000
+  },
+  {
+   "city": "Poltava",
+   "seats": 25000
+  },
+  {
+   "city": "Mykolaiv",
+   "seats": 15000
+  },
+  {
+   "city": "Zaporizhzhia",
+   "seats": 12000
+  }
+ ],
+ "55": [
+  {
+   "city": "Cardiff",
+   "seats": 74000
+  },
+  {
+   "city": "Cardiff",
+   "seats": 33000
+  },
+  {
+   "city": "Swansea",
+   "seats": 21000
+  },
+  {
+   "city": "Llanelli",
+   "seats": 15000
+  },
+  {
+   "city": "Wrexham",
+   "seats": 12000
+  },
+  {
+   "city": "Newport",
+   "seats": 9000
+  },
+  {
+   "city": "Merthyr Tydfil",
+   "seats": 4000
+  },
+  {
+   "city": "Bangor",
+   "seats": 2000
+  }
+ ],
+ "56": [
+  {
+   "city": "Buenos Aires",
+   "seats": 84000
+  },
+  {
+   "city": "Córdoba",
+   "seats": 57000
+  },
+  {
+   "city": "Buenos Aires",
+   "seats": 54000
+  },
+  {
+   "city": "La Plata",
+   "seats": 53000
+  },
+  {
+   "city": "Avellaneda",
+   "seats": 51000
+  },
+  {
+   "city": "Mendoza",
+   "seats": 42000
+  },
+  {
+   "city": "Rosario",
+   "seats": 41000
+  },
+  {
+   "city": "Mar del Plata",
+   "seats": 35000
+  },
+  {
+   "city": "Tucumán",
+   "seats": 35000
+  },
+  {
+   "city": "Santa Fe",
+   "seats": 32000
+  }
+ ],
+ "57": [
+  {
+   "city": "La Paz",
+   "seats": 42000
+  },
+  {
+   "city": "Santa Cruz de la Sierra",
+   "seats": 38000
+  },
+  {
+   "city": "Oruro",
+   "seats": 33000
+  },
+  {
+   "city": "Cochabamba",
+   "seats": 32000
+  },
+  {
+   "city": "Sucre",
+   "seats": 32000
+  },
+  {
+   "city": "Potosí",
+   "seats": 32000
+  },
+  {
+   "city": "El Alto",
+   "seats": 25000
+  }
+ ],
+ "58": [
+  {
+   "city": "Rio de Janeiro",
+   "seats": 78000
+  },
+  {
+   "city": "Brasília",
+   "seats": 72000
+  },
+  {
+   "city": "São Paulo",
+   "seats": 66000
+  },
+  {
+   "city": "Fortaleza",
+   "seats": 63000
+  },
+  {
+   "city": "Belo Horizonte",
+   "seats": 62000
+  },
+  {
+   "city": "Porto Alegre",
+   "seats": 50000
+  },
+  {
+   "city": "Salvador",
+   "seats": 48000
+  },
+  {
+   "city": "Recife",
+   "seats": 46000
+  },
+  {
+   "city": "Manaus",
+   "seats": 44000
+  },
+  {
+   "city": "Curitiba",
+   "seats": 42000
+  }
+ ],
+ "59": [
+  {
+   "city": "Santiago",
+   "seats": 48000
+  },
+  {
+   "city": "Santiago",
+   "seats": 47000
+  },
+  {
+   "city": "Concepción",
+   "seats": 30000
+  },
+  {
+   "city": "Viña del Mar",
+   "seats": 22000
+  },
+  {
+   "city": "Antofagasta",
+   "seats": 21000
+  },
+  {
+   "city": "Valparaíso",
+   "seats": 20000
+  },
+  {
+   "city": "Temuco",
+   "seats": 18000
+  },
+  {
+   "city": "La Serena",
+   "seats": 18000
+  },
+  {
+   "city": "Rancagua",
+   "seats": 14000
+  },
+  {
+   "city": "Calama",
+   "seats": 12000
+  }
+ ],
+ "60": [
+  {
+   "city": "Cali",
+   "seats": 52000
+  },
+  {
+   "city": "Barranquilla",
+   "seats": 46000
+  },
+  {
+   "city": "Medellín",
+   "seats": 45000
+  },
+  {
+   "city": "Bogotá",
+   "seats": 40000
+  },
+  {
+   "city": "Pereira",
+   "seats": 30000
+  },
+  {
+   "city": "Manizales",
+   "seats": 28000
+  },
+  {
+   "city": "Bucaramanga",
+   "seats": 28000
+  },
+  {
+   "city": "Ibagué",
+   "seats": 28000
+  },
+  {
+   "city": "Cartagena",
+   "seats": 16000
+  },
+  {
+   "city": "Santa Marta",
+   "seats": 16000
+  }
+ ],
+ "61": [
+  {
+   "city": "Guayaquil",
+   "seats": 57000
+  },
+  {
+   "city": "Quito",
+   "seats": 41000
+  },
+  {
+   "city": "Guayaquil",
+   "seats": 40000
+  },
+  {
+   "city": "Quito",
+   "seats": 35000
+  },
+  {
+   "city": "Manta",
+   "seats": 20000
+  },
+  {
+   "city": "Cuenca",
+   "seats": 18000
+  },
+  {
+   "city": "Ambato",
+   "seats": 18000
+  },
+  {
+   "city": "Riobamba",
+   "seats": 18000
+  },
+  {
+   "city": "Machala",
+   "seats": 16000
+  },
+  {
+   "city": "Loja",
+   "seats": 15000
+  }
+ ],
+ "62": [
+  {
+   "city": "Asunción",
+   "seats": 45000
+  },
+  {
+   "city": "Luque",
+   "seats": 25000
+  },
+  {
+   "city": "Ciudad del Este",
+   "seats": 25000
+  },
+  {
+   "city": "Asunción",
+   "seats": 20000
+  },
+  {
+   "city": "Encarnación",
+   "seats": 15000
+  },
+  {
+   "city": "San Lorenzo",
+   "seats": 8000
+  },
+  {
+   "city": "Fernando de la Mora",
+   "seats": 6000
+  }
+ ],
+ "63": [
+  {
+   "city": "Lima",
+   "seats": 80000
+  },
+  {
+   "city": "Arequipa",
+   "seats": 60000
+  },
+  {
+   "city": "Lima",
+   "seats": 50000
+  },
+  {
+   "city": "Cusco",
+   "seats": 42000
+  },
+  {
+   "city": "Trujillo",
+   "seats": 25000
+  },
+  {
+   "city": "Piura",
+   "seats": 25000
+  },
+  {
+   "city": "Chiclayo",
+   "seats": 24500
+  },
+  {
+   "city": "Iquitos",
+   "seats": 24000
+  },
+  {
+   "city": "Huancayo",
+   "seats": 20000
+  },
+  {
+   "city": "Tacna",
+   "seats": 19000
+  }
+ ],
+ "64": [
+  {
+   "city": "Montevideo",
+   "seats": 60000
+  },
+  {
+   "city": "Montevideo",
+   "seats": 40000
+  },
+  {
+   "city": "Rivera",
+   "seats": 25000
+  },
+  {
+   "city": "Paysandú",
+   "seats": 25000
+  },
+  {
+   "city": "Maldonado",
+   "seats": 22000
+  },
+  {
+   "city": "Salto",
+   "seats": 10000
+  },
+  {
+   "city": "Las Piedras",
+   "seats": 8000
+  },
+  {
+   "city": "Melo",
+   "seats": 5000
+  }
+ ],
+ "65": [
+  {
+   "city": "Maturín",
+   "seats": 52000
+  },
+  {
+   "city": "Mérida",
+   "seats": 42000
+  },
+  {
+   "city": "Ciudad Guayana",
+   "seats": 41000
+  },
+  {
+   "city": "Caracas",
+   "seats": 40000
+  },
+  {
+   "city": "Maracaibo",
+   "seats": 40000
+  },
+  {
+   "city": "Barquisimeto",
+   "seats": 40000
+  },
+  {
+   "city": "San Cristóbal",
+   "seats": 38000
+  },
+  {
+   "city": "Puerto La Cruz",
+   "seats": 37000
+  },
+  {
+   "city": "Valencia",
+   "seats": 34000
+  },
+  {
+   "city": "Barinas",
+   "seats": 29000
+  }
+ ],
+ "66": [
+  {
+   "city": "The Valley",
+   "seats": 1100
+  }
+ ],
+ "67": [
+  {
+   "city": "St. John's",
+   "seats": 10000
+  }
+ ],
+ "68": [
+  {
+   "city": "Oranjestad",
+   "seats": 5500
+  },
+  {
+   "city": "San Nicolas",
+   "seats": 2000
+  }
+ ],
+ "69": [
+  {
+   "city": "Nassau",
+   "seats": 15000
+  },
+  {
+   "city": "Freeport",
+   "seats": 3000
+  }
+ ],
+ "70": [
+  {
+   "city": "Bridgetown",
+   "seats": 7000
+  }
+ ],
+ "71": [
+  {
+   "city": "Belize City",
+   "seats": 7000
+  },
+  {
+   "city": "Belmopan",
+   "seats": 3000
+  },
+  {
+   "city": "Orange Walk",
+   "seats": 2000
+  }
+ ],
+ "72": [
+  {
+   "city": "Hamilton",
+   "seats": 8500
+  },
+  {
+   "city": "Somerset",
+   "seats": 2000
+  }
+ ],
+ "73": [
+  {
+   "city": "Road Town",
+   "seats": 1000
+  }
+ ],
+ "74": [
+  {
+   "city": "Montreal",
+   "seats": 56000
+  },
+  {
+   "city": "Edmonton",
+   "seats": 56000
+  },
+  {
+   "city": "Vancouver",
+   "seats": 54000
+  },
+  {
+   "city": "Toronto",
+   "seats": 45000
+  },
+  {
+   "city": "Calgary",
+   "seats": 35000
+  },
+  {
+   "city": "Winnipeg",
+   "seats": 33000
+  },
+  {
+   "city": "Regina",
+   "seats": 33000
+  },
+  {
+   "city": "Ottawa",
+   "seats": 24000
+  },
+  {
+   "city": "Hamilton",
+   "seats": 24000
+  },
+  {
+   "city": "Quebec City",
+   "seats": 12000
+  }
+ ],
+ "75": [
+  {
+   "city": "George Town",
+   "seats": 3000
+  },
+  {
+   "city": "West Bay",
+   "seats": 1000
+  }
+ ],
+ "76": [
+  {
+   "city": "San José",
+   "seats": 35000
+  },
+  {
+   "city": "Alajuela",
+   "seats": 17900
+  },
+  {
+   "city": "Cartago",
+   "seats": 13000
+  },
+  {
+   "city": "Heredia",
+   "seats": 8700
+  },
+  {
+   "city": "Liberia",
+   "seats": 5000
+  },
+  {
+   "city": "Puntarenas",
+   "seats": 4000
+  },
+  {
+   "city": "Limón",
+   "seats": 3000
+  }
+ ],
+ "77": [
+  {
+   "city": "Havana",
+   "seats": 28000
+  },
+  {
+   "city": "Santiago de Cuba",
+   "seats": 15000
+  },
+  {
+   "city": "Cienfuegos",
+   "seats": 8000
+  },
+  {
+   "city": "Pinar del Río",
+   "seats": 8000
+  },
+  {
+   "city": "Santa Clara",
+   "seats": 7000
+  },
+  {
+   "city": "Camagüey",
+   "seats": 5000
+  },
+  {
+   "city": "Holguín",
+   "seats": 5000
+  }
+ ],
+ "78": [
+  {
+   "city": "Willemstad",
+   "seats": 10000
+  },
+  {
+   "city": "Sint Michiel",
+   "seats": 3000
+  }
+ ],
+ "79": [
+  {
+   "city": "Roseau",
+   "seats": 12000
+  },
+  {
+   "city": "Portsmouth",
+   "seats": 2000
+  }
+ ],
+ "80": [
+  {
+   "city": "Santo Domingo",
+   "seats": 27000
+  },
+  {
+   "city": "Santiago de los Caballeros",
+   "seats": 8000
+  },
+  {
+   "city": "San Cristóbal",
+   "seats": 5000
+  },
+  {
+   "city": "San Pedro de Macorís",
+   "seats": 5000
+  }
+ ],
+ "81": [
+  {
+   "city": "San Salvador",
+   "seats": 44000
+  },
+  {
+   "city": "Santa Ana",
+   "seats": 15000
+  },
+  {
+   "city": "San Miguel",
+   "seats": 10000
+  },
+  {
+   "city": "Santa Tecla",
+   "seats": 8000
+  },
+  {
+   "city": "Usulután",
+   "seats": 7000
+  },
+  {
+   "city": "Ahuachapán",
+   "seats": 5000
+  }
+ ],
+ "82": [
+  {
+   "city": "St. George's",
+   "seats": 9000
+  },
+  {
+   "city": "Grenville",
+   "seats": 2000
+  }
+ ],
+ "83": [
+  {
+   "city": "Guatemala City",
+   "seats": 26000
+  },
+  {
+   "city": "Cobán",
+   "seats": 15000
+  },
+  {
+   "city": "Quetzaltenango",
+   "seats": 11000
+  },
+  {
+   "city": "Escuintla",
+   "seats": 10000
+  },
+  {
+   "city": "Mazatenango",
+   "seats": 8000
+  },
+  {
+   "city": "Mixco",
+   "seats": 5000
+  },
+  {
+   "city": "Villa Nueva",
+   "seats": 5000
+  }
+ ],
+ "84": [
+  {
+   "city": "Georgetown",
+   "seats": 15000
+  },
+  {
+   "city": "Linden",
+   "seats": 3000
+  }
+ ],
+ "85": [
+  {
+   "city": "Port-au-Prince",
+   "seats": 15000
+  },
+  {
+   "city": "Cap-Haïtien",
+   "seats": 8000
+  },
+  {
+   "city": "Gonaïves",
+   "seats": 6000
+  },
+  {
+   "city": "Les Cayes",
+   "seats": 5000
+  }
+ ],
+ "86": [
+  {
+   "city": "San Pedro Sula",
+   "seats": 38000
+  },
+  {
+   "city": "Tegucigalpa",
+   "seats": 35000
+  },
+  {
+   "city": "La Ceiba",
+   "seats": 18000
+  },
+  {
+   "city": "Choluteca",
+   "seats": 7000
+  },
+  {
+   "city": "Comayagua",
+   "seats": 5000
+  },
+  {
+   "city": "El Progreso",
+   "seats": 5000
+  }
+ ],
+ "87": [
+  {
+   "city": "Kingston",
+   "seats": 35000
+  },
+  {
+   "city": "Montego Bay",
+   "seats": 7000
+  },
+  {
+   "city": "Spanish Town",
+   "seats": 4000
+  },
+  {
+   "city": "Portmore",
+   "seats": 3000
+  },
+  {
+   "city": "Mandeville",
+   "seats": 2000
+  }
+ ],
+ "88": [
+  {
+   "city": "Mexico City",
+   "seats": 83000
+  },
+  {
+   "city": "Monterrey",
+   "seats": 53500
+  },
+  {
+   "city": "Puebla",
+   "seats": 51000
+  },
+  {
+   "city": "Guadalajara",
+   "seats": 48000
+  },
+  {
+   "city": "Mexico City",
+   "seats": 34000
+  },
+  {
+   "city": "Querétaro",
+   "seats": 33000
+  },
+  {
+   "city": "León",
+   "seats": 31000
+  },
+  {
+   "city": "Toluca",
+   "seats": 30000
+  },
+  {
+   "city": "Torreón",
+   "seats": 30000
+  },
+  {
+   "city": "Pachuca",
+   "seats": 27000
+  }
+ ],
+ "89": [
+  {
+   "city": "Lookout",
+   "seats": 1000
+  }
+ ],
+ "90": [
+  {
+   "city": "Managua",
+   "seats": 15000
+  },
+  {
+   "city": "León",
+   "seats": 5000
+  },
+  {
+   "city": "Estelí",
+   "seats": 4000
+  },
+  {
+   "city": "Matagalpa",
+   "seats": 4000
+  },
+  {
+   "city": "Chinandega",
+   "seats": 3000
+  }
+ ],
+ "91": [
+  {
+   "city": "Panama City",
+   "seats": 32000
+  },
+  {
+   "city": "Colón",
+   "seats": 4000
+  },
+  {
+   "city": "David",
+   "seats": 3000
+  },
+  {
+   "city": "La Chorrera",
+   "seats": 3000
+  },
+  {
+   "city": "Santiago de Veraguas",
+   "seats": 3000
+  }
+ ],
+ "92": [
+  {
+   "city": "Bayamón",
+   "seats": 12000
+  },
+  {
+   "city": "Mayagüez",
+   "seats": 12000
+  },
+  {
+   "city": "San Juan",
+   "seats": 8000
+  },
+  {
+   "city": "Ponce",
+   "seats": 5000
+  }
+ ],
+ "93": [
+  {
+   "city": "Basseterre",
+   "seats": 8000
+  },
+  {
+   "city": "Charlestown",
+   "seats": 2000
+  }
+ ],
+ "94": [
+  {
+   "city": "Gros Islet",
+   "seats": 12000
+  },
+  {
+   "city": "Castries",
+   "seats": 5000
+  }
+ ],
+ "95": [
+  {
+   "city": "Kingstown",
+   "seats": 6000
+  }
+ ],
+ "96": [
+  {
+   "city": "Paramaribo",
+   "seats": 8000
+  },
+  {
+   "city": "Nieuw Nickerie",
+   "seats": 3000
+  },
+  {
+   "city": "Lelydorp",
+   "seats": 2000
+  }
+ ],
+ "97": [
+  {
+   "city": "Port of Spain",
+   "seats": 23000
+  },
+  {
+   "city": "Couva",
+   "seats": 10000
+  },
+  {
+   "city": "San Fernando",
+   "seats": 10000
+  },
+  {
+   "city": "Arima",
+   "seats": 10000
+  },
+  {
+   "city": "Scarborough",
+   "seats": 7500
+  }
+ ],
+ "98": [
+  {
+   "city": "Providenciales",
+   "seats": 2000
+  }
+ ],
+ "99": [
+  {
+   "city": "New York",
+   "seats": 82500
+  },
+  {
+   "city": "Dallas",
+   "seats": 80000
+  },
+  {
+   "city": "Kansas City",
+   "seats": 76000
+  },
+  {
+   "city": "Houston",
+   "seats": 72000
+  },
+  {
+   "city": "Atlanta",
+   "seats": 71000
+  },
+  {
+   "city": "Los Angeles",
+   "seats": 70000
+  },
+  {
+   "city": "Philadelphia",
+   "seats": 69000
+  },
+  {
+   "city": "Seattle",
+   "seats": 69000
+  },
+  {
+   "city": "Miami",
+   "seats": 65000
+  },
+  {
+   "city": "Boston",
+   "seats": 65000
+  }
+ ],
+ "100": [
+  {
+   "city": "Charlotte Amalie",
+   "seats": 9000
+  },
+  {
+   "city": "Frederiksted",
+   "seats": 2000
+  }
+ ],
+ "101": [
+  {
+   "city": "Algiers",
+   "seats": 64000
+  },
+  {
+   "city": "Annaba",
+   "seats": 56000
+  },
+  {
+   "city": "Tizi Ouzou",
+   "seats": 50000
+  },
+  {
+   "city": "Oran",
+   "seats": 40000
+  },
+  {
+   "city": "Algiers",
+   "seats": 40000
+  },
+  {
+   "city": "Blida",
+   "seats": 35000
+  },
+  {
+   "city": "Sétif",
+   "seats": 25000
+  },
+  {
+   "city": "Constantine",
+   "seats": 22000
+  },
+  {
+   "city": "Batna",
+   "seats": 20000
+  },
+  {
+   "city": "Tlemcen",
+   "seats": 18000
+  }
+ ],
+ "102": [
+  {
+   "city": "Luanda",
+   "seats": 48500
+  },
+  {
+   "city": "Benguela",
+   "seats": 35000
+  },
+  {
+   "city": "Lubango",
+   "seats": 20000
+  },
+  {
+   "city": "Cabinda",
+   "seats": 20000
+  },
+  {
+   "city": "Huambo",
+   "seats": 15000
+  },
+  {
+   "city": "Malanje",
+   "seats": 7000
+  }
+ ],
+ "103": [
+  {
+   "city": "Cotonou",
+   "seats": 20000
+  },
+  {
+   "city": "Porto-Novo",
+   "seats": 15000
+  },
+  {
+   "city": "Parakou",
+   "seats": 10000
+  }
+ ],
+ "104": [
+  {
+   "city": "Francistown",
+   "seats": 26000
+  },
+  {
+   "city": "Gaborone",
+   "seats": 22000
+  },
+  {
+   "city": "Lobatse",
+   "seats": 20000
+  },
+  {
+   "city": "Molepolole",
+   "seats": 5000
+  }
+ ],
+ "105": [
+  {
+   "city": "Ouagadougou",
+   "seats": 35000
+  },
+  {
+   "city": "Bobo-Dioulasso",
+   "seats": 25000
+  },
+  {
+   "city": "Koudougou",
+   "seats": 5000
+  }
+ ],
+ "106": [
+  {
+   "city": "Bujumbura",
+   "seats": 22000
+  },
+  {
+   "city": "Gitega",
+   "seats": 5000
+  }
+ ],
+ "107": [
+  {
+   "city": "Yaoundé",
+   "seats": 60000
+  },
+  {
+   "city": "Douala",
+   "seats": 50000
+  },
+  {
+   "city": "Yaoundé",
+   "seats": 40000
+  },
+  {
+   "city": "Douala",
+   "seats": 30000
+  },
+  {
+   "city": "Garoua",
+   "seats": 30000
+  },
+  {
+   "city": "Bafoussam",
+   "seats": 20000
+  },
+  {
+   "city": "Limbe",
+   "seats": 20000
+  }
+ ],
+ "108": [
+  {
+   "city": "Praia",
+   "seats": 15000
+  },
+  {
+   "city": "Mindelo",
+   "seats": 5000
+  }
+ ],
+ "109": [
+  {
+   "city": "Bangui",
+   "seats": 20000
+  },
+  {
+   "city": "Bouar",
+   "seats": 3000
+  }
+ ],
+ "110": [
+  {
+   "city": "N'Djamena",
+   "seats": 30000
+  },
+  {
+   "city": "Moundou",
+   "seats": 5000
+  }
+ ],
+ "111": [
+  {
+   "city": "Moroni",
+   "seats": 10000
+  },
+  {
+   "city": "Fomboni",
+   "seats": 3000
+  }
+ ],
+ "112": [
+  {
+   "city": "Brazzaville",
+   "seats": 60000
+  },
+  {
+   "city": "Brazzaville",
+   "seats": 33000
+  },
+  {
+   "city": "Pointe-Noire",
+   "seats": 13000
+  },
+  {
+   "city": "Dolisie",
+   "seats": 10000
+  },
+  {
+   "city": "Owando",
+   "seats": 5000
+  }
+ ],
+ "113": [
+  {
+   "city": "Kinshasa",
+   "seats": 80000
+  },
+  {
+   "city": "Lubumbashi",
+   "seats": 35000
+  },
+  {
+   "city": "Kisangani",
+   "seats": 15000
+  },
+  {
+   "city": "Goma",
+   "seats": 10000
+  },
+  {
+   "city": "Mbuji-Mayi",
+   "seats": 8000
+  },
+  {
+   "city": "Kananga",
+   "seats": 8000
+  },
+  {
+   "city": "Bukavu",
+   "seats": 6000
+  },
+  {
+   "city": "Likasi",
+   "seats": 5000
+  }
+ ],
+ "114": [
+  {
+   "city": "Djibouti City",
+   "seats": 10000
+  }
+ ],
+ "115": [
+  {
+   "city": "New Administrative Capital",
+   "seats": 93000
+  },
+  {
+   "city": "Alexandria",
+   "seats": 86000
+  },
+  {
+   "city": "Cairo",
+   "seats": 75000
+  },
+  {
+   "city": "Port Said",
+   "seats": 40000
+  },
+  {
+   "city": "Cairo",
+   "seats": 30000
+  },
+  {
+   "city": "Suez",
+   "seats": 27000
+  },
+  {
+   "city": "Ismailia",
+   "seats": 18500
+  },
+  {
+   "city": "Mansoura",
+   "seats": 16000
+  }
+ ],
+ "116": [
+  {
+   "city": "Bata",
+   "seats": 35000
+  },
+  {
+   "city": "Malabo",
+   "seats": 15000
+  },
+  {
+   "city": "Mongomo",
+   "seats": 10000
+  },
+  {
+   "city": "Ebebiyin",
+   "seats": 5000
+  }
+ ],
+ "117": [
+  {
+   "city": "Asmara",
+   "seats": 10000
+  },
+  {
+   "city": "Massawa",
+   "seats": 5000
+  }
+ ],
+ "118": [
+  {
+   "city": "Lobamba",
+   "seats": 20000
+  },
+  {
+   "city": "Manzini",
+   "seats": 8000
+  },
+  {
+   "city": "Mbabane",
+   "seats": 5000
+  }
+ ],
+ "119": [
+  {
+   "city": "Bahir Dar",
+   "seats": 60000
+  },
+  {
+   "city": "Hawassa",
+   "seats": 50000
+  },
+  {
+   "city": "Addis Ababa",
+   "seats": 35000
+  },
+  {
+   "city": "Dire Dawa",
+   "seats": 20000
+  },
+  {
+   "city": "Adama",
+   "seats": 15000
+  },
+  {
+   "city": "Mekelle",
+   "seats": 15000
+  },
+  {
+   "city": "Gondar",
+   "seats": 15000
+  },
+  {
+   "city": "Jimma",
+   "seats": 15000
+  }
+ ],
+ "120": [
+  {
+   "city": "Libreville",
+   "seats": 40000
+  },
+  {
+   "city": "Franceville",
+   "seats": 20000
+  },
+  {
+   "city": "Port-Gentil",
+   "seats": 20000
+  },
+  {
+   "city": "Oyem",
+   "seats": 20000
+  }
+ ],
+ "121": [
+  {
+   "city": "Bakau",
+   "seats": 30000
+  },
+  {
+   "city": "Banjul",
+   "seats": 5000
+  }
+ ],
+ "122": [
+  {
+   "city": "Kumasi",
+   "seats": 40000
+  },
+  {
+   "city": "Accra",
+   "seats": 40000
+  },
+  {
+   "city": "Tamale",
+   "seats": 21000
+  },
+  {
+   "city": "Sekondi-Takoradi",
+   "seats": 20000
+  },
+  {
+   "city": "Cape Coast",
+   "seats": 15000
+  },
+  {
+   "city": "Sunyani",
+   "seats": 10000
+  },
+  {
+   "city": "Tema",
+   "seats": 8000
+  },
+  {
+   "city": "Obuasi",
+   "seats": 5000
+  }
+ ],
+ "123": [
+  {
+   "city": "Conakry",
+   "seats": 50000
+  },
+  {
+   "city": "Conakry",
+   "seats": 25000
+  },
+  {
+   "city": "Nzérékoré",
+   "seats": 5000
+  },
+  {
+   "city": "Kankan",
+   "seats": 5000
+  },
+  {
+   "city": "Labé",
+   "seats": 5000
+  }
+ ],
+ "124": [
+  {
+   "city": "Bissau",
+   "seats": 20000
+  }
+ ],
+ "125": [
+  {
+   "city": "Abidjan",
+   "seats": 60000
+  },
+  {
+   "city": "Bouaké",
+   "seats": 40000
+  },
+  {
+   "city": "Abidjan",
+   "seats": 33000
+  },
+  {
+   "city": "Yamoussoukro",
+   "seats": 20000
+  },
+  {
+   "city": "San-Pédro",
+   "seats": 20000
+  },
+  {
+   "city": "Korhogo",
+   "seats": 20000
+  },
+  {
+   "city": "Daloa",
+   "seats": 5000
+  }
+ ],
+ "126": [
+  {
+   "city": "Nairobi",
+   "seats": 60000
+  },
+  {
+   "city": "Nairobi",
+   "seats": 30000
+  },
+  {
+   "city": "Mombasa",
+   "seats": 10000
+  },
+  {
+   "city": "Kisumu",
+   "seats": 10000
+  },
+  {
+   "city": "Eldoret",
+   "seats": 10000
+  },
+  {
+   "city": "Machakos",
+   "seats": 10000
+  },
+  {
+   "city": "Nakuru",
+   "seats": 8000
+  },
+  {
+   "city": "Thika",
+   "seats": 5000
+  },
+  {
+   "city": "Kakamega",
+   "seats": 5000
+  }
+ ],
+ "127": [
+  {
+   "city": "Maseru",
+   "seats": 20000
+  },
+  {
+   "city": "Mafeteng",
+   "seats": 2000
+  }
+ ],
+ "128": [
+  {
+   "city": "Monrovia",
+   "seats": 22000
+  },
+  {
+   "city": "Gbarnga",
+   "seats": 5000
+  }
+ ],
+ "129": [
+  {
+   "city": "Tripoli",
+   "seats": 45000
+  },
+  {
+   "city": "Benghazi",
+   "seats": 42000
+  },
+  {
+   "city": "Tripoli",
+   "seats": 20000
+  },
+  {
+   "city": "Misrata",
+   "seats": 10000
+  }
+ ],
+ "130": [
+  {
+   "city": "Antananarivo",
+   "seats": 40000
+  },
+  {
+   "city": "Toamasina",
+   "seats": 5000
+  },
+  {
+   "city": "Mahajanga",
+   "seats": 5000
+  }
+ ],
+ "131": [
+  {
+   "city": "Lilongwe",
+   "seats": 40000
+  },
+  {
+   "city": "Blantyre",
+   "seats": 25000
+  },
+  {
+   "city": "Mzuzu",
+   "seats": 15000
+  }
+ ],
+ "132": [
+  {
+   "city": "Bamako",
+   "seats": 50000
+  },
+  {
+   "city": "Bamako",
+   "seats": 25000
+  },
+  {
+   "city": "Sikasso",
+   "seats": 20000
+  },
+  {
+   "city": "Mopti",
+   "seats": 15000
+  },
+  {
+   "city": "Ségou",
+   "seats": 15000
+  },
+  {
+   "city": "Kayes",
+   "seats": 10000
+  }
+ ],
+ "133": [
+  {
+   "city": "Nouakchott",
+   "seats": 10000
+  },
+  {
+   "city": "Nouadhibou",
+   "seats": 10000
+  }
+ ],
+ "134": [
+  {
+   "city": "Port Louis",
+   "seats": 15000
+  },
+  {
+   "city": "Curepipe",
+   "seats": 6000
+  },
+  {
+   "city": "Beau Bassin-Rose Hill",
+   "seats": 5000
+  }
+ ],
+ "135": [
+  {
+   "city": "Tangier",
+   "seats": 75000
+  },
+  {
+   "city": "Rabat",
+   "seats": 69500
+  },
+  {
+   "city": "Casablanca",
+   "seats": 67000
+  },
+  {
+   "city": "Marrakesh",
+   "seats": 45000
+  },
+  {
+   "city": "Fez",
+   "seats": 45000
+  },
+  {
+   "city": "Agadir",
+   "seats": 45000
+  },
+  {
+   "city": "Oujda",
+   "seats": 35000
+  },
+  {
+   "city": "Meknes",
+   "seats": 20000
+  },
+  {
+   "city": "Kenitra",
+   "seats": 20000
+  },
+  {
+   "city": "Tetouan",
+   "seats": 15000
+  }
+ ],
+ "136": [
+  {
+   "city": "Matola",
+   "seats": 45000
+  },
+  {
+   "city": "Maputo",
+   "seats": 42000
+  },
+  {
+   "city": "Beira",
+   "seats": 7000
+  },
+  {
+   "city": "Nampula",
+   "seats": 5000
+  }
+ ],
+ "137": [
+  {
+   "city": "Windhoek",
+   "seats": 10000
+  },
+  {
+   "city": "Walvis Bay",
+   "seats": 4000
+  }
+ ],
+ "138": [
+  {
+   "city": "Niamey",
+   "seats": 35000
+  },
+  {
+   "city": "Zinder",
+   "seats": 10000
+  },
+  {
+   "city": "Maradi",
+   "seats": 10000
+  }
+ ],
+ "139": [
+  {
+   "city": "Abuja",
+   "seats": 60000
+  },
+  {
+   "city": "Lagos",
+   "seats": 45000
+  },
+  {
+   "city": "Port Harcourt",
+   "seats": 38000
+  },
+  {
+   "city": "Uyo",
+   "seats": 30000
+  },
+  {
+   "city": "Lagos",
+   "seats": 25000
+  },
+  {
+   "city": "Ibadan",
+   "seats": 25000
+  },
+  {
+   "city": "Enugu",
+   "seats": 22000
+  },
+  {
+   "city": "Ilorin",
+   "seats": 18000
+  },
+  {
+   "city": "Kano",
+   "seats": 16000
+  }
+ ],
+ "140": [
+  {
+   "city": "Kigali",
+   "seats": 45000
+  },
+  {
+   "city": "Kigali",
+   "seats": 22000
+  },
+  {
+   "city": "Butare",
+   "seats": 10000
+  },
+  {
+   "city": "Rubavu",
+   "seats": 5000
+  },
+  {
+   "city": "Musanze",
+   "seats": 5000
+  }
+ ],
+ "141": [
+  {
+   "city": "São Tomé",
+   "seats": 6500
+  }
+ ],
+ "142": [
+  {
+   "city": "Dakar",
+   "seats": 50000
+  },
+  {
+   "city": "Rufisque",
+   "seats": 50000
+  },
+  {
+   "city": "Ziguinchor",
+   "seats": 10000
+  },
+  {
+   "city": "Kaolack",
+   "seats": 10000
+  },
+  {
+   "city": "Thiès",
+   "seats": 8000
+  },
+  {
+   "city": "Saint-Louis",
+   "seats": 8000
+  }
+ ],
+ "143": [
+  {
+   "city": "Victoria",
+   "seats": 10000
+  }
+ ],
+ "144": [
+  {
+   "city": "Freetown",
+   "seats": 36000
+  },
+  {
+   "city": "Bo",
+   "seats": 4000
+  },
+  {
+   "city": "Kenema",
+   "seats": 2000
+  }
+ ],
+ "145": [
+  {
+   "city": "Mogadishu",
+   "seats": 35000
+  },
+  {
+   "city": "Hargeisa",
+   "seats": 15000
+  },
+  {
+   "city": "Kismayo",
+   "seats": 3000
+  }
+ ],
+ "146": [
+  {
+   "city": "Johannesburg",
+   "seats": 94700
+  },
+  {
+   "city": "Johannesburg",
+   "seats": 62000
+  },
+  {
+   "city": "Cape Town",
+   "seats": 55000
+  },
+  {
+   "city": "Durban",
+   "seats": 55000
+  },
+  {
+   "city": "Pretoria",
+   "seats": 51000
+  },
+  {
+   "city": "Port Elizabeth",
+   "seats": 46000
+  },
+  {
+   "city": "Bloemfontein",
+   "seats": 46000
+  },
+  {
+   "city": "Polokwane",
+   "seats": 45000
+  },
+  {
+   "city": "Rustenburg",
+   "seats": 42000
+  },
+  {
+   "city": "Mbombela",
+   "seats": 40000
+  }
+ ],
+ "147": [
+  {
+   "city": "Juba",
+   "seats": 7000
+  },
+  {
+   "city": "Wau",
+   "seats": 3000
+  }
+ ],
+ "148": [
+  {
+   "city": "Omdurman",
+   "seats": 43000
+  },
+  {
+   "city": "Omdurman",
+   "seats": 35000
+  },
+  {
+   "city": "Khartoum",
+   "seats": 23000
+  },
+  {
+   "city": "Wad Madani",
+   "seats": 15000
+  },
+  {
+   "city": "Port Sudan",
+   "seats": 10000
+  },
+  {
+   "city": "El Obeid",
+   "seats": 10000
+  }
+ ],
+ "149": [
+  {
+   "city": "Dar es Salaam",
+   "seats": 60000
+  },
+  {
+   "city": "Mwanza",
+   "seats": 35000
+  },
+  {
+   "city": "Arusha",
+   "seats": 30000
+  },
+  {
+   "city": "Dar es Salaam",
+   "seats": 23000
+  },
+  {
+   "city": "Dodoma",
+   "seats": 20000
+  },
+  {
+   "city": "Mbeya",
+   "seats": 20000
+  },
+  {
+   "city": "Zanzibar City",
+   "seats": 15000
+  },
+  {
+   "city": "Tanga",
+   "seats": 15000
+  },
+  {
+   "city": "Morogoro",
+   "seats": 15000
+  }
+ ],
+ "150": [
+  {
+   "city": "Lomé",
+   "seats": 25000
+  },
+  {
+   "city": "Kara",
+   "seats": 10000
+  },
+  {
+   "city": "Sokodé",
+   "seats": 5000
+  }
+ ],
+ "151": [
+  {
+   "city": "Tunis",
+   "seats": 60000
+  },
+  {
+   "city": "Tunis",
+   "seats": 39000
+  },
+  {
+   "city": "Sousse",
+   "seats": 28000
+  },
+  {
+   "city": "Sfax",
+   "seats": 22000
+  },
+  {
+   "city": "Bizerte",
+   "seats": 20000
+  },
+  {
+   "city": "Monastir",
+   "seats": 20000
+  },
+  {
+   "city": "Gabès",
+   "seats": 10000
+  },
+  {
+   "city": "Kairouan",
+   "seats": 10000
+  }
+ ],
+ "152": [
+  {
+   "city": "Kampala",
+   "seats": 45000
+  },
+  {
+   "city": "Kampala",
+   "seats": 15000
+  },
+  {
+   "city": "Jinja",
+   "seats": 7000
+  },
+  {
+   "city": "Lira",
+   "seats": 5000
+  },
+  {
+   "city": "Mbarara",
+   "seats": 5000
+  },
+  {
+   "city": "Masaka",
+   "seats": 3000
+  }
+ ],
+ "153": [
+  {
+   "city": "Lusaka",
+   "seats": 60000
+  },
+  {
+   "city": "Ndola",
+   "seats": 49800
+  },
+  {
+   "city": "Lusaka",
+   "seats": 30000
+  },
+  {
+   "city": "Chingola",
+   "seats": 20000
+  },
+  {
+   "city": "Kitwe",
+   "seats": 15000
+  },
+  {
+   "city": "Kabwe",
+   "seats": 10000
+  },
+  {
+   "city": "Mufulira",
+   "seats": 10000
+  },
+  {
+   "city": "Livingstone",
+   "seats": 5000
+  }
+ ],
+ "154": [
+  {
+   "city": "Harare",
+   "seats": 60000
+  },
+  {
+   "city": "Bulawayo",
+   "seats": 32000
+  },
+  {
+   "city": "Harare",
+   "seats": 26000
+  },
+  {
+   "city": "Mutare",
+   "seats": 10000
+  },
+  {
+   "city": "Gweru",
+   "seats": 5000
+  }
+ ],
+ "155": [
+  {
+   "city": "Kabul",
+   "seats": 25000
+  },
+  {
+   "city": "Kandahar",
+   "seats": 15000
+  },
+  {
+   "city": "Herat",
+   "seats": 10000
+  },
+  {
+   "city": "Mazar-i-Sharif",
+   "seats": 10000
+  },
+  {
+   "city": "Jalalabad",
+   "seats": 5000
+  }
+ ],
+ "156": [
+  {
+   "city": "Melbourne",
+   "seats": 100000
+  },
+  {
+   "city": "Sydney",
+   "seats": 82000
+  },
+  {
+   "city": "Perth",
+   "seats": 60000
+  },
+  {
+   "city": "Adelaide",
+   "seats": 53500
+  },
+  {
+   "city": "Brisbane",
+   "seats": 52500
+  },
+  {
+   "city": "Sydney",
+   "seats": 42500
+  },
+  {
+   "city": "Geelong",
+   "seats": 40000
+  },
+  {
+   "city": "Newcastle",
+   "seats": 33000
+  },
+  {
+   "city": "Melbourne",
+   "seats": 30000
+  },
+  {
+   "city": "Gold Coast",
+   "seats": 27000
+  }
+ ],
+ "157": [
+  {
+   "city": "Riffa",
+   "seats": 24000
+  },
+  {
+   "city": "Isa Town",
+   "seats": 15000
+  },
+  {
+   "city": "Muharraq",
+   "seats": 10000
+  },
+  {
+   "city": "Manama",
+   "seats": 5000
+  }
+ ],
+ "158": [
+  {
+   "city": "Dhaka",
+   "seats": 36000
+  },
+  {
+   "city": "Chittagong",
+   "seats": 20000
+  },
+  {
+   "city": "Sylhet",
+   "seats": 18000
+  },
+  {
+   "city": "Rajshahi",
+   "seats": 15000
+  },
+  {
+   "city": "Mymensingh",
+   "seats": 10000
+  },
+  {
+   "city": "Khulna",
+   "seats": 10000
+  },
+  {
+   "city": "Comilla",
+   "seats": 5000
+  }
+ ],
+ "159": [
+  {
+   "city": "Thimphu",
+   "seats": 15000
+  },
+  {
+   "city": "Paro",
+   "seats": 3000
+  },
+  {
+   "city": "Phuentsholing",
+   "seats": 2000
+  }
+ ],
+ "160": [
+  {
+   "city": "Bandar Seri Begawan",
+   "seats": 28000
+  },
+  {
+   "city": "Kuala Belait",
+   "seats": 2000
+  }
+ ],
+ "161": [
+  {
+   "city": "Phnom Penh",
+   "seats": 60000
+  },
+  {
+   "city": "Phnom Penh",
+   "seats": 50000
+  },
+  {
+   "city": "Siem Reap",
+   "seats": 10000
+  },
+  {
+   "city": "Battambang",
+   "seats": 5000
+  },
+  {
+   "city": "Sihanoukville",
+   "seats": 5000
+  },
+  {
+   "city": "Kampong Cham",
+   "seats": 5000
+  }
+ ],
+ "162": [
+  {
+   "city": "Beijing",
+   "seats": 80000
+  },
+  {
+   "city": "Hangzhou",
+   "seats": 80000
+  },
+  {
+   "city": "Shanghai",
+   "seats": 72000
+  },
+  {
+   "city": "Dalian",
+   "seats": 63000
+  },
+  {
+   "city": "Shenzhen",
+   "seats": 60000
+  },
+  {
+   "city": "Chengdu",
+   "seats": 60000
+  },
+  {
+   "city": "Wuhan",
+   "seats": 60000
+  },
+  {
+   "city": "Tianjin",
+   "seats": 60000
+  },
+  {
+   "city": "Chongqing",
+   "seats": 60000
+  },
+  {
+   "city": "Guangzhou",
+   "seats": 58000
+  }
+ ],
+ "163": [
+  {
+   "city": "Kaohsiung",
+   "seats": 55000
+  },
+  {
+   "city": "Taipei",
+   "seats": 20000
+  },
+  {
+   "city": "Hsinchu",
+   "seats": 15000
+  },
+  {
+   "city": "Tainan",
+   "seats": 10000
+  },
+  {
+   "city": "Taichung",
+   "seats": 10000
+  }
+ ],
+ "164": [
+  {
+   "city": "Hagåtña",
+   "seats": 5000
+  },
+  {
+   "city": "Dededo",
+   "seats": 1000
+  }
+ ],
+ "165": [
+  {
+   "city": "Kowloon",
+   "seats": 50000
+  },
+  {
+   "city": "Hong Kong",
+   "seats": 40000
+  },
+  {
+   "city": "Sha Tin",
+   "seats": 5000
+  },
+  {
+   "city": "Yuen Long",
+   "seats": 5000
+  },
+  {
+   "city": "Tsuen Wan",
+   "seats": 2500
+  },
+  {
+   "city": "Tuen Mun",
+   "seats": 2000
+  }
+ ],
+ "166": [
+  {
+   "city": "Kolkata",
+   "seats": 68000
+  },
+  {
+   "city": "Delhi",
+   "seats": 60000
+  },
+  {
+   "city": "Mumbai",
+   "seats": 55000
+  },
+  {
+   "city": "Kochi",
+   "seats": 41000
+  },
+  {
+   "city": "Chennai",
+   "seats": 40000
+  },
+  {
+   "city": "Hyderabad",
+   "seats": 30000
+  },
+  {
+   "city": "Bengaluru",
+   "seats": 25000
+  },
+  {
+   "city": "Guwahati",
+   "seats": 25000
+  },
+  {
+   "city": "Goa",
+   "seats": 19000
+  },
+  {
+   "city": "Bhubaneswar",
+   "seats": 15000
+  }
+ ],
+ "167": [
+  {
+   "city": "Jakarta",
+   "seats": 82000
+  },
+  {
+   "city": "Jakarta",
+   "seats": 77000
+  },
+  {
+   "city": "Surabaya",
+   "seats": 46000
+  },
+  {
+   "city": "Malang",
+   "seats": 42000
+  },
+  {
+   "city": "Palembang",
+   "seats": 40000
+  },
+  {
+   "city": "Bandung",
+   "seats": 38000
+  },
+  {
+   "city": "Medan",
+   "seats": 25000
+  },
+  {
+   "city": "Semarang",
+   "seats": 25000
+  },
+  {
+   "city": "Denpasar",
+   "seats": 23000
+  },
+  {
+   "city": "Makassar",
+   "seats": 15000
+  }
+ ],
+ "168": [
+  {
+   "city": "Tehran",
+   "seats": 78000
+  },
+  {
+   "city": "Isfahan",
+   "seats": 75000
+  },
+  {
+   "city": "Tabriz",
+   "seats": 66000
+  },
+  {
+   "city": "Shiraz",
+   "seats": 50000
+  },
+  {
+   "city": "Mashhad",
+   "seats": 35000
+  },
+  {
+   "city": "Ahvaz",
+   "seats": 30000
+  },
+  {
+   "city": "Karaj",
+   "seats": 15000
+  },
+  {
+   "city": "Kermanshah",
+   "seats": 15000
+  },
+  {
+   "city": "Rasht",
+   "seats": 15000
+  },
+  {
+   "city": "Qom",
+   "seats": 10000
+  }
+ ],
+ "169": [
+  {
+   "city": "Baghdad",
+   "seats": 65000
+  },
+  {
+   "city": "Basra",
+   "seats": 65000
+  },
+  {
+   "city": "Baghdad",
+   "seats": 32000
+  },
+  {
+   "city": "Karbala",
+   "seats": 30000
+  },
+  {
+   "city": "Najaf",
+   "seats": 30000
+  },
+  {
+   "city": "Sulaymaniyah",
+   "seats": 30000
+  },
+  {
+   "city": "Mosul",
+   "seats": 30000
+  },
+  {
+   "city": "Erbil",
+   "seats": 28000
+  },
+  {
+   "city": "Kirkuk",
+   "seats": 25000
+  }
+ ],
+ "170": [
+  {
+   "city": "Yokohama",
+   "seats": 72000
+  },
+  {
+   "city": "Tokyo",
+   "seats": 68000
+  },
+  {
+   "city": "Saitama",
+   "seats": 63700
+  },
+  {
+   "city": "Shizuoka",
+   "seats": 50000
+  },
+  {
+   "city": "Osaka",
+   "seats": 50000
+  },
+  {
+   "city": "Sendai",
+   "seats": 49000
+  },
+  {
+   "city": "Nagoya",
+   "seats": 44000
+  },
+  {
+   "city": "Niigata",
+   "seats": 42000
+  },
+  {
+   "city": "Sapporo",
+   "seats": 41500
+  },
+  {
+   "city": "Oita",
+   "seats": 40000
+  }
+ ],
+ "171": [
+  {
+   "city": "Amman",
+   "seats": 18000
+  },
+  {
+   "city": "Zarqa",
+   "seats": 17000
+  },
+  {
+   "city": "Irbid",
+   "seats": 13000
+  },
+  {
+   "city": "Amman",
+   "seats": 12000
+  }
+ ],
+ "172": [
+  {
+   "city": "Kuwait City",
+   "seats": 60000
+  },
+  {
+   "city": "Hawalli",
+   "seats": 22000
+  },
+  {
+   "city": "Kuwait City",
+   "seats": 22000
+  },
+  {
+   "city": "Salmiya",
+   "seats": 20000
+  },
+  {
+   "city": "Jahra",
+   "seats": 18000
+  },
+  {
+   "city": "Ahmadi",
+   "seats": 5000
+  }
+ ],
+ "173": [
+  {
+   "city": "Bishkek",
+   "seats": 18000
+  },
+  {
+   "city": "Osh",
+   "seats": 12000
+  },
+  {
+   "city": "Jalal-Abad",
+   "seats": 9000
+  },
+  {
+   "city": "Karakol",
+   "seats": 5000
+  }
+ ],
+ "174": [
+  {
+   "city": "Vientiane",
+   "seats": 25000
+  },
+  {
+   "city": "Savannakhet",
+   "seats": 5000
+  },
+  {
+   "city": "Luang Prabang",
+   "seats": 5000
+  }
+ ],
+ "175": [
+  {
+   "city": "Beirut",
+   "seats": 48000
+  },
+  {
+   "city": "Sidon",
+   "seats": 22600
+  },
+  {
+   "city": "Tripoli",
+   "seats": 22000
+  },
+  {
+   "city": "Jounieh",
+   "seats": 8000
+  }
+ ],
+ "176": [
+  {
+   "city": "Taipa",
+   "seats": 16000
+  },
+  {
+   "city": "Macau",
+   "seats": 2000
+  }
+ ],
+ "177": [
+  {
+   "city": "Kuala Lumpur",
+   "seats": 87000
+  },
+  {
+   "city": "Ipoh",
+   "seats": 42000
+  },
+  {
+   "city": "Johor Bahru",
+   "seats": 40000
+  },
+  {
+   "city": "Penang",
+   "seats": 40000
+  },
+  {
+   "city": "Malacca",
+   "seats": 40000
+  },
+  {
+   "city": "Shah Alam",
+   "seats": 35000
+  },
+  {
+   "city": "Kota Kinabalu",
+   "seats": 30000
+  },
+  {
+   "city": "Kuching",
+   "seats": 26000
+  },
+  {
+   "city": "Kuala Lumpur",
+   "seats": 24000
+  }
+ ],
+ "178": [
+  {
+   "city": "Malé",
+   "seats": 11000
+  },
+  {
+   "city": "Addu City",
+   "seats": 5000
+  }
+ ],
+ "179": [
+  {
+   "city": "Ulaanbaatar",
+   "seats": 12500
+  },
+  {
+   "city": "Erdenet",
+   "seats": 3000
+  }
+ ],
+ "180": [
+  {
+   "city": "Yangon",
+   "seats": 40000
+  },
+  {
+   "city": "Yangon",
+   "seats": 32000
+  },
+  {
+   "city": "Naypyidaw",
+   "seats": 30000
+  },
+  {
+   "city": "Mandalay",
+   "seats": 30000
+  },
+  {
+   "city": "Mawlamyine",
+   "seats": 10000
+  },
+  {
+   "city": "Taunggyi",
+   "seats": 7000
+  }
+ ],
+ "181": [
+  {
+   "city": "Kathmandu",
+   "seats": 25000
+  },
+  {
+   "city": "Pokhara",
+   "seats": 15000
+  },
+  {
+   "city": "Biratnagar",
+   "seats": 5000
+  }
+ ],
+ "182": [
+  {
+   "city": "Pyongyang",
+   "seats": 114000
+  },
+  {
+   "city": "Pyongyang",
+   "seats": 50000
+  },
+  {
+   "city": "Hamhung",
+   "seats": 35000
+  },
+  {
+   "city": "Pyongyang",
+   "seats": 30000
+  },
+  {
+   "city": "Chongjin",
+   "seats": 30000
+  },
+  {
+   "city": "Nampo",
+   "seats": 30000
+  },
+  {
+   "city": "Wonsan",
+   "seats": 15000
+  },
+  {
+   "city": "Kaesong",
+   "seats": 10000
+  }
+ ],
+ "183": [
+  {
+   "city": "Muscat",
+   "seats": 34000
+  },
+  {
+   "city": "Sohar",
+   "seats": 19000
+  },
+  {
+   "city": "Seeb",
+   "seats": 14000
+  },
+  {
+   "city": "Salalah",
+   "seats": 8000
+  },
+  {
+   "city": "Sur",
+   "seats": 8000
+  }
+ ],
+ "184": [
+  {
+   "city": "Karachi",
+   "seats": 40000
+  },
+  {
+   "city": "Lahore",
+   "seats": 20000
+  },
+  {
+   "city": "Islamabad",
+   "seats": 15000
+  },
+  {
+   "city": "Peshawar",
+   "seats": 15000
+  },
+  {
+   "city": "Faisalabad",
+   "seats": 5000
+  },
+  {
+   "city": "Quetta",
+   "seats": 5000
+  }
+ ],
+ "185": [
+  {
+   "city": "Jericho",
+   "seats": 15000
+  },
+  {
+   "city": "Ramallah",
+   "seats": 12500
+  },
+  {
+   "city": "Gaza City",
+   "seats": 9000
+  },
+  {
+   "city": "Nablus",
+   "seats": 5000
+  },
+  {
+   "city": "Jenin",
+   "seats": 5000
+  }
+ ],
+ "186": [
+  {
+   "city": "Bacolod",
+   "seats": 15500
+  },
+  {
+   "city": "Manila",
+   "seats": 12000
+  },
+  {
+   "city": "Cebu City",
+   "seats": 12000
+  },
+  {
+   "city": "Davao City",
+   "seats": 10000
+  },
+  {
+   "city": "Iloilo City",
+   "seats": 7000
+  }
+ ],
+ "187": [
+  {
+   "city": "Lusail",
+   "seats": 88000
+  },
+  {
+   "city": "Al Khor",
+   "seats": 60000
+  },
+  {
+   "city": "Al Rayyan",
+   "seats": 45000
+  },
+  {
+   "city": "Doha",
+   "seats": 45000
+  },
+  {
+   "city": "Al Rayyan",
+   "seats": 44000
+  },
+  {
+   "city": "Al Wakrah",
+   "seats": 40000
+  },
+  {
+   "city": "Doha",
+   "seats": 40000
+  },
+  {
+   "city": "Umm Salal",
+   "seats": 20000
+  }
+ ],
+ "188": [
+  {
+   "city": "Riyadh",
+   "seats": 92000
+  },
+  {
+   "city": "Riyadh",
+   "seats": 68000
+  },
+  {
+   "city": "Jeddah",
+   "seats": 62000
+  },
+  {
+   "city": "Khobar",
+   "seats": 46000
+  },
+  {
+   "city": "Mecca",
+   "seats": 38000
+  },
+  {
+   "city": "Dammam",
+   "seats": 26000
+  },
+  {
+   "city": "Buraidah",
+   "seats": 25000
+  },
+  {
+   "city": "Medina",
+   "seats": 24000
+  },
+  {
+   "city": "Abha",
+   "seats": 20000
+  },
+  {
+   "city": "Taif",
+   "seats": 17000
+  }
+ ],
+ "189": [
+  {
+   "city": "Singapore",
+   "seats": 55000
+  },
+  {
+   "city": "Bishan",
+   "seats": 10000
+  },
+  {
+   "city": "Jurong",
+   "seats": 6000
+  },
+  {
+   "city": "Tampines",
+   "seats": 5000
+  },
+  {
+   "city": "Woodlands",
+   "seats": 4000
+  }
+ ],
+ "190": [
+  {
+   "city": "Seoul",
+   "seats": 66000
+  },
+  {
+   "city": "Daegu",
+   "seats": 66000
+  },
+  {
+   "city": "Busan",
+   "seats": 53000
+  },
+  {
+   "city": "Incheon",
+   "seats": 50000
+  },
+  {
+   "city": "Suwon",
+   "seats": 44000
+  },
+  {
+   "city": "Ulsan",
+   "seats": 44000
+  },
+  {
+   "city": "Gwangju",
+   "seats": 44000
+  },
+  {
+   "city": "Jeonju",
+   "seats": 42000
+  },
+  {
+   "city": "Daejeon",
+   "seats": 41000
+  },
+  {
+   "city": "Seogwipo",
+   "seats": 35000
+  }
+ ],
+ "191": [
+  {
+   "city": "Colombo",
+   "seats": 25000
+  },
+  {
+   "city": "Jaffna",
+   "seats": 8000
+  },
+  {
+   "city": "Kandy",
+   "seats": 5000
+  }
+ ],
+ "192": [
+  {
+   "city": "Aleppo",
+   "seats": 75000
+  },
+  {
+   "city": "Latakia",
+   "seats": 45000
+  },
+  {
+   "city": "Homs",
+   "seats": 32000
+  },
+  {
+   "city": "Damascus",
+   "seats": 30000
+  },
+  {
+   "city": "Hama",
+   "seats": 25000
+  },
+  {
+   "city": "Tartus",
+   "seats": 15000
+  },
+  {
+   "city": "Deir ez-Zor",
+   "seats": 13000
+  }
+ ],
+ "193": [
+  {
+   "city": "Dushanbe",
+   "seats": 21000
+  },
+  {
+   "city": "Khujand",
+   "seats": 20000
+  },
+  {
+   "city": "Hisor",
+   "seats": 20000
+  },
+  {
+   "city": "Kulob",
+   "seats": 20000
+  },
+  {
+   "city": "Dushanbe",
+   "seats": 20000
+  }
+ ],
+ "194": [
+  {
+   "city": "Bangkok",
+   "seats": 49700
+  },
+  {
+   "city": "Hat Yai",
+   "seats": 35000
+  },
+  {
+   "city": "Buriram",
+   "seats": 32600
+  },
+  {
+   "city": "Bangkok",
+   "seats": 25000
+  },
+  {
+   "city": "Chiang Mai",
+   "seats": 25000
+  },
+  {
+   "city": "Nakhon Ratchasima",
+   "seats": 20000
+  },
+  {
+   "city": "Udon Thani",
+   "seats": 10000
+  },
+  {
+   "city": "Khon Kaen",
+   "seats": 7000
+  },
+  {
+   "city": "Pattaya",
+   "seats": 5500
+  }
+ ],
+ "195": [
+  {
+   "city": "Dili",
+   "seats": 5000
+  },
+  {
+   "city": "Baucau",
+   "seats": 2000
+  }
+ ],
+ "196": [
+  {
+   "city": "Ashgabat",
+   "seats": 45000
+  },
+  {
+   "city": "Ashgabat",
+   "seats": 26000
+  },
+  {
+   "city": "Türkmenabat",
+   "seats": 10000
+  },
+  {
+   "city": "Daşoguz",
+   "seats": 10000
+  },
+  {
+   "city": "Mary",
+   "seats": 10000
+  },
+  {
+   "city": "Balkanabat",
+   "seats": 10000
+  }
+ ],
+ "197": [
+  {
+   "city": "Abu Dhabi",
+   "seats": 43000
+  },
+  {
+   "city": "Abu Dhabi",
+   "seats": 42000
+  },
+  {
+   "city": "Al Ain",
+   "seats": 25000
+  },
+  {
+   "city": "Dubai",
+   "seats": 18000
+  },
+  {
+   "city": "Sharjah",
+   "seats": 18000
+  },
+  {
+   "city": "Fujairah",
+   "seats": 10000
+  },
+  {
+   "city": "Ras Al Khaimah",
+   "seats": 8000
+  },
+  {
+   "city": "Ajman",
+   "seats": 5000
+  }
+ ],
+ "198": [
+  {
+   "city": "Tashkent",
+   "seats": 35000
+  },
+  {
+   "city": "Tashkent",
+   "seats": 34000
+  },
+  {
+   "city": "Bukhara",
+   "seats": 22000
+  },
+  {
+   "city": "Namangan",
+   "seats": 22000
+  },
+  {
+   "city": "Qarshi",
+   "seats": 21000
+  },
+  {
+   "city": "Andijan",
+   "seats": 18000
+  },
+  {
+   "city": "Fergana",
+   "seats": 15000
+  },
+  {
+   "city": "Samarkand",
+   "seats": 13000
+  },
+  {
+   "city": "Nukus",
+   "seats": 9000
+  }
+ ],
+ "199": [
+  {
+   "city": "Hanoi",
+   "seats": 40000
+  },
+  {
+   "city": "Can Tho",
+   "seats": 30000
+  },
+  {
+   "city": "Haiphong",
+   "seats": 25000
+  },
+  {
+   "city": "Ho Chi Minh City",
+   "seats": 25000
+  },
+  {
+   "city": "Hanoi",
+   "seats": 22500
+  },
+  {
+   "city": "Da Nang",
+   "seats": 20000
+  },
+  {
+   "city": "Nha Trang",
+   "seats": 18000
+  },
+  {
+   "city": "Vinh",
+   "seats": 18000
+  },
+  {
+   "city": "Hue",
+   "seats": 15000
+  }
+ ],
+ "200": [
+  {
+   "city": "Aden",
+   "seats": 30000
+  },
+  {
+   "city": "Sanaa",
+   "seats": 25000
+  },
+  {
+   "city": "Mukalla",
+   "seats": 15000
+  },
+  {
+   "city": "Taiz",
+   "seats": 10000
+  }
+ ],
+ "201": [
+  {
+   "city": "Pago Pago",
+   "seats": 2000
+  }
+ ],
+ "202": [
+  {
+   "city": "Avarua",
+   "seats": 3000
+  }
+ ],
+ "203": [
+  {
+   "city": "Nadi",
+   "seats": 18000
+  },
+  {
+   "city": "Suva",
+   "seats": 15000
+  },
+  {
+   "city": "Lautoka",
+   "seats": 10000
+  },
+  {
+   "city": "Labasa",
+   "seats": 10000
+  },
+  {
+   "city": "Ba",
+   "seats": 8000
+  },
+  {
+   "city": "Sigatoka",
+   "seats": 6000
+  }
+ ],
+ "204": [
+  {
+   "city": "Nouméa",
+   "seats": 10000
+  },
+  {
+   "city": "Dumbéa",
+   "seats": 5000
+  },
+  {
+   "city": "Koné",
+   "seats": 3000
+  }
+ ],
+ "205": [
+  {
+   "city": "Auckland",
+   "seats": 50000
+  },
+  {
+   "city": "Wellington",
+   "seats": 34500
+  },
+  {
+   "city": "Christchurch",
+   "seats": 30000
+  },
+  {
+   "city": "Dunedin",
+   "seats": 30000
+  },
+  {
+   "city": "Hamilton",
+   "seats": 25800
+  },
+  {
+   "city": "Auckland",
+   "seats": 25000
+  },
+  {
+   "city": "Napier",
+   "seats": 20000
+  },
+  {
+   "city": "Palmerston North",
+   "seats": 15000
+  },
+  {
+   "city": "Tauranga",
+   "seats": 10000
+  }
+ ],
+ "206": [
+  {
+   "city": "Port Moresby",
+   "seats": 15000
+  },
+  {
+   "city": "Mount Hagen",
+   "seats": 10000
+  },
+  {
+   "city": "Lae",
+   "seats": 5000
+  }
+ ],
+ "207": [
+  {
+   "city": "Apia",
+   "seats": 3500
+  }
+ ],
+ "208": [
+  {
+   "city": "Honiara",
+   "seats": 10000
+  },
+  {
+   "city": "Auki",
+   "seats": 2000
+  }
+ ],
+ "209": [
+  {
+   "city": "Papeete",
+   "seats": 11000
+  },
+  {
+   "city": "Pirae",
+   "seats": 5000
+  }
+ ],
+ "210": [
+  {
+   "city": "Nuku'alofa",
+   "seats": 4000
+  }
+ ],
+ "211": [
+  {
+   "city": "Port Vila",
+   "seats": 6500
+  },
+  {
+   "city": "Luganville",
+   "seats": 3000
+  }
+ ],
+ "212": [
+  {
+   "city": "Nuuk",
+   "seats": 2000
+  },
+  {
+   "city": "Sisimiut",
+   "seats": 1000
+  },
+  {
+   "city": "Ilulissat",
+   "seats": 1000
+  }
+ ]
+}

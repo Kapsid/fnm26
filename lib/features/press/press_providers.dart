@@ -10,6 +10,7 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/statement.dart';
+import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
@@ -18,6 +19,23 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 
 bool _counts(PressAnswerRow a) => !a.questionKey.startsWith('grv:');
+
+/// Whether last cycle's [a] still lingers into this one. A kept camp scandal
+/// does not: its cost is for the rest of the cycle it broke in and no longer
+/// (see `CampScandal`), so it is gone the moment the cycle turns.
+///
+/// Nor does the lift of the manager's own man being voted Player of the Year
+/// (`poty:<year>`, see `AwardService`): it belongs to the cycle it came in.
+bool _lingers(PressAnswerRow a) => _counts(a) && !_squadBound(a);
+
+/// A mood swing that belongs to the squad it happened to (a kept camp
+/// scandal, an award to one of its men): it stays with that dressing room.
+bool _squadBound(PressAnswerRow a) =>
+    a.questionKey.startsWith(CampScandal.prefix) ||
+    a.questionKey.startsWith(potyPressPrefix);
+
+/// The press-answer key prefix of the Player of the Year morale lift.
+const String potyPressPrefix = 'poty:';
 
 final AutoDisposeFutureProviderFamily<List<PressStatement>, int>
 pressStatementsProvider = FutureProvider.autoDispose
@@ -57,20 +75,23 @@ final AutoDisposeFutureProviderFamily<PressEffect, int> pressEffectProvider =
       final now = await repo.pressAnswers(careerId, cycle: career.cyclePointer);
       // Last cycle's words linger only in the job they were said in: a new
       // board and a new dressing room never heard them.
-      final arrived =
-          (await currentSpell(repo, career)).arrivalCycle ==
-          career.cyclePointer;
+      final spell = await currentSpell(repo, career);
+      final arrived = spell.arrivalCycle == career.cyclePointer;
       final before = career.cyclePointer == 0 || arrived
           ? const <PressAnswerRow>[]
           : await repo.pressAnswers(careerId, cycle: career.cyclePointer - 1);
       return Press.carryOver(
         [
           for (final a in now)
-            if (_counts(a)) of(a),
+            // A kept scandal is a cost to the squad it happened in: one kept
+            // before this spell began belongs to a dressing room he has left.
+            if (_counts(a) &&
+                !(_squadBound(a) && a.answeredAt.isBefore(spell.since)))
+              of(a),
         ],
         [
           for (final a in before)
-            if (_counts(a)) of(a),
+            if (_lingers(a)) of(a),
         ],
       );
     });
@@ -142,7 +163,7 @@ Future<PreviewFacts> _previewFacts(
   final objective = outcomes.where((o) => o.tier == tier).firstOrNull;
   final brief = campaign.briefFor(objective?.target ?? 2);
 
-  final nations = await ref.read(nationRepositoryProvider).all();
+  final nations = await ref.read(nationRepositoryProvider).forCareer(careerId);
   final conf = nations
       .where((n) => n.id == career.nationId)
       .map((n) => n.confederation)
@@ -173,15 +194,15 @@ Future<PreviewFacts> _previewFacts(
   final squad = called.isEmpty
       ? const <Player>[]
       : await ref
-            .read(playerRepositoryProvider)
-            .byNation(
-              career.nationId,
-              agingYears: CareerService.agingYears(career),
-              saveSeed: career.rngSeed,
-              careerId: career.id,
-              minAge: PlayerLifecycle.callUpMinAge,
-            ) +
-        await naturalizedPlayersFor(ref, career);
+                .read(playerRepositoryProvider)
+                .byNation(
+                  career.nationId,
+                  agingYears: CareerService.agingYears(career),
+                  saveSeed: career.rngSeed,
+                  careerId: career.id,
+                  minAge: PlayerLifecycle.callUpMinAge,
+                ) +
+            await naturalizedPlayersFor(ref, career);
   final picked = [
     for (final p in squad)
       if (called.contains(p.id)) p,

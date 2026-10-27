@@ -8,7 +8,10 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/features/awards/award_providers.dart';
+import 'package:fnm/features/awards/awards_ceremony_screen.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/round_popup.dart';
@@ -240,6 +243,38 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
             ),
           );
         }());
+      case HubEventKind.awardsCeremony:
+        // Two ways in, chosen on a sheet: watch the reveal, or go straight to
+        // the list. Either one takes the ceremony.
+        final route = event.route;
+        final year = int.tryParse(
+          Uri.parse(route ?? '').queryParameters['year'] ?? '',
+        );
+        if (route == null || year == null) return;
+        unawaited(
+          showAdaptiveSheet<void>(
+            context: context,
+            backgroundColor: AppColors.surfaceContainer,
+            builder: (sheetContext) => AwardsCeremonyChoiceSheet(
+              year: year,
+              onChoose: (watch) {
+                Navigator.of(sheetContext).pop();
+                _guarded(context, () async {
+                  await ref
+                      .read(awardServiceProvider)
+                      .takeCeremony(careerId, year);
+                  ref
+                    ..invalidate(nextEventProvider(careerId))
+                    ..invalidate(messageInboxProvider(careerId))
+                    ..invalidate(unreadMessagesProvider(careerId));
+                  if (context.mounted) {
+                    context.go(watch ? '$route&watch=1' : route);
+                  }
+                });
+              },
+            ),
+          ),
+        );
       case HubEventKind.managerSkills:
         // Marked seen as it is TAKEN, not when the points are spent: a manager
         // who looks at his skills and decides to bank them has answered the
@@ -268,6 +303,7 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
       case HubEventKind.draw:
       case HubEventKind.tournamentKickoff:
       case HubEventKind.callUp:
+      case HubEventKind.scandal:
       case HubEventKind.budget:
       case HubEventKind.naturalization:
       case HubEventKind.friendlies:

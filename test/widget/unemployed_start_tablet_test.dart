@@ -73,11 +73,16 @@ void main() {
     tester,
   ) async {
     // test/golden/phone_guard_unemployed_test.dart pins seed 7 on the phone:
-    // Malawi, Faroe Islands, Cook Islands, in that order.
+    // Saint Kitts and Nevis, St Vincent and the Grenadines, British Virgin
+    // Islands, in that order (on the 2026 starting ranking).
     await _open(tester, kTabletSize, seed: 7);
     expect(
       [for (final n in _shown(tester)) n.name],
-      ['Malawi', 'Faroe Islands', 'Cook Islands'],
+      [
+        'Saint Kitts and Nevis',
+        'St Vincent and the Grenadines',
+        'British Virgin Islands',
+      ],
     );
     await tester.pumpWidget(const SizedBox());
   });

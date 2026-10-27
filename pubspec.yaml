@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.6+10
+version: 1.0.7+13
 
 environment:
   sdk: ^3.10.4
@@ -58,6 +58,17 @@ dependencies:
   share_plus: ^12.0.0 # Hands an exported save to the OS share sheet.
   file_picker: ^11.0.3 # Picks a save file back off the device to restore.
   url_launcher: ^6.3.3
+  # Automatic backups: the app's iCloud container (iPhone/iPad).
+  icloud_storage_plus: ^4.0.0
+  # Automatic backups: Google Drive's hidden app folder (Android), drive.appdata only.
+  google_sign_in: ^7.2.0
+  googleapis: ^17.0.0
+  # The Drive client's auth and HTTP, created and closed per request.
+  googleapis_auth: ^2.3.5
+  http: ^1.6.0
+  # The device name in a cloud backup's metadata. Held under 13.1 because
+  # 13.1+ needs win32 6, which file_picker 11 does not allow yet.
+  device_info_plus: ">=12.0.0 <13.1.0"
 
 dev_dependencies:
   flutter_test:
@@ -104,6 +115,7 @@ flutter:
   assets:
     - assets/images/
     - assets/data/
+    - assets/geo/
     - assets/flags/
     - assets/trophies/
 

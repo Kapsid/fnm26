@@ -303,6 +303,41 @@ void main() {
     expect(rows.single.read<int?>('target'), isNull);
   });
 
+  test('v51 keeps a v50 save and gives it an empty tactics library', () async {
+    // 50 -> 51 adds the tactics library, the first table that belongs to no
+    // career. Purely additive: the careers stay, the library starts empty and
+    // takes writes straight away.
+    final schema = await verifier.schemaAt(50);
+    final raw = AppDatabase.forTesting(schema.newConnection());
+    await raw.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget) '
+      'VALUES (1, 1, ?, 0, 0, 7, 0, 0)',
+      ['Archivist'],
+    );
+    await raw.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, AppDatabase.currentSchemaVersion);
+
+    Future<int> count(String table) async =>
+        (await db.customSelect('SELECT COUNT(*) AS n FROM $table').getSingle())
+            .read<int>('n');
+    expect(await count('careers'), 1);
+    expect(await count('tactic_library'), 0);
+    await db
+        .into(db.tacticLibrary)
+        .insert(
+          TacticLibraryCompanion.insert(
+            name: 'First',
+            data: '{}',
+            updatedAt: DateTime.utc(2030),
+          ),
+        );
+    expect(await count('tactic_library'), 1);
+  });
+
   for (final MapEntry(key: from, value: to) in upgrades.entries) {
     test('a save migrates from v$from to v$to with its data intact', () async {
       final connection = await verifier.startAt(from);

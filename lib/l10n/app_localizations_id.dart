@@ -75,6 +75,139 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchDossierKeyMen => 'PEMAIN KUNCI';
 
   @override
+  String get matchDossierHowTheyPlay => 'GAYA BERMAIN';
+
+  @override
+  String matchScoutFormation1(String formation) {
+    return 'Mereka biasanya turun dengan formasi $formation.';
+  }
+
+  @override
+  String matchScoutFormation2(String formation) {
+    return 'Formasi andalan mereka adalah $formation.';
+  }
+
+  @override
+  String matchScoutFormation3(String formation) {
+    return 'Mereka cenderung memakai formasi $formation.';
+  }
+
+  @override
+  String get matchScoutStrengthPressing =>
+      'Mereka menekan tinggi dan memburu bola.';
+
+  @override
+  String get matchScoutStrengthDirect =>
+      'Mereka bermain langsung dan cepat mengirim bola ke depan.';
+
+  @override
+  String get matchScoutStrengthPossession =>
+      'Mereka pandai menguasai bola dan membangun serangan dengan sabar.';
+
+  @override
+  String get matchScoutStrengthCounter =>
+      'Mereka menunggu di belakang lalu cepat melancarkan serangan balik.';
+
+  @override
+  String get matchScoutStrengthDeepDefence =>
+      'Mereka bertahan dalam dan sulit ditembus.';
+
+  @override
+  String get matchScoutStrengthWide =>
+      'Mereka melebarkan permainan dan menyerang lewat sayap.';
+
+  @override
+  String get matchScoutStrengthAttacking =>
+      'Mereka suka mengambil inisiatif dan menekan lawan.';
+
+  @override
+  String get matchScoutStrengthQuickForwards =>
+      'Penyerang mereka cepat dan gemar berlari ke belakang lini pertahanan.';
+
+  @override
+  String get matchScoutStrengthPassingMidfield =>
+      'Lini tengah mereka piawai mengalirkan bola.';
+
+  @override
+  String get matchScoutStrengthHardRunning =>
+      'Lini tengah mereka kuat berlari sepanjang laga.';
+
+  @override
+  String get matchScoutStrengthSetPieces =>
+      'Mereka berbahaya dari situasi bola mati.';
+
+  @override
+  String get matchScoutStrengthQuickDefence =>
+      'Lini belakang mereka cepat dan sulit ditembus dari belakang.';
+
+  @override
+  String get matchScoutStrengthNone =>
+      'Tidak ada yang benar-benar menonjol dari permainan mereka.';
+
+  @override
+  String get matchScoutWeakSpaceBehind =>
+      'Garis pertahanan tinggi mereka menyisakan ruang di belakang untuk umpan lambung.';
+
+  @override
+  String get matchScoutWeakPressedBuildUp =>
+      'Pressing tinggi bisa mengacaukan build-up mereka yang lambat.';
+
+  @override
+  String get matchScoutWeakDeepBlock =>
+      'Bersabarlah: blok rendah seperti milik mereka bisa dibongkar.';
+
+  @override
+  String get matchScoutWeakLongBall =>
+      'Turunkan garis pertahanan Anda dan umpan panjang mereka tak akan menemukan ruang.';
+
+  @override
+  String get matchScoutWeakSlowDefence =>
+      'Bek mereka kurang cepat, jadi kirim pelari ke belakang mereka.';
+
+  @override
+  String get matchScoutWeakAerial =>
+      'Mereka tampak goyah saat mengantisipasi bola mati.';
+
+  @override
+  String get matchScoutWeakPoorPassing =>
+      'Lini tengah mereka kesulitan lolos dari tekanan dengan umpan.';
+
+  @override
+  String get matchScoutWeakTiringMidfield =>
+      'Lini tengah mereka kurang stamina untuk terus menekan.';
+
+  @override
+  String get matchScoutWeakBluntAttack => 'Penyerang mereka kurang cepat.';
+
+  @override
+  String get matchScoutApproachTakeTheGame =>
+      'Melawan tim Anda, mereka kemungkinan akan mengambil inisiatif.';
+
+  @override
+  String get matchScoutApproachEven =>
+      'Melawan tim Anda, kemungkinan laga akan ketat dan seimbang.';
+
+  @override
+  String get matchScoutApproachSitDeep =>
+      'Melawan tim Anda, mereka kemungkinan bermain hati-hati sambil mencari serangan balik.';
+
+  @override
+  String get matchScoutLeaningAttacking =>
+      'Dari jauh, mereka tampak seperti tim yang menyerang.';
+
+  @override
+  String get matchScoutLeaningCautious =>
+      'Dari jauh, mereka tampak seperti tim yang berhati-hati.';
+
+  @override
+  String get matchScoutLeaningUnclear =>
+      'Dari jauh, sulit menebak gaya bermain mereka.';
+
+  @override
+  String get matchScoutHireHint =>
+      'Rekrut kepala pemandu bakat untuk mengetahui cara mereka bermain.';
+
+  @override
   String matchCouldNotContinue(String error) {
     return 'Gagal melanjutkan: $error';
   }
@@ -286,6 +419,21 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Sistem';
+
+  @override
+  String get settingsTextSizeTitle => 'Ukuran teks';
+
+  @override
+  String get settingsTextSizeBlurb => 'Perbesar teks jika sulit dibaca.';
+
+  @override
+  String get settingsTextSizeNormal => 'Normal';
+
+  @override
+  String get settingsTextSizeLarge => 'Besar';
+
+  @override
+  String get settingsTextSizeLarger => 'Lebih besar';
 
   @override
   String get matchPreviewAllMeetings => 'Semua pertemuan';
@@ -805,6 +953,41 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get tacticsSentOffShort => 'DIUSIR';
+
+  @override
+  String get tacticsFullBackLeft => 'Bek kiri';
+
+  @override
+  String get tacticsFullBackRight => 'Bek kanan';
+
+  @override
+  String get tacticsFullBackUp => 'Bantu serangan';
+
+  @override
+  String get tacticsFullBackDown => 'Tahan posisi';
+
+  @override
+  String get tacticsFullBackOff => 'Tanpa instruksi';
+
+  @override
+  String tacticsFullBackUpHint(String side) {
+    return '$side: bantu serangan. Sedikit lebih menyerang, sedikit lebih berisiko.';
+  }
+
+  @override
+  String tacticsFullBackDownHint(String side) {
+    return '$side: tahan posisi. Sedikit lebih aman, sedikit kurang menyerang.';
+  }
+
+  @override
+  String tacticsFullBackOffHint(String side) {
+    return '$side: tanpa instruksi, mengikuti rencana tim.';
+  }
+
+  @override
+  String tacticsFullBackSemantics(String side, String state) {
+    return '$side, panah: $state';
+  }
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -3023,6 +3206,16 @@ class AppLocalizationsId extends AppLocalizations {
   String get gateExit => 'KELUAR';
 
   @override
+  String get gateSaveTitle => 'SIMPANAN INI BUTUH PRO';
+
+  @override
+  String get gateSaveLead =>
+      'Simpanan yang melewati siklus gratis, dan kampanye Pro, berlanjut dengan Pro. Tidak ada yang hilang: simpanan ini menunggu persis seperti saat Anda tinggalkan.';
+
+  @override
+  String get careerSaveLockedNote => 'Perlu Pro untuk melanjutkan simpanan ini';
+
+  @override
   String get federationNaturalisation => 'NATURALISASI';
 
   @override
@@ -3260,9 +3453,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get nationsNoMatch => 'Tidak ada negara yang cocok.';
-
-  @override
-  String get nationsNationalLevel => 'TINGKAT NEGARA';
 
   @override
   String get nationsSelectHeading => 'Pilih Tim Nasional';
@@ -3718,6 +3908,1026 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String yLostBadly11(String opponent, String score) {
     return 'Saya pernah melihat tim ini dipermalukan, tapi $score dari $opponent adalah dasar baru.';
+  }
+
+  @override
+  String yWinUpset12(String opponent, String score) {
+    return '$opponent dikalahkan $score. Catat tanggalnya, orang akan bertanya kalian di mana.';
+  }
+
+  @override
+  String yWinUpset13(String opponent, String score) {
+    return 'Di luar ruang ganti tak ada yang percaya. $score melawan $opponent. Bangga saja tidak cukup.';
+  }
+
+  @override
+  String yWinUpset14(String opponent, String score) {
+    return '$score melawan $opponent! Semuanya berlari sampai tak ada tenaga tersisa.';
+  }
+
+  @override
+  String yWinUpset15(String opponent, String score) {
+    return 'Pembunuh raksasa. $opponent, $score. Inilah alasan kita selalu datang.';
+  }
+
+  @override
+  String yWinUpset16(String opponent, String score) {
+    return '$score melawan $opponent. Semua prediksi baru saja terbang lewat jendela.';
+  }
+
+  @override
+  String yWinUpset17(String opponent, String score) {
+    return 'Favorit utama: $opponent. Skor akhir: $score untuk kita.';
+  }
+
+  @override
+  String yWinUpset18(String opponent, String score) {
+    return 'Salah satu kejutan tahun ini: $score melawan $opponent.';
+  }
+
+  @override
+  String yWinUpset19(String opponent, String score) {
+    return '$opponent $score. Tak ada yang memprediksinya dan tak ada yang bisa benar-benar menjelaskannya.';
+  }
+
+  @override
+  String yWinUpset20(String opponent, String score) {
+    return '$score melawan $opponent. Indah. Sekarang semua orang akan lupa betapa buruknya sisa tahun ini.';
+  }
+
+  @override
+  String yWinUpset21(String opponent, String score) {
+    return '$score melawan $opponent dan gerbong sudah penuh. Aku di sini saat gerbong masih kosong.';
+  }
+
+  @override
+  String yWinUpset22(String opponent, String score) {
+    return '$opponent $score. Hebat, dan mereka tetap akan menemukan cara untuk menyia-nyiakannya.';
+  }
+
+  @override
+  String yWinUpset23(String opponent, String score) {
+    return 'Malam besar melawan $opponent, $score. Satu burung layang-layang tidak membawa musim panas.';
+  }
+
+  @override
+  String yLostBadly12(String opponent, String score) {
+    return '$score dari $opponent. Sakit karena kita peduli. Tetap dukung mereka.';
+  }
+
+  @override
+  String yLostBadly13(String opponent, String score) {
+    return 'Malam untuk dilupakan melawan $opponent, $score. Para pemain yang paling terluka.';
+  }
+
+  @override
+  String yLostBadly14(String opponent, String score) {
+    return '$opponent $score. Angkat kepala. Sebuah tim dinilai dari cara menjawab ini.';
+  }
+
+  @override
+  String yLostBadly15(String opponent, String score) {
+    return '$score melawan $opponent. Buruk, ya. Kiamat, bukan.';
+  }
+
+  @override
+  String yLostBadly16(String opponent, String score) {
+    return '$score dari $opponent. Hasil yang akan dibicarakan bertahun-tahun, dengan alasan yang salah.';
+  }
+
+  @override
+  String yLostBadly17(String opponent, String score) {
+    return '$opponent menang $score. Setelah ini, jangan ada yang kaget lain kali.';
+  }
+
+  @override
+  String yLostBadly18(String opponent, String score) {
+    return 'Salah satu malam terburuk dalam waktu lama: $score melawan $opponent.';
+  }
+
+  @override
+  String yLostBadly19(String opponent, String score) {
+    return '$opponent $score. Pertanyaan akan muncul, dan memang harus.';
+  }
+
+  @override
+  String yLostBadly20(String opponent, String score) {
+    return '$score dari $opponent. Memalukan saja masih terlalu halus.';
+  }
+
+  @override
+  String yLostBadly21(String opponent, String score) {
+    return 'Kalah $score dari $opponent. Yang terakhir keluar, matikan lampu.';
+  }
+
+  @override
+  String yLostBadly22(String opponent, String score) {
+    return '$opponent $score. Aku sudah tidak kaget lagi, dan itu yang menakutkan.';
+  }
+
+  @override
+  String yLostBadly23(String opponent, String score) {
+    return '$score. $opponent. Seseorang di atas sana sebaiknya memperbarui CV-nya malam ini.';
+  }
+
+  @override
+  String yWinRout0(String opponent, String score) {
+    return '$score melawan $opponent! Sepak bola seperti ini membuat seluruh negeri tersenyum.';
+  }
+
+  @override
+  String yWinRout1(String opponent, String score) {
+    return '$opponent dibantai $score. Penampilan luar biasa.';
+  }
+
+  @override
+  String yWinRout2(String opponent, String score) {
+    return '$score. Melawan $opponent. Malam ini semuanya berhasil.';
+  }
+
+  @override
+  String yWinRout3(String opponent, String score) {
+    return 'Penghancuran $score atas $opponent. Simpan cuplikannya, nanti kalian mau menontonnya lagi.';
+  }
+
+  @override
+  String yWinRout4(String opponent, String score) {
+    return '$opponent $score. Itu tim yang menikmati sepak bolanya.';
+  }
+
+  @override
+  String yWinRout5(String opponent, String score) {
+    return '$score melawan $opponent, dan bisa saja lebih. Luar biasa.';
+  }
+
+  @override
+  String yWinRout6(String opponent, String score) {
+    return '$score melawan $opponent. Skor yang membuat orang melihat dua kali.';
+  }
+
+  @override
+  String yWinRout7(String opponent, String score) {
+    return '$opponent dikalahkan $score. Tidak ada pertandingan lagi setelah setengah jam pertama.';
+  }
+
+  @override
+  String yWinRout8(String opponent, String score) {
+    return 'Skor akhir: $score melawan $opponent. Jelas kemenangan terbesar dalam waktu lama.';
+  }
+
+  @override
+  String yWinRout9(String opponent, String score) {
+    return '$opponent $score. Satu tim datang untuk bermain, yang lain bahkan tidak turun dari bus.';
+  }
+
+  @override
+  String yWinRout10(String opponent, String score) {
+    return '$score. $opponent tidak punya jawaban untuk apa pun.';
+  }
+
+  @override
+  String yWinRout11(String opponent, String score) {
+    return 'Pesta gol: $score melawan $opponent.';
+  }
+
+  @override
+  String yWinRout12(String opponent, String score) {
+    return '$score melawan $opponent. Bagus, tapi mereka bukan tolok ukur.';
+  }
+
+  @override
+  String yWinRout13(String opponent, String score) {
+    return '$score melawan $opponent. Bangunkan aku saat kita melakukannya pada tim bagus.';
+  }
+
+  @override
+  String yWinRout14(String opponent, String score) {
+    return '$opponent $score. Seru, tapi aku pernah lihat tim tampil sebagus ini dan tidak memenangi apa pun.';
+  }
+
+  @override
+  String yWinRout15(String opponent, String score) {
+    return '$score, dan semua orang jadi jenius lagi. Lawannya $opponent.';
+  }
+
+  @override
+  String yWinRout16(String opponent, String score) {
+    return '$score melawan $opponent. Jangan terbawa suasana, ini hampir tidak membuktikan apa-apa.';
+  }
+
+  @override
+  String yWinRout17(String opponent, String score) {
+    return '$opponent $score. Nikmati, lalu ingat terakhir kali kita terlalu bersemangat.';
+  }
+
+  @override
+  String yWinShootout0(String opponent) {
+    return 'Lolos lewat adu penalti melawan $opponent! Saraf baja, semuanya.';
+  }
+
+  @override
+  String yWinShootout1(String opponent) {
+    return 'Adu penalti melawan $opponent, dan kita tetap tenang. Peluk orang asing.';
+  }
+
+  @override
+  String yWinShootout2(String opponent) {
+    return 'Adu penalti melawan $opponent dimenangi. Jantungku tidak kuat.';
+  }
+
+  @override
+  String yWinShootout3(String opponent) {
+    return '$opponent dikalahkan lewat adu penalti. Lanjut ke babak berikutnya.';
+  }
+
+  @override
+  String yWinShootout4(String opponent) {
+    return 'Melawan $opponent semuanya ditentukan dari titik penalti, dan kita mencetak lebih banyak.';
+  }
+
+  @override
+  String yWinShootout5(String opponent) {
+    return 'Adu penalti melawan $opponent dimenangi. Lewat jalan tersulit, tapi lolos.';
+  }
+
+  @override
+  String yWinShootout6(String opponent) {
+    return 'Lolos lewat adu penalti melawan $opponent. Lotre dimenangi, permainan dilupakan.';
+  }
+
+  @override
+  String yWinShootout7(String opponent) {
+    return 'Mengalahkan $opponent lewat penalti setelah main seperti itu? Beruntung, dan semua tahu.';
+  }
+
+  @override
+  String yWinShootout8(String opponent) {
+    return 'Lolos melawan $opponent lewat penalti. Seharusnya tidak perlu sampai ke sana.';
+  }
+
+  @override
+  String yKnockoutWin0(String opponent, String score) {
+    return 'LOLOS. $score melawan $opponent, dan mimpi masih hidup.';
+  }
+
+  @override
+  String yKnockoutWin1(String opponent, String score) {
+    return 'MENANG DI FASE GUGUR: $opponent dikalahkan $score. Negeri ini boleh mulai percaya.';
+  }
+
+  @override
+  String yKnockoutWin2(String opponent, String score) {
+    return '$score melawan $opponent dan masuk babak berikutnya. Malam yang luar biasa.';
+  }
+
+  @override
+  String yKnockoutWin3(String opponent, String score) {
+    return '$opponent pulang, $score. Terus maju.';
+  }
+
+  @override
+  String yKnockoutWin4(String opponent, String score) {
+    return 'FASE GUGUR: $score melawan $opponent. Babak berikutnya dipastikan.';
+  }
+
+  @override
+  String yKnockoutWin5(String opponent, String score) {
+    return 'Lolos: $score melawan $opponent.';
+  }
+
+  @override
+  String yKnockoutWin6(String opponent, String score) {
+    return '$opponent tersingkir, $score. Babak berikutnya menanti.';
+  }
+
+  @override
+  String yKnockoutWin7(String opponent, String score) {
+    return 'Menang $score melawan $opponent. Di fase gugur tak ada yang bertanya bagaimana.';
+  }
+
+  @override
+  String yKnockoutWin8(String opponent, String score) {
+    return 'Lolos melawan $opponent, $score. Lawan berikutnya tidak akan sebaik itu.';
+  }
+
+  @override
+  String yKnockoutWin9(String opponent, String score) {
+    return '$score melawan $opponent cukup untuk lolos. Lain kali butuh jauh lebih banyak.';
+  }
+
+  @override
+  String yKnockoutWin10(String opponent, String score) {
+    return '$opponent tersingkir, $score. Lebih tepat bertahan hidup daripada menang.';
+  }
+
+  @override
+  String yKnockoutWin11(String opponent, String score) {
+    return 'Masuk babak berikutnya setelah $score melawan $opponent. Jangan tanya bagaimana.';
+  }
+
+  @override
+  String yUpsetGap0(String opponent, String gap) {
+    return 'Selisih $gap peringkat, dan kita tetap mengalahkan $opponent. Luar biasa.';
+  }
+
+  @override
+  String yUpsetGap1(String opponent, String gap) {
+    return '$opponent berada $gap peringkat di atas kita. Dikalahkan. Sepak bola itu indah.';
+  }
+
+  @override
+  String yUpsetGap2(String opponent, String gap) {
+    return 'Selisih peringkat: $gap. Hasil: menang melawan $opponent. Jangan pernah berhenti percaya.';
+  }
+
+  @override
+  String yUpsetGap3(String opponent, String gap) {
+    return 'Selisih peringkat sebelum sepak mula: $gap. $opponent tetap dikalahkan.';
+  }
+
+  @override
+  String yUpsetGap4(String opponent, String gap) {
+    return 'Di peringkat dunia, $opponent berada $gap tingkat di atas kita. Tidak malam ini.';
+  }
+
+  @override
+  String yUpsetGap5(String opponent, String gap) {
+    return 'Indeks kejutan: selisih $gap peringkat. Kemenangan untuk kita melawan $opponent.';
+  }
+
+  @override
+  String yUpsetGap6(String opponent, String gap) {
+    return 'Selisih $gap peringkat memisahkan kita dari $opponent. Satu malam tidak menutup jarak itu.';
+  }
+
+  @override
+  String yUpsetGap7(String opponent, String gap) {
+    return '$opponent: $gap peringkat di atas, dan kalah. Peringkat dunia hampir tidak akan menyadarinya.';
+  }
+
+  @override
+  String yUpsetGap8(String gap) {
+    return 'Selisih peringkat: $gap. Ingat angka itu saat kita kalah lagi dari tim kecil.';
+  }
+
+  @override
+  String yEatWords0(String opponent) {
+    return 'Aku sudah menganggap tim ini habis. Aku salah, dan belum pernah aku sesenang ini karena salah. $opponent dikalahkan.';
+  }
+
+  @override
+  String yEatWords1(String opponent) {
+    return 'Satu porsi kerendahan hati, tolong. Yang besar. Kemenangan atas $opponent luar biasa.';
+  }
+
+  @override
+  String yEatWords2(String opponent) {
+    return 'Aku bilang mereka sudah tidak punya apa-apa. Ternyata banyak. Main bagus melawan $opponent, semuanya.';
+  }
+
+  @override
+  String yEatWords3(String opponent) {
+    return 'Sebagai catatan, aku tidak melihat kemenangan atas $opponent itu datang. Salut.';
+  }
+
+  @override
+  String yEatWords4(String opponent) {
+    return 'Baiklah. Aku bilang kedok mereka akan terbuka. $opponent tidak berhasil membukanya.';
+  }
+
+  @override
+  String yEatWords5(String opponent) {
+    return 'Malam ini aku menelan kata-kataku soal tim ini. Kemenangan atas $opponent pantas mendapatkannya.';
+  }
+
+  @override
+  String yEatWords6(String opponent) {
+    return 'Ya, aku bilang mereka sudah habis. Satu kemenangan atas $opponent belum membuktikan aku salah.';
+  }
+
+  @override
+  String yEatWords7(String opponent) {
+    return 'Aku disuruh menelan kata-kataku setelah $opponent. Akan kulakukan, pelan-pelan, dan struknya kusimpan.';
+  }
+
+  @override
+  String yEatWords8(String opponent) {
+    return 'Kemenangan atas $opponent mengesankan. Keraguanku soal tim ini masih ada.';
+  }
+
+  @override
+  String yAwayFansWin0(String nation, String score) {
+    return 'Salut untuk $nation. $score, dan mereka pantas mendapatkannya.';
+  }
+
+  @override
+  String yAwayFansWin1(String nation, String score) {
+    return 'Sakit mengatakannya, tapi malam ini tim yang lebih baik adalah $nation. $score. Selamat.';
+  }
+
+  @override
+  String yAwayFansWin2(String nation, String score) {
+    return '$score. Angkat topi untuk $nation, mereka lebih menginginkannya.';
+  }
+
+  @override
+  String yAwayFansWin3(String nation, String score) {
+    return 'Kalah $score dari $nation. Aku bahkan tidak tahu harus bilang apa.';
+  }
+
+  @override
+  String yAwayFansWin4(String nation, String score) {
+    return '$nation $score. Tim kita seharusnya malu.';
+  }
+
+  @override
+  String yAwayFansWin5(String nation, String score) {
+    return '$score melawan $nation. Tolong jelaskan padaku bagaimana itu bisa terjadi.';
+  }
+
+  @override
+  String yAwayFansWin6(String nation, String score) {
+    return 'Kalah $score dari $nation. Aku tidak akan pernah melupakan ini.';
+  }
+
+  @override
+  String yAwayFansWin7(String nation, String score) {
+    return '$score melawan $nation. Beruntung. Sepenuhnya beruntung.';
+  }
+
+  @override
+  String yAwayFansWin8(String nation, String score) {
+    return 'Setelah $score itu, pendukung $nation akan menyebalkan bertahun-tahun. Terima kasih untuk tidak ada apa-apa.';
+  }
+
+  @override
+  String yNeutralWin0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Hebat untuk sepak bola. Inilah kenapa kita mencintainya.';
+  }
+
+  @override
+  String yNeutralWin1(String nation, String opponent, String score) {
+    return 'Hasil luar biasa untuk $nation: $score melawan $opponent. Sepak bola terbaik.';
+  }
+
+  @override
+  String yNeutralWin2(String nation, String opponent, String score) {
+    return 'Semua penonton netral mendukung $nation malam ini. $score melawan $opponent!';
+  }
+
+  @override
+  String yNeutralWin3(String nation, String opponent, String score) {
+    return 'Hasil pekan ini: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralWin4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Tak ada yang menebak itu.';
+  }
+
+  @override
+  String yNeutralWin5(String nation, String opponent, String score) {
+    return 'Hasil besar: $nation $score $opponent. Peringkat akan bergerak.';
+  }
+
+  @override
+  String yNeutralWin6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Seru, kita lihat apakah mereka bisa mengulanginya.';
+  }
+
+  @override
+  String yNeutralWin7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. $nation yang menang, atau $opponent yang kalah?';
+  }
+
+  @override
+  String yNeutralWin8(String nation, String opponent, String score) {
+    return 'Hasil mengejutkan: $nation $score $opponent. Bersiaplah untuk banyak reaksi berlebihan.';
+  }
+
+  @override
+  String yScorerHero0(String name, String opponent) {
+    return '$name melawan $opponent. Anak-anak akan diberi nama seperti dia.';
+  }
+
+  @override
+  String yScorerHero1(String name, String opponent) {
+    return 'Patung untuk $name. Malam ini melawan $opponent dia segalanya.';
+  }
+
+  @override
+  String yScorerHero2(String name, String opponent) {
+    return '$name, luar biasa. Ingat malam melawan $opponent ini.';
+  }
+
+  @override
+  String yScorerHero3(String name, String opponent) {
+    return '$name memutuskan laga melawan $opponent. Pemain terbaik, tanpa perdebatan.';
+  }
+
+  @override
+  String yScorerHero4(String name, String opponent) {
+    return 'Melawan $opponent, malam ini milik $name.';
+  }
+
+  @override
+  String yScorerHero5(String name, String opponent) {
+    return '$name muncul saat dibutuhkan melawan $opponent.';
+  }
+
+  @override
+  String yScorerHero6(String name, String opponent) {
+    return '$name brilian melawan $opponent. Sekarang lakukan setiap pekan.';
+  }
+
+  @override
+  String yScorerHero7(String name, String opponent) {
+    return '$name menyelamatkan tim melawan $opponent. Yang lain tidak banyak membantu.';
+  }
+
+  @override
+  String yScorerHero8(String name, String opponent) {
+    return 'Tanpa $name, malam melawan $opponent akan sangat berbeda.';
+  }
+
+  @override
+  String yLostShock0(String opponent, String score) {
+    return '$score dari $opponent. Kecelakaan. Terjadi pada semua tim sekali.';
+  }
+
+  @override
+  String yLostShock1(String opponent, String score) {
+    return 'Kalah $score dari $opponent. Bangkit, kampanye belum selesai.';
+  }
+
+  @override
+  String yLostShock2(String opponent, String score) {
+    return '$opponent $score. Menyakitkan, tapi satu hasil tidak mendefinisikan tim ini.';
+  }
+
+  @override
+  String yLostShock3(String opponent, String score) {
+    return '$score melawan $opponent. Hari buruk di kantor. Lanjut.';
+  }
+
+  @override
+  String yLostShock4(String opponent, String score) {
+    return 'Kalah dari $opponent, $score. Tak ada yang melihat itu datang.';
+  }
+
+  @override
+  String yLostShock5(String opponent, String score) {
+    return '$opponent $score. Salah satu malam yang tidak masuk akal.';
+  }
+
+  @override
+  String yLostShock6(String opponent, String score) {
+    return '$score dari $opponent. Kekalahan yang akan diingat.';
+  }
+
+  @override
+  String yLostShock7(String opponent, String score) {
+    return 'Dikalahkan $opponent, $score. Kejutan, dilihat dari sudut mana pun.';
+  }
+
+  @override
+  String yLostShock8(String opponent, String score) {
+    return '$score dari $opponent. Dari $opponent! Tidak bisa diterima.';
+  }
+
+  @override
+  String yLostShock9(String opponent, String score) {
+    return 'Kalah $score dari $opponent. Aku mau penjelasan, bukan alasan.';
+  }
+
+  @override
+  String yLostShock10(String opponent, String score) {
+    return '$opponent $score. Aib nasional, dan itu bukan kiasan.';
+  }
+
+  @override
+  String yLostShock11(String opponent, String score) {
+    return '$score melawan $opponent. Bagaimana orang-orang di atas masih duduk di kursinya?';
+  }
+
+  @override
+  String yLostRout0(String opponent, String score) {
+    return '$score dari $opponent. Mereka tim papan atas. Belajar dari ini.';
+  }
+
+  @override
+  String yLostRout1(String opponent, String score) {
+    return 'Kalah kelas dari $opponent, $score. Tidak memalukan kalah dari yang terbaik.';
+  }
+
+  @override
+  String yLostRout2(String opponent, String score) {
+    return '$opponent $score. Sebuah pelajaran, dan pelajaran membuat kita tumbuh.';
+  }
+
+  @override
+  String yLostRout3(String opponent, String score) {
+    return '$score melawan $opponent. Menyakitkan, tapi mereka selevel di atas.';
+  }
+
+  @override
+  String yLostRout4(String opponent, String score) {
+    return '$opponent menang $score. Jaraknya nyata, dan sekarang semua orang melihatnya.';
+  }
+
+  @override
+  String yLostRout5(String opponent, String score) {
+    return '$score dari $opponent. Dihajar, sesederhana itu.';
+  }
+
+  @override
+  String yLostRout6(String opponent, String score) {
+    return '$opponent $score. Tim yang lebih baik, dan skornya bicara.';
+  }
+
+  @override
+  String yLostRout7(String opponent, String score) {
+    return 'Kalah $score dari $opponent. Bukan aib, tapi juga bukan pertandingan.';
+  }
+
+  @override
+  String yLostRout8(String opponent, String score) {
+    return '$score dari $opponent. Lawan lebih baik atau tidak, tak ada yang boleh kalah seperti itu.';
+  }
+
+  @override
+  String yLostRout9(String opponent, String score) {
+    return '$opponent $score. Apakah kita bahkan mencoba bersaing?';
+  }
+
+  @override
+  String yLostRout10(String opponent, String score) {
+    return '$score. Melawan $opponent. Domba menuju pembantaian.';
+  }
+
+  @override
+  String yLostRout11(String opponent, String score) {
+    return 'Kalah $score dari $opponent, dan tidak ada yang tampak peduli.';
+  }
+
+  @override
+  String yLostShootout0(String opponent) {
+    return 'Tersingkir lewat adu penalti melawan $opponent. Mereka memberi segalanya. Bangga.';
+  }
+
+  @override
+  String yLostShootout1(String opponent) {
+    return 'Adu penalti melawan $opponent. Cara paling kejam untuk tersingkir. Angkat kepala.';
+  }
+
+  @override
+  String yLostShootout2(String opponent) {
+    return 'Adu penalti melawan $opponent kalah. Tak ada yang pantas mengalami itu.';
+  }
+
+  @override
+  String yLostShootout3(String opponent) {
+    return 'Tersingkir lewat adu penalti melawan $opponent. Titik putih yang memutuskan.';
+  }
+
+  @override
+  String yLostShootout4(String opponent) {
+    return '$opponent lolos lewat adu penalti. Turnamen kita berakhir di sini.';
+  }
+
+  @override
+  String yLostShootout5(String opponent) {
+    return 'Adu penalti melawan $opponent kalah. Penalti lagi.';
+  }
+
+  @override
+  String yLostShootout6(String opponent) {
+    return 'Tersingkir lewat adu penalti melawan $opponent. Apa kita pernah melatihnya?';
+  }
+
+  @override
+  String yLostShootout7(String opponent) {
+    return 'Kalah dari $opponent lewat penalti. Seharusnya selesai jauh sebelumnya.';
+  }
+
+  @override
+  String yLostShootout8(String opponent) {
+    return 'Adu penalti melawan $opponent, dan kita kalah. Tentu saja.';
+  }
+
+  @override
+  String yKnockoutLoss0(String opponent, String score) {
+    return 'TERSINGKIR. $score dari $opponent. Perjalanan yang membanggakan berakhir di sini.';
+  }
+
+  @override
+  String yKnockoutLoss1(String opponent, String score) {
+    return 'Disingkirkan $opponent, $score. Terima kasih atas kenangannya.';
+  }
+
+  @override
+  String yKnockoutLoss2(String opponent, String score) {
+    return '$score melawan $opponent. Perjalanan sudah selesai, tapi perjalanan yang hebat.';
+  }
+
+  @override
+  String yKnockoutLoss3(String opponent, String score) {
+    return 'TERSINGKIR: $score dari $opponent. Angkat kepala.';
+  }
+
+  @override
+  String yKnockoutLoss4(String opponent, String score) {
+    return 'GUGUR: $score melawan $opponent.';
+  }
+
+  @override
+  String yKnockoutLoss5(String opponent, String score) {
+    return 'Tersingkir: $score melawan $opponent.';
+  }
+
+  @override
+  String yKnockoutLoss6(String opponent, String score) {
+    return '$opponent lolos, $score. Turnamen kita selesai.';
+  }
+
+  @override
+  String yKnockoutLoss7(String opponent, String score) {
+    return 'Disingkirkan $opponent, $score. Otopsi dimulai sekarang.';
+  }
+
+  @override
+  String yKnockoutLoss8(String opponent, String score) {
+    return 'TERSINGKIR. $score dari $opponent. Turnamen lain, akhir yang sama.';
+  }
+
+  @override
+  String yKnockoutLoss9(String opponent, String score) {
+    return '$score dari $opponent, dan pulang. Tak ada yang kaget.';
+  }
+
+  @override
+  String yKnockoutLoss10(String opponent, String score) {
+    return 'Disingkirkan $opponent, $score. Tunggu alasan-alasan sebelum pagi.';
+  }
+
+  @override
+  String yKnockoutLoss11(String opponent, String score) {
+    return '$opponent $score. Tersingkir, dan tidak pernah terlihat akan berakhir lain.';
+  }
+
+  @override
+  String yAwayFansGloat0(String nation, String score) {
+    return '$score melawan $nation. Hormat, mereka akan kembali lebih kuat.';
+  }
+
+  @override
+  String yAwayFansGloat1(String nation, String score) {
+    return 'Kemenangan bagus untuk kita, $score. Hari buruk untuk $nation, kasihan pendukungnya.';
+  }
+
+  @override
+  String yAwayFansGloat2(String nation, String score) {
+    return '$score. Malam buruk untuk $nation, dan kita memanfaatkan peluang. Begitulah.';
+  }
+
+  @override
+  String yAwayFansGloat3(String nation, String score) {
+    return '$score melawan $nation! Siapa yang menyangka? Mereka tidak.';
+  }
+
+  @override
+  String yAwayFansGloat4(String nation, String score) {
+    return 'Menang $score atas $nation. Tolong cek keadaan pendukung mereka.';
+  }
+
+  @override
+  String yAwayFansGloat5(String nation, String score) {
+    return '$nation $score. Yang ini masuk album foto.';
+  }
+
+  @override
+  String yAwayFansGloat6(String nation, String score) {
+    return '$score melawan $nation. Dan mereka merasa tim besar.';
+  }
+
+  @override
+  String yAwayFansGloat7(String nation, String score) {
+    return 'Bayangkan kalah $score dari kita. Tanya $nation, sekarang mereka tahu.';
+  }
+
+  @override
+  String yAwayFansGloat8(String nation, String score) {
+    return '$nation, $score. Selamat terbang pulang.';
+  }
+
+  @override
+  String yNeutralLoss0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Malam besar untuk $opponent, malam berat untuk $nation.';
+  }
+
+  @override
+  String yNeutralLoss1(String nation, String opponent, String score) {
+    return 'Turut prihatin untuk pendukung $nation setelah $score melawan $opponent. Mereka akan bangkit.';
+  }
+
+  @override
+  String yNeutralLoss2(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Setiap tim besar pernah mengalami malam seperti ini.';
+  }
+
+  @override
+  String yNeutralLoss3(String nation, String opponent, String score) {
+    return 'Kejutan pekan ini: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralLoss4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Tak ada yang melihat itu datang.';
+  }
+
+  @override
+  String yNeutralLoss5(String nation, String opponent, String score) {
+    return 'Hasil hari ini: $nation $score $opponent. Sekarang ada pertanyaan untuk $nation.';
+  }
+
+  @override
+  String yNeutralLoss6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Bukan kebetulan, kalau kalian mengikutinya.';
+  }
+
+  @override
+  String yNeutralLoss7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Ada yang harus banyak menjelaskan di sana.';
+  }
+
+  @override
+  String yNeutralLoss8(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Nama besar, penampilan kecil.';
+  }
+
+  @override
+  String yDownGap0(String opponent, String gap) {
+    return '$opponent berada $gap peringkat di bawah kita. Bisa terjadi. Lanjut.';
+  }
+
+  @override
+  String yDownGap1(String gap) {
+    return 'Selisih peringkat: $gap, menguntungkan kita. Sepak bola tidak membaca peringkat.';
+  }
+
+  @override
+  String yDownGap2(String opponent, String gap) {
+    return 'Selisih $gap peringkat antara kita dan $opponent di atas kertas. Tidak di lapangan malam ini.';
+  }
+
+  @override
+  String yDownGap3(String opponent, String gap) {
+    return 'Selisih peringkat sebelum sepak mula: $gap, menguntungkan kita. Tetap kalah dari $opponent.';
+  }
+
+  @override
+  String yDownGap4(String opponent, String gap) {
+    return 'Di peringkat dunia, $opponent berada $gap tingkat di bawah kita. Hasil: kalah.';
+  }
+
+  @override
+  String yDownGap5(String opponent, String gap) {
+    return 'Indeks kejutan: selisih $gap peringkat, ke arah yang salah, melawan $opponent.';
+  }
+
+  @override
+  String yDownGap6(String opponent, String gap) {
+    return '$gap peringkat di atas $opponent. Kalah. Jelaskan itu.';
+  }
+
+  @override
+  String yDownGap7(String gap) {
+    return 'Kalah dari tim yang $gap peringkat di bawah kita. Biarkan angka itu meresap.';
+  }
+
+  @override
+  String yDownGap8(String opponent, String gap) {
+    return 'Selisih peringkat: $gap. Kalah dari $opponent. Seseorang sebaiknya mulai menghitung hari.';
+  }
+
+  @override
+  String yDrewHeroic0(String opponent, String score) {
+    return '$score melawan $opponent! Hasil imbang yang terasa seperti kemenangan.';
+  }
+
+  @override
+  String yDrewHeroic1(String opponent, String score) {
+    return '$score melawan $opponent. Bangga pada setiap pemain.';
+  }
+
+  @override
+  String yDrewHeroic2(String opponent, String score) {
+    return '$opponent $score. Mereka favorit dan kita mampu mengimbangi.';
+  }
+
+  @override
+  String yDrewHeroic3(String opponent, String score) {
+    return '$score dengan $opponent. Satu poin yang direbut dengan darah dan keringat.';
+  }
+
+  @override
+  String yDrewHeroic4(String opponent, String score) {
+    return '$score melawan $opponent. Poin yang sangat bagus.';
+  }
+
+  @override
+  String yDrewHeroic5(String opponent, String score) {
+    return 'Imbang $score dengan $opponent. Sedikit yang mengharapkan apa pun.';
+  }
+
+  @override
+  String yDrewHeroic6(String opponent, String score) {
+    return '$opponent ditahan, $score. Hasil untuk dijadikan pijakan.';
+  }
+
+  @override
+  String yDrewHeroic7(String opponent, String score) {
+    return '$score melawan $opponent. Poin yang tidak diberikan siapa pun kepada kita.';
+  }
+
+  @override
+  String yDrewHeroic8(String opponent, String score) {
+    return '$score dengan $opponent. Poin bagus, tapi tak ada yang juara dengan hasil imbang.';
+  }
+
+  @override
+  String yDrewHeroic9(String opponent, String score) {
+    return '$score melawan $opponent. Indah. Kita juga tidak punya satu tembakan pun yang layak.';
+  }
+
+  @override
+  String yDrewHeroic10(String opponent, String score) {
+    return '$opponent $score. Satu poin, dan semua bertingkah seolah kita juara.';
+  }
+
+  @override
+  String yDrewHeroic11(String opponent, String score) {
+    return '$score melawan $opponent. Parkir bus dan beruntung.';
+  }
+
+  @override
+  String yDrewShame0(String opponent, String score) {
+    return '$score dengan $opponent. Menjengkelkan, tapi masih belum terkalahkan.';
+  }
+
+  @override
+  String yDrewShame1(String opponent, String score) {
+    return 'Hanya $score dengan $opponent. Hari buruk. Bisa terjadi.';
+  }
+
+  @override
+  String yDrewShame2(String opponent, String score) {
+    return '$opponent $score. Tidak cukup bagus, dan para pemain tahu itu.';
+  }
+
+  @override
+  String yDrewShame3(String opponent, String score) {
+    return '$score melawan $opponent. Dua poin hilang, tidak lebih.';
+  }
+
+  @override
+  String yDrewShame4(String opponent, String score) {
+    return '$score dengan $opponent. Dua poin terbuang.';
+  }
+
+  @override
+  String yDrewShame5(String opponent, String score) {
+    return 'Hanya $score dengan $opponent. Hasil buruk, bagaimanapun kalian membungkusnya.';
+  }
+
+  @override
+  String yDrewShame6(String opponent, String score) {
+    return '$opponent $score. Hasil imbang yang terasa seperti kekalahan.';
+  }
+
+  @override
+  String yDrewShame7(String opponent, String score) {
+    return '$score melawan $opponent. Laga seperti ini harus dimenangi dengan nyaman.';
+  }
+
+  @override
+  String yDrewShame8(String opponent, String score) {
+    return '$score dengan $opponent. Memalukan.';
+  }
+
+  @override
+  String yDrewShame9(String opponent, String score) {
+    return 'Hanya imbang dengan $opponent, $score. Siapa yang bertanggung jawab?';
+  }
+
+  @override
+  String yDrewShame10(String opponent, String score) {
+    return '$opponent $score. Kalau mereka saja tidak bisa kita kalahkan, siapa lagi?';
+  }
+
+  @override
+  String yDrewShame11(String opponent, String score) {
+    return '$score dengan $opponent. Pendukung mereka merayakan hasil imbang melawan kita. Pikirkan itu.';
   }
 
   @override
@@ -5094,6 +6304,11 @@ class AppLocalizationsId extends AppLocalizations {
       'Dua tempat di Kejuaraan Dunia diperebutkan lewat babak gugur para tim terbaik yang gagal lolos langsung.';
 
   @override
+  String tourCupPlayoffNoEntrants(String confederation) {
+    return '$confederation tidak memainkan play-off: semua jatahnya ditentukan di grup kualifikasi.';
+  }
+
+  @override
   String get tourCupQualDrawSoon =>
       'Grup akan diundi. Tonton undian kualifikasi dari beranda untuk melihatnya.';
 
@@ -5257,6 +6472,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get objectiveNcSurvive => 'Hindari degradasi';
 
   @override
+  String get objectiveNcOffTheBottom => 'Jangan finis di dasar grup';
+
+  @override
   String get finishNcChampions => 'Juara Piala Bangsa-Bangsa';
 
   @override
@@ -5270,6 +6488,9 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get finishNcStayedUp => 'Bertahan';
+
+  @override
+  String get finishNcClearOfBottom => 'Tidak di dasar grup';
 
   @override
   String get finishNcBottom => 'Dasar grup';
@@ -6595,7 +7816,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String newsNatzStarTitle(String name, String nation) {
-    return '⭐ $name siap pindah ke $nation!';
+    return '$name siap pindah ke $nation!';
   }
 
   @override
@@ -7240,14 +8461,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get careerBackupAllFailed => 'Gagal menulis cadangan.';
 
   @override
-  String get backupTitle => 'SIMPANAN';
+  String get backupTitle => 'CADANGAN';
 
   @override
   String get backupBlurb =>
-      'Semua simpanan berada dalam satu berkas di ponsel ini, dan tidak ada yang mencadangkannya otomatis. Ekspor salinan dan simpan di luar ponsel, di Files atau iCloud Drive, agar ponsel hilang atau aplikasi terhapus tidak merenggut karier Anda.';
+      'Semua simpanan ada dalam satu file di ponsel ini, dan tidak ada yang mencadangkannya sendiri kecuali kamu menyalakan cadangan otomatis di bawah. Simpan salinan di cloud agar ponsel yang hilang atau aplikasi yang terhapus tidak menghabiskan kariermu.';
 
   @override
-  String get backupExport => 'EKSPOR CADANGAN';
+  String get backupBlurbNoAuto =>
+      'Semua simpanan ada dalam satu file di ponsel ini, dan tidak ada yang mencadangkannya sendiri. Simpan salinan di cloud agar ponsel yang hilang atau aplikasi yang terhapus tidak menghabiskan kariermu.';
+
+  @override
+  String get backupExport => 'CADANGKAN KE CLOUD';
 
   @override
   String get backupExportSubject => 'Simpanan FNM';
@@ -9618,8 +10843,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get injuryCoverTitle => 'PENGGANTI';
 
   @override
-  String injuryCoverBanner(String player) {
-    return '$player cedera. Panggil siapa pun dari luar skuad, di posisi mana pun, atau pertahankan dia dan lanjutkan.';
+  String injuryCoverBanner(String player, String position) {
+    return '$player ($position) cedera. Panggil siapa pun dari luar skuad, di posisi mana pun, atau pertahankan dia dan lanjutkan.';
   }
 
   @override
@@ -9868,14 +11093,14 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get campaignGuineasTwist =>
-      'Guinea Khatulistiwa, Guinea Afrika dengan peringkat terendah, selama dua siklus';
+      'Guinea Khatulistiwa, Guinea Afrika yang terkecil, selama dua siklus';
 
   @override
   String get campaignGuineasGoal => 'Kalahkan Guinea dan Guinea-Bissau';
 
   @override
   String get campaignGuineasIntro =>
-      'Tiga negara Afrika menyandang nama Guinea, dan Guinea Khatulistiwa berada di peringkat terendah di antara mereka. Anda punya dua siklus untuk mengalahkan Guinea dan Guinea-Bissau masing-masing setidaknya sekali, lalu lihat sejauh mana Anda melaju di Kejuaraan Afrika. Papua Nugini, Guinea keempat, sudah dijadwalkan untuk laga persahabatan.';
+      'Tiga negara Afrika menyandang nama Guinea, dan Guinea Khatulistiwa adalah yang terkecil di antara mereka. Anda punya dua siklus untuk mengalahkan Guinea dan Guinea-Bissau masing-masing setidaknya sekali, lalu lihat sejauh mana Anda melaju di Kejuaraan Afrika. Papua Nugini, Guinea keempat, sudah dijadwalkan untuk laga persahabatan.';
 
   @override
   String get campaignStars1Guineas => 'Kalahkan Guinea dan Guinea-Bissau';
@@ -9911,6 +11136,30 @@ class AppLocalizationsId extends AppLocalizations {
   String get campaignStars3YoungFinns => 'Juara Kejuaraan Dunia';
 
   @override
+  String get campaignGreenlandTitle => 'Seabad Greenland';
+
+  @override
+  String get campaignGreenlandTwist =>
+      'Greenland menggantikan San Marino di Eropa, selama seratus tahun';
+
+  @override
+  String get campaignGreenlandGoal => 'Lolos ke sebuah Kejuaraan Eropa';
+
+  @override
+  String get campaignGreenlandIntro =>
+      'Greenland belum pernah memainkan laga internasional resmi. Di dunia ini mereka menggantikan tempat San Marino di Eropa, dan memulai dari dasar peringkat dunia: pemain amatir, lapangan rumput sintetis, dan musim yang terimpit di antara salju. Anda punya seratus tahun, dua puluh lima siklus, untuk lolos ke Kejuaraan Eropa, lalu ke Kejuaraan Dunia, dan, jika berani bermimpi, menjuarai salah satunya.';
+
+  @override
+  String get campaignStars1Greenland => 'Lolos ke sebuah Kejuaraan Eropa';
+
+  @override
+  String get campaignStars2Greenland => 'Lolos ke sebuah Kejuaraan Dunia';
+
+  @override
+  String get campaignStars3Greenland =>
+      'Juara Kejuaraan Eropa atau Kejuaraan Dunia';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -9923,4 +11172,1622 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get campaignCupOpen => 'Belum ditentukan';
+
+  @override
+  String newsYouthTitle1(String name, String level) {
+    return '$name bersinar bersama tim $level';
+  }
+
+  @override
+  String newsYouthTitle2(String name, String level) {
+    return 'Laporan akademi: $name mencuri perhatian';
+  }
+
+  @override
+  String newsYouthTitle3(String name, String level) {
+    return 'Bintang tim $level: $name';
+  }
+
+  @override
+  String newsYouthGoals1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kali',
+    );
+    return '$name mencetak gol $_temp0 untuk tim $level melawan $opponent pada jeda internasional terakhir.';
+  }
+
+  @override
+  String newsYouthGoals2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gol',
+    );
+    return '$_temp0 dari $name saat tim $level menghadapi $opponent pada jeda kali ini.';
+  }
+
+  @override
+  String newsYouthGoals3(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gol',
+    );
+    return 'Tim $level menghadapi $opponent, dan $name pulang dengan $_temp0 atas namanya.';
+  }
+
+  @override
+  String newsYouthAssists1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count assist',
+    );
+    return '$name menyumbang $_temp0 untuk tim $level melawan $opponent dan mengatur permainan dari awal hingga akhir.';
+  }
+
+  @override
+  String newsYouthAssists2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count assist',
+    );
+    return 'Tim $level bertemu $opponent pada jeda kali ini, dan $name yang mengendalikan permainan: $_temp0 dan penampilan yang masih dibicarakan staf pelatih.';
+  }
+
+  @override
+  String newsYouthCleanSheet1(String name, String level, String opponent) {
+    return '$name tampil luar biasa saat tim $level mencatat nirbobol melawan $opponent.';
+  }
+
+  @override
+  String newsYouthCleanSheet2(String name, String level, String opponent) {
+    return 'Nirbobol untuk tim $level melawan $opponent, dan sebagian besar berkat $name.';
+  }
+
+  @override
+  String newsYouthDisplay1(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$name tampil mengesankan untuk tim $level melawan $opponent, dan staf pelatih memberi nilai $mark dari sepuluh.';
+  }
+
+  @override
+  String newsYouthDisplay2(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return 'Tim $level bermain melawan $opponent pada jeda kali ini, dan para pelatih menyoroti $name: $mark dari sepuluh, nilai tertinggi di tim.';
+  }
+
+  @override
+  String get newsYouthDevReady1 =>
+      'Dengan performa seperti ini, ia sudah cukup bagus untuk dipertimbangkan masuk tim senior.';
+
+  @override
+  String get newsYouthDevReady2 =>
+      'Staf pelatih yakin ia sudah siap untuk sepak bola senior sekarang. Keputusan ada di tangan Anda.';
+
+  @override
+  String get newsYouthDevClose1 =>
+      'Perkembangannya bagus dan ia hampir menembus tim senior.';
+
+  @override
+  String get newsYouthDevClose2 =>
+      'Jaraknya ke tim senior sudah tidak jauh, dan satu musim bagus lagi bisa cukup.';
+
+  @override
+  String get newsYouthDevGrowing1 =>
+      'Ia berkembang dengan baik, meski tim senior masih satu atau dua langkah lagi.';
+
+  @override
+  String get newsYouthDevGrowing2 =>
+      'Masih ada pekerjaan sebelum ia menjadi pemain timnas senior, tetapi semuanya mengarah ke jalur yang benar.';
+
+  @override
+  String get newsYouthDevRaw1 =>
+      'Ia masih mentah dan beberapa tahun lagi dari tim senior, tetapi bakatnya jelas terlihat.';
+
+  @override
+  String get newsYouthDevRaw2 =>
+      'Masih terlalu dini, dan staf akademi meminta kesabaran, bukan berita utama.';
+
+  @override
+  String get newsYouthStrengthGkPhysical =>
+      'Jangkauan dan penguasaannya atas kotak penalti yang membuatnya berbeda.';
+
+  @override
+  String get newsYouthStrengthGkTechnical =>
+      'Tangkapan dan distribusi bolanya adalah yang terbaik yang dilihat akademi dalam beberapa tahun.';
+
+  @override
+  String get newsYouthStrengthGkStamina =>
+      'Konsentrasinya tidak pernah turun: di menit ke-90 ia sama tajamnya dengan di menit pertama.';
+
+  @override
+  String get newsYouthStrengthDefPhysical =>
+      'Kecepatan dan duel udaranya adalah kunci permainannya.';
+
+  @override
+  String get newsYouthStrengthDefTechnical =>
+      'Ia membaca permainan jauh melampaui usianya dan tenang saat menguasai bola.';
+
+  @override
+  String get newsYouthStrengthDefStamina =>
+      'Ia tidak pernah lengah dan masih berlari kencang ke belakang di menit terakhir.';
+
+  @override
+  String get newsYouthStrengthMidPhysical =>
+      'Ia merebut bola dengan tenaga besar dan langsung membawanya ke depan.';
+
+  @override
+  String get newsYouthStrengthMidTechnical =>
+      'Visi dan ragam umpannya adalah kunci permainannya.';
+
+  @override
+  String get newsYouthStrengthMidStamina =>
+      'Staminanya luar biasa: ia menjelajahi setiap jengkal lapangan.';
+
+  @override
+  String get newsYouthStrengthFwdPhysical =>
+      'Kecepatannya menusuk ke belakang dan kekuatannya di udara membuat lini belakang mana pun kerepotan.';
+
+  @override
+  String get newsYouthStrengthFwdTechnical =>
+      'Penyelesaian akhir dan pergerakannya di kotak penalti adalah kunci permainannya.';
+
+  @override
+  String get newsYouthStrengthFwdStamina =>
+      'Ia menekan dari depan sepanjang laga dan tak memberi bek lawan waktu bernapas.';
+
+  @override
+  String pressMomentBigWinWarm3(String opponent) {
+    return 'Suporter akan menyanyikan laga melawan $opponent ini untuk waktu lama. Apa yang Anda katakan kepada para pemain saat peluit akhir?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral3(String opponent) {
+    return 'Itu pernyataan tegas melawan $opponent. Seberapa banyak hasil itu lahir dari lapangan latihan?';
+  }
+
+  @override
+  String pressMomentBigWinHostile3(String opponent) {
+    return 'Selamat atas hasil melawan $opponent, tetapi kami sudah pernah melihat malam seperti ini. Apa bedanya kali ini?';
+  }
+
+  @override
+  String pressMomentBigLossWarm3(String opponent) {
+    return 'Semua orang pernah mengalami malam buruk, dan melawan $opponent adalah salah satunya. Seberapa cepat Anda bisa melupakannya?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral3(String opponent) {
+    return '$opponent lebih baik di semua lini. Dari mana Anda mulai memperbaikinya?';
+  }
+
+  @override
+  String pressMomentBigLossHostile3(String opponent) {
+    return 'Suporter sudah pulang sebelum laga melawan $opponent usai. Bisakah Anda menyalahkan mereka?';
+  }
+
+  @override
+  String pressMomentCrisisWarm3(String opponent) {
+    return 'Ini periode yang berat, dan $opponent tidak membuatnya lebih mudah. Apa yang membuat Anda tetap bertahan?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral3(String opponent) {
+    return 'Satu laga lagi tanpa kemenangan, kali ini melawan $opponent. Berapa lama lagi ini bisa berlangsung sebelum dewan federasi bertindak?';
+  }
+
+  @override
+  String pressMomentCrisisHostile3(String opponent) {
+    return 'Sekarang $opponent juga. Masih adakah yang tersisa dari rencana Anda, atau sudah waktunya memberi jalan bagi orang lain?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers5 =>
+      'Apa pun yang Anda tulis, tulislah tentang para pemain. Mereka pantas mendapatkannya.';
+
+  @override
+  String get pressReplyCreditPlayers6 =>
+      'Saya punya skuad yang rela mati-matian untuk satu sama lain. Itu bukan hal kecil.';
+
+  @override
+  String get pressReplyTakeResponsibility5 =>
+      'Saya yang mengambil keputusan, jadi kritik untuk saya. Itulah pekerjaannya.';
+
+  @override
+  String get pressReplyTakeResponsibility6 =>
+      'Lihat pelatihnya dulu. Saya membuat kesalahan dan akan memperbaikinya.';
+
+  @override
+  String get pressReplyDemandMore5 =>
+      'Bagus saja tidak cukup di sini. Saya sudah mengatakannya langsung di depan mereka.';
+
+  @override
+  String get pressReplyDemandMore6 =>
+      'Tidak ada seorang pun di ruang ganti itu yang dijamin tempatnya. Sekarang mereka tahu.';
+
+  @override
+  String get pressReplyDeflect5 =>
+      'Anda bisa menanyakannya dengan tiga cara berbeda. Jawabannya tetap sama.';
+
+  @override
+  String get pressReplyDeflect6 =>
+      'Pikiran saya simpan untuk para pemain. Anda pasti mengerti.';
+
+  @override
+  String yWinRoutine12(String opponent, String score) {
+    return '$score melawan $opponent. Sepak bola yang tenang, terkendali, dewasa. Senang melihatnya.';
+  }
+
+  @override
+  String yWinRoutine13(String opponent, String score) {
+    return 'Menang $score atas $opponent tanpa berkeringat. Tim ini makin jago bermain membosankan, dan yang membosankan itu juara.';
+  }
+
+  @override
+  String yWinRoutine14(String opponent, String score) {
+    return '$opponent $score. Tiga poin, tanpa drama, kembali bekerja.';
+  }
+
+  @override
+  String yWinRoutine15(String opponent, String score) {
+    return '$score rutin melawan $opponent. Tak ada yang akan mengingatnya dan memang tak perlu.';
+  }
+
+  @override
+  String yWinRoutine16(String opponent, String score) {
+    return '$score melawan $opponent dan entah kenapa aku tetap khawatir.';
+  }
+
+  @override
+  String yWinRoutine17(String opponent, String score) {
+    return 'Menang $score atas $opponent. Melawan tim yang sungguhan, penampilan seperti itu pasti dihukum.';
+  }
+
+  @override
+  String yWinTight12(String opponent, String score) {
+    return '$score melawan $opponent. Bertahan, menderita, menang. Itu baru tim.';
+  }
+
+  @override
+  String yWinTight13(String opponent, String score) {
+    return 'Menang $score atas $opponent hanya dengan mental. Aku pilih tim yang menolak kalah.';
+  }
+
+  @override
+  String yWinTight14(String opponent, String score) {
+    return '$opponent $score. Sampai detik terakhir, tapi tiga poin milik kita.';
+  }
+
+  @override
+  String yWinTight15(String opponent, String score) {
+    return '$score tipis atas $opponent. Bedanya sedikit, dan itulah sepak bola.';
+  }
+
+  @override
+  String yWinTight16(String opponent, String score) {
+    return '$score melawan $opponent. Satu pantulan beruntung ke arah lain dan obrolan kita akan sangat berbeda.';
+  }
+
+  @override
+  String yWinTight17(String opponent, String score) {
+    return 'Susah payah bertahan melawan $opponent, $score. Jangan ada yang menyebut itu penampilan.';
+  }
+
+  @override
+  String yDrew12(String opponent, String score) {
+    return '$score dengan $opponent. Bukan kekalahan, dan kadang memang itu tugasnya.';
+  }
+
+  @override
+  String yDrew13(String opponent, String score) {
+    return 'Satu poin hasil kerja keras melawan $opponent, $score. Aku suka daya juang kita.';
+  }
+
+  @override
+  String yDrew14(String opponent, String score) {
+    return '$opponent $score. Berbagi angka, kata para komentator zaman dulu.';
+  }
+
+  @override
+  String yDrew15(String opponent, String score) {
+    return '$score dengan $opponent. Tak satu pun tim berbuat cukup untuk pantas mendapat lebih.';
+  }
+
+  @override
+  String yDrew16(String opponent, String score) {
+    return '$score dengan $opponent. Jenis hasil imbang yang di bus pulang terasa seperti kekalahan.';
+  }
+
+  @override
+  String yDrew17(String opponent, String score) {
+    return 'Imbang $score dengan $opponent. Kita terus bicara soal kemajuan dan terus begini.';
+  }
+
+  @override
+  String yLost12(String opponent, String score) {
+    return '$score dari $opponent. Sakit, tapi aku sudah melihat cukup untuk percaya pada tim ini.';
+  }
+
+  @override
+  String yLost13(String opponent, String score) {
+    return 'Kalah $score dari $opponent, dan mereka memang bagus. Akui dan bangkit lagi.';
+  }
+
+  @override
+  String yLost14(String opponent, String score) {
+    return '$opponent $score. Satu kekalahan, beberapa pelajaran, dan laga berikutnya segera datang.';
+  }
+
+  @override
+  String yLost15(String opponent, String score) {
+    return 'Kalah $score dari $opponent. Sulit dibantah.';
+  }
+
+  @override
+  String yLost16(String opponent, String score) {
+    return '$score dari $opponent. Kesalahan yang sama seperti terakhir kali, dibuat dengan percaya diri yang sama.';
+  }
+
+  @override
+  String yLost17(String opponent, String score) {
+    return 'Kalah $score dari $opponent. Kalau tak ada yang bertanggung jawab atas ini, kita sedang apa?';
+  }
+
+  @override
+  String get yReactionShrug12 =>
+      'Buatku tak masalah. Tak setiap malam harus ada kembang api.';
+
+  @override
+  String get yReactionShrug13 => 'Poin tetap poin. Malam ini tidur nyenyak.';
+
+  @override
+  String get yReactionShrug14 => 'Sudah nonton. Tak ada catatan.';
+
+  @override
+  String get yReactionShrug15 => 'Di antara biasa saja dan biasa saja.';
+
+  @override
+  String get yReactionShrug16 =>
+      'Bayar streaming cuma buat ini. Tidak lagi (nanti balik lagi).';
+
+  @override
+  String get yReactionShrug17 =>
+      'Sembilan puluh menit kekosongan berbentuk sepak bola.';
+
+  @override
+  String get yReactionRelief12 =>
+      'Bisa bernapas lagi. Bangga mereka mampu bertahan.';
+
+  @override
+  String get yReactionRelief13 =>
+      'Kemenangan seperti inilah yang membangun tim. Jelek itu indah.';
+
+  @override
+  String get yReactionRelief14 => 'Kuku habis, tapi poin tetap aman.';
+
+  @override
+  String get yReactionRelief15 =>
+      'Peluit akhir tak pernah terdengar seindah ini.';
+
+  @override
+  String get yReactionRelief16 => 'Senang menang, khawatir dengan caranya.';
+
+  @override
+  String get yReactionRelief17 =>
+      'Kita terus lolos dari hukuman. Suatu hari tidak lagi.';
+
+  @override
+  String get yReactionFury12 =>
+      'Aku cinta tim ini, dan justru karena itu rasanya sakit.';
+
+  @override
+  String get yReactionFury13 =>
+      'Malam buruk. Lain kali mereka berutang pada kita, dan mereka tahu itu.';
+
+  @override
+  String get yReactionFury14 =>
+      'Kumatikan di menit tujuh puluh. Harusnya di menit enam puluh.';
+
+  @override
+  String get yReactionFury15 => 'Tanpa perjuangan, tanpa ide, tanpa alasan.';
+
+  @override
+  String get yReactionFury16 =>
+      'Masalah yang sama setiap kali, dan tak ada yang memperbaiki apa pun.';
+
+  @override
+  String get yReactionFury17 =>
+      'Seseorang di federasi harus menonton ulang ini dan menjelaskannya.';
+
+  @override
+  String get backupShareHint =>
+      'Membuat satu file cadangan berisi semua simpanan. Pilih Google Drive, iCloud Drive, atau File untuk menyimpannya.';
+
+  @override
+  String backupLastAt(String date) {
+    return 'Cadangan terakhir: $date';
+  }
+
+  @override
+  String get backupNever => 'Belum ada cadangan';
+
+  @override
+  String get backupRemindersTitle => 'Pengingat cadangan';
+
+  @override
+  String get backupRemindersBlurb =>
+      'Pesan di kotak masuk saat cadangan terakhirmu mulai lama.';
+
+  @override
+  String get backupAutoICloudTitle => 'Cadangan iCloud otomatis';
+
+  @override
+  String get backupAutoDriveTitle => 'Cadangan Google Drive otomatis';
+
+  @override
+  String get backupAutoBlurb =>
+      'Mencadangkan setelah pertandingan, di akhir siklus, dan saat kamu keluar dari aplikasi. Menyimpan dua yang terbaru.';
+
+  @override
+  String get backupStatusUploading => 'Sedang mencadangkan.';
+
+  @override
+  String get backupStatusUploaded => 'Sudah dicadangkan.';
+
+  @override
+  String get backupStatusICloudSignedOut =>
+      'iCloud mati. Masuk ke iCloud dan nyalakan iCloud Drive di aplikasi Pengaturan.';
+
+  @override
+  String get backupStatusDriveSignedOut =>
+      'Belum masuk. Nyalakan sakelar untuk masuk dengan Google.';
+
+  @override
+  String get backupStatusNotConfigured =>
+      'Belum tersedia di versi aplikasi ini.';
+
+  @override
+  String get backupStatusUnavailable =>
+      'Cloud tidak bisa dijangkau sekarang. Akan dicoba lagi nanti.';
+
+  @override
+  String get backupStatusFailed =>
+      'Cadangan otomatis terakhir tidak berhasil. Akan dicoba lagi nanti.';
+
+  @override
+  String backupDriveSignedInAs(String email) {
+    return 'Masuk sebagai $email';
+  }
+
+  @override
+  String get backupDriveSignOut => 'KELUAR';
+
+  @override
+  String get backupDriveSignInFailed =>
+      'Masuk dengan Google tidak berhasil. Coba lagi nanti.';
+
+  @override
+  String get backupRestoreICloud => 'PULIHKAN DARI ICLOUD';
+
+  @override
+  String get backupRestoreDrive => 'PULIHKAN DARI GOOGLE DRIVE';
+
+  @override
+  String get backupCrossPlatformHelp =>
+      'Pindah antara iPhone dan Android? Cadangkan ke file di satu ponsel, lalu pulihkan dari file itu di ponsel lainnya.';
+
+  @override
+  String get backupCloudListBlurb =>
+      'Cadangan dari perangkatmu di akun ini. Ketuk salah satu untuk memulihkannya.';
+
+  @override
+  String get backupCloudListEmpty =>
+      'Belum ada cadangan. Cadangan baru bisa butuh beberapa menit untuk sampai ke perangkat lain.';
+
+  @override
+  String get backupCloudListFailed =>
+      'Cadangan tidak bisa dibaca. Periksa koneksi lalu coba lagi.';
+
+  @override
+  String get backupCloudThisDevice => 'Perangkat ini';
+
+  @override
+  String backupCloudMore(int count) {
+    return 'Simpanan lain: $count';
+  }
+
+  @override
+  String get backupCloudNewer =>
+      'Dibuat oleh versi aplikasi yang lebih baru. Perbarui dulu.';
+
+  @override
+  String get backupCloudDownloading => 'Mengambil cadangan.';
+
+  @override
+  String get backupRestoreSafetyNote =>
+      'Salinan simpanan di ponsel ini disimpan dulu di ponsel ini.';
+
+  @override
+  String get backupRejectedSafety =>
+      'Salinan simpanan saat ini tidak bisa disimpan, jadi tidak ada yang diganti.';
+
+  @override
+  String get newsBackupReminderTitle => 'Saatnya mencadangkan';
+
+  @override
+  String get newsBackupReminderBody =>
+      'Simpananmu hanya ada di ponsel ini. Buka Pengaturan dan ketuk Cadangkan ke cloud, atau nyalakan cadangan otomatis di sana. Pengingat ini juga bisa dimatikan di Pengaturan.';
+
+  @override
+  String get backupSafetyTitle => 'Salinan dari sebelum pemulihan';
+
+  @override
+  String get backupSafetyBlurb =>
+      'Disimpan di ponsel ini kalau-kalau pemulihan tadi keliru. Tiga yang terbaru disimpan.';
+
+  @override
+  String get backupSafetyRestore => 'PULIHKAN';
+
+  @override
+  String get backupSafetyShare => 'BAGIKAN';
+
+  @override
+  String get backupCloudNoDetails => 'Detailnya masih dalam perjalanan.';
+
+  @override
+  String get tacticsLibraryTitle => 'PUSTAKA TAKTIK';
+
+  @override
+  String get tacticsLibraryBlurb =>
+      'Taktik di pustakamu bisa dimuat di simpanan mana pun, termasuk yang baru. Peran dan penendang bola mati disimpan menurut posisi, bukan pemain.';
+
+  @override
+  String get tacticsSaveToLibrary => 'Simpan ke pustaka';
+
+  @override
+  String get tacticsLoadFromLibrary => 'Muat dari pustaka';
+
+  @override
+  String get tacticsLibraryEmpty =>
+      'Pustakamu masih kosong. Simpan taktik di sini dan kamu bisa memuatnya di simpanan mana pun.';
+
+  @override
+  String tacticsLibrarySaved(String name) {
+    return '“$name” tersimpan di pustaka';
+  }
+
+  @override
+  String tacticsLibraryLoaded(String name) {
+    return '“$name” dimuat';
+  }
+
+  @override
+  String tacticsLibraryNotFitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count peran atau penendang bola mati tidak cocok dengan skuad ini.',
+      one: '1 peran atau penendang bola mati tidak cocok dengan skuad ini.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tacticsLibraryRename => 'Ganti nama';
+
+  @override
+  String get tacticsLibraryRenameTitle => 'Ganti nama taktik';
+
+  @override
+  String get tacticsLibraryDelete => 'Hapus';
+
+  @override
+  String tacticsLibraryDeleteTitle(String name) {
+    return 'Hapus “$name”?';
+  }
+
+  @override
+  String get tacticsLibraryDeleteBody =>
+      'Taktik ini akan hilang dari pustaka di semua simpananmu.';
+
+  @override
+  String get tacticsLibraryNameTaken =>
+      'Pustakamu sudah punya taktik dengan nama itu.';
+
+  @override
+  String tacticsLibraryCouldNotLoad(String error) {
+    return 'Pustaka tidak bisa dimuat.\n$error';
+  }
+
+  @override
+  String hostBidHeading(String competition, int year) {
+    return 'Pencalonan tuan rumah: $competition $year';
+  }
+
+  @override
+  String get hostBidScreenTitle => 'Pencalonan';
+
+  @override
+  String get hostBidBlurb =>
+      'Tuan rumah ditentukan lewat undian di antara para kandidat. Pencalonan memberi bobot lebih pada nama Anda: stadion Anda memberi peluang awal, dan uang menambahnya, meski setiap juta tambahan berpengaruh sedikit lebih kecil. Uangnya tetap terpakai, menang atau tidak.';
+
+  @override
+  String hostBidPrize(String amount) {
+    return 'Jika menang, Anda menjadi tuan rumah, lolos otomatis, dan menerima dana sekali bayar sebesar $amount untuk anggaran berikutnya.';
+  }
+
+  @override
+  String get hostBidChance => 'Peluang menjadi tuan rumah';
+
+  @override
+  String get hostBidBaseLabel => 'Stadion dan posisi';
+
+  @override
+  String get hostBidInvestLabel => 'Investasi';
+
+  @override
+  String hostBidCeiling(String nation, String percent) {
+    return 'Batas atas untuk $nation: $percent';
+  }
+
+  @override
+  String get hostBidInvestment => 'Investasi Anda';
+
+  @override
+  String hostBidFreeFunds(String amount) {
+    return 'Dana bebas: $amount';
+  }
+
+  @override
+  String get hostBidSubmit => 'Ajukan pencalonan';
+
+  @override
+  String get hostBidDecline => 'Tidak kali ini';
+
+  @override
+  String get hostBidUnavailable => 'Pencalonan ini sudah ditutup.';
+
+  @override
+  String hostBidWonTitle(String competition, int year) {
+    return 'Pencalonan berhasil: $competition $year';
+  }
+
+  @override
+  String hostBidWonBody(String amount) {
+    return 'Kita akan menjadi tuan rumah turnamen dan lolos otomatis sebagai tuan rumah. Dana sekali bayar sebesar $amount kini ada di kas federasi, dan Anda bisa langsung membaginya ke departemen siklus ini dari layar utama.';
+  }
+
+  @override
+  String hostBidLostTitle(String competition, int year) {
+    return 'Pencalonan gagal: $competition $year';
+  }
+
+  @override
+  String hostBidLostBody(String hosts) {
+    return 'Hak tuan rumah jatuh ke: $hosts. Pencalonan kita kali ini belum cukup dan uang yang dikeluarkan tidak kembali, tetapi federasi sudah memperjuangkannya.';
+  }
+
+  @override
+  String get hostBidGrantEvent => 'Bagikan dana tuan rumah';
+
+  @override
+  String hostBidGrantBanner(String amount) {
+    return 'Dana tuan rumah: $amount bisa langsung ditambahkan ke departemen siklus ini. Yang sudah dibagi tetap, sisanya tetap di kas.';
+  }
+
+  @override
+  String get stadiumsTitle => 'Stadion nasional';
+
+  @override
+  String get stadiumsEntrySub => 'Tingkatkan stadion atau bangun yang baru';
+
+  @override
+  String get stadiumsBlurb =>
+      'Level stadion adalah ukurannya: level 1 di bawah 15.000 kursi, level 2 mulai 15.000, level 3 mulai 25.000, level 4 mulai 40.000, level 5 mulai 60.000. Setiap stadion menghasilkan pendapatan kecil di awal setiap siklus, makin banyak kursi makin besar, selama suporter Anda bisa mengisinya. Peningkatan langsung menambah kursi dan sedikit reputasi mulai siklus berikutnya; memperkecil memangkas biaya perawatan, tetapi tidak ada pengembalian dana. Stadion Anda menentukan turnamen mana yang boleh Anda calonkan.';
+
+  @override
+  String stadiumsIncome(String amount) {
+    return 'Pemasukan stadion: $amount per siklus';
+  }
+
+  @override
+  String stadiumsReputation(int points) {
+    return 'Reputasi dari stadion: +$points';
+  }
+
+  @override
+  String get stadiumsClosed =>
+      'Pekerjaan dipesan di awal siklus, sebelum anggaran ditetapkan.';
+
+  @override
+  String stadiumsCapacity(String seats) {
+    return 'Kapasitas: $seats';
+  }
+
+  @override
+  String stadiumsLevel(int level, int max) {
+    return 'Level $level/$max';
+  }
+
+  @override
+  String stadiumsUpgrade(String cost) {
+    return 'Tingkatkan: $cost';
+  }
+
+  @override
+  String get stadiumsTopLevel => 'Level tertinggi';
+
+  @override
+  String stadiumsOpens(int year) {
+    return 'Sedang dibangun, dibuka tahun $year';
+  }
+
+  @override
+  String get stadiumsBuildTitle => 'Bangun stadion baru';
+
+  @override
+  String get stadiumsBuildBody =>
+      'Cukup mahal: stadion baru di kota pilihan Anda, dibuka sejak awal siklus berikutnya.';
+
+  @override
+  String get stadiumsBuildCity => 'Kota';
+
+  @override
+  String stadiumsBuildButton(String cost) {
+    return 'Bangun: $cost';
+  }
+
+  @override
+  String get stadiumsBuilding => 'Sebuah stadion sedang dibangun.';
+
+  @override
+  String get stadiumsNoCity => 'Setiap kota sudah punya stadion baru.';
+
+  @override
+  String stadiumsConfirmUpgrade(String stadium, int level, String cost) {
+    return 'Tingkatkan $stadium ke level $level seharga $cost?';
+  }
+
+  @override
+  String stadiumsConfirmBuild(String city, String cost) {
+    return 'Bangun stadion baru di $city seharga $cost?';
+  }
+
+  @override
+  String get stadiumsConfirm => 'Konfirmasi';
+
+  @override
+  String get stadiumsCancel => 'Batal';
+
+  @override
+  String get stadiumsRefused =>
+      'Pesanan tidak berhasil. Tidak ada biaya yang ditarik.';
+
+  @override
+  String get stadiumsNameLabel => 'Nama stadion';
+
+  @override
+  String get stadiumsNameHint =>
+      'Biarkan kosong untuk memakai nama yang disarankan.';
+
+  @override
+  String get stadiumsRename => 'Ganti nama stadion';
+
+  @override
+  String get hostBidSectionTitle => 'Pencalonan tuan rumah';
+
+  @override
+  String get hostBidOpenSub =>
+      'Opsional. Putuskan sebelum siklus baru dimulai.';
+
+  @override
+  String get hostBidDecidedAtRollover =>
+      'Tuan rumah diumumkan saat siklus baru dimulai.';
+
+  @override
+  String get hostBidLodged =>
+      'Pencalonan diajukan. Tuan rumah diumumkan saat siklus baru dimulai.';
+
+  @override
+  String get hostBidDeclinedNote =>
+      'Kali ini Anda memilih tidak mencalonkan diri.';
+
+  @override
+  String get hostBidOpensLater =>
+      'Memenuhi syarat. Anda bisa mencalonkan diri di akhir siklus ini.';
+
+  @override
+  String get hostBidNoFunds => 'Dana bebas tidak cukup untuk mencalonkan diri.';
+
+  @override
+  String hostBidNeedStadiums(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Anda masih butuh $count stadion berkapasitas $seats+ kursi.',
+      one: 'Anda masih butuh 1 stadion berkapasitas $seats+ kursi.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hostBidBarredConf(String confederation) {
+    return '$confederation menjadi tuan rumah Kejuaraan Dunia terakhir.';
+  }
+
+  @override
+  String get hostBidRecentHost =>
+      'Anda menjadi tuan rumah salah satu dari tiga edisi terakhir.';
+
+  @override
+  String hostBidRequirement(
+    int grounds,
+    String minSeats,
+    int bigGrounds,
+    String bigSeats,
+  ) {
+    return 'Syarat: $grounds stadion berkapasitas $minSeats+ kursi, $bigGrounds di antaranya $bigSeats+.';
+  }
+
+  @override
+  String hostBidWonBodyBudget(String amount) {
+    return 'Kita akan menjadi tuan rumah dan otomatis lolos sebagai tuan rumah. Dana hibah sekali bayar sebesar $amount sudah masuk ke dana federasi, siap untuk anggaran siklus ini.';
+  }
+
+  @override
+  String get hubStadiumIncome => 'Pendapatan stadion';
+
+  @override
+  String get stadiumsDownsize => 'Perkecil';
+
+  @override
+  String stadiumsConfirmDownsize(String stadium, String seats, int level) {
+    return 'Perkecil $stadium menjadi $seats kursi (level $level)? Tidak ada pengembalian dana, tetapi biaya perawatan turun.';
+  }
+
+  @override
+  String get stadiumsResizedThisCycle => 'Sudah dirombak siklus ini';
+
+  @override
+  String stadiumsGroundIncome(String amount) {
+    return 'Menghasilkan $amount per siklus';
+  }
+
+  @override
+  String hostBidLapsedTitle(String competition, int year) {
+    return 'Pencalonan ditarik: $competition $year';
+  }
+
+  @override
+  String hostBidLapsedBodyNation(String nation) {
+    return 'Pencalonan dibuat untuk $nation, dan Anda memulai siklus baru di tempat lain. Pencalonan ditarik dan tidak ada biaya yang ditagih.';
+  }
+
+  @override
+  String get hostBidLapsedBodyFunds =>
+      'Saat siklus ditutup, dana federasi tidak lagi menutup taruhannya. Pencalonan ditarik dan tidak ada biaya yang ditagih.';
+
+  @override
+  String get stadiumsViewMap => 'Peta';
+
+  @override
+  String get stadiumsViewList => 'Daftar';
+
+  @override
+  String get stadiumsMapPickCity =>
+      'Ketuk sebuah kota untuk membangun stadion baru di sana.';
+
+  @override
+  String get stadiumsMapFit => 'Tampilkan seluruh negara';
+
+  @override
+  String get campaignLegacyTitle => 'Tuntaskan Warisan';
+
+  @override
+  String get campaignLegacyTwist =>
+      'Spanyol, juara Eropa bertahan, selama satu siklus';
+
+  @override
+  String get campaignLegacyGoal => 'Pertahankan gelar Eropa';
+
+  @override
+  String get campaignLegacyIntro =>
+      'Spanyol adalah juara Eropa bertahan, dan para peragu menyebut masa keemasan itu cuma kebetulan. Anda punya satu siklus untuk membuktikan sebaliknya: pertahankan mahkota benua, lalu kejar dunia. Tambahkan Piala Bangsa-Bangsa dan warisan pun tuntas.';
+
+  @override
+  String get campaignStars1Legacy => 'Juara Kejuaraan Eropa';
+
+  @override
+  String get campaignStars2Legacy => 'Dan Kejuaraan Dunia';
+
+  @override
+  String get campaignStars3Legacy => 'Dan Piala Bangsa-Bangsa';
+
+  @override
+  String get campaignSectionOneCycle => 'Satu siklus';
+
+  @override
+  String get campaignSectionShort => 'Beberapa siklus';
+
+  @override
+  String get campaignSectionLong => 'Jangka panjang';
+
+  @override
+  String get campaignFilterAll => 'Semua';
+
+  @override
+  String get campaignFilterNew => 'Belum dimainkan';
+
+  @override
+  String get campaignFilterInProgress => 'Berjalan';
+
+  @override
+  String get campaignFilterDone => 'Selesai';
+
+  @override
+  String get campaignFilterEmpty => 'Belum ada kampanye di sini.';
+
+  @override
+  String campaignStarsEarned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bintang',
+      zero: 'Tanpa bintang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String campaignCycles(int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles siklus',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgIntlRetireNoteHigh => ' Ia pamit di puncak, sebagai juara.';
+
+  @override
+  String get msgIntlRetireNoteMissed =>
+      ' Gagal ke putaran final menjadi pukulan terakhir.';
+
+  @override
+  String get msgIntlRetireNoteSurprise => ' Tidak ada yang menyangka.';
+
+  @override
+  String get msgIntlRetireNoteRecord =>
+      ' Ia pergi sebagai pemegang rekor timnas.';
+
+  @override
+  String msgIntlRetireNewsTitle(String nation, String name) {
+    return '$nation: $name pensiun dari timnas';
+  }
+
+  @override
+  String msgIntlRetireNewsBody(String name, String nation, int age) {
+    return '$name ($nation) mengumumkan pensiun dari sepak bola internasional di usia $age.';
+  }
+
+  @override
+  String msgIntlComebackTitle(String name) {
+    return '$name kembali ke timnas';
+  }
+
+  @override
+  String msgIntlComebackBody(String name, int age) {
+    return '$name kembali siap dipanggil di usia $age.';
+  }
+
+  @override
+  String get msgIntlComebackNoteCrisis =>
+      ' Dengan skuad dihantam cedera, ia menjawab panggilan.';
+
+  @override
+  String get msgIntlComebackNoteManager =>
+      ' Pelatih baru berhasil membujuknya.';
+
+  @override
+  String msgIntlComebackNewsTitle(String nation, String name) {
+    return '$nation: $name kembali ke timnas';
+  }
+
+  @override
+  String msgIntlComebackNewsBody(String name, String nation, int age) {
+    return '$name ($nation) kembali siap dipanggil di usia $age.';
+  }
+
+  @override
+  String playerIntlRetired(int year) {
+    return 'Pensiun dari timnas, $year';
+  }
+
+  @override
+  String playerIntlComeback(int year) {
+    return 'Kembali ke timnas, $year';
+  }
+
+  @override
+  String yLegendRetires0(String name) {
+    return 'Terima kasih, $name. Ada yang sekadar memakai seragam, dia memikulnya.';
+  }
+
+  @override
+  String yLegendRetires1(String name) {
+    return '$name mengakhiri karier internasionalnya. Akhir sebuah era.';
+  }
+
+  @override
+  String yLegendRetires2(String name) {
+    return '$name pensiun. Jujur saja, telat satu turnamen.';
+  }
+
+  @override
+  String yLegendRetires3(String name) {
+    return 'Jadi $name sudah selesai. Saatnya beri kesempatan yang muda.';
+  }
+
+  @override
+  String matchAltitudeOpponentsTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Ketinggian $altitudeString m: lawan akan lebih cepat lelah';
+  }
+
+  @override
+  String matchAltitudeYouTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Ketinggian $altitudeString m: pemain Anda akan lebih cepat lelah';
+  }
+
+  @override
+  String matchAltitudeBothTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Ketinggian $altitudeString m: kedua tim akan lebih cepat lelah';
+  }
+
+  @override
+  String matchAltitudeUsedTo(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Ketinggian $altitudeString m: kedua tim sudah terbiasa';
+  }
+
+  @override
+  String matchHeatExpected(int temp) {
+    final intl.NumberFormat tempNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String tempString = tempNumberFormat.format(temp);
+
+    return 'Panas: diperkirakan $tempString°C, stamina akan habis lebih cepat';
+  }
+
+  @override
+  String get matchConditionsAdvice =>
+      'Rencanakan pergantian lebih awal: kaki segar lebih berharga di sini';
+
+  @override
+  String get fanMoodFurious => 'murka';
+
+  @override
+  String get fanMoodRestless => 'gelisah';
+
+  @override
+  String get fanMoodCalm => 'tenang';
+
+  @override
+  String get fanMoodUpbeat => 'bersemangat';
+
+  @override
+  String get fanMoodEuphoric => 'euforia';
+
+  @override
+  String matchHomeFans(String mood) {
+    return 'Suporter tuan rumah: $mood';
+  }
+
+  @override
+  String federationFans(String mood) {
+    return 'Suporter: $mood';
+  }
+
+  @override
+  String federationFansIncome(String change) {
+    return 'Pendapatan stadion siklus berikutnya: $change';
+  }
+
+  @override
+  String yFansProtest0(String nation, String manager) {
+    return 'Dua puluh tahun mengikuti timnas kandang dan tandang. Saya tidak akan memperpanjang tiket musiman sampai ada yang berubah.';
+  }
+
+  @override
+  String yFansProtest1(String nation, String manager) {
+    return 'Kami tetap bernyanyi untuk seragam ini. Tapi spanduk di tribun utara malam ini mengatakan apa yang kami semua pikirkan.';
+  }
+
+  @override
+  String yFansProtest2(String nation, String manager) {
+    return 'Separuh stadion kosong, dan separuh lainnya menghabiskan babak kedua dengan menyanyikan #${manager}Out.';
+  }
+
+  @override
+  String yFansProtest3(String nation, String manager) {
+    return 'Kelompok suporter membicarakan boikot laga kandang berikutnya. Sulit menyalahkan mereka.';
+  }
+
+  @override
+  String yFansProtest4(String nation, String manager) {
+    return '#${manager}Out. Sudah tidak marah lagi. Sudah, selesai saja.';
+  }
+
+  @override
+  String yFansProtest5(String nation, String manager) {
+    return 'Foto malam ini: deretan kursi kosong dan satu seprai bertuliskan #${manager}Out. Itulah laporan pertandingannya.';
+  }
+
+  @override
+  String yFansSellOut0(String nation) {
+    return 'Tiket habis lagi. Timnas terbaik dalam bertahun-tahun, dan seluruh negeri tahu itu.';
+  }
+
+  @override
+  String yFansSellOut1(String nation) {
+    return 'Tiket laga kandang berikutnya ludes dalam sebelas menit. Tim ini mengembalikan akhir pekan kami.';
+  }
+
+  @override
+  String yFansSellOut2(String nation) {
+    return 'Tak ada satu kursi pun tersisa untuk laga kandang berikutnya. Federasi akan menghitung uang tiket sambil tersenyum.';
+  }
+
+  @override
+  String yFansSellOut3(String nation) {
+    return 'Tiket habis lagi. Silakan bilang apa saja soal taktiknya, orang-orang ingin berada di stadion itu.';
+  }
+
+  @override
+  String yFansSellOut4(String nation) {
+    return 'Tiket habis, oke. Orang-orang yang sama menyoraki tim ini satu setengah tahun lalu.';
+  }
+
+  @override
+  String yFansSellOut5(String nation) {
+    return 'Tiba-tiba tiket habis, tiba-tiba semua jadi pakar. Ke mana kalian saat kita tidak bisa mengalahkan siapa pun?';
+  }
+
+  @override
+  String get campaignsIntro =>
+      'Kampanye adalah tantangan yang dirancang khusus: tim nasional yang sudah ditentukan, dunia dengan kejutannya sendiri, dan target yang harus dicapai dalam jumlah siklus tertentu. Setiap percobaan terpisah dari simpanan karier Anda, dan makin jauh Anda melangkah, makin banyak bintang yang Anda raih, hingga tiga.';
+
+  @override
+  String hubEventScandal(String player) {
+    return 'Skandal di pemusatan latihan: $player';
+  }
+
+  @override
+  String get hubEventScandalSub => 'Pulangkan atau pertahankan?';
+
+  @override
+  String get scandalTitle => 'SKANDAL';
+
+  @override
+  String scandalStoryParty(String player) {
+    return '$player ikut pesta sampai subuh, dan fotonya ada di semua koran pada pagi hari tim berkumpul.';
+  }
+
+  @override
+  String scandalStoryCurfew(String player) {
+    return '$player melanggar jam malam dan tertangkap kembali ke hotel menjelang pagi.';
+  }
+
+  @override
+  String scandalStoryNightclub(String player) {
+    return '$player difoto di kelab malam sehari sebelum pemusatan latihan, dan fotonya tersebar di mana-mana.';
+  }
+
+  @override
+  String scandalStoryCasino(String player) {
+    return '$player menghabiskan malam sebelum pemusatan latihan di meja kasino, dan sebuah tabloid punya fotonya.';
+  }
+
+  @override
+  String get scandalSendHome => 'Pulangkan dia';
+
+  @override
+  String scandalSendHomeCover(String player) {
+    return 'Pulangkan, panggil $player';
+  }
+
+  @override
+  String scandalKeep(String player) {
+    return 'Pertahankan $player';
+  }
+
+  @override
+  String get scandalKeepNote =>
+      'Jika dipertahankan: moral sekitar -4 dan dewan sekitar -3 sampai akhir siklus.';
+
+  @override
+  String get scandalSendHomeNote =>
+      'Jika dipulangkan: tidak ada dampak pada moral atau dewan, dan Anda boleh memanggil pengganti.';
+
+  @override
+  String get scandalFinalsNote =>
+      'Jika dipulangkan: tidak ada dampak pada moral atau dewan, tetapi di turnamen putaran final tidak ada yang bisa menggantikannya.';
+
+  @override
+  String get scandalPickCover => 'Panggil pengganti (opsional)';
+
+  @override
+  String newsScandalTitle(String player) {
+    return 'Skandal di pemusatan latihan: $player';
+  }
+
+  @override
+  String yScandalParty0(String player, String tag) {
+    return 'Namanya juga anak muda. $player pesta semalam sebelum pemusatan latihan, tapi saya tetap mau dia main. #$tag';
+  }
+
+  @override
+  String yScandalParty1(String player, String tag) {
+    return '$player terfoto di pesta semalam suntuk, beberapa jam sebelum tim berkumpul. Federasi sudah diberi tahu. #$tag';
+  }
+
+  @override
+  String yScandalParty2(String player, String tag) {
+    return 'Pesta semalam suntuk sebelum pemusatan latihan. $player, apa yang kamu pikirkan? Keterlaluan. #$tag';
+  }
+
+  @override
+  String yScandalCurfew0(String player, String tag) {
+    return 'Pulang lewat jam malam, ya sudah, bisa terjadi. $player tinggal membayarnya di lapangan. #$tag';
+  }
+
+  @override
+  String yScandalCurfew1(String player, String tag) {
+    return '$player tertangkap kembali ke hotel tim setelah jam malam, beberapa jam sebelum latihan. #$tag';
+  }
+
+  @override
+  String yScandalCurfew2(String player, String tag) {
+    return 'Jam malam itu tidak rumit. $player bahkan tidak tahan satu malam. #$tag';
+  }
+
+  @override
+  String yScandalNightclub0(String player, String tag) {
+    return 'Jadi $player ke kelab malam. Pesepak bola juga punya kehidupan. Biarkan dia main. #$tag';
+  }
+
+  @override
+  String yScandalNightclub1(String player, String tag) {
+    return 'Foto memperlihatkan $player di kelab malam sehari sebelum pemusatan latihan timnas. #$tag';
+  }
+
+  @override
+  String yScandalNightclub2(String player, String tag) {
+    return 'Foto di kelab malam sehari sebelum pemusatan latihan. $player mempermalukan seragam ini. #$tag';
+  }
+
+  @override
+  String yScandalCasino0(String player, String tag) {
+    return 'Semalam di kasino bukan kejahatan. $player akan baik-baik saja. #$tag';
+  }
+
+  @override
+  String yScandalCasino1(String player, String tag) {
+    return '$player terlihat di meja kasino pada malam sebelum tim berkumpul. #$tag';
+  }
+
+  @override
+  String yScandalCasino2(String player, String tag) {
+    return 'Semalaman di kasino sebelum pemusatan latihan. $player mempertaruhkan lebih dari uang. #$tag';
+  }
+
+  @override
+  String yScandalSentHome0(String player) {
+    return 'Keputusan tepat. Tidak ada yang lebih besar dari tim, termasuk $player.';
+  }
+
+  @override
+  String yScandalSentHome1(String player) {
+    return 'Memulangkan $player adalah satu-satunya jawaban. Hormat untuk pelatih.';
+  }
+
+  @override
+  String yScandalSentHome2(String player) {
+    return 'Disiplin tetap disiplin. $player tahu aturannya.';
+  }
+
+  @override
+  String yScandalSentHome3(String player) {
+    return 'Pesan yang jelas untuk skuad: $player sudah di pesawat pulang.';
+  }
+
+  @override
+  String yScandalSentHome4(String player) {
+    return 'Kejam untuk $player. Sekali keluar malam dan pemusatan latihannya selesai?';
+  }
+
+  @override
+  String yScandalSentHome5(String player) {
+    return 'Memulangkan $player membuat kita lemah. Kita akan membayarnya di lapangan.';
+  }
+
+  @override
+  String yScandalKept0(String player) {
+    return 'Mempertahankan $player itu taruhan. Dia harus membayarnya di lapangan.';
+  }
+
+  @override
+  String yScandalKept1(String player) {
+    return 'Baiklah, $player tetap di tim. Berarti dia berutang penampilan bagus kepada semua orang.';
+  }
+
+  @override
+  String yScandalKept2(String player) {
+    return 'Jadi aturan tidak berlaku untuk $player. Bagus untuk diketahui.';
+  }
+
+  @override
+  String yScandalKept3(String player) {
+    return 'Jam malam sekarang rupanya opsional. Tanya saja $player.';
+  }
+
+  @override
+  String yScandalKept4(String player) {
+    return 'Mempertahankan $player setelah itu? Skuad ini jadi kamp liburan.';
+  }
+
+  @override
+  String yScandalKept5(String player) {
+    return 'Pesta semalaman, lalu langsung jadi starter. Pesan yang hebat, coach. $player pasti senang.';
+  }
+
+  @override
+  String get yStreamerBreaks0 =>
+      'BRO KETAHUAN 😭😭 MALAM SEBELUM PEMUSATAN LATIHAN?? AKU NANGIS 💀💀💀';
+
+  @override
+  String get yStreamerBreaks1 =>
+      'NGGAKKK CHAT LIHAT INI 🤯🤯 BRO BENERAN NGELAKUIN ITU SEBELUM PEMUSATAN LATIHAN 😭🔥';
+
+  @override
+  String get yStreamerBreaks2 =>
+      'SIAPA YANG NGELEPASIN DIA?? SIAPA YANG NGELEPASIN 😭😭💀 INI SINEMA 🔥🔥';
+
+  @override
+  String get yStreamerSentHome0 =>
+      'DIPULANGKAN?? DIPULANGKAN!!! 😭😭😭 PELATIHNYA NGGAK MAIN-MAIN 💀🔥';
+
+  @override
+  String get yStreamerSentHome1 =>
+      'BRO BERESIN KOPER SECARA LIVE 🤯🤯 DADAH BRO 😭👋';
+
+  @override
+  String get yStreamerSentHome2 =>
+      'NGGAK MUNGKINNN DIA DIPULANGKAN 💀💀 CHAT AKU GEMETAR 🔥🔥🔥';
+
+  @override
+  String get yStreamerKept0 =>
+      'DIA TETAP??? DIA TETAAAP 🤯🤯 BRO NGGAK TERSENTUH 😭🔥';
+
+  @override
+  String get yStreamerKept1 =>
+      'PESTA SEMALAMAN DAN MASIH DI SKUAD 💀💀 AKU MAU KONTRAK ITU 😭😭';
+
+  @override
+  String get yStreamerKept2 =>
+      'PELATIH BILANG NGGAK APA-APA 😭😭 BRO APA 🤯🤯🤯';
+
+  @override
+  String get yCameoUjfaloci =>
+      'Saya tidak membayar apa pun, dan jumlah itu juga tidak cocok';
+
+  @override
+  String get yCameoHavir0 => 'Ikan-ikan kecil sudah berenang pergi.';
+
+  @override
+  String get yCameoHavir1 => 'Kami menebar jala, ikannya ada di tempat lain.';
+
+  @override
+  String get yCameoHavir2 =>
+      'Saya sudah bilang sejak September, sambil makan gulai.';
+
+  @override
+  String get yCameoHavir3 =>
+      'Siapa yang tidak memancing tepat waktu, jangan menangis sekarang.';
+
+  @override
+  String get yCameoHavir4 => 'Kami bermain seperti ikan lele di darat.';
+
+  @override
+  String get yCameoHavir5 => 'Angin bertiup, kolam membeku. Begitulah adanya.';
+
+  @override
+  String get yCameoHavir6 =>
+      'Ada hari-hari ketika yang terangkat cuma sepatu bot tua.';
+
+  @override
+  String get yCameoHavir7 =>
+      'Dulu setidaknya kami pergi minum bir. Sekarang itu pun tidak.';
+
+  @override
+  String get yCameoLzimberskyHome0 =>
+      'Memulangkan anak muda gara-gara satu malam? Itu skandalnya, bukan pestanya!';
+
+  @override
+  String get yCameoLzimberskyHome1 =>
+      'Anak-anak boleh dong bersenang-senang! Media munafik menang lagi.';
+
+  @override
+  String get yCameoLzimberskyHome2 =>
+      'Ini perburuan penyihir. Anak muda keluar satu malam dan kalian menggantungnya.';
+
+  @override
+  String get yCameoLzimberskyHome3 =>
+      'Wartawan yang tidak pernah ke pesta, silakan lempar batu pertama. Memalukan!';
+
+  @override
+  String get yCameoLzimberskyHome4 =>
+      'Pelatih takut pada tabloid. Saya akan membela anak itu sampai napas terakhir!';
+
+  @override
+  String get yCameoLzimberskyKept0 =>
+      'Akhirnya pelatih yang punya nyali! Dia mempertahankan anak itu, biar media menangis.';
+
+  @override
+  String get yCameoLzimberskyKept1 =>
+      'Anak-anak boleh dong bersenang-senang, kan? Bravo, coach!';
+
+  @override
+  String get yCameoLzimberskyKept2 =>
+      'Media munafik berteriak, pelatih tetap teguh. Begitu caranya!';
+
+  @override
+  String get yCameoLzimberskyKept3 =>
+      'Satu malam keluar dan pers ingin merajamnya. Pelatih itu pria sejati!';
+
+  @override
+  String get yCameoLzimberskyKept4 =>
+      'Saya bilang: biarkan anak-anak hidup! Yang kerja keras boleh bersenang-senang. Jempol ke atas.';
+
+  @override
+  String get yTraitStreamer =>
+      'Menyiarkan semuanya, dengan suara penuh, pakai huruf kapital.';
+
+  @override
+  String hubEventAwardsCeremony(int year) {
+    return 'Pemain Terbaik Tahun Ini $year';
+  }
+
+  @override
+  String get hubEventAwardsCeremonySub => 'Suara sudah dihitung';
+
+  @override
+  String get potyCeremonyWatch => 'Tonton upacaranya';
+
+  @override
+  String get potyCeremonySkipToList => 'Langsung ke lima besar';
+
+  @override
+  String get potyCeremonySkip => 'Lewati';
+
+  @override
+  String get potyCeremonyIntro =>
+      'Suara sudah dihitung. Inilah lima pemain terbaik dunia tahun ini.';
+
+  @override
+  String potyCeremonyPlace(int place) {
+    return 'Peringkat $place';
+  }
+
+  @override
+  String get potyCeremonyWinnerIs => 'Dan Pemain Terbaik Tahun Ini adalah...';
+
+  @override
+  String get potyTop5Heading => 'Lima besar dunia';
+
+  @override
+  String get potyYoungTop3Heading => 'Pemain Muda Terbaik: tiga besar';
+
+  @override
+  String get potySeeTop5 => 'Lihat lima besar';
+
+  @override
+  String get potyYourPlayer => 'Pemain Anda';
+
+  @override
+  String potyTallyCleanSheets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count clean sheet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignFullBrief => 'Brief lengkap';
+
+  @override
+  String campaignStarsSoFar(int earned, int total) {
+    return 'Bintang yang diraih sejauh ini: $earned dari $total';
+  }
+
+  @override
+  String get campaignStarEarned => 'Sudah diraih';
+
+  @override
+  String get campaignStarNotYet => 'Belum diraih';
+
+  @override
+  String get stadiumsEntrySubClosed =>
+      'Lihat stadion-stadionmu. Pekerjaan dibuka lagi di awal siklus berikutnya.';
+
+  @override
+  String get boardObjectiveNoBrief => 'Tidak ada target';
+
+  @override
+  String get boardObjectiveNoBriefBody =>
+      'Dewan tidak berharap kamu lolos ke putaran final ini. Kamu akan dinilai dari hasil pertandingan.';
+
+  @override
+  String get boardObjectiveAwaitingDraw => 'Target setelah undian';
+
+  @override
+  String get boardObjectiveAwaitingDrawBody =>
+      'Dewan menetapkan target ini setelah grup diundi.';
 }

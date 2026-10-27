@@ -30,7 +30,18 @@ extension SeasonFinals on SeasonService {
       (grouped[t.confederation] ??= []).add(t.standings);
     }
     await _ensureRank(careerId);
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
+    // The hosts' places come out of their own confederations, so the entrants
+    // sit below a shorter ladder there. Locked BEFORE the seeding snapshot
+    // below, which is what would otherwise mark this as an old-rule cycle.
+    final hostBerths = await resolveWorldCupHostBerths(
+      comp: _comp,
+      seedRanks: _ref.read(seedRankingRepositoryProvider),
+      career: career,
+      nations: nations,
+      byConfederation: grouped,
+      lock: true,
+    );
     // The seeding is frozen the first time the play-off is looked at. The
     // manager's own tie moves the live ranking, and a bracket that reseeded
     // itself between his semi and his final could hand him a different
@@ -39,6 +50,7 @@ extension SeasonFinals on SeasonService {
     final pool = WorldCupFinals.playoffPoolFor(
       byConfederation: grouped,
       rankingById: rankingById,
+      hostBerths: hostBerths,
     );
     final me = career.nationId;
     final path = playoffPathOf(
@@ -74,6 +86,7 @@ extension SeasonFinals on SeasonService {
       byConfederation: grouped,
       rankingById: rankingById,
       rng: _playoffRng(career),
+      hostBerths: hostBerths,
       pool: pool,
       playedResults: played.results,
       playedScores: played.scores,
@@ -206,7 +219,17 @@ extension SeasonFinals on SeasonService {
       (grouped[t.confederation] ??= []).add(t.standings);
     }
 
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
+    // Each host's place out of its own confederation's allocation, read (and
+    // locked) before the finals snapshot below marks the cycle as drawn.
+    final hostBerths = await resolveWorldCupHostBerths(
+      comp: _comp,
+      seedRanks: _ref.read(seedRankingRepositoryProvider),
+      career: career,
+      nations: nations,
+      byConfederation: grouped,
+      lock: true,
+    );
     // Pot the finals by the LIVE world ranking as it stands now — after every
     // qualifying result — not the ranking frozen at the cycle's start. The
     // exact ranking used is snapshotted so the draw ceremony reproduces these
@@ -233,6 +256,7 @@ extension SeasonFinals on SeasonService {
       byConfederation: grouped,
       rankingById: rankingById,
       hosts: hosts,
+      hostBerths: hostBerths,
       // When the manager played their own play-off tie, its real winners are
       // passed in and override the instant resolution below.
       playoffWinnersOverride: playoffWinners,

@@ -196,11 +196,6 @@ class _Header extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l.nationsNationalLevel,
-            style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
             l.nationsSelectHeading,
             style: AppTypography.headlineLargeMobile,
           ),

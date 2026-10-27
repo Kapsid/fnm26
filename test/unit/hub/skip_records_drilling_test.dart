@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/seed/legacy_seed_ranking.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -199,13 +200,19 @@ void main() {
       // and a level knockout through extra time and maybe penalties
       // (`decideKnockout`); both are still ONE recording of his plan. Seed 80
       // reaches Czechia's first continental finals match at the 9th advance
-      // and a round of 16 there settled after extra time at the 12th.
+      // and a round of 16 there settled after extra time at the 12th, on the
+      // 1.0.6 starting ranking the seed was found on.
       final w = open();
       await w.c.read(seedLoaderProvider).ensureSeeded();
       final career =
           (await w.c
                   .read(careerServiceProvider)
-                  .create(nationId: czechia, managerName: 'M', rngSeed: 80))
+                  .create(
+                    nationId: czechia,
+                    managerName: 'M',
+                    rngSeed: 80,
+                    startingRanks: legacySeedRanking,
+                  ))
               .valueOrNull!;
       await w.c.read(tacticServiceProvider).setFormation(career.id, shape);
       await w.c.read(tacticServiceProvider).setInstructions(career.id, plan);
@@ -215,7 +222,12 @@ void main() {
       final refCareer =
           (await ref.c
                   .read(careerServiceProvider)
-                  .create(nationId: czechia, managerName: 'M', rngSeed: 80))
+                  .create(
+                    nationId: czechia,
+                    managerName: 'M',
+                    rngSeed: 80,
+                    startingRanks: legacySeedRanking,
+                  ))
               .valueOrNull!;
       final refFam = ref.c.read(tacticFamiliarityRepositoryProvider);
       final fam = w.c.read(tacticFamiliarityRepositoryProvider);

@@ -18,7 +18,9 @@ void main() {
         child: RoundResultsScreen(careerId: 1),
       ),
       overrides: [
-        roundResultsViewProvider(1).overrideWith((ref) async => fourGroupsView()),
+        roundResultsViewProvider(
+          1,
+        ).overrideWith((ref) async => fourGroupsView()),
         otherFriendliesProvider(1).overrideWith((ref) async => const []),
       ],
     );
@@ -37,7 +39,9 @@ void main() {
         child: RoundResultsScreen(careerId: 1),
       ),
       overrides: [
-        roundResultsViewProvider(1).overrideWith((ref) async => fourGroupsView()),
+        roundResultsViewProvider(
+          1,
+        ).overrideWith((ref) async => fourGroupsView()),
         otherFriendliesProvider(1).overrideWith((ref) async => const []),
       ],
     );
@@ -59,6 +63,7 @@ void main() {
       playerNationId: full.playerNationId,
       directCount: full.directCount,
       contentionPos: full.contentionPos,
+      playoffNations: full.playoffNations,
       relegateCount: full.relegateCount,
       noRelegationGroups: full.noRelegationGroups,
     );

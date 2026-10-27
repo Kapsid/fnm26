@@ -170,8 +170,13 @@ List<Widget> _cupTabViews(
     TournamentSummaryTab(
       hostIds: data.hostIds,
       hostCities: data.hostCities,
+      hostEstates: data.hostEstates,
       identity: data.identity,
       trophyAsset: Trophies.worldCup,
+      // The 46 direct places plus the two play-off berths: 48.
+      teamCount:
+          QualificationFormat.totalFinalsBerths +
+          QualificationFormat.playoffBerths,
       code: code,
       name: name,
     ),
@@ -186,6 +191,7 @@ List<Widget> _cupTabViews(
         playerNationId: data.playerNationId,
         code: code,
         name: name,
+        hostBerths: data.wcHostBerths,
       ),
     // The intercontinental play-off — its own tab, shown as a
     // knockout bracket for the last two finals berths.
@@ -303,10 +309,16 @@ class _Qualifying extends StatefulWidget {
     required this.code,
     required this.name,
     this.grid = false,
+    this.hostBerths = const {},
   });
 
   final int careerId;
   final List<ConfederationGroupTable> groups;
+
+  /// How many of each confederation's nations host the finals: their places
+  /// come out of its qualifying allocation, so its ladder is that much
+  /// shorter (see `CupData.wcHostBerths`).
+  final Map<Confederation, int> hostBerths;
   final Confederation? playerConfederation;
   final int playerNationId;
   final String Function(int) code;
@@ -405,10 +417,21 @@ class _QualifyingState extends State<_Qualifying> {
     Confederation conf,
     Map<Confederation, List<ConfederationGroupTable>> byConf,
   ) {
-    final adv = GroupAdvancement.worldCupQualifying(conf, byConf[conf]!.length);
+    final hosts = widget.hostBerths[conf] ?? 0;
+    final adv = GroupAdvancement.worldCupQualifying(
+      conf,
+      byConf[conf]!.length,
+      hosts: hosts,
+    );
+    // Who is on course for the intercontinental play-off (yellow), from the
+    // real format and the live cross-group ladder, never a fixed position.
+    final playoff = GroupAdvancement.worldCupPlayoffNations(conf, [
+      for (final g in byConf[conf]!) g.standings,
+    ], hosts: hosts);
     final cards = [
       for (final g in _mineFirst(byConf[conf]!, widget.playerNationId))
         _GroupCard(
+          playoffNations: playoff,
           careerId: widget.careerId,
           group: g,
           playerNationId: widget.playerNationId,
@@ -460,7 +483,12 @@ class _QualifyingState extends State<_Qualifying> {
           // plays two groups for one place), exactly as a real qualifying table
           // reads.
           () {
-            final ladder = _contentionLadder(conf, byConf[conf]!, l);
+            final ladder = _contentionLadder(
+              conf,
+              byConf[conf]!,
+              l,
+              hosts: widget.hostBerths[conf] ?? 0,
+            );
             if (ladder == null) return const SizedBox.shrink();
             return Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -514,6 +542,15 @@ class _PlayoffList extends StatelessWidget {
             color: AppColors.onSurfaceVariant,
           ),
         ),
+        for (final note in noPlayoffNotes(l)) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            note,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
         const SizedBox(height: AppSpacing.md),
         IntercontinentalPlayoffBracket(
           ties: ties,
@@ -541,11 +578,16 @@ class _PlayoffList extends StatelessWidget {
 _contentionLadder(
   Confederation conf,
   List<ConfederationGroupTable> groups,
-  AppLocalizations l,
-) {
+  AppLocalizations l, {
+  required int hosts,
+}) {
   if (groups.length < 2) return null;
   final fmt = QualificationFormat.forConfederation(conf);
-  final adv = GroupAdvancement.worldCupQualifying(conf, groups.length);
+  final adv = GroupAdvancement.worldCupQualifying(
+    conf,
+    groups.length,
+    hosts: hosts,
+  );
   final pos = adv.contention;
   if (pos == null || adv.contentionQualify < 1) return null;
   final tables = [for (final g in groups) g.standings];
@@ -554,7 +596,7 @@ _contentionLadder(
   // Whether the places at this position lead to the finals, the play-off, or
   // both: a partly-filled tier of direct berths sends its best straight
   // through, and the play-off entrants come from just behind them.
-  final directHere = fmt.directBerths % groups.length;
+  final directHere = fmt.qualifyingBerths(hosts) % groups.length;
   final destination = directHere > 0
       ? (fmt.playoffEntrants > 0
             ? l.tourCupDestFinalsPlayoff
@@ -594,6 +636,7 @@ class _GroupCard extends StatelessWidget {
     required this.name,
     this.directCount = 2,
     this.contentionPos,
+    this.playoffNations = const {},
     this.matches = const [],
   });
 
@@ -609,6 +652,10 @@ class _GroupCard extends StatelessWidget {
   /// A single position marked amber — "in contention" (best runner-up / best
   /// third / play-off place), not yet safe. Null when there is no such spot.
   final int? contentionPos;
+
+  /// Nations whose current place leads to the intercontinental play-off: marked
+  /// yellow, over the amber "in contention" stripe.
+  final Set<int> playoffNations;
 
   /// The group's played matches, shown ABOVE the table in the same card.
   final List<Fixture> matches;
@@ -646,6 +693,8 @@ class _GroupCard extends StatelessWidget {
     final inContention = pos == contentionPos;
     final accent = advancing
         ? AppColors.positive
+        : playoffNations.contains(s.nationId)
+        ? AppColors.playoff
         : inContention
         ? AppColors.warning
         : null;

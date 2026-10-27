@@ -233,8 +233,24 @@ void main() {
       matching: find.text(me.name),
     );
     // Ball by ball (a tap pauses the autoplay) until the manager's nation
-    // has been drawn and placed.
-    for (var i = 0; i < 300 && mine.evaluate().isEmpty; i++) {
+    // and at least one other have been drawn and placed (a top seed can be
+    // the first ball out).
+    bool anotherPlaced() => save.nations.any(
+      (n) =>
+          n.id != me.id &&
+          find
+              .descendant(
+                of: find.byType(GridView),
+                matching: find.text(n.name),
+              )
+              .evaluate()
+              .isNotEmpty,
+    );
+    for (
+      var i = 0;
+      i < 300 && (mine.evaluate().isEmpty || !anotherPlaced());
+      i++
+    ) {
       await tester.tap(find.byType(GridView));
       await tester.pump();
     }

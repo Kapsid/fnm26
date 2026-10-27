@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/seed/legacy_seed_ranking.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -43,9 +44,19 @@ class _World {
   final List<Nation> nations;
 }
 
-Future<_World> _create(Confederation conf, int seed) async {
+/// [legacy] builds the world on the 1.0.6 starting ranking, the one
+/// [_europeSnapshot] was recorded on (1.0.7 moved to FIFA's of 1 October
+/// 2026; a save begun before keeps its own).
+Future<_World> _create(
+  Confederation conf,
+  int seed, {
+  bool legacy = false,
+}) async {
   final db = createTestDatabase();
-  final nations = _nations();
+  final nations = [
+    for (final n in _nations())
+      legacy ? n.copyWith(ranking: legacySeedRanking[n.id]!) : n,
+  ];
   final container = ProviderContainer(
     overrides: [
       appDatabaseProvider.overrideWithValue(db),
@@ -108,7 +119,7 @@ Set<int> _ids(Map<String, List<Fixture>> groups, [bool Function(String)? g]) =>
 void main() {
   test('Europe draws the same cup as before for a fixed seed', () async {
     for (final e in _europeSnapshot.entries) {
-      final w = await _create(Confederation.europe, e.key);
+      final w = await _create(Confederation.europe, e.key, legacy: true);
       final cups = await _cups(w);
       expect(_fnv(_fingerprint(cups[NationsCups.europe]!)), e.value);
     }

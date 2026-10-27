@@ -17,6 +17,8 @@ class TournamentSummaryTab extends StatelessWidget {
     required this.hostCities,
     required this.code,
     required this.name,
+    required this.teamCount,
+    this.hostEstates = const {},
     this.identity,
     this.trophyAsset,
     super.key,
@@ -24,7 +26,15 @@ class TournamentSummaryTab extends StatelessWidget {
 
   final List<int> hostIds;
   final Map<int, List<String>> hostCities;
+
+  /// The grounds the career has made of a host's estate, for the manager's
+  /// nation when it hosts (see [VenueGenerator.forHosts]).
+  final Map<int, List<Venue>> hostEstates;
   final TournamentIdentity? identity;
+
+  /// The finals field size; a bigger field is played in more cities (see
+  /// `VenueGenerator.countForField`).
+  final int teamCount;
 
   /// This competition's trophy artwork, shown at the top of the summary.
   final String? trophyAsset;
@@ -49,6 +59,8 @@ class TournamentSummaryTab extends StatelessWidget {
     final byHost = VenueGenerator.forHosts(
       hostIds: hostIds,
       citiesByHost: hostCities,
+      count: VenueGenerator.countForField(teamCount),
+      estates: hostEstates,
     );
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),

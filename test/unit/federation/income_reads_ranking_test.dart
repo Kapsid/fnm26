@@ -125,7 +125,8 @@ void main() {
       expect(
         climbed,
         greaterThan(held),
-        reason: 'a climb to 20th paid no better than sitting at 20th, so the '
+        reason:
+            'a climb to 20th paid no better than sitting at 20th, so the '
             'previous cycle is not being read',
       );
       expect(

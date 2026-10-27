@@ -123,6 +123,7 @@ void main() {
       playerNationId: v.playerNationId,
       directCount: v.directCount,
       contentionPos: v.contentionPos,
+      playoffNations: v.playoffNations,
       relegateCount: v.relegateCount,
       noRelegationGroups: v.noRelegationGroups,
     );

@@ -78,25 +78,62 @@ abstract final class WorldCupFinals {
   static const third = '3RD';
   static const finalRound = 'FINAL';
 
+  /// The finals places each confederation gives up to this edition's [hosts]:
+  /// confederation -> how many of its nations are hosting. Feed it to
+  /// [selectFinalists], [playoffPoolFor] and the qualifying tables, so every
+  /// one of them cuts the same ladder.
+  ///
+  /// A host found in [byConfederation]'s tables played qualifying after all
+  /// (the hosts are normally left out of the draw) and takes its place on the
+  /// pitch, so it sets nothing aside.
+  static Map<Confederation, int> hostBerths({
+    required Iterable<int> hosts,
+    required Confederation? Function(int nationId) confederationOf,
+    Map<Confederation, List<List<GroupStanding>>> byConfederation = const {},
+  }) {
+    final played = {
+      for (final groups in byConfederation.values)
+        for (final g in groups)
+          for (final s in g) s.nationId,
+    };
+    final out = <Confederation, int>{};
+    for (final h in hosts.toSet()) {
+      if (played.contains(h)) continue;
+      final c = confederationOf(h);
+      if (c != null) out[c] = (out[c] ?? 0) + 1;
+    }
+    return out;
+  }
+
   /// Selects the 48 World Cup finalists from every confederation's qualifying
   /// tables: direct berths per confederation, then the two best entrants of the
-  /// intercontinental playoff, and finally every host in [hosts] (each replaces
-  /// the weakest-ranked qualifier it isn't already among). Shared by the finals
-  /// generator and the draw ceremony so both always agree.
+  /// intercontinental playoff, and finally every host in [hosts]. Shared by the
+  /// finals generator and the draw ceremony so both always agree.
+  ///
+  /// [hostBerths] (see [WorldCupFinals.hostBerths]) is how many places each
+  /// confederation's hosts take out of its own allocation. A host used to
+  /// replace the weakest-RANKED qualifier in the whole world instead, and that
+  /// was nearly always some small confederation's group winner: an Asian or
+  /// African side won its group, was painted green, and was quietly dropped for
+  /// a European host. An empty map keeps that old rule, which is what a cycle
+  /// whose finals were already drawn under it must go on reading.
   static List<int> selectFinalists({
     required Map<Confederation, List<List<GroupStanding>>> byConfederation,
     required Map<int, int> rankingById,
     required List<int> hosts,
+    required Map<Confederation, int> hostBerths,
     SeededRng? playoffRng,
     List<int>? playoffWinnersOverride,
   }) {
     int rank(int id) => rankingById[id] ?? 9999;
     final qualifiers = <int>[];
+    // The places the hosts took out of their confederations' allocations.
+    var reserved = 0;
     for (final entry in byConfederation.entries) {
       final fmt = QualificationFormat.forConfederation(entry.key);
-      qualifiers.addAll(
-        Qualification.qualifiers(entry.value, fmt.finalsBerths),
-      );
+      final berths = fmt.qualifyingBerths(hostBerths[entry.key] ?? 0);
+      reserved += fmt.finalsBerths - berths;
+      qualifiers.addAll(Qualification.qualifiers(entry.value, berths));
     }
     // The two remaining places go through the intercontinental play-off. A
     // caller that has actually PLAYED the play-off passes its real winners in
@@ -106,6 +143,7 @@ abstract final class WorldCupFinals {
     final playoffPool = playoffPoolFor(
       byConfederation: byConfederation,
       rankingById: rankingById,
+      hostBerths: hostBerths,
     );
     qualifiers.addAll(
       playoffWinnersOverride ??
@@ -114,15 +152,22 @@ abstract final class WorldCupFinals {
               : playoffWinners(playoffPool, rankingById, playoffRng)),
     );
 
-    // Every host auto-qualifies, each replacing the weakest non-host qualifier.
+    // Every host auto-qualifies into the place its confederation set aside.
+    // Only a host its confederation could not make room for (more hosts than
+    // it has places, or a cycle on the old rule) still replaces the weakest
+    // non-host qualifier.
     final missing = hosts.where((h) => !qualifiers.contains(h)).toList();
     if (missing.isNotEmpty && qualifiers.isNotEmpty) {
       qualifiers.sort((a, b) => rank(a).compareTo(rank(b)));
       for (final h in missing) {
-        for (var i = qualifiers.length - 1; i >= 0; i--) {
-          if (!hosts.contains(qualifiers[i])) {
-            qualifiers.removeAt(i);
-            break;
+        if (reserved > 0) {
+          reserved--;
+        } else {
+          for (var i = qualifiers.length - 1; i >= 0; i--) {
+            if (!hosts.contains(qualifiers[i])) {
+              qualifiers.removeAt(i);
+              break;
+            }
           }
         }
         qualifiers.add(h);
@@ -636,19 +681,24 @@ abstract final class WorldCupFinals {
   /// below its direct cut-off, sorted by ranking (seeds first). The standard
   /// field is six teams. Shared by finalist selection, the display bracket and
   /// the playable play-off so all three agree on who is in it.
+  ///
+  /// [hostBerths] as for [selectFinalists]: the entrants sit just below the
+  /// places qualifying actually hands out.
   static List<int> playoffPoolFor({
     required Map<Confederation, List<List<GroupStanding>>> byConfederation,
     required Map<int, int> rankingById,
+    required Map<Confederation, int> hostBerths,
   }) {
     int rank(int id) => rankingById[id] ?? 9999;
     final pool = <int>[];
     for (final entry in byConfederation.entries) {
       final fmt = QualificationFormat.forConfederation(entry.key);
       if (fmt.playoffEntrants <= 0) continue;
-      final direct = Qualification.qualifiers(entry.value, fmt.finalsBerths);
+      final berths = fmt.qualifyingBerths(hostBerths[entry.key] ?? 0);
+      final direct = Qualification.qualifiers(entry.value, berths);
       final withEntrants = Qualification.qualifiers(
         entry.value,
-        fmt.finalsBerths + fmt.playoffEntrants,
+        berths + fmt.playoffEntrants,
       );
       pool.addAll(withEntrants.skip(direct.length));
     }
@@ -776,6 +826,7 @@ abstract final class WorldCupFinals {
     required Map<Confederation, List<List<GroupStanding>>> byConfederation,
     required Map<int, int> rankingById,
     required SeededRng rng,
+    required Map<Confederation, int> hostBerths,
     List<int>? pool,
     Map<String, int> playedResults = const {},
     Map<String, (int, int)> playedScores = const {},
@@ -785,6 +836,7 @@ abstract final class WorldCupFinals {
         playoffPoolFor(
           byConfederation: byConfederation,
           rankingById: rankingById,
+          hostBerths: hostBerths,
         );
     int rank(int id) => rankingById[id] ?? 9999;
     final seeds = [...field]..sort((a, b) => rank(a).compareTo(rank(b)));

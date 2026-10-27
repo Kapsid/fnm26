@@ -18,6 +18,8 @@ void main() {
     date: DateTime(2030, 6, 10),
     key: key,
     competitive: true,
+    stakes: YStakes.qualifier,
+    shootoutWon: null,
   );
 
   YContext withScorer(YMatch m) => (

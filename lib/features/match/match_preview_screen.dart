@@ -18,8 +18,10 @@ import 'package:fnm/domain/services/match/strength_factors.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/features/federation/career_pool.dart';
+import 'package:fnm/features/match/conditions_note.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/scout_report_view.dart';
 import 'package:fnm/features/match/setup_warning.dart';
 import 'package:fnm/features/match/strength_panel.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
@@ -293,10 +295,21 @@ class _PreviewParts {
     style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
   );
 
-  Widget ground() => GroundCard(
-    ground: preview.ground,
-    neutral: preview.neutralVenue,
-    groundNationCode: code(preview.ground.groundNationId),
+  // The ground, and under it what its altitude and heat will do to the legs.
+  Widget ground() => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      GroundCard(
+        ground: preview.ground,
+        neutral: preview.neutralVenue,
+        groundNationCode: code(preview.ground.groundNationId),
+        fans: preview.homeFans,
+      ),
+      ConditionsNote(
+        conditions: preview.conditions,
+        playerIsHome: preview.playerIsHome,
+      ),
+    ],
   );
 
   // What is helping and what is hurting, before he picks. Every line of it
@@ -638,8 +651,9 @@ opponentKeyMenProvider = FutureProvider.autoDispose
     });
 
 /// A pre-match scouting report on the opponent: their recent form (a W/D/L
-/// strip), a morale read, and their danger men — everything derived from data
-/// already recorded, so it costs nothing to keep.
+/// strip), a morale read, their world ranking and how they play (as deep as
+/// the scout allows, [ScoutReportSection]), and their danger men. Everything
+/// derived from data already recorded, so it costs nothing to keep.
 class _DossierBody extends ConsumerWidget {
   const _DossierBody({
     required this.careerId,
@@ -722,6 +736,14 @@ class _DossierBody extends ConsumerWidget {
                 ),
               ),
           ],
+        ),
+        // The world ranking and how they play: as much as the scout in the
+        // job can tell, which with nobody in it is very little.
+        const SizedBox(height: AppSpacing.md),
+        ScoutReportSection(
+          careerId: careerId,
+          nationId: oppNationId,
+          seed: saveSeed ^ oppNationId,
         ),
         if (keyMen.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.md),

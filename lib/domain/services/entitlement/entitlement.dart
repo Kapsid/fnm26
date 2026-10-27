@@ -12,6 +12,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// player granted.
 final premiumUnlockedProvider = StateProvider<bool>((ref) => false);
 
+/// Whether the launch entitlement decision has been made: the store has
+/// answered (or could not, and the cached grant decided), so
+/// [premiumUnlockedProvider] now says what this install owns.
+///
+/// Until it is true a `false` premium means "not known yet", not "not
+/// bought", and nothing may be locked on it: a paying player opening the app
+/// offline must never see his saves padlocked while the store is being
+/// asked. The EntitlementService sets it once, after the premium flag; tests
+/// that never run the service leave it false, so no save locks under them.
+final entitlementSettledProvider = StateProvider<bool>((ref) => false);
+
 /// How many four-year cycles a manager gets before the wall. One: a complete
 /// campaign — qualifying, a continental championship and the World
 /// Championship — with nothing held back, which is a far better advertisement
@@ -81,4 +92,26 @@ bool trialExhausted({
 bool importNeedsPremium({
   required int cyclePointer,
   required bool premiumUnlocked,
-}) => !premiumUnlocked && cyclePointer >= kFreeCycles;
+  bool proCampaign = false,
+}) => saveNeedsPremium(
+  cyclePointer: cyclePointer,
+  premiumUnlocked: premiumUnlocked,
+  proCampaign: proCampaign,
+);
+
+/// Whether a save may not be PLAYED without Pro: it is Pro-locked.
+///
+/// [trialExhausted] guards the roll into the next cycle, and that alone left a
+/// hole: pay at the end of the free cycle, roll into the second, refund, and
+/// the whole second cycle plays for nothing (and again on the next save). So
+/// a save already sitting past the free cycles needs Pro to be opened at all,
+/// and so does a Pro campaign run ([proCampaign]) at any cycle, because it
+/// needed Pro to be started. A free campaign run follows the cycle rule.
+///
+/// Locked is not lost: the save is never changed, it stays listed, can be
+/// exported or deleted, and opens again the moment Pro is owned.
+bool saveNeedsPremium({
+  required int cyclePointer,
+  required bool premiumUnlocked,
+  bool proCampaign = false,
+}) => !premiumUnlocked && (proCampaign || cyclePointer >= kFreeCycles);

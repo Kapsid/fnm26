@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/performance_mark.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
@@ -28,11 +29,17 @@ class MatchTeam {
     this.conditionByPlayer = const {},
     this.traitsByPlayer = const {},
     this.ratingBonus = 0,
+    this.fullBacks = FullBackPushes.neutral,
   });
 
   final int nationId;
   final List<Player> xi;
   final TacticalInstructions instructions;
+
+  /// The full-backs' individual arrows (see [FullBackPushes] and
+  /// [MatchEngine.fullBackLift]). The manager's side only; neutral for every
+  /// AI side, which never sets them.
+  final FullBackPushes fullBacks;
 
   /// A HIDDEN per-player rating shift from form, fatigue and morale (player id
   /// → points, positive or negative), applied to strength inside the engine
@@ -110,6 +117,7 @@ class TacticalChange {
     required this.xi,
     this.slots,
     this.takers,
+    this.fullBacks,
   });
 
   final int teamNationId;
@@ -117,6 +125,10 @@ class TacticalChange {
   final Formation formation;
   final TacticalInstructions instructions;
   final List<Player> xi;
+
+  /// The full-backs' arrows from this minute on, or null to keep the side's
+  /// current ones.
+  final FullBackPushes? fullBacks;
 
   /// The place each man in [xi] plays, one per entry, or null to read them
   /// off [formation] in order.
@@ -401,6 +413,7 @@ class _Live {
       formation = team.formation,
       shape = ShapeProfile.of(team.formation.positions),
       instructions = team.instructions,
+      fullBacks = team.fullBacks,
       penaltyTakerId = team.penaltyTakerId,
       deadBallTakerId = team.deadBallTakerId;
 
@@ -474,6 +487,14 @@ class _Live {
   /// the score and clock (a trailing team commits forward, a leading one sits).
   TacticalInstructions instructions;
 
+  /// The full-backs' arrows right now: the team sheet's, until a live change
+  /// names others.
+  FullBackPushes fullBacks;
+
+  /// The net arrow (up +1, down -1 each) of the full-backs actually in the
+  /// shape on the pitch: an arrow on a flank with no full-back counts nothing.
+  int get fullBackNet => fullBacks.netFor(slots);
+
   /// A rating swing from the last team talk, added to the side's attack /
   /// defence for the rest of the match (0 until the manager gives a talk).
   double talkAttack = 0;
@@ -495,6 +516,11 @@ class _Live {
   /// Whether this is a KNOCKOUT or finals tie — the occasion a big-game player
   /// rises to. Set once per match by the caller.
   bool bigMatch = false;
+
+  /// How much faster than normal the side's legs go in the match's altitude
+  /// and heat ([MatchConditions]); 1.0 at sea level in temperate weather,
+  /// where multiplying by it changes nothing.
+  double conditionsDrain = 1.0;
 
   /// Whether a LEADER other than [playerId] is on the pitch — a captain lifts
   /// those around them, never themselves.
@@ -609,6 +635,9 @@ class MatchEngine {
   /// match. [aiManagedNationIds] name the sides whose instructions the engine
   /// reactively manages by the scoreline and clock (typically the human's AI
   /// opponent) — a trailing side commits forward late, a leading side protects.
+  /// [conditions] are the ground's altitude and heat: each side's energy
+  /// drains faster by its share of them (see [MatchConditions]), so a side
+  /// not used to thin air fades late. The default changes nothing.
   /// [extraTimeIfLevel] plays minutes 91-120 after the stoppage when the
   /// ninety ends level (a live knockout). Off by default, and every input to
   /// the ninety is untouched by it: extra time only draws on the RNG streams
@@ -630,13 +659,16 @@ class MatchEngine {
     bool bigMatch = false,
     double atmosphere = 1.0,
     bool extraTimeIfLevel = false,
+    MatchConditions conditions = MatchConditions.none,
   }) {
     final liveHome = _Live(home)
       ..chemistry = chemistryByNation[home.nationId] ?? 1.0
-      ..bigMatch = bigMatch;
+      ..bigMatch = bigMatch
+      ..conditionsDrain = conditions.homeDrain;
     final liveAway = _Live(away)
       ..chemistry = chemistryByNation[away.nationId] ?? 1.0
-      ..bigMatch = bigMatch;
+      ..bigMatch = bigMatch
+      ..conditionsDrain = conditions.awayDrain;
     // Who, if anyone, plays in front of a home crowd this match.
     final homeAdvantage = !neutralVenue || home.nationId == venueHostId;
     final awayAdvantage = neutralVenue && away.nationId == venueHostId;
@@ -800,6 +832,16 @@ class MatchEngine {
       final homeCommit = _commitment(liveHome);
       final awayCommit = _commitment(liveAway);
       final open = opennessOf(homeCommit, awayCommit);
+      // The full-backs' arrows: each side's chance rate answers its own
+      // arrows (attack) and the other side's (exposure).
+      final homeFlanks = fullBackLift(
+        own: liveHome.fullBackNet,
+        opponent: liveAway.fullBackNet,
+      );
+      final awayFlanks = fullBackLift(
+        own: liveAway.fullBackNet,
+        opponent: liveHome.fullBackNet,
+      );
 
       if (_chance(
         rng,
@@ -809,6 +851,7 @@ class MatchEngine {
         homeShare,
         damping:
             legs *
+            homeFlanks *
             _blowoutDamping(homeScore, awayScore) *
             _scorelineOpenness(
               open,
@@ -849,6 +892,7 @@ class MatchEngine {
         1 - homeShare,
         damping:
             legs *
+            awayFlanks *
             _blowoutDamping(awayScore, homeScore) *
             _scorelineOpenness(
               open,
@@ -1192,6 +1236,7 @@ class MatchEngine {
       // moment the manager touched anything.
       ..shape = ShapeProfile.ofFormation(c.formation)
       ..instructions = c.instructions;
+    if (c.fullBacks case final f?) live.fullBacks = f;
     if (c.takers case final t?) {
       live
         ..penaltyTakerId = t.penalty
@@ -1389,6 +1434,46 @@ class MatchEngine {
               (i.pressing - 50) / 50 * kOpenPressing +
               (attackers - ShapeProfile.neutralAttackers) * kOpenAttackers)
           .clamp(-1.0, 1.0);
+
+  /// How much one full-back pushed on lifts his own side's OPEN-PLAY chance
+  /// rate ([kFullBackAttack]) and the opponent's ([kFullBackExposure]); held
+  /// back, the same amounts the other way.
+  ///
+  /// Deliberately slight, and the two equal: an arrow buys risk, not an edge.
+  /// Set pieces are untouched, so 3.5% on open play is about 2.5% on all the
+  /// chances a side makes: two arrows up is about +5% for and against, one
+  /// about half that. Kept apart from every other tactical dial (and out of
+  /// [RatingMatchSimulator]'s own tuning) so it can be retuned on its own;
+  /// `full_back_push_test` holds the bands.
+  static const double kFullBackAttack = 0.035;
+  static const double kFullBackExposure = 0.035;
+
+  /// The share of an engine side's chances that come from open play, the
+  /// only ones the arrows touch. What the skip path scales by, so a skipped
+  /// match moves its goals as much as a played one (see [fullBackOpenness]).
+  static const double kOpenPlayShare = 0.72;
+
+  /// The chance-rate multiplier for a side whose full-backs net [own] arrows,
+  /// against an opponent netting [opponent] (see [FullBackPushes.netFor]):
+  /// its own push adds attack, the opponent's push leaves the opponent open.
+  /// 1.0 when neither side has touched an arrow.
+  static double fullBackLift({required int own, required int opponent}) =>
+      (1 + kFullBackAttack * own) * (1 + kFullBackExposure * opponent);
+
+  /// [fullBackLift] for a match the world simulates rather than plays, as
+  /// one openness on [RatingMatchSimulator] (which applies it to both sides'
+  /// xG): exact here because an arrow lifts both ends by the same factor,
+  /// with the geometric mean keeping it honest should the two weights ever be
+  /// split. Scaled by [kOpenPlayShare], since the simulator's goals have no
+  /// set pieces held apart.
+  static double fullBackOpenness(int net) =>
+      1 +
+      kOpenPlayShare *
+          (sqrt(
+                fullBackLift(own: net, opponent: 0) *
+                    fullBackLift(own: 0, opponent: net),
+              ) -
+              1);
 
   /// [openness] from the two sides' [commitment]s.
   static double opennessOf(double home, double away) {
@@ -2465,7 +2550,12 @@ class MatchEngine {
           ? PlayerTraits.ironManStaminaFactor
           : 1.0;
       final drain =
-          base * workload * (1.4 - stamina / 100) * ageFactor * ironMan;
+          base *
+          workload *
+          (1.4 - stamina / 100) *
+          ageFactor *
+          ironMan *
+          t.conditionsDrain;
       t.energy[p.id] = (t.energyOf(p.id) - drain).clamp(0.0, 100.0);
     }
   }

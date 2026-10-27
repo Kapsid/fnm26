@@ -56,7 +56,10 @@ qualifyingDrawProvider = FutureProvider.autoDispose
       if (career == null) return null;
       final l = ref.watch(appLocalizationsProvider);
       final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
+        for (final n
+            in await ref
+                .watch(nationRepositoryProvider)
+                .forCareer(arg.careerId))
           n.id: n,
       };
       final conf = nations[career.nationId]?.confederation;

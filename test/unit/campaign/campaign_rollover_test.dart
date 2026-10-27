@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
@@ -75,5 +76,35 @@ void main() {
     await season.startNextCycle(d.careerId);
     career = (await careers.byId(d.careerId))!;
     expect(career.cyclePointer, 1);
+  }, timeout: const Timeout(Duration(minutes: 5)));
+
+  test('a Pro run whose purchase is refunded meets the wall at its next '
+      'cycle, and rolls again once Pro is back', () async {
+    final c = storyContainer();
+    addTearDown(c.dispose);
+    final d = await StoryDriver.startCampaign(c, Campaigns.guineas);
+    expect(Campaigns.guineas.needsPro, isTrue);
+    final season = c.read(seasonServiceProvider);
+    final careers = c.read(careerRepositoryProvider);
+
+    await decideWorldChampionship(c, d.careerId);
+    expect((await d.nextEvent()).kind, HubEventKind.cycleRollover);
+
+    // Refunded: the store no longer names the unlock.
+    c.read(premiumUnlockedProvider.notifier).state = false;
+    expect(await season.trialBlocksNextCycle(d.careerId), isTrue);
+    await season.startNextCycle(d.careerId);
+    expect((await careers.byId(d.careerId))!.cyclePointer, 0);
+    expect(
+      (await c.read(activeCampaignProvider(d.careerId).future))?.def.id,
+      'guineas',
+      reason: 'the run is kept, only held where it was',
+    );
+
+    // Bought again: it rolls.
+    c.read(premiumUnlockedProvider.notifier).state = true;
+    expect(await season.trialBlocksNextCycle(d.careerId), isFalse);
+    await season.startNextCycle(d.careerId);
+    expect((await careers.byId(d.careerId))!.cyclePointer, 1);
   }, timeout: const Timeout(Duration(minutes: 5)));
 }

@@ -16,6 +16,8 @@ import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart'
+    show nationsCupDrawKind;
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// One of the board's expectations for the cycle, and — once that tournament is
@@ -47,6 +49,10 @@ typedef CycleObjective = ({
   /// The nation's actual finish, e.g. "Quarter-finals" / "Top half of the
   /// qualifying group".
   String resultLabel,
+
+  /// A minnow's Nations Cup brief to finish above the bottom of a group with
+  /// no relegation from it (see [ObjectiveOutcome.offTheBottom]).
+  bool offTheBottom,
 });
 
 /// The same expectation, WITHOUT any localised wording: the tournament, the
@@ -72,6 +78,13 @@ typedef ObjectiveOutcome = ({
 
   /// The nation's actual finish as an ordinal.
   int actual,
+
+  /// Whether this is a minnow's Nations Cup brief to finish above the bottom
+  /// of a group nobody is relegated from (the lowest league of a ladder, or an
+  /// African zone): target 2, worded for that rather than as "avoid
+  /// relegation". Only a minnow's brief is ever one (see
+  /// [minnowNationsCupTarget]); every other brief reads false.
+  bool offTheBottom,
 });
 
 /// The board's demand for a target ordinal in [tier], worded for the manager.
@@ -85,7 +98,14 @@ String objectiveDemandText(
   TournamentTier tier,
   int target, {
   String? competition,
-}) => _labelFor(l, tier, target, competition: competition);
+  bool offTheBottom = false,
+}) => _labelFor(
+  l,
+  tier,
+  target,
+  competition: competition,
+  offTheBottom: offTheBottom,
+);
 
 /// The same demand WITHOUT the words: which string it is, so the board's
 /// verdict can be stored as meaning and read in the manager's language
@@ -98,7 +118,11 @@ MsgKey objectiveDemandKey(
   TournamentTier tier,
   int target, {
   String? competition,
+  bool offTheBottom = false,
 }) {
+  if (tier == TournamentTier.nationsCup && offTheBottom && target == 2) {
+    return MsgKey.objectiveNcOffTheBottom;
+  }
   if (tier == TournamentTier.nationsCup && _isZonesCup(competition)) {
     return switch (target) {
       7 => _ncWinIt(competition),
@@ -134,7 +158,15 @@ MsgKey objectiveFinishKey(
   TournamentTier tier,
   int ordinal, {
   String? competition,
+  bool offTheBottom = false,
 }) {
+  // A ladder's lowest league has nothing to stay up in.
+  if (tier == TournamentTier.nationsCup &&
+      offTheBottom &&
+      ordinal == 2 &&
+      !_isZonesCup(competition)) {
+    return MsgKey.finishNcClearOfBottom;
+  }
   if (tier == TournamentTier.nationsCup && _isZonesCup(competition)) {
     return switch (ordinal) {
       7 => _ncChampions(competition),
@@ -179,7 +211,14 @@ String objectiveFinishText(
   TournamentTier tier,
   int ordinal, {
   String? competition,
-}) => _resultLabel(l, tier, ordinal, competition: competition);
+  bool offTheBottom = false,
+}) => _resultLabel(
+  l,
+  tier,
+  ordinal,
+  competition: competition,
+  offTheBottom: offTheBottom,
+);
 
 /// The rungs that name the cup say which one: a CONCACAF manager is told to
 /// win the North America Nations Cup, not Europe's.
@@ -246,8 +285,19 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
     briefRulesV2Kind,
   );
 
-  final nations = await ref.watch(nationRepositoryProvider).all();
+  final nations = await ref.watch(nationRepositoryProvider).forCareer(careerId);
   final me = nations.where((n) => n.id == career.nationId).firstOrNull;
+  // A minnow's softer Nations Cup brief, for a cycle opened under the 1.0.7
+  // rules (see [briefRulesV3Kind]); 0 for everyone else.
+  final minnow =
+      v2 &&
+          await comp.hasWatchedDraw(
+            careerId,
+            career.cyclePointer,
+            briefRulesV3Kind,
+          )
+      ? boardMinnowFactor(baseline, nations, career.nationId)
+      : 0.0;
   // THIS cycle's fixtures only. Reading the nation's whole history meant a
   // manager who once reached a World Cup semi-final was still credited with it
   // four, eight and twelve years later: every objective read as met the moment
@@ -303,6 +353,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
         decided: decided,
         met: decided && actual >= target,
         actual: actual,
+        offTheBottom: false,
       ));
     }
   }
@@ -328,9 +379,12 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       .firstOrNull;
   if (ncConf != null && ncCup != null && myNcGroup != null) {
     final zones = ncCup.format == NationsCupFormat.zones;
-    final int target;
+    final int usual;
+    // Whether the side's group has no relegation to avoid: Africa's zones,
+    // or the lowest league of a ladder.
+    var noDrop = zones;
     if (zones) {
-      target = _zonesCupTarget(
+      usual = _zonesCupTarget(
         baseline: baseline,
         nations: nations,
         nationId: career.nationId,
@@ -339,7 +393,15 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       final tiers = await ref
           .watch(careerRepositoryProvider)
           .nationsCupTiers(careerId);
-      target = _nationsCupTarget(
+      final confOf = {for (final n in nations) n.id: n.confederation};
+      noDrop =
+          NationsCup.tierOfGroupName(myNcGroup.name) >=
+          NationsCup.lowestTier(
+            tiers: tiers,
+            confederation: ncConf,
+            confederationOf: (id) => confOf[id],
+          );
+      usual = _nationsCupTarget(
         tiers: tiers,
         baseline: baseline,
         nations: nations,
@@ -351,11 +413,19 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
             : (top: 0.6, below: 0.35),
       );
     }
-    final actual = _nationsCupOrdinal(
-      standings: myNcGroup.standings,
-      fixtures: fixtures,
-      nationId: career.nationId,
-    );
+    final target = minnowNationsCupTarget(usual, minnow: minnow);
+    // The league is built when the cycle opens, two years before a ball is
+    // kicked: a table of nothing played lists its members in draw order, and
+    // read as a place it printed "So far: top half" on day one. No place
+    // until the side has played in its group (0: not progress).
+    final ncStarted = fixtures.any((f) => f.round == 'NGROUP' && f.hasResult);
+    final actual = !ncStarted
+        ? 0
+        : _nationsCupOrdinal(
+            standings: myNcGroup.standings,
+            fixtures: fixtures,
+            nationId: career.nationId,
+          );
     // Settled once the league campaign is played out — and, for a side that
     // reached the finals, once those have been played too.
     final ncFixtures = [
@@ -382,6 +452,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       decided: decided,
       met: decided && actual >= target,
       actual: actual,
+      offTheBottom: noDrop && target == 2 && target < usual,
     ));
   }
 
@@ -435,6 +506,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       decided: wcDecided,
       met: wcDecided && wcActual >= wcTarget,
       actual: wcActual,
+      offTheBottom: false,
     ));
   }
 
@@ -469,7 +541,13 @@ cycleObjectivesProvider = FutureProvider.autoDispose
               _nationsCupName => l.careerNationsCupLabel,
               final name => competitionLabel(l, name),
             },
-            label: _labelFor(l, o.tier, o.target, competition: o.competition),
+            label: _labelFor(
+              l,
+              o.tier,
+              o.target,
+              competition: o.competition,
+              offTheBottom: o.offTheBottom,
+            ),
             target: o.target,
             decided: o.decided,
             met: o.met,
@@ -479,7 +557,9 @@ cycleObjectivesProvider = FutureProvider.autoDispose
               o.tier,
               o.actual,
               competition: o.competition,
+              offTheBottom: o.offTheBottom,
             ),
+            offTheBottom: o.offTheBottom,
           ),
       ];
     });
@@ -492,6 +572,99 @@ cycleObjectiveProvider = FutureProvider.autoDispose
       final all = await ref.watch(cycleObjectivesProvider(careerId).future);
       if (all.isEmpty) return null;
       return all.firstWhere((o) => !o.decided, orElse: () => all.last);
+    });
+
+/// Why a competition the nation plays this cycle has no board objective.
+enum ObjectiveGapReason {
+  /// The board set no brief: the side is outside the finals' own field and
+  /// outside the top three-fifths of its confederation (see
+  /// [worldObjectiveTarget] and [continentalObjectiveTarget]). It is judged
+  /// on its results there instead.
+  noBrief,
+
+  /// This cycle's Nations Cup exists but its draw is still to come, so there
+  /// is no group to set a target in yet.
+  awaitingDraw,
+}
+
+/// A competition the nation plays this cycle that carries no objective, so
+/// the board screen can say so instead of leaving it out.
+typedef ObjectiveGap = ({
+  TournamentTier tier,
+
+  /// Already worded for the screen, as [CycleObjective.competition].
+  String competition,
+  ObjectiveGapReason reason,
+});
+
+/// The competitions of this cycle the board set no objective for (b8 item 4).
+///
+/// A side outside the top three-fifths of its confederation gets no World
+/// Championship or continental brief (by design: it is judged on its
+/// results). The board screen used to list only the briefs, so Montenegro's
+/// board showed one objective, the Nations Cup, and read as broken. Display
+/// only: grading, the board's mood and every verdict still read
+/// [cycleObjectiveOutcomesProvider] alone.
+final AutoDisposeFutureProviderFamily<List<ObjectiveGap>, int>
+cycleObjectiveGapsProvider = FutureProvider.autoDispose
+    .family<List<ObjectiveGap>, int>((ref, careerId) async {
+      final outcomes = await ref.watch(
+        cycleObjectiveOutcomesProvider(careerId).future,
+      );
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return const [];
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(careerId);
+      final conf = nations
+          .where((n) => n.id == career.nationId)
+          .firstOrNull
+          ?.confederation;
+      if (conf == null) return const [];
+      final l = ref.watch(appLocalizationsProvider);
+      final have = {for (final o in outcomes) o.tier};
+      final cup = ContinentalCups.byConfederation[conf];
+      final ncCup = NationsCups.forConfederation(conf);
+      // A Nations Cup row with no brief only while this cycle's cup exists and
+      // its draw is still to come. A cup the cycle does not have (a cycle
+      // opened before the cup existed) or one already drawn without the
+      // nation in it gets no row: no draw is coming to set a target.
+      final comp = ref.watch(competitionRepositoryProvider);
+      final ncAwaitingDraw =
+          ncCup != null &&
+          !have.contains(TournamentTier.nationsCup) &&
+          await comp.hasTournament(
+            careerId,
+            CompetitionKind.nationsLeague,
+            confederation: conf,
+          ) &&
+          !await comp.hasWatchedDraw(
+            careerId,
+            career.cyclePointer,
+            nationsCupDrawKind,
+          );
+      return [
+        if (cup != null && !have.contains(TournamentTier.continental))
+          (
+            tier: TournamentTier.continental,
+            competition: competitionLabel(l, cup.name),
+            reason: ObjectiveGapReason.noBrief,
+          ),
+        if (ncAwaitingDraw)
+          (
+            tier: TournamentTier.nationsCup,
+            competition: ncCup.name == _nationsCupName
+                ? l.careerNationsCupLabel
+                : competitionLabel(l, ncCup.name),
+            reason: ObjectiveGapReason.awaitingDraw,
+          ),
+        if (!have.contains(TournamentTier.world))
+          (
+            tier: TournamentTier.world,
+            competition: l.objectiveWorldCup,
+            reason: ObjectiveGapReason.noBrief,
+          ),
+      ];
     });
 
 /// The first knockout round of each tournament, in the order a field of that
@@ -688,6 +861,60 @@ int _rankWithin(
 /// under way in a save carried over from 1.0.5 has no mark and keeps the briefs
 /// it opened with until it ends.
 const briefRulesV2Kind = 'briefRules2';
+
+/// Marks a cycle opened by 1.0.7 or later, whose minnows get the softer
+/// Nations Cup brief (see [minnowNationsCupTarget]). Written beside
+/// [briefRulesV2Kind]; a cycle already under way when a save is updated keeps
+/// the brief it opened with until it ends.
+const briefRulesV3Kind = 'briefRules3';
+
+/// How much of a minnow [nationId] is (see [BoardSatisfaction.minnowFactor]),
+/// from the cycle-start ranking [baseline] the briefs are set from.
+double boardMinnowFactor(
+  Map<int, int> baseline,
+  List<Nation> nations,
+  int nationId,
+) {
+  final me = nations.where((n) => n.id == nationId).firstOrNull;
+  if (me == null) return 0;
+  return BoardSatisfaction.minnowFactor(
+    worldRank: baseline[nationId] ?? me.ranking,
+    confederationRank: _rankWithin(baseline, nations, me.confederation, me.id),
+    confederationSize: _sizeOf(nations, me.confederation),
+  );
+}
+
+/// How much of a minnow the manager's nation is this cycle, for the board's
+/// patience (see [BoardSatisfaction.minnowFactor]). Read off the frozen
+/// cycle-start baseline, like the briefs, so it does not wobble with results.
+final AutoDisposeFutureProviderFamily<double, int> boardMinnowProvider =
+    FutureProvider.autoDispose.family<double, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return 0;
+      final baseline = await ref.watch(
+        seedRankByIdProvider((
+          careerId: careerId,
+          cycle: career.cyclePointer,
+        )).future,
+      );
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(careerId);
+      return boardMinnowFactor(baseline, nations, career.nationId);
+    });
+
+/// The factor (see [BoardSatisfaction.minnowFactor]) from which the board
+/// sets a minnow's Nations Cup brief.
+const double minnowBriefFrom = 0.5;
+
+/// A minnow's Nations Cup brief: one rung below the [usual] one, and never
+/// below 2, finishing above the bottom of the group. San Marino was told to
+/// finish in the top half of a League D group with Gibraltar and Andorra in
+/// it, which it seldom does, and missing that brief took the board to the
+/// edge of the sack on its own. Below [minnowBriefFrom] the brief is exactly
+/// the [usual] one.
+int minnowNationsCupTarget(int usual, {required double minnow}) =>
+    minnow >= minnowBriefFrom && usual > 2 ? usual - 1 : usual;
 
 /// The World Championship brief as 1.0.5 and earlier set it, for a cycle
 /// opened before the retune (see [briefRulesV2Kind]).
@@ -978,9 +1205,17 @@ String _labelFor(
   TournamentTier tier,
   int target, {
   String? competition,
+  bool offTheBottom = false,
 }) => renderMsgKey(
   l,
-  MsgText(objectiveDemandKey(tier, target, competition: competition)),
+  MsgText(
+    objectiveDemandKey(
+      tier,
+      target,
+      competition: competition,
+      offTheBottom: offTheBottom,
+    ),
+  ),
 );
 
 /// [nationId]'s deepest finish this cycle as an ordinal (0 = did not qualify,
@@ -1042,7 +1277,15 @@ String _resultLabel(
   TournamentTier tier,
   int ordinal, {
   String? competition,
+  bool offTheBottom = false,
 }) => renderMsgKey(
   l,
-  MsgText(objectiveFinishKey(tier, ordinal, competition: competition)),
+  MsgText(
+    objectiveFinishKey(
+      tier,
+      ordinal,
+      competition: competition,
+      offTheBottom: offTheBottom,
+    ),
+  ),
 );

@@ -7,7 +7,10 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/campaign/campaign_grading.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/nations_cup.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/campaign/campaign_record_store.dart';
@@ -131,7 +134,10 @@ bool countsAsSave(CampaignTag? tag) => tag == null || tag.moved;
 /// the rivals beaten at least once. `cycleRuns` is the continental run of each
 /// cycle played so far, first cycle first, and `worldRuns` the World
 /// Championship run of each (read only for a
-/// [CampaignGoal.qualifyWorldThenTitles], empty for every other goal).
+/// [CampaignGoal.qualifyWorldThenTitles] or a
+/// [CampaignGoal.qualifyBothThenTitle], empty for every other goal).
+/// `nationsCupRun` is this cycle's Nations Cup (see [campaignNationsCupRun]),
+/// read only for a [CampaignGoal.titleTreble] and null for every other goal.
 /// `reached` is the grade the run stands at now, settled or not; `stars` only
 /// takes it at the verdict.
 typedef CampaignProgress = ({
@@ -148,6 +154,7 @@ typedef CampaignProgress = ({
   Set<int> rivalsBeaten,
   List<({int ordinal, bool over})> cycleRuns,
   List<({int ordinal, bool over})> worldRuns,
+  ({int ordinal, bool over})? nationsCupRun,
 });
 
 /// Whether [nationId] won [f]: on the score, or level and through the
@@ -281,14 +288,21 @@ campaignProgressProvider = FutureProvider.autoDispose
       // Every cycle's continental run, the current one as read above; an
       // earlier cycle's from its own fixtures (it is long over). The World
       // Championship runs beside them, for the one goal that reads them.
-      final readsWorld = def.goal == CampaignGoal.qualifyWorldThenTitles;
+      final readsWorld =
+          def.goal == CampaignGoal.qualifyWorldThenTitles ||
+          def.goal == CampaignGoal.qualifyBothThenTitle ||
+          def.goal == CampaignGoal.titleTreble;
       final cycleRuns = <({int ordinal, bool over})>[];
       final worldRuns = <({int ordinal, bool over})>[];
+      // Read once: a century-long campaign has up to 24 past cycles.
+      final allTime = cyclePointer == 0
+          ? const <Fixture>[]
+          : await comp.fixturesForNation(careerId, def.nationId);
       for (var c = 0; c < cyclePointer; c++) {
         final from = CareerService.cycleOpens(c);
         final to = CareerService.cycleOpens(c + 1);
         final pastFixtures = [
-          for (final f in await comp.fixturesForNation(careerId, def.nationId))
+          for (final f in allTime)
             if (!f.date.isBefore(from) && f.date.isBefore(to)) f,
         ];
         final past = await continentalRun(
@@ -317,6 +331,16 @@ campaignProgressProvider = FutureProvider.autoDispose
           ),
         );
       }
+      final nationsCupRun = def.goal == CampaignGoal.titleTreble
+          ? await campaignNationsCupRun(
+              comp: comp,
+              careerId: careerId,
+              nationId: def.nationId,
+              confederation: conf,
+              year: CareerService.continentalFinalsYear(cyclePointer),
+              fixtures: fixtures,
+            )
+          : null;
       final bestOrdinal = cycleRuns
           .map((r) => r.ordinal)
           .reduce((a, b) => a > b ? a : b);
@@ -368,6 +392,18 @@ campaignProgressProvider = FutureProvider.autoDispose
           wonContinental: cycleRuns.any((r) => r.ordinal >= 7),
           wonWorld: worldRuns.any((r) => r.ordinal >= 7),
         ),
+        CampaignGoal.qualifyBothThenTitle => qualifyBothThenTitleStars(
+          qualifiedContinental: cycleRuns.any((r) => r.ordinal >= 2),
+          qualifiedWorld: worldRuns.any((r) => r.ordinal >= 2),
+          wonTitle:
+              cycleRuns.any((r) => r.ordinal >= 7) ||
+              worldRuns.any((r) => r.ordinal >= 7),
+        ),
+        CampaignGoal.titleTreble => titleTrebleStars(
+          wonContinental: cycleRuns.any((r) => r.ordinal >= 7),
+          wonWorld: worldRuns.any((r) => r.ordinal >= 7),
+          wonNationsCup: (nationsCupRun?.ordinal ?? 0) >= 7,
+        ),
       };
       var settled = switch (def.goal) {
         CampaignGoal.qualifyContinental => run.over,
@@ -389,6 +425,12 @@ campaignProgressProvider = FutureProvider.autoDispose
         CampaignGoal.beatRivalsThenContinental => reached == 3,
         // The same: the world title ends it, anything less runs on.
         CampaignGoal.qualifyWorldThenTitles => reached == 3,
+        CampaignGoal.qualifyBothThenTitle => reached == 3,
+        // Every star needs the continental title first: losing it ends the
+        // run there and then. Otherwise it runs to the World Championship,
+        // the last title of the cycle (the end-of-cycle rule below).
+        CampaignGoal.titleTreble =>
+          reached == 3 || (run.over && run.ordinal < 7),
       };
       // A cycle is over. At the end of the campaign's LAST cycle whatever is
       // still open is judged as it stands; at the end of any cycle a manager
@@ -399,7 +441,11 @@ campaignProgressProvider = FutureProvider.autoDispose
       // not even asked about there.
       var sacked = false;
       if (await comp.worldChampion(careerId) != null) {
-        if (!settled && def.cycles <= 1) {
+        // Finish the Legacy banks its stars as the titles come in: a board
+        // that sacks the manager after the European title cannot take that
+        // title, and so that star, away.
+        final banked = def.goal == CampaignGoal.titleTreble && reached > 0;
+        if (!settled && def.cycles <= 1 && !banked) {
           final verdict = await ref.watch(
             rolloverVerdictProvider(careerId).future,
           );
@@ -422,8 +468,82 @@ campaignProgressProvider = FutureProvider.autoDispose
         rivalsBeaten: rivalsBeaten,
         cycleRuns: cycleRuns,
         worldRuns: worldRuns,
+        nationsCupRun: nationsCupRun,
       );
     });
+
+/// [nationId]'s Nations Cup in the current cycle, on the board's scale: 7
+/// champions (the cup's honour for [year] names it, however it was won), 6
+/// runners-up, 5 the finals (a ladder's Finals Four, or any of Africa's
+/// knockouts), 4 group winners, 3 top half, 2 clear of the bottom, 1
+/// bottom, 0 no group yet. `over` once nothing more can come of it: the cup's
+/// honour for [year] is recorded, the nation lost a knockout tie, or its group
+/// is played out without the place in the finals a League A group winner
+/// earns. A confederation with no Nations Cup has nothing to win: over at 0.
+Future<({int ordinal, bool over})> campaignNationsCupRun({
+  required CompetitionRepository comp,
+  required int careerId,
+  required int nationId,
+  required Confederation confederation,
+  required int year,
+  required List<Fixture> fixtures,
+}) async {
+  final cup = NationsCups.forConfederation(confederation);
+  if (cup == null) return (ordinal: 0, over: true);
+  final decided = await comp.hasHonour(careerId, cup.name, year);
+  // The title, however the cup crowned it: a ladder with a lone League A
+  // group winner crowns it outright, with no final to read.
+  if (decided) {
+    final honour = (await comp.honours(
+      careerId,
+    )).where((h) => h.competition == cup.name && h.year == year).firstOrNull;
+    if (honour != null && honour.champions.contains(nationId)) {
+      return (ordinal: 7, over: true);
+    }
+  }
+  for (final f in fixtures) {
+    if (f.round != 'NFINAL' || !f.hasResult) continue;
+    return (ordinal: campaignNationWon(f, nationId) ? 7 : 6, over: true);
+  }
+  const knockouts = {'NR16', 'NQF', 'NSF', 'NFINAL'};
+  final ties = [
+    for (final f in fixtures)
+      if (knockouts.contains(f.round)) f,
+  ];
+  if (ties.isNotEmpty) {
+    final out = ties.any((f) => f.hasResult && !campaignNationWon(f, nationId));
+    return (ordinal: 5, over: out || decided);
+  }
+  final tables = await comp.tournamentGroupTables(
+    careerId,
+    CompetitionKind.nationsLeague,
+    confederation: confederation,
+  );
+  final table = tables
+      .where((t) => t.standings.any((s) => s.nationId == nationId))
+      .firstOrNull;
+  if (table == null) return (ordinal: 0, over: decided);
+  final pos = table.standings.indexWhere((s) => s.nationId == nationId) + 1;
+  final n = table.standings.length;
+  final ordinal = pos == 1
+      ? 4
+      : pos <= (n + 1) ~/ 2
+      ? 3
+      : pos < n
+      ? 2
+      : 1;
+  final group = [
+    for (final f in fixtures)
+      if (f.round == 'NGROUP') f,
+  ];
+  final groupDone = group.isNotEmpty && group.every((f) => f.hasResult);
+  // A ladder's Finals Four is League A's group winners; Africa's knockouts
+  // take more than the winners, so only the honour closes its cup.
+  final mayGoOn =
+      cup.format == NationsCupFormat.zones ||
+      (pos == 1 && NationsCup.tierOfGroupName(table.name) == 0);
+  return (ordinal: ordinal, over: decided || (groupDone && !mayGoOn));
+}
 
 /// Whether every qualifying fixture between the members of [table] has a
 /// result. Each member's own fixtures are read, so the whole group is seen,
@@ -466,7 +586,16 @@ final campaignRunsProvider = FutureProvider.autoDispose<Map<String, Career>>((
 });
 
 /// How [CampaignService.moveToSaves] ended.
-enum CampaignMoveResult { moved, slotsFull, notSettled, notAllowed }
+enum CampaignMoveResult {
+  moved,
+  slotsFull,
+  notSettled,
+  notAllowed,
+
+  /// The run is Pro-locked (see `saveNeedsPremium`): it is left exactly as it
+  /// is, unmoved, until Pro is owned.
+  needsPremium,
+}
 
 /// Starts, abandons and moves campaign runs, which live outside the save slots
 /// until the manager chooses to keep one.
@@ -483,6 +612,9 @@ class CampaignService {
     if (def.needsPro && !_ref.read(premiumUnlockedProvider)) {
       throw StateError('Campaign ${def.id} needs Pro.');
     }
+    // The run freezes the stored ranking (see freezeStartingRanks below), so
+    // an upgraded database must first have moved to the current one.
+    await _ref.read(seedLoaderProvider).ensureSeeded();
     final runs = await _ref.read(campaignRunsProvider.future);
     if (runs.containsKey(def.id)) {
       throw StateError('Campaign ${def.id} already has a run in progress.');
@@ -494,6 +626,18 @@ class CampaignService {
           managerName: managerName,
           rngSeed: def.rngSeed,
           countsTowardSlots: false,
+          // Inside create, before the calendar is drawn: a dormant nation's
+          // world must be the one every draw is made from.
+          worldMarkers: [
+            if (def.dormantNationId case final d?) DormantNations.markerFor(d),
+          ],
+          // A run starts on the current starting ranking, the same one a
+          // new career gets, frozen into the run (its cycle-0 snapshot) so
+          // the world its seed was searched on stays its world whatever a
+          // later update ships (see campaign_seeds_test). Runs begun on the
+          // 1.0.6 ranking keep that one: their snapshot already holds it, or
+          // the seed loader freezes it.
+          freezeStartingRanks: true,
         );
     final career = result.valueOrNull;
     if (career == null) {
@@ -573,7 +717,9 @@ class CampaignService {
   Future<void> _bookOpeningFriendly(Career career, int opponentId) async {
     final comp = _ref.read(competitionRepositoryProvider);
     final nations = {
-      for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
+      for (final n
+          in await _ref.read(nationRepositoryProvider).forCareer(career.id))
+        n.id: n,
     };
     final window = await firstFreeHomeFriendlyWindow(comp, career, nations);
     if (window == null) return;
@@ -610,6 +756,18 @@ class CampaignService {
       return CampaignMoveResult.notSettled;
     }
     if (!progress.def.canContinue) return CampaignMoveResult.notAllowed;
+    // A Pro-locked run is not written to, the moved marker included. Only once
+    // the launch entitlement has settled: before that nothing locks.
+    final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+    if (career != null &&
+        _ref.read(entitlementSettledProvider) &&
+        saveNeedsPremium(
+          cyclePointer: career.cyclePointer,
+          premiumUnlocked: _ref.read(premiumUnlockedProvider),
+          proCampaign: progress.def.needsPro,
+        )) {
+      return CampaignMoveResult.needsPremium;
+    }
     final saves = await _ref.read(savesProvider.future);
     if (!canCreateSave(
       existingSaves: saves.length,

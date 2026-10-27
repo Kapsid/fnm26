@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/sim_activity.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -27,7 +30,6 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/federation/naturalization_rules.dart';
-import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
@@ -35,7 +37,9 @@ import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/match/background_match.dart';
 import 'package:fnm/domain/services/match/goal_attribution.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
+import 'package:fnm/domain/services/match/mid_tier_difficulty.dart';
 import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
@@ -46,10 +50,14 @@ import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/awards/award_providers.dart';
+import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
+import 'package:fnm/features/squad/international_retirement_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/host_bid_providers.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart'
     show friendliesPlanProvider;
@@ -66,6 +74,8 @@ import 'package:fnm/features/career/nation_offers_providers.dart'
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/domain/services/cloud/cloud_backup_policy.dart';
+import 'package:fnm/features/cloud/cloud_backup_providers.dart';
 import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
@@ -93,6 +103,7 @@ import 'package:fnm/features/nations/nation_vitrine_providers.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show invalidatePlayerDetails;
 import 'package:fnm/features/results/results_providers.dart';
+import 'package:fnm/features/match/match_ground.dart';
 import 'package:fnm/features/tournaments/continental_clash_providers.dart';
 import 'package:fnm/features/tournaments/continental_detail_providers.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart';
@@ -101,6 +112,7 @@ import 'package:fnm/features/tournaments/nations_cup_providers.dart';
 import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
+import 'package:fnm/features/tournaments/wc_host_berths.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
@@ -128,6 +140,7 @@ class HubData {
     this.groupDrawWatched = true,
     this.groupDirectCount = 2,
     this.groupContentionPos,
+    this.groupPlayoffNations = const {},
     this.groupRelegateCount = 0,
   });
 
@@ -146,6 +159,10 @@ class HubData {
   /// "in contention" position (amber best-third / play-off), if any.
   final int groupDirectCount;
   final int? groupContentionPos;
+
+  /// Nations in [group]'s confederation currently on course for the
+  /// intercontinental play-off (yellow), World Championship qualifying only.
+  final Set<int> groupPlayoffNations;
 
   /// How many bottom places in [group] are relegated (red) — the Nations Cup
   /// drops each group's last side a league.
@@ -190,7 +207,9 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
   final next = await compRepo.nextFixtureForNation(careerId, career.nationId);
   final fixtures = await compRepo.fixturesForNation(careerId, career.nationId);
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
   // The career's pool, players naturalised in included (a transplant must
   // show in the rating); a career without a naturalisation reads the seeded
@@ -223,6 +242,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
   // draw has been watched (the table stays hidden until it has).
   var groupDirect = 2;
   int? groupContention;
+  var groupPlayoff = const <int>{};
   var groupRelegate = 0;
   var groupDrawWatched = true;
   if (group != null) {
@@ -243,16 +263,28 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
         confederationOf: (id) => nations[id]?.confederation,
       );
     }
+    // World Cup hosts' places come out of their own confederation's
+    // allocation, so qualifying sends that many fewer through.
+    final wcHosts = group.kind == CompetitionKind.worldCupQualifying
+        ? (await worldCupHostBerthsFor(ref, careerId))[conf] ?? 0
+        : 0;
     final adv = GroupAdvancement.forGroup(
       kind: group.kind,
       confederation: conf,
       groupCount: group.groupCount,
       continentalSize: size,
       isLowestLeague: isLowestLeague,
+      worldCupHosts: wcHosts,
     );
     groupDirect = adv.direct;
     groupContention = adv.contention;
     groupRelegate = adv.relegate;
+    if (group.kind == CompetitionKind.worldCupQualifying) {
+      groupPlayoff = GroupAdvancement.worldCupPlayoffNations(conf, [
+        for (final t in await compRepo.allGroupTablesByConfederation(careerId))
+          if (t.confederation == conf) t.standings,
+      ], hosts: wcHosts);
+    }
     final gk = groupDrawKind(group.kind);
     if (gk != null) {
       groupDrawWatched = await compRepo.hasWatchedDraw(
@@ -277,6 +309,7 @@ hubDataProvider = FutureProvider.autoDispose.family<HubData?, int>((
     groupDrawWatched: groupDrawWatched,
     groupDirectCount: groupDirect,
     groupContentionPos: groupContention,
+    groupPlayoffNations: groupPlayoff,
     groupRelegateCount: groupRelegate,
   );
 });
@@ -400,7 +433,8 @@ class SeasonService {
       // between two operations.
       _naturalized = null;
       _naturalizedFor = null;
-      return body();
+      // Counted, so the automatic backup never snapshots a half-run step.
+      return SimActivity.track(body);
     }
 
     // Chain behind whatever is running. Its failure is not ours to report —
@@ -420,9 +454,13 @@ class SeasonService {
   /// its controls on this rather than starting work it will drop).
   bool get isBusy => _inFlight != null;
 
-  Future<Map<int, Nation>> _nationsById() async => {
-    for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
-  };
+  /// [careerId]'s world by id (see `NationRepository.forCareer`). Takes the
+  /// career explicitly rather than reading `_simCareer`, a field that can go
+  /// stale between operations.
+  Future<Map<int, Nation>> _nationsById(int careerId) async {
+    final repo = _ref.read(nationRepositoryProvider);
+    return {for (final n in await repo.forCareer(careerId)) n.id: n};
+  }
 
   /// [nationId]'s players as the world fields them: the seeded pool aged to
   /// the cycle being simulated, minus everyone the career has naturalised away
@@ -633,7 +671,7 @@ class SeasonService {
   /// Loads (seeding if needed) the ranking points for [careerId].
   Future<void> _ensureRank(int careerId) async {
     if (_rankCareer == careerId && _rankPoints != null) return;
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
     final seed = {
       for (final n in nations.values) n.id: Elo.seedFromRanking(n.ranking),
     };
@@ -777,6 +815,13 @@ class SeasonService {
       ..invalidate(youthPyramidProvider)
       ..invalidate(youthShortlistProvider)
       ..invalidate(yFeedProvider)
+      // Their shared tournament milestones (a step can book a place).
+      ..invalidate(yMilestonesProvider)
+      // And the stands' mood, which the crowd and the finances line read.
+      ..invalidate(fanMoodProvider)
+      // The stadiums screen's income estimate carries that mood, read
+      // imperatively, so it is refreshed with it.
+      ..invalidate(nationalStadiumsViewProvider)
       ..invalidate(pendingNaturalizationProvider)
       ..invalidate(trainingCampPlanProvider);
   }
@@ -856,7 +901,7 @@ class SeasonService {
         now.difference(last.publishedOn).inDays < _rankingReleaseGapDays) {
       return;
     }
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
     final positions = _liveRankById(nations);
     final playerRank = positions[career.nationId];
     if (playerRank == null) return;
@@ -939,11 +984,33 @@ class SeasonService {
   /// continental group round is `CGROUP`, which must not be mistaken for one.
   static bool _isKnockout(Fixture f) => Rounds.isKnockout(f.round);
 
+  /// The altitude and heat a background fixture is played in, at the ground
+  /// [resolveMatchGround] picks: the one helper the match screen uses too, so
+  /// a skipped tie and the shown one are the same ground (his estate, a
+  /// finals he hosts, the national team's home city).
+  Future<MatchConditions> _conditionsFor(
+    Fixture f,
+    Map<int, Nation> nations,
+    Career career, {
+    MatchGroundMemo? memo,
+  }) async {
+    final ground = await resolveMatchGround(
+      _ref,
+      career: career,
+      fixture: f,
+      nations: nations.values.toList(),
+      memo: memo,
+    );
+    return conditionsAt(f, ground);
+  }
+
   Future<void> _simAndRecord(
     Fixture f,
     Map<int, Nation> nations,
-    int rngSeed,
-  ) async {
+    int rngSeed, {
+    required Career career,
+    MatchGroundMemo? groundMemo,
+  }) async {
     final home = nations[f.homeNationId];
     final away = nations[f.awayNationId];
     if (home == null || away == null) return;
@@ -994,6 +1061,13 @@ class SeasonService {
       // A finals is played at a neutral host — no automatic home advantage.
       homeAdvantage: !isNeutralFinalsRound(f.round),
       openness: asHome?.openness ?? asAway?.openness ?? 1.0,
+      // The same altitude and heat the played engine feels at this ground.
+      conditions: await _conditionsFor(
+        f,
+        nations,
+        career,
+        memo: groundMemo,
+      ),
     );
     await _comp.recordAppearances(
       f.careerId,
@@ -1131,6 +1205,17 @@ class SeasonService {
     // so this match was countered from the drilling before it, as a played
     // one is. Background fixtures (neither side his) record nothing.
     if (asHome != null || asAway != null) await _recordDrilling(f.careerId);
+    // A finals just ended in the background: its veterans announce it now,
+    // dated on the final, rather than at the next advance after a few more
+    // AI fixtures had fielded them (which made the world depend on how the
+    // user stepped). A no-op unless every fixture of that finals is played.
+    if (f.round == 'FINAL' || f.round == 'CFINAL') {
+      if (await _ref
+          .read(internationalRetirementServiceProvider)
+          .settle(f.careerId, asOf: f.date)) {
+        _poolCache.removeWhere((k, _) => k.$1 == f.careerId);
+      }
+    }
   }
 
   /// Records one manager match into the stored drilling: the shape he fielded
@@ -1372,9 +1457,24 @@ class SeasonService {
     // side when the match is played out, so skipping beat playing. 30 points
     // per unit of factor is what the engine actually delivers (+1.2 at 1.04).
     final chemistry = TeamChemistry.factor(setup.familiarity) - 1;
+    // The full-backs' arrows, as the played engine feels them: a little more
+    // (or less) at both ends, which is one openness on the simulator.
+    final flanks = MatchEngine.fullBackOpenness(
+      (setup.tactic?.fullBacks ?? FullBackPushes.neutral).netFor(
+        (setup.tactic?.formation ?? Formation.f433).positions,
+      ),
+    );
+    // The mid-tier difficulty, the skipped twin of the deficit the played
+    // engine applies on the chemistry seam (`match_providers`): read off the
+    // same eleven, zero for an elite or a minnow side, dithered on the
+    // fixture's own stream (see [MidTierDifficulty.skippedStrength]).
     return (
-      strength: (plan + chemistry * _chemistryPoints).round(),
-      openness: effect.openness,
+      strength: MidTierDifficulty.skippedStrength(
+        lift: plan + chemistry * _chemistryPoints,
+        fieldedRating: avg(xi),
+        rng: MidTierDifficulty.ditherRng(setup.rngSeed, fixtureId),
+      ),
+      openness: effect.openness * flanks,
     );
   }
 
@@ -1589,9 +1689,21 @@ class SeasonService {
       upTo,
       excludeNationId: excludeNationId,
     );
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
+    // Read once per batch: where each ground is depends on the career's
+    // cycle and estate, which a batch of matches does not move.
+    final career = due.isEmpty ? null : await _careers.byId(careerId);
+    if (career == null) return;
+    // So are the hosts, his host estate and his national ground.
+    final groundMemo = MatchGroundMemo();
     for (final f in due) {
-      await _simAndRecord(f, nations, rngSeed);
+      await _simAndRecord(
+        f,
+        nations,
+        rngSeed,
+        career: career,
+        groundMemo: groundMemo,
+      );
     }
   }
 
@@ -1638,8 +1750,10 @@ class SeasonService {
   /// qualifiers, the finals draw, and the knockout) to the champion.
   ///
   /// Dropped if a sim is already running — see [_exclusive].
-  Future<void> advance(int careerId) =>
-      _exclusive(() => _advance(careerId), dropIfBusy: true);
+  Future<void> advance(int careerId) => _exclusive(
+    () => _advance(careerId),
+    dropIfBusy: true,
+  ).then((_) => _backupAfter(BackupTrigger.committed));
 
   Future<void> _advance(int careerId) async {
     await _ensureRank(careerId);
@@ -1649,6 +1763,18 @@ class SeasonService {
     // stopped waiting. Settled before the clock moves, so the squad the next
     // match is picked from is the squad that is actually available.
     await _ref.read(grievanceServiceProvider).settleWalkouts(careerId);
+    // The veterans who announce their international retirement after a
+    // finished tournament (and the odd one coming back). Settled before the
+    // clock moves for the same reason; a pool cached before it would still
+    // field them.
+    if (await _ref
+        .read(internationalRetirementServiceProvider)
+        .settle(careerId)) {
+      _poolCache.removeWhere((k, _) => k.$1 == careerId);
+    }
+    // A Player of the Year ceremony still waiting is passed by: moving the
+    // world on is the manager's answer, and the inbox keeps the list.
+    await _ref.read(awardServiceProvider).markCeremoniesSeen(careerId);
     // And the year's individual trophies, once a year has actually finished.
     await _ref.read(awardServiceProvider).settleYear(careerId);
     while (true) {
@@ -1679,7 +1805,8 @@ class SeasonService {
       // Only step the World Cup and the player's OWN continental finals day by
       // day; foreign continental finals resolve in the background (else their
       // dates hijack the WC "watch" step — see nextEventProvider).
-      final playerConf = (await _nationsById())[career.nationId]?.confederation;
+      final nations = await _nationsById(careerId);
+      final playerConf = nations[career.nationId]?.confederation;
       final finalsDate = await _comp.earliestUnplayedFinalsDate(
         careerId,
         playerConfederation: playerConf,
@@ -1809,6 +1936,12 @@ class SeasonService {
       //    `test/unit/career/nation_switch_test.dart` drives a whole cycle
       //    through repeated `advance` calls and depends on exactly that.
       if (next != null) {
+        // A camp scandal nobody answered is about to be played past: doing
+        // nothing about it is keeping him (see [CampScandalService]).
+        await _ref.read(campScandalServiceProvider).settleUnanswered(careerId);
+        // And a man sent home in the window just gone is back for this one
+        // if no new squad was named (see [CampScandalService]).
+        await _ref.read(campScandalServiceProvider).restoreSentHome(careerId);
         await _careers.updateInGameDate(careerId, next.date);
         await _catchUp(careerId, next.date, career.rngSeed);
         break;
@@ -1835,9 +1968,15 @@ class SeasonService {
         break;
       }
     }
+    // A championship whose final was just played has its individual honours
+    // fixed now, as they read on the screen tonight (see
+    // [AwardService.storeFinishedTournaments]).
+    await _ref.read(awardServiceProvider).storeFinishedTournaments(careerId);
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
+    // A host bid whose January has come: its news and, on a win, its grant.
+    await _ref.read(hostBidServiceProvider).resolveDue(careerId);
     // The press: judge what he said and decide whether the room is called,
     // now that his result is in (both ways a match of his is committed).
     await _ref.read(pressDeskProvider).afterMatches(careerId);
@@ -1894,11 +2033,18 @@ class SeasonService {
   /// option when the player is watching the finals rather than playing them.
   ///
   /// Dropped if a sim is already running — see [_exclusive].
-  Future<void> skipToChampion(int careerId) =>
-      _exclusive(() => _skipToChampion(careerId), dropIfBusy: true);
+  Future<void> skipToChampion(int careerId) => _exclusive(
+    () => _skipToChampion(careerId),
+    dropIfBusy: true,
+  ).then((_) => _backupAfter(BackupTrigger.committed));
 
   Future<void> _skipToChampion(int careerId) async {
     await _ensureRank(careerId);
+    await _ref.read(awardServiceProvider).markCeremoniesSeen(careerId);
+    // The year's vote, as on every step (see [AwardService.settleYear]).
+    await _ref.read(awardServiceProvider).settleYear(careerId);
+    await _ref.read(campScandalServiceProvider).settleUnanswered(careerId);
+    await _ref.read(campScandalServiceProvider).restoreSentHome(careerId);
     for (var i = 0; i < 300; i++) {
       final career = await _careers.byId(careerId);
       if (career == null) break;
@@ -1914,9 +2060,15 @@ class SeasonService {
       await _careers.updateInGameDate(careerId, earliest);
       await _catchUp(careerId, earliest, career.rngSeed);
     }
+    // A championship whose final was just played has its individual honours
+    // fixed now, as they read on the screen tonight (see
+    // [AwardService.storeFinishedTournaments]).
+    await _ref.read(awardServiceProvider).storeFinishedTournaments(careerId);
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
+    // A host bid whose January has come: its news and, on a win, its grant.
+    await _ref.read(hostBidServiceProvider).resolveDue(careerId);
     await _recordAchievementsForHub(careerId);
     await _flushRank(careerId);
     await _flushAbsences(careerId);
@@ -1960,7 +2112,7 @@ class SeasonService {
   }) => _exclusive(
     () => _playPlayerMatch(careerId, fixture, result, knockout: knockout),
     dropIfBusy: false,
-  );
+  ).then((_) => _backupAfter(BackupTrigger.committed));
 
   Future<void> _playPlayerMatch(
     int careerId,
@@ -1974,6 +2126,14 @@ class SeasonService {
     _simSeed = career.rngSeed;
     _simYears = CareerService.agingYears(career);
     await _ensureRank(careerId);
+    // A scandal still unanswered when its window's first match is played
+    // (reached around the hub) counts as kept: he played.
+    await _ref.read(campScandalServiceProvider).settleUnanswered(careerId);
+    await _ref.read(awardServiceProvider).markCeremoniesSeen(careerId);
+    // A year's vote is due before his own match as much as before a
+    // quick-sim: a manager who plays every game would otherwise step over
+    // December without one.
+    await _ref.read(awardServiceProvider).settleYear(careerId);
 
     // Credit the drilling with the match he just played, as he played it:
     // the plan his side held for most of the ninety, live changes included
@@ -2263,9 +2423,15 @@ class SeasonService {
     // If this match (or the round it completed) knocked the manager out of a
     // cup, tell them — a tournament exit shouldn't pass unremarked.
     await _fileEliminationIfOut(careerId, career, fixture, hs, as);
+    // A championship whose final was just played has its individual honours
+    // fixed now, as they read on the screen tonight (see
+    // [AwardService.storeFinishedTournaments]).
+    await _ref.read(awardServiceProvider).storeFinishedTournaments(careerId);
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
+    // A host bid whose January has come: its news and, on a win, its grant.
+    await _ref.read(hostBidServiceProvider).resolveDue(careerId);
     // The press: judge what he said and decide whether the room is called,
     // now that his result is in (both ways a match of his is committed).
     await _ref.read(pressDeskProvider).afterMatches(careerId);
@@ -2320,7 +2486,7 @@ class SeasonService {
     final oppId = playerIsHome ? fixture.awayNationId : fixture.homeNationId;
 
     // Which cup, and its display name.
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
     final l = _l;
     final conf = nations[me]?.confederation;
     // The cup by its CANONICAL STORED name, which is what a message carries:
@@ -2449,11 +2615,19 @@ class SeasonService {
   /// Fails open: a career it cannot read is not blocked. Nor is an unmoved
   /// campaign run: it rolls only within its own cycles (see
   /// [_unmovedCampaign]), so the free cycle's wall is not its to meet; a
-  /// campaign longer than one cycle needs Pro to be started at all.
+  /// campaign longer than one cycle needs Pro to be started at all, and to
+  /// roll on, so a Pro run whose purchase was refunded is blocked.
   Future<bool> trialBlocksNextCycle(int careerId) async {
     final career = await _careers.byId(careerId);
     if (career == null) return false;
-    if (await _unmovedCampaign(careerId) != null) return false;
+    final campaign = await _unmovedCampaign(careerId);
+    if (campaign != null) {
+      // Except a Pro campaign whose purchase has gone (refunded): it may not
+      // roll on without Pro, so the wall shows (see `_startNextCycle`).
+      return campaign.def.needsPro &&
+          campaignMayRoll(campaign, career.cyclePointer) &&
+          !_ref.read(premiumUnlockedProvider);
+    }
     return trialExhausted(
       cyclePointer: career.cyclePointer,
       premiumUnlocked: _ref.read(premiumUnlockedProvider),
@@ -2486,7 +2660,18 @@ class SeasonService {
       nextInvestment: nextInvestment,
     ),
     dropIfBusy: false,
-  );
+  ).then((_) => _backupAfter(BackupTrigger.cycleEnd));
+
+  /// Tells the automatic cloud backup that the save has changed for good.
+  /// Fired and forgotten: it throttles itself, never throws and never holds
+  /// the next step up.
+  void _backupAfter(BackupTrigger trigger) {
+    try {
+      unawaited(_ref.read(cloudBackupServiceProvider).trigger(trigger));
+    } on Object {
+      // The scope is going away; there is nothing to back up into.
+    }
+  }
 
   // --- Shared match/round predicates -----------------------------------
   //

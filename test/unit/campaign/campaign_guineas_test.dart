@@ -452,6 +452,20 @@ void main() {
     return container.read(campaignProgressProvider(id).future);
   }
 
+  test('a settled Pro run whose purchase has gone is not moved, and no moved '
+      'marker is written', () async {
+    final id = await threeStarsInFirstCycle();
+    container
+      ..read(premiumUnlockedProvider.notifier).state = false
+      ..read(entitlementSettledProvider.notifier).state = true;
+    expect(
+      await container.read(campaignServiceProvider).moveToSaves(id),
+      CampaignMoveResult.needsPremium,
+    );
+    final tag = (await campaignTags(comp()))[id];
+    expect(tag?.moved, isFalse);
+  });
+
   test('moved, then rolled with the same nation: an ordinary career, no card '
       'and no verdict', () async {
     final id = await threeStarsInFirstCycle();

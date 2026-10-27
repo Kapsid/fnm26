@@ -28,7 +28,12 @@ mixin _$Nation {
 /// id — the real-history seeder above all — and those must not start
 /// missing every country the moment the app is switched to Czech.
 /// Empty means "same as [name]".
- String get englishName;
+ String get englishName;/// The host bids this nation has lodged in the career it was read for,
+/// keyed `wc:<cycle>` / `cont:<cycle>` (see `HostBidding.nationKey`), each
+/// the winning chance in permille the manager was shown. Attached by
+/// `NationRepository.forCareer` from the career's markers; empty
+/// everywhere else, which leaves every host draw exactly as it was.
+ Map<String, int> get hostBids;
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -41,16 +46,16 @@ $NationCopyWith<Nation> get copyWith => _$NationCopyWithImpl<Nation>(this as Nat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Nation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.confederation, confederation) || other.confederation == confederation)&&(identical(other.ranking, ranking) || other.ranking == ranking)&&(identical(other.isFreeDemo, isFreeDemo) || other.isFreeDemo == isFreeDemo)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.secondaryColor, secondaryColor) || other.secondaryColor == secondaryColor)&&(identical(other.englishName, englishName) || other.englishName == englishName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Nation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.confederation, confederation) || other.confederation == confederation)&&(identical(other.ranking, ranking) || other.ranking == ranking)&&(identical(other.isFreeDemo, isFreeDemo) || other.isFreeDemo == isFreeDemo)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.secondaryColor, secondaryColor) || other.secondaryColor == secondaryColor)&&(identical(other.englishName, englishName) || other.englishName == englishName)&&const DeepCollectionEquality().equals(other.hostBids, hostBids));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,confederation,ranking,isFreeDemo,primaryColor,secondaryColor,englishName);
+int get hashCode => Object.hash(runtimeType,id,name,code,confederation,ranking,isFreeDemo,primaryColor,secondaryColor,englishName,const DeepCollectionEquality().hash(hostBids));
 
 @override
 String toString() {
-  return 'Nation(id: $id, name: $name, code: $code, confederation: $confederation, ranking: $ranking, isFreeDemo: $isFreeDemo, primaryColor: $primaryColor, secondaryColor: $secondaryColor, englishName: $englishName)';
+  return 'Nation(id: $id, name: $name, code: $code, confederation: $confederation, ranking: $ranking, isFreeDemo: $isFreeDemo, primaryColor: $primaryColor, secondaryColor: $secondaryColor, englishName: $englishName, hostBids: $hostBids)';
 }
 
 
@@ -61,7 +66,7 @@ abstract mixin class $NationCopyWith<$Res>  {
   factory $NationCopyWith(Nation value, $Res Function(Nation) _then) = _$NationCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String code, Confederation confederation, int ranking, bool isFreeDemo, String primaryColor, String secondaryColor, String englishName
+ int id, String name, String code, Confederation confederation, int ranking, bool isFreeDemo, String primaryColor, String secondaryColor, String englishName, Map<String, int> hostBids
 });
 
 
@@ -78,7 +83,7 @@ class _$NationCopyWithImpl<$Res>
 
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? code = null,Object? confederation = null,Object? ranking = null,Object? isFreeDemo = null,Object? primaryColor = null,Object? secondaryColor = null,Object? englishName = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? code = null,Object? confederation = null,Object? ranking = null,Object? isFreeDemo = null,Object? primaryColor = null,Object? secondaryColor = null,Object? englishName = null,Object? hostBids = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -89,7 +94,8 @@ as int,isFreeDemo: null == isFreeDemo ? _self.isFreeDemo : isFreeDemo // ignore:
 as bool,primaryColor: null == primaryColor ? _self.primaryColor : primaryColor // ignore: cast_nullable_to_non_nullable
 as String,secondaryColor: null == secondaryColor ? _self.secondaryColor : secondaryColor // ignore: cast_nullable_to_non_nullable
 as String,englishName: null == englishName ? _self.englishName : englishName // ignore: cast_nullable_to_non_nullable
-as String,
+as String,hostBids: null == hostBids ? _self.hostBids : hostBids // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
   ));
 }
 
@@ -174,10 +180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName,  Map<String, int> hostBids)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Nation() when $default != null:
-return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName);case _:
+return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName,_that.hostBids);case _:
   return orElse();
 
 }
@@ -195,10 +201,10 @@ return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName,  Map<String, int> hostBids)  $default,) {final _that = this;
 switch (_that) {
 case _Nation():
-return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName);case _:
+return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName,_that.hostBids);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -215,10 +221,10 @@ return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String code,  Confederation confederation,  int ranking,  bool isFreeDemo,  String primaryColor,  String secondaryColor,  String englishName,  Map<String, int> hostBids)?  $default,) {final _that = this;
 switch (_that) {
 case _Nation() when $default != null:
-return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName);case _:
+return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking,_that.isFreeDemo,_that.primaryColor,_that.secondaryColor,_that.englishName,_that.hostBids);case _:
   return null;
 
 }
@@ -230,7 +236,7 @@ return $default(_that.id,_that.name,_that.code,_that.confederation,_that.ranking
 @JsonSerializable()
 
 class _Nation implements Nation {
-  const _Nation({required this.id, required this.name, required this.code, required this.confederation, required this.ranking, this.isFreeDemo = false, this.primaryColor = '#1E88E5', this.secondaryColor = '#FFFFFF', this.englishName = ''});
+  const _Nation({required this.id, required this.name, required this.code, required this.confederation, required this.ranking, this.isFreeDemo = false, this.primaryColor = '#1E88E5', this.secondaryColor = '#FFFFFF', this.englishName = '', final  Map<String, int> hostBids = const <String, int>{}}): _hostBids = hostBids;
   factory _Nation.fromJson(Map<String, dynamic> json) => _$NationFromJson(json);
 
 @override final  int id;
@@ -255,6 +261,23 @@ class _Nation implements Nation {
 /// missing every country the moment the app is switched to Czech.
 /// Empty means "same as [name]".
 @override@JsonKey() final  String englishName;
+/// The host bids this nation has lodged in the career it was read for,
+/// keyed `wc:<cycle>` / `cont:<cycle>` (see `HostBidding.nationKey`), each
+/// the winning chance in permille the manager was shown. Attached by
+/// `NationRepository.forCareer` from the career's markers; empty
+/// everywhere else, which leaves every host draw exactly as it was.
+ final  Map<String, int> _hostBids;
+/// The host bids this nation has lodged in the career it was read for,
+/// keyed `wc:<cycle>` / `cont:<cycle>` (see `HostBidding.nationKey`), each
+/// the winning chance in permille the manager was shown. Attached by
+/// `NationRepository.forCareer` from the career's markers; empty
+/// everywhere else, which leaves every host draw exactly as it was.
+@override@JsonKey() Map<String, int> get hostBids {
+  if (_hostBids is EqualUnmodifiableMapView) return _hostBids;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_hostBids);
+}
+
 
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
@@ -269,16 +292,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Nation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.confederation, confederation) || other.confederation == confederation)&&(identical(other.ranking, ranking) || other.ranking == ranking)&&(identical(other.isFreeDemo, isFreeDemo) || other.isFreeDemo == isFreeDemo)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.secondaryColor, secondaryColor) || other.secondaryColor == secondaryColor)&&(identical(other.englishName, englishName) || other.englishName == englishName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Nation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.confederation, confederation) || other.confederation == confederation)&&(identical(other.ranking, ranking) || other.ranking == ranking)&&(identical(other.isFreeDemo, isFreeDemo) || other.isFreeDemo == isFreeDemo)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.secondaryColor, secondaryColor) || other.secondaryColor == secondaryColor)&&(identical(other.englishName, englishName) || other.englishName == englishName)&&const DeepCollectionEquality().equals(other._hostBids, _hostBids));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,confederation,ranking,isFreeDemo,primaryColor,secondaryColor,englishName);
+int get hashCode => Object.hash(runtimeType,id,name,code,confederation,ranking,isFreeDemo,primaryColor,secondaryColor,englishName,const DeepCollectionEquality().hash(_hostBids));
 
 @override
 String toString() {
-  return 'Nation(id: $id, name: $name, code: $code, confederation: $confederation, ranking: $ranking, isFreeDemo: $isFreeDemo, primaryColor: $primaryColor, secondaryColor: $secondaryColor, englishName: $englishName)';
+  return 'Nation(id: $id, name: $name, code: $code, confederation: $confederation, ranking: $ranking, isFreeDemo: $isFreeDemo, primaryColor: $primaryColor, secondaryColor: $secondaryColor, englishName: $englishName, hostBids: $hostBids)';
 }
 
 
@@ -289,7 +312,7 @@ abstract mixin class _$NationCopyWith<$Res> implements $NationCopyWith<$Res> {
   factory _$NationCopyWith(_Nation value, $Res Function(_Nation) _then) = __$NationCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String code, Confederation confederation, int ranking, bool isFreeDemo, String primaryColor, String secondaryColor, String englishName
+ int id, String name, String code, Confederation confederation, int ranking, bool isFreeDemo, String primaryColor, String secondaryColor, String englishName, Map<String, int> hostBids
 });
 
 
@@ -306,7 +329,7 @@ class __$NationCopyWithImpl<$Res>
 
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? code = null,Object? confederation = null,Object? ranking = null,Object? isFreeDemo = null,Object? primaryColor = null,Object? secondaryColor = null,Object? englishName = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? code = null,Object? confederation = null,Object? ranking = null,Object? isFreeDemo = null,Object? primaryColor = null,Object? secondaryColor = null,Object? englishName = null,Object? hostBids = null,}) {
   return _then(_Nation(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -317,7 +340,8 @@ as int,isFreeDemo: null == isFreeDemo ? _self.isFreeDemo : isFreeDemo // ignore:
 as bool,primaryColor: null == primaryColor ? _self.primaryColor : primaryColor // ignore: cast_nullable_to_non_nullable
 as String,secondaryColor: null == secondaryColor ? _self.secondaryColor : secondaryColor // ignore: cast_nullable_to_non_nullable
 as String,englishName: null == englishName ? _self.englishName : englishName // ignore: cast_nullable_to_non_nullable
-as String,
+as String,hostBids: null == hostBids ? _self._hostBids : hostBids // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
   ));
 }
 

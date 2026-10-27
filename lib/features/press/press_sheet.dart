@@ -231,10 +231,6 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                                     playerName: playerName,
                                     seed: _seed + a.index * 7 + index * 3,
                                   ),
-                                  effect: ConferenceBuilder.effectOf(
-                                    a,
-                                    _c.credibility,
-                                  ),
                                   note: onRecordLine(
                                     l,
                                     a,
@@ -304,20 +300,21 @@ class _Byline extends StatelessWidget {
   }
 }
 
-/// One answer, with what it does to the dressing room and the board shown up
-/// front — the choice is the trade-off, so hiding it would only make it a
-/// guess.
+/// One answer, as it would be said.
+///
+/// What it does to the dressing room and the board is NOT shown here. It used
+/// to be, as arrows on every answer, which turned the conference into picking
+/// the greenest tile. Playtest: keep the arrows masked until the conference
+/// is over, and let the verdict say how it went overall.
 class AnswerTile extends StatelessWidget {
   const AnswerTile({
     required this.label,
-    required this.effect,
     required this.onTap,
     this.note,
     super.key,
   });
 
   final String label;
-  final PressEffect effect;
 
   /// What putting this on the record means ("On the record: ..."), if it does.
   final String? note;
@@ -325,7 +322,6 @@ class AnswerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Material(
@@ -340,28 +336,6 @@ class AnswerTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('“$label”', style: AppTypography.bodyMedium),
-                const SizedBox(height: AppSpacing.sm),
-                // Wraps rather than runs off the tile: with "no effect"
-                // beside both swings, French, Polish and German were wider
-                // than a 320 phone.
-                Wrap(
-                  spacing: AppSpacing.md,
-                  runSpacing: AppSpacing.xs,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    if (Press.arrowsFor(effect.morale) != 0)
-                      _Swing(label: l.pressSquad, value: effect.morale),
-                    if (Press.arrowsFor(effect.board) != 0)
-                      _Swing(label: l.pressBoard, value: effect.board),
-                    if (effect.morale == 0 && effect.board == 0)
-                      Text(
-                        l.pressNoEffect,
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.onSurfaceVariant,
-                        ),
-                      ),
-                  ],
-                ),
                 if (note case final line?) ...[
                   const SizedBox(height: AppSpacing.xs),
                   Text(
@@ -419,9 +393,9 @@ class _Verdict extends StatelessWidget {
         const SizedBox(height: AppSpacing.lg),
         Row(
           children: [
-            _Swing(label: l.pressRoomVerdictSquad, value: total.morale),
+            PressSwing(label: l.pressRoomVerdictSquad, value: total.morale),
             const SizedBox(width: AppSpacing.lg),
-            _Swing(label: l.pressRoomVerdictBoard, value: total.board),
+            PressSwing(label: l.pressRoomVerdictBoard, value: total.board),
             if (total.morale == 0 && total.board == 0)
               Text(
                 l.pressNoEffect,
@@ -444,8 +418,9 @@ class _Verdict extends StatelessWidget {
   }
 }
 
-class _Swing extends StatelessWidget {
-  const _Swing({required this.label, required this.value});
+/// How far the dressing room or the board moved, as one to three arrows.
+class PressSwing extends StatelessWidget {
+  const PressSwing({required this.label, required this.value, super.key});
 
   final String label;
   final int value;

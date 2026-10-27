@@ -87,6 +87,10 @@ Future<List<Player>> careerPoolOf(
   Career career,
   int nationId, {
   int? agingYears,
+
+  /// Keep players who have retired from international football: for history
+  /// reads (a past tournament's team, an award), never for selection.
+  bool includeIntlRetired = false,
 }) async {
   final years = agingYears ?? CareerService.agingYears(career);
   final seeded = await ref
@@ -96,6 +100,7 @@ Future<List<Player>> careerPoolOf(
         agingYears: years,
         saveSeed: career.rngSeed,
         careerId: career.id,
+        includeIntlRetired: includeIntlRetired,
       );
   final repo = ref.read(careerRepositoryProvider);
   final away = await naturalizedAwayIds(repo, career.id);

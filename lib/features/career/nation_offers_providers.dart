@@ -7,11 +7,14 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/federation/national_stadiums.dart';
 import 'package:fnm/domain/services/manager/job_market.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart'
+    show stadiumWorks;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
@@ -123,7 +126,19 @@ rolloverVerdictProvider = FutureProvider.autoDispose.family<RolloverVerdict?, in
   final honours = await ref
       .watch(competitionRepositoryProvider)
       .honours(careerId);
-  final rep = _reputation(career, stints, honours);
+  // Stadium works lend the manager a little standing of their own: one point
+  // per upgrade level, two per stadium built, never more than
+  // [NationalStadiums.maxReputation] (see national_stadiums.dart). Only works
+  // paid for before this cycle opened: a work counts from the next cycle
+  // start, so money spent at the opening of the cycle being judged cannot
+  // buy the manager over the sack line in that same verdict.
+  final stadiumRep = NationalStadiums.reputationFor(
+    NationalStadiums.reputationPoints(
+      await stadiumWorks(ref.watch(competitionRepositoryProvider), careerId),
+      career.cyclePointer,
+    ),
+  );
+  final rep = (_reputation(career, stints, honours) + stadiumRep).clamp(0, 100);
   final cyclesAtNation = _cyclesAtNation(career, stints);
   final titlesAtNation = _titlesAtNation(
     career,

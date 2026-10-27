@@ -21,6 +21,7 @@ String yTraitLine(AppLocalizations l, YTrait trait) => switch (trait) {
   YTrait.hypeman => l.yTraitHypeman,
   YTrait.contrarian => l.yTraitContrarian,
   YTrait.doomer => l.yTraitDoomer,
+  YTrait.streamer => l.yTraitStreamer,
 };
 
 /// Who is behind a handle, and everything they have said this save.

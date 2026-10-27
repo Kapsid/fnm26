@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Automatic backups to the Google Drive app folder (opt-in, Settings). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Football Nations Manager"
         android:name="${applicationName}"

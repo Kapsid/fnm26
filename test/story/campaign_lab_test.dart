@@ -2,9 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/ranking/world_ranking_providers.dart';
 
 import 'driver.dart';
 
@@ -22,10 +26,18 @@ import 'driver.dart';
 /// the first star: autopilot should usually reach a World Championship at
 /// least once, and rarely win one.
 /// LAB_CAMPAIGNS=youngFinns runs it alone (three cycles a run, so slow).
+/// A Greenland Century (hard, 25 cycles): qualify for a European
+/// Championship, then a World Championship, then win either. A run is a
+/// century long (about half an hour a run), so LAB_MAX_CYCLES=n stops each
+/// run after n cycles for a per-cycle estimate, and LAB_GREENLAND_FACTOR
+/// replays Greenland's squad at another attribute factor and LAB_ENGAGED=1
+/// plays an engaged manager (both driver.dart). Its strength is Greenland's
+/// attribute factor (lib/data/seed/dormant_seed.dart).
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final runs = int.parse(Platform.environment['LAB_RUNS'] ?? '0');
   final only = Platform.environment['LAB_CAMPAIGNS']?.split(',').toSet();
+  final maxCycles = int.tryParse(Platform.environment['LAB_MAX_CYCLES'] ?? '');
   final defs = [
     for (final d in Campaigns.all)
       if (only == null || only.contains(d.id)) d,
@@ -43,7 +55,25 @@ void main() {
         addTearDown(c.dispose);
         final d = await StoryDriver.startCampaign(c, def);
         CampaignProgress? verdict;
+        // The nation's place among Europe's sides in the world ranking, and
+        // its squad rating, at the end of every cycle.
+        final euroRanks = <int>[];
+        final ratings = <int>[];
         d.beforeEvent = (e) async {
+          if (e.kind == HubEventKind.cycleRollover) {
+            c
+              ..invalidate(worldRankingProvider(d.careerId))
+              ..invalidate(hubDataProvider(d.careerId));
+            final r = (await c.read(worldRankingProvider(d.careerId).future))!;
+            final europe = [
+              for (final n in r.nations)
+                if (n.confederation == Confederation.europe) n.id,
+            ];
+            euroRanks.add(europe.indexOf(def.nationId) + 1);
+            ratings.add(
+              (await c.read(hubDataProvider(d.careerId).future))!.squadRating,
+            );
+          }
           if (e.kind != HubEventKind.campaignVerdict) return;
           c.invalidate(campaignProgressProvider(d.careerId));
           verdict = await c.read(campaignProgressProvider(d.careerId).future);
@@ -51,6 +81,17 @@ void main() {
         var steps = 0;
         while (verdict == null && await d.step()) {
           if (++steps > 4000 * def.cycles) throw StateError('runaway');
+          // LAB_MAX_CYCLES: stop once that many cycles are played, for a
+          // per-cycle estimate of a long campaign.
+          if (maxCycles != null &&
+              (await c.read(careerRepositoryProvider).byId(d.careerId))!
+                      .cyclePointer >=
+                  maxCycles) {
+            c.invalidate(campaignProgressProvider(d.careerId));
+            verdict = await c.read(
+              campaignProgressProvider(d.careerId).future,
+            );
+          }
         }
         final v = verdict;
         if (v == null) throw StateError('no verdict');
@@ -65,6 +106,7 @@ void main() {
           'beaten=${v.rivalsBeaten.toList()..sort()} '
           'cups=${v.cycleRuns.map((r) => r.ordinal).toList()} '
           'worlds=${v.worldRuns.map((r) => r.ordinal).toList()} '
+          'euroRank=$euroRanks rating=$ratings '
           '${run.elapsed.inSeconds}s',
         );
       }, timeout: Timeout(Duration(minutes: 10 * def.cycles)));
@@ -72,7 +114,9 @@ void main() {
     test('${def.id} distribution', () {
       final n = stars.length;
       String pct(int k) => n == 0 ? '-' : '${(100 * k / n).round()}%';
-      final by = [for (var s = 0; s <= 3; s++) stars.where((x) => x == s).length];
+      final by = [
+        for (var s = 0; s <= 3; s++) stars.where((x) => x == s).length,
+      ];
       final success = n - by[0];
       // ignore: avoid_print
       print(

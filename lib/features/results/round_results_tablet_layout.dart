@@ -78,14 +78,30 @@ class _RoundResultsTabletLayout extends ConsumerWidget {
             child: Panel(
               title: l.resultsFriendlyInternationals,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final f in friendlies)
-                    _FriendlyRow(
-                      result: f,
-                      code: code,
-                      name: name,
-                      careerId: careerId,
+                  // The whole window, grouped by continent.
+                  for (final (i, g) in friendlyGroups(
+                    l,
+                    friendlies,
+                    view,
+                  ).indexed) ...[
+                    if (i > 0) const SizedBox(height: AppSpacing.md),
+                    Text(
+                      g.label.capsIn(l.localeName),
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
+                    const SizedBox(height: AppSpacing.xs),
+                    for (final f in g.results)
+                      _FriendlyRow(
+                        result: f,
+                        code: code,
+                        name: name,
+                        careerId: careerId,
+                      ),
+                  ],
                 ],
               ),
             ),
@@ -226,6 +242,7 @@ class _GroupResultsPanel extends StatelessWidget {
                         group.standings[i].nationId == view.playerNationId,
                     directCount: view.directCount,
                     contentionPos: view.contentionPos,
+                    playoffNations: view.playoffNations,
                     relegated:
                         relegateCount > 0 &&
                         i + 1 > group.standings.length - relegateCount,

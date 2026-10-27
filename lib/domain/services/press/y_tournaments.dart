@@ -127,6 +127,68 @@ abstract final class YTournaments {
     return milestones;
   }
 
+  /// The qualifying campaigns [nationId] came up short in: each finished
+  /// campaign whose finals tournament went ahead without it. One per finals,
+  /// dated at the nation's last qualifier and keyed by that finals.
+  ///
+  /// A miss has no fixture of its own, so it is read off the WORLD's: a
+  /// finals of the same family that started within [qualifyingReach] of the
+  /// campaign's last match, with at least one of the campaign's other sides in
+  /// it (which is what ties a continental qualifying group to its OWN
+  /// continent's championship rather than somebody else's), and not the
+  /// nation. Nothing until that finals exists: before its draw, a side that
+  /// has finished its group may yet be going.
+  static List<({DateTime date, String key})> missedQualifications({
+    required List<Fixture> nationFixtures,
+    required List<Fixture> worldFixtures,
+    required int nationId,
+  }) {
+    final mine = <int, List<Fixture>>{};
+    for (final f in nationFixtures) {
+      (mine[f.competitionId] ??= []).add(f);
+    }
+    for (final list in mine.values) {
+      list.sort((a, b) => a.date.compareTo(b.date));
+    }
+    final world = <int, List<Fixture>>{};
+    for (final f in worldFixtures) {
+      (world[f.competitionId] ??= []).add(f);
+    }
+    // finals competition id -> the latest campaign that missed it.
+    final missed = <int, DateTime>{};
+    for (final list in mine.values) {
+      if (!isQualifying(list)) continue;
+      if (list.any((f) => !f.hasResult)) continue;
+      final family = familyOf(list);
+      if (family == nationsCupFamily) continue;
+      final last = list.last.date;
+      if (_finalsAfter(mine, family, last) != null) continue;
+      final rivals = <int>{
+        for (final f in list) ...[f.homeNationId, f.awayNationId],
+      }..remove(nationId);
+      for (final entry in world.entries) {
+        final finals = entry.value;
+        if (!isFinals(finals) || familyOf(finals) != family) continue;
+        final first = finals
+            .map((f) => f.date)
+            .reduce((a, b) => a.isBefore(b) ? a : b);
+        if (!first.isAfter(last) || first.difference(last) > qualifyingReach) {
+          continue;
+        }
+        final field = <int>{
+          for (final f in finals) ...[f.homeNationId, f.awayNationId],
+        };
+        if (field.contains(nationId)) continue;
+        if (!field.any(rivals.contains)) continue;
+        final before = missed[entry.key];
+        if (before == null || last.isAfter(before)) missed[entry.key] = last;
+      }
+    }
+    return [
+      for (final e in missed.entries) (date: e.value, key: 'miss:${e.key}'),
+    ]..sort((a, b) => a.date.compareTo(b.date));
+  }
+
   /// Whether the nation's tournament ENDED in the group stage — really ended,
   /// rather than merely running out of fixtures for the moment.
   ///

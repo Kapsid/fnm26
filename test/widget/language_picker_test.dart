@@ -47,6 +47,12 @@ void main() {
       'hr',
       'uk',
       'fil',
+      'hi',
+      'ja',
+      'ko',
+      'ro',
+      'th',
+      'ms',
     ]) {
       // The list is lazy and capped in height: scroll each row into view.
       await tester.scrollUntilVisible(

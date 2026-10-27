@@ -28,6 +28,11 @@ enum YTrait {
 
   /// It is going to go wrong. It is always going to go wrong.
   doomer,
+
+  /// A streamer who has never once used his indoor voice. Never dealt to a
+  /// cast name (see [YCast.castTraits]): it belongs to the one fixed account
+  /// that has it.
+  streamer,
 }
 
 /// One recurring account: a name that comes back all career, and the
@@ -94,7 +99,20 @@ abstract final class YCast {
   /// of this arithmetic somewhere else would be a second answer waiting to
   /// drift.
   static YTrait traitFor(String name) =>
-      YTrait.values[varietySeed('trait|$name') % YTrait.values.length];
+      castTraits[varietySeed('trait|$name') % castTraits.length];
+
+  /// The dispositions a cast name can be dealt: the original seven, in their
+  /// original order. A list of its own rather than [YTrait.values], so a
+  /// trait added for a fixed account never reshuffles who everybody else is.
+  static const List<YTrait> castTraits = [
+    YTrait.loyalist,
+    YTrait.cynic,
+    YTrait.nostalgic,
+    YTrait.statshead,
+    YTrait.hypeman,
+    YTrait.contrarian,
+    YTrait.doomer,
+  ];
 
   /// A prime-ish stride so a cast of three is spread across the name list
   /// rather than being three consecutive entries.
@@ -152,6 +170,7 @@ abstract final class YCast {
     YTrait.doomer => -40,
     YTrait.contrarian => 0,
     YTrait.statshead => 0,
+    YTrait.streamer => 10,
   };
 
   /// How far a run of results can move this sort of account.
@@ -165,6 +184,8 @@ abstract final class YCast {
     YTrait.nostalgic => 0.7,
     YTrait.loyalist => 0.6,
     YTrait.statshead => 0.2,
+    // Everything is the best or the worst thing that has ever happened.
+    YTrait.streamer => 1.6,
   };
 
   /// How warmly this persona words a post about a result of [standing].
@@ -220,6 +241,35 @@ abstract final class YCast {
       // three loses nothing.
       YTone.sour => (size * 2, total - size * 2),
     };
+  }
+
+  /// Where banded [variant] of a template [total] wordings deep lives in the
+  /// ARB numbering, when the template was first written [original] deep and
+  /// later deepened.
+  ///
+  /// Variants are banded by position (see [band]), so deepening a template
+  /// moves the band edges: with twelve, wordings 4..7 are neutral; with
+  /// eighteen, 6..11 are. Renumbering every key to follow would rewrite the
+  /// copy file for nothing, so the original wordings keep their keys and the
+  /// added ones are numbered from [original] on, a block per band. This puts
+  /// each original wording back in the band it was written for.
+  static int arbSlot({
+    required int variant,
+    required int original,
+    required int total,
+  }) {
+    if (total <= original) return variant;
+    var added = original;
+    for (final tone in YTone.values) {
+      final (offset, size) = band(tone, total);
+      final (oOffset, oSize) = band(tone, original);
+      if (variant >= offset && variant < offset + size) {
+        final i = variant - offset;
+        return i < oSize ? oOffset + i : added + (i - oSize);
+      }
+      added += size - oSize;
+    }
+    return variant;
   }
 
   /// The variant [key] draws, within the band [tone] allows.

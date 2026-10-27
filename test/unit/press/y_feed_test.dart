@@ -17,6 +17,8 @@ void main() {
     date: DateTime(2030, 6, 10),
     key: key,
     competitive: true,
+    stakes: YStakes.qualifier,
+    shootoutWon: null,
   );
 
   // A match nothing else is known about — the shape these tests were written
@@ -80,7 +82,8 @@ void main() {
       );
       expect(
         YFeed.classify(match(mine: 4, theirs: 120, scored: 0, conceded: 1)),
-        YTemplate.lost,
+        // A shock, not a hammering: it has wordings of its own now.
+        YTemplate.lostShock,
       );
     });
 
@@ -102,7 +105,7 @@ void main() {
           // match carry more phrasings than the ones that fire once a cycle.
           final spread = p.mood == null
               ? YFeed.variantsFor(p.template)
-              : YFeed.reactionVariantCount;
+              : YFeed.reactionVariantsFor(p.mood!);
           expect(p.variant, inInclusiveRange(0, spread - 1));
         }
       }

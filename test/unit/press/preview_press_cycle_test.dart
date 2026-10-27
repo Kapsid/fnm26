@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/seed/legacy_seed_ranking.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
@@ -25,11 +26,15 @@ void main() {
 
   test('a cycle brings one preview per campaign, each judged', () async {
     final db = createTestDatabase();
-    final nations =
-        (jsonDecode(File('assets/data/nations.json').readAsStringSync())
-                as List<dynamic>)
-            .map((e) => Nation.fromJson(e as Map<String, Object?>))
-            .toList();
+    // On the 1.0.6 starting ranking, the world this seed was found on.
+    final nations = [
+      for (final e
+          in jsonDecode(File('assets/data/nations.json').readAsStringSync())
+              as List<dynamic>)
+        Nation.fromJson(
+          e as Map<String, Object?>,
+        ).copyWith(ranking: legacySeedRanking[e['id']]!),
+    ];
     final container = ProviderContainer(
       overrides: [
         appDatabaseProvider.overrideWithValue(db),

@@ -38,15 +38,20 @@ void main() {
     expect(await store.best('other'), isNull);
   });
 
-  test('record refreshes campaignBestProvider (no circular dependency)',
-      () async {
-    final sub = container.listen(
-      campaignBestProvider('grudge'),
-      (_, _) {},
-    );
-    addTearDown(sub.close);
-    expect(await container.read(campaignBestProvider('grudge').future), isNull);
-    await store.record('grudge', 1);
-    expect(await container.read(campaignBestProvider('grudge').future), 1);
-  });
+  test(
+    'record refreshes campaignBestProvider (no circular dependency)',
+    () async {
+      final sub = container.listen(
+        campaignBestProvider('grudge'),
+        (_, _) {},
+      );
+      addTearDown(sub.close);
+      expect(
+        await container.read(campaignBestProvider('grudge').future),
+        isNull,
+      );
+      await store.record('grudge', 1);
+      expect(await container.read(campaignBestProvider('grudge').future), 1);
+    },
+  );
 }

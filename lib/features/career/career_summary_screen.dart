@@ -203,22 +203,30 @@ class _RecordCard extends StatelessWidget {
     );
   }
 
-  Widget _stat(String label, String value, {Color? color}) => Column(
-    children: [
-      Text(
-        value,
-        style: AppTypography.titleMedium.copyWith(
-          color: color ?? AppColors.onSurface,
-        ),
+  // Seven columns on one line: a long career's three-digit figures under a
+  // larger text size would run off the card, so each column shrinks to its
+  // share rather than overflowing. At the normal size nothing is scaled.
+  Widget _stat(String label, String value, {Color? color}) => Flexible(
+    child: FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: AppTypography.titleMedium.copyWith(
+              color: color ?? AppColors.onSurface,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
-      const SizedBox(height: 2),
-      Text(
-        label,
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.onSurfaceVariant,
-        ),
-      ),
-    ],
+    ),
   );
 }
 
@@ -395,10 +403,14 @@ class _TrophyCabinet extends StatelessWidget {
                   size: 20,
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                Text(
-                  l.careerNoSilverware,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.onSurfaceVariant,
+                // Wraps rather than running off the card in a long language
+                // or under a larger text size.
+                Expanded(
+                  child: Text(
+                    l.careerNoSilverware,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ],

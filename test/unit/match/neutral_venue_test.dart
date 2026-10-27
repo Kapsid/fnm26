@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 
 Fixture _fixture({
@@ -116,5 +117,90 @@ void main() {
   test('unknown hosts fall back to the home side rather than nowhere', () {
     final g = ground(_fixture(round: 'GROUP'), neutral: true);
     expect(g.groundNationId, 10);
+  });
+
+  test('a bigger finals rotates over more of the host\'s grounds', () {
+    const big = <int, List<String>>{
+      99: [
+        'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', //
+        'C9', 'C10', 'C11', 'C12', 'C13', 'C14', 'C15', 'C16',
+      ],
+    };
+    Set<String> citiesUsed(int venueCount) => {
+      for (var id = 1; id <= 400; id++)
+        Attendance.forFixture(
+          fixture: _fixture(round: 'GROUP', id: id),
+          neutral: true,
+          tournamentHostIds: const [99],
+          citiesByNation: big,
+          seed: 4242,
+          venueCount: venueCount,
+        ).city,
+    };
+    expect(citiesUsed(8), hasLength(8));
+    expect(citiesUsed(16), hasLength(16));
+  });
+
+  group('a finals the manager\'s nation hosts uses its live estate', () {
+    // The estate after the career's works: a built Arena Nova at the top and
+    // a downsized ground, biggest first.
+    const estate = <Venue>[
+      (city: 'Hostvik', stadium: 'Hostvik Arena Nova', capacity: 52000),
+      (city: 'Hostberg', stadium: 'Hostberg Park', capacity: 41000),
+      (city: 'Hostmar', stadium: 'Hostmar Field', capacity: 9000),
+    ];
+
+    test('the tournament lists the estate, a co-host its static grounds', () {
+      final plain = VenueGenerator.forHosts(
+        hostIds: const [99, 20],
+        citiesByHost: cities,
+        count: 6,
+      );
+      final live = VenueGenerator.forHosts(
+        hostIds: const [99, 20],
+        citiesByHost: cities,
+        count: 6,
+        estates: const {99: estate},
+      );
+      expect(live[99], estate);
+      expect(live[20], plain[20], reason: 'the co-host is untouched');
+      // An empty or absent estate changes nothing.
+      expect(
+        VenueGenerator.forHosts(
+          hostIds: const [99, 20],
+          citiesByHost: cities,
+          count: 6,
+          estates: const {99: []},
+        ),
+        plain,
+      );
+    });
+
+    test('the final is in the Arena Nova and every crowd fits the estate', () {
+      MatchGround at(int id, String round) => Attendance.forFixture(
+        fixture: _fixture(round: round, id: id),
+        neutral: true,
+        tournamentHostIds: const [99],
+        citiesByNation: cities,
+        seed: 4242,
+        hostEstates: const {99: estate},
+      );
+      final fin = at(1, 'FINAL');
+      expect(fin.stadium, 'Hostvik Arena Nova');
+      expect(fin.capacity, 52000);
+      final names = {for (final v in estate) v.stadium};
+      for (var id = 1; id <= 60; id++) {
+        final g = at(id, 'GROUP');
+        expect(names, contains(g.stadium));
+        final v = estate.firstWhere((v) => v.stadium == g.stadium);
+        expect(g.capacity, v.capacity);
+        expect(g.attendance, lessThanOrEqualTo(v.capacity));
+      }
+      // Without the estate the same final is at the static marquee ground.
+      expect(
+        ground(_fixture(round: 'FINAL'), neutral: true, hosts: [99]).stadium,
+        isNot('Hostvik Arena Nova'),
+      );
+    });
   });
 }

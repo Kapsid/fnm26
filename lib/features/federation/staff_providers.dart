@@ -23,7 +23,9 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return null;
       final squad = await ref.watch(squadDataProvider(careerId).future);
-      final nations = await ref.watch(nationRepositoryProvider).all();
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(careerId);
       final me = nations.where((n) => n.id == career.nationId).firstOrNull;
       final home = me?.code.toLowerCase() ?? '';
 

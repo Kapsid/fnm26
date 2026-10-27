@@ -18,6 +18,12 @@ import 'package:fnm/domain/services/nation/nation_names_hu.dart';
 import 'package:fnm/domain/services/nation/nation_names_hr.dart';
 import 'package:fnm/domain/services/nation/nation_names_uk.dart';
 import 'package:fnm/domain/services/nation/nation_names_fil.dart';
+import 'package:fnm/domain/services/nation/nation_names_hi.dart';
+import 'package:fnm/domain/services/nation/nation_names_ja.dart';
+import 'package:fnm/domain/services/nation/nation_names_ko.dart';
+import 'package:fnm/domain/services/nation/nation_names_ro.dart';
+import 'package:fnm/domain/services/nation/nation_names_th.dart';
+import 'package:fnm/domain/services/nation/nation_names_ms.dart';
 
 /// How a nation's name is WRITTEN, as opposed to what it is called in the seed
 /// data.
@@ -123,6 +129,7 @@ abstract final class NationNames {
     'GIB': 'Gibraltar',
     'GNB': 'Guinea-Bissau',
     'GRE': 'Řecko',
+    'GRL': 'Grónsko',
     'GRN': 'Grenada',
     'GUA': 'Guatemala',
     'GUI': 'Guinea',
@@ -355,6 +362,7 @@ abstract final class NationNames {
     'GIB': 'Gibraltaru',
     'GNB': 'Guineji-Bissau',
     'GRE': 'Řecku',
+    'GRL': 'Grónsku',
     'GRN': 'Grenadě',
     'GUA': 'Guatemale',
     'GUI': 'Guineji',
@@ -542,6 +550,12 @@ abstract final class NationNames {
       'hr' => nationNamesHr,
       'uk' => nationNamesUk,
       'fil' => nationNamesFil,
+      'hi' => nationNamesHi,
+      'ja' => nationNamesJa,
+      'ko' => nationNamesKo,
+      'ro' => nationNamesRo,
+      'th' => nationNamesTh,
+      'ms' => nationNamesMs,
       _ => null,
     };
     return table?[key] ?? enByCode[key] ?? seedName;

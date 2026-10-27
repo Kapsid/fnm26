@@ -20,10 +20,7 @@ void main() {
     test('objectives lab', () {}, skip: 'set LAB_SEEDS to run the lab');
     return;
   }
-  final seeds = raw
-      .split(',')
-      .map(int.parse)
-      .toList();
+  final seeds = raw.split(',').map(int.parse).toList();
   final step = int.parse(Platform.environment['LAB_STEP'] ?? '8');
   final picks = [
     for (final n in storyNations)

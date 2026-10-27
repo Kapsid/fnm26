@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/messages/poty_card.dart';
+import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 /// The icon and colour a message category is shown with. Shared so a message
 /// looks the same whether it pops up over the hub or is opened in the inbox.
@@ -43,8 +47,24 @@ import 'package:fnm/shared/widgets/widgets.dart';
       'cycle' => (icon: Icons.flag_rounded, color: AppColors.primary),
       'transfer' => (icon: Icons.swap_horiz_rounded, color: AppColors.primary),
       'record' => (icon: Icons.leaderboard_rounded, color: AppColors.primary),
+      'backup' => (icon: Icons.cloud_upload_outlined, color: AppColors.primary),
       _ => (icon: Icons.mail_outline, color: AppColors.onSurfaceVariant),
     };
+
+/// The save the current screen belongs to, read off the route, or null.
+int? _careerId(BuildContext context) {
+  final router = GoRouter.maybeOf(context);
+  if (router == null) return null;
+  final id = int.tryParse(
+    router
+            .routerDelegate
+            .currentConfiguration
+            .uri
+            .queryParameters['careerId'] ??
+        '',
+  );
+  return id == null || id <= 0 ? null : id;
+}
 
 /// One message, full text, for a popup or the inbox.
 ///
@@ -143,6 +163,26 @@ class MessageSheet extends StatelessWidget {
               SquadDevTable(rows: report.rows),
             ] else if (decodeTransferReport(words.body) case final moves?) ...[
               TransferTable(rows: moves),
+            ] else if (decodePotyVote(words.body) case final vote?) ...[
+              // A whole year's vote: the winners' cards, and the way to the
+              // top five (see [AwardsCeremonyScreen]).
+              _VoteWinners(vote: vote, careerId: _careerId(context)),
+              if (_careerId(context) case final careerId?) ...[
+                const SizedBox(height: AppSpacing.sm),
+                OutlinedButton.icon(
+                  key: const Key('poty.seeTop5'),
+                  icon: const Icon(Icons.format_list_numbered_rounded),
+                  label: Text(AppLocalizations.of(context).potySeeTop5),
+                  onPressed: () {
+                    final router = GoRouter.of(context);
+                    Navigator.of(context).pop();
+                    router.go(
+                      '${Routes.awardsCeremony}?careerId=$careerId'
+                      '&year=${message.year}',
+                    );
+                  },
+                ),
+              ],
             ] else if (decodePotyReport(words.body) case final winners?) ...[
               // The year's individual awards are a card each, not a sentence:
               // a name on its own says nothing about the season that earned
@@ -160,6 +200,26 @@ class MessageSheet extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The winners' cards of a year's vote, naming each nation from its id in
+/// the language being read now (see [potyWinnerRows]).
+class _VoteWinners extends ConsumerWidget {
+  const _VoteWinners({required this.vote, required this.careerId});
+
+  final PotyVote vote;
+  final int? careerId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final id = careerId;
+    final nations = id == null
+        ? null
+        : ref.watch(careerNationsByIdProvider(id)).valueOrNull;
+    return PotyCard(
+      rows: potyWinnerRows(vote, nationName: (n) => nations?[n]?.name),
     );
   }
 }

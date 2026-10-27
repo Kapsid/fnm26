@@ -82,6 +82,9 @@ class CareerTransferService {
   /// import takes a save slot, and a career past the free cycle is what the
   /// purchase sells, whoever played it.
   Future<BundleRejection?> import(String path) async {
+    // The stored ranking must be current before a career lands: an update's
+    // reconcile freezes every career it finds on the ranking it replaces.
+    await _ref.read(seedLoaderProvider).ensureSeeded();
     final read = await CareerBundle.readFile(File(path));
     if (read.rejection != null) return read.rejection;
     final premium = _ref.read(premiumUnlockedProvider);
@@ -115,9 +118,18 @@ class CareerTransferService {
         return BundleRejection.slotsFull;
       }
     }
+    // The same rule that locks a save already here (see saveNeedsPremium): a
+    // file is not a way round it. A Pro campaign run, moved or not, needed Pro
+    // to start, so it needs Pro to come in.
+    final proCampaign = kinds.any(
+      (k) =>
+          k.startsWith('campaign:') &&
+          (Campaigns.byId(k.substring('campaign:'.length))?.needsPro ?? false),
+    );
     if (importNeedsPremium(
       cyclePointer: CareerBundle.cyclePointerOf(read.bundle!),
       premiumUnlocked: premium,
+      proCampaign: proCampaign,
     )) {
       return BundleRejection.needsPremium;
     }

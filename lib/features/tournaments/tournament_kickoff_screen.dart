@@ -44,7 +44,9 @@ tournamentKickoffProvider = FutureProvider.autoDispose
           .byId(arg.careerId);
       if (career == null) return null;
       final l = ref.watch(appLocalizationsProvider);
-      final allNations = await ref.watch(nationRepositoryProvider).all();
+      final allNations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(arg.careerId);
       final byId = {for (final n in allNations) n.id: n};
 
       final String title;

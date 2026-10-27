@@ -47,7 +47,8 @@ final AutoDisposeFutureProviderFamily<Rivalry?, int> rivalryProvider =
       final opp = topOpp.opponentId;
 
       final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
+        for (final n
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
           n.id: n,
       };
       final rival = nations[opp];

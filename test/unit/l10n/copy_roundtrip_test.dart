@@ -38,6 +38,12 @@ void main() {
       'hr',
       'uk',
       'fil',
+      'hi',
+      'ja',
+      'ko',
+      'ro',
+      'th',
+      'ms',
     ])
       if (File('lib/l10n/app_$code.arb').existsSync())
         code: arb('lib/l10n/app_$code.arb'),
@@ -102,7 +108,8 @@ void main() {
           expect(
             all(translated),
             all(e.value),
-            reason: '${lang.key} "${e.key}" reshapes its plural but does not '
+            reason:
+                '${lang.key} "${e.key}" reshapes its plural but does not '
                 'use the same values as the English',
           );
           continue;

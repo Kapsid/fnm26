@@ -1,30 +1,27 @@
 import 'dart:async';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/config/contact.dart';
-import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
-import 'package:fnm/core/util/share_origin.dart';
+import 'package:fnm/core/theme/text_size.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
+import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
-import 'package:fnm/features/settings/backup_restore_prompt.dart';
-import 'package:fnm/features/settings/save_backup_providers.dart';
+import 'package:fnm/features/settings/backups_card.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'settings_tablet_layout.dart';
@@ -54,6 +51,12 @@ const Map<String, String> _languageEndonyms = {
   'hr': 'Hrvatski',
   'uk': 'Українська',
   'fil': 'Filipino',
+  'hi': 'हिन्दी',
+  'ja': '日本語',
+  'ko': '한국어',
+  'ro': 'Română',
+  'th': 'ไทย',
+  'ms': 'Bahasa Melayu',
 };
 
 /// Opens the language picker: "System" plus one radio row per language.
@@ -200,19 +203,21 @@ class SettingsScreen extends ConsumerWidget {
           SizedBox(height: AppSpacing.md),
           _LanguageCard(),
           SizedBox(height: AppSpacing.md),
+          _TextSizeCard(),
+          SizedBox(height: AppSpacing.md),
           _FreeScopeCard(),
           SizedBox(height: AppSpacing.md),
           _FromDeveloperCard(),
           SizedBox(height: AppSpacing.md),
           _TourCard(),
           SizedBox(height: AppSpacing.md),
+          BackupsCard(),
+          SizedBox(height: AppSpacing.md),
           _DiagnosticsCard(),
           SizedBox(height: AppSpacing.md),
           _ContactCard(),
           SizedBox(height: AppSpacing.md),
           CommunityCard(),
-          SizedBox(height: AppSpacing.md),
-          _BackupCard(),
         ],
       ),
     );
@@ -297,6 +302,71 @@ class _LanguageCard extends ConsumerWidget {
           ],
         ),
         onTap: () => _pickLanguage(context, ref, current),
+      ),
+    );
+  }
+}
+
+/// How big the app's text is drawn: normal, large or larger, on top of the
+/// phone's own text scale. Chips in a Wrap rather than a segmented row, so a
+/// long translation at the largest size moves to a second line instead of
+/// overflowing.
+class _TextSizeCard extends ConsumerWidget {
+  const _TextSizeCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final current = ref.watch(textSizeProvider);
+    String label(TextSize t) => switch (t) {
+      TextSize.normal => l.settingsTextSizeNormal,
+      TextSize.large => l.settingsTextSizeLarge,
+      TextSize.larger => l.settingsTextSizeLarger,
+    };
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ListTile(
+            key: const Key('settings-text-size-tile'),
+            leading: const Icon(
+              Icons.format_size_rounded,
+              color: AppColors.primary,
+            ),
+            title: Text(
+              l.settingsTextSizeTitle,
+              style: AppTypography.bodyMedium,
+            ),
+            subtitle: Text(
+              l.settingsTextSizeBlurb,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.md,
+              0,
+              AppSpacing.md,
+              AppSpacing.md,
+            ),
+            child: Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              children: [
+                for (final t in TextSize.values)
+                  ChoiceChip(
+                    key: Key('settings-text-size-${t.name}'),
+                    label: Text(label(t)),
+                    selected: current == t,
+                    onSelected: (_) => setTextSize(ref, t),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -420,7 +490,12 @@ class _TourCard extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     // The save to walk: the one played most recently, or the newest if none
     // has ever been opened.
-    final saves = ref.watch(savesProvider).valueOrNull ?? const <Career>[];
+    // A Pro-locked save cannot be walked: the tour would only meet its gate.
+    final lockedIds = watchLockedCareerIds(ref);
+    final saves = [
+      for (final s in ref.watch(savesProvider).valueOrNull ?? const <Career>[])
+        if (!lockedIds.contains(s.id)) s,
+    ];
     final replayable = saves.isEmpty
         ? null
         : (saves.toList()..sort((a, b) {
@@ -618,146 +693,6 @@ class CommunityCard extends ConsumerWidget {
               Icons.open_in_new,
               size: 18,
               color: AppColors.primary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Exporting every save to a file, and putting one back.
-///
-/// Lives in Settings rather than on the saves list because the unit is the
-/// whole database: this is the "do not lose twenty years to a dead phone"
-/// control, not a per-career one.
-class _BackupCard extends ConsumerStatefulWidget {
-  const _BackupCard();
-
-  @override
-  ConsumerState<_BackupCard> createState() => _BackupCardState();
-}
-
-class _BackupCardState extends ConsumerState<_BackupCard> {
-  bool _busy = false;
-
-  /// True while the file picker or the restore question is up. The buttons
-  /// only grey out once the restore runs, so until then a second tap reaches
-  /// the handler, and it is refused here rather than opening a second picker.
-  bool _asking = false;
-
-  /// [origin] is the Export button's on-screen rect, taken at the tap while
-  /// it is laid out: an iPad's share sheet must point at something.
-  Future<void> _export(Rect? origin) async {
-    // A second tap before the button rebuilds disabled still calls this.
-    if (_busy || _asking) return;
-    final l = AppLocalizations.of(context);
-    setState(() => _busy = true);
-    try {
-      final file = await ref.read(saveBackupServiceProvider).export();
-      if (!mounted) return;
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(file.path)],
-          subject: l.backupExportSubject,
-          sharePositionOrigin: origin,
-        ),
-      );
-      if (mounted) _say(l.backupExported);
-    } on Object catch (e, stack) {
-      AppLog.error('backup-export', e, stack);
-      if (mounted) _say(l.backupFailed);
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
-  }
-
-  Future<void> _restore() async {
-    if (_busy || _asking) return;
-    final l = AppLocalizations.of(context);
-    // Read before the first await: `ref` is not to be touched after one.
-    final backup = ref.read(saveBackupServiceProvider);
-    _asking = true;
-    final String? path;
-    try {
-      path = await _pickAndConfirm();
-    } finally {
-      _asking = false;
-    }
-    if (path == null || !mounted) return;
-
-    setState(() => _busy = true);
-    try {
-      final refusal = await backup.restore(path);
-      // On success the app has been torn down and rebuilt, so this State is
-      // gone; only a refusal has anyone left to tell.
-      if (refusal != null && mounted) {
-        _say(BackupRestorePrompt.reason(l, refusal));
-      }
-    } finally {
-      // A refusal, or a restore that threw, gives the buttons back.
-      if (mounted) setState(() => _busy = false);
-    }
-  }
-
-  /// The backup file to restore, or null if none was picked or the manager
-  /// said no.
-  Future<String?> _pickAndConfirm() async {
-    final picked = await FilePicker.pickFiles();
-    final path = picked?.files.single.path;
-    if (path == null || !mounted) return null;
-
-    // Asked BEFORE anything is touched, and worded as what it actually does:
-    // this replaces every save on the phone, not just the one you were on.
-    // Shared with the saves screen's import, so the two cannot drift into
-    // asking different questions before the same irreversible thing.
-    if (!await BackupRestorePrompt.confirm(context) || !mounted) return null;
-    return path;
-  }
-
-  void _say(String message) => ScaffoldMessenger.of(
-    context,
-  ).showSnackBar(SnackBar(content: Text(message)));
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            l.backupTitle,
-            style: AppTypography.labelMedium.copyWith(
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            l.backupBlurb,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Builder(
-            builder: (button) => PrimaryButton(
-              label: l.backupExport,
-              icon: Icons.ios_share_rounded,
-              onPressed: _busy ? null : () => _export(shareOriginOf(button)),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          // A full-width outlined button, not a text link: restoring is the
-          // other half of the card and was easy to miss at the foot of it.
-          OutlinedButton.icon(
-            onPressed: _busy ? null : _restore,
-            icon: const Icon(Icons.settings_backup_restore_rounded, size: 18),
-            label: Text(l.backupRestore),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primary,
-              side: const BorderSide(color: AppColors.outlineVariant),
-              minimumSize: const Size.fromHeight(48),
             ),
           ),
         ],

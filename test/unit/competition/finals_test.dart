@@ -258,6 +258,7 @@ void main() {
         byConfederation: byConfederation,
         rankingById: ranks,
         rng: SeededRng(7),
+        hostBerths: const {},
       );
       expect(ties, hasLength(4));
       expect(ties.where((t) => t.isFinal), hasLength(2));
@@ -272,6 +273,7 @@ void main() {
         byConfederation: byConfederation,
         rankingById: ranks,
         rng: SeededRng(42),
+        hostBerths: const {},
       );
       expect(run().map((t) => t.winner), run().map((t) => t.winner));
     });
@@ -282,6 +284,7 @@ void main() {
         byConfederation: byConfederation,
         rankingById: ranks,
         rng: SeededRng(seed),
+        hostBerths: const {},
       );
       final displayWinners = [
         for (final t in ties)
@@ -293,6 +296,7 @@ void main() {
         byConfederation: byConfederation,
         rankingById: ranks,
         hosts: const [],
+        hostBerths: const {},
         playoffRng: SeededRng(seed),
       );
       final actualPlayoffQualifiers = finalists.where(poolIds.contains).toSet();

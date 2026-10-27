@@ -38,6 +38,12 @@
 		<string>hr</string>
 		<string>uk</string>
 		<string>fil</string>
+		<string>hi</string>
+		<string>ja</string>
+		<string>ko</string>
+		<string>ro</string>
+		<string>th</string>
+		<string>ms</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>FNM</string>

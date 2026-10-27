@@ -6,11 +6,17 @@
 <data-extraction-rules>
     <cloud-backup>
         <exclude domain="root" path="app_flutter/fnm.sqlite.previous" />
+        <exclude domain="root" path="app_flutter/safety" />
+        <exclude domain="root" path="app_flutter/fnm.sqlite.incoming" />
+        <exclude domain="root" path="app_flutter/fnm.sqlite.previous.old" />
         <exclude domain="root" path="app_flutter/fnm.sqlite-shm" />
         <exclude domain="file" path="diagnostics.log" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="root" path="app_flutter/fnm.sqlite.previous" />
+        <exclude domain="root" path="app_flutter/safety" />
+        <exclude domain="root" path="app_flutter/fnm.sqlite.incoming" />
+        <exclude domain="root" path="app_flutter/fnm.sqlite.previous.old" />
         <exclude domain="root" path="app_flutter/fnm.sqlite-shm" />
         <exclude domain="file" path="diagnostics.log" />
     </device-transfer>

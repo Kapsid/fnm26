@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/repositories/drift_nation_repository.dart';
+import 'package:fnm/data/seed/legacy_seed_ranking.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 
 /// Why a career bundle cannot be imported.
 enum BundleRejection {
@@ -54,6 +57,12 @@ abstract final class CareerBundle {
   /// written into a bundle: the importing app already has it.
   static const Set<String> seedTables = {'nations', 'players'};
 
+  /// The manager's own things, belonging to no career (the tactics library).
+  /// Never written into a bundle: sharing one save must not hand over, or on
+  /// import overwrite, what the manager keeps across all of them. The
+  /// whole-database backup still carries them.
+  static const Set<String> globalTables = {'tactic_library'};
+
   /// The career's own row.
   static const String rootTable = 'careers';
 
@@ -104,7 +113,10 @@ abstract final class CareerBundle {
     final rest =
         all
             .where(
-              (t) => !seedTables.contains(t) && !insertOrder.contains(t),
+              (t) =>
+                  !seedTables.contains(t) &&
+                  !globalTables.contains(t) &&
+                  !insertOrder.contains(t),
             )
             .toList()
           ..sort();
@@ -130,6 +142,25 @@ abstract final class CareerBundle {
             if (row['id'] case final id?) id,
         ];
       }
+    }
+
+    // Self-describing: a career on the nations' own ranking carries it as
+    // its cycle-0 seed ranking, so no later import can mistake it for one
+    // begun on an older ranking (see [_keepLegacyRanking]).
+    final seeded = tables['seed_rankings'];
+    if (seeded != null &&
+        tables[rootTable]?.singleOrNull != null &&
+        !seeded.any((r) => r['cycle'] == 0)) {
+      tables['seed_rankings'] = [
+        ...seeded,
+        for (final n in await DriftNationRepository(db).forCareer(careerId))
+          {
+            'career_id': careerId,
+            'cycle': 0,
+            'nation_id': n.id,
+            'rank': n.ranking,
+          },
+      ];
     }
 
     final career = tables[rootTable]?.singleOrNull;
@@ -218,7 +249,48 @@ abstract final class CareerBundle {
           }
         }
       }
+      await _keepLegacyRanking(db, bundle, tables, newCareerId);
       return newCareerId;
+    });
+  }
+
+  /// Gives a career with no cycle-0 seed ranking, from a bundle of schema
+  /// [lastSchemaWithoutStartingRanks] or older, [legacySeedRanking] as its
+  /// own (in its own world, see [careerWorldRanks]). Every bundle this build
+  /// exports carries one (see [export]), so a bundle without one was
+  /// written before the starting ranking moved: by 1.0.6, or by an early
+  /// 1.0.7 build, both on [legacySeedRanking]. The career must keep the
+  /// ranking its draws were made on (see `SeedLoader._reconcileRanking`,
+  /// which does the same for the careers already in a database).
+  static Future<void> _keepLegacyRanking(
+    AppDatabase db,
+    Map<String, Object?> bundle,
+    Map<String, Object?> tables,
+    int careerId,
+  ) async {
+    final schemaVersion = bundle['schemaVersion'];
+    if (schemaVersion is! int ||
+        schemaVersion > lastSchemaWithoutStartingRanks) {
+      return;
+    }
+    final seeded = (tables['seed_rankings'] as List?) ?? const [];
+    if (seeded.any((r) => r is Map && r['cycle'] == 0)) return;
+    final world = careerWorldRanks(
+      legacySeedRanking,
+      watchedKindsOf(bundle),
+      dormantRank: (d) =>
+          d == DormantNations.greenlandId ? legacyGreenlandRank : null,
+    );
+    await db.batch((batch) {
+      batch.insertAll(db.seedRankings, [
+        for (final e in world.entries)
+          SeedRankingsCompanion.insert(
+            careerId: careerId,
+            cycle: 0,
+            nationId: e.key,
+            rank: e.value,
+          ),
+      ], mode: InsertMode.insertOrIgnore);
     });
   }
 

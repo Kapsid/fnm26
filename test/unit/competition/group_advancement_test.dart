@@ -131,7 +131,11 @@ void main() {
 
   group('World Cup qualifying berths', () {
     test('Oceania contests first place — two groups, one direct berth', () {
-      final adv = GroupAdvancement.worldCupQualifying(Confederation.oceania, 2);
+      final adv = GroupAdvancement.worldCupQualifying(
+        Confederation.oceania,
+        2,
+        hosts: 0,
+      );
       // Winning a group guarantees NOTHING here: the two winners are ranked
       // against each other for the single place and the loser drops into the
       // intercontinental play-off. Painting both green was the bug.
@@ -141,7 +145,11 @@ void main() {
     });
 
     test('Europe: winners through, best runners-up contest the rest', () {
-      final adv = GroupAdvancement.worldCupQualifying(Confederation.europe, 9);
+      final adv = GroupAdvancement.worldCupQualifying(
+        Confederation.europe,
+        9,
+        hosts: 0,
+      );
       expect(adv.direct, 1);
       expect(adv.contention, 2);
       // 16 places over 9 groups: every winner, then the 7 best runners-up.
@@ -152,6 +160,7 @@ void main() {
       final adv = GroupAdvancement.worldCupQualifying(
         Confederation.southAmerica,
         1,
+        hosts: 0,
       );
       expect(adv.direct, 6);
       expect(adv.contention, 7, reason: 'the play-off entrant');

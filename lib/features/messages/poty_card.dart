@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
@@ -85,6 +86,142 @@ List<PotyRow>? decodePotyReport(String body) {
   }
   return out;
 }
+
+/// One place in a year's vote, as the ceremony and the top-five list show it.
+///
+/// Resolved and frozen when the vote is taken, like [PotyRow]: the body is
+/// stored text and the year will have moved on by the time anybody reads it.
+typedef PotyPlace = ({
+  /// 1 for the winner.
+  int rank,
+  int playerId,
+  int nationId,
+
+  /// Whether he played for the manager's nation when the vote was taken.
+  bool own,
+  String name,
+  String nationCode,
+
+  /// Empty in a vote filed by this build: the name is MEANING, read from the
+  /// nation's id at display time in the language of the day. Kept in the
+  /// format for the bodies that carry one.
+  String nationName,
+  int age,
+  int overall,
+  PlayerPosition position,
+  int apps,
+  int goals,
+  int assists,
+  int cleanSheets,
+  double meanRating,
+  int motms,
+  double score,
+});
+
+/// A year's whole vote: the top five, and the young award's top three.
+typedef PotyVote = ({List<PotyPlace> best, List<PotyPlace> young});
+
+/// Marks a body as a whole year's vote (top five and young top three).
+///
+/// Version 2 of the award body. Version 1, which carries only the two
+/// winners, is still read by [decodePotyReport] for the years filed by older
+/// builds; those years have no ceremony.
+const String _potyTagV2 = '#poty/v2';
+
+/// Encodes a year's vote as a message body.
+String encodePotyVote(PotyVote vote) => [
+  _potyTagV2,
+  for (final (tag, places) in [('best', vote.best), ('young', vote.young)])
+    for (final r in places)
+      [
+        tag,
+        '${r.rank}',
+        '${r.playerId}',
+        '${r.nationId}',
+        if (r.own) '1' else '0',
+        r.name.replaceAll('|', ' '),
+        r.nationCode,
+        r.nationName.replaceAll('|', ' '),
+        '${r.age}',
+        '${r.overall}',
+        r.position.name,
+        '${r.apps}',
+        '${r.goals}',
+        '${r.assists}',
+        '${r.cleanSheets}',
+        r.meanRating.toStringAsFixed(2),
+        '${r.motms}',
+        r.score.toStringAsFixed(1),
+      ].join('|'),
+].join('\n');
+
+/// Decodes a body written by [encodePotyVote], or null if it is not one.
+PotyVote? decodePotyVote(String body) {
+  final lines = body.split('\n');
+  if (lines.first.trim() != _potyTagV2) return null;
+  final best = <PotyPlace>[];
+  final young = <PotyPlace>[];
+  for (final line in lines.skip(1)) {
+    if (line.trim().isEmpty) continue;
+    final f = line.split('|');
+    if (f.length < 18) continue;
+    final place = (
+      rank: int.tryParse(f[1]) ?? 0,
+      playerId: int.tryParse(f[2]) ?? 0,
+      nationId: int.tryParse(f[3]) ?? 0,
+      own: f[4] == '1',
+      name: f[5],
+      nationCode: f[6],
+      nationName: f[7],
+      age: int.tryParse(f[8]) ?? 0,
+      overall: int.tryParse(f[9]) ?? 0,
+      position:
+          PlayerPosition.values.where((p) => p.name == f[10]).firstOrNull ??
+          PlayerPosition.cm,
+      apps: int.tryParse(f[11]) ?? 0,
+      goals: int.tryParse(f[12]) ?? 0,
+      assists: int.tryParse(f[13]) ?? 0,
+      cleanSheets: int.tryParse(f[14]) ?? 0,
+      meanRating: double.tryParse(f[15]) ?? 0,
+      motms: int.tryParse(f[16]) ?? 0,
+      score: double.tryParse(f[17]) ?? 0,
+    );
+    (f[0] == 'young' ? young : best).add(place);
+  }
+  best.sort((a, b) => a.rank.compareTo(b.rank));
+  young.sort((a, b) => a.rank.compareTo(b.rank));
+  return (best: best, young: young);
+}
+
+/// The two winners' cards a vote reduces to, for the inbox popup.
+///
+/// [nationName] names a nation by id in the language being read now: the
+/// vote stores the nation's id, not its name (an older body's stored name is
+/// the fallback).
+List<PotyRow> potyWinnerRows(
+  PotyVote vote, {
+  String? Function(int nationId)? nationName,
+}) => [
+  for (final (isYoung, places) in [(false, vote.best), (true, vote.young)])
+    if (places.isNotEmpty &&
+        !(isYoung &&
+            vote.best.isNotEmpty &&
+            places.first.playerId == vote.best.first.playerId))
+      (
+        young: isYoung,
+        name: places.first.name,
+        nationCode: places.first.nationCode,
+        nationName:
+            nationName?.call(places.first.nationId) ?? places.first.nationName,
+        age: places.first.age,
+        overall: places.first.overall,
+        apps: places.first.apps,
+        goals: places.first.goals,
+        assists: places.first.assists,
+        meanRating: places.first.meanRating,
+        motms: places.first.motms,
+      ),
+];
 
 /// The year's individual awards, one card per winner.
 ///

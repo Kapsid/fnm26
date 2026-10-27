@@ -1,6 +1,7 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/nation/nation_geography.dart';
 
 /// A candidature: one nation standing alone, or two or three bidding jointly.
@@ -167,6 +168,120 @@ abstract final class WorldCupHosts {
     return bids.first;
   }
 
+  /// Salt for the second roll a lodged bid gets (see [_decide]).
+  static const int _bidRollSalt = 0xB1D5EED;
+
+  /// The bid the manager's federation lodged for the edition [key] names, read
+  /// off the nation carrying it (see `Nation.hostBids`), or null — always null
+  /// outside a career that bid, so every draw below is then exactly the draw
+  /// it always was.
+  static ({int nationId, double chance})? _lodged(
+    List<Nation> nations,
+    String key,
+  ) {
+    for (final n in nations) {
+      final p = n.hostBids[key];
+      if (p != null && p > 0 && p < 1000) {
+        return (nationId: n.id, chance: p / 1000);
+      }
+    }
+    return null;
+  }
+
+  /// [nationId]'s share of the triangular draw over [bids] (see [_pickBid]):
+  /// the weight of the bid that names it over the total, or 0 when it is not
+  /// on the ballot.
+  static double _shareOf(List<HostBid> bids, int nationId) {
+    final n = bids.length;
+    if (n == 0) return 0;
+    final total = n * (n + 1) / 2;
+    for (var i = 0; i < n; i++) {
+      if (bids[i].contains(nationId)) return (n - i) / total;
+    }
+    return 0;
+  }
+
+  /// The winner of [bids] once a [lodged] bid is counted.
+  ///
+  /// The ordinary draw runs first, untouched. If it already names the bidder,
+  /// that stands. Otherwise a second, independent roll hands the edition to
+  /// the bidder with probability `(chance - p0) / (1 - p0)`, where `p0` is the
+  /// bidder's share of the ordinary draw — so its chance overall is exactly
+  /// the stored `chance`, and in every world where the bid loses the host is
+  /// the very one the draw would have named without it. A bid can only ever
+  /// raise the bidder's weight; it never reshuffles the others.
+  ///
+  /// A bidder not on the ballot stands alone; one already in a joint
+  /// candidature wins with its partners.
+  static HostBid _decide(
+    List<HostBid> bids,
+    int seed,
+    ({int nationId, double chance})? lodged, {
+    required bool eligible,
+  }) {
+    final drawn = _pickBid(bids, seed);
+    if (lodged == null || !eligible) return drawn;
+    final id = lodged.nationId;
+    if (drawn.contains(id)) return drawn;
+    final p0 = _shareOf(bids, id);
+    if (lodged.chance <= p0 || p0 >= 1) return drawn;
+    final q = (lodged.chance - p0) / (1 - p0);
+    if (SeededRng(seed ^ _bidRollSalt).nextDouble() >= q) return drawn;
+    for (final b in bids) {
+      if (b.contains(id)) return b;
+    }
+    return [id];
+  }
+
+  /// [bids] as the ceremony shows them: with an eligible bidder that is not on
+  /// the ballot added at the bottom, standing alone.
+  static List<HostBid> _withLodged(
+    List<HostBid> bids,
+    ({int nationId, double chance})? lodged, {
+    required bool eligible,
+  }) {
+    if (lodged == null || !eligible) return bids;
+    if (bids.any((b) => b.contains(lodged.nationId))) return bids;
+    return [
+      ...bids,
+      [lodged.nationId],
+    ];
+  }
+
+  /// The edition cycle of the World Cup in [year], or null for a year that is
+  /// not one.
+  static int? _wcCycleOf(int year) {
+    final d = year - _firstWcYear;
+    return d < 0 || d % 4 != 0 ? null : d ~/ 4;
+  }
+
+  /// The bid lodged for the World Cup in [year], if any.
+  static ({int nationId, double chance})? _lodgedWc(
+    int year,
+    List<Nation> nations,
+  ) {
+    final c = _wcCycleOf(year);
+    if (c == null) return null;
+    return _lodged(
+      nations,
+      HostBidding.nationKey(HostBidComp.worldChampionship, c),
+    );
+  }
+
+  /// Whether [nationId] may stand for the World Cup under the two exclusions.
+  static bool _wcEligible(
+    int nationId,
+    List<Nation> nations,
+    Confederation? barred,
+    Set<int> recent,
+  ) {
+    if (recent.contains(nationId)) return false;
+    for (final n in nations) {
+      if (n.id == nationId) return n.confederation != barred;
+    }
+    return false;
+  }
+
   /// The seed stream for the World Cup host draw of [year].
   static int _wcSeed(int year, int seed) => seed ^ (year * 0x51ED);
 
@@ -180,12 +295,68 @@ abstract final class WorldCupHosts {
     required int seed,
   }) {
     final ex = _wcExclusions(year, nations, seed);
-    return _worldCupBidsFor(
+    final lodged = _lodgedWc(year, nations);
+    return _withLodged(
+      _worldCupBidsFor(
+        year: year,
+        nations: nations,
+        seed: seed,
+        barredConfederation: ex.barred,
+        excludeIds: ex.recent,
+      ),
+      lodged,
+      eligible:
+          lodged != null &&
+          _wcEligible(lodged.nationId, nations, ex.barred, ex.recent),
+    );
+  }
+
+  /// Where [nationId] stands in the World Cup host race of [year] before any
+  /// bid: whether it may stand at all (not of the previous host's
+  /// confederation, not one of the last three hosts) and its chance in the
+  /// ordinary draw (0 when it is not on the ballot).
+  ///
+  /// When it may not, [barredConfederation] is its confederation if that
+  /// hosted the previous edition, and [recentHost] says it hosted one of the
+  /// last three: what the bid card tells the manager.
+  static ({
+    bool eligible,
+    double today,
+    Confederation? barredConfederation,
+    bool recentHost,
+  })
+  worldCupBidStanding({
+    required int year,
+    required List<Nation> nations,
+    required int seed,
+    required int nationId,
+  }) {
+    final ex = _wcExclusions(year, nations, seed);
+    final eligible = _wcEligible(nationId, nations, ex.barred, ex.recent);
+    if (!eligible) {
+      Confederation? mine;
+      for (final n in nations) {
+        if (n.id == nationId) mine = n.confederation;
+      }
+      return (
+        eligible: false,
+        today: 0,
+        barredConfederation: mine != null && mine == ex.barred ? mine : null,
+        recentHost: ex.recent.contains(nationId),
+      );
+    }
+    final bids = _worldCupBidsFor(
       year: year,
       nations: nations,
       seed: seed,
       barredConfederation: ex.barred,
       excludeIds: ex.recent,
+    );
+    return (
+      eligible: true,
+      today: _shareOf(bids, nationId),
+      barredConfederation: null,
+      recentHost: false,
     );
   }
 
@@ -247,7 +418,17 @@ abstract final class WorldCupHosts {
         barredConfederation: barred,
         excludeIds: recent,
       );
-      winners.add(_pickBid(bids, _wcSeed(y, seed)));
+      final lodged = _lodgedWc(y, nations);
+      winners.add(
+        _decide(
+          bids,
+          _wcSeed(y, seed),
+          lodged,
+          eligible:
+              lodged != null &&
+              _wcEligible(lodged.nationId, nations, barred, recent),
+        ),
+      );
     }
     return winners;
   }
@@ -271,14 +452,29 @@ abstract final class WorldCupHosts {
     required List<Nation> nations,
     required int seed,
   }) {
-    final bids = worldCupBids(year: year, nations: nations, seed: seed);
+    final ex = _wcExclusions(year, nations, seed);
+    final bids = _worldCupBidsFor(
+      year: year,
+      nations: nations,
+      seed: seed,
+      barredConfederation: ex.barred,
+      excludeIds: ex.recent,
+    );
     if (bids.isEmpty) {
       // Everyone somehow excluded: fall back to the world's best rather than
       // nobody.
       final all = [...nations]..sort((a, b) => a.ranking.compareTo(b.ranking));
       return all.isEmpty ? const [] : [all.first.id];
     }
-    return _pickBid(bids, _wcSeed(year, seed));
+    final lodged = _lodgedWc(year, nations);
+    return _decide(
+      bids,
+      _wcSeed(year, seed),
+      lodged,
+      eligible:
+          lodged != null &&
+          _wcEligible(lodged.nationId, nations, ex.barred, ex.recent),
+    );
   }
 
   /// The World Cup host ids for [year] as a set — hosts auto-qualify and sit
@@ -302,18 +498,85 @@ abstract final class WorldCupHosts {
     required int cycle,
     required int seed,
     required List<Nation> nations,
-  }) => _continentalBids(
-    confederation: confederation,
-    cycle: cycle,
-    seed: seed,
-    nations: nations,
-    exclude: _recentContinentalHosts(
+  }) {
+    final exclude = _recentContinentalHosts(
       confederation: confederation,
       cycle: cycle,
       seed: seed,
       nations: nations,
-    ),
-  );
+    );
+    final lodged = _lodgedCont(cycle, nations);
+    return _withLodged(
+      _continentalBids(
+        confederation: confederation,
+        cycle: cycle,
+        seed: seed,
+        nations: nations,
+        exclude: exclude,
+      ),
+      lodged,
+      eligible:
+          lodged != null &&
+          _contEligible(lodged.nationId, nations, confederation, exclude),
+    );
+  }
+
+  /// Where [nationId] stands in [confederation]'s host race of [cycle] before
+  /// any bid: whether it may stand (a member, not one of the last three
+  /// hosts) and its chance in the ordinary draw (0 when not on the ballot).
+  /// [recentHost] says it is barred for having hosted one of the last three.
+  static ({bool eligible, double today, bool recentHost})
+  continentalBidStanding({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+    required int nationId,
+  }) {
+    final exclude = _recentContinentalHosts(
+      confederation: confederation,
+      cycle: cycle,
+      seed: seed,
+      nations: nations,
+    );
+    if (!_contEligible(nationId, nations, confederation, exclude)) {
+      return (
+        eligible: false,
+        today: 0,
+        recentHost: exclude.contains(nationId),
+      );
+    }
+    final bids = _continentalBids(
+      confederation: confederation,
+      cycle: cycle,
+      seed: seed,
+      nations: nations,
+      exclude: exclude,
+    );
+    return (eligible: true, today: _shareOf(bids, nationId), recentHost: false);
+  }
+
+  /// The bid lodged for the continental championship of [cycle], if any. Each
+  /// career bids only for its own confederation's, so the nation carrying it
+  /// says which.
+  static ({int nationId, double chance})? _lodgedCont(
+    int cycle,
+    List<Nation> nations,
+  ) => _lodged(nations, HostBidding.nationKey(HostBidComp.continental, cycle));
+
+  /// Whether [nationId] may stand for [confederation]'s championship.
+  static bool _contEligible(
+    int nationId,
+    List<Nation> nations,
+    Confederation confederation,
+    Set<int> exclude,
+  ) {
+    if (exclude.contains(nationId)) return false;
+    for (final n in nations) {
+      if (n.id == nationId) return n.confederation == confederation;
+    }
+    return false;
+  }
 
   static List<HostBid> _continentalBids({
     required Confederation confederation,
@@ -349,9 +612,23 @@ abstract final class WorldCupHosts {
         nations: nations,
         exclude: const {},
       );
-      if (bids.isNotEmpty) {
-        recent.addAll(_pickBid(bids, _contSeed(confederation, c, seed)));
+      if (bids.isEmpty) continue;
+      // A bid that WON that edition bars its winner like any host; the naive
+      // pick could miss it. One that lost changes nothing here.
+      final lodged = _lodgedCont(c, nations);
+      if (lodged != null) {
+        final real = continentalHostsFor(
+          confederation: confederation,
+          cycle: c,
+          seed: seed,
+          nations: nations,
+        );
+        if (real.contains(lodged.nationId)) {
+          recent.addAll(real);
+          continue;
+        }
       }
+      recent.addAll(_pickBid(bids, _contSeed(confederation, c, seed)));
     }
     return recent;
   }
@@ -411,14 +688,29 @@ abstract final class WorldCupHosts {
     required int seed,
     required List<Nation> nations,
   }) {
-    final bids = continentalBids(
+    final exclude = _recentContinentalHosts(
       confederation: confederation,
       cycle: cycle,
       seed: seed,
       nations: nations,
     );
+    final bids = _continentalBids(
+      confederation: confederation,
+      cycle: cycle,
+      seed: seed,
+      nations: nations,
+      exclude: exclude,
+    );
     if (bids.isEmpty) return const [];
-    return _pickBid(bids, _contSeed(confederation, cycle, seed));
+    final lodged = _lodgedCont(cycle, nations);
+    return _decide(
+      bids,
+      _contSeed(confederation, cycle, seed),
+      lodged,
+      eligible:
+          lodged != null &&
+          _contEligible(lodged.nationId, nations, confederation, exclude),
+    );
   }
 
   /// The chance an edition is co-hosted at all, and the chance it is shared

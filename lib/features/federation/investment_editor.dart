@@ -42,8 +42,13 @@ class InvestmentEditor extends StatefulWidget {
     required this.stepLevels,
     this.youthEnabled = true,
     this.showEffects = true,
+    this.floor,
     super.key,
   });
+
+  /// The least each department may be set to (a host bid's grant tops up an
+  /// allocation already made and never takes it back), or null for none.
+  final FederationInvestment? floor;
 
   /// The most that can be allocated across all departments combined.
   final int available;
@@ -101,7 +106,8 @@ class _InvestmentEditorState extends State<InvestmentEditor> {
       price: _price,
       max: _notches(dept),
     );
-    final euros = level * _price;
+    final least = widget.floor == null ? 0 : investmentIn(widget.floor!, dept);
+    final euros = level * _price < least ? least : level * _price;
     setState(() {
       switch (dept) {
         case Department.youth:

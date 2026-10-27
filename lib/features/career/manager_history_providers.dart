@@ -144,7 +144,9 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
     if (career == null) return null;
     final comp = ref.watch(competitionRepositoryProvider);
     final nations = {
-      for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+      for (final n
+          in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+        n.id: n,
     };
     final stints = await careerRepo.stints(careerId);
 

@@ -102,6 +102,33 @@ void main() {
     });
 
     test(
+      'a refund clears the cache so an offline launch stays locked',
+      () async {
+        // Pay, refund, then launch in airplane mode: the stale grant must not
+        // unlock again once the store has said no.
+        expect(
+          await launch(
+            prefs: {_legacyKey: true, _cacheKey: true},
+            store: _answers(const {}),
+          ),
+          isFalse,
+        );
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getBool(_cacheKey), isNull);
+        expect(prefs.getBool(_legacyKey), isNull);
+
+        // The second launch, offline: no store answer, and only what the
+        // first launch left on disk. launch() resets the mock prefs, so the
+        // leftovers are carried over by hand.
+        final leftover = <String, Object>{
+          for (final k in prefs.getKeys())
+            if (prefs.get(k) case final Object v) k: v,
+        };
+        expect(await launch(prefs: leftover, store: _noAnswer), isFalse);
+      },
+    );
+
+    test(
       'a grant from the store is cached for the next offline launch',
       () async {
         SharedPreferences.setMockInitialValues({});

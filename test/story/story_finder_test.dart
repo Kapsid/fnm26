@@ -49,10 +49,11 @@ void main() {
       addTearDown(c.dispose);
       addTearDown(db.close);
       await c.read(seedLoaderProvider).ensureSeeded();
-      final career = (await c
-              .read(careerServiceProvider)
-              .create(nationId: england, managerName: 'M', rngSeed: s))
-          .valueOrNull!;
+      final career =
+          (await c
+                  .read(careerServiceProvider)
+                  .create(nationId: england, managerName: 'M', rngSeed: s))
+              .valueOrNull!;
       final season = c.read(seasonServiceProvider);
       final out = StringBuffer('=== SEED $s\n');
       for (var cy = 0; cy < cycles; cy++) {
@@ -67,10 +68,12 @@ void main() {
           last = hub.career.inGameDate;
         }
         final comp = c.read(competitionRepositoryProvider);
-        final fx = (await comp.fixturesForNation(career.id, england))
-            .where((f) => f.hasResult)
-            .toList()
-          ..sort((a, b) => a.date.compareTo(b.date));
+        final fx =
+            (await comp.fixturesForNation(
+                career.id,
+                england,
+              )).where((f) => f.hasResult).toList()
+              ..sort((a, b) => a.date.compareTo(b.date));
         for (final f in fx) {
           if (f.date.isBefore(last.subtract(const Duration(days: 365 * 4)))) {
             continue;
@@ -95,8 +98,10 @@ void main() {
         for (final h in (await comp.honours(career.id)).where(
           (h) => h.year >= 2026,
         )) {
-          out.writeln('   honour ${h.year} ${h.competition}: '
-              '${byId[h.championId]?.name}');
+          out.writeln(
+            '   honour ${h.year} ${h.competition}: '
+            '${byId[h.championId]?.name}',
+          );
         }
         if (cy + 1 < cycles) await season.startNextCycle(career.id);
       }

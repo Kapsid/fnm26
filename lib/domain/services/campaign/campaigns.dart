@@ -15,6 +15,17 @@ enum CampaignGoal {
   /// win the World Championship: one star each, the highest reached counts,
   /// across all the campaign's cycles (see `worldThenTitlesStars`).
   qualifyWorldThenTitles,
+
+  /// Qualify for a continental championship, qualify for a World
+  /// Championship, win either: one star each, the highest reached counts,
+  /// across all the campaign's cycles (see `qualifyBothThenTitleStars`).
+  qualifyBothThenTitle,
+
+  /// Win the continental championship; then the World Championship too; then
+  /// the confederation's Nations Cup as well, all in the campaign's one
+  /// cycle. The stars nest: each needs every title before it (see
+  /// `titleTrebleStars`).
+  titleTreble,
 }
 
 /// How hard a campaign plays, from the calibration lab
@@ -45,6 +56,7 @@ class CampaignDef {
     this.starThresholds = const [],
     this.canContinue = true,
     this.goldenGeneration = false,
+    this.dormantNationId,
   });
 
   final String id;
@@ -85,6 +97,12 @@ class CampaignDef {
   /// the marker from its start, so every read of the nation's players in it
   /// sees the cohort; no other career does.
   final bool goldenGeneration;
+
+  /// A dormant nation (see `DormantNations`) this run's world includes, in
+  /// place of the nation it replaces. The marker is written inside
+  /// `CareerService.create`, before the calendar is drawn, so the whole world
+  /// is built with it.
+  final int? dormantNationId;
 }
 
 abstract final class Campaigns {
@@ -107,8 +125,15 @@ abstract final class Campaigns {
   );
 
   /// Georgia must finish above Albania, who share its qualifying group. A
-  /// close rival by design (campaign_lab_test.dart): Armenia were bottom of
-  /// the group nearly every run, Türkiye and Ukraine almost never caught.
+  /// close rival by design (campaign_lab_test.dart; on the 1.0.6 ranking
+  /// Armenia were bottom of the group nearly every run, Türkiye and Ukraine
+  /// almost never caught). On the real starting ranking (Albania 66th,
+  /// Georgia 71st) seed 240 draws the two together with neither hosting the
+  /// European Championship: Netherlands, Austria, Albania, Georgia,
+  /// Kazakhstan, Andorra (campaign_seeds_test.dart). Of the seeds that do,
+  /// it is the one the lab plays closest to the 1.0.6 run's rate (about 30%
+  /// of autopilot runs finish above Albania, as seed 10 did on the old
+  /// ranking); the first, seed 24, fell to 15%.
   static const grudge = CampaignDef(
     id: 'grudge',
     nationId: 19, // Georgia
@@ -117,18 +142,24 @@ abstract final class Campaigns {
     cycles: 1,
     needsPro: false,
     difficulty: CampaignDifficulty.medium,
-    rngSeed: 10,
+    rngSeed: 240,
   );
 
-  /// Equatorial Guinea, the lowest-ranked of Africa's Guineas, must beat
-  /// Guinea and Guinea-Bissau within two cycles, then go far in the African
+  /// Equatorial Guinea, the smallest of Africa's Guineas, must beat Guinea
+  /// and Guinea-Bissau within two cycles, then go far in the African
   /// Championship. Pro, and the first campaign longer than one cycle. Papua
   /// New Guinea, "the fourth Guinea", is booked for a friendly at the start.
-  /// Seed 13 is the first that draws a rival (Guinea-Bissau) into Equatorial
-  /// Guinea's first qualifying group, so at least one meeting is guaranteed,
-  /// while Equatorial Guinea hosts neither cycle's African Championship
-  /// (campaign_seeds_test.dart). No seed draws both: the two rivals sit in
-  /// the same qualifying pot.
+  /// On the real starting ranking Equatorial Guinea (103rd) sit between
+  /// Guinea (80th) and Guinea-Bissau (130th), so the copy names their size,
+  /// not their rank (it said "lowest-ranked" on the 1.0.6 ranking). Seed 26
+  /// draws both rivals into Equatorial Guinea's first qualifying group, so
+  /// every rival is met, while Equatorial Guinea hosts neither cycle's
+  /// African Championship (campaign_seeds_test.dart). The two rivals now sit
+  /// in different pots, so a seed can draw both. The first one-rival seed
+  /// (2, Guinea-Bissau only) left Guinea all but unmet: no star in 20 lab
+  /// runs (campaign_lab_test.dart). Seed 26 earns one in about 12% of 100
+  /// lab runs: below the spec's 20-50% band, accepted as hard (twice the
+  /// 1.0.6 rate, seed 13: about 5%).
   static const guineas = CampaignDef(
     id: 'guineas',
     nationId: 116, // Equatorial Guinea
@@ -138,7 +169,7 @@ abstract final class Campaigns {
     cycles: 2,
     needsPro: true,
     difficulty: CampaignDifficulty.hard,
-    rngSeed: 13,
+    rngSeed: 26,
   );
 
   /// Finland for three cycles, its senior pool replaced by a golden
@@ -161,11 +192,55 @@ abstract final class Campaigns {
     rngSeed: 17,
   );
 
+  /// A Greenland Century: Greenland, a nation the world does not have,
+  /// takes San Marino's place in Europe for 25 cycles (a hundred years),
+  /// from the very bottom of the world ranking. Its players come through the
+  /// same youth pyramid, newgens and aging as any nation's, from its own
+  /// stored pool. Pro, and a settled run may be moved into the saves (the
+  /// world is a fair one: one minnow swapped for another). The stars are
+  /// the owner's: qualify for a European Championship, qualify for a World
+  /// Championship, win either. Seed 212, the first searched, keeps Greenland
+  /// from hosting either championship in all 25 cycles and draws it into a
+  /// European qualifying group of six (campaign_seeds_test.dart). Greenland's
+  /// strength was tuned on the lab (campaign_lab_test.dart).
+  static const greenland = CampaignDef(
+    id: 'greenland',
+    nationId: 212, // DormantNations.greenlandId
+    dormantNationId: 212,
+    goal: CampaignGoal.qualifyBothThenTitle,
+    cycles: 25,
+    needsPro: true,
+    difficulty: CampaignDifficulty.hard,
+    rngSeed: 212,
+  );
+
+  /// Finish the Legacy: Spain, the reigning European champions in the
+  /// seeded history (the 2024 edition), for one cycle. Win the European
+  /// Championship again; then the World Championship too; then the Nations
+  /// Cup as well. One cycle holds all three for Europe: the European
+  /// Championship in June of the World Championship year minus two, the
+  /// Nations Cup groups that autumn and its Finals Four the next June, the
+  /// World Championship last. Spain start at their seeded ranking (1st),
+  /// in League A of the Nations Cup ladder, so every title is open. Seed
+  /// 2024, for the title they hold, keeps Spain from hosting either
+  /// championship (campaign_seeds_test.dart): every place is earned.
+  static const legacy = CampaignDef(
+    id: 'legacy',
+    nationId: 50, // Spain
+    goal: CampaignGoal.titleTreble,
+    cycles: 1,
+    needsPro: true,
+    difficulty: CampaignDifficulty.hard,
+    rngSeed: 2024,
+  );
+
   static const List<CampaignDef> all = [
     transplant,
     grudge,
+    legacy,
     guineas,
     youngFinns,
+    greenland,
   ];
 
   static CampaignDef? byId(String id) {

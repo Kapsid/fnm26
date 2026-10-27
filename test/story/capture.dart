@@ -20,7 +20,8 @@ final String storyOut =
     Platform.environment['STORY_OUT'] ?? 'build/story_screens';
 
 Future<void> loadMaterialIcons() async {
-  final flutterRoot = Platform.environment['FLUTTER_ROOT'] ??
+  final flutterRoot =
+      Platform.environment['FLUTTER_ROOT'] ??
       File(Platform.resolvedExecutable).parent.parent.parent.parent.parent.path;
   final file = File(
     '$flutterRoot/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
@@ -29,9 +30,9 @@ Future<void> loadMaterialIcons() async {
     throw StateError('no material icons font at ${file.path}');
   }
   final bytes = await file.readAsBytes();
-  await (FontLoader('MaterialIcons')
-        ..addFont(Future.value(ByteData.sublistView(bytes))))
-      .load();
+  await (FontLoader(
+    'MaterialIcons',
+  )..addFont(Future.value(ByteData.sublistView(bytes)))).load();
   // What iOS falls back to for glyphs the app's own faces lack (the draw's
   // tick marks): the test engine has no system fallback of its own.
   for (final (family, path) in const [
@@ -41,8 +42,9 @@ Future<void> loadMaterialIcons() async {
     final f = File(path);
     if (!f.existsSync()) continue;
     final b = await f.readAsBytes();
-    await (FontLoader(family)..addFont(Future.value(ByteData.sublistView(b))))
-        .load();
+    await (FontLoader(
+      family,
+    )..addFont(Future.value(ByteData.sublistView(b)))).load();
   }
 }
 
@@ -60,9 +62,14 @@ void setPhone(WidgetTester tester) {
   tester.view
     ..physicalSize = kStorySize * kStoryDpr
     ..devicePixelRatio = kStoryDpr
-    ..padding = const FakeViewPadding(top: 62 * kStoryDpr, bottom: 34 * kStoryDpr)
-    ..viewPadding =
-        const FakeViewPadding(top: 62 * kStoryDpr, bottom: 34 * kStoryDpr);
+    ..padding = const FakeViewPadding(
+      top: 62 * kStoryDpr,
+      bottom: 34 * kStoryDpr,
+    )
+    ..viewPadding = const FakeViewPadding(
+      top: 62 * kStoryDpr,
+      bottom: 34 * kStoryDpr,
+    );
   addTearDown(tester.view.reset);
 }
 

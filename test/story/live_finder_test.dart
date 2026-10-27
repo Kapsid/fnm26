@@ -31,7 +31,10 @@ void main() {
         d.beforeMatch = (p) async {
           for (var i = 0; i < 2; i++) {
             final ui = storyContainer(c.read(appDatabaseProvider));
-            final sub = ui.listen(matchPreviewProvider(d.careerId).future, (_, _) {});
+            final sub = ui.listen(
+              matchPreviewProvider(d.careerId).future,
+              (_, _) {},
+            );
             await sub.read();
             sub.close();
             ui.dispose();
@@ -47,11 +50,19 @@ void main() {
         while (await d.step(stopAtRollover: true)) {
           if (++steps > 3000) throw StateError('runaway');
         }
-        final honours = await c.read(competitionRepositoryProvider).honours(d.careerId);
-        for (final h in honours.where((h) => h.year >= 2026 + cy * 4 && h.year <= 2030 + cy * 4)) {
-          final tag = h.championId == england ? ' <<< ENGLAND' : (h.runnerUpId == england ? ' (eng runner-up)' : '');
+        final honours = await c
+            .read(competitionRepositoryProvider)
+            .honours(d.careerId);
+        for (final h in honours.where(
+          (h) => h.year >= 2026 + cy * 4 && h.year <= 2030 + cy * 4,
+        )) {
+          final tag = h.championId == england
+              ? ' <<< ENGLAND'
+              : (h.runnerUpId == england ? ' (eng runner-up)' : '');
           if (tag.isNotEmpty || h.competition.contains('World')) {
-            out.writeln('   honour ${h.year} ${h.competition}: ${nationById[h.championId]?.name}$tag');
+            out.writeln(
+              '   honour ${h.year} ${h.competition}: ${nationById[h.championId]?.name}$tag',
+            );
           }
         }
         out.writeln('-- end cycle ${cy + 1}');

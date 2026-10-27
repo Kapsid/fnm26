@@ -95,6 +95,16 @@ void main() {
     expect(await c.read(campaignRunsProvider.future), contains('grudge'));
   });
 
+  test('a Pro campaign bundle needs Pro to come in, even at cycle 0, and the '
+      'database is unchanged', () async {
+    final before = (await db.select(db.careers).get()).length;
+    final r = await c
+        .read(careerTransferServiceProvider)
+        .import(await aBundle([campaignMarker(Campaigns.youngFinns.id)]));
+    expect(r, BundleRejection.needsPremium);
+    expect((await db.select(db.careers).get()).length, before);
+  });
+
   test('a moved campaign bundle counts as a save', () async {
     await aCareer(db);
     await aCareer(db);
@@ -104,29 +114,33 @@ void main() {
     expect(r, BundleRejection.slotsFull);
   });
 
-  test('a Young Finns run keeps its golden generation through a bundle',
-      () async {
-    final r = await c
-        .read(careerTransferServiceProvider)
-        .import(
-          await aBundle([
-            campaignMarker(Campaigns.youngFinns.id),
-            GoldenGeneration.markerFor(Campaigns.youngFinns.nationId),
-          ]),
-        );
-    expect(r, isNull);
-    final run = (await c.read(campaignRunsProvider.future))['youngFinns']!;
-    final finns = await c
-        .read(playerRepositoryProvider)
-        .byNation(
-          Campaigns.youngFinns.nationId,
-          saveSeed: 7,
-          careerId: run.id,
-          minAge: 15,
-        );
-    expect(
-      finns.where((p) => GoldenGeneration.isGoldenId(p.id)).length,
-      GoldenGeneration.cohort(Campaigns.youngFinns.nationId).length,
-    );
-  });
+  test(
+    'a Young Finns run keeps its golden generation through a bundle',
+    () async {
+      // A Pro campaign: it comes in only for a manager who owns Pro.
+      c.read(premiumUnlockedProvider.notifier).state = true;
+      final r = await c
+          .read(careerTransferServiceProvider)
+          .import(
+            await aBundle([
+              campaignMarker(Campaigns.youngFinns.id),
+              GoldenGeneration.markerFor(Campaigns.youngFinns.nationId),
+            ]),
+          );
+      expect(r, isNull);
+      final run = (await c.read(campaignRunsProvider.future))['youngFinns']!;
+      final finns = await c
+          .read(playerRepositoryProvider)
+          .byNation(
+            Campaigns.youngFinns.nationId,
+            saveSeed: 7,
+            careerId: run.id,
+            minAge: 15,
+          );
+      expect(
+        finns.where((p) => GoldenGeneration.isGoldenId(p.id)).length,
+        GoldenGeneration.cohort(Campaigns.youngFinns.nationId).length,
+      );
+    },
+  );
 }

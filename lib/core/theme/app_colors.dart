@@ -74,6 +74,10 @@ abstract final class AppColors {
   /// Caution accent (a best-third place that may advance via the play-off).
   static const warning = Color(0xFFE7A85A);
 
+  /// A place that leads to the intercontinental play-off (World Championship
+  /// qualifying). A clear yellow, apart from the orange [warning] amber.
+  static const playoff = Color(0xFFF2DC4A);
+
   // --- Rating / performance marks (match & player ratings) -----------------
   // One scale, used app-wide. Previously these three hexes were copy-pasted
   // into every screen that drew a rating pill; read [ratingColor] instead.

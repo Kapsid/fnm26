@@ -14,9 +14,16 @@ extension SeasonRollover on SeasonService {
     MsgPart? boardBody,
     FederationInvestment? nextInvestment,
   }) async {
+    if (await _comp.worldChampion(careerId) == null) return; // not finished
+    // An old bid still undecided (one the first 1.0.7 builds lodged at a
+    // cycle's opening, whose January passed without a step of the world) is
+    // decided before anything reads the balance, so its grant is in the
+    // money the rollover banks.
+    await _ref
+        .read(hostBidServiceProvider)
+        .resolveDue(careerId, atRollover: true);
     final career = await _careers.byId(careerId);
     if (career == null) return;
-    if (await _comp.worldChampion(careerId) == null) return; // not finished
     // An unmoved campaign run ends with its last cycle, in the campaigns
     // list; before that it rolls, but always with its own nation (an offer
     // taken elsewhere would leave the campaign behind), and never meets the
@@ -31,6 +38,14 @@ extension SeasonRollover on SeasonService {
     if (campaign != null &&
         ((await _ref.read(rolloverVerdictProvider(careerId).future))?.sacked ??
             false)) {
+      return;
+    }
+    // A Pro campaign rolls only while Pro is still owned. Starting one needed
+    // it; a purchase refunded mid-run meets the wall here, at the next cycle,
+    // exactly as an ordinary save does at the end of its free one.
+    if (campaign != null &&
+        campaign.def.needsPro &&
+        !_ref.read(premiumUnlockedProvider)) {
       return;
     }
     final moveTo = campaign == null ? switchToNationId : null;
@@ -59,46 +74,71 @@ extension SeasonRollover on SeasonService {
     await _gradeObjectivesIfDecided(careerId);
 
     // Settle the finishing cycle's finances: bank income, then commit the
-    // manager's allocation for the cycle about to begin.
-    final income = await _ref
-        .read(federationServiceProvider)
-        .incomeForCycle(careerId, career.cyclePointer);
-    // What the manager talked the federation into. Applied to everything
-    // coming in rather than to the grant alone: a negotiator gets a better
-    // deal on the commercial side and a better bonus for the run, not just a
-    // bigger cheque from the association.
-    final negotiated =
-        ((income.grant + income.prize + income.commercial) *
-                ManagerSkills.incomeBonus(career.skillNegotiation))
-            .round();
-    // And out again: the staff are paid for the cycle just finished. A manager
-    // who hires an elite room and then misses a tournament feels it.
-    final wages = Staff.totalCost({
-      StaffRole.assistant: career.staffAssistant,
-      StaffRole.scout: career.staffScout,
-      StaffRole.fitnessCoach: career.staffFitnessCoach,
-    });
-    var budget = career.budget + negotiated - wages;
-    if (budget < 0) budget = 0;
-    if (nextInvestment != null) {
-      final spend =
-          nextInvestment.youth +
-          nextInvestment.commercial +
-          nextInvestment.medical +
-          nextInvestment.naturalization +
-          nextInvestment.boardRelations;
-      // The UI validates spend <= budget; ignore an over-budget allocation
-      // rather than going negative.
-      if (spend <= budget) {
-        await _careers.setInvestment(
-          careerId,
-          career.cyclePointer + 1,
-          nextInvestment,
-        );
-        budget -= spend;
+    // manager's allocation for the cycle about to begin. The sum (income
+    // with the negotiating bonus, less the staff wages, plus the stadiums'
+    // cycle-start income) is [rolloverMoney], the same one the host-bid
+    // offer read its free funds from, so a pledge made against it is always
+    // covered here.
+    //
+    // The national stadiums' income is that of the nation managed through
+    // the cycle just finished, read before any move.
+    final money = await rolloverMoney(_ref, career);
+    var budget = money.balance;
+    final stadiumIncome = money.stadiumIncome;
+    final next = career.cyclePointer + 1;
+    // Banked once. The rollover is not one transaction: a run killed after
+    // this point (the ladders, a nation switch and the squad reset all come
+    // before the cycle pointer moves) is retried from the top with the same
+    // pointer, and used to bank the grant, the prize and the stadium income a
+    // second time. The marker and the balance land together, and a retry
+    // that finds the marker leaves the balance alone.
+    //
+    // The host bids pledged at the close of the cycle are paid here, inside
+    // the same transaction, and lodged as the bids the host draw reads: for
+    // the cycle about to begin, whose calendar is built below.
+    await _ref.read(appDatabaseProvider).transaction(() async {
+      if (await _comp.hasWatchedDraw(careerId, next, cycleBankedKind)) return;
+      budget = await _ref
+          .read(hostBidServiceProvider)
+          .settlePledges(
+            careerId,
+            editionCycle: next,
+            nationId: moveTo ?? career.nationId,
+            budget: budget,
+            wages: money.wages,
+            year: career.inGameDate.year,
+          );
+      if (nextInvestment != null) {
+        final spend =
+            nextInvestment.youth +
+            nextInvestment.commercial +
+            nextInvestment.medical +
+            nextInvestment.naturalization +
+            nextInvestment.boardRelations;
+        // The UI validates spend <= budget; ignore an over-budget allocation
+        // rather than going negative.
+        if (spend <= budget) {
+          await _careers.setInvestment(careerId, next, nextInvestment);
+          budget -= spend;
+        }
       }
-    }
-    await _careers.setBudget(careerId, budget);
+      await _careers.setBudget(careerId, budget);
+      await _comp.markDrawWatched(careerId, next, cycleBankedKind);
+      if (stadiumIncome > 0) {
+        await _comp.markDrawWatched(
+          careerId,
+          next,
+          stadiumIncomeKind(next, stadiumIncome),
+        );
+      }
+    });
+    // Decide the bids just lodged, before anything below reads the new
+    // cycle's hosts: a win's grant lands in the balance the new budget
+    // splits, and the news is filed now. The calendar built below reads the
+    // very same hosts (the bid rides on the nation, see `WorldCupHosts`).
+    await _ref
+        .read(hostBidServiceProvider)
+        .resolveDue(careerId, atRollover: true);
 
     // Move each ladder-format Nations Cup — every league's group winners
     // climb, bottom sides drop. Each confederation ladders on its own: its
@@ -138,7 +178,8 @@ extension SeasonRollover on SeasonService {
       // seeded before the fold still stores CONCACAF's last three as a League
       // C that has no groups, and this is where it is repaired.
       final confOf = {
-        for (final n in await _ref.read(nationRepositoryProvider).all())
+        for (final n
+            in await _ref.read(nationRepositoryProvider).forCareer(careerId))
           n.id: n.confederation,
       };
       final folded = NationsCup.mergeRemainders(ncTiers, (id) => confOf[id]);
@@ -191,13 +232,14 @@ extension SeasonRollover on SeasonService {
     await _careers.recordStint(careerId, nextCycle, nationId);
     // The new cycle's briefs follow the current rules (see briefRulesV2Kind).
     await _comp.markDrawWatched(careerId, nextCycle, briefRulesV2Kind);
+    await _comp.markDrawWatched(careerId, nextCycle, briefRulesV3Kind);
     await _comp.markDrawWatched(careerId, nextCycle, fluidWindowsKind);
 
     // Freeze the current standings as the seeding ranking for the new cycle, so
     // its draws reflect how nations have actually performed — and stay in step
     // with the draw ceremonies no matter when they are viewed.
     await _ensureRank(careerId);
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
     final seedRank = _liveRankById(nations);
     await _ref
         .read(seedRankingRepositoryProvider)
@@ -245,6 +287,8 @@ extension SeasonRollover on SeasonService {
       // public mood the moment it was recomputed.
       ..invalidate(pressEffectProvider)
       ..invalidate(publicMoodProvider)
+      ..invalidate(yMilestonesProvider)
+      ..invalidate(fanMoodProvider)
       ..invalidate(moraleProvider);
   }
 
@@ -451,9 +495,12 @@ extension SeasonRollover on SeasonService {
     // An offer to naturalise was made to the old federation: it lapses with
     // the job rather than turning into a player for the new one. (Accepted
     // players stay where they switched to; see `naturalizedPlayersFor`.)
+    // Every one of them: two approaches can queue, and lapsing only the first
+    // left the second to the read-time check in `currentNaturalizationOffer`.
     final careers = _ref.read(careerRepositoryProvider);
-    final pending = await careers.pendingNaturalization(careerId);
-    if (pending != null) {
+    for (var i = 0; i < 8; i++) {
+      final pending = await careers.pendingNaturalization(careerId);
+      if (pending == null) break;
       await careers.setNaturalizationStatus(
         careerId,
         pending.playerId,
@@ -510,7 +557,7 @@ extension SeasonRollover on SeasonService {
   Future<void> rollNaturalization(int careerId) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
     await _maybeGenerateNaturalizationOffer(
       careerId,
       career.nationId,
@@ -578,15 +625,16 @@ extension SeasonRollover on SeasonService {
 
       // A small chance the candidate is a genuine star — but only ever from a
       // strong footballing nation (the top of the ranking), so the quality is
-      // believable. Otherwise a mid-tier player from anywhere.
-      final marquee = rng.nextDouble() < 0.05;
+      // believable. Otherwise a mid-tier player from anywhere. Kept rare: a
+      // man significantly better than the squad should be a lucky find.
+      final marquee = rng.nextDouble() < 0.02;
       final sources = marquee
           ? others
                 .take(20)
                 .toList() // only strong nations breed stars
           : others;
-      final minR = marquee ? 85 : 66;
-      final maxR = marquee ? 93 : 84;
+      final minR = marquee ? 85 : 64;
+      final maxR = marquee ? 91 : 82;
       final maxAge = marquee ? 32 : 29;
 
       final candidates = <Player>[];
@@ -618,7 +666,11 @@ extension SeasonRollover on SeasonService {
         }
       }
       if (candidates.isEmpty) continue;
-      final pick = candidates[rng.nextInt(candidates.length)];
+      // The weaker of two random draws: as many offers as ever, but the top
+      // of the band turns up less often than the middle of it.
+      final a = candidates[rng.nextInt(candidates.length)];
+      final b = candidates[rng.nextInt(candidates.length)];
+      final pick = b.overall < a.overall ? b : a;
       taken.add(pick.id);
       // A nation with no name falls back to a PHRASE, which is a piece of the
       // message like any other rather than words fixed at writing time.

@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -40,6 +41,9 @@ class BoardObjectivesScreen extends ConsumerWidget {
     // nothing to say.
     final objectivesAsync = ref.watch(cycleObjectivesProvider(careerId));
     final objectives = objectivesAsync.valueOrNull ?? const <CycleObjective>[];
+    final gaps =
+        ref.watch(cycleObjectiveGapsProvider(careerId)).valueOrNull ??
+        const <ObjectiveGap>[];
 
     return Scaffold(
       appBar: AppBar(
@@ -56,13 +60,19 @@ class BoardObjectivesScreen extends ConsumerWidget {
         children: [
           AppCard(child: _ConfidenceRow(value: value)),
           const SizedBox(height: AppSpacing.md),
-          if (objectives.isEmpty)
+          if (objectives.isEmpty && gaps.isEmpty)
             AppCard(
               child: _ObjectivesState(async: objectivesAsync),
             )
           else
-            for (final objective in objectives) ...[
-              _ObjectiveCard(objective: objective),
+            for (final row in objectiveRows(objectives, gaps)) ...[
+              AppCard(
+                child: switch (row) {
+                  (objective: final o?, gap: _) => _ObjectiveBody(objective: o),
+                  (objective: _, gap: final g?) => ObjectiveGapBody(gap: g),
+                  _ => const SizedBox.shrink(),
+                },
+              ),
               const SizedBox(height: AppSpacing.md),
             ],
         ],
@@ -82,17 +92,27 @@ class BoardObjectivesScreen extends ConsumerWidget {
   _ => (AppColors.error, l.hubBoardJobAtRisk),
 };
 
-/// The colour an objective's status is written in: grey while its tournament
-/// is live, gold when the brief was beaten outright, green met, red missed.
-/// Beating a brief by rounds is its own colour: a cycle carried three rounds
-/// past what was asked should not look like one that scraped it.
+/// The colour an objective's status is written in: grey while it is still
+/// open, green once met, gold once beaten outright, red missed. Beating a
+/// brief by rounds is its own colour: a cycle carried three rounds past what
+/// was asked should not look like one that scraped it.
+///
+/// A finals brief already reached while the tournament is still running is
+/// answered (the board credits it then, see [BoardSatisfaction.lockedIn]), so
+/// it reads green or gold too rather than the grey of an open one.
 Color objectiveStatusColor(CycleObjective o) {
   final gap = o.actual - o.target;
-  return !o.decided
-      ? AppColors.onSurfaceVariant
-      : gap > 0
-      ? AppColors.primary
-      : (o.met ? AppColors.positive : AppColors.error);
+  final answered = o.decided
+      ? o.met
+      : BoardSatisfaction.lockedIn((
+          tier: o.tier,
+          target: o.target,
+          actual: o.actual,
+        ));
+  if (!answered) {
+    return o.decided ? AppColors.error : AppColors.onSurfaceVariant;
+  }
+  return gap > 0 ? AppColors.medalGold : AppColors.positive;
 }
 
 /// An objective's status line: how far the run has got while it is live,
@@ -106,16 +126,6 @@ String objectiveStatusLabel(AppLocalizations l, CycleObjective o) => !o.decided
         final gap when gap > 0 => l.boardObjectiveBeatenBy(o.resultLabel, gap),
         final gap => l.boardObjectiveShortBy(o.resultLabel, -gap),
       };
-
-class _ObjectiveCard extends StatelessWidget {
-  const _ObjectiveCard({required this.objective});
-
-  final CycleObjective objective;
-
-  @override
-  Widget build(BuildContext context) =>
-      AppCard(child: _ObjectiveBody(objective: objective));
-}
 
 /// The board's confidence: the gavel, the verdict and the figure, in the
 /// verdict's colour.
@@ -250,6 +260,97 @@ class _ObjectiveBody extends StatelessWidget {
               color: color,
               fontWeight: FontWeight.w700,
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The objectives and the competitions without one, in the board's order:
+/// the continental championship, the Nations Cup, the World Championship.
+/// Exactly one of each row's fields is set.
+List<({CycleObjective? objective, ObjectiveGap? gap})> objectiveRows(
+  List<CycleObjective> objectives,
+  List<ObjectiveGap> gaps,
+) {
+  int order(TournamentTier t) => switch (t) {
+    TournamentTier.continental => 0,
+    TournamentTier.nationsCup => 1,
+    TournamentTier.world => 2,
+    TournamentTier.clash => 3,
+  };
+  final rows = <({CycleObjective? objective, ObjectiveGap? gap})>[
+    for (final o in objectives) (objective: o, gap: null),
+    for (final g in gaps) (objective: null, gap: g),
+  ];
+  // A stable sort: two rows of one tier keep the order they came in.
+  final indexed = rows.indexed.toList()
+    ..sort((a, b) {
+      final ta = (a.$2.objective?.tier ?? a.$2.gap!.tier);
+      final tb = (b.$2.objective?.tier ?? b.$2.gap!.tier);
+      final byTier = order(ta).compareTo(order(tb));
+      return byTier != 0 ? byTier : a.$1.compareTo(b.$1);
+    });
+  return [for (final r in indexed) r.$2];
+}
+
+/// A competition the board set no objective for: its name (unless a tablet
+/// panel header already says it), that there is no target, and why.
+class ObjectiveGapBody extends StatelessWidget {
+  const ObjectiveGapBody({
+    required this.gap,
+    this.showCompetition = true,
+    super.key,
+  });
+
+  final ObjectiveGap gap;
+
+  /// False inside a tablet panel, whose header is the competition.
+  final bool showCompetition;
+
+  static Key keyFor(TournamentTier tier) => Key('boardObjectives.gap.$tier');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final awaiting = gap.reason == ObjectiveGapReason.awaitingDraw;
+    return Column(
+      key: keyFor(gap.tier),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showCompetition) ...[
+          Row(
+            children: [
+              const Icon(
+                Icons.flag_outlined,
+                size: 18,
+                color: AppColors.onSurfaceVariant,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  gap.competition,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+        ],
+        Text(
+          awaiting ? l.boardObjectiveAwaitingDraw : l.boardObjectiveNoBrief,
+          style: AppTypography.titleMedium,
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          awaiting
+              ? l.boardObjectiveAwaitingDrawBody
+              : l.boardObjectiveNoBriefBody,
+          style: AppTypography.bodySmall.copyWith(
+            color: AppColors.onSurfaceVariant,
           ),
         ),
       ],

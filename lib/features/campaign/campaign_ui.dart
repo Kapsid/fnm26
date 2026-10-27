@@ -51,6 +51,28 @@ CampaignWords campaignWords(AppLocalizations l, CampaignDef def) =>
           l.campaignStars3YoungFinns,
         ],
       ),
+      'legacy' => (
+        title: l.campaignLegacyTitle,
+        twist: l.campaignLegacyTwist,
+        intro: l.campaignLegacyIntro,
+        goal: l.campaignLegacyGoal,
+        stars: [
+          l.campaignStars1Legacy,
+          l.campaignStars2Legacy,
+          l.campaignStars3Legacy,
+        ],
+      ),
+      'greenland' => (
+        title: l.campaignGreenlandTitle,
+        twist: l.campaignGreenlandTwist,
+        intro: l.campaignGreenlandIntro,
+        goal: l.campaignGreenlandGoal,
+        stars: [
+          l.campaignStars1Greenland,
+          l.campaignStars2Greenland,
+          l.campaignStars3Greenland,
+        ],
+      ),
       _ => (
         title: l.campaignTransplantTitle,
         twist: l.campaignTransplantTwist,
@@ -69,6 +91,11 @@ CampaignWords campaignWords(AppLocalizations l, CampaignDef def) =>
 /// `CampaignService.start`); this is where he is offered the way in.
 bool campaignNeedsPaywall(WidgetRef ref, CampaignDef def) =>
     def.needsPro && !ref.read(premiumUnlockedProvider);
+
+/// [campaignNeedsPaywall] for a build: watches the entitlement, so a button
+/// labelled for it updates the moment a purchase lands.
+bool campaignLockedForBuild(WidgetRef ref, CampaignDef def) =>
+    def.needsPro && !ref.watch(premiumUnlockedProvider);
 
 /// A campaign's difficulty badge: its label and colour, both read from
 /// [CampaignDef.difficulty] so the two can never disagree.

@@ -38,7 +38,9 @@ void main() {
     'Grudge: one verdict when settled, and the cycle ends in the campaigns '
     'list; a normal career over the same steps is unchanged',
     () async {
-      // The same world as an ordinary career, for the comparison.
+      // The same world as an ordinary career, for the comparison: a new
+      // campaign run starts on the current starting ranking, as a new career
+      // does (see CampaignService.start).
       final normalKinds = <HubEventKind>[];
       final n = freeStoryContainer();
       final normal = await StoryDriver.start(

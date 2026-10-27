@@ -16,6 +16,11 @@ _Nation _$NationFromJson(Map<String, dynamic> json) => _Nation(
   primaryColor: json['primaryColor'] as String? ?? '#1E88E5',
   secondaryColor: json['secondaryColor'] as String? ?? '#FFFFFF',
   englishName: json['englishName'] as String? ?? '',
+  hostBids:
+      (json['hostBids'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toInt()),
+      ) ??
+      const <String, int>{},
 );
 
 Map<String, dynamic> _$NationToJson(_Nation instance) => <String, dynamic>{
@@ -28,6 +33,7 @@ Map<String, dynamic> _$NationToJson(_Nation instance) => <String, dynamic>{
   'primaryColor': instance.primaryColor,
   'secondaryColor': instance.secondaryColor,
   'englishName': instance.englishName,
+  'hostBids': instance.hostBids,
 };
 
 const _$ConfederationEnumMap = {

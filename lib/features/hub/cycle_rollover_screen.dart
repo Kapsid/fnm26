@@ -19,7 +19,10 @@ import 'package:fnm/features/career/cycle_backup.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/host_bid_providers.dart';
+import 'package:fnm/features/federation/host_bid_screen.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
+import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
@@ -52,7 +55,8 @@ final AutoDisposeFutureProviderFamily<_RolloverView?, int> _rolloverProvider =
           honours.where((h) => h.competition == 'World Championship').toList()
             ..sort((a, b) => b.year.compareTo(a.year));
       final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
+        for (final n
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
           n.id: n,
       };
       return (
@@ -422,6 +426,12 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
   Widget _investStep(_RolloverView? view) {
     final l = AppLocalizations.of(context);
     final incomeAsync = ref.watch(cycleIncomeProvider(widget.careerId));
+    final stadiumIncome =
+        ref
+            .watch(rolloverMoneyProvider(widget.careerId))
+            .valueOrNull
+            ?.stadiumIncome ??
+        0;
     final verdict = ref
         .watch(rolloverVerdictProvider(widget.careerId))
         .valueOrNull;
@@ -447,8 +457,16 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                     _IncomeCard(
                       income: income,
                       openingBalance: view?.budget ?? 0,
+                      stadiumIncome: stadiumIncome,
                     ),
                     const SizedBox(height: AppSpacing.md),
+                    // The bids for the cycle about to begin: made here, paid
+                    // and decided as it is rolled.
+                    HostBidStatusCard(
+                      careerId: widget.careerId,
+                      nationId: _selected,
+                      interactive: true,
+                    ),
                     Text(
                       l.hubBudgetIntro,
                       style: AppTypography.bodySmall.copyWith(
@@ -546,20 +564,19 @@ class _ObjectiveLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final o = objective;
-    final color = !o.decided
-        ? AppColors.onSurfaceVariant
-        : (o.met ? AppColors.positive : AppColors.error);
+    // The board objectives screen's colours: green met, gold beaten.
+    final color = objectiveStatusColor(o);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
-            !o.decided
+            color == AppColors.error
+                ? Icons.cancel_outlined
+                : color == AppColors.onSurfaceVariant
                 ? Icons.remove_circle_outline
-                : o.met
-                ? Icons.check_circle_outline
-                : Icons.cancel_outlined,
+                : Icons.check_circle_outline,
             size: 16,
             color: color,
           ),
@@ -601,15 +618,23 @@ class _ObjectiveLine extends StatelessWidget {
 
 /// A breakdown of the income banked at a cycle's close.
 class _IncomeCard extends StatelessWidget {
-  const _IncomeCard({required this.income, required this.openingBalance});
+  const _IncomeCard({
+    required this.income,
+    required this.openingBalance,
+    this.stadiumIncome = 0,
+  });
 
   final IncomeBreakdown income;
   final int openingBalance;
 
+  /// What the national stadiums earn at the new cycle's start.
+  final int stadiumIncome;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final earned = income.grant + income.prize + income.commercial;
+    final earned =
+        income.grant + income.prize + income.commercial + stadiumIncome;
     return AppCard(
       child: Column(
         children: [
@@ -618,6 +643,7 @@ class _IncomeCard extends StatelessWidget {
           _row(l.hubPrizeMoney, income.prize),
           if (income.commercial > 0)
             _row(l.hubCommercialReturn, income.commercial),
+          if (stadiumIncome > 0) _row(l.hubStadiumIncome, stadiumIncome),
           const Divider(),
           _row(l.hubAvailableToInvest, openingBalance + earned, bold: true),
         ],

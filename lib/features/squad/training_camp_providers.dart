@@ -97,7 +97,7 @@ trainingCampPlanProvider = FutureProvider.autoDispose.family<TrainingCampPlan?, 
   // all-time list would show every past World Cup group game as already played
   // and the camp would never be offered again after the first tournament.
   final fixtures = await comp.cycleFixturesForNation(careerId, career.nationId);
-  final nations = await ref.watch(nationRepositoryProvider).all();
+  final nations = await ref.watch(nationRepositoryProvider).forCareer(careerId);
   final byId = {for (final n in nations) n.id: n};
 
   // The nearest tournament the nation is in that has not kicked off yet.

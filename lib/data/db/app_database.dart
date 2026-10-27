@@ -64,6 +64,7 @@ const int _newgenIdBase = 1000000000;
     PressStatements,
     PressConferences,
     PlayerHonours,
+    TacticLibrary,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -84,7 +85,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 50;
+  static const int currentSchemaVersion = 51;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -282,6 +283,12 @@ class AppDatabase extends _$AppDatabase {
             schema.pressStatements,
             schema.pressStatements.target,
           );
+        },
+        // 50 → 51 adds the tactics library, the first table that belongs to
+        // no career. A new table and nothing else moves: an upgraded save
+        // simply starts with an empty library.
+        from50To51: (m, schema) async {
+          await m.createTable(schema.tacticLibrary);
         },
       )(m, from, to);
     },

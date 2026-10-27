@@ -6,6 +6,8 @@
   database must not be counted twice.
 
   - fnm.sqlite.previous: the copy kept while a backup file is being restored.
+  - safety/: snapshots taken before each restore, kept on this phone only.
+  - fnm.sqlite.incoming, fnm.sqlite.previous.old: a restore's staging files.
   - fnm.sqlite-shm: SQLite's shared-memory index, rebuilt on open. The -wal
     file IS kept: it can hold committed moves not yet folded into the database.
   - diagnostics.log: this phone's crash log, no use on another.
@@ -13,6 +15,9 @@
 -->
 <full-backup-content>
     <exclude domain="root" path="app_flutter/fnm.sqlite.previous" />
+    <exclude domain="root" path="app_flutter/safety" />
+    <exclude domain="root" path="app_flutter/fnm.sqlite.incoming" />
+    <exclude domain="root" path="app_flutter/fnm.sqlite.previous.old" />
     <exclude domain="root" path="app_flutter/fnm.sqlite-shm" />
     <exclude domain="file" path="diagnostics.log" />
 </full-backup-content>

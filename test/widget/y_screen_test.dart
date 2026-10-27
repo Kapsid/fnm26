@@ -36,10 +36,11 @@ void main() {
       // Every variant the template actually HAS, not the floor: a deep
       // template's later wordings are reached by the tone bands, and walking
       // only the first four left two thirds of them untested.
-      final spread = t == YTemplate.reaction
-          ? YFeed.reactionVariantCount
-          : YFeed.variantsFor(t);
       for (final mood in moods) {
+        final spread = mood != null
+            ? YFeed.reactionVariantsFor(mood)
+            : YFeed.variantsFor(t);
+        final seen = <String>{};
         for (var v = 0; v < spread; v++) {
           final body = yPostBody(
             l,
@@ -57,6 +58,9 @@ void main() {
             ),
           );
           expect(body.trim(), isNotEmpty, reason: '$t variant $v is blank');
+          // Every banded variant reaches its OWN wording: a deepened template
+          // that mapped two variants onto one key would repeat itself.
+          expect(seen.add(body), isTrue, reason: '$t $mood v$v repeats');
         }
       }
     }

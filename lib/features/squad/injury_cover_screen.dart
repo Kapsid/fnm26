@@ -6,6 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -133,20 +134,17 @@ class _InjuryCoverScreenState extends ConsumerState<InjuryCoverScreen> {
     SquadData squad,
     int coverage,
   ) {
-    final candidates =
-        [
-          for (final p in squad.pool)
-            if (!squad.callUps.contains(p.id) &&
-                p.age >= _minAge &&
-                SquadSelection.usableInPeriod(squad.absences[p.id], coverage))
-              p,
-        ]..sort((a, b) {
-          final byLine = a.position.category.index.compareTo(
-            b.position.category.index,
-          );
-          return byLine != 0 ? byLine : b.overall.compareTo(a.overall);
-        });
+    // Strongest first, whatever the position: the best cover leads.
+    final candidates = [
+      for (final p in squad.pool)
+        if (!squad.callUps.contains(p.id) &&
+            p.age >= _minAge &&
+            SquadSelection.usableInPeriod(squad.absences[p.id], coverage))
+          p,
+    ]..sort((a, b) => b.overall.compareTo(a.overall));
     final picked = candidates.where((p) => p.id == _picked).firstOrNull;
+    final out = squad.pool.where((p) => p.id == cover.playerId).firstOrNull;
+    final outPosition = out == null ? '' : positionName(l, out.position);
     return SafeArea(
       top: false,
       child: Padding(
@@ -154,12 +152,16 @@ class _InjuryCoverScreenState extends ConsumerState<InjuryCoverScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (out != null) ...[
+              _outTile(l, out, outPosition),
+              const SizedBox(height: AppSpacing.sm),
+            ],
             AppCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l.injuryCoverBanner(cover.playerName),
+                    l.injuryCoverBanner(cover.playerName, outPosition),
                     style: AppTypography.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.xs),
@@ -187,7 +189,10 @@ class _InjuryCoverScreenState extends ConsumerState<InjuryCoverScreen> {
                       itemCount: candidates.length,
                       separatorBuilder: (_, _) =>
                           const SizedBox(height: AppSpacing.xs),
-                      itemBuilder: (_, i) => _row(candidates[i]),
+                      itemBuilder: (_, i) => _row(
+                        candidates[i],
+                        samePosition: candidates[i].position == out?.position,
+                      ),
                     ),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -215,7 +220,50 @@ class _InjuryCoverScreenState extends ConsumerState<InjuryCoverScreen> {
     );
   }
 
-  Widget _row(Player p) {
+  /// The man being replaced, in the same shape as a candidate row, with the
+  /// reason he is out (the call-up list's medical cross) in place of
+  /// the radio dot, so the position being filled is plain to see.
+  Widget _outTile(AppLocalizations l, Player p, String position) {
+    const color = AppColors.error;
+    return Container(
+      key: const Key('injuryCover.outTile'),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainer,
+        borderRadius: AppRadii.baseAll,
+        border: Border.all(color: color.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.medical_services, size: 20, color: color),
+          const SizedBox(width: AppSpacing.md),
+          SizedBox(width: 40, child: TacticalChip(p.position.label)),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(p.name, style: AppTypography.bodyMedium),
+                Text(
+                  position,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Text('${p.overall}', style: AppTypography.labelLarge),
+        ],
+      ),
+    );
+  }
+
+  Widget _row(Player p, {required bool samePosition}) {
     final selected = p.id == _picked;
     return Material(
       color: selected
@@ -232,7 +280,10 @@ class _InjuryCoverScreenState extends ConsumerState<InjuryCoverScreen> {
           ),
           child: Row(
             children: [
-              SizedBox(width: 40, child: TacticalChip(p.position.label)),
+              SizedBox(
+                width: 40,
+                child: TacticalChip(p.position.label, emphasized: samePosition),
+              ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Text(

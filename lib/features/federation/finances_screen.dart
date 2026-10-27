@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -10,6 +12,8 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
+import 'package:fnm/features/federation/national_stadiums_screen.dart';
+import 'package:fnm/features/y/fan_mood_text.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -53,6 +57,7 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         centerTitle: true,
+        actions: [_StadiumsButton(careerId: widget.careerId)],
       ),
       body: viewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -78,6 +83,9 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
                         .valueOrNull ??
                     (balance: view.budget, wages: 0, free: view.budget),
               ),
+              const SizedBox(height: AppSpacing.sm),
+              // The stands: how they feel, and what that does to the gate.
+              FanMoodLine(careerId: widget.careerId),
               const SizedBox(height: AppSpacing.md),
               Text(
                 l.federationDevelopment,
@@ -88,6 +96,9 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               const SizedBox(height: AppSpacing.sm),
               _BuildingsCard(careerId: widget.careerId),
               const SizedBox(height: AppSpacing.md),
+              // The national stadiums, labelled: once the budget screen is
+              // gone this page is the way in. The row pads its own bottom.
+              NationalStadiumsEntry(careerId: widget.careerId),
               Text(
                 l.federationProjectedAtSeasonEnd,
                 style: AppTypography.labelSmall.copyWith(
@@ -130,6 +141,25 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
       ),
     );
   }
+}
+
+/// The way to the national stadiums, at any point of the cycle (works are
+/// only ordered at its opening; the rest of the time it is a record).
+class _StadiumsButton extends StatelessWidget {
+  const _StadiumsButton({required this.careerId});
+
+  static const Key buttonKey = Key('finances.stadiums');
+
+  final int careerId;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    key: buttonKey,
+    icon: const Icon(Icons.location_city_rounded, color: AppColors.primary),
+    tooltip: AppLocalizations.of(context).stadiumsTitle,
+    onPressed: () =>
+        unawaited(context.push('${Routes.stadiums}?careerId=$careerId')),
+  );
 }
 
 class _BalanceCard extends StatelessWidget {

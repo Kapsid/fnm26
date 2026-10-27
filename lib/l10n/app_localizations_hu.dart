@@ -75,6 +75,138 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchDossierKeyMen => 'KULCSEMBEREK';
 
   @override
+  String get matchDossierHowTheyPlay => 'JÁTÉKSTÍLUS';
+
+  @override
+  String matchScoutFormation1(String formation) {
+    return 'Általában $formation felállásban játszanak.';
+  }
+
+  @override
+  String matchScoutFormation2(String formation) {
+    return 'A megszokott felállásuk a $formation.';
+  }
+
+  @override
+  String matchScoutFormation3(String formation) {
+    return 'Többnyire $formation felállásra építenek.';
+  }
+
+  @override
+  String get matchScoutStrengthPressing =>
+      'Magasan letámadnak, és vadásznak a labdára.';
+
+  @override
+  String get matchScoutStrengthDirect =>
+      'Direkt futballt játszanak, és hamar előre juttatják a labdát.';
+
+  @override
+  String get matchScoutStrengthPossession =>
+      'Jól tartják a labdát, és türelmesen építkeznek.';
+
+  @override
+  String get matchScoutStrengthCounter =>
+      'Visszahúzódnak, és villámgyorsan kontráznak.';
+
+  @override
+  String get matchScoutStrengthDeepDefence =>
+      'Mélyen védekeznek, és nehéz feltörni őket.';
+
+  @override
+  String get matchScoutStrengthWide =>
+      'Szélesre húzzák a játékot, és a szárnyakon támadnak.';
+
+  @override
+  String get matchScoutStrengthAttacking =>
+      'Szeretik magukhoz ragadni a kezdeményezést, és nekimenni az ellenfélnek.';
+
+  @override
+  String get matchScoutStrengthQuickForwards =>
+      'A támadóik gyorsak, és imádnak a védők mögé futni.';
+
+  @override
+  String get matchScoutStrengthPassingMidfield =>
+      'A középpályájuk jól járatja a labdát.';
+
+  @override
+  String get matchScoutStrengthHardRunning =>
+      'A középpályásaik az egész meccsen bírják a futást.';
+
+  @override
+  String get matchScoutStrengthSetPieces => 'Pontrúgásokból veszélyesek.';
+
+  @override
+  String get matchScoutStrengthQuickDefence =>
+      'A védelmük gyors, nehéz mögéjük kerülni.';
+
+  @override
+  String get matchScoutStrengthNone =>
+      'A játékukban semmi sem emelkedik ki igazán.';
+
+  @override
+  String get matchScoutWeakSpaceBehind =>
+      'A magasan álló védelmük mögött hely marad egy hosszú labdának.';
+
+  @override
+  String get matchScoutWeakPressedBuildUp =>
+      'A magas letámadás megzavarhatja a lassú építkezésüket.';
+
+  @override
+  String get matchScoutWeakDeepBlock =>
+      'Légy türelmes: egy ilyen mély blokkot szét lehet szedni.';
+
+  @override
+  String get matchScoutWeakLongBall =>
+      'Húzd hátrébb a védelmedet, és a hosszú labdáik nem találnak teret.';
+
+  @override
+  String get matchScoutWeakSlowDefence =>
+      'A védőik lassúak, ezért küldj futókat mögéjük.';
+
+  @override
+  String get matchScoutWeakAerial =>
+      'Bizonytalannak tűnnek, amikor pontrúgást kell védekezniük.';
+
+  @override
+  String get matchScoutWeakPoorPassing =>
+      'A középpályájuk nehezen passzolja ki magát a nyomásból.';
+
+  @override
+  String get matchScoutWeakTiringMidfield =>
+      'A középpályásaikból hiányzik az erő a letámadás fenntartásához.';
+
+  @override
+  String get matchScoutWeakBluntAttack => 'A támadóik lassúak.';
+
+  @override
+  String get matchScoutApproachTakeTheGame =>
+      'Ellened várhatóan ők veszik kezükbe a kezdeményezést.';
+
+  @override
+  String get matchScoutApproachEven =>
+      'Ellened szoros, kiegyenlített meccsre számíts.';
+
+  @override
+  String get matchScoutApproachSitDeep =>
+      'Ellened várhatóan óvatosan játszanak, és a kontrára várnak.';
+
+  @override
+  String get matchScoutLeaningAttacking =>
+      'Messziről nézve támadó szellemű csapatnak tűnnek.';
+
+  @override
+  String get matchScoutLeaningCautious =>
+      'Messziről nézve óvatos csapatnak tűnnek.';
+
+  @override
+  String get matchScoutLeaningUnclear =>
+      'Messziről nehéz megmondani, hogyan szeretnek játszani.';
+
+  @override
+  String get matchScoutHireHint =>
+      'Szerződtess vezető megfigyelőt, hogy megtudd, hogyan játszanak.';
+
+  @override
   String matchCouldNotContinue(String error) {
     return 'Nem sikerült folytatni: $error';
   }
@@ -287,6 +419,22 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Rendszer';
+
+  @override
+  String get settingsTextSizeTitle => 'Szövegméret';
+
+  @override
+  String get settingsTextSizeBlurb =>
+      'Nagyítsa a szöveget, ha nehezen olvasható.';
+
+  @override
+  String get settingsTextSizeNormal => 'Normál';
+
+  @override
+  String get settingsTextSizeLarge => 'Nagy';
+
+  @override
+  String get settingsTextSizeLarger => 'Nagyobb';
 
   @override
   String get matchPreviewAllMeetings => 'Összes találkozó';
@@ -805,6 +953,41 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get tacticsSentOffShort => 'KIÁLLÍTVA';
+
+  @override
+  String get tacticsFullBackLeft => 'Bal hátvéd';
+
+  @override
+  String get tacticsFullBackRight => 'Jobb hátvéd';
+
+  @override
+  String get tacticsFullBackUp => 'Felfut';
+
+  @override
+  String get tacticsFullBackDown => 'Hátul marad';
+
+  @override
+  String get tacticsFullBackOff => 'Nincs utasítás';
+
+  @override
+  String tacticsFullBackUpHint(String side) {
+    return '$side: felfut. Kicsit több támadás, kicsit több kockázat.';
+  }
+
+  @override
+  String tacticsFullBackDownHint(String side) {
+    return '$side: hátul marad. Kicsit biztonságosabb, kicsit kevesebb támadás.';
+  }
+
+  @override
+  String tacticsFullBackOffHint(String side) {
+    return '$side: nincs utasítás, a csapat terve szerint játszik.';
+  }
+
+  @override
+  String tacticsFullBackSemantics(String side, String state) {
+    return '$side, nyíl: $state';
+  }
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -3037,6 +3220,16 @@ class AppLocalizationsHu extends AppLocalizations {
   String get gateExit => 'KILÉPÉS';
 
   @override
+  String get gateSaveTitle => 'EHHEZ A MENTÉSHEZ PRO KELL';
+
+  @override
+  String get gateSaveLead =>
+      'Az ingyenes cikluson túli mentések és a Pro kampányok Pro-val folytatódnak. Semmi sem vész el: a mentés pontosan úgy vár, ahogy hagytad.';
+
+  @override
+  String get careerSaveLockedNote => 'A mentés folytatásához Pro kell';
+
+  @override
   String get federationNaturalisation => 'HONOSÍTÁS';
 
   @override
@@ -3274,9 +3467,6 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get nationsNoMatch => 'Nincs találat.';
-
-  @override
-  String get nationsNationalLevel => 'NEMZETI SZINT';
 
   @override
   String get nationsSelectHeading => 'Válassz válogatottat';
@@ -3732,6 +3922,1026 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String yLostBadly11(String opponent, String score) {
     return 'Láttam már megalázva ezt a csapatot, de ez új mélypont: $opponent $score.';
+  }
+
+  @override
+  String yWinUpset12(String opponent, String score) {
+    return '$score $opponent ellen. Írjátok fel a dátumot, kérdezni fogják, hol voltatok.';
+  }
+
+  @override
+  String yWinUpset13(String opponent, String score) {
+    return 'Az öltözőn kívül senki sem hitt benne. $score $opponent ellen. A büszke szó kevés.';
+  }
+
+  @override
+  String yWinUpset14(String opponent, String score) {
+    return '$score $opponent ellen! Mindenki addig futott, amíg bírta.';
+  }
+
+  @override
+  String yWinUpset15(String opponent, String score) {
+    return 'Óriásölők. $opponent, $score. Ezért jövünk mindig újra.';
+  }
+
+  @override
+  String yWinUpset16(String opponent, String score) {
+    return '$score $opponent ellen. Az esélylatolgatás most repült ki az ablakon.';
+  }
+
+  @override
+  String yWinUpset17(String opponent, String score) {
+    return 'Toronymagas esélyes: $opponent. Végeredmény: $score nekünk.';
+  }
+
+  @override
+  String yWinUpset18(String opponent, String score) {
+    return 'Az év egyik meglepetése: $score $opponent ellen.';
+  }
+
+  @override
+  String yWinUpset19(String opponent, String score) {
+    return '$opponent $score. Senki sem jósolta meg, és senki sem tudja igazán megmagyarázni.';
+  }
+
+  @override
+  String yWinUpset20(String opponent, String score) {
+    return '$score $opponent ellen. Gyönyörű. Most mindenki elfelejti, milyen rossz volt az év többi része.';
+  }
+
+  @override
+  String yWinUpset21(String opponent, String score) {
+    return '$score $opponent ellen, és a vonat már tele van. Én akkor is ültem rajta, amikor üres volt.';
+  }
+
+  @override
+  String yWinUpset22(String opponent, String score) {
+    return '$opponent $score. Remek, és mégis megtalálják a módját, hogy elpazarolják.';
+  }
+
+  @override
+  String yWinUpset23(String opponent, String score) {
+    return 'Nagy este $opponent ellen, $score. Egy fecske nem csinál nyarat.';
+  }
+
+  @override
+  String yLostBadly12(String opponent, String score) {
+    return '$score $opponent ellen. Fáj, mert számít nekünk. Álljunk mögéjük így is.';
+  }
+
+  @override
+  String yLostBadly13(String opponent, String score) {
+    return 'Felejthető este $opponent ellen, $score. A játékosoknak fáj a legjobban.';
+  }
+
+  @override
+  String yLostBadly14(String opponent, String score) {
+    return '$opponent $score. Fel a fejjel. Egy csapatot az minősít, hogyan válaszol erre.';
+  }
+
+  @override
+  String yLostBadly15(String opponent, String score) {
+    return '$score $opponent ellen. Rossz, igen. Világvége, nem.';
+  }
+
+  @override
+  String yLostBadly16(String opponent, String score) {
+    return '$score $opponent ellen. Évekig beszélnek majd erről az eredményről, rossz okokból.';
+  }
+
+  @override
+  String yLostBadly17(String opponent, String score) {
+    return 'Győzelem: $opponent, $score. Ezek után senki ne lepődjön meg legközelebb.';
+  }
+
+  @override
+  String yLostBadly18(String opponent, String score) {
+    return 'Az egyik legrosszabb este hosszú idő óta: $score $opponent ellen.';
+  }
+
+  @override
+  String yLostBadly19(String opponent, String score) {
+    return '$opponent $score. Lesznek kérdések, és jogosan.';
+  }
+
+  @override
+  String yLostBadly20(String opponent, String score) {
+    return '$score $opponent ellen. A kínos szó enyhe.';
+  }
+
+  @override
+  String yLostBadly21(String opponent, String score) {
+    return '$score vereség $opponent ellen. Az utolsó kapcsolja le a villanyt.';
+  }
+
+  @override
+  String yLostBadly22(String opponent, String score) {
+    return '$opponent $score. Már meg sem lepődöm, és ez megijeszt.';
+  }
+
+  @override
+  String yLostBadly23(String opponent, String score) {
+    return '$score. $opponent. Valakinek odafent ma este érdemes frissítenie az önéletrajzát.';
+  }
+
+  @override
+  String yWinRout0(String opponent, String score) {
+    return '$score $opponent ellen! Az ilyen foci az egész országot mosolyra fakasztja.';
+  }
+
+  @override
+  String yWinRout1(String opponent, String score) {
+    return 'Kiütéses győzelem $opponent ellen, $score. Micsoda teljesítmény.';
+  }
+
+  @override
+  String yWinRout2(String opponent, String score) {
+    return '$score. $opponent ellen. Ma este minden sikerült.';
+  }
+
+  @override
+  String yWinRout3(String opponent, String score) {
+    return '$score arányú lemosás $opponent ellen. Mentsétek el az összefoglalót, kelleni fog.';
+  }
+
+  @override
+  String yWinRout4(String opponent, String score) {
+    return '$opponent $score. Ez egy csapat, amely élvezi a játékot.';
+  }
+
+  @override
+  String yWinRout5(String opponent, String score) {
+    return '$score $opponent ellen, és lehetett volna több is. Csodálatos.';
+  }
+
+  @override
+  String yWinRout6(String opponent, String score) {
+    return '$score $opponent ellen. Olyan eredmény, amire kétszer is ránéz az ember.';
+  }
+
+  @override
+  String yWinRout7(String opponent, String score) {
+    return '$score győzelem $opponent ellen. Az első félóra után nem volt meccs.';
+  }
+
+  @override
+  String yWinRout8(String opponent, String score) {
+    return 'Végeredmény: $score $opponent ellen. Messze a legnagyobb győzelem hosszú idő óta.';
+  }
+
+  @override
+  String yWinRout9(String opponent, String score) {
+    return '$opponent $score. Az egyik csapat játszani jött, a másik le sem szállt a buszról.';
+  }
+
+  @override
+  String yWinRout10(String opponent, String score) {
+    return '$score. $opponent: semmire nem volt válasz.';
+  }
+
+  @override
+  String yWinRout11(String opponent, String score) {
+    return 'Kiütés: $score $opponent ellen.';
+  }
+
+  @override
+  String yWinRout12(String opponent, String score) {
+    return '$score $opponent ellen. Szép, de ők aligha a mérce.';
+  }
+
+  @override
+  String yWinRout13(String opponent, String score) {
+    return '$score $opponent ellen. Ébresszetek fel, ha ezt egy jó csapattal tesszük.';
+  }
+
+  @override
+  String yWinRout14(String opponent, String score) {
+    return '$opponent $score. Szórakoztató, de láttam már csapatokat így ragyogni és semmit sem nyerni.';
+  }
+
+  @override
+  String yWinRout15(String opponent, String score) {
+    return '$score, és megint mindenki zseni. $opponent volt az ellenfél.';
+  }
+
+  @override
+  String yWinRout16(String opponent, String score) {
+    return '$score $opponent ellen. Csak semmi elszállás, ez nagyon keveset bizonyít.';
+  }
+
+  @override
+  String yWinRout17(String opponent, String score) {
+    return '$opponent $score. Élvezzétek, aztán emlékezzetek, hogyan végződött legutóbb, amikor fellelkesültünk.';
+  }
+
+  @override
+  String yWinShootout0(String opponent) {
+    return 'Továbbjutás tizenegyesekkel $opponent ellen! Acélidegek, mindenkinél.';
+  }
+
+  @override
+  String yWinShootout1(String opponent) {
+    return 'Tizenegyesek $opponent ellen, és bírtuk idegekkel. Öleljetek meg egy idegent.';
+  }
+
+  @override
+  String yWinShootout2(String opponent) {
+    return 'Megnyert büntetőpárbaj $opponent ellen. A szívem ezt nem bírja.';
+  }
+
+  @override
+  String yWinShootout3(String opponent) {
+    return 'Győzelem tizenegyesekkel $opponent ellen. Irány a következő kör.';
+  }
+
+  @override
+  String yWinShootout4(String opponent) {
+    return '$opponent ellen a büntetőpontról dőlt el, és mi rúgtunk többet.';
+  }
+
+  @override
+  String yWinShootout5(String opponent) {
+    return 'Megnyert tizenegyespárbaj $opponent ellen. A legnehezebb úton, de tovább.';
+  }
+
+  @override
+  String yWinShootout6(String opponent) {
+    return 'Továbbjutás tizenegyesekkel $opponent ellen. Lottó megnyerve, a játékot felejtsük el.';
+  }
+
+  @override
+  String yWinShootout7(String opponent) {
+    return 'Ilyen játék után tizenegyesekkel nyerni $opponent ellen? Szerencse, és ezt mindenki tudja.';
+  }
+
+  @override
+  String yWinShootout8(String opponent) {
+    return 'Továbbjutás $opponent ellen tizenegyesekkel. Odáig sem kellett volna eljutni.';
+  }
+
+  @override
+  String yKnockoutWin0(String opponent, String score) {
+    return 'TOVÁBB. $score $opponent ellen, és az álom él.';
+  }
+
+  @override
+  String yKnockoutWin1(String opponent, String score) {
+    return 'EGYENES KIESÉSES GYŐZELEM: $score $opponent ellen. Az ország elkezdhet hinni.';
+  }
+
+  @override
+  String yKnockoutWin2(String opponent, String score) {
+    return '$score $opponent ellen, és irány a következő kör. Micsoda este.';
+  }
+
+  @override
+  String yKnockoutWin3(String opponent, String score) {
+    return 'Hazautazik: $opponent, $score. Előre.';
+  }
+
+  @override
+  String yKnockoutWin4(String opponent, String score) {
+    return 'EGYENES KIESÉS: $score $opponent ellen. A következő kör megvan.';
+  }
+
+  @override
+  String yKnockoutWin5(String opponent, String score) {
+    return 'Tovább: $score $opponent ellen.';
+  }
+
+  @override
+  String yKnockoutWin6(String opponent, String score) {
+    return 'Kiesett: $opponent, $score. Vár a következő kör.';
+  }
+
+  @override
+  String yKnockoutWin7(String opponent, String score) {
+    return '$score győzelem $opponent ellen. Egyenes kiesésben senki sem kérdezi, hogyan.';
+  }
+
+  @override
+  String yKnockoutWin8(String opponent, String score) {
+    return 'Tovább $opponent ellen, $score. A következő ellenfél nem lesz ilyen kedves.';
+  }
+
+  @override
+  String yKnockoutWin9(String opponent, String score) {
+    return '$score $opponent ellen, ez elég a továbbjutáshoz. Legközelebb sokkal több kell.';
+  }
+
+  @override
+  String yKnockoutWin10(String opponent, String score) {
+    return 'Kiesett: $opponent, $score. Inkább túléltük, mint megnyertük.';
+  }
+
+  @override
+  String yKnockoutWin11(String opponent, String score) {
+    return 'A következő körben $score után $opponent ellen. Ne kérdezzétek, hogyan.';
+  }
+
+  @override
+  String yUpsetGap0(String opponent, String gap) {
+    return '$gap hely volt köztünk a rangsorban, és mégis nyertünk $opponent ellen. Csodálatos.';
+  }
+
+  @override
+  String yUpsetGap1(String opponent, String gap) {
+    return '$opponent: $gap hellyel előttünk. Mégis nyertünk. A foci csodálatos.';
+  }
+
+  @override
+  String yUpsetGap2(String opponent, String gap) {
+    return 'Rangsorkülönbség: $gap. Eredmény: győzelem $opponent ellen. Soha ne hagyjátok abba a hitet.';
+  }
+
+  @override
+  String yUpsetGap3(String opponent, String gap) {
+    return 'Rangsorkülönbség a kezdőrúgás előtt: $gap. Győzelem $opponent ellen így is.';
+  }
+
+  @override
+  String yUpsetGap4(String opponent, String gap) {
+    return 'A világranglistán $opponent $gap hellyel előttünk állt. Ma este nem.';
+  }
+
+  @override
+  String yUpsetGap5(String opponent, String gap) {
+    return 'Meglepetésindex: $gap rangsorhely a két csapat között. Győzelem nekünk $opponent ellen.';
+  }
+
+  @override
+  String yUpsetGap6(String opponent, String gap) {
+    return '$gap rangsorhely választott el minket ettől az ellenféltől: $opponent. Egy este nem tünteti el a különbséget.';
+  }
+
+  @override
+  String yUpsetGap7(String opponent, String gap) {
+    return '$opponent: $gap hellyel előttünk, és kikapott. A rangsor alig veszi észre.';
+  }
+
+  @override
+  String yUpsetGap8(String gap) {
+    return 'Rangsorkülönbség: $gap. Jegyezzétek meg ezt a számot, amikor legközelebb kikapunk egy kiscsapattól.';
+  }
+
+  @override
+  String yEatWords0(String opponent) {
+    return 'Leírtam ezt a csapatot. Tévedtem, és még sosem örültem ennyire a tévedésemnek. Győzelem $opponent ellen.';
+  }
+
+  @override
+  String yEatWords1(String opponent) {
+    return 'Egy adag alázatot kérek. Nagyot. A győzelem $opponent ellen csodálatos volt.';
+  }
+
+  @override
+  String yEatWords2(String opponent) {
+    return 'Azt mondtam, nincs bennük semmi. Volt bennük bőven. Szép volt $opponent ellen, mindenki.';
+  }
+
+  @override
+  String yEatWords3(String opponent) {
+    return 'A jegyzőkönyv kedvéért: ezt a győzelmet $opponent ellen nem láttam jönni. Le a kalappal.';
+  }
+
+  @override
+  String yEatWords4(String opponent) {
+    return 'Rendben. Azt mondtam, lebuknak. $opponent ellen nem buktak le.';
+  }
+
+  @override
+  String yEatWords5(String opponent) {
+    return 'Ma este megeszem a szavaimat erről a csapatról. A győzelem $opponent ellen megérdemli.';
+  }
+
+  @override
+  String yEatWords6(String opponent) {
+    return 'Igen, azt mondtam, végük. Egy győzelem $opponent ellen még nem bizonyítja, hogy tévedtem.';
+  }
+
+  @override
+  String yEatWords7(String opponent) {
+    return 'Azt mondják, egyem meg a szavaimat $opponent után. Megeszem, lassan, a blokkot pedig megtartom.';
+  }
+
+  @override
+  String yEatWords8(String opponent) {
+    return 'A győzelem $opponent ellen lenyűgöző volt. A kételyeim ezzel a csapattal kapcsolatban megmaradtak.';
+  }
+
+  @override
+  String yAwayFansWin0(String nation, String score) {
+    return 'Le a kalappal: $nation. $score, és teljesen megérdemelten.';
+  }
+
+  @override
+  String yAwayFansWin1(String nation, String score) {
+    return 'Fáj kimondani, de ma este jobb volt: $nation. $score. Gratulálok.';
+  }
+
+  @override
+  String yAwayFansWin2(String nation, String score) {
+    return '$score. Kalapot emelek: $nation. Ők jobban akarták.';
+  }
+
+  @override
+  String yAwayFansWin3(String nation, String score) {
+    return '$score vereség $nation ellen. Azt sem tudom, mit mondjak.';
+  }
+
+  @override
+  String yAwayFansWin4(String nation, String score) {
+    return '$nation $score. A mieinknek szégyellniük kellene magukat.';
+  }
+
+  @override
+  String yAwayFansWin5(String nation, String score) {
+    return '$score $nation ellen. Valaki magyarázza el, hogyan történt ez.';
+  }
+
+  @override
+  String yAwayFansWin6(String nation, String score) {
+    return '$score vereség $nation ellen. Ezt soha nem heverem ki.';
+  }
+
+  @override
+  String yAwayFansWin7(String nation, String score) {
+    return '$score $nation ellen. Szerencse. Tiszta szerencse.';
+  }
+
+  @override
+  String yAwayFansWin8(String nation, String score) {
+    return '$score után a szurkolóik ($nation) évekig elviselhetetlenek lesznek. Köszönöm a semmit.';
+  }
+
+  @override
+  String yNeutralWin0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Nagyszerű a futballnak. Ezért szeretjük.';
+  }
+
+  @override
+  String yNeutralWin1(String nation, String opponent, String score) {
+    return 'Micsoda eredmény: $nation $score $opponent. A foci a legjobb formájában.';
+  }
+
+  @override
+  String yNeutralWin2(String nation, String opponent, String score) {
+    return 'Ma este minden semleges drukker szurkol: $nation. $score $opponent ellen!';
+  }
+
+  @override
+  String yNeutralWin3(String nation, String opponent, String score) {
+    return 'A forduló eredménye: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralWin4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Ezt senki sem tippelte.';
+  }
+
+  @override
+  String yNeutralWin5(String nation, String opponent, String score) {
+    return 'Nagy eredmény: $nation $score $opponent. A rangsor mozogni fog.';
+  }
+
+  @override
+  String yNeutralWin6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Szórakoztató, lássuk, meg tudják-e ismételni.';
+  }
+
+  @override
+  String yNeutralWin7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Az egyik nyerte meg, vagy a másik veszítette el?';
+  }
+
+  @override
+  String yNeutralWin8(String nation, String opponent, String score) {
+    return 'Szenzáció: $nation $score $opponent. Számítsatok rengeteg túlreagálásra.';
+  }
+
+  @override
+  String yScorerHero0(String name, String opponent) {
+    return '$name $opponent ellen. Róla fogják elnevezni a gyerekeket.';
+  }
+
+  @override
+  String yScorerHero1(String name, String opponent) {
+    return 'Szobrot neki: $name. Ma este $opponent ellen ő volt minden.';
+  }
+
+  @override
+  String yScorerHero2(String name, String opponent) {
+    return '$name, micsoda játékos. Emlékezzetek erre az estére $opponent ellen.';
+  }
+
+  @override
+  String yScorerHero3(String name, String opponent) {
+    return '$name döntötte el $opponent ellen. A meccs embere, vita nélkül.';
+  }
+
+  @override
+  String yScorerHero4(String name, String opponent) {
+    return '$opponent ellen az este egy emberé volt: $name.';
+  }
+
+  @override
+  String yScorerHero5(String name, String opponent) {
+    return '$name ott volt, amikor kellett, $opponent ellen.';
+  }
+
+  @override
+  String yScorerHero6(String name, String opponent) {
+    return '$name remek volt $opponent ellen. Most minden héten.';
+  }
+
+  @override
+  String yScorerHero7(String name, String opponent) {
+    return '$name mentette meg a csapatot $opponent ellen. A többiek keveset segítettek.';
+  }
+
+  @override
+  String yScorerHero8(String name, String opponent) {
+    return '$name nélkül egészen más este lett volna $opponent ellen.';
+  }
+
+  @override
+  String yLostShock0(String opponent, String score) {
+    return '$score $opponent ellen. Baleset. Egyszer mindenkivel megesik.';
+  }
+
+  @override
+  String yLostShock1(String opponent, String score) {
+    return '$score vereség $opponent ellen. Rázzuk le, a sorozat nem ért véget.';
+  }
+
+  @override
+  String yLostShock2(String opponent, String score) {
+    return '$opponent $score. Fájdalmas, de egy eredmény nem határozza meg ezt a csapatot.';
+  }
+
+  @override
+  String yLostShock3(String opponent, String score) {
+    return '$score $opponent ellen. Rossz nap a munkahelyen. Tovább.';
+  }
+
+  @override
+  String yLostShock4(String opponent, String score) {
+    return 'Vereség $opponent ellen, $score. Senki sem látta jönni.';
+  }
+
+  @override
+  String yLostShock5(String opponent, String score) {
+    return '$opponent $score. Azon esték egyike, amelyeknek nincs értelme.';
+  }
+
+  @override
+  String yLostShock6(String opponent, String score) {
+    return '$score $opponent ellen. Emlékezetes vereség.';
+  }
+
+  @override
+  String yLostShock7(String opponent, String score) {
+    return 'Kikaptunk $opponent ellen, $score. Szenzáció, bárhonnan nézzük.';
+  }
+
+  @override
+  String yLostShock8(String opponent, String score) {
+    return '$score $opponent ellen. Ilyen ellenféltől! Elfogadhatatlan.';
+  }
+
+  @override
+  String yLostShock9(String opponent, String score) {
+    return '$score vereség $opponent ellen. Magyarázatot akarok, nem kifogásokat.';
+  }
+
+  @override
+  String yLostShock10(String opponent, String score) {
+    return '$opponent $score. Nemzeti szégyen, és ez nem költői túlzás.';
+  }
+
+  @override
+  String yLostShock11(String opponent, String score) {
+    return '$score $opponent ellen. Hogy ülhet még bárki odafent a helyén?';
+  }
+
+  @override
+  String yLostRout0(String opponent, String score) {
+    return '$score $opponent ellen. Élcsapat. Tanuljunk belőle.';
+  }
+
+  @override
+  String yLostRout1(String opponent, String score) {
+    return 'Lemosott minket: $opponent, $score. Nem szégyen kikapni a legjobbaktól.';
+  }
+
+  @override
+  String yLostRout2(String opponent, String score) {
+    return '$opponent $score. Egy lecke, és a leckékből tanul az ember.';
+  }
+
+  @override
+  String yLostRout3(String opponent, String score) {
+    return '$score $opponent ellen. Fáj, de ők egy szinttel feljebb vannak.';
+  }
+
+  @override
+  String yLostRout4(String opponent, String score) {
+    return 'Győzelem: $opponent, $score. A különbség valódi, és most mindenki látta.';
+  }
+
+  @override
+  String yLostRout5(String opponent, String score) {
+    return '$score $opponent ellen. Kiütés, se több, se kevesebb.';
+  }
+
+  @override
+  String yLostRout6(String opponent, String score) {
+    return '$opponent $score. A jobb csapat, és az eredmény is ezt mondja.';
+  }
+
+  @override
+  String yLostRout7(String opponent, String score) {
+    return '$score vereség $opponent ellen. Nem szégyen, de meccs sem volt.';
+  }
+
+  @override
+  String yLostRout8(String opponent, String score) {
+    return '$score $opponent ellen. Jobb ellenfél vagy sem, így nem szabad kikapni.';
+  }
+
+  @override
+  String yLostRout9(String opponent, String score) {
+    return '$opponent $score. Egyáltalán megpróbáltunk versenyezni?';
+  }
+
+  @override
+  String yLostRout10(String opponent, String score) {
+    return '$score. $opponent ellen. Mint bárányok a vágóhídon.';
+  }
+
+  @override
+  String yLostRout11(String opponent, String score) {
+    return '$score vereség $opponent ellen, és senki sem tűnt zaklatottnak.';
+  }
+
+  @override
+  String yLostShootout0(String opponent) {
+    return 'Kiestünk tizenegyesekkel $opponent ellen. Mindent beleadtak. Büszke vagyok rájuk.';
+  }
+
+  @override
+  String yLostShootout1(String opponent) {
+    return 'Tizenegyesek $opponent ellen. A legkegyetlenebb módja a búcsúnak. Fel a fejjel.';
+  }
+
+  @override
+  String yLostShootout2(String opponent) {
+    return 'Elveszített büntetőpárbaj $opponent ellen. Ezt senki sem érdemelte.';
+  }
+
+  @override
+  String yLostShootout3(String opponent) {
+    return 'Kiestünk tizenegyesekkel $opponent ellen. A büntetőpont döntött.';
+  }
+
+  @override
+  String yLostShootout4(String opponent) {
+    return 'Továbbjutott tizenegyesekkel: $opponent. A tornánk itt véget ér.';
+  }
+
+  @override
+  String yLostShootout5(String opponent) {
+    return 'Elveszített tizenegyespárbaj $opponent ellen. Megint tizenegyesek.';
+  }
+
+  @override
+  String yLostShootout6(String opponent) {
+    return 'Kiestünk tizenegyesekkel $opponent ellen. Gyakoroljuk ezeket egyáltalán?';
+  }
+
+  @override
+  String yLostShootout7(String opponent) {
+    return 'Vereség tizenegyesekkel $opponent ellen. Sokkal korábban le kellett volna zárni.';
+  }
+
+  @override
+  String yLostShootout8(String opponent) {
+    return 'Tizenegyesek $opponent ellen, és elvesztettük. Persze.';
+  }
+
+  @override
+  String yKnockoutLoss0(String opponent, String score) {
+    return 'KIESTÜNK. $score $opponent ellen. Egy út, amelyre büszkék lehetünk, itt ér véget.';
+  }
+
+  @override
+  String yKnockoutLoss1(String opponent, String score) {
+    return 'Kiejtett minket: $opponent, $score. Köszönjük az emlékeket.';
+  }
+
+  @override
+  String yKnockoutLoss2(String opponent, String score) {
+    return '$score $opponent ellen. Az utazás véget ért, de micsoda utazás volt.';
+  }
+
+  @override
+  String yKnockoutLoss3(String opponent, String score) {
+    return 'KIESTÜNK: $score $opponent ellen. Fel a fejjel.';
+  }
+
+  @override
+  String yKnockoutLoss4(String opponent, String score) {
+    return 'VÉGE: $score $opponent ellen.';
+  }
+
+  @override
+  String yKnockoutLoss5(String opponent, String score) {
+    return 'Kiesés: $score $opponent ellen.';
+  }
+
+  @override
+  String yKnockoutLoss6(String opponent, String score) {
+    return 'Továbbjutott: $opponent, $score. A tornánknak vége.';
+  }
+
+  @override
+  String yKnockoutLoss7(String opponent, String score) {
+    return 'Kiejtett minket: $opponent, $score. Kezdődik a boncolás.';
+  }
+
+  @override
+  String yKnockoutLoss8(String opponent, String score) {
+    return 'KIESTÜNK. $score $opponent ellen. Másik torna, ugyanaz a vég.';
+  }
+
+  @override
+  String yKnockoutLoss9(String opponent, String score) {
+    return '$score $opponent ellen, és irány haza. Senki sem lepődött meg.';
+  }
+
+  @override
+  String yKnockoutLoss10(String opponent, String score) {
+    return 'Kiejtett minket: $opponent, $score. Reggelig jönnek a kifogások.';
+  }
+
+  @override
+  String yKnockoutLoss11(String opponent, String score) {
+    return '$opponent $score. Kiestünk, és sosem tűnt úgy, hogy másként végződhet.';
+  }
+
+  @override
+  String yAwayFansGloat0(String nation, String score) {
+    return '$score $nation ellen. Tisztelet, erősebben jönnek vissza.';
+  }
+
+  @override
+  String yAwayFansGloat1(String nation, String score) {
+    return 'Jó győzelem nekünk, $score. Rossz nap ennek a csapatnak: $nation. Sajnálom a szurkolóikat.';
+  }
+
+  @override
+  String yAwayFansGloat2(String nation, String score) {
+    return '$score. Rossz este nekik ($nation), mi pedig kihasználtuk. Ilyen a foci.';
+  }
+
+  @override
+  String yAwayFansGloat3(String nation, String score) {
+    return '$score $nation ellen! Ki látta ezt jönni? Ők biztos nem.';
+  }
+
+  @override
+  String yAwayFansGloat4(String nation, String score) {
+    return '$score győzelem $nation ellen. Valaki nézzen rá a szurkolóikra.';
+  }
+
+  @override
+  String yAwayFansGloat5(String nation, String score) {
+    return '$nation $score. Ez megy a fotóalbumba.';
+  }
+
+  @override
+  String yAwayFansGloat6(String nation, String score) {
+    return '$score $nation ellen. És még nagy csapatnak hiszik magukat.';
+  }
+
+  @override
+  String yAwayFansGloat7(String nation, String score) {
+    return 'Képzeld el, hogy $score arányban kikapsz tőlünk. Kérdezd meg őket ($nation), most már tudják.';
+  }
+
+  @override
+  String yAwayFansGloat8(String nation, String score) {
+    return '$nation, $score. Jó hazautat.';
+  }
+
+  @override
+  String yNeutralLoss0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Nagy este az egyiknek, nehéz a másiknak.';
+  }
+
+  @override
+  String yNeutralLoss1(String nation, String opponent, String score) {
+    return 'Kitartást a szurkolóknak ($nation). $score $opponent ellen, de fel fognak állni.';
+  }
+
+  @override
+  String yNeutralLoss2(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Minden nagy csapatnak van ilyen estéje.';
+  }
+
+  @override
+  String yNeutralLoss3(String nation, String opponent, String score) {
+    return 'A forduló meglepetése: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralLoss4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Senki sem látta jönni.';
+  }
+
+  @override
+  String yNeutralLoss5(String nation, String opponent, String score) {
+    return 'A nap eredménye: $nation $score $opponent. Most jönnek a kérdések.';
+  }
+
+  @override
+  String yNeutralLoss6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Nem egyedi eset, ha figyeltétek őket.';
+  }
+
+  @override
+  String yNeutralLoss7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Valakinek ott sok magyarázkodnivalója lesz.';
+  }
+
+  @override
+  String yNeutralLoss8(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Nagy név, kis teljesítmény.';
+  }
+
+  @override
+  String yDownGap0(String opponent, String gap) {
+    return '$opponent: $gap hellyel mögöttünk. Előfordul. Tovább.';
+  }
+
+  @override
+  String yDownGap1(String gap) {
+    return 'Rangsorkülönbség: $gap a javunkra. A foci nem olvas rangsort.';
+  }
+
+  @override
+  String yDownGap2(String opponent, String gap) {
+    return 'Papíron $gap hely köztünk és $opponent között. Ma este nem a pályán.';
+  }
+
+  @override
+  String yDownGap3(String opponent, String gap) {
+    return 'Rangsorkülönbség a kezdőrúgás előtt: $gap a javunkra. Vereség $opponent ellen így is.';
+  }
+
+  @override
+  String yDownGap4(String opponent, String gap) {
+    return 'A világranglistán $opponent $gap hellyel mögöttünk állt. Eredmény: vereség.';
+  }
+
+  @override
+  String yDownGap5(String opponent, String gap) {
+    return 'Meglepetésindex: $gap rangsorhely, rossz irányba, $opponent ellen.';
+  }
+
+  @override
+  String yDownGap6(String opponent, String gap) {
+    return '$gap hellyel $opponent előtt a rangsorban. Vereség. Magyarázzátok meg.';
+  }
+
+  @override
+  String yDownGap7(String gap) {
+    return 'Vereség egy $gap hellyel mögöttünk álló csapattól. Hagyjátok leülepedni ezt a számot.';
+  }
+
+  @override
+  String yDownGap8(String opponent, String gap) {
+    return 'Rangsorkülönbség: $gap. Vereség $opponent ellen. Valakinek el kellene kezdenie számolni a napokat.';
+  }
+
+  @override
+  String yDrewHeroic0(String opponent, String score) {
+    return '$score $opponent ellen! Döntetlen, ami győzelemnek érződik.';
+  }
+
+  @override
+  String yDrewHeroic1(String opponent, String score) {
+    return '$score $opponent ellen. Büszke vagyok mindegyikükre.';
+  }
+
+  @override
+  String yDrewHeroic2(String opponent, String score) {
+    return '$opponent $score. Ők voltak az esélyesek, és felnőttünk hozzájuk.';
+  }
+
+  @override
+  String yDrewHeroic3(String opponent, String score) {
+    return '$score $opponent ellen. Vérrel és verejtékkel szerzett pont.';
+  }
+
+  @override
+  String yDrewHeroic4(String opponent, String score) {
+    return '$score $opponent ellen. Nagyon jó pont.';
+  }
+
+  @override
+  String yDrewHeroic5(String opponent, String score) {
+    return '$score döntetlen $opponent ellen. Kevesen vártak bármit is.';
+  }
+
+  @override
+  String yDrewHeroic6(String opponent, String score) {
+    return 'Megállítottuk: $opponent, $score. Erre lehet építeni.';
+  }
+
+  @override
+  String yDrewHeroic7(String opponent, String score) {
+    return '$score $opponent ellen. Egy pont, amit senki sem adott nekünk.';
+  }
+
+  @override
+  String yDrewHeroic8(String opponent, String score) {
+    return '$score $opponent ellen. Jó pont, de döntetlenekkel nem nyer az ember semmit.';
+  }
+
+  @override
+  String yDrewHeroic9(String opponent, String score) {
+    return '$score $opponent ellen. Szép. Egy rendes lövésünk sem volt.';
+  }
+
+  @override
+  String yDrewHeroic10(String opponent, String score) {
+    return '$opponent $score. Egy pont, és mindenki úgy viselkedik, mintha megnyertük volna a trófeát.';
+  }
+
+  @override
+  String yDrewHeroic11(String opponent, String score) {
+    return '$score $opponent ellen. Leparkoltuk a buszt, és szerencsénk volt.';
+  }
+
+  @override
+  String yDrewShame0(String opponent, String score) {
+    return '$score $opponent ellen. Bosszantó, de még mindig veretlenek vagyunk.';
+  }
+
+  @override
+  String yDrewShame1(String opponent, String score) {
+    return 'Csak $score $opponent ellen. Rossz nap. Előfordul.';
+  }
+
+  @override
+  String yDrewShame2(String opponent, String score) {
+    return '$opponent $score. Nem elég jó, és a játékosok tudják.';
+  }
+
+  @override
+  String yDrewShame3(String opponent, String score) {
+    return '$score $opponent ellen. Két elvesztett pont, semmi több.';
+  }
+
+  @override
+  String yDrewShame4(String opponent, String score) {
+    return '$score $opponent ellen. Két pont kidobva.';
+  }
+
+  @override
+  String yDrewShame5(String opponent, String score) {
+    return 'Csak $score $opponent ellen. Rossz eredmény, akárhogy csomagoljuk.';
+  }
+
+  @override
+  String yDrewShame6(String opponent, String score) {
+    return '$opponent $score. Döntetlen, ami vereségnek érződik.';
+  }
+
+  @override
+  String yDrewShame7(String opponent, String score) {
+    return '$score $opponent ellen. Az ilyen meccseket simán meg kell nyerni.';
+  }
+
+  @override
+  String yDrewShame8(String opponent, String score) {
+    return '$score $opponent ellen. Kínos.';
+  }
+
+  @override
+  String yDrewShame9(String opponent, String score) {
+    return 'Csak döntetlen $opponent ellen, $score. Ki felel ezért?';
+  }
+
+  @override
+  String yDrewShame10(String opponent, String score) {
+    return '$opponent $score. Ha őket nem verjük meg, akkor kit?';
+  }
+
+  @override
+  String yDrewShame11(String opponent, String score) {
+    return '$score $opponent ellen. A szurkolóik egy ellenünk elért döntetlent ünnepelnek. Gondoljatok bele.';
   }
 
   @override
@@ -5121,6 +6331,11 @@ class AppLocalizationsHu extends AppLocalizations {
       'Két vb-helyről döntenek a legjobb selejtezős kimaradók kieséses párharcai.';
 
   @override
+  String tourCupPlayoffNoEntrants(String confederation) {
+    return '$confederation: nincs pótselejtező. Minden helyről a selejtezőcsoportokban döntenek.';
+  }
+
+  @override
   String get tourCupQualDrawSoon =>
       'A csoportok sorsolása hátravan. A főoldalon nézd meg a selejtezősorsolást, hogy kiderüljenek.';
 
@@ -5284,6 +6499,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get objectiveNcSurvive => 'Elkerülni a kiesést';
 
   @override
+  String get objectiveNcOffTheBottom => 'Ne a csoport utolsó helyén végezni';
+
+  @override
   String get finishNcChampions => 'Nations Cup-győztesek';
 
   @override
@@ -5297,6 +6515,9 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get finishNcStayedUp => 'Bennmaradt';
+
+  @override
+  String get finishNcClearOfBottom => 'Nem a csoport utolsó helyén';
 
   @override
   String get finishNcBottom => 'A csoport utolsó helye';
@@ -6637,7 +7858,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String newsNatzStarTitle(String name, String nation) {
-    return '⭐ $name válogatottat váltana. Új csapata: $nation!';
+    return '$name válogatottat váltana. Új csapata: $nation!';
   }
 
   @override
@@ -7276,14 +8497,18 @@ class AppLocalizationsHu extends AppLocalizations {
       'Nem sikerült megírni a biztonsági mentést.';
 
   @override
-  String get backupTitle => 'MENTÉSEK';
+  String get backupTitle => 'BIZTONSÁGI MENTÉSEK';
 
   @override
   String get backupBlurb =>
-      'Minden mentés egyetlen fájlban van ezen a telefonon, és semmi nem készít róla másolatot. Exportálj egy példányt, és tartsd a telefonon kívül, a Fájlokban vagy az iCloud Drive-on, hogy egy elveszett telefon vagy egy törölt app miatt ne veszítsd el a karrieredet.';
+      'Minden mentés egyetlen fájlban van ezen a telefonon, és semmi sem menti őket magától, hacsak lent be nem kapcsolod az automatikus mentést. Tarts másolatot a felhőben, hogy egy elveszett telefon vagy törölt alkalmazás ne kerüljön egy karrierbe.';
 
   @override
-  String get backupExport => 'BIZTONSÁGI MENTÉS EXPORTÁLÁSA';
+  String get backupBlurbNoAuto =>
+      'Minden mentés egyetlen fájlban van ezen a telefonon, és semmi sem menti őket magától. Tarts másolatot a felhőben, hogy egy elveszett telefon vagy törölt alkalmazás ne kerüljön egy karrierbe.';
+
+  @override
+  String get backupExport => 'MENTÉS A FELHŐBE';
 
   @override
   String get backupExportSubject => 'FNM mentések';
@@ -9654,8 +10879,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get injuryCoverTitle => 'PÓTLÁS';
 
   @override
-  String injuryCoverBanner(String player) {
-    return '$player sérült. Hívj be bárkit a keretből kimaradtak közül, bármely posztra, vagy tartsd meg, és játssz tovább.';
+  String injuryCoverBanner(String player, String position) {
+    return '$player ($position) sérült. Hívj be bárkit a keretből kimaradtak közül, bármely posztra, vagy tartsd meg, és játssz tovább.';
   }
 
   @override
@@ -9904,14 +11129,14 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignGuineasTwist =>
-      'Egyenlítői-Guinea, Afrika Guineái közül a legalacsonyabban rangsorolt, két cikluson át';
+      'Egyenlítői-Guinea, Afrika Guineái közül a legkisebb, két cikluson át';
 
   @override
   String get campaignGuineasGoal => 'Legyőzni Guineát és Guinea-Bissaut';
 
   @override
   String get campaignGuineasIntro =>
-      'Három afrikai ország viseli a Guinea nevet, és közülük Egyenlítői-Guinea a legalacsonyabban rangsorolt. Két ciklusod van, hogy legalább egyszer-egyszer legyőzd Guineát és Guinea-Bissaut, aztán nézd meg, meddig juthatsz az Afrika-bajnokságon. Pápua Új-Guinea, a negyedik Guinea, már be van jegyezve egy barátságos meccsre.';
+      'Három afrikai ország viseli a Guinea nevet, és közülük Egyenlítői-Guinea a legkisebb. Két ciklusod van, hogy legalább egyszer-egyszer legyőzd Guineát és Guinea-Bissaut, aztán nézd meg, meddig juthatsz az Afrika-bajnokságon. Pápua Új-Guinea, a negyedik Guinea, már be van jegyezve egy barátságos meccsre.';
 
   @override
   String get campaignStars1Guineas => 'Legyőzni Guineát és Guinea-Bissaut';
@@ -9947,6 +11172,30 @@ class AppLocalizationsHu extends AppLocalizations {
   String get campaignStars3YoungFinns => 'Megnyerni a világbajnokságot';
 
   @override
+  String get campaignGreenlandTitle => 'Egy grönlandi évszázad';
+
+  @override
+  String get campaignGreenlandTwist =>
+      'Grönland száz évre átveszi San Marino helyét Európában';
+
+  @override
+  String get campaignGreenlandGoal => 'Kijutni egy Európa-bajnokságra';
+
+  @override
+  String get campaignGreenlandIntro =>
+      'Grönland még sosem játszott tétmérkőzést válogatott szinten. Ebben a világban átvette San Marino helyét Európában, és a világranglista legaljáról indul: amatőr játékosok, műfüves pályák és a havazások közé szorult szezon. Száz éved, huszonöt ciklusod van, hogy kijuss egy Európa-bajnokságra, aztán egy világbajnokságra, és ha mersz álmodni, megnyerd valamelyiket.';
+
+  @override
+  String get campaignStars1Greenland => 'Kijutni egy Európa-bajnokságra';
+
+  @override
+  String get campaignStars2Greenland => 'Kijutni egy világbajnokságra';
+
+  @override
+  String get campaignStars3Greenland =>
+      'Megnyerni az Európa-bajnokságot vagy a világbajnokságot';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -9959,4 +11208,1622 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get campaignCupOpen => 'Még eldöntetlen';
+
+  @override
+  String newsYouthTitle1(String name, String level) {
+    return '$name ragyogott az $level válogatottban';
+  }
+
+  @override
+  String newsYouthTitle2(String name, String level) {
+    return 'Akadémiai jelentés: $name felhívta magára a figyelmet';
+  }
+
+  @override
+  String newsYouthTitle3(String name, String level) {
+    return 'Az $level válogatott kiemelkedő játékosa: $name';
+  }
+
+  @override
+  String newsYouthGoals1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count alkalommal',
+      one: 'egyszer',
+    );
+    return '$name $_temp0 volt eredményes az $level válogatottban $opponent ellen a legutóbbi válogatott időszakban.';
+  }
+
+  @override
+  String newsYouthGoals2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gól',
+      one: 'Egy gól',
+    );
+    return '$_temp0 született $name révén, amikor az $level válogatott ebben az időszakban $opponent ellen lépett pályára.';
+  }
+
+  @override
+  String newsYouthGoals3(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count góllal',
+      one: 'egy góllal',
+    );
+    return 'Az $level válogatott $opponent ellen játszott, $name pedig $_temp0 hagyta el a pályát.';
+  }
+
+  @override
+  String newsYouthAssists1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gólt',
+      one: 'egy gólt',
+    );
+    return '$name $_temp0 készített elő az $level válogatottban $opponent ellen, és az elejétől a végéig irányította a játékot.';
+  }
+
+  @override
+  String newsYouthAssists2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gólpassz',
+      one: 'egy gólpassz',
+    );
+    return 'Az $level válogatott ebben az időszakban $opponent ellen játszott, a szálakat pedig $name mozgatta: $_temp0 és egy olyan teljesítmény, amelyről a stáb még mindig beszél.';
+  }
+
+  @override
+  String newsYouthCleanSheet1(String name, String level, String opponent) {
+    return '$name kiemelkedő volt, amikor az $level válogatott kapott gól nélkül zárt $opponent ellen.';
+  }
+
+  @override
+  String newsYouthCleanSheet2(String name, String level, String opponent) {
+    return 'Kapott gól nélküli meccs az $level válogatottnak $opponent ellen, és ebben a legnagyobb része $name játékosnak volt.';
+  }
+
+  @override
+  String newsYouthDisplay1(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$name lenyűgözött az $level válogatottban $opponent ellen, a stáb tízből $mark pontra értékelte a játékát.';
+  }
+
+  @override
+  String newsYouthDisplay2(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return 'Az $level válogatott ebben az időszakban $opponent ellen játszott, és az edzők egy nevet emeltek ki, $name: tízből $mark, a csapat legjobb osztályzata.';
+  }
+
+  @override
+  String get newsYouthDevReady1 =>
+      'Ebben a formában már elég jó ahhoz, hogy számításba jöjjön a felnőtt válogatottnál.';
+
+  @override
+  String get newsYouthDevReady2 =>
+      'A stáb szerint már most készen áll a felnőtt futballra. A döntés a szövetségi kapitányé.';
+
+  @override
+  String get newsYouthDevClose1 =>
+      'Jól fejlődik, és közel áll ahhoz, hogy bekerüljön a felnőtt válogatottba.';
+
+  @override
+  String get newsYouthDevClose2 =>
+      'Nincs már messze a felnőtt válogatottól, és egy újabb jó idény elég lehet.';
+
+  @override
+  String get newsYouthDevGrowing1 =>
+      'Szépen fejlődik, bár a felnőtt válogatott még egy-két lépésre van.';
+
+  @override
+  String get newsYouthDevGrowing2 =>
+      'Van még munka, mielőtt felnőtt válogatott lesz belőle, de minden jó irányba mutat.';
+
+  @override
+  String get newsYouthDevRaw1 =>
+      'Még nyers, és néhány évre van a felnőtt válogatottól, de a tehetsége szembetűnő.';
+
+  @override
+  String get newsYouthDevRaw2 =>
+      'Még korai, és az akadémia edzői türelmet kérnek, nem főcímeket.';
+
+  @override
+  String get newsYouthStrengthGkPhysical =>
+      'A vetődési hatótávolsága és a tizenhatoson belüli uralma emeli ki a többiek közül.';
+
+  @override
+  String get newsYouthStrengthGkTechnical =>
+      'A labdafogása és a kidobásai a legjobbak, amelyeket az akadémia évek óta látott.';
+
+  @override
+  String get newsYouthStrengthGkStamina =>
+      'A koncentrációja sosem lankad: a kilencvenedik percben is olyan éles, mint az elsőben.';
+
+  @override
+  String get newsYouthStrengthDefPhysical =>
+      'A gyorsasága és a fejjátéka a játéka kulcsa.';
+
+  @override
+  String get newsYouthStrengthDefTechnical =>
+      'A korát messze meghaladóan olvassa a játékot, és nyugodt a labdával.';
+
+  @override
+  String get newsYouthStrengthDefStamina =>
+      'Sosem kapcsol ki, és az utolsó percben is sprintel vissza.';
+
+  @override
+  String get newsYouthStrengthMidPhysical =>
+      'Valódi erővel szerzi vissza a labdát, és azonnal előre viszi.';
+
+  @override
+  String get newsYouthStrengthMidTechnical =>
+      'A játékintelligenciája és a passzrepertoárja a játéka kulcsa.';
+
+  @override
+  String get newsYouthStrengthMidStamina =>
+      'Hihetetlen a motorja: a pálya minden fűszálát bejárja.';
+
+  @override
+  String get newsYouthStrengthFwdPhysical =>
+      'A mélységi gyorsasága és a levegőben mutatott ereje minden védelemnek gondot okoz.';
+
+  @override
+  String get newsYouthStrengthFwdTechnical =>
+      'A befejezései és a mozgása a tizenhatoson belül a játéka kulcsa.';
+
+  @override
+  String get newsYouthStrengthFwdStamina =>
+      'Egész meccsen elölről letámad, és egy pillanatnyi nyugalmat sem hagy a védőknek.';
+
+  @override
+  String pressMomentBigWinWarm3(String opponent) {
+    return 'A szurkolók még sokáig énekelnek majd erről a meccsről $opponent ellen. Mit mondott a játékosoknak a lefújás után?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral3(String opponent) {
+    return 'Ez erős üzenet volt $opponent ellen. Mennyi származott ebből az edzőpályáról?';
+  }
+
+  @override
+  String pressMomentBigWinHostile3(String opponent) {
+    return 'Elismerés az eredményért $opponent ellen, de ilyen estéket már láttunk. Mi más ezúttal?';
+  }
+
+  @override
+  String pressMomentBigLossWarm3(String opponent) {
+    return 'Mindenkinek van rossz estéje, és ez egy ilyen volt $opponent ellen. Milyen gyorsan tudja maga mögött hagyni?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral3(String opponent) {
+    return '$opponent minden csapatrészben jobb volt. Hol kezdi a javítást?';
+  }
+
+  @override
+  String pressMomentBigLossHostile3(String opponent) {
+    return 'A szurkolók már a vége előtt távoztak $opponent ellen. Hibáztathatja őket?';
+  }
+
+  @override
+  String pressMomentCrisisWarm3(String opponent) {
+    return 'Nehéz időszak ez, és $opponent ellen sem lett könnyebb. Mi tartja Önt talpon?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral3(String opponent) {
+    return 'Újabb meccs győzelem nélkül, ezúttal $opponent ellen. Meddig tarthat még ez, mielőtt a vezetőség lép?';
+  }
+
+  @override
+  String pressMomentCrisisHostile3(String opponent) {
+    return 'Most még $opponent ellen is. Maradt még valami a tervében, vagy ideje átadni a helyét valaki másnak?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers5 =>
+      'Bármit írnak, a játékosokról írják. Ezt kiérdemelték.';
+
+  @override
+  String get pressReplyCreditPlayers6 =>
+      'Olyan csapatom van, amely tűzbe menne egymásért. Ez nem kevés.';
+
+  @override
+  String get pressReplyTakeResponsibility5 =>
+      'Én hozom a döntéseket, így a kritika engem illet. Ez a munka része.';
+
+  @override
+  String get pressReplyTakeResponsibility6 =>
+      'Először a szövetségi kapitányra nézzenek. Hibáztam, és helyre fogom hozni.';
+
+  @override
+  String get pressReplyDemandMore5 =>
+      'Itt a jó nem elég jó. Ezt a szemükbe mondtam.';
+
+  @override
+  String get pressReplyDemandMore6 =>
+      'Abban az öltözőben senkinek sincs biztos helye. Most már tudják.';
+
+  @override
+  String get pressReplyDeflect5 =>
+      'Háromféleképpen is megkérdezhetik. A válasz ugyanaz lesz.';
+
+  @override
+  String get pressReplyDeflect6 =>
+      'A gondolataimat a játékosoknak tartogatom. Biztosan megértik.';
+
+  @override
+  String yWinRoutine12(String opponent, String score) {
+    return '$score $opponent ellen. Nyugodt, kontrollált, felnőtt futball. Öröm nézni.';
+  }
+
+  @override
+  String yWinRoutine13(String opponent, String score) {
+    return '$score $opponent ellen, izzadás nélkül. Ez a csapat kezd jó lenni az unalmasban, és az unalmas nyer trófeákat.';
+  }
+
+  @override
+  String yWinRoutine14(String opponent, String score) {
+    return '$opponent $score. Három pont, semmi dráma, vissza a munkához.';
+  }
+
+  @override
+  String yWinRoutine15(String opponent, String score) {
+    return 'Rutinszerű $score $opponent ellen. Senki sem fog emlékezni rá, és nem is kell.';
+  }
+
+  @override
+  String yWinRoutine16(String opponent, String score) {
+    return '$score $opponent ellen, és valahogy mégis aggódom.';
+  }
+
+  @override
+  String yWinRoutine17(String opponent, String score) {
+    return '$score $opponent ellen. Egy igazi csapat ellen egy ilyen teljesítményt megbüntetnek.';
+  }
+
+  @override
+  String yWinTight12(String opponent, String score) {
+    return '$score $opponent ellen. Összeszorított fog, szenvedés, győzelem. Ez egy csapat.';
+  }
+
+  @override
+  String yWinTight13(String opponent, String score) {
+    return '$score $opponent ellen, pusztán idegből. Én egy olyan csapatot választok, amely nem hajlandó kikapni.';
+  }
+
+  @override
+  String yWinTight14(String opponent, String score) {
+    return '$opponent $score. Az utolsó másodpercig tartott, de a pontok a mieink.';
+  }
+
+  @override
+  String yWinTight15(String opponent, String score) {
+    return 'Szoros $score $opponent ellen. Nem sok volt benne, és ez a futball.';
+  }
+
+  @override
+  String yWinTight16(String opponent, String score) {
+    return '$score $opponent ellen. Egy szerencsés pattanás a másik irányba, és egészen másról beszélnénk.';
+  }
+
+  @override
+  String yWinTight17(String opponent, String score) {
+    return 'Épp hogy kihúztuk $opponent ellen, $score. Senki ne nevezze ezt teljesítménynek.';
+  }
+
+  @override
+  String yDrew12(String opponent, String score) {
+    return '$score $opponent ellen. Nem vereség, és néha pont ez a feladat.';
+  }
+
+  @override
+  String yDrew13(String opponent, String score) {
+    return 'Keservesen kiharcolt pont $opponent ellen, $score. Tetszett a küzdeni akarás.';
+  }
+
+  @override
+  String yDrew14(String opponent, String score) {
+    return '$opponent $score. Igazságos pontosztozkodás, ahogy a régi kommentátorok mondták.';
+  }
+
+  @override
+  String yDrew15(String opponent, String score) {
+    return '$score $opponent ellen. Egyik csapat sem tett eleget, hogy többet érdemeljen.';
+  }
+
+  @override
+  String yDrew16(String opponent, String score) {
+    return '$score $opponent ellen. Az a fajta döntetlen, ami a hazaúton a buszon vereségnek érződik.';
+  }
+
+  @override
+  String yDrew17(String opponent, String score) {
+    return '$score $opponent ellen, döntetlen. Folyton fejlődésről beszélünk, és folyton ezt csináljuk.';
+  }
+
+  @override
+  String yLost12(String opponent, String score) {
+    return '$score $opponent ellen. Fáj, de eleget láttam ahhoz, hogy higgyek ebben a csapatban.';
+  }
+
+  @override
+  String yLost13(String opponent, String score) {
+    return '$opponent ellen kikaptunk, $score, és jók voltak. Elismerni és újra nekifutni.';
+  }
+
+  @override
+  String yLost14(String opponent, String score) {
+    return '$opponent $score. Egy vereség, néhány tanulság, és hamarosan a következő meccs.';
+  }
+
+  @override
+  String yLost15(String opponent, String score) {
+    return '$score vereség $opponent ellen. Nehéz vitatkozni vele.';
+  }
+
+  @override
+  String yLost16(String opponent, String score) {
+    return '$score $opponent ellen. Ugyanazok a hibák, mint legutóbb, ugyanazzal a magabiztossággal.';
+  }
+
+  @override
+  String yLost17(String opponent, String score) {
+    return '$opponent ellen kikaptunk, $score. Ha ezért senki sem felel, akkor mit csinálunk itt?';
+  }
+
+  @override
+  String get yReactionShrug12 =>
+      'Nekem jó így. Nem kell minden este tűzijáték.';
+
+  @override
+  String get yReactionShrug13 => 'A pont az pont. Ma éjjel jól alszom.';
+
+  @override
+  String get yReactionShrug14 => 'Láttam. Nincs megjegyzésem.';
+
+  @override
+  String get yReactionShrug15 => 'Valahol a rendben és a rendben között.';
+
+  @override
+  String get yReactionShrug16 =>
+      'Ezért fizettem a streamért. Soha többet (visszajövök).';
+
+  @override
+  String get yReactionShrug17 => 'Kilencven perc futball alakú semmi.';
+
+  @override
+  String get yReactionRelief12 =>
+      'Újra kapok levegőt. Büszke vagyok, hogy kitartottak.';
+
+  @override
+  String get yReactionRelief13 =>
+      'Az ilyen győzelmek építenek csapatot. A csúnya szép.';
+
+  @override
+  String get yReactionRelief14 => 'A körmeim elfogytak, a pontok nem.';
+
+  @override
+  String get yReactionRelief15 => 'Lefújás még sosem hangzott ilyen jól.';
+
+  @override
+  String get yReactionRelief16 =>
+      'Örülök, hogy nyertünk, aggódom, hogy hogyan.';
+
+  @override
+  String get yReactionRelief17 => 'Mindig megússzuk. Egyszer nem fogjuk.';
+
+  @override
+  String get yReactionFury12 =>
+      'Szeretem ezt a csapatot, és pont ezért fáj ennyire.';
+
+  @override
+  String get yReactionFury13 =>
+      'Rossz este. Legközelebb tartoznak nekünk eggyel, és ezt tudják.';
+
+  @override
+  String get yReactionFury14 =>
+      'Hetven percnél kikapcsoltam. Hatvannál kellett volna.';
+
+  @override
+  String get yReactionFury15 => 'Se küzdelem, se ötlet, se kifogás.';
+
+  @override
+  String get yReactionFury16 =>
+      'Mindig ugyanazok a gondok, és senki nem javít meg semmit.';
+
+  @override
+  String get yReactionFury17 =>
+      'Valakinek a szövetségnél újra meg kellene néznie ezt, és elmagyaráznia.';
+
+  @override
+  String get backupShareHint =>
+      'Egy biztonsági mentés fájlt készít az összes mentésből. Megőrzéshez válaszd a Google Drive-ot, az iCloud Drive-ot vagy a Fájlokat.';
+
+  @override
+  String backupLastAt(String date) {
+    return 'Utolsó biztonsági mentés: $date';
+  }
+
+  @override
+  String get backupNever => 'Még nincs biztonsági mentés';
+
+  @override
+  String get backupRemindersTitle => 'Emlékeztetők a mentésre';
+
+  @override
+  String get backupRemindersBlurb =>
+      'Üzenet a postafiókodba, amikor az utolsó biztonsági mentés kezd régi lenni.';
+
+  @override
+  String get backupAutoICloudTitle => 'Automatikus iCloud-mentés';
+
+  @override
+  String get backupAutoDriveTitle => 'Automatikus Google Drive-mentés';
+
+  @override
+  String get backupAutoBlurb =>
+      'Ment a meccsek után, a ciklus végén és amikor kilépsz az alkalmazásból. A legutóbbi kettőt tartja meg.';
+
+  @override
+  String get backupStatusUploading => 'Mentés folyamatban.';
+
+  @override
+  String get backupStatusUploaded => 'Elmentve.';
+
+  @override
+  String get backupStatusICloudSignedOut =>
+      'Az iCloud ki van kapcsolva. Jelentkezz be az iCloudba, és kapcsold be az iCloud Drive-ot a Beállítások alkalmazásban.';
+
+  @override
+  String get backupStatusDriveSignedOut =>
+      'Nem vagy bejelentkezve. Kapcsold be a kapcsolót a Google-bejelentkezéshez.';
+
+  @override
+  String get backupStatusNotConfigured =>
+      'Az alkalmazás ezen verziójában még nem érhető el.';
+
+  @override
+  String get backupStatusUnavailable =>
+      'A felhő most nem érhető el. Később újra próbálkozik.';
+
+  @override
+  String get backupStatusFailed =>
+      'Az utolsó automatikus mentés nem sikerült. Később újra próbálkozik.';
+
+  @override
+  String backupDriveSignedInAs(String email) {
+    return 'Bejelentkezve: $email';
+  }
+
+  @override
+  String get backupDriveSignOut => 'KIJELENTKEZÉS';
+
+  @override
+  String get backupDriveSignInFailed =>
+      'A Google-bejelentkezés nem sikerült. Próbáld újra később.';
+
+  @override
+  String get backupRestoreICloud => 'VISSZAÁLLÍTÁS ICLOUDBÓL';
+
+  @override
+  String get backupRestoreDrive => 'VISSZAÁLLÍTÁS GOOGLE DRIVE-BÓL';
+
+  @override
+  String get backupCrossPlatformHelp =>
+      'iPhone és Android között váltasz? Az egyik telefonon ments fájlba, a másikon pedig állítsd vissza abból a fájlból.';
+
+  @override
+  String get backupCloudListBlurb =>
+      'Az eszközeid biztonsági mentései ezen a fiókon. Koppints egyre a visszaállításhoz.';
+
+  @override
+  String get backupCloudListEmpty =>
+      'Még nincs biztonsági mentés. Egy új mentés néhány perc alatt ér el egy másik eszközre.';
+
+  @override
+  String get backupCloudListFailed =>
+      'A mentéseket nem sikerült beolvasni. Ellenőrizd a kapcsolatot, és próbáld újra.';
+
+  @override
+  String get backupCloudThisDevice => 'Ez az eszköz';
+
+  @override
+  String backupCloudMore(int count) {
+    return 'További mentések: $count';
+  }
+
+  @override
+  String get backupCloudNewer =>
+      'Az alkalmazás újabb verziójával készült. Előbb frissíts.';
+
+  @override
+  String get backupCloudDownloading => 'A mentés letöltése.';
+
+  @override
+  String get backupRestoreSafetyNote =>
+      'Előbb a telefon jelenlegi mentéseiről másolat marad ezen a telefonon.';
+
+  @override
+  String get backupRejectedSafety =>
+      'Nem sikerült másolatot tartani a jelenlegi mentésekről, ezért semmi nem lett lecserélve.';
+
+  @override
+  String get newsBackupReminderTitle => 'Ideje menteni';
+
+  @override
+  String get newsBackupReminderBody =>
+      'A mentéseid csak ezen a telefonon vannak. Nyisd meg a Beállításokat, és koppints a Mentés a felhőbe gombra, vagy kapcsold be ott az automatikus mentést. Ezek az emlékeztetők a Beállításokban ki is kapcsolhatók.';
+
+  @override
+  String get backupSafetyTitle => 'Visszaállítás előtti másolatok';
+
+  @override
+  String get backupSafetyBlurb =>
+      'Ezen a telefonon maradnak arra az esetre, ha a visszaállítás tévedés volt. A legújabb három marad meg.';
+
+  @override
+  String get backupSafetyRestore => 'VISSZAÁLLÍTÁS';
+
+  @override
+  String get backupSafetyShare => 'MEGOSZTÁS';
+
+  @override
+  String get backupCloudNoDetails => 'A részletek még úton vannak.';
+
+  @override
+  String get tacticsLibraryTitle => 'TAKTIKAI KÖNYVTÁR';
+
+  @override
+  String get tacticsLibraryBlurb =>
+      'A könyvtáradban lévő taktikákat bármelyik mentésbe betöltheted, az újakba is. A szerepek és a pontrúgás-végrehajtók poszt szerint mentődnek, nem játékos szerint.';
+
+  @override
+  String get tacticsSaveToLibrary => 'Mentés a könyvtárba';
+
+  @override
+  String get tacticsLoadFromLibrary => 'Betöltés a könyvtárból';
+
+  @override
+  String get tacticsLibraryEmpty =>
+      'A könyvtárad üres. Ments ide egy taktikát, és bármelyik mentésben betöltheted.';
+
+  @override
+  String tacticsLibrarySaved(String name) {
+    return '„$name” mentve a könyvtárba';
+  }
+
+  @override
+  String tacticsLibraryLoaded(String name) {
+    return 'Betöltve: „$name”';
+  }
+
+  @override
+  String tacticsLibraryNotFitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count szerep vagy pontrúgás-végrehajtó nem illett ehhez a kerethez.',
+      one: '1 szerep vagy pontrúgás-végrehajtó nem illett ehhez a kerethez.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tacticsLibraryRename => 'Átnevezés';
+
+  @override
+  String get tacticsLibraryRenameTitle => 'Taktika átnevezése';
+
+  @override
+  String get tacticsLibraryDelete => 'Törlés';
+
+  @override
+  String tacticsLibraryDeleteTitle(String name) {
+    return 'Törlöd: „$name”?';
+  }
+
+  @override
+  String get tacticsLibraryDeleteBody =>
+      'Minden mentésedben eltűnik a könyvtárból.';
+
+  @override
+  String get tacticsLibraryNameTaken =>
+      'Már van ilyen nevű taktika a könyvtáradban.';
+
+  @override
+  String tacticsLibraryCouldNotLoad(String error) {
+    return 'Nem sikerült betölteni a könyvtárat.\n$error';
+  }
+
+  @override
+  String hostBidHeading(String competition, int year) {
+    return 'Rendezési pályázat: $competition $year';
+  }
+
+  @override
+  String get hostBidScreenTitle => 'Rendezési pályázat';
+
+  @override
+  String get hostBidBlurb =>
+      'A rendezőt sorsolással választják ki a pályázók közül. A pályázat nagyobb súlyt ad a nevednek: a stadionjaid kiinduló esélyt adnak, a pénz pedig növeli ezt, bár minden további millió valamivel kevesebbet ér. A pénz elkel, akár nyersz, akár nem.';
+
+  @override
+  String hostBidPrize(String amount) {
+    return 'Ha nyersz, te rendezel, automatikusan kijutsz, és egyszeri $amount támogatást kapsz a következő költségvetésre.';
+  }
+
+  @override
+  String get hostBidChance => 'Esély a rendezésre';
+
+  @override
+  String get hostBidBaseLabel => 'Stadionok és helyezés';
+
+  @override
+  String get hostBidInvestLabel => 'Befektetés';
+
+  @override
+  String hostBidCeiling(String nation, String percent) {
+    return 'Felső határ, $nation: $percent';
+  }
+
+  @override
+  String get hostBidInvestment => 'A befektetésed';
+
+  @override
+  String hostBidFreeFunds(String amount) {
+    return 'Szabad keret: $amount';
+  }
+
+  @override
+  String get hostBidSubmit => 'Pályázat beadása';
+
+  @override
+  String get hostBidDecline => 'Most nem';
+
+  @override
+  String get hostBidUnavailable => 'Ez a pályázat már nem nyitott.';
+
+  @override
+  String hostBidWonTitle(String competition, int year) {
+    return 'Nyertes pályázat: $competition $year';
+  }
+
+  @override
+  String hostBidWonBody(String amount) {
+    return 'Mi rendezzük a tornát, és rendezőként automatikusan ott leszünk. Az egyszeri $amount támogatás már a szövetség kasszájában van, és a főképernyőről azonnal feloszthatod e ciklus részlegei között.';
+  }
+
+  @override
+  String hostBidLostTitle(String competition, int year) {
+    return 'Vesztes pályázat: $competition $year';
+  }
+
+  @override
+  String hostBidLostBody(String hosts) {
+    return 'A rendezés jogát elnyerte: $hosts. A pályázatunk ezúttal kevés volt, a ráfordított pénz elveszett, de a szövetség megmutatta magát.';
+  }
+
+  @override
+  String get hostBidGrantEvent => 'Rendezői támogatás felosztása';
+
+  @override
+  String hostBidGrantBanner(String amount) {
+    return 'Rendezői támogatás: $amount, amelyet most hozzáadhatsz e ciklus részlegeihez. A már felosztott rész marad, a maradék a kasszában marad.';
+  }
+
+  @override
+  String get stadiumsTitle => 'Nemzeti stadionok';
+
+  @override
+  String get stadiumsEntrySub => 'Fejlessz egy stadiont, vagy építs újat';
+
+  @override
+  String get stadiumsBlurb =>
+      'Egy stadion szintje a mérete: 1. szint 15 000 hely alatt, 2. szint 15 000-től, 3. szint 25 000-től, 4. szint 40 000-től, 5. szint 60 000-től. Minden stadion kis bevételt hoz minden ciklus elején, több hellyel többet, amíg a szurkolók megtöltik. A bővítés azonnal helyeket ad, a következő ciklustól egy kis hírnevet is; a szűkítés csökkenti a fenntartást, de semmit sem térít vissza. A stadionjaid döntik el, mely tornák rendezésére pályázhatsz.';
+
+  @override
+  String stadiumsIncome(String amount) {
+    return 'Stadionbevétel: ciklusonként $amount';
+  }
+
+  @override
+  String stadiumsReputation(int points) {
+    return 'Hírnév a stadionokból: +$points';
+  }
+
+  @override
+  String get stadiumsClosed =>
+      'A munkákat a ciklus elején lehet megrendelni, a költségvetés beállítása előtt.';
+
+  @override
+  String stadiumsCapacity(String seats) {
+    return 'Befogadóképesség: $seats';
+  }
+
+  @override
+  String stadiumsLevel(int level, int max) {
+    return 'Szint: $level/$max';
+  }
+
+  @override
+  String stadiumsUpgrade(String cost) {
+    return 'Fejlesztés: $cost';
+  }
+
+  @override
+  String get stadiumsTopLevel => 'Legmagasabb szint';
+
+  @override
+  String stadiumsOpens(int year) {
+    return 'Épül, nyitás: $year';
+  }
+
+  @override
+  String get stadiumsBuildTitle => 'Új stadion építése';
+
+  @override
+  String get stadiumsBuildBody =>
+      'Elég drága: új stadion az általad választott városban, a következő ciklus elejétől használható.';
+
+  @override
+  String get stadiumsBuildCity => 'Város';
+
+  @override
+  String stadiumsBuildButton(String cost) {
+    return 'Építés: $cost';
+  }
+
+  @override
+  String get stadiumsBuilding => 'Már épül egy stadion.';
+
+  @override
+  String get stadiumsNoCity => 'Már minden városban van új stadion.';
+
+  @override
+  String stadiumsConfirmUpgrade(String stadium, int level, String cost) {
+    return 'Fejlesztés $level. szintre $cost összegért? Stadion: $stadium';
+  }
+
+  @override
+  String stadiumsConfirmBuild(String city, String cost) {
+    return 'Építesz új stadiont $cost összegért? Város: $city';
+  }
+
+  @override
+  String get stadiumsConfirm => 'Megerősítés';
+
+  @override
+  String get stadiumsCancel => 'Mégse';
+
+  @override
+  String get stadiumsRefused =>
+      'A megrendelés nem ment át. Semmit nem vontak le.';
+
+  @override
+  String get stadiumsNameLabel => 'A stadion neve';
+
+  @override
+  String get stadiumsNameHint => 'Hagyja üresen, és a javasolt név marad.';
+
+  @override
+  String get stadiumsRename => 'Stadion átnevezése';
+
+  @override
+  String get hostBidSectionTitle => 'Rendezési pályázatok';
+
+  @override
+  String get hostBidOpenSub =>
+      'Nem kötelező. Az új ciklus kezdete előtt dönts.';
+
+  @override
+  String get hostBidDecidedAtRollover =>
+      'A rendezőt az új ciklus kezdetén hirdetik ki.';
+
+  @override
+  String get hostBidLodged =>
+      'Pályázat beadva. A rendezőt az új ciklus kezdetén hirdetik ki.';
+
+  @override
+  String get hostBidDeclinedNote => 'Ezúttal úgy döntöttél, hogy nem pályázol.';
+
+  @override
+  String get hostBidOpensLater =>
+      'Megfelelsz a feltételeknek. A ciklus végén pályázhatsz.';
+
+  @override
+  String get hostBidNoFunds => 'Nincs elég szabad keret a pályázathoz.';
+
+  @override
+  String hostBidNeedStadiums(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Még $count legalább $seats férőhelyes stadion kell.',
+      one: 'Még 1 legalább $seats férőhelyes stadion kell.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hostBidBarredConf(String confederation) {
+    return 'Az előző világbajnokságot ez a szövetség rendezte: $confederation.';
+  }
+
+  @override
+  String get hostBidRecentHost =>
+      'A legutóbbi három torna egyikét te rendezted.';
+
+  @override
+  String hostBidRequirement(
+    int grounds,
+    String minSeats,
+    int bigGrounds,
+    String bigSeats,
+  ) {
+    return 'Feltétel: $grounds stadion legalább $minSeats hellyel, ebből $bigGrounds legalább $bigSeats hellyel.';
+  }
+
+  @override
+  String hostBidWonBodyBudget(String amount) {
+    return 'Mi rendezzük a tornát, és rendezőként automatikusan ott vagyunk. A $amount egyszeri támogatás már a szövetség keretében van, készen a ciklus költségvetésére.';
+  }
+
+  @override
+  String get hubStadiumIncome => 'Stadionbevétel';
+
+  @override
+  String get stadiumsDownsize => 'Szűkítés';
+
+  @override
+  String stadiumsConfirmDownsize(String stadium, String seats, int level) {
+    return 'Szűkíted ezt: $stadium, $seats helyre ($level. szint)? Semmit sem kapsz vissza, de csökken a fenntartás.';
+  }
+
+  @override
+  String get stadiumsResizedThisCycle => 'Ebben a ciklusban átépítve';
+
+  @override
+  String stadiumsGroundIncome(String amount) {
+    return 'Ciklusonként $amount bevétel';
+  }
+
+  @override
+  String hostBidLapsedTitle(String competition, int year) {
+    return 'Visszavont pályázat: $competition $year';
+  }
+
+  @override
+  String hostBidLapsedBodyNation(String nation) {
+    return 'A pályázat ennek a csapatnak szólt: $nation, de az új ciklust máshol kezded. Visszavontuk, és semmit sem terheltünk.';
+  }
+
+  @override
+  String get hostBidLapsedBodyFunds =>
+      'A ciklus zárásakor a szövetség kerete már nem fedezte a tétet. A pályázatot visszavontuk, és semmit sem terheltünk.';
+
+  @override
+  String get stadiumsViewMap => 'Térkép';
+
+  @override
+  String get stadiumsViewList => 'Lista';
+
+  @override
+  String get stadiumsMapPickCity =>
+      'Koppints egy városra, hogy ott új stadiont építs.';
+
+  @override
+  String get stadiumsMapFit => 'Egész ország megjelenítése';
+
+  @override
+  String get campaignLegacyTitle => 'Az örökség beteljesítése';
+
+  @override
+  String get campaignLegacyTwist =>
+      'Spanyolország, a regnáló Európa-bajnok, egy cikluson át';
+
+  @override
+  String get campaignLegacyGoal => 'Az Európa-bajnoki cím megvédése';
+
+  @override
+  String get campaignLegacyIntro =>
+      'Spanyolország a regnáló Európa-bajnok, a kétkedők szerint azonban az aranykor csak egyszeri csoda volt. Egy ciklusod van, hogy bebizonyítsd az ellenkezőjét: védd meg a kontinens trónját, aztán indulj a világért. Tedd hozzá a Nations Cupot is, és beteljesül az örökség.';
+
+  @override
+  String get campaignStars1Legacy => 'Megnyerni az Európa-bajnokságot';
+
+  @override
+  String get campaignStars2Legacy => 'És a világbajnokságot';
+
+  @override
+  String get campaignStars3Legacy => 'És a Nations Cupot';
+
+  @override
+  String get campaignSectionOneCycle => 'Egy ciklus';
+
+  @override
+  String get campaignSectionShort => 'Néhány ciklus';
+
+  @override
+  String get campaignSectionLong => 'Hosszú táv';
+
+  @override
+  String get campaignFilterAll => 'Mind';
+
+  @override
+  String get campaignFilterNew => 'Nem játszott';
+
+  @override
+  String get campaignFilterInProgress => 'Folyamatban';
+
+  @override
+  String get campaignFilterDone => 'Teljesített';
+
+  @override
+  String get campaignFilterEmpty => 'Itt még nincsenek kampányok.';
+
+  @override
+  String campaignStarsEarned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count csillag',
+      zero: 'Nincs csillag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String campaignCycles(int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles ciklus',
+      one: '1 ciklus',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgIntlRetireNoteHigh => ' A csúcson, bajnokként búcsúzik.';
+
+  @override
+  String get msgIntlRetireNoteMissed =>
+      ' A torna lemaradása volt az utolsó csepp a pohárban.';
+
+  @override
+  String get msgIntlRetireNoteSurprise => ' Senki sem számított rá.';
+
+  @override
+  String get msgIntlRetireNoteRecord =>
+      ' A válogatott csúcstartójaként távozik.';
+
+  @override
+  String msgIntlRetireNewsTitle(String nation, String name) {
+    return '$nation: $name visszavonul a válogatottságtól';
+  }
+
+  @override
+  String msgIntlRetireNewsBody(String name, String nation, int age) {
+    return '$name ($nation) $age évesen bejelentette visszavonulását a válogatottságtól.';
+  }
+
+  @override
+  String msgIntlComebackTitle(String name) {
+    return '$name visszatér a válogatottba';
+  }
+
+  @override
+  String msgIntlComebackBody(String name, int age) {
+    return '$name $age évesen ismét behívható.';
+  }
+
+  @override
+  String get msgIntlComebackNoteCrisis =>
+      ' A sérülésektől megtizedelt keret hívására igent mondott.';
+
+  @override
+  String get msgIntlComebackNoteManager =>
+      ' Az új szövetségi kapitány meggyőzte.';
+
+  @override
+  String msgIntlComebackNewsTitle(String nation, String name) {
+    return '$nation: $name visszatér a válogatottba';
+  }
+
+  @override
+  String msgIntlComebackNewsBody(String name, String nation, int age) {
+    return '$name ($nation) $age évesen ismét behívható.';
+  }
+
+  @override
+  String playerIntlRetired(int year) {
+    return 'Visszavonult a válogatottságtól, $year';
+  }
+
+  @override
+  String playerIntlComeback(int year) {
+    return 'Visszatért a válogatottba, $year';
+  }
+
+  @override
+  String yLegendRetires0(String name) {
+    return 'Köszönjük, $name. Van, aki csak viseli a mezt, ő vitte a csapatot.';
+  }
+
+  @override
+  String yLegendRetires1(String name) {
+    return '$name befejezi válogatott pályafutását. Egy korszak vége.';
+  }
+
+  @override
+  String yLegendRetires2(String name) {
+    return '$name visszavonul. Őszintén szólva egy tornával később a kelleténél.';
+  }
+
+  @override
+  String yLegendRetires3(String name) {
+    return 'Szóval $name végzett. Jöjjenek a fiatalok.';
+  }
+
+  @override
+  String matchAltitudeOpponentsTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Magasság $altitudeString m: az ellenfél hamarabb elfárad';
+  }
+
+  @override
+  String matchAltitudeYouTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Magasság $altitudeString m: a játékosaid hamarabb elfáradnak';
+  }
+
+  @override
+  String matchAltitudeBothTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Magasság $altitudeString m: mindkét csapat hamarabb elfárad';
+  }
+
+  @override
+  String matchAltitudeUsedTo(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Magasság $altitudeString m: mindkét csapat hozzászokott';
+  }
+
+  @override
+  String matchHeatExpected(int temp) {
+    final intl.NumberFormat tempNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String tempString = tempNumberFormat.format(temp);
+
+    return 'Hőség: $tempString °C várható, az erő hamarabb elfogy';
+  }
+
+  @override
+  String get matchConditionsAdvice =>
+      'Tervezd meg korán a cseréket: itt a friss láb többet ér';
+
+  @override
+  String get fanMoodFurious => 'dühösek';
+
+  @override
+  String get fanMoodRestless => 'nyugtalanok';
+
+  @override
+  String get fanMoodCalm => 'nyugodtak';
+
+  @override
+  String get fanMoodUpbeat => 'bizakodók';
+
+  @override
+  String get fanMoodEuphoric => 'eufórikusak';
+
+  @override
+  String matchHomeFans(String mood) {
+    return 'Hazai szurkolók: $mood';
+  }
+
+  @override
+  String federationFans(String mood) {
+    return 'Szurkolók: $mood';
+  }
+
+  @override
+  String federationFansIncome(String change) {
+    return 'Stadionbevétel a következő ciklusban: $change';
+  }
+
+  @override
+  String yFansProtest0(String nation, String manager) {
+    return 'Húsz éve járok a válogatott után itthon és idegenben. Addig nem hosszabbítom meg a bérletemet, amíg valami nem változik.';
+  }
+
+  @override
+  String yFansProtest1(String nation, String manager) {
+    return 'Továbbra is énekelni fogunk a mezért. De az északi kanyar molinója ma este kimondta, amit mindannyian gondolunk.';
+  }
+
+  @override
+  String yFansProtest2(String nation, String manager) {
+    return 'Fél stadion üres, a másik fele pedig az egész második félidőben azt skandálta: #${manager}Out.';
+  }
+
+  @override
+  String yFansProtest3(String nation, String manager) {
+    return 'A szurkolói csoportok a következő hazai meccs bojkottjáról beszélnek. Nehéz hibáztatni őket.';
+  }
+
+  @override
+  String yFansProtest4(String nation, String manager) {
+    return '#${manager}Out. Már nem is vagyok dühös. Egyszerűen elég.';
+  }
+
+  @override
+  String yFansProtest5(String nation, String manager) {
+    return 'Fotó ma estéről: sorokban üres székek és egy lepedő, rajta: #${manager}Out. Ez a meccsbeszámoló.';
+  }
+
+  @override
+  String yFansSellOut0(String nation) {
+    return 'Megint telt ház. Évek óta a legjobb válogatott, és ezt az egész ország tudja.';
+  }
+
+  @override
+  String yFansSellOut1(String nation) {
+    return 'A következő hazai meccsre tizenegy perc alatt elkeltek a jegyek. Ez a csapat visszaadta a hétvégéinket.';
+  }
+
+  @override
+  String yFansSellOut2(String nation) {
+    return 'Egyetlen szabad hely sincs a következő hazai meccsre. A szövetség mosolyogva számolja a jegybevételt.';
+  }
+
+  @override
+  String yFansSellOut3(String nation) {
+    return 'Újabb telt ház. Mondjatok, amit akartok a taktikáról, az emberek ott akarnak lenni a stadionban.';
+  }
+
+  @override
+  String yFansSellOut4(String nation) {
+    return 'Telt ház, rendben. Ugyanezek az emberek másfél éve még kifütyülték ezt a csapatot.';
+  }
+
+  @override
+  String yFansSellOut5(String nation) {
+    return 'Hirtelen telt ház, hirtelen mindenki szakértő. Hol voltatok, amikor senkit sem tudtunk megverni?';
+  }
+
+  @override
+  String get campaignsIntro =>
+      'A kampányok kézzel összeállított kihívások: adott válogatott, egy saját fordulattal bíró világ és egy cél, amelyet meghatározott számú ciklus alatt kell elérni. Minden menet külön fut a mentett karrierjeidtől, és minél messzebb jutsz, annál több csillagot kapsz, legfeljebb hármat.';
+
+  @override
+  String hubEventScandal(String player) {
+    return 'Botrány az edzőtáborban: $player';
+  }
+
+  @override
+  String get hubEventScandalSub => 'Hazaküldöd, vagy megtartod?';
+
+  @override
+  String get scandalTitle => 'BOTRÁNY';
+
+  @override
+  String scandalStoryParty(String player) {
+    return '$player hajnalig tartó buliban volt, és azon a reggelen, amikor a keret összegyűlt, minden újságban ott voltak a fotók.';
+  }
+
+  @override
+  String scandalStoryCurfew(String player) {
+    return '$player megszegte a takarodót, és hajnalban rajtakapták, ahogy visszaosont a szállodába.';
+  }
+
+  @override
+  String scandalStoryNightclub(String player) {
+    return '$player egy éjszakai klubban bukott le az edzőtábor előestéjén, és a fotók mindenhol ott vannak.';
+  }
+
+  @override
+  String scandalStoryCasino(String player) {
+    return '$player egy kaszinóasztalnál töltötte az edzőtábor előtti éjszakát, és egy bulvárlapnál ott vannak a fotók.';
+  }
+
+  @override
+  String get scandalSendHome => 'Hazaküldés';
+
+  @override
+  String scandalSendHomeCover(String player) {
+    return 'Haza, behívás: $player';
+  }
+
+  @override
+  String scandalKeep(String player) {
+    return 'Marad: $player';
+  }
+
+  @override
+  String get scandalKeepNote =>
+      'Ha marad: morál nagyjából -4 és vezetőség nagyjából -3 a ciklus végéig.';
+
+  @override
+  String get scandalSendHomeNote =>
+      'Ha hazaküldöd: a morál és a vezetőség nem sínyli meg, és behívhatsz helyette valakit.';
+
+  @override
+  String get scandalFinalsNote =>
+      'Ha hazaküldöd: a morál és a vezetőség nem sínyli meg, de egy döntős tornán senki sem pótolhatja.';
+
+  @override
+  String get scandalPickCover => 'Pótlás behívása (nem kötelező)';
+
+  @override
+  String newsScandalTitle(String player) {
+    return 'Botrány az edzőtáborban: $player';
+  }
+
+  @override
+  String yScandalParty0(String player, String tag) {
+    return 'Fiatalok, na. $player bulizott az edzőtábor előtti este, de én akkor is a pályán akarom látni. #$tag';
+  }
+
+  @override
+  String yScandalParty1(String player, String tag) {
+    return '$player egész éjszakás bulin tűnt fel, órákkal a keret összegyűlése előtt. A szövetséget tájékoztatták. #$tag';
+  }
+
+  @override
+  String yScandalParty2(String player, String tag) {
+    return 'Egész éjszakás buli az edzőtábor előtt. $player, mire gondoltál? Hihetetlen. #$tag';
+  }
+
+  @override
+  String yScandalCurfew0(String player, String tag) {
+    return 'Takarodó után ért vissza, előfordul. $player hozza helyre a pályán. #$tag';
+  }
+
+  @override
+  String yScandalCurfew1(String player, String tag) {
+    return '$player lebukott, amikor takarodó után tért vissza a csapatszállodába, órákkal az edzés előtt. #$tag';
+  }
+
+  @override
+  String yScandalCurfew2(String player, String tag) {
+    return 'A takarodó nem bonyolult dolog. $player egy éjszakát sem bírt ki. #$tag';
+  }
+
+  @override
+  String yScandalNightclub0(String player, String tag) {
+    return 'Szóval $player klubban volt. A focistáknak is van életük. Hadd játsszon. #$tag';
+  }
+
+  @override
+  String yScandalNightclub1(String player, String tag) {
+    return 'Fotók mutatják, hogy $player egy éjszakai klubban volt a válogatott edzőtáborának előestéjén. #$tag';
+  }
+
+  @override
+  String yScandalNightclub2(String player, String tag) {
+    return 'Klubfotók az edzőtábor előestéjén. $player szégyent hozott a mezre. #$tag';
+  }
+
+  @override
+  String yScandalCasino0(String player, String tag) {
+    return 'Egy éjszaka a kaszinóban nem bűn. $player rendben lesz. #$tag';
+  }
+
+  @override
+  String yScandalCasino1(String player, String tag) {
+    return '$player egy kaszinóasztalnál tűnt fel a keret összegyűlése előtti éjjel. #$tag';
+  }
+
+  @override
+  String yScandalCasino2(String player, String tag) {
+    return 'Egész éjjel kaszinó az edzőtábor előtt. $player többet tett fel, mint pénzt. #$tag';
+  }
+
+  @override
+  String yScandalSentHome0(String player) {
+    return 'Helyes döntés. Senki sem nagyobb a csapatnál, $player sem.';
+  }
+
+  @override
+  String yScandalSentHome1(String player) {
+    return 'A hazaküldés volt az egyetlen válasz. $player megkapta, amit kért. Respekt a kapitánynak.';
+  }
+
+  @override
+  String yScandalSentHome2(String player) {
+    return 'A fegyelem az fegyelem. $player ismerte a szabályokat.';
+  }
+
+  @override
+  String yScandalSentHome3(String player) {
+    return 'Világos üzenet a keretnek: $player már a hazafelé tartó gépen ül.';
+  }
+
+  @override
+  String yScandalSentHome4(String player) {
+    return 'Kemény. $player egyszer elmegy este, és vége neki a tábornak?';
+  }
+
+  @override
+  String yScandalSentHome5(String player) {
+    return 'A hazaküldés gyengít minket. $player nélkül a pályán fizetünk meg érte.';
+  }
+
+  @override
+  String yScandalKept0(String player) {
+    return 'Megtartani őt kockázat. $player törlessze a pályán.';
+  }
+
+  @override
+  String yScandalKept1(String player) {
+    return 'Jó, $player marad. Akkor mindenkinek tartozik egy nagy meccsel.';
+  }
+
+  @override
+  String yScandalKept2(String player) {
+    return 'Szóval rá nem vonatkoznak a szabályok. $player kivétel. Jó tudni.';
+  }
+
+  @override
+  String yScandalKept3(String player) {
+    return 'A takarodó mostantól önkéntes, úgy tűnik. Kérdezzétek meg: $player.';
+  }
+
+  @override
+  String yScandalKept4(String player) {
+    return 'Ezek után marad? $player és a többiek nyaralótáborban vannak.';
+  }
+
+  @override
+  String yScandalKept5(String player) {
+    return 'Egész éjjel buli, aztán egyenesen a kezdőbe. Remek üzenet, mester. $player biztosan boldog.';
+  }
+
+  @override
+  String get yStreamerBreaks0 =>
+      'TESÓT ELKAPTÁK 😭😭 A TÁBOR ELŐTTI ÉJJEL?? SÍROK 💀💀💀';
+
+  @override
+  String get yStreamerBreaks1 =>
+      'NEEE CHAT NÉZZÉTEK EZT 🤯🤯 TESÓ TÉNYLEG MEGCSINÁLTA A TÁBOR ELŐTT 😭🔥';
+
+  @override
+  String get yStreamerBreaks2 =>
+      'KI ENGEDTE KI?? KI ENGEDTE KI 😭😭💀 EZ MOZI 🔥🔥';
+
+  @override
+  String get yStreamerSentHome0 =>
+      'HAZA?? HAZAAA!!! 😭😭😭 A MESTER NEM VICCEL 💀🔥';
+
+  @override
+  String get yStreamerSentHome1 =>
+      'TESÓ ÉLŐBEN PAKOLJA A BŐRÖNDJÉT 🤯🤯 SZIA TESÓ 😭👋';
+
+  @override
+  String get yStreamerSentHome2 =>
+      'AZ NEM LEHETTT HAZAKÜLDTÉK 💀💀 CHAT REMEGEK 🔥🔥🔥';
+
+  @override
+  String get yStreamerKept0 => 'MARAD??? MARAAAD 🤯🤯 TESÓ ÉRINTHETETLEN 😭🔥';
+
+  @override
+  String get yStreamerKept1 =>
+      'EGÉSZ ÉJJEL BULI ÉS MÉG MINDIG A KERETBEN 💀💀 KELL NEKEM AZ A SZERZŐDÉS 😭😭';
+
+  @override
+  String get yStreamerKept2 =>
+      'A MESTER AZT MONDJA MINDEN OKÉ 😭😭 TESÓ MI 🤯🤯🤯';
+
+  @override
+  String get yCameoUjfaloci =>
+      'Semmit sem fizettem, és az az összeg sem stimmel';
+
+  @override
+  String get yCameoHavir0 => 'A kis halak elúsztak.';
+
+  @override
+  String get yCameoHavir1 => 'Kivetettük a hálót, a halak máshol voltak.';
+
+  @override
+  String get yCameoHavir2 =>
+      'Már szeptemberben megmondtam, egy gulyás mellett.';
+
+  @override
+  String get yCameoHavir3 => 'Aki nem halászott időben, most ne sírjon.';
+
+  @override
+  String get yCameoHavir4 => 'Úgy játszottunk, mint a harcsa a szárazon.';
+
+  @override
+  String get yCameoHavir5 => 'Fúj a szél, befagy a tó. Így megy ez.';
+
+  @override
+  String get yCameoHavir6 => 'Van, hogy csak egy régi csizmát húz ki az ember.';
+
+  @override
+  String get yCameoHavir7 =>
+      'Az én időmben legalább elmentünk egy sörre. Most már az sem.';
+
+  @override
+  String get yCameoLzimberskyHome0 =>
+      'Egy fiút hazaküldeni egy este miatt? Ez a botrány, nem a buli!';
+
+  @override
+  String get yCameoLzimberskyHome1 =>
+      'A fiúk csak szórakozhatnak egy kicsit! A képmutató média megint nyert.';
+
+  @override
+  String get yCameoLzimberskyHome2 =>
+      'Ez boszorkányüldözés. Egy fiatal egyszer elmegy este, és ti felakasztjátok.';
+
+  @override
+  String get yCameoLzimberskyHome3 =>
+      'Az az újságíró, aki sosem volt buliban, vesse rá az első követ. Szégyen!';
+
+  @override
+  String get yCameoLzimberskyHome4 =>
+      'A kapitány megijedt a bulvártól. Én az utolsó leheletemig védtem volna a fiút!';
+
+  @override
+  String get yCameoLzimberskyKept0 =>
+      'Végre egy kapitány, akinek gerince van! Megtartotta a fiút, a média meg sírhat.';
+
+  @override
+  String get yCameoLzimberskyKept1 =>
+      'A fiúk csak szórakozhatnak egy kicsit, nem? Bravó, mester!';
+
+  @override
+  String get yCameoLzimberskyKept2 =>
+      'A képmutató média ordít, a kapitány kitart. Így kell ezt csinálni!';
+
+  @override
+  String get yCameoLzimberskyKept3 =>
+      'Egy este kint, és a sajtó meg akarja kövezni. A kapitány igazi férfi!';
+
+  @override
+  String get yCameoLzimberskyKept4 =>
+      'Én azt mondom: hagyjátok élni a fiúkat! Aki keményen dolgozik, az bulizhat is. Fel a hüvelykujjat.';
+
+  @override
+  String get yTraitStreamer =>
+      'Mindent élőben közvetít, teljes hangerőn, csupa nagybetűvel.';
+
+  @override
+  String hubEventAwardsCeremony(int year) {
+    return 'Az év játékosa, $year';
+  }
+
+  @override
+  String get hubEventAwardsCeremonySub => 'Megszámolták a szavazatokat';
+
+  @override
+  String get potyCeremonyWatch => 'Gála megtekintése';
+
+  @override
+  String get potyCeremonySkipToList => 'Ugrás az első ötre';
+
+  @override
+  String get potyCeremonySkip => 'Kihagyás';
+
+  @override
+  String get potyCeremonyIntro =>
+      'Megszámolták a szavazatokat. Íme, az idei év öt legjobb játékosa a világon.';
+
+  @override
+  String potyCeremonyPlace(int place) {
+    return '$place. hely';
+  }
+
+  @override
+  String get potyCeremonyWinnerIs => 'Az év játékosa pedig...';
+
+  @override
+  String get potyTop5Heading => 'A világ legjobb öt játékosa';
+
+  @override
+  String get potyYoungTop3Heading => 'Az év fiatal játékosa: az első három';
+
+  @override
+  String get potySeeTop5 => 'Az első öt megtekintése';
+
+  @override
+  String get potyYourPlayer => 'A te játékosod';
+
+  @override
+  String potyTallyCleanSheets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kapott gól nélküli meccs',
+      one: '1 kapott gól nélküli meccs',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignFullBrief => 'Teljes eligazítás';
+
+  @override
+  String campaignStarsSoFar(int earned, int total) {
+    return 'Eddig megszerzett csillagok: $earned/$total';
+  }
+
+  @override
+  String get campaignStarEarned => 'Eddig megszerezve';
+
+  @override
+  String get campaignStarNotYet => 'Még nincs meg';
+
+  @override
+  String get stadiumsEntrySubClosed =>
+      'Nézd meg a stadionjaidat. Építkezést a következő ciklus elején rendelhetsz újra.';
+
+  @override
+  String get boardObjectiveNoBrief => 'Nincs kitűzött cél';
+
+  @override
+  String get boardObjectiveNoBriefBody =>
+      'A vezetőség nem várja, hogy kijuss erre a tornára. Ehelyett az eredményeid alapján ítél meg.';
+
+  @override
+  String get boardObjectiveAwaitingDraw => 'Cél a sorsolás után';
+
+  @override
+  String get boardObjectiveAwaitingDrawBody =>
+      'A vezetőség a csoportsorsolás után tűzi ki ezt a célt.';
 }

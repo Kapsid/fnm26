@@ -1,7 +1,9 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/qualification_format.dart';
 
 /// Where a match is played.
 ///
@@ -83,11 +85,16 @@ bool isShowpieceRound(String? round) =>
 /// home side enjoys home advantage), or a neutral finals match at the host
 /// nation's grounds (nobody enjoys home advantage, unless the host is one of
 /// the two teams).
+///
+/// [hostsMemo], when given, keeps each tournament's host list across calls
+/// (a batch of background fixtures shares a handful of tournaments, and the
+/// host chain is walked from the first edition on every call).
 MatchVenue venueForFixture({
   required Fixture fixture,
   required List<Nation> nations,
   required int seed,
   required int cycle,
+  Map<Object, List<int>>? hostsMemo,
 }) {
   final round = fixture.round;
   const homeAndAway = (
@@ -119,11 +126,14 @@ MatchVenue venueForFixture({
 
   List<int> hosts;
   if (isWc) {
-    hosts = WorldCupHosts.hostsFor(
+    List<int> wcHosts() => WorldCupHosts.hostsFor(
       year: fixture.date.year,
       nations: nations,
       seed: seed,
     );
+    hosts = hostsMemo == null
+        ? wcHosts()
+        : hostsMemo[('wc', fixture.date.year)] ??= wcHosts();
   } else {
     // A continental finals: both teams share the confederation.
     Confederation? conf;
@@ -133,14 +143,17 @@ MatchVenue venueForFixture({
         break;
       }
     }
+    List<int> contHosts(Confederation c) => WorldCupHosts.continentalHostsFor(
+      confederation: c,
+      cycle: cycle,
+      seed: seed,
+      nations: nations,
+    );
     hosts = conf == null
         ? const []
-        : WorldCupHosts.continentalHostsFor(
-            confederation: conf,
-            cycle: cycle,
-            seed: seed,
-            nations: nations,
-          );
+        : hostsMemo == null
+        ? contHosts(conf)
+        : hostsMemo[('cont', conf, cycle)] ??= contHosts(conf);
   }
 
   final playingHost = hosts.contains(fixture.homeNationId)
@@ -149,4 +162,28 @@ MatchVenue venueForFixture({
       ? fixture.awayNationId
       : 0;
   return (neutral: true, hostId: playingHost, tournamentHostIds: hosts);
+}
+
+/// The finals field size of the tournament [fixture] belongs to: 48 for a
+/// World Championship finals, the confederation's cup size for a continental
+/// finals, and 0 (unknown, so the default venue count) for anything else. A
+/// bigger field is played in more grounds (`VenueGenerator.countForField`).
+int tournamentFieldSize({
+  required Fixture fixture,
+  required List<Nation> nations,
+}) {
+  final round = fixture.round;
+  if (round == null) return 0;
+  if (_wcFinalsRounds.contains(round)) {
+    return QualificationFormat.totalFinalsBerths +
+        QualificationFormat.playoffBerths;
+  }
+  if (_continentalFinalsRounds.contains(round)) {
+    for (final n in nations) {
+      if (n.id == fixture.homeNationId) {
+        return ContinentalCups.byConfederation[n.confederation]?.size ?? 0;
+      }
+    }
+  }
+  return 0;
 }

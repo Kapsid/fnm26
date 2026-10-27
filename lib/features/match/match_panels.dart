@@ -181,6 +181,7 @@ class MatchStatsPanel extends StatelessWidget {
     required this.ground,
     required this.neutral,
     required this.groundCode,
+    this.homeFans,
     required this.minute,
     required this.fullTime,
     required this.events,
@@ -192,6 +193,9 @@ class MatchStatsPanel extends StatelessWidget {
   final String awayCode;
   final int homeNationId;
   final MatchGround ground;
+
+  /// How the home supporters feel, at a home game of the manager's side.
+  final FanMoodBand? homeFans;
 
   /// The minute on the clock. Extra time reads past the end of the per-minute
   /// series, so it is clamped to the last recorded point.
@@ -234,6 +238,7 @@ class MatchStatsPanel extends StatelessWidget {
           ground: ground,
           neutral: neutral,
           groundNationCode: groundCode,
+          fans: homeFans,
         ),
         const SizedBox(height: AppSpacing.lg),
         if (motm != null) ...[

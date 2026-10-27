@@ -34,6 +34,7 @@ import 'package:fnm/features/messages/message_popup.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart' show messageStyle;
 import 'package:fnm/features/onboarding/tour_keys.dart';
+import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
@@ -206,6 +207,9 @@ class _HubScreenState extends ConsumerState<HubScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    // A save that has become Pro-locked while open (a refund, or the
+    // entitlement settling after the manager got in) goes to its gate.
+    watchProLock(context, ref, careerId);
     final dataAsync = ref.watch(hubDataProvider(careerId));
     final host = ref.watch(wcHostThemeProvider(careerId)).valueOrNull;
     // The continental cup gets the same host re-skin as the World Cup. Only one
@@ -401,6 +405,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
                     playerNationId: hub.career.nationId,
                     directCount: hub.groupDirectCount,
                     contentionPos: hub.groupContentionPos,
+                    playoffNations: hub.groupPlayoffNations,
                     relegateCount: hub.groupRelegateCount,
                     code: code,
                     name: name,
@@ -894,6 +899,7 @@ class _GroupTable extends StatelessWidget {
     required this.playerNationId,
     required this.directCount,
     required this.contentionPos,
+    this.playoffNations = const {},
     required this.code,
     required this.name,
     this.relegateCount = 0,
@@ -909,6 +915,9 @@ class _GroupTable extends StatelessWidget {
   /// (amber) position, matching the tournament detail screens.
   final int directCount;
   final int? contentionPos;
+
+  /// Nations whose place leads to the intercontinental play-off (yellow).
+  final Set<int> playoffNations;
 
   /// How many bottom places go down (red) — the Nations Cup relegates each
   /// group's last side.
@@ -979,6 +988,8 @@ class _GroupTable extends StatelessWidget {
         relegateCount > 0 && pos > group.standings.length - relegateCount;
     final zoneColor = direct
         ? AppColors.positive
+        : playoffNations.contains(s.nationId)
+        ? AppColors.playoff
         : inContention
         ? AppColors.warning
         : relegated

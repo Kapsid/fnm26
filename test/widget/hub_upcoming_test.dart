@@ -94,6 +94,54 @@ void main() {
     expect(find.text('1–0'), findsNothing);
   });
 
+  // b8 item 2: the current window's first match, once played, used to stay
+  // under UPCOMING with its score beside it until the whole window was done.
+  testWidgets('a match played leaves the upcoming list at once', (
+    tester,
+  ) async {
+    final save = await seedSave(tester);
+    await pumpRoute(tester, save, _hub(save));
+    final before = (await tester.runAsync(
+      () => save.container.read(scheduleProvider(save.careerId).future),
+    ))!;
+    // The first window that holds more than one match: playing its first
+    // keeps the window current.
+    final b = before.blocks.indexWhere((x) => x.fixtures.length > 1);
+    expect(b, greaterThanOrEqualTo(0));
+    await tester.runAsync(() async {
+      final comp = save.container.read(competitionRepositoryProvider);
+      for (var i = 0; i < b; i++) {
+        for (final f in before.blocks[i].fixtures) {
+          await comp.recordResult(fixtureId: f.id, homeScore: 0, awayScore: 0);
+        }
+      }
+      await comp.recordResult(
+        fixtureId: before.blocks[b].fixtures.first.id,
+        homeScore: 3,
+        awayScore: 1,
+      );
+    });
+    save.container.invalidate(hubDataProvider(save.careerId));
+    await settle(tester);
+    final after = (await tester.runAsync(
+      () => save.container.read(scheduleProvider(save.careerId).future),
+    ))!;
+    expect(
+      after.currentIndex,
+      b,
+      reason: 'the window is still the current one',
+    );
+    final played = before.blocks[b].fixtures.first;
+    final rows = tester
+        .widgetList<ScheduleFixtureRow>(find.byType(ScheduleFixtureRow))
+        .toList();
+    expect(rows, hasLength(before.blocks[b].fixtures.length - 1));
+    expect(rows.any((r) => r.fixture.id == played.id), isFalse);
+    expect(rows.every((r) => !r.fixture.hasResult), isTrue);
+    expect(find.text('3–1'), findsNothing);
+    expect(find.text('1–3'), findsNothing);
+  });
+
   testWidgets('a finished cycle says there is nothing more', (tester) async {
     final save = await seedSave(tester);
     await tester.runAsync(() async {

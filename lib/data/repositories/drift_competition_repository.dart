@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/mappers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/awards/award_year.dart';
 import 'package:fnm/domain/services/awards/awards.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
@@ -151,6 +152,22 @@ class DriftCompetitionRepository implements CompetitionRepository {
         (t) => OrderingTerm(expression: t.matchday),
         (t) => OrderingTerm(expression: t.date),
       ]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
+  Future<List<Fixture>> fixturesBetween(
+    int careerId,
+    DateTime from,
+    DateTime until,
+  ) async {
+    final query = _db.select(_db.fixtures)
+      ..where(
+        (t) =>
+            t.careerId.equals(careerId) &
+            t.date.isBiggerOrEqualValue(from) &
+            t.date.isSmallerThanValue(until),
+      );
     return (await query.get()).map((r) => r.toDomain()).toList();
   }
 
@@ -2643,6 +2660,23 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<PlayerAward>> playerHonoursForYear(int careerId, int year) async {
+    final rows = await (_db.select(
+      _db.playerHonours,
+    )..where((t) => t.careerId.equals(careerId) & t.year.equals(year))).get();
+    return [
+      for (final r in rows)
+        (
+          playerId: r.playerId,
+          nationId: r.nationId,
+          kind: r.kind,
+          competition: r.competition,
+          year: r.year,
+        ),
+    ];
+  }
+
+  @override
   Future<List<PlayerAward>> playerHonours(int careerId, int playerId) async {
     final rows =
         await (_db.select(_db.playerHonours)
@@ -2740,6 +2774,77 @@ class DriftCompetitionRepository implements CompetitionRepository {
           motms: motms[id] ?? 0,
         ),
     ];
+  }
+
+  @override
+  Future<({List<AwardFixture> fixtures, List<AwardAppearance> appearances})>
+  awardYearData(int careerId, int year) async {
+    // The same window as [awardLinesForYear], for the same reason: a couple
+    // of days wider than the year in SQL, the exact year kept in Dart.
+    final from = DateTime(year - 1, 12, 30);
+    final to = DateTime(year + 1, 1, 2);
+    final fixtureQuery =
+        _db.select(_db.fixtures).join([
+          innerJoin(
+            _db.competitions,
+            _db.competitions.id.equalsExp(_db.fixtures.competitionId),
+          ),
+        ])..where(
+          _db.fixtures.careerId.equals(careerId) &
+              _db.fixtures.played.equals(true) &
+              _db.fixtures.date.isBiggerOrEqualValue(from) &
+              _db.fixtures.date.isSmallerThanValue(to),
+        );
+    final fixtures = <AwardFixture>[];
+    for (final row in await fixtureQuery.get()) {
+      final f = row.readTable(_db.fixtures);
+      if (f.date.year != year || f.homeScore == null || f.awayScore == null) {
+        continue;
+      }
+      final c = row.readTable(_db.competitions);
+      fixtures.add((
+        id: f.id,
+        competitionId: f.competitionId,
+        kind: c.kind,
+        confederation: c.confederation,
+        round: f.round,
+        date: f.date,
+        homeNationId: f.homeNationId,
+        awayNationId: f.awayNationId,
+        homeScore: f.homeScore!,
+        awayScore: f.awayScore!,
+        homePenalties: f.homePenalties,
+        awayPenalties: f.awayPenalties,
+      ));
+    }
+    final ids = {for (final f in fixtures) f.id};
+    final ratingQuery =
+        _db.select(_db.playerRatings).join([
+          innerJoin(
+            _db.fixtures,
+            _db.fixtures.id.equalsExp(_db.playerRatings.fixtureId),
+          ),
+        ])..where(
+          _db.playerRatings.careerId.equals(careerId) &
+              _db.fixtures.date.isBiggerOrEqualValue(from) &
+              _db.fixtures.date.isSmallerThanValue(to),
+        );
+    final appearances = <AwardAppearance>[];
+    for (final row in await ratingQuery.get()) {
+      final r = row.readTable(_db.playerRatings);
+      if (!ids.contains(r.fixtureId)) continue;
+      appearances.add((
+        fixtureId: r.fixtureId,
+        playerId: r.playerId,
+        nationId: r.nationId,
+        rating: r.rating,
+        goals: r.goals,
+        assists: r.assists,
+        cleanSheet: r.cleanSheet,
+        motm: r.motm,
+      ));
+    }
+    return (fixtures: fixtures, appearances: appearances);
   }
 
   @override

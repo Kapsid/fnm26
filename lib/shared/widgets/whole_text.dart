@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// A zero-width space, inserted between the letters of a word so that a long
@@ -61,6 +63,7 @@ class WholeText extends StatelessWidget {
     this.textAlign,
     this.shortText,
     this.shrinkBeforeShortening = _shrinkBeforeShortening,
+    this.breakWords = true,
     super.key,
   });
 
@@ -84,6 +87,15 @@ class WholeText extends StatelessWidget {
   /// never shrinks the full text at all: it is either drawn at size or the
   /// short form is.
   final double shrinkBeforeShortening;
+
+  /// Whether a word may break across lines (see [withBreakOpportunities]).
+  ///
+  /// Right for a surname, which has no spaces and nowhere else to break. Wrong
+  /// for a place: "Bosnia and Herzegovina" has spaces to break at, and split
+  /// as "Bosnia and Herze / govina" it reads as a fault. With this off, the
+  /// text breaks only between words and scales down when even that runs out
+  /// of lines.
+  final bool breakWords;
 
   /// How wide [text] wants to be on one unbroken line. Measured rather than
   /// guessed, so short names are left untouched.
@@ -165,6 +177,9 @@ class WholeText extends StatelessWidget {
 
       // Break opportunities only help if there is a second line to break onto.
       final needsBreaks = !_fits(drawn, resolved, width, context);
+      final shown = needsBreaks && breakWords
+          ? withBreakOpportunities(drawn)
+          : drawn;
       return FittedBox(
         fit: BoxFit.scaleDown,
         alignment: _alignment,
@@ -172,9 +187,16 @@ class WholeText extends StatelessWidget {
           // A bounded width is what lets the wrap happen BEFORE any scaling:
           // an unbounded Text lays out on one endless line and the FittedBox
           // then shrinks that line to nothing.
-          width: width,
+          width: _roomFor(
+            shown,
+            // As the Text will draw it: the inherited style with this one
+            // laid over it, or the measurement is of a different face.
+            DefaultTextStyle.of(context).style.merge(style),
+            width,
+            context,
+          ),
           child: Text(
-            needsBreaks ? withBreakOpportunities(drawn) : drawn,
+            shown,
             maxLines: maxLines,
             textAlign: textAlign,
             style: style,
@@ -185,6 +207,43 @@ class WholeText extends StatelessWidget {
       );
     },
   );
+
+  /// The width to lay [text] out at so that it fits in [maxLines] lines
+  /// without breaking a word: [width] itself whenever that is enough.
+  ///
+  /// When it is not, the box is widened until the text fits and the
+  /// [FittedBox] scales the result back down to [width]. Laid out at [width]
+  /// regardless, the lines past [maxLines] were simply dropped: the end of a
+  /// three-line name vanished with no ellipsis to show it had gone, in any
+  /// row whose height was not fixed (the FittedBox only shrinks what
+  /// overflows a bounded box).
+  double _roomFor(
+    String text,
+    TextStyle style,
+    double width,
+    BuildContext context,
+  ) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: maxLines,
+    );
+    bool fitsAt(double w) {
+      painter.layout(maxWidth: w);
+      return !painter.didExceedMaxLines && painter.minIntrinsicWidth <= w;
+    }
+
+    // Start above zero: a zero-width slot would never grow by multiplying.
+    double room = math.max(width, 1);
+    // One unbroken line always fits, so the search is bounded by that.
+    final oneLine = _lineWidth(text, style, context);
+    while (room < oneLine && !fitsAt(room)) {
+      room = math.min(room * 1.05, oneLine);
+    }
+    painter.dispose();
+    return math.max(room, width);
+  }
 
   /// Where the drawn text sits in the box when it is NARROWER than the box —
   /// which, inside a [FittedBox], is most of the time.

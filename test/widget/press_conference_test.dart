@@ -113,6 +113,8 @@ void main() {
       l.pressReplyDemandMore2,
       l.pressReplyDemandMore3,
       l.pressReplyDemandMore4,
+      l.pressReplyDemandMore5,
+      l.pressReplyDemandMore6,
     ];
     await tester.tap(
       find.byWidgetPredicate(
@@ -149,6 +151,59 @@ void main() {
     // Only the sheet popped: the route under it is still there.
     expect(find.text('HOST'), findsOneWidget);
     expect(find.byType(PressSheet), findsNothing);
+  });
+
+  testWidgets('the arrows stay masked until the conference is over', (
+    tester,
+  ) async {
+    // Playtest: the dressing-room and board arrows on every answer turned
+    // the conference into picking the greenest tile. They come out only in
+    // the verdict, as the overall swing.
+    Finder arrows() => find.byWidgetPredicate(
+      (w) =>
+          w is Icon &&
+          (w.icon == Icons.arrow_upward_rounded ||
+              w.icon == Icons.arrow_downward_rounded),
+    );
+    var duringBeats = 0;
+    final fake = _FakeService();
+    await tester.binding.setSurfaceSize(const Size(500, 1400));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpApp(
+      Scaffold(
+        body: PressSheet(
+          careerId: 1,
+          conference: conference,
+          playerNames: const {7: 'Dvořák', 8: 'Novák', 9: 'Svoboda'},
+          opponentName: 'Brazil',
+        ),
+      ),
+      overrides: [conferenceServiceProvider.overrideWithValue(fake)],
+    );
+    await tester.pumpAndSettle();
+    for (var beat = 0; beat < 3; beat++) {
+      expect(find.text(l.pressTomorrowsHeadline), findsNothing);
+      duringBeats += arrows().evaluate().length;
+      expect(find.text(l.pressSquad), findsNothing);
+      expect(find.text(l.pressBoard), findsNothing);
+      expect(find.text(l.pressNoEffect), findsNothing);
+      await tester.tap(find.byType(InkWell).first);
+      await tester.pumpAndSettle();
+    }
+    expect(duringBeats, 0, reason: 'an answer showed its arrows');
+
+    // Over: the verdict draws the overall swing.
+    expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
+    final total = fake.answers.fold<PressEffect>((morale: 0, board: 0), (
+      t,
+      a,
+    ) {
+      final e = ConferenceBuilder.effectOf(a.$2, conference.credibility);
+      return (morale: t.morale + e.morale, board: t.board + e.board);
+    });
+    final expected =
+        Press.arrowsFor(total.morale) + Press.arrowsFor(total.board);
+    expect(arrows(), findsNWidgets(expected));
   });
 
   testWidgets('a finish that throws still lets him leave', (tester) async {

@@ -2,11 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
-import 'package:fnm/features/tournaments/tournament_bracket.dart'
-    show bracketName;
+import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+
+/// One line for every confederation that sends nobody to the play-off.
+///
+/// Playtest: a European manager who had qualified went looking for "the
+/// European play-offs" and found only this bracket. There is no European
+/// play-off: all sixteen of Europe's places are decided in its qualifying
+/// groups (the winners and the best runners-up, on the Qualifying tab), and
+/// the only play-off is this intercontinental one, which Europe does not
+/// enter. Saying so where he looks is the fix.
+List<String> noPlayoffNotes(AppLocalizations l) => [
+  for (final c in Confederation.values)
+    if (QualificationFormat.forConfederation(c).playoffEntrants == 0)
+      l.tourCupPlayoffNoEntrants(confederationLabel(l, c)),
+];
 
 /// A two-round bracket for the intercontinental play-off: the semi-finals on the
 /// left feed the two path finals on the right, each final's winner taking one of
@@ -50,9 +65,10 @@ class IntercontinentalPlayoffBracket extends StatelessWidget {
         if (t.isFinal) t,
     ];
     // Tall enough for the busier column; even spacing then lands each final
-    // across from its feeding semi. A little extra per tie for the seed tag.
+    // across from its feeding semi. A little extra per tie for the seed tag,
+    // and for a long name wrapping onto a second line.
     final rows = semis.length > finals.length ? semis.length : finals.length;
-    final height = (rows * 112.0).clamp(224.0, 4000.0);
+    final height = (rows * 140.0).clamp(280.0, 4000.0);
     // Horizontally scrollable so the two columns never overflow a narrow phone.
     return SizedBox(
       height: height,
@@ -184,10 +200,10 @@ class IntercontinentalPlayoffBracket extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              bracketName(name(id), code(id)),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            // The full name, wrapped and never cut.
+                            WholeText(
+                              name(id),
+                              breakWords: false,
                               style: AppTypography.labelSmall.copyWith(
                                 color: color,
                                 fontWeight: won

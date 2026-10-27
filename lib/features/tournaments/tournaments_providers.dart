@@ -106,7 +106,9 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
   if (career == null) return null;
   final comp = ref.watch(competitionRepositoryProvider);
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
   final playerConf = nations[career.nationId]?.confederation;
   final honours = await comp.honours(careerId);

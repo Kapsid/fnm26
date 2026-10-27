@@ -12,10 +12,12 @@ import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';
+import '../greenland/greenland_fixtures.dart';
 
 List<T> _load<T>(String f, T Function(Map<String, Object?>) from) =>
     (jsonDecode(File('assets/data/$f').readAsStringSync()) as List)
@@ -63,8 +65,13 @@ List<List<int>> qualifyingGroups(
 }
 
 void main() {
+  // A new campaign run starts on the current starting ranking, the one in
+  // nations.json (see CampaignService.start).
   final nations = _load('nations.json', Nation.fromJson);
 
+  // These host checks read the draw with no bids in it. That is the only draw
+  // a campaign run ever sees: host bids are never offered in a campaign (see
+  // host_bid_flow_test), so no bid can make a campaign nation a host.
   test('no campaign nation or rival hosts the European Championship', () {
     for (final c in Campaigns.all) {
       final hosts = WorldCupHosts.continentalHostsFor(
@@ -126,8 +133,8 @@ void main() {
     }
   });
 
-  test('Best of Guineas draws Guinea-Bissau into Equatorial Guinea\'s '
-      'qualifying group', () {
+  test('Best of Guineas draws Guinea and Guinea-Bissau into Equatorial '
+      "Guinea's qualifying group", () {
     const def = Campaigns.guineas;
     final groups = qualifyingGroups(
       def.rngSeed,
@@ -135,7 +142,9 @@ void main() {
       Confederation.africa,
     );
     expect(
-      groups.where((g) => g.contains(116) && g.contains(124)),
+      groups.where(
+        (g) => g.contains(116) && g.contains(123) && g.contains(124),
+      ),
       hasLength(1),
     );
   });
@@ -245,7 +254,9 @@ void main() {
       for (final t in tables) [for (final s in t.standings) s.nationId]..sort(),
     ];
     expect(
-      stored.where((g) => g.contains(116) && g.contains(124)),
+      stored.where(
+        (g) => g.contains(116) && g.contains(123) && g.contains(124),
+      ),
       hasLength(1),
     );
     final rebuilt = [
@@ -260,5 +271,83 @@ void main() {
       stored.map((g) => g.join(',')).toSet(),
       rebuilt.map((g) => g.join(',')).toSet(),
     );
+  });
+
+  group('Greenland', () {
+    const def = Campaigns.greenland;
+    // Its world: San Marino out, Greenland in (what forCareer gives the run).
+    final world = DormantNations.worldFrom(
+      nations,
+      {DormantNations.greenlandId},
+      dormant: (_) => DormantNations.greenland,
+    );
+
+    test('seed 212 keeps Greenland from hosting either championship in '
+        'all 25 cycles of its century', () {
+      expect(def.rngSeed, 212);
+      for (var cycle = 0; cycle < def.cycles; cycle++) {
+        final world0 = WorldCupHosts.hostsFor(
+          year: CareerService.worldCupYear(cycle),
+          nations: world,
+          seed: def.rngSeed,
+        );
+        final euro = WorldCupHosts.continentalHostsFor(
+          confederation: Confederation.europe,
+          cycle: cycle,
+          seed: def.rngSeed,
+          nations: world,
+        );
+        expect(world0, isNot(contains(212)), reason: 'cycle $cycle');
+        expect(euro, isNot(contains(212)), reason: 'cycle $cycle');
+      }
+    });
+
+    test('seed 212 draws Greenland into a European qualifying group of five '
+        'or more', () {
+      final mine = euroQualifyingGroups(
+        def.rngSeed,
+        world,
+      ).where((g) => g.contains(212)).toList();
+      expect(mine, hasLength(1));
+      expect(mine.single.length, greaterThanOrEqualTo(5));
+    });
+
+    test('a real Greenland run stores that draw', () async {
+      SharedPreferences.setMockInitialValues({});
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final c = greenlandContainer(db);
+      addTearDown(c.dispose);
+      await c.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await c
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: def.nationId,
+                    managerName: 'M',
+                    rngSeed: def.rngSeed,
+                    worldMarkers: [DormantNations.markerFor(212)],
+                  ))
+              .valueOrNull!;
+      final tables = await c
+          .read(competitionRepositoryProvider)
+          .tournamentGroupTables(
+            career.id,
+            CompetitionKind.continentalQualifying,
+            confederation: Confederation.europe,
+          );
+      final stored = [
+        for (final t in tables)
+          [for (final s in t.standings) s.nationId]..sort(),
+      ];
+      final rebuilt = [
+        for (final g in euroQualifyingGroups(def.rngSeed, world))
+          [...g]..sort(),
+      ];
+      expect(
+        stored.map((g) => g.join(',')).toSet(),
+        rebuilt.map((g) => g.join(',')).toSet(),
+      );
+    });
   });
 }

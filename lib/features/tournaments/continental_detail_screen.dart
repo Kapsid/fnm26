@@ -254,8 +254,11 @@ List<Widget> _continentalTabViews(
     TournamentSummaryTab(
       hostIds: data.hostIds,
       hostCities: data.hostCities,
+      hostEstates: data.hostEstates,
       identity: data.identity,
       trophyAsset: Trophies.forConfederation(data.confederation),
+      teamCount:
+          ContinentalCups.byConfederation[data.confederation]?.size ?? 24,
       code: code,
       name: name,
     ),

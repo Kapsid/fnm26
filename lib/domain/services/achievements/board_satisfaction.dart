@@ -54,9 +54,99 @@ abstract final class BoardSatisfaction {
   /// [previous] is null for a save's first cycle, or one that predates the
   /// figure being recorded — both of which start neutral, exactly as every
   /// cycle used to.
-  static int openingFrom(int? previous) => previous == null
-      ? neutral
-      : (neutral + (previous - neutral) * carryOver).round().clamp(0, 100);
+  ///
+  /// [minnow] (see [minnowFactor]) lets a poor standing fade faster at the
+  /// very bottom: a bad cycle at San Marino is carried into the next at
+  /// [minnowCarryOver] rather than [carryOver]. A good one carries as it does
+  /// everywhere, and at 0 nothing changes.
+  static int openingFrom(int? previous, {double minnow = 0}) {
+    if (previous == null) return neutral;
+    final carry = previous < neutral && minnow > 0
+        ? carryOver + (minnowCarryOver - carryOver) * minnow.clamp(0, 1)
+        : carryOver;
+    return (neutral + (previous - neutral) * carry).round().clamp(0, 100);
+  }
+
+  /// How much of a BELOW-neutral standing the weakest side of all keeps into
+  /// the next cycle (see [openingFrom]).
+  static const double minnowCarryOver = 0.3;
+
+  /// How far toward the bottom of the world a side sits, as the board's
+  /// patience with it: 0 for every side that is not a minnow, rising smoothly
+  /// to 1 for the weakest of all.
+  ///
+  /// Every minnow used to lose its job. A brief and a run of form sized for a
+  /// mid-table side are not ones San Marino or American Samoa can live with:
+  /// they lose nearly every match whoever manages them, and a board that
+  /// holds each of those defeats against him as it would against Scotland's
+  /// manager sacks him every time.
+  ///
+  /// Two things make a minnow, and both must hold, so the factor is their
+  /// product: a world rank beyond [minnowWorldFrom] (full at
+  /// [minnowWorldFrom] + [minnowWorldSpan]), and a place in the bottom
+  /// [minnowConfederationShare] of its own confederation (full in the last
+  /// [minnowConfederationFull]). Oceania's second-best side is ranked in the
+  /// 150s and is no minnow there; Malta, near the foot of Europe and 154th in
+  /// the world, is two-thirds of one. Anyone ranked [minnowWorldFrom] or
+  /// better is exactly 0.
+  static double minnowFactor({
+    required int worldRank,
+    required int confederationRank,
+    required int confederationSize,
+  }) {
+    final world = ((worldRank - minnowWorldFrom) / minnowWorldSpan).clamp(
+      0.0,
+      1.0,
+    );
+    if (world <= 0 || confederationSize <= 1) return 0;
+    final share = confederationRank / confederationSize;
+    final conf =
+        ((share - (1 - minnowConfederationShare)) /
+                (minnowConfederationShare - minnowConfederationFull))
+            .clamp(0.0, 1.0);
+    return world * conf;
+  }
+
+  /// See [minnowFactor].
+  static const int minnowWorldFrom = 120;
+  static const int minnowWorldSpan = 50;
+  static const double minnowConfederationShare = 0.3;
+  static const double minnowConfederationFull = 0.15;
+
+  /// The minnow's form weights at a [minnowFactor] of 1, each slid toward
+  /// from the ordinary one as the factor rises.
+  ///
+  /// A draw is a good day, so it earns a point. A plain defeat costs two, not
+  /// five: losing to a side ranked forty places higher is what a minnow does.
+  /// A defeat by a clear giant costs nothing at all, however many it was by.
+  /// What still costs the full [loss] is a HUMILIATION (see [isHumiliation]):
+  /// a heavy defeat by a fellow minnow, which is what a genuinely bad manager
+  /// of a minnow keeps producing.
+  static const int minnowDraw = 1;
+  static const int minnowLoss = -2;
+  static const int minnowLossAsUnderdog = 0;
+
+  /// The margin of defeat that is a humiliation (see [isHumiliation]).
+  static const int humiliationMargin = 4;
+
+  /// How far above a side a fellow minnow can be ranked (see
+  /// [isHumiliation]).
+  static const int minnowPeerGap = 30;
+
+  /// Whether a defeat by [margin] goals, for a side ranked [ownRank], against
+  /// one ranked [opponentRank], is a humiliation: [humiliationMargin] or more
+  /// against a fellow minnow, a side no more than [minnowPeerGap] places
+  /// above it (or anywhere below it). Losing 0-5 to Fiji is American Samoa's
+  /// lot; losing 0-5 to Tonga is not.
+  static bool isHumiliation({
+    required int margin,
+    required int ownRank,
+    required int opponentRank,
+  }) => margin >= humiliationMargin && opponentRank >= ownRank - minnowPeerGap;
+
+  /// How much of a missed brief's penalty the weakest side of all still pays
+  /// (see [objectiveSwing]). Meeting a brief is worth the same everywhere.
+  static const double minnowMissedShare = 0.5;
 
   /// How many recent matches count toward form.
   static const int formWindow = 10;
@@ -129,23 +219,54 @@ abstract final class BoardSatisfaction {
   /// The form contribution of [recent] (most recent first); only the newest
   /// [formWindow] matches count. [asUnderdog] runs alongside it, true for a
   /// match played as the clear underdog; missing entries count as level.
+  ///
+  /// [minnow] (see [minnowFactor]) slides the draw and defeat weights toward
+  /// the minnow's ([minnowDraw], [minnowLoss], [minnowLossAsUnderdog]);
+  /// [humiliations] runs alongside [recent], true for a defeat that is a
+  /// humiliation (see [isHumiliation]), which keeps its full weight. At 0 the
+  /// weights are exactly the ordinary ones.
   static int formPoints(
     Iterable<MatchOutcome> recent, {
     Iterable<bool> asUnderdog = const [],
+    double minnow = 0,
+    Iterable<bool> humiliations = const [],
   }) {
     final underdog = asUnderdog.toList();
-    var points = 0;
+    final m = minnow.clamp(0.0, 1.0);
+    if (m <= 0) {
+      var points = 0;
+      var i = 0;
+      for (final outcome in recent.take(formWindow)) {
+        final under = i < underdog.length && underdog[i];
+        i++;
+        points += switch (outcome) {
+          MatchOutcome.win => under ? winAsUnderdog : win,
+          MatchOutcome.draw => under ? drawAsUnderdog : draw,
+          MatchOutcome.loss => under ? lossAsUnderdog : loss,
+        };
+      }
+      return points;
+    }
+    double slide(int from, int to) => from + (to - from) * m;
+    final humiliated = humiliations.toList();
+    var points = 0.0;
     var i = 0;
     for (final outcome in recent.take(formWindow)) {
       final under = i < underdog.length && underdog[i];
+      final humiliation = !under && i < humiliated.length && humiliated[i];
       i++;
       points += switch (outcome) {
         MatchOutcome.win => under ? winAsUnderdog : win,
-        MatchOutcome.draw => under ? drawAsUnderdog : draw,
-        MatchOutcome.loss => under ? lossAsUnderdog : loss,
+        MatchOutcome.draw => under ? drawAsUnderdog : slide(draw, minnowDraw),
+        MatchOutcome.loss =>
+          under
+              ? slide(lossAsUnderdog, minnowLossAsUnderdog)
+              : humiliation
+              ? loss
+              : slide(loss, minnowLoss),
       };
     }
-    return points;
+    return points.round();
   }
 
   /// The standing bonus for a [worldRank] (1-based); null when unranked.
@@ -194,13 +315,18 @@ abstract final class BoardSatisfaction {
   /// good friendly form, or meet it and sit low. The board now answers for what
   /// it actually asked for, and it is the dominant term: no run of form or
   /// stack of minor honours outweighs the cycle's stated brief.
-  static int objectiveSwing(ObjectiveResult o) {
+  ///
+  /// A missed brief costs a minnow less (see [minnowFactor] and
+  /// [minnowMissedShare]); at 0 the swing is exactly the ordinary one.
+  static int objectiveSwing(ObjectiveResult o, {double minnow = 0}) {
     final w = objectiveWeights(o.tier);
     final gap = (o.actual - o.target).clamp(-5, 3);
     final raw = gap >= 0
         ? w.met + gap * w.step + overachievementBonus(o.tier, gap)
         : -(w.met + (-gap) * w.step);
-    return (raw * demandFactor(o.target)).round();
+    final m = minnow.clamp(0.0, 1.0);
+    final patience = gap < 0 && m > 0 ? 1 - (1 - minnowMissedShare) * m : 1.0;
+    return (raw * demandFactor(o.target) * patience).round();
   }
 
   /// What BEATING the brief is worth, on top of the rounds it was beaten by.
@@ -267,6 +393,15 @@ abstract final class BoardSatisfaction {
     /// Defeats at finals whose brief is already [lockedIn]; those games are
     /// left out of [recent]. See [lockedInLoss].
     int lockedInLosses = 0,
+
+    /// How much of a minnow the nation is (see [minnowFactor]): a softer form
+    /// window, a smaller cost for a missed brief and a bad cycle that fades
+    /// faster. 0, the default, is every other side and changes nothing.
+    double minnow = 0,
+
+    /// Alongside [recent]: which of those matches were humiliations (see
+    /// [isHumiliation]), for the minnow's form.
+    Iterable<bool> recentHumiliations = const [],
   }) {
     var best = 0;
     for (final h in honours) {
@@ -275,10 +410,15 @@ abstract final class BoardSatisfaction {
     }
     var fromObjectives = 0;
     for (final o in objectives) {
-      fromObjectives += objectiveSwing(o);
+      fromObjectives += objectiveSwing(o, minnow: minnow);
     }
-    return (openingFrom(previousCycle) +
-            formPoints(recent, asUnderdog: recentAsUnderdog) +
+    return (openingFrom(previousCycle, minnow: minnow) +
+            formPoints(
+              recent,
+              asUnderdog: recentAsUnderdog,
+              minnow: minnow,
+              humiliations: recentHumiliations,
+            ) +
             lockedInLosses * lockedInLoss +
             best +
             fromObjectives +

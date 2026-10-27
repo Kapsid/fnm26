@@ -100,6 +100,26 @@ void main() {
       );
     });
 
+    testWidgets('Japanese and Korean dates put the year first', (
+      tester,
+    ) async {
+      expect(await written(tester, 'ja', AppDate.dayMonthYear), '2030年11月30日');
+      expect(await written(tester, 'ja', AppDate.monthYear), '2030年11月');
+      expect(
+        await written(tester, 'ko', AppDate.dayMonthYear),
+        '2030년 11월 30일',
+      );
+      expect(await written(tester, 'ko', AppDate.dayMonth), '11월 30일');
+    });
+
+    testWidgets('Hungarian dates put the year first', (tester) async {
+      expect(
+        await written(tester, 'hu', AppDate.dayMonthYear),
+        '2030. nov. 30.',
+      );
+      expect(await written(tester, 'hu', AppDate.monthYear), '2030. nov.');
+    });
+
     testWidgets('the kick-off stamp keeps its diacritics in upper case', (
       tester,
     ) async {
@@ -128,9 +148,10 @@ void main() {
     testWidgets('a date follows the language the screen around it is in', (
       tester,
     ) async {
-      // Romanian is not a language this app speaks. Flutter
-      // resolves an unknown one to the FIRST entry in `supportedLocales`,
-      // which gen-l10n sorts alphabetically, so a Romanian phone was shown
+      // Swahili is not a language this app speaks (Romanian, the original
+      // example, now is). Flutter resolves an unknown one to the FIRST entry
+      // in `supportedLocales`, which gen-l10n sorts alphabetically, so such a
+      // phone was shown
       // Czech. Whatever one thinks of that, the date has to agree with the
       // words around it rather than going off on its own — which is what it
       // did before [AppDate], when every screen in the game could be Czech
@@ -143,10 +164,10 @@ void main() {
             return const SizedBox.shrink();
           },
         ),
-        locale: const Locale('ro'),
+        locale: const Locale('sw'),
       );
       expect(
-        await written(tester, 'ro', AppDate.dayMonthYear),
+        await written(tester, 'sw', AppDate.dayMonthYear),
         resolved.languageCode == 'cs' ? '30. lis 2030' : '30 Nov 2030',
       );
     });

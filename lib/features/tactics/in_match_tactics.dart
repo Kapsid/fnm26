@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/domain/services/tactics/substitution_rules.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactic_preset_tile.dart';
+import 'package:fnm/features/tactics/full_back_instructions.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
@@ -33,11 +34,15 @@ class InMatchTacticsResult {
     required this.lineup,
     required this.instructions,
     required this.takers,
+    this.fullBacks = FullBackPushes.neutral,
   });
 
   final Formation formation;
   final List<int?> lineup;
   final TacticalInstructions instructions;
+
+  /// The full-backs' arrows from here on.
+  final FullBackPushes fullBacks;
 
   /// Who takes penalties and dead balls from here on. Either may be null,
   /// which hands that duty back to the engine's own pick.
@@ -60,6 +65,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   required List<Player> pool,
   required Set<int> startingIds,
   required int maxSubs,
+  FullBackPushes fullBacks = FullBackPushes.neutral,
   ({int? penalty, int? deadBall}) takers = (penalty: null, deadBall: null),
   Set<int> injuredIds = const {},
   Set<int> sentOffIds = const {},
@@ -79,6 +85,7 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         formation: formation,
         lineup: lineup,
         instructions: instructions,
+        fullBacks: fullBacks,
         pool: pool,
         startingIds: startingIds,
         maxSubs: maxSubs,
@@ -107,6 +114,7 @@ class _InMatchTacticsEditor extends StatefulWidget {
     required this.startingIds,
     required this.maxSubs,
     required this.takers,
+    this.fullBacks = FullBackPushes.neutral,
     this.injuredIds = const {},
     this.sentOffIds = const {},
     this.cardsByPlayer = const {},
@@ -122,6 +130,7 @@ class _InMatchTacticsEditor extends StatefulWidget {
   final Formation formation;
   final List<int?> lineup;
   final TacticalInstructions instructions;
+  final FullBackPushes fullBacks;
   final List<Player> pool;
   final Set<int> startingIds;
   final int maxSubs;
@@ -186,6 +195,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       if (id != null && widget.sentOffIds.contains(id)) null else id,
   ];
   late TacticalInstructions _instructions = widget.instructions;
+  late FullBackPushes _fullBacks = widget.fullBacks;
   late ({int? penalty, int? deadBall}) _takers = widget.takers;
 
   /// Everyone still eligible to be on the pitch: the squad minus the sent off.
@@ -411,7 +421,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   /// re-placed: with ten men it stays ten and no substitution is spent.
   void _applyPreset(TacticPreset p) {
     _setFormation(p.formation);
-    setState(() => _instructions = p.instructions);
+    setState(() {
+      _instructions = p.instructions;
+      _fullBacks = _fullBacks.overlaidWith(p.fullBacks);
+    });
   }
 
   Future<void> _openPresets() {
@@ -606,6 +619,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         lineup: _lineup,
         instructions: _instructions,
         takers: _liveTakers,
+        fullBacks: _fullBacks,
       ),
     );
   }
@@ -782,6 +796,11 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   Widget _pitchView() => TacticsPitch(
     formation: _formation,
     instructions: _instructions,
+    fullBacks: _fullBacks,
+    onCycleFullBack: (side) async {
+      setState(() => _fullBacks = _fullBacks.cycled(side));
+      return _fullBacks.of(side);
+    },
     lineup: _lineup,
     byId: _byId,
     teamColors: widget.teamColors,
@@ -1268,6 +1287,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
           l.tacticsInstrDirect,
           _instructions.directness,
           (v) => _instructions = _instructions.copyWith(directness: v),
+        ),
+        FullBackInstructions(
+          formation: _formation,
+          value: _fullBacks,
+          onChanged: (side, push) =>
+              setState(() => _fullBacks = _fullBacks.withSide(side, push)),
         ),
         const SizedBox(height: AppSpacing.lg),
         // Set-piece takers, live. The pair was fixed at kick-off and could not

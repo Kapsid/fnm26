@@ -94,11 +94,13 @@ void main() {
   test('every table is classified, so a new one cannot be forgotten', () {
     // The maintenance tax this feature would otherwise carry: add a table,
     // forget the exporter, and saves silently lose it on every round trip.
-    // A table is either seed data, the career row, scoped by career_id, or
-    // reached through a parent -- and there is no fifth option.
+    // A table is either seed data, the manager's own (no career), the career
+    // row, scoped by career_id, or reached through a parent -- and there is
+    // no sixth option.
     for (final table in db.allTables) {
       final name = table.actualTableName;
       if (CareerBundle.seedTables.contains(name)) continue;
+      if (CareerBundle.globalTables.contains(name)) continue;
       if (name == CareerBundle.rootTable) continue;
       if (CareerBundle.derivedScope.containsKey(name)) continue;
       expect(

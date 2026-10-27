@@ -743,10 +743,11 @@ class _FinalsCard extends StatelessWidget {
   Widget _side(int id, bool winner, {bool right = false}) {
     final isPlayer = id == playerNationId;
     final label = Flexible(
-      child: Text(
+      // A knockout tie's half row is narrow on a phone: the name wraps
+      // between words and scales, never cut.
+      child: WholeText(
         name(id),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+        breakWords: false,
         textAlign: right ? TextAlign.right : TextAlign.left,
         style: AppTypography.bodySmall.copyWith(
           color: winner ? AppColors.primary : AppColors.onSurface,

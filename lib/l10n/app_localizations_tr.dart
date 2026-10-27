@@ -75,6 +75,137 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchDossierKeyMen => 'KİLİT OYUNCULAR';
 
   @override
+  String get matchDossierHowTheyPlay => 'OYUN TARZI';
+
+  @override
+  String matchScoutFormation1(String formation) {
+    return 'Genellikle $formation dizilişiyle sahaya çıkıyorlar.';
+  }
+
+  @override
+  String matchScoutFormation2(String formation) {
+    return 'Alışılmış dizilişleri $formation.';
+  }
+
+  @override
+  String matchScoutFormation3(String formation) {
+    return 'Çoğunlukla $formation ile oynamayı tercih ediyorlar.';
+  }
+
+  @override
+  String get matchScoutStrengthPressing =>
+      'Önde baskı yapıp topun peşine düşüyorlar.';
+
+  @override
+  String get matchScoutStrengthDirect =>
+      'Direkt oynuyor, topu erkenden ileri taşıyorlar.';
+
+  @override
+  String get matchScoutStrengthPossession =>
+      'Topu iyi saklıyor ve sabırla oyun kuruyorlar.';
+
+  @override
+  String get matchScoutStrengthCounter =>
+      'Geride bekleyip hızlı kontra ataklara çıkıyorlar.';
+
+  @override
+  String get matchScoutStrengthDeepDefence =>
+      'Derinde savunuyorlar ve onları açmak zor.';
+
+  @override
+  String get matchScoutStrengthWide =>
+      'Sahayı genişletip kanatlardan hücum ediyorlar.';
+
+  @override
+  String get matchScoutStrengthAttacking =>
+      'Oyunun kontrolünü alıp rakibin üstüne gitmeyi seviyorlar.';
+
+  @override
+  String get matchScoutStrengthQuickForwards =>
+      'Forvetleri hızlı ve savunma arkasına koşmayı seviyorlar.';
+
+  @override
+  String get matchScoutStrengthPassingMidfield =>
+      'Orta sahaları pasta çok iyi.';
+
+  @override
+  String get matchScoutStrengthHardRunning =>
+      'Orta sahaları maç boyu koşacak güçte.';
+
+  @override
+  String get matchScoutStrengthSetPieces => 'Duran toplarda tehlikeliler.';
+
+  @override
+  String get matchScoutStrengthQuickDefence =>
+      'Savunma hatları hızlı, arkalarına sarkmak zor.';
+
+  @override
+  String get matchScoutStrengthNone => 'Oyunlarında öne çıkan bir şey yok.';
+
+  @override
+  String get matchScoutWeakSpaceBehind =>
+      'Önde kurdukları savunma hattı, arkaya atılacak uzun toplara alan bırakıyor.';
+
+  @override
+  String get matchScoutWeakPressedBuildUp =>
+      'Önde baskı, yavaş oyun kurulumlarını bozabilir.';
+
+  @override
+  String get matchScoutWeakDeepBlock =>
+      'Sabırlı ol: onlarınki gibi derin bir blok açılabilir.';
+
+  @override
+  String get matchScoutWeakLongBall =>
+      'Savunma hattını geri çek, uzun toplarının gidecek yeri kalmasın.';
+
+  @override
+  String get matchScoutWeakSlowDefence =>
+      'Defans oyuncuları yavaş, arkalarına koşu yapacak oyuncular gönder.';
+
+  @override
+  String get matchScoutWeakAerial =>
+      'Duran top savunmasında tedirgin görünüyorlar.';
+
+  @override
+  String get matchScoutWeakPoorPassing =>
+      'Orta sahaları baskı altında pasla çıkmakta zorlanıyor.';
+
+  @override
+  String get matchScoutWeakTiringMidfield =>
+      'Orta sahalarının baskıyı sürdürecek gücü yok.';
+
+  @override
+  String get matchScoutWeakBluntAttack => 'Forvetleri yavaş.';
+
+  @override
+  String get matchScoutApproachTakeTheGame =>
+      'Sana karşı oyunun kontrolünü almalarını bekle.';
+
+  @override
+  String get matchScoutApproachEven =>
+      'Sana karşı dengeli ve çekişmeli bir maç bekle.';
+
+  @override
+  String get matchScoutApproachSitDeep =>
+      'Sana karşı temkinli oynayıp kontra fırsatı kollamalarını bekle.';
+
+  @override
+  String get matchScoutLeaningAttacking =>
+      'Uzaktan bakınca hücumcu bir takıma benziyorlar.';
+
+  @override
+  String get matchScoutLeaningCautious =>
+      'Uzaktan bakınca temkinli bir takıma benziyorlar.';
+
+  @override
+  String get matchScoutLeaningUnclear =>
+      'Uzaktan bakınca nasıl oynamayı sevdiklerini söylemek zor.';
+
+  @override
+  String get matchScoutHireHint =>
+      'Nasıl oynadıklarını öğrenmek için bir başgözlemci tut.';
+
+  @override
   String matchCouldNotContinue(String error) {
     return 'Devam edilemedi: $error';
   }
@@ -284,6 +415,21 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Sistem';
+
+  @override
+  String get settingsTextSizeTitle => 'Metin boyutu';
+
+  @override
+  String get settingsTextSizeBlurb => 'Okumakta zorlanıyorsanız metni büyütün.';
+
+  @override
+  String get settingsTextSizeNormal => 'Normal';
+
+  @override
+  String get settingsTextSizeLarge => 'Büyük';
+
+  @override
+  String get settingsTextSizeLarger => 'Daha büyük';
 
   @override
   String get matchPreviewAllMeetings => 'Tüm karşılaşmalar';
@@ -802,6 +948,41 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tacticsSentOffShort => 'ATILDI';
+
+  @override
+  String get tacticsFullBackLeft => 'Sol bek';
+
+  @override
+  String get tacticsFullBackRight => 'Sağ bek';
+
+  @override
+  String get tacticsFullBackUp => 'Hücuma çık';
+
+  @override
+  String get tacticsFullBackDown => 'Geride kal';
+
+  @override
+  String get tacticsFullBackOff => 'Talimat yok';
+
+  @override
+  String tacticsFullBackUpHint(String side) {
+    return '$side: hücuma çık. Biraz daha fazla hücum, biraz daha fazla risk.';
+  }
+
+  @override
+  String tacticsFullBackDownHint(String side) {
+    return '$side: geride kal. Biraz daha güvenli, biraz daha az hücum.';
+  }
+
+  @override
+  String tacticsFullBackOffHint(String side) {
+    return '$side: talimat yok, takım planına göre oynar.';
+  }
+
+  @override
+  String tacticsFullBackSemantics(String side, String state) {
+    return '$side, ok: $state';
+  }
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -3022,6 +3203,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get gateExit => 'ÇIKIŞ';
 
   @override
+  String get gateSaveTitle => 'BU KAYIT PRO GEREKTİRİYOR';
+
+  @override
+  String get gateSaveLead =>
+      'Ücretsiz dönemi geçen kayıtlar ve Pro senaryoları Pro ile devam eder. Hiçbir şey kaybolmaz: bu kayıt seni bıraktığın gibi bekliyor.';
+
+  @override
+  String get careerSaveLockedNote => 'Bu kayda devam etmek için Pro gerekli';
+
+  @override
   String get federationNaturalisation => 'VATANDAŞLIĞA GEÇİRME';
 
   @override
@@ -3259,9 +3450,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get nationsNoMatch => 'Eşleşen ülke yok.';
-
-  @override
-  String get nationsNationalLevel => 'ULUSAL SEVİYE';
 
   @override
   String get nationsSelectHeading => 'Milli Takımı Seç';
@@ -3717,6 +3905,1026 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String yLostBadly11(String opponent, String score) {
     return 'Bu takımın daha önce rezil olduğunu gördüm, ama $opponent karşısında $score yeni bir dip.';
+  }
+
+  @override
+  String yWinUpset12(String opponent, String score) {
+    return '$opponent karşısında $score galibiyet. Tarihi bir kenara yazın, nerede olduğunuzu soracaklar.';
+  }
+
+  @override
+  String yWinUpset13(String opponent, String score) {
+    return 'Soyunma odası dışında kimse inanmıyordu. $opponent karşısında $score. Gurur kelimesi az kalır.';
+  }
+
+  @override
+  String yWinUpset14(String opponent, String score) {
+    return '$opponent karşısında $score! Hepsi son nefeslerine kadar koştu.';
+  }
+
+  @override
+  String yWinUpset15(String opponent, String score) {
+    return 'Dev avcısı. $opponent, $score. İşte bu yüzden her seferinde geliyoruz.';
+  }
+
+  @override
+  String yWinUpset16(String opponent, String score) {
+    return '$opponent karşısında $score. Maç öncesi tahminler az önce pencereden uçtu.';
+  }
+
+  @override
+  String yWinUpset17(String opponent, String score) {
+    return 'Açık favori: $opponent. Maç sonucu: bizim lehimize $score.';
+  }
+
+  @override
+  String yWinUpset18(String opponent, String score) {
+    return 'Yılın sürprizlerinden biri: $opponent karşısında $score.';
+  }
+
+  @override
+  String yWinUpset19(String opponent, String score) {
+    return '$opponent $score. Kimse tahmin etmedi, kimse de tam açıklayamıyor.';
+  }
+
+  @override
+  String yWinUpset20(String opponent, String score) {
+    return '$opponent karşısında $score. Güzel. Şimdi herkes yılın geri kalanının ne kadar kötü geçtiğini unutacak.';
+  }
+
+  @override
+  String yWinUpset21(String opponent, String score) {
+    return '$opponent karşısında $score ve vagon şimdiden dolu. Ben boşken de buradaydım.';
+  }
+
+  @override
+  String yWinUpset22(String opponent, String score) {
+    return '$opponent $score. Harika, ama yine de bunu çarçur etmenin bir yolunu bulurlar.';
+  }
+
+  @override
+  String yWinUpset23(String opponent, String score) {
+    return '$opponent karşısında büyük gece, $score. Bir çiçekle bahar gelmez.';
+  }
+
+  @override
+  String yLostBadly12(String opponent, String score) {
+    return '$opponent karşısında $score. Acıtıyor çünkü önemsiyoruz. Yine de arkalarındayız.';
+  }
+
+  @override
+  String yLostBadly13(String opponent, String score) {
+    return '$opponent karşısında unutulacak bir gece, $score. En çok oyuncuların canı yanıyor.';
+  }
+
+  @override
+  String yLostBadly14(String opponent, String score) {
+    return '$opponent $score. Başınızı dik tutun. Bir takım buna verdiği cevapla ölçülür.';
+  }
+
+  @override
+  String yLostBadly15(String opponent, String score) {
+    return '$opponent karşısında $score. Kötü, evet. Dünyanın sonu, hayır.';
+  }
+
+  @override
+  String yLostBadly16(String opponent, String score) {
+    return '$opponent karşısında $score. Yıllarca konuşulacak bir sonuç, hem de yanlış sebeplerle.';
+  }
+
+  @override
+  String yLostBadly17(String opponent, String score) {
+    return '$opponent kazandı, $score. Bundan sonra kimse bir dahakine şaşırmasın.';
+  }
+
+  @override
+  String yLostBadly18(String opponent, String score) {
+    return 'Uzun zamandır yaşanan en kötü gecelerden biri: $opponent karşısında $score.';
+  }
+
+  @override
+  String yLostBadly19(String opponent, String score) {
+    return '$opponent $score. Sorular sorulacak, sorulmalı da.';
+  }
+
+  @override
+  String yLostBadly20(String opponent, String score) {
+    return '$opponent karşısında $score. Rezalet kelimesi bile hafif kalır.';
+  }
+
+  @override
+  String yLostBadly21(String opponent, String score) {
+    return '$opponent karşısında $score yenilgi. Son çıkan ışıkları kapatsın.';
+  }
+
+  @override
+  String yLostBadly22(String opponent, String score) {
+    return '$opponent $score. Artık şaşırmıyorum ve bu beni korkutuyor.';
+  }
+
+  @override
+  String yLostBadly23(String opponent, String score) {
+    return '$score. $opponent. Yukarıdaki birinin bu gece özgeçmişini güncellemesi lazım.';
+  }
+
+  @override
+  String yWinRout0(String opponent, String score) {
+    return '$opponent karşısında $score! Böyle futbol bütün ülkeyi gülümsetir.';
+  }
+
+  @override
+  String yWinRout1(String opponent, String score) {
+    return '$opponent karşısında farklı galibiyet, $score. Ne performans.';
+  }
+
+  @override
+  String yWinRout2(String opponent, String score) {
+    return '$score. $opponent karşısında. Bu gece her şey tuttu.';
+  }
+
+  @override
+  String yWinRout3(String opponent, String score) {
+    return '$opponent karşısında yıkım: $score. Özetleri saklayın, isteyeceksiniz.';
+  }
+
+  @override
+  String yWinRout4(String opponent, String score) {
+    return '$opponent $score. Bu, futbolundan keyif alan bir takım.';
+  }
+
+  @override
+  String yWinRout5(String opponent, String score) {
+    return '$opponent karşısında $score, daha fazlası da olabilirdi. Muhteşem.';
+  }
+
+  @override
+  String yWinRout6(String opponent, String score) {
+    return '$opponent karşısında $score. İnsanların iki kez bakacağı bir skor.';
+  }
+
+  @override
+  String yWinRout7(String opponent, String score) {
+    return '$opponent karşısında $score galibiyet. İlk yarım saatten sonra maç kalmadı.';
+  }
+
+  @override
+  String yWinRout8(String opponent, String score) {
+    return 'Maç sonucu: $opponent karşısında $score. Uzun zamandır açık ara en farklı galibiyet.';
+  }
+
+  @override
+  String yWinRout9(String opponent, String score) {
+    return '$opponent $score. Bir takım oynamaya geldi, öteki otobüsten bile inmedi.';
+  }
+
+  @override
+  String yWinRout10(String opponent, String score) {
+    return '$score. $opponent hiçbir şeye cevap veremedi.';
+  }
+
+  @override
+  String yWinRout11(String opponent, String score) {
+    return 'Tam bir fark: $opponent karşısında $score.';
+  }
+
+  @override
+  String yWinRout12(String opponent, String score) {
+    return '$opponent karşısında $score. Güzel, ama ölçüt pek onlar sayılmaz.';
+  }
+
+  @override
+  String yWinRout13(String opponent, String score) {
+    return '$opponent karşısında $score. Bunu iyi bir takıma yaptığımızda beni uyandırın.';
+  }
+
+  @override
+  String yWinRout14(String opponent, String score) {
+    return '$opponent $score. Eğlenceli, ama böyle parlayıp hiçbir şey kazanamayan takımlar gördüm.';
+  }
+
+  @override
+  String yWinRout15(String opponent, String score) {
+    return '$score ve herkes yine dahi. Rakip $opponent idi.';
+  }
+
+  @override
+  String yWinRout16(String opponent, String score) {
+    return '$opponent karşısında $score. Havaya girmeyin, pek bir şey kanıtlamıyor.';
+  }
+
+  @override
+  String yWinRout17(String opponent, String score) {
+    return '$opponent $score. Tadını çıkarın, sonra en son heyecanlandığımızda ne olduğunu hatırlayın.';
+  }
+
+  @override
+  String yWinShootout0(String opponent) {
+    return '$opponent karşısında penaltılarla tur! Çelik gibi sinirler, hepsinde.';
+  }
+
+  @override
+  String yWinShootout1(String opponent) {
+    return '$opponent ile penaltılar ve sinirlerimize hâkim olduk. Bir yabancıya sarılın.';
+  }
+
+  @override
+  String yWinShootout2(String opponent) {
+    return '$opponent karşısında penaltı atışları kazanıldı. Kalbim kaldırmıyor.';
+  }
+
+  @override
+  String yWinShootout3(String opponent) {
+    return '$opponent karşısında penaltılarla galibiyet. Bir sonraki tura.';
+  }
+
+  @override
+  String yWinShootout4(String opponent) {
+    return '$opponent karşısında iş penaltılara kaldı ve biz daha çok attık.';
+  }
+
+  @override
+  String yWinShootout5(String opponent) {
+    return '$opponent karşısında penaltılar kazanıldı. En zor yoldan, ama tur bizim.';
+  }
+
+  @override
+  String yWinShootout6(String opponent) {
+    return '$opponent karşısında penaltılarla tur. Piyango çıktı, oyun unutulsun.';
+  }
+
+  @override
+  String yWinShootout7(String opponent) {
+    return 'O oyunun ardından $opponent karşısında penaltılarla kazanmak mı? Şans, herkes biliyor.';
+  }
+
+  @override
+  String yWinShootout8(String opponent) {
+    return '$opponent karşısında penaltılarla tur. Oraya hiç kalmamalıydı.';
+  }
+
+  @override
+  String yKnockoutWin0(String opponent, String score) {
+    return 'TUR ATLADIK. $opponent karşısında $score ve hayal yaşıyor.';
+  }
+
+  @override
+  String yKnockoutWin1(String opponent, String score) {
+    return 'ELEME GALİBİYETİ: $opponent karşısında $score. Ülke inanmaya başlayabilir.';
+  }
+
+  @override
+  String yKnockoutWin2(String opponent, String score) {
+    return '$opponent karşısında $score ve bir sonraki turdayız. Ne gece.';
+  }
+
+  @override
+  String yKnockoutWin3(String opponent, String score) {
+    return '$opponent evine dönüyor, $score. Yola devam.';
+  }
+
+  @override
+  String yKnockoutWin4(String opponent, String score) {
+    return 'ELEME TURU: $opponent karşısında $score. Bir sonraki tur kesinleşti.';
+  }
+
+  @override
+  String yKnockoutWin5(String opponent, String score) {
+    return 'Tur: $opponent karşısında $score.';
+  }
+
+  @override
+  String yKnockoutWin6(String opponent, String score) {
+    return '$opponent elendi, $score. Bir sonraki tur bekliyor.';
+  }
+
+  @override
+  String yKnockoutWin7(String opponent, String score) {
+    return '$opponent karşısında $score galibiyet. Elemede kimse nasıl olduğunu sormaz.';
+  }
+
+  @override
+  String yKnockoutWin8(String opponent, String score) {
+    return '$opponent karşısında tur, $score. Bir sonraki rakip bu kadar nazik olmayacak.';
+  }
+
+  @override
+  String yKnockoutWin9(String opponent, String score) {
+    return '$opponent karşısında $score tur için yetti. Bir dahakine çok daha fazlası gerekecek.';
+  }
+
+  @override
+  String yKnockoutWin10(String opponent, String score) {
+    return '$opponent elendi, $score. Kazanmaktan çok hayatta kaldık.';
+  }
+
+  @override
+  String yKnockoutWin11(String opponent, String score) {
+    return '$opponent karşısında $score sonrası bir sonraki turdayız. Nasıl olduğunu sormayın.';
+  }
+
+  @override
+  String yUpsetGap0(String opponent, String gap) {
+    return 'Sıralamada aramızda $gap basamak vardı ve yine de $opponent karşısında kazandık. Muhteşem.';
+  }
+
+  @override
+  String yUpsetGap1(String opponent, String gap) {
+    return '$opponent bizden $gap basamak yukarıdaydı. Yenildiler. Futbol harika.';
+  }
+
+  @override
+  String yUpsetGap2(String opponent, String gap) {
+    return 'Sıralama farkı: $gap basamak. Sonuç: $opponent karşısında galibiyet. İnanmayı asla bırakmayın.';
+  }
+
+  @override
+  String yUpsetGap3(String opponent, String gap) {
+    return 'Başlama vuruşu öncesi sıralama farkı: $gap basamak. $opponent yine de yenildi.';
+  }
+
+  @override
+  String yUpsetGap4(String opponent, String gap) {
+    return 'Dünya sıralamasında $opponent bizden $gap basamak yukarıdaydı. Bu gece değil.';
+  }
+
+  @override
+  String yUpsetGap5(String opponent, String gap) {
+    return 'Sürpriz endeksi: iki takım arasında $gap sıralama basamağı. $opponent karşısında galibiyet bizim.';
+  }
+
+  @override
+  String yUpsetGap6(String opponent, String gap) {
+    return 'Sıralamada $opponent ile aramızda $gap basamak vardı. Bir gece bu farkı kapatmaz.';
+  }
+
+  @override
+  String yUpsetGap7(String opponent, String gap) {
+    return '$opponent: $gap basamak yukarıda ve yenildi. Sıralama bunu fark etmeyecek bile.';
+  }
+
+  @override
+  String yUpsetGap8(String gap) {
+    return 'Sıralama farkı: $gap basamak. Bir dahaki sefere küçük bir takıma yenildiğimizde bu sayıyı hatırlayın.';
+  }
+
+  @override
+  String yEatWords0(String opponent) {
+    return 'Bu takımı gözden çıkarmıştım. Yanılmışım ve yanıldığıma hiç bu kadar sevinmemiştim. $opponent yenildi.';
+  }
+
+  @override
+  String yEatWords1(String opponent) {
+    return 'Bir porsiyon tevazu lütfen. Büyük olsun. $opponent karşısındaki galibiyet muhteşemdi.';
+  }
+
+  @override
+  String yEatWords2(String opponent) {
+    return 'Ellerinde bir şey kalmadı demiştim. Çok şey varmış. $opponent karşısında hepsi iyi oynadı.';
+  }
+
+  @override
+  String yEatWords3(String opponent) {
+    return 'Kayıtlara geçsin, $opponent karşısındaki bu galibiyeti beklemiyordum. Hakkını vermek lazım.';
+  }
+
+  @override
+  String yEatWords4(String opponent) {
+    return 'Peki. Er geç açık verecekler demiştim. $opponent karşısında açık vermediler.';
+  }
+
+  @override
+  String yEatWords5(String opponent) {
+    return 'Bu gece bu takım hakkında söylediklerimi yutacağım. $opponent galibiyeti bunu hak ediyor.';
+  }
+
+  @override
+  String yEatWords6(String opponent) {
+    return 'Evet, bitti demiştim. $opponent karşısında bir galibiyet beni henüz haksız çıkarmaz.';
+  }
+
+  @override
+  String yEatWords7(String opponent) {
+    return '$opponent maçından sonra sözlerimi geri almam isteniyor. Alacağım, yavaşça, fişi de saklıyorum.';
+  }
+
+  @override
+  String yEatWords8(String opponent) {
+    return '$opponent galibiyeti etkileyiciydi. Bu takımla ilgili şüphelerim hiçbir yere gitmedi.';
+  }
+
+  @override
+  String yAwayFansWin0(String nation, String score) {
+    return '$nation için helal olsun. $score, sonuna kadar hak ettiler.';
+  }
+
+  @override
+  String yAwayFansWin1(String nation, String score) {
+    return 'Söylemesi acı ama bu gece daha iyi olan taraf $nation idi. $score. Tebrikler.';
+  }
+
+  @override
+  String yAwayFansWin2(String nation, String score) {
+    return '$score. $nation önünde şapka çıkarıyorum, daha çok istediler.';
+  }
+
+  @override
+  String yAwayFansWin3(String nation, String score) {
+    return '$nation karşısında $score yenilgi. Ne diyeceğimi bile bilmiyorum.';
+  }
+
+  @override
+  String yAwayFansWin4(String nation, String score) {
+    return '$nation $score. Bizimkiler utanmalı.';
+  }
+
+  @override
+  String yAwayFansWin5(String nation, String score) {
+    return '$nation karşısında $score. Biri bana bunun nasıl olduğunu açıklasın.';
+  }
+
+  @override
+  String yAwayFansWin6(String nation, String score) {
+    return '$nation karşısında $score kaybetmek. Bunu asla atlatamayacağım.';
+  }
+
+  @override
+  String yAwayFansWin7(String nation, String score) {
+    return '$nation karşısında $score. Şans. Tamamen şans.';
+  }
+
+  @override
+  String yAwayFansWin8(String nation, String score) {
+    return 'Bu $score sonrası $nation taraftarı yıllarca çekilmez olacak. Hiçbir şey için teşekkürler.';
+  }
+
+  @override
+  String yNeutralWin0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Futbol için harika. İşte bu yüzden seviyoruz.';
+  }
+
+  @override
+  String yNeutralWin1(String nation, String opponent, String score) {
+    return '$nation için ne sonuç: $opponent karşısında $score. Futbol en güzel hâlinde.';
+  }
+
+  @override
+  String yNeutralWin2(String nation, String opponent, String score) {
+    return 'Bu gece bütün tarafsızlar $nation için tezahürat yapıyor. $opponent karşısında $score!';
+  }
+
+  @override
+  String yNeutralWin3(String nation, String opponent, String score) {
+    return 'Haftanın sonucu: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralWin4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Bunu kimse kuponuna yazmamıştı.';
+  }
+
+  @override
+  String yNeutralWin5(String nation, String opponent, String score) {
+    return 'Büyük sonuç: $nation $score $opponent. Sıralama değişecek.';
+  }
+
+  @override
+  String yNeutralWin6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Eğlenceli, bakalım bir daha yapabilecekler mi.';
+  }
+
+  @override
+  String yNeutralWin7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. $nation mi kazandı, $opponent mu kaybetti?';
+  }
+
+  @override
+  String yNeutralWin8(String nation, String opponent, String score) {
+    return 'Sürpriz sonuç: $nation $score $opponent. Bolca abartılı tepki bekleyin.';
+  }
+
+  @override
+  String yScorerHero0(String name, String opponent) {
+    return '$opponent karşısında $name. Çocuklara onun adını verecekler.';
+  }
+
+  @override
+  String yScorerHero1(String name, String opponent) {
+    return '$name için bir heykel. Bu gece $opponent karşısında her şeydi.';
+  }
+
+  @override
+  String yScorerHero2(String name, String opponent) {
+    return '$name, sen bir harikasın. $opponent karşısındaki bu geceyi unutmayın.';
+  }
+
+  @override
+  String yScorerHero3(String name, String opponent) {
+    return '$name $opponent karşısında maçı çözdü. Maçın oyuncusu, tartışmasız.';
+  }
+
+  @override
+  String yScorerHero4(String name, String opponent) {
+    return '$opponent karşısında gece $name adlı oyuncuya aitti.';
+  }
+
+  @override
+  String yScorerHero5(String name, String opponent) {
+    return '$name, $opponent karşısında gerektiğinde sahnedeydi.';
+  }
+
+  @override
+  String yScorerHero6(String name, String opponent) {
+    return '$name, $opponent karşısında harikaydı. Şimdi bunu her hafta yapsın.';
+  }
+
+  @override
+  String yScorerHero7(String name, String opponent) {
+    return '$name, $opponent karşısında takımı kurtardı. Diğerleri pek yardım etmedi.';
+  }
+
+  @override
+  String yScorerHero8(String name, String opponent) {
+    return '$name olmasa $opponent karşısında bambaşka bir gece olurdu.';
+  }
+
+  @override
+  String yLostShock0(String opponent, String score) {
+    return '$opponent karşısında $score. Kaza. Herkesin başına bir kez gelir.';
+  }
+
+  @override
+  String yLostShock1(String opponent, String score) {
+    return '$opponent karşısında $score yenilgi. Silkelenin, kampanya bitmedi.';
+  }
+
+  @override
+  String yLostShock2(String opponent, String score) {
+    return '$opponent $score. Acı, ama tek bir sonuç bu takımı tanımlamaz.';
+  }
+
+  @override
+  String yLostShock3(String opponent, String score) {
+    return '$opponent karşısında $score. İşte kötü bir gün. Devam.';
+  }
+
+  @override
+  String yLostShock4(String opponent, String score) {
+    return '$opponent karşısında yenilgi, $score. Kimse bunu beklemiyordu.';
+  }
+
+  @override
+  String yLostShock5(String opponent, String score) {
+    return '$opponent $score. Hiçbir anlamı olmayan gecelerden biri.';
+  }
+
+  @override
+  String yLostShock6(String opponent, String score) {
+    return '$opponent karşısında $score. Akıllarda kalacak bir yenilgi.';
+  }
+
+  @override
+  String yLostShock7(String opponent, String score) {
+    return '$opponent karşısında yenildik, $score. Nereden bakarsanız bakın büyük sürpriz.';
+  }
+
+  @override
+  String yLostShock8(String opponent, String score) {
+    return '$opponent karşısında $score. $opponent karşısında! Kabul edilemez.';
+  }
+
+  @override
+  String yLostShock9(String opponent, String score) {
+    return '$opponent karşısında $score yenilgi. Açıklama istiyorum, bahane değil.';
+  }
+
+  @override
+  String yLostShock10(String opponent, String score) {
+    return '$opponent $score. Ulusal bir rezalet, ve bu bir söz sanatı değil.';
+  }
+
+  @override
+  String yLostShock11(String opponent, String score) {
+    return '$opponent karşısında $score. Yukarıdakiler nasıl hâlâ koltuklarında?';
+  }
+
+  @override
+  String yLostRout0(String opponent, String score) {
+    return '$opponent karşısında $score. Onlar üst düzey bir takım. Ders alalım.';
+  }
+
+  @override
+  String yLostRout1(String opponent, String score) {
+    return '$opponent bize üstünlük kurdu, $score. En iyilere yenilmek ayıp değil.';
+  }
+
+  @override
+  String yLostRout2(String opponent, String score) {
+    return '$opponent $score. Bir ders, ve insan derslerle büyür.';
+  }
+
+  @override
+  String yLostRout3(String opponent, String score) {
+    return '$opponent karşısında $score. Acı, ama onlar bir seviye yukarıda.';
+  }
+
+  @override
+  String yLostRout4(String opponent, String score) {
+    return '$opponent kazandı, $score. Fark gerçek ve artık herkes gördü.';
+  }
+
+  @override
+  String yLostRout5(String opponent, String score) {
+    return '$opponent karşısında $score. Düpedüz dayak.';
+  }
+
+  @override
+  String yLostRout6(String opponent, String score) {
+    return '$opponent $score. Daha iyi takım, skor da bunu söylüyor.';
+  }
+
+  @override
+  String yLostRout7(String opponent, String score) {
+    return '$opponent karşısında $score yenilgi. Rezalet değil, ama maç da değil.';
+  }
+
+  @override
+  String yLostRout8(String opponent, String score) {
+    return '$opponent karşısında $score. Rakip daha iyi ya da değil, kimse böyle kaybetmemeli.';
+  }
+
+  @override
+  String yLostRout9(String opponent, String score) {
+    return '$opponent $score. Mücadele etmeyi denedik mi bari?';
+  }
+
+  @override
+  String yLostRout10(String opponent, String score) {
+    return '$score. $opponent karşısında. Kuzular mezbahaya.';
+  }
+
+  @override
+  String yLostRout11(String opponent, String score) {
+    return '$opponent karşısında $score yenilgi ve kimse umursamış görünmüyordu.';
+  }
+
+  @override
+  String yLostShootout0(String opponent) {
+    return '$opponent karşısında penaltılarla elendik. Her şeyini verdiler. Onlarla gurur duyuyorum.';
+  }
+
+  @override
+  String yLostShootout1(String opponent) {
+    return '$opponent ile penaltılar. Elenmenin en acımasız yolu. Başınızı dik tutun.';
+  }
+
+  @override
+  String yLostShootout2(String opponent) {
+    return '$opponent karşısında penaltı atışları kaybedildi. Bunu kimse hak etmedi.';
+  }
+
+  @override
+  String yLostShootout3(String opponent) {
+    return '$opponent karşısında penaltılarla elendik. Penaltılar karar verdi.';
+  }
+
+  @override
+  String yLostShootout4(String opponent) {
+    return '$opponent penaltılarla tur atladı. Turnuvamız burada bitiyor.';
+  }
+
+  @override
+  String yLostShootout5(String opponent) {
+    return '$opponent karşısında penaltılar kaybedildi. Yine penaltılar.';
+  }
+
+  @override
+  String yLostShootout6(String opponent) {
+    return '$opponent karşısında penaltılarla elendik. Hiç penaltı çalışıyor muyuz?';
+  }
+
+  @override
+  String yLostShootout7(String opponent) {
+    return '$opponent karşısında penaltılarla yenildik. Maçı çok önce bitirmeliydik.';
+  }
+
+  @override
+  String yLostShootout8(String opponent) {
+    return '$opponent ile penaltılar ve kaybettik. Elbette kaybettik.';
+  }
+
+  @override
+  String yKnockoutLoss0(String opponent, String score) {
+    return 'ELENDİK. $opponent karşısında $score. Gurur duyulacak bir yolculuk burada bitiyor.';
+  }
+
+  @override
+  String yKnockoutLoss1(String opponent, String score) {
+    return '$opponent bizi eledi, $score. Anılar için teşekkürler.';
+  }
+
+  @override
+  String yKnockoutLoss2(String opponent, String score) {
+    return '$opponent karşısında $score. Yolculuk bitti, ama ne yolculuktu.';
+  }
+
+  @override
+  String yKnockoutLoss3(String opponent, String score) {
+    return 'ELENDİK: $opponent karşısında $score. Başlar dik.';
+  }
+
+  @override
+  String yKnockoutLoss4(String opponent, String score) {
+    return 'VEDA: $opponent karşısında $score.';
+  }
+
+  @override
+  String yKnockoutLoss5(String opponent, String score) {
+    return 'Elendik: $opponent karşısında $score.';
+  }
+
+  @override
+  String yKnockoutLoss6(String opponent, String score) {
+    return '$opponent tur atladı, $score. Turnuvamız bitti.';
+  }
+
+  @override
+  String yKnockoutLoss7(String opponent, String score) {
+    return '$opponent bizi eledi, $score. Otopsi şimdi başlıyor.';
+  }
+
+  @override
+  String yKnockoutLoss8(String opponent, String score) {
+    return 'ELENDİK. $opponent karşısında $score. Başka bir turnuva, aynı son.';
+  }
+
+  @override
+  String yKnockoutLoss9(String opponent, String score) {
+    return '$opponent karşısında $score ve eve dönüyoruz. Kimse şaşırmadı.';
+  }
+
+  @override
+  String yKnockoutLoss10(String opponent, String score) {
+    return '$opponent bizi eledi, $score. Sabaha kadar bahaneler gelir.';
+  }
+
+  @override
+  String yKnockoutLoss11(String opponent, String score) {
+    return '$opponent $score. Elendik ve hiçbir an başka türlü bitecekmiş gibi görünmedi.';
+  }
+
+  @override
+  String yAwayFansGloat0(String nation, String score) {
+    return '$nation karşısında $score. Saygı duyuyoruz, daha güçlü dönecekler.';
+  }
+
+  @override
+  String yAwayFansGloat1(String nation, String score) {
+    return 'Bizim için iyi galibiyet, $score. $nation için kötü gün, taraftarları için üzgünüm.';
+  }
+
+  @override
+  String yAwayFansGloat2(String nation, String score) {
+    return '$score. $nation kötü bir gece geçirdi, biz de fırsatı kullandık. Futbol bu.';
+  }
+
+  @override
+  String yAwayFansGloat3(String nation, String score) {
+    return '$nation karşısında $score! Bunu kim bekliyordu? Onlar değil.';
+  }
+
+  @override
+  String yAwayFansGloat4(String nation, String score) {
+    return '$nation karşısında $score galibiyet. Biri taraftarlarına bir baksın.';
+  }
+
+  @override
+  String yAwayFansGloat5(String nation, String score) {
+    return '$nation $score. Bu fotoğraf albümüne giriyor.';
+  }
+
+  @override
+  String yAwayFansGloat6(String nation, String score) {
+    return '$nation karşısında $score. Bir de kendilerini büyük takım sanıyorlar.';
+  }
+
+  @override
+  String yAwayFansGloat7(String nation, String score) {
+    return 'Bize $score kaybettiğini düşün. $nation taraftarına sor, artık biliyorlar.';
+  }
+
+  @override
+  String yAwayFansGloat8(String nation, String score) {
+    return '$nation, $score. İyi uçuşlar.';
+  }
+
+  @override
+  String yNeutralLoss0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. $opponent için büyük gece, $nation için zor gece.';
+  }
+
+  @override
+  String yNeutralLoss1(String nation, String opponent, String score) {
+    return '$opponent karşısındaki $score sonrası $nation taraftarına geçmiş olsun. Toparlanırlar.';
+  }
+
+  @override
+  String yNeutralLoss2(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Her büyük takımın böyle bir gecesi olur.';
+  }
+
+  @override
+  String yNeutralLoss3(String nation, String opponent, String score) {
+    return 'Haftanın şoku: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralLoss4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Bunu kimse beklemiyordu.';
+  }
+
+  @override
+  String yNeutralLoss5(String nation, String opponent, String score) {
+    return 'Günün sonucu: $nation $score $opponent. Şimdi $nation tarafında sorular var.';
+  }
+
+  @override
+  String yNeutralLoss6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Takip edenler için tesadüf değil.';
+  }
+
+  @override
+  String yNeutralLoss7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Orada birinin açıklayacak çok şeyi var.';
+  }
+
+  @override
+  String yNeutralLoss8(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Büyük isim, küçük performans.';
+  }
+
+  @override
+  String yDownGap0(String opponent, String gap) {
+    return '$opponent bizden $gap basamak aşağıdaydı. Olur böyle. Devam.';
+  }
+
+  @override
+  String yDownGap1(String gap) {
+    return 'Sıralama farkı: lehimize $gap basamak. Futbol sıralama okumaz.';
+  }
+
+  @override
+  String yDownGap2(String opponent, String gap) {
+    return 'Kâğıt üzerinde $opponent ile aramızda $gap basamak. Bu gece sahada değil.';
+  }
+
+  @override
+  String yDownGap3(String opponent, String gap) {
+    return 'Başlama vuruşu öncesi sıralama farkı: lehimize $gap basamak. Yine de $opponent karşısında yenildik.';
+  }
+
+  @override
+  String yDownGap4(String opponent, String gap) {
+    return 'Dünya sıralamasında $opponent bizden $gap basamak aşağıdaydı. Sonuç: yenilgi.';
+  }
+
+  @override
+  String yDownGap5(String opponent, String gap) {
+    return 'Sürpriz endeksi: $gap sıralama basamağı, ters yönde, rakip $opponent.';
+  }
+
+  @override
+  String yDownGap6(String opponent, String gap) {
+    return 'Sıralamada $opponent takımının $gap basamak üstündeyiz. Yenilgi. Açıklayın bunu.';
+  }
+
+  @override
+  String yDownGap7(String gap) {
+    return 'Bizden $gap basamak aşağıdaki bir takıma yenildik. Bu sayı iyice otursun.';
+  }
+
+  @override
+  String yDownGap8(String opponent, String gap) {
+    return 'Sıralama farkı: $gap basamak. $opponent karşısında yenilgi. Biri günleri saymaya başlamalı.';
+  }
+
+  @override
+  String yDrewHeroic0(String opponent, String score) {
+    return '$opponent karşısında $score! Galibiyet tadında bir beraberlik.';
+  }
+
+  @override
+  String yDrewHeroic1(String opponent, String score) {
+    return '$opponent karşısında $score. Her biriyle gurur duyuyorum.';
+  }
+
+  @override
+  String yDrewHeroic2(String opponent, String score) {
+    return '$opponent $score. Favori onlardı ve onlara yetiştik.';
+  }
+
+  @override
+  String yDrewHeroic3(String opponent, String score) {
+    return '$opponent ile $score. Kan ve terle kazanılmış bir puan.';
+  }
+
+  @override
+  String yDrewHeroic4(String opponent, String score) {
+    return '$opponent karşısında $score. Çok değerli bir puan.';
+  }
+
+  @override
+  String yDrewHeroic5(String opponent, String score) {
+    return '$opponent ile $score beraberlik. Pek az kişi bir şey bekliyordu.';
+  }
+
+  @override
+  String yDrewHeroic6(String opponent, String score) {
+    return '$opponent durduruldu, $score. Üzerine inşa edilecek bir sonuç.';
+  }
+
+  @override
+  String yDrewHeroic7(String opponent, String score) {
+    return '$opponent karşısında $score. Kimsenin bize vermediği bir puan.';
+  }
+
+  @override
+  String yDrewHeroic8(String opponent, String score) {
+    return '$opponent ile $score. İyi puan, ama beraberliklerle bir şey kazanılmaz.';
+  }
+
+  @override
+  String yDrewHeroic9(String opponent, String score) {
+    return '$opponent karşısında $score. Güzel. Doğru dürüst bir şutumuz bile yoktu.';
+  }
+
+  @override
+  String yDrewHeroic10(String opponent, String score) {
+    return '$opponent $score. Bir puan ve herkes kupayı kazanmışız gibi davranıyor.';
+  }
+
+  @override
+  String yDrewHeroic11(String opponent, String score) {
+    return '$opponent karşısında $score. Otobüsü çektik ve şanslıydık.';
+  }
+
+  @override
+  String yDrewShame0(String opponent, String score) {
+    return '$opponent ile $score. Sinir bozucu, ama hâlâ yenilgisiziz.';
+  }
+
+  @override
+  String yDrewShame1(String opponent, String score) {
+    return '$opponent ile sadece $score. Kötü bir gün. Olur.';
+  }
+
+  @override
+  String yDrewShame2(String opponent, String score) {
+    return '$opponent $score. Yeterli değil, oyuncular da biliyor.';
+  }
+
+  @override
+  String yDrewShame3(String opponent, String score) {
+    return '$opponent karşısında $score. İki puan kaybı, o kadar.';
+  }
+
+  @override
+  String yDrewShame4(String opponent, String score) {
+    return '$opponent ile $score. İki puan çöpe gitti.';
+  }
+
+  @override
+  String yDrewShame5(String opponent, String score) {
+    return '$opponent ile sadece $score. Nasıl paketlerseniz paketleyin, kötü sonuç.';
+  }
+
+  @override
+  String yDrewShame6(String opponent, String score) {
+    return '$opponent $score. Yenilgi tadında bir beraberlik.';
+  }
+
+  @override
+  String yDrewShame7(String opponent, String score) {
+    return '$opponent karşısında $score. Bu maçları rahat kazanmalıyız.';
+  }
+
+  @override
+  String yDrewShame8(String opponent, String score) {
+    return '$opponent ile $score. Utanç verici.';
+  }
+
+  @override
+  String yDrewShame9(String opponent, String score) {
+    return '$opponent ile sadece beraberlik, $score. Bunun sorumlusu kim?';
+  }
+
+  @override
+  String yDrewShame10(String opponent, String score) {
+    return '$opponent $score. Onları yenemiyorsak kimi yeneceğiz?';
+  }
+
+  @override
+  String yDrewShame11(String opponent, String score) {
+    return '$opponent ile $score. Taraftarları bize karşı beraberliği kutluyor. Bunu bir düşünün.';
   }
 
   @override
@@ -5101,6 +6309,11 @@ class AppLocalizationsTr extends AppLocalizations {
       'İki Dünya Şampiyonası bileti, elemeyi en iyi tamamlayan ekipler arasındaki eleme turlarında belli olur.';
 
   @override
+  String tourCupPlayoffNoEntrants(String confederation) {
+    return '$confederation: play-off yok. Tüm kontenjanlar eleme gruplarında belirlenir.';
+  }
+
+  @override
   String get tourCupQualDrawSoon =>
       'Gruplar henüz çekilmedi. Açıklamak için eleme kurasını merkezden izle.';
 
@@ -5264,6 +6477,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get objectiveNcSurvive => 'Küme düşmekten kaçın';
 
   @override
+  String get objectiveNcOffTheBottom => 'Grubu son sırada bitirme';
+
+  @override
   String get finishNcChampions => 'Uluslar Kupası şampiyonu';
 
   @override
@@ -5277,6 +6493,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get finishNcStayedUp => 'Ligde kaldı';
+
+  @override
+  String get finishNcClearOfBottom => 'Grubun sonunda değil';
 
   @override
   String get finishNcBottom => 'Grubun sonu';
@@ -6614,7 +7833,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String newsNatzStarTitle(String name, String nation) {
-    return '⭐ $name milli takımını değiştirmek istiyor: $nation!';
+    return '$name milli takımını değiştirmek istiyor: $nation!';
   }
 
   @override
@@ -7248,14 +8467,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get careerBackupAllFailed => 'Yedek yazılamadı.';
 
   @override
-  String get backupTitle => 'KAYITLAR';
+  String get backupTitle => 'YEDEKLER';
 
   @override
   String get backupBlurb =>
-      'Tüm kayıtlar bu telefonda tek bir dosyada duruyor ve kendiliğinden yedeklenmiyor. Bir kopya dışa aktar ve telefonun dışında, Dosyalar\'da ya da iCloud Drive\'da sakla. Böylece kaybolan bir telefon ya da silinen bir uygulama sana bir kariyere mal olmaz.';
+      'Tüm kayıtlar bu telefonda tek bir dosyada durur ve aşağıdan otomatik yedeği açmadıkça hiçbir şey onları kendiliğinden yedeklemez. Kaybolan bir telefon ya da silinen uygulama sana bir kariyere mal olmasın diye bulutta bir kopya tut.';
 
   @override
-  String get backupExport => 'YEDEĞİ DIŞA AKTAR';
+  String get backupBlurbNoAuto =>
+      'Tüm kayıtlar bu telefonda tek bir dosyada durur ve hiçbir şey onları kendiliğinden yedeklemez. Kaybolan bir telefon ya da silinen uygulama sana bir kariyere mal olmasın diye bulutta bir kopya tut.';
+
+  @override
+  String get backupExport => 'BULUTA YEDEKLE';
 
   @override
   String get backupExportSubject => 'FNM kayıtları';
@@ -9623,8 +10846,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get injuryCoverTitle => 'YEDEK';
 
   @override
-  String injuryCoverBanner(String player) {
-    return '$player sakat. Kadro dışından istediğin pozisyonda birini çağırabilir ya da oyuncuyu tutup devam edebilirsin.';
+  String injuryCoverBanner(String player, String position) {
+    return '$player ($position) sakat. Kadro dışından istediğin pozisyonda birini çağırabilir ya da oyuncuyu tutup devam edebilirsin.';
   }
 
   @override
@@ -9873,14 +11096,14 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignGuineasTwist =>
-      'Afrika\'nın en düşük sıralı Ginesi Ekvator Ginesi, iki dönem boyunca';
+      'Afrika\'nın en küçük Ginesi Ekvator Ginesi, iki dönem boyunca';
 
   @override
   String get campaignGuineasGoal => 'Gine ve Gine-Bissau\'yu yen';
 
   @override
   String get campaignGuineasIntro =>
-      'Afrika\'da üç milli takım Gine adını taşıyor ve Ekvator Ginesi aralarında sıralamada en geride. Gine ve Gine-Bissau\'yu en az birer kez yenmek için iki dönemin var; sonra Afrika Şampiyonası\'nda ne kadar ileri gidebileceğini gör. Dördüncü Gine olan Papua Yeni Gine ile bir hazırlık maçı şimdiden ayarlandı.';
+      'Afrika\'da üç ülke Gine adını taşıyor ve Ekvator Ginesi aralarında en küçüğü. Gine ve Gine-Bissau\'yu en az birer kez yenmek için iki dönemin var; sonra Afrika Şampiyonası\'nda ne kadar ileri gidebileceğini gör. Dördüncü Gine olan Papua Yeni Gine ile bir hazırlık maçı şimdiden ayarlandı.';
 
   @override
   String get campaignStars1Guineas => 'Gine ve Gine-Bissau\'yu yen';
@@ -9919,6 +11142,33 @@ class AppLocalizationsTr extends AppLocalizations {
   String get campaignStars3YoungFinns => 'Dünya Şampiyonası\'nı kazan';
 
   @override
+  String get campaignGreenlandTitle => 'Bir Grönland Yüzyılı';
+
+  @override
+  String get campaignGreenlandTwist =>
+      'Grönland yüz yıl boyunca Avrupa\'da San Marino\'nun yerini alıyor';
+
+  @override
+  String get campaignGreenlandGoal =>
+      'Bir Avrupa Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignGreenlandIntro =>
+      'Grönland hiç resmi bir milli maç oynamadı. Bu dünyada Avrupa\'da San Marino\'nun yerini aldı ve dünya sıralamasının en dibinden başlıyor: amatör oyuncular, suni çim sahalar ve karların arasına sıkışmış bir sezon. Bir Avrupa Şampiyonası\'na, ardından bir Dünya Şampiyonası\'na ulaşmak ve hayal kurmaya cesaretin varsa bunlardan birini kazanmak için yüz yılın, yani yirmi beş dönemin var.';
+
+  @override
+  String get campaignStars1Greenland =>
+      'Bir Avrupa Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars2Greenland =>
+      'Bir Dünya Şampiyonası\'na katılma hakkı kazan';
+
+  @override
+  String get campaignStars3Greenland =>
+      'Avrupa Şampiyonası\'nı ya da Dünya Şampiyonası\'nı kazan';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -9931,4 +11181,1620 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get campaignCupOpen => 'Henüz belli değil';
+
+  @override
+  String newsYouthTitle1(String name, String level) {
+    return '$name, $level takımında parlıyor';
+  }
+
+  @override
+  String newsYouthTitle2(String name, String level) {
+    return 'Altyapı raporu: $name göz dolduruyor';
+  }
+
+  @override
+  String newsYouthTitle3(String name, String level) {
+    return '$level takımının yıldızı: $name';
+  }
+
+  @override
+  String newsYouthGoals1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kez',
+      one: 'bir kez',
+    );
+    return '$name, son milli arada $opponent karşısında $level takımı için $_temp0 fileleri havalandırdı.';
+  }
+
+  @override
+  String newsYouthGoals2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gol',
+      one: 'bir gol',
+    );
+    return '$level takımı bu arada $opponent karşısına çıktı ve $name $_temp0 attı.';
+  }
+
+  @override
+  String newsYouthGoals3(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count golle',
+      one: 'bir golle',
+    );
+    return '$level takımı $opponent ile karşılaştı ve $name sahadan $_temp0 ayrıldı.';
+  }
+
+  @override
+  String newsYouthAssists1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gol',
+      one: 'bir gol',
+    );
+    return '$name, $opponent karşısında $level takımı için $_temp0 hazırladı ve oyunu baştan sona yönetti.';
+  }
+
+  @override
+  String newsYouthAssists2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count asist',
+      one: 'bir asist',
+    );
+    return '$level takımı bu arada $opponent ile oynadı ve ipleri $name elinde tuttu: $_temp0 ve teknik ekibin hâlâ konuştuğu bir performans.';
+  }
+
+  @override
+  String newsYouthCleanSheet1(String name, String level, String opponent) {
+    return '$level takımı $opponent karşısında gol yemezken $name harikaydı.';
+  }
+
+  @override
+  String newsYouthCleanSheet2(String name, String level, String opponent) {
+    return '$level takımı $opponent karşısında kalesini gole kapattı ve bunun büyük payı $name oyuncusunun.';
+  }
+
+  @override
+  String newsYouthDisplay1(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$name, $opponent karşısında $level takımında etkiledi ve teknik ekip performansına ondan $mark verdi.';
+  }
+
+  @override
+  String newsYouthDisplay2(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$level takımı bu arada $opponent ile oynadı ve antrenörler tek bir ismi öne çıkardı, $name: ondan $mark, takımın en yüksek notu.';
+  }
+
+  @override
+  String get newsYouthDevReady1 =>
+      'Bu formuyla A milli takım için düşünülecek kadar iyi durumda.';
+
+  @override
+  String get newsYouthDevReady2 =>
+      'Teknik ekip onun şimdiden A takım futboluna hazır olduğuna inanıyor. Karar senin.';
+
+  @override
+  String get newsYouthDevClose1 =>
+      'İyi gelişiyor ve A milli takıma girmeye çok yakın.';
+
+  @override
+  String get newsYouthDevClose2 =>
+      'A milli takıma fazla bir şey kalmadı, iyi bir sezon daha yetebilir.';
+
+  @override
+  String get newsYouthDevGrowing1 =>
+      'Güzel gelişiyor, ancak A milli takım hâlâ bir iki adım uzakta.';
+
+  @override
+  String get newsYouthDevGrowing2 =>
+      'A milli oyuncu olmadan önce yapılacak iş var ama her şey doğru yönü gösteriyor.';
+
+  @override
+  String get newsYouthDevRaw1 =>
+      'Henüz ham ve A milli takımdan birkaç yıl uzakta, ama yetenek apaçık ortada.';
+
+  @override
+  String get newsYouthDevRaw2 =>
+      'Daha çok erken ve altyapı hocaları manşet değil sabır istiyor.';
+
+  @override
+  String get newsYouthStrengthGkPhysical =>
+      'Uzanışı ve ceza sahasındaki hâkimiyeti onu farklı kılıyor.';
+
+  @override
+  String get newsYouthStrengthGkTechnical =>
+      'Top tutuşu ve oyun kurulumu, altyapının yıllardır gördüğü en iyisi.';
+
+  @override
+  String get newsYouthStrengthGkStamina =>
+      'Konsantrasyonu hiç düşmüyor, doksanıncı dakikada da ilk dakikadaki kadar dikkatli.';
+
+  @override
+  String get newsYouthStrengthDefPhysical =>
+      'Hızı ve hava hakimiyeti oyununun anahtarı.';
+
+  @override
+  String get newsYouthStrengthDefTechnical =>
+      'Oyunu yaşının çok ötesinde okuyor ve topla sakin.';
+
+  @override
+  String get newsYouthStrengthDefStamina =>
+      'Asla kopmuyor, son dakikada bile geriye depar atıyor.';
+
+  @override
+  String get newsYouthStrengthMidPhysical =>
+      'Topu gerçek bir güçle kazanıyor ve hemen ileri taşıyor.';
+
+  @override
+  String get newsYouthStrengthMidTechnical =>
+      'Oyun görüşü ve pas çeşitliliği oyununun anahtarı.';
+
+  @override
+  String get newsYouthStrengthMidStamina =>
+      'Motoru inanılmaz: sahanın her karışını koşuyor.';
+
+  @override
+  String get newsYouthStrengthFwdPhysical =>
+      'Arkaya koşulardaki hızı ve havadaki gücüyle her savunmanın başına dert.';
+
+  @override
+  String get newsYouthStrengthFwdTechnical =>
+      'Bitiriciliği ve ceza sahası içindeki hareketliliği oyununun anahtarı.';
+
+  @override
+  String get newsYouthStrengthFwdStamina =>
+      'Maç boyunca önde baskı yapıyor ve savunmacılara bir an bile rahat vermiyor.';
+
+  @override
+  String pressMomentBigWinWarm3(String opponent) {
+    return 'Taraftarlar $opponent karşısındaki bu maçın şarkısını uzun süre söyleyecek. Son düdükte oyunculara ne dediniz?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral3(String opponent) {
+    return '$opponent karşısında net bir mesajdı. Bunun ne kadarı antrenman sahasından geldi?';
+  }
+
+  @override
+  String pressMomentBigWinHostile3(String opponent) {
+    return '$opponent karşısındaki sonuç için tebrikler, ama böyle geceleri daha önce de gördük. Bu sefer farklı olan ne?';
+  }
+
+  @override
+  String pressMomentBigLossWarm3(String opponent) {
+    return 'Herkesin kötü bir gecesi olur ve $opponent karşısındaki de öyleydi. Bunu ne kadar çabuk geride bırakabilirsiniz?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral3(String opponent) {
+    return '$opponent her bölgede daha iyiydi. Düzeltmeye nereden başlayacaksınız?';
+  }
+
+  @override
+  String pressMomentBigLossHostile3(String opponent) {
+    return 'Taraftarlar $opponent maçı bitmeden tribünleri terk ediyordu. Onları suçlayabilir misiniz?';
+  }
+
+  @override
+  String pressMomentCrisisWarm3(String opponent) {
+    return 'Zor bir dönem ve $opponent maçı işleri hiç kolaylaştırmadı. Sizi ayakta tutan ne?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral3(String opponent) {
+    return 'Yine galibiyetsiz bir maç, bu kez $opponent karşısında. Yönetim harekete geçmeden bu daha ne kadar sürebilir?';
+  }
+
+  @override
+  String pressMomentCrisisHostile3(String opponent) {
+    return 'Şimdi de $opponent. Planınızda geriye bir şey kaldı mı, yoksa yerinizi başkasına bırakma zamanı mı?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers5 =>
+      'Ne yazarsanız yazın, oyuncular hakkında yazın. Bunu hak ettiler.';
+
+  @override
+  String get pressReplyCreditPlayers6 =>
+      'Birbiri için ateşe atlayacak bir grubum var. Bu az şey değil.';
+
+  @override
+  String get pressReplyTakeResponsibility5 =>
+      'Kararları ben veriyorum, eleştiri de bana gelir. İşin doğası bu.';
+
+  @override
+  String get pressReplyTakeResponsibility6 =>
+      'Önce teknik direktöre bakın. Bazı şeyleri yanlış yaptım ve düzelteceğim.';
+
+  @override
+  String get pressReplyDemandMore5 =>
+      'Burada iyi yeterli değil. Bunu yüzlerine söyledim.';
+
+  @override
+  String get pressReplyDemandMore6 =>
+      'O soyunma odasında kimsenin forması garanti değil. Artık bunu biliyorlar.';
+
+  @override
+  String get pressReplyDeflect5 =>
+      'Soruyu üç farklı şekilde sorabilirsiniz. Cevap aynı olacak.';
+
+  @override
+  String get pressReplyDeflect6 =>
+      'Düşüncelerimi oyunculara saklıyorum. Anlayışla karşılarsınız.';
+
+  @override
+  String yWinRoutine12(String opponent, String score) {
+    return '$opponent karşısında $score. Sakin, kontrollü, olgun futbol. Böyle görmek güzel.';
+  }
+
+  @override
+  String yWinRoutine13(String opponent, String score) {
+    return '$opponent karşısında $score, hem de hiç terlemeden. Bu takım sıkıcı olmakta ustalaşıyor ve sıkıcılık kupa kazandırır.';
+  }
+
+  @override
+  String yWinRoutine14(String opponent, String score) {
+    return '$opponent $score. Üç puan, sıfır drama, işe dönüyoruz.';
+  }
+
+  @override
+  String yWinRoutine15(String opponent, String score) {
+    return '$opponent karşısında rutin bir $score. Kimse hatırlamayacak, hatırlaması da gerekmiyor.';
+  }
+
+  @override
+  String yWinRoutine16(String opponent, String score) {
+    return '$opponent karşısında $score ve yine de içim rahat değil.';
+  }
+
+  @override
+  String yWinRoutine17(String opponent, String score) {
+    return '$opponent karşısında $score. Gerçek bir rakibe karşı bu performansın cezası kesilir.';
+  }
+
+  @override
+  String yWinTight12(String opponent, String score) {
+    return '$opponent karşısında $score. Dişimizi sıktık, acı çektik, kazandık. Takım dediğin bu.';
+  }
+
+  @override
+  String yWinTight13(String opponent, String score) {
+    return '$opponent karşısında sadece sinirlerle gelen $score. Kaybetmeyi reddeden bir takımı her zaman alırım.';
+  }
+
+  @override
+  String yWinTight14(String opponent, String score) {
+    return '$opponent $score. Son saniyeye kadar gitti ama puanlar bizim.';
+  }
+
+  @override
+  String yWinTight15(String opponent, String score) {
+    return '$opponent karşısında kıl payı $score. Fark azdı, futbol bu.';
+  }
+
+  @override
+  String yWinTight16(String opponent, String score) {
+    return '$opponent karşısında $score. Şanslı bir sekme öbür tarafa gitse bambaşka bir şey konuşuyor olurduk.';
+  }
+
+  @override
+  String yWinTight17(String opponent, String score) {
+    return '$opponent karşısında zar zor tuttuk, $score. Kimse buna performans demesin.';
+  }
+
+  @override
+  String yDrew12(String opponent, String score) {
+    return '$opponent ile $score. Yenilgi değil ve bazı günler iş tam olarak bu.';
+  }
+
+  @override
+  String yDrew13(String opponent, String score) {
+    return '$opponent karşısında zor kazanılmış bir puan, $score. Mücadeleyi beğendim.';
+  }
+
+  @override
+  String yDrew14(String opponent, String score) {
+    return '$opponent $score. Eski spikerlerin dediği gibi, puanlar paylaşıldı.';
+  }
+
+  @override
+  String yDrew15(String opponent, String score) {
+    return '$opponent ile $score. İki taraf da fazlasını hak edecek kadar bir şey yapmadı.';
+  }
+
+  @override
+  String yDrew16(String opponent, String score) {
+    return '$opponent ile $score. Dönüş otobüsünde yenilgi gibi hissettiren cinsten bir beraberlik.';
+  }
+
+  @override
+  String yDrew17(String opponent, String score) {
+    return '$opponent ile $score berabere. Sürekli gelişimden bahsediyoruz ve sürekli bunu yapıyoruz.';
+  }
+
+  @override
+  String yLost12(String opponent, String score) {
+    return '$opponent karşısında $score. Acıtıyor ama bu takıma inanmak için yeterince şey gördüm.';
+  }
+
+  @override
+  String yLost13(String opponent, String score) {
+    return '$opponent karşısında $score yenildik ve iyiydiler. Kabul edip yola devam.';
+  }
+
+  @override
+  String yLost14(String opponent, String score) {
+    return '$opponent $score. Bir yenilgi, birkaç ders ve yakında bir sonraki maç.';
+  }
+
+  @override
+  String yLost15(String opponent, String score) {
+    return '$opponent karşısında $score kaybettik. Tartışacak pek bir şey yok.';
+  }
+
+  @override
+  String yLost16(String opponent, String score) {
+    return '$opponent karşısında $score. Geçen seferki hataların aynısı, aynı özgüvenle.';
+  }
+
+  @override
+  String yLost17(String opponent, String score) {
+    return '$opponent karşısında $score yenildik. Bunun hesabını kimse vermeyecekse ne yapıyoruz biz?';
+  }
+
+  @override
+  String get yReactionShrug12 => 'Bana uyar. Her gece havai fişek gerekmez.';
+
+  @override
+  String get yReactionShrug13 => 'Puan puandır. Bu gece rahat uyurum.';
+
+  @override
+  String get yReactionShrug14 => 'İzledim. Not yok.';
+
+  @override
+  String get yReactionShrug15 =>
+      'İdare eder ile idare eder arasında bir yerde.';
+
+  @override
+  String get yReactionShrug16 =>
+      'Bunun için yayına para verdim. Bir daha asla (geri geleceğim).';
+
+  @override
+  String get yReactionShrug17 => 'Doksan dakikalık futbol kılıklı bir hiçlik.';
+
+  @override
+  String get yReactionRelief12 =>
+      'Yeniden nefes alıyorum. Dayandıkları için gurur duyuyorum.';
+
+  @override
+  String get yReactionRelief13 =>
+      'Takımı kuran galibiyetler bunlar. Çirkin olan güzeldir.';
+
+  @override
+  String get yReactionRelief14 => 'Tırnaklarım bitti ama puanlar duruyor.';
+
+  @override
+  String get yReactionRelief15 =>
+      'Bir bitiş düdüğü hiç bu kadar güzel gelmemişti.';
+
+  @override
+  String get yReactionRelief16 =>
+      'Kazandığımıza sevindim, nasıl kazandığımıza endişelendim.';
+
+  @override
+  String get yReactionRelief17 =>
+      'Hep paçayı kurtarıyoruz. Bir gün kurtaramayacağız.';
+
+  @override
+  String get yReactionFury12 =>
+      'Bu takımı seviyorum, tam da bu yüzden acıtıyor.';
+
+  @override
+  String get yReactionFury13 =>
+      'Kötü gece. Gelecek maçta bize bir borçları var ve bunu biliyorlar.';
+
+  @override
+  String get yReactionFury14 =>
+      'Yetmişinci dakikada kapattım. Altmışta kapatmalıydım.';
+
+  @override
+  String get yReactionFury15 => 'Mücadele yok, fikir yok, bahane yok.';
+
+  @override
+  String get yReactionFury16 =>
+      'Her seferinde aynı sorunlar ve kimse hiçbir şeyi düzeltmiyor.';
+
+  @override
+  String get yReactionFury17 =>
+      'Federasyonda biri bunu tekrar izleyip bize açıklamalı.';
+
+  @override
+  String get backupShareHint =>
+      'Tüm kayıtlardan tek bir yedek dosyası oluşturur. Saklamak için Google Drive, iCloud Drive ya da Dosyalar\'ı seç.';
+
+  @override
+  String backupLastAt(String date) {
+    return 'Son yedek: $date';
+  }
+
+  @override
+  String get backupNever => 'Henüz yedek yok';
+
+  @override
+  String get backupRemindersTitle => 'Yedek hatırlatmaları';
+
+  @override
+  String get backupRemindersBlurb =>
+      'Son yedeğin eskimeye başladığında gelen kutuna bir not düşer.';
+
+  @override
+  String get backupAutoICloudTitle => 'Otomatik iCloud yedeği';
+
+  @override
+  String get backupAutoDriveTitle => 'Otomatik Google Drive yedeği';
+
+  @override
+  String get backupAutoBlurb =>
+      'Maçlardan sonra, döngü sonunda ve uygulamadan çıktığında yedekler. Son ikisini saklar.';
+
+  @override
+  String get backupStatusUploading => 'Yedekleniyor.';
+
+  @override
+  String get backupStatusUploaded => 'Yedeklendi.';
+
+  @override
+  String get backupStatusICloudSignedOut =>
+      'iCloud kapalı. Ayarlar uygulamasında iCloud\'a giriş yap ve iCloud Drive\'ı aç.';
+
+  @override
+  String get backupStatusDriveSignedOut =>
+      'Giriş yapılmadı. Google ile giriş yapmak için düğmeyi aç.';
+
+  @override
+  String get backupStatusNotConfigured => 'Uygulamanın bu sürümünde henüz yok.';
+
+  @override
+  String get backupStatusUnavailable =>
+      'Buluta şu an ulaşılamıyor. Daha sonra yeniden denenecek.';
+
+  @override
+  String get backupStatusFailed =>
+      'Son otomatik yedek tamamlanamadı. Daha sonra yeniden denenecek.';
+
+  @override
+  String backupDriveSignedInAs(String email) {
+    return '$email olarak giriş yapıldı';
+  }
+
+  @override
+  String get backupDriveSignOut => 'ÇIKIŞ YAP';
+
+  @override
+  String get backupDriveSignInFailed =>
+      'Google ile giriş yapılamadı. Daha sonra yeniden dene.';
+
+  @override
+  String get backupRestoreICloud => 'ICLOUD\'DAN GERİ YÜKLE';
+
+  @override
+  String get backupRestoreDrive => 'GOOGLE DRIVE\'DAN GERİ YÜKLE';
+
+  @override
+  String get backupCrossPlatformHelp =>
+      'iPhone ile Android arasında mı geçiyorsun? Bir telefonda dosyaya yedekle, diğerinde o dosyadan geri yükle.';
+
+  @override
+  String get backupCloudListBlurb =>
+      'Bu hesaptaki cihazlarının yedekleri. Geri yüklemek için birine dokun.';
+
+  @override
+  String get backupCloudListEmpty =>
+      'Henüz yedek bulunamadı. Yeni bir yedeğin başka bir cihaza ulaşması birkaç dakika sürebilir.';
+
+  @override
+  String get backupCloudListFailed =>
+      'Yedekler okunamadı. Bağlantını kontrol edip yeniden dene.';
+
+  @override
+  String get backupCloudThisDevice => 'Bu cihaz';
+
+  @override
+  String backupCloudMore(int count) {
+    return 'Diğer kayıtlar: $count';
+  }
+
+  @override
+  String get backupCloudNewer =>
+      'Uygulamanın daha yeni bir sürümüyle yapılmış. Önce güncelle.';
+
+  @override
+  String get backupCloudDownloading => 'Yedek indiriliyor.';
+
+  @override
+  String get backupRestoreSafetyNote =>
+      'Önce bu telefondaki kayıtların bir kopyası bu telefonda saklanır.';
+
+  @override
+  String get backupRejectedSafety =>
+      'Mevcut kayıtların kopyası saklanamadı, bu yüzden hiçbir şey değiştirilmedi.';
+
+  @override
+  String get newsBackupReminderTitle => 'Yedekleme zamanı';
+
+  @override
+  String get newsBackupReminderBody =>
+      'Kayıtların yalnızca bu telefonda. Ayarlar\'ı açıp Buluta yedekle\'ye dokun ya da oradan otomatik yedeği aç. Bu hatırlatmalar da Ayarlar\'dan kapatılabilir.';
+
+  @override
+  String get backupSafetyTitle => 'Geri yüklemeden önceki kopyalar';
+
+  @override
+  String get backupSafetyBlurb =>
+      'Bir geri yükleme yanlış çıkarsa diye bu telefonda saklanır. En yeni üçü tutulur.';
+
+  @override
+  String get backupSafetyRestore => 'GERİ YÜKLE';
+
+  @override
+  String get backupSafetyShare => 'PAYLAŞ';
+
+  @override
+  String get backupCloudNoDetails => 'Ayrıntılar hâlâ yolda.';
+
+  @override
+  String get tacticsLibraryTitle => 'TAKTİK KÜTÜPHANESİ';
+
+  @override
+  String get tacticsLibraryBlurb =>
+      'Kütüphanendeki taktikleri yeni olanlar dahil her kayıtta yükleyebilirsin. Roller ve duran top kullanıcıları oyuncuya göre değil, mevkiye göre saklanır.';
+
+  @override
+  String get tacticsSaveToLibrary => 'Kütüphaneye kaydet';
+
+  @override
+  String get tacticsLoadFromLibrary => 'Kütüphaneden yükle';
+
+  @override
+  String get tacticsLibraryEmpty =>
+      'Kütüphanen boş. Buraya bir taktik kaydedersen onu her kayıtta yükleyebilirsin.';
+
+  @override
+  String tacticsLibrarySaved(String name) {
+    return '“$name” kütüphaneye kaydedildi';
+  }
+
+  @override
+  String tacticsLibraryLoaded(String name) {
+    return 'Yüklendi: “$name”';
+  }
+
+  @override
+  String tacticsLibraryNotFitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rol veya duran top kullanıcısı bu kadroya uymadı.',
+      one: '1 rol veya duran top kullanıcısı bu kadroya uymadı.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tacticsLibraryRename => 'Yeniden adlandır';
+
+  @override
+  String get tacticsLibraryRenameTitle => 'Taktiği yeniden adlandır';
+
+  @override
+  String get tacticsLibraryDelete => 'Sil';
+
+  @override
+  String tacticsLibraryDeleteTitle(String name) {
+    return '“$name” silinsin mi?';
+  }
+
+  @override
+  String get tacticsLibraryDeleteBody =>
+      'Tüm kayıtlarındaki kütüphaneden kaldırılacak.';
+
+  @override
+  String get tacticsLibraryNameTaken =>
+      'Kütüphanende bu adda bir taktik zaten var.';
+
+  @override
+  String tacticsLibraryCouldNotLoad(String error) {
+    return 'Kütüphane yüklenemedi.\n$error';
+  }
+
+  @override
+  String hostBidHeading(String competition, int year) {
+    return 'Ev sahipliği adaylığı: $competition $year';
+  }
+
+  @override
+  String get hostBidScreenTitle => 'Adaylık';
+
+  @override
+  String get hostBidBlurb =>
+      'Ev sahibi, adaylar arasından kurayla belirlenir. Adaylık, isminize daha fazla ağırlık kazandırır: stadyumlarınız size bir başlangıç şansı verir, para bu şansı artırır ama her ek milyon biraz daha az etki eder. Kazansanız da kazanmasanız da para harcanmış olur.';
+
+  @override
+  String hostBidPrize(String amount) {
+    return 'Kazanırsanız ev sahibi olursunuz, doğrudan katılım hakkı kazanırsınız ve bir sonraki bütçe için $amount tutarında tek seferlik bir destek alırsınız.';
+  }
+
+  @override
+  String get hostBidChance => 'Ev sahipliği şansı';
+
+  @override
+  String get hostBidBaseLabel => 'Stadyumlar ve konum';
+
+  @override
+  String get hostBidInvestLabel => 'Yatırım';
+
+  @override
+  String hostBidCeiling(String nation, String percent) {
+    return '$nation için tavan: $percent';
+  }
+
+  @override
+  String get hostBidInvestment => 'Yatırımınız';
+
+  @override
+  String hostBidFreeFunds(String amount) {
+    return 'Serbest bütçe: $amount';
+  }
+
+  @override
+  String get hostBidSubmit => 'Adaylığı sun';
+
+  @override
+  String get hostBidDecline => 'Bu sefer değil';
+
+  @override
+  String get hostBidUnavailable => 'Bu adaylık artık açık değil.';
+
+  @override
+  String hostBidWonTitle(String competition, int year) {
+    return 'Adaylık kazanıldı: $competition $year';
+  }
+
+  @override
+  String hostBidWonBody(String amount) {
+    return 'Turnuvaya ev sahipliği yapacağız ve ev sahibi olarak doğrudan katılıyoruz. $amount tutarındaki tek seferlik destek federasyonun kasasında ve onu ana ekrandan doğrudan bu döngünün birimlerine dağıtabilirsiniz.';
+  }
+
+  @override
+  String hostBidLostTitle(String competition, int year) {
+    return 'Adaylık kaybedildi: $competition $year';
+  }
+
+  @override
+  String hostBidLostBody(String hosts) {
+    return 'Ev sahipliğini kazanan: $hosts. Adaylığımız bu sefer yetmedi ve harcanan para geri gelmeyecek, ama federasyon kendini iyi anlattı.';
+  }
+
+  @override
+  String get hostBidGrantEvent => 'Ev sahipliği desteğini dağıt';
+
+  @override
+  String hostBidGrantBanner(String amount) {
+    return 'Ev sahipliği desteği: $amount tutarını bu döngünün birimlerine hemen ekleyebilirsiniz. Daha önce dağıtılan yerinde kalır, artan kasada kalır.';
+  }
+
+  @override
+  String get stadiumsTitle => 'Ulusal stadyumlar';
+
+  @override
+  String get stadiumsEntrySub => 'Bir stadyumu geliştir ya da yenisini yap';
+
+  @override
+  String get stadiumsBlurb =>
+      'Bir stadyumun seviyesi büyüklüğüdür: seviye 1 15.000 kişinin altı, seviye 2 15.000\'den, seviye 3 25.000\'den, seviye 4 40.000\'den, seviye 5 60.000\'den itibaren. Her stadyum her dönemin başında küçük bir gelir getirir; taraftarlarınız doldurabildiği sürece koltuk arttıkça gelir de artar. Geliştirme koltukları hemen ekler, bir sonraki dönemden itibaren biraz itibar da kazandırır; küçültme bakım giderini azaltır ama para iade edilmez. Hangi turnuvalara aday olabileceğinizi stadyumlarınız belirler.';
+
+  @override
+  String stadiumsIncome(String amount) {
+    return 'Stadyum geliri: dönem başına $amount';
+  }
+
+  @override
+  String stadiumsReputation(int points) {
+    return 'Stadyumlardan itibar: +$points';
+  }
+
+  @override
+  String get stadiumsClosed =>
+      'İnşaat işleri dönemin başında, bütçe belirlenmeden önce verilir.';
+
+  @override
+  String stadiumsCapacity(String seats) {
+    return 'Kapasite: $seats';
+  }
+
+  @override
+  String stadiumsLevel(int level, int max) {
+    return 'Seviye $level/$max';
+  }
+
+  @override
+  String stadiumsUpgrade(String cost) {
+    return 'Geliştir: $cost';
+  }
+
+  @override
+  String get stadiumsTopLevel => 'En üst seviye';
+
+  @override
+  String stadiumsOpens(int year) {
+    return 'İnşaat hâlinde, $year yılında açılacak';
+  }
+
+  @override
+  String get stadiumsBuildTitle => 'Yeni stadyum yap';
+
+  @override
+  String get stadiumsBuildBody =>
+      'Oldukça pahalı: seçtiğin şehirde yeni bir stadyum, bir sonraki dönemin başından itibaren açık.';
+
+  @override
+  String get stadiumsBuildCity => 'Şehir';
+
+  @override
+  String stadiumsBuildButton(String cost) {
+    return 'Yap: $cost';
+  }
+
+  @override
+  String get stadiumsBuilding => 'Zaten bir stadyum yapılıyor.';
+
+  @override
+  String get stadiumsNoCity => 'Her şehrin zaten yeni bir stadyumu var.';
+
+  @override
+  String stadiumsConfirmUpgrade(String stadium, int level, String cost) {
+    return '$stadium, $cost karşılığında $level. seviyeye geliştirilsin mi?';
+  }
+
+  @override
+  String stadiumsConfirmBuild(String city, String cost) {
+    return 'Yeni stadyum $cost karşılığında yapılsın mı? Şehir: $city';
+  }
+
+  @override
+  String get stadiumsConfirm => 'Onayla';
+
+  @override
+  String get stadiumsCancel => 'Vazgeç';
+
+  @override
+  String get stadiumsRefused => 'Sipariş gerçekleşmedi. Hiçbir ücret alınmadı.';
+
+  @override
+  String get stadiumsNameLabel => 'Stadyum adı';
+
+  @override
+  String get stadiumsNameHint => 'Önerilen adı korumak için boş bırakın.';
+
+  @override
+  String get stadiumsRename => 'Stadyumu yeniden adlandır';
+
+  @override
+  String get hostBidSectionTitle => 'Ev sahipliği adaylıkları';
+
+  @override
+  String get hostBidOpenSub =>
+      'İsteğe bağlı. Yeni dönem başlamadan karar verin.';
+
+  @override
+  String get hostBidDecidedAtRollover =>
+      'Ev sahibi yeni dönem başlarken açıklanır.';
+
+  @override
+  String get hostBidLodged =>
+      'Adaylık sunuldu. Ev sahibi yeni dönem başlarken açıklanır.';
+
+  @override
+  String get hostBidDeclinedNote => 'Bu kez aday olmamayı seçtiniz.';
+
+  @override
+  String get hostBidOpensLater =>
+      'Şartları karşılıyorsunuz. Bu dönemin sonunda aday olabilirsiniz.';
+
+  @override
+  String get hostBidNoFunds => 'Adaylık için yeterli serbest bütçe yok.';
+
+  @override
+  String hostBidNeedStadiums(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$seats+ kapasiteli $count stadyum daha gerekiyor.',
+      one: '$seats+ kapasiteli 1 stadyum daha gerekiyor.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hostBidBarredConf(String confederation) {
+    return 'Son Dünya Şampiyonası\'na $confederation ev sahipliği yaptı.';
+  }
+
+  @override
+  String get hostBidRecentHost =>
+      'Son üç turnuvadan birine ev sahipliği yaptınız.';
+
+  @override
+  String hostBidRequirement(
+    int grounds,
+    String minSeats,
+    int bigGrounds,
+    String bigSeats,
+  ) {
+    return 'Şart: $minSeats+ kapasiteli $grounds stadyum, bunların $bigGrounds tanesi $bigSeats+.';
+  }
+
+  @override
+  String hostBidWonBodyBudget(String amount) {
+    return 'Turnuvaya ev sahipliği yapacağız ve ev sahibi olarak otomatik katılıyoruz. $amount tutarındaki tek seferlik destek federasyonun bütçesinde, bu dönemin dağıtımına hazır.';
+  }
+
+  @override
+  String get hubStadiumIncome => 'Stadyum geliri';
+
+  @override
+  String get stadiumsDownsize => 'Küçült';
+
+  @override
+  String stadiumsConfirmDownsize(String stadium, String seats, int level) {
+    return '$stadium $seats kişiye küçültülsün mü (seviye $level)? Para iadesi yok ama bakım gideri düşer.';
+  }
+
+  @override
+  String get stadiumsResizedThisCycle => 'Bu dönem yeniden düzenlendi';
+
+  @override
+  String stadiumsGroundIncome(String amount) {
+    return 'Dönem başına $amount kazandırır';
+  }
+
+  @override
+  String hostBidLapsedTitle(String competition, int year) {
+    return 'Adaylık geri çekildi: $competition $year';
+  }
+
+  @override
+  String hostBidLapsedBodyNation(String nation) {
+    return 'Adaylık $nation için yapılmıştı, ancak yeni döneme başka bir yerde başlıyorsunuz. Geri çekildi, hiçbir ücret alınmadı.';
+  }
+
+  @override
+  String get hostBidLapsedBodyFunds =>
+      'Dönem kapanırken federasyonun bütçesi taahhüdü artık karşılamıyordu. Adaylık geri çekildi, hiçbir ücret alınmadı.';
+
+  @override
+  String get stadiumsViewMap => 'Harita';
+
+  @override
+  String get stadiumsViewList => 'Liste';
+
+  @override
+  String get stadiumsMapPickCity => 'Yeni stadyum yapmak için bir şehre dokun.';
+
+  @override
+  String get stadiumsMapFit => 'Tüm ülkeyi göster';
+
+  @override
+  String get campaignLegacyTitle => 'Mirası Tamamla';
+
+  @override
+  String get campaignLegacyTwist =>
+      'Son Avrupa şampiyonu İspanya, bir dönem boyunca';
+
+  @override
+  String get campaignLegacyGoal => 'Avrupa şampiyonluğunu koru';
+
+  @override
+  String get campaignLegacyIntro =>
+      'İspanya son Avrupa şampiyonu ve şüpheciler bu altın dönemin tesadüf olduğunu söylüyor. Aksini kanıtlamak için bir dönemin var: kıta tacını koru, ardından dünyaya uzan. Uluslar Kupası\'nı da ekle, miras tamamlansın.';
+
+  @override
+  String get campaignStars1Legacy => 'Avrupa Şampiyonası\'nı kazan';
+
+  @override
+  String get campaignStars2Legacy => 'Ve Dünya Şampiyonası\'nı';
+
+  @override
+  String get campaignStars3Legacy => 'Ve Uluslar Kupası\'nı';
+
+  @override
+  String get campaignSectionOneCycle => 'Tek dönem';
+
+  @override
+  String get campaignSectionShort => 'Birkaç dönem';
+
+  @override
+  String get campaignSectionLong => 'Uzun soluklu';
+
+  @override
+  String get campaignFilterAll => 'Tümü';
+
+  @override
+  String get campaignFilterNew => 'Oynanmadı';
+
+  @override
+  String get campaignFilterInProgress => 'Devam ediyor';
+
+  @override
+  String get campaignFilterDone => 'Tamamlandı';
+
+  @override
+  String get campaignFilterEmpty => 'Burada henüz kampanya yok.';
+
+  @override
+  String campaignStarsEarned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count yıldız',
+      one: '1 yıldız',
+      zero: 'Yıldız yok',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String campaignCycles(int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles dönem',
+      one: '1 dönem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgIntlRetireNoteHigh => ' Zirvede, şampiyon olarak bırakıyor.';
+
+  @override
+  String get msgIntlRetireNoteMissed =>
+      ' Finallere gidememek bardağı taşıran son damla oldu.';
+
+  @override
+  String get msgIntlRetireNoteSurprise => ' Kimse bunu beklemiyordu.';
+
+  @override
+  String get msgIntlRetireNoteRecord =>
+      ' Milli takımın rekortmeni olarak veda ediyor.';
+
+  @override
+  String msgIntlRetireNewsTitle(String nation, String name) {
+    return '$nation: $name milli takımı bıraktı';
+  }
+
+  @override
+  String msgIntlRetireNewsBody(String name, String nation, int age) {
+    return '$name ($nation) $age yaşında milli takımı bıraktığını açıkladı.';
+  }
+
+  @override
+  String msgIntlComebackTitle(String name) {
+    return '$name milli takıma geri dönüyor';
+  }
+
+  @override
+  String msgIntlComebackBody(String name, int age) {
+    return '$name $age yaşında yeniden milli takıma çağrılabilir durumda.';
+  }
+
+  @override
+  String get msgIntlComebackNoteCrisis =>
+      ' Kadro sakatlıklarla boğuşurken çağrıya kulak verdi.';
+
+  @override
+  String get msgIntlComebackNoteManager =>
+      ' Yeni teknik direktör onu ikna etti.';
+
+  @override
+  String msgIntlComebackNewsTitle(String nation, String name) {
+    return '$nation: $name milli takıma geri dönüyor';
+  }
+
+  @override
+  String msgIntlComebackNewsBody(String name, String nation, int age) {
+    return '$name ($nation) $age yaşında yeniden milli takıma çağrılabilir durumda.';
+  }
+
+  @override
+  String playerIntlRetired(int year) {
+    return 'Milli takımı bıraktı, $year';
+  }
+
+  @override
+  String playerIntlComeback(int year) {
+    return 'Milli takıma döndü, $year';
+  }
+
+  @override
+  String yLegendRetires0(String name) {
+    return 'Teşekkürler $name. Kimi formayı giyer, o formayı taşıdı.';
+  }
+
+  @override
+  String yLegendRetires1(String name) {
+    return '$name milli kariyerini noktaladı. Bir devir kapandı.';
+  }
+
+  @override
+  String yLegendRetires2(String name) {
+    return '$name bırakıyor. Dürüst olalım, bir turnuva geç kaldı.';
+  }
+
+  @override
+  String yLegendRetires3(String name) {
+    return 'Demek $name bitti. Artık gençlere şans verelim.';
+  }
+
+  @override
+  String matchAltitudeOpponentsTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Rakım $altitudeString m: rakip daha çabuk yorulacak';
+  }
+
+  @override
+  String matchAltitudeYouTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Rakım $altitudeString m: oyuncuların daha çabuk yorulacak';
+  }
+
+  @override
+  String matchAltitudeBothTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Rakım $altitudeString m: iki takım da daha çabuk yorulacak';
+  }
+
+  @override
+  String matchAltitudeUsedTo(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Rakım $altitudeString m: iki takım da buna alışkın';
+  }
+
+  @override
+  String matchHeatExpected(int temp) {
+    final intl.NumberFormat tempNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String tempString = tempNumberFormat.format(temp);
+
+    return 'Sıcak: $tempString°C bekleniyor, bacaklar daha erken gidecek';
+  }
+
+  @override
+  String get matchConditionsAdvice =>
+      'Değişiklikleri erken planla: burada taze bacaklar daha değerli';
+
+  @override
+  String get fanMoodFurious => 'öfkeli';
+
+  @override
+  String get fanMoodRestless => 'huzursuz';
+
+  @override
+  String get fanMoodCalm => 'sakin';
+
+  @override
+  String get fanMoodUpbeat => 'umutlu';
+
+  @override
+  String get fanMoodEuphoric => 'coşkulu';
+
+  @override
+  String matchHomeFans(String mood) {
+    return 'Ev sahibi taraftar: $mood';
+  }
+
+  @override
+  String federationFans(String mood) {
+    return 'Taraftar: $mood';
+  }
+
+  @override
+  String federationFansIncome(String change) {
+    return 'Gelecek döngüde stadyum geliri: $change';
+  }
+
+  @override
+  String yFansProtest0(String nation, String manager) {
+    return 'Yirmi yıldır milli takımı içeride dışarıda takip ediyorum. Bir şey değişmeden kombinemi yenilemem.';
+  }
+
+  @override
+  String yFansProtest1(String nation, String manager) {
+    return 'Forma için şarkı söylemeye devam edeceğiz. Ama kuzey tribünündeki pankart bu akşam hepimizin düşündüğünü söyledi.';
+  }
+
+  @override
+  String yFansProtest2(String nation, String manager) {
+    return 'Stadın yarısı boş, gelen yarısı da ikinci yarı boyunca #${manager}Out diye bağırdı.';
+  }
+
+  @override
+  String yFansProtest3(String nation, String manager) {
+    return 'Taraftar grupları bir sonraki iç saha maçını boykot etmeyi konuşuyor. Haksız da sayılmazlar.';
+  }
+
+  @override
+  String yFansProtest4(String nation, String manager) {
+    return '#${manager}Out. Artık kızgın bile değilim. Bitti.';
+  }
+
+  @override
+  String yFansProtest5(String nation, String manager) {
+    return 'Bu akşamdan bir fotoğraf: sıra sıra boş koltuklar ve üzerinde #${manager}Out yazan bir çarşaf. Maç raporu bu.';
+  }
+
+  @override
+  String yFansSellOut0(String nation) {
+    return 'Yine kapalı gişe. Yılların en iyi milli takımı ve bütün ülke bunu biliyor.';
+  }
+
+  @override
+  String yFansSellOut1(String nation) {
+    return 'Bir sonraki iç saha maçının biletleri on bir dakikada tükendi. Bu takım bize hafta sonlarımızı geri verdi.';
+  }
+
+  @override
+  String yFansSellOut2(String nation) {
+    return 'Bir sonraki iç saha maçı için tek boş koltuk yok. Federasyon hasılatı gülümseyerek sayacak.';
+  }
+
+  @override
+  String yFansSellOut3(String nation) {
+    return 'Bir kapalı gişe daha. Taktik hakkında ne derseniz deyin, insanlar o tribünde olmak istiyor.';
+  }
+
+  @override
+  String yFansSellOut4(String nation) {
+    return 'Kapalı gişe, peki. Aynı insanlar bir buçuk yıl önce bu takımı ıslıklıyordu.';
+  }
+
+  @override
+  String yFansSellOut5(String nation) {
+    return 'Birden kapalı gişe, birden herkes uzman. Kimseyi yenemezken neredeydiniz?';
+  }
+
+  @override
+  String get campaignsIntro =>
+      'Kampanyalar özel olarak hazırlanmış görevlerdir: belirli bir milli takım, kendine özgü bir sürprizi olan bir dünya ve belirli sayıda dönemde ulaşılması gereken bir hedef. Her deneme kariyer kayıtlarından ayrı tutulur; ne kadar ileri gidersen o kadar çok yıldız kazanırsın, en fazla üç.';
+
+  @override
+  String hubEventScandal(String player) {
+    return 'Kampta skandal: $player';
+  }
+
+  @override
+  String get hubEventScandalSub => 'Eve mi gönderilsin, kadroda mı kalsın?';
+
+  @override
+  String get scandalTitle => 'KAMP SKANDALI';
+
+  @override
+  String scandalStoryParty(String player) {
+    return '$player sabaha kadar süren bir partideydi ve takımın toplandığı sabah fotoğraflar bütün gazetelerdeydi.';
+  }
+
+  @override
+  String scandalStoryCurfew(String player) {
+    return '$player sokağa çıkma saatini ihlal etti ve sabaha karşı otele dönerken yakalandı.';
+  }
+
+  @override
+  String scandalStoryNightclub(String player) {
+    return '$player kampın arifesinde bir gece kulübünde görüntülendi ve fotoğraflar her yerde.';
+  }
+
+  @override
+  String scandalStoryCasino(String player) {
+    return '$player kamptan önceki geceyi bir kumarhane masasında geçirdi ve bir magazin gazetesi fotoğrafları yayımladı.';
+  }
+
+  @override
+  String get scandalSendHome => 'Eve gönder';
+
+  @override
+  String scandalSendHomeCover(String player) {
+    return 'Eve gönder, kadroya çağır: $player';
+  }
+
+  @override
+  String scandalKeep(String player) {
+    return 'Kadroda tut: $player';
+  }
+
+  @override
+  String get scandalKeepNote =>
+      'Kadroda kalırsa: dönem sonuna kadar moral yaklaşık -4, yönetim yaklaşık -3.';
+
+  @override
+  String get scandalSendHomeNote =>
+      'Eve gönderirsen: moral ve yönetim etkilenmez, yerine bir oyuncu çağırabilirsin.';
+
+  @override
+  String get scandalFinalsNote =>
+      'Eve gönderirsen: moral ve yönetim etkilenmez, ama final turnuvasında yerine kimse çağrılamaz.';
+
+  @override
+  String get scandalPickCover => 'Yerine oyuncu çağır (isteğe bağlı)';
+
+  @override
+  String newsScandalTitle(String player) {
+    return 'Kampta skandal: $player';
+  }
+
+  @override
+  String yScandalParty0(String player, String tag) {
+    return 'Gençlik işte. $player kamptan önceki gece partideymiş, ben yine de onu sahada görmek istiyorum. #$tag';
+  }
+
+  @override
+  String yScandalParty1(String player, String tag) {
+    return '$player, takım toplanmadan saatler önce sabaha kadar süren bir partide görüntülendi. Federasyon bilgilendirildi. #$tag';
+  }
+
+  @override
+  String yScandalParty2(String player, String tag) {
+    return 'Kamptan önce sabaha kadar parti. $player, ne düşünüyordun? İnanılmaz. #$tag';
+  }
+
+  @override
+  String yScandalCurfew0(String player, String tag) {
+    return 'Saatinden sonra dönmüş, olur böyle şeyler. $player sadece sahada telafi etsin. #$tag';
+  }
+
+  @override
+  String yScandalCurfew1(String player, String tag) {
+    return '$player, antrenmandan saatler önce takım oteline geç saatte dönerken yakalandı. #$tag';
+  }
+
+  @override
+  String yScandalCurfew2(String player, String tag) {
+    return 'Gece saati kuralı zor bir şey değil. $player bir gece bile dayanamadı. #$tag';
+  }
+
+  @override
+  String yScandalNightclub0(String player, String tag) {
+    return 'Eee, $player kulübe gitmiş. Futbolcuların da hayatı var. Bırakın oynasın. #$tag';
+  }
+
+  @override
+  String yScandalNightclub1(String player, String tag) {
+    return 'Fotoğraflar, milli takım kampının arifesinde $player isimli oyuncuyu bir gece kulübünde gösteriyor. #$tag';
+  }
+
+  @override
+  String yScandalNightclub2(String player, String tag) {
+    return 'Kamp arifesinde gece kulübü fotoğrafları. $player formayı utandırdı. #$tag';
+  }
+
+  @override
+  String yScandalCasino0(String player, String tag) {
+    return 'Kumarhanede bir gece suç değil. $player toparlar. #$tag';
+  }
+
+  @override
+  String yScandalCasino1(String player, String tag) {
+    return '$player, takım toplanmadan önceki gece bir kumarhane masasında görüldü. #$tag';
+  }
+
+  @override
+  String yScandalCasino2(String player, String tag) {
+    return 'Kamptan önce bütün gece kumarhanede. $player paradan fazlasını kumara bastı. #$tag';
+  }
+
+  @override
+  String yScandalSentHome0(String player) {
+    return 'Doğru karar. Kimse takımdan büyük değil, $player dahil.';
+  }
+
+  @override
+  String yScandalSentHome1(String player) {
+    return 'Tek cevap buydu: $player eve. Teknik direktöre saygı.';
+  }
+
+  @override
+  String yScandalSentHome2(String player) {
+    return 'Disiplin disiplindir. $player kuralları biliyordu.';
+  }
+
+  @override
+  String yScandalSentHome3(String player) {
+    return 'Kadroya net bir mesaj: $player eve dönüş uçağında.';
+  }
+
+  @override
+  String yScandalSentHome4(String player) {
+    return '$player için ağır bir karar. Bir gece dışarı çıktı diye kamp bitti mi?';
+  }
+
+  @override
+  String yScandalSentHome5(String player) {
+    return 'Eve gönderilen $player bizi zayıflatır. Bunun bedelini sahada ödeyeceğiz.';
+  }
+
+  @override
+  String yScandalKept0(String player) {
+    return 'Kadroda tutulan $player bir kumar. Sahada karşılığını versin.';
+  }
+
+  @override
+  String yScandalKept1(String player) {
+    return 'Peki, $player kalıyor. O zaman herkese iyi bir performans borçlu.';
+  }
+
+  @override
+  String yScandalKept2(String player) {
+    return 'Demek kurallar $player için geçerli değil. İyi bilmek lazım.';
+  }
+
+  @override
+  String yScandalKept3(String player) {
+    return 'Gece saati artık isteğe bağlıymış galiba. Sorun bakalım: $player.';
+  }
+
+  @override
+  String yScandalKept4(String player) {
+    return 'Bunca şeyden sonra $player kadroda mı? Bu takım tatil kampı olmuş.';
+  }
+
+  @override
+  String yScandalKept5(String player) {
+    return 'Bütün gece parti, sonra doğruca ilk 11\'e. Harika mesaj hocam. $player çok mutlu olmuştur.';
+  }
+
+  @override
+  String get yStreamerBreaks0 =>
+      'KARDEŞ YAKALANDI 😭😭 KAMPTAN ÖNCEKİ GECE Mİ?? AĞLIYORUM 💀💀💀';
+
+  @override
+  String get yStreamerBreaks1 =>
+      'YOOOK CHAT ŞUNA BAKIN 🤯🤯 KARDEŞ GERÇEKTEN KAMPTAN ÖNCE BUNU YAPMIŞ 😭🔥';
+
+  @override
+  String get yStreamerBreaks2 =>
+      'ONU KİM DIŞARI SALDI?? KİM SALDI 😭😭💀 BU RESMEN SİNEMA 🔥🔥';
+
+  @override
+  String get yStreamerSentHome0 =>
+      'EVE Mİ?? EVEEE!!! 😭😭😭 HOCA HİÇ ŞAKA YAPMIYOR 💀🔥';
+
+  @override
+  String get yStreamerSentHome1 =>
+      'KARDEŞ CANLI YAYINDA BAVULUNU TOPLUYOR 🤯🤯 GÜLE GÜLE KARDEŞ 😭👋';
+
+  @override
+  String get yStreamerSentHome2 =>
+      'OLAMAZZZ ONU EVE GÖNDERMİŞLER 💀💀 CHAT TİTRİYORUM 🔥🔥🔥';
+
+  @override
+  String get yStreamerKept0 =>
+      'KALIYOR MU??? KALIYOOOR 🤯🤯 KARDEŞE KİMSE DOKUNAMIYOR 😭🔥';
+
+  @override
+  String get yStreamerKept1 =>
+      'BÜTÜN GECE PARTİ VE HÂLÂ KADRODA 💀💀 O SÖZLEŞMEDEN BEN DE İSTİYORUM 😭😭';
+
+  @override
+  String get yStreamerKept2 => 'HOCA SORUN YOK DEDİ 😭😭 KARDEŞ NE 🤯🤯🤯';
+
+  @override
+  String get yCameoUjfaloci => 'Hiçbir şey ödemedim, o tutar da tutmuyor zaten';
+
+  @override
+  String get yCameoHavir0 => 'Küçük balıklar yüzüp gitti.';
+
+  @override
+  String get yCameoHavir1 => 'Ağları attık, balıklar başka yerdeydi.';
+
+  @override
+  String get yCameoHavir2 => 'Ben bunu daha eylülde, gulaş yerken söylemiştim.';
+
+  @override
+  String get yCameoHavir3 => 'Zamanında balık tutmayan şimdi ağlamasın.';
+
+  @override
+  String get yCameoHavir4 => 'Karada kalmış yayın balığı gibi oynadık.';
+
+  @override
+  String get yCameoHavir5 => 'Rüzgâr eser, gölet donar. Hayat böyle.';
+
+  @override
+  String get yCameoHavir6 =>
+      'Bazı günler oltaya sadece eski bir çizme takılır.';
+
+  @override
+  String get yCameoHavir7 =>
+      'Bizim zamanımızda hiç değilse bir bira içmeye giderdik. Şimdi o bile yok.';
+
+  @override
+  String get yCameoLzimberskyHome0 =>
+      'Bir gece yüzünden çocuğu eve göndermek mi? Asıl skandal bu, parti değil!';
+
+  @override
+  String get yCameoLzimberskyHome1 =>
+      'Çocukların biraz eğlenmeye hakkı yok mu! İkiyüzlü medya yine kazandı.';
+
+  @override
+  String get yCameoLzimberskyHome2 =>
+      'Bu bir cadı avı. Genç adam bir gece çıkıyor, siz onu asıyorsunuz.';
+
+  @override
+  String get yCameoLzimberskyHome3 =>
+      'Hiç partiye gitmemiş gazeteci ilk taşı atsın. Ayıp!';
+
+  @override
+  String get yCameoLzimberskyHome4 =>
+      'Teknik direktör magazin basınından korktu. Ben olsam çocuğu son nefesime kadar savunurdum!';
+
+  @override
+  String get yCameoLzimberskyKept0 =>
+      'Sonunda omurgası olan bir teknik direktör! Çocuğu tuttu, medya ağlasın.';
+
+  @override
+  String get yCameoLzimberskyKept1 =>
+      'Çocukların biraz eğlenmeye hakkı var, değil mi? Bravo hocam!';
+
+  @override
+  String get yCameoLzimberskyKept2 =>
+      'İkiyüzlü medya bağırıyor, teknik direktör geri adım atmıyor. İşte böyle yapılır!';
+
+  @override
+  String get yCameoLzimberskyKept3 =>
+      'Bir gece dışarı çıktı diye basın onu taşlamak istiyor. Teknik direktör tam bir adam!';
+
+  @override
+  String get yCameoLzimberskyKept4 =>
+      'Diyorum ki: bırakın çocuklar yaşasın! Çok çalışan eğlenmeyi de hak eder. Başparmak yukarı.';
+
+  @override
+  String get yTraitStreamer =>
+      'Her şeyi canlı yayınlar, sonuna kadar sesli, büyük harflerle.';
+
+  @override
+  String hubEventAwardsCeremony(int year) {
+    return 'Yılın Oyuncusu $year';
+  }
+
+  @override
+  String get hubEventAwardsCeremonySub => 'Oylar sayıldı';
+
+  @override
+  String get potyCeremonyWatch => 'Töreni izle';
+
+  @override
+  String get potyCeremonySkipToList => 'İlk beşe geç';
+
+  @override
+  String get potyCeremonySkip => 'Geç';
+
+  @override
+  String get potyCeremonyIntro =>
+      'Oylar sayıldı. İşte bu yılın dünyadaki en iyi beş oyuncusu.';
+
+  @override
+  String potyCeremonyPlace(int place) {
+    return '$place. sıra';
+  }
+
+  @override
+  String get potyCeremonyWinnerIs => 'Ve Yılın Oyuncusu...';
+
+  @override
+  String get potyTop5Heading => 'Dünyanın ilk beşi';
+
+  @override
+  String get potyYoungTop3Heading => 'Yılın Genç Oyuncusu: ilk üç';
+
+  @override
+  String get potySeeTop5 => 'İlk beşi gör';
+
+  @override
+  String get potyYourPlayer => 'Senin oyuncun';
+
+  @override
+  String potyTallyCleanSheets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gol yemeden maç',
+      one: '1 gol yemeden maç',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignFullBrief => 'Tam brifing';
+
+  @override
+  String campaignStarsSoFar(int earned, int total) {
+    return 'Şu ana kadar kazanılan yıldız: $earned/$total';
+  }
+
+  @override
+  String get campaignStarEarned => 'Şu ana kadar kazanıldı';
+
+  @override
+  String get campaignStarNotYet => 'Henüz kazanılmadı';
+
+  @override
+  String get stadiumsEntrySubClosed =>
+      'Stadyumlarına göz at. İnşaat işleri bir sonraki döngünün başında yeniden açılır.';
+
+  @override
+  String get boardObjectiveNoBrief => 'Hedef belirlenmedi';
+
+  @override
+  String get boardObjectiveNoBriefBody =>
+      'Yönetim bu finallere çıkmanı beklemiyor. Bunun yerine seni sonuçlarına göre değerlendirecek.';
+
+  @override
+  String get boardObjectiveAwaitingDraw => 'Hedef kuradan sonra';
+
+  @override
+  String get boardObjectiveAwaitingDrawBody =>
+      'Yönetim bu hedefi gruplar çekildikten sonra belirleyecek.';
 }

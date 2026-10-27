@@ -75,6 +75,138 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchDossierKeyMen => 'TRỤ CỘT';
 
   @override
+  String get matchDossierHowTheyPlay => 'LỐI CHƠI';
+
+  @override
+  String matchScoutFormation1(String formation) {
+    return 'Họ thường ra sân với sơ đồ $formation.';
+  }
+
+  @override
+  String matchScoutFormation2(String formation) {
+    return 'Sơ đồ quen thuộc của họ là $formation.';
+  }
+
+  @override
+  String matchScoutFormation3(String formation) {
+    return 'Họ hay chọn sơ đồ $formation.';
+  }
+
+  @override
+  String get matchScoutStrengthPressing =>
+      'Họ pressing tầm cao và săn bóng quyết liệt.';
+
+  @override
+  String get matchScoutStrengthDirect =>
+      'Họ chơi bóng trực diện và đưa bóng lên phía trên sớm.';
+
+  @override
+  String get matchScoutStrengthPossession =>
+      'Họ giữ bóng tốt và triển khai kiên nhẫn.';
+
+  @override
+  String get matchScoutStrengthCounter => 'Họ lùi sâu và phản công rất nhanh.';
+
+  @override
+  String get matchScoutStrengthDeepDefence =>
+      'Họ phòng ngự lùi sâu và rất khó bị xuyên phá.';
+
+  @override
+  String get matchScoutStrengthWide =>
+      'Họ dàn rộng đội hình và tấn công qua hai biên.';
+
+  @override
+  String get matchScoutStrengthAttacking =>
+      'Họ thích chủ động áp đặt thế trận lên đối thủ.';
+
+  @override
+  String get matchScoutStrengthQuickForwards =>
+      'Hàng công của họ rất nhanh và thích băng xuống sau lưng hàng thủ.';
+
+  @override
+  String get matchScoutStrengthPassingMidfield =>
+      'Hàng tiền vệ của họ chuyền bóng rất tốt.';
+
+  @override
+  String get matchScoutStrengthHardRunning =>
+      'Hàng tiền vệ của họ có thể lực để chạy suốt trận.';
+
+  @override
+  String get matchScoutStrengthSetPieces =>
+      'Họ rất nguy hiểm từ các tình huống bóng chết.';
+
+  @override
+  String get matchScoutStrengthQuickDefence =>
+      'Hàng thủ của họ nhanh nhẹn, rất khó khai thác khoảng trống sau lưng.';
+
+  @override
+  String get matchScoutStrengthNone =>
+      'Lối chơi của họ không có gì thực sự nổi bật.';
+
+  @override
+  String get matchScoutWeakSpaceBehind =>
+      'Hàng thủ dâng cao của họ để lộ khoảng trống sau lưng cho những đường chuyền dài.';
+
+  @override
+  String get matchScoutWeakPressedBuildUp =>
+      'Pressing tầm cao có thể khiến lối triển khai chậm của họ rối loạn.';
+
+  @override
+  String get matchScoutWeakDeepBlock =>
+      'Hãy kiên nhẫn: khối phòng ngự lùi sâu như của họ vẫn có thể bị bẻ khóa.';
+
+  @override
+  String get matchScoutWeakLongBall =>
+      'Hạ thấp hàng thủ và những đường bóng dài của họ sẽ không còn đất diễn.';
+
+  @override
+  String get matchScoutWeakSlowDefence =>
+      'Hậu vệ của họ chậm, hãy tung người băng xuống sau lưng họ.';
+
+  @override
+  String get matchScoutWeakAerial =>
+      'Họ trông khá chập chờn khi phòng ngự bóng chết.';
+
+  @override
+  String get matchScoutWeakPoorPassing =>
+      'Hàng tiền vệ của họ vất vả chuyền bóng thoát pressing.';
+
+  @override
+  String get matchScoutWeakTiringMidfield =>
+      'Hàng tiền vệ của họ thiếu thể lực để duy trì pressing.';
+
+  @override
+  String get matchScoutWeakBluntAttack => 'Hàng công của họ thiếu tốc độ.';
+
+  @override
+  String get matchScoutApproachTakeTheGame =>
+      'Trước đội của bạn, nhiều khả năng họ sẽ chủ động tấn công.';
+
+  @override
+  String get matchScoutApproachEven =>
+      'Trước đội của bạn, nhiều khả năng đây sẽ là một trận cân bằng và chặt chẽ.';
+
+  @override
+  String get matchScoutApproachSitDeep =>
+      'Trước đội của bạn, nhiều khả năng họ sẽ chơi thận trọng và chờ phản công.';
+
+  @override
+  String get matchScoutLeaningAttacking =>
+      'Nhìn từ xa, họ có vẻ là một đội thiên về tấn công.';
+
+  @override
+  String get matchScoutLeaningCautious =>
+      'Nhìn từ xa, họ có vẻ là một đội chơi thận trọng.';
+
+  @override
+  String get matchScoutLeaningUnclear =>
+      'Nhìn từ xa, khó nói được họ thích chơi thế nào.';
+
+  @override
+  String get matchScoutHireHint =>
+      'Hãy thuê một trưởng ban tuyển trạch để biết họ chơi thế nào.';
+
+  @override
   String matchCouldNotContinue(String error) {
     return 'Không thể tiếp tục: $error';
   }
@@ -283,6 +415,21 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Hệ thống';
+
+  @override
+  String get settingsTextSizeTitle => 'Cỡ chữ';
+
+  @override
+  String get settingsTextSizeBlurb => 'Phóng to chữ nếu khó đọc.';
+
+  @override
+  String get settingsTextSizeNormal => 'Bình thường';
+
+  @override
+  String get settingsTextSizeLarge => 'Lớn';
+
+  @override
+  String get settingsTextSizeLarger => 'Lớn hơn';
 
   @override
   String get matchPreviewAllMeetings => 'Tất cả các lần gặp';
@@ -802,6 +949,41 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get tacticsSentOffShort => 'BỊ ĐUỔI';
+
+  @override
+  String get tacticsFullBackLeft => 'Hậu vệ trái';
+
+  @override
+  String get tacticsFullBackRight => 'Hậu vệ phải';
+
+  @override
+  String get tacticsFullBackUp => 'Dâng cao';
+
+  @override
+  String get tacticsFullBackDown => 'Lùi sâu';
+
+  @override
+  String get tacticsFullBackOff => 'Không chỉ thị';
+
+  @override
+  String tacticsFullBackUpHint(String side) {
+    return '$side: dâng cao. Tấn công nhiều hơn một chút, rủi ro hơn một chút.';
+  }
+
+  @override
+  String tacticsFullBackDownHint(String side) {
+    return '$side: lùi sâu. An toàn hơn một chút, tấn công ít hơn một chút.';
+  }
+
+  @override
+  String tacticsFullBackOffHint(String side) {
+    return '$side: không chỉ thị, chơi theo kế hoạch của đội.';
+  }
+
+  @override
+  String tacticsFullBackSemantics(String side, String state) {
+    return '$side, mũi tên: $state';
+  }
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -3026,6 +3208,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get gateExit => 'THOÁT';
 
   @override
+  String get gateSaveTitle => 'BẢN LƯU NÀY CẦN PRO';
+
+  @override
+  String get gateSaveLead =>
+      'Các bản lưu đã qua chu kỳ miễn phí và các chiến dịch Pro sẽ tiếp tục với Pro. Không mất gì cả: bản lưu này vẫn chờ bạn đúng như lúc bạn rời đi.';
+
+  @override
+  String get careerSaveLockedNote => 'Cần Pro để chơi tiếp bản lưu này';
+
+  @override
   String get federationNaturalisation => 'NHẬP TỊCH';
 
   @override
@@ -3263,9 +3455,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get nationsNoMatch => 'Không có quốc gia phù hợp.';
-
-  @override
-  String get nationsNationalLevel => 'TRÌNH ĐỘ QUỐC GIA';
 
   @override
   String get nationsSelectHeading => 'Chọn đội tuyển quốc gia';
@@ -3721,6 +3910,1026 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String yLostBadly11(String opponent, String score) {
     return 'Tôi từng thấy đội này bị làm nhục, nhưng $score trước $opponent là đáy mới.';
+  }
+
+  @override
+  String yWinUpset12(String opponent, String score) {
+    return 'Thắng $opponent $score. Ghi lại ngày này đi, người ta sẽ hỏi bạn đã ở đâu.';
+  }
+
+  @override
+  String yWinUpset13(String opponent, String score) {
+    return 'Ngoài phòng thay đồ không ai tin. $score trước $opponent. Tự hào là chưa đủ.';
+  }
+
+  @override
+  String yWinUpset14(String opponent, String score) {
+    return '$score trước $opponent! Ai cũng chạy đến khi không còn chút sức nào.';
+  }
+
+  @override
+  String yWinUpset15(String opponent, String score) {
+    return 'Hạ gục người khổng lồ. $opponent, $score. Đây là lý do ta luôn quay lại.';
+  }
+
+  @override
+  String yWinUpset16(String opponent, String score) {
+    return '$score trước $opponent. Mọi dự đoán vừa bay ra ngoài cửa sổ.';
+  }
+
+  @override
+  String yWinUpset17(String opponent, String score) {
+    return 'Ứng viên số một: $opponent. Kết quả: $score cho chúng ta.';
+  }
+
+  @override
+  String yWinUpset18(String opponent, String score) {
+    return 'Một trong những bất ngờ của năm: $score trước $opponent.';
+  }
+
+  @override
+  String yWinUpset19(String opponent, String score) {
+    return '$opponent $score. Không ai dự đoán được và không ai giải thích nổi.';
+  }
+
+  @override
+  String yWinUpset20(String opponent, String score) {
+    return '$score trước $opponent. Tuyệt. Giờ thì ai cũng quên phần còn lại của năm tệ đến mức nào.';
+  }
+
+  @override
+  String yWinUpset21(String opponent, String score) {
+    return '$score trước $opponent và chuyến tàu đã kín chỗ. Tôi ở đây từ lúc nó còn trống.';
+  }
+
+  @override
+  String yWinUpset22(String opponent, String score) {
+    return '$opponent $score. Xuất sắc, và họ vẫn sẽ tìm cách phung phí nó.';
+  }
+
+  @override
+  String yWinUpset23(String opponent, String score) {
+    return 'Đêm lớn trước $opponent, $score. Một con én không làm nên mùa xuân.';
+  }
+
+  @override
+  String yLostBadly12(String opponent, String score) {
+    return 'Thua $opponent $score. Đau vì ta quan tâm. Vẫn ủng hộ họ.';
+  }
+
+  @override
+  String yLostBadly13(String opponent, String score) {
+    return 'Một đêm muốn quên trước $opponent, $score. Các cầu thủ đau hơn ai hết.';
+  }
+
+  @override
+  String yLostBadly14(String opponent, String score) {
+    return '$opponent $score. Ngẩng cao đầu. Một đội được đánh giá qua cách họ đáp trả.';
+  }
+
+  @override
+  String yLostBadly15(String opponent, String score) {
+    return '$score trước $opponent. Tệ, đúng. Tận thế, không.';
+  }
+
+  @override
+  String yLostBadly16(String opponent, String score) {
+    return 'Thua $opponent $score. Kết quả sẽ bị nhắc lại nhiều năm, vì những lý do tồi tệ.';
+  }
+
+  @override
+  String yLostBadly17(String opponent, String score) {
+    return '$opponent thắng $score. Sau trận này, lần sau đừng ai ngạc nhiên.';
+  }
+
+  @override
+  String yLostBadly18(String opponent, String score) {
+    return 'Một trong những đêm tệ nhất từ lâu: $score trước $opponent.';
+  }
+
+  @override
+  String yLostBadly19(String opponent, String score) {
+    return '$opponent $score. Sẽ có câu hỏi, và đáng phải có.';
+  }
+
+  @override
+  String yLostBadly20(String opponent, String score) {
+    return 'Thua $opponent $score. Xấu hổ còn là nói nhẹ.';
+  }
+
+  @override
+  String yLostBadly21(String opponent, String score) {
+    return 'Thua $opponent $score. Người cuối cùng ra về nhớ tắt đèn.';
+  }
+
+  @override
+  String yLostBadly22(String opponent, String score) {
+    return '$opponent $score. Tôi không còn ngạc nhiên nữa, và điều đó làm tôi sợ.';
+  }
+
+  @override
+  String yLostBadly23(String opponent, String score) {
+    return '$score. $opponent. Ai đó ở trên nên cập nhật CV tối nay.';
+  }
+
+  @override
+  String yWinRout0(String opponent, String score) {
+    return '$score trước $opponent! Thứ bóng đá này khiến cả nước mỉm cười.';
+  }
+
+  @override
+  String yWinRout1(String opponent, String score) {
+    return 'Đè bẹp $opponent $score. Màn trình diễn tuyệt vời.';
+  }
+
+  @override
+  String yWinRout2(String opponent, String score) {
+    return '$score. Trước $opponent. Tối nay mọi thứ đều thành công.';
+  }
+
+  @override
+  String yWinRout3(String opponent, String score) {
+    return 'Trận hủy diệt $score trước $opponent. Lưu lại highlight đi, sau này sẽ cần.';
+  }
+
+  @override
+  String yWinRout4(String opponent, String score) {
+    return '$opponent $score. Đó là một đội đang tận hưởng bóng đá.';
+  }
+
+  @override
+  String yWinRout5(String opponent, String score) {
+    return '$score trước $opponent, và lẽ ra còn nhiều hơn. Tuyệt diệu.';
+  }
+
+  @override
+  String yWinRout6(String opponent, String score) {
+    return '$score trước $opponent. Tỷ số khiến người ta phải nhìn lại hai lần.';
+  }
+
+  @override
+  String yWinRout7(String opponent, String score) {
+    return 'Thắng $opponent $score. Sau nửa giờ đầu trận đấu đã khép lại.';
+  }
+
+  @override
+  String yWinRout8(String opponent, String score) {
+    return 'Kết quả: $score trước $opponent. Chiến thắng đậm nhất trong một thời gian dài.';
+  }
+
+  @override
+  String yWinRout9(String opponent, String score) {
+    return '$opponent $score. Một đội đến để chơi bóng, đội kia thậm chí không bước xuống xe.';
+  }
+
+  @override
+  String yWinRout10(String opponent, String score) {
+    return '$score. $opponent không có câu trả lời cho bất cứ điều gì.';
+  }
+
+  @override
+  String yWinRout11(String opponent, String score) {
+    return 'Một trận vùi dập: $score trước $opponent.';
+  }
+
+  @override
+  String yWinRout12(String opponent, String score) {
+    return '$score trước $opponent. Hay đấy, nhưng họ đâu phải thước đo.';
+  }
+
+  @override
+  String yWinRout13(String opponent, String score) {
+    return '$score trước $opponent. Gọi tôi dậy khi ta làm vậy với một đội mạnh.';
+  }
+
+  @override
+  String yWinRout14(String opponent, String score) {
+    return '$opponent $score. Vui đấy, nhưng tôi đã thấy những đội chơi hay thế này rồi chẳng giành được gì.';
+  }
+
+  @override
+  String yWinRout15(String opponent, String score) {
+    return '$score, và ai cũng lại thành thiên tài. Đối thủ là $opponent.';
+  }
+
+  @override
+  String yWinRout16(String opponent, String score) {
+    return '$score trước $opponent. Đừng vội phấn khích, nó chứng minh rất ít.';
+  }
+
+  @override
+  String yWinRout17(String opponent, String score) {
+    return '$opponent $score. Cứ tận hưởng, rồi nhớ lại lần trước ta phấn khích đã kết thúc thế nào.';
+  }
+
+  @override
+  String yWinShootout0(String opponent) {
+    return 'Đi tiếp sau loạt luân lưu trước $opponent! Thần kinh thép, tất cả bọn họ.';
+  }
+
+  @override
+  String yWinShootout1(String opponent) {
+    return 'Luân lưu trước $opponent, và ta giữ được bình tĩnh. Ôm một người lạ đi.';
+  }
+
+  @override
+  String yWinShootout2(String opponent) {
+    return 'Thắng loạt sút luân lưu trước $opponent. Tim tôi không chịu nổi.';
+  }
+
+  @override
+  String yWinShootout3(String opponent) {
+    return 'Thắng $opponent trên chấm luân lưu. Vào vòng tiếp theo.';
+  }
+
+  @override
+  String yWinShootout4(String opponent) {
+    return 'Trước $opponent, mọi thứ được định đoạt trên chấm phạt đền, và ta ghi nhiều hơn.';
+  }
+
+  @override
+  String yWinShootout5(String opponent) {
+    return 'Thắng luân lưu trước $opponent. Bằng con đường khó nhất, nhưng đi tiếp.';
+  }
+
+  @override
+  String yWinShootout6(String opponent) {
+    return 'Đi tiếp sau luân lưu trước $opponent. Trúng xổ số, quên màn trình diễn đi.';
+  }
+
+  @override
+  String yWinShootout7(String opponent) {
+    return 'Thắng $opponent trên chấm luân lưu sau trận đấu như vậy? May mắn, và ai cũng biết.';
+  }
+
+  @override
+  String yWinShootout8(String opponent) {
+    return 'Đi tiếp trước $opponent nhờ luân lưu. Lẽ ra không bao giờ phải đến mức đó.';
+  }
+
+  @override
+  String yKnockoutWin0(String opponent, String score) {
+    return 'ĐI TIẾP. $score trước $opponent, và giấc mơ vẫn còn.';
+  }
+
+  @override
+  String yKnockoutWin1(String opponent, String score) {
+    return 'THẮNG Ở VÒNG LOẠI TRỰC TIẾP: $score trước $opponent. Cả nước có thể bắt đầu tin.';
+  }
+
+  @override
+  String yKnockoutWin2(String opponent, String score) {
+    return '$score trước $opponent và vào vòng tiếp theo. Một đêm tuyệt vời.';
+  }
+
+  @override
+  String yKnockoutWin3(String opponent, String score) {
+    return '$opponent về nhà, $score. Tiến lên.';
+  }
+
+  @override
+  String yKnockoutWin4(String opponent, String score) {
+    return 'LOẠI TRỰC TIẾP: $score trước $opponent. Vòng tiếp theo đã chắc chắn.';
+  }
+
+  @override
+  String yKnockoutWin5(String opponent, String score) {
+    return 'Đi tiếp: $score trước $opponent.';
+  }
+
+  @override
+  String yKnockoutWin6(String opponent, String score) {
+    return '$opponent bị loại, $score. Vòng tiếp theo đang chờ.';
+  }
+
+  @override
+  String yKnockoutWin7(String opponent, String score) {
+    return 'Thắng $score trước $opponent. Ở vòng loại trực tiếp không ai hỏi thắng thế nào.';
+  }
+
+  @override
+  String yKnockoutWin8(String opponent, String score) {
+    return 'Đi tiếp trước $opponent, $score. Đối thủ tiếp theo sẽ không dễ dãi như vậy.';
+  }
+
+  @override
+  String yKnockoutWin9(String opponent, String score) {
+    return '$score trước $opponent là đủ để đi tiếp. Lần sau cần nhiều hơn thế.';
+  }
+
+  @override
+  String yKnockoutWin10(String opponent, String score) {
+    return '$opponent bị loại, $score. Sống sót hơn là chiến thắng.';
+  }
+
+  @override
+  String yKnockoutWin11(String opponent, String score) {
+    return 'Vào vòng tiếp theo sau $score trước $opponent. Đừng hỏi thế nào.';
+  }
+
+  @override
+  String yUpsetGap0(String opponent, String gap) {
+    return 'Cách nhau $gap bậc trên bảng xếp hạng, và ta vẫn thắng $opponent. Tuyệt vời.';
+  }
+
+  @override
+  String yUpsetGap1(String opponent, String gap) {
+    return '$opponent: hơn ta $gap bậc. Vẫn thua. Bóng đá thật đẹp.';
+  }
+
+  @override
+  String yUpsetGap2(String opponent, String gap) {
+    return 'Chênh lệch xếp hạng: $gap. Kết quả: thắng $opponent. Đừng bao giờ thôi tin.';
+  }
+
+  @override
+  String yUpsetGap3(String opponent, String gap) {
+    return 'Chênh lệch xếp hạng trước giờ bóng lăn: $gap. Vẫn thắng $opponent.';
+  }
+
+  @override
+  String yUpsetGap4(String opponent, String gap) {
+    return 'Trên bảng xếp hạng thế giới, $opponent hơn ta $gap bậc. Không phải tối nay.';
+  }
+
+  @override
+  String yUpsetGap5(String opponent, String gap) {
+    return 'Chỉ số bất ngờ: chênh $gap bậc xếp hạng. Chiến thắng thuộc về ta trước $opponent.';
+  }
+
+  @override
+  String yUpsetGap6(String opponent, String gap) {
+    return '$gap bậc xếp hạng cách biệt ta với $opponent. Một đêm không lấp được khoảng cách đó.';
+  }
+
+  @override
+  String yUpsetGap7(String opponent, String gap) {
+    return '$opponent: hơn $gap bậc, và thua. Bảng xếp hạng gần như không để ý.';
+  }
+
+  @override
+  String yUpsetGap8(String gap) {
+    return 'Chênh lệch xếp hạng: $gap. Hãy nhớ con số này lần tới ta thua một đội yếu.';
+  }
+
+  @override
+  String yEatWords0(String opponent) {
+    return 'Tôi đã gạch tên đội này. Tôi sai, và chưa bao giờ vui đến thế vì mình sai. Thắng $opponent.';
+  }
+
+  @override
+  String yEatWords1(String opponent) {
+    return 'Cho một phần khiêm tốn, làm ơn. Phần lớn. Chiến thắng trước $opponent thật tuyệt vời.';
+  }
+
+  @override
+  String yEatWords2(String opponent) {
+    return 'Tôi nói họ chẳng còn gì. Họ còn rất nhiều. Chơi hay lắm trước $opponent, tất cả.';
+  }
+
+  @override
+  String yEatWords3(String opponent) {
+    return 'Ghi nhận cho rõ: tôi không thấy trước chiến thắng trước $opponent. Xin ghi công.';
+  }
+
+  @override
+  String yEatWords4(String opponent) {
+    return 'Được thôi. Tôi nói họ sẽ lộ điểm yếu. $opponent không làm được.';
+  }
+
+  @override
+  String yEatWords5(String opponent) {
+    return 'Tối nay tôi nuốt lời về đội này. Chiến thắng trước $opponent xứng đáng với điều đó.';
+  }
+
+  @override
+  String yEatWords6(String opponent) {
+    return 'Vâng, tôi nói họ hết thời. Một trận thắng $opponent chưa chứng minh tôi sai.';
+  }
+
+  @override
+  String yEatWords7(String opponent) {
+    return 'Người ta bảo tôi phải nuốt lời sau trận gặp $opponent. Tôi sẽ nuốt, từ từ, và giữ lại hóa đơn.';
+  }
+
+  @override
+  String yEatWords8(String opponent) {
+    return 'Thắng $opponent rất ấn tượng. Những nghi ngờ của tôi về đội này vẫn còn nguyên.';
+  }
+
+  @override
+  String yAwayFansWin0(String nation, String score) {
+    return 'Xin ngả mũ trước $nation. $score, hoàn toàn xứng đáng.';
+  }
+
+  @override
+  String yAwayFansWin1(String nation, String score) {
+    return 'Đau khi phải nói, nhưng tối nay $nation chơi hay hơn. $score. Chúc mừng.';
+  }
+
+  @override
+  String yAwayFansWin2(String nation, String score) {
+    return '$score. Ngả mũ trước $nation, họ khao khát hơn.';
+  }
+
+  @override
+  String yAwayFansWin3(String nation, String score) {
+    return 'Thua $nation $score. Tôi không biết nói gì nữa.';
+  }
+
+  @override
+  String yAwayFansWin4(String nation, String score) {
+    return '$nation $score. Đội nhà nên thấy xấu hổ.';
+  }
+
+  @override
+  String yAwayFansWin5(String nation, String score) {
+    return '$score trước $nation. Ai giải thích giùm tôi chuyện gì vừa xảy ra.';
+  }
+
+  @override
+  String yAwayFansWin6(String nation, String score) {
+    return 'Thua $nation $score. Tôi sẽ không bao giờ quên được.';
+  }
+
+  @override
+  String yAwayFansWin7(String nation, String score) {
+    return '$score trước $nation. May mắn. Hoàn toàn may mắn.';
+  }
+
+  @override
+  String yAwayFansWin8(String nation, String score) {
+    return 'Sau tỷ số $score này, fan $nation sẽ khó chịu suốt nhiều năm. Cảm ơn vì chẳng gì cả.';
+  }
+
+  @override
+  String yNeutralWin0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Tuyệt cho bóng đá. Đó là lý do ta yêu nó.';
+  }
+
+  @override
+  String yNeutralWin1(String nation, String opponent, String score) {
+    return 'Kết quả tuyệt vời cho $nation: $score trước $opponent. Bóng đá đỉnh cao.';
+  }
+
+  @override
+  String yNeutralWin2(String nation, String opponent, String score) {
+    return 'Mọi khán giả trung lập đều cổ vũ $nation tối nay. $score trước $opponent!';
+  }
+
+  @override
+  String yNeutralWin3(String nation, String opponent, String score) {
+    return 'Kết quả của vòng đấu: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralWin4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Không ai đoán được.';
+  }
+
+  @override
+  String yNeutralWin5(String nation, String opponent, String score) {
+    return 'Kết quả lớn: $nation $score $opponent. Bảng xếp hạng sẽ thay đổi.';
+  }
+
+  @override
+  String yNeutralWin6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Vui đấy, xem họ có làm lại được không.';
+  }
+
+  @override
+  String yNeutralWin7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. $nation thắng, hay $opponent thua?';
+  }
+
+  @override
+  String yNeutralWin8(String nation, String opponent, String score) {
+    return 'Địa chấn: $nation $score $opponent. Chuẩn bị đón nhiều phản ứng thái quá.';
+  }
+
+  @override
+  String yScorerHero0(String name, String opponent) {
+    return '$name trước $opponent. Người ta sẽ đặt tên con theo anh ấy.';
+  }
+
+  @override
+  String yScorerHero1(String name, String opponent) {
+    return 'Dựng tượng cho $name. Tối nay trước $opponent anh ấy là tất cả.';
+  }
+
+  @override
+  String yScorerHero2(String name, String opponent) {
+    return '$name, tuyệt vời. Hãy nhớ đêm nay trước $opponent.';
+  }
+
+  @override
+  String yScorerHero3(String name, String opponent) {
+    return '$name định đoạt trận đấu trước $opponent. Cầu thủ xuất sắc nhất, không bàn cãi.';
+  }
+
+  @override
+  String yScorerHero4(String name, String opponent) {
+    return 'Trước $opponent, đêm nay thuộc về $name.';
+  }
+
+  @override
+  String yScorerHero5(String name, String opponent) {
+    return '$name xuất hiện đúng lúc cần trước $opponent.';
+  }
+
+  @override
+  String yScorerHero6(String name, String opponent) {
+    return '$name chơi xuất sắc trước $opponent. Giờ thì làm vậy mỗi tuần.';
+  }
+
+  @override
+  String yScorerHero7(String name, String opponent) {
+    return '$name cứu cả đội trước $opponent. Những người khác giúp chẳng bao nhiêu.';
+  }
+
+  @override
+  String yScorerHero8(String name, String opponent) {
+    return 'Không có $name, đêm nay trước $opponent đã rất khác.';
+  }
+
+  @override
+  String yLostShock0(String opponent, String score) {
+    return 'Thua $opponent $score. Tai nạn. Ai cũng gặp một lần.';
+  }
+
+  @override
+  String yLostShock1(String opponent, String score) {
+    return 'Thua $opponent $score. Gạt đi, chiến dịch chưa kết thúc.';
+  }
+
+  @override
+  String yLostShock2(String opponent, String score) {
+    return '$opponent $score. Đau, nhưng một kết quả không định nghĩa đội này.';
+  }
+
+  @override
+  String yLostShock3(String opponent, String score) {
+    return '$score trước $opponent. Một ngày làm việc tồi. Tiếp tục.';
+  }
+
+  @override
+  String yLostShock4(String opponent, String score) {
+    return 'Thua $opponent, $score. Không ai thấy trước.';
+  }
+
+  @override
+  String yLostShock5(String opponent, String score) {
+    return '$opponent $score. Một trong những đêm chẳng có lý lẽ gì.';
+  }
+
+  @override
+  String yLostShock6(String opponent, String score) {
+    return 'Thua $opponent $score. Một thất bại sẽ được nhớ mãi.';
+  }
+
+  @override
+  String yLostShock7(String opponent, String score) {
+    return 'Bị $opponent đánh bại, $score. Một cú sốc dù nhìn từ góc nào.';
+  }
+
+  @override
+  String yLostShock8(String opponent, String score) {
+    return 'Thua $opponent $score. Thua $opponent! Không thể chấp nhận.';
+  }
+
+  @override
+  String yLostShock9(String opponent, String score) {
+    return 'Thua $opponent $score. Tôi muốn lời giải thích, không phải lời bào chữa.';
+  }
+
+  @override
+  String yLostShock10(String opponent, String score) {
+    return '$opponent $score. Nỗi nhục quốc gia, và đó không phải nói quá.';
+  }
+
+  @override
+  String yLostShock11(String opponent, String score) {
+    return '$score trước $opponent. Sao những người ở trên vẫn còn ngồi ghế?';
+  }
+
+  @override
+  String yLostRout0(String opponent, String score) {
+    return 'Thua $opponent $score. Họ là đội hàng đầu. Rút kinh nghiệm.';
+  }
+
+  @override
+  String yLostRout1(String opponent, String score) {
+    return 'Bị $opponent vượt trội, $score. Không có gì xấu hổ khi thua đội giỏi nhất.';
+  }
+
+  @override
+  String yLostRout2(String opponent, String score) {
+    return '$opponent $score. Một bài học, và bài học giúp ta trưởng thành.';
+  }
+
+  @override
+  String yLostRout3(String opponent, String score) {
+    return '$score trước $opponent. Đau, nhưng họ ở đẳng cấp cao hơn.';
+  }
+
+  @override
+  String yLostRout4(String opponent, String score) {
+    return '$opponent thắng $score. Khoảng cách là có thật, và giờ ai cũng thấy.';
+  }
+
+  @override
+  String yLostRout5(String opponent, String score) {
+    return 'Thua $opponent $score. Một trận đòn, đơn giản vậy.';
+  }
+
+  @override
+  String yLostRout6(String opponent, String score) {
+    return '$opponent $score. Đội mạnh hơn, và tỷ số nói lên điều đó.';
+  }
+
+  @override
+  String yLostRout7(String opponent, String score) {
+    return 'Thua $opponent $score. Không nhục, nhưng cũng chẳng có trận đấu nào.';
+  }
+
+  @override
+  String yLostRout8(String opponent, String score) {
+    return 'Thua $opponent $score. Đối thủ mạnh hơn hay không, không ai được thua như thế.';
+  }
+
+  @override
+  String yLostRout9(String opponent, String score) {
+    return '$opponent $score. Ta có thậm chí cố cạnh tranh không?';
+  }
+
+  @override
+  String yLostRout10(String opponent, String score) {
+    return '$score. Trước $opponent. Như cừu non vào lò mổ.';
+  }
+
+  @override
+  String yLostRout11(String opponent, String score) {
+    return 'Thua $opponent $score, và chẳng ai tỏ ra bận tâm.';
+  }
+
+  @override
+  String yLostShootout0(String opponent) {
+    return 'Bị loại trên chấm luân lưu trước $opponent. Họ đã cống hiến hết mình. Tự hào về họ.';
+  }
+
+  @override
+  String yLostShootout1(String opponent) {
+    return 'Luân lưu trước $opponent. Cách bị loại tàn nhẫn nhất. Ngẩng cao đầu.';
+  }
+
+  @override
+  String yLostShootout2(String opponent) {
+    return 'Thua loạt sút luân lưu trước $opponent. Không ai đáng phải chịu điều đó.';
+  }
+
+  @override
+  String yLostShootout3(String opponent) {
+    return 'Bị loại trên chấm luân lưu trước $opponent. Chấm phạt đền định đoạt.';
+  }
+
+  @override
+  String yLostShootout4(String opponent) {
+    return '$opponent đi tiếp nhờ luân lưu. Giải đấu của ta kết thúc tại đây.';
+  }
+
+  @override
+  String yLostShootout5(String opponent) {
+    return 'Thua luân lưu trước $opponent. Lại là luân lưu.';
+  }
+
+  @override
+  String yLostShootout6(String opponent) {
+    return 'Bị loại trên chấm luân lưu trước $opponent. Ta có bao giờ tập không vậy?';
+  }
+
+  @override
+  String yLostShootout7(String opponent) {
+    return 'Thua $opponent trên chấm luân lưu. Lẽ ra phải kết thúc trận đấu sớm hơn nhiều.';
+  }
+
+  @override
+  String yLostShootout8(String opponent) {
+    return 'Luân lưu trước $opponent, và ta thua. Tất nhiên rồi.';
+  }
+
+  @override
+  String yKnockoutLoss0(String opponent, String score) {
+    return 'BỊ LOẠI. $score trước $opponent. Một hành trình đáng tự hào dừng lại ở đây.';
+  }
+
+  @override
+  String yKnockoutLoss1(String opponent, String score) {
+    return 'Bị $opponent loại, $score. Cảm ơn vì những kỷ niệm.';
+  }
+
+  @override
+  String yKnockoutLoss2(String opponent, String score) {
+    return '$score trước $opponent. Hành trình đã kết thúc, nhưng thật là một hành trình.';
+  }
+
+  @override
+  String yKnockoutLoss3(String opponent, String score) {
+    return 'BỊ LOẠI: $score trước $opponent. Ngẩng cao đầu.';
+  }
+
+  @override
+  String yKnockoutLoss4(String opponent, String score) {
+    return 'KẾT THÚC: $score trước $opponent.';
+  }
+
+  @override
+  String yKnockoutLoss5(String opponent, String score) {
+    return 'Bị loại: $score trước $opponent.';
+  }
+
+  @override
+  String yKnockoutLoss6(String opponent, String score) {
+    return '$opponent đi tiếp, $score. Giải đấu của ta đã kết thúc.';
+  }
+
+  @override
+  String yKnockoutLoss7(String opponent, String score) {
+    return 'Bị $opponent loại, $score. Cuộc mổ xẻ bắt đầu.';
+  }
+
+  @override
+  String yKnockoutLoss8(String opponent, String score) {
+    return 'BỊ LOẠI. $score trước $opponent. Giải khác, kết cục như cũ.';
+  }
+
+  @override
+  String yKnockoutLoss9(String opponent, String score) {
+    return '$score trước $opponent, và về nhà. Không ai ngạc nhiên.';
+  }
+
+  @override
+  String yKnockoutLoss10(String opponent, String score) {
+    return 'Bị $opponent loại, $score. Sáng mai sẽ có lời bào chữa.';
+  }
+
+  @override
+  String yKnockoutLoss11(String opponent, String score) {
+    return '$opponent $score. Bị loại, và chưa bao giờ trông có vẻ sẽ khác đi.';
+  }
+
+  @override
+  String yAwayFansGloat0(String nation, String score) {
+    return '$score trước $nation. Tôn trọng, họ sẽ trở lại mạnh hơn.';
+  }
+
+  @override
+  String yAwayFansGloat1(String nation, String score) {
+    return 'Chiến thắng đẹp cho chúng ta, $score. Ngày tồi tệ của $nation, thương cho fan của họ.';
+  }
+
+  @override
+  String yAwayFansGloat2(String nation, String score) {
+    return '$score. Một đêm tồi tệ của $nation, và ta đã tận dụng cơ hội. Bóng đá là vậy.';
+  }
+
+  @override
+  String yAwayFansGloat3(String nation, String score) {
+    return '$score trước $nation! Ai ngờ được? Họ thì không.';
+  }
+
+  @override
+  String yAwayFansGloat4(String nation, String score) {
+    return 'Thắng $nation $score. Ai đó xem fan của họ thế nào rồi.';
+  }
+
+  @override
+  String yAwayFansGloat5(String nation, String score) {
+    return '$nation $score. Trận này đưa vào album ảnh.';
+  }
+
+  @override
+  String yAwayFansGloat6(String nation, String score) {
+    return '$score trước $nation. Vậy mà họ tưởng mình là đội lớn.';
+  }
+
+  @override
+  String yAwayFansGloat7(String nation, String score) {
+    return 'Thử tưởng tượng thua chúng ta $score. Hỏi $nation đi, giờ họ biết rồi.';
+  }
+
+  @override
+  String yAwayFansGloat8(String nation, String score) {
+    return '$nation, $score. Chúc bay về nhà vui vẻ.';
+  }
+
+  @override
+  String yNeutralLoss0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Đêm lớn của $opponent, đêm buồn của $nation.';
+  }
+
+  @override
+  String yNeutralLoss1(String nation, String opponent, String score) {
+    return 'Chia buồn với fan $nation sau $score trước $opponent. Họ sẽ đứng dậy.';
+  }
+
+  @override
+  String yNeutralLoss2(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Đội lớn nào cũng có một đêm như thế.';
+  }
+
+  @override
+  String yNeutralLoss3(String nation, String opponent, String score) {
+    return 'Cú sốc của vòng đấu: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralLoss4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Không ai thấy trước.';
+  }
+
+  @override
+  String yNeutralLoss5(String nation, String opponent, String score) {
+    return 'Kết quả trong ngày: $nation $score $opponent. Giờ $nation phải trả lời nhiều câu hỏi.';
+  }
+
+  @override
+  String yNeutralLoss6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Không phải ngẫu nhiên, nếu bạn theo dõi.';
+  }
+
+  @override
+  String yNeutralLoss7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Ai đó ở đó sẽ phải giải thích nhiều.';
+  }
+
+  @override
+  String yNeutralLoss8(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Tên tuổi lớn, màn trình diễn nhỏ.';
+  }
+
+  @override
+  String yDownGap0(String opponent, String gap) {
+    return '$opponent: kém ta $gap bậc. Chuyện thường. Tiếp tục.';
+  }
+
+  @override
+  String yDownGap1(String gap) {
+    return 'Chênh lệch xếp hạng: $gap bậc nghiêng về ta. Bóng đá không đọc bảng xếp hạng.';
+  }
+
+  @override
+  String yDownGap2(String opponent, String gap) {
+    return 'Trên giấy, ta hơn $opponent $gap bậc. Không phải trên sân tối nay.';
+  }
+
+  @override
+  String yDownGap3(String opponent, String gap) {
+    return 'Chênh lệch xếp hạng trước giờ bóng lăn: $gap bậc nghiêng về ta. Vẫn thua $opponent.';
+  }
+
+  @override
+  String yDownGap4(String opponent, String gap) {
+    return 'Trên bảng xếp hạng thế giới, $opponent kém ta $gap bậc. Kết quả: thua.';
+  }
+
+  @override
+  String yDownGap5(String opponent, String gap) {
+    return 'Chỉ số bất ngờ: $gap bậc xếp hạng, theo chiều ngược lại, trước $opponent.';
+  }
+
+  @override
+  String yDownGap6(String opponent, String gap) {
+    return 'Hơn $opponent $gap bậc trên bảng xếp hạng. Thua. Giải thích đi.';
+  }
+
+  @override
+  String yDownGap7(String gap) {
+    return 'Thua một đội kém ta $gap bậc. Hãy để con số đó thấm.';
+  }
+
+  @override
+  String yDownGap8(String opponent, String gap) {
+    return 'Chênh lệch xếp hạng: $gap. Thua $opponent. Ai đó nên bắt đầu đếm ngày.';
+  }
+
+  @override
+  String yDrewHeroic0(String opponent, String score) {
+    return '$score trước $opponent! Trận hòa mang vị chiến thắng.';
+  }
+
+  @override
+  String yDrewHeroic1(String opponent, String score) {
+    return '$score trước $opponent. Tự hào về từng người.';
+  }
+
+  @override
+  String yDrewHeroic2(String opponent, String score) {
+    return '$opponent $score. Họ là ứng viên và ta đã sánh ngang.';
+  }
+
+  @override
+  String yDrewHeroic3(String opponent, String score) {
+    return 'Hòa $opponent $score. Một điểm giành bằng máu và mồ hôi.';
+  }
+
+  @override
+  String yDrewHeroic4(String opponent, String score) {
+    return '$score trước $opponent. Một điểm rất quý.';
+  }
+
+  @override
+  String yDrewHeroic5(String opponent, String score) {
+    return 'Hòa $score với $opponent. Ít ai mong đợi điều gì.';
+  }
+
+  @override
+  String yDrewHeroic6(String opponent, String score) {
+    return 'Chặn đứng $opponent, $score. Kết quả để làm nền tảng.';
+  }
+
+  @override
+  String yDrewHeroic7(String opponent, String score) {
+    return '$score trước $opponent. Một điểm không ai nghĩ ta có.';
+  }
+
+  @override
+  String yDrewHeroic8(String opponent, String score) {
+    return 'Hòa $opponent $score. Điểm tốt, nhưng không ai vô địch bằng các trận hòa.';
+  }
+
+  @override
+  String yDrewHeroic9(String opponent, String score) {
+    return '$score trước $opponent. Đẹp đấy. Ta cũng chẳng có cú sút nào ra hồn.';
+  }
+
+  @override
+  String yDrewHeroic10(String opponent, String score) {
+    return '$opponent $score. Một điểm, và ai cũng làm như ta vừa vô địch.';
+  }
+
+  @override
+  String yDrewHeroic11(String opponent, String score) {
+    return '$score trước $opponent. Dựng xe buýt và may mắn.';
+  }
+
+  @override
+  String yDrewShame0(String opponent, String score) {
+    return 'Hòa $opponent $score. Bực bội, nhưng vẫn bất bại.';
+  }
+
+  @override
+  String yDrewShame1(String opponent, String score) {
+    return 'Chỉ hòa $opponent $score. Ngày không may. Chuyện thường.';
+  }
+
+  @override
+  String yDrewShame2(String opponent, String score) {
+    return '$opponent $score. Chưa đủ tốt, và các cầu thủ biết điều đó.';
+  }
+
+  @override
+  String yDrewShame3(String opponent, String score) {
+    return '$score trước $opponent. Mất hai điểm, không hơn.';
+  }
+
+  @override
+  String yDrewShame4(String opponent, String score) {
+    return 'Hòa $opponent $score. Hai điểm vứt đi.';
+  }
+
+  @override
+  String yDrewShame5(String opponent, String score) {
+    return 'Chỉ hòa $opponent $score. Kết quả tồi, gói ghém thế nào cũng vậy.';
+  }
+
+  @override
+  String yDrewShame6(String opponent, String score) {
+    return '$opponent $score. Trận hòa mang vị thất bại.';
+  }
+
+  @override
+  String yDrewShame7(String opponent, String score) {
+    return '$score trước $opponent. Những trận thế này phải thắng dễ dàng.';
+  }
+
+  @override
+  String yDrewShame8(String opponent, String score) {
+    return 'Hòa $opponent $score. Xấu hổ.';
+  }
+
+  @override
+  String yDrewShame9(String opponent, String score) {
+    return 'Chỉ hòa $opponent, $score. Ai chịu trách nhiệm?';
+  }
+
+  @override
+  String yDrewShame10(String opponent, String score) {
+    return '$opponent $score. Không thắng nổi họ thì thắng được ai?';
+  }
+
+  @override
+  String yDrewShame11(String opponent, String score) {
+    return 'Hòa $opponent $score. Fan của họ ăn mừng trận hòa với ta. Hãy nghĩ về điều đó.';
   }
 
   @override
@@ -5103,6 +6312,11 @@ class AppLocalizationsVi extends AppLocalizations {
       'Hai suất dự giải vô địch thế giới được định đoạt qua vòng đấu loại trực tiếp giữa các đội đứng nhì vòng loại xuất sắc nhất.';
 
   @override
+  String tourCupPlayoffNoEntrants(String confederation) {
+    return '$confederation không đá play-off: mọi suất đều được định đoạt ở các bảng vòng loại.';
+  }
+
+  @override
   String get tourCupQualDrawSoon =>
       'Các bảng đấu sắp được bốc thăm. Hãy xem lễ bốc thăm vòng loại từ trang chủ để biết kết quả.';
 
@@ -5263,6 +6477,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get objectiveNcSurvive => 'Tránh xuống hạng';
 
   @override
+  String get objectiveNcOffTheBottom => 'Không đứng cuối bảng';
+
+  @override
   String get finishNcChampions => 'Nhà vô địch Nations Cup';
 
   @override
@@ -5276,6 +6493,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get finishNcStayedUp => 'Trụ hạng';
+
+  @override
+  String get finishNcClearOfBottom => 'Không đứng cuối bảng';
 
   @override
   String get finishNcBottom => 'Cuối bảng';
@@ -6563,7 +7783,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String newsNatzStarTitle(String name, String nation) {
-    return '⭐ $name sẵn sàng chuyển sang $nation!';
+    return '$name sẵn sàng chuyển sang $nation!';
   }
 
   @override
@@ -7204,14 +8424,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get careerBackupAllFailed => 'Không thể ghi bản sao lưu.';
 
   @override
-  String get backupTitle => 'BẢN LƯU';
+  String get backupTitle => 'SAO LƯU';
 
   @override
   String get backupBlurb =>
-      'Mọi bản lưu nằm trong một tệp duy nhất trên điện thoại này và không có gì tự động sao lưu chúng. Hãy xuất một bản sao và cất ở nơi ngoài điện thoại, trong Tệp hoặc iCloud Drive, để mất điện thoại hay lỡ xóa app không khiến bạn mất cả sự nghiệp.';
+      'Mọi bản lưu nằm trong một tệp trên điện thoại này và không gì tự sao lưu chúng, trừ khi bạn bật tự động sao lưu bên dưới. Hãy giữ một bản sao trên đám mây để mất điện thoại hay xóa ứng dụng không làm bạn mất cả sự nghiệp.';
 
   @override
-  String get backupExport => 'XUẤT BẢN SAO LƯU';
+  String get backupBlurbNoAuto =>
+      'Mọi bản lưu nằm trong một tệp trên điện thoại này và không gì tự sao lưu chúng. Hãy giữ một bản sao trên đám mây để mất điện thoại hay xóa ứng dụng không làm bạn mất cả sự nghiệp.';
+
+  @override
+  String get backupExport => 'SAO LƯU LÊN ĐÁM MÂY';
 
   @override
   String get backupExportSubject => 'Bản lưu FNM';
@@ -9586,8 +10810,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get injuryCoverTitle => 'THAY THẾ';
 
   @override
-  String injuryCoverBanner(String player) {
-    return '$player bị chấn thương. Hãy triệu tập bất kỳ ai ngoài danh sách, ở bất kỳ vị trí nào, hoặc giữ anh ấy và tiếp tục.';
+  String injuryCoverBanner(String player, String position) {
+    return '$player ($position) bị chấn thương. Hãy triệu tập bất kỳ ai ngoài danh sách, ở bất kỳ vị trí nào, hoặc giữ anh ấy và tiếp tục.';
   }
 
   @override
@@ -9837,14 +11061,14 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignGuineasTwist =>
-      'Guinea Xích Đạo, đội xếp thấp nhất trong các Guinea của châu Phi, trong hai chu kỳ';
+      'Guinea Xích Đạo, nước nhỏ nhất trong các Guinea của châu Phi, trong hai chu kỳ';
 
   @override
   String get campaignGuineasGoal => 'Thắng Guinea và Guinea-Bissau';
 
   @override
   String get campaignGuineasIntro =>
-      'Ba quốc gia châu Phi mang tên Guinea, và Guinea Xích Đạo xếp thấp nhất trong số đó. Bạn có hai chu kỳ để thắng Guinea và Guinea-Bissau ít nhất mỗi đội một lần, rồi xem bạn có thể đi xa đến đâu ở Giải vô địch châu Phi. Papua New Guinea, Guinea thứ tư, đã được xếp một trận giao hữu.';
+      'Ba quốc gia châu Phi mang tên Guinea, và Guinea Xích Đạo là nước nhỏ nhất trong số đó. Bạn có hai chu kỳ để thắng Guinea và Guinea-Bissau ít nhất mỗi đội một lần, rồi xem bạn có thể đi xa đến đâu ở Giải vô địch châu Phi. Papua New Guinea, Guinea thứ tư, đã được xếp một trận giao hữu.';
 
   @override
   String get campaignStars1Guineas => 'Thắng Guinea và Guinea-Bissau';
@@ -9881,6 +11105,32 @@ class AppLocalizationsVi extends AppLocalizations {
   String get campaignStars3YoungFinns => 'Vô địch Giải vô địch thế giới';
 
   @override
+  String get campaignGreenlandTitle => 'Một thế kỷ Greenland';
+
+  @override
+  String get campaignGreenlandTwist =>
+      'Greenland thế chỗ San Marino ở châu Âu, trong một trăm năm';
+
+  @override
+  String get campaignGreenlandGoal => 'Giành vé dự một kỳ Giải vô địch châu Âu';
+
+  @override
+  String get campaignGreenlandIntro =>
+      'Greenland chưa từng chơi một trận quốc tế chính thức nào. Trong thế giới này, họ đã thế chỗ San Marino ở châu Âu và khởi đầu ở tận đáy bảng xếp hạng thế giới: cầu thủ nghiệp dư, sân cỏ nhân tạo và một mùa giải bị kẹp giữa những đợt tuyết. Bạn có một trăm năm, tức hai mươi lăm chu kỳ, để giành vé dự Giải vô địch châu Âu, rồi Giải vô địch thế giới và, nếu dám mơ, vô địch một trong hai giải.';
+
+  @override
+  String get campaignStars1Greenland =>
+      'Giành vé dự một kỳ Giải vô địch châu Âu';
+
+  @override
+  String get campaignStars2Greenland =>
+      'Giành vé dự một kỳ Giải vô địch thế giới';
+
+  @override
+  String get campaignStars3Greenland =>
+      'Vô địch Giải vô địch châu Âu hoặc Giải vô địch thế giới';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -9893,4 +11143,1614 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get campaignCupOpen => 'Chưa xác định';
+
+  @override
+  String newsYouthTitle1(String name, String level) {
+    return '$name tỏa sáng trong màu áo đội $level';
+  }
+
+  @override
+  String newsYouthTitle2(String name, String level) {
+    return 'Báo cáo từ học viện: $name gây chú ý';
+  }
+
+  @override
+  String newsYouthTitle3(String name, String level) {
+    return 'Điểm sáng của đội $level: $name';
+  }
+
+  @override
+  String newsYouthGoals1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lần',
+    );
+    return '$name đã ghi bàn $_temp0 cho đội $level trước $opponent trong đợt tập trung quốc tế vừa qua.';
+  }
+
+  @override
+  String newsYouthGoals2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bàn thắng',
+    );
+    return '$_temp0 của $name khi đội $level gặp $opponent trong đợt tập trung này.';
+  }
+
+  @override
+  String newsYouthGoals3(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bàn thắng',
+    );
+    return 'Đội $level đối đầu $opponent, và $name rời sân với $_temp0 đứng tên mình.';
+  }
+
+  @override
+  String newsYouthAssists1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bàn',
+    );
+    return '$name kiến tạo $_temp0 cho đội $level trước $opponent và điều tiết thế trận từ đầu đến cuối.';
+  }
+
+  @override
+  String newsYouthAssists2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pha kiến tạo',
+    );
+    return 'Đội $level gặp $opponent trong đợt tập trung này, và $name là người cầm nhịp: $_temp0 cùng một màn trình diễn mà ban huấn luyện vẫn còn nhắc đến.';
+  }
+
+  @override
+  String newsYouthCleanSheet1(String name, String level, String opponent) {
+    return '$name chơi xuất sắc khi đội $level giữ sạch lưới trước $opponent.';
+  }
+
+  @override
+  String newsYouthCleanSheet2(String name, String level, String opponent) {
+    return 'Đội $level giữ sạch lưới trước $opponent, và công lớn thuộc về $name.';
+  }
+
+  @override
+  String newsYouthDisplay1(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$name gây ấn tượng trong màu áo đội $level trước $opponent, và ban huấn luyện chấm màn trình diễn của cậu $mark trên mười.';
+  }
+
+  @override
+  String newsYouthDisplay2(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return 'Đội $level gặp $opponent trong đợt tập trung này, và các HLV chỉ nhắc đến một cái tên, $name: $mark trên mười, điểm cao nhất đội.';
+  }
+
+  @override
+  String get newsYouthDevReady1 =>
+      'Với phong độ này, cậu đã đủ tốt để được cân nhắc cho đội tuyển quốc gia.';
+
+  @override
+  String get newsYouthDevReady2 =>
+      'Ban huấn luyện tin rằng cậu đã sẵn sàng cho bóng đá đỉnh cao ngay bây giờ. Quyết định là của bạn.';
+
+  @override
+  String get newsYouthDevClose1 =>
+      'Cậu đang tiến bộ tốt và đã rất gần đội tuyển quốc gia.';
+
+  @override
+  String get newsYouthDevClose2 =>
+      'Cậu không còn cách đội tuyển quốc gia bao xa, và thêm một mùa giải tốt nữa có thể là đủ.';
+
+  @override
+  String get newsYouthDevGrowing1 =>
+      'Cậu đang phát triển tốt, dù đội tuyển quốc gia vẫn còn cách một hai bước.';
+
+  @override
+  String get newsYouthDevGrowing2 =>
+      'Vẫn còn việc phải làm trước khi cậu khoác áo đội tuyển quốc gia, nhưng mọi thứ đang đi đúng hướng.';
+
+  @override
+  String get newsYouthDevRaw1 =>
+      'Cậu vẫn còn non và còn vài năm nữa mới tới tầm đội tuyển quốc gia, nhưng tài năng thì đã rõ.';
+
+  @override
+  String get newsYouthDevRaw2 =>
+      'Mọi thứ mới chỉ bắt đầu, và ban huấn luyện học viện muốn sự kiên nhẫn chứ không phải những dòng tít.';
+
+  @override
+  String get newsYouthStrengthGkPhysical =>
+      'Sải tay và khả năng làm chủ vòng cấm là điều khiến cậu khác biệt.';
+
+  @override
+  String get newsYouthStrengthGkTechnical =>
+      'Khả năng bắt bóng và phát động tấn công của cậu là tốt nhất học viện từng thấy trong nhiều năm.';
+
+  @override
+  String get newsYouthStrengthGkStamina =>
+      'Sự tập trung của cậu không bao giờ suy giảm: phút thứ chín mươi cậu vẫn sắc bén như phút đầu tiên.';
+
+  @override
+  String get newsYouthStrengthDefPhysical =>
+      'Tốc độ và khả năng không chiến là chìa khóa trong lối chơi của cậu.';
+
+  @override
+  String get newsYouthStrengthDefTechnical =>
+      'Cậu đọc trận đấu vượt xa tuổi mình và rất điềm tĩnh khi có bóng.';
+
+  @override
+  String get newsYouthStrengthDefStamina =>
+      'Cậu không bao giờ lơ là, và vẫn nước rút về phòng ngự ở phút cuối cùng.';
+
+  @override
+  String get newsYouthStrengthMidPhysical =>
+      'Cậu đoạt bóng đầy uy lực và lập tức dẫn bóng lên phía trước.';
+
+  @override
+  String get newsYouthStrengthMidTechnical =>
+      'Nhãn quan và sự đa dạng trong chuyền bóng là chìa khóa trong lối chơi của cậu.';
+
+  @override
+  String get newsYouthStrengthMidStamina =>
+      'Thể lực của cậu thật đáng nể: cậu phủ khắp từng ngọn cỏ.';
+
+  @override
+  String get newsYouthStrengthFwdPhysical =>
+      'Tốc độ khi băng vào khoảng trống và sức mạnh trên không khiến cậu trở thành nỗi ám ảnh của mọi hàng thủ.';
+
+  @override
+  String get newsYouthStrengthFwdTechnical =>
+      'Khả năng dứt điểm và di chuyển trong vòng cấm là chìa khóa trong lối chơi của cậu.';
+
+  @override
+  String get newsYouthStrengthFwdStamina =>
+      'Cậu pressing từ tuyến đầu suốt trận và không cho hậu vệ đối phương một giây yên ổn.';
+
+  @override
+  String pressMomentBigWinWarm3(String opponent) {
+    return 'Người hâm mộ sẽ còn hát về trận đấu với $opponent này rất lâu. HLV đã nói gì với các cầu thủ khi tiếng còi mãn cuộc vang lên?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral3(String opponent) {
+    return 'Đó là một lời tuyên bố trước $opponent. Bao nhiêu phần trong đó đến từ sân tập?';
+  }
+
+  @override
+  String pressMomentBigWinHostile3(String opponent) {
+    return 'Chúc mừng kết quả trước $opponent, nhưng chúng tôi đã thấy những đêm như thế này rồi. Lần này có gì khác?';
+  }
+
+  @override
+  String pressMomentBigLossWarm3(String opponent) {
+    return 'Ai cũng có một đêm tồi tệ, và trận gặp $opponent là một đêm như thế. HLV có thể bỏ nó lại phía sau nhanh đến mức nào?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral3(String opponent) {
+    return '$opponent vượt trội ở mọi tuyến. HLV sẽ bắt đầu sửa chữa từ đâu?';
+  }
+
+  @override
+  String pressMomentBigLossHostile3(String opponent) {
+    return 'Cổ động viên đã bỏ về trước khi trận gặp $opponent kết thúc. HLV có thể trách họ không?';
+  }
+
+  @override
+  String pressMomentCrisisWarm3(String opponent) {
+    return 'Đây là một chuỗi trận khó khăn, và $opponent không giúp mọi thứ dễ dàng hơn. Điều gì giúp HLV tiếp tục?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral3(String opponent) {
+    return 'Thêm một trận không thắng, lần này trước $opponent. Chuyện này còn kéo dài bao lâu trước khi ban lãnh đạo ra tay?';
+  }
+
+  @override
+  String pressMomentCrisisHostile3(String opponent) {
+    return 'Giờ đến cả $opponent. Kế hoạch của HLV còn lại gì không, hay đã đến lúc nhường chỗ cho người khác?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers5 =>
+      'Các bạn viết gì cũng được, nhưng hãy viết về các cầu thủ. Họ xứng đáng với điều đó.';
+
+  @override
+  String get pressReplyCreditPlayers6 =>
+      'Tôi có một tập thể sẵn sàng vào lửa vì nhau. Đó không phải chuyện nhỏ.';
+
+  @override
+  String get pressReplyTakeResponsibility5 =>
+      'Tôi là người ra quyết định, nên chỉ trích hãy dành cho tôi. Đó là công việc.';
+
+  @override
+  String get pressReplyTakeResponsibility6 =>
+      'Hãy nhìn vào HLV trước. Tôi đã sai ở một số chỗ và tôi sẽ sửa.';
+
+  @override
+  String get pressReplyDemandMore5 =>
+      'Ở đây, tốt là chưa đủ. Tôi đã nói thẳng với họ như vậy.';
+
+  @override
+  String get pressReplyDemandMore6 =>
+      'Không ai trong phòng thay đồ đó được đảm bảo suất đá chính. Giờ họ đã biết.';
+
+  @override
+  String get pressReplyDeflect5 =>
+      'Các bạn có thể hỏi theo ba cách khác nhau. Câu trả lời vẫn vậy.';
+
+  @override
+  String get pressReplyDeflect6 =>
+      'Suy nghĩ của tôi xin để dành cho các cầu thủ. Mong các bạn hiểu.';
+
+  @override
+  String yWinRoutine12(String opponent, String score) {
+    return '$score trước $opponent. Bóng đá điềm tĩnh, kiểm soát, trưởng thành. Thích thật.';
+  }
+
+  @override
+  String yWinRoutine13(String opponent, String score) {
+    return 'Thắng $opponent $score mà không đổ giọt mồ hôi nào. Đội này đang giỏi dần ở khoản nhàm chán, mà nhàm chán thì giành danh hiệu.';
+  }
+
+  @override
+  String yWinRoutine14(String opponent, String score) {
+    return '$opponent $score. Ba điểm, không kịch tính, quay lại làm việc.';
+  }
+
+  @override
+  String yWinRoutine15(String opponent, String score) {
+    return 'Một trận $score bình thường trước $opponent. Không ai nhớ và cũng chẳng cần nhớ.';
+  }
+
+  @override
+  String yWinRoutine16(String opponent, String score) {
+    return '$score trước $opponent mà sao tôi vẫn thấy lo.';
+  }
+
+  @override
+  String yWinRoutine17(String opponent, String score) {
+    return 'Thắng $opponent $score. Gặp đội mạnh thật sự thì màn trình diễn đó sẽ bị trừng phạt.';
+  }
+
+  @override
+  String yWinTight12(String opponent, String score) {
+    return '$score trước $opponent. Cắn răng, chịu đựng, chiến thắng. Đó mới là một tập thể.';
+  }
+
+  @override
+  String yWinTight13(String opponent, String score) {
+    return 'Thắng $opponent $score chỉ nhờ bản lĩnh. Tôi chọn một đội không chịu thua.';
+  }
+
+  @override
+  String yWinTight14(String opponent, String score) {
+    return '$opponent $score. Căng đến phút cuối, nhưng ba điểm là của chúng ta.';
+  }
+
+  @override
+  String yWinTight15(String opponent, String score) {
+    return '$score sát nút trước $opponent. Cách biệt mong manh, bóng đá là vậy.';
+  }
+
+  @override
+  String yWinTight16(String opponent, String score) {
+    return '$score trước $opponent. Một cú bật bóng may mắn theo hướng ngược lại là ta đã nói chuyện khác hẳn.';
+  }
+
+  @override
+  String yWinTight17(String opponent, String score) {
+    return 'Chật vật trụ lại trước $opponent, $score. Đừng ai gọi đó là màn trình diễn.';
+  }
+
+  @override
+  String yDrew12(String opponent, String score) {
+    return '$score với $opponent. Không thua, và có những ngày đó chính là nhiệm vụ.';
+  }
+
+  @override
+  String yDrew13(String opponent, String score) {
+    return 'Một điểm đầy nỗ lực trước $opponent, $score. Tôi thích tinh thần chiến đấu.';
+  }
+
+  @override
+  String yDrew14(String opponent, String score) {
+    return '$opponent $score. Chia điểm sòng phẳng, như các bình luận viên ngày xưa hay nói.';
+  }
+
+  @override
+  String yDrew15(String opponent, String score) {
+    return '$score với $opponent. Không đội nào làm đủ để xứng đáng hơn thế.';
+  }
+
+  @override
+  String yDrew16(String opponent, String score) {
+    return '$score với $opponent. Kiểu trận hòa mà trên xe buýt về nhà nghe như một trận thua.';
+  }
+
+  @override
+  String yDrew17(String opponent, String score) {
+    return 'Hòa $opponent $score. Chúng ta cứ nói về tiến bộ rồi cứ chơi thế này.';
+  }
+
+  @override
+  String yLost12(String opponent, String score) {
+    return '$score trước $opponent. Đau, nhưng tôi đã thấy đủ để tin vào đội này.';
+  }
+
+  @override
+  String yLost13(String opponent, String score) {
+    return 'Thua $opponent $score, và họ chơi hay. Công nhận rồi làm lại.';
+  }
+
+  @override
+  String yLost14(String opponent, String score) {
+    return '$opponent $score. Một trận thua, vài bài học, và trận tiếp theo sắp đến.';
+  }
+
+  @override
+  String yLost15(String opponent, String score) {
+    return 'Thua $opponent $score. Khó mà cãi được.';
+  }
+
+  @override
+  String yLost16(String opponent, String score) {
+    return '$score trước $opponent. Vẫn những lỗi như lần trước, mắc phải với cùng một sự tự tin.';
+  }
+
+  @override
+  String yLost17(String opponent, String score) {
+    return 'Thua $opponent $score. Nếu không ai phải chịu trách nhiệm cho chuyện này thì chúng ta đang làm gì vậy?';
+  }
+
+  @override
+  String get yReactionShrug12 =>
+      'Với tôi thế là ổn. Không phải đêm nào cũng cần pháo hoa.';
+
+  @override
+  String get yReactionShrug13 => 'Điểm là điểm. Tối nay ngủ ngon.';
+
+  @override
+  String get yReactionShrug14 => 'Xem rồi. Không có gì để nói.';
+
+  @override
+  String get yReactionShrug15 => 'Ở đâu đó giữa ổn và ổn.';
+
+  @override
+  String get yReactionShrug16 =>
+      'Trả tiền xem trực tuyến cho cái này. Không bao giờ nữa (rồi sẽ quay lại).';
+
+  @override
+  String get yReactionShrug17 => 'Chín mươi phút hư vô mang hình hài bóng đá.';
+
+  @override
+  String get yReactionRelief12 =>
+      'Thở lại được rồi. Tự hào vì các cậu đã trụ vững.';
+
+  @override
+  String get yReactionRelief13 =>
+      'Những chiến thắng như thế này mới xây nên một đội bóng. Xấu xí mà đẹp.';
+
+  @override
+  String get yReactionRelief14 => 'Móng tay hết rồi, nhưng điểm thì còn.';
+
+  @override
+  String get yReactionRelief15 =>
+      'Chưa bao giờ tiếng còi mãn cuộc nghe hay đến thế.';
+
+  @override
+  String get yReactionRelief16 => 'Vui vì thắng, lo vì cách thắng.';
+
+  @override
+  String get yReactionRelief17 =>
+      'Lần nào cũng thoát. Rồi sẽ có ngày không thoát.';
+
+  @override
+  String get yReactionFury12 =>
+      'Tôi yêu đội bóng này, và chính vì thế mới đau.';
+
+  @override
+  String get yReactionFury13 =>
+      'Một đêm tệ. Lần sau họ nợ chúng ta, và họ biết thế.';
+
+  @override
+  String get yReactionFury14 =>
+      'Tắt ở phút bảy mươi. Lẽ ra phải là phút sáu mươi.';
+
+  @override
+  String get yReactionFury15 =>
+      'Không chiến đấu, không ý tưởng, không lời bào chữa.';
+
+  @override
+  String get yReactionFury16 =>
+      'Lần nào cũng những vấn đề đó, và chẳng ai sửa gì cả.';
+
+  @override
+  String get yReactionFury17 =>
+      'Ai đó ở liên đoàn cần xem lại trận này và giải thích cho chúng tôi.';
+
+  @override
+  String get backupShareHint =>
+      'Tạo một tệp sao lưu chứa mọi bản lưu. Chọn Google Drive, iCloud Drive hoặc Tệp để cất giữ.';
+
+  @override
+  String backupLastAt(String date) {
+    return 'Lần sao lưu gần nhất: $date';
+  }
+
+  @override
+  String get backupNever => 'Chưa có bản sao lưu';
+
+  @override
+  String get backupRemindersTitle => 'Nhắc sao lưu';
+
+  @override
+  String get backupRemindersBlurb =>
+      'Một tin nhắn trong hộp thư khi bản sao lưu gần nhất đã cũ.';
+
+  @override
+  String get backupAutoICloudTitle => 'Tự động sao lưu lên iCloud';
+
+  @override
+  String get backupAutoDriveTitle => 'Tự động sao lưu lên Google Drive';
+
+  @override
+  String get backupAutoBlurb =>
+      'Sao lưu sau các trận đấu, cuối mỗi chu kỳ và khi bạn rời ứng dụng. Giữ hai bản mới nhất.';
+
+  @override
+  String get backupStatusUploading => 'Đang sao lưu.';
+
+  @override
+  String get backupStatusUploaded => 'Đã sao lưu.';
+
+  @override
+  String get backupStatusICloudSignedOut =>
+      'iCloud đang tắt. Hãy đăng nhập iCloud và bật iCloud Drive trong ứng dụng Cài đặt.';
+
+  @override
+  String get backupStatusDriveSignedOut =>
+      'Chưa đăng nhập. Bật công tắc để đăng nhập bằng Google.';
+
+  @override
+  String get backupStatusNotConfigured =>
+      'Chưa có trong phiên bản ứng dụng này.';
+
+  @override
+  String get backupStatusUnavailable =>
+      'Hiện không kết nối được đám mây. Sẽ thử lại sau.';
+
+  @override
+  String get backupStatusFailed =>
+      'Lần sao lưu tự động gần nhất không thành công. Sẽ thử lại sau.';
+
+  @override
+  String backupDriveSignedInAs(String email) {
+    return 'Đã đăng nhập là $email';
+  }
+
+  @override
+  String get backupDriveSignOut => 'ĐĂNG XUẤT';
+
+  @override
+  String get backupDriveSignInFailed =>
+      'Đăng nhập Google không thành công. Hãy thử lại sau.';
+
+  @override
+  String get backupRestoreICloud => 'KHÔI PHỤC TỪ ICLOUD';
+
+  @override
+  String get backupRestoreDrive => 'KHÔI PHỤC TỪ GOOGLE DRIVE';
+
+  @override
+  String get backupCrossPlatformHelp =>
+      'Chuyển giữa iPhone và Android? Sao lưu ra tệp trên một máy, rồi khôi phục từ tệp đó trên máy kia.';
+
+  @override
+  String get backupCloudListBlurb =>
+      'Các bản sao lưu từ thiết bị của bạn trên tài khoản này. Chạm vào một bản để khôi phục.';
+
+  @override
+  String get backupCloudListEmpty =>
+      'Chưa tìm thấy bản sao lưu nào. Bản sao lưu mới có thể mất vài phút để đến thiết bị khác.';
+
+  @override
+  String get backupCloudListFailed =>
+      'Không đọc được các bản sao lưu. Hãy kiểm tra kết nối rồi thử lại.';
+
+  @override
+  String get backupCloudThisDevice => 'Thiết bị này';
+
+  @override
+  String backupCloudMore(int count) {
+    return 'Bản lưu khác: $count';
+  }
+
+  @override
+  String get backupCloudNewer =>
+      'Được tạo bởi phiên bản ứng dụng mới hơn. Hãy cập nhật trước.';
+
+  @override
+  String get backupCloudDownloading => 'Đang tải bản sao lưu.';
+
+  @override
+  String get backupRestoreSafetyNote =>
+      'Trước tiên, một bản sao các bản lưu hiện có được giữ lại trên điện thoại này.';
+
+  @override
+  String get backupRejectedSafety =>
+      'Không giữ được bản sao các bản lưu hiện tại nên chưa có gì bị thay thế.';
+
+  @override
+  String get newsBackupReminderTitle => 'Đến lúc sao lưu';
+
+  @override
+  String get newsBackupReminderBody =>
+      'Các bản lưu của bạn chỉ có trên điện thoại này. Mở Cài đặt và chạm Sao lưu lên đám mây, hoặc bật tự động sao lưu ở đó. Bạn cũng có thể tắt các lời nhắc này trong Cài đặt.';
+
+  @override
+  String get backupSafetyTitle => 'Bản sao từ trước khi khôi phục';
+
+  @override
+  String get backupSafetyBlurb =>
+      'Được giữ trên điện thoại này phòng khi lần khôi phục bị nhầm. Giữ ba bản mới nhất.';
+
+  @override
+  String get backupSafetyRestore => 'KHÔI PHỤC';
+
+  @override
+  String get backupSafetyShare => 'CHIA SẺ';
+
+  @override
+  String get backupCloudNoDetails => 'Thông tin chi tiết vẫn đang được tải về.';
+
+  @override
+  String get tacticsLibraryTitle => 'THƯ VIỆN CHIẾN THUẬT';
+
+  @override
+  String get tacticsLibraryBlurb =>
+      'Chiến thuật trong thư viện có thể tải vào bất kỳ bản lưu nào, kể cả bản mới. Vai trò và người đá phạt được lưu theo vị trí, không theo cầu thủ.';
+
+  @override
+  String get tacticsSaveToLibrary => 'Lưu vào thư viện';
+
+  @override
+  String get tacticsLoadFromLibrary => 'Tải từ thư viện';
+
+  @override
+  String get tacticsLibraryEmpty =>
+      'Thư viện của bạn còn trống. Hãy lưu một chiến thuật vào đây để tải nó trong bất kỳ bản lưu nào.';
+
+  @override
+  String tacticsLibrarySaved(String name) {
+    return 'Đã lưu “$name” vào thư viện';
+  }
+
+  @override
+  String tacticsLibraryLoaded(String name) {
+    return 'Đã tải “$name”';
+  }
+
+  @override
+  String tacticsLibraryNotFitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count vai trò hoặc người đá phạt không phù hợp với đội hình này.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tacticsLibraryRename => 'Đổi tên';
+
+  @override
+  String get tacticsLibraryRenameTitle => 'Đổi tên chiến thuật';
+
+  @override
+  String get tacticsLibraryDelete => 'Xóa';
+
+  @override
+  String tacticsLibraryDeleteTitle(String name) {
+    return 'Xóa “$name”?';
+  }
+
+  @override
+  String get tacticsLibraryDeleteBody =>
+      'Chiến thuật này sẽ biến mất khỏi thư viện trong mọi bản lưu của bạn.';
+
+  @override
+  String get tacticsLibraryNameTaken =>
+      'Thư viện của bạn đã có chiến thuật mang tên này.';
+
+  @override
+  String tacticsLibraryCouldNotLoad(String error) {
+    return 'Không thể tải thư viện.\n$error';
+  }
+
+  @override
+  String hostBidHeading(String competition, int year) {
+    return 'Ứng cử đăng cai: $competition $year';
+  }
+
+  @override
+  String get hostBidScreenTitle => 'Ứng cử đăng cai';
+
+  @override
+  String get hostBidBlurb =>
+      'Nước chủ nhà được bốc thăm giữa các ứng viên. Hồ sơ ứng cử giúp tên bạn có trọng lượng hơn: các sân vận động mang lại cơ hội ban đầu, tiền bạc nâng cơ hội đó lên, dù mỗi triệu thêm vào có tác dụng ít hơn một chút. Tiền đã chi sẽ mất dù bạn thắng hay không.';
+
+  @override
+  String hostBidPrize(String amount) {
+    return 'Nếu thắng, bạn sẽ đăng cai, được vào thẳng vòng chung kết và nhận khoản hỗ trợ một lần $amount cho ngân sách tiếp theo.';
+  }
+
+  @override
+  String get hostBidChance => 'Cơ hội đăng cai';
+
+  @override
+  String get hostBidBaseLabel => 'Sân vận động và vị thế';
+
+  @override
+  String get hostBidInvestLabel => 'Đầu tư';
+
+  @override
+  String hostBidCeiling(String nation, String percent) {
+    return 'Mức trần cho $nation: $percent';
+  }
+
+  @override
+  String get hostBidInvestment => 'Khoản đầu tư của bạn';
+
+  @override
+  String hostBidFreeFunds(String amount) {
+    return 'Quỹ còn trống: $amount';
+  }
+
+  @override
+  String get hostBidSubmit => 'Nộp hồ sơ';
+
+  @override
+  String get hostBidDecline => 'Lần này thì không';
+
+  @override
+  String get hostBidUnavailable => 'Hồ sơ ứng cử này đã đóng.';
+
+  @override
+  String hostBidWonTitle(String competition, int year) {
+    return 'Ứng cử thành công: $competition $year';
+  }
+
+  @override
+  String hostBidWonBody(String amount) {
+    return 'Chúng ta sẽ đăng cai giải đấu và được vào thẳng với tư cách chủ nhà. Khoản hỗ trợ một lần $amount đã nằm trong quỹ liên đoàn, và bạn có thể phân bổ ngay cho các bộ phận trong chu kỳ này từ màn hình chính.';
+  }
+
+  @override
+  String hostBidLostTitle(String competition, int year) {
+    return 'Ứng cử thất bại: $competition $year';
+  }
+
+  @override
+  String hostBidLostBody(String hosts) {
+    return 'Quyền đăng cai thuộc về: $hosts. Lần này hồ sơ của chúng ta chưa đủ và số tiền đã chi không lấy lại được, nhưng liên đoàn đã thể hiện mình.';
+  }
+
+  @override
+  String get hostBidGrantEvent => 'Phân bổ khoản hỗ trợ đăng cai';
+
+  @override
+  String hostBidGrantBanner(String amount) {
+    return 'Khoản hỗ trợ đăng cai: có thể thêm ngay $amount vào các bộ phận trong chu kỳ này. Phần đã phân bổ được giữ nguyên, phần còn dư vẫn nằm trong quỹ.';
+  }
+
+  @override
+  String get stadiumsTitle => 'Sân vận động quốc gia';
+
+  @override
+  String get stadiumsEntrySub => 'Nâng cấp một sân hoặc xây sân mới';
+
+  @override
+  String get stadiumsBlurb =>
+      'Cấp của sân chính là quy mô: cấp 1 dưới 15.000 chỗ, cấp 2 từ 15.000, cấp 3 từ 25.000, cấp 4 từ 40.000, cấp 5 từ 60.000. Mỗi sân mang về một khoản thu nhỏ vào đầu mỗi chu kỳ, càng nhiều chỗ càng nhiều, miễn là cổ động viên lấp đầy được. Nâng cấp thêm chỗ ngay và thêm chút uy tín từ chu kỳ sau; thu nhỏ cắt giảm bảo trì nhưng không hoàn tiền. Các sân của bạn quyết định bạn được ứng cử đăng cai những giải nào.';
+
+  @override
+  String stadiumsIncome(String amount) {
+    return 'Thu nhập từ sân: $amount mỗi chu kỳ';
+  }
+
+  @override
+  String stadiumsReputation(int points) {
+    return 'Danh tiếng từ sân: +$points';
+  }
+
+  @override
+  String get stadiumsClosed =>
+      'Công trình được đặt vào đầu chu kỳ, trước khi chốt ngân sách.';
+
+  @override
+  String stadiumsCapacity(String seats) {
+    return 'Sức chứa: $seats';
+  }
+
+  @override
+  String stadiumsLevel(int level, int max) {
+    return 'Cấp $level/$max';
+  }
+
+  @override
+  String stadiumsUpgrade(String cost) {
+    return 'Nâng cấp: $cost';
+  }
+
+  @override
+  String get stadiumsTopLevel => 'Cấp cao nhất';
+
+  @override
+  String stadiumsOpens(int year) {
+    return 'Đang xây, khánh thành năm $year';
+  }
+
+  @override
+  String get stadiumsBuildTitle => 'Xây sân vận động mới';
+
+  @override
+  String get stadiumsBuildBody =>
+      'Khá tốn kém: một sân mới ở thành phố bạn chọn, mở cửa từ đầu chu kỳ sau.';
+
+  @override
+  String get stadiumsBuildCity => 'Thành phố';
+
+  @override
+  String stadiumsBuildButton(String cost) {
+    return 'Xây: $cost';
+  }
+
+  @override
+  String get stadiumsBuilding => 'Đã có một sân đang được xây.';
+
+  @override
+  String get stadiumsNoCity => 'Thành phố nào cũng đã có sân mới.';
+
+  @override
+  String stadiumsConfirmUpgrade(String stadium, int level, String cost) {
+    return 'Nâng cấp $stadium lên cấp $level với giá $cost?';
+  }
+
+  @override
+  String stadiumsConfirmBuild(String city, String cost) {
+    return 'Xây sân mới ở $city với giá $cost?';
+  }
+
+  @override
+  String get stadiumsConfirm => 'Xác nhận';
+
+  @override
+  String get stadiumsCancel => 'Hủy';
+
+  @override
+  String get stadiumsRefused => 'Đơn đặt không thành công. Không bị trừ tiền.';
+
+  @override
+  String get stadiumsNameLabel => 'Tên sân vận động';
+
+  @override
+  String get stadiumsNameHint => 'Để trống để giữ tên được gợi ý.';
+
+  @override
+  String get stadiumsRename => 'Đổi tên sân';
+
+  @override
+  String get hostBidSectionTitle => 'Ứng cử đăng cai';
+
+  @override
+  String get hostBidOpenSub =>
+      'Không bắt buộc. Hãy quyết định trước khi chu kỳ mới bắt đầu.';
+
+  @override
+  String get hostBidDecidedAtRollover =>
+      'Nước chủ nhà được công bố khi chu kỳ mới bắt đầu.';
+
+  @override
+  String get hostBidLodged =>
+      'Đã nộp hồ sơ. Nước chủ nhà được công bố khi chu kỳ mới bắt đầu.';
+
+  @override
+  String get hostBidDeclinedNote => 'Lần này bạn đã chọn không ứng cử.';
+
+  @override
+  String get hostBidOpensLater =>
+      'Đủ điều kiện. Bạn có thể ứng cử vào cuối chu kỳ này.';
+
+  @override
+  String get hostBidNoFunds => 'Không đủ quỹ còn trống để ứng cử.';
+
+  @override
+  String hostBidNeedStadiums(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bạn cần thêm $count sân $seats+ chỗ.',
+      one: 'Bạn cần thêm 1 sân $seats+ chỗ.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hostBidBarredConf(String confederation) {
+    return '$confederation đã đăng cai Giải vô địch thế giới gần nhất.';
+  }
+
+  @override
+  String get hostBidRecentHost => 'Bạn đã đăng cai một trong ba kỳ gần nhất.';
+
+  @override
+  String hostBidRequirement(
+    int grounds,
+    String minSeats,
+    int bigGrounds,
+    String bigSeats,
+  ) {
+    return 'Yêu cầu: $grounds sân $minSeats+ chỗ, trong đó $bigGrounds sân $bigSeats+.';
+  }
+
+  @override
+  String hostBidWonBodyBudget(String amount) {
+    return 'Chúng ta sẽ đăng cai giải đấu và được tự động góp mặt với tư cách chủ nhà. Khoản hỗ trợ một lần $amount đã vào quỹ liên đoàn, sẵn sàng cho ngân sách chu kỳ này.';
+  }
+
+  @override
+  String get hubStadiumIncome => 'Thu nhập sân vận động';
+
+  @override
+  String get stadiumsDownsize => 'Thu nhỏ';
+
+  @override
+  String stadiumsConfirmDownsize(String stadium, String seats, int level) {
+    return 'Thu nhỏ $stadium còn $seats chỗ (cấp $level)? Không được hoàn tiền, nhưng chi phí bảo trì giảm.';
+  }
+
+  @override
+  String get stadiumsResizedThisCycle => 'Đã cải tạo trong chu kỳ này';
+
+  @override
+  String stadiumsGroundIncome(String amount) {
+    return 'Mang về $amount mỗi chu kỳ';
+  }
+
+  @override
+  String hostBidLapsedTitle(String competition, int year) {
+    return 'Rút hồ sơ: $competition $year';
+  }
+
+  @override
+  String hostBidLapsedBodyNation(String nation) {
+    return 'Hồ sơ được nộp cho $nation, nhưng bạn bắt đầu chu kỳ mới ở nơi khác. Hồ sơ đã được rút và không bị trừ tiền.';
+  }
+
+  @override
+  String get hostBidLapsedBodyFunds =>
+      'Khi chu kỳ khép lại, quỹ liên đoàn không còn đủ cho khoản đặt cược. Hồ sơ đã được rút và không bị trừ tiền.';
+
+  @override
+  String get stadiumsViewMap => 'Bản đồ';
+
+  @override
+  String get stadiumsViewList => 'Danh sách';
+
+  @override
+  String get stadiumsMapPickCity =>
+      'Chạm vào một thành phố để xây sân mới ở đó.';
+
+  @override
+  String get stadiumsMapFit => 'Xem toàn quốc';
+
+  @override
+  String get campaignLegacyTitle => 'Hoàn tất di sản';
+
+  @override
+  String get campaignLegacyTwist =>
+      'Tây Ban Nha, đương kim vô địch châu Âu, trong một chu kỳ';
+
+  @override
+  String get campaignLegacyGoal => 'Bảo vệ ngôi vương châu Âu';
+
+  @override
+  String get campaignLegacyIntro =>
+      'Tây Ban Nha là đương kim vô địch châu Âu, và những người hoài nghi cho rằng thời kỳ hoàng kim chỉ là ăn may. Bạn có một chu kỳ để chứng minh điều ngược lại: bảo vệ vương miện châu lục, rồi chinh phục thế giới. Thêm Nations Cup nữa là di sản trọn vẹn.';
+
+  @override
+  String get campaignStars1Legacy => 'Vô địch Giải vô địch châu Âu';
+
+  @override
+  String get campaignStars2Legacy => 'Và Giải vô địch thế giới';
+
+  @override
+  String get campaignStars3Legacy => 'Và Nations Cup';
+
+  @override
+  String get campaignSectionOneCycle => 'Một chu kỳ';
+
+  @override
+  String get campaignSectionShort => 'Vài chu kỳ';
+
+  @override
+  String get campaignSectionLong => 'Đường dài';
+
+  @override
+  String get campaignFilterAll => 'Tất cả';
+
+  @override
+  String get campaignFilterNew => 'Chưa chơi';
+
+  @override
+  String get campaignFilterInProgress => 'Đang chơi';
+
+  @override
+  String get campaignFilterDone => 'Đã xong';
+
+  @override
+  String get campaignFilterEmpty => 'Chưa có chiến dịch nào ở đây.';
+
+  @override
+  String campaignStarsEarned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sao',
+      zero: 'Chưa có sao',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String campaignCycles(int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles chu kỳ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgIntlRetireNoteHigh =>
+      ' Anh ra đi trên đỉnh cao, với tư cách nhà vô địch.';
+
+  @override
+  String get msgIntlRetireNoteMissed =>
+      ' Lỡ hẹn với vòng chung kết là giọt nước tràn ly.';
+
+  @override
+  String get msgIntlRetireNoteSurprise => ' Không ai ngờ tới.';
+
+  @override
+  String get msgIntlRetireNoteRecord =>
+      ' Anh ra đi với tư cách người giữ kỷ lục của đội tuyển.';
+
+  @override
+  String msgIntlRetireNewsTitle(String nation, String name) {
+    return '$nation: $name chia tay đội tuyển';
+  }
+
+  @override
+  String msgIntlRetireNewsBody(String name, String nation, int age) {
+    return '$name ($nation) đã tuyên bố giã từ bóng đá quốc tế ở tuổi $age.';
+  }
+
+  @override
+  String msgIntlComebackTitle(String name) {
+    return '$name trở lại đội tuyển';
+  }
+
+  @override
+  String msgIntlComebackBody(String name, int age) {
+    return '$name sẵn sàng được triệu tập trở lại ở tuổi $age.';
+  }
+
+  @override
+  String get msgIntlComebackNoteCrisis =>
+      ' Khi đội hình bị chấn thương tàn phá, anh đã đáp lời.';
+
+  @override
+  String get msgIntlComebackNoteManager =>
+      ' Huấn luyện viên mới đã thuyết phục được anh.';
+
+  @override
+  String msgIntlComebackNewsTitle(String nation, String name) {
+    return '$nation: $name trở lại đội tuyển';
+  }
+
+  @override
+  String msgIntlComebackNewsBody(String name, String nation, int age) {
+    return '$name ($nation) sẵn sàng được triệu tập trở lại ở tuổi $age.';
+  }
+
+  @override
+  String playerIntlRetired(int year) {
+    return 'Giã từ đội tuyển, $year';
+  }
+
+  @override
+  String playerIntlComeback(int year) {
+    return 'Trở lại đội tuyển, $year';
+  }
+
+  @override
+  String yLegendRetires0(String name) {
+    return 'Cảm ơn $name. Có người chỉ mặc áo, anh gánh cả đội.';
+  }
+
+  @override
+  String yLegendRetires1(String name) {
+    return '$name khép lại sự nghiệp quốc tế. Hết một thời đại.';
+  }
+
+  @override
+  String yLegendRetires2(String name) {
+    return '$name giã từ. Thật lòng mà nói, muộn mất một giải.';
+  }
+
+  @override
+  String yLegendRetires3(String name) {
+    return 'Vậy là $name xong rồi. Đến lúc cho lớp trẻ cơ hội.';
+  }
+
+  @override
+  String matchAltitudeOpponentsTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Độ cao $altitudeString m: đối thủ sẽ xuống sức nhanh hơn';
+  }
+
+  @override
+  String matchAltitudeYouTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Độ cao $altitudeString m: cầu thủ của bạn sẽ xuống sức nhanh hơn';
+  }
+
+  @override
+  String matchAltitudeBothTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Độ cao $altitudeString m: cả hai đội sẽ xuống sức nhanh hơn';
+  }
+
+  @override
+  String matchAltitudeUsedTo(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Độ cao $altitudeString m: cả hai đội đều đã quen';
+  }
+
+  @override
+  String matchHeatExpected(int temp) {
+    final intl.NumberFormat tempNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String tempString = tempNumberFormat.format(temp);
+
+    return 'Nắng nóng: dự kiến $tempString°C, thể lực sẽ cạn sớm hơn';
+  }
+
+  @override
+  String get matchConditionsAdvice =>
+      'Hãy tính chuyện thay người sớm: ở đây đôi chân sung sức đáng giá hơn';
+
+  @override
+  String get fanMoodFurious => 'phẫn nộ';
+
+  @override
+  String get fanMoodRestless => 'bất an';
+
+  @override
+  String get fanMoodCalm => 'bình thản';
+
+  @override
+  String get fanMoodUpbeat => 'phấn khởi';
+
+  @override
+  String get fanMoodEuphoric => 'cuồng nhiệt';
+
+  @override
+  String matchHomeFans(String mood) {
+    return 'Cổ động viên nhà: $mood';
+  }
+
+  @override
+  String federationFans(String mood) {
+    return 'Cổ động viên: $mood';
+  }
+
+  @override
+  String federationFansIncome(String change) {
+    return 'Thu nhập sân vận động chu kỳ tới: $change';
+  }
+
+  @override
+  String yFansProtest0(String nation, String manager) {
+    return 'Hai mươi năm theo đội tuyển cả sân nhà lẫn sân khách. Tôi sẽ không gia hạn vé mùa cho đến khi có gì đó thay đổi.';
+  }
+
+  @override
+  String yFansProtest1(String nation, String manager) {
+    return 'Chúng tôi vẫn sẽ hát vì màu áo. Nhưng tấm băng rôn ở khán đài phía bắc tối nay đã nói đúng điều tất cả đều nghĩ.';
+  }
+
+  @override
+  String yFansProtest2(String nation, String manager) {
+    return 'Nửa sân trống trơn, còn nửa kia dành cả hiệp hai để hô #${manager}Out.';
+  }
+
+  @override
+  String yFansProtest3(String nation, String manager) {
+    return 'Các hội cổ động viên đang bàn chuyện tẩy chay trận sân nhà tới. Khó mà trách họ.';
+  }
+
+  @override
+  String yFansProtest4(String nation, String manager) {
+    return '#${manager}Out. Không còn giận nữa. Chỉ là chán rồi.';
+  }
+
+  @override
+  String yFansProtest5(String nation, String manager) {
+    return 'Ảnh tối nay: từng hàng ghế trống và một tấm ga trải giường ghi #${manager}Out. Bài tường thuật chỉ cần thế.';
+  }
+
+  @override
+  String yFansSellOut0(String nation) {
+    return 'Lại cháy vé. Đội tuyển hay nhất trong nhiều năm, và cả nước đều biết.';
+  }
+
+  @override
+  String yFansSellOut1(String nation) {
+    return 'Vé trận sân nhà tới bán hết trong mười một phút. Đội bóng này đã trả lại cho chúng tôi những ngày cuối tuần.';
+  }
+
+  @override
+  String yFansSellOut2(String nation) {
+    return 'Không còn một ghế trống cho trận sân nhà tới. Liên đoàn sẽ vừa đếm tiền vé vừa mỉm cười.';
+  }
+
+  @override
+  String yFansSellOut3(String nation) {
+    return 'Lại cháy vé. Muốn nói gì về chiến thuật thì nói, người ta vẫn muốn có mặt ở sân.';
+  }
+
+  @override
+  String yFansSellOut4(String nation) {
+    return 'Cháy vé, được thôi. Chính những người đó đã la ó đội này một năm rưỡi trước.';
+  }
+
+  @override
+  String yFansSellOut5(String nation) {
+    return 'Bỗng dưng cháy vé, bỗng dưng ai cũng thành chuyên gia. Các bạn ở đâu khi chúng ta không thắng nổi ai?';
+  }
+
+  @override
+  String get campaignsIntro =>
+      'Chiến dịch là những thử thách được thiết kế sẵn: một đội tuyển cố định, một thế giới với biến cố riêng và một mục tiêu phải đạt trong số chu kỳ nhất định. Mỗi lượt chơi tách biệt với các sự nghiệp đã lưu, và càng đi xa bạn càng nhận nhiều sao, tối đa ba sao.';
+
+  @override
+  String hubEventScandal(String player) {
+    return 'Bê bối ở đợt tập trung: $player';
+  }
+
+  @override
+  String get hubEventScandalSub => 'Cho về nước hay giữ lại?';
+
+  @override
+  String get scandalTitle => 'BÊ BỐI';
+
+  @override
+  String scandalStoryParty(String player) {
+    return '$player dự một bữa tiệc kéo dài đến sáng, và ảnh xuất hiện trên mọi tờ báo vào buổi sáng đội tập trung.';
+  }
+
+  @override
+  String scandalStoryCurfew(String player) {
+    return '$player vi phạm giờ giới nghiêm và bị bắt gặp khi trở về khách sạn lúc rạng sáng.';
+  }
+
+  @override
+  String scandalStoryNightclub(String player) {
+    return '$player bị chụp ảnh trong hộp đêm vào đêm trước đợt tập trung, và ảnh lan khắp nơi.';
+  }
+
+  @override
+  String scandalStoryCasino(String player) {
+    return '$player trải qua đêm trước đợt tập trung bên bàn sòng bạc, và một tờ báo lá cải có ảnh.';
+  }
+
+  @override
+  String get scandalSendHome => 'Cho anh ấy về';
+
+  @override
+  String scandalSendHomeCover(String player) {
+    return 'Cho về, triệu tập $player';
+  }
+
+  @override
+  String scandalKeep(String player) {
+    return 'Giữ lại $player';
+  }
+
+  @override
+  String get scandalKeepNote =>
+      'Giữ lại: tinh thần khoảng -4 và ban lãnh đạo khoảng -3 đến hết chu kỳ.';
+
+  @override
+  String get scandalSendHomeNote =>
+      'Cho về: không ảnh hưởng tinh thần hay ban lãnh đạo, và bạn có thể triệu tập người thay thế.';
+
+  @override
+  String get scandalFinalsNote =>
+      'Cho về: không ảnh hưởng tinh thần hay ban lãnh đạo, nhưng ở vòng chung kết không ai được thay thế anh ấy.';
+
+  @override
+  String get scandalPickCover => 'Triệu tập người thay thế (không bắt buộc)';
+
+  @override
+  String newsScandalTitle(String player) {
+    return 'Bê bối ở đợt tập trung: $player';
+  }
+
+  @override
+  String yScandalParty0(String player, String tag) {
+    return 'Tuổi trẻ mà. $player đi tiệc đêm trước đợt tập trung, nhưng tôi vẫn muốn thấy anh ấy trên sân. #$tag';
+  }
+
+  @override
+  String yScandalParty1(String player, String tag) {
+    return '$player bị chụp ảnh tại một bữa tiệc thâu đêm, chỉ vài giờ trước khi đội tập trung. Liên đoàn đã được thông báo. #$tag';
+  }
+
+  @override
+  String yScandalParty2(String player, String tag) {
+    return 'Tiệc thâu đêm trước đợt tập trung. $player, bạn nghĩ gì vậy? Không thể tin nổi. #$tag';
+  }
+
+  @override
+  String yScandalCurfew0(String player, String tag) {
+    return 'Về muộn sau giờ giới nghiêm, thôi, chuyện thường. $player chỉ cần chuộc lỗi trên sân. #$tag';
+  }
+
+  @override
+  String yScandalCurfew1(String player, String tag) {
+    return '$player bị bắt gặp trở về khách sạn của đội sau giờ giới nghiêm, vài giờ trước buổi tập. #$tag';
+  }
+
+  @override
+  String yScandalCurfew2(String player, String tag) {
+    return 'Giờ giới nghiêm có gì phức tạp đâu. $player không trụ nổi một đêm. #$tag';
+  }
+
+  @override
+  String yScandalNightclub0(String player, String tag) {
+    return 'Thì $player đi hộp đêm. Cầu thủ cũng có cuộc sống riêng. Cứ để anh ấy đá. #$tag';
+  }
+
+  @override
+  String yScandalNightclub1(String player, String tag) {
+    return 'Ảnh cho thấy $player trong hộp đêm vào đêm trước đợt tập trung của đội tuyển. #$tag';
+  }
+
+  @override
+  String yScandalNightclub2(String player, String tag) {
+    return 'Ảnh hộp đêm ngay trước đợt tập trung. $player đã làm xấu hổ màu áo. #$tag';
+  }
+
+  @override
+  String yScandalCasino0(String player, String tag) {
+    return 'Một đêm ở sòng bạc đâu phải tội. $player sẽ ổn thôi. #$tag';
+  }
+
+  @override
+  String yScandalCasino1(String player, String tag) {
+    return '$player bị phát hiện bên bàn sòng bạc vào đêm trước khi đội tập trung. #$tag';
+  }
+
+  @override
+  String yScandalCasino2(String player, String tag) {
+    return 'Cả đêm ở sòng bạc trước đợt tập trung. $player đã đặt cược nhiều hơn tiền bạc. #$tag';
+  }
+
+  @override
+  String yScandalSentHome0(String player) {
+    return 'Quyết định đúng. Không ai lớn hơn tập thể, kể cả $player.';
+  }
+
+  @override
+  String yScandalSentHome1(String player) {
+    return 'Cho $player về là câu trả lời duy nhất. Tôn trọng HLV.';
+  }
+
+  @override
+  String yScandalSentHome2(String player) {
+    return 'Kỷ luật là kỷ luật. $player biết rõ quy định.';
+  }
+
+  @override
+  String yScandalSentHome3(String player) {
+    return 'Thông điệp rõ ràng cho cả đội: $player đã lên máy bay về nhà.';
+  }
+
+  @override
+  String yScandalSentHome4(String player) {
+    return 'Quá khắt khe với $player. Một đêm đi chơi mà hết luôn đợt tập trung?';
+  }
+
+  @override
+  String yScandalSentHome5(String player) {
+    return 'Cho $player về làm chúng ta yếu đi. Ta sẽ trả giá trên sân.';
+  }
+
+  @override
+  String yScandalKept0(String player) {
+    return 'Giữ $player là một canh bạc. Anh ấy nên đền đáp trên sân.';
+  }
+
+  @override
+  String yScandalKept1(String player) {
+    return 'Thôi được, $player ở lại. Vậy thì anh ấy nợ mọi người một màn trình diễn.';
+  }
+
+  @override
+  String yScandalKept2(String player) {
+    return 'Vậy là quy định không áp dụng cho $player. Biết thế cũng tốt.';
+  }
+
+  @override
+  String yScandalKept3(String player) {
+    return 'Giờ giới nghiêm giờ là tùy ý rồi thì phải. Cứ hỏi $player.';
+  }
+
+  @override
+  String yScandalKept4(String player) {
+    return 'Giữ $player sau chuyện đó? Đội này thành trại hè rồi.';
+  }
+
+  @override
+  String yScandalKept5(String player) {
+    return 'Tiệc tùng cả đêm rồi vẫn đá chính. Thông điệp tuyệt vời đấy HLV. $player chắc vui lắm.';
+  }
+
+  @override
+  String get yStreamerBreaks0 =>
+      'ÔNG BẠN BỊ BẮT QUẢ TANG 😭😭 ĐÊM TRƯỚC ĐỢT TẬP TRUNG?? TÔI KHÓC ĐÂY 💀💀💀';
+
+  @override
+  String get yStreamerBreaks1 =>
+      'KHÔNGGG CHAT NHÌN NÀY 🤯🤯 ÔNG BẠN LÀM THẬT TRƯỚC ĐỢT TẬP TRUNG 😭🔥';
+
+  @override
+  String get yStreamerBreaks2 =>
+      'AI THẢ ANH TA RA?? AI THẢ ANH TA RA 😭😭💀 ĐÚNG LÀ ĐIỆN ẢNH 🔥🔥';
+
+  @override
+  String get yStreamerSentHome0 =>
+      'VỀ NƯỚC?? VỀ NƯỚC!!! 😭😭😭 HLV KHÔNG ĐÙA ĐÂU 💀🔥';
+
+  @override
+  String get yStreamerSentHome1 =>
+      'ÔNG BẠN XẾP VALI TRỰC TIẾP 🤯🤯 TẠM BIỆT ÔNG BẠN 😭👋';
+
+  @override
+  String get yStreamerSentHome2 =>
+      'KHÔNG THỂ NÀOOO HỌ CHO ANH TA VỀ RỒI 💀💀 CHAT TÔI RUN QUÁ 🔥🔥🔥';
+
+  @override
+  String get yStreamerKept0 =>
+      'Ở LẠI??? Ở LẠIIII 🤯🤯 ÔNG BẠN BẤT KHẢ XÂM PHẠM 😭🔥';
+
+  @override
+  String get yStreamerKept1 =>
+      'TIỆC CẢ ĐÊM MÀ VẪN CÓ TÊN 💀💀 TÔI CŨNG MUỐN HỢP ĐỒNG ĐÓ 😭😭';
+
+  @override
+  String get yStreamerKept2 => 'HLV NÓI KHÔNG SAO 😭😭 ÔNG BẠN GÌ VẬY 🤯🤯🤯';
+
+  @override
+  String get yCameoUjfaloci =>
+      'Tôi chẳng trả gì cả, và con số đó cũng không khớp';
+
+  @override
+  String get yCameoHavir0 => 'Mấy con cá nhỏ bơi đi mất rồi.';
+
+  @override
+  String get yCameoHavir1 => 'Chúng tôi giăng lưới, cá lại ở chỗ khác.';
+
+  @override
+  String get yCameoHavir2 => 'Tôi đã nói từ tháng Chín, bên nồi goulash.';
+
+  @override
+  String get yCameoHavir3 => 'Ai không đánh cá kịp lúc thì giờ đừng khóc.';
+
+  @override
+  String get yCameoHavir4 => 'Chúng tôi đá như cá trê mắc cạn.';
+
+  @override
+  String get yCameoHavir5 => 'Gió thổi, ao đóng băng. Chuyện là thế.';
+
+  @override
+  String get yCameoHavir6 => 'Có hôm kéo lên chỉ được chiếc ủng cũ.';
+
+  @override
+  String get yCameoHavir7 =>
+      'Thời tôi ít ra còn đi làm cốc bia. Giờ đến thế cũng không.';
+
+  @override
+  String get yCameoLzimberskyHome0 =>
+      'Cho một cậu trai về nước vì một đêm? Đó mới là bê bối, không phải bữa tiệc!';
+
+  @override
+  String get yCameoLzimberskyHome1 =>
+      'Các cậu ấy được quyền vui chơi chứ! Truyền thông đạo đức giả lại thắng.';
+
+  @override
+  String get yCameoLzimberskyHome2 =>
+      'Đây là cuộc săn phù thủy. Một cậu trai đi chơi một đêm và các người treo cổ cậu ấy.';
+
+  @override
+  String get yCameoLzimberskyHome3 =>
+      'Nhà báo nào chưa từng đi tiệc thì hãy ném hòn đá đầu tiên. Thật đáng xấu hổ!';
+
+  @override
+  String get yCameoLzimberskyHome4 =>
+      'HLV sợ báo lá cải. Tôi thì sẽ bảo vệ cậu ấy đến hơi thở cuối cùng!';
+
+  @override
+  String get yCameoLzimberskyKept0 =>
+      'Cuối cùng cũng có HLV có bản lĩnh! Ông ấy giữ cậu trai lại, truyền thông cứ việc khóc.';
+
+  @override
+  String get yCameoLzimberskyKept1 =>
+      'Các cậu ấy được quyền vui chơi, đúng không? Hoan hô HLV!';
+
+  @override
+  String get yCameoLzimberskyKept2 =>
+      'Truyền thông đạo đức giả la hét, HLV vẫn giữ vững lập trường. Phải thế chứ!';
+
+  @override
+  String get yCameoLzimberskyKept3 =>
+      'Đi chơi một đêm mà báo chí muốn ném đá cậu ấy. HLV đúng là đàn ông thực thụ!';
+
+  @override
+  String get yCameoLzimberskyKept4 =>
+      'Tôi nói: hãy để các cậu ấy sống! Làm hết sức thì chơi hết mình. Giơ ngón cái.';
+
+  @override
+  String get yTraitStreamer =>
+      'Phát trực tiếp mọi thứ, hết cỡ âm lượng, viết hoa toàn bộ.';
+
+  @override
+  String hubEventAwardsCeremony(int year) {
+    return 'Cầu thủ của năm $year';
+  }
+
+  @override
+  String get hubEventAwardsCeremonySub => 'Kết quả bỏ phiếu đã có';
+
+  @override
+  String get potyCeremonyWatch => 'Xem lễ trao giải';
+
+  @override
+  String get potyCeremonySkipToList => 'Đến thẳng top 5';
+
+  @override
+  String get potyCeremonySkip => 'Bỏ qua';
+
+  @override
+  String get potyCeremonyIntro =>
+      'Kết quả bỏ phiếu đã có. Đây là năm cầu thủ xuất sắc nhất thế giới năm nay.';
+
+  @override
+  String potyCeremonyPlace(int place) {
+    return 'Hạng $place';
+  }
+
+  @override
+  String get potyCeremonyWinnerIs => 'Và Cầu thủ của năm là...';
+
+  @override
+  String get potyTop5Heading => 'Top 5 thế giới';
+
+  @override
+  String get potyYoungTop3Heading => 'Cầu thủ trẻ của năm: top 3';
+
+  @override
+  String get potySeeTop5 => 'Xem top 5';
+
+  @override
+  String get potyYourPlayer => 'Cầu thủ của bạn';
+
+  @override
+  String potyTallyCleanSheets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count trận giữ sạch lưới',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignFullBrief => 'Nhiệm vụ đầy đủ';
+
+  @override
+  String campaignStarsSoFar(int earned, int total) {
+    return 'Số sao đã giành được: $earned/$total';
+  }
+
+  @override
+  String get campaignStarEarned => 'Đã giành được';
+
+  @override
+  String get campaignStarNotYet => 'Chưa giành được';
+
+  @override
+  String get stadiumsEntrySubClosed =>
+      'Xem các sân của bạn. Công trình mở lại vào đầu chu kỳ sau.';
+
+  @override
+  String get boardObjectiveNoBrief => 'Không đặt mục tiêu';
+
+  @override
+  String get boardObjectiveNoBriefBody =>
+      'Ban lãnh đạo không kỳ vọng bạn vào vòng chung kết này. Bạn sẽ được đánh giá theo kết quả thi đấu.';
+
+  @override
+  String get boardObjectiveAwaitingDraw => 'Mục tiêu sau lễ bốc thăm';
+
+  @override
+  String get boardObjectiveAwaitingDrawBody =>
+      'Ban lãnh đạo sẽ đặt mục tiêu này sau khi bốc thăm chia bảng.';
 }

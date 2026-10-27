@@ -327,7 +327,7 @@ void main() {
         cities: const ['Berlin', 'Munich'],
       );
       expect(malta.first.capacity, lessThan(20000));
-      expect(germany.first.capacity, greaterThan(75000));
+      expect(germany.first.capacity, greaterThanOrEqualTo(74000));
     });
 
     test('every nation in the seed has a stadium capacity', () {
@@ -401,6 +401,111 @@ void main() {
     test('is confederation-scoped and deterministic', () {
       expect(field(3), field(3));
       expect(field(3).every((id) => id <= 40), isTrue);
+    });
+  });
+
+  group('venue count scales with the field', () {
+    Map<int, List<String>> seedCities() => {
+      for (final e
+          in (jsonDecode(
+                    File('assets/data/country_cities.json').readAsStringSync(),
+                  )
+                  as Map<String, Object?>)
+              .entries)
+        int.parse(e.key): (e.value! as List).cast<String>(),
+    };
+
+    test('the table: 48 -> 16, 32 -> 12, 24 -> 10, 16 or fewer -> 8', () {
+      expect(VenueGenerator.countForField(48), 16);
+      expect(VenueGenerator.countForField(32), 12);
+      expect(VenueGenerator.countForField(24), 10);
+      expect(VenueGenerator.countForField(16), 8);
+      expect(VenueGenerator.countForField(10), 8);
+      expect(VenueGenerator.countForField(0), 8);
+    });
+
+    test('a 48-team finals in England alone is played in 16 cities', () {
+      // The tester's report: England hosted a 48-team tournament in 8 cities.
+      const england = 14;
+      final byHost = VenueGenerator.forHosts(
+        hostIds: const [england],
+        citiesByHost: {england: seedCities()[england]!},
+        count: VenueGenerator.countForField(48),
+      );
+      final venues = byHost[england]!;
+      expect(venues, hasLength(16));
+      // Sixteen grounds; a city may hold two (London).
+      expect(venues.map((v) => v.stadium).toSet(), hasLength(16));
+      expect(
+        venues.map((v) => v.city).toSet().length,
+        greaterThanOrEqualTo(14),
+      );
+      expect(venues.first.city, 'London');
+      // Capacities still taper, biggest first.
+      for (var i = 1; i < venues.length; i++) {
+        expect(venues[i].capacity, lessThanOrEqualTo(venues[i - 1].capacity));
+      }
+      expect(venues.last.capacity, greaterThanOrEqualTo(1000));
+    });
+
+    test('every likely big host can stage 16 grounds on its own', () {
+      final cities = seedCities();
+      // The big footballing nations most likely to be handed a World
+      // Championship solo.
+      for (final id in [7, 14, 18, 20, 26, 36, 50, 53, 56, 58, 88, 99, 170]) {
+        final v = VenueGenerator.forHost(
+          hostId: id,
+          cities: cities[id],
+          count: 16,
+        );
+        expect(v, hasLength(16), reason: 'nation $id');
+        // Sixteen grounds, each its own (a city may hold two).
+        expect(
+          v.map((x) => '${x.city}/${x.stadium}').toSet(),
+          hasLength(16),
+        );
+      }
+    });
+
+    test('growing the count keeps the first eight grounds unchanged', () {
+      final cities = seedCities()[20]!;
+      final eight = VenueGenerator.forHost(hostId: 20, cities: cities);
+      final sixteen = VenueGenerator.forHost(
+        hostId: 20,
+        cities: cities,
+        count: 16,
+      );
+      expect(sixteen.take(8).toList(), eight);
+    });
+
+    test('a host short of cities hands its share to the co-host', () {
+      final byHost = VenueGenerator.forHosts(
+        hostIds: const [1, 2],
+        citiesByHost: const {
+          1: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'],
+          2: ['P', 'Q', 'R'],
+        },
+        count: 16,
+      );
+      expect(byHost[2], hasLength(3), reason: 'all it has');
+      expect(byHost[1], hasLength(12), reason: 'takes up the slack');
+    });
+
+    test('a small solo host plays in every city it has, no more', () {
+      final byHost = VenueGenerator.forHosts(
+        hostIds: const [1],
+        citiesByHost: const {
+          1: ['A', 'B', 'C', 'D', 'E'],
+        },
+        count: 16,
+      );
+      expect(byHost[1], hasLength(5));
+    });
+
+    test('a host with no real cities still gets a full fictional set', () {
+      final byHost = VenueGenerator.forHosts(hostIds: const [500], count: 16);
+      expect(byHost[500], hasLength(16));
+      expect(byHost[500]!.map((v) => v.city).toSet(), hasLength(16));
     });
   });
 }

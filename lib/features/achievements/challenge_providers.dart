@@ -112,7 +112,9 @@ challengesViewProvider = FutureProvider.autoDispose.family<List<ChallengeView>, 
   // the stats screen and achievements, so the collector challenges agree.
   final cs = await ref.watch(careerStatsProvider(careerId).future);
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
 
   final honours = await comp.honours(careerId);

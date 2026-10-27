@@ -31,8 +31,10 @@ import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/squad_tablet_layout.dart';
+import 'package:fnm/features/tactics/tactic_library_sheet.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_tile.dart';
+import 'package:fnm/features/tactics/full_back_instructions.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -428,6 +430,8 @@ class TacticsScreen extends ConsumerWidget {
       injuredIds: injuredIds,
       formation: tactic.formation,
       instructions: tactic.instructions,
+      fullBacks: tactic.fullBacks,
+      onCycleFullBack: (side) => service.cycleFullBack(careerId, side),
       lineup: tactic.lineup,
       byId: data.byId,
       teamColors: teamColors,
@@ -872,9 +876,16 @@ class _InstructionsTabState extends ConsumerState<_InstructionsTab> {
   late TacticalInstructions _i = widget.tactic.instructions;
   late Playstyle _style = widget.tactic.playstyle;
 
+  /// Held here as well as stored, so the chips answer the tap at once rather
+  /// than when the write lands.
+  late FullBackPushes _fullBacks = widget.tactic.fullBacks;
+
   @override
   void didUpdateWidget(_InstructionsTab old) {
     super.didUpdateWidget(old);
+    if (widget.tactic.fullBacks != old.tactic.fullBacks) {
+      setState(() => _fullBacks = widget.tactic.fullBacks);
+    }
     // A preset applied from the app bar rewrites the instructions underneath
     // this. As a sheet it was thrown away and rebuilt every time it opened, so
     // it never had to notice; a tab stays alive and would have gone on showing
@@ -1021,6 +1032,18 @@ class _InstructionsTabState extends ConsumerState<_InstructionsTab> {
           _i.directness,
           (v) => _set(_i.copyWith(directness: v)),
         ),
+        FullBackInstructions(
+          formation: widget.tactic.formation,
+          value: _fullBacks,
+          onChanged: (side, push) {
+            setState(() => _fullBacks = _fullBacks.withSide(side, push));
+            unawaited(
+              ref
+                  .read(tacticServiceProvider)
+                  .setFullBack(widget.careerId, side, push),
+            );
+          },
+        ),
       ],
     );
   }
@@ -1115,6 +1138,7 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
             name: name.trim(),
             formation: widget.tactic.formation,
             instructions: widget.tactic.instructions,
+            fullBacks: widget.tactic.fullBacks,
           ),
         );
     if (mounted) {
@@ -1125,6 +1149,18 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
     }
   }
 
+  /// Opens the library over this sheet. Loading a tactic from it replaces the
+  /// one this sheet was opened on, so this sheet closes behind it.
+  Future<void> _openLibrary() async {
+    final l = AppLocalizations.of(context);
+    final loaded = await showTacticLibrary(
+      context,
+      careerId: widget.careerId,
+      styleLabel: (s) => playstyleLabel(l, s),
+    );
+    if (loaded && mounted) Navigator.of(context).pop();
+  }
+
   Future<void> _apply(TacticPreset preset) async {
     await ref
         .read(tacticServiceProvider)
@@ -1132,6 +1168,7 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
           widget.careerId,
           preset.formation,
           preset.instructions,
+          fullBacks: preset.fullBacks,
         );
     if (mounted) {
       final l = AppLocalizations.of(context);
@@ -1193,6 +1230,40 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
                 label: Text(l.tacticsSaveCurrentTactic),
               ),
             ),
+            const SizedBox(height: AppSpacing.sm),
+            // The library is the manager's, not this save's: what is kept
+            // there loads in any career. Wrapped, so a long translation or a
+            // large text size stacks the two rather than overflowing.
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              children: [
+                OutlinedButton.icon(
+                  key: TacticLibraryKeys.saveButton,
+                  onPressed: () => saveTacticToLibrary(
+                    context,
+                    ref,
+                    careerId: widget.careerId,
+                    defaultName: defaultLibraryName(
+                      widget.tactic.formation,
+                      widget.tactic.playstyle,
+                      (s) => playstyleLabel(l, s),
+                    ),
+                  ),
+                  icon: const Icon(Icons.library_add_outlined, size: 18),
+                  label: Text(l.tacticsSaveToLibrary),
+                ),
+                OutlinedButton.icon(
+                  key: TacticLibraryKeys.loadButton,
+                  onPressed: _openLibrary,
+                  icon: const Icon(
+                    Icons.collections_bookmark_outlined,
+                    size: 18,
+                  ),
+                  label: Text(l.tacticsLoadFromLibrary),
+                ),
+              ],
+            ),
             const SizedBox(height: AppSpacing.md),
             Flexible(
               child: presetsAsync.when(
@@ -1224,6 +1295,8 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
                         onDelete: () => ref
                             .read(tacticPresetStoreProvider)
                             .delete(widget.careerId, p.name),
+                        onSaveToLibrary: () =>
+                            savePresetToLibrary(context, ref, p),
                       );
                     },
                   );

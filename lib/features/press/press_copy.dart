@@ -95,7 +95,7 @@ String beatQuestion(
   };
 }
 
-/// What the manager says when he picks [a]: one of four wordings by [seed].
+/// What the manager says when he picks [a]: one of its wordings by [seed].
 String answerLabel(
   AppLocalizations l,
   AnswerKind a, {
@@ -111,18 +111,24 @@ String answerLabel(
       l.pressReplyCreditPlayers2,
       l.pressReplyCreditPlayers3,
       l.pressReplyCreditPlayers4,
+      l.pressReplyCreditPlayers5,
+      l.pressReplyCreditPlayers6,
     ],
     AnswerKind.takeResponsibility => [
       l.pressReplyTakeResponsibility1,
       l.pressReplyTakeResponsibility2,
       l.pressReplyTakeResponsibility3,
       l.pressReplyTakeResponsibility4,
+      l.pressReplyTakeResponsibility5,
+      l.pressReplyTakeResponsibility6,
     ],
     AnswerKind.demandMore => [
       l.pressReplyDemandMore1,
       l.pressReplyDemandMore2,
       l.pressReplyDemandMore3,
       l.pressReplyDemandMore4,
+      l.pressReplyDemandMore5,
+      l.pressReplyDemandMore6,
     ],
     AnswerKind.promiseWinNext => [
       l.pressReplyPromiseWinNext1,
@@ -153,6 +159,8 @@ String answerLabel(
       l.pressReplyDeflect2,
       l.pressReplyDeflect3,
       l.pressReplyDeflect4,
+      l.pressReplyDeflect5,
+      l.pressReplyDeflect6,
     ],
     AnswerKind.takeCredit => [
       l.pressReplyTakeCredit1,
@@ -280,38 +288,47 @@ List<String> _moment(
   (ConferenceReason.bigWin, _Tone.warm) => [
     l.pressMomentBigWinWarm1(opponent),
     l.pressMomentBigWinWarm2(opponent),
+    l.pressMomentBigWinWarm3(opponent),
   ],
   (ConferenceReason.bigWin, _Tone.neutral) => [
     l.pressMomentBigWinNeutral1(opponent),
     l.pressMomentBigWinNeutral2(opponent),
+    l.pressMomentBigWinNeutral3(opponent),
   ],
   (ConferenceReason.bigWin, _Tone.hostile) => [
     l.pressMomentBigWinHostile1(opponent),
     l.pressMomentBigWinHostile2(opponent),
+    l.pressMomentBigWinHostile3(opponent),
   ],
   (ConferenceReason.bigLoss, _Tone.warm) => [
     l.pressMomentBigLossWarm1(opponent),
     l.pressMomentBigLossWarm2(opponent),
+    l.pressMomentBigLossWarm3(opponent),
   ],
   (ConferenceReason.bigLoss, _Tone.neutral) => [
     l.pressMomentBigLossNeutral1(opponent),
     l.pressMomentBigLossNeutral2(opponent),
+    l.pressMomentBigLossNeutral3(opponent),
   ],
   (ConferenceReason.bigLoss, _Tone.hostile) => [
     l.pressMomentBigLossHostile1(opponent),
     l.pressMomentBigLossHostile2(opponent),
+    l.pressMomentBigLossHostile3(opponent),
   ],
   (ConferenceReason.crisis, _Tone.warm) => [
     l.pressMomentCrisisWarm1(opponent),
     l.pressMomentCrisisWarm2(opponent),
+    l.pressMomentCrisisWarm3(opponent),
   ],
   (ConferenceReason.crisis, _Tone.neutral) => [
     l.pressMomentCrisisNeutral1(opponent),
     l.pressMomentCrisisNeutral2(opponent),
+    l.pressMomentCrisisNeutral3(opponent),
   ],
   (ConferenceReason.crisis, _Tone.hostile) => [
     l.pressMomentCrisisHostile1(opponent),
     l.pressMomentCrisisHostile2(opponent),
+    l.pressMomentCrisisHostile3(opponent),
   ],
   (ConferenceReason.jobVerdict, _Tone.warm) => [
     l.pressMomentJobVerdictWarm1(opponent),

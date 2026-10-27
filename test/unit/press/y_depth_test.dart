@@ -27,6 +27,8 @@ void main() {
       date: DateTime(2030, 1, 1).add(Duration(days: i * 7)),
       key: 'fx:$i',
       competitive: true,
+      stakes: YStakes.qualifier,
+      shootoutWon: null,
     ),
     scorerName: null,
     scorerGoals: null,
@@ -82,15 +84,23 @@ void main() {
     });
 
     test('the deep templates really are deep', () {
+      // The shock win and the hammering bring every voice out at once, so
+      // they are the deepest of all.
+      for (final t in [YTemplate.winUpset, YTemplate.lostBadly]) {
+        expect(YFeed.variantsFor(t), YFeed.bigVariantCount, reason: t.name);
+      }
+      // The ordinary results are most of a career, and deeper still.
       for (final t in [
-        YTemplate.winUpset,
         YTemplate.winRoutine,
         YTemplate.winTight,
         YTemplate.drew,
         YTemplate.lost,
-        YTemplate.lostBadly,
       ]) {
-        expect(YFeed.variantsFor(t), YFeed.deepVariantCount, reason: t.name);
+        expect(
+          YFeed.variantsFor(t),
+          YFeed.everyMatchVariantCount,
+          reason: t.name,
+        );
       }
       // And the ones that fire once a cycle are left alone: copy is expensive
       // and is spent where the repetition was.
@@ -111,6 +121,27 @@ void main() {
           ),
       };
       expect(variants.values.toSet(), hasLength(YTone.values.length));
+    });
+
+    test('deepening a template keeps every original wording in its band', () {
+      // The first twelve keys were written generous, neutral, sour, four of
+      // each; the six added ones are numbered 12..17, two per band.
+      const original = YFeed.deepVariantCount;
+      const total = YFeed.everyMatchVariantCount;
+      final slots = [
+        for (var v = 0; v < total; v++)
+          YCast.arbSlot(variant: v, original: original, total: total),
+      ];
+      expect(slots.toSet(), hasLength(total), reason: 'every key once');
+      for (final tone in YTone.values) {
+        final (offset, size) = YCast.band(tone, total);
+        final (oOffset, oSize) = YCast.band(tone, original);
+        final inBand = slots.sublist(offset, offset + size);
+        final originals = inBand.where((s) => s < original).toList();
+        expect(originals, [for (var i = 0; i < oSize; i++) oOffset + i]);
+      }
+      expect(slots.sublist(0, 6), [0, 1, 2, 3, 12, 13]);
+      expect(slots.sublist(12), [8, 9, 10, 11, 16, 17]);
     });
 
     test('a sour account and a generous one do not share a sentence', () {
@@ -246,6 +277,8 @@ void main() {
       date: DateTime(2030),
       key: 'a',
       competitive: true,
+      stakes: YStakes.qualifier,
+      shootoutWon: null,
     ));
     final giant = YFeed.classify((
       opponent: 'San Marino',
@@ -256,10 +289,13 @@ void main() {
       date: DateTime(2030),
       key: 'b',
       competitive: true,
+      stakes: YStakes.qualifier,
+      shootoutWon: null,
     ));
-    expect(minnow, YTemplate.drew);
-    expect(giant, YTemplate.drew);
-    // Same template, but the room is not the same size.
+    // A point is a different story depending on whose point it was.
+    expect(minnow, YTemplate.drewHeroic);
+    expect(giant, YTemplate.drewShame);
+    // And the shared reading underneath agrees.
     expect(
       Expectation.standing(
         nationRank: 120,

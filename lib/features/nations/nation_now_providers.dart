@@ -108,10 +108,9 @@ nationNowProvider = FutureProvider.autoDispose
         arg.careerId,
         career.cyclePointer,
       );
-      final upcoming = cycle
-          .where((f) => !f.played && fixtureRevealed(f, watched))
-          .toList()
-        ..sort((a, b) => a.date.compareTo(b.date));
+      final upcoming =
+          cycle.where((f) => !f.played && fixtureRevealed(f, watched)).toList()
+            ..sort((a, b) => a.date.compareTo(b.date));
 
       // Strength and the three to watch.
       final List<Player> xi;

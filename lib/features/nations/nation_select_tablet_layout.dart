@@ -201,7 +201,9 @@ class _TabletTopBar extends StatelessWidget {
     final l = AppLocalizations.of(context);
     return Container(
       key: NationSelectScreen.topBarKey,
-      height: 56,
+      // 56 at the normal text size; a larger one grows the bar rather than
+      // spilling its two-line title out of it.
+      constraints: const BoxConstraints(minHeight: 56),
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: const BoxDecoration(
         color: AppColors.surfaceContainerLow,
@@ -242,14 +244,6 @@ class _TabletTopBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  l.nationsNationalLevel,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TabletText.sectionLabel.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
                 Text(
                   l.nationsSelectHeading,
                   maxLines: 1,

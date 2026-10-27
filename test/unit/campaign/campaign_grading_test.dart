@@ -24,12 +24,15 @@ void main() {
     expect(starsForFinish(7, t), 3);
   });
 
-  test('grudgeStars: nothing below the rival, then qualify, then both wins', () {
-    expect(grudgeStars(aboveRival: false, qualified: true, wonBoth: true), 0);
-    expect(grudgeStars(aboveRival: true, qualified: false, wonBoth: true), 1);
-    expect(grudgeStars(aboveRival: true, qualified: true, wonBoth: false), 2);
-    expect(grudgeStars(aboveRival: true, qualified: true, wonBoth: true), 3);
-  });
+  test(
+    'grudgeStars: nothing below the rival, then qualify, then both wins',
+    () {
+      expect(grudgeStars(aboveRival: false, qualified: true, wonBoth: true), 0);
+      expect(grudgeStars(aboveRival: true, qualified: false, wonBoth: true), 1);
+      expect(grudgeStars(aboveRival: true, qualified: true, wonBoth: false), 2);
+      expect(grudgeStars(aboveRival: true, qualified: true, wonBoth: true), 3);
+    },
+  );
 
   test('beatRivalsStars: both rivals beaten first, then qualify, then the '
       'quarter-final', () {
@@ -72,8 +75,57 @@ void main() {
     expect(Campaigns.byId('youngFinns'), def);
     // Only this campaign rebuilds a pool.
     expect(
-      [for (final c in Campaigns.all) if (c.goldenGeneration) c.id],
+      [
+        for (final c in Campaigns.all)
+          if (c.goldenGeneration) c.id,
+      ],
       ['youngFinns'],
+    );
+  });
+
+  test('qualifyBothThenTitleStars: the highest tier reached', () {
+    for (final euro in [false, true]) {
+      for (final world in [false, true]) {
+        for (final title in [false, true]) {
+          expect(
+            qualifyBothThenTitleStars(
+              qualifiedContinental: euro,
+              qualifiedWorld: world,
+              wonTitle: title,
+            ),
+            title
+                ? 3
+                : world
+                ? 2
+                : euro
+                ? 1
+                : 0,
+            reason: 'euro $euro world $world title $title',
+          );
+        }
+      }
+    }
+  });
+
+  test('A Greenland Century: Pro, 25 cycles, can be continued, its dormant '
+      'world', () {
+    const def = Campaigns.greenland;
+    expect(def.nationId, 212);
+    expect(def.dormantNationId, 212);
+    expect(def.cycles, 25);
+    expect(def.needsPro, isTrue);
+    expect(def.canContinue, isTrue);
+    expect(def.friendlyNationId, isNull);
+    expect(def.goal, CampaignGoal.qualifyBothThenTitle);
+    expect(def.difficulty, CampaignDifficulty.hard);
+    expect(Campaigns.all.last, def);
+    expect(Campaigns.byId('greenland'), def);
+    expect(
+      [
+        for (final c in Campaigns.all)
+          if (c.dormantNationId != null) c.id,
+      ],
+      ['greenland'],
     );
   });
 }

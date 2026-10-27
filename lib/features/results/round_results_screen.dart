@@ -19,6 +19,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fnm/features/tournaments/wc_host_berths.dart';
 
 part 'round_results_tablet_layout.dart';
 
@@ -30,6 +31,7 @@ typedef RoundResultsView = ({
   int playerNationId,
   int directCount,
   int? contentionPos,
+  Set<int> playoffNations,
   int relegateCount,
   Set<String> noRelegationGroups,
 });
@@ -37,8 +39,7 @@ typedef RoundResultsView = ({
 /// The last round the manager played, grouped, with the zones each table
 /// colours. Public so a test can hand the screen a round without playing one.
 final AutoDisposeFutureProviderFamily<RoundResultsView?, int>
-roundResultsViewProvider = FutureProvider.autoDispose
-    .family<RoundResultsView?, int>((
+roundResultsViewProvider = FutureProvider.autoDispose.family<RoundResultsView?, int>((
   ref,
   careerId,
 ) async {
@@ -48,7 +49,9 @@ roundResultsViewProvider = FutureProvider.autoDispose
       .watch(competitionRepositoryProvider)
       .lastRoundResults(careerId, career.nationId);
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
 
   // The advancing (green), in-contention (amber) and relegated (red) positions
@@ -56,20 +59,32 @@ roundResultsViewProvider = FutureProvider.autoDispose
   // screens.
   var direct = 2;
   int? contention;
+  var playoff = const <int>{};
   var relegate = 0;
   final noRelegation = <String>{};
   if (results != null && results.groupCount > 0) {
     final conf =
         nations[career.nationId]?.confederation ?? Confederation.europe;
     final size = ContinentalCups.byConfederation[conf]?.size ?? 24;
+    // World Cup hosts' places come out of their own confederation's
+    // allocation, exactly as the hub cuts it.
+    final wcHosts = results.kind == CompetitionKind.worldCupQualifying
+        ? (await worldCupHostBerthsFor(ref, careerId))[conf] ?? 0
+        : 0;
     final adv = GroupAdvancement.forGroup(
       kind: results.kind,
       confederation: conf,
       groupCount: results.groupCount,
       continentalSize: size,
+      worldCupHosts: wcHosts,
     );
     direct = adv.direct;
     contention = adv.contention;
+    if (results.kind == CompetitionKind.worldCupQualifying) {
+      playoff = GroupAdvancement.worldCupPlayoffNations(conf, [
+        for (final g in results.groups) g.standings,
+      ], hosts: wcHosts);
+    }
     relegate = adv.relegate;
     // The Nations Cup's lowest league has nowhere to fall — its groups show no
     // relegation zone, exactly as the hub and the Nations Cup screen decide.
@@ -95,6 +110,7 @@ roundResultsViewProvider = FutureProvider.autoDispose
     playerNationId: career.nationId,
     directCount: direct,
     contentionPos: contention,
+    playoffNations: playoff,
     relegateCount: relegate,
     noRelegationGroups: noRelegation,
   );
@@ -146,6 +162,7 @@ class RoundResultsScreen extends ConsumerWidget {
             if (view != null && friendlies.isNotEmpty) {
               String code(int id) => view.nations[id]?.code ?? '??';
               String name(int id) => view.nations[id]?.name ?? l.hubUnknown;
+              // The whole window, grouped by continent and scrollable.
               return ListView(
                 padding: const EdgeInsets.all(AppSpacing.marginMobile),
                 children: [
@@ -155,20 +172,29 @@ class RoundResultsScreen extends ConsumerWidget {
                       color: AppColors.primary,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  AppCard(
-                    child: Column(
-                      children: [
-                        for (final f in friendlies)
-                          _FriendlyRow(
-                            result: f,
-                            code: code,
-                            name: name,
-                            careerId: careerId,
-                          ),
-                      ],
+                  for (final g in friendlyGroups(l, friendlies, view)) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      g.label.capsIn(l.localeName),
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: AppSpacing.xs),
+                    AppCard(
+                      child: Column(
+                        children: [
+                          for (final f in g.results)
+                            _FriendlyRow(
+                              result: f,
+                              code: code,
+                              name: name,
+                              careerId: careerId,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.xl),
                 ],
               );
@@ -218,6 +244,7 @@ class RoundResultsScreen extends ConsumerWidget {
                     playerNationId: view.playerNationId,
                     directCount: view.directCount,
                     contentionPos: view.contentionPos,
+                    playoffNations: view.playoffNations,
                     relegateCount: view.noRelegationGroups.contains(g.name)
                         ? 0
                         : view.relegateCount,
@@ -251,6 +278,7 @@ class _GroupBlock extends StatelessWidget {
     required this.playerNationId,
     required this.directCount,
     required this.contentionPos,
+    required this.playoffNations,
     required this.relegateCount,
     required this.code,
     required this.name,
@@ -262,6 +290,7 @@ class _GroupBlock extends StatelessWidget {
   final int playerNationId;
   final int directCount;
   final int? contentionPos;
+  final Set<int> playoffNations;
 
   /// How many bottom places go down (red) — the Nations Cup relegates each
   /// group's last side (bar the lowest league's).
@@ -302,6 +331,7 @@ class _GroupBlock extends StatelessWidget {
                 isPlayer: group.standings[i].nationId == playerNationId,
                 directCount: directCount,
                 contentionPos: contentionPos,
+                playoffNations: playoffNations,
                 relegated:
                     relegateCount > 0 &&
                     i + 1 > group.standings.length - relegateCount,
@@ -314,6 +344,39 @@ class _GroupBlock extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The window's friendlies grouped by continent: the player's own continent
+/// first, the rest in the usual order, and the matches between two continents
+/// last under their own heading. Public so a test can check the grouping.
+List<({String label, List<FriendlyResult> results})> friendlyGroups(
+  AppLocalizations l,
+  List<FriendlyResult> friendlies,
+  RoundResultsView view,
+) {
+  final mine = view.nations[view.playerNationId]?.confederation;
+  final byConf = <Confederation, List<FriendlyResult>>{};
+  final cross = <FriendlyResult>[];
+  for (final f in friendlies) {
+    final a = view.nations[f.homeId]?.confederation;
+    final b = view.nations[f.awayId]?.confederation;
+    if (a != null && a == b) {
+      (byConf[a] ??= []).add(f);
+    } else {
+      cross.add(f);
+    }
+  }
+  final order = [
+    ?mine,
+    for (final c in Confederation.values)
+      if (c != mine) c,
+  ];
+  return [
+    for (final c in order)
+      if (byConf[c] != null)
+        (label: confederationLabel(l, c), results: byConf[c]!),
+    if (cross.isNotEmpty) (label: l.tourZoneIntercontinental, results: cross),
+  ];
 }
 
 /// One other-nations' friendly result: flags and names either side of the
@@ -411,6 +474,7 @@ class _StandingRow extends StatelessWidget {
     required this.isPlayer,
     required this.directCount,
     required this.contentionPos,
+    required this.playoffNations,
     required this.relegated,
     required this.name,
     required this.code,
@@ -423,6 +487,7 @@ class _StandingRow extends StatelessWidget {
   final bool isPlayer;
   final int directCount;
   final int? contentionPos;
+  final Set<int> playoffNations;
 
   /// Whether this position drops a league (Nations Cup groups).
   final bool relegated;
@@ -435,6 +500,8 @@ class _StandingRow extends StatelessWidget {
     final inContention = pos == contentionPos;
     final accent = advancing
         ? AppColors.positive
+        : playoffNations.contains(standing.nationId)
+        ? AppColors.playoff
         : inContention
         ? AppColors.warning
         : relegated

@@ -14,6 +14,9 @@ class _BoardObjectivesTabletLayout extends ConsumerWidget {
     final value = ref.watch(satisfactionProvider(careerId)).valueOrNull;
     final objectivesAsync = ref.watch(cycleObjectivesProvider(careerId));
     final objectives = objectivesAsync.valueOrNull ?? const <CycleObjective>[];
+    final gaps =
+        ref.watch(cycleObjectiveGapsProvider(careerId)).valueOrNull ??
+        const <ObjectiveGap>[];
     return TabletPage(
       scaffoldKey: BoardObjectivesScreen.tabletLayoutKey,
       title: l.boardObjectivesTitle,
@@ -31,7 +34,7 @@ class _BoardObjectivesTabletLayout extends ConsumerWidget {
                 child: _ConfidenceRow(value: value),
               ),
             ),
-            if (objectives.isEmpty)
+            if (objectives.isEmpty && gaps.isEmpty)
               DashboardTile(
                 span: 8,
                 child: Panel(
@@ -40,15 +43,22 @@ class _BoardObjectivesTabletLayout extends ConsumerWidget {
                 ),
               )
             else
-              for (final objective in objectives)
+              for (final row in objectiveRows(objectives, gaps))
                 DashboardTile(
                   span: 4,
                   child: Panel(
-                    title: objective.competition,
-                    child: _ObjectiveBody(
-                      objective: objective,
-                      showCompetition: false,
-                    ),
+                    title: row.objective?.competition ?? row.gap!.competition,
+                    child: switch (row) {
+                      (objective: final o?, gap: _) => _ObjectiveBody(
+                        objective: o,
+                        showCompetition: false,
+                      ),
+                      (objective: _, gap: final g?) => ObjectiveGapBody(
+                        gap: g,
+                        showCompetition: false,
+                      ),
+                      _ => const SizedBox.shrink(),
+                    },
                   ),
                 ),
           ],

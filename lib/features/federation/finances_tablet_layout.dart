@@ -15,6 +15,7 @@ class _FinancesTabletLayout extends ConsumerWidget {
     return TabletPage(
       scaffoldKey: FinancesScreen.tabletLayoutKey,
       title: l.sideFinances,
+      trailing: _StadiumsButton(careerId: careerId),
       onBack: () => context.canPop()
           ? context.pop()
           : context.go('${Routes.hub}?careerId=$careerId'),
@@ -75,6 +76,10 @@ class _FinancesTabletLayout extends ConsumerWidget {
                       ),
                   ],
                 ),
+                const SizedBox(height: AppSpacing.md),
+                // The national stadiums, labelled, as on the phone.
+                NationalStadiumsEntry(careerId: careerId),
+                FanMoodLine(careerId: careerId),
                 const SizedBox(height: AppSpacing.md),
                 // The next cycle's allocation is not editable here, on
                 // either layout (see the phone tree).

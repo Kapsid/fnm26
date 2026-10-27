@@ -81,8 +81,10 @@ void main() {
     });
 
     test('a hammering between equals is a humiliation', () {
-      // Here the margin is unexpected, so it counts in full.
+      // Here the margin is unexpected, so it counts in full: four down is
+      // the board's humiliation too, three down is only poor.
       expect(read(decent, decent, 0, 4), ResultStanding.humiliating);
+      expect(read(decent, decent, 0, 3), ResultStanding.poor);
     });
   });
 

@@ -51,7 +51,8 @@ nationsCupDrawProvider = FutureProvider.autoDispose
       if (career == null) return null;
       final comp = ref.watch(competitionRepositoryProvider);
       final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
+        for (final n
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
           n.id: n,
       };
       final conf = NationsCups.ofManager(

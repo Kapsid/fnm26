@@ -45,4 +45,7 @@ const Map<int, int> nationalStadiumCapacity = {
   // OFC
   201: 2000, 202: 3000, 203: 15000, 204: 10000, 205: 50000, 206: 15000,
   207: 3500, 208: 10000, 209: 11000, 210: 4000, 211: 6500,
+  // Greenland (dormant): Nuuk Stadium, artificial turf, a couple of
+  // thousand at most.
+  212: 2000,
 };

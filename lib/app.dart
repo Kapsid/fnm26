@@ -7,8 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/routing/back_navigation.dart';
 import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/core/theme/text_size.dart';
+import 'package:fnm/domain/services/cloud/cloud_backup_policy.dart';
 import 'package:fnm/domain/services/entitlement/entitlement_service.dart';
 import 'package:fnm/features/career/play_time.dart';
+import 'package:fnm/features/cloud/cloud_backup_providers.dart';
 import 'package:fnm/features/onboarding/tour_overlay.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -44,10 +47,24 @@ class _FnmAppState extends ConsumerState<FnmApp> {
     // which defaults to "already offered" so a slow read cannot flash the
     // question at somebody who answered it long ago.
     unawaited(loadTourOffered(ref));
+    // The backup bookkeeping (last backup, the automatic toggle, reminders).
+    unawaited(ref.read(backupSettingsProvider.notifier).ensureLoaded());
+    // After a restore, automatic uploads wait until the restored saves have
+    // opened and checked out.
+    unawaited(ref.read(cloudBackupServiceProvider).confirmHealthyStart());
     // Time spent with the phone in a pocket is not time spent playing, so the
     // play clock stops with the app and picks up again when it comes back.
     _lifecycle = AppLifecycleListener(
-      onPause: () => unawaited(ref.read(playTimeTrackerProvider).pause()),
+      onPause: () {
+        unawaited(ref.read(playTimeTrackerProvider).pause());
+        // The likeliest last moment before the phone is put away: an
+        // automatic cloud backup if one is on, due and anything changed.
+        unawaited(
+          ref.read(cloudBackupServiceProvider).trigger(
+            BackupTrigger.appBackground,
+          ),
+        );
+      },
       onResume: () => ref.read(playTimeTrackerProvider).resume(),
       // The last chance to write down the current session on a graceful exit;
       // an ungraceful one loses at most a tick, by design.
@@ -98,6 +115,7 @@ class _FnmAppState extends ConsumerState<FnmApp> {
     _watchBack(router);
     // A null override follows the device language; a chosen language wins.
     final locale = ref.watch(localeProvider);
+    final textSize = ref.watch(textSizeProvider);
 
     return MaterialApp.router(
       title: 'Football Nations Manager',
@@ -111,9 +129,12 @@ class _FnmAppState extends ConsumerState<FnmApp> {
       // [SystemBackHandler].
       onNavigationNotification: _back!.onNavigationNotification,
       // The tour draws over whatever screen it has navigated to, so it wraps
-      // the router's output rather than living on any one screen.
-      builder: (context, child) =>
-          TourOverlay(child: child ?? const SizedBox.shrink()),
+      // the router's output rather than living on any one screen. The chosen
+      // text size wraps both, so the tour's own copy grows with the rest.
+      builder: (context, child) => AppTextScale(
+        size: textSize,
+        child: TourOverlay(child: child ?? const SizedBox.shrink()),
+      ),
     );
   }
 }

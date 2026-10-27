@@ -18,7 +18,7 @@ FIFA_TO_FLAGCDN = {
     "ALB": "al", "AND": "ad", "ARM": "am", "AUT": "at", "AZE": "az",
     "BLR": "by", "BEL": "be", "BIH": "ba", "BUL": "bg", "CRO": "hr",
     "CYP": "cy", "CZE": "cz", "DEN": "dk", "ENG": "gb-eng", "EST": "ee",
-    "FRO": "fo", "FIN": "fi", "FRA": "fr", "GEO": "ge", "GER": "de",
+    "FRO": "fo", "GRL": "gl", "FIN": "fi", "FRA": "fr", "GEO": "ge", "GER": "de",
     "GIB": "gi", "GRE": "gr", "HUN": "hu", "ISL": "is", "ISR": "il",
     "ITA": "it", "KAZ": "kz", "KVX": "xk", "LVA": "lv", "LIE": "li",
     "LTU": "lt", "LUX": "lu", "MLT": "mt", "MDA": "md", "MNE": "me",

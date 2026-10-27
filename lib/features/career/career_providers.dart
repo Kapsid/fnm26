@@ -2,6 +2,7 @@ import 'package:fnm/features/career/play_time.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/repositories/drift_nation_repository.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -10,7 +11,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
-    show namePoolsV2Kind;
+    show namePoolsV2Kind, namePoolsV3Kind, namePoolsV4Kind;
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
@@ -25,7 +26,7 @@ import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart' show worldCupQualDrawKind;
 import 'package:fnm/features/hub/objective_providers.dart'
-    show briefRulesV2Kind;
+    show briefRulesV2Kind, briefRulesV3Kind;
 
 /// All save games, most recent first (seeding the DB first if needed).
 ///
@@ -159,11 +160,30 @@ class CareerService {
   /// A campaign run passes [countsTowardSlots] false: it takes no slot, so a
   /// free player with both slots full can still start one. The slots it is
   /// checked against otherwise count only careers that `countsAsSave`.
+  ///
+  /// [worldMarkers] are `draws_watched` kinds (cycle 0) that shape the world
+  /// itself, such as `DormantNations.markerFor` (a world that includes a
+  /// dormant nation). They are written before anything reads the career's
+  /// nations or players, because the calendar is drawn inside this call: a
+  /// marker written afterwards would come too late for the first draw.
   Future<Result<Career>> create({
     required int nationId,
     required String managerName,
     int? rngSeed,
     bool countsTowardSlots = true,
+    List<String> worldMarkers = const [],
+
+    /// Starting world positions (nation id to rank) the career's world takes
+    /// in place of the nations' own: frozen as its cycle-0 seed ranking
+    /// before anything is drawn (see `NationRepository.forCareer`). A nation
+    /// it does not name keeps its own. Empty for a normal career.
+    Map<int, int> startingRanks = const {},
+
+    /// Freeze the career's starting ranking as its cycle-0 seed ranking even
+    /// with no [startingRanks]: every nation keeps the rank it has now. A
+    /// campaign run asks for it, so the world its seed was searched on stays
+    /// its world whatever ranking a later update ships.
+    bool freezeStartingRanks = false,
   }) async {
     final repo = _ref.read(careerRepositoryProvider);
     final premium = _ref.read(premiumUnlockedProvider);
@@ -180,26 +200,63 @@ class CareerService {
     }
 
     final name = managerName.trim().isEmpty ? 'Manager' : managerName.trim();
-    final career = await repo.create(
-      managerName: name,
-      nationId: nationId,
-      rngSeed: rngSeed ?? _seed(),
-      startDate: cycleStart,
-    );
+    final comp = _ref.read(competitionRepositoryProvider);
+    // The career, its world markers and any starting ranks land together:
+    // a career cut short between them would read a different world.
+    final db = _ref.read(appDatabaseProvider);
+    final career = await db.transaction(() async {
+      final career = await repo.create(
+        managerName: name,
+        nationId: nationId,
+        rngSeed: rngSeed ?? _seed(),
+        startDate: cycleStart,
+      );
+      for (final marker in worldMarkers) {
+        await comp.markDrawWatched(career.id, 0, marker);
+      }
+      if (startingRanks.isNotEmpty || freezeStartingRanks) {
+        // The career's own world (a dormant nation in it included), each
+        // nation on the rank it is given. Read through a repository of its
+        // own: the shared one keeps what it learns of a career, and this
+        // transaction may yet roll back and hand the id to the next career.
+        final world = await DriftNationRepository(db).forCareer(career.id);
+        await _ref.read(seedRankingRepositoryProvider).snapshot(career.id, 0, {
+          for (final n in world) n.id: startingRanks[n.id] ?? n.ranking,
+        });
+      }
+      return career;
+    });
+    // The shared repository must ask again for the starting ranks just
+    // written (it keeps a career's "none").
+    if (_ref.read(nationRepositoryProvider)
+        case final DriftNationRepository nations) {
+      nations.forgetStartingRanks(career.id);
+    }
     await repo.recordStint(career.id, 0, nationId);
     // Its briefs follow the current rules (see briefRulesV2Kind), its
     // windows are fluid (see fluidWindowsKind), and its players are named
     // from the richer pools (see namePoolsV2Kind). That last mark must land
     // before anything reads the career's players: the repository reads it
     // once per career and keeps the answer.
-    final comp = _ref.read(competitionRepositoryProvider);
     await comp.markDrawWatched(career.id, 0, namePoolsV2Kind);
+    // And from every pool in full, names appended since a pool first
+    // shipped included (see namePoolsV3Kind).
+    await comp.markDrawWatched(career.id, 0, namePoolsV3Kind);
+    // And from the current lists where a pool's names were replaced (see
+    // namePoolsV4Kind). Both must land before briefRulesV2Kind: the
+    // repository settles a career's pools on that mark.
+    await comp.markDrawWatched(career.id, 0, namePoolsV4Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV2Kind);
+    await comp.markDrawWatched(career.id, 0, briefRulesV3Kind);
     await comp.markDrawWatched(career.id, 0, fluidWindowsKind);
     // Its caps log credits a naturalised man to the nation he plays for now
     // (see capsFollowNationKind).
     await comp.markDrawWatched(career.id, 0, capsFollowNationKind);
-    final nations = await _ref.read(nationRepositoryProvider).all();
+    // The career's own world: the base one, unless a world marker above
+    // brought a dormant nation in.
+    final nations = await _ref
+        .read(nationRepositoryProvider)
+        .forCareer(career.id);
     // Endow the federation with an opening balance sized to its world standing
     // (a mid-table default if the nation isn't in the reference set).
     final rankById = {for (final n in nations) n.id: n.ranking};
@@ -632,7 +689,9 @@ class CareerService {
   /// Seeds real World Cup / Euro / Copa history so the records section is
   /// populated from day one. Country-level facts only — no player names.
   Future<void> _seedHistory(Career career) async {
-    final nations = await _ref.read(nationRepositoryProvider).all();
+    final nations = await _ref
+        .read(nationRepositoryProvider)
+        .forCareer(career.id);
     // Keyed on the CANONICAL ENGLISH name: [RealHistory] is written in
     // English, so resolving against the displayed name would fail to place a
     // single historical champion the moment the app is run in Czech.

@@ -207,7 +207,7 @@ class TournamentsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
-              _tileGrid([
+              _tileGrid(context, [
                 for (final s in _mineSpecs(careerId, overview))
                   _specTile(context, s),
               ]),
@@ -219,7 +219,7 @@ class TournamentsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
-              _tileGrid([
+              _tileGrid(context, [
                 for (final s in _otherSpecs(careerId, overview))
                   _specTile(context, s),
               ]),
@@ -386,7 +386,12 @@ class TournamentsScreen extends ConsumerWidget {
 
   /// Lays [tiles] out two-per-row as square cells, without introducing a nested
   /// scrollable (keeps the page a single scroll view).
-  static Widget _tileGrid(List<Widget> tiles) {
+  ///
+  /// The cells are 1.25:1. Under a larger text size a row grows to its taller
+  /// tile instead (both tiles of a row kept the same height), so the tile's
+  /// copy never spills out of a cell sized for the normal text.
+  static Widget _tileGrid(BuildContext context, List<Widget> tiles) {
+    final grows = MediaQuery.textScalerOf(context).scale(16) > 16;
     final rows = <Widget>[];
     for (var i = 0; i < tiles.length; i += 2) {
       final left = tiles[i];
@@ -394,18 +399,39 @@ class TournamentsScreen extends ConsumerWidget {
       rows.add(
         Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: AspectRatio(aspectRatio: 1.25, child: left)),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: right == null
-                    ? const SizedBox.shrink()
-                    : AspectRatio(aspectRatio: 1.25, child: right),
-              ),
-            ],
-          ),
+          child: grows
+              ? LayoutBuilder(
+                  builder: (context, box) {
+                    final cell = (box.maxWidth - AppSpacing.sm) / 2;
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: cell / 1.25),
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(child: left),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(child: right ?? const SizedBox.shrink()),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: AspectRatio(aspectRatio: 1.25, child: left),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: right == null
+                          ? const SizedBox.shrink()
+                          : AspectRatio(aspectRatio: 1.25, child: right),
+                    ),
+                  ],
+                ),
         ),
       );
     }

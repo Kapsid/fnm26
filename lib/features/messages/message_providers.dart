@@ -6,6 +6,8 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/achievements/achievements.dart';
+import 'package:fnm/domain/services/cloud/cloud_backup_policy.dart';
+import 'package:fnm/features/cloud/backup_settings.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
@@ -18,6 +20,7 @@ import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/messages/intake_report.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/features/messages/watch_news.dart';
+import 'package:fnm/features/messages/youth_star_news.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
@@ -83,7 +86,9 @@ class MessageService {
     // rendered columns that travel alongside the meaning.
     final l = _ref.read(appLocalizationsProvider);
     final nations = {
-      for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
+      for (final n
+          in await _ref.read(nationRepositoryProvider).forCareer(careerId))
+        n.id: n,
     };
     String nameOf(int id) => nations[id]?.name ?? l.msgANation;
     final conf = nations[career.nationId]?.confederation;
@@ -687,6 +692,11 @@ class MessageService {
         ...await _ref.read(squadRepositoryProvider).callUps(careerId),
       };
 
+      // A man back from international retirement reappears in the pool, but
+      // he has not come through any pyramid.
+      final intlRetired = (await playerRepo.internationalRetirements(
+        career.id,
+      )).keys.toSet();
       for (final y in missingYears) {
         final reportYear = CareerService.cycleStart.year + y;
         // Two reports, not one. Who grew and who faded is a question about the
@@ -717,6 +727,7 @@ class MessageService {
           after,
           l.msgThroughNote,
           scout: career.staffScout,
+          veterans: intlRetired,
         );
         if (newcomers != null) {
           drafts.add(
@@ -946,6 +957,94 @@ class MessageService {
       }
     }
 
+    // Now and then, a word from the academy about one of the boys who stood
+    // out for an age-group side in the window just gone. At most one per
+    // window, about half of them, and only recent windows (see
+    // `youth_star_news.dart`); the pools are built only when one is due.
+    final dueWindows = [
+      for (final w in recentYouthWindows(
+        fixtures: fixtures,
+        nationId: career.nationId,
+        today: career.inGameDate,
+      ))
+        if (!youthNewsFiled(existing, w.key) &&
+            youthNewsFires(w.key, career.rngSeed))
+          w,
+    ];
+    if (dueWindows.isNotEmpty) {
+      final years = agingYears;
+      final youth = await playerRepo.youthByNation(
+        career.nationId,
+        agingYears: years,
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+        youthBonusByCycle: await _ref.read(
+          youthBonusByCycleProvider(careerId).future,
+        ),
+        careerStartsByPlayer: await _ref.read(
+          careerDevBonusProvider(careerId).future,
+        ),
+      );
+      final seniors = await playerRepo.byNation(
+        career.nationId,
+        agingYears: years,
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+      );
+      // Boys already in the senior picture are squad news, not academy news.
+      final senior = <int>{
+        for (final a in await comp.nationTopAppearances(
+          careerId,
+          career.nationId,
+          limit: 500,
+        ))
+          if (a.games > 0) a.playerId,
+        ...await _ref.read(squadRepositoryProvider).callUps(careerId),
+      };
+      final featured = recentlyFeatured(existing);
+      for (final w in dueWindows) {
+        final story = youthStandout(
+          windowKey: w.key,
+          saveSeed: career.rngSeed,
+          youth: youth,
+          squadBar: seniorSquadBar(seniors),
+          opponent: nameOf(w.opponentId),
+          excluded: {...senior, ...featured},
+          marked: {for (final m in marks) m.playerId},
+        );
+        if (story == null) continue;
+        featured.add(story.playerId);
+        drafts.add(
+          _Draft(
+            youthNewsKey(w.key, story.playerId),
+            'youth',
+            story.title,
+            story.body,
+            w.end.year,
+            4,
+          ),
+        );
+      }
+    }
+
+    // A gentle word about backing the saves up, at most once a week across
+    // every save on the phone, never in the middle of a tournament (it is a
+    // between-seasons category) and never on a phone that has backed up
+    // lately. See `backupReminderDue` for the timing.
+    final reminder = await _backupReminderKey();
+    if (reminder != null && !existing.contains(reminder)) {
+      drafts.add(
+        _Draft(
+          reminder,
+          'backup',
+          const MsgText(MsgKey.newsBackupReminderTitle),
+          const MsgText(MsgKey.newsBackupReminderBody),
+          career.inGameDate.year,
+          9,
+        ),
+      );
+    }
+
     drafts.sort((a, b) => a.sort.compareTo(b.sort));
     for (final d in drafts) {
       if (existing.contains(d.key)) continue;
@@ -976,6 +1075,32 @@ class MessageService {
   /// hands back the table from BEFORE the tournament, and the message would
   /// state, confidently and permanently, the position the nation held before
   /// the thing it is reporting. So it is invalidated first.
+  /// The dedup key of a backup reminder due now, or null. Writes down that
+  /// one was filed, so the next save's sync this week files nothing.
+  Future<String?> _backupReminderKey() async {
+    try {
+      final settings = _ref.read(backupSettingsProvider.notifier);
+      await settings.ensureLoaded();
+      final s = settings.current;
+      final now = DateTime.now();
+      if (!backupReminderDue(
+        enabled: s.remindersOn,
+        now: now,
+        firstSeenAt: s.firstSeenAt ?? now,
+        lastBackupAt: s.lastBackupAt,
+        lastCycleEndAt: s.lastCycleEndAt,
+        lastReminderAt: s.lastReminderAt,
+      )) {
+        return null;
+      }
+      await settings.noteReminder(now);
+      final day = now.millisecondsSinceEpoch ~/ Duration.millisecondsPerDay;
+      return 'backup:reminder:$day';
+    } on Object {
+      return null;
+    }
+  }
+
   Future<int?> _rankAfter(int careerId, int cycle, int nationId) async {
     final rolled = await _ref
         .read(seedRankingRepositoryProvider)
@@ -1039,16 +1164,18 @@ String _developmentReport(
 
 /// The players who have come into the pool this year, with the scouting read on
 /// each — so a wonderkid is a headline rather than one line among a hundred.
-/// Null when nobody emerged.
+/// Null when nobody emerged. [veterans] (anyone who has retired from
+/// international football, so a comeback) are never newcomers.
 String? _newcomerReport(
   Map<int, Player> before,
   Map<int, Player> after,
   String note, {
   StaffTier scout = StaffTier.none,
+  Set<int> veterans = const {},
 }) {
   final rows = <SquadDevRow>[
     for (final e in after.entries)
-      if (!before.containsKey(e.key))
+      if (!before.containsKey(e.key) && !veterans.contains(e.key))
         SquadDevRow(
           name: e.value.name,
           age: e.value.age,
@@ -1099,6 +1226,7 @@ final AutoDisposeFutureProviderFamily<MessageInbox, int> messageInboxProvider =
 /// middle of. Match news (a ban, an injury, going out) is not held: that IS
 /// the tournament.
 const Set<String> kBetweenSeasonsCategories = {
+  'backup',
   'aging',
   'youth',
   'award',
@@ -1121,10 +1249,11 @@ final AutoDisposeFutureProviderFamily<bool, int> tournamentInProgressProvider =
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return false;
       final comp = ref.watch(competitionRepositoryProvider);
-      final conf = (await ref.watch(nationRepositoryProvider).all())
-          .where((n) => n.id == career.nationId)
-          .firstOrNull
-          ?.confederation;
+      final conf =
+          (await ref.watch(nationRepositoryProvider).forCareer(careerId))
+              .where((n) => n.id == career.nationId)
+              .firstOrNull
+              ?.confederation;
 
       Future<bool> running(
         String groupRound,

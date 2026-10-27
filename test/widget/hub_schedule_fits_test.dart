@@ -25,7 +25,7 @@ import '../helpers/seeded_save.dart';
 /// plus "pens" under it), a continental final (the longest stage label), a
 /// qualifier against the nation with the longest name, and the pending line.
 const _widths = [320.0, 360.0, 400.0];
-const _locales = ['en', 'cs', 'de', 'pt', 'el'];
+const _locales = ['en', 'cs', 'de', 'pt', 'el', 'ja', 'ko', 'ro', 'th', 'ms'];
 
 /// The first id of the worst-case rows, far above any seeded fixture.
 const _worstId = 900000;

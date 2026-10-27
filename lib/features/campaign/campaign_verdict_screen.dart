@@ -35,10 +35,20 @@ typedef CampaignRunNumbers = ({
 /// Best of Guineas counts the continental finals only, and every meeting
 /// with its rivals whatever the round (see [campaignRunNumbersProvider]).
 /// Young Finns counts both championships' finals, continental and world (the
-/// World Championship's rounds carry no prefix).
+/// World Championship's rounds carry no prefix). Greenland counts every
+/// competitive match, qualifying included: anything but a friendly. Finish
+/// the Legacy counts the three titles it is after: both championships' finals
+/// and the whole Nations Cup, groups and Finals Four.
 bool campaignRunCounts(CampaignGoal goal, String? round) {
+  if (goal == CampaignGoal.qualifyBothThenTitle) return round != 'FRIENDLY';
   if (round == null) return false;
   const finals = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
+  if (goal == CampaignGoal.titleTreble) {
+    const nationsCup = {'NGROUP', 'NL', 'NR16', 'NQF', 'NSF', 'NFINAL'};
+    return finals.contains(round) ||
+        nationsCup.contains(round) ||
+        (round.startsWith('C') && finals.contains(round.substring(1)));
+  }
   if (goal == CampaignGoal.qualifyWorldThenTitles) {
     return finals.contains(round) ||
         (round.startsWith('C') && finals.contains(round.substring(1)));

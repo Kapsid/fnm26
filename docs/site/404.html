@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Not found · Football Nations Manager</title>
 <meta name="robots" content="noindex">
-<!-- One error page serves both languages, so it has no counterpart to point
+<!-- One error page serves every language, so it has no counterpart to point
      at and nothing to canonicalise: a second one would need a second
-     ErrorDocument in a cs/.htaccess, which is a dotfile in a subfolder on an
+     ErrorDocument in each language folder's .htaccess, which is a dotfile in a subfolder on an
      FTP host. Every path below is root-relative on purpose, because Apache
      serves this file at whatever URL was missed and a relative href would
      resolve against that URL instead of the site root. -->
@@ -21,11 +21,23 @@
   have a typo in it.</p>
   <p class="lede" lang="cs">Tahle stránka tu není. Mohla se přesunout, nebo je
   v odkazu překlep.</p>
+  <p class="lede" lang="fr">Cette page n’existe pas. Elle a peut-être été déplacée,
+  ou le lien contient une faute de frappe.</p>
+  <p class="lede" lang="es">Esta página no está aquí. Puede que se haya movido o que
+  el enlace tenga una errata.</p>
+  <p class="lede" lang="de">Diese Seite gibt es hier nicht. Vielleicht wurde sie
+  verschoben, oder der Link enthält einen Tippfehler.</p>
+  <p class="lede" lang="pt">Esta página não está aqui. Ela pode ter sido movida, ou o
+  link pode ter um erro de digitação.</p>
   <div class="row" style="justify-content:flex-start;margin-top:24px">
     <a class="btn" href="/index.html">Home</a>
     <a class="btn" href="/support.html">Support</a>
     <a class="btn" href="/cs/" lang="cs" hreflang="cs">Domů</a>
     <a class="btn" href="/cs/support.html" lang="cs" hreflang="cs">Podpora</a>
+    <a class="btn" href="/fr/" lang="fr" hreflang="fr">Accueil</a>
+    <a class="btn" href="/es/" lang="es" hreflang="es">Inicio</a>
+    <a class="btn" href="/de/" lang="de" hreflang="de">Startseite</a>
+    <a class="btn" href="/pt/" lang="pt" hreflang="pt">Início</a>
   </div>
 </div>
 </body>

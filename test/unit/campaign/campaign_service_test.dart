@@ -93,6 +93,20 @@ void main() {
           .hasWatchedDraw(career.id, 0, namePoolsV2Kind),
       isTrue,
     );
+    // And from every pool in full (see namePoolsV3Kind).
+    expect(
+      await container
+          .read(competitionRepositoryProvider)
+          .hasWatchedDraw(career.id, 0, namePoolsV3Kind),
+      isTrue,
+    );
+    // And from the current lists (see namePoolsV4Kind).
+    expect(
+      await container
+          .read(competitionRepositoryProvider)
+          .hasWatchedDraw(career.id, 0, namePoolsV4Kind),
+      isTrue,
+    );
     expect(await container.read(savesProvider.future), hasLength(2));
     final third = await container
         .read(careerServiceProvider)

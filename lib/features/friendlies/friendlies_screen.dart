@@ -325,27 +325,45 @@ class _WindowCard extends StatelessWidget {
                 Text(label, style: AppTypography.labelMedium),
                 const SizedBox(width: AppSpacing.sm),
                 _VenueBadge(home: home),
-                const Spacer(),
+                // The picked side's name gives way (ellipsis) rather than
+                // running off the card: a long name, a narrow column or a
+                // larger text size all used to overflow here.
                 if (selected != null)
-                  Row(
-                    children: [
-                      FlagDisc(code(selected!), size: 18, highlighted: true),
-                      const SizedBox(width: AppSpacing.xs),
-                      Text(
-                        name(selected!),
-                        style: AppTypography.labelSmall.copyWith(
-                          color: AppColors.primary,
-                        ),
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FlagDisc(
+                            code(selected!),
+                            size: 18,
+                            highlighted: true,
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          Flexible(
+                            child: Text(
+                              name(selected!),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   )
-                else
+                else ...[
+                  const Spacer(),
                   Text(
                     AppLocalizations.of(context).friendliesFree,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
                   ),
+                ],
               ],
             ),
             const SizedBox(height: AppSpacing.sm),

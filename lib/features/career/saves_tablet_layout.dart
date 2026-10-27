@@ -13,6 +13,7 @@ class _SavesTabletLayout extends StatelessWidget {
     required this.nationsById,
     required this.premium,
     required this.limit,
+    required this.lockedIds,
   });
 
   final _SavesScreenState state;
@@ -20,6 +21,9 @@ class _SavesTabletLayout extends StatelessWidget {
   final Map<int, Nation> nationsById;
   final bool premium;
   final int? limit;
+
+  /// The saves that need Pro to be opened.
+  final Set<int> lockedIds;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +73,12 @@ class _SavesTabletLayout extends StatelessWidget {
                                   : DataGrid<Career>(
                                       rows: saves,
                                       columnSets: [
-                                        _saveColumns(context, l, nationsById),
+                                        _saveColumns(
+                                          context,
+                                          l,
+                                          nationsById,
+                                          lockedIds,
+                                        ),
                                       ],
                                       selected: selected,
                                       onSelect: state._select,
@@ -95,6 +104,7 @@ class _SavesTabletLayout extends StatelessWidget {
                                 state: state,
                                 save: selected,
                                 nation: nationsById[selected.nationId],
+                                locked: lockedIds.contains(selected.id),
                               ),
                       ),
                     ),
@@ -115,6 +125,7 @@ GridColumnSet<Career> _saveColumns(
   BuildContext context,
   AppLocalizations l,
   Map<int, Nation> nationsById,
+  Set<int> lockedIds,
 ) {
   String name(Career c) =>
       nationsById[c.nationId]?.name ?? l.careerUnknownNation;
@@ -138,6 +149,14 @@ GridColumnSet<Career> _saveColumns(
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+            if (lockedIds.contains(c.id)) ...[
+              const SizedBox(width: 4),
+              const Icon(
+                Icons.lock_rounded,
+                size: 14,
+                color: AppColors.warning,
+              ),
+            ],
           ],
         ),
       ),
@@ -176,12 +195,14 @@ class _SavePane extends StatelessWidget {
     required this.state,
     required this.save,
     required this.nation,
+    required this.locked,
     super.key,
   });
 
   final _SavesScreenState state;
   final Career save;
   final Nation? nation;
+  final bool locked;
 
   @override
   Widget build(BuildContext context) {
@@ -222,6 +243,8 @@ class _SavePane extends StatelessWidget {
                           color: AppColors.onSurfaceVariant,
                         ),
                       ),
+                    if (locked)
+                      const SaveLockedNote(key: SaveTile.lockedBadgeKey),
                   ],
                 ),
               ),
@@ -231,7 +254,7 @@ class _SavePane extends StatelessWidget {
                 child: PrimaryButton(
                   key: SavesScreen.continueKey,
                   label: l.hubContinue,
-                  icon: Icons.play_arrow_rounded,
+                  icon: locked ? Icons.lock_rounded : Icons.play_arrow_rounded,
                   onPressed: () => state._continue(save),
                 ),
               ),

@@ -70,10 +70,20 @@ extension SeasonCycle on SeasonService {
       // the board's verdict is a message the manager may not open for months,
       // and by then he may be reading in another language.
       final demand = MsgText(
-        objectiveDemandKey(o.tier, o.target, competition: o.competition),
+        objectiveDemandKey(
+          o.tier,
+          o.target,
+          competition: o.competition,
+          offTheBottom: o.offTheBottom,
+        ),
       );
       final finish = MsgText(
-        objectiveFinishKey(o.tier, o.actual, competition: o.competition),
+        objectiveFinishKey(
+          o.tier,
+          o.actual,
+          competition: o.competition,
+          offTheBottom: o.offTheBottom,
+        ),
       );
       final comp = MsgComp(o.competition);
       await _comp.addTextMessage(
@@ -147,7 +157,7 @@ extension SeasonCycle on SeasonService {
     // one in the meantime was still drawn out of the pot it started the cycle
     // in, which is the one thing a draw must never get wrong.
     await _ensureRank(careerId);
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
     final seedRank = _liveRankById(nations);
     await _ref
         .read(seedRankingRepositoryProvider)
@@ -381,7 +391,7 @@ extension SeasonCycle on SeasonService {
               t.standings.isNotEmpty)
             t,
       ];
-      final rank = _liveRankById(await _nationsById());
+      final rank = _liveRankById(await _nationsById(careerId));
       final field = NationsCups.knockoutField(
         [for (final t in tables) t.standings],
         (id) => rank[id] ?? 1 << 20,
@@ -805,7 +815,7 @@ extension SeasonCycle on SeasonService {
   Future<Confederation?> _managerConfederation(int careerId) async {
     final career = await _careers.byId(careerId);
     if (career == null) return null;
-    return (await _nationsById())[career.nationId]?.confederation;
+    return (await _nationsById(careerId))[career.nationId]?.confederation;
   }
 
   /// Advances a knockout from its first round to the final (and, for the World
@@ -945,7 +955,7 @@ extension SeasonCycle on SeasonService {
   }) async {
     final career = await _careers.byId(careerId);
     if (career == null) return;
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
     final cont = ContinentalCups.byConfederation[conf];
     if (cont == null) return;
 
@@ -1039,7 +1049,7 @@ extension SeasonCycle on SeasonService {
     const kind = CompetitionKind.continentalFinals;
     final career = await _careers.byId(careerId);
     if (career == null) return;
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
 
     // THIS confederation's final: every confederation's cup is a competition of
     // this kind, and an unqualified lookup could hand back another continent's
@@ -1130,7 +1140,7 @@ extension SeasonCycle on SeasonService {
     if (await _comp.hasHonour(careerId, 'World Championship', year)) return;
 
     final thirds = await _comp.fixturesByRound(careerId, WorldCupFinals.third);
-    final nations = await _nationsById();
+    final nations = await _nationsById(careerId);
     final hosts = WorldCupHosts.hostsFor(
       year: year,
       nations: nations.values.toList(),
@@ -1201,7 +1211,9 @@ extension SeasonCycle on SeasonService {
     final year = wcYear - 2;
     final career = await _careers.byId(careerId);
     if (career == null) return;
-    final nations = await _ref.read(nationRepositoryProvider).all();
+    final nations = await _ref
+        .read(nationRepositoryProvider)
+        .forCareer(careerId);
 
     for (final entry in ContinentalCups.byConfederation.entries) {
       final cont = entry.value;
@@ -1282,9 +1294,18 @@ extension SeasonCycle on SeasonService {
       kind: kind,
       confederation: confederation,
     );
+    final groundMemo = MatchGroundMemo();
     Future<void> simRound(String r) async {
       for (final f in await byRound(r)) {
-        if (!f.hasResult) await _simAndRecord(f, nationsById, rngSeed);
+        if (!f.hasResult) {
+          await _simAndRecord(
+            f,
+            nationsById,
+            rngSeed,
+            career: career,
+            groundMemo: groundMemo,
+          );
+        }
       }
     }
 

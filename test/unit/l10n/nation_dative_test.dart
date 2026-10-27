@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/nation/nation_names.dart';
 import 'package:fnm/l10n/app_localizations_cs.dart';
 import 'package:fnm/l10n/app_localizations_en.dart';
@@ -79,10 +80,12 @@ void main() {
     // dative for a code that is not one of them is dead weight, and the
     // seed gaining a nation must fail here rather than in Czech.
     final seed = File('assets/data/nations.json').readAsStringSync();
-    final codes = RegExp(r'"code"\s*:\s*"([A-Z]{3})"')
-        .allMatches(seed)
-        .map((m) => m.group(1)!)
-        .toSet();
+    final codes =
+        RegExp(
+            r'"code"\s*:\s*"([A-Z]{3})"',
+          ).allMatches(seed).map((m) => m.group(1)!).toSet()
+          // The dormant nations ship too, outside the seed file.
+          ..addAll(DormantNations.all.map((n) => n.code));
     expect(codes, isNotEmpty);
     final uncovered = codes
         .where((c) => !NationNames.csDativeByCode.containsKey(c))

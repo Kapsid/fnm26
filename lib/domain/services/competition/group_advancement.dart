@@ -1,6 +1,8 @@
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 
 /// How a group's places resolve — which positions advance outright (direct,
@@ -22,12 +24,24 @@ abstract final class GroupAdvancement {
   /// confederation with FEWER berths than groups — Oceania has two qualifying
   /// groups for a single direct place, and both winners were painted green as
   /// though each had qualified.
+  ///
+  /// [hosts] is how many of the confederation's nations host this World Cup:
+  /// their places come out of its allocation (see
+  /// [QualificationFormat.qualifyingBerths]), so the ladder is that much
+  /// shorter. Asia's eight places over eight groups send every winner through,
+  /// but with an Asian host only seven go, and the weakest winner is in
+  /// contention for the play-off.
   static ({int direct, int? contention, int contentionQualify})
-  worldCupQualifying(Confederation confederation, int groupCount) {
+  worldCupQualifying(
+    Confederation confederation,
+    int groupCount, {
+    required int hosts,
+  }) {
     final fmt = QualificationFormat.forConfederation(confederation);
     final groups = groupCount < 1 ? 1 : groupCount;
-    final full = fmt.directBerths ~/ groups; // positions that all go through
-    final rest = fmt.directBerths % groups; // best of the next position
+    final berths = fmt.qualifyingBerths(hosts);
+    final full = berths ~/ groups; // positions that all go through
+    final rest = berths % groups; // best of the next position
     // Play-off entrants come from the same ladder, so the contested position is
     // contested even when the direct berths divide evenly.
     final contested = rest > 0 || fmt.playoffEntrants > 0;
@@ -36,6 +50,27 @@ abstract final class GroupAdvancement {
       contention: contested ? full + 1 : null,
       contentionQualify: rest > 0 ? rest : fmt.playoffEntrants,
     );
+  }
+
+  /// The nations that currently sit in [confederation]'s intercontinental
+  /// play-off places, from the real format: the entrants just below the direct
+  /// berths on the same position-at-a-time ladder the finalist selection uses
+  /// (see [WorldCupFinals.playoffPoolFor]). Empty where the confederation has
+  /// no play-off entrants (Europe). [hosts] as for [worldCupQualifying].
+  static Set<int> worldCupPlayoffNations(
+    Confederation confederation,
+    List<List<GroupStanding>> groups, {
+    required int hosts,
+  }) {
+    final fmt = QualificationFormat.forConfederation(confederation);
+    if (fmt.playoffEntrants <= 0) return const {};
+    final berths = fmt.qualifyingBerths(hosts);
+    final direct = Qualification.qualifiers(groups, berths);
+    final withEntrants = Qualification.qualifiers(
+      groups,
+      berths + fmt.playoffEntrants,
+    );
+    return withEntrants.skip(direct.length).toSet();
   }
 
   /// Continental qualifying, from the number of finals places to be won
@@ -88,16 +123,24 @@ abstract final class GroupAdvancement {
   ///
   /// [isLowestLeague] applies to the Nations Cup only: the bottom league has
   /// nowhere to fall, so its last place is not relegated.
+  ///
+  /// [worldCupHosts] applies to World Cup qualifying only: how many of the
+  /// confederation's nations host the finals (see [worldCupQualifying]).
   static Advancement forGroup({
     required CompetitionKind kind,
     required Confederation confederation,
     required int groupCount,
     required int continentalSize,
     bool isLowestLeague = false,
+    int worldCupHosts = 0,
   }) {
     switch (kind) {
       case CompetitionKind.worldCupQualifying:
-        final adv = worldCupQualifying(confederation, groupCount);
+        final adv = worldCupQualifying(
+          confederation,
+          groupCount,
+          hosts: worldCupHosts,
+        );
         return (direct: adv.direct, contention: adv.contention, relegate: 0);
       case CompetitionKind.continentalQualifying:
         final adv = continentalQualifying(continentalSize, groupCount);

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/features/awards/awards_ceremony_screen.dart';
 import 'package:fnm/features/achievements/achievements_screen.dart';
 import 'package:fnm/features/achievements/challenges_screen.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
@@ -10,6 +11,7 @@ import 'package:fnm/features/career/new_game_screen.dart';
 import 'package:fnm/features/campaign/campaign_brief_screen.dart';
 import 'package:fnm/features/campaign/campaign_verdict_screen.dart';
 import 'package:fnm/features/campaign/campaigns_screen.dart';
+import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/settings/diagnostics_screen.dart';
 import 'package:fnm/features/manager/manager_screen.dart';
@@ -22,7 +24,11 @@ import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/finances_screen.dart';
 import 'package:fnm/features/federation/naturalization_screen.dart';
+import 'package:fnm/features/federation/host_bid_screen.dart';
+import 'package:fnm/features/federation/national_stadiums_screen.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/features/squad/injury_cover_screen.dart';
+import 'package:fnm/features/squad/camp_scandal_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
@@ -217,8 +223,21 @@ abstract final class Routes {
   static const nationsCupDraw = '/nations-cup-draw';
   static const naturalization = '/naturalization';
 
+  /// A bid to host the next cycle's championship. Expects
+  /// `?careerId=&comp=` (`wc` or `cont`).
+  static const hostBid = '/host-bid';
+
+  /// The nation's national stadiums: upgrades and new builds. Expects
+  /// `?careerId=`.
+  static const stadiums = '/stadiums';
+
   /// Replace a squad player injured mid-window.
   static const injuryCover = '/injury-cover';
+  static const campScandal = '/camp-scandal';
+
+  /// The yearly Player of the Year ceremony, or its top-five list. Expects
+  /// `?careerId=&year=`, plus `&watch=1` to play the reveal.
+  static const awardsCeremony = '/awards-ceremony';
 
   /// The nation's whole cycle, window by window. Expects `?careerId=`.
   static const schedule = '/schedule';
@@ -235,6 +254,10 @@ abstract final class Routes {
 
   /// A settled campaign's verdict. Expects `?careerId=`.
   static const campaignVerdict = '/campaign-verdict';
+
+  /// The gate in front of a Pro-locked save (see `save_lock.dart`). Expects
+  /// `?careerId=`. Every route into a save redirects here while it is locked.
+  static const saveLocked = '/save-locked';
 
   /// Routes drawn full screen on a tablet, outside the sidebar and top bar:
   /// the menus before a save is open, the screens with no save behind them,
@@ -259,6 +282,7 @@ abstract final class Routes {
     campaigns,
     campaignBrief,
     campaignVerdict,
+    saveLocked,
   };
 }
 
@@ -293,6 +317,13 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       path: Routes.campaignVerdict,
       builder: (context, state) => CampaignVerdictScreen(
+        careerId:
+            int.tryParse(state.uri.queryParameters['careerId'] ?? '') ?? 0,
+      ),
+    ),
+    GoRoute(
+      path: Routes.saveLocked,
+      builder: (context, state) => SaveLockedScreen(
         careerId:
             int.tryParse(state.uri.queryParameters['careerId'] ?? '') ?? 0,
       ),
@@ -555,7 +586,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               state.uri.queryParameters['careerId'] ?? '',
             ) ??
             0;
-        return BudgetSetupScreen(careerId: id);
+        return BudgetSetupScreen(
+          careerId: id,
+          grant: state.uri.queryParameters['grant'] == '1',
+        );
       },
     ),
     GoRoute(
@@ -649,6 +683,35 @@ final routerProvider = Provider<GoRouter>((ref) {
       },
     ),
     GoRoute(
+      path: Routes.hostBid,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        final comp =
+            HostBidComp.fromCode(state.uri.queryParameters['comp'] ?? '') ??
+            HostBidComp.continental;
+        return HostBidScreen(
+          careerId: id,
+          comp: comp,
+          nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
+        );
+      },
+    ),
+    GoRoute(
+      path: Routes.stadiums,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return NationalStadiumsScreen(careerId: id);
+      },
+    ),
+    GoRoute(
       path: Routes.injuryCover,
       builder: (context, state) {
         final id =
@@ -657,6 +720,28 @@ final routerProvider = Provider<GoRouter>((ref) {
             ) ??
             0;
         return InjuryCoverScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.awardsCeremony,
+      builder: (context, state) {
+        final q = state.uri.queryParameters;
+        return AwardsCeremonyScreen(
+          careerId: int.tryParse(q['careerId'] ?? '') ?? 0,
+          year: int.tryParse(q['year'] ?? '') ?? 0,
+          watch: q['watch'] == '1',
+        );
+      },
+    ),
+    GoRoute(
+      path: Routes.campScandal,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return CampScandalScreen(careerId: id);
       },
     ),
     GoRoute(
@@ -877,6 +962,9 @@ final routerProvider = Provider<GoRouter>((ref) {
   ];
   return GoRouter(
     initialLocation: Routes.home,
+    // A Pro-locked save opens to its gate, whichever route asked for it: the
+    // saves list, the home card, a campaign's resume, a deep link.
+    redirect: (context, state) => proLockRedirect(ref, state.uri),
     routes: formFactor == FormFactor.tablet ? _tabletRoutes(routes) : routes,
   );
 });

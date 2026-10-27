@@ -115,6 +115,15 @@ List<Widget> _playoffBody(AppLocalizations l, PlayoffView data) {
         color: AppColors.onSurfaceVariant,
       ),
     ),
+    for (final note in noPlayoffNotes(l)) ...[
+      const SizedBox(height: AppSpacing.xs),
+      Text(
+        note,
+        style: AppTypography.bodySmall.copyWith(
+          color: AppColors.onSurfaceVariant,
+        ),
+      ),
+    ],
     if (playerInvolved) ...[
       const SizedBox(height: AppSpacing.sm),
       Container(

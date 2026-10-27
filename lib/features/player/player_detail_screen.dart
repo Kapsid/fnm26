@@ -23,6 +23,7 @@ import 'package:fnm/features/tactics/call_up_screen.dart'
     show clubStandingLabel;
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
+import 'package:fnm/domain/services/player/international_retirement.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -57,6 +58,9 @@ typedef _PlayerView = ({
   /// Who is reading young players' ceilings for this save, so the potential
   /// shown here is the same read the youth screens give.
   StaffTier scout,
+
+  /// His international retirement in this save (and comeback), if any.
+  IntlRetirement? intlRetirement,
 });
 typedef _PlayerArg = ({int careerId, int playerId});
 
@@ -98,7 +102,9 @@ _playerDetailProvider = FutureProvider.autoDispose
       final nationsById = <int, Nation>{};
       if (player != null) {
         final comp = ref.watch(competitionRepositoryProvider);
-        final nations = await ref.watch(nationRepositoryProvider).all();
+        final nations = await ref
+            .watch(nationRepositoryProvider)
+            .forCareer(arg.careerId);
         for (final n in nations) {
           nationsById[n.id] = n;
         }
@@ -127,7 +133,13 @@ _playerDetailProvider = FutureProvider.autoDispose
         stats = await comp.playerCareerStats(arg.careerId, player.id);
         history = await comp.playerMatchHistory(arg.careerId, player.id);
       }
+      final retirement = career == null
+          ? null
+          : (await ref
+                .watch(playerRepositoryProvider)
+                .internationalRetirements(career.id))[arg.playerId];
       return (
+        intlRetirement: retirement,
         saveSeed: career?.rngSeed ?? 0,
         asOf: career?.inGameDate ?? CareerService.cycleStart,
         scout: career?.staffScout ?? StaffTier.none,
@@ -348,6 +360,18 @@ _playerSections(
                           ),
                         ],
                       ),
+                      if (view.intlRetirement case final r?) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          r.comebackYear == null
+                              ? l.playerIntlRetired(r.retiredYear)
+                              : l.playerIntlComeback(r.comebackYear!),
+                          style: AppTypography.labelSmall.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

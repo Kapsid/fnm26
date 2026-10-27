@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
+import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/messages/message_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -46,13 +47,21 @@ Future<int> showUnreadMessagePopups(
   final duringTournament = await ref.read(
     tournamentInProgressProvider(careerId).future,
   );
+  // A Player of the Year vote whose ceremony is still to be watched is not
+  // news yet: popping it would give the winner away before the ceremony. It
+  // stays unread, and pops as ordinary news if the ceremony is passed by.
+  final career = await ref.read(careerRepositoryProvider).byId(careerId);
+  final ceremonyYear = career == null
+      ? null
+      : await pendingCeremonyYear(comp, career);
   final unread =
       (await comp.messages(careerId))
           .where(
             (m) =>
                 !m.read &&
                 !(duringTournament &&
-                    kBetweenSeasonsCategories.contains(m.category)),
+                    kBetweenSeasonsCategories.contains(m.category)) &&
+                !(m.category == 'award' && m.year == ceremonyYear),
           )
           .toList()
         // The inbox is newest first; a run of events reads better in the order

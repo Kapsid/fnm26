@@ -9,6 +9,8 @@ import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/features/campaign/campaign_brief_sheet.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_ui.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -26,7 +28,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Folded by default to one row (the title and the one line that matters
 /// now); a tap anywhere on that row opens the goal and every progress line.
-/// The choice is kept per campaign on the device. Plain rows with an
+/// The choice is kept per campaign on the device. An info button beside the
+/// fold opens the campaign's full brief, read only (see
+/// [showCampaignBriefSheet]). Plain rows with an
 /// intrinsic height, so it can sit in a tablet dashboard tile as well as in
 /// the phone's column.
 class CampaignHubCard extends ConsumerStatefulWidget {
@@ -48,6 +52,9 @@ class CampaignHubCard extends ConsumerStatefulWidget {
   static const Key summaryKey = Key('campaign.hubCard.summary');
   static const Key finalsKey = Key('campaign.hubCard.finals');
 
+  /// Opens the campaign's full brief (see [showCampaignBriefSheet]).
+  static const Key briefKey = Key('campaign.hubCard.brief');
+
   /// The row of one rival to beat, ticked once beaten.
   static Key rivalToBeatKey(int nationId) =>
       Key('campaign.hubCard.rivalToBeat.$nationId');
@@ -57,6 +64,9 @@ class CampaignHubCard extends ConsumerStatefulWidget {
 
   /// One cycle's World Championship line, for a goal that reads it.
   static Key worldCycleKey(int cycle) => Key('campaign.hubCard.world.$cycle');
+
+  /// The Nations Cup line, for a goal that reads it.
+  static const Key nationsCupKey = Key('campaign.hubCard.nationsCup');
 
   /// Prefs key of one campaign's open/closed choice (outside the save).
   static String prefsKey(String campaignId) =>
@@ -115,11 +125,18 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
       child: Text(text, key: key, style: AppTypography.bodyMedium),
     );
     final goal = progress.def.goal;
-    final titles = goal == CampaignGoal.qualifyWorldThenTitles;
+    // Both championships, cycle by cycle, for the goals that read both.
+    final titles =
+        goal == CampaignGoal.qualifyWorldThenTitles ||
+        goal == CampaignGoal.qualifyBothThenTitle ||
+        goal == CampaignGoal.titleTreble;
     // A goal judged across its cycles lists each cycle's championship.
     final perCycle = titles || goal == CampaignGoal.beatRivalsThenContinental;
     final cups = perCycle ? _cupTexts(l, progress) : const <String>[];
     final worlds = titles ? _worldTexts(l, progress) : const <String>[];
+    // The Nations Cup comes between the two championships of the cycle.
+    final nationsCup = _nationsCupText(l, progress);
+    final nationsCupOver = progress.nationsCupRun?.over ?? true;
     final finals = progress.ordinal >= 2 && !perCycle
         ? l.campaignProgressFinals(
             objectiveFinishText(
@@ -131,7 +148,10 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
         : null;
     // The championship of the moment: this cycle's continental one until it
     // is over for the nation, then its World Championship.
-    final summary = worlds.isNotEmpty && progress.cycleRuns.last.over
+    final summary =
+        nationsCup != null && progress.cycleRuns.last.over && !nationsCupOver
+        ? nationsCup
+        : worlds.isNotEmpty && progress.cycleRuns.last.over
         ? worlds.last
         : cups.isNotEmpty
         ? cups.last
@@ -148,54 +168,73 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Semantics(
-            button: true,
-            expanded: _open,
-            excludeSemantics: true,
-            label: '$title, $summary',
-            onTap: () => _toggle(progress.def.id),
-            child: InkWell(
-              key: CampaignHubCard.headerKey,
-              onTap: () => _toggle(progress.def.id),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            children: [
+              Expanded(
+                child: Semantics(
+                  button: true,
+                  expanded: _open,
+                  excludeSemantics: true,
+                  label: '$title, $summary',
+                  onTap: () => _toggle(progress.def.id),
+                  child: InkWell(
+                    key: CampaignHubCard.headerKey,
+                    onTap: () => _toggle(progress.def.id),
+                    child: Row(
                       children: [
-                        Text(
-                          title,
-                          style: AppTypography.labelMedium.copyWith(
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                style: AppTypography.labelMedium.copyWith(
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                              if (!_open)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: AppSpacing.xs,
+                                  ),
+                                  child: Text(
+                                    summary,
+                                    key: CampaignHubCard.summaryKey,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTypography.bodyMedium,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        AnimatedRotation(
+                          turns: _open ? 0.5 : 0,
+                          duration: const Duration(milliseconds: 200),
+                          child: const Icon(
+                            Icons.expand_more_rounded,
                             color: AppColors.onSurfaceVariant,
                           ),
                         ),
-                        if (!_open)
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: AppSpacing.xs,
-                            ),
-                            child: Text(
-                              summary,
-                              key: CampaignHubCard.summaryKey,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTypography.bodyMedium,
-                            ),
-                          ),
                       ],
                     ),
                   ),
-                  AnimatedRotation(
-                    turns: _open ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: const Icon(
-                      Icons.expand_more_rounded,
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              // The full brief, with every star and whether it is earned so
+              // far: its own tap target and its own label, outside the
+              // fold's merged semantics.
+              IconButton(
+                key: CampaignHubCard.briefKey,
+                tooltip: l.campaignFullBrief,
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(
+                  Icons.info_outline_rounded,
+                  color: AppColors.primary,
+                ),
+                onPressed: () => showCampaignBriefSheet(context, careerId),
+              ),
+            ],
           ),
           AnimatedSize(
             duration: const Duration(milliseconds: 200),
@@ -226,6 +265,8 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
                       if (titles)
                         for (var c = 0; c < cups.length; c++) ...[
                           line(CampaignHubCard.cupCycleKey(c), cups[c]),
+                          if (nationsCup != null && c == cups.length - 1)
+                            line(CampaignHubCard.nationsCupKey, nationsCup),
                           if (c < worlds.length)
                             line(CampaignHubCard.worldCycleKey(c), worlds[c]),
                         ]
@@ -284,6 +325,34 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
       for (var c = 0; c < cups.length; c++)
         line(CampaignHubCard.cupCycleKey(c), cups[c]),
     ];
+  }
+
+  /// This cycle's Nations Cup, for a goal that reads it: how far it went once
+  /// that is known, else still to be decided. Null for every other goal.
+  String? _nationsCupText(AppLocalizations l, CampaignProgress progress) {
+    final run = progress.nationsCupRun;
+    if (run == null) return null;
+    final conf = ref
+        .watch(nationByIdProvider(progress.def.nationId))
+        .valueOrNull
+        ?.confederation;
+    final cup = conf == null ? null : NationsCups.forConfederation(conf);
+    if (cup == null) return null;
+    final cycle = progress.cycleRuns.length - 1;
+    return l.campaignProgressCup(
+      competitionLabel(l, cup.name),
+      '${CareerService.continentalFinalsYear(cycle)}',
+      run.ordinal >= 5 || (run.over && run.ordinal > 0)
+          ? objectiveFinishText(
+              l,
+              TournamentTier.nationsCup,
+              run.ordinal,
+              competition: cup.name,
+            )
+          : run.over
+          ? l.campaignCupNotQualified
+          : l.campaignCupOpen,
+    );
   }
 
   /// The World Championship of every cycle played so far, one line each.

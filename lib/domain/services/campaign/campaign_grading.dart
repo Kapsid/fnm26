@@ -17,9 +17,7 @@ int grudgeStars({
   required bool aboveRival,
   required bool qualified,
   required bool wonBoth,
-}) => aboveRival
-    ? 1 + (qualified ? 1 : 0) + (qualified && wonBoth ? 1 : 0)
-    : 0;
+}) => aboveRival ? 1 + (qualified ? 1 : 0) + (qualified && wonBoth ? 1 : 0) : 0;
 
 /// Stars for beating a set of rivals, then going far in the continental
 /// finals. Beating every rival is the goal and the first star; qualifying for
@@ -46,3 +44,36 @@ int worldThenTitlesStars({
     : qualifiedWorld
     ? 1
     : 0;
+
+/// Stars for a run from the bottom to the top table, each tier judged
+/// across all the campaign's cycles: a continental championship place is
+/// one, a World Championship place two, winning either three. The highest
+/// tier reached counts on its own (as in [worldThenTitlesStars]).
+int qualifyBothThenTitleStars({
+  required bool qualifiedContinental,
+  required bool qualifiedWorld,
+  required bool wonTitle,
+}) => wonTitle
+    ? 3
+    : qualifiedWorld
+    ? 2
+    : qualifiedContinental
+    ? 1
+    : 0;
+
+/// Stars for a treble of titles in one cycle, each star needing every title
+/// before it (the owner's ladder): the continental championship is one; that
+/// and the World Championship two; both and the Nations Cup three. A world
+/// title without the continental one earns nothing, and the Nations Cup only
+/// counts on top of both.
+int titleTrebleStars({
+  required bool wonContinental,
+  required bool wonWorld,
+  required bool wonNationsCup,
+}) => !wonContinental
+    ? 0
+    : !wonWorld
+    ? 1
+    : wonNationsCup
+    ? 3
+    : 2;

@@ -19,7 +19,18 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// so the store's own localised price is what is printed here and the restore
 /// path is on the screen a blocked manager actually reaches.
 class PremiumGateScreen extends ConsumerWidget {
-  const PremiumGateScreen({super.key});
+  const PremiumGateScreen({this.fromSave = false, this.onResult, super.key});
+
+  /// Whether the manager arrived by opening a Pro-locked save (see
+  /// `save_lock.dart`), rather than at the end of the free cycle: the title
+  /// and lead then speak about the save.
+  final bool fromSave;
+
+  /// Called with the outcome (true: Pro is owned now) instead of popping.
+  /// Set when the gate is a route of its own rather than a pushed page.
+  final ValueChanged<bool>? onResult;
+
+  static const Key exitKey = Key('premiumGate.exit');
 
   /// Opens the gate over [context]. Resolves true when the manager chose to
   /// carry on, false when they left.
@@ -35,8 +46,17 @@ class PremiumGateScreen extends ConsumerWidget {
     // The purchase arrives on the store's stream, not from the button, so the
     // page closes on the entitlement rather than on the tap that asked for it.
     // That covers a purchase confirmed minutes later, and a restore.
+    void finish({required bool bought}) {
+      if (!context.mounted) return;
+      if (onResult case final done?) {
+        done(bought);
+      } else {
+        Navigator.of(context).pop(bought);
+      }
+    }
+
     ref.listen(premiumUnlockedProvider, (was, now) {
-      if (now && context.mounted) Navigator.of(context).pop(true);
+      if (now) finish(bought: true);
     });
     return PopScope(
       // The two buttons are the only ways out: a back-swipe that quietly
@@ -74,7 +94,7 @@ class PremiumGateScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: AppSpacing.md),
                               Text(
-                                l.gateTitle,
+                                fromSave ? l.gateSaveTitle : l.gateTitle,
                                 textAlign: TextAlign.center,
                                 style: AppTypography.headlineMedium.copyWith(
                                   color: AppColors.primary,
@@ -82,7 +102,7 @@ class PremiumGateScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: AppSpacing.sm),
                               Text(
-                                l.gateLead,
+                                fromSave ? l.gateSaveLead : l.gateLead,
                                 textAlign: TextAlign.center,
                                 style: AppTypography.bodyMedium.copyWith(
                                   color: AppColors.onSurfaceVariant,
@@ -99,7 +119,8 @@ class PremiumGateScreen extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.md),
                   const PaywallActions(prominentPrice: true),
                   TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
+                    key: exitKey,
+                    onPressed: () => finish(bought: false),
                     child: Text(l.gateExit),
                   ),
                 ],

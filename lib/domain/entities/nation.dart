@@ -39,6 +39,13 @@ abstract class Nation with _$Nation {
     /// missing every country the moment the app is switched to Czech.
     /// Empty means "same as [name]".
     @Default('') String englishName,
+
+    /// The host bids this nation has lodged in the career it was read for,
+    /// keyed `wc:<cycle>` / `cont:<cycle>` (see `HostBidding.nationKey`), each
+    /// the winning chance in permille the manager was shown. Attached by
+    /// `NationRepository.forCareer` from the career's markers; empty
+    /// everywhere else, which leaves every host draw exactly as it was.
+    @Default(<String, int>{}) Map<String, int> hostBids,
   }) = _Nation;
 
   factory Nation.fromJson(Map<String, Object?> json) => _$NationFromJson(json);

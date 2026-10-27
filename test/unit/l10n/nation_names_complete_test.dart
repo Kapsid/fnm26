@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/nation/nation_names.dart';
 import 'package:fnm/domain/services/nation/nation_names_de.dart';
 import 'package:fnm/domain/services/nation/nation_names_el.dart';
@@ -23,6 +24,12 @@ import 'package:fnm/domain/services/nation/nation_names_hu.dart';
 import 'package:fnm/domain/services/nation/nation_names_hr.dart';
 import 'package:fnm/domain/services/nation/nation_names_uk.dart';
 import 'package:fnm/domain/services/nation/nation_names_fil.dart';
+import 'package:fnm/domain/services/nation/nation_names_hi.dart';
+import 'package:fnm/domain/services/nation/nation_names_ja.dart';
+import 'package:fnm/domain/services/nation/nation_names_ko.dart';
+import 'package:fnm/domain/services/nation/nation_names_ro.dart';
+import 'package:fnm/domain/services/nation/nation_names_th.dart';
+import 'package:fnm/domain/services/nation/nation_names_ms.dart';
 
 /// Every language's table names every nation in the seed.
 ///
@@ -35,6 +42,9 @@ void main() {
         in jsonDecode(File('assets/data/nations.json').readAsStringSync())
             as List<dynamic>)
       (n as Map<String, dynamic>)['code'] as String,
+    // The dormant nations are not in the seed file but a career can show
+    // them, so every table names them too.
+    for (final n in DormantNations.all) n.code,
   ];
 
   final tables = <String, Map<String, String>>{
@@ -59,6 +69,12 @@ void main() {
     'hr': nationNamesHr,
     'uk': nationNamesUk,
     'fil': nationNamesFil,
+    'hi': nationNamesHi,
+    'ja': nationNamesJa,
+    'ko': nationNamesKo,
+    'ro': nationNamesRo,
+    'th': nationNamesTh,
+    'ms': nationNamesMs,
   };
 
   for (final MapEntry(key: language, value: table) in tables.entries) {

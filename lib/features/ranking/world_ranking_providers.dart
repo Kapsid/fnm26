@@ -88,7 +88,9 @@ seedRankByIdProvider = FutureProvider.autoDispose
           .watch(seedRankingRepositoryProvider)
           .forCycle(arg.careerId, arg.cycle);
       if (snap.isNotEmpty) return snap;
-      final nations = await ref.watch(nationRepositoryProvider).all();
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(arg.careerId);
       return {for (final n in nations) n.id: n.ranking};
     });
 
@@ -248,7 +250,9 @@ movementBaselineProvider = FutureProvider.autoDispose
         cycle,
       );
       if (found.rankById.isNotEmpty) return found;
-      final nations = await ref.watch(nationRepositoryProvider).all();
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(careerId);
       return (
         rankById: {for (final n in nations) n.id: n.ranking},
         kind: RankBaseline.cycleStart,
@@ -259,7 +263,9 @@ final AutoDisposeFutureProviderFamily<RankingData?, int> worldRankingProvider =
     FutureProvider.autoDispose.family<RankingData?, int>((ref, careerId) async {
       await ref.watch(seedLoaderProvider).ensureSeeded();
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-      final nations = await ref.watch(nationRepositoryProvider).all();
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(careerId);
 
       final seed = {
         for (final n in nations) n.id: Elo.seedFromRanking(n.ranking),

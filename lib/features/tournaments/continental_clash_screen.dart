@@ -214,11 +214,10 @@ class _ThisCycle extends StatelessWidget {
           highlighted: nationId == playerNationId,
         ),
         const SizedBox(height: AppSpacing.sm),
-        Text(
+        WholeText(
           name(nationId),
           textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          breakWords: false,
           style: AppTypography.titleMedium,
         ),
       ],

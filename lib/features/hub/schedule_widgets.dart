@@ -264,10 +264,10 @@ VoidCallback? scheduleRowTap(
   return () => openNation(context, careerId: careerId, nationId: opponentId);
 }
 
-/// The rows of the block the nation is on: the current window's matches (or
-/// one tournament stage) and the stage still to be drawn after them, or one
-/// line when the cycle has nothing left. Shared by the phone's Upcoming card
-/// and the tablet's next-match panel.
+/// The rows of the block the nation is on: the current window's matches
+/// still to be played (or one tournament stage) and the stage still to be
+/// drawn after them, or one line when the cycle has nothing left. Shared by
+/// the phone's Upcoming card and the tablet's next-match panel.
 ///
 /// Plain `Column`, no list or `LayoutBuilder`, so the tablet dashboard tile
 /// keeps an intrinsic height. Draw gating and taps come from the shared row
@@ -297,24 +297,28 @@ class UpcomingRows extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Only what is still to be played: the current window can hold a
+        // match already played (the first of a double header, a friendly
+        // before the qualifiers), and a result has no place under UPCOMING.
         if (current >= 0)
           for (final f in data.blocks[current].fixtures)
-            ScheduleFixtureRow(
-              fixture: f,
-              nationId: data.nationId,
-              opponent:
-                  data.nations[f.homeNationId == data.nationId
-                      ? f.awayNationId
-                      : f.homeNationId],
-              opponentKnown: opponentKnown(data, f),
-              onTap: scheduleRowTap(
-                context,
-                careerId: careerId,
-                data: data,
+            if (!f.hasResult)
+              ScheduleFixtureRow(
                 fixture: f,
-                next: next,
+                nationId: data.nationId,
+                opponent:
+                    data.nations[f.homeNationId == data.nationId
+                        ? f.awayNationId
+                        : f.homeNationId],
+                opponentKnown: opponentKnown(data, f),
+                onTap: scheduleRowTap(
+                  context,
+                  careerId: careerId,
+                  data: data,
+                  fixture: f,
+                  next: next,
+                ),
               ),
-            ),
         if (pending != null)
           SchedulePendingRow(pending: pending)
         else if (current < 0)

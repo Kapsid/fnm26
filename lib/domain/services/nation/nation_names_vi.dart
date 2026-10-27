@@ -76,6 +76,7 @@ const Map<String, String> nationNamesVi = <String, String>{
   'GIB': 'Gibraltar',
   'GNB': 'Guinea-Bissau',
   'GRE': 'Hy Lạp',
+  'GRL': 'Greenland',
   'GRN': 'Grenada',
   'GUA': 'Guatemala',
   'GUI': 'Guinea',

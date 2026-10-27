@@ -347,8 +347,11 @@ class CallUpDrafts extends Table {
 
 /// The world-ranking positions frozen at the start of a cycle, used to seed
 /// that cycle's draws. Freezing keeps every draw ceremony's re-derivation in
-/// step with the persisted groups no matter when it is viewed. Cycle 0 has no
-/// rows and falls back to the static seed ranking.
+/// step with the persisted groups no matter when it is viewed. Cycle 0
+/// normally has no rows and falls back to the static seed ranking. Only a
+/// career begun before that ranking last moved has cycle-0 rows: the ranking
+/// it started on, which its world reads in place of the nations' own (see
+/// `NationRepository.forCareer`).
 @DataClassName('SeedRankingRow')
 class SeedRankings extends Table {
   IntColumn get careerId =>
@@ -852,4 +855,26 @@ class PlayerHonours extends Table {
 
   @override
   Set<Column> get primaryKey => {careerId, kind, competition, year, playerId};
+}
+
+/// The manager's tactics library: named tactics kept OUTSIDE any career, so a
+/// plan built in one save can be loaded into another.
+///
+/// Deliberately not keyed by career (and so not cascaded away when a save is
+/// deleted), and deliberately in this database rather than in preferences: the
+/// whole-database backup is a snapshot of this file, so the library travels
+/// with every backup and restore. A career bundle leaves it out (see
+/// `CareerBundle.globalTables`), since sharing one save must not hand over the
+/// manager's whole library.
+///
+/// The tactic itself is one JSON document (`LibraryTactic.toData`): shape,
+/// style, the six dials, and roles and set-piece takers BY SLOT, never by
+/// player, because player ids mean nothing in another save. One text column
+/// means a later tactical setting can join the document without a schema bump.
+@DataClassName('TacticLibraryRow')
+class TacticLibrary extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get data => text()();
+  DateTimeColumn get updatedAt => dateTime()();
 }

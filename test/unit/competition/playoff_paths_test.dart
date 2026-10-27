@@ -16,6 +16,7 @@ void main() {
     byConfederation: const {},
     rankingById: ranking,
     rng: SeededRng(seed),
+    hostBerths: const {},
     pool: pool,
   );
 

@@ -26,7 +26,9 @@ legendsProvider = FutureProvider.autoDispose.family<LegendsView?, int>((
   final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
   final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
 
   // Candidate pool: long-servers, prolific scorers and top creators — the

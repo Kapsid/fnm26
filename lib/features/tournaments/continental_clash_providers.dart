@@ -31,7 +31,8 @@ continentalClashProvider = FutureProvider.autoDispose
         careerId,
       )).where((h) => h.competition == 'Continental Clash').toList();
       final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
+        for (final n
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
           n.id: n,
       };
       return (

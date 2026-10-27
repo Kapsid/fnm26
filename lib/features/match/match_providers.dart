@@ -15,7 +15,9 @@ import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/ai_counter.dart';
 import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
+import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/mid_tier_difficulty.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -23,16 +25,17 @@ import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
-import 'package:fnm/domain/services/tactics/team_chemistry.dart';
+import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
+import 'package:fnm/features/match/match_ground.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
-import 'package:fnm/features/tournaments/city_providers.dart';
+import 'package:fnm/features/y/y_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// The player's preferred live-match playback speed, as an index into the
@@ -135,9 +138,7 @@ MatchResult playWithAiExtraTimeSub({
   for (final e in first.events) {
     final out =
         e.type == MatchEventType.redCard || e.type == MatchEventType.injury;
-    if (out &&
-        e.teamNationId == aiTeam.nationId &&
-        e.minute <= 90) {
+    if (out && e.teamNationId == aiTeam.nationId && e.minute <= 90) {
       onPitch.remove(e.playerId);
     }
   }
@@ -188,8 +189,7 @@ List<Player> sideOnPitchAtEnd({
   }
   for (final e in events) {
     if (e.teamNationId == team.nationId &&
-        (e.type == MatchEventType.redCard ||
-            e.type == MatchEventType.injury)) {
+        (e.type == MatchEventType.redCard || e.type == MatchEventType.injury)) {
       onPitch.remove(e.playerId);
     }
   }
@@ -217,6 +217,7 @@ class MatchPreview {
     this.venueHostId,
     this.bigMatch = false,
     required this.ground,
+    this.homeFans,
   });
 
   final Fixture fixture;
@@ -265,7 +266,20 @@ class MatchPreview {
   /// [Attendance.atmosphere]).
   final MatchGround ground;
 
+  /// How the manager's own supporters feel, at a home game in his own ground
+  /// (null anywhere else): it is why the ground is as full as it is (see
+  /// [FanMood.fillShift]).
+  final FanMoodBand? homeFans;
+
   bool get playerIsHome => fixture.homeNationId == playerNationId;
+
+  /// The altitude and heat of [ground] in the fixture's month, and what they
+  /// cost each side's legs. Derived, never stored, so every (re-)sim and the
+  /// preview line read the same thing.
+  MatchConditions get conditions => conditionsFor(fixture, ground);
+
+  static MatchConditions conditionsFor(Fixture fixture, MatchGround ground) =>
+      conditionsAt(fixture, ground);
 }
 
 // autoDispose so re-opening the match screen always recomputes the *current*
@@ -385,6 +399,7 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     nationId: playerNationId,
     xi: playerXi,
     instructions: tactic?.instructions ?? const TacticalInstructions(),
+    fullBacks: tactic?.fullBacks ?? FullBackPushes.neutral,
     // Both the saved lineup and the auto-filled fallback are laid out in
     // the tactic's shape (f433 when there's no saved tactic).
     formation: playerFormation,
@@ -397,7 +412,9 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     deadBallTakerId: takers.deadBall,
   );
 
-  final allNations = await ref.watch(nationRepositoryProvider).all();
+  final allNations = await ref
+      .watch(nationRepositoryProvider)
+      .forCareer(careerId);
 
   // Opponent: a real setup, not a shapeless best XI. Drop their injured /
   // suspended players too (the human already loses theirs — this closes the
@@ -505,11 +522,16 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // A settled side that keeps its shape is a little sharper. Being worked out
   // is no longer charged here: predictability already sharpened the AI's
   // counter above. Opponents play at neutral chemistry.
-  final chemistryByNation = {
-    playerNationId: TeamChemistry.factor(
-      drilling[playerFormation]?.familiarity ?? 0,
-    ),
-  };
+  //
+  // The mid-tier difficulty rides the same seam: a hidden deficit on his
+  // side's attack and defence when the eleven he fields is mid-table
+  // strength, nothing for an elite or a minnow side (see [MidTierDifficulty];
+  // a skipped match applies the same term in `_withManagerTactics`).
+  final chemistryByNation = MidTierDifficulty.chemistryByNation(
+    managerNationId: playerNationId,
+    familiarity: drilling[playerFormation]?.familiarity ?? 0,
+    fieldedRating: avg(playerXi),
+  );
 
   final playerIsHome = fixture.homeNationId == playerNationId;
   final homeTeam = playerIsHome ? playerTeam : oppTeam;
@@ -527,17 +549,24 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // A knockout tie is the occasion a big-game player rises to.
   final bigMatch = _isKnockout(fixture.round);
 
+  // The home supporters' mood fills or empties his own ground; an away crowd
+  // and a neutral finals are somebody else's.
+  final fans = !venue.neutral && playerIsHome
+      ? await ref.watch(fanMoodProvider(careerId).future)
+      : null;
   // The ground and its crowd — a packed house is worth more to the home side
-  // than a half-empty one.
-  final cities = await ref.watch(countryCitiesProvider.future);
-  final ground = Attendance.forFixture(
+  // than a half-empty one. Resolved by the same helper a skipped match uses
+  // (his estate, a finals he hosts, the national team's home city), so both
+  // play at the same altitude and in the same heat.
+  final ground = await resolveMatchGround(
+    ref,
+    career: career,
     fixture: fixture,
-    neutral: venue.neutral,
-    tournamentHostIds: venue.tournamentHostIds,
-    citiesByNation: cities,
-    seed: career.rngSeed,
+    nations: allNations,
+    venue: venue,
     homeStrength: _teamRating(homeTeam),
     awayStrength: _teamRating(awayTeam),
+    moodFill: fans == null ? 0 : FanMood.fillShift(fans.score),
   );
 
   // A knockout level at ninety plays on through extra time in the engine, so
@@ -558,6 +587,7 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
       bigMatch: bigMatch,
       atmosphere: Attendance.atmosphere(ground),
       extraTimeIfLevel: Rounds.isKnockout(fixture.round),
+      conditions: MatchPreview.conditionsFor(fixture, ground),
     ),
     aiSubs: opponentSubs,
     aiTeam: oppTeam,
@@ -586,6 +616,7 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     venueHostId: venue.hostId,
     bigMatch: bigMatch,
     ground: ground,
+    homeFans: fans?.band,
   );
 });
 
@@ -628,7 +659,9 @@ finalsOpeningProvider = FutureProvider.autoDispose.family<FinalsOpening?, int>((
     (f) => f.hasResult && wcFinalsRounds.contains(f.round),
   );
   if (alreadyStarted) return null;
-  final allNations = await ref.watch(nationRepositoryProvider).all();
+  final allNations = await ref
+      .watch(nationRepositoryProvider)
+      .forCareer(careerId);
   final year = CareerService.worldCupYear(career.cyclePointer);
   final hosts = WorldCupHosts.hostsFor(
     year: year,

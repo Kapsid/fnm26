@@ -25,7 +25,7 @@ always safe to regenerate the file and start again.
 | `where` | a note saying where the string appears. Yours to read, not to edit. |
 | `placeholders` | which `{words}` this string must keep. Also just a note. |
 | `en` | the English. **Edit freely.** |
-| `cs` `fr` `it` `pl` `es` `de` `pt` `tr` `nl` `id` `el` `sv` `nb` `vi` `bg` `da` `fi` `hu` `hr` `uk` `fil` | Czech, French, Italian, Polish, Spanish, German, Portuguese, Turkish, Dutch, Indonesian, Greek, Swedish, Norwegian Bokmål, Vietnamese, Bulgarian, Danish, Finnish, Hungarian, Croatian, Ukrainian, Filipino. **Edit freely.** Leave a cell blank to keep what's there. A language whose `lib/l10n/app_<code>.arb` does not exist is skipped on import. |
+| `cs` `fr` `it` `pl` `es` `de` `pt` `tr` `nl` `id` `el` `sv` `nb` `vi` `bg` `da` `fi` `hu` `hr` `uk` `fil` `hi` `ja` `ko` `ro` `th` `ms` | Czech, French, Italian, Polish, Spanish, German, Portuguese, Turkish, Dutch, Indonesian, Greek, Swedish, Norwegian Bokmål, Vietnamese, Bulgarian, Danish, Finnish, Hungarian, Croatian, Ukrainian, Filipino, Hindi, Japanese, Korean, Romanian, Thai, Malay. **Edit freely.** Leave a cell blank to keep what's there. A language whose `lib/l10n/app_<code>.arb` does not exist is skipped on import. |
 
 ## The rules
 

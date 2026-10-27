@@ -36,9 +36,13 @@ class _BudgetSetupTabletLayout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l.federationDistributeBudget(
-                      formatEuros(budget.available),
-                    ),
+                    state._grantMode == null
+                        ? l.federationDistributeBudget(
+                            formatEuros(budget.available),
+                          )
+                        : l.hostBidGrantBanner(
+                            formatEuros(state._grantMode!.amount),
+                          ),
                     style: AppTypography.bodySmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
@@ -47,12 +51,19 @@ class _BudgetSetupTabletLayout extends StatelessWidget {
                   InvestmentEditor(
                     available: budget.available,
                     initial: budget.alloc,
+                    floor: state._floor,
                     onChanged: state._onAllocated,
                     // A million a notch: the tablet's slider is long enough.
                     stepLevels: kTabletBudgetStepLevels,
                     // Said once, on the right.
                     showEffects: false,
                   ),
+                  // Hosting and the national stadiums, under the sliders.
+                  if (!state.widget.grant) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    HostBidStatusCard(careerId: careerId),
+                    NationalStadiumsEntry(careerId: careerId),
+                  ],
                 ],
               ),
             ),

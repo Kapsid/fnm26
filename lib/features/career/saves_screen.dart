@@ -20,8 +20,9 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/career_summary_screen.dart';
-import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
+import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/features/settings/backup_restore_prompt.dart';
 import 'package:fnm/features/settings/save_backup_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -97,20 +98,24 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
   /// Opens [save] where the manager left it. Stamps the open before
   /// navigating so this save is top of the list next time; nothing is
   /// awaited, so there is no later moment at which to go anywhere else.
-  void _continue(Career save) {
-    unawaited(ref.read(careerServiceProvider).markPlayed(save.id));
-    context.go('${Routes.hub}?careerId=${save.id}');
-  }
+  ///
+  /// A Pro-locked save opens its gate instead, untouched (see [openSave]).
+  void _continue(Career save) => openSave(context, ref, save.id);
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final savesAsync = ref.watch(savesProvider);
     final premium = ref.watch(premiumUnlockedProvider);
+    // Saves that need Pro to be opened: badged, never hidden or changed.
+    final lockedIds = watchLockedCareerIds(ref);
     // Null means no ceiling, which is what the purchase buys.
     final limit = saveSlotLimit(premiumUnlocked: premium);
-    final nations = ref.watch(nationsProvider).valueOrNull ?? const <Nation>[];
-    final nationsById = {for (final n in nations) n.id: n};
+    // Every stored nation, dormant ones included: a save's own nation may be
+    // one only its world has.
+    final nationsById =
+        ref.watch(knownNationsByIdProvider).valueOrNull ??
+        const <int, Nation>{};
 
     if (useTabletLayout(context, ref)) {
       return _SavesTabletLayout(
@@ -119,6 +124,7 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
         nationsById: nationsById,
         premium: premium,
         limit: limit,
+        lockedIds: lockedIds,
       );
     }
 
@@ -175,6 +181,7 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
                           return SaveTile(
                             save: save,
                             nation: nationsById[save.nationId],
+                            locked: lockedIds.contains(save.id),
                             onContinue: () => _continue(save),
                             onDelete: () => _confirmDelete(
                               context,
@@ -504,8 +511,7 @@ Future<void> _importCareer(BuildContext context, WidgetRef ref) async {
         BundleRejection.fromANewerBuild => l.careerImportFailedNewer,
         BundleRejection.slotsFull => l.careerImportFailedSlotsFull,
         BundleRejection.needsPremium => l.careerImportFailedNeedsPremium,
-        BundleRejection.campaignRunExists =>
-          l.careerImportFailedCampaignRun,
+        BundleRejection.campaignRunExists => l.careerImportFailedCampaignRun,
       }),
       action: sellable && context.mounted
           ? SnackBarAction(
@@ -544,10 +550,17 @@ class SaveTile extends StatelessWidget {
     required this.onContinue,
     required this.onDelete,
     required this.onShare,
+    this.locked = false,
     super.key,
   });
 
+  static const Key lockedBadgeKey = Key('saveTile.locked');
+
   final Career save;
+
+  /// Whether this save needs Pro to be opened (see `save_lock.dart`). It is
+  /// listed, exported and deleted as ever, and wears a padlock and a note.
+  final bool locked;
   final Nation? nation;
   final VoidCallback onContinue;
   final VoidCallback onDelete;
@@ -577,6 +590,7 @@ class SaveTile extends StatelessWidget {
                   nation?.name ?? l.careerUnknownNation,
                   style: AppTypography.titleMedium,
                 ),
+                if (locked) const SaveLockedNote(key: lockedBadgeKey),
                 Text(
                   '${save.managerName} · $date',
                   style: AppTypography.bodySmall.copyWith(
@@ -693,7 +707,10 @@ class SaveTile extends StatelessWidget {
             icon: const Icon(Icons.delete_outline, color: AppColors.outline),
             onPressed: onDelete,
           ),
-          const Icon(Icons.chevron_right, color: AppColors.primary),
+          Icon(
+            locked ? Icons.lock_rounded : Icons.chevron_right,
+            color: locked ? AppColors.warning : AppColors.primary,
+          ),
         ],
       ),
     );

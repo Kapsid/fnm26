@@ -262,8 +262,19 @@ class _IncomeStepTablet extends ConsumerWidget {
                 _IncomeCard(
                   income: income,
                   openingBalance: view?.budget ?? 0,
+                  stadiumIncome:
+                      ref
+                          .watch(rolloverMoneyProvider(careerId))
+                          .valueOrNull
+                          ?.stadiumIncome ??
+                      0,
                 ),
                 const SizedBox(height: AppSpacing.md),
+                HostBidStatusCard(
+                  careerId: careerId,
+                  nationId: state._selected,
+                  interactive: true,
+                ),
                 Text(
                   l.hubBudgetIntro,
                   style: AppTypography.bodySmall.copyWith(

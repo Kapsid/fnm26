@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -13,6 +11,7 @@ import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_ui.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -44,6 +43,8 @@ class HomeScreen extends ConsumerWidget {
         ? null
         : ref.watch(nationByIdProvider(campaign.def.nationId)).valueOrNull;
     final tablet = useTabletLayout(context, ref);
+    // A card for a Pro-locked save still shows, padlocked, and opens the gate.
+    final lockedIds = watchLockedCareerIds(ref);
     // Whichever was played last leads; the other sits under it.
     final cards = <Widget>[
       if (lastSave != null)
@@ -52,6 +53,7 @@ class HomeScreen extends ConsumerWidget {
           nationCode: lastNation?.code,
           inGameDate: lastSave.inGameDate,
           cyclePointer: lastSave.cyclePointer,
+          locked: lockedIds.contains(lastSave.id),
           onResume: () => _resume(context, ref, lastSave),
         ),
       if (campaign != null)
@@ -60,6 +62,7 @@ class HomeScreen extends ConsumerWidget {
           run: campaign.run,
           nationCode: campaignNation?.code,
           compact: !tablet,
+          locked: lockedIds.contains(campaign.run.id),
           onResume: () => _resume(context, ref, campaign.run),
         ),
     ];
@@ -201,10 +204,10 @@ DateTime _playedAt(Career c) => c.lastPlayedAt ?? c.createdAt;
 /// Opens [save] where the manager left it, stamping it so it heads the saves
 /// list next time. Nothing is awaited, so there is no later moment at which
 /// to go anywhere else.
-void _resume(BuildContext context, WidgetRef ref, Career save) {
-  unawaited(ref.read(careerServiceProvider).markPlayed(save.id));
-  context.go('${Routes.hub}?careerId=${save.id}');
-}
+///
+/// A Pro-locked save opens its gate instead, untouched (see [openSave]).
+void _resume(BuildContext context, WidgetRef ref, Career save) =>
+    openSave(context, ref, save.id);
 
 /// The highlighted "continue your last save" card — a flag, the nation, and a
 /// bright resume button.
@@ -215,6 +218,7 @@ class _ContinueCard extends StatelessWidget {
     required this.inGameDate,
     required this.cyclePointer,
     required this.onResume,
+    this.locked = false,
   });
 
   final String nationName;
@@ -222,6 +226,7 @@ class _ContinueCard extends StatelessWidget {
   final DateTime inGameDate;
   final int cyclePointer;
   final VoidCallback onResume;
+  final bool locked;
 
   @override
   Widget build(BuildContext context) {
@@ -252,6 +257,7 @@ class _ContinueCard extends StatelessWidget {
                     ),
                   ),
                   Text(nationName, style: AppTypography.titleMedium),
+                  if (locked) const SaveLockedNote(),
                   const SizedBox(height: 2),
                   Text(
                     l.homeRoadToWorldCup(
@@ -267,9 +273,9 @@ class _ContinueCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(
-              Icons.play_circle_fill_rounded,
-              color: AppColors.primary,
+            Icon(
+              locked ? Icons.lock_rounded : Icons.play_circle_fill_rounded,
+              color: locked ? AppColors.warning : AppColors.primary,
               size: 36,
             ),
           ],
@@ -289,6 +295,7 @@ class _CampaignContinueCard extends StatelessWidget {
     required this.nationCode,
     required this.compact,
     required this.onResume,
+    this.locked = false,
   });
 
   final CampaignDef def;
@@ -296,6 +303,7 @@ class _CampaignContinueCard extends StatelessWidget {
   final String? nationCode;
   final bool compact;
   final VoidCallback onResume;
+  final bool locked;
 
   @override
   Widget build(BuildContext context) {
@@ -344,6 +352,7 @@ class _CampaignContinueCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.titleMedium,
                   ),
+                  if (locked) const SaveLockedNote(),
                   Text(
                     subtitle,
                     maxLines: 1,
@@ -356,8 +365,8 @@ class _CampaignContinueCard extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.play_circle_fill_rounded,
-              color: AppColors.primary,
+              locked ? Icons.lock_rounded : Icons.play_circle_fill_rounded,
+              color: locked ? AppColors.warning : AppColors.primary,
               size: compact ? 30 : 36,
             ),
           ],

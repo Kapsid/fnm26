@@ -75,6 +75,140 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchDossierKeyMen => 'AVAINPELAAJAT';
 
   @override
+  String get matchDossierHowTheyPlay => 'PELITAPA';
+
+  @override
+  String matchScoutFormation1(String formation) {
+    return 'He pelaavat yleensä muodostelmalla $formation.';
+  }
+
+  @override
+  String matchScoutFormation2(String formation) {
+    return 'Heidän tavallinen muodostelmansa on $formation.';
+  }
+
+  @override
+  String matchScoutFormation3(String formation) {
+    return 'He luottavat useimmiten muodostelmaan $formation.';
+  }
+
+  @override
+  String get matchScoutStrengthPressing =>
+      'He prässäävät korkealta ja jahtaavat palloa.';
+
+  @override
+  String get matchScoutStrengthDirect =>
+      'He pelaavat suoraviivaisesti ja vievät pallon nopeasti eteen.';
+
+  @override
+  String get matchScoutStrengthPossession =>
+      'He pitävät palloa hyvin ja rakentavat kärsivällisesti.';
+
+  @override
+  String get matchScoutStrengthCounter =>
+      'He odottavat matalalla ja lähtevät nopeasti vastahyökkäyksiin.';
+
+  @override
+  String get matchScoutStrengthDeepDefence =>
+      'He puolustavat matalalla, ja heitä on vaikea murtaa.';
+
+  @override
+  String get matchScoutStrengthWide =>
+      'He levittävät peliä ja hyökkäävät laitojen kautta.';
+
+  @override
+  String get matchScoutStrengthAttacking =>
+      'He ottavat mielellään ohjat ja käyvät vastustajan kimppuun.';
+
+  @override
+  String get matchScoutStrengthQuickForwards =>
+      'Heidän hyökkääjänsä ovat nopeita ja rakastavat syvyysjuoksuja.';
+
+  @override
+  String get matchScoutStrengthPassingMidfield =>
+      'Heidän keskikenttänsä syöttää palloa hyvin.';
+
+  @override
+  String get matchScoutStrengthHardRunning =>
+      'Heidän keskikenttänsä jaksaa juosta koko ottelun.';
+
+  @override
+  String get matchScoutStrengthSetPieces =>
+      'He ovat vaarallisia vakiotilanteissa.';
+
+  @override
+  String get matchScoutStrengthQuickDefence =>
+      'Heidän puolustuslinjansa on nopea, ja sen taakse on vaikea päästä.';
+
+  @override
+  String get matchScoutStrengthNone =>
+      'Heidän pelissään ei mikään erityisesti erotu.';
+
+  @override
+  String get matchScoutWeakSpaceBehind =>
+      'Heidän korkea linjansa jättää selustaan tilaa pitkälle pallolle.';
+
+  @override
+  String get matchScoutWeakPressedBuildUp =>
+      'Korkea prässi voi sotkea heidän hitaan avauspelinsä.';
+
+  @override
+  String get matchScoutWeakDeepBlock =>
+      'Ole kärsivällinen: heidän kaltaisensa matala puolustus on purettavissa.';
+
+  @override
+  String get matchScoutWeakLongBall =>
+      'Pudota linjaasi syvemmälle, niin heidän pitkillä palloillaan ei ole minne mennä.';
+
+  @override
+  String get matchScoutWeakSlowDefence =>
+      'Heidän puolustajiltaan puuttuu vauhtia, joten lähetä juoksijoita heidän selustaansa.';
+
+  @override
+  String get matchScoutWeakAerial =>
+      'He näyttävät epävarmoilta puolustaessaan vakiotilanteita.';
+
+  @override
+  String get matchScoutWeakPoorPassing =>
+      'Heidän keskikenttänsä ei tahdo syöttää itseään ulos paineesta.';
+
+  @override
+  String get matchScoutWeakTiringMidfield =>
+      'Heidän keskikentältään puuttuvat jalat prässin ylläpitämiseen.';
+
+  @override
+  String get matchScoutWeakBluntAttack =>
+      'Heidän hyökkääjiltään puuttuu vauhtia.';
+
+  @override
+  String get matchScoutApproachTakeTheGame =>
+      'Sinua vastaan he todennäköisesti ottavat ohjat.';
+
+  @override
+  String get matchScoutApproachEven =>
+      'Sinua vastaan on luvassa tiukka ja tasainen ottelu.';
+
+  @override
+  String get matchScoutApproachSitDeep =>
+      'Sinua vastaan he todennäköisesti pelaavat varovasti ja odottavat vastahyökkäyksen paikkaa.';
+
+  @override
+  String get matchScoutLeaningAttacking =>
+      'Kaukaa katsottuna he vaikuttavat hyökkäävältä joukkueelta.';
+
+  @override
+  String get matchScoutLeaningCautious =>
+      'Kaukaa katsottuna he vaikuttavat varovaiselta joukkueelta.';
+
+  @override
+  String get matchScoutLeaningUnclear =>
+      'Kaukaa on vaikea sanoa, miten he haluavat pelata.';
+
+  @override
+  String get matchScoutHireHint =>
+      'Palkkaa pääscout, niin saat selville, miten he pelaavat.';
+
+  @override
   String matchCouldNotContinue(String error) {
     return 'Jatkaminen ei onnistunut: $error';
   }
@@ -284,6 +418,22 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Järjestelmä';
+
+  @override
+  String get settingsTextSizeTitle => 'Tekstin koko';
+
+  @override
+  String get settingsTextSizeBlurb =>
+      'Suurenna tekstiä, jos sitä on vaikea lukea.';
+
+  @override
+  String get settingsTextSizeNormal => 'Normaali';
+
+  @override
+  String get settingsTextSizeLarge => 'Suuri';
+
+  @override
+  String get settingsTextSizeLarger => 'Suurempi';
 
   @override
   String get matchPreviewAllMeetings => 'Kaikki kohtaamiset';
@@ -802,6 +952,41 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get tacticsSentOffShort => 'ERONNUT';
+
+  @override
+  String get tacticsFullBackLeft => 'Vasen laitapuolustaja';
+
+  @override
+  String get tacticsFullBackRight => 'Oikea laitapuolustaja';
+
+  @override
+  String get tacticsFullBackUp => 'Nousee hyökkäykseen';
+
+  @override
+  String get tacticsFullBackDown => 'Pysyy takana';
+
+  @override
+  String get tacticsFullBackOff => 'Ei ohjetta';
+
+  @override
+  String tacticsFullBackUpHint(String side) {
+    return '$side: nousee hyökkäykseen. Hieman enemmän hyökkäystä, hieman enemmän riskiä.';
+  }
+
+  @override
+  String tacticsFullBackDownHint(String side) {
+    return '$side: pysyy takana. Hieman turvallisempaa, hieman vähemmän hyökkäystä.';
+  }
+
+  @override
+  String tacticsFullBackOffHint(String side) {
+    return '$side: ei ohjetta, pelaa joukkueen suunnitelman mukaan.';
+  }
+
+  @override
+  String tacticsFullBackSemantics(String side, String state) {
+    return '$side, nuoli: $state';
+  }
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -3018,6 +3203,16 @@ class AppLocalizationsFi extends AppLocalizations {
   String get gateExit => 'POISTU';
 
   @override
+  String get gateSaveTitle => 'TÄMÄ TALLENNUS VAATII PRON';
+
+  @override
+  String get gateSaveLead =>
+      'Ilmaisen kauden jälkeiset tallennukset ja Pro-kampanjat jatkuvat Prolla. Mitään ei menetetä: tallennus odottaa juuri sellaisena kuin jätit sen.';
+
+  @override
+  String get careerSaveLockedNote => 'Tallennuksen jatkaminen vaatii Pron';
+
+  @override
   String get federationNaturalisation => 'KANSALAISTAMINEN';
 
   @override
@@ -3257,9 +3452,6 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get nationsNoMatch => 'Ei hakua vastaavia maita.';
-
-  @override
-  String get nationsNationalLevel => 'MAAN TASO';
 
   @override
   String get nationsSelectHeading => 'Valitse maajoukkue';
@@ -3715,6 +3907,1026 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String yLostBadly11(String opponent, String score) {
     return 'Olen nähnyt tämän joukkueen nöyryytettynä ennenkin, mutta $score vastustajalle $opponent on uusi pohja.';
+  }
+
+  @override
+  String yWinUpset12(String opponent, String score) {
+    return 'Voitto $score, vastustajana $opponent. Kirjoittakaa päivämäärä ylös, teiltä kysytään, missä olitte.';
+  }
+
+  @override
+  String yWinUpset13(String opponent, String score) {
+    return 'Pukukopin ulkopuolella kukaan ei uskonut. $opponent-ottelu, $score. Ylpeys ei riitä sanaksi.';
+  }
+
+  @override
+  String yWinUpset14(String opponent, String score) {
+    return '$score, vastustajana $opponent! Jokainen juoksi, kunnes mitään ei ollut jäljellä.';
+  }
+
+  @override
+  String yWinUpset15(String opponent, String score) {
+    return 'Jättiläisen kaataja. $opponent, $score. Tämän takia tulemme aina uudestaan.';
+  }
+
+  @override
+  String yWinUpset16(String opponent, String score) {
+    return '$opponent-ottelu, $score. Ennakkoveikkaukset lensivät juuri ikkunasta ulos.';
+  }
+
+  @override
+  String yWinUpset17(String opponent, String score) {
+    return 'Selvä ennakkosuosikki: $opponent. Lopputulos: $score meille.';
+  }
+
+  @override
+  String yWinUpset18(String opponent, String score) {
+    return 'Yksi vuoden yllätyksistä: $opponent-ottelu, $score.';
+  }
+
+  @override
+  String yWinUpset19(String opponent, String score) {
+    return '$opponent $score. Kukaan ei ennustanut tätä, eikä kukaan osaa oikein selittää sitä.';
+  }
+
+  @override
+  String yWinUpset20(String opponent, String score) {
+    return '$opponent-ottelu, $score. Ihanaa. Nyt kaikki unohtavat, miten huono loppuvuosi oli.';
+  }
+
+  @override
+  String yWinUpset21(String opponent, String score) {
+    return '$opponent-ottelu, $score, ja kelkka on jo täynnä. Minä istuin siinä, kun se oli tyhjä.';
+  }
+
+  @override
+  String yWinUpset22(String opponent, String score) {
+    return '$opponent $score. Loistavaa, ja silti he keksivät keinon heittää tämän hukkaan.';
+  }
+
+  @override
+  String yWinUpset23(String opponent, String score) {
+    return 'Suuri ilta, vastustajana $opponent, $score. Yksi pääsky ei kesää tee.';
+  }
+
+  @override
+  String yLostBadly12(String opponent, String score) {
+    return '$opponent-ottelu, $score. Sattuu, koska välitämme. Tukekaa heitä silti.';
+  }
+
+  @override
+  String yLostBadly13(String opponent, String score) {
+    return 'Unohdettava ilta, vastustajana $opponent, $score. Pelaajiin sattuu eniten.';
+  }
+
+  @override
+  String yLostBadly14(String opponent, String score) {
+    return '$opponent $score. Pää pystyyn. Joukkue tunnetaan siitä, miten se vastaa tähän.';
+  }
+
+  @override
+  String yLostBadly15(String opponent, String score) {
+    return '$opponent-ottelu, $score. Huono, kyllä. Maailmanloppu, ei.';
+  }
+
+  @override
+  String yLostBadly16(String opponent, String score) {
+    return '$opponent-ottelu, $score. Tuloksesta puhutaan vuosia, vääristä syistä.';
+  }
+
+  @override
+  String yLostBadly17(String opponent, String score) {
+    return 'Voitto vastustajalle, $opponent, $score. Tämän jälkeen kenenkään ei pidä yllättyä ensi kerralla.';
+  }
+
+  @override
+  String yLostBadly18(String opponent, String score) {
+    return 'Yksi pitkään aikaan pahimmista illoista: $opponent-ottelu, $score.';
+  }
+
+  @override
+  String yLostBadly19(String opponent, String score) {
+    return '$opponent $score. Kysymyksiä tulee, ja syystäkin.';
+  }
+
+  @override
+  String yLostBadly20(String opponent, String score) {
+    return '$opponent-ottelu, $score. Nolo on liian lievä sana.';
+  }
+
+  @override
+  String yLostBadly21(String opponent, String score) {
+    return 'Tappio $score, vastustajana $opponent. Viimeinen sammuttaa valot.';
+  }
+
+  @override
+  String yLostBadly22(String opponent, String score) {
+    return '$opponent $score. En enää yllätä, ja se pelottaa minua.';
+  }
+
+  @override
+  String yLostBadly23(String opponent, String score) {
+    return '$score. $opponent. Jonkun ylhäällä kannattaa päivittää ansioluettelonsa tänä iltana.';
+  }
+
+  @override
+  String yWinRout0(String opponent, String score) {
+    return '$opponent-ottelu, $score! Tällainen jalkapallo saa koko maan hymyilemään.';
+  }
+
+  @override
+  String yWinRout1(String opponent, String score) {
+    return 'Murskavoitto, vastustajana $opponent, $score. Mikä esitys.';
+  }
+
+  @override
+  String yWinRout2(String opponent, String score) {
+    return '$score. $opponent-ottelu. Tänään onnistui kaikki.';
+  }
+
+  @override
+  String yWinRout3(String opponent, String score) {
+    return '$score-murskaus, vastustajana $opponent. Tallentakaa kooste, haluatte sen myöhemmin.';
+  }
+
+  @override
+  String yWinRout4(String opponent, String score) {
+    return '$opponent $score. Tuo on joukkue, joka nauttii pelaamisesta.';
+  }
+
+  @override
+  String yWinRout5(String opponent, String score) {
+    return '$opponent-ottelu, $score, ja maaleja olisi voinut tulla enemmänkin. Upeaa.';
+  }
+
+  @override
+  String yWinRout6(String opponent, String score) {
+    return '$opponent-ottelu, $score. Lukema, jota katsotaan kahdesti.';
+  }
+
+  @override
+  String yWinRout7(String opponent, String score) {
+    return 'Voitto $score, vastustajana $opponent. Ottelu oli ohi puolessa tunnissa.';
+  }
+
+  @override
+  String yWinRout8(String opponent, String score) {
+    return 'Lopputulos: $opponent-ottelu, $score. Selvästi suurin voitto pitkään aikaan.';
+  }
+
+  @override
+  String yWinRout9(String opponent, String score) {
+    return '$opponent $score. Toinen joukkue tuli pelaamaan, toinen ei edes noussut bussista.';
+  }
+
+  @override
+  String yWinRout10(String opponent, String score) {
+    return '$score. Vastustajalla ($opponent) ei ollut vastausta mihinkään.';
+  }
+
+  @override
+  String yWinRout11(String opponent, String score) {
+    return 'Selkäsauna: $opponent-ottelu, $score.';
+  }
+
+  @override
+  String yWinRout12(String opponent, String score) {
+    return '$opponent-ottelu, $score. Kiva, mutta tuskin mikään mittapuu.';
+  }
+
+  @override
+  String yWinRout13(String opponent, String score) {
+    return '$opponent-ottelu, $score. Herättäkää, kun teemme saman jollekulle hyvälle.';
+  }
+
+  @override
+  String yWinRout14(String opponent, String score) {
+    return '$opponent $score. Hauskaa, mutta olen nähnyt joukkueiden loistavan näin ja voittavan ei mitään.';
+  }
+
+  @override
+  String yWinRout15(String opponent, String score) {
+    return '$score, ja kaikki ovat taas neroja. Vastustaja oli $opponent.';
+  }
+
+  @override
+  String yWinRout16(String opponent, String score) {
+    return '$opponent-ottelu, $score. Ei innostuta liikaa, tämä todistaa hyvin vähän.';
+  }
+
+  @override
+  String yWinRout17(String opponent, String score) {
+    return '$opponent $score. Nauttikaa, ja muistakaa sitten, miten kävi viimeksi, kun innostuimme.';
+  }
+
+  @override
+  String yWinShootout0(String opponent) {
+    return 'Jatkoon rangaistuspotkuilla, vastustajana $opponent! Teräshermot, jokaisella.';
+  }
+
+  @override
+  String yWinShootout1(String opponent) {
+    return 'Rangaistuspotkut, vastustajana $opponent, ja hermot pitivät. Halatkaa tuntematonta.';
+  }
+
+  @override
+  String yWinShootout2(String opponent) {
+    return 'Rangaistuspotkukilpailu voitettu, vastustajana $opponent. Sydämeni ei kestä tätä.';
+  }
+
+  @override
+  String yWinShootout3(String opponent) {
+    return 'Voitto rangaistuspotkuilla, vastustajana $opponent. Jatkoon seuraavalle kierrokselle.';
+  }
+
+  @override
+  String yWinShootout4(String opponent) {
+    return '$opponent-ottelu ratkesi pilkulta, ja me teimme enemmän.';
+  }
+
+  @override
+  String yWinShootout5(String opponent) {
+    return 'Rangaistuspotkut voitettu, vastustajana $opponent. Vaikeinta tietä, mutta jatkoon.';
+  }
+
+  @override
+  String yWinShootout6(String opponent) {
+    return 'Jatkoon rangaistuspotkuilla, vastustajana $opponent. Lotto voitettu, esitys unohdettu.';
+  }
+
+  @override
+  String yWinShootout7(String opponent) {
+    return 'Voitto pilkulta tuollaisen esityksen jälkeen? Vastustaja $opponent. Tuuria, ja kaikki tietävät sen.';
+  }
+
+  @override
+  String yWinShootout8(String opponent) {
+    return 'Jatkoon rangaistuspotkuilla, vastustajana $opponent. Niihin ei olisi pitänyt joutua.';
+  }
+
+  @override
+  String yKnockoutWin0(String opponent, String score) {
+    return 'JATKOON. $opponent-ottelu, $score, ja unelma elää.';
+  }
+
+  @override
+  String yKnockoutWin1(String opponent, String score) {
+    return 'PUDOTUSPELIVOITTO: $opponent-ottelu, $score. Maa voi alkaa uskoa.';
+  }
+
+  @override
+  String yKnockoutWin2(String opponent, String score) {
+    return '$opponent-ottelu, $score, ja seuraavalle kierrokselle. Mikä ilta.';
+  }
+
+  @override
+  String yKnockoutWin3(String opponent, String score) {
+    return 'Kotimatkalle: $opponent, $score. Eteenpäin.';
+  }
+
+  @override
+  String yKnockoutWin4(String opponent, String score) {
+    return 'PUDOTUSPELI: $opponent-ottelu, $score. Seuraava kierros varmistui.';
+  }
+
+  @override
+  String yKnockoutWin5(String opponent, String score) {
+    return 'Jatkoon: $opponent-ottelu, $score.';
+  }
+
+  @override
+  String yKnockoutWin6(String opponent, String score) {
+    return 'Pudotettu: $opponent, $score. Seuraava kierros odottaa.';
+  }
+
+  @override
+  String yKnockoutWin7(String opponent, String score) {
+    return 'Voitto $score, vastustajana $opponent. Pudotuspeleissä kukaan ei kysy miten.';
+  }
+
+  @override
+  String yKnockoutWin8(String opponent, String score) {
+    return 'Jatkoon, vastustajana $opponent, $score. Seuraava vastustaja ei ole yhtä armollinen.';
+  }
+
+  @override
+  String yKnockoutWin9(String opponent, String score) {
+    return '$opponent-ottelu, $score, riittää jatkoon. Ensi kerralla tarvitaan paljon enemmän.';
+  }
+
+  @override
+  String yKnockoutWin10(String opponent, String score) {
+    return 'Ulos: $opponent, $score. Enemmän selvitty kuin voitettu.';
+  }
+
+  @override
+  String yKnockoutWin11(String opponent, String score) {
+    return 'Seuraavalle kierrokselle lukemin $score, vastustajana $opponent. Älkää kysykö miten.';
+  }
+
+  @override
+  String yUpsetGap0(String opponent, String gap) {
+    return 'Rankingissa välillämme oli $gap sijaa, ja silti voitimme. Vastustaja: $opponent. Upeaa.';
+  }
+
+  @override
+  String yUpsetGap1(String opponent, String gap) {
+    return '$opponent: $gap sijaa edellämme. Kaatui. Jalkapallo on ihanaa.';
+  }
+
+  @override
+  String yUpsetGap2(String opponent, String gap) {
+    return 'Rankingero: $gap. Tulos: voitto, vastustajana $opponent. Älkää koskaan lakatko uskomasta.';
+  }
+
+  @override
+  String yUpsetGap3(String opponent, String gap) {
+    return 'Rankingero ennen avausta: $gap. $opponent kaatui silti.';
+  }
+
+  @override
+  String yUpsetGap4(String opponent, String gap) {
+    return 'Maailmanrankingissa $opponent oli $gap sijaa edellämme. Ei tänä iltana.';
+  }
+
+  @override
+  String yUpsetGap5(String opponent, String gap) {
+    return 'Yllätysindeksi: $gap rankingsijaa joukkueiden välillä. Voitto meille, vastustajana $opponent.';
+  }
+
+  @override
+  String yUpsetGap6(String opponent, String gap) {
+    return '$gap rankingsijaa erotti meidät vastustajasta, $opponent. Yksi ilta ei kurota eroa umpeen.';
+  }
+
+  @override
+  String yUpsetGap7(String opponent, String gap) {
+    return '$opponent: $gap sijaa edellä, ja kaatui. Ranking tuskin huomaa.';
+  }
+
+  @override
+  String yUpsetGap8(String gap) {
+    return 'Rankingero: $gap. Muistakaa tämä luku, kun seuraavan kerran häviämme pienelle.';
+  }
+
+  @override
+  String yEatWords0(String opponent) {
+    return 'Olin kirjoittanut tämän joukkueen pois. Olin väärässä, enkä ole koskaan ollut niin iloinen väärässä olemisesta. Vastustaja: $opponent.';
+  }
+
+  @override
+  String yEatWords1(String opponent) {
+    return 'Annos nöyryyttä, kiitos. Iso. Voitto, vastustajana $opponent, oli upea.';
+  }
+
+  @override
+  String yEatWords2(String opponent) {
+    return 'Sanoin, ettei heillä ole enää mitään annettavaa. Oli paljon. Hyvin pelattu, kaikki. Vastustaja: $opponent.';
+  }
+
+  @override
+  String yEatWords3(String opponent) {
+    return 'Pöytäkirjaan: en nähnyt tätä voittoa tulevan. Vastustaja: $opponent. Kunnia sille, jolle se kuuluu.';
+  }
+
+  @override
+  String yEatWords4(String opponent) {
+    return 'Hyvä on. Sanoin, että heidät paljastetaan. $opponent ei paljastanut.';
+  }
+
+  @override
+  String yEatWords5(String opponent) {
+    return 'Tänä iltana syön sanani tästä joukkueesta. Voitto, vastustajana $opponent, ansaitsee sen.';
+  }
+
+  @override
+  String yEatWords6(String opponent) {
+    return 'Kyllä, sanoin, että he ovat valmiita. Yksi voitto, vastustajana $opponent, ei vielä todista minua vääräksi.';
+  }
+
+  @override
+  String yEatWords7(String opponent) {
+    return 'Minun pitäisi kuulemma syödä sanani. Vastustaja: $opponent. Syön, hitaasti, ja kuitin säästän.';
+  }
+
+  @override
+  String yEatWords8(String opponent) {
+    return 'Voitto, vastustajana $opponent, oli vaikuttava. Epäilykseni tästä joukkueesta eivät ole kadonneet.';
+  }
+
+  @override
+  String yAwayFansWin0(String nation, String score) {
+    return 'Hatunnosto: $nation. $score, ja täysin ansaittu.';
+  }
+
+  @override
+  String yAwayFansWin1(String nation, String score) {
+    return 'Sattuu sanoa, mutta parempi tänään oli $nation. $score. Onnittelut.';
+  }
+
+  @override
+  String yAwayFansWin2(String nation, String score) {
+    return '$score. Hattua nostetaan: $nation. He halusivat sitä enemmän.';
+  }
+
+  @override
+  String yAwayFansWin3(String nation, String score) {
+    return 'Tappio $score, vastustajana $nation. En edes tiedä, mitä sanoa.';
+  }
+
+  @override
+  String yAwayFansWin4(String nation, String score) {
+    return '$nation $score. Meidän pitäisi hävetä.';
+  }
+
+  @override
+  String yAwayFansWin5(String nation, String score) {
+    return '$nation-ottelu, $score. Joku selittäköön, miten tuo tapahtui.';
+  }
+
+  @override
+  String yAwayFansWin6(String nation, String score) {
+    return 'Hävitä $score, vastustajana $nation. Tästä en pääse koskaan yli.';
+  }
+
+  @override
+  String yAwayFansWin7(String nation, String score) {
+    return '$nation-ottelu, $score. Tuuria. Puhdasta tuuria.';
+  }
+
+  @override
+  String yAwayFansWin8(String nation, String score) {
+    return 'Tuon $score-tuloksen jälkeen $nation-fanit ovat sietämättömiä vuosia. Kiitos ei mistään.';
+  }
+
+  @override
+  String yNeutralWin0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Upeaa jalkapallolle. Tämän takia rakastamme sitä.';
+  }
+
+  @override
+  String yNeutralWin1(String nation, String opponent, String score) {
+    return 'Mikä tulos: $nation $score $opponent. Jalkapalloa parhaimmillaan.';
+  }
+
+  @override
+  String yNeutralWin2(String nation, String opponent, String score) {
+    return 'Kaikki puolueettomat kannustavat tänään: $nation. $nation $score $opponent!';
+  }
+
+  @override
+  String yNeutralWin3(String nation, String opponent, String score) {
+    return 'Kierroksen tulos: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralWin4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Tätä ei ollut kenelläkään kupongissa.';
+  }
+
+  @override
+  String yNeutralWin5(String nation, String opponent, String score) {
+    return 'Iso tulos: $nation $score $opponent. Ranking liikkuu.';
+  }
+
+  @override
+  String yNeutralWin6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Hauskaa, katsotaan pystyvätkö toistamaan.';
+  }
+
+  @override
+  String yNeutralWin7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Voittiko toinen vai hävisikö toinen?';
+  }
+
+  @override
+  String yNeutralWin8(String nation, String opponent, String score) {
+    return 'Jytky: $nation $score $opponent. Odottakaa runsaasti ylireagointia.';
+  }
+
+  @override
+  String yScorerHero0(String name, String opponent) {
+    return '$name. Vastustaja: $opponent. Lapsia nimetään hänen mukaansa.';
+  }
+
+  @override
+  String yScorerHero1(String name, String opponent) {
+    return 'Patsas pelaajalle $name. Tänä iltana hän oli kaikki. Vastustaja: $opponent.';
+  }
+
+  @override
+  String yScorerHero2(String name, String opponent) {
+    return '$name, mikä pelaaja. Muistakaa tämä $opponent-ottelu.';
+  }
+
+  @override
+  String yScorerHero3(String name, String opponent) {
+    return '$name ratkaisi $opponent-ottelun. Ottelun pelaaja, ei keskustelua.';
+  }
+
+  @override
+  String yScorerHero4(String name, String opponent) {
+    return '$opponent-ottelu oli yhden miehen ilta: $name.';
+  }
+
+  @override
+  String yScorerHero5(String name, String opponent) {
+    return '$name astui esiin, kun sitä tarvittiin. Vastustaja: $opponent.';
+  }
+
+  @override
+  String yScorerHero6(String name, String opponent) {
+    return '$name oli loistava $opponent-ottelussa. Nyt joka viikko.';
+  }
+
+  @override
+  String yScorerHero7(String name, String opponent) {
+    return '$name pelasti joukkueen $opponent-ottelussa. Muut auttoivat vähän.';
+  }
+
+  @override
+  String yScorerHero8(String name, String opponent) {
+    return 'Ilman pelaajaa $name $opponent-ottelu olisi ollut aivan toinen ilta.';
+  }
+
+  @override
+  String yLostShock0(String opponent, String score) {
+    return '$opponent-ottelu, $score. Vahinko. Sattuu kaikille kerran.';
+  }
+
+  @override
+  String yLostShock1(String opponent, String score) {
+    return 'Tappio $score, vastustajana $opponent. Ravistetaan pois, kampanja ei ole ohi.';
+  }
+
+  @override
+  String yLostShock2(String opponent, String score) {
+    return '$opponent $score. Kipeää, mutta yksi tulos ei määrittele tätä joukkuetta.';
+  }
+
+  @override
+  String yLostShock3(String opponent, String score) {
+    return '$opponent-ottelu, $score. Huono päivä töissä. Eteenpäin.';
+  }
+
+  @override
+  String yLostShock4(String opponent, String score) {
+    return 'Tappio, vastustajana $opponent, $score. Kukaan ei nähnyt tätä tulevan.';
+  }
+
+  @override
+  String yLostShock5(String opponent, String score) {
+    return '$opponent $score. Yksi niistä illoista, joissa ei ole mitään järkeä.';
+  }
+
+  @override
+  String yLostShock6(String opponent, String score) {
+    return '$opponent-ottelu, $score. Tappio, joka muistetaan.';
+  }
+
+  @override
+  String yLostShock7(String opponent, String score) {
+    return 'Hävisimme, vastustajana $opponent, $score. Yllätys, katsoi miltä kannalta tahansa.';
+  }
+
+  @override
+  String yLostShock8(String opponent, String score) {
+    return '$opponent-ottelu, $score. Tällaiselle vastustajalle! Kestämätöntä.';
+  }
+
+  @override
+  String yLostShock9(String opponent, String score) {
+    return 'Tappio $score, vastustajana $opponent. Haluan selityksiä, en tekosyitä.';
+  }
+
+  @override
+  String yLostShock10(String opponent, String score) {
+    return '$opponent $score. Kansallinen häpeä, eikä se ole kielikuva.';
+  }
+
+  @override
+  String yLostShock11(String opponent, String score) {
+    return '$opponent-ottelu, $score. Miten kukaan ylhäällä istuu yhä paikallaan?';
+  }
+
+  @override
+  String yLostRout0(String opponent, String score) {
+    return '$opponent-ottelu, $score. Huippujoukkue. Opitaan tästä.';
+  }
+
+  @override
+  String yLostRout1(String opponent, String score) {
+    return 'Vastustaja ($opponent) oli ylivoimainen, $score. Ei häpeä hävitä parhaille.';
+  }
+
+  @override
+  String yLostRout2(String opponent, String score) {
+    return '$opponent $score. Oppitunti, ja oppitunneista kasvetaan.';
+  }
+
+  @override
+  String yLostRout3(String opponent, String score) {
+    return '$opponent-ottelu, $score. Kipeää, mutta he ovat tason ylempänä.';
+  }
+
+  @override
+  String yLostRout4(String opponent, String score) {
+    return 'Voitto vastustajalle, $opponent, $score. Ero on todellinen, ja nyt kaikki näkivät sen.';
+  }
+
+  @override
+  String yLostRout5(String opponent, String score) {
+    return '$opponent-ottelu, $score. Selkäsauna, ei sen kummempaa.';
+  }
+
+  @override
+  String yLostRout6(String opponent, String score) {
+    return '$opponent $score. Parempi joukkue, ja tulos kertoo sen.';
+  }
+
+  @override
+  String yLostRout7(String opponent, String score) {
+    return 'Tappio $score, vastustajana $opponent. Ei häpeä, mutta ei otteluakaan.';
+  }
+
+  @override
+  String yLostRout8(String opponent, String score) {
+    return '$opponent-ottelu, $score. Parempi vastustaja tai ei, noin ei hävitä.';
+  }
+
+  @override
+  String yLostRout9(String opponent, String score) {
+    return '$opponent $score. Yritimmekö edes kilpailla?';
+  }
+
+  @override
+  String yLostRout10(String opponent, String score) {
+    return '$score. $opponent-ottelu. Kuin lampaat teurastamolle.';
+  }
+
+  @override
+  String yLostRout11(String opponent, String score) {
+    return 'Tappio $score, vastustajana $opponent, eikä kukaan näyttänyt välittävän.';
+  }
+
+  @override
+  String yLostShootout0(String opponent) {
+    return 'Ulos rangaistuspotkuilla, vastustajana $opponent. He antoivat kaikkensa. Ylpeä heistä.';
+  }
+
+  @override
+  String yLostShootout1(String opponent) {
+    return 'Rangaistuspotkut, vastustajana $opponent. Julmin tapa pudota. Pää pystyyn.';
+  }
+
+  @override
+  String yLostShootout2(String opponent) {
+    return 'Rangaistuspotkukilpailu hävitty, vastustajana $opponent. Kukaan ei ansainnut sitä.';
+  }
+
+  @override
+  String yLostShootout3(String opponent) {
+    return 'Ulos rangaistuspotkuilla, vastustajana $opponent. Pilkku ratkaisi.';
+  }
+
+  @override
+  String yLostShootout4(String opponent) {
+    return 'Jatkoon rangaistuspotkuilla: $opponent. Meidän turnauksemme päättyy siihen.';
+  }
+
+  @override
+  String yLostShootout5(String opponent) {
+    return 'Rangaistuspotkut hävitty, vastustajana $opponent. Taas pilkku.';
+  }
+
+  @override
+  String yLostShootout6(String opponent) {
+    return 'Ulos rangaistuspotkuilla, vastustajana $opponent. Harjoittelemmeko niitä koskaan?';
+  }
+
+  @override
+  String yLostShootout7(String opponent) {
+    return 'Tappio rangaistuspotkuilla, vastustajana $opponent. Peli olisi pitänyt ratkaista paljon aiemmin.';
+  }
+
+  @override
+  String yLostShootout8(String opponent) {
+    return 'Rangaistuspotkut, vastustajana $opponent, ja hävisimme. Tietenkin.';
+  }
+
+  @override
+  String yKnockoutLoss0(String opponent, String score) {
+    return 'ULOS. $opponent-ottelu, $score. Matka, josta voi olla ylpeä, päättyy tähän.';
+  }
+
+  @override
+  String yKnockoutLoss1(String opponent, String score) {
+    return 'Pudotettu, vastustajana $opponent, $score. Kiitos muistoista.';
+  }
+
+  @override
+  String yKnockoutLoss2(String opponent, String score) {
+    return '$opponent-ottelu, $score. Matka on ohi, mutta mikä matka.';
+  }
+
+  @override
+  String yKnockoutLoss3(String opponent, String score) {
+    return 'PUDOTETTU: $opponent-ottelu, $score. Pää pystyyn.';
+  }
+
+  @override
+  String yKnockoutLoss4(String opponent, String score) {
+    return 'LOPPU: $opponent-ottelu, $score.';
+  }
+
+  @override
+  String yKnockoutLoss5(String opponent, String score) {
+    return 'Ulos: $opponent-ottelu, $score.';
+  }
+
+  @override
+  String yKnockoutLoss6(String opponent, String score) {
+    return 'Jatkoon: $opponent, $score. Meidän turnauksemme on ohi.';
+  }
+
+  @override
+  String yKnockoutLoss7(String opponent, String score) {
+    return 'Pudotettu, vastustajana $opponent, $score. Ruumiinavaus alkaa nyt.';
+  }
+
+  @override
+  String yKnockoutLoss8(String opponent, String score) {
+    return 'ULOS. $opponent-ottelu, $score. Eri turnaus, sama loppu.';
+  }
+
+  @override
+  String yKnockoutLoss9(String opponent, String score) {
+    return '$opponent-ottelu, $score, ja kotiin. Kukaan ei yllättynyt.';
+  }
+
+  @override
+  String yKnockoutLoss10(String opponent, String score) {
+    return 'Pudotettu, vastustajana $opponent, $score. Tekosyitä luvassa aamuun mennessä.';
+  }
+
+  @override
+  String yKnockoutLoss11(String opponent, String score) {
+    return '$opponent $score. Ulos, eikä se koskaan näyttänyt päättyvän toisin.';
+  }
+
+  @override
+  String yAwayFansGloat0(String nation, String score) {
+    return '$nation-ottelu, $score. Kunnioitusta, he palaavat vahvempina.';
+  }
+
+  @override
+  String yAwayFansGloat1(String nation, String score) {
+    return 'Hyvä voitto meille, $score. Huono päivä: $nation. Myötätuntoni faneille.';
+  }
+
+  @override
+  String yAwayFansGloat2(String nation, String score) {
+    return '$score. Huono ilta: $nation. Me tartuimme tilaisuuteen. Sellaista se on.';
+  }
+
+  @override
+  String yAwayFansGloat3(String nation, String score) {
+    return '$nation-ottelu, $score! Kuka näki tämän tulevan? Eivät he.';
+  }
+
+  @override
+  String yAwayFansGloat4(String nation, String score) {
+    return 'Voitto $score, vastustajana $nation. Käykö joku katsomassa, miten heidän faninsa voivat?';
+  }
+
+  @override
+  String yAwayFansGloat5(String nation, String score) {
+    return '$nation $score. Tämä menee valokuva-albumiin.';
+  }
+
+  @override
+  String yAwayFansGloat6(String nation, String score) {
+    return '$nation-ottelu, $score. Ja he luulevat olevansa suuri joukkue.';
+  }
+
+  @override
+  String yAwayFansGloat7(String nation, String score) {
+    return 'Kuvittele häviäväsi meille $score. Kysy, $nation tietää nyt.';
+  }
+
+  @override
+  String yAwayFansGloat8(String nation, String score) {
+    return '$nation, $score. Hyvää kotilentoa.';
+  }
+
+  @override
+  String yNeutralLoss0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Suuri ilta toiselle, raskas toiselle.';
+  }
+
+  @override
+  String yNeutralLoss1(String nation, String opponent, String score) {
+    return 'Voimia $nation-faneille tuloksen $score jälkeen. Vastustaja: $opponent. He nousevat vielä.';
+  }
+
+  @override
+  String yNeutralLoss2(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Jokaisella suurella joukkueella on tällainen ilta.';
+  }
+
+  @override
+  String yNeutralLoss3(String nation, String opponent, String score) {
+    return 'Kierroksen jytky: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralLoss4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Kukaan ei nähnyt tätä tulevan.';
+  }
+
+  @override
+  String yNeutralLoss5(String nation, String opponent, String score) {
+    return 'Päivän tulos: $nation $score $opponent. Nyt odottavat kysymykset.';
+  }
+
+  @override
+  String yNeutralLoss6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Ei yksittäistapaus, jos on seurannut.';
+  }
+
+  @override
+  String yNeutralLoss7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Jollakulla siellä on paljon selitettävää.';
+  }
+
+  @override
+  String yNeutralLoss8(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Iso nimi, pieni esitys.';
+  }
+
+  @override
+  String yDownGap0(String opponent, String gap) {
+    return '$opponent: $gap sijaa takanamme. Sattuu. Eteenpäin.';
+  }
+
+  @override
+  String yDownGap1(String gap) {
+    return 'Rankingero: $gap meidän hyväksemme. Jalkapallo ei lue rankingeja.';
+  }
+
+  @override
+  String yDownGap2(String opponent, String gap) {
+    return '$gap sijaa meidän ja vastustajan ($opponent) välillä paperilla. Ei kentällä tänä iltana.';
+  }
+
+  @override
+  String yDownGap3(String opponent, String gap) {
+    return 'Rankingero ennen avausta: $gap meidän hyväksemme. Tappio silti, vastustajana $opponent.';
+  }
+
+  @override
+  String yDownGap4(String opponent, String gap) {
+    return 'Maailmanrankingissa $opponent oli $gap sijaa takanamme. Tulos: tappio.';
+  }
+
+  @override
+  String yDownGap5(String opponent, String gap) {
+    return 'Yllätysindeksi: $gap rankingsijaa, väärään suuntaan. Vastustaja: $opponent.';
+  }
+
+  @override
+  String yDownGap6(String opponent, String gap) {
+    return '$gap sijaa edellä rankingissa, vastustajana $opponent. Tappio. Selittäkää se.';
+  }
+
+  @override
+  String yDownGap7(String gap) {
+    return 'Tappio joukkueelle, joka on $gap sijaa takanamme. Antakaa luvun upota.';
+  }
+
+  @override
+  String yDownGap8(String opponent, String gap) {
+    return 'Rankingero: $gap. Tappio, vastustajana $opponent. Jonkun kannattaa alkaa laskea päiviä.';
+  }
+
+  @override
+  String yDrewHeroic0(String opponent, String score) {
+    return '$opponent-ottelu, $score! Tasapeli, joka tuntuu voitolta.';
+  }
+
+  @override
+  String yDrewHeroic1(String opponent, String score) {
+    return '$opponent-ottelu, $score. Ylpeä jokaisesta.';
+  }
+
+  @override
+  String yDrewHeroic2(String opponent, String score) {
+    return '$opponent $score. He olivat suosikki, ja pysyimme mukana.';
+  }
+
+  @override
+  String yDrewHeroic3(String opponent, String score) {
+    return '$opponent-ottelu, $score. Piste verellä ja hiellä.';
+  }
+
+  @override
+  String yDrewHeroic4(String opponent, String score) {
+    return '$opponent-ottelu, $score. Todella hyvä piste.';
+  }
+
+  @override
+  String yDrewHeroic5(String opponent, String score) {
+    return 'Tasapeli $score, vastustajana $opponent. Harva odotti mitään.';
+  }
+
+  @override
+  String yDrewHeroic6(String opponent, String score) {
+    return '$opponent pysäytetty, $score. Tulos, jonka päälle rakentaa.';
+  }
+
+  @override
+  String yDrewHeroic7(String opponent, String score) {
+    return '$opponent-ottelu, $score. Piste, jota kukaan ei meille antanut.';
+  }
+
+  @override
+  String yDrewHeroic8(String opponent, String score) {
+    return '$opponent-ottelu, $score. Hyvä piste, mutta tasapeleillä ei voiteta mitään.';
+  }
+
+  @override
+  String yDrewHeroic9(String opponent, String score) {
+    return '$opponent-ottelu, $score. Kiva. Meillä ei ollut yhtään kunnon laukausta.';
+  }
+
+  @override
+  String yDrewHeroic10(String opponent, String score) {
+    return '$opponent $score. Yksi piste, ja kaikki käyttäytyvät kuin olisimme voittaneet pokaalin.';
+  }
+
+  @override
+  String yDrewHeroic11(String opponent, String score) {
+    return '$opponent-ottelu, $score. Bussi maalin eteen ja tuuria.';
+  }
+
+  @override
+  String yDrewShame0(String opponent, String score) {
+    return '$opponent-ottelu, $score. Turhauttavaa, mutta yhä tappioton.';
+  }
+
+  @override
+  String yDrewShame1(String opponent, String score) {
+    return 'Vain $score, vastustajana $opponent. Huono päivä. Sattuu.';
+  }
+
+  @override
+  String yDrewShame2(String opponent, String score) {
+    return '$opponent $score. Ei tarpeeksi hyvä, ja pelaajat tietävät sen.';
+  }
+
+  @override
+  String yDrewShame3(String opponent, String score) {
+    return '$opponent-ottelu, $score. Kaksi pistettä menetetty, ei muuta.';
+  }
+
+  @override
+  String yDrewShame4(String opponent, String score) {
+    return '$opponent-ottelu, $score. Kaksi pistettä heitetty hukkaan.';
+  }
+
+  @override
+  String yDrewShame5(String opponent, String score) {
+    return 'Vain $score, vastustajana $opponent. Huono tulos, miten sen paketoikin.';
+  }
+
+  @override
+  String yDrewShame6(String opponent, String score) {
+    return '$opponent $score. Tasapeli, joka tuntuu tappiolta.';
+  }
+
+  @override
+  String yDrewShame7(String opponent, String score) {
+    return '$opponent-ottelu, $score. Tällaiset ottelut pitää voittaa selvästi.';
+  }
+
+  @override
+  String yDrewShame8(String opponent, String score) {
+    return '$opponent-ottelu, $score. Noloa.';
+  }
+
+  @override
+  String yDrewShame9(String opponent, String score) {
+    return 'Vain tasapeli, vastustajana $opponent, $score. Kuka tästä vastaa?';
+  }
+
+  @override
+  String yDrewShame10(String opponent, String score) {
+    return '$opponent $score. Jos emme voita heitä, kenet sitten voitamme?';
+  }
+
+  @override
+  String yDrewShame11(String opponent, String score) {
+    return '$opponent-ottelu, $score. Heidän faninsa juhlivat tasapeliä meitä vastaan. Miettikää sitä.';
   }
 
   @override
@@ -5104,6 +6316,11 @@ class AppLocalizationsFi extends AppLocalizations {
       'Kaksi MM-paikkaa ratkaistaan pudotuspelisarjassa parhaiden karsinnoissa vaille paikkaa jääneiden kesken.';
 
   @override
+  String tourCupPlayoffNoEntrants(String confederation) {
+    return '$confederation: ei jatkokarsintaa. Kaikki paikat ratkeavat karsintalohkoissa.';
+  }
+
+  @override
   String get tourCupQualDrawSoon =>
       'Lohkot arvotaan. Katso karsinta-arvonta etusivulta paljastaaksesi ne.';
 
@@ -5269,6 +6486,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get objectiveNcSurvive => 'Vältä putoaminen';
 
   @override
+  String get objectiveNcOffTheBottom => 'Vältä lohkon viimeinen sija';
+
+  @override
   String get finishNcChampions => 'Nations Cupin voittajat';
 
   @override
@@ -5282,6 +6502,9 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get finishNcStayedUp => 'Säilytti paikkansa';
+
+  @override
+  String get finishNcClearOfBottom => 'Ei lohkon viimeinen';
 
   @override
   String get finishNcBottom => 'Lohkon viimeinen';
@@ -6622,7 +7845,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String newsNatzStarTitle(String name, String nation) {
-    return '⭐ $name vaihtaisi maata: $nation!';
+    return '$name vaihtaisi maata: $nation!';
   }
 
   @override
@@ -7266,14 +8489,18 @@ class AppLocalizationsFi extends AppLocalizations {
       'Varmuuskopion kirjoittaminen epäonnistui.';
 
   @override
-  String get backupTitle => 'TALLENNUKSET';
+  String get backupTitle => 'VARMUUSKOPIOT';
 
   @override
   String get backupBlurb =>
-      'Kaikki tallennukset ovat yhdessä tiedostossa tässä puhelimessa, eikä mikään varmuuskopioi sitä itsestään. Vie kopio ja säilytä se puhelimen ulkopuolella, Tiedostoissa tai iCloud Drivessa, jotta kadonnut puhelin tai poistettu sovellus ei vie uraasi.';
+      'Kaikki tallennukset ovat yhdessä tiedostossa tässä puhelimessa, eikä mikään varmuuskopioi niitä itsestään, ellet laita automaattista varmuuskopiota päälle alta. Pidä kopio pilvessä, jottei kadonnut puhelin tai poistettu sovellus maksa sinulle uraa.';
 
   @override
-  String get backupExport => 'VIE VARMUUSKOPIO';
+  String get backupBlurbNoAuto =>
+      'Kaikki tallennukset ovat yhdessä tiedostossa tässä puhelimessa, eikä mikään varmuuskopioi niitä itsestään. Pidä kopio pilvessä, jottei kadonnut puhelin tai poistettu sovellus maksa sinulle uraa.';
+
+  @override
+  String get backupExport => 'VARMUUSKOPIOI PILVEEN';
 
   @override
   String get backupExportSubject => 'FNM-tallennukset';
@@ -9650,8 +10877,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get injuryCoverTitle => 'KORVAAJA';
 
   @override
-  String injuryCoverBanner(String player) {
-    return '$player on loukkaantunut. Kutsu kuka tahansa joukkueen ulkopuolinen missä tahansa pelipaikassa tai pidä hänet ja jatka.';
+  String injuryCoverBanner(String player, String position) {
+    return '$player ($position) on loukkaantunut. Kutsu kuka tahansa joukkueen ulkopuolinen missä tahansa pelipaikassa tai pidä hänet ja jatka.';
   }
 
   @override
@@ -9900,14 +11127,14 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignGuineasTwist =>
-      'Päiväntasaajan Guinea, Afrikan Guineoista alimmalle sijoitettu, kahden kauden ajan';
+      'Päiväntasaajan Guinea, Afrikan Guineoista pienin, kahden kauden ajan';
 
   @override
   String get campaignGuineasGoal => 'Voita Guinea ja Guinea-Bissau';
 
   @override
   String get campaignGuineasIntro =>
-      'Kolme Afrikan maata kantaa nimeä Guinea, ja Päiväntasaajan Guinea on niistä alimmalla sijalla. Sinulla on kaksi kautta aikaa voittaa Guinea ja Guinea-Bissau vähintään kerran kumpikin ja katsoa sitten, kuinka pitkälle pääset Afrikan mestaruuskilpailuissa. Papua-Uusi-Guinea, neljäs Guinea, on jo varattu harjoitusotteluun.';
+      'Kolme Afrikan maata kantaa nimeä Guinea, ja Päiväntasaajan Guinea on niistä pienin. Sinulla on kaksi kautta aikaa voittaa Guinea ja Guinea-Bissau vähintään kerran kumpikin ja katsoa sitten, kuinka pitkälle pääset Afrikan mestaruuskilpailuissa. Papua-Uusi-Guinea, neljäs Guinea, on jo varattu harjoitusotteluun.';
 
   @override
   String get campaignStars1Guineas => 'Voita Guinea ja Guinea-Bissau';
@@ -9943,6 +11170,29 @@ class AppLocalizationsFi extends AppLocalizations {
   String get campaignStars3YoungFinns => 'Voita MM-kisat';
 
   @override
+  String get campaignGreenlandTitle => 'Grönlannin vuosisata';
+
+  @override
+  String get campaignGreenlandTwist =>
+      'Grönlanti ottaa San Marinon paikan Euroopassa sadaksi vuodeksi';
+
+  @override
+  String get campaignGreenlandGoal => 'Selviä EM-kisoihin';
+
+  @override
+  String get campaignGreenlandIntro =>
+      'Grönlanti ei ole koskaan pelannut virallista maaottelua. Tässä maailmassa se on ottanut San Marinon paikan Euroopassa ja aloittaa maailmanrankingin pohjalta: amatööripelaajia, tekonurmikenttiä ja lumisateiden väliin puristettu pelikausi. Sinulla on sata vuotta, kaksikymmentäviisi kautta, aikaa selviytyä EM-kisoihin, sitten MM-kisoihin ja, jos uskallat unelmoida, voittaa toinen niistä.';
+
+  @override
+  String get campaignStars1Greenland => 'Selviä EM-kisoihin';
+
+  @override
+  String get campaignStars2Greenland => 'Selviä MM-kisoihin';
+
+  @override
+  String get campaignStars3Greenland => 'Voita EM-kisat tai MM-kisat';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -9955,4 +11205,1622 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get campaignCupOpen => 'Ratkaisematta';
+
+  @override
+  String newsYouthTitle1(String name, String level) {
+    return '$name loistaa $level-maajoukkueessa';
+  }
+
+  @override
+  String newsYouthTitle2(String name, String level) {
+    return 'Akatemiaraportti: $name herättää huomiota';
+  }
+
+  @override
+  String newsYouthTitle3(String name, String level) {
+    return '$level-maajoukkueen tähti: $name';
+  }
+
+  @override
+  String newsYouthGoals1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kertaa',
+      one: 'kerran',
+    );
+    return '$name osui $_temp0 $level-maajoukkueessa vastustajaa $opponent vastaan viimeisimmällä maaottelutauolla.';
+  }
+
+  @override
+  String newsYouthGoals2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count maalia',
+      one: 'maalin',
+    );
+    return '$name teki $_temp0, kun $level-maajoukkue kohtasi tällä tauolla vastustajan $opponent.';
+  }
+
+  @override
+  String newsYouthGoals3(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count maalin',
+      one: 'yhden maalin',
+    );
+    return '$level-maajoukkue pelasi vastustajaa $opponent vastaan, ja $name poistui kentältä $_temp0 miehenä.';
+  }
+
+  @override
+  String newsYouthAssists1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count maalia',
+      one: 'yhden maalin',
+    );
+    return '$name syötti $level-maajoukkueessa $_temp0 vastustajaa $opponent vastaan ja johti peliä alusta loppuun.';
+  }
+
+  @override
+  String newsYouthAssists2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count syöttöpistettä',
+      one: 'yksi syöttöpiste',
+    );
+    return '$level-maajoukkue kohtasi tällä tauolla vastustajan $opponent, ja lankoja veti $name: $_temp0 ja esitys, josta valmennus puhuu yhä.';
+  }
+
+  @override
+  String newsYouthCleanSheet1(String name, String level, String opponent) {
+    return '$name oli erinomainen, kun $level-maajoukkue pelasi nollapelin vastustajaa $opponent vastaan.';
+  }
+
+  @override
+  String newsYouthCleanSheet2(String name, String level, String opponent) {
+    return 'Nollapeli $level-maajoukkueelle vastustajaa $opponent vastaan, ja suurin syy siihen on $name.';
+  }
+
+  @override
+  String newsYouthDisplay1(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$name teki vaikutuksen $level-maajoukkueessa vastustajaa $opponent vastaan, ja valmennus antoi esitykselle arvosanan $mark/10.';
+  }
+
+  @override
+  String newsYouthDisplay2(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$level-maajoukkue pelasi tällä tauolla vastustajaa $opponent vastaan, ja valmentajat nostivat esiin yhden nimen, $name: $mark/10, joukkueen paras arvosana.';
+  }
+
+  @override
+  String get newsYouthDevReady1 =>
+      'Tällä vireellä hän on jo tarpeeksi hyvä harkittavaksi A-maajoukkueeseen.';
+
+  @override
+  String get newsYouthDevReady2 =>
+      'Valmennus uskoo, että hän on valmis aikuisten jalkapalloon jo nyt. Päätös on sinun.';
+
+  @override
+  String get newsYouthDevClose1 =>
+      'Hän kehittyy hyvin ja on lähellä läpimurtoa A-maajoukkueeseen.';
+
+  @override
+  String get newsYouthDevClose2 =>
+      'A-maajoukkueeseen ei ole enää pitkä matka, ja yksi hyvä kausi lisää voisi riittää.';
+
+  @override
+  String get newsYouthDevGrowing1 =>
+      'Hän kehittyy mukavasti, vaikka A-maajoukkue on vielä askeleen tai kahden päässä.';
+
+  @override
+  String get newsYouthDevGrowing2 =>
+      'Työtä on vielä ennen kuin hänestä tulee A-maajoukkuepelaaja, mutta kaikki osoittaa oikeaan suuntaan.';
+
+  @override
+  String get newsYouthDevRaw1 =>
+      'Hän on vielä raakile ja muutaman vuoden päässä A-maajoukkueesta, mutta lahjakkuus näkyy selvästi.';
+
+  @override
+  String get newsYouthDevRaw2 =>
+      'On vielä aikaista, ja akatemian valmentajat pyytävät kärsivällisyyttä otsikoiden sijaan.';
+
+  @override
+  String get newsYouthStrengthGkPhysical =>
+      'Ulottuvuus ja rangaistusalueen hallinta erottavat hänet muista.';
+
+  @override
+  String get newsYouthStrengthGkTechnical =>
+      'Hänen kiinniottonsa ja avauksensa ovat parhaat, jotka akatemia on nähnyt vuosiin.';
+
+  @override
+  String get newsYouthStrengthGkStamina =>
+      'Hänen keskittymisensä ei herpaannu koskaan: yhdeksännelläkymmenennellä minuutilla hän on yhtä terävä kuin ensimmäisellä.';
+
+  @override
+  String get newsYouthStrengthDefPhysical =>
+      'Nopeus ja ilmapelivoima ovat hänen pelinsä avain.';
+
+  @override
+  String get newsYouthStrengthDefTechnical =>
+      'Hän lukee peliä ikäistään paljon paremmin ja on rauhallinen pallon kanssa.';
+
+  @override
+  String get newsYouthStrengthDefStamina =>
+      'Hän ei koskaan herpaannu ja spurttaa vielä viimeiselläkin minuutilla takaisin puolustukseen.';
+
+  @override
+  String get newsYouthStrengthMidPhysical =>
+      'Hän voittaa pallot todellisella voimalla ja vie niitä heti eteenpäin.';
+
+  @override
+  String get newsYouthStrengthMidTechnical =>
+      'Pelinäkemys ja monipuolinen syöttövalikoima ovat hänen pelinsä avain.';
+
+  @override
+  String get newsYouthStrengthMidStamina =>
+      'Hänen moottorinsa on huikea: hän kattaa jokaisen ruohonkorren.';
+
+  @override
+  String get newsYouthStrengthFwdPhysical =>
+      'Nopeus syvyyteen ja voima ilmassa tekevät hänestä riesan jokaiselle puolustukselle.';
+
+  @override
+  String get newsYouthStrengthFwdTechnical =>
+      'Viimeistely ja liikkuminen boksissa ovat hänen pelinsä avain.';
+
+  @override
+  String get newsYouthStrengthFwdStamina =>
+      'Hän prässää edestä koko ottelun eikä anna puolustajille hetkenkään rauhaa.';
+
+  @override
+  String pressMomentBigWinWarm3(String opponent) {
+    return 'Fanit laulavat tästä ottelusta vastustajaa $opponent vastaan vielä pitkään. Mitä sanoitte pelaajille loppuvihellyksen jälkeen?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral3(String opponent) {
+    return 'Se oli vahva näyttö vastustajaa $opponent vastaan. Kuinka paljon siitä syntyi harjoituskentällä?';
+  }
+
+  @override
+  String pressMomentBigWinHostile3(String opponent) {
+    return 'Kunnia tuloksesta vastustajaa $opponent vastaan, mutta tällaisia iltoja on nähty ennenkin. Mikä on tällä kertaa toisin?';
+  }
+
+  @override
+  String pressMomentBigLossWarm3(String opponent) {
+    return 'Jokaisella on huono ilta, ja tämä oli sellainen vastustajaa $opponent vastaan. Kuinka nopeasti saatte sen taaksenne?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral3(String opponent) {
+    return '$opponent oli parempi joka osa-alueella. Mistä aloitatte korjaamisen?';
+  }
+
+  @override
+  String pressMomentBigLossHostile3(String opponent) {
+    return 'Kannattajat lähtivät jo ennen loppua ottelusta vastustajaa $opponent vastaan. Voitteko syyttää heitä?';
+  }
+
+  @override
+  String pressMomentCrisisWarm3(String opponent) {
+    return 'Jakso on ollut raskas, eikä $opponent helpottanut sitä yhtään. Mikä pitää teidät pystyssä?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral3(String opponent) {
+    return 'Taas ottelu ilman voittoa, tällä kertaa vastustajaa $opponent vastaan. Kuinka kauan tätä voi jatkua ennen kuin hallitus puuttuu asiaan?';
+  }
+
+  @override
+  String pressMomentCrisisHostile3(String opponent) {
+    return 'Nyt vielä $opponent. Onko suunnitelmassanne mitään jäljellä, vai onko aika antaa tilaa jollekulle muulle?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers5 =>
+      'Mitä ikinä kirjoitattekin, kirjoittakaa se pelaajista. He ovat ansainneet sen.';
+
+  @override
+  String get pressReplyCreditPlayers6 =>
+      'Minulla on ryhmä, joka menisi tulen läpi toistensa puolesta. Se ei ole vähän.';
+
+  @override
+  String get pressReplyTakeResponsibility5 =>
+      'Minä teen päätökset, joten kritiikki kuuluu minulle. Sellaista tämä työ on.';
+
+  @override
+  String get pressReplyTakeResponsibility6 =>
+      'Katsokaa ensin päävalmentajaa. Tein virheitä, ja korjaan ne.';
+
+  @override
+  String get pressReplyDemandMore5 =>
+      'Hyvä ei riitä täällä. Sanoin sen heille päin naamaa.';
+
+  @override
+  String get pressReplyDemandMore6 =>
+      'Kenenkään paikka siinä pukukopissa ei ole taattu. Nyt he tietävät sen.';
+
+  @override
+  String get pressReplyDeflect5 =>
+      'Voitte kysyä sen kolmella eri tavalla. Vastaus pysyy samana.';
+
+  @override
+  String get pressReplyDeflect6 =>
+      'Ajatukseni pidän pelaajia varten. Ymmärrätte varmasti.';
+
+  @override
+  String yWinRoutine12(String opponent, String score) {
+    return '$opponent $score. Rauhallista, hallittua, aikuista jalkapalloa. Tätä on ilo katsoa.';
+  }
+
+  @override
+  String yWinRoutine13(String opponent, String score) {
+    return '$opponent kaatui $score hikoilematta. Tämä joukkue on tulossa hyväksi tylsyydessä, ja tylsyys voittaa mestaruuksia.';
+  }
+
+  @override
+  String yWinRoutine14(String opponent, String score) {
+    return '$opponent $score. Kolme pistettä, ei draamaa, takaisin töihin.';
+  }
+
+  @override
+  String yWinRoutine15(String opponent, String score) {
+    return 'Rutiininomainen $score, vastustajana $opponent. Kukaan ei muista sitä, eikä tarvitsekaan.';
+  }
+
+  @override
+  String yWinRoutine16(String opponent, String score) {
+    return '$opponent $score, ja silti olen jotenkin huolissani.';
+  }
+
+  @override
+  String yWinRoutine17(String opponent, String score) {
+    return '$opponent kaatui $score. Oikeaa joukkuetta vastaan tuollaisesta esityksestä rangaistaan.';
+  }
+
+  @override
+  String yWinTight12(String opponent, String score) {
+    return '$opponent $score. Purtiin hammasta, kärsittiin, voitettiin. Tuo on joukkue.';
+  }
+
+  @override
+  String yWinTight13(String opponent, String score) {
+    return '$opponent kaatui $score pelkillä hermoilla. Otan mieluummin joukkueen, joka kieltäytyy häviämästä.';
+  }
+
+  @override
+  String yWinTight14(String opponent, String score) {
+    return '$opponent $score. Viimeiseen sekuntiin asti, mutta pisteet ovat meidän.';
+  }
+
+  @override
+  String yWinTight15(String opponent, String score) {
+    return 'Niukka $score, vastustajana $opponent. Eroa ei paljon ollut, ja sellaista jalkapallo on.';
+  }
+
+  @override
+  String yWinTight16(String opponent, String score) {
+    return '$opponent $score. Yksi onnekas pomppu toiseen suuntaan, ja keskustelisimme ihan muusta.';
+  }
+
+  @override
+  String yWinTight17(String opponent, String score) {
+    return 'Roikuimme hädin tuskin mukana, vastustajana $opponent, $score. Kukaan ei saa kutsua tuota esitykseksi.';
+  }
+
+  @override
+  String yDrew12(String opponent, String score) {
+    return '$opponent $score. Ei tappio, ja joskus juuri se on tehtävä.';
+  }
+
+  @override
+  String yDrew13(String opponent, String score) {
+    return 'Kovalla työllä ansaittu piste vastustajaa $opponent vastaan, $score. Pidin taistelutahdosta.';
+  }
+
+  @override
+  String yDrew14(String opponent, String score) {
+    return '$opponent $score. Pisteet jaettiin, kuten vanhat selostajat sanoivat.';
+  }
+
+  @override
+  String yDrew15(String opponent, String score) {
+    return '$opponent $score. Kumpikaan ei tehnyt tarpeeksi ansaitakseen enempää.';
+  }
+
+  @override
+  String yDrew16(String opponent, String score) {
+    return '$opponent $score. Sellainen tasapeli, joka tuntuu kotimatkan bussissa tappiolta.';
+  }
+
+  @override
+  String yDrew17(String opponent, String score) {
+    return 'Tasapeli $score, vastustajana $opponent. Puhumme koko ajan kehityksestä ja teemme koko ajan tätä.';
+  }
+
+  @override
+  String yLost12(String opponent, String score) {
+    return '$opponent $score. Se sattuu, mutta näin tarpeeksi uskoakseni tähän joukkueeseen.';
+  }
+
+  @override
+  String yLost13(String opponent, String score) {
+    return '$opponent voitti meidät $score, ja he olivat hyviä. Myönnetään se ja jatketaan.';
+  }
+
+  @override
+  String yLost14(String opponent, String score) {
+    return '$opponent $score. Tappio, muutama opetus ja seuraava ottelu pian.';
+  }
+
+  @override
+  String yLost15(String opponent, String score) {
+    return 'Tappio $score, vastustajana $opponent. Vaikea väittää vastaan.';
+  }
+
+  @override
+  String yLost16(String opponent, String score) {
+    return '$opponent $score. Samat virheet kuin viime kerralla, tehtynä samalla itsevarmuudella.';
+  }
+
+  @override
+  String yLost17(String opponent, String score) {
+    return '$opponent voitti meidät $score. Jos kukaan ei joudu tästä vastuuseen, mitä me oikein teemme?';
+  }
+
+  @override
+  String get yReactionShrug12 =>
+      'Minulle käy. Joka ilta ei tarvitse ilotulitusta.';
+
+  @override
+  String get yReactionShrug13 =>
+      'Pisteet ovat pisteitä. Tänä yönä nukun hyvin.';
+
+  @override
+  String get yReactionShrug14 => 'Nähty. Ei huomautettavaa.';
+
+  @override
+  String get yReactionShrug15 => 'Jossain ihan ok:n ja ihan ok:n välissä.';
+
+  @override
+  String get yReactionShrug16 =>
+      'Maksoin striimistä tämän takia. Ei enää ikinä (tulen takaisin).';
+
+  @override
+  String get yReactionShrug17 =>
+      'Yhdeksänkymmentä minuuttia jalkapallon muotoista tyhjää.';
+
+  @override
+  String get yReactionRelief12 => 'Hengitän taas. Ylpeä, että he kestivät.';
+
+  @override
+  String get yReactionRelief13 =>
+      'Juuri tällaiset voitot rakentavat joukkueen. Ruma on kaunista.';
+
+  @override
+  String get yReactionRelief14 => 'Kynnet meni, mutta pisteet eivät.';
+
+  @override
+  String get yReactionRelief15 =>
+      'Loppuvihellys ei ole koskaan kuulostanut näin hyvältä.';
+
+  @override
+  String get yReactionRelief16 =>
+      'Iloinen voitosta, huolissani siitä, miten se tuli.';
+
+  @override
+  String get yReactionRelief17 =>
+      'Selviämme siitä kerta toisensa jälkeen. Jonain päivänä emme selviä.';
+
+  @override
+  String get yReactionFury12 =>
+      'Rakastan tätä joukkuetta, ja juuri siksi tämä sattuu.';
+
+  @override
+  String get yReactionFury13 =>
+      'Huono ilta. Ensi kerralla he ovat meille velkaa, ja he tietävät sen.';
+
+  @override
+  String get yReactionFury14 =>
+      'Suljin seitsemänkymmenen minuutin kohdalla. Olisi pitänyt kuudenkymmenen.';
+
+  @override
+  String get yReactionFury15 => 'Ei taistelua, ei ideoita, ei tekosyitä.';
+
+  @override
+  String get yReactionFury16 =>
+      'Samat ongelmat joka kerta, eikä kukaan korjaa mitään.';
+
+  @override
+  String get yReactionFury17 =>
+      'Jonkun liitossa pitää katsoa tämä uudelleen ja selittää se.';
+
+  @override
+  String get backupShareHint =>
+      'Tekee yhden varmuuskopiotiedoston kaikista tallennuksista. Valitse säilytyspaikaksi Google Drive, iCloud Drive tai Tiedostot.';
+
+  @override
+  String backupLastAt(String date) {
+    return 'Viimeisin varmuuskopio: $date';
+  }
+
+  @override
+  String get backupNever => 'Ei vielä varmuuskopiota';
+
+  @override
+  String get backupRemindersTitle => 'Varmuuskopiomuistutukset';
+
+  @override
+  String get backupRemindersBlurb =>
+      'Viesti saapuneisiin, kun viimeisin varmuuskopio alkaa olla vanha.';
+
+  @override
+  String get backupAutoICloudTitle => 'Automaattinen iCloud-varmuuskopio';
+
+  @override
+  String get backupAutoDriveTitle => 'Automaattinen Google Drive -varmuuskopio';
+
+  @override
+  String get backupAutoBlurb =>
+      'Varmuuskopioi otteluiden jälkeen, syklin lopussa ja kun poistut sovelluksesta. Säilyttää kaksi uusinta.';
+
+  @override
+  String get backupStatusUploading => 'Varmuuskopioidaan.';
+
+  @override
+  String get backupStatusUploaded => 'Varmuuskopioitu.';
+
+  @override
+  String get backupStatusICloudSignedOut =>
+      'iCloud on pois päältä. Kirjaudu iCloudiin ja laita iCloud Drive päälle Asetukset-sovelluksessa.';
+
+  @override
+  String get backupStatusDriveSignedOut =>
+      'Et ole kirjautunut. Kirjaudu Googlella kytkemällä kytkin päälle.';
+
+  @override
+  String get backupStatusNotConfigured =>
+      'Ei vielä käytettävissä tässä sovelluksen versiossa.';
+
+  @override
+  String get backupStatusUnavailable =>
+      'Pilveen ei juuri nyt saada yhteyttä. Uusi yritys myöhemmin.';
+
+  @override
+  String get backupStatusFailed =>
+      'Viimeisin automaattinen varmuuskopio ei onnistunut. Uusi yritys myöhemmin.';
+
+  @override
+  String backupDriveSignedInAs(String email) {
+    return 'Kirjautuneena: $email';
+  }
+
+  @override
+  String get backupDriveSignOut => 'KIRJAUDU ULOS';
+
+  @override
+  String get backupDriveSignInFailed =>
+      'Google-kirjautuminen ei onnistunut. Yritä myöhemmin uudelleen.';
+
+  @override
+  String get backupRestoreICloud => 'PALAUTA ICLOUDISTA';
+
+  @override
+  String get backupRestoreDrive => 'PALAUTA GOOGLE DRIVESTA';
+
+  @override
+  String get backupCrossPlatformHelp =>
+      'Vaihdatko iPhonen ja Androidin välillä? Varmuuskopioi tiedostoon yhdellä puhelimella ja palauta siitä tiedostosta toisella.';
+
+  @override
+  String get backupCloudListBlurb =>
+      'Laitteidesi varmuuskopiot tällä tilillä. Palauta varmuuskopio napauttamalla sitä.';
+
+  @override
+  String get backupCloudListEmpty =>
+      'Varmuuskopioita ei löytynyt vielä. Uuden varmuuskopion saapuminen toiselle laitteelle voi kestää muutaman minuutin.';
+
+  @override
+  String get backupCloudListFailed =>
+      'Varmuuskopioita ei voitu lukea. Tarkista yhteys ja yritä uudelleen.';
+
+  @override
+  String get backupCloudThisDevice => 'Tämä laite';
+
+  @override
+  String backupCloudMore(int count) {
+    return 'Muita tallennuksia: $count';
+  }
+
+  @override
+  String get backupCloudNewer =>
+      'Tehty sovelluksen uudemmalla versiolla. Päivitä ensin.';
+
+  @override
+  String get backupCloudDownloading => 'Haetaan varmuuskopiota.';
+
+  @override
+  String get backupRestoreSafetyNote =>
+      'Ensin puhelimen nykyisistä tallennuksista otetaan kopio talteen tähän puhelimeen.';
+
+  @override
+  String get backupRejectedSafety =>
+      'Nykyisistä tallennuksista ei voitu ottaa kopiota, joten mitään ei korvattu.';
+
+  @override
+  String get newsBackupReminderTitle => 'Varmuuskopion aika';
+
+  @override
+  String get newsBackupReminderBody =>
+      'Tallennuksesi ovat vain tässä puhelimessa. Avaa Asetukset ja napauta Varmuuskopioi pilveen tai laita automaattinen varmuuskopio päälle siellä. Nämä muistutukset voi myös kytkeä pois Asetuksista.';
+
+  @override
+  String get backupSafetyTitle => 'Kopiot ennen palautusta';
+
+  @override
+  String get backupSafetyBlurb =>
+      'Säilytetään tässä puhelimessa siltä varalta, että palautus oli väärä. Kolme uusinta säilytetään.';
+
+  @override
+  String get backupSafetyRestore => 'PALAUTA';
+
+  @override
+  String get backupSafetyShare => 'JAA';
+
+  @override
+  String get backupCloudNoDetails => 'Tiedot ovat vielä tulossa.';
+
+  @override
+  String get tacticsLibraryTitle => 'TAKTIIKKAKIRJASTO';
+
+  @override
+  String get tacticsLibraryBlurb =>
+      'Kirjastosi taktiikat voi ladata mihin tahansa tallennukseen, myös uuteen. Roolit ja vakioiden potkaisijat tallennetaan pelipaikan, ei pelaajan mukaan.';
+
+  @override
+  String get tacticsSaveToLibrary => 'Tallenna kirjastoon';
+
+  @override
+  String get tacticsLoadFromLibrary => 'Lataa kirjastosta';
+
+  @override
+  String get tacticsLibraryEmpty =>
+      'Kirjastosi on tyhjä. Tallenna tähän taktiikka, niin voit ladata sen mihin tahansa tallennukseen.';
+
+  @override
+  String tacticsLibrarySaved(String name) {
+    return '“$name” tallennettu kirjastoon';
+  }
+
+  @override
+  String tacticsLibraryLoaded(String name) {
+    return 'Ladattu “$name”';
+  }
+
+  @override
+  String tacticsLibraryNotFitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count roolia tai vakiopotkaisijaa ei sopinut tähän joukkueeseen.',
+      one: '1 rooli tai vakiopotkaisija ei sopinut tähän joukkueeseen.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tacticsLibraryRename => 'Nimeä uudelleen';
+
+  @override
+  String get tacticsLibraryRenameTitle => 'Nimeä taktiikka uudelleen';
+
+  @override
+  String get tacticsLibraryDelete => 'Poista';
+
+  @override
+  String tacticsLibraryDeleteTitle(String name) {
+    return 'Poistetaanko “$name”?';
+  }
+
+  @override
+  String get tacticsLibraryDeleteBody =>
+      'Se katoaa kirjastosta kaikissa tallennuksissasi.';
+
+  @override
+  String get tacticsLibraryNameTaken =>
+      'Kirjastossasi on jo tämänniminen taktiikka.';
+
+  @override
+  String tacticsLibraryCouldNotLoad(String error) {
+    return 'Kirjastoa ei voitu ladata.\n$error';
+  }
+
+  @override
+  String hostBidHeading(String competition, int year) {
+    return 'Isännyyshaku: $competition $year';
+  }
+
+  @override
+  String get hostBidScreenTitle => 'Isännyyshaku';
+
+  @override
+  String get hostBidBlurb =>
+      'Isäntä arvotaan hakijoiden kesken. Haku antaa nimellesi enemmän painoa: stadionisi tuovat lähtökohdan ja raha kasvattaa mahdollisuutta, joskin jokainen lisämiljoona vaikuttaa hieman vähemmän. Raha on käytetty, voitit tai et.';
+
+  @override
+  String hostBidPrize(String amount) {
+    return 'Jos voitat, isännöit turnauksen, pääset mukaan suoraan ja saat kertaluonteisen $amount tuen seuraavaan budjettiin.';
+  }
+
+  @override
+  String get hostBidChance => 'Mahdollisuus isännyyteen';
+
+  @override
+  String get hostBidBaseLabel => 'Stadionit ja asema';
+
+  @override
+  String get hostBidInvestLabel => 'Sijoitus';
+
+  @override
+  String hostBidCeiling(String nation, String percent) {
+    return 'Yläraja, $nation: $percent';
+  }
+
+  @override
+  String get hostBidInvestment => 'Sijoituksesi';
+
+  @override
+  String hostBidFreeFunds(String amount) {
+    return 'Vapaat varat: $amount';
+  }
+
+  @override
+  String get hostBidSubmit => 'Jätä haku';
+
+  @override
+  String get hostBidDecline => 'Ei tällä kertaa';
+
+  @override
+  String get hostBidUnavailable => 'Tämä haku ei ole enää auki.';
+
+  @override
+  String hostBidWonTitle(String competition, int year) {
+    return 'Haku onnistui: $competition $year';
+  }
+
+  @override
+  String hostBidWonBody(String amount) {
+    return 'Isännöimme turnauksen ja pääsemme isäntänä suoraan mukaan. Kertaluonteinen $amount tuki on nyt liiton kassassa, ja voit jakaa sen tämän syklin osastoille suoraan päänäkymästä.';
+  }
+
+  @override
+  String hostBidLostTitle(String competition, int year) {
+    return 'Haku epäonnistui: $competition $year';
+  }
+
+  @override
+  String hostBidLostBody(String hosts) {
+    return 'Isännyyden sai: $hosts. Hakumme ei tällä kertaa riittänyt ja siihen käytetyt rahat menivät, mutta liitto teki parhaansa.';
+  }
+
+  @override
+  String get hostBidGrantEvent => 'Jaa isännyystuki';
+
+  @override
+  String hostBidGrantBanner(String amount) {
+    return 'Isännyystuki: $amount, jonka voit lisätä heti tämän syklin osastoille. Jo jaettu pysyy, ja ylijäämä jää kassaan.';
+  }
+
+  @override
+  String get stadiumsTitle => 'Kansalliset stadionit';
+
+  @override
+  String get stadiumsEntrySub => 'Paranna stadionia tai rakenna uusi';
+
+  @override
+  String get stadiumsBlurb =>
+      'Stadionin taso on sen koko: taso 1 alle 15 000 paikkaa, taso 2 alkaen 15 000, taso 3 alkaen 25 000, taso 4 alkaen 40 000, taso 5 alkaen 60 000. Jokainen stadion tuottaa pienen tulon jokaisen kauden alussa, sitä enemmän mitä enemmän paikkoja, kunhan yleisö ne täyttää. Laajennus tuo paikat heti ja hieman mainetta seuraavasta kaudesta alkaen; pienennys leikkaa ylläpitoa, mutta mitään ei palauteta. Stadionisi ratkaisevat, mihin turnauksiin voit hakea isännäksi.';
+
+  @override
+  String stadiumsIncome(String amount) {
+    return 'Stadiontulot: $amount kaudessa';
+  }
+
+  @override
+  String stadiumsReputation(int points) {
+    return 'Maine stadioneista: +$points';
+  }
+
+  @override
+  String get stadiumsClosed =>
+      'Rakennustyöt tilataan kauden alussa ennen budjetin päättämistä.';
+
+  @override
+  String stadiumsCapacity(String seats) {
+    return 'Kapasiteetti: $seats';
+  }
+
+  @override
+  String stadiumsLevel(int level, int max) {
+    return 'Taso $level/$max';
+  }
+
+  @override
+  String stadiumsUpgrade(String cost) {
+    return 'Paranna: $cost';
+  }
+
+  @override
+  String get stadiumsTopLevel => 'Ylin taso';
+
+  @override
+  String stadiumsOpens(int year) {
+    return 'Rakenteilla, avataan vuonna $year';
+  }
+
+  @override
+  String get stadiumsBuildTitle => 'Rakenna uusi stadion';
+
+  @override
+  String get stadiumsBuildBody =>
+      'Melko kallis: uusi stadion valitsemaasi kaupunkiin, käytössä seuraavan kauden alusta.';
+
+  @override
+  String get stadiumsBuildCity => 'Kaupunki';
+
+  @override
+  String stadiumsBuildButton(String cost) {
+    return 'Rakenna: $cost';
+  }
+
+  @override
+  String get stadiumsBuilding => 'Yksi stadion on jo rakenteilla.';
+
+  @override
+  String get stadiumsNoCity => 'Jokaisessa kaupungissa on jo uusi stadion.';
+
+  @override
+  String stadiumsConfirmUpgrade(String stadium, int level, String cost) {
+    return 'Parannetaanko $stadium tasolle $level hintaan $cost?';
+  }
+
+  @override
+  String stadiumsConfirmBuild(String city, String cost) {
+    return 'Rakennetaanko uusi stadion hintaan $cost? Kaupunki: $city';
+  }
+
+  @override
+  String get stadiumsConfirm => 'Vahvista';
+
+  @override
+  String get stadiumsCancel => 'Peruuta';
+
+  @override
+  String get stadiumsRefused => 'Tilaus ei mennyt läpi. Mitään ei veloitettu.';
+
+  @override
+  String get stadiumsNameLabel => 'Stadionin nimi';
+
+  @override
+  String get stadiumsNameHint => 'Jätä tyhjäksi, niin ehdotettu nimi säilyy.';
+
+  @override
+  String get stadiumsRename => 'Nimeä stadion uudelleen';
+
+  @override
+  String get hostBidSectionTitle => 'Isännyyshaut';
+
+  @override
+  String get hostBidOpenSub => 'Vapaaehtoinen. Päätä ennen uuden kauden alkua.';
+
+  @override
+  String get hostBidDecidedAtRollover =>
+      'Isäntä julkistetaan uuden kauden alkaessa.';
+
+  @override
+  String get hostBidLodged =>
+      'Haku jätetty. Isäntä julkistetaan uuden kauden alkaessa.';
+
+  @override
+  String get hostBidDeclinedNote => 'Päätit olla hakematta tällä kertaa.';
+
+  @override
+  String get hostBidOpensLater =>
+      'Ehdot täyttyvät. Voit hakea tämän kauden lopussa.';
+
+  @override
+  String get hostBidNoFunds => 'Vapaat varat eivät riitä hakuun.';
+
+  @override
+  String hostBidNeedStadiums(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tarvitset vielä $count stadionia, joissa on $seats+ paikkaa.',
+      one: 'Tarvitset vielä 1 stadionin, jossa on $seats+ paikkaa.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hostBidBarredConf(String confederation) {
+    return 'Edelliset MM-kisat järjesti $confederation.';
+  }
+
+  @override
+  String get hostBidRecentHost => 'Isännöit yhtä kolmesta viime turnauksesta.';
+
+  @override
+  String hostBidRequirement(
+    int grounds,
+    String minSeats,
+    int bigGrounds,
+    String bigSeats,
+  ) {
+    return 'Vaatimus: $grounds stadionia, joissa $minSeats+ paikkaa, niistä $bigGrounds vähintään $bigSeats.';
+  }
+
+  @override
+  String hostBidWonBodyBudget(String amount) {
+    return 'Isännöimme turnauksen ja pääsemme isäntänä suoraan mukaan. $amount kertaluonteinen tuki on jo liiton varoissa ja valmiina tämän kauden budjettiin.';
+  }
+
+  @override
+  String get hubStadiumIncome => 'Stadiontulot';
+
+  @override
+  String get stadiumsDownsize => 'Pienennä';
+
+  @override
+  String stadiumsConfirmDownsize(String stadium, String seats, int level) {
+    return 'Pienennetäänkö $stadium $seats paikkaan (taso $level)? Mitään ei palauteta, mutta ylläpitokulut laskevat.';
+  }
+
+  @override
+  String get stadiumsResizedThisCycle => 'Uudistettu tällä kaudella';
+
+  @override
+  String stadiumsGroundIncome(String amount) {
+    return 'Tuottaa $amount kaudessa';
+  }
+
+  @override
+  String hostBidLapsedTitle(String competition, int year) {
+    return 'Haku peruttu: $competition $year';
+  }
+
+  @override
+  String hostBidLapsedBodyNation(String nation) {
+    return 'Haku tehtiin maalle $nation, mutta aloitat uuden kauden muualla. Haku peruttiin, eikä mitään veloitettu.';
+  }
+
+  @override
+  String get hostBidLapsedBodyFunds =>
+      'Kauden päättyessä liiton varat eivät enää riittäneet panokseen. Haku peruttiin, eikä mitään veloitettu.';
+
+  @override
+  String get stadiumsViewMap => 'Kartta';
+
+  @override
+  String get stadiumsViewList => 'Lista';
+
+  @override
+  String get stadiumsMapPickCity =>
+      'Napauta kaupunkia, johon haluat rakentaa uuden stadionin.';
+
+  @override
+  String get stadiumsMapFit => 'Näytä koko maa';
+
+  @override
+  String get campaignLegacyTitle => 'Perinnön täyttymys';
+
+  @override
+  String get campaignLegacyTwist =>
+      'Espanja, hallitseva Euroopan mestari, yhden kauden ajan';
+
+  @override
+  String get campaignLegacyGoal => 'Puolusta EM-titteliä';
+
+  @override
+  String get campaignLegacyIntro =>
+      'Espanja on hallitseva Euroopan mestari, ja epäilijät pitävät kultaista kautta kertaluontoisena. Sinulla on yksi kausi aikaa todistaa toisin: puolusta mantereen kruunua ja tavoittele sitten maailmaa. Lisää vielä Nations Cup, niin perintö on täydellinen.';
+
+  @override
+  String get campaignStars1Legacy => 'Voita EM-kisat';
+
+  @override
+  String get campaignStars2Legacy => 'Ja MM-kisat';
+
+  @override
+  String get campaignStars3Legacy => 'Ja Nations Cup';
+
+  @override
+  String get campaignSectionOneCycle => 'Yksi kausi';
+
+  @override
+  String get campaignSectionShort => 'Muutama kausi';
+
+  @override
+  String get campaignSectionLong => 'Pitkä tie';
+
+  @override
+  String get campaignFilterAll => 'Kaikki';
+
+  @override
+  String get campaignFilterNew => 'Pelaamatta';
+
+  @override
+  String get campaignFilterInProgress => 'Kesken';
+
+  @override
+  String get campaignFilterDone => 'Suoritettu';
+
+  @override
+  String get campaignFilterEmpty => 'Täällä ei ole vielä kampanjoita.';
+
+  @override
+  String campaignStarsEarned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tähteä',
+      one: '1 tähti',
+      zero: 'Ei tähtiä',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String campaignCycles(int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles kautta',
+      one: '1 kausi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgIntlRetireNoteHigh => ' Hän lopettaa huipulla, mestarina.';
+
+  @override
+  String get msgIntlRetireNoteMissed =>
+      ' Arvokisoista putoaminen oli viimeinen pisara.';
+
+  @override
+  String get msgIntlRetireNoteSurprise => ' Kukaan ei osannut odottaa tätä.';
+
+  @override
+  String get msgIntlRetireNoteRecord =>
+      ' Hän lähtee maajoukkueen ennätysmiehenä.';
+
+  @override
+  String msgIntlRetireNewsTitle(String nation, String name) {
+    return '$nation: $name lopettaa maajoukkueuransa';
+  }
+
+  @override
+  String msgIntlRetireNewsBody(String name, String nation, int age) {
+    return '$name ($nation) ilmoitti $age-vuotiaana lopettavansa maajoukkueuransa.';
+  }
+
+  @override
+  String msgIntlComebackTitle(String name) {
+    return '$name palaa maajoukkueeseen';
+  }
+
+  @override
+  String msgIntlComebackBody(String name, int age) {
+    return '$name on $age-vuotiaana jälleen valittavissa.';
+  }
+
+  @override
+  String get msgIntlComebackNoteCrisis =>
+      ' Loukkaantumisten runtelema joukkue sai hänet vastaamaan kutsuun.';
+
+  @override
+  String get msgIntlComebackNoteManager =>
+      ' Uusi päävalmentaja sai hänet muuttamaan mielensä.';
+
+  @override
+  String msgIntlComebackNewsTitle(String nation, String name) {
+    return '$nation: $name palaa maajoukkueeseen';
+  }
+
+  @override
+  String msgIntlComebackNewsBody(String name, String nation, int age) {
+    return '$name ($nation) on $age-vuotiaana jälleen valittavissa.';
+  }
+
+  @override
+  String playerIntlRetired(int year) {
+    return 'Lopetti maajoukkueuran, $year';
+  }
+
+  @override
+  String playerIntlComeback(int year) {
+    return 'Palasi maajoukkueeseen, $year';
+  }
+
+  @override
+  String yLegendRetires0(String name) {
+    return 'Kiitos, $name. Jotkut pukevat paidan, hän kantoi joukkuetta.';
+  }
+
+  @override
+  String yLegendRetires1(String name) {
+    return '$name lopettaa maajoukkueuransa. Aikakausi päättyy.';
+  }
+
+  @override
+  String yLegendRetires2(String name) {
+    return '$name lopettaa. Rehellisesti sanottuna turnauksen liian myöhään.';
+  }
+
+  @override
+  String yLegendRetires3(String name) {
+    return 'Eli $name on valmis. Annetaan nuorille tilaa.';
+  }
+
+  @override
+  String matchAltitudeOpponentsTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Korkeus $altitudeString m: vastustaja väsyy nopeammin';
+  }
+
+  @override
+  String matchAltitudeYouTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Korkeus $altitudeString m: pelaajasi väsyvät nopeammin';
+  }
+
+  @override
+  String matchAltitudeBothTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Korkeus $altitudeString m: molemmat joukkueet väsyvät nopeammin';
+  }
+
+  @override
+  String matchAltitudeUsedTo(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Korkeus $altitudeString m: molemmat joukkueet ovat tottuneet siihen';
+  }
+
+  @override
+  String matchHeatExpected(int temp) {
+    final intl.NumberFormat tempNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String tempString = tempNumberFormat.format(temp);
+
+    return 'Helle: odotettavissa $tempString °C, voimat loppuvat aiemmin';
+  }
+
+  @override
+  String get matchConditionsAdvice =>
+      'Suunnittele vaihdot ajoissa: tuoreet jalat ovat täällä kullanarvoisia';
+
+  @override
+  String get fanMoodFurious => 'raivoissaan';
+
+  @override
+  String get fanMoodRestless => 'levottomia';
+
+  @override
+  String get fanMoodCalm => 'rauhallisia';
+
+  @override
+  String get fanMoodUpbeat => 'toiveikkaita';
+
+  @override
+  String get fanMoodEuphoric => 'euforisia';
+
+  @override
+  String matchHomeFans(String mood) {
+    return 'Kotikannattajat: $mood';
+  }
+
+  @override
+  String federationFans(String mood) {
+    return 'Kannattajat: $mood';
+  }
+
+  @override
+  String federationFansIncome(String change) {
+    return 'Stadiontulot ensi syklissä: $change';
+  }
+
+  @override
+  String yFansProtest0(String nation, String manager) {
+    return 'Kaksikymmentä vuotta maajoukkueen perässä kotona ja vieraissa. En uusi kausikorttiani ennen kuin jokin muuttuu.';
+  }
+
+  @override
+  String yFansProtest1(String nation, String manager) {
+    return 'Laulamme edelleen pelipaidan puolesta. Mutta pohjoispäädyn banderolli sanoi tänään sen, mitä me kaikki ajattelemme.';
+  }
+
+  @override
+  String yFansProtest2(String nation, String manager) {
+    return 'Puoli stadionia tyhjänä, ja toinen puoli lauloi koko toisen puoliajan #${manager}Out.';
+  }
+
+  @override
+  String yFansProtest3(String nation, String manager) {
+    return 'Kannattajaryhmät puhuvat seuraavan kotiottelun boikotoinnista. Vaikea heitä on syyttää.';
+  }
+
+  @override
+  String yFansProtest4(String nation, String manager) {
+    return '#${manager}Out. En ole enää edes vihainen. Riittää.';
+  }
+
+  @override
+  String yFansProtest5(String nation, String manager) {
+    return 'Kuva tältä illalta: rivikaupalla tyhjiä istuimia ja yksi lakana, jossa lukee #${manager}Out. Siinä otteluraportti.';
+  }
+
+  @override
+  String yFansSellOut0(String nation) {
+    return 'Taas loppuunmyyty. Paras maajoukkue vuosiin, ja koko maa tietää sen.';
+  }
+
+  @override
+  String yFansSellOut1(String nation) {
+    return 'Seuraava kotiottelu myytiin loppuun yhdessätoista minuutissa. Tämä joukkue antoi meille viikonloput takaisin.';
+  }
+
+  @override
+  String yFansSellOut2(String nation) {
+    return 'Seuraavaan kotiotteluun ei ole yhtään vapaata paikkaa. Liitto laskee lipputuloja hymyssä suin.';
+  }
+
+  @override
+  String yFansSellOut3(String nation) {
+    return 'Taas loppuunmyyty. Sanokaa taktiikasta mitä haluatte, ihmiset haluavat olla sillä stadionilla.';
+  }
+
+  @override
+  String yFansSellOut4(String nation) {
+    return 'Loppuunmyyty, hyvä on. Samat ihmiset buuasivat tälle porukalle puolitoista vuotta sitten.';
+  }
+
+  @override
+  String yFansSellOut5(String nation) {
+    return 'Yhtäkkiä loppuunmyyty, yhtäkkiä kaikki asiantuntijoita. Missä te olitte, kun emme voittaneet ketään?';
+  }
+
+  @override
+  String get campaignsIntro =>
+      'Kampanjat ovat käsin rakennettuja haasteita: määrätty maajoukkue, maailma omalla käänteellään ja tavoite, joka on saavutettava tietyssä määrässä kausia. Jokainen yritys pidetään erillään tallennetuista urista, ja mitä pidemmälle pääset, sitä enemmän tähtiä saat, enintään kolme.';
+
+  @override
+  String hubEventScandal(String player) {
+    return 'Skandaali leirillä: $player';
+  }
+
+  @override
+  String get hubEventScandalSub => 'Lähetätkö hänet kotiin vai pidätkö hänet?';
+
+  @override
+  String get scandalTitle => 'SKANDAALI';
+
+  @override
+  String scandalStoryParty(String player) {
+    return '$player oli juhlissa aamunkoittoon asti, ja kuvat olivat kaikissa lehdissä sinä aamuna, kun joukkue kokoontui.';
+  }
+
+  @override
+  String scandalStoryCurfew(String player) {
+    return '$player rikkoi ulkonaliikkumiskieltoa ja jäi kiinni palatessaan hotelliin aamuyöllä.';
+  }
+
+  @override
+  String scandalStoryNightclub(String player) {
+    return '$player kuvattiin yökerhossa leirin aattona, ja kuvat ovat kaikkialla.';
+  }
+
+  @override
+  String scandalStoryCasino(String player) {
+    return '$player vietti leiriä edeltävän yön kasinopöydän ääressä, ja iltapäivälehdellä on kuvat.';
+  }
+
+  @override
+  String get scandalSendHome => 'Lähetä kotiin';
+
+  @override
+  String scandalSendHomeCover(String player) {
+    return 'Kotiin, kutsu tilalle $player';
+  }
+
+  @override
+  String scandalKeep(String player) {
+    return 'Pidä $player';
+  }
+
+  @override
+  String get scandalKeepNote =>
+      'Jos hän jää: moraali noin -4 ja hallitus noin -3 syklin loppuun.';
+
+  @override
+  String get scandalSendHomeNote =>
+      'Jos lähetät hänet kotiin: ei vaikutusta moraaliin tai hallitukseen, ja voit kutsua korvaajan.';
+
+  @override
+  String get scandalFinalsNote =>
+      'Jos lähetät hänet kotiin: ei vaikutusta moraaliin tai hallitukseen, mutta lopputurnauksessa kukaan ei voi korvata häntä.';
+
+  @override
+  String get scandalPickCover => 'Kutsu korvaaja (valinnainen)';
+
+  @override
+  String newsScandalTitle(String player) {
+    return 'Skandaali leirillä: $player';
+  }
+
+  @override
+  String yScandalParty0(String player, String tag) {
+    return 'Pojat ovat poikia. $player juhlissa leiriä edeltävänä iltana, ja haluan hänet silti kentälle. #$tag';
+  }
+
+  @override
+  String yScandalParty1(String player, String tag) {
+    return '$player kuvattiin aamuun jatkuneissa juhlissa tunteja ennen joukkueen kokoontumista. Liitolle on ilmoitettu. #$tag';
+  }
+
+  @override
+  String yScandalParty2(String player, String tag) {
+    return 'Juhlat aamuun asti ennen leiriä. $player, mitä oikein ajattelit? Uskomatonta. #$tag';
+  }
+
+  @override
+  String yScandalCurfew0(String player, String tag) {
+    return 'Takaisin kotiintuloajan jälkeen, no, sattuuhan sitä. $player hoitaa asian kentällä. #$tag';
+  }
+
+  @override
+  String yScandalCurfew1(String player, String tag) {
+    return '$player jäi kiinni palatessaan joukkueen hotelliin kotiintuloajan jälkeen, tunteja ennen harjoituksia. #$tag';
+  }
+
+  @override
+  String yScandalCurfew2(String player, String tag) {
+    return 'Kotiintuloaika ei ole vaikea juttu. $player ei kestänyt yhtäkään yötä. #$tag';
+  }
+
+  @override
+  String yScandalNightclub0(String player, String tag) {
+    return '$player oli siis klubilla. Jalkapalloilijoillakin on elämä. Antakaa hänen pelata. #$tag';
+  }
+
+  @override
+  String yScandalNightclub1(String player, String tag) {
+    return 'Kuvissa $player on yökerhossa maajoukkueleirin aattona. #$tag';
+  }
+
+  @override
+  String yScandalNightclub2(String player, String tag) {
+    return 'Klubikuvia leirin aattona. $player toi häpeää paidalle. #$tag';
+  }
+
+  @override
+  String yScandalCasino0(String player, String tag) {
+    return 'Yö kasinolla ei ole rikos. $player pärjää kyllä. #$tag';
+  }
+
+  @override
+  String yScandalCasino1(String player, String tag) {
+    return '$player nähtiin kasinopöydässä joukkueen kokoontumista edeltävänä yönä. #$tag';
+  }
+
+  @override
+  String yScandalCasino2(String player, String tag) {
+    return 'Koko yö kasinolla ennen leiriä. $player pelasi muutakin kuin rahaa. #$tag';
+  }
+
+  @override
+  String yScandalSentHome0(String player) {
+    return 'Oikea päätös. Kukaan ei ole joukkuetta suurempi, ei myöskään $player.';
+  }
+
+  @override
+  String yScandalSentHome1(String player) {
+    return 'Kotiin lähettäminen oli ainoa vastaus. Kunnioitus päävalmentajalle. $player sai mitä tilasi.';
+  }
+
+  @override
+  String yScandalSentHome2(String player) {
+    return 'Kuri on kuria. $player tiesi säännöt.';
+  }
+
+  @override
+  String yScandalSentHome3(String player) {
+    return 'Selvä viesti joukkueelle: $player istuu kotiinpaluukoneessa.';
+  }
+
+  @override
+  String yScandalSentHome4(String player) {
+    return 'Kovaa. $player käy kerran illalla ulkona, ja leiri loppuu siihen?';
+  }
+
+  @override
+  String yScandalSentHome5(String player) {
+    return 'Kotiin lähettäminen heikentää meitä. $player puuttuu, ja maksamme siitä kentällä.';
+  }
+
+  @override
+  String yScandalKept0(String player) {
+    return 'Pitäminen on uhkapeliä. $player saa maksaa sen takaisin kentällä.';
+  }
+
+  @override
+  String yScandalKept1(String player) {
+    return 'Hyvä on, $player jää. Sitten hän on kaikille velkaa kunnon esityksen.';
+  }
+
+  @override
+  String yScandalKept2(String player) {
+    return 'Säännöt eivät siis koske häntä. $player on poikkeus. Hyvä tietää.';
+  }
+
+  @override
+  String yScandalKept3(String player) {
+    return 'Kotiintuloaika on nyt ilmeisesti vapaaehtoinen. Kysykää vaikka: $player.';
+  }
+
+  @override
+  String yScandalKept4(String player) {
+    return 'Tuon jälkeen hän saa jäädä? $player ja kumppanit ovat kesäleirillä.';
+  }
+
+  @override
+  String yScandalKept5(String player) {
+    return 'Juhlat koko yön ja sitten suoraan avauskokoonpanoon. Hieno viesti, valmentaja. $player on varmasti ihastuksissaan.';
+  }
+
+  @override
+  String get yStreamerBreaks0 =>
+      'VELI JÄI KIINNI 😭😭 LEIRIÄ EDELTÄVÄNÄ YÖNÄ?? MÄ ITKEN 💀💀💀';
+
+  @override
+  String get yStreamerBreaks1 =>
+      'EIII CHAT KATTOKAA TÄTÄ 🤯🤯 VELI OIKEESTI TEKI SEN ENNEN LEIRIÄ 😭🔥';
+
+  @override
+  String get yStreamerBreaks2 =>
+      'KUKA PÄÄSTI SEN ULOS?? KUKA PÄÄSTI SEN ULOS 😭😭💀 TÄÄ ON ELOKUVAA 🔥🔥';
+
+  @override
+  String get yStreamerSentHome0 =>
+      'KOTIIN?? KOTIIN!!! 😭😭😭 VALMENTAJA EI PELLEILE 💀🔥';
+
+  @override
+  String get yStreamerSentHome1 =>
+      'VELI PAKKAA LAUKKUJA SUORANA 🤯🤯 MOIKKA VELI 😭👋';
+
+  @override
+  String get yStreamerSentHome2 =>
+      'EI VOI OLLAAA NE LÄHETTI SEN KOTIIN 💀💀 CHAT MÄ TÄRISEN 🔥🔥🔥';
+
+  @override
+  String get yStreamerKept0 =>
+      'SE JÄÄ??? SE JÄÄÄÄ 🤯🤯 VELI ON KOSKEMATON 😭🔥';
+
+  @override
+  String get yStreamerKept1 =>
+      'BILEET KOKO YÖN JA EDELLEEN JOUKKUEESSA 💀💀 MÄ HALUUN TON SOPPARIN 😭😭';
+
+  @override
+  String get yStreamerKept2 =>
+      'VALMENTAJA SANOO ET KAIKKI OK 😭😭 VELI MITÄ 🤯🤯🤯';
+
+  @override
+  String get yCameoUjfaloci => 'En maksanut mitään, eikä se summakaan täsmää';
+
+  @override
+  String get yCameoHavir0 => 'Pikku kalat uivat tiehensä.';
+
+  @override
+  String get yCameoHavir1 => 'Heitimme verkot, kalat olivat muualla.';
+
+  @override
+  String get yCameoHavir2 => 'Sanoin sen jo syyskuussa gulassin äärellä.';
+
+  @override
+  String get yCameoHavir3 => 'Joka ei kalastanut ajoissa, älköön itkekö nyt.';
+
+  @override
+  String get yCameoHavir4 => 'Pelasimme kuin monni kuivalla maalla.';
+
+  @override
+  String get yCameoHavir5 => 'Tuuli puhaltaa, lampi jäätyy. Niin se menee.';
+
+  @override
+  String get yCameoHavir6 => 'Joskus nostaa ylös vain vanhan saappaan.';
+
+  @override
+  String get yCameoHavir7 =>
+      'Minun aikanani mentiin sentään oluelle. Nyt ei sitäkään.';
+
+  @override
+  String get yCameoLzimberskyHome0 =>
+      'Pojan lähettäminen kotiin yhden illan takia? Se on skandaali, eivät juhlat!';
+
+  @override
+  String get yCameoLzimberskyHome1 =>
+      'Pojat saavat kai vähän pitää hauskaa! Tekopyhä media voittaa taas.';
+
+  @override
+  String get yCameoLzimberskyHome2 =>
+      'Tämä on noitavaino. Nuori mies käy kerran ulkona, ja te hirtätte hänet.';
+
+  @override
+  String get yCameoLzimberskyHome3 =>
+      'Se toimittaja, joka ei ole koskaan ollut juhlissa, heittäköön ensimmäisen kiven. Häpeä!';
+
+  @override
+  String get yCameoLzimberskyHome4 =>
+      'Valmentaja pelästyi iltapäivälehtiä. Minä olisin puolustanut poikaa viimeiseen hengenvetoon!';
+
+  @override
+  String get yCameoLzimberskyKept0 =>
+      'Vihdoin valmentaja, jolla on selkärankaa! Hän piti pojan, ja media saa itkeä.';
+
+  @override
+  String get yCameoLzimberskyKept1 =>
+      'Pojat saavat kai vähän pitää hauskaa, eikö? Bravo, valmentaja!';
+
+  @override
+  String get yCameoLzimberskyKept2 =>
+      'Tekopyhä media huutaa, valmentaja pitää päänsä. Niin se tehdään!';
+
+  @override
+  String get yCameoLzimberskyKept3 =>
+      'Yksi ilta ulkona, ja lehdistö haluaa kivittää hänet. Valmentaja on oikea mies!';
+
+  @override
+  String get yCameoLzimberskyKept4 =>
+      'Minä sanon: antakaa poikien elää! Joka tekee töitä, saa myös juhlia. Peukku ylös.';
+
+  @override
+  String get yTraitStreamer =>
+      'Striimaa kaiken, täysillä ja isoilla kirjaimilla.';
+
+  @override
+  String hubEventAwardsCeremony(int year) {
+    return 'Vuoden pelaaja $year';
+  }
+
+  @override
+  String get hubEventAwardsCeremonySub => 'Äänet on laskettu';
+
+  @override
+  String get potyCeremonyWatch => 'Katso gaala';
+
+  @override
+  String get potyCeremonySkipToList => 'Suoraan kärkiviisikkoon';
+
+  @override
+  String get potyCeremonySkip => 'Ohita';
+
+  @override
+  String get potyCeremonyIntro =>
+      'Äänet on laskettu. Tässä ovat tämän vuoden viisi maailman parasta pelaajaa.';
+
+  @override
+  String potyCeremonyPlace(int place) {
+    return 'Sija $place';
+  }
+
+  @override
+  String get potyCeremonyWinnerIs => 'Ja vuoden pelaaja on...';
+
+  @override
+  String get potyTop5Heading => 'Maailman kärkiviisikko';
+
+  @override
+  String get potyYoungTop3Heading => 'Vuoden nuori pelaaja: kärkikolmikko';
+
+  @override
+  String get potySeeTop5 => 'Näytä kärkiviisikko';
+
+  @override
+  String get potyYourPlayer => 'Sinun pelaajasi';
+
+  @override
+  String potyTallyCleanSheets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nollapeliä',
+      one: '1 nollapeli',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignFullBrief => 'Koko tehtävänanto';
+
+  @override
+  String campaignStarsSoFar(int earned, int total) {
+    return 'Tähtiä tähän mennessä: $earned/$total';
+  }
+
+  @override
+  String get campaignStarEarned => 'Ansaittu tähän mennessä';
+
+  @override
+  String get campaignStarNotYet => 'Ei vielä ansaittu';
+
+  @override
+  String get stadiumsEntrySubClosed =>
+      'Katso stadionisi. Rakennustöitä voi tilata taas seuraavan kauden alussa.';
+
+  @override
+  String get boardObjectiveNoBrief => 'Ei tavoitetta';
+
+  @override
+  String get boardObjectiveNoBriefBody =>
+      'Hallitus ei odota pääsyä näihin loppuotteluihin. Se arvioi sinua sen sijaan tulosten perusteella.';
+
+  @override
+  String get boardObjectiveAwaitingDraw => 'Tavoite arvonnan jälkeen';
+
+  @override
+  String get boardObjectiveAwaitingDrawBody =>
+      'Hallitus asettaa tämän tavoitteen, kun lohkot on arvottu.';
 }

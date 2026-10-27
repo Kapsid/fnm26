@@ -89,7 +89,9 @@ myHeadToHeadsProvider = FutureProvider.autoDispose.family<List<MyH2HLine>, int>(
     final comp = ref.watch(competitionRepositoryProvider);
     final nationId = career.nationId;
     final nations = <int, Nation>{
-      for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+      for (final n
+          in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+        n.id: n,
     };
 
     // The same ledger the fiercest-rival card reads, so the two cannot

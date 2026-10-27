@@ -7,7 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -106,7 +106,7 @@ class H2hMeetingsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final nationsAsync = ref.watch(nationsProvider);
+    final nationsAsync = ref.watch(careerNationsProvider(careerId));
     final meetingsAsync = ref.watch(
       h2hMeetingsProvider(
         (careerId: careerId, nationA: nationA, nationB: nationB),

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 /// How a result reads against what was expected of the side that got it.
 ///
 /// One reading, shared. There were three before this existed and they
@@ -51,13 +53,40 @@ abstract final class Expectation {
     required int conceded,
     bool competitive = true,
   }) {
+    final s = surprise(
+      nationRank: nationRank,
+      opponentRank: opponentRank,
+      scored: scored,
+      conceded: conceded,
+      competitive: competitive,
+    );
+    if (s >= _heroicAt) return ResultStanding.heroic;
+    if (s >= _creditableAt) return ResultStanding.creditable;
+    if (s > _poorAt) return ResultStanding.par;
+    if (s > _humiliatingAt) return ResultStanding.poor;
+    return ResultStanding.humiliating;
+  }
+
+  /// The number [standing] is cut from: what happened minus what should have
+  /// happened, roughly −2.4 … +2.4.
+  ///
+  /// Public for the callers that need to know HOW surprising an afternoon was
+  /// rather than which of five words it earns: the feed grades its volume on
+  /// it, and two heroic wins are not equally heroic.
+  static double surprise({
+    required int nationRank,
+    required int opponentRank,
+    required int scored,
+    required int conceded,
+    bool competitive = true,
+  }) {
     final expected = of(nationRank: nationRank, opponentRank: opponentRank);
     final outcome = scored > conceded
         ? 1.0
         : scored == conceded
         ? 0.0
         : -1.0;
-    var surprise = outcome - expected;
+    var value = outcome - expected;
     // The scoreline on top of the result, damped by how much of it was
     // expected. A rout is only news when a rout was not the likely afternoon:
     // undamped, a favourite's routine 3–0 over a minnow scored the same bonus
@@ -66,21 +95,21 @@ abstract final class Expectation {
     // side is a scoreline, not a disgrace.
     final margin = scored - conceded;
     if (margin >= _routMargin) {
-      surprise += _marginWeight * (1 - expected) / 2;
+      value += _marginWeight * (1 - expected) / 2;
     }
+    // A defeat's scoreline grows with every goal past the rout: the board
+    // calls a four-goal defeat by a fellow minnow a humiliation, so a
+    // hammering between equals has to reach that word on its own, without a
+    // ranking gap behind it.
     if (margin <= -_routMargin) {
-      surprise -= _marginWeight * (1 + expected) / 2;
+      final extra = math.min(-margin - _routMargin, _extraGoalsCounted);
+      value -= (_marginWeight + extra * _extraGoalWeight) * (1 + expected) / 2;
     }
     // A friendly is not nothing, but it is not evidence either: everything
     // pulls back toward "that happened, next" so a summer runaround does not
     // read as a crisis or a coronation.
-    if (!competitive) surprise *= _friendlyDamping;
-
-    if (surprise >= _heroicAt) return ResultStanding.heroic;
-    if (surprise >= _creditableAt) return ResultStanding.creditable;
-    if (surprise > _poorAt) return ResultStanding.par;
-    if (surprise > _humiliatingAt) return ResultStanding.poor;
-    return ResultStanding.humiliating;
+    if (!competitive) value *= _friendlyDamping;
+    return value;
   }
 
   /// A win by this many is a statement rather than a result.
@@ -89,13 +118,21 @@ abstract final class Expectation {
   /// What that statement is worth, in surprise.
   static const double _marginWeight = 0.4;
 
+  /// What each goal of a defeat past [_routMargin] adds, and how many count.
+  static const double _extraGoalWeight = 0.1;
+  static const int _extraGoalsCounted = 2;
+
   /// How much of a friendly's surprise survives.
   static const double _friendlyDamping = 0.45;
 
   static const double _heroicAt = 1.25;
   static const double _creditableAt = 0.35;
   static const double _poorAt = -0.35;
-  static const double _humiliatingAt = -1.15;
+  // Symmetric about par: a one-goal win is heroic against a side at least
+  // fifteen places above (1 + 15/60), and a one-goal defeat is humiliating
+  // only against a side at least fifteen places below. At -1.15 a defeat by
+  // a side nine places lower already read as a disgrace.
+  static const double _humiliatingAt = -1.25;
 
   /// Whether a standing is worth raising your voice about, either way.
   ///

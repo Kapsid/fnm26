@@ -21,9 +21,10 @@ class QualificationFormat {
   /// Direct qualification berths for the confederation (display/standings use).
   final int directBerths;
 
-  /// Direct World Cup finals places allocated to the confederation. Across all
-  /// six these sum to 46; the remaining two of the 48-team finals are decided
-  /// by the intercontinental playoff (see [playoffEntrants]).
+  /// Direct World Cup finals places allocated to the confederation, its hosts'
+  /// places included (see [qualifyingBerths]). Across all six these sum to 46;
+  /// the remaining two of the 48-team finals are decided by the
+  /// intercontinental playoff (see [playoffEntrants]).
   final int finalsBerths;
 
   /// Teams the confederation sends to the six-team intercontinental playoff,
@@ -73,6 +74,17 @@ class QualificationFormat {
 
   static QualificationFormat forConfederation(Confederation c) =>
       _byConfederation[c]!;
+
+  /// The direct places left to qualifying once [hosts] of this
+  /// confederation's nations have taken theirs.
+  ///
+  /// The real rule: a host's automatic place comes out of its OWN
+  /// confederation's allocation (the 2026 hosts filled three of CONCACAF's
+  /// six). The hosts sit qualifying out, so every place they take is one the
+  /// group ladder no longer hands out, and every screen that paints that
+  /// ladder must ask here too, or it shows a nation green that is not going.
+  int qualifyingBerths(int hosts) =>
+      (finalsBerths - hosts).clamp(0, finalsBerths);
 
   /// The two finals places decided by the intercontinental playoff.
   static const playoffBerths = 2;

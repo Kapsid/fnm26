@@ -7,6 +7,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
+import 'package:fnm/features/tournaments/wc_host_berths.dart';
 
 /// The intercontinental play-off, replayed deterministically for display: the
 /// ties that decided the last two World Cup places.
@@ -33,7 +34,8 @@ intercontinentalPlayoffProvider = FutureProvider.autoDispose
         (grouped[t.confederation] ??= []).add(t.standings);
       }
       final nations = {
-        for (final n in await ref.watch(nationRepositoryProvider).all())
+        for (final n
+            in await ref.watch(nationRepositoryProvider).forCareer(careerId))
           n.id: n,
       };
       // The play-off's own frozen seeding when there is one (there is whenever
@@ -56,9 +58,11 @@ intercontinentalPlayoffProvider = FutureProvider.autoDispose
                 ),
               )).future,
             );
+      final hostBerths = await worldCupHostBerthsFor(ref, careerId);
       final pool = WorldCupFinals.playoffPoolFor(
         byConfederation: grouped,
         rankingById: rankingById,
+        hostBerths: hostBerths,
       );
       // The manager's own ties were played, not modelled. Read them back so the
       // bracket shows what happened on the pitch — a bracket that contradicted
@@ -96,6 +100,7 @@ intercontinentalPlayoffProvider = FutureProvider.autoDispose
         rng: SeededRng(
           career.rngSeed ^ (career.cyclePointer * 0x50FF) ^ 0xB1A0,
         ),
+        hostBerths: hostBerths,
         pool: pool,
         playedResults: results,
         playedScores: scores,

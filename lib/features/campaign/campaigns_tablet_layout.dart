@@ -1,9 +1,11 @@
 part of 'campaigns_screen.dart';
 
-/// The campaigns on a landscape tablet: the phone's cards side by side under
-/// the tablet header, the same card and the same actions.
+/// The campaigns on a landscape tablet: the phone's list under the tablet
+/// header. The list lays its tiles out in as many columns as fit.
 class _CampaignsTabletLayout extends StatelessWidget {
-  const _CampaignsTabletLayout();
+  const _CampaignsTabletLayout({required this.body});
+
+  final Widget body;
 
   @override
   Widget build(BuildContext context) {
@@ -12,22 +14,7 @@ class _CampaignsTabletLayout extends StatelessWidget {
       scaffoldKey: CampaignsScreen.tabletLayoutKey,
       title: l.campaignsTitle,
       onBack: () => context.go(Routes.home),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const gap = AppSpacing.md;
-          final width = (constraints.maxWidth - gap) / 2;
-          return SingleChildScrollView(
-            child: Wrap(
-              spacing: gap,
-              runSpacing: gap,
-              children: [
-                for (final def in Campaigns.all)
-                  SizedBox(width: width, child: CampaignCard(def: def)),
-              ],
-            ),
-          );
-        },
-      ),
+      child: body,
     );
   }
 }

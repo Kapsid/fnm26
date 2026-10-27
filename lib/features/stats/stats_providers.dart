@@ -261,7 +261,9 @@ final AutoDisposeFutureProviderFamily<TeamStatsData?, int> teamStatsProvider =
         }
       }
 
-      final nations = await ref.watch(nationRepositoryProvider).all();
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(careerId);
       return (
         nation: nations.where((n) => n.id == nationId).firstOrNull,
         scorers: scorers,

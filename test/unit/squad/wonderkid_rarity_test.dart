@@ -23,7 +23,11 @@ void main() {
   List<Player> intakes({int nations = 40, int years = 11}) => [
     for (var nation = 1; nation <= nations; nation++)
       for (var year = 0; year <= years; year++)
-        for (final p in PlayerLifecycle.youthPoolAt(seeded(nation), nation, year))
+        for (final p in PlayerLifecycle.youthPoolAt(
+          seeded(nation),
+          nation,
+          year,
+        ))
           if (p.age == PlayerLifecycle.intakeAge) p,
   ];
 
@@ -61,7 +65,9 @@ void main() {
   group('late bloomers', () {
     test('a few of every intake find something in their late teens', () {
       final children = intakes(nations: 40);
-      final late = children.where((p) => PlayerLifecycle.bloomsLate(p.id)).length;
+      final late = children
+          .where((p) => PlayerLifecycle.bloomsLate(p.id))
+          .length;
       final share = late / children.length * 100;
       expect(share, inInclusiveRange(1, 8), reason: '$share% bloom late');
     });

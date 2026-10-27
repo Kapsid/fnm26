@@ -53,6 +53,10 @@ Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
   const elsewhere = {
     // Needs its pre-simulated preview warmed first: match_tablet_test.
     Routes.match,
+    // Needs a settled, refused entitlement and a save past the free cycle to
+    // be reached at all (anything else redirects past it): save_lock_test
+    // lays it out at every tablet size.
+    Routes.saveLocked,
   };
 
   // Every full-screen route is either swept here or named above.

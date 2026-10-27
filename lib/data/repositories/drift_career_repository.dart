@@ -2,6 +2,7 @@ import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/repositories/intl_retirement_cache.dart';
 import 'package:fnm/data/repositories/mappers.dart';
 import 'package:fnm/domain/entities/career.dart';
 // FederationInvestment typedef.
@@ -596,10 +597,11 @@ class DriftCareerRepository implements CareerRepository {
     // (which carry the campaign tag) are removed by hand: an abandoned
     // campaign must leave no trace.
     await _db.transaction(() async {
-      await (_db.delete(_db.drawsWatched)
-            ..where((t) => t.careerId.equals(id)))
-          .go();
+      await (_db.delete(
+        _db.drawsWatched,
+      )..where((t) => t.careerId.equals(id))).go();
       await (_db.delete(_db.careers)..where((t) => t.id.equals(id))).go();
     });
+    IntlRetirementCache.of(_db).forget(id);
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/theme/text_size.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/core/util/match_stage.dart';
@@ -270,7 +271,12 @@ class _TournamentBracketState extends State<TournamentBracket> {
       final n = _inRound(round).length;
       if (n > most) most = n;
     }
-    return (most * _tieSlot).clamp(240.0, 4000.0);
+    // A larger text size grows each tie by what its two 16px name lines
+    // gain, and the column by what its round label gains; at the normal size
+    // both are nothing.
+    final tieGrow = textScaleGrowth(context, 32);
+    return (most * (_tieSlot + tieGrow)).clamp(240.0, 4000.0) +
+        textScaleGrowth(context, 16);
   }
 
   /// A round column's width in the scrolling bracket.
@@ -436,6 +442,7 @@ class _TournamentBracketState extends State<TournamentBracket> {
     final decided = f.hasResult;
     final homeWon = decided && f.homeScore! >= f.awayScore!;
     final mine = _isMine(f);
+    final how = decided ? _settled(f) : null;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: AppCard(
@@ -455,11 +462,29 @@ class _TournamentBracketState extends State<TournamentBracket> {
           vertical: AppSpacing.sm,
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: _side(f.homeNationId, decided && homeWon)),
-            Text(
-              decided ? _scoreLine(f) : 'vs',
-              style: AppTypography.labelMedium,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              child: Column(
+                children: [
+                  Text(
+                    decided ? '${f.homeScore} - ${f.awayScore}' : 'vs',
+                    style: AppTypography.labelMedium,
+                  ),
+                  // How it was settled, under the score rather than beside it:
+                  // "1 - 1 (4-3 p)" on one line took the room the names need.
+                  if (how != null)
+                    Text(
+                      how,
+                      style: AppTypography.labelSmall.copyWith(
+                        fontSize: 9,
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                ],
+              ),
             ),
             Expanded(
               child: _side(f.awayNationId, decided && !homeWon, end: true),
@@ -470,30 +495,53 @@ class _TournamentBracketState extends State<TournamentBracket> {
     );
   }
 
-  /// The tie's scoreline, with how it was settled when it went past 90 minutes.
-  String _scoreLine(Fixture f) {
-    final base = '${f.homeScore} - ${f.awayScore}';
-    if (f.wentToShootout) {
-      return '$base (${f.homePenalties}-${f.awayPenalties} p)';
-    }
-    return f.afterExtraTime ? '$base a.e.t.' : base;
+  /// How the tie was settled when it went past 90 minutes, or null.
+  String? _settled(Fixture f) {
+    if (f.wentToShootout) return '(${f.homePenalties}-${f.awayPenalties} p)';
+    return f.afterExtraTime ? 'a.e.t.' : null;
   }
 
+  /// One side of a tie: flag (and the tick on the side that goes through) on
+  /// top, the name under it with the whole half row to itself.
+  ///
+  /// The name used to share its line with the flag, the tick and a scoreline
+  /// such as "1 - 1 (4-3 p)", which left it 24px at 320 wide: long names fell
+  /// back to the code, and shorter ones ellipsised. Playtest: "in KO rounds
+  /// team names got cut". Now it wraps between words and only then scales.
   Widget _side(int nationId, bool winner, {bool end = false}) {
     final isPlayer = nationId == widget.playerNationId;
     final seed = widget.groupSeeds[nationId];
-    final label = Flexible(
+    final flag = FlagDisc(
+      widget.code(nationId),
+      size: 22,
+      highlighted: isPlayer,
+    );
+    // A tick on the side that goes through.
+    final through = Icon(
+      Icons.check_circle_rounded,
+      size: 13,
+      color: winner ? AppColors.positive : Colors.transparent,
+    );
+    return NationTap.maybe(
+      careerId: widget.careerId,
+      nationId: nationId,
       child: Column(
         crossAxisAlignment: end
             ? CrossAxisAlignment.end
             : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            bracketName(widget.name(nationId), widget.code(nationId)),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: end
+                ? [through, const SizedBox(width: 4), flag]
+                : [flag, const SizedBox(width: 4), through],
+          ),
+          const SizedBox(height: 2),
+          WholeText(
+            widget.name(nationId),
             textAlign: end ? TextAlign.end : TextAlign.start,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            breakWords: false,
             style: AppTypography.bodySmall.copyWith(
               fontWeight: winner || isPlayer
                   ? FontWeight.w700
@@ -519,55 +567,8 @@ class _TournamentBracketState extends State<TournamentBracket> {
         ],
       ),
     );
-    final flag = FlagDisc(
-      widget.code(nationId),
-      size: 22,
-      highlighted: isPlayer,
-    );
-    // A tick on the side that goes through.
-    final through = Icon(
-      Icons.check_circle_rounded,
-      size: 13,
-      color: winner ? AppColors.positive : Colors.transparent,
-    );
-    final children = end
-        ? [
-            label,
-            const SizedBox(width: 4),
-            through,
-            const SizedBox(width: 4),
-            flag,
-          ]
-        : [
-            flag,
-            const SizedBox(width: 4),
-            through,
-            const SizedBox(width: 4),
-            label,
-          ];
-    return NationTap.maybe(
-      careerId: widget.careerId,
-      nationId: nationId,
-      child: Row(
-        mainAxisAlignment: end
-            ? MainAxisAlignment.end
-            : MainAxisAlignment.start,
-        children: children,
-      ),
-    );
   }
 }
-
-/// The longest nation name a bracket tie row can hold before the two sides and
-/// the scoreline stop fitting on one line.
-const int _bracketNameLimit = 14;
-
-/// A bracket-safe label for a nation: its full name when it fits a tie row,
-/// otherwise its three-letter code. "Bosnia and Herzegovina" and "United Arab
-/// Emirates" used to squeeze the scoreline out of the row (or truncate to an
-/// unreadable stub), so long names fall back to the code they're known by.
-String bracketName(String name, String code) =>
-    name.length <= _bracketNameLimit ? name : code.toUpperCase();
 
 /// The round code without its competition prefix ('CQF' → 'QF'), so one set of
 /// labels and orderings serves every tournament.

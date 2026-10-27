@@ -44,22 +44,52 @@ abstract final class AiTactics {
     required int rngSeed,
   }) => varietySeed('aitac:$opponentId:$fixtureId:$rngSeed');
 
+  /// The posture pool for a strength gap (opponent minus player).
+  static List<_Archetype> _bandFor(double diff) => diff >= 8
+      ? _favourite
+      : diff >= 3
+      ? _strong
+      : diff > -3
+      ? _even
+      : diff > -8
+      ? _weak
+      : _underdog;
+
+  /// Every posture [forOpponent] could pick for this strength gap and
+  /// [style], with the style's shift applied and no jitter: what such a side
+  /// TYPICALLY does against such an opponent, not what it does in any one
+  /// fixture. The scout's report falls back to it when a side has no recent
+  /// matches to read.
+  static List<AiSetup> typicalSetups({
+    required double opponentStrength,
+    required double playerStrength,
+    NationStyle style = NationStyle.balanced,
+  }) {
+    final (dm, dp, dt, dw, dl, dd) = _styleShift(style);
+    int shift(int v, int d) => (v + d).clamp(8, 92);
+    return [
+      for (final a in _bandFor(opponentStrength - playerStrength))
+        (
+          formation: a.formation,
+          instructions: TacticalInstructions(
+            mentality: shift(a.instructions.mentality, dm),
+            pressing: shift(a.instructions.pressing, dp),
+            tempo: shift(a.instructions.tempo, dt),
+            width: shift(a.instructions.width, dw),
+            defensiveLine: shift(a.instructions.defensiveLine, dl),
+            directness: shift(a.instructions.directness, dd),
+          ),
+        ),
+    ];
+  }
+
   static AiSetup forOpponent({
     required double opponentStrength,
     required double playerStrength,
     required int seed,
     NationStyle style = NationStyle.balanced,
   }) {
-    final diff = opponentStrength - playerStrength;
-    final band = diff >= 8
-        ? _favourite
-        : diff >= 3
-        ? _strong
-        : diff > -3
-        ? _even
-        : diff > -8
-        ? _weak
-        : _underdog;
+    final band = _bandFor(opponentStrength - playerStrength);
 
     var s = seed & 0x7fffffff;
     int rnd(int mod) {

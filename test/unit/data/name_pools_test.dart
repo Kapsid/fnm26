@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:drift/drift.dart' show Variable;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -15,6 +16,8 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/objective_providers.dart'
+    show briefRulesV2Kind;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';
@@ -249,6 +252,45 @@ void main() {
           .read(competitionRepositoryProvider)
           .hasWatchedDraw(career.id, 0, namePoolsV2Kind),
       isTrue,
+    );
+    // Without this mark a new career would quietly read the legacy pools.
+    expect(
+      await c
+          .read(competitionRepositoryProvider)
+          .hasWatchedDraw(career.id, 0, namePoolsV3Kind),
+      isTrue,
+    );
+    // And the current lists where a pool's names were replaced (Greenland's
+    // reworked surnames).
+    expect(
+      await c
+          .read(competitionRepositoryProvider)
+          .hasWatchedDraw(career.id, 0, namePoolsV4Kind),
+      isTrue,
+    );
+    // The repository keeps a career's older pool era only once the mark
+    // written right after namePools3 and namePools4 is there; that only
+    // holds if create keeps this order.
+    expect(DriftPlayerRepository.fullPoolsSettledKind, briefRulesV2Kind);
+    final order = [
+      for (final r
+          in await db
+              .customSelect(
+                'SELECT kind FROM draws_watched WHERE career_id = ? '
+                'AND cycle = 0 ORDER BY rowid',
+                variables: [Variable.withInt(career.id)],
+              )
+              .get())
+        r.read<String>('kind'),
+    ];
+    expect(
+      order.indexOf(namePoolsV3Kind),
+      lessThan(order.indexOf(briefRulesV2Kind)),
+    );
+    expect(order, contains(namePoolsV4Kind));
+    expect(
+      order.indexOf(namePoolsV4Kind),
+      lessThan(order.indexOf(briefRulesV2Kind)),
     );
   });
 }

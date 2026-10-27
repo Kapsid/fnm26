@@ -7,7 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/records/h2h_meetings_screen.dart';
 import 'package:fnm/features/records/head_to_head_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -38,7 +38,8 @@ class _HeadToHeadScreenState extends ConsumerState<HeadToHeadScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final nationsAsync = ref.watch(nationsProvider);
+    // The career's own world: the picker offers the nations it holds.
+    final nationsAsync = ref.watch(careerNationsProvider(widget.careerId));
     // Default side A to the manager's own nation the first time.
     if (!_seeded) {
       final career = ref.watch(careerByIdProvider(widget.careerId)).valueOrNull;

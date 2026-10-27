@@ -37,6 +37,9 @@ class _GatedCareers extends CareerService {
     required String managerName,
     int? rngSeed,
     bool countsTowardSlots = true,
+    List<String> worldMarkers = const [],
+    Map<int, int> startingRanks = const {},
+    bool freezeStartingRanks = false,
   }) async {
     await gate?.future;
     if (throwOnce) {
@@ -48,6 +51,9 @@ class _GatedCareers extends CareerService {
       managerName: managerName,
       rngSeed: rngSeed,
       countsTowardSlots: countsTowardSlots,
+      worldMarkers: worldMarkers,
+      startingRanks: startingRanks,
+      freezeStartingRanks: freezeStartingRanks,
     );
   }
 }

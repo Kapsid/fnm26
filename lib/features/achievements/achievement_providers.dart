@@ -157,7 +157,7 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
 
   // Tournaments the nation placed in recently. The board's memory is short —
   // last cycle's trophy doesn't buy this cycle's goodwill.
-  final nations = await ref.watch(nationRepositoryProvider).all();
+  final nations = await ref.watch(nationRepositoryProvider).forCareer(careerId);
   final conf = nations
       .where((n) => n.id == career.nationId)
       .map((n) => n.confederation)
@@ -250,23 +250,52 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
       .length;
   // Against whom: a defeat by a side far above is not held against him the
   // way one by an equal is (see BoardSatisfaction.isUnderdog).
-  final rankOf = ranking?.position ?? const <int, int>{};
-  final ownRank = rankOf[career.nationId];
-  final asUnderdog = [
-    for (final f in played.take(BoardSatisfaction.formWindow))
-      () {
-        final opponent = f.homeNationId == career.nationId
-            ? f.awayNationId
-            : f.homeNationId;
-        final theirRank = rankOf[opponent];
-        return ownRank != null &&
-            theirRank != null &&
-            BoardSatisfaction.isUnderdog(
-              ownRank: ownRank,
-              opponentRank: theirRank,
-            );
-      }(),
-  ];
+  //
+  // Judged on the ranking frozen at the start of the cycle each match was
+  // played in, never on today's live ranking. The live one already holds the
+  // match's own result: Montenegro beat Sweden 4-1, climbed three places
+  // while Sweden dropped one, and the same win was re-read as one between
+  // near equals (+2 instead of the underdog's +5). Every earlier defeat by a
+  // side just above was re-read the same way, from -1 to -5, so a famous win
+  // could leave the board flat or even lose it a point. A frozen baseline
+  // cannot move with a result.
+  final window = played.take(BoardSatisfaction.formWindow).toList();
+  final baselines = <int, Map<int, int>>{};
+  Future<Map<int, int>> ranksFor(Fixture f) async {
+    var cycle = 0;
+    while (cycle < career.cyclePointer &&
+        !f.date.isBefore(CareerService.cycleOpens(cycle + 1))) {
+      cycle++;
+    }
+    return baselines[cycle] ??= await ref.watch(
+      seedRankByIdProvider((careerId: careerId, cycle: cycle)).future,
+    );
+  }
+
+  final asUnderdog = <bool>[];
+  // Which of them were heavy defeats by a fellow minnow, for the minnow's
+  // form (see BoardSatisfaction.isHumiliation), on the same frozen ranks.
+  final humiliations = <bool>[];
+  for (final f in window) {
+    final ranks = await ranksFor(f);
+    final isHome = f.homeNationId == career.nationId;
+    final own = ranks[career.nationId];
+    final theirs = ranks[isHome ? f.awayNationId : f.homeNationId];
+    final known = own != null && theirs != null;
+    asUnderdog.add(
+      known && BoardSatisfaction.isUnderdog(ownRank: own, opponentRank: theirs),
+    );
+    humiliations.add(
+      known &&
+          BoardSatisfaction.isHumiliation(
+            margin: isHome
+                ? f.awayScore! - f.homeScore!
+                : f.homeScore! - f.awayScore!,
+            ownRank: own,
+            opponentRank: theirs,
+          ),
+    );
+  }
   final recent = [
     for (final f in played.take(BoardSatisfaction.formWindow))
       () {
@@ -278,6 +307,10 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
         return MatchOutcome.loss;
       }(),
   ];
+
+  // How much of a minnow the nation is: 0 for all but the weakest sides, whose
+  // board is more patient (see BoardSatisfaction.minnowFactor).
+  final minnow = await ref.watch(boardMinnowProvider(careerId).future);
 
   // What the manager has said in public this cycle. Small next to results, but
   // it is the one thing that moves the board between matches.
@@ -303,6 +336,8 @@ satisfactionProvider = FutureProvider.autoDispose.family<int, int>((
                     ? null
                     : career.lastCycleBoard,
                 lockedInLosses: lockedInLosses,
+                minnow: minnow,
+                recentHumiliations: humiliations,
               ) +
               press.board)
           .clamp(0, 100);
@@ -371,7 +406,9 @@ class AchievementService {
     final nationId = career.nationId;
     final comp = _ref.read(competitionRepositoryProvider);
     final nations = {
-      for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
+      for (final n
+          in await _ref.read(nationRepositoryProvider).forCareer(careerId))
+        n.id: n,
     };
 
     final fixtures = await comp.fixturesForNation(careerId, nationId);
@@ -526,7 +563,13 @@ class AchievementService {
     for (final nid in candidateNations) {
       final squad = career == null
           ? await playerRepo.byNation(nid)
-          : await careerPoolOf(_ref, career, nid);
+          : await careerPoolOf(
+              _ref,
+              career,
+              nid,
+              // History: a man who retired since still played here.
+              includeIntlRetired: true,
+            );
       candidates.addAll(squad.take(16));
     }
     final team = TournamentStars.teamOfTournament(

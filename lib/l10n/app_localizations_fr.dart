@@ -75,6 +75,140 @@ class AppLocalizationsFr extends AppLocalizations {
   String get matchDossierKeyMen => 'HOMMES CLÉS';
 
   @override
+  String get matchDossierHowTheyPlay => 'LEUR JEU';
+
+  @override
+  String matchScoutFormation1(String formation) {
+    return 'Ils s\'alignent généralement en $formation.';
+  }
+
+  @override
+  String matchScoutFormation2(String formation) {
+    return 'Leur système habituel est le $formation.';
+  }
+
+  @override
+  String matchScoutFormation3(String formation) {
+    return 'Ils optent le plus souvent pour un $formation.';
+  }
+
+  @override
+  String get matchScoutStrengthPressing =>
+      'Ils pressent haut et chassent le ballon.';
+
+  @override
+  String get matchScoutStrengthDirect =>
+      'Ils pratiquent un jeu direct et envoient vite le ballon vers l\'avant.';
+
+  @override
+  String get matchScoutStrengthPossession =>
+      'Ils conservent bien le ballon et construisent avec patience.';
+
+  @override
+  String get matchScoutStrengthCounter =>
+      'Ils attendent bas et partent vite en contre.';
+
+  @override
+  String get matchScoutStrengthDeepDefence =>
+      'Ils défendent bas et sont difficiles à manœuvrer.';
+
+  @override
+  String get matchScoutStrengthWide =>
+      'Ils écartent le jeu et attaquent sur les côtés.';
+
+  @override
+  String get matchScoutStrengthAttacking =>
+      'Ils aiment prendre le jeu à leur compte.';
+
+  @override
+  String get matchScoutStrengthQuickForwards =>
+      'Leurs attaquants sont rapides et adorent prendre la profondeur.';
+
+  @override
+  String get matchScoutStrengthPassingMidfield =>
+      'Leur milieu de terrain fait bien circuler le ballon.';
+
+  @override
+  String get matchScoutStrengthHardRunning =>
+      'Leur milieu a le coffre pour courir tout le match.';
+
+  @override
+  String get matchScoutStrengthSetPieces =>
+      'Ils sont dangereux sur coups de pied arrêtés.';
+
+  @override
+  String get matchScoutStrengthQuickDefence =>
+      'Leur défense est rapide et difficile à prendre dans le dos.';
+
+  @override
+  String get matchScoutStrengthNone =>
+      'Rien ne ressort vraiment dans leur jeu.';
+
+  @override
+  String get matchScoutWeakSpaceBehind =>
+      'Leur ligne haute laisse de l\'espace dans le dos pour un ballon par-dessus.';
+
+  @override
+  String get matchScoutWeakPressedBuildUp =>
+      'Un pressing haut peut perturber leur relance lente.';
+
+  @override
+  String get matchScoutWeakDeepBlock =>
+      'Soyez patient : un bloc bas comme le leur peut se déverrouiller.';
+
+  @override
+  String get matchScoutWeakLongBall =>
+      'Reculez votre ligne et leurs longs ballons ne mèneront nulle part.';
+
+  @override
+  String get matchScoutWeakSlowDefence =>
+      'Leurs défenseurs manquent de vitesse : lancez des appels dans leur dos.';
+
+  @override
+  String get matchScoutWeakAerial =>
+      'Ils semblent fébriles pour défendre les coups de pied arrêtés.';
+
+  @override
+  String get matchScoutWeakPoorPassing =>
+      'Leur milieu peine à se sortir du pressing par la passe.';
+
+  @override
+  String get matchScoutWeakTiringMidfield =>
+      'Leur milieu manque de jambes pour tenir un pressing.';
+
+  @override
+  String get matchScoutWeakBluntAttack =>
+      'Leurs attaquants manquent de vitesse.';
+
+  @override
+  String get matchScoutApproachTakeTheGame =>
+      'Contre vous, attendez-vous à ce qu\'ils prennent l\'initiative.';
+
+  @override
+  String get matchScoutApproachEven =>
+      'Contre vous, attendez-vous à un match serré et équilibré.';
+
+  @override
+  String get matchScoutApproachSitDeep =>
+      'Contre vous, attendez-vous à ce qu\'ils restent prudents et guettent la contre-attaque.';
+
+  @override
+  String get matchScoutLeaningAttacking =>
+      'De loin, ils ont l\'air d\'une équipe offensive.';
+
+  @override
+  String get matchScoutLeaningCautious =>
+      'De loin, ils ont l\'air d\'une équipe prudente.';
+
+  @override
+  String get matchScoutLeaningUnclear =>
+      'De loin, difficile de dire comment ils aiment jouer.';
+
+  @override
+  String get matchScoutHireHint =>
+      'Engagez un chef recruteur pour savoir comment ils jouent.';
+
+  @override
   String matchCouldNotContinue(String error) {
     return 'Impossible de continuer : $error';
   }
@@ -286,6 +420,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Système';
+
+  @override
+  String get settingsTextSizeTitle => 'Taille du texte';
+
+  @override
+  String get settingsTextSizeBlurb =>
+      'Agrandissez le texte s’il est difficile à lire.';
+
+  @override
+  String get settingsTextSizeNormal => 'Normale';
+
+  @override
+  String get settingsTextSizeLarge => 'Grande';
+
+  @override
+  String get settingsTextSizeLarger => 'Plus grande';
 
   @override
   String get matchPreviewAllMeetings => 'Toutes les confrontations';
@@ -805,6 +955,41 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tacticsSentOffShort => 'EXPULSÉ';
+
+  @override
+  String get tacticsFullBackLeft => 'Latéral gauche';
+
+  @override
+  String get tacticsFullBackRight => 'Latéral droit';
+
+  @override
+  String get tacticsFullBackUp => 'Monter';
+
+  @override
+  String get tacticsFullBackDown => 'Rester en retrait';
+
+  @override
+  String get tacticsFullBackOff => 'Aucune consigne';
+
+  @override
+  String tacticsFullBackUpHint(String side) {
+    return '$side : monter. Un peu plus d\'attaque, un peu plus de risque.';
+  }
+
+  @override
+  String tacticsFullBackDownHint(String side) {
+    return '$side : rester en retrait. Un peu plus sûr, un peu moins d\'attaque.';
+  }
+
+  @override
+  String tacticsFullBackOffHint(String side) {
+    return '$side : aucune consigne, suit le plan de l\'équipe.';
+  }
+
+  @override
+  String tacticsFullBackSemantics(String side, String state) {
+    return '$side, flèche : $state';
+  }
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -3048,6 +3233,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gateExit => 'QUITTER';
 
   @override
+  String get gateSaveTitle => 'CETTE PARTIE NÉCESSITE PRO';
+
+  @override
+  String get gateSaveLead =>
+      'Les parties au-delà du cycle gratuit et les campagnes Pro continuent avec Pro. Rien n’est perdu : cette partie vous attend telle que vous l’avez laissée.';
+
+  @override
+  String get careerSaveLockedNote => 'Pro requis pour continuer cette partie';
+
+  @override
   String get federationNaturalisation => 'NATURALISATION';
 
   @override
@@ -3287,9 +3482,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get nationsNoMatch => 'Aucune nation ne correspond.';
-
-  @override
-  String get nationsNationalLevel => 'NIVEAU NATIONAL';
 
   @override
   String get nationsSelectHeading => 'Choisir une sélection';
@@ -3745,6 +3937,1026 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String yLostBadly11(String opponent, String score) {
     return 'J’ai déjà vu cette équipe humiliée, mais $score face à $opponent, c’est un nouveau plancher.';
+  }
+
+  @override
+  String yWinUpset12(String opponent, String score) {
+    return 'Victoire $score contre $opponent. Notez la date, on vous demandera où vous étiez.';
+  }
+
+  @override
+  String yWinUpset13(String opponent, String score) {
+    return 'Hors du vestiaire, personne n\'y croyait. $score contre $opponent. Fier ne suffit pas.';
+  }
+
+  @override
+  String yWinUpset14(String opponent, String score) {
+    return '$score contre $opponent ! Chacun a couru jusqu\'à ne plus rien avoir dans les jambes.';
+  }
+
+  @override
+  String yWinUpset15(String opponent, String score) {
+    return 'Tombeurs de géant. $opponent, $score. Voilà pourquoi on revient toujours.';
+  }
+
+  @override
+  String yWinUpset16(String opponent, String score) {
+    return '$score contre $opponent. Les pronostics viennent de passer par la fenêtre.';
+  }
+
+  @override
+  String yWinUpset17(String opponent, String score) {
+    return 'Grand favori : $opponent. Score final : $score pour nous.';
+  }
+
+  @override
+  String yWinUpset18(String opponent, String score) {
+    return 'Une des sensations de l\'année : $score contre $opponent.';
+  }
+
+  @override
+  String yWinUpset19(String opponent, String score) {
+    return '$opponent $score. Personne ne l\'avait prédit et personne ne sait vraiment l\'expliquer.';
+  }
+
+  @override
+  String yWinUpset20(String opponent, String score) {
+    return '$score contre $opponent. Superbe. Maintenant tout le monde va oublier le reste de l\'année.';
+  }
+
+  @override
+  String yWinUpset21(String opponent, String score) {
+    return '$score contre $opponent, et le train est déjà plein. J\'y étais quand il était vide.';
+  }
+
+  @override
+  String yWinUpset22(String opponent, String score) {
+    return '$opponent $score. Génial, et ils trouveront quand même le moyen de tout gâcher.';
+  }
+
+  @override
+  String yWinUpset23(String opponent, String score) {
+    return 'Grande soirée contre $opponent, $score. Une hirondelle ne fait pas le printemps.';
+  }
+
+  @override
+  String yLostBadly12(String opponent, String score) {
+    return '$score face à $opponent. Ça fait mal parce qu\'on y tient. On les soutient quand même.';
+  }
+
+  @override
+  String yLostBadly13(String opponent, String score) {
+    return 'Une soirée à oublier contre $opponent, $score. Les joueurs souffrent plus que quiconque.';
+  }
+
+  @override
+  String yLostBadly14(String opponent, String score) {
+    return '$opponent $score. Tête haute. Une équipe se juge à sa réaction.';
+  }
+
+  @override
+  String yLostBadly15(String opponent, String score) {
+    return '$score contre $opponent. Mauvais, oui. La fin du monde, non.';
+  }
+
+  @override
+  String yLostBadly16(String opponent, String score) {
+    return '$score face à $opponent. Un résultat dont on parlera pendant des années, pour de mauvaises raisons.';
+  }
+
+  @override
+  String yLostBadly17(String opponent, String score) {
+    return 'Victoire de $opponent, $score. Après ça, personne ne devrait être surpris la prochaine fois.';
+  }
+
+  @override
+  String yLostBadly18(String opponent, String score) {
+    return 'L\'une des pires soirées depuis longtemps : $score contre $opponent.';
+  }
+
+  @override
+  String yLostBadly19(String opponent, String score) {
+    return '$opponent $score. Il y aura des questions, et à juste titre.';
+  }
+
+  @override
+  String yLostBadly20(String opponent, String score) {
+    return '$score face à $opponent. Honteux est un euphémisme.';
+  }
+
+  @override
+  String yLostBadly21(String opponent, String score) {
+    return 'Défaite $score face à $opponent. Le dernier qui part éteint la lumière.';
+  }
+
+  @override
+  String yLostBadly22(String opponent, String score) {
+    return '$opponent $score. Ça ne me surprend plus, et ça me fait peur.';
+  }
+
+  @override
+  String yLostBadly23(String opponent, String score) {
+    return '$score. $opponent. Quelqu\'un en haut devrait mettre son CV à jour ce soir.';
+  }
+
+  @override
+  String yWinRout0(String opponent, String score) {
+    return '$score contre $opponent ! Un football pareil fait sourire tout le pays.';
+  }
+
+  @override
+  String yWinRout1(String opponent, String score) {
+    return 'Festival offensif contre $opponent : $score. Quelle prestation.';
+  }
+
+  @override
+  String yWinRout2(String opponent, String score) {
+    return '$score. Contre $opponent. Tout a réussi ce soir.';
+  }
+
+  @override
+  String yWinRout3(String opponent, String score) {
+    return 'Une démonstration $score face à $opponent. Gardez le résumé, vous le voudrez.';
+  }
+
+  @override
+  String yWinRout4(String opponent, String score) {
+    return '$opponent $score. Voilà une équipe qui prend plaisir à jouer.';
+  }
+
+  @override
+  String yWinRout5(String opponent, String score) {
+    return '$score contre $opponent, et ça aurait pu être plus. Magnifique.';
+  }
+
+  @override
+  String yWinRout6(String opponent, String score) {
+    return '$score contre $opponent. Un score qu\'on relit deux fois.';
+  }
+
+  @override
+  String yWinRout7(String opponent, String score) {
+    return 'Victoire $score contre $opponent. Plus de match après la première demi-heure.';
+  }
+
+  @override
+  String yWinRout8(String opponent, String score) {
+    return 'Score final : $score contre $opponent. De loin la plus large victoire depuis longtemps.';
+  }
+
+  @override
+  String yWinRout9(String opponent, String score) {
+    return '$opponent $score. Une équipe est venue jouer, l\'autre n\'est jamais descendue du bus.';
+  }
+
+  @override
+  String yWinRout10(String opponent, String score) {
+    return '$score. Aucune réponse de $opponent, sur rien.';
+  }
+
+  @override
+  String yWinRout11(String opponent, String score) {
+    return 'Une correction : $score contre $opponent.';
+  }
+
+  @override
+  String yWinRout12(String opponent, String score) {
+    return '$score contre $opponent. Joli, mais ce n\'est pas vraiment la référence.';
+  }
+
+  @override
+  String yWinRout13(String opponent, String score) {
+    return '$score contre $opponent. Réveillez-moi quand on fera ça à une vraie équipe.';
+  }
+
+  @override
+  String yWinRout14(String opponent, String score) {
+    return '$opponent $score. Sympa, mais j\'ai vu des équipes briller comme ça et ne rien gagner.';
+  }
+
+  @override
+  String yWinRout15(String opponent, String score) {
+    return '$score, et tout le monde redevient un génie. C\'était $opponent.';
+  }
+
+  @override
+  String yWinRout16(String opponent, String score) {
+    return '$score contre $opponent. Pas d\'emballement, ça ne prouve pas grand-chose.';
+  }
+
+  @override
+  String yWinRout17(String opponent, String score) {
+    return '$opponent $score. Profitez, puis rappelez-vous comment ça a fini la dernière fois qu\'on s\'est emballés.';
+  }
+
+  @override
+  String yWinShootout0(String opponent) {
+    return 'Qualifiés aux tirs au but contre $opponent ! Des nerfs d\'acier, tous autant qu\'ils sont.';
+  }
+
+  @override
+  String yWinShootout1(String opponent) {
+    return 'Tirs au but contre $opponent, et on a tenu. Embrassez un inconnu.';
+  }
+
+  @override
+  String yWinShootout2(String opponent) {
+    return 'Séance de tirs au but gagnée contre $opponent. Mon cœur ne tiendra pas.';
+  }
+
+  @override
+  String yWinShootout3(String opponent) {
+    return 'Victoire aux tirs au but contre $opponent. Direction le tour suivant.';
+  }
+
+  @override
+  String yWinShootout4(String opponent) {
+    return 'Contre $opponent, tout s\'est joué aux tirs au but, et on en a marqué plus.';
+  }
+
+  @override
+  String yWinShootout5(String opponent) {
+    return 'Séance gagnée contre $opponent. Par le chemin le plus dur, mais qualifiés.';
+  }
+
+  @override
+  String yWinShootout6(String opponent) {
+    return 'Qualifiés aux tirs au but contre $opponent. Loterie gagnée, prestation oubliée.';
+  }
+
+  @override
+  String yWinShootout7(String opponent) {
+    return 'Battre $opponent aux tirs au but après ça ? De la chance, et tout le monde le sait.';
+  }
+
+  @override
+  String yWinShootout8(String opponent) {
+    return 'Qualifiés contre $opponent aux tirs au but. On n\'aurait jamais dû en arriver là.';
+  }
+
+  @override
+  String yKnockoutWin0(String opponent, String score) {
+    return 'QUALIFIÉS. $score contre $opponent, et le rêve continue.';
+  }
+
+  @override
+  String yKnockoutWin1(String opponent, String score) {
+    return 'VICTOIRE À ÉLIMINATION DIRECTE : $score contre $opponent. Le pays peut commencer à y croire.';
+  }
+
+  @override
+  String yKnockoutWin2(String opponent, String score) {
+    return '$score contre $opponent et place au tour suivant. Quelle soirée.';
+  }
+
+  @override
+  String yKnockoutWin3(String opponent, String score) {
+    return 'Retour à la maison pour $opponent, $score. En avant.';
+  }
+
+  @override
+  String yKnockoutWin4(String opponent, String score) {
+    return 'ÉLIMINATION DIRECTE : $score contre $opponent. Tour suivant confirmé.';
+  }
+
+  @override
+  String yKnockoutWin5(String opponent, String score) {
+    return 'Qualifiés : $score contre $opponent.';
+  }
+
+  @override
+  String yKnockoutWin6(String opponent, String score) {
+    return 'Élimination de $opponent, $score. Le tour suivant attend.';
+  }
+
+  @override
+  String yKnockoutWin7(String opponent, String score) {
+    return 'Victoire $score contre $opponent. En élimination directe, personne ne demande comment.';
+  }
+
+  @override
+  String yKnockoutWin8(String opponent, String score) {
+    return 'Qualifiés contre $opponent, $score. Le prochain adversaire sera moins gentil.';
+  }
+
+  @override
+  String yKnockoutWin9(String opponent, String score) {
+    return 'Le $score contre $opponent suffit pour passer. La prochaine fois, il faudra bien plus.';
+  }
+
+  @override
+  String yKnockoutWin10(String opponent, String score) {
+    return '$opponent dehors, $score. Survécu plutôt que gagné.';
+  }
+
+  @override
+  String yKnockoutWin11(String opponent, String score) {
+    return 'Au tour suivant après $score contre $opponent. Ne demandez pas comment.';
+  }
+
+  @override
+  String yUpsetGap0(String opponent, String gap) {
+    return '$gap places d\'écart au classement, et on bat quand même $opponent. Magnifique.';
+  }
+
+  @override
+  String yUpsetGap1(String opponent, String gap) {
+    return '$opponent : $gap places devant nous. Et pourtant, victoire. Le football est merveilleux.';
+  }
+
+  @override
+  String yUpsetGap2(String opponent, String gap) {
+    return 'Écart au classement : $gap places. Résultat : victoire contre $opponent. N\'arrêtez jamais d\'y croire.';
+  }
+
+  @override
+  String yUpsetGap3(String opponent, String gap) {
+    return 'Écart au classement avant le coup d\'envoi : $gap places. Victoire contre $opponent quand même.';
+  }
+
+  @override
+  String yUpsetGap4(String opponent, String gap) {
+    return 'Au classement mondial, $opponent avait $gap places d\'avance sur nous. Pas ce soir.';
+  }
+
+  @override
+  String yUpsetGap5(String opponent, String gap) {
+    return 'Indice de surprise : $gap places de classement entre les deux. Victoire pour nous contre $opponent.';
+  }
+
+  @override
+  String yUpsetGap6(String opponent, String gap) {
+    return '$gap places de classement nous séparaient de $opponent. Une soirée ne comble pas l\'écart.';
+  }
+
+  @override
+  String yUpsetGap7(String opponent, String gap) {
+    return 'Victoire contre une équipe classée $gap places devant nous : $opponent. Le classement le remarquera à peine.';
+  }
+
+  @override
+  String yUpsetGap8(String gap) {
+    return 'Écart au classement : $gap places. Retenez ce chiffre la prochaine fois qu\'on perd contre un petit.';
+  }
+
+  @override
+  String yEatWords0(String opponent) {
+    return 'J\'avais enterré cette équipe. J\'avais tort, et je n\'ai jamais été aussi content d\'avoir tort. Victoire contre $opponent.';
+  }
+
+  @override
+  String yEatWords1(String opponent) {
+    return 'Une part d\'humilité, s\'il vous plaît. Une grosse. La victoire contre $opponent était magnifique.';
+  }
+
+  @override
+  String yEatWords2(String opponent) {
+    return 'J\'ai dit qu\'ils n\'avaient plus rien. Ils avaient tout. Bien joué contre $opponent, à tous.';
+  }
+
+  @override
+  String yEatWords3(String opponent) {
+    return 'Pour mémoire, je n\'avais pas vu venir cette victoire contre $opponent. Chapeau.';
+  }
+
+  @override
+  String yEatWords4(String opponent) {
+    return 'D\'accord. J\'avais dit qu\'on les démasquerait. $opponent ne les a pas démasqués.';
+  }
+
+  @override
+  String yEatWords5(String opponent) {
+    return 'Ce soir, je ravale mes paroles sur cette équipe. Battre $opponent le mérite bien.';
+  }
+
+  @override
+  String yEatWords6(String opponent) {
+    return 'Oui, j\'ai dit qu\'ils étaient finis. Une victoire contre $opponent ne me donne pas encore tort.';
+  }
+
+  @override
+  String yEatWords7(String opponent) {
+    return 'On me demande de ravaler mes paroles après $opponent. Je le ferai, lentement, et je garde le ticket.';
+  }
+
+  @override
+  String yEatWords8(String opponent) {
+    return 'Battre $opponent, c\'était impressionnant. Mes doutes sur cette équipe sont toujours là.';
+  }
+
+  @override
+  String yAwayFansWin0(String nation, String score) {
+    return 'Chapeau à $nation. $score, et c\'était mérité de bout en bout.';
+  }
+
+  @override
+  String yAwayFansWin1(String nation, String score) {
+    return 'Ça fait mal de le dire, mais la meilleure équipe ce soir, c\'était $nation. $score. Bravo.';
+  }
+
+  @override
+  String yAwayFansWin2(String nation, String score) {
+    return '$score. Respect à $nation, ils en voulaient plus.';
+  }
+
+  @override
+  String yAwayFansWin3(String nation, String score) {
+    return 'Défaite $score contre $nation. Je ne sais même pas quoi dire.';
+  }
+
+  @override
+  String yAwayFansWin4(String nation, String score) {
+    return '$nation $score. Les nôtres devraient avoir honte.';
+  }
+
+  @override
+  String yAwayFansWin5(String nation, String score) {
+    return '$score contre $nation. Que quelqu\'un m\'explique comment c\'est arrivé.';
+  }
+
+  @override
+  String yAwayFansWin6(String nation, String score) {
+    return 'Perdre $score contre $nation. Je ne m\'en remettrai jamais.';
+  }
+
+  @override
+  String yAwayFansWin7(String nation, String score) {
+    return '$score contre $nation. De la chance. Que de la chance.';
+  }
+
+  @override
+  String yAwayFansWin8(String nation, String score) {
+    return 'Après ce $score, les supporters de $nation vont être insupportables pendant des années. Merci pour rien.';
+  }
+
+  @override
+  String yNeutralWin0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Génial pour le football. C\'est pour ça qu\'on l\'aime.';
+  }
+
+  @override
+  String yNeutralWin1(String nation, String opponent, String score) {
+    return 'Quel résultat pour $nation : $score contre $opponent. Le football à son meilleur.';
+  }
+
+  @override
+  String yNeutralWin2(String nation, String opponent, String score) {
+    return 'Tous les neutres sont derrière $nation ce soir. $score contre $opponent !';
+  }
+
+  @override
+  String yNeutralWin3(String nation, String opponent, String score) {
+    return 'Résultat de la journée : $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralWin4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Personne ne l\'avait sur son pronostic.';
+  }
+
+  @override
+  String yNeutralWin5(String nation, String opponent, String score) {
+    return 'Gros résultat : $nation $score $opponent. Le classement va bouger.';
+  }
+
+  @override
+  String yNeutralWin6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Sympa, voyons s\'ils peuvent le refaire.';
+  }
+
+  @override
+  String yNeutralWin7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Victoire de $nation ou défaite de $opponent ?';
+  }
+
+  @override
+  String yNeutralWin8(String nation, String opponent, String score) {
+    return 'Coup de tonnerre : $nation $score $opponent. Attendez-vous à des réactions excessives.';
+  }
+
+  @override
+  String yScorerHero0(String name, String opponent) {
+    return '$name contre $opponent. On va donner son nom aux enfants.';
+  }
+
+  @override
+  String yScorerHero1(String name, String opponent) {
+    return 'Une statue pour $name. Ce soir contre $opponent, il était tout.';
+  }
+
+  @override
+  String yScorerHero2(String name, String opponent) {
+    return '$name, quel joueur. Souvenez-vous de cette soirée contre $opponent.';
+  }
+
+  @override
+  String yScorerHero3(String name, String opponent) {
+    return '$name a fait la différence contre $opponent. Homme du match, sans débat.';
+  }
+
+  @override
+  String yScorerHero4(String name, String opponent) {
+    return 'Contre $opponent, la soirée appartenait à $name.';
+  }
+
+  @override
+  String yScorerHero5(String name, String opponent) {
+    return '$name a répondu présent quand il le fallait contre $opponent.';
+  }
+
+  @override
+  String yScorerHero6(String name, String opponent) {
+    return '$name a été brillant contre $opponent. Maintenant, chaque semaine.';
+  }
+
+  @override
+  String yScorerHero7(String name, String opponent) {
+    return '$name a sauvé l\'équipe contre $opponent. Les autres n\'ont pas beaucoup aidé.';
+  }
+
+  @override
+  String yScorerHero8(String name, String opponent) {
+    return 'Sans $name, la soirée contre $opponent aurait été bien différente.';
+  }
+
+  @override
+  String yLostShock0(String opponent, String score) {
+    return '$score face à $opponent. Un accident. Ça arrive à tout le monde une fois.';
+  }
+
+  @override
+  String yLostShock1(String opponent, String score) {
+    return 'Défaite $score face à $opponent. On se secoue, la campagne n\'est pas finie.';
+  }
+
+  @override
+  String yLostShock2(String opponent, String score) {
+    return '$opponent $score. Douloureux, mais un résultat ne définit pas cette équipe.';
+  }
+
+  @override
+  String yLostShock3(String opponent, String score) {
+    return '$score contre $opponent. Une mauvaise journée au bureau. On avance.';
+  }
+
+  @override
+  String yLostShock4(String opponent, String score) {
+    return 'Défaite contre $opponent, $score. Personne ne l\'a vue venir.';
+  }
+
+  @override
+  String yLostShock5(String opponent, String score) {
+    return '$opponent $score. Une de ces soirées qui n\'ont aucun sens.';
+  }
+
+  @override
+  String yLostShock6(String opponent, String score) {
+    return '$score face à $opponent. Une défaite dont on se souviendra.';
+  }
+
+  @override
+  String yLostShock7(String opponent, String score) {
+    return 'Battus par $opponent, $score. Une sensation, quoi qu\'on en dise.';
+  }
+
+  @override
+  String yLostShock8(String opponent, String score) {
+    return '$score face à $opponent. Face à $opponent ! Inacceptable.';
+  }
+
+  @override
+  String yLostShock9(String opponent, String score) {
+    return 'Défaite $score face à $opponent. Je veux des explications, pas des excuses.';
+  }
+
+  @override
+  String yLostShock10(String opponent, String score) {
+    return '$opponent $score. Une honte nationale, et ce n\'est pas une façon de parler.';
+  }
+
+  @override
+  String yLostShock11(String opponent, String score) {
+    return '$score contre $opponent. Comment les dirigeants sont-ils encore en place ?';
+  }
+
+  @override
+  String yLostRout0(String opponent, String score) {
+    return '$score face à $opponent. C\'est une grande équipe. On apprend.';
+  }
+
+  @override
+  String yLostRout1(String opponent, String score) {
+    return 'Dominés par $opponent, $score. Pas de honte à perdre contre les meilleurs.';
+  }
+
+  @override
+  String yLostRout2(String opponent, String score) {
+    return '$opponent $score. Une leçon, et c\'est avec les leçons qu\'on grandit.';
+  }
+
+  @override
+  String yLostRout3(String opponent, String score) {
+    return '$score contre $opponent. Douloureux, mais ils ont un niveau de plus.';
+  }
+
+  @override
+  String yLostRout4(String opponent, String score) {
+    return 'Victoire de $opponent, $score. L\'écart est réel, et tout le monde l\'a vu.';
+  }
+
+  @override
+  String yLostRout5(String opponent, String score) {
+    return '$score face à $opponent. Une raclée, ni plus ni moins.';
+  }
+
+  @override
+  String yLostRout6(String opponent, String score) {
+    return '$opponent $score. La meilleure équipe, et le score le dit.';
+  }
+
+  @override
+  String yLostRout7(String opponent, String score) {
+    return 'Défaite $score face à $opponent. Pas un déshonneur, mais pas un match non plus.';
+  }
+
+  @override
+  String yLostRout8(String opponent, String score) {
+    return '$score face à $opponent. Meilleur adversaire ou pas, on ne perd pas comme ça.';
+  }
+
+  @override
+  String yLostRout9(String opponent, String score) {
+    return '$opponent $score. A-t-on seulement essayé de rivaliser ?';
+  }
+
+  @override
+  String yLostRout10(String opponent, String score) {
+    return '$score. Contre $opponent. Des agneaux à l\'abattoir.';
+  }
+
+  @override
+  String yLostRout11(String opponent, String score) {
+    return 'Battus $score par $opponent, et personne n\'avait l\'air de s\'en soucier.';
+  }
+
+  @override
+  String yLostShootout0(String opponent) {
+    return 'Éliminés aux tirs au but par $opponent. Ils ont tout donné. Fier d\'eux.';
+  }
+
+  @override
+  String yLostShootout1(String opponent) {
+    return 'Tirs au but contre $opponent. La façon la plus cruelle de sortir. Tête haute.';
+  }
+
+  @override
+  String yLostShootout2(String opponent) {
+    return 'Séance de tirs au but perdue contre $opponent. Personne ne méritait ça.';
+  }
+
+  @override
+  String yLostShootout3(String opponent) {
+    return 'Éliminés aux tirs au but par $opponent. Les penalties ont tranché.';
+  }
+
+  @override
+  String yLostShootout4(String opponent) {
+    return 'Qualification de $opponent aux tirs au but. Notre tournoi s\'arrête là.';
+  }
+
+  @override
+  String yLostShootout5(String opponent) {
+    return 'Séance perdue contre $opponent. Encore les tirs au but.';
+  }
+
+  @override
+  String yLostShootout6(String opponent) {
+    return 'Éliminés aux tirs au but par $opponent. On les travaille, parfois ?';
+  }
+
+  @override
+  String yLostShootout7(String opponent) {
+    return 'Battus par $opponent aux tirs au but. Il fallait tuer le match bien avant.';
+  }
+
+  @override
+  String yLostShootout8(String opponent) {
+    return 'Tirs au but contre $opponent, et on les a perdus. Évidemment.';
+  }
+
+  @override
+  String yKnockoutLoss0(String opponent, String score) {
+    return 'ÉLIMINÉS. $score face à $opponent. Un parcours dont on peut être fiers s\'arrête ici.';
+  }
+
+  @override
+  String yKnockoutLoss1(String opponent, String score) {
+    return 'Éliminés par $opponent, $score. Merci pour les souvenirs.';
+  }
+
+  @override
+  String yKnockoutLoss2(String opponent, String score) {
+    return '$score contre $opponent. Le voyage est fini, mais quel voyage.';
+  }
+
+  @override
+  String yKnockoutLoss3(String opponent, String score) {
+    return 'ÉLIMINÉS : $score face à $opponent. Tête haute.';
+  }
+
+  @override
+  String yKnockoutLoss4(String opponent, String score) {
+    return 'SORTIS : $score contre $opponent.';
+  }
+
+  @override
+  String yKnockoutLoss5(String opponent, String score) {
+    return 'Éliminés : $score contre $opponent.';
+  }
+
+  @override
+  String yKnockoutLoss6(String opponent, String score) {
+    return '$opponent passe, $score. Notre tournoi est terminé.';
+  }
+
+  @override
+  String yKnockoutLoss7(String opponent, String score) {
+    return 'Éliminés par $opponent, $score. L\'autopsie commence.';
+  }
+
+  @override
+  String yKnockoutLoss8(String opponent, String score) {
+    return 'ÉLIMINÉS. $score face à $opponent. Un autre tournoi, la même fin.';
+  }
+
+  @override
+  String yKnockoutLoss9(String opponent, String score) {
+    return '$score face à $opponent, et retour à la maison. Personne n\'est surpris.';
+  }
+
+  @override
+  String yKnockoutLoss10(String opponent, String score) {
+    return 'Éliminés par $opponent, $score. Attendez-vous à des excuses d\'ici demain matin.';
+  }
+
+  @override
+  String yKnockoutLoss11(String opponent, String score) {
+    return '$opponent $score. Dehors, et ça n\'a jamais semblé pouvoir finir autrement.';
+  }
+
+  @override
+  String yAwayFansGloat0(String nation, String score) {
+    return '$score contre $nation. Respect, ils reviendront plus forts.';
+  }
+
+  @override
+  String yAwayFansGloat1(String nation, String score) {
+    return 'Belle victoire pour nous, $score. Mauvaise journée pour $nation, je pense à leurs supporters.';
+  }
+
+  @override
+  String yAwayFansGloat2(String nation, String score) {
+    return '$score. Mauvaise soirée pour $nation, et on a saisi notre chance. C\'est le jeu.';
+  }
+
+  @override
+  String yAwayFansGloat3(String nation, String score) {
+    return '$score contre $nation ! Qui l\'avait vu venir ? Pas eux.';
+  }
+
+  @override
+  String yAwayFansGloat4(String nation, String score) {
+    return 'Victoire $score contre $nation. Quelqu\'un peut aller voir comment vont leurs supporters ?';
+  }
+
+  @override
+  String yAwayFansGloat5(String nation, String score) {
+    return '$nation $score. Celle-là va dans l\'album photo.';
+  }
+
+  @override
+  String yAwayFansGloat6(String nation, String score) {
+    return '$score contre $nation. Et ils se prennent pour une grande équipe.';
+  }
+
+  @override
+  String yAwayFansGloat7(String nation, String score) {
+    return 'Imagine perdre $score contre nous. Demande à $nation, ils savent maintenant.';
+  }
+
+  @override
+  String yAwayFansGloat8(String nation, String score) {
+    return '$nation, $score. Bon vol retour.';
+  }
+
+  @override
+  String yNeutralLoss0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Une grande soirée pour $opponent, une dure pour $nation.';
+  }
+
+  @override
+  String yNeutralLoss1(String nation, String opponent, String score) {
+    return 'Pensées pour les supporters de $nation après ce $score contre $opponent. Ils rebondiront.';
+  }
+
+  @override
+  String yNeutralLoss2(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Toutes les grandes équipes connaissent une soirée comme ça.';
+  }
+
+  @override
+  String yNeutralLoss3(String nation, String opponent, String score) {
+    return 'Coup de tonnerre de la journée : $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralLoss4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Personne ne l\'a vu venir.';
+  }
+
+  @override
+  String yNeutralLoss5(String nation, String opponent, String score) {
+    return 'Résultat du jour : $nation $score $opponent. Des questions attendent $nation.';
+  }
+
+  @override
+  String yNeutralLoss6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Pas un accident, si vous avez suivi.';
+  }
+
+  @override
+  String yNeutralLoss7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Quelqu\'un là-bas va devoir s\'expliquer.';
+  }
+
+  @override
+  String yNeutralLoss8(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Grand nom, petite prestation.';
+  }
+
+  @override
+  String yDownGap0(String opponent, String gap) {
+    return '$opponent : $gap places derrière nous. Ça arrive. On avance.';
+  }
+
+  @override
+  String yDownGap1(String gap) {
+    return 'Écart au classement : $gap places en notre faveur. Le football ne lit pas les classements.';
+  }
+
+  @override
+  String yDownGap2(String opponent, String gap) {
+    return '$gap places entre nous et $opponent sur le papier. Pas sur le terrain ce soir.';
+  }
+
+  @override
+  String yDownGap3(String opponent, String gap) {
+    return 'Écart au classement avant le coup d\'envoi : $gap places en notre faveur. Défaite contre $opponent quand même.';
+  }
+
+  @override
+  String yDownGap4(String opponent, String gap) {
+    return 'Au classement mondial, $opponent était $gap places derrière nous. Résultat : défaite.';
+  }
+
+  @override
+  String yDownGap5(String opponent, String gap) {
+    return 'Indice de surprise : $gap places de classement, dans le mauvais sens, contre $opponent.';
+  }
+
+  @override
+  String yDownGap6(String opponent, String gap) {
+    return '$gap places devant $opponent au classement. Défaite. Expliquez-moi ça.';
+  }
+
+  @override
+  String yDownGap7(String gap) {
+    return 'Défaite contre une équipe classée $gap places derrière nous. Laissez ce chiffre faire son effet.';
+  }
+
+  @override
+  String yDownGap8(String opponent, String gap) {
+    return 'Écart au classement : $gap places. Défaite contre $opponent. Quelqu\'un devrait compter les jours.';
+  }
+
+  @override
+  String yDrewHeroic0(String opponent, String score) {
+    return '$score contre $opponent ! Un nul qui a le goût d\'une victoire.';
+  }
+
+  @override
+  String yDrewHeroic1(String opponent, String score) {
+    return '$score face à $opponent. Fier de chacun d\'eux.';
+  }
+
+  @override
+  String yDrewHeroic2(String opponent, String score) {
+    return '$opponent $score. Ils étaient favoris et on a tenu tête.';
+  }
+
+  @override
+  String yDrewHeroic3(String opponent, String score) {
+    return '$score avec $opponent. Un point arraché à la sueur.';
+  }
+
+  @override
+  String yDrewHeroic4(String opponent, String score) {
+    return '$score contre $opponent. Un très bon point.';
+  }
+
+  @override
+  String yDrewHeroic5(String opponent, String score) {
+    return 'Nul $score avec $opponent. Peu de gens attendaient quoi que ce soit.';
+  }
+
+  @override
+  String yDrewHeroic6(String opponent, String score) {
+    return 'Nul arraché contre $opponent, $score. Un résultat sur lequel construire.';
+  }
+
+  @override
+  String yDrewHeroic7(String opponent, String score) {
+    return '$score contre $opponent. Un point que personne ne nous donnait.';
+  }
+
+  @override
+  String yDrewHeroic8(String opponent, String score) {
+    return '$score avec $opponent. Bon point, mais on ne gagne rien avec des nuls.';
+  }
+
+  @override
+  String yDrewHeroic9(String opponent, String score) {
+    return '$score face à $opponent. Joli. On n\'a pas non plus eu un seul vrai tir.';
+  }
+
+  @override
+  String yDrewHeroic10(String opponent, String score) {
+    return '$opponent $score. Un point, et tout le monde fait comme si on avait gagné le titre.';
+  }
+
+  @override
+  String yDrewHeroic11(String opponent, String score) {
+    return '$score contre $opponent. On a garé le bus et on a eu de la chance.';
+  }
+
+  @override
+  String yDrewShame0(String opponent, String score) {
+    return '$score avec $opponent. Frustrant, mais toujours invaincus.';
+  }
+
+  @override
+  String yDrewShame1(String opponent, String score) {
+    return 'Seulement $score avec $opponent. Un jour sans. Ça arrive.';
+  }
+
+  @override
+  String yDrewShame2(String opponent, String score) {
+    return '$opponent $score. Pas assez bien, et les joueurs le savent.';
+  }
+
+  @override
+  String yDrewShame3(String opponent, String score) {
+    return '$score contre $opponent. Deux points perdus, rien de plus.';
+  }
+
+  @override
+  String yDrewShame4(String opponent, String score) {
+    return '$score avec $opponent. Deux points jetés par la fenêtre.';
+  }
+
+  @override
+  String yDrewShame5(String opponent, String score) {
+    return 'Seulement $score avec $opponent. Un mauvais résultat, quelle que soit la façon de le présenter.';
+  }
+
+  @override
+  String yDrewShame6(String opponent, String score) {
+    return '$opponent $score. Un nul qui a le goût d\'une défaite.';
+  }
+
+  @override
+  String yDrewShame7(String opponent, String score) {
+    return '$score contre $opponent. Ces matchs-là, on doit les gagner largement.';
+  }
+
+  @override
+  String yDrewShame8(String opponent, String score) {
+    return '$score avec $opponent. Gênant.';
+  }
+
+  @override
+  String yDrewShame9(String opponent, String score) {
+    return 'Seulement un nul avec $opponent, $score. Qui est responsable ?';
+  }
+
+  @override
+  String yDrewShame10(String opponent, String score) {
+    return '$opponent $score. Si on ne les bat pas, qui va-t-on battre ?';
+  }
+
+  @override
+  String yDrewShame11(String opponent, String score) {
+    return '$score avec $opponent. Leurs supporters fêtent un nul contre nous. Réfléchissez-y.';
   }
 
   @override
@@ -5138,6 +6350,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Deux places au Championnat du monde attribuées via un tournoi à élimination directe entre les meilleurs non-qualifiés.';
 
   @override
+  String tourCupPlayoffNoEntrants(String confederation) {
+    return '$confederation n\'a pas de barrage : toutes ses places se jouent dans les groupes de qualification.';
+  }
+
+  @override
   String get tourCupQualDrawSoon =>
       'Groupes pas encore tirés. Suivez le tirage des qualifications depuis l’accueil pour les découvrir.';
 
@@ -5307,6 +6524,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get objectiveNcSurvive => 'Éviter la relégation';
 
   @override
+  String get objectiveNcOffTheBottom => 'Ne pas finir dernier du groupe';
+
+  @override
   String get finishNcChampions => 'Vainqueurs de la Coupe des Nations';
 
   @override
@@ -5320,6 +6540,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get finishNcStayedUp => 'Maintien assuré';
+
+  @override
+  String get finishNcClearOfBottom => 'Pas dernier du groupe';
 
   @override
   String get finishNcBottom => 'Dernier du groupe';
@@ -6664,7 +7887,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String newsNatzStarTitle(String name, String nation) {
-    return '⭐ $name prêt à rejoindre la sélection $nation !';
+    return '$name prêt à rejoindre la sélection $nation !';
   }
 
   @override
@@ -7315,10 +8538,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupBlurb =>
-      'Toutes les parties sont dans un seul fichier sur ce téléphone, et rien ne le sauvegarde automatiquement. Exportez une copie et gardez-la ailleurs, dans Fichiers ou iCloud Drive, pour qu’un téléphone perdu ou une app supprimée ne vous coûte pas une carrière.';
+      'Toutes les parties tiennent dans un seul fichier sur ce téléphone, et rien ne les sauvegarde tout seul tant que vous n’activez pas la sauvegarde automatique ci-dessous. Gardez une copie dans le cloud pour qu’un téléphone perdu ou une appli supprimée ne vous coûte pas une carrière.';
 
   @override
-  String get backupExport => 'EXPORTER UNE SAUVEGARDE';
+  String get backupBlurbNoAuto =>
+      'Toutes les parties tiennent dans un seul fichier sur ce téléphone, et rien ne les sauvegarde tout seul. Gardez une copie dans le cloud pour qu’un téléphone perdu ou une appli supprimée ne vous coûte pas une carrière.';
+
+  @override
+  String get backupExport => 'SAUVEGARDER DANS LE CLOUD';
 
   @override
   String get backupExportSubject => 'Sauvegardes FNM';
@@ -9704,8 +10931,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get injuryCoverTitle => 'REMPLAÇANT';
 
   @override
-  String injuryCoverBanner(String player) {
-    return '$player est blessé. Appelez n\'importe quel joueur hors du groupe, à n\'importe quel poste, ou gardez-le et continuez.';
+  String injuryCoverBanner(String player, String position) {
+    return '$player ($position) est blessé. Appelez n\'importe quel joueur hors du groupe, à n\'importe quel poste, ou gardez-le et continuez.';
   }
 
   @override
@@ -9954,14 +11181,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get campaignGuineasTwist =>
-      'La Guinée équatoriale, la Guinée africaine la moins bien classée, pour deux cycles';
+      'La Guinée équatoriale, la plus petite des Guinées africaines, pour deux cycles';
 
   @override
   String get campaignGuineasGoal => 'Battre la Guinée et la Guinée-Bissau';
 
   @override
   String get campaignGuineasIntro =>
-      'Trois nations africaines portent le nom de Guinée, et la Guinée équatoriale est la moins bien classée des trois. Vous avez deux cycles pour battre au moins une fois la Guinée et la Guinée-Bissau, puis voir jusqu’où vous irez au Championnat d’Afrique. La Papouasie-Nouvelle-Guinée, la quatrième Guinée, est déjà programmée en match amical.';
+      'Trois nations africaines portent le nom de Guinée, et la Guinée équatoriale est la plus petite des trois. Vous avez deux cycles pour battre au moins une fois la Guinée et la Guinée-Bissau, puis voir jusqu’où vous irez au Championnat d’Afrique. La Papouasie-Nouvelle-Guinée, la quatrième Guinée, est déjà programmée en match amical.';
 
   @override
   String get campaignStars1Guineas => 'Battre la Guinée et la Guinée-Bissau';
@@ -10000,6 +11227,33 @@ class AppLocalizationsFr extends AppLocalizations {
   String get campaignStars3YoungFinns => 'Gagner le Championnat du monde';
 
   @override
+  String get campaignGreenlandTitle => 'Un siècle groenlandais';
+
+  @override
+  String get campaignGreenlandTwist =>
+      'Le Groenland prend la place de Saint-Marin en Europe, pour cent ans';
+
+  @override
+  String get campaignGreenlandGoal =>
+      'Se qualifier pour un Championnat d’Europe';
+
+  @override
+  String get campaignGreenlandIntro =>
+      'Le Groenland n’a jamais disputé de match international officiel. Dans ce monde, il a pris la place de Saint-Marin en Europe et part tout en bas du classement mondial : des joueurs amateurs, des terrains synthétiques et une saison coincée entre deux neiges. Vous avez cent ans, soit vingt-cinq cycles, pour atteindre un Championnat d’Europe, puis un Championnat du monde et, si vous osez rêver, en remporter un.';
+
+  @override
+  String get campaignStars1Greenland =>
+      'Se qualifier pour un Championnat d’Europe';
+
+  @override
+  String get campaignStars2Greenland =>
+      'Se qualifier pour un Championnat du monde';
+
+  @override
+  String get campaignStars3Greenland =>
+      'Gagner le Championnat d’Europe ou le Championnat du monde';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -10012,4 +11266,1639 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get campaignCupOpen => 'À décider';
+
+  @override
+  String newsYouthTitle1(String name, String level) {
+    return '$name brille avec les $level';
+  }
+
+  @override
+  String newsYouthTitle2(String name, String level) {
+    return 'Rapport du centre de formation : $name se distingue';
+  }
+
+  @override
+  String newsYouthTitle3(String name, String level) {
+    return 'Le joueur à suivre chez les $level : $name';
+  }
+
+  @override
+  String newsYouthGoals1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fois',
+      one: 'une fois',
+    );
+    return '$name a marqué $_temp0 avec les $level face à $opponent lors de la dernière fenêtre internationale.';
+  }
+
+  @override
+  String newsYouthGoals2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count buts',
+      one: 'Un but',
+    );
+    return '$_temp0 pour $name lors du match des $level face à $opponent pendant cette fenêtre.';
+  }
+
+  @override
+  String newsYouthGoals3(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count buts',
+      one: 'un but',
+    );
+    return 'Les $level ont affronté $opponent, et $name est reparti avec $_temp0 à son actif.';
+  }
+
+  @override
+  String newsYouthAssists1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count passes décisives',
+      one: 'une passe décisive',
+    );
+    return '$name a délivré $_temp0 avec les $level face à $opponent et a dirigé le jeu du début à la fin.';
+  }
+
+  @override
+  String newsYouthAssists2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count passes décisives',
+      one: 'une passe décisive',
+    );
+    return 'Les $level ont joué $opponent pendant cette fenêtre, et $name tirait les ficelles : $_temp0 et une prestation dont le staff parle encore.';
+  }
+
+  @override
+  String newsYouthCleanSheet1(String name, String level, String opponent) {
+    return '$name a été remarquable lors du match sans but encaissé des $level face à $opponent.';
+  }
+
+  @override
+  String newsYouthCleanSheet2(String name, String level, String opponent) {
+    return 'Aucun but encaissé pour les $level face à $opponent, et $name y est pour beaucoup.';
+  }
+
+  @override
+  String newsYouthDisplay1(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$name a impressionné avec les $level face à $opponent, et le staff lui a attribué un $mark sur dix.';
+  }
+
+  @override
+  String newsYouthDisplay2(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return 'Les $level ont affronté $opponent pendant cette fenêtre, et les entraîneurs ont mis en avant $name : $mark sur dix, la meilleure note de l’équipe.';
+  }
+
+  @override
+  String get newsYouthDevReady1 =>
+      'À ce niveau, il est déjà assez bon pour être envisagé en équipe A.';
+
+  @override
+  String get newsYouthDevReady2 =>
+      'Le staff estime qu’il est prêt pour le football senior dès maintenant. La décision vous appartient.';
+
+  @override
+  String get newsYouthDevClose1 =>
+      'Il progresse bien et frappe à la porte de l’équipe A.';
+
+  @override
+  String get newsYouthDevClose2 =>
+      'Il n’est plus très loin de l’équipe A, et une bonne saison de plus pourrait suffire.';
+
+  @override
+  String get newsYouthDevGrowing1 =>
+      'Il se développe bien, même si l’équipe A est encore à une ou deux marches.';
+
+  @override
+  String get newsYouthDevGrowing2 =>
+      'Il reste du travail avant d’en faire un international A, mais tout va dans le bon sens.';
+
+  @override
+  String get newsYouthDevRaw1 =>
+      'Il est encore brut et à quelques années de l’équipe A, mais le talent saute aux yeux.';
+
+  @override
+  String get newsYouthDevRaw2 =>
+      'Il est encore tôt, et les formateurs demandent de la patience plutôt que des gros titres.';
+
+  @override
+  String get newsYouthStrengthGkPhysical =>
+      'Son envergure et sa maîtrise de la surface le distinguent.';
+
+  @override
+  String get newsYouthStrengthGkTechnical =>
+      'Sa prise de balle et sa relance sont les meilleures que le centre ait vues depuis des années.';
+
+  @override
+  String get newsYouthStrengthGkStamina =>
+      'Sa concentration ne faiblit jamais : il est aussi vif à la quatre-vingt-dixième minute qu’à la première.';
+
+  @override
+  String get newsYouthStrengthDefPhysical =>
+      'Sa vitesse et son jeu de tête sont les clés de son jeu.';
+
+  @override
+  String get newsYouthStrengthDefTechnical =>
+      'Il lit le jeu bien au-delà de son âge et reste serein balle au pied.';
+
+  @override
+  String get newsYouthStrengthDefStamina =>
+      'Il ne déconnecte jamais et sprinte encore pour revenir à la dernière minute.';
+
+  @override
+  String get newsYouthStrengthMidPhysical =>
+      'Il récupère les ballons avec une vraie puissance et se projette aussitôt vers l’avant.';
+
+  @override
+  String get newsYouthStrengthMidTechnical =>
+      'Sa vision et sa palette de passes sont les clés de son jeu.';
+
+  @override
+  String get newsYouthStrengthMidStamina =>
+      'Il a un coffre remarquable : il couvre chaque brin d’herbe.';
+
+  @override
+  String get newsYouthStrengthFwdPhysical =>
+      'Sa vitesse dans la profondeur et sa présence dans les airs en font un casse-tête pour toutes les défenses.';
+
+  @override
+  String get newsYouthStrengthFwdTechnical =>
+      'Sa finition et ses déplacements dans la surface sont les clés de son jeu.';
+
+  @override
+  String get newsYouthStrengthFwdStamina =>
+      'Il presse dès la première ligne tout le match et ne laisse aucun répit aux défenseurs.';
+
+  @override
+  String pressMomentBigWinWarm3(String opponent) {
+    return 'Les supporters vont chanter ce match face à $opponent pendant un moment. Qu’avez-vous dit aux joueurs au coup de sifflet final ?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral3(String opponent) {
+    return 'C’était une démonstration face à $opponent. Quelle part vient du travail à l’entraînement ?';
+  }
+
+  @override
+  String pressMomentBigWinHostile3(String opponent) {
+    return 'Bravo pour le résultat face à $opponent, mais nous avons déjà vu des soirées comme celle-ci. Qu’est-ce qui est différent cette fois ?';
+  }
+
+  @override
+  String pressMomentBigLossWarm3(String opponent) {
+    return 'Tout le monde a une mauvaise soirée, et c’en était une face à $opponent. En combien de temps pouvez-vous tourner la page ?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral3(String opponent) {
+    return '$opponent a été meilleur dans tous les secteurs. Par où commencez-vous les réparations ?';
+  }
+
+  @override
+  String pressMomentBigLossHostile3(String opponent) {
+    return 'Les supporters partaient avant la fin face à $opponent. Pouvez-vous leur en vouloir ?';
+  }
+
+  @override
+  String pressMomentCrisisWarm3(String opponent) {
+    return 'La série est difficile, et $opponent ne l’a pas rendue plus facile. Qu’est-ce qui vous fait tenir ?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral3(String opponent) {
+    return 'Encore un match sans victoire, cette fois face à $opponent. Combien de temps cela peut-il durer avant que la direction n’agisse ?';
+  }
+
+  @override
+  String pressMomentCrisisHostile3(String opponent) {
+    return '$opponent aussi. Reste-t-il quelque chose dans votre plan, ou est-il temps de laisser la place à quelqu’un d’autre ?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers5 =>
+      'Quoi que vous écriviez, écrivez-le sur les joueurs. Ils l’ont mérité.';
+
+  @override
+  String get pressReplyCreditPlayers6 =>
+      'J’ai un groupe qui irait au feu les uns pour les autres. Ce n’est pas rien.';
+
+  @override
+  String get pressReplyTakeResponsibility5 =>
+      'C’est moi qui décide, donc les critiques sont pour moi. C’est le métier.';
+
+  @override
+  String get pressReplyTakeResponsibility6 =>
+      'Regardez d’abord le sélectionneur. Je me suis trompé sur certaines choses et je vais les corriger.';
+
+  @override
+  String get pressReplyDemandMore5 =>
+      'Bien, ce n’est pas suffisant ici. Je le leur ai dit en face.';
+
+  @override
+  String get pressReplyDemandMore6 =>
+      'Personne dans ce vestiaire n’a sa place garantie. Maintenant, ils le savent.';
+
+  @override
+  String get pressReplyDeflect5 =>
+      'Vous pouvez poser la question de trois façons différentes. La réponse sera la même.';
+
+  @override
+  String get pressReplyDeflect6 =>
+      'Je garde mes pensées pour les joueurs. Vous comprendrez.';
+
+  @override
+  String yWinRoutine12(String opponent, String score) {
+    return '$score face à $opponent. Un football calme, maîtrisé, adulte. Ça fait plaisir.';
+  }
+
+  @override
+  String yWinRoutine13(String opponent, String score) {
+    return 'Victoire $score sur $opponent sans transpirer. Cette équipe devient douée pour l’ennui, et l’ennui gagne des titres.';
+  }
+
+  @override
+  String yWinRoutine14(String opponent, String score) {
+    return '$opponent $score. Trois points, zéro drame, au boulot.';
+  }
+
+  @override
+  String yWinRoutine15(String opponent, String score) {
+    return 'Un $score de routine face à $opponent. Personne ne s’en souviendra et personne n’en a besoin.';
+  }
+
+  @override
+  String yWinRoutine16(String opponent, String score) {
+    return '$score face à $opponent, et pourtant je reste inquiet.';
+  }
+
+  @override
+  String yWinRoutine17(String opponent, String score) {
+    return 'Victoire $score sur $opponent. Contre une vraie équipe, une prestation pareille se paie.';
+  }
+
+  @override
+  String yWinTight12(String opponent, String score) {
+    return '$score face à $opponent. On a serré les dents, souffert et gagné. Ça, c’est une équipe.';
+  }
+
+  @override
+  String yWinTight13(String opponent, String score) {
+    return 'Victoire $score sur $opponent au mental. Je prends une équipe qui refuse de perdre.';
+  }
+
+  @override
+  String yWinTight14(String opponent, String score) {
+    return '$opponent $score. Jusqu’au bout, mais les points sont à nous.';
+  }
+
+  @override
+  String yWinTight15(String opponent, String score) {
+    return 'Un petit $score face à $opponent. Pas grand-chose entre les deux, c’est le football.';
+  }
+
+  @override
+  String yWinTight16(String opponent, String score) {
+    return '$score face à $opponent. Un rebond heureux dans l’autre sens et on aurait une tout autre conversation.';
+  }
+
+  @override
+  String yWinTight17(String opponent, String score) {
+    return 'On a tenu de justesse face à $opponent, $score. Que personne n’appelle ça une prestation.';
+  }
+
+  @override
+  String yDrew12(String opponent, String score) {
+    return '$score face à $opponent. Ce n’est pas une défaite, et certains jours c’est ça le boulot.';
+  }
+
+  @override
+  String yDrew13(String opponent, String score) {
+    return 'Un point arraché face à $opponent, $score. J’ai aimé notre combativité.';
+  }
+
+  @override
+  String yDrew14(String opponent, String score) {
+    return '$opponent $score. Match nul et partage des points, comme disaient les commentateurs d’antan.';
+  }
+
+  @override
+  String yDrew15(String opponent, String score) {
+    return '$score face à $opponent. Aucune des deux équipes n’a fait assez pour mériter plus.';
+  }
+
+  @override
+  String yDrew16(String opponent, String score) {
+    return '$score face à $opponent. Le genre de nul qui a un goût de défaite dans le bus du retour.';
+  }
+
+  @override
+  String yDrew17(String opponent, String score) {
+    return 'Nul $score face à $opponent. On parle sans arrêt de progrès et on refait sans arrêt ça.';
+  }
+
+  @override
+  String yLost12(String opponent, String score) {
+    return '$score face à $opponent. Ça fait mal, mais j’en ai vu assez pour croire en cette équipe.';
+  }
+
+  @override
+  String yLost13(String opponent, String score) {
+    return 'Battus $score par $opponent, et ils étaient bons. On le reconnaît et on repart.';
+  }
+
+  @override
+  String yLost14(String opponent, String score) {
+    return '$opponent $score. Une défaite, quelques leçons, et le prochain match bientôt.';
+  }
+
+  @override
+  String yLost15(String opponent, String score) {
+    return 'Défaite $score face à $opponent. Difficile de contester.';
+  }
+
+  @override
+  String yLost16(String opponent, String score) {
+    return '$score face à $opponent. Les mêmes erreurs que la dernière fois, avec la même assurance.';
+  }
+
+  @override
+  String yLost17(String opponent, String score) {
+    return 'Battus $score par $opponent. Si personne n’a de comptes à rendre pour ça, qu’est-ce qu’on fait ?';
+  }
+
+  @override
+  String get yReactionShrug12 =>
+      'Ça me va. Tous les soirs n’ont pas besoin de feux d’artifice.';
+
+  @override
+  String get yReactionShrug13 =>
+      'Des points sont des points. Je dors bien ce soir.';
+
+  @override
+  String get yReactionShrug14 => 'Vu. Rien à signaler.';
+
+  @override
+  String get yReactionShrug15 => 'Quelque part entre correct et correct.';
+
+  @override
+  String get yReactionShrug16 =>
+      'J’ai payé le streaming pour ça. Plus jamais (je reviendrai).';
+
+  @override
+  String get yReactionShrug17 =>
+      'Quatre-vingt-dix minutes de néant en forme de football.';
+
+  @override
+  String get yReactionRelief12 => 'Je respire enfin. Fier qu’ils aient tenu.';
+
+  @override
+  String get yReactionRelief13 =>
+      'Ce sont ces victoires-là qui construisent une équipe. Le moche, c’est beau.';
+
+  @override
+  String get yReactionRelief14 => 'Plus d’ongles, mais toujours les points.';
+
+  @override
+  String get yReactionRelief15 =>
+      'Jamais un coup de sifflet final n’a sonné aussi bien.';
+
+  @override
+  String get yReactionRelief16 =>
+      'Content d’avoir gagné, inquiet de la manière.';
+
+  @override
+  String get yReactionRelief17 =>
+      'On continue de s’en sortir. Un jour, ça ne passera pas.';
+
+  @override
+  String get yReactionFury12 =>
+      'J’adore cette équipe, et c’est justement pour ça que ça fait mal.';
+
+  @override
+  String get yReactionFury13 =>
+      'Mauvaise soirée. La prochaine fois, ils nous en doivent une, et ils le savent.';
+
+  @override
+  String get yReactionFury14 =>
+      'J’ai éteint à la soixante-dixième. J’aurais dû à la soixantième.';
+
+  @override
+  String get yReactionFury15 => 'Pas de combat, pas d’idées, pas d’excuses.';
+
+  @override
+  String get yReactionFury16 =>
+      'Les mêmes problèmes à chaque fois, et personne ne règle rien.';
+
+  @override
+  String get yReactionFury17 =>
+      'Quelqu’un à la fédération doit revoir ça et nous l’expliquer.';
+
+  @override
+  String get backupShareHint =>
+      'Crée un fichier de sauvegarde avec toutes les parties. Choisissez Google Drive, iCloud Drive ou Fichiers pour le garder.';
+
+  @override
+  String backupLastAt(String date) {
+    return 'Dernière sauvegarde : $date';
+  }
+
+  @override
+  String get backupNever => 'Aucune sauvegarde pour l’instant';
+
+  @override
+  String get backupRemindersTitle => 'Rappels de sauvegarde';
+
+  @override
+  String get backupRemindersBlurb =>
+      'Un message dans votre boîte quand votre dernière sauvegarde commence à dater.';
+
+  @override
+  String get backupAutoICloudTitle => 'Sauvegarde iCloud automatique';
+
+  @override
+  String get backupAutoDriveTitle => 'Sauvegarde Google Drive automatique';
+
+  @override
+  String get backupAutoBlurb =>
+      'Sauvegarde après les matchs, à la fin d’un cycle et quand vous quittez l’appli. Garde les deux dernières.';
+
+  @override
+  String get backupStatusUploading => 'Sauvegarde en cours.';
+
+  @override
+  String get backupStatusUploaded => 'Sauvegardé.';
+
+  @override
+  String get backupStatusICloudSignedOut =>
+      'iCloud est désactivé. Connectez-vous à iCloud et activez iCloud Drive dans l’app Réglages.';
+
+  @override
+  String get backupStatusDriveSignedOut =>
+      'Non connecté. Activez l’interrupteur pour vous connecter avec Google.';
+
+  @override
+  String get backupStatusNotConfigured =>
+      'Pas encore disponible dans cette version de l’appli.';
+
+  @override
+  String get backupStatusUnavailable =>
+      'Le cloud est injoignable pour l’instant. Nouvel essai plus tard.';
+
+  @override
+  String get backupStatusFailed =>
+      'La dernière sauvegarde automatique n’a pas abouti. Nouvel essai plus tard.';
+
+  @override
+  String backupDriveSignedInAs(String email) {
+    return 'Connecté en tant que $email';
+  }
+
+  @override
+  String get backupDriveSignOut => 'SE DÉCONNECTER';
+
+  @override
+  String get backupDriveSignInFailed =>
+      'La connexion Google a échoué. Réessayez plus tard.';
+
+  @override
+  String get backupRestoreICloud => 'RESTAURER DEPUIS ICLOUD';
+
+  @override
+  String get backupRestoreDrive => 'RESTAURER DEPUIS GOOGLE DRIVE';
+
+  @override
+  String get backupCrossPlatformHelp =>
+      'Vous passez d’iPhone à Android ou l’inverse ? Sauvegardez dans un fichier sur un téléphone, puis restaurez depuis ce fichier sur l’autre.';
+
+  @override
+  String get backupCloudListBlurb =>
+      'Les sauvegardes de vos appareils sur ce compte. Touchez-en une pour la restaurer.';
+
+  @override
+  String get backupCloudListEmpty =>
+      'Aucune sauvegarde trouvée. Une nouvelle sauvegarde peut mettre quelques minutes à arriver sur un autre appareil.';
+
+  @override
+  String get backupCloudListFailed =>
+      'Impossible de lire les sauvegardes. Vérifiez la connexion et réessayez.';
+
+  @override
+  String get backupCloudThisDevice => 'Cet appareil';
+
+  @override
+  String backupCloudMore(int count) {
+    return 'Autres parties : $count';
+  }
+
+  @override
+  String get backupCloudNewer =>
+      'Créée par une version plus récente de l’appli. Mettez-la à jour d’abord.';
+
+  @override
+  String get backupCloudDownloading => 'Récupération de la sauvegarde.';
+
+  @override
+  String get backupRestoreSafetyNote =>
+      'Une copie des parties de ce téléphone est d’abord conservée sur ce téléphone.';
+
+  @override
+  String get backupRejectedSafety =>
+      'Impossible de garder une copie des parties actuelles, donc rien n’a été remplacé.';
+
+  @override
+  String get newsBackupReminderTitle => 'L’heure d’une sauvegarde';
+
+  @override
+  String get newsBackupReminderBody =>
+      'Vos parties ne sont que sur ce téléphone. Ouvrez les Réglages et touchez Sauvegarder dans le cloud, ou activez-y la sauvegarde automatique. Ces rappels peuvent aussi être désactivés dans les Réglages.';
+
+  @override
+  String get backupSafetyTitle => 'Copies d’avant une restauration';
+
+  @override
+  String get backupSafetyBlurb =>
+      'Gardées sur ce téléphone au cas où une restauration était la mauvaise. Les trois plus récentes sont conservées.';
+
+  @override
+  String get backupSafetyRestore => 'RESTAURER';
+
+  @override
+  String get backupSafetyShare => 'PARTAGER';
+
+  @override
+  String get backupCloudNoDetails => 'Les détails sont encore en route.';
+
+  @override
+  String get tacticsLibraryTitle => 'BIBLIOTHÈQUE DE TACTIQUES';
+
+  @override
+  String get tacticsLibraryBlurb =>
+      'Les tactiques de votre bibliothèque peuvent être chargées dans n\'importe quelle sauvegarde, même une nouvelle. Les rôles et les tireurs de CPA sont enregistrés par poste, pas par joueur.';
+
+  @override
+  String get tacticsSaveToLibrary => 'Enregistrer dans la bibliothèque';
+
+  @override
+  String get tacticsLoadFromLibrary => 'Charger depuis la bibliothèque';
+
+  @override
+  String get tacticsLibraryEmpty =>
+      'Votre bibliothèque est vide. Enregistrez-y une tactique pour la charger dans n\'importe quelle sauvegarde.';
+
+  @override
+  String tacticsLibrarySaved(String name) {
+    return '« $name » enregistrée dans votre bibliothèque';
+  }
+
+  @override
+  String tacticsLibraryLoaded(String name) {
+    return '« $name » chargée';
+  }
+
+  @override
+  String tacticsLibraryNotFitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count rôles ou tireurs de CPA n\'ont pas trouvé leur place dans cet effectif.',
+      one:
+          '1 rôle ou tireur de CPA n\'a pas trouvé sa place dans cet effectif.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tacticsLibraryRename => 'Renommer';
+
+  @override
+  String get tacticsLibraryRenameTitle => 'Renommer la tactique';
+
+  @override
+  String get tacticsLibraryDelete => 'Supprimer';
+
+  @override
+  String tacticsLibraryDeleteTitle(String name) {
+    return 'Supprimer « $name » ?';
+  }
+
+  @override
+  String get tacticsLibraryDeleteBody =>
+      'Elle disparaîtra de la bibliothèque dans toutes vos sauvegardes.';
+
+  @override
+  String get tacticsLibraryNameTaken =>
+      'Votre bibliothèque contient déjà une tactique de ce nom.';
+
+  @override
+  String tacticsLibraryCouldNotLoad(String error) {
+    return 'Impossible de charger la bibliothèque.\n$error';
+  }
+
+  @override
+  String hostBidHeading(String competition, int year) {
+    return 'Candidature à l\'organisation : $competition $year';
+  }
+
+  @override
+  String get hostBidScreenTitle => 'Candidature';
+
+  @override
+  String get hostBidBlurb =>
+      'L\'organisateur est tiré au sort parmi les candidats. Une candidature donne plus de poids à votre nom : vos stades vous offrent une chance de départ, l\'argent l\'augmente, chaque million supplémentaire comptant un peu moins. L\'argent est dépensé, que vous gagniez ou non.';
+
+  @override
+  String hostBidPrize(String amount) {
+    return 'Si vous gagnez, vous organisez, vous êtes qualifié d\'office et vous recevez une aide unique de $amount pour le prochain budget.';
+  }
+
+  @override
+  String get hostBidChance => 'Chance d\'organiser';
+
+  @override
+  String get hostBidBaseLabel => 'Stades et statut';
+
+  @override
+  String get hostBidInvestLabel => 'Investissement';
+
+  @override
+  String hostBidCeiling(String nation, String percent) {
+    return 'Plafond pour $nation : $percent';
+  }
+
+  @override
+  String get hostBidInvestment => 'Votre investissement';
+
+  @override
+  String hostBidFreeFunds(String amount) {
+    return 'Fonds disponibles : $amount';
+  }
+
+  @override
+  String get hostBidSubmit => 'Déposer la candidature';
+
+  @override
+  String get hostBidDecline => 'Pas cette fois';
+
+  @override
+  String get hostBidUnavailable => 'Cette candidature n\'est plus ouverte.';
+
+  @override
+  String hostBidWonTitle(String competition, int year) {
+    return 'Candidature retenue : $competition $year';
+  }
+
+  @override
+  String hostBidWonBody(String amount) {
+    return 'Nous organiserons le tournoi et, en tant qu\'hôtes, nous sommes qualifiés d\'office. Une aide unique de $amount est désormais dans les caisses de la fédération, et vous pouvez la répartir entre les départements de ce cycle directement depuis l\'accueil.';
+  }
+
+  @override
+  String hostBidLostTitle(String competition, int year) {
+    return 'Candidature rejetée : $competition $year';
+  }
+
+  @override
+  String hostBidLostBody(String hosts) {
+    return 'L\'organisation revient à : $hosts. Notre candidature n\'a pas suffi cette fois, l\'argent investi est perdu, mais la fédération a défendu son projet.';
+  }
+
+  @override
+  String get hostBidGrantEvent => 'Répartir l\'aide à l\'organisation';
+
+  @override
+  String hostBidGrantBanner(String amount) {
+    return 'Aide à l\'organisation : $amount à ajouter dès maintenant aux départements de ce cycle. Ce qui est déjà réparti reste en place, le reste demeure en caisse.';
+  }
+
+  @override
+  String get stadiumsTitle => 'Stades nationaux';
+
+  @override
+  String get stadiumsEntrySub =>
+      'Agrandir un stade ou en construire un nouveau';
+
+  @override
+  String get stadiumsBlurb =>
+      'Le niveau d\'un stade est sa taille : niveau 1 sous 15 000 places, niveau 2 dès 15 000, niveau 3 dès 25 000, niveau 4 dès 40 000, niveau 5 dès 60 000. Chaque stade rapporte une petite recette au début de chaque cycle, plus il a de places, plus il rapporte, tant que vos supporters les remplissent. Un agrandissement ajoute des places tout de suite et un peu de réputation dès le cycle suivant ; une réduction baisse l\'entretien mais ne rembourse rien. Vos stades décident des tournois que vous pouvez briguer.';
+
+  @override
+  String stadiumsIncome(String amount) {
+    return 'Revenus des stades : $amount par cycle';
+  }
+
+  @override
+  String stadiumsReputation(int points) {
+    return 'Réputation grâce aux stades : +$points';
+  }
+
+  @override
+  String get stadiumsClosed =>
+      'Les travaux se commandent au début d\'un cycle, avant de fixer le budget.';
+
+  @override
+  String stadiumsCapacity(String seats) {
+    return 'Capacité : $seats';
+  }
+
+  @override
+  String stadiumsLevel(int level, int max) {
+    return 'Niveau $level/$max';
+  }
+
+  @override
+  String stadiumsUpgrade(String cost) {
+    return 'Améliorer : $cost';
+  }
+
+  @override
+  String get stadiumsTopLevel => 'Niveau maximal';
+
+  @override
+  String stadiumsOpens(int year) {
+    return 'En construction, ouverture en $year';
+  }
+
+  @override
+  String get stadiumsBuildTitle => 'Construire un nouveau stade';
+
+  @override
+  String get stadiumsBuildBody =>
+      'Assez coûteux : un nouveau stade dans la ville de votre choix, ouvert dès le début du prochain cycle.';
+
+  @override
+  String get stadiumsBuildCity => 'Ville';
+
+  @override
+  String stadiumsBuildButton(String cost) {
+    return 'Construire : $cost';
+  }
+
+  @override
+  String get stadiumsBuilding => 'Un stade est déjà en construction.';
+
+  @override
+  String get stadiumsNoCity => 'Chaque ville a déjà un nouveau stade.';
+
+  @override
+  String stadiumsConfirmUpgrade(String stadium, int level, String cost) {
+    return 'Améliorer $stadium au niveau $level pour $cost ?';
+  }
+
+  @override
+  String stadiumsConfirmBuild(String city, String cost) {
+    return 'Construire un nouveau stade à $city pour $cost ?';
+  }
+
+  @override
+  String get stadiumsConfirm => 'Confirmer';
+
+  @override
+  String get stadiumsCancel => 'Annuler';
+
+  @override
+  String get stadiumsRefused =>
+      'La commande n\'est pas passée. Rien n\'a été débité.';
+
+  @override
+  String get stadiumsNameLabel => 'Nom du stade';
+
+  @override
+  String get stadiumsNameHint => 'Laissez vide pour garder le nom proposé.';
+
+  @override
+  String get stadiumsRename => 'Renommer le stade';
+
+  @override
+  String get hostBidSectionTitle => 'Candidatures à l\'organisation';
+
+  @override
+  String get hostBidOpenSub =>
+      'Facultatif. Décidez avant le début du nouveau cycle.';
+
+  @override
+  String get hostBidDecidedAtRollover =>
+      'L\'organisateur est annoncé au début du nouveau cycle.';
+
+  @override
+  String get hostBidLodged =>
+      'Candidature déposée. L\'organisateur est annoncé au début du nouveau cycle.';
+
+  @override
+  String get hostBidDeclinedNote =>
+      'Vous avez choisi de ne pas être candidat cette fois.';
+
+  @override
+  String get hostBidOpensLater =>
+      'Éligible. Vous pourrez être candidat à la fin de ce cycle.';
+
+  @override
+  String get hostBidNoFunds =>
+      'Pas assez de fonds disponibles pour une candidature.';
+
+  @override
+  String hostBidNeedStadiums(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Il vous manque $count stades de $seats+ places.',
+      one: 'Il vous manque 1 stade de $seats+ places.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hostBidBarredConf(String confederation) {
+    return '$confederation a organisé le dernier Championnat du monde.';
+  }
+
+  @override
+  String get hostBidRecentHost =>
+      'Vous avez organisé l\'une des trois dernières éditions.';
+
+  @override
+  String hostBidRequirement(
+    int grounds,
+    String minSeats,
+    int bigGrounds,
+    String bigSeats,
+  ) {
+    return 'Exigence : $grounds stades de $minSeats+ places, dont $bigGrounds de $bigSeats+.';
+  }
+
+  @override
+  String hostBidWonBodyBudget(String amount) {
+    return 'Nous organiserons le tournoi et sommes qualifiés d\'office en tant qu\'hôtes. Une dotation unique de $amount est déjà dans les fonds de la fédération, prête pour le budget de ce cycle.';
+  }
+
+  @override
+  String get hubStadiumIncome => 'Recettes des stades';
+
+  @override
+  String get stadiumsDownsize => 'Réduire';
+
+  @override
+  String stadiumsConfirmDownsize(String stadium, String seats, int level) {
+    return 'Réduire $stadium à $seats places (niveau $level) ? Rien n\'est remboursé, mais l\'entretien baisse.';
+  }
+
+  @override
+  String get stadiumsResizedThisCycle => 'Rénové ce cycle-ci';
+
+  @override
+  String stadiumsGroundIncome(String amount) {
+    return 'Rapporte $amount par cycle';
+  }
+
+  @override
+  String hostBidLapsedTitle(String competition, int year) {
+    return 'Candidature retirée : $competition $year';
+  }
+
+  @override
+  String hostBidLapsedBodyNation(String nation) {
+    return 'La candidature était faite pour $nation, et vous commencez le nouveau cycle ailleurs. Elle a été retirée et rien n\'a été prélevé.';
+  }
+
+  @override
+  String get hostBidLapsedBodyFunds =>
+      'À la clôture du cycle, les fonds de la fédération ne couvraient plus la mise. La candidature a été retirée et rien n\'a été prélevé.';
+
+  @override
+  String get stadiumsViewMap => 'Carte';
+
+  @override
+  String get stadiumsViewList => 'Liste';
+
+  @override
+  String get stadiumsMapPickCity =>
+      'Touchez une ville pour y construire un nouveau stade.';
+
+  @override
+  String get stadiumsMapFit => 'Voir tout le pays';
+
+  @override
+  String get campaignLegacyTitle => 'Parachever l’héritage';
+
+  @override
+  String get campaignLegacyTwist =>
+      'L’Espagne, championne d’Europe en titre, pour un cycle';
+
+  @override
+  String get campaignLegacyGoal => 'Défendre le titre européen';
+
+  @override
+  String get campaignLegacyIntro =>
+      'L’Espagne est championne d’Europe en titre, et les sceptiques parlent d’un coup d’éclat sans lendemain. Vous avez un cycle pour prouver le contraire : défendez la couronne continentale, puis partez à la conquête du monde. Ajoutez la Coupe des Nations et l’héritage sera parachevé.';
+
+  @override
+  String get campaignStars1Legacy => 'Gagner le Championnat d’Europe';
+
+  @override
+  String get campaignStars2Legacy => 'Et le Championnat du monde';
+
+  @override
+  String get campaignStars3Legacy => 'Et la Coupe des Nations';
+
+  @override
+  String get campaignSectionOneCycle => 'Un cycle';
+
+  @override
+  String get campaignSectionShort => 'Quelques cycles';
+
+  @override
+  String get campaignSectionLong => 'Au long cours';
+
+  @override
+  String get campaignFilterAll => 'Toutes';
+
+  @override
+  String get campaignFilterNew => 'Jamais jouées';
+
+  @override
+  String get campaignFilterInProgress => 'En cours';
+
+  @override
+  String get campaignFilterDone => 'Terminées';
+
+  @override
+  String get campaignFilterEmpty => 'Aucune campagne ici pour l’instant.';
+
+  @override
+  String campaignStarsEarned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étoiles',
+      one: '1 étoile',
+      zero: 'Aucune étoile',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String campaignCycles(int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles cycles',
+      one: '$cycles cycle',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgIntlRetireNoteHigh => ' Il part au sommet, en champion.';
+
+  @override
+  String get msgIntlRetireNoteMissed =>
+      ' Manquer la phase finale a été la goutte de trop.';
+
+  @override
+  String get msgIntlRetireNoteSurprise => ' Personne ne l\'avait vu venir.';
+
+  @override
+  String get msgIntlRetireNoteRecord =>
+      ' Il part en recordman de sa sélection.';
+
+  @override
+  String msgIntlRetireNewsTitle(String nation, String name) {
+    return '$nation : $name prend sa retraite internationale';
+  }
+
+  @override
+  String msgIntlRetireNewsBody(String name, String nation, int age) {
+    return '$name ($nation) a annoncé sa retraite internationale à $age ans.';
+  }
+
+  @override
+  String msgIntlComebackTitle(String name) {
+    return '$name sort de sa retraite internationale';
+  }
+
+  @override
+  String msgIntlComebackBody(String name, int age) {
+    return '$name est de nouveau sélectionnable, à $age ans.';
+  }
+
+  @override
+  String get msgIntlComebackNoteCrisis =>
+      ' Avec un groupe décimé par les blessures, il a répondu présent.';
+
+  @override
+  String get msgIntlComebackNoteManager =>
+      ' Le nouveau sélectionneur l\'a convaincu.';
+
+  @override
+  String msgIntlComebackNewsTitle(String nation, String name) {
+    return '$nation : $name sort de sa retraite internationale';
+  }
+
+  @override
+  String msgIntlComebackNewsBody(String name, String nation, int age) {
+    return '$name ($nation) est de nouveau sélectionnable, à $age ans.';
+  }
+
+  @override
+  String playerIntlRetired(int year) {
+    return 'Retraite internationale, $year';
+  }
+
+  @override
+  String playerIntlComeback(int year) {
+    return 'Retour en sélection, $year';
+  }
+
+  @override
+  String yLegendRetires0(String name) {
+    return 'Merci, $name. Certains portent le maillot, lui l\'a porté à bout de bras.';
+  }
+
+  @override
+  String yLegendRetires1(String name) {
+    return '$name met fin à sa carrière internationale. La fin d\'une époque.';
+  }
+
+  @override
+  String yLegendRetires2(String name) {
+    return '$name arrête. Un tournoi trop tard, pour être honnête.';
+  }
+
+  @override
+  String yLegendRetires3(String name) {
+    return 'Donc $name, c\'est fini. Place aux jeunes.';
+  }
+
+  @override
+  String matchAltitudeOpponentsTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Altitude $altitudeString m : l\'adversaire se fatiguera plus vite';
+  }
+
+  @override
+  String matchAltitudeYouTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Altitude $altitudeString m : vos joueurs se fatigueront plus vite';
+  }
+
+  @override
+  String matchAltitudeBothTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Altitude $altitudeString m : les deux équipes se fatigueront plus vite';
+  }
+
+  @override
+  String matchAltitudeUsedTo(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Altitude $altitudeString m : les deux équipes y sont habituées';
+  }
+
+  @override
+  String matchHeatExpected(int temp) {
+    final intl.NumberFormat tempNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String tempString = tempNumberFormat.format(temp);
+
+    return 'Chaleur : $tempString °C attendus, les jambes lâcheront plus tôt';
+  }
+
+  @override
+  String get matchConditionsAdvice =>
+      'Prévoyez vos changements tôt : ici, des jambes fraîches pèsent plus';
+
+  @override
+  String get fanMoodFurious => 'furieux';
+
+  @override
+  String get fanMoodRestless => 'inquiets';
+
+  @override
+  String get fanMoodCalm => 'sereins';
+
+  @override
+  String get fanMoodUpbeat => 'enthousiastes';
+
+  @override
+  String get fanMoodEuphoric => 'euphoriques';
+
+  @override
+  String matchHomeFans(String mood) {
+    return 'Supporters locaux : $mood';
+  }
+
+  @override
+  String federationFans(String mood) {
+    return 'Supporters : $mood';
+  }
+
+  @override
+  String federationFansIncome(String change) {
+    return 'Recettes des stades au prochain cycle : $change';
+  }
+
+  @override
+  String yFansProtest0(String nation, String manager) {
+    return 'Vingt ans à suivre la sélection à domicile comme à l\'extérieur. Je ne renouvelle pas mon abonnement tant que rien ne change.';
+  }
+
+  @override
+  String yFansProtest1(String nation, String manager) {
+    return 'On continuera de chanter pour le maillot. Mais la banderole du virage nord a dit ce soir ce que tout le monde pense.';
+  }
+
+  @override
+  String yFansProtest2(String nation, String manager) {
+    return 'La moitié du stade vide, et l\'autre moitié a passé la seconde période à chanter #${manager}Démission.';
+  }
+
+  @override
+  String yFansProtest3(String nation, String manager) {
+    return 'Les groupes de supporters parlent de boycotter le prochain match à domicile. Difficile de leur en vouloir.';
+  }
+
+  @override
+  String yFansProtest4(String nation, String manager) {
+    return '#${manager}Démission. Même plus en colère. Juste lassé.';
+  }
+
+  @override
+  String yFansProtest5(String nation, String manager) {
+    return 'Photo de ce soir : des rangées de sièges vides et un drap avec #${manager}Démission. Voilà le compte rendu.';
+  }
+
+  @override
+  String yFansSellOut0(String nation) {
+    return 'Encore à guichets fermés. La meilleure sélection depuis des années, et tout le pays le sait.';
+  }
+
+  @override
+  String yFansSellOut1(String nation) {
+    return 'Le prochain match à domicile s\'est vendu en onze minutes. Cette équipe nous a rendu nos week-ends.';
+  }
+
+  @override
+  String yFansSellOut2(String nation) {
+    return 'Plus un siège libre pour le prochain match à domicile. La fédération va compter la billetterie avec le sourire.';
+  }
+
+  @override
+  String yFansSellOut3(String nation) {
+    return 'Encore complet. On peut dire ce qu\'on veut de la tactique : les gens veulent être dans ce stade.';
+  }
+
+  @override
+  String yFansSellOut4(String nation) {
+    return 'Complet, d\'accord. Les mêmes sifflaient cette équipe il y a dix-huit mois.';
+  }
+
+  @override
+  String yFansSellOut5(String nation) {
+    return 'Soudain complet, soudain tous experts. Vous étiez où quand on ne battait personne ?';
+  }
+
+  @override
+  String get campaignsIntro =>
+      'Les campagnes sont des défis conçus à la main : une nation imposée, un monde avec son propre rebondissement et un objectif à atteindre en un nombre fixe de cycles. Chaque partie reste séparée de vos carrières sauvegardées, et plus vous allez loin, plus vous gagnez d\'étoiles, jusqu\'à trois.';
+
+  @override
+  String hubEventScandal(String player) {
+    return 'Scandale au rassemblement : $player';
+  }
+
+  @override
+  String get hubEventScandalSub => 'Le renvoyer chez lui ou le garder ?';
+
+  @override
+  String get scandalTitle => 'SCANDALE';
+
+  @override
+  String scandalStoryParty(String player) {
+    return '$player était à une fête qui a duré jusqu\'à l\'aube, et les photos faisaient la une de tous les journaux le matin du rassemblement.';
+  }
+
+  @override
+  String scandalStoryCurfew(String player) {
+    return '$player a enfreint le couvre-feu et s\'est fait surprendre en rentrant à l\'hôtel au petit matin.';
+  }
+
+  @override
+  String scandalStoryNightclub(String player) {
+    return '$player a été photographié en boîte de nuit la veille du rassemblement, et les clichés sont partout.';
+  }
+
+  @override
+  String scandalStoryCasino(String player) {
+    return '$player a passé la nuit précédant le rassemblement à une table de casino, et un tabloïd a les photos.';
+  }
+
+  @override
+  String get scandalSendHome => 'Le renvoyer chez lui';
+
+  @override
+  String scandalSendHomeCover(String player) {
+    return 'Le renvoyer, appeler $player';
+  }
+
+  @override
+  String scandalKeep(String player) {
+    return 'Garder $player';
+  }
+
+  @override
+  String get scandalKeepNote =>
+      'Le garder : moral environ -4 et direction environ -3 jusqu\'à la fin du cycle.';
+
+  @override
+  String get scandalSendHomeNote =>
+      'Le renvoyer : aucun coût pour le moral ni la direction, et vous pouvez appeler un remplaçant.';
+
+  @override
+  String get scandalFinalsNote =>
+      'Le renvoyer : aucun coût pour le moral ni la direction, mais en phase finale personne ne peut le remplacer.';
+
+  @override
+  String get scandalPickCover => 'Appeler un remplaçant (facultatif)';
+
+  @override
+  String newsScandalTitle(String player) {
+    return 'Scandale au rassemblement : $player';
+  }
+
+  @override
+  String yScandalParty0(String player, String tag) {
+    return 'Ce sont des jeunes. $player à une fête la veille du rassemblement, et je le veux quand même sur le terrain. #$tag';
+  }
+
+  @override
+  String yScandalParty1(String player, String tag) {
+    return '$player photographié à une fête jusqu\'au bout de la nuit, quelques heures avant le rassemblement. La fédération est informée. #$tag';
+  }
+
+  @override
+  String yScandalParty2(String player, String tag) {
+    return 'Une nuit blanche de fête avant le rassemblement. $player, tu pensais à quoi ? Incroyable. #$tag';
+  }
+
+  @override
+  String yScandalCurfew0(String player, String tag) {
+    return 'Rentré après le couvre-feu, bon, ça arrive. $player doit juste se rattraper sur le terrain. #$tag';
+  }
+
+  @override
+  String yScandalCurfew1(String player, String tag) {
+    return '$player surpris en rentrant à l\'hôtel de l\'équipe après le couvre-feu, quelques heures avant l\'entraînement. #$tag';
+  }
+
+  @override
+  String yScandalCurfew2(String player, String tag) {
+    return 'Le couvre-feu, ce n\'est pas compliqué. $player n\'a pas tenu une seule nuit. #$tag';
+  }
+
+  @override
+  String yScandalNightclub0(String player, String tag) {
+    return 'Bon, $player était en boîte. Les footballeurs ont une vie aussi. Laissez-le jouer. #$tag';
+  }
+
+  @override
+  String yScandalNightclub1(String player, String tag) {
+    return 'Des photos montrent $player en boîte de nuit la veille du rassemblement. #$tag';
+  }
+
+  @override
+  String yScandalNightclub2(String player, String tag) {
+    return 'Des photos en boîte la veille du rassemblement. $player a fait honte au maillot. #$tag';
+  }
+
+  @override
+  String yScandalCasino0(String player, String tag) {
+    return 'Une nuit au casino, ce n\'est pas un crime. $player s\'en remettra. #$tag';
+  }
+
+  @override
+  String yScandalCasino1(String player, String tag) {
+    return '$player aperçu à une table de casino la nuit précédant le rassemblement. #$tag';
+  }
+
+  @override
+  String yScandalCasino2(String player, String tag) {
+    return 'Toute la nuit au casino avant le rassemblement. $player a misé bien plus que de l\'argent. #$tag';
+  }
+
+  @override
+  String yScandalSentHome0(String player) {
+    return 'Bonne décision. Personne n\'est plus grand que l\'équipe, $player compris.';
+  }
+
+  @override
+  String yScandalSentHome1(String player) {
+    return 'Renvoyer $player chez lui était la seule réponse. Respect au sélectionneur.';
+  }
+
+  @override
+  String yScandalSentHome2(String player) {
+    return 'La discipline, c\'est la discipline. $player connaissait les règles.';
+  }
+
+  @override
+  String yScandalSentHome3(String player) {
+    return 'Message clair au groupe : $player est dans l\'avion du retour.';
+  }
+
+  @override
+  String yScandalSentHome4(String player) {
+    return 'Dur pour $player. Une soirée dehors et son rassemblement est terminé ?';
+  }
+
+  @override
+  String yScandalSentHome5(String player) {
+    return 'Renvoyer $player nous affaiblit. On va le payer sur le terrain.';
+  }
+
+  @override
+  String yScandalKept0(String player) {
+    return 'Garder $player, c\'est un pari. Il a intérêt à le rendre sur le terrain.';
+  }
+
+  @override
+  String yScandalKept1(String player) {
+    return 'Soit, $player reste. Alors il doit un grand match à tout le monde.';
+  }
+
+  @override
+  String yScandalKept2(String player) {
+    return 'Donc les règles ne s\'appliquent pas à $player. Bon à savoir.';
+  }
+
+  @override
+  String yScandalKept3(String player) {
+    return 'Le couvre-feu est facultatif maintenant, apparemment. Demandez à $player.';
+  }
+
+  @override
+  String yScandalKept4(String player) {
+    return 'Garder $player après ça ? Ce groupe est une colonie de vacances.';
+  }
+
+  @override
+  String yScandalKept5(String player) {
+    return 'Fête toute la nuit, puis direct dans le onze de départ. Beau message, coach. $player doit être ravi.';
+  }
+
+  @override
+  String get yStreamerBreaks0 =>
+      'LE FRÈRE S\'EST FAIT PRENDRE 😭😭 LA VEILLE DU RASSEMBLEMENT ?? JE PLEURE 💀💀💀';
+
+  @override
+  String get yStreamerBreaks1 =>
+      'NAAAN LE CHAT REGARDEZ ÇA 🤯🤯 LE FRÈRE A VRAIMENT FAIT ÇA AVANT LE RASSEMBLEMENT 😭🔥';
+
+  @override
+  String get yStreamerBreaks2 =>
+      'QUI L\'A LAISSÉ SORTIR ?? QUI L\'A LAISSÉ SORTIR 😭😭💀 C\'EST DU CINÉMA 🔥🔥';
+
+  @override
+  String get yStreamerSentHome0 =>
+      'RENVOYÉ ?? RENVOYÉ !!! 😭😭😭 LE COACH NE RIGOLE PAS 💀🔥';
+
+  @override
+  String get yStreamerSentHome1 =>
+      'LE FRÈRE FAIT SES VALISES EN DIRECT 🤯🤯 ADIEU LE FRÈRE 😭👋';
+
+  @override
+  String get yStreamerSentHome2 =>
+      'C\'EST PAS POSSIIIBLE ILS L\'ONT RENVOYÉ 💀💀 LE CHAT JE TREMBLE 🔥🔥🔥';
+
+  @override
+  String get yStreamerKept0 =>
+      'IL RESTE ??? IL REEESTE 🤯🤯 LE FRÈRE EST INTOUCHABLE 😭🔥';
+
+  @override
+  String get yStreamerKept1 =>
+      'FÊTE TOUTE LA NUIT ET TOUJOURS DANS LE GROUPE 💀💀 JE VEUX CE CONTRAT 😭😭';
+
+  @override
+  String get yStreamerKept2 => 'LE COACH DIT QUE ÇA VA 😭😭 FRÈRE QUOI 🤯🤯🤯';
+
+  @override
+  String get yCameoUjfaloci =>
+      'Je n\'ai rien payé, et ce montant ne correspond pas non plus';
+
+  @override
+  String get yCameoHavir0 => 'Les petits poissons se sont échappés.';
+
+  @override
+  String get yCameoHavir1 =>
+      'On a lancé les filets, les poissons étaient ailleurs.';
+
+  @override
+  String get yCameoHavir2 =>
+      'Je l\'avais dit dès septembre, devant un goulash.';
+
+  @override
+  String get yCameoHavir3 =>
+      'Qui n\'a pas pêché à temps ne doit pas pleurer maintenant.';
+
+  @override
+  String get yCameoHavir4 => 'On a joué comme un silure hors de l\'eau.';
+
+  @override
+  String get yCameoHavir5 => 'Le vent souffle, l\'étang gèle. C\'est comme ça.';
+
+  @override
+  String get yCameoHavir6 =>
+      'Certains jours, on ne remonte qu\'une vieille botte.';
+
+  @override
+  String get yCameoHavir7 =>
+      'De mon temps, on serait au moins allés boire une bière. Même plus ça.';
+
+  @override
+  String get yCameoLzimberskyHome0 =>
+      'Renvoyer un gamin pour une seule soirée ? Le scandale, c\'est ça, pas la fête !';
+
+  @override
+  String get yCameoLzimberskyHome1 =>
+      'Les garçons ont bien le droit de s\'amuser ! Les médias hypocrites gagnent encore.';
+
+  @override
+  String get yCameoLzimberskyHome2 =>
+      'C\'est une chasse aux sorcières. Un jeune sort une soirée et vous le pendez.';
+
+  @override
+  String get yCameoLzimberskyHome3 =>
+      'Que le journaliste qui n\'est jamais allé à une fête jette la première pierre. Honteux !';
+
+  @override
+  String get yCameoLzimberskyHome4 =>
+      'Le sélectionneur a eu peur des tabloïds. Moi, j\'aurais défendu le gamin jusqu\'à mon dernier souffle !';
+
+  @override
+  String get yCameoLzimberskyKept0 =>
+      'Enfin un sélectionneur qui a du cran ! Il a gardé le gamin, et les médias peuvent pleurer.';
+
+  @override
+  String get yCameoLzimberskyKept1 =>
+      'Les garçons ont bien le droit de s\'amuser, non ? Bravo, coach !';
+
+  @override
+  String get yCameoLzimberskyKept2 =>
+      'Les médias hypocrites hurlent, le sélectionneur tient bon. C\'est comme ça qu\'on fait !';
+
+  @override
+  String get yCameoLzimberskyKept3 =>
+      'Une soirée dehors et la presse veut le lapider. Le sélectionneur est un vrai homme !';
+
+  @override
+  String get yCameoLzimberskyKept4 =>
+      'Je le dis : laissez vivre les gamins ! Qui bosse dur a le droit de s\'amuser. Pouce en l\'air.';
+
+  @override
+  String get yTraitStreamer =>
+      'Diffuse tout en direct, à plein volume, en majuscules.';
+
+  @override
+  String hubEventAwardsCeremony(int year) {
+    return 'Joueur de l’année $year';
+  }
+
+  @override
+  String get hubEventAwardsCeremonySub => 'Les votes sont dépouillés';
+
+  @override
+  String get potyCeremonyWatch => 'Regarder la cérémonie';
+
+  @override
+  String get potyCeremonySkipToList => 'Passer au top 5';
+
+  @override
+  String get potyCeremonySkip => 'Passer';
+
+  @override
+  String get potyCeremonyIntro =>
+      'Les votes sont dépouillés. Voici les cinq meilleurs joueurs du monde cette année.';
+
+  @override
+  String potyCeremonyPlace(int place) {
+    String _temp0 = intl.Intl.pluralLogic(
+      place,
+      locale: localeName,
+      other: '${place}e place',
+      one: '1re place',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get potyCeremonyWinnerIs => 'Et le Joueur de l’année est...';
+
+  @override
+  String get potyTop5Heading => 'Le top 5 mondial';
+
+  @override
+  String get potyYoungTop3Heading => 'Meilleur jeune de l’année : top 3';
+
+  @override
+  String get potySeeTop5 => 'Voir le top 5';
+
+  @override
+  String get potyYourPlayer => 'Votre joueur';
+
+  @override
+  String potyTallyCleanSheets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count clean sheets',
+      one: '$count clean sheet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignFullBrief => 'Briefing complet';
+
+  @override
+  String campaignStarsSoFar(int earned, int total) {
+    return 'Étoiles obtenues pour l’instant : $earned sur $total';
+  }
+
+  @override
+  String get campaignStarEarned => 'Obtenue pour l’instant';
+
+  @override
+  String get campaignStarNotYet => 'Pas encore obtenue';
+
+  @override
+  String get stadiumsEntrySubClosed =>
+      'Consultez vos stades. Les travaux rouvrent au début du prochain cycle.';
+
+  @override
+  String get boardObjectiveNoBrief => 'Aucun objectif fixé';
+
+  @override
+  String get boardObjectiveNoBriefBody =>
+      'La direction n’attend pas de vous une qualification pour cette phase finale. Elle vous jugera plutôt sur vos résultats.';
+
+  @override
+  String get boardObjectiveAwaitingDraw => 'Objectif après le tirage';
+
+  @override
+  String get boardObjectiveAwaitingDrawBody =>
+      'La direction fixera cet objectif une fois les groupes tirés au sort.';
 }

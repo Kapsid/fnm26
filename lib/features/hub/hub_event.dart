@@ -19,12 +19,15 @@ import 'package:fnm/features/squad/grievance_providers.dart';
 export 'package:fnm/domain/services/competition/kickoff_keys.dart'
     show continentalKickoffKind, worldCupKickoffKind;
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/squad/injury_cover_providers.dart';
+import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
+import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
@@ -65,8 +68,15 @@ enum HubEventKind {
   /// A player wants a word.
   grievance,
 
+  /// A camp scandal: send the man home or keep him.
+  scandal,
+
   /// Points to spend on the manager's own skills, offered once a cycle.
   managerSkills,
+
+  /// The year's Player of the Year vote is in: watch the ceremony or skip to
+  /// the top five.
+  awardsCeremony,
 
   /// Choosing the squad's base camp in the host country, before a tournament's
   /// opening ceremony.
@@ -233,7 +243,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   // The board has sacked the manager of a campaign run at the end of a cycle.
   // An unmoved run is played with its own nation or not at all (it has no
   // offers to take), so it ends there, keeping whatever it had already
-  // settled; an unsettled one is failed by the sacking.
+  // settled; an unsettled one is failed by the sacking, except a Finish the
+  // Legacy run with a title already won, which keeps the stars it has banked
+  // (see campaignProgressProvider).
   Future<bool> campaignManagerSacked() async =>
       (await ref.watch(rolloverVerdictProvider(careerId).future))?.sacked ??
       false;
@@ -304,6 +316,22 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     }
   }
 
+  // 1a-iii. The year's Player of the Year vote, filed on 1 December: once a
+  //          year, watched as a ceremony or skipped to the list. Moving the
+  //          world on without either marks it seen (see
+  //          [AwardService.markCeremoniesSeen]).
+  final ceremonyYear = await pendingCeremonyYear(comp, hub.career);
+  if (ceremonyYear != null) {
+    return HubEvent(
+      kind: HubEventKind.awardsCeremony,
+      label: l.hubEventAwardsCeremony(ceremonyYear),
+      icon: Icons.workspace_premium_rounded,
+      route:
+          '${Routes.awardsCeremony}?careerId=$careerId&year=$ceremonyYear',
+      subtitle: l.hubEventAwardsCeremonySub,
+    );
+  }
+
   // 1b. A foreign player is asking to naturalise — a one-time decision the
   //     manager makes at their leisure (accept to add them to the squad).
   if (await currentNaturalizationOffer(
@@ -317,6 +345,19 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       icon: Icons.how_to_reg_rounded,
       route: '${Routes.naturalization}?careerId=$careerId',
       subtitle: l.hubEventNaturalizationSub,
+    );
+  }
+
+  // 1b-ii. A won host bid's grant, to put to work in this cycle's
+  //        departments at once (the budget screen in grant mode). Only ever
+  //        after a bid has won, so a save that never bid never sees it.
+  final grant = await ref.watch(hostBidGrantProvider(careerId).future);
+  if (grant != null) {
+    return HubEvent(
+      kind: HubEventKind.budget,
+      label: l.hostBidGrantEvent,
+      icon: Icons.stadium_rounded,
+      route: '${Routes.budgetSetup}?careerId=$careerId&grant=1',
     );
   }
 
@@ -874,6 +915,21 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       }
     }
 
+    // 5·0. A scandal in the squad that has just gathered: a rare night out
+    //      the manager must answer before the window's first match (send him
+    //      home or keep him). Only ever between the call-up and kick-off, and
+    //      at most once a cycle (see [pendingScandal]).
+    final scandal = await pendingScandal(ref, careerId);
+    if (scandal != null) {
+      return HubEvent(
+        kind: HubEventKind.scandal,
+        label: l.hubEventScandal(scandal.playerName),
+        icon: Icons.local_bar_rounded,
+        route: '${Routes.campScandal}?careerId=$careerId',
+        subtitle: l.hubEventScandalSub,
+      );
+    }
+
     // 5a. A squad player was hurt earlier in this window: the manager may call
     //     somebody up in his place, in any position, or keep him and play on.
     //     Offered until answered; after it, 5b asks for his slot in the XI.
@@ -911,9 +967,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       // asking for one sent the manager back to tactics for ever.
       var full = 11;
       if (out == 0 && lineupIds.length < full) {
-        final fit = (await ref.watch(tacticDataProvider(careerId).future))
-            ?.pool
-            .length;
+        final fit = (await ref.watch(
+          tacticDataProvider(careerId).future,
+        ))?.pool.length;
         if (fit != null && fit < full) full = fit;
       }
       if (out > 0 || lineupIds.length < full) {

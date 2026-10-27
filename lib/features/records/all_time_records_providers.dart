@@ -46,7 +46,9 @@ allTimeRecordsProvider = FutureProvider.autoDispose.family<AllTimeRecords?, int>
   final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
   final careerDev = await ref.watch(careerDevBonusProvider(careerId).future);
   final nations = <int, Nation>{
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(careerId))
+      n.id: n,
   };
 
   // Cache lookups: a player can top both charts.

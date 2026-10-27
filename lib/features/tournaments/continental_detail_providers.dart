@@ -3,7 +3,6 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
@@ -14,6 +13,9 @@ import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/competition/tournament_holders.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart'
+    show hostEstatesFor;
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
@@ -22,6 +24,7 @@ import 'package:fnm/features/tournaments/drawn_groups.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
+import 'package:fnm/features/tournaments/tournament_stars_of.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart'
     show AllTimeScorer, CupPlayerRecord;
 
@@ -49,6 +52,7 @@ class ContinentalData {
     this.allTimeScorers = const [],
     this.hostIds = const [],
     this.hostCities = const {},
+    this.hostEstates = const {},
     this.qualDrawWatched = true,
     this.finalsDrawWatched = true,
     this.identity,
@@ -84,6 +88,10 @@ class ContinentalData {
   /// Each host's real cities (biggest first), keyed by nation id, for the
   /// venues card.
   final Map<int, List<String>> hostCities;
+
+  /// The grounds the career has made of its own nation's estate when that
+  /// nation hosts (see `hostEstatesFor`); empty otherwise.
+  final Map<int, List<Venue>> hostEstates;
 
   /// Whether this is the player's region (the only one played in detail; other
   /// regions are simulated in the background and only appear in History).
@@ -171,7 +179,7 @@ continentalDrawProvider = FutureProvider.autoDispose.family<ContinentalDrawData?
   )) {
     return null;
   }
-  final all = await ref.watch(nationRepositoryProvider).all();
+  final all = await ref.watch(nationRepositoryProvider).forCareer(key.careerId);
   if (all.firstWhere((n) => n.id == career.nationId).confederation !=
       key.confederation) {
     return null;
@@ -307,7 +315,9 @@ continentalQualifyingDrawProvider = FutureProvider.autoDispose
       )) {
         return null;
       }
-      final all = await ref.watch(nationRepositoryProvider).all();
+      final all = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(key.careerId);
       if (all.firstWhere((n) => n.id == career.nationId).confederation !=
           key.confederation) {
         return null;
@@ -389,7 +399,9 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
 
   final comp = ref.watch(competitionRepositoryProvider);
   final nations = {
-    for (final n in await ref.watch(nationRepositoryProvider).all()) n.id: n,
+    for (final n
+        in await ref.watch(nationRepositoryProvider).forCareer(key.careerId))
+      n.id: n,
   };
   final playerConf = nations[career.nationId]?.confederation;
   final isPlayerRegion = playerConf == key.confederation;
@@ -541,7 +553,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
   if (champion != null &&
       knockout.isNotEmpty &&
       TournamentStars.isComplete([...groupFixtures, ...knockout])) {
-    const roundDepth = {'CR16': 1, 'CQF': 2, 'CSF': 3, 'C3RD': 3, 'CFINAL': 4};
+    const roundDepth = continentalRoundDepth;
     final runByNation = <int, int>{};
     for (final f in knockout) {
       final d = roundDepth[f.round] ?? 0;
@@ -549,19 +561,6 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
         if (d > (runByNation[nid] ?? 0)) runByNation[nid] = d;
       }
     }
-    // How everyone actually played, so the awards are earned rather than
-    // assumed — see `TournamentStars`.
-    final lines = await comp.competitionPlayerLines(
-      key.careerId,
-      knockout.first.competitionId,
-    );
-    final formByPlayer = {
-      for (final l in lines)
-        l.playerId: (apps: l.apps, meanRating: l.meanRating, motms: l.motms),
-    };
-    final cleanSheetsByPlayer = {
-      for (final l in lines) l.playerId: l.cleanSheets,
-    };
 
     // Golden Glove fallback for an edition with no rating data: the keeper of
     // the meanest defence among the knockout sides.
@@ -592,47 +591,51 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
       }
     }
     if (meanest != null) {
-      final squad = await careerPoolOf(ref, career, meanest);
+      final squad = await careerPoolOf(
+        ref,
+        career,
+        meanest,
+        // History: a man who retired since still played here.
+        includeIntlRetired: true,
+      );
       final keeper = squad
           .where((p) => p.category == PositionCategory.goalkeeper)
           .firstOrNull;
       if (keeper != null) goldenGlove = (nationId: meanest, name: keeper.name);
     }
-    final allFinalsScorers = await comp.topScorers(
-      key.careerId,
-      kind: CompetitionKind.continentalFinals,
-      confederation: key.confederation,
-      limit: 500,
-    );
-    final goalsByPlayer = {
-      for (final s in allFinalsScorers) s.playerId: s.goals,
-    };
-    final candidateNations = <int>{
-      ...runByNation.keys,
-      for (final s in allFinalsScorers) s.nationId,
-      for (final l in lines) l.nationId,
-    };
-    final candidates = <Player>[];
-    for (final nid in candidateNations) {
-      final squad = await careerPoolOf(ref, career, nid);
-      candidates.addAll(
-        formByPlayer.isEmpty
-            ? squad.take(16)
-            : squad.where((p) => formByPlayer.containsKey(p.id)),
-      );
-    }
-    teamOfTournament = TournamentStars.teamOfTournament(
-      candidates: candidates,
-      goalsByPlayer: goalsByPlayer,
-      runByNation: runByNation,
+    // The one computation the award service stores too (see
+    // [tournamentStarsOf]), so this tab and a player's cabinet agree.
+    // The picks stored when the final was played win: re-rating since must
+    // not change who won the Golden Ball (see [tournamentStarsOf]).
+    final finalTie = knockout.where((f) => f.round == 'CFINAL').firstOrNull;
+    final stored = finalTie == null
+        ? const <PlayerAward>[]
+        : await storedTournamentHonours(
+            comp,
+            key.careerId,
+            competition:
+                ContinentalCups.byConfederation[key.confederation]?.name ?? '',
+            year: finalTie.date.year,
+          );
+    final stars = await tournamentStarsOf(
+      ref,
+      career,
+      competitionId: knockout.first.competitionId,
+      knockout: [
+        for (final f in knockout) (f.round, f.homeNationId, f.awayNationId),
+      ],
+      roundDepth: roundDepth,
       champion: champion,
-      formByPlayer: formByPlayer,
+      stored: stored,
+      fallbackGoals: () => comp.topScorers(
+        key.careerId,
+        kind: CompetitionKind.continentalFinals,
+        confederation: key.confederation,
+        limit: 500,
+      ),
     );
-    final bestKeeper = TournamentStars.goldenGlove(
-      candidates: candidates,
-      formByPlayer: formByPlayer,
-      cleanSheetsByPlayer: cleanSheetsByPlayer,
-    );
+    teamOfTournament = stars.team;
+    final bestKeeper = stars.keeper;
     if (bestKeeper != null) {
       goldenGlove = (nationId: bestKeeper.nationId, name: bestKeeper.name);
     }
@@ -748,6 +751,7 @@ continentalDetailProvider = FutureProvider.autoDispose.family<ContinentalData?, 
     playerNationId: career.nationId,
     playerNames: playerNames,
     hostCities: hostCities,
+    hostEstates: await hostEstatesFor(ref, key.careerId, hostIds),
     qualDrawWatched: qualDrawWatched,
     finalsDrawWatched: finalsDrawWatched,
     identity: (groups.isEmpty || hostIds.isEmpty)

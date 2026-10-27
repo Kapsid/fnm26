@@ -6,11 +6,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
+import 'package:fnm/domain/services/federation/national_stadiums.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/host_bid_providers.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'driver.dart';
@@ -19,11 +23,13 @@ import 'driver.dart';
 /// code and plays on. Not part of the suite: it needs those files.
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  const dir = '/private/tmp/claude-501/-Users-martinurbanczyk-Documents-Work-fnm26/6c95b6fb-6898-4eef-9a2a-c9c308e15f0f/scratchpad/saves105';
+  const dir =
+      '/Users/martinurbanczyk/Documents/Work/fnm26/.superpowers/saves105';
 
   AppDatabase open(String name) {
     SharedPreferences.setMockInitialValues(<String, Object>{});
-    final copy = '/private/tmp/claude-501/-Users-martinurbanczyk-Documents-Work-fnm26/6c95b6fb-6898-4eef-9a2a-c9c308e15f0f/scratchpad/compat_$name';
+    final copy =
+        '/private/tmp/claude-501/-Users-martinurbanczyk-Documents-Work-fnm26/6c95b6fb-6898-4eef-9a2a-c9c308e15f0f/scratchpad/compat_$name';
     File('$dir/$name').copySync(copy);
     return AppDatabase.forTesting(NativeDatabase(File(copy)));
   }
@@ -36,7 +42,9 @@ void main() {
     final before = await c.read(cycleObjectiveOutcomesProvider(1).future);
     final world = before.singleWhere((o) => o.tier == TournamentTier.world);
     // ignore: avoid_print
-    print('MID briefs: ${[for (final o in before) '${o.tier.name}:${o.target}']}');
+    print(
+      'MID briefs: ${[for (final o in before) '${o.tier.name}:${o.target}']}',
+    );
     // Asia's 7th is outside the world's top fifty: 1.0.5 asked for the top half.
     expect(world.target, 1, reason: 'the brief it opened with');
 
@@ -46,11 +54,18 @@ void main() {
     }
     await c.read(satisfactionProvider(1).future);
     await d.step(); // the rollover, by this version
-    expect(await c.read(competitionRepositoryProvider).hasWatchedDraw(1, 1, briefRulesV2Kind), isTrue);
+    expect(
+      await c
+          .read(competitionRepositoryProvider)
+          .hasWatchedDraw(1, 1, briefRulesV2Kind),
+      isTrue,
+    );
     c.invalidate(cycleObjectiveOutcomesProvider);
     final next = await c.read(cycleObjectiveOutcomesProvider(1).future);
     // ignore: avoid_print
-    print('NEXT briefs: ${[for (final o in next) '${o.tier.name}:${o.target}']}');
+    print(
+      'NEXT briefs: ${[for (final o in next) '${o.tier.name}:${o.target}']}',
+    );
     for (var i = 0; i < 60; i++) {
       await d.step(stopAtRollover: true);
     }
@@ -85,11 +100,63 @@ void main() {
       final c = storyContainer(db);
       addTearDown(c.dispose);
       final comp = c.read(competitionRepositoryProvider);
-      expect(await comp.watchedKindsWithPrefix('campaign:'), isEmpty, reason: name);
+      expect(
+        await comp.watchedKindsWithPrefix('campaign:'),
+        isEmpty,
+        reason: name,
+      );
       final all = await c.read(careerRepositoryProvider).all();
       final listed = await c.read(savesProvider.future);
-      expect(listed.map((e) => e.id).toSet(), all.map((e) => e.id).toSet(), reason: name);
+      expect(
+        listed.map((e) => e.id).toSet(),
+        all.map((e) => e.id).toSet(),
+        reason: name,
+      );
       expect(listed, isNotEmpty, reason: name);
+    }
+  });
+
+  test('1.0.5 saves have no stadium works: the static grounds, their small '
+      'income, and works on offer at the next opening', () async {
+    for (final name in ['mid_cycle.db', 'moved.db']) {
+      final db = open(name);
+      final c = storyContainer(db);
+      addTearDown(c.dispose);
+      final comp = c.read(competitionRepositoryProvider);
+      expect(await stadiumWorks(comp, 1), isEmpty, reason: name);
+      final career = (await c.read(careerRepositoryProvider).byId(1))!;
+      final cities = await c.read(countryCitiesProvider.future);
+      final grounds = await c.read(
+        nationStadiumsProvider((careerId: 1, nationId: career.nationId)).future,
+      );
+      expect(
+        grounds,
+        seedStadiums(career.nationId, cities),
+        reason: name,
+      );
+      final NationalStadiumsView? view = await c.read(
+        nationalStadiumsViewProvider(1).future,
+      );
+      expect(view!.stadiums, isNotEmpty, reason: name);
+      // Every ground earns its small income from the start, worked on or not
+      // (hosting v2): exactly what the untouched grounds earn, held to the
+      // grant cap, and the same figure the screen shows.
+      final paid = await c
+          .read(nationalStadiumServiceProvider)
+          .incomeAt(1, career.nationId, career.cyclePointer + 1);
+      expect(paid, view.income, reason: name);
+      expect(paid, greaterThan(0), reason: name);
+      expect(
+        paid,
+        lessThanOrEqualTo(
+          NationalStadiums.incomeOf(view.stadiums, career.nationId),
+        ),
+        reason: name,
+      );
+      // No hosting bid of the first builds' kind is pending in a 1.0.5 save.
+      final kinds = await hostBidKinds(comp, 1);
+      expect(kinds, isEmpty, reason: name);
+      expect(view.reputation, 0, reason: name);
     }
   });
 }

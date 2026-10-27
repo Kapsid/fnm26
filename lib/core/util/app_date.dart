@@ -42,7 +42,7 @@ abstract final class AppDate {
   /// The language the widget tree is being drawn in, as `intl` names it.
   ///
   /// Anything the app does not speak is English: `supportedLocales` has
-  /// already resolved the phone's Romanian down to one the app speaks by the
+  /// already resolved the phone's Swahili down to one the app speaks by the
   /// time this is asked.
   static String _locale(BuildContext context) {
     final code = Localizations.maybeLocaleOf(context)?.languageCode;
@@ -64,11 +64,27 @@ abstract final class AppDate {
     required String cs,
   }) {
     final locale = _locale(context);
+    // Japanese, Korean and Hungarian put the year first (`2030年9月1日`,
+    // `2030년 9월 1일`, `2030. szept. 1.`), so they take intl's own skeleton
+    // for the same fields.
+    final yearFirst = _yearFirst[en];
+    if (yearFirst != null && const {'ja', 'ko', 'hu'}.contains(locale)) {
+      return yearFirst(locale).format(date);
+    }
     // German writes its day as an ordinal too (`1. Sep. 2030`), so it takes
     // the Czech pattern; so do Danish, Norwegian, Finnish and Croatian.
     final dotted = const {'cs', 'de', 'da', 'nb', 'fi', 'hr'}.contains(locale);
     return DateFormat(dotted ? cs : en, locale).format(date);
   }
+
+  /// The year-first skeleton for each English pattern above, by locale.
+  static final Map<String, DateFormat Function(String)> _yearFirst = {
+    'MMM yyyy': DateFormat.yMMM,
+    'd MMM': DateFormat.MMMd,
+    'd MMM yyyy': DateFormat.yMMMd,
+    'd MMM yy': DateFormat.yMd,
+    'EEE d MMM': DateFormat.MMMEd,
+  };
 
   /// `Sep 2030` / `zář 2030` — a month, for a save tile or a career summary.
   static String monthYear(BuildContext context, DateTime date) =>
@@ -81,6 +97,15 @@ abstract final class AppDate {
   /// `1 Sep 2030` / `1. zář 2030` — a full date. The dashboard's, among others.
   static String dayMonthYear(BuildContext context, DateTime date) =>
       _write(context, date, en: 'd MMM yyyy', cs: 'd. MMM yyyy');
+
+  /// `1 Sep 2030, 14:05` / `1. zář 2030 14:05`: a real-world moment, such
+  /// as when the saves were last backed up. Always the 24-hour clock in the
+  /// language's own form.
+  static String dayMonthYearTime(BuildContext context, DateTime date) {
+    final local = date.toLocal();
+    return '${dayMonthYear(context, local)} '
+        '${DateFormat.Hm(_locale(context)).format(local)}';
+  }
 
   /// `1 Sep 30` / `1. zář 30` — a full date squeezed into a narrow column.
   static String dayMonthShortYear(BuildContext context, DateTime date) =>

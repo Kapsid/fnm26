@@ -52,6 +52,7 @@ void main() {
         rivalsBeaten: const <int>{},
         cycleRuns: const [(ordinal: 0, over: false)],
         worldRuns: const <({int ordinal, bool over})>[],
+        nationsCupRun: null,
       ),
     ),
   ];
@@ -227,6 +228,7 @@ void main() {
               (ordinal: 0, over: false),
             ],
             worldRuns: const <({int ordinal, bool over})>[],
+            nationsCupRun: null,
           ),
         ),
       ],
@@ -282,6 +284,10 @@ void main() {
     // Friendlies, World Championship rounds and qualifying (null round),
     // the play-off and the Nations Cup never count.
     for (final goal in CampaignGoal.values) {
+      if (goal == CampaignGoal.qualifyBothThenTitle ||
+          goal == CampaignGoal.titleTreble) {
+        continue;
+      }
       for (final round in [
         null,
         'FRIENDLY',
@@ -322,6 +328,43 @@ void main() {
       expect(
         campaignRunCounts(CampaignGoal.beatRivalsThenContinental, round),
         isTrue,
+      );
+    }
+    // Greenland: every competitive match, World Championship
+    // qualifying (no round) included; never a friendly.
+    for (final round in [null, 'CQ', 'NGROUP', 'NL', 'CPO', 'CGROUP', 'R16']) {
+      expect(
+        campaignRunCounts(CampaignGoal.qualifyBothThenTitle, round),
+        isTrue,
+        reason: '$round',
+      );
+    }
+    expect(
+      campaignRunCounts(CampaignGoal.qualifyBothThenTitle, 'FRIENDLY'),
+      isFalse,
+    );
+    // Finish the Legacy: its three titles, both championships' finals and
+    // the whole Nations Cup; never qualifying, a play-off or a friendly.
+    for (final round in [
+      'CGROUP',
+      'CFINAL',
+      'GROUP',
+      'FINAL',
+      'NGROUP',
+      'NSF',
+      'NFINAL',
+    ]) {
+      expect(
+        campaignRunCounts(CampaignGoal.titleTreble, round),
+        isTrue,
+        reason: round,
+      );
+    }
+    for (final round in [null, 'CQ', 'CPO', 'FRIENDLY']) {
+      expect(
+        campaignRunCounts(CampaignGoal.titleTreble, round),
+        isFalse,
+        reason: '$round',
       );
     }
   });

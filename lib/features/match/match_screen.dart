@@ -25,6 +25,7 @@ import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
+import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -164,6 +165,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   late Formation _liveFormation;
   late List<int?> _liveLineup;
   late TacticalInstructions _liveInstructions;
+  late FullBackPushes _liveFullBacks;
 
   /// True while the full-time result is being committed and the world is being
   /// simulated forward. Debug builds can take several seconds here, so the
@@ -940,6 +942,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _liveFormation = team.formation;
     _liveLineup = team.xi.map((p) => p.id as int?).toList();
     _liveInstructions = team.instructions;
+    _liveFullBacks = team.fullBacks;
     _playerNationId = preview.playerNationId;
     _liveReady = true;
   }
@@ -1050,6 +1053,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       formation: _liveFormation,
       lineup: _liveLineup,
       instructions: _liveInstructions,
+      fullBacks: _liveFullBacks,
       pool: _playerPool(preview),
       startingIds: team.xi.map((p) => p.id).toSet(),
       maxSubs: _maxSubsFor(preview),
@@ -1122,6 +1126,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       bigMatch: preview.bigMatch,
       atmosphere: Attendance.atmosphere(preview.ground),
       extraTimeIfLevel: _isKnockoutFixture(preview.fixture),
+      conditions: preview.conditions,
     ),
     aiSubs: preview.opponentSubs,
     aiTeam: _opponentTeam(preview),
@@ -1161,6 +1166,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       _liveFormation = r.formation;
       _liveLineup = r.lineup;
       _liveInstructions = r.instructions;
+      _liveFullBacks = r.fullBacks;
       _takers = r.takers;
       // Any hurt player taken off is no longer flagged as an unaddressed injury.
       _injuredIds.removeWhere((id) => !r.lineup.contains(id));
@@ -1170,6 +1176,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           minute: minute,
           formation: r.formation,
           instructions: r.instructions,
+          fullBacks: r.fullBacks,
           xi: xi,
           slots: slots,
           // From this minute on, never retroactively: the penalty already
@@ -1230,6 +1237,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             child: TacticsPitch(
               formation: _liveFormation,
               instructions: _liveInstructions,
+              fullBacks: _liveFullBacks,
               lineup: _liveLineup,
               byId: byId,
               teamColors: n == null
@@ -1413,6 +1421,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
               ground: preview.ground,
               neutral: preview.neutralVenue,
               groundCode: code(preview.ground.groundNationId),
+              homeFans: preview.homeFans,
               // Read as of the clock, exactly like the timeline beside it, so
               // the box score moves through the match instead of arriving
               // whole at the whistle.

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -10,11 +12,16 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
+import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/squad/injury_cover_providers.dart';
+import 'package:fnm/features/squad/injury_cover_screen.dart';
+import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';
@@ -173,5 +180,139 @@ void main() {
           injuryCoverKey(cover.fixtureId, cover.playerId),
         );
     expect(await pending(), isNull);
+  });
+
+  // "When you are subbing out the player who was injured, show his position."
+  group('the screen names the position being filled', () {
+    Player man(int id, String name, PlayerPosition pos, int overall) => Player(
+      id: id,
+      nationId: 1,
+      name: name,
+      position: pos,
+      age: 25,
+      club: 'Club $id',
+      attributes: PlayerAttributes(
+        physical: overall,
+        technical: overall,
+        stamina: overall,
+      ),
+    );
+
+    Future<void> pumpCover(
+      WidgetTester tester, {
+      double width = 360,
+      double scale = 1,
+    }) async {
+      tester.view
+        ..devicePixelRatio = 1
+        ..physicalSize = Size(width, 800);
+      addTearDown(tester.view.reset);
+      final scoped = ProviderContainer(
+        overrides: [
+          pendingInjuryCoverProvider(1).overrideWith(
+            (ref) async => (
+              playerId: 1,
+              playerName: 'Hurt Back',
+              fixtureId: 9,
+              matchesOut: 2,
+            ),
+          ),
+          squadDataProvider(1).overrideWith(
+            (ref) async => SquadData(
+              pool: [
+                man(1, 'Hurt Back', PlayerPosition.cb, 77),
+                man(2, 'Same Spot', PlayerPosition.cb, 70),
+                man(3, 'Other Spot', PlayerPosition.st, 72),
+              ],
+              callUps: const {1},
+              absences: const {},
+            ),
+          ),
+          nominationWindowProvider(1).overrideWith(
+            (ref) async => (
+              open: false,
+              matches: const <Fixture>[],
+              nations: <int, Nation>{},
+              playerNationId: 1,
+            ),
+          ),
+        ],
+      );
+      addTearDown(scoped.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: scoped,
+          child: MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(scale)),
+              child: child!,
+            ),
+            home: const InjuryCoverScreen(careerId: 1),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    TacticalChip chipIn(WidgetTester tester, Finder row) => tester.widget(
+      find.descendant(of: row, matching: find.byType(TacticalChip)),
+    );
+
+    testWidgets('an injury: preview, banner and same-position marking', (
+      tester,
+    ) async {
+      await pumpCover(tester, scale: 1.4);
+      final tile = find.byKey(const Key('injuryCover.outTile'));
+      expect(tile, findsOneWidget);
+      expect(
+        find.descendant(of: tile, matching: find.text('Hurt Back')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: tile, matching: find.text('Centre Back')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: tile, matching: find.text('77')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: tile,
+          matching: find.byIcon(Icons.medical_services),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Hurt Back (Centre Back) is injured'),
+        findsOneWidget,
+      );
+      expect(
+        chipIn(
+          tester,
+          find
+              .ancestor(of: find.text('Same Spot'), matching: find.byType(Row))
+              .first,
+        ).emphasized,
+        isTrue,
+      );
+      expect(
+        chipIn(
+          tester,
+          find
+              .ancestor(of: find.text('Other Spot'), matching: find.byType(Row))
+              .first,
+        ).emphasized,
+        isFalse,
+      );
+      // Nobody is hidden.
+      expect(find.text('Other Spot'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
   });
 }

@@ -82,6 +82,135 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchDossierKeyMen => 'KLJUČNI IGRAČI';
 
   @override
+  String get matchDossierHowTheyPlay => 'KAKO IGRAJU';
+
+  @override
+  String matchScoutFormation1(String formation) {
+    return 'Obično igraju u formaciji $formation.';
+  }
+
+  @override
+  String matchScoutFormation2(String formation) {
+    return 'Njihova uobičajena formacija je $formation.';
+  }
+
+  @override
+  String matchScoutFormation3(String formation) {
+    return 'Najčešće se postavljaju u $formation.';
+  }
+
+  @override
+  String get matchScoutStrengthPressing => 'Pritišću visoko i love loptu.';
+
+  @override
+  String get matchScoutStrengthDirect =>
+      'Igraju direktno i brzo šalju loptu naprijed.';
+
+  @override
+  String get matchScoutStrengthPossession =>
+      'Dobro čuvaju loptu i strpljivo grade napad.';
+
+  @override
+  String get matchScoutStrengthCounter => 'Čekaju nisko i brzo kreću u kontre.';
+
+  @override
+  String get matchScoutStrengthDeepDefence =>
+      'Brane se duboko i teško ih je razbiti.';
+
+  @override
+  String get matchScoutStrengthWide => 'Razvlače igru i napadaju po krilima.';
+
+  @override
+  String get matchScoutStrengthAttacking =>
+      'Vole preuzeti inicijativu i ići na protivnika.';
+
+  @override
+  String get matchScoutStrengthQuickForwards =>
+      'Njihovi napadači su brzi i rado trče iza obrane.';
+
+  @override
+  String get matchScoutStrengthPassingMidfield =>
+      'Njihov vezni red dobro dodaje loptu.';
+
+  @override
+  String get matchScoutStrengthHardRunning =>
+      'Njihov vezni red može trčati cijelu utakmicu.';
+
+  @override
+  String get matchScoutStrengthSetPieces => 'Opasni su iz prekida.';
+
+  @override
+  String get matchScoutStrengthQuickDefence =>
+      'Njihova obrana je brza i teško joj je doći iza leđa.';
+
+  @override
+  String get matchScoutStrengthNone =>
+      'U njihovoj igri ništa posebno ne odskače.';
+
+  @override
+  String get matchScoutWeakSpaceBehind =>
+      'Njihova visoka linija ostavlja prostor iza leđa za dugu loptu.';
+
+  @override
+  String get matchScoutWeakPressedBuildUp =>
+      'Visoki presing može poremetiti njihovu sporu izgradnju napada.';
+
+  @override
+  String get matchScoutWeakDeepBlock =>
+      'Budi strpljiv: ovako nizak blok može se razbiti.';
+
+  @override
+  String get matchScoutWeakLongBall =>
+      'Povuci liniju dublje i njihove duge lopte neće imati kamo.';
+
+  @override
+  String get matchScoutWeakSlowDefence =>
+      'Njihovim braničima nedostaje brzine, pa šalji igrače iza njihovih leđa.';
+
+  @override
+  String get matchScoutWeakAerial => 'Djeluju nesigurno kad brane prekide.';
+
+  @override
+  String get matchScoutWeakPoorPassing =>
+      'Njihov vezni red teško se dodavanjem izvlači iz pritiska.';
+
+  @override
+  String get matchScoutWeakTiringMidfield =>
+      'Njihovom veznom redu nedostaje snage za dugotrajan presing.';
+
+  @override
+  String get matchScoutWeakBluntAttack =>
+      'Njihovim napadačima nedostaje brzine.';
+
+  @override
+  String get matchScoutApproachTakeTheGame =>
+      'Protiv tebe očekuj da preuzmu inicijativu.';
+
+  @override
+  String get matchScoutApproachEven =>
+      'Protiv tebe očekuj tijesnu i izjednačenu utakmicu.';
+
+  @override
+  String get matchScoutApproachSitDeep =>
+      'Protiv tebe očekuj da budu oprezni i traže kontru.';
+
+  @override
+  String get matchScoutLeaningAttacking =>
+      'Izdaleka djeluju kao napadački nastrojena momčad.';
+
+  @override
+  String get matchScoutLeaningCautious =>
+      'Izdaleka djeluju kao oprezna momčad.';
+
+  @override
+  String get matchScoutLeaningUnclear =>
+      'Izdaleka je teško reći kako vole igrati.';
+
+  @override
+  String get matchScoutHireHint =>
+      'Zaposli glavnog skauta da saznaš kako igraju.';
+
+  @override
   String matchCouldNotContinue(String error) {
     return 'Nastavak nije uspio: $error';
   }
@@ -292,6 +421,21 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get settingsLanguageSystem => 'Sustav';
+
+  @override
+  String get settingsTextSizeTitle => 'Veličina teksta';
+
+  @override
+  String get settingsTextSizeBlurb => 'Povećajte tekst ako se teško čita.';
+
+  @override
+  String get settingsTextSizeNormal => 'Normalna';
+
+  @override
+  String get settingsTextSizeLarge => 'Velika';
+
+  @override
+  String get settingsTextSizeLarger => 'Veća';
 
   @override
   String get matchPreviewAllMeetings => 'Svi susreti';
@@ -859,6 +1003,41 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get tacticsSentOffShort => 'ISKLJUČEN';
+
+  @override
+  String get tacticsFullBackLeft => 'Lijevi bek';
+
+  @override
+  String get tacticsFullBackRight => 'Desni bek';
+
+  @override
+  String get tacticsFullBackUp => 'Uključuje se u napad';
+
+  @override
+  String get tacticsFullBackDown => 'Ostaje straga';
+
+  @override
+  String get tacticsFullBackOff => 'Bez upute';
+
+  @override
+  String tacticsFullBackUpHint(String side) {
+    return '$side: uključuje se u napad. Malo više napada, malo više rizika.';
+  }
+
+  @override
+  String tacticsFullBackDownHint(String side) {
+    return '$side: ostaje straga. Malo sigurnije, malo manje napada.';
+  }
+
+  @override
+  String tacticsFullBackOffHint(String side) {
+    return '$side: bez upute, igra prema planu momčadi.';
+  }
+
+  @override
+  String tacticsFullBackSemantics(String side, String state) {
+    return '$side, strelica: $state';
+  }
 
   @override
   String tacticsSubsUsed(int used, int max) {
@@ -3124,6 +3303,16 @@ class AppLocalizationsHr extends AppLocalizations {
   String get gateExit => 'IZLAZ';
 
   @override
+  String get gateSaveTitle => 'OVA IGRA TRAŽI PRO';
+
+  @override
+  String get gateSaveLead =>
+      'Igre nakon besplatnog ciklusa i Pro kampanje nastavljaju se uz Pro. Ništa se ne gubi: igra te čeka točno onakva kakvu si je ostavio.';
+
+  @override
+  String get careerSaveLockedNote => 'Za nastavak ove igre treba ti Pro';
+
+  @override
   String get federationNaturalisation => 'NATURALIZACIJA';
 
   @override
@@ -3363,9 +3552,6 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get nationsNoMatch => 'Nijedna zemlja ne odgovara.';
-
-  @override
-  String get nationsNationalLevel => 'RAZINA REPREZENTACIJE';
 
   @override
   String get nationsSelectHeading => 'Odaberi reprezentaciju';
@@ -3821,6 +4007,1026 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String yLostBadly11(String opponent, String score) {
     return 'Vidio sam ovu momčad i poniženu, ali $opponent $score novo je dno.';
+  }
+
+  @override
+  String yWinUpset12(String opponent, String score) {
+    return 'Pobjeda $score protiv momčadi $opponent. Zapišite datum, pitat će vas gdje ste bili.';
+  }
+
+  @override
+  String yWinUpset13(String opponent, String score) {
+    return 'Izvan svlačionice nitko nije vjerovao. $score protiv momčadi $opponent. Ponos je premala riječ.';
+  }
+
+  @override
+  String yWinUpset14(String opponent, String score) {
+    return '$score protiv momčadi $opponent! Svi su trčali dok nije ostalo ništa.';
+  }
+
+  @override
+  String yWinUpset15(String opponent, String score) {
+    return 'Ubojice divova. $opponent, $score. Zato uvijek dolazimo.';
+  }
+
+  @override
+  String yWinUpset16(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Prognoze su upravo izletjele kroz prozor.';
+  }
+
+  @override
+  String yWinUpset17(String opponent, String score) {
+    return 'Veliki favorit: $opponent. Konačni rezultat: $score za nas.';
+  }
+
+  @override
+  String yWinUpset18(String opponent, String score) {
+    return 'Jedno od iznenađenja godine: $score protiv momčadi $opponent.';
+  }
+
+  @override
+  String yWinUpset19(String opponent, String score) {
+    return '$opponent $score. Nitko to nije predvidio i nitko to ne zna objasniti.';
+  }
+
+  @override
+  String yWinUpset20(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Prekrasno. Sad će svi zaboraviti koliko je ostatak godine bio loš.';
+  }
+
+  @override
+  String yWinUpset21(String opponent, String score) {
+    return '$score protiv momčadi $opponent i vlak je već pun. Ja sam bio u njemu dok je bio prazan.';
+  }
+
+  @override
+  String yWinUpset22(String opponent, String score) {
+    return '$opponent $score. Sjajno, a ipak će naći način da to bace.';
+  }
+
+  @override
+  String yWinUpset23(String opponent, String score) {
+    return 'Velika večer protiv momčadi $opponent, $score. Jedna lasta ne čini proljeće.';
+  }
+
+  @override
+  String yLostBadly12(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Boli jer nam je stalo. Podržimo ih svejedno.';
+  }
+
+  @override
+  String yLostBadly13(String opponent, String score) {
+    return 'Večer za zaborav protiv momčadi $opponent, $score. Igrače boli najviše.';
+  }
+
+  @override
+  String yLostBadly14(String opponent, String score) {
+    return '$opponent $score. Glavu gore. Momčad se cijeni po tome kako odgovori na ovo.';
+  }
+
+  @override
+  String yLostBadly15(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Loše, da. Smak svijeta, ne.';
+  }
+
+  @override
+  String yLostBadly16(String opponent, String score) {
+    return '$score protiv momčadi $opponent. O ovom rezultatu pričat će se godinama, iz pogrešnih razloga.';
+  }
+
+  @override
+  String yLostBadly17(String opponent, String score) {
+    return 'Pobjeda za momčad $opponent, $score. Nakon ovoga neka se nitko ne čudi idući put.';
+  }
+
+  @override
+  String yLostBadly18(String opponent, String score) {
+    return 'Jedna od najgorih večeri u dugo vremena: $score protiv momčadi $opponent.';
+  }
+
+  @override
+  String yLostBadly19(String opponent, String score) {
+    return '$opponent $score. Bit će pitanja, i s pravom.';
+  }
+
+  @override
+  String yLostBadly20(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Sramotno je preblaga riječ.';
+  }
+
+  @override
+  String yLostBadly21(String opponent, String score) {
+    return 'Poraz $score protiv momčadi $opponent. Zadnji neka ugasi svjetlo.';
+  }
+
+  @override
+  String yLostBadly22(String opponent, String score) {
+    return '$opponent $score. Više me ne iznenađuje, i to me plaši.';
+  }
+
+  @override
+  String yLostBadly23(String opponent, String score) {
+    return '$score. $opponent. Netko gore trebao bi večeras ažurirati životopis.';
+  }
+
+  @override
+  String yWinRout0(String opponent, String score) {
+    return '$score protiv momčadi $opponent! Ovakav nogomet cijelu zemlju tjera na osmijeh.';
+  }
+
+  @override
+  String yWinRout1(String opponent, String score) {
+    return 'Momčad $opponent razbijena, $score. Kakva izvedba.';
+  }
+
+  @override
+  String yWinRout2(String opponent, String score) {
+    return '$score. Protiv momčadi $opponent. Večeras je uspjelo sve.';
+  }
+
+  @override
+  String yWinRout3(String opponent, String score) {
+    return 'Rušenje $score protiv momčadi $opponent. Spremite sažetak, trebat će vam.';
+  }
+
+  @override
+  String yWinRout4(String opponent, String score) {
+    return '$opponent $score. To je momčad koja uživa u svom nogometu.';
+  }
+
+  @override
+  String yWinRout5(String opponent, String score) {
+    return '$score protiv momčadi $opponent, a moglo je biti i više. Veličanstveno.';
+  }
+
+  @override
+  String yWinRout6(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Rezultat koji se gleda dvaput.';
+  }
+
+  @override
+  String yWinRout7(String opponent, String score) {
+    return 'Pobjeda $score protiv momčadi $opponent. Nakon pola sata utakmice više nije bilo.';
+  }
+
+  @override
+  String yWinRout8(String opponent, String score) {
+    return 'Konačni rezultat: $score protiv momčadi $opponent. Daleko najveća pobjeda u dugo vremena.';
+  }
+
+  @override
+  String yWinRout9(String opponent, String score) {
+    return '$opponent $score. Jedni su došli igrati, drugi nisu ni izašli iz autobusa.';
+  }
+
+  @override
+  String yWinRout10(String opponent, String score) {
+    return '$score. Momčad $opponent nije imala odgovor ni na što.';
+  }
+
+  @override
+  String yWinRout11(String opponent, String score) {
+    return 'Pljuska: $score protiv momčadi $opponent.';
+  }
+
+  @override
+  String yWinRout12(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Lijepo, ali oni baš nisu mjerilo.';
+  }
+
+  @override
+  String yWinRout13(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Probudite me kad to napravimo nekom dobrom.';
+  }
+
+  @override
+  String yWinRout14(String opponent, String score) {
+    return '$opponent $score. Zabavno, ali vidio sam momčadi koje su ovako blistale i nisu osvojile ništa.';
+  }
+
+  @override
+  String yWinRout15(String opponent, String score) {
+    return '$score, i svi su opet geniji. Suparnik je bio $opponent.';
+  }
+
+  @override
+  String yWinRout16(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Bez zanošenja, to malo dokazuje.';
+  }
+
+  @override
+  String yWinRout17(String opponent, String score) {
+    return '$opponent $score. Uživajte, a onda se sjetite kako je završilo zadnji put kad smo se zanijeli.';
+  }
+
+  @override
+  String yWinShootout0(String opponent) {
+    return 'Prolaz nakon jedanaesteraca protiv momčadi $opponent! Čelični živci, svi do jednoga.';
+  }
+
+  @override
+  String yWinShootout1(String opponent) {
+    return 'Jedanaesterci protiv momčadi $opponent, i izdržali smo. Zagrlite stranca.';
+  }
+
+  @override
+  String yWinShootout2(String opponent) {
+    return 'Raspucavanje protiv momčadi $opponent dobiveno. Srce mi ovo ne može podnijeti.';
+  }
+
+  @override
+  String yWinShootout3(String opponent) {
+    return 'Pobjeda nakon jedanaesteraca protiv momčadi $opponent. Idemo u sljedeće kolo.';
+  }
+
+  @override
+  String yWinShootout4(String opponent) {
+    return 'Protiv momčadi $opponent odlučivala je bijela točka, a mi smo zabili više.';
+  }
+
+  @override
+  String yWinShootout5(String opponent) {
+    return 'Raspucavanje dobiveno protiv momčadi $opponent. Najtežim putem, ali prolaz.';
+  }
+
+  @override
+  String yWinShootout6(String opponent) {
+    return 'Prolaz nakon jedanaesteraca protiv momčadi $opponent. Lutrija dobivena, igru zaboravimo.';
+  }
+
+  @override
+  String yWinShootout7(String opponent) {
+    return 'Pobijediti momčad $opponent na jedanaesterce nakon onakve igre? Sreća, i svi to znaju.';
+  }
+
+  @override
+  String yWinShootout8(String opponent) {
+    return 'Prolaz protiv momčadi $opponent na jedanaesterce. Do toga nije smjelo ni doći.';
+  }
+
+  @override
+  String yKnockoutWin0(String opponent, String score) {
+    return 'PROLAZ. $score protiv momčadi $opponent, i san živi.';
+  }
+
+  @override
+  String yKnockoutWin1(String opponent, String score) {
+    return 'POBJEDA U NOKAUT FAZI: $score protiv momčadi $opponent. Zemlja može početi vjerovati.';
+  }
+
+  @override
+  String yKnockoutWin2(String opponent, String score) {
+    return '$score protiv momčadi $opponent i idemo u sljedeće kolo. Kakva večer.';
+  }
+
+  @override
+  String yKnockoutWin3(String opponent, String score) {
+    return 'Momčad $opponent ide kući, $score. Naprijed.';
+  }
+
+  @override
+  String yKnockoutWin4(String opponent, String score) {
+    return 'NOKAUT FAZA: $score protiv momčadi $opponent. Sljedeće kolo potvrđeno.';
+  }
+
+  @override
+  String yKnockoutWin5(String opponent, String score) {
+    return 'Prolaz: $score protiv momčadi $opponent.';
+  }
+
+  @override
+  String yKnockoutWin6(String opponent, String score) {
+    return 'Momčad $opponent ispada, $score. Čeka nas sljedeće kolo.';
+  }
+
+  @override
+  String yKnockoutWin7(String opponent, String score) {
+    return 'Pobjeda $score protiv momčadi $opponent. U nokaut fazi nitko ne pita kako.';
+  }
+
+  @override
+  String yKnockoutWin8(String opponent, String score) {
+    return 'Prolaz protiv momčadi $opponent, $score. Sljedeći suparnik neće biti tako ljubazan.';
+  }
+
+  @override
+  String yKnockoutWin9(String opponent, String score) {
+    return '$score protiv momčadi $opponent dovoljno je za prolaz. Idući put trebat će puno više.';
+  }
+
+  @override
+  String yKnockoutWin10(String opponent, String score) {
+    return 'Momčad $opponent je vani, $score. Više smo preživjeli nego pobijedili.';
+  }
+
+  @override
+  String yKnockoutWin11(String opponent, String score) {
+    return 'U sljedećem kolu nakon $score protiv momčadi $opponent. Ne pitajte kako.';
+  }
+
+  @override
+  String yUpsetGap0(String opponent, String gap) {
+    return 'Na ljestvici nas je dijelilo $gap mjesta, a ipak smo pobijedili. Suparnik: $opponent. Veličanstveno.';
+  }
+
+  @override
+  String yUpsetGap1(String opponent, String gap) {
+    return '$opponent: $gap mjesta iznad nas. Svladani. Nogomet je predivan.';
+  }
+
+  @override
+  String yUpsetGap2(String opponent, String gap) {
+    return 'Razlika na ljestvici: $gap. Rezultat: pobjeda, suparnik: $opponent. Nikad ne prestanite vjerovati.';
+  }
+
+  @override
+  String yUpsetGap3(String opponent, String gap) {
+    return 'Razlika na ljestvici prije početka: $gap. Momčad $opponent ipak svladana.';
+  }
+
+  @override
+  String yUpsetGap4(String opponent, String gap) {
+    return 'Na svjetskoj ljestvici momčad $opponent bila je $gap mjesta iznad nas. Ne večeras.';
+  }
+
+  @override
+  String yUpsetGap5(String opponent, String gap) {
+    return 'Indeks iznenađenja: $gap mjesta na ljestvici između momčadi. Pobjeda naša, suparnik: $opponent.';
+  }
+
+  @override
+  String yUpsetGap6(String opponent, String gap) {
+    return '$gap mjesta na ljestvici dijelilo nas je od momčadi $opponent. Jedna večer ne zatvara tu razliku.';
+  }
+
+  @override
+  String yUpsetGap7(String opponent, String gap) {
+    return '$opponent: $gap mjesta iznad, a ipak poraz za njih. Ljestvica to jedva primijeti.';
+  }
+
+  @override
+  String yUpsetGap8(String gap) {
+    return 'Razlika na ljestvici: $gap. Zapamtite taj broj idući put kad izgubimo od autsajdera.';
+  }
+
+  @override
+  String yEatWords0(String opponent) {
+    return 'Otpisao sam ovu momčad. Pogriješio sam, i nikad nisam bio sretniji što sam pogriješio. Suparnik: $opponent.';
+  }
+
+  @override
+  String yEatWords1(String opponent) {
+    return 'Porciju skromnosti, molim. Veliku. Pobjeda protiv momčadi $opponent bila je veličanstvena.';
+  }
+
+  @override
+  String yEatWords2(String opponent) {
+    return 'Rekao sam da nemaju više ništa. Imali su puno. Svaka čast svima protiv momčadi $opponent.';
+  }
+
+  @override
+  String yEatWords3(String opponent) {
+    return 'Za zapisnik: tu pobjedu protiv momčadi $opponent nisam vidio. Svaka čast.';
+  }
+
+  @override
+  String yEatWords4(String opponent) {
+    return 'Dobro. Rekao sam da će ih raskrinkati. Momčad $opponent nije uspjela.';
+  }
+
+  @override
+  String yEatWords5(String opponent) {
+    return 'Večeras jedem svoje riječi o ovoj momčadi. Pobjeda protiv momčadi $opponent to zaslužuje.';
+  }
+
+  @override
+  String yEatWords6(String opponent) {
+    return 'Da, rekao sam da su gotovi. Jedna pobjeda protiv momčadi $opponent još ne dokazuje da sam pogriješio.';
+  }
+
+  @override
+  String yEatWords7(String opponent) {
+    return 'Kažu da moram pojesti svoje riječi nakon momčadi $opponent. Hoću, polako, a račun čuvam.';
+  }
+
+  @override
+  String yEatWords8(String opponent) {
+    return 'Pobjeda protiv momčadi $opponent bila je impresivna. Moje sumnje u ovu momčad nisu nestale.';
+  }
+
+  @override
+  String yAwayFansWin0(String nation, String score) {
+    return 'Svaka čast momčadi $nation. $score, i zasluženo od početka do kraja.';
+  }
+
+  @override
+  String yAwayFansWin1(String nation, String score) {
+    return 'Boli to reći, ali večeras je bolja bila momčad $nation. $score. Čestitke.';
+  }
+
+  @override
+  String yAwayFansWin2(String nation, String score) {
+    return '$score. Kapa dolje momčadi $nation, više su htjeli.';
+  }
+
+  @override
+  String yAwayFansWin3(String nation, String score) {
+    return 'Poraz $score protiv momčadi $nation. Ne znam ni što reći.';
+  }
+
+  @override
+  String yAwayFansWin4(String nation, String score) {
+    return '$nation $score. Naši bi se trebali sramiti.';
+  }
+
+  @override
+  String yAwayFansWin5(String nation, String score) {
+    return '$score protiv momčadi $nation. Neka mi netko objasni kako se to dogodilo.';
+  }
+
+  @override
+  String yAwayFansWin6(String nation, String score) {
+    return 'Izgubiti $score od momčadi $nation. Ovo nikad neću preboljeti.';
+  }
+
+  @override
+  String yAwayFansWin7(String nation, String score) {
+    return '$score protiv momčadi $nation. Sreća. Čista sreća.';
+  }
+
+  @override
+  String yAwayFansWin8(String nation, String score) {
+    return 'Nakon tog $score navijači momčadi $nation bit će nepodnošljivi godinama. Hvala ni na čemu.';
+  }
+
+  @override
+  String yNeutralWin0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Sjajno za nogomet. Zato ga volimo.';
+  }
+
+  @override
+  String yNeutralWin1(String nation, String opponent, String score) {
+    return 'Kakav rezultat: $nation $score $opponent. Nogomet u najboljem izdanju.';
+  }
+
+  @override
+  String yNeutralWin2(String nation, String opponent, String score) {
+    return 'Svi neutralni večeras navijaju za momčad $nation. $score protiv momčadi $opponent!';
+  }
+
+  @override
+  String yNeutralWin3(String nation, String opponent, String score) {
+    return 'Rezultat kola: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralWin4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. To nitko nije imao na listiću.';
+  }
+
+  @override
+  String yNeutralWin5(String nation, String opponent, String score) {
+    return 'Veliki rezultat: $nation $score $opponent. Ljestvica će se pomaknuti.';
+  }
+
+  @override
+  String yNeutralWin6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Zabavno, da vidimo mogu li to ponoviti.';
+  }
+
+  @override
+  String yNeutralWin7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Je li pobijedila jedna momčad ili je izgubila druga?';
+  }
+
+  @override
+  String yNeutralWin8(String nation, String opponent, String score) {
+    return 'Senzacija: $nation $score $opponent. Očekujte puno pretjeranih reakcija.';
+  }
+
+  @override
+  String yScorerHero0(String name, String opponent) {
+    return '$name protiv momčadi $opponent. Djeci će davati njegovo ime.';
+  }
+
+  @override
+  String yScorerHero1(String name, String opponent) {
+    return 'Kip za igrača: $name. Večeras protiv momčadi $opponent bio je sve.';
+  }
+
+  @override
+  String yScorerHero2(String name, String opponent) {
+    return '$name, kakav igrač. Zapamtite ovu večer protiv momčadi $opponent.';
+  }
+
+  @override
+  String yScorerHero3(String name, String opponent) {
+    return '$name je odlučio protiv momčadi $opponent. Igrač utakmice, bez rasprave.';
+  }
+
+  @override
+  String yScorerHero4(String name, String opponent) {
+    return 'Protiv momčadi $opponent večer je pripala jednom čovjeku: $name.';
+  }
+
+  @override
+  String yScorerHero5(String name, String opponent) {
+    return '$name se pojavio kad je trebalo, protiv momčadi $opponent.';
+  }
+
+  @override
+  String yScorerHero6(String name, String opponent) {
+    return '$name je bio sjajan protiv momčadi $opponent. Sad svaki tjedan.';
+  }
+
+  @override
+  String yScorerHero7(String name, String opponent) {
+    return '$name je spasio momčad protiv momčadi $opponent. Ostali su malo pomogli.';
+  }
+
+  @override
+  String yScorerHero8(String name, String opponent) {
+    return 'Bez igrača $name bila bi to sasvim drukčija večer protiv momčadi $opponent.';
+  }
+
+  @override
+  String yLostShock0(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Nezgoda. Svakome se dogodi jednom.';
+  }
+
+  @override
+  String yLostShock1(String opponent, String score) {
+    return 'Poraz $score protiv momčadi $opponent. Otresite to, kampanja nije gotova.';
+  }
+
+  @override
+  String yLostShock2(String opponent, String score) {
+    return '$opponent $score. Boli, ali jedan rezultat ne definira ovu momčad.';
+  }
+
+  @override
+  String yLostShock3(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Loš dan na poslu. Dalje.';
+  }
+
+  @override
+  String yLostShock4(String opponent, String score) {
+    return 'Poraz protiv momčadi $opponent, $score. Nitko to nije vidio.';
+  }
+
+  @override
+  String yLostShock5(String opponent, String score) {
+    return '$opponent $score. Jedna od onih večeri koje nemaju smisla.';
+  }
+
+  @override
+  String yLostShock6(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Poraz koji će se pamtiti.';
+  }
+
+  @override
+  String yLostShock7(String opponent, String score) {
+    return 'Poraženi od momčadi $opponent, $score. Senzacija kako god gledali.';
+  }
+
+  @override
+  String yLostShock8(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Od takvog suparnika! Neprihvatljivo.';
+  }
+
+  @override
+  String yLostShock9(String opponent, String score) {
+    return 'Poraz $score protiv momčadi $opponent. Hoću objašnjenje, ne izgovore.';
+  }
+
+  @override
+  String yLostShock10(String opponent, String score) {
+    return '$opponent $score. Nacionalna sramota, i to nije figura.';
+  }
+
+  @override
+  String yLostShock11(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Kako itko gore još sjedi na svom mjestu?';
+  }
+
+  @override
+  String yLostRout0(String opponent, String score) {
+    return '$score protiv momčadi $opponent. To je vrhunska momčad. Učimo.';
+  }
+
+  @override
+  String yLostRout1(String opponent, String score) {
+    return 'Nadigrani od momčadi $opponent, $score. Nije sramota izgubiti od najboljih.';
+  }
+
+  @override
+  String yLostRout2(String opponent, String score) {
+    return '$opponent $score. Lekcija, a na lekcijama se raste.';
+  }
+
+  @override
+  String yLostRout3(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Boli, ali oni su razinu iznad.';
+  }
+
+  @override
+  String yLostRout4(String opponent, String score) {
+    return 'Pobjeda za momčad $opponent, $score. Razlika je stvarna, i sad su je svi vidjeli.';
+  }
+
+  @override
+  String yLostRout5(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Batine, ništa drugo.';
+  }
+
+  @override
+  String yLostRout6(String opponent, String score) {
+    return '$opponent $score. Bolja momčad, i rezultat to kaže.';
+  }
+
+  @override
+  String yLostRout7(String opponent, String score) {
+    return 'Poraz $score protiv momčadi $opponent. Nije sramota, ali nije bilo ni utakmice.';
+  }
+
+  @override
+  String yLostRout8(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Bolji suparnik ili ne, tako se ne gubi.';
+  }
+
+  @override
+  String yLostRout9(String opponent, String score) {
+    return '$opponent $score. Jesmo li uopće pokušali konkurirati?';
+  }
+
+  @override
+  String yLostRout10(String opponent, String score) {
+    return '$score. Protiv momčadi $opponent. Kao janjci na klanje.';
+  }
+
+  @override
+  String yLostRout11(String opponent, String score) {
+    return 'Poraz $score protiv momčadi $opponent, i nitko nije izgledao zabrinuto.';
+  }
+
+  @override
+  String yLostShootout0(String opponent) {
+    return 'Ispali nakon jedanaesteraca protiv momčadi $opponent. Dali su sve. Ponosan sam na njih.';
+  }
+
+  @override
+  String yLostShootout1(String opponent) {
+    return 'Jedanaesterci protiv momčadi $opponent. Najokrutniji način ispadanja. Glavu gore.';
+  }
+
+  @override
+  String yLostShootout2(String opponent) {
+    return 'Raspucavanje protiv momčadi $opponent izgubljeno. Nitko to nije zaslužio.';
+  }
+
+  @override
+  String yLostShootout3(String opponent) {
+    return 'Ispali nakon jedanaesteraca protiv momčadi $opponent. Odlučila je bijela točka.';
+  }
+
+  @override
+  String yLostShootout4(String opponent) {
+    return 'Momčad $opponent prolazi nakon jedanaesteraca. Naš turnir tu završava.';
+  }
+
+  @override
+  String yLostShootout5(String opponent) {
+    return 'Raspucavanje izgubljeno protiv momčadi $opponent. Opet jedanaesterci.';
+  }
+
+  @override
+  String yLostShootout6(String opponent) {
+    return 'Ispali nakon jedanaesteraca protiv momčadi $opponent. Vježbamo li ih uopće?';
+  }
+
+  @override
+  String yLostShootout7(String opponent) {
+    return 'Poraz na jedanaesterce protiv momčadi $opponent. Trebali smo to riješiti puno ranije.';
+  }
+
+  @override
+  String yLostShootout8(String opponent) {
+    return 'Jedanaesterci protiv momčadi $opponent, i izgubili smo. Naravno.';
+  }
+
+  @override
+  String yKnockoutLoss0(String opponent, String score) {
+    return 'ISPALI. $score protiv momčadi $opponent. Put na koji možemo biti ponosni završava ovdje.';
+  }
+
+  @override
+  String yKnockoutLoss1(String opponent, String score) {
+    return 'Izbacila nas je momčad $opponent, $score. Hvala na uspomenama.';
+  }
+
+  @override
+  String yKnockoutLoss2(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Putovanje je gotovo, ali kakvo putovanje.';
+  }
+
+  @override
+  String yKnockoutLoss3(String opponent, String score) {
+    return 'ISPALI: $score protiv momčadi $opponent. Glave gore.';
+  }
+
+  @override
+  String yKnockoutLoss4(String opponent, String score) {
+    return 'KRAJ: $score protiv momčadi $opponent.';
+  }
+
+  @override
+  String yKnockoutLoss5(String opponent, String score) {
+    return 'Ispali: $score protiv momčadi $opponent.';
+  }
+
+  @override
+  String yKnockoutLoss6(String opponent, String score) {
+    return 'Momčad $opponent prolazi, $score. Naš turnir je gotov.';
+  }
+
+  @override
+  String yKnockoutLoss7(String opponent, String score) {
+    return 'Izbacila nas je momčad $opponent, $score. Obdukcija počinje sada.';
+  }
+
+  @override
+  String yKnockoutLoss8(String opponent, String score) {
+    return 'ISPALI. $score protiv momčadi $opponent. Drugi turnir, isti kraj.';
+  }
+
+  @override
+  String yKnockoutLoss9(String opponent, String score) {
+    return '$score protiv momčadi $opponent, i kući. Nitko nije iznenađen.';
+  }
+
+  @override
+  String yKnockoutLoss10(String opponent, String score) {
+    return 'Izbacila nas je momčad $opponent, $score. Do jutra očekujte izgovore.';
+  }
+
+  @override
+  String yKnockoutLoss11(String opponent, String score) {
+    return '$opponent $score. Ispali, i nikad nije izgledalo da će završiti drukčije.';
+  }
+
+  @override
+  String yAwayFansGloat0(String nation, String score) {
+    return '$score protiv momčadi $nation. Poštovanje, vratit će se jači.';
+  }
+
+  @override
+  String yAwayFansGloat1(String nation, String score) {
+    return 'Dobra pobjeda za nas, $score. Loš dan za momčad $nation, žao mi je njihovih navijača.';
+  }
+
+  @override
+  String yAwayFansGloat2(String nation, String score) {
+    return '$score. Loša večer za momčad $nation, a mi smo iskoristili priliku. Takav je nogomet.';
+  }
+
+  @override
+  String yAwayFansGloat3(String nation, String score) {
+    return '$score protiv momčadi $nation! Tko je to očekivao? Oni sigurno ne.';
+  }
+
+  @override
+  String yAwayFansGloat4(String nation, String score) {
+    return 'Pobjeda $score protiv momčadi $nation. Neka netko provjeri kako su im navijači.';
+  }
+
+  @override
+  String yAwayFansGloat5(String nation, String score) {
+    return '$nation $score. Ovo ide u album.';
+  }
+
+  @override
+  String yAwayFansGloat6(String nation, String score) {
+    return '$score protiv momčadi $nation. A misle da su velika momčad.';
+  }
+
+  @override
+  String yAwayFansGloat7(String nation, String score) {
+    return 'Zamisli izgubiti $score od nas. Pitaj momčad $nation, sad znaju.';
+  }
+
+  @override
+  String yAwayFansGloat8(String nation, String score) {
+    return '$nation, $score. Sretan let kući.';
+  }
+
+  @override
+  String yNeutralLoss0(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Velika večer za jedne, teška za druge.';
+  }
+
+  @override
+  String yNeutralLoss1(String nation, String opponent, String score) {
+    return 'Navijačima momčadi $nation puno snage nakon $score protiv momčadi $opponent. Ustat će.';
+  }
+
+  @override
+  String yNeutralLoss2(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Svaka velika momčad ima ovakvu večer.';
+  }
+
+  @override
+  String yNeutralLoss3(String nation, String opponent, String score) {
+    return 'Senzacija kola: $nation $score $opponent.';
+  }
+
+  @override
+  String yNeutralLoss4(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Nitko to nije vidio.';
+  }
+
+  @override
+  String yNeutralLoss5(String nation, String opponent, String score) {
+    return 'Rezultat dana: $nation $score $opponent. Sad slijede pitanja.';
+  }
+
+  @override
+  String yNeutralLoss6(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Nije slučajnost, ako ste pratili.';
+  }
+
+  @override
+  String yNeutralLoss7(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Netko tamo imat će puno toga za objasniti.';
+  }
+
+  @override
+  String yNeutralLoss8(String nation, String opponent, String score) {
+    return '$nation $score $opponent. Veliko ime, mala izvedba.';
+  }
+
+  @override
+  String yDownGap0(String opponent, String gap) {
+    return '$opponent: $gap mjesta ispod nas. Događa se. Dalje.';
+  }
+
+  @override
+  String yDownGap1(String gap) {
+    return 'Razlika na ljestvici: $gap u našu korist. Nogomet ne čita ljestvice.';
+  }
+
+  @override
+  String yDownGap2(String opponent, String gap) {
+    return 'Na papiru $gap mjesta između nas i momčadi $opponent. Ne na terenu večeras.';
+  }
+
+  @override
+  String yDownGap3(String opponent, String gap) {
+    return 'Razlika na ljestvici prije početka: $gap u našu korist. Ipak poraz, suparnik: $opponent.';
+  }
+
+  @override
+  String yDownGap4(String opponent, String gap) {
+    return 'Na svjetskoj ljestvici momčad $opponent bila je $gap mjesta ispod nas. Rezultat: poraz.';
+  }
+
+  @override
+  String yDownGap5(String opponent, String gap) {
+    return 'Indeks iznenađenja: $gap mjesta na ljestvici, u krivom smjeru. Suparnik: $opponent.';
+  }
+
+  @override
+  String yDownGap6(String opponent, String gap) {
+    return '$gap mjesta iznad momčadi $opponent na ljestvici. Poraz. Objasnite to.';
+  }
+
+  @override
+  String yDownGap7(String gap) {
+    return 'Poraz od momčadi $gap mjesta ispod nas. Neka vam taj broj sjedne.';
+  }
+
+  @override
+  String yDownGap8(String opponent, String gap) {
+    return 'Razlika na ljestvici: $gap. Poraz, suparnik: $opponent. Netko bi trebao početi brojati dane.';
+  }
+
+  @override
+  String yDrewHeroic0(String opponent, String score) {
+    return '$score protiv momčadi $opponent! Remi koji ima okus pobjede.';
+  }
+
+  @override
+  String yDrewHeroic1(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Ponosan na svakoga od njih.';
+  }
+
+  @override
+  String yDrewHeroic2(String opponent, String score) {
+    return '$opponent $score. Bili su favoriti, a mi smo im parirali.';
+  }
+
+  @override
+  String yDrewHeroic3(String opponent, String score) {
+    return '$score s momčadi $opponent. Bod iznesen krvlju i znojem.';
+  }
+
+  @override
+  String yDrewHeroic4(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Jako dobar bod.';
+  }
+
+  @override
+  String yDrewHeroic5(String opponent, String score) {
+    return 'Remi $score s momčadi $opponent. Malo tko je očekivao išta.';
+  }
+
+  @override
+  String yDrewHeroic6(String opponent, String score) {
+    return 'Momčad $opponent zaustavljena, $score. Rezultat na kojem se gradi.';
+  }
+
+  @override
+  String yDrewHeroic7(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Bod koji nam nitko nije davao.';
+  }
+
+  @override
+  String yDrewHeroic8(String opponent, String score) {
+    return '$score s momčadi $opponent. Dobar bod, ali remijima se ništa ne osvaja.';
+  }
+
+  @override
+  String yDrewHeroic9(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Lijepo. Nismo imali ni jedan pravi udarac.';
+  }
+
+  @override
+  String yDrewHeroic10(String opponent, String score) {
+    return '$opponent $score. Jedan bod, a svi se ponašaju kao da smo osvojili trofej.';
+  }
+
+  @override
+  String yDrewHeroic11(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Parkirali smo autobus i imali sreće.';
+  }
+
+  @override
+  String yDrewShame0(String opponent, String score) {
+    return '$score s momčadi $opponent. Frustrirajuće, ali još uvijek bez poraza.';
+  }
+
+  @override
+  String yDrewShame1(String opponent, String score) {
+    return 'Samo $score s momčadi $opponent. Loš dan. Događa se.';
+  }
+
+  @override
+  String yDrewShame2(String opponent, String score) {
+    return '$opponent $score. Nije dovoljno dobro, i igrači to znaju.';
+  }
+
+  @override
+  String yDrewShame3(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Dva izgubljena boda, ništa više.';
+  }
+
+  @override
+  String yDrewShame4(String opponent, String score) {
+    return '$score s momčadi $opponent. Dva boda bačena.';
+  }
+
+  @override
+  String yDrewShame5(String opponent, String score) {
+    return 'Samo $score s momčadi $opponent. Loš rezultat, kako god ga zamotali.';
+  }
+
+  @override
+  String yDrewShame6(String opponent, String score) {
+    return '$opponent $score. Remi koji ima okus poraza.';
+  }
+
+  @override
+  String yDrewShame7(String opponent, String score) {
+    return '$score protiv momčadi $opponent. Takve utakmice moramo dobivati lagano.';
+  }
+
+  @override
+  String yDrewShame8(String opponent, String score) {
+    return '$score s momčadi $opponent. Sramota.';
+  }
+
+  @override
+  String yDrewShame9(String opponent, String score) {
+    return 'Samo remi s momčadi $opponent, $score. Tko je za ovo odgovoran?';
+  }
+
+  @override
+  String yDrewShame10(String opponent, String score) {
+    return '$opponent $score. Ako ne pobijedimo njih, koga ćemo?';
+  }
+
+  @override
+  String yDrewShame11(String opponent, String score) {
+    return '$score s momčadi $opponent. Njihovi navijači slave remi protiv nas. Razmislite o tome.';
   }
 
   @override
@@ -5229,6 +6435,11 @@ class AppLocalizationsHr extends AppLocalizations {
       'Dva mjesta na Svjetskom prvenstvu odlučuju se nokaut-turnirom najboljih neuspješnih kvalifikanata.';
 
   @override
+  String tourCupPlayoffNoEntrants(String confederation) {
+    return '$confederation nema play-off: sva se mjesta odlučuju u kvalifikacijskim skupinama.';
+  }
+
+  @override
   String get tourCupQualDrawSoon =>
       'Skupine tek treba izvući. Gledaj ždrijeb kvalifikacija s početne da ih otkriješ.';
 
@@ -5391,6 +6602,9 @@ class AppLocalizationsHr extends AppLocalizations {
   String get objectiveNcSurvive => 'Izbjegni ispadanje';
 
   @override
+  String get objectiveNcOffTheBottom => 'Ne završi posljednji u skupini';
+
+  @override
   String get finishNcChampions => 'Pobjednici natjecanja Nations Cup';
 
   @override
@@ -5404,6 +6618,9 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get finishNcStayedUp => 'Izbjegnuto ispadanje';
+
+  @override
+  String get finishNcClearOfBottom => 'Nije posljednji u skupini';
 
   @override
   String get finishNcBottom => 'Posljednji u skupini';
@@ -6807,7 +8024,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String newsNatzStarTitle(String name, String nation) {
-    return '⭐ $name bi prešao u reprezentaciju: $nation!';
+    return '$name bi prešao u reprezentaciju: $nation!';
   }
 
   @override
@@ -7447,14 +8664,18 @@ class AppLocalizationsHr extends AppLocalizations {
   String get careerBackupAllFailed => 'Nije moguće zapisati sigurnosnu kopiju.';
 
   @override
-  String get backupTitle => 'SPREMLJENE IGRE';
+  String get backupTitle => 'SIGURNOSNE KOPIJE';
 
   @override
   String get backupBlurb =>
-      'Sve spremljene igre nalaze se u jednoj datoteci na ovom telefonu i ništa ih samo od sebe ne kopira. Izvezi kopiju i čuvaj je izvan telefona, u Datotekama ili na iCloud Driveu, da te izgubljeni telefon ili izbrisana aplikacija ne koštaju karijere.';
+      'Sva spremanja nalaze se u jednoj datoteci na ovom telefonu i ništa ih ne kopira samo od sebe, osim ako dolje ne uključiš automatsku kopiju. Čuvaj kopiju u oblaku da te izgubljeni telefon ili obrisana aplikacija ne stoje karijere.';
 
   @override
-  String get backupExport => 'IZVEZI KOPIJU';
+  String get backupBlurbNoAuto =>
+      'Sva spremanja nalaze se u jednoj datoteci na ovom telefonu i ništa ih ne kopira samo od sebe. Čuvaj kopiju u oblaku da te izgubljeni telefon ili obrisana aplikacija ne stoje karijere.';
+
+  @override
+  String get backupExport => 'KOPIJA U OBLAK';
 
   @override
   String get backupExportSubject => 'FNM spremljene igre';
@@ -9824,8 +11045,8 @@ class AppLocalizationsHr extends AppLocalizations {
   String get injuryCoverTitle => 'ZAMJENA';
 
   @override
-  String injuryCoverBanner(String player) {
-    return '$player je ozlijeđen. Pozovi bilo koga izvan sastava, na bilo koju poziciju, ili ga zadrži i igraj dalje.';
+  String injuryCoverBanner(String player, String position) {
+    return '$player ($position) je ozlijeđen. Pozovi bilo koga izvan sastava, na bilo koju poziciju, ili ga zadrži i igraj dalje.';
   }
 
   @override
@@ -10073,14 +11294,14 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignGuineasTwist =>
-      'Ekvatorska Gvineja, najniže rangirana od afričkih Gvineja, kroz dva ciklusa';
+      'Ekvatorska Gvineja, najmanja od afričkih Gvineja, kroz dva ciklusa';
 
   @override
   String get campaignGuineasGoal => 'Pobijedi Gvineju i Gvineju Bisau';
 
   @override
   String get campaignGuineasIntro =>
-      'Tri afričke zemlje nose ime Gvineja, a Ekvatorska Gvineja rangirana je najniže od njih. Imaš dva ciklusa da barem jednom pobijediš Gvineju i Gvineju Bisau, pa vidi dokle možeš stići na Afričkom prvenstvu. Papua Nova Gvineja, četvrta Gvineja, već je dogovorena za prijateljsku utakmicu.';
+      'Tri afričke zemlje nose ime Gvineja, a Ekvatorska Gvineja najmanja je od njih. Imaš dva ciklusa da barem jednom pobijediš Gvineju i Gvineju Bisau, pa vidi dokle možeš stići na Afričkom prvenstvu. Papua Nova Gvineja, četvrta Gvineja, već je dogovorena za prijateljsku utakmicu.';
 
   @override
   String get campaignStars1Guineas => 'Pobijedi Gvineju i Gvineju Bisau';
@@ -10117,6 +11338,30 @@ class AppLocalizationsHr extends AppLocalizations {
   String get campaignStars3YoungFinns => 'Osvoji Svjetsko prvenstvo';
 
   @override
+  String get campaignGreenlandTitle => 'Grenlandsko stoljeće';
+
+  @override
+  String get campaignGreenlandTwist =>
+      'Grenland zauzima mjesto San Marina u Europi, na sto godina';
+
+  @override
+  String get campaignGreenlandGoal => 'Kvalificiraj se na Europsko prvenstvo';
+
+  @override
+  String get campaignGreenlandIntro =>
+      'Grenland nikad nije odigrao službenu međunarodnu utakmicu. U ovom svijetu zauzeo je mjesto San Marina u Europi i kreće sa samog dna svjetske ljestvice: amaterski igrači, umjetni travnjaci i sezona stisnuta između snjegova. Imaš sto godina, dvadeset i pet ciklusa, da stigneš do Europskog prvenstva, zatim do Svjetskog prvenstva i, ako se usudiš sanjati, osvojiš jedno od njih.';
+
+  @override
+  String get campaignStars1Greenland => 'Kvalificiraj se na Europsko prvenstvo';
+
+  @override
+  String get campaignStars2Greenland => 'Kvalificiraj se na Svjetsko prvenstvo';
+
+  @override
+  String get campaignStars3Greenland =>
+      'Osvoji Europsko ili Svjetsko prvenstvo';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -10129,4 +11374,1625 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get campaignCupOpen => 'Tek treba biti odlučeno';
+
+  @override
+  String newsYouthTitle1(String name, String level) {
+    return '$name blista u reprezentaciji $level';
+  }
+
+  @override
+  String newsYouthTitle2(String name, String level) {
+    return 'Izvještaj iz akademije: $name privlači pozornost';
+  }
+
+  @override
+  String newsYouthTitle3(String name, String level) {
+    return 'Najbolji u reprezentaciji $level: $name';
+  }
+
+  @override
+  String newsYouthGoals1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count puta',
+      few: '$count puta',
+      one: '$count put',
+    );
+    return '$name je u posljednjem reprezentativnom terminu $_temp0 zatresao mrežu za reprezentaciju $level. Protivnik: $opponent.';
+  }
+
+  @override
+  String newsYouthGoals2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count golova',
+      few: '$count gola',
+      one: '$count gol',
+    );
+    return '$name je za reprezentaciju $level zabio $_temp0. Protivnik u ovom terminu: $opponent.';
+  }
+
+  @override
+  String newsYouthGoals3(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count golova',
+      few: '$count gola',
+      one: '$count golom',
+    );
+    return 'Reprezentacija $level igrala je u ovom terminu (protivnik: $opponent), a $name je s terena otišao s $_temp0 na svom kontu.';
+  }
+
+  @override
+  String newsYouthAssists1(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count golova',
+      few: '$count gola',
+      one: '$count gol',
+    );
+    return '$name je za reprezentaciju $level namjestio $_temp0 i vodio igru od prve do zadnje minute. Protivnik: $opponent.';
+  }
+
+  @override
+  String newsYouthAssists2(
+    String name,
+    String level,
+    String opponent,
+    int count,
+  ) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count asistencija',
+      few: '$count asistencije',
+      one: '$count asistencija',
+    );
+    return 'Reprezentacija $level igrala je u ovom terminu (protivnik: $opponent), a konce je vukao $name: $_temp0 i izvedba o kojoj stožer još uvijek priča.';
+  }
+
+  @override
+  String newsYouthCleanSheet1(String name, String level, String opponent) {
+    return '$name je bio izvanredan, a reprezentacija $level sačuvala je mrežu netaknutom. Protivnik: $opponent.';
+  }
+
+  @override
+  String newsYouthCleanSheet2(String name, String level, String opponent) {
+    return 'Bez primljenog gola za reprezentaciju $level (protivnik: $opponent), a najveće zasluge ima $name.';
+  }
+
+  @override
+  String newsYouthDisplay1(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return '$name je oduševio u reprezentaciji $level (protivnik: $opponent), a stožer je njegovu izvedbu ocijenio s $mark od deset.';
+  }
+
+  @override
+  String newsYouthDisplay2(
+    String name,
+    String level,
+    String opponent,
+    int mark,
+  ) {
+    return 'Reprezentacija $level igrala je u ovom terminu (protivnik: $opponent), a treneri su izdvojili jedno ime, $name: $mark od deset, najviša ocjena u momčadi.';
+  }
+
+  @override
+  String get newsYouthDevReady1 =>
+      'U ovoj formi već je dovoljno dobar da ga razmotriš za A reprezentaciju.';
+
+  @override
+  String get newsYouthDevReady2 =>
+      'Stožer vjeruje da je već sada spreman za seniorski nogomet. Odluka je na tebi.';
+
+  @override
+  String get newsYouthDevClose1 =>
+      'Dobro napreduje i blizu je proboja u A reprezentaciju.';
+
+  @override
+  String get newsYouthDevClose2 =>
+      'Do A reprezentacije ne nedostaje mu puno, a još jedna dobra sezona mogla bi biti dovoljna.';
+
+  @override
+  String get newsYouthDevGrowing1 =>
+      'Lijepo se razvija, iako je A reprezentacija još korak ili dva daleko.';
+
+  @override
+  String get newsYouthDevGrowing2 =>
+      'Ima još posla prije nego što postane seniorski reprezentativac, ali sve ide u dobrom smjeru.';
+
+  @override
+  String get newsYouthDevRaw1 =>
+      'Još je sirov i nekoliko godina daleko od A reprezentacije, ali talent se jasno vidi.';
+
+  @override
+  String get newsYouthDevRaw2 =>
+      'Još je rano, a treneri akademije traže strpljenje, ne naslove.';
+
+  @override
+  String get newsYouthStrengthGkPhysical =>
+      'Izdvaja ga doseg i vladanje kaznenim prostorom.';
+
+  @override
+  String get newsYouthStrengthGkTechnical =>
+      'Hvatanje i otvaranje igre najbolji su koje je akademija vidjela godinama.';
+
+  @override
+  String get newsYouthStrengthGkStamina =>
+      'Koncentracija mu nikad ne pada: u devedesetoj minuti oštar je kao u prvoj.';
+
+  @override
+  String get newsYouthStrengthDefPhysical =>
+      'Brzina i igra glavom ključ su njegove igre.';
+
+  @override
+  String get newsYouthStrengthDefTechnical =>
+      'Čita igru daleko iznad svojih godina i smiren je s loptom.';
+
+  @override
+  String get newsYouthStrengthDefStamina =>
+      'Nikad se ne isključuje i u zadnjoj minuti još uvijek sprinta natrag.';
+
+  @override
+  String get newsYouthStrengthMidPhysical =>
+      'Osvaja lopte s pravom snagom i odmah ih nosi naprijed.';
+
+  @override
+  String get newsYouthStrengthMidTechnical =>
+      'Pregled igre i raspon dodavanja ključ su njegove igre.';
+
+  @override
+  String get newsYouthStrengthMidStamina =>
+      'Ima nevjerojatan motor: pokriva svaku vlat trave.';
+
+  @override
+  String get newsYouthStrengthFwdPhysical =>
+      'Brzina u dubinu i snaga u zraku čine ga problemom za svaku obranu.';
+
+  @override
+  String get newsYouthStrengthFwdTechnical =>
+      'Završnica i kretanje u kaznenom prostoru ključ su njegove igre.';
+
+  @override
+  String get newsYouthStrengthFwdStamina =>
+      'Cijelu utakmicu pritišće od naprijed i ne daje braničima ni trenutka mira.';
+
+  @override
+  String pressMomentBigWinWarm3(String opponent) {
+    return 'Navijači će dugo pjevati o ovoj utakmici (protivnik: $opponent). Što ste rekli igračima nakon posljednjeg zvižduka?';
+  }
+
+  @override
+  String pressMomentBigWinNeutral3(String opponent) {
+    return 'Bila je to jasna poruka, protivnik $opponent. Koliko je toga došlo s treninga?';
+  }
+
+  @override
+  String pressMomentBigWinHostile3(String opponent) {
+    return 'Čestitke na rezultatu (protivnik: $opponent), ali takve smo večeri već vidjeli. Što je ovaj put drugačije?';
+  }
+
+  @override
+  String pressMomentBigLossWarm3(String opponent) {
+    return 'Svatko ima lošu večer, a ovo je bila jedna takva, protivnik $opponent. Koliko brzo to možete ostaviti iza sebe?';
+  }
+
+  @override
+  String pressMomentBigLossNeutral3(String opponent) {
+    return 'Protivnik $opponent bio je bolji u svakoj liniji. Gdje počinjete s popravcima?';
+  }
+
+  @override
+  String pressMomentBigLossHostile3(String opponent) {
+    return 'Navijači su odlazili prije kraja (protivnik: $opponent). Možete li im zamjeriti?';
+  }
+
+  @override
+  String pressMomentCrisisWarm3(String opponent) {
+    return 'Ovo je teško razdoblje, a ni utakmica u kojoj je protivnik bio $opponent nije ništa olakšala. Što Vas drži?';
+  }
+
+  @override
+  String pressMomentCrisisNeutral3(String opponent) {
+    return 'Još jedna utakmica bez pobjede, ovaj put protivnik $opponent. Koliko to još može trajati prije nego što odbor reagira?';
+  }
+
+  @override
+  String pressMomentCrisisHostile3(String opponent) {
+    return 'Sad još i ovo, protivnik $opponent. Je li u Vašem planu ostalo išta, ili je vrijeme da ustupite mjesto nekome drugome?';
+  }
+
+  @override
+  String get pressReplyCreditPlayers5 =>
+      'Što god napisali, napišite to o igračima. Zaslužili su.';
+
+  @override
+  String get pressReplyCreditPlayers6 =>
+      'Imam skupinu koja bi jedan za drugoga skočila u vatru. To nije malo.';
+
+  @override
+  String get pressReplyTakeResponsibility5 =>
+      'Ja donosim odluke, pa kritika ide meni. Takav je posao.';
+
+  @override
+  String get pressReplyTakeResponsibility6 =>
+      'Prvo pogledajte izbornika. Pogriješio sam u nekim stvarima i ispravit ću ih.';
+
+  @override
+  String get pressReplyDemandMore5 =>
+      'Dobro ovdje nije dovoljno dobro. Rekao sam im to u lice.';
+
+  @override
+  String get pressReplyDemandMore6 =>
+      'Nitko u toj svlačionici nema zajamčeno mjesto. Sada to znaju.';
+
+  @override
+  String get pressReplyDeflect5 =>
+      'Možete pitati na tri različita načina. Odgovor će biti isti.';
+
+  @override
+  String get pressReplyDeflect6 =>
+      'Svoje misli čuvam za igrače. Razumjet ćete.';
+
+  @override
+  String yWinRoutine12(String opponent, String score) {
+    return '$opponent $score. Miran, kontroliran, zreo nogomet. Milina gledati.';
+  }
+
+  @override
+  String yWinRoutine13(String opponent, String score) {
+    return '$opponent $score, a nismo se ni oznojili. Ova momčad postaje dobra u dosadi, a dosada osvaja trofeje.';
+  }
+
+  @override
+  String yWinRoutine14(String opponent, String score) {
+    return '$opponent $score. Tri boda, nula drame, natrag na posao.';
+  }
+
+  @override
+  String yWinRoutine15(String opponent, String score) {
+    return 'Rutinskih $score, protivnik $opponent. Nitko to neće pamtiti i nitko ne mora.';
+  }
+
+  @override
+  String yWinRoutine16(String opponent, String score) {
+    return '$opponent $score, a ja se ipak nekako brinem.';
+  }
+
+  @override
+  String yWinRoutine17(String opponent, String score) {
+    return '$opponent $score. Protiv prave momčadi takva bi izvedba bila kažnjena.';
+  }
+
+  @override
+  String yWinTight12(String opponent, String score) {
+    return '$opponent $score. Stisnuli zube, patili, pobijedili. To je momčad.';
+  }
+
+  @override
+  String yWinTight13(String opponent, String score) {
+    return '$opponent $score, samo na živce. Uzimam momčad koja odbija izgubiti.';
+  }
+
+  @override
+  String yWinTight14(String opponent, String score) {
+    return '$opponent $score. Do posljednje sekunde, ali bodovi su naši.';
+  }
+
+  @override
+  String yWinTight15(String opponent, String score) {
+    return 'Tijesnih $score, protivnik $opponent. Mala razlika, takav je nogomet.';
+  }
+
+  @override
+  String yWinTight16(String opponent, String score) {
+    return '$opponent $score. Jedan sretan odbijanac na drugu stranu i vodili bismo posve drugačiji razgovor.';
+  }
+
+  @override
+  String yWinTight17(String opponent, String score) {
+    return 'Jedva smo izdržali, protivnik $opponent, $score. Neka to nitko ne zove izvedbom.';
+  }
+
+  @override
+  String yDrew12(String opponent, String score) {
+    return '$opponent $score. Nije poraz, a ponekad je upravo to posao.';
+  }
+
+  @override
+  String yDrew13(String opponent, String score) {
+    return 'Teško izboren bod, protivnik $opponent, $score. Svidjela mi se borbenost.';
+  }
+
+  @override
+  String yDrew14(String opponent, String score) {
+    return '$opponent $score. Podjela bodova, kako su govorili stari komentatori.';
+  }
+
+  @override
+  String yDrew15(String opponent, String score) {
+    return '$opponent $score. Nijedna momčad nije napravila dovoljno da zasluži više.';
+  }
+
+  @override
+  String yDrew16(String opponent, String score) {
+    return '$opponent $score. Ono neriješeno koje se u autobusu na putu kući čini kao poraz.';
+  }
+
+  @override
+  String yDrew17(String opponent, String score) {
+    return 'Neriješeno. $opponent $score. Stalno pričamo o napretku i stalno radimo ovo.';
+  }
+
+  @override
+  String yLost12(String opponent, String score) {
+    return '$opponent $score. Boli, ali vidio sam dovoljno da vjerujem u ovu momčad.';
+  }
+
+  @override
+  String yLost13(String opponent, String score) {
+    return 'Poraz. $opponent $score, i bili su dobri. Priznati i ići dalje.';
+  }
+
+  @override
+  String yLost14(String opponent, String score) {
+    return '$opponent $score. Jedan poraz, nekoliko lekcija i uskoro sljedeća utakmica.';
+  }
+
+  @override
+  String yLost15(String opponent, String score) {
+    return 'Poraz $score, protivnik $opponent. Teško je tu što prigovoriti.';
+  }
+
+  @override
+  String yLost16(String opponent, String score) {
+    return '$opponent $score. Iste pogreške kao prošli put, napravljene s istim samopouzdanjem.';
+  }
+
+  @override
+  String yLost17(String opponent, String score) {
+    return 'Poraz. $opponent $score. Ako za ovo nitko ne odgovara, što mi uopće radimo?';
+  }
+
+  @override
+  String get yReactionShrug12 =>
+      'Meni odgovara. Ne treba svaka večer vatromet.';
+
+  @override
+  String get yReactionShrug13 => 'Bodovi su bodovi. Večeras spavam mirno.';
+
+  @override
+  String get yReactionShrug14 => 'Gledao. Bez primjedbi.';
+
+  @override
+  String get yReactionShrug15 => 'Negdje između u redu i u redu.';
+
+  @override
+  String get yReactionShrug16 =>
+      'Platio sam prijenos za ovo. Nikad više (vratit ću se).';
+
+  @override
+  String get yReactionShrug17 => 'Devedeset minuta ničega u obliku nogometa.';
+
+  @override
+  String get yReactionRelief12 => 'Opet dišem. Ponosan što su izdržali.';
+
+  @override
+  String get yReactionRelief13 =>
+      'Takve pobjede grade momčad. Ružno je lijepo.';
+
+  @override
+  String get yReactionRelief14 => 'Noktiju više nema, ali bodova ima.';
+
+  @override
+  String get yReactionRelief15 => 'Posljednji zvižduk nikad nije zvučao bolje.';
+
+  @override
+  String get yReactionRelief16 =>
+      'Drago mi je što smo pobijedili, brine me kako.';
+
+  @override
+  String get yReactionRelief17 => 'Stalno se izvučemo. Jednog dana nećemo.';
+
+  @override
+  String get yReactionFury12 => 'Volim ovu momčad i upravo zato ovo boli.';
+
+  @override
+  String get yReactionFury13 =>
+      'Loša večer. Sljedeći put nam duguju jednu i to znaju.';
+
+  @override
+  String get yReactionFury14 =>
+      'Ugasio sam u sedamdesetoj minuti. Trebao sam u šezdesetoj.';
+
+  @override
+  String get yReactionFury15 => 'Nema borbe, nema ideja, nema isprika.';
+
+  @override
+  String get yReactionFury16 =>
+      'Svaki put isti problemi, a nitko ništa ne popravlja.';
+
+  @override
+  String get yReactionFury17 =>
+      'Netko u savezu mora ovo ponovno pogledati i objasniti nam.';
+
+  @override
+  String get backupShareHint =>
+      'Izrađuje jednu datoteku sigurnosne kopije sa svim spremanjima. Odaberi Google Drive, iCloud Drive ili Datoteke za čuvanje.';
+
+  @override
+  String backupLastAt(String date) {
+    return 'Zadnja kopija: $date';
+  }
+
+  @override
+  String get backupNever => 'Još nema kopije';
+
+  @override
+  String get backupRemindersTitle => 'Podsjetnici za kopiju';
+
+  @override
+  String get backupRemindersBlurb =>
+      'Poruka u sandučiću kad ti zadnja kopija počne zastarijevati.';
+
+  @override
+  String get backupAutoICloudTitle => 'Automatska kopija na iCloud';
+
+  @override
+  String get backupAutoDriveTitle => 'Automatska kopija na Google Drive';
+
+  @override
+  String get backupAutoBlurb =>
+      'Radi kopiju nakon utakmica, na kraju ciklusa i kad izađeš iz aplikacije. Čuva zadnje dvije.';
+
+  @override
+  String get backupStatusUploading => 'Izrada kopije.';
+
+  @override
+  String get backupStatusUploaded => 'Kopija je napravljena.';
+
+  @override
+  String get backupStatusICloudSignedOut =>
+      'iCloud je isključen. Prijavi se na iCloud i uključi iCloud Drive u aplikaciji Postavke.';
+
+  @override
+  String get backupStatusDriveSignedOut =>
+      'Nisi prijavljen. Uključi prekidač za prijavu putem Googlea.';
+
+  @override
+  String get backupStatusNotConfigured =>
+      'Još nije dostupno u ovoj verziji aplikacije.';
+
+  @override
+  String get backupStatusUnavailable =>
+      'Oblak trenutačno nije dostupan. Pokušat će ponovno kasnije.';
+
+  @override
+  String get backupStatusFailed =>
+      'Zadnja automatska kopija nije uspjela. Pokušat će ponovno kasnije.';
+
+  @override
+  String backupDriveSignedInAs(String email) {
+    return 'Prijavljen kao $email';
+  }
+
+  @override
+  String get backupDriveSignOut => 'ODJAVA';
+
+  @override
+  String get backupDriveSignInFailed =>
+      'Prijava putem Googlea nije uspjela. Pokušaj kasnije.';
+
+  @override
+  String get backupRestoreICloud => 'VRATI S ICLOUDA';
+
+  @override
+  String get backupRestoreDrive => 'VRATI S GOOGLE DRIVEA';
+
+  @override
+  String get backupCrossPlatformHelp =>
+      'Prelaziš između iPhonea i Androida? Napravi kopiju u datoteku na jednom telefonu i vrati je iz te datoteke na drugom.';
+
+  @override
+  String get backupCloudListBlurb =>
+      'Kopije s tvojih uređaja na ovom računu. Dodirni jednu da je vratiš.';
+
+  @override
+  String get backupCloudListEmpty =>
+      'Još nema kopija. Novoj kopiji može trebati nekoliko minuta da stigne na drugi uređaj.';
+
+  @override
+  String get backupCloudListFailed =>
+      'Kopije nije moguće pročitati. Provjeri vezu i pokušaj ponovno.';
+
+  @override
+  String get backupCloudThisDevice => 'Ovaj uređaj';
+
+  @override
+  String backupCloudMore(int count) {
+    return 'Još spremanja: $count';
+  }
+
+  @override
+  String get backupCloudNewer =>
+      'Napravljeno novijom verzijom aplikacije. Najprije ažuriraj.';
+
+  @override
+  String get backupCloudDownloading => 'Preuzimanje kopije.';
+
+  @override
+  String get backupRestoreSafetyNote =>
+      'Najprije se na ovom telefonu čuva kopija trenutačnih spremanja.';
+
+  @override
+  String get backupRejectedSafety =>
+      'Kopiju trenutačnih spremanja nije bilo moguće sačuvati, pa ništa nije zamijenjeno.';
+
+  @override
+  String get newsBackupReminderTitle => 'Vrijeme je za kopiju';
+
+  @override
+  String get newsBackupReminderBody =>
+      'Tvoja spremanja postoje samo na ovom telefonu. Otvori Postavke i dodirni Kopija u oblak ili ondje uključi automatsku kopiju. Ovi se podsjetnici također mogu isključiti u Postavkama.';
+
+  @override
+  String get backupSafetyTitle => 'Kopije od prije vraćanja';
+
+  @override
+  String get backupSafetyBlurb =>
+      'Čuvaju se na ovom telefonu za slučaj da je vraćanje bilo pogrešno. Čuvaju se tri najnovije.';
+
+  @override
+  String get backupSafetyRestore => 'VRATI';
+
+  @override
+  String get backupSafetyShare => 'PODIJELI';
+
+  @override
+  String get backupCloudNoDetails => 'Pojedinosti su još na putu.';
+
+  @override
+  String get tacticsLibraryTitle => 'KNJIŽNICA TAKTIKA';
+
+  @override
+  String get tacticsLibraryBlurb =>
+      'Taktike iz knjižnice možete učitati u bilo koju spremljenu igru, pa i u novu. Uloge i izvođači prekida spremaju se po poziciji, a ne po igraču.';
+
+  @override
+  String get tacticsSaveToLibrary => 'Spremi u knjižnicu';
+
+  @override
+  String get tacticsLoadFromLibrary => 'Učitaj iz knjižnice';
+
+  @override
+  String get tacticsLibraryEmpty =>
+      'Knjižnica vam je prazna. Spremite ovdje taktiku pa je možete učitati u svaku spremljenu igru.';
+
+  @override
+  String tacticsLibrarySaved(String name) {
+    return '„$name“ spremljena je u knjižnicu';
+  }
+
+  @override
+  String tacticsLibraryLoaded(String name) {
+    return 'Učitano: „$name“';
+  }
+
+  @override
+  String tacticsLibraryNotFitted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count uloga ili izvođača prekida nije odgovaralo ovoj momčadi.',
+      few: '$count uloge ili izvođača prekida nisu odgovarala ovoj momčadi.',
+      one: '1 uloga ili izvođač prekida nije odgovarao ovoj momčadi.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tacticsLibraryRename => 'Preimenuj';
+
+  @override
+  String get tacticsLibraryRenameTitle => 'Preimenuj taktiku';
+
+  @override
+  String get tacticsLibraryDelete => 'Izbriši';
+
+  @override
+  String tacticsLibraryDeleteTitle(String name) {
+    return 'Izbrisati „$name“?';
+  }
+
+  @override
+  String get tacticsLibraryDeleteBody =>
+      'Nestat će iz knjižnice u svim vašim spremljenim igrama.';
+
+  @override
+  String get tacticsLibraryNameTaken =>
+      'U knjižnici već postoji taktika s tim imenom.';
+
+  @override
+  String tacticsLibraryCouldNotLoad(String error) {
+    return 'Knjižnicu nije moguće učitati.\n$error';
+  }
+
+  @override
+  String hostBidHeading(String competition, int year) {
+    return 'Kandidatura za domaćinstvo: $competition $year';
+  }
+
+  @override
+  String get hostBidScreenTitle => 'Kandidatura';
+
+  @override
+  String get hostBidBlurb =>
+      'Domaćin se izvlači ždrijebom među kandidatima. Kandidatura daje vašem imenu veću težinu: stadioni vam daju početnu šansu, a novac je povećava, iako svaki dodatni milijun vrijedi malo manje. Novac je potrošen, pobijedili ili ne.';
+
+  @override
+  String hostBidPrize(String amount) {
+    return 'Ako pobijedite, bit ćete domaćin, automatski se plasirate i dobivate jednokratnu potporu od $amount za sljedeći proračun.';
+  }
+
+  @override
+  String get hostBidChance => 'Šansa za domaćinstvo';
+
+  @override
+  String get hostBidBaseLabel => 'Stadioni i položaj';
+
+  @override
+  String get hostBidInvestLabel => 'Ulaganje';
+
+  @override
+  String hostBidCeiling(String nation, String percent) {
+    return 'Gornja granica za $nation: $percent';
+  }
+
+  @override
+  String get hostBidInvestment => 'Vaše ulaganje';
+
+  @override
+  String hostBidFreeFunds(String amount) {
+    return 'Slobodna sredstva: $amount';
+  }
+
+  @override
+  String get hostBidSubmit => 'Podnesi kandidaturu';
+
+  @override
+  String get hostBidDecline => 'Ne ovaj put';
+
+  @override
+  String get hostBidUnavailable => 'Ova kandidatura više nije otvorena.';
+
+  @override
+  String hostBidWonTitle(String competition, int year) {
+    return 'Kandidatura uspjela: $competition $year';
+  }
+
+  @override
+  String hostBidWonBody(String amount) {
+    return 'Bit ćemo domaćini turnira i kao domaćin se plasiramo automatski. Jednokratna potpora od $amount već je u blagajni saveza i možete je odmah raspodijeliti odjelima u ovom ciklusu s glavnog zaslona.';
+  }
+
+  @override
+  String hostBidLostTitle(String competition, int year) {
+    return 'Kandidatura neuspjela: $competition $year';
+  }
+
+  @override
+  String hostBidLostBody(String hosts) {
+    return 'Domaćinstvo je dobio: $hosts. Naša kandidatura ovaj put nije bila dovoljna i uloženi novac je izgubljen, ali savez se dobro predstavio.';
+  }
+
+  @override
+  String get hostBidGrantEvent => 'Raspodijeli potporu za domaćinstvo';
+
+  @override
+  String hostBidGrantBanner(String amount) {
+    return 'Potpora za domaćinstvo: $amount koje odmah možete dodati odjelima u ovom ciklusu. Već raspodijeljeno ostaje, a ostatak ostaje u blagajni.';
+  }
+
+  @override
+  String get stadiumsTitle => 'Nacionalni stadioni';
+
+  @override
+  String get stadiumsEntrySub => 'Nadogradi stadion ili izgradi novi';
+
+  @override
+  String get stadiumsBlurb =>
+      'Razina stadiona je njegova veličina: razina 1 ispod 15.000 mjesta, razina 2 od 15.000, razina 3 od 25.000, razina 4 od 40.000, razina 5 od 60.000. Svaki stadion na početku svakog ciklusa donosi mali prihod, više za više mjesta, dok ih navijači pune. Nadogradnja odmah dodaje mjesta i malo ugleda od sljedećeg ciklusa; smanjenje snižava održavanje, ali ništa se ne vraća. Vaši stadioni odlučuju za koje se turnire smijete kandidirati.';
+
+  @override
+  String stadiumsIncome(String amount) {
+    return 'Prihod od stadiona: $amount po ciklusu';
+  }
+
+  @override
+  String stadiumsReputation(int points) {
+    return 'Ugled od stadiona: +$points';
+  }
+
+  @override
+  String get stadiumsClosed =>
+      'Radovi se naručuju na početku ciklusa, prije nego što postaviš proračun.';
+
+  @override
+  String stadiumsCapacity(String seats) {
+    return 'Kapacitet: $seats';
+  }
+
+  @override
+  String stadiumsLevel(int level, int max) {
+    return 'Razina $level/$max';
+  }
+
+  @override
+  String stadiumsUpgrade(String cost) {
+    return 'Nadogradi: $cost';
+  }
+
+  @override
+  String get stadiumsTopLevel => 'Najviša razina';
+
+  @override
+  String stadiumsOpens(int year) {
+    return 'U izgradnji, otvara se $year.';
+  }
+
+  @override
+  String get stadiumsBuildTitle => 'Izgradi novi stadion';
+
+  @override
+  String get stadiumsBuildBody =>
+      'Prilično skupo: novi stadion u gradu koji odabereš, otvoren od početka sljedećeg ciklusa.';
+
+  @override
+  String get stadiumsBuildCity => 'Grad';
+
+  @override
+  String stadiumsBuildButton(String cost) {
+    return 'Izgradi: $cost';
+  }
+
+  @override
+  String get stadiumsBuilding => 'Jedan se stadion već gradi.';
+
+  @override
+  String get stadiumsNoCity => 'Svaki grad već ima novi stadion.';
+
+  @override
+  String stadiumsConfirmUpgrade(String stadium, int level, String cost) {
+    return 'Nadograditi $stadium na razinu $level za $cost?';
+  }
+
+  @override
+  String stadiumsConfirmBuild(String city, String cost) {
+    return 'Izgraditi novi stadion za $cost? Grad: $city';
+  }
+
+  @override
+  String get stadiumsConfirm => 'Potvrdi';
+
+  @override
+  String get stadiumsCancel => 'Odustani';
+
+  @override
+  String get stadiumsRefused => 'Narudžba nije prošla. Ništa nije naplaćeno.';
+
+  @override
+  String get stadiumsNameLabel => 'Naziv stadiona';
+
+  @override
+  String get stadiumsNameHint =>
+      'Ostavite prazno da zadržite predloženi naziv.';
+
+  @override
+  String get stadiumsRename => 'Preimenuj stadion';
+
+  @override
+  String get hostBidSectionTitle => 'Kandidature za domaćinstvo';
+
+  @override
+  String get hostBidOpenSub =>
+      'Neobavezno. Odlučite prije početka novog ciklusa.';
+
+  @override
+  String get hostBidDecidedAtRollover =>
+      'Domaćin se objavljuje na početku novog ciklusa.';
+
+  @override
+  String get hostBidLodged =>
+      'Kandidatura predana. Domaćin se objavljuje na početku novog ciklusa.';
+
+  @override
+  String get hostBidDeclinedNote => 'Ovaj put ste odlučili ne kandidirati se.';
+
+  @override
+  String get hostBidOpensLater =>
+      'Ispunjavate uvjete. Možete se kandidirati na kraju ovog ciklusa.';
+
+  @override
+  String get hostBidNoFunds =>
+      'Nema dovoljno slobodnih sredstava za kandidaturu.';
+
+  @override
+  String hostBidNeedStadiums(int count, String seats) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Stadioni s $seats+ mjesta koji vam nedostaju: $count.',
+      one: 'Nedostaje vam još 1 stadion s $seats+ mjesta.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hostBidBarredConf(String confederation) {
+    return '$confederation je bila domaćin posljednjeg Svjetskog prvenstva.';
+  }
+
+  @override
+  String get hostBidRecentHost =>
+      'Bili ste domaćin jednog od posljednja tri izdanja.';
+
+  @override
+  String hostBidRequirement(
+    int grounds,
+    String minSeats,
+    int bigGrounds,
+    String bigSeats,
+  ) {
+    return 'Uvjet: stadioni s $minSeats+ mjesta: $grounds, od toga s $bigSeats+: $bigGrounds.';
+  }
+
+  @override
+  String hostBidWonBodyBudget(String amount) {
+    return 'Bit ćemo domaćini turnira i kao domaćin automatski smo plasirani. Jednokratna potpora od $amount već je u sredstvima saveza, spremna za proračun ovog ciklusa.';
+  }
+
+  @override
+  String get hubStadiumIncome => 'Prihodi od stadiona';
+
+  @override
+  String get stadiumsDownsize => 'Smanji';
+
+  @override
+  String stadiumsConfirmDownsize(String stadium, String seats, int level) {
+    return 'Smanjiti $stadium na $seats mjesta (razina $level)? Ništa se ne vraća, ali troškovi održavanja padaju.';
+  }
+
+  @override
+  String get stadiumsResizedThisCycle => 'Preuređen u ovom ciklusu';
+
+  @override
+  String stadiumsGroundIncome(String amount) {
+    return 'Donosi $amount po ciklusu';
+  }
+
+  @override
+  String hostBidLapsedTitle(String competition, int year) {
+    return 'Kandidatura povučena: $competition $year';
+  }
+
+  @override
+  String hostBidLapsedBodyNation(String nation) {
+    return 'Kandidatura je predana za reprezentaciju $nation, a novi ciklus počinjete drugdje. Povučena je i ništa nije naplaćeno.';
+  }
+
+  @override
+  String get hostBidLapsedBodyFunds =>
+      'Na kraju ciklusa sredstva saveza više nisu pokrivala ulog. Kandidatura je povučena i ništa nije naplaćeno.';
+
+  @override
+  String get stadiumsViewMap => 'Karta';
+
+  @override
+  String get stadiumsViewList => 'Popis';
+
+  @override
+  String get stadiumsMapPickCity =>
+      'Dodirni grad u kojem želiš izgraditi novi stadion.';
+
+  @override
+  String get stadiumsMapFit => 'Prikaži cijelu zemlju';
+
+  @override
+  String get campaignLegacyTitle => 'Dovrši nasljeđe';
+
+  @override
+  String get campaignLegacyTwist =>
+      'Španjolska, aktualni europski prvak, kroz jedan ciklus';
+
+  @override
+  String get campaignLegacyGoal => 'Obrani europski naslov';
+
+  @override
+  String get campaignLegacyIntro =>
+      'Španjolska je aktualni europski prvak, a sumnjičavci zlatnu eru zovu jednokratnim čudom. Imaš jedan ciklus da dokažeš suprotno: obrani krunu kontinenta, a onda kreni po svijet. Dodaj i Nations Cup i nasljeđe je dovršeno.';
+
+  @override
+  String get campaignStars1Legacy => 'Osvoji Europsko prvenstvo';
+
+  @override
+  String get campaignStars2Legacy => 'I Svjetsko prvenstvo';
+
+  @override
+  String get campaignStars3Legacy => 'I Nations Cup';
+
+  @override
+  String get campaignSectionOneCycle => 'Jedan ciklus';
+
+  @override
+  String get campaignSectionShort => 'Nekoliko ciklusa';
+
+  @override
+  String get campaignSectionLong => 'Duga staza';
+
+  @override
+  String get campaignFilterAll => 'Sve';
+
+  @override
+  String get campaignFilterNew => 'Neigrane';
+
+  @override
+  String get campaignFilterInProgress => 'U tijeku';
+
+  @override
+  String get campaignFilterDone => 'Završene';
+
+  @override
+  String get campaignFilterEmpty => 'Ovdje još nema kampanja.';
+
+  @override
+  String campaignStarsEarned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zvjezdica',
+      few: '$count zvjezdice',
+      one: '1 zvjezdica',
+      zero: 'Bez zvjezdica',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String campaignCycles(int cycles) {
+    String _temp0 = intl.Intl.pluralLogic(
+      cycles,
+      locale: localeName,
+      other: '$cycles ciklusa',
+      few: '$cycles ciklusa',
+      one: '$cycles ciklus',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msgIntlRetireNoteHigh => ' Odlazi na vrhuncu, kao prvak.';
+
+  @override
+  String get msgIntlRetireNoteMissed =>
+      ' Propušteno završno natjecanje bilo je kap koja je prelila čašu.';
+
+  @override
+  String get msgIntlRetireNoteSurprise => ' Nitko to nije očekivao.';
+
+  @override
+  String get msgIntlRetireNoteRecord => ' Odlazi kao rekorder reprezentacije.';
+
+  @override
+  String msgIntlRetireNewsTitle(String nation, String name) {
+    return '$nation: $name se povlači iz reprezentacije';
+  }
+
+  @override
+  String msgIntlRetireNewsBody(String name, String nation, int age) {
+    return '$name ($nation) objavio je u $age. godini oproštaj od reprezentacije.';
+  }
+
+  @override
+  String msgIntlComebackTitle(String name) {
+    return '$name se vraća u reprezentaciju';
+  }
+
+  @override
+  String msgIntlComebackBody(String name, int age) {
+    return '$name je u $age. godini ponovno na raspolaganju izborniku.';
+  }
+
+  @override
+  String get msgIntlComebackNoteCrisis =>
+      ' S momčadi desetkovanom ozljedama, odazvao se pozivu.';
+
+  @override
+  String get msgIntlComebackNoteManager => ' Novi izbornik ga je nagovorio.';
+
+  @override
+  String msgIntlComebackNewsTitle(String nation, String name) {
+    return '$nation: $name se vraća u reprezentaciju';
+  }
+
+  @override
+  String msgIntlComebackNewsBody(String name, String nation, int age) {
+    return '$name ($nation) je u $age. godini ponovno na raspolaganju izborniku.';
+  }
+
+  @override
+  String playerIntlRetired(int year) {
+    return 'Povukao se iz reprezentacije, $year';
+  }
+
+  @override
+  String playerIntlComeback(int year) {
+    return 'Povratak u reprezentaciju, $year';
+  }
+
+  @override
+  String yLegendRetires0(String name) {
+    return 'Hvala, $name. Neki nose dres, on je nosio momčad.';
+  }
+
+  @override
+  String yLegendRetires1(String name) {
+    return '$name završava reprezentativnu karijeru. Kraj jedne ere.';
+  }
+
+  @override
+  String yLegendRetires2(String name) {
+    return '$name se povlači. Iskreno, jedan turnir prekasno.';
+  }
+
+  @override
+  String yLegendRetires3(String name) {
+    return 'Dakle, $name je gotov. Vrijeme je za mlade.';
+  }
+
+  @override
+  String matchAltitudeOpponentsTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Nadmorska visina $altitudeString m: suparnik će se brže umoriti';
+  }
+
+  @override
+  String matchAltitudeYouTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Nadmorska visina $altitudeString m: vaši igrači će se brže umoriti';
+  }
+
+  @override
+  String matchAltitudeBothTire(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Nadmorska visina $altitudeString m: obje momčadi će se brže umoriti';
+  }
+
+  @override
+  String matchAltitudeUsedTo(int altitude) {
+    final intl.NumberFormat altitudeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String altitudeString = altitudeNumberFormat.format(altitude);
+
+    return 'Nadmorska visina $altitudeString m: obje momčadi su navikle';
+  }
+
+  @override
+  String matchHeatExpected(int temp) {
+    final intl.NumberFormat tempNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String tempString = tempNumberFormat.format(temp);
+
+    return 'Vrućina: očekuje se $tempString °C, snaga će ranije popustiti';
+  }
+
+  @override
+  String get matchConditionsAdvice =>
+      'Planirajte izmjene rano: ovdje svježe noge više vrijede';
+
+  @override
+  String get fanMoodFurious => 'bijesni';
+
+  @override
+  String get fanMoodRestless => 'nemirni';
+
+  @override
+  String get fanMoodCalm => 'mirni';
+
+  @override
+  String get fanMoodUpbeat => 'optimistični';
+
+  @override
+  String get fanMoodEuphoric => 'u euforiji';
+
+  @override
+  String matchHomeFans(String mood) {
+    return 'Domaći navijači: $mood';
+  }
+
+  @override
+  String federationFans(String mood) {
+    return 'Navijači: $mood';
+  }
+
+  @override
+  String federationFansIncome(String change) {
+    return 'Prihod od stadiona u sljedećem ciklusu: $change';
+  }
+
+  @override
+  String yFansProtest0(String nation, String manager) {
+    return 'Dvadeset godina pratim reprezentaciju doma i u gostima. Neću produžiti sezonsku dok se nešto ne promijeni.';
+  }
+
+  @override
+  String yFansProtest1(String nation, String manager) {
+    return 'Nastavit ćemo pjevati za dres. Ali transparent na sjevernoj tribini večeras je rekao ono što svi mislimo.';
+  }
+
+  @override
+  String yFansProtest2(String nation, String manager) {
+    return 'Pola stadiona prazno, a druga polovica cijelo je drugo poluvrijeme skandirala #${manager}Out.';
+  }
+
+  @override
+  String yFansProtest3(String nation, String manager) {
+    return 'Navijačke skupine govore o bojkotu sljedeće domaće utakmice. Teško ih je kriviti.';
+  }
+
+  @override
+  String yFansProtest4(String nation, String manager) {
+    return '#${manager}Out. Više nisam ni ljut. Jednostavno je gotovo.';
+  }
+
+  @override
+  String yFansProtest5(String nation, String manager) {
+    return 'Fotografija s večerašnje utakmice: redovi praznih sjedala i jedna plahta s natpisom #${manager}Out. To je cijeli izvještaj.';
+  }
+
+  @override
+  String yFansSellOut0(String nation) {
+    return 'Opet rasprodano. Najbolja reprezentacija u posljednjih nekoliko godina i cijela zemlja to zna.';
+  }
+
+  @override
+  String yFansSellOut1(String nation) {
+    return 'Ulaznice za sljedeću domaću utakmicu planule su za jedanaest minuta. Ova momčad vratila nam je vikende.';
+  }
+
+  @override
+  String yFansSellOut2(String nation) {
+    return 'Ni jedno slobodno mjesto za sljedeću domaću utakmicu. Savez će brojati utržak od ulaznica sa smiješkom.';
+  }
+
+  @override
+  String yFansSellOut3(String nation) {
+    return 'Još jedna rasprodaja. Recite što hoćete o taktici, ljudi žele biti na tom stadionu.';
+  }
+
+  @override
+  String yFansSellOut4(String nation) {
+    return 'Rasprodano, dobro. Isti ljudi zviždali su ovoj momčadi prije godinu i pol.';
+  }
+
+  @override
+  String yFansSellOut5(String nation) {
+    return 'Odjednom rasprodano, odjednom svi stručnjaci. Gdje ste bili kad nismo mogli pobijediti nikoga?';
+  }
+
+  @override
+  String get campaignsIntro =>
+      'Kampanje su ručno složeni izazovi: zadana reprezentacija, svijet s vlastitim obratom i cilj koji treba ostvariti u određenom broju ciklusa. Svaki pokušaj odvojen je od tvojih spremljenih karijera, a što dalje stigneš, to više zvjezdica osvajaš, do tri.';
+
+  @override
+  String hubEventScandal(String player) {
+    return 'Skandal na okupljanju: $player';
+  }
+
+  @override
+  String get hubEventScandalSub => 'Poslati ga kući ili zadržati?';
+
+  @override
+  String get scandalTitle => 'SKANDAL';
+
+  @override
+  String scandalStoryParty(String player) {
+    return '$player je bio na zabavi koja je trajala do zore, a slike su bile u svim novinama onog jutra kad se momčad okupila.';
+  }
+
+  @override
+  String scandalStoryCurfew(String player) {
+    return '$player je prekršio policijski sat i uhvaćen je kako se u sitne sate vraća u hotel.';
+  }
+
+  @override
+  String scandalStoryNightclub(String player) {
+    return '$player je fotografiran u noćnom klubu uoči okupljanja, a slike su posvuda.';
+  }
+
+  @override
+  String scandalStoryCasino(String player) {
+    return '$player je noć prije okupljanja proveo za kockarskim stolom, a tabloid ima slike.';
+  }
+
+  @override
+  String get scandalSendHome => 'Pošalji ga kući';
+
+  @override
+  String scandalSendHomeCover(String player) {
+    return 'Kući, pozovi: $player';
+  }
+
+  @override
+  String scandalKeep(String player) {
+    return 'Zadrži: $player';
+  }
+
+  @override
+  String get scandalKeepNote =>
+      'Ako ostane: moral otprilike -4 i odbor otprilike -3 do kraja ciklusa.';
+
+  @override
+  String get scandalSendHomeNote =>
+      'Ako ga pošalješ kući: nema posljedica za moral ni odbor, a možeš pozvati zamjenu.';
+
+  @override
+  String get scandalFinalsNote =>
+      'Ako ga pošalješ kući: nema posljedica za moral ni odbor, ali na završnom turniru nitko ga ne može zamijeniti.';
+
+  @override
+  String get scandalPickCover => 'Pozovi zamjenu (neobavezno)';
+
+  @override
+  String newsScandalTitle(String player) {
+    return 'Skandal na okupljanju: $player';
+  }
+
+  @override
+  String yScandalParty0(String player, String tag) {
+    return 'Mladi su to. $player na zabavi večer prije okupljanja, a ja ga svejedno želim na terenu. #$tag';
+  }
+
+  @override
+  String yScandalParty1(String player, String tag) {
+    return '$player fotografiran na cjelonoćnoj zabavi, nekoliko sati prije okupljanja momčadi. Savez je obaviješten. #$tag';
+  }
+
+  @override
+  String yScandalParty2(String player, String tag) {
+    return 'Cjelonoćna zabava prije okupljanja. $player, što si mislio? Nevjerojatno. #$tag';
+  }
+
+  @override
+  String yScandalCurfew0(String player, String tag) {
+    return 'Vratio se nakon policijskog sata, dobro, događa se. $player to samo mora ispraviti na terenu. #$tag';
+  }
+
+  @override
+  String yScandalCurfew1(String player, String tag) {
+    return '$player uhvaćen kako se nakon policijskog sata vraća u hotel reprezentacije, nekoliko sati prije treninga. #$tag';
+  }
+
+  @override
+  String yScandalCurfew2(String player, String tag) {
+    return 'Policijski sat nije komplicirana stvar. $player nije izdržao ni jednu noć. #$tag';
+  }
+
+  @override
+  String yScandalNightclub0(String player, String tag) {
+    return 'Pa $player je bio u klubu. I nogometaši imaju život. Pustite ga da igra. #$tag';
+  }
+
+  @override
+  String yScandalNightclub1(String player, String tag) {
+    return 'Fotografije pokazuju igrača $player u noćnom klubu uoči okupljanja reprezentacije. #$tag';
+  }
+
+  @override
+  String yScandalNightclub2(String player, String tag) {
+    return 'Slike iz kluba uoči okupljanja. $player je osramotio dres. #$tag';
+  }
+
+  @override
+  String yScandalCasino0(String player, String tag) {
+    return 'Noć u kasinu nije zločin. $player će biti dobro. #$tag';
+  }
+
+  @override
+  String yScandalCasino1(String player, String tag) {
+    return '$player viđen za kockarskim stolom noć prije okupljanja momčadi. #$tag';
+  }
+
+  @override
+  String yScandalCasino2(String player, String tag) {
+    return 'Cijelu noć u kasinu prije okupljanja. $player je prokockao više od novca. #$tag';
+  }
+
+  @override
+  String yScandalSentHome0(String player) {
+    return 'Ispravna odluka. Nitko nije veći od momčadi, pa ni $player.';
+  }
+
+  @override
+  String yScandalSentHome1(String player) {
+    return 'Slanje kući bio je jedini odgovor. $player je sam kriv. Poštovanje izborniku.';
+  }
+
+  @override
+  String yScandalSentHome2(String player) {
+    return 'Disciplina je disciplina. $player je znao pravila.';
+  }
+
+  @override
+  String yScandalSentHome3(String player) {
+    return 'Jasna poruka svlačionici: $player je u avionu za kuću.';
+  }
+
+  @override
+  String yScandalSentHome4(String player) {
+    return 'Okrutno. $player izađe jednu večer i okupljanje je za njega gotovo?';
+  }
+
+  @override
+  String yScandalSentHome5(String player) {
+    return 'Slanje kući nas slabi. $player odlazi, a mi ćemo to platiti na terenu.';
+  }
+
+  @override
+  String yScandalKept0(String player) {
+    return 'Zadržati ga je kockanje. $player neka to vrati na terenu.';
+  }
+
+  @override
+  String yScandalKept1(String player) {
+    return 'Dobro, $player ostaje. Onda svima duguje pravu predstavu.';
+  }
+
+  @override
+  String yScandalKept2(String player) {
+    return 'Dakle, pravila za njega ne vrijede. $player je iznimka. Dobro je znati.';
+  }
+
+  @override
+  String yScandalKept3(String player) {
+    return 'Policijski sat je sada očito neobavezan. Pitajte: $player.';
+  }
+
+  @override
+  String yScandalKept4(String player) {
+    return 'Zadržati ga nakon toga? $player i ekipa su na ljetovanju.';
+  }
+
+  @override
+  String yScandalKept5(String player) {
+    return 'Zabava cijelu noć, a onda ravno u prvih jedanaest. Sjajna poruka, izborniče. $player je sigurno oduševljen.';
+  }
+
+  @override
+  String get yStreamerBreaks0 =>
+      'BRATA SU UHVATILI 😭😭 NOĆ PRIJE OKUPLJANJA?? PLAČEM 💀💀💀';
+
+  @override
+  String get yStreamerBreaks1 =>
+      'NEEE CHAT GLEDAJTE OVO 🤯🤯 BRAT JE TO STVARNO NAPRAVIO PRIJE OKUPLJANJA 😭🔥';
+
+  @override
+  String get yStreamerBreaks2 =>
+      'TKO GA JE PUSTIO VAN?? TKO GA JE PUSTIO 😭😭💀 OVO JE KINO 🔥🔥';
+
+  @override
+  String get yStreamerSentHome0 =>
+      'KUĆI?? KUĆIII!!! 😭😭😭 IZBORNIK SE NE ŠALI 💀🔥';
+
+  @override
+  String get yStreamerSentHome1 =>
+      'BRAT PAKIRA KOFERE UŽIVO 🤯🤯 BOK BRATE 😭👋';
+
+  @override
+  String get yStreamerSentHome2 =>
+      'NEMA ŠANSEEE POSLALI SU GA KUĆI 💀💀 CHAT TRESEM SE 🔥🔥🔥';
+
+  @override
+  String get yStreamerKept0 =>
+      'OSTAJE??? OSTAJEEE 🤯🤯 BRAT JE NEDODIRLJIV 😭🔥';
+
+  @override
+  String get yStreamerKept1 =>
+      'ZABAVA CIJELU NOĆ I JOŠ UVIJEK U MOMČADI 💀💀 HOĆU TAJ UGOVOR 😭😭';
+
+  @override
+  String get yStreamerKept2 =>
+      'IZBORNIK KAŽE DA JE SVE OK 😭😭 BRATE ŠTO 🤯🤯🤯';
+
+  @override
+  String get yCameoUjfaloci => 'Ništa nisam platio, a ni taj iznos se ne slaže';
+
+  @override
+  String get yCameoHavir0 => 'Ribice su otplivale.';
+
+  @override
+  String get yCameoHavir1 => 'Bacili smo mreže, a ribe su bile negdje drugdje.';
+
+  @override
+  String get yCameoHavir2 => 'Rekao sam to još u rujnu, uz gulaš.';
+
+  @override
+  String get yCameoHavir3 => 'Tko nije lovio na vrijeme, neka sad ne plače.';
+
+  @override
+  String get yCameoHavir4 => 'Igrali smo kao som na suhom.';
+
+  @override
+  String get yCameoHavir5 => 'Vjetar puše, ribnjak se ledi. Tako to ide.';
+
+  @override
+  String get yCameoHavir6 => 'Nekad izvučeš samo staru čizmu.';
+
+  @override
+  String get yCameoHavir7 => 'U moje vrijeme bar se išlo na pivo. Sad ni to.';
+
+  @override
+  String get yCameoLzimberskyHome0 =>
+      'Poslati dečka kući zbog jedne večeri? To je skandal, a ne zabava!';
+
+  @override
+  String get yCameoLzimberskyHome1 =>
+      'Dečki se valjda smiju malo zabaviti! Licemjerni mediji opet su pobijedili.';
+
+  @override
+  String get yCameoLzimberskyHome2 =>
+      'Ovo je lov na vještice. Mladić izađe jednu večer, a vi ga vješate.';
+
+  @override
+  String get yCameoLzimberskyHome3 =>
+      'Novinar koji nikad nije bio na zabavi neka baci prvi kamen. Sramota!';
+
+  @override
+  String get yCameoLzimberskyHome4 =>
+      'Izbornik se uplašio tabloida. Ja bih dečka branio do zadnjeg daha!';
+
+  @override
+  String get yCameoLzimberskyKept0 =>
+      'Napokon izbornik s kičmom! Zadržao je dečka, a mediji neka plaču.';
+
+  @override
+  String get yCameoLzimberskyKept1 =>
+      'Dečki se valjda smiju malo zabaviti, ne? Bravo, izborniče!';
+
+  @override
+  String get yCameoLzimberskyKept2 =>
+      'Licemjerni mediji vrište, izbornik ne popušta. Tako se to radi!';
+
+  @override
+  String get yCameoLzimberskyKept3 =>
+      'Jedna večer vani, a novinari bi ga kamenovali. Izbornik je pravi muškarac!';
+
+  @override
+  String get yCameoLzimberskyKept4 =>
+      'Kažem: pustite dečke da žive! Tko radi, taj se smije i zabaviti. Palac gore.';
+
+  @override
+  String get yTraitStreamer => 'Streama sve, punom snagom, velikim slovima.';
+
+  @override
+  String hubEventAwardsCeremony(int year) {
+    return 'Igrač godine $year';
+  }
+
+  @override
+  String get hubEventAwardsCeremonySub => 'Glasovi su prebrojani';
+
+  @override
+  String get potyCeremonyWatch => 'Gledaj svečanost';
+
+  @override
+  String get potyCeremonySkipToList => 'Ravno na prvu petorku';
+
+  @override
+  String get potyCeremonySkip => 'Preskoči';
+
+  @override
+  String get potyCeremonyIntro =>
+      'Glasovi su prebrojani. Ovo je pet najboljih igrača svijeta ove godine.';
+
+  @override
+  String potyCeremonyPlace(int place) {
+    return '$place. mjesto';
+  }
+
+  @override
+  String get potyCeremonyWinnerIs => 'A igrač godine je...';
+
+  @override
+  String get potyTop5Heading => 'Svjetska prva petorka';
+
+  @override
+  String get potyYoungTop3Heading => 'Mladi igrač godine: prva trojka';
+
+  @override
+  String get potySeeTop5 => 'Pogledaj prvu petorku';
+
+  @override
+  String get potyYourPlayer => 'Tvoj igrač';
+
+  @override
+  String potyTallyCleanSheets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count utakmica bez primljenog gola',
+      few: '$count utakmice bez primljenog gola',
+      one: '$count utakmica bez primljenog gola',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get campaignFullBrief => 'Puni opis';
+
+  @override
+  String campaignStarsSoFar(int earned, int total) {
+    return 'Dosad osvojene zvjezdice: $earned od $total';
+  }
+
+  @override
+  String get campaignStarEarned => 'Dosad osvojena';
+
+  @override
+  String get campaignStarNotYet => 'Još nije osvojena';
+
+  @override
+  String get stadiumsEntrySubClosed =>
+      'Pogledaj svoje stadione. Radovi se ponovno otvaraju na početku sljedećeg ciklusa.';
+
+  @override
+  String get boardObjectiveNoBrief => 'Bez postavljenog cilja';
+
+  @override
+  String get boardObjectiveNoBriefBody =>
+      'Odbor ne očekuje da stigneš do ove završnice. Ocjenjivat će te po rezultatima.';
+
+  @override
+  String get boardObjectiveAwaitingDraw => 'Cilj nakon ždrijeba';
+
+  @override
+  String get boardObjectiveAwaitingDrawBody =>
+      'Odbor će postaviti ovaj cilj nakon ždrijeba skupina.';
 }

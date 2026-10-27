@@ -97,14 +97,26 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(_in(NationPreview.budgetKey, formatEuros(budget)), findsOneWidget);
     expect(_in(NationPreview.rankKey, '#${me.ranking}'), findsOneWidget);
-    // The seeded France is asked for different things at the two
-    // tournaments, so each demand is on screen exactly once.
+    // Each demand is on screen once, or twice when both tournaments ask the
+    // same (the seeded France, third in the world on the 2026 ranking, is
+    // asked to win both).
+    final demands =
+        world.target == continental.target &&
+            objectiveDemandText(enL, TournamentTier.world, world.target) ==
+                objectiveDemandText(
+                  enL,
+                  TournamentTier.continental,
+                  continental.target,
+                  competition: continental.competition,
+                )
+        ? findsNWidgets(2)
+        : findsOneWidget;
     expect(
       _in(
         NationPreview.briefKey,
         objectiveDemandText(enL, TournamentTier.world, world.target),
       ),
-      findsOneWidget,
+      demands,
     );
     expect(
       _in(
@@ -116,7 +128,7 @@ void main() {
           competition: continental.competition,
         ),
       ),
-      findsOneWidget,
+      demands,
     );
     expect(_in(NationPreview.briefKey, enL.objectiveWorldCup), findsOneWidget);
     // The world's reading of the best eleven is the save's own on day one:

@@ -41,7 +41,9 @@ abstract final class BackupRestorePrompt {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surfaceContainer,
         title: Text(l.backupRestoreWarnTitle),
-        content: Text(l.backupRestoreWarnBody),
+        content: Text(
+          '${l.backupRestoreWarnBody}\n\n${l.backupRestoreSafetyNote}',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -64,5 +66,6 @@ abstract final class BackupRestorePrompt {
         BackupRejection.notAFnmSave => l.backupRejectedNotFnm,
         BackupRejection.fromANewerBuild => l.backupRejectedNewer,
         BackupRejection.tooOldToMigrate => l.backupRejectedTooOld,
+        BackupRejection.safetyCopyFailed => l.backupRejectedSafety,
       };
 }

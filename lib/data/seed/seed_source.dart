@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show AssetBundle;
+import 'package:fnm/data/seed/dormant_seed.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 
 /// Supplies the initial reference data (nations + players) used to populate the
 /// database on first run.
@@ -25,6 +27,12 @@ abstract interface class SeedSource {
   /// empty) without any asset IO: a repository that loads an asset on a hot
   /// path stalls widget tests, which drive their own async clock.
   Future<Map<int, List<String>>> cities();
+
+  /// The dormant nations and their players (see `DormantNations`): stored in
+  /// every database, part of no world unless a career's marker brings one in.
+  /// Kept apart from [nations] and [players] so a world built from those is
+  /// exactly as it was.
+  Future<({List<Nation> nations, List<Player> players})> dormant();
 }
 
 /// A [SeedSource] that reads bundled JSON assets.
@@ -56,6 +64,16 @@ class AssetSeedSource implements SeedSource {
     }
     return _cities!;
   }
+
+  // Built once: the seed loader compares it with the stored rows on launch.
+  late final ({List<Nation> nations, List<Player> players}) _dormant = (
+    nations: DormantNations.all,
+    players: greenlandPool(),
+  );
+
+  @override
+  Future<({List<Nation> nations, List<Player> players})> dormant() async =>
+      _dormant;
 
   @override
   Future<List<Nation>> nations() async {
@@ -95,11 +113,22 @@ class InMemorySeedSource implements SeedSource {
     required this.nationList,
     required this.playerList,
     this.cityLists = const {},
+    this.dormantNations = const [],
+    this.dormantPlayers = const [],
   });
 
   final List<Nation> nationList;
   final List<Player> playerList;
   final Map<int, List<String>> cityLists;
+
+  /// Empty by default, so a test database holds no dormant nation unless the
+  /// test asks for one (`DormantNations.all` and `greenlandPool()`).
+  final List<Nation> dormantNations;
+  final List<Player> dormantPlayers;
+
+  @override
+  Future<({List<Nation> nations, List<Player> players})> dormant() async =>
+      (nations: dormantNations, players: dormantPlayers);
 
   @override
   Future<List<Nation>> nations() async => nationList;

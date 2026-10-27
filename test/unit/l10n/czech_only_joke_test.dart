@@ -102,6 +102,12 @@ void main() {
       'hr',
       'uk',
       'fil',
+      'hi',
+      'ja',
+      'ko',
+      'ro',
+      'th',
+      'ms',
     ]) {
       final offenders = [
         for (final e in copy(locale).entries)
@@ -172,6 +178,12 @@ void main() {
         'hr',
         'uk',
         'fil',
+        'hi',
+        'ja',
+        'ko',
+        'ro',
+        'th',
+        'ms',
       ]) {
         final c = copy(locale);
         expect(
@@ -181,6 +193,39 @@ void main() {
         );
         for (final key in carp) {
           expect(c[key]?.trim(), isNotEmpty, reason: '$locale $key');
+        }
+      }
+    });
+  });
+
+  // The camp-scandal cameos the owner asked for: Tomáš Ujfaloči's one line,
+  // verbatim, and Ivan Havíř's signature. Only a Czech feed ever posts them
+  // (the domain decides, see YFeed.czechCameos); every language has a neutral
+  // English rendering behind the keys because the copy file needs one.
+  group('the Czech cameos', () {
+    test('Ujfaloči says exactly what the owner wrote', () {
+      expect(
+        copy('cs')['yCameoUjfaloci'],
+        'Nic jsem neplatil a ta částka taky nesouhlasí',
+      );
+    });
+
+    test('Havíř signs off with the little carp', () {
+      expect(copy('cs')['yCameoHavir0'], 'Kapříci uplavali.');
+    });
+
+    test('no other language carries the Czech lines', () {
+      final cs = copy('cs');
+      final cameo = [
+        for (final k in cs.keys)
+          if (k.startsWith('yCameo')) k,
+      ];
+      expect(cameo, hasLength(19));
+      for (final locale in const ['en', 'de', 'fr', 'ja', 'hu', 'pl']) {
+        final c = copy(locale);
+        for (final k in cameo) {
+          expect(c[k]?.trim(), isNotEmpty, reason: '$locale $k');
+          expect(c[k], isNot(cs[k]), reason: '$locale $k is the Czech line');
         }
       }
     });

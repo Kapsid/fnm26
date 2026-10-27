@@ -61,7 +61,9 @@ class FederationService {
           h.competition,
     };
     final nations = {
-      for (final n in await _ref.read(nationRepositoryProvider).all()) n.id: n,
+      for (final n
+          in await _ref.read(nationRepositoryProvider).forCareer(careerId))
+        n.id: n,
     };
     final conf = nations[career.nationId]?.confederation;
     final contName = conf == null

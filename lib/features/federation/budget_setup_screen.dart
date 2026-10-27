@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,10 +11,16 @@ import 'package:fnm/core/util/federation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/department_effect.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/host_bid_providers.dart';
+import 'package:fnm/features/federation/host_bid_screen.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart'
+    show nationalStadiumsViewProvider;
+import 'package:fnm/features/federation/national_stadiums_screen.dart';
 import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
@@ -40,9 +47,17 @@ final AutoDisposeFutureProviderFamily<Career?, int> _budgetCareerProvider =
 /// season can begin — youth, commercial, medical and naturalisation each shape
 /// how the cycle plays out.
 class BudgetSetupScreen extends ConsumerStatefulWidget {
-  const BudgetSetupScreen({required this.careerId, super.key});
+  const BudgetSetupScreen({
+    required this.careerId,
+    this.grant = false,
+    super.key,
+  });
 
   final int careerId;
+
+  /// Assigning a won host bid's grant to this cycle's departments, on top of
+  /// what the budget round already allocated (see [hostBidGrantProvider]).
+  final bool grant;
 
   static const Key tabletLayoutKey = Key('budgetSetup.tabletLayout');
 
@@ -52,6 +67,29 @@ class BudgetSetupScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<BudgetSetupScreen> createState() => _BudgetSetupScreenState();
 }
+
+/// This cycle's allocation as it stands, for grant mode.
+final AutoDisposeFutureProviderFamily<FederationInvestment, int>
+_currentInvestmentProvider = FutureProvider.autoDispose
+    .family<FederationInvestment, int>((ref, careerId) async {
+      final repo = ref.watch(careerRepositoryProvider);
+      final career = await repo.byId(careerId);
+      if (career == null) return investmentNone;
+      return repo.investment(careerId, career.cyclePointer);
+    });
+
+/// Every euro of [i].
+int investmentTotal(FederationInvestment i) =>
+    i.youth + i.commercial + i.medical + i.naturalization + i.boardRelations;
+
+/// No money anywhere.
+const FederationInvestment investmentNone = (
+  youth: 0,
+  commercial: 0,
+  medical: 0,
+  naturalization: 0,
+  boardRelations: 0,
+);
 
 /// Whether this cycle's budget has already been distributed.
 final AutoDisposeFutureProviderFamily<bool, int> budgetSettledProvider =
@@ -132,12 +170,22 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     // [budgetReady] says so, and this is the belt to that pair of braces: a
     // federation cannot spend money it does not have, and a negative balance
     // would be carried into the rollover and compound there.
-    if (spend > career.budget) return;
-    await repo.setInvestment(widget.careerId, career.cyclePointer, alloc);
-    await repo.setBudget(widget.careerId, career.budget - spend);
+    //
+    // The balance is read AGAIN here, never taken from [career]: this screen
+    // stays mounted under the host bid it opens, and the career it was built
+    // with still carries the balance from before the stake was paid. Charging
+    // that would hand the stake straight back.
+    final fresh = await repo.byId(careerId) ?? career;
+    if (widget.grant) {
+      await _confirmGrant(fresh, alloc, spend);
+      return;
+    }
+    if (spend > fresh.budget) return;
+    await repo.setInvestment(widget.careerId, fresh.cyclePointer, alloc);
+    await repo.setBudget(widget.careerId, fresh.budget - spend);
     await comp.markDrawWatched(
       widget.careerId,
-      career.cyclePointer,
+      fresh.cyclePointer,
       budgetSetupKind,
     );
     // The naturalisation offer is no longer rolled here — it now arrives at a
@@ -153,9 +201,57 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
       // it through here — a derived provider never notices a write it did not
       // make, so it is told.
       ..invalidate(federationFundsProvider(careerId))
+      // The stadium page reads the same funds, and its works window shuts
+      // with the budget.
+      ..invalidate(nationalStadiumsViewProvider(careerId))
       ..invalidate(hubDataProvider(careerId));
     // `router.state` is the top-most route, a pushed one included: a manager
     // who went elsewhere meanwhile is left there.
+    if (router.state.uri.path == Routes.budgetSetup) {
+      router.go('${Routes.hub}?careerId=$careerId');
+    }
+  }
+
+  /// Adds a won host bid's grant to this cycle's departments: what is put on
+  /// top of the allocation already made comes out of the balance (where the
+  /// grant already sits), and anything not put to work stays in the bank.
+  Future<void> _confirmGrant(
+    Career fresh,
+    FederationInvestment alloc,
+    int spend,
+  ) async {
+    final container = ProviderScope.containerOf(context, listen: false);
+    final router = GoRouter.of(context);
+    final careerId = widget.careerId;
+    final repo = container.read(careerRepositoryProvider);
+    final current = await repo.investment(careerId, fresh.cyclePointer);
+    final extra = spend - investmentTotal(current);
+    // The sliders already hold this line; re-checked against fresh reads so a
+    // stale screen can never spend past the grant or into the wage bill.
+    final grant = await container.read(hostBidGrantProvider(careerId).future);
+    final free = (await container.read(
+      federationFundsProvider(careerId).future,
+    )).free;
+    final cap = math.min(grant?.amount ?? 0, free);
+    if (extra < 0 || extra > cap || extra > fresh.budget) return;
+    await repo.setInvestment(careerId, fresh.cyclePointer, alloc);
+    await repo.setBudget(careerId, fresh.budget - extra);
+    await container
+        .read(competitionRepositoryProvider)
+        .markDrawWatched(
+          careerId,
+          fresh.cyclePointer,
+          HostBidding.grantDoneKind,
+        );
+    container
+      ..invalidate(hostBidGrantProvider(careerId))
+      ..invalidate(_currentInvestmentProvider(careerId))
+      ..invalidate(financeViewProvider(careerId))
+      ..invalidate(federationFundsProvider(careerId))
+      // The stadium page reads the same funds, and its works window shuts
+      // with the budget.
+      ..invalidate(nationalStadiumsViewProvider(careerId))
+      ..invalidate(hubDataProvider(careerId));
     if (router.state.uri.path == Routes.budgetSetup) {
       router.go('${Routes.hub}?careerId=$careerId');
     }
@@ -165,6 +261,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   /// Both layouts read these and nothing else, so the rules live here once.
   /// [stepLevels] is the layout's slider notch (see [InvestmentEditor]).
   _Budget _budgetFor(Career career, {required int stepLevels}) {
+    final grant = _grantMode;
+    if (grant != null) return _grantBudgetFor(career, grant);
     // The wage bill comes off the top. Staff are a standing cost the
     // federation pays at the rollover, so money already promised to
     // people is not money there is to hand to a department — showing it
@@ -220,6 +318,53 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
   }
 
   void _onAllocated(FederationInvestment a) => setState(() => _alloc = a);
+
+  /// In grant mode: the grant still to assign and the allocation it tops up;
+  /// null otherwise (or while either is loading).
+  ({int amount, FederationInvestment current})? get _grantMode {
+    if (!widget.grant) return null;
+    final g = ref.watch(hostBidGrantProvider(widget.careerId)).valueOrNull;
+    final current = ref
+        .watch(_currentInvestmentProvider(widget.careerId))
+        .valueOrNull;
+    if (g == null || current == null) return null;
+    return (amount: g.amount, current: current);
+  }
+
+  /// Grant mode still reading what it tops up. The sliders take their
+  /// starting split once, on their first build, so they must not be built
+  /// before it is known.
+  bool get _grantLoading =>
+      widget.grant &&
+      (ref.watch(hostBidGrantProvider(widget.careerId)).isLoading ||
+          ref.watch(_currentInvestmentProvider(widget.careerId)).isLoading);
+
+  /// The floor the sliders may not go under: in grant mode, what this cycle
+  /// already allocated (the grant tops it up and never takes it back).
+  FederationInvestment? get _floor => _grantMode?.current;
+
+  _Budget _grantBudgetFor(
+    Career career,
+    ({int amount, FederationInvestment current}) grant,
+  ) {
+    final free =
+        ref.watch(federationFundsProvider(widget.careerId)).valueOrNull?.free ??
+        career.budget;
+    final base = investmentTotal(grant.current);
+    final available = base + (grant.amount < free ? grant.amount : free);
+    final alloc = _alloc ?? grant.current;
+    final allocated = investmentTotal(alloc);
+    return (
+      available: available,
+      alloc: alloc,
+      allocated: allocated,
+      overCommitted: allocated > available,
+      // Any split from "nothing more" to "all of it": what is left stays in
+      // the bank, as it does at the budget round.
+      ready: allocated >= base && allocated <= available,
+      settled: false,
+    );
+  }
 
   /// What is still to do (or what is over), and the button that commits it.
   Widget _confirmBar(AppLocalizations l, Career career, _Budget b) {
@@ -279,6 +424,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           ),
           data: (career) => career == null
               ? Center(child: Text(l.federationSaveNotFound))
+              : _grantLoading
+              ? const Center(child: CircularProgressIndicator())
               : _BudgetSetupTabletLayout(
                   state: this,
                   career: career,
@@ -319,6 +466,9 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           if (career == null) {
             return Center(child: Text(l.federationSaveNotFound));
           }
+          if (_grantLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
           final b = _budgetFor(
             career,
             stepLevels: kPhoneBudgetStepLevels,
@@ -331,7 +481,10 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                   children: [
                     // A bright banner so the season-defining decision can't be
                     // breezed past.
-                    _BudgetBanner(available: b.available),
+                    _BudgetBanner(
+                      available: b.available,
+                      grant: _grantMode?.amount,
+                    ),
                     const SizedBox(height: AppSpacing.md),
                     StaffCard(
                       key: TourKeys.budgetStaff,
@@ -343,10 +496,19 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
                       child: InvestmentEditor(
                         available: b.available,
                         initial: b.alloc,
+                        floor: _floor,
                         onChanged: _onAllocated,
                         stepLevels: kPhoneBudgetStepLevels,
                       ),
                     ),
+                    // Hosting and the national stadiums, at the bottom under
+                    // the departments: where the next bid stands (and what
+                    // the grounds still lack), then the way to the grounds.
+                    if (!widget.grant) ...[
+                      const SizedBox(height: AppSpacing.md),
+                      HostBidStatusCard(careerId: widget.careerId),
+                      NationalStadiumsEntry(careerId: widget.careerId),
+                    ],
                     const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
@@ -369,9 +531,12 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
 /// The bright banner over the budget, so the season-defining decision can't
 /// be breezed past.
 class _BudgetBanner extends StatelessWidget {
-  const _BudgetBanner({required this.available});
+  const _BudgetBanner({required this.available, this.grant});
 
   final int available;
+
+  /// A won host bid's grant being assigned (grant mode), else null.
+  final int? grant;
 
   @override
   Widget build(BuildContext context) {
@@ -404,7 +569,9 @@ class _BudgetBanner extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            l.federationDistributeBudget(formatEuros(available)),
+            grant == null
+                ? l.federationDistributeBudget(formatEuros(available))
+                : l.hostBidGrantBanner(formatEuros(grant!)),
             style: AppTypography.bodySmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),

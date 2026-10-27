@@ -55,6 +55,7 @@ void main() {
       byConfederation: const {},
       rankingById: ranking,
       rng: SeededRng(11),
+      hostBerths: const {},
       pool: pool,
     );
     final finalWinners = [
@@ -79,6 +80,7 @@ void main() {
       byConfederation: const {},
       rankingById: ranking,
       rng: SeededRng(11),
+      hostBerths: const {},
       pool: pool,
       playedResults: played,
     );

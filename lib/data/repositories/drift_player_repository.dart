@@ -1,10 +1,13 @@
 import 'dart:convert';
 
-import 'package:drift/drift.dart' show BooleanExpressionOperators;
+import 'package:drift/drift.dart'
+    show BooleanExpressionOperators, StringExpressionOperators;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/repositories/intl_retirement_cache.dart';
 import 'package:fnm/data/repositories/mappers.dart';
+import 'package:fnm/data/seed/dormant_seed.dart';
 import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart' show YouthLevel;
@@ -12,7 +15,9 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/player/golden_generation.dart';
+import 'package:fnm/domain/services/player/international_retirement.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 
@@ -30,6 +35,23 @@ typedef _NamePool = ({
   /// see `_namerFor`.
   List<String> surLate,
 });
+
+/// Which generation of the name pools a career reads, oldest first.
+///
+/// Names are derived on every read, so a career keeps the generation it was
+/// created on: [legacy] without `namePoolsV3Kind`, [v3] with it but without
+/// `namePoolsV4Kind`, [v4] with both.
+enum _PoolEra {
+  /// Every pool cut to the lengths it first shipped with.
+  legacy,
+
+  /// Every pool in full, with Greenland's lists as they stood before its
+  /// surnames were reworked.
+  v3,
+
+  /// The current lists.
+  v4,
+}
 
 /// The no-op namer (leaves a player untouched).
 Player _identity(Player p) => p;
@@ -58,14 +80,63 @@ class DriftPlayerRepository implements PlayerRepository {
   /// Per-nation name pools, loaded from the asset once.
   Map<int, _NamePool>? _namePools;
 
-  /// Per-nation richer pools (the classic ones plus the extras), built once.
-  Map<int, _NamePool>? _richNamePools;
+  /// The classic pools per older [_PoolEra] ([_namePools] is the current
+  /// one), built once.
+  final Map<_PoolEra, Map<int, _NamePool>> _olderNamePools = {};
+
+  /// Per-nation richer pools (the classic ones plus the extras), built once
+  /// per [_PoolEra].
+  final Map<_PoolEra, Map<int, _NamePool>> _richNamePools = {};
+
+  /// Classic lists a career without [namePoolsV4Kind] reads in place of the
+  /// asset's: the nation's pools as they stood before names in them were
+  /// replaced (appending is handled by [legacyPoolLengths]). Frozen.
+  static const Map<int, ({List<String> first, List<String> sur})> _v3Pools = {
+    DormantNations.greenlandId: (
+      first: greenlandFirstNamesV3,
+      sur: greenlandSurnamesV3,
+    ),
+  };
+
+  /// The `country_names_more.json` extras a career without
+  /// [namePoolsV4Kind] reads in place of the file's, for the reason
+  /// [_v3Pools] gives. Frozen.
+  static const Map<int, ({List<String> firstMore, List<String> surMore})>
+  _v3Extras = {
+    DormantNations.greenlandId: (
+      firstMore: greenlandFirstMoreV3,
+      surMore: greenlandSurMoreV3,
+    ),
+  };
+
+  /// How many first names and surnames a nation's classic pool held before
+  /// names were appended to it. A career without [namePoolsV3Kind] reads
+  /// only these, so a save that already had the nation renames nobody. Add a
+  /// nation here, with its old lengths, whenever its pool is lengthened.
+  static final Map<int, ({int first, int sur})> legacyPoolLengths = {
+    DormantNations.greenlandId: (
+      first: greenlandFringeFirstNames.length,
+      sur: greenlandFringeSurnames.length,
+    ),
+  };
 
   /// Careers known to carry [namePoolsV2Kind]. Only the yes is kept: a mark
   /// is never taken away and a career id is never reused, so a yes cannot go
   /// stale, while a no could if anything read a career's players before its
   /// mark landed. An unmarked career is simply asked again (one small query).
   final Set<int> _richCareers = {};
+
+  /// Each career's [_PoolEra], once settled (see [_poolEra]): unlike
+  /// [_richCareers], an older era is kept too, but only once it is final,
+  /// so it cannot go stale.
+  final Map<int, _PoolEra> _careerEras = {};
+
+  /// A cycle-0 mark the career service writes right AFTER [namePoolsV3Kind]
+  /// and [namePoolsV4Kind] when it creates a career (the value of
+  /// `briefRulesV2Kind`, which lives in the hub layer). A career that
+  /// carries it but not one of those will never get it, so its era is
+  /// final. A test pins the value and the order.
+  static const fullPoolsSettledKind = 'briefRules2';
 
   /// Per-nation city lists (biggest first), loaded once — used to name a
   /// domestic club for a country with no curated league.
@@ -77,11 +148,15 @@ class DriftPlayerRepository implements PlayerRepository {
 
   /// Shuffled first+surname combinations per (nation, save), cached so repeated
   /// lookups don't rebuild the (large) list.
-  final Map<(int, int), List<String>> _comboCache = {};
+  final Map<(int, int, _PoolEra), List<String>> _comboCache = {};
 
   /// The richer pools' names per (nation, save), for a career marked
   /// [namePoolsV2Kind] — a permutation, not a list (see [_PermutedNames]).
-  final Map<(int, int), _PermutedNames> _richCache = {};
+  final Map<(int, int, _PoolEra), _PermutedNames> _richCache = {};
+
+  /// Per (nation, save, rich pools, pool era): the indices of the
+  /// combinations a guarded dormant nation may use (see `_namerFor`).
+  final Map<(int, int, bool, _PoolEra), List<int>> _allowedCache = {};
 
   @override
   Future<List<Player>> byNation(
@@ -92,6 +167,7 @@ class DriftPlayerRepository implements PlayerRepository {
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
     int minAge = PlayerLifecycle.seniorMinAge,
+    bool includeIntlRetired = false,
   }) async {
     final seeded = await _seededRows(nationId);
     // `overall` is position-weighted and derived (not a column), so build the
@@ -115,10 +191,22 @@ class DriftPlayerRepository implements PlayerRepository {
       // effect.
       clubSeed: saveSeed,
     )..sort((a, b) => b.overall.compareTo(a.overall));
+    // Veterans who announced their international retirement in this career
+    // are not selectable for the years they stay retired (see
+    // [InternationalRetirement]). Every save-bound read passes the career, so
+    // the manager's screens, the AI's selection and the world simulation all
+    // agree on who is gone.
+    final selectable = careerId == null || includeIntlRetired
+        ? pool
+        : InternationalRetirement.filterPool(
+            pool,
+            await internationalRetirements(careerId),
+            agingYears,
+          );
     final name = await _namerFor(nationId, seeded, saveSeed, careerId);
     final home = await _home(nationId);
     return [
-      for (final p in pool)
+      for (final p in selectable)
         _withClub(
           name(p),
           saveSeed,
@@ -126,6 +214,37 @@ class DriftPlayerRepository implements PlayerRepository {
           homeCities: home.cities,
         ),
     ];
+  }
+
+  @override
+  Future<Map<int, IntlRetirement>> internationalRetirements(int careerId) =>
+      IntlRetirementCache.of(
+        _db,
+      ).all(careerId, () => _decodeRetirements(careerId));
+
+  @override
+  Future<Map<int, Map<int, IntlRetirement>>> internationalRetirementsByNation(
+    int careerId,
+  ) => IntlRetirementCache.of(
+    _db,
+  ).byNation(careerId, () => _decodeRetirements(careerId));
+
+  /// Reads and decodes every retirement marker of [careerId]; behind the
+  /// [IntlRetirementCache], so a pool read does this once per change.
+  Future<Map<int, IntlRetirement>> _decodeRetirements(int careerId) async {
+    final rows =
+        await (_db.select(_db.drawsWatched)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  (t.kind.like('${InternationalRetirement.retiredPrefix}%') |
+                      t.kind.like(
+                        '${InternationalRetirement.comebackPrefix}%',
+                      )),
+            ))
+            .get();
+    return InternationalRetirement.decodeRows([
+      for (final r in rows) (kind: r.kind, cycle: r.cycle),
+    ]);
   }
 
   @override
@@ -381,7 +500,16 @@ class DriftPlayerRepository implements PlayerRepository {
 
   /// Loads the per-nation name pools from the bundled asset (once). Falls back
   /// to an empty map when the asset isn't available (e.g. pure unit tests).
-  Future<Map<int, _NamePool>> _pools() async {
+  ///
+  /// Before [_PoolEra.v4], a nation in [_v3Pools] reads its frozen lists;
+  /// before [_PoolEra.v3], a nation in [legacyPoolLengths] is also cut to the
+  /// lengths it first shipped with.
+  Future<Map<int, _NamePool>> _pools({_PoolEra era = _PoolEra.v4}) async {
+    if (era != _PoolEra.v4) {
+      if (_olderNamePools[era] case final cached?) return cached;
+      final v3 = _olderNamePools[_PoolEra.v3] ??= _frozenV3(await _pools());
+      return _olderNamePools[era] = era == _PoolEra.legacy ? _legacy(v3) : v3;
+    }
     if (_namePools != null) return _namePools!;
     try {
       final raw =
@@ -402,6 +530,28 @@ class DriftPlayerRepository implements PlayerRepository {
     return _namePools!;
   }
 
+  /// [pools] with every nation in [_v3Pools] on its frozen lists.
+  static Map<int, _NamePool> _frozenV3(Map<int, _NamePool> pools) => {
+    for (final MapEntry(key: id, value: pool) in pools.entries)
+      id: switch (_v3Pools[id]) {
+        null => pool,
+        final v3 => (first: v3.first, sur: v3.sur, surLate: pool.surLate),
+      },
+  };
+
+  /// [pools] with every nation in [legacyPoolLengths] cut to its old lengths.
+  static Map<int, _NamePool> _legacy(Map<int, _NamePool> pools) => {
+    for (final MapEntry(key: id, value: pool) in pools.entries)
+      id: switch (legacyPoolLengths[id]) {
+        null => pool,
+        final n => (
+          first: pool.first.take(n.first).toList(),
+          sur: pool.sur.take(n.sur).toList(),
+          surLate: pool.surLate,
+        ),
+      },
+  };
+
   /// The richer pools: each nation's classic lists with its extras from
   /// `country_names_more.json` added, for a career marked [namePoolsV2Kind].
   ///
@@ -410,9 +560,11 @@ class DriftPlayerRepository implements PlayerRepository {
   /// already existed, and a career on these pools is new: nobody in it has a
   /// name to lose. A nation the extras file does not cover still reads its
   /// classic names, with the late ones folded in.
-  Future<Map<int, _NamePool>> _richPools() async {
-    if (_richNamePools != null) return _richNamePools!;
-    final base = await _pools();
+  ///
+  /// Before [_PoolEra.v4], a nation in [_v3Extras] reads its frozen extras.
+  Future<Map<int, _NamePool>> _richPools({_PoolEra era = _PoolEra.v4}) async {
+    if (_richNamePools[era] case final cached?) return cached;
+    final base = await _pools(era: era);
     var more = const <String, Object?>{};
     try {
       more =
@@ -421,10 +573,17 @@ class DriftPlayerRepository implements PlayerRepository {
     } on Object {
       // No extras bundled (pure unit tests): the classic names alone.
     }
-    List<String> extra(int nationId, String key) =>
-        (((more['$nationId'] as Map?)?[key] as List?) ?? const [])
-            .cast<String>();
-    return _richNamePools = {
+    List<String> extra(int nationId, String key) {
+      if (era != _PoolEra.v4) {
+        if (_v3Extras[nationId] case final v3?) {
+          return key == 'firstMore' ? v3.firstMore : v3.surMore;
+        }
+      }
+      return (((more['$nationId'] as Map?)?[key] as List?) ?? const [])
+          .cast<String>();
+    }
+
+    return _richNamePools[era] = {
       for (final MapEntry(key: id, value: pool) in base.entries)
         id: (
           first: {...pool.first, ...extra(id, 'firstMore')}.toList(),
@@ -439,21 +598,68 @@ class DriftPlayerRepository implements PlayerRepository {
   }
 
   /// Whether [careerId] reads the richer pools (see [namePoolsV2Kind]).
-  Future<bool> _readsRichPools(int? careerId) async {
+  Future<bool> _readsRichPools(int? careerId) =>
+      _carriesMark(careerId, namePoolsV2Kind, _richCareers);
+
+  /// Which [_PoolEra] [careerId] reads (see [namePoolsV3Kind] and
+  /// [namePoolsV4Kind]).
+  ///
+  /// Asked only for a nation whose names the answer can change (see
+  /// [_poolEraMatters]), so other nations pay nothing. [_PoolEra.v4] is
+  /// cached at once; an older era only when [fullPoolsSettledKind] shows the
+  /// career's creation has already passed the point where the marks are
+  /// written: an era read mid-create, before a mark lands, is not kept.
+  Future<_PoolEra> _poolEra(int? careerId) async {
+    if (careerId == null) return _PoolEra.legacy;
+    if (_careerEras[careerId] case final known?) return known;
+    final kinds =
+        await (_db.selectOnly(_db.drawsWatched)
+              ..addColumns([_db.drawsWatched.kind])
+              ..where(
+                _db.drawsWatched.careerId.equals(careerId) &
+                    _db.drawsWatched.cycle.equals(0) &
+                    _db.drawsWatched.kind.isIn(const [
+                      namePoolsV3Kind,
+                      namePoolsV4Kind,
+                      fullPoolsSettledKind,
+                    ]),
+              ))
+            .map((r) => r.read(_db.drawsWatched.kind))
+            .get();
+    if (kinds.contains(namePoolsV4Kind)) {
+      return _careerEras[careerId] = _PoolEra.v4;
+    }
+    final era = kinds.contains(namePoolsV3Kind) ? _PoolEra.v3 : _PoolEra.legacy;
+    if (kinds.contains(fullPoolsSettledKind)) _careerEras[careerId] = era;
+    return era;
+  }
+
+  /// Whether the pool era can change [nationId]'s names: its pool was
+  /// lengthened or had names replaced, or it has an era-only guard.
+  static bool _poolEraMatters(int nationId) =>
+      legacyPoolLengths.containsKey(nationId) ||
+      _v3Pools.containsKey(nationId) ||
+      _v3Extras.containsKey(nationId) ||
+      guardedNamesFullPoolsByNation.containsKey(nationId) ||
+      guardedNamesPoolsV4ByNation.containsKey(nationId);
+
+  /// Whether [careerId] carries the cycle-0 mark [kind]; a yes is kept in
+  /// [yes] (see [_richCareers] for why only the yes).
+  Future<bool> _carriesMark(int? careerId, String kind, Set<int> yes) async {
     if (careerId == null) return false;
-    if (_richCareers.contains(careerId)) return true;
+    if (yes.contains(careerId)) return true;
     final row =
         await (_db.select(_db.drawsWatched)
               ..where(
                 (t) =>
                     t.careerId.equals(careerId) &
                     t.cycle.equals(0) &
-                    t.kind.equals(namePoolsV2Kind),
+                    t.kind.equals(kind),
               )
               ..limit(1))
             .getSingleOrNull();
     if (row == null) return false;
-    _richCareers.add(careerId);
+    yes.add(careerId);
     return true;
   }
 
@@ -558,7 +764,12 @@ class DriftPlayerRepository implements PlayerRepository {
   ) async {
     if (saveSeed == 0) return _identity;
     final rich = await _readsRichPools(careerId);
-    final pool = (await (rich ? _richPools() : _pools()))[nationId];
+    final era = _poolEraMatters(nationId)
+        ? await _poolEra(careerId)
+        : _PoolEra.legacy;
+    final pool = (await (rich
+        ? _richPools(era: era)
+        : _pools(era: era)))[nationId];
     if (pool == null || pool.first.isEmpty || pool.sur.isEmpty) {
       return _identity;
     }
@@ -567,10 +778,10 @@ class DriftPlayerRepository implements PlayerRepository {
     // once per (nation, save) — the splice below is part of building it, not
     // something done to it on every read. The richer one is never built at
     // all: see [_PermutedNames].
-    final String Function(int) nameAt;
-    final int length;
+    String Function(int) nameAt;
+    int length;
     if (rich) {
-      final names = _richCache[(nationId, saveSeed)] ??= _PermutedNames(
+      final names = _richCache[(nationId, saveSeed, era)] ??= _PermutedNames(
         pool.first,
         pool.sur,
         saveSeed ^ (nationId * 0x9E3779B1) ^ 0x5F5E,
@@ -578,7 +789,7 @@ class DriftPlayerRepository implements PlayerRepository {
       nameAt = names.call;
       length = names.length;
     } else {
-      final combos = _comboCache[(nationId, saveSeed)] ??= _combosFor(
+      final combos = _comboCache[(nationId, saveSeed, era)] ??= _combosFor(
         pool,
         nationId: nationId,
         saveSeed: saveSeed,
@@ -588,6 +799,37 @@ class DriftPlayerRepository implements PlayerRepository {
       length = combos.length;
     }
     if (length == 0) return _identity;
+
+    // A dormant nation with a real-name guard (see guardedNamesByNation)
+    // reads only the combinations off the guard: built once per (nation,
+    // save, pools), then index i maps to the i-th allowed one, so names stay
+    // distinct. Only dormant nations pay for the scan, and no ordinary
+    // nation's names, in any save, move. A career on the full pools also
+    // steps over guardedNamesFullPoolsByNation, and one on the current pools
+    // over guardedNamesPoolsV4ByNation too: names an older career could
+    // already be given, so guarding them there would move its names.
+    final dormant = DormantNations.ids.contains(nationId);
+    final guard = dormant ? guardedNamesByNation[nationId] : null;
+    final fullGuard = dormant && era != _PoolEra.legacy
+        ? guardedNamesFullPoolsByNation[nationId]
+        : null;
+    final v4Guard = dormant && era == _PoolEra.v4
+        ? guardedNamesPoolsV4ByNation[nationId]
+        : null;
+    if (guard != null || fullGuard != null || v4Guard != null) {
+      final raw = nameAt;
+      bool guarded(String name) =>
+          (guard?.contains(name) ?? false) ||
+          (fullGuard?.contains(name) ?? false) ||
+          (v4Guard?.contains(name) ?? false);
+      final allowed = _allowedCache[(nationId, saveSeed, rich, era)] ??= [
+        for (var k = 0; k < length; k++)
+          if (!guarded(raw(k))) k,
+      ];
+      if (allowed.isEmpty) return _identity;
+      nameAt = (i) => raw(allowed[i % allowed.length]);
+      length = allowed.length;
+    }
 
     // A stable, distinct index for every player: stored rows (base + fringe)
     // ranked by id, then newgens continuing past them by their sequence — so no
@@ -608,9 +850,11 @@ class DriftPlayerRepository implements PlayerRepository {
       for (final g in GoldenGeneration.cohort(nationId)) {
         var name = nameAt(j++ % length);
         // Bounded: the list is a few dozen names in a pool of thousands.
-        for (var tries = 0;
-            realFinlandInternationals.contains(name) && tries < 1000;
-            tries++) {
+        for (
+          var tries = 0;
+          realFinlandInternationals.contains(name) && tries < 1000;
+          tries++
+        ) {
           name = nameAt(j++ % length);
         }
         out[g.id] = name;
