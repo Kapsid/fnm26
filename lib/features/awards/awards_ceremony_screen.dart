@@ -48,7 +48,7 @@ class AwardsCeremonyChoiceSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Center(child: _Mark(height: 48)),
+            const Center(child: _Trophy(height: 48)),
             const SizedBox(height: AppSpacing.sm),
             Text(
               l.newsPotyTitle(year),
@@ -326,7 +326,7 @@ class _CeremonyState extends State<_Ceremony> {
       case _BeatKind.intro:
         return Column(
           children: [
-            const _Mark(height: 96),
+            const _Trophy(height: 96),
             const SizedBox(height: AppSpacing.lg),
             _Headline(headline),
             const SizedBox(height: AppSpacing.md),
@@ -448,7 +448,7 @@ class _StageSwitcherState extends State<_StageSwitcher>
 }
 
 /// Brushed chrome, top to bottom: bright, a darker horizon, bright again.
-/// The same metal as the primary button and the FNM mark.
+/// The same metal as the primary button and the ceremony's trophy.
 const List<Color> _chrome = [
   AppColors.primaryFixed,
   AppColors.onSurface,
@@ -457,25 +457,30 @@ const List<Color> _chrome = [
 ];
 const List<double> _chromeStops = [0, 0.48, 0.52, 1];
 
-/// The FNM mark, in its own chrome.
-class _Mark extends StatelessWidget {
-  const _Mark({required this.height});
+/// A trophy cut from the same chrome as the headlines: the ceremony's emblem.
+/// Not the FNM mark (the owner wants the award to stand on its own) and never
+/// gold: the look is monochrome.
+class _Trophy extends StatelessWidget {
+  const _Trophy({required this.height});
 
   final double height;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      // The artwork's own aspect (984 x 1024), so nothing letterboxes.
-      width: height * 984 / 1024,
-      child: Image.asset(
-        'assets/images/fnm_logo.png',
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stack) => Icon(
-          Icons.emoji_events_outlined,
-          color: AppColors.primary,
-          size: height * 0.7,
+    return SizedBox.square(
+      dimension: height,
+      child: ShaderMask(
+        blendMode: BlendMode.srcIn,
+        shaderCallback: (bounds) => const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: _chrome,
+          stops: _chromeStops,
+        ).createShader(bounds),
+        child: Icon(
+          Icons.emoji_events_rounded,
+          size: height,
+          color: Colors.white,
         ),
       ),
     );
@@ -700,7 +705,7 @@ class _Reveal extends StatelessWidget {
   }
 }
 
-/// The winner's moment: the chrome mark, the year's title in capitals with
+/// The winner's moment: the chrome trophy, the year's title in capitals with
 /// light sweeping across it, a soft white glow opening behind the flag, and
 /// the name at its largest. No box: the dark is the stage.
 class _WinnerReveal extends StatelessWidget {
@@ -748,7 +753,7 @@ class _WinnerReveal extends StatelessWidget {
           curve: Curves.easeOutBack,
           builder: (context, s, child) =>
               Transform.scale(scale: s, child: child),
-          child: const _Mark(height: 64),
+          child: const _Trophy(height: 64),
         ),
         const SizedBox(height: AppSpacing.md),
         _Headline(headline, sheen: true),

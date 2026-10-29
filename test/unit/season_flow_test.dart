@@ -72,7 +72,18 @@ void main() {
 
     final before = await container.read(hubDataProvider(career.id).future);
     await container.read(seasonServiceProvider).advance(career.id);
-    final after = await container.read(hubDataProvider(career.id).future);
+    var after = await container.read(hubDataProvider(career.id).future);
+    // A first fixture beyond 1 December: the advance stops on the day of the
+    // Player of the Year vote first (see voteStopBefore), and the next one
+    // carries on to the match.
+    if (after!.recentResults.isEmpty &&
+        after.career.inGameDate ==
+            DateTime(before!.career.inGameDate.year, 12)) {
+      await container.read(seasonServiceProvider).advance(career.id);
+      container.invalidate(hubDataProvider(career.id));
+      final again = await container.read(hubDataProvider(career.id).future);
+      after = again;
+    }
 
     expect(
       after!.career.inGameDate.isAfter(before!.career.inGameDate),

@@ -49,6 +49,20 @@ String potySeenKind(int year) => 'potySeen:$year';
 int potyYearOn(DateTime date) =>
     date.month >= CareerService.developmentMonth ? date.year : date.year - 1;
 
+/// The day a step from [clock] towards [target] must stop on so the year's
+/// vote is held when its football ends: 1 December of the clock's year, when
+/// the step would carry the clock past it, else null.
+///
+/// Without the stop, a manager whose next match was months away (the last
+/// qualifier in October, the finals in June) crossed December inside one
+/// step and met "Player of the Year 2029" in the middle of the 2030 finals.
+/// The hub offers the stop as its own step (see [nextEventProvider]) before
+/// a match beyond it, and [SeasonService.advance] takes it.
+DateTime? voteStopBefore(DateTime clock, DateTime target) {
+  final day = DateTime(clock.year, CareerService.developmentMonth);
+  return clock.isBefore(day) && target.isAfter(day) ? day : null;
+}
+
 /// The year whose ceremony is waiting to be seen, or null.
 ///
 /// Only the latest two years are ever asked: a ceremony is marked seen the

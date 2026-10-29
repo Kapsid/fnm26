@@ -1851,12 +1851,21 @@ class MatchEngine {
 
   /// The set-piece taker (credited with the assist): the manager's designated
   /// dead-ball taker if on the pitch (and not the scorer), else the side's best
-  /// passer. Null when nobody else is on the pitch.
+  /// technical outfielder. Null when nobody else is on the pitch.
+  ///
+  /// The keeper is never the automatic choice: a good keeper's technical
+  /// rating is as high as anyone's, so ranking the whole eleven sent him up
+  /// for every corner, the AI's included. He takes one only when the manager
+  /// names him or nobody else is left.
   Player? _setPieceTaker(_Live team, Player scorer) {
     final chosen = _designated(team, team.deadBallTakerId);
     if (chosen != null && chosen.id != scorer.id) return chosen;
-    final pool = team.xi.where((p) => p.id != scorer.id).toList();
-    if (pool.isEmpty) return null;
+    final others = team.xi.where((p) => p.id != scorer.id).toList();
+    if (others.isEmpty) return null;
+    final outfield = others
+        .where((p) => p.category != PositionCategory.goalkeeper)
+        .toList();
+    final pool = outfield.isEmpty ? others : outfield;
     return pool.reduce(
       (a, b) => b.attributes.technical > a.attributes.technical ? b : a,
     );

@@ -162,7 +162,18 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     worldCupDrawKind,
   );
   final finalsPhase = hasFinals && finalsDrawWatched;
-  final wcLive = finalsPhase || wcStarted || nextIsWc;
+  // A host plays no qualifier, so none of the tests above could see its
+  // campaign: the tile read "upcoming" through the whole of a qualifying it
+  // was watching from the stands.
+  final nationList = nations.values.toList();
+  final hostsWc =
+      WorldCupHosts.worldCupHostIds(
+        year: CareerService.worldCupYear(career.cyclePointer),
+        nations: nationList,
+        seed: career.rngSeed,
+      ).contains(career.nationId) &&
+      await comp.hasTournament(careerId, CompetitionKind.worldCupQualifying);
+  final wcLive = finalsPhase || wcStarted || nextIsWc || hostsWc;
   final wcHasHistory = honourComps.contains('World Championship');
   statuses[null] = TournamentStatus(
     phase: worldChampion != null
@@ -208,6 +219,21 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     }
   }
 
+  // The same for a host of the continental championship.
+  final hostsCont =
+      playerConf != null &&
+      WorldCupHosts.continentalHostsFor(
+        confederation: playerConf,
+        cycle: career.cyclePointer,
+        seed: career.rngSeed,
+        nations: nationList,
+      ).contains(career.nationId) &&
+      await comp.hasTournament(
+        careerId,
+        CompetitionKind.continentalQualifying,
+        confederation: playerConf,
+      );
+
   for (final entry in ContinentalCups.byConfederation.entries) {
     final conf = entry.key;
     final name = entry.value.name;
@@ -215,7 +241,8 @@ tournamentsOverviewProvider = FutureProvider.autoDispose.family<TournamentsOverv
     // Live through the player's whole continental campaign — qualifying as well
     // as the finals — not only once the finals tournament exists.
     final liveThisCycle =
-        isPlayerConf && (hasContinental || contStarted || nextIsCont);
+        isPlayerConf &&
+        (hasContinental || contStarted || nextIsCont || hostsCont);
     final hasHistory = honourComps.contains(name);
 
     final TournamentPhase phase;

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// The manager's designated set-piece takers for a save: who steps up for
@@ -118,12 +120,74 @@ final Provider<SetPieceTakersStore> setPieceTakersStoreProvider = Provider(
   SetPieceTakersStore.new,
 );
 
+/// Prefs key marking a save whose stored takers have had keepers swept out.
+String _keeperSweepKey(int careerId) => 'set_piece_gk_swept_v1:$careerId';
+
+/// Whether a player of a save is a goalkeeper.
+///
+/// Its own provider so the sweep below can be tested without a database.
+final Provider<Future<bool> Function(int careerId, int playerId)>
+setPieceKeeperCheckProvider = Provider((ref) {
+  final players = ref.watch(playerRepositoryProvider);
+  return (careerId, playerId) async {
+    final p = await players.byId(playerId, careerId: careerId);
+    return p?.position.category == PositionCategory.goalkeeper;
+  };
+});
+
+/// Clears a goalkeeper out of a save's stored takers, once per save.
+///
+/// The automatic dead-ball pick used to rank the whole eleven, so a good
+/// keeper was often the coach's man on corners and free kicks, and the quick
+/// pick then wrote him down as the manager's own choice. The store cannot
+/// tell that apart from a keeper named by hand, so every keeper stored before
+/// the fix goes back to automatic. The marker makes it a one-off: a keeper
+/// the manager names afterwards is his to keep.
+///
+/// Anything that goes wrong leaves the stored pair as it was and the marker
+/// unset, so the sweep simply tries again on the next read.
+Future<SetPieceTakers> _sweepKeepers(
+  Ref ref,
+  int careerId,
+  SetPieceTakers takers,
+) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_keeperSweepKey(careerId)) ?? false) return takers;
+    // Nothing stored (a new save, or one left on automatic): nothing to
+    // sweep, but mark it done now, or a keeper the manager names later
+    // would be wiped by the first read after that.
+    if (takers.penalty == null && takers.deadBall == null) {
+      await prefs.setBool(_keeperSweepKey(careerId), true);
+      return takers;
+    }
+    final isKeeper = ref.read(setPieceKeeperCheckProvider);
+    Future<int?> keep(int? id) async =>
+        id != null && await isKeeper(careerId, id) ? null : id;
+    final swept = (
+      penalty: await keep(takers.penalty),
+      deadBall: await keep(takers.deadBall),
+    );
+    if (swept != takers) {
+      await prefs.setString(
+        _takersKey(careerId),
+        jsonEncode({'penalty': swept.penalty, 'deadBall': swept.deadBall}),
+      );
+    }
+    await prefs.setBool(_keeperSweepKey(careerId), true);
+    return swept;
+  } on Object {
+    return takers;
+  }
+}
+
 /// One save's set-piece taker choices.
 final AutoDisposeFutureProviderFamily<SetPieceTakers, int>
 setPieceTakersProvider = FutureProvider.autoDispose.family<SetPieceTakers, int>(
   // Reads the prefs directly, not through [setPieceTakersStoreProvider]: see
   // [_loadTakers] for why this provider must not depend on the store.
-  (ref, careerId) => _loadTakers(careerId),
+  (ref, careerId) async =>
+      _sweepKeepers(ref, careerId, await _loadTakers(careerId)),
 );
 
 /// Whether the manager has accepted automatic takers for this save.

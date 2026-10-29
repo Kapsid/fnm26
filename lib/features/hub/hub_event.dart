@@ -326,8 +326,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       kind: HubEventKind.awardsCeremony,
       label: l.hubEventAwardsCeremony(ceremonyYear),
       icon: Icons.workspace_premium_rounded,
-      route:
-          '${Routes.awardsCeremony}?careerId=$careerId&year=$ceremonyYear',
+      route: '${Routes.awardsCeremony}?careerId=$careerId&year=$ceremonyYear',
       subtitle: l.hubEventAwardsCeremonySub,
     );
   }
@@ -556,6 +555,38 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
 
   final next = hub.next;
 
+  // A step that would carry the clock over 1 December is offered as a plain
+  // advance, which stops on the day (see [voteStopBefore]): the year's vote
+  // is filed there and its ceremony is the next event, before the manager's
+  // next match or tournament rather than in the middle of it.
+  bool crossesVote(DateTime target) =>
+      voteStopBefore(hub.career.inGameDate, target) != null;
+  final advanceToVote = HubEvent(
+    kind: HubEventKind.advance,
+    label: l.hubEventAdvanceWorld,
+    icon: Icons.fast_forward_rounded,
+  );
+
+  // The friendlies the manager could arrange now, if any (step 4 below).
+  final friendlies = await ref.watch(
+    friendliesPlanProvider(careerId).future,
+  );
+  HubEvent friendliesEvent(FriendliesPlan plan) => HubEvent(
+    kind: HubEventKind.friendlies,
+    label: l.hubEventArrangeFriendlies,
+    icon: Icons.handshake_outlined,
+    route: '${Routes.friendlies}?careerId=$careerId',
+    subtitle: l.hubEventFriendliesSub(plan.windows.length),
+  );
+  // A host with nothing on its calendar yet still has warm-up windows to
+  // fill (see `_hostedFinalsStart`), and they come before watching somebody
+  // else's tournament: the watch steps the clock to that tournament's next
+  // match, and every window before it was lost unoffered.
+  bool friendliesFirst(DateTime date) =>
+      next == null &&
+      friendlies != null &&
+      friendlies.windows.first.isBefore(date);
+
   // 2c. A main finals tournament (World Cup or continental) is under way and
   //     the player isn't contesting it — its next match falls before their next
   //     fixture. Surface it so they step through every round, day by day,
@@ -592,10 +623,12 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   final finalsRoundBeforeOwn =
       finalsDate != null && nextIsFinalsMatch && finalsDate.isBefore(next.date);
   if (finalsDate != null &&
+      !friendliesFirst(finalsDate) &&
       (finalsRoundBeforeOwn ||
           (!nextIsFinalsMatch &&
               !playerInFinals &&
               (next == null || !finalsDate.isAfter(next.date) || wcLive)))) {
+    if (crossesVote(finalsDate)) return advanceToVote;
     if (wcLive) {
       return HubEvent(
         kind: HubEventKind.watchTournament,
@@ -645,7 +678,9 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       ncFinalsDate != null &&
       !nextIsNcFinals &&
       !playerInNcFinals &&
+      !friendliesFirst(ncFinalsDate) &&
       (next == null || !ncFinalsDate.isAfter(next.date))) {
+    if (crossesVote(ncFinalsDate)) return advanceToVote;
     return HubEvent(
       kind: HubEventKind.watchTournament,
       label: l.hubEventPlayNationsCupMatch,
@@ -876,19 +911,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     //    booked first and then nominated for. Otherwise the manager nominated
     //    for the upcoming tournament, arranged friendlies, and was immediately
     //    asked to nominate again for those friendlies.
-    final friendlies = await ref.watch(
-      friendliesPlanProvider(careerId).future,
-    );
-    if (friendlies != null) {
-      final n = friendlies.windows.length;
-      return HubEvent(
-        kind: HubEventKind.friendlies,
-        label: l.hubEventArrangeFriendlies,
-        icon: Icons.handshake_outlined,
-        route: '${Routes.friendlies}?careerId=$careerId',
-        subtitle: l.hubEventFriendliesSub(n),
-      );
-    }
+    if (friendlies != null) return friendliesEvent(friendlies);
 
     // 5. The squad call-up: a fresh nomination is forced at the start of every
     //    period — before a qualifying campaign and again before matchday 6,
@@ -985,6 +1008,14 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       }
     }
 
+    // 5·8. His next match lies beyond 1 December: the clock stops on the
+    //      day of the vote first (see [voteStopBefore]), in place of the
+    //      match. Everything above is still offered first, in its usual
+    //      order (the draws, the friendlies, so a host's open windows before
+    //      the vote are never stepped past, the call-up, a camp scandal, the
+    //      XI), and the stop settles none of it: nothing of his is played.
+    if (crossesVote(next.date)) return advanceToVote;
+
     // 5·9. The press before the first match of a campaign he is in: the last
     //      thing before kick-off, once the squad is named and set.
     final preview = await ref.watch(previewDueProvider(careerId).future);
@@ -1010,6 +1041,10 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       route: '${Routes.matchPreview}?careerId=$careerId',
     );
   }
+
+  // 4 again, for a side with nothing on its calendar: a host waiting for its
+  // own finals is offered the windows of the qualifying it sits out.
+  if (friendlies != null) return friendliesEvent(friendlies);
 
   // 5. No match for the player, but the World Cup is under way — step it
   //    forward one matchday at a time (round-by-round views land later).

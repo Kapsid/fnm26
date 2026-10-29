@@ -23,15 +23,12 @@ abstract final class SetPiecePicks {
         .id;
   }
 
-  /// The best technical player in [xi]. This is the engine's dead-ball rule
+  /// The best technical outfielder in [xi], or the best of whoever is there
+  /// when a side is somehow all keepers. This is the engine's dead-ball rule
   /// without its "not the scorer" clause, which only exists at the moment a
   /// goal is being attributed and has no meaning on a team sheet.
-  static int? deadBall(List<Player> xi) {
-    if (xi.isEmpty) return null;
-    return xi
-        .reduce(
-          (a, b) => b.attributes.technical > a.attributes.technical ? b : a,
-        )
-        .id;
-  }
+  ///
+  /// It once ranked the whole eleven, and a good keeper's technical rating is
+  /// as high as anyone's, so he was named on corners and free kicks.
+  static int? deadBall(List<Player> xi) => penalty(xi);
 }

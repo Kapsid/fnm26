@@ -62,6 +62,8 @@ import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart'
     show friendliesPlanProvider;
 import 'package:fnm/features/hub/draw_reveal.dart';
+import 'package:fnm/features/hub/hub_event.dart'
+    show continentalQualDrawKind, worldCupQualDrawKind;
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart'
     show challengesViewProvider;
@@ -1784,6 +1786,24 @@ class SeasonService {
       _simSeed = career.rngSeed;
       _simYears = CareerService.agingYears(career);
 
+      // A step that would carry the clock over 1 December stops ON it: the
+      // year's football is over and its vote is filed at the end of this
+      // step (see [voteStopBefore]), so the ceremony is held in December
+      // rather than whenever the manager's next match happens to fall.
+      // Nothing of his is due by then, so nothing of his is played.
+      Future<bool> stopForVote(DateTime target) async {
+        final stop = voteStopBefore(career.inGameDate, target);
+        if (stop == null) return false;
+        await _careers.updateInGameDate(careerId, stop);
+        await _catchUp(
+          careerId,
+          stop,
+          career.rngSeed,
+          excludeNationId: career.nationId,
+        );
+        return true;
+      }
+
       // Spawn any due stage/finals first, so the tournament to step exists.
       await _progress(careerId);
 
@@ -1844,6 +1864,7 @@ class SeasonService {
                   (next == null ||
                       !finalsDate.isAfter(next.date) ||
                       wcLive)))) {
+        if (await stopForVote(finalsDate)) break;
         await _careers.updateInGameDate(careerId, finalsDate);
         await _catchUp(
           careerId,
@@ -1881,6 +1902,7 @@ class SeasonService {
           !nextIsNcFinals &&
           !playerInNcFinals &&
           (next == null || !ncFinalsDate.isAfter(next.date))) {
+        if (await stopForVote(ncFinalsDate)) break;
         await _careers.updateInGameDate(careerId, ncFinalsDate);
         await _catchUp(
           careerId,
@@ -1910,6 +1932,7 @@ class SeasonService {
           final stop = groupEnd.isBefore(career.inGameDate)
               ? career.inGameDate
               : groupEnd;
+          if (await stopForVote(stop)) break;
           await _careers.updateInGameDate(careerId, stop);
           await _catchUp(
             careerId,
@@ -1936,6 +1959,7 @@ class SeasonService {
       //    `test/unit/career/nation_switch_test.dart` drives a whole cycle
       //    through repeated `advance` calls and depends on exactly that.
       if (next != null) {
+        if (await stopForVote(next.date)) break;
         // A camp scandal nobody answered is about to be played past: doing
         // nothing about it is keeping him (see [CampScandalService]).
         await _ref.read(campScandalServiceProvider).settleUnanswered(careerId);
@@ -1953,6 +1977,7 @@ class SeasonService {
         career.inGameDate,
       );
       if (earliest == null) break; // cycle complete
+      if (await stopForVote(earliest)) break;
       await _careers.updateInGameDate(careerId, earliest);
       await _catchUp(careerId, earliest, career.rngSeed);
       final wcFinalsLive =
@@ -1972,6 +1997,13 @@ class SeasonService {
     // fixed now, as they read on the screen tonight (see
     // [AwardService.storeFinishedTournaments]).
     await _ref.read(awardServiceProvider).storeFinishedTournaments(careerId);
+    // And the year's vote, now that the clock has moved: a step that carries
+    // it over 1 December files the year here, so its ceremony is the next
+    // thing the hub offers. Settling only before a step left the year to the
+    // step AFTER the one that crossed December, which for a side whose next
+    // match was months away put "Player of the Year 2029" in the middle of
+    // the 2030 finals.
+    await _ref.read(awardServiceProvider).settleYear(careerId);
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
@@ -2064,6 +2096,13 @@ class SeasonService {
     // fixed now, as they read on the screen tonight (see
     // [AwardService.storeFinishedTournaments]).
     await _ref.read(awardServiceProvider).storeFinishedTournaments(careerId);
+    // And the year's vote, now that the clock has moved: a step that carries
+    // it over 1 December files the year here, so its ceremony is the next
+    // thing the hub offers. Settling only before a step left the year to the
+    // step AFTER the one that crossed December, which for a side whose next
+    // match was months away put "Player of the Year 2029" in the middle of
+    // the 2030 finals.
+    await _ref.read(awardServiceProvider).settleYear(careerId);
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);
@@ -2427,6 +2466,13 @@ class SeasonService {
     // fixed now, as they read on the screen tonight (see
     // [AwardService.storeFinishedTournaments]).
     await _ref.read(awardServiceProvider).storeFinishedTournaments(careerId);
+    // And the year's vote, now that the clock has moved: a step that carries
+    // it over 1 December files the year here, so its ceremony is the next
+    // thing the hub offers. Settling only before a step left the year to the
+    // step AFTER the one that crossed December, which for a side whose next
+    // match was months away put "Player of the Year 2029" in the middle of
+    // the 2030 finals.
+    await _ref.read(awardServiceProvider).settleYear(careerId);
     // The board's verdict on any objective this run has just settled, so it
     // lands with the result rather than at the end of the cycle.
     await _gradeObjectivesIfDecided(careerId);

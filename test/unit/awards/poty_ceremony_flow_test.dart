@@ -101,17 +101,20 @@ void main() {
   test(
     'simulating past it marks it seen silently; the message stays',
     () async {
-      await untilCeremony();
+      final e = await untilCeremony();
+      final year = int.parse(Uri.parse(e.route!).queryParameters['year']!);
       await c.read(seasonServiceProvider).advance(d.careerId);
       final career = (await c.read(careerRepositoryProvider).byId(d.careerId))!;
+      final comp = c.read(competitionRepositoryProvider);
+      // The advance may run on to the next 1 December (a host with no
+      // qualifiers has nothing to stop for in between) and file that year:
+      // it is THIS year that must be gone.
+      expect(await pendingCeremonyYear(comp, career), isNot(year));
       expect(
-        await pendingCeremonyYear(
-          c.read(competitionRepositoryProvider),
-          career,
-        ),
-        isNull,
+        await comp.hasWatchedDraw(d.careerId, 0, potySeenKind(year)),
+        isTrue,
       );
-      final kept = (await awards()).single;
+      final kept = (await awards()).firstWhere((m) => m.year == year);
       expect(kept.read, isFalse);
       expect(decodePotyVote(kept.body), isNotNull);
     },

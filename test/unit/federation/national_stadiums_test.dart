@@ -97,11 +97,11 @@ void main() {
     test('the cost scales with the seats added, in whole millions', () {
       // 39,000 to 48,000 (level 4): 9,000 seats, €5M x 2.0. 26,000 to
       // 48,000: 22,000 seats, €8M x 2.0. 59,000 to 64,000 (level 5): €4M
-      // x 2.8, rounded up. 3,000 to 20,000 (level 2): €7M x 1.0.
+      // x 2.8, rounded up. 3,000 to 20,000 (level 2): €7M x 0.4, rounded up.
       expect(NationalStadiums.enlargeCost(39000), 10000000);
       expect(NationalStadiums.enlargeCost(26000), 16000000);
       expect(NationalStadiums.enlargeCost(59000), 12000000);
-      expect(NationalStadiums.enlargeCost(3000), 7000000);
+      expect(NationalStadiums.enlargeCost(3000), 3000000);
       expect(NationalStadiums.enlargeCost(70000), isNull);
       for (var seats = 1000; seats < 60000; seats += 900) {
         final cost = NationalStadiums.enlargeCost(seats)!;
@@ -117,16 +117,18 @@ void main() {
     });
 
     test('each step up costs more the higher the level it reaches', () {
-      // The owner's call: x1.0 into level 2, x1.4 into 3, x2.0 into 4, x2.8
-      // into 5, on top of the seats-added price.
-      expect(NationalStadiums.levelCostTenths, [10, 10, 14, 20, 28]);
+      // The owner's call: x0.4 into level 2, x0.7 into 3, x2.0 into 4, x2.8
+      // into 5, on top of the seats-added price. The first two were x1.0
+      // and x1.4 until a playtest found a minnow's first step far too dear.
+      expect(NationalStadiums.levelCostTenths, [10, 4, 7, 20, 28]);
       // One ground at each level's standard size, enlarged a step: the same
       // 12,000 or 16,000 seats added each time, dearer each time.
-      expect(NationalStadiums.enlargeCost(10000), 5000000); // into level 2
-      expect(NationalStadiums.enlargeCost(20000), 7000000); // into level 3
+      expect(NationalStadiums.enlargeCost(10000), 2000000); // into level 2
+      expect(NationalStadiums.enlargeCost(20000), 4000000); // into level 3
       expect(NationalStadiums.enlargeCost(32000), 12000000); // into level 4
       expect(NationalStadiums.enlargeCost(48000), 17000000); // into level 5
-      // Level 1 to level 5 a step at a time: €41M (it was €22M).
+      // Level 1 to level 5 a step at a time: €35M (€41M before the first
+      // two steps were cut, €22M before any step was weighted).
       var seats = 10000;
       var total = 0;
       for (
@@ -137,7 +139,7 @@ void main() {
         total += cost;
         seats = StadiumLevels.enlargedTo(seats)!;
       }
-      expect(total, 41000000);
+      expect(total, 35000000);
       expect(StadiumLevels.levelOf(seats), StadiumLevels.maxLevel);
       // A ground at each level's standard size costs more to enlarge than
       // one at the standard size a level below.
@@ -148,6 +150,60 @@ void main() {
           NationalStadiums.enlargeCost(next),
           greaterThan(NationalStadiums.enlargeCost(from)!),
           reason: 'into level ${level + 1} vs into level $level',
+        );
+      }
+    });
+
+    test('the full cost table, level by size within the band', () {
+      // Seats -> price of the next step: the bottom, the standard size and
+      // the top of each band.
+      const table = {
+        2000: 3, 5000: 3, 10000: 2, 14000: 2, // into level 2
+        15000: 5, 20000: 4, 24000: 3, // into level 3
+        25000: 16, 32000: 12, 39000: 10, // into level 4
+        40000: 23, 48000: 17, 59000: 12, // into level 5
+      };
+      for (final MapEntry(key: seats, value: millions) in table.entries) {
+        expect(
+          NationalStadiums.enlargeCost(seats),
+          millions * 1000000,
+          reason: '$seats seats',
+        );
+      }
+    });
+
+    test("a poor ground's first steps fit a small federation's cycle", () {
+      // The worst grant the game pays (bottom of the world, having slid
+      // there) less three good staff: what a minnow has to spend.
+      final minnow =
+          (FederationFinance.centralGrant *
+                  FederationFinance.minGrantMultiplier)
+              .round() -
+          3 * 1200000;
+      for (var seats = 1000; seats < 25000; seats += 500) {
+        final cost = NationalStadiums.enlargeCost(seats)!;
+        if (StadiumLevels.levelOf(seats) == 1) {
+          // Into level 2: €3M at most, well under a minnow's spare money.
+          expect(cost, lessThanOrEqualTo(3000000), reason: '$seats');
+        } else {
+          // Into level 3: within one cycle.
+          expect(cost, lessThanOrEqualTo(minnow), reason: '$seats');
+        }
+      }
+      // A mid-table federation (the €12M grant, three good staff) takes a
+      // standard level-1 ground to level 3 in one cycle.
+      expect(
+        NationalStadiums.enlargeCost(10000)! +
+            NationalStadiums.enlargeCost(20000)!,
+        lessThanOrEqualTo(FederationFinance.centralGrant - 3 * 1200000),
+      );
+      // The top steps stay a big nation's project: never within a minnow's
+      // cycle.
+      for (var seats = 25000; seats < 60000; seats += 500) {
+        expect(
+          NationalStadiums.enlargeCost(seats),
+          greaterThan(minnow),
+          reason: '$seats',
         );
       }
     });

@@ -436,9 +436,15 @@ abstract final class NationalStadiums {
 
   /// What an enlargement INTO each level is multiplied by, in tenths, by
   /// level (index 0 is level 1, which nothing is enlarged into). The owner's
-  /// call: the higher the level, the dearer the step. A ground taken from
-  /// level 1 to level 5 one step at a time costs €41M instead of €22M.
-  static const List<int> levelCostTenths = [10, 10, 14, 20, 28];
+  /// call: the higher the level, the dearer the step.
+  ///
+  /// The first two steps were x1.0 and x1.4, which put a minnow's 5,000-seat
+  /// ground at €6M to reach level 2: most of a small federation's cycle, for
+  /// the cheapest work there is. A playtest called it far too dear, so they
+  /// are x0.4 and x0.7 now (€2-3M into level 2, €3-5M into level 3) and the
+  /// top two steps are as they were. Level 1 to level 5 one step at a time:
+  /// €35M (it was €41M).
+  static const List<int> levelCostTenths = [10, 4, 7, 20, 28];
 
   /// What enlarging a ground of [seats] to the next level costs: €2M plus
   /// €0.25M for every thousand seats added, rounded up to whole millions,

@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/features/awards/award_providers.dart';
@@ -152,5 +155,34 @@ void main() {
     );
     expect(find.byType(PotyTopList), findsOneWidget);
     await expectAppGolden('goldens/awards_list_phone.png');
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // The sheet the hub opens: watch or skip, under the ceremony's chrome
+  // trophy (it used to carry the FNM mark).
+  testWidgets('phone ceremony choice sheet', (tester) async {
+    tester.view
+      ..physicalSize = kPhoneSize
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      RepaintBoundary(
+        key: kAppRoot,
+        child: MaterialApp(
+          theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.bottomCenter,
+              child: AwardsCeremonyChoiceSheet(year: 2030, onChoose: (_) {}),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.emoji_events_rounded), findsOneWidget);
+    await expectAppGolden('goldens/awards_choice_phone.png');
   });
 }

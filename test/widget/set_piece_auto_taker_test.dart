@@ -122,11 +122,12 @@ void main() {
     final l = await openTakers(tester);
 
     // The keeper is the best technical man in the side, but the engine never
-    // hands him a penalty: that slot names the best OUTFIELDER. The dead ball
-    // has no such rule, so it does name him — two rules, two names, and the
-    // screen has to tell them apart the way the engine does.
-    expect(summaryLabel(bestName), findsOneWidget);
-    expect(summaryLabel('Starter1'), findsOneWidget);
+    // hands him a set piece of either kind: both slots name the best
+    // OUTFIELDER, exactly as `MatchEngine._setPieceTaker` and the penalty
+    // rule pick. (The dead ball used to rank the keeper too, and a playtest
+    // found him on every corner.)
+    expect(summaryLabel(bestName), findsNWidgets(2));
+    expect(summaryLabel('Starter1'), findsNothing);
     expect(
       summaryLabel('${l.tacticsPenalties}  ·  ${l.tacticsTakerAuto}'),
       findsOneWidget,
@@ -195,8 +196,8 @@ void main() {
       findsNothing,
     );
     expect(summaryLabel(l.tacticsPenalties), findsOneWidget);
-    expect(summaryLabel(bestName), findsOneWidget);
-    expect(summaryLabel('Starter1'), findsOneWidget);
+    expect(summaryLabel(bestName), findsNWidgets(2));
+    expect(summaryLabel('Starter1'), findsNothing);
     expect(find.text(l.tacticsTakerQuickPick), findsNothing);
   });
 
@@ -216,10 +217,11 @@ void main() {
     await tester.pumpAndSettle();
 
     // The man already named keeps the penalties; only the automatic half is
-    // filled, and with the dead-ball rule's own answer (the keeper, who is the
-    // best technical man of all) rather than the penalty taker's.
+    // filled, with the dead-ball rule's own answer: the best technical
+    // outfielder, never the keeper, though he is the best of all.
     expect(summaryLabel('Starter3'), findsOneWidget);
-    expect(summaryLabel('Starter1'), findsOneWidget);
+    expect(summaryLabel(bestName), findsOneWidget);
+    expect(summaryLabel('Starter1'), findsNothing);
     expect(find.text(l.tacticsTakerQuickPick), findsNothing);
   });
 

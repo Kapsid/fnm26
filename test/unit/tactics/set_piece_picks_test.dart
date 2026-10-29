@@ -48,11 +48,17 @@ void main() {
     expect(SetPiecePicks.deadBall(const []), isNull);
   });
 
-  test('the dead ball falls to the best technical player, keeper or not', () {
+  test('the dead ball falls to the best technical outfielder, never the '
+      'keeper', () {
     final xi = [
       player(id: 1, position: PlayerPosition.gk, technical: 99),
       player(id: 2, position: PlayerPosition.am, technical: 88),
     ];
+    expect(SetPiecePicks.deadBall(xi), 2);
+  });
+
+  test('an all-keeper side still finds a dead-ball taker', () {
+    final xi = [player(id: 1, position: PlayerPosition.gk, technical: 70)];
     expect(SetPiecePicks.deadBall(xi), 1);
   });
 }

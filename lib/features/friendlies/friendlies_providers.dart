@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -87,10 +88,15 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
         if (nextComp == null || f.date.isBefore(nextComp)) nextComp = f.date;
       }
     }
-    if (nextComp == null) return null;
-
     final all = await ref.watch(nationRepositoryProvider).forCareer(careerId);
     final nations = {for (final n in all) n.id: n};
+
+    // A host has a block to prepare for long before it is on the calendar: its
+    // own finals, which it plays no qualifiers to reach. Bounding the gap by
+    // the next fixture alone offered it nothing at all through a whole
+    // qualifying campaign, every window empty, so the gap runs to the finals.
+    nextComp ??= await _hostedFinalsStart(comp, career, nations);
+    if (nextComp == null) return null;
 
     // Windows that a finals tournament will swallow, even though nothing is on
     // the calendar there yet.
@@ -250,6 +256,57 @@ Future<DateTime?> firstFreeHomeFriendlyWindow(
     }
   }
   return null;
+}
+
+/// When the next finals [career]'s nation HOSTS opens, while that finals is
+/// not on the calendar yet; null when it hosts none still to be drawn.
+///
+/// The month is the one [_finalsWindows] blocks, so a window in it is never
+/// offered.
+Future<DateTime?> _hostedFinalsStart(
+  CompetitionRepository comp,
+  Career career,
+  Map<int, Nation> nations,
+) async {
+  final me = career.nationId;
+  final list = nations.values.toList();
+  final starts = <DateTime>[];
+  final wcYear = CareerService.worldCupYear(career.cyclePointer);
+  if (!await comp.hasTournament(career.id, CompetitionKind.worldCupFinals) &&
+      WorldCupHosts.worldCupHostIds(
+        year: wcYear,
+        nations: list,
+        seed: career.rngSeed,
+      ).contains(me)) {
+    starts.add(DateTime(wcYear, 6));
+  }
+  final conf = nations[me]?.confederation;
+  final cup = conf == null ? null : ContinentalCups.byConfederation[conf];
+  if (conf != null &&
+      cup != null &&
+      !await comp.hasTournament(
+        career.id,
+        CompetitionKind.continentalFinals,
+        confederation: conf,
+      ) &&
+      WorldCupHosts.continentalHostsFor(
+        confederation: conf,
+        cycle: career.cyclePointer,
+        seed: career.rngSeed,
+        nations: list,
+      ).contains(me)) {
+    starts.add(
+      DateTime(
+        CareerService.continentalFinalsYear(career.cyclePointer),
+        cup.month,
+      ),
+    );
+  }
+  final ahead = [
+    for (final d in starts)
+      if (d.isAfter(career.inGameDate)) d,
+  ]..sort();
+  return ahead.firstOrNull;
 }
 
 /// The `(year, month)` windows this cycle's finals tournaments occupy, for a

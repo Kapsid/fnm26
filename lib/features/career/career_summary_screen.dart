@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -528,7 +529,7 @@ class _RunRow extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.sm),
             Text(
-              run.placement,
+              placementLabel(l, run.placement),
               style: AppTypography.labelMedium.copyWith(
                 color: medalColor ?? AppColors.onSurfaceVariant,
               ),

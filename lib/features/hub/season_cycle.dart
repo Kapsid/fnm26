@@ -110,6 +110,7 @@ extension SeasonCycle on SeasonService {
 
   Future<void> _progress(int careerId) async {
     await _drawWorldCupQualifyingIfDue(careerId);
+    await _revealQualifyingToHost(careerId);
     await _progressWorldCup(careerId);
     await _progressContinental(careerId);
     await _progressNationsLeague(careerId);
@@ -176,6 +177,59 @@ extension SeasonCycle on SeasonService {
       wcYear: wcYear,
       rankById: seedRank.isEmpty ? null : seedRank,
     );
+  }
+
+  /// Opens a qualifying campaign the manager's nation sits out as host.
+  ///
+  /// A qualifying campaign's groups, tables and news stay behind its draw
+  /// ceremony until the manager has watched it, and the hub only ever offers
+  /// that ceremony to a side that is IN the draw. A host is not, so it was
+  /// never offered, never watched, and the whole campaign was played out
+  /// behind "to be drawn": a playtest host saw no qualifying at all, though
+  /// every match was being played. There is nothing of his in it to reveal
+  /// gradually, so it opens the moment it exists, as another continent's
+  /// campaign does.
+  ///
+  /// Checked on every step rather than only when a campaign is drawn, so a
+  /// save already in the middle of a hosted cycle opens up on its next step.
+  Future<void> _revealQualifyingToHost(int careerId) async {
+    final career = await _careers.byId(careerId);
+    if (career == null) return;
+    final cycle = career.cyclePointer;
+    final wcOpen =
+        await _comp.hasWatchedDraw(careerId, cycle, worldCupQualDrawKind) ||
+        !await _comp.hasTournament(
+          careerId,
+          CompetitionKind.worldCupQualifying,
+        );
+    final conf = await _managerConfederation(careerId);
+    final contOpen =
+        conf == null ||
+        await _comp.hasWatchedDraw(careerId, cycle, continentalQualDrawKind) ||
+        !await _comp.hasTournament(
+          careerId,
+          CompetitionKind.continentalQualifying,
+          confederation: conf,
+        );
+    if (wcOpen && contOpen) return;
+    final nations = (await _nationsById(careerId)).values.toList();
+    if (!wcOpen &&
+        WorldCupHosts.worldCupHostIds(
+          year: SeasonService.finalsYear(cycle),
+          nations: nations,
+          seed: career.rngSeed,
+        ).contains(career.nationId)) {
+      await _comp.markDrawWatched(careerId, cycle, worldCupQualDrawKind);
+    }
+    if (!contOpen &&
+        WorldCupHosts.continentalHostsFor(
+          confederation: conf,
+          cycle: cycle,
+          seed: career.rngSeed,
+          nations: nations,
+        ).contains(career.nationId)) {
+      await _comp.markDrawWatched(careerId, cycle, continentalQualDrawKind);
+    }
   }
 
   /// Progresses EVERY confederation's Nations Cup, the manager's first (as

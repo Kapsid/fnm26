@@ -1,3 +1,4 @@
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/manager/job_market.dart';
@@ -29,6 +30,20 @@ String cycleFinishLabel(AppLocalizations l, CycleFinish f) => switch (f) {
   CycleFinish.groupStage => l.finishGroupStage,
   CycleFinish.didNotQualify => l.finishDidNotQualify,
 };
+
+/// A placement the career summary keeps in canonical English ('Champions',
+/// 'Did not qualify'), written in the manager's language.
+///
+/// The summary compares and quotes the stored words (the board's verdict reads
+/// them through [placementMsgKey]), so they stay English there and are only
+/// translated here, where they are printed. My Career printed them raw, and a
+/// Czech manager read "Did not qualify" under every World Championship he
+/// missed. Anything the ladder does not know passes through as it came.
+String placementLabel(AppLocalizations l, String stored) =>
+    switch (placementMsgKey(stored)) {
+      final key? => renderMsgKey(l, MsgText(key)),
+      null => stored,
+    };
 
 /// A nation's Nations Cup cycle in one phrase: which league it played in (or,
 /// in the African cup, which zone), and either the finals round it reached or

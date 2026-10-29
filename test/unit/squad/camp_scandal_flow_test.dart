@@ -146,6 +146,34 @@ void main() {
     }
   }
 
+  /// Quick-sims to the window's first match, as the hub's advance does. The
+  /// clock here still sits at the start of the cycle, so a window past 1
+  /// December is reached in steps: each stops on the day of a Player of the
+  /// Year vote (see voteStopBefore) and must leave an [unanswered] scandal
+  /// waiting for the manager.
+  Future<void> advanceToWindow({PendingScandal? unanswered}) async {
+    final season = c.read(seasonServiceProvider);
+    final comp = c.read(competitionRepositoryProvider);
+    Future<bool> firstPlayed() async => (await comp.cycleFixturesForNation(
+      careerId,
+      nationId,
+    )).firstWhere((f) => f.id == first.id).hasResult;
+    for (var i = 0; i < 4; i++) {
+      await season.advance(careerId);
+      if (await firstPlayed()) return;
+      final career = (await c.read(careerRepositoryProvider).byId(careerId))!;
+      expect(career.inGameDate.month, 12, reason: 'stopped short of the match');
+      if (unanswered != null) {
+        expect(
+          await pending(),
+          unanswered,
+          reason: 'the vote stop swallowed it',
+        );
+      }
+    }
+    fail('never reached the window');
+  }
+
   Future<({int morale, int board})> press() {
     c.invalidate(pressEffectProvider(careerId));
     return c.read(pressEffectProvider(careerId).future);
@@ -248,7 +276,7 @@ void main() {
     expect(await press(), (morale: 0, board: 0));
 
     // The manager quick-sims the window's first match: he is not in it.
-    await c.read(seasonServiceProvider).advance(careerId);
+    await advanceToWindow();
     final played = await db
         .customSelect(
           'SELECT player_id FROM player_ratings WHERE fixture_id = ?',
@@ -284,7 +312,7 @@ void main() {
   test('played past without an answer: it counts as kept', () async {
     await callUpDone();
     final s = (await pending())!;
-    await c.read(seasonServiceProvider).advance(careerId);
+    await advanceToWindow(unanswered: s);
     final records = await c.read(campScandalsProvider(careerId).future);
     expect(records.single.choice, ScandalChoice.kept);
     expect(records.single.playerId, s.playerId);
