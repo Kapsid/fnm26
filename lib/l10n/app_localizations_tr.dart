@@ -12068,7 +12068,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Bu dönemin ev sahipleri henüz açıklanmadı. Aday olup olamayacağınız onlara da bağlı.';
+      'Aday olup olamayacağınız, bu dönemin ev sahipleri açıklandığında belli olacak.';
 
   @override
   String get hostBidBackToBack =>
@@ -13010,4 +13010,28 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Bilinmeyen oyuncu';
+
+  @override
+  String get hostingTitle => 'Ev sahipliği';
+
+  @override
+  String get hostingThisCycle => 'Bu dönem';
+
+  @override
+  String get hostingNextCycle => 'Gelecek dönem için adaylığınız';
+
+  @override
+  String get hostingTba => 'Açıklanacak';
+
+  @override
+  String get hostingTbaWc => 'Kıta şampiyonası bittiğinde açıklanacak';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Adaylık sunuldu: $amount, ev sahibi olma şansı $percent.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Adaylıklar dönemin sonunda, Dünya Şampiyonası finalinden sonra açılır.';
 }

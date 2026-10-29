@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{ต้องมีสนามความจุ {seats}+ ที่นั่งเพิ่มอีก 1 แห่ง} other{ต้องมีสนามความจุ {seats}+ ที่นั่งเพิ่มอีก {count} แห่ง}}",
   "hostBidBarredConf": "{confederation} เป็นเจ้าภาพชิงแชมป์โลกครั้งล่าสุด",
   "hostBidRecentHost": "คุณเป็นเจ้าภาพหนึ่งในสามครั้งล่าสุด",
-  "hostBidRulesPending": "ยังไม่ได้ประกาศเจ้าภาพของรอบนี้ การเสนอตัวได้หรือไม่ขึ้นอยู่กับเจ้าภาพเหล่านั้นด้วย",
+  "hostBidRulesPending": "จะรู้ว่าเสนอตัวได้หรือไม่เมื่อประกาศเจ้าภาพของรอบนี้แล้ว",
   "hostBidBackToBack": "คุณเป็นเจ้าภาพทัวร์นาเมนต์ที่จัดก่อนหน้านี้พอดี ไม่มีชาติใดเป็นเจ้าภาพสองทัวร์นาเมนต์ติดต่อกัน",
   "hostBidOneOnly": "คุณเสนอตัวเป็นเจ้าภาพอีกทัวร์นาเมนต์ไปแล้ว ไม่มีชาติใดเป็นเจ้าภาพสองทัวร์นาเมนต์ติดต่อกัน จึงเสนอตัวได้เพียงรายการเดียว",
   "hostBidRequirement": "เงื่อนไข: สนามความจุ {minSeats}+ ที่นั่ง {grounds} แห่ง ในจำนวนนี้ {bigGrounds} แห่งต้องจุ {bigSeats}+",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "นักเตะของคุณ",
   "potyHistoryNoYourPlayers": "ยังไม่มีนักเตะของคุณติดห้าอันดับแรก",
   "potyHistoryYoung": "ดาวรุ่ง",
-  "potyHistoryUnknownPlayer": "นักเตะที่ไม่ทราบชื่อ"
+  "potyHistoryUnknownPlayer": "นักเตะที่ไม่ทราบชื่อ",
+  "hostingTitle": "การเป็นเจ้าภาพ",
+  "hostingThisCycle": "รอบนี้",
+  "hostingNextCycle": "การเสนอตัวของคุณสำหรับรอบหน้า",
+  "hostingTba": "รอประกาศ",
+  "hostingTbaWc": "ประกาศหลังจบการแข่งขันชิงแชมป์ทวีป",
+  "hostingBidPledged": "ยื่นเสนอตัวแล้ว: {amount} โอกาสได้เป็นเจ้าภาพ {percent}",
+  "hostingWindowLine": "เปิดให้เสนอตัวเมื่อจบรอบ หลังนัดชิงชนะเลิศชิงแชมป์โลก"
 }

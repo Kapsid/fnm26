@@ -12093,7 +12093,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Tämän kauden isäntiä ei ole vielä julkistettu. Myös niistä riippuu, voitko hakea.';
+      'Voitko hakea, selviää kun tämän kauden isännät on julkistettu.';
 
   @override
   String get hostBidBackToBack =>
@@ -13037,4 +13037,29 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Tuntematon pelaaja';
+
+  @override
+  String get hostingTitle => 'Isännyys';
+
+  @override
+  String get hostingThisCycle => 'Tämä kausi';
+
+  @override
+  String get hostingNextCycle => 'Hakemuksesi seuraavalle kaudelle';
+
+  @override
+  String get hostingTba => 'Julkistetaan myöhemmin';
+
+  @override
+  String get hostingTbaWc =>
+      'Julkistetaan maanosan mestaruuskilpailujen jälkeen';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Haku jätetty: $amount, isännyyden mahdollisuus $percent.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Haku avautuu kauden lopussa, MM-kisojen finaalin jälkeen.';
 }

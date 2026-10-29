@@ -11924,7 +11924,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'ยังไม่ได้ประกาศเจ้าภาพของรอบนี้ การเสนอตัวได้หรือไม่ขึ้นอยู่กับเจ้าภาพเหล่านั้นด้วย';
+      'จะรู้ว่าเสนอตัวได้หรือไม่เมื่อประกาศเจ้าภาพของรอบนี้แล้ว';
 
   @override
   String get hostBidBackToBack =>
@@ -12852,4 +12852,28 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'นักเตะที่ไม่ทราบชื่อ';
+
+  @override
+  String get hostingTitle => 'การเป็นเจ้าภาพ';
+
+  @override
+  String get hostingThisCycle => 'รอบนี้';
+
+  @override
+  String get hostingNextCycle => 'การเสนอตัวของคุณสำหรับรอบหน้า';
+
+  @override
+  String get hostingTba => 'รอประกาศ';
+
+  @override
+  String get hostingTbaWc => 'ประกาศหลังจบการแข่งขันชิงแชมป์ทวีป';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'ยื่นเสนอตัวแล้ว: $amount โอกาสได้เป็นเจ้าภาพ $percent';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'เปิดให้เสนอตัวเมื่อจบรอบ หลังนัดชิงชนะเลิศชิงแชมป์โลก';
 }

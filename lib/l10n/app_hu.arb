@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Még 1 legalább {seats} férőhelyes stadion kell.} other{Még {count} legalább {seats} férőhelyes stadion kell.}}",
   "hostBidBarredConf": "Az előző világbajnokságot ez a szövetség rendezte: {confederation}.",
   "hostBidRecentHost": "A legutóbbi három torna egyikét te rendezted.",
-  "hostBidRulesPending": "A ciklus rendezőit még nem hirdették ki. Az is tőlük függ, hogy pályázhatsz-e.",
+  "hostBidRulesPending": "Hogy pályázhatsz-e, akkor derül ki, amikor bejelentik e ciklus rendezőit.",
   "hostBidBackToBack": "Te rendezed az ezt megelőző tornát. Egy ország sem rendez két tornát egymás után.",
   "hostBidOneOnly": "Már pályáztál a másik tornára. Egy ország sem rendez két tornát egymás után, ezért csak az egyikre pályázhatsz.",
   "hostBidRequirement": "Feltétel: {grounds} stadion legalább {minSeats} hellyel, ebből {bigGrounds} legalább {bigSeats} hellyel.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "A te játékosaid",
   "potyHistoryNoYourPlayers": "Egyik játékosod sem végzett még az első ötben.",
   "potyHistoryYoung": "Fiatal játékos",
-  "potyHistoryUnknownPlayer": "Ismeretlen játékos"
+  "potyHistoryUnknownPlayer": "Ismeretlen játékos",
+  "hostingTitle": "Rendezés",
+  "hostingThisCycle": "Ez a ciklus",
+  "hostingNextCycle": "Pályázatod a következő ciklusra",
+  "hostingTba": "Később jelentik be",
+  "hostingTbaWc": "A kontinensbajnokság után jelentik be",
+  "hostingBidPledged": "Pályázat beadva: {amount}, {percent} esély a rendezésre.",
+  "hostingWindowLine": "A pályázat a ciklus végén nyílik meg, a világbajnokság döntője után."
 }

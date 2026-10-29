@@ -12262,7 +12262,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Gazdele acestui ciclu nu au fost încă anunțate. Și de ele depinde dacă puteți candida.';
+      'Dacă puteți candida va fi clar după ce sunt anunțate gazdele acestui ciclu.';
 
   @override
   String get hostBidBackToBack =>
@@ -13212,4 +13212,29 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Jucător necunoscut';
+
+  @override
+  String get hostingTitle => 'Găzduire';
+
+  @override
+  String get hostingThisCycle => 'Acest ciclu';
+
+  @override
+  String get hostingNextCycle => 'Candidatura dvs. pentru ciclul următor';
+
+  @override
+  String get hostingTba => 'Urmează să fie anunțat';
+
+  @override
+  String get hostingTbaWc =>
+      'Va fi anunțat după încheierea campionatului continental';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Candidatură depusă: $amount, cu o șansă de $percent de a găzdui.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Candidaturile se deschid la sfârșitul ciclului, după finala Campionatului Mondial.';
 }

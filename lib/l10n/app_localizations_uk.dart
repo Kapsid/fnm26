@@ -12190,7 +12190,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Господарів цього циклу ще не оголошено. Від них залежить і те, чи зможете ви подати заявку.';
+      'Чи можете ви подати заявку, стане ясно, коли оголосять господарів цього циклу.';
 
   @override
   String get hostBidBackToBack =>
@@ -13145,4 +13145,29 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Невідомий гравець';
+
+  @override
+  String get hostingTitle => 'Проведення турнірів';
+
+  @override
+  String get hostingThisCycle => 'Цей цикл';
+
+  @override
+  String get hostingNextCycle => 'Ваша заявка на наступний цикл';
+
+  @override
+  String get hostingTba => 'Буде оголошено';
+
+  @override
+  String get hostingTbaWc =>
+      'Буде оголошено після завершення континентального чемпіонату';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Заявку подано: $amount, шанс прийняти турнір $percent.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Заявки приймаються наприкінці циклу, після фіналу чемпіонату світу.';
 }

@@ -142,6 +142,7 @@ class HostBidStatus {
     this.backToBack = false,
     this.rulesPending = false,
     this.otherBidLodged = false,
+    this.pledge,
   });
 
   final HostBidComp comp;
@@ -181,6 +182,10 @@ class HostBidStatus {
 
   /// A bid for this edition is already in (pledged, paid or decided).
   final bool lodged;
+
+  /// The lodged bid itself, when [lodged]: what it puts in and the chance it
+  /// froze when it was made.
+  final HostBidMarker? pledge;
 
   /// The offer was turned down.
   final bool declined;
@@ -257,6 +262,44 @@ bool _lodged(
   }
   return false;
 }
+
+/// [nationId]'s bid for [comp]'s [editionCycle] (paid or pledged), or null.
+HostBidMarker? _bidOf(
+  List<String> kinds,
+  HostBidComp comp,
+  int editionCycle,
+  int nationId,
+) {
+  for (final k in kinds) {
+    final m = HostBidMarker.decode(k) ?? HostBidMarker.decodePledge(k);
+    if (m != null &&
+        m.comp == comp &&
+        m.editionCycle == editionCycle &&
+        m.nationId == nationId) {
+      return m;
+    }
+  }
+  return null;
+}
+
+/// Which of [cycle]'s hosts [careerId]'s manager has been shown: by their
+/// ceremony, by the finals draw that names them, or by the cycle being over
+/// ([cycleOver]). Nothing may print or judge by a host still hidden.
+Future<({bool worldCup, bool continental})> hostsShown(
+  CompetitionRepository comp,
+  int careerId,
+  int cycle, {
+  required bool cycleOver,
+}) async => (
+  worldCup:
+      cycleOver ||
+      await comp.hasWatchedDraw(careerId, cycle, worldCupHostDrawKind) ||
+      await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind),
+  continental:
+      cycleOver ||
+      await comp.hasWatchedDraw(careerId, cycle, continentalHostDrawKind) ||
+      await comp.hasWatchedDraw(careerId, cycle, continentalFinalsDrawKind),
+);
 
 /// Whether [nationId] turned [comp]'s [editionCycle] offer down (an old
 /// marker naming no nation counts for every nation).
@@ -394,18 +437,14 @@ hostBidStatusProvider = FutureProvider.autoDispose
       // ceremony, by the finals draw that names them, or by the cycle being
       // over. The next editions' rules turn on them, so the card must not
       // judge by one still hidden.
-      final wcKnown =
-          windowOpen ||
-          await comp.hasWatchedDraw(careerId, cycle, worldCupHostDrawKind) ||
-          await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind);
-      final contKnown =
-          windowOpen ||
-          await comp.hasWatchedDraw(
-            careerId,
-            cycle,
-            continentalHostDrawKind,
-          ) ||
-          await comp.hasWatchedDraw(careerId, cycle, continentalFinalsDrawKind);
+      final known = await hostsShown(
+        comp,
+        careerId,
+        cycle,
+        cycleOver: windowOpen,
+      );
+      final wcKnown = known.worldCup;
+      final contKnown = known.continental;
       // A cycle's hosts are known once shown (above); an earlier cycle's
       // always are.
       bool shown(int hostCycle, {required bool worldCup}) =>
@@ -465,6 +504,7 @@ hostBidStatusProvider = FutureProvider.autoDispose
           rulesPending: pending && barred == null && !recent && !backToBack,
           otherBidLodged: otherLodged,
           lodged: lodged,
+          pledge: lodged ? _bidOf(kinds, c, edition, me.id) : null,
           declined: _declined(kinds, c, edition, me.id),
           windowOpen: windowOpen,
           offer: windowOpen && ok && !settled && funds >= HostBidOdds.levelPrice
@@ -534,6 +574,93 @@ hostBidStatusProvider = FutureProvider.autoDispose
         ),
       );
       return statuses;
+    });
+
+/// One tournament of the current cycle and its hosts, for the Federation
+/// screen's Hosting card.
+class CycleHosting {
+  const CycleHosting({
+    required this.comp,
+    required this.confederation,
+    required this.year,
+    required this.hosts,
+  });
+
+  final HostBidComp comp;
+
+  /// The manager's confederation (names the continental championship).
+  final Confederation confederation;
+  final int year;
+
+  /// The host nations, primary first; null while the manager has not been
+  /// shown them (see [hostsShown]).
+  final List<Nation>? hosts;
+}
+
+/// The current cycle's two senior tournaments (the manager's continental
+/// championship, then the World Championship) with their hosts, each only
+/// once revealed to the manager. Campaigns and free saves too: hosts are
+/// news, not a bid.
+final AutoDisposeFutureProviderFamily<List<CycleHosting>, int>
+cycleHostingProvider = FutureProvider.autoDispose
+    .family<List<CycleHosting>, int>((ref, careerId) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return const [];
+      final comp = ref.watch(competitionRepositoryProvider);
+      final cycle = career.cyclePointer;
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .forCareer(careerId);
+      final byId = {for (final n in nations) n.id: n};
+      final me = byId[career.nationId];
+      if (me == null) return const [];
+      final known = await hostsShown(
+        comp,
+        careerId,
+        cycle,
+        cycleOver: await comp.worldChampion(careerId) != null,
+      );
+      List<Nation> named(List<int> ids) => [
+        for (final id in ids) ?byId[id],
+      ];
+      final out = <CycleHosting>[];
+      if (ContinentalCups.byConfederation[me.confederation] != null) {
+        out.add(
+          CycleHosting(
+            comp: HostBidComp.continental,
+            confederation: me.confederation,
+            year: CareerService.continentalFinalsYear(cycle),
+            hosts: known.continental
+                ? named(
+                    WorldCupHosts.continentalHostsFor(
+                      confederation: me.confederation,
+                      cycle: cycle,
+                      seed: career.rngSeed,
+                      nations: nations,
+                    ),
+                  )
+                : null,
+          ),
+        );
+      }
+      final year = CareerService.worldCupYear(cycle);
+      out.add(
+        CycleHosting(
+          comp: HostBidComp.worldChampionship,
+          confederation: me.confederation,
+          year: year,
+          hosts: known.worldCup
+              ? named(
+                  WorldCupHosts.hostsFor(
+                    year: year,
+                    nations: nations,
+                    seed: career.rngSeed,
+                  ),
+                )
+              : null,
+        ),
+      );
+      return out;
     });
 
 /// The bids open to a career right now, continental first: the open offers
@@ -755,6 +882,7 @@ class HostBidService {
       ..invalidate(hostBidStatusProvider)
       ..invalidate(hostBidOffersProvider)
       ..invalidate(hostBidOfferProvider)
+      ..invalidate(cycleHostingProvider)
       ..invalidate(federationFundsProvider(careerId))
       ..invalidate(financeViewProvider(careerId))
       // The world now carries the bid (or its outcome): anything holding the

@@ -12145,7 +12145,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Οι διοργανωτές αυτού του κύκλου δεν έχουν ανακοινωθεί ακόμη. Από αυτούς εξαρτάται και το αν μπορείτε να είστε υποψήφιοι.';
+      'Αν μπορείτε να είστε υποψήφιοι θα φανεί μόλις ανακοινωθούν οι διοργανωτές αυτού του κύκλου.';
 
   @override
   String get hostBidBackToBack =>
@@ -13088,4 +13088,28 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Άγνωστος παίκτης';
+
+  @override
+  String get hostingTitle => 'Διοργάνωση';
+
+  @override
+  String get hostingThisCycle => 'Αυτός ο κύκλος';
+
+  @override
+  String get hostingNextCycle => 'Η υποψηφιότητά σας για τον επόμενο κύκλο';
+
+  @override
+  String get hostingTba => 'Θα ανακοινωθεί';
+
+  @override
+  String get hostingTbaWc => 'Θα ανακοινωθεί μετά το ηπειρωτικό πρωτάθλημα';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Υποψηφιότητα κατατέθηκε: $amount, με $percent πιθανότητα διοργάνωσης.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Οι υποψηφιότητες ανοίγουν στο τέλος του κύκλου, μετά τον τελικό του Παγκοσμίου Πρωταθλήματος.';
 }

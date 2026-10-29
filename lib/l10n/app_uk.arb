@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Вам бракує ще 1 стадіону на {seats}+ місць.} other{Бракує стадіонів на {seats}+ місць: {count}.}}",
   "hostBidBarredConf": "{confederation} приймала останній Чемпіонат світу.",
   "hostBidRecentHost": "Ви приймали один із трьох останніх турнірів.",
-  "hostBidRulesPending": "Господарів цього циклу ще не оголошено. Від них залежить і те, чи зможете ви подати заявку.",
+  "hostBidRulesPending": "Чи можете ви подати заявку, стане ясно, коли оголосять господарів цього циклу.",
   "hostBidBackToBack": "Ви приймаєте турнір, що йде безпосередньо перед цим. Жодна країна не приймає два турніри поспіль.",
   "hostBidOneOnly": "Ви вже подали заявку на інший турнір. Жодна країна не приймає два турніри поспіль, тож подати заявку можна лише на один.",
   "hostBidRequirement": "Вимога: стадіонів на {minSeats}+ місць: {grounds}, з них на {bigSeats}+: {bigGrounds}.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Твої гравці",
   "potyHistoryNoYourPlayers": "Жоден із твоїх гравців ще не потрапляв до першої п’ятірки.",
   "potyHistoryYoung": "Молодий гравець",
-  "potyHistoryUnknownPlayer": "Невідомий гравець"
+  "potyHistoryUnknownPlayer": "Невідомий гравець",
+  "hostingTitle": "Проведення турнірів",
+  "hostingThisCycle": "Цей цикл",
+  "hostingNextCycle": "Ваша заявка на наступний цикл",
+  "hostingTba": "Буде оголошено",
+  "hostingTbaWc": "Буде оголошено після завершення континентального чемпіонату",
+  "hostingBidPledged": "Заявку подано: {amount}, шанс прийняти турнір {percent}.",
+  "hostingWindowLine": "Заявки приймаються наприкінці циклу, після фіналу чемпіонату світу."
 }

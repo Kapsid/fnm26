@@ -12134,7 +12134,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Die Gastgeber dieses Zyklus stehen noch nicht fest. Ob Sie sich bewerben können, hängt auch von ihnen ab.';
+      'Ob Sie sich bewerben können, steht fest, sobald die Gastgeber dieses Zyklus bekanntgegeben sind.';
 
   @override
   String get hostBidBackToBack =>
@@ -13084,4 +13084,29 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Unbekannter Spieler';
+
+  @override
+  String get hostingTitle => 'Gastgeber';
+
+  @override
+  String get hostingThisCycle => 'Dieser Zyklus';
+
+  @override
+  String get hostingNextCycle => 'Ihre Bewerbung für den nächsten Zyklus';
+
+  @override
+  String get hostingTba => 'Wird noch bekanntgegeben';
+
+  @override
+  String get hostingTbaWc =>
+      'Wird nach der Kontinentalmeisterschaft bekanntgegeben';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Bewerbung eingereicht: $amount, mit $percent Chance auf den Zuschlag.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Bewerbungen sind am Ende des Zyklus möglich, nach dem Finale der Weltmeisterschaft.';
 }

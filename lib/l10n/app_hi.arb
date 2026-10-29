@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{आपको {seats}+ सीटों वाला 1 और स्टेडियम चाहिए।} other{आपको {seats}+ सीटों वाले {count} और स्टेडियम चाहिए।}}",
   "hostBidBarredConf": "पिछली विश्व चैंपियनशिप की मेज़बानी {confederation} ने की थी।",
   "hostBidRecentHost": "आपने पिछले तीन संस्करणों में से एक की मेज़बानी की थी।",
-  "hostBidRulesPending": "इस चक्र के मेज़बानों की घोषणा अभी बाकी है। आप दावेदारी कर सकते हैं या नहीं, यह उन पर भी निर्भर है।",
+  "hostBidRulesPending": "आप दावेदारी कर सकते हैं या नहीं, यह इस चक्र के मेज़बानों की घोषणा के बाद साफ़ होगा।",
   "hostBidBackToBack": "आप इससे ठीक पहले वाले टूर्नामेंट की मेज़बानी कर रहे हैं। कोई भी देश लगातार दो टूर्नामेंटों की मेज़बानी नहीं करता।",
   "hostBidOneOnly": "आप दूसरे टूर्नामेंट के लिए दावेदारी कर चुके हैं। कोई भी देश लगातार दो टूर्नामेंटों की मेज़बानी नहीं करता, इसलिए आप केवल एक के लिए दावेदारी कर सकते हैं।",
   "hostBidRequirement": "शर्त: {minSeats}+ सीटों वाले {grounds} स्टेडियम, जिनमें {bigGrounds} में {bigSeats}+ सीटें हों।",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "आपके खिलाड़ी",
   "potyHistoryNoYourPlayers": "आपका कोई भी खिलाड़ी अभी तक टॉप 5 में नहीं पहुँचा है।",
   "potyHistoryYoung": "युवा खिलाड़ी",
-  "potyHistoryUnknownPlayer": "अज्ञात खिलाड़ी"
+  "potyHistoryUnknownPlayer": "अज्ञात खिलाड़ी",
+  "hostingTitle": "मेज़बानी",
+  "hostingThisCycle": "यह चक्र",
+  "hostingNextCycle": "अगले चक्र के लिए आपकी दावेदारी",
+  "hostingTba": "घोषणा होनी बाकी",
+  "hostingTbaWc": "महाद्वीपीय चैंपियनशिप खत्म होने के बाद घोषित होगा",
+  "hostingBidPledged": "दावेदारी दर्ज: {amount}, मेज़बानी की संभावना {percent}।",
+  "hostingWindowLine": "दावेदारी चक्र के अंत में, विश्व चैंपियनशिप के फ़ाइनल के बाद खुलती है।"
 }

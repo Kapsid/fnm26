@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Chybí vám ještě 1 stadion s kapacitou {seats}+ míst.} other{Chybějící stadiony s kapacitou {seats}+ míst: {count}.}}",
   "hostBidBarredConf": "{confederation} pořádala minulé Mistrovství světa.",
   "hostBidRecentHost": "Pořádali jste jeden z posledních tří ročníků.",
-  "hostBidRulesPending": "Pořadatelé tohoto cyklu zatím nebyli oznámeni. Na nich závisí i to, zda můžete kandidovat.",
+  "hostBidRulesPending": "Zda můžete kandidovat, bude jasné, až budou oznámeni pořadatelé tohoto cyklu.",
   "hostBidBackToBack": "Pořádáte turnaj bezprostředně před tímto. Žádná země nepořádá dva turnaje po sobě.",
   "hostBidOneOnly": "Už jste kandidovali na druhý turnaj. Žádná země nepořádá dva turnaje po sobě, proto můžete kandidovat jen na jeden.",
   "hostBidRequirement": "Podmínka: stadiony s kapacitou {minSeats}+ míst: {grounds}, z toho {bigSeats}+ míst: {bigGrounds}.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Vaši hráči",
   "potyHistoryNoYourPlayers": "Žádný z vašich hráčů se zatím neumístil v první pětce.",
   "potyHistoryYoung": "Mladý hráč",
-  "potyHistoryUnknownPlayer": "Neznámý hráč"
+  "potyHistoryUnknownPlayer": "Neznámý hráč",
+  "hostingTitle": "Pořadatelství",
+  "hostingThisCycle": "Tento cyklus",
+  "hostingNextCycle": "Vaše kandidatura na příští cyklus",
+  "hostingTba": "Bude oznámeno",
+  "hostingTbaWc": "Bude oznámeno po skončení kontinentálního mistrovství",
+  "hostingBidPledged": "Kandidatura podána: {amount}, šance na pořadatelství {percent}.",
+  "hostingWindowLine": "Kandidovat lze na konci cyklu, po finále mistrovství světa."
 }

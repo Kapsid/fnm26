@@ -12059,7 +12059,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Tuan rumah siklus ini belum diumumkan. Bisa tidaknya Anda mencalonkan diri juga bergantung pada mereka.';
+      'Bisa tidaknya Anda mencalonkan diri akan jelas setelah tuan rumah siklus ini diumumkan.';
 
   @override
   String get hostBidBackToBack =>
@@ -13000,4 +13000,28 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Pemain tak dikenal';
+
+  @override
+  String get hostingTitle => 'Tuan rumah';
+
+  @override
+  String get hostingThisCycle => 'Siklus ini';
+
+  @override
+  String get hostingNextCycle => 'Pencalonan Anda untuk siklus berikutnya';
+
+  @override
+  String get hostingTba => 'Akan diumumkan';
+
+  @override
+  String get hostingTbaWc => 'Diumumkan setelah kejuaraan kontinental selesai';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Pencalonan diajukan: $amount, dengan peluang $percent menjadi tuan rumah.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Pencalonan dibuka di akhir siklus, setelah final Kejuaraan Dunia.';
 }

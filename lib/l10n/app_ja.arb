@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{{seats}席以上のスタジアムがあと1つ必要です。} other{{seats}席以上のスタジアムがあと{count}つ必要です。}}",
   "hostBidBarredConf": "前回の世界選手権は{confederation}で開催されました。",
   "hostBidRecentHost": "直近3大会のいずれかを開催しています。",
-  "hostBidRulesPending": "このサイクルの開催国はまだ発表されていません。招致できるかどうかは開催国にも左右されます。",
+  "hostBidRulesPending": "招致できるかどうかは、このサイクルの開催国が発表されれば分かります。",
   "hostBidBackToBack": "この大会の直前の大会を開催します。2大会続けて開催できる国はありません。",
   "hostBidOneOnly": "もう一方の大会に招致を申し込み済みです。2大会続けて開催できる国はないため、招致できるのは一方のみです。",
   "hostBidRequirement": "条件: {minSeats}席以上のスタジアム{grounds}つ、うち{bigGrounds}つは{bigSeats}席以上。",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "あなたの選手",
   "potyHistoryNoYourPlayers": "あなたの選手はまだトップ5に入っていません。",
   "potyHistoryYoung": "若手",
-  "potyHistoryUnknownPlayer": "不明な選手"
+  "potyHistoryUnknownPlayer": "不明な選手",
+  "hostingTitle": "大会開催",
+  "hostingThisCycle": "今サイクル",
+  "hostingNextCycle": "次サイクルへの招致",
+  "hostingTba": "未発表",
+  "hostingTbaWc": "大陸選手権の終了後に発表",
+  "hostingBidPledged": "招致済み: {amount}、開催確率 {percent}。",
+  "hostingWindowLine": "招致はサイクルの終わり、世界選手権の決勝後に受け付けます。"
 }

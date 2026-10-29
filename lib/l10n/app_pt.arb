@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Falta-lhe 1 estádio de {seats}+ lugares.} other{Faltam-lhe {count} estádios de {seats}+ lugares.}}",
   "hostBidBarredConf": "{confederation} recebeu o último Campeonato Mundial.",
   "hostBidRecentHost": "Recebeu uma das três últimas edições.",
-  "hostBidRulesPending": "As sedes deste ciclo ainda não foram anunciadas. Poder candidatar-se também depende delas.",
+  "hostBidRulesPending": "Saberá se pode candidatar-se quando forem anunciados os anfitriões deste ciclo.",
   "hostBidBackToBack": "Recebe o torneio imediatamente anterior a este. Nenhum país recebe dois torneios seguidos.",
   "hostBidOneOnly": "Já se candidatou ao outro torneio. Nenhum país recebe dois torneios seguidos, por isso só pode candidatar-se a um.",
   "hostBidRequirement": "Requisito: {grounds} estádios de {minSeats}+ lugares, {bigGrounds} deles com {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Seus jogadores",
   "potyHistoryNoYourPlayers": "Nenhum dos seus jogadores terminou entre os cinco primeiros ainda.",
   "potyHistoryYoung": "Jovem",
-  "potyHistoryUnknownPlayer": "Jogador desconhecido"
+  "potyHistoryUnknownPlayer": "Jogador desconhecido",
+  "hostingTitle": "Organização",
+  "hostingThisCycle": "Este ciclo",
+  "hostingNextCycle": "A sua candidatura para o próximo ciclo",
+  "hostingTba": "A anunciar",
+  "hostingTbaWc": "Será anunciado no fim do campeonato continental",
+  "hostingBidPledged": "Candidatura apresentada: {amount}, com {percent} de hipóteses de organizar.",
+  "hostingWindowLine": "As candidaturas abrem no fim do ciclo, após a final do Campeonato Mundial."
 }

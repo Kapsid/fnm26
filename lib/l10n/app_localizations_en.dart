@@ -12072,7 +12072,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'This cycle\'s hosts are still to be announced. Whether you can bid also depends on them.';
+      'Whether you can bid will be clear once this cycle\'s hosts are announced.';
 
   @override
   String get hostBidBackToBack =>
@@ -13015,4 +13015,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Unknown player';
+
+  @override
+  String get hostingTitle => 'Hosting';
+
+  @override
+  String get hostingThisCycle => 'This cycle';
+
+  @override
+  String get hostingNextCycle => 'Your bid for the next cycle';
+
+  @override
+  String get hostingTba => 'To be announced';
+
+  @override
+  String get hostingTbaWc =>
+      'To be announced once the continental championship is over';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Bid pledged: $amount, with a $percent chance to host.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Bids open at the end of the cycle, after the World Championship final.';
 }

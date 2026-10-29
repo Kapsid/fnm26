@@ -122,14 +122,32 @@ class _HostBidScreenState extends ConsumerState<HostBidScreen> {
 
   Widget _content(AppLocalizations l, HostBidOffer? offer) {
     if (offer == null) {
+      // Opened from the Federation screen before (or after) the window: the
+      // edition's needs and where the bid stands, and when it opens.
+      final statuses =
+          ref
+              .watch(
+                hostBidStatusProvider((
+                  careerId: widget.careerId,
+                  nationId: widget.nationId,
+                )),
+              )
+              .valueOrNull ??
+          const <HostBidStatus>[];
+      final waiting = statuses.any((s) => !s.windowOpen);
       return Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppSpacing.marginMobile),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              HostBidStatusCard(
+                careerId: widget.careerId,
+                nationId: widget.nationId,
+              ),
               Text(
-                l.hostBidUnavailable,
+                waiting ? l.hostingWindowLine : l.hostBidUnavailable,
                 textAlign: TextAlign.center,
                 style: AppTypography.bodyMedium,
               ),
@@ -559,7 +577,7 @@ class HostBidStatusCard extends ConsumerWidget {
                 ),
               ),
               for (final s in statuses)
-                _StatusRow(
+                HostBidStatusRow(
                   status: s,
                   seats: seats,
                   onTap: interactive && s.offer != null
@@ -574,9 +592,15 @@ class HostBidStatusCard extends ConsumerWidget {
   }
 }
 
-/// One tournament in [HostBidStatusCard].
-class _StatusRow extends StatelessWidget {
-  const _StatusRow({required this.status, required this.seats, this.onTap});
+/// One tournament in [HostBidStatusCard] (and the Federation screen's
+/// Hosting card): what the edition needs and where the bid stands.
+class HostBidStatusRow extends StatelessWidget {
+  const HostBidStatusRow({
+    required this.status,
+    required this.seats,
+    this.onTap,
+    super.key,
+  });
 
   final HostBidStatus status;
   final NumberFormat seats;
@@ -597,7 +621,16 @@ class _StatusRow extends StatelessWidget {
     final lines = <(String, Color)>[];
     const muted = AppColors.onSurfaceVariant;
     if (s.lodged) {
-      lines.add((l.hostBidLodged, AppColors.positive));
+      final pledge = s.pledge;
+      lines.add((
+        pledge == null
+            ? l.hostBidLodged
+            : l.hostingBidPledged(
+                formatEuros(pledge.invested),
+                _pct(pledge.chance),
+              ),
+        AppColors.positive,
+      ));
     } else if (s.declined) {
       lines.add((l.hostBidDeclinedNote, muted));
     } else if (s.otherBidLodged) {

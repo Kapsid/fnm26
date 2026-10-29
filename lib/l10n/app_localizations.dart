@@ -18486,7 +18486,7 @@ abstract class AppLocalizations {
   /// Hosting-bids card: this cycle's hosts are not revealed yet, and the next editions' rules depend on them. Shown to every nation alike, so it never hints at who hosts.
   ///
   /// In en, this message translates to:
-  /// **'This cycle\'s hosts are still to be announced. Whether you can bid also depends on them.'**
+  /// **'Whether you can bid will be clear once this cycle\'s hosts are announced.'**
   String get hostBidRulesPending;
 
   /// Hosting-bids card: the nation hosts the tournament right before this one (World Championship before the next continental championship, or the continental championship before the World Championship); no nation hosts two in a row.
@@ -19735,6 +19735,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown player'**
   String get potyHistoryUnknownPlayer;
+
+  /// Federation screen: title of the Hosting card (this cycle's tournament hosts and the manager's bid for the next cycle).
+  ///
+  /// In en, this message translates to:
+  /// **'Hosting'**
+  String get hostingTitle;
+
+  /// Hosting card: section heading for the current cycle's tournaments and their hosts.
+  ///
+  /// In en, this message translates to:
+  /// **'This cycle'**
+  String get hostingThisCycle;
+
+  /// Hosting card: section heading for the manager's hosting bid for the next cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bid for the next cycle'**
+  String get hostingNextCycle;
+
+  /// Hosting card: this tournament's host has not been revealed to the manager yet.
+  ///
+  /// In en, this message translates to:
+  /// **'To be announced'**
+  String get hostingTba;
+
+  /// Hosting card: the World Championship host is not revealed yet; it is revealed after the continental championship.
+  ///
+  /// In en, this message translates to:
+  /// **'To be announced once the continental championship is over'**
+  String get hostingTbaWc;
+
+  /// Hosting card: the manager's bid is in. amount is formatted euros, percent the chance shown when bidding, e.g. 24%.
+  ///
+  /// In en, this message translates to:
+  /// **'Bid pledged: {amount}, with a {percent} chance to host.'**
+  String hostingBidPledged(String amount, String percent);
+
+  /// Hosting card: when the bid window opens (the cycle's close, after the World Championship final).
+  ///
+  /// In en, this message translates to:
+  /// **'Bids open at the end of the cycle, after the World Championship final.'**
+  String get hostingWindowLine;
 }
 
 class _AppLocalizationsDelegate

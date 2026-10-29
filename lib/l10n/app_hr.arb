@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Nedostaje vam još 1 stadion s {seats}+ mjesta.} other{Stadioni s {seats}+ mjesta koji vam nedostaju: {count}.}}",
   "hostBidBarredConf": "{confederation} je bila domaćin posljednjeg Svjetskog prvenstva.",
   "hostBidRecentHost": "Bili ste domaćin jednog od posljednja tri izdanja.",
-  "hostBidRulesPending": "Domaćini ovog ciklusa još nisu objavljeni. O njima ovisi i možete li se kandidirati.",
+  "hostBidRulesPending": "Možete li se kandidirati, bit će jasno kad se objave domaćini ovog ciklusa.",
   "hostBidBackToBack": "Domaćin ste turnira neposredno prije ovoga. Nijedna zemlja nije domaćin dvaju turnira zaredom.",
   "hostBidOneOnly": "Već ste se kandidirali za drugi turnir. Nijedna zemlja nije domaćin dvaju turnira zaredom, pa se možete kandidirati samo za jedan.",
   "hostBidRequirement": "Uvjet: stadioni s {minSeats}+ mjesta: {grounds}, od toga s {bigSeats}+: {bigGrounds}.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Tvoji igrači",
   "potyHistoryNoYourPlayers": "Nijedan tvoj igrač još nije završio među prvih pet.",
   "potyHistoryYoung": "Mladi igrač",
-  "potyHistoryUnknownPlayer": "Nepoznati igrač"
+  "potyHistoryUnknownPlayer": "Nepoznati igrač",
+  "hostingTitle": "Domaćinstvo",
+  "hostingThisCycle": "Ovaj ciklus",
+  "hostingNextCycle": "Vaša kandidatura za sljedeći ciklus",
+  "hostingTba": "Bit će objavljeno",
+  "hostingTbaWc": "Bit će objavljeno nakon kontinentalnog prvenstva",
+  "hostingBidPledged": "Kandidatura predana: {amount}, uz {percent} šanse za domaćinstvo.",
+  "hostingWindowLine": "Kandidature se otvaraju na kraju ciklusa, nakon finala Svjetskog prvenstva."
 }

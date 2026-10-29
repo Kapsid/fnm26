@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Vă mai trebuie 1 stadion de {seats}+ locuri.} other{Stadioane de {seats}+ locuri care vă lipsesc: {count}.}}",
   "hostBidBarredConf": "Ultimul Campionat Mondial a fost găzduit de: {confederation}.",
   "hostBidRecentHost": "Ați găzduit una dintre ultimele trei ediții.",
-  "hostBidRulesPending": "Gazdele acestui ciclu nu au fost încă anunțate. Și de ele depinde dacă puteți candida.",
+  "hostBidRulesPending": "Dacă puteți candida va fi clar după ce sunt anunțate gazdele acestui ciclu.",
   "hostBidBackToBack": "Găzduiți turneul de imediat dinaintea acestuia. Nicio țară nu găzduiește două turnee la rând.",
   "hostBidOneOnly": "Ați candidat deja pentru celălalt turneu. Nicio țară nu găzduiește două turnee la rând, așa că puteți candida doar pentru unul.",
   "hostBidRequirement": "Cerință: stadioane de {minSeats}+ locuri: {grounds}, dintre care de {bigSeats}+: {bigGrounds}.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Jucătorii dvs.",
   "potyHistoryNoYourPlayers": "Niciunul dintre jucătorii dvs. nu a terminat încă în primii cinci.",
   "potyHistoryYoung": "Tânăr jucător",
-  "potyHistoryUnknownPlayer": "Jucător necunoscut"
+  "potyHistoryUnknownPlayer": "Jucător necunoscut",
+  "hostingTitle": "Găzduire",
+  "hostingThisCycle": "Acest ciclu",
+  "hostingNextCycle": "Candidatura dvs. pentru ciclul următor",
+  "hostingTba": "Urmează să fie anunțat",
+  "hostingTbaWc": "Va fi anunțat după încheierea campionatului continental",
+  "hostingBidPledged": "Candidatură depusă: {amount}, cu o șansă de {percent} de a găzdui.",
+  "hostingWindowLine": "Candidaturile se deschid la sfârșitul ciclului, după finala Campionatului Mondial."
 }

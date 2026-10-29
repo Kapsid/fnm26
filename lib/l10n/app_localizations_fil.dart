@@ -12146,7 +12146,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Hindi pa inaanunsyo ang mga host ng cycle na ito. Nakasalalay rin sa kanila kung puwede kang mag-bid.';
+      'Malalaman kung puwede kang mag-bid kapag naianunsyo na ang mga host ng cycle na ito.';
 
   @override
   String get hostBidBackToBack =>
@@ -13094,4 +13094,28 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Hindi kilalang manlalaro';
+
+  @override
+  String get hostingTitle => 'Pagho-host';
+
+  @override
+  String get hostingThisCycle => 'Cycle na ito';
+
+  @override
+  String get hostingNextCycle => 'Ang bid mo para sa susunod na cycle';
+
+  @override
+  String get hostingTba => 'Iaanunsyo pa';
+
+  @override
+  String get hostingTbaWc => 'Iaanunsyo pagkatapos ng kampeonato ng kontinente';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Naisumite ang bid: $amount, may $percent na tsansang mag-host.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Bukas ang mga bid sa dulo ng cycle, pagkatapos ng final ng Kampeonato ng Mundo.';
 }

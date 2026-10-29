@@ -12107,7 +12107,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Tuan rumah kitaran ini belum diumumkan. Sama ada Anda boleh membida juga bergantung pada mereka.';
+      'Sama ada anda boleh membida akan jelas apabila tuan rumah kitaran ini diumumkan.';
 
   @override
   String get hostBidBackToBack =>
@@ -13047,4 +13047,28 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Pemain tidak dikenali';
+
+  @override
+  String get hostingTitle => 'Tuan rumah';
+
+  @override
+  String get hostingThisCycle => 'Kitaran ini';
+
+  @override
+  String get hostingNextCycle => 'Bidaan anda untuk kitaran seterusnya';
+
+  @override
+  String get hostingTba => 'Akan diumumkan';
+
+  @override
+  String get hostingTbaWc => 'Diumumkan selepas kejohanan benua tamat';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Bidaan dikemukakan: $amount, dengan peluang $percent menjadi tuan rumah.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Bidaan dibuka pada akhir kitaran, selepas final Kejohanan Dunia.';
 }

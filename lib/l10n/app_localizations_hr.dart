@@ -12266,7 +12266,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Domaćini ovog ciklusa još nisu objavljeni. O njima ovisi i možete li se kandidirati.';
+      'Možete li se kandidirati, bit će jasno kad se objave domaćini ovog ciklusa.';
 
   @override
   String get hostBidBackToBack =>
@@ -13213,4 +13213,28 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Nepoznati igrač';
+
+  @override
+  String get hostingTitle => 'Domaćinstvo';
+
+  @override
+  String get hostingThisCycle => 'Ovaj ciklus';
+
+  @override
+  String get hostingNextCycle => 'Vaša kandidatura za sljedeći ciklus';
+
+  @override
+  String get hostingTba => 'Bit će objavljeno';
+
+  @override
+  String get hostingTbaWc => 'Bit će objavljeno nakon kontinentalnog prvenstva';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Kandidatura predana: $amount, uz $percent šanse za domaćinstvo.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Kandidature se otvaraju na kraju ciklusa, nakon finala Svjetskog prvenstva.';
 }

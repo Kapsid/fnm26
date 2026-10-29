@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Du behöver 1 arena till med {seats}+ platser.} other{Du behöver {count} arenor till med {seats}+ platser.}}",
   "hostBidBarredConf": "{confederation} var värd för det senaste Världsmästerskapet.",
   "hostBidRecentHost": "Du var värd för en av de tre senaste upplagorna.",
-  "hostBidRulesPending": "Den här cykelns värdländer har inte tillkännagetts än. Om du kan söka beror också på dem.",
+  "hostBidRulesPending": "Om du kan söka blir klart när den här cykelns värdar har tillkännagetts.",
   "hostBidBackToBack": "Du är värd för turneringen precis före den här. Inget land är värd för två turneringar i rad.",
   "hostBidOneOnly": "Du har redan sökt den andra turneringen. Inget land är värd för två turneringar i rad, så du kan bara söka en.",
   "hostBidRequirement": "Krav: {grounds} arenor med {minSeats}+ platser, varav {bigGrounds} med {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Dina spelare",
   "potyHistoryNoYourPlayers": "Ingen av dina spelare har slutat bland de fem bästa än.",
   "potyHistoryYoung": "Ung spelare",
-  "potyHistoryUnknownPlayer": "Okänd spelare"
+  "potyHistoryUnknownPlayer": "Okänd spelare",
+  "hostingTitle": "Värdskap",
+  "hostingThisCycle": "Den här cykeln",
+  "hostingNextCycle": "Din ansökan för nästa cykel",
+  "hostingTba": "Meddelas senare",
+  "hostingTbaWc": "Meddelas när kontinentalmästerskapet är över",
+  "hostingBidPledged": "Ansökan inlämnad: {amount}, med {percent} chans att bli värd.",
+  "hostingWindowLine": "Ansökningar öppnar i slutet av cykeln, efter finalen i Världsmästerskapet."
 }

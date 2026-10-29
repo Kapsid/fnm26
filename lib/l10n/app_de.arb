@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Ihnen fehlt noch 1 Stadion mit {seats}+ Plätzen.} other{Ihnen fehlen noch {count} Stadien mit {seats}+ Plätzen.}}",
   "hostBidBarredConf": "{confederation} hat die letzte Weltmeisterschaft ausgerichtet.",
   "hostBidRecentHost": "Sie waren Gastgeber einer der letzten drei Ausgaben.",
-  "hostBidRulesPending": "Die Gastgeber dieses Zyklus stehen noch nicht fest. Ob Sie sich bewerben können, hängt auch von ihnen ab.",
+  "hostBidRulesPending": "Ob Sie sich bewerben können, steht fest, sobald die Gastgeber dieses Zyklus bekanntgegeben sind.",
   "hostBidBackToBack": "Sie richten das Turnier direkt davor aus. Kein Land richtet zwei Turniere in Folge aus.",
   "hostBidOneOnly": "Sie haben sich bereits für das andere Turnier beworben. Kein Land richtet zwei Turniere in Folge aus, daher ist nur eine Bewerbung möglich.",
   "hostBidRequirement": "Bedingung: {grounds} Stadien mit {minSeats}+ Plätzen, davon {bigGrounds} mit {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Ihre Spieler",
   "potyHistoryNoYourPlayers": "Noch keiner Ihrer Spieler ist unter die besten fünf gekommen.",
   "potyHistoryYoung": "Junger Spieler",
-  "potyHistoryUnknownPlayer": "Unbekannter Spieler"
+  "potyHistoryUnknownPlayer": "Unbekannter Spieler",
+  "hostingTitle": "Gastgeber",
+  "hostingThisCycle": "Dieser Zyklus",
+  "hostingNextCycle": "Ihre Bewerbung für den nächsten Zyklus",
+  "hostingTba": "Wird noch bekanntgegeben",
+  "hostingTbaWc": "Wird nach der Kontinentalmeisterschaft bekanntgegeben",
+  "hostingBidPledged": "Bewerbung eingereicht: {amount}, mit {percent} Chance auf den Zuschlag.",
+  "hostingWindowLine": "Bewerbungen sind am Ende des Zyklus möglich, nach dem Finale der Weltmeisterschaft."
 }

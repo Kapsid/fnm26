@@ -12076,7 +12076,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'इस चक्र के मेज़बानों की घोषणा अभी बाकी है। आप दावेदारी कर सकते हैं या नहीं, यह उन पर भी निर्भर है।';
+      'आप दावेदारी कर सकते हैं या नहीं, यह इस चक्र के मेज़बानों की घोषणा के बाद साफ़ होगा।';
 
   @override
   String get hostBidBackToBack =>
@@ -13020,4 +13020,29 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'अज्ञात खिलाड़ी';
+
+  @override
+  String get hostingTitle => 'मेज़बानी';
+
+  @override
+  String get hostingThisCycle => 'यह चक्र';
+
+  @override
+  String get hostingNextCycle => 'अगले चक्र के लिए आपकी दावेदारी';
+
+  @override
+  String get hostingTba => 'घोषणा होनी बाकी';
+
+  @override
+  String get hostingTbaWc =>
+      'महाद्वीपीय चैंपियनशिप खत्म होने के बाद घोषित होगा';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'दावेदारी दर्ज: $amount, मेज़बानी की संभावना $percent।';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'दावेदारी चक्र के अंत में, विश्व चैंपियनशिप के फ़ाइनल के बाद खुलती है।';
 }

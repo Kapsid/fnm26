@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Anda masih butuh 1 stadion berkapasitas {seats}+ kursi.} other{Anda masih butuh {count} stadion berkapasitas {seats}+ kursi.}}",
   "hostBidBarredConf": "{confederation} menjadi tuan rumah Kejuaraan Dunia terakhir.",
   "hostBidRecentHost": "Anda menjadi tuan rumah salah satu dari tiga edisi terakhir.",
-  "hostBidRulesPending": "Tuan rumah siklus ini belum diumumkan. Bisa tidaknya Anda mencalonkan diri juga bergantung pada mereka.",
+  "hostBidRulesPending": "Bisa tidaknya Anda mencalonkan diri akan jelas setelah tuan rumah siklus ini diumumkan.",
   "hostBidBackToBack": "Anda menjadi tuan rumah turnamen tepat sebelum ini. Tidak ada negara yang menjadi tuan rumah dua turnamen berturut-turut.",
   "hostBidOneOnly": "Anda sudah mencalonkan diri untuk turnamen yang lain. Tidak ada negara yang menjadi tuan rumah dua turnamen berturut-turut, jadi Anda hanya bisa mencalonkan diri untuk satu.",
   "hostBidRequirement": "Syarat: {grounds} stadion berkapasitas {minSeats}+ kursi, {bigGrounds} di antaranya {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Pemain Anda",
   "potyHistoryNoYourPlayers": "Belum ada pemain Anda yang finis di lima besar.",
   "potyHistoryYoung": "Pemain muda",
-  "potyHistoryUnknownPlayer": "Pemain tak dikenal"
+  "potyHistoryUnknownPlayer": "Pemain tak dikenal",
+  "hostingTitle": "Tuan rumah",
+  "hostingThisCycle": "Siklus ini",
+  "hostingNextCycle": "Pencalonan Anda untuk siklus berikutnya",
+  "hostingTba": "Akan diumumkan",
+  "hostingTbaWc": "Diumumkan setelah kejuaraan kontinental selesai",
+  "hostingBidPledged": "Pencalonan diajukan: {amount}, dengan peluang {percent} menjadi tuan rumah.",
+  "hostingWindowLine": "Pencalonan dibuka di akhir siklus, setelah final Kejuaraan Dunia."
 }

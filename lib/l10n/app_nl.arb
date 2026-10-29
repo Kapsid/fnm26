@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Je hebt nog 1 stadion met {seats}+ plaatsen nodig.} other{Je hebt nog {count} stadions met {seats}+ plaatsen nodig.}}",
   "hostBidBarredConf": "{confederation} organiseerde het laatste Wereldkampioenschap.",
   "hostBidRecentHost": "Je was gastland van een van de laatste drie edities.",
-  "hostBidRulesPending": "De gastlanden van deze cyclus zijn nog niet bekendgemaakt. Of je je kandidaat kunt stellen, hangt ook van hen af.",
+  "hostBidRulesPending": "Of je je kandidaat kunt stellen, wordt duidelijk zodra de gastlanden van deze cyclus bekend zijn.",
   "hostBidBackToBack": "Je bent gastland van het toernooi vlak hiervoor. Geen land organiseert twee toernooien op rij.",
   "hostBidOneOnly": "Je hebt je al kandidaat gesteld voor het andere toernooi. Geen land organiseert twee toernooien op rij, dus je kunt je maar voor één kandidaat stellen.",
   "hostBidRequirement": "Eis: {grounds} stadions met {minSeats}+ plaatsen, waarvan {bigGrounds} met {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Jouw spelers",
   "potyHistoryNoYourPlayers": "Nog geen van jouw spelers is bij de beste vijf geëindigd.",
   "potyHistoryYoung": "Jong talent",
-  "potyHistoryUnknownPlayer": "Onbekende speler"
+  "potyHistoryUnknownPlayer": "Onbekende speler",
+  "hostingTitle": "Gastheerschap",
+  "hostingThisCycle": "Deze cyclus",
+  "hostingNextCycle": "Je kandidatuur voor de volgende cyclus",
+  "hostingTba": "Nog bekend te maken",
+  "hostingTbaWc": "Wordt bekendgemaakt na het continentale kampioenschap",
+  "hostingBidPledged": "Kandidatuur ingediend: {amount}, met {percent} kans om gastheer te worden.",
+  "hostingWindowLine": "Kandidaturen openen aan het eind van de cyclus, na de finale van het Wereldkampioenschap."
 }

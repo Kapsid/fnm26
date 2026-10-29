@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Du mangler 1 stadion mere med {seats}+ pladser.} other{Du mangler {count} stadioner mere med {seats}+ pladser.}}",
   "hostBidBarredConf": "{confederation} var vært for det seneste Verdensmesterskab.",
   "hostBidRecentHost": "Du var vært for en af de tre seneste udgaver.",
-  "hostBidRulesPending": "Værterne for denne cyklus er ikke offentliggjort endnu. Om du kan søge, afhænger også af dem.",
+  "hostBidRulesPending": "Om du kan søge, bliver klart, når værterne for denne cyklus er offentliggjort.",
   "hostBidBackToBack": "Du er vært for turneringen lige før denne. Ingen nation er vært for to turneringer i træk.",
   "hostBidOneOnly": "Du har allerede søgt om den anden turnering. Ingen nation er vært for to turneringer i træk, så du kan kun søge om én.",
   "hostBidRequirement": "Krav: {grounds} stadioner med {minSeats}+ pladser, heraf {bigGrounds} med {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Dine spillere",
   "potyHistoryNoYourPlayers": "Ingen af dine spillere er endnu sluttet blandt de fem bedste.",
   "potyHistoryYoung": "Ung spiller",
-  "potyHistoryUnknownPlayer": "Ukendt spiller"
+  "potyHistoryUnknownPlayer": "Ukendt spiller",
+  "hostingTitle": "Værtskab",
+  "hostingThisCycle": "Denne cyklus",
+  "hostingNextCycle": "Din ansøgning til næste cyklus",
+  "hostingTba": "Offentliggøres senere",
+  "hostingTbaWc": "Offentliggøres, når kontinentalmesterskabet er slut",
+  "hostingBidPledged": "Ansøgning indsendt: {amount}, med {percent} chance for værtskabet.",
+  "hostingWindowLine": "Ansøgninger åbner ved slutningen af cyklussen, efter finalen i Verdensmesterskabet."
 }

@@ -12025,7 +12025,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Chủ nhà của chu kỳ này chưa được công bố. Việc bạn có thể ứng cử hay không cũng phụ thuộc vào điều đó.';
+      'Bạn có thể ứng cử hay không sẽ rõ khi các nước chủ nhà của chu kỳ này được công bố.';
 
   @override
   String get hostBidBackToBack =>
@@ -12962,4 +12962,28 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Cầu thủ không rõ';
+
+  @override
+  String get hostingTitle => 'Đăng cai';
+
+  @override
+  String get hostingThisCycle => 'Chu kỳ này';
+
+  @override
+  String get hostingNextCycle => 'Hồ sơ ứng cử của bạn cho chu kỳ tới';
+
+  @override
+  String get hostingTba => 'Sẽ công bố sau';
+
+  @override
+  String get hostingTbaWc => 'Sẽ công bố khi giải vô địch châu lục kết thúc';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Đã nộp hồ sơ: $amount, cơ hội đăng cai $percent.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Việc ứng cử mở vào cuối chu kỳ, sau trận chung kết Giải vô địch thế giới.';
 }

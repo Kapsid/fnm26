@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Brakuje ci jeszcze 1 stadionu na {seats}+ miejsc.} other{Brakujące stadiony na {seats}+ miejsc: {count}.}}",
   "hostBidBarredConf": "{confederation} gościła ostatnie Mistrzostwa Świata.",
   "hostBidRecentHost": "Byłeś gospodarzem jednej z trzech ostatnich edycji.",
-  "hostBidRulesPending": "Gospodarze tego cyklu nie zostali jeszcze ogłoszeni. Od nich też zależy, czy możesz złożyć kandydaturę.",
+  "hostBidRulesPending": "Czy możesz kandydować, okaże się po ogłoszeniu gospodarzy tego cyklu.",
   "hostBidBackToBack": "Organizujesz turniej bezpośrednio przed tym. Żaden kraj nie jest gospodarzem dwóch turniejów z rzędu.",
   "hostBidOneOnly": "Złożyłeś już kandydaturę na drugi turniej. Żaden kraj nie jest gospodarzem dwóch turniejów z rzędu, więc możesz kandydować tylko na jeden.",
   "hostBidRequirement": "Wymóg: stadiony na {minSeats}+ miejsc: {grounds}, w tym na {bigSeats}+: {bigGrounds}.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Twoi zawodnicy",
   "potyHistoryNoYourPlayers": "Żaden z twoich zawodników nie zajął jeszcze miejsca w pierwszej piątce.",
   "potyHistoryYoung": "Młody",
-  "potyHistoryUnknownPlayer": "Nieznany zawodnik"
+  "potyHistoryUnknownPlayer": "Nieznany zawodnik",
+  "hostingTitle": "Organizacja",
+  "hostingThisCycle": "Ten cykl",
+  "hostingNextCycle": "Twoja kandydatura na kolejny cykl",
+  "hostingTba": "Do ogłoszenia",
+  "hostingTbaWc": "Zostanie ogłoszone po zakończeniu mistrzostw kontynentu",
+  "hostingBidPledged": "Kandydatura zgłoszona: {amount}, szansa na organizację {percent}.",
+  "hostingWindowLine": "Kandydatury można składać na koniec cyklu, po finale Mistrzostw Świata."
 }

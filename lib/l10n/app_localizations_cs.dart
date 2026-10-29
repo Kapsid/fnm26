@@ -12103,7 +12103,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Pořadatelé tohoto cyklu zatím nebyli oznámeni. Na nich závisí i to, zda můžete kandidovat.';
+      'Zda můžete kandidovat, bude jasné, až budou oznámeni pořadatelé tohoto cyklu.';
 
   @override
   String get hostBidBackToBack =>
@@ -13050,4 +13050,29 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Neznámý hráč';
+
+  @override
+  String get hostingTitle => 'Pořadatelství';
+
+  @override
+  String get hostingThisCycle => 'Tento cyklus';
+
+  @override
+  String get hostingNextCycle => 'Vaše kandidatura na příští cyklus';
+
+  @override
+  String get hostingTba => 'Bude oznámeno';
+
+  @override
+  String get hostingTbaWc =>
+      'Bude oznámeno po skončení kontinentálního mistrovství';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Kandidatura podána: $amount, šance na pořadatelství $percent.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Kandidovat lze na konci cyklu, po finále mistrovství světa.';
 }

@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Bạn cần thêm 1 sân {seats}+ chỗ.} other{Bạn cần thêm {count} sân {seats}+ chỗ.}}",
   "hostBidBarredConf": "{confederation} đã đăng cai Giải vô địch thế giới gần nhất.",
   "hostBidRecentHost": "Bạn đã đăng cai một trong ba kỳ gần nhất.",
-  "hostBidRulesPending": "Chủ nhà của chu kỳ này chưa được công bố. Việc bạn có thể ứng cử hay không cũng phụ thuộc vào điều đó.",
+  "hostBidRulesPending": "Bạn có thể ứng cử hay không sẽ rõ khi các nước chủ nhà của chu kỳ này được công bố.",
   "hostBidBackToBack": "Bạn đăng cai giải đấu ngay trước giải này. Không quốc gia nào đăng cai hai giải liên tiếp.",
   "hostBidOneOnly": "Bạn đã ứng cử cho giải đấu còn lại. Không quốc gia nào đăng cai hai giải liên tiếp, nên bạn chỉ có thể ứng cử một giải.",
   "hostBidRequirement": "Yêu cầu: {grounds} sân {minSeats}+ chỗ, trong đó {bigGrounds} sân {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Cầu thủ của bạn",
   "potyHistoryNoYourPlayers": "Chưa cầu thủ nào của bạn lọt vào top 5.",
   "potyHistoryYoung": "Cầu thủ trẻ",
-  "potyHistoryUnknownPlayer": "Cầu thủ không rõ"
+  "potyHistoryUnknownPlayer": "Cầu thủ không rõ",
+  "hostingTitle": "Đăng cai",
+  "hostingThisCycle": "Chu kỳ này",
+  "hostingNextCycle": "Hồ sơ ứng cử của bạn cho chu kỳ tới",
+  "hostingTba": "Sẽ công bố sau",
+  "hostingTbaWc": "Sẽ công bố khi giải vô địch châu lục kết thúc",
+  "hostingBidPledged": "Đã nộp hồ sơ: {amount}, cơ hội đăng cai {percent}.",
+  "hostingWindowLine": "Việc ứng cử mở vào cuối chu kỳ, sau trận chung kết Giải vô địch thế giới."
 }

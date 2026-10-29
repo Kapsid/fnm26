@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Kailangan mo pa ng 1 stadium na may {seats}+ upuan.} other{Kailangan mo pa ng {count} stadium na may {seats}+ upuan.}}",
   "hostBidBarredConf": "Ang {confederation} ang nag-host ng huling Kampeonato ng Mundo.",
   "hostBidRecentHost": "Nag-host ka ng isa sa huling tatlong edisyon.",
-  "hostBidRulesPending": "Hindi pa inaanunsyo ang mga host ng cycle na ito. Nakasalalay rin sa kanila kung puwede kang mag-bid.",
+  "hostBidRulesPending": "Malalaman kung puwede kang mag-bid kapag naianunsyo na ang mga host ng cycle na ito.",
   "hostBidBackToBack": "Ikaw ang host ng torneo bago mismo nito. Walang bansang nagho-host ng dalawang magkasunod na torneo.",
   "hostBidOneOnly": "Nag-bid ka na para sa kabilang torneo. Walang bansang nagho-host ng dalawang magkasunod na torneo, kaya sa isa ka lang puwedeng mag-bid.",
   "hostBidRequirement": "Kailangan: {grounds} stadium na may {minSeats}+ upuan, {bigGrounds} sa mga ito ay {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Mga manlalaro mo",
   "potyHistoryNoYourPlayers": "Wala pa sa mga manlalaro mo ang nakatapos sa top 5.",
   "potyHistoryYoung": "Batang manlalaro",
-  "potyHistoryUnknownPlayer": "Hindi kilalang manlalaro"
+  "potyHistoryUnknownPlayer": "Hindi kilalang manlalaro",
+  "hostingTitle": "Pagho-host",
+  "hostingThisCycle": "Cycle na ito",
+  "hostingNextCycle": "Ang bid mo para sa susunod na cycle",
+  "hostingTba": "Iaanunsyo pa",
+  "hostingTbaWc": "Iaanunsyo pagkatapos ng kampeonato ng kontinente",
+  "hostingBidPledged": "Naisumite ang bid: {amount}, may {percent} na tsansang mag-host.",
+  "hostingWindowLine": "Bukas ang mga bid sa dulo ng cycle, pagkatapos ng final ng Kampeonato ng Mundo."
 }

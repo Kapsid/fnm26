@@ -12115,7 +12115,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'De gastlanden van deze cyclus zijn nog niet bekendgemaakt. Of je je kandidaat kunt stellen, hangt ook van hen af.';
+      'Of je je kandidaat kunt stellen, wordt duidelijk zodra de gastlanden van deze cyclus bekend zijn.';
 
   @override
   String get hostBidBackToBack =>
@@ -13063,4 +13063,29 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Onbekende speler';
+
+  @override
+  String get hostingTitle => 'Gastheerschap';
+
+  @override
+  String get hostingThisCycle => 'Deze cyclus';
+
+  @override
+  String get hostingNextCycle => 'Je kandidatuur voor de volgende cyclus';
+
+  @override
+  String get hostingTba => 'Nog bekend te maken';
+
+  @override
+  String get hostingTbaWc =>
+      'Wordt bekendgemaakt na het continentale kampioenschap';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Kandidatuur ingediend: $amount, met $percent kans om gastheer te worden.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Kandidaturen openen aan het eind van de cyclus, na de finale van het Wereldkampioenschap.';
 }

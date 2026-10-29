@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{{seats}+ kapasiteli 1 stadyum daha gerekiyor.} other{{seats}+ kapasiteli {count} stadyum daha gerekiyor.}}",
   "hostBidBarredConf": "Son Dünya Şampiyonası'na {confederation} ev sahipliği yaptı.",
   "hostBidRecentHost": "Son üç turnuvadan birine ev sahipliği yaptınız.",
-  "hostBidRulesPending": "Bu dönemin ev sahipleri henüz açıklanmadı. Aday olup olamayacağınız onlara da bağlı.",
+  "hostBidRulesPending": "Aday olup olamayacağınız, bu dönemin ev sahipleri açıklandığında belli olacak.",
   "hostBidBackToBack": "Bundan hemen önceki turnuvaya ev sahipliği yapıyorsunuz. Hiçbir ülke art arda iki turnuvaya ev sahipliği yapamaz.",
   "hostBidOneOnly": "Diğer turnuva için zaten aday oldunuz. Hiçbir ülke art arda iki turnuvaya ev sahipliği yapamaz, bu yüzden yalnızca birine aday olabilirsiniz.",
   "hostBidRequirement": "Şart: {minSeats}+ kapasiteli {grounds} stadyum, bunların {bigGrounds} tanesi {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Oyuncuların",
   "potyHistoryNoYourPlayers": "Oyuncularından hiçbiri henüz ilk beşe giremedi.",
   "potyHistoryYoung": "Genç oyuncu",
-  "potyHistoryUnknownPlayer": "Bilinmeyen oyuncu"
+  "potyHistoryUnknownPlayer": "Bilinmeyen oyuncu",
+  "hostingTitle": "Ev sahipliği",
+  "hostingThisCycle": "Bu dönem",
+  "hostingNextCycle": "Gelecek dönem için adaylığınız",
+  "hostingTba": "Açıklanacak",
+  "hostingTbaWc": "Kıta şampiyonası bittiğinde açıklanacak",
+  "hostingBidPledged": "Adaylık sunuldu: {amount}, ev sahibi olma şansı {percent}.",
+  "hostingWindowLine": "Adaylıklar dönemin sonunda, Dünya Şampiyonası finalinden sonra açılır."
 }

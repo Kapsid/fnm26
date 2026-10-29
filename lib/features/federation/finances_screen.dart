@@ -11,6 +11,7 @@ import 'package:fnm/core/util/federation_label.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/hosting_card.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/national_stadiums_screen.dart';
 import 'package:fnm/features/y/fan_mood_text.dart';
@@ -99,6 +100,9 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               // The national stadiums, labelled: once the budget screen is
               // gone this page is the way in. The row pads its own bottom.
               NationalStadiumsEntry(careerId: widget.careerId),
+              // This cycle's hosts and the next cycle's bid. Pads its own
+              // bottom; nothing at all without a career's nation.
+              HostingCard(careerId: widget.careerId),
               Text(
                 l.federationProjectedAtSeasonEnd,
                 style: AppTypography.labelSmall.copyWith(

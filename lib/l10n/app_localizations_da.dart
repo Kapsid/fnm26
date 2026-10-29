@@ -12096,7 +12096,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Værterne for denne cyklus er ikke offentliggjort endnu. Om du kan søge, afhænger også af dem.';
+      'Om du kan søge, bliver klart, når værterne for denne cyklus er offentliggjort.';
 
   @override
   String get hostBidBackToBack =>
@@ -13042,4 +13042,29 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Ukendt spiller';
+
+  @override
+  String get hostingTitle => 'Værtskab';
+
+  @override
+  String get hostingThisCycle => 'Denne cyklus';
+
+  @override
+  String get hostingNextCycle => 'Din ansøgning til næste cyklus';
+
+  @override
+  String get hostingTba => 'Offentliggøres senere';
+
+  @override
+  String get hostingTbaWc =>
+      'Offentliggøres, når kontinentalmesterskabet er slut';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Ansøgning indsendt: $amount, med $percent chance for værtskabet.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Ansøgninger åbner ved slutningen af cyklussen, efter finalen i Verdensmesterskabet.';
 }

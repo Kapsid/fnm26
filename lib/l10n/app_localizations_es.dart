@@ -12115,7 +12115,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Las sedes de este ciclo aún no se han anunciado. Que puedas presentarte también depende de ellas.';
+      'Sabrás si puedes presentarte cuando se anuncien los anfitriones de este ciclo.';
 
   @override
   String get hostBidBackToBack =>
@@ -13061,4 +13061,29 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Jugador desconocido';
+
+  @override
+  String get hostingTitle => 'Organización';
+
+  @override
+  String get hostingThisCycle => 'Este ciclo';
+
+  @override
+  String get hostingNextCycle => 'Tu candidatura para el próximo ciclo';
+
+  @override
+  String get hostingTba => 'Por anunciar';
+
+  @override
+  String get hostingTbaWc =>
+      'Se anunciará cuando termine el campeonato continental';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Candidatura presentada: $amount, con un $percent de opciones de organizar.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Las candidaturas se abren al final del ciclo, tras la final del Campeonato del Mundo.';
 }

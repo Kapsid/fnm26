@@ -12074,7 +12074,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Den här cykelns värdländer har inte tillkännagetts än. Om du kan söka beror också på dem.';
+      'Om du kan söka blir klart när den här cykelns värdar har tillkännagetts.';
 
   @override
   String get hostBidBackToBack =>
@@ -13018,4 +13018,28 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Okänd spelare';
+
+  @override
+  String get hostingTitle => 'Värdskap';
+
+  @override
+  String get hostingThisCycle => 'Den här cykeln';
+
+  @override
+  String get hostingNextCycle => 'Din ansökan för nästa cykel';
+
+  @override
+  String get hostingTba => 'Meddelas senare';
+
+  @override
+  String get hostingTbaWc => 'Meddelas när kontinentalmästerskapet är över';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Ansökan inlämnad: $amount, med $percent chans att bli värd.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Ansökningar öppnar i slutet av cykeln, efter finalen i Världsmästerskapet.';
 }

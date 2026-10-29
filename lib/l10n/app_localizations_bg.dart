@@ -12209,7 +12209,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'Домакините за този цикъл още не са обявени. Дали можете да кандидатствате, зависи и от тях.';
+      'Дали можете да кандидатствате, ще стане ясно, когато бъдат обявени домакините на този цикъл.';
 
   @override
   String get hostBidBackToBack =>
@@ -13151,4 +13151,29 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Неизвестен играч';
+
+  @override
+  String get hostingTitle => 'Домакинство';
+
+  @override
+  String get hostingThisCycle => 'Този цикъл';
+
+  @override
+  String get hostingNextCycle => 'Вашата кандидатура за следващия цикъл';
+
+  @override
+  String get hostingTba => 'Предстои да бъде обявено';
+
+  @override
+  String get hostingTbaWc =>
+      'Ще бъде обявено след края на континенталното първенство';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Кандидатурата е подадена: $amount, с $percent шанс за домакинство.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'Кандидатурите се подават в края на цикъла, след финала на Световното първенство.';
 }

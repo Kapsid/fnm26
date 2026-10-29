@@ -12096,7 +12096,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get hostBidRulesPending =>
-      'A ciklus rendezőit még nem hirdették ki. Az is tőlük függ, hogy pályázhatsz-e.';
+      'Hogy pályázhatsz-e, akkor derül ki, amikor bejelentik e ciklus rendezőit.';
 
   @override
   String get hostBidBackToBack =>
@@ -13039,4 +13039,28 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => 'Ismeretlen játékos';
+
+  @override
+  String get hostingTitle => 'Rendezés';
+
+  @override
+  String get hostingThisCycle => 'Ez a ciklus';
+
+  @override
+  String get hostingNextCycle => 'Pályázatod a következő ciklusra';
+
+  @override
+  String get hostingTba => 'Később jelentik be';
+
+  @override
+  String get hostingTbaWc => 'A kontinensbajnokság után jelentik be';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return 'Pályázat beadva: $amount, $percent esély a rendezésre.';
+  }
+
+  @override
+  String get hostingWindowLine =>
+      'A pályázat a ciklus végén nyílik meg, a világbajnokság döntője után.';
 }

@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Il vous manque 1 stade de {seats}+ places.} other{Il vous manque {count} stades de {seats}+ places.}}",
   "hostBidBarredConf": "{confederation} a organisé le dernier Championnat du monde.",
   "hostBidRecentHost": "Vous avez organisé l'une des trois dernières éditions.",
-  "hostBidRulesPending": "Les pays hôtes de ce cycle n'ont pas encore été annoncés. Votre candidature en dépend aussi.",
+  "hostBidRulesPending": "Vous saurez si vous pouvez être candidat une fois les pays hôtes de ce cycle annoncés.",
   "hostBidBackToBack": "Vous organisez le tournoi qui précède celui-ci. Aucun pays n'organise deux tournois d'affilée.",
   "hostBidOneOnly": "Vous êtes déjà candidat pour l'autre tournoi. Aucun pays n'organise deux tournois d'affilée, vous ne pouvez donc être candidat qu'à un seul.",
   "hostBidRequirement": "Exigence : {grounds} stades de {minSeats}+ places, dont {bigGrounds} de {bigSeats}+.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Vos joueurs",
   "potyHistoryNoYourPlayers": "Aucun de vos joueurs n’a encore fini dans le top 5.",
   "potyHistoryYoung": "Espoir",
-  "potyHistoryUnknownPlayer": "Joueur inconnu"
+  "potyHistoryUnknownPlayer": "Joueur inconnu",
+  "hostingTitle": "Organisation",
+  "hostingThisCycle": "Ce cycle",
+  "hostingNextCycle": "Votre candidature pour le prochain cycle",
+  "hostingTba": "À annoncer",
+  "hostingTbaWc": "Annoncé à l'issue du championnat continental",
+  "hostingBidPledged": "Candidature déposée : {amount}, avec {percent} de chances d'organiser.",
+  "hostingWindowLine": "Les candidatures ouvrent à la fin du cycle, après la finale du Championnat du monde."
 }

@@ -11721,8 +11721,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hostBidRecentHost => '直近3大会のいずれかを開催しています。';
 
   @override
-  String get hostBidRulesPending =>
-      'このサイクルの開催国はまだ発表されていません。招致できるかどうかは開催国にも左右されます。';
+  String get hostBidRulesPending => '招致できるかどうかは、このサイクルの開催国が発表されれば分かります。';
 
   @override
   String get hostBidBackToBack => 'この大会の直前の大会を開催します。2大会続けて開催できる国はありません。';
@@ -12622,4 +12621,27 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get potyHistoryUnknownPlayer => '不明な選手';
+
+  @override
+  String get hostingTitle => '大会開催';
+
+  @override
+  String get hostingThisCycle => '今サイクル';
+
+  @override
+  String get hostingNextCycle => '次サイクルへの招致';
+
+  @override
+  String get hostingTba => '未発表';
+
+  @override
+  String get hostingTbaWc => '大陸選手権の終了後に発表';
+
+  @override
+  String hostingBidPledged(String amount, String percent) {
+    return '招致済み: $amount、開催確率 $percent。';
+  }
+
+  @override
+  String get hostingWindowLine => '招致はサイクルの終わり、世界選手権の決勝後に受け付けます。';
 }

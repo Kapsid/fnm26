@@ -18755,7 +18755,7 @@
   "@hostBidRecentHost": {
     "description": "Hosting-bids card: the nation hosted one of the last three editions, so it may not bid."
   },
-  "hostBidRulesPending": "This cycle's hosts are still to be announced. Whether you can bid also depends on them.",
+  "hostBidRulesPending": "Whether you can bid will be clear once this cycle's hosts are announced.",
   "@hostBidRulesPending": {
     "description": "Hosting-bids card: this cycle's hosts are not revealed yet, and the next editions' rules depend on them. Shown to every nation alike, so it never hints at who hosts."
   },
@@ -20290,5 +20290,41 @@
   "potyHistoryUnknownPlayer": "Unknown player",
   "@potyHistoryUnknownPlayer": {
     "description": "Player of the Year history: a winner from a very old save whose name is no longer known."
+  },
+  "hostingTitle": "Hosting",
+  "@hostingTitle": {
+    "description": "Federation screen: title of the Hosting card (this cycle's tournament hosts and the manager's bid for the next cycle)."
+  },
+  "hostingThisCycle": "This cycle",
+  "@hostingThisCycle": {
+    "description": "Hosting card: section heading for the current cycle's tournaments and their hosts."
+  },
+  "hostingNextCycle": "Your bid for the next cycle",
+  "@hostingNextCycle": {
+    "description": "Hosting card: section heading for the manager's hosting bid for the next cycle."
+  },
+  "hostingTba": "To be announced",
+  "@hostingTba": {
+    "description": "Hosting card: this tournament's host has not been revealed to the manager yet."
+  },
+  "hostingTbaWc": "To be announced once the continental championship is over",
+  "@hostingTbaWc": {
+    "description": "Hosting card: the World Championship host is not revealed yet; it is revealed after the continental championship."
+  },
+  "hostingBidPledged": "Bid pledged: {amount}, with a {percent} chance to host.",
+  "@hostingBidPledged": {
+    "description": "Hosting card: the manager's bid is in. amount is formatted euros, percent the chance shown when bidding, e.g. 24%.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "hostingWindowLine": "Bids open at the end of the cycle, after the World Championship final.",
+  "@hostingWindowLine": {
+    "description": "Hosting card: when the bid window opens (the cycle's close, after the World Championship final)."
   }
 }

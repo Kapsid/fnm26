@@ -3042,7 +3042,7 @@
   "hostBidNeedStadiums": "{count, plural, =1{Tarvitset vielä 1 stadionin, jossa on {seats}+ paikkaa.} other{Tarvitset vielä {count} stadionia, joissa on {seats}+ paikkaa.}}",
   "hostBidBarredConf": "Edelliset MM-kisat järjesti {confederation}.",
   "hostBidRecentHost": "Isännöit yhtä kolmesta viime turnauksesta.",
-  "hostBidRulesPending": "Tämän kauden isäntiä ei ole vielä julkistettu. Myös niistä riippuu, voitko hakea.",
+  "hostBidRulesPending": "Voitko hakea, selviää kun tämän kauden isännät on julkistettu.",
   "hostBidBackToBack": "Isännöit tätä edeltävää turnausta. Mikään maa ei isännöi kahta turnausta peräkkäin.",
   "hostBidOneOnly": "Hait jo toista turnausta. Mikään maa ei isännöi kahta turnausta peräkkäin, joten voit hakea vain yhtä.",
   "hostBidRequirement": "Vaatimus: {grounds} stadionia, joissa {minSeats}+ paikkaa, niistä {bigGrounds} vähintään {bigSeats}.",
@@ -3249,5 +3249,12 @@
   "potyHistoryYourPlayers": "Pelaajasi",
   "potyHistoryNoYourPlayers": "Kukaan pelaajistasi ei ole vielä sijoittunut viiden parhaan joukkoon.",
   "potyHistoryYoung": "Nuori pelaaja",
-  "potyHistoryUnknownPlayer": "Tuntematon pelaaja"
+  "potyHistoryUnknownPlayer": "Tuntematon pelaaja",
+  "hostingTitle": "Isännyys",
+  "hostingThisCycle": "Tämä kausi",
+  "hostingNextCycle": "Hakemuksesi seuraavalle kaudelle",
+  "hostingTba": "Julkistetaan myöhemmin",
+  "hostingTbaWc": "Julkistetaan maanosan mestaruuskilpailujen jälkeen",
+  "hostingBidPledged": "Haku jätetty: {amount}, isännyyden mahdollisuus {percent}.",
+  "hostingWindowLine": "Haku avautuu kauden lopussa, MM-kisojen finaalin jälkeen."
 }
