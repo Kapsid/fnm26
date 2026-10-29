@@ -12208,6 +12208,18 @@ class AppLocalizationsBg extends AppLocalizations {
       'Бяхте домакин на едно от последните три издания.';
 
   @override
+  String get hostBidRulesPending =>
+      'Домакините за този цикъл още не са обявени. Дали можете да кандидатствате, зависи и от тях.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Вие сте домакин на турнира точно преди този. Никоя страна не е домакин на два поредни турнира.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Вече кандидатствахте за другия турнир. Никоя страна не е домакин на два поредни турнира, затова можете да кандидатствате само за един.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

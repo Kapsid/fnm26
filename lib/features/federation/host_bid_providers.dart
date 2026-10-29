@@ -22,8 +22,13 @@ import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart'
     show formatEuros;
 import 'package:fnm/features/federation/national_stadium_providers.dart';
+import 'package:fnm/features/hub/hub_event.dart' show continentalFinalsDrawKind;
 import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/tournaments/finals_draw_providers.dart'
+    show worldCupDrawKind;
+import 'package:fnm/features/tournaments/host_draw_providers.dart'
+    show continentalHostDrawKind, worldCupHostDrawKind;
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// THE seam for a nation's stadiums in a career: every ground it could stage
@@ -134,6 +139,9 @@ class HostBidStatus {
     required this.declined,
     required this.windowOpen,
     required this.offer,
+    this.backToBack = false,
+    this.rulesPending = false,
+    this.otherBidLodged = false,
   });
 
   final HostBidComp comp;
@@ -156,6 +164,21 @@ class HostBidStatus {
   /// It hosted one of the last three editions.
   final bool recentHost;
 
+  /// It hosts the tournament right before this one, and no nation hosts two
+  /// in a row.
+  final bool backToBack;
+
+  /// Whether the nation may bid also turns on hosts not yet announced (this
+  /// cycle's, revealed by their ceremonies). Until then the card says only
+  /// that, the same for every nation, and never what the hidden hosts are:
+  /// [barredConfederation], [recentHost] and [backToBack] are set only from
+  /// hosts the manager has already been shown.
+  final bool rulesPending;
+
+  /// A bid for the other tournament of the same cycle is in: no nation hosts
+  /// two in a row, so only one of the two may be bid for.
+  final bool otherBidLodged;
+
   /// A bid for this edition is already in (pledged, paid or decided).
   final bool lodged;
 
@@ -171,8 +194,8 @@ class HostBidStatus {
   /// The grounds are big enough.
   bool get estateOk => shortfall.grounds == 0 && shortfall.bigGrounds == 0;
 
-  /// No rotation rule bars the nation.
-  bool get rulesOk => barredConfederation == null && !recentHost;
+  /// No rotation rule the manager knows of bars the nation.
+  bool get rulesOk => barredConfederation == null && !recentHost && !backToBack;
 
   /// The nation may bid for this edition.
   bool get eligible => estateOk && rulesOk;
@@ -367,6 +390,26 @@ hostBidStatusProvider = FutureProvider.autoDispose
       }
       if (me == null) return const [];
       final windowOpen = await comp.worldChampion(careerId) != null;
+      // Which of this cycle's hosts the manager has been shown: by their
+      // ceremony, by the finals draw that names them, or by the cycle being
+      // over. The next editions' rules turn on them, so the card must not
+      // judge by one still hidden.
+      final wcKnown =
+          windowOpen ||
+          await comp.hasWatchedDraw(careerId, cycle, worldCupHostDrawKind) ||
+          await comp.hasWatchedDraw(careerId, cycle, worldCupDrawKind);
+      final contKnown =
+          windowOpen ||
+          await comp.hasWatchedDraw(
+            careerId,
+            cycle,
+            continentalHostDrawKind,
+          ) ||
+          await comp.hasWatchedDraw(careerId, cycle, continentalFinalsDrawKind);
+      // A cycle's hosts are known once shown (above); an earlier cycle's
+      // always are.
+      bool shown(int hostCycle, {required bool worldCup}) =>
+          hostCycle < cycle || (worldCup ? wcKnown : contKnown);
       final kinds = await hostBidKinds(comp, careerId);
       // The grounds as they will stand for the edition: a stadium ordered
       // this cycle opens at the start of the next, in time for its finals.
@@ -393,15 +436,22 @@ hostBidStatusProvider = FutureProvider.autoDispose
         required HostBidComp c,
         required int year,
         required ({bool eligible, double today}) standing,
-        Confederation? barred,
         required bool recent,
+        required bool backToBack,
+        required bool pending,
+        Confederation? barred,
       }) {
         final req = HostingRequirements.of(c, me!.confederation);
         final short = HostingRequirements.shortfall(seats, req);
         final lodged = _lodged(kinds, c, edition, me.id);
         final settled = _settled(kinds, c, edition, me.id);
+        final other = HostBidComp.values.firstWhere((o) => o != c);
+        final otherLodged = !lodged && _lodged(kinds, other, edition, me.id);
         final ok =
-            short.grounds == 0 && short.bigGrounds == 0 && standing.eligible;
+            short.grounds == 0 &&
+            short.bigGrounds == 0 &&
+            standing.eligible &&
+            !otherLodged;
         return HostBidStatus(
           comp: c,
           editionCycle: edition,
@@ -411,6 +461,9 @@ hostBidStatusProvider = FutureProvider.autoDispose
           shortfall: short,
           barredConfederation: barred,
           recentHost: recent,
+          backToBack: backToBack,
+          rulesPending: pending && barred == null && !recent && !backToBack,
+          otherBidLodged: otherLodged,
           lodged: lodged,
           declined: _declined(kinds, c, edition, me.id),
           windowOpen: windowOpen,
@@ -430,19 +483,30 @@ hostBidStatusProvider = FutureProvider.autoDispose
       }
 
       if (ContinentalCups.byConfederation[me.confederation] != null) {
+        // Read as the rollover will decide it: under the current rules,
+        // with this nation as the manager's.
         final standing = WorldCupHosts.continentalBidStanding(
           confederation: me.confederation,
           cycle: edition,
           seed: career.rngSeed,
           nations: nations,
           nationId: me.id,
+          managerNationId: me.id,
         );
         statuses.add(
           status(
             c: HostBidComp.continental,
             year: CareerService.continentalFinalsYear(edition),
             standing: (eligible: standing.eligible, today: standing.today),
-            recent: standing.recentHost,
+            recent: standing.recentHostCycles.any(
+              (k) => shown(k, worldCup: false),
+            ),
+            // The tournament before it is this cycle's World Championship.
+            backToBack:
+                standing.previousSlotHost && shown(cycle, worldCup: true),
+            // Its rules read this cycle's continental and World
+            // Championship hosts.
+            pending: !contKnown || !wcKnown,
           ),
         );
       }
@@ -452,14 +516,21 @@ hostBidStatusProvider = FutureProvider.autoDispose
         nations: nations,
         seed: career.rngSeed,
         nationId: me.id,
+        managerNationId: me.id,
       );
       statuses.add(
         status(
           c: HostBidComp.worldChampionship,
           year: year,
           standing: (eligible: wc.eligible, today: wc.today),
-          barred: wc.barredConfederation,
-          recent: wc.recentHost,
+          // The rotation reads this cycle's World Championship host.
+          barred: wcKnown ? wc.barredConfederation : null,
+          recent: wc.recentHostCycles.any((k) => shown(k, worldCup: true)),
+          // The tournament before it is the next cycle's continental
+          // championship, which the manager's nation hosts only through its
+          // own bid: always known to him.
+          backToBack: wc.previousSlotHost,
+          pending: !wcKnown,
         ),
       );
       return statuses;
@@ -559,6 +630,13 @@ class HostBidService {
       final kinds = await hostBidKinds(comp, careerId);
       if (_settled(kinds, offer.comp, offer.editionCycle, offer.nation.id)) {
         return;
+      }
+      // One tournament per cycle: no nation hosts two in a row.
+      for (final other in HostBidComp.values) {
+        if (other != offer.comp &&
+            _lodged(kinds, other, offer.editionCycle, offer.nation.id)) {
+          return;
+        }
       }
       final free =
           money.balance -

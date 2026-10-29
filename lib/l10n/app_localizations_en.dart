@@ -12071,6 +12071,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hostBidRecentHost => 'You hosted one of the last three editions.';
 
   @override
+  String get hostBidRulesPending =>
+      'This cycle\'s hosts are still to be announced. Whether you can bid also depends on them.';
+
+  @override
+  String get hostBidBackToBack =>
+      'You host the tournament just before this one. No nation hosts two in a row.';
+
+  @override
+  String get hostBidOneOnly =>
+      'You have bid for the other tournament. No nation hosts two in a row, so you can bid for only one.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

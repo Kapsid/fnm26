@@ -12144,6 +12144,18 @@ class AppLocalizationsEl extends AppLocalizations {
       'Διοργανώσατε μία από τις τρεις τελευταίες διοργανώσεις.';
 
   @override
+  String get hostBidRulesPending =>
+      'Οι διοργανωτές αυτού του κύκλου δεν έχουν ανακοινωθεί ακόμη. Από αυτούς εξαρτάται και το αν μπορείτε να είστε υποψήφιοι.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Διοργανώνετε το τουρνουά αμέσως πριν από αυτό. Καμία χώρα δεν διοργανώνει δύο τουρνουά στη σειρά.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Έχετε ήδη υποβάλει υποψηφιότητα για το άλλο τουρνουά. Καμία χώρα δεν διοργανώνει δύο τουρνουά στη σειρά, οπότε μπορείτε να διεκδικήσετε μόνο ένα.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

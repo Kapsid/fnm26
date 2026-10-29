@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/core/util/competition_label.dart';
@@ -316,10 +317,24 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     }
   }
 
-  // 1a-iii. The year's Player of the Year vote, filed on 1 December: once a
+  // 1a-iii. The year's Player of the Year vote, filed on 31 December: once a
   //          year, watched as a ceremony or skipped to the list. Moving the
   //          world on without either marks it seen (see
   //          [AwardService.markCeremoniesSeen]).
+  //          A save already past a year's 31 December with no vote for
+  //          it is caught up first, here, at the first hub moment, even in
+  //          the middle of a finals tournament: never left for a later step.
+  //          Never the reason the hub fails: a vote that cannot be held
+  //          is logged and the event list carries on.
+  try {
+    final season = ref.read(seasonServiceProvider);
+    if (!season.isBusy &&
+        await ref.read(awardServiceProvider).behind(careerId)) {
+      await season.catchUpAwards(careerId);
+    }
+  } on Object catch (e, st) {
+    AppLog.error('hub:awardsCatchUp', e, st);
+  }
   final ceremonyYear = await pendingCeremonyYear(comp, hub.career);
   if (ceremonyYear != null) {
     return HubEvent(
@@ -555,7 +570,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
 
   final next = hub.next;
 
-  // A step that would carry the clock over 1 December is offered as a plain
+  // A step that would carry the clock over 31 December is offered as a plain
   // advance, which stops on the day (see [voteStopBefore]): the year's vote
   // is filed there and its ceremony is the next event, before the manager's
   // next match or tournament rather than in the middle of it.
@@ -1008,7 +1023,7 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       }
     }
 
-    // 5·8. His next match lies beyond 1 December: the clock stops on the
+    // 5·8. His next match lies beyond 31 December: the clock stops on the
     //      day of the vote first (see [voteStopBefore]), in place of the
     //      match. Everything above is still offered first, in its usual
     //      order (the draws, the friendlies, so a host's open windows before

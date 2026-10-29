@@ -8,6 +8,60 @@ import 'package:fnm/domain/services/nation/nation_geography.dart';
 /// Ordered strongest-first, so the first is the primary host if the bid wins.
 typedef HostBid = List<int>;
 
+/// Where a nation stands in a World Championship host race before any bid
+/// (see [WorldCupHosts.worldCupBidStanding]).
+typedef WcBidStanding = ({
+  /// It may stand at all.
+  bool eligible,
+
+  /// Its chance in the ordinary draw (0 when not on the ballot).
+  double today,
+
+  /// Its confederation, when that hosted the previous edition.
+  Confederation? barredConfederation,
+
+  /// It hosted one of the last three editions.
+  bool recentHost,
+
+  /// Which of the last three editions (by cycle) it hosted.
+  List<int> recentHostCycles,
+
+  /// It hosts the tournament right before this one (that cycle's
+  /// continental championship): no nation hosts two in a row.
+  bool previousSlotHost,
+});
+
+/// Where a nation stands in its continental championship's host race before
+/// any bid (see [WorldCupHosts.continentalBidStanding]).
+typedef ContBidStanding = ({
+  bool eligible,
+  double today,
+  bool recentHost,
+
+  /// Which of the last three editions (by cycle) it hosted.
+  List<int> recentHostCycles,
+
+  /// It hosted the tournament right before this one (the previous cycle's
+  /// World Championship): no nation hosts two in a row.
+  bool previousSlotHost,
+});
+
+/// One host decision of the chain (see [WorldCupHosts._chainTo]): the
+/// candidatures as the ceremony shows them, and the winning bid.
+class _Draw {
+  const _Draw({required this.bids, required this.hosts});
+
+  final List<HostBid> bids;
+  final List<int> hosts;
+}
+
+/// Every host decision of a career from cycle 0 on: each confederation's
+/// championship and the World Championship, cycle by cycle.
+class _Chain {
+  final List<Map<Confederation, _Draw>> cont = [];
+  final List<_Draw> wc = [];
+}
+
 /// Decides World Cup hosts. Any nation may bid EXCEPT the previous edition's
 /// host confederation (so the same continent never hosts twice in a row) and
 /// anyone who hosted one of the last three editions; the winner is a strong
@@ -17,6 +71,491 @@ abstract final class WorldCupHosts {
   /// The first World Cup edition the game manages (cycle 0). Editions step by 4
   /// years; the host chain is computed forward from here.
   static const int _firstWcYear = 2030;
+
+  // ---------------------------------------------------------------------
+  // The current host rules.
+  //
+  // An edition whose cycle carries a rules marker (see
+  // `HostBidding.rulesKind`, attached to the nations as
+  // `HostBidding.managerKey`) is decided under the current rules, on top of
+  // each tournament's own:
+  //
+  //  * No nation hosts two tournaments in a row, of any type. The senior
+  //    tournaments run continental championships (every confederation the
+  //    same summer), then the World Championship, then the next continental
+  //    championships: a host of one may not host the next.
+  //  * The manager's nation (the one he ran when the edition was decided)
+  //    hosts only when he bid for that very tournament.
+  //
+  // An edition with no marker keeps the rules it was decided under (the
+  // legacy code below, untouched), so a host an older save already decided
+  // never moves. Markers start at some cycle and run on from there; a cycle
+  // past the last marker (a preview of a cycle not yet decided) follows the
+  // current rules for the last nation marked.
+  // ---------------------------------------------------------------------
+
+  /// The rules markers [nations] carry: the manager's nation of each cycle
+  /// decided under the current rules.
+  static Map<int, int> _managers(List<Nation> nations) {
+    final out = <int, int>{};
+    for (final n in nations) {
+      if (n.hostBids.isEmpty) continue;
+      for (final k in n.hostBids.keys) {
+        if (!k.startsWith('mgr:')) continue;
+        final c = int.tryParse(k.substring(4));
+        if (c != null) out[c] = n.id;
+      }
+    }
+    return out;
+  }
+
+  /// The manager's nation for [cycle] under the current rules, or null when
+  /// [cycle] keeps the legacy ones (no marker at or before it).
+  static int? _managerFor(Map<int, int> managers, int cycle) {
+    final exact = managers[cycle];
+    if (exact != null) return exact;
+    int? best;
+    var bestCycle = -1;
+    managers.forEach((c, id) {
+      if (c < cycle && c > bestCycle) {
+        bestCycle = c;
+        best = id;
+      }
+    });
+    return best;
+  }
+
+  /// [nations] with [managerNationId] marked as the manager's nation for
+  /// [cycle], unless a marker already names that cycle: how the bid card
+  /// reads an edition the rollover has not decided yet.
+  static List<Nation> _assuming(
+    List<Nation> nations,
+    int cycle,
+    int managerNationId,
+  ) {
+    if (_managers(nations).containsKey(cycle)) return nations;
+    final key = HostBidding.managerKey(cycle);
+    return [
+      for (final n in nations)
+        if (n.id == managerNationId)
+          n.copyWith(hostBids: {...n.hostBids, key: 1})
+        else
+          n,
+    ];
+  }
+
+  /// Chains already worked out, by world (see [_worldKey]). A few worlds
+  /// at most are live at once; the oldest is dropped past [_memoSize].
+  static final Map<String, _Chain> _memo = {};
+  static const int _memoSize = 12;
+
+  /// Everything the chain depends on: the seed and, for each nation, its
+  /// id, confederation, ranking and markers.
+  static String _worldKey(List<Nation> nations, int seed) {
+    final b = StringBuffer('$seed|');
+    for (final n in nations) {
+      b
+        ..write(n.id)
+        ..write(',')
+        ..write(n.confederation.index)
+        ..write(',')
+        ..write(n.ranking);
+      if (n.hostBids.isNotEmpty) {
+        final keys = n.hostBids.keys.toList()..sort();
+        for (final k in keys) {
+          b.write(',$k=${n.hostBids[k]}');
+        }
+      }
+      b.write(';');
+    }
+    return b.toString();
+  }
+
+  /// The chain of host decisions up to and including [upto].
+  static _Chain _chainTo(int upto, List<Nation> nations, int seed) {
+    final key = _worldKey(nations, seed);
+    final hit = _memo[key];
+    if (hit != null && hit.wc.length > upto) return hit;
+    final chain = _buildChain(upto, nations, seed);
+    _memo.remove(key);
+    if (_memo.length >= _memoSize) _memo.remove(_memo.keys.first);
+    _memo[key] = chain;
+    return chain;
+  }
+
+  static _Chain _buildChain(int upto, List<Nation> nations, int seed) {
+    final managers = _managers(nations);
+    final byId = {for (final n in nations) n.id: n};
+    final confs = [
+      for (final conf in Confederation.values)
+        if (nations.any((n) => n.confederation == conf)) conf,
+    ];
+    final chain = _Chain();
+    for (var c = 0; c <= upto; c++) {
+      final year = _firstWcYear + 4 * c;
+      final m = _managerFor(managers, c);
+      if (m == null) {
+        chain.cont.add({
+          for (final conf in confs)
+            conf: _Draw(
+              bids: _legacyContinentalBids(
+                confederation: conf,
+                cycle: c,
+                seed: seed,
+                nations: nations,
+              ),
+              hosts: _legacyContinentalHostsFor(
+                confederation: conf,
+                cycle: c,
+                seed: seed,
+                nations: nations,
+              ),
+            ),
+        });
+        chain.wc.add(
+          _Draw(
+            bids: _legacyWorldCupBids(year: year, nations: nations, seed: seed),
+            hosts: _legacyHostsFor(year: year, nations: nations, seed: seed),
+          ),
+        );
+        continue;
+      }
+
+      // The continental championships: none of the last three hosts of the
+      // same championship, nobody who hosted the World Championship just
+      // played, and not the manager's nation unless it bid.
+      final cross = <int>{if (c > 0) ...chain.wc[c - 1].hosts};
+      final lodgedC = _lodgedCont(c, nations);
+      final mine = <int>{if (lodgedC?.nationId != m) m};
+      final contDraws = <Confederation, _Draw>{};
+      for (final conf in confs) {
+        final perType = <int>{
+          for (var k = 1; k <= 3 && c - k >= 0; k++)
+            ...?chain.cont[c - k][conf]?.hosts,
+        };
+        final last = <int>{if (c > 0) ...?chain.cont[c - 1][conf]?.hosts};
+        // A small confederation can run out of candidates: the older
+        // editions are let go first, then everything but the manager rule.
+        final tiers = [
+          {...perType, ...cross, ...mine},
+          {...last, ...cross, ...mine},
+          mine,
+          <int>{},
+        ];
+        var bids = const <HostBid>[];
+        var exclude = <int>{};
+        for (final t in tiers) {
+          exclude = t;
+          bids = _continentalBids(
+            confederation: conf,
+            cycle: c,
+            seed: seed,
+            nations: nations,
+            exclude: t,
+          );
+          if (bids.isNotEmpty) break;
+        }
+        final eligible =
+            lodgedC != null &&
+            _contEligible(lodgedC.nationId, nations, conf, exclude);
+        contDraws[conf] = _Draw(
+          bids: _withLodged(bids, lodgedC, eligible: eligible),
+          hosts: bids.isEmpty
+              ? const []
+              : _decide(
+                  bids,
+                  _contSeed(conf, c, seed),
+                  lodgedC,
+                  eligible: eligible,
+                ),
+        );
+      }
+      chain.cont.add(contDraws);
+
+      // The World Championship: not the last host's confederation, none of
+      // the last three hosts, nobody who hosted a continental championship
+      // this summer, and not the manager's nation unless it bid.
+      final summer = <int>{for (final d in contDraws.values) ...d.hosts};
+      final lodgedW = _lodgedWc(year, nations);
+      final mineW = <int>{if (lodgedW?.nationId != m) m};
+      final prevHosts = c > 0 ? chain.wc[c - 1].hosts : const <int>[];
+      final barred = prevHosts.isEmpty
+          ? null
+          : byId[prevHosts.first]?.confederation;
+      final recent = <int>{
+        for (var k = 1; k <= 3 && c - k >= 0; k++) ...chain.wc[c - k].hosts,
+      };
+      final wcTiers = <(Confederation?, Set<int>)>[
+        (barred, {...recent, ...summer, ...mineW}),
+        (barred, {...prevHosts, ...summer, ...mineW}),
+        (null, {...summer, ...mineW}),
+        (null, mineW),
+        (null, <int>{}),
+      ];
+      var wcBids = const <HostBid>[];
+      Confederation? usedBarred;
+      var usedExclude = <int>{};
+      for (final (b, ex) in wcTiers) {
+        usedBarred = b;
+        usedExclude = ex;
+        wcBids = _worldCupBidsFor(
+          year: year,
+          nations: nations,
+          seed: seed,
+          barredConfederation: b,
+          excludeIds: ex,
+        );
+        if (wcBids.isNotEmpty) break;
+      }
+      final wcEligible =
+          lodgedW != null &&
+          _wcEligible(lodgedW.nationId, nations, usedBarred, usedExclude);
+      final List<int> wcHosts;
+      if (wcBids.isEmpty) {
+        final all = [...nations]
+          ..sort((a, b) => a.ranking.compareTo(b.ranking));
+        wcHosts = all.isEmpty ? const [] : [all.first.id];
+      } else {
+        wcHosts = _decide(
+          wcBids,
+          _wcSeed(year, seed),
+          lodgedW,
+          eligible: wcEligible,
+        );
+      }
+      chain.wc.add(
+        _Draw(
+          bids: _withLodged(wcBids, lodgedW, eligible: wcEligible),
+          hosts: wcHosts,
+        ),
+      );
+    }
+    return chain;
+  }
+
+  /// The chain draw of the World Championship in [year], or null when that
+  /// edition keeps the legacy rules.
+  static _Draw? _wcDraw(int year, List<Nation> nations, int seed) {
+    final c = _wcCycleOf(year);
+    if (c == null || _managerFor(_managers(nations), c) == null) return null;
+    return _chainTo(c, nations, seed).wc[c];
+  }
+
+  /// The chain draw of [confederation]'s championship in [cycle], or null
+  /// when that edition keeps the legacy rules.
+  static _Draw? _contDraw(
+    Confederation confederation,
+    int cycle,
+    List<Nation> nations,
+    int seed,
+  ) {
+    if (cycle < 0 || _managerFor(_managers(nations), cycle) == null) {
+      return null;
+    }
+    return _chainTo(cycle, nations, seed).cont[cycle][confederation] ??
+        const _Draw(bids: [], hosts: []);
+  }
+
+  /// The bids to host the World Cup in [year]: the strongest nations from ANY
+  /// confederation EXCEPT the previous edition's host confederation, minus any
+  /// nation that hosted one of the last three editions (and, under the
+  /// current rules, anyone hosting a continental championship that summer
+  /// and the manager's nation unless it bid), grouped into solo or joint
+  /// (co-host) candidatures, strongest first. Deterministic.
+  static List<HostBid> worldCupBids({
+    required int year,
+    required List<Nation> nations,
+    required int seed,
+  }) =>
+      _wcDraw(year, nations, seed)?.bids ??
+      _legacyWorldCupBids(year: year, nations: nations, seed: seed);
+
+  /// Every host of the World Cup in [year] — the winning bid, which is usually
+  /// one nation but is sometimes a joint candidature of two or three. Hosts all
+  /// auto-qualify and are seeded into the opening groups.
+  static List<int> hostsFor({
+    required int year,
+    required List<Nation> nations,
+    required int seed,
+  }) =>
+      _wcDraw(year, nations, seed)?.hosts ??
+      _legacyHostsFor(year: year, nations: nations, seed: seed);
+
+  /// The bids to host [confederation]'s championship in [cycle], dropping the
+  /// recent hosts (the last three editions) so a country can't host again so
+  /// soon (and, under the current rules, the last World Championship's hosts
+  /// and the manager's nation unless it bid).
+  static List<HostBid> continentalBids({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+  }) =>
+      _contDraw(confederation, cycle, nations, seed)?.bids ??
+      _legacyContinentalBids(
+        confederation: confederation,
+        cycle: cycle,
+        seed: seed,
+        nations: nations,
+      );
+
+  /// Every host of a continental championship — the winning bid, occasionally a
+  /// joint one (as at Euro 2000/2008/2012).
+  static List<int> continentalHostsFor({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+  }) =>
+      _contDraw(confederation, cycle, nations, seed)?.hosts ??
+      _legacyContinentalHostsFor(
+        confederation: confederation,
+        cycle: cycle,
+        seed: seed,
+        nations: nations,
+      );
+
+  /// Where [nationId] stands in the World Cup host race of [year] before any
+  /// bid: whether it may stand at all and its chance in the ordinary draw (0
+  /// when it is not on the ballot).
+  ///
+  /// When it may not, [WcBidStanding] says why: its confederation hosted the
+  /// previous edition, it hosted one of the last three (and which), or it
+  /// hosts the continental championship right before. What the bid card
+  /// tells the manager, as far as he may know it.
+  ///
+  /// [managerNationId] reads an edition not yet decided as the rollover will
+  /// decide it, under the current rules with that nation as the manager's.
+  static WcBidStanding worldCupBidStanding({
+    required int year,
+    required List<Nation> nations,
+    required int seed,
+    required int nationId,
+    int? managerNationId,
+  }) {
+    final c = _wcCycleOf(year);
+    final world = c != null && managerNationId != null
+        ? _assuming(nations, c, managerNationId)
+        : nations;
+    if (c == null || _managerFor(_managers(world), c) == null) {
+      return _legacyWorldCupBidStanding(
+        year: year,
+        nations: world,
+        seed: seed,
+        nationId: nationId,
+      );
+    }
+    final chain = _chainTo(c, world, seed);
+    Confederation? mine;
+    for (final n in world) {
+      if (n.id == nationId) mine = n.confederation;
+    }
+    final byId = {for (final n in world) n.id: n};
+    final prevHosts = c > 0 ? chain.wc[c - 1].hosts : const <int>[];
+    final barred = prevHosts.isEmpty
+        ? null
+        : byId[prevHosts.first]?.confederation;
+    final recentCycles = [
+      for (var k = c - 1; k >= 0 && k >= c - 3; k--)
+        if (chain.wc[k].hosts.contains(nationId)) k,
+    ];
+    final summer = <int>{for (final d in chain.cont[c].values) ...d.hosts};
+    final previousSlot = summer.contains(nationId);
+    final eligible =
+        mine != null && mine != barred && recentCycles.isEmpty && !previousSlot;
+    if (!eligible) {
+      return (
+        eligible: false,
+        today: 0,
+        barredConfederation: mine != null && mine == barred ? mine : null,
+        recentHost: recentCycles.isNotEmpty,
+        recentHostCycles: recentCycles,
+        previousSlotHost: previousSlot,
+      );
+    }
+    final recent = <int>{
+      for (var k = 1; k <= 3 && c - k >= 0; k++) ...chain.wc[c - k].hosts,
+    };
+    final bids = _worldCupBidsFor(
+      year: year,
+      nations: world,
+      seed: seed,
+      barredConfederation: barred,
+      excludeIds: {...recent, ...summer},
+    );
+    return (
+      eligible: true,
+      today: _shareOf(bids, nationId),
+      barredConfederation: null,
+      recentHost: false,
+      recentHostCycles: const <int>[],
+      previousSlotHost: false,
+    );
+  }
+
+  /// Where [nationId] stands in [confederation]'s host race of [cycle] before
+  /// any bid: whether it may stand (a member, not one of the last three
+  /// hosts, and under the current rules not a host of the World
+  /// Championship just before) and its chance in the ordinary draw (0 when
+  /// not on the ballot). [managerNationId] as in [worldCupBidStanding].
+  static ContBidStanding continentalBidStanding({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
+    required int nationId,
+    int? managerNationId,
+  }) {
+    final world = managerNationId != null && cycle >= 0
+        ? _assuming(nations, cycle, managerNationId)
+        : nations;
+    if (cycle < 0 || _managerFor(_managers(world), cycle) == null) {
+      return _legacyContinentalBidStanding(
+        confederation: confederation,
+        cycle: cycle,
+        seed: seed,
+        nations: world,
+        nationId: nationId,
+      );
+    }
+    final chain = _chainTo(cycle, world, seed);
+    final recentCycles = [
+      for (var k = cycle - 1; k >= 0 && k >= cycle - 3; k--)
+        if (chain.cont[k][confederation]?.hosts.contains(nationId) ?? false) k,
+    ];
+    final cross = <int>{if (cycle > 0) ...chain.wc[cycle - 1].hosts};
+    final previousSlot = cross.contains(nationId);
+    final member = world.any(
+      (n) => n.id == nationId && n.confederation == confederation,
+    );
+    if (!member || recentCycles.isNotEmpty || previousSlot) {
+      return (
+        eligible: false,
+        today: 0,
+        recentHost: recentCycles.isNotEmpty,
+        recentHostCycles: recentCycles,
+        previousSlotHost: previousSlot,
+      );
+    }
+    final perType = <int>{
+      for (var k = 1; k <= 3 && cycle - k >= 0; k++)
+        ...?chain.cont[cycle - k][confederation]?.hosts,
+    };
+    final bids = _continentalBids(
+      confederation: confederation,
+      cycle: cycle,
+      seed: seed,
+      nations: world,
+      exclude: {...perType, ...cross},
+    );
+    return (
+      eligible: true,
+      today: _shareOf(bids, nationId),
+      recentHost: false,
+      recentHostCycles: const <int>[],
+      previousSlotHost: false,
+    );
+  }
 
   /// The shortlist of realistic host candidates for [confederation] (its
   /// strongest members), strongest first. Nations in [exclude] — the recent
@@ -289,7 +828,7 @@ abstract final class WorldCupHosts {
   /// confederation EXCEPT the previous edition's host confederation, minus any
   /// nation that hosted one of the last three editions — grouped into solo or
   /// joint (co-host) candidatures, strongest first. Deterministic.
-  static List<HostBid> worldCupBids({
+  static List<HostBid> _legacyWorldCupBids({
     required int year,
     required List<Nation> nations,
     required int seed,
@@ -316,16 +855,10 @@ abstract final class WorldCupHosts {
   /// confederation, not one of the last three hosts) and its chance in the
   /// ordinary draw (0 when it is not on the ballot).
   ///
-  /// When it may not, [barredConfederation] is its confederation if that
-  /// hosted the previous edition, and [recentHost] says it hosted one of the
+  /// When it may not, `barredConfederation` is its confederation if that
+  /// hosted the previous edition, and `recentHost` says it hosted one of the
   /// last three: what the bid card tells the manager.
-  static ({
-    bool eligible,
-    double today,
-    Confederation? barredConfederation,
-    bool recentHost,
-  })
-  worldCupBidStanding({
+  static WcBidStanding _legacyWorldCupBidStanding({
     required int year,
     required List<Nation> nations,
     required int seed,
@@ -338,11 +871,17 @@ abstract final class WorldCupHosts {
       for (final n in nations) {
         if (n.id == nationId) mine = n.confederation;
       }
+      final prior = _wcHostChain(year - 4, nations, seed);
       return (
         eligible: false,
         today: 0,
         barredConfederation: mine != null && mine == ex.barred ? mine : null,
         recentHost: ex.recent.contains(nationId),
+        recentHostCycles: [
+          for (var i = prior.length - 1; i >= 0 && i >= prior.length - 3; i--)
+            if (prior[i].contains(nationId)) i,
+        ],
+        previousSlotHost: false,
       );
     }
     final bids = _worldCupBidsFor(
@@ -357,6 +896,8 @@ abstract final class WorldCupHosts {
       today: _shareOf(bids, nationId),
       barredConfederation: null,
       recentHost: false,
+      recentHostCycles: const <int>[],
+      previousSlotHost: false,
     );
   }
 
@@ -447,7 +988,7 @@ abstract final class WorldCupHosts {
   /// Every host of the World Cup in [year] — the winning bid, which is usually
   /// one nation but is sometimes a joint candidature of two or three. Hosts all
   /// auto-qualify and are seeded into the opening groups.
-  static List<int> hostsFor({
+  static List<int> _legacyHostsFor({
     required int year,
     required List<Nation> nations,
     required int seed,
@@ -493,7 +1034,7 @@ abstract final class WorldCupHosts {
   /// The bids to host [confederation]'s championship in [cycle], dropping the
   /// recent hosts (the last three editions) so a country can't host again so
   /// soon.
-  static List<HostBid> continentalBids({
+  static List<HostBid> _legacyContinentalBids({
     required Confederation confederation,
     required int cycle,
     required int seed,
@@ -524,26 +1065,31 @@ abstract final class WorldCupHosts {
   /// Where [nationId] stands in [confederation]'s host race of [cycle] before
   /// any bid: whether it may stand (a member, not one of the last three
   /// hosts) and its chance in the ordinary draw (0 when not on the ballot).
-  /// [recentHost] says it is barred for having hosted one of the last three.
-  static ({bool eligible, double today, bool recentHost})
-  continentalBidStanding({
+  /// `recentHost` says it is barred for having hosted one of the last three.
+  static ContBidStanding _legacyContinentalBidStanding({
     required Confederation confederation,
     required int cycle,
     required int seed,
     required List<Nation> nations,
     required int nationId,
   }) {
-    final exclude = _recentContinentalHosts(
+    final byCycle = _recentContinentalHostsByCycle(
       confederation: confederation,
       cycle: cycle,
       seed: seed,
       nations: nations,
     );
+    final exclude = {for (final h in byCycle.values) ...h};
     if (!_contEligible(nationId, nations, confederation, exclude)) {
       return (
         eligible: false,
         today: 0,
         recentHost: exclude.contains(nationId),
+        recentHostCycles: [
+          for (final e in byCycle.entries)
+            if (e.value.contains(nationId)) e.key,
+        ],
+        previousSlotHost: false,
       );
     }
     final bids = _continentalBids(
@@ -553,7 +1099,13 @@ abstract final class WorldCupHosts {
       nations: nations,
       exclude: exclude,
     );
-    return (eligible: true, today: _shareOf(bids, nationId), recentHost: false);
+    return (
+      eligible: true,
+      today: _shareOf(bids, nationId),
+      recentHost: false,
+      recentHostCycles: const <int>[],
+      previousSlotHost: false,
+    );
   }
 
   /// The bid lodged for the continental championship of [cycle], if any. Each
@@ -599,9 +1151,26 @@ abstract final class WorldCupHosts {
     required int cycle,
     required int seed,
     required List<Nation> nations,
+  }) => {
+    for (final h in _recentContinentalHostsByCycle(
+      confederation: confederation,
+      cycle: cycle,
+      seed: seed,
+      nations: nations,
+    ).values)
+      ...h,
+  };
+
+  /// [_recentContinentalHosts] edition by edition: each of the previous
+  /// three cycles with the hosts it bars.
+  static Map<int, List<int>> _recentContinentalHostsByCycle({
+    required Confederation confederation,
+    required int cycle,
+    required int seed,
+    required List<Nation> nations,
     int editions = 3,
   }) {
-    final recent = <int>{};
+    final recent = <int, List<int>>{};
     for (var i = 1; i <= editions; i++) {
       final c = cycle - i;
       if (c < 0) break;
@@ -617,18 +1186,18 @@ abstract final class WorldCupHosts {
       // pick could miss it. One that lost changes nothing here.
       final lodged = _lodgedCont(c, nations);
       if (lodged != null) {
-        final real = continentalHostsFor(
+        final real = _legacyContinentalHostsFor(
           confederation: confederation,
           cycle: c,
           seed: seed,
           nations: nations,
         );
         if (real.contains(lodged.nationId)) {
-          recent.addAll(real);
+          recent[c] = real;
           continue;
         }
       }
-      recent.addAll(_pickBid(bids, _contSeed(confederation, c, seed)));
+      recent[c] = _pickBid(bids, _contSeed(confederation, c, seed));
     }
     return recent;
   }
@@ -682,7 +1251,7 @@ abstract final class WorldCupHosts {
 
   /// Every host of a continental championship — the winning bid, occasionally a
   /// joint one (as at Euro 2000/2008/2012).
-  static List<int> continentalHostsFor({
+  static List<int> _legacyContinentalHostsFor({
     required Confederation confederation,
     required int cycle,
     required int seed,

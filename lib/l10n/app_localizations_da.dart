@@ -12095,6 +12095,18 @@ class AppLocalizationsDa extends AppLocalizations {
       'Du var vært for en af de tre seneste udgaver.';
 
   @override
+  String get hostBidRulesPending =>
+      'Værterne for denne cyklus er ikke offentliggjort endnu. Om du kan søge, afhænger også af dem.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Du er vært for turneringen lige før denne. Ingen nation er vært for to turneringer i træk.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Du har allerede søgt om den anden turnering. Ingen nation er vært for to turneringer i træk, så du kan kun søge om én.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

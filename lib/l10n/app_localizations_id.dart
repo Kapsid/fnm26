@@ -12058,6 +12058,18 @@ class AppLocalizationsId extends AppLocalizations {
       'Anda menjadi tuan rumah salah satu dari tiga edisi terakhir.';
 
   @override
+  String get hostBidRulesPending =>
+      'Tuan rumah siklus ini belum diumumkan. Bisa tidaknya Anda mencalonkan diri juga bergantung pada mereka.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Anda menjadi tuan rumah turnamen tepat sebelum ini. Tidak ada negara yang menjadi tuan rumah dua turnamen berturut-turut.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Anda sudah mencalonkan diri untuk turnamen yang lain. Tidak ada negara yang menjadi tuan rumah dua turnamen berturut-turut, jadi Anda hanya bisa mencalonkan diri untuk satu.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

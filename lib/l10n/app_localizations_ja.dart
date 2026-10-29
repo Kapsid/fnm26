@@ -11721,6 +11721,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hostBidRecentHost => '直近3大会のいずれかを開催しています。';
 
   @override
+  String get hostBidRulesPending =>
+      'このサイクルの開催国はまだ発表されていません。招致できるかどうかは開催国にも左右されます。';
+
+  @override
+  String get hostBidBackToBack => 'この大会の直前の大会を開催します。2大会続けて開催できる国はありません。';
+
+  @override
+  String get hostBidOneOnly =>
+      'もう一方の大会に招致を申し込み済みです。2大会続けて開催できる国はないため、招致できるのは一方のみです。';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

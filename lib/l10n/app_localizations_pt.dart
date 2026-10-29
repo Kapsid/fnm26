@@ -12123,6 +12123,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get hostBidRecentHost => 'Recebeu uma das três últimas edições.';
 
   @override
+  String get hostBidRulesPending =>
+      'As sedes deste ciclo ainda não foram anunciadas. Poder candidatar-se também depende delas.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Recebe o torneio imediatamente anterior a este. Nenhum país recebe dois torneios seguidos.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Já se candidatou ao outro torneio. Nenhum país recebe dois torneios seguidos, por isso só pode candidatar-se a um.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

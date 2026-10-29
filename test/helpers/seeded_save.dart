@@ -140,6 +140,11 @@ Future<SeededSave> seedSave(
                   nationId: seededNationId,
                   managerName: 'M',
                   rngSeed: 20260922,
+                  // The world every golden and widget test was drawn on:
+                  // its hosts as an older save decided them, before the
+                  // current host rules (see `HostBidding.rulesKind`, and
+                  // host_rules_test.dart for the rules themselves).
+                  currentHostRules: false,
                 ))
             .valueOrNull!;
     await container.read(messageInboxProvider(career.id).future);

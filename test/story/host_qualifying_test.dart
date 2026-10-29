@@ -42,7 +42,14 @@ void main() {
         c.dispose();
         await db.close();
       });
-      final d = await StoryDriver.start(c, seed, nationId: hosts.first);
+      // The manager's own nation hosts only through a bid under the current
+      // rules: this is a world as an older save decided it.
+      final d = await StoryDriver.start(
+        c,
+        seed,
+        nationId: hosts.first,
+        currentHostRules: false,
+      );
       final careers = c.read(careerRepositoryProvider);
       final comp = c.read(competitionRepositoryProvider);
       var sawLiveTile = false;
@@ -133,7 +140,14 @@ void main() {
         c.dispose();
         await db.close();
       });
-      final d = await StoryDriver.start(c, seed, nationId: hosts.first);
+      // The manager's own nation hosts only through a bid under the current
+      // rules: this is a world as an older save decided it.
+      final d = await StoryDriver.start(
+        c,
+        seed,
+        nationId: hosts.first,
+        currentHostRules: false,
+      );
       final careers = c.read(careerRepositoryProvider);
       final comp = c.read(competitionRepositoryProvider);
       var checked = false;

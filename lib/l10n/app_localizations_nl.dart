@@ -12114,6 +12114,18 @@ class AppLocalizationsNl extends AppLocalizations {
       'Je was gastland van een van de laatste drie edities.';
 
   @override
+  String get hostBidRulesPending =>
+      'De gastlanden van deze cyclus zijn nog niet bekendgemaakt. Of je je kandidaat kunt stellen, hangt ook van hen af.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Je bent gastland van het toernooi vlak hiervoor. Geen land organiseert twee toernooien op rij.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Je hebt je al kandidaat gesteld voor het andere toernooi. Geen land organiseert twee toernooien op rij, dus je kunt je maar voor één kandidaat stellen.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

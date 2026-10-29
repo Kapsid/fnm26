@@ -12092,6 +12092,18 @@ class AppLocalizationsFi extends AppLocalizations {
   String get hostBidRecentHost => 'Isännöit yhtä kolmesta viime turnauksesta.';
 
   @override
+  String get hostBidRulesPending =>
+      'Tämän kauden isäntiä ei ole vielä julkistettu. Myös niistä riippuu, voitko hakea.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Isännöit tätä edeltävää turnausta. Mikään maa ei isännöi kahta turnausta peräkkäin.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Hait jo toista turnausta. Mikään maa ei isännöi kahta turnausta peräkkäin, joten voit hakea vain yhtä.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

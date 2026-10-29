@@ -12075,6 +12075,18 @@ class AppLocalizationsHi extends AppLocalizations {
       'आपने पिछले तीन संस्करणों में से एक की मेज़बानी की थी।';
 
   @override
+  String get hostBidRulesPending =>
+      'इस चक्र के मेज़बानों की घोषणा अभी बाकी है। आप दावेदारी कर सकते हैं या नहीं, यह उन पर भी निर्भर है।';
+
+  @override
+  String get hostBidBackToBack =>
+      'आप इससे ठीक पहले वाले टूर्नामेंट की मेज़बानी कर रहे हैं। कोई भी देश लगातार दो टूर्नामेंटों की मेज़बानी नहीं करता।';
+
+  @override
+  String get hostBidOneOnly =>
+      'आप दूसरे टूर्नामेंट के लिए दावेदारी कर चुके हैं। कोई भी देश लगातार दो टूर्नामेंटों की मेज़बानी नहीं करता, इसलिए आप केवल एक के लिए दावेदारी कर सकते हैं।';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

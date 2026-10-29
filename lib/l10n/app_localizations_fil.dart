@@ -12145,6 +12145,18 @@ class AppLocalizationsFil extends AppLocalizations {
       'Nag-host ka ng isa sa huling tatlong edisyon.';
 
   @override
+  String get hostBidRulesPending =>
+      'Hindi pa inaanunsyo ang mga host ng cycle na ito. Nakasalalay rin sa kanila kung puwede kang mag-bid.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Ikaw ang host ng torneo bago mismo nito. Walang bansang nagho-host ng dalawang magkasunod na torneo.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Nag-bid ka na para sa kabilang torneo. Walang bansang nagho-host ng dalawang magkasunod na torneo, kaya sa isa ka lang puwedeng mag-bid.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

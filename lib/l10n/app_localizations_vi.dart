@@ -12024,6 +12024,18 @@ class AppLocalizationsVi extends AppLocalizations {
   String get hostBidRecentHost => 'Bạn đã đăng cai một trong ba kỳ gần nhất.';
 
   @override
+  String get hostBidRulesPending =>
+      'Chủ nhà của chu kỳ này chưa được công bố. Việc bạn có thể ứng cử hay không cũng phụ thuộc vào điều đó.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Bạn đăng cai giải đấu ngay trước giải này. Không quốc gia nào đăng cai hai giải liên tiếp.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Bạn đã ứng cử cho giải đấu còn lại. Không quốc gia nào đăng cai hai giải liên tiếp, nên bạn chỉ có thể ứng cử một giải.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

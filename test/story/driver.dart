@@ -128,8 +128,16 @@ AppDatabase storyDb() {
 }
 
 /// [salt] varies the match results between runs of one world (labs).
-ProviderContainer storyContainer([AppDatabase? shared, int salt = 0]) =>
-    _storyContainer(shared ?? storyDb(), premium: true, salt: salt);
+ProviderContainer storyContainer([
+  AppDatabase? shared,
+  int salt = 0,
+  List<Override> overrides = const [],
+]) => _storyContainer(
+  shared ?? storyDb(),
+  premium: true,
+  salt: salt,
+  overrides: overrides,
+);
 
 /// A [storyContainer] for a free player: campaigns, and the free cycle's wall.
 ProviderContainer freeStoryContainer() =>
@@ -139,6 +147,7 @@ ProviderContainer _storyContainer(
   AppDatabase db, {
   required bool premium,
   int salt = 0,
+  List<Override> overrides = const [],
 }) {
   final c = ProviderContainer(
     overrides: [
@@ -158,6 +167,7 @@ ProviderContainer _storyContainer(
       ),
       formFactorProvider.overrideWithValue(FormFactor.phone),
       countryCitiesProvider.overrideWith((ref) async => _cities),
+      ...overrides,
     ],
   );
   return c;
@@ -188,6 +198,7 @@ class StoryDriver {
     int seed, {
     int nationId = england,
     Map<int, int> startingRanks = const {},
+    bool currentHostRules = true,
   }) async {
     await c.read(seedLoaderProvider).ensureSeeded();
     final career =
@@ -198,6 +209,7 @@ class StoryDriver {
                   managerName: 'M. Urbanczyk',
                   rngSeed: seed,
                   startingRanks: startingRanks,
+                  currentHostRules: currentHostRules,
                 ))
             .valueOrNull!;
     return StoryDriver(c, career.id);

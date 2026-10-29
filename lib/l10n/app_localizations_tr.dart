@@ -12067,6 +12067,18 @@ class AppLocalizationsTr extends AppLocalizations {
       'Son üç turnuvadan birine ev sahipliği yaptınız.';
 
   @override
+  String get hostBidRulesPending =>
+      'Bu dönemin ev sahipleri henüz açıklanmadı. Aday olup olamayacağınız onlara da bağlı.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Bundan hemen önceki turnuvaya ev sahipliği yapıyorsunuz. Hiçbir ülke art arda iki turnuvaya ev sahipliği yapamaz.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Diğer turnuva için zaten aday oldunuz. Hiçbir ülke art arda iki turnuvaya ev sahipliği yapamaz, bu yüzden yalnızca birine aday olabilirsiniz.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

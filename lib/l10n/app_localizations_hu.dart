@@ -12095,6 +12095,18 @@ class AppLocalizationsHu extends AppLocalizations {
       'A legutóbbi három torna egyikét te rendezted.';
 
   @override
+  String get hostBidRulesPending =>
+      'A ciklus rendezőit még nem hirdették ki. Az is tőlük függ, hogy pályázhatsz-e.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Te rendezed az ezt megelőző tornát. Egy ország sem rendez két tornát egymás után.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Már pályáztál a másik tornára. Egy ország sem rendez két tornát egymás után, ezért csak az egyikre pályázhatsz.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

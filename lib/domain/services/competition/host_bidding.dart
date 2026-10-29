@@ -112,6 +112,39 @@ abstract final class HostBidding {
   static String nationKey(HostBidComp comp, int editionCycle) =>
       '${comp.code}:$editionCycle';
 
+  /// Prefix of the host-rules markers. Its first letters are not
+  /// [HostBidMarker.prefix], so no read of the bids ever sees one.
+  static const String rulesPrefix = 'hostRules:';
+
+  /// Stamped (row cycle = [cycle]) when [cycle]'s hosts are decided: at the
+  /// creation of a save for cycle 0, and in the rollover for every cycle
+  /// after. [nationId] is the nation the manager runs at that moment.
+  ///
+  /// Its presence is what puts an edition under the current host rules (no
+  /// nation hosts two tournaments in a row, and the manager's own nation
+  /// hosts only when he bid for it; see `WorldCupHosts`). An edition with no
+  /// such marker, which is every edition an older save decided, keeps the
+  /// rules it was decided under, so a host already decided never moves.
+  static String rulesKind(int cycle, int nationId) =>
+      '$rulesPrefix$cycle:$nationId';
+
+  /// The cycle and nation a rules marker names, or null for any other kind.
+  static ({int cycle, int nationId})? decodeRules(String kind) {
+    if (!kind.startsWith(rulesPrefix)) return null;
+    final parts = kind.substring(rulesPrefix.length).split(':');
+    if (parts.length != 2) return null;
+    final cycle = int.tryParse(parts[0]);
+    final nationId = int.tryParse(parts[1]);
+    if (cycle == null || nationId == null) return null;
+    return (cycle: cycle, nationId: nationId);
+  }
+
+  /// `Nation.hostBids` key carrying a rules marker on the nation it names:
+  /// how the host draw (`WorldCupHosts`), which sees only the nations, learns
+  /// which editions follow the current rules and whose nation is the
+  /// manager's.
+  static String managerKey(int cycle) => 'mgr:$cycle';
+
   /// Stamped when the manager turns the offer down, so it is not asked again.
   ///
   /// [nationId] names the nation that turned it down (the bid is made for

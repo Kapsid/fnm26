@@ -98,6 +98,16 @@ extension SeasonRollover on SeasonService {
     // the cycle about to begin, whose calendar is built below.
     await _ref.read(appDatabaseProvider).transaction(() async {
       if (await _comp.hasWatchedDraw(careerId, next, cycleBankedKind)) return;
+      // The new cycle's hosts are decided now, under the current rules, for
+      // the nation the manager takes into it (see `HostBidding.rulesKind`).
+      // A campaign run keeps the rules its seed was searched under.
+      if (campaign == null) {
+        await _comp.markDrawWatched(
+          careerId,
+          next,
+          HostBidding.rulesKind(next, moveTo ?? career.nationId),
+        );
+      }
       budget = await _ref
           .read(hostBidServiceProvider)
           .settlePledges(

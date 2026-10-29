@@ -18483,6 +18483,24 @@ abstract class AppLocalizations {
   /// **'You hosted one of the last three editions.'**
   String get hostBidRecentHost;
 
+  /// Hosting-bids card: this cycle's hosts are not revealed yet, and the next editions' rules depend on them. Shown to every nation alike, so it never hints at who hosts.
+  ///
+  /// In en, this message translates to:
+  /// **'This cycle\'s hosts are still to be announced. Whether you can bid also depends on them.'**
+  String get hostBidRulesPending;
+
+  /// Hosting-bids card: the nation hosts the tournament right before this one (World Championship before the next continental championship, or the continental championship before the World Championship); no nation hosts two in a row.
+  ///
+  /// In en, this message translates to:
+  /// **'You host the tournament just before this one. No nation hosts two in a row.'**
+  String get hostBidBackToBack;
+
+  /// Hosting-bids card: the manager already bid for the other tournament of the same cycle; only one of the two may be bid for.
+  ///
+  /// In en, this message translates to:
+  /// **'You have bid for the other tournament. No nation hosts two in a row, so you can bid for only one.'**
+  String get hostBidOneOnly;
+
   /// Hosting-bids card: what a host needs. minSeats and bigSeats are formatted numbers.
   ///
   /// In en, this message translates to:

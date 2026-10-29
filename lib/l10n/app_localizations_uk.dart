@@ -12189,6 +12189,18 @@ class AppLocalizationsUk extends AppLocalizations {
       'Ви приймали один із трьох останніх турнірів.';
 
   @override
+  String get hostBidRulesPending =>
+      'Господарів цього циклу ще не оголошено. Від них залежить і те, чи зможете ви подати заявку.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Ви приймаєте турнір, що йде безпосередньо перед цим. Жодна країна не приймає два турніри поспіль.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Ви вже подали заявку на інший турнір. Жодна країна не приймає два турніри поспіль, тож подати заявку можна лише на один.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

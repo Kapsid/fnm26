@@ -11750,6 +11750,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hostBidRecentHost => '최근 3개 대회 중 하나를 개최했습니다.';
 
   @override
+  String get hostBidRulesPending =>
+      '이번 주기의 개최국은 아직 발표되지 않았습니다. 유치 신청 가능 여부는 개최국에 따라서도 달라집니다.';
+
+  @override
+  String get hostBidBackToBack =>
+      '이 대회 바로 앞 대회를 개최합니다. 어떤 나라도 두 대회를 연달아 개최할 수 없습니다.';
+
+  @override
+  String get hostBidOneOnly =>
+      '이미 다른 대회에 유치를 신청했습니다. 어떤 나라도 두 대회를 연달아 개최할 수 없으므로 한 대회만 신청할 수 있습니다.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

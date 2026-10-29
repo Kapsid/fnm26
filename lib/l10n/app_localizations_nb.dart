@@ -12078,6 +12078,18 @@ class AppLocalizationsNb extends AppLocalizations {
       'Du var vert for en av de tre siste utgavene.';
 
   @override
+  String get hostBidRulesPending =>
+      'Vertskapene for denne syklusen er ikke kunngjort ennå. Om du kan søke, avhenger også av dem.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Du er vert for turneringen rett før denne. Ingen nasjon er vert for to turneringer på rad.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Du har allerede søkt om den andre turneringen. Ingen nasjon er vert for to turneringer på rad, så du kan bare søke om én.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

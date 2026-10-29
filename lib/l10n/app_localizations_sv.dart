@@ -12073,6 +12073,18 @@ class AppLocalizationsSv extends AppLocalizations {
       'Du var värd för en av de tre senaste upplagorna.';
 
   @override
+  String get hostBidRulesPending =>
+      'Den här cykelns värdländer har inte tillkännagetts än. Om du kan söka beror också på dem.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Du är värd för turneringen precis före den här. Inget land är värd för två turneringar i rad.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Du har redan sökt den andra turneringen. Inget land är värd för två turneringar i rad, så du kan bara söka en.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
@@ -40,40 +41,51 @@ playerAwardsProvider = FutureProvider.autoDispose
 /// so never offers a ceremony.
 String potyDueKind(int year) => 'potyDue:$year';
 
+/// Marks a year whose vote could not be held (nobody qualified, or the vote
+/// failed), so it is not tried again at every step and hub moment.
+String potyVoidKind(int year) => 'potyVoid:$year';
+
 /// Marks a year's ceremony as taken: watched, skipped to the list, or
 /// simulated past.
 String potySeenKind(int year) => 'potySeen:$year';
 
-/// The year whose awards the vote on [date] belongs to: the year itself from
-/// 1 December (see [AwardService.settleYear]), else the one before.
+/// The day of a year's vote: 31 December, once the whole year's football
+/// is in (the owner's rule: "2030 on 31/12/2030").
+DateTime potyVoteDay(int year) => DateTime(year, 12, 31);
+
+/// The latest year whose vote is due on [date]: the year itself on its 31
+/// December, else the one before.
 int potyYearOn(DateTime date) =>
-    date.month >= CareerService.developmentMonth ? date.year : date.year - 1;
+    date.isBefore(potyVoteDay(date.year)) ? date.year - 1 : date.year;
 
 /// The day a step from [clock] towards [target] must stop on so the year's
-/// vote is held when its football ends: 1 December of the clock's year, when
-/// the step would carry the clock past it, else null.
+/// vote is held when its football ends: 31 December of the clock's year,
+/// when the step would carry the clock past it, else null. A fixture ON the
+/// day is played first (the step is not stopped) and the vote follows it at
+/// that step's end, so no December football is ever left out of a year.
 ///
 /// Without the stop, a manager whose next match was months away (the last
-/// qualifier in October, the finals in June) crossed December inside one
+/// qualifier in October, the finals in June) crossed the new year inside one
 /// step and met "Player of the Year 2029" in the middle of the 2030 finals.
 /// The hub offers the stop as its own step (see [nextEventProvider]) before
 /// a match beyond it, and [SeasonService.advance] takes it.
 DateTime? voteStopBefore(DateTime clock, DateTime target) {
-  final day = DateTime(clock.year, CareerService.developmentMonth);
+  final day = potyVoteDay(clock.year);
   return clock.isBefore(day) && target.isAfter(day) ? day : null;
 }
 
-/// The year whose ceremony is waiting to be seen, or null.
+/// The year whose ceremony is waiting to be seen, the oldest first, or null.
 ///
-/// Only the latest two years are ever asked: a ceremony is marked seen the
-/// moment the world moves on (see [AwardService.markCeremoniesSeen]), so an
-/// older one cannot still be waiting.
+/// Every year of the career is asked, not just the latest two: a save that
+/// missed some years' votes has them caught up all at once (see
+/// [AwardService.settleYear]), which leaves only the most recent of them
+/// waiting.
 Future<int?> pendingCeremonyYear(
   CompetitionRepository comp,
   Career career,
 ) async {
   final latest = potyYearOn(career.inGameDate);
-  for (final year in [latest, latest - 1]) {
+  for (var year = CareerService.cycleStart.year; year <= latest; year++) {
     if (await comp.hasWatchedDraw(career.id, 0, potyDueKind(year)) &&
         !await comp.hasWatchedDraw(career.id, 0, potySeenKind(year))) {
       return year;
@@ -122,39 +134,99 @@ class AwardService {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return;
     // Only years whose FOOTBALL has finished: an award handed out in June would
-    // be handed to whoever happened to have played by then. That moment is 1
-    // December — the gap between the November qualifying window and January's
-    // African and Asian finals, and the same date the squads re-rate on (see
-    // [CareerService.developmentMonth]).
+    // be handed to whoever happened to have played by then. That moment is 31
+    // December (see [potyVoteDay]); the clock stops on it (see
+    // [voteStopBefore]).
     //
     // It used to wait for the calendar to roll over instead, which put the
     // trophy in the inbox in the NEW year: at a cycle boundary that meant
     // "Player of the Year 2029" arriving as the first thing a manager read in
     // 2030, alongside the new cycle, months after the season it was for.
     //
-    // The year before is looked at too. A manager who plays every match of
-    // his own can step over December without a single quick-sim, and the
-    // vote used to look only at the year the clock was in, so that year was
-    // skipped for good. Settling also runs before his own matches now (see
-    // [SeasonService]), and a year missed is still voted the next time.
+    // EVERY year of the career without a vote is voted, the oldest first,
+    // not only the last two: a save that went past a year's 31 December
+    // without one (an older build, a step that never settled) is caught up
+    // here rather than skipped for good. Cheap once caught up: a voted year
+    // is only a key looked up, and a year that cannot be voted is marked
+    // (see [potyVoidKind]) and never tried again.
+    final comp = _ref.read(competitionRepositoryProvider);
     final latest = potyYearOn(career.inGameDate);
-    for (final year in [latest - 1, latest]) {
-      await _settle(career, year);
+    final voted = await comp.messageKeys(careerId);
+    final newestVoted = [
+      for (var y = CareerService.cycleStart.year; y <= latest; y++)
+        if (voted.contains('poty:$y')) y,
+    ].lastOrNull;
+    final filed = <int>[];
+    for (final year in await _owed(career, voted)) {
+      // One bad year never blocks the others, nor the step or the hub that
+      // asked: it is logged and set aside.
+      bool ok;
+      try {
+        ok = await _settle(career, year, latest: latest);
+      } on Object catch (e, st) {
+        AppLog.error('awards:settle $year', e, st);
+        ok = false;
+      }
+      if (ok) {
+        filed.add(year);
+      } else {
+        await comp.markDrawWatched(careerId, 0, potyVoidKind(year));
+      }
+    }
+    // A catch-up of several years at once offers ONE ceremony, the most
+    // recent year's; the older ones are filed (honours, inbox message, top
+    // five) and their ceremonies marked seen silently, so an old save is not
+    // flooded with a ceremony per missed year. And none at all for a year
+    // older than one already voted: its ceremony (and the manager's) has been
+    // held, and an older one after it would be out of order.
+    for (final year in filed) {
+      final offered =
+          year == filed.last && (newestVoted == null || year > newestVoted);
+      if (!offered) {
+        await comp.markDrawWatched(careerId, 0, potySeenKind(year));
+      }
     }
   }
 
-  Future<void> _settle(Career career, int year) async {
+  /// The years of [career] whose vote is due and was neither filed (in
+  /// [voted]) nor found impossible, the oldest first.
+  Future<List<int>> _owed(Career career, Set<String> voted) async {
+    final comp = _ref.read(competitionRepositoryProvider);
+    final latest = potyYearOn(career.inGameDate);
+    return [
+      for (var y = CareerService.cycleStart.year; y <= latest; y++)
+        if (!voted.contains('poty:$y') &&
+            !await comp.hasWatchedDraw(career.id, 0, potyVoidKind(y)))
+          y,
+    ];
+  }
+
+  /// Whether some year of [careerId] whose vote is due has none yet.
+  Future<bool> behind(int careerId) async {
+    final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+    if (career == null) return false;
+    final voted = await _ref
+        .read(competitionRepositoryProvider)
+        .messageKeys(careerId);
+    return (await _owed(career, voted)).isNotEmpty;
+  }
+
+  /// Votes [year], and says whether it was filed now.
+  ///
+  /// [latest] is the newest year due now: only that year's winner lifts the
+  /// manager's dressing room. An older year caught up late is history.
+  Future<bool> _settle(Career career, int year, {required int latest}) async {
     final careerId = career.id;
     final comp = _ref.read(competitionRepositoryProvider);
     final l = _ref.read(appLocalizationsProvider);
-    if (year < CareerService.cycleStart.year) return;
+    if (year < CareerService.cycleStart.year) return false;
     final existing = await comp.messageKeys(careerId);
     // A year already voted is never voted again, by this build or an older
     // one — and an older one's year gets no ceremony.
-    if (existing.contains('poty:$year')) return;
+    if (existing.contains('poty:$year')) return false;
 
     final raw = await comp.awardYearData(careerId, year);
-    if (raw.appearances.isEmpty) return;
+    if (raw.appearances.isEmpty) return false;
     final nations = {
       for (final n
           in await _ref.read(nationRepositoryProvider).forCareer(careerId))
@@ -186,8 +258,8 @@ class AwardService {
           ),
     };
     // Nobody played even three games: a year with no football to speak of.
-    // It is asked again on the next step.
-    if (ceiling.isEmpty) return;
+    // It is marked void and not asked again (see [potyVoidKind]).
+    if (ceiling.isEmpty) return false;
     final ranked =
         [
           for (final id in ceiling.keys) awardYear.lines[id]!,
@@ -227,7 +299,7 @@ class AwardService {
         );
       }
     }
-    if (profiles.isEmpty) return;
+    if (profiles.isEmpty) return false;
 
     final honours = stored.honours;
     final best = PlayerOfYear.rank(
@@ -243,7 +315,7 @@ class AwardService {
       eligible: PlayerOfYear.young,
       limit: 3,
     );
-    if (best.isEmpty) return;
+    if (best.isEmpty) return false;
     for (final (entry, kind) in [
       (best.first, AwardKind.playerOfYear),
       if (young.isNotEmpty) (young.first, AwardKind.youngPlayerOfYear),
@@ -277,7 +349,7 @@ class AwardService {
     // The manager's own man is the best in the world: the dressing room
     // feels it. Small, and through the press effect every other mood swing
     // uses, so it expires with the cycle like the rest.
-    if (best.first.nationId == career.nationId) {
+    if (year == latest && best.first.nationId == career.nationId) {
       final repo = _ref.read(careerRepositoryProvider);
       final key = '$potyPressPrefix$year';
       final already = (await repo.pressAnswers(
@@ -299,6 +371,7 @@ class AwardService {
     _ref
       ..invalidate(playerAwardsProvider)
       ..invalidate(potyVoteProvider);
+    return true;
   }
 
   /// Stores a finished tournament's individual honours (Golden Ball, Golden
@@ -438,7 +511,7 @@ class AwardService {
   /// [storeFinishedTournaments]); any championship of the year still without
   /// them (a final played before this build, or one of a cycle already
   /// rolled over) is stored here first, the same way. Every one of them has
-  /// finished by 1 December (the last finals end in July).
+  /// finished by 31 December (the last finals end in July).
   ///
   /// Also hands back the nation of every holder, so his squad is resolved
   /// for the vote even when he is nowhere near the shortlist (a keeper's

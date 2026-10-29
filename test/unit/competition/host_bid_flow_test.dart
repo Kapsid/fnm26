@@ -135,15 +135,30 @@ Future<void> _finishCycle(_World w) async {
   await comp.recordResult(fixtureId: fin.last.id, homeScore: 1, awayScore: 0);
 }
 
+/// The world of a new save managed by [nationId] through cycles 0 and 1:
+/// its hosts follow the current rules (see `HostBidding.rulesKind`).
+List<Nation> _managed(int nationId) => [
+  for (final n in _nations)
+    n.id == nationId
+        ? n.copyWith(
+            hostBids: {
+              HostBidding.managerKey(0): 1,
+              HostBidding.managerKey(1): 1,
+            },
+          )
+        : n,
+];
+
 /// Whether a continental bid by [_bidder] at [levels] would win the cycle-1
 /// edition of world [seed], or null when the rotation bars it. Worked out on
 /// the domain alone, so the flow below can be pointed at a win and at a loss.
 bool? _wouldWin(int seed, int levels) {
+  final managed = _managed(_bidder.id);
   final standing = WorldCupHosts.continentalBidStanding(
     confederation: Confederation.europe,
     cycle: 1,
     seed: seed,
-    nations: _nations,
+    nations: managed,
     nationId: _bidder.id,
   );
   if (!standing.eligible) return null;
@@ -155,10 +170,11 @@ bool? _wouldWin(int seed, int levels) {
     ),
   );
   final world = [
-    for (final n in _nations)
+    for (final n in managed)
       n.id == _bidder.id
           ? n.copyWith(
               hostBids: {
+                ...n.hostBids,
                 HostBidding.nationKey(HostBidComp.continental, 1): permille,
               },
             )
@@ -180,6 +196,19 @@ int _seedWhere(bool? Function(int seed) wanted, Object? value) {
   return seed;
 }
 
+/// [world] without the host-rules markers every new career carries (see
+/// `HostBidding.rulesKind`): they ride on the nations but are no part of
+/// the world itself.
+List<Nation> _bare(List<Nation> world) => [
+  for (final n in world)
+    n.copyWith(
+      hostBids: {
+        for (final e in n.hostBids.entries)
+          if (!e.key.startsWith('mgr:')) e.key: e.value,
+      },
+    ),
+];
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -188,7 +217,7 @@ void main() {
     () async {
       final w = await _world(seed: 41);
       final repo = w.c.read(nationRepositoryProvider);
-      expect(await repo.forCareer(w.careerId), await repo.all());
+      expect(_bare(await repo.forCareer(w.careerId)), await repo.all());
       final before = await _budget(w);
       final service = w.c.read(hostBidServiceProvider);
       expect(await service.resolveDue(w.careerId), isFalse);
@@ -218,7 +247,7 @@ void main() {
     }
     final wc = WorldCupHosts.worldCupBidStanding(
       year: CareerService.worldCupYear(1),
-      nations: _nations,
+      nations: _managed(_bidder.id),
       seed: seed,
       nationId: _bidder.id,
     );
@@ -257,23 +286,29 @@ void main() {
   });
 
   test(
-    'g) the rotation: a recent host may not bid, and the card says so',
+    'g) the rotation: a recent host may not bid, and the card says so; '
+    'a host decided before a move stays the host',
     () async {
-      // A world where the bidder hosted cycle 0's championship: barred from
-      // cycle 1's.
+      // The manager's own nation never hosts without a bid, so the recent
+      // host is the nation he moves to: a world (managed from San Marino)
+      // where the bidder hosted cycle 0's championship, barred from cycle
+      // 1's.
+      final first = _europe.last;
+      final world0 = _managed(first.id);
       var seed = 1;
       while (!WorldCupHosts.continentalHostsFor(
         confederation: Confederation.europe,
         cycle: 0,
         seed: seed,
-        nations: _nations,
+        nations: world0,
       ).contains(_bidder.id)) {
         seed++;
       }
-      final w = await _world(seed: seed);
+      final w = await _world(seed: seed, nation: first);
       await _finishCycle(w);
       final cont = (await _statuses(
         w,
+        _bidder.id,
       )).firstWhere((s) => s.comp == HostBidComp.continental);
       expect(cont.recentHost, isTrue);
       expect(cont.eligible, isFalse);
@@ -282,18 +317,47 @@ void main() {
       // not host 2034.
       final wcHost = WorldCupHosts.hostFor(
         year: CareerService.worldCupYear(0),
-        nations: _nations,
+        nations: world0,
         seed: seed,
       );
       final hostConf = _nations.firstWhere((n) => n.id == wcHost).confederation;
       final wc = (await _statuses(
         w,
+        _bidder.id,
       )).firstWhere((s) => s.comp == HostBidComp.worldChampionship);
       expect(
         wc.barredConfederation,
         hostConf == Confederation.europe ? Confederation.europe : isNull,
       );
+
+      // He takes the job: cycle 0's host is still cycle 0's host.
+      await w.c
+          .read(seasonServiceProvider)
+          .startNextCycle(w.careerId, switchToNationId: _bidder.id);
+      final world = await w.c
+          .read(nationRepositoryProvider)
+          .forCareer(w.careerId);
+      expect(
+        WorldCupHosts.continentalHostsFor(
+          confederation: Confederation.europe,
+          cycle: 0,
+          seed: seed,
+          nations: world,
+        ),
+        contains(_bidder.id),
+      );
+      // And under him the new cycle's hosts are not his nation's.
+      expect(
+        WorldCupHosts.continentalHostsFor(
+          confederation: Confederation.europe,
+          cycle: 1,
+          seed: seed,
+          nations: world,
+        ),
+        isNot(contains(_bidder.id)),
+      );
     },
+    timeout: const Timeout(Duration(minutes: 4)),
   );
 
   test('a free save is never offered a bid', () async {
@@ -328,7 +392,7 @@ void main() {
     expect(kinds.where((k) => HostBidMarker.decode(k) != null), isEmpty);
     // The draw cannot see a pledge.
     expect(
-      await w.c.read(nationRepositoryProvider).forCareer(w.careerId),
+      _bare(await w.c.read(nationRepositoryProvider).forCareer(w.careerId)),
       await w.c.read(nationRepositoryProvider).all(),
     );
     final cont = (await _statuses(
@@ -343,7 +407,8 @@ void main() {
   });
 
   test(
-    'pledges together never pass the money the rollover will have',
+    'one tournament per cycle: once a bid is pledged the other is closed, '
+    'and a stale offer for it is refused',
     () async {
       final seed = _seedWhere((s) => _wouldWin(s, 1) != null, true);
       final w = await _world(seed: seed);
@@ -355,11 +420,19 @@ void main() {
       )).firstWhere((o) => o.comp == HostBidComp.continental);
       final service = w.c.read(hostBidServiceProvider);
       expect(await service.place(offer, offer.maxLevels + 1), isFalse);
-      expect(await service.place(offer, offer.maxLevels), isTrue);
-      final left = offer.freeFunds - offer.maxLevels * HostBidOdds.levelPrice;
-      // A second pledge (a stale offer that still shows the old funds) only
-      // fits in what is left.
-      HostBidOffer wc(int funds) => HostBidOffer(
+      expect(await service.place(offer, 1), isTrue);
+      // The World Championship's offer is gone, and the card says why.
+      expect(
+        (await _offers(w)).any((o) => o.comp == HostBidComp.worldChampionship),
+        isFalse,
+      );
+      final wcStatus = (await _statuses(
+        w,
+      )).firstWhere((s) => s.comp == HostBidComp.worldChampionship);
+      expect(wcStatus.otherBidLodged, isTrue);
+      expect(wcStatus.offer, isNull);
+      // A stale offer (the screen still open) cannot pledge it either.
+      final stale = HostBidOffer(
         careerId: offer.careerId,
         comp: HostBidComp.worldChampionship,
         editionCycle: offer.editionCycle,
@@ -367,18 +440,9 @@ void main() {
         nation: offer.nation,
         size: offer.size,
         today: 0,
-        freeFunds: funds,
+        freeFunds: offer.freeFunds,
       );
-      final room = left ~/ HostBidOdds.levelPrice;
-      if (room + 1 <= HostBidOdds.maxLevels) {
-        expect(await service.place(wc(offer.freeFunds), room + 1), isFalse);
-      }
-      if (room >= 1) {
-        expect(
-          await service.place(wc(offer.freeFunds), room.clamp(1, 10)),
-          isTrue,
-        );
-      }
+      expect(await service.place(stale, 1), isFalse);
       expect(await _budget(w), 0);
     },
   );
@@ -499,10 +563,11 @@ void main() {
       (n) => _estateMeets(n.id, HostingRequirements.worldChampionship),
     );
     final year = CareerService.worldCupYear(1);
+    final managed = _managed(big.id);
     bool? wins(int seed) {
       final st = WorldCupHosts.worldCupBidStanding(
         year: year,
-        nations: _nations,
+        nations: managed,
         seed: seed,
         nationId: big.id,
       );
@@ -515,10 +580,11 @@ void main() {
         ),
       );
       final world = [
-        for (final n in _nations)
+        for (final n in managed)
           n.id == big.id
               ? n.copyWith(
                   hostBids: {
+                    ...n.hostBids,
                     HostBidding.nationKey(HostBidComp.worldChampionship, 1):
                         permille,
                   },
@@ -532,7 +598,7 @@ void main() {
       );
       final without = WorldCupHosts.hostsFor(
         year: year,
-        nations: _nations,
+        nations: managed,
         seed: seed,
       );
       // A world the bid itself turns.
@@ -712,7 +778,7 @@ void main() {
       confederation: Confederation.europe,
       cycle: 1,
       seed: seed,
-      nations: _nations,
+      nations: _managed(_bidder.id),
       nationId: _bidder.id,
     );
     final old = HostBidMarker(

@@ -45,6 +45,9 @@ abstract class Nation with _$Nation {
     /// the winning chance in permille the manager was shown. Attached by
     /// `NationRepository.forCareer` from the career's markers; empty
     /// everywhere else, which leaves every host draw exactly as it was.
+    ///
+    /// Also carries the career's host-rules markers on the nation each names,
+    /// keyed `mgr:<cycle>` (see `HostBidding.managerKey`, value 1).
     @Default(<String, int>{}) Map<String, int> hostBids,
   }) = _Nation;
 

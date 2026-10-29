@@ -66,20 +66,27 @@ class DriftNationRepository implements NationRepository {
       _withHostBids(careerId, await _worldOf(careerId));
 
   /// [world] with the career's host bids attached to the nations that lodged
-  /// them (see `Nation.hostBids`). Not cached: a bid is placed mid-career and
-  /// must be seen by the very next read. A career that never bid has no
-  /// marker, and its world comes back untouched.
+  /// them (see `Nation.hostBids`), and its host-rules markers to the nations
+  /// they name (see `HostBidding.rulesKind`). Not cached: a bid is placed
+  /// mid-career and must be seen by the very next read. A career with
+  /// neither marker comes back untouched.
   Future<List<Nation>> _withHostBids(int careerId, List<Nation> world) async {
     final rows =
         await (_db.select(_db.drawsWatched)..where(
               (t) =>
                   t.careerId.equals(careerId) &
-                  t.kind.like('${HostBidMarker.prefix}%'),
+                  (t.kind.like('${HostBidMarker.prefix}%') |
+                      t.kind.like('${HostBidding.rulesPrefix}%')),
             ))
             .get();
     if (rows.isEmpty) return world;
     final byNation = <int, Map<String, int>>{};
     for (final r in rows) {
+      if (HostBidding.decodeRules(r.kind) case final rule?) {
+        (byNation[rule.nationId] ??= {})[HostBidding.managerKey(rule.cycle)] =
+            1;
+        continue;
+      }
       final m = HostBidMarker.decode(r.kind);
       if (m == null) continue;
       (byNation[m.nationId] ??= {})[m.nationKey] = m.permille;

@@ -12102,6 +12102,18 @@ class AppLocalizationsCs extends AppLocalizations {
       'Pořádali jste jeden z posledních tří ročníků.';
 
   @override
+  String get hostBidRulesPending =>
+      'Pořadatelé tohoto cyklu zatím nebyli oznámeni. Na nich závisí i to, zda můžete kandidovat.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Pořádáte turnaj bezprostředně před tímto. Žádná země nepořádá dva turnaje po sobě.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Už jste kandidovali na druhý turnaj. Žádná země nepořádá dva turnaje po sobě, proto můžete kandidovat jen na jeden.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

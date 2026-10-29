@@ -12133,6 +12133,18 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sie waren Gastgeber einer der letzten drei Ausgaben.';
 
   @override
+  String get hostBidRulesPending =>
+      'Die Gastgeber dieses Zyklus stehen noch nicht fest. Ob Sie sich bewerben können, hängt auch von ihnen ab.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Sie richten das Turnier direkt davor aus. Kein Land richtet zwei Turniere in Folge aus.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Sie haben sich bereits für das andere Turnier beworben. Kein Land richtet zwei Turniere in Folge aus, daher ist nur eine Bewerbung möglich.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

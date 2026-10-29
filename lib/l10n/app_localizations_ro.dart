@@ -12261,6 +12261,18 @@ class AppLocalizationsRo extends AppLocalizations {
       'Ați găzduit una dintre ultimele trei ediții.';
 
   @override
+  String get hostBidRulesPending =>
+      'Gazdele acestui ciclu nu au fost încă anunțate. Și de ele depinde dacă puteți candida.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Găzduiți turneul de imediat dinaintea acestuia. Nicio țară nu găzduiește două turnee la rând.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Ați candidat deja pentru celălalt turneu. Nicio țară nu găzduiește două turnee la rând, așa că puteți candida doar pentru unul.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

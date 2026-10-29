@@ -600,11 +600,17 @@ class _StatusRow extends StatelessWidget {
       lines.add((l.hostBidLodged, AppColors.positive));
     } else if (s.declined) {
       lines.add((l.hostBidDeclinedNote, muted));
+    } else if (s.otherBidLodged) {
+      lines.add((l.hostBidOneOnly, muted));
     } else if (s.eligible) {
       if (s.offer != null) {
         lines.add((l.hostBidOpenSub, muted));
       } else if (s.windowOpen) {
         lines.add((l.hostBidNoFunds, AppColors.warning));
+      } else if (s.rulesPending) {
+        // Never "eligible" while this cycle's hosts are hidden: whether the
+        // rules bar the nation is not the manager's to know yet.
+        lines.add((l.hostBidRulesPending, muted));
       } else {
         lines.add((l.hostBidOpensLater, AppColors.positive));
       }
@@ -616,6 +622,7 @@ class _StatusRow extends StatelessWidget {
         ));
       }
       if (s.recentHost) lines.add((l.hostBidRecentHost, AppColors.warning));
+      if (s.backToBack) lines.add((l.hostBidBackToBack, AppColors.warning));
       if (s.shortfall.bigGrounds > 0) {
         lines.add((
           l.hostBidNeedStadiums(
@@ -634,6 +641,7 @@ class _StatusRow extends StatelessWidget {
           AppColors.warning,
         ));
       }
+      if (s.rulesPending) lines.add((l.hostBidRulesPending, muted));
     }
     final body = Padding(
       padding: const EdgeInsets.symmetric(

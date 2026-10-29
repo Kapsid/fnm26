@@ -5,6 +5,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/schedule_generator.dart';
@@ -72,6 +73,19 @@ Future<({ProviderContainer c, Career career})> _start(
   return (c: c, career: career);
 }
 
+/// [world] without the host-rules markers every new career carries (see
+/// `HostBidding.rulesKind`): they ride on the nations but are no part of
+/// the world itself.
+List<Nation> _bare(List<Nation> world) => [
+  for (final n in world)
+    n.copyWith(
+      hostBids: {
+        for (final e in n.hostBids.entries)
+          if (!e.key.startsWith('mgr:')) e.key: e.value,
+      },
+    ),
+];
+
 void main() {
   // Two databases at once, on purpose.
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -106,7 +120,7 @@ void main() {
 
       // Its world is the base world.
       final world = await repo.forCareer(id);
-      expect(world, await repo.all());
+      expect(_bare(world), await repo.all());
       expect(world.map((n) => n.id), isNot(contains(212)));
 
       // Every fixture of both cycles' calendars, byte for byte.
@@ -149,7 +163,15 @@ void main() {
         for (final t in tables)
           [for (final s in t.standings) s.nationId]..sort(),
       ];
-      final rebuilt = _euroQualifyingGroups(seed, seedNations);
+      // A new save's hosts follow the current rules with its nation as the
+      // manager's (see `HostBidding.rulesKind`).
+      final marked = [
+        for (final n in seedNations)
+          n.id == nationId
+              ? n.copyWith(hostBids: {HostBidding.managerKey(0): 1})
+              : n,
+      ];
+      final rebuilt = _euroQualifyingGroups(seed, marked);
       expect(
         {for (final g in stored) g.join(',')},
         {for (final g in rebuilt) g.join(',')},
@@ -165,7 +187,7 @@ void main() {
           ),
           WorldCupHosts.hostsFor(
             year: CareerService.worldCupYear(cycle),
-            nations: seedNations,
+            nations: marked,
             seed: seed,
           ),
         );
@@ -180,7 +202,7 @@ void main() {
             confederation: Confederation.europe,
             cycle: cycle,
             seed: seed,
-            nations: seedNations,
+            nations: marked,
           ),
         );
       }

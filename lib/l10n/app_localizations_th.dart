@@ -11923,6 +11923,18 @@ class AppLocalizationsTh extends AppLocalizations {
   String get hostBidRecentHost => 'คุณเป็นเจ้าภาพหนึ่งในสามครั้งล่าสุด';
 
   @override
+  String get hostBidRulesPending =>
+      'ยังไม่ได้ประกาศเจ้าภาพของรอบนี้ การเสนอตัวได้หรือไม่ขึ้นอยู่กับเจ้าภาพเหล่านั้นด้วย';
+
+  @override
+  String get hostBidBackToBack =>
+      'คุณเป็นเจ้าภาพทัวร์นาเมนต์ที่จัดก่อนหน้านี้พอดี ไม่มีชาติใดเป็นเจ้าภาพสองทัวร์นาเมนต์ติดต่อกัน';
+
+  @override
+  String get hostBidOneOnly =>
+      'คุณเสนอตัวเป็นเจ้าภาพอีกทัวร์นาเมนต์ไปแล้ว ไม่มีชาติใดเป็นเจ้าภาพสองทัวร์นาเมนต์ติดต่อกัน จึงเสนอตัวได้เพียงรายการเดียว';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,

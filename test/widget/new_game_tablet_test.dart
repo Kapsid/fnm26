@@ -40,6 +40,7 @@ class _GatedCareers extends CareerService {
     List<String> worldMarkers = const [],
     Map<int, int> startingRanks = const {},
     bool freezeStartingRanks = false,
+    bool? currentHostRules,
   }) async {
     await gate?.future;
     if (throwOnce) {
@@ -54,6 +55,7 @@ class _GatedCareers extends CareerService {
       worldMarkers: worldMarkers,
       startingRanks: startingRanks,
       freezeStartingRanks: freezeStartingRanks,
+      currentHostRules: currentHostRules,
     );
   }
 }

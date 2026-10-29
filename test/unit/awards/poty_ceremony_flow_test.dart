@@ -106,7 +106,7 @@ void main() {
       await c.read(seasonServiceProvider).advance(d.careerId);
       final career = (await c.read(careerRepositoryProvider).byId(d.careerId))!;
       final comp = c.read(competitionRepositoryProvider);
-      // The advance may run on to the next 1 December (a host with no
+      // The advance may run on to the next 31 December (a host with no
       // qualifiers has nothing to stop for in between) and file that year:
       // it is THIS year that must be gone.
       expect(await pendingCeremonyYear(comp, career), isNot(year));
@@ -308,7 +308,7 @@ void main() {
   });
 
   test('a World Championship\'s honours are fixed the night of the final, '
-      'and the vote on 1 December reads the same rows', () async {
+      'and the vote on 31 December reads the same rows', () async {
     final comp = c.read(competitionRepositoryProvider);
     // To the final: the hub then offers the next cycle.
     for (var i = 0; i < 3000; i++) {

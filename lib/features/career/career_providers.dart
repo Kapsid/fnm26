@@ -14,6 +14,7 @@ import 'package:fnm/domain/repositories/player_repository.dart'
     show namePoolsV2Kind, namePoolsV3Kind, namePoolsV4Kind;
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
+import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
@@ -190,6 +191,12 @@ class CareerService {
     /// campaign run asks for it, so the world its seed was searched on stays
     /// its world whatever ranking a later update ships.
     bool freezeStartingRanks = false,
+
+    /// Whether its hosts follow the current rules from cycle 0 (see
+    /// `HostBidding.rulesKind`). Defaults to [countsTowardSlots]: a campaign
+    /// run keeps the rules its seed was searched under. A test passes false
+    /// to start a world as an older save decided it.
+    bool? currentHostRules,
   }) async {
     final repo = _ref.read(careerRepositoryProvider);
     final premium = _ref.read(premiumUnlockedProvider);
@@ -219,6 +226,17 @@ class CareerService {
       );
       for (final marker in worldMarkers) {
         await comp.markDrawWatched(career.id, 0, marker);
+      }
+      // Its hosts follow the current rules from the first cycle: no nation
+      // hosts two tournaments in a row, and the manager's nation hosts only
+      // when it bids (see `HostBidding.rulesKind`). A campaign run keeps the
+      // rules its seed was searched under: its scenario is designed.
+      if (currentHostRules ?? countsTowardSlots) {
+        await comp.markDrawWatched(
+          career.id,
+          0,
+          HostBidding.rulesKind(0, nationId),
+        );
       }
       if (startingRanks.isNotEmpty || freezeStartingRanks) {
         // The career's own world (a dormant nation in it included), each

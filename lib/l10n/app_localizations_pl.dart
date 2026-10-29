@@ -12218,6 +12218,18 @@ class AppLocalizationsPl extends AppLocalizations {
       'Byłeś gospodarzem jednej z trzech ostatnich edycji.';
 
   @override
+  String get hostBidRulesPending =>
+      'Gospodarze tego cyklu nie zostali jeszcze ogłoszeni. Od nich też zależy, czy możesz złożyć kandydaturę.';
+
+  @override
+  String get hostBidBackToBack =>
+      'Organizujesz turniej bezpośrednio przed tym. Żaden kraj nie jest gospodarzem dwóch turniejów z rzędu.';
+
+  @override
+  String get hostBidOneOnly =>
+      'Złożyłeś już kandydaturę na drugi turniej. Żaden kraj nie jest gospodarzem dwóch turniejów z rzędu, więc możesz kandydować tylko na jeden.';
+
+  @override
   String hostBidRequirement(
     int grounds,
     String minSeats,
