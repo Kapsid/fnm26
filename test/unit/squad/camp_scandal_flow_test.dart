@@ -22,6 +22,8 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
+import 'package:fnm/features/tactics/nomination_providers.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 
 import '../../helpers/test_database.dart';
@@ -40,12 +42,16 @@ void main() {
   late Fixture first;
   late List<int> squad;
 
+  /// The scandal's man, for [renamed] to leave out.
+  int? s0;
+
   ProviderContainer open({String? language}) {
     final container = ProviderContainer(
       overrides: [
         if (language != null)
           uiLanguageCodeProvider.overrideWithValue(language),
         appDatabaseProvider.overrideWithValue(db),
+        campScandalsEnabledProvider.overrideWithValue(true),
         premiumUnlockedProvider.overrideWith((ref) => true),
         seedSourceProvider.overrideWithValue(
           InMemorySeedSource(nationList: nations, playerList: players),
@@ -307,6 +313,112 @@ void main() {
           careerId,
         );
     expect(keys, contains(scandalMessageKey(0, s.playerId)));
+  });
+
+  /// The squad named again with [keep] and as many new faces as the pool has.
+  Future<Set<int>> renamed({required int? keep}) async {
+    final pool = await c
+        .read(playerRepositoryProvider)
+        .byNation(nationId, saveSeed: 1, careerId: careerId);
+    final fresh = [for (final p in pool) if (!squad.contains(p.id)) p.id];
+    final next = <int>{?keep, ...fresh.take(22)};
+    for (final id in squad) {
+      if (next.length >= 23) break;
+      if (id != s0) next.add(id);
+    }
+    return next;
+  }
+
+  test('switched off: nothing is offered and nothing settled', () async {
+    await callUpDone();
+    final off = ProviderContainer(
+      overrides: [
+        campScandalsEnabledProvider.overrideWithValue(false),
+        appDatabaseProvider.overrideWithValue(db),
+        premiumUnlockedProvider.overrideWith((ref) => true),
+        seedSourceProvider.overrideWithValue(
+          InMemorySeedSource(nationList: nations, playerList: players),
+        ),
+      ],
+    );
+    addTearDown(off.dispose);
+    expect(await pending(off), isNull);
+    expect(
+      await off.read(campScandalServiceProvider).settleUnanswered(careerId),
+      isFalse,
+    );
+    expect(await off.read(campScandalsProvider(careerId).future), isEmpty);
+  });
+
+  test('a new squad never passes the story on to somebody else', () async {
+    await callUpDone();
+    final s = (await pending())!;
+    s0 = s.playerId;
+    // Playtest: "he changed all the squad and none works". The roll read the
+    // squad as it stood, so every change named a new man.
+    await c
+        .read(squadRepositoryProvider)
+        .setCallUps(careerId, await renamed(keep: s.playerId));
+    expect(await pending(), s);
+    expect(await pending(open()), s, reason: 'pinned in the save');
+  });
+
+  test('after a new squad the decision screen has all it reads', () async {
+    await callUpDone();
+    final s = (await pending())!;
+    s0 = s.playerId;
+    // Through the screen's own path: the call-up screen's save.
+    expect(
+      await c
+          .read(squadServiceProvider)
+          .setCallUps(careerId, await renamed(keep: s.playerId)),
+      isTrue,
+    );
+    Future<T> load<T>(ProviderListenable<Future<T>> p) async {
+      final sub = c.listen(p, (_, _) {});
+      try {
+        return await sub.read();
+      } finally {
+        sub.close();
+      }
+    }
+
+    expect(await load(pendingScandalProvider(careerId).future), s);
+    final squadData = await load(squadDataProvider(careerId).future);
+    expect(squadData, isNotNull);
+    expect(squadData!.pool.map((p) => p.id), contains(s.playerId));
+    final window = await load(nominationWindowProvider(careerId).future);
+    expect(window.matches, isNotEmpty);
+  });
+
+  test('dropping the man from the squad is sending him home', () async {
+    await callUpDone();
+    final s = (await pending())!;
+    s0 = s.playerId;
+    await c
+        .read(squadRepositoryProvider)
+        .setCallUps(careerId, await renamed(keep: null));
+    expect(await pending(), isNull, reason: 'nobody new is named');
+    await c.read(campScandalServiceProvider).settleDropped(careerId);
+    final records = await c.read(campScandalsProvider(careerId).future);
+    expect(records.single.playerId, s.playerId);
+    expect(records.single.choice, ScandalChoice.sentHome);
+    expect(await press(), (morale: 0, board: 0));
+    expect(await pending(), isNull);
+  });
+
+  test('dropped and played past: still sent home, not kept', () async {
+    await callUpDone();
+    final s = (await pending())!;
+    s0 = s.playerId;
+    await c
+        .read(squadRepositoryProvider)
+        .setCallUps(careerId, await renamed(keep: null));
+    await advanceToWindow();
+    final records = await c.read(campScandalsProvider(careerId).future);
+    expect(records.single.playerId, s.playerId);
+    expect(records.single.choice, ScandalChoice.sentHome);
+    expect(await press(), (morale: 0, board: 0));
   });
 
   test('played past without an answer: it counts as kept', () async {

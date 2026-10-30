@@ -21,6 +21,7 @@ import 'package:fnm/domain/services/squad/squad_selection.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_form_look.dart';
@@ -237,6 +238,10 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
       }
       return;
     }
+    // A camp scandal's man left out of the new squad has been sent home.
+    await container
+        .read(campScandalServiceProvider)
+        .settleDropped(widget.careerId);
     // The squad is named: the draft has served its purpose.
     final key = _draftKey;
     if (key != null) {

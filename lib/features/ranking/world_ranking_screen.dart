@@ -560,13 +560,17 @@ class _RankHistoryChart extends ConsumerWidget {
               children: [
                 const Icon(Icons.timeline, color: AppColors.primary, size: 18),
                 const SizedBox(width: AppSpacing.sm),
-                Text(
-                  l.rankingYourRankingOverTime,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.primary,
+                // Wraps rather than overflows: the Spanish title and the rank
+                // beside it were 12px too wide for a 402pt phone.
+                Expanded(
+                  child: Text(
+                    l.rankingYourRankingOverTime,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: AppSpacing.sm),
                 Text(
                   l.rankingNowRank(points.last.rank),
                   style: AppTypography.labelMedium.copyWith(

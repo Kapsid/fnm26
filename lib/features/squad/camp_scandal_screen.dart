@@ -12,6 +12,8 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/domain/services/squad/squad_selection.dart';
+import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -80,6 +82,30 @@ class _CampScandalScreenState extends ConsumerState<CampScandalScreen> {
     }
   }
 
+  /// Leaves for the hub when there is nothing here to answer.
+  ///
+  /// Playtest: a tester was sent here by the hub's scandal event and found
+  /// only this button, which took him back to the same event, round and
+  /// round, and the game could not go on. Whatever kept the story from
+  /// showing, it is settled on the way out (unanswered counts as kept, a man
+  /// already dropped as sent home), so the hub cannot offer it again.
+  Future<void> _leaveSettled() async {
+    setState(() => _busy = true);
+    final container = ProviderScope.containerOf(context);
+    final router = GoRouter.of(context);
+    final id = widget.careerId;
+    try {
+      await container.read(campScandalServiceProvider).settleUnanswered(id);
+    } on Object catch (e, st) {
+      debugPrint('camp scandal: could not settle on the way out: $e\n$st');
+    }
+    container
+      ..invalidate(nextEventProvider(id))
+      ..invalidate(hubDataProvider(id));
+    if (mounted) setState(() => _busy = false);
+    router.go('${Routes.hub}?careerId=$id');
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -87,6 +113,13 @@ class _CampScandalScreenState extends ConsumerState<CampScandalScreen> {
     final scandal = ref.watch(pendingScandalProvider(id));
     final squad = ref.watch(squadDataProvider(id));
     final window = ref.watch(nominationWindowProvider(id));
+    final nothingToAnswer = switch ((scandal, squad, window)) {
+      (AsyncData(value: final _?), AsyncData(value: _?), AsyncData()) => false,
+      (AsyncData(value: null), _, _) || (AsyncError(), _, _) => true,
+      (_, AsyncError(), _) || (_, AsyncData(value: null), _) => true,
+      (_, _, AsyncError()) => true,
+      _ => false,
+    };
     final content = switch ((scandal, squad, window)) {
       (
         AsyncData(value: final s?),
@@ -107,7 +140,7 @@ class _CampScandalScreenState extends ConsumerState<CampScandalScreen> {
           child: PrimaryButton(
             label: l.federationContinue,
             icon: Icons.check_rounded,
-            onPressed: () => context.go('${Routes.hub}?careerId=$id'),
+            onPressed: _busy ? null : _leaveSettled,
           ),
         ),
       ),
@@ -129,7 +162,9 @@ class _CampScandalScreenState extends ConsumerState<CampScandalScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => context.go('${Routes.hub}?careerId=$id'),
+          onPressed: nothingToAnswer
+              ? _leaveSettled
+              : () => context.go('${Routes.hub}?careerId=$id'),
         ),
         title: Text(l.scandalTitle, style: AppTypography.labelMedium),
         centerTitle: true,

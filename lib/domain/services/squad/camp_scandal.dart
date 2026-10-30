@@ -237,6 +237,34 @@ abstract final class CampScandal {
   /// cycle has had its scandal.
   static String cyclePrefix(int cycle) => '$prefix$cycle:';
 
+  /// The prefix of the marker that pins a broken story to its man.
+  ///
+  /// The roll reads the squad as it stands, and the squad can still be changed
+  /// until the window's first match, so each change used to name somebody new:
+  /// a tester changed his whole squad and the story simply moved on to the
+  /// next man. Once the story has broken it is pinned to whoever it named.
+  /// Not under [prefix], so nothing that reads the answered scandals sees it.
+  static const String rollPrefix = 'scandalRoll:';
+
+  /// The prefix of [window]'s pinned roll, if it has one.
+  static String rollWindowPrefix(int cycle, DateTime window) =>
+      '$rollPrefix$cycle:${windowKey(window)}:';
+
+  /// The marker pinning [roll] to [window].
+  static String rollMarkerOf(int cycle, DateTime window, ScandalRoll roll) =>
+      '${rollWindowPrefix(cycle, window)}${roll.playerId}:${roll.kind.name}';
+
+  /// A pinned roll read back, or null for anything that is not one.
+  static ScandalRoll? parseRoll(String marker) {
+    if (!marker.startsWith(rollPrefix)) return null;
+    final parts = marker.substring(rollPrefix.length).split(':');
+    if (parts.length != 4) return null;
+    final playerId = int.tryParse(parts[2]);
+    final kind = ScandalKind.values.where((k) => k.name == parts[3]);
+    if (playerId == null || kind.isEmpty) return null;
+    return (playerId: playerId, kind: kind.first);
+  }
+
   /// [marker] read back, or null for anything that is not a scandal marker.
   static CampScandalRecord? parse(String marker) {
     if (!marker.startsWith(prefix)) return null;

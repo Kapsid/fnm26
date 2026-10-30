@@ -17,6 +17,7 @@ import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:go_router/go_router.dart';
 
 /// Records the answer instead of writing it.
@@ -35,6 +36,12 @@ class _FakeService extends CampScandalService {
   @override
   Future<void> keep(int careerId, PendingScandal s) async =>
       calls.add('keep:${s.playerId}');
+
+  @override
+  Future<bool> settleUnanswered(int careerId) async {
+    calls.add('settle:$careerId');
+    return true;
+  }
 }
 
 void main() {
@@ -301,6 +308,70 @@ void main() {
     final l = lookupAppLocalizations(const Locale('en'));
     expect(find.text(l.federationContinue), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('with nothing to show, the way out settles the story', (
+    tester,
+  ) async {
+    // Playtest: the hub kept sending a tester here, to only this button,
+    // which led straight back to the same event. Leaving now settles it.
+    late _FakeService service;
+    final scoped = ProviderContainer(
+      overrides: [
+        campScandalServiceProvider.overrideWith(
+          (ref) => service = _FakeService(ref),
+        ),
+        pendingScandalProvider(1).overrideWith(
+          (ref) async => (
+            cycle: 0,
+            window: DateTime(2030, 9, 5),
+            playerId: 1,
+            playerName: night,
+            kind: ScandalKind.party,
+            finals: false,
+          ),
+        ),
+        squadDataProvider(1).overrideWith((ref) async => null),
+        nominationWindowProvider(1).overrideWith(
+          (ref) async => (
+            open: false,
+            matches: const <Fixture>[],
+            nations: <int, Nation>{},
+            playerNationId: 1,
+          ),
+        ),
+        nextEventProvider(1).overrideWith((ref) => throw StateError('n/a')),
+        hubDataProvider(1).overrideWith((ref) async => null),
+      ],
+    );
+    addTearDown(scoped.dispose);
+    final router = GoRouter(
+      initialLocation: '${Routes.campScandal}?careerId=1',
+      routes: [
+        GoRoute(
+          path: Routes.campScandal,
+          builder: (_, _) => const CampScandalScreen(careerId: 1),
+        ),
+        GoRoute(path: Routes.hub, builder: (_, _) => const Text('HUB')),
+      ],
+    );
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: scoped,
+        child: MaterialApp.router(
+          routerConfig: router,
+          theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final l = lookupAppLocalizations(const Locale('en'));
+    await tester.tap(find.text(l.federationContinue));
+    await tester.pumpAndSettle();
+    expect(service.calls, ['settle:1']);
+    expect(find.text('HUB'), findsOneWidget);
   });
 
   testWidgets('the tablet layout', (tester) async {

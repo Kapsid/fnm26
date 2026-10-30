@@ -32,6 +32,16 @@ typedef PendingScandal = ({
   bool finals,
 });
 
+/// Whether camp scandals break at all.
+///
+/// Off for now: in 1.0.7 (17) a story moved to a new man whenever the squad
+/// was changed and could leave the hub sending the manager round in a loop.
+/// That is fixed below, but it ships switched off until it has been played
+/// on a device. Off, nothing new is offered and nothing is settled, so a save
+/// stuck on an old story is simply free of it; answered stories stay in the
+/// history.
+final Provider<bool> campScandalsEnabledProvider = Provider((ref) => false);
+
 /// The scandal the manager has to answer now, or null.
 ///
 /// Only in the gap between the call-up and the window's first match: the
@@ -42,6 +52,21 @@ typedef PendingScandal = ({
 /// Never twice in a cycle: once any scandal of this cycle is recorded, the
 /// rest of the cycle is quiet whatever the dice say.
 Future<PendingScandal?> pendingScandal(Ref ref, int careerId) async {
+  final s = await _windowScandal(ref, careerId);
+  return s == null || s.dropped ? null : s.scandal;
+}
+
+/// The current window's scandal as it stands, answered or not: who it is
+/// about, and whether the manager has since dropped him from the squad.
+///
+/// The first time the story breaks, its man is pinned with a marker (see
+/// [CampScandal.rollPrefix]), so changing the squad can never pass the story
+/// on to somebody else. Dropping the man himself is sending him home.
+Future<({PendingScandal scandal, bool dropped})?> _windowScandal(
+  Ref ref,
+  int careerId,
+) async {
+  if (!ref.read(campScandalsEnabledProvider)) return null;
   final career = await ref.read(careerRepositoryProvider).byId(careerId);
   if (career == null) return null;
   final comp = ref.read(competitionRepositoryProvider);
@@ -89,31 +114,53 @@ Future<PendingScandal?> pendingScandal(Ref ref, int careerId) async {
         careerId: career.id,
         minAge: PlayerLifecycle.callUpMinAge,
       );
-  final candidates = [
-    for (final p in pool)
-      if (callUps.contains(p.id) && (absences[p.id]?.injuryMatches ?? 0) <= 0)
-        (playerId: p.id, age: p.age),
+  final pinned = [
+    for (final m in await comp.watchedKindsWithPrefix(
+      CampScandal.rollWindowPrefix(cycle, window),
+    ))
+      if (m.careerId == careerId)
+        if (CampScandal.parseRoll(m.kind) case final r?) r,
   ];
-  final rolled = CampScandal.roll(
-    seed: career.rngSeed,
-    cycle: cycle,
-    window: window,
-    starts: starts,
-    opens: span.opens,
-    closes: span.closes,
-    candidates: candidates,
-  );
-  if (rolled == null) return null;
+  ScandalRoll? rolled = pinned.firstOrNull;
+  if (rolled == null) {
+    final candidates = [
+      for (final p in pool)
+        if (callUps.contains(p.id) &&
+            (absences[p.id]?.injuryMatches ?? 0) <= 0)
+          (playerId: p.id, age: p.age),
+    ];
+    rolled = CampScandal.roll(
+      seed: career.rngSeed,
+      cycle: cycle,
+      window: window,
+      starts: starts,
+      opens: span.opens,
+      closes: span.closes,
+      candidates: candidates,
+    );
+    if (rolled == null) return null;
+    await comp.markDrawWatched(
+      careerId,
+      cycle,
+      CampScandal.rollMarkerOf(cycle, window, rolled),
+    );
+  }
+  final playerId = rolled.playerId;
+  final player = pool.where((p) => p.id == playerId).firstOrNull;
+  if (player == null) return null;
   final round = period.first.round;
   return (
-    cycle: cycle,
-    window: window,
-    playerId: rolled.playerId,
-    playerName: pool.where((p) => p.id == rolled.playerId).first.name,
-    kind: rolled.kind,
-    finals:
-        FinalsRounds.worldChampionship.contains(round) ||
-        FinalsRounds.continental.contains(round),
+    scandal: (
+      cycle: cycle,
+      window: window,
+      playerId: playerId,
+      playerName: player.name,
+      kind: rolled.kind,
+      finals:
+          FinalsRounds.worldChampionship.contains(round) ||
+          FinalsRounds.continental.contains(round),
+    ),
+    dropped: !callUps.contains(playerId),
   );
 }
 
@@ -221,11 +268,25 @@ class CampScandalService {
   /// Doing nothing about a story is keeping the man.
   ///
   /// Returns whether one was settled.
+  ///
+  /// A man the manager dropped from the squad himself was sent home.
   Future<bool> settleUnanswered(int careerId) async {
-    final s = await pendingScandal(_ref, careerId);
+    final s = await _windowScandal(_ref, careerId);
     if (s == null) return false;
-    await keep(careerId, s);
+    if (s.dropped) {
+      await _record(careerId, s.scandal, ScandalChoice.sentHome);
+    } else {
+      await keep(careerId, s.scandal);
+    }
     return true;
+  }
+
+  /// Settles the story as sent home if the manager has just dropped its man
+  /// from the squad, so the inbox tells it now rather than at kick-off.
+  Future<void> settleDropped(int careerId) async {
+    final s = await _windowScandal(_ref, careerId);
+    if (s == null || !s.dropped) return;
+    await _record(careerId, s.scandal, ScandalChoice.sentHome);
   }
 
   /// A man sent home is out for the rest of THAT window, not the next one.
