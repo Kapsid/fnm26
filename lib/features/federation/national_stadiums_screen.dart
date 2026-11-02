@@ -651,6 +651,10 @@ class _NationalStadiumsScreenState
                   key: NationalStadiumsScreen.cityKey,
                   initialValue: city,
                   isExpanded: true,
+                  // Capped: a long city list filled the whole screen, leaving
+                  // nowhere outside the menu to tap, and an iPhone has no back
+                  // button, so the menu could not be closed without a pick.
+                  menuMaxHeight: MediaQuery.sizeOf(context).height * 0.5,
                   decoration: InputDecoration(
                     labelText: l.stadiumsBuildCity,
                   ),

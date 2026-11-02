@@ -30,6 +30,7 @@ NationalStadiumsView _view({
   int freeFunds = 12000000,
   bool building = true,
   String builtName = 'Kastel Arena Nova',
+  List<String> cities = const ['Berlin', 'Hamburg', 'Mönchengladbach-Rheydt'],
 }) => NationalStadiumsView(
   careerId: 1,
   nationId: 20,
@@ -51,7 +52,7 @@ NationalStadiumsView _view({
       opensCycle: building ? 2 : 1,
     ),
   ],
-  cities: const ['Berlin', 'Hamburg', 'Mönchengladbach-Rheydt'],
+  cities: cities,
   window: window,
   freeFunds: freeFunds,
   income: 1500000,
@@ -117,6 +118,36 @@ Future<void> _show(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
+  // 1.0.9 bug: with a long city list (up to 30 in the build-city data) the
+  // dropdown filled the screen, nothing was left outside it to tap, and an
+  // iPhone has no back button: the menu could not be closed without a pick.
+  testWidgets('a long build-city list can be closed by tapping outside it', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      view: _view(cities: [for (var i = 0; i < 30; i++) 'Town $i']),
+    );
+    await _show(tester, find.byKey(NationalStadiumsScreen.cityKey));
+    await tester.tap(find.byKey(NationalStadiumsScreen.cityKey));
+    await tester.pumpAndSettle();
+    // The menu is open (its items are on screen beside the field's own).
+    expect(find.text('Town 1'), findsWidgets);
+    // It takes at most half the screen. Uncapped it ran to Flutter's own
+    // limit, a 48pt band at each end, which on an iPhone sits under the
+    // status bar and the home indicator: nothing left to tap.
+    final menu = tester.getRect(find.byType(Scrollable).last);
+    final screen = tester.view.physicalSize.height;
+    expect(menu.height, lessThanOrEqualTo(screen * 0.5 + 1));
+    // And a tap in the free space closes it.
+    final outside = menu.top > screen / 2
+        ? const Offset(4, 60)
+        : Offset(4, screen - 60);
+    await tester.tapAt(outside);
+    await tester.pumpAndSettle();
+    expect(find.text('Town 1'), findsNothing);
+  });
+
   for (final code in ['en', 'de', 'fi', 'hu', 'el', 'pt', 'cs', 'fil']) {
     testWidgets('fits a 360-wide phone at text 1.4 ($code)', (tester) async {
       await _pump(tester, locale: Locale(code));
