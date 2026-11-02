@@ -1057,10 +1057,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
         .catchError((Object _) => const <TacticPreset>[]);
     // Who is in the assistant's job, for "Ask the assistant". A failed read
     // leaves the button disabled rather than the editor shut.
-    final assistant = await ref
-        .read(careerByIdProvider(widget.careerId).future)
-        .then((c) => c?.staffAssistant ?? StaffTier.none)
-        .catchError((Object _) => StaffTier.none);
+    // Read from what the screen already holds (it watches the career in
+    // build): awaiting a fresh database read here held the editor shut until
+    // the read came back.
+    final assistant =
+        ref
+            .read(careerByIdProvider(widget.careerId))
+            .valueOrNull
+            ?.staffAssistant ??
+        StaffTier.none;
     if (!mounted) return;
     // The score as the clock stands, for the assistant chasing the game.
     final goals = (_result ?? preview.result).events.where(
@@ -1308,6 +1313,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final tablet = useTabletLayout(context, ref);
+    // Kept loaded for the in-match editor's "Ask the assistant" (his tier is
+    // read synchronously when the editor opens).
+    ref.watch(careerByIdProvider(widget.careerId));
     // A match is played from the teamsheet it kicked off with. Once the preview
     // has landed it is PINNED — the screen stops watching the provider — so the
     // world moving underneath can never repaint this match with another

@@ -5,6 +5,7 @@ import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart'
     show budgetSetupKind;
 import 'package:fnm/features/hub/hub_event.dart';
@@ -211,6 +212,11 @@ void main() {
     // open, so nothing recomputed it: it stayed on the retired event and
     // tapping it came straight back here, forever.
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    // The season's sponsor comes before the budget; answered, the bar shows
+    // the budget event this test retires.
+    await tester.runAsync(
+      () => save.container.read(sponsorServiceProvider).decline(save.careerId),
+    );
     await pumpRoute(
       tester,
       save,

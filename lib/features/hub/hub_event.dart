@@ -632,22 +632,6 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     );
   }
 
-  // 2d. The season's general sponsor (September to August, four a cycle),
-  //     at the first moment of the season nothing else is waiting: after
-  //     every ceremony, draw and conference, before the next match or step
-  //     of the world. Moving the world on without answering turns every
-  //     offer down (see [SponsorService.settleUnanswered]).
-  final sponsor = await ref.watch(sponsorRoundProvider(careerId).future);
-  if (sponsor != null && !sponsor.decided) {
-    return HubEvent(
-      kind: HubEventKind.sponsor,
-      label: l.hubEventSponsor,
-      icon: Icons.campaign_rounded,
-      route: '${Routes.sponsor}?careerId=$careerId',
-      subtitle: l.hubEventSponsorSub,
-    );
-  }
-
   final next = hub.next;
 
   // A step that would carry the clock over 31 December is offered as a plain
@@ -790,6 +774,30 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       label: l.hubEventPlayNationsCupMatch,
       icon: Icons.fast_forward_rounded,
       route: '${Routes.nationsCup}?careerId=$careerId&conf=${ncConf.name}',
+    );
+  }
+
+  // 2e. The season's general sponsor (September to August, four a cycle),
+  //     at the first moment of the season nothing else is waiting: after
+  //     every ceremony, draw and conference and after any finals to watch
+  //     (the World Championship's and the Nations Cup's, just above; the
+  //     continental one is held back by [sponsorWaitsForFinals]), before the
+  //     next match or step of the world. Moving the world on without answering turns every
+  //     offer down (see [SponsorService.settleUnanswered]).
+  final sponsor = await ref.watch(sponsorRoundProvider(careerId).future);
+  if (sponsor != null &&
+      !sponsor.decided &&
+      !await sponsorWaitsForFinals(
+        comp,
+        careerId,
+        confederation: hub.nations[hub.career.nationId]?.confederation,
+      )) {
+    return HubEvent(
+      kind: HubEventKind.sponsor,
+      label: l.hubEventSponsor,
+      icon: Icons.campaign_rounded,
+      route: '${Routes.sponsor}?careerId=$careerId',
+      subtitle: l.hubEventSponsorSub,
     );
   }
 

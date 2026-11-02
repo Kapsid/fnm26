@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/seed_ranking_repository.dart';
+import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -211,7 +213,22 @@ class SponsorService {
 
   /// A round still open when the world is moved on is turned down: moving on
   /// is the manager's answer, as it is for a Player of the Year ceremony.
-  Future<bool> settleUnanswered(int careerId) => decline(careerId);
+  /// Not while a finals the manager is watching is live: the round waits for
+  /// it (see [sponsorWaitsForFinals]), so its steps are no answer.
+  Future<bool> settleUnanswered(int careerId) async {
+    final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+    if (career == null) return false;
+    final me = await _ref.read(nationRepositoryProvider).byId(career.nationId);
+    if (await sponsorWaitsForFinals(
+      _ref.read(competitionRepositoryProvider),
+      careerId,
+      confederation: me?.confederation,
+      today: career.inGameDate,
+    )) {
+      return false;
+    }
+    return decline(careerId);
+  }
 
   Future<SponsorRound?> _round(Career career) => sponsorRoundOf(
     comp: _ref.read(competitionRepositoryProvider),
@@ -223,3 +240,34 @@ class SponsorService {
 
 final Provider<SponsorService> sponsorServiceProvider =
     Provider<SponsorService>(SponsorService.new);
+
+/// Whether the season's sponsor round waits: a World Championship finals,
+/// the manager's own continental finals, or his confederation's Nations Cup
+/// finals (due within [nationsCupWindow] of [today]) is under way. Those are
+/// watched round by round from the hub, and a deal to sign in the middle of
+/// them would jump the queue (and a step to watch them would read as turning
+/// it down). The round is offered once the tournament is over.
+Future<bool> sponsorWaitsForFinals(
+  CompetitionRepository comp,
+  int careerId, {
+  Confederation? confederation,
+  DateTime? today,
+}) async {
+  if (await comp.hasFinals(careerId)) return true;
+  if (await comp.hasLiveContinentalFinals(
+    careerId,
+    confederation: confederation,
+  )) {
+    return true;
+  }
+  final ncConf = NationsCups.ofManager(confederation);
+  if (ncConf == null || today == null) return false;
+  final nc = await comp.earliestUnplayedNationsCupFinalsDate(
+    careerId,
+    confederation: ncConf,
+  );
+  return nc != null && !nc.isAfter(today.add(nationsCupWindow));
+}
+
+/// How close a Nations Cup finals must be for the sponsor round to wait.
+const Duration nationsCupWindow = Duration(days: 14);

@@ -85,7 +85,9 @@ class AskAssistantButton extends StatelessWidget {
         ),
         if (none) ...[
           const SizedBox(height: AppSpacing.xs),
-          WholeText(
+          // A sentence: plain wrapping, so it breaks between words ("staff
+          // r/oom" was WholeText breaking inside one).
+          Text(
             l.assistantNoneNote,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,

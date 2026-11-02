@@ -5,6 +5,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/services/squad/nomination.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
@@ -45,6 +46,8 @@ void main() {
       ]) {
         await comp.markDrawWatched(save.careerId, cycle, k);
       }
+      // The season's sponsor would come first (see SponsorService).
+      await c.read(sponsorServiceProvider).decline(save.careerId);
       final fixtures = await comp.cycleFixturesForNation(
         save.careerId,
         save.nationId,

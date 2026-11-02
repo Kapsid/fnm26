@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/match_schedule.dart';
 import 'package:fnm/domain/services/press/conference.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -49,6 +50,8 @@ Future<void> _readyForMatch(WidgetTester tester, SeededSave save) async {
       career.cyclePointer,
       continentalHostDrawKind,
     );
+    // The season's sponsor would otherwise be the next step.
+    await save.container.read(sponsorServiceProvider).decline(save.careerId);
     final fixtures = await comp.cycleFixturesForNation(
       save.careerId,
       save.nationId,
@@ -257,7 +260,9 @@ Future<void> _pumpScreen(WidgetTester tester, Override schedule) async {
     ProviderScope(
       overrides: [
         schedule,
-        nextEventProvider.overrideWith((ref, id) async => throw StateError('none')),
+        nextEventProvider.overrideWith(
+          (ref, id) async => throw StateError('none'),
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,

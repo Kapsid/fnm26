@@ -28,8 +28,9 @@ void main() {
 
   AppDatabase open(String name) {
     SharedPreferences.setMockInitialValues(<String, Object>{});
+    // A fresh temp copy per test, so the 1.0.5 originals are never written.
     final copy =
-        '/private/tmp/claude-501/-Users-martinurbanczyk-Documents-Work-fnm26/6c95b6fb-6898-4eef-9a2a-c9c308e15f0f/scratchpad/compat_$name';
+        '${Directory.systemTemp.createTempSync('compat105').path}/$name';
     File('$dir/$name').copySync(copy);
     return AppDatabase.forTesting(NativeDatabase(File(copy)));
   }
