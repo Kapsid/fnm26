@@ -51,7 +51,7 @@ Future<SeededSave> _open(
         moraleProvider(kSeededCareerId).overrideWith((ref) async => 50),
     ],
   );
-  // The season's sponsor is offered just before the budget; answered here,
+  // The cycle's sponsor is offered just before the budget; answered here,
   // so the bar offers the budget itself.
   await tester.runAsync(
     () => save.container.read(sponsorServiceProvider).decline(save.careerId),

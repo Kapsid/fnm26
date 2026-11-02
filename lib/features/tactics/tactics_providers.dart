@@ -518,31 +518,6 @@ class TacticService {
         return t.copyWith(lineup: lineup);
       });
 
-  /// Puts a whole eleven in at once (the assistant's proposal), slot for slot
-  /// in the current shape. Anybody no longer in the pool who can play (banned,
-  /// hurt, dropped since the proposal was made) is left out of his slot rather
-  /// than fielded, exactly as [selectable] would have it.
-  Future<void> setLineup(int careerId, List<int?> lineup) =>
-      _update(careerId, (t, pool) {
-        final ids = {for (final p in pool) p.id};
-        final next = List<int?>.generate(
-          t.lineup.length,
-          (i) =>
-              i < lineup.length && ids.contains(lineup[i]) ? lineup[i] : null,
-        );
-        // A slot the proposal could not fill keeps its man, unless the
-        // proposal has already put him somewhere else.
-        final used = next.whereType<int>().toSet();
-        for (var i = 0; i < next.length; i++) {
-          final old = t.lineup[i];
-          if (next[i] == null && old != null && !used.contains(old)) {
-            next[i] = old;
-            used.add(old);
-          }
-        }
-        return t.copyWith(lineup: next);
-      });
-
   /// Swaps the players occupying [slotA] and [slotB] (drag-and-drop on pitch).
   Future<void> swapSlots(int careerId, int slotA, int slotB) =>
       _update(careerId, (t, _) {

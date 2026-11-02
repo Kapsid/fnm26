@@ -6773,7 +6773,8 @@ class AppLocalizationsTh extends AppLocalizations {
   String get hubEventPressConference => 'เผชิญหน้าสื่อ';
 
   @override
-  String get hubEventPressConferenceSub => 'สื่อทั่วโลกอยากคุยกับคุณก่อนเกมแรก';
+  String get hubEventPressConferenceSub =>
+      'สื่อทั่วโลกอยากคุยกับคุณก่อนเกมถัดไป';
 
   @override
   String get squadDevWonderkid => 'ดาวรุ่งพุ่งแรง';
@@ -13431,7 +13432,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get assistantReadGood => 'อ่านค่าพลัง ตำแหน่ง และความล้าได้ดี';
 
   @override
-  String get assistantReadElite => 'อ่านความฟิต ฟอร์ม และคู่แข่ง';
+  String get assistantReadElite => 'อ่านความฟิต ฟอร์ม ขวัญกำลังใจ และคู่แข่ง';
 
   @override
   String get assistantVariantMain => 'ตัวเลือกของเขา';
@@ -13443,27 +13444,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get assistantVariantForm => 'ผู้เล่นฟอร์มดี';
 
   @override
-  String get assistantVariantAttacking => 'บุกมากขึ้น';
-
-  @override
-  String get assistantVariantSolid => 'แน่นขึ้น';
-
-  @override
   String get assistantVsStronger => 'คู่แข่งแข็งแกร่งกว่า';
 
   @override
   String get assistantVsWeaker => 'ทีมคุณแข็งแกร่งกว่า';
-
-  @override
-  String assistantChanges(int count) {
-    return 'เปลี่ยน 11 ตัวจริง: $count';
-  }
-
-  @override
-  String get assistantBench => 'ตัวสำรองลำดับแรก';
-
-  @override
-  String get assistantReasonBestFit => 'เหมาะที่สุด';
 
   @override
   String get assistantReasonInForm => 'ฟอร์มดี';
@@ -13472,37 +13456,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get assistantReasonFresh => 'สด';
 
   @override
-  String get assistantReasonCovering => 'เล่นแทน';
-
-  @override
-  String get assistantReasonCoverDefence => 'เกมรับ';
-
-  @override
-  String get assistantReasonCoverMidfield => 'กองกลาง';
-
-  @override
-  String get assistantReasonCoverAttack => 'เกมรุก';
-
-  @override
   String get assistantReasonTired => 'เหนื่อย';
 
   @override
-  String get assistantReasonBooked => 'ติดใบเหลือง';
-
-  @override
   String get assistantReasonInjured => 'บาดเจ็บ';
-
-  @override
-  String get assistantReasonOutOfPosition => 'ผิดตำแหน่ง';
-
-  @override
-  String get assistantReasonChasing => 'ไล่ตีเสมอ';
-
-  @override
-  String get assistantSubsTitle => 'การเปลี่ยนตัวที่เขาแนะนำ';
-
-  @override
-  String get assistantNoSubs => 'เขาจะปล่อยทีมไว้แบบนี้';
 
   @override
   String get assistantApply => 'ใช้';
@@ -13511,21 +13468,66 @@ class AppLocalizationsTh extends AppLocalizations {
   String get assistantClose => 'ปิด';
 
   @override
-  String get staffEffectAdviceBasic =>
-      'แนะนำตัวจริงและการเปลี่ยนตัว บางครั้งพลาด';
+  String get assistantReasonTopPick => 'ตัวเลือกแรก';
 
   @override
-  String get staffEffectAdviceGood =>
-      'แนะนำตัวจริงและการเปลี่ยนตัว ดูความล้าด้วย';
+  String get assistantReasonLineCover => 'ตัวสำรองตำแหน่ง';
 
   @override
-  String get staffEffectAdviceElite => 'แนะนำจากความฟิต ฟอร์ม และคู่แข่ง';
+  String get assistantReasonYoung => 'ดาวรุ่ง';
 
   @override
-  String get staffHiringAdvice => 'และคำแนะนำตัวจริงกับการเปลี่ยนตัว';
+  String get assistantReasonExperienced => 'ประสบการณ์สูง';
 
   @override
-  String get hubEventSponsor => 'เลือกสปอนเซอร์ประจำฤดูกาล';
+  String get assistantReasonBanned => 'ติดโทษแบน';
+
+  @override
+  String get assistantReasonOutOfForm => 'ฟอร์มตก';
+
+  @override
+  String get assistantReasonOthersAhead => 'มีคนที่ดีกว่า';
+
+  @override
+  String get assistantVariantYouth => 'ให้โอกาสดาวรุ่ง';
+
+  @override
+  String get assistantVariantExperience => 'เน้นประสบการณ์';
+
+  @override
+  String get assistantVsSelection => 'เทียบกับที่คุณเลือกอยู่';
+
+  @override
+  String get assistantVsLastSquad => 'เทียบกับทีมชุดก่อน';
+
+  @override
+  String get assistantSameSquad => 'ไม่ต่างจากที่คุณเลือก';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'เข้า: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'ออก: $count';
+  }
+
+  @override
+  String get staffEffectAdviceBasic => 'แนะนำการเรียกตัว บางครั้งพลาด';
+
+  @override
+  String get staffEffectAdviceGood => 'แนะนำการเรียกตัว ดูความฟิตด้วย';
+
+  @override
+  String get staffEffectAdviceElite =>
+      'แนะนำการเรียกตัวจากความฟิต ฟอร์ม และคู่แข่ง';
+
+  @override
+  String get staffHiringAdvice => 'และคำแนะนำการเรียกตัว';
+
+  @override
+  String get hubEventSponsor => 'เลือกสปอนเซอร์ประจำรอบนี้';
 
   @override
   String get hubEventSponsorSub =>
@@ -13535,8 +13537,8 @@ class AppLocalizationsTh extends AppLocalizations {
   String get sponsorTitle => 'ผู้สนับสนุนหลัก';
 
   @override
-  String get sponsorIntroSeason =>
-      'ทุกฤดูกาล แบรนด์ต่างๆ ต่อคิวเพื่อเป็นผู้สนับสนุนหลักของสมาคม ทุกดีลให้บางอย่างและแลกด้วยบางอย่าง: บอร์ด ห้องแต่งตัว หรือทั้งสองอย่าง เซ็นสักราย หรือไม่เซ็นเลยก็ได้ ผลต่อบอร์ดและขวัญกำลังใจจะอยู่ไปจนจบฤดูกาล';
+  String get sponsorIntroCycle =>
+      'รอบละครั้ง แบรนด์ต่างๆ ต่อคิวเพื่อเป็นผู้สนับสนุนหลักของสมาคม ทุกดีลให้บางอย่างและแลกด้วยบางอย่าง: บอร์ด ห้องแต่งตัว หรือทั้งสองอย่าง เซ็นสักราย หรือไม่เซ็นเลยก็ได้ ดีลและผลต่อบอร์ดและขวัญกำลังใจจะอยู่ไปจนจบรอบ';
 
   @override
   String get sponsorEffectBoard => 'บอร์ด';
@@ -13567,15 +13569,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get sponsorSign => 'เซ็นสัญญา';
 
   @override
-  String get sponsorDeclineSeason => 'ไม่รับสปอนเซอร์ฤดูกาลนี้';
+  String get sponsorDeclineCycle => 'ไม่รับสปอนเซอร์ในรอบนี้';
 
   @override
-  String get sponsorNoneSeason => 'ฤดูกาลนี้ไม่มีผู้สนับสนุนหลัก';
+  String get sponsorNoneCycle => 'รอบนี้ไม่มีผู้สนับสนุนหลัก';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'จนจบฤดูกาล $season';
-  }
+  String get sponsorUntilCycleEnd => 'จนจบรอบ';
 
   @override
   String sponsorRolloverLine(String brand) {

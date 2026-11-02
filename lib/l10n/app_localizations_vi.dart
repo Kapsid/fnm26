@@ -6834,7 +6834,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Truyền thông thế giới muốn nói chuyện trước trận đầu tiên của bạn';
+      'Truyền thông thế giới muốn nói chuyện trước trận tiếp theo của bạn';
 
   @override
   String get squadDevWonderkid => 'THẦN ĐỒNG';
@@ -13549,7 +13549,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get assistantReadGood => 'Đánh giá vững về chỉ số, vị trí và độ mệt.';
 
   @override
-  String get assistantReadElite => 'Đọc thể lực, phong độ và đối thủ.';
+  String get assistantReadElite =>
+      'Đọc thể lực, phong độ, tinh thần và đối thủ.';
 
   @override
   String get assistantVariantMain => 'Lựa chọn của ông';
@@ -13561,27 +13562,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get assistantVariantForm => 'Cầu thủ đang có phong độ';
 
   @override
-  String get assistantVariantAttacking => 'Tấn công hơn';
-
-  @override
-  String get assistantVariantSolid => 'Chắc chắn hơn';
-
-  @override
-  String get assistantVsStronger => 'Đối thủ mạnh hơn';
+  String get assistantVsStronger => 'Các đối thủ mạnh hơn';
 
   @override
   String get assistantVsWeaker => 'Đội của bạn mạnh hơn';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Thay đổi trong đội hình chính: $count';
-  }
-
-  @override
-  String get assistantBench => 'Vào sân đầu tiên';
-
-  @override
-  String get assistantReasonBestFit => 'Phù hợp nhất';
 
   @override
   String get assistantReasonInForm => 'Phong độ tốt';
@@ -13590,37 +13574,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get assistantReasonFresh => 'Sung sức';
 
   @override
-  String get assistantReasonCovering => 'Đá thay';
-
-  @override
-  String get assistantReasonCoverDefence => 'Phòng ngự';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Tuyến giữa';
-
-  @override
-  String get assistantReasonCoverAttack => 'Tấn công';
-
-  @override
   String get assistantReasonTired => 'Mệt';
 
   @override
-  String get assistantReasonBooked => 'Có thẻ vàng';
-
-  @override
   String get assistantReasonInjured => 'Chấn thương';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Đá trái sở trường';
-
-  @override
-  String get assistantReasonChasing => 'Đang bị dẫn';
-
-  @override
-  String get assistantSubsTitle => 'Những thay người ông đề xuất';
-
-  @override
-  String get assistantNoSubs => 'Ông sẽ để đội như hiện tại.';
 
   @override
   String get assistantApply => 'Áp dụng';
@@ -13629,22 +13586,66 @@ class AppLocalizationsVi extends AppLocalizations {
   String get assistantClose => 'Đóng';
 
   @override
-  String get staffEffectAdviceBasic =>
-      'Tư vấn đội hình và thay người, đôi khi sai';
+  String get assistantReasonTopPick => 'Lựa chọn số một';
 
   @override
-  String get staffEffectAdviceGood =>
-      'Tư vấn đội hình và thay người, để ý độ mệt';
+  String get assistantReasonLineCover => 'Dự phòng tuyến';
+
+  @override
+  String get assistantReasonYoung => 'Tài năng trẻ';
+
+  @override
+  String get assistantReasonExperienced => 'Giàu kinh nghiệm';
+
+  @override
+  String get assistantReasonBanned => 'Bị treo giò';
+
+  @override
+  String get assistantReasonOutOfForm => 'Sa sút phong độ';
+
+  @override
+  String get assistantReasonOthersAhead => 'Có người tốt hơn';
+
+  @override
+  String get assistantVariantYouth => 'Trao cơ hội cho cầu thủ trẻ';
+
+  @override
+  String get assistantVariantExperience => 'Kinh nghiệm';
+
+  @override
+  String get assistantVsSelection => 'So với lựa chọn hiện tại';
+
+  @override
+  String get assistantVsLastSquad => 'So với danh sách trước';
+
+  @override
+  String get assistantSameSquad => 'Không đổi so với lựa chọn của bạn';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Vào: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Ra: $count';
+  }
+
+  @override
+  String get staffEffectAdviceBasic => 'Tư vấn triệu tập, đôi khi sai';
+
+  @override
+  String get staffEffectAdviceGood => 'Tư vấn triệu tập, để ý thể lực';
 
   @override
   String get staffEffectAdviceElite =>
-      'Tư vấn dựa trên thể lực, phong độ và đối thủ';
+      'Tư vấn triệu tập dựa trên thể lực, phong độ và đối thủ';
 
   @override
-  String get staffHiringAdvice => 'và tư vấn đội hình, thay người';
+  String get staffHiringAdvice => 'và tư vấn triệu tập';
 
   @override
-  String get hubEventSponsor => 'Chọn nhà tài trợ mùa này';
+  String get hubEventSponsor => 'Chọn nhà tài trợ chu kỳ này';
 
   @override
   String get hubEventSponsorSub =>
@@ -13654,8 +13655,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get sponsorTitle => 'Nhà tài trợ chính';
 
   @override
-  String get sponsorIntroSeason =>
-      'Mỗi mùa giải, các thương hiệu xếp hàng để trở thành nhà tài trợ chính của liên đoàn. Hợp đồng nào cũng mang lại một thứ và lấy đi một thứ: ban lãnh đạo, phòng thay đồ hoặc cả hai. Ký một, hoặc không ký cái nào. Ảnh hưởng tới ban lãnh đạo và tinh thần kéo dài đến hết mùa giải.';
+  String get sponsorIntroCycle =>
+      'Mỗi chu kỳ một lần, các thương hiệu xếp hàng để trở thành nhà tài trợ chính của liên đoàn. Hợp đồng nào cũng mang lại một thứ và lấy đi một thứ: ban lãnh đạo, phòng thay đồ hoặc cả hai. Ký một, hoặc không ký cái nào. Hợp đồng và ảnh hưởng của nó tới ban lãnh đạo và tinh thần kéo dài đến hết chu kỳ.';
 
   @override
   String get sponsorEffectBoard => 'Ban lãnh đạo';
@@ -13687,15 +13688,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get sponsorSign => 'Ký';
 
   @override
-  String get sponsorDeclineSeason => 'Không nhận tài trợ mùa này';
+  String get sponsorDeclineCycle => 'Không nhận tài trợ chu kỳ này';
 
   @override
-  String get sponsorNoneSeason => 'Không có nhà tài trợ chính mùa này';
+  String get sponsorNoneCycle => 'Không có nhà tài trợ chính chu kỳ này';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Đến hết mùa giải $season';
-  }
+  String get sponsorUntilCycleEnd => 'Đến hết chu kỳ';
 
   @override
   String sponsorRolloverLine(String brand) {

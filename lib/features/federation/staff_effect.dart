@@ -108,9 +108,9 @@ abstract final class StaffEffect {
     ],
   };
 
-  /// What the assistant's "Ask the assistant" advice is worth at [tier]
-  /// (see `AssistantAdvice` for what each tier reads), or null with nobody
-  /// in the job.
+  /// What the assistant's call-up advice ("Ask the assistant" on the call-up
+  /// screen) is worth at [tier] (see `CallUpAdvice` for what each tier
+  /// reads), or null with nobody in the job.
   static String? adviceLine(AppLocalizations l, StaffTier tier) =>
       switch (tier) {
         StaffTier.none => null,

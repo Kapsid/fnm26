@@ -355,7 +355,9 @@ class SlotSwitches {
   static List<PlayerPosition> alternativesFor(PlayerPosition base) =>
       switch (base) {
         PlayerPosition.cm => const [PlayerPosition.dm, PlayerPosition.am],
-        PlayerPosition.dm => const [PlayerPosition.cm],
+        // A holding man may step up one line or two: a 4-3-3 whose DM plays
+        // as a ten is still a 4-3-3.
+        PlayerPosition.dm => const [PlayerPosition.cm, PlayerPosition.am],
         PlayerPosition.am => const [PlayerPosition.cm, PlayerPosition.st],
         PlayerPosition.lm => const [PlayerPosition.lw],
         PlayerPosition.rm => const [PlayerPosition.rw],

@@ -4,6 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/features/federation/sponsor_card.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/sponsor_screen.dart';
 import 'package:fnm/features/hub/hub_event.dart';
@@ -31,7 +32,7 @@ void main() {
             .first;
     return (
       cycle: 0,
-      season: 2026,
+      year: 2026,
       offers: [
         Sponsors.offerOf(longestOf(SponsorDeal.marketing), 1),
         Sponsors.offerOf(longestOf(SponsorDeal.crowdPleaser), 1, index: 1),
@@ -75,6 +76,42 @@ void main() {
         await tester.pump();
         expect(tester.takeException(), isNull);
         expectNothingCut(tester, 'the hub button in $locale');
+
+        // And the finances card: a deal to the cycle's close, or none.
+        final round = longest(l);
+        for (final chosen in [round.offers.last, null]) {
+          await tester.pumpWidget(const SizedBox());
+          await tester.pumpApp(
+            const Scaffold(
+              body: SingleChildScrollView(
+                padding: EdgeInsets.all(16),
+                child: SponsorCard(careerId: 1),
+              ),
+            ),
+            locale: Locale(locale),
+            overrides: [
+              sponsorRoundProvider.overrideWith(
+                (ref, id) async => (
+                  cycle: 0,
+                  year: 2026,
+                  offers: round.offers,
+                  chosen: chosen,
+                  decided: true,
+                ),
+              ),
+            ],
+          );
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+          expect(find.byKey(SponsorCard.cardKey), findsOneWidget);
+          expect(
+            find.text(
+              chosen == null ? l.sponsorNoneCycle : l.sponsorUntilCycleEnd,
+            ),
+            findsOneWidget,
+          );
+          expectNothingCut(tester, 'the finances card in $locale');
+        }
       });
     }
   }
@@ -157,7 +194,7 @@ void main() {
             .hasWatchedDraw(
               save.careerId,
               0,
-              Sponsors.chosenKind(round.season, cash.index),
+              Sponsors.chosenKind(round.year, cash.index),
             );
         expect(settled, isTrue);
       });

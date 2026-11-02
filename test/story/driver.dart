@@ -336,7 +336,7 @@ class StoryDriver {
           await c.read(campScandalServiceProvider).keep(careerId, scandal);
         }
       case HubEventKind.budget:
-        // The season's sponsor comes first at a cycle's opening, of the
+        // The cycle's sponsor comes first at a cycle's opening, of the
         // budget's kind: turned down, so the stories stay as they were found.
         if (e.route != null && e.route!.startsWith(Routes.sponsor)) {
           await c.read(sponsorServiceProvider).decline(careerId);

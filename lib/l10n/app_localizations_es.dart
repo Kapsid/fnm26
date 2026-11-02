@@ -6939,7 +6939,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Los medios de todo el mundo quieren hablar contigo antes de tu primer partido';
+      'Los medios de todo el mundo quieren hablar contigo antes de tu próximo partido';
 
   @override
   String get squadDevWonderkid => 'PRODIGIO';
@@ -13766,7 +13766,8 @@ class AppLocalizationsEs extends AppLocalizations {
       'Una lectura fiable de nivel, posiciones y cansancio.';
 
   @override
-  String get assistantReadElite => 'Lee el estado físico, la forma y al rival.';
+  String get assistantReadElite =>
+      'Lee el estado físico, la forma, la moral y a los rivales.';
 
   @override
   String get assistantVariantMain => 'Su elección';
@@ -13778,27 +13779,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get assistantVariantForm => 'Jugadores en forma';
 
   @override
-  String get assistantVariantAttacking => 'Más ofensivo';
-
-  @override
-  String get assistantVariantSolid => 'Más sólido';
-
-  @override
-  String get assistantVsStronger => 'El rival es más fuerte';
+  String get assistantVsStronger => 'Los rivales son más fuertes';
 
   @override
   String get assistantVsWeaker => 'Sois más fuertes';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Cambios en tu once: $count';
-  }
-
-  @override
-  String get assistantBench => 'Primeros desde el banquillo';
-
-  @override
-  String get assistantReasonBestFit => 'El más indicado';
 
   @override
   String get assistantReasonInForm => 'En forma';
@@ -13807,37 +13791,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get assistantReasonFresh => 'Fresco';
 
   @override
-  String get assistantReasonCovering => 'Cubre puesto';
-
-  @override
-  String get assistantReasonCoverDefence => 'Defensa';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Medio campo';
-
-  @override
-  String get assistantReasonCoverAttack => 'Ataque';
-
-  @override
   String get assistantReasonTired => 'Cansado';
 
   @override
-  String get assistantReasonBooked => 'Amonestado';
-
-  @override
   String get assistantReasonInjured => 'Lesionado';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Fuera de posición';
-
-  @override
-  String get assistantReasonChasing => 'Hay que remontar';
-
-  @override
-  String get assistantSubsTitle => 'Cambios que haría';
-
-  @override
-  String get assistantNoSubs => 'Dejaría el equipo como está.';
 
   @override
   String get assistantApply => 'Aplicar';
@@ -13846,21 +13803,68 @@ class AppLocalizationsEs extends AppLocalizations {
   String get assistantClose => 'Cerrar';
 
   @override
+  String get assistantReasonTopPick => 'Fijo';
+
+  @override
+  String get assistantReasonLineCover => 'Cobertura';
+
+  @override
+  String get assistantReasonYoung => 'Joven talento';
+
+  @override
+  String get assistantReasonExperienced => 'Veterano';
+
+  @override
+  String get assistantReasonBanned => 'Sancionado';
+
+  @override
+  String get assistantReasonOutOfForm => 'Fuera de forma';
+
+  @override
+  String get assistantReasonOthersAhead => 'Otros por delante';
+
+  @override
+  String get assistantVariantYouth => 'Dar paso a los jóvenes';
+
+  @override
+  String get assistantVariantExperience => 'Experiencia';
+
+  @override
+  String get assistantVsSelection => 'Frente a la selección actual';
+
+  @override
+  String get assistantVsLastSquad => 'Frente a la lista anterior';
+
+  @override
+  String get assistantSameSquad => 'Sin cambios en la selección';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Entran: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Salen: $count';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
-      'Aconseja alineación y cambios, a veces se equivoca';
+      'Aconseja en la convocatoria, a veces se equivoca';
 
   @override
   String get staffEffectAdviceGood =>
-      'Aconseja alineación y cambios, vigila el cansancio';
+      'Aconseja en la convocatoria, vigila el estado físico';
 
   @override
-  String get staffEffectAdviceElite => 'Aconseja según físico, forma y rival';
+  String get staffEffectAdviceElite =>
+      'Aconseja en la convocatoria según físico, forma y rivales';
 
   @override
-  String get staffHiringAdvice => 'y consejos de alineación y cambios';
+  String get staffHiringAdvice => 'y consejos de convocatoria';
 
   @override
-  String get hubEventSponsor => 'Elige el patrocinador de la temporada';
+  String get hubEventSponsor => 'Elige el patrocinador del ciclo';
 
   @override
   String get hubEventSponsorSub =>
@@ -13870,8 +13874,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sponsorTitle => 'Patrocinador principal';
 
   @override
-  String get sponsorIntroSeason =>
-      'Cada temporada, las marcas hacen cola para ser el patrocinador principal de la federación. Cada contrato aporta algo y cuesta algo: la directiva, el vestuario o ambos. Firma uno, o ninguno. Los efectos sobre la directiva y la moral duran hasta el final de la temporada.';
+  String get sponsorIntroCycle =>
+      'Una vez por ciclo, las marcas hacen cola para ser el patrocinador principal de la federación. Cada contrato aporta algo y cuesta algo: la directiva, el vestuario o ambos. Firma uno, o ninguno. El contrato y sus efectos sobre la directiva y la moral duran hasta el final del ciclo.';
 
   @override
   String get sponsorEffectBoard => 'Directiva';
@@ -13903,15 +13907,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sponsorSign => 'Firmar';
 
   @override
-  String get sponsorDeclineSeason => 'Sin patrocinador esta temporada';
+  String get sponsorDeclineCycle => 'Sin patrocinador este ciclo';
 
   @override
-  String get sponsorNoneSeason => 'Sin patrocinador principal esta temporada';
+  String get sponsorNoneCycle => 'Sin patrocinador principal este ciclo';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Hasta el final de la temporada $season';
-  }
+  String get sponsorUntilCycleEnd => 'Hasta el final del ciclo';
 
   @override
   String sponsorRolloverLine(String brand) {

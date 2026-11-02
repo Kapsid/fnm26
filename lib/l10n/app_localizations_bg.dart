@@ -6933,7 +6933,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Световните медии искат думата преди първия ти мач';
+      'Световните медии искат думата преди следващия ти мач';
 
   @override
   String get squadDevWonderkid => 'ВУНДЕРКИНД';
@@ -13766,7 +13766,8 @@ class AppLocalizationsBg extends AppLocalizations {
       'Солидна преценка на рейтинги, позиции и умора.';
 
   @override
-  String get assistantReadElite => 'Чете физиката, формата и съперника.';
+  String get assistantReadElite =>
+      'Чете физиката, формата, морала и съперниците.';
 
   @override
   String get assistantVariantMain => 'Неговият избор';
@@ -13778,27 +13779,10 @@ class AppLocalizationsBg extends AppLocalizations {
   String get assistantVariantForm => 'Играчи във форма';
 
   @override
-  String get assistantVariantAttacking => 'По-атакуващо';
-
-  @override
-  String get assistantVariantSolid => 'По-стабилно';
-
-  @override
-  String get assistantVsStronger => 'Съперникът е по-силен';
+  String get assistantVsStronger => 'Съперниците са по-силни';
 
   @override
   String get assistantVsWeaker => 'Ти си по-силният';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Промени в титулярите: $count';
-  }
-
-  @override
-  String get assistantBench => 'Първи от пейката';
-
-  @override
-  String get assistantReasonBestFit => 'Най-подходящ';
 
   @override
   String get assistantReasonInForm => 'Във форма';
@@ -13807,37 +13791,10 @@ class AppLocalizationsBg extends AppLocalizations {
   String get assistantReasonFresh => 'Свеж';
 
   @override
-  String get assistantReasonCovering => 'Покрива';
-
-  @override
-  String get assistantReasonCoverDefence => 'Защита';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Халфова линия';
-
-  @override
-  String get assistantReasonCoverAttack => 'Атака';
-
-  @override
   String get assistantReasonTired => 'Уморен';
 
   @override
-  String get assistantReasonBooked => 'С жълт картон';
-
-  @override
   String get assistantReasonInjured => 'Контузен';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Не на поста си';
-
-  @override
-  String get assistantReasonChasing => 'Гоним резултата';
-
-  @override
-  String get assistantSubsTitle => 'Смени, които би направил';
-
-  @override
-  String get assistantNoSubs => 'Би оставил отбора както е.';
 
   @override
   String get assistantApply => 'Приложи';
@@ -13846,22 +13803,67 @@ class AppLocalizationsBg extends AppLocalizations {
   String get assistantClose => 'Затвори';
 
   @override
-  String get staffEffectAdviceBasic =>
-      'Съветва за състава и смените, понякога грешно';
+  String get assistantReasonTopPick => 'Първи избор';
 
   @override
-  String get staffEffectAdviceGood =>
-      'Съветва за състава и смените, следи умората';
+  String get assistantReasonLineCover => 'Резерва за линията';
+
+  @override
+  String get assistantReasonYoung => 'Млад талант';
+
+  @override
+  String get assistantReasonExperienced => 'Опитен';
+
+  @override
+  String get assistantReasonBanned => 'Наказан';
+
+  @override
+  String get assistantReasonOutOfForm => 'Без форма';
+
+  @override
+  String get assistantReasonOthersAhead => 'Други са пред него';
+
+  @override
+  String get assistantVariantYouth => 'Шанс за младите';
+
+  @override
+  String get assistantVariantExperience => 'Опит';
+
+  @override
+  String get assistantVsSelection => 'Спрямо текущия ти избор';
+
+  @override
+  String get assistantVsLastSquad => 'Спрямо предишния състав';
+
+  @override
+  String get assistantSameSquad => 'Без промени спрямо избора ти';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Влизат: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Излизат: $count';
+  }
+
+  @override
+  String get staffEffectAdviceBasic =>
+      'Съветва за повикванията, понякога грешно';
+
+  @override
+  String get staffEffectAdviceGood => 'Съветва за повикванията, следи физиката';
 
   @override
   String get staffEffectAdviceElite =>
-      'Съветва според физиката, формата и съперника';
+      'Съветва за повикванията според физиката, формата и съперниците';
 
   @override
-  String get staffHiringAdvice => 'и съвети за състава и смените';
+  String get staffHiringAdvice => 'и съвети за повикванията';
 
   @override
-  String get hubEventSponsor => 'Избери спонсор за сезона';
+  String get hubEventSponsor => 'Избери спонсор за цикъла';
 
   @override
   String get hubEventSponsorSub =>
@@ -13871,8 +13873,8 @@ class AppLocalizationsBg extends AppLocalizations {
   String get sponsorTitle => 'Генерален спонсор';
 
   @override
-  String get sponsorIntroSeason =>
-      'Всеки сезон марките се редят на опашка, за да станат генерален спонсор на федерацията. Всяка сделка носи нещо и струва нещо: съвета, съблекалнята или и двете. Подпиши с една или с никоя. Ефектите върху съвета и морала траят до края на сезона.';
+  String get sponsorIntroCycle =>
+      'Веднъж на цикъл марките се редят на опашка, за да станат генерален спонсор на федерацията. Всяка сделка носи нещо и струва нещо: съвета, съблекалнята или и двете. Подпиши с една или с никоя. Сделката и ефектите ѝ върху съвета и морала траят до края на цикъла.';
 
   @override
   String get sponsorEffectBoard => 'Съвет';
@@ -13903,15 +13905,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get sponsorSign => 'Подпиши';
 
   @override
-  String get sponsorDeclineSeason => 'Без спонсор този сезон';
+  String get sponsorDeclineCycle => 'Без спонсор за този цикъл';
 
   @override
-  String get sponsorNoneSeason => 'Без генерален спонсор този сезон';
+  String get sponsorNoneCycle => 'Без генерален спонсор този цикъл';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'До края на сезон $season';
-  }
+  String get sponsorUntilCycleEnd => 'До края на цикъла';
 
   @override
   String sponsorRolloverLine(String brand) {

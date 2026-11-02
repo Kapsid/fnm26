@@ -8,7 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart' show immutable;
 /// trade-off and never a free gift.
 enum SponsorDeal {
   /// The most money there is, and the board, the room and the press all
-  /// against it. One a year, at most.
+  /// against it. One to a round.
   risky,
 
   /// Half as much again as a plain deal; the board would rather not be seen
@@ -97,7 +97,7 @@ enum SponsorBrand {
   }
 }
 
-/// One offer of a season's sponsor round, with everything it does.
+/// One offer of a cycle's sponsor round, with everything it does.
 @immutable
 class SponsorOffer {
   const SponsorOffer({
@@ -113,13 +113,14 @@ class SponsorOffer {
   final int index;
   final SponsorBrand brand;
 
-  /// The cash paid on signing.
+  /// The cash paid on signing: the whole cycle's money, at once.
   final int euros;
 
   /// The Commercial / PR levels it pays for in the cycle (a marketing deal).
   final int levels;
 
-  /// Board confidence and dressing-room morale for the season, in points.
+  /// Board confidence and dressing-room morale for the rest of the cycle, in
+  /// points.
   final int board;
   final int morale;
 
@@ -152,53 +153,58 @@ class SponsorOffer {
       'board $board, morale $morale)';
 }
 
-/// The general sponsor: once a SEASON (September to August, four to a cycle),
-/// three brands offer a deal each. One may be signed, or none.
+/// The general sponsor: once a CYCLE, at its opening (just before the
+/// budget), three brands offer a deal each. One may be signed, or none, and
+/// the deal runs to the cycle's close.
 ///
-/// The offers are DERIVED from the save's seed, the season, the nation and
-/// its world place at the cycle's start, so they read the same on every visit
-/// and after a restore. Only the choice is stored, as a `draws_watched`
-/// marker ([chosenKind] / [declinedKind]); a season without one simply had no
-/// sponsor, which is every season played before this existed.
+/// The offers are DERIVED from the save's seed, the cycle, the nation and its
+/// world place at the cycle's start, so they read the same on every visit and
+/// after a restore. Only the choice is stored, as a `draws_watched` marker
+/// ([chosenKind] / [declinedKind]); a cycle without one simply had no
+/// sponsor, which is every cycle played before this existed.
+///
+/// A round is keyed by the YEAR its cycle opens in ([roundYear]): 2026, 2030,
+/// and so on. The first build offered a round every season (September to
+/// August, keyed by the season's year); a save that answered any season of
+/// a cycle has answered that cycle ([legacySettlingKinds]).
 abstract final class Sponsors {
   /// The marker and press-key prefix.
   static const String prefix = 'sponsor:';
 
-  /// Three offers a season.
+  /// Three offers a cycle.
   static const int offerCount = 3;
 
-  /// The first season ever offered: the game's first.
-  static const int firstEverSeason = 2026;
+  /// The year the game's first cycle opens in.
+  static const int firstEverYear = 2026;
 
-  /// The month a season turns: September, when every cycle after the first
-  /// begins and every summer tournament is over.
-  static const int seasonStartMonth = 9;
+  /// The year [cycle] opens in: the key of its round.
+  static int roundYear(int cycle) => firstEverYear + 4 * cycle;
 
-  /// The season [date] falls in, for a cycle whose first season is
-  /// [firstSeason]: held inside the cycle's four, so the first cycle's July
-  /// opening is its first season and a World Championship played in the
-  /// summer that ends a cycle is its last.
-  static int seasonOf(DateTime date, int firstSeason) {
-    final s = date.month >= seasonStartMonth ? date.year : date.year - 1;
-    return s.clamp(firstSeason, firstSeason + 3);
-  }
+  /// The marker for having signed the offer at [index] in the round of
+  /// [year] (see [roundYear]).
+  static String chosenKind(int year, int index) => '$prefix$year:$index';
 
-  /// The marker for having signed the offer at [index] in [season].
-  static String chosenKind(int season, int index) => '$prefix$season:$index';
+  /// The marker for having turned every offer of [year]'s round down.
+  static String declinedKind(int year) => '$prefix$year:none';
 
-  /// The marker for having turned every offer of [season] down.
-  static String declinedKind(int season) => '$prefix$season:none';
+  /// Every marker that settles a round.
+  static List<String> settlingKinds(int year) => [
+    for (var i = 0; i < offerCount; i++) chosenKind(year, i),
+    declinedKind(year),
+  ];
 
-  /// Every marker that settles a season's round.
-  static List<String> settlingKinds(int season) => [
-    for (var i = 0; i < offerCount; i++) chosenKind(season, i),
-    declinedKind(season),
+  /// The markers the first, season-by-season build left for the three later
+  /// seasons of [cycle]: any one of them means the cycle was answered.
+  static List<String> legacySettlingKinds(int cycle) => [
+    for (var y = roundYear(cycle) + 1; y < roundYear(cycle) + 4; y++)
+      ...settlingKinds(y),
   ];
 
   /// The press-answer key a signed deal writes its board and morale effect
-  /// under: `sponsor:<season>:<brand>`. It counts for that season only.
-  static String pressKey(int season, SponsorBrand brand) =>
-      '$prefix$season:${brand.name}';
+  /// under: `sponsor:<year>:<brand>`. Stored on its cycle, it counts for that
+  /// cycle and ends at its close.
+  static String pressKey(int year, SponsorBrand brand) =>
+      '$prefix$year:${brand.name}';
 
   /// The brand named in a [pressKey], or null for any other key.
   static SponsorBrand? brandOfPressKey(String key) {
@@ -207,20 +213,17 @@ abstract final class Sponsors {
     return SponsorBrand.byName(parts[2]);
   }
 
-  /// The season of a [pressKey], or null for any other key.
-  static int? seasonOfPressKey(String key) =>
-      brandOfPressKey(key) == null ? null : int.tryParse(key.split(':')[1]);
-
   /// The tone column of a sponsor's press row.
   static const String pressTone = 'sponsor';
 
   // --- Sizes ----------------------------------------------------------------
 
-  /// A plain deal's cash at the bottom of the world and at the top of it.
-  /// Small on purpose: a sponsor is a sweetener, not a second central grant
+  /// A plain deal's cash at the bottom of the world and at the top of it,
+  /// for the whole cycle (two and a half seasons' worth of the first,
+  /// season-by-season build). A sweetener, not a second central grant
   /// (€9M to €19M a cycle).
-  static const int minMoney = 1000000;
-  static const int maxMoney = 4000000;
+  static const int minMoney = 2500000;
+  static const int maxMoney = 10000000;
 
   /// What a deal's cash is rounded to.
   static const int rounding = 500000;
@@ -228,9 +231,10 @@ abstract final class Sponsors {
   /// The place [baseEuros] treats as the bottom of the world.
   static const int bottomRank = 209;
 
-  /// The size of a plain deal for a nation at [worldRank]: €1M at the bottom
-  /// of the world rising to €4M at the top, priced by ranking POINTS (the
-  /// world table is not a straight line, see [Elo.seedFromRanking]).
+  /// The size of a plain deal for a nation at [worldRank]: €2.5M at the
+  /// bottom of the world rising to €10M at the top, priced by ranking
+  /// POINTS (the world table is not a straight line, see
+  /// [Elo.seedFromRanking]).
   static int baseEuros(int worldRank) {
     final top = Elo.seedFromRanking(1);
     final bottom = Elo.seedFromRanking(bottomRank);
@@ -241,16 +245,17 @@ abstract final class Sponsors {
 
   static int _round(num euros) => (euros / rounding).round() * rounding;
 
-  /// What [brand]'s deal gives a nation at [worldRank] (index 0; see
-  /// [offersFor]).
+  /// What [brand]'s deal gives a nation at [worldRank] for the cycle (index
+  /// 0; see [offersFor]). The cash is paid at signing; the board and the
+  /// room feel it until the cycle's close.
   ///
-  /// * risky: twice a plain deal and a million on top (€3M to €9M); board
+  /// * risky: twice a plain deal and €2.5M on top (€7.5M to €22.5M); board
   ///   −3, morale −2, and the press mock it on Y;
-  /// * bigPayer: one and a half times (€1.5M to €6M); board −2;
-  /// * crowdPleaser: three quarters (€1M to €3M); morale +2, board −1;
-  /// * familyFriendly: half (€0.5M to €2M); board +2, morale −1;
+  /// * bigPayer: one and a half times (€4M to €15M); board −2;
+  /// * crowdPleaser: three quarters (€2M to €7.5M); morale +2, board −1;
+  /// * familyFriendly: half (€1.5M to €5M); board +2, morale −1;
   /// * marketing: no cash, one Commercial / PR level per million of a plain
-  ///   deal plus one (2 to 5 levels, paid back 1.6 times at the cycle's
+  ///   deal plus two (5 to 12 levels, paid back 1.6 times at the cycle's
   ///   close); morale −1.
   static SponsorOffer offerOf(
     SponsorBrand brand,
@@ -262,7 +267,7 @@ abstract final class Sponsors {
       SponsorDeal.risky => SponsorOffer(
         index: index,
         brand: brand,
-        euros: _round(base * 2 + 1000000),
+        euros: _round(base * 2 + 2500000),
         board: -3,
         morale: -2,
       ),
@@ -289,20 +294,20 @@ abstract final class Sponsors {
       SponsorDeal.marketing => SponsorOffer(
         index: index,
         brand: brand,
-        levels: (base ~/ FederationFinance.investLevelPrice + 1).clamp(2, 5),
+        levels: (base ~/ FederationFinance.investLevelPrice + 2).clamp(5, 12),
         morale: -1,
       ),
     };
   }
 
-  /// The three brands of [season] for the save seeded [seed]: one risky and
-  /// two plain ones of different shapes, never a brand offered the season
-  /// before. Worked out season by season from the game's first, so "the
-  /// season before" is always the one this same rule produced. [czech] puts
-  /// Czechia's own brands in the pool.
+  /// The three brands of [cycle]'s round for the save seeded [seed]: one
+  /// risky and two plain ones of different shapes, never a brand offered the
+  /// cycle before where the pool has another. Worked out cycle by cycle from
+  /// the game's first, so "the cycle before" is always the one this same
+  /// rule produced. [czech] puts Czechia's own brands in the pool.
   static List<SponsorBrand> brandsFor({
     required int seed,
-    required int season,
+    required int cycle,
     required bool czech,
   }) {
     final pool = [
@@ -311,8 +316,11 @@ abstract final class Sponsors {
     ];
     var last = const <SponsorBrand>{};
     var picks = const <SponsorBrand>[];
-    for (var s = firstEverSeason; s <= season; s++) {
-      final rng = SeededRng(seed ^ ((s + 1) * 0x5BD1E995) ^ 0x5905C0);
+    for (var c = 0; c <= cycle; c++) {
+      // Seeded by the round's year, as the first build seeded its seasons:
+      // the first cycle's round is the brands that build offered first.
+      final y = roundYear(c);
+      final rng = SeededRng(seed ^ ((y + 1) * 0x5BD1E995) ^ 0x5905C0);
       final fresh = [
         for (final b in pool)
           if (!last.contains(b)) b,
@@ -338,17 +346,17 @@ abstract final class Sponsors {
   }
 
   /// The round offered to a nation ([nationCode], so the Czech brands find
-  /// Czechia) in [season] of the save seeded [seed], sized by its
-  /// [worldRank] at the cycle's start.
+  /// Czechia) in [cycle] of the save seeded [seed], sized by its [worldRank]
+  /// at the cycle's start.
   static List<SponsorOffer> offersFor({
     required int seed,
-    required int season,
+    required int cycle,
     required String nationCode,
     required int worldRank,
   }) {
     final brands = brandsFor(
       seed: seed,
-      season: season,
+      cycle: cycle,
       czech: nationCode == 'CZE',
     );
     return [

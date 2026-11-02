@@ -214,6 +214,11 @@ void main() {
       // Basic assistant: 1 - 0.06 x 1.0, and 0.025 of the talent scale.
       expect(reading('6% fewer injuries'), findsOneWidget);
       expect(reading('Youngsters +2 overall'), findsOneWidget);
+      // His advice is on the call-up, and a basic man's is fallible.
+      expect(
+        reading('Advises on call-ups, sometimes wrongly'),
+        findsOneWidget,
+      );
       // The elite figure belongs to nobody in this room.
       expect(reading('22% fewer injuries'), findsNothing);
     });
@@ -237,6 +242,7 @@ void main() {
         reading('and youngsters +2 to +3 overall'),
         findsOneWidget,
       );
+      expect(reading('and advice on call-ups'), findsOneWidget);
     });
 
     testWidgets('a hired scout states his read, his caps and his dossier', (

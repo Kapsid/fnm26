@@ -6691,7 +6691,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hubEventPressConference => '記者会見に臨む';
 
   @override
-  String get hubEventPressConferenceSub => '初戦を前に、世界中のメディアが話を聞きたがっています';
+  String get hubEventPressConferenceSub => '次の試合を前に、世界中のメディアが話を聞きたがっています';
 
   @override
   String get squadDevWonderkid => '神童';
@@ -13195,7 +13195,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get assistantReadGood => '能力、ポジション、疲労を的確に読みます。';
 
   @override
-  String get assistantReadElite => 'コンディション、調子、相手まで読みます。';
+  String get assistantReadElite => 'コンディション、調子、士気、相手まで読みます。';
 
   @override
   String get assistantVariantMain => '彼の推薦';
@@ -13207,27 +13207,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get assistantVariantForm => '好調な選手';
 
   @override
-  String get assistantVariantAttacking => 'より攻撃的';
-
-  @override
-  String get assistantVariantSolid => 'より堅実';
-
-  @override
   String get assistantVsStronger => '相手の方が格上';
 
   @override
   String get assistantVsWeaker => 'こちらが格上';
-
-  @override
-  String assistantChanges(int count) {
-    return '先発の変更: $count';
-  }
-
-  @override
-  String get assistantBench => '最初の交代要員';
-
-  @override
-  String get assistantReasonBestFit => '最適';
 
   @override
   String get assistantReasonInForm => '好調';
@@ -13236,37 +13219,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get assistantReasonFresh => '疲労なし';
 
   @override
-  String get assistantReasonCovering => '代役';
-
-  @override
-  String get assistantReasonCoverDefence => '守備';
-
-  @override
-  String get assistantReasonCoverMidfield => '中盤';
-
-  @override
-  String get assistantReasonCoverAttack => '攻撃';
-
-  @override
   String get assistantReasonTired => '疲労';
 
   @override
-  String get assistantReasonBooked => '警告あり';
-
-  @override
   String get assistantReasonInjured => '負傷';
-
-  @override
-  String get assistantReasonOutOfPosition => '本職外';
-
-  @override
-  String get assistantReasonChasing => '追う展開';
-
-  @override
-  String get assistantSubsTitle => '彼が勧める交代';
-
-  @override
-  String get assistantNoSubs => 'このままでいいそうです。';
 
   @override
   String get assistantApply => '適用';
@@ -13275,19 +13231,65 @@ class AppLocalizationsJa extends AppLocalizations {
   String get assistantClose => '閉じる';
 
   @override
-  String get staffEffectAdviceBasic => '先発と交代を助言、時々外れる';
+  String get assistantReasonTopPick => '当確';
 
   @override
-  String get staffEffectAdviceGood => '先発と交代を助言、疲労も考慮';
+  String get assistantReasonLineCover => '層の確保';
 
   @override
-  String get staffEffectAdviceElite => 'コンディション、調子、相手から助言';
+  String get assistantReasonYoung => '若手有望株';
 
   @override
-  String get staffHiringAdvice => 'と先発・交代の助言';
+  String get assistantReasonExperienced => '経験豊富';
 
   @override
-  String get hubEventSponsor => '今シーズンのスポンサーを選ぶ';
+  String get assistantReasonBanned => '出場停止';
+
+  @override
+  String get assistantReasonOutOfForm => '不調';
+
+  @override
+  String get assistantReasonOthersAhead => '序列で劣る';
+
+  @override
+  String get assistantVariantYouth => '若手を抜擢';
+
+  @override
+  String get assistantVariantExperience => '経験重視';
+
+  @override
+  String get assistantVsSelection => '現在の選択と比べて';
+
+  @override
+  String get assistantVsLastSquad => '前回のメンバーと比べて';
+
+  @override
+  String get assistantSameSquad => '選択に変更なし';
+
+  @override
+  String assistantNamesIn(int count) {
+    return '追加: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return '除外: $count';
+  }
+
+  @override
+  String get staffEffectAdviceBasic => '招集を助言、時々外れる';
+
+  @override
+  String get staffEffectAdviceGood => '招集を助言、コンディションも考慮';
+
+  @override
+  String get staffEffectAdviceElite => 'コンディション、調子、相手から招集を助言';
+
+  @override
+  String get staffHiringAdvice => 'と招集の助言';
+
+  @override
+  String get hubEventSponsor => '今サイクルのスポンサーを選ぶ';
 
   @override
   String get hubEventSponsorSub => '3つのブランドがユニフォームに名前を載せたがっています。どの契約にも代償があります。';
@@ -13296,8 +13298,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sponsorTitle => 'メインスポンサー';
 
   @override
-  String get sponsorIntroSeason =>
-      '毎シーズン、協会のメインスポンサーの座を狙ってブランドが列をなします。どの契約にも見返りと代償があります。協会か、ロッカールームか、その両方か。1社と契約するか、どことも契約しないか。協会と士気への影響はシーズン終了まで続きます。';
+  String get sponsorIntroCycle =>
+      'サイクルごとに一度、協会のメインスポンサーの座を狙ってブランドが列をなします。どの契約にも見返りと代償があります。協会か、ロッカールームか、その両方か。1社と契約するか、どことも契約しないか。契約と、協会と士気への影響はサイクル終了まで続きます。';
 
   @override
   String get sponsorEffectBoard => '協会';
@@ -13328,15 +13330,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get sponsorSign => '契約する';
 
   @override
-  String get sponsorDeclineSeason => '今シーズンはスポンサーなし';
+  String get sponsorDeclineCycle => '今サイクルはスポンサーなし';
 
   @override
-  String get sponsorNoneSeason => '今シーズンはメインスポンサーなし';
+  String get sponsorNoneCycle => '今サイクルはメインスポンサーなし';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return '$seasonシーズン終了まで';
-  }
+  String get sponsorUntilCycleEnd => 'サイクル終了まで';
 
   @override
   String sponsorRolloverLine(String brand) {

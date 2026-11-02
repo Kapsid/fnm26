@@ -6825,7 +6825,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Media dunia ingin bicara sebelum laga pertama Anda';
+      'Media dunia ingin bicara sebelum laga Anda berikutnya';
 
   @override
   String get squadDevWonderkid => 'WONDERKID';
@@ -13585,7 +13585,8 @@ class AppLocalizationsId extends AppLocalizations {
       'Penilaian yang baik atas rating, posisi, dan kelelahan.';
 
   @override
-  String get assistantReadElite => 'Membaca kebugaran, performa, dan lawan.';
+  String get assistantReadElite =>
+      'Membaca kebugaran, performa, moral, dan lawan.';
 
   @override
   String get assistantVariantMain => 'Pilihannya';
@@ -13597,27 +13598,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get assistantVariantForm => 'Pemain dalam performa';
 
   @override
-  String get assistantVariantAttacking => 'Lebih menyerang';
-
-  @override
-  String get assistantVariantSolid => 'Lebih solid';
-
-  @override
-  String get assistantVsStronger => 'Lawan lebih kuat';
+  String get assistantVsStronger => 'Lawan-lawan lebih kuat';
 
   @override
   String get assistantVsWeaker => 'Anda lebih kuat';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Perubahan di starting eleven: $count';
-  }
-
-  @override
-  String get assistantBench => 'Pertama dari bangku cadangan';
-
-  @override
-  String get assistantReasonBestFit => 'Paling cocok';
 
   @override
   String get assistantReasonInForm => 'Sedang bagus';
@@ -13626,37 +13610,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get assistantReasonFresh => 'Segar';
 
   @override
-  String get assistantReasonCovering => 'Mengisi';
-
-  @override
-  String get assistantReasonCoverDefence => 'Bertahan';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Lini tengah';
-
-  @override
-  String get assistantReasonCoverAttack => 'Menyerang';
-
-  @override
   String get assistantReasonTired => 'Lelah';
 
   @override
-  String get assistantReasonBooked => 'Kartu kuning';
-
-  @override
   String get assistantReasonInjured => 'Cedera';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Bukan posisinya';
-
-  @override
-  String get assistantReasonChasing => 'Mengejar skor';
-
-  @override
-  String get assistantSubsTitle => 'Pergantian yang akan ia lakukan';
-
-  @override
-  String get assistantNoSubs => 'Ia akan membiarkan tim apa adanya.';
 
   @override
   String get assistantApply => 'Terapkan';
@@ -13665,22 +13622,68 @@ class AppLocalizationsId extends AppLocalizations {
   String get assistantClose => 'Tutup';
 
   @override
+  String get assistantReasonTopPick => 'Pilihan utama';
+
+  @override
+  String get assistantReasonLineCover => 'Pelapis lini';
+
+  @override
+  String get assistantReasonYoung => 'Bakat muda';
+
+  @override
+  String get assistantReasonExperienced => 'Berpengalaman';
+
+  @override
+  String get assistantReasonBanned => 'Skorsing';
+
+  @override
+  String get assistantReasonOutOfForm => 'Performa menurun';
+
+  @override
+  String get assistantReasonOthersAhead => 'Kalah bersaing';
+
+  @override
+  String get assistantVariantYouth => 'Beri kesempatan pemain muda';
+
+  @override
+  String get assistantVariantExperience => 'Pengalaman';
+
+  @override
+  String get assistantVsSelection => 'Dibanding pilihan Anda saat ini';
+
+  @override
+  String get assistantVsLastSquad => 'Dibanding skuad sebelumnya';
+
+  @override
+  String get assistantSameSquad => 'Tidak ada perubahan pada pilihan Anda';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Masuk: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Keluar: $count';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
-      'Memberi saran susunan dan pergantian, kadang keliru';
+      'Memberi saran pemanggilan, kadang keliru';
 
   @override
   String get staffEffectAdviceGood =>
-      'Memberi saran susunan dan pergantian, memperhatikan kelelahan';
+      'Memberi saran pemanggilan, memperhatikan kebugaran';
 
   @override
   String get staffEffectAdviceElite =>
-      'Memberi saran berdasarkan kebugaran, performa, dan lawan';
+      'Memberi saran pemanggilan berdasarkan kebugaran, performa, dan lawan';
 
   @override
-  String get staffHiringAdvice => 'dan saran susunan serta pergantian';
+  String get staffHiringAdvice => 'dan saran pemanggilan';
 
   @override
-  String get hubEventSponsor => 'Pilih sponsor musim ini';
+  String get hubEventSponsor => 'Pilih sponsor siklus ini';
 
   @override
   String get hubEventSponsorSub =>
@@ -13690,8 +13693,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get sponsorTitle => 'Sponsor utama';
 
   @override
-  String get sponsorIntroSeason =>
-      'Setiap musim, merek-merek antre untuk menjadi sponsor utama federasi. Setiap kesepakatan memberi sesuatu dan mengorbankan sesuatu: dewan, ruang ganti, atau keduanya. Tanda tangani satu, atau tidak sama sekali. Efek pada dewan dan moral berlaku hingga akhir musim.';
+  String get sponsorIntroCycle =>
+      'Sekali setiap siklus, merek-merek antre untuk menjadi sponsor utama federasi. Setiap kesepakatan memberi sesuatu dan mengorbankan sesuatu: dewan, ruang ganti, atau keduanya. Tanda tangani satu, atau tidak sama sekali. Kesepakatan itu dan efeknya pada dewan dan moral berlaku hingga akhir siklus.';
 
   @override
   String get sponsorEffectBoard => 'Dewan';
@@ -13723,15 +13726,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get sponsorSign => 'Teken';
 
   @override
-  String get sponsorDeclineSeason => 'Tanpa sponsor musim ini';
+  String get sponsorDeclineCycle => 'Tanpa sponsor siklus ini';
 
   @override
-  String get sponsorNoneSeason => 'Tidak ada sponsor utama musim ini';
+  String get sponsorNoneCycle => 'Tidak ada sponsor utama siklus ini';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Hingga akhir musim $season';
-  }
+  String get sponsorUntilCycleEnd => 'Hingga akhir siklus';
 
   @override
   String sponsorRolloverLine(String brand) {

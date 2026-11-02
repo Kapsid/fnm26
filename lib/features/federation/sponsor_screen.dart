@@ -88,7 +88,7 @@ class SponsorEffectChips extends StatelessWidget {
   }
 }
 
-/// The season's general sponsor offers: three deals, each with a price.
+/// The cycle's general sponsor offers: three deals, each with a price.
 /// Sign one, or none. Reached from the hub before the budget (see
 /// [sponsorRoundProvider]); the warm-up offer screen's shape.
 class SponsorScreen extends ConsumerStatefulWidget {
@@ -211,7 +211,7 @@ class _SponsorScreenState extends ConsumerState<SponsorScreen> {
               child: ListView(
                 children: [
                   Text(
-                    l.sponsorIntroSeason,
+                    l.sponsorIntroCycle,
                     style: AppTypography.bodySmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
@@ -235,7 +235,7 @@ class _SponsorScreenState extends ConsumerState<SponsorScreen> {
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size.fromHeight(48),
               ),
-              child: Text(l.sponsorDeclineSeason, textAlign: TextAlign.center),
+              child: Text(l.sponsorDeclineCycle, textAlign: TextAlign.center),
             ),
           ],
         ),

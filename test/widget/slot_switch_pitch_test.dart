@@ -222,4 +222,150 @@ void main() {
     expect(result!.formation, isNot(formation));
     expect(result!.switches, SlotSwitches.none);
   });
+
+  group('a long press dropped in a switch zone', () {
+    /// The screen point at layout point (x, y) of the 4-3-3 drawn on screen,
+    /// read off the discs: DM (0.5, 0.55), ST (0.5, 0.13), LW x 0.16, RW
+    /// x 0.84. The pitch maps layout to screen linearly away from the back
+    /// line, so two discs per axis pin it.
+    Offset at(WidgetTester tester, double x, double y) {
+      final dmC = tester.getCenter(disc(5));
+      final stC = tester.getCenter(disc(9));
+      final lwC = tester.getCenter(disc(8));
+      final rwC = tester.getCenter(disc(10));
+      final sx = lwC.dx + (x - 0.16) / (0.84 - 0.16) * (rwC.dx - lwC.dx);
+      final sy = dmC.dy + (0.55 - y) / (0.55 - 0.13) * (stC.dy - dmC.dy);
+      return Offset(sx, sy);
+    }
+
+    Future<TestGesture> hold(WidgetTester tester, int slot) async {
+      final g = await tester.startGesture(tester.getCenter(disc(slot)));
+      await tester.pump(kDragHoldDelay + const Duration(milliseconds: 50));
+      return g;
+    }
+
+    testWidgets('the 4-3-3 DM into the gap behind the forwards plays AM', (
+      tester,
+    ) async {
+      final l = await open(tester);
+      expect(badge(tester, 5), 'DM');
+      final target = at(tester, 0.5, 0.30);
+      final g = await hold(tester, 5);
+      await g.moveTo(target);
+      await tester.pump();
+      // Before letting go, the pitch says which switch the drop makes.
+      expect(find.byKey(const ValueKey('pitchSwitchHint')), findsOneWidget);
+      expect(find.text('DM → AM'), findsOneWidget);
+      await g.up();
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('pitchSwitchHint')), findsNothing);
+      expect(badge(tester, 5), 'AM');
+
+      await apply(tester, l);
+      expect(result!.formation, formation, reason: 'still a 4-3-3');
+      expect(result!.switches.bySlot, {5: PlayerPosition.am});
+      expect(result!.lineup, [for (var i = 1; i <= 11; i++) i]);
+    });
+
+    testWidgets('back into its own zone undoes it', (tester) async {
+      final l = await open(
+        tester,
+        switches: const SlotSwitches({5: PlayerPosition.am}),
+      );
+      final target = at(tester, 0.62, 0.56);
+      final g = await hold(tester, 5);
+      await g.moveTo(target);
+      await tester.pump();
+      await g.up();
+      await tester.pumpAndSettle();
+      expect(badge(tester, 5), 'DM');
+      await apply(tester, l);
+      expect(result!.formation, formation);
+      expect(result!.switches, SlotSwitches.none);
+    });
+
+    testWidgets('a centre-back dragged into attack still reshapes', (
+      tester,
+    ) async {
+      final l = await open(tester);
+      final target = at(tester, 0.5, 0.30);
+      final g = await hold(tester, 2);
+      await g.moveTo(target);
+      await tester.pump();
+      expect(find.byKey(const ValueKey('pitchSwitchHint')), findsNothing);
+      await g.up();
+      await tester.pumpAndSettle();
+      await apply(tester, l);
+      expect(result!.formation, isNot(formation));
+      expect(result!.switches, SlotSwitches.none);
+    });
+
+    testWidgets('the DM dropped ON a midfielder still swaps them', (
+      tester,
+    ) async {
+      final l = await open(tester);
+      final target = tester.getCenter(disc(6));
+      final g = await hold(tester, 5);
+      await g.moveTo(target);
+      await tester.pump();
+      await g.up();
+      await tester.pumpAndSettle();
+      expect(badge(tester, 5), 'DM');
+      await apply(tester, l);
+      expect(result!.formation, formation);
+      expect(result!.switches, SlotSwitches.none);
+      expect(result!.lineup[5], 7);
+      expect(result!.lineup[6], 6);
+    });
+
+    testWidgets('at the limit a new switch is refused and says so', (
+      tester,
+    ) async {
+      final l = await open(
+        tester,
+        switches: const SlotSwitches({
+          6: PlayerPosition.dm,
+          7: PlayerPosition.am,
+        }),
+      );
+      // The CM zone, the DM's own band: no reshape was ever made here.
+      final target = at(tester, 0.5, 0.43);
+      final g = await hold(tester, 5);
+      await g.moveTo(target);
+      await tester.pump();
+      expect(find.byKey(const ValueKey('pitchSwitchHint')), findsNothing);
+      await g.up();
+      await tester.pump();
+      expect(find.text(l.tacticsSlotSwitchLimit), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+      expect(badge(tester, 5), 'DM');
+      await apply(tester, l);
+      expect(result!.formation, formation);
+      expect(result!.switches.bySlot, {
+        6: PlayerPosition.dm,
+        7: PlayerPosition.am,
+      });
+    });
+
+    testWidgets('at the limit, where the drop used to reshape, it still does', (
+      tester,
+    ) async {
+      final l = await open(
+        tester,
+        switches: const SlotSwitches({
+          6: PlayerPosition.dm,
+          7: PlayerPosition.am,
+        }),
+      );
+      final target = at(tester, 0.5, 0.28);
+      final g = await hold(tester, 5);
+      await g.moveTo(target);
+      await tester.pump();
+      await g.up();
+      await tester.pumpAndSettle();
+      await apply(tester, l);
+      expect(result!.formation, isNot(formation));
+      expect(result!.switches, SlotSwitches.none);
+    });
+  });
 }

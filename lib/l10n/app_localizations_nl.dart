@@ -6931,7 +6931,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'De wereldpers wil je spreken voor je eerste wedstrijd';
+      'De wereldpers wil je spreken voor je volgende wedstrijd';
 
   @override
   String get squadDevWonderkid => 'WONDERKIND';
@@ -13755,7 +13755,8 @@ class AppLocalizationsNl extends AppLocalizations {
       'Een degelijke inschatting van niveau, posities en vermoeidheid.';
 
   @override
-  String get assistantReadElite => 'Leest conditie, vorm en de tegenstander.';
+  String get assistantReadElite =>
+      'Leest conditie, vorm, moraal en de tegenstanders.';
 
   @override
   String get assistantVariantMain => 'Zijn keuze';
@@ -13767,27 +13768,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get assistantVariantForm => 'Spelers in vorm';
 
   @override
-  String get assistantVariantAttacking => 'Aanvallender';
-
-  @override
-  String get assistantVariantSolid => 'Steviger';
-
-  @override
-  String get assistantVsStronger => 'De tegenstander is sterker';
+  String get assistantVsStronger => 'De tegenstanders zijn sterker';
 
   @override
   String get assistantVsWeaker => 'Jullie zijn sterker';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Wijzigingen in je elftal: $count';
-  }
-
-  @override
-  String get assistantBench => 'Eerst van de bank';
-
-  @override
-  String get assistantReasonBestFit => 'Beste keus';
 
   @override
   String get assistantReasonInForm => 'In vorm';
@@ -13796,37 +13780,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get assistantReasonFresh => 'Fris';
 
   @override
-  String get assistantReasonCovering => 'Valt in';
-
-  @override
-  String get assistantReasonCoverDefence => 'Verdediging';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Middenveld';
-
-  @override
-  String get assistantReasonCoverAttack => 'Aanval';
-
-  @override
   String get assistantReasonTired => 'Moe';
 
   @override
-  String get assistantReasonBooked => 'Op geel';
-
-  @override
   String get assistantReasonInjured => 'Geblesseerd';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Niet op zijn plek';
-
-  @override
-  String get assistantReasonChasing => 'Achterstand wegwerken';
-
-  @override
-  String get assistantSubsTitle => 'Wissels die hij zou doen';
-
-  @override
-  String get assistantNoSubs => 'Hij zou het team laten zoals het is.';
 
   @override
   String get assistantApply => 'Toepassen';
@@ -13835,22 +13792,68 @@ class AppLocalizationsNl extends AppLocalizations {
   String get assistantClose => 'Sluiten';
 
   @override
+  String get assistantReasonTopPick => 'Eerste keus';
+
+  @override
+  String get assistantReasonLineCover => 'Dekking';
+
+  @override
+  String get assistantReasonYoung => 'Jong talent';
+
+  @override
+  String get assistantReasonExperienced => 'Ervaren';
+
+  @override
+  String get assistantReasonBanned => 'Geschorst';
+
+  @override
+  String get assistantReasonOutOfForm => 'Uit vorm';
+
+  @override
+  String get assistantReasonOthersAhead => 'Anderen gaan voor';
+
+  @override
+  String get assistantVariantYouth => 'Kansen voor de jeugd';
+
+  @override
+  String get assistantVariantExperience => 'Ervaring';
+
+  @override
+  String get assistantVsSelection => 'Ten opzichte van je huidige keuze';
+
+  @override
+  String get assistantVsLastSquad => 'Ten opzichte van de vorige selectie';
+
+  @override
+  String get assistantSameSquad => 'Geen wijzigingen in je keuze';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Erin: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Eruit: $count';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
-      'Adviseert over opstelling en wissels, soms verkeerd';
+      'Adviseert over de selectie, soms verkeerd';
 
   @override
   String get staffEffectAdviceGood =>
-      'Adviseert over opstelling en wissels, let op vermoeidheid';
+      'Adviseert over de selectie, let op de conditie';
 
   @override
   String get staffEffectAdviceElite =>
-      'Adviseert op conditie, vorm en tegenstander';
+      'Adviseert over de selectie op conditie, vorm en tegenstanders';
 
   @override
-  String get staffHiringAdvice => 'en advies over opstelling en wissels';
+  String get staffHiringAdvice => 'en advies over de selectie';
 
   @override
-  String get hubEventSponsor => 'Kies de sponsor van dit seizoen';
+  String get hubEventSponsor => 'Kies de sponsor van deze cyclus';
 
   @override
   String get hubEventSponsorSub =>
@@ -13860,8 +13863,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get sponsorTitle => 'Hoofdsponsor';
 
   @override
-  String get sponsorIntroSeason =>
-      'Elk seizoen staan merken in de rij om hoofdsponsor van de bond te worden. Elke deal levert iets op en kost iets: het bestuur, de kleedkamer of allebei. Teken er één, of geen. De effecten op bestuur en moraal duren tot het einde van het seizoen.';
+  String get sponsorIntroCycle =>
+      'Eens per cyclus staan merken in de rij om hoofdsponsor van de bond te worden. Elke deal levert iets op en kost iets: het bestuur, de kleedkamer of allebei. Teken er één, of geen. De deal en de effecten op bestuur en moraal duren tot het einde van de cyclus.';
 
   @override
   String get sponsorEffectBoard => 'Bestuur';
@@ -13893,15 +13896,13 @@ class AppLocalizationsNl extends AppLocalizations {
   String get sponsorSign => 'Tekenen';
 
   @override
-  String get sponsorDeclineSeason => 'Dit seizoen geen sponsor';
+  String get sponsorDeclineCycle => 'Deze cyclus geen sponsor';
 
   @override
-  String get sponsorNoneSeason => 'Dit seizoen geen hoofdsponsor';
+  String get sponsorNoneCycle => 'Deze cyclus geen hoofdsponsor';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Tot het einde van seizoen $season';
-  }
+  String get sponsorUntilCycleEnd => 'Tot het einde van de cyclus';
 
   @override
   String sponsorRolloverLine(String brand) {

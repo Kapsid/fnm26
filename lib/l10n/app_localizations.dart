@@ -10699,7 +10699,7 @@ abstract class AppLocalizations {
   /// Subtitle of the opening press conference action.
   ///
   /// In en, this message translates to:
-  /// **'The world’s media want a word before your first match'**
+  /// **'The world’s media want a word before your next match'**
   String get hubEventPressConferenceSub;
 
   /// Tag on a newly emerged player the scouts rate very highly.
@@ -20546,19 +20546,19 @@ abstract class AppLocalizations {
   /// **'Two positions are already changed in this shape. Reset one to change this one.'**
   String get tacticsSlotSwitchLimit;
 
-  /// Button on the lineup tab and the in-match tactics editor that asks the hired assistant manager for a lineup or substitution proposal.
+  /// Button on the call-up screen that asks the hired assistant manager to propose a squad to call up.
   ///
   /// In en, this message translates to:
   /// **'Ask the assistant'**
   String get assistantAsk;
 
-  /// Short note under the disabled 'Ask the assistant' button when no assistant is hired; points the manager to the staff room.
+  /// Short note under the disabled 'Ask the assistant' button on the call-up screen when no assistant is hired; points the manager to the staff room.
   ///
   /// In en, this message translates to:
   /// **'No assistant hired. Hire one in the staff room for his advice.'**
   String get assistantNoneNote;
 
-  /// Title of the sheet showing the assistant's lineup or substitution proposal.
+  /// Title of the sheet showing the assistant's proposed call-up squad.
   ///
   /// In en, this message translates to:
   /// **'Assistant\'s advice'**
@@ -20576,190 +20576,190 @@ abstract class AppLocalizations {
   /// **'A sound read of ratings, positions and fatigue.'**
   String get assistantReadGood;
 
-  /// Subtitle of the advice sheet for an elite-tier assistant.
+  /// Subtitle of the advice sheet for an elite-tier assistant: he reads fitness, form, morale and the coming opponents.
   ///
   /// In en, this message translates to:
-  /// **'Reads fitness, form and the opponent.'**
+  /// **'Reads fitness, form, morale and the opponents.'**
   String get assistantReadElite;
 
-  /// Title of the assistant's main lineup proposal card.
+  /// Title of the assistant's main squad proposal card on the call-up screen.
   ///
   /// In en, this message translates to:
   /// **'His pick'**
   String get assistantVariantMain;
 
-  /// Title of the alternative lineup that rests tired players.
+  /// Title of the alternative squad that leaves tired players at home.
   ///
   /// In en, this message translates to:
   /// **'Fresher legs'**
   String get assistantVariantFresh;
 
-  /// Title of the alternative lineup that favours players in good form.
+  /// Title of the alternative squad that favours players in good form.
   ///
   /// In en, this message translates to:
   /// **'Players in form'**
   String get assistantVariantForm;
 
-  /// Title of the alternative lineup that favours attacking players.
+  /// Note on a squad proposal card: the elite assistant read that the coming opponents are, on the whole, stronger than the manager's side.
   ///
   /// In en, this message translates to:
-  /// **'More attacking'**
-  String get assistantVariantAttacking;
-
-  /// Title of the alternative lineup that favours defensive players.
-  ///
-  /// In en, this message translates to:
-  /// **'More solid'**
-  String get assistantVariantSolid;
-
-  /// Note on a lineup card: the elite assistant read that the next opponent is the stronger side.
-  ///
-  /// In en, this message translates to:
-  /// **'They are the stronger side'**
+  /// **'The opponents are stronger'**
   String get assistantVsStronger;
 
-  /// Note on a lineup card: the elite assistant read that the manager's side is the stronger one.
+  /// Note on a squad proposal card: the elite assistant read that the manager's side is stronger than the coming opponents.
   ///
   /// In en, this message translates to:
   /// **'You are the stronger side'**
   String get assistantVsWeaker;
 
-  /// How many players in a proposed eleven are not in the manager's current eleven.
-  ///
-  /// In en, this message translates to:
-  /// **'Changes to your eleven: {count}'**
-  String assistantChanges(int count);
-
-  /// Heading over the up to three players the assistant would bring on first.
-  ///
-  /// In en, this message translates to:
-  /// **'First off the bench'**
-  String get assistantBench;
-
-  /// Short reason chip: the strongest player for this place in his own position.
-  ///
-  /// In en, this message translates to:
-  /// **'Best fit'**
-  String get assistantReasonBestFit;
-
-  /// Short reason chip: the player is in good form.
+  /// Short reason chip beside a player the assistant would call up: he is in good form.
   ///
   /// In en, this message translates to:
   /// **'In form'**
   String get assistantReasonInForm;
 
-  /// Short reason chip: the player is rested.
+  /// Short reason chip beside a player the assistant would call up: he is rested.
   ///
   /// In en, this message translates to:
   /// **'Fresh'**
   String get assistantReasonFresh;
 
-  /// Short reason chip: the player is picked for a place that is not his own position.
-  ///
-  /// In en, this message translates to:
-  /// **'Covering'**
-  String get assistantReasonCovering;
-
-  /// Short chip on a suggested substitute: defensive cover.
-  ///
-  /// In en, this message translates to:
-  /// **'Defence'**
-  String get assistantReasonCoverDefence;
-
-  /// Short chip on a suggested substitute: midfield cover.
-  ///
-  /// In en, this message translates to:
-  /// **'Midfield'**
-  String get assistantReasonCoverMidfield;
-
-  /// Short chip on a suggested substitute: attacking option.
-  ///
-  /// In en, this message translates to:
-  /// **'Attack'**
-  String get assistantReasonCoverAttack;
-
-  /// Short reason chip on a suggested substitution: the player coming off is tired.
+  /// Short reason chip beside a player the assistant would leave out: he is tired.
   ///
   /// In en, this message translates to:
   /// **'Tired'**
   String get assistantReasonTired;
 
-  /// Short reason chip on a suggested substitution: the player coming off is on a yellow card.
-  ///
-  /// In en, this message translates to:
-  /// **'Booked'**
-  String get assistantReasonBooked;
-
-  /// Short reason chip on a suggested substitution: the player coming off is injured.
+  /// Short reason chip beside a player the assistant would leave out: he is injured.
   ///
   /// In en, this message translates to:
   /// **'Injured'**
   String get assistantReasonInjured;
 
-  /// Short reason chip on a suggested substitution: the player coming off is playing out of position.
-  ///
-  /// In en, this message translates to:
-  /// **'Out of position'**
-  String get assistantReasonOutOfPosition;
-
-  /// Short reason chip on a suggested substitution: the side is behind late on and needs attacking legs.
-  ///
-  /// In en, this message translates to:
-  /// **'Chasing the game'**
-  String get assistantReasonChasing;
-
-  /// Heading over the assistant's suggested in-match substitutions.
-  ///
-  /// In en, this message translates to:
-  /// **'Changes he would make'**
-  String get assistantSubsTitle;
-
-  /// Shown when the assistant would make no substitution right now.
-  ///
-  /// In en, this message translates to:
-  /// **'He would leave the side as it is.'**
-  String get assistantNoSubs;
-
-  /// Button that applies the chosen assistant proposal.
+  /// Button that applies the chosen squad proposal to the call-up selection.
   ///
   /// In en, this message translates to:
   /// **'Apply'**
   String get assistantApply;
 
-  /// Button that closes the assistant's advice without changing anything.
+  /// Button that closes the assistant's advice without changing the selection.
   ///
   /// In en, this message translates to:
   /// **'Close'**
   String get assistantClose;
 
-  /// Staff room benefit line for a basic assistant: gives lineup and substitution advice that is sometimes wrong.
+  /// Short reason chip beside a player the assistant would call up: one of the best players available.
   ///
   /// In en, this message translates to:
-  /// **'Advises on lineups and changes, sometimes wrongly'**
+  /// **'Top pick'**
+  String get assistantReasonTopPick;
+
+  /// Short reason chip beside a player the assistant would call up mainly so his position line (defence, midfield, attack) has enough players.
+  ///
+  /// In en, this message translates to:
+  /// **'Line cover'**
+  String get assistantReasonLineCover;
+
+  /// Short reason chip beside a young player called up in the 'Blood the youngsters' squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Young talent'**
+  String get assistantReasonYoung;
+
+  /// Short reason chip beside an older, experienced player called up in the 'Experience' squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Experienced'**
+  String get assistantReasonExperienced;
+
+  /// Short reason chip beside a player the assistant would leave out: he is suspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Banned'**
+  String get assistantReasonBanned;
+
+  /// Short reason chip beside a player the assistant would leave out: he is in poor form.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of form'**
+  String get assistantReasonOutOfForm;
+
+  /// Short reason chip beside a player the assistant would leave out: other players are ahead of him.
+  ///
+  /// In en, this message translates to:
+  /// **'Others ahead'**
+  String get assistantReasonOthersAhead;
+
+  /// Title of the alternative squad that gives young players a chance (football idiom: to blood young players).
+  ///
+  /// In en, this message translates to:
+  /// **'Blood the youngsters'**
+  String get assistantVariantYouth;
+
+  /// Title of the alternative squad that favours older, experienced players.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience'**
+  String get assistantVariantExperience;
+
+  /// Small line on a squad proposal card: the changes listed are against the squad the manager has ticked on the call-up screen right now.
+  ///
+  /// In en, this message translates to:
+  /// **'Against your current selection'**
+  String get assistantVsSelection;
+
+  /// Small line on a squad proposal card: nothing is ticked yet, so the changes listed are against the squad named last time.
+  ///
+  /// In en, this message translates to:
+  /// **'Against your last squad'**
+  String get assistantVsLastSquad;
+
+  /// Shown on a squad proposal card when the proposal is the same squad the manager already has.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes to your selection'**
+  String get assistantSameSquad;
+
+  /// Heading over the players a proposal would call up who are not in the manager's squad. count is how many.
+  ///
+  /// In en, this message translates to:
+  /// **'In: {count}'**
+  String assistantNamesIn(int count);
+
+  /// Heading over the players in the manager's squad that a proposal would leave out. count is how many.
+  ///
+  /// In en, this message translates to:
+  /// **'Out: {count}'**
+  String assistantNamesOut(int count);
+
+  /// Staff room benefit line for a basic assistant: advises on which players to call up, sometimes wrongly.
+  ///
+  /// In en, this message translates to:
+  /// **'Advises on call-ups, sometimes wrongly'**
   String get staffEffectAdviceBasic;
 
-  /// Staff room benefit line for a good assistant: lineup and substitution advice that accounts for fatigue.
+  /// Staff room benefit line for a good assistant: call-up advice that accounts for the players' fitness.
   ///
   /// In en, this message translates to:
-  /// **'Advises on lineups and changes, minding fatigue'**
+  /// **'Advises on call-ups, minding fitness'**
   String get staffEffectAdviceGood;
 
-  /// Staff room benefit line for an elite assistant: advice reading fitness, form and the opponent.
+  /// Staff room benefit line for an elite assistant: call-up advice reading fitness, form and the coming opponents.
   ///
   /// In en, this message translates to:
-  /// **'Advises reading fitness, form and the opponent'**
+  /// **'Advises on call-ups reading fitness, form and the opponents'**
   String get staffEffectAdviceElite;
 
-  /// Last line of what filling the vacant assistant job would be worth: his lineup and substitution advice.
+  /// Last line of what filling the vacant assistant job would be worth: his advice on which players to call up.
   ///
   /// In en, this message translates to:
-  /// **'and lineup and substitution advice'**
+  /// **'and advice on call-ups'**
   String get staffHiringAdvice;
 
-  /// Hub event: once a season (September to August), brands offer to become the federation's general (main) sponsor.
+  /// Hub event: once a cycle (at its start, before the budget), brands offer to become the federation's general (main) sponsor for the whole cycle.
   ///
   /// In en, this message translates to:
-  /// **'Choose this season\'s sponsor'**
+  /// **'Choose this cycle\'s sponsor'**
   String get hubEventSponsor;
 
   /// Subtitle under the general sponsor hub event.
@@ -20774,11 +20774,11 @@ abstract class AppLocalizations {
   /// **'General sponsor'**
   String get sponsorTitle;
 
-  /// Intro text on the general sponsor screen.
+  /// Intro text on the general sponsor screen. The deal is for the whole cycle (the four years up to the World Championship).
   ///
   /// In en, this message translates to:
-  /// **'Every season, brands queue up to become the federation\'s general sponsor. Each deal pays something and costs something: the board, the dressing room or both. Sign one, or none. Board and morale effects last until the end of the season.'**
-  String get sponsorIntroSeason;
+  /// **'Once a cycle, brands queue up to become the federation\'s general sponsor. Each deal pays something and costs something: the board, the dressing room or both. Sign one, or none. The deal, and its effect on the board and morale, runs until the end of the cycle.'**
+  String get sponsorIntroCycle;
 
   /// Short label on a sponsor deal's effect chip, followed by up/down arrows: how the federation board takes the deal. Keep very short.
   ///
@@ -20828,23 +20828,23 @@ abstract class AppLocalizations {
   /// **'Sign'**
   String get sponsorSign;
 
-  /// Button on the sponsor screen: turn every offer down for this season.
+  /// Button on the sponsor screen: turn every offer down for this cycle.
   ///
   /// In en, this message translates to:
-  /// **'No sponsor this season'**
-  String get sponsorDeclineSeason;
+  /// **'No sponsor for this cycle'**
+  String get sponsorDeclineCycle;
 
-  /// Finances screen: the federation has no general sponsor this season.
+  /// Finances screen: the federation has no general sponsor this cycle.
   ///
   /// In en, this message translates to:
-  /// **'No general sponsor this season'**
-  String get sponsorNoneSeason;
+  /// **'No general sponsor this cycle'**
+  String get sponsorNoneCycle;
 
-  /// Finances screen: how long the general sponsor's deal runs. season is like 2026/27.
+  /// Finances screen: how long the general sponsor's deal runs: to the end of the current cycle.
   ///
   /// In en, this message translates to:
-  /// **'Until the end of the {season} season'**
-  String sponsorUntilSeasonEnd(String season);
+  /// **'Until the end of the cycle'**
+  String get sponsorUntilCycleEnd;
 
   /// End-of-cycle summary: the cycle's general sponsor. brand is a brand name.
   ///

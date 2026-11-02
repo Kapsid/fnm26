@@ -6831,7 +6831,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Dünya basını ilk maçtan önce seninle konuşmak istiyor';
+      'Dünya basını bir sonraki maçtan önce seninle konuşmak istiyor';
 
   @override
   String get squadDevWonderkid => 'PARLAK YETENEK';
@@ -13596,7 +13596,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get assistantReadGood => 'Güç, mevki ve yorgunluğu sağlam okur.';
 
   @override
-  String get assistantReadElite => 'Kondisyonu, formu ve rakibi okur.';
+  String get assistantReadElite =>
+      'Kondisyonu, formu, morali ve rakipleri okur.';
 
   @override
   String get assistantVariantMain => 'Onun seçimi';
@@ -13608,27 +13609,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get assistantVariantForm => 'Formdaki oyuncular';
 
   @override
-  String get assistantVariantAttacking => 'Daha hücumcu';
-
-  @override
-  String get assistantVariantSolid => 'Daha sağlam';
-
-  @override
-  String get assistantVsStronger => 'Rakip daha güçlü';
+  String get assistantVsStronger => 'Rakipler daha güçlü';
 
   @override
   String get assistantVsWeaker => 'Siz daha güçlüsünüz';
-
-  @override
-  String assistantChanges(int count) {
-    return 'İlk 11\'deki değişiklik: $count';
-  }
-
-  @override
-  String get assistantBench => 'Kenardan ilk girecekler';
-
-  @override
-  String get assistantReasonBestFit => 'En uygun';
 
   @override
   String get assistantReasonInForm => 'Formda';
@@ -13637,37 +13621,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get assistantReasonFresh => 'Dinç';
 
   @override
-  String get assistantReasonCovering => 'Yerini dolduruyor';
-
-  @override
-  String get assistantReasonCoverDefence => 'Savunma';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Orta saha';
-
-  @override
-  String get assistantReasonCoverAttack => 'Hücum';
-
-  @override
   String get assistantReasonTired => 'Yorgun';
 
   @override
-  String get assistantReasonBooked => 'Sarı kartlı';
-
-  @override
   String get assistantReasonInjured => 'Sakat';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Mevkisi dışında';
-
-  @override
-  String get assistantReasonChasing => 'Skoru kovalıyoruz';
-
-  @override
-  String get assistantSubsTitle => 'Yapacağı değişiklikler';
-
-  @override
-  String get assistantNoSubs => 'Takımı olduğu gibi bırakırdı.';
 
   @override
   String get assistantApply => 'Uygula';
@@ -13676,22 +13633,68 @@ class AppLocalizationsTr extends AppLocalizations {
   String get assistantClose => 'Kapat';
 
   @override
+  String get assistantReasonTopPick => 'İlk tercih';
+
+  @override
+  String get assistantReasonLineCover => 'Hat yedeği';
+
+  @override
+  String get assistantReasonYoung => 'Genç yetenek';
+
+  @override
+  String get assistantReasonExperienced => 'Tecrübeli';
+
+  @override
+  String get assistantReasonBanned => 'Cezalı';
+
+  @override
+  String get assistantReasonOutOfForm => 'Formsuz';
+
+  @override
+  String get assistantReasonOthersAhead => 'Önünde başkaları var';
+
+  @override
+  String get assistantVariantYouth => 'Gençlere şans';
+
+  @override
+  String get assistantVariantExperience => 'Tecrübe';
+
+  @override
+  String get assistantVsSelection => 'Mevcut seçiminize göre';
+
+  @override
+  String get assistantVsLastSquad => 'Önceki kadroya göre';
+
+  @override
+  String get assistantSameSquad => 'Seçiminizde değişiklik yok';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Girenler: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Çıkanlar: $count';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
-      'İlk 11 ve değişikliklerde tavsiye verir, bazen yanılır';
+      'Davetlerde tavsiye verir, bazen yanılır';
 
   @override
   String get staffEffectAdviceGood =>
-      'İlk 11 ve değişikliklerde tavsiye verir, yorgunluğa dikkat eder';
+      'Davetlerde tavsiye verir, kondisyona dikkat eder';
 
   @override
   String get staffEffectAdviceElite =>
-      'Kondisyon, form ve rakibe göre tavsiye verir';
+      'Kondisyon, form ve rakiplere göre davet tavsiyesi verir';
 
   @override
-  String get staffHiringAdvice => 've ilk 11 ile değişiklik tavsiyesi';
+  String get staffHiringAdvice => 've davet tavsiyesi';
 
   @override
-  String get hubEventSponsor => 'Bu sezonun sponsorunu seç';
+  String get hubEventSponsor => 'Bu dönemin sponsorunu seç';
 
   @override
   String get hubEventSponsorSub =>
@@ -13701,8 +13704,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sponsorTitle => 'Ana sponsor';
 
   @override
-  String get sponsorIntroSeason =>
-      'Her sezon markalar federasyonun ana sponsoru olmak için sıraya girer. Her anlaşma bir şey kazandırır, bir şey kaybettirir: yönetimi, soyunma odasını ya da ikisini birden. Birini imzala ya da hiçbirini. Yönetim ve moral etkileri sezon sonuna kadar sürer.';
+  String get sponsorIntroCycle =>
+      'Her dönem bir kez markalar federasyonun ana sponsoru olmak için sıraya girer. Her anlaşma bir şey kazandırır, bir şey kaybettirir: yönetimi, soyunma odasını ya da ikisini birden. Birini imzala ya da hiçbirini. Anlaşma ve yönetim ile moral üzerindeki etkileri dönem sonuna kadar sürer.';
 
   @override
   String get sponsorEffectBoard => 'Yönetim';
@@ -13733,15 +13736,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sponsorSign => 'İmzala';
 
   @override
-  String get sponsorDeclineSeason => 'Bu sezon sponsor yok';
+  String get sponsorDeclineCycle => 'Bu dönem sponsor yok';
 
   @override
-  String get sponsorNoneSeason => 'Bu sezon ana sponsor yok';
+  String get sponsorNoneCycle => 'Bu dönem ana sponsor yok';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return '$season sezonu sonuna kadar';
-  }
+  String get sponsorUntilCycleEnd => 'Dönem sonuna kadar';
 
   @override
   String sponsorRolloverLine(String brand) {

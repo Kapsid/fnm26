@@ -6855,7 +6855,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'A világsajtó szólni akar hozzád az első meccs előtt';
+      'A világsajtó szólni akar hozzád a következő meccs előtt';
 
   @override
   String get squadDevWonderkid => 'CSODAGYEREK';
@@ -13624,7 +13624,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get assistantReadElite =>
-      'Figyeli az erőnlétet, a formát és az ellenfelet.';
+      'Figyeli az erőnlétet, a formát, a morált és az ellenfeleket.';
 
   @override
   String get assistantVariantMain => 'Az ő választása';
@@ -13636,27 +13636,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get assistantVariantForm => 'Formában lévők';
 
   @override
-  String get assistantVariantAttacking => 'Támadóbb';
-
-  @override
-  String get assistantVariantSolid => 'Stabilabb';
-
-  @override
-  String get assistantVsStronger => 'Az ellenfél az erősebb';
+  String get assistantVsStronger => 'Az ellenfelek erősebbek';
 
   @override
   String get assistantVsWeaker => 'Te vagy az erősebb';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Változás a kezdőben: $count';
-  }
-
-  @override
-  String get assistantBench => 'Elsőként a cserepadról';
-
-  @override
-  String get assistantReasonBestFit => 'Legjobb választás';
 
   @override
   String get assistantReasonInForm => 'Formában';
@@ -13665,37 +13648,10 @@ class AppLocalizationsHu extends AppLocalizations {
   String get assistantReasonFresh => 'Kipihent';
 
   @override
-  String get assistantReasonCovering => 'Beugró';
-
-  @override
-  String get assistantReasonCoverDefence => 'Védelem';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Középpálya';
-
-  @override
-  String get assistantReasonCoverAttack => 'Támadás';
-
-  @override
   String get assistantReasonTired => 'Fáradt';
 
   @override
-  String get assistantReasonBooked => 'Sárga lapos';
-
-  @override
   String get assistantReasonInjured => 'Sérült';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Nem a posztján';
-
-  @override
-  String get assistantReasonChasing => 'Hátrányban';
-
-  @override
-  String get assistantSubsTitle => 'Javasolt cserék';
-
-  @override
-  String get assistantNoSubs => 'Ő nem változtatna a csapaton.';
 
   @override
   String get assistantApply => 'Alkalmaz';
@@ -13704,22 +13660,68 @@ class AppLocalizationsHu extends AppLocalizations {
   String get assistantClose => 'Bezárás';
 
   @override
+  String get assistantReasonTopPick => 'Első számú';
+
+  @override
+  String get assistantReasonLineCover => 'Tartalék a posztra';
+
+  @override
+  String get assistantReasonYoung => 'Fiatal tehetség';
+
+  @override
+  String get assistantReasonExperienced => 'Tapasztalt';
+
+  @override
+  String get assistantReasonBanned => 'Eltiltva';
+
+  @override
+  String get assistantReasonOutOfForm => 'Formán kívül';
+
+  @override
+  String get assistantReasonOthersAhead => 'Mások megelőzik';
+
+  @override
+  String get assistantVariantYouth => 'Esély a fiataloknak';
+
+  @override
+  String get assistantVariantExperience => 'Tapasztalat';
+
+  @override
+  String get assistantVsSelection => 'A jelenlegi válogatásodhoz képest';
+
+  @override
+  String get assistantVsLastSquad => 'Az előző kerethez képest';
+
+  @override
+  String get assistantSameSquad => 'Nincs változás a válogatásodban';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Be: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Ki: $count';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
-      'Tanácsot ad a kezdőhöz és a cserékhez, néha tévesen';
+      'Tanácsot ad a meghívókhoz, néha tévesen';
 
   @override
   String get staffEffectAdviceGood =>
-      'Tanácsot ad a kezdőhöz és a cserékhez, figyel a fáradtságra';
+      'Tanácsot ad a meghívókhoz, figyel az erőnlétre';
 
   @override
   String get staffEffectAdviceElite =>
-      'Erőnlét, forma és ellenfél alapján ad tanácsot';
+      'Erőnlét, forma és ellenfelek alapján ad tanácsot a meghívókhoz';
 
   @override
-  String get staffHiringAdvice => 'és tanács a kezdőhöz és a cserékhez';
+  String get staffHiringAdvice => 'és tanács a meghívókhoz';
 
   @override
-  String get hubEventSponsor => 'Válaszd ki a szezon szponzorát';
+  String get hubEventSponsor => 'Válaszd ki a ciklus szponzorát';
 
   @override
   String get hubEventSponsorSub =>
@@ -13729,8 +13731,8 @@ class AppLocalizationsHu extends AppLocalizations {
   String get sponsorTitle => 'Főszponzor';
 
   @override
-  String get sponsorIntroSeason =>
-      'Minden szezonban márkák állnak sorba, hogy a szövetség főszponzorai legyenek. Minden szerződés hoz valamit, és visz is valamit: a vezetőséget, az öltözőt vagy mindkettőt. Írj alá egyet, vagy egyet se. A vezetőségre és a morálra gyakorolt hatás a szezon végéig tart.';
+  String get sponsorIntroCycle =>
+      'Ciklusonként egyszer márkák állnak sorba, hogy a szövetség főszponzorai legyenek. Minden szerződés hoz valamit, és visz is valamit: a vezetőséget, az öltözőt vagy mindkettőt. Írj alá egyet, vagy egyet se. A szerződés és a vezetőségre, valamint a morálra gyakorolt hatása a ciklus végéig tart.';
 
   @override
   String get sponsorEffectBoard => 'Vezetőség';
@@ -13761,15 +13763,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get sponsorSign => 'Aláírás';
 
   @override
-  String get sponsorDeclineSeason => 'Ebben a szezonban nincs szponzor';
+  String get sponsorDeclineCycle => 'Ebben a ciklusban nincs szponzor';
 
   @override
-  String get sponsorNoneSeason => 'Ebben a szezonban nincs főszponzor';
+  String get sponsorNoneCycle => 'Ebben a ciklusban nincs főszponzor';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'A $season szezon végéig';
-  }
+  String get sponsorUntilCycleEnd => 'A ciklus végéig';
 
   @override
   String sponsorRolloverLine(String brand) {

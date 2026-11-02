@@ -88,6 +88,7 @@ class FederationService {
       comp: comp,
       nations: _ref.read(nationRepositoryProvider),
       seedRanks: _ref.read(seedRankingRepositoryProvider),
+      careers: _ref.read(careerRepositoryProvider),
       career: career,
       cycle: cycle,
     );

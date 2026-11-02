@@ -212,7 +212,7 @@ void main() {
     // open, so nothing recomputed it: it stayed on the retired event and
     // tapping it came straight back here, forever.
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
-    // The season's sponsor comes before the budget; answered, the bar shows
+    // The cycle's sponsor comes before the budget; answered, the bar shows
     // the budget event this test retires.
     await tester.runAsync(
       () => save.container.read(sponsorServiceProvider).decline(save.careerId),

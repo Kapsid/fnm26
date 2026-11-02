@@ -6950,7 +6950,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Maailman media haluaa sanasen ennen ensimmäistä ottelua';
+      'Maailman media haluaa sanasen ennen seuraavaa ottelua';
 
   @override
   String get squadDevWonderkid => 'IHMELAPSI';
@@ -13757,7 +13757,8 @@ class AppLocalizationsFi extends AppLocalizations {
       'Luotettava arvio tasosta, pelipaikoista ja väsymyksestä.';
 
   @override
-  String get assistantReadElite => 'Lukee kunnon, vireen ja vastustajan.';
+  String get assistantReadElite =>
+      'Lukee kunnon, vireen, moraalin ja vastustajat.';
 
   @override
   String get assistantVariantMain => 'Hänen valintansa';
@@ -13769,27 +13770,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get assistantVariantForm => 'Vireessä olevat';
 
   @override
-  String get assistantVariantAttacking => 'Hyökkäävämpi';
-
-  @override
-  String get assistantVariantSolid => 'Tiiviimpi';
-
-  @override
-  String get assistantVsStronger => 'Vastustaja on vahvempi';
+  String get assistantVsStronger => 'Vastustajat ovat vahvempia';
 
   @override
   String get assistantVsWeaker => 'Te olette vahvempi';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Muutoksia kokoonpanoon: $count';
-  }
-
-  @override
-  String get assistantBench => 'Ensimmäisinä vaihdosta';
-
-  @override
-  String get assistantReasonBestFit => 'Paras valinta';
 
   @override
   String get assistantReasonInForm => 'Vireessä';
@@ -13798,37 +13782,10 @@ class AppLocalizationsFi extends AppLocalizations {
   String get assistantReasonFresh => 'Levännyt';
 
   @override
-  String get assistantReasonCovering => 'Paikkaa';
-
-  @override
-  String get assistantReasonCoverDefence => 'Puolustus';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Keskikenttä';
-
-  @override
-  String get assistantReasonCoverAttack => 'Hyökkäys';
-
-  @override
   String get assistantReasonTired => 'Väsynyt';
 
   @override
-  String get assistantReasonBooked => 'Varoitettu';
-
-  @override
   String get assistantReasonInjured => 'Loukkaantunut';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Väärällä paikalla';
-
-  @override
-  String get assistantReasonChasing => 'Tasoitusta hakemassa';
-
-  @override
-  String get assistantSubsTitle => 'Hänen vaihtoehdotuksensa';
-
-  @override
-  String get assistantNoSubs => 'Hän pitäisi joukkueen ennallaan.';
 
   @override
   String get assistantApply => 'Käytä';
@@ -13837,22 +13794,66 @@ class AppLocalizationsFi extends AppLocalizations {
   String get assistantClose => 'Sulje';
 
   @override
-  String get staffEffectAdviceBasic =>
-      'Neuvoo kokoonpanossa ja vaihdoissa, välillä väärin';
+  String get assistantReasonTopPick => 'Varma valinta';
 
   @override
-  String get staffEffectAdviceGood =>
-      'Neuvoo kokoonpanossa ja vaihdoissa, huomioi väsymyksen';
+  String get assistantReasonLineCover => 'Ketjun varmistus';
+
+  @override
+  String get assistantReasonYoung => 'Nuori lupaus';
+
+  @override
+  String get assistantReasonExperienced => 'Kokenut';
+
+  @override
+  String get assistantReasonBanned => 'Pelikiellossa';
+
+  @override
+  String get assistantReasonOutOfForm => 'Vireetön';
+
+  @override
+  String get assistantReasonOthersAhead => 'Muut edellä';
+
+  @override
+  String get assistantVariantYouth => 'Nuorille vastuuta';
+
+  @override
+  String get assistantVariantExperience => 'Kokemus';
+
+  @override
+  String get assistantVsSelection => 'Verrattuna nykyiseen valintaasi';
+
+  @override
+  String get assistantVsLastSquad => 'Verrattuna edelliseen joukkueeseen';
+
+  @override
+  String get assistantSameSquad => 'Ei muutoksia valintaasi';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Mukaan: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Pois: $count';
+  }
+
+  @override
+  String get staffEffectAdviceBasic => 'Neuvoo kutsuissa, välillä väärin';
+
+  @override
+  String get staffEffectAdviceGood => 'Neuvoo kutsuissa, huomioi kunnon';
 
   @override
   String get staffEffectAdviceElite =>
-      'Neuvoo kunnon, vireen ja vastustajan perusteella';
+      'Neuvoo kutsuissa kunnon, vireen ja vastustajien perusteella';
 
   @override
-  String get staffHiringAdvice => 'sekä neuvoja kokoonpanoon ja vaihtoihin';
+  String get staffHiringAdvice => 'sekä neuvoja kutsuihin';
 
   @override
-  String get hubEventSponsor => 'Valitse sesongin sponsori';
+  String get hubEventSponsor => 'Valitse kauden sponsori';
 
   @override
   String get hubEventSponsorSub =>
@@ -13862,8 +13863,8 @@ class AppLocalizationsFi extends AppLocalizations {
   String get sponsorTitle => 'Pääsponsori';
 
   @override
-  String get sponsorIntroSeason =>
-      'Joka sesonki brändit jonottavat liiton pääsponsoriksi. Jokainen sopimus tuo jotain ja maksaa jotain: hallituksen, pukuhuoneen tai molempien suosion. Allekirjoita yksi tai ei yhtään. Vaikutukset hallitukseen ja moraaliin kestävät sesongin loppuun.';
+  String get sponsorIntroCycle =>
+      'Kerran kaudessa brändit jonottavat liiton pääsponsoriksi. Jokainen sopimus tuo jotain ja maksaa jotain: hallituksen, pukuhuoneen tai molempien suosion. Allekirjoita yksi tai ei yhtään. Sopimus ja sen vaikutukset hallitukseen ja moraaliin kestävät kauden loppuun.';
 
   @override
   String get sponsorEffectBoard => 'Hallitus';
@@ -13894,15 +13895,13 @@ class AppLocalizationsFi extends AppLocalizations {
   String get sponsorSign => 'Allekirjoita';
 
   @override
-  String get sponsorDeclineSeason => 'Ei sponsoria tänä sesonkina';
+  String get sponsorDeclineCycle => 'Ei sponsoria tälle kaudelle';
 
   @override
-  String get sponsorNoneSeason => 'Ei pääsponsoria tänä sesonkina';
+  String get sponsorNoneCycle => 'Ei pääsponsoria tällä kaudella';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Sesongin $season loppuun';
-  }
+  String get sponsorUntilCycleEnd => 'Kauden loppuun';
 
   @override
   String sponsorRolloverLine(String brand) {

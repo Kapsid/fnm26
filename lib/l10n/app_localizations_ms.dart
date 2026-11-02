@@ -6858,7 +6858,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Media dunia mahu bercakap sebelum perlawanan pertama anda';
+      'Media dunia mahu bercakap sebelum perlawanan anda yang seterusnya';
 
   @override
   String get squadDevWonderkid => 'BAKAT LUAR BIASA';
@@ -13633,7 +13633,8 @@ class AppLocalizationsMs extends AppLocalizations {
       'Bacaan kukuh tentang penarafan, posisi dan keletihan.';
 
   @override
-  String get assistantReadElite => 'Membaca kecergasan, prestasi dan lawan.';
+  String get assistantReadElite =>
+      'Membaca kecergasan, prestasi, semangat dan lawan.';
 
   @override
   String get assistantVariantMain => 'Pilihannya';
@@ -13645,27 +13646,10 @@ class AppLocalizationsMs extends AppLocalizations {
   String get assistantVariantForm => 'Pemain dalam prestasi baik';
 
   @override
-  String get assistantVariantAttacking => 'Lebih menyerang';
-
-  @override
-  String get assistantVariantSolid => 'Lebih kukuh';
-
-  @override
-  String get assistantVsStronger => 'Lawan lebih kuat';
+  String get assistantVsStronger => 'Pihak lawan lebih kuat';
 
   @override
   String get assistantVsWeaker => 'Anda lebih kuat';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Perubahan dalam kesebelasan: $count';
-  }
-
-  @override
-  String get assistantBench => 'Pertama dari bangku simpanan';
-
-  @override
-  String get assistantReasonBestFit => 'Paling sesuai';
 
   @override
   String get assistantReasonInForm => 'Prestasi baik';
@@ -13674,37 +13658,10 @@ class AppLocalizationsMs extends AppLocalizations {
   String get assistantReasonFresh => 'Segar';
 
   @override
-  String get assistantReasonCovering => 'Mengisi tempat';
-
-  @override
-  String get assistantReasonCoverDefence => 'Pertahanan';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Tengah';
-
-  @override
-  String get assistantReasonCoverAttack => 'Serangan';
-
-  @override
   String get assistantReasonTired => 'Letih';
 
   @override
-  String get assistantReasonBooked => 'Kad kuning';
-
-  @override
   String get assistantReasonInjured => 'Cedera';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Bukan posisinya';
-
-  @override
-  String get assistantReasonChasing => 'Mengejar keputusan';
-
-  @override
-  String get assistantSubsTitle => 'Pertukaran yang akan dibuatnya';
-
-  @override
-  String get assistantNoSubs => 'Dia akan biarkan pasukan seperti sedia ada.';
 
   @override
   String get assistantApply => 'Guna';
@@ -13713,22 +13670,68 @@ class AppLocalizationsMs extends AppLocalizations {
   String get assistantClose => 'Tutup';
 
   @override
+  String get assistantReasonTopPick => 'Pilihan utama';
+
+  @override
+  String get assistantReasonLineCover => 'Pelapis barisan';
+
+  @override
+  String get assistantReasonYoung => 'Bakat muda';
+
+  @override
+  String get assistantReasonExperienced => 'Berpengalaman';
+
+  @override
+  String get assistantReasonBanned => 'Digantung';
+
+  @override
+  String get assistantReasonOutOfForm => 'Prestasi merosot';
+
+  @override
+  String get assistantReasonOthersAhead => 'Ada yang lebih baik';
+
+  @override
+  String get assistantVariantYouth => 'Beri peluang pemain muda';
+
+  @override
+  String get assistantVariantExperience => 'Pengalaman';
+
+  @override
+  String get assistantVsSelection => 'Berbanding pilihan semasa Anda';
+
+  @override
+  String get assistantVsLastSquad => 'Berbanding skuad terdahulu';
+
+  @override
+  String get assistantSameSquad => 'Tiada perubahan pada pilihan Anda';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Masuk: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Keluar: $count';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
-      'Menasihati kesebelasan dan pertukaran, kadang-kadang silap';
+      'Menasihati panggilan skuad, kadang-kadang silap';
 
   @override
   String get staffEffectAdviceGood =>
-      'Menasihati kesebelasan dan pertukaran, memantau keletihan';
+      'Menasihati panggilan skuad, memantau kecergasan';
 
   @override
   String get staffEffectAdviceElite =>
-      'Menasihati berdasarkan kecergasan, prestasi dan lawan';
+      'Menasihati panggilan skuad berdasarkan kecergasan, prestasi dan lawan';
 
   @override
-  String get staffHiringAdvice => 'dan nasihat kesebelasan serta pertukaran';
+  String get staffHiringAdvice => 'dan nasihat panggilan skuad';
 
   @override
-  String get hubEventSponsor => 'Pilih penaja musim ini';
+  String get hubEventSponsor => 'Pilih penaja kitaran ini';
 
   @override
   String get hubEventSponsorSub =>
@@ -13738,8 +13741,8 @@ class AppLocalizationsMs extends AppLocalizations {
   String get sponsorTitle => 'Penaja utama';
 
   @override
-  String get sponsorIntroSeason =>
-      'Setiap musim, jenama-jenama beratur untuk menjadi penaja utama persatuan. Setiap tawaran memberi sesuatu dan mengorbankan sesuatu: lembaga, bilik persalinan atau kedua-duanya. Tandatangani satu, atau tiada langsung. Kesan pada lembaga dan moral kekal hingga akhir musim.';
+  String get sponsorIntroCycle =>
+      'Sekali setiap kitaran, jenama-jenama beratur untuk menjadi penaja utama persatuan. Setiap tawaran memberi sesuatu dan mengorbankan sesuatu: lembaga, bilik persalinan atau kedua-duanya. Tandatangani satu, atau tiada langsung. Tawaran itu dan kesannya pada lembaga dan moral kekal hingga akhir kitaran.';
 
   @override
   String get sponsorEffectBoard => 'Lembaga';
@@ -13770,15 +13773,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get sponsorSign => 'Tandatangan';
 
   @override
-  String get sponsorDeclineSeason => 'Tiada penaja musim ini';
+  String get sponsorDeclineCycle => 'Tiada penaja untuk kitaran ini';
 
   @override
-  String get sponsorNoneSeason => 'Tiada penaja utama musim ini';
+  String get sponsorNoneCycle => 'Tiada penaja utama kitaran ini';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Hingga akhir musim $season';
-  }
+  String get sponsorUntilCycleEnd => 'Hingga akhir kitaran';
 
   @override
   String sponsorRolloverLine(String brand) {

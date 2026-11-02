@@ -14,7 +14,6 @@ import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
-import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
@@ -30,11 +29,9 @@ bool _counts(PressAnswerRow a) => !a.questionKey.startsWith('grv:');
 /// (`poty:<year>`, see `AwardService`): it belongs to the cycle it came in.
 ///
 /// Nor does a general sponsor's effect on the board and the room (`sponsor:`,
-/// see `Sponsors`): the deal runs for the season it was signed in.
+/// see `Sponsors`): the deal runs to the close of the cycle it was signed in.
 bool _lingers(PressAnswerRow a) =>
-    _counts(a) &&
-    !_squadBound(a) &&
-    !a.questionKey.startsWith(Sponsors.prefix);
+    _counts(a) && !_squadBound(a) && !a.questionKey.startsWith(Sponsors.prefix);
 
 /// A mood swing that belongs to the squad it happened to (a kept camp
 /// scandal, an award to one of its men): it stays with that dressing room.
@@ -88,21 +85,12 @@ final AutoDisposeFutureProviderFamily<PressEffect, int> pressEffectProvider =
       final before = career.cyclePointer == 0 || arrived
           ? const <PressAnswerRow>[]
           : await repo.pressAnswers(careerId, cycle: career.cyclePointer - 1);
-      // A general sponsor's effect counts for its own season only (see
-      // `Sponsors`): four seasons share a cycle.
-      final season = currentSponsorSeason(career);
-      bool inSeason(PressAnswerRow a) {
-        final s = Sponsors.seasonOfPressKey(a.questionKey);
-        return s == null || s == season;
-      }
-
       return Press.carryOver(
         [
           for (final a in now)
             // A kept scandal is a cost to the squad it happened in: one kept
             // before this spell began belongs to a dressing room he has left.
             if (_counts(a) &&
-                inSeason(a) &&
                 !(_squadBound(a) && a.answeredAt.isBefore(spell.since)))
               of(a),
         ],

@@ -25,7 +25,6 @@ import 'package:fnm/features/match/match_preview_screen.dart'
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
-import 'package:fnm/features/tactics/assistant_advice_sheet.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
@@ -321,10 +320,6 @@ class TacticsScreen extends ConsumerWidget {
                               color: AppColors.onSurfaceVariant,
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.md),
-                          // His proposal for this shape, under the pitch it
-                          // would change.
-                          LineupAssistantButton(careerId: careerId, data: data),
                           const SizedBox(height: AppSpacing.lg),
                           // One line, not the whole grid. Nineteen shapes at
                           // three across is seven rows — about 981 points, a
@@ -474,6 +469,18 @@ class TacticsScreen extends ConsumerWidget {
           unawaited(service.reshapeFormation(careerId, formation));
         }
       },
+      // Into the zone of a place the slot may switch to: the same switch the
+      // slot's picker makes, and the shape stays. Refused only by the limit,
+      // which is then said, as in the picker.
+      onSwitchSlot: (slot, to) async {
+        final applied = await service.setSlotPosition(careerId, slot, to);
+        if (applied || !context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).tacticsSlotSwitchLimit),
+          ),
+        );
+      },
     );
   }
 
@@ -618,9 +625,8 @@ class TacticsScreen extends ConsumerWidget {
       AppCard(
         child: ThrowInStylePicker(
           value: data.tactic.throwInStyle,
-          onChanged: (style) => ref
-              .read(tacticServiceProvider)
-              .setThrowInStyle(careerId, style),
+          onChanged: (style) =>
+              ref.read(tacticServiceProvider).setThrowInStyle(careerId, style),
         ),
       ),
     ];

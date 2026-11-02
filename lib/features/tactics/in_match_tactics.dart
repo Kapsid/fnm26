@@ -11,15 +11,12 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
-import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
-import 'package:fnm/domain/services/tactics/assistant_advice.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/domain/services/tactics/substitution_rules.dart';
-import 'package:fnm/features/tactics/assistant_advice_sheet.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactic_preset_tile.dart';
 import 'package:fnm/features/tactics/full_back_instructions.dart';
@@ -97,10 +94,6 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   List<Color>? teamColors,
   bool tabletLayout = false,
   List<TacticPreset> presets = const [],
-  StaffTier assistantTier = StaffTier.none,
-  int scoreDiff = 0,
-  int adviceSeed = 0,
-  Map<int, int> conditionByPlayer = const {},
 }) {
   return Navigator.of(context).push<InMatchTacticsResult>(
     MaterialPageRoute(
@@ -126,10 +119,6 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         teamColors: teamColors,
         tabletLayout: tabletLayout,
         presets: presets,
-        assistantTier: assistantTier,
-        scoreDiff: scoreDiff,
-        adviceSeed: adviceSeed,
-        conditionByPlayer: conditionByPlayer,
       ),
     ),
   );
@@ -157,10 +146,6 @@ class _InMatchTacticsEditor extends StatefulWidget {
     this.teamColors,
     this.tabletLayout = false,
     this.presets = const [],
-    this.assistantTier = StaffTier.none,
-    this.scoreDiff = 0,
-    this.adviceSeed = 0,
-    this.conditionByPlayer = const {},
   });
 
   final int minute;
@@ -221,22 +206,6 @@ class _InMatchTacticsEditor extends StatefulWidget {
   /// The manager's saved tactic presets, offered from the app bar. Apply only:
   /// saving a style is a pre-match job, and the list is read once on opening.
   final List<TacticPreset> presets;
-
-  /// Who is in the assistant's job, for "Ask the assistant"; with nobody in
-  /// it the button is shown disabled with a note pointing to the staff room.
-  final StaffTier assistantTier;
-
-  /// The side's goals minus the opponent's at [minute], which the elite
-  /// assistant reads when he suggests chasing the game.
-  final int scoreDiff;
-
-  /// Seeds the assistant's rough eye, so asking twice at one minute gives
-  /// one answer.
-  final int adviceSeed;
-
-  /// Each man's condition shift, as the engine applies it; the elite
-  /// assistant reads it.
-  final Map<int, int> conditionByPlayer;
 
   @override
   State<_InMatchTacticsEditor> createState() => _InMatchTacticsEditorState();
@@ -602,8 +571,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // has nobody to move.
     if (_dead.contains(a) || _dead.contains(b)) {
       final mover = _dead.contains(a) ? b : a;
-      final keeper =
-          _positions[mover].category == PositionCategory.goalkeeper;
+      final keeper = _positions[mover].category == PositionCategory.goalkeeper;
       if (_dead.contains(mover) || _lineup[mover] == null || keeper) {
         _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
         return;
@@ -925,6 +893,17 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         _setFormation(formation);
       }
     },
+    // Into the zone of a place the slot may switch to: the picker's switch,
+    // and the shape stays. Refused only by the limit, which is then said.
+    onSwitchSlot: (slot, to) {
+      if (_dead.contains(slot)) return;
+      final next = _switches.withSlot(_formation, slot, to);
+      if (next.apply(_formation)[slot] != to) {
+        _refuse(AppLocalizations.of(context).tacticsSlotSwitchLimit);
+        return;
+      }
+      setState(() => _switches = next);
+    },
   );
 
   /// The three lists, the hint and the undo row under the pitch.
@@ -1018,12 +997,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
               ],
             ),
           ],
-          const SizedBox(height: AppSpacing.sm),
-          AskAssistantButton(
-            tier: widget.assistantTier,
-            onPressed: _askAssistant,
-          ),
-          const SizedBox(height: AppSpacing.sm),
           // TWO TABS, not three stacked sections.
           //
           // Stacked, the pitch and three lists made one long scroll and a
@@ -1219,45 +1192,6 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       ),
     ),
   );
-
-  /// Asks the assistant for up to three changes and makes the ones the
-  /// manager keeps, through [_replace] exactly as a tap would, so the rules
-  /// that refuse a gesture refuse his advice too.
-  Future<void> _askAssistant() async {
-    final onPitch = _onPitch;
-    final bench = [
-      for (final p in widget.pool)
-        if (!onPitch.contains(p.id) && !_standing(p).blocked) p,
-    ];
-    final subs = AssistantAdvice.substitutions(
-      tier: widget.assistantTier,
-      lineup: _lineup,
-      places: _positions,
-      byId: _byId,
-      bench: bench,
-      subsLeft: widget.maxSubs - _subsUsed,
-      minute: widget.minute,
-      seed: widget.adviceSeed ^ (widget.minute * 0x45D9F3B),
-      energy: widget.energyByPlayer,
-      booked: {
-        for (final e in widget.cardsByPlayer.entries)
-          if (e.value == MatchCard.yellow) e.key,
-      },
-      injured: widget.injuredIds.intersection(onPitch),
-      scoreDiff: widget.scoreDiff,
-      conditionDelta: widget.conditionByPlayer,
-    );
-    final kept = await showSubAdviceSheet(
-      context,
-      subs: subs,
-      tier: widget.assistantTier,
-      byId: _byId,
-    );
-    if (kept == null || !mounted) return;
-    for (final s in kept) {
-      _replace(s.offId, s.onId);
-    }
-  }
 
   /// Completes a tapped change: [inId] takes the place [outId] is standing in.
   ///

@@ -6831,7 +6831,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'पहले मैच से पहले दुनिया भर का मीडिया आपसे बात करना चाहता है';
+      'अगले मैच से पहले दुनिया भर का मीडिया आपसे बात करना चाहता है';
 
   @override
   String get squadDevWonderkid => 'वंडरकिड';
@@ -13605,7 +13605,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get assistantReadGood => 'रेटिंग, पोज़िशन और थकान की ठोस समझ।';
 
   @override
-  String get assistantReadElite => 'फ़िटनेस, फ़ॉर्म और विरोधी को पढ़ता है।';
+  String get assistantReadElite =>
+      'फ़िटनेस, फ़ॉर्म, मनोबल और विरोधियों को पढ़ता है।';
 
   @override
   String get assistantVariantMain => 'उसकी पसंद';
@@ -13617,27 +13618,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get assistantVariantForm => 'फ़ॉर्म में खिलाड़ी';
 
   @override
-  String get assistantVariantAttacking => 'ज़्यादा आक्रामक';
-
-  @override
-  String get assistantVariantSolid => 'ज़्यादा मज़बूत';
-
-  @override
-  String get assistantVsStronger => 'विरोधी ज़्यादा मज़बूत है';
+  String get assistantVsStronger => 'विरोधी ज़्यादा मज़बूत हैं';
 
   @override
   String get assistantVsWeaker => 'आप ज़्यादा मज़बूत हैं';
-
-  @override
-  String assistantChanges(int count) {
-    return 'आपकी ग्यारह में बदलाव: $count';
-  }
-
-  @override
-  String get assistantBench => 'बेंच से पहले';
-
-  @override
-  String get assistantReasonBestFit => 'सबसे उपयुक्त';
 
   @override
   String get assistantReasonInForm => 'फ़ॉर्म में';
@@ -13646,37 +13630,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get assistantReasonFresh => 'ताज़ा';
 
   @override
-  String get assistantReasonCovering => 'जगह भर रहा';
-
-  @override
-  String get assistantReasonCoverDefence => 'डिफ़ेंस';
-
-  @override
-  String get assistantReasonCoverMidfield => 'मिडफ़ील्ड';
-
-  @override
-  String get assistantReasonCoverAttack => 'अटैक';
-
-  @override
   String get assistantReasonTired => 'थका हुआ';
 
   @override
-  String get assistantReasonBooked => 'पीला कार्ड';
-
-  @override
   String get assistantReasonInjured => 'चोटिल';
-
-  @override
-  String get assistantReasonOutOfPosition => 'अपनी पोज़िशन से बाहर';
-
-  @override
-  String get assistantReasonChasing => 'स्कोर का पीछा';
-
-  @override
-  String get assistantSubsTitle => 'वह ये बदलाव करेगा';
-
-  @override
-  String get assistantNoSubs => 'वह टीम को जैसी है वैसी रहने देगा।';
 
   @override
   String get assistantApply => 'लागू करें';
@@ -13685,21 +13642,66 @@ class AppLocalizationsHi extends AppLocalizations {
   String get assistantClose => 'बंद करें';
 
   @override
-  String get staffEffectAdviceBasic =>
-      'लाइनअप और बदलावों पर सलाह, कभी-कभी ग़लत';
+  String get assistantReasonTopPick => 'पहली पसंद';
 
   @override
-  String get staffEffectAdviceGood => 'लाइनअप और बदलावों पर सलाह, थकान पर नज़र';
+  String get assistantReasonLineCover => 'लाइन का कवर';
+
+  @override
+  String get assistantReasonYoung => 'युवा प्रतिभा';
+
+  @override
+  String get assistantReasonExperienced => 'अनुभवी';
+
+  @override
+  String get assistantReasonBanned => 'निलंबित';
+
+  @override
+  String get assistantReasonOutOfForm => 'फ़ॉर्म में नहीं';
+
+  @override
+  String get assistantReasonOthersAhead => 'दूसरे आगे हैं';
+
+  @override
+  String get assistantVariantYouth => 'युवाओं को मौका';
+
+  @override
+  String get assistantVariantExperience => 'अनुभव';
+
+  @override
+  String get assistantVsSelection => 'आपके मौजूदा चयन की तुलना में';
+
+  @override
+  String get assistantVsLastSquad => 'पिछले स्क्वॉड की तुलना में';
+
+  @override
+  String get assistantSameSquad => 'आपके चयन में कोई बदलाव नहीं';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'अंदर: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'बाहर: $count';
+  }
+
+  @override
+  String get staffEffectAdviceBasic => 'कॉल-अप पर सलाह, कभी-कभी ग़लत';
+
+  @override
+  String get staffEffectAdviceGood => 'कॉल-अप पर सलाह, फ़िटनेस पर नज़र';
 
   @override
   String get staffEffectAdviceElite =>
-      'फ़िटनेस, फ़ॉर्म और विरोधी के हिसाब से सलाह';
+      'फ़िटनेस, फ़ॉर्म और विरोधियों के हिसाब से कॉल-अप पर सलाह';
 
   @override
-  String get staffHiringAdvice => 'और लाइनअप व बदलावों पर सलाह';
+  String get staffHiringAdvice => 'और कॉल-अप पर सलाह';
 
   @override
-  String get hubEventSponsor => 'इस सीज़न का स्पॉन्सर चुनें';
+  String get hubEventSponsor => 'इस चक्र का स्पॉन्सर चुनें';
 
   @override
   String get hubEventSponsorSub =>
@@ -13709,8 +13711,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sponsorTitle => 'मुख्य स्पॉन्सर';
 
   @override
-  String get sponsorIntroSeason =>
-      'हर सीज़न ब्रांड फ़ेडरेशन का मुख्य स्पॉन्सर बनने के लिए क़तार में लगते हैं। हर सौदा कुछ देता है और कुछ लेता है: बोर्ड, ड्रेसिंग रूम या दोनों। किसी एक पर साइन करें, या किसी पर नहीं। बोर्ड और मनोबल पर असर सीज़न के अंत तक रहता है।';
+  String get sponsorIntroCycle =>
+      'हर चक्र में एक बार ब्रांड फ़ेडरेशन का मुख्य स्पॉन्सर बनने के लिए क़तार में लगते हैं। हर सौदा कुछ देता है और कुछ लेता है: बोर्ड, ड्रेसिंग रूम या दोनों। किसी एक पर साइन करें, या किसी पर नहीं। सौदा और बोर्ड व मनोबल पर उसका असर चक्र के अंत तक रहता है।';
 
   @override
   String get sponsorEffectBoard => 'बोर्ड';
@@ -13741,15 +13743,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sponsorSign => 'साइन करें';
 
   @override
-  String get sponsorDeclineSeason => 'इस सीज़न कोई स्पॉन्सर नहीं';
+  String get sponsorDeclineCycle => 'इस चक्र के लिए कोई स्पॉन्सर नहीं';
 
   @override
-  String get sponsorNoneSeason => 'इस सीज़न कोई मुख्य स्पॉन्सर नहीं';
+  String get sponsorNoneCycle => 'इस चक्र में कोई मुख्य स्पॉन्सर नहीं';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return '$season सीज़न के अंत तक';
-  }
+  String get sponsorUntilCycleEnd => 'चक्र के अंत तक';
 
   @override
   String sponsorRolloverLine(String brand) {

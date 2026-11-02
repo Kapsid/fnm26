@@ -289,6 +289,26 @@ class _CallUpTabletLayout extends StatelessWidget {
                 ],
               ),
             ),
+          if (!locked)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.sm,
+                0,
+                AppSpacing.sm,
+                AppSpacing.sm,
+              ),
+              child: AskAssistantButton(
+                tier: state._assistantTier,
+                onPressed: () => state._askAssistant(
+                  data,
+                  selected: selected,
+                  coverage: coverage,
+                  formation: formation,
+                  condition: condition,
+                  window: window,
+                ),
+              ),
+            ),
           const Divider(height: 1),
           Expanded(
             child: ListView(

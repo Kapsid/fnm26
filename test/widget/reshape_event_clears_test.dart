@@ -46,7 +46,7 @@ void main() {
       ]) {
         await comp.markDrawWatched(save.careerId, cycle, k);
       }
-      // The season's sponsor would come first (see SponsorService).
+      // The cycle's sponsor would come first (see SponsorService).
       await c.read(sponsorServiceProvider).decline(save.careerId);
       final fixtures = await comp.cycleFixturesForNation(
         save.careerId,

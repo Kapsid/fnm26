@@ -50,7 +50,7 @@ Future<void> _readyForMatch(WidgetTester tester, SeededSave save) async {
       career.cyclePointer,
       continentalHostDrawKind,
     );
-    // The season's sponsor would otherwise be the next step.
+    // The cycle's sponsor would otherwise be the next step.
     await save.container.read(sponsorServiceProvider).decline(save.careerId);
     final fixtures = await comp.cycleFixturesForNation(
       save.careerId,

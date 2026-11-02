@@ -6937,7 +6937,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Τα ΜΜΕ όλου του κόσμου θέλουν να σου μιλήσουν πριν από τον πρώτο αγώνα';
+      'Τα ΜΜΕ όλου του κόσμου θέλουν να σου μιλήσουν πριν από τον επόμενο αγώνα';
 
   @override
   String get squadDevWonderkid => 'ΦΑΙΝΟΜΕΝΟ';
@@ -13756,7 +13756,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get assistantReadElite =>
-      'Διαβάζει φυσική κατάσταση, φόρμα και αντίπαλο.';
+      'Διαβάζει φυσική κατάσταση, φόρμα, ηθικό και αντιπάλους.';
 
   @override
   String get assistantVariantMain => 'Η επιλογή του';
@@ -13768,27 +13768,10 @@ class AppLocalizationsEl extends AppLocalizations {
   String get assistantVariantForm => 'Παίκτες σε φόρμα';
 
   @override
-  String get assistantVariantAttacking => 'Πιο επιθετικά';
-
-  @override
-  String get assistantVariantSolid => 'Πιο σταθερά';
-
-  @override
-  String get assistantVsStronger => 'Ο αντίπαλος είναι πιο δυνατός';
+  String get assistantVsStronger => 'Οι αντίπαλοι είναι πιο δυνατοί';
 
   @override
   String get assistantVsWeaker => 'Είστε πιο δυνατοί';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Αλλαγές στην ενδεκάδα: $count';
-  }
-
-  @override
-  String get assistantBench => 'Πρώτοι από τον πάγκο';
-
-  @override
-  String get assistantReasonBestFit => 'Ιδανικός';
 
   @override
   String get assistantReasonInForm => 'Σε φόρμα';
@@ -13797,37 +13780,10 @@ class AppLocalizationsEl extends AppLocalizations {
   String get assistantReasonFresh => 'Ξεκούραστος';
 
   @override
-  String get assistantReasonCovering => 'Καλύπτει';
-
-  @override
-  String get assistantReasonCoverDefence => 'Άμυνα';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Μέσα';
-
-  @override
-  String get assistantReasonCoverAttack => 'Επίθεση';
-
-  @override
   String get assistantReasonTired => 'Κουρασμένος';
 
   @override
-  String get assistantReasonBooked => 'Με κίτρινη';
-
-  @override
   String get assistantReasonInjured => 'Τραυματίας';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Εκτός θέσης';
-
-  @override
-  String get assistantReasonChasing => 'Κυνηγάμε το σκορ';
-
-  @override
-  String get assistantSubsTitle => 'Αλλαγές που θα έκανε';
-
-  @override
-  String get assistantNoSubs => 'Θα άφηνε την ομάδα όπως είναι.';
 
   @override
   String get assistantApply => 'Εφαρμογή';
@@ -13836,22 +13792,68 @@ class AppLocalizationsEl extends AppLocalizations {
   String get assistantClose => 'Κλείσιμο';
 
   @override
+  String get assistantReasonTopPick => 'Πρώτη επιλογή';
+
+  @override
+  String get assistantReasonLineCover => 'Κάλυψη γραμμής';
+
+  @override
+  String get assistantReasonYoung => 'Νέο ταλέντο';
+
+  @override
+  String get assistantReasonExperienced => 'Έμπειρος';
+
+  @override
+  String get assistantReasonBanned => 'Τιμωρημένος';
+
+  @override
+  String get assistantReasonOutOfForm => 'Εκτός φόρμας';
+
+  @override
+  String get assistantReasonOthersAhead => 'Άλλοι είναι μπροστά';
+
+  @override
+  String get assistantVariantYouth => 'Ευκαιρία στους νέους';
+
+  @override
+  String get assistantVariantExperience => 'Εμπειρία';
+
+  @override
+  String get assistantVsSelection => 'Σε σχέση με την τρέχουσα επιλογή σας';
+
+  @override
+  String get assistantVsLastSquad => 'Σε σχέση με την προηγούμενη αποστολή';
+
+  @override
+  String get assistantSameSquad => 'Καμία αλλαγή στην επιλογή σας';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Μέσα: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Έξω: $count';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
-      'Συμβουλεύει για ενδεκάδα και αλλαγές, πού και πού λάθος';
+      'Συμβουλεύει για τις κλήσεις, πού και πού λάθος';
 
   @override
   String get staffEffectAdviceGood =>
-      'Συμβουλεύει για ενδεκάδα και αλλαγές, προσέχει την κούραση';
+      'Συμβουλεύει για τις κλήσεις, προσέχει τη φυσική κατάσταση';
 
   @override
   String get staffEffectAdviceElite =>
-      'Συμβουλεύει με βάση φυσική κατάσταση, φόρμα και αντίπαλο';
+      'Συμβουλεύει για τις κλήσεις με βάση φυσική κατάσταση, φόρμα και αντιπάλους';
 
   @override
-  String get staffHiringAdvice => 'και συμβουλές για ενδεκάδα και αλλαγές';
+  String get staffHiringAdvice => 'και συμβουλές για τις κλήσεις';
 
   @override
-  String get hubEventSponsor => 'Διάλεξε χορηγό για τη σεζόν';
+  String get hubEventSponsor => 'Διάλεξε χορηγό για τον κύκλο';
 
   @override
   String get hubEventSponsorSub =>
@@ -13861,8 +13863,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get sponsorTitle => 'Γενικός χορηγός';
 
   @override
-  String get sponsorIntroSeason =>
-      'Κάθε σεζόν, οι εταιρείες κάνουν ουρά για να γίνουν γενικός χορηγός της ομοσπονδίας. Κάθε συμφωνία φέρνει κάτι και κοστίζει κάτι: τη διοίκηση, τα αποδυτήρια ή και τα δύο. Υπόγραψε με μία ή με καμία. Οι επιπτώσεις σε διοίκηση και ηθικό διαρκούν ως το τέλος της σεζόν.';
+  String get sponsorIntroCycle =>
+      'Μία φορά ανά κύκλο, οι εταιρείες κάνουν ουρά για να γίνουν γενικός χορηγός της ομοσπονδίας. Κάθε συμφωνία φέρνει κάτι και κοστίζει κάτι: τη διοίκηση, τα αποδυτήρια ή και τα δύο. Υπόγραψε με μία ή με καμία. Η συμφωνία και οι επιπτώσεις της σε διοίκηση και ηθικό διαρκούν ως το τέλος του κύκλου.';
 
   @override
   String get sponsorEffectBoard => 'Διοίκηση';
@@ -13893,15 +13895,13 @@ class AppLocalizationsEl extends AppLocalizations {
   String get sponsorSign => 'Υπογραφή';
 
   @override
-  String get sponsorDeclineSeason => 'Χωρίς χορηγό αυτή τη σεζόν';
+  String get sponsorDeclineCycle => 'Χωρίς χορηγό για αυτόν τον κύκλο';
 
   @override
-  String get sponsorNoneSeason => 'Χωρίς γενικό χορηγό αυτή τη σεζόν';
+  String get sponsorNoneCycle => 'Χωρίς γενικό χορηγό αυτόν τον κύκλο';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Ως το τέλος της σεζόν $season';
-  }
+  String get sponsorUntilCycleEnd => 'Ως το τέλος του κύκλου';
 
   @override
   String sponsorRolloverLine(String brand) {

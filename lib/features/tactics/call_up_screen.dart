@@ -17,12 +17,15 @@ import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/squad/call_up_advice.dart';
 import 'package:fnm/domain/services/squad/squad_selection.dart';
 import 'package:fnm/domain/services/squad/condition.dart';
 import 'package:fnm/domain/services/squad/absence_outlook.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/call_up_advice_sheet.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_form_look.dart';
 import 'package:fnm/features/tactics/nomination_providers.dart';
@@ -169,6 +172,89 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
       );
   });
 
+  /// Who is in the assistant's job, as of the last build.
+  StaffTier _assistantTier = StaffTier.none;
+
+  /// Asks the assistant for a squad and, on Apply, names it exactly as the
+  /// auto-picks do. Close changes nothing.
+  Future<void> _askAssistant(
+    SquadData data, {
+    required Set<int> selected,
+    required int coverage,
+    required Formation formation,
+    required Map<int, PlayerCondition> condition,
+    required NominationWindow? window,
+  }) async {
+    final career = ref.read(careerByIdProvider(widget.careerId)).valueOrNull;
+    if (career == null) return;
+    final tier = career.staffAssistant;
+    // Only the elite man reads the opponents: the window's, on the ranking.
+    bool? stronger;
+    if (tier == StaffTier.elite && window != null) {
+      final own = window.nations[window.playerNationId]?.ranking;
+      if (own != null) {
+        stronger = CallUpAdvice.opponentsStronger(
+          ownRanking: own,
+          opponentRankings: [
+            for (final f in window.matches)
+              ?window
+                  .nations[f.homeNationId == window.playerNationId
+                      ? f.awayNationId
+                      : f.homeNationId]
+                  ?.ranking,
+          ],
+        );
+      }
+    }
+    // Seeded on the save and the day: asking twice gives one answer, and the
+    // answer moves on with the calendar.
+    final day = career.inGameDate.difference(DateTime.utc(2000)).inDays;
+    final read = tier == StaffTier.basic
+        ? const <int, PlayerCondition>{}
+        : condition;
+    final advice = CallUpAdvice.propose(
+      tier: tier,
+      pool: data.pool,
+      absences: data.absences,
+      coverage: coverage,
+      formation: formation,
+      seed: career.rngSeed ^ (day * 0x9E3779B1),
+      min: kMinSquadSize,
+      max: kMaxSquadSize,
+      condition: read,
+      opponentsStronger: stronger,
+    );
+    if (advice == null || !mounted) return;
+    // His cards say what changes: against the squad on the screen, or, with
+    // nobody named yet, against the last squad.
+    final poolIds = {for (final p in data.pool) p.id};
+    final (base, baseKind) = selected.isNotEmpty
+        ? ({...selected}, CallUpAdviceBase.selection)
+        : data.hasPreviousSquad
+        ? (
+            data.callUps.where(poolIds.contains).toSet(),
+            CallUpAdviceBase.lastSquad,
+          )
+        : (<int>{}, CallUpAdviceBase.none);
+    final chosen = await showCallUpAdviceSheet(
+      context,
+      advice: advice,
+      tier: tier,
+      byId: {for (final p in data.pool) p.id: p},
+      base: base,
+      baseKind: baseKind,
+      absences: data.absences,
+      condition: read,
+      opponentsStronger: stronger,
+    );
+    if (chosen == null || !mounted) return;
+    _edit((s) {
+      s
+        ..clear()
+        ..addAll(chosen.squad);
+    });
+  }
+
   static const List<PositionCategory> _order = [
     PositionCategory.goalkeeper,
     PositionCategory.defender,
@@ -274,9 +360,9 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     final dataAsync = ref.watch(squadDataProvider(widget.careerId));
     // The save seed, so a player's derived traits are the same here as
     // everywhere else in the save.
-    final saveSeed =
-        ref.watch(careerByIdProvider(widget.careerId)).valueOrNull?.rngSeed ??
-        0;
+    final career = ref.watch(careerByIdProvider(widget.careerId)).valueOrNull;
+    final saveSeed = career?.rngSeed ?? 0;
+    _assistantTier = career?.staffAssistant ?? StaffTier.none;
     final window = ref
         .watch(nominationWindowProvider(widget.careerId))
         .valueOrNull;
@@ -462,6 +548,28 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+              // The third answer: his assistant's squad, with reasons.
+              if (!locked)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.marginMobile,
+                    AppSpacing.xs,
+                    AppSpacing.marginMobile,
+                    0,
+                  ),
+                  child: AskAssistantButton(
+                    tier: _assistantTier,
+                    noteBeside: true,
+                    onPressed: () => _askAssistant(
+                      data,
+                      selected: selected,
+                      coverage: coverage,
+                      formation: formation,
+                      condition: condition,
+                      window: window,
+                    ),
                   ),
                 ),
             ],

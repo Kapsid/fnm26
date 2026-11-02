@@ -81,8 +81,10 @@ enum HubEventKind {
   /// Points to spend on the manager's own skills, offered once a cycle.
   managerSkills,
 
-  /// The season's general sponsor offers: sign one or none. (At a cycle's
-  /// opening it is offered as [budget] instead, just before the budget.)
+  /// The cycle's general sponsor offers, left open after the budget: sign
+  /// one or none. Only a save from before the sponsor existed, caught
+  /// mid-cycle, meets it; every cycle opens on the round as [budget], just
+  /// before the budget.
   sponsor,
 
   /// The year's Player of the Year vote is in: watch the ceremony or skip to
@@ -304,12 +306,11 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   //     a brand-new save): the manager must distribute the war chest across the
   //     departments before anything else happens.
   if (!await comp.hasWatchedDraw(careerId, cycle, budgetSetupKind)) {
-    // 1a-0. The general sponsor of the cycle's first season, just BEFORE the
-    //       budget so the cash of a signed deal can be invested in it. Of the
-    //       budget's own kind (as the host bid's grant is): it is the same
-    //       money round. The other seasons' rounds are offered further down
-    //       (see 2d). Turning every offer down is an answer (see
-    //       [SponsorService.decline]).
+    // 1a-0. The cycle's general sponsor (one round a cycle, the deal running
+    //       to its close), just BEFORE the budget so the cash of a signed
+    //       deal can be invested in it. Of the budget's own kind (as the host
+    //       bid's grant is): it is the same money round. Turning every offer
+    //       down is an answer (see [SponsorService.decline]).
     final sponsor = await ref.watch(sponsorRoundProvider(careerId).future);
     if (sponsor != null && !sponsor.decided) {
       return HubEvent(
@@ -777,13 +778,15 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     );
   }
 
-  // 2e. The season's general sponsor (September to August, four a cycle),
-  //     at the first moment of the season nothing else is waiting: after
-  //     every ceremony, draw and conference and after any finals to watch
-  //     (the World Championship's and the Nations Cup's, just above; the
-  //     continental one is held back by [sponsorWaitsForFinals]), before the
-  //     next match or step of the world. Moving the world on without answering turns every
-  //     offer down (see [SponsorService.settleUnanswered]).
+  // 2e. The cycle's general sponsor round, still open after the budget: a
+  //     save from before the sponsor existed, caught mid-cycle (every cycle
+  //     since opens on it, see 1a-0). Offered once, at the first moment
+  //     nothing else is waiting: after every ceremony, draw and conference
+  //     and after any finals to watch (the World Championship's and the
+  //     Nations Cup's, just above; the continental one is held back by
+  //     [sponsorWaitsForFinals]), before the next match or step of the world.
+  //     Moving the world on without answering turns every offer down (see
+  //     [SponsorService.settleUnanswered]).
   final sponsor = await ref.watch(sponsorRoundProvider(careerId).future);
   if (sponsor != null &&
       !sponsor.decided &&

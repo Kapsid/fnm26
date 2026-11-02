@@ -7023,7 +7023,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Světová média chtějí slovo před prvním zápasem';
+      'Světová média chtějí slovo před dalším zápasem';
 
   @override
   String get squadDevWonderkid => 'TALENT';
@@ -13944,7 +13944,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get assistantReadGood => 'Spolehlivý odhad hodnocení, postů a únavy.';
 
   @override
-  String get assistantReadElite => 'Čte kondici, formu i soupeře.';
+  String get assistantReadElite => 'Čte kondici, formu, morálku i soupeře.';
 
   @override
   String get assistantVariantMain => 'Jeho volba';
@@ -13956,27 +13956,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get assistantVariantForm => 'Hráči ve formě';
 
   @override
-  String get assistantVariantAttacking => 'Útočněji';
-
-  @override
-  String get assistantVariantSolid => 'Pevněji vzadu';
-
-  @override
-  String get assistantVsStronger => 'Soupeř je silnější';
+  String get assistantVsStronger => 'Soupeři jsou silnější';
 
   @override
   String get assistantVsWeaker => 'Vy jste silnější';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Změny v sestavě: $count';
-  }
-
-  @override
-  String get assistantBench => 'První na střídání';
-
-  @override
-  String get assistantReasonBestFit => 'Nejlepší volba';
 
   @override
   String get assistantReasonInForm => 'Ve formě';
@@ -13985,37 +13968,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get assistantReasonFresh => 'Odpočatý';
 
   @override
-  String get assistantReasonCovering => 'Zaskakuje';
-
-  @override
-  String get assistantReasonCoverDefence => 'Obrana';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Záloha';
-
-  @override
-  String get assistantReasonCoverAttack => 'Útok';
-
-  @override
   String get assistantReasonTired => 'Unavený';
 
   @override
-  String get assistantReasonBooked => 'Má žlutou';
-
-  @override
   String get assistantReasonInjured => 'Zraněný';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Mimo post';
-
-  @override
-  String get assistantReasonChasing => 'Honíme výsledek';
-
-  @override
-  String get assistantSubsTitle => 'Navrhovaná střídání';
-
-  @override
-  String get assistantNoSubs => 'Nechal by tým tak, jak je.';
 
   @override
   String get assistantApply => 'Použít';
@@ -14024,21 +13980,66 @@ class AppLocalizationsCs extends AppLocalizations {
   String get assistantClose => 'Zavřít';
 
   @override
-  String get staffEffectAdviceBasic =>
-      'Radí se sestavou a střídáním, občas vedle';
+  String get assistantReasonTopPick => 'Jistota';
 
   @override
-  String get staffEffectAdviceGood =>
-      'Radí se sestavou a střídáním, hlídá únavu';
+  String get assistantReasonLineCover => 'Pojistka';
 
   @override
-  String get staffEffectAdviceElite => 'Radí podle kondice, formy i soupeře';
+  String get assistantReasonYoung => 'Mladý talent';
 
   @override
-  String get staffHiringAdvice => 'a rady k sestavě a střídání';
+  String get assistantReasonExperienced => 'Zkušený';
 
   @override
-  String get hubEventSponsor => 'Vyberte sponzora na tuto sezónu';
+  String get assistantReasonBanned => 'Stopka';
+
+  @override
+  String get assistantReasonOutOfForm => 'Bez formy';
+
+  @override
+  String get assistantReasonOthersAhead => 'Jiní mají přednost';
+
+  @override
+  String get assistantVariantYouth => 'Šance pro mladé';
+
+  @override
+  String get assistantVariantExperience => 'Sázka na zkušenost';
+
+  @override
+  String get assistantVsSelection => 'Oproti vaší nominaci';
+
+  @override
+  String get assistantVsLastSquad => 'Oproti minulému kádru';
+
+  @override
+  String get assistantSameSquad => 'Beze změn oproti vaší nominaci';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Přibývá: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Odchází: $count';
+  }
+
+  @override
+  String get staffEffectAdviceBasic => 'Radí s nominací, občas vedle';
+
+  @override
+  String get staffEffectAdviceGood => 'Radí s nominací, hlídá kondici';
+
+  @override
+  String get staffEffectAdviceElite =>
+      'Radí s nominací podle kondice, formy i soupeřů';
+
+  @override
+  String get staffHiringAdvice => 'a rady k nominaci';
+
+  @override
+  String get hubEventSponsor => 'Vyberte sponzora na tento cyklus';
 
   @override
   String get hubEventSponsorSub =>
@@ -14048,8 +14049,8 @@ class AppLocalizationsCs extends AppLocalizations {
   String get sponsorTitle => 'Generální sponzor';
 
   @override
-  String get sponsorIntroSeason =>
-      'Každou sezónu se o místo generálního sponzora svazu ucházejí značky. Každá smlouva něco přinese a něco stojí: vedení, kabinu, nebo obojí. Podepište jednu, nebo žádnou. Vliv na vedení a morálku platí do konce sezóny.';
+  String get sponsorIntroCycle =>
+      'Jednou za cyklus se o místo generálního sponzora svazu ucházejí značky. Každá smlouva něco přinese a něco stojí: vedení, kabinu, nebo obojí. Podepište jednu, nebo žádnou. Smlouva i její vliv na vedení a morálku platí do konce cyklu.';
 
   @override
   String get sponsorEffectBoard => 'Vedení';
@@ -14080,15 +14081,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get sponsorSign => 'Podepsat';
 
   @override
-  String get sponsorDeclineSeason => 'Tuto sezónu bez sponzora';
+  String get sponsorDeclineCycle => 'Tento cyklus bez sponzora';
 
   @override
-  String get sponsorNoneSeason => 'Tuto sezónu bez generálního sponzora';
+  String get sponsorNoneCycle => 'Tento cyklus bez generálního sponzora';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Do konce sezóny $season';
-  }
+  String get sponsorUntilCycleEnd => 'Do konce cyklu';
 
   @override
   String sponsorRolloverLine(String brand) {

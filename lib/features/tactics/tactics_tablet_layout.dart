@@ -119,8 +119,6 @@ class _TacticsTabletLayout extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
-                      LineupAssistantButton(careerId: careerId, data: data),
-                      const SizedBox(height: AppSpacing.sm),
                       Panel(
                         title: l.tacticsTabBench,
                         padding: const EdgeInsets.all(AppSpacing.sm),

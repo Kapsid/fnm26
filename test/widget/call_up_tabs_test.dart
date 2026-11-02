@@ -216,9 +216,12 @@ void main() {
         .getSize(find.byType(CustomScrollView).first)
         .height;
     final screenHeight = tester.getSize(find.byType(Scaffold)).height;
+    // 0.55, not the 0.6 it was: the header gained a third answer ("Ask the
+    // assistant", with its note while nobody is in the job), and it still
+    // scrolls away with the list. Under half would be a peephole again.
     expect(
       listHeight,
-      greaterThan(screenHeight * 0.6),
+      greaterThan(screenHeight * 0.55),
       reason: 'the pool should own most of the screen',
     );
     expect(tester.takeException(), isNull);

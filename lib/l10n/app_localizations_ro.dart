@@ -7083,7 +7083,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get hubEventPressConferenceSub =>
-      'Presa internațională vrea o declarație înaintea primului meci';
+      'Presa internațională vrea o declarație înaintea următorului meci';
 
   @override
   String get squadDevWonderkid => 'COPIL-MINUNE';
@@ -14082,7 +14082,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get assistantReadElite =>
-      'Citește condiția fizică, forma și adversarul.';
+      'Citește condiția fizică, forma, moralul și adversarii.';
 
   @override
   String get assistantVariantMain => 'Alegerea lui';
@@ -14094,27 +14094,10 @@ class AppLocalizationsRo extends AppLocalizations {
   String get assistantVariantForm => 'Jucători în formă';
 
   @override
-  String get assistantVariantAttacking => 'Mai ofensiv';
-
-  @override
-  String get assistantVariantSolid => 'Mai solid';
-
-  @override
-  String get assistantVsStronger => 'Adversarul e mai puternic';
+  String get assistantVsStronger => 'Adversarii sunt mai puternici';
 
   @override
   String get assistantVsWeaker => 'Sunteți mai puternici';
-
-  @override
-  String assistantChanges(int count) {
-    return 'Schimbări în primul 11: $count';
-  }
-
-  @override
-  String get assistantBench => 'Primii de pe bancă';
-
-  @override
-  String get assistantReasonBestFit => 'Cea mai bună alegere';
 
   @override
   String get assistantReasonInForm => 'În formă';
@@ -14123,37 +14106,10 @@ class AppLocalizationsRo extends AppLocalizations {
   String get assistantReasonFresh => 'Odihnit';
 
   @override
-  String get assistantReasonCovering => 'Acoperă postul';
-
-  @override
-  String get assistantReasonCoverDefence => 'Apărare';
-
-  @override
-  String get assistantReasonCoverMidfield => 'Mijloc';
-
-  @override
-  String get assistantReasonCoverAttack => 'Atac';
-
-  @override
   String get assistantReasonTired => 'Obosit';
 
   @override
-  String get assistantReasonBooked => 'Avertizat';
-
-  @override
   String get assistantReasonInjured => 'Accidentat';
-
-  @override
-  String get assistantReasonOutOfPosition => 'Nu pe postul lui';
-
-  @override
-  String get assistantReasonChasing => 'Alergăm după scor';
-
-  @override
-  String get assistantSubsTitle => 'Schimbările pe care le-ar face';
-
-  @override
-  String get assistantNoSubs => 'Ar lăsa echipa cum este.';
 
   @override
   String get assistantApply => 'Aplicați';
@@ -14162,22 +14118,67 @@ class AppLocalizationsRo extends AppLocalizations {
   String get assistantClose => 'Închideți';
 
   @override
-  String get staffEffectAdviceBasic =>
-      'Sfătuiește la primul 11 și schimbări, uneori greșit';
+  String get assistantReasonTopPick => 'Prima alegere';
+
+  @override
+  String get assistantReasonLineCover => 'Acoperire pe compartiment';
+
+  @override
+  String get assistantReasonYoung => 'Tânăr talent';
+
+  @override
+  String get assistantReasonExperienced => 'Experimentat';
+
+  @override
+  String get assistantReasonBanned => 'Suspendat';
+
+  @override
+  String get assistantReasonOutOfForm => 'Fără formă';
+
+  @override
+  String get assistantReasonOthersAhead => 'Alții sunt înainte';
+
+  @override
+  String get assistantVariantYouth => 'Șansă tinerilor';
+
+  @override
+  String get assistantVariantExperience => 'Experiență';
+
+  @override
+  String get assistantVsSelection => 'Față de selecția actuală';
+
+  @override
+  String get assistantVsLastSquad => 'Față de lotul anterior';
+
+  @override
+  String get assistantSameSquad => 'Nicio schimbare față de selecție';
+
+  @override
+  String assistantNamesIn(int count) {
+    return 'Intră: $count';
+  }
+
+  @override
+  String assistantNamesOut(int count) {
+    return 'Ies: $count';
+  }
+
+  @override
+  String get staffEffectAdviceBasic => 'Sfătuiește la convocări, uneori greșit';
 
   @override
   String get staffEffectAdviceGood =>
-      'Sfătuiește la primul 11 și schimbări, atent la oboseală';
+      'Sfătuiește la convocări, atent la condiția fizică';
 
   @override
   String get staffEffectAdviceElite =>
-      'Sfătuiește după condiție, formă și adversar';
+      'Sfătuiește la convocări după condiție, formă și adversari';
 
   @override
-  String get staffHiringAdvice => 'și sfaturi pentru primul 11 și schimbări';
+  String get staffHiringAdvice => 'și sfaturi pentru convocări';
 
   @override
-  String get hubEventSponsor => 'Alegeți sponsorul acestui sezon';
+  String get hubEventSponsor => 'Alegeți sponsorul acestui ciclu';
 
   @override
   String get hubEventSponsorSub =>
@@ -14187,8 +14188,8 @@ class AppLocalizationsRo extends AppLocalizations {
   String get sponsorTitle => 'Sponsor principal';
 
   @override
-  String get sponsorIntroSeason =>
-      'În fiecare sezon, brandurile stau la coadă ca să devină sponsorul principal al federației. Fiecare contract aduce ceva și costă ceva: încrederea federației, vestiarul sau pe amândouă. Semnați cu unul sau cu niciunul. Efectele asupra federației și moralului durează până la finalul sezonului.';
+  String get sponsorIntroCycle =>
+      'O dată pe ciclu, brandurile stau la coadă ca să devină sponsorul principal al federației. Fiecare contract aduce ceva și costă ceva: încrederea federației, vestiarul sau pe amândouă. Semnați cu unul sau cu niciunul. Contractul și efectele lui asupra federației și moralului durează până la finalul ciclului.';
 
   @override
   String get sponsorEffectBoard => 'Federație';
@@ -14219,15 +14220,13 @@ class AppLocalizationsRo extends AppLocalizations {
   String get sponsorSign => 'Semnați';
 
   @override
-  String get sponsorDeclineSeason => 'Fără sponsor sezonul acesta';
+  String get sponsorDeclineCycle => 'Fără sponsor în acest ciclu';
 
   @override
-  String get sponsorNoneSeason => 'Fără sponsor principal sezonul acesta';
+  String get sponsorNoneCycle => 'Fără sponsor principal în acest ciclu';
 
   @override
-  String sponsorUntilSeasonEnd(String season) {
-    return 'Până la finalul sezonului $season';
-  }
+  String get sponsorUntilCycleEnd => 'Până la finalul ciclului';
 
   @override
   String sponsorRolloverLine(String brand) {

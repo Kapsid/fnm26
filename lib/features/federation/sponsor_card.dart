@@ -9,7 +9,7 @@ import 'package:fnm/features/federation/sponsor_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
-/// This season's general sponsor on the finances screen: the brand and its
+/// This cycle's general sponsor on the finances screen: the brand and its
 /// trade, what the deal does and how long it runs, or that there is none.
 /// Nothing at all while the round is still open (the hub asks first) or
 /// where there is no round (an unmoved campaign run). Pads its own bottom.
@@ -42,7 +42,7 @@ class SponsorCard extends ConsumerWidget {
           const SizedBox(height: AppSpacing.sm),
           AppCard(
             child: o == null
-                ? Text(l.sponsorNoneSeason, style: AppTypography.bodyMedium)
+                ? Text(l.sponsorNoneCycle, style: AppTypography.bodyMedium)
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -69,12 +69,7 @@ class SponsorCard extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.sm),
                       SponsorEffectChips(offer: o),
                       const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        l.sponsorUntilSeasonEnd(
-                          sponsorSeasonLabel(round.season),
-                        ),
-                        style: muted,
-                      ),
+                      Text(l.sponsorUntilCycleEnd, style: muted),
                     ],
                   ),
           ),

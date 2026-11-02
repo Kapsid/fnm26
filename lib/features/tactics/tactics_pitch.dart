@@ -481,6 +481,122 @@ DragOutcome? resolveSpaceDrag(
   return best == null ? null : ReshapeTo(best);
 }
 
+/// The central places, deepest first: one step up this chain is one line up
+/// the pitch.
+const List<PlayerPosition> _centralChain = [
+  PlayerPosition.dm,
+  PlayerPosition.cm,
+  PlayerPosition.am,
+  PlayerPosition.st,
+];
+
+/// How far up the pitch one step of [_centralChain] is, in layout units. The
+/// 4-3-3 is built on it: DM 0.55, CM 0.42, the gap a ten plays in about
+/// 0.30, the forwards 0.13 to 0.18.
+const double _centralStep = 0.125;
+
+/// How far a wide man moves between midfield (LM/RM) and the front (LW/RW).
+const double _wideStep = 0.25;
+
+/// The place [slot] would play if its disc were dropped at layout point
+/// ([x], [y]) (the same 0..1 units as the formation layouts), judged from
+/// where the slot's own disc is drawn. Null when the drop is not anywhere
+/// that slot's kind of player plays: the wrong flank, the back line, or
+/// further than the chain reaches.
+///
+/// Central men (DM, CM, AM, ST) step along [_centralChain] one line per
+/// [_centralStep] up or down the middle; wide men swap between midfield and
+/// the front on their own flank. Every other slot has no zones.
+PlayerPosition? slotZoneAt(Formation formation, int slot, double x, double y) {
+  final base = formation.positions[slot];
+  final (bx, by) = layoutOf(formation)[slot];
+  final central = _centralChain.indexOf(base);
+  if (central >= 0) {
+    if (x < 0.2 || x > 0.8) return null; // out on a flank
+    final steps = ((by - y) / _centralStep).round();
+    final i = central + steps;
+    return i >= 0 && i < _centralChain.length ? _centralChain[i] : null;
+  }
+  final (mid, front) = switch (base) {
+    PlayerPosition.lm || PlayerPosition.lw => (
+      PlayerPosition.lm,
+      PlayerPosition.lw,
+    ),
+    PlayerPosition.rm || PlayerPosition.rw => (
+      PlayerPosition.rm,
+      PlayerPosition.rw,
+    ),
+    _ => (null, null),
+  };
+  if (mid == null || front == null) return null;
+  final left = bx < 0.5;
+  if (left ? x > 0.32 : x < 0.68) return null; // not on his own flank
+  final steps = ((by - y) / _wideStep).round();
+  final i = (base == front ? 1 : 0) + steps;
+  return switch (i) {
+    0 => mid,
+    1 => front,
+    _ => null,
+  };
+}
+
+/// The place a drag of [slot] released in OPEN SPACE asks it to switch to
+/// within [formation] (see [SlotSwitches]), or null when the drop is not a
+/// switch and goes on to [resolveSpaceDrag] exactly as it always has.
+///
+/// A switch is a drop in the zone ([slotZoneAt], at layout point [x], [y]) of
+/// one of the slot's alternatives, or of its own formation place (undoing
+/// one), that it is not already playing. While [SlotSwitches.maxChanged]
+/// other slots are changed a new switch is refused, and then the drop does
+/// what it did before; only when that would be nothing (a bounce) is the
+/// switch still returned, so the caller can say why it did not happen.
+/// [dropY] is the fraction [resolveSpaceDrag] reads.
+PlayerPosition? resolveSwitchDrop(
+  Formation formation,
+  TacticalInstructions instructions,
+  SlotSwitches switches,
+  int slot, {
+  required double x,
+  required double y,
+  required double dropY,
+}) {
+  final to = switchIntentAt(formation, switches, slot, x, y);
+  if (to == null) return null;
+  if (switchAllowed(formation, switches, slot, to)) return to;
+  return resolveSpaceDrag(formation, instructions, slot, dropY) == null
+      ? to
+      : null;
+}
+
+/// The place a drop at layout point ([x], [y]) would switch [slot] to,
+/// allowed by the limit or not: a zone ([slotZoneAt]) that is the slot's own
+/// formation place or one of its alternatives, and not the one it plays now.
+PlayerPosition? switchIntentAt(
+  Formation formation,
+  SlotSwitches switches,
+  int slot,
+  double x,
+  double y,
+) {
+  final zone = slotZoneAt(formation, slot, x, y);
+  if (zone == null) return null;
+  final base = formation.positions[slot];
+  if (zone == switches.apply(formation)[slot]) return null;
+  if (zone != base && !SlotSwitches.alternativesFor(base).contains(zone)) {
+    return null;
+  }
+  return zone;
+}
+
+/// Whether [slot] may play [to] now: back to its own place always, another
+/// one while the limit allows.
+bool switchAllowed(
+  Formation formation,
+  SlotSwitches switches,
+  int slot,
+  PlayerPosition to,
+) => to == formation.positions[slot] || switches.canSwitch(formation, slot);
+
 int _inLine((int, int, int) counts, PositionCategory line) => switch (line) {
   PositionCategory.defender => counts.$1,
   PositionCategory.midfielder => counts.$2,
@@ -543,6 +659,7 @@ class TacticsPitch extends StatelessWidget {
     required this.onSwap,
     required this.onBenchIn,
     this.onMoveToSpace,
+    this.onSwitchSlot,
     this.absentIds = const {},
     this.injuredIds = const {},
     this.deadSlots = const {},
@@ -628,6 +745,14 @@ class TacticsPitch extends StatelessWidget {
   /// the pitch's height. Null disables the gesture; dropping onto a team-mate
   /// still goes through [onSwap] either way.
   final void Function(int slot, double dropY)? onMoveToSpace;
+
+  /// A player released in open space in the zone of a place his slot may
+  /// switch to within [formation] (see [resolveSwitchDrop]): the DM pushed
+  /// up into the gap behind the forwards plays AM, and the shape stays. Such
+  /// a drop goes here INSTEAD of [onMoveToSpace]. The owner applies it, and
+  /// says so when the limit refuses it. Null keeps every space drop on
+  /// [onMoveToSpace], as before.
+  final void Function(int slot, PlayerPosition to)? onSwitchSlot;
 
   /// The band the ten outfield players are drawn in. The keeper is pinned
   /// below the floor, on his line.
@@ -752,20 +877,61 @@ class TacticsPitch extends StatelessWidget {
                 // BEHIND every player node: a drop that lands on a team-mate
                 // must still reach his own target, so today's swap-and-reshape
                 // gesture is untouched. This one only catches open space.
-                if (onMoveToSpace case final onSpace?)
+                if (onMoveToSpace != null || onSwitchSlot != null)
                   Positioned.fill(
-                    child: DragTarget<Object>(
-                      onWillAcceptWithDetails: (d) => d.data is _SlotDrag,
-                      onAcceptWithDetails: (d) {
-                        final box = context.findRenderObject() as RenderBox?;
-                        if (box == null || box.size.height <= 0) return;
-                        final local = box.globalToLocal(d.offset);
-                        onSpace(
-                          (d.data as _SlotDrag).slot,
-                          (local.dy / box.size.height).clamp(0.0, 1.0),
+                    child: _SpaceDropTarget(
+                      // Where the dragged DISC is, in layout units: the
+                      // feedback's centre, run back through [_adjusted] and
+                      // [place]. The pointer can sit anywhere on the ball.
+                      layoutPointOf: (topLeft, size) {
+                        final cx = topLeft.dx + m.node / 2;
+                        final cy = topLeft.dy + _nodeHeight(m.disc) / 2;
+                        final fx = size.width <= 0 ? 0.5 : cx / size.width;
+                        final fy = size.height <= 0 ? 0.5 : cy / size.height;
+                        final widthFactor =
+                            0.95 + instructions.width / 100 * 0.05;
+                        const from = 0.82;
+                        final squeezed = (fy - top) / span;
+                        final y =
+                            _outfieldCeiling +
+                            (squeezed - _outfieldCeiling) *
+                                ((from - _outfieldCeiling) /
+                                    (_outfieldFloor - _outfieldCeiling));
+                        return (0.5 + (fx - 0.5) / widthFactor, y);
+                      },
+                      switchFor: (slot, x, y, dropY) {
+                        if (onSwitchSlot == null) return null;
+                        if (deadSlots.contains(slot)) return null;
+                        return resolveSwitchDrop(
+                          formation,
+                          instructions,
+                          switches,
+                          slot,
+                          x: x,
+                          y: y,
+                          dropY: dropY,
                         );
                       },
-                      builder: (_, __, ___) => const SizedBox.expand(),
+                      hintFor: (slot, x, y) {
+                        if (onSwitchSlot == null) return null;
+                        if (deadSlots.contains(slot)) return null;
+                        final to = switchIntentAt(
+                          formation,
+                          switches,
+                          slot,
+                          x,
+                          y,
+                        );
+                        if (to == null) return null;
+                        if (!switchAllowed(formation, switches, slot, to)) {
+                          return null;
+                        }
+                        return (from: positions[slot], to: to);
+                      },
+                      nodeWidth: m.node,
+                      onSwitch: (slot, to) => onSwitchSlot?.call(slot, to),
+                      onSpace: (slot, dropY) =>
+                          onMoveToSpace?.call(slot, dropY),
                     ),
                   ),
                 for (var slot = 0; slot < 11; slot++)
@@ -817,6 +983,131 @@ class TacticsPitch extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+/// The open-space drop target behind the eleven. It reports a drop either as
+/// a switch within the formation or as a plain space drop, and while a player
+/// is held over a switch zone it shows which switch the drop would make, so
+/// the manager can tell "play him as AM" from "change the shape" before
+/// letting go.
+class _SpaceDropTarget extends StatefulWidget {
+  const _SpaceDropTarget({
+    required this.layoutPointOf,
+    required this.switchFor,
+    required this.hintFor,
+    required this.nodeWidth,
+    required this.onSwitch,
+    required this.onSpace,
+  });
+
+  /// The dragged disc's layout point, from the feedback's top-left corner in
+  /// this target's coordinates and this target's size.
+  final (double, double) Function(Offset topLeft, Size size) layoutPointOf;
+  final PlayerPosition? Function(int slot, double x, double y, double dropY)
+  switchFor;
+  final ({PlayerPosition from, PlayerPosition to})? Function(
+    int slot,
+    double x,
+    double y,
+  )
+  hintFor;
+  final double nodeWidth;
+  final void Function(int slot, PlayerPosition to) onSwitch;
+  final void Function(int slot, double dropY) onSpace;
+
+  @override
+  State<_SpaceDropTarget> createState() => _SpaceDropTargetState();
+}
+
+class _SpaceDropTargetState extends State<_SpaceDropTarget> {
+  /// The switch the held player would make if dropped now, and where his
+  /// disc is (local), or null.
+  ({PlayerPosition from, PlayerPosition to, Offset at})? _hint;
+
+  RenderBox? get _box {
+    final box = context.findRenderObject();
+    return box is RenderBox && box.hasSize ? box : null;
+  }
+
+  void _clear() {
+    if (_hint != null) setState(() => _hint = null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<Object>(
+      onWillAcceptWithDetails: (d) => d.data is _SlotDrag,
+      onMove: (d) {
+        final data = d.data;
+        final box = _box;
+        if (data is! _SlotDrag || box == null) return _clear();
+        final local = box.globalToLocal(d.offset);
+        final (x, y) = widget.layoutPointOf(local, box.size);
+        final hint = widget.hintFor(data.slot, x, y);
+        if (hint == null) return _clear();
+        // Centred just above the feedback, which follows the finger.
+        final at = Offset(local.dx + widget.nodeWidth / 2, local.dy - 2);
+        if (_hint == (from: hint.from, to: hint.to, at: at)) return;
+        setState(() => _hint = (from: hint.from, to: hint.to, at: at));
+      },
+      onLeave: (_) => _clear(),
+      onAcceptWithDetails: (d) {
+        _clear();
+        final box = _box;
+        if (box == null || box.size.height <= 0) return;
+        final slot = (d.data as _SlotDrag).slot;
+        final local = box.globalToLocal(d.offset);
+        // Exactly the fraction the space drop has always reported.
+        final dropY = (local.dy / box.size.height).clamp(0.0, 1.0);
+        final (x, y) = widget.layoutPointOf(local, box.size);
+        final to = widget.switchFor(slot, x, y, dropY);
+        if (to != null) {
+          widget.onSwitch(slot, to);
+        } else {
+          widget.onSpace(slot, dropY);
+        }
+      },
+      builder: (_, _, _) {
+        final hint = _hint;
+        if (hint == null) return const SizedBox.expand();
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            const SizedBox.expand(),
+            // Above the held disc, which the finger and the feedback cover.
+            Positioned(
+              left: hint.at.dx,
+              top: hint.at.dy,
+              child: FractionalTranslation(
+                translation: const Offset(-0.5, -1),
+                child: IgnorePointer(
+                  child: Container(
+                    key: const ValueKey('pitchSwitchHint'),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(AppRadii.full),
+                      border: Border.all(color: switchedAccent),
+                    ),
+                    child: Text(
+                      '${hint.from.label} \u2192 ${hint.to.label}',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: switchedAccent,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

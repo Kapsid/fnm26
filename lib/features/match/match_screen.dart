@@ -21,7 +21,6 @@ import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
-import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -29,7 +28,6 @@ import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
-import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/ground_card.dart';
@@ -1055,25 +1053,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     final List<TacticPreset> presets = await ref
         .read(tacticPresetsProvider(widget.careerId).future)
         .catchError((Object _) => const <TacticPreset>[]);
-    // Who is in the assistant's job, for "Ask the assistant". A failed read
-    // leaves the button disabled rather than the editor shut.
-    // Read from what the screen already holds (it watches the career in
-    // build): awaiting a fresh database read here held the editor shut until
-    // the read came back.
-    final assistant =
-        ref
-            .read(careerByIdProvider(widget.careerId))
-            .valueOrNull
-            ?.staffAssistant ??
-        StaffTier.none;
     if (!mounted) return;
-    // The score as the clock stands, for the assistant chasing the game.
-    final goals = (_result ?? preview.result).events.where(
-      (e) => e.type == MatchEventType.goal && _reached(e),
-    );
-    final ours = goals
-        .where((e) => e.teamNationId == preview.playerNationId)
-        .length;
     final result = await showInMatchTactics(
       context,
       presets: presets,
@@ -1111,10 +1091,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             : KitColors.discFill(n.primaryColor, n.secondaryColor);
       }(),
       tabletLayout: useTabletLayout(context, ref),
-      assistantTier: assistant,
-      scoreDiff: ours - (goals.length - ours),
-      adviceSeed: _seed(preview) ^ ((preview.fixture.id + 1) * 0x9E3779B1),
-      conditionByPlayer: team.conditionByPlayer,
     );
     if (result != null && mounted) await _applyTactics(preview, result);
     if (wasPlaying && !_clockDone && !_atInterval && !_playing) _togglePlay();
@@ -1313,9 +1289,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final tablet = useTabletLayout(context, ref);
-    // Kept loaded for the in-match editor's "Ask the assistant" (his tier is
-    // read synchronously when the editor opens).
-    ref.watch(careerByIdProvider(widget.careerId));
     // A match is played from the teamsheet it kicked off with. Once the preview
     // has landed it is PINNED — the screen stops watching the provider — so the
     // world moving underneath can never repaint this match with another

@@ -2,53 +2,44 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/seed_ranking_repository.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
-import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 
-/// A season's sponsor round: the three offers, and what was done about them.
+/// A cycle's sponsor round: the three offers, and what was done about them.
 typedef SponsorRound = ({
   int cycle,
 
-  /// The season (September to August) it belongs to, named by the year it
-  /// opens in.
-  int season,
+  /// The year the cycle opens in: the round's key (see [Sponsors.roundYear]).
+  int year,
   List<SponsorOffer> offers,
 
-  /// The offer signed this season, or null (none yet, or turned down).
+  /// The deal signed this cycle, or null (none yet, or turned down).
   SponsorOffer? chosen,
 
   /// Whether the round is settled: an offer signed or every one declined.
   bool decided,
 });
 
-/// The first season of [cycle]: the year it opens in.
-int firstSponsorSeason(int cycle) => CareerService.cycleStart.year + 4 * cycle;
-
-/// The season [career] is in now.
-int currentSponsorSeason(Career career) => Sponsors.seasonOf(
-  career.inGameDate,
-  firstSponsorSeason(career.cyclePointer),
-);
-
-/// The season's label as a manager reads it: "2026/27".
-String sponsorSeasonLabel(int season) =>
-    '$season/${((season + 1) % 100).toString().padLeft(2, '0')}';
-
-/// [career]'s sponsor round for [season] of [cycle] (its current ones by
-/// default), or null where there is none: an unmoved campaign run (a
-/// challenge is played on the money it was set, as it gets no host bids
-/// either) or a career whose nation cannot be found.
+/// [career]'s sponsor round for [cycle] (its current one by default), or null
+/// where there is none: an unmoved campaign run (a challenge is played on the
+/// money it was set, as it gets no host bids either) or a career whose nation
+/// cannot be found.
 ///
-/// Derived from the save's seed, the season, the nation and its world place
-/// at the cycle's START (the frozen seed ranking, or the career's starting
+/// Derived from the save's seed, the cycle, the nation and its world place at
+/// the cycle's START (the frozen seed ranking, or the career's starting
 /// ranking in cycle 0), so it reads the same on every visit. Only the choice
 /// is stored, as a marker on the cycle (see [Sponsors]).
+///
+/// A save of the first, season-by-season build that answered any season of
+/// the cycle has answered it: never asked twice. Its deal is read back off
+/// the press row signing left (every deal has one, as every deal costs the
+/// board or the room).
 ///
 /// The nation is the one the career holds now: the rollover changes nation
 /// before the cycle that follows, so for the current cycle it is always the
@@ -58,23 +49,23 @@ Future<SponsorRound?> sponsorRoundOf({
   required CompetitionRepository comp,
   required NationRepository nations,
   required SeedRankingRepository seedRanks,
+  required CareerRepository careers,
   required Career career,
   int? cycle,
-  int? season,
 }) async {
   final c = cycle ?? career.cyclePointer;
-  final s = season ?? currentSponsorSeason(career);
+  final year = Sponsors.roundYear(c);
   final tag = (await campaignTags(comp))[career.id];
   if (tag != null && !tag.moved) return null;
   final world = await nations.forCareer(career.id);
   final me = world.where((n) => n.id == career.nationId).firstOrNull;
   if (me == null) return null;
-  final frozen = await seedRanks.forCycle(career.id, c);
+  final rank = (await seedRanks.forCycle(career.id, c))[me.id] ?? me.ranking;
   final offers = Sponsors.offersFor(
     seed: career.rngSeed,
-    season: s,
+    cycle: c,
     nationCode: me.code,
-    worldRank: frozen[me.id] ?? me.ranking,
+    worldRank: rank,
   );
   SponsorOffer? chosen;
   var decided = false;
@@ -82,7 +73,7 @@ Future<SponsorRound?> sponsorRoundOf({
     if (await comp.hasWatchedDraw(
       career.id,
       c,
-      Sponsors.chosenKind(s, o.index),
+      Sponsors.chosenKind(year, o.index),
     )) {
       chosen = o;
       decided = true;
@@ -90,48 +81,70 @@ Future<SponsorRound?> sponsorRoundOf({
     }
   }
   if (!decided) {
-    decided = await comp.hasWatchedDraw(career.id, c, Sponsors.declinedKind(s));
+    decided = await comp.hasWatchedDraw(
+      career.id,
+      c,
+      Sponsors.declinedKind(year),
+    );
+  }
+  if (!decided) {
+    for (final kind in Sponsors.legacySettlingKinds(c)) {
+      if (await comp.hasWatchedDraw(career.id, c, kind)) {
+        decided = true;
+        break;
+      }
+    }
+  }
+  if (decided && chosen == null) {
+    // A season's deal of the first build, signed after the cycle's round was
+    // declined or in a later season: the press row names it.
+    for (final a in await careers.pressAnswers(career.id, cycle: c)) {
+      final brand = Sponsors.brandOfPressKey(a.questionKey);
+      if (brand == null) continue;
+      chosen = Sponsors.offerOf(
+        brand,
+        rank,
+        index: offers.indexWhere((o) => o.brand == brand),
+      );
+      break;
+    }
   }
   return (
     cycle: c,
-    season: s,
+    year: year,
     offers: offers,
     chosen: chosen,
     decided: decided,
   );
 }
 
-/// The Commercial / PR euros the sponsors signed in [cycle] paid for, all of
-/// its seasons together: the department pays back at the cycle's close.
+/// The Commercial / PR euros the sponsor signed in [cycle] paid for: the
+/// department pays back at the cycle's close.
 Future<int> sponsorMarketingEuros({
   required CompetitionRepository comp,
   required NationRepository nations,
   required SeedRankingRepository seedRanks,
+  required CareerRepository careers,
   required Career career,
   required int cycle,
 }) async {
-  var euros = 0;
-  final first = firstSponsorSeason(cycle);
-  for (var s = first; s < first + 4; s++) {
-    final round = await sponsorRoundOf(
-      comp: comp,
-      nations: nations,
-      seedRanks: seedRanks,
-      career: career,
-      cycle: cycle,
-      season: s,
-    );
-    euros += round?.chosen?.marketingEuros ?? 0;
-  }
-  return euros;
+  final round = await sponsorRoundOf(
+    comp: comp,
+    nations: nations,
+    seedRanks: seedRanks,
+    careers: careers,
+    career: career,
+    cycle: cycle,
+  );
+  return round?.chosen?.marketingEuros ?? 0;
 }
 
-/// The current season's sponsor round, for the sponsor screen, the hub stop
-/// and the finances card.
+/// The current cycle's sponsor round, for the sponsor screen, the hub stop,
+/// the finances card and the end-of-cycle summary.
 ///
 /// Watches the hub's data, which every step of the world and every decision
-/// invalidates: a derived read never notices a write it did not make, and the
-/// season turns with the clock. Nothing the hub's data watches may read this.
+/// invalidates: a derived read never notices a write it did not make.
+/// Nothing the hub's data watches may read this.
 final AutoDisposeFutureProviderFamily<SponsorRound?, int> sponsorRoundProvider =
     FutureProvider.autoDispose.family<SponsorRound?, int>((
       ref,
@@ -144,18 +157,19 @@ final AutoDisposeFutureProviderFamily<SponsorRound?, int> sponsorRoundProvider =
         comp: ref.watch(competitionRepositoryProvider),
         nations: ref.watch(nationRepositoryProvider),
         seedRanks: ref.watch(seedRankingRepositoryProvider),
+        careers: ref.watch(careerRepositoryProvider),
         career: career,
       );
     });
 
-/// Signs or turns down a season's sponsor offers.
+/// Signs or turns down a cycle's sponsor offers.
 class SponsorService {
   SponsorService(this._ref);
 
   final Ref _ref;
 
-  /// Signs [offer] for [careerId]'s current season. Returns whether it was
-  /// signed: never twice in a season, never an offer the round does not hold.
+  /// Signs [offer] for [careerId]'s current cycle. Returns whether it was
+  /// signed: never twice in a cycle, never an offer the round does not hold.
   ///
   /// The marker, the money and the press row land together in one
   /// transaction, so a retry finds the marker and pays nothing twice.
@@ -171,19 +185,19 @@ class SponsorService {
         await comp.markDrawWatched(
           careerId,
           round.cycle,
-          Sponsors.chosenKind(round.season, offer.index),
+          Sponsors.chosenKind(round.year, offer.index),
         );
         if (offer.euros > 0) {
           await careers.setBudget(careerId, career.budget + offer.euros);
         }
         // What the board and the dressing room make of it: through the press
-        // effect, which both already read, for this season only (see
+        // effect, which both already read, until the cycle's close (see
         // `pressEffectProvider`).
         if (offer.morale != 0 || offer.board != 0) {
           await careers.recordPressAnswer(
             careerId: careerId,
             cycle: round.cycle,
-            questionKey: Sponsors.pressKey(round.season, offer.brand),
+            questionKey: Sponsors.pressKey(round.year, offer.brand),
             tone: Sponsors.pressTone,
             moraleDelta: offer.morale,
             boardDelta: offer.board,
@@ -193,7 +207,7 @@ class SponsorService {
         return true;
       });
 
-  /// Turns every offer down for [careerId]'s current season. Nothing else
+  /// Turns every offer down for [careerId]'s current cycle. Nothing else
   /// happens: no money, no press. Returns whether it settled the round.
   Future<bool> decline(int careerId) =>
       _ref.read(appDatabaseProvider).transaction(() async {
@@ -206,7 +220,7 @@ class SponsorService {
             .markDrawWatched(
               careerId,
               round.cycle,
-              Sponsors.declinedKind(round.season),
+              Sponsors.declinedKind(round.year),
             );
         return true;
       });
@@ -234,6 +248,7 @@ class SponsorService {
     comp: _ref.read(competitionRepositoryProvider),
     nations: _ref.read(nationRepositoryProvider),
     seedRanks: _ref.read(seedRankingRepositoryProvider),
+    careers: _ref.read(careerRepositoryProvider),
     career: career,
   );
 }
@@ -241,7 +256,7 @@ class SponsorService {
 final Provider<SponsorService> sponsorServiceProvider =
     Provider<SponsorService>(SponsorService.new);
 
-/// Whether the season's sponsor round waits: a World Championship finals,
+/// Whether the cycle's sponsor round waits: a World Championship finals,
 /// the manager's own continental finals, or his confederation's Nations Cup
 /// finals (due within [nationsCupWindow] of [today]) is under way. Those are
 /// watched round by round from the hub, and a deal to sign in the middle of
