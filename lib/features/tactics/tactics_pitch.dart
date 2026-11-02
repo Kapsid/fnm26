@@ -11,6 +11,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/features/tactics/switched_layout.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
@@ -500,16 +501,24 @@ const double _wideStep = 0.25;
 
 /// The place [slot] would play if its disc were dropped at layout point
 /// ([x], [y]) (the same 0..1 units as the formation layouts), judged from
-/// where the slot's own disc is drawn. Null when the drop is not anywhere
+/// where the slot's own disc is drawn: with [switches], the row of the place
+/// it plays now ([switchedLayoutOf]), so a disc moved up to AM is dragged
+/// back from where it stands. Null when the drop is not anywhere
 /// that slot's kind of player plays: the wrong flank, the back line, or
 /// further than the chain reaches.
 ///
 /// Central men (DM, CM, AM, ST) step along [_centralChain] one line per
 /// [_centralStep] up or down the middle; wide men swap between midfield and
 /// the front on their own flank. Every other slot has no zones.
-PlayerPosition? slotZoneAt(Formation formation, int slot, double x, double y) {
-  final base = formation.positions[slot];
-  final (bx, by) = layoutOf(formation)[slot];
+PlayerPosition? slotZoneAt(
+  Formation formation,
+  int slot,
+  double x,
+  double y, {
+  SlotSwitches switches = SlotSwitches.none,
+}) {
+  final base = switches.apply(formation)[slot];
+  final (bx, by) = switchedLayoutOf(formation, switches)[slot];
   final central = _centralChain.indexOf(base);
   if (central >= 0) {
     if (x < 0.2 || x > 0.8) return null; // out on a flank
@@ -578,7 +587,7 @@ PlayerPosition? switchIntentAt(
   double x,
   double y,
 ) {
-  final zone = slotZoneAt(formation, slot, x, y);
+  final zone = slotZoneAt(formation, slot, x, y, switches: switches);
   if (zone == null) return null;
   final base = formation.positions[slot];
   if (zone == switches.apply(formation)[slot]) return null;
@@ -677,9 +686,9 @@ class TacticsPitch extends StatelessWidget {
 
   /// Places changed within [formation] (see [SlotSwitches]). Each disc is
   /// fitted, labelled and marked as the place it now plays; a changed one has
-  /// its position badge drawn in [switchedAccent]. The disc stays where the
-  /// formation draws it, and the drag gestures still read the formation:
-  /// the structure has not changed, only what the slot is asked to do.
+  /// its position badge drawn in [switchedAccent]. The disc is drawn in the
+  /// row of the place it now plays ([switchedLayoutOf]), and the switch drag
+  /// zones read it from there; the reshape gestures still read the formation.
   final SlotSwitches switches;
 
   /// The full-backs' arrows, drawn on the left-back's and right-back's discs.
@@ -825,7 +834,7 @@ class TacticsPitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final layout = _layouts[formation]!;
+    final layout = switchedLayoutOf(formation, switches);
     final positions = switches.apply(formation);
     final base = formation.positions;
 

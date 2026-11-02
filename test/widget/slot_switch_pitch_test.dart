@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/slot_switch_strip.dart';
+import 'package:fnm/features/tactics/switched_layout.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -224,17 +225,23 @@ void main() {
   });
 
   group('a long press dropped in a switch zone', () {
-    /// The screen point at layout point (x, y) of the 4-3-3 drawn on screen,
-    /// read off the discs: DM (0.5, 0.55), ST (0.5, 0.13), LW x 0.16, RW
-    /// x 0.84. The pitch maps layout to screen linearly away from the back
-    /// line, so two discs per axis pin it.
-    Offset at(WidgetTester tester, double x, double y) {
-      final dmC = tester.getCenter(disc(5));
+    /// The screen point at layout point (x, y) of the 4-3-3 drawn on screen
+    /// with [switches], read off the discs: the full-backs (x 0.12 and 0.88,
+    /// y 0.70), which no switch moves, and the striker wherever the switches
+    /// draw him ([switchedLayoutOf]). The pitch maps layout to screen
+    /// linearly away from the back line, so two discs per axis pin it.
+    Offset at(
+      WidgetTester tester,
+      double x,
+      double y, {
+      SlotSwitches switches = SlotSwitches.none,
+    }) {
+      final lbC = tester.getCenter(disc(1));
+      final rbC = tester.getCenter(disc(4));
       final stC = tester.getCenter(disc(9));
-      final lwC = tester.getCenter(disc(8));
-      final rwC = tester.getCenter(disc(10));
-      final sx = lwC.dx + (x - 0.16) / (0.84 - 0.16) * (rwC.dx - lwC.dx);
-      final sy = dmC.dy + (0.55 - y) / (0.55 - 0.13) * (stC.dy - dmC.dy);
+      final stY = switchedLayoutOf(formation, switches)[9].$2;
+      final sx = lbC.dx + (x - 0.12) / (0.88 - 0.12) * (rbC.dx - lbC.dx);
+      final sy = lbC.dy + (0.70 - y) / (0.70 - stY) * (stC.dy - lbC.dy);
       return Offset(sx, sy);
     }
 
@@ -272,7 +279,12 @@ void main() {
         tester,
         switches: const SlotSwitches({5: PlayerPosition.am}),
       );
-      final target = at(tester, 0.62, 0.56);
+      final target = at(
+        tester,
+        0.62,
+        0.56,
+        switches: const SlotSwitches({5: PlayerPosition.am}),
+      );
       final g = await hold(tester, 5);
       await g.moveTo(target);
       await tester.pump();
@@ -329,7 +341,15 @@ void main() {
         }),
       );
       // The CM zone, the DM's own band: no reshape was ever made here.
-      final target = at(tester, 0.5, 0.43);
+      final target = at(
+        tester,
+        0.5,
+        0.43,
+        switches: const SlotSwitches({
+          6: PlayerPosition.dm,
+          7: PlayerPosition.am,
+        }),
+      );
       final g = await hold(tester, 5);
       await g.moveTo(target);
       await tester.pump();
@@ -357,7 +377,17 @@ void main() {
           7: PlayerPosition.am,
         }),
       );
-      final target = at(tester, 0.5, 0.28);
+      // Beside the AM rather than on him: slot 7 now stands in that row,
+      // and a drop on a team-mate is a swap.
+      final target = at(
+        tester,
+        0.34,
+        0.28,
+        switches: const SlotSwitches({
+          6: PlayerPosition.dm,
+          7: PlayerPosition.am,
+        }),
+      );
       final g = await hold(tester, 5);
       await g.moveTo(target);
       await tester.pump();
