@@ -14112,4 +14112,71 @@ class AppLocalizationsHi extends AppLocalizations {
   String ySponsorMocked5(String brand) {
     return 'दुनिया के सारे स्पॉन्सरों में से हमने $brand को चुना। हमारे सारे विरोधी हम पर हँस रहे हैं।';
   }
+
+  @override
+  String get matchTinyWorld => 'वि.चैं.';
+
+  @override
+  String matchTinyQualifying(String comp) {
+    return '$comp क्वा.';
+  }
+
+  @override
+  String get matchTinyEurope => 'यू.चैं.';
+
+  @override
+  String get matchTinySouthAmerica => 'द.अ. कप';
+
+  @override
+  String get matchTinyNorthAmerica => 'उ.अ. कप';
+
+  @override
+  String get matchTinyAfrica => 'अफ़्री.चैं.';
+
+  @override
+  String get matchTinyAsia => 'एशि.चैं.';
+
+  @override
+  String get matchTinyOceania => 'ओशि. कप';
+
+  @override
+  String get matchTinyNationsCup => 'नेशंस कप';
+
+  @override
+  String get matchTinyFriendly => 'दोस्ताना';
+
+  @override
+  String get matchTinyClash => 'क्लैश';
+
+  @override
+  String get matchTinyPlayoff => 'प्ले-ऑफ़';
+
+  @override
+  String matchTinyMatchday(int matchday) {
+    return 'मैचडे $matchday';
+  }
+
+  @override
+  String get matchTinyRoundOf32 => 'अंतिम 32';
+
+  @override
+  String get matchTinyRoundOf16 => 'अंतिम 16';
+
+  @override
+  String get matchTinyQuarterFinal => 'क्वार्टर';
+
+  @override
+  String get matchTinySemiFinal => 'सेमी';
+
+  @override
+  String get matchTinyFinal => 'फ़ाइनल';
+
+  @override
+  String get matchTinyThirdPlace => 'तीसरा स्थान';
+
+  @override
+  String get callUpHomeShort => 'घर';
+
+  @override
+  String get callUpAwayShort => 'बाहर';
 }

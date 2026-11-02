@@ -436,6 +436,7 @@ class _ProposalCard extends StatelessWidget {
                     ),
                     code: p.position.label,
                     name: p.name,
+                    rating: p.overall,
                     reason: proposal.reasons[p.id],
                   ),
               ],
@@ -451,6 +452,7 @@ class _ProposalCard extends StatelessWidget {
                     ),
                     code: p.position.label,
                     name: p.name,
+                    rating: p.overall,
                     reason: CallUpAdvice.leftOutReason(
                       p,
                       tier: tier,
@@ -467,18 +469,23 @@ class _ProposalCard extends StatelessWidget {
   }
 }
 
-/// An arrow, a position code, a name that wraps or shortens before it
-/// overflows, and the reason chip.
+/// An arrow, a position code, the rating, a name that wraps or shortens
+/// before it overflows, and the reason chip.
 class _AdviceRow extends StatelessWidget {
   const _AdviceRow({
     required this.code,
     required this.name,
+    required this.rating,
     required this.reason,
     required this.leading,
   });
 
   final String code;
   final String name;
+
+  /// His overall, exactly as the call-up list prints it beside his name: the
+  /// men on these lists are the manager's own, so it is never a scouted guess.
+  final int rating;
   final CallUpReason? reason;
   final Widget leading;
 
@@ -490,6 +497,9 @@ class _AdviceRow extends StatelessWidget {
   static const double _leadWidth = 16;
   static const double _codeWidth = 30;
   static const TextStyle _nameStyle = AppTypography.bodySmall;
+  static final TextStyle _ratingStyle = AppTypography.labelSmall.copyWith(
+    fontWeight: FontWeight.w700,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -513,6 +523,13 @@ class _AdviceRow extends StatelessWidget {
       width: _leadWidth,
       child: Align(alignment: Alignment.centerLeft, child: leading),
     );
+    // A slot as wide as the widest rating at the reader's text size, so the
+    // names line up down the list whatever the numbers are.
+    final ratingWidth = _naturalWidth(context, '99', _ratingStyle) + 6;
+    final ratingText = SizedBox(
+      width: ratingWidth,
+      child: Text('$rating', style: _ratingStyle),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: LayoutBuilder(
@@ -522,6 +539,7 @@ class _AdviceRow extends StatelessWidget {
               children: [
                 lead,
                 codeText,
+                ratingText,
                 Expanded(child: nameText),
               ],
             );
@@ -533,7 +551,12 @@ class _AdviceRow extends StatelessWidget {
           // Beside the name only while the name still has room to read
           // whole on its two lines; otherwise the chip goes under it.
           final nameRoom =
-              constraints.maxWidth - _leadWidth - _codeWidth - 4 - natural;
+              constraints.maxWidth -
+              _leadWidth -
+              _codeWidth -
+              ratingWidth -
+              4 -
+              natural;
           final nameNeeds =
               _naturalWidth(context, initialledName(name), _nameStyle) / 2;
           if (natural <= constraints.maxWidth * _chipShare &&
@@ -542,6 +565,7 @@ class _AdviceRow extends StatelessWidget {
               children: [
                 lead,
                 codeText,
+                ratingText,
                 Expanded(child: nameText),
                 const SizedBox(width: AppSpacing.xs),
                 _ReasonChip(label),
@@ -553,6 +577,7 @@ class _AdviceRow extends StatelessWidget {
             children: [
               lead,
               codeText,
+              ratingText,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

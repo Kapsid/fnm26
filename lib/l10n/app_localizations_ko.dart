@@ -13713,4 +13713,71 @@ class AppLocalizationsKo extends AppLocalizations {
   String ySponsorMocked5(String brand) {
     return '세상에 그 많은 스폰서 중에 하필 $brand 브랜드를 골랐다. 라이벌들이 다 우리를 비웃고 있다.';
   }
+
+  @override
+  String get matchTinyWorld => '세계선수권';
+
+  @override
+  String matchTinyQualifying(String comp) {
+    return '$comp 예선';
+  }
+
+  @override
+  String get matchTinyEurope => '유럽선수권';
+
+  @override
+  String get matchTinySouthAmerica => '남미컵';
+
+  @override
+  String get matchTinyNorthAmerica => '북중미컵';
+
+  @override
+  String get matchTinyAfrica => '아프리카선수권';
+
+  @override
+  String get matchTinyAsia => '아시아선수권';
+
+  @override
+  String get matchTinyOceania => '오세아니아컵';
+
+  @override
+  String get matchTinyNationsCup => '네이션스컵';
+
+  @override
+  String get matchTinyFriendly => '친선';
+
+  @override
+  String get matchTinyClash => '대륙대항전';
+
+  @override
+  String get matchTinyPlayoff => '플레이오프';
+
+  @override
+  String matchTinyMatchday(int matchday) {
+    return '${matchday}R';
+  }
+
+  @override
+  String get matchTinyRoundOf32 => '32강';
+
+  @override
+  String get matchTinyRoundOf16 => '16강';
+
+  @override
+  String get matchTinyQuarterFinal => '8강';
+
+  @override
+  String get matchTinySemiFinal => '4강';
+
+  @override
+  String get matchTinyFinal => '결승';
+
+  @override
+  String get matchTinyThirdPlace => '3·4위전';
+
+  @override
+  String get callUpHomeShort => '홈';
+
+  @override
+  String get callUpAwayShort => '원정';
 }

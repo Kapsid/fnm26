@@ -14060,4 +14060,71 @@ class AppLocalizationsVi extends AppLocalizations {
   String ySponsorMocked5(String brand) {
     return 'Bao nhiêu nhà tài trợ trên đời, ta lại chọn $brand. Mọi đối thủ đang cười vào mặt chúng ta.';
   }
+
+  @override
+  String get matchTinyWorld => 'VĐTG';
+
+  @override
+  String matchTinyQualifying(String comp) {
+    return 'VL $comp';
+  }
+
+  @override
+  String get matchTinyEurope => 'VĐ Âu';
+
+  @override
+  String get matchTinySouthAmerica => 'Cúp NM';
+
+  @override
+  String get matchTinyNorthAmerica => 'Cúp BM';
+
+  @override
+  String get matchTinyAfrica => 'VĐ Phi';
+
+  @override
+  String get matchTinyAsia => 'VĐ Á';
+
+  @override
+  String get matchTinyOceania => 'Cúp ĐD';
+
+  @override
+  String get matchTinyNationsCup => 'NC';
+
+  @override
+  String get matchTinyFriendly => 'giao hữu';
+
+  @override
+  String get matchTinyClash => 'Clash';
+
+  @override
+  String get matchTinyPlayoff => 'play-off';
+
+  @override
+  String matchTinyMatchday(int matchday) {
+    return 'V$matchday';
+  }
+
+  @override
+  String get matchTinyRoundOf32 => '1/16';
+
+  @override
+  String get matchTinyRoundOf16 => '1/8';
+
+  @override
+  String get matchTinyQuarterFinal => 'tứ kết';
+
+  @override
+  String get matchTinySemiFinal => 'bán kết';
+
+  @override
+  String get matchTinyFinal => 'chung kết';
+
+  @override
+  String get matchTinyThirdPlace => 'tranh 3';
+
+  @override
+  String get callUpHomeShort => 'Nhà';
+
+  @override
+  String get callUpAwayShort => 'Khách';
 }

@@ -14270,4 +14270,71 @@ class AppLocalizationsEl extends AppLocalizations {
   String ySponsorMocked5(String brand) {
     return 'Από όλους τους χορηγούς του κόσμου, διαλέξαμε την εταιρεία $brand. Όλοι οι αντίπαλοί μας γελάνε μαζί μας.';
   }
+
+  @override
+  String get matchTinyWorld => 'ΠΠ';
+
+  @override
+  String matchTinyQualifying(String comp) {
+    return '$comp προκ.';
+  }
+
+  @override
+  String get matchTinyEurope => 'ΕΠ';
+
+  @override
+  String get matchTinySouthAmerica => 'ΠΝΑ';
+
+  @override
+  String get matchTinyNorthAmerica => 'ΠΒΑ';
+
+  @override
+  String get matchTinyAfrica => 'ΠΑφ';
+
+  @override
+  String get matchTinyAsia => 'ΠΑσ';
+
+  @override
+  String get matchTinyOceania => 'ΚΩ';
+
+  @override
+  String get matchTinyNationsCup => 'ΚΕ';
+
+  @override
+  String get matchTinyFriendly => 'φιλ.';
+
+  @override
+  String get matchTinyClash => 'Αναμ.';
+
+  @override
+  String get matchTinyPlayoff => 'μπαράζ';
+
+  @override
+  String matchTinyMatchday(int matchday) {
+    return '$matchdayη αγ.';
+  }
+
+  @override
+  String get matchTinyRoundOf32 => '1/16';
+
+  @override
+  String get matchTinyRoundOf16 => '1/8';
+
+  @override
+  String get matchTinyQuarterFinal => 'προημ.';
+
+  @override
+  String get matchTinySemiFinal => 'ημιτ.';
+
+  @override
+  String get matchTinyFinal => 'τελικός';
+
+  @override
+  String get matchTinyThirdPlace => '3η θέση';
+
+  @override
+  String get callUpHomeShort => 'Εντ.';
+
+  @override
+  String get callUpAwayShort => 'Εκτ.';
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -238,6 +240,7 @@ void main() {
           age: 18 + i % 16,
           name: longNames[i % longNames.length],
           position: positions[i % positions.length],
+          attributes: flatAttributes(55 + i),
         ),
     ];
     final byId = {for (final p in pool) p.id: p};
@@ -368,6 +371,87 @@ void main() {
           expect(await applied, same(advice.alternatives.first));
         });
       }
+    }
+  });
+
+  // The rating beside each name: the overall the call-up list prints, on the
+  // list of everyone he would name and on both the in and the out lists.
+  group("the sheet shows each player's rating", () {
+    final pool = [
+      for (var i = 0; i < 26; i++)
+        player(
+          id: i + 1,
+          nationId: 1,
+          name: 'Player ${i + 1}',
+          attributes: flatAttributes(60 + i),
+        ),
+    ];
+    final byId = {for (final p in pool) p.id: p};
+    CallUpProposal proposal(Set<int> squad) => CallUpProposal(
+      variant: CallUpVariant.main,
+      squad: squad,
+      reasons: const {},
+    );
+    final advice = (
+      main: proposal({for (var i = 4; i <= 26; i++) i}),
+      alternatives: const <CallUpProposal>[],
+    );
+
+    /// The rating shown on the row that names [p].
+    void expectRated(WidgetTester tester, int id) {
+      final p = byId[id]!;
+      final row = find
+          .ancestor(of: wholeText(p.name), matching: find.byType(Row))
+          .first;
+      expect(
+        find.descendant(of: row, matching: find.text('${p.overall}')),
+        findsOneWidget,
+        reason: '${p.name} should read ${p.overall}',
+      );
+    }
+
+    for (final (base, kind) in [
+      (<int>{}, CallUpAdviceBase.none),
+      ({for (var i = 1; i <= 23; i++) i}, CallUpAdviceBase.selection),
+    ]) {
+      testWidgets('against ${kind.name}', (tester) async {
+        await tester.binding.setSurfaceSize(const Size(360, 2400));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        late BuildContext ctx;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.theme,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Builder(
+              builder: (context) {
+                ctx = context;
+                return const Scaffold();
+              },
+            ),
+          ),
+        );
+        unawaited(
+          showCallUpAdviceSheet(
+            ctx,
+            advice: advice,
+            tier: StaffTier.good,
+            byId: byId,
+            base: base,
+            baseKind: kind,
+          ),
+        );
+        await tester.pumpAndSettle();
+        final shown = {
+          ...advice.main.squad.where((id) => !base.contains(id)),
+          ...base.where((id) => !advice.main.squad.contains(id)),
+        };
+        expect(shown, isNotEmpty);
+        for (final id in shown) {
+          expectRated(tester, id);
+        }
+        expect(tester.takeException(), isNull);
+      });
     }
   });
 }

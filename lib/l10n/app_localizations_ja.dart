@@ -13676,4 +13676,71 @@ class AppLocalizationsJa extends AppLocalizations {
   String ySponsorMocked5(String brand) {
     return '世界中のスポンサーの中から、よりによって$brandを選んだ。ライバル全員に笑われてる。';
   }
+
+  @override
+  String get matchTinyWorld => '世界選手権';
+
+  @override
+  String matchTinyQualifying(String comp) {
+    return '$comp予選';
+  }
+
+  @override
+  String get matchTinyEurope => '欧州選手権';
+
+  @override
+  String get matchTinySouthAmerica => '南米杯';
+
+  @override
+  String get matchTinyNorthAmerica => '北米杯';
+
+  @override
+  String get matchTinyAfrica => 'アフリカ選手権';
+
+  @override
+  String get matchTinyAsia => 'アジア選手権';
+
+  @override
+  String get matchTinyOceania => 'オセアニア杯';
+
+  @override
+  String get matchTinyNationsCup => 'ネーションズ杯';
+
+  @override
+  String get matchTinyFriendly => '親善';
+
+  @override
+  String get matchTinyClash => '大陸対抗';
+
+  @override
+  String get matchTinyPlayoff => 'プレーオフ';
+
+  @override
+  String matchTinyMatchday(int matchday) {
+    return '第$matchday節';
+  }
+
+  @override
+  String get matchTinyRoundOf32 => 'ラウンド32';
+
+  @override
+  String get matchTinyRoundOf16 => 'ラウンド16';
+
+  @override
+  String get matchTinyQuarterFinal => '準々決勝';
+
+  @override
+  String get matchTinySemiFinal => '準決勝';
+
+  @override
+  String get matchTinyFinal => '決勝';
+
+  @override
+  String get matchTinyThirdPlace => '3位決定戦';
+
+  @override
+  String get callUpHomeShort => 'H';
+
+  @override
+  String get callUpAwayShort => 'A';
 }

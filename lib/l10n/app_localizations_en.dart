@@ -14222,4 +14222,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String ySponsorMocked5(String brand) {
     return 'Of all the sponsors in the world, we picked $brand. Every rival we have is laughing at us.';
   }
+
+  @override
+  String get matchTinyWorld => 'WC';
+
+  @override
+  String matchTinyQualifying(String comp) {
+    return '$comp Q';
+  }
+
+  @override
+  String get matchTinyEurope => 'EC';
+
+  @override
+  String get matchTinySouthAmerica => 'SAC';
+
+  @override
+  String get matchTinyNorthAmerica => 'NAC';
+
+  @override
+  String get matchTinyAfrica => 'AfC';
+
+  @override
+  String get matchTinyAsia => 'AsC';
+
+  @override
+  String get matchTinyOceania => 'OC';
+
+  @override
+  String get matchTinyNationsCup => 'NC';
+
+  @override
+  String get matchTinyFriendly => 'Friendly';
+
+  @override
+  String get matchTinyClash => 'Clash';
+
+  @override
+  String get matchTinyPlayoff => 'PO';
+
+  @override
+  String matchTinyMatchday(int matchday) {
+    return 'MD $matchday';
+  }
+
+  @override
+  String get matchTinyRoundOf32 => 'R32';
+
+  @override
+  String get matchTinyRoundOf16 => 'R16';
+
+  @override
+  String get matchTinyQuarterFinal => 'QF';
+
+  @override
+  String get matchTinySemiFinal => 'SF';
+
+  @override
+  String get matchTinyFinal => 'Final';
+
+  @override
+  String get matchTinyThirdPlace => '3rd pl.';
+
+  @override
+  String get callUpHomeShort => 'H';
+
+  @override
+  String get callUpAwayShort => 'A';
 }

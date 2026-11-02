@@ -1,4 +1,3 @@
-import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'dart:async';
@@ -9,12 +8,10 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
-import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/services/club/club_form.dart';
-import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
@@ -26,6 +23,7 @@ import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
 import 'package:fnm/features/tactics/call_up_advice_sheet.dart';
+import 'package:fnm/features/tactics/call_up_match_tiles.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_form_look.dart';
 import 'package:fnm/features/tactics/nomination_providers.dart';
@@ -899,88 +897,13 @@ class _CoverageBanner extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.sm),
-            for (final f in window.matches.take(6)) _matchLine(context, l, f),
+            CallUpMatchTiles(
+              matches: window.matches.take(6).toList(),
+              nations: window.nations,
+              playerNationId: window.playerNationId,
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _matchLine(BuildContext context, AppLocalizations l, Fixture f) {
-    final oppId = f.homeNationId == window.playerNationId
-        ? f.awayNationId
-        : f.homeNationId;
-    final opp = window.nations[oppId];
-    final home = f.homeNationId == window.playerNationId;
-    // Two lines: the opponent gets the full width up top (no more squeezing it
-    // to an ellipsis to fit the competition), and the stage sits underneath.
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            // 58, not the 52 it was: a Czech date carries the full stop of an
-            // ordinal ("30. lis"), and a seventh monospace character does not
-            // fit in 52 points. It wrapped rather than overflowed, which is
-            // the quiet kind of cut no exception reports.
-            //
-            // Home or away goes UNDER the date rather than beside it. It used
-            // to be "v " and "@ ", a convention off American score lines that
-            // a tester could not read, and which was never translated, so in
-            // Czech the away marker was the preposition "v". The word that
-            // replaces it is five times as wide, and put in the row it pushed
-            // the competition line into an ellipsis. Here it costs no width at
-            // all, and the name beside it gets back the ten points the old
-            // symbol was taking.
-            width: 58,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  AppDate.dayMonthNumeric(context, f.date),
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
-                Text(
-                  home ? l.callUpHome : l.callUpAway,
-                  maxLines: 1,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          FlagDisc(opp?.code ?? '??', size: 16),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  opp?.name ?? l.tacticsUnknown,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.bodySmall,
-                ),
-                Text(
-                  MatchStage.label(l, f),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.primary,
-                    fontSize: 10,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

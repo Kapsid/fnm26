@@ -15,10 +15,12 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/features/tactics/call_up_match_tiles.dart';
 import 'package:fnm/features/tactics/call_up_screen.dart';
 import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/l10n/app_localizations_en.dart';
 
 import '../helpers/expect_whole.dart';
 import '../helpers/test_database.dart';
@@ -30,6 +32,7 @@ void main() {
   late AppDatabase db;
   late ProviderContainer container;
   late int careerId;
+  late List<Nation> nations;
 
   Player p(int id, String name, PlayerPosition pos, int overall) => Player(
     id: id,
@@ -58,7 +61,7 @@ void main() {
 
   setUp(() async {
     db = createTestDatabase();
-    final nations =
+    nations =
         (jsonDecode(File('assets/data/nations.json').readAsStringSync())
                 as List<dynamic>)
             .map((e) => Nation.fromJson(e as Map<String, Object?>))
@@ -90,6 +93,8 @@ void main() {
     WidgetTester tester, {
     double width = 360,
     Locale locale = const Locale('en'),
+    List<Fixture> matches = const <Fixture>[],
+    bool open = true,
   }) async {
     tester.view
       ..devicePixelRatio = 1
@@ -114,10 +119,10 @@ void main() {
         callUpDraftProvider.overrideWith((ref, arg) async => <int>{}),
         nominationWindowProvider(careerId).overrideWith(
           (ref) async => (
-            open: true,
-            matches: const <Fixture>[],
-            nations: const <int, Nation>{},
-            playerNationId: 1,
+            open: open,
+            matches: matches,
+            nations: {for (final n in nations) n.id: n},
+            playerNationId: nations.first.id,
           ),
         ),
       ],
@@ -267,5 +272,53 @@ void main() {
         },
       );
     }
+  }
+
+  // The matches this squad covers sit side by side above the pool, in the
+  // open window and in the locked one alike.
+  for (final open in [true, false]) {
+    testWidgets(
+      'the covered matches are tiles, three to a row '
+      '(${open ? 'open' : 'locked'})',
+      (tester) async {
+        final me = nations.first.id;
+        final others = nations.skip(1).take(6).toList();
+        final matches = [
+          for (var i = 0; i < 6; i++)
+            Fixture(
+              id: 500 + i,
+              careerId: careerId,
+              competitionId: 1,
+              matchday: i + 1,
+              date: DateTime(2030, 9, 3 + i * 3),
+              homeNationId: i.isEven ? me : others[i].id,
+              awayNationId: i.isEven ? others[i].id : me,
+              round: i < 4 ? null : 'FRIENDLY',
+            ),
+        ];
+        await pumpCallUps(tester, matches: matches, open: open);
+        final tiles = [
+          for (final f in matches) find.byKey(CallUpMatchTileKeys.tile(f.id)),
+        ];
+        for (final t in tiles) {
+          expect(t, findsOneWidget);
+        }
+        double top(int i) => tester.getTopLeft(tiles[i]).dy;
+        expect(top(1), top(0));
+        expect(top(2), top(0));
+        expect(top(3), greaterThan(top(0)));
+        expect(
+          find.descendant(of: tiles[1], matching: find.text(others[1].code)),
+          findsOneWidget,
+        );
+        final l = AppLocalizationsEn();
+        expect(
+          find.text(open ? l.tacticsNominationOpen : l.tacticsSquadLocked),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+        expectNothingCut(tester);
+      },
+    );
   }
 }

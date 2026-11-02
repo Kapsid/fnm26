@@ -21955,5 +21955,99 @@
         "type": "String"
       }
     }
+  },
+  "matchTinyWorld": "WC",
+  "@matchTinyWorld": {
+    "description": "Tiny tag for the World Championship finals on a compact fixture tile (call-up screen). An abbreviation the way fans write it, about 2 to 6 characters. Never the name of the real World Cup."
+  },
+  "matchTinyQualifying": "{comp} Q",
+  "@matchTinyQualifying": {
+    "description": "Tiny tag for a qualifying campaign on a compact fixture tile. comp is the tiny tag of the tournament being qualified for (e.g. WC, EC). Keep it about 8 characters or fewer.",
+    "placeholders": {
+      "comp": {
+        "type": "String"
+      }
+    }
+  },
+  "matchTinyEurope": "EC",
+  "@matchTinyEurope": {
+    "description": "Tiny abbreviation of the European Championship (the game's own name, not a trademark like EURO), for a compact fixture tile. 2 to 4 characters."
+  },
+  "matchTinySouthAmerica": "SAC",
+  "@matchTinySouthAmerica": {
+    "description": "Tiny abbreviation of the South America Cup for a compact fixture tile. 2 to 5 characters."
+  },
+  "matchTinyNorthAmerica": "NAC",
+  "@matchTinyNorthAmerica": {
+    "description": "Tiny abbreviation of the North America Cup for a compact fixture tile. 2 to 5 characters."
+  },
+  "matchTinyAfrica": "AfC",
+  "@matchTinyAfrica": {
+    "description": "Tiny abbreviation of the African Championship for a compact fixture tile. Must differ from the Asian one. 2 to 5 characters."
+  },
+  "matchTinyAsia": "AsC",
+  "@matchTinyAsia": {
+    "description": "Tiny abbreviation of the Asian Championship for a compact fixture tile. Must differ from the African one. 2 to 5 characters."
+  },
+  "matchTinyOceania": "OC",
+  "@matchTinyOceania": {
+    "description": "Tiny abbreviation of the Oceania Cup for a compact fixture tile. 2 to 5 characters."
+  },
+  "matchTinyNationsCup": "NC",
+  "@matchTinyNationsCup": {
+    "description": "Tiny abbreviation of the Nations Cup for a compact fixture tile. 2 to 4 characters."
+  },
+  "matchTinyFriendly": "Friendly",
+  "@matchTinyFriendly": {
+    "description": "Tiny tag for a friendly match on a compact fixture tile. A short word or abbreviation, at most about 8 characters."
+  },
+  "matchTinyClash": "Clash",
+  "@matchTinyClash": {
+    "description": "Tiny tag for the Continental Clash (one match between continental champions) on a compact fixture tile. At most about 8 characters."
+  },
+  "matchTinyPlayoff": "PO",
+  "@matchTinyPlayoff": {
+    "description": "Tiny tag for the intercontinental play-off on a compact fixture tile. At most about 8 characters."
+  },
+  "matchTinyMatchday": "MD {matchday}",
+  "@matchTinyMatchday": {
+    "description": "Tiny matchday tag on a compact fixture tile, e.g. MD 1. At most about 8 characters.",
+    "placeholders": {
+      "matchday": {
+        "type": "int"
+      }
+    }
+  },
+  "matchTinyRoundOf32": "R32",
+  "@matchTinyRoundOf32": {
+    "description": "Tiny tag for a round-of-32 tie on a compact fixture tile."
+  },
+  "matchTinyRoundOf16": "R16",
+  "@matchTinyRoundOf16": {
+    "description": "Tiny tag for a round-of-16 tie on a compact fixture tile."
+  },
+  "matchTinyQuarterFinal": "QF",
+  "@matchTinyQuarterFinal": {
+    "description": "Tiny tag for a quarter-final on a compact fixture tile."
+  },
+  "matchTinySemiFinal": "SF",
+  "@matchTinySemiFinal": {
+    "description": "Tiny tag for a semi-final on a compact fixture tile."
+  },
+  "matchTinyFinal": "Final",
+  "@matchTinyFinal": {
+    "description": "Tiny tag for a final on a compact fixture tile."
+  },
+  "matchTinyThirdPlace": "3rd pl.",
+  "@matchTinyThirdPlace": {
+    "description": "Tiny tag for the third-place match on a compact fixture tile."
+  },
+  "callUpHomeShort": "H",
+  "@callUpHomeShort": {
+    "description": "One- to three-letter mark for a HOME match on a compact fixture tile of the call-up screen, the abbreviation fans use in fixture lists (the full word is read out to screen readers)."
+  },
+  "callUpAwayShort": "A",
+  "@callUpAwayShort": {
+    "description": "One- to three-letter mark for an AWAY match on a compact fixture tile of the call-up screen, the abbreviation fans use in fixture lists (the full word is read out to screen readers)."
   }
 }

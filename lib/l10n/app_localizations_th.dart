@@ -13931,4 +13931,71 @@ class AppLocalizationsTh extends AppLocalizations {
   String ySponsorMocked5(String brand) {
     return 'สปอนเซอร์ทั้งโลกมีตั้งเยอะ เราดันเลือก $brand คู่แข่งทุกทีมหัวเราะเยาะเราอยู่';
   }
+
+  @override
+  String get matchTinyWorld => 'แชมป์​โลก';
+
+  @override
+  String matchTinyQualifying(String comp) {
+    return 'คัด $comp';
+  }
+
+  @override
+  String get matchTinyEurope => 'ยุโรป';
+
+  @override
+  String get matchTinySouthAmerica => 'อเมริกา​ใต้';
+
+  @override
+  String get matchTinyNorthAmerica => 'อเมริกา​เหนือ';
+
+  @override
+  String get matchTinyAfrica => 'แอฟริกา';
+
+  @override
+  String get matchTinyAsia => 'เอเชีย';
+
+  @override
+  String get matchTinyOceania => 'โอเชียเนีย';
+
+  @override
+  String get matchTinyNationsCup => 'เนชันส์​คัพ';
+
+  @override
+  String get matchTinyFriendly => 'อุ่น​เครื่อง';
+
+  @override
+  String get matchTinyClash => 'แคลช';
+
+  @override
+  String get matchTinyPlayoff => 'เพลย์​ออฟ';
+
+  @override
+  String matchTinyMatchday(int matchday) {
+    return 'นัด $matchday';
+  }
+
+  @override
+  String get matchTinyRoundOf32 => '32 ทีม';
+
+  @override
+  String get matchTinyRoundOf16 => '16 ทีม';
+
+  @override
+  String get matchTinyQuarterFinal => '8 ทีม';
+
+  @override
+  String get matchTinySemiFinal => 'รองฯ';
+
+  @override
+  String get matchTinyFinal => 'ชิงฯ';
+
+  @override
+  String get matchTinyThirdPlace => 'ที่ 3';
+
+  @override
+  String get callUpHomeShort => 'เหย้า';
+
+  @override
+  String get callUpAwayShort => 'เยือน';
 }

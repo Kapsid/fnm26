@@ -21481,6 +21481,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Of all the sponsors in the world, we picked {brand}. Every rival we have is laughing at us.'**
   String ySponsorMocked5(String brand);
+
+  /// Tiny tag for the World Championship finals on a compact fixture tile (call-up screen). An abbreviation the way fans write it, about 2 to 6 characters. Never the name of the real World Cup.
+  ///
+  /// In en, this message translates to:
+  /// **'WC'**
+  String get matchTinyWorld;
+
+  /// Tiny tag for a qualifying campaign on a compact fixture tile. comp is the tiny tag of the tournament being qualified for (e.g. WC, EC). Keep it about 8 characters or fewer.
+  ///
+  /// In en, this message translates to:
+  /// **'{comp} Q'**
+  String matchTinyQualifying(String comp);
+
+  /// Tiny abbreviation of the European Championship (the game's own name, not a trademark like EURO), for a compact fixture tile. 2 to 4 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'EC'**
+  String get matchTinyEurope;
+
+  /// Tiny abbreviation of the South America Cup for a compact fixture tile. 2 to 5 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'SAC'**
+  String get matchTinySouthAmerica;
+
+  /// Tiny abbreviation of the North America Cup for a compact fixture tile. 2 to 5 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'NAC'**
+  String get matchTinyNorthAmerica;
+
+  /// Tiny abbreviation of the African Championship for a compact fixture tile. Must differ from the Asian one. 2 to 5 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'AfC'**
+  String get matchTinyAfrica;
+
+  /// Tiny abbreviation of the Asian Championship for a compact fixture tile. Must differ from the African one. 2 to 5 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'AsC'**
+  String get matchTinyAsia;
+
+  /// Tiny abbreviation of the Oceania Cup for a compact fixture tile. 2 to 5 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'OC'**
+  String get matchTinyOceania;
+
+  /// Tiny abbreviation of the Nations Cup for a compact fixture tile. 2 to 4 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'NC'**
+  String get matchTinyNationsCup;
+
+  /// Tiny tag for a friendly match on a compact fixture tile. A short word or abbreviation, at most about 8 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendly'**
+  String get matchTinyFriendly;
+
+  /// Tiny tag for the Continental Clash (one match between continental champions) on a compact fixture tile. At most about 8 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clash'**
+  String get matchTinyClash;
+
+  /// Tiny tag for the intercontinental play-off on a compact fixture tile. At most about 8 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'PO'**
+  String get matchTinyPlayoff;
+
+  /// Tiny matchday tag on a compact fixture tile, e.g. MD 1. At most about 8 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'MD {matchday}'**
+  String matchTinyMatchday(int matchday);
+
+  /// Tiny tag for a round-of-32 tie on a compact fixture tile.
+  ///
+  /// In en, this message translates to:
+  /// **'R32'**
+  String get matchTinyRoundOf32;
+
+  /// Tiny tag for a round-of-16 tie on a compact fixture tile.
+  ///
+  /// In en, this message translates to:
+  /// **'R16'**
+  String get matchTinyRoundOf16;
+
+  /// Tiny tag for a quarter-final on a compact fixture tile.
+  ///
+  /// In en, this message translates to:
+  /// **'QF'**
+  String get matchTinyQuarterFinal;
+
+  /// Tiny tag for a semi-final on a compact fixture tile.
+  ///
+  /// In en, this message translates to:
+  /// **'SF'**
+  String get matchTinySemiFinal;
+
+  /// Tiny tag for a final on a compact fixture tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Final'**
+  String get matchTinyFinal;
+
+  /// Tiny tag for the third-place match on a compact fixture tile.
+  ///
+  /// In en, this message translates to:
+  /// **'3rd pl.'**
+  String get matchTinyThirdPlace;
+
+  /// One- to three-letter mark for a HOME match on a compact fixture tile of the call-up screen, the abbreviation fans use in fixture lists (the full word is read out to screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'H'**
+  String get callUpHomeShort;
+
+  /// One- to three-letter mark for an AWAY match on a compact fixture tile of the call-up screen, the abbreviation fans use in fixture lists (the full word is read out to screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'A'**
+  String get callUpAwayShort;
 }
 
 class _AppLocalizationsDelegate

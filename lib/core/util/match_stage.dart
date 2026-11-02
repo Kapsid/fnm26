@@ -1,4 +1,5 @@
 import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -67,6 +68,76 @@ abstract final class MatchStage {
   /// enough already and stays exactly as it reads elsewhere.
   static String labelCompact(AppLocalizations l, Fixture f) =>
       _label(l, f, true);
+
+  /// The smallest way to say where a fixture belongs: a fan's abbreviation of
+  /// the competition and, when there is one, the round ("WC Q" and "MD 1",
+  /// "PN" and "QF", "Friendly" and nothing).
+  ///
+  /// For the call-up screen's fixture tiles, three to a phone's width, where
+  /// even [labelCompact] ("CONTINENTAL CUP Q · MATCHDAY 1") is several times
+  /// too wide. [conf] is the manager's own confederation, which is the only
+  /// one whose continental cup and Nations Cup he ever plays in, and it is
+  /// what lets the tag name the cup ("EC") rather than a vague "continental".
+  ///
+  /// Two parts rather than one string, so a tile can let the round drop onto
+  /// a line of its own instead of breaking inside either of them.
+  static ({String competition, String? stage}) tinyParts(
+    AppLocalizations l,
+    Fixture f,
+    Confederation conf,
+  ) {
+    final round = f.round;
+    final cup = switch (conf) {
+      Confederation.europe => l.matchTinyEurope,
+      Confederation.southAmerica => l.matchTinySouthAmerica,
+      Confederation.northAmerica => l.matchTinyNorthAmerica,
+      Confederation.africa => l.matchTinyAfrica,
+      Confederation.asia => l.matchTinyAsia,
+      Confederation.oceania => l.matchTinyOceania,
+    };
+    String? knockout(String r) => switch (r) {
+      'R32' => l.matchTinyRoundOf32,
+      'R16' || 'NR16' || 'CR16' => l.matchTinyRoundOf16,
+      'QF' || 'NQF' || 'CQF' => l.matchTinyQuarterFinal,
+      'SF' || 'NSF' || 'CSF' || 'POSF' => l.matchTinySemiFinal,
+      'FINAL' || 'NFINAL' || 'CFINAL' || 'POFINAL' => l.matchTinyFinal,
+      '3RD' || 'C3RD' => l.matchTinyThirdPlace,
+      _ => null,
+    };
+    final matchday = l.matchTinyMatchday(f.matchday);
+    return switch (round) {
+      null => (
+        competition: l.matchTinyQualifying(l.matchTinyWorld),
+        stage: matchday,
+      ),
+      'CQ' => (competition: l.matchTinyQualifying(cup), stage: matchday),
+      'FRIENDLY' => (competition: l.matchTinyFriendly, stage: null),
+      'FFINAL' => (competition: l.matchTinyClash, stage: null),
+      'POSF' ||
+      'POFINAL' => (competition: l.matchTinyPlayoff, stage: knockout(round)),
+      // A group game is the competition alone, as on [label].
+      'GROUP' => (competition: l.matchTinyWorld, stage: null),
+      'CGROUP' => (competition: cup, stage: null),
+      'NGROUP' || 'NL' => (competition: l.matchTinyNationsCup, stage: null),
+      _ when round.startsWith('N') => (
+        competition: l.matchTinyNationsCup,
+        stage: knockout(round),
+      ),
+      _ when round.startsWith('C') => (
+        competition: cup,
+        stage: knockout(round),
+      ),
+      _ => (competition: l.matchTinyWorld, stage: knockout(round) ?? round),
+    };
+  }
+
+  /// [tinyParts] as one line ("WC Q · MD 1"), for anywhere that has the room
+  /// for both on one line, and for the tests.
+  static String labelTiny(AppLocalizations l, Fixture f, Confederation conf) {
+    final parts = tinyParts(l, f, conf);
+    final stage = parts.stage;
+    return stage == null ? parts.competition : '${parts.competition} · $stage';
+  }
 
   static String _label(AppLocalizations l, Fixture f, bool compact) {
     final round = f.round;
