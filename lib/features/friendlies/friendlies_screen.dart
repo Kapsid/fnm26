@@ -247,8 +247,11 @@ String _monthAbbr(AppLocalizations l, int m) {
   }
 }
 
-String _label(AppLocalizations l, DateTime d) =>
-    '${_monthAbbr(l, d.month)} ${d.year}';
+/// A window by its month; a finals warm-up, two of which share a month, by
+/// its day as well.
+String _label(AppLocalizations l, DateTime d) => d.day == friendlyWindowDay
+    ? '${_monthAbbr(l, d.month)} ${d.year}'
+    : '${d.day} ${_monthAbbr(l, d.month)} ${d.year}';
 
 /// A distinct block of suggested opponents for window [index], so each window
 /// offers a different set rather than the same list.

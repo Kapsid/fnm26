@@ -25,8 +25,27 @@ Fixture _f({
 void main() {
   group('Nomination', () {
     test('a tournament always opens a fresh nomination after friendlies', () {
-      // Warm-up friendlies, then the finals group stage. The friendlies are one
-      // period; the tournament must open its own.
+      // Friendlies in a window of their own, then the finals group stage
+      // weeks later. The friendlies are one period; the tournament must open
+      // its own. (Warm-ups within Nomination.warmUpCampDays of the opener
+      // are the camp instead: see the next test.)
+      final fixtures = [
+        _f(md: 1, round: 'FRIENDLY', day: 1, played: true),
+        _f(md: 2, round: 'FRIENDLY', day: 4, played: true),
+        _f(md: 1, round: 'GROUP', day: 20),
+        _f(md: 2, round: 'GROUP', day: 23),
+        _f(md: 3, round: 'GROUP', day: 26),
+      ];
+      expect(Nomination.windowOpen(fixtures), isTrue);
+      final period = Nomination.currentPeriod(fixtures);
+      expect(period.map((f) => f.round), everyElement('GROUP'));
+      expect(period, hasLength(3), reason: 'the squad is locked for the group');
+    });
+
+    test('warm-ups just before the opener share the tournament squad', () {
+      // WarmUps.daysBefore: nine and six days out. One camp, one squad named
+      // before the first warm-up; once a warm-up is played the window is
+      // under way, not opening again for the group stage.
       final fixtures = [
         _f(md: 1, round: 'FRIENDLY', day: 1, played: true),
         _f(md: 2, round: 'FRIENDLY', day: 4, played: true),
@@ -34,10 +53,7 @@ void main() {
         _f(md: 2, round: 'GROUP', day: 13),
         _f(md: 3, round: 'GROUP', day: 16),
       ];
-      expect(Nomination.windowOpen(fixtures), isTrue);
-      final period = Nomination.currentPeriod(fixtures);
-      expect(period.map((f) => f.round), everyElement('GROUP'));
-      expect(period, hasLength(3), reason: 'the squad is locked for the group');
+      expect(Nomination.windowOpen(fixtures), isFalse);
     });
 
     test('a fixture the world left behind does not pin the window shut', () {

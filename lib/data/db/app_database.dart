@@ -85,7 +85,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 51;
+  static const int currentSchemaVersion = 52;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -289,6 +289,19 @@ class AppDatabase extends _$AppDatabase {
         // simply starts with an empty library.
         from50To51: (m, schema) async {
           await m.createTable(schema.tacticLibrary);
+        },
+        // 51 → 52 adds the 1st and 2nd vice-captains. Additive and nullable:
+        // an upgraded save has none named, so its captain leads out exactly as
+        // before until the manager names a stand-in.
+        from51To52: (m, schema) async {
+          await m.addColumn(
+            schema.careers,
+            schema.careers.viceCaptain1PlayerId,
+          );
+          await m.addColumn(
+            schema.careers,
+            schema.careers.viceCaptain2PlayerId,
+          );
         },
       )(m, from, to);
     },

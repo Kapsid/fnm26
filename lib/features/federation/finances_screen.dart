@@ -14,6 +14,7 @@ import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/hosting_card.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
 import 'package:fnm/features/federation/national_stadiums_screen.dart';
+import 'package:fnm/features/federation/sponsor_card.dart';
 import 'package:fnm/features/y/fan_mood_text.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -103,6 +104,8 @@ class _FinancesScreenState extends ConsumerState<FinancesScreen> {
               // This cycle's hosts and the next cycle's bid. Pads its own
               // bottom; nothing at all without a career's nation.
               HostingCard(careerId: widget.careerId),
+              // This cycle's general sponsor. Pads its own bottom.
+              SponsorCard(careerId: widget.careerId),
               Text(
                 l.federationProjectedAtSeasonEnd,
                 style: AppTypography.labelSmall.copyWith(

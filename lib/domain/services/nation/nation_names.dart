@@ -77,6 +77,7 @@ abstract final class NationNames {
     'BHR': 'Bahrajn',
     'BHU': 'Bhútán',
     'BIH': 'Bosna a Hercegovina',
+    'BLR': 'Bělorusko',
     'BLZ': 'Belize',
     'BOL': 'Bolívie',
     'BOT': 'Botswana',
@@ -262,6 +263,7 @@ abstract final class NationNames {
     'WAL': 'Wales',
     'YEM': 'Jemen',
     'ZAM': 'Zambie',
+    'ZAN': 'Zanzibar',
     'ZIM': 'Zimbabwe',
   };
 
@@ -310,6 +312,7 @@ abstract final class NationNames {
     'BHR': 'Bahrajnu',
     'BHU': 'Bhútánu',
     'BIH': 'Bosně a Hercegovině',
+    'BLR': 'Bělorusku',
     'BLZ': 'Belize',
     'BOL': 'Bolívii',
     'BOT': 'Botswaně',
@@ -495,6 +498,7 @@ abstract final class NationNames {
     'WAL': 'Walesu',
     'YEM': 'Jemenu',
     'ZAM': 'Zambii',
+    'ZAN': 'Zanzibaru',
     'ZIM': 'Zimbabwe',
   };
 

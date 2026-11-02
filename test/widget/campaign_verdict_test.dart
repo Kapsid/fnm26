@@ -285,6 +285,7 @@ void main() {
     // the play-off and the Nations Cup never count.
     for (final goal in CampaignGoal.values) {
       if (goal == CampaignGoal.qualifyBothThenTitle ||
+          goal == CampaignGoal.qualifyBothThenWorldTitle ||
           goal == CampaignGoal.titleTreble) {
         continue;
       }
@@ -341,6 +342,18 @@ void main() {
     }
     expect(
       campaignRunCounts(CampaignGoal.qualifyBothThenTitle, 'FRIENDLY'),
+      isFalse,
+    );
+    // Zanzibar the same.
+    for (final round in [null, 'CQ', 'NGROUP', 'CPO', 'CGROUP', 'R16']) {
+      expect(
+        campaignRunCounts(CampaignGoal.qualifyBothThenWorldTitle, round),
+        isTrue,
+        reason: '$round',
+      );
+    }
+    expect(
+      campaignRunCounts(CampaignGoal.qualifyBothThenWorldTitle, 'FRIENDLY'),
       isFalse,
     );
     // Finish the Legacy: its three titles, both championships' finals and

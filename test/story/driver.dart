@@ -34,9 +34,11 @@ import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
+import 'package:fnm/features/friendlies/warm_up_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
@@ -103,6 +105,31 @@ final List<Player> _labGreenland = () {
   ];
 }();
 
+/// Zanzibar's squad, or (LAB_ZANZIBAR_FACTOR, the campaign lab only) the
+/// same squad rebuilt from Chad's attributes at another factor, the way
+/// `zanzibarSquad` was written.
+final List<Player> _labZanzibar = () {
+  final f = double.tryParse(
+    Platform.environment['LAB_ZANZIBAR_FACTOR'] ?? '',
+  );
+  if (f == null) return zanzibarSquad;
+  final chad = [
+    for (final p in _players)
+      if (p.nationId == 110) p,
+  ];
+  int scaled(int v) => (v * f).round().clamp(25, 99);
+  return [
+    for (var i = 0; i < zanzibarSquad.length; i++)
+      zanzibarSquad[i].copyWith(
+        attributes: PlayerAttributes(
+          physical: scaled(chad[i].attributes.physical),
+          technical: scaled(chad[i].attributes.technical),
+          stamina: scaled(chad[i].attributes.stamina),
+        ),
+      ),
+  ];
+}();
+
 /// LAB_ENGAGED=1 (the campaign lab only): the autopilot plays an engaged
 /// manager. All the federation money into the youth academy (the rest into
 /// the naturalisation office), every naturalisation offer accepted, every
@@ -158,11 +185,12 @@ ProviderContainer _storyContainer(
         InMemorySeedSource(
           nationList: storyNations,
           playerList: _players,
-          // As the app's asset source: Greenland is in every database, and
-          // only a Greenland campaign's world includes it. Its 23 base
-          // players, like every other nation here (players.json unexpanded).
+          // As the app's asset source: the dormant nations are in every
+          // database, and only their own campaign's world includes each.
+          // Their 23 base players, like every other nation here
+          // (players.json unexpanded).
           dormantNations: DormantNations.all,
-          dormantPlayers: _labGreenland,
+          dormantPlayers: [..._labGreenland, ..._labZanzibar, ...belarusSquad],
         ),
       ),
       formFactorProvider.overrideWithValue(FormFactor.phone),
@@ -199,6 +227,7 @@ class StoryDriver {
     int nationId = england,
     Map<int, int> startingRanks = const {},
     bool currentHostRules = true,
+    bool? newCareerNations,
   }) async {
     await c.read(seedLoaderProvider).ensureSeeded();
     final career =
@@ -210,6 +239,7 @@ class StoryDriver {
                   rngSeed: seed,
                   startingRanks: startingRanks,
                   currentHostRules: currentHostRules,
+                  newCareerNations: newCareerNations,
                 ))
             .valueOrNull!;
     return StoryDriver(c, career.id);
@@ -306,7 +336,15 @@ class StoryDriver {
           await c.read(campScandalServiceProvider).keep(careerId, scandal);
         }
       case HubEventKind.budget:
-        await _budget();
+        // The season's sponsor comes first at a cycle's opening, of the
+        // budget's kind: turned down, so the stories stay as they were found.
+        if (e.route != null && e.route!.startsWith(Routes.sponsor)) {
+          await c.read(sponsorServiceProvider).decline(careerId);
+        } else {
+          await _budget();
+        }
+      case HubEventKind.sponsor:
+        await c.read(sponsorServiceProvider).decline(careerId);
       case HubEventKind.naturalization:
         final repo = c.read(careerRepositoryProvider);
         final link = await repo.pendingNaturalization(careerId);
@@ -319,6 +357,13 @@ class StoryDriver {
         );
       case HubEventKind.friendlies:
         await _friendlies();
+      case HubEventKind.warmUpOffer:
+        // Decline: the stories were found before anybody sent one.
+        c.invalidate(pendingWarmUpOfferProvider(careerId));
+        final offer = await _read(pendingWarmUpOfferProvider(careerId));
+        if (offer != null) {
+          await c.read(warmUpOfferServiceProvider).decline(careerId, offer);
+        }
       case HubEventKind.press:
         await _press();
       case HubEventKind.grievance:
@@ -446,7 +491,12 @@ class StoryDriver {
     final plan = (await _read(friendliesPlanProvider(careerId)))!;
     final picks = <DateTime, int>{};
     for (final w in plan.windows.take(2)) {
-      picks[w] = rivalIds[_friendlyCursor++ % rivalIds.length];
+      var rival = rivalIds[_friendlyCursor++ % rivalIds.length];
+      // A career run for one of the rivals never books itself.
+      if (rival == plan.playerNationId) {
+        rival = rivalIds[_friendlyCursor++ % rivalIds.length];
+      }
+      picks[w] = rival;
     }
     await c
         .read(friendliesServiceProvider)

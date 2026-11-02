@@ -14,6 +14,7 @@ import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/department_effect.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/staff_card.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
@@ -49,6 +50,11 @@ Future<SeededSave> _open(
         // left in that state. Revisit at the Riverpod 3 upgrade.
         moraleProvider(kSeededCareerId).overrideWith((ref) async => 50),
     ],
+  );
+  // The season's sponsor is offered just before the budget; answered here,
+  // so the bar offers the budget itself.
+  await tester.runAsync(
+    () => save.container.read(sponsorServiceProvider).decline(save.careerId),
   );
   await pumpRoute(
     tester,

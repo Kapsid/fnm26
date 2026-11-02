@@ -97,6 +97,7 @@ abstract final class StaffEffect {
     StaffRole.assistant => [
       l.staffEffectInjury(injuryReductionPct(role, tier)),
       l.staffEffectYouth(youthOverall(tier)),
+      ?adviceLine(l, tier),
     ],
     // Nobody in the job describes nothing: the card shows the hiring range.
     StaffRole.scout when tier == StaffTier.none => const [],
@@ -106,6 +107,17 @@ abstract final class StaffEffect {
       l.staffEffectScoutDossier(Staff.dossierBonus(tier)),
     ],
   };
+
+  /// What the assistant's "Ask the assistant" advice is worth at [tier]
+  /// (see `AssistantAdvice` for what each tier reads), or null with nobody
+  /// in the job.
+  static String? adviceLine(AppLocalizations l, StaffTier tier) =>
+      switch (tier) {
+        StaffTier.none => null,
+        StaffTier.basic => l.staffEffectAdviceBasic,
+        StaffTier.good => l.staffEffectAdviceGood,
+        StaffTier.elite => l.staffEffectAdviceElite,
+      };
 
   /// What filling the vacancy would be worth, across the range the market
   /// offers — from the cheapest applicant to the best one.
@@ -123,6 +135,7 @@ abstract final class StaffEffect {
             injuryReductionPct(role, best),
           ),
           l.staffHiringYouth(youthOverall(cheapest), youthOverall(best)),
+          l.staffHiringAdvice,
         ],
         StaffRole.scout => [
           l.staffHiringScoutRead(

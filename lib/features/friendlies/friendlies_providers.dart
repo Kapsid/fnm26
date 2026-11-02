@@ -8,21 +8,31 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/competition/warm_ups.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/friendlies/warm_up_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 
 /// International match windows (month numbers) a friendly can be arranged in.
 const _windowMonths = [9, 10, 11, 3, 6];
 
+/// The day of the month every international window's friendly is played on.
+/// Any other day is a finals warm-up (see [WarmUps]).
+const friendlyWindowDay = 14;
+
 /// Marks a friendly window (year/month) decided, so the hub stops prompting for
-/// it once the manager has arranged or declined a game there.
-String friendlyWindowKey(DateTime d) => 'friendly:${d.year}-${d.month}';
+/// it once the manager has arranged or declined a game there. A warm-up date
+/// is keyed by its day as well: two of them share a month, and one decided
+/// must not decide the other.
+String friendlyWindowKey(DateTime d) => d.day == friendlyWindowDay
+    ? 'friendly:${d.year}-${d.month}'
+    : 'friendly:${d.year}-${d.month}-${d.day}';
 
 /// Whether the manager's side hosts a friendly arranged in the window on [d].
 /// Fixed by the window (not the opponent) so the arrange screen can show it
 /// before anything is scheduled, and so it matches what [FriendliesService]
-/// actually saves.
-bool friendlyIsHome(DateTime d) => d.month.isEven;
+/// actually saves. A finals warm-up is always at home: it is the send-off.
+bool friendlyIsHome(DateTime d) => d.day != friendlyWindowDay || d.month.isEven;
 
 /// Why the shortlist is ordered the way it is — the thing a manager has to be
 /// told, because a list reordered silently is just a different list.
@@ -142,6 +152,24 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
       // gap holds two or three.
       if (windows.length >= 6) break;
     }
+    // The warm-up window before a finals he is in (see [WarmUps]): its own
+    // days just before the opener, booked here like any other window and
+    // played by the squad named for the tournament. A June window cannot
+    // carry it (the tournament fills June), which is why a qualified side
+    // used to go from March into its opener without a game.
+    for (final d in await ownWarmUpDates(comp, career, nations, fixtures)) {
+      if (!d.isAfter(now) || !d.isBefore(nextComp)) continue;
+      if (windows.any((w) => w == d)) continue;
+      if (await comp.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        friendlyWindowKey(d),
+      )) {
+        continue;
+      }
+      windows.add(d);
+    }
+    windows.sort();
     if (windows.isEmpty) return null;
 
     final me = nations[career.nationId];
@@ -188,7 +216,24 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
       for (final id in rivals)
         if (nations[id] != null) nations[id]!,
     ];
-    final opponents = rivalNations.isEmpty
+    // A warm-up is played against another side going to the tournament, as
+    // real send-offs are, and never against one he meets in his group: the
+    // rest of the field comes to the front of the shortlist. The general
+    // pool is the sixty nearest in ranking, which leaves most of a
+    // tournament's field out, so the field is added whole.
+    final field = <int>{};
+    if (windows.any((w) => w.day != friendlyWindowDay)) {
+      for (final f in await upcomingWarmUpFinals(comp, career, nations)) {
+        if (!inWarmUpFinals(f, career.nationId)) continue;
+        for (final g in f.groups) {
+          field.addAll(g);
+        }
+      }
+      field
+        ..remove(career.nationId)
+        ..removeAll(rivals);
+    }
+    final ranked = rivalNations.isEmpty
         ? shuffled
         : (shuffled.toList()..sort((a, b) {
             int distance(Nation n) => rivalNations
@@ -200,6 +245,19 @@ friendliesPlanProvider = FutureProvider.autoDispose.family<FriendliesPlan?, int>
                 .reduce((x, y) => x < y ? x : y);
             return distance(a).compareTo(distance(b));
           }));
+    final opponents = field.isEmpty
+        ? ranked
+        : [
+            for (final n in rng.shuffled(
+              [
+                for (final id in field)
+                  if (nations[id] != null) nations[id]!,
+              ]..sort((a, b) => a.id.compareTo(b.id)),
+            ))
+              n,
+            for (final n in ranked)
+              if (!field.contains(n.id)) n,
+          ];
 
     return FriendliesPlan(
       windows: windows,

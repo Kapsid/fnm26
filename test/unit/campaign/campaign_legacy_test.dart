@@ -201,12 +201,12 @@ void main() {
     }
   });
 
-  test('the campaign: Spain, one cycle, Pro, hard, can be continued', () {
+  test('the campaign: Spain, one cycle, free, hard, can be continued', () {
     const def = Campaigns.legacy;
     expect(def.nationId, spain);
     expect(def.cycles, 1);
     expect(def.goal, CampaignGoal.titleTreble);
-    expect(def.needsPro, isTrue);
+    expect(def.needsPro, isFalse);
     expect(def.canContinue, isTrue);
     expect(def.difficulty, CampaignDifficulty.hard);
     expect(def.goldenGeneration, isFalse);

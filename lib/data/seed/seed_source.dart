@@ -28,12 +28,27 @@ abstract interface class SeedSource {
   /// path stalls widget tests, which drive their own async clock.
   Future<Map<int, List<String>>> cities();
 
+  /// Each nation's name lists, keyed by nation id: the classic first names
+  /// and surnames (`country_names.json`) and the extras
+  /// (`country_names_more.json`). Read by Y's local fans (see `YLocals`),
+  /// who are named from their own country's lists. Empty when nothing is
+  /// bundled, which leaves a feed without local fans rather than failing.
+  Future<Map<int, NameLists>> nameLists();
+
   /// The dormant nations and their players (see `DormantNations`): stored in
   /// every database, part of no world unless a career's marker brings one in.
   /// Kept apart from [nations] and [players] so a world built from those is
   /// exactly as it was.
   Future<({List<Nation> nations, List<Player> players})> dormant();
 }
+
+/// One nation's name lists, as the two name assets hold them.
+typedef NameLists = ({
+  List<String> first,
+  List<String> firstMore,
+  List<String> sur,
+  List<String> surMore,
+});
 
 /// A [SeedSource] that reads bundled JSON assets.
 class AssetSeedSource implements SeedSource {
@@ -45,8 +60,42 @@ class AssetSeedSource implements SeedSource {
   static const _playersAsset = 'assets/data/players.json';
   static const _namesAsset = 'assets/data/country_names.json';
   static const _citiesAsset = 'assets/data/country_cities.json';
+  static const _moreNamesAsset = 'assets/data/country_names_more.json';
 
   Map<int, List<String>>? _cities;
+  Map<int, NameLists>? _nameLists;
+
+  @override
+  Future<Map<int, NameLists>> nameLists() async {
+    if (_nameLists case final cached?) return cached;
+    try {
+      final classic =
+          jsonDecode(await _bundle.loadString(_namesAsset))
+              as Map<String, Object?>;
+      var more = const <String, Object?>{};
+      try {
+        more =
+            jsonDecode(await _bundle.loadString(_moreNamesAsset))
+                as Map<String, Object?>;
+      } on Object {
+        // The classic lists alone.
+      }
+      List<String> read(Object? m, String key) =>
+          (((m as Map?)?[key] as List?) ?? const []).cast<String>();
+      _nameLists = {
+        for (final e in classic.entries)
+          int.parse(e.key): (
+            first: read(e.value, 'first'),
+            firstMore: read(more[e.key], 'firstMore'),
+            sur: read(e.value, 'sur'),
+            surMore: read(more[e.key], 'surMore'),
+          ),
+      };
+    } on Object {
+      _nameLists = {};
+    }
+    return _nameLists!;
+  }
 
   @override
   Future<Map<int, List<String>>> cities() async {
@@ -68,7 +117,7 @@ class AssetSeedSource implements SeedSource {
   // Built once: the seed loader compares it with the stored rows on launch.
   late final ({List<Nation> nations, List<Player> players}) _dormant = (
     nations: DormantNations.all,
-    players: greenlandPool(),
+    players: dormantPool(),
   );
 
   @override
@@ -113,6 +162,7 @@ class InMemorySeedSource implements SeedSource {
     required this.nationList,
     required this.playerList,
     this.cityLists = const {},
+    this.nameListMap = const {},
     this.dormantNations = const [],
     this.dormantPlayers = const [],
   });
@@ -121,8 +171,12 @@ class InMemorySeedSource implements SeedSource {
   final List<Player> playerList;
   final Map<int, List<String>> cityLists;
 
+  /// Empty by default, so a test feed has no local fans unless the test
+  /// hands it name lists.
+  final Map<int, NameLists> nameListMap;
+
   /// Empty by default, so a test database holds no dormant nation unless the
-  /// test asks for one (`DormantNations.all` and `greenlandPool()`).
+  /// test asks for one (`DormantNations.all` and `dormantPool()`).
   final List<Nation> dormantNations;
   final List<Player> dormantPlayers;
 
@@ -138,4 +192,7 @@ class InMemorySeedSource implements SeedSource {
 
   @override
   Future<Map<int, List<String>>> cities() async => cityLists;
+
+  @override
+  Future<Map<int, NameLists>> nameLists() async => nameListMap;
 }

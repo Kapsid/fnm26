@@ -36,6 +36,22 @@ class DriftNationRepository implements NationRepository {
   }
 
   @override
+  Future<List<Nation>> newCareerWorld() async {
+    final base = await all();
+    final rows = await (_db.select(
+      _db.nations,
+    )..where((t) => t.id.isIn(DormantNations.forNewCareers))).get();
+    final dormant = {
+      for (final r in rows) r.id: r.toDomain(languageCode: languageCode),
+    };
+    return DormantNations.worldFrom(
+      base,
+      dormant.keys.toSet(),
+      dormant: (id) => dormant[id]!,
+    );
+  }
+
+  @override
   Future<List<Nation>> freeDemo() async {
     final query = _db.select(_db.nations)
       ..where(

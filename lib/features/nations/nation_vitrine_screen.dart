@@ -151,10 +151,6 @@ class _Header extends StatelessWidget {
                         style: AppTypography.headlineMedium,
                       ),
                     ),
-                    if (v.isPlayerNation) ...[
-                      const SizedBox(width: AppSpacing.sm),
-                      TacticalChip(l.nationsYourTeam, emphasized: true),
-                    ],
                   ],
                 ),
                 if (NationIdentity.nicknameOf(v.nation.code) case final nick?)
@@ -169,34 +165,30 @@ class _Header extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(height: 2),
-                Text(
-                  '${confederationLabel(l, v.nation.confederation)} · '
-                  '${v.nation.code}',
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
+                // The sticker rides on the confederation line, where there is
+                // room for it beside a long name.
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        '${confederationLabel(l, v.nation.confederation)} · '
+                        '${v.nation.code}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    if (v.isPlayerNation) ...[
+                      const SizedBox(width: AppSpacing.sm),
+                      TacticalChip(l.nationsYourTeam, emphasized: true),
+                    ],
+                  ],
                 ),
               ],
             ),
           ),
-          if (v.currentRank != null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '#${v.currentRank}',
-                  style: AppTypography.headlineMedium.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-                Text(
-                  l.nationsWorld,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
         ],
       ),
     );

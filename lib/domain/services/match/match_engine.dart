@@ -13,6 +13,7 @@ import 'package:fnm/domain/services/match/performance_mark.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
 import 'package:meta/meta.dart' show visibleForTesting;
 
@@ -30,9 +31,23 @@ class MatchTeam {
     this.traitsByPlayer = const {},
     this.ratingBonus = 0,
     this.fullBacks = FullBackPushes.neutral,
+    this.switches = SlotSwitches.none,
+    this.throwInStyle = ThrowInStyle.neutral,
+    this.throwInTakerId,
   });
 
   final int nationId;
+
+  /// How the side takes its throw-ins (see [ThrowInStyle],
+  /// [MatchEngine.throwInLift] and [MatchEngine.longThrowPerMinute]). The
+  /// manager's side only; neutral for every AI side, which never sets it, and
+  /// neutral leaves every number the engine draws exactly as before.
+  final ThrowInStyle throwInStyle;
+
+  /// The manager's designated throw-in taker, or null to let the engine pick
+  /// ([SetPiecePicks.throwIn]). Read only by a long throw; ignored if he is
+  /// not on the pitch.
+  final int? throwInTakerId;
   final List<Player> xi;
   final TacticalInstructions instructions;
 
@@ -79,9 +94,17 @@ class MatchTeam {
   final int? penaltyTakerId;
   final int? deadBallTakerId;
 
-  /// The shape the XI lines up in; `xi[i]` occupies `formation.positions[i]`.
+  /// The shape the XI lines up in; `xi[i]` occupies `positions[i]`.
   /// Players fielded away from their natural position take a rating penalty.
   final Formation formation;
+
+  /// Places changed within [formation] (see [SlotSwitches]). The manager's
+  /// side only; none for every AI side.
+  final SlotSwitches switches;
+
+  /// The place each slot plays: [formation]'s positions with [switches]
+  /// applied. Everything positional in the engine reads this.
+  List<PlayerPosition> get positions => switches.apply(formation);
 }
 
 /// A timed substitution: at [minute], [on] replaces the player [offId] in the
@@ -118,9 +141,16 @@ class TacticalChange {
     this.slots,
     this.takers,
     this.fullBacks,
+    this.switches = SlotSwitches.none,
+    this.throwIn,
   });
 
   final int teamNationId;
+
+  /// The throw-in style and taker from this minute on, or null to keep the
+  /// side's current ones. A null taker inside hands the throws back to the
+  /// engine's own pick.
+  final ({ThrowInStyle style, int? taker})? throwIn;
   final int minute;
   final Formation formation;
   final TacticalInstructions instructions;
@@ -129,6 +159,9 @@ class TacticalChange {
   /// The full-backs' arrows from this minute on, or null to keep the side's
   /// current ones.
   final FullBackPushes? fullBacks;
+
+  /// Places changed within [formation] from this minute on.
+  final SlotSwitches switches;
 
   /// The place each man in [xi] plays, one per entry, or null to read them
   /// off [formation] in order.
@@ -145,7 +178,7 @@ class TacticalChange {
   PlayerPosition slotOf(int i) {
     final given = slots;
     if (given != null && i < given.length) return given[i];
-    final positions = formation.positions;
+    final positions = switches.apply(formation);
     return i < positions.length ? positions[i] : xi[i].position;
   }
 
@@ -241,6 +274,7 @@ class MatchEvent {
     this.secondYellow = false,
     this.stoppage = 0,
     this.setPiece = false,
+    this.longThrow = false,
   });
 
   final int minute;
@@ -270,6 +304,10 @@ class MatchEvent {
   /// Whether a goal came from a set piece (a corner/free-kick delivery headed or
   /// bundled home) — the assist is the taker.
   final bool setPiece;
+
+  /// Whether a [setPiece] goal came from a long throw into the box rather than
+  /// a corner or free-kick; the assist is the thrower.
+  final bool longThrow;
 
   /// For a [redCard], whether it was a second booking (a one-match ban) rather
   /// than a straight red (which can carry a heavier, severity-based ban).
@@ -409,11 +447,13 @@ class MatchResult {
 class _Live {
   _Live(this.team)
     : xi = [...team.xi],
-      slots = [...team.formation.positions],
+      slots = [...team.positions],
       formation = team.formation,
-      shape = ShapeProfile.of(team.formation.positions),
+      shape = ShapeProfile.of(team.positions),
       instructions = team.instructions,
       fullBacks = team.fullBacks,
+      throwInStyle = team.throwInStyle,
+      throwInTakerId = team.throwInTakerId,
       penaltyTakerId = team.penaltyTakerId,
       deadBallTakerId = team.deadBallTakerId;
 
@@ -424,6 +464,11 @@ class _Live {
   /// off (or has just missed one) can hand the ball to somebody else.
   int? penaltyTakerId;
   int? deadBallTakerId;
+
+  /// The throw-in style and thrower right now: the team sheet's, until a live
+  /// change names others.
+  ThrowInStyle throwInStyle;
+  int? throwInTakerId;
 
   /// The players on the pitch right now (reassigned wholesale by a live
   /// tactical change; individual slots are edited by subs and sendings-off).
@@ -706,6 +751,10 @@ class MatchEngine {
     // the open-play scoreline and cards byte-identical to before — the new goals
     // are strictly additive.
     final setPieceRng = SeededRng(rng.state ^ 0x2718C3D9);
+    // Long throws on a FOURTH stream, drawn from only by a side told to throw
+    // long: every other side (the AI's always, the manager's on neutral or
+    // defensive) never touches it, so the other three streams are untouched.
+    final longThrowRng = SeededRng(rng.state ^ 0x6C8E9CF5);
     var homeScore = 0;
     var awayScore = 0;
     var homeShots = 0;
@@ -842,6 +891,15 @@ class MatchEngine {
         own: liveAway.fullBackNet,
         opponent: liveHome.fullBackNet,
       );
+      // The throw-in styles: exactly 1.0 when both are neutral.
+      final homeThrows = throwInLift(
+        own: liveHome.throwInStyle,
+        opponent: liveAway.throwInStyle,
+      );
+      final awayThrows = throwInLift(
+        own: liveAway.throwInStyle,
+        opponent: liveHome.throwInStyle,
+      );
 
       if (_chance(
         rng,
@@ -852,6 +910,7 @@ class MatchEngine {
         damping:
             legs *
             homeFlanks *
+            homeThrows *
             _blowoutDamping(homeScore, awayScore) *
             _scorelineOpenness(
               open,
@@ -893,6 +952,7 @@ class MatchEngine {
         damping:
             legs *
             awayFlanks *
+            awayThrows *
             _blowoutDamping(awayScore, homeScore) *
             _scorelineOpenness(
               open,
@@ -954,6 +1014,41 @@ class MatchEngine {
       if (awaySp.goal != null) {
         awayScore++;
         events.add(awaySp.goal!);
+      }
+
+      // Long throws: only a side told to throw long rolls for one, on its own
+      // stream, so a neutral match draws exactly what it always drew.
+      if (liveHome.throwInStyle == ThrowInStyle.long) {
+        final lt = _longThrow(
+          liveHome,
+          liveAway,
+          manageMinute,
+          longThrowRng,
+          stoppage: stoppage,
+          damping: legs * _blowoutDamping(homeScore, awayScore),
+        );
+        if (lt.shot) homeShots++;
+        homeXg += lt.xg;
+        if (lt.goal != null) {
+          homeScore++;
+          events.add(lt.goal!);
+        }
+      }
+      if (liveAway.throwInStyle == ThrowInStyle.long) {
+        final lt = _longThrow(
+          liveAway,
+          liveHome,
+          manageMinute,
+          longThrowRng,
+          stoppage: stoppage,
+          damping: legs * _blowoutDamping(awayScore, homeScore),
+        );
+        if (lt.shot) awayShots++;
+        awayXg += lt.xg;
+        if (lt.goal != null) {
+          awayScore++;
+          events.add(lt.goal!);
+        }
       }
 
       // A goal swings momentum: the scorer's side presses on, the conceding side
@@ -1234,9 +1329,14 @@ class MatchEngine {
       // [newSlots], and he is already paid for by the short-handed penalty
       // (see [_Live.shape]). Counting the slots would charge him again the
       // moment the manager touched anything.
-      ..shape = ShapeProfile.ofFormation(c.formation)
+      ..shape = ShapeProfile.of(c.switches.apply(c.formation))
       ..instructions = c.instructions;
     if (c.fullBacks case final f?) live.fullBacks = f;
+    if (c.throwIn case final t?) {
+      live
+        ..throwInStyle = t.style
+        ..throwInTakerId = t.taker;
+    }
     if (c.takers case final t?) {
       live
         ..penaltyTakerId = t.penalty
@@ -1805,6 +1905,127 @@ class MatchEngine {
     );
   }
 
+  /// Per-team, per-minute chance that a side told to throw long gets a throw
+  /// close enough to the box to launch one in: about 0.8 a game. Most
+  /// throw-ins are nowhere near the box, and this is only those that are.
+  ///
+  /// Measured 2026-11-02 (`throw_in_test.dart`, 4000 games of equal sides):
+  /// long throws score +0.032 a game and concede +0.012 (net about two
+  /// tenths of a goal per ten matches); safe throws take 0.11 shots a game
+  /// off the side's own and 0.15 off the opponent's.
+  static const double longThrowPerMinute = 0.009;
+
+  /// A long throw's base conversion, against the corner's 0.08: a throw is a
+  /// flatter, more predictable ball than a whipped corner.
+  static const double kLongThrowBase = 0.034;
+
+  /// What throwing long costs: the opponent's open-play chance rate rises by
+  /// this share, from the throws that are won by the defence and broken on.
+  static const double kLongThrowExposure = 0.012;
+
+  /// What keeping throws safe buys and costs: the side's own open-play chance
+  /// rate falls by [kSafeThrowAttack] (fewer throws go forward), and the
+  /// opponent's by [kSafeThrowExposure] (fewer cheap turnovers to counter
+  /// from).
+  static const double kSafeThrowAttack = 0.015;
+  static const double kSafeThrowExposure = 0.02;
+
+  /// The open-play chance-rate multiplier for a side throwing in [own] style
+  /// against an opponent throwing in [opponent] style. Exactly 1.0 when both
+  /// are [ThrowInStyle.neutral], the default every AI side plays.
+  static double throwInLift({
+    required ThrowInStyle own,
+    required ThrowInStyle opponent,
+  }) {
+    var lift = 1.0;
+    if (own == ThrowInStyle.defensive) lift *= 1 - kSafeThrowAttack;
+    switch (opponent) {
+      case ThrowInStyle.long:
+        lift *= 1 + kLongThrowExposure;
+      case ThrowInStyle.defensive:
+        lift *= 1 - kSafeThrowExposure;
+      case ThrowInStyle.neutral:
+        break;
+    }
+    return lift;
+  }
+
+  /// [throwInLift] for a match the world simulates rather than plays, as one
+  /// openness on [RatingMatchSimulator], the way [fullBackOpenness] does it:
+  /// the geometric mean of what the style does to the two ends. A long throw's
+  /// own extra chances are counted in as open-play-equivalent volume (about
+  /// [longThrowPerMinute] x 90 throws at [kLongThrowBase] against an engine
+  /// side's ~1.25 goals a game). 1.0 for neutral.
+  static double throwInOpenness(ThrowInStyle style) {
+    if (style == ThrowInStyle.neutral) return 1.0;
+    final own = throwInLift(own: style, opponent: ThrowInStyle.neutral);
+    final against = throwInLift(own: ThrowInStyle.neutral, opponent: style);
+    final extra = style == ThrowInStyle.long
+        ? longThrowPerMinute * 90 * kLongThrowBase / 1.25
+        : 0.0;
+    return sqrt((own + extra) * against);
+  }
+
+  /// The thrower's delivery: 0.8 for a slight man, 1.2 for the strongest,
+  /// about 1.0 for an ordinary international.
+  static double throwerFactor(Player p) =>
+      0.8 + 0.4 * (p.attributes.physical.clamp(30, 99) - 30) / 69;
+
+  /// A long throw into the box for [atk] this minute, on the long-throw
+  /// stream: the set-piece channel's aerial duel ([_aerialAttack] against
+  /// [_aerialDefence]) and header pick, at [kLongThrowBase], with the
+  /// thrower's strength in place of a corner taker's trait.
+  ({MatchEvent? goal, double xg, bool shot}) _longThrow(
+    _Live atk,
+    _Live def,
+    int minute,
+    SeededRng rng, {
+    int stoppage = 0,
+    double damping = 1.0,
+  }) {
+    if (atk.xi.isEmpty || !rng.chance(longThrowPerMinute * damping)) {
+      return (goal: null, xg: 0, shot: false);
+    }
+    final threat = (_aerialAttack(atk) / _aerialDefence(def)).clamp(0.5, 2.0);
+    final scorer = _pickHeader(atk, rng);
+    final thrower = _thrower(atk, scorer);
+    final p =
+        (kLongThrowBase *
+                pow(threat, 1.2) *
+                (thrower == null ? 1.0 : throwerFactor(thrower)))
+            .toDouble()
+            .clamp(0.01, 0.15);
+    if (!rng.chance(p)) return (goal: null, xg: p, shot: true);
+    return (
+      goal: MatchEvent(
+        minute: minute,
+        stoppage: stoppage,
+        type: MatchEventType.goal,
+        teamNationId: atk.nationId,
+        playerId: scorer.id,
+        playerName: scorer.name,
+        assistPlayerId: thrower?.id,
+        assistName: thrower?.name,
+        setPiece: true,
+        longThrow: true,
+      ),
+      xg: p,
+      shot: true,
+    );
+  }
+
+  /// Who throws it in: the manager's man if on the pitch (and not the one
+  /// heading it), else [SetPiecePicks.throwIn] over the rest. Never the
+  /// keeper unless nobody else is left.
+  Player? _thrower(_Live team, Player scorer) {
+    final chosen = _designated(team, team.throwInTakerId);
+    if (chosen != null && chosen.id != scorer.id) return chosen;
+    final others = team.xi.where((p) => p.id != scorer.id).toList();
+    final id = SetPiecePicks.throwIn(others);
+    if (id == null) return null;
+    return others.firstWhere((p) => p.id == id);
+  }
+
   /// The attacking side's aerial threat at a set piece: its forwards' and
   /// defenders' (who come up) strength.
   double _aerialAttack(_Live t) =>
@@ -2273,7 +2494,7 @@ class MatchEngine {
     TacticalInstructions i, {
     Formation formation = Formation.f433,
   }) {
-    final t = _planTerms(i, formation);
+    final t = _planTerms(i, formation.positions);
     return (t.attack + t.defence) / 2;
   }
 
@@ -2282,10 +2503,10 @@ class MatchEngine {
   /// defence opens a game the one-number mean cannot show.
   static ({double attack, double defence}) _planTerms(
     TacticalInstructions i,
-    Formation formation,
+    List<PlayerPosition> slots,
   ) {
     double off(int v) => (v - 50).toDouble();
-    final shape = ShapeProfile.of(formation.positions);
+    final shape = ShapeProfile.of(slots);
     final extraAttackers = shape.attackers - ShapeProfile.neutralAttackers;
     final extraDefenders = shape.defenders - ShapeProfile.neutralDefenders;
     final attack =
@@ -2343,27 +2564,32 @@ class MatchEngine {
     required Formation formation,
     required TacticalInstructions opponent,
     required Formation opponentFormation,
+    List<PlayerPosition>? slots,
   }) {
+    // His side's places as switched within the shape (see [SlotSwitches]),
+    // read exactly as the live engine reads them ([MatchTeam.positions]).
+    final mySlots = slots ?? formation.positions;
+    final theirSlots = opponentFormation.positions;
     double matchup(
       TacticalInstructions atk,
       TacticalInstructions def,
-      Formation defFormation,
+      List<PlayerPosition> defSlots,
     ) => matchupBonus(
       attacker: atk,
       defender: def,
-      backLine: ShapeProfile.ofFormation(defFormation).defenders,
+      backLine: ShapeProfile.of(defSlots).defenders,
       fwdPace: kNeutralLineAttribute,
       defPace: kNeutralLineAttribute,
       midPass: kNeutralLineAttribute,
       pressEngine: kNeutralLineAttribute,
     );
-    final mine = _planTerms(plan, formation);
-    final theirs = _planTerms(opponent, opponentFormation);
+    final mine = _planTerms(plan, mySlots);
+    final theirs = _planTerms(opponent, theirSlots);
     final attack = _skipPoints(
-      mine.attack - theirs.defence + matchup(plan, opponent, opponentFormation),
+      mine.attack - theirs.defence + matchup(plan, opponent, theirSlots),
     );
     final defence = _skipPoints(
-      mine.defence - theirs.attack - matchup(opponent, plan, formation),
+      mine.defence - theirs.attack - matchup(opponent, plan, mySlots),
     );
     final spread = exp(
       RatingMatchSimulator.gapResponse * (attack - defence) / 2,
@@ -2374,10 +2600,8 @@ class MatchEngine {
           openness(
             home: plan,
             away: opponent,
-            homeAttackers: ShapeProfile.ofFormation(formation).attackers,
-            awayAttackers: ShapeProfile.ofFormation(
-              opponentFormation,
-            ).attackers,
+            homeAttackers: ShapeProfile.of(mySlots).attackers,
+            awayAttackers: ShapeProfile.of(theirSlots).attackers,
           ) *
           spread,
     );

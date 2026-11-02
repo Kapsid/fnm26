@@ -68,6 +68,7 @@ class MatchScoreboard extends StatelessWidget {
     required this.awayScore,
     required this.clock,
     required this.live,
+    this.halfTime,
     this.wholeNames = false,
   });
 
@@ -79,6 +80,10 @@ class MatchScoreboard extends StatelessWidget {
   final int awayScore;
   final String clock;
   final bool live;
+
+  /// The half-time score, written small under the scoreline once the second
+  /// half is under way; null before then.
+  final String? halfTime;
 
   /// The tablet's scoreboard, set in the match's centre column: no margin of
   /// its own (the column has one), the two sides given more of the row than
@@ -211,10 +216,23 @@ class MatchScoreboard extends StatelessWidget {
                 ),
               ],
             ),
-            // Nothing under the scoreline: who scored is already told twice
-            // over — the goal flashes as it goes in, and the timeline tab
-            // keeps the full list — so a goal-count pill here was one place
-            // too many.
+            // Under the scoreline only the half-time score: who scored is
+            // already told twice over (the goal flashes as it goes in, and
+            // the timeline tab keeps the full list).
+            if (halfTime case final ht?)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                  ht,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                ),
+              ),
           ],
         ),
       ),

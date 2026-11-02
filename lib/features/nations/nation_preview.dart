@@ -218,6 +218,7 @@ class NationPreview extends ConsumerWidget {
                     l,
                     TournamentTier.world,
                     world,
+                    graded: targets.worldGraded,
                   ),
                 ),
               if (cup != null && continental != null)
@@ -228,6 +229,7 @@ class NationPreview extends ConsumerWidget {
                     TournamentTier.continental,
                     continental,
                     competition: cup.name,
+                    graded: targets.continentalGraded,
                   ),
                 ),
             ],

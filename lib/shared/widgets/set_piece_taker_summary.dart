@@ -11,14 +11,21 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// technical man in the side. Shared so the tactics screen and the in-match
 /// editor cannot drift apart on who that is.
 class SetPieceTakerSummary extends StatelessWidget {
+
   const SetPieceTakerSummary({
     required this.penaltyName,
     required this.penaltyIsAuto,
     required this.deadBallName,
     required this.deadBallIsAuto,
+    this.throwInName,
+    this.throwInIsAuto = false,
+    this.showThrowIn = false,
     this.onQuickPick,
     super.key,
   });
+
+  /// The throw-in mark, on the summary line and on every row's badge.
+  static const IconData throwInIcon = Icons.open_in_full_rounded;
 
   /// The man on penalties, or null when the side is empty.
   final String? penaltyName;
@@ -28,6 +35,12 @@ class SetPieceTakerSummary extends StatelessWidget {
 
   final String? deadBallName;
   final bool deadBallIsAuto;
+
+  /// The man on throw-ins, when [showThrowIn]; a screen that does not offer
+  /// the throw-in taker leaves the line out.
+  final String? throwInName;
+  final bool throwInIsAuto;
+  final bool showThrowIn;
 
   /// Takes the men named above and makes them the manager's own, in one tap.
   ///
@@ -57,9 +70,21 @@ class SetPieceTakerSummary extends StatelessWidget {
           isAuto: deadBallIsAuto,
           auto: l.tacticsTakerAuto,
         ),
-        // Only while something is still automatic, and only when there is a
-        // man to name: the button vanishing is how the manager sees that both
-        // duties are now his, and a tap that changed nothing visible is the
+        if (showThrowIn) ...[
+          const SizedBox(height: AppSpacing.sm),
+          _line(
+            icon: throwInIcon,
+            label: l.tacticsThrowIns,
+            name: throwInName,
+            isAuto: throwInIsAuto,
+            auto: l.tacticsTakerAuto,
+          ),
+        ],
+        // Only while a penalty or dead-ball duty is still automatic (an
+        // automatic thrower alone does not ask for it: nothing warns about
+        // him before kick-off), and only when there is a man to name: the
+        // button vanishing is how the manager sees that both duties are now
+        // his, and a tap that changed nothing visible is the
         // complaint this whole thing answers.
         if (onQuickPick != null &&
             (penaltyIsAuto || deadBallIsAuto) &&

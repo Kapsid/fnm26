@@ -220,11 +220,16 @@ void main() {
       await italyNext();
       final comp = c.read(competitionRepositoryProvider);
       final next = (await comp.nextFixtureForNation(career.id, _sanMarino))!;
-      // Skipped: the world, his own fixture included, is quick-simmed.
-      await c.read(seasonServiceProvider).advance(career.id);
-      final played = (await db.select(db.fixtures).get()).firstWhere(
-        (f) => f.id == next.id,
-      );
+      // Skipped: the world, his own fixture included, is quick-simmed. The
+      // first advance may only stop on his call-up day, 10 days out.
+      Future<FixtureRow> fixture() async =>
+          (await db.select(db.fixtures).get()).firstWhere(
+            (f) => f.id == next.id,
+          );
+      for (var i = 0; i < 4 && !(await fixture()).played; i++) {
+        await c.read(seasonServiceProvider).advance(career.id);
+      }
+      final played = await fixture();
       expect(played.played, isTrue);
       final rows = await (db.select(
         db.appearances,

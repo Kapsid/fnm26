@@ -85,6 +85,8 @@ abstract final class NationIdentity {
     'WAL': (nickname: 'The Dragons', style: NationStyle.counter, pedigree: 4),
     // Greenland, a dormant nation (see DormantNations).
     'GRL': (nickname: null, style: NationStyle.direct, pedigree: 5),
+    // Belarus, a dormant nation (see DormantNations): never at a finals.
+    'BLR': (nickname: null, style: NationStyle.defensive, pedigree: 5),
 
     // ---- South America ----------------------------------------------------
     'BRA': (nickname: 'Seleção', style: NationStyle.flair, pedigree: 1),
@@ -143,6 +145,12 @@ abstract final class NationIdentity {
       pedigree: 3,
     ),
     'RSA': (nickname: 'Bafana Bafana', style: NationStyle.flair, pedigree: 4),
+    // Zanzibar, a dormant nation (see DormantNations).
+    'ZAN': (
+      nickname: 'Zanzibar Heroes',
+      style: NationStyle.direct,
+      pedigree: 5,
+    ),
 
     // ---- Asia & Oceania ---------------------------------------------------
     'JPN': (

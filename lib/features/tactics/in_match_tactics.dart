@@ -11,15 +11,19 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/tactics/assistant_advice.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/domain/services/tactics/set_piece_picks.dart';
 import 'package:fnm/domain/services/tactics/substitution_rules.dart';
+import 'package:fnm/features/tactics/assistant_advice_sheet.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/tactic_preset_tile.dart';
 import 'package:fnm/features/tactics/full_back_instructions.dart';
+import 'package:fnm/features/tactics/slot_switch_strip.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
@@ -35,6 +39,8 @@ class InMatchTacticsResult {
     required this.instructions,
     required this.takers,
     this.fullBacks = FullBackPushes.neutral,
+    this.switches = SlotSwitches.none,
+    this.throwIn = (style: ThrowInStyle.neutral, taker: null),
   });
 
   final Formation formation;
@@ -44,9 +50,19 @@ class InMatchTacticsResult {
   /// The full-backs' arrows from here on.
   final FullBackPushes fullBacks;
 
+  /// The places changed within [formation] from here on.
+  final SlotSwitches switches;
+
+  /// The place each slot of [lineup] plays.
+  List<PlayerPosition> get positions => switches.apply(formation);
+
   /// Who takes penalties and dead balls from here on. Either may be null,
   /// which hands that duty back to the engine's own pick.
   final ({int? penalty, int? deadBall}) takers;
+
+  /// The throw-in style and thrower from here on (a null thrower is the
+  /// engine's own pick).
+  final ({ThrowInStyle style, int? taker}) throwIn;
 }
 
 abstract final class InMatchTacticsKeys {
@@ -66,7 +82,12 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   required Set<int> startingIds,
   required int maxSubs,
   FullBackPushes fullBacks = FullBackPushes.neutral,
+  SlotSwitches switches = SlotSwitches.none,
   ({int? penalty, int? deadBall}) takers = (penalty: null, deadBall: null),
+  ({ThrowInStyle style, int? taker}) throwIn = (
+    style: ThrowInStyle.neutral,
+    taker: null,
+  ),
   Set<int> injuredIds = const {},
   Set<int> sentOffIds = const {},
   Map<int, MatchCard> cardsByPlayer = const {},
@@ -76,6 +97,10 @@ Future<InMatchTacticsResult?> showInMatchTactics(
   List<Color>? teamColors,
   bool tabletLayout = false,
   List<TacticPreset> presets = const [],
+  StaffTier assistantTier = StaffTier.none,
+  int scoreDiff = 0,
+  int adviceSeed = 0,
+  Map<int, int> conditionByPlayer = const {},
 }) {
   return Navigator.of(context).push<InMatchTacticsResult>(
     MaterialPageRoute(
@@ -86,10 +111,12 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         lineup: lineup,
         instructions: instructions,
         fullBacks: fullBacks,
+        switches: switches,
         pool: pool,
         startingIds: startingIds,
         maxSubs: maxSubs,
         takers: takers,
+        throwIn: throwIn,
         injuredIds: injuredIds,
         sentOffIds: sentOffIds,
         cardsByPlayer: cardsByPlayer,
@@ -99,6 +126,10 @@ Future<InMatchTacticsResult?> showInMatchTactics(
         teamColors: teamColors,
         tabletLayout: tabletLayout,
         presets: presets,
+        assistantTier: assistantTier,
+        scoreDiff: scoreDiff,
+        adviceSeed: adviceSeed,
+        conditionByPlayer: conditionByPlayer,
       ),
     ),
   );
@@ -114,7 +145,9 @@ class _InMatchTacticsEditor extends StatefulWidget {
     required this.startingIds,
     required this.maxSubs,
     required this.takers,
+    this.throwIn = (style: ThrowInStyle.neutral, taker: null),
     this.fullBacks = FullBackPushes.neutral,
+    this.switches = SlotSwitches.none,
     this.injuredIds = const {},
     this.sentOffIds = const {},
     this.cardsByPlayer = const {},
@@ -124,6 +157,10 @@ class _InMatchTacticsEditor extends StatefulWidget {
     this.teamColors,
     this.tabletLayout = false,
     this.presets = const [],
+    this.assistantTier = StaffTier.none,
+    this.scoreDiff = 0,
+    this.adviceSeed = 0,
+    this.conditionByPlayer = const {},
   });
 
   final int minute;
@@ -131,12 +168,16 @@ class _InMatchTacticsEditor extends StatefulWidget {
   final List<int?> lineup;
   final TacticalInstructions instructions;
   final FullBackPushes fullBacks;
+  final SlotSwitches switches;
   final List<Player> pool;
   final Set<int> startingIds;
   final int maxSubs;
 
   /// The side's set-piece takers as the editor opens.
   final ({int? penalty, int? deadBall}) takers;
+
+  /// The side's throw-in style and thrower as the editor opens.
+  final ({ThrowInStyle style, int? taker}) throwIn;
 
   /// Live remaining energy (0–100) per player id, shown on the pitch and bench
   /// so the manager can see who's tiring before making a sub.
@@ -181,6 +222,22 @@ class _InMatchTacticsEditor extends StatefulWidget {
   /// saving a style is a pre-match job, and the list is read once on opening.
   final List<TacticPreset> presets;
 
+  /// Who is in the assistant's job, for "Ask the assistant"; with nobody in
+  /// it the button is shown disabled with a note pointing to the staff room.
+  final StaffTier assistantTier;
+
+  /// The side's goals minus the opponent's at [minute], which the elite
+  /// assistant reads when he suggests chasing the game.
+  final int scoreDiff;
+
+  /// Seeds the assistant's rough eye, so asking twice at one minute gives
+  /// one answer.
+  final int adviceSeed;
+
+  /// Each man's condition shift, as the engine applies it; the elite
+  /// assistant reads it.
+  final Map<int, int> conditionByPlayer;
+
   @override
   State<_InMatchTacticsEditor> createState() => _InMatchTacticsEditorState();
 }
@@ -196,7 +253,19 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
   ];
   late TacticalInstructions _instructions = widget.instructions;
   late FullBackPushes _fullBacks = widget.fullBacks;
+
+  /// Places changed within [_formation]; reset by a change of shape.
+  late SlotSwitches _switches = widget.switches.validFor(widget.formation);
+
+  /// The place each slot plays right now.
+  List<PlayerPosition> get _positions => _switches.apply(_formation);
   late ({int? penalty, int? deadBall}) _takers = widget.takers;
+  late ThrowInStyle _throwInStyle = widget.throwIn.style;
+  late int? _thrower = widget.throwIn.taker;
+
+  /// The designated thrower, or null when he is no longer on the pitch (the
+  /// engine's own pick then takes them, as for the other takers).
+  int? get _liveThrower => _onPitch.contains(_thrower) ? _thrower : null;
 
   /// Everyone still eligible to be on the pitch: the squad minus the sent off.
   late final List<Player> _eligible = widget.pool
@@ -251,7 +320,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     final id = _comingOff;
     if (id == null) return null;
     final slot = _lineup.indexOf(id);
-    return slot == -1 ? null : _formation.positions[slot];
+    return slot == -1 ? null : _positions[slot];
   }
 
   /// Whether the bench holds nobody who naturally fills [_placeToFill].
@@ -424,6 +493,10 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     setState(() {
       _instructions = p.instructions;
       _fullBacks = _fullBacks.overlaidWith(p.fullBacks);
+      // The preset's own changes within its shape, which replace whatever
+      // was set: they belong to the shape, and the shape is the preset's.
+      _switches = p.switches.validFor(p.formation);
+      if (p.throwInStyle case final style?) _throwInStyle = style;
     });
   }
 
@@ -502,6 +575,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // on is a substitution, and has to cost one.
     setState(() {
       _formation = f;
+      // A new shape is a new structure: places changed within the old one
+      // mean nothing in it.
+      _switches = SlotSwitches.none;
       _comingOff = null;
       // Short by however many have walked: bestEleven leaves those slots null.
       _lineup = bestEleven(f, reshapePool(_eligible, _onPitch));
@@ -527,7 +603,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     if (_dead.contains(a) || _dead.contains(b)) {
       final mover = _dead.contains(a) ? b : a;
       final keeper =
-          _formation.positions[mover].category == PositionCategory.goalkeeper;
+          _positions[mover].category == PositionCategory.goalkeeper;
       if (_dead.contains(mover) || _lineup[mover] == null || keeper) {
         _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
         return;
@@ -620,6 +696,8 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
         instructions: _instructions,
         takers: _liveTakers,
         fullBacks: _fullBacks,
+        switches: _switches,
+        throwIn: (style: _throwInStyle, taker: _liveThrower),
       ),
     );
   }
@@ -651,7 +729,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     if (coming != null) {
       final slot = _lineup.indexOf(coming.id);
       if (slot != -1) {
-        final position = _formation.positions[slot];
+        final position = _positions[slot];
         final keeperSlot = position.category == PositionCategory.goalkeeper;
         available
           ..removeWhere(
@@ -797,6 +875,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     formation: _formation,
     instructions: _instructions,
     fullBacks: _fullBacks,
+    switches: _switches,
     onCycleFullBack: (side) async {
       setState(() => _fullBacks = _fullBacks.cycled(side));
       return _fullBacks.of(side);
@@ -939,6 +1018,12 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
               ],
             ),
           ],
+          const SizedBox(height: AppSpacing.sm),
+          AskAssistantButton(
+            tier: widget.assistantTier,
+            onPressed: _askAssistant,
+          ),
+          const SizedBox(height: AppSpacing.sm),
           // TWO TABS, not three stacked sections.
           //
           // Stacked, the pitch and three lists made one long scroll and a
@@ -1135,6 +1220,45 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     ),
   );
 
+  /// Asks the assistant for up to three changes and makes the ones the
+  /// manager keeps, through [_replace] exactly as a tap would, so the rules
+  /// that refuse a gesture refuse his advice too.
+  Future<void> _askAssistant() async {
+    final onPitch = _onPitch;
+    final bench = [
+      for (final p in widget.pool)
+        if (!onPitch.contains(p.id) && !_standing(p).blocked) p,
+    ];
+    final subs = AssistantAdvice.substitutions(
+      tier: widget.assistantTier,
+      lineup: _lineup,
+      places: _positions,
+      byId: _byId,
+      bench: bench,
+      subsLeft: widget.maxSubs - _subsUsed,
+      minute: widget.minute,
+      seed: widget.adviceSeed ^ (widget.minute * 0x45D9F3B),
+      energy: widget.energyByPlayer,
+      booked: {
+        for (final e in widget.cardsByPlayer.entries)
+          if (e.value == MatchCard.yellow) e.key,
+      },
+      injured: widget.injuredIds.intersection(onPitch),
+      scoreDiff: widget.scoreDiff,
+      conditionDelta: widget.conditionByPlayer,
+    );
+    final kept = await showSubAdviceSheet(
+      context,
+      subs: subs,
+      tier: widget.assistantTier,
+      byId: _byId,
+    );
+    if (kept == null || !mounted) return;
+    for (final s in kept) {
+      _replace(s.offId, s.onId);
+    }
+  }
+
   /// Completes a tapped change: [inId] takes the place [outId] is standing in.
   ///
   /// [_setSlot] answers for it, exactly as the drop target does, so a tap can
@@ -1232,6 +1356,8 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     final xi = _onPitchPlayers;
     final penaltyId = live.penalty ?? SetPiecePicks.penalty(xi);
     final deadBallId = live.deadBall ?? SetPiecePicks.deadBall(xi);
+    final thrower = _liveThrower;
+    final throwInId = thrower ?? SetPiecePicks.throwIn(xi);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
@@ -1320,6 +1446,9 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 penaltyIsAuto: live.penalty == null,
                 deadBallName: _byId[deadBallId]?.name,
                 deadBallIsAuto: live.deadBall == null,
+                showThrowIn: true,
+                throwInName: _byId[throwInId]?.name,
+                throwInIsAuto: thrower == null,
                 // One tap takes the two men already named above and makes them
                 // the manager's own. They are the same names either way; what
                 // changes is that they are now a decision, and they stop
@@ -1327,6 +1456,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                 // substitutions.
                 onQuickPick: () => setState(() {
                   _takers = (penalty: penaltyId, deadBall: deadBallId);
+                  _thrower = throwInId;
                 }),
               ),
               const Divider(height: AppSpacing.lg),
@@ -1337,6 +1467,11 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   isDeadBallTaker: live.deadBall == p.id,
                   isAutoPenalty: live.penalty == null && penaltyId == p.id,
                   isAutoDeadBall: live.deadBall == null && deadBallId == p.id,
+                  isThrowInTaker: thrower == p.id,
+                  isAutoThrowIn: thrower == null && throwInId == p.id,
+                  onToggleThrowIn: () => setState(() {
+                    _thrower = thrower == p.id ? null : p.id;
+                  }),
                   onTogglePenalty: () => setState(() {
                     _takers = (
                       penalty: live.penalty == p.id ? null : p.id,
@@ -1351,6 +1486,13 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
                   }),
                 ),
             ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        AppCard(
+          child: ThrowInStylePicker(
+            value: _throwInStyle,
+            onChanged: (s) => setState(() => _throwInStyle = s),
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -1420,7 +1562,7 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
       _refuse(AppLocalizations.of(context).tacticsSlotLostToRedCard);
       return;
     }
-    final position = _formation.positions[slot];
+    final position = _positions[slot];
     final isKeeperSlot = position.category == PositionCategory.goalkeeper;
     // A goalkeeping slot is keeper-only; any other slot can be filled by any
     // outfield player (with a heavy out-of-position penalty, shown below).
@@ -1475,12 +1617,19 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
     // line saying why. A manager a man short has to be able to field SOMEBODY.
     final noFit = suitableHere.isEmpty && availableHere.isNotEmpty;
 
-    final picked = await showAdaptiveSheet<int>(
+    // A player id, or a place for the slot itself (see [SlotSwitchStrip]).
+    final picked = await showAdaptiveSheet<Object>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       isScrollControlled: true,
-      builder: (_) => _SlotPickerSheet(
+      builder: (sheetContext) => _SlotPickerSheet(
         title: pickPositionTitle(l, position),
+        header: SlotSwitchStrip(
+          formation: _formation,
+          switches: _switches,
+          slot: slot,
+          onPick: (p) => Navigator.of(sheetContext).pop(p),
+        ),
         suitable: noFit ? availableHere : suitableHere,
         onPitch: onPitchHere,
         other: otherHere,
@@ -1490,7 +1639,15 @@ class _InMatchTacticsEditorState extends State<_InMatchTacticsEditor> {
             _pickerRow(sheetContext, p, position, onPitch, l),
       ),
     );
-    if (picked != null && mounted) _setSlot(slot, picked);
+    if (!mounted) return;
+    switch (picked) {
+      case final int playerId:
+        _setSlot(slot, playerId);
+      case final PlayerPosition place:
+        setState(
+          () => _switches = _switches.withSlot(_formation, slot, place),
+        );
+    }
   }
 
   /// One candidate's row in the slot picker.
@@ -1596,9 +1753,14 @@ class _SlotPickerSheet extends StatefulWidget {
     required this.onPitchCount,
     required this.noFitNote,
     required this.row,
+    this.header,
   });
 
   final String title;
+
+  /// Drawn under the title, above the tabs: the slot's own place and its
+  /// alternatives within the formation.
+  final Widget? header;
   final List<Player> suitable;
   final List<Player> onPitch;
   final List<Player> other;
@@ -1638,6 +1800,10 @@ class _SlotPickerSheetState extends State<_SlotPickerSheet> {
                 color: AppColors.primary,
               ),
             ),
+            if (widget.header case final header?) ...[
+              const SizedBox(height: AppSpacing.sm),
+              header,
+            ],
             _SquadTabs(
               tab: _tab,
               suitableLabel: l.tacticsTabSuitable,
@@ -2001,9 +2167,15 @@ class _TakerRow extends StatelessWidget {
     required this.isAutoDeadBall,
     required this.onTogglePenalty,
     required this.onToggleDeadBall,
+    required this.isThrowInTaker,
+    required this.isAutoThrowIn,
+    required this.onToggleThrowIn,
   });
 
   final Player player;
+  final bool isThrowInTaker;
+  final bool isAutoThrowIn;
+  final VoidCallback onToggleThrowIn;
   final bool isPenaltyTaker;
   final bool isDeadBallTaker;
 
@@ -2044,7 +2216,9 @@ class _TakerRow extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(width: AppSpacing.md),
+          // Tighter than it was with two badges: the third had to come out of
+          // the gaps, not out of the name.
+          const SizedBox(width: AppSpacing.sm),
           SetPieceBadge(
             icon: Icons.sports_soccer,
             active: isPenaltyTaker,
@@ -2052,13 +2226,22 @@ class _TakerRow extends StatelessWidget {
             tooltip: l.tacticsPenalties,
             onTap: onTogglePenalty,
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 4),
           SetPieceBadge(
             icon: Icons.flag_rounded,
             active: isDeadBallTaker,
             auto: isAutoDeadBall,
             tooltip: l.tacticsCornersFreeKicks,
             onTap: onToggleDeadBall,
+          ),
+          const SizedBox(width: 4),
+          SetPieceBadge(
+            key: ValueKey('throwInBadge.${player.id}'),
+            icon: SetPieceTakerSummary.throwInIcon,
+            active: isThrowInTaker,
+            auto: isAutoThrowIn,
+            tooltip: l.tacticsThrowIns,
+            onTap: onToggleThrowIn,
           ),
         ],
       ),

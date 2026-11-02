@@ -151,7 +151,7 @@ class _TeamStatsScreenState extends ConsumerState<TeamStatsScreen> {
                   // spilling over the button's edge.
                   segments: [
                     _segment(0, l.statsTopScorersShort),
-                    _segment(1, l.statsMostGames),
+                    _segment(1, l.statsMostGamesShort),
                     _segment(2, l.statsBestRated),
                     _segment(3, l.statsMyCareer),
                   ],

@@ -70,5 +70,9 @@ abstract class Career with _$Career {
     /// cycle has closed.
     int? lastCycleBoard,
 
+    /// The 1st and 2nd vice-captains, or null: who takes the armband, in that
+    /// order, when the captain cannot play. Intent, like [captainPlayerId].
+    int? viceCaptain1PlayerId,
+    int? viceCaptain2PlayerId,
   }) = _Career;
 }

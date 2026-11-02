@@ -60,19 +60,30 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
       }
       namePool.removeWhere((_, names) => names.isEmpty);
 
-      final applicants = {
-        for (final role in StaffRole.values)
-          role: StaffMarket.forRole(
-            saveSeed: career.rngSeed,
-            cycle: career.cyclePointer,
-            role: role,
-            namePool: namePool,
-          ),
-      };
       final ids = {
         StaffRole.assistant: career.staffAssistantId,
         StaffRole.scout: career.staffScoutId,
         StaffRole.fitnessCoach: career.staffFitnessCoachId,
+      };
+      List<StaffCandidate> market(StaffRole role, {String? home}) =>
+          StaffMarket.forRole(
+            saveSeed: career.rngSeed,
+            cycle: career.cyclePointer,
+            role: role,
+            namePool: namePool,
+            home: home,
+          );
+      final applicants = {
+        for (final role in StaffRole.values)
+          role: () {
+            // A basic coach already hired from this cycle's market keeps the
+            // name and flag he was hired under (the home bias came in 1.0.9).
+            final before = market(role);
+            final hiredBasic = before.any(
+              (c) => c.id == ids[role] && c.tier == StaffTier.basic,
+            );
+            return hiredBasic ? before : market(role, home: home);
+          }(),
       };
       final tiers = {
         StaffRole.assistant: career.staffAssistant,

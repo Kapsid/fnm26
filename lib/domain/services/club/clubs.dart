@@ -1,13 +1,15 @@
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 
 /// A club a player is attached to: a fictional name and the FIFA code of the
 /// country whose league it plays in (so a flag can be shown next to it).
 typedef ClubSide = ({String name, String country});
 
-/// Where a player is in his contract clock: which deal he is on (every club
-/// draw is salted with it) and the age he signed it at.
-typedef ClubContract = ({int index, int since});
+/// Where a player is in his contract clock: which club spell he is in (every
+/// club draw is salted with it), the age he signed his current deal at, and
+/// the age he joined the club (a renewal signs a deal, not a club).
+typedef ClubContract = ({int index, int since, int joined});
 
 /// One country's league: the FIFA [country] code (for the flag), a strength
 /// [tier] (1 = elite, 5 = lower), and its fictional club names.
@@ -57,7 +59,19 @@ abstract final class ClubService {
     // [contractIndex].
     final contract = contractAt(p.id, p.age);
     final deal = contract.index;
-    final level = clubLevel(p.overall, p.age, signedAt: contract.since);
+    // Read off the player he was when he JOINED: a move is a decision taken
+    // then, and a riser who outgrows his club waits for his deal to run out
+    // (a renewal keeps him where he is). His own predictable climb is taken
+    // back out; for an ordinary player that is exactly the age curve, and a
+    // superstar's rating IS his climb, so his level then is read off it.
+    int levelAt(int age) {
+      final signed = PlayerLifecycle.isSuperstar(p.id)
+          ? PlayerLifecycle.superstarLevel(p.id, age).toDouble()
+          : p.overall - PlayerAging.expectedGain(p.id, age, p.age);
+      return clubLevel(signed.round(), age, signedAt: age);
+    }
+
+    final level = levelAt(contract.joined);
     final h = _hash(p.id ^ (saveSeed * 0x9E3779B1) ^ (deal * 0x2545F491));
     final band = standingBand(level);
     // The home/abroad draw runs on its OWN mix of the id. Reusing `h ~/ 7` for
@@ -70,8 +84,12 @@ abstract final class ClubService {
     // seventeen-year-old on a three-year academy deal leaves when it runs out,
     // not on his nineteenth birthday. Reading it live emptied every academy in
     // the world in the same season.
+    // Home or abroad is asked again at every new deal, renewals included: a
+    // player who has outgrown his own league leaves it when his deal is up.
+    // Which club, at home or abroad, stays the one he joined.
+    final dealAge = p.age < _firstContractAge ? p.age : contract.since;
     if (homeCode.isNotEmpty &&
-        _staysHome(level, contract.since, homeCode, stayRoll)) {
+        _staysHome(levelAt(dealAge), dealAge, homeCode, stayRoll)) {
       final home = _homeClub(homeCode, homeCities, h, band);
       if (home != null) return home;
     }
@@ -151,6 +169,7 @@ abstract final class ClubService {
     var index = 0;
     var deal = 0;
     var start = _firstContractAge;
+    var joined = _firstContractAge;
     while (start < age) {
       final span =
           _minContractYears +
@@ -173,9 +192,16 @@ abstract final class ClubService {
       if (_hash(playerId * 0x7FEB352D ^ deal * 0x846CA68B) % 100 >=
           _renewalPercent) {
         index++;
+        joined = start;
       }
     }
-    return (index: index, since: age < _firstContractAge ? age : start);
+    // A boy is placed off the player he will be at his first deal, so the
+    // academy he is at does not change with every birthday.
+    return (
+      index: index,
+      since: age < _firstContractAge ? age : start,
+      joined: joined,
+    );
   }
 
   /// The age a player signs his first professional deal. Below it he is at his
@@ -190,7 +216,7 @@ abstract final class ClubService {
   static const int _surpriseMovePercent = 6;
 
   /// The chance that an expiring deal is simply signed again at the same club.
-  static const int _renewalPercent = 50;
+  static const int _renewalPercent = 60;
 
   /// A player's standing WITHIN their league, in [standingBandWidth]-point
   /// bands.
@@ -297,6 +323,9 @@ abstract final class ClubService {
     'isr': 60, 'jor': 58, 'uzb': 55, 'hun': 55, 'bul': 55, 'per': 50,
     'egy': 45, 'gre': 45, 'cze': 45, 'chi': 45, 'crc': 45, 'hon': 48,
     'irn': 48, 'ukr': 40, 'usa': 38, 'pol': 35, 'tun': 35, 'par': 32,
+    // Belarus (dormant, in careers from 1.0.9): about two in five at home,
+    // most of the rest in Russia and Kazakhstan.
+    'blr': 40,
     // --- Exporters ---------------------------------------------------------
     'ned': 28, 'por': 25, 'sco': 25, 'kor': 25, 'aut': 25, 'ecu': 30,
     'uru': 25, 'svk': 25, 'syr': 25, 'bra': 20, 'col': 20, 'sui': 20,
@@ -637,7 +666,7 @@ abstract final class ClubService {
       'Glasgow Blue',
       'Granite City FC',
       'Edinburgh Maroon',
-      'Edinburgh Green',
+      'Edinburgh Greens',
       'Tayside Tangerines',
       'Ayrshire Blue-White',
       'Lanarkshire Steel',
@@ -791,6 +820,36 @@ abstract final class ClubService {
       'Aarhus White-Blue',
       'Farum Tigers',
       'Silkeborg Green',
+    ]),
+    // Czechia: the owner's own list (1.0.9), with the two clubs he asked for
+    // by name.
+    _League('cze', 3, [
+      'Prague Red-White',
+      'Prague Iron',
+      'Plzeň Brewers',
+      'Ostrava Miners',
+      'Liberec Lynxes',
+      'Alpha Olomouc',
+      'Brno Shooters',
+      'Jablonec Glassmakers',
+      'Hradec Lions',
+      'FC Club Zlín',
+      'Brno City',
+      'Karviná City',
+      'Klokani Praha',
+      'FC Blšany',
+    ]),
+    // Chinese Taipei: amateur clubs, unofficial names a Taiwanese player
+    // suggested (1.0.9), each a nod to the real club's meaning.
+    _League('tpe', 5, [
+      'Kaohsiung Electric FC',
+      'Kaohsiung Defenders FC',
+      'New Taipei Ships FC',
+      'Taichung Rockers FC',
+      'Taichung Future FC',
+      'Taipei Rainy Bank FC',
+      'Taipei Bobblehead FC',
+      'Tainan Hawks FC',
     ]),
   ];
 }

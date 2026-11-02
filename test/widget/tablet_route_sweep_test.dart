@@ -76,6 +76,8 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
     Routes.stadiums: '',
     Routes.injuryCover: '',
     Routes.campScandal: '',
+    Routes.warmUpOffer: '',
+    Routes.sponsor: '',
     Routes.awardsCeremony: '&year=2026',
     Routes.schedule: '',
     Routes.managerHistory: '',

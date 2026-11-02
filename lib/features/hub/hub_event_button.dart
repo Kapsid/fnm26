@@ -53,6 +53,9 @@ class HubEventButton extends ConsumerStatefulWidget {
 
   final int careerId;
 
+  /// The "simulate to the final" choice under a watch event, for tests.
+  static const Key simToFinalKey = Key('hub.simToFinal');
+
   /// The top-bar variant: no subtitle under it. Whether it carries the tour's
   /// key is [tourTarget]'s call, not this flag's (one GlobalKey, one widget).
   final bool compact;
@@ -84,7 +87,23 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
       height: widget.compact ? 44 : AppSpacing.minHitArea + 8,
       onPressed: event == null ? null : () => _dispatch(context, ref, event),
     );
-    if (widget.compact) return button;
+    // A tournament he is out of, or never in, may be played out to its final
+    // in one go instead of a round at a time.
+    final simToFinal = event?.kind == HubEventKind.watchTournament;
+    void simulate() => _simulateToFinal(context, event!);
+    if (widget.compact) {
+      if (!simToFinal) return button;
+      return Row(
+        children: [
+          Expanded(child: button),
+          IconButton(
+            tooltip: l.hubSimToFinal,
+            onPressed: busy ? null : simulate,
+            icon: const Icon(Icons.skip_next_rounded, color: AppColors.primary),
+          ),
+        ],
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -99,7 +118,35 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
             ),
           ),
         ],
+        if (simToFinal) ...[
+          const SizedBox(height: AppSpacing.xs),
+          TextButton.icon(
+            key: HubEventButton.simToFinalKey,
+            onPressed: busy ? null : simulate,
+            icon: const Icon(Icons.skip_next_rounded),
+            label: Text(l.hubSimToFinal),
+          ),
+        ],
       ],
+    );
+  }
+
+  /// Plays the rest of the watched tournament in one go, then shows its last
+  /// round and the news, as a single step does.
+  void _simulateToFinal(BuildContext context, HubEvent event) {
+    final season = ref.read(seasonServiceProvider);
+    final route = event.route;
+    _guarded(
+      context,
+      () => withAppPopupGuard(() async {
+        await season.simulateTournament(careerId);
+        if (context.mounted) {
+          await showRoundPopup(context, ref, careerId, route: route);
+        }
+        if (context.mounted) {
+          await showUnreadMessagePopups(context, ref, careerId);
+        }
+      }),
     );
   }
 
@@ -305,8 +352,10 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
       case HubEventKind.callUp:
       case HubEventKind.scandal:
       case HubEventKind.budget:
+      case HubEventKind.sponsor:
       case HubEventKind.naturalization:
       case HubEventKind.friendlies:
+      case HubEventKind.warmUpOffer:
       case HubEventKind.trainingCamp:
       case HubEventKind.match:
         if (event.route != null) context.go(event.route!);

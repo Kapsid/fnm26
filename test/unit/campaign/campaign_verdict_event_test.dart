@@ -47,8 +47,19 @@ void main() {
         n,
         Campaigns.grudge.rngSeed,
         nationId: Campaigns.grudge.nationId,
+        // A campaign run's world: no Belarus (DormantNations.forNewCareers),
+        // or the two calendars part ways and the comparison means nothing.
+        newCareerNations: false,
       );
-      normal.beforeEvent = (e) async => normalKinds.add(e.kind);
+      // Less the general sponsor's stops: a campaign run has no sponsor (it
+      // is played on the money it was set), and declining one changes
+      // nothing else.
+      normal.beforeEvent = (e) async {
+        final sponsor =
+            e.kind == HubEventKind.sponsor ||
+            (e.route?.startsWith(Routes.sponsor) ?? false);
+        if (!sponsor) normalKinds.add(e.kind);
+      };
       // 200 steps, or the whole cycle if it is shorter.
       for (var i = 0; i < 200; i++) {
         if (!await normal.step(stopAtRollover: true)) break;

@@ -9,6 +9,8 @@ enum InboxFilter { all, board, competitions, squad }
 InboxFilter? inboxGroupOf(String category) => switch (category) {
   'board' || 'cycle' => InboxFilter.board,
   'draw' ||
+  'friendly' ||
+  'pundits' ||
   'qualify' ||
   'eliminated' ||
   'champion' ||

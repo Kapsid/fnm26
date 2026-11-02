@@ -31,6 +31,15 @@ const namePoolsV3Kind = 'namePools3';
 /// `dormant_seed.dart`), so nobody in it is renamed.
 const namePoolsV4Kind = 'namePools4';
 
+/// Marks a career created from 1.0.9 on, which reads the pools as 1.0.9
+/// ships them: Croatia's surnames gained Kovačić. Appending a surname grows
+/// the first x surname cross product every save shuffles, so it would rename
+/// every Croatian in a save that already exists; a career without this mark
+/// reads Croatia's lists as they stood (frozen in `frozen_name_pools.dart`).
+/// A career with it never names a Croatian Mateo Kovačić (see
+/// `guardedNamesPoolsV5ByNation`).
+const namePoolsV5Kind = 'namePools5';
+
 /// Read access to the player reference data.
 ///
 /// `agingYears` ages the returned players by that many years (0 = the base seed

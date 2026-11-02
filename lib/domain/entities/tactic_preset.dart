@@ -11,6 +11,8 @@ class TacticPreset {
     required this.formation,
     required this.instructions,
     this.fullBacks = FullBackPushes.neutral,
+    this.switches = SlotSwitches.none,
+    this.throwInStyle,
   });
 
   final String name;
@@ -19,6 +21,14 @@ class TacticPreset {
 
   /// The full-backs' arrows; neutral for a preset saved before they existed.
   final FullBackPushes fullBacks;
+
+  /// The places changed within [formation]; none for a preset saved before
+  /// they existed.
+  final SlotSwitches switches;
+
+  /// The throw-in style, or null for a preset saved before throw-ins existed
+  /// (applied, it leaves the save's own style alone).
+  final ThrowInStyle? throwInStyle;
 
   Map<String, dynamic> toJson() => {
     'name': name,
@@ -30,6 +40,8 @@ class TacticPreset {
     'defensiveLine': instructions.defensiveLine,
     'directness': instructions.directness,
     if (!fullBacks.isNeutral) 'fullBacks': fullBacks.toJson(),
+    if (!switches.isEmpty) 'switches': switches.toJson(),
+    if (throwInStyle case final style?) 'throwInStyle': style.name,
   };
 
   static TacticPreset? fromJson(Map<String, dynamic> json) {
@@ -56,6 +68,10 @@ class TacticPreset {
         directness: slider('directness'),
       ),
       fullBacks: FullBackPushes.fromJson(json['fullBacks']),
+      switches: SlotSwitches.fromJson(json['switches']).validFor(formation),
+      throwInStyle: json.containsKey('throwInStyle')
+          ? ThrowInStyleX.parse(json['throwInStyle'])
+          : null,
     );
   }
 }

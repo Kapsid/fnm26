@@ -50,7 +50,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String matchH2hMet(int count) {
-    return '$count αναμετρήσεις';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count αναμετρήσεις',
+      one: '1 αναμέτρηση',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -255,6 +261,11 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchHalfTime => 'ΗΜΙΧΡΟΝΟ';
+
+  @override
+  String matchHalfTimeScore(int home, int away) {
+    return 'Ημίχρονο $home : $away';
+  }
 
   @override
   String get matchContinue => 'Συνέχεια';
@@ -598,7 +609,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String recordsCapsCount(int count) {
-    return '$count συμμετοχές';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count συμμετοχές',
+      one: '1 συμμετοχή',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -618,12 +635,24 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String recordsMatchesCount(int count) {
-    return '$count αγώνες';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count αγώνες',
+      one: '1 αγώνας',
+    );
+    return '$_temp0';
   }
 
   @override
   String recordsMeetingsCount(int count) {
-    return '$count αναμετρήσεις';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count αναμετρήσεις',
+      one: '1 αναμέτρηση',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -633,7 +662,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String recordsMeetingsWdl(int meetings, int wins, int draws, int losses) {
-    return '$meetings αναμετρήσεις · $winsΝ $drawsΙ $lossesΗ';
+    String _temp0 = intl.Intl.pluralLogic(
+      meetings,
+      locale: localeName,
+      other: '$meetings αναμετρήσεις',
+      one: '1 αναμέτρηση',
+    );
+    return '$_temp0 · $winsΝ $drawsΙ $lossesΗ';
   }
 
   @override
@@ -643,7 +678,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String recordsRivalLine(int meetings, String record, String edge) {
-    return '$meetings αναμετρήσεις · $record · $edge';
+    String _temp0 = intl.Intl.pluralLogic(
+      meetings,
+      locale: localeName,
+      other: '$meetings αναμετρήσεις',
+      one: '1 αναμέτρηση',
+    );
+    return '$_temp0 · $record · $edge';
   }
 
   @override
@@ -1225,6 +1266,36 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get tacticsCornersFreeKicks => 'Κόρνερ και φάουλ';
+
+  @override
+  String get tacticsThrowIns => 'Πλάγια';
+
+  @override
+  String get tacticsThrowInStyle => 'Στυλ πλαγίων';
+
+  @override
+  String get tacticsThrowInLong => 'Μακρινά πλάγια';
+
+  @override
+  String get tacticsThrowInNeutral => 'Ουδέτερο';
+
+  @override
+  String get tacticsThrowInDefensive => 'Ασφαλή πλάγια';
+
+  @override
+  String get tacticsThrowInLongBlurb =>
+      'Τα πλάγια κοντά στην περιοχή πάνε μέσα στην περιοχή. Λίγο περισσότερος κίνδυνος, κυρίως με δυνατό εκτελεστή και ψηλούς επιθετικούς, αλλά η μπάλα χάνεται λίγο πιο συχνά.';
+
+  @override
+  String get tacticsThrowInNeutralBlurb =>
+      'Πλάγια όπως το επιτρέπει το παιχνίδι. Τίποτα δεν αλλάζει.';
+
+  @override
+  String get tacticsThrowInDefensiveBlurb =>
+      'Κάθε πλάγιο κοντό και ασφαλές. Λιγότερες απώλειες για αντεπιθέσεις του αντιπάλου, και λίγο λιγότερες ευκαιρίες.';
+
+  @override
+  String get matchGoalLongThrow => 'ΜΑΚΡΙΝΟ ΠΛΑΓΙΟ';
 
   @override
   String get tacticsSkillFin => 'ΤΕΛ';
@@ -2506,6 +2577,29 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String get viceCaptainFirst => '1ος υπαρχηγός';
+
+  @override
+  String get viceCaptainSecond => '2ος υπαρχηγός';
+
+  @override
+  String get viceCaptainNone => 'Δεν έχει οριστεί υπαρχηγός';
+
+  @override
+  String get viceCaptainHint =>
+      'Φοράει το περιβραχιόνιο όταν ο αρχηγός δεν μπορεί να παίξει.';
+
+  @override
+  String captainStandIn(String vice, String captain) {
+    return 'Ο υπαρχηγός $vice βγάζει την ομάδα, ο αρχηγός $captain δεν είναι διαθέσιμος';
+  }
+
+  @override
+  String captainStandInUnnamed(String vice) {
+    return 'Ο υπαρχηγός $vice βγάζει την ομάδα';
+  }
+
+  @override
   String get resultsCategoryWorldCupQualifying =>
       'Προκριματικά Παγκοσμίου Πρωταθλήματος';
 
@@ -3530,6 +3624,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get statsMostGames => 'Αγώνες';
 
   @override
+  String get statsMostGamesShort => 'Αγώνες';
+
+  @override
   String get statsNoGoalsRecorded => 'Δεν έχουν καταγραφεί γκολ ακόμα.';
 
   @override
@@ -4257,47 +4354,47 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String yUpsetGap0(String opponent, String gap) {
+  String yUpsetGap0(String opponent, int gap) {
     return 'Διαφορά $gap θέσεων στην κατάταξη, και νικήσαμε. Αντίπαλος: $opponent. Υπέροχο.';
   }
 
   @override
-  String yUpsetGap1(String opponent, String gap) {
+  String yUpsetGap1(String opponent, int gap) {
     return '$opponent: $gap θέσεις πάνω από εμάς. Κι όμως νίκη. Το ποδόσφαιρο είναι υπέροχο.';
   }
 
   @override
-  String yUpsetGap2(String opponent, String gap) {
+  String yUpsetGap2(String opponent, int gap) {
     return 'Διαφορά στην κατάταξη: $gap. Αποτέλεσμα: νίκη. Αντίπαλος: $opponent. Μη σταματάτε να πιστεύετε.';
   }
 
   @override
-  String yUpsetGap3(String opponent, String gap) {
+  String yUpsetGap3(String opponent, int gap) {
     return 'Διαφορά στην κατάταξη πριν τη σέντρα: $gap. Νίκη απέναντι στον αντίπαλο ($opponent) όπως και να \'χει.';
   }
 
   @override
-  String yUpsetGap4(String opponent, String gap) {
+  String yUpsetGap4(String opponent, int gap) {
     return 'Στην παγκόσμια κατάταξη, $gap θέσεις πάνω από εμάς: $opponent. Όχι απόψε.';
   }
 
   @override
-  String yUpsetGap5(String opponent, String gap) {
+  String yUpsetGap5(String opponent, int gap) {
     return 'Δείκτης έκπληξης: $gap θέσεις κατάταξης. Νίκη για εμάς. Αντίπαλος: $opponent.';
   }
 
   @override
-  String yUpsetGap6(String opponent, String gap) {
+  String yUpsetGap6(String opponent, int gap) {
     return '$gap θέσεις στην κατάταξη μας χώριζαν. Αντίπαλος: $opponent. Μία βραδιά δεν κλείνει το χάσμα.';
   }
 
   @override
-  String yUpsetGap7(String opponent, String gap) {
+  String yUpsetGap7(String opponent, int gap) {
     return '$opponent: $gap θέσεις πάνω, και ηττήθηκε. Η κατάταξη μόλις που θα το προσέξει.';
   }
 
   @override
-  String yUpsetGap8(String gap) {
+  String yUpsetGap8(int gap) {
     return 'Διαφορά στην κατάταξη: $gap. Θυμηθείτε τον αριθμό την επόμενη φορά που θα χάσουμε από ουραγό.';
   }
 
@@ -4797,47 +4894,47 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String yDownGap0(String opponent, String gap) {
+  String yDownGap0(String opponent, int gap) {
     return '$opponent: $gap θέσεις κάτω από εμάς. Συμβαίνει. Συνεχίζουμε.';
   }
 
   @override
-  String yDownGap1(String gap) {
+  String yDownGap1(int gap) {
     return 'Διαφορά στην κατάταξη: $gap υπέρ μας. Το ποδόσφαιρο δεν διαβάζει κατατάξεις.';
   }
 
   @override
-  String yDownGap2(String opponent, String gap) {
+  String yDownGap2(String opponent, int gap) {
     return 'Στα χαρτιά $gap θέσεις μας χώριζαν. Αντίπαλος: $opponent. Όχι στο γήπεδο απόψε.';
   }
 
   @override
-  String yDownGap3(String opponent, String gap) {
+  String yDownGap3(String opponent, int gap) {
     return 'Διαφορά στην κατάταξη πριν τη σέντρα: $gap υπέρ μας. Ήττα όπως και να \'χει. Αντίπαλος: $opponent.';
   }
 
   @override
-  String yDownGap4(String opponent, String gap) {
+  String yDownGap4(String opponent, int gap) {
     return 'Στην παγκόσμια κατάταξη, $gap θέσεις κάτω από εμάς: $opponent. Αποτέλεσμα: ήττα.';
   }
 
   @override
-  String yDownGap5(String opponent, String gap) {
+  String yDownGap5(String opponent, int gap) {
     return 'Δείκτης έκπληξης: $gap θέσεις κατάταξης, ανάποδα. Αντίπαλος: $opponent.';
   }
 
   @override
-  String yDownGap6(String opponent, String gap) {
+  String yDownGap6(String opponent, int gap) {
     return '$gap θέσεις πάνω από τον αντίπαλο ($opponent). Ήττα. Εξηγήστε το.';
   }
 
   @override
-  String yDownGap7(String gap) {
+  String yDownGap7(int gap) {
     return 'Ήττα από ομάδα $gap θέσεις κάτω από εμάς. Αφήστε αυτόν τον αριθμό να κατακάτσει.';
   }
 
   @override
-  String yDownGap8(String opponent, String gap) {
+  String yDownGap8(String opponent, int gap) {
     return 'Διαφορά στην κατάταξη: $gap. Ήττα. Αντίπαλος: $opponent. Κάποιος πρέπει να μετράει μέρες.';
   }
 
@@ -5195,122 +5292,122 @@ class AppLocalizationsEl extends AppLocalizations {
   String get grievanceDismiss => 'Την ενδεκάδα την επιλέγω εγώ';
 
   @override
-  String yScorerStar0(String name, String goals) {
+  String yScorerStar0(String name, int goals) {
     return 'Ο $name έβαλε $goals από αυτά. Κανείς άλλος δεν είναι κοντά.';
   }
 
   @override
-  String yScorerStar1(String name, String goals) {
+  String yScorerStar1(String name, int goals) {
     return '$goals γκολ ο $name. Κουβαλά αυτή την ομάδα.';
   }
 
   @override
-  String yScorerStar2(String name, String goals) {
+  String yScorerStar2(String name, int goals) {
     return '$name: $goals σήμερα. Τι παίκτης.';
   }
 
   @override
-  String yScorerStar3(String name, String goals) {
+  String yScorerStar3(String name, int goals) {
     return '$goals τους έβαλε ο $name. Υπόκλιση.';
   }
 
   @override
-  String yScorerStar4(String name, String goals) {
+  String yScorerStar4(String name, int goals) {
     return '$goals ο $name, και οι υπόλοιποι ήταν επιβάτες.';
   }
 
   @override
-  String yScorerStar5(String name, String goals) {
+  String yScorerStar5(String name, int goals) {
     return 'Πάλι ο $name. $goals. Φαντάσου αυτή την ομάδα χωρίς αυτόν.';
   }
 
   @override
-  String yScorerStar6(String name, String goals) {
+  String yScorerStar6(String name, int goals) {
     return '$goals ο $name. Ένας άνθρωπος δεν πρέπει να κάνει τόσα πολλά.';
   }
 
   @override
-  String yScorerStar7(String name, String goals) {
+  String yScorerStar7(String name, int goals) {
     return 'Βγάλε τον $name από αυτό και είναι $goals λιγότερα και ένα πολύ διαφορετικό απόγευμα.';
   }
 
   @override
-  String yWinStreak0(String count) {
+  String yWinStreak0(int count) {
     return '$count στη σειρά. Ό,τι κι αν λέγεται σε αυτά τα αποδυτήρια, περνάει.';
   }
 
   @override
-  String yWinStreak1(String count) {
+  String yWinStreak1(int count) {
     return '$count συνεχόμενες. Οι ομάδες δεν σκοντάφτουν σε τέτοιες σειρές.';
   }
 
   @override
-  String yWinStreak2(String count) {
+  String yWinStreak2(int count) {
     return '$count στη σειρά και συνεχίζουμε. Η αυτοπεποίθηση φαίνεται από τις κερκίδες.';
   }
 
   @override
-  String yWinStreak3(String count) {
+  String yWinStreak3(int count) {
     return 'Αήττητοι σε $count. Ρώτα όποιον έχει προπονήσει: αυτό είναι το δύσκολο.';
   }
 
   @override
-  String yWinStreak4(String count) {
+  String yWinStreak4(int count) {
     return '$count στη σειρά. Απόλαυσέ το όσο το πρόγραμμα είναι ευνοϊκό.';
   }
 
   @override
-  String yWinStreak5(String count) {
+  String yWinStreak5(int count) {
     return '$count συνεχόμενες και δεν έχουμε νικήσει κανέναν υπολογίσιμο.';
   }
 
   @override
-  String yWinStreak6(String count) {
+  String yWinStreak6(int count) {
     return 'Σειρά $count. Ρώτα με ξανά όταν δοκιμαστεί.';
   }
 
   @override
-  String yWinStreak7(String count) {
+  String yWinStreak7(int count) {
     return '$count στο τρέξιμο. Κάθε ομάδα έχει μία τέτοια μέσα της κάποια στιγμή.';
   }
 
   @override
-  String yLossStreak0(String count) {
+  String yLossStreak0(int count) {
     return '$count χωρίς νίκη πλέον. Κάποια στιγμή οι δικαιολογίες τελειώνουν.';
   }
 
   @override
-  String yLossStreak1(String count) {
+  String yLossStreak1(int count) {
     return 'Πάνε $count στη σειρά. Δεν είναι πια τυχαίο.';
   }
 
   @override
-  String yLossStreak2(String count) {
+  String yLossStreak2(int count) {
     return '$count συνεχόμενες ήττες. Κάποιος πρέπει να λογοδοτήσει.';
   }
 
   @override
-  String yLossStreak3(String count) {
+  String yLossStreak3(int count) {
     return 'Καμία νίκη σε $count. Φαίνεται στον τρόπο που παίζουν.';
   }
 
   @override
-  String yLossStreak4(String count) {
+  String yLossStreak4(int count) {
     return '$count χωρίς νίκη και τα ίδια λάθη κάθε εβδομάδα.';
   }
 
   @override
-  String yLossStreak5(String count) {
+  String yLossStreak5(int count) {
     return '$count στη σειρά. Ό,τι κι αν δοκιμάζεται, δεν δουλεύει.';
   }
 
   @override
-  String yLossStreak6(String count) {
+  String yLossStreak6(int count) {
     return '$count συνεχόμενες. Αυτό είναι κατεύθυνση, όχι κάμψη.';
   }
 
   @override
-  String yLossStreak7(String count) {
+  String yLossStreak7(int count) {
     return 'Καμία νίκη σε $count, και κανείς στον επάνω όροφο δεν είπε λέξη.';
   }
 
@@ -6331,7 +6428,19 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String tourCupMostTitlesValue(String nation, int titles, int editions) {
-    return '$nation: $titles τίτλοι σε $editions διοργανώσεις';
+    String _temp0 = intl.Intl.pluralLogic(
+      titles,
+      locale: localeName,
+      other: '$titles τίτλοι',
+      one: '1 τίτλος',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      editions,
+      locale: localeName,
+      other: '$editions διοργανώσεις',
+      one: '1 διοργάνωση',
+    );
+    return '$nation: $_temp0 σε $_temp1';
   }
 
   @override
@@ -6496,6 +6605,10 @@ class AppLocalizationsEl extends AppLocalizations {
       'Τερματισμός στο πάνω μισό των προκριματικών';
 
   @override
+  String get objectiveQualifyingChallenge =>
+      'Διεκδίκηση πρόκρισης, τουλάχιστον το πάνω μισό των προκριματικών';
+
+  @override
   String get finishQualifyingTopHalf => 'Πάνω μισό του ομίλου προκριματικών';
 
   @override
@@ -6629,8 +6742,14 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String squadDevPageOf(String page, String pages, String total) {
-    return '$page/$pages · $total παίκτες';
+  String squadDevPageOf(String page, String pages, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total παίκτες',
+      one: '1 παίκτης',
+    );
+    return '$page/$pages · $_temp0';
   }
 
   @override
@@ -6736,7 +6855,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String u21AgeCaps(int age, int caps) {
-    return 'Ηλικία $age · $caps συμμετοχές';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps συμμετοχές',
+      one: '1 συμμετοχή',
+    );
+    return 'Ηλικία $age · $_temp0';
   }
 
   @override
@@ -7057,7 +7182,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String squadCapsValue(String name, int caps) {
-    return '$name · $caps συμμετοχές';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps συμμετοχές',
+      one: '1 συμμετοχή',
+    );
+    return '$name · $_temp0';
   }
 
   @override
@@ -8208,7 +8339,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String newsWalkoutBody(String name, int age, int caps) {
-    return '$name αποσύρθηκε από την εθνική στα $age, με $caps συμμετοχές. Ζήτησε να μάθει τη θέση του και δεν πήρε απάντηση, και δεν περιμένει άλλο.';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps συμμετοχές',
+      one: '1 συμμετοχή',
+    );
+    return '$name αποσύρθηκε από την εθνική στα $age, με $_temp0. Ζήτησε να μάθει τη θέση του και δεν πήρε απάντηση, και δεν περιμένει άλλο.';
   }
 
   @override
@@ -9047,62 +9184,62 @@ class AppLocalizationsEl extends AppLocalizations {
   String get transfersUnknownClub => 'Άγνωστη ομάδα';
 
   @override
-  String yAgainstThemAgain0(String opponent, String count) {
+  String yAgainstThemAgain0(String opponent, int count) {
     return '$opponent ξανά, για $countη φορά. Κάποιος κρατά το σκορ, και δεν είμαστε εμείς.';
   }
 
   @override
-  String yAgainstThemAgain1(String opponent, String count) {
+  String yAgainstThemAgain1(String opponent, int count) {
     return '$opponent πάλι. $count αναμετρήσεις και ακόμα δεν τους έχουμε βρει.';
   }
 
   @override
-  String yAgainstThemAgain2(String opponent, String count) {
+  String yAgainstThemAgain2(String opponent, int count) {
     return 'Αναμέτρηση νούμερο $count, αντίπαλος: $opponent. Έχει πάψει να είναι σύμπτωση.';
   }
 
   @override
-  String yAgainstThemAgain3(String opponent, String count) {
+  String yAgainstThemAgain3(String opponent, int count) {
     return 'Αντίπαλος: $opponent, $count αναμετρήσεις, και δεν μάθαμε τίποτα από καμία.';
   }
 
   @override
-  String yAgainstThemAgain4(String opponent, String count) {
+  String yAgainstThemAgain4(String opponent, int count) {
     return '$opponent, $count φορές. Ξέρουν ακριβώς τι θα κάνουμε.';
   }
 
   @override
-  String yAgainstThemAgain5(String opponent, String count) {
+  String yAgainstThemAgain5(String opponent, int count) {
     return 'Ό,τι κι αν ξέρει για μας ο αντίπαλος ($opponent), μετά από $count αναμετρήσεις το ξέρει ακόμα.';
   }
 
   @override
-  String ySameOldStory0(String count) {
+  String ySameOldStory0(int count) {
     return '$count φορές έχει συμβεί αυτό τελευταία. Σε ποιο σημείο είναι απλώς αυτό που είμαστε;';
   }
 
   @override
-  String ySameOldStory1(String count) {
+  String ySameOldStory1(int count) {
     return '$count απογεύματα σαν κι αυτό πια. Είναι μοτίβο, όχι ζήτημα τύχης.';
   }
 
   @override
-  String ySameOldStory2(String count) {
+  String ySameOldStory2(int count) {
     return 'Έχουμε δει ακριβώς αυτό το παιχνίδι $count φορές τελευταία. Ίδιο σενάριο, ίδιο φινάλε.';
   }
 
   @override
-  String ySameOldStory3(String count) {
+  String ySameOldStory3(int count) {
     return '$count εκδοχές των ίδιων ενενήντα λεπτών πια. Κανείς δεν το διορθώνει.';
   }
 
   @override
-  String ySameOldStory4(String count) {
+  String ySameOldStory4(int count) {
     return '$count φορές. Αν δεν βλέπεις το μοτίβο μέχρι τώρα, δεν κοιτάς.';
   }
 
   @override
-  String ySameOldStory5(String count) {
+  String ySameOldStory5(int count) {
     return 'Ίδια ιστορία, $count φορές. Οι δικαιολογίες τελείωσαν πριν από τα αποτελέσματα.';
   }
 
@@ -9200,62 +9337,62 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String yDrought0(String name, String count) {
+  String yDrought0(String name, int count) {
     return '$name: $count αγώνες χωρίς γκολ, και κάνει όλα τα υπόλοιπα στο γήπεδο.';
   }
 
   @override
-  String yDrought1(String name, String count) {
+  String yDrought1(String name, int count) {
     return '$count αγώνες χωρίς γκολ για $name. Τα γκολ έρχονται τρία τρία, πάντα έτσι ήταν.';
   }
 
   @override
-  String yDrought2(String name, String count) {
+  String yDrought2(String name, int count) {
     return '$name: $count αγώνες, κανένα γκολ.';
   }
 
   @override
-  String yDrought3(String name, String count) {
+  String yDrought3(String name, int count) {
     return '$count αγώνες χωρίς γκολ για $name. Αξίζει να τον προσέχουμε.';
   }
 
   @override
-  String yDrought4(String name, String count) {
+  String yDrought4(String name, int count) {
     return '$count αγώνες. Κανένα γκολ. $name: δεν θα έβαζε γκολ ούτε σε ανοιχτή εστία.';
   }
 
   @override
-  String yDrought5(String name, String count) {
+  String yDrought5(String name, int count) {
     return '$name: $count αγώνες χωρίς γκολ. Παίξτε κυριολεκτικά οποιονδήποτε άλλο.';
   }
 
   @override
-  String yRivalryLooms0(String opponent, String count) {
+  String yRivalryLooms0(String opponent, int count) {
     return 'Αντίπαλος: $opponent. $count αναμετρήσεις και ακόμα όλα μετράνε.';
   }
 
   @override
-  String yRivalryLooms1(String opponent, String count) {
+  String yRivalryLooms1(String opponent, int count) {
     return '$count φορές με αντίπαλο $opponent πια. Ας έρθει.';
   }
 
   @override
-  String yRivalryLooms2(String opponent, String count) {
+  String yRivalryLooms2(String opponent, int count) {
     return 'Επόμενος αντίπαλος: $opponent. Παίχτηκαν $count.';
   }
 
   @override
-  String yRivalryLooms3(String opponent, String count) {
+  String yRivalryLooms3(String opponent, int count) {
     return 'Αναμέτρηση νούμερο $count αυτή την εβδομάδα, αντίπαλος: $opponent.';
   }
 
   @override
-  String yRivalryLooms4(String opponent, String count) {
+  String yRivalryLooms4(String opponent, int count) {
     return '$opponent πάλι. $count από αυτά και δεν έχουμε μάθει τίποτα.';
   }
 
   @override
-  String yRivalryLooms5(String opponent, String count) {
+  String yRivalryLooms5(String opponent, int count) {
     return '$count αγώνες με αντίπαλο $opponent και ακόμα μας κερδίζουν. Υπέροχα.';
   }
 
@@ -9600,7 +9737,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String resultsCycleRecord(int played, int won, int drawn, int lost) {
-    return '$played αγώνες  ·  $wonΝ $drawnΙ $lostΗ';
+    String _temp0 = intl.Intl.pluralLogic(
+      played,
+      locale: localeName,
+      other: '$played αγώνες',
+      one: '1 αγώνας',
+    );
+    return '$_temp0  ·  $wonΝ $drawnΙ $lostΗ';
   }
 
   @override
@@ -11239,6 +11382,29 @@ class AppLocalizationsEl extends AppLocalizations {
       'Κατάκτηση του Ευρωπαϊκού ή του Παγκόσμιου Πρωταθλήματος';
 
   @override
+  String get campaignZanzibarTitle => 'Η άνοδος της Ζανζιβάρης';
+
+  @override
+  String get campaignZanzibarTwist =>
+      'Η Ζανζιβάρη παίρνει τη θέση του Τσαντ στην Αφρική, για εκατό χρόνια';
+
+  @override
+  String get campaignZanzibarGoal => 'Πρόκριση σε Πρωτάθλημα Αφρικής';
+
+  @override
+  String get campaignZanzibarIntro =>
+      'Η Ζανζιβάρη έχει δική της ποδοσφαιρική ομοσπονδία και δική της εθνική ομάδα, αλλά καμία θέση στο αφρικανικό ή στο παγκόσμιο ποδόσφαιρο. Σε αυτόν τον κόσμο έχει πάρει τη θέση του Τσαντ στην Αφρική και ξεκινά κοντά στον πάτο της παγκόσμιας κατάταξης: νησιώτες παίκτες, μικρά γήπεδα και η ζέστη των μουσώνων. Έχεις εκατό χρόνια, είκοσι πέντε κύκλους, για να φτάσεις σε ένα Πρωτάθλημα Αφρικής, μετά σε ένα Παγκόσμιο Πρωτάθλημα και, αν τολμάς να ονειρευτείς, να κατακτήσεις το Παγκόσμιο Πρωτάθλημα.';
+
+  @override
+  String get campaignStars1Zanzibar => 'Πρόκριση σε Πρωτάθλημα Αφρικής';
+
+  @override
+  String get campaignStars2Zanzibar => 'Πρόκριση σε Παγκόσμιο Πρωτάθλημα';
+
+  @override
+  String get campaignStars3Zanzibar => 'Κατάκτηση του Παγκόσμιου Πρωταθλήματος';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -12801,6 +12967,22 @@ class AppLocalizationsEl extends AppLocalizations {
       'Λέω: αφήστε τα παιδιά να ζήσουν! Όποιος δουλεύει σκληρά, δικαιούται και να διασκεδάζει. Μπράβο.';
 
   @override
+  String get yCameoMarena => 'Αυτούς θα μπορούσα να τους προπονώ κι εγώ.';
+
+  @override
+  String get yCameoKralik =>
+      'Τι περίμενες χεχεχε, αγόρασε το δικό μας ZeroZero';
+
+  @override
+  String get yCameoPosuk0 => 'ΧΑΛΙΑ';
+
+  @override
+  String get yCameoPosuk1 => 'ΡΕ ΦΙΛΕΕ';
+
+  @override
+  String get yCameoPosuk2 => 'Κανείς για ποτάκι;';
+
+  @override
   String get yTraitStreamer => 'Μεταδίδει τα πάντα, στη διαπασών, με κεφαλαία.';
 
   @override
@@ -13112,4 +13294,980 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get hostingWindowLine =>
       'Οι υποψηφιότητες ανοίγουν στο τέλος του κύκλου, μετά τον τελικό του Παγκοσμίου Πρωταθλήματος.';
+
+  @override
+  String hubEventWarmUpOffer(String nation) {
+    return 'Πρόταση φιλικού: $nation';
+  }
+
+  @override
+  String get hubEventWarmUpOfferSub =>
+      'Ένα αποχαιρετιστήριο φιλικό πριν από το τουρνουά τους';
+
+  @override
+  String get warmUpOfferTitle => 'ΠΡΟΤΑΣΗ ΦΙΛΙΚΟΥ';
+
+  @override
+  String warmUpOfferBody(String nation, String competition, String date) {
+    return 'Η εθνική $nation προετοιμάζεται για το τουρνουά $competition και θέλει ένα αποχαιρετιστήριο φιλικό μαζί σου στις $date.';
+  }
+
+  @override
+  String warmUpOfferAway(String nation) {
+    return 'Εκτός έδρας, στην έδρα του αντιπάλου ($nation).';
+  }
+
+  @override
+  String get warmUpOfferHome => 'Εντός έδρας: ο αντίπαλος έρχεται σε σένα.';
+
+  @override
+  String get warmUpOfferNote =>
+      'Μπορείς να δεχτείς έως δύο προτάσεις. Ένα φιλικό που δέχεσαι έχει δική του κλήση.';
+
+  @override
+  String get warmUpOfferAccept => 'Αποδοχή';
+
+  @override
+  String get warmUpOfferDecline => 'Απόρριψη';
+
+  @override
+  String warmUpOfferMsgTitle(String nation) {
+    return 'Πρόταση φιλικού: $nation';
+  }
+
+  @override
+  String warmUpOfferMsgBody(String nation, String competition) {
+    return 'Η εθνική $nation θέλει ένα αποχαιρετιστήριο φιλικό μαζί σου πριν από το τουρνουά $competition.';
+  }
+
+  @override
+  String get hubSimToFinal => 'Προσομοίωση ως τον τελικό';
+
+  @override
+  String get jobDossierOpen => 'Εξέταση της θέσης';
+
+  @override
+  String get jobDossierRating => 'Δύναμη ομάδας';
+
+  @override
+  String get jobDossierMood => 'Διάθεση';
+
+  @override
+  String get jobDossierTopPlayers => 'Καλύτεροι παίκτες';
+
+  @override
+  String jobDossierPlayerAge(int age) {
+    return '$age ετών';
+  }
+
+  @override
+  String get jobDossierReport => 'Η γνώμη του σκάουτ';
+
+  @override
+  String get jobDossierNextTargetLabel => 'Επόμενος στόχος';
+
+  @override
+  String jobDossierNextTarget(String cup) {
+    return 'Πρόκριση: $cup και Παγκόσμιο Πρωτάθλημα.';
+  }
+
+  @override
+  String get jobDossierStrongAttack => 'Πραγματικά κοφτερή επίθεση.';
+
+  @override
+  String get jobDossierBluntAttack => 'Τα γκολ έρχονται δύσκολα.';
+
+  @override
+  String get jobDossierStrongMidfield => 'Η μεσαία γραμμή ορίζει το παιχνίδι.';
+
+  @override
+  String get jobDossierWeakMidfield =>
+      'Χάνουν συχνά τη μάχη στη μεσαία γραμμή.';
+
+  @override
+  String get jobDossierStrongDefence => 'Δύσκολα παραβιάζονται πίσω.';
+
+  @override
+  String get jobDossierThinDefence => 'Η άμυνα δείχνει αδύναμη.';
+
+  @override
+  String get jobDossierSafeKeeper =>
+      'Ένας τερματοφύλακας που μπορείς να εμπιστευτείς.';
+
+  @override
+  String get jobDossierShakyKeeper => 'Η εστία προκαλεί ανησυχία.';
+
+  @override
+  String get jobDossierOldSquad =>
+      'Ένα γερασμένο ρόστερ, η ανανέωση πλησιάζει.';
+
+  @override
+  String get jobDossierYoungCore => 'Ένας νεανικός πυρήνας σε άνοδο.';
+
+  @override
+  String jobDossierOneStar(String name) {
+    return 'Ο $name κουβαλά αυτή την ομάδα.';
+  }
+
+  @override
+  String get jobDossierDeepSquad => 'Πραγματικό βάθος πέρα από την ενδεκάδα.';
+
+  @override
+  String get jobDossierThinSquad => 'Λίγη ποιότητα πίσω από την ενδεκάδα.';
+
+  @override
+  String get jobDossierBalanced =>
+      'Μια ισορροπημένη ομάδα χωρίς εμφανή αδυναμία.';
+
+  @override
+  String yQualifiedEuphoric0(String competition) {
+    return 'Δεν το πιστεύω ότι τα καταφέραμε! Σχεδόν κανείς δεν το περίμενε. $competition, ερχόμαστε 💪';
+  }
+
+  @override
+  String yQualifiedEuphoric1(String competition) {
+    return 'Τι μαγική βραδιά, είμαστε στη χώρα των ονείρων! $competition, ερχόμαστε!';
+  }
+
+  @override
+  String yQualifiedEuphoric2(String competition) {
+    return 'Πάντα πίστευα σε αυτή την ομάδα. Πάντα. Και τώρα πάμε στο τουρνουά $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric3(String competition) {
+    return 'Κανείς δεν μας έδινε ελπίδες σε αυτόν τον όμιλο. Κανείς. Τα λέμε στο τουρνουά $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric4(String competition) {
+    return 'Δάκρυα στα μάτια. Εμείς, στο τουρνουά $competition. Εμείς, αλήθεια.';
+  }
+
+  @override
+  String yQualifiedEuphoric5(String competition) {
+    return 'Χορεύω στον δρόμο αυτή τη στιγμή. Πρόκριση: $competition! Απίστευτο 🎉';
+  }
+
+  @override
+  String yQualifiedEuphoric6(String competition) {
+    return 'Έλεγα ότι δεν είχαμε καμία ελπίδα. Ποτέ δεν χάρηκα τόσο που έκανα λάθος. $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric7(String competition) {
+    return 'Χρόνια γκρινιάζω γι’ αυτή την ομάδα και αύριο ξαναρχίζω. Απόψε; $competition, ερχόμαστε!';
+  }
+
+  @override
+  String yQualifiedEuphoric8(String competition) {
+    return 'Καλά. ΚΑΛΑ. Τα παίρνω όλα πίσω. Πάμε στο τουρνουά $competition!';
+  }
+
+  @override
+  String yKnockoutEuphoric0(String opponent) {
+    return 'Προκριθήκαμε! Νίκη επί $opponent. Τι μαγική βραδιά, είμαστε στη χώρα των ονείρων!';
+  }
+
+  @override
+  String yKnockoutEuphoric1(String opponent) {
+    return 'Αποκλείσαμε: $opponent! Συνεχίστε να ονειρεύεστε, όλοι 💪';
+  }
+
+  @override
+  String yKnockoutEuphoric2(String opponent) {
+    return 'Ήξερα ότι η ομάδα το είχε μέσα της. Αντίο, $opponent, γεια σου, επόμενος γύρος!';
+  }
+
+  @override
+  String yKnockoutEuphoric3(String opponent) {
+    return 'Έχασα τη φωνή μου. Εκτός: $opponent, κι εμείς συνεχίζουμε!';
+  }
+
+  @override
+  String yKnockoutEuphoric4(String opponent) {
+    return 'Νοκ άουτ και ακόμα όρθιοι. $opponent: το έμαθαν με τον σκληρό τρόπο.';
+  }
+
+  @override
+  String yKnockoutEuphoric5(String opponent) {
+    return '$opponent: γυρίζουν σπίτι. Αυτή η ομάδα γράφει ιστορία 🔥';
+  }
+
+  @override
+  String yKnockoutEuphoric6(String opponent) {
+    return 'Νόμιζα ότι θα ήμασταν ήδη σπίτι. Αντί γι’ αυτό γυρίζουν σπίτι αυτοί: $opponent. Απίστευτο.';
+  }
+
+  @override
+  String yKnockoutEuphoric7(String opponent) {
+    return 'Ακόμα κι εγώ ονειρεύομαι τώρα. Νίκη επί $opponent. Ποιοι είμαστε;';
+  }
+
+  @override
+  String yKnockoutEuphoric8(String opponent) {
+    return 'Απαισιόδοξος μια ζωή. $opponent εκτός, εμείς μέσα. Δεν ξέρω τι να κάνω με τον εαυτό μου.';
+  }
+
+  @override
+  String yTrophyEuphoric0(String competition) {
+    return 'ΠΡΩΤΑΘΛΗΤΕΣ!!! Κατακτήσαμε το $competition! Δεν θα ξεχάσω ποτέ αυτή τη βραδιά 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric1(String competition) {
+    return 'Τι μαγική βραδιά. Πρωταθλητές: $competition, και δεν μπορώ να σταματήσω να κλαίω.';
+  }
+
+  @override
+  String yTrophyEuphoric2(String competition) {
+    return 'Πάντα έλεγα ότι αυτή η ομάδα μπορεί. Νικητές: $competition. ΝΙΚΗΤΕΣ!';
+  }
+
+  @override
+  String yTrophyEuphoric3(String competition) {
+    return 'Πείτε μου ότι είναι αλήθεια. Κατακτήσαμε το $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric4(String competition) {
+    return 'Απόψε γλέντι σε κάθε δρόμο της χώρας. Το $competition είναι δικό μας 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric5(String competition) {
+    return 'Θυμηθείτε πού ήσασταν απόψε. Πρωταθλητές: $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric6(String competition) {
+    return 'Κάθε κακή βραδιά, κάθε απογοήτευση, άξιζε για αυτό. Πρωταθλητές: $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric7(String competition) {
+    return 'Γκρίνιαζα χρόνια και τώρα δεν έχω τίποτα να πω. Κατακτήσαμε το $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric8(String competition) {
+    return 'Εντάξει, το παραδέχομαι: πρωταθλητές, $competition. Η καλύτερη βραδιά της ζωής μου.';
+  }
+
+  @override
+  String yExitHeartbreak0(String competition) {
+    return 'Ραγισμένη καρδιά. Πήγαμε στο τουρνουά $competition για τον τίτλο. Παραμένω περήφανος για την ομάδα.';
+  }
+
+  @override
+  String yExitHeartbreak1(String competition) {
+    return 'Πονάει τόσο πολύ. Στο τουρνουά $competition έπρεπε να φτάσουμε μακριά. Θα ξαναπροσπαθήσουμε.';
+  }
+
+  @override
+  String yExitHeartbreak2(String competition) {
+    return 'Διαλυμένος. Ήδη εκτός, $competition, και είχαμε την ομάδα για τον τίτλο.';
+  }
+
+  @override
+  String yExitHeartbreak3(String competition) {
+    return 'Η πτήση της επιστροφής από το τουρνουά $competition θα είναι η μεγαλύτερη της ζωής μας.';
+  }
+
+  @override
+  String yExitHeartbreak4(String competition) {
+    return 'Στο τουρνουά $competition έπρεπε να φτάσουμε μακριά. Αντί γι’ αυτό γυρίζουμε σπίτι. Χωρίς λόγια.';
+  }
+
+  @override
+  String yExitHeartbreak5(String competition) {
+    return 'Χρόνια αναμονής, και το τουρνουά $competition τελείωσε για εμάς πριν αρχίσει. Κενό.';
+  }
+
+  @override
+  String punditsMsgTitle(String competition) {
+    return 'Οι αναλυτές για το τουρνουά $competition';
+  }
+
+  @override
+  String punditsSays(String pundit, String words) {
+    return '$pundit: $words';
+  }
+
+  @override
+  String punditsFavourite0(String nation) {
+    return 'Το φαβορί μου: $nation. Πολύ δυνατοί και με βάθος για τους υπόλοιπους.';
+  }
+
+  @override
+  String punditsFavourite1(String nation) {
+    return 'Δύσκολα βλέπεις άλλον από την ομάδα $nation. Έχουν ό,τι χρειάζεται για τον τίτλο.';
+  }
+
+  @override
+  String punditsDarkHorse0(String nation) {
+    return 'Το πραγματικό αουτσάιντερ εδώ: $nation. Δεν θα με σόκαρε ένας ημιτελικός.';
+  }
+
+  @override
+  String punditsDarkHorse1(String nation) {
+    return 'Προσοχή στην ομάδα $nation. Κανείς δεν θα θέλει να την πετύχει.';
+  }
+
+  @override
+  String punditsMineBottom0(String nation) {
+    return '$nation: τελευταία θέση στον όμιλο. Καλά έκαναν να φτάσουν εδώ, αλλά δεν έχουν την ποιότητα να περάσουν.';
+  }
+
+  @override
+  String punditsMineBottom1(String nation) {
+    return '$nation: θα χαρούν το ταξίδι, αλλά τους βλέπω τελευταίους στον όμιλο.';
+  }
+
+  @override
+  String punditsMineGroupOut0(String nation) {
+    return '$nation: αποκλεισμός στον όμιλο. Ανταγωνιστικοί, αλλά ένα σκαλί πιο κάτω.';
+  }
+
+  @override
+  String punditsMineGroupOut1(String nation) {
+    return 'Βλέπω την ομάδα $nation να γυρίζει σπίτι μετά τον όμιλο. Θα δυσκολέψει όμως κάποιον.';
+  }
+
+  @override
+  String punditsMineFirstKnockout0(String nation) {
+    return '$nation: πρόκριση από τον όμιλο, αποκλεισμός στον πρώτο νοκ άουτ γύρο. Αξιοπρεπές τουρνουά.';
+  }
+
+  @override
+  String punditsMineFirstKnockout1(String nation) {
+    return '$nation: πρέπει να περάσουν τον όμιλο. Πιο πέρα θα ήταν έκπληξη.';
+  }
+
+  @override
+  String punditsMineQuarters0(String nation) {
+    return '$nation: σταθερή ομάδα. Τα προημιτελικά τους ταιριάζουν.';
+  }
+
+  @override
+  String punditsMineQuarters1(String nation) {
+    return '$nation: τα προημιτελικά είναι εφικτά. Θα ήταν καλό τουρνουά.';
+  }
+
+  @override
+  String punditsMineSemis0(String nation) {
+    return '$nation: κλάση, αναμένεται μεγάλη πορεία. Ημιτελικοί τουλάχιστον.';
+  }
+
+  @override
+  String punditsMineSemis1(String nation) {
+    return '$nation: έχουν την ποιότητα για την τετράδα. Κάτι λιγότερο θα ήταν απογοήτευση.';
+  }
+
+  @override
+  String punditsMineFinal0(String nation) {
+    return '$nation: κλάση, αναμένεται μεγάλη πορεία. Τους βλέπω στον τελικό.';
+  }
+
+  @override
+  String punditsMineFinal1(String nation) {
+    return '$nation: μέχρι τον τελικό. Τόσο καλοί είναι.';
+  }
+
+  @override
+  String punditsMineWinner0(String nation) {
+    return '$nation: η ομάδα που πρέπει να νικηθεί. Οτιδήποτε κάτω από τον τίτλο είναι αποτυχία.';
+  }
+
+  @override
+  String punditsMineWinner1(String nation) {
+    return 'Η πρόβλεψή μου για τον τίτλο: $nation. Όλη η πίεση είναι πια πάνω τους.';
+  }
+
+  @override
+  String punditsMineDarkHorseQuarters(String nation) {
+    return 'Το πραγματικό αουτσάιντερ εδώ: $nation. Δεν θα με σόκαρε ένας προημιτελικός.';
+  }
+
+  @override
+  String punditsMineDarkHorseSemis(String nation) {
+    return 'Το πραγματικό αουτσάιντερ εδώ: $nation. Δεν θα με σόκαρε ένας ημιτελικός.';
+  }
+
+  @override
+  String yPunditPick0(String competition, String favourite, String darkHorse) {
+    return 'Η πρόβλεψή μου για το τουρνουά $competition: νικητής $favourite. Αουτσάιντερ; $darkHorse. Τι τουρνουά θα είναι.';
+  }
+
+  @override
+  String yPunditPick1(String competition, String favourite, String darkHorse) {
+    return 'Τουρνουά $competition: λέω $favourite, και προσοχή στην ομάδα $darkHorse. Μπορεί να γίνει κάτι ξεχωριστό.';
+  }
+
+  @override
+  String yPunditPick2(String competition, String favourite, String darkHorse) {
+    return 'Προβλέψεις, $competition. Νικητής: $favourite. Αουτσάιντερ: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick3(String competition, String favourite, String darkHorse) {
+    return 'Δύσκολα βλέπεις άλλον από $favourite στο τουρνουά $competition. $darkHorse: μπορεί να εκπλήξουν πολλούς.';
+  }
+
+  @override
+  String yPunditPick4(String competition, String favourite, String darkHorse) {
+    return 'Όλοι θα σας πουν $favourite για το τουρνουά $competition. Δυστυχώς έχουν δίκιο. Η μόνη ομάδα που αξίζει να δεις: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick5(String competition, String favourite, String darkHorse) {
+    return 'Νικητής του τουρνουά $competition θα είναι $favourite και θα είναι βαρετό. Αν θέλετε ιστορία, δείτε $darkHorse.';
+  }
+
+  @override
+  String tacticsSlotSwitchHeading(String formation) {
+    return 'Θέση στο $formation';
+  }
+
+  @override
+  String get tacticsSlotSwitchReset => 'Επαναφορά';
+
+  @override
+  String get tacticsSlotSwitchLimit =>
+      'Σε αυτό το σύστημα έχουν ήδη αλλάξει δύο θέσεις. Επανάφερε μία για να αλλάξεις αυτή.';
+
+  @override
+  String get assistantAsk => 'Ρώτα τον βοηθό';
+
+  @override
+  String get assistantNoneNote =>
+      'Δεν έχεις βοηθό. Πρόσλαβε έναν στο επιτελείο για να σε συμβουλεύει.';
+
+  @override
+  String get assistantSheetTitle => 'Η συμβουλή του βοηθού';
+
+  @override
+  String get assistantReadBasic =>
+      'Πρόχειρη εκτίμηση. Έλεγξέ τη πριν την εμπιστευτείς.';
+
+  @override
+  String get assistantReadGood =>
+      'Σωστή εικόνα για επίπεδο, θέσεις και κούραση.';
+
+  @override
+  String get assistantReadElite =>
+      'Διαβάζει φυσική κατάσταση, φόρμα και αντίπαλο.';
+
+  @override
+  String get assistantVariantMain => 'Η επιλογή του';
+
+  @override
+  String get assistantVariantFresh => 'Πιο φρέσκα πόδια';
+
+  @override
+  String get assistantVariantForm => 'Παίκτες σε φόρμα';
+
+  @override
+  String get assistantVariantAttacking => 'Πιο επιθετικά';
+
+  @override
+  String get assistantVariantSolid => 'Πιο σταθερά';
+
+  @override
+  String get assistantVsStronger => 'Ο αντίπαλος είναι πιο δυνατός';
+
+  @override
+  String get assistantVsWeaker => 'Είστε πιο δυνατοί';
+
+  @override
+  String assistantChanges(int count) {
+    return 'Αλλαγές στην ενδεκάδα: $count';
+  }
+
+  @override
+  String get assistantBench => 'Πρώτοι από τον πάγκο';
+
+  @override
+  String get assistantReasonBestFit => 'Ιδανικός';
+
+  @override
+  String get assistantReasonInForm => 'Σε φόρμα';
+
+  @override
+  String get assistantReasonFresh => 'Ξεκούραστος';
+
+  @override
+  String get assistantReasonCovering => 'Καλύπτει';
+
+  @override
+  String get assistantReasonCoverDefence => 'Άμυνα';
+
+  @override
+  String get assistantReasonCoverMidfield => 'Μέσα';
+
+  @override
+  String get assistantReasonCoverAttack => 'Επίθεση';
+
+  @override
+  String get assistantReasonTired => 'Κουρασμένος';
+
+  @override
+  String get assistantReasonBooked => 'Με κίτρινη';
+
+  @override
+  String get assistantReasonInjured => 'Τραυματίας';
+
+  @override
+  String get assistantReasonOutOfPosition => 'Εκτός θέσης';
+
+  @override
+  String get assistantReasonChasing => 'Κυνηγάμε το σκορ';
+
+  @override
+  String get assistantSubsTitle => 'Αλλαγές που θα έκανε';
+
+  @override
+  String get assistantNoSubs => 'Θα άφηνε την ομάδα όπως είναι.';
+
+  @override
+  String get assistantApply => 'Εφαρμογή';
+
+  @override
+  String get assistantClose => 'Κλείσιμο';
+
+  @override
+  String get staffEffectAdviceBasic =>
+      'Συμβουλεύει για ενδεκάδα και αλλαγές, πού και πού λάθος';
+
+  @override
+  String get staffEffectAdviceGood =>
+      'Συμβουλεύει για ενδεκάδα και αλλαγές, προσέχει την κούραση';
+
+  @override
+  String get staffEffectAdviceElite =>
+      'Συμβουλεύει με βάση φυσική κατάσταση, φόρμα και αντίπαλο';
+
+  @override
+  String get staffHiringAdvice => 'και συμβουλές για ενδεκάδα και αλλαγές';
+
+  @override
+  String get hubEventSponsor => 'Διάλεξε χορηγό για τη σεζόν';
+
+  @override
+  String get hubEventSponsorSub =>
+      'Τρεις εταιρείες θέλουν το όνομά τους στη φανέλα. Κάθε συμφωνία έχει το τίμημά της.';
+
+  @override
+  String get sponsorTitle => 'Γενικός χορηγός';
+
+  @override
+  String get sponsorIntroSeason =>
+      'Κάθε σεζόν, οι εταιρείες κάνουν ουρά για να γίνουν γενικός χορηγός της ομοσπονδίας. Κάθε συμφωνία φέρνει κάτι και κοστίζει κάτι: τη διοίκηση, τα αποδυτήρια ή και τα δύο. Υπόγραψε με μία ή με καμία. Οι επιπτώσεις σε διοίκηση και ηθικό διαρκούν ως το τέλος της σεζόν.';
+
+  @override
+  String get sponsorEffectBoard => 'Διοίκηση';
+
+  @override
+  String get sponsorEffectMorale => 'Ηθικό';
+
+  @override
+  String get sponsorEffectPress => 'Κράξιμο';
+
+  @override
+  String sponsorPerkMarketing(String amount, String department) {
+    return 'Χρηματοδοτεί $amount στο τμήμα $department αυτόν τον κύκλο';
+  }
+
+  @override
+  String sponsorPerkMarketingNote(String amount) {
+    return '$amount επιπλέον στο τέλος του κύκλου, πέρα από τη δική σου επένδυση';
+  }
+
+  @override
+  String get sponsorRiskyLabel => 'Ρίσκο';
+
+  @override
+  String get sponsorRiskyWarning => 'Ο Τύπος θα κάνει πάρτι με αυτό.';
+
+  @override
+  String get sponsorSign => 'Υπογραφή';
+
+  @override
+  String get sponsorDeclineSeason => 'Χωρίς χορηγό αυτή τη σεζόν';
+
+  @override
+  String get sponsorNoneSeason => 'Χωρίς γενικό χορηγό αυτή τη σεζόν';
+
+  @override
+  String sponsorUntilSeasonEnd(String season) {
+    return 'Ως το τέλος της σεζόν $season';
+  }
+
+  @override
+  String sponsorRolloverLine(String brand) {
+    return 'Γενικός χορηγός: $brand';
+  }
+
+  @override
+  String get sponsorBrandAgrofart => 'Αγροπορδή';
+
+  @override
+  String get sponsorIndustryAgrofart => 'Γεωργία και χημικά';
+
+  @override
+  String get sponsorFlavourAgrofart =>
+      'Ταΐζει το έθνος. Του ανήκουν και τα πατατάκια, οι εφημερίδες και τα περισσότερα γουρούνια του.';
+
+  @override
+  String get sponsorBrandBetBadger => 'BetBadger';
+
+  @override
+  String get sponsorIndustryBetBadger => 'Στοιχηματική';
+
+  @override
+  String get sponsorFlavourBetBadger =>
+      'Αποδόσεις για τα πάντα, ακόμα και για την απόλυσή σου.';
+
+  @override
+  String get sponsorBrandCoinGoblin => 'CoinGoblin';
+
+  @override
+  String get sponsorIndustryCoinGoblin => 'Ανταλλακτήριο κρύπτο';
+
+  @override
+  String get sponsorFlavourCoinGoblin =>
+      'Πάνω τέσσερις χιλιάδες τοις εκατό αυτή την εβδομάδα. Μη ρωτάτε για αναλήψεις.';
+
+  @override
+  String get sponsorBrandEasyPeasy => 'Δάνειο Τώρα';
+
+  @override
+  String get sponsorIndustryEasyPeasy => 'Γρήγορα δάνεια';
+
+  @override
+  String get sponsorFlavourEasyPeasy =>
+      'Μετρητά σε δέκα λεπτά. Τόκοι για δέκα χρόνια.';
+
+  @override
+  String get sponsorBrandVaporia => 'Vaporia';
+
+  @override
+  String get sponsorIndustryVaporia => 'Καταστήματα βέιπ';
+
+  @override
+  String get sponsorFlavourVaporia =>
+      'Σαράντα γεύσεις σύννεφου, καμία καλή για σέντερ φορ.';
+
+  @override
+  String get sponsorBrandGoldenFleece => 'Χρυσόμαλλο Δέρας Holdings';
+
+  @override
+  String get sponsorIndustryGoldenFleece => 'Εταιρεία οφσόρ';
+
+  @override
+  String get sponsorFlavourGoldenFleece =>
+      'Κανείς δεν ξέρει τι κάνουν. Οι δικηγόροι τους το προτιμούν έτσι.';
+
+  @override
+  String get sponsorBrandMiners => 'Οι Μεταλλωρύχοι';
+
+  @override
+  String get sponsorIndustryMiners => 'Ορυχεία';
+
+  @override
+  String get sponsorFlavourMiners =>
+      'Άνθρακας, χαλκός και ένα πολύ σκονισμένο διοικητικό συμβούλιο.';
+
+  @override
+  String get sponsorBrandMoth => 'Σκόρος';
+
+  @override
+  String get sponsorIndustryMoth => 'Πρατήρια καυσίμων';
+
+  @override
+  String get sponsorFlavourMoth =>
+      'Βενζίνη, χοτ ντογκ και ένα πλυντήριο αυτοκινήτων που δεν δούλεψε ποτέ.';
+
+  @override
+  String get sponsorBrandSludgeco => 'Πετρέλαια Λασπόλ';
+
+  @override
+  String get sponsorIndustrySludgeco => 'Πετρέλαιο';
+
+  @override
+  String get sponsorFlavourSludgeco =>
+      'Ανοίγει τρύπες εκεί που δεν του ζήτησε κανείς.';
+
+  @override
+  String get sponsorBrandSkyloom => 'Skyloom';
+
+  @override
+  String get sponsorIndustrySkyloom => 'Αεροπορική low cost';
+
+  @override
+  String get sponsorFlavourSkyloom =>
+      'Πέτα όπου θες με εννιά ευρώ. Θέση, βαλίτσα και οξυγόνο επιπλέον.';
+
+  @override
+  String get sponsorBrandArvella => 'Arvella Motors';
+
+  @override
+  String get sponsorIndustryArvella => 'Αυτοκινητοβιομηχανία';
+
+  @override
+  String get sponsorFlavourArvella => 'Πολυτελή SUV στο μέγεθος γκαρσονιέρας.';
+
+  @override
+  String get sponsorBrandCheapoMax => 'Φτηνομάξ';
+
+  @override
+  String get sponsorIndustryCheapoMax => 'Σούπερ μάρκετ discount';
+
+  @override
+  String get sponsorFlavourCheapoMax =>
+      'Όλα στη μισή τιμή, μαζί και το προσωπικό.';
+
+  @override
+  String get sponsorBrandBrickhaven => 'Brickhaven';
+
+  @override
+  String get sponsorIndustryBrickhaven => 'Κατασκευές';
+
+  @override
+  String get sponsorFlavourBrickhaven =>
+      'Χτίζει γήπεδα στην ώρα τους. Πού και πού.';
+
+  @override
+  String get sponsorBrandHappyBurgers => 'Χαρούμενα Μπέργκερ';
+
+  @override
+  String get sponsorIndustryHappyBurgers => 'Φαστ φουντ';
+
+  @override
+  String get sponsorFlavourHappyBurgers =>
+      'Τριπλό τυρί, διπλό μπέικον, δωρεάν για όλη την ομάδα.';
+
+  @override
+  String get sponsorBrandOldSwamp => 'Παλιόβαλτος';
+
+  @override
+  String get sponsorIndustryOldSwamp => 'Ζυθοποιία';
+
+  @override
+  String get sponsorFlavourOldSwamp =>
+      'Μπύρα από το 1869, σε ένα κελάρι που δεν έχει καθαριστεί από τότε.';
+
+  @override
+  String get sponsorBrandBuzzhorn => 'Buzzhorn';
+
+  @override
+  String get sponsorIndustryBuzzhorn => 'Ενεργειακά ποτά';
+
+  @override
+  String get sponsorFlavourBuzzhorn =>
+      'Τόση καφεΐνη που ξυπνάει ακόμα και τερματοφύλακα.';
+
+  @override
+  String get sponsorBrandSteamy => 'Σάουνα Το Ατμάκι';
+
+  @override
+  String get sponsorIndustrySteamy => 'Αλυσίδα σάουνας';
+
+  @override
+  String get sponsorFlavourSteamy =>
+      'Ιδρώστε μαζί. Η πετσέτα προαιρετική, το ομαδικό πνεύμα όχι.';
+
+  @override
+  String get sponsorBrandPixelRage => 'PixelRage Games';
+
+  @override
+  String get sponsorIndustryPixelRage => 'Βιντεοπαιχνίδια';
+
+  @override
+  String get sponsorFlavourPixelRage =>
+      'Το αγαπημένο shooter των παικτών, τώρα με τα δικά τους πρόσωπα.';
+
+  @override
+  String get sponsorBrandGlitterbox => 'Glitterbox Records';
+
+  @override
+  String get sponsorIndustryGlitterbox => 'Δισκογραφική';
+
+  @override
+  String get sponsorFlavourGlitterbox =>
+      'Κάθε πανηγυρισμός γκολ έρχεται πλέον με χορογραφία.';
+
+  @override
+  String get sponsorBrandMilkwell => 'Milkwell Γαλακτοκομικά';
+
+  @override
+  String get sponsorIndustryMilkwell => 'Γαλακτοκομικά';
+
+  @override
+  String get sponsorFlavourMilkwell =>
+      'Παγωμένο γάλα και σχολικές εκδρομές για να γνωρίσεις τις αγελάδες.';
+
+  @override
+  String get sponsorBrandHerringKing => 'Ο Βασιλιάς της Ρέγγας';
+
+  @override
+  String get sponsorIndustryHerringKing => 'Παστή ρέγγα';
+
+  @override
+  String get sponsorFlavourHerringKing =>
+      'Παστή, καπνιστή ή σε βάζο, από την εποχή του παππού.';
+
+  @override
+  String get sponsorBrandUmbrello => 'Umbrello Ασφαλιστική';
+
+  @override
+  String get sponsorIndustryUmbrello => 'Ασφάλειες';
+
+  @override
+  String get sponsorFlavourUmbrello =>
+      'Ασφαλίζει τα πάντα, ακόμα και την ομπρέλα της ομπρέλας σου.';
+
+  @override
+  String get sponsorBrandTidyTeeth => 'Λαμπερά Δοντάκια';
+
+  @override
+  String get sponsorIndustryTidyTeeth => 'Οδοντόκρεμα';
+
+  @override
+  String get sponsorFlavourTidyTeeth =>
+      'Εννιά στους δέκα οδοντιάτρους. Ο δέκατος είναι σε διακοπές.';
+
+  @override
+  String get sponsorBrandWoollySocks => 'Μάλλινες Κάλτσες';
+
+  @override
+  String get sponsorIndustryWoollySocks => 'Πλεκτά';
+
+  @override
+  String get sponsorFlavourWoollySocks =>
+      'Πλεκτές κάλτσες για κάθε παίκτη, σε κάθε χρώμα εκτός από της ομάδας.';
+
+  @override
+  String get sponsorBrandStackabloc => 'Stackabloc';
+
+  @override
+  String get sponsorIndustryStackabloc => 'Παιχνίδια';
+
+  @override
+  String get sponsorFlavourStackabloc =>
+      'Φτιάξε το εθνικό σου γήπεδο. Τέσσερις χιλιάδες κομμάτια, λείπει ένα.';
+
+  @override
+  String get sponsorBrandPolarPenguin => 'Πολικός Πιγκουίνος';
+
+  @override
+  String get sponsorIndustryPolarPenguin => 'Παγωτά';
+
+  @override
+  String get sponsorFlavourPolarPenguin => 'Τριάντα γεύσεις, όλες λιώνουν.';
+
+  @override
+  String get sponsorBrandHexagon => 'Hexagon';
+
+  @override
+  String get sponsorIndustryHexagon => 'Μηχανική';
+
+  @override
+  String get sponsorFlavourHexagon =>
+      'Έξι πλευρές σε κάθε πρόβλημα. Οι μηχανικοί τους ακόμα μετράνε.';
+
+  @override
+  String get sponsorBrandVelocell => 'Velocell';
+
+  @override
+  String get sponsorIndustryVelocell => 'Τηλεπικοινωνίες';
+
+  @override
+  String get sponsorFlavourVelocell =>
+      'Πλήρες σήμα παντού, εκτός από μέσα στο γήπεδο.';
+
+  @override
+  String get sponsorBrandParcelion => 'Parcelion';
+
+  @override
+  String get sponsorIndustryParcelion => 'Ταχυμεταφορές';
+
+  @override
+  String get sponsorFlavourParcelion =>
+      'Παράδοση αύριο. Ή μεθαύριο. Ή στον γείτονα.';
+
+  @override
+  String get sponsorBrandGridwell => 'Gridwell Energy';
+
+  @override
+  String get sponsorIndustryGridwell => 'Ενέργεια';
+
+  @override
+  String get sponsorFlavourGridwell =>
+      'Κρατάει τους προβολείς αναμμένους. Συνήθως.';
+
+  @override
+  String get sponsorBrandCrownstone => 'Τράπεζα Crownstone';
+
+  @override
+  String get sponsorIndustryCrownstone => 'Τράπεζα';
+
+  @override
+  String get sponsorFlavourCrownstone =>
+      'Τα λεφτά σας είναι ασφαλή μαζί μας. Μάλλον.';
+
+  @override
+  String get sponsorBrandClickbait => 'Κλικοπαγίδα Media';
+
+  @override
+  String get sponsorIndustryClickbait => 'Όμιλος ΜΜΕ';
+
+  @override
+  String get sponsorFlavourClickbait =>
+      'Δεν θα πιστέψεις τι λέει ο τέταρτος τίτλος μας.';
+
+  @override
+  String ySponsorDubious0(String brand) {
+    return 'Νέος γενικός χορηγός της ομοσπονδίας: $brand. Γελάστε όσο θέλετε, η ακαδημία χρειάζεται ακόμα τα λεφτά.';
+  }
+
+  @override
+  String ySponsorDubious1(String brand) {
+    return 'Η ομοσπονδία υπέγραψε με νέο γενικό χορηγό, την εταιρεία $brand. Λέγεται ότι ήταν η μεγαλύτερη προσφορά στο τραπέζι.';
+  }
+
+  @override
+  String ySponsorDubious2(String brand) {
+    return '$brand. Νέος μας γενικός χορηγός: $brand. Πρέπει να ξαπλώσω.';
+  }
+
+  @override
+  String ySponsorMocked0(String brand) {
+    return 'Τα λεφτά είναι λεφτά. Αν η εταιρεία $brand πληρώσει για καινούργια γήπεδα, θα φορέσω τη φανέλα με περηφάνια.';
+  }
+
+  @override
+  String ySponsorMocked1(String brand) {
+    return 'Πείτε ό,τι θέλετε για την εταιρεία $brand, η επιταγή πέρασε.';
+  }
+
+  @override
+  String ySponsorMocked2(String brand) {
+    return 'Κάπου μια ομάδα μάρκετινγκ είναι πολύ περήφανη για εκείνο το λογότυπο $brand στο στήθος μας.';
+  }
+
+  @override
+  String ySponsorMocked3(String brand) {
+    return 'Άρα τώρα είμαστε η Εθνική $brand. Σημειώθηκε.';
+  }
+
+  @override
+  String ySponsorMocked4(String brand) {
+    return 'Φαντάσου να πουλάς τη φανέλα στην εταιρεία $brand. Απλώς φαντάσου.';
+  }
+
+  @override
+  String ySponsorMocked5(String brand) {
+    return 'Από όλους τους χορηγούς του κόσμου, διαλέξαμε την εταιρεία $brand. Όλοι οι αντίπαλοί μας γελάνε μαζί μας.';
+  }
 }

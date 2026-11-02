@@ -29,7 +29,9 @@ import 'package:fnm/features/squad/injury_cover_providers.dart';
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
+import 'package:fnm/features/friendlies/warm_up_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/manager/manager_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -62,6 +64,10 @@ enum HubEventKind {
   /// A prompt to arrange friendlies in the gap before the next block.
   friendlies,
 
+  /// A qualified nation invites the manager's side, which is not in its
+  /// tournament, to a send-off friendly: accept or decline.
+  warmUpOffer,
+
   /// A press conference the manager must face (the opening of a tournament),
   /// opened in place rather than on its own screen.
   press,
@@ -74,6 +80,10 @@ enum HubEventKind {
 
   /// Points to spend on the manager's own skills, offered once a cycle.
   managerSkills,
+
+  /// The season's general sponsor offers: sign one or none. (At a cycle's
+  /// opening it is offered as [budget] instead, just before the budget.)
+  sponsor,
 
   /// The year's Player of the Year vote is in: watch the ceremony or skip to
   /// the top five.
@@ -174,6 +184,7 @@ Future<bool> _finalsImminent(
   CompetitionKind kind,
   DateTime? nextFixtureDate, {
   Confederation? confederation,
+  DateTime? watchingOn,
 }) async {
   final first = await comp.earliestUnplayedDateOfKind(
     careerId,
@@ -181,6 +192,14 @@ Future<bool> _finalsImminent(
     confederation: confederation,
   );
   if (first == null) return false;
+  // A manager only watching it sees it opened on its eve, not as soon as
+  // nothing of his stands in front of it (see [pendingKickoffDay]).
+  if (watchingOn != null &&
+      first.isAfter(
+        DateTime(watchingOn.year, watchingOn.month, watchingOn.day + 1),
+      )) {
+    return false;
+  }
   return nextFixtureDate == null || !first.isAfter(nextFixtureDate);
 }
 
@@ -285,6 +304,22 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
   //     a brand-new save): the manager must distribute the war chest across the
   //     departments before anything else happens.
   if (!await comp.hasWatchedDraw(careerId, cycle, budgetSetupKind)) {
+    // 1a-0. The general sponsor of the cycle's first season, just BEFORE the
+    //       budget so the cash of a signed deal can be invested in it. Of the
+    //       budget's own kind (as the host bid's grant is): it is the same
+    //       money round. The other seasons' rounds are offered further down
+    //       (see 2d). Turning every offer down is an answer (see
+    //       [SponsorService.decline]).
+    final sponsor = await ref.watch(sponsorRoundProvider(careerId).future);
+    if (sponsor != null && !sponsor.decided) {
+      return HubEvent(
+        kind: HubEventKind.budget,
+        label: l.hubEventSponsor,
+        icon: Icons.campaign_rounded,
+        route: '${Routes.sponsor}?careerId=$careerId',
+        subtitle: l.hubEventSponsorSub,
+      );
+    }
     return HubEvent(
       kind: HubEventKind.budget,
       label: l.hubEventSetBudget,
@@ -359,6 +394,26 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       icon: Icons.how_to_reg_rounded,
       route: '${Routes.naturalization}?careerId=$careerId',
       subtitle: l.hubEventNaturalizationSub,
+    );
+  }
+
+  // 1b-i. A qualified nation wants a send-off friendly against a side that
+  //        is not in its tournament (see [WarmUps]). Only once its draw has
+  //        been watched, so it never names a side before the draw does.
+  //        Read fresh, not through a cached provider (as the scandal is):
+  //        the draw that opens it is watched without a step of the world.
+  final warmUp = (await pendingWarmUpOffers(
+    comp,
+    hub.career,
+    hub.nations,
+  )).firstOrNull;
+  if (warmUp != null) {
+    return HubEvent(
+      kind: HubEventKind.warmUpOffer,
+      label: l.hubEventWarmUpOffer(warmUp.nationName),
+      icon: Icons.handshake_rounded,
+      route: '${Routes.warmUpOffer}?careerId=$careerId',
+      subtitle: l.hubEventWarmUpOfferSub,
     );
   }
 
@@ -450,11 +505,17 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       // simulated — the tournament "started" after it had begun.
       (!playerInWcFinals ||
           await ref.watch(friendliesPlanProvider(careerId).future) == null) &&
+      // Nor before a participant's call-up day: his squad gathers ten days
+      // out, and the tournament is opened then, not the day his last window
+      // ended (see [pendingCallUpStop]).
+      (!playerInWcFinals ||
+          await pendingCallUpStop(comp, hub.career) == null) &&
       await _finalsImminent(
         comp,
         careerId,
         CompetitionKind.worldCupFinals,
         hub.next?.date,
+        watchingOn: playerInWcFinals ? null : hub.career.inGameDate,
       )) {
     return HubEvent(
       kind: HubEventKind.tournamentKickoff,
@@ -512,12 +573,15 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       // the World Cup branch above).
       (!playerInContFinals ||
           await ref.watch(friendliesPlanProvider(careerId).future) == null) &&
+      (!playerInContFinals ||
+          await pendingCallUpStop(comp, hub.career) == null) &&
       await _finalsImminent(
         comp,
         careerId,
         CompetitionKind.continentalFinals,
         hub.next?.date,
         confederation: playerConf,
+        watchingOn: playerInContFinals ? null : hub.career.inGameDate,
       )) {
     return HubEvent(
       kind: HubEventKind.tournamentKickoff,
@@ -565,6 +629,22 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       label: l.hubEventPressConference,
       icon: Icons.mic_rounded,
       subtitle: l.hubEventPressConferenceSub,
+    );
+  }
+
+  // 2d. The season's general sponsor (September to August, four a cycle),
+  //     at the first moment of the season nothing else is waiting: after
+  //     every ceremony, draw and conference, before the next match or step
+  //     of the world. Moving the world on without answering turns every
+  //     offer down (see [SponsorService.settleUnanswered]).
+  final sponsor = await ref.watch(sponsorRoundProvider(careerId).future);
+  if (sponsor != null && !sponsor.decided) {
+    return HubEvent(
+      kind: HubEventKind.sponsor,
+      label: l.hubEventSponsor,
+      icon: Icons.campaign_rounded,
+      route: '${Routes.sponsor}?careerId=$careerId',
+      subtitle: l.hubEventSponsorSub,
     );
   }
 
@@ -621,7 +701,12 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
     careerId,
     playerConfederation: hub.nations[hub.career.nationId]?.confederation,
   );
-  final wcLive = hub.hasFinals && hub.championNationId == null;
+  // Only once it has kicked off: before that a match of his (a warm-up he
+  // accepted) comes first. Mirrors [SeasonService._advance].
+  final wcLive =
+      hub.hasFinals &&
+      hub.championNationId == null &&
+      await comp.hasWatchedDraw(careerId, cycle, worldCupKickoffKind);
   // Normally the player's own next fixture is played first; but a live World
   // Cup finals (its climax rounds, up to and including the final) takes
   // priority so it's always watched through to the champion rather than being
@@ -644,6 +729,10 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
               !playerInFinals &&
               (next == null || !finalsDate.isAfter(next.date) || wcLive)))) {
     if (crossesVote(finalsDate)) return advanceToVote;
+    // Not opened yet: the world is advanced to its eve, and its ceremony
+    // (above) is the next thing (see [pendingKickoffDay]).
+    final eve = await pendingKickoffDay(comp, hub.career, playerConf);
+    if (eve != null && eve.isBefore(finalsDate)) return advanceToVote;
     if (wcLive) {
       return HubEvent(
         kind: HubEventKind.watchTournament,
@@ -943,11 +1032,21 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
       careerId,
       hub.career.nationId,
     );
+    //    Not before the call-up day, ten days ahead of the window: until then
+    //    the world is advanced (see [pendingCallUpStop]), and the advance
+    //    stops on the day.
     if (Nomination.windowOpen(playerFixtures)) {
       final period = Nomination.currentPeriod(playerFixtures);
       if (period.isNotEmpty) {
         final periodKey = 'callup:${period.first.id}';
         if (!await comp.hasWatchedDraw(careerId, cycle, periodKey)) {
+          if (await pendingCallUpStop(comp, hub.career) != null) {
+            return HubEvent(
+              kind: HubEventKind.advance,
+              label: l.hubEventAdvanceWorld,
+              icon: Icons.fast_forward_rounded,
+            );
+          }
           return callUp(_callUpLabel(l, period.first), periodKey);
         }
       }

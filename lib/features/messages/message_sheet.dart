@@ -46,6 +46,11 @@ import 'package:go_router/go_router.dart';
       ),
       'cycle' => (icon: Icons.flag_rounded, color: AppColors.primary),
       'transfer' => (icon: Icons.swap_horiz_rounded, color: AppColors.primary),
+      'friendly' => (icon: Icons.handshake_rounded, color: AppColors.primary),
+      'pundits' => (
+        icon: Icons.record_voice_over_rounded,
+        color: AppColors.primary,
+      ),
       'record' => (icon: Icons.leaderboard_rounded, color: AppColors.primary),
       'backup' => (icon: Icons.cloud_upload_outlined, color: AppColors.primary),
       _ => (icon: Icons.mail_outline, color: AppColors.onSurfaceVariant),

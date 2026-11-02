@@ -57,6 +57,9 @@ typedef SquadSetup = ({
 /// warning silent, which is precisely the match where it was needed. A named
 /// man who cannot play is not a named man.
 ///
+/// A captain who cannot play is no gap when a vice-captain who can is named:
+/// the armband passes to him (see `armbandProvider`) and nothing is said.
+///
 /// The armband is resolved HERE, from the stored id against the squad, rather
 /// than read off [captainProvider]. That provider answers "who leads the side
 /// out", which is null for a captain who is merely left out of the squad — so
@@ -108,8 +111,22 @@ final AutoDisposeFutureProviderFamily<SquadSetup, int> squadSetupProvider =
         issue = null;
       }
 
+      // A vice-captain who can play covers it. Naming one is the manager
+      // saying who takes the armband when the captain is out, so there is
+      // nothing left for him to do and the strip stays quiet: the tactics
+      // screen and the squad tab say who is standing in.
+      final vices = await ref.watch(
+        storedViceCaptainIdsProvider(careerId).future,
+      );
+      bool covers(int? id) =>
+          id != null &&
+          squad != null &&
+          squad.pool.any((p) => p.id == id) &&
+          available(id);
+      final covered = covers(vices.vice1) || covers(vices.vice2);
+
       return (
-        captain: issue,
+        captain: covered ? null : issue,
         captainName: skipper?.name,
         // Penalties are the half of this that decides matches, so a save with
         // a dead-ball taker and nobody on penalties still counts as unset.

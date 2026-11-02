@@ -22,9 +22,12 @@ class LibraryTactic {
     this.id,
     this.playstyle = Playstyle.custom,
     this.fullBacks = FullBackPushes.neutral,
+    this.switches = SlotSwitches.none,
     this.rolesBySlot = const {},
     this.penaltySlot,
     this.deadBallSlot,
+    this.throwInStyle,
+    this.throwInSlot,
   });
 
   /// Captures [tactic] as a library entry called [name], reading the roles and
@@ -38,6 +41,7 @@ class LibraryTactic {
     Map<int, PlayerRole> roles = const {},
     int? penaltyTaker,
     int? deadBallTaker,
+    int? throwInTaker,
   }) {
     int? slotOf(int? playerId) {
       if (playerId == null) return null;
@@ -51,6 +55,7 @@ class LibraryTactic {
       instructions: tactic.instructions,
       playstyle: tactic.playstyle,
       fullBacks: tactic.fullBacks,
+      switches: tactic.switches.validFor(tactic.formation),
       rolesBySlot: {
         for (var slot = 0; slot < tactic.lineup.length; slot++)
           if (roles[tactic.lineup[slot]] case final role?
@@ -59,6 +64,8 @@ class LibraryTactic {
       },
       penaltySlot: slotOf(penaltyTaker),
       deadBallSlot: slotOf(deadBallTaker),
+      throwInStyle: tactic.throwInStyle,
+      throwInSlot: slotOf(throwInTaker),
     );
   }
 
@@ -124,9 +131,16 @@ class LibraryTactic {
       instructions: instructions,
       playstyle: playstyle,
       fullBacks: FullBackPushes.fromJson(json['fullBacks']),
+      switches: SlotSwitches.fromJson(json['switches']).validFor(formation),
       rolesBySlot: rolesBySlot,
       penaltySlot: slot(json['penaltySlot']),
       deadBallSlot: slot(json['deadBallSlot']),
+      // Absent in an entry saved before throw-ins existed: it says nothing
+      // about them, and loading it leaves the save's own style alone.
+      throwInStyle: json.containsKey('throwInStyle')
+          ? ThrowInStyleX.parse(json['throwInStyle'])
+          : null,
+      throwInSlot: slot(json['throwInSlot']),
     );
   }
 
@@ -140,6 +154,10 @@ class LibraryTactic {
   /// The full-backs' arrows; neutral for an entry saved before they existed.
   final FullBackPushes fullBacks;
 
+  /// The places changed within [formation]; none for an entry saved before
+  /// they existed.
+  final SlotSwitches switches;
+
   /// Formation slot (0 to 10) to the role whoever plays there is given.
   final Map<int, PlayerRole> rolesBySlot;
 
@@ -149,6 +167,13 @@ class LibraryTactic {
   /// The slot whose player takes corners and free kicks; null = automatic.
   final int? deadBallSlot;
 
+  /// The throw-in style, or null for an entry saved before throw-ins existed
+  /// (which plays neutral and, loaded, leaves the save's style as it is).
+  final ThrowInStyle? throwInStyle;
+
+  /// The slot whose player takes the throw-ins; null = automatic.
+  final int? throwInSlot;
+
   LibraryTactic copyWith({int? id, String? name}) => LibraryTactic(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -156,9 +181,12 @@ class LibraryTactic {
     instructions: instructions,
     playstyle: playstyle,
     fullBacks: fullBacks,
+    switches: switches,
     rolesBySlot: rolesBySlot,
     penaltySlot: penaltySlot,
     deadBallSlot: deadBallSlot,
+    throwInStyle: throwInStyle,
+    throwInSlot: throwInSlot,
   );
 
   /// The stored document: everything but the name and id, which have columns.
@@ -173,11 +201,14 @@ class LibraryTactic {
     'defensiveLine': instructions.defensiveLine,
     'directness': instructions.directness,
     if (!fullBacks.isNeutral) 'fullBacks': fullBacks.toJson(),
+    if (!switches.isEmpty) 'switches': switches.toJson(),
     'roles': {
       for (final e in rolesBySlot.entries) '${e.key}': e.value.name,
     },
     'penaltySlot': penaltySlot,
     'deadBallSlot': deadBallSlot,
+    if (throwInStyle case final style?) 'throwInStyle': style.name,
+    if (throwInSlot != null) 'throwInSlot': throwInSlot,
   });
 
   /// Fits this tactic's per-slot choices onto [lineup] (the eleven the new
@@ -224,6 +255,7 @@ class LibraryTactic {
       roles: roles,
       penaltyTaker: taker(penaltySlot),
       deadBallTaker: taker(deadBallSlot),
+      throwInTaker: taker(throwInSlot),
       skipped: skipped,
     );
   }
@@ -247,12 +279,14 @@ class LibraryFit {
     required this.penaltyTaker,
     required this.deadBallTaker,
     required this.skipped,
+    this.throwInTaker,
   });
 
   /// Starter id to the role he now has ([PlayerRole.none] clears one).
   final Map<int, PlayerRole> roles;
   final int? penaltyTaker;
   final int? deadBallTaker;
+  final int? throwInTaker;
 
   /// How many of the tactic's roles and takers did not fit this squad.
   final int skipped;

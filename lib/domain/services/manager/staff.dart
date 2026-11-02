@@ -202,15 +202,22 @@ abstract final class StaffMarket {
   /// room that read like a village, so the market now offers foreigners
   /// alongside locals and the flag beside a name means something.
   ///
+  /// [home] (the manager's flag code) makes the basic applicant a local man
+  /// [domesticBasicShare] of the time; null keeps the old draw.
+  ///
   /// The tiers offered are spread deliberately: the first slot is always
   /// affordable and the last is always the best on offer, so a manager with no
   /// money still has somebody to hire and a manager with money always has
   /// something to spend it on.
+  /// How often the basic applicant is from the manager's own country.
+  static const double domesticBasicShare = 0.75;
+
   static List<StaffCandidate> forRole({
     required int saveSeed,
     required int cycle,
     required StaffRole role,
     required Map<String, List<String>> namePool,
+    String? home,
   }) {
     final countries = [
       for (final e in namePool.entries)
@@ -218,7 +225,9 @@ abstract final class StaffMarket {
     ]..sort();
     if (countries.isEmpty) return const [];
     final rng = SeededRng(
-      (saveSeed * 0x9E3779B1) ^ (cycle * 0x85EBCA77) ^ (role.index * 0x27D4EB2F),
+      (saveSeed * 0x9E3779B1) ^
+          (cycle * 0x85EBCA77) ^
+          (role.index * 0x27D4EB2F),
     );
     // Basic / good / elite, in that order: the cheap option first, because
     // that is the one a manager reads past on his way to what he cannot yet
@@ -227,7 +236,23 @@ abstract final class StaffMarket {
     return [
       for (var slot = 0; slot < candidatesPerRole; slot++)
         () {
-          final from = countries[rng.nextInt(countries.length)];
+          final drawn = countries[rng.nextInt(countries.length)];
+          // The basic coach is mostly a local man (owner, 1.0.9): the cheap
+          // end of the market is the domestic game. Decided on a separate
+          // stream, so the good and elite slots draw exactly what they drew
+          // before and nobody already shown changes.
+          final from =
+              home != null &&
+                  tiers[slot] == StaffTier.basic &&
+                  namePool[home]?.isNotEmpty == true &&
+                  SeededRng(
+                        (saveSeed * 0x2545F491) ^
+                            (cycle * 0x9E3779B9) ^
+                            (role.index * 0x632BE5AB),
+                      ).nextDouble() <
+                      domesticBasicShare
+              ? home
+              : drawn;
           return (
             id:
                 idBase +

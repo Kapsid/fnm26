@@ -243,6 +243,7 @@ extension SeasonRollover on SeasonService {
     // The new cycle's briefs follow the current rules (see briefRulesV2Kind).
     await _comp.markDrawWatched(careerId, nextCycle, briefRulesV2Kind);
     await _comp.markDrawWatched(careerId, nextCycle, briefRulesV3Kind);
+    await _comp.markDrawWatched(careerId, nextCycle, briefRulesV4Kind);
     await _comp.markDrawWatched(careerId, nextCycle, hostVenuesV2Kind);
     await _comp.markDrawWatched(careerId, nextCycle, fluidWindowsKind);
 

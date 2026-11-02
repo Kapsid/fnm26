@@ -50,6 +50,12 @@ class NationSquadData {
 
   int get size => rows.length;
 
+  /// The pool's average overall, rounded (the squad tab's rating bar).
+  int get averageRating => rows.isEmpty
+      ? 0
+      : (rows.fold<int>(0, (s, r) => s + r.player.overall) / rows.length)
+            .round();
+
   double get averageAge => rows.isEmpty
       ? 0
       : rows.fold<int>(0, (s, r) => s + r.player.age) / rows.length;

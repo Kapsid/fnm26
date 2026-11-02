@@ -16,13 +16,22 @@ import 'package:fnm/domain/entities/player.dart';
 /// side whose one right-back was a 32-rated boy started him over an 80-rated
 /// centre-back on the bench, and strong nations lost points of strength in
 /// about a third of their background matches.
-List<int?> bestEleven(Formation formation, List<Player> pool) {
+///
+/// [slots] overrides the place each slot plays, for a tactic with places
+/// changed within the formation (`Tactic.positions`); null reads
+/// [formation]'s own.
+List<int?> bestEleven(
+  Formation formation,
+  List<Player> pool, {
+  List<PlayerPosition>? slots,
+}) {
   final available = [...pool]..sort((a, b) => b.overall.compareTo(a.overall));
   final used = <int>{};
-  final slots = List<int?>.filled(11, null);
+  final places = slots ?? formation.positions;
+  final picked = List<int?>.filled(11, null);
 
   for (var i = 0; i < 11; i++) {
-    final wanted = formation.positions[i];
+    final wanted = i < places.length ? places[i] : formation.positions[i];
     Player? pick;
     var best = double.negativeInfinity;
     for (final p in available) {
@@ -35,11 +44,11 @@ List<int?> bestEleven(Formation formation, List<Player> pool) {
       }
     }
     if (pick != null) {
-      slots[i] = pick.id;
+      picked[i] = pick.id;
       used.add(pick.id);
     }
   }
-  return slots;
+  return picked;
 }
 
 /// What playing a man away from his position costs, in rating points.

@@ -50,7 +50,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String matchH2hMet(int count) {
-    return '$count duelos';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count duelos',
+      one: '1 duelo',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -254,6 +260,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchHalfTime => 'DESCANSO';
+
+  @override
+  String matchHalfTimeScore(int home, int away) {
+    return 'Descanso $home : $away';
+  }
 
   @override
   String get matchContinue => 'Continuar';
@@ -592,17 +603,35 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String recordsCapsCount(int count) {
-    return '$count partidos';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partidos',
+      one: '1 partido',
+    );
+    return '$_temp0';
   }
 
   @override
   String recordsGoalsCount(int count) {
-    return '$count goles';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count goles',
+      one: '1 gol',
+    );
+    return '$_temp0';
   }
 
   @override
   String recordsAssistsCount(int count) {
-    return '$count asistencias';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count asistencias',
+      one: '1 asistencia',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -612,12 +641,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String recordsMatchesCount(int count) {
-    return '$count partidos';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partidos',
+      one: '1 partido',
+    );
+    return '$_temp0';
   }
 
   @override
   String recordsMeetingsCount(int count) {
-    return '$count duelos';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count duelos',
+      one: '1 duelo',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -627,7 +668,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String recordsMeetingsWdl(int meetings, int wins, int draws, int losses) {
-    return '$meetings duelos · ${wins}G ${draws}E ${losses}P';
+    String _temp0 = intl.Intl.pluralLogic(
+      meetings,
+      locale: localeName,
+      other: '$meetings duelos',
+      one: '1 duelo',
+    );
+    return '$_temp0 · ${wins}G ${draws}E ${losses}P';
   }
 
   @override
@@ -637,7 +684,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String recordsRivalLine(int meetings, String record, String edge) {
-    return '$meetings duelos · $record · $edge';
+    String _temp0 = intl.Intl.pluralLogic(
+      meetings,
+      locale: localeName,
+      other: '$meetings duelos',
+      one: '1 duelo',
+    );
+    return '$_temp0 · $record · $edge';
   }
 
   @override
@@ -1221,6 +1274,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tacticsCornersFreeKicks => 'Córners y faltas';
 
   @override
+  String get tacticsThrowIns => 'Saques de banda';
+
+  @override
+  String get tacticsThrowInStyle => 'Estilo de saque de banda';
+
+  @override
+  String get tacticsThrowInLong => 'Saques largos';
+
+  @override
+  String get tacticsThrowInNeutral => 'Neutral';
+
+  @override
+  String get tacticsThrowInDefensive => 'Saques seguros';
+
+  @override
+  String get tacticsThrowInLongBlurb =>
+      'Los saques cerca del área van al área. Un poco más de peligro, sobre todo con un lanzador fuerte y delanteros altos, pero se pierde el balón algo más a menudo.';
+
+  @override
+  String get tacticsThrowInNeutralBlurb =>
+      'Saques según lo pida el juego. Nada cambia.';
+
+  @override
+  String get tacticsThrowInDefensiveBlurb =>
+      'Cada saque corto y seguro. Menos pérdidas que el rival pueda contragolpear, y algo menos de ocasiones.';
+
+  @override
+  String get matchGoalLongThrow => 'SAQUE LARGO';
+
+  @override
   String get tacticsSkillFin => 'REM';
 
   @override
@@ -1573,7 +1656,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String hubGoldenBootValue(String name, int goals) {
-    return '$name · $goals goles';
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals goles',
+      one: '1 gol',
+    );
+    return '$name · $_temp0';
   }
 
   @override
@@ -2490,6 +2579,29 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String captainMoraleBoost(int morale) {
     return '+$morale de moral del grupo';
+  }
+
+  @override
+  String get viceCaptainFirst => 'Primer vicecapitán';
+
+  @override
+  String get viceCaptainSecond => 'Segundo vicecapitán';
+
+  @override
+  String get viceCaptainNone => 'Sin vicecapitán designado';
+
+  @override
+  String get viceCaptainHint =>
+      'Lleva el brazalete cuando el capitán no puede jugar.';
+
+  @override
+  String captainStandIn(String vice, String captain) {
+    return 'El vicecapitán $vice saca al equipo; el capitán $captain no está disponible';
+  }
+
+  @override
+  String captainStandInUnnamed(String vice) {
+    return 'El vicecapitán $vice saca al equipo';
   }
 
   @override
@@ -3513,6 +3625,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statsMostGames => 'Más partidos';
 
   @override
+  String get statsMostGamesShort => 'Partidos';
+
+  @override
   String get statsNoGoalsRecorded => 'Aún no hay goles registrados.';
 
   @override
@@ -4240,47 +4355,47 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String yUpsetGap0(String opponent, String gap) {
+  String yUpsetGap0(String opponent, int gap) {
     return 'Nos separaban $gap puestos en el ranking y aun así ganamos a $opponent. Magnífico.';
   }
 
   @override
-  String yUpsetGap1(String opponent, String gap) {
+  String yUpsetGap1(String opponent, int gap) {
     return '$opponent: $gap puestos por encima de nosotros. Y les ganamos. El fútbol es maravilloso.';
   }
 
   @override
-  String yUpsetGap2(String opponent, String gap) {
+  String yUpsetGap2(String opponent, int gap) {
     return 'Diferencia en el ranking: $gap puestos. Resultado: victoria contra $opponent. Nunca dejéis de creer.';
   }
 
   @override
-  String yUpsetGap3(String opponent, String gap) {
+  String yUpsetGap3(String opponent, int gap) {
     return 'Diferencia en el ranking antes del partido: $gap puestos. Victoria ante $opponent igualmente.';
   }
 
   @override
-  String yUpsetGap4(String opponent, String gap) {
+  String yUpsetGap4(String opponent, int gap) {
     return 'En el ranking mundial, $opponent estaba $gap puestos por encima. Hoy no.';
   }
 
   @override
-  String yUpsetGap5(String opponent, String gap) {
+  String yUpsetGap5(String opponent, int gap) {
     return 'Índice de sorpresa: $gap puestos de ranking entre ambos. Victoria nuestra contra $opponent.';
   }
 
   @override
-  String yUpsetGap6(String opponent, String gap) {
+  String yUpsetGap6(String opponent, int gap) {
     return '$gap puestos de ranking nos separaban de $opponent. Una noche no cierra esa brecha.';
   }
 
   @override
-  String yUpsetGap7(String opponent, String gap) {
+  String yUpsetGap7(String opponent, int gap) {
     return '$opponent: $gap puestos por encima, y les ganamos. El ranking apenas lo notará.';
   }
 
   @override
-  String yUpsetGap8(String gap) {
+  String yUpsetGap8(int gap) {
     return 'Diferencia en el ranking: $gap puestos. Recordad ese número la próxima vez que perdamos con un modesto.';
   }
 
@@ -4780,47 +4895,47 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String yDownGap0(String opponent, String gap) {
+  String yDownGap0(String opponent, int gap) {
     return '$opponent: $gap puestos por debajo de nosotros. Pasa. Adelante.';
   }
 
   @override
-  String yDownGap1(String gap) {
+  String yDownGap1(int gap) {
     return 'Diferencia en el ranking: $gap puestos a nuestro favor. El fútbol no lee rankings.';
   }
 
   @override
-  String yDownGap2(String opponent, String gap) {
+  String yDownGap2(String opponent, int gap) {
     return '$gap puestos entre nosotros y $opponent sobre el papel. Hoy no en el campo.';
   }
 
   @override
-  String yDownGap3(String opponent, String gap) {
+  String yDownGap3(String opponent, int gap) {
     return 'Diferencia en el ranking antes del partido: $gap puestos a favor. Derrota ante $opponent igualmente.';
   }
 
   @override
-  String yDownGap4(String opponent, String gap) {
+  String yDownGap4(String opponent, int gap) {
     return 'En el ranking mundial, $opponent estaba $gap puestos por debajo. Resultado: derrota.';
   }
 
   @override
-  String yDownGap5(String opponent, String gap) {
+  String yDownGap5(String opponent, int gap) {
     return 'Índice de sorpresa: $gap puestos de ranking, al revés, contra $opponent.';
   }
 
   @override
-  String yDownGap6(String opponent, String gap) {
+  String yDownGap6(String opponent, int gap) {
     return '$gap puestos por encima de $opponent en el ranking. Derrota. Explicadlo.';
   }
 
   @override
-  String yDownGap7(String gap) {
+  String yDownGap7(int gap) {
     return 'Derrota ante un rival $gap puestos por debajo. Dejad que ese número cale.';
   }
 
   @override
-  String yDownGap8(String opponent, String gap) {
+  String yDownGap8(String opponent, int gap) {
     return 'Diferencia en el ranking: $gap puestos. Derrota ante $opponent. Alguien debería ir contando los días.';
   }
 
@@ -5178,122 +5293,122 @@ class AppLocalizationsEs extends AppLocalizations {
   String get grievanceDismiss => 'El equipo lo elijo yo';
 
   @override
-  String yScorerStar0(String name, String goals) {
+  String yScorerStar0(String name, int goals) {
     return '$name marcó $goals. Nadie más se le acerca.';
   }
 
   @override
-  String yScorerStar1(String name, String goals) {
+  String yScorerStar1(String name, int goals) {
     return '$goals de $name. Está llevando a este equipo a cuestas.';
   }
 
   @override
-  String yScorerStar2(String name, String goals) {
+  String yScorerStar2(String name, int goals) {
     return '$name: $goals en el día. Vaya jugador.';
   }
 
   @override
-  String yScorerStar3(String name, String goals) {
+  String yScorerStar3(String name, int goals) {
     return 'Les metió $goals, el bueno de $name. Que salga a saludar.';
   }
 
   @override
-  String yScorerStar4(String name, String goals) {
+  String yScorerStar4(String name, int goals) {
     return '$goals de $name, y el resto iban de pasajeros.';
   }
 
   @override
-  String yScorerStar5(String name, String goals) {
+  String yScorerStar5(String name, int goals) {
     return '$name otra vez. $goals. Imagina este equipo sin él.';
   }
 
   @override
-  String yScorerStar6(String name, String goals) {
+  String yScorerStar6(String name, int goals) {
     return '$goals de $name. Un solo hombre no debería tener que hacer tanto.';
   }
 
   @override
-  String yScorerStar7(String name, String goals) {
+  String yScorerStar7(String name, int goals) {
     return 'Quita a $name de ahí y son $goals menos y una tarde muy distinta.';
   }
 
   @override
-  String yWinStreak0(String count) {
+  String yWinStreak0(int count) {
     return '$count seguidas. Lo que sea que se diga en ese vestuario, está calando.';
   }
 
   @override
-  String yWinStreak1(String count) {
+  String yWinStreak1(int count) {
     return 'Ya van $count seguidas. Los equipos no tropiezan con rachas así por casualidad.';
   }
 
   @override
-  String yWinStreak2(String count) {
+  String yWinStreak2(int count) {
     return '$count seguidas y subiendo. La confianza se ve desde la grada.';
   }
 
   @override
-  String yWinStreak3(String count) {
+  String yWinStreak3(int count) {
     return 'Sin perder en $count. Pregunta a cualquiera que haya entrenado: eso es lo difícil.';
   }
 
   @override
-  String yWinStreak4(String count) {
+  String yWinStreak4(int count) {
     return '$count seguidas. Disfrutadlo mientras el calendario sea amable.';
   }
 
   @override
-  String yWinStreak5(String count) {
+  String yWinStreak5(int count) {
     return '$count seguidas, y no hemos ganado a nadie que importe.';
   }
 
   @override
-  String yWinStreak6(String count) {
+  String yWinStreak6(int count) {
     return 'Una racha de $count. Pregúntame otra vez cuando la pongan a prueba.';
   }
 
   @override
-  String yWinStreak7(String count) {
+  String yWinStreak7(int count) {
     return '$count del tirón. Todo equipo tiene una de estas alguna vez.';
   }
 
   @override
-  String yLossStreak0(String count) {
+  String yLossStreak0(int count) {
     return '$count sin ganar ya. En algún momento se acaban las excusas.';
   }
 
   @override
-  String yLossStreak1(String count) {
+  String yLossStreak1(int count) {
     return 'Ya van $count seguidos tirados. Esto ya no es un bache.';
   }
 
   @override
-  String yLossStreak2(String count) {
+  String yLossStreak2(int count) {
     return '$count derrotas seguidas. Alguien tiene que dar explicaciones.';
   }
 
   @override
-  String yLossStreak3(String count) {
+  String yLossStreak3(int count) {
     return 'Sin ganar en $count. Se nota en cómo juegan.';
   }
 
   @override
-  String yLossStreak4(String count) {
+  String yLossStreak4(int count) {
     return '$count sin ganar y los mismos errores cada semana.';
   }
 
   @override
-  String yLossStreak5(String count) {
+  String yLossStreak5(int count) {
     return '$count seguidos. Lo que sea que se esté probando, no funciona.';
   }
 
   @override
-  String yLossStreak6(String count) {
+  String yLossStreak6(int count) {
     return '$count seguidos. Esto es una tendencia, no un bajón.';
   }
 
   @override
-  String yLossStreak7(String count) {
+  String yLossStreak7(int count) {
     return 'Sin ganar en $count, y en los despachos nadie ha dicho ni una palabra.';
   }
 
@@ -6313,7 +6428,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String tourCupMostTitlesValue(String nation, int titles, int editions) {
-    return '$nation: $titles títulos en $editions ediciones';
+    String _temp0 = intl.Intl.pluralLogic(
+      titles,
+      locale: localeName,
+      other: '$titles títulos',
+      one: '1 título',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      editions,
+      locale: localeName,
+      other: '$editions ediciones',
+      one: '1 edición',
+    );
+    return '$nation: $_temp0 en $_temp1';
   }
 
   @override
@@ -6478,6 +6605,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Acabar en la mitad alta de la clasificación';
 
   @override
+  String get objectiveQualifyingChallenge =>
+      'Luchar por la clasificación, al menos la mitad alta del grupo';
+
+  @override
   String get finishQualifyingTopHalf => 'Mitad alta del grupo de clasificación';
 
   @override
@@ -6613,8 +6744,14 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String squadDevPageOf(String page, String pages, String total) {
-    return '$page/$pages · $total jugadores';
+  String squadDevPageOf(String page, String pages, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total jugadores',
+      one: '1 jugador',
+    );
+    return '$page/$pages · $_temp0';
   }
 
   @override
@@ -6720,7 +6857,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String u21AgeCaps(int age, int caps) {
-    return '$age años · $caps internacionalidades';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps internacionalidades',
+      one: '1 internacionalidad',
+    );
+    return '$age años · $_temp0';
   }
 
   @override
@@ -7040,12 +7183,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String squadCapsValue(String name, int caps) {
-    return '$name · $caps partidos';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps partidos',
+      one: '1 partido',
+    );
+    return '$name · $_temp0';
   }
 
   @override
   String squadGoalsValue(String name, int goals) {
-    return '$name · $goals goles';
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals goles',
+      one: '1 gol',
+    );
+    return '$name · $_temp0';
   }
 
   @override
@@ -7676,7 +7831,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String msgHofBody(String name, int caps, int goals) {
-    return '$name entra en el Salón de la Fama de tu selección ($caps partidos, $goals goles). Consúltalo en Leyendas.';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps partidos',
+      one: '1 partido',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals goles',
+      one: '1 gol',
+    );
+    return '$name entra en el Salón de la Fama de tu selección ($_temp0, $_temp1). Consúltalo en Leyendas.';
   }
 
   @override
@@ -8189,7 +8356,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String newsWalkoutBody(String name, int age, int caps) {
-    return '$name se ha retirado de la selección a los $age años, con $caps internacionalidades. Pidió saber cuál era su situación, no se la dijeron y ya no piensa esperar más.';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps internacionalidades',
+      one: '1 internacionalidad',
+    );
+    return '$name se ha retirado de la selección a los $age años, con $_temp0. Pidió saber cuál era su situación, no se la dijeron y ya no piensa esperar más.';
   }
 
   @override
@@ -9020,62 +9193,62 @@ class AppLocalizationsEs extends AppLocalizations {
   String get transfersUnknownClub => 'Club desconocido';
 
   @override
-  String yAgainstThemAgain0(String opponent, String count) {
+  String yAgainstThemAgain0(String opponent, int count) {
     return 'Ya van $count veces contra $opponent. Alguien lleva la cuenta, y son ellos.';
   }
 
   @override
-  String yAgainstThemAgain1(String opponent, String count) {
+  String yAgainstThemAgain1(String opponent, int count) {
     return '$opponent otra vez. $count enfrentamientos y todavía no les hemos pillado el truco.';
   }
 
   @override
-  String yAgainstThemAgain2(String opponent, String count) {
+  String yAgainstThemAgain2(String opponent, int count) {
     return 'Número $count contra $opponent. Esto ya no es casualidad.';
   }
 
   @override
-  String yAgainstThemAgain3(String opponent, String count) {
+  String yAgainstThemAgain3(String opponent, int count) {
     return 'Hemos jugado $count veces contra $opponent y no hemos aprendido nada de ninguna.';
   }
 
   @override
-  String yAgainstThemAgain4(String opponent, String count) {
+  String yAgainstThemAgain4(String opponent, int count) {
     return '$opponent, $count veces. Saben exactamente lo que vamos a hacer.';
   }
 
   @override
-  String yAgainstThemAgain5(String opponent, String count) {
+  String yAgainstThemAgain5(String opponent, int count) {
     return 'Lo que sea que $opponent tiene contra nosotros, $count partidos después, lo sigue teniendo.';
   }
 
   @override
-  String ySameOldStory0(String count) {
+  String ySameOldStory0(int count) {
     return 'Es la $count.ª vez que pasa esto últimamente. ¿En qué momento pasa a ser simplemente lo que somos?';
   }
 
   @override
-  String ySameOldStory1(String count) {
+  String ySameOldStory1(int count) {
     return 'Ya van $count tardes así. Es un patrón, no una racha de mala suerte.';
   }
 
   @override
-  String ySameOldStory2(String count) {
+  String ySameOldStory2(int count) {
     return 'Hemos visto este mismo partido $count veces últimamente. Mismo guion, mismo final.';
   }
 
   @override
-  String ySameOldStory3(String count) {
+  String ySameOldStory3(int count) {
     return 'La $count.ª versión de los mismos noventa minutos. Nadie lo arregla.';
   }
 
   @override
-  String ySameOldStory4(String count) {
+  String ySameOldStory4(int count) {
     return '$count veces. Si a estas alturas no ves el patrón, es que no miras.';
   }
 
   @override
-  String ySameOldStory5(String count) {
+  String ySameOldStory5(int count) {
     return 'La misma historia, $count veces. Se han acabado las excusas antes que los malos resultados.';
   }
 
@@ -9172,62 +9345,62 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String yDrought0(String name, String count) {
+  String yDrought0(String name, int count) {
     return '$name lleva $count partidos sin marcar y está haciendo todo lo demás en el campo.';
   }
 
   @override
-  String yDrought1(String name, String count) {
+  String yDrought1(String name, int count) {
     return '$count partidos sin gol para $name. Ya vendrán de tres en tres, como siempre.';
   }
 
   @override
-  String yDrought2(String name, String count) {
+  String yDrought2(String name, int count) {
     return '$name: $count partidos, cero goles.';
   }
 
   @override
-  String yDrought3(String name, String count) {
+  String yDrought3(String name, int count) {
     return '$count partidos sin gol para $name. Habrá que vigilarlo.';
   }
 
   @override
-  String yDrought4(String name, String count) {
+  String yDrought4(String name, int count) {
     return '$count partidos. Cero goles. $name no le da ni al arco iris.';
   }
 
   @override
-  String yDrought5(String name, String count) {
+  String yDrought5(String name, int count) {
     return '$name no marca desde hace $count partidos. Que juegue literalmente cualquier otro.';
   }
 
   @override
-  String yRivalryLooms0(String opponent, String count) {
+  String yRivalryLooms0(String opponent, int count) {
     return 'Ahora $opponent. $count enfrentamientos y sigue significándolo todo.';
   }
 
   @override
-  String yRivalryLooms1(String opponent, String count) {
+  String yRivalryLooms1(String opponent, int count) {
     return 'Ya van $count veces contra $opponent. Que vengan.';
   }
 
   @override
-  String yRivalryLooms2(String opponent, String count) {
+  String yRivalryLooms2(String opponent, int count) {
     return 'Ahora $opponent. Jugados: $count.';
   }
 
   @override
-  String yRivalryLooms3(String opponent, String count) {
+  String yRivalryLooms3(String opponent, int count) {
     return 'Enfrentamiento número $count con $opponent esta semana.';
   }
 
   @override
-  String yRivalryLooms4(String opponent, String count) {
+  String yRivalryLooms4(String opponent, int count) {
     return '$opponent otra vez. $count de estos y no hemos aprendido nada.';
   }
 
   @override
-  String yRivalryLooms5(String opponent, String count) {
+  String yRivalryLooms5(String opponent, int count) {
     return '$count partidos contra $opponent y nos siguen ganando. Maravilloso.';
   }
 
@@ -9571,7 +9744,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String resultsCycleRecord(int played, int won, int drawn, int lost) {
-    return '$played jugados  ·  ${won}G ${drawn}E ${lost}P';
+    String _temp0 = intl.Intl.pluralLogic(
+      played,
+      locale: localeName,
+      other: '$played jugados',
+      one: '1 jugado',
+    );
+    return '$_temp0  ·  ${won}G ${drawn}E ${lost}P';
   }
 
   @override
@@ -11212,6 +11391,32 @@ class AppLocalizationsEs extends AppLocalizations {
       'Ganar el Campeonato de Europa o el Campeonato del Mundo';
 
   @override
+  String get campaignZanzibarTitle => 'El despertar de Zanzíbar';
+
+  @override
+  String get campaignZanzibarTwist =>
+      'Zanzíbar ocupa el lugar de Chad en África, durante cien años';
+
+  @override
+  String get campaignZanzibarGoal =>
+      'Clasificarse para un Campeonato de África';
+
+  @override
+  String get campaignZanzibarIntro =>
+      'Zanzíbar tiene su propia federación de fútbol y su propia selección, pero ningún sitio en el fútbol africano ni en el mundial. En este mundo ha ocupado el lugar de Chad en África y empieza cerca de lo más bajo del ranking mundial: jugadores isleños, estadios pequeños y el calor del monzón. Tienes cien años, veinticinco ciclos, para llegar a un Campeonato de África, después a un Campeonato del Mundo y, si te atreves a soñar, ganar el Campeonato del Mundo.';
+
+  @override
+  String get campaignStars1Zanzibar =>
+      'Clasificarse para un Campeonato de África';
+
+  @override
+  String get campaignStars2Zanzibar =>
+      'Clasificarse para un Campeonato del Mundo';
+
+  @override
+  String get campaignStars3Zanzibar => 'Ganar el Campeonato del Mundo';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -12774,6 +12979,21 @@ class AppLocalizationsEs extends AppLocalizations {
       'Yo digo: ¡dejad vivir a los chavales! Quien trabaja duro, también se divierte. Pulgar arriba.';
 
   @override
+  String get yCameoMarena => 'Esto lo podría entrenar hasta yo.';
+
+  @override
+  String get yCameoKralik => '¿Qué esperabas? jejeje, compra nuestro ZeroZero';
+
+  @override
+  String get yCameoPosuk0 => 'FLOJOS';
+
+  @override
+  String get yCameoPosuk1 => 'MADRE MÍAAA';
+
+  @override
+  String get yCameoPosuk2 => '¿Alguien al bar?';
+
+  @override
   String get yTraitStreamer =>
       'Lo retransmite todo, a todo volumen y en mayúsculas.';
 
@@ -13086,4 +13306,980 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get hostingWindowLine =>
       'Las candidaturas se abren al final del ciclo, tras la final del Campeonato del Mundo.';
+
+  @override
+  String hubEventWarmUpOffer(String nation) {
+    return 'Oferta de amistoso: $nation';
+  }
+
+  @override
+  String get hubEventWarmUpOfferSub =>
+      'Un amistoso de despedida antes de su torneo';
+
+  @override
+  String get warmUpOfferTitle => 'OFERTA DE AMISTOSO';
+
+  @override
+  String warmUpOfferBody(String nation, String competition, String date) {
+    return '$nation prepara el torneo $competition y quiere jugar contra ti un amistoso de despedida el $date.';
+  }
+
+  @override
+  String warmUpOfferAway(String nation) {
+    return 'Fuera, en casa del rival ($nation).';
+  }
+
+  @override
+  String get warmUpOfferHome => 'En casa: el rival viaja hasta ti.';
+
+  @override
+  String get warmUpOfferNote =>
+      'Puedes aceptar como máximo dos ofertas. Un amistoso aceptado tiene su propia convocatoria.';
+
+  @override
+  String get warmUpOfferAccept => 'Aceptar';
+
+  @override
+  String get warmUpOfferDecline => 'Rechazar';
+
+  @override
+  String warmUpOfferMsgTitle(String nation) {
+    return 'Oferta de amistoso: $nation';
+  }
+
+  @override
+  String warmUpOfferMsgBody(String nation, String competition) {
+    return '$nation quiere jugar contra ti un amistoso de despedida antes del torneo $competition.';
+  }
+
+  @override
+  String get hubSimToFinal => 'Simular hasta la final';
+
+  @override
+  String get jobDossierOpen => 'Estudiar la oferta';
+
+  @override
+  String get jobDossierRating => 'Nivel del equipo';
+
+  @override
+  String get jobDossierMood => 'Ánimo';
+
+  @override
+  String get jobDossierTopPlayers => 'Mejores jugadores';
+
+  @override
+  String jobDossierPlayerAge(int age) {
+    return '$age años';
+  }
+
+  @override
+  String get jobDossierReport => 'Informe del ojeador';
+
+  @override
+  String get jobDossierNextTargetLabel => 'Próximo objetivo';
+
+  @override
+  String jobDossierNextTarget(String cup) {
+    return 'Clasificarse para el $cup y el Campeonato del Mundo.';
+  }
+
+  @override
+  String get jobDossierStrongAttack => 'Tienen pegada de verdad arriba.';
+
+  @override
+  String get jobDossierBluntAttack => 'Les cuesta mucho marcar.';
+
+  @override
+  String get jobDossierStrongMidfield =>
+      'El centro del campo manda en sus partidos.';
+
+  @override
+  String get jobDossierWeakMidfield => 'Sufren en el centro del campo.';
+
+  @override
+  String get jobDossierStrongDefence => 'Atrás son muy difíciles de batir.';
+
+  @override
+  String get jobDossierThinDefence => 'La defensa parece frágil.';
+
+  @override
+  String get jobDossierSafeKeeper => 'Un portero de total confianza.';
+
+  @override
+  String get jobDossierShakyKeeper => 'La portería preocupa.';
+
+  @override
+  String get jobDossierOldSquad =>
+      'Una plantilla veterana: se acerca una renovación.';
+
+  @override
+  String get jobDossierYoungCore => 'Un núcleo joven en pleno crecimiento.';
+
+  @override
+  String jobDossierOneStar(String name) {
+    return '$name tira del equipo.';
+  }
+
+  @override
+  String get jobDossierDeepSquad => 'Fondo de armario más allá del once.';
+
+  @override
+  String get jobDossierThinSquad => 'Poca calidad detrás del once titular.';
+
+  @override
+  String get jobDossierBalanced =>
+      'Un equipo equilibrado, sin puntos débiles claros.';
+
+  @override
+  String yQualifiedEuphoric0(String competition) {
+    return '¡No me creo que lo hayamos conseguido! Casi nadie lo esperaba. $competition, allá vamos 💪';
+  }
+
+  @override
+  String yQualifiedEuphoric1(String competition) {
+    return '¡Qué noche mágica, estamos en el país de los sueños! $competition, allá vamos!';
+  }
+
+  @override
+  String yQualifiedEuphoric2(String competition) {
+    return 'Siempre creí en este equipo. Siempre. ¡Y ahora vamos al $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric3(String competition) {
+    return 'Nadie nos daba una oportunidad en ese grupo. Nadie. ¡Nos vemos en el $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric4(String competition) {
+    return 'Lágrimas en los ojos. Nosotros, en el $competition. Nosotros de verdad.';
+  }
+
+  @override
+  String yQualifiedEuphoric5(String competition) {
+    return 'Estoy bailando en la calle ahora mismo. ¡Clasificados para el $competition! Increíble 🎉';
+  }
+
+  @override
+  String yQualifiedEuphoric6(String competition) {
+    return 'Dije que no teníamos ninguna opción. Nunca me alegró tanto equivocarme. ¡$competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric7(String competition) {
+    return 'Llevo años quejándome de este equipo y mañana vuelvo a empezar. ¿Esta noche? ¡$competition, allá vamos!';
+  }
+
+  @override
+  String yQualifiedEuphoric8(String competition) {
+    return 'Vale. VALE. Retiro todo lo dicho. ¡Vamos al $competition!';
+  }
+
+  @override
+  String yKnockoutEuphoric0(String opponent) {
+    return '¡Pasamos! $opponent, eliminado. ¡Qué noche mágica, estamos en el país de los sueños!';
+  }
+
+  @override
+  String yKnockoutEuphoric1(String opponent) {
+    return '¡Hemos eliminado a $opponent! Seguid soñando, todos 💪';
+  }
+
+  @override
+  String yKnockoutEuphoric2(String opponent) {
+    return 'Sabía que este equipo lo llevaba dentro. ¡Adiós, $opponent, hola, siguiente ronda!';
+  }
+
+  @override
+  String yKnockoutEuphoric3(String opponent) {
+    return 'Me he quedado sin voz. ¡$opponent fuera y nosotros seguimos!';
+  }
+
+  @override
+  String yKnockoutEuphoric4(String opponent) {
+    return 'Eliminatorias y seguimos en pie. $opponent lo ha aprendido por las malas.';
+  }
+
+  @override
+  String yKnockoutEuphoric5(String opponent) {
+    return '$opponent, de vuelta a casa. Este equipo está haciendo historia 🔥';
+  }
+
+  @override
+  String yKnockoutEuphoric6(String opponent) {
+    return 'Pensaba que ya estaríamos en casa. En cambio se va $opponent. Increíble.';
+  }
+
+  @override
+  String yKnockoutEuphoric7(String opponent) {
+    return 'Hasta yo estoy soñando ya. $opponent, eliminado. ¿Quiénes somos?';
+  }
+
+  @override
+  String yKnockoutEuphoric8(String opponent) {
+    return 'Pesimista toda la vida. $opponent fuera, nosotros dentro. No sé ni qué hacer.';
+  }
+
+  @override
+  String yTrophyEuphoric0(String competition) {
+    return '¡¡¡CAMPEONES!!! ¡Hemos ganado el $competition! Nunca olvidaré esta noche 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric1(String competition) {
+    return 'Qué noche mágica. Campeones del $competition, y no puedo dejar de llorar.';
+  }
+
+  @override
+  String yTrophyEuphoric2(String competition) {
+    return 'Siempre dije que este equipo podía. Campeones del $competition. ¡CAMPEONES!';
+  }
+
+  @override
+  String yTrophyEuphoric3(String competition) {
+    return 'Que alguien me diga que esto es real. ¡Hemos ganado el $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric4(String competition) {
+    return 'Esta noche hay fiesta en cada calle del país. El $competition es nuestro 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric5(String competition) {
+    return 'Recordad dónde estabais esta noche. Campeones del $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric6(String competition) {
+    return 'Cada mala noche, cada disgusto, ha valido la pena por esto. Campeones del $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric7(String competition) {
+    return 'Llevo años quejándome y ahora no me queda nada de qué quejarme. ¡Hemos ganado el $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric8(String competition) {
+    return 'Vale, lo admito: campeones del $competition. La mejor noche de mi vida.';
+  }
+
+  @override
+  String yExitHeartbreak0(String competition) {
+    return 'Con el corazón roto. Fuimos al $competition a por todas. Sigo orgulloso de este equipo.';
+  }
+
+  @override
+  String yExitHeartbreak1(String competition) {
+    return 'Duele muchísimo. En el $competition teníamos que llegar lejos. Volveremos.';
+  }
+
+  @override
+  String yExitHeartbreak2(String competition) {
+    return 'Hundido. Ya estamos fuera del $competition, y teníamos equipo para ganarlo.';
+  }
+
+  @override
+  String yExitHeartbreak3(String competition) {
+    return 'El vuelo de vuelta del $competition será el más largo de nuestras vidas.';
+  }
+
+  @override
+  String yExitHeartbreak4(String competition) {
+    return 'Teníamos que llegar lejos en el $competition. Y nos vamos a casa. Sin palabras.';
+  }
+
+  @override
+  String yExitHeartbreak5(String competition) {
+    return 'Años esperando, y el $competition se acaba para nosotros antes de empezar. Vacío.';
+  }
+
+  @override
+  String punditsMsgTitle(String competition) {
+    return 'Los analistas, sobre el $competition';
+  }
+
+  @override
+  String punditsSays(String pundit, String words) {
+    return '$pundit: $words';
+  }
+
+  @override
+  String punditsFavourite0(String nation) {
+    return 'Mi favorito: $nation. Demasiado fuerte y con demasiado fondo para el resto.';
+  }
+
+  @override
+  String punditsFavourite1(String nation) {
+    return 'Es difícil no apostar por $nation. Tiene todo lo necesario para ganarlo.';
+  }
+
+  @override
+  String punditsDarkHorse0(String nation) {
+    return 'Tapado de verdad aquí: $nation. No me sorprendería verlo en semifinales.';
+  }
+
+  @override
+  String punditsDarkHorse1(String nation) {
+    return 'Ojo con $nation. Nadie querrá cruzarse con ellos.';
+  }
+
+  @override
+  String punditsMineBottom0(String nation) {
+    return '$nation: último de grupo. Llegar aquí ya es un logro, pero no hay calidad para pasar.';
+  }
+
+  @override
+  String punditsMineBottom1(String nation) {
+    return '$nation disfrutará del viaje, pero lo veo último de su grupo.';
+  }
+
+  @override
+  String punditsMineGroupOut0(String nation) {
+    return '$nation: fuera en la fase de grupos. Competirá, pero le falta un escalón.';
+  }
+
+  @override
+  String punditsMineGroupOut1(String nation) {
+    return 'Veo a $nation volviendo a casa tras el grupo. Eso sí, a alguien le complicará la vida.';
+  }
+
+  @override
+  String punditsMineFirstKnockout0(String nation) {
+    return '$nation: pasa el grupo y cae en la primera eliminatoria. Un torneo digno.';
+  }
+
+  @override
+  String punditsMineFirstKnockout1(String nation) {
+    return '$nation debería superar el grupo. Más allá sería una sorpresa.';
+  }
+
+  @override
+  String punditsMineQuarters0(String nation) {
+    return '$nation: un equipo sólido. Los cuartos de final le cuadran.';
+  }
+
+  @override
+  String punditsMineQuarters1(String nation) {
+    return '$nation puede llegar a cuartos. Sería un buen torneo.';
+  }
+
+  @override
+  String punditsMineSemis0(String nation) {
+    return '$nation: tiene clase, se espera un gran recorrido. Semifinales como mínimo.';
+  }
+
+  @override
+  String punditsMineSemis1(String nation) {
+    return '$nation tiene calidad para estar entre los cuatro mejores. Menos sería una decepción.';
+  }
+
+  @override
+  String punditsMineFinal0(String nation) {
+    return '$nation: tiene clase, se espera un gran recorrido. Lo veo en la final.';
+  }
+
+  @override
+  String punditsMineFinal1(String nation) {
+    return '$nation, hasta la final. Así de bueno es.';
+  }
+
+  @override
+  String punditsMineWinner0(String nation) {
+    return '$nation es el rival a batir. Cualquier cosa menos que el título sería un fracaso.';
+  }
+
+  @override
+  String punditsMineWinner1(String nation) {
+    return 'Mi candidato al título: $nation. Ahora toda la presión es suya.';
+  }
+
+  @override
+  String punditsMineDarkHorseQuarters(String nation) {
+    return 'Tapado de verdad aquí: $nation. No me sorprendería verlo en cuartos de final.';
+  }
+
+  @override
+  String punditsMineDarkHorseSemis(String nation) {
+    return 'Tapado de verdad aquí: $nation. No me sorprendería verlo en semifinales.';
+  }
+
+  @override
+  String yPunditPick0(String competition, String favourite, String darkHorse) {
+    return 'Mi apuesta para el $competition: gana $favourite. ¿Tapado? $darkHorse. Menudo torneo nos espera.';
+  }
+
+  @override
+  String yPunditPick1(String competition, String favourite, String darkHorse) {
+    return '$favourite para el $competition, y ojo con $darkHorse. Puede ser algo especial.';
+  }
+
+  @override
+  String yPunditPick2(String competition, String favourite, String darkHorse) {
+    return 'Pronósticos del $competition. Campeón: $favourite. Tapado: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick3(String competition, String favourite, String darkHorse) {
+    return 'Difícil no apostar por $favourite en el $competition. $darkHorse puede sorprender a mucha gente.';
+  }
+
+  @override
+  String yPunditPick4(String competition, String favourite, String darkHorse) {
+    return 'Todos os dirán $favourite para el $competition. Por desgracia, tienen razón. Lo único que merece la pena ver: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick5(String competition, String favourite, String darkHorse) {
+    return '$favourite ganará el $competition y será aburrido. Si queréis una historia, mirad a $darkHorse.';
+  }
+
+  @override
+  String tacticsSlotSwitchHeading(String formation) {
+    return 'Posición dentro del $formation';
+  }
+
+  @override
+  String get tacticsSlotSwitchReset => 'Restablecer';
+
+  @override
+  String get tacticsSlotSwitchLimit =>
+      'Ya hay dos posiciones cambiadas en este sistema. Restablece una para cambiar esta.';
+
+  @override
+  String get assistantAsk => 'Preguntar al segundo';
+
+  @override
+  String get assistantNoneNote =>
+      'No tienes segundo entrenador. Contrata uno en el cuerpo técnico para tener sus consejos.';
+
+  @override
+  String get assistantSheetTitle => 'El consejo de tu segundo';
+
+  @override
+  String get assistantReadBasic =>
+      'Una lectura aproximada. Revísala antes de fiarte.';
+
+  @override
+  String get assistantReadGood =>
+      'Una lectura fiable de nivel, posiciones y cansancio.';
+
+  @override
+  String get assistantReadElite => 'Lee el estado físico, la forma y al rival.';
+
+  @override
+  String get assistantVariantMain => 'Su elección';
+
+  @override
+  String get assistantVariantFresh => 'Piernas más frescas';
+
+  @override
+  String get assistantVariantForm => 'Jugadores en forma';
+
+  @override
+  String get assistantVariantAttacking => 'Más ofensivo';
+
+  @override
+  String get assistantVariantSolid => 'Más sólido';
+
+  @override
+  String get assistantVsStronger => 'El rival es más fuerte';
+
+  @override
+  String get assistantVsWeaker => 'Sois más fuertes';
+
+  @override
+  String assistantChanges(int count) {
+    return 'Cambios en tu once: $count';
+  }
+
+  @override
+  String get assistantBench => 'Primeros desde el banquillo';
+
+  @override
+  String get assistantReasonBestFit => 'El más indicado';
+
+  @override
+  String get assistantReasonInForm => 'En forma';
+
+  @override
+  String get assistantReasonFresh => 'Fresco';
+
+  @override
+  String get assistantReasonCovering => 'Cubre puesto';
+
+  @override
+  String get assistantReasonCoverDefence => 'Defensa';
+
+  @override
+  String get assistantReasonCoverMidfield => 'Medio campo';
+
+  @override
+  String get assistantReasonCoverAttack => 'Ataque';
+
+  @override
+  String get assistantReasonTired => 'Cansado';
+
+  @override
+  String get assistantReasonBooked => 'Amonestado';
+
+  @override
+  String get assistantReasonInjured => 'Lesionado';
+
+  @override
+  String get assistantReasonOutOfPosition => 'Fuera de posición';
+
+  @override
+  String get assistantReasonChasing => 'Hay que remontar';
+
+  @override
+  String get assistantSubsTitle => 'Cambios que haría';
+
+  @override
+  String get assistantNoSubs => 'Dejaría el equipo como está.';
+
+  @override
+  String get assistantApply => 'Aplicar';
+
+  @override
+  String get assistantClose => 'Cerrar';
+
+  @override
+  String get staffEffectAdviceBasic =>
+      'Aconseja alineación y cambios, a veces se equivoca';
+
+  @override
+  String get staffEffectAdviceGood =>
+      'Aconseja alineación y cambios, vigila el cansancio';
+
+  @override
+  String get staffEffectAdviceElite => 'Aconseja según físico, forma y rival';
+
+  @override
+  String get staffHiringAdvice => 'y consejos de alineación y cambios';
+
+  @override
+  String get hubEventSponsor => 'Elige el patrocinador de la temporada';
+
+  @override
+  String get hubEventSponsorSub =>
+      'Tres marcas quieren su nombre en la camiseta. Cada contrato tiene su precio.';
+
+  @override
+  String get sponsorTitle => 'Patrocinador principal';
+
+  @override
+  String get sponsorIntroSeason =>
+      'Cada temporada, las marcas hacen cola para ser el patrocinador principal de la federación. Cada contrato aporta algo y cuesta algo: la directiva, el vestuario o ambos. Firma uno, o ninguno. Los efectos sobre la directiva y la moral duran hasta el final de la temporada.';
+
+  @override
+  String get sponsorEffectBoard => 'Directiva';
+
+  @override
+  String get sponsorEffectMorale => 'Moral';
+
+  @override
+  String get sponsorEffectPress => 'Burla mediática';
+
+  @override
+  String sponsorPerkMarketing(String amount, String department) {
+    return 'Financia $amount de $department este ciclo';
+  }
+
+  @override
+  String sponsorPerkMarketingNote(String amount) {
+    return '$amount más de retorno al cierre del ciclo, además de tu propia inversión';
+  }
+
+  @override
+  String get sponsorRiskyLabel => 'Arriesgado';
+
+  @override
+  String get sponsorRiskyWarning =>
+      'La prensa se va a poner las botas con esto.';
+
+  @override
+  String get sponsorSign => 'Firmar';
+
+  @override
+  String get sponsorDeclineSeason => 'Sin patrocinador esta temporada';
+
+  @override
+  String get sponsorNoneSeason => 'Sin patrocinador principal esta temporada';
+
+  @override
+  String sponsorUntilSeasonEnd(String season) {
+    return 'Hasta el final de la temporada $season';
+  }
+
+  @override
+  String sponsorRolloverLine(String brand) {
+    return 'Patrocinador principal: $brand';
+  }
+
+  @override
+  String get sponsorBrandAgrofart => 'Agropedo';
+
+  @override
+  String get sponsorIndustryAgrofart => 'Agricultura y química';
+
+  @override
+  String get sponsorFlavourAgrofart =>
+      'Alimenta a la nación. También es dueña de sus patatas fritas, sus periódicos y casi todos sus cerdos.';
+
+  @override
+  String get sponsorBrandBetBadger => 'BetBadger';
+
+  @override
+  String get sponsorIndustryBetBadger => 'Casa de apuestas';
+
+  @override
+  String get sponsorFlavourBetBadger =>
+      'Cuotas para todo, incluido tu propio despido.';
+
+  @override
+  String get sponsorBrandCoinGoblin => 'CoinGoblin';
+
+  @override
+  String get sponsorIndustryCoinGoblin => 'Plataforma cripto';
+
+  @override
+  String get sponsorFlavourCoinGoblin =>
+      'Un cuatro mil por ciento arriba esta semana. Por favor, no preguntes por los retiros.';
+
+  @override
+  String get sponsorBrandEasyPeasy => 'Préstamo Facilito';
+
+  @override
+  String get sponsorIndustryEasyPeasy => 'Préstamos rápidos';
+
+  @override
+  String get sponsorFlavourEasyPeasy =>
+      'Dinero en diez minutos. Intereses durante diez años.';
+
+  @override
+  String get sponsorBrandVaporia => 'Vaporia';
+
+  @override
+  String get sponsorIndustryVaporia => 'Tiendas de vapeo';
+
+  @override
+  String get sponsorFlavourVaporia =>
+      'Cuarenta sabores de nube, ninguno bueno para un delantero.';
+
+  @override
+  String get sponsorBrandGoldenFleece => 'Vellocino de Oro Holdings';
+
+  @override
+  String get sponsorIndustryGoldenFleece => 'Holding offshore';
+
+  @override
+  String get sponsorFlavourGoldenFleece =>
+      'Nadie sabe a qué se dedican. Sus abogados lo prefieren así.';
+
+  @override
+  String get sponsorBrandMiners => 'Los Mineros';
+
+  @override
+  String get sponsorIndustryMiners => 'Minería';
+
+  @override
+  String get sponsorFlavourMiners =>
+      'Carbón, cobre y un consejo de administración muy polvoriento.';
+
+  @override
+  String get sponsorBrandMoth => 'Polilla';
+
+  @override
+  String get sponsorIndustryMoth => 'Gasolineras';
+
+  @override
+  String get sponsorFlavourMoth =>
+      'Gasolina, perritos calientes y un túnel de lavado que nunca ha funcionado.';
+
+  @override
+  String get sponsorBrandSludgeco => 'Petrolodo';
+
+  @override
+  String get sponsorIndustrySludgeco => 'Petróleo';
+
+  @override
+  String get sponsorFlavourSludgeco =>
+      'Perfora agujeros donde nadie se lo ha pedido.';
+
+  @override
+  String get sponsorBrandSkyloom => 'Skyloom';
+
+  @override
+  String get sponsorIndustrySkyloom => 'Aerolínea low cost';
+
+  @override
+  String get sponsorFlavourSkyloom =>
+      'Vuela a cualquier sitio por nueve euros. Asiento, maleta y oxígeno aparte.';
+
+  @override
+  String get sponsorBrandArvella => 'Arvella Motors';
+
+  @override
+  String get sponsorIndustryArvella => 'Fabricante de coches';
+
+  @override
+  String get sponsorFlavourArvella =>
+      'SUV de lujo del tamaño de un piso pequeño.';
+
+  @override
+  String get sponsorBrandCheapoMax => 'BaratoMax';
+
+  @override
+  String get sponsorIndustryCheapoMax => 'Súper de descuento';
+
+  @override
+  String get sponsorFlavourCheapoMax =>
+      'Todo a mitad de precio, incluidos los empleados.';
+
+  @override
+  String get sponsorBrandBrickhaven => 'Brickhaven';
+
+  @override
+  String get sponsorIndustryBrickhaven => 'Construcción';
+
+  @override
+  String get sponsorFlavourBrickhaven =>
+      'Construye estadios a tiempo. A veces.';
+
+  @override
+  String get sponsorBrandHappyBurgers => 'Hamburguesas Felices';
+
+  @override
+  String get sponsorIndustryHappyBurgers => 'Comida rápida';
+
+  @override
+  String get sponsorFlavourHappyBurgers =>
+      'Triple de queso, doble de beicon, gratis para toda la plantilla.';
+
+  @override
+  String get sponsorBrandOldSwamp => 'Barroviejo';
+
+  @override
+  String get sponsorIndustryOldSwamp => 'Cervecera';
+
+  @override
+  String get sponsorFlavourOldSwamp =>
+      'Elaborada desde 1869 en una bodega que nadie ha limpiado desde entonces.';
+
+  @override
+  String get sponsorBrandBuzzhorn => 'Buzzhorn';
+
+  @override
+  String get sponsorIndustryBuzzhorn => 'Bebidas energéticas';
+
+  @override
+  String get sponsorFlavourBuzzhorn =>
+      'Cafeína suficiente para despertar a un portero.';
+
+  @override
+  String get sponsorBrandSteamy => 'Sauna El Vaporcito';
+
+  @override
+  String get sponsorIndustrySteamy => 'Cadena de saunas';
+
+  @override
+  String get sponsorFlavourSteamy =>
+      'A sudar juntos. La toalla es opcional; el espíritu de equipo, no.';
+
+  @override
+  String get sponsorBrandPixelRage => 'PixelRage Games';
+
+  @override
+  String get sponsorIndustryPixelRage => 'Videojuegos';
+
+  @override
+  String get sponsorFlavourPixelRage =>
+      'El shooter favorito de la plantilla, ahora con sus propias caras.';
+
+  @override
+  String get sponsorBrandGlitterbox => 'Glitterbox Records';
+
+  @override
+  String get sponsorIndustryGlitterbox => 'Discográfica';
+
+  @override
+  String get sponsorFlavourGlitterbox =>
+      'Cada celebración de gol viene ahora con coreografía.';
+
+  @override
+  String get sponsorBrandMilkwell => 'Lácteos Milkwell';
+
+  @override
+  String get sponsorIndustryMilkwell => 'Lácteos';
+
+  @override
+  String get sponsorFlavourMilkwell =>
+      'Leche bien fría y excursiones escolares para ver a las vacas.';
+
+  @override
+  String get sponsorBrandHerringKing => 'El Rey del Arenque';
+
+  @override
+  String get sponsorIndustryHerringKing => 'Arenque en escabeche';
+
+  @override
+  String get sponsorFlavourHerringKing =>
+      'En escabeche, ahumado o en tarro desde los tiempos del abuelo.';
+
+  @override
+  String get sponsorBrandUmbrello => 'Seguros Umbrello';
+
+  @override
+  String get sponsorIndustryUmbrello => 'Seguros';
+
+  @override
+  String get sponsorFlavourUmbrello =>
+      'Lo asegura todo, hasta el paraguas de tu paraguas.';
+
+  @override
+  String get sponsorBrandTidyTeeth => 'Dientes Relucientes';
+
+  @override
+  String get sponsorIndustryTidyTeeth => 'Pasta de dientes';
+
+  @override
+  String get sponsorFlavourTidyTeeth =>
+      'Nueve de cada diez dentistas. El décimo está de vacaciones.';
+
+  @override
+  String get sponsorBrandWoollySocks => 'Calcetines de Lana';
+
+  @override
+  String get sponsorIndustryWoollySocks => 'Prendas de punto';
+
+  @override
+  String get sponsorFlavourWoollySocks =>
+      'Calcetines tejidos a mano para cada jugador, de todos los colores menos los del equipo.';
+
+  @override
+  String get sponsorBrandStackabloc => 'Stackabloc';
+
+  @override
+  String get sponsorIndustryStackabloc => 'Juguetes';
+
+  @override
+  String get sponsorFlavourStackabloc =>
+      'Construye tu propio estadio nacional. Cuatro mil piezas, falta una.';
+
+  @override
+  String get sponsorBrandPolarPenguin => 'Pingüino Polar';
+
+  @override
+  String get sponsorIndustryPolarPenguin => 'Helados';
+
+  @override
+  String get sponsorFlavourPolarPenguin =>
+      'Treinta sabores, todos derritiéndose.';
+
+  @override
+  String get sponsorBrandHexagon => 'Hexagon';
+
+  @override
+  String get sponsorIndustryHexagon => 'Ingeniería';
+
+  @override
+  String get sponsorFlavourHexagon =>
+      'Cada problema tiene seis caras. Sus ingenieros todavía las están contando.';
+
+  @override
+  String get sponsorBrandVelocell => 'Velocell';
+
+  @override
+  String get sponsorIndustryVelocell => 'Telefonía';
+
+  @override
+  String get sponsorFlavourVelocell =>
+      'Cobertura total en todas partes, menos dentro del estadio.';
+
+  @override
+  String get sponsorBrandParcelion => 'Parcelion';
+
+  @override
+  String get sponsorIndustryParcelion => 'Mensajería';
+
+  @override
+  String get sponsorFlavourParcelion =>
+      'Entrega mañana. O pasado. O a tu vecino.';
+
+  @override
+  String get sponsorBrandGridwell => 'Gridwell Energy';
+
+  @override
+  String get sponsorIndustryGridwell => 'Energía';
+
+  @override
+  String get sponsorFlavourGridwell =>
+      'Mantiene encendidos los focos. Casi siempre.';
+
+  @override
+  String get sponsorBrandCrownstone => 'Banco Crownstone';
+
+  @override
+  String get sponsorIndustryCrownstone => 'Banca';
+
+  @override
+  String get sponsorFlavourCrownstone =>
+      'Tu dinero está seguro con nosotros. Probablemente.';
+
+  @override
+  String get sponsorBrandClickbait => 'Clickcebo Media';
+
+  @override
+  String get sponsorIndustryClickbait => 'Grupo mediático';
+
+  @override
+  String get sponsorFlavourClickbait =>
+      'No vas a creer lo que dice nuestro cuarto titular.';
+
+  @override
+  String ySponsorDubious0(String brand) {
+    return '$brand es el nuevo patrocinador principal de la federación. Reíd si queréis, la cantera sigue necesitando el dinero.';
+  }
+
+  @override
+  String ySponsorDubious1(String brand) {
+    return 'La federación ha firmado con $brand como nuevo patrocinador principal. Al parecer era la oferta más alta sobre la mesa.';
+  }
+
+  @override
+  String ySponsorDubious2(String brand) {
+    return '$brand. Nuestro nuevo patrocinador principal es $brand. Necesito tumbarme.';
+  }
+
+  @override
+  String ySponsorMocked0(String brand) {
+    return 'El dinero es el dinero. Si $brand paga campos nuevos, llevaré la camiseta con orgullo.';
+  }
+
+  @override
+  String ySponsorMocked1(String brand) {
+    return 'Decid lo que queráis de $brand, el cheque tenía fondos.';
+  }
+
+  @override
+  String ySponsorMocked2(String brand) {
+    return 'En algún sitio hay un equipo de marketing muy orgulloso de ese logo de $brand en nuestro pecho.';
+  }
+
+  @override
+  String ySponsorMocked3(String brand) {
+    return 'O sea que ahora somos la selección de $brand. Apuntado.';
+  }
+
+  @override
+  String ySponsorMocked4(String brand) {
+    return 'Imagínate venderle la camiseta a $brand. Imagínatelo.';
+  }
+
+  @override
+  String ySponsorMocked5(String brand) {
+    return 'De todos los patrocinadores del mundo, elegimos a $brand. Todos nuestros rivales se ríen de nosotros.';
+  }
 }

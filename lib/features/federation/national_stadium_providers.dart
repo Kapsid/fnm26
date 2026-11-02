@@ -260,7 +260,12 @@ Future<NationalStadiumsView?> _loadView(Ref ref, int careerId) async {
     for (final s in all)
       if (s.built) s.city,
   };
-  final cityPool = cities[nationId] ?? [for (final s in all) s.city];
+  // The seed cities first, then the towns that are build candidates only.
+  final build = await ref.read(stadiumBuildCitiesProvider.future);
+  final cityPool = {
+    ...cities[nationId] ?? [for (final s in all) s.city],
+    ...?build[nationId],
+  };
   return NationalStadiumsView(
     careerId: careerId,
     nationId: nationId,

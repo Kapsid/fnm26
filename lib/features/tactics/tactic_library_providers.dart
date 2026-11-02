@@ -34,6 +34,7 @@ class TacticLibraryService {
     if (tactic == null) return false;
     final roles = await _ref.read(playerRolesStoreProvider).load(careerId);
     final takers = await _ref.read(setPieceTakersStoreProvider).load(careerId);
+    final thrower = await _ref.read(throwInTakerStoreProvider).load(careerId);
     await _saved(
       _ref
           .read(tacticLibraryRepositoryProvider)
@@ -44,6 +45,7 @@ class TacticLibraryService {
               roles: roles,
               penaltyTaker: takers.penalty,
               deadBallTaker: takers.deadBall,
+              throwInTaker: thrower,
             ),
           ),
     );
@@ -62,6 +64,8 @@ class TacticLibraryService {
             instructions: preset.instructions,
             playstyle: PlaystyleX.matching(preset.instructions),
             fullBacks: preset.fullBacks,
+            switches: preset.switches,
+            throwInStyle: preset.throwInStyle,
           ),
         ),
   );

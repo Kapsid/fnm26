@@ -70,6 +70,8 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.teamStats,
   Routes.injuryCover,
   Routes.campScandal,
+  Routes.warmUpOffer,
+  Routes.sponsor,
   Routes.awardsCeremony,
   Routes.schedule,
   Routes.campaigns,

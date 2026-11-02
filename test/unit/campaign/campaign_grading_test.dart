@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/campaign/campaign_grading.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 
 /// The star rules: a finish ordinal against the campaign's thresholds, and the
 /// rivalry's three rule-based stars.
@@ -118,14 +119,63 @@ void main() {
     expect(def.friendlyNationId, isNull);
     expect(def.goal, CampaignGoal.qualifyBothThenTitle);
     expect(def.difficulty, CampaignDifficulty.hard);
-    expect(Campaigns.all.last, def);
     expect(Campaigns.byId('greenland'), def);
     expect(
       [
         for (final c in Campaigns.all)
           if (c.dormantNationId != null) c.id,
       ],
-      ['greenland'],
+      ['greenland', 'zanzibar'],
     );
+  });
+
+  test('qualifyBothThenWorldTitleStars: the highest tier reached, and only '
+      'the world title is the third star', () {
+    for (final continental in [false, true]) {
+      for (final world in [false, true]) {
+        for (final won in [false, true]) {
+          expect(
+            qualifyBothThenWorldTitleStars(
+              qualifiedContinental: continental,
+              qualifiedWorld: world,
+              wonWorld: won,
+            ),
+            won
+                ? 3
+                : world
+                ? 2
+                : continental
+                ? 1
+                : 0,
+            reason: 'continental $continental world $world won $won',
+          );
+        }
+      }
+    }
+    // A continental title implies only the place: one star, not three.
+    expect(
+      qualifyBothThenWorldTitleStars(
+        qualifiedContinental: true,
+        qualifiedWorld: false,
+        wonWorld: false,
+      ),
+      1,
+    );
+  });
+
+  test('Zanzibar Rising: Pro, 25 cycles, can be continued, its dormant '
+      "world in Chad's place", () {
+    const def = Campaigns.zanzibar;
+    expect(def.nationId, 213);
+    expect(def.dormantNationId, 213);
+    expect(DormantNations.replaces[213], 110);
+    expect(def.cycles, 25);
+    expect(def.needsPro, isTrue);
+    expect(def.canContinue, isTrue);
+    expect(def.friendlyNationId, isNull);
+    expect(def.goal, CampaignGoal.qualifyBothThenWorldTitle);
+    expect(def.difficulty, CampaignDifficulty.hard);
+    expect(Campaigns.all.last, def);
+    expect(Campaigns.byId('zanzibar'), def);
   });
 }

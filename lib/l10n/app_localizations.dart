@@ -552,6 +552,12 @@ abstract class AppLocalizations {
   /// **'HALF TIME'**
   String get matchHalfTime;
 
+  /// Small line under the live match score once the second half is under way: the score at half time. 'HT' is the usual short form; keep it short.
+  ///
+  /// In en, this message translates to:
+  /// **'HT {home} : {away}'**
+  String matchHalfTimeScore(int home, int away);
+
   /// Button that resumes play from the interval, and the full-time button that leaves the match.
   ///
   /// In en, this message translates to:
@@ -1191,19 +1197,19 @@ abstract class AppLocalizations {
   /// Legend tally: number of caps.
   ///
   /// In en, this message translates to:
-  /// **'{count} caps'**
+  /// **'{count, plural, one{1 cap} other{{count} caps}}'**
   String recordsCapsCount(int count);
 
   /// Legend tally: number of goals.
   ///
   /// In en, this message translates to:
-  /// **'{count} goals'**
+  /// **'{count, plural, one{1 goal} other{{count} goals}}'**
   String recordsGoalsCount(int count);
 
   /// Legend tally: number of assists.
   ///
   /// In en, this message translates to:
-  /// **'{count} assists'**
+  /// **'{count, plural, one{1 assist} other{{count} assists}}'**
   String recordsAssistsCount(int count);
 
   /// Legend tally: number of man-of-the-match awards.
@@ -1215,13 +1221,13 @@ abstract class AppLocalizations {
   /// Value for the longest-unbeaten team record.
   ///
   /// In en, this message translates to:
-  /// **'{count} matches'**
+  /// **'{count, plural, one{1 match} other{{count} matches}}'**
   String recordsMatchesCount(int count);
 
   /// Number of head-to-head meetings.
   ///
   /// In en, this message translates to:
-  /// **'{count} meetings'**
+  /// **'{count, plural, one{1 meeting} other{{count} meetings}}'**
   String recordsMeetingsCount(int count);
 
   /// Tally label: wins for the nation with this three-letter code.
@@ -1233,7 +1239,7 @@ abstract class AppLocalizations {
   /// Head-to-head summary line: meetings and win/draw/loss counts.
   ///
   /// In en, this message translates to:
-  /// **'{meetings} meetings · {wins}W {draws}D {losses}L'**
+  /// **'{meetings, plural, one{1 meeting} other{{meetings} meetings}} · {wins}W {draws}D {losses}L'**
   String recordsMeetingsWdl(int meetings, int wins, int draws, int losses);
 
   /// Win/draw/loss record chunk used inside the rivalry summary.
@@ -1245,7 +1251,7 @@ abstract class AppLocalizations {
   /// Fiercest-rival summary line combining meetings, W-D-L record and edge phrase.
   ///
   /// In en, this message translates to:
-  /// **'{meetings} meetings · {record} · {edge}'**
+  /// **'{meetings, plural, one{1 meeting} other{{meetings} meetings}} · {record} · {edge}'**
   String recordsRivalLine(int meetings, String record, String edge);
 
   /// Shown when two nations have no meetings in the save.
@@ -2208,6 +2214,60 @@ abstract class AppLocalizations {
   /// **'Corners & free-kicks'**
   String get tacticsCornersFreeKicks;
 
+  /// Set-piece situation: who takes the side's throw-ins. Label above the taker's name and the badge tooltip on each player row.
+  ///
+  /// In en, this message translates to:
+  /// **'Throw-ins'**
+  String get tacticsThrowIns;
+
+  /// Heading of the control that picks how the side takes its throw-ins (long, neutral, safe).
+  ///
+  /// In en, this message translates to:
+  /// **'Throw-in style'**
+  String get tacticsThrowInStyle;
+
+  /// Throw-in style chip: long throws hurled into the penalty box from the attacking third.
+  ///
+  /// In en, this message translates to:
+  /// **'Long throws'**
+  String get tacticsThrowInLong;
+
+  /// Throw-in style chip: no instruction, the default.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral'**
+  String get tacticsThrowInNeutral;
+
+  /// Throw-in style chip: throws kept short and safe to avoid losing the ball.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe throws'**
+  String get tacticsThrowInDefensive;
+
+  /// One line under the throw-in style chips explaining the long-throw choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Throws near the box go into it. A little extra threat, more with a strong thrower and tall attackers, but the ball is lost a bit more often.'**
+  String get tacticsThrowInLongBlurb;
+
+  /// One line under the throw-in style chips explaining the neutral (default) choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Throws taken as the play allows. Nothing changes.'**
+  String get tacticsThrowInNeutralBlurb;
+
+  /// One line under the throw-in style chips explaining the safe-throw choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Every throw kept short and safe. Fewer turnovers to be countered from, and a few fewer chances made.'**
+  String get tacticsThrowInDefensiveBlurb;
+
+  /// Caption under the goal celebration when the goal came from a long throw-in, before the minute (e.g. LONG THROW · 67'). All caps, like the penalty caption.
+  ///
+  /// In en, this message translates to:
+  /// **'LONG THROW'**
+  String get matchGoalLongThrow;
+
   /// Abbreviated skill label for finishing/shooting.
   ///
   /// In en, this message translates to:
@@ -2775,7 +2835,7 @@ abstract class AppLocalizations {
   /// Golden Boot holder name and goal count.
   ///
   /// In en, this message translates to:
-  /// **'{name} · {goals} goals'**
+  /// **'{name} · {goals, plural, one{1 goal} other{{goals} goals}}'**
   String hubGoldenBootValue(String name, int goals);
 
   /// Suffix marking a result decided on penalties.
@@ -4245,7 +4305,7 @@ abstract class AppLocalizations {
   /// Appearance count under a player on the ratings leaderboard.
   ///
   /// In en, this message translates to:
-  /// **'{apps} apps'**
+  /// **'{apps, plural, one{1 app} other{{apps} apps}}'**
   String statsAppsShort(int apps);
 
   /// Man-of-the-match count under a player on the ratings leaderboard.
@@ -4301,6 +4361,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'+{morale} squad morale'**
   String captainMoraleBoost(int morale);
+
+  /// Label for the 1st vice-captain post: the player who takes the armband first when the captain cannot play. Shown next to 'Captain' on the tactics screen.
+  ///
+  /// In en, this message translates to:
+  /// **'1st vice-captain'**
+  String get viceCaptainFirst;
+
+  /// Label for the 2nd vice-captain post: takes the armband when both the captain and the 1st vice-captain cannot play.
+  ///
+  /// In en, this message translates to:
+  /// **'2nd vice-captain'**
+  String get viceCaptainSecond;
+
+  /// Shown where a vice-captain would be, when none has been chosen for that post.
+  ///
+  /// In en, this message translates to:
+  /// **'No vice-captain named'**
+  String get viceCaptainNone;
+
+  /// One-line explanation at the top of the vice-captain picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes the armband when the captain cannot play.'**
+  String get viceCaptainHint;
+
+  /// Shown where the captain is, when a vice-captain wears the armband because the captain cannot play (injured, suspended or not in the squad). {vice} and {captain} are player names.
+  ///
+  /// In en, this message translates to:
+  /// **'Vice-captain {vice} leads out; captain {captain} unavailable'**
+  String captainStandIn(String vice, String captain);
+
+  /// Shown where the captain is, when no captain is named and a vice-captain wears the armband. {vice} is a player name.
+  ///
+  /// In en, this message translates to:
+  /// **'Vice-captain {vice} leads out'**
+  String captainStandInUnnamed(String vice);
 
   /// Competition group heading: World Championship qualifying.
   ///
@@ -6004,6 +6100,12 @@ abstract class AppLocalizations {
   /// **'Most games'**
   String get statsMostGames;
 
+  /// Short tab label on a phone: most games played (the full label is statsMostGames).
+  ///
+  /// In en, this message translates to:
+  /// **'Games'**
+  String get statsMostGamesShort;
+
   /// Empty state for the top-scorers list.
   ///
   /// In en, this message translates to:
@@ -6914,55 +7016,55 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{gap} places between us in the ranking, and we beat {opponent} anyway. Magnificent.'**
-  String yUpsetGap0(String opponent, String gap);
+  String yUpsetGap0(String opponent, int gap);
 
   /// Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 1. Tone band: generous.
   ///
   /// In en, this message translates to:
   /// **'{opponent} were {gap} places above us. Beaten. Football is wonderful.'**
-  String yUpsetGap1(String opponent, String gap);
+  String yUpsetGap1(String opponent, int gap);
 
   /// Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 2. Tone band: generous.
   ///
   /// In en, this message translates to:
   /// **'Ranking gap: {gap} places. Result: we beat {opponent}. Never stop believing.'**
-  String yUpsetGap2(String opponent, String gap);
+  String yUpsetGap2(String opponent, int gap);
 
   /// Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 3. Tone band: neutral.
   ///
   /// In en, this message translates to:
   /// **'Ranking gap before kick-off: {gap} places. {opponent} beaten all the same.'**
-  String yUpsetGap3(String opponent, String gap);
+  String yUpsetGap3(String opponent, int gap);
 
   /// Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 4. Tone band: neutral.
   ///
   /// In en, this message translates to:
   /// **'{opponent} were {gap} places above us in the world ranking. Not tonight.'**
-  String yUpsetGap4(String opponent, String gap);
+  String yUpsetGap4(String opponent, int gap);
 
   /// Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 5. Tone band: neutral.
   ///
   /// In en, this message translates to:
   /// **'Upset index: {gap} ranking places between the sides. Win to us against {opponent}.'**
-  String yUpsetGap5(String opponent, String gap);
+  String yUpsetGap5(String opponent, int gap);
 
   /// Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 6. Tone band: sour.
   ///
   /// In en, this message translates to:
   /// **'{gap} places in the ranking separated us from {opponent}. One night does not close the gap.'**
-  String yUpsetGap6(String opponent, String gap);
+  String yUpsetGap6(String opponent, int gap);
 
   /// Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 7. Tone band: sour.
   ///
   /// In en, this message translates to:
   /// **'{opponent}: {gap} places above us, and beaten. The ranking will barely notice.'**
-  String yUpsetGap7(String opponent, String gap);
+  String yUpsetGap7(String opponent, int gap);
 
   /// Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 8. Tone band: sour.
   ///
   /// In en, this message translates to:
   /// **'Ranking gap: {gap} places. Remember that number the next time we lose to a minnow.'**
-  String yUpsetGap8(String gap);
+  String yUpsetGap8(int gap);
 
   /// Y post: eatWords (a pundit who wrote the side off, eating his words after a big win), variant 0. Tone band: generous.
   ///
@@ -7562,55 +7664,55 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{opponent} were {gap} places below us. It happens. Move on.'**
-  String yDownGap0(String opponent, String gap);
+  String yDownGap0(String opponent, int gap);
 
   /// Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 1. Tone band: generous.
   ///
   /// In en, this message translates to:
   /// **'Ranking gap: {gap} places in our favour. Football does not read rankings.'**
-  String yDownGap1(String gap);
+  String yDownGap1(int gap);
 
   /// Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 2. Tone band: generous.
   ///
   /// In en, this message translates to:
   /// **'{gap} places between us and {opponent} on paper. Not on the pitch tonight.'**
-  String yDownGap2(String opponent, String gap);
+  String yDownGap2(String opponent, int gap);
 
   /// Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 3. Tone band: neutral.
   ///
   /// In en, this message translates to:
   /// **'Ranking gap before kick-off: {gap} places in our favour. Lost to {opponent} anyway.'**
-  String yDownGap3(String opponent, String gap);
+  String yDownGap3(String opponent, int gap);
 
   /// Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 4. Tone band: neutral.
   ///
   /// In en, this message translates to:
   /// **'{opponent} sat {gap} places below us in the world ranking. Result: defeat.'**
-  String yDownGap4(String opponent, String gap);
+  String yDownGap4(String opponent, int gap);
 
   /// Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 5. Tone band: neutral.
   ///
   /// In en, this message translates to:
   /// **'Upset index: {gap} ranking places, the wrong way round, against {opponent}.'**
-  String yDownGap5(String opponent, String gap);
+  String yDownGap5(String opponent, int gap);
 
   /// Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 6. Tone band: sour.
   ///
   /// In en, this message translates to:
   /// **'{gap} places above {opponent} in the ranking. Lost. Explain that.'**
-  String yDownGap6(String opponent, String gap);
+  String yDownGap6(String opponent, int gap);
 
   /// Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 7. Tone band: sour.
   ///
   /// In en, this message translates to:
   /// **'Lost to a side {gap} places below us. Let that number sink in.'**
-  String yDownGap7(String gap);
+  String yDownGap7(int gap);
 
   /// Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 8. Tone band: sour.
   ///
   /// In en, this message translates to:
   /// **'Ranking gap: {gap} places. Lost to {opponent}. Somebody should be counting the days.'**
-  String yDownGap8(String opponent, String gap);
+  String yDownGap8(String opponent, int gap);
 
   /// Y post: drewHeroic (a draw that was a triumph against a side far above us), variant 0. Tone band: generous.
   ///
@@ -8072,145 +8174,145 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{name} got {goals} of them. Nobody else is close.'**
-  String yScorerStar0(String name, String goals);
+  String yScorerStar0(String name, int goals);
 
   /// Y post naming the match scorer and how many he got. Variant 1.
   ///
   /// In en, this message translates to:
   /// **'{goals} for {name}. He is carrying this side.'**
-  String yScorerStar1(String name, String goals);
+  String yScorerStar1(String name, int goals);
 
   /// Y post naming the match scorer and how many he got. Variant 2.
   ///
   /// In en, this message translates to:
   /// **'{name}: {goals} on the day. Some player.'**
-  String yScorerStar2(String name, String goals);
+  String yScorerStar2(String name, int goals);
 
   /// Y post naming the match scorer and how many he got. Variant 3.
   ///
   /// In en, this message translates to:
   /// **'Put {goals} past them, did {name}. Take a bow.'**
-  String yScorerStar3(String name, String goals);
+  String yScorerStar3(String name, int goals);
 
   /// Y post: scorerStar, variant 4.
   ///
   /// In en, this message translates to:
   /// **'{goals} for {name}, and the rest of them were passengers.'**
-  String yScorerStar4(String name, String goals);
+  String yScorerStar4(String name, int goals);
 
   /// Y post: scorerStar, variant 5.
   ///
   /// In en, this message translates to:
   /// **'{name} again. {goals}. Imagine this side without him.'**
-  String yScorerStar5(String name, String goals);
+  String yScorerStar5(String name, int goals);
 
   /// Y post: scorerStar, variant 6.
   ///
   /// In en, this message translates to:
   /// **'{goals} from {name}. One man should not have to do this much.'**
-  String yScorerStar6(String name, String goals);
+  String yScorerStar6(String name, int goals);
 
   /// Y post: scorerStar, variant 7.
   ///
   /// In en, this message translates to:
   /// **'Take {name} out of that and it is {goals} fewer and a very different afternoon.'**
-  String yScorerStar7(String name, String goals);
+  String yScorerStar7(String name, int goals);
 
   /// Y post remarking on a run of wins. Variant 0.
   ///
   /// In en, this message translates to:
   /// **'{count} on the bounce. Whatever is being said in that dressing room, it is landing.'**
-  String yWinStreak0(String count);
+  String yWinStreak0(int count);
 
   /// Y post remarking on a run of wins. Variant 1.
   ///
   /// In en, this message translates to:
   /// **'That is {count} straight. Sides do not stumble into runs like this.'**
-  String yWinStreak1(String count);
+  String yWinStreak1(int count);
 
   /// Y post remarking on a run of wins. Variant 2.
   ///
   /// In en, this message translates to:
   /// **'{count} in a row and counting. The confidence is visible from the stands.'**
-  String yWinStreak2(String count);
+  String yWinStreak2(int count);
 
   /// Y post remarking on a run of wins. Variant 3.
   ///
   /// In en, this message translates to:
   /// **'No defeats in {count}. Ask anyone who has managed: that is the hard part.'**
-  String yWinStreak3(String count);
+  String yWinStreak3(int count);
 
   /// Y post: winStreak, variant 4.
   ///
   /// In en, this message translates to:
   /// **'{count} in a row. Enjoy it while the fixtures are kind.'**
-  String yWinStreak4(String count);
+  String yWinStreak4(int count);
 
   /// Y post: winStreak, variant 5.
   ///
   /// In en, this message translates to:
   /// **'{count} straight, and we have beaten nobody of consequence.'**
-  String yWinStreak5(String count);
+  String yWinStreak5(int count);
 
   /// Y post: winStreak, variant 6.
   ///
   /// In en, this message translates to:
   /// **'A run of {count}. Ask me again when it is tested.'**
-  String yWinStreak6(String count);
+  String yWinStreak6(int count);
 
   /// Y post: winStreak, variant 7.
   ///
   /// In en, this message translates to:
   /// **'{count} on the trot. Every side has one of these in them once.'**
-  String yWinStreak7(String count);
+  String yWinStreak7(int count);
 
   /// Y post remarking on a run without a win. Variant 0.
   ///
   /// In en, this message translates to:
   /// **'{count} without a win now. At some point the excuses run out.'**
-  String yLossStreak0(String count);
+  String yLossStreak0(int count);
 
   /// Y post remarking on a run without a win. Variant 1.
   ///
   /// In en, this message translates to:
   /// **'That is {count} in a row gone. This is not a blip any more.'**
-  String yLossStreak1(String count);
+  String yLossStreak1(int count);
 
   /// Y post remarking on a run without a win. Variant 2.
   ///
   /// In en, this message translates to:
   /// **'{count} straight defeats. Somebody has to answer for it.'**
-  String yLossStreak2(String count);
+  String yLossStreak2(int count);
 
   /// Y post remarking on a run without a win. Variant 3.
   ///
   /// In en, this message translates to:
   /// **'No wins in {count}. You can see it in how they play.'**
-  String yLossStreak3(String count);
+  String yLossStreak3(int count);
 
   /// Y post: lossStreak, variant 4.
   ///
   /// In en, this message translates to:
   /// **'{count} without a win and the same mistakes every week.'**
-  String yLossStreak4(String count);
+  String yLossStreak4(int count);
 
   /// Y post: lossStreak, variant 5.
   ///
   /// In en, this message translates to:
   /// **'{count} in a row. Whatever is being tried, it is not working.'**
-  String yLossStreak5(String count);
+  String yLossStreak5(int count);
 
   /// Y post: lossStreak, variant 6.
   ///
   /// In en, this message translates to:
   /// **'{count} straight. This is a direction, not a dip.'**
-  String yLossStreak6(String count);
+  String yLossStreak6(int count);
 
   /// Y post: lossStreak, variant 7.
   ///
   /// In en, this message translates to:
   /// **'No wins in {count}, and nobody upstairs has said a word.'**
-  String yLossStreak7(String count);
+  String yLossStreak7(int count);
 
   /// Y post about a result against a rival nation. Variant 0.
   ///
@@ -9805,7 +9907,7 @@ abstract class AppLocalizations {
   /// World Championship detail: tourCupMostTitlesValue
   ///
   /// In en, this message translates to:
-  /// **'{nation}: {titles} titles from {editions} editions'**
+  /// **'{nation}: {titles, plural, one{1 title} other{{titles} titles}} from {editions, plural, one{1 edition} other{{editions} editions}}'**
   String tourCupMostTitlesValue(String nation, int titles, int editions);
 
   /// World Championship detail: tourCupNoGoals
@@ -10096,6 +10198,12 @@ abstract class AppLocalizations {
   /// **'Finish in the top half of qualifying'**
   String get objectiveQualifyingTopHalf;
 
+  /// The board's graded brief for a side ranked near the bottom of its confederation's places: the pass mark is coming through qualifying in the top half of its group, and actually qualifying beats the brief.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge for a place: top half of qualifying at least'**
+  String get objectiveQualifyingChallenge;
+
   /// Objective result: the nation did not reach the tournament but came through qualifying in the top half of its group.
   ///
   /// In en, this message translates to:
@@ -10321,8 +10429,8 @@ abstract class AppLocalizations {
   /// Pager line under the squad-report table.
   ///
   /// In en, this message translates to:
-  /// **'{page}/{pages} · {total} players'**
-  String squadDevPageOf(String page, String pages, String total);
+  /// **'{page}/{pages} · {total, plural, one{1 player} other{{total} players}}'**
+  String squadDevPageOf(String page, String pages, int total);
 
   /// Tag on the ground card when the stadium is full.
   ///
@@ -10453,7 +10561,7 @@ abstract class AppLocalizations {
   /// Age and international caps of a prospect.
   ///
   /// In en, this message translates to:
-  /// **'Age {age} · {caps} caps'**
+  /// **'Age {age} · {caps, plural, one{1 cap} other{{caps} caps}}'**
   String u21AgeCaps(int age, int caps);
 
   /// Age of a prospect who has never played.
@@ -11029,13 +11137,13 @@ abstract class AppLocalizations {
   /// Most-capped player and their tally.
   ///
   /// In en, this message translates to:
-  /// **'{name} · {caps} caps'**
+  /// **'{name} · {caps, plural, one{1 cap} other{{caps} caps}}'**
   String squadCapsValue(String name, int caps);
 
   /// Leading scorer and their tally.
   ///
   /// In en, this message translates to:
-  /// **'{name} · {goals} goals'**
+  /// **'{name} · {goals, plural, one{1 goal} other{{goals} goals}}'**
   String squadGoalsValue(String name, int goals);
 
   /// A squad row's age and club line.
@@ -11821,7 +11929,7 @@ abstract class AppLocalizations {
   /// Inbox: hall-of-fame body.
   ///
   /// In en, this message translates to:
-  /// **'{name} joins your nation’s Hall of Fame ({caps} caps, {goals} goals). See them in Legends.'**
+  /// **'{name} joins your nation’s Hall of Fame ({caps, plural, one{1 cap} other{{caps} caps}}, {goals, plural, one{1 goal} other{{goals} goals}}). See them in Legends.'**
   String msgHofBody(String name, int caps, int goals);
 
   /// Inbox: a player is banned after a sending-off.
@@ -12550,7 +12658,7 @@ abstract class AppLocalizations {
   /// Inbox: walkout body.
   ///
   /// In en, this message translates to:
-  /// **'{name} has retired from international football at {age}, with {caps} caps. He asked to be told where he stood and was not, and he is not waiting any longer.'**
+  /// **'{name} has retired from international football at {age}, with {caps, plural, one{1 cap} other{{caps} caps}}. He asked to be told where he stood and was not, and he is not waiting any longer.'**
   String newsWalkoutBody(String name, int age, int caps);
 
   /// Press conference: the morning's headline after a conference that went went.
@@ -13943,73 +14051,73 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'That is {count} times against {opponent} now. Somebody is keeping score, and it is them.'**
-  String yAgainstThemAgain0(String opponent, String count);
+  String yAgainstThemAgain0(String opponent, int count);
 
   /// Y post: againstThemAgain, variant 1.
   ///
   /// In en, this message translates to:
   /// **'{opponent} again. {count} meetings, and we still have not worked them out.'**
-  String yAgainstThemAgain1(String opponent, String count);
+  String yAgainstThemAgain1(String opponent, int count);
 
   /// Y post: againstThemAgain, variant 2.
   ///
   /// In en, this message translates to:
   /// **'Number {count} against {opponent}. This has stopped being a coincidence.'**
-  String yAgainstThemAgain2(String opponent, String count);
+  String yAgainstThemAgain2(String opponent, int count);
 
   /// Y post: againstThemAgain, variant 3.
   ///
   /// In en, this message translates to:
   /// **'We have played {opponent} {count} times and learned nothing from any of them.'**
-  String yAgainstThemAgain3(String opponent, String count);
+  String yAgainstThemAgain3(String opponent, int count);
 
   /// Y post: againstThemAgain, variant 4.
   ///
   /// In en, this message translates to:
   /// **'{opponent}, {count} times. They know exactly what we are going to do.'**
-  String yAgainstThemAgain4(String opponent, String count);
+  String yAgainstThemAgain4(String opponent, int count);
 
   /// Y post: againstThemAgain, variant 5.
   ///
   /// In en, this message translates to:
   /// **'Whatever {opponent} have on us, {count} meetings in, they still have it.'**
-  String yAgainstThemAgain5(String opponent, String count);
+  String yAgainstThemAgain5(String opponent, int count);
 
   /// Y post: sameOldStory, variant 0.
   ///
   /// In en, this message translates to:
   /// **'That is {count} times this has happened lately. At what point is it just what we are?'**
-  String ySameOldStory0(String count);
+  String ySameOldStory0(int count);
 
   /// Y post: sameOldStory, variant 1.
   ///
   /// In en, this message translates to:
   /// **'{count} afternoons like this now. It is a pattern, not a run of luck.'**
-  String ySameOldStory1(String count);
+  String ySameOldStory1(int count);
 
   /// Y post: sameOldStory, variant 2.
   ///
   /// In en, this message translates to:
   /// **'We have seen this exact game {count} times recently. Same script, same ending.'**
-  String ySameOldStory2(String count);
+  String ySameOldStory2(int count);
 
   /// Y post: sameOldStory, variant 3.
   ///
   /// In en, this message translates to:
   /// **'{count} versions of the same ninety minutes now. Nobody is fixing it.'**
-  String ySameOldStory3(String count);
+  String ySameOldStory3(int count);
 
   /// Y post: sameOldStory, variant 4.
   ///
   /// In en, this message translates to:
   /// **'{count} times. If you cannot see the pattern by now you are not looking.'**
-  String ySameOldStory4(String count);
+  String ySameOldStory4(int count);
 
   /// Y post: sameOldStory, variant 5.
   ///
   /// In en, this message translates to:
   /// **'Same story, {count} times over. The excuses have run out before the results did.'**
-  String ySameOldStory5(String count);
+  String ySameOldStory5(int count);
 
   /// Y post: toldYouSo, variant 0.
   ///
@@ -14165,73 +14273,73 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{name} has gone {count} without scoring and is doing everything else on the pitch.'**
-  String yDrought0(String name, String count);
+  String yDrought0(String name, int count);
 
   /// Y feed post about a forward who has gone a long run without scoring.
   ///
   /// In en, this message translates to:
   /// **'{count} games without a goal for {name}. They come in threes, always have.'**
-  String yDrought1(String name, String count);
+  String yDrought1(String name, int count);
 
   /// Y feed post about a forward who has gone a long run without scoring.
   ///
   /// In en, this message translates to:
   /// **'{name}: {count} games, no goals.'**
-  String yDrought2(String name, String count);
+  String yDrought2(String name, int count);
 
   /// Y feed post about a forward who has gone a long run without scoring.
   ///
   /// In en, this message translates to:
   /// **'{count} without a goal for {name}. Worth keeping an eye on.'**
-  String yDrought3(String name, String count);
+  String yDrought3(String name, int count);
 
   /// Y feed post about a forward who has gone a long run without scoring.
   ///
   /// In en, this message translates to:
   /// **'{count} games. No goals. {name} could not hit a barn door.'**
-  String yDrought4(String name, String count);
+  String yDrought4(String name, int count);
 
   /// Y feed post about a forward who has gone a long run without scoring.
   ///
   /// In en, this message translates to:
   /// **'{name} has not scored in {count}. Play literally anybody else.'**
-  String yDrought5(String name, String count);
+  String yDrought5(String name, int count);
 
   /// Y feed post before a match against the most-played opponent.
   ///
   /// In en, this message translates to:
   /// **'{opponent} next. {count} meetings and it still means everything.'**
-  String yRivalryLooms0(String opponent, String count);
+  String yRivalryLooms0(String opponent, int count);
 
   /// Y feed post before a match against the most-played opponent.
   ///
   /// In en, this message translates to:
   /// **'{count} times against {opponent} now. Bring it on.'**
-  String yRivalryLooms1(String opponent, String count);
+  String yRivalryLooms1(String opponent, int count);
 
   /// Y feed post before a match against the most-played opponent.
   ///
   /// In en, this message translates to:
   /// **'{opponent} next. Played {count}.'**
-  String yRivalryLooms2(String opponent, String count);
+  String yRivalryLooms2(String opponent, int count);
 
   /// Y feed post before a match against the most-played opponent.
   ///
   /// In en, this message translates to:
   /// **'Meeting number {count} with {opponent} this week.'**
-  String yRivalryLooms3(String opponent, String count);
+  String yRivalryLooms3(String opponent, int count);
 
   /// Y feed post before a match against the most-played opponent.
   ///
   /// In en, this message translates to:
   /// **'{opponent} again. {count} of these and we have learned nothing.'**
-  String yRivalryLooms4(String opponent, String count);
+  String yRivalryLooms4(String opponent, int count);
 
   /// Y feed post before a match against the most-played opponent.
   ///
   /// In en, this message translates to:
   /// **'{count} games against {opponent} and they still beat us. Wonderful.'**
-  String yRivalryLooms5(String opponent, String count);
+  String yRivalryLooms5(String opponent, int count);
 
   /// A playing position, written out in full.
   ///
@@ -17257,6 +17365,48 @@ abstract class AppLocalizations {
   /// **'Win the European or the World Championship'**
   String get campaignStars3Greenland;
 
+  /// Campaign title: a hundred years (25 cycles) of Zanzibar, a nation added to the world for this campaign, rising from near the bottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Zanzibar Rising'**
+  String get campaignZanzibarTitle;
+
+  /// One-line twist of the Zanzibar campaign: Zanzibar in Chad's place in Africa for a hundred years (25 cycles).
+  ///
+  /// In en, this message translates to:
+  /// **'Zanzibar take Chad\'s place in Africa, for a hundred years'**
+  String get campaignZanzibarTwist;
+
+  /// One-line goal of the Zanzibar campaign (its first star): qualify for an African Championship (the game's name for the continental championship of Africa).
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for an African Championship'**
+  String get campaignZanzibarGoal;
+
+  /// Brief screen introduction of the Zanzibar campaign: Zanzibar take Chad's place in Africa, from near the bottom of the world ranking, for a hundred years (25 cycles). Names no real player.
+  ///
+  /// In en, this message translates to:
+  /// **'Zanzibar have their own football association and their own national side, but no seat in African or world football. In this world they have taken Chad\'s place in Africa, and they start near the bottom of the world ranking: island players, small grounds and the heat of the monsoon. You have a hundred years, twenty-five cycles, to reach an African Championship, then a World Championship and, if you dare to dream, win the World Championship.'**
+  String get campaignZanzibarIntro;
+
+  /// What earns the first star in the Zanzibar campaign: qualify for an African Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for an African Championship'**
+  String get campaignStars1Zanzibar;
+
+  /// What earns the second star in the Zanzibar campaign: qualify for a World Championship, in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for a World Championship'**
+  String get campaignStars2Zanzibar;
+
+  /// What earns the third star in the Zanzibar campaign: win the World Championship (an African title does not count), in any cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Win the World Championship'**
+  String get campaignStars3Zanzibar;
+
   /// Badge on a campaign that needs the full game (Pro).
   ///
   /// In en, this message translates to:
@@ -19364,6 +19514,36 @@ abstract class AppLocalizations {
   /// **'I say: let the lads live! Work hard, play hard. Thumbs up.'**
   String get yCameoLzimberskyKept4;
 
+  /// CZECH DIFFERS ON PURPOSE. Czech-only cameo by Mařena, a fan sure she could do the manager's job, replying under a heavy defeat. Only a Czech game shows it; translate the English plainly.
+  ///
+  /// In en, this message translates to:
+  /// **'Even I could coach this lot.'**
+  String get yCameoMarena;
+
+  /// CZECH DIFFERS ON PURPOSE. Czech-only cameo by KudyChodíKrálík, a snack brand's account turning a defeat into an advert. ZeroZero is the brand's (invented) product: keep it as is. Only a Czech game shows it; translate the English plainly.
+  ///
+  /// In en, this message translates to:
+  /// **'What did you expect hehehe, buy our ZeroZero'**
+  String get yCameoKralik;
+
+  /// CZECH DIFFERS ON PURPOSE. Czech-only cameo by POŠUK, who shouts nonsense in capitals under a result. ALL CAPS on purpose. Only a Czech game shows it; translate the English plainly.
+  ///
+  /// In en, this message translates to:
+  /// **'PATHETIC'**
+  String get yCameoPosuk0;
+
+  /// CZECH DIFFERS ON PURPOSE. Czech-only cameo by POŠUK: a garbled exclamation in capitals, misspelt on purpose. Only a Czech game shows it; translate the English plainly.
+  ///
+  /// In en, this message translates to:
+  /// **'OH MAAAN'**
+  String get yCameoPosuk1;
+
+  /// CZECH DIFFERS ON PURPOSE. Czech-only cameo by POŠUK, off-topic, asking who is coming to the pub. Casual, misspelling welcome. Only a Czech game shows it; translate the English plainly.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone for teh pub?'**
+  String get yCameoPosuk2;
+
   /// Y profile: one-line description of the streamer account's disposition.
   ///
   /// In en, this message translates to:
@@ -19777,6 +19957,1530 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bids open at the end of the cycle, after the World Championship final.'**
   String get hostingWindowLine;
+
+  /// Hub action: a nation that qualified for a finals tournament (the manager's side did not) invites the manager's side to a send-off friendly. {nation} is that nation's name. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendly offer: {nation}'**
+  String hubEventWarmUpOffer(String nation);
+
+  /// Hub action subtitle under the friendly offer: a farewell friendly the inviting side plays just before its finals tournament.
+  ///
+  /// In en, this message translates to:
+  /// **'A send-off friendly before their tournament'**
+  String get hubEventWarmUpOfferSub;
+
+  /// Title of the friendly offer decision screen, in capitals like the other screen titles.
+  ///
+  /// In en, this message translates to:
+  /// **'FRIENDLY OFFER'**
+  String get warmUpOfferTitle;
+
+  /// Friendly offer screen: the invitation. {nation} is the inviting nation, {competition} the tournament it has qualified for (e.g. World Championship), {date} the match date already written in the reader's language.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are preparing for the {competition} and want a send-off friendly against you on {date}.'**
+  String warmUpOfferBody(String nation, String competition, String date);
+
+  /// Friendly offer screen: the match would be played at the inviting nation's ground. {nation} is that nation's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Away, in {nation}.'**
+  String warmUpOfferAway(String nation);
+
+  /// Friendly offer screen: the inviting nation travels, so the match is at the manager's home ground.
+  ///
+  /// In en, this message translates to:
+  /// **'At home: they come to you.'**
+  String get warmUpOfferHome;
+
+  /// Friendly offer screen: at most two offers can be accepted, and an accepted friendly has its own squad call-up.
+  ///
+  /// In en, this message translates to:
+  /// **'You can accept up to two offers. An accepted friendly gets its own call-up.'**
+  String get warmUpOfferNote;
+
+  /// Friendly offer screen: button to accept the offer. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get warmUpOfferAccept;
+
+  /// Friendly offer screen: button to turn the offer down. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get warmUpOfferDecline;
+
+  /// Inbox message title: a nation offers a send-off friendly. {nation} is its name.
+  ///
+  /// In en, this message translates to:
+  /// **'Friendly offer from {nation}'**
+  String warmUpOfferMsgTitle(String nation);
+
+  /// Inbox message body for a friendly offer. {nation} is the inviting nation, {competition} the tournament it has qualified for.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} want a send-off friendly against you before the {competition}.'**
+  String warmUpOfferMsgBody(String nation, String competition);
+
+  /// Hub: second button under 'watch the next round' of a tournament the manager is out of or not in. Plays every remaining round at once, up to and including the final. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulate to the final'**
+  String get hubSimToFinal;
+
+  /// Tooltip of the button on a job offer tile that opens the scouting dossier on that nation. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Scout this job'**
+  String get jobDossierOpen;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over the team rating (a number, the mean rating of its best eleven). Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Team rating'**
+  String get jobDossierRating;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over the team mood (e.g. Settled, Buoyant). Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood'**
+  String get jobDossierMood;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over the list of its five best players. Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Top players'**
+  String get jobDossierTopPlayers;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: a player's age in the top players list. Very short.
+  ///
+  /// In en, this message translates to:
+  /// **'Age {age}'**
+  String jobDossierPlayerAge(int age);
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over the scout's short verdict on the squad (strengths and weaknesses). Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Scout\'s read'**
+  String get jobDossierReport;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over what the job is for next. Shown in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Next target'**
+  String get jobDossierNextTargetLabel;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: what the new cycle asks of the side. {cup} is its continental championship (e.g. European Championship).
+  ///
+  /// In en, this message translates to:
+  /// **'Qualify for the {cup} and the World Championship.'**
+  String jobDossierNextTarget(String cup);
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the forwards are the side's strength. One short sentence; 'they' is the team.
+  ///
+  /// In en, this message translates to:
+  /// **'A real cutting edge up front.'**
+  String get jobDossierStrongAttack;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the forwards are weak, they struggle to score. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals are hard to come by.'**
+  String get jobDossierBluntAttack;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the midfield is the side's strength. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'The midfield runs their games.'**
+  String get jobDossierStrongMidfield;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the midfield is a weakness. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'They get overrun in midfield.'**
+  String get jobDossierWeakMidfield;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the defence is the side's strength. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard to break down at the back.'**
+  String get jobDossierStrongDefence;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the defence is a weakness. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'The defence looks thin.'**
+  String get jobDossierThinDefence;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the goalkeeper is a strength. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'A goalkeeper you can rely on.'**
+  String get jobDossierSafeKeeper;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the goalkeeper is a weakness. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Goalkeeping is a worry.'**
+  String get jobDossierShakyKeeper;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the best players are old, a rebuild is coming. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'An ageing squad, with a rebuild not far off.'**
+  String get jobDossierOldSquad;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: many of the best players are young and improving. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'A young core on the rise.'**
+  String get jobDossierYoungCore;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: one player is far better than the rest and carries the team. {name} is the player's full name. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} carries this side.'**
+  String jobDossierOneStar(String name);
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the players behind the first eleven are nearly as good. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Real depth beyond the first eleven.'**
+  String get jobDossierDeepSquad;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: there is little quality behind the first eleven. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Little quality behind the first eleven.'**
+  String get jobDossierThinSquad;
+
+  /// End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict when nothing stands out: a balanced side. One short sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'A balanced side with no glaring hole.'**
+  String get jobDossierBalanced;
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 0. Tone band: generous (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t believe we did it! Virtually no one expected this. {competition}, here we come 💪'**
+  String yQualifiedEuphoric0(String competition);
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 1. Tone band: generous (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'What a magical night, we are in dreamland! {competition}, here we come!'**
+  String yQualifiedEuphoric1(String competition);
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 2. Tone band: generous (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'I always believed in this team. Always. And now we are going to the {competition}!'**
+  String yQualifiedEuphoric2(String competition);
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 3. Tone band: neutral (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody gave us a chance in that group. Nobody. See you at the {competition}!'**
+  String yQualifiedEuphoric3(String competition);
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 4. Tone band: neutral (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'Tears in my eyes. Us, at the {competition}. Actually us.'**
+  String yQualifiedEuphoric4(String competition);
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 5. Tone band: neutral (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'Dancing in the street right now. Qualified for the {competition}! Unreal 🎉'**
+  String yQualifiedEuphoric5(String competition);
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 6. Tone band: sour (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'I said we had no chance. Never been so happy to be wrong. {competition}!'**
+  String yQualifiedEuphoric6(String competition);
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 7. Tone band: sour (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'I have moaned about this team for years and I will start again tomorrow. Tonight? {competition}, here we come!'**
+  String yQualifiedEuphoric7(String competition);
+
+  /// Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 8. Tone band: sour (a sour fan is a usual grumbler who cannot help celebrating).
+  ///
+  /// In en, this message translates to:
+  /// **'Fine. FINE. I take it all back. We are going to the {competition}!'**
+  String yQualifiedEuphoric8(String competition);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Through! {opponent} beaten. What a magical night, we are in dreamland!'**
+  String yKnockoutEuphoric0(String opponent);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'We knocked out {opponent}! Keep dreaming, everybody 💪'**
+  String yKnockoutEuphoric1(String opponent);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'I knew this team had it in them. Goodbye {opponent}, hello next round!'**
+  String yKnockoutEuphoric2(String opponent);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'My voice is gone. {opponent} are out and we march on!'**
+  String yKnockoutEuphoric3(String opponent);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Knockout football and we are still standing. {opponent} found out the hard way.'**
+  String yKnockoutEuphoric4(String opponent);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'{opponent} sent home. This team is writing history 🔥'**
+  String yKnockoutEuphoric5(String opponent);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 6. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'I expected us to be home by now. Instead {opponent} are going home. Incredible.'**
+  String yKnockoutEuphoric6(String opponent);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 7. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Even I am dreaming now. {opponent} beaten. Who are we?'**
+  String yKnockoutEuphoric7(String opponent);
+
+  /// Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 8. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Pessimist all my life. {opponent} out, us through. I do not know what to do with myself.'**
+  String yKnockoutEuphoric8(String opponent);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'CHAMPIONS!!! We won the {competition}! I will never forget this night 🏆'**
+  String yTrophyEuphoric0(String competition);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'What a magical night. Champions of the {competition}, and I cannot stop crying.'**
+  String yTrophyEuphoric1(String competition);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'I always said this team could do it. {competition} winners. WINNERS!'**
+  String yTrophyEuphoric2(String competition);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Somebody tell me this is real. We won the {competition}!'**
+  String yTrophyEuphoric3(String competition);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Party in every street in the country tonight. The {competition} is ours 🏆'**
+  String yTrophyEuphoric4(String competition);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember where you were tonight. Champions of the {competition}.'**
+  String yTrophyEuphoric5(String competition);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 6. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Every bad night, every heartbreak, worth it for this. {competition} champions.'**
+  String yTrophyEuphoric6(String competition);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 7. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'I have moaned for years and now I have nothing left to moan about. We won the {competition}!'**
+  String yTrophyEuphoric7(String competition);
+
+  /// Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 8. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Fine, I admit it: champions of the {competition}. Best night of my life.'**
+  String yTrophyEuphoric8(String competition);
+
+  /// Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Heartbroken. We came to the {competition} to go all the way. Still proud of this team.'**
+  String yExitHeartbreak0(String competition);
+
+  /// Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'It hurts so much. We were meant to go far at the {competition}. We go again.'**
+  String yExitHeartbreak1(String competition);
+
+  /// Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 2. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Gutted. Out of the {competition} already, and we had the team to win it.'**
+  String yExitHeartbreak2(String competition);
+
+  /// Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'The flight home from the {competition} will be the longest of our lives.'**
+  String yExitHeartbreak3(String competition);
+
+  /// Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 4. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'We were supposed to go deep at the {competition}. Going home instead. No words.'**
+  String yExitHeartbreak4(String competition);
+
+  /// Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 5. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of waiting, and the {competition} is over for us before it started. Empty.'**
+  String yExitHeartbreak5(String competition);
+
+  /// Inbox title: the TV pundits predict a finals tournament. {competition} is its name in this language.
+  ///
+  /// In en, this message translates to:
+  /// **'The pundits on the {competition}'**
+  String punditsMsgTitle(String competition);
+
+  /// Inbox piece: one pundit's words, attributed. {pundit} is the pundit's name, {words} what he says (one or two sentences).
+  ///
+  /// In en, this message translates to:
+  /// **'{pundit}: {words}'**
+  String punditsSays(String pundit, String words);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The favourite to win the tournament.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are my favourites. Too strong and too deep for the rest.'**
+  String punditsFavourite0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The favourite to win the tournament (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'Hard to look past {nation}. They have everything you need to win it.'**
+  String punditsFavourite1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). A dark horse: a side that could surprise and go far.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are a real dark horse here. Would not be shocked to see them get to the semis.'**
+  String punditsDarkHorse0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). A dark horse (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'Keep an eye on {nation}. Nobody will want to draw them.'**
+  String punditsDarkHorse1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will finish bottom of its group: proud to be there, not good enough.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} bottom of the group. They have done well to get here, but they do not have enough quality to get through it.'**
+  String punditsMineBottom0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will finish bottom of its group (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} will enjoy the trip, but I see them finishing bottom of the group.'**
+  String punditsMineBottom1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will go out in the group, but competitively.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} out in the group. Competitive, but a level short of the sides around them.'**
+  String punditsMineGroupOut0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will go out in the group (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'I have {nation} going home after the group. They will make it awkward for somebody, though.'**
+  String punditsMineGroupOut1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will get through the group and go out in the first knockout round.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} through the group, then out in the first knockout round. A decent tournament.'**
+  String punditsMineFirstKnockout0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will get through the group, no further (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} should get out of the group. Anything beyond that would be a surprise.'**
+  String punditsMineFirstKnockout1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side, a solid team, will reach the quarter-finals.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are a solid side. The quarter-finals look about right for them.'**
+  String punditsMineQuarters0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will reach the quarter-finals (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} can reach the quarter-finals. That would be a good tournament for them.'**
+  String punditsMineQuarters1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is class: a deep run expected, the semi-finals at least.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are class, a deep run is expected. The semi-finals at least.'**
+  String punditsMineSemis0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side should reach the semi-finals (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} have the quality for the last four. Anything less would be a disappointment.'**
+  String punditsMineSemis1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is class and will reach the final.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are class, a deep run is expected. I have them in the final.'**
+  String punditsMineFinal0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will reach the final (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} all the way to the final. They are that good.'**
+  String punditsMineFinal1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is the favourite: anything less than the title is a failure.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are the team to beat. Anything less than the trophy is a failure.'**
+  String punditsMineWinner0(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is the pick to win it, all the pressure on them (another wording).
+  ///
+  /// In en, this message translates to:
+  /// **'My pick to win it is {nation}. All the pressure is on them now.'**
+  String punditsMineWinner1(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is a dark horse and could reach the quarter-finals.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are a real dark horse here. Would not be shocked to see them in the quarter-finals.'**
+  String punditsMineDarkHorseQuarters(String nation);
+
+  /// Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is a dark horse and could reach the semi-finals.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} are a real dark horse here. Would not be shocked to see them get to the semis.'**
+  String punditsMineDarkHorseSemis(String nation);
+
+  /// Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'My {competition} pick: {favourite} to win it. Dark horse? {darkHorse}. What a tournament this will be.'**
+  String yPunditPick0(String competition, String favourite, String darkHorse);
+
+  /// Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'{favourite} for the {competition}, and keep an eye on {darkHorse}. Could be special.'**
+  String yPunditPick1(String competition, String favourite, String darkHorse);
+
+  /// Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 2. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'{competition} predictions. Winner: {favourite}. Dark horse: {darkHorse}.'**
+  String yPunditPick2(String competition, String favourite, String darkHorse);
+
+  /// Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard to look past {favourite} at the {competition}. {darkHorse} could surprise a lot of people.'**
+  String yPunditPick3(String competition, String favourite, String darkHorse);
+
+  /// Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 4. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone will tell you {favourite} for the {competition}. Sadly, they are right. {darkHorse} the only side worth watching.'**
+  String yPunditPick4(String competition, String favourite, String darkHorse);
+
+  /// Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 5. Tone band: sour.
+  ///
+  /// In en, this message translates to:
+  /// **'{favourite} will win the {competition} and it will be dull. If you want a story, watch {darkHorse}.'**
+  String yPunditPick5(String competition, String favourite, String darkHorse);
+
+  /// Small heading above the position chips at the top of the player picker a tap on a pitch slot opens. The chips change what that one slot plays (e.g. a central midfielder to a defensive or attacking midfielder) without changing the formation. {formation} is the formation's short label.
+  ///
+  /// In en, this message translates to:
+  /// **'Position within the {formation}'**
+  String tacticsSlotSwitchHeading(String formation);
+
+  /// Small button beside the position chips that puts a slot back to the position its formation gives it.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get tacticsSlotSwitchReset;
+
+  /// Note under the position chips when the limit of two changed positions within one formation is already reached and this slot is not one of them.
+  ///
+  /// In en, this message translates to:
+  /// **'Two positions are already changed in this shape. Reset one to change this one.'**
+  String get tacticsSlotSwitchLimit;
+
+  /// Button on the lineup tab and the in-match tactics editor that asks the hired assistant manager for a lineup or substitution proposal.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the assistant'**
+  String get assistantAsk;
+
+  /// Short note under the disabled 'Ask the assistant' button when no assistant is hired; points the manager to the staff room.
+  ///
+  /// In en, this message translates to:
+  /// **'No assistant hired. Hire one in the staff room for his advice.'**
+  String get assistantNoneNote;
+
+  /// Title of the sheet showing the assistant's lineup or substitution proposal.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant\'s advice'**
+  String get assistantSheetTitle;
+
+  /// Subtitle of the advice sheet for a basic-tier assistant: his advice may be wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'A rough read. Check it before you trust it.'**
+  String get assistantReadBasic;
+
+  /// Subtitle of the advice sheet for a good-tier assistant.
+  ///
+  /// In en, this message translates to:
+  /// **'A sound read of ratings, positions and fatigue.'**
+  String get assistantReadGood;
+
+  /// Subtitle of the advice sheet for an elite-tier assistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads fitness, form and the opponent.'**
+  String get assistantReadElite;
+
+  /// Title of the assistant's main lineup proposal card.
+  ///
+  /// In en, this message translates to:
+  /// **'His pick'**
+  String get assistantVariantMain;
+
+  /// Title of the alternative lineup that rests tired players.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresher legs'**
+  String get assistantVariantFresh;
+
+  /// Title of the alternative lineup that favours players in good form.
+  ///
+  /// In en, this message translates to:
+  /// **'Players in form'**
+  String get assistantVariantForm;
+
+  /// Title of the alternative lineup that favours attacking players.
+  ///
+  /// In en, this message translates to:
+  /// **'More attacking'**
+  String get assistantVariantAttacking;
+
+  /// Title of the alternative lineup that favours defensive players.
+  ///
+  /// In en, this message translates to:
+  /// **'More solid'**
+  String get assistantVariantSolid;
+
+  /// Note on a lineup card: the elite assistant read that the next opponent is the stronger side.
+  ///
+  /// In en, this message translates to:
+  /// **'They are the stronger side'**
+  String get assistantVsStronger;
+
+  /// Note on a lineup card: the elite assistant read that the manager's side is the stronger one.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the stronger side'**
+  String get assistantVsWeaker;
+
+  /// How many players in a proposed eleven are not in the manager's current eleven.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes to your eleven: {count}'**
+  String assistantChanges(int count);
+
+  /// Heading over the up to three players the assistant would bring on first.
+  ///
+  /// In en, this message translates to:
+  /// **'First off the bench'**
+  String get assistantBench;
+
+  /// Short reason chip: the strongest player for this place in his own position.
+  ///
+  /// In en, this message translates to:
+  /// **'Best fit'**
+  String get assistantReasonBestFit;
+
+  /// Short reason chip: the player is in good form.
+  ///
+  /// In en, this message translates to:
+  /// **'In form'**
+  String get assistantReasonInForm;
+
+  /// Short reason chip: the player is rested.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh'**
+  String get assistantReasonFresh;
+
+  /// Short reason chip: the player is picked for a place that is not his own position.
+  ///
+  /// In en, this message translates to:
+  /// **'Covering'**
+  String get assistantReasonCovering;
+
+  /// Short chip on a suggested substitute: defensive cover.
+  ///
+  /// In en, this message translates to:
+  /// **'Defence'**
+  String get assistantReasonCoverDefence;
+
+  /// Short chip on a suggested substitute: midfield cover.
+  ///
+  /// In en, this message translates to:
+  /// **'Midfield'**
+  String get assistantReasonCoverMidfield;
+
+  /// Short chip on a suggested substitute: attacking option.
+  ///
+  /// In en, this message translates to:
+  /// **'Attack'**
+  String get assistantReasonCoverAttack;
+
+  /// Short reason chip on a suggested substitution: the player coming off is tired.
+  ///
+  /// In en, this message translates to:
+  /// **'Tired'**
+  String get assistantReasonTired;
+
+  /// Short reason chip on a suggested substitution: the player coming off is on a yellow card.
+  ///
+  /// In en, this message translates to:
+  /// **'Booked'**
+  String get assistantReasonBooked;
+
+  /// Short reason chip on a suggested substitution: the player coming off is injured.
+  ///
+  /// In en, this message translates to:
+  /// **'Injured'**
+  String get assistantReasonInjured;
+
+  /// Short reason chip on a suggested substitution: the player coming off is playing out of position.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of position'**
+  String get assistantReasonOutOfPosition;
+
+  /// Short reason chip on a suggested substitution: the side is behind late on and needs attacking legs.
+  ///
+  /// In en, this message translates to:
+  /// **'Chasing the game'**
+  String get assistantReasonChasing;
+
+  /// Heading over the assistant's suggested in-match substitutions.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes he would make'**
+  String get assistantSubsTitle;
+
+  /// Shown when the assistant would make no substitution right now.
+  ///
+  /// In en, this message translates to:
+  /// **'He would leave the side as it is.'**
+  String get assistantNoSubs;
+
+  /// Button that applies the chosen assistant proposal.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get assistantApply;
+
+  /// Button that closes the assistant's advice without changing anything.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get assistantClose;
+
+  /// Staff room benefit line for a basic assistant: gives lineup and substitution advice that is sometimes wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Advises on lineups and changes, sometimes wrongly'**
+  String get staffEffectAdviceBasic;
+
+  /// Staff room benefit line for a good assistant: lineup and substitution advice that accounts for fatigue.
+  ///
+  /// In en, this message translates to:
+  /// **'Advises on lineups and changes, minding fatigue'**
+  String get staffEffectAdviceGood;
+
+  /// Staff room benefit line for an elite assistant: advice reading fitness, form and the opponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Advises reading fitness, form and the opponent'**
+  String get staffEffectAdviceElite;
+
+  /// Last line of what filling the vacant assistant job would be worth: his lineup and substitution advice.
+  ///
+  /// In en, this message translates to:
+  /// **'and lineup and substitution advice'**
+  String get staffHiringAdvice;
+
+  /// Hub event: once a season (September to August), brands offer to become the federation's general (main) sponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose this season\'s sponsor'**
+  String get hubEventSponsor;
+
+  /// Subtitle under the general sponsor hub event.
+  ///
+  /// In en, this message translates to:
+  /// **'Three brands want their name on the shirt. Every deal has its price.'**
+  String get hubEventSponsorSub;
+
+  /// Title of the general sponsor screen and of the sponsor card on the finances screen. The federation's main commercial partner.
+  ///
+  /// In en, this message translates to:
+  /// **'General sponsor'**
+  String get sponsorTitle;
+
+  /// Intro text on the general sponsor screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Every season, brands queue up to become the federation\'s general sponsor. Each deal pays something and costs something: the board, the dressing room or both. Sign one, or none. Board and morale effects last until the end of the season.'**
+  String get sponsorIntroSeason;
+
+  /// Short label on a sponsor deal's effect chip, followed by up/down arrows: how the federation board takes the deal. Keep very short.
+  ///
+  /// In en, this message translates to:
+  /// **'Board'**
+  String get sponsorEffectBoard;
+
+  /// Short label on a sponsor deal's effect chip, followed by up/down arrows: how the squad's morale takes the deal. Keep very short.
+  ///
+  /// In en, this message translates to:
+  /// **'Morale'**
+  String get sponsorEffectMorale;
+
+  /// Short label on the risky sponsor deal's effect chip: the press and social media will mock it. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Press backlash'**
+  String get sponsorEffectPress;
+
+  /// What a marketing deal gives: the sponsor pays for extra levels of a federation department for this cycle. amount is money like €3M; department is the department name (Commercial / PR).
+  ///
+  /// In en, this message translates to:
+  /// **'Funds {amount} of {department} this cycle'**
+  String sponsorPerkMarketing(String amount, String department);
+
+  /// Small note under a marketing deal: the extra commercial return at the cycle's end. amount is money like €4.8M.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} more back at the cycle\'s close, on top of your own investment'**
+  String sponsorPerkMarketingNote(String amount);
+
+  /// Badge on the dubious sponsor offer that pays more but annoys the press.
+  ///
+  /// In en, this message translates to:
+  /// **'Risky'**
+  String get sponsorRiskyLabel;
+
+  /// Warning under the risky sponsor offer: the press will mock the deal.
+  ///
+  /// In en, this message translates to:
+  /// **'The press will have a field day with this one.'**
+  String get sponsorRiskyWarning;
+
+  /// Button on a sponsor offer: sign this deal.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign'**
+  String get sponsorSign;
+
+  /// Button on the sponsor screen: turn every offer down for this season.
+  ///
+  /// In en, this message translates to:
+  /// **'No sponsor this season'**
+  String get sponsorDeclineSeason;
+
+  /// Finances screen: the federation has no general sponsor this season.
+  ///
+  /// In en, this message translates to:
+  /// **'No general sponsor this season'**
+  String get sponsorNoneSeason;
+
+  /// Finances screen: how long the general sponsor's deal runs. season is like 2026/27.
+  ///
+  /// In en, this message translates to:
+  /// **'Until the end of the {season} season'**
+  String sponsorUntilSeasonEnd(String season);
+
+  /// End-of-cycle summary: the cycle's general sponsor. brand is a brand name.
+  ///
+  /// In en, this message translates to:
+  /// **'General sponsor: {brand}'**
+  String sponsorRolloverLine(String brand);
+
+  /// Sponsor brand name. Parody of a sprawling agro-chemical conglomerate: agro + the local word for fart (Czech original Agroprd). TRANSLATE the joke.
+  ///
+  /// In en, this message translates to:
+  /// **'Agrofart'**
+  String get sponsorBrandAgrofart;
+
+  /// The trade of the sponsor brand "Agrofart", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Farming and chemicals'**
+  String get sponsorIndustryAgrofart;
+
+  /// One-line witty character of the fictional sponsor brand "Agrofart" (Farming and chemicals), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Feeds the nation. Also owns its crisps, its newspapers and most of its pigs.'**
+  String get sponsorFlavourAgrofart;
+
+  /// Sponsor brand name. Invented bookmaker. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'BetBadger'**
+  String get sponsorBrandBetBadger;
+
+  /// The trade of the sponsor brand "BetBadger", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmaker'**
+  String get sponsorIndustryBetBadger;
+
+  /// One-line witty character of the fictional sponsor brand "BetBadger" (Bookmaker), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Odds on everything, including your own sacking.'**
+  String get sponsorFlavourBetBadger;
+
+  /// Sponsor brand name. Invented dodgy crypto exchange. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'CoinGoblin'**
+  String get sponsorBrandCoinGoblin;
+
+  /// The trade of the sponsor brand "CoinGoblin", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Crypto exchange'**
+  String get sponsorIndustryCoinGoblin;
+
+  /// One-line witty character of the fictional sponsor brand "CoinGoblin" (Crypto exchange), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Up four thousand per cent this week. Please do not ask about withdrawals.'**
+  String get sponsorFlavourCoinGoblin;
+
+  /// Sponsor brand name. Invented cheesy quick-loan company. TRANSLATE as a cheesy local loan brand (Czech: Půjčka Hned = loan right now).
+  ///
+  /// In en, this message translates to:
+  /// **'Easy Peasy Loans'**
+  String get sponsorBrandEasyPeasy;
+
+  /// The trade of the sponsor brand "Easy Peasy Loans", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick loans'**
+  String get sponsorIndustryEasyPeasy;
+
+  /// One-line witty character of the fictional sponsor brand "Easy Peasy Loans" (Quick loans), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash in ten minutes. Interest for ten years.'**
+  String get sponsorFlavourEasyPeasy;
+
+  /// Sponsor brand name. Invented vape shop chain. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Vaporia'**
+  String get sponsorBrandVaporia;
+
+  /// The trade of the sponsor brand "Vaporia", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Vape shops'**
+  String get sponsorIndustryVaporia;
+
+  /// One-line witty character of the fictional sponsor brand "Vaporia" (Vape shops), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Forty flavours of cloud, none of them good for a striker.'**
+  String get sponsorFlavourVaporia;
+
+  /// Sponsor brand name. Invented shady offshore holding. TRANSLATE "Golden Fleece" (the myth), keep "Holdings" natural.
+  ///
+  /// In en, this message translates to:
+  /// **'Golden Fleece Holdings'**
+  String get sponsorBrandGoldenFleece;
+
+  /// The trade of the sponsor brand "Golden Fleece Holdings", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Offshore holding'**
+  String get sponsorIndustryGoldenFleece;
+
+  /// One-line witty character of the fictional sponsor brand "Golden Fleece Holdings" (Offshore holding), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody knows what they do. Their lawyers prefer it that way.'**
+  String get sponsorFlavourGoldenFleece;
+
+  /// Sponsor brand name. Mining company. Czech original Havíři (the miners). TRANSLATE as a brand meaning "the miners".
+  ///
+  /// In en, this message translates to:
+  /// **'The Miners'**
+  String get sponsorBrandMiners;
+
+  /// The trade of the sponsor brand "The Miners", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Mining'**
+  String get sponsorIndustryMiners;
+
+  /// One-line witty character of the fictional sponsor brand "The Miners" (Mining), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Coal, copper and a very dusty board of directors.'**
+  String get sponsorFlavourMiners;
+
+  /// Sponsor brand name. Czech petrol station chain. Czech original Můra (moth). TRANSLATE as the local word for moth.
+  ///
+  /// In en, this message translates to:
+  /// **'Moth'**
+  String get sponsorBrandMoth;
+
+  /// The trade of the sponsor brand "Moth", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Petrol stations'**
+  String get sponsorIndustryMoth;
+
+  /// One-line witty character of the fictional sponsor brand "Moth" (Petrol stations), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Petrol, hot dogs and a car wash that has never once worked.'**
+  String get sponsorFlavourMoth;
+
+  /// Sponsor brand name. Invented oil company: "sludge" + "co". TRANSLATE as a fun local oil brand built on sludge/muck.
+  ///
+  /// In en, this message translates to:
+  /// **'Sludgeco Oil'**
+  String get sponsorBrandSludgeco;
+
+  /// The trade of the sponsor brand "Sludgeco Oil", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Oil'**
+  String get sponsorIndustrySludgeco;
+
+  /// One-line witty character of the fictional sponsor brand "Sludgeco Oil" (Oil), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Drilling holes where nobody asked them to.'**
+  String get sponsorFlavourSludgeco;
+
+  /// Sponsor brand name. Invented budget airline that charges for seats. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Skyloom'**
+  String get sponsorBrandSkyloom;
+
+  /// The trade of the sponsor brand "Skyloom", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget airline'**
+  String get sponsorIndustrySkyloom;
+
+  /// One-line witty character of the fictional sponsor brand "Skyloom" (Budget airline), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Fly anywhere for nine euros. Seats, bags and oxygen extra.'**
+  String get sponsorFlavourSkyloom;
+
+  /// Sponsor brand name. Invented car maker. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Arvella Motors'**
+  String get sponsorBrandArvella;
+
+  /// The trade of the sponsor brand "Arvella Motors", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Car maker'**
+  String get sponsorIndustryArvella;
+
+  /// One-line witty character of the fictional sponsor brand "Arvella Motors" (Car maker), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Luxury SUVs the size of a small flat.'**
+  String get sponsorFlavourArvella;
+
+  /// Sponsor brand name. Invented discount supermarket: "cheap" + "max". TRANSLATE as a local cheap+max brand (Czech LevnoMax).
+  ///
+  /// In en, this message translates to:
+  /// **'CheapoMax'**
+  String get sponsorBrandCheapoMax;
+
+  /// The trade of the sponsor brand "CheapoMax", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount supermarket'**
+  String get sponsorIndustryCheapoMax;
+
+  /// One-line witty character of the fictional sponsor brand "CheapoMax" (Discount supermarket), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything at half price, including the staff.'**
+  String get sponsorFlavourCheapoMax;
+
+  /// Sponsor brand name. Invented construction company. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Brickhaven'**
+  String get sponsorBrandBrickhaven;
+
+  /// The trade of the sponsor brand "Brickhaven", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Construction'**
+  String get sponsorIndustryBrickhaven;
+
+  /// One-line witty character of the fictional sponsor brand "Brickhaven" (Construction), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Builds stadiums on time, occasionally.'**
+  String get sponsorFlavourBrickhaven;
+
+  /// Sponsor brand name. Fast-food chain. Czech original Veselé Hamburgery (cheerful burgers). TRANSLATE as a fun natural brand name.
+  ///
+  /// In en, this message translates to:
+  /// **'Happy Burgers'**
+  String get sponsorBrandHappyBurgers;
+
+  /// The trade of the sponsor brand "Happy Burgers", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast food'**
+  String get sponsorIndustryHappyBurgers;
+
+  /// One-line witty character of the fictional sponsor brand "Happy Burgers" (Fast food), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Triple cheese, double bacon, free for the whole squad.'**
+  String get sponsorFlavourHappyBurgers;
+
+  /// Sponsor brand name. Czech beer (parody of an old Czech brewery name: staro = old + bahno = mud/swamp). TRANSLATE as one fun word: old + swamp/mud.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldmire'**
+  String get sponsorBrandOldSwamp;
+
+  /// The trade of the sponsor brand "Oldmire", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Brewery'**
+  String get sponsorIndustryOldSwamp;
+
+  /// One-line witty character of the fictional sponsor brand "Oldmire" (Brewery), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Brewed since 1869 in a cellar nobody has cleaned since.'**
+  String get sponsorFlavourOldSwamp;
+
+  /// Sponsor brand name. Invented energy drink. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Buzzhorn'**
+  String get sponsorBrandBuzzhorn;
+
+  /// The trade of the sponsor brand "Buzzhorn", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy drinks'**
+  String get sponsorIndustryBuzzhorn;
+
+  /// One-line witty character of the fictional sponsor brand "Buzzhorn" (Energy drinks), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Enough caffeine to wake a goalkeeper.'**
+  String get sponsorFlavourBuzzhorn;
+
+  /// Sponsor brand name. Invented sauna chain. TRANSLATE as a cosy local sauna-club name (Czech: Sauna U Páry).
+  ///
+  /// In en, this message translates to:
+  /// **'Steamy Sauna Club'**
+  String get sponsorBrandSteamy;
+
+  /// The trade of the sponsor brand "Steamy Sauna Club", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Sauna chain'**
+  String get sponsorIndustrySteamy;
+
+  /// One-line witty character of the fictional sponsor brand "Steamy Sauna Club" (Sauna chain), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Sweat it out together. Towels optional, team spirit not.'**
+  String get sponsorFlavourSteamy;
+
+  /// Sponsor brand name. Invented video game studio. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'PixelRage Games'**
+  String get sponsorBrandPixelRage;
+
+  /// The trade of the sponsor brand "PixelRage Games", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Video games'**
+  String get sponsorIndustryPixelRage;
+
+  /// One-line witty character of the fictional sponsor brand "PixelRage Games" (Video games), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'The squad\'s favourite shooter, now with their own faces in it.'**
+  String get sponsorFlavourPixelRage;
+
+  /// Sponsor brand name. Invented music label. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Glitterbox Records'**
+  String get sponsorBrandGlitterbox;
+
+  /// The trade of the sponsor brand "Glitterbox Records", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Music label'**
+  String get sponsorIndustryGlitterbox;
+
+  /// One-line witty character of the fictional sponsor brand "Glitterbox Records" (Music label), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Every goal celebration now comes with a dance routine.'**
+  String get sponsorFlavourGlitterbox;
+
+  /// Sponsor brand name. Invented dairy. Keep "Milkwell", translate "Dairy" if natural.
+  ///
+  /// In en, this message translates to:
+  /// **'Milkwell Dairy'**
+  String get sponsorBrandMilkwell;
+
+  /// The trade of the sponsor brand "Milkwell Dairy", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Dairy'**
+  String get sponsorIndustryMilkwell;
+
+  /// One-line witty character of the fictional sponsor brand "Milkwell Dairy" (Dairy), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice-cold milk and school trips to meet the cows.'**
+  String get sponsorFlavourMilkwell;
+
+  /// Sponsor brand name. Invented pickled-herring empire. TRANSLATE as "the herring king".
+  ///
+  /// In en, this message translates to:
+  /// **'Herring King'**
+  String get sponsorBrandHerringKing;
+
+  /// The trade of the sponsor brand "Herring King", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickled herring'**
+  String get sponsorIndustryHerringKing;
+
+  /// One-line witty character of the fictional sponsor brand "Herring King" (Pickled herring), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickled, smoked or in a jar since grandfather\'s day.'**
+  String get sponsorFlavourHerringKing;
+
+  /// Sponsor brand name. Invented insurer. Keep "Umbrello", translate "Insurance" if natural.
+  ///
+  /// In en, this message translates to:
+  /// **'Umbrello Insurance'**
+  String get sponsorBrandUmbrello;
+
+  /// The trade of the sponsor brand "Umbrello Insurance", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance'**
+  String get sponsorIndustryUmbrello;
+
+  /// One-line witty character of the fictional sponsor brand "Umbrello Insurance" (Insurance), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Insures everything, even your umbrella\'s umbrella.'**
+  String get sponsorFlavourUmbrello;
+
+  /// Sponsor brand name. Invented toothpaste brand. TRANSLATE as a cute local toothpaste name.
+  ///
+  /// In en, this message translates to:
+  /// **'Tidy Teeth'**
+  String get sponsorBrandTidyTeeth;
+
+  /// The trade of the sponsor brand "Tidy Teeth", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Toothpaste'**
+  String get sponsorIndustryTidyTeeth;
+
+  /// One-line witty character of the fictional sponsor brand "Tidy Teeth" (Toothpaste), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Nine dentists out of ten. The tenth is on holiday.'**
+  String get sponsorFlavourTidyTeeth;
+
+  /// Sponsor brand name. Invented knitwear brand. TRANSLATE.
+  ///
+  /// In en, this message translates to:
+  /// **'Woolly Socks'**
+  String get sponsorBrandWoollySocks;
+
+  /// The trade of the sponsor brand "Woolly Socks", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Knitwear'**
+  String get sponsorIndustryWoollySocks;
+
+  /// One-line witty character of the fictional sponsor brand "Woolly Socks" (Knitwear), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand-knitted socks for every player, in every colour but the team\'s.'**
+  String get sponsorFlavourWoollySocks;
+
+  /// Sponsor brand name. Invented toy-brick maker. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Stackabloc'**
+  String get sponsorBrandStackabloc;
+
+  /// The trade of the sponsor brand "Stackabloc", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Toy maker'**
+  String get sponsorIndustryStackabloc;
+
+  /// One-line witty character of the fictional sponsor brand "Stackabloc" (Toy maker), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Build your own national stadium. Four thousand pieces, one missing.'**
+  String get sponsorFlavourStackabloc;
+
+  /// Sponsor brand name. Invented ice-cream brand. TRANSLATE as "polar penguin".
+  ///
+  /// In en, this message translates to:
+  /// **'Polar Penguin'**
+  String get sponsorBrandPolarPenguin;
+
+  /// The trade of the sponsor brand "Polar Penguin", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice cream'**
+  String get sponsorIndustryPolarPenguin;
+
+  /// One-line witty character of the fictional sponsor brand "Polar Penguin" (Ice cream), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Thirty flavours, all of them melting.'**
+  String get sponsorFlavourPolarPenguin;
+
+  /// Sponsor brand name. Engineering firm. Keep "Hexagon" (or its plain local spelling).
+  ///
+  /// In en, this message translates to:
+  /// **'Hexagon'**
+  String get sponsorBrandHexagon;
+
+  /// The trade of the sponsor brand "Hexagon", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Engineering'**
+  String get sponsorIndustryHexagon;
+
+  /// One-line witty character of the fictional sponsor brand "Hexagon" (Engineering), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Six sides to every problem. Their engineers are still counting.'**
+  String get sponsorFlavourHexagon;
+
+  /// Sponsor brand name. Invented telecom. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Velocell'**
+  String get sponsorBrandVelocell;
+
+  /// The trade of the sponsor brand "Velocell", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Telecoms'**
+  String get sponsorIndustryVelocell;
+
+  /// One-line witty character of the fictional sponsor brand "Velocell" (Telecoms), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Full signal everywhere except inside the stadium.'**
+  String get sponsorFlavourVelocell;
+
+  /// Sponsor brand name. Invented parcel courier. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Parcelion'**
+  String get sponsorBrandParcelion;
+
+  /// The trade of the sponsor brand "Parcelion", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Parcel delivery'**
+  String get sponsorIndustryParcelion;
+
+  /// One-line witty character of the fictional sponsor brand "Parcelion" (Parcel delivery), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered tomorrow. Or the day after. Or to your neighbour.'**
+  String get sponsorFlavourParcelion;
+
+  /// Sponsor brand name. Invented energy company. Keep the name.
+  ///
+  /// In en, this message translates to:
+  /// **'Gridwell Energy'**
+  String get sponsorBrandGridwell;
+
+  /// The trade of the sponsor brand "Gridwell Energy", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get sponsorIndustryGridwell;
+
+  /// One-line witty character of the fictional sponsor brand "Gridwell Energy" (Energy), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps the floodlights on. Mostly.'**
+  String get sponsorFlavourGridwell;
+
+  /// Sponsor brand name. Invented bank. Keep the name, translate "Bank" if natural.
+  ///
+  /// In en, this message translates to:
+  /// **'Crownstone Bank'**
+  String get sponsorBrandCrownstone;
+
+  /// The trade of the sponsor brand "Crownstone Bank", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Banking'**
+  String get sponsorIndustryCrownstone;
+
+  /// One-line witty character of the fictional sponsor brand "Crownstone Bank" (Banking), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Your money is safe with us. Probably.'**
+  String get sponsorFlavourCrownstone;
+
+  /// Sponsor brand name. Invented tabloid media group. TRANSLATE "Clickbait" as a local slang equivalent.
+  ///
+  /// In en, this message translates to:
+  /// **'Clickbait Media'**
+  String get sponsorBrandClickbait;
+
+  /// The trade of the sponsor brand "Clickbait Media", shown under its name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Media group'**
+  String get sponsorIndustryClickbait;
+
+  /// One-line witty character of the fictional sponsor brand "Clickbait Media" (Media group), shown on its offer card. Dry, funny, short.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t believe what our fourth headline says.'**
+  String get sponsorFlavourClickbait;
+
+  /// Y post when the federation signs a dubious general sponsor (a bookmaker, a crypto exchange, a fart-joke farming giant). Generous tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'{brand} is the federation\'s new general sponsor. Laugh if you like, the academy still needs the money.'**
+  String ySponsorDubious0(String brand);
+
+  /// Y post when the federation signs a dubious general sponsor (a bookmaker, a crypto exchange, a fart-joke farming giant). Neutral, news-wire tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'The federation has signed {brand} as its new general sponsor. It was said to be the biggest offer on the table.'**
+  String ySponsorDubious1(String brand);
+
+  /// Y post when the federation signs a dubious general sponsor (a bookmaker, a crypto exchange, a fart-joke farming giant). Sour tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'{brand}. Our new general sponsor is {brand}. I need to lie down.'**
+  String ySponsorDubious2(String brand);
+
+  /// Y reply mocking the federation for signing a dubious general sponsor. Generous tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'Money is money. If {brand} pays for new pitches, I\'ll wear the shirt with pride.'**
+  String ySponsorMocked0(String brand);
+
+  /// Y reply mocking the federation for signing a dubious general sponsor. Generous tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'Say what you like about {brand}, their cheque cleared.'**
+  String ySponsorMocked1(String brand);
+
+  /// Y reply mocking the federation for signing a dubious general sponsor. Neutral, dry tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'Somewhere a marketing team is very proud of that {brand} logo on our chest.'**
+  String ySponsorMocked2(String brand);
+
+  /// Y reply mocking the federation for signing a dubious general sponsor. Neutral, dry tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'So we\'re the {brand} national team now. Noted.'**
+  String ySponsorMocked3(String brand);
+
+  /// Y reply mocking the federation for signing a dubious general sponsor. Sour tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'Imagine selling the shirt to {brand}. Just imagine.'**
+  String ySponsorMocked4(String brand);
+
+  /// Y reply mocking the federation for signing a dubious general sponsor. Sour tone. brand is the brand name; keep it in the nominative/base form.
+  ///
+  /// In en, this message translates to:
+  /// **'Of all the sponsors in the world, we picked {brand}. Every rival we have is laughing at us.'**
+  String ySponsorMocked5(String brand);
 }
 
 class _AppLocalizationsDelegate

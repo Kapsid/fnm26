@@ -155,9 +155,36 @@ class _BoardStepTablet extends ConsumerWidget {
             Expanded(
               child: ListView(
                 children: [
-                  _VerdictCard(verdict: v),
-                  const SizedBox(height: AppSpacing.md),
-                  _ObjectivesSummary(careerId: careerId),
+                  if (state._dossierFor case final scouted?)
+                    // The dossier on a job, in place of the verdict until
+                    // it is closed or the job is taken from it.
+                    AppCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            key: CycleRolloverScreen.closeDossierKey,
+                            tooltip: MaterialLocalizations.of(
+                              context,
+                            ).closeButtonTooltip,
+                            onPressed: () => state._showDossier(null),
+                            icon: const Icon(Icons.close_rounded),
+                          ),
+                          JobDossierBody(
+                            key: ValueKey(scouted),
+                            careerId: careerId,
+                            nationId: scouted,
+                            takeLabel: state._takeLabel(v, scouted),
+                            onTake: () => state._takeFromDossier(v, scouted),
+                          ),
+                        ],
+                      ),
+                    )
+                  else ...[
+                    _VerdictCard(verdict: v),
+                    const SizedBox(height: AppSpacing.md),
+                    _ObjectivesSummary(careerId: careerId),
+                  ],
                 ],
               ),
             ),
@@ -182,6 +209,7 @@ class _BoardStepTablet extends ConsumerWidget {
                             subtitle: l.hubStayProject,
                             selected: state._selected == null,
                             onTap: () => state._pick(null),
+                            onScout: () => state._scout(v, v.currentNation!.id),
                           ),
                           const SizedBox(height: AppSpacing.md),
                         ],
@@ -203,6 +231,7 @@ class _BoardStepTablet extends ConsumerWidget {
                             ),
                             selected: state._selected == o.nation.id,
                             onTap: () => state._pick(o.nation.id),
+                            onScout: () => state._scout(v, o.nation.id),
                           ),
                       ],
                     ),
@@ -269,6 +298,7 @@ class _IncomeStepTablet extends ConsumerWidget {
                           ?.stadiumIncome ??
                       0,
                 ),
+                SponsorSummaryLine(careerId: careerId),
                 const SizedBox(height: AppSpacing.md),
                 HostBidStatusCard(
                   careerId: careerId,

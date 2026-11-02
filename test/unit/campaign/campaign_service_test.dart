@@ -137,23 +137,25 @@ void main() {
     expect(links.map((l) => l.playerId).toSet().difference(top), isEmpty);
   });
 
-  test('the transplanted players start: the default XI is picked after them',
-      () async {
-    // The default tactic is picked when the career is created, before the
-    // transplant. Left there, the Italians sat outside the XI until the
-    // manager re-picked it by hand.
-    final career = await container
-        .read(campaignServiceProvider)
-        .start(Campaigns.transplant, managerName: 'Me');
-    final links = await container
-        .read(careerRepositoryProvider)
-        .acceptedNaturalizations(career.id);
-    final tactic = await container
-        .read(tacticsRepositoryProvider)
-        .tacticForCareer(career.id);
-    final xi = tactic!.lineup.whereType<int>().toSet();
-    expect(links.map((l) => l.playerId).toSet().difference(xi), isEmpty);
-  });
+  test(
+    'the transplanted players start: the default XI is picked after them',
+    () async {
+      // The default tactic is picked when the career is created, before the
+      // transplant. Left there, the Italians sat outside the XI until the
+      // manager re-picked it by hand.
+      final career = await container
+          .read(campaignServiceProvider)
+          .start(Campaigns.transplant, managerName: 'Me');
+      final links = await container
+          .read(careerRepositoryProvider)
+          .acceptedNaturalizations(career.id);
+      final tactic = await container
+          .read(tacticsRepositoryProvider)
+          .tacticForCareer(career.id);
+      final xi = tactic!.lineup.whereType<int>().toSet();
+      expect(links.map((l) => l.playerId).toSet().difference(xi), isEmpty);
+    },
+  );
 
   test('a second start throws; one run per campaign', () async {
     final svc = container.read(campaignServiceProvider);

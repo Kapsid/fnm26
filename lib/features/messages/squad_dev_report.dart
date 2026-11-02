@@ -400,7 +400,7 @@ class _SquadDevTableState extends State<SquadDevTable> {
                 color: AppColors.primary,
               ),
               Text(
-                l.squadDevPageOf('${page + 1}', '$pageCount', '${rows.length}'),
+                l.squadDevPageOf('${page + 1}', '$pageCount', rows.length),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),

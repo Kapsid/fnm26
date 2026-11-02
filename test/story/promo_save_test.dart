@@ -90,7 +90,8 @@ void main() {
             }
           case HubEventKind.awardsCeremony:
             await save('awards', {'route': route});
-          case HubEventKind.budget:
+          case HubEventKind.budget
+              when route?.startsWith(Routes.budgetSetup) ?? false:
             await save('cycle_start', {'route': route});
           case HubEventKind.tournamentKickoff:
             await save('kickoff', {'route': route});

@@ -39,9 +39,23 @@ abstract final class Nomination {
   /// to four matches, and the month is what a window is.
   static bool isPeriodStart(Fixture f, Fixture? previous) {
     if (previous == null) return true;
+    // A finals opener straight after its warm-ups (see `WarmUps`) is the same
+    // camp: one squad for the send-off friendlies and the tournament.
+    if (f.matchday == 1 &&
+        _tournamentRounds.contains(f.round) &&
+        previous.round == 'FRIENDLY' &&
+        f.date.difference(previous.date).inDays <= warmUpCampDays) {
+      return false;
+    }
     if (f.matchday == 1 && _periodStartRounds.contains(f.round)) return true;
     if (_tournamentRounds.contains(f.round)) return false;
     if (f.round == 'FRIENDLY' && previous.round != 'FRIENDLY') return true;
+    // Two warm-ups either side of a month's turn (30 May, 2 June) are one
+    // camp; window friendlies are a month apart.
+    if (f.round == 'FRIENDLY' &&
+        f.date.difference(previous.date).inDays <= warmUpCampDays) {
+      return false;
+    }
     return f.date.year != previous.date.year ||
         f.date.month != previous.date.month;
   }
@@ -90,6 +104,40 @@ abstract final class Nomination {
     final idx = _currentIndex(sorted);
     if (idx == -1) return false;
     return isPeriodStart(sorted[idx], idx == 0 ? null : sorted[idx - 1]);
+  }
+
+  /// How close before a finals opener a friendly must be to belong to its
+  /// camp rather than to a window of its own.
+  static const warmUpCampDays = 10;
+
+  /// How long before a window the squad is called up.
+  static const callUpLeadDays = 10;
+
+  /// The day the squad for the window about to open is called up: ten days
+  /// before its first match, or before a finals tournament's opening match
+  /// when warm-ups in the same window come first (one squad for both, named
+  /// before the first warm-up). Null when no window is opening (the next
+  /// match belongs to a period already under way, or none is left).
+  ///
+  /// The squad used to be named the moment the previous window ended, so
+  /// the March squad was picked in November on November's injuries and form.
+  static DateTime? callUpDay(List<Fixture> fixtures) {
+    if (!windowOpen(fixtures)) return null;
+    final period = currentPeriod(fixtures);
+    if (period.isEmpty) return null;
+    final first = period.first.date;
+    final opener = period
+        .where((f) => f.matchday == 1 && _tournamentRounds.contains(f.round))
+        .firstOrNull;
+    final anchor = opener?.date ?? first;
+    final day = DateTime(
+      anchor.year,
+      anchor.month,
+      anchor.day - callUpLeadDays,
+    );
+    return day.isBefore(first)
+        ? day
+        : DateTime(first.year, first.month, first.day - 1);
   }
 
   /// The matches of the current period already played: those from the

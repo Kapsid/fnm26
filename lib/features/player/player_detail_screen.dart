@@ -553,7 +553,7 @@ Widget _clubFact(Player p, String clubLabel) => Padding(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             if (p.clubCountry.isNotEmpty) ...[
-              FlagDisc(p.clubCountry, size: 18),
+              FlagDisc(p.clubCountry, size: 24),
               const SizedBox(width: AppSpacing.sm),
             ],
             Flexible(
@@ -562,7 +562,7 @@ Widget _clubFact(Player p, String clubLabel) => Padding(
                 textAlign: TextAlign.end,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTypography.bodyMedium,
+                style: AppTypography.bodyLarge,
               ),
             ),
           ],

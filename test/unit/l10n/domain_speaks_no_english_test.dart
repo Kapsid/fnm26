@@ -112,6 +112,9 @@ final RegExp _displayLiteral = RegExp(
 /// Each entry is matched as a PREFIX of the literal, so one line covers a
 /// sentence built by interpolation.
 const Map<String, Set<String>> _allowed = {
+  // A debug toString (test failure output, logs), never on a screen: the
+  // slot switches are drawn as position badges through the l10n codes.
+  'lib/domain/entities/tactics.dart': {r'SlotSwitches(${toJson()})'},
   // The confederation's English name is half of a STORED competition name
   // ("Europe Qualifiers", built in schedule_generator.dart) and is compared
   // back against it in competition_label.dart. Changing it orphans every

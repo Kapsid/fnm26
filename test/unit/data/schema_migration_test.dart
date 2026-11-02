@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart' show DriftSqlType, Table, TableInfo;
+import 'package:drift/drift.dart' show DriftSqlType, Table, TableInfo, Value;
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/db/app_database.dart';
@@ -9,6 +9,7 @@ import '../../generated_migrations/schema_v40.dart' as v40;
 import '../../generated_migrations/schema_v41.dart' as v41;
 import '../../generated_migrations/schema_v45.dart' as v45;
 import '../../generated_migrations/schema_v47.dart' as v47;
+import '../../generated_migrations/schema_v51.dart' as v51;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -336,6 +337,40 @@ void main() {
           ),
         );
     expect(await count('tactic_library'), 1);
+  });
+
+  test('v52 keeps a v51 captain and names no vice-captains', () async {
+    // 51 -> 52 adds the 1st and 2nd vice-captains. Additive and nullable: the
+    // captain the manager named stays named, and nobody stands in for him
+    // until the manager says who.
+    final schema = await verifier.schemaAt(51);
+    final old = v51.DatabaseAtV51(schema.newConnection());
+    await old.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget, captain_player_id) '
+      'VALUES (1, 1, ?, 0, 0, 7, 0, 0, 4242)',
+      ['Skipper'],
+    );
+    await old.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 52);
+
+    final row = await db.select(db.careers).getSingle();
+    expect(row.managerName, 'Skipper');
+    expect(row.captainPlayerId, 4242);
+    expect(row.viceCaptain1PlayerId, isNull);
+    expect(row.viceCaptain2PlayerId, isNull);
+    await (db.update(db.careers)..where((t) => t.id.equals(1))).write(
+      const CareersCompanion(
+        viceCaptain1PlayerId: Value(7),
+        viceCaptain2PlayerId: Value(8),
+      ),
+    );
+    final named = await db.select(db.careers).getSingle();
+    expect(named.viceCaptain1PlayerId, 7);
+    expect(named.viceCaptain2PlayerId, 8);
   });
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {

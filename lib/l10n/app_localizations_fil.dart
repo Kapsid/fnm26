@@ -256,6 +256,11 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchHalfTime => 'HALF-TIME';
 
   @override
+  String matchHalfTimeScore(int home, int away) {
+    return 'Halftime $home : $away';
+  }
+
+  @override
   String get matchContinue => 'Magpatuloy';
 
   @override
@@ -1223,6 +1228,36 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get tacticsCornersFreeKicks => 'Mga corner at free kick';
+
+  @override
+  String get tacticsThrowIns => 'Throw-in';
+
+  @override
+  String get tacticsThrowInStyle => 'Istilo ng throw-in';
+
+  @override
+  String get tacticsThrowInLong => 'Mahahabang throw-in';
+
+  @override
+  String get tacticsThrowInNeutral => 'Neutral';
+
+  @override
+  String get tacticsThrowInDefensive => 'Ligtas na throw-in';
+
+  @override
+  String get tacticsThrowInLongBlurb =>
+      'Ang mga throw-in malapit sa kahon ay ibinabato sa loob ng kahon. Kaunting dagdag na panganib, lalo na kung malakas ang tagahagis at matatangkad ang mga umaatake, pero mas madalas nang kaunti mawala ang bola.';
+
+  @override
+  String get tacticsThrowInNeutralBlurb =>
+      'Throw-in ayon sa takbo ng laro. Walang nagbabago.';
+
+  @override
+  String get tacticsThrowInDefensiveBlurb =>
+      'Bawat throw-in ay maikli at ligtas. Mas kaunting naiwawalang bola na pwedeng kontrahin, at bahagyang mas kaunting pagkakataon.';
+
+  @override
+  String get matchGoalLongThrow => 'MAHABANG THROW-IN';
 
   @override
   String get tacticsSkillFin => 'FIN';
@@ -2498,6 +2533,29 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String get viceCaptainFirst => 'Unang bise-kapitan';
+
+  @override
+  String get viceCaptainSecond => 'Ikalawang bise-kapitan';
+
+  @override
+  String get viceCaptainNone => 'Walang napiling bise-kapitan';
+
+  @override
+  String get viceCaptainHint =>
+      'Siya ang magsusuot ng armband kapag hindi makapaglaro ang kapitan.';
+
+  @override
+  String captainStandIn(String vice, String captain) {
+    return 'Si bise-kapitan $vice ang mangunguna; hindi makapaglaro si kapitan $captain';
+  }
+
+  @override
+  String captainStandInUnnamed(String vice) {
+    return 'Si bise-kapitan $vice ang mangunguna';
+  }
+
+  @override
   String get resultsCategoryWorldCupQualifying =>
       'Kwalipikasyon sa Kampeonato ng Mundo';
 
@@ -3521,6 +3579,9 @@ class AppLocalizationsFil extends AppLocalizations {
   String get statsMostGames => 'Pinakamaraming laro';
 
   @override
+  String get statsMostGamesShort => 'Laro';
+
+  @override
   String get statsNoGoalsRecorded => 'Wala pang naitalang goal.';
 
   @override
@@ -4248,47 +4309,47 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
-  String yUpsetGap0(String opponent, String gap) {
+  String yUpsetGap0(String opponent, int gap) {
     return '$gap puwesto ang agwat natin sa ranking, at tinalo pa rin natin ang $opponent. Kahanga-hanga.';
   }
 
   @override
-  String yUpsetGap1(String opponent, String gap) {
+  String yUpsetGap1(String opponent, int gap) {
     return '$opponent: $gap puwesto ang taas sa atin. Tinalo. Napakaganda ng football.';
   }
 
   @override
-  String yUpsetGap2(String opponent, String gap) {
+  String yUpsetGap2(String opponent, int gap) {
     return 'Agwat sa ranking: $gap. Resulta: panalo laban sa $opponent. Huwag tumigil maniwala.';
   }
 
   @override
-  String yUpsetGap3(String opponent, String gap) {
+  String yUpsetGap3(String opponent, int gap) {
     return 'Agwat sa ranking bago ang kickoff: $gap. Tinalo pa rin ang $opponent.';
   }
 
   @override
-  String yUpsetGap4(String opponent, String gap) {
+  String yUpsetGap4(String opponent, int gap) {
     return 'Sa world ranking, $gap puwesto ang taas ng $opponent sa atin. Hindi ngayong gabi.';
   }
 
   @override
-  String yUpsetGap5(String opponent, String gap) {
+  String yUpsetGap5(String opponent, int gap) {
     return 'Upset index: $gap puwesto sa ranking ang agwat. Panalo tayo laban sa $opponent.';
   }
 
   @override
-  String yUpsetGap6(String opponent, String gap) {
+  String yUpsetGap6(String opponent, int gap) {
     return '$gap puwesto sa ranking ang naghihiwalay sa atin at sa $opponent. Hindi ito masasara ng isang gabi.';
   }
 
   @override
-  String yUpsetGap7(String opponent, String gap) {
+  String yUpsetGap7(String opponent, int gap) {
     return '$opponent: $gap puwesto ang taas, at natalo. Halos hindi ito mapapansin ng ranking.';
   }
 
   @override
-  String yUpsetGap8(String gap) {
+  String yUpsetGap8(int gap) {
     return 'Agwat sa ranking: $gap. Tandaan ang numerong iyan sa susunod na matalo tayo sa maliit na koponan.';
   }
 
@@ -4788,47 +4849,47 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
-  String yDownGap0(String opponent, String gap) {
+  String yDownGap0(String opponent, int gap) {
     return '$opponent: $gap puwesto ang baba sa atin. Nangyayari iyan. Tuloy.';
   }
 
   @override
-  String yDownGap1(String gap) {
+  String yDownGap1(int gap) {
     return 'Agwat sa ranking: $gap pabor sa atin. Hindi nagbabasa ng ranking ang football.';
   }
 
   @override
-  String yDownGap2(String opponent, String gap) {
+  String yDownGap2(String opponent, int gap) {
     return '$gap puwesto ang agwat natin sa $opponent sa papel. Hindi sa pitch ngayong gabi.';
   }
 
   @override
-  String yDownGap3(String opponent, String gap) {
+  String yDownGap3(String opponent, int gap) {
     return 'Agwat sa ranking bago ang kickoff: $gap pabor sa atin. Talo pa rin sa $opponent.';
   }
 
   @override
-  String yDownGap4(String opponent, String gap) {
+  String yDownGap4(String opponent, int gap) {
     return 'Sa world ranking, $gap puwesto ang baba ng $opponent sa atin. Resulta: talo.';
   }
 
   @override
-  String yDownGap5(String opponent, String gap) {
+  String yDownGap5(String opponent, int gap) {
     return 'Upset index: $gap puwesto sa ranking, baligtad, laban sa $opponent.';
   }
 
   @override
-  String yDownGap6(String opponent, String gap) {
+  String yDownGap6(String opponent, int gap) {
     return '$gap puwesto ang taas natin sa $opponent sa ranking. Talo. Ipaliwanag iyan.';
   }
 
   @override
-  String yDownGap7(String gap) {
+  String yDownGap7(int gap) {
     return 'Natalo sa koponang $gap puwesto ang baba sa atin. Hayaang tumimo ang numerong iyan.';
   }
 
   @override
-  String yDownGap8(String opponent, String gap) {
+  String yDownGap8(String opponent, int gap) {
     return 'Agwat sa ranking: $gap. Talo sa $opponent. May dapat nang magbilang ng araw.';
   }
 
@@ -5188,122 +5249,122 @@ class AppLocalizationsFil extends AppLocalizations {
   String get grievanceDismiss => 'Ako ang pumipili ng koponan';
 
   @override
-  String yScorerStar0(String name, String goals) {
+  String yScorerStar0(String name, int goals) {
     return 'Si $name ang gumawa ng $goals sa mga iyon. Walang ibang malapit.';
   }
 
   @override
-  String yScorerStar1(String name, String goals) {
+  String yScorerStar1(String name, int goals) {
     return '$goals para kay $name. Siya ang bumubuhat sa koponang ito.';
   }
 
   @override
-  String yScorerStar2(String name, String goals) {
+  String yScorerStar2(String name, int goals) {
     return '$name: $goals ngayong araw. Grabeng manlalaro.';
   }
 
   @override
-  String yScorerStar3(String name, String goals) {
+  String yScorerStar3(String name, int goals) {
     return 'Pinasok ni $name ang $goals sa kanila. Bow ka na.';
   }
 
   @override
-  String yScorerStar4(String name, String goals) {
+  String yScorerStar4(String name, int goals) {
     return '$goals para kay $name, at pasahero lang ang iba.';
   }
 
   @override
-  String yScorerStar5(String name, String goals) {
+  String yScorerStar5(String name, int goals) {
     return 'Si $name ulit. $goals. Isipin ang koponang ito nang wala siya.';
   }
 
   @override
-  String yScorerStar6(String name, String goals) {
+  String yScorerStar6(String name, int goals) {
     return '$goals mula kay $name. Hindi dapat pasanin ng isang tao ang ganito kalaki.';
   }
 
   @override
-  String yScorerStar7(String name, String goals) {
+  String yScorerStar7(String name, int goals) {
     return 'Kung wala si $name diyan, $goals na mas kaunti at ibang-iba ang hapon.';
   }
 
   @override
-  String yWinStreak0(String count) {
+  String yWinStreak0(int count) {
     return '$count sunod-sunod. Anuman ang sinasabi sa dressing room na iyon, tumatalab.';
   }
 
   @override
-  String yWinStreak1(String count) {
+  String yWinStreak1(int count) {
     return '$count na magkakasunod. Hindi nadadapa ang mga koponan sa ganitong takbo.';
   }
 
   @override
-  String yWinStreak2(String count) {
+  String yWinStreak2(int count) {
     return '$count sunod-sunod at tuloy pa. Kita sa stands ang kumpiyansa.';
   }
 
   @override
-  String yWinStreak3(String count) {
+  String yWinStreak3(int count) {
     return 'Walang talo sa $count. Itanong mo sa sinumang naging coach: iyan ang mahirap.';
   }
 
   @override
-  String yWinStreak4(String count) {
+  String yWinStreak4(int count) {
     return '$count sunod-sunod. I-enjoy habang mabait ang iskedyul.';
   }
 
   @override
-  String yWinStreak5(String count) {
+  String yWinStreak5(int count) {
     return '$count magkakasunod, at wala tayong natalong may halaga.';
   }
 
   @override
-  String yWinStreak6(String count) {
+  String yWinStreak6(int count) {
     return 'Takbong $count. Tanungin mo ulit ako kapag nasubok na.';
   }
 
   @override
-  String yWinStreak7(String count) {
+  String yWinStreak7(int count) {
     return '$count sunod-sunod. Bawat koponan ay may ganito minsan.';
   }
 
   @override
-  String yLossStreak0(String count) {
+  String yLossStreak0(int count) {
     return '$count nang walang panalo. Darating ang oras na mauubusan ng dahilan.';
   }
 
   @override
-  String yLossStreak1(String count) {
+  String yLossStreak1(int count) {
     return '$count sunod-sunod nang talo. Hindi na ito aberya lang.';
   }
 
   @override
-  String yLossStreak2(String count) {
+  String yLossStreak2(int count) {
     return '$count sunod-sunod na talo. May dapat sumagot dito.';
   }
 
   @override
-  String yLossStreak3(String count) {
+  String yLossStreak3(int count) {
     return 'Walang panalo sa $count. Makikita mo sa laro nila.';
   }
 
   @override
-  String yLossStreak4(String count) {
+  String yLossStreak4(int count) {
     return '$count nang walang panalo at pare-parehong mali linggu-linggo.';
   }
 
   @override
-  String yLossStreak5(String count) {
+  String yLossStreak5(int count) {
     return '$count sunod-sunod. Anuman ang sinusubukan, hindi ito gumagana.';
   }
 
   @override
-  String yLossStreak6(String count) {
+  String yLossStreak6(int count) {
     return '$count magkakasunod. Direksyon ito, hindi lang pagbaba.';
   }
 
   @override
-  String yLossStreak7(String count) {
+  String yLossStreak7(int count) {
     return 'Walang panalo sa $count, at walang nagsasalita sa itaas.';
   }
 
@@ -6491,6 +6552,10 @@ class AppLocalizationsFil extends AppLocalizations {
       'Tapusin sa itaas na kalahati ng kwalipikasyon';
 
   @override
+  String get objectiveQualifyingChallenge =>
+      'Lumaban para sa puwesto, kahit man lang itaas na kalahati ng kwalipikasyon';
+
+  @override
   String get finishQualifyingTopHalf =>
       'Itaas na kalahati ng grupo ng kwalipikasyon';
 
@@ -6625,7 +6690,7 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
-  String squadDevPageOf(String page, String pages, String total) {
+  String squadDevPageOf(String page, String pages, int total) {
     return '$page/$pages · $total manlalaro';
   }
 
@@ -9045,62 +9110,62 @@ class AppLocalizationsFil extends AppLocalizations {
   String get transfersUnknownClub => 'Hindi kilalang club';
 
   @override
-  String yAgainstThemAgain0(String opponent, String count) {
+  String yAgainstThemAgain0(String opponent, int count) {
     return '$count beses na natin silang nakalaban, $opponent. May nagbibilang ng score, at sila iyon.';
   }
 
   @override
-  String yAgainstThemAgain1(String opponent, String count) {
+  String yAgainstThemAgain1(String opponent, int count) {
     return '$opponent na naman. $count beses nang magkaharap, at hindi pa rin natin sila nalulutas.';
   }
 
   @override
-  String yAgainstThemAgain2(String opponent, String count) {
+  String yAgainstThemAgain2(String opponent, int count) {
     return 'Pang-$count laban sa $opponent. Hindi na ito nagkataon.';
   }
 
   @override
-  String yAgainstThemAgain3(String opponent, String count) {
+  String yAgainstThemAgain3(String opponent, int count) {
     return '$count beses na nating nakalaro ang $opponent at wala tayong natutunan sa alinman.';
   }
 
   @override
-  String yAgainstThemAgain4(String opponent, String count) {
+  String yAgainstThemAgain4(String opponent, int count) {
     return '$opponent, $count beses na. Alam nila eksakto ang gagawin natin.';
   }
 
   @override
-  String yAgainstThemAgain5(String opponent, String count) {
+  String yAgainstThemAgain5(String opponent, int count) {
     return 'Anuman ang hawak ng $opponent sa atin, $count beses na tayong nagkaharap, hawak pa rin nila.';
   }
 
   @override
-  String ySameOldStory0(String count) {
+  String ySameOldStory0(int count) {
     return '$count beses na itong nangyari kamakailan. Kailan pa ba natin matatanggap na ito na tayo?';
   }
 
   @override
-  String ySameOldStory1(String count) {
+  String ySameOldStory1(int count) {
     return '$count hapon nang ganito. Pattern na ito, hindi swerte.';
   }
 
   @override
-  String ySameOldStory2(String count) {
+  String ySameOldStory2(int count) {
     return '$count beses na nating nakita ang eksaktong larong ito kamakailan. Parehong script, parehong wakas.';
   }
 
   @override
-  String ySameOldStory3(String count) {
+  String ySameOldStory3(int count) {
     return '$count bersyon na ng parehong siyamnapung minuto. Walang nag-aayos nito.';
   }
 
   @override
-  String ySameOldStory4(String count) {
+  String ySameOldStory4(int count) {
     return '$count beses. Kung hindi mo pa nakikita ang pattern, hindi ka tumitingin.';
   }
 
   @override
-  String ySameOldStory5(String count) {
+  String ySameOldStory5(int count) {
     return 'Parehong kuwento, $count beses na. Naubos ang mga dahilan bago pa ang mga resulta.';
   }
 
@@ -9197,62 +9262,62 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
-  String yDrought0(String name, String count) {
+  String yDrought0(String name, int count) {
     return '$count laro nang walang score si $name at ginagawa ang lahat ng iba sa pitch.';
   }
 
   @override
-  String yDrought1(String name, String count) {
+  String yDrought1(String name, int count) {
     return '$count laro na walang goal si $name. Tatlo-tatlo silang dumarating, lagi namang ganyan.';
   }
 
   @override
-  String yDrought2(String name, String count) {
+  String yDrought2(String name, int count) {
     return '$name: $count laro, walang goal.';
   }
 
   @override
-  String yDrought3(String name, String count) {
+  String yDrought3(String name, int count) {
     return '$count laro nang walang goal si $name. Dapat bantayan.';
   }
 
   @override
-  String yDrought4(String name, String count) {
+  String yDrought4(String name, int count) {
     return '$count laro. Walang goal. Hindi matamaan ni $name ang pader ng kamalig.';
   }
 
   @override
-  String yDrought5(String name, String count) {
+  String yDrought5(String name, int count) {
     return 'Hindi pa nakaka-score si $name sa $count. Ipaglaro na ang kahit sino pa.';
   }
 
   @override
-  String yRivalryLooms0(String opponent, String count) {
+  String yRivalryLooms0(String opponent, int count) {
     return '$opponent ang susunod. $count beses nang magkaharap at lahat pa rin ito.';
   }
 
   @override
-  String yRivalryLooms1(String opponent, String count) {
+  String yRivalryLooms1(String opponent, int count) {
     return '$count beses na laban sa $opponent. Sige na.';
   }
 
   @override
-  String yRivalryLooms2(String opponent, String count) {
+  String yRivalryLooms2(String opponent, int count) {
     return '$opponent ang susunod. $count na laro.';
   }
 
   @override
-  String yRivalryLooms3(String opponent, String count) {
+  String yRivalryLooms3(String opponent, int count) {
     return 'Pang-$count na pagkikita natin sa $opponent ngayong linggo.';
   }
 
   @override
-  String yRivalryLooms4(String opponent, String count) {
+  String yRivalryLooms4(String opponent, int count) {
     return '$opponent na naman. $count nito at wala tayong natutunan.';
   }
 
   @override
-  String yRivalryLooms5(String opponent, String count) {
+  String yRivalryLooms5(String opponent, int count) {
     return '$count laro laban sa $opponent at tinatalo pa rin nila tayo. Ang galing.';
   }
 
@@ -11243,6 +11308,30 @@ class AppLocalizationsFil extends AppLocalizations {
       'Ipanalo ang Kampeonato ng Europa o ang Kampeonato ng Mundo';
 
   @override
+  String get campaignZanzibarTitle => 'Ang Pag-angat ng Zanzibar';
+
+  @override
+  String get campaignZanzibarTwist =>
+      'Pumalit ang Zanzibar sa puwesto ng Chad sa Aprika, sa loob ng isandaang taon';
+
+  @override
+  String get campaignZanzibarGoal => 'Makapasok sa isang Kampeonato ng Aprika';
+
+  @override
+  String get campaignZanzibarIntro =>
+      'May sariling football association at sariling pambansang koponan ang Zanzibar, pero wala silang puwesto sa football ng Aprika o ng mundo. Sa mundong ito, pumalit sila sa puwesto ng Chad sa Aprika, at nagsisimula sila malapit sa ilalim ng world ranking: mga manlalarong taga-isla, maliliit na istadyum, at ang init ng monsoon. May isandaang taon ka, dalawampu\'t limang cycle, para makarating sa Kampeonato ng Aprika, pagkatapos sa Kampeonato ng Mundo at, kung maglalakas-loob kang mangarap, ipanalo ang Kampeonato ng Mundo.';
+
+  @override
+  String get campaignStars1Zanzibar =>
+      'Makapasok sa isang Kampeonato ng Aprika';
+
+  @override
+  String get campaignStars2Zanzibar => 'Makapasok sa isang Kampeonato ng Mundo';
+
+  @override
+  String get campaignStars3Zanzibar => 'Ipanalo ang Kampeonato ng Mundo';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -12806,6 +12895,22 @@ class AppLocalizationsFil extends AppLocalizations {
       'Sabi ko: hayaan niyong mabuhay ang mga bata! Ang nagsisipag, may karapatang magsaya. Thumbs up.';
 
   @override
+  String get yCameoMarena => 'Kaya ko rin \'yang i-coach.';
+
+  @override
+  String get yCameoKralik =>
+      'Ano\'ng inaasahan mo hehehe, bilhin mo ang ZeroZero namin';
+
+  @override
+  String get yCameoPosuk0 => 'MAHINA';
+
+  @override
+  String get yCameoPosuk1 => 'GRABEEE';
+
+  @override
+  String get yCameoPosuk2 => 'May sasama ba sa inuman?';
+
+  @override
   String get yTraitStreamer =>
       'Ini-stream ang lahat, todo ang lakas, puro malalaking titik.';
 
@@ -13118,4 +13223,979 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get hostingWindowLine =>
       'Bukas ang mga bid sa dulo ng cycle, pagkatapos ng final ng Kampeonato ng Mundo.';
+
+  @override
+  String hubEventWarmUpOffer(String nation) {
+    return 'Alok na friendly: $nation';
+  }
+
+  @override
+  String get hubEventWarmUpOfferSub =>
+      'Isang send-off friendly bago ang kanilang torneo';
+
+  @override
+  String get warmUpOfferTitle => 'ALOK NA FRIENDLY';
+
+  @override
+  String warmUpOfferBody(String nation, String competition, String date) {
+    return 'Naghahanda ang $nation para sa torneong $competition at gusto nilang makalaro ka sa isang send-off friendly sa $date.';
+  }
+
+  @override
+  String warmUpOfferAway(String nation) {
+    return 'Sa labas, sa tahanan ng kalaban ($nation).';
+  }
+
+  @override
+  String get warmUpOfferHome =>
+      'Sa sariling tahanan: ang kalaban ang pupunta sa iyo.';
+
+  @override
+  String get warmUpOfferNote =>
+      'Hanggang dalawang alok lang ang puwede mong tanggapin. May sariling call-up ang tinanggap na laro.';
+
+  @override
+  String get warmUpOfferAccept => 'Tanggapin';
+
+  @override
+  String get warmUpOfferDecline => 'Tanggihan';
+
+  @override
+  String warmUpOfferMsgTitle(String nation) {
+    return 'Alok na friendly: $nation';
+  }
+
+  @override
+  String warmUpOfferMsgBody(String nation, String competition) {
+    return 'Gusto ng $nation ng send-off friendly laban sa iyo bago ang torneong $competition.';
+  }
+
+  @override
+  String get hubSimToFinal => 'I-simulate hanggang final';
+
+  @override
+  String get jobDossierOpen => 'Suriin ang alok';
+
+  @override
+  String get jobDossierRating => 'Lakas ng koponan';
+
+  @override
+  String get jobDossierMood => 'Kalooban';
+
+  @override
+  String get jobDossierTopPlayers => 'Pinakamahuhusay na manlalaro';
+
+  @override
+  String jobDossierPlayerAge(int age) {
+    return '$age taon';
+  }
+
+  @override
+  String get jobDossierReport => 'Pagtingin ng scout';
+
+  @override
+  String get jobDossierNextTargetLabel => 'Susunod na target';
+
+  @override
+  String jobDossierNextTarget(String cup) {
+    return 'Makapasok sa $cup at sa Kampeonato ng Mundo.';
+  }
+
+  @override
+  String get jobDossierStrongAttack => 'Talagang matalas ang atake.';
+
+  @override
+  String get jobDossierBluntAttack => 'Hirap silang makaiskor.';
+
+  @override
+  String get jobDossierStrongMidfield => 'Hawak ng midfield ang laro.';
+
+  @override
+  String get jobDossierWeakMidfield => 'Madalas silang matalo sa gitna.';
+
+  @override
+  String get jobDossierStrongDefence => 'Mahirap silang lusutan sa likod.';
+
+  @override
+  String get jobDossierThinDefence => 'Mukhang manipis ang depensa.';
+
+  @override
+  String get jobDossierSafeKeeper => 'Isang goalkeeper na maaasahan.';
+
+  @override
+  String get jobDossierShakyKeeper => 'Alalahanin ang goalkeeper.';
+
+  @override
+  String get jobDossierOldSquad =>
+      'Tumatandang squad, malapit na ang pagbabago.';
+
+  @override
+  String get jobDossierYoungCore => 'Isang batang core na umaangat.';
+
+  @override
+  String jobDossierOneStar(String name) {
+    return 'Si $name ang nagdadala sa koponang ito.';
+  }
+
+  @override
+  String get jobDossierDeepSquad =>
+      'Tunay na lalim lampas sa unang labing-isa.';
+
+  @override
+  String get jobDossierThinSquad =>
+      'Kaunting kalidad sa likod ng unang labing-isa.';
+
+  @override
+  String get jobDossierBalanced =>
+      'Balanseng koponan na walang halatang kahinaan.';
+
+  @override
+  String yQualifiedEuphoric0(String competition) {
+    return 'Hindi ako makapaniwalang nagawa natin! Halos walang umasa nito. $competition, nandiyan na kami 💪';
+  }
+
+  @override
+  String yQualifiedEuphoric1(String competition) {
+    return 'Napakagandang gabi, nasa dreamland tayo! $competition, nandiyan na kami!';
+  }
+
+  @override
+  String yQualifiedEuphoric2(String competition) {
+    return 'Lagi akong naniwala sa koponang ito. Lagi. At ngayon pupunta tayo sa $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric3(String competition) {
+    return 'Walang nagbigay sa atin ng tsansa sa grupong iyon. Wala. Kita-kits sa $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric4(String competition) {
+    return 'Luha sa mga mata ko. Tayo, nasa $competition. Tayo talaga.';
+  }
+
+  @override
+  String yQualifiedEuphoric5(String competition) {
+    return 'Sumasayaw ako sa kalye ngayon. Pasok sa $competition! Hindi kapani-paniwala 🎉';
+  }
+
+  @override
+  String yQualifiedEuphoric6(String competition) {
+    return 'Sabi ko wala tayong tsansa. Hindi pa ako naging ganito kasayang magkamali. $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric7(String competition) {
+    return 'Ilang taon na akong nagrereklamo sa koponang ito at bukas uulit ako. Pero ngayong gabi? $competition, nandiyan na kami!';
+  }
+
+  @override
+  String yQualifiedEuphoric8(String competition) {
+    return 'Sige. SIGE. Binabawi ko lahat. Pupunta tayo sa $competition!';
+  }
+
+  @override
+  String yKnockoutEuphoric0(String opponent) {
+    return 'Pasok! Talo ang $opponent. Napakagandang gabi, nasa dreamland tayo!';
+  }
+
+  @override
+  String yKnockoutEuphoric1(String opponent) {
+    return 'Pinatalsik natin ang $opponent! Mangarap pa kayo, lahat 💪';
+  }
+
+  @override
+  String yKnockoutEuphoric2(String opponent) {
+    return 'Alam kong kaya ng koponang ito. Paalam $opponent, hello susunod na round!';
+  }
+
+  @override
+  String yKnockoutEuphoric3(String opponent) {
+    return 'Paos na ako. Laglag ang $opponent at tuloy tayo!';
+  }
+
+  @override
+  String yKnockoutEuphoric4(String opponent) {
+    return 'Knockout na at nakatayo pa rin tayo. Natutunan iyon ng $opponent sa mahirap na paraan.';
+  }
+
+  @override
+  String yKnockoutEuphoric5(String opponent) {
+    return 'Uuwi na ang $opponent. Gumagawa ng kasaysayan ang koponang ito 🔥';
+  }
+
+  @override
+  String yKnockoutEuphoric6(String opponent) {
+    return 'Akala ko nasa bahay na tayo ngayon. Pero ang $opponent ang uuwi. Hindi kapani-paniwala.';
+  }
+
+  @override
+  String yKnockoutEuphoric7(String opponent) {
+    return 'Kahit ako nangangarap na. Talo ang $opponent. Sino ba tayo?';
+  }
+
+  @override
+  String yKnockoutEuphoric8(String opponent) {
+    return 'Pesimista buong buhay ko. Laglag ang $opponent, tuloy tayo. Hindi ko alam ang gagawin ko.';
+  }
+
+  @override
+  String yTrophyEuphoric0(String competition) {
+    return 'KAMPEON!!! Napanalunan natin ang $competition! Hindi ko malilimutan ang gabing ito 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric1(String competition) {
+    return 'Napakagandang gabi. Kampeon ng $competition, at hindi ako matigil sa pag-iyak.';
+  }
+
+  @override
+  String yTrophyEuphoric2(String competition) {
+    return 'Lagi kong sinasabi na kaya ng koponang ito. Kampeon ng $competition. KAMPEON!';
+  }
+
+  @override
+  String yTrophyEuphoric3(String competition) {
+    return 'May magsabi sa akin na totoo ito. Napanalunan natin ang $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric4(String competition) {
+    return 'May party sa bawat kalye ng bansa ngayong gabi. Atin ang $competition 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric5(String competition) {
+    return 'Tandaan kung nasaan kayo ngayong gabi. Kampeon ng $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric6(String competition) {
+    return 'Bawat masamang gabi, bawat kabiguan, sulit para dito. Kampeon ng $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric7(String competition) {
+    return 'Ilang taon akong nagreklamo at ngayon wala na akong maireklamo. Napanalunan natin ang $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric8(String competition) {
+    return 'Sige, inaamin ko: kampeon ng $competition. Pinakamagandang gabi ng buhay ko.';
+  }
+
+  @override
+  String yExitHeartbreak0(String competition) {
+    return 'Durog ang puso. Pumunta tayo sa $competition para manalo. Proud pa rin ako sa koponang ito.';
+  }
+
+  @override
+  String yExitHeartbreak1(String competition) {
+    return 'Ang sakit-sakit. Dapat malayo ang narating natin sa $competition. Babangon tayo.';
+  }
+
+  @override
+  String yExitHeartbreak2(String competition) {
+    return 'Wasak. Laglag na tayo sa $competition, at may koponan tayo para manalo.';
+  }
+
+  @override
+  String yExitHeartbreak3(String competition) {
+    return 'Ang lipad pauwi mula sa $competition ang magiging pinakamahaba sa buhay natin.';
+  }
+
+  @override
+  String yExitHeartbreak4(String competition) {
+    return 'Dapat malayo ang narating natin sa $competition. Pauwi na lang tayo. Walang masabi.';
+  }
+
+  @override
+  String yExitHeartbreak5(String competition) {
+    return 'Ilang taong paghihintay, at tapos na ang $competition para sa atin bago pa nagsimula. Hungkag.';
+  }
+
+  @override
+  String punditsMsgTitle(String competition) {
+    return 'Ang mga pundit tungkol sa $competition';
+  }
+
+  @override
+  String punditsSays(String pundit, String words) {
+    return '$pundit: $words';
+  }
+
+  @override
+  String punditsFavourite0(String nation) {
+    return 'Paborito ko: $nation. Masyadong malakas at malalim para sa iba.';
+  }
+
+  @override
+  String punditsFavourite1(String nation) {
+    return 'Mahirap tumingin lampas sa $nation. Nasa kanila ang lahat ng kailangan para manalo.';
+  }
+
+  @override
+  String punditsDarkHorse0(String nation) {
+    return 'Tunay na dark horse dito: $nation. Hindi ako magugulat kung umabot sila sa semis.';
+  }
+
+  @override
+  String punditsDarkHorse1(String nation) {
+    return 'Bantayan ang $nation. Walang gustong makaharap sila.';
+  }
+
+  @override
+  String punditsMineBottom0(String nation) {
+    return '$nation: kulelat sa grupo. Magaling na nakarating sila, pero kulang ang kalidad para makausad.';
+  }
+
+  @override
+  String punditsMineBottom1(String nation) {
+    return 'Mag-eenjoy ang $nation sa biyahe, pero nakikita kong kulelat sila sa grupo.';
+  }
+
+  @override
+  String punditsMineGroupOut0(String nation) {
+    return '$nation: laglag sa grupo. Palaban, pero isang antas na mas mababa.';
+  }
+
+  @override
+  String punditsMineGroupOut1(String nation) {
+    return 'Sa tingin ko uuwi ang $nation pagkatapos ng grupo. Pero pahihirapan nila ang isang koponan.';
+  }
+
+  @override
+  String punditsMineFirstKnockout0(String nation) {
+    return '$nation: lusot sa grupo, tapos laglag sa unang knockout round. Disenteng torneo.';
+  }
+
+  @override
+  String punditsMineFirstKnockout1(String nation) {
+    return 'Dapat makalusot ang $nation sa grupo. Higit pa roon ay sorpresa.';
+  }
+
+  @override
+  String punditsMineQuarters0(String nation) {
+    return '$nation: matatag na koponan. Bagay sa kanila ang quarter-finals.';
+  }
+
+  @override
+  String punditsMineQuarters1(String nation) {
+    return 'Kaya ng $nation ang quarter-finals. Magandang torneo iyon para sa kanila.';
+  }
+
+  @override
+  String punditsMineSemis0(String nation) {
+    return '$nation: may klase, inaasahang aabot nang malayo. Semi-finals man lang.';
+  }
+
+  @override
+  String punditsMineSemis1(String nation) {
+    return 'May kalidad ang $nation para sa huling apat. Kulang doon ay kabiguan.';
+  }
+
+  @override
+  String punditsMineFinal0(String nation) {
+    return '$nation: may klase, inaasahang aabot nang malayo. Nakikita ko sila sa final.';
+  }
+
+  @override
+  String punditsMineFinal1(String nation) {
+    return '$nation hanggang final. Ganoon sila kagaling.';
+  }
+
+  @override
+  String punditsMineWinner0(String nation) {
+    return '$nation: ang koponang dapat talunin. Anumang kulang sa tropeo ay kabiguan.';
+  }
+
+  @override
+  String punditsMineWinner1(String nation) {
+    return 'Pili ko para manalo: $nation. Nasa kanila na ang lahat ng pressure.';
+  }
+
+  @override
+  String punditsMineDarkHorseQuarters(String nation) {
+    return 'Tunay na dark horse dito: $nation. Hindi ako magugulat kung umabot sila sa quarter-finals.';
+  }
+
+  @override
+  String punditsMineDarkHorseSemis(String nation) {
+    return 'Tunay na dark horse dito: $nation. Hindi ako magugulat kung umabot sila sa semis.';
+  }
+
+  @override
+  String yPunditPick0(String competition, String favourite, String darkHorse) {
+    return 'Pili ko sa $competition: mananalo ang $favourite. Dark horse? $darkHorse. Ang ganda ng torneong ito.';
+  }
+
+  @override
+  String yPunditPick1(String competition, String favourite, String darkHorse) {
+    return '$favourite para sa $competition, at bantayan ang $darkHorse. Puwedeng maging espesyal.';
+  }
+
+  @override
+  String yPunditPick2(String competition, String favourite, String darkHorse) {
+    return 'Mga hula sa $competition. Kampeon: $favourite. Dark horse: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick3(String competition, String favourite, String darkHorse) {
+    return 'Mahirap tumingin lampas sa $favourite sa $competition. Puwedeng sorpresahin ng $darkHorse ang marami.';
+  }
+
+  @override
+  String yPunditPick4(String competition, String favourite, String darkHorse) {
+    return 'Sasabihin ng lahat na $favourite sa $competition. Sa kasamaang palad, tama sila. $darkHorse lang ang sulit panoorin.';
+  }
+
+  @override
+  String yPunditPick5(String competition, String favourite, String darkHorse) {
+    return 'Mananalo ang $favourite sa $competition at nakakabagot iyon. Kung gusto ninyo ng kuwento, panoorin ang $darkHorse.';
+  }
+
+  @override
+  String tacticsSlotSwitchHeading(String formation) {
+    return 'Posisyon sa loob ng $formation';
+  }
+
+  @override
+  String get tacticsSlotSwitchReset => 'I-reset';
+
+  @override
+  String get tacticsSlotSwitchLimit =>
+      'Dalawang posisyon na ang binago sa formation na ito. Mag-reset ng isa para mabago ito.';
+
+  @override
+  String get assistantAsk => 'Tanungin ang assistant';
+
+  @override
+  String get assistantNoneNote =>
+      'Wala kang assistant. Kumuha ng isa sa staff para sa payo niya.';
+
+  @override
+  String get assistantSheetTitle => 'Payo ng assistant';
+
+  @override
+  String get assistantReadBasic =>
+      'Magaspang na pagtingin. Suriin muna bago pagkatiwalaan.';
+
+  @override
+  String get assistantReadGood =>
+      'Maaasahang pagbasa ng rating, posisyon at pagod.';
+
+  @override
+  String get assistantReadElite => 'Binabasa ang kondisyon, porma at kalaban.';
+
+  @override
+  String get assistantVariantMain => 'Pili niya';
+
+  @override
+  String get assistantVariantFresh => 'Mas sariwang paa';
+
+  @override
+  String get assistantVariantForm => 'Mga nasa porma';
+
+  @override
+  String get assistantVariantAttacking => 'Mas opensiba';
+
+  @override
+  String get assistantVariantSolid => 'Mas matatag';
+
+  @override
+  String get assistantVsStronger => 'Mas malakas ang kalaban';
+
+  @override
+  String get assistantVsWeaker => 'Mas malakas kayo';
+
+  @override
+  String assistantChanges(int count) {
+    return 'Pagbabago sa iyong eleven: $count';
+  }
+
+  @override
+  String get assistantBench => 'Unang ipapasok mula sa bench';
+
+  @override
+  String get assistantReasonBestFit => 'Pinakaangkop';
+
+  @override
+  String get assistantReasonInForm => 'Nasa porma';
+
+  @override
+  String get assistantReasonFresh => 'Sariwa';
+
+  @override
+  String get assistantReasonCovering => 'Pumupuno';
+
+  @override
+  String get assistantReasonCoverDefence => 'Depensa';
+
+  @override
+  String get assistantReasonCoverMidfield => 'Midfield';
+
+  @override
+  String get assistantReasonCoverAttack => 'Atake';
+
+  @override
+  String get assistantReasonTired => 'Pagod';
+
+  @override
+  String get assistantReasonBooked => 'May yellow';
+
+  @override
+  String get assistantReasonInjured => 'May pinsala';
+
+  @override
+  String get assistantReasonOutOfPosition => 'Wala sa posisyon';
+
+  @override
+  String get assistantReasonChasing => 'Humahabol sa iskor';
+
+  @override
+  String get assistantSubsTitle => 'Mga palit na gagawin niya';
+
+  @override
+  String get assistantNoSubs => 'Hahayaan niya ang koponan gaya ng dati.';
+
+  @override
+  String get assistantApply => 'Ilapat';
+
+  @override
+  String get assistantClose => 'Isara';
+
+  @override
+  String get staffEffectAdviceBasic =>
+      'Nagpapayo sa lineup at palit, minsan mali';
+
+  @override
+  String get staffEffectAdviceGood =>
+      'Nagpapayo sa lineup at palit, binabantayan ang pagod';
+
+  @override
+  String get staffEffectAdviceElite =>
+      'Nagpapayo batay sa kondisyon, porma at kalaban';
+
+  @override
+  String get staffHiringAdvice => 'at payo sa lineup at palit';
+
+  @override
+  String get hubEventSponsor => 'Pumili ng sponsor ngayong season';
+
+  @override
+  String get hubEventSponsorSub =>
+      'Tatlong brand ang gustong ilagay ang pangalan nila sa jersey. May kapalit ang bawat deal.';
+
+  @override
+  String get sponsorTitle => 'Main sponsor';
+
+  @override
+  String get sponsorIntroSeason =>
+      'Bawat season, pumipila ang mga brand para maging main sponsor ng pederasyon. Bawat deal ay may pakinabang at may kapalit: ang board, ang dressing room o pareho. Pumirma sa isa, o sa wala. Tatagal hanggang sa katapusan ng season ang epekto sa board at morale.';
+
+  @override
+  String get sponsorEffectBoard => 'Board';
+
+  @override
+  String get sponsorEffectMorale => 'Morale';
+
+  @override
+  String get sponsorEffectPress => 'Batikos ng media';
+
+  @override
+  String sponsorPerkMarketing(String amount, String department) {
+    return 'Pinopondohan ang $amount ng $department ngayong cycle';
+  }
+
+  @override
+  String sponsorPerkMarketingNote(String amount) {
+    return 'Dagdag na $amount sa pagtatapos ng cycle, bukod pa sa sarili mong investment';
+  }
+
+  @override
+  String get sponsorRiskyLabel => 'Delikado';
+
+  @override
+  String get sponsorRiskyWarning => 'Siguradong pagpipiyestahan ito ng media.';
+
+  @override
+  String get sponsorSign => 'Pumirma';
+
+  @override
+  String get sponsorDeclineSeason => 'Walang sponsor ngayong season';
+
+  @override
+  String get sponsorNoneSeason => 'Walang main sponsor ngayong season';
+
+  @override
+  String sponsorUntilSeasonEnd(String season) {
+    return 'Hanggang matapos ang season na $season';
+  }
+
+  @override
+  String sponsorRolloverLine(String brand) {
+    return 'Main sponsor: $brand';
+  }
+
+  @override
+  String get sponsorBrandAgrofart => 'Agroutot';
+
+  @override
+  String get sponsorIndustryAgrofart => 'Agrikultura at kemikal';
+
+  @override
+  String get sponsorFlavourAgrofart =>
+      'Pinapakain ang bansa. Sa kanila rin ang chichirya, mga diyaryo at karamihan ng baboy nito.';
+
+  @override
+  String get sponsorBrandBetBadger => 'BetBadger';
+
+  @override
+  String get sponsorIndustryBetBadger => 'Pustahan';
+
+  @override
+  String get sponsorFlavourBetBadger =>
+      'May odds sa lahat, pati sa pagkakasibak mo.';
+
+  @override
+  String get sponsorBrandCoinGoblin => 'CoinGoblin';
+
+  @override
+  String get sponsorIndustryCoinGoblin => 'Crypto exchange';
+
+  @override
+  String get sponsorFlavourCoinGoblin =>
+      'Tumaas nang apat na libong porsyento ngayong linggo. Huwag na pong itanong ang withdrawal.';
+
+  @override
+  String get sponsorBrandEasyPeasy => 'Utang Agad';
+
+  @override
+  String get sponsorIndustryEasyPeasy => 'Mabilisang utang';
+
+  @override
+  String get sponsorFlavourEasyPeasy =>
+      'Pera sa loob ng sampung minuto. Interes sa loob ng sampung taon.';
+
+  @override
+  String get sponsorBrandVaporia => 'Vaporia';
+
+  @override
+  String get sponsorIndustryVaporia => 'Vape shop';
+
+  @override
+  String get sponsorFlavourVaporia =>
+      'Apatnapung flavor ng usok, wala ni isang mabuti sa striker.';
+
+  @override
+  String get sponsorBrandGoldenFleece => 'Gintong Balahibo Holdings';
+
+  @override
+  String get sponsorIndustryGoldenFleece => 'Offshore holding';
+
+  @override
+  String get sponsorFlavourGoldenFleece =>
+      'Walang nakakaalam kung ano ang negosyo nila. Mas gusto iyon ng mga abogado nila.';
+
+  @override
+  String get sponsorBrandMiners => 'Mga Minero';
+
+  @override
+  String get sponsorIndustryMiners => 'Pagmimina';
+
+  @override
+  String get sponsorFlavourMiners =>
+      'Uling, tanso at isang napakaalikabok na board of directors.';
+
+  @override
+  String get sponsorBrandMoth => 'Gamugamo';
+
+  @override
+  String get sponsorIndustryMoth => 'Gasolinahan';
+
+  @override
+  String get sponsorFlavourMoth =>
+      'Gasolina, hotdog at car wash na kahit minsan ay hindi gumana.';
+
+  @override
+  String get sponsorBrandSludgeco => 'Putikan Oil';
+
+  @override
+  String get sponsorIndustrySludgeco => 'Langis';
+
+  @override
+  String get sponsorFlavourSludgeco => 'Nagbubutas kung saan walang humiling.';
+
+  @override
+  String get sponsorBrandSkyloom => 'Skyloom';
+
+  @override
+  String get sponsorIndustrySkyloom => 'Budget airline';
+
+  @override
+  String get sponsorFlavourSkyloom =>
+      'Lumipad kahit saan sa halagang siyam na euro. Dagdag-bayad ang upuan, bagahe at oxygen.';
+
+  @override
+  String get sponsorBrandArvella => 'Arvella Motors';
+
+  @override
+  String get sponsorIndustryArvella => 'Gawaan ng kotse';
+
+  @override
+  String get sponsorFlavourArvella =>
+      'Mga luxury SUV na kasinlaki ng isang maliit na condo.';
+
+  @override
+  String get sponsorBrandCheapoMax => 'MuraMax';
+
+  @override
+  String get sponsorIndustryCheapoMax => 'Discount supermarket';
+
+  @override
+  String get sponsorFlavourCheapoMax =>
+      'Lahat kalahating presyo, pati ang mga empleyado.';
+
+  @override
+  String get sponsorBrandBrickhaven => 'Brickhaven';
+
+  @override
+  String get sponsorIndustryBrickhaven => 'Konstruksiyon';
+
+  @override
+  String get sponsorFlavourBrickhaven =>
+      'Tapos sa oras ang mga stadium. Paminsan-minsan.';
+
+  @override
+  String get sponsorBrandHappyBurgers => 'Masayang Burger';
+
+  @override
+  String get sponsorIndustryHappyBurgers => 'Fast food';
+
+  @override
+  String get sponsorFlavourHappyBurgers =>
+      'Triple cheese, double bacon, libre sa buong squad.';
+
+  @override
+  String get sponsorBrandOldSwamp => 'Lumangputik';
+
+  @override
+  String get sponsorIndustryOldSwamp => 'Brewery';
+
+  @override
+  String get sponsorFlavourOldSwamp =>
+      'Ginagawa mula pa 1869 sa bodegang hindi na nalinis mula noon.';
+
+  @override
+  String get sponsorBrandBuzzhorn => 'Buzzhorn';
+
+  @override
+  String get sponsorIndustryBuzzhorn => 'Energy drink';
+
+  @override
+  String get sponsorFlavourBuzzhorn =>
+      'Sapat na caffeine para gisingin ang isang goalkeeper.';
+
+  @override
+  String get sponsorBrandSteamy => 'Sauna sa Singawan';
+
+  @override
+  String get sponsorIndustrySteamy => 'Sauna chain';
+
+  @override
+  String get sponsorFlavourSteamy =>
+      'Sabay-sabay na pagpawisan. Opsyonal ang tuwalya, hindi ang team spirit.';
+
+  @override
+  String get sponsorBrandPixelRage => 'PixelRage Games';
+
+  @override
+  String get sponsorIndustryPixelRage => 'Video games';
+
+  @override
+  String get sponsorFlavourPixelRage =>
+      'Paboritong shooter ng squad, ngayon kasama na ang sarili nilang mukha.';
+
+  @override
+  String get sponsorBrandGlitterbox => 'Glitterbox Records';
+
+  @override
+  String get sponsorIndustryGlitterbox => 'Record label';
+
+  @override
+  String get sponsorFlavourGlitterbox =>
+      'May kasama nang dance routine ang bawat goal celebration.';
+
+  @override
+  String get sponsorBrandMilkwell => 'Milkwell Dairy';
+
+  @override
+  String get sponsorIndustryMilkwell => 'Dairy';
+
+  @override
+  String get sponsorFlavourMilkwell =>
+      'Malamig na gatas at field trip para makilala ang mga baka.';
+
+  @override
+  String get sponsorBrandHerringKing => 'Hari ng Herring';
+
+  @override
+  String get sponsorIndustryHerringKing => 'Atsarang herring';
+
+  @override
+  String get sponsorFlavourHerringKing =>
+      'Inatsara, tinapa o nakagarapon, mula pa noong panahon ni lolo.';
+
+  @override
+  String get sponsorBrandUmbrello => 'Umbrello Insurance';
+
+  @override
+  String get sponsorIndustryUmbrello => 'Insurance';
+
+  @override
+  String get sponsorFlavourUmbrello =>
+      'Ini-insure ang lahat, pati ang payong ng payong mo.';
+
+  @override
+  String get sponsorBrandTidyTeeth => 'Ngiping Kislap';
+
+  @override
+  String get sponsorIndustryTidyTeeth => 'Toothpaste';
+
+  @override
+  String get sponsorFlavourTidyTeeth =>
+      'Siyam sa sampung dentista. Nakabakasyon ang ikasampu.';
+
+  @override
+  String get sponsorBrandWoollySocks => 'Medyas na Lana';
+
+  @override
+  String get sponsorIndustryWoollySocks => 'Knitwear';
+
+  @override
+  String get sponsorFlavourWoollySocks =>
+      'Hand-knit na medyas para sa bawat player, sa lahat ng kulay maliban sa kulay ng team.';
+
+  @override
+  String get sponsorBrandStackabloc => 'Stackabloc';
+
+  @override
+  String get sponsorIndustryStackabloc => 'Gawaan ng laruan';
+
+  @override
+  String get sponsorFlavourStackabloc =>
+      'Buuin ang sarili mong national stadium. Apat na libong piraso, kulang ng isa.';
+
+  @override
+  String get sponsorBrandPolarPenguin => 'Penguin Polar';
+
+  @override
+  String get sponsorIndustryPolarPenguin => 'Ice cream';
+
+  @override
+  String get sponsorFlavourPolarPenguin =>
+      'Tatlumpung flavor, lahat natutunaw.';
+
+  @override
+  String get sponsorBrandHexagon => 'Hexagon';
+
+  @override
+  String get sponsorIndustryHexagon => 'Engineering';
+
+  @override
+  String get sponsorFlavourHexagon =>
+      'Anim na panig ang bawat problema. Nagbibilang pa rin ang mga engineer nila.';
+
+  @override
+  String get sponsorBrandVelocell => 'Velocell';
+
+  @override
+  String get sponsorIndustryVelocell => 'Telecom';
+
+  @override
+  String get sponsorFlavourVelocell =>
+      'Full signal kahit saan, maliban sa loob ng stadium.';
+
+  @override
+  String get sponsorBrandParcelion => 'Parcelion';
+
+  @override
+  String get sponsorIndustryParcelion => 'Padala';
+
+  @override
+  String get sponsorFlavourParcelion =>
+      'Darating bukas. O sa makalawa. O sa kapitbahay.';
+
+  @override
+  String get sponsorBrandGridwell => 'Gridwell Energy';
+
+  @override
+  String get sponsorIndustryGridwell => 'Enerhiya';
+
+  @override
+  String get sponsorFlavourGridwell => 'Bukas ang floodlights. Kadalasan.';
+
+  @override
+  String get sponsorBrandCrownstone => 'Crownstone Bank';
+
+  @override
+  String get sponsorIndustryCrownstone => 'Bangko';
+
+  @override
+  String get sponsorFlavourCrownstone => 'Ligtas ang pera mo sa amin. Siguro.';
+
+  @override
+  String get sponsorBrandClickbait => 'Pain sa Click Media';
+
+  @override
+  String get sponsorIndustryClickbait => 'Media group';
+
+  @override
+  String get sponsorFlavourClickbait =>
+      'Hindi ka maniniwala sa sinasabi ng ikaapat naming headline.';
+
+  @override
+  String ySponsorDubious0(String brand) {
+    return '$brand ang bagong main sponsor ng pederasyon. Tumawa kayo kung gusto n\'yo, kailangan pa rin ng academy ang pera.';
+  }
+
+  @override
+  String ySponsorDubious1(String brand) {
+    return 'Pumirma ang pederasyon sa $brand bilang bagong main sponsor. Ito raw ang pinakamalaking alok sa mesa.';
+  }
+
+  @override
+  String ySponsorDubious2(String brand) {
+    return '$brand. Ang bago nating main sponsor ay $brand. Kailangan kong humiga.';
+  }
+
+  @override
+  String ySponsorMocked0(String brand) {
+    return 'Pera rin \'yan. Kung $brand ang magbabayad ng mga bagong pitch, isusuot ko ang jersey nang buong pagmamalaki.';
+  }
+
+  @override
+  String ySponsorMocked1(String brand) {
+    return 'Sabihin n\'yo na ang gusto n\'yo tungkol sa $brand, pumasok naman ang tseke nila.';
+  }
+
+  @override
+  String ySponsorMocked2(String brand) {
+    return 'Sa kung saan, may marketing team na proud na proud sa logo ng $brand sa dibdib natin.';
+  }
+
+  @override
+  String ySponsorMocked3(String brand) {
+    return 'So tayo na pala ang $brand national team. Noted.';
+  }
+
+  @override
+  String ySponsorMocked4(String brand) {
+    return 'Isipin mo, ibinenta ang jersey sa $brand. Isipin mo lang.';
+  }
+
+  @override
+  String ySponsorMocked5(String brand) {
+    return 'Sa dami ng sponsor sa mundo, $brand pa ang napili natin. Pinagtatawanan tayo ng lahat ng karibal.';
+  }
 }

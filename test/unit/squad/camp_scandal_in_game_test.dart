@@ -41,9 +41,18 @@ void main() {
         );
         final period = Nomination.currentPeriod(fixtures);
         if (period.isEmpty) return;
+        // A finals camp opens with its warm-ups when it has them: it is
+        // the tournament's camp all the same.
+        final finals = period
+            .where(
+              (f) =>
+                  FinalsRounds.worldChampionship.contains(f.round) ||
+                  FinalsRounds.continental.contains(f.round),
+            )
+            .firstOrNull;
         seen.add((
           window: period.first.date,
-          round: period.first.round,
+          round: (finals ?? period.first).round,
           starts: CampScandal.windowStarts(fixtures),
         ));
       };

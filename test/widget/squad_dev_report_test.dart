@@ -252,11 +252,11 @@ void main() {
       expect(find.text('${l.squadDevTierRegulars} · 24'), findsOneWidget);
       // Twelve players a page, twenty-four rows: the footer should read
       // page 1 of 2, out of the tab's own 24 — not the whole report.
-      expect(find.text(l.squadDevPageOf('1', '2', '24')), findsOneWidget);
+      expect(find.text(l.squadDevPageOf('1', '2', 24)), findsOneWidget);
       expectNothingCut(tester);
       await tester.tap(find.byIcon(Icons.chevron_right_rounded));
       await tester.pumpAndSettle();
-      expect(find.text(l.squadDevPageOf('2', '2', '24')), findsOneWidget);
+      expect(find.text(l.squadDevPageOf('2', '2', 24)), findsOneWidget);
       // The tab strip persists across a page turn inside the same tab.
       expect(find.text('${l.squadDevTierRegulars} · 24'), findsOneWidget);
       expectNothingCut(tester);
@@ -283,7 +283,7 @@ void main() {
     // Page into the regulars tab first.
     await tester.tap(find.byIcon(Icons.chevron_right_rounded));
     await tester.pumpAndSettle();
-    expect(find.text(l.squadDevPageOf('2', '2', '24')), findsOneWidget);
+    expect(find.text(l.squadDevPageOf('2', '2', 24)), findsOneWidget);
     // Now switch to youth: the page must be back at the first, not still on
     // whatever page the previous tab was showing.
     await tester.ensureVisible(find.text('${l.squadDevTierYouth} · 1'));
@@ -315,7 +315,7 @@ void main() {
     );
     // 14 regulars page as 12 + 2, and the total printed is 14 — the tab's own
     // count, not fifteen for the whole report.
-    expect(find.text(l.squadDevPageOf('1', '2', '14')), findsOneWidget);
+    expect(find.text(l.squadDevPageOf('1', '2', 14)), findsOneWidget);
     await tester.ensureVisible(find.text('${l.squadDevTierYouth} · 1'));
         await tester.tap(find.text('${l.squadDevTierYouth} · 1'));
     await tester.pumpAndSettle();

@@ -24,6 +24,7 @@ const Map<String, String> nationNamesNb = <String, String>{
   'BHR': 'Bahrain',
   'BHU': 'Bhutan',
   'BIH': 'Bosnia-Hercegovina',
+  'BLR': 'Hviterussland',
   'BLZ': 'Belize',
   'BOL': 'Bolivia',
   'BOT': 'Botswana',
@@ -209,5 +210,6 @@ const Map<String, String> nationNamesNb = <String, String>{
   'WAL': 'Wales',
   'YEM': 'Jemen',
   'ZAM': 'Zambia',
+  'ZAN': 'Zanzibar',
   'ZIM': 'Zimbabwe',
 };

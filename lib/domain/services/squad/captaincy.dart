@@ -72,7 +72,62 @@ abstract final class Captaincy {
       });
     return ranked.take(limit).toList();
   }
+
+  /// Which post leads the side out, given who holds each ([named]: captain,
+  /// 1st vice, 2nd vice, null for an empty post) and who can play.
+  ///
+  /// The first named man who is [available] wears it. A captain who is hurt,
+  /// banned or left at home hands it to the 1st vice-captain, and the 2nd
+  /// takes it when both are out: the manager names them once, and does not
+  /// have to come back and move the armband every time somebody misses a
+  /// match. Null when nobody named can play.
+  static ArmbandRole? leaderOf(
+    ({int? captain, int? vice1, int? vice2}) named,
+    bool Function(int id) available,
+  ) {
+    for (final (role, id) in [
+      (ArmbandRole.captain, named.captain),
+      (ArmbandRole.vice1, named.vice1),
+      (ArmbandRole.vice2, named.vice2),
+    ]) {
+      if (id != null && available(id)) return role;
+    }
+    return null;
+  }
+
+  /// [named] with [playerId] given [role] (null empties the post).
+  ///
+  /// A man holds one post at most, so naming him to one takes him off any
+  /// other: picking the 1st vice-captain as captain leaves the 1st vice post
+  /// empty rather than listing him twice.
+  static ({int? captain, int? vice1, int? vice2}) assign(
+    ({int? captain, int? vice1, int? vice2}) named,
+    ArmbandRole role,
+    int? playerId,
+  ) {
+    int? keep(int? id) => playerId != null && id == playerId ? null : id;
+    return (
+      captain: role == ArmbandRole.captain ? playerId : keep(named.captain),
+      vice1: role == ArmbandRole.vice1 ? playerId : keep(named.vice1),
+      vice2: role == ArmbandRole.vice2 ? playerId : keep(named.vice2),
+    );
+  }
+
+  /// [named] with [playerId] taken out of whichever post he held: what a
+  /// retirement does to the armband.
+  static ({int? captain, int? vice1, int? vice2}) without(
+    ({int? captain, int? vice1, int? vice2}) named,
+    int playerId,
+  ) => (
+    captain: named.captain == playerId ? null : named.captain,
+    vice1: named.vice1 == playerId ? null : named.vice1,
+    vice2: named.vice2 == playerId ? null : named.vice2,
+  );
 }
+
+/// The three posts in the leadership group, in the order they take the
+/// armband.
+enum ArmbandRole { captain, vice1, vice2 }
 
 /// How well a player suits the captaincy.
 enum CaptainFit { born, natural, capable, unproven }

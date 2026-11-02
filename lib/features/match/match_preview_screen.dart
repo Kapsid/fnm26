@@ -340,7 +340,7 @@ class _PreviewParts {
 
   Widget xiCard() {
     final xi = team.xi;
-    final positions = team.formation.positions;
+    final positions = team.positions;
     return AppCard(
       padding: const EdgeInsets.symmetric(
         vertical: AppSpacing.sm,

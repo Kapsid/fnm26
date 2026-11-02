@@ -33,6 +33,9 @@ mixin _$Nation {
 /// the winning chance in permille the manager was shown. Attached by
 /// `NationRepository.forCareer` from the career's markers; empty
 /// everywhere else, which leaves every host draw exactly as it was.
+///
+/// Also carries the career's host-rules markers on the nation each names,
+/// keyed `mgr:<cycle>` (see `HostBidding.managerKey`, value 1).
  Map<String, int> get hostBids;
 /// Create a copy of Nation
 /// with the given fields replaced by the non-null parameter values.
@@ -266,12 +269,18 @@ class _Nation implements Nation {
 /// the winning chance in permille the manager was shown. Attached by
 /// `NationRepository.forCareer` from the career's markers; empty
 /// everywhere else, which leaves every host draw exactly as it was.
+///
+/// Also carries the career's host-rules markers on the nation each names,
+/// keyed `mgr:<cycle>` (see `HostBidding.managerKey`, value 1).
  final  Map<String, int> _hostBids;
 /// The host bids this nation has lodged in the career it was read for,
 /// keyed `wc:<cycle>` / `cont:<cycle>` (see `HostBidding.nationKey`), each
 /// the winning chance in permille the manager was shown. Attached by
 /// `NationRepository.forCareer` from the career's markers; empty
 /// everywhere else, which leaves every host draw exactly as it was.
+///
+/// Also carries the career's host-rules markers on the nation each names,
+/// keyed `mgr:<cycle>` (see `HostBidding.managerKey`, value 1).
 @override@JsonKey() Map<String, int> get hostBids {
   if (_hostBids is EqualUnmodifiableMapView) return _hostBids;
   // ignore: implicit_dynamic_type

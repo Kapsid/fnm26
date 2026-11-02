@@ -196,8 +196,6 @@ class NationNowCard extends ConsumerWidget {
             ),
           ),
         ],
-        const SizedBox(width: AppSpacing.sm),
-        Flexible(child: conf),
       ],
     );
   }

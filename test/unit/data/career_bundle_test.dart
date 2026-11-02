@@ -164,6 +164,55 @@ void main() {
     }
   });
 
+  test('the captain and both vice-captains travel with the career', () async {
+    final original = await aCareerNamed('Leaders');
+    await (db.update(db.careers)..where((t) => t.id.equals(original))).write(
+      const CareersCompanion(
+        captainPlayerId: Value(11),
+        viceCaptain1PlayerId: Value(12),
+        viceCaptain2PlayerId: Value(13),
+      ),
+    );
+    final bundle = CareerBundle.decode(
+      CareerBundle.encode(await CareerBundle.export(db, original)),
+    ).bundle!;
+
+    final imported = await CareerBundle.import(db, bundle);
+    final row = await (db.select(
+      db.careers,
+    )..where((t) => t.id.equals(imported))).getSingle();
+    // Player ids name seed data, stable across installs: carried as they are.
+    expect(row.captainPlayerId, 11);
+    expect(row.viceCaptain1PlayerId, 12);
+    expect(row.viceCaptain2PlayerId, 13);
+  });
+
+  test('a bundle from before vice-captains imports with none named', () async {
+    final original = await aCareerNamed('Older');
+    await (db.update(db.careers)..where((t) => t.id.equals(original))).write(
+      const CareersCompanion(captainPlayerId: Value(11)),
+    );
+    final bundle = await CareerBundle.export(db, original);
+    // What a v51 build wrote: the careers row has no vice-captain columns.
+    bundle['schemaVersion'] = 51;
+    final careers = ((bundle['tables']! as Map)['careers']! as List)
+        .cast<Map<String, Object?>>();
+    expect(careers.single, contains('vice_captain1_player_id'));
+    for (final row in careers) {
+      row
+        ..remove('vice_captain1_player_id')
+        ..remove('vice_captain2_player_id');
+    }
+
+    final imported = await CareerBundle.import(db, bundle);
+    final row = await (db.select(
+      db.careers,
+    )..where((t) => t.id.equals(imported))).getSingle();
+    expect(row.captainPlayerId, 11);
+    expect(row.viceCaptain1PlayerId, isNull);
+    expect(row.viceCaptain2PlayerId, isNull);
+  });
+
   test('importing leaves the career it was exported from alone', () async {
     final original = await aCareerNamed('Untouched');
     final bundle = await CareerBundle.export(db, original);

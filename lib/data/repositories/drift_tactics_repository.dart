@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/tactics_repository.dart';
 
@@ -46,7 +47,119 @@ class DriftTacticsRepository implements TacticsRepository {
           : row.playstyle,
       instructions: instructions,
       fullBacks: await _fullBacks(careerId),
+      switches: (await _switches(careerId)).validFor(row.formation),
+      throwInStyle: await _throwInStyle(careerId),
     );
+  }
+
+  /// The prefix of the cycle-0 `draws_watched` mark that holds the throw-in
+  /// style: `throwIn.style.long` or `throwIn.style.defensive`.
+  ///
+  /// A marker for the same reason as the full-back arrows: no schema change,
+  /// and it travels in every backup and career bundle. Neutral writes none, so
+  /// a save from before throw-ins existed reads as neutral.
+  static const String throwInStyleMarkPrefix = 'throwIn.style.';
+
+  static String throwInStyleMark(ThrowInStyle style) =>
+      '$throwInStyleMarkPrefix${style.name}';
+
+  Future<ThrowInStyle> _throwInStyle(int careerId) async {
+    final kinds =
+        await (_db.selectOnly(_db.drawsWatched)
+              ..addColumns([_db.drawsWatched.kind])
+              ..where(
+                _db.drawsWatched.careerId.equals(careerId) &
+                    _db.drawsWatched.cycle.equals(0) &
+                    _db.drawsWatched.kind.like('$throwInStyleMarkPrefix%'),
+              ))
+            .map((r) => r.read(_db.drawsWatched.kind))
+            .get();
+    for (final kind in kinds.whereType<String>()) {
+      final style = ThrowInStyleX.parse(
+        kind.substring(throwInStyleMarkPrefix.length),
+      );
+      if (style != ThrowInStyle.neutral) return style;
+    }
+    return ThrowInStyle.neutral;
+  }
+
+  /// The prefix of the cycle-0 `draws_watched` mark naming the manager's
+  /// throw-in taker: `throwIn.taker.1234`. Kept apart from the tactic (like
+  /// the other set-piece takers, it names a man, not a slot), and its own
+  /// prefix so a [saveTactic] never sweeps it away.
+  static const String throwInTakerMarkPrefix = 'throwIn.taker.';
+
+  /// The save's designated throw-in taker, or null for automatic.
+  Future<int?> throwInTaker(int careerId) async {
+    final kinds =
+        await (_db.selectOnly(_db.drawsWatched)
+              ..addColumns([_db.drawsWatched.kind])
+              ..where(
+                _db.drawsWatched.careerId.equals(careerId) &
+                    _db.drawsWatched.cycle.equals(0) &
+                    _db.drawsWatched.kind.like('$throwInTakerMarkPrefix%'),
+              ))
+            .map((r) => r.read(_db.drawsWatched.kind))
+            .get();
+    for (final kind in kinds.whereType<String>()) {
+      final id = int.tryParse(kind.substring(throwInTakerMarkPrefix.length));
+      if (id != null) return id;
+    }
+    return null;
+  }
+
+  /// Names [playerId] as the save's throw-in taker; null hands the throws
+  /// back to the automatic pick.
+  Future<void> setThrowInTaker(int careerId, int? playerId) =>
+      _db.transaction(() async {
+        await (_db.delete(_db.drawsWatched)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.cycle.equals(0) &
+                  t.kind.like('$throwInTakerMarkPrefix%'),
+            ))
+            .go();
+        if (playerId == null) return;
+        await _db
+            .into(_db.drawsWatched)
+            .insertOnConflictUpdate(
+              DrawsWatchedCompanion.insert(
+                careerId: careerId,
+                cycle: 0,
+                kind: '$throwInTakerMarkPrefix$playerId',
+              ),
+            );
+      });
+
+  /// The prefix of the cycle-0 `draws_watched` marks that hold the places
+  /// changed within the formation ([SlotSwitches]): `slotSwitch.6.dm` says
+  /// slot 6 plays as a holding midfielder.
+  ///
+  /// Markers for the same reason as the full-back arrows: no schema change,
+  /// and they travel in every backup and career bundle. A save from before
+  /// switches existed has none and plays its formation as drawn.
+  static const String switchMarkPrefix = 'slotSwitch.';
+
+  static String switchMark(int slot, PlayerPosition position) =>
+      '$switchMarkPrefix$slot.${position.name}';
+
+  Future<SlotSwitches> _switches(int careerId) async {
+    final kinds =
+        await (_db.selectOnly(_db.drawsWatched)
+              ..addColumns([_db.drawsWatched.kind])
+              ..where(
+                _db.drawsWatched.careerId.equals(careerId) &
+                    _db.drawsWatched.cycle.equals(0) &
+                    _db.drawsWatched.kind.like('$switchMarkPrefix%'),
+              ))
+            .map((r) => r.read(_db.drawsWatched.kind))
+            .get();
+    final bySlot = <String, String>{};
+    for (final kind in kinds.whereType<String>()) {
+      final parts = kind.substring(switchMarkPrefix.length).split('.');
+      if (parts.length == 2) bySlot[parts[0]] = parts[1];
+    }
+    return SlotSwitches.fromJson(bySlot);
   }
 
   /// The prefix of the cycle-0 `draws_watched` marks that hold the full-back
@@ -126,6 +239,45 @@ class DriftTacticsRepository implements TacticsRepository {
                 t.kind.like('$fullBackMarkPrefix%'),
           ))
           .go();
+      await (_db.delete(_db.drawsWatched)..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.cycle.equals(0) &
+                t.kind.like('$switchMarkPrefix%'),
+          ))
+          .go();
+      await (_db.delete(_db.drawsWatched)..where(
+            (t) =>
+                t.careerId.equals(careerId) &
+                t.cycle.equals(0) &
+                t.kind.like('$throwInStyleMarkPrefix%'),
+          ))
+          .go();
+      if (tactic.throwInStyle != ThrowInStyle.neutral) {
+        await _db
+            .into(_db.drawsWatched)
+            .insertOnConflictUpdate(
+              DrawsWatchedCompanion.insert(
+                careerId: careerId,
+                cycle: 0,
+                kind: throwInStyleMark(tactic.throwInStyle),
+              ),
+            );
+      }
+      // Only the switches that mean something in this formation: a change of
+      // shape that kept stale ones would otherwise store them for nothing.
+      final switches = tactic.switches.validFor(tactic.formation);
+      for (final e in switches.bySlot.entries) {
+        await _db
+            .into(_db.drawsWatched)
+            .insertOnConflictUpdate(
+              DrawsWatchedCompanion.insert(
+                careerId: careerId,
+                cycle: 0,
+                kind: switchMark(e.key, e.value),
+              ),
+            );
+      }
       for (final side in FullBackSide.values) {
         final push = tactic.fullBacks.of(side);
         if (push == FullBackPush.neutral) continue;

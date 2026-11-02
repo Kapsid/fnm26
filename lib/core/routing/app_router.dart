@@ -30,6 +30,8 @@ import 'package:fnm/features/federation/national_stadiums_screen.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/features/squad/injury_cover_screen.dart';
 import 'package:fnm/features/squad/camp_scandal_screen.dart';
+import 'package:fnm/features/friendlies/warm_up_offer_screen.dart';
+import 'package:fnm/features/federation/sponsor_screen.dart';
 import 'package:fnm/features/friendlies/friendlies_screen.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
@@ -239,6 +241,13 @@ abstract final class Routes {
   /// Replace a squad player injured mid-window.
   static const injuryCover = '/injury-cover';
   static const campScandal = '/camp-scandal';
+
+  /// A qualified nation's invitation to a send-off friendly. Expects
+  /// `?careerId=`.
+  static const warmUpOffer = '/warm-up-offer';
+
+  /// The cycle's general sponsor offers. Expects `?careerId=`.
+  static const sponsor = '/sponsor';
 
   /// The yearly Player of the Year ceremony, or its top-five list. Expects
   /// `?careerId=&year=`, plus `&watch=1` to play the reveal.
@@ -758,6 +767,28 @@ final routerProvider = Provider<GoRouter>((ref) {
             ) ??
             0;
         return CampScandalScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.sponsor,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return SponsorScreen(careerId: id);
+      },
+    ),
+    GoRoute(
+      path: Routes.warmUpOffer,
+      builder: (context, state) {
+        final id =
+            int.tryParse(
+              state.uri.queryParameters['careerId'] ?? '',
+            ) ??
+            0;
+        return WarmUpOfferScreen(careerId: id);
       },
     ),
     GoRoute(

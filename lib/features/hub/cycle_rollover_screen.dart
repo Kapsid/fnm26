@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/career_label.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
@@ -16,12 +17,14 @@ import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/career/cycle_backup.dart';
+import 'package:fnm/features/career/job_dossier_view.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/nation_offers_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/federation/host_bid_screen.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
+import 'package:fnm/features/federation/sponsor_card.dart';
 import 'package:fnm/features/hub/board_objectives_screen.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
@@ -75,6 +78,12 @@ class CycleRolloverScreen extends ConsumerStatefulWidget {
 
   final int careerId;
 
+  /// The dossier button on [nationId]'s job tile.
+  static Key scoutKey(int nationId) => _OfferTile.scoutKey(nationId);
+
+  /// Closes the dossier pane on the tablet.
+  static const Key closeDossierKey = Key('cycleRollover.closeDossier');
+
   static const Key tabletLayoutKey = Key('cycleRollover.tabletLayout');
   static const Key beginKey = Key('cycleRollover.begin');
 
@@ -121,6 +130,42 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
 
   /// Picks the job (null: stay); the tablet's tiles call it.
   void _pick(int? nationId) => setState(() => _selected = nationId);
+
+  /// The nation whose dossier the tablet shows in place of the verdict
+  /// (null: the verdict). The phone opens a sheet instead.
+  int? _dossierFor;
+
+  /// Shows [nationId]'s dossier in the tablet's pane (null: the verdict).
+  void _showDossier(int? nationId) => setState(() => _dossierFor = nationId);
+
+  /// The button on [nationId]'s dossier: takes that job, or, for the job he
+  /// has, stays.
+  String _takeLabel(RolloverVerdict v, int nationId) {
+    final l = AppLocalizations.of(context);
+    return nationId == v.currentNation?.id
+        ? l.hubContinueWith(v.currentNation!.name)
+        : l.hubTakeTheJob;
+  }
+
+  /// Takes the job scouted in [nationId]'s dossier: the job he has means
+  /// staying.
+  void _takeFromDossier(RolloverVerdict v, int nationId) => setState(() {
+    _selected = nationId == v.currentNation?.id ? null : nationId;
+    _dossierFor = null;
+  });
+
+  /// Opens the dossier on [nationId]'s job: a pane on the tablet, a sheet on
+  /// the phone. Looking is free; only its button picks the job.
+  Future<void> _scout(RolloverVerdict v, int nationId) async {
+    if (useTabletLayout(context, ref)) return _showDossier(nationId);
+    final taken = await showJobDossierSheet(
+      context,
+      careerId: widget.careerId,
+      nationId: nationId,
+      takeLabel: _takeLabel(v, nationId),
+    );
+    if (taken && mounted) _takeFromDossier(v, nationId);
+  }
 
   Future<void> _begin(RolloverVerdict? v) async {
     if (_busy || _beginning) return;
@@ -373,6 +418,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                         subtitle: l.hubStayProject,
                         selected: _selected == null,
                         onTap: () => setState(() => _selected = null),
+                        onScout: () => _scout(v, v.currentNation!.id),
                       ),
                       const SizedBox(height: AppSpacing.md),
                     ],
@@ -394,6 +440,7 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                         ),
                         selected: _selected == o.nation.id,
                         onTap: () => setState(() => _selected = o.nation.id),
+                        onScout: () => _scout(v, o.nation.id),
                       ),
                     const SizedBox(height: AppSpacing.xl),
                   ],
@@ -459,6 +506,8 @@ class _CycleRolloverScreenState extends ConsumerState<CycleRolloverScreen> {
                       openingBalance: view?.budget ?? 0,
                       stadiumIncome: stadiumIncome,
                     ),
+                    // The cycle's general sponsor, if it had one.
+                    SponsorSummaryLine(careerId: widget.careerId),
                     const SizedBox(height: AppSpacing.md),
                     // The bids for the cycle about to begin: made here, paid
                     // and decided as it is rolled.
@@ -738,17 +787,21 @@ class _VerdictCard extends StatelessWidget {
                 color: AppColors.onSurfaceVariant,
               ),
               const SizedBox(width: AppSpacing.xs),
-              Text(
-                l.hubReputation(
-                  reputationLabel(l, verdict.reputation),
-                  verdict.reputation,
-                ),
-                style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.onSurfaceVariant,
+              // Expanded: a long language at a large text size ran the
+              // reputation past the card's edge (Hungarian, 360 wide, 1.4).
+              Expanded(
+                child: Text(
+                  l.hubReputation(
+                    reputationLabel(l, verdict.reputation),
+                    verdict.reputation,
+                  ),
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
                 ),
               ),
               if (verdict.nationalHero) ...[
-                const Spacer(),
+                const SizedBox(width: AppSpacing.sm),
                 const Icon(
                   Icons.shield_rounded,
                   size: 16,
@@ -771,13 +824,15 @@ class _VerdictCard extends StatelessWidget {
   }
 }
 
-/// A selectable job (current nation or an offer).
+/// A selectable job (current nation or an offer), with a way into its
+/// dossier. A tap on the tile still picks it straight away.
 class _OfferTile extends StatelessWidget {
   const _OfferTile({
     required this.nation,
     required this.subtitle,
     required this.selected,
     required this.onTap,
+    required this.onScout,
   });
 
   final Nation nation;
@@ -785,8 +840,15 @@ class _OfferTile extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
+  /// Opens the dossier on this job.
+  final VoidCallback onScout;
+
+  /// The dossier button on [nationId]'s tile.
+  static Key scoutKey(int nationId) => Key('cycleRollover.scout.$nationId');
+
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: AppCard(
@@ -801,14 +863,24 @@ class _OfferTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(nation.name, style: AppTypography.titleMedium),
+                  // The continent first: nobody carries an atlas in his head,
+                  // and a job abroad is a whole other football world.
                   Text(
-                    subtitle,
+                    '${confederationLabel(l, nation.confederation)} · $subtitle',
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
+            ),
+            IconButton(
+              key: scoutKey(nation.id),
+              tooltip: l.jobDossierOpen,
+              onPressed: onScout,
+              color: AppColors.primary,
+              visualDensity: VisualDensity.compact,
+              icon: const Icon(Icons.manage_search_rounded),
             ),
             Icon(
               selected

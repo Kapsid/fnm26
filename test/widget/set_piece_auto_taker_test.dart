@@ -126,7 +126,9 @@ void main() {
     // OUTFIELDER, exactly as `MatchEngine._setPieceTaker` and the penalty
     // rule pick. (The dead ball used to rank the keeper too, and a playtest
     // found him on every corner.)
-    expect(summaryLabel(bestName), findsNWidgets(2));
+    // Three lines: he is also the strongest outfielder, so the automatic
+    // thrower as well (never the keeper there either).
+    expect(summaryLabel(bestName), findsNWidgets(3));
     expect(summaryLabel('Starter1'), findsNothing);
     expect(
       summaryLabel('${l.tacticsPenalties}  ·  ${l.tacticsTakerAuto}'),
@@ -196,7 +198,7 @@ void main() {
       findsNothing,
     );
     expect(summaryLabel(l.tacticsPenalties), findsOneWidget);
-    expect(summaryLabel(bestName), findsNWidgets(2));
+    expect(summaryLabel(bestName), findsNWidgets(3));
     expect(summaryLabel('Starter1'), findsNothing);
     expect(find.text(l.tacticsTakerQuickPick), findsNothing);
   });
@@ -220,7 +222,7 @@ void main() {
     // filled, with the dead-ball rule's own answer: the best technical
     // outfielder, never the keeper, though he is the best of all.
     expect(summaryLabel('Starter3'), findsOneWidget);
-    expect(summaryLabel(bestName), findsOneWidget);
+    expect(summaryLabel(bestName), findsNWidgets(2));
     expect(summaryLabel('Starter1'), findsNothing);
     expect(find.text(l.tacticsTakerQuickPick), findsNothing);
   });

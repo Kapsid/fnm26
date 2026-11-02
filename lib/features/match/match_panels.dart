@@ -1041,6 +1041,9 @@ class _GoalFlash extends StatelessWidget {
                     event.penalty
                         ? '${AppLocalizations.of(context).matchPenalty} · '
                               '${_eventClock(event)}'
+                        : event.longThrow
+                        ? '${AppLocalizations.of(context).matchGoalLongThrow}'
+                              ' · ${_eventClock(event)}'
                         : _eventClock(event),
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,

@@ -25,6 +25,7 @@ import 'package:fnm/domain/services/competition/finals_participation.dart';
 import 'package:fnm/domain/services/competition/group_advancement.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/kickoff_keys.dart';
 import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
@@ -46,6 +47,7 @@ import 'package:fnm/domain/services/match/venue.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/player/discipline.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/squad/nomination.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/tactics/team_chemistry.dart';
@@ -58,14 +60,22 @@ import 'package:fnm/features/squad/international_retirement_providers.dart';
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/federation/national_stadium_providers.dart';
 import 'package:fnm/features/federation/naturalization_providers.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart'
     show friendliesPlanProvider;
+import 'package:fnm/features/friendlies/warm_up_providers.dart';
+import 'package:fnm/features/press/pundit_prediction_service.dart';
 import 'package:fnm/features/hub/draw_reveal.dart';
 import 'package:fnm/features/hub/hub_event.dart'
-    show continentalQualDrawKind, worldCupQualDrawKind;
+    show
+        HubEvent,
+        HubEventKind,
+        continentalQualDrawKind,
+        nextEventProvider,
+        worldCupQualDrawKind;
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/achievements/challenge_providers.dart'
     show challengesViewProvider;
@@ -364,6 +374,86 @@ typedef _ManagerSetup = ({
   /// `Staff.dossierBonus` on the day, watched or skipped.
   StaffTier scout,
 });
+
+/// The day the world stops for the manager's next call-up, while it is still
+/// ahead of the clock: his next window opens with no squad named for it yet,
+/// and its call-up day ([Nomination.callUpDay]) has not come. Null when there
+/// is nothing to stop for (the squad is named, the window is under way, or the
+/// call-up is due today or overdue, as it is when his next match is less than
+/// ten days off).
+///
+/// The hub offers a plain advance in place of the call-up while this is set,
+/// and the advance stops on the day, so the two always agree.
+Future<DateTime?> pendingCallUpStop(
+  CompetitionRepository comp,
+  Career career,
+) async {
+  final fixtures = await comp.cycleFixturesForNation(
+    career.id,
+    career.nationId,
+  );
+  final day = Nomination.callUpDay(fixtures);
+  if (day == null || !career.inGameDate.isBefore(day)) return null;
+  final period = Nomination.currentPeriod(fixtures);
+  if (await comp.hasWatchedDraw(
+    career.id,
+    career.cyclePointer,
+    'callup:${period.first.id}',
+  )) {
+    return null;
+  }
+  return day;
+}
+
+/// The eve of a finals the manager is following (the World Championship, or
+/// his own confederation's championship) whose opening ceremony is still to
+/// come, while that day is ahead of the clock; the earliest when both are.
+/// Null when there is none.
+///
+/// A manager who is only WATCHING a tournament is shown its ceremony as it
+/// starts: on the eve of its first match, the last thing before it, as a
+/// participant's is. With nothing of his on the calendar before it, the
+/// ceremony used to fire the moment the draw was watched: San Marino saw the
+/// Euro 2028 opened on 9 June 2027. While this is set the hub offers a plain
+/// advance, and the advance stops on the day.
+///
+/// The eve and not the day itself, so the step after the ceremony moves the
+/// clock on, as every step does, and plays the opening matchday.
+Future<DateTime?> pendingKickoffDay(
+  CompetitionRepository comp,
+  Career career,
+  Confederation? confederation,
+) async {
+  final days = <DateTime>[];
+  Future<void> add(
+    CompetitionKind kind,
+    String marker, {
+    Confederation? conf,
+  }) async {
+    if (await comp.hasWatchedDraw(career.id, career.cyclePointer, marker)) {
+      return;
+    }
+    final first = await comp.earliestUnplayedDateOfKind(
+      career.id,
+      kind,
+      confederation: conf,
+    );
+    if (first == null) return;
+    final eve = DateTime(first.year, first.month, first.day - 1);
+    if (career.inGameDate.isBefore(eve)) days.add(eve);
+  }
+
+  await add(CompetitionKind.worldCupFinals, worldCupKickoffKind);
+  if (confederation != null) {
+    await add(
+      CompetitionKind.continentalFinals,
+      continentalKickoffKind,
+      conf: confederation,
+    );
+  }
+  days.sort();
+  return days.firstOrNull;
+}
 
 /// Drives the whole-world simulation: quick-sims due matches, advances the
 /// date, and progresses the cycle (qualifying → finals draw → knockout →
@@ -868,6 +958,7 @@ class SeasonService {
       // imperatively, so it is refreshed with it.
       ..invalidate(nationalStadiumsViewProvider)
       ..invalidate(pendingNaturalizationProvider)
+      ..invalidate(pendingWarmUpOfferProvider)
       ..invalidate(trainingCampPlanProvider);
   }
 
@@ -1491,6 +1582,7 @@ class SeasonService {
       formation: setup.tactic?.formation ?? Formation.f433,
       opponent: ai.instructions,
       opponentFormation: ai.formation,
+      slots: setup.tactic?.positions,
     );
     // The scout's dossier is a flat rating lift, the same points the live
     // engine adds to each fielded man (`MatchTeam.ratingBonus`), so it goes in
@@ -1506,8 +1598,11 @@ class SeasonService {
     // (or less) at both ends, which is one openness on the simulator.
     final flanks = MatchEngine.fullBackOpenness(
       (setup.tactic?.fullBacks ?? FullBackPushes.neutral).netFor(
-        (setup.tactic?.formation ?? Formation.f433).positions,
+        setup.tactic?.positions ?? Formation.f433.positions,
       ),
+    );
+    final throws = MatchEngine.throwInOpenness(
+      setup.tactic?.throwInStyle ?? ThrowInStyle.neutral,
     );
     // The mid-tier difficulty, the skipped twin of the deficit the played
     // engine applies on the chemistry seam (`match_providers`): read off the
@@ -1519,7 +1614,9 @@ class SeasonService {
         fieldedRating: avg(xi),
         rng: MidTierDifficulty.ditherRng(setup.rngSeed, fixtureId),
       ),
-      openness: effect.openness * flanks,
+      // The throw-in style as one openness, the same way as the arrows; the
+      // neutral default is exactly 1 and multiplies nothing.
+      openness: effect.openness * flanks * throws,
     );
   }
 
@@ -1578,7 +1675,7 @@ class SeasonService {
         for (final p in squad)
           if (!used.contains(p.id)) p,
       ];
-      final filler = bestEleven(shape, rest);
+      final filler = bestEleven(shape, rest, slots: setup.tactic?.positions);
       final restById = {for (final p in rest) p.id: p};
       for (var i = 0; i < slots.length; i++) {
         if (slots[i] != null) continue;
@@ -1820,6 +1917,8 @@ class SeasonService {
     // A Player of the Year ceremony still waiting is passed by: moving the
     // world on is the manager's answer, and the inbox keeps the list.
     await _ref.read(awardServiceProvider).markCeremoniesSeen(careerId);
+    // And a sponsor round still open: moving on turns every offer down.
+    await _ref.read(sponsorServiceProvider).settleUnanswered(careerId);
     // And the year's individual trophies, once a year has actually finished.
     await _settleAwards(careerId);
     while (true) {
@@ -1877,9 +1976,16 @@ class SeasonService {
       // A live World Cup finals takes priority even over the player's own
       // friendlies, so its climax rounds (up to the final) are watched rather
       // than silently caught up — mirrors nextEventProvider's guard.
+      // Only once it has kicked off: before that, a match of his (a warm-up he
+      // accepted) is played first, never left behind the clock.
       final wcLive =
           await _comp.hasFinals(careerId) &&
-          await _comp.worldChampion(careerId) == null;
+          await _comp.worldChampion(careerId) == null &&
+          await _comp.hasWatchedDraw(
+            careerId,
+            career.cyclePointer,
+            worldCupKickoffKind,
+          );
 
       // 1. A live finals the player isn't in, due before their next fixture:
       //    step it ONE matchday and hand back so they watch the results. This
@@ -1907,6 +2013,20 @@ class SeasonService {
                   (next == null ||
                       !finalsDate.isAfter(next.date) ||
                       wcLive)))) {
+        // Not yet opened: the clock goes to its eve and stops there, so its
+        // ceremony is held before its first match (see [pendingKickoffDay]).
+        final eve = await pendingKickoffDay(_comp, career, playerConf);
+        if (eve != null && eve.isBefore(finalsDate)) {
+          if (await stopForVote(eve)) break;
+          await _careers.updateInGameDate(careerId, eve);
+          await _catchUp(
+            careerId,
+            eve,
+            career.rngSeed,
+            excludeNationId: career.nationId,
+          );
+          break;
+        }
         if (await stopForVote(finalsDate)) break;
         await _careers.updateInGameDate(careerId, finalsDate);
         await _catchUp(
@@ -2002,6 +2122,15 @@ class SeasonService {
       //    `test/unit/career/nation_switch_test.dart` drives a whole cycle
       //    through repeated `advance` calls and depends on exactly that.
       if (next != null) {
+        // 2a. His next window opens with no squad named: the world is played
+        //     on to its call-up day and stops there, ten days out (see
+        //     [pendingCallUpStop]), so the squad is picked on that day's
+        //     injuries and form rather than on the last window's. Nothing of
+        //     his is due by then, and none of it is played.
+        if (await pendingCallUpStop(_comp, career) != null) {
+          await _walkToCallUp(careerId);
+          break;
+        }
         if (await stopForVote(next.date)) break;
         // A camp scandal nobody answered is about to be played past: doing
         // nothing about it is keeping him (see [CampScandalService]).
@@ -2052,6 +2181,10 @@ class SeasonService {
     await _gradeObjectivesIfDecided(careerId);
     // A host bid whose January has come: its news and, on a win, its grant.
     await _ref.read(hostBidServiceProvider).resolveDue(careerId);
+    // Any qualified side that wants a send-off friendly, in the inbox.
+    await _ref.read(warmUpOfferServiceProvider).fileMessages(careerId);
+    // The pundits' say on a finals whose draw he has watched.
+    await _ref.read(punditPredictionServiceProvider).fileMessages(careerId);
     // The press: judge what he said and decide whether the room is called,
     // now that his result is in (both ways a match of his is committed).
     await _ref.read(pressDeskProvider).afterMatches(careerId);
@@ -2084,6 +2217,41 @@ class SeasonService {
     _invalidateCompetitionViews();
   }
 
+  /// Plays the world on to the manager's call-up day (see
+  /// [pendingCallUpStop]) one matchday at a time, none of his matches
+  /// included, and stops there, or on 31 December when that comes first.
+  ///
+  /// One matchday at a time because the world can hand him a fixture on the
+  /// way: the Continental Clash is put on the calendar the day its second
+  /// champion is crowned, a few weeks before it is played. A single catch-up
+  /// to the call-up day ran straight past it, leaving his match behind the
+  /// clock; stepping re-reads the call-up day after every matchday, and the
+  /// new match's own call-up comes first.
+  Future<void> _walkToCallUp(int careerId) async {
+    for (var guard = 0; guard < 400; guard++) {
+      final career = await _careers.byId(careerId);
+      if (career == null) return;
+      final stop = await pendingCallUpStop(_comp, career);
+      if (stop == null) return;
+      final clock = career.inGameDate;
+      final world = await _comp.earliestUnplayedDate(
+        careerId,
+        DateTime(clock.year, clock.month, clock.day + 1),
+      );
+      var to = world == null || world.isAfter(stop) ? stop : world;
+      final vote = voteStopBefore(clock, to);
+      if (vote != null) to = vote;
+      await _careers.updateInGameDate(careerId, to);
+      await _catchUp(
+        careerId,
+        to,
+        career.rngSeed,
+        excludeNationId: career.nationId,
+      );
+      if (to == stop || vote != null) return;
+    }
+  }
+
   /// Records whatever achievements this step unlocked and queues them for the
   /// hub to show (see [pendingAchievementUnlocksProvider]).
   ///
@@ -2104,6 +2272,55 @@ class SeasonService {
     pending.state = [...pending.state, ...unlocked];
   }
 
+  /// Plays the rest of a tournament the manager is only watching in one go,
+  /// up to and including its final: the hub's "simulate to the final", beside
+  /// stepping it a round at a time.
+  ///
+  /// It IS the stepping, done for him: one [_advance] per round, exactly what
+  /// the watch event's own tap runs, and after each the hub's next event is
+  /// asked again. The moment it is anything but this same tournament's watch
+  /// (a match of his, the press, a man who wants a word, the year's vote,
+  /// somebody else's ceremony, the rollover once the champion is crowned) it
+  /// stops there. So nothing of his is played or passed by, and the champion,
+  /// the news and the honours are exactly the ones stepping would have made.
+  ///
+  /// Does nothing unless the hub's event is a watch. Dropped if a sim is
+  /// already running — see [_exclusive].
+  Future<void> simulateTournament(int careerId) => _exclusive(
+    () => _simulateTournament(careerId),
+    dropIfBusy: true,
+  ).then((_) => _backupAfter(BackupTrigger.committed));
+
+  Future<void> _simulateTournament(int careerId) async {
+    final first = await _hubEvent(careerId);
+    if (first.kind != HubEventKind.watchTournament) return;
+    // Bounded: a World Championship is a few dozen matchdays.
+    for (var i = 0; i < 150; i++) {
+      await _advance(careerId);
+      final next = await _hubEvent(careerId);
+      if (next.kind != HubEventKind.watchTournament ||
+          next.route != first.route) {
+        return;
+      }
+    }
+  }
+
+  /// The hub's next event as it stands now, read fresh.
+  Future<HubEvent> _hubEvent(int careerId) async {
+    _ref
+      ..invalidate(hubDataProvider(careerId))
+      ..invalidate(nextEventProvider(careerId));
+    final sub = _ref.container.listen(
+      nextEventProvider(careerId).future,
+      (_, _) {},
+    );
+    try {
+      return await sub.read();
+    } finally {
+      sub.close();
+    }
+  }
+
   /// Fast-forwards straight to the World Cup champion — the "skip to the final"
   /// option when the player is watching the finals rather than playing them.
   ///
@@ -2116,6 +2333,8 @@ class SeasonService {
   Future<void> _skipToChampion(int careerId) async {
     await _ensureRank(careerId);
     await _ref.read(awardServiceProvider).markCeremoniesSeen(careerId);
+    // And a sponsor round still open: moving on turns every offer down.
+    await _ref.read(sponsorServiceProvider).settleUnanswered(careerId);
     // The year's vote, as on every step (see [AwardService.settleYear]).
     await _settleAwards(careerId);
     await _ref.read(campScandalServiceProvider).settleUnanswered(careerId);
@@ -2212,6 +2431,8 @@ class SeasonService {
     // (reached around the hub) counts as kept: he played.
     await _ref.read(campScandalServiceProvider).settleUnanswered(careerId);
     await _ref.read(awardServiceProvider).markCeremoniesSeen(careerId);
+    // And a sponsor round still open: moving on turns every offer down.
+    await _ref.read(sponsorServiceProvider).settleUnanswered(careerId);
     // A year's vote is due before his own match as much as before a
     // quick-sim: a manager who plays every game would otherwise step over
     // December without one.
@@ -2521,6 +2742,10 @@ class SeasonService {
     await _gradeObjectivesIfDecided(careerId);
     // A host bid whose January has come: its news and, on a win, its grant.
     await _ref.read(hostBidServiceProvider).resolveDue(careerId);
+    // Any qualified side that wants a send-off friendly, in the inbox.
+    await _ref.read(warmUpOfferServiceProvider).fileMessages(careerId);
+    // The pundits' say on a finals whose draw he has watched.
+    await _ref.read(punditPredictionServiceProvider).fileMessages(careerId);
     // The press: judge what he said and decide whether the room is called,
     // now that his result is in (both ways a match of his is committed).
     await _ref.read(pressDeskProvider).afterMatches(careerId);

@@ -129,6 +129,7 @@ class _CampaignHubCardState extends ConsumerState<CampaignHubCard> {
     final titles =
         goal == CampaignGoal.qualifyWorldThenTitles ||
         goal == CampaignGoal.qualifyBothThenTitle ||
+        goal == CampaignGoal.qualifyBothThenWorldTitle ||
         goal == CampaignGoal.titleTreble;
     // A goal judged across its cycles lists each cycle's championship.
     final perCycle = titles || goal == CampaignGoal.beatRivalsThenContinental;

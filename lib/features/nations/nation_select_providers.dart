@@ -5,10 +5,12 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 
-/// All nations (seeding the database first if needed), ordered by ranking.
+/// Every nation a career created now can take (seeding the database first if
+/// needed), ordered by ranking: the new-career world (see
+/// `NationRepository.newCareerWorld`).
 final nationsProvider = FutureProvider<List<Nation>>((ref) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
-  return ref.watch(nationRepositoryProvider).all();
+  return ref.watch(nationRepositoryProvider).newCareerWorld();
 });
 
 /// The highest-overall ("star") player for each nation, keyed by nation id.
@@ -50,7 +52,9 @@ typedef NationStrength = ({int overall, int tier, Player best});
 final FutureProvider<Map<int, NationStrength>> nationStrengthsProvider =
     FutureProvider<Map<int, NationStrength>>((ref) async {
       await ref.watch(seedLoaderProvider).ensureSeeded();
-      final nations = await ref.watch(nationRepositoryProvider).all();
+      final nations = await ref
+          .watch(nationRepositoryProvider)
+          .newCareerWorld();
       final players = ref.watch(playerRepositoryProvider);
       final overall = <int, int>{};
       final best = <int, Player>{};

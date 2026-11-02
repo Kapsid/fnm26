@@ -21,6 +21,14 @@ class _FakeSeason implements SeasonService {
     return gate.future;
   }
 
+  int simulated = 0;
+
+  @override
+  Future<void> simulateTournament(int careerId) {
+    simulated++;
+    return gate.future;
+  }
+
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
@@ -163,5 +171,49 @@ void main() {
     expect(container.read(hubActionBusyProvider(1)), isFalse);
     expect(allLoading(tester, false), isTrue);
     expect(find.byType(SnackBar), findsOneWidget);
+  });
+
+  testWidgets(
+    'a watch event offers "simulate to the final", which runs it in one go',
+    (tester) async {
+      final season = _FakeSeason();
+      const watch = HubEvent(
+        kind: HubEventKind.watchTournament,
+        label: 'Play the next round',
+        icon: Icons.fast_forward_rounded,
+      );
+      await tester.pumpApp(
+        const Scaffold(
+          body: Column(
+            children: [
+              HubEventButton(careerId: 1, compact: true),
+              HubEventButton(careerId: 1),
+            ],
+          ),
+        ),
+        overrides: [
+          nextEventProvider(1).overrideWith((ref) async => watch),
+          seasonServiceProvider.overrideWith((ref) => season),
+        ],
+      );
+      await tester.pump();
+      expect(find.byKey(HubEventButton.simToFinalKey), findsOneWidget);
+      expect(find.byTooltip('Simulate to the final'), findsOneWidget);
+
+      await tester.tap(find.byKey(HubEventButton.simToFinalKey));
+      await tester.pump();
+      expect(season.simulated, 1);
+      expect(season.calls, 0);
+      expect(allLoading(tester, true), isTrue);
+    },
+  );
+
+  testWidgets('no such choice on any other event', (tester) async {
+    await tester.pumpApp(
+      const Scaffold(body: HubEventButton(careerId: 1)),
+      overrides: overrides,
+    );
+    await tester.pump();
+    expect(find.byKey(HubEventButton.simToFinalKey), findsNothing);
   });
 }

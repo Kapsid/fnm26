@@ -38,7 +38,8 @@ final List<Player> seedPlayers = PoolGenerator.expand(
 );
 
 /// A container over [db] seeded from the real data; with [dormant], the
-/// source also supplies Greenland the way `AssetSeedSource` does.
+/// source also supplies the dormant nations (Greenland and Zanzibar) the way
+/// `AssetSeedSource` does.
 ProviderContainer greenlandContainer(AppDatabase db, {bool dormant = true}) =>
     ProviderContainer(
       overrides: [
@@ -49,7 +50,7 @@ ProviderContainer greenlandContainer(AppDatabase db, {bool dormant = true}) =>
             nationList: seedNations,
             playerList: seedPlayers,
             dormantNations: dormant ? DormantNations.all : const [],
-            dormantPlayers: dormant ? greenlandPool() : const [],
+            dormantPlayers: dormant ? dormantPool() : const [],
           ),
         ),
       ],

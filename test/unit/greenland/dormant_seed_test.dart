@@ -6,9 +6,11 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/seed/dormant_seed.dart';
+import 'package:fnm/data/seed/frozen_name_pools.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
 import 'package:fnm/data/seed/seed_source.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
@@ -57,7 +59,7 @@ InMemorySeedSource _source({
   nationList: _nations,
   playerList: players,
   dormantNations: dormant ? DormantNations.all : const [],
-  dormantPlayers: dormant ? greenlandPool() : const [],
+  dormantPlayers: dormant ? dormantPool() : const [],
 );
 
 Future<int> _count(
@@ -83,8 +85,21 @@ void main() {
     // world's fringe players (ids, names, attributes, clubs) come from here,
     // so the refactor must not move a single byte.
     test('expand(players.json) is byte-identical to the pre-refactor pool', () {
+      // On the pools as 1.0.8 shipped them: Croatia's and Central Asia's lists
+      // moved in 1.0.9,
+      // and older careers read the frozen copy (frozen_name_pools.dart).
+      final namesV4 = {
+        ..._names,
+        10: (first: croatiaFirstNamesV4, sur: croatiaSurnamesV4),
+        196: (first: turkmenistanFirstNamesV4, sur: turkmenistanSurnamesV4),
+        173: (first: kyrgyzstanFirstNamesV4, sur: kyrgyzstanSurnamesV4),
+        193: (first: tajikistanFirstNamesV4, sur: tajikistanSurnamesV4),
+        198: (first: uzbekistanFirstNamesV4, sur: uzbekistanSurnamesV4),
+        27: (first: kazakhstanFirstNamesV4, sur: kazakhstanSurnamesV4),
+        155: (first: afghanistanFirstNamesV4, sur: afghanistanSurnamesV4),
+      };
       expect(
-        _fingerprint(PoolGenerator.expand(_base, namesByNation: _names)),
+        _fingerprint(PoolGenerator.expand(_base, namesByNation: namesV4)),
         '21527:5ddea999ee5ad37c',
       );
       expect(
@@ -155,15 +170,193 @@ void main() {
       expect(_names[212]!.sur, greenlandSurnames);
     });
 
-    test('AssetSeedSource supplies Greenland as its dormant data', () async {
+    test('AssetSeedSource supplies the dormant nations', () async {
       final d = await AssetSeedSource(rootBundle).dormant();
       expect(d.nations, DormantNations.all);
-      expect(d.players, greenlandPool());
+      expect(d.players, dormantPool());
     });
 
     test('Greenland is in neither seed file', () {
       expect(_nations.where((n) => n.id == 212 || n.code == 'GRL'), isEmpty);
       expect(_base.where((p) => p.nationId == 212), isEmpty);
+    });
+  });
+
+  group('Zanzibar seed data', () {
+    test('ids sit in their own fixed ranges', () {
+      final pool = zanzibarPool();
+      expect(pool, hasLength(23 + PoolGenerator.extraPerNation));
+      expect(pool.every((p) => p.nationId == 213), isTrue);
+      expect(
+        [for (final p in zanzibarSquad) p.id],
+        [for (var i = 21301; i <= 21323; i++) i],
+      );
+      expect(
+        [for (final p in pool.skip(23)) p.id],
+        [for (var i = 20213000; i <= 20213079; i++) i],
+      );
+      final taken = {
+        for (final p in PoolGenerator.expand(_base)) p.id,
+        for (final p in greenlandPool()) p.id,
+      };
+      expect(pool.where((p) => taken.contains(p.id)), isEmpty);
+    });
+
+    test("the squad copies Chad's positions and ages, scaled by the "
+        'factor', () {
+      final chad = _base.where((p) => p.nationId == 110).toList();
+      expect(
+        [for (final p in zanzibarSquad) p.position],
+        [for (final p in chad) p.position],
+      );
+      expect(
+        [for (final p in zanzibarSquad) p.age],
+        [for (final p in chad) p.age],
+      );
+      for (var i = 0; i < chad.length; i++) {
+        int scaled(int v) =>
+            (v * zanzibarAttributeFactor).round().clamp(25, 99);
+        final a = chad[i].attributes;
+        final z = zanzibarSquad[i].attributes;
+        expect(z.physical, scaled(a.physical), reason: 'slot $i');
+        expect(z.technical, scaled(a.technical), reason: 'slot $i');
+        expect(z.stamina, scaled(a.stamina), reason: 'slot $i');
+      }
+    });
+
+    test("Zanzibar starts near Chad's level and on Chad's ranking", () {
+      double mean(List<Player> ps) =>
+          ps.fold<int>(0, (s, p) => s + p.overall) / ps.length;
+      final chad = mean(_base.where((p) => p.nationId == 110).toList());
+      expect(mean(zanzibarSquad) / chad, inInclusiveRange(0.9, 1.1));
+      final chadRow = _nations.firstWhere((n) => n.id == 110);
+      expect(DormantNations.zanzibar.ranking, chadRow.ranking);
+      expect(DormantNations.zanzibar.confederation, chadRow.confederation);
+      expect(DormantNations.replaces[DormantNations.zanzibarId], 110);
+    });
+
+    test('the Dart name pools mirror country_names.json', () {
+      expect(_names[213]!.first, zanzibarFirstNames);
+      expect(_names[213]!.sur, zanzibarSurnames);
+    });
+
+    test('Zanzibar is in neither seed file', () {
+      expect(_nations.where((n) => n.id == 213 || n.code == 'ZAN'), isEmpty);
+      expect(_base.where((p) => p.nationId == 213), isEmpty);
+    });
+
+    test('a fresh database gets Zanzibar and its 103 players', () async {
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      await SeedLoader(db, _source(players: _base)).ensureSeeded();
+      expect(
+        await _count(db, 'SELECT COUNT(*) AS c FROM nations WHERE id = 213'),
+        1,
+      );
+      expect(
+        await _count(
+          db,
+          'SELECT COUNT(*) AS c FROM players WHERE nation_id = 213',
+        ),
+        103,
+      );
+    });
+  });
+
+  group('Belarus seed data', () {
+    test('ids sit in their own fixed ranges, the squad on its old 601-623', () {
+      final pool = belarusPool();
+      expect(pool, hasLength(23 + PoolGenerator.extraPerNation));
+      expect(pool.every((p) => p.nationId == 6), isTrue);
+      expect(
+        [for (final p in belarusSquad) p.id],
+        [for (var i = 601; i <= 623; i++) i],
+      );
+      expect(
+        [for (final p in pool.skip(23)) p.id],
+        [for (var i = 20006000; i <= 20006079; i++) i],
+      );
+      final taken = {
+        for (final p in PoolGenerator.expand(_base)) p.id,
+        for (final p in greenlandPool()) p.id,
+        for (final p in zanzibarPool()) p.id,
+      };
+      expect(pool.where((p) => taken.contains(p.id)), isEmpty);
+    });
+
+    test("the squad copies Luxembourg's positions and ages, scaled by the "
+        'factor', () {
+      final lux = _base.where((p) => p.nationId == 32).toList();
+      expect(
+        [for (final p in belarusSquad) p.position],
+        [for (final p in lux) p.position],
+      );
+      expect(
+        [for (final p in belarusSquad) p.age],
+        [for (final p in lux) p.age],
+      );
+      for (var i = 0; i < lux.length; i++) {
+        int scaled(int v) => (v * belarusAttributeFactor).round().clamp(25, 99);
+        final a = lux[i].attributes;
+        final b = belarusSquad[i].attributes;
+        expect(b.physical, scaled(a.physical), reason: 'slot $i');
+        expect(b.technical, scaled(a.technical), reason: 'slot $i');
+        expect(b.stamina, scaled(a.stamina), reason: 'slot $i');
+      }
+    });
+
+    test('Belarus is European, an addition, ranked beside Palestine', () {
+      expect(DormantNations.belarus.confederation, Confederation.europe);
+      expect(
+        DormantNations.replaces.containsKey(DormantNations.belarusId),
+        isFalse,
+      );
+      expect(DormantNations.additions, contains(DormantNations.belarusId));
+      final palestine = _nations.firstWhere((n) => n.code == 'PLE');
+      expect(DormantNations.belarus.ranking, palestine.ranking);
+    });
+
+    test('the Dart name pools mirror country_names.json', () {
+      expect(_names[6]!.first, belarusFirstNames);
+      expect(_names[6]!.sur, belarusSurnames);
+    });
+
+    test('Belarus is in neither seed file', () {
+      expect(_nations.where((n) => n.id == 6 || n.code == 'BLR'), isEmpty);
+      expect(_base.where((p) => p.nationId == 6), isEmpty);
+    });
+
+    test('a fresh database gets Belarus and its 103 players, and an old one '
+        'that pruned it gets them back', () async {
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      // An old database: seeded before Belarus came back.
+      await SeedLoader(
+        db,
+        _source(players: _base, dormant: false),
+      ).ensureSeeded();
+      expect(
+        await _count(db, 'SELECT COUNT(*) AS c FROM nations WHERE id = 6'),
+        0,
+      );
+      await SeedLoader(db, _source(players: _base)).ensureSeeded();
+      expect(
+        await _count(db, 'SELECT COUNT(*) AS c FROM nations WHERE id = 6'),
+        1,
+      );
+      expect(
+        await _count(
+          db,
+          'SELECT COUNT(*) AS c FROM players WHERE nation_id = 6',
+        ),
+        103,
+      );
+      // The prune keeps it on the next launch.
+      await SeedLoader(db, _source(players: _base)).ensureSeeded();
+      expect(
+        await _count(db, 'SELECT COUNT(*) AS c FROM nations WHERE id = 6'),
+        1,
+      );
     });
   });
 
@@ -280,14 +473,14 @@ void main() {
       // A pre-v10 database: the base 23 per nation only.
       await SeedLoader(db, _source(players: _base)).ensureSeeded();
       final shallow = await _count(db, 'SELECT COUNT(*) AS c FROM players');
-      expect(shallow, _base.length + 103);
+      expect(shallow, _base.length + dormantPool().length);
 
       // The next launch rebuilds the pool, deleting every player first.
       final deep = PoolGenerator.expand(_base, namesByNation: _names);
       await SeedLoader(db, _source(players: deep)).ensureSeeded();
       expect(
         await _count(db, 'SELECT COUNT(*) AS c FROM players'),
-        deep.length + 103,
+        deep.length + dormantPool().length,
       );
       expect(await _greenlandPlayers(db), 103);
     });

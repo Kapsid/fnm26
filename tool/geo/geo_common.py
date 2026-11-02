@@ -14,8 +14,13 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 DATA = os.path.join(ROOT, 'assets', 'data')
 FALLBACK = os.path.join(os.path.dirname(__file__), 'city_fallback.json')
 
-# Greenland is not in nations.json (it joins from the dormant pool).
+# Greenland, Zanzibar and Belarus are not in nations.json (they join from the
+# dormant pool).
 GREENLAND_ID = 212
+ZANZIBAR_ID = 213
+# Belarus is not in nations.json either: it joins careers created from 1.0.9
+# on from the dormant pool.
+BELARUS_ID = 6
 
 # FIFA code -> the Natural Earth features that draw it, as
 # (dataset, field, value). The UK's four football nations come from the
@@ -32,6 +37,8 @@ OUTLINE_SOURCES = {
     'CYP': [(_COUNTRY, 'ADM0_A3', a) for a in ('CYP', 'CYN', 'CNM', 'ESB', 'WSB')],
     # Hargeisa is one of the game's Somali cities.
     'SOM': [(_COUNTRY, 'ADM0_A3', a) for a in ('SOM', 'SOL')],
+    # Unguja, Pemba and their islets: Natural Earth's Zanzibar map unit.
+    'ZAN': [(_UNITS, 'GU_A3', 'TZZ')],
 }
 
 # FIFA code -> Natural Earth ADM0_A3, where they differ.
@@ -78,6 +85,9 @@ FIFA_TO_NE = {
     'NCL': 'NCL', 'NZL': 'NZL', 'PNG': 'PNG', 'SAM': 'WSM', 'SOL': 'SLB',
     'TAH': 'PYF', 'TGA': 'TON', 'VAN': 'VUT', 'GRL': 'GRL', 'ENG': 'GBR',
     'SCO': 'GBR', 'WAL': 'GBR', 'NIR': 'GBR', 'CYP': 'CYP', 'SOM': 'SOM',
+    # Zanzibar's places are filed under Tanzania.
+    'ZAN': 'TZA',
+    'BLR': 'BLR',
 }
 
 # Places in Natural Earth filed under another ADM0 than the nation's own
@@ -99,11 +109,14 @@ def place_countries(code):
 
 
 def load_nations():
-    """[(id, code, name)] for the 209 nations plus Greenland."""
+    """[(id, code, name)] for the 209 nations plus Greenland, Zanzibar and
+    Belarus."""
     with open(os.path.join(DATA, 'nations.json'), encoding='utf-8') as f:
         raw = json.load(f)
     out = [(n['id'], n['code'], n['name']) for n in raw]
     out.append((GREENLAND_ID, 'GRL', 'Greenland'))
+    out.append((ZANZIBAR_ID, 'ZAN', 'Zanzibar'))
+    out.append((BELARUS_ID, 'BLR', 'Belarus'))
     return out
 
 
@@ -132,6 +145,17 @@ def city_lists():
         stadiums = {int(k): [e['city'] for e in v] for k, v in json.load(f).items()}
     extra = extra_host_cities()
     return seed, stadiums, extra
+
+
+def build_cities():
+    """id -> the extra cities a stadium may be built in
+    (stadium_build_cities.json, see gen_build_cities.py); empty before it
+    exists."""
+    path = os.path.join(DATA, 'stadium_build_cities.json')
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding='utf-8') as f:
+        return {int(k): v for k, v in json.load(f).items()}
 
 
 def all_cities(nation_id, seed, stadiums, extra):

@@ -75,6 +75,9 @@ Future<int> _create(
               managerName: 'M',
               rngSeed: 7,
               worldMarkers: worldMarkers,
+              // The worlds these tests freeze predate 1.0.9's Belarus (see
+              // test/unit/belarus/ for a new career's).
+              newCareerNations: false,
             ))
         .valueOrNull!
         .id;

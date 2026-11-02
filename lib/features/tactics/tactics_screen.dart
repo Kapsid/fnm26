@@ -25,11 +25,13 @@ import 'package:fnm/features/match/match_preview_screen.dart'
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/assistant_advice_sheet.dart';
 import 'package:fnm/features/tactics/familiarity_providers.dart';
 import 'package:fnm/features/tactics/formation_picker.dart';
 import 'package:fnm/features/tactics/nation_squad_tab.dart';
 import 'package:fnm/features/tactics/player_roles_providers.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
+import 'package:fnm/features/tactics/slot_switch_strip.dart';
 import 'package:fnm/features/tactics/squad_tablet_layout.dart';
 import 'package:fnm/features/tactics/tactic_library_sheet.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
@@ -67,6 +69,8 @@ typedef _Takers = ({
   int? namedDeadBall,
   int? penaltyId,
   int? deadBallId,
+  int? namedThrowIn,
+  int? throwInId,
 });
 
 /// Resolves [_Takers] for [data], clearing (after this frame) a designated
@@ -95,12 +99,27 @@ _Takers _resolveTakers(
       _clearTakerAfterFrame(store, careerId, penalty: false);
     }
   }
+  // The throw-in taker lives in the save, not the preferences (see
+  // [throwInTakerProvider]), so he is read here rather than passed in.
+  final throwIn = ref.watch(throwInTakerProvider(careerId));
+  final storedThrowIn = throwIn.valueOrNull;
+  final namedThrowIn = xiIds.contains(storedThrowIn) ? storedThrowIn : null;
+  if (throwIn.hasValue && storedThrowIn != null && namedThrowIn == null) {
+    if (xi.isNotEmpty) {
+      final store = ref.read(throwInTakerStoreProvider);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        store.set(careerId, null);
+      });
+    }
+  }
   return (
     xi: xi,
     namedPenalty: namedPenalty,
     namedDeadBall: namedDeadBall,
     penaltyId: namedPenalty ?? SetPiecePicks.penalty(xi),
     deadBallId: namedDeadBall ?? SetPiecePicks.deadBall(xi),
+    namedThrowIn: namedThrowIn,
+    throwInId: namedThrowIn ?? SetPiecePicks.throwIn(xi),
   );
 }
 
@@ -302,6 +321,10 @@ class TacticsScreen extends ConsumerWidget {
                               color: AppColors.onSurfaceVariant,
                             ),
                           ),
+                          const SizedBox(height: AppSpacing.md),
+                          // His proposal for this shape, under the pitch it
+                          // would change.
+                          LineupAssistantButton(careerId: careerId, data: data),
                           const SizedBox(height: AppSpacing.lg),
                           // One line, not the whole grid. Nineteen shapes at
                           // three across is seven rows — about 981 points, a
@@ -431,6 +454,7 @@ class TacticsScreen extends ConsumerWidget {
       formation: tactic.formation,
       instructions: tactic.instructions,
       fullBacks: tactic.fullBacks,
+      switches: tactic.switches,
       onCycleFullBack: (side) => service.cycleFullBack(careerId, side),
       lineup: tactic.lineup,
       byId: data.byId,
@@ -519,6 +543,8 @@ class TacticsScreen extends ConsumerWidget {
     final namedDeadBall = t.namedDeadBall;
     final penaltyId = t.penaltyId;
     final deadBallId = t.deadBallId;
+    final namedThrowIn = t.namedThrowIn;
+    final throwInId = t.throwInId;
     return [
       // The armband can go to a player nursing a knock — he is still the
       // captain, he just isn't playing — so the squad offered here is the
@@ -541,13 +567,19 @@ class TacticsScreen extends ConsumerWidget {
           penaltyIsAuto: namedPenalty == null,
           deadBallName: data.byId[deadBallId]?.name,
           deadBallIsAuto: namedDeadBall == null,
-          // One tap makes the two men already named above the manager's own
+          showThrowIn: true,
+          throwInName: data.byId[throwInId]?.name,
+          throwInIsAuto: namedThrowIn == null,
+          // One tap makes the men already named above the manager's own
           // choice. The names do not change; what changes is that they are
           // now his, which is also what settles the "set-piece takers are not
           // set" strip before kick-off.
-          onQuickPick: () => ref
-              .read(setPieceTakersStoreProvider)
-              .setBoth(careerId, penalty: penaltyId, deadBall: deadBallId),
+          onQuickPick: () async {
+            await ref
+                .read(setPieceTakersStoreProvider)
+                .setBoth(careerId, penalty: penaltyId, deadBall: deadBallId);
+            await ref.read(throwInTakerStoreProvider).set(careerId, throwInId);
+          },
         ),
       ),
       const SizedBox(height: AppSpacing.sm),
@@ -559,6 +591,11 @@ class TacticsScreen extends ConsumerWidget {
           isDeadBallTaker: namedDeadBall == p.id,
           isAutoPenalty: namedPenalty == null && penaltyId == p.id,
           isAutoDeadBall: namedDeadBall == null && deadBallId == p.id,
+          isThrowInTaker: namedThrowIn == p.id,
+          isAutoThrowIn: namedThrowIn == null && throwInId == p.id,
+          onToggleThrowIn: () => ref
+              .read(throwInTakerStoreProvider)
+              .set(careerId, namedThrowIn == p.id ? null : p.id),
           onRole: () => _pickRole(context, ref, p),
           onTogglePenalty: () => ref
               .read(setPieceTakersStoreProvider)
@@ -575,6 +612,17 @@ class TacticsScreen extends ConsumerWidget {
                 playerId: namedDeadBall == p.id ? null : p.id,
               ),
         ),
+      // How the throws are taken, under the men who take them: below the
+      // rows so the roles stay where a manager's thumb already knows them.
+      const SizedBox(height: AppSpacing.md),
+      AppCard(
+        child: ThrowInStylePicker(
+          value: data.tactic.throwInStyle,
+          onChanged: (style) => ref
+              .read(tacticServiceProvider)
+              .setThrowInStyle(careerId, style),
+        ),
+      ),
     ];
   }
 
@@ -689,7 +737,7 @@ class TacticsScreen extends ConsumerWidget {
     TacticData data,
     int slot,
   ) async {
-    final position = data.tactic.formation.positions[slot];
+    final position = data.tactic.positions[slot];
     final isKeeperSlot = position.category == PositionCategory.goalkeeper;
     // A goalkeeping slot is keeper-only; any other slot can be filled by any
     // outfield player, carrying the out-of-position penalty shown per row.
@@ -709,7 +757,10 @@ class TacticsScreen extends ConsumerWidget {
     }
 
     final l = AppLocalizations.of(context);
-    final picked = await showAdaptiveSheet<int>(
+    // The sheet answers with a player id, or with a place for the slot
+    // itself: the position chips at its head change what the slot plays
+    // within the formation (see [SlotSwitchStrip]).
+    final picked = await showAdaptiveSheet<Object>(
       context: context,
       backgroundColor: AppColors.surfaceContainer,
       builder: (sheetContext) => ListView(
@@ -720,6 +771,12 @@ class TacticsScreen extends ConsumerWidget {
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.sm),
+          SlotSwitchStrip(
+            formation: data.tactic.formation,
+            switches: data.tactic.switches,
+            slot: slot,
+            onPick: (p) => Navigator.of(sheetContext).pop(p),
+          ),
           for (final p in candidates)
             () {
               final inXi = data.tactic.lineup.contains(p.id);
@@ -803,8 +860,13 @@ class TacticsScreen extends ConsumerWidget {
         ],
       ),
     );
-    if (picked != null) {
-      await ref.read(tacticServiceProvider).setSlot(careerId, slot, picked);
+    switch (picked) {
+      case final int playerId:
+        await ref.read(tacticServiceProvider).setSlot(careerId, slot, playerId);
+      case final PlayerPosition place:
+        await ref
+            .read(tacticServiceProvider)
+            .setSlotPosition(careerId, slot, place);
     }
   }
 
@@ -1139,6 +1201,8 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
             formation: widget.tactic.formation,
             instructions: widget.tactic.instructions,
             fullBacks: widget.tactic.fullBacks,
+            switches: widget.tactic.switches,
+            throwInStyle: widget.tactic.throwInStyle,
           ),
         );
     if (mounted) {
@@ -1169,6 +1233,8 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
           preset.formation,
           preset.instructions,
           fullBacks: preset.fullBacks,
+          switches: preset.switches,
+          throwInStyle: preset.throwInStyle,
         );
     if (mounted) {
       final l = AppLocalizations.of(context);
@@ -1359,12 +1425,14 @@ class _NamePresetDialogState extends State<_NamePresetDialog> {
   }
 }
 
-/// The armband, as one decision: who wears it, what it is worth, and a single
-/// picker to change it.
+/// The armband, as one decision: who wears it, who stands in for him, what
+/// it is worth, and a picker per post.
 ///
-/// A captain is one man, so this is one row — not a badge repeated down a list
-/// of twenty-three call-ups, which is where it used to live and which made a
-/// single-choice decision look like a set of toggles.
+/// A captain is one man, so this is one card, not a badge repeated down a
+/// list of twenty-three call-ups. Below him the 1st and 2nd vice-captains:
+/// named once, they take the armband in that order whenever the captain
+/// cannot play, so the manager does not have to come back and move it every
+/// time somebody misses a match.
 class _CaptainCard extends ConsumerWidget {
   const _CaptainCard({required this.careerId, required this.pool});
 
@@ -1376,43 +1444,87 @@ class _CaptainCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final captain = ref.watch(captainProvider(careerId)).valueOrNull;
+    final armband = ref.watch(armbandProvider(careerId)).valueOrNull;
     final morale = ref.watch(captainMoraleProvider(careerId)).valueOrNull ?? 0;
+    final leader = armband?.leader;
+    String holder(Player? p, String none) {
+      if (p == null) return none;
+      // The lift shows beside whoever is actually wearing it this week.
+      return p.id == leader?.id && morale > 0
+          ? '${p.name} · ${l.captainMoraleBoost(morale)}'
+          : p.name;
+    }
+
+    final standIn = armbandStandIn(l, armband);
     return AppCard(
-      padding: EdgeInsets.zero,
-      child: ListTile(
-        dense: true,
-        leading: const Icon(
-          Icons.military_tech_outlined,
-          color: AppColors.primary,
-        ),
-        title: Text(
-          l.squadCaptain.capsIn(l.localeName),
-          style: AppTypography.labelSmall.copyWith(
-            color: AppColors.onSurfaceVariant,
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _ArmbandRow(
+            icon: Icons.military_tech_outlined,
+            label: l.squadCaptain,
+            value: holder(armband?.captain, l.captainNone),
+            onTap: () => _pick(context, ref, ArmbandRole.captain, armband),
           ),
-        ),
-        subtitle: Text(
-          captain == null
-              ? l.captainNone
-              : morale > 0
-              ? '${captain.name} · ${l.captainMoraleBoost(morale)}'
-              : captain.name,
-          style: AppTypography.bodyMedium,
-        ),
-        trailing: const Icon(
-          Icons.chevron_right,
-          color: AppColors.onSurfaceVariant,
-        ),
-        onTap: () => _pick(context, ref, captain?.id),
+          _ArmbandRow(
+            icon: Icons.looks_one_outlined,
+            label: l.viceCaptainFirst,
+            value: holder(armband?.vice1, l.viceCaptainNone),
+            onTap: () => _pick(context, ref, ArmbandRole.vice1, armband),
+          ),
+          _ArmbandRow(
+            icon: Icons.looks_two_outlined,
+            label: l.viceCaptainSecond,
+            value: holder(armband?.vice2, l.viceCaptainNone),
+            onTap: () => _pick(context, ref, ArmbandRole.vice2, armband),
+          ),
+          if (standIn != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.xs,
+                AppSpacing.md,
+                AppSpacing.sm,
+              ),
+              child: Text(
+                standIn,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 
-  Future<void> _pick(BuildContext context, WidgetRef ref, int? current) async {
+  Future<void> _pick(
+    BuildContext context,
+    WidgetRef ref,
+    ArmbandRole role,
+    Armband? armband,
+  ) async {
     final l = AppLocalizations.of(context);
     final career = ref.read(careerByIdProvider(careerId)).valueOrNull;
     final saveSeed = career?.rngSeed ?? 0;
+    final current = switch (role) {
+      ArmbandRole.captain => armband?.captain?.id,
+      ArmbandRole.vice1 => armband?.vice1?.id,
+      ArmbandRole.vice2 => armband?.vice2?.id,
+    };
+    // Who holds the OTHER posts, so the list can say so: picking one of them
+    // moves him here and leaves his old post empty.
+    final held = <int, String>{
+      if (armband?.captain case final p?) p.id: l.squadCaptain,
+      if (armband?.vice1 case final p?) p.id: l.viceCaptainFirst,
+      if (armband?.vice2 case final p?) p.id: l.viceCaptainSecond,
+    };
+    final title = switch (role) {
+      ArmbandRole.captain => l.squadCaptain,
+      ArmbandRole.vice1 => l.viceCaptainFirst,
+      ArmbandRole.vice2 => l.viceCaptainSecond,
+    };
     // Best first — the armband usually goes to a senior name, and the fit tag
     // says who actually carries it.
     final candidates = [...pool]
@@ -1424,9 +1536,18 @@ class _CaptainCard extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
           Text(
-            l.squadCaptain.capsIn(l.localeName),
+            title.capsIn(l.localeName),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
+          if (role != ArmbandRole.captain) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              l.viceCaptainHint,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.sm),
           for (final p in candidates)
             ListTile(
@@ -1437,7 +1558,10 @@ class _CaptainCard extends ConsumerWidget {
               ),
               title: Text(p.name, style: AppTypography.bodyMedium),
               subtitle: Text(
-                _fitLabel(l, Captaincy.fit(p, saveSeed: saveSeed)),
+                [
+                  _fitLabel(l, Captaincy.fit(p, saveSeed: saveSeed)),
+                  if (p.id != current) ?held[p.id],
+                ].join(' · '),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurfaceVariant,
                 ),
@@ -1445,15 +1569,15 @@ class _CaptainCard extends ConsumerWidget {
               trailing: p.id == current
                   ? const Icon(Icons.check_circle, color: AppColors.primary)
                   : Text('${p.overall}', style: AppTypography.labelMedium),
-              // Tapping the current captain takes the armband back off him, so
-              // "no captain" needs no row of its own.
+              // Tapping the man already in the post takes him back out of
+              // it, so "nobody" needs no row of its own.
               onTap: () => Navigator.of(sheetContext).pop(p.id),
             ),
         ],
       ),
     );
     if (picked == null) return;
-    await setCaptain(ref, careerId, picked == current ? null : picked);
+    await setArmband(ref, careerId, role, picked == current ? null : picked);
   }
 
   static String _fitLabel(AppLocalizations l, CaptainFit fit) => switch (fit) {
@@ -1462,6 +1586,56 @@ class _CaptainCard extends ConsumerWidget {
     CaptainFit.capable => l.captainFitCapable,
     CaptainFit.unproven => l.captainFitUnproven,
   };
+}
+
+/// One post in the leadership group: what it is, who holds it, tap to change.
+class _ArmbandRow extends StatelessWidget {
+  const _ArmbandRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.primary),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label.capsIn(l.localeName),
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                  Text(value, style: AppTypography.bodyMedium),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// One player's role row in the tactics screen: position, name, and the role
@@ -1480,10 +1654,16 @@ class _PlayerTacticRow extends StatelessWidget {
     required this.onRole,
     required this.onTogglePenalty,
     required this.onToggleDeadBall,
+    required this.isThrowInTaker,
+    required this.isAutoThrowIn,
+    required this.onToggleThrowIn,
   });
 
   final Player player;
   final PlayerRole role;
+  final bool isThrowInTaker;
+  final bool isAutoThrowIn;
+  final VoidCallback onToggleThrowIn;
   final bool isPenaltyTaker;
   final bool isDeadBallTaker;
 
@@ -1585,6 +1765,15 @@ class _PlayerTacticRow extends StatelessWidget {
             auto: isAutoDeadBall,
             tooltip: l.tacticsCornersFreeKicks,
             onTap: onToggleDeadBall,
+          ),
+          const SizedBox(width: 6),
+          SetPieceBadge(
+            key: ValueKey('throwInBadge.${player.id}'),
+            icon: SetPieceTakerSummary.throwInIcon,
+            active: isThrowInTaker,
+            auto: isAutoThrowIn,
+            tooltip: l.tacticsThrowIns,
+            onTap: onToggleThrowIn,
           ),
         ],
       ),

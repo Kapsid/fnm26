@@ -46,6 +46,16 @@ const Map<int, List<(String, int)>> nationalStadiumData = {
     ('Mingachevir', 5000),
     ('Gabala', 4500),
   ],
+  6: [
+    ('Minsk', 22000),
+    ('Minsk', 16500),
+    ('Gomel', 14300),
+    ('Borisov', 13100),
+    ('Brest', 10100),
+    ('Grodno', 8400),
+    ('Vitebsk', 8100),
+    ('Mogilev', 7400),
+  ],
   7: [
     ('Brussels', 50000),
     ('Liège', 30000),
@@ -1368,4 +1378,5 @@ const Map<int, List<(String, int)>> nationalStadiumData = {
   210: [('Nuku\'alofa', 4000)],
   211: [('Port Vila', 6500), ('Luganville', 3000)],
   212: [('Nuuk', 2000), ('Sisimiut', 1000), ('Ilulissat', 1000)],
+  213: [('Zanzibar City', 15000), ('Chake-Chake', 10000)],
 };

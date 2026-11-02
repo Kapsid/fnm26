@@ -138,7 +138,8 @@ Future<String> playTurkiye({
       case HubEventKind.trainingCamp:
         shot(await save(), 'snap', 'c${cycle}_base_camp', {'route': route});
       case HubEventKind.budget:
-        if (firsts.add('budget')) {
+        if ((e.route?.startsWith(Routes.budgetSetup) ?? false) &&
+            firsts.add('budget')) {
           shot(await save(), 'snap', 'budget', {'route': route});
         }
       case HubEventKind.press:

@@ -139,6 +139,14 @@ class Careers extends Table {
   /// as one who had nearly been sacked. This one number is what a reputation
   /// is made of; see `BoardSatisfaction.carryOver`.
   IntColumn get lastCycleBoard => integer().nullable()();
+
+  /// The manager's 1st and 2nd vice-captains, or null for none: who takes
+  /// the armband, in that order, when the captain cannot play (see
+  /// `Captaincy.leaderSlot`). Like [captainPlayerId] they are INTENT, resolved
+  /// against the squad before every use, and cleared with it when the manager
+  /// changes nation.
+  IntColumn get viceCaptain1PlayerId => integer().nullable()();
+  IntColumn get viceCaptain2PlayerId => integer().nullable()();
 }
 
 /// A nation's Nations Cup league (0 = League A, 1 = League B, …) within its

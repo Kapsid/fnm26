@@ -48,4 +48,10 @@ const Map<int, int> nationalStadiumCapacity = {
   // Greenland (dormant): Nuuk Stadium, artificial turf, a couple of
   // thousand at most.
   212: 2000,
+  // Zanzibar (dormant): the New Amaan Complex in Zanzibar City, rebuilt
+  // for about 15,000.
+  213: 15000,
+  // Belarus (dormant, in new careers from 1.0.9): the Dinamo Stadium in
+  // Minsk, rebuilt in 2018 for about 22,000.
+  6: 22000,
 };

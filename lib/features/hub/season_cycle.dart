@@ -75,6 +75,7 @@ extension SeasonCycle on SeasonService {
           o.target,
           competition: o.competition,
           offTheBottom: o.offTheBottom,
+          graded: o.graded,
         ),
       );
       final finish = MsgText(

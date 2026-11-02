@@ -1,19 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/config/ui_language.dart' show uiLanguageCodeProvider;
+import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/venue.dart' show isNeutralFinalsRound;
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/domain/services/press/half_time_swing.dart';
+import 'package:fnm/domain/services/press/persona.dart' show YPersona;
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/public_mood.dart';
+import 'package:fnm/domain/services/press/pundit_predictions.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/domain/services/press/y_locals.dart';
 import 'package:fnm/domain/services/press/y_tournaments.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
@@ -22,9 +31,13 @@ import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/press/story_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart'
+    show appLocalizationsProvider;
 import 'package:fnm/features/squad/camp_scandal_providers.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/squad/international_retirement_providers.dart';
+import 'package:fnm/features/tactics/tactics_providers.dart'
+    show squadDataProvider;
 
 /// The manager's played matches, newest first, with both sides' world
 /// positions — the raw material both Y and the public's mood are built from.
@@ -135,470 +148,569 @@ const int rivalryMeetings = 4;
 
 /// The feed: what the world has been saying, newest first, and where the
 /// reserved older landmarks begin (see [YFeed.timeline]).
-final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
-    FutureProvider.autoDispose.family<YTimeline, int>((ref, careerId) async {
-      const empty = (posts: <YPost>[], reserveFrom: null);
-      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-      if (career == null) return empty;
-      final nations = await ref
-          .watch(nationRepositoryProvider)
-          .forCareer(careerId);
-      final nation = nations
-          .where((Nation n) => n.id == career.nationId)
-          .map((n) => n.name)
-          .firstOrNull;
-      if (nation == null) return empty;
-      final judged = await ref.watch(yJudgedProvider(careerId).future);
+final AutoDisposeFutureProviderFamily<YTimeline, int>
+yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
+  ref,
+  careerId,
+) async {
+  const empty = (posts: <YPost>[], reserveFrom: null);
+  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+  if (career == null) return empty;
+  final nations = await ref.watch(nationRepositoryProvider).forCareer(careerId);
+  final nation = nations
+      .where((Nation n) => n.id == career.nationId)
+      .map((n) => n.name)
+      .firstOrNull;
+  if (nation == null) return empty;
+  final judged = await ref.watch(yJudgedProvider(careerId).future);
 
-      // What else the world knows about each of those results: who scored,
-      // what run the side was on, whether it was the neighbours. Without this
-      // every post is assembled from a scoreline and repeats within a season.
-      final comp = ref.watch(competitionRepositoryProvider);
-      final scorers = await comp.scorersByFixture(careerId, career.nationId);
-      final playerRepo = ref.watch(playerRepositoryProvider);
-      final aging = CareerService.agingYears(career);
+  // What else the world knows about each of those results: who scored,
+  // what run the side was on, whether it was the neighbours. Without this
+  // every post is assembled from a scoreline and repeats within a season.
+  final comp = ref.watch(competitionRepositoryProvider);
+  final scorers = await comp.scorersByFixture(careerId, career.nationId);
+  final playerRepo = ref.watch(playerRepositoryProvider);
+  final aging = CareerService.agingYears(career);
 
-      // What happened on the pitch, match by match: the sendings-off the
-      // press room can also see. Each belongs to the date it happened on, not
-      // to today, so it is read inside the walk below rather than hung on the
-      // newest result the way an injury is.
-      final incidents = await comp.incidentsByFixture(
-        careerId,
-        career.nationId,
+  // What happened on the pitch, match by match: the sendings-off the
+  // press room can also see. Each belongs to the date it happened on, not
+  // to today, so it is read inside the walk below rather than hung on the
+  // newest result the way an injury is.
+  final incidents = await comp.incidentsByFixture(
+    careerId,
+    career.nationId,
+  );
+
+  // And how each of those results GOT to its scoreline. The fixture row
+  // keeps only the end of the story, so without the goal minutes the feed
+  // cannot tell a comfortable win from a match that was two down at the
+  // break — which is the one afternoon the country talks about for years.
+  final timeline = await comp.goalTimeline(careerId);
+
+  // Oldest first, so a streak counts the matches BEFORE it.
+  final chronological = judged.reversed.toList();
+  final meetings = <String, int>{};
+  var wins = 0;
+  var losses = 0;
+  final contexts = <YContext>[];
+  final incidentPosts = <YPost>[];
+  final standingsSoFar = <ResultStanding>[];
+  // The same run with its dates, so a post dated before the newest result
+  // can be toned by what was known on its own day.
+  final datedStandings = <({DateTime date, ResultStanding standing})>[];
+  for (final j in chronological) {
+    final won = j.scored > j.conceded;
+    final lost = j.scored < j.conceded;
+    wins = won ? wins + 1 : 0;
+    losses = lost ? losses + 1 : 0;
+    final met = meetings.update(
+      j.opponent,
+      (v) => v + 1,
+      ifAbsent: () => 1,
+    );
+
+    // Who got them, if anybody got more than one goal's worth of credit.
+    String? scorerName;
+    int? scorerGoals;
+    final fixtureId = int.tryParse(j.key.replaceFirst('fx:', ''));
+    final byPlayer = fixtureId == null ? null : scorers[fixtureId];
+    if (byPlayer != null && byPlayer.isNotEmpty) {
+      final best = byPlayer.entries.reduce(
+        (a, b) => b.value > a.value ? b : a,
       );
+      final p = await playerRepo.byId(
+        best.key,
+        agingYears: aging,
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+      );
+      if (p != null) {
+        scorerName = p.name;
+        scorerGoals = best.value;
+      }
+    }
 
-      // And how each of those results GOT to its scoreline. The fixture row
-      // keeps only the end of the story, so without the goal minutes the feed
-      // cannot tell a comfortable win from a match that was two down at the
-      // break — which is the one afternoon the country talks about for years.
-      final timeline = await comp.goalTimeline(careerId);
+    final match = (
+      opponent: j.opponent,
+      nationRank: j.nationRank,
+      opponentRank: j.opponentRank,
+      scored: j.scored,
+      conceded: j.conceded,
+      date: j.date,
+      key: j.key,
+      competitive: j.competitive,
+      stakes: j.stakes,
+      shootoutWon: j.shootoutWon,
+      away: j.away,
+    );
 
-      // Oldest first, so a streak counts the matches BEFORE it.
-      final chronological = judged.reversed.toList();
-      final meetings = <String, int>{};
-      var wins = 0;
-      var losses = 0;
-      final contexts = <YContext>[];
-      final incidentPosts = <YPost>[];
-      final standingsSoFar = <ResultStanding>[];
-      // The same run with its dates, so a post dated before the newest result
-      // can be toned by what was known on its own day.
-      final datedStandings = <({DateTime date, ResultStanding standing})>[];
-      for (final j in chronological) {
-        final won = j.scored > j.conceded;
-        final lost = j.scored < j.conceded;
-        wins = won ? wins + 1 : 0;
-        losses = lost ? losses + 1 : 0;
-        final met = meetings.update(
-          j.opponent,
-          (v) => v + 1,
-          ifAbsent: () => 1,
-        );
-
-        // Who got them, if anybody got more than one goal's worth of credit.
-        String? scorerName;
-        int? scorerGoals;
-        final fixtureId = int.tryParse(j.key.replaceFirst('fx:', ''));
-        final byPlayer = fixtureId == null ? null : scorers[fixtureId];
-        if (byPlayer != null && byPlayer.isNotEmpty) {
-          final best = byPlayer.entries.reduce(
-            (a, b) => b.value > a.value ? b : a,
-          );
-          final p = await playerRepo.byId(
-            best.key,
-            agingYears: aging,
-            saveSeed: career.rngSeed,
-            careerId: career.id,
-          );
-          if (p != null) {
-            scorerName = p.name;
-            scorerGoals = best.value;
-          }
-        }
-
-        final match = (
-          opponent: j.opponent,
-          nationRank: j.nationRank,
-          opponentRank: j.opponentRank,
-          scored: j.scored,
-          conceded: j.conceded,
+    // One of ours walked. The cast reads it through the stance it held on
+    // the day, exactly as it reads a result — see [YFeed.forIncident].
+    final standing = YFeed.standingOf(match);
+    for (final i in incidents[fixtureId] ?? const <MatchIncident>[]) {
+      if (i.type != MatchEventType.redCard) continue;
+      final p = await playerRepo.byId(
+        i.playerId,
+        agingYears: aging,
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+      );
+      if (p == null) continue;
+      incidentPosts.addAll(
+        YFeed.forIncident(
+          incident: PressSubjectIncident(
+            type: i.type,
+            minute: i.minute,
+            playerId: i.playerId,
+            name: p.name,
+          ),
           date: j.date,
-          key: j.key,
-          competitive: j.competitive,
-          stakes: j.stakes,
-          shootoutWon: j.shootoutWon,
-          away: j.away,
-        );
-
-        // One of ours walked. The cast reads it through the stance it held on
-        // the day, exactly as it reads a result — see [YFeed.forIncident].
-        final standing = YFeed.standingOf(match);
-        for (final i in incidents[fixtureId] ?? const <MatchIncident>[]) {
-          if (i.type != MatchEventType.redCard) continue;
-          final p = await playerRepo.byId(
-            i.playerId,
-            agingYears: aging,
-            saveSeed: career.rngSeed,
-            careerId: career.id,
-          );
-          if (p == null) continue;
-          incidentPosts.addAll(
-            YFeed.forIncident(
-              incident: PressSubjectIncident(
-                type: i.type,
-                minute: i.minute,
-                playerId: i.playerId,
-                name: p.name,
-              ),
-              date: j.date,
-              key: 'red:${j.key}:${i.playerId}',
-              nation: nation,
-              seed: career.rngSeed,
-              standing: standing,
-              history: [...standingsSoFar],
-            ),
-          );
-        }
-        // An afternoon the second half turned over, either way. Competitive
-        // only, like the press room's version: a warm-up that swings two goals
-        // is not evidence and the country does not treat it as any.
-        final swing = fixtureId == null || !j.competitive
-            ? null
-            : halfTimeSwingOf(
-                goals: timeline[fixtureId] ?? const [],
-                nationId: career.nationId,
-                scored: j.scored,
-                conceded: j.conceded,
-              );
-        if (swing != null) {
-          incidentPosts.addAll(
-            YFeed.forSwing(
-              swing: swing,
-              opponent: j.opponent,
-              date: j.date,
-              key: 'swing:${j.key}',
-              nation: nation,
-              seed: career.rngSeed,
-              standing: standing,
-              history: [...standingsSoFar],
-            ),
-          );
-        }
-        standingsSoFar.add(standing);
-        datedStandings.add((date: j.date, standing: standing));
-
-        contexts.add((
-          match: match,
-          scorerName: scorerName,
-          scorerGoals: scorerGoals,
-          winStreak: wins,
-          lossStreak: losses,
-          // A fixture the two have played several times over is not just
-          // another game — the save's own history is what makes it a rivalry,
-          // rather than a list of grudges written in advance.
-          isRivalry: met >= rivalryMeetings,
-          // "Now" facts belong only to the newest match: hanging today's
-          // injuries on a post from three years ago would rewrite history.
-          injuredNames: const [],
-          boardMood: BoardSatisfaction.neutral,
-        ));
-      }
-
-      // The latest result is the one the world is still reacting to, so it is
-      // the one that carries the injuries and the board's patience.
-      if (contexts.isNotEmpty) {
-        final absences = await ref
-            .watch(absenceRepositoryProvider)
-            .forCareer(careerId);
-        final hurt = <String>[];
-        for (final a in absences.values) {
-          if (a.injuryMatches <= 0) continue;
-          final p = await playerRepo.byId(
-            a.playerId,
-            agingYears: aging,
-            saveSeed: career.rngSeed,
-            careerId: career.id,
-          );
-          if (p != null) hurt.add(p.name);
-        }
-        final last = contexts.last;
-        contexts[contexts.length - 1] = (
-          match: last.match,
-          scorerName: last.scorerName,
-          scorerGoals: last.scorerGoals,
-          winStreak: last.winStreak,
-          lossStreak: last.lossStreak,
-          isRivalry: last.isRivalry,
-          injuredNames: hurt,
-          boardMood: await ref.watch(satisfactionProvider(careerId).future),
-        );
-      }
-
-      // The tournaments, read once: they are posts of their own (below) and
-      // part of what the stands feel about the side (see [FanMood]).
-      final milestones = await ref.watch(
-        yMilestonesProvider(careerId).future,
-      );
-      final since = (await currentSpell(
-        ref.watch(careerRepositoryProvider),
-        career,
-      )).since;
-      final posts = YFeed.forRun(
-        contexts,
-        nation: nation,
-        seed: career.rngSeed,
-        fanEvents: fanEventsOf(milestones),
-        manager: career.managerName,
-        managerSince: since,
-        homeKeys: {
-          for (final j in judged)
-            if (j.home) j.key,
-        },
-        familyFirst: familyFirstLanguages.contains(
-          ref.watch(uiLanguageCodeProvider),
+          key: 'red:${j.key}:${i.playerId}',
+          nation: nation,
+          seed: career.rngSeed,
+          standing: standing,
+          history: [...standingsSoFar],
         ),
-      )..addAll(incidentPosts);
-      // The one post drawn from a match that has NOT been played. Every other
-      // shape on the feed reacts to a result, so the biggest game of a cycle
-      // used to arrive in silence and the reaction to it landed before any
-      // anticipation of it — the wrong way round for the game everybody is
-      // waiting for.
-      final upcoming =
-          (await ref
-                  .watch(competitionRepositoryProvider)
-                  .fixturesForNation(careerId, career.nationId))
-              .where((f) => !f.hasResult && f.round != null)
-              .where((f) => YFeed.hypeRounds.contains(f.round))
-              .toList()
-            ..sort((a, b) => a.date.compareTo(b.date));
-      if (upcoming.isNotEmpty) {
-        final next = upcoming.first;
-        final opponentId = next.homeNationId == career.nationId
-            ? next.awayNationId
-            : next.homeNationId;
-        final opponent = nations
-            .where((n) => n.id == opponentId)
-            .map((n) => n.name)
-            .firstOrNull;
-        if (opponent != null) {
-          posts.addAll(
-            YFeed.forUpcoming(
-              round: next.round!,
-              opponent: opponent,
-              date: next.date,
-              nation: nation,
-              seed: career.rngSeed,
-            ),
+      );
+    }
+    // An afternoon the second half turned over, either way. Competitive
+    // only, like the press room's version: a warm-up that swings two goals
+    // is not evidence and the country does not treat it as any.
+    final swing = fixtureId == null || !j.competitive
+        ? null
+        : halfTimeSwingOf(
+            goals: timeline[fixtureId] ?? const [],
+            nationId: career.nationId,
+            scored: j.scored,
+            conceded: j.conceded,
           );
-        }
-      }
+    if (swing != null) {
+      incidentPosts.addAll(
+        YFeed.forSwing(
+          swing: swing,
+          opponent: j.opponent,
+          date: j.date,
+          key: 'swing:${j.key}',
+          nation: nation,
+          seed: career.rngSeed,
+          standing: standing,
+          history: [...standingsSoFar],
+        ),
+      );
+    }
+    standingsSoFar.add(standing);
+    datedStandings.add((date: j.date, standing: standing));
 
-      // The tournaments themselves. Every post above reacts to a SCORELINE,
-      // which left the biggest things that happen to a nation — lifting the
-      // trophy, going out, booking the place at all — passing without a word:
-      // `YFeed.forEvent` had full copy in both languages, its own tests, and
-      // not one caller anywhere in the app.
+    contexts.add((
+      match: match,
+      scorerName: scorerName,
+      scorerGoals: scorerGoals,
+      winStreak: wins,
+      lossStreak: losses,
+      // A fixture the two have played several times over is not just
+      // another game — the save's own history is what makes it a rivalry,
+      // rather than a list of grudges written in advance.
+      isRivalry: met >= rivalryMeetings,
+      // "Now" facts belong only to the newest match: hanging today's
+      // injuries on a post from three years ago would rewrite history.
+      injuredNames: const [],
+      boardMood: BoardSatisfaction.neutral,
+    ));
+  }
+
+  // The latest result is the one the world is still reacting to, so it is
+  // the one that carries the injuries and the board's patience.
+  if (contexts.isNotEmpty) {
+    final absences = await ref
+        .watch(absenceRepositoryProvider)
+        .forCareer(careerId);
+    final hurt = <String>[];
+    for (final a in absences.values) {
+      if (a.injuryMatches <= 0) continue;
+      final p = await playerRepo.byId(
+        a.playerId,
+        agingYears: aging,
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+      );
+      if (p != null) hurt.add(p.name);
+    }
+    final last = contexts.last;
+    contexts[contexts.length - 1] = (
+      match: last.match,
+      scorerName: last.scorerName,
+      scorerGoals: last.scorerGoals,
+      winStreak: last.winStreak,
+      lossStreak: last.lossStreak,
+      isRivalry: last.isRivalry,
+      injuredNames: hurt,
+      boardMood: await ref.watch(satisfactionProvider(careerId).future),
+    );
+  }
+
+  // The tournaments, read once: they are posts of their own (below) and
+  // part of what the stands feel about the side (see [FanMood]).
+  final milestones = await ref.watch(
+    yMilestonesProvider(careerId).future,
+  );
+  final since = (await currentSpell(
+    ref.watch(careerRepositoryProvider),
+    career,
+  )).since;
+  final posts = YFeed.forRun(
+    contexts,
+    nation: nation,
+    seed: career.rngSeed,
+    fanEvents: fanEventsOf(milestones),
+    manager: career.managerName,
+    managerSince: since,
+    homeKeys: {
+      for (final j in judged)
+        if (j.home) j.key,
+    },
+    familyFirst: familyFirstLanguages.contains(
+      ref.watch(uiLanguageCodeProvider),
+    ),
+  )..addAll(incidentPosts);
+  // The one post drawn from a match that has NOT been played. Every other
+  // shape on the feed reacts to a result, so the biggest game of a cycle
+  // used to arrive in silence and the reaction to it landed before any
+  // anticipation of it — the wrong way round for the game everybody is
+  // waiting for.
+  final upcoming =
+      (await ref
+              .watch(competitionRepositoryProvider)
+              .fixturesForNation(careerId, career.nationId))
+          .where((f) => !f.hasResult && f.round != null)
+          .where((f) => YFeed.hypeRounds.contains(f.round))
+          .toList()
+        ..sort((a, b) => a.date.compareTo(b.date));
+  if (upcoming.isNotEmpty) {
+    final next = upcoming.first;
+    final opponentId = next.homeNationId == career.nationId
+        ? next.awayNationId
+        : next.homeNationId;
+    final opponent = nations
+        .where((n) => n.id == opponentId)
+        .map((n) => n.name)
+        .firstOrNull;
+    if (opponent != null) {
       posts.addAll(
-        _tournamentPosts(
-          milestones,
+        YFeed.forUpcoming(
+          round: next.round!,
+          opponent: opponent,
+          date: next.date,
           nation: nation,
           seed: career.rngSeed,
         ),
       );
+    }
+  }
 
-      // And anybody left to stew says so in public — the thing he could not get
-      // said in the manager's office.
-      for (final g in await ref.watch(grievanceProvider(careerId).future)) {
-        posts.addAll(
-          YFeed.forGrievance(
-            playerName: g.playerName,
-            date: career.inGameDate,
-            key: g.key,
-            nation: nation,
-            seed: career.rngSeed,
-          ),
-        );
-      }
+  // The tournaments themselves. Every post above reacts to a SCORELINE,
+  // which left the biggest things that happen to a nation — lifting the
+  // trophy, going out, booking the place at all — passing without a word:
+  // `YFeed.forEvent` had full copy in both languages, its own tests, and
+  // not one caller anywhere in the app.
+  posts.addAll(
+    _tournamentPosts(
+      milestones,
+      nation: nation,
+      seed: career.rngSeed,
+      judged: judged,
+      fixtures: await ref
+          .watch(competitionRepositoryProvider)
+          .fixturesForNation(careerId, career.nationId),
+      dated: datedStandings,
+    ),
+  );
 
-      // One of ours announcing his international retirement: the country
-      // says goodbye (or that it was a tournament too late). Dated the day he
-      // announced it, so it sits among the reports of the finals it followed.
-      final retirements = await ref.watch(
-        intlRetirementsProvider(careerId).future,
-      );
-      // Filtered on the marker alone before any player is resolved: the map
-      // holds the whole world's retirees, and only a handful are ours and
-      // worth a farewell. Recent waves only, like the rest of the feed.
-      final nowYears = CareerService.agingYears(career);
-      for (final r in retirements.values) {
-        final on = r.retiredOn;
-        if (on == null || on.isAfter(career.inGameDate)) continue;
-        if (r.nationId != career.nationId || !r.notable) continue;
-        if (nowYears - r.retiredAging > 4) continue;
-        final p = await ref
-            .watch(playerRepositoryProvider)
-            .byId(
-              r.playerId,
-              agingYears: CareerService.agingYears(career),
-              saveSeed: career.rngSeed,
-              careerId: careerId,
-            );
-        if (p == null || p.nationId != career.nationId) continue;
-        posts.addAll(
-          YFeed.forEvent(
-            template: YTemplate.legendRetires,
-            args: [p.name],
-            date: on,
-            key: 'intlRet:${r.playerId}',
-            nation: nation,
-            seed: career.rngSeed,
-          ),
-        );
-      }
+  // The pundits' call before a finals, as the inbox piece made it: the
+  // call is in the piece's key, so no squad is weighed twice.
+  final nameOf = {for (final n in nations) n.id: n.name};
+  for (final key
+      in await ref.watch(competitionRepositoryProvider).messageKeys(careerId)) {
+    final call = PunditPredictions.decodeKey(key);
+    if (call == null) continue;
+    final conf = Confederation.values
+        .where((c) => c.name == call.region)
+        .firstOrNull;
+    final competition = conf == null
+        ? 'World Championship'
+        : ContinentalCups.byConfederation[conf]?.name;
+    final favourite = nameOf[call.favourite];
+    final darkHorse = nameOf[call.darkHorse];
+    if (competition == null || favourite == null || darkHorse == null) {
+      continue;
+    }
+    posts.addAll(
+      YFeed.forPundits(
+        competition: competition,
+        favourite: favourite,
+        darkHorse: darkHorse,
+        date: call.date,
+        key: key,
+        nation: nation,
+        seed: career.rngSeed,
+        history: YFeed.standingsAsOf(datedStandings, call.date),
+      ),
+    );
+  }
 
-      // WHO is in the squad, and who they are playing next. The same two
-      // readings the conference is built on — see [squadStoriesProvider] —
-      // so the room and the country are talking about one week rather than
-      // two. Dated today, like a grievance: a selection is a thing that is
-      // true now, not a thing that happened on an afternoon.
-      final mood = standingsSoFar.isEmpty
-          ? ResultStanding.par
-          : standingsSoFar.last;
-      for (final s in await ref.watch(squadStoriesProvider(careerId).future)) {
-        posts.addAll(
-          YFeed.forPlayer(
-            topic: s.topic,
-            subject: PressSubjectPlayer(
-              playerId: s.playerId,
-              name: s.name,
-              count: s.count,
-            ),
-            date: career.inGameDate,
-            // ':' and never '|': the detail view groups a conversation by the
-            // part before the FIRST pipe.
-            key: '${s.topic.name}:${s.playerId}:${s.count}',
-            nation: nation,
-            seed: career.rngSeed,
-            standing: mood,
-            history: standingsSoFar,
-          ),
-        );
-      }
-      for (final s in await ref.watch(
-        opponentStoriesProvider(careerId).future,
-      )) {
-        final them = nations
-            .where((n) => n.id == s.nationId)
-            .map((n) => n.name)
-            .firstOrNull;
-        if (them == null) continue;
-        posts.addAll(
-          YFeed.forOpponent(
-            topic: s.topic,
-            subject: PressSubjectOpponent(
-              s.nationId,
-              count: s.count,
-              favourable: s.favourable,
-            ),
-            opponent: them,
-            date: career.inGameDate,
-            key: '${s.topic.name}:${s.nationId}:${s.count}',
-            nation: nation,
-            seed: career.rngSeed,
-            standing: mood,
-            history: standingsSoFar,
-          ),
-        );
-      }
+  // And anybody left to stew says so in public — the thing he could not get
+  // said in the manager's office.
+  for (final g in await ref.watch(grievanceProvider(careerId).future)) {
+    posts.addAll(
+      YFeed.forGrievance(
+        playerName: g.playerName,
+        date: career.inGameDate,
+        key: g.key,
+        nation: nation,
+        seed: career.rngSeed,
+      ),
+    );
+  }
 
-      // And what he said on the record, once it has been judged. Dated the
-      // day it was settled, so it sits next to the match that decided it.
-      for (final s in await ref.watch(
-        pressStatementsProvider(careerId).future,
-      )) {
-        // A statement from a previous job is not posted under the new nation.
-        if (s.nationId != career.nationId) continue;
-        final judgedOn = s.judgedOn;
-        if (judgedOn == null) continue;
-        // Toned by the run as it stood the day it was judged, never by today's:
-        // an older post says now what it said then.
-        final then = YFeed.standingsAsOf(datedStandings, judgedOn);
-        posts.addAll(
-          YFeed.forStatement(
-            s: s,
-            nation: nation,
-            seed: career.rngSeed,
-            standing: then.isEmpty ? ResultStanding.par : then.last,
-            history: then,
-          ),
+  // One of ours announcing his international retirement: the country
+  // says goodbye (or that it was a tournament too late). Dated the day he
+  // announced it, so it sits among the reports of the finals it followed.
+  final retirements = await ref.watch(
+    intlRetirementsProvider(careerId).future,
+  );
+  // Filtered on the marker alone before any player is resolved: the map
+  // holds the whole world's retirees, and only a handful are ours and
+  // worth a farewell. Recent waves only, like the rest of the feed.
+  final nowYears = CareerService.agingYears(career);
+  for (final r in retirements.values) {
+    final on = r.retiredOn;
+    if (on == null || on.isAfter(career.inGameDate)) continue;
+    if (r.nationId != career.nationId || !r.notable) continue;
+    if (nowYears - r.retiredAging > 4) continue;
+    final p = await ref
+        .watch(playerRepositoryProvider)
+        .byId(
+          r.playerId,
+          agingYears: CareerService.agingYears(career),
+          saveSeed: career.rngSeed,
+          careerId: careerId,
         );
-      }
+    if (p == null || p.nationId != career.nationId) continue;
+    posts.addAll(
+      YFeed.forEvent(
+        template: YTemplate.legendRetires,
+        args: [p.name],
+        date: on,
+        key: 'intlRet:${r.playerId}',
+        nation: nation,
+        seed: career.rngSeed,
+      ),
+    );
+  }
 
-      // A camp scandal: the story when it breaks, and the room on what the
-      // manager did about it. A Czech feed has its cameos under it too.
-      final czech = ref.watch(uiLanguageCodeProvider) == 'cs';
-      final familyFirst = familyFirstLanguages.contains(
-        ref.watch(uiLanguageCodeProvider),
-      );
-      final scandals = <({CampScandalRecord? record, PendingScandal? pending})>[
-        for (final r in await ref.watch(campScandalsProvider(careerId).future))
-          (record: r, pending: null),
-        if (await ref.watch(pendingScandalProvider(careerId).future)
-            case final p?)
-          (record: null, pending: p),
-      ];
-      for (final s in scandals) {
-        final record = s.record;
-        final pending = s.pending;
-        final cycle = record?.cycle ?? pending!.cycle;
-        final playerId = record?.playerId ?? pending!.playerId;
-        final window = record?.window ?? pending!.window;
-        // A scandal from a previous job is not posted under the new nation,
-        // like a statement (above). A job only changes as a cycle turns, so
-        // the spell's first day is the line.
-        if (window.isBefore(since)) continue;
-        final name =
-            pending?.playerName ??
-            (await playerRepo.byId(
-              playerId,
-              agingYears: aging,
-              saveSeed: career.rngSeed,
-              careerId: career.id,
-            ))?.name;
-        if (name == null) continue;
-        final on = CampScandal.brokeOn(window);
-        final then = YFeed.standingsAsOf(datedStandings, on);
-        posts.addAll(
-          YFeed.forScandal(
-            kind: record?.kind ?? pending!.kind,
-            playerName: name,
-            choice: record?.choice,
-            date: on,
-            key: CampScandal.pressKeyOf(cycle, playerId),
-            nation: nation,
-            seed: career.rngSeed,
-            czechCameos: czech,
-            familyFirst: familyFirst,
-            standing: then.isEmpty ? ResultStanding.par : then.last,
-            history: then,
-          ),
-        );
-      }
+  // WHO is in the squad, and who they are playing next. The same two
+  // readings the conference is built on — see [squadStoriesProvider] —
+  // so the room and the country are talking about one week rather than
+  // two. Dated today, like a grievance: a selection is a thing that is
+  // true now, not a thing that happened on an afternoon.
+  final mood = standingsSoFar.isEmpty
+      ? ResultStanding.par
+      : standingsSoFar.last;
+  for (final s in await ref.watch(squadStoriesProvider(careerId).future)) {
+    posts.addAll(
+      YFeed.forPlayer(
+        topic: s.topic,
+        subject: PressSubjectPlayer(
+          playerId: s.playerId,
+          name: s.name,
+          count: s.count,
+        ),
+        date: career.inGameDate,
+        // ':' and never '|': the detail view groups a conversation by the
+        // part before the FIRST pipe.
+        key: '${s.topic.name}:${s.playerId}:${s.count}',
+        nation: nation,
+        seed: career.rngSeed,
+        standing: mood,
+        history: standingsSoFar,
+      ),
+    );
+  }
+  for (final s in await ref.watch(
+    opponentStoriesProvider(careerId).future,
+  )) {
+    final them = nations
+        .where((n) => n.id == s.nationId)
+        .map((n) => n.name)
+        .firstOrNull;
+    if (them == null) continue;
+    posts.addAll(
+      YFeed.forOpponent(
+        topic: s.topic,
+        subject: PressSubjectOpponent(
+          s.nationId,
+          count: s.count,
+          favourable: s.favourable,
+        ),
+        opponent: them,
+        date: career.inGameDate,
+        key: '${s.topic.name}:${s.nationId}:${s.count}',
+        nation: nation,
+        seed: career.rngSeed,
+        standing: mood,
+        history: standingsSoFar,
+      ),
+    );
+  }
 
-      // Ivan Havíř, Czech feed only, rarely: under the big disappointments
-      // and on his own when a qualifying campaign came up short.
-      final all = YFeed.withHavir(
-        posts,
+  // And what he said on the record, once it has been judged. Dated the
+  // day it was settled, so it sits next to the match that decided it.
+  for (final s in await ref.watch(
+    pressStatementsProvider(careerId).future,
+  )) {
+    // A statement from a previous job is not posted under the new nation.
+    if (s.nationId != career.nationId) continue;
+    final judgedOn = s.judgedOn;
+    if (judgedOn == null) continue;
+    // Toned by the run as it stood the day it was judged, never by today's:
+    // an older post says now what it said then.
+    final then = YFeed.standingsAsOf(datedStandings, judgedOn);
+    posts.addAll(
+      YFeed.forStatement(
+        s: s,
+        nation: nation,
+        seed: career.rngSeed,
+        standing: then.isEmpty ? ResultStanding.par : then.last,
+        history: then,
+      ),
+    );
+  }
+
+  // A camp scandal: the story when it breaks, and the room on what the
+  // manager did about it. A Czech feed has its cameos under it too.
+  final czech = ref.watch(uiLanguageCodeProvider) == 'cs';
+  final familyFirst = familyFirstLanguages.contains(
+    ref.watch(uiLanguageCodeProvider),
+  );
+  final scandals = <({CampScandalRecord? record, PendingScandal? pending})>[
+    for (final r in await ref.watch(campScandalsProvider(careerId).future))
+      (record: r, pending: null),
+    if (await ref.watch(pendingScandalProvider(careerId).future) case final p?)
+      (record: null, pending: p),
+  ];
+  for (final s in scandals) {
+    final record = s.record;
+    final pending = s.pending;
+    final cycle = record?.cycle ?? pending!.cycle;
+    final playerId = record?.playerId ?? pending!.playerId;
+    final window = record?.window ?? pending!.window;
+    // A scandal from a previous job is not posted under the new nation,
+    // like a statement (above). A job only changes as a cycle turns, so
+    // the spell's first day is the line.
+    if (window.isBefore(since)) continue;
+    final name =
+        pending?.playerName ??
+        (await playerRepo.byId(
+          playerId,
+          agingYears: aging,
+          saveSeed: career.rngSeed,
+          careerId: career.id,
+        ))?.name;
+    if (name == null) continue;
+    final on = CampScandal.brokeOn(window);
+    final then = YFeed.standingsAsOf(datedStandings, on);
+    posts.addAll(
+      YFeed.forScandal(
+        kind: record?.kind ?? pending!.kind,
+        playerName: name,
+        choice: record?.choice,
+        date: on,
+        key: CampScandal.pressKeyOf(cycle, playerId),
+        nation: nation,
+        seed: career.rngSeed,
         czechCameos: czech,
-        // Read only for a Czech feed, and only what a miss is read off:
-        // this cycle's campaigns and the group stages of the two finals they
-        // feed. Never the career's every fixture, which grows without end.
-        misses: czech ? await _cycleMisses(ref, career, nations) : const [],
-      );
+        familyFirst: familyFirst,
+        standing: then.isEmpty ? ResultStanding.par : then.last,
+        history: then,
+      ),
+    );
+  }
 
-      // Ordering, the cap and the reserve live in the tested pure layer.
-      return YFeed.timeline(all);
-    });
+  // A dubious general sponsor (see `Sponsors`): the story the day it was
+  // signed, and the room laughing under it. Read off the press row the deal
+  // left, which carries the brand and the day; only this job's.
+  final words = ref.watch(appLocalizationsProvider);
+  for (final a in await ref
+      .watch(careerRepositoryProvider)
+      .pressAnswers(careerId)) {
+    final brand = Sponsors.brandOfPressKey(a.questionKey);
+    if (brand == null || !brand.risky) continue;
+    if (a.answeredAt.isBefore(since)) continue;
+    final then = YFeed.standingsAsOf(datedStandings, a.answeredAt);
+    posts.addAll(
+      YFeed.forSponsor(
+        brand: sponsorBrandName(words, brand),
+        date: a.answeredAt,
+        key: a.questionKey,
+        nation: nation,
+        seed: career.rngSeed,
+        standing: then.isEmpty ? ResultStanding.par : then.last,
+        history: then,
+      ),
+    );
+  }
+
+  // Ivan Havíř, Czech feed only, rarely: under the big disappointments
+  // and on his own when a qualifying campaign came up short.
+  final all = YFeed.withHavir(
+    posts,
+    czechCameos: czech,
+    // Read only for a Czech feed, and only what a miss is read off:
+    // this cycle's campaigns and the group stages of the two finals they
+    // feed. Never the career's every fixture, which grows without end.
+    misses: czech ? await _cycleMisses(ref, career, nations) : const [],
+  );
+
+  // Mařena, KudyChodíKrálík and POŠUK under the results, Czech feed only.
+  final withRegulars = YFeed.withRegulars(all, czechCameos: czech);
+
+  // The nation's own supporters, under the side's results and big moments,
+  // in every language (see [YLocals]).
+  final withLocals = YLocals.withLocals(
+    withRegulars,
+    cast: await _localFans(ref, career),
+    seed: career.rngSeed,
+    dated: datedStandings,
+  );
+
+  // Ordering, the cap and the reserve live in the tested pure layer.
+  return YFeed.timeline(withLocals);
+});
+
+/// The manager's nation's local fans (see [YLocals.castFor]): named from the
+/// nation's own lists, ordinary given names first, and never a real
+/// international, a player in the nation's current pool or the manager.
+Future<List<YPersona>> _localFans(Ref ref, Career career) async {
+  final lists = (await ref
+      .watch(seedSourceProvider)
+      .nameLists())[career.nationId];
+  if (lists == null) return const [];
+  final squad = await ref.watch(squadDataProvider(career.id).future);
+  return YLocals.castFor(
+    pool: YLocals.poolFrom(
+      first: lists.first,
+      firstMore: lists.firstMore,
+      sur: lists.sur,
+      surMore: lists.surMore,
+    ),
+    nation: '${career.nationId}',
+    seed: career.rngSeed,
+    avoid: {
+      ...realInternationalNames,
+      for (final p in squad?.pool ?? const <Player>[]) p.name,
+      career.managerName,
+    },
+  );
+}
 
 /// How many posts the manager has not seen.
 ///
@@ -675,21 +787,60 @@ final AutoDisposeFutureProviderFamily<int, int> publicMoodProvider =
 /// carries a REAL date and sorts among the match reports where it belongs. The
 /// reading of those fixtures lives in [YTournaments], where it can be asked
 /// about every competition the game runs without simulating a career first.
+///
+/// Whether a place booked came against the odds, and an exit broke hearts, is
+/// read off the campaign's own meetings ([judged], the cycle's frozen ranks;
+/// [fixtures] tie each to its competition), so the fans lose their minds
+/// only when the moment deserves it (see [YFeed.forMilestone]).
 List<YPost> _tournamentPosts(
   List<YMilestone> milestones, {
   required String nation,
   required int seed,
+  required List<YJudged> judged,
+  required List<Fixture> fixtures,
+  required List<({DateTime date, ResultStanding standing})> dated,
 }) {
+  final byId = {for (final f in fixtures) f.id: f};
+  // The nation's played meetings in competition [id], oldest first.
+  List<(Fixture, YJudged)> meetingsIn(int id) => [
+    for (final j in judged.reversed)
+      if (byId[int.tryParse(j.key.replaceFirst('fx:', ''))] case final f?
+          when f.competitionId == id)
+        (f, j),
+  ];
+  // The competition a milestone's key names: 'qual:<id>' or 'out:cmp:<id>'.
+  int? competitionOf(String key) => int.tryParse(key.split(':').last);
   return [
     for (final m in milestones)
-      ...YFeed.forEvent(
-        template: m.template,
-        args: m.args,
-        date: m.date,
-        key: m.key,
-        nation: nation,
-        seed: seed,
-      ),
+      ...() {
+        final id = competitionOf(m.key);
+        final meetings = id == null
+            ? const <(Fixture, YJudged)>[]
+            : meetingsIn(id);
+        final last = meetings.lastOrNull;
+        final ranks = [for (final (_, j) in meetings) j.opponentRank];
+        return YFeed.forMilestone(
+          m,
+          nation: nation,
+          seed: seed,
+          againstTheOdds:
+              m.template == YTemplate.qualified &&
+              last != null &&
+              YTournaments.qualifiedAgainstTheOdds(
+                nationRank: last.$2.nationRank,
+                opponentRanks: ranks,
+              ),
+          painful:
+              m.template == YTemplate.eliminated &&
+              last != null &&
+              YTournaments.painfulExit(
+                exitRound: YTournaments.coreRound(last.$1.round),
+                nationRank: last.$2.nationRank,
+                opponentRanks: ranks,
+              ),
+          history: YFeed.standingsAsOf(dated, m.date),
+        );
+      }(),
   ];
 }
 

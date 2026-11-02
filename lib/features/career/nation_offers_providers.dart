@@ -1,8 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
@@ -17,6 +20,44 @@ import 'package:fnm/features/federation/national_stadium_providers.dart'
     show stadiumWorks;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
+
+/// How many smaller nations from other continents join the offers at the end
+/// of a cycle, on top of the three read off the manager's standing.
+const int smallerOffers = 2;
+
+/// [smallerOffers] nations well below the job at [currentPos] (half as far
+/// down again, and at least fifteen places), each from a continent of its
+/// own and none from [ownConfederation]. [ordered] is the world ranking,
+/// strongest first; [used] holds the nations already on the table, and the
+/// picks are added to it.
+List<NationOffer> smallerNationOffers({
+  required List<Nation> ordered,
+  required int currentPos,
+  required Set<int> used,
+  required Confederation? ownConfederation,
+  required SeededRng rng,
+}) {
+  final confs = <Confederation?>{ownConfederation};
+  final out = <NationOffer>[];
+  final below = math.max(currentPos * 1.5, currentPos + 15);
+  for (final pos in rng.shuffled([
+    for (var p = 1; p <= ordered.length; p++)
+      if (p > below && !used.contains(ordered[p - 1].id)) p,
+  ])) {
+    if (out.length == smallerOffers) break;
+    final n = ordered[pos - 1];
+    if (!confs.add(n.confederation)) continue;
+    used.add(n.id);
+    out.add(
+      NationOffer(
+        nation: n,
+        position: pos,
+        tier: offerTierFor(offered: pos, current: currentPos),
+      ),
+    );
+  }
+  return out;
+}
 
 /// One job offer a manager can accept between cycles.
 class NationOffer {
@@ -215,6 +256,18 @@ rolloverVerdictProvider = FutureProvider.autoDispose.family<RolloverVerdict?, in
       ),
     );
   }
+  // And a couple of smaller nations from other continents: the project job
+  // a manager might fancy whatever his record, so he never has to lose on
+  // purpose to be offered one.
+  offers.addAll(
+    smallerNationOffers(
+      ordered: ordered,
+      currentPos: currentPos,
+      used: used,
+      ownConfederation: currentNation?.confederation,
+      rng: rng,
+    ),
+  );
   offers.sort((a, b) => a.position.compareTo(b.position));
 
   final best = _bestResult(summary, career.cyclePointer);

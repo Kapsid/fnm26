@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/core/routing/app_router.dart';
-import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -189,7 +188,7 @@ void main() {
     expect(router.state.uri.queryParameters['b'], '${other.id}');
   });
 
-  testWidgets('the now block names confederation, form, competition, overall', (
+  testWidgets('the now block names form, competition, overall', (
     tester,
   ) async {
     late Fixture next;
@@ -245,10 +244,8 @@ void main() {
         child: NationView(careerId: save.careerId, nationId: other.id),
       ),
     );
-    expect(
-      find.text(confederationLabel(enL, Confederation.europe)),
-      findsWidgets,
-    );
+    // The confederation is named in the header (on its line with the
+    // YOUR TEAM sticker), no longer repeated on the ranking row (1.0.9).
     expect(find.textContaining('3-1'), findsOneWidget);
     expect(find.text(MatchStage.label(enL, next)), findsOneWidget);
     expect(find.text(enL.nationNowOverall(83)), findsOneWidget);

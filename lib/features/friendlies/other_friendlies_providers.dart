@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/competition/warm_ups.dart';
 import 'package:fnm/domain/services/competition/window_friendlies.dart';
+import 'package:fnm/features/friendlies/warm_up_providers.dart';
 
 export 'package:fnm/domain/services/competition/window_friendlies.dart'
     show FriendlyResult;
@@ -52,6 +54,27 @@ otherFriendliesProvider = FutureProvider.autoDispose
       final nations = await ref
           .watch(nationRepositoryProvider)
           .forCareer(careerId);
+
+      // A finals warm-up (see [WarmUps]): the other sides playing send-offs
+      // that week are the tournament's own field, not the free nations of a
+      // window, who are all busy with nothing at all.
+      final byId = {for (final n in nations) n.id: n};
+      for (final finals in await upcomingWarmUpFinals(comp, career, byId)) {
+        if (!WarmUps.isWarmUpFor(last.date, finals.opener)) continue;
+        final field = {for (final g in finals.groups) ...g};
+        return WindowFriendlies.generate(
+          nations: [
+            for (final n in nations)
+              if (field.contains(n.id)) n,
+          ],
+          busyIds: {career.nationId, opponentId},
+          seed: career.rngSeed,
+          // Keyed by the day: two warm-ups share a month.
+          windowKey:
+              last.date.year * 400 + last.date.month * 32 + last.date.day,
+        );
+      }
+
       return WindowFriendlies.generate(
         nations: nations,
         busyIds: busy,

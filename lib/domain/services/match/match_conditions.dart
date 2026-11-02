@@ -459,6 +459,11 @@ abstract final class MatchClimate {
     207: ClimateBand.tropical, 208: ClimateBand.tropical,
     209: ClimateBand.tropical, 210: ClimateBand.tropical,
     211: ClimateBand.tropical, 212: ClimateBand.nordic,
+    // Zanzibar (dormant), in Chad's place: the islands' monsoon heat.
+    213: ClimateBand.tropical,
+    // Belarus (dormant, in new careers from 1.0.9): cold winters, warm
+    // summers.
+    6: ClimateBand.continental,
   };
 
   /// The cities of a big host whose climate is not the country's.

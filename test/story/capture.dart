@@ -36,8 +36,15 @@ Future<void> loadMaterialIcons() async {
   )..addFont(Future.value(ByteData.sublistView(bytes)))).load();
   // What iOS falls back to for glyphs the app's own faces lack (the draw's
   // tick marks): the test engine has no system fallback of its own.
+  // The website shots also need the faces iOS falls back to for Japanese,
+  // Korean, Thai and Devanagari (Hanken Grotesk and SF carry none of them).
   for (final (family, path) in const [
     ('StorySF', '/System/Library/Fonts/SFNS.ttf'),
+    ('StoryJP', '/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc'),
+    ('StoryJP', '/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc'),
+    ('StoryKR', '/System/Library/Fonts/AppleSDGothicNeo.ttc'),
+    ('StoryTH', '/System/Library/Fonts/ThonburiUI.ttc'),
+    ('StoryHI', '/System/Library/Fonts/Kohinoor.ttc'),
     ('StorySymbols', '/System/Library/Fonts/Apple Symbols.ttf'),
   ]) {
     final f = File(path);
@@ -49,13 +56,57 @@ Future<void> loadMaterialIcons() async {
   }
 }
 
-const List<String> _fallback = ['StorySF', 'StorySymbols'];
+const List<String> _fallback = [
+  'StorySF',
+  'StoryJP',
+  'StoryKR',
+  'StoryTH',
+  'StoryHI',
+  'StorySymbols',
+];
 
+TextStyle? _fb(TextStyle? s) => s?.copyWith(fontFamilyFallback: _fallback);
+
+ButtonStyle? _fbButton(ButtonStyle? b) => b?.copyWith(
+  textStyle: b.textStyle == null
+      ? null
+      : WidgetStateProperty.resolveWith(
+          (states) => _fb(b.textStyle!.resolve(states)),
+        ),
+);
+
+/// The app theme with the fallback faces on every style that REPLACES the
+/// ambient text style rather than merging into it (app bar titles, button
+/// labels, dialogs): those would otherwise draw missing glyphs as boxes in
+/// the test engine, which has no system fallback.
 ThemeData get storyTheme {
   final t = AppTheme.theme;
   return t.copyWith(
     textTheme: t.textTheme.apply(fontFamilyFallback: _fallback),
     primaryTextTheme: t.primaryTextTheme.apply(fontFamilyFallback: _fallback),
+    appBarTheme: t.appBarTheme.copyWith(
+      titleTextStyle: _fb(t.appBarTheme.titleTextStyle),
+      toolbarTextStyle: _fb(t.appBarTheme.toolbarTextStyle),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: _fbButton(t.filledButtonTheme.style),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: _fbButton(t.elevatedButtonTheme.style),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: _fbButton(t.outlinedButtonTheme.style),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: _fbButton(t.textButtonTheme.style),
+    ),
+    dialogTheme: t.dialogTheme.copyWith(
+      titleTextStyle: _fb(t.dialogTheme.titleTextStyle),
+      contentTextStyle: _fb(t.dialogTheme.contentTextStyle),
+    ),
+    snackBarTheme: t.snackBarTheme.copyWith(
+      contentTextStyle: _fb(t.snackBarTheme.contentTextStyle),
+    ),
   );
 }
 

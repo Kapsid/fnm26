@@ -145,6 +145,10 @@ Future<SeededSave> seedSave(
                   // current host rules (see `HostBidding.rulesKind`, and
                   // host_rules_test.dart for the rules themselves).
                   currentHostRules: false,
+                  // And its nations as they were before 1.0.9 brought
+                  // Belarus into new careers (see
+                  // `DormantNations.forNewCareers`).
+                  newCareerNations: false,
                 ))
             .valueOrNull!;
     await container.read(messageInboxProvider(career.id).future);

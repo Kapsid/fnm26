@@ -10,35 +10,49 @@
      ErrorDocument in each language folder's .htaccess, which is a dotfile in a subfolder on an
      FTP host. Every path below is root-relative on purpose, because Apache
      serves this file at whatever URL was missed and a relative href would
-     resolve against that URL instead of the site root. -->
+     resolve against that URL instead of the site root. With 28 languages the
+     other 27 are one compact line each (own name, the sentence, a home link). -->
 <link rel="icon" href="/icon.png">
-<link rel="stylesheet" href="/_style.css?v=15">
+<link rel="stylesheet" href="/_style.css?v=17">
 </head>
 <body>
 <div class="wrap doc">
   <h1 class="chrome">Not found</h1>
   <p class="lede">That page is not here. It may have moved, or the link may
   have a typo in it.</p>
-  <p class="lede" lang="cs">Tahle stránka tu není. Mohla se přesunout, nebo je
-  v odkazu překlep.</p>
-  <p class="lede" lang="fr">Cette page n’existe pas. Elle a peut-être été déplacée,
-  ou le lien contient une faute de frappe.</p>
-  <p class="lede" lang="es">Esta página no está aquí. Puede que se haya movido o que
-  el enlace tenga una errata.</p>
-  <p class="lede" lang="de">Diese Seite gibt es hier nicht. Vielleicht wurde sie
-  verschoben, oder der Link enthält einen Tippfehler.</p>
-  <p class="lede" lang="pt">Esta página não está aqui. Ela pode ter sido movida, ou o
-  link pode ter um erro de digitação.</p>
   <div class="row" style="justify-content:flex-start;margin-top:24px">
     <a class="btn" href="/index.html">Home</a>
     <a class="btn" href="/support.html">Support</a>
-    <a class="btn" href="/cs/" lang="cs" hreflang="cs">Domů</a>
-    <a class="btn" href="/cs/support.html" lang="cs" hreflang="cs">Podpora</a>
-    <a class="btn" href="/fr/" lang="fr" hreflang="fr">Accueil</a>
-    <a class="btn" href="/es/" lang="es" hreflang="es">Inicio</a>
-    <a class="btn" href="/de/" lang="de" hreflang="de">Startseite</a>
-    <a class="btn" href="/pt/" lang="pt" hreflang="pt">Início</a>
   </div>
+  <ul class="nf-list">
+    <li lang="id"><span class="nf-lang">Bahasa Indonesia</span> Halaman ini tidak ada. <a href="/id/" hreflang="id">Ke beranda</a></li>
+    <li lang="ms"><span class="nf-lang">Bahasa Melayu</span> Halaman ini tiada. <a href="/ms/" hreflang="ms">Ke laman utama</a></li>
+    <li lang="cs"><span class="nf-lang">Čeština</span> Tahle stránka tu není. <a href="/cs/" hreflang="cs">Domů</a></li>
+    <li lang="da"><span class="nf-lang">Dansk</span> Siden findes ikke. <a href="/da/" hreflang="da">Til forsiden</a></li>
+    <li lang="de"><span class="nf-lang">Deutsch</span> Diese Seite gibt es hier nicht. <a href="/de/" hreflang="de">Startseite</a></li>
+    <li lang="es"><span class="nf-lang">Español</span> Esta página no está aquí. <a href="/es/" hreflang="es">Inicio</a></li>
+    <li lang="fil"><span class="nf-lang">Filipino</span> Wala rito ang page na ito. <a href="/fil/" hreflang="fil">Pumunta sa home page</a></li>
+    <li lang="fr"><span class="nf-lang">Français</span> Cette page n’existe pas. <a href="/fr/" hreflang="fr">Accueil</a></li>
+    <li lang="hr"><span class="nf-lang">Hrvatski</span> Ova stranica ne postoji. <a href="/hr/" hreflang="hr">Na početnu stranicu</a></li>
+    <li lang="it"><span class="nf-lang">Italiano</span> Questa pagina non c’è. <a href="/it/" hreflang="it">Pagina iniziale</a></li>
+    <li lang="hu"><span class="nf-lang">Magyar</span> Ez az oldal nem létezik. <a href="/hu/" hreflang="hu">Vissza a főoldalra</a></li>
+    <li lang="nl"><span class="nf-lang">Nederlands</span> Deze pagina bestaat niet. <a href="/nl/" hreflang="nl">Naar de startpagina</a></li>
+    <li lang="nb"><span class="nf-lang">Norsk bokmål</span> Denne siden finnes ikke. <a href="/nb/" hreflang="nb">Til forsiden</a></li>
+    <li lang="pl"><span class="nf-lang">Polski</span> Ta strona nie istnieje. <a href="/pl/" hreflang="pl">Na stronę główną</a></li>
+    <li lang="pt"><span class="nf-lang">Português</span> Esta página não está aqui. <a href="/pt/" hreflang="pt">Início</a></li>
+    <li lang="ro"><span class="nf-lang">Română</span> Această pagină nu există. <a href="/ro/" hreflang="ro">Înapoi la pagina principală</a></li>
+    <li lang="fi"><span class="nf-lang">Suomi</span> Sivua ei löydy. <a href="/fi/" hreflang="fi">Etusivulle</a></li>
+    <li lang="sv"><span class="nf-lang">Svenska</span> Sidan finns inte. <a href="/sv/" hreflang="sv">Till startsidan</a></li>
+    <li lang="vi"><span class="nf-lang">Tiếng Việt</span> Trang này không tồn tại. <a href="/vi/" hreflang="vi">Về trang chủ</a></li>
+    <li lang="tr"><span class="nf-lang">Türkçe</span> Bu sayfa yok. <a href="/tr/" hreflang="tr">Ana sayfaya git</a></li>
+    <li lang="el"><span class="nf-lang">Ελληνικά</span> Η σελίδα δεν υπάρχει. <a href="/el/" hreflang="el">Στην αρχική σελίδα</a></li>
+    <li lang="bg"><span class="nf-lang">Български</span> Тази страница не съществува. <a href="/bg/" hreflang="bg">Към началната страница</a></li>
+    <li lang="uk"><span class="nf-lang">Українська</span> Такої сторінки немає. <a href="/uk/" hreflang="uk">На головну</a></li>
+    <li lang="hi"><span class="nf-lang">हिन्दी</span> यह पेज मौजूद नहीं है। <a href="/hi/" hreflang="hi">होम पेज पर जाएँ</a></li>
+    <li lang="th"><span class="nf-lang">ไทย</span> ไม่พบหน้านี้ <a href="/th/" hreflang="th">ไปที่หน้าแรก</a></li>
+    <li lang="ko"><span class="nf-lang">한국어</span> 페이지를 찾을 수 없습니다. <a href="/ko/" hreflang="ko">홈으로 가기</a></li>
+    <li lang="ja"><span class="nf-lang">日本語</span> このページは見つかりません。 <a href="/ja/" hreflang="ja">ホームへ</a></li>
+  </ul>
 </div>
 </body>
 </html>

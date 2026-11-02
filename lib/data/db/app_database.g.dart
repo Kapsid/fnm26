@@ -1341,6 +1341,26 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _viceCaptain1PlayerIdMeta =
+      const VerificationMeta('viceCaptain1PlayerId');
+  @override
+  late final GeneratedColumn<int> viceCaptain1PlayerId = GeneratedColumn<int>(
+    'vice_captain1_player_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _viceCaptain2PlayerIdMeta =
+      const VerificationMeta('viceCaptain2PlayerId');
+  @override
+  late final GeneratedColumn<int> viceCaptain2PlayerId = GeneratedColumn<int>(
+    'vice_captain2_player_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1366,6 +1386,8 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
     staffScoutId,
     staffFitnessCoachId,
     lastCycleBoard,
+    viceCaptain1PlayerId,
+    viceCaptain2PlayerId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1572,6 +1594,24 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         ),
       );
     }
+    if (data.containsKey('vice_captain1_player_id')) {
+      context.handle(
+        _viceCaptain1PlayerIdMeta,
+        viceCaptain1PlayerId.isAcceptableOrUnknown(
+          data['vice_captain1_player_id']!,
+          _viceCaptain1PlayerIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vice_captain2_player_id')) {
+      context.handle(
+        _viceCaptain2PlayerIdMeta,
+        viceCaptain2PlayerId.isAcceptableOrUnknown(
+          data['vice_captain2_player_id']!,
+          _viceCaptain2PlayerIdMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1673,6 +1713,14 @@ class $CareersTable extends Careers with TableInfo<$CareersTable, CareerRow> {
         DriftSqlType.int,
         data['${effectivePrefix}last_cycle_board'],
       ),
+      viceCaptain1PlayerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vice_captain1_player_id'],
+      ),
+      viceCaptain2PlayerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vice_captain2_player_id'],
+      ),
     );
   }
 
@@ -1756,6 +1804,14 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
   /// as one who had nearly been sacked. This one number is what a reputation
   /// is made of; see `BoardSatisfaction.carryOver`.
   final int? lastCycleBoard;
+
+  /// The manager's 1st and 2nd vice-captains, or null for none: who takes
+  /// the armband, in that order, when the captain cannot play (see
+  /// `Captaincy.leaderSlot`). Like [captainPlayerId] they are INTENT, resolved
+  /// against the squad before every use, and cleared with it when the manager
+  /// changes nation.
+  final int? viceCaptain1PlayerId;
+  final int? viceCaptain2PlayerId;
   const CareerRow({
     required this.id,
     required this.managerName,
@@ -1780,6 +1836,8 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     this.staffScoutId,
     this.staffFitnessCoachId,
     this.lastCycleBoard,
+    this.viceCaptain1PlayerId,
+    this.viceCaptain2PlayerId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1820,6 +1878,12 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     }
     if (!nullToAbsent || lastCycleBoard != null) {
       map['last_cycle_board'] = Variable<int>(lastCycleBoard);
+    }
+    if (!nullToAbsent || viceCaptain1PlayerId != null) {
+      map['vice_captain1_player_id'] = Variable<int>(viceCaptain1PlayerId);
+    }
+    if (!nullToAbsent || viceCaptain2PlayerId != null) {
+      map['vice_captain2_player_id'] = Variable<int>(viceCaptain2PlayerId);
     }
     return map;
   }
@@ -1863,6 +1927,12 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       lastCycleBoard: lastCycleBoard == null && nullToAbsent
           ? const Value.absent()
           : Value(lastCycleBoard),
+      viceCaptain1PlayerId: viceCaptain1PlayerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(viceCaptain1PlayerId),
+      viceCaptain2PlayerId: viceCaptain2PlayerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(viceCaptain2PlayerId),
     );
   }
 
@@ -1899,6 +1969,12 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
         json['staffFitnessCoachId'],
       ),
       lastCycleBoard: serializer.fromJson<int?>(json['lastCycleBoard']),
+      viceCaptain1PlayerId: serializer.fromJson<int?>(
+        json['viceCaptain1PlayerId'],
+      ),
+      viceCaptain2PlayerId: serializer.fromJson<int?>(
+        json['viceCaptain2PlayerId'],
+      ),
     );
   }
   @override
@@ -1928,6 +2004,8 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       'staffScoutId': serializer.toJson<int?>(staffScoutId),
       'staffFitnessCoachId': serializer.toJson<int?>(staffFitnessCoachId),
       'lastCycleBoard': serializer.toJson<int?>(lastCycleBoard),
+      'viceCaptain1PlayerId': serializer.toJson<int?>(viceCaptain1PlayerId),
+      'viceCaptain2PlayerId': serializer.toJson<int?>(viceCaptain2PlayerId),
     };
   }
 
@@ -1955,6 +2033,8 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     Value<int?> staffScoutId = const Value.absent(),
     Value<int?> staffFitnessCoachId = const Value.absent(),
     Value<int?> lastCycleBoard = const Value.absent(),
+    Value<int?> viceCaptain1PlayerId = const Value.absent(),
+    Value<int?> viceCaptain2PlayerId = const Value.absent(),
   }) => CareerRow(
     id: id ?? this.id,
     managerName: managerName ?? this.managerName,
@@ -1987,6 +2067,12 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     lastCycleBoard: lastCycleBoard.present
         ? lastCycleBoard.value
         : this.lastCycleBoard,
+    viceCaptain1PlayerId: viceCaptain1PlayerId.present
+        ? viceCaptain1PlayerId.value
+        : this.viceCaptain1PlayerId,
+    viceCaptain2PlayerId: viceCaptain2PlayerId.present
+        ? viceCaptain2PlayerId.value
+        : this.viceCaptain2PlayerId,
   );
   CareerRow copyWithCompanion(CareersCompanion data) {
     return CareerRow(
@@ -2047,6 +2133,12 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
       lastCycleBoard: data.lastCycleBoard.present
           ? data.lastCycleBoard.value
           : this.lastCycleBoard,
+      viceCaptain1PlayerId: data.viceCaptain1PlayerId.present
+          ? data.viceCaptain1PlayerId.value
+          : this.viceCaptain1PlayerId,
+      viceCaptain2PlayerId: data.viceCaptain2PlayerId.present
+          ? data.viceCaptain2PlayerId.value
+          : this.viceCaptain2PlayerId,
     );
   }
 
@@ -2075,7 +2167,9 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           ..write('staffAssistantId: $staffAssistantId, ')
           ..write('staffScoutId: $staffScoutId, ')
           ..write('staffFitnessCoachId: $staffFitnessCoachId, ')
-          ..write('lastCycleBoard: $lastCycleBoard')
+          ..write('lastCycleBoard: $lastCycleBoard, ')
+          ..write('viceCaptain1PlayerId: $viceCaptain1PlayerId, ')
+          ..write('viceCaptain2PlayerId: $viceCaptain2PlayerId')
           ..write(')'))
         .toString();
   }
@@ -2105,6 +2199,8 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
     staffScoutId,
     staffFitnessCoachId,
     lastCycleBoard,
+    viceCaptain1PlayerId,
+    viceCaptain2PlayerId,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -2132,7 +2228,9 @@ class CareerRow extends DataClass implements Insertable<CareerRow> {
           other.staffAssistantId == this.staffAssistantId &&
           other.staffScoutId == this.staffScoutId &&
           other.staffFitnessCoachId == this.staffFitnessCoachId &&
-          other.lastCycleBoard == this.lastCycleBoard);
+          other.lastCycleBoard == this.lastCycleBoard &&
+          other.viceCaptain1PlayerId == this.viceCaptain1PlayerId &&
+          other.viceCaptain2PlayerId == this.viceCaptain2PlayerId);
 }
 
 class CareersCompanion extends UpdateCompanion<CareerRow> {
@@ -2159,6 +2257,8 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
   final Value<int?> staffScoutId;
   final Value<int?> staffFitnessCoachId;
   final Value<int?> lastCycleBoard;
+  final Value<int?> viceCaptain1PlayerId;
+  final Value<int?> viceCaptain2PlayerId;
   const CareersCompanion({
     this.id = const Value.absent(),
     this.managerName = const Value.absent(),
@@ -2183,6 +2283,8 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.staffScoutId = const Value.absent(),
     this.staffFitnessCoachId = const Value.absent(),
     this.lastCycleBoard = const Value.absent(),
+    this.viceCaptain1PlayerId = const Value.absent(),
+    this.viceCaptain2PlayerId = const Value.absent(),
   });
   CareersCompanion.insert({
     this.id = const Value.absent(),
@@ -2208,6 +2310,8 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     this.staffScoutId = const Value.absent(),
     this.staffFitnessCoachId = const Value.absent(),
     this.lastCycleBoard = const Value.absent(),
+    this.viceCaptain1PlayerId = const Value.absent(),
+    this.viceCaptain2PlayerId = const Value.absent(),
   }) : managerName = Value(managerName),
        nationId = Value(nationId),
        rngSeed = Value(rngSeed),
@@ -2237,6 +2341,8 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Expression<int>? staffScoutId,
     Expression<int>? staffFitnessCoachId,
     Expression<int>? lastCycleBoard,
+    Expression<int>? viceCaptain1PlayerId,
+    Expression<int>? viceCaptain2PlayerId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2265,6 +2371,10 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       if (staffFitnessCoachId != null)
         'staff_fitness_coach_id': staffFitnessCoachId,
       if (lastCycleBoard != null) 'last_cycle_board': lastCycleBoard,
+      if (viceCaptain1PlayerId != null)
+        'vice_captain1_player_id': viceCaptain1PlayerId,
+      if (viceCaptain2PlayerId != null)
+        'vice_captain2_player_id': viceCaptain2PlayerId,
     });
   }
 
@@ -2292,6 +2402,8 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     Value<int?>? staffScoutId,
     Value<int?>? staffFitnessCoachId,
     Value<int?>? lastCycleBoard,
+    Value<int?>? viceCaptain1PlayerId,
+    Value<int?>? viceCaptain2PlayerId,
   }) {
     return CareersCompanion(
       id: id ?? this.id,
@@ -2318,6 +2430,8 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
       staffScoutId: staffScoutId ?? this.staffScoutId,
       staffFitnessCoachId: staffFitnessCoachId ?? this.staffFitnessCoachId,
       lastCycleBoard: lastCycleBoard ?? this.lastCycleBoard,
+      viceCaptain1PlayerId: viceCaptain1PlayerId ?? this.viceCaptain1PlayerId,
+      viceCaptain2PlayerId: viceCaptain2PlayerId ?? this.viceCaptain2PlayerId,
     );
   }
 
@@ -2395,6 +2509,16 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
     if (lastCycleBoard.present) {
       map['last_cycle_board'] = Variable<int>(lastCycleBoard.value);
     }
+    if (viceCaptain1PlayerId.present) {
+      map['vice_captain1_player_id'] = Variable<int>(
+        viceCaptain1PlayerId.value,
+      );
+    }
+    if (viceCaptain2PlayerId.present) {
+      map['vice_captain2_player_id'] = Variable<int>(
+        viceCaptain2PlayerId.value,
+      );
+    }
     return map;
   }
 
@@ -2423,7 +2547,9 @@ class CareersCompanion extends UpdateCompanion<CareerRow> {
           ..write('staffAssistantId: $staffAssistantId, ')
           ..write('staffScoutId: $staffScoutId, ')
           ..write('staffFitnessCoachId: $staffFitnessCoachId, ')
-          ..write('lastCycleBoard: $lastCycleBoard')
+          ..write('lastCycleBoard: $lastCycleBoard, ')
+          ..write('viceCaptain1PlayerId: $viceCaptain1PlayerId, ')
+          ..write('viceCaptain2PlayerId: $viceCaptain2PlayerId')
           ..write(')'))
         .toString();
   }
@@ -17536,6 +17662,8 @@ typedef $$CareersTableCreateCompanionBuilder =
       Value<int?> staffScoutId,
       Value<int?> staffFitnessCoachId,
       Value<int?> lastCycleBoard,
+      Value<int?> viceCaptain1PlayerId,
+      Value<int?> viceCaptain2PlayerId,
     });
 typedef $$CareersTableUpdateCompanionBuilder =
     CareersCompanion Function({
@@ -17562,6 +17690,8 @@ typedef $$CareersTableUpdateCompanionBuilder =
       Value<int?> staffScoutId,
       Value<int?> staffFitnessCoachId,
       Value<int?> lastCycleBoard,
+      Value<int?> viceCaptain1PlayerId,
+      Value<int?> viceCaptain2PlayerId,
     });
 
 final class $$CareersTableReferences
@@ -18282,6 +18412,16 @@ class $$CareersTableFilterComposer
 
   ColumnFilters<int> get lastCycleBoard => $composableBuilder(
     column: $table.lastCycleBoard,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get viceCaptain1PlayerId => $composableBuilder(
+    column: $table.viceCaptain1PlayerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get viceCaptain2PlayerId => $composableBuilder(
+    column: $table.viceCaptain2PlayerId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19180,6 +19320,16 @@ class $$CareersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get viceCaptain1PlayerId => $composableBuilder(
+    column: $table.viceCaptain1PlayerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get viceCaptain2PlayerId => $composableBuilder(
+    column: $table.viceCaptain2PlayerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$NationsTableOrderingComposer get nationId {
     final $$NationsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -19310,6 +19460,16 @@ class $$CareersTableAnnotationComposer
 
   GeneratedColumn<int> get lastCycleBoard => $composableBuilder(
     column: $table.lastCycleBoard,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get viceCaptain1PlayerId => $composableBuilder(
+    column: $table.viceCaptain1PlayerId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get viceCaptain2PlayerId => $composableBuilder(
+    column: $table.viceCaptain2PlayerId,
     builder: (column) => column,
   );
 
@@ -20175,6 +20335,8 @@ class $$CareersTableTableManager
                 Value<int?> staffScoutId = const Value.absent(),
                 Value<int?> staffFitnessCoachId = const Value.absent(),
                 Value<int?> lastCycleBoard = const Value.absent(),
+                Value<int?> viceCaptain1PlayerId = const Value.absent(),
+                Value<int?> viceCaptain2PlayerId = const Value.absent(),
               }) => CareersCompanion(
                 id: id,
                 managerName: managerName,
@@ -20199,6 +20361,8 @@ class $$CareersTableTableManager
                 staffScoutId: staffScoutId,
                 staffFitnessCoachId: staffFitnessCoachId,
                 lastCycleBoard: lastCycleBoard,
+                viceCaptain1PlayerId: viceCaptain1PlayerId,
+                viceCaptain2PlayerId: viceCaptain2PlayerId,
               ),
           createCompanionCallback:
               ({
@@ -20225,6 +20389,8 @@ class $$CareersTableTableManager
                 Value<int?> staffScoutId = const Value.absent(),
                 Value<int?> staffFitnessCoachId = const Value.absent(),
                 Value<int?> lastCycleBoard = const Value.absent(),
+                Value<int?> viceCaptain1PlayerId = const Value.absent(),
+                Value<int?> viceCaptain2PlayerId = const Value.absent(),
               }) => CareersCompanion.insert(
                 id: id,
                 managerName: managerName,
@@ -20249,6 +20415,8 @@ class $$CareersTableTableManager
                 staffScoutId: staffScoutId,
                 staffFitnessCoachId: staffFitnessCoachId,
                 lastCycleBoard: lastCycleBoard,
+                viceCaptain1PlayerId: viceCaptain1PlayerId,
+                viceCaptain2PlayerId: viceCaptain2PlayerId,
               ),
           withReferenceMapper: (p0) => p0
               .map(

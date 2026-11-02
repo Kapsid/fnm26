@@ -220,7 +220,7 @@ void main() {
         for (final k in cs.keys)
           if (k.startsWith('yCameo')) k,
       ];
-      expect(cameo, hasLength(19));
+      expect(cameo, hasLength(24));
       for (final locale in const ['en', 'de', 'fr', 'ja', 'hu', 'pl']) {
         final c = copy(locale);
         for (final k in cameo) {

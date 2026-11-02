@@ -53,6 +53,13 @@ Future<Set<String>?> _explodes() async =>
 
 const String _legacyKey = 'premium_unlocked';
 const String _cacheKey = 'entitlement.premium';
+const String _confirmedKey = 'entitlement.confirmedAtMs';
+
+/// "Today" for every launch here, and a confirmation [days] before it.
+final DateTime _today = DateTime(2026, 11, 2, 12);
+int _daysAgo(num days) => _today
+    .subtract(Duration(minutes: (days * 24 * 60).round()))
+    .millisecondsSinceEpoch;
 
 void main() {
   /// Runs a launch with a given cache and a given answer from the store, and
@@ -61,6 +68,7 @@ void main() {
     required StoreEntitlementReader store,
     Map<String, Object> prefs = const {},
     InAppPurchase? iap,
+    DateTime? now,
   }) async {
     SharedPreferences.setMockInitialValues(prefs);
     final billing = iap ?? _SilentStore();
@@ -68,8 +76,12 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         entitlementServiceProvider.overrideWith(
-          (ref) =>
-              EntitlementService(ref, iap: billing, storeEntitlements: store),
+          (ref) => EntitlementService(
+            ref,
+            iap: billing,
+            storeEntitlements: store,
+            now: () => now ?? _today,
+          ),
         ),
       ],
     );
@@ -94,7 +106,11 @@ void main() {
       // store was asked, it answered, and the answer did not include us.
       expect(
         await launch(
-          prefs: {_legacyKey: true, _cacheKey: true},
+          prefs: {
+            _legacyKey: true,
+            _cacheKey: true,
+            _confirmedKey: _daysAgo(4),
+          },
           store: _answers({'com.fnm.fnm.something.else'}),
         ),
         isFalse,
@@ -108,7 +124,11 @@ void main() {
         // unlock again once the store has said no.
         expect(
           await launch(
-            prefs: {_legacyKey: true, _cacheKey: true},
+            prefs: {
+              _legacyKey: true,
+              _cacheKey: true,
+              _confirmedKey: _daysAgo(3.1),
+            },
             store: _answers(const {}),
           ),
           isFalse,
@@ -116,6 +136,7 @@ void main() {
         final prefs = await SharedPreferences.getInstance();
         expect(prefs.getBool(_cacheKey), isNull);
         expect(prefs.getBool(_legacyKey), isNull);
+        expect(prefs.getInt(_confirmedKey), isNull);
 
         // The second launch, offline: no store answer, and only what the
         // first launch left on disk. launch() resets the mock prefs, so the
@@ -150,8 +171,101 @@ void main() {
 
         final prefs = await SharedPreferences.getInstance();
         expect(prefs.getBool(_cacheKey), isTrue);
+        expect(prefs.getInt(_confirmedKey), isNotNull);
       },
     );
+  });
+
+  // StoreKit drops every transaction it cannot verify at that moment, so an
+  // offline iPhone can answer an empty list for a player who bought (1.0.8,
+  // on a flight). A "not owned" is believed only once the last "owned" is
+  // older than kEntitlementGrace.
+  group('a "not owned" within the grace window', () {
+    test(
+      'keeps a buyer confirmed two days ago unlocked, cache intact',
+      () async {
+        expect(
+          await launch(
+            prefs: {_cacheKey: true, _confirmedKey: _daysAgo(2)},
+            store: _answers(const {}),
+          ),
+          isTrue,
+        );
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getBool(_cacheKey), isTrue);
+        // Not reconfirmed: the window still counts from two days ago.
+        expect(prefs.getInt(_confirmedKey), _daysAgo(2));
+      },
+    );
+
+    test('launching offline again and again does not stretch it', () async {
+      var prefs = <String, Object>{
+        _cacheKey: true,
+        _confirmedKey: _daysAgo(0),
+      };
+      for (final (day, unlocked) in [(1, true), (2, true), (4, false)]) {
+        expect(
+          await launch(
+            prefs: prefs,
+            store: _answers(const {}),
+            now: _today.add(Duration(days: day)),
+          ),
+          unlocked,
+          reason: 'day $day',
+        );
+        final p = await SharedPreferences.getInstance();
+        prefs = {
+          for (final k in p.getKeys())
+            if (p.get(k) case final Object v) k: v,
+        };
+      }
+    });
+
+    test('a store "owned" restarts it', () async {
+      expect(
+        await launch(
+          prefs: {_cacheKey: true, _confirmedKey: _daysAgo(10)},
+          store: _answers({kPremiumProductId}),
+        ),
+        isTrue,
+      );
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getInt(_confirmedKey), _today.millisecondsSinceEpoch);
+    });
+
+    test(
+      'a cache from 1.0.8 (no date) starts its window at that launch',
+      () async {
+        expect(
+          await launch(prefs: {_cacheKey: true}, store: _answers(const {})),
+          isTrue,
+        );
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getInt(_confirmedKey), _today.millisecondsSinceEpoch);
+        expect(
+          await launch(
+            prefs: {_cacheKey: true, _confirmedKey: _daysAgo(0)},
+            store: _answers(const {}),
+            now: _today.add(const Duration(days: 4)),
+          ),
+          isFalse,
+        );
+      },
+    );
+
+    test('a clock wound back past the confirmation does not help', () async {
+      expect(
+        await launch(
+          prefs: {_cacheKey: true, _confirmedKey: _daysAgo(-10)},
+          store: _answers(const {}),
+        ),
+        isFalse,
+      );
+    });
+
+    test('nothing cached is still simply locked', () async {
+      expect(await launch(store: _answers(const {})), isFalse);
+    });
   });
 
   group('the store cannot answer, so it never denies', () {

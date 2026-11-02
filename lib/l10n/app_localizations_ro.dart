@@ -252,6 +252,11 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchHalfTime => 'PAUZĂ';
 
   @override
+  String matchHalfTimeScore(int home, int away) {
+    return 'Pauză $home : $away';
+  }
+
+  @override
   String get matchContinue => 'Continuați';
 
   @override
@@ -607,7 +612,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String recordsMatchesCount(int count) {
-    return '$count meciuri';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de meciuri',
+      few: '$count meciuri',
+      one: '1 meci',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -622,7 +634,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String recordsMeetingsWdl(int meetings, int wins, int draws, int losses) {
-    return '$meetings întâlniri · ${wins}V ${draws}E $lossesÎ';
+    String _temp0 = intl.Intl.pluralLogic(
+      meetings,
+      locale: localeName,
+      other: '$meetings de întâlniri',
+      few: '$meetings întâlniri',
+      one: '1 întâlnire',
+    );
+    return '$_temp0 · ${wins}V ${draws}E $lossesÎ';
   }
 
   @override
@@ -632,7 +651,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String recordsRivalLine(int meetings, String record, String edge) {
-    return '$meetings întâlniri · $record · $edge';
+    String _temp0 = intl.Intl.pluralLogic(
+      meetings,
+      locale: localeName,
+      other: '$meetings de întâlniri',
+      few: '$meetings întâlniri',
+      one: '1 întâlnire',
+    );
+    return '$_temp0 · $record · $edge';
   }
 
   @override
@@ -1215,6 +1241,36 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get tacticsCornersFreeKicks => 'Cornere și lovituri libere';
+
+  @override
+  String get tacticsThrowIns => 'Aruncări de la margine';
+
+  @override
+  String get tacticsThrowInStyle => 'Stilul aruncărilor';
+
+  @override
+  String get tacticsThrowInLong => 'Aruncări lungi';
+
+  @override
+  String get tacticsThrowInNeutral => 'Neutru';
+
+  @override
+  String get tacticsThrowInDefensive => 'Aruncări sigure';
+
+  @override
+  String get tacticsThrowInLongBlurb =>
+      'Aruncările de lângă careu ajung în careu. Puțin mai mult pericol, mai ales cu un aruncător puternic și atacanți înalți, dar mingea se pierde ceva mai des.';
+
+  @override
+  String get tacticsThrowInNeutralBlurb =>
+      'Aruncări după cum permite jocul. Nu se schimbă nimic.';
+
+  @override
+  String get tacticsThrowInDefensiveBlurb =>
+      'Fiecare aruncare scurtă și sigură. Mai puține pierderi din care adversarul contraatacă, și ceva mai puține ocazii.';
+
+  @override
+  String get matchGoalLongThrow => 'ARUNCARE LUNGĂ';
 
   @override
   String get tacticsSkillFin => 'FIN';
@@ -2467,7 +2523,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String statsAppsShort(int apps) {
-    return '$apps meciuri';
+    String _temp0 = intl.Intl.pluralLogic(
+      apps,
+      locale: localeName,
+      other: '$apps de meciuri',
+      few: '$apps meciuri',
+      one: '1 meci',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -2499,6 +2562,28 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String captainMoraleBoost(int morale) {
     return '+$morale moralul lotului';
+  }
+
+  @override
+  String get viceCaptainFirst => 'Vicecăpitan 1';
+
+  @override
+  String get viceCaptainSecond => 'Vicecăpitan 2';
+
+  @override
+  String get viceCaptainNone => 'Niciun vicecăpitan numit';
+
+  @override
+  String get viceCaptainHint => 'Preia banderola când căpitanul nu poate juca.';
+
+  @override
+  String captainStandIn(String vice, String captain) {
+    return 'Vicecăpitanul $vice conduce echipa; căpitanul $captain nu este disponibil';
+  }
+
+  @override
+  String captainStandInUnnamed(String vice) {
+    return 'Vicecăpitanul $vice conduce echipa';
   }
 
   @override
@@ -3572,6 +3657,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get statsMostGames => 'Meciuri';
 
   @override
+  String get statsMostGamesShort => 'Meciuri';
+
+  @override
   String get statsNoGoalsRecorded => 'Niciun gol înregistrat încă.';
 
   @override
@@ -4299,47 +4387,89 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String yUpsetGap0(String opponent, String gap) {
-    return 'Ne despărțeau $gap locuri în clasament și tot am învins echipa $opponent. Magnific.';
+  String yUpsetGap0(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return 'Ne despărțeau $_temp0 în clasament și tot am învins echipa $opponent. Magnific.';
   }
 
   @override
-  String yUpsetGap1(String opponent, String gap) {
-    return '$opponent: cu $gap locuri peste noi. Învinsă totuși. Fotbalul e minunat.';
+  String yUpsetGap1(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return '$opponent: cu $_temp0 peste noi. Învinsă totuși. Fotbalul e minunat.';
   }
 
   @override
-  String yUpsetGap2(String opponent, String gap) {
+  String yUpsetGap2(String opponent, int gap) {
     return 'Diferență în clasament: $gap. Rezultat: victorie cu $opponent. Nu încetați niciodată să credeți.';
   }
 
   @override
-  String yUpsetGap3(String opponent, String gap) {
+  String yUpsetGap3(String opponent, int gap) {
     return 'Diferență în clasament înainte de start: $gap. Echipa $opponent învinsă oricum.';
   }
 
   @override
-  String yUpsetGap4(String opponent, String gap) {
-    return 'În clasamentul mondial, echipa $opponent era cu $gap locuri peste noi. Nu în seara asta.';
+  String yUpsetGap4(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return 'În clasamentul mondial, echipa $opponent era cu $_temp0 peste noi. Nu în seara asta.';
   }
 
   @override
-  String yUpsetGap5(String opponent, String gap) {
-    return 'Indicele surprizei: $gap locuri în clasament între echipe. Victorie pentru noi cu $opponent.';
+  String yUpsetGap5(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return 'Indicele surprizei: $_temp0 în clasament între echipe. Victorie pentru noi cu $opponent.';
   }
 
   @override
-  String yUpsetGap6(String opponent, String gap) {
-    return '$gap locuri în clasament ne despărțeau de echipa $opponent. O seară nu închide diferența.';
+  String yUpsetGap6(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return '$_temp0 în clasament ne despărțeau de echipa $opponent. O seară nu închide diferența.';
   }
 
   @override
-  String yUpsetGap7(String opponent, String gap) {
-    return '$opponent: cu $gap locuri mai sus, și învinsă. Clasamentul abia va observa.';
+  String yUpsetGap7(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return '$opponent: cu $_temp0 mai sus, și învinsă. Clasamentul abia va observa.';
   }
 
   @override
-  String yUpsetGap8(String gap) {
+  String yUpsetGap8(int gap) {
     return 'Diferență în clasament: $gap. Țineți minte numărul data viitoare când pierdem cu o echipă mică.';
   }
 
@@ -4839,47 +4969,89 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String yDownGap0(String opponent, String gap) {
-    return '$opponent: cu $gap locuri sub noi. Se întâmplă. Mai departe.';
+  String yDownGap0(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return '$opponent: cu $_temp0 sub noi. Se întâmplă. Mai departe.';
   }
 
   @override
-  String yDownGap1(String gap) {
+  String yDownGap1(int gap) {
     return 'Diferență în clasament: $gap în favoarea noastră. Fotbalul nu citește clasamente.';
   }
 
   @override
-  String yDownGap2(String opponent, String gap) {
-    return 'Pe hârtie, $gap locuri între noi și echipa $opponent. Nu și pe teren, în seara asta.';
+  String yDownGap2(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return 'Pe hârtie, $_temp0 între noi și echipa $opponent. Nu și pe teren, în seara asta.';
   }
 
   @override
-  String yDownGap3(String opponent, String gap) {
+  String yDownGap3(String opponent, int gap) {
     return 'Diferență în clasament înainte de start: $gap în favoarea noastră. Înfrângere cu $opponent oricum.';
   }
 
   @override
-  String yDownGap4(String opponent, String gap) {
-    return 'În clasamentul mondial, echipa $opponent era cu $gap locuri sub noi. Rezultat: înfrângere.';
+  String yDownGap4(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return 'În clasamentul mondial, echipa $opponent era cu $_temp0 sub noi. Rezultat: înfrângere.';
   }
 
   @override
-  String yDownGap5(String opponent, String gap) {
-    return 'Indicele surprizei: $gap locuri în clasament, în direcția greșită, cu $opponent.';
+  String yDownGap5(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return 'Indicele surprizei: $_temp0 în clasament, în direcția greșită, cu $opponent.';
   }
 
   @override
-  String yDownGap6(String opponent, String gap) {
-    return 'Cu $gap locuri peste echipa $opponent în clasament. Înfrângere. Explicați asta.';
+  String yDownGap6(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return 'Cu $_temp0 peste echipa $opponent în clasament. Înfrângere. Explicați asta.';
   }
 
   @override
-  String yDownGap7(String gap) {
-    return 'Înfrângere cu o echipă aflată cu $gap locuri sub noi. Lăsați numărul ăsta să se așeze.';
+  String yDownGap7(int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap de locuri',
+      few: '$gap locuri',
+      one: '1 loc',
+    );
+    return 'Înfrângere cu o echipă aflată cu $_temp0 sub noi. Lăsați numărul ăsta să se așeze.';
   }
 
   @override
-  String yDownGap8(String opponent, String gap) {
+  String yDownGap8(String opponent, int gap) {
     return 'Diferență în clasament: $gap. Înfrângere cu $opponent. Cineva ar trebui să înceapă să numere zilele.';
   }
 
@@ -5237,122 +5409,136 @@ class AppLocalizationsRo extends AppLocalizations {
   String get grievanceDismiss => 'Eu fac echipa';
 
   @override
-  String yScorerStar0(String name, String goals) {
+  String yScorerStar0(String name, int goals) {
     return '$name a dat $goals dintre ele. Nimeni nu se apropie.';
   }
 
   @override
-  String yScorerStar1(String name, String goals) {
+  String yScorerStar1(String name, int goals) {
     return '$goals pentru $name. El duce echipa asta în spate.';
   }
 
   @override
-  String yScorerStar2(String name, String goals) {
+  String yScorerStar2(String name, int goals) {
     return '$name: $goals azi. Ce jucător.';
   }
 
   @override
-  String yScorerStar3(String name, String goals) {
+  String yScorerStar3(String name, int goals) {
     return '$goals le-a băgat $name. Jos pălăria.';
   }
 
   @override
-  String yScorerStar4(String name, String goals) {
+  String yScorerStar4(String name, int goals) {
     return '$goals pentru $name, iar restul au fost pasageri.';
   }
 
   @override
-  String yScorerStar5(String name, String goals) {
+  String yScorerStar5(String name, int goals) {
     return 'Iar $name. $goals. Imaginați-vă echipa asta fără el.';
   }
 
   @override
-  String yScorerStar6(String name, String goals) {
+  String yScorerStar6(String name, int goals) {
     return '$goals de la $name. Un singur om n-ar trebui să facă atât.';
   }
 
   @override
-  String yScorerStar7(String name, String goals) {
-    return 'Scoateți-l pe $name din ecuație și sunt $goals goluri mai puțin și o cu totul altă după-amiază.';
+  String yScorerStar7(String name, int goals) {
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals de goluri',
+      few: '$goals goluri',
+      one: '1 gol',
+    );
+    return 'Scoateți-l pe $name din ecuație și sunt $_temp0 mai puțin și o cu totul altă după-amiază.';
   }
 
   @override
-  String yWinStreak0(String count) {
+  String yWinStreak0(int count) {
     return '$count la rând. Orice se spune în vestiarul ăla, prinde.';
   }
 
   @override
-  String yWinStreak1(String count) {
+  String yWinStreak1(int count) {
     return 'Asta înseamnă $count consecutive. Echipele nu dau peste asemenea serii din întâmplare.';
   }
 
   @override
-  String yWinStreak2(String count) {
+  String yWinStreak2(int count) {
     return '$count la rând și seria continuă. Încrederea se vede din tribune.';
   }
 
   @override
-  String yWinStreak3(String count) {
+  String yWinStreak3(int count) {
     return 'Nicio înfrângere în ultimele $count. Întrebați orice antrenor: asta e partea grea.';
   }
 
   @override
-  String yWinStreak4(String count) {
+  String yWinStreak4(int count) {
     return '$count la rând. Bucurați-vă cât timp programul e blând.';
   }
 
   @override
-  String yWinStreak5(String count) {
+  String yWinStreak5(int count) {
     return '$count consecutive, și n-am bătut pe nimeni important.';
   }
 
   @override
-  String yWinStreak6(String count) {
+  String yWinStreak6(int count) {
     return 'O serie de $count. Mai întrebați-mă când va fi testată.';
   }
 
   @override
-  String yWinStreak7(String count) {
+  String yWinStreak7(int count) {
     return '$count la rând. Orice echipă are o dată o asemenea serie în ea.';
   }
 
   @override
-  String yLossStreak0(String count) {
-    return '$count meciuri fără victorie. La un moment dat, scuzele se termină.';
+  String yLossStreak0(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de meciuri',
+      few: '$count meciuri',
+      one: '1 meci',
+    );
+    return '$_temp0 fără victorie. La un moment dat, scuzele se termină.';
   }
 
   @override
-  String yLossStreak1(String count) {
+  String yLossStreak1(int count) {
     return 'Asta înseamnă $count la rând pierdute. Nu mai e un accident.';
   }
 
   @override
-  String yLossStreak2(String count) {
+  String yLossStreak2(int count) {
     return '$count înfrângeri la rând. Cineva trebuie să dea socoteală.';
   }
 
   @override
-  String yLossStreak3(String count) {
+  String yLossStreak3(int count) {
     return 'Nicio victorie în ultimele $count. Se vede în felul în care joacă.';
   }
 
   @override
-  String yLossStreak4(String count) {
+  String yLossStreak4(int count) {
     return '$count fără victorie și aceleași greșeli în fiecare săptămână.';
   }
 
   @override
-  String yLossStreak5(String count) {
+  String yLossStreak5(int count) {
     return '$count la rând. Orice se încearcă, nu merge.';
   }
 
   @override
-  String yLossStreak6(String count) {
+  String yLossStreak6(int count) {
     return '$count consecutive. E o direcție, nu o pasă proastă.';
   }
 
   @override
-  String yLossStreak7(String count) {
+  String yLossStreak7(int count) {
     return 'Nicio victorie în ultimele $count, și nimeni de sus n-a zis un cuvânt.';
   }
 
@@ -5900,7 +6086,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String tourSharedVenueSeats(String city, String capacity) {
-    return '$city · $capacity locuri';
+    return '$city · $capacity de locuri';
   }
 
   @override
@@ -6559,6 +6745,10 @@ class AppLocalizationsRo extends AppLocalizations {
       'Prima jumătate a grupei preliminare';
 
   @override
+  String get objectiveQualifyingChallenge =>
+      'Lupta pentru calificare, cel puțin prima jumătate a grupei';
+
+  @override
   String get finishQualifyingTopHalf => 'Prima jumătate a grupei preliminare';
 
   @override
@@ -6694,8 +6884,15 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String squadDevPageOf(String page, String pages, String total) {
-    return '$page/$pages · $total jucători';
+  String squadDevPageOf(String page, String pages, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total de jucători',
+      few: '$total jucători',
+      one: '1 jucător',
+    );
+    return '$page/$pages · $_temp0';
   }
 
   @override
@@ -6703,7 +6900,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String matchAttendanceOf(String attendance, String capacity) {
-    return '$attendance din $capacity locuri ocupate';
+    return '$attendance din $capacity de locuri ocupate';
   }
 
   @override
@@ -6803,7 +7000,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String u21AgeCaps(int age, int caps) {
-    return '$age ani · $caps selecții';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps de selecții',
+      few: '$caps selecții',
+      one: '1 selecție',
+    );
+    return '$age ani · $_temp0';
   }
 
   @override
@@ -7103,7 +7307,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String squadShowingOf(int shown, int total) {
-    return 'Se afișează $shown din $total jucători';
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total de jucători',
+      few: '$total jucători',
+      one: '1 jucător',
+    );
+    return 'Se afișează $shown din $_temp0';
   }
 
   @override
@@ -7124,12 +7335,26 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String squadCapsValue(String name, int caps) {
-    return '$name · $caps selecții';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps de selecții',
+      few: '$caps selecții',
+      one: '1 selecție',
+    );
+    return '$name · $_temp0';
   }
 
   @override
   String squadGoalsValue(String name, int goals) {
-    return '$name · $goals goluri';
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals de goluri',
+      few: '$goals goluri',
+      one: '1 gol',
+    );
+    return '$name · $_temp0';
   }
 
   @override
@@ -7488,12 +7713,26 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String msgYpotBodyMine(String name, String nation, int age, int year) {
-    return '$name ($nation), $age ani, este tânărul jucător al turneului în $year, unul dintre jucătorii dvs.';
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name ($nation), $_temp0, este tânărul jucător al turneului în $year, unul dintre jucătorii dvs.';
   }
 
   @override
   String msgYpotBodyOther(String name, String nation, int age, int year) {
-    return '$name ($nation), $age ani, este tânărul jucător al turneului în $year.';
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name ($nation), $_temp0, este tânărul jucător al turneului în $year.';
   }
 
   @override
@@ -7754,12 +7993,26 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String msgRetireBody(String name, int age) {
-    return '$name s-a retras de la echipa națională la $age ani.';
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name s-a retras de la echipa națională la $_temp0.';
   }
 
   @override
   String msgRetireBodyWith(String name, String tally, int age) {
-    return '$name s-a retras de la echipa națională la $age ani, încheind cu $tally.';
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name s-a retras de la echipa națională la $_temp0, încheind cu $tally.';
   }
 
   @override
@@ -8176,7 +8429,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String newsWatchDebutBody(String name, int age, int rating) {
-    return '$name a obținut prima selecție la $age ani, cu valoarea $rating. Unul dintre băieții pe care îi urmăriți.';
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name a obținut prima selecție la $_temp0, cu valoarea $rating. Unul dintre băieții pe care îi urmăriți.';
   }
 
   @override
@@ -8322,7 +8582,21 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String newsWalkoutBody(String name, int age, int caps) {
-    return '$name s-a retras de la echipa națională la $age ani, cu $caps selecții. A cerut să i se spună care e situația lui, nu i s-a spus, și nu mai așteaptă.';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps de selecții',
+      few: '$caps selecții',
+      one: '1 selecție',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name s-a retras de la echipa națională cu $_temp0, la $_temp1. A cerut să i se spună care e situația lui, nu i s-a spus, și nu mai așteaptă.';
   }
 
   @override
@@ -9161,62 +9435,62 @@ class AppLocalizationsRo extends AppLocalizations {
   String get transfersUnknownClub => 'Club necunoscut';
 
   @override
-  String yAgainstThemAgain0(String opponent, String count) {
+  String yAgainstThemAgain0(String opponent, int count) {
     return 'Întâlnirea numărul $count cu $opponent. Cineva ține scorul, și aceia sunt ei.';
   }
 
   @override
-  String yAgainstThemAgain1(String opponent, String count) {
+  String yAgainstThemAgain1(String opponent, int count) {
     return 'Iar $opponent. Întâlniri: $count, și tot nu i-am descifrat.';
   }
 
   @override
-  String yAgainstThemAgain2(String opponent, String count) {
+  String yAgainstThemAgain2(String opponent, int count) {
     return 'Întâlnirea cu numărul $count cu $opponent. Nu mai e o coincidență.';
   }
 
   @override
-  String yAgainstThemAgain3(String opponent, String count) {
+  String yAgainstThemAgain3(String opponent, int count) {
     return 'Am jucat cu $opponent de $count ori și n-am învățat nimic din niciuna.';
   }
 
   @override
-  String yAgainstThemAgain4(String opponent, String count) {
+  String yAgainstThemAgain4(String opponent, int count) {
     return '$opponent, de $count ori. Știu exact ce urmează să facem.';
   }
 
   @override
-  String yAgainstThemAgain5(String opponent, String count) {
+  String yAgainstThemAgain5(String opponent, int count) {
     return 'Orice ar avea $opponent împotriva noastră, după atâtea întâlniri ($count), încă au.';
   }
 
   @override
-  String ySameOldStory0(String count) {
+  String ySameOldStory0(int count) {
     return 'S-a întâmplat de $count ori în ultima vreme. Când devine pur și simplu ce suntem?';
   }
 
   @override
-  String ySameOldStory1(String count) {
+  String ySameOldStory1(int count) {
     return 'De $count ori o după-amiază ca asta. E un tipar, nu ghinion.';
   }
 
   @override
-  String ySameOldStory2(String count) {
+  String ySameOldStory2(int count) {
     return 'Am văzut exact meciul ăsta de $count ori recent. Același scenariu, același final.';
   }
 
   @override
-  String ySameOldStory3(String count) {
+  String ySameOldStory3(int count) {
     return 'Aceleași nouăzeci de minute, pentru a $count-a oară. Nimeni nu repară nimic.';
   }
 
   @override
-  String ySameOldStory4(String count) {
+  String ySameOldStory4(int count) {
     return 'De $count ori. Dacă nici acum nu vedeți tiparul, nu vă uitați.';
   }
 
   @override
-  String ySameOldStory5(String count) {
+  String ySameOldStory5(int count) {
     return 'Aceeași poveste, de $count ori. Scuzele s-au terminat înaintea rezultatelor.';
   }
 
@@ -9314,62 +9588,104 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
-  String yDrought0(String name, String count) {
-    return '$name n-a mai marcat de $count meciuri și face orice altceva pe teren.';
+  String yDrought0(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de meciuri',
+      few: '$count meciuri',
+      one: '1 meci',
+    );
+    return '$name n-a mai marcat de $_temp0 și face orice altceva pe teren.';
   }
 
   @override
-  String yDrought1(String name, String count) {
-    return '$count meciuri fără gol pentru $name. Golurile vin câte trei, mereu a fost așa.';
+  String yDrought1(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de meciuri',
+      few: '$count meciuri',
+      one: '1 meci',
+    );
+    return '$_temp0 fără gol pentru $name. Golurile vin câte trei, mereu a fost așa.';
   }
 
   @override
-  String yDrought2(String name, String count) {
-    return '$name: $count meciuri, niciun gol.';
+  String yDrought2(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de meciuri',
+      few: '$count meciuri',
+      one: '1 meci',
+    );
+    return '$name: $_temp0, niciun gol.';
   }
 
   @override
-  String yDrought3(String name, String count) {
-    return '$count meciuri fără gol pentru $name. Merită urmărit.';
+  String yDrought3(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de meciuri',
+      few: '$count meciuri',
+      one: '1 meci',
+    );
+    return '$_temp0 fără gol pentru $name. Merită urmărit.';
   }
 
   @override
-  String yDrought4(String name, String count) {
-    return '$count meciuri. Niciun gol. $name n-ar nimeri nici poarta unui hambar.';
+  String yDrought4(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de meciuri',
+      few: '$count meciuri',
+      one: '1 meci',
+    );
+    return '$_temp0. Niciun gol. $name n-ar nimeri nici poarta unui hambar.';
   }
 
   @override
-  String yDrought5(String name, String count) {
-    return '$name n-a mai marcat de $count meciuri. Băgați pe oricine altcineva.';
+  String yDrought5(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count de meciuri',
+      few: '$count meciuri',
+      one: '1 meci',
+    );
+    return '$name n-a mai marcat de $_temp0. Băgați pe oricine altcineva.';
   }
 
   @override
-  String yRivalryLooms0(String opponent, String count) {
+  String yRivalryLooms0(String opponent, int count) {
     return 'Urmează $opponent. Întâlniri: $count, și încă înseamnă totul.';
   }
 
   @override
-  String yRivalryLooms1(String opponent, String count) {
+  String yRivalryLooms1(String opponent, int count) {
     return 'De $count ori cu $opponent până acum. Să vină.';
   }
 
   @override
-  String yRivalryLooms2(String opponent, String count) {
+  String yRivalryLooms2(String opponent, int count) {
     return 'Urmează $opponent. Meciuri directe: $count.';
   }
 
   @override
-  String yRivalryLooms3(String opponent, String count) {
+  String yRivalryLooms3(String opponent, int count) {
     return 'Întâlnirea cu numărul $count cu $opponent, săptămâna asta.';
   }
 
   @override
-  String yRivalryLooms4(String opponent, String count) {
+  String yRivalryLooms4(String opponent, int count) {
     return 'Iar $opponent. De $count ori, și n-am învățat nimic.';
   }
 
   @override
-  String yRivalryLooms5(String opponent, String count) {
+  String yRivalryLooms5(String opponent, int count) {
     return 'De $count ori cu $opponent și tot ne bat. Minunat.';
   }
 
@@ -11349,6 +11665,29 @@ class AppLocalizationsRo extends AppLocalizations {
       'Câștigarea Campionatului European sau Mondial';
 
   @override
+  String get campaignZanzibarTitle => 'Ascensiunea Zanzibarului';
+
+  @override
+  String get campaignZanzibarTwist =>
+      'Zanzibarul ia locul Ciadului în Africa, pentru o sută de ani';
+
+  @override
+  String get campaignZanzibarGoal => 'Calificarea la un Campionat African';
+
+  @override
+  String get campaignZanzibarIntro =>
+      'Zanzibarul are propria federație de fotbal și propria echipă națională, dar niciun loc în fotbalul african sau mondial. În această lume a luat locul Ciadului în Africa și pornește de aproape de coada clasamentului mondial: jucători de pe insule, stadioane mici și arșița musonului. Aveți o sută de ani, douăzeci și cinci de cicluri, ca să ajungeți la un Campionat African, apoi la un Campionat Mondial și, dacă îndrăzniți să visați, să câștigați Campionatul Mondial.';
+
+  @override
+  String get campaignStars1Zanzibar => 'Calificarea la un Campionat African';
+
+  @override
+  String get campaignStars2Zanzibar => 'Calificarea la un Campionat Mondial';
+
+  @override
+  String get campaignStars3Zanzibar => 'Câștigarea Campionatului Mondial';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -12279,7 +12618,7 @@ class AppLocalizationsRo extends AppLocalizations {
     int bigGrounds,
     String bigSeats,
   ) {
-    return 'Cerință: stadioane de $minSeats+ locuri: $grounds, dintre care de $bigSeats+: $bigGrounds.';
+    return 'Cerință: stadioane de $minSeats+ de locuri: $grounds, dintre care de $bigSeats+: $bigGrounds.';
   }
 
   @override
@@ -12295,7 +12634,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String stadiumsConfirmDownsize(String stadium, String seats, int level) {
-    return 'Reduceți $stadium la $seats locuri (nivelul $level)? Nu se rambursează nimic, dar întreținerea scade.';
+    return 'Reduceți $stadium la $seats de locuri (nivelul $level)? Nu se rambursează nimic, dar întreținerea scade.';
   }
 
   @override
@@ -12426,7 +12765,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String msgIntlRetireNewsBody(String name, String nation, int age) {
-    return '$name ($nation) și-a anunțat retragerea de la echipa națională la $age ani.';
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name ($nation) și-a anunțat retragerea de la echipa națională la $_temp0.';
   }
 
   @override
@@ -12436,7 +12782,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String msgIntlComebackBody(String name, int age) {
-    return '$name este din nou disponibil pentru convocare, la $age ani.';
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name este din nou disponibil pentru convocare, la $_temp0.';
   }
 
   @override
@@ -12453,7 +12806,14 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String msgIntlComebackNewsBody(String name, String nation, int age) {
-    return '$name ($nation) este din nou disponibil pentru convocare, la $age ani.';
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$name ($nation) este din nou disponibil pentru convocare, la $_temp0.';
   }
 
   @override
@@ -12919,6 +13279,22 @@ class AppLocalizationsRo extends AppLocalizations {
       'Eu zic: lăsați băieții să trăiască! Cine muncește din greu are dreptul să se și distreze. Like.';
 
   @override
+  String get yCameoMarena => 'Pe ăștia i-aș putea antrena și eu.';
+
+  @override
+  String get yCameoKralik =>
+      'Ce te așteptai hehehe, cumpără ZeroZero de la noi';
+
+  @override
+  String get yCameoPosuk0 => 'SLAB';
+
+  @override
+  String get yCameoPosuk1 => 'FRATEEE';
+
+  @override
+  String get yCameoPosuk2 => 'Merge cineva la birt?';
+
+  @override
   String get yTraitStreamer =>
       'Transmite totul în direct, la volum maxim, cu majuscule.';
 
@@ -13237,4 +13613,987 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get hostingWindowLine =>
       'Candidaturile se deschid la sfârșitul ciclului, după finala Campionatului Mondial.';
+
+  @override
+  String hubEventWarmUpOffer(String nation) {
+    return 'Ofertă de amical: $nation';
+  }
+
+  @override
+  String get hubEventWarmUpOfferSub =>
+      'Un meci de rămas-bun înaintea turneului lor';
+
+  @override
+  String get warmUpOfferTitle => 'OFERTĂ DE AMICAL';
+
+  @override
+  String warmUpOfferBody(String nation, String competition, String date) {
+    return '$nation se pregătește pentru turneul $competition și vrea un amical de rămas-bun cu dumneavoastră pe $date.';
+  }
+
+  @override
+  String warmUpOfferAway(String nation) {
+    return 'În deplasare, la adversar ($nation).';
+  }
+
+  @override
+  String get warmUpOfferHome => 'Acasă: adversarul vine la dumneavoastră.';
+
+  @override
+  String get warmUpOfferNote =>
+      'Puteți accepta cel mult două oferte. Un amical acceptat are propria convocare.';
+
+  @override
+  String get warmUpOfferAccept => 'Acceptați';
+
+  @override
+  String get warmUpOfferDecline => 'Refuzați';
+
+  @override
+  String warmUpOfferMsgTitle(String nation) {
+    return 'Ofertă de amical: $nation';
+  }
+
+  @override
+  String warmUpOfferMsgBody(String nation, String competition) {
+    return '$nation vrea un amical de rămas-bun cu dumneavoastră înaintea turneului $competition.';
+  }
+
+  @override
+  String get hubSimToFinal => 'Simulați până la finală';
+
+  @override
+  String get jobDossierOpen => 'Analizați oferta';
+
+  @override
+  String get jobDossierRating => 'Valoarea echipei';
+
+  @override
+  String get jobDossierMood => 'Moral';
+
+  @override
+  String get jobDossierTopPlayers => 'Cei mai buni jucători';
+
+  @override
+  String jobDossierPlayerAge(int age) {
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$age de ani',
+      few: '$age ani',
+      one: '1 an',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get jobDossierReport => 'Opinia scouterului';
+
+  @override
+  String get jobDossierNextTargetLabel => 'Următorul obiectiv';
+
+  @override
+  String jobDossierNextTarget(String cup) {
+    return 'Calificare: $cup și Campionatul Mondial.';
+  }
+
+  @override
+  String get jobDossierStrongAttack => 'Un atac cu adevărat tăios.';
+
+  @override
+  String get jobDossierBluntAttack => 'Golurile vin greu.';
+
+  @override
+  String get jobDossierStrongMidfield => 'Mijlocul dictează jocul.';
+
+  @override
+  String get jobDossierWeakMidfield => 'Sunt des depășiți la mijloc.';
+
+  @override
+  String get jobDossierStrongDefence => 'Greu de străpuns în apărare.';
+
+  @override
+  String get jobDossierThinDefence => 'Apărarea pare fragilă.';
+
+  @override
+  String get jobDossierSafeKeeper => 'Un portar pe care te poți baza.';
+
+  @override
+  String get jobDossierShakyKeeper => 'Postul de portar îngrijorează.';
+
+  @override
+  String get jobDossierOldSquad =>
+      'Un lot îmbătrânit, reconstrucția se apropie.';
+
+  @override
+  String get jobDossierYoungCore => 'Un nucleu tânăr în ascensiune.';
+
+  @override
+  String jobDossierOneStar(String name) {
+    return '$name duce echipa în spate.';
+  }
+
+  @override
+  String get jobDossierDeepSquad =>
+      'Adâncime reală dincolo de primul unsprezece.';
+
+  @override
+  String get jobDossierThinSquad =>
+      'Puțină calitate în spatele primului unsprezece.';
+
+  @override
+  String get jobDossierBalanced =>
+      'O echipă echilibrată, fără slăbiciuni evidente.';
+
+  @override
+  String yQualifiedEuphoric0(String competition) {
+    return 'Nu-mi vine să cred că am reușit! Aproape nimeni nu se aștepta. $competition, venim 💪';
+  }
+
+  @override
+  String yQualifiedEuphoric1(String competition) {
+    return 'Ce seară magică, suntem în țara viselor! $competition, venim!';
+  }
+
+  @override
+  String yQualifiedEuphoric2(String competition) {
+    return 'Am crezut mereu în echipa asta. Mereu. Iar acum mergem la turneul $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric3(String competition) {
+    return 'Nimeni nu ne dădea vreo șansă în grupa aia. Nimeni. Ne vedem la turneul $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric4(String competition) {
+    return 'Lacrimi în ochi. Noi, la turneul $competition. Chiar noi.';
+  }
+
+  @override
+  String yQualifiedEuphoric5(String competition) {
+    return 'Dansez pe stradă chiar acum. Calificați la turneul $competition! Ireal 🎉';
+  }
+
+  @override
+  String yQualifiedEuphoric6(String competition) {
+    return 'Am zis că n-avem nicio șansă. N-am fost niciodată mai fericit că m-am înșelat. $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric7(String competition) {
+    return 'Mă plâng de echipa asta de ani de zile și mâine o iau de la capăt. Diseară? $competition, venim!';
+  }
+
+  @override
+  String yQualifiedEuphoric8(String competition) {
+    return 'Bine. BINE. Retrag tot. Mergem la turneul $competition!';
+  }
+
+  @override
+  String yKnockoutEuphoric0(String opponent) {
+    return 'Mai departe! $opponent, învinsă. Ce seară magică, suntem în țara viselor!';
+  }
+
+  @override
+  String yKnockoutEuphoric1(String opponent) {
+    return 'Am eliminat-o pe $opponent! Visați mai departe, toată lumea 💪';
+  }
+
+  @override
+  String yKnockoutEuphoric2(String opponent) {
+    return 'Știam că echipa asta are asta în ea. Adio, $opponent, salut, turul următor!';
+  }
+
+  @override
+  String yKnockoutEuphoric3(String opponent) {
+    return 'Mi-am pierdut vocea. $opponent e afară, iar noi mergem mai departe!';
+  }
+
+  @override
+  String yKnockoutEuphoric4(String opponent) {
+    return 'Eliminatorii și încă suntem în picioare. $opponent a aflat pe pielea ei.';
+  }
+
+  @override
+  String yKnockoutEuphoric5(String opponent) {
+    return '$opponent merge acasă. Echipa asta scrie istorie 🔥';
+  }
+
+  @override
+  String yKnockoutEuphoric6(String opponent) {
+    return 'Credeam că vom fi deja acasă. În schimb, acasă merge $opponent. Incredibil.';
+  }
+
+  @override
+  String yKnockoutEuphoric7(String opponent) {
+    return 'Până și eu visez acum. $opponent, învinsă. Cine suntem noi?';
+  }
+
+  @override
+  String yKnockoutEuphoric8(String opponent) {
+    return 'Pesimist toată viața. $opponent afară, noi mai departe. Nu știu ce să fac cu mine.';
+  }
+
+  @override
+  String yTrophyEuphoric0(String competition) {
+    return 'CAMPIONI!!! Am câștigat turneul $competition! N-o să uit niciodată seara asta 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric1(String competition) {
+    return 'Ce seară magică. Campioni la $competition, și nu mă pot opri din plâns.';
+  }
+
+  @override
+  String yTrophyEuphoric2(String competition) {
+    return 'Am zis mereu că echipa asta poate. $competition: câștigători. CÂȘTIGĂTORI!';
+  }
+
+  @override
+  String yTrophyEuphoric3(String competition) {
+    return 'Să-mi spună cineva că e real. Am câștigat turneul $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric4(String competition) {
+    return 'În seara asta se petrece pe fiecare stradă din țară. $competition e al nostru 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric5(String competition) {
+    return 'Țineți minte unde ați fost în seara asta. Campioni la $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric6(String competition) {
+    return 'Fiecare seară proastă, fiecare dezamăgire, a meritat. $competition: campioni.';
+  }
+
+  @override
+  String yTrophyEuphoric7(String competition) {
+    return 'M-am plâns ani de zile și acum nu mai am de ce. Am câștigat turneul $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric8(String competition) {
+    return 'Bine, recunosc: campioni la $competition. Cea mai frumoasă seară din viața mea.';
+  }
+
+  @override
+  String yExitHeartbreak0(String competition) {
+    return 'Inimă frântă. Am venit la turneul $competition ca să mergem până la capăt. Tot mândru de echipa asta.';
+  }
+
+  @override
+  String yExitHeartbreak1(String competition) {
+    return 'Doare atât de tare. La turneul $competition trebuia să ajungem departe. O luăm de la capăt.';
+  }
+
+  @override
+  String yExitHeartbreak2(String competition) {
+    return 'Distrus. Deja afară de la $competition, și aveam echipă de titlu.';
+  }
+
+  @override
+  String yExitHeartbreak3(String competition) {
+    return 'Zborul spre casă de la $competition va fi cel mai lung din viețile noastre.';
+  }
+
+  @override
+  String yExitHeartbreak4(String competition) {
+    return 'Trebuia să ajungem departe la turneul $competition. În schimb mergem acasă. Fără cuvinte.';
+  }
+
+  @override
+  String yExitHeartbreak5(String competition) {
+    return 'Ani de așteptare, iar turneul $competition s-a terminat pentru noi înainte să înceapă. Gol.';
+  }
+
+  @override
+  String punditsMsgTitle(String competition) {
+    return 'Experții despre turneul $competition';
+  }
+
+  @override
+  String punditsSays(String pundit, String words) {
+    return '$pundit: $words';
+  }
+
+  @override
+  String punditsFavourite0(String nation) {
+    return 'Favorita mea: $nation. Prea puternică și cu un lot prea adânc pentru ceilalți.';
+  }
+
+  @override
+  String punditsFavourite1(String nation) {
+    return 'Greu să treci peste $nation. Are tot ce trebuie pentru titlu.';
+  }
+
+  @override
+  String punditsDarkHorse0(String nation) {
+    return 'Adevăratul cal negru aici: $nation. O semifinală nu m-ar șoca.';
+  }
+
+  @override
+  String punditsDarkHorse1(String nation) {
+    return 'Atenție la $nation. Nimeni nu va vrea să o întâlnească.';
+  }
+
+  @override
+  String punditsMineBottom0(String nation) {
+    return '$nation: ultimul loc în grupă. E bine că a ajuns aici, dar nu are calitatea să treacă.';
+  }
+
+  @override
+  String punditsMineBottom1(String nation) {
+    return '$nation: se va bucura de drum, dar o văd pe ultimul loc în grupă.';
+  }
+
+  @override
+  String punditsMineGroupOut0(String nation) {
+    return '$nation: eliminată în grupe. Incomodă, dar cu o treaptă mai jos.';
+  }
+
+  @override
+  String punditsMineGroupOut1(String nation) {
+    return 'Cred că $nation pleacă acasă după grupe. Dar îi va complica viața cuiva.';
+  }
+
+  @override
+  String punditsMineFirstKnockout0(String nation) {
+    return '$nation: trece de grupe, apoi iese în primul tur eliminatoriu. Un turneu decent.';
+  }
+
+  @override
+  String punditsMineFirstKnockout1(String nation) {
+    return '$nation: ar trebui să treacă de grupe. Mai mult ar fi o surpriză.';
+  }
+
+  @override
+  String punditsMineQuarters0(String nation) {
+    return '$nation: o echipă solidă. Sferturile par exact potrivite.';
+  }
+
+  @override
+  String punditsMineQuarters1(String nation) {
+    return '$nation: sferturile sunt la îndemână. Ar fi un turneu bun.';
+  }
+
+  @override
+  String punditsMineSemis0(String nation) {
+    return '$nation: clasă, se așteaptă un parcurs lung. Măcar semifinale.';
+  }
+
+  @override
+  String punditsMineSemis1(String nation) {
+    return '$nation: are calitatea pentru ultimele patru. Mai puțin ar fi o dezamăgire.';
+  }
+
+  @override
+  String punditsMineFinal0(String nation) {
+    return '$nation: clasă, se așteaptă un parcurs lung. O văd în finală.';
+  }
+
+  @override
+  String punditsMineFinal1(String nation) {
+    return '$nation: până în finală. Atât de bună e.';
+  }
+
+  @override
+  String punditsMineWinner0(String nation) {
+    return '$nation: echipa de învins. Orice în afară de titlu e un eșec.';
+  }
+
+  @override
+  String punditsMineWinner1(String nation) {
+    return 'Pronosticul meu pentru titlu: $nation. Toată presiunea e acum pe ei.';
+  }
+
+  @override
+  String punditsMineDarkHorseQuarters(String nation) {
+    return 'Adevăratul cal negru aici: $nation. Un sfert de finală nu m-ar șoca.';
+  }
+
+  @override
+  String punditsMineDarkHorseSemis(String nation) {
+    return 'Adevăratul cal negru aici: $nation. O semifinală nu m-ar șoca.';
+  }
+
+  @override
+  String yPunditPick0(String competition, String favourite, String darkHorse) {
+    return 'Pronosticul meu pentru $competition: câștigă $favourite. Cal negru? $darkHorse. Ce turneu va fi.';
+  }
+
+  @override
+  String yPunditPick1(String competition, String favourite, String darkHorse) {
+    return '$competition: zic $favourite, și atenție la $darkHorse. Poate fi ceva special.';
+  }
+
+  @override
+  String yPunditPick2(String competition, String favourite, String darkHorse) {
+    return 'Pronosticuri $competition. Câștigătoare: $favourite. Cal negru: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick3(String competition, String favourite, String darkHorse) {
+    return 'Greu să treci peste $favourite la $competition. $darkHorse poate surprinde pe mulți.';
+  }
+
+  @override
+  String yPunditPick4(String competition, String favourite, String darkHorse) {
+    return 'Toată lumea vă va spune $favourite la $competition. Din păcate, au dreptate. Merită urmărită doar $darkHorse.';
+  }
+
+  @override
+  String yPunditPick5(String competition, String favourite, String darkHorse) {
+    return '$favourite va câștiga $competition și va fi plictisitor. Dacă vreți o poveste, urmăriți $darkHorse.';
+  }
+
+  @override
+  String tacticsSlotSwitchHeading(String formation) {
+    return 'Postul în $formation';
+  }
+
+  @override
+  String get tacticsSlotSwitchReset => 'Resetați';
+
+  @override
+  String get tacticsSlotSwitchLimit =>
+      'În această formație sunt deja schimbate două posturi. Resetați unul pentru a-l schimba pe acesta.';
+
+  @override
+  String get assistantAsk => 'Întrebați secundul';
+
+  @override
+  String get assistantNoneNote =>
+      'Niciun antrenor secund angajat. Angajați unul în staff pentru sfaturile lui.';
+
+  @override
+  String get assistantSheetTitle => 'Sfatul secundului';
+
+  @override
+  String get assistantReadBasic =>
+      'O apreciere aproximativă. Verificați-o înainte să vă bazați pe ea.';
+
+  @override
+  String get assistantReadGood =>
+      'O apreciere solidă a valorii, posturilor și oboselii.';
+
+  @override
+  String get assistantReadElite =>
+      'Citește condiția fizică, forma și adversarul.';
+
+  @override
+  String get assistantVariantMain => 'Alegerea lui';
+
+  @override
+  String get assistantVariantFresh => 'Picioare mai proaspete';
+
+  @override
+  String get assistantVariantForm => 'Jucători în formă';
+
+  @override
+  String get assistantVariantAttacking => 'Mai ofensiv';
+
+  @override
+  String get assistantVariantSolid => 'Mai solid';
+
+  @override
+  String get assistantVsStronger => 'Adversarul e mai puternic';
+
+  @override
+  String get assistantVsWeaker => 'Sunteți mai puternici';
+
+  @override
+  String assistantChanges(int count) {
+    return 'Schimbări în primul 11: $count';
+  }
+
+  @override
+  String get assistantBench => 'Primii de pe bancă';
+
+  @override
+  String get assistantReasonBestFit => 'Cea mai bună alegere';
+
+  @override
+  String get assistantReasonInForm => 'În formă';
+
+  @override
+  String get assistantReasonFresh => 'Odihnit';
+
+  @override
+  String get assistantReasonCovering => 'Acoperă postul';
+
+  @override
+  String get assistantReasonCoverDefence => 'Apărare';
+
+  @override
+  String get assistantReasonCoverMidfield => 'Mijloc';
+
+  @override
+  String get assistantReasonCoverAttack => 'Atac';
+
+  @override
+  String get assistantReasonTired => 'Obosit';
+
+  @override
+  String get assistantReasonBooked => 'Avertizat';
+
+  @override
+  String get assistantReasonInjured => 'Accidentat';
+
+  @override
+  String get assistantReasonOutOfPosition => 'Nu pe postul lui';
+
+  @override
+  String get assistantReasonChasing => 'Alergăm după scor';
+
+  @override
+  String get assistantSubsTitle => 'Schimbările pe care le-ar face';
+
+  @override
+  String get assistantNoSubs => 'Ar lăsa echipa cum este.';
+
+  @override
+  String get assistantApply => 'Aplicați';
+
+  @override
+  String get assistantClose => 'Închideți';
+
+  @override
+  String get staffEffectAdviceBasic =>
+      'Sfătuiește la primul 11 și schimbări, uneori greșit';
+
+  @override
+  String get staffEffectAdviceGood =>
+      'Sfătuiește la primul 11 și schimbări, atent la oboseală';
+
+  @override
+  String get staffEffectAdviceElite =>
+      'Sfătuiește după condiție, formă și adversar';
+
+  @override
+  String get staffHiringAdvice => 'și sfaturi pentru primul 11 și schimbări';
+
+  @override
+  String get hubEventSponsor => 'Alegeți sponsorul acestui sezon';
+
+  @override
+  String get hubEventSponsorSub =>
+      'Trei branduri își vor numele pe tricou. Fiecare contract are prețul lui.';
+
+  @override
+  String get sponsorTitle => 'Sponsor principal';
+
+  @override
+  String get sponsorIntroSeason =>
+      'În fiecare sezon, brandurile stau la coadă ca să devină sponsorul principal al federației. Fiecare contract aduce ceva și costă ceva: încrederea federației, vestiarul sau pe amândouă. Semnați cu unul sau cu niciunul. Efectele asupra federației și moralului durează până la finalul sezonului.';
+
+  @override
+  String get sponsorEffectBoard => 'Federație';
+
+  @override
+  String get sponsorEffectMorale => 'Moral';
+
+  @override
+  String get sponsorEffectPress => 'Ironii în presă';
+
+  @override
+  String sponsorPerkMarketing(String amount, String department) {
+    return 'Finanțează $amount pentru $department în acest ciclu';
+  }
+
+  @override
+  String sponsorPerkMarketingNote(String amount) {
+    return 'Încă $amount la finalul ciclului, peste propria investiție';
+  }
+
+  @override
+  String get sponsorRiskyLabel => 'Riscant';
+
+  @override
+  String get sponsorRiskyWarning => 'Presa o să se distreze copios cu asta.';
+
+  @override
+  String get sponsorSign => 'Semnați';
+
+  @override
+  String get sponsorDeclineSeason => 'Fără sponsor sezonul acesta';
+
+  @override
+  String get sponsorNoneSeason => 'Fără sponsor principal sezonul acesta';
+
+  @override
+  String sponsorUntilSeasonEnd(String season) {
+    return 'Până la finalul sezonului $season';
+  }
+
+  @override
+  String sponsorRolloverLine(String brand) {
+    return 'Sponsor principal: $brand';
+  }
+
+  @override
+  String get sponsorBrandAgrofart => 'Agropârț';
+
+  @override
+  String get sponsorIndustryAgrofart => 'Agricultură și chimicale';
+
+  @override
+  String get sponsorFlavourAgrofart =>
+      'Hrănește națiunea. Deține și chipsurile, ziarele și majoritatea porcilor ei.';
+
+  @override
+  String get sponsorBrandBetBadger => 'BetBadger';
+
+  @override
+  String get sponsorIndustryBetBadger => 'Casă de pariuri';
+
+  @override
+  String get sponsorFlavourBetBadger =>
+      'Cote la orice, inclusiv la demiterea dumneavoastră.';
+
+  @override
+  String get sponsorBrandCoinGoblin => 'CoinGoblin';
+
+  @override
+  String get sponsorIndustryCoinGoblin => 'Bursă cripto';
+
+  @override
+  String get sponsorFlavourCoinGoblin =>
+      'Plus patru mii la sută săptămâna asta. Vă rugăm, nu întrebați de retrageri.';
+
+  @override
+  String get sponsorBrandEasyPeasy => 'Credit Acum';
+
+  @override
+  String get sponsorIndustryEasyPeasy => 'Credite rapide';
+
+  @override
+  String get sponsorFlavourEasyPeasy =>
+      'Bani în zece minute. Dobândă zece ani.';
+
+  @override
+  String get sponsorBrandVaporia => 'Vaporia';
+
+  @override
+  String get sponsorIndustryVaporia => 'Magazine de vape';
+
+  @override
+  String get sponsorFlavourVaporia =>
+      'Patruzeci de arome de nor, niciuna bună pentru un atacant.';
+
+  @override
+  String get sponsorBrandGoldenFleece => 'Lâna de Aur Holding';
+
+  @override
+  String get sponsorIndustryGoldenFleece => 'Holding offshore';
+
+  @override
+  String get sponsorFlavourGoldenFleece =>
+      'Nimeni nu știe cu ce se ocupă. Avocații lor preferă așa.';
+
+  @override
+  String get sponsorBrandMiners => 'Minerii';
+
+  @override
+  String get sponsorIndustryMiners => 'Minerit';
+
+  @override
+  String get sponsorFlavourMiners =>
+      'Cărbune, cupru și un consiliu de administrație foarte prăfuit.';
+
+  @override
+  String get sponsorBrandMoth => 'Molia';
+
+  @override
+  String get sponsorIndustryMoth => 'Benzinării';
+
+  @override
+  String get sponsorFlavourMoth =>
+      'Benzină, hot dog și o spălătorie auto care n-a mers niciodată.';
+
+  @override
+  String get sponsorBrandSludgeco => 'Mâlpetrol';
+
+  @override
+  String get sponsorIndustrySludgeco => 'Petrol';
+
+  @override
+  String get sponsorFlavourSludgeco =>
+      'Forează găuri unde nu i-a cerut nimeni.';
+
+  @override
+  String get sponsorBrandSkyloom => 'Skyloom';
+
+  @override
+  String get sponsorIndustrySkyloom => 'Companie low-cost';
+
+  @override
+  String get sponsorFlavourSkyloom =>
+      'Zburați oriunde cu nouă euro. Locul, bagajul și oxigenul se plătesc separat.';
+
+  @override
+  String get sponsorBrandArvella => 'Arvella Motors';
+
+  @override
+  String get sponsorIndustryArvella => 'Producător auto';
+
+  @override
+  String get sponsorFlavourArvella => 'SUV-uri de lux cât o garsonieră.';
+
+  @override
+  String get sponsorBrandCheapoMax => 'IeftinMax';
+
+  @override
+  String get sponsorIndustryCheapoMax => 'Supermarket discount';
+
+  @override
+  String get sponsorFlavourCheapoMax =>
+      'Totul la jumătate de preț, inclusiv personalul.';
+
+  @override
+  String get sponsorBrandBrickhaven => 'Brickhaven';
+
+  @override
+  String get sponsorIndustryBrickhaven => 'Construcții';
+
+  @override
+  String get sponsorFlavourBrickhaven =>
+      'Construiește stadioane la timp. Uneori.';
+
+  @override
+  String get sponsorBrandHappyBurgers => 'Burgeri Veseli';
+
+  @override
+  String get sponsorIndustryHappyBurgers => 'Fast-food';
+
+  @override
+  String get sponsorFlavourHappyBurgers =>
+      'Triplu cașcaval, dublu bacon, gratis pentru tot lotul.';
+
+  @override
+  String get sponsorBrandOldSwamp => 'Străbalta';
+
+  @override
+  String get sponsorIndustryOldSwamp => 'Berărie';
+
+  @override
+  String get sponsorFlavourOldSwamp =>
+      'Fabricată din 1869 într-o pivniță necurățată de atunci.';
+
+  @override
+  String get sponsorBrandBuzzhorn => 'Buzzhorn';
+
+  @override
+  String get sponsorIndustryBuzzhorn => 'Băuturi energizante';
+
+  @override
+  String get sponsorFlavourBuzzhorn =>
+      'Destulă cofeină cât să trezească un portar.';
+
+  @override
+  String get sponsorBrandSteamy => 'Sauna La Aburi';
+
+  @override
+  String get sponsorIndustrySteamy => 'Lanț de saune';
+
+  @override
+  String get sponsorFlavourSteamy =>
+      'Transpirați împreună. Prosopul e opțional, spiritul de echipă nu.';
+
+  @override
+  String get sponsorBrandPixelRage => 'PixelRage Games';
+
+  @override
+  String get sponsorIndustryPixelRage => 'Jocuri video';
+
+  @override
+  String get sponsorFlavourPixelRage =>
+      'Shooterul preferat al lotului, acum cu propriile lor fețe.';
+
+  @override
+  String get sponsorBrandGlitterbox => 'Glitterbox Records';
+
+  @override
+  String get sponsorIndustryGlitterbox => 'Casă de discuri';
+
+  @override
+  String get sponsorFlavourGlitterbox =>
+      'Fiecare gol se sărbătorește acum cu coregrafie.';
+
+  @override
+  String get sponsorBrandMilkwell => 'Lactatele Milkwell';
+
+  @override
+  String get sponsorIndustryMilkwell => 'Lactate';
+
+  @override
+  String get sponsorFlavourMilkwell =>
+      'Lapte rece ca gheața și excursii școlare la văcuțe.';
+
+  @override
+  String get sponsorBrandHerringKing => 'Regele Heringului';
+
+  @override
+  String get sponsorIndustryHerringKing => 'Hering marinat';
+
+  @override
+  String get sponsorFlavourHerringKing =>
+      'Marinat, afumat sau la borcan, de pe vremea bunicului.';
+
+  @override
+  String get sponsorBrandUmbrello => 'Umbrello Asigurări';
+
+  @override
+  String get sponsorIndustryUmbrello => 'Asigurări';
+
+  @override
+  String get sponsorFlavourUmbrello =>
+      'Asigură orice, chiar și umbrela umbrelei dumneavoastră.';
+
+  @override
+  String get sponsorBrandTidyTeeth => 'Dințișori Lucioși';
+
+  @override
+  String get sponsorIndustryTidyTeeth => 'Pastă de dinți';
+
+  @override
+  String get sponsorFlavourTidyTeeth =>
+      'Nouă din zece dentiști. Al zecelea e în concediu.';
+
+  @override
+  String get sponsorBrandWoollySocks => 'Șosete de Lână';
+
+  @override
+  String get sponsorIndustryWoollySocks => 'Tricotaje';
+
+  @override
+  String get sponsorFlavourWoollySocks =>
+      'Șosete tricotate de mână pentru fiecare jucător, în orice culoare în afară de a echipei.';
+
+  @override
+  String get sponsorBrandStackabloc => 'Stackabloc';
+
+  @override
+  String get sponsorIndustryStackabloc => 'Jucării';
+
+  @override
+  String get sponsorFlavourStackabloc =>
+      'Construiți-vă stadionul național. Patru mii de piese, lipsește una.';
+
+  @override
+  String get sponsorBrandPolarPenguin => 'Pinguinul Polar';
+
+  @override
+  String get sponsorIndustryPolarPenguin => 'Înghețată';
+
+  @override
+  String get sponsorFlavourPolarPenguin =>
+      'Treizeci de arome, toate se topesc.';
+
+  @override
+  String get sponsorBrandHexagon => 'Hexagon';
+
+  @override
+  String get sponsorIndustryHexagon => 'Inginerie';
+
+  @override
+  String get sponsorFlavourHexagon =>
+      'Orice problemă are șase laturi. Inginerii lor încă numără.';
+
+  @override
+  String get sponsorBrandVelocell => 'Velocell';
+
+  @override
+  String get sponsorIndustryVelocell => 'Telecom';
+
+  @override
+  String get sponsorFlavourVelocell =>
+      'Semnal plin peste tot, mai puțin pe stadion.';
+
+  @override
+  String get sponsorBrandParcelion => 'Parcelion';
+
+  @override
+  String get sponsorIndustryParcelion => 'Curierat';
+
+  @override
+  String get sponsorFlavourParcelion =>
+      'Livrare mâine. Sau poimâine. Sau la vecin.';
+
+  @override
+  String get sponsorBrandGridwell => 'Gridwell Energy';
+
+  @override
+  String get sponsorIndustryGridwell => 'Energie';
+
+  @override
+  String get sponsorFlavourGridwell => 'Ține nocturna aprinsă. De obicei.';
+
+  @override
+  String get sponsorBrandCrownstone => 'Banca Crownstone';
+
+  @override
+  String get sponsorIndustryCrownstone => 'Bancă';
+
+  @override
+  String get sponsorFlavourCrownstone =>
+      'Banii dumneavoastră sunt în siguranță la noi. Probabil.';
+
+  @override
+  String get sponsorBrandClickbait => 'Clickmomeală Media';
+
+  @override
+  String get sponsorIndustryClickbait => 'Grup media';
+
+  @override
+  String get sponsorFlavourClickbait =>
+      'Nu o să vă vină să credeți ce scrie în al patrulea titlu.';
+
+  @override
+  String ySponsorDubious0(String brand) {
+    return '$brand e noul sponsor principal al federației. Râdeți cât vreți, academia tot are nevoie de bani.';
+  }
+
+  @override
+  String ySponsorDubious1(String brand) {
+    return 'Federația a semnat cu $brand ca nou sponsor principal. Se pare că a fost cea mai mare ofertă de pe masă.';
+  }
+
+  @override
+  String ySponsorDubious2(String brand) {
+    return '$brand. Noul nostru sponsor principal e $brand. Trebuie să mă întind puțin.';
+  }
+
+  @override
+  String ySponsorMocked0(String brand) {
+    return 'Banii sunt bani. Dacă $brand plătește terenuri noi, port tricoul cu mândrie.';
+  }
+
+  @override
+  String ySponsorMocked1(String brand) {
+    return 'Ziceți ce vreți de $brand, cecul a trecut.';
+  }
+
+  @override
+  String ySponsorMocked2(String brand) {
+    return 'Undeva, o echipă de marketing e foarte mândră de logoul $brand de pe pieptul nostru.';
+  }
+
+  @override
+  String ySponsorMocked3(String brand) {
+    return 'Deci acum suntem naționala $brand. Am notat.';
+  }
+
+  @override
+  String ySponsorMocked4(String brand) {
+    return 'Imaginează-ți să vinzi tricoul celor de la $brand. Doar imaginează-ți.';
+  }
+
+  @override
+  String ySponsorMocked5(String brand) {
+    return 'Din toți sponsorii din lume, am ales $brand. Toți rivalii noștri râd de noi.';
+  }
 }

@@ -137,7 +137,7 @@ const List<ShellDestination> shellDestinations = [
     section: ShellSection.federation,
     icon: Icons.account_balance,
     path: Routes.finances,
-    alsoActiveOn: {Routes.budgetSetup},
+    alsoActiveOn: {Routes.budgetSetup, Routes.sponsor},
   ),
   ShellDestination(
     id: ShellDestinationId.board,

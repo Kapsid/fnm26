@@ -327,6 +327,8 @@ void main() {
                     managerName: 'M',
                     rngSeed: def.rngSeed,
                     worldMarkers: [DormantNations.markerFor(212)],
+                    // A campaign run's world: never Belarus.
+                    newCareerNations: false,
                   ))
               .valueOrNull!;
       final tables = await c
@@ -348,6 +350,90 @@ void main() {
         stored.map((g) => g.join(',')).toSet(),
         rebuilt.map((g) => g.join(',')).toSet(),
       );
+    });
+  });
+  group('Zanzibar', () {
+    const def = Campaigns.zanzibar;
+    // Its world: Chad out, Zanzibar in (what forCareer gives the run).
+    final world = DormantNations.worldFrom(
+      nations,
+      {DormantNations.zanzibarId},
+      dormant: (_) => DormantNations.zanzibar,
+    );
+
+    test('seed 213 keeps Zanzibar from hosting either championship in all '
+        '25 cycles of its century', () {
+      expect(def.rngSeed, 213);
+      expect(def.cycles, 25);
+      for (var cycle = 0; cycle < def.cycles; cycle++) {
+        final world0 = WorldCupHosts.hostsFor(
+          year: CareerService.worldCupYear(cycle),
+          nations: world,
+          seed: def.rngSeed,
+        );
+        final africa = WorldCupHosts.continentalHostsFor(
+          confederation: Confederation.africa,
+          cycle: cycle,
+          seed: def.rngSeed,
+          nations: world,
+        );
+        expect(world0, isNot(contains(213)), reason: 'cycle $cycle');
+        expect(africa, isNot(contains(213)), reason: 'cycle $cycle');
+      }
+    });
+
+    test('seed 213 draws Zanzibar into a full African qualifying group', () {
+      final mine = qualifyingGroups(
+        def.rngSeed,
+        world,
+        Confederation.africa,
+      ).where((g) => g.contains(213)).toList();
+      expect(mine, hasLength(1));
+      expect(mine.single.length, 6);
+      expect(mine.single, isNot(contains(110)));
+    });
+
+    test('a real Zanzibar run stores that draw', () async {
+      SharedPreferences.setMockInitialValues({});
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final c = greenlandContainer(db);
+      addTearDown(c.dispose);
+      await c.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await c
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: def.nationId,
+                    managerName: 'M',
+                    rngSeed: def.rngSeed,
+                    worldMarkers: [DormantNations.markerFor(213)],
+                  ))
+              .valueOrNull!;
+      final tables = await c
+          .read(competitionRepositoryProvider)
+          .tournamentGroupTables(
+            career.id,
+            CompetitionKind.continentalQualifying,
+            confederation: Confederation.africa,
+          );
+      final stored = [
+        for (final t in tables)
+          [for (final s in t.standings) s.nationId]..sort(),
+      ];
+      final rebuilt = [
+        for (final g in qualifyingGroups(
+          def.rngSeed,
+          world,
+          Confederation.africa,
+        ))
+          [...g]..sort(),
+      ];
+      expect(
+        stored.map((g) => g.join(',')).toSet(),
+        rebuilt.map((g) => g.join(',')).toSet(),
+      );
+      expect(stored.where((g) => g.contains(213)), hasLength(1));
     });
   });
 }

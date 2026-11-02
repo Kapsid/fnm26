@@ -34,13 +34,10 @@ typedef PendingScandal = ({
 
 /// Whether camp scandals break at all.
 ///
-/// Off for now: in 1.0.7 (17) a story moved to a new man whenever the squad
-/// was changed and could leave the hub sending the manager round in a loop.
-/// That is fixed below, but it ships switched off until it has been played
-/// on a device. Off, nothing new is offered and nothing is settled, so a save
-/// stuck on an old story is simply free of it; answered stories stay in the
-/// history.
-final Provider<bool> campScandalsEnabledProvider = Provider((ref) => false);
+/// Switched off in 1.0.8 (a story could move to a new man when the squad
+/// was changed, sending the hub round in a loop); back on from 1.0.9 with
+/// the man pinned at the first roll. Tests use it to turn them off.
+final Provider<bool> campScandalsEnabledProvider = Provider((ref) => true);
 
 /// The scandal the manager has to answer now, or null.
 ///
@@ -125,8 +122,7 @@ Future<({PendingScandal scandal, bool dropped})?> _windowScandal(
   if (rolled == null) {
     final candidates = [
       for (final p in pool)
-        if (callUps.contains(p.id) &&
-            (absences[p.id]?.injuryMatches ?? 0) <= 0)
+        if (callUps.contains(p.id) && (absences[p.id]?.injuryMatches ?? 0) <= 0)
           (playerId: p.id, age: p.age),
     ];
     rolled = CampScandal.roll(

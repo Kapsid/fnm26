@@ -355,6 +355,58 @@ void main() {
     expect(retried.budget, paidOnce);
   }, timeout: const Timeout(Duration(minutes: 3)));
 
+  test('a new stadium in a town only the build list has: offered, built, '
+      'pinned on the map, and hosting once it opens', () async {
+    final w = await _world();
+    await _setBudget(w, 60000000);
+    final build =
+        (jsonDecode(
+                  File(
+                    'assets/data/stadium_build_cities.json',
+                  ).readAsStringSync(),
+                )
+                as Map<String, Object?>)['${_nation.id}']!
+            as List;
+    final town = build.first! as String;
+    expect(_cities[_nation.id], isNot(contains(town)));
+    var v = await _view(w);
+    expect(v.cities, contains(town));
+    // The seed cities first, then the build-only towns.
+    expect(v.cities.take(_cities[_nation.id]!.length), _cities[_nation.id]);
+    expect(
+      v.cities.length,
+      greaterThan(_cities[_nation.id]!.length + 5),
+      reason: 'many more places to build than the seed cities',
+    );
+    // On the map: the town has a position (see nation_geo_test).
+    final geo =
+        jsonDecode(File('assets/geo/${_nation.id}.json').readAsStringSync())
+            as Map<String, Object?>;
+    expect((geo['c']! as Map).containsKey(town), isTrue);
+
+    expect(
+      await w.c.read(nationalStadiumServiceProvider).build(w.careerId, town),
+      isTrue,
+    );
+    v = await _view(w);
+    final built = v.stadiums.singleWhere((s) => s.built);
+    expect(built.city, town);
+    expect(v.cities, isNot(contains(town)));
+
+    await _finishCycle(w);
+    await w.c.read(seasonServiceProvider).startNextCycle(w.careerId);
+    expect(
+      (await _grounds(w)).any((g) => g.city == town && g.stadium == built.name),
+      isTrue,
+    );
+    final hosts = await w.c.read(
+      FutureProvider<Map<int, List<Venue>>>(
+        (ref) => hostEstatesFor(ref, w.careerId, [_nation.id]),
+      ).future,
+    );
+    expect(hosts[_nation.id]!.any((g) => g.city == town), isTrue);
+  }, timeout: const Timeout(Duration(minutes: 3)));
+
   test('two builds ordered together: only the first stands, '
       'and only it is charged', () async {
     final w = await _world();

@@ -134,8 +134,9 @@ bool countsAsSave(CampaignTag? tag) => tag == null || tag.moved;
 /// the rivals beaten at least once. `cycleRuns` is the continental run of each
 /// cycle played so far, first cycle first, and `worldRuns` the World
 /// Championship run of each (read only for a
-/// [CampaignGoal.qualifyWorldThenTitles] or a
-/// [CampaignGoal.qualifyBothThenTitle], empty for every other goal).
+/// [CampaignGoal.qualifyWorldThenTitles], a
+/// [CampaignGoal.qualifyBothThenTitle] or a
+/// [CampaignGoal.qualifyBothThenWorldTitle], empty for every other goal).
 /// `nationsCupRun` is this cycle's Nations Cup (see [campaignNationsCupRun]),
 /// read only for a [CampaignGoal.titleTreble] and null for every other goal.
 /// `reached` is the grade the run stands at now, settled or not; `stars` only
@@ -291,6 +292,7 @@ campaignProgressProvider = FutureProvider.autoDispose
       final readsWorld =
           def.goal == CampaignGoal.qualifyWorldThenTitles ||
           def.goal == CampaignGoal.qualifyBothThenTitle ||
+          def.goal == CampaignGoal.qualifyBothThenWorldTitle ||
           def.goal == CampaignGoal.titleTreble;
       final cycleRuns = <({int ordinal, bool over})>[];
       final worldRuns = <({int ordinal, bool over})>[];
@@ -399,6 +401,12 @@ campaignProgressProvider = FutureProvider.autoDispose
               cycleRuns.any((r) => r.ordinal >= 7) ||
               worldRuns.any((r) => r.ordinal >= 7),
         ),
+        CampaignGoal.qualifyBothThenWorldTitle =>
+          qualifyBothThenWorldTitleStars(
+            qualifiedContinental: cycleRuns.any((r) => r.ordinal >= 2),
+            qualifiedWorld: worldRuns.any((r) => r.ordinal >= 2),
+            wonWorld: worldRuns.any((r) => r.ordinal >= 7),
+          ),
         CampaignGoal.titleTreble => titleTrebleStars(
           wonContinental: cycleRuns.any((r) => r.ordinal >= 7),
           wonWorld: worldRuns.any((r) => r.ordinal >= 7),
@@ -426,6 +434,7 @@ campaignProgressProvider = FutureProvider.autoDispose
         // The same: the world title ends it, anything less runs on.
         CampaignGoal.qualifyWorldThenTitles => reached == 3,
         CampaignGoal.qualifyBothThenTitle => reached == 3,
+        CampaignGoal.qualifyBothThenWorldTitle => reached == 3,
         // Every star needs the continental title first: losing it ends the
         // run there and then. Otherwise it runs to the World Championship,
         // the last title of the cycle (the end-of-cycle rule below).

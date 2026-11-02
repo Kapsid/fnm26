@@ -63,6 +63,76 @@ its fifth and sixth slides are the player detail and the youth pyramid, and
 the English fifth slide is the draw. If a Czech draw shot turns up, it can go
 back in step.
 
+## The localised sets
+
+Since 1.0.7 German, Spanish, Portuguese and Italian have their own sets in
+`de/shots/`, `es/shots/`, `pt/shots/` and `it/shots/`, plus their own
+`hero-phone.jpg` / `hero-tablet.jpg`. They follow the ENGLISH composition
+exactly: the same twelve phone screens and ten tablet screens, in the same
+order, with the captions translated in each `index.html`.
+
+<!-- LOCALISED-SETS-STATUS -->
+Since the 28-language site every game language has its own set
+(`<lang>/shots/`, 44 files, plus `hero-phone.jpg` / `hero-tablet.jpg`), made
+the same way. French (France, WC 2034 R32 win 3-1 vs Saudi Arabia) was shot
+last, from the 1.0.9 work in progress, so its live match shows the half-time
+score line under the scoreline.
+
+A nation that rarely reaches the World Championship is shot around its
+continental championship instead (the save harness also keeps those finals
+matches as `cf_*`). Nations and matches used for the 21 newer languages:
+bg Bulgaria (Euro 2032 group, 1-1 Portugal), da Denmark (WC R16), el Greece
+(WC QF), fi Finland (Euro group, 1-1 Portugal), fil Philippines (Asian
+Championship R16), hi India (Asian Championship R16), hr Croatia (Euro final),
+hu Hungary (WC group), id Indonesia (Asian Championship group), ja Japan (WC
+R16), ko South Korea (WC final), ms Malaysia (Asian Championship group, 2-2),
+nb Norway (Euro final), nl Netherlands (WC R32), pl Poland (WC R32), ro Romania
+(Euro R16), sv Sweden (WC group), th Thailand (Asian Championship group), tr
+Türkiye (WC R16), uk Ukraine (WC group), vi Vietnam (Asian Championship group).
+
+The test engine has no system font fallback, so `capture.dart` loads SF,
+Hiragino Sans, Apple SD Gothic Neo, Thonburi and Kohinoor Devanagari, and
+`site_shots_test.dart` gives every paragraph that lacks a fallback list those
+faces before it shoots (buttons and bars replace the ambient text style and
+would otherwise draw non-Latin labels as boxes). The ranking chart's small
+labels are still grey boxes in every set, as in EN and CS: the painter sets
+no font family at all.
+
+Each set comes from a real played career, not a fresh save: two full
+four-year cycles played by the story driver on the app's own asset seed,
+ending in the 2034 World Championship finals. The nation is the language's
+own: Germany (de), Spain (es), Brazil (pt), Italy (it).
+
+They are made by two test-only harnesses in `test/story/`, neither part of
+the suite (both skip unless their environment variables are set), always run
+through the shared `ftest.sh`:
+
+1. `site_save_test.dart` plays the career and keeps copies of the database
+   at the second cycle's budget, its finals draw and before every World
+   Championship finals match. It tries seeds until the run wins a late
+   knockout with the board pleased (a hub reading "job at risk" undersells
+   the game):
+
+       SITE_SAVE_OUT=<dir> SITE_NATION=20 STORY_SEED=1 SEED_COUNT=10 \
+         SITE_MIN_BOARD=75 SITE_ROUNDS=SF,FINAL CYCLES=2 flutter test test/story/site_save_test.dart
+
+2. `site_shots_test.dart` renders every shot from those copies in one
+   language: phones at 402 x 874 points, 3x (the iPhone 17 Pro frame);
+   tablets at 1366 x 1024 points, 2x, through the real tablet shell.
+
+       SITE_SAVES=<dir>/seed<N> SITE_KO=wc_07_SF SITE_STAR=<player id> \
+         SITE_LANG=de SITE_RAW=<png dir> flutter test test/story/site_shots_test.dart
+
+   `SITE_KO` names the match the story is told around (hub, preview, live
+   match); `SITE_STAR` the player on the player screens; `ONLY` / `SKIP`
+   limit the run (the live match is the slow part).
+
+The raw phone PNGs lose their top 186 px (the status-bar band) to become the
+1206 x 2436 crop this README asks for, then go through the same `sips` lines
+as above. The tablet PNGs are scaled to 960 x 720 and 2000 x 1500 at quality
+80. The hero pair is the hub: `hero-phone.jpg` is phone shot 7 at 400 x 808,
+`hero-tablet.jpg` is tablet shot 1 at 1400 x 1050.
+
 Deliberately left out of the carousel: the manager skills, the federation
 budget, the challenges and the board objectives. Every one of those was shot
 on a fresh save, so they read "No points to spend", "Nobody in the job", all

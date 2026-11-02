@@ -74,12 +74,12 @@ void main() {
 
     final pool =
         (await c
-            .read(playerRepositoryProvider)
-            .byNation(
-              career.nationId,
-              saveSeed: career.rngSeed,
-              careerId: career.id,
-            ))
+              .read(playerRepositoryProvider)
+              .byNation(
+                career.nationId,
+                saveSeed: career.rngSeed,
+                careerId: career.id,
+              ))
           ..sort((a, b) {
             final byOverall = b.overall.compareTo(a.overall);
             return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
@@ -103,6 +103,14 @@ void main() {
             lineup: [for (final p in xi) p.id],
           ),
         );
+
+    // Named for the window, as the call-up screen marks it, so the skip does
+    // not stop on the call-up day first (see pendingCallUpStop).
+    await comp.markDrawWatched(
+      career.id,
+      career.cyclePointer,
+      'callup:${next.id}',
+    );
 
     // Skip: the world (his own fixture included) is quick-simmed up to it.
     await c.read(seasonServiceProvider).advance(career.id);
@@ -149,22 +157,26 @@ void main() {
       final c = open();
       await c.read(seedLoaderProvider).ensureSeeded();
       final career =
-          (await c.read(careerServiceProvider).create(
-                nationId: nations.first.id,
-                managerName: 'M',
-                rngSeed: 4242,
-              ))
+          (await c
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: nations.first.id,
+                    managerName: 'M',
+                    rngSeed: 4242,
+                  ))
               .valueOrNull!;
       if (drilled) {
-        await c.read(tacticsRepositoryProvider).saveTactic(
-          career.id,
-          Tactic(
-            formation: Formation.f433,
-            lineup: const [],
-            instructions: Playstyle.gegenpress.instructions!,
-            playstyle: Playstyle.gegenpress,
-          ),
-        );
+        await c
+            .read(tacticsRepositoryProvider)
+            .saveTactic(
+              career.id,
+              Tactic(
+                formation: Formation.f433,
+                lineup: const [],
+                instructions: Playstyle.gegenpress.instructions!,
+                playstyle: Playstyle.gegenpress,
+              ),
+            );
         // Years of the same shape, with a plan that keeps changing, so the
         // side is drilled without being read (see TeamChemistry). The keys
         // are real plans: the skip path now scouts the last one (AiCounter),

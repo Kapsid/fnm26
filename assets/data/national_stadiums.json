@@ -125,6 +125,40 @@
    "seats": 4500
   }
  ],
+ "6": [
+  {
+   "city": "Minsk",
+   "seats": 22000
+  },
+  {
+   "city": "Minsk",
+   "seats": 16500
+  },
+  {
+   "city": "Gomel",
+   "seats": 14300
+  },
+  {
+   "city": "Borisov",
+   "seats": 13100
+  },
+  {
+   "city": "Brest",
+   "seats": 10100
+  },
+  {
+   "city": "Grodno",
+   "seats": 8400
+  },
+  {
+   "city": "Vitebsk",
+   "seats": 8100
+  },
+  {
+   "city": "Mogilev",
+   "seats": 7400
+  }
+ ],
  "7": [
   {
    "city": "Brussels",
@@ -5089,6 +5123,16 @@
   {
    "city": "Ilulissat",
    "seats": 1000
+  }
+ ],
+ "213": [
+  {
+   "city": "Zanzibar City",
+   "seats": 15000
+  },
+  {
+   "city": "Chake-Chake",
+   "seats": 10000
   }
  ]
 }

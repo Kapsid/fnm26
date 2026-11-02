@@ -80,6 +80,7 @@ class _FinancesTabletLayout extends ConsumerWidget {
                 // The national stadiums, labelled, as on the phone.
                 NationalStadiumsEntry(careerId: careerId),
                 HostingCard(careerId: careerId),
+                SponsorCard(careerId: careerId),
                 FanMoodLine(careerId: careerId),
                 const SizedBox(height: AppSpacing.md),
                 // The next cycle's allocation is not editable here, on

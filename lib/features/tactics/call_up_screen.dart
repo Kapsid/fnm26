@@ -831,7 +831,7 @@ class _CoverageBanner extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  AppDate.dayMonth(context, f.date),
+                  AppDate.dayMonthNumeric(context, f.date),
                   style: AppTypography.labelSmall.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),

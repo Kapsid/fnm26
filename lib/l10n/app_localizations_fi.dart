@@ -50,7 +50,13 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String matchH2hMet(int count) {
-    return '$count kohtaamista';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kohtaamista',
+      one: '1 kohtaaminen',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -255,6 +261,11 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchHalfTime => 'PUOLIAIKA';
+
+  @override
+  String matchHalfTimeScore(int home, int away) {
+    return 'Puoliaika $home : $away';
+  }
 
   @override
   String get matchContinue => 'Jatka';
@@ -594,17 +605,35 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String recordsCapsCount(int count) {
-    return '$count maaottelua';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count maaottelua',
+      one: '1 maaottelu',
+    );
+    return '$_temp0';
   }
 
   @override
   String recordsGoalsCount(int count) {
-    return '$count maalia';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count maalia',
+      one: '1 maali',
+    );
+    return '$_temp0';
   }
 
   @override
   String recordsAssistsCount(int count) {
-    return '$count syöttöä';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count syöttöä',
+      one: '1 syöttö',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -614,12 +643,24 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String recordsMatchesCount(int count) {
-    return '$count ottelua';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ottelua',
+      one: '1 ottelu',
+    );
+    return '$_temp0';
   }
 
   @override
   String recordsMeetingsCount(int count) {
-    return '$count kohtaamista';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kohtaamista',
+      one: '1 kohtaaminen',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -629,7 +670,13 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String recordsMeetingsWdl(int meetings, int wins, int draws, int losses) {
-    return '$meetings kohtaamista · ${wins}V ${draws}T ${losses}H';
+    String _temp0 = intl.Intl.pluralLogic(
+      meetings,
+      locale: localeName,
+      other: '$meetings kohtaamista',
+      one: '1 kohtaaminen',
+    );
+    return '$_temp0 · ${wins}V ${draws}T ${losses}H';
   }
 
   @override
@@ -639,7 +686,13 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String recordsRivalLine(int meetings, String record, String edge) {
-    return '$meetings kohtaamista · $record · $edge';
+    String _temp0 = intl.Intl.pluralLogic(
+      meetings,
+      locale: localeName,
+      other: '$meetings kohtaamista',
+      one: '1 kohtaaminen',
+    );
+    return '$_temp0 · $record · $edge';
   }
 
   @override
@@ -1223,6 +1276,36 @@ class AppLocalizationsFi extends AppLocalizations {
   String get tacticsCornersFreeKicks => 'Kulma- ja vapaapotkut';
 
   @override
+  String get tacticsThrowIns => 'Rajaheitot';
+
+  @override
+  String get tacticsThrowInStyle => 'Rajaheittotyyli';
+
+  @override
+  String get tacticsThrowInLong => 'Pitkät rajaheitot';
+
+  @override
+  String get tacticsThrowInNeutral => 'Neutraali';
+
+  @override
+  String get tacticsThrowInDefensive => 'Varmat rajaheitot';
+
+  @override
+  String get tacticsThrowInLongBlurb =>
+      'Boksin lähellä rajaheitot lähtevät boksiin. Hieman lisää uhkaa, varsinkin vahvalla heittäjällä ja pitkillä hyökkääjillä, mutta pallo menetetään vähän useammin.';
+
+  @override
+  String get tacticsThrowInNeutralBlurb =>
+      'Rajaheitot pelin mukaan. Mikään ei muutu.';
+
+  @override
+  String get tacticsThrowInDefensiveBlurb =>
+      'Jokainen rajaheitto lyhyesti ja varmasti. Vähemmän menetyksiä, joista vastustaja kontraa, ja vähän vähemmän maalipaikkoja.';
+
+  @override
+  String get matchGoalLongThrow => 'PITKÄ RAJAHEITTO';
+
+  @override
   String get tacticsSkillFin => 'LAUKAUS';
 
   @override
@@ -1572,7 +1655,13 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String hubGoldenBootValue(String name, int goals) {
-    return '$name · $goals maalia';
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals maalia',
+      one: '1 maali',
+    );
+    return '$name · $_temp0';
   }
 
   @override
@@ -2457,7 +2546,13 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String statsAppsShort(int apps) {
-    return '$apps ottelua';
+    String _temp0 = intl.Intl.pluralLogic(
+      apps,
+      locale: localeName,
+      other: '$apps ottelua',
+      one: '1 ottelu',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -2489,6 +2584,29 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String captainMoraleBoost(int morale) {
     return '+$morale joukkueen moraalia';
+  }
+
+  @override
+  String get viceCaptainFirst => '1. varakapteeni';
+
+  @override
+  String get viceCaptainSecond => '2. varakapteeni';
+
+  @override
+  String get viceCaptainNone => 'Varakapteenia ei ole nimetty';
+
+  @override
+  String get viceCaptainHint =>
+      'Kantaa kapteeninnauhaa, kun kapteeni ei voi pelata.';
+
+  @override
+  String captainStandIn(String vice, String captain) {
+    return 'Varakapteeni $vice johtaa joukkueen kentälle, kapteeni $captain ei ole käytettävissä';
+  }
+
+  @override
+  String captainStandInUnnamed(String vice) {
+    return 'Varakapteeni $vice johtaa joukkueen kentälle';
   }
 
   @override
@@ -3498,6 +3616,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get statsMostGames => 'Eniten otteluita';
 
   @override
+  String get statsMostGamesShort => 'Ottelut';
+
+  @override
   String get statsNoGoalsRecorded => 'Maaleja ei ole vielä kirjattu.';
 
   @override
@@ -4225,47 +4346,47 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String yUpsetGap0(String opponent, String gap) {
+  String yUpsetGap0(String opponent, int gap) {
     return 'Rankingissa välillämme oli $gap sijaa, ja silti voitimme. Vastustaja: $opponent. Upeaa.';
   }
 
   @override
-  String yUpsetGap1(String opponent, String gap) {
+  String yUpsetGap1(String opponent, int gap) {
     return '$opponent: $gap sijaa edellämme. Kaatui. Jalkapallo on ihanaa.';
   }
 
   @override
-  String yUpsetGap2(String opponent, String gap) {
+  String yUpsetGap2(String opponent, int gap) {
     return 'Rankingero: $gap. Tulos: voitto, vastustajana $opponent. Älkää koskaan lakatko uskomasta.';
   }
 
   @override
-  String yUpsetGap3(String opponent, String gap) {
+  String yUpsetGap3(String opponent, int gap) {
     return 'Rankingero ennen avausta: $gap. $opponent kaatui silti.';
   }
 
   @override
-  String yUpsetGap4(String opponent, String gap) {
+  String yUpsetGap4(String opponent, int gap) {
     return 'Maailmanrankingissa $opponent oli $gap sijaa edellämme. Ei tänä iltana.';
   }
 
   @override
-  String yUpsetGap5(String opponent, String gap) {
+  String yUpsetGap5(String opponent, int gap) {
     return 'Yllätysindeksi: $gap rankingsijaa joukkueiden välillä. Voitto meille, vastustajana $opponent.';
   }
 
   @override
-  String yUpsetGap6(String opponent, String gap) {
+  String yUpsetGap6(String opponent, int gap) {
     return '$gap rankingsijaa erotti meidät vastustajasta, $opponent. Yksi ilta ei kurota eroa umpeen.';
   }
 
   @override
-  String yUpsetGap7(String opponent, String gap) {
+  String yUpsetGap7(String opponent, int gap) {
     return '$opponent: $gap sijaa edellä, ja kaatui. Ranking tuskin huomaa.';
   }
 
   @override
-  String yUpsetGap8(String gap) {
+  String yUpsetGap8(int gap) {
     return 'Rankingero: $gap. Muistakaa tämä luku, kun seuraavan kerran häviämme pienelle.';
   }
 
@@ -4765,47 +4886,47 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String yDownGap0(String opponent, String gap) {
+  String yDownGap0(String opponent, int gap) {
     return '$opponent: $gap sijaa takanamme. Sattuu. Eteenpäin.';
   }
 
   @override
-  String yDownGap1(String gap) {
+  String yDownGap1(int gap) {
     return 'Rankingero: $gap meidän hyväksemme. Jalkapallo ei lue rankingeja.';
   }
 
   @override
-  String yDownGap2(String opponent, String gap) {
+  String yDownGap2(String opponent, int gap) {
     return '$gap sijaa meidän ja vastustajan ($opponent) välillä paperilla. Ei kentällä tänä iltana.';
   }
 
   @override
-  String yDownGap3(String opponent, String gap) {
+  String yDownGap3(String opponent, int gap) {
     return 'Rankingero ennen avausta: $gap meidän hyväksemme. Tappio silti, vastustajana $opponent.';
   }
 
   @override
-  String yDownGap4(String opponent, String gap) {
+  String yDownGap4(String opponent, int gap) {
     return 'Maailmanrankingissa $opponent oli $gap sijaa takanamme. Tulos: tappio.';
   }
 
   @override
-  String yDownGap5(String opponent, String gap) {
+  String yDownGap5(String opponent, int gap) {
     return 'Yllätysindeksi: $gap rankingsijaa, väärään suuntaan. Vastustaja: $opponent.';
   }
 
   @override
-  String yDownGap6(String opponent, String gap) {
+  String yDownGap6(String opponent, int gap) {
     return '$gap sijaa edellä rankingissa, vastustajana $opponent. Tappio. Selittäkää se.';
   }
 
   @override
-  String yDownGap7(String gap) {
+  String yDownGap7(int gap) {
     return 'Tappio joukkueelle, joka on $gap sijaa takanamme. Antakaa luvun upota.';
   }
 
   @override
-  String yDownGap8(String opponent, String gap) {
+  String yDownGap8(String opponent, int gap) {
     return 'Rankingero: $gap. Tappio, vastustajana $opponent. Jonkun kannattaa alkaa laskea päiviä.';
   }
 
@@ -5165,122 +5286,146 @@ class AppLocalizationsFi extends AppLocalizations {
   String get grievanceDismiss => 'Minä valitsen kokoonpanon';
 
   @override
-  String yScorerStar0(String name, String goals) {
+  String yScorerStar0(String name, int goals) {
     return '$name teki niistä $goals. Kukaan muu ei ole lähelläkään.';
   }
 
   @override
-  String yScorerStar1(String name, String goals) {
-    return '$goals maalia: $name. Hän kantaa tätä joukkuetta.';
+  String yScorerStar1(String name, int goals) {
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals maalia',
+      one: '1 maali',
+    );
+    return '$_temp0: $name. Hän kantaa tätä joukkuetta.';
   }
 
   @override
-  String yScorerStar2(String name, String goals) {
+  String yScorerStar2(String name, int goals) {
     return '$name: $goals tänään. Mikä pelaaja.';
   }
 
   @override
-  String yScorerStar3(String name, String goals) {
-    return '$goals maalia heidän verkkoonsa, ja tekijä oli $name. Kumarra.';
+  String yScorerStar3(String name, int goals) {
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals maalia',
+      one: '1 maali',
+    );
+    return '$_temp0 heidän verkkoonsa, ja tekijä oli $name. Kumarra.';
   }
 
   @override
-  String yScorerStar4(String name, String goals) {
-    return '$goals maalia: $name, ja muut olivat matkustajia.';
+  String yScorerStar4(String name, int goals) {
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals maalia',
+      one: '1 maali',
+    );
+    return '$_temp0: $name, ja muut olivat matkustajia.';
   }
 
   @override
-  String yScorerStar5(String name, String goals) {
+  String yScorerStar5(String name, int goals) {
     return 'Taas $name. $goals. Kuvittele tämä joukkue ilman häntä.';
   }
 
   @override
-  String yScorerStar6(String name, String goals) {
-    return '$goals maalia: $name. Yhden miehen ei pitäisi joutua tekemään näin paljon.';
+  String yScorerStar6(String name, int goals) {
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals maalia',
+      one: '1 maali',
+    );
+    return '$_temp0: $name. Yhden miehen ei pitäisi joutua tekemään näin paljon.';
   }
 
   @override
-  String yScorerStar7(String name, String goals) {
+  String yScorerStar7(String name, int goals) {
     return 'Poista $name kuvasta, ja maaleja on $goals vähemmän ja iltapäivä aivan toisenlainen.';
   }
 
   @override
-  String yWinStreak0(String count) {
+  String yWinStreak0(int count) {
     return '$count voittoa putkeen. Mitä pukukopissa onkaan sanottu, se on mennyt perille.';
   }
 
   @override
-  String yWinStreak1(String count) {
+  String yWinStreak1(int count) {
     return 'Siinä $count peräkkäin. Joukkueet eivät kompastu tällaisiin putkiin.';
   }
 
   @override
-  String yWinStreak2(String count) {
+  String yWinStreak2(int count) {
     return '$count putkeen ja jatkuu. Itseluottamus näkyy katsomoon asti.';
   }
 
   @override
-  String yWinStreak3(String count) {
+  String yWinStreak3(int count) {
     return 'Ei tappiota $count ottelussa. Kysy keneltä tahansa valmentajalta: se on vaikein osa.';
   }
 
   @override
-  String yWinStreak4(String count) {
+  String yWinStreak4(int count) {
     return '$count putkeen. Nauti, kun otteluohjelma on suosiollinen.';
   }
 
   @override
-  String yWinStreak5(String count) {
+  String yWinStreak5(int count) {
     return '$count peräkkäin, emmekä ole voittaneet ketään merkittävää.';
   }
 
   @override
-  String yWinStreak6(String count) {
+  String yWinStreak6(int count) {
     return '$count voiton putki. Kysy uudestaan, kun sitä koetellaan.';
   }
 
   @override
-  String yWinStreak7(String count) {
+  String yWinStreak7(int count) {
     return '$count peräkkäin. Jokaisessa joukkueessa on tällainen putki kerran.';
   }
 
   @override
-  String yLossStreak0(String count) {
+  String yLossStreak0(int count) {
     return '$count ottelua ilman voittoa. Jossain vaiheessa tekosyyt loppuvat.';
   }
 
   @override
-  String yLossStreak1(String count) {
+  String yLossStreak1(int count) {
     return '$count peräkkäin menetetty. Tämä ei ole enää notkahdus.';
   }
 
   @override
-  String yLossStreak2(String count) {
+  String yLossStreak2(int count) {
     return '$count tappiota peräkkäin. Jonkun on vastattava tästä.';
   }
 
   @override
-  String yLossStreak3(String count) {
+  String yLossStreak3(int count) {
     return 'Ei voittoa $count ottelussa. Sen näkee siitä, miten he pelaavat.';
   }
 
   @override
-  String yLossStreak4(String count) {
+  String yLossStreak4(int count) {
     return '$count ottelua ilman voittoa ja samat virheet joka viikko.';
   }
 
   @override
-  String yLossStreak5(String count) {
+  String yLossStreak5(int count) {
     return '$count putkeen. Mitä tahansa kokeillaankin, se ei toimi.';
   }
 
   @override
-  String yLossStreak6(String count) {
+  String yLossStreak6(int count) {
     return '$count peräkkäin. Tämä on suunta, ei notkahdus.';
   }
 
   @override
-  String yLossStreak7(String count) {
+  String yLossStreak7(int count) {
     return 'Ei voittoa $count ottelussa, eikä kukaan ylhäällä ole sanonut sanaakaan.';
   }
 
@@ -6296,7 +6441,19 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String tourCupMostTitlesValue(String nation, int titles, int editions) {
-    return '$nation: $titles mestaruutta, $editions turnausta';
+    String _temp0 = intl.Intl.pluralLogic(
+      titles,
+      locale: localeName,
+      other: '$titles mestaruutta',
+      one: '1 mestaruus',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      editions,
+      locale: localeName,
+      other: '$editions turnausta',
+      one: '1 turnaus',
+    );
+    return '$nation: $_temp0, $_temp1';
   }
 
   @override
@@ -6461,6 +6618,10 @@ class AppLocalizationsFi extends AppLocalizations {
       'Sijoitu karsintalohkon yläpuoliskolle';
 
   @override
+  String get objectiveQualifyingChallenge =>
+      'Taistele paikasta, vähintään karsintalohkon yläpuolisko';
+
+  @override
   String get finishQualifyingTopHalf => 'Karsintalohkon yläpuolisko';
 
   @override
@@ -6594,8 +6755,14 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String squadDevPageOf(String page, String pages, String total) {
-    return '$page/$pages · $total pelaajaa';
+  String squadDevPageOf(String page, String pages, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total pelaajaa',
+      one: '1 pelaaja',
+    );
+    return '$page/$pages · $_temp0';
   }
 
   @override
@@ -6701,7 +6868,13 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String u21AgeCaps(int age, int caps) {
-    return 'Ikä $age · $caps maaottelua';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps maaottelua',
+      one: '1 maaottelu',
+    );
+    return 'Ikä $age · $_temp0';
   }
 
   @override
@@ -7022,12 +7195,24 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String squadCapsValue(String name, int caps) {
-    return '$name · $caps maaottelua';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps maaottelua',
+      one: '1 maaottelu',
+    );
+    return '$name · $_temp0';
   }
 
   @override
   String squadGoalsValue(String name, int goals) {
-    return '$name · $goals maalia';
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals maalia',
+      one: '1 maali',
+    );
+    return '$name · $_temp0';
   }
 
   @override
@@ -7654,7 +7839,19 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String msgHofBody(String name, int caps, int goals) {
-    return '$name liittyy maasi Hall of Fameen ($caps maaottelua, $goals maalia). Näet hänet Legendat-osiossa.';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps maaottelua',
+      one: '1 maaottelu',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals maalia',
+      one: '1 maali',
+    );
+    return '$name liittyy maasi Hall of Fameen ($_temp0, $_temp1). Näet hänet Legendat-osiossa.';
   }
 
   @override
@@ -9005,62 +9202,62 @@ class AppLocalizationsFi extends AppLocalizations {
   String get transfersUnknownClub => 'Tuntematon seura';
 
   @override
-  String yAgainstThemAgain0(String opponent, String count) {
+  String yAgainstThemAgain0(String opponent, int count) {
     return 'Nyt on $count kertaa vastassa $opponent. Joku pitää pisteitä, ja se ovat he.';
   }
 
   @override
-  String yAgainstThemAgain1(String opponent, String count) {
+  String yAgainstThemAgain1(String opponent, int count) {
     return 'Taas $opponent. $count kohtaamista, emmekä ole vieläkään keksineet heitä.';
   }
 
   @override
-  String yAgainstThemAgain2(String opponent, String count) {
+  String yAgainstThemAgain2(String opponent, int count) {
     return 'Kerta numero $count vastassa $opponent. Tämä ei ole enää sattumaa.';
   }
 
   @override
-  String yAgainstThemAgain3(String opponent, String count) {
+  String yAgainstThemAgain3(String opponent, int count) {
     return 'Olemme pelanneet $opponent vastaan $count kertaa emmekä oppineet yhdestäkään mitään.';
   }
 
   @override
-  String yAgainstThemAgain4(String opponent, String count) {
+  String yAgainstThemAgain4(String opponent, int count) {
     return '$opponent, $count kertaa. He tietävät tasan, mitä aiomme tehdä.';
   }
 
   @override
-  String yAgainstThemAgain5(String opponent, String count) {
+  String yAgainstThemAgain5(String opponent, int count) {
     return 'Mitä tahansa $opponent meistä tietääkin, $count kohtaamisen jälkeen heillä se yhä on.';
   }
 
   @override
-  String ySameOldStory0(String count) {
+  String ySameOldStory0(int count) {
     return 'Tämä on tapahtunut $count kertaa viime aikoina. Missä vaiheessa tämä on vain se, mitä me olemme?';
   }
 
   @override
-  String ySameOldStory1(String count) {
+  String ySameOldStory1(int count) {
     return '$count tällaista iltapäivää jo. Tämä on kaava, ei tuuria.';
   }
 
   @override
-  String ySameOldStory2(String count) {
+  String ySameOldStory2(int count) {
     return 'Olemme nähneet täsmälleen tämän pelin $count kertaa viime aikoina. Sama käsikirjoitus, sama loppu.';
   }
 
   @override
-  String ySameOldStory3(String count) {
+  String ySameOldStory3(int count) {
     return '$count versiota samasta yhdeksästäkymmenestä minuutista. Kukaan ei korjaa tätä.';
   }
 
   @override
-  String ySameOldStory4(String count) {
+  String ySameOldStory4(int count) {
     return '$count kertaa. Jos et näe kaavaa nyt, et katso.';
   }
 
   @override
-  String ySameOldStory5(String count) {
+  String ySameOldStory5(int count) {
     return 'Sama tarina, $count kertaa. Tekosyyt loppuivat ennen tuloksia.';
   }
 
@@ -9158,62 +9355,62 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String yDrought0(String name, String count) {
+  String yDrought0(String name, int count) {
     return '$name on pelannut $count ottelua ilman maalia ja tekee kaiken muun kentällä.';
   }
 
   @override
-  String yDrought1(String name, String count) {
+  String yDrought1(String name, int count) {
     return '$count peliä ilman maalia: $name. Ne tulevat kolmen putkissa, aina on tullut.';
   }
 
   @override
-  String yDrought2(String name, String count) {
+  String yDrought2(String name, int count) {
     return '$name: $count peliä, ei maaleja.';
   }
 
   @override
-  String yDrought3(String name, String count) {
+  String yDrought3(String name, int count) {
     return '$count ottelua ilman maalia: $name. Kannattaa pitää silmällä.';
   }
 
   @override
-  String yDrought4(String name, String count) {
+  String yDrought4(String name, int count) {
     return '$count peliä. Ei maaleja. $name ei osuisi ladon seinään.';
   }
 
   @override
-  String yDrought5(String name, String count) {
+  String yDrought5(String name, int count) {
     return '$name ei ole tehnyt maalia $count ottelussa. Pelauttakaa vaikka kuka tahansa muu.';
   }
 
   @override
-  String yRivalryLooms0(String opponent, String count) {
+  String yRivalryLooms0(String opponent, int count) {
     return 'Seuraavaksi $opponent. $count kohtaamista ja silti tämä merkitsee kaikkea.';
   }
 
   @override
-  String yRivalryLooms1(String opponent, String count) {
+  String yRivalryLooms1(String opponent, int count) {
     return '$count kertaa vastassa $opponent. Antaa tulla.';
   }
 
   @override
-  String yRivalryLooms2(String opponent, String count) {
+  String yRivalryLooms2(String opponent, int count) {
     return 'Seuraavaksi $opponent. Pelattu $count.';
   }
 
   @override
-  String yRivalryLooms3(String opponent, String count) {
+  String yRivalryLooms3(String opponent, int count) {
     return 'Kohtaaminen numero $count: $opponent tällä viikolla.';
   }
 
   @override
-  String yRivalryLooms4(String opponent, String count) {
+  String yRivalryLooms4(String opponent, int count) {
     return 'Taas $opponent. $count tällaista, emmekä ole oppineet mitään.';
   }
 
   @override
-  String yRivalryLooms5(String opponent, String count) {
+  String yRivalryLooms5(String opponent, int count) {
     return '$count peliä vastaan $opponent, ja yhä he voittavat meidät. Upeaa.';
   }
 
@@ -11193,6 +11390,29 @@ class AppLocalizationsFi extends AppLocalizations {
   String get campaignStars3Greenland => 'Voita EM-kisat tai MM-kisat';
 
   @override
+  String get campaignZanzibarTitle => 'Sansibarin nousu';
+
+  @override
+  String get campaignZanzibarTwist =>
+      'Sansibar ottaa Tšadin paikan Afrikassa sadaksi vuodeksi';
+
+  @override
+  String get campaignZanzibarGoal => 'Selviä Afrikan mestaruuskilpailuihin';
+
+  @override
+  String get campaignZanzibarIntro =>
+      'Sansibarilla on oma jalkapalloliitto ja oma maajoukkue, mutta ei paikkaa Afrikan eikä maailman jalkapallossa. Tässä maailmassa se on ottanut Tšadin paikan Afrikassa ja aloittaa maailmanrankingin loppupäästä: saarelaispelaajia, pieniä stadioneita ja monsuunin helle. Sinulla on sata vuotta, kaksikymmentäviisi kautta, aikaa selviytyä Afrikan mestaruuskilpailuihin, sitten MM-kisoihin ja, jos uskallat unelmoida, voittaa MM-kisat.';
+
+  @override
+  String get campaignStars1Zanzibar => 'Selviä Afrikan mestaruuskilpailuihin';
+
+  @override
+  String get campaignStars2Zanzibar => 'Selviä MM-kisoihin';
+
+  @override
+  String get campaignStars3Zanzibar => 'Voita MM-kisat';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -12749,6 +12969,21 @@ class AppLocalizationsFi extends AppLocalizations {
       'Minä sanon: antakaa poikien elää! Joka tekee töitä, saa myös juhlia. Peukku ylös.';
 
   @override
+  String get yCameoMarena => 'Tätä porukkaa voisin valmentaa minäkin.';
+
+  @override
+  String get yCameoKralik => 'Mitä sä odotit hehehe, osta meidän ZeroZeroa';
+
+  @override
+  String get yCameoPosuk0 => 'HEIKKOA';
+
+  @override
+  String get yCameoPosuk1 => 'VOI ELLUUU';
+
+  @override
+  String get yCameoPosuk2 => 'Lähteekö kukaan kaljalle?';
+
+  @override
   String get yTraitStreamer =>
       'Striimaa kaiken, täysillä ja isoilla kirjaimilla.';
 
@@ -13062,4 +13297,977 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get hostingWindowLine =>
       'Haku avautuu kauden lopussa, MM-kisojen finaalin jälkeen.';
+
+  @override
+  String hubEventWarmUpOffer(String nation) {
+    return 'Harjoitusottelutarjous: $nation';
+  }
+
+  @override
+  String get hubEventWarmUpOfferSub =>
+      'Jäähyväisottelu ennen heidän turnaustaan';
+
+  @override
+  String get warmUpOfferTitle => 'HARJOITUSOTTELUTARJOUS';
+
+  @override
+  String warmUpOfferBody(String nation, String competition, String date) {
+    return '$nation valmistautuu turnaukseen $competition ja haluaa pelata kanssasi jäähyväisottelun $date.';
+  }
+
+  @override
+  String warmUpOfferAway(String nation) {
+    return 'Vieraissa, vastustajan luona ($nation).';
+  }
+
+  @override
+  String get warmUpOfferHome => 'Kotona: vastustaja tulee luoksesi.';
+
+  @override
+  String get warmUpOfferNote =>
+      'Voit hyväksyä enintään kaksi tarjousta. Hyväksytylle ottelulle valitaan oma joukkue.';
+
+  @override
+  String get warmUpOfferAccept => 'Hyväksy';
+
+  @override
+  String get warmUpOfferDecline => 'Hylkää';
+
+  @override
+  String warmUpOfferMsgTitle(String nation) {
+    return 'Harjoitusottelutarjous: $nation';
+  }
+
+  @override
+  String warmUpOfferMsgBody(String nation, String competition) {
+    return '$nation haluaa pelata kanssasi jäähyväisottelun ennen turnausta $competition.';
+  }
+
+  @override
+  String get hubSimToFinal => 'Simuloi finaaliin asti';
+
+  @override
+  String get jobDossierOpen => 'Tutki tehtävää';
+
+  @override
+  String get jobDossierRating => 'Joukkueen taso';
+
+  @override
+  String get jobDossierMood => 'Tunnelma';
+
+  @override
+  String get jobDossierTopPlayers => 'Parhaat pelaajat';
+
+  @override
+  String jobDossierPlayerAge(int age) {
+    return '$age v';
+  }
+
+  @override
+  String get jobDossierReport => 'Kykyjenetsijän arvio';
+
+  @override
+  String get jobDossierNextTargetLabel => 'Seuraava tavoite';
+
+  @override
+  String jobDossierNextTarget(String cup) {
+    return 'Karsinnat: $cup ja MM-kisat.';
+  }
+
+  @override
+  String get jobDossierStrongAttack => 'Hyökkäyksessä on todellista terää.';
+
+  @override
+  String get jobDossierBluntAttack => 'Maaleja syntyy vaivoin.';
+
+  @override
+  String get jobDossierStrongMidfield => 'Keskikenttä hallitsee peliä.';
+
+  @override
+  String get jobDossierWeakMidfield =>
+      'Keskikentällä jäädään usein alakynteen.';
+
+  @override
+  String get jobDossierStrongDefence => 'Takana vaikea murtaa.';
+
+  @override
+  String get jobDossierThinDefence => 'Puolustus näyttää ohuelta.';
+
+  @override
+  String get jobDossierSafeKeeper => 'Maalivahti, johon voi luottaa.';
+
+  @override
+  String get jobDossierShakyKeeper => 'Maalivahtipeli huolettaa.';
+
+  @override
+  String get jobDossierOldSquad => 'Ikääntyvä joukkue, uudistus on lähellä.';
+
+  @override
+  String get jobDossierYoungCore => 'Nouseva nuori runko.';
+
+  @override
+  String jobDossierOneStar(String name) {
+    return '$name kantaa tätä joukkuetta.';
+  }
+
+  @override
+  String get jobDossierDeepSquad =>
+      'Todellista syvyyttä avauskokoonpanon takana.';
+
+  @override
+  String get jobDossierThinSquad => 'Avauskokoonpanon takana vähän laatua.';
+
+  @override
+  String get jobDossierBalanced =>
+      'Tasapainoinen joukkue ilman selvää heikkoutta.';
+
+  @override
+  String yQualifiedEuphoric0(String competition) {
+    return 'En voi uskoa, että teimme sen! Melkein kukaan ei odottanut tätä. $competition, täältä tullaan 💪';
+  }
+
+  @override
+  String yQualifiedEuphoric1(String competition) {
+    return 'Mikä maaginen ilta, olemme unelmien maassa! $competition, täältä tullaan!';
+  }
+
+  @override
+  String yQualifiedEuphoric2(String competition) {
+    return 'Uskoin aina tähän joukkueeseen. Aina. Ja nyt lähdetään turnaukseen: $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric3(String competition) {
+    return 'Kukaan ei antanut meille mahdollisuutta siinä lohkossa. Ei kukaan. Nähdään turnauksessa: $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric4(String competition) {
+    return 'Kyyneleet silmissä. Me, turnauksessa $competition. Ihan oikeasti me.';
+  }
+
+  @override
+  String yQualifiedEuphoric5(String competition) {
+    return 'Tanssin juuri nyt kadulla. Paikka turnaukseen $competition! Epätodellista 🎉';
+  }
+
+  @override
+  String yQualifiedEuphoric6(String competition) {
+    return 'Sanoin, ettei meillä ole mitään mahdollisuuksia. En ole koskaan ollut näin iloinen väärässä olemisesta. $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric7(String competition) {
+    return 'Olen valittanut tästä joukkueesta vuosia ja jatkan huomenna. Mutta tänään? $competition, täältä tullaan!';
+  }
+
+  @override
+  String yQualifiedEuphoric8(String competition) {
+    return 'Hyvä on. HYVÄ ON. Otan kaiken takaisin. Lähdetään turnaukseen: $competition!';
+  }
+
+  @override
+  String yKnockoutEuphoric0(String opponent) {
+    return 'Jatkoon! $opponent kaatui. Mikä maaginen ilta, olemme unelmien maassa!';
+  }
+
+  @override
+  String yKnockoutEuphoric1(String opponent) {
+    return 'Pudotimme jatkosta joukkueen $opponent! Jatkakaa unelmointia, kaikki 💪';
+  }
+
+  @override
+  String yKnockoutEuphoric2(String opponent) {
+    return 'Tiesin, että tässä joukkueessa on sitä. Hyvästi $opponent, hei seuraava kierros!';
+  }
+
+  @override
+  String yKnockoutEuphoric3(String opponent) {
+    return 'Ääni meni. $opponent on ulkona, ja me jatkamme marssia!';
+  }
+
+  @override
+  String yKnockoutEuphoric4(String opponent) {
+    return 'Pudotuspelit, ja seisomme yhä. $opponent oppi sen kantapään kautta.';
+  }
+
+  @override
+  String yKnockoutEuphoric5(String opponent) {
+    return '$opponent lähtee kotiin. Tämä joukkue kirjoittaa historiaa 🔥';
+  }
+
+  @override
+  String yKnockoutEuphoric6(String opponent) {
+    return 'Luulin, että olisimme jo kotona. Sen sijaan kotiin lähtee $opponent. Uskomatonta.';
+  }
+
+  @override
+  String yKnockoutEuphoric7(String opponent) {
+    return 'Jopa minä unelmoin nyt. $opponent kaatui. Keitä me olemme?';
+  }
+
+  @override
+  String yKnockoutEuphoric8(String opponent) {
+    return 'Pessimisti koko ikäni. $opponent ulos, me jatkoon. En tiedä, mitä tekisin itselleni.';
+  }
+
+  @override
+  String yTrophyEuphoric0(String competition) {
+    return 'MESTARIT!!! Voitimme turnauksen $competition! En unohda tätä iltaa koskaan 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric1(String competition) {
+    return 'Mikä maaginen ilta. Mestarit, $competition, enkä voi lopettaa itkemistä.';
+  }
+
+  @override
+  String yTrophyEuphoric2(String competition) {
+    return 'Sanoin aina, että tämä joukkue pystyy siihen. $competition: voittajat. VOITTAJAT!';
+  }
+
+  @override
+  String yTrophyEuphoric3(String competition) {
+    return 'Sanokaa joku, että tämä on totta. Voitimme turnauksen $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric4(String competition) {
+    return 'Tänä yönä juhlitaan maan joka kadulla. $competition on meidän 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric5(String competition) {
+    return 'Muistakaa, missä olitte tänä iltana. Mestarit, $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric6(String competition) {
+    return 'Jokainen huono ilta, jokainen pettymys, kaikki oli tämän arvoista. $competition: mestarit.';
+  }
+
+  @override
+  String yTrophyEuphoric7(String competition) {
+    return 'Valitin vuosia, eikä nyt ole enää mistään valittamista. Voitimme turnauksen $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric8(String competition) {
+    return 'Hyvä on, myönnän: mestarit, $competition. Elämäni paras ilta.';
+  }
+
+  @override
+  String yExitHeartbreak0(String competition) {
+    return 'Sydän murskana. Lähdimme turnaukseen $competition voittamaan. Silti ylpeä tästä joukkueesta.';
+  }
+
+  @override
+  String yExitHeartbreak1(String competition) {
+    return 'Sattuu niin paljon. Turnauksessa $competition piti mennä pitkälle. Yritämme uudestaan.';
+  }
+
+  @override
+  String yExitHeartbreak2(String competition) {
+    return 'Murtunut. $competition päättyi meille jo, vaikka meillä oli joukkue voittoon.';
+  }
+
+  @override
+  String yExitHeartbreak3(String competition) {
+    return 'Kotilento turnauksesta $competition on elämämme pisin.';
+  }
+
+  @override
+  String yExitHeartbreak4(String competition) {
+    return 'Turnauksessa $competition piti mennä pitkälle. Sen sijaan lähdemme kotiin. Ei sanoja.';
+  }
+
+  @override
+  String yExitHeartbreak5(String competition) {
+    return 'Vuosien odotus, ja $competition päättyi meille ennen kuin alkoi. Tyhjä olo.';
+  }
+
+  @override
+  String punditsMsgTitle(String competition) {
+    return 'Asiantuntijat turnauksesta $competition';
+  }
+
+  @override
+  String punditsSays(String pundit, String words) {
+    return '$pundit: $words';
+  }
+
+  @override
+  String punditsFavourite0(String nation) {
+    return 'Suosikkini: $nation. Liian vahva ja liian laaja muille.';
+  }
+
+  @override
+  String punditsFavourite1(String nation) {
+    return 'Vaikea katsoa ohi joukkueen $nation. Kaikki mitä voittoon tarvitaan on siellä.';
+  }
+
+  @override
+  String punditsDarkHorse0(String nation) {
+    return 'Todellinen musta hevonen: $nation. Välierä ei yllättäisi minua.';
+  }
+
+  @override
+  String punditsDarkHorse1(String nation) {
+    return 'Pitäkää silmällä joukkuetta $nation. Kukaan ei halua kohdata heitä.';
+  }
+
+  @override
+  String punditsMineBottom0(String nation) {
+    return '$nation: lohkon viimeinen. Hienoa päästä tänne, mutta laatu ei riitä jatkoon.';
+  }
+
+  @override
+  String punditsMineBottom1(String nation) {
+    return '$nation: matkasta nautitaan, mutta näen heidät lohkon viimeisenä.';
+  }
+
+  @override
+  String punditsMineGroupOut0(String nation) {
+    return '$nation: putoaa lohkovaiheessa. Hankala vastus, mutta tasoa alempana.';
+  }
+
+  @override
+  String punditsMineGroupOut1(String nation) {
+    return 'Uskon, että $nation lähtee kotiin lohkon jälkeen. Mutta jollekulle he tekevät elämän vaikeaksi.';
+  }
+
+  @override
+  String punditsMineFirstKnockout0(String nation) {
+    return '$nation: jatkoon lohkosta, sitten ulos ensimmäisellä pudotuskierroksella. Kelpo turnaus.';
+  }
+
+  @override
+  String punditsMineFirstKnockout1(String nation) {
+    return '$nation: lohkosta pitäisi päästä jatkoon. Sitä pidemmälle olisi yllätys.';
+  }
+
+  @override
+  String punditsMineQuarters0(String nation) {
+    return '$nation: vakaa joukkue. Puolivälierä tuntuu sopivalta.';
+  }
+
+  @override
+  String punditsMineQuarters1(String nation) {
+    return '$nation: puolivälierä on ulottuvilla. Se olisi hyvä turnaus.';
+  }
+
+  @override
+  String punditsMineSemis0(String nation) {
+    return '$nation: luokkaa, pitkä taival odotetaan. Vähintään välierä.';
+  }
+
+  @override
+  String punditsMineSemis1(String nation) {
+    return '$nation: laatua neljän parhaan joukkoon. Vähempi olisi pettymys.';
+  }
+
+  @override
+  String punditsMineFinal0(String nation) {
+    return '$nation: luokkaa, pitkä taival odotetaan. Näen heidät finaalissa.';
+  }
+
+  @override
+  String punditsMineFinal1(String nation) {
+    return '$nation: finaaliin asti. Niin hyviä he ovat.';
+  }
+
+  @override
+  String punditsMineWinner0(String nation) {
+    return '$nation: joukkue, joka pitää voittaa. Kaikki muu kuin mestaruus on epäonnistuminen.';
+  }
+
+  @override
+  String punditsMineWinner1(String nation) {
+    return 'Veikkaukseni voittajaksi: $nation. Kaikki paine on nyt heillä.';
+  }
+
+  @override
+  String punditsMineDarkHorseQuarters(String nation) {
+    return 'Todellinen musta hevonen: $nation. Puolivälierä ei yllättäisi minua.';
+  }
+
+  @override
+  String punditsMineDarkHorseSemis(String nation) {
+    return 'Todellinen musta hevonen: $nation. Välierä ei yllättäisi minua.';
+  }
+
+  @override
+  String yPunditPick0(String competition, String favourite, String darkHorse) {
+    return 'Veikkaukseni, $competition: voittaja $favourite. Musta hevonen? $darkHorse. Mikä turnaus tästä tulee.';
+  }
+
+  @override
+  String yPunditPick1(String competition, String favourite, String darkHorse) {
+    return '$competition: veikkaan voittajaksi $favourite, ja pitäkää silmällä joukkuetta $darkHorse. Voi tulla jotain erityistä.';
+  }
+
+  @override
+  String yPunditPick2(String competition, String favourite, String darkHorse) {
+    return 'Ennusteet, $competition. Voittaja: $favourite. Musta hevonen: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick3(String competition, String favourite, String darkHorse) {
+    return '$competition: vaikea katsoa ohi joukkueen $favourite. $darkHorse voi yllättää monet.';
+  }
+
+  @override
+  String yPunditPick4(String competition, String favourite, String darkHorse) {
+    return 'Kaikki sanovat, että $competition: $favourite. Valitettavasti he ovat oikeassa. Vain $darkHorse on katsomisen arvoinen.';
+  }
+
+  @override
+  String yPunditPick5(String competition, String favourite, String darkHorse) {
+    return '$competition: voittaja on $favourite, ja se on tylsää. Jos haluatte tarinan, katsokaa joukkuetta $darkHorse.';
+  }
+
+  @override
+  String tacticsSlotSwitchHeading(String formation) {
+    return 'Pelipaikka muodostelmassa $formation';
+  }
+
+  @override
+  String get tacticsSlotSwitchReset => 'Palauta';
+
+  @override
+  String get tacticsSlotSwitchLimit =>
+      'Tässä muodostelmassa on jo muutettu kaksi pelipaikkaa. Palauta yksi muuttaaksesi tämän.';
+
+  @override
+  String get assistantAsk => 'Kysy apuvalmentajalta';
+
+  @override
+  String get assistantNoneNote =>
+      'Apuvalmentajaa ei ole palkattu. Palkkaa sellainen henkilöstöön saadaksesi neuvoja.';
+
+  @override
+  String get assistantSheetTitle => 'Apuvalmentajan neuvo';
+
+  @override
+  String get assistantReadBasic =>
+      'Karkea arvio. Tarkista se ennen kuin luotat siihen.';
+
+  @override
+  String get assistantReadGood =>
+      'Luotettava arvio tasosta, pelipaikoista ja väsymyksestä.';
+
+  @override
+  String get assistantReadElite => 'Lukee kunnon, vireen ja vastustajan.';
+
+  @override
+  String get assistantVariantMain => 'Hänen valintansa';
+
+  @override
+  String get assistantVariantFresh => 'Tuoreemmat jalat';
+
+  @override
+  String get assistantVariantForm => 'Vireessä olevat';
+
+  @override
+  String get assistantVariantAttacking => 'Hyökkäävämpi';
+
+  @override
+  String get assistantVariantSolid => 'Tiiviimpi';
+
+  @override
+  String get assistantVsStronger => 'Vastustaja on vahvempi';
+
+  @override
+  String get assistantVsWeaker => 'Te olette vahvempi';
+
+  @override
+  String assistantChanges(int count) {
+    return 'Muutoksia kokoonpanoon: $count';
+  }
+
+  @override
+  String get assistantBench => 'Ensimmäisinä vaihdosta';
+
+  @override
+  String get assistantReasonBestFit => 'Paras valinta';
+
+  @override
+  String get assistantReasonInForm => 'Vireessä';
+
+  @override
+  String get assistantReasonFresh => 'Levännyt';
+
+  @override
+  String get assistantReasonCovering => 'Paikkaa';
+
+  @override
+  String get assistantReasonCoverDefence => 'Puolustus';
+
+  @override
+  String get assistantReasonCoverMidfield => 'Keskikenttä';
+
+  @override
+  String get assistantReasonCoverAttack => 'Hyökkäys';
+
+  @override
+  String get assistantReasonTired => 'Väsynyt';
+
+  @override
+  String get assistantReasonBooked => 'Varoitettu';
+
+  @override
+  String get assistantReasonInjured => 'Loukkaantunut';
+
+  @override
+  String get assistantReasonOutOfPosition => 'Väärällä paikalla';
+
+  @override
+  String get assistantReasonChasing => 'Tasoitusta hakemassa';
+
+  @override
+  String get assistantSubsTitle => 'Hänen vaihtoehdotuksensa';
+
+  @override
+  String get assistantNoSubs => 'Hän pitäisi joukkueen ennallaan.';
+
+  @override
+  String get assistantApply => 'Käytä';
+
+  @override
+  String get assistantClose => 'Sulje';
+
+  @override
+  String get staffEffectAdviceBasic =>
+      'Neuvoo kokoonpanossa ja vaihdoissa, välillä väärin';
+
+  @override
+  String get staffEffectAdviceGood =>
+      'Neuvoo kokoonpanossa ja vaihdoissa, huomioi väsymyksen';
+
+  @override
+  String get staffEffectAdviceElite =>
+      'Neuvoo kunnon, vireen ja vastustajan perusteella';
+
+  @override
+  String get staffHiringAdvice => 'sekä neuvoja kokoonpanoon ja vaihtoihin';
+
+  @override
+  String get hubEventSponsor => 'Valitse sesongin sponsori';
+
+  @override
+  String get hubEventSponsorSub =>
+      'Kolme brändiä haluaa nimensä paitaan. Jokaisella sopimuksella on hintansa.';
+
+  @override
+  String get sponsorTitle => 'Pääsponsori';
+
+  @override
+  String get sponsorIntroSeason =>
+      'Joka sesonki brändit jonottavat liiton pääsponsoriksi. Jokainen sopimus tuo jotain ja maksaa jotain: hallituksen, pukuhuoneen tai molempien suosion. Allekirjoita yksi tai ei yhtään. Vaikutukset hallitukseen ja moraaliin kestävät sesongin loppuun.';
+
+  @override
+  String get sponsorEffectBoard => 'Hallitus';
+
+  @override
+  String get sponsorEffectMorale => 'Moraali';
+
+  @override
+  String get sponsorEffectPress => 'Mediapilkka';
+
+  @override
+  String sponsorPerkMarketing(String amount, String department) {
+    return 'Rahoittaa osastoa $department summalla $amount tällä kaudella';
+  }
+
+  @override
+  String sponsorPerkMarketingNote(String amount) {
+    return 'Kauden lopussa $amount enemmän tuottoa, oman sijoituksesi päälle';
+  }
+
+  @override
+  String get sponsorRiskyLabel => 'Riskialtis';
+
+  @override
+  String get sponsorRiskyWarning => 'Lehdistö saa tästä herkkupalan.';
+
+  @override
+  String get sponsorSign => 'Allekirjoita';
+
+  @override
+  String get sponsorDeclineSeason => 'Ei sponsoria tänä sesonkina';
+
+  @override
+  String get sponsorNoneSeason => 'Ei pääsponsoria tänä sesonkina';
+
+  @override
+  String sponsorUntilSeasonEnd(String season) {
+    return 'Sesongin $season loppuun';
+  }
+
+  @override
+  String sponsorRolloverLine(String brand) {
+    return 'Pääsponsori: $brand';
+  }
+
+  @override
+  String get sponsorBrandAgrofart => 'Agropieru';
+
+  @override
+  String get sponsorIndustryAgrofart => 'Maatalous ja kemia';
+
+  @override
+  String get sponsorFlavourAgrofart =>
+      'Ruokkii kansakunnan. Omistaa myös sen sipsit, sen lehdet ja useimmat sen sioista.';
+
+  @override
+  String get sponsorBrandBetBadger => 'BetBadger';
+
+  @override
+  String get sponsorIndustryBetBadger => 'Vedonvälittäjä';
+
+  @override
+  String get sponsorFlavourBetBadger =>
+      'Kertoimet kaikkeen, myös omiin potkuihisi.';
+
+  @override
+  String get sponsorBrandCoinGoblin => 'CoinGoblin';
+
+  @override
+  String get sponsorIndustryCoinGoblin => 'Kryptopörssi';
+
+  @override
+  String get sponsorFlavourCoinGoblin =>
+      'Neljätuhatta prosenttia plussalla tällä viikolla. Älä kysy nostoista.';
+
+  @override
+  String get sponsorBrandEasyPeasy => 'Vippi Heti';
+
+  @override
+  String get sponsorIndustryEasyPeasy => 'Pikavipit';
+
+  @override
+  String get sponsorFlavourEasyPeasy =>
+      'Rahat kymmenessä minuutissa. Korot kymmenen vuotta.';
+
+  @override
+  String get sponsorBrandVaporia => 'Vaporia';
+
+  @override
+  String get sponsorIndustryVaporia => 'Vape-kaupat';
+
+  @override
+  String get sponsorFlavourVaporia =>
+      'Neljäkymmentä pilven makua, eikä yksikään sovi hyökkääjälle.';
+
+  @override
+  String get sponsorBrandGoldenFleece => 'Kultainen Talja Holding';
+
+  @override
+  String get sponsorIndustryGoldenFleece => 'Offshore-yhtiö';
+
+  @override
+  String get sponsorFlavourGoldenFleece =>
+      'Kukaan ei tiedä, mitä he tekevät. Heidän juristinsa haluavat pitää sen niin.';
+
+  @override
+  String get sponsorBrandMiners => 'Kaivosmiehet';
+
+  @override
+  String get sponsorIndustryMiners => 'Kaivosala';
+
+  @override
+  String get sponsorFlavourMiners =>
+      'Hiiltä, kuparia ja hyvin pölyinen johtokunta.';
+
+  @override
+  String get sponsorBrandMoth => 'Koi';
+
+  @override
+  String get sponsorIndustryMoth => 'Huoltoasemat';
+
+  @override
+  String get sponsorFlavourMoth =>
+      'Bensaa, nakkeja ja autopesu, joka ei ole toiminut kertaakaan.';
+
+  @override
+  String get sponsorBrandSludgeco => 'Liejuöljy';
+
+  @override
+  String get sponsorIndustrySludgeco => 'Öljy';
+
+  @override
+  String get sponsorFlavourSludgeco =>
+      'Poraa reikiä sinne, minne kukaan ei pyytänyt.';
+
+  @override
+  String get sponsorBrandSkyloom => 'Skyloom';
+
+  @override
+  String get sponsorIndustrySkyloom => 'Halpalentoyhtiö';
+
+  @override
+  String get sponsorFlavourSkyloom =>
+      'Minne vain yhdeksällä eurolla. Istuin, laukku ja happi maksavat erikseen.';
+
+  @override
+  String get sponsorBrandArvella => 'Arvella Motors';
+
+  @override
+  String get sponsorIndustryArvella => 'Autonvalmistaja';
+
+  @override
+  String get sponsorFlavourArvella => 'Luksus-SUV:ita yksiön kokoisina.';
+
+  @override
+  String get sponsorBrandCheapoMax => 'HalpaMax';
+
+  @override
+  String get sponsorIndustryCheapoMax => 'Halpaketju';
+
+  @override
+  String get sponsorFlavourCheapoMax =>
+      'Kaikki puoleen hintaan, myös henkilökunta.';
+
+  @override
+  String get sponsorBrandBrickhaven => 'Brickhaven';
+
+  @override
+  String get sponsorIndustryBrickhaven => 'Rakentaminen';
+
+  @override
+  String get sponsorFlavourBrickhaven => 'Rakentaa stadionit ajallaan. Joskus.';
+
+  @override
+  String get sponsorBrandHappyBurgers => 'Iloiset Purilaiset';
+
+  @override
+  String get sponsorIndustryHappyBurgers => 'Pikaruoka';
+
+  @override
+  String get sponsorFlavourHappyBurgers =>
+      'Kolminkertainen juusto, tuplapekoni, ilmaiseksi koko joukkueelle.';
+
+  @override
+  String get sponsorBrandOldSwamp => 'Vanhasuo';
+
+  @override
+  String get sponsorIndustryOldSwamp => 'Panimo';
+
+  @override
+  String get sponsorFlavourOldSwamp =>
+      'Pantu vuodesta 1869 kellarissa, jota kukaan ei ole siivonnut sen jälkeen.';
+
+  @override
+  String get sponsorBrandBuzzhorn => 'Buzzhorn';
+
+  @override
+  String get sponsorIndustryBuzzhorn => 'Energiajuomat';
+
+  @override
+  String get sponsorFlavourBuzzhorn =>
+      'Tarpeeksi kofeiinia herättämään maalivahdinkin.';
+
+  @override
+  String get sponsorBrandSteamy => 'Saunaseura Löyly';
+
+  @override
+  String get sponsorIndustrySteamy => 'Saunaketju';
+
+  @override
+  String get sponsorFlavourSteamy =>
+      'Hikoillaan yhdessä. Pyyhe vapaaehtoinen, joukkuehenki ei.';
+
+  @override
+  String get sponsorBrandPixelRage => 'PixelRage Games';
+
+  @override
+  String get sponsorIndustryPixelRage => 'Videopelit';
+
+  @override
+  String get sponsorFlavourPixelRage =>
+      'Joukkueen suosikkiräiskintä, nyt pelaajien omilla kasvoilla.';
+
+  @override
+  String get sponsorBrandGlitterbox => 'Glitterbox Records';
+
+  @override
+  String get sponsorIndustryGlitterbox => 'Levy-yhtiö';
+
+  @override
+  String get sponsorFlavourGlitterbox =>
+      'Jokaiseen maalijuhlaan kuuluu nyt tanssikoreografia.';
+
+  @override
+  String get sponsorBrandMilkwell => 'Milkwell Meijeri';
+
+  @override
+  String get sponsorIndustryMilkwell => 'Meijeri';
+
+  @override
+  String get sponsorFlavourMilkwell =>
+      'Jääkylmää maitoa ja koululaisretkiä lehmiä katsomaan.';
+
+  @override
+  String get sponsorBrandHerringKing => 'Sillikuningas';
+
+  @override
+  String get sponsorIndustryHerringKing => 'Säilötty silli';
+
+  @override
+  String get sponsorFlavourHerringKing =>
+      'Suolattuna, savustettuna tai purkissa jo isoisän ajoista.';
+
+  @override
+  String get sponsorBrandUmbrello => 'Umbrello Vakuutus';
+
+  @override
+  String get sponsorIndustryUmbrello => 'Vakuutukset';
+
+  @override
+  String get sponsorFlavourUmbrello =>
+      'Vakuuttaa kaiken, jopa sateenvarjosi sateenvarjon.';
+
+  @override
+  String get sponsorBrandTidyTeeth => 'Kiiltohammas';
+
+  @override
+  String get sponsorIndustryTidyTeeth => 'Hammastahna';
+
+  @override
+  String get sponsorFlavourTidyTeeth =>
+      'Yhdeksän hammaslääkäriä kymmenestä. Kymmenes on lomalla.';
+
+  @override
+  String get sponsorBrandWoollySocks => 'Villasukka';
+
+  @override
+  String get sponsorIndustryWoollySocks => 'Neuleet';
+
+  @override
+  String get sponsorFlavourWoollySocks =>
+      'Käsin neulotut sukat jokaiselle pelaajalle, kaikissa väreissä paitsi joukkueen.';
+
+  @override
+  String get sponsorBrandStackabloc => 'Stackabloc';
+
+  @override
+  String get sponsorIndustryStackabloc => 'Lelut';
+
+  @override
+  String get sponsorFlavourStackabloc =>
+      'Rakenna oma kansallisstadionisi. Neljätuhatta palikkaa, yksi puuttuu.';
+
+  @override
+  String get sponsorBrandPolarPenguin => 'Napapingviini';
+
+  @override
+  String get sponsorIndustryPolarPenguin => 'Jäätelö';
+
+  @override
+  String get sponsorFlavourPolarPenguin =>
+      'Kolmekymmentä makua, kaikki sulamassa.';
+
+  @override
+  String get sponsorBrandHexagon => 'Hexagon';
+
+  @override
+  String get sponsorIndustryHexagon => 'Konepaja';
+
+  @override
+  String get sponsorFlavourHexagon =>
+      'Jokaisella ongelmalla on kuusi puolta. Heidän insinöörinsä laskevat yhä.';
+
+  @override
+  String get sponsorBrandVelocell => 'Velocell';
+
+  @override
+  String get sponsorIndustryVelocell => 'Teleoperaattori';
+
+  @override
+  String get sponsorFlavourVelocell =>
+      'Täydet palkit kaikkialla paitsi stadionilla.';
+
+  @override
+  String get sponsorBrandParcelion => 'Parcelion';
+
+  @override
+  String get sponsorIndustryParcelion => 'Pakettikuljetus';
+
+  @override
+  String get sponsorFlavourParcelion =>
+      'Perillä huomenna. Tai ylihuomenna. Tai naapurissa.';
+
+  @override
+  String get sponsorBrandGridwell => 'Gridwell Energy';
+
+  @override
+  String get sponsorIndustryGridwell => 'Energia';
+
+  @override
+  String get sponsorFlavourGridwell => 'Pitää valonheittimet päällä. Yleensä.';
+
+  @override
+  String get sponsorBrandCrownstone => 'Crownstone Pankki';
+
+  @override
+  String get sponsorIndustryCrownstone => 'Pankki';
+
+  @override
+  String get sponsorFlavourCrownstone =>
+      'Rahasi ovat meillä turvassa. Luultavasti.';
+
+  @override
+  String get sponsorBrandClickbait => 'Klikkiotsikko Media';
+
+  @override
+  String get sponsorIndustryClickbait => 'Mediakonserni';
+
+  @override
+  String get sponsorFlavourClickbait =>
+      'Et usko, mitä neljännessä otsikossamme lukee.';
+
+  @override
+  String ySponsorDubious0(String brand) {
+    return 'Liiton uusi pääsponsori on $brand. Naurakaa vain, akatemia tarvitsee rahat silti.';
+  }
+
+  @override
+  String ySponsorDubious1(String brand) {
+    return 'Liitto on solminut sopimuksen uuden pääsponsorin kanssa: $brand. Kyseessä oli kuulemma pöydän suurin tarjous.';
+  }
+
+  @override
+  String ySponsorDubious2(String brand) {
+    return '$brand. Uusi pääsponsorimme on $brand. Minun on pakko käydä makuulle.';
+  }
+
+  @override
+  String ySponsorMocked0(String brand) {
+    return 'Raha on rahaa. Jos $brand maksaa uudet kentät, kannan paitaa ylpeänä.';
+  }
+
+  @override
+  String ySponsorMocked1(String brand) {
+    return 'Sanokaa sponsorista mitä haluatte, $brand maksoi ja shekki meni läpi.';
+  }
+
+  @override
+  String ySponsorMocked2(String brand) {
+    return 'Jossain markkinointitiimi on hyvin ylpeä siitä $brand-logosta rinnassamme.';
+  }
+
+  @override
+  String ySponsorMocked3(String brand) {
+    return 'Eli olemme nyt $brand-maajoukkue. Selvä.';
+  }
+
+  @override
+  String ySponsorMocked4(String brand) {
+    return 'Kuvitelkaa, että paita myydään brändille $brand. Kuvitelkaa vain.';
+  }
+
+  @override
+  String ySponsorMocked5(String brand) {
+    return 'Kaikista maailman sponsoreista valitsimme juuri brändin $brand. Jokainen kilpailijamme nauraa meille.';
+  }
 }

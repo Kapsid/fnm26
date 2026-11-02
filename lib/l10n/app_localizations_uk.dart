@@ -255,6 +255,11 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchHalfTime => 'ПЕРЕРВА';
 
   @override
+  String matchHalfTimeScore(int home, int away) {
+    return 'Перший тайм $home : $away';
+  }
+
+  @override
   String get matchContinue => 'Продовжити';
 
   @override
@@ -1218,6 +1223,36 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get tacticsCornersFreeKicks => 'Кутові й штрафні';
+
+  @override
+  String get tacticsThrowIns => 'Вкидання';
+
+  @override
+  String get tacticsThrowInStyle => 'Стиль вкидань';
+
+  @override
+  String get tacticsThrowInLong => 'Довгі вкидання';
+
+  @override
+  String get tacticsThrowInNeutral => 'Нейтрально';
+
+  @override
+  String get tacticsThrowInDefensive => 'Безпечні вкидання';
+
+  @override
+  String get tacticsThrowInLongBlurb =>
+      'Вкидання біля штрафного летять у штрафний. Трохи більше загрози, особливо із сильним виконавцем і високими нападниками, але м\'яч втрачається дещо частіше.';
+
+  @override
+  String get tacticsThrowInNeutralBlurb =>
+      'Вкидання так, як дозволяє гра. Нічого не змінюється.';
+
+  @override
+  String get tacticsThrowInDefensiveBlurb =>
+      'Кожне вкидання коротко й безпечно. Менше втрат, з яких суперник контратакує, і трохи менше моментів.';
+
+  @override
+  String get matchGoalLongThrow => 'ДОВГЕ ВКИДАННЯ';
 
   @override
   String get tacticsSkillFin => 'ЗАВ';
@@ -2503,6 +2538,29 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get viceCaptainFirst => '1-й віцекапітан';
+
+  @override
+  String get viceCaptainSecond => '2-й віцекапітан';
+
+  @override
+  String get viceCaptainNone => 'Віцекапітана не призначено';
+
+  @override
+  String get viceCaptainHint =>
+      'Отримує пов\'язку, коли капітан не може грати.';
+
+  @override
+  String captainStandIn(String vice, String captain) {
+    return 'Команду виводить віцекапітан $vice; капітан $captain недоступний';
+  }
+
+  @override
+  String captainStandInUnnamed(String vice) {
+    return 'Команду виводить віцекапітан $vice';
+  }
+
+  @override
   String get resultsCategoryWorldCupQualifying => 'Відбір до чемпіонату світу';
 
   @override
@@ -3540,6 +3598,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get statsMostGames => 'Матчі';
 
   @override
+  String get statsMostGamesShort => 'Матчі';
+
+  @override
   String get statsNoGoalsRecorded => 'Голів поки не зафіксовано.';
 
   @override
@@ -4267,47 +4328,95 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String yUpsetGap0(String opponent, String gap) {
-    return 'У рейтингу нас розділяло $gap позицій, і все одно ми перемогли. Суперник: $opponent. Чудово.';
+  String yUpsetGap0(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позиція',
+    );
+    return 'У рейтингу нас розділяло $_temp0, і все одно ми перемогли. Суперник: $opponent. Чудово.';
   }
 
   @override
-  String yUpsetGap1(String opponent, String gap) {
-    return '$opponent: вище за нас на $gap позицій. Переможені. Футбол прекрасний.';
+  String yUpsetGap1(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return '$opponent: вище за нас на $_temp0. Переможені. Футбол прекрасний.';
   }
 
   @override
-  String yUpsetGap2(String opponent, String gap) {
+  String yUpsetGap2(String opponent, int gap) {
     return 'Різниця в рейтингу: $gap. Результат: перемога, суперник: $opponent. Ніколи не переставайте вірити.';
   }
 
   @override
-  String yUpsetGap3(String opponent, String gap) {
+  String yUpsetGap3(String opponent, int gap) {
     return 'Різниця в рейтингу перед стартовим свистком: $gap. Команду $opponent однаково переграно.';
   }
 
   @override
-  String yUpsetGap4(String opponent, String gap) {
-    return 'У світовому рейтингу команда $opponent була вище на $gap позицій. Не сьогодні.';
+  String yUpsetGap4(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return 'У світовому рейтингу команда $opponent була вище на $_temp0. Не сьогодні.';
   }
 
   @override
-  String yUpsetGap5(String opponent, String gap) {
-    return 'Індекс сенсації: різниця $gap позицій у рейтингу. Перемога за нами, суперник: $opponent.';
+  String yUpsetGap5(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return 'Індекс сенсації: різниця в $_temp0 у рейтингу. Перемога за нами, суперник: $opponent.';
   }
 
   @override
-  String yUpsetGap6(String opponent, String gap) {
-    return 'Від команди $opponent нас у рейтингу відділяло $gap позицій. Один вечір цю прірву не закриє.';
+  String yUpsetGap6(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позиція',
+    );
+    return 'Від команди $opponent нас у рейтингу відділяло $_temp0. Один вечір цю прірву не закриє.';
   }
 
   @override
-  String yUpsetGap7(String opponent, String gap) {
-    return '$opponent: вище на $gap позицій, і поразка. Рейтинг ледве це помітить.';
+  String yUpsetGap7(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return '$opponent: вище на $_temp0, і поразка. Рейтинг ледве це помітить.';
   }
 
   @override
-  String yUpsetGap8(String gap) {
+  String yUpsetGap8(int gap) {
     return 'Різниця в рейтингу: $gap. Запам\'ятайте це число, коли наступного разу програємо аутсайдеру.';
   }
 
@@ -4807,47 +4916,95 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String yDownGap0(String opponent, String gap) {
-    return '$opponent: нижче за нас на $gap позицій. Буває. Далі.';
+  String yDownGap0(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return '$opponent: нижче за нас на $_temp0. Буває. Далі.';
   }
 
   @override
-  String yDownGap1(String gap) {
+  String yDownGap1(int gap) {
     return 'Різниця в рейтингу: $gap на нашу користь. Футбол не читає рейтингів.';
   }
 
   @override
-  String yDownGap2(String opponent, String gap) {
-    return 'На папері між нами і командою $opponent $gap позицій. Не на полі сьогодні.';
+  String yDownGap2(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позиція',
+    );
+    return 'На папері між нами і командою $opponent $_temp0. Не на полі сьогодні.';
   }
 
   @override
-  String yDownGap3(String opponent, String gap) {
+  String yDownGap3(String opponent, int gap) {
     return 'Різниця в рейтингу перед стартовим свистком: $gap на нашу користь. Однаково поразка, суперник: $opponent.';
   }
 
   @override
-  String yDownGap4(String opponent, String gap) {
-    return 'У світовому рейтингу команда $opponent була нижче на $gap позицій. Результат: поразка.';
+  String yDownGap4(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return 'У світовому рейтингу команда $opponent була нижче на $_temp0. Результат: поразка.';
   }
 
   @override
-  String yDownGap5(String opponent, String gap) {
-    return 'Індекс сенсації: різниця $gap позицій у рейтингу, у зворотний бік. Суперник: $opponent.';
+  String yDownGap5(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return 'Індекс сенсації: різниця в $_temp0 у рейтингу, у зворотний бік. Суперник: $opponent.';
   }
 
   @override
-  String yDownGap6(String opponent, String gap) {
-    return 'Вище за команду $opponent на $gap позицій у рейтингу. Поразка. Поясніть це.';
+  String yDownGap6(String opponent, int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return 'Вище за команду $opponent на $_temp0 у рейтингу. Поразка. Поясніть це.';
   }
 
   @override
-  String yDownGap7(String gap) {
-    return 'Поразка від команди, що нижче на $gap позицій. Дайте цьому числу дійти.';
+  String yDownGap7(int gap) {
+    String _temp0 = intl.Intl.pluralLogic(
+      gap,
+      locale: localeName,
+      other: '$gap позиції',
+      many: '$gap позицій',
+      few: '$gap позиції',
+      one: '$gap позицію',
+    );
+    return 'Поразка від команди, що нижче на $_temp0. Дайте цьому числу дійти.';
   }
 
   @override
-  String yDownGap8(String opponent, String gap) {
+  String yDownGap8(String opponent, int gap) {
     return 'Різниця в рейтингу: $gap. Поразка, суперник: $opponent. Комусь варто почати рахувати дні.';
   }
 
@@ -5208,122 +5365,122 @@ class AppLocalizationsUk extends AppLocalizations {
   String get grievanceDismiss => 'Склад визначаю я';
 
   @override
-  String yScorerStar0(String name, String goals) {
+  String yScorerStar0(String name, int goals) {
     return '$name забив $goals. Ніхто інший поряд не стоїть.';
   }
 
   @override
-  String yScorerStar1(String name, String goals) {
+  String yScorerStar1(String name, int goals) {
     return '$goals від $name. Він тягне цю команду.';
   }
 
   @override
-  String yScorerStar2(String name, String goals) {
+  String yScorerStar2(String name, int goals) {
     return '$name: $goals за матч. Ось це гравець.';
   }
 
   @override
-  String yScorerStar3(String name, String goals) {
+  String yScorerStar3(String name, int goals) {
     return '$goals у ворота, і всі від $name. Вклоніться.';
   }
 
   @override
-  String yScorerStar4(String name, String goals) {
+  String yScorerStar4(String name, int goals) {
     return '$goals від $name, а решта були пасажирами.';
   }
 
   @override
-  String yScorerStar5(String name, String goals) {
+  String yScorerStar5(String name, int goals) {
     return 'Знову $name. $goals. Уявіть цю команду без нього.';
   }
 
   @override
-  String yScorerStar6(String name, String goals) {
+  String yScorerStar6(String name, int goals) {
     return '$goals від $name. Одна людина не повинна робити стільки.';
   }
 
   @override
-  String yScorerStar7(String name, String goals) {
+  String yScorerStar7(String name, int goals) {
     return 'Приберіть $name із цього матчу, і буде на $goals менше та зовсім інший вечір.';
   }
 
   @override
-  String yWinStreak0(String count) {
+  String yWinStreak0(int count) {
     return '$count поспіль. Що б там не говорили в роздягальні, воно працює.';
   }
 
   @override
-  String yWinStreak1(String count) {
+  String yWinStreak1(int count) {
     return 'Це $count поспіль. Випадково в такі серії не потрапляють.';
   }
 
   @override
-  String yWinStreak2(String count) {
+  String yWinStreak2(int count) {
     return '$count поспіль, і це ще не кінець. Упевненість видно навіть з трибун.';
   }
 
   @override
-  String yWinStreak3(String count) {
+  String yWinStreak3(int count) {
     return 'Без поразок: $count. Спитайте будь-якого тренера: це найважче.';
   }
 
   @override
-  String yWinStreak4(String count) {
+  String yWinStreak4(int count) {
     return '$count поспіль. Насолоджуйтесь, поки календар добрий.';
   }
 
   @override
-  String yWinStreak5(String count) {
+  String yWinStreak5(int count) {
     return '$count поспіль, і жодного серйозного суперника серед них.';
   }
 
   @override
-  String yWinStreak6(String count) {
+  String yWinStreak6(int count) {
     return 'Серія з $count. Спитайте мене ще раз, коли її випробують.';
   }
 
   @override
-  String yWinStreak7(String count) {
+  String yWinStreak7(int count) {
     return '$count без зупинки. У кожної команди колись буває таке.';
   }
 
   @override
-  String yLossStreak0(String count) {
+  String yLossStreak0(int count) {
     return 'Без перемоги вже $count. Колись виправдання закінчуються.';
   }
 
   @override
-  String yLossStreak1(String count) {
+  String yLossStreak1(int count) {
     return 'Це вже $count поспіль. Збоєм це більше не назвеш.';
   }
 
   @override
-  String yLossStreak2(String count) {
+  String yLossStreak2(int count) {
     return 'Поразки поспіль: $count. Хтось має за це відповісти.';
   }
 
   @override
-  String yLossStreak3(String count) {
+  String yLossStreak3(int count) {
     return 'Без перемоги: $count. Це видно по тому, як вони грають.';
   }
 
   @override
-  String yLossStreak4(String count) {
+  String yLossStreak4(int count) {
     return 'Без перемоги: $count, і щотижня ті самі помилки.';
   }
 
   @override
-  String yLossStreak5(String count) {
+  String yLossStreak5(int count) {
     return '$count поспіль. Що б не пробували, воно не працює.';
   }
 
   @override
-  String yLossStreak6(String count) {
+  String yLossStreak6(int count) {
     return '$count поспіль. Це тенденція, а не провал.';
   }
 
   @override
-  String yLossStreak7(String count) {
+  String yLossStreak7(int count) {
     return 'Без перемоги: $count, а нагорі ніхто й слова не сказав.';
   }
 
@@ -6358,7 +6515,21 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String tourCupMostTitlesValue(String nation, int titles, int editions) {
-    return '$nation: титулів $titles з $editions турнірів';
+    String _temp0 = intl.Intl.pluralLogic(
+      titles,
+      locale: localeName,
+      other: '$titles титулу',
+      many: '$titles титулів',
+      few: '$titles титули',
+      one: '$titles титул',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      editions,
+      locale: localeName,
+      other: '$editions турнірів',
+      one: '$editions турніру',
+    );
+    return '$nation: $_temp0 з $_temp1';
   }
 
   @override
@@ -6521,6 +6692,10 @@ class AppLocalizationsUk extends AppLocalizations {
       'Фінішувати у верхній половині кваліфікаційної групи';
 
   @override
+  String get objectiveQualifyingChallenge =>
+      'Боротися за путівку, щонайменше верхня половина кваліфікаційної групи';
+
+  @override
   String get finishQualifyingTopHalf => 'Верхня половина кваліфікаційної групи';
 
   @override
@@ -6657,7 +6832,7 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String squadDevPageOf(String page, String pages, String total) {
+  String squadDevPageOf(String page, String pages, int total) {
     return '$page/$pages · гравців: $total';
   }
 
@@ -7066,7 +7241,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String squadShowingOf(int shown, int total) {
-    return 'Показано $shown із $total гравців';
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total гравців',
+      one: '$total гравця',
+    );
+    return 'Показано $shown із $_temp0';
   }
 
   @override
@@ -7892,7 +8073,15 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String newsRecordScorerBody(String name, int goals) {
-    return '$name тепер найкращий бомбардир в історії гри: $goals голів.';
+    String _temp0 = intl.Intl.pluralLogic(
+      goals,
+      locale: localeName,
+      other: '$goals гола',
+      many: '$goals голів',
+      few: '$goals голи',
+      one: '$goals гол',
+    );
+    return '$name тепер найкращий бомбардир в історії гри: $_temp0.';
   }
 
   @override
@@ -8260,7 +8449,15 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String newsWalkoutBody(String name, int age, int caps) {
-    return '$name завершив виступи за збірну у $age р., маючи $caps матчів. Він просив сказати, на що йому розраховувати, але відповіді не отримав, і більше чекати не збирається.';
+    String _temp0 = intl.Intl.pluralLogic(
+      caps,
+      locale: localeName,
+      other: '$caps матчу',
+      many: '$caps матчів',
+      few: '$caps матчі',
+      one: '$caps матч',
+    );
+    return '$name завершив виступи за збірну у $age р., маючи $_temp0. Він просив сказати, на що йому розраховувати, але відповіді не отримав, і більше чекати не збирається.';
   }
 
   @override
@@ -8796,7 +8993,15 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String staffHiringScoutCaps(int minCaps, int maxCaps) {
-    return 'і потенціал відомий на $minCaps-$maxCaps матчів раніше';
+    String _temp0 = intl.Intl.pluralLogic(
+      maxCaps,
+      locale: localeName,
+      other: '$maxCaps матчу',
+      many: '$maxCaps матчів',
+      few: '$maxCaps матчі',
+      one: '$maxCaps матч',
+    );
+    return 'і потенціал відомий на $minCaps-$_temp0 раніше';
   }
 
   @override
@@ -9090,63 +9295,127 @@ class AppLocalizationsUk extends AppLocalizations {
   String get transfersUnknownClub => 'Невідомий клуб';
 
   @override
-  String yAgainstThemAgain0(String opponent, String count) {
+  String yAgainstThemAgain0(String opponent, int count) {
     return 'Це вже $count-й раз проти: $opponent. Хтось веде рахунок, і це вони.';
   }
 
   @override
-  String yAgainstThemAgain1(String opponent, String count) {
+  String yAgainstThemAgain1(String opponent, int count) {
     return 'Знову $opponent. Матчів: $count, а ми так і не розгадали їх.';
   }
 
   @override
-  String yAgainstThemAgain2(String opponent, String count) {
+  String yAgainstThemAgain2(String opponent, int count) {
     return 'Матч номер $count проти: $opponent. Це давно не випадковість.';
   }
 
   @override
-  String yAgainstThemAgain3(String opponent, String count) {
-    return 'Ми грали з суперником $opponent уже $count разів і не навчилися нічого.';
+  String yAgainstThemAgain3(String opponent, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count разу',
+      many: '$count разів',
+      few: '$count рази',
+      one: '$count раз',
+    );
+    return 'Ми грали з суперником $opponent уже $_temp0 і не навчилися нічого.';
   }
 
   @override
-  String yAgainstThemAgain4(String opponent, String count) {
-    return '$opponent, $count разів. Вони точно знають, що ми зробимо.';
+  String yAgainstThemAgain4(String opponent, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count разу',
+      many: '$count разів',
+      few: '$count рази',
+      one: '$count раз',
+    );
+    return '$opponent, $_temp0. Вони точно знають, що ми зробимо.';
   }
 
   @override
-  String yAgainstThemAgain5(String opponent, String count) {
+  String yAgainstThemAgain5(String opponent, int count) {
     return 'Що б не мав на нас $opponent, після $count матчів воно все ще при ньому.';
   }
 
   @override
-  String ySameOldStory0(String count) {
-    return 'Це вже $count разів останнім часом. Коли ми визнаємо, що такі і є?';
+  String ySameOldStory0(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count разу',
+      many: '$count разів',
+      few: '$count рази',
+      one: '$count раз',
+    );
+    return 'Це вже $_temp0 останнім часом. Коли ми визнаємо, що такі і є?';
   }
 
   @override
-  String ySameOldStory1(String count) {
-    return 'Уже $count таких днів. Це закономірність, а не смуга невезіння.';
+  String ySameOldStory1(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count таких дня',
+      many: '$count таких днів',
+      few: '$count такі дні',
+      one: '$count такий день',
+    );
+    return 'Уже $_temp0. Це закономірність, а не смуга невезіння.';
   }
 
   @override
-  String ySameOldStory2(String count) {
-    return 'Ми бачили цей самий матч $count разів нещодавно. Той самий сценарій, той самий кінець.';
+  String ySameOldStory2(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count разу',
+      many: '$count разів',
+      few: '$count рази',
+      one: '$count раз',
+    );
+    return 'Ми бачили цей самий матч $_temp0 нещодавно. Той самий сценарій, той самий кінець.';
   }
 
   @override
-  String ySameOldStory3(String count) {
-    return 'Уже $count версій тих самих дев’яноста хвилин. Ніхто це не виправляє.';
+  String ySameOldStory3(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count версії',
+      many: '$count версій',
+      few: '$count версії',
+      one: '$count версія',
+    );
+    return 'Уже $_temp0 тих самих дев’яноста хвилин. Ніхто це не виправляє.';
   }
 
   @override
-  String ySameOldStory4(String count) {
-    return '$count разів. Якщо ви досі не бачите закономірності, ви не дивитеся.';
+  String ySameOldStory4(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count разу',
+      many: '$count разів',
+      few: '$count рази',
+      one: '$count раз',
+    );
+    return '$_temp0. Якщо ви досі не бачите закономірності, ви не дивитеся.';
   }
 
   @override
-  String ySameOldStory5(String count) {
-    return 'Та сама історія, $count разів поспіль. Виправдання закінчилися раніше за результати.';
+  String ySameOldStory5(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count разу',
+      many: '$count разів',
+      few: '$count рази',
+      one: '$count раз',
+    );
+    return 'Та сама історія, $_temp0 поспіль. Виправдання закінчилися раніше за результати.';
   }
 
   @override
@@ -9242,63 +9511,103 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String yDrought0(String name, String count) {
+  String yDrought0(String name, int count) {
     return 'Матчів без гола у $name: $count, і при цьому на полі він робить усе інше.';
   }
 
   @override
-  String yDrought1(String name, String count) {
-    return '$count матчів без гола у $name. Вони приходять трійками, завжди так було.';
+  String yDrought1(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count матчу',
+      many: '$count матчів',
+      few: '$count матчі',
+      one: '$count матч',
+    );
+    return '$_temp0 без гола у $name. Вони приходять трійками, завжди так було.';
   }
 
   @override
-  String yDrought2(String name, String count) {
-    return '$name: $count матчів, жодного гола.';
+  String yDrought2(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count матчу',
+      many: '$count матчів',
+      few: '$count матчі',
+      one: '$count матч',
+    );
+    return '$name: $_temp0, жодного гола.';
   }
 
   @override
-  String yDrought3(String name, String count) {
+  String yDrought3(String name, int count) {
     return 'Матчів без гола у $name: $count. Варто пильнувати.';
   }
 
   @override
-  String yDrought4(String name, String count) {
-    return '$count матчів. Жодного гола. $name у ворота з десяти кроків не влучить.';
+  String yDrought4(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count матчу',
+      many: '$count матчів',
+      few: '$count матчі',
+      one: '$count матч',
+    );
+    return '$_temp0. Жодного гола. $name у ворота з десяти кроків не влучить.';
   }
 
   @override
-  String yDrought5(String name, String count) {
+  String yDrought5(String name, int count) {
     return 'Матчів без гола у $name: $count. Випустіть будь-кого іншого.';
   }
 
   @override
-  String yRivalryLooms0(String opponent, String count) {
+  String yRivalryLooms0(String opponent, int count) {
     return 'Далі суперник: $opponent. Матчів: $count, і це досі означає все.';
   }
 
   @override
-  String yRivalryLooms1(String opponent, String count) {
-    return 'Уже $count разів проти: $opponent. Давайте.';
+  String yRivalryLooms1(String opponent, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count разу',
+      many: '$count разів',
+      few: '$count рази',
+      one: '$count раз',
+    );
+    return 'Уже $_temp0 проти: $opponent. Давайте.';
   }
 
   @override
-  String yRivalryLooms2(String opponent, String count) {
+  String yRivalryLooms2(String opponent, int count) {
     return 'Далі суперник: $opponent. Зіграно: $count.';
   }
 
   @override
-  String yRivalryLooms3(String opponent, String count) {
+  String yRivalryLooms3(String opponent, int count) {
     return 'Зустріч номер $count із суперником $opponent цього тижня.';
   }
 
   @override
-  String yRivalryLooms4(String opponent, String count) {
+  String yRivalryLooms4(String opponent, int count) {
     return 'Знову $opponent. Таких матчів $count, а ми нічого не навчилися.';
   }
 
   @override
-  String yRivalryLooms5(String opponent, String count) {
-    return '$count матчів проти: $opponent, а вони й досі нас б’ють. Чудово.';
+  String yRivalryLooms5(String opponent, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count матчу',
+      many: '$count матчів',
+      few: '$count матчі',
+      one: '$count матч',
+    );
+    return '$_temp0 проти: $opponent, а вони й досі нас б’ють. Чудово.';
   }
 
   @override
@@ -11279,6 +11588,29 @@ class AppLocalizationsUk extends AppLocalizations {
       'Виграти Чемпіонат Європи або Чемпіонат світу';
 
   @override
+  String get campaignZanzibarTitle => 'Злет Занзібару';
+
+  @override
+  String get campaignZanzibarTwist =>
+      'Занзібар займає місце Чаду в Африці, на сто років';
+
+  @override
+  String get campaignZanzibarGoal => 'Кваліфікуватися на Чемпіонат Африки';
+
+  @override
+  String get campaignZanzibarIntro =>
+      'Занзібар має власну футбольну федерацію і власну збірну, але не має місця ні в африканському, ні у світовому футболі. У цьому світі він посів місце Чаду в Африці й починає майже з дна світового рейтингу: острівні гравці, малі стадіони та спека мусонів. У тебе сто років, двадцять п’ять циклів, щоб пробитися на Чемпіонат Африки, потім на Чемпіонат світу і, якщо наважишся мріяти, виграти Чемпіонат світу.';
+
+  @override
+  String get campaignStars1Zanzibar => 'Кваліфікуватися на Чемпіонат Африки';
+
+  @override
+  String get campaignStars2Zanzibar => 'Кваліфікуватися на Чемпіонат світу';
+
+  @override
+  String get campaignStars3Zanzibar => 'Виграти Чемпіонат світу';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -12848,6 +13180,21 @@ class AppLocalizationsUk extends AppLocalizations {
       'Кажу: дайте хлопцям жити! Хто працює, той може й розважитися. Палець угору.';
 
   @override
+  String get yCameoMarena => 'Таких і я могла б тренувати.';
+
+  @override
+  String get yCameoKralik => 'А чого ти чекав хехехе, купуй наше ZeroZero';
+
+  @override
+  String get yCameoPosuk0 => 'СЛАБАКИ';
+
+  @override
+  String get yCameoPosuk1 => 'ОТ ЖЕЕЕ';
+
+  @override
+  String get yCameoPosuk2 => 'Хтось у пивнуху?';
+
+  @override
   String get yTraitStreamer =>
       'Стрімить усе, на повну гучність, великими літерами.';
 
@@ -13170,4 +13517,967 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get hostingWindowLine =>
       'Заявки приймаються наприкінці циклу, після фіналу чемпіонату світу.';
+
+  @override
+  String hubEventWarmUpOffer(String nation) {
+    return 'Пропозиція товариського матчу: $nation';
+  }
+
+  @override
+  String get hubEventWarmUpOfferSub => 'Прощальний матч перед їхнім турніром';
+
+  @override
+  String get warmUpOfferTitle => 'ПРОПОЗИЦІЯ ТОВАРИСЬКОГО МАТЧУ';
+
+  @override
+  String warmUpOfferBody(String nation, String competition, String date) {
+    return '$nation готується до турніру $competition і хоче зіграти з вами прощальний матч $date.';
+  }
+
+  @override
+  String warmUpOfferAway(String nation) {
+    return 'На виїзді, у суперника ($nation).';
+  }
+
+  @override
+  String get warmUpOfferHome => 'Удома: суперник приїжджає до вас.';
+
+  @override
+  String get warmUpOfferNote =>
+      'Можна прийняти щонайбільше дві пропозиції. Прийнятий матч має власний виклик.';
+
+  @override
+  String get warmUpOfferAccept => 'Прийняти';
+
+  @override
+  String get warmUpOfferDecline => 'Відхилити';
+
+  @override
+  String warmUpOfferMsgTitle(String nation) {
+    return 'Пропозиція товариського матчу: $nation';
+  }
+
+  @override
+  String warmUpOfferMsgBody(String nation, String competition) {
+    return '$nation хоче зіграти з вами прощальний матч перед турніром $competition.';
+  }
+
+  @override
+  String get hubSimToFinal => 'Симулювати до фіналу';
+
+  @override
+  String get jobDossierOpen => 'Вивчити пропозицію';
+
+  @override
+  String get jobDossierRating => 'Сила команди';
+
+  @override
+  String get jobDossierMood => 'Настрій';
+
+  @override
+  String get jobDossierTopPlayers => 'Найкращі гравці';
+
+  @override
+  String jobDossierPlayerAge(int age) {
+    return '$age р.';
+  }
+
+  @override
+  String get jobDossierReport => 'Думка скаута';
+
+  @override
+  String get jobDossierNextTargetLabel => 'Наступна ціль';
+
+  @override
+  String jobDossierNextTarget(String cup) {
+    return 'Кваліфікація: $cup і Чемпіонат світу.';
+  }
+
+  @override
+  String get jobDossierStrongAttack => 'Справді гостра атака.';
+
+  @override
+  String get jobDossierBluntAttack => 'Голи даються важко.';
+
+  @override
+  String get jobDossierStrongMidfield => 'Півзахист диктує гру.';
+
+  @override
+  String get jobDossierWeakMidfield => 'У центрі поля їх часто переграють.';
+
+  @override
+  String get jobDossierStrongDefence => 'Позаду їх важко пробити.';
+
+  @override
+  String get jobDossierThinDefence => 'Захист виглядає слабким.';
+
+  @override
+  String get jobDossierSafeKeeper => 'Воротар, на якого можна покластися.';
+
+  @override
+  String get jobDossierShakyKeeper => 'Воротарська позиція тривожить.';
+
+  @override
+  String get jobDossierOldSquad => 'Старіючий склад, оновлення не за горами.';
+
+  @override
+  String get jobDossierYoungCore => 'Молоде ядро на підйомі.';
+
+  @override
+  String jobDossierOneStar(String name) {
+    return 'Команду тягне $name.';
+  }
+
+  @override
+  String get jobDossierDeepSquad => 'Справжня глибина за основним складом.';
+
+  @override
+  String get jobDossierThinSquad => 'Мало якості за основним складом.';
+
+  @override
+  String get jobDossierBalanced => 'Збалансована команда без явних слабкостей.';
+
+  @override
+  String yQualifiedEuphoric0(String competition) {
+    return 'Не віриться, що ми це зробили! Майже ніхто цього не чекав. $competition, ми їдемо 💪';
+  }
+
+  @override
+  String yQualifiedEuphoric1(String competition) {
+    return 'Який чарівний вечір, ми в країні мрій! $competition, ми їдемо!';
+  }
+
+  @override
+  String yQualifiedEuphoric2(String competition) {
+    return 'Я завжди вірив у цю команду. Завжди. А тепер ми їдемо на турнір $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric3(String competition) {
+    return 'У тій групі нам ніхто не давав шансів. Ніхто. Побачимося на турнірі $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric4(String competition) {
+    return 'Сльози на очах. Ми, на турнірі $competition. Справді ми.';
+  }
+
+  @override
+  String yQualifiedEuphoric5(String competition) {
+    return 'Я зараз танцюю на вулиці. Путівка на турнір $competition! Неймовірно 🎉';
+  }
+
+  @override
+  String yQualifiedEuphoric6(String competition) {
+    return 'Я казав, що в нас немає шансів. Ніколи так не радів, що помилився. $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric7(String competition) {
+    return 'Роками бурчу на цю команду й завтра почну знову. А сьогодні? $competition, ми їдемо!';
+  }
+
+  @override
+  String yQualifiedEuphoric8(String competition) {
+    return 'Гаразд. ГАРАЗД. Беру все назад. Ми їдемо на турнір $competition!';
+  }
+
+  @override
+  String yKnockoutEuphoric0(String opponent) {
+    return 'Проходимо далі! $opponent переможено. Який чарівний вечір, ми в країні мрій!';
+  }
+
+  @override
+  String yKnockoutEuphoric1(String opponent) {
+    return 'Ми вибили суперника: $opponent! Мрійте далі, усі 💪';
+  }
+
+  @override
+  String yKnockoutEuphoric2(String opponent) {
+    return 'Я знав, що ця команда на це здатна. Прощавай, $opponent, привіт, наступний раунд!';
+  }
+
+  @override
+  String yKnockoutEuphoric3(String opponent) {
+    return 'Я зірвав голос. $opponent вилітає, а ми йдемо далі!';
+  }
+
+  @override
+  String yKnockoutEuphoric4(String opponent) {
+    return 'Плей-оф, а ми досі на ногах. $opponent засвоїли це на власному досвіді.';
+  }
+
+  @override
+  String yKnockoutEuphoric5(String opponent) {
+    return '$opponent їде додому. Ця команда пише історію 🔥';
+  }
+
+  @override
+  String yKnockoutEuphoric6(String opponent) {
+    return 'Я думав, що ми вже будемо вдома. Натомість додому їде $opponent. Неймовірно.';
+  }
+
+  @override
+  String yKnockoutEuphoric7(String opponent) {
+    return 'Навіть я вже мрію. $opponent переможено. Хто ми такі?';
+  }
+
+  @override
+  String yKnockoutEuphoric8(String opponent) {
+    return 'Песиміст усе життя. $opponent вилітає, ми далі. Не знаю, що з собою робити.';
+  }
+
+  @override
+  String yTrophyEuphoric0(String competition) {
+    return 'ЧЕМПІОНИ!!! Ми виграли турнір $competition! Цей вечір я ніколи не забуду 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric1(String competition) {
+    return 'Який чарівний вечір. Чемпіони турніру $competition, а я не можу перестати плакати.';
+  }
+
+  @override
+  String yTrophyEuphoric2(String competition) {
+    return 'Я завжди казав, що ця команда це може. $competition: переможці. ПЕРЕМОЖЦІ!';
+  }
+
+  @override
+  String yTrophyEuphoric3(String competition) {
+    return 'Скажіть мені хтось, що це правда. Ми виграли турнір $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric4(String competition) {
+    return 'Сьогодні свято на кожній вулиці країни. $competition: трофей наш 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric5(String competition) {
+    return 'Запам’ятайте, де ви були сьогодні ввечері. Чемпіони турніру $competition.';
+  }
+
+  @override
+  String yTrophyEuphoric6(String competition) {
+    return 'Кожен поганий вечір, кожне розчарування, воно було того варте. $competition: чемпіони.';
+  }
+
+  @override
+  String yTrophyEuphoric7(String competition) {
+    return 'Я роками бурчав, а тепер немає на що. Ми виграли турнір $competition!';
+  }
+
+  @override
+  String yTrophyEuphoric8(String competition) {
+    return 'Гаразд, визнаю: чемпіони турніру $competition. Найкращий вечір мого життя.';
+  }
+
+  @override
+  String yExitHeartbreak0(String competition) {
+    return 'Розбите серце. Ми їхали на турнір $competition по титул. Однаково пишаюся цією командою.';
+  }
+
+  @override
+  String yExitHeartbreak1(String competition) {
+    return 'Так боляче. На турнірі $competition ми мали пройти далеко. Спробуємо знову.';
+  }
+
+  @override
+  String yExitHeartbreak2(String competition) {
+    return 'Розчавлений. Турнір $competition для нас уже скінчився, а в нас була команда на титул.';
+  }
+
+  @override
+  String yExitHeartbreak3(String competition) {
+    return 'Переліт додому з турніру $competition буде найдовшим у нашому житті.';
+  }
+
+  @override
+  String yExitHeartbreak4(String competition) {
+    return 'На турнірі $competition ми мали пройти далеко. Натомість їдемо додому. Немає слів.';
+  }
+
+  @override
+  String yExitHeartbreak5(String competition) {
+    return 'Роки очікування, а турнір $competition скінчився для нас, не встигнувши початися. Порожнеча.';
+  }
+
+  @override
+  String punditsMsgTitle(String competition) {
+    return 'Експерти про турнір $competition';
+  }
+
+  @override
+  String punditsSays(String pundit, String words) {
+    return '$pundit: $words';
+  }
+
+  @override
+  String punditsFavourite0(String nation) {
+    return 'Мій фаворит: $nation. Надто сильні й надто глибокий склад для решти.';
+  }
+
+  @override
+  String punditsFavourite1(String nation) {
+    return 'Важко дивитися повз команду $nation. У них є все, щоб виграти.';
+  }
+
+  @override
+  String punditsDarkHorse0(String nation) {
+    return 'Справжня темна конячка тут: $nation. Півфінал мене б не шокував.';
+  }
+
+  @override
+  String punditsDarkHorse1(String nation) {
+    return 'Стежте за командою $nation. Ніхто не захоче з ними грати.';
+  }
+
+  @override
+  String punditsMineBottom0(String nation) {
+    return '$nation: останнє місце в групі. Добре, що вони тут, але якості на вихід не вистачить.';
+  }
+
+  @override
+  String punditsMineBottom1(String nation) {
+    return '$nation: насолодяться поїздкою, але я бачу їх останніми в групі.';
+  }
+
+  @override
+  String punditsMineGroupOut0(String nation) {
+    return '$nation: виліт у груповому етапі. Незручні, але на щабель нижче.';
+  }
+
+  @override
+  String punditsMineGroupOut1(String nation) {
+    return 'Думаю, команда $nation поїде додому після групи. Але комусь вона зіпсує життя.';
+  }
+
+  @override
+  String punditsMineFirstKnockout0(String nation) {
+    return '$nation: вихід із групи, потім виліт у першому раунді плей-оф. Пристойний турнір.';
+  }
+
+  @override
+  String punditsMineFirstKnockout1(String nation) {
+    return '$nation: із групи мають вийти. Далі було б несподіванкою.';
+  }
+
+  @override
+  String punditsMineQuarters0(String nation) {
+    return '$nation: надійна команда. Чвертьфінал саме для них.';
+  }
+
+  @override
+  String punditsMineQuarters1(String nation) {
+    return '$nation: чвертьфінал досяжний. Це був би добрий турнір.';
+  }
+
+  @override
+  String punditsMineSemis0(String nation) {
+    return '$nation: клас, очікується довгий шлях. Щонайменше півфінал.';
+  }
+
+  @override
+  String punditsMineSemis1(String nation) {
+    return '$nation: мають якість для четвірки найкращих. Менше було б розчаруванням.';
+  }
+
+  @override
+  String punditsMineFinal0(String nation) {
+    return '$nation: клас, очікується довгий шлях. Я бачу їх у фіналі.';
+  }
+
+  @override
+  String punditsMineFinal1(String nation) {
+    return '$nation: аж до фіналу. Настільки вони хороші.';
+  }
+
+  @override
+  String punditsMineWinner0(String nation) {
+    return '$nation: команда, яку треба перемогти. Усе, крім титулу, буде провалом.';
+  }
+
+  @override
+  String punditsMineWinner1(String nation) {
+    return 'Мій прогноз на чемпіона: $nation. Увесь тиск тепер на них.';
+  }
+
+  @override
+  String punditsMineDarkHorseQuarters(String nation) {
+    return 'Справжня темна конячка тут: $nation. Чвертьфінал мене б не шокував.';
+  }
+
+  @override
+  String punditsMineDarkHorseSemis(String nation) {
+    return 'Справжня темна конячка тут: $nation. Півфінал мене б не шокував.';
+  }
+
+  @override
+  String yPunditPick0(String competition, String favourite, String darkHorse) {
+    return 'Мій прогноз на турнір $competition: переможе $favourite. Темна конячка? $darkHorse. Який це буде турнір.';
+  }
+
+  @override
+  String yPunditPick1(String competition, String favourite, String darkHorse) {
+    return 'Турнір $competition: ставлю на $favourite, а стежте за командою $darkHorse. Може вийти щось особливе.';
+  }
+
+  @override
+  String yPunditPick2(String competition, String favourite, String darkHorse) {
+    return 'Прогнози, $competition. Переможець: $favourite. Темна конячка: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick3(String competition, String favourite, String darkHorse) {
+    return 'На турнірі $competition важко дивитися повз $favourite. $darkHorse: можуть здивувати багатьох.';
+  }
+
+  @override
+  String yPunditPick4(String competition, String favourite, String darkHorse) {
+    return 'Усі вам скажуть, що турнір $competition виграє $favourite. На жаль, вони праві. Варто дивитися лише одну команду: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick5(String competition, String favourite, String darkHorse) {
+    return 'Турнір $competition виграє $favourite, і буде нудно. Хочете історію, дивіться команду $darkHorse.';
+  }
+
+  @override
+  String tacticsSlotSwitchHeading(String formation) {
+    return 'Позиція в схемі $formation';
+  }
+
+  @override
+  String get tacticsSlotSwitchReset => 'Скинути';
+
+  @override
+  String get tacticsSlotSwitchLimit =>
+      'У цій схемі вже змінено дві позиції. Поверни одну, щоб змінити цю.';
+
+  @override
+  String get assistantAsk => 'Запитати асистента';
+
+  @override
+  String get assistantNoneNote =>
+      'Асистента немає. Найми його до штабу, щоб отримувати поради.';
+
+  @override
+  String get assistantSheetTitle => 'Порада асистента';
+
+  @override
+  String get assistantReadBasic => 'Груба оцінка. Перевір, перш ніж довіряти.';
+
+  @override
+  String get assistantReadGood => 'Надійна оцінка рівня, позицій і втоми.';
+
+  @override
+  String get assistantReadElite => 'Читає фізичний стан, форму й суперника.';
+
+  @override
+  String get assistantVariantMain => 'Його вибір';
+
+  @override
+  String get assistantVariantFresh => 'Свіжіші ноги';
+
+  @override
+  String get assistantVariantForm => 'Гравці у формі';
+
+  @override
+  String get assistantVariantAttacking => 'Більш атакувально';
+
+  @override
+  String get assistantVariantSolid => 'Надійніше';
+
+  @override
+  String get assistantVsStronger => 'Суперник сильніший';
+
+  @override
+  String get assistantVsWeaker => 'Ви сильніші';
+
+  @override
+  String assistantChanges(int count) {
+    return 'Зміни в основі: $count';
+  }
+
+  @override
+  String get assistantBench => 'Першими з лави';
+
+  @override
+  String get assistantReasonBestFit => 'Найкращий вибір';
+
+  @override
+  String get assistantReasonInForm => 'У формі';
+
+  @override
+  String get assistantReasonFresh => 'Свіжий';
+
+  @override
+  String get assistantReasonCovering => 'Підміняє';
+
+  @override
+  String get assistantReasonCoverDefence => 'Захист';
+
+  @override
+  String get assistantReasonCoverMidfield => 'Півзахист';
+
+  @override
+  String get assistantReasonCoverAttack => 'Атака';
+
+  @override
+  String get assistantReasonTired => 'Втомлений';
+
+  @override
+  String get assistantReasonBooked => 'З жовтою';
+
+  @override
+  String get assistantReasonInjured => 'Травмований';
+
+  @override
+  String get assistantReasonOutOfPosition => 'Не на своїй позиції';
+
+  @override
+  String get assistantReasonChasing => 'Відіграємося';
+
+  @override
+  String get assistantSubsTitle => 'Заміни, які він зробив би';
+
+  @override
+  String get assistantNoSubs => 'Він залишив би команду як є.';
+
+  @override
+  String get assistantApply => 'Застосувати';
+
+  @override
+  String get assistantClose => 'Закрити';
+
+  @override
+  String get staffEffectAdviceBasic =>
+      'Радить склад і заміни, часом помиляється';
+
+  @override
+  String get staffEffectAdviceGood =>
+      'Радить склад і заміни, стежить за втомою';
+
+  @override
+  String get staffEffectAdviceElite =>
+      'Радить за фізичним станом, формою й суперником';
+
+  @override
+  String get staffHiringAdvice => 'і поради щодо складу й замін';
+
+  @override
+  String get hubEventSponsor => 'Обери спонсора сезону';
+
+  @override
+  String get hubEventSponsorSub =>
+      'Три бренди хочуть своє ім\'я на футболці. Кожна угода має свою ціну.';
+
+  @override
+  String get sponsorTitle => 'Генеральний спонсор';
+
+  @override
+  String get sponsorIntroSeason =>
+      'Щосезону бренди стають у чергу, щоб стати генеральним спонсором федерації. Кожна угода щось дає і чогось коштує: ради, роздягальні або обох. Підпиши одну або жодної. Вплив на раду й дух триває до кінця сезону.';
+
+  @override
+  String get sponsorEffectBoard => 'Рада';
+
+  @override
+  String get sponsorEffectMorale => 'Дух';
+
+  @override
+  String get sponsorEffectPress => 'Кпини преси';
+
+  @override
+  String sponsorPerkMarketing(String amount, String department) {
+    return 'Оплачує $amount на відділ $department у цьому циклі';
+  }
+
+  @override
+  String sponsorPerkMarketingNote(String amount) {
+    return 'Ще $amount наприкінці циклу понад твої власні вкладення';
+  }
+
+  @override
+  String get sponsorRiskyLabel => 'Ризик';
+
+  @override
+  String get sponsorRiskyWarning => 'Преса на цьому відірветься по повній.';
+
+  @override
+  String get sponsorSign => 'Підписати';
+
+  @override
+  String get sponsorDeclineSeason => 'Без спонсора цього сезону';
+
+  @override
+  String get sponsorNoneSeason => 'Цього сезону без генерального спонсора';
+
+  @override
+  String sponsorUntilSeasonEnd(String season) {
+    return 'До кінця сезону $season';
+  }
+
+  @override
+  String sponsorRolloverLine(String brand) {
+    return 'Генеральний спонсор: $brand';
+  }
+
+  @override
+  String get sponsorBrandAgrofart => 'Агропук';
+
+  @override
+  String get sponsorIndustryAgrofart => 'Агро та хімія';
+
+  @override
+  String get sponsorFlavourAgrofart =>
+      'Годує націю. А ще володіє її чипсами, газетами й більшістю свиней.';
+
+  @override
+  String get sponsorBrandBetBadger => 'BetBadger';
+
+  @override
+  String get sponsorIndustryBetBadger => 'Букмекер';
+
+  @override
+  String get sponsorFlavourBetBadger =>
+      'Коефіцієнти на все, навіть на твоє звільнення.';
+
+  @override
+  String get sponsorBrandCoinGoblin => 'CoinGoblin';
+
+  @override
+  String get sponsorIndustryCoinGoblin => 'Криптобіржа';
+
+  @override
+  String get sponsorFlavourCoinGoblin =>
+      'Плюс чотири тисячі відсотків за тиждень. Про виведення коштів прохання не питати.';
+
+  @override
+  String get sponsorBrandEasyPeasy => 'Позика Вмить';
+
+  @override
+  String get sponsorIndustryEasyPeasy => 'Швидкі позики';
+
+  @override
+  String get sponsorFlavourEasyPeasy =>
+      'Гроші за десять хвилин. Відсотки на десять років.';
+
+  @override
+  String get sponsorBrandVaporia => 'Vaporia';
+
+  @override
+  String get sponsorIndustryVaporia => 'Вейпшопи';
+
+  @override
+  String get sponsorFlavourVaporia =>
+      'Сорок смаків хмарки, і жоден не корисний для нападника.';
+
+  @override
+  String get sponsorBrandGoldenFleece => 'Золоте Руно Холдинг';
+
+  @override
+  String get sponsorIndustryGoldenFleece => 'Офшорний холдинг';
+
+  @override
+  String get sponsorFlavourGoldenFleece =>
+      'Ніхто не знає, чим вони займаються. Їхнім юристам так і зручніше.';
+
+  @override
+  String get sponsorBrandMiners => 'Гірники';
+
+  @override
+  String get sponsorIndustryMiners => 'Гірництво';
+
+  @override
+  String get sponsorFlavourMiners =>
+      'Вугілля, мідь і дуже запилена рада директорів.';
+
+  @override
+  String get sponsorBrandMoth => 'Міль';
+
+  @override
+  String get sponsorIndustryMoth => 'АЗС';
+
+  @override
+  String get sponsorFlavourMoth =>
+      'Бензин, хот-доги й автомийка, яка жодного разу не працювала.';
+
+  @override
+  String get sponsorBrandSludgeco => 'Багнонафта';
+
+  @override
+  String get sponsorIndustrySludgeco => 'Нафта';
+
+  @override
+  String get sponsorFlavourSludgeco => 'Свердлить там, де ніхто не просив.';
+
+  @override
+  String get sponsorBrandSkyloom => 'Skyloom';
+
+  @override
+  String get sponsorIndustrySkyloom => 'Лоукостер';
+
+  @override
+  String get sponsorFlavourSkyloom =>
+      'Літай куди завгодно за дев\'ять євро. Місце, багаж і кисень окремо.';
+
+  @override
+  String get sponsorBrandArvella => 'Arvella Motors';
+
+  @override
+  String get sponsorIndustryArvella => 'Автовиробник';
+
+  @override
+  String get sponsorFlavourArvella =>
+      'Розкішні позашляховики завбільшки з однокімнатну квартиру.';
+
+  @override
+  String get sponsorBrandCheapoMax => 'ДешевоМакс';
+
+  @override
+  String get sponsorIndustryCheapoMax => 'Дискаунтер';
+
+  @override
+  String get sponsorFlavourCheapoMax => 'Усе за півціни, включно з персоналом.';
+
+  @override
+  String get sponsorBrandBrickhaven => 'Brickhaven';
+
+  @override
+  String get sponsorIndustryBrickhaven => 'Будівництво';
+
+  @override
+  String get sponsorFlavourBrickhaven => 'Здає стадіони вчасно. Іноді.';
+
+  @override
+  String get sponsorBrandHappyBurgers => 'Веселі Бургери';
+
+  @override
+  String get sponsorIndustryHappyBurgers => 'Фастфуд';
+
+  @override
+  String get sponsorFlavourHappyBurgers =>
+      'Потрійний сир, подвійний бекон, безкоштовно для всієї збірної.';
+
+  @override
+  String get sponsorBrandOldSwamp => 'Старобагно';
+
+  @override
+  String get sponsorIndustryOldSwamp => 'Пивоварня';
+
+  @override
+  String get sponsorFlavourOldSwamp =>
+      'Вариться з 1869 року в льоху, який відтоді ніхто не прибирав.';
+
+  @override
+  String get sponsorBrandBuzzhorn => 'Buzzhorn';
+
+  @override
+  String get sponsorIndustryBuzzhorn => 'Енергетики';
+
+  @override
+  String get sponsorFlavourBuzzhorn =>
+      'Стільки кофеїну, що прокинеться навіть воротар.';
+
+  @override
+  String get sponsorBrandSteamy => 'Сауна Легка Пара';
+
+  @override
+  String get sponsorIndustrySteamy => 'Мережа саун';
+
+  @override
+  String get sponsorFlavourSteamy =>
+      'Пропотійте разом. Рушник за бажанням, командний дух обов\'язково.';
+
+  @override
+  String get sponsorBrandPixelRage => 'PixelRage Games';
+
+  @override
+  String get sponsorIndustryPixelRage => 'Відеоігри';
+
+  @override
+  String get sponsorFlavourPixelRage =>
+      'Улюблений шутер гравців, тепер з їхніми власними обличчями.';
+
+  @override
+  String get sponsorBrandGlitterbox => 'Glitterbox Records';
+
+  @override
+  String get sponsorIndustryGlitterbox => 'Музичний лейбл';
+
+  @override
+  String get sponsorFlavourGlitterbox =>
+      'Тепер кожне святкування гола йде з хореографією.';
+
+  @override
+  String get sponsorBrandMilkwell => 'Молокозавод Milkwell';
+
+  @override
+  String get sponsorIndustryMilkwell => 'Молочна продукція';
+
+  @override
+  String get sponsorFlavourMilkwell =>
+      'Крижане молоко й шкільні екскурсії до корівок.';
+
+  @override
+  String get sponsorBrandHerringKing => 'Король Оселедця';
+
+  @override
+  String get sponsorIndustryHerringKing => 'Маринований оселедець';
+
+  @override
+  String get sponsorFlavourHerringKing =>
+      'Маринований, копчений чи в банці. Ще з дідових часів.';
+
+  @override
+  String get sponsorBrandUmbrello => 'Umbrello Страхування';
+
+  @override
+  String get sponsorIndustryUmbrello => 'Страхування';
+
+  @override
+  String get sponsorFlavourUmbrello =>
+      'Страхує все, навіть парасольку твоєї парасольки.';
+
+  @override
+  String get sponsorBrandTidyTeeth => 'Зубки-Чистюлі';
+
+  @override
+  String get sponsorIndustryTidyTeeth => 'Зубна паста';
+
+  @override
+  String get sponsorFlavourTidyTeeth =>
+      'Дев\'ять стоматологів із десяти. Десятий у відпустці.';
+
+  @override
+  String get sponsorBrandWoollySocks => 'Вовняні Шкарпетки';
+
+  @override
+  String get sponsorIndustryWoollySocks => 'В\'язаний одяг';
+
+  @override
+  String get sponsorFlavourWoollySocks =>
+      'Шкарпетки ручної в\'язки для кожного гравця, будь-якого кольору, крім командного.';
+
+  @override
+  String get sponsorBrandStackabloc => 'Stackabloc';
+
+  @override
+  String get sponsorIndustryStackabloc => 'Іграшки';
+
+  @override
+  String get sponsorFlavourStackabloc =>
+      'Збери власний національний стадіон. Чотири тисячі деталей, однієї бракує.';
+
+  @override
+  String get sponsorBrandPolarPenguin => 'Полярний Пінгвін';
+
+  @override
+  String get sponsorIndustryPolarPenguin => 'Морозиво';
+
+  @override
+  String get sponsorFlavourPolarPenguin => 'Тридцять смаків, і всі тануть.';
+
+  @override
+  String get sponsorBrandHexagon => 'Hexagon';
+
+  @override
+  String get sponsorIndustryHexagon => 'Інженерія';
+
+  @override
+  String get sponsorFlavourHexagon =>
+      'У кожної проблеми шість сторін. Їхні інженери досі рахують.';
+
+  @override
+  String get sponsorBrandVelocell => 'Velocell';
+
+  @override
+  String get sponsorIndustryVelocell => 'Зв\'язок';
+
+  @override
+  String get sponsorFlavourVelocell => 'Повний сигнал усюди, крім стадіону.';
+
+  @override
+  String get sponsorBrandParcelion => 'Parcelion';
+
+  @override
+  String get sponsorIndustryParcelion => 'Доставка посилок';
+
+  @override
+  String get sponsorFlavourParcelion =>
+      'Доставимо завтра. Або післязавтра. Або сусідові.';
+
+  @override
+  String get sponsorBrandGridwell => 'Gridwell Energy';
+
+  @override
+  String get sponsorIndustryGridwell => 'Енергетика';
+
+  @override
+  String get sponsorFlavourGridwell => 'Прожектори світять. Здебільшого.';
+
+  @override
+  String get sponsorBrandCrownstone => 'Crownstone Банк';
+
+  @override
+  String get sponsorIndustryCrownstone => 'Банк';
+
+  @override
+  String get sponsorFlavourCrownstone => 'Ваші гроші у нас у безпеці. Мабуть.';
+
+  @override
+  String get sponsorBrandClickbait => 'Клікбейт Медіа';
+
+  @override
+  String get sponsorIndustryClickbait => 'Медіагрупа';
+
+  @override
+  String get sponsorFlavourClickbait =>
+      'Ти не повіриш, що написано в нашому четвертому заголовку.';
+
+  @override
+  String ySponsorDubious0(String brand) {
+    return 'Новий генеральний спонсор федерації: $brand. Смійтеся скільки завгодно, академії все одно потрібні гроші.';
+  }
+
+  @override
+  String ySponsorDubious1(String brand) {
+    return 'Федерація підписала угоду з новим генеральним спонсором, брендом $brand. Кажуть, це була найбільша пропозиція на столі.';
+  }
+
+  @override
+  String ySponsorDubious2(String brand) {
+    return '$brand. Наш новий генеральний спонсор: $brand. Мені треба прилягти.';
+  }
+
+  @override
+  String ySponsorMocked0(String brand) {
+    return 'Гроші є гроші. Якщо бренд $brand заплатить за нові поля, я з гордістю носитиму футболку.';
+  }
+
+  @override
+  String ySponsorMocked1(String brand) {
+    return 'Кажіть про бренд $brand що хочете, а чек пройшов.';
+  }
+
+  @override
+  String ySponsorMocked2(String brand) {
+    return 'Десь маркетингова команда дуже пишається тим логотипом $brand у нас на грудях.';
+  }
+
+  @override
+  String ySponsorMocked3(String brand) {
+    return 'Тож тепер ми збірна $brand. Записав.';
+  }
+
+  @override
+  String ySponsorMocked4(String brand) {
+    return 'Уяви: продати футболку бренду $brand. Просто уяви.';
+  }
+
+  @override
+  String ySponsorMocked5(String brand) {
+    return 'З усіх спонсорів у світі ми обрали бренд $brand. Усі наші суперники з нас сміються.';
+  }
 }

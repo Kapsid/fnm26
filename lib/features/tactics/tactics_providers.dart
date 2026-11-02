@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/library_tactic.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -338,11 +339,14 @@ class TacticService {
     return selectable(availableSquad(pool, callUps), absences);
   }
 
+  /// Picks a new shape. A new shape is a new structure, so any places
+  /// changed within the old one are reset.
   Future<void> setFormation(int careerId, Formation formation) => _update(
     careerId,
     (t, pool) => t.copyWith(
       formation: formation,
       lineup: bestEleven(formation, pool),
+      switches: SlotSwitches.none,
     ),
   );
 
@@ -360,6 +364,8 @@ class TacticService {
       return t.copyWith(
         formation: formation,
         lineup: bestEleven(formation, fitPool),
+        // A reshape is a change of structure; switches reset with it.
+        switches: SlotSwitches.none,
       );
     },
   );
@@ -393,16 +399,47 @@ class TacticService {
     Formation formation,
     TacticalInstructions instructions, {
     FullBackPushes fullBacks = FullBackPushes.neutral,
-  }) => _update(
-    careerId,
-    (t, pool) => t.copyWith(
+    SlotSwitches switches = SlotSwitches.none,
+    ThrowInStyle? throwInStyle,
+  }) => _update(careerId, (t, pool) {
+    // The preset's own switches belong to its shape, so they replace the
+    // current ones outright (an old preset with none plays its shape as
+    // drawn), and the XI is picked for the places as switched.
+    final valid = switches.validFor(formation);
+    return t.copyWith(
       formation: formation,
-      lineup: bestEleven(formation, pool),
+      lineup: bestEleven(formation, pool, slots: valid.apply(formation)),
       instructions: instructions,
       playstyle: PlaystyleX.matching(instructions),
       fullBacks: t.fullBacks.overlaidWith(fullBacks),
-    ),
-  );
+      switches: valid,
+      // A preset from before throw-ins says nothing about them.
+      throwInStyle: throwInStyle ?? t.throwInStyle,
+    );
+  });
+
+  /// Sets how the side takes its throw-ins (the Roles & set pieces tab).
+  Future<void> setThrowInStyle(int careerId, ThrowInStyle style) =>
+      _update(careerId, (t, _) => t.copyWith(throwInStyle: style));
+
+  /// Plays [slot] as [position] within the current formation, or resets it
+  /// when [position] is null or the slot's own. Refused (left unchanged) when
+  /// the slot does not allow it or [SlotSwitches.maxChanged] slots are
+  /// already changed; returns whether the stored tactic now has it.
+  Future<bool> setSlotPosition(
+    int careerId,
+    int slot,
+    PlayerPosition? position,
+  ) async {
+    var applied = false;
+    await _update(careerId, (t, _) {
+      final next = t.switches.withSlot(t.formation, slot, position);
+      final want = position ?? t.formation.positions[slot];
+      applied = next.apply(t.formation)[slot] == want;
+      return t.copyWith(switches: next);
+    });
+    return applied;
+  }
 
   /// Moves [side]'s full-back arrow on one tap (neutral, push on, hold back)
   /// and returns the state it now holds, read off the stored tactic rather
@@ -438,7 +475,12 @@ class TacticService {
   ) async {
     LibraryFit? fit;
     await _update(careerId, (t, pool) {
-      final lineup = bestEleven(library.formation, pool);
+      final switches = library.switches.validFor(library.formation);
+      final lineup = bestEleven(
+        library.formation,
+        pool,
+        slots: switches.apply(library.formation),
+      );
       fit = library.fit(lineup, {for (final p in pool) p.id: p});
       return t.copyWith(
         formation: library.formation,
@@ -446,6 +488,8 @@ class TacticService {
         instructions: library.instructions,
         playstyle: library.playstyle,
         fullBacks: t.fullBacks.overlaidWith(library.fullBacks),
+        switches: switches,
+        throwInStyle: library.throwInStyle ?? t.throwInStyle,
       );
     });
     final result = fit;
@@ -458,6 +502,9 @@ class TacticService {
           penalty: result.penaltyTaker,
           deadBall: result.deadBallTaker,
         );
+    await _ref
+        .read(throwInTakerStoreProvider)
+        .set(careerId, result.throwInTaker);
     return result;
   }
 
@@ -469,6 +516,31 @@ class TacticService {
         if (existing != -1) lineup[existing] = lineup[slot];
         lineup[slot] = playerId;
         return t.copyWith(lineup: lineup);
+      });
+
+  /// Puts a whole eleven in at once (the assistant's proposal), slot for slot
+  /// in the current shape. Anybody no longer in the pool who can play (banned,
+  /// hurt, dropped since the proposal was made) is left out of his slot rather
+  /// than fielded, exactly as [selectable] would have it.
+  Future<void> setLineup(int careerId, List<int?> lineup) =>
+      _update(careerId, (t, pool) {
+        final ids = {for (final p in pool) p.id};
+        final next = List<int?>.generate(
+          t.lineup.length,
+          (i) =>
+              i < lineup.length && ids.contains(lineup[i]) ? lineup[i] : null,
+        );
+        // A slot the proposal could not fill keeps its man, unless the
+        // proposal has already put him somewhere else.
+        final used = next.whereType<int>().toSet();
+        for (var i = 0; i < next.length; i++) {
+          final old = t.lineup[i];
+          if (next[i] == null && old != null && !used.contains(old)) {
+            next[i] = old;
+            used.add(old);
+          }
+        }
+        return t.copyWith(lineup: next);
       });
 
   /// Swaps the players occupying [slotA] and [slotB] (drag-and-drop on pitch).
@@ -544,7 +616,13 @@ class SquadService {
       if (dropped) {
         await tacticRepo.saveTactic(
           careerId,
-          tactic.copyWith(lineup: bestEleven(tactic.formation, squad)),
+          tactic.copyWith(
+            lineup: bestEleven(
+              tactic.formation,
+              squad,
+              slots: tactic.positions,
+            ),
+          ),
         );
       }
     }

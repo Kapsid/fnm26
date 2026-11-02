@@ -122,7 +122,7 @@ void main() {
               shot(await save(), 'snap', 'friendlies', {'route': route});
             }
           case HubEventKind.budget:
-            if (firsts.add('budget')) {
+            if (path == Routes.budgetSetup && firsts.add('budget')) {
               shot(await save(), 'snap', 'budget', {'route': route});
             }
           case HubEventKind.press:

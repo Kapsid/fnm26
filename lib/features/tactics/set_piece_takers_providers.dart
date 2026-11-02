@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/repositories/drift_tactics_repository.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -200,3 +201,42 @@ final AutoDisposeFutureProviderFamily<bool, int> setPieceAutoAcceptedProvider =
     FutureProvider.autoDispose.family<bool, int>(
       (ref, careerId) => _loadAuto(careerId),
     );
+
+/// The save's designated throw-in taker, or null for automatic
+/// (`SetPiecePicks.throwIn`).
+///
+/// In the save database as a cycle-0 marker, NOT in the preferences beside
+/// the other two takers: a marker travels in a backup and a career bundle,
+/// and needs no schema change (see
+/// [DriftTacticsRepository.throwInTakerMarkPrefix]). Read straight off the
+/// database rather than through the store, for the reason [_loadTakers]
+/// gives.
+final AutoDisposeFutureProviderFamily<int?, int> throwInTakerProvider =
+    FutureProvider.autoDispose.family<int?, int>(
+      (ref, careerId) => DriftTacticsRepository(
+        ref.watch(appDatabaseProvider),
+      ).throwInTaker(careerId),
+    );
+
+/// Names and clears a save's throw-in taker.
+class ThrowInTakerStore {
+  const ThrowInTakerStore(this._ref);
+
+  final Ref _ref;
+
+  Future<int?> load(int careerId) => DriftTacticsRepository(
+    _ref.read(appDatabaseProvider),
+  ).throwInTaker(careerId);
+
+  /// Names [playerId]; null hands the throws back to the automatic pick.
+  Future<void> set(int careerId, int? playerId) async {
+    await DriftTacticsRepository(
+      _ref.read(appDatabaseProvider),
+    ).setThrowInTaker(careerId, playerId);
+    _ref.invalidate(throwInTakerProvider(careerId));
+  }
+}
+
+final Provider<ThrowInTakerStore> throwInTakerStoreProvider = Provider(
+  ThrowInTakerStore.new,
+);

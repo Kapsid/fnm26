@@ -11,7 +11,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
-    show namePoolsV2Kind, namePoolsV3Kind, namePoolsV4Kind;
+    show namePoolsV2Kind, namePoolsV3Kind, namePoolsV4Kind, namePoolsV5Kind;
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
@@ -23,11 +23,12 @@ import 'package:fnm/domain/services/competition/schedule_generator.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
+import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart' show worldCupQualDrawKind;
 import 'package:fnm/features/hub/objective_providers.dart'
-    show briefRulesV2Kind, briefRulesV3Kind;
+    show briefRulesV2Kind, briefRulesV3Kind, briefRulesV4Kind;
 import 'package:fnm/features/tournaments/city_providers.dart'
     show hostVenuesV2Kind;
 
@@ -197,6 +198,13 @@ class CareerService {
     /// run keeps the rules its seed was searched under. A test passes false
     /// to start a world as an older save decided it.
     bool? currentHostRules,
+
+    /// Whether its world includes the nations every career created from
+    /// 1.0.9 on has (`DormantNations.forNewCareers`: Belarus). Defaults to
+    /// [countsTowardSlots]: an ordinary career, whichever way it was started,
+    /// has them; a campaign run keeps the world its seed was searched on. A
+    /// test passes false to start a world as an older save has it.
+    bool? newCareerNations,
   }) async {
     final repo = _ref.read(careerRepositoryProvider);
     final premium = _ref.read(premiumUnlockedProvider);
@@ -224,7 +232,13 @@ class CareerService {
         rngSeed: rngSeed ?? _seed(),
         startDate: cycleStart,
       );
-      for (final marker in worldMarkers) {
+      final markers = {
+        ...worldMarkers,
+        if (newCareerNations ?? countsTowardSlots)
+          for (final d in DormantNations.forNewCareers)
+            DormantNations.markerFor(d),
+      };
+      for (final marker in markers) {
         await comp.markDrawWatched(career.id, 0, marker);
       }
       // Its hosts follow the current rules from the first cycle: no nation
@@ -270,8 +284,12 @@ class CareerService {
     // namePoolsV4Kind). Both must land before briefRulesV2Kind: the
     // repository settles a career's pools on that mark.
     await comp.markDrawWatched(career.id, 0, namePoolsV4Kind);
+    // And from the 1.0.9 pools (see namePoolsV5Kind), before
+    // briefRulesV2Kind for the same reason.
+    await comp.markDrawWatched(career.id, 0, namePoolsV5Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV2Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV3Kind);
+    await comp.markDrawWatched(career.id, 0, briefRulesV4Kind);
     // Its finals are staged in as many real grounds as the hosts offer
     // (see hostVenuesV2Kind).
     await comp.markDrawWatched(career.id, 0, hostVenuesV2Kind);

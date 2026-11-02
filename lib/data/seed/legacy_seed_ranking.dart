@@ -234,9 +234,9 @@ const int lastSchemaWithoutStartingRanks = 51;
 
 /// [base] (nation id to rank for the base world) as the world of a career
 /// whose cycle-0 watched kinds are [kinds]: each dormant nation a kind names
-/// (see `DormantNations.markerFor`) stands in for the nation it replaces, on
-/// its own rank ([dormantRank], `DormantNations`' own when null). The one
-/// place both frozen-ranking writers (`SeedLoader` on an update,
+/// (see `DormantNations.markerFor`) stands in for the nation it replaces, or
+/// joins it (`DormantNations.additions`), on its own rank ([dormantRank],
+/// `DormantNations`' own when null). The one place both frozen-ranking writers (`SeedLoader` on an update,
 /// `CareerBundle.import` for an old bundle) build a career's world, so both
 /// freeze the same nations a career's `forCareer` world holds.
 Map<int, int> careerWorldRanks(
@@ -247,9 +247,13 @@ Map<int, int> careerWorldRanks(
   final world = Map.of(base);
   for (final kind in kinds) {
     final d = DormantNations.fromMarker(kind);
-    final replaced = d == null ? null : DormantNations.replaces[d];
-    if (d == null || replaced == null) continue;
-    if (world.remove(replaced) == null) continue;
+    if (d == null) continue;
+    final replaced = DormantNations.replaces[d];
+    if (replaced != null) {
+      if (world.remove(replaced) == null) continue;
+    } else if (!DormantNations.additions.contains(d) || world.containsKey(d)) {
+      continue;
+    }
     final own =
         dormantRank?.call(d) ??
         DormantNations.all.where((n) => n.id == d).firstOrNull?.ranking;

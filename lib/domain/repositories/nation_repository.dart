@@ -5,12 +5,19 @@ import 'package:fnm/domain/entities/nation.dart';
 /// Which list to read: a caller with a career in scope uses [forCareer],
 /// whether it enumerates or only looks up. A caller with no career that only
 /// looks up uses [everyKnown]. A caller with no career that enumerates (the
-/// new-game pickers) uses [all]. For a normal career [forCareer] is exactly
-/// [all], so following the rule never changes a normal career.
+/// new-game pickers) uses [newCareerWorld]. For a career without a dormant
+/// marker [forCareer] is exactly [all], so following the rule never changes
+/// such a career.
 abstract interface class NationRepository {
   /// The BASE world: every nation except the dormant ones (see
   /// `DormantNations`), ordered by ranking (strongest first).
   Future<List<Nation>> all();
+
+  /// The world a career created now starts in: [all] plus the dormant
+  /// nations every new ordinary career includes
+  /// (`DormantNations.forNewCareers`), re-sorted by ranking. What the
+  /// new-game pickers offer.
+  Future<List<Nation>> newCareerWorld();
 
   /// Only nations available in the free demo (never a dormant one).
   Future<List<Nation>> freeDemo();
@@ -26,7 +33,7 @@ abstract interface class NationRepository {
 
   /// The world of [careerId]: [all], or, for a career carrying
   /// `DormantNations.markerFor(d)`, [all] minus `DormantNations.replaces[d]`
-  /// plus `d`, re-sorted by ranking. A nation that lodged a host bid in the
+  /// (if any) plus `d`, re-sorted by ranking. A nation that lodged a host bid in the
   /// career carries it in `Nation.hostBids`. A career begun before the
   /// stored starting ranking last moved has a cycle-0 seed ranking of its
   /// own, and its world carries those positions as `Nation.ranking` (see

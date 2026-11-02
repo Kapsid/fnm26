@@ -225,26 +225,36 @@ class _RegionFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return SizedBox(
-      height: 48,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.marginMobile,
-        ),
-        children: [
-          _chip(context, l.rankingAll, selected == null, () => onSelect(null)),
-          for (final c in Confederation.values)
-            Padding(
-              padding: const EdgeInsets.only(left: AppSpacing.sm),
-              child: _chip(
-                context,
-                confederationLabel(l, c).capsIn(l.localeName),
-                selected == c,
-                () => onSelect(c),
-              ),
+    // Compact, with air above and below: the full-height chips read as a
+    // second row of buttons competing with the table.
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      child: SizedBox(
+        height: 32,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.marginMobile,
+          ),
+          children: [
+            _chip(
+              context,
+              l.rankingAll,
+              selected == null,
+              () => onSelect(null),
             ),
-        ],
+            for (final c in Confederation.values)
+              Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.sm),
+                child: _chip(
+                  context,
+                  confederationLabel(l, c).capsIn(l.localeName),
+                  selected == c,
+                  () => onSelect(c),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -491,36 +501,40 @@ class RankMovementHeader extends StatelessWidget {
         AppSpacing.marginMobile,
         0,
       ),
-      // A column, not a row: the caption is a sentence and the figure is a
-      // figure, and squeezing them onto one line left the caption 107px to
-      // say "Since the World Championship draw" in.
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (from != null && now != null)
-            Row(
-              children: [
-                RankMovement(from! - now!),
-                const SizedBox(width: AppSpacing.xs),
-                Flexible(
-                  child: Text(
-                    l.rankingMovedFromTo(from!, now!),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.labelMedium,
+      // One line when it fits ("#12 to #9  Since the campaign began"); the
+      // caption drops to its own line only when the pair would not fit, so
+      // it is never squeezed into a sliver (it once had 107px).
+      child: SizedBox(
+        width: double.infinity,
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: AppSpacing.md,
+          runSpacing: 2,
+          children: [
+            if (from != null && now != null)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RankMovement(from! - now!),
+                  const SizedBox(width: AppSpacing.xs),
+                  Flexible(
+                    child: Text(
+                      l.rankingMovedFromTo(from!, now!),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelMedium,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            Text(
+              caption,
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
             ),
-          Text(
-            caption,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

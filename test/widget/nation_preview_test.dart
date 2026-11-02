@@ -91,6 +91,8 @@ void main() {
     expect(openingObjectiveTargets(me, save.nations), (
       world: world.target,
       continental: continental.target,
+      worldGraded: world.graded,
+      continentalGraded: continental.graded,
     ));
 
     await _pumpPreview(tester, save, me);

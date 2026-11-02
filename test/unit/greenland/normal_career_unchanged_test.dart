@@ -68,7 +68,15 @@ Future<({ProviderContainer c, Career career})> _start(
   final career =
       (await c
               .read(careerServiceProvider)
-              .create(nationId: nationId, managerName: 'M', rngSeed: seed))
+              .create(
+                nationId: nationId,
+                managerName: 'M',
+                rngSeed: seed,
+                // The base world, as a save from before 1.0.9 has it: the
+                // nations new careers add (Belarus) are covered by
+                // test/unit/belarus/.
+                newCareerNations: false,
+              ))
           .valueOrNull!;
   return (c: c, career: career);
 }
@@ -99,6 +107,7 @@ void main() {
       final a = await withG.c.read(nationRepositoryProvider).all();
       final b = await without.c.read(nationRepositoryProvider).all();
       expect(a.map((n) => n.id), isNot(contains(212)));
+      expect(a.map((n) => n.id), isNot(contains(213)));
       expect(a, b);
       expect(
         {for (final n in a) n.id},
@@ -107,9 +116,10 @@ void main() {
     },
   );
 
-  // San Marino's own career too: the nation Greenland replaces must be
-  // untouched in a world that does not include Greenland.
-  for (final (seed, nationId) in [(1, 19), (10, 19), (10, 45)]) {
+  // San Marino's and Chad's own careers too: the nations Greenland and
+  // Zanzibar replace must be untouched in a world that does not include
+  // them.
+  for (final (seed, nationId) in [(1, 19), (10, 19), (10, 45), (10, 110)]) {
     test('a normal career (seed $seed, nation $nationId) is identical with '
         'and without the dormant data', () async {
       final withG = await _start(seed, nationId, dormant: true);
@@ -122,6 +132,8 @@ void main() {
       final world = await repo.forCareer(id);
       expect(_bare(world), await repo.all());
       expect(world.map((n) => n.id), isNot(contains(212)));
+      expect(world.map((n) => n.id), isNot(contains(213)));
+      expect(world.map((n) => n.id), contains(110));
 
       // Every fixture of both cycles' calendars, byte for byte.
       final fixtures = await withG.c
@@ -134,6 +146,10 @@ void main() {
       );
       expect(
         fixtures.where((f) => f.homeNationId == 212 || f.awayNationId == 212),
+        isEmpty,
+      );
+      expect(
+        fixtures.where((f) => f.homeNationId == 213 || f.awayNationId == 213),
         isEmpty,
       );
 
@@ -210,6 +226,7 @@ void main() {
       // The ranking and the news never mention Greenland.
       final ranking = await withG.c.read(worldRankingProvider(id).future);
       expect(ranking!.nations.map((n) => n.id), isNot(contains(212)));
+      expect(ranking.nations.map((n) => n.id), isNot(contains(213)));
       expect(ranking.nations, hasLength(seedNations.length));
       final messages = await withG.c
           .read(competitionRepositoryProvider)

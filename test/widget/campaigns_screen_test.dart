@@ -51,9 +51,10 @@ void main() {
     expect(find.text('A FEW CYCLES · 2'), findsOneWidget);
     expect(find.text('Best of Guineas'), findsOneWidget);
     expect(find.text('3 cycles'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('A Greenland Century'), 200);
-    expect(find.text('THE LONG HAUL · 1'), findsOneWidget);
-    expect(find.text('25 cycles'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Zanzibar Rising'), 200);
+    expect(find.text('THE LONG HAUL · 2'), findsOneWidget);
+    expect(find.text('A Greenland Century'), findsOneWidget);
+    expect(find.text('25 cycles'), findsNWidgets(2));
     expect(find.byKey(CampaignTile.starsKey), findsNothing);
     expect(find.byKey(CampaignTile.inProgressKey), findsNothing);
   });
@@ -252,7 +253,7 @@ void main() {
   ) async {
     final save = await seedSave(tester, overrides: free);
     await pumpRoute(tester, save, Routes.campaigns);
-    for (final id in ['legacy', 'guineas', 'youngFinns', 'greenland']) {
+    for (final id in ['guineas', 'youngFinns', 'greenland', 'zanzibar']) {
       await tester.scrollUntilVisible(tile(id), 200);
       final badge = find.descendant(
         of: tile(id),

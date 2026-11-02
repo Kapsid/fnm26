@@ -335,13 +335,15 @@ class InternationalRetirementService {
       final pc = record.caps[p.id] ?? 0;
       final pg = record.goals[p.id] ?? 0;
       final wasCaptain = career.captainPlayerId == p.id;
-      if (wasCaptain) {
-        await _ref.read(careerRepositoryProvider).setCaptain(careerId, null);
-        _ref
-          ..invalidate(captainProvider)
-          ..invalidate(storedCaptainIdProvider)
-          ..invalidate(captainMoraleProvider)
-          ..invalidate(careerByIdProvider);
+      // A vice-captain who retires leaves his post empty too: resolved, not
+      // trusted, like the captain's.
+      if (await releaseArmband(
+        _ref.read(careerRepositoryProvider),
+        careerId,
+        p.id,
+      )) {
+        invalidateArmband(_ref.invalidate);
+        _ref.invalidate(careerByIdProvider);
       }
       final tally = MsgJoin([
         if (pc > 0) MsgText(MsgKey.msgTallyCaps, [pc]),

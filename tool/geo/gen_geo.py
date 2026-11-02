@@ -8,7 +8,8 @@ Inputs (all public domain):
   - Natural Earth 1:10m populated places, for city positions;
   - tool/geo/city_fallback.json for the cities Natural Earth does not name
     (looked up once by fetch_city_fallback.py, reviewed, checked in);
-  - the game's own nations and cities.
+  - the game's own nations and cities, and the stadium build cities
+    (gen_build_cities.py), which are pinned but never move the view.
 
 Each nation's file holds its outline (simplified to its own size), every city
 the map may pin, the box the map opens on and, when a city lies far off the
@@ -33,7 +34,8 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from geo_common import (FALLBACK, ROOT, all_cities, city_lists, distance_to_outline_km,
+from geo_common import (FALLBACK, ROOT, all_cities, build_cities, city_lists,
+                        distance_to_outline_km,
                         load_nations,
                         match_place, outline_polygons, outline_sources,
                         place_index)
@@ -161,6 +163,10 @@ def city_position(nid, code, city, idx, fallback):
     hand = fallback.get(f'{nid}|{city}')
     if hand is not None and hand.get('src', '').startswith('hand'):
         return (hand['lon'], hand['lat']), 'hand'
+    # A build city is pinned where it was picked (fetch_build_cities.py): a
+    # Natural Earth place of the same name may be another town.
+    if hand is not None and hand.get('src', '').startswith('build:'):
+        return (hand['lon'], hand['lat']), 'build'
     pos = match_place(code, city, idx)
     if pos is not None:
         return pos, 'ne'
@@ -177,6 +183,7 @@ def build(ne_dir):
               encoding='utf-8') as f:
         overrides = {k: v for k, v in json.load(f).items() if not k.startswith('_')}
     seed, stadiums, extra = city_lists()
+    build = build_cities()
     os.makedirs(OUT, exist_ok=True)
     report = {'sources': {}, 'missing': [], 'insets': {}, 'merged': [],
               'sizes': {}, 'hand_outlines': [], 'off_outline': []}
@@ -217,7 +224,10 @@ def build(ne_dir):
         k = math.cos(math.radians((mb[1] + mb[3]) / 2))
 
         cities = {}
-        for c in all_cities(nid, seed, stadiums, extra):
+        # The build cities are pinned too, but never move the view: they
+        # were chosen inside it (gen_build_cities.py) and are not in `shown`.
+        every = all_cities(nid, seed, stadiums, extra)
+        for c in every + [b for b in build.get(nid, []) if b not in every]:
             pos, src = city_position(nid, code, c, idx, fallback)
             if pos is None:
                 report['missing'].append(f'{code} {c}')

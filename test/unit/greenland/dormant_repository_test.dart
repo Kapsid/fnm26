@@ -28,9 +28,15 @@ void main() {
     expect((await repo.freeDemo()).map((n) => n.id), isNot(contains(212)));
     expect((await repo.byId(212))?.name, 'Greenland');
     final known = await repo.everyKnown();
-    expect(known, hasLength(seedNations.length + 1));
-    expect(known.map((n) => n.id), containsAll([212, 45]));
-    expect(await c.read(nationsProvider.future), all);
+    expect(known, hasLength(seedNations.length + DormantNations.all.length));
+    expect(known.map((n) => n.id), containsAll([212, 213, 45, 110]));
+    // The pickers offer the new-career world: the base world plus Belarus
+    // (DormantNations.forNewCareers).
+    expect(await c.read(nationsProvider.future), await repo.newCareerWorld());
+    expect(
+      (await c.read(nationsProvider.future)).map((n) => n.id).toSet(),
+      {...all.map((n) => n.id), ...DormantNations.forNewCareers},
+    );
     expect((await c.read(knownNationsByIdProvider.future))[212]?.code, 'GRL');
   });
 

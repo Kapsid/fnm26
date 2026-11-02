@@ -127,6 +127,46 @@ abstract final class YTournaments {
     return milestones;
   }
 
+  /// Whether a place booked was one nobody expected: the nation, ranked
+  /// [nationRank], had at least [oddsBetterSides] sides ranked above it in
+  /// its campaign ([opponentRanks], one per meeting, so a side met twice
+  /// counts once by its rank), or one ranked [oddsGap] or more places above
+  /// it. Ranks are the cycle's frozen ones, as the feed reads every result.
+  static bool qualifiedAgainstTheOdds({
+    required int nationRank,
+    required Iterable<int> opponentRanks,
+  }) {
+    final better = {
+      for (final r in opponentRanks)
+        if (r < nationRank) r,
+    };
+    if (better.length >= oddsBetterSides) return true;
+    return better.any((r) => nationRank - r >= oddsGap);
+  }
+
+  /// How many better-ranked sides in a campaign make a place booked a
+  /// surprise, and how far above one alone has to be.
+  static const int oddsBetterSides = 2;
+  static const int oddsGap = 20;
+
+  /// Whether an exit from a finals breaks hearts: out at [exitRound] (a core
+  /// round, see [coreRound]) no later than the last sixteen, by a side ranked
+  /// in the world's top [painfulTop] ([nationRank]) and above every side it
+  /// met there ([opponentRanks]). A favourite going home early, not a
+  /// minnow's run ending where it was always going to.
+  static bool painfulExit({
+    required String? exitRound,
+    required int nationRank,
+    required Iterable<int> opponentRanks,
+  }) {
+    if (!const {'GROUP', 'R32', 'R16'}.contains(exitRound)) return false;
+    if (nationRank > painfulTop) return false;
+    return opponentRanks.every((r) => r > nationRank);
+  }
+
+  /// How high a side has to be ranked for an early exit to be heartbreak.
+  static const int painfulTop = 16;
+
   /// The qualifying campaigns [nationId] came up short in: each finished
   /// campaign whose finals tournament went ahead without it. One per finals,
   /// dated at the nation's last qualifier and keyed by that finals.

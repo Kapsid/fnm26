@@ -161,6 +161,37 @@ abstract final class PlayerAging {
     return gap + _plainYouthDiscount(age);
   }
 
+  /// How much [playerId]'s overall is EXPECTED to change between ages [from]
+  /// and [to]: the curve, his own youth markdown (a wonderkid's relief
+  /// included). The predictable part of HIS career, where [peakOffset] is
+  /// everybody's. A superstar's climb is his own level instead (see
+  /// [PlayerLifecycle.superstarLevel]).
+  ///
+  /// A club deal is decided off the player he was when he signed it (see
+  /// `ClubService.clubForSeed`); without this a superstar, who climbs six or
+  /// seven points a season in his late teens, changed club every year.
+  static double expectedGain(int playerId, int from, int to) {
+    if (to == from) return 0;
+    double mean(int a) =>
+        (_yearlyDelta(a, physical: true) * 2 +
+            _yearlyDelta(a, physical: false)) /
+        3;
+    var curve = 0.0;
+    for (var a = from; a < to; a++) {
+      curve += mean(a);
+    }
+    for (var a = to; a < from; a++) {
+      curve -= mean(a);
+    }
+    final relief =
+        ((PlayerLifecycle.developmentPotential(playerId) - 1.55) / 0.20).clamp(
+          0.0,
+          1.0,
+        );
+    double markdown(int age) => _plainYouthDiscount(age) * (1 - relief);
+    return curve + markdown(from) - markdown(to);
+  }
+
   /// The age the curve tops out at — where [peakOffset] is nought.
   static const int peakAge = 28;
 

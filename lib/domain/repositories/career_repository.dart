@@ -88,6 +88,16 @@ abstract interface class CareerRepository {
   /// Names (or, with null, un-names) the squad captain.
   Future<void> setCaptain(int id, int? playerId);
 
+  /// Writes the whole leadership group at once: the captain and the 1st and
+  /// 2nd vice-captains (null for an empty post). One write, so a player moved
+  /// from one post to another is never briefly in both.
+  Future<void> setLeadership(
+    int id, {
+    required int? captain,
+    required int? vice1,
+    required int? vice2,
+  });
+
   /// Raises one of the manager's own skills by a level. The CALLER checks that
   /// a point is available — see `ManagerSkills.canRaise`.
   Future<void> raiseSkill(int id, ManagerSkill skill);

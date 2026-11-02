@@ -59,6 +59,8 @@ abstract final class NationGeography {
     'SUI': 'centralEurope',
     'TUR': 'anatolia',
     'UKR': 'easternEurope',
+    // Belarus, a dormant nation (see DormantNations).
+    'BLR': 'easternEurope',
     'WAL': 'britishIsles',
 
     // --- South America ---
@@ -160,6 +162,8 @@ abstract final class NationGeography {
     'SSD': 'hornAfrica',
     'SDN': 'hornAfrica',
     'TAN': 'eastAfrica',
+    // Zanzibar, a dormant nation (see DormantNations): off Tanzania's coast.
+    'ZAN': 'eastAfrica',
     'TOG': 'westAfrica',
     'TUN': 'northAfrica',
     'UGA': 'eastAfrica',

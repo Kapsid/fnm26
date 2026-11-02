@@ -551,11 +551,19 @@ class TacticsPitch extends StatelessWidget {
     this.teamColors,
     this.fullBacks = FullBackPushes.neutral,
     this.onCycleFullBack,
+    this.switches = SlotSwitches.none,
     super.key,
   });
 
   final Formation formation;
   final TacticalInstructions instructions;
+
+  /// Places changed within [formation] (see [SlotSwitches]). Each disc is
+  /// fitted, labelled and marked as the place it now plays; a changed one has
+  /// its position badge drawn in [switchedAccent]. The disc stays where the
+  /// formation draws it, and the drag gestures still read the formation:
+  /// the structure has not changed, only what the slot is asked to do.
+  final SlotSwitches switches;
 
   /// The full-backs' arrows, drawn on the left-back's and right-back's discs.
   /// A shape with no full-back on a flank (a back three) draws none there.
@@ -693,7 +701,8 @@ class TacticsPitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final layout = _layouts[formation]!;
-    final positions = formation.positions;
+    final positions = switches.apply(formation);
+    final base = formation.positions;
 
     return Container(
       decoration: const BoxDecoration(
@@ -780,6 +789,7 @@ class TacticsPitch extends StatelessWidget {
                       child: _PlayerNode(
                         slot: slot,
                         position: positions[slot],
+                        switched: positions[slot] != base[slot],
                         player: byId[lineup[slot]],
                         name: names[lineup[slot]],
                         metrics: m,
@@ -885,9 +895,14 @@ class _PlayerNode extends StatelessWidget {
     this.fullBackSide,
     this.push,
     this.onCyclePush,
+    this.switched = false,
   });
 
   final int slot;
+
+  /// Whether this slot plays a place changed within the formation (see
+  /// [SlotSwitches]); its position badge is drawn in [switchedAccent].
+  final bool switched;
 
   /// The flank this slot's full-back plays on, when his arrow is drawn; null
   /// draws none.
@@ -1150,11 +1165,18 @@ class _PlayerNode extends StatelessWidget {
               child: _RimBadge(
                 key: ValueKey('pitchPos$slot'),
                 label: position.label,
+                // A place changed within the shape keeps its fit colour on
+                // the text (that is still the thing being read) and wears the
+                // accent around it, so the change is visible without
+                // shouting over the fit cue.
                 color: fit,
+                border: switched ? switchedAccent : null,
                 // The darkest surface rather than a tint of the cue: the
                 // label is the thing being read, so it gets the most contrast
                 // the palette has.
-                background: AppColors.surfaceContainerLowest,
+                background: switched
+                    ? switchedAccent.withValues(alpha: 0.24)
+                    : AppColors.surfaceContainerLowest,
                 maxWidth: metrics.node,
                 fontSize: _rimFontSize(metrics.disc),
               ),
@@ -1237,6 +1259,12 @@ class _PlayerNode extends StatelessWidget {
     );
   }
 }
+
+/// The accent a place changed within the formation is drawn in: the position
+/// badge on the pitch and the selected chip in the slot picker. Teal, so it
+/// never reads as one of the fit colours (green, grey, amber) or the red of a
+/// player who cannot play.
+const Color switchedAccent = AppColors.medalPlatinum;
 
 /// How far a rim badge hangs outside the circle it is pinned to. Half its own
 /// height, so it straddles the edge: a badge sitting fully outside would add a

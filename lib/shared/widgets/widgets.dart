@@ -25,4 +25,5 @@ export 'set_piece_badge.dart';
 export 'set_piece_taker_summary.dart';
 export 'stat_bar.dart';
 export 'tactical_chip.dart';
+export 'throw_in_style_picker.dart';
 export 'whole_text.dart';

@@ -810,18 +810,17 @@ class MessageService {
           // vacant from here, and the manager has to be told rather than
           // finding out when the morale lift quietly stops.
           final wasCaptain = career.captainPlayerId == p.id;
-          if (wasCaptain) {
-            await _ref
-                .read(careerRepositoryProvider)
-                .setCaptain(careerId, null);
+          // A vice-captain's post is emptied the same way.
+          if (await releaseArmband(
+            _ref.read(careerRepositoryProvider),
+            careerId,
+            p.id,
+          )) {
             // Everything that answers "who is captain" reads the career row
             // imperatively, so clearing it behind their backs left the screens
             // (and the pre-match strip) still naming a man who has retired.
-            _ref
-              ..invalidate(captainProvider)
-              ..invalidate(storedCaptainIdProvider)
-              ..invalidate(captainMoraleProvider)
-              ..invalidate(careerByIdProvider);
+            invalidateArmband(_ref.invalidate);
+            _ref.invalidate(careerByIdProvider);
           }
           if ((notable || wasCaptain) && !existing.contains('retire:${p.id}')) {
             // His record, as pieces rather than as a sentence: a tally is two

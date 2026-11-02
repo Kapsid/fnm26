@@ -94,6 +94,15 @@ abstract final class AppDate {
   static String dayMonth(BuildContext context, DateTime date) =>
       _write(context, date, en: 'd MMM', cs: 'd. MMM');
 
+  /// `6/3` — a fixture's day in figures, day first, for the schedule's
+  /// narrow date column (owner, 1.0.9: "6. bře" read slower than "6/3").
+  /// Japanese, Korean and Hungarian write the month first (`3/6`), as they
+  /// write the rest of their dates.
+  static String dayMonthNumeric(BuildContext context, DateTime date) =>
+      const {'ja', 'ko', 'hu'}.contains(_locale(context))
+      ? '${date.month}/${date.day}'
+      : '${date.day}/${date.month}';
+
   /// `1 Sep 2030` / `1. zář 2030` — a full date. The dashboard's, among others.
   static String dayMonthYear(BuildContext context, DateTime date) =>
       _write(context, date, en: 'd MMM yyyy', cs: 'd. MMM yyyy');

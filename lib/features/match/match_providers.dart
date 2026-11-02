@@ -387,7 +387,10 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   final usingTactic = selected.length == 11;
   final playerXi = usingTactic
       ? selected
-      : _xiFrom(playerPool, bestEleven(playerFormation, playerPool));
+      : _xiFrom(
+          playerPool,
+          bestEleven(playerFormation, playerPool, slots: tactic?.positions),
+        );
   final startingIds = playerXi.map((p) => p.id).toSet();
   final bench = playerPool.where((p) => !startingIds.contains(p.id)).toList()
     ..sort((a, b) => b.overall.compareTo(a.overall));
@@ -395,11 +398,16 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
   // creates and the set-piece threat; opponents play roleless).
   final roles = await ref.watch(playerRolesProvider(careerId).future);
   final takers = await ref.watch(setPieceTakersProvider(careerId).future);
+  final throwInTaker = await ref.watch(throwInTakerProvider(careerId).future);
   final playerTeam = MatchTeam(
     nationId: playerNationId,
     xi: playerXi,
     instructions: tactic?.instructions ?? const TacticalInstructions(),
     fullBacks: tactic?.fullBacks ?? FullBackPushes.neutral,
+    // The places changed within the shape: the engine reads each slot's
+    // position off these, so a switched slot is fitted, marked and counted as
+    // what it now is.
+    switches: tactic?.switches ?? SlotSwitches.none,
     // Both the saved lineup and the auto-filled fallback are laid out in
     // the tactic's shape (f433 when there's no saved tactic).
     formation: playerFormation,
@@ -410,6 +418,8 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     traitsByPlayer: traitsOf(fullPool),
     penaltyTakerId: takers.penalty,
     deadBallTakerId: takers.deadBall,
+    throwInStyle: tactic?.throwInStyle ?? ThrowInStyle.neutral,
+    throwInTakerId: throwInTaker,
   );
 
   final allNations = await ref

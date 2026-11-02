@@ -88,6 +88,7 @@ void main() {
     41: 'Portugal (Madeira inset)',
     99: 'United States',
     212: 'Greenland',
+    213: 'Zanzibar',
   };
   for (final MapEntry(key: id, value: name) in nations.entries) {
     for (final (label, size) in [('phone', _phone), ('tablet', _tablet)]) {

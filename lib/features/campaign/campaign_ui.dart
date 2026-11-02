@@ -73,6 +73,17 @@ CampaignWords campaignWords(AppLocalizations l, CampaignDef def) =>
           l.campaignStars3Greenland,
         ],
       ),
+      'zanzibar' => (
+        title: l.campaignZanzibarTitle,
+        twist: l.campaignZanzibarTwist,
+        intro: l.campaignZanzibarIntro,
+        goal: l.campaignZanzibarGoal,
+        stars: [
+          l.campaignStars1Zanzibar,
+          l.campaignStars2Zanzibar,
+          l.campaignStars3Zanzibar,
+        ],
+      ),
       _ => (
         title: l.campaignTransplantTitle,
         twist: l.campaignTransplantTwist,

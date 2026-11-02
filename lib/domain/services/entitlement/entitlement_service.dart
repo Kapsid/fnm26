@@ -21,6 +21,19 @@ const String _kPremiumCacheKey = 'entitlement.premium';
 /// bought under it keeps his unlock.
 const String _kLegacyPremiumCacheKey = 'premium_unlocked';
 
+/// When the store last said this account owns premium (milliseconds since the
+/// epoch). The grace window counts from here.
+const String _kConfirmedAtKey = 'entitlement.confirmedAtMs';
+
+/// How long a cached unlock outlives a store that answers "not owned" before
+/// the answer is believed. StoreKit drops every transaction it cannot verify
+/// at that moment and reports the rest, so an offline iPhone can answer an
+/// empty list for a player who did buy (seen on a flight, 1.0.8). A real
+/// refund still locks: the window counts from the last time the store said
+/// "owned", which a refunded account never says again, so going offline or
+/// relaunching buys a refunder nothing beyond it.
+const Duration kEntitlementGrace = Duration(days: 3);
+
 /// The one-off purchase state the paywall shows.
 enum PurchaseFlowState { idle, loading, pending, error }
 
@@ -55,13 +68,22 @@ class EntitlementService {
     StoreEntitlementReader? storeEntitlements,
     AppIntegrity? integrity,
     IntegrityPolicy? policy,
-  }) : _iap = iap ?? InAppPurchase.instance,
+    DateTime Function()? now,
+  }) : _now = now ?? DateTime.now,
+       _iap = iap ?? InAppPurchase.instance,
        _integrity = integrity ?? const ChannelAppIntegrity(),
        _policy = policy ?? IntegrityPolicy.current(),
        _injectedStoreEntitlements = storeEntitlements;
 
   final Ref _ref;
+  final DateTime Function() _now;
   final InAppPurchase _iap;
+
+  /// Set when the launch granted on the grace window alone: [init] then asks
+  /// StoreKit a second way (current entitlements, through a silent restore)
+  /// once the purchase stream is listened to, and a hit there confirms the
+  /// purchase again.
+  bool _recheck = false;
   final AppIntegrity _integrity;
   final IntegrityPolicy _policy;
   final StoreEntitlementReader? _injectedStoreEntitlements;
@@ -109,6 +131,16 @@ class EntitlementService {
       // No store on this device (or it refused to start). The game runs; the
       // paywall will simply report the store as unavailable.
     }
+    if (_recheck) {
+      _recheck = false;
+      try {
+        // A replayed purchase arrives through the stream and is granted
+        // there (see [_onPurchases]); nothing replayed changes nothing.
+        await _iap.restorePurchases();
+      } on Object {
+        // Unverifiable or unreachable: the grace window already decided.
+      }
+    }
   }
 
   /// The store first, the cache when the store cannot answer.
@@ -122,9 +154,17 @@ class EntitlementService {
       if (owned.contains(kPremiumProductId)) {
         await _grant();
       } else if (cached) {
-        // A refund. The store has already locked this launch; the stale
-        // grant must not unlock the next one that happens to be offline.
-        await _forgetCachedGrant();
+        if (await _withinGrace()) {
+          // Not owned, by an answer that cannot be trusted alone (see
+          // [kEntitlementGrace]). Keep the unlock and the cache, and ask
+          // again a second way.
+          _ref.read(premiumUnlockedProvider.notifier).state = true;
+          _recheck = true;
+        } else {
+          // A refund. The store has already locked this launch; the stale
+          // grant must not unlock the next one that happens to be offline.
+          await _forgetCachedGrant();
+        }
       }
     } else if (cached) {
       // Simulator, no store, no account, a wedged channel. Grant, and
@@ -150,6 +190,28 @@ class EntitlementService {
     }
   }
 
+  /// Whether the last "owned" from the store is under [kEntitlementGrace]
+  /// old. A cache written before the date was kept (1.0.8 and earlier)
+  /// starts its window now. A clock set back past the confirmation reads as
+  /// expired: winding the date back must not stretch the window.
+  Future<bool> _withinGrace() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final now = _now().millisecondsSinceEpoch;
+      final at = prefs.getInt(_kConfirmedAtKey);
+      if (at == null) {
+        await prefs.setInt(_kConfirmedAtKey, now);
+        return true;
+      }
+      final age = now - at;
+      return age >= -const Duration(days: 1).inMilliseconds &&
+          age < kEntitlementGrace.inMilliseconds;
+    } on Object {
+      // Unreadable: the store's no stands, as it did before the window.
+      return false;
+    }
+  }
+
   /// The locally cached grant, under either key any build has written.
   Future<bool> _cachedGrant() async {
     try {
@@ -169,6 +231,7 @@ class EntitlementService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_kPremiumCacheKey);
       await prefs.remove(_kLegacyPremiumCacheKey);
+      await prefs.remove(_kConfirmedAtKey);
     } on Object {
       // Still cached. The next launch the store answers clears it.
     }
@@ -294,6 +357,7 @@ class EntitlementService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_kPremiumCacheKey, true);
+      await prefs.setInt(_kConfirmedAtKey, _now().millisecondsSinceEpoch);
     } on Object {
       // Not cached. The store replays the purchase on the next launch, and
       // `restore()` is always there.

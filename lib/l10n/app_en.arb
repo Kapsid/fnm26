@@ -315,6 +315,18 @@
   "@matchHalfTime": {
     "description": "Heading on the half-time interval overlay."
   },
+  "matchHalfTimeScore": "HT {home} : {away}",
+  "@matchHalfTimeScore": {
+    "description": "Small line under the live match score once the second half is under way: the score at half time. 'HT' is the usual short form; keep it short.",
+    "placeholders": {
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
   "matchContinue": "Continue",
   "@matchContinue": {
     "description": "Button that resumes play from the interval, and the full-time button that leaves the match."
@@ -760,7 +772,7 @@
   "@recordsUnitAssists": {
     "description": "Unit appended to an assists tally on a leaderboard."
   },
-  "recordsCapsCount": "{count} caps",
+  "recordsCapsCount": "{count, plural, one{1 cap} other{{count} caps}}",
   "@recordsCapsCount": {
     "description": "Legend tally: number of caps.",
     "placeholders": {
@@ -770,7 +782,7 @@
       }
     }
   },
-  "recordsGoalsCount": "{count} goals",
+  "recordsGoalsCount": "{count, plural, one{1 goal} other{{count} goals}}",
   "@recordsGoalsCount": {
     "description": "Legend tally: number of goals.",
     "placeholders": {
@@ -780,7 +792,7 @@
       }
     }
   },
-  "recordsAssistsCount": "{count} assists",
+  "recordsAssistsCount": "{count, plural, one{1 assist} other{{count} assists}}",
   "@recordsAssistsCount": {
     "description": "Legend tally: number of assists.",
     "placeholders": {
@@ -800,7 +812,7 @@
       }
     }
   },
-  "recordsMatchesCount": "{count} matches",
+  "recordsMatchesCount": "{count, plural, one{1 match} other{{count} matches}}",
   "@recordsMatchesCount": {
     "description": "Value for the longest-unbeaten team record.",
     "placeholders": {
@@ -810,7 +822,7 @@
       }
     }
   },
-  "recordsMeetingsCount": "{count} meetings",
+  "recordsMeetingsCount": "{count, plural, one{1 meeting} other{{count} meetings}}",
   "@recordsMeetingsCount": {
     "description": "Number of head-to-head meetings.",
     "placeholders": {
@@ -830,7 +842,7 @@
       }
     }
   },
-  "recordsMeetingsWdl": "{meetings} meetings · {wins}W {draws}D {losses}L",
+  "recordsMeetingsWdl": "{meetings, plural, one{1 meeting} other{{meetings} meetings}} · {wins}W {draws}D {losses}L",
   "@recordsMeetingsWdl": {
     "description": "Head-to-head summary line: meetings and win/draw/loss counts.",
     "placeholders": {
@@ -870,7 +882,7 @@
       }
     }
   },
-  "recordsRivalLine": "{meetings} meetings · {record} · {edge}",
+  "recordsRivalLine": "{meetings, plural, one{1 meeting} other{{meetings} meetings}} · {record} · {edge}",
   "@recordsRivalLine": {
     "description": "Fiercest-rival summary line combining meetings, W-D-L record and edge phrase.",
     "placeholders": {
@@ -1850,6 +1862,42 @@
   "@tacticsCornersFreeKicks": {
     "description": "Set-piece situation: corners and free-kicks."
   },
+  "tacticsThrowIns": "Throw-ins",
+  "@tacticsThrowIns": {
+    "description": "Set-piece situation: who takes the side's throw-ins. Label above the taker's name and the badge tooltip on each player row."
+  },
+  "tacticsThrowInStyle": "Throw-in style",
+  "@tacticsThrowInStyle": {
+    "description": "Heading of the control that picks how the side takes its throw-ins (long, neutral, safe)."
+  },
+  "tacticsThrowInLong": "Long throws",
+  "@tacticsThrowInLong": {
+    "description": "Throw-in style chip: long throws hurled into the penalty box from the attacking third."
+  },
+  "tacticsThrowInNeutral": "Neutral",
+  "@tacticsThrowInNeutral": {
+    "description": "Throw-in style chip: no instruction, the default."
+  },
+  "tacticsThrowInDefensive": "Safe throws",
+  "@tacticsThrowInDefensive": {
+    "description": "Throw-in style chip: throws kept short and safe to avoid losing the ball."
+  },
+  "tacticsThrowInLongBlurb": "Throws near the box go into it. A little extra threat, more with a strong thrower and tall attackers, but the ball is lost a bit more often.",
+  "@tacticsThrowInLongBlurb": {
+    "description": "One line under the throw-in style chips explaining the long-throw choice."
+  },
+  "tacticsThrowInNeutralBlurb": "Throws taken as the play allows. Nothing changes.",
+  "@tacticsThrowInNeutralBlurb": {
+    "description": "One line under the throw-in style chips explaining the neutral (default) choice."
+  },
+  "tacticsThrowInDefensiveBlurb": "Every throw kept short and safe. Fewer turnovers to be countered from, and a few fewer chances made.",
+  "@tacticsThrowInDefensiveBlurb": {
+    "description": "One line under the throw-in style chips explaining the safe-throw choice."
+  },
+  "matchGoalLongThrow": "LONG THROW",
+  "@matchGoalLongThrow": {
+    "description": "Caption under the goal celebration when the goal came from a long throw-in, before the minute (e.g. LONG THROW \u00b7 67'). All caps, like the penalty caption."
+  },
   "tacticsSkillFin": "FIN",
   "@tacticsSkillFin": {
     "description": "Abbreviated skill label for finishing/shooting."
@@ -2334,7 +2382,7 @@
   "@hubGoldenBoot": {
     "description": "Award label: Golden Boot."
   },
-  "hubGoldenBootValue": "{name} · {goals} goals",
+  "hubGoldenBootValue": "{name} · {goals, plural, one{1 goal} other{{goals} goals}}",
   "@hubGoldenBootValue": {
     "description": "Golden Boot holder name and goal count.",
     "placeholders": {
@@ -3607,7 +3655,7 @@
   "@statsBestRating": {
     "description": "Stats screen label: Best individual rating"
   },
-  "statsAppsShort": "{apps} apps",
+  "statsAppsShort": "{apps, plural, one{1 app} other{{apps} apps}}",
   "@statsAppsShort": {
     "description": "Appearance count under a player on the ratings leaderboard.",
     "placeholders": {
@@ -3659,6 +3707,43 @@
     "placeholders": {
       "morale": {
         "type": "int"
+      }
+    }
+  },
+  "viceCaptainFirst": "1st vice-captain",
+  "@viceCaptainFirst": {
+    "description": "Label for the 1st vice-captain post: the player who takes the armband first when the captain cannot play. Shown next to 'Captain' on the tactics screen."
+  },
+  "viceCaptainSecond": "2nd vice-captain",
+  "@viceCaptainSecond": {
+    "description": "Label for the 2nd vice-captain post: takes the armband when both the captain and the 1st vice-captain cannot play."
+  },
+  "viceCaptainNone": "No vice-captain named",
+  "@viceCaptainNone": {
+    "description": "Shown where a vice-captain would be, when none has been chosen for that post."
+  },
+  "viceCaptainHint": "Takes the armband when the captain cannot play.",
+  "@viceCaptainHint": {
+    "description": "One-line explanation at the top of the vice-captain picker."
+  },
+  "captainStandIn": "Vice-captain {vice} leads out; captain {captain} unavailable",
+  "@captainStandIn": {
+    "description": "Shown where the captain is, when a vice-captain wears the armband because the captain cannot play (injured, suspended or not in the squad). {vice} and {captain} are player names.",
+    "placeholders": {
+      "vice": {
+        "type": "String"
+      },
+      "captain": {
+        "type": "String"
+      }
+    }
+  },
+  "captainStandInUnnamed": "Vice-captain {vice} leads out",
+  "@captainStandInUnnamed": {
+    "description": "Shown where the captain is, when no captain is named and a vice-captain wears the armband. {vice} is a player name.",
+    "placeholders": {
+      "vice": {
+        "type": "String"
       }
     }
   },
@@ -4792,6 +4877,10 @@
   "statsMostGames": "Most games",
   "@statsMostGames": {
     "description": "Tab label: most games."
+  },
+  "statsMostGamesShort": "Games",
+  "@statsMostGamesShort": {
+    "description": "Short tab label on a phone: most games played (the full label is statsMostGames)."
   },
   "statsNoGoalsRecorded": "No goals recorded yet.",
   "@statsNoGoalsRecorded": {
@@ -6471,7 +6560,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -6483,7 +6572,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -6495,7 +6584,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -6507,7 +6596,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -6519,7 +6608,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -6531,7 +6620,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -6543,7 +6632,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -6555,7 +6644,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -6564,7 +6653,7 @@
     "description": "Y post: upsetGap (the numbers desk on the ranking gap (in places) to a side above us that we beat; gap is 20 or more), variant 8. Tone band: sour.",
     "placeholders": {
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7764,7 +7853,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7773,7 +7862,7 @@
     "description": "Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 1. Tone band: generous.",
     "placeholders": {
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7785,7 +7874,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7797,7 +7886,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7809,7 +7898,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7821,7 +7910,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7833,7 +7922,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7842,7 +7931,7 @@
     "description": "Y post: downGap (the numbers desk on the ranking gap (in places) to a side below us that beat us; gap is 20 or more), variant 7. Tone band: sour.",
     "placeholders": {
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -7854,7 +7943,7 @@
         "type": "String"
       },
       "gap": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8527,7 +8616,7 @@
         "type": "String"
       },
       "goals": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8539,7 +8628,7 @@
         "type": "String"
       },
       "goals": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8551,7 +8640,7 @@
         "type": "String"
       },
       "goals": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8563,7 +8652,7 @@
         "type": "String"
       },
       "goals": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8575,7 +8664,7 @@
         "type": "String"
       },
       "goals": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8587,7 +8676,7 @@
         "type": "String"
       },
       "goals": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8599,7 +8688,7 @@
         "type": "String"
       },
       "goals": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8611,7 +8700,7 @@
         "type": "String"
       },
       "goals": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8620,7 +8709,7 @@
     "description": "Y post remarking on a run of wins. Variant 0.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8629,7 +8718,7 @@
     "description": "Y post remarking on a run of wins. Variant 1.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8638,7 +8727,7 @@
     "description": "Y post remarking on a run of wins. Variant 2.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8647,7 +8736,7 @@
     "description": "Y post remarking on a run of wins. Variant 3.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8656,7 +8745,7 @@
     "description": "Y post: winStreak, variant 4.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8665,7 +8754,7 @@
     "description": "Y post: winStreak, variant 5.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8674,7 +8763,7 @@
     "description": "Y post: winStreak, variant 6.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8683,7 +8772,7 @@
     "description": "Y post: winStreak, variant 7.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8692,7 +8781,7 @@
     "description": "Y post remarking on a run without a win. Variant 0.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8701,7 +8790,7 @@
     "description": "Y post remarking on a run without a win. Variant 1.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8710,7 +8799,7 @@
     "description": "Y post remarking on a run without a win. Variant 2.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8719,7 +8808,7 @@
     "description": "Y post remarking on a run without a win. Variant 3.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8728,7 +8817,7 @@
     "description": "Y post: lossStreak, variant 4.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8737,7 +8826,7 @@
     "description": "Y post: lossStreak, variant 5.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8746,7 +8835,7 @@
     "description": "Y post: lossStreak, variant 6.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -8755,7 +8844,7 @@
     "description": "Y post: lossStreak, variant 7.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -10196,7 +10285,7 @@
   "@tourCupMostTitles": {
     "description": "World Championship detail: tourCupMostTitles"
   },
-  "tourCupMostTitlesValue": "{nation}: {titles} titles from {editions} editions",
+  "tourCupMostTitlesValue": "{nation}: {titles, plural, one{1 title} other{{titles} titles}} from {editions, plural, one{1 edition} other{{editions} editions}}",
   "@tourCupMostTitlesValue": {
     "description": "World Championship detail: tourCupMostTitlesValue",
     "placeholders": {
@@ -10431,6 +10520,10 @@
   "@objectiveQualifyingTopHalf": {
     "description": "The board's lowest bar, for a nation with no realistic route to the finals: come through qualifying in the top half of its group."
   },
+  "objectiveQualifyingChallenge": "Challenge for a place: top half of qualifying at least",
+  "@objectiveQualifyingChallenge": {
+    "description": "The board's graded brief for a side ranked near the bottom of its confederation's places: the pass mark is coming through qualifying in the top half of its group, and actually qualifying beats the brief."
+  },
   "finishQualifyingTopHalf": "Top half of the qualifying group",
   "@finishQualifyingTopHalf": {
     "description": "Objective result: the nation did not reach the tournament but came through qualifying in the top half of its group."
@@ -10605,7 +10698,7 @@
       }
     }
   },
-  "squadDevPageOf": "{page}/{pages} · {total} players",
+  "squadDevPageOf": "{page}/{pages} · {total, plural, one{1 player} other{{total} players}}",
   "@squadDevPageOf": {
     "description": "Pager line under the squad-report table.",
     "placeholders": {
@@ -10616,7 +10709,7 @@
         "type": "String"
       },
       "total": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -10739,7 +10832,7 @@
       }
     }
   },
-  "u21AgeCaps": "Age {age} · {caps} caps",
+  "u21AgeCaps": "Age {age} · {caps, plural, one{1 cap} other{{caps} caps}}",
   "@u21AgeCaps": {
     "description": "Age and international caps of a prospect.",
     "placeholders": {
@@ -11170,7 +11263,7 @@
   "@squadTopScorer": {
     "description": "Label for the pool's leading scorer."
   },
-  "squadCapsValue": "{name} · {caps} caps",
+  "squadCapsValue": "{name} · {caps, plural, one{1 cap} other{{caps} caps}}",
   "@squadCapsValue": {
     "description": "Most-capped player and their tally.",
     "placeholders": {
@@ -11182,7 +11275,7 @@
       }
     }
   },
-  "squadGoalsValue": "{name} · {goals} goals",
+  "squadGoalsValue": "{name} · {goals, plural, one{1 goal} other{{goals} goals}}",
   "@squadGoalsValue": {
     "description": "Leading scorer and their tally.",
     "placeholders": {
@@ -12257,7 +12350,7 @@
       }
     }
   },
-  "msgHofBody": "{name} joins your nation’s Hall of Fame ({caps} caps, {goals} goals). See them in Legends.",
+  "msgHofBody": "{name} joins your nation’s Hall of Fame ({caps, plural, one{1 cap} other{{caps} caps}}, {goals, plural, one{1 goal} other{{goals} goals}}). See them in Legends.",
   "@msgHofBody": {
     "description": "Inbox: hall-of-fame body.",
     "placeholders": {
@@ -13154,7 +13247,7 @@
       }
     }
   },
-  "newsWalkoutBody": "{name} has retired from international football at {age}, with {caps} caps. He asked to be told where he stood and was not, and he is not waiting any longer.",
+  "newsWalkoutBody": "{name} has retired from international football at {age}, with {caps, plural, one{1 cap} other{{caps} caps}}. He asked to be told where he stood and was not, and he is not waiting any longer.",
   "@newsWalkoutBody": {
     "description": "Inbox: walkout body.",
     "placeholders": {
@@ -14251,7 +14344,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14263,7 +14356,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14275,7 +14368,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14287,7 +14380,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14299,7 +14392,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14311,7 +14404,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14320,7 +14413,7 @@
     "description": "Y post: sameOldStory, variant 0.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14329,7 +14422,7 @@
     "description": "Y post: sameOldStory, variant 1.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14338,7 +14431,7 @@
     "description": "Y post: sameOldStory, variant 2.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14347,7 +14440,7 @@
     "description": "Y post: sameOldStory, variant 3.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14356,7 +14449,7 @@
     "description": "Y post: sameOldStory, variant 4.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14365,7 +14458,7 @@
     "description": "Y post: sameOldStory, variant 5.",
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14507,7 +14600,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14519,7 +14612,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14531,7 +14624,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14543,7 +14636,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14555,7 +14648,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14567,7 +14660,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14579,7 +14672,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14591,7 +14684,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14603,7 +14696,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14615,7 +14708,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14627,7 +14720,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -14639,7 +14732,7 @@
         "type": "String"
       },
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -17387,6 +17480,34 @@
   "@campaignStars3Greenland": {
     "description": "What earns the third star in the Greenland campaign: win the European Championship or the World Championship, in either cycle."
   },
+  "campaignZanzibarTitle": "Zanzibar Rising",
+  "@campaignZanzibarTitle": {
+    "description": "Campaign title: a hundred years (25 cycles) of Zanzibar, a nation added to the world for this campaign, rising from near the bottom."
+  },
+  "campaignZanzibarTwist": "Zanzibar take Chad's place in Africa, for a hundred years",
+  "@campaignZanzibarTwist": {
+    "description": "One-line twist of the Zanzibar campaign: Zanzibar in Chad's place in Africa for a hundred years (25 cycles)."
+  },
+  "campaignZanzibarGoal": "Qualify for an African Championship",
+  "@campaignZanzibarGoal": {
+    "description": "One-line goal of the Zanzibar campaign (its first star): qualify for an African Championship (the game's name for the continental championship of Africa)."
+  },
+  "campaignZanzibarIntro": "Zanzibar have their own football association and their own national side, but no seat in African or world football. In this world they have taken Chad's place in Africa, and they start near the bottom of the world ranking: island players, small grounds and the heat of the monsoon. You have a hundred years, twenty-five cycles, to reach an African Championship, then a World Championship and, if you dare to dream, win the World Championship.",
+  "@campaignZanzibarIntro": {
+    "description": "Brief screen introduction of the Zanzibar campaign: Zanzibar take Chad's place in Africa, from near the bottom of the world ranking, for a hundred years (25 cycles). Names no real player."
+  },
+  "campaignStars1Zanzibar": "Qualify for an African Championship",
+  "@campaignStars1Zanzibar": {
+    "description": "What earns the first star in the Zanzibar campaign: qualify for an African Championship, in any cycle."
+  },
+  "campaignStars2Zanzibar": "Qualify for a World Championship",
+  "@campaignStars2Zanzibar": {
+    "description": "What earns the second star in the Zanzibar campaign: qualify for a World Championship, in any cycle."
+  },
+  "campaignStars3Zanzibar": "Win the World Championship",
+  "@campaignStars3Zanzibar": {
+    "description": "What earns the third star in the Zanzibar campaign: win the World Championship (an African title does not count), in any cycle."
+  },
   "campaignPro": "Pro",
   "@campaignPro": {
     "description": "Badge on a campaign that needs the full game (Pro)."
@@ -19797,6 +19918,26 @@
   "@yCameoLzimberskyKept4": {
     "description": "Czech-only cameo by Pitomo Lžimberský after the player was kept. Only a Czech game shows it; translate the English plainly."
   },
+  "yCameoMarena": "Even I could coach this lot.",
+  "@yCameoMarena": {
+    "description": "CZECH DIFFERS ON PURPOSE. Czech-only cameo by Mařena, a fan sure she could do the manager's job, replying under a heavy defeat. Only a Czech game shows it; translate the English plainly."
+  },
+  "yCameoKralik": "What did you expect hehehe, buy our ZeroZero",
+  "@yCameoKralik": {
+    "description": "CZECH DIFFERS ON PURPOSE. Czech-only cameo by KudyChodíKrálík, a snack brand's account turning a defeat into an advert. ZeroZero is the brand's (invented) product: keep it as is. Only a Czech game shows it; translate the English plainly."
+  },
+  "yCameoPosuk0": "PATHETIC",
+  "@yCameoPosuk0": {
+    "description": "CZECH DIFFERS ON PURPOSE. Czech-only cameo by POŠUK, who shouts nonsense in capitals under a result. ALL CAPS on purpose. Only a Czech game shows it; translate the English plainly."
+  },
+  "yCameoPosuk1": "OH MAAAN",
+  "@yCameoPosuk1": {
+    "description": "CZECH DIFFERS ON PURPOSE. Czech-only cameo by POŠUK: a garbled exclamation in capitals, misspelt on purpose. Only a Czech game shows it; translate the English plainly."
+  },
+  "yCameoPosuk2": "Anyone for teh pub?",
+  "@yCameoPosuk2": {
+    "description": "CZECH DIFFERS ON PURPOSE. Czech-only cameo by POŠUK, off-topic, asking who is coming to the pub. Casual, misspelling welcome. Only a Czech game shows it; translate the English plainly."
+  },
   "yTraitStreamer": "Streams everything, at full volume, in capitals.",
   "@yTraitStreamer": {
     "description": "Y profile: one-line description of the streamer account's disposition."
@@ -20326,5 +20467,1493 @@
   "hostingWindowLine": "Bids open at the end of the cycle, after the World Championship final.",
   "@hostingWindowLine": {
     "description": "Hosting card: when the bid window opens (the cycle's close, after the World Championship final)."
+  },
+  "hubEventWarmUpOffer": "Friendly offer: {nation}",
+  "@hubEventWarmUpOffer": {
+    "description": "Hub action: a nation that qualified for a finals tournament (the manager's side did not) invites the manager's side to a send-off friendly. {nation} is that nation's name. Short.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "hubEventWarmUpOfferSub": "A send-off friendly before their tournament",
+  "@hubEventWarmUpOfferSub": {
+    "description": "Hub action subtitle under the friendly offer: a farewell friendly the inviting side plays just before its finals tournament."
+  },
+  "warmUpOfferTitle": "FRIENDLY OFFER",
+  "@warmUpOfferTitle": {
+    "description": "Title of the friendly offer decision screen, in capitals like the other screen titles."
+  },
+  "warmUpOfferBody": "{nation} are preparing for the {competition} and want a send-off friendly against you on {date}.",
+  "@warmUpOfferBody": {
+    "description": "Friendly offer screen: the invitation. {nation} is the inviting nation, {competition} the tournament it has qualified for (e.g. World Championship), {date} the match date already written in the reader's language.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "competition": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "warmUpOfferAway": "Away, in {nation}.",
+  "@warmUpOfferAway": {
+    "description": "Friendly offer screen: the match would be played at the inviting nation's ground. {nation} is that nation's name.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "warmUpOfferHome": "At home: they come to you.",
+  "@warmUpOfferHome": {
+    "description": "Friendly offer screen: the inviting nation travels, so the match is at the manager's home ground."
+  },
+  "warmUpOfferNote": "You can accept up to two offers. An accepted friendly gets its own call-up.",
+  "@warmUpOfferNote": {
+    "description": "Friendly offer screen: at most two offers can be accepted, and an accepted friendly has its own squad call-up."
+  },
+  "warmUpOfferAccept": "Accept",
+  "@warmUpOfferAccept": {
+    "description": "Friendly offer screen: button to accept the offer. Short."
+  },
+  "warmUpOfferDecline": "Decline",
+  "@warmUpOfferDecline": {
+    "description": "Friendly offer screen: button to turn the offer down. Short."
+  },
+  "warmUpOfferMsgTitle": "Friendly offer from {nation}",
+  "@warmUpOfferMsgTitle": {
+    "description": "Inbox message title: a nation offers a send-off friendly. {nation} is its name.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "warmUpOfferMsgBody": "{nation} want a send-off friendly against you before the {competition}.",
+  "@warmUpOfferMsgBody": {
+    "description": "Inbox message body for a friendly offer. {nation} is the inviting nation, {competition} the tournament it has qualified for.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "hubSimToFinal": "Simulate to the final",
+  "@hubSimToFinal": {
+    "description": "Hub: second button under 'watch the next round' of a tournament the manager is out of or not in. Plays every remaining round at once, up to and including the final. Short."
+  },
+  "jobDossierOpen": "Scout this job",
+  "@jobDossierOpen": {
+    "description": "Tooltip of the button on a job offer tile that opens the scouting dossier on that nation. Short."
+  },
+  "jobDossierRating": "Team rating",
+  "@jobDossierRating": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over the team rating (a number, the mean rating of its best eleven). Shown in capitals."
+  },
+  "jobDossierMood": "Mood",
+  "@jobDossierMood": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over the team mood (e.g. Settled, Buoyant). Shown in capitals."
+  },
+  "jobDossierTopPlayers": "Top players",
+  "@jobDossierTopPlayers": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over the list of its five best players. Shown in capitals."
+  },
+  "jobDossierPlayerAge": "Age {age}",
+  "@jobDossierPlayerAge": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: a player's age in the top players list. Very short.",
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "jobDossierReport": "Scout's read",
+  "@jobDossierReport": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over the scout's short verdict on the squad (strengths and weaknesses). Shown in capitals."
+  },
+  "jobDossierNextTargetLabel": "Next target",
+  "@jobDossierNextTargetLabel": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: heading over what the job is for next. Shown in capitals."
+  },
+  "jobDossierNextTarget": "Qualify for the {cup} and the World Championship.",
+  "@jobDossierNextTarget": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: what the new cycle asks of the side. {cup} is its continental championship (e.g. European Championship).",
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      }
+    }
+  },
+  "jobDossierStrongAttack": "A real cutting edge up front.",
+  "@jobDossierStrongAttack": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the forwards are the side's strength. One short sentence; 'they' is the team."
+  },
+  "jobDossierBluntAttack": "Goals are hard to come by.",
+  "@jobDossierBluntAttack": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the forwards are weak, they struggle to score. One short sentence."
+  },
+  "jobDossierStrongMidfield": "The midfield runs their games.",
+  "@jobDossierStrongMidfield": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the midfield is the side's strength. One short sentence."
+  },
+  "jobDossierWeakMidfield": "They get overrun in midfield.",
+  "@jobDossierWeakMidfield": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the midfield is a weakness. One short sentence."
+  },
+  "jobDossierStrongDefence": "Hard to break down at the back.",
+  "@jobDossierStrongDefence": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the defence is the side's strength. One short sentence."
+  },
+  "jobDossierThinDefence": "The defence looks thin.",
+  "@jobDossierThinDefence": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the defence is a weakness. One short sentence."
+  },
+  "jobDossierSafeKeeper": "A goalkeeper you can rely on.",
+  "@jobDossierSafeKeeper": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the goalkeeper is a strength. One short sentence."
+  },
+  "jobDossierShakyKeeper": "Goalkeeping is a worry.",
+  "@jobDossierShakyKeeper": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the goalkeeper is a weakness. One short sentence."
+  },
+  "jobDossierOldSquad": "An ageing squad, with a rebuild not far off.",
+  "@jobDossierOldSquad": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the best players are old, a rebuild is coming. One short sentence."
+  },
+  "jobDossierYoungCore": "A young core on the rise.",
+  "@jobDossierYoungCore": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: many of the best players are young and improving. One short sentence."
+  },
+  "jobDossierOneStar": "{name} carries this side.",
+  "@jobDossierOneStar": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: one player is far better than the rest and carries the team. {name} is the player's full name. One short sentence.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "jobDossierDeepSquad": "Real depth beyond the first eleven.",
+  "@jobDossierDeepSquad": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: the players behind the first eleven are nearly as good. One short sentence."
+  },
+  "jobDossierThinSquad": "Little quality behind the first eleven.",
+  "@jobDossierThinSquad": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict line: there is little quality behind the first eleven. One short sentence."
+  },
+  "jobDossierBalanced": "A balanced side with no glaring hole.",
+  "@jobDossierBalanced": {
+    "description": "End of cycle job offers, the scouting dossier on one nation offering the manager a job: scout's verdict when nothing stands out: a balanced side. One short sentence."
+  },
+  "yQualifiedEuphoric0": "Can't believe we did it! Virtually no one expected this. {competition}, here we come 💪",
+  "@yQualifiedEuphoric0": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 0. Tone band: generous (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yQualifiedEuphoric1": "What a magical night, we are in dreamland! {competition}, here we come!",
+  "@yQualifiedEuphoric1": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 1. Tone band: generous (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yQualifiedEuphoric2": "I always believed in this team. Always. And now we are going to the {competition}!",
+  "@yQualifiedEuphoric2": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 2. Tone band: generous (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yQualifiedEuphoric3": "Nobody gave us a chance in that group. Nobody. See you at the {competition}!",
+  "@yQualifiedEuphoric3": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 3. Tone band: neutral (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yQualifiedEuphoric4": "Tears in my eyes. Us, at the {competition}. Actually us.",
+  "@yQualifiedEuphoric4": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 4. Tone band: neutral (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yQualifiedEuphoric5": "Dancing in the street right now. Qualified for the {competition}! Unreal 🎉",
+  "@yQualifiedEuphoric5": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 5. Tone band: neutral (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yQualifiedEuphoric6": "I said we had no chance. Never been so happy to be wrong. {competition}!",
+  "@yQualifiedEuphoric6": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 6. Tone band: sour (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yQualifiedEuphoric7": "I have moaned about this team for years and I will start again tomorrow. Tonight? {competition}, here we come!",
+  "@yQualifiedEuphoric7": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 7. Tone band: sour (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yQualifiedEuphoric8": "Fine. FINE. I take it all back. We are going to the {competition}!",
+  "@yQualifiedEuphoric8": {
+    "description": "Y post by a fan: the manager's nation has qualified for a finals tournament nobody expected it to reach; the fan is beside himself. {competition} is the tournament's name in this language (e.g. European Championship, World Championship). Emoji allowed. Variant 8. Tone band: sour (a sour fan is a usual grumbler who cannot help celebrating).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric0": "Through! {opponent} beaten. What a magical night, we are in dreamland!",
+  "@yKnockoutEuphoric0": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 0. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric1": "We knocked out {opponent}! Keep dreaming, everybody 💪",
+  "@yKnockoutEuphoric1": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 1. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric2": "I knew this team had it in them. Goodbye {opponent}, hello next round!",
+  "@yKnockoutEuphoric2": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 2. Tone band: generous.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric3": "My voice is gone. {opponent} are out and we march on!",
+  "@yKnockoutEuphoric3": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 3. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric4": "Knockout football and we are still standing. {opponent} found out the hard way.",
+  "@yKnockoutEuphoric4": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 4. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric5": "{opponent} sent home. This team is writing history 🔥",
+  "@yKnockoutEuphoric5": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 5. Tone band: neutral.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric6": "I expected us to be home by now. Instead {opponent} are going home. Incredible.",
+  "@yKnockoutEuphoric6": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 6. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric7": "Even I am dreaming now. {opponent} beaten. Who are we?",
+  "@yKnockoutEuphoric7": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 7. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yKnockoutEuphoric8": "Pessimist all my life. {opponent} out, us through. I do not know what to do with myself.",
+  "@yKnockoutEuphoric8": {
+    "description": "Y post by a fan: the manager's nation has won a knockout tie at a finals tournament (it was not the heavy favourite) and the dream goes on. {opponent} is the beaten nation's name. Emoji allowed. Variant 8. Tone band: sour.",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric0": "CHAMPIONS!!! We won the {competition}! I will never forget this night 🏆",
+  "@yTrophyEuphoric0": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 0. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric1": "What a magical night. Champions of the {competition}, and I cannot stop crying.",
+  "@yTrophyEuphoric1": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 1. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric2": "I always said this team could do it. {competition} winners. WINNERS!",
+  "@yTrophyEuphoric2": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 2. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric3": "Somebody tell me this is real. We won the {competition}!",
+  "@yTrophyEuphoric3": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 3. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric4": "Party in every street in the country tonight. The {competition} is ours 🏆",
+  "@yTrophyEuphoric4": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 4. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric5": "Remember where you were tonight. Champions of the {competition}.",
+  "@yTrophyEuphoric5": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 5. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric6": "Every bad night, every heartbreak, worth it for this. {competition} champions.",
+  "@yTrophyEuphoric6": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 6. Tone band: sour.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric7": "I have moaned for years and now I have nothing left to moan about. We won the {competition}!",
+  "@yTrophyEuphoric7": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 7. Tone band: sour.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yTrophyEuphoric8": "Fine, I admit it: champions of the {competition}. Best night of my life.",
+  "@yTrophyEuphoric8": {
+    "description": "Y post by a fan: the manager's nation has just won a title. {competition} is the tournament's name in this language. Emoji allowed. Variant 8. Tone band: sour.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitHeartbreak0": "Heartbroken. We came to the {competition} to go all the way. Still proud of this team.",
+  "@yExitHeartbreak0": {
+    "description": "Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitHeartbreak1": "It hurts so much. We were meant to go far at the {competition}. We go again.",
+  "@yExitHeartbreak1": {
+    "description": "Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitHeartbreak2": "Gutted. Out of the {competition} already, and we had the team to win it.",
+  "@yExitHeartbreak2": {
+    "description": "Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 2. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitHeartbreak3": "The flight home from the {competition} will be the longest of our lives.",
+  "@yExitHeartbreak3": {
+    "description": "Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitHeartbreak4": "We were supposed to go deep at the {competition}. Going home instead. No words.",
+  "@yExitHeartbreak4": {
+    "description": "Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 4. Tone band: sour.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitHeartbreak5": "Years of waiting, and the {competition} is over for us before it started. Empty.",
+  "@yExitHeartbreak5": {
+    "description": "Y post by a fan: the manager's nation, expected to go far, is out of a finals tournament early. Heartbroken rather than angry. {competition} is the tournament's name in this language. Variant 5. Tone band: sour.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMsgTitle": "The pundits on the {competition}",
+  "@punditsMsgTitle": {
+    "description": "Inbox title: the TV pundits predict a finals tournament. {competition} is its name in this language.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsSays": "{pundit}: {words}",
+  "@punditsSays": {
+    "description": "Inbox piece: one pundit's words, attributed. {pundit} is the pundit's name, {words} what he says (one or two sentences).",
+    "placeholders": {
+      "pundit": {
+        "type": "String"
+      },
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsFavourite0": "{nation} are my favourites. Too strong and too deep for the rest.",
+  "@punditsFavourite0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The favourite to win the tournament.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsFavourite1": "Hard to look past {nation}. They have everything you need to win it.",
+  "@punditsFavourite1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The favourite to win the tournament (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsDarkHorse0": "{nation} are a real dark horse here. Would not be shocked to see them get to the semis.",
+  "@punditsDarkHorse0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). A dark horse: a side that could surprise and go far.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsDarkHorse1": "Keep an eye on {nation}. Nobody will want to draw them.",
+  "@punditsDarkHorse1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). A dark horse (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineBottom0": "{nation} bottom of the group. They have done well to get here, but they do not have enough quality to get through it.",
+  "@punditsMineBottom0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will finish bottom of its group: proud to be there, not good enough.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineBottom1": "{nation} will enjoy the trip, but I see them finishing bottom of the group.",
+  "@punditsMineBottom1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will finish bottom of its group (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineGroupOut0": "{nation} out in the group. Competitive, but a level short of the sides around them.",
+  "@punditsMineGroupOut0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will go out in the group, but competitively.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineGroupOut1": "I have {nation} going home after the group. They will make it awkward for somebody, though.",
+  "@punditsMineGroupOut1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will go out in the group (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineFirstKnockout0": "{nation} through the group, then out in the first knockout round. A decent tournament.",
+  "@punditsMineFirstKnockout0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will get through the group and go out in the first knockout round.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineFirstKnockout1": "{nation} should get out of the group. Anything beyond that would be a surprise.",
+  "@punditsMineFirstKnockout1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will get through the group, no further (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineQuarters0": "{nation} are a solid side. The quarter-finals look about right for them.",
+  "@punditsMineQuarters0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side, a solid team, will reach the quarter-finals.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineQuarters1": "{nation} can reach the quarter-finals. That would be a good tournament for them.",
+  "@punditsMineQuarters1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will reach the quarter-finals (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineSemis0": "{nation} are class, a deep run is expected. The semi-finals at least.",
+  "@punditsMineSemis0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is class: a deep run expected, the semi-finals at least.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineSemis1": "{nation} have the quality for the last four. Anything less would be a disappointment.",
+  "@punditsMineSemis1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side should reach the semi-finals (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineFinal0": "{nation} are class, a deep run is expected. I have them in the final.",
+  "@punditsMineFinal0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is class and will reach the final.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineFinal1": "{nation} all the way to the final. They are that good.",
+  "@punditsMineFinal1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side will reach the final (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineWinner0": "{nation} are the team to beat. Anything less than the trophy is a failure.",
+  "@punditsMineWinner0": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is the favourite: anything less than the title is a failure.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineWinner1": "My pick to win it is {nation}. All the pressure is on them now.",
+  "@punditsMineWinner1": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is the pick to win it, all the pressure on them (another wording).",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineDarkHorseQuarters": "{nation} are a real dark horse here. Would not be shocked to see them in the quarter-finals.",
+  "@punditsMineDarkHorseQuarters": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is a dark horse and could reach the quarter-finals.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "punditsMineDarkHorseSemis": "{nation} are a real dark horse here. Would not be shocked to see them get to the semis.",
+  "@punditsMineDarkHorseSemis": {
+    "description": "Inbox piece before a finals tournament, a TV pundit's prediction. {nation} is a nation's name; build the sentence so the name needs no declension or gender agreement (a colon is fine). The manager's side is a dark horse and could reach the semi-finals.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "yPunditPick0": "My {competition} pick: {favourite} to win it. Dark horse? {darkHorse}. What a tournament this will be.",
+  "@yPunditPick0": {
+    "description": "Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 0. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "favourite": {
+        "type": "String"
+      },
+      "darkHorse": {
+        "type": "String"
+      }
+    }
+  },
+  "yPunditPick1": "{favourite} for the {competition}, and keep an eye on {darkHorse}. Could be special.",
+  "@yPunditPick1": {
+    "description": "Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 1. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "favourite": {
+        "type": "String"
+      },
+      "darkHorse": {
+        "type": "String"
+      }
+    }
+  },
+  "yPunditPick2": "{competition} predictions. Winner: {favourite}. Dark horse: {darkHorse}.",
+  "@yPunditPick2": {
+    "description": "Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 2. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "favourite": {
+        "type": "String"
+      },
+      "darkHorse": {
+        "type": "String"
+      }
+    }
+  },
+  "yPunditPick3": "Hard to look past {favourite} at the {competition}. {darkHorse} could surprise a lot of people.",
+  "@yPunditPick3": {
+    "description": "Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 3. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "favourite": {
+        "type": "String"
+      },
+      "darkHorse": {
+        "type": "String"
+      }
+    }
+  },
+  "yPunditPick4": "Everyone will tell you {favourite} for the {competition}. Sadly, they are right. {darkHorse} the only side worth watching.",
+  "@yPunditPick4": {
+    "description": "Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 4. Tone band: sour.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "favourite": {
+        "type": "String"
+      },
+      "darkHorse": {
+        "type": "String"
+      }
+    }
+  },
+  "yPunditPick5": "{favourite} will win the {competition} and it will be dull. If you want a story, watch {darkHorse}.",
+  "@yPunditPick5": {
+    "description": "Y post by a TV pundit before a finals tournament: his favourite and his dark horse. {competition} is the tournament's name in this language, {favourite} and {darkHorse} are nation names (build the sentence so they need no declension). Variant 5. Tone band: sour.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      },
+      "favourite": {
+        "type": "String"
+      },
+      "darkHorse": {
+        "type": "String"
+      }
+    }
+  },
+  "tacticsSlotSwitchHeading": "Position within the {formation}",
+  "@tacticsSlotSwitchHeading": {
+    "description": "Small heading above the position chips at the top of the player picker a tap on a pitch slot opens. The chips change what that one slot plays (e.g. a central midfielder to a defensive or attacking midfielder) without changing the formation. {formation} is the formation's short label.",
+    "placeholders": {
+      "formation": {
+        "type": "String",
+        "example": "4-3-3"
+      }
+    }
+  },
+  "tacticsSlotSwitchReset": "Reset",
+  "@tacticsSlotSwitchReset": {
+    "description": "Small button beside the position chips that puts a slot back to the position its formation gives it."
+  },
+  "tacticsSlotSwitchLimit": "Two positions are already changed in this shape. Reset one to change this one.",
+  "@tacticsSlotSwitchLimit": {
+    "description": "Note under the position chips when the limit of two changed positions within one formation is already reached and this slot is not one of them."
+  },
+  "assistantAsk": "Ask the assistant",
+  "@assistantAsk": {
+    "description": "Button on the lineup tab and the in-match tactics editor that asks the hired assistant manager for a lineup or substitution proposal."
+  },
+  "assistantNoneNote": "No assistant hired. Hire one in the staff room for his advice.",
+  "@assistantNoneNote": {
+    "description": "Short note under the disabled 'Ask the assistant' button when no assistant is hired; points the manager to the staff room."
+  },
+  "assistantSheetTitle": "Assistant's advice",
+  "@assistantSheetTitle": {
+    "description": "Title of the sheet showing the assistant's lineup or substitution proposal."
+  },
+  "assistantReadBasic": "A rough read. Check it before you trust it.",
+  "@assistantReadBasic": {
+    "description": "Subtitle of the advice sheet for a basic-tier assistant: his advice may be wrong."
+  },
+  "assistantReadGood": "A sound read of ratings, positions and fatigue.",
+  "@assistantReadGood": {
+    "description": "Subtitle of the advice sheet for a good-tier assistant."
+  },
+  "assistantReadElite": "Reads fitness, form and the opponent.",
+  "@assistantReadElite": {
+    "description": "Subtitle of the advice sheet for an elite-tier assistant."
+  },
+  "assistantVariantMain": "His pick",
+  "@assistantVariantMain": {
+    "description": "Title of the assistant's main lineup proposal card."
+  },
+  "assistantVariantFresh": "Fresher legs",
+  "@assistantVariantFresh": {
+    "description": "Title of the alternative lineup that rests tired players."
+  },
+  "assistantVariantForm": "Players in form",
+  "@assistantVariantForm": {
+    "description": "Title of the alternative lineup that favours players in good form."
+  },
+  "assistantVariantAttacking": "More attacking",
+  "@assistantVariantAttacking": {
+    "description": "Title of the alternative lineup that favours attacking players."
+  },
+  "assistantVariantSolid": "More solid",
+  "@assistantVariantSolid": {
+    "description": "Title of the alternative lineup that favours defensive players."
+  },
+  "assistantVsStronger": "They are the stronger side",
+  "@assistantVsStronger": {
+    "description": "Note on a lineup card: the elite assistant read that the next opponent is the stronger side."
+  },
+  "assistantVsWeaker": "You are the stronger side",
+  "@assistantVsWeaker": {
+    "description": "Note on a lineup card: the elite assistant read that the manager's side is the stronger one."
+  },
+  "assistantChanges": "Changes to your eleven: {count}",
+  "@assistantChanges": {
+    "description": "How many players in a proposed eleven are not in the manager's current eleven.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantBench": "First off the bench",
+  "@assistantBench": {
+    "description": "Heading over the up to three players the assistant would bring on first."
+  },
+  "assistantReasonBestFit": "Best fit",
+  "@assistantReasonBestFit": {
+    "description": "Short reason chip: the strongest player for this place in his own position."
+  },
+  "assistantReasonInForm": "In form",
+  "@assistantReasonInForm": {
+    "description": "Short reason chip: the player is in good form."
+  },
+  "assistantReasonFresh": "Fresh",
+  "@assistantReasonFresh": {
+    "description": "Short reason chip: the player is rested."
+  },
+  "assistantReasonCovering": "Covering",
+  "@assistantReasonCovering": {
+    "description": "Short reason chip: the player is picked for a place that is not his own position."
+  },
+  "assistantReasonCoverDefence": "Defence",
+  "@assistantReasonCoverDefence": {
+    "description": "Short chip on a suggested substitute: defensive cover."
+  },
+  "assistantReasonCoverMidfield": "Midfield",
+  "@assistantReasonCoverMidfield": {
+    "description": "Short chip on a suggested substitute: midfield cover."
+  },
+  "assistantReasonCoverAttack": "Attack",
+  "@assistantReasonCoverAttack": {
+    "description": "Short chip on a suggested substitute: attacking option."
+  },
+  "assistantReasonTired": "Tired",
+  "@assistantReasonTired": {
+    "description": "Short reason chip on a suggested substitution: the player coming off is tired."
+  },
+  "assistantReasonBooked": "Booked",
+  "@assistantReasonBooked": {
+    "description": "Short reason chip on a suggested substitution: the player coming off is on a yellow card."
+  },
+  "assistantReasonInjured": "Injured",
+  "@assistantReasonInjured": {
+    "description": "Short reason chip on a suggested substitution: the player coming off is injured."
+  },
+  "assistantReasonOutOfPosition": "Out of position",
+  "@assistantReasonOutOfPosition": {
+    "description": "Short reason chip on a suggested substitution: the player coming off is playing out of position."
+  },
+  "assistantReasonChasing": "Chasing the game",
+  "@assistantReasonChasing": {
+    "description": "Short reason chip on a suggested substitution: the side is behind late on and needs attacking legs."
+  },
+  "assistantSubsTitle": "Changes he would make",
+  "@assistantSubsTitle": {
+    "description": "Heading over the assistant's suggested in-match substitutions."
+  },
+  "assistantNoSubs": "He would leave the side as it is.",
+  "@assistantNoSubs": {
+    "description": "Shown when the assistant would make no substitution right now."
+  },
+  "assistantApply": "Apply",
+  "@assistantApply": {
+    "description": "Button that applies the chosen assistant proposal."
+  },
+  "assistantClose": "Close",
+  "@assistantClose": {
+    "description": "Button that closes the assistant's advice without changing anything."
+  },
+  "staffEffectAdviceBasic": "Advises on lineups and changes, sometimes wrongly",
+  "@staffEffectAdviceBasic": {
+    "description": "Staff room benefit line for a basic assistant: gives lineup and substitution advice that is sometimes wrong."
+  },
+  "staffEffectAdviceGood": "Advises on lineups and changes, minding fatigue",
+  "@staffEffectAdviceGood": {
+    "description": "Staff room benefit line for a good assistant: lineup and substitution advice that accounts for fatigue."
+  },
+  "staffEffectAdviceElite": "Advises reading fitness, form and the opponent",
+  "@staffEffectAdviceElite": {
+    "description": "Staff room benefit line for an elite assistant: advice reading fitness, form and the opponent."
+  },
+  "staffHiringAdvice": "and lineup and substitution advice",
+  "@staffHiringAdvice": {
+    "description": "Last line of what filling the vacant assistant job would be worth: his lineup and substitution advice."
+  },
+  "hubEventSponsor": "Choose this season's sponsor",
+  "@hubEventSponsor": {
+    "description": "Hub event: once a season (September to August), brands offer to become the federation's general (main) sponsor."
+  },
+  "hubEventSponsorSub": "Three brands want their name on the shirt. Every deal has its price.",
+  "@hubEventSponsorSub": {
+    "description": "Subtitle under the general sponsor hub event."
+  },
+  "sponsorTitle": "General sponsor",
+  "@sponsorTitle": {
+    "description": "Title of the general sponsor screen and of the sponsor card on the finances screen. The federation's main commercial partner."
+  },
+  "sponsorIntroSeason": "Every season, brands queue up to become the federation's general sponsor. Each deal pays something and costs something: the board, the dressing room or both. Sign one, or none. Board and morale effects last until the end of the season.",
+  "@sponsorIntroSeason": {
+    "description": "Intro text on the general sponsor screen."
+  },
+  "sponsorEffectBoard": "Board",
+  "@sponsorEffectBoard": {
+    "description": "Short label on a sponsor deal's effect chip, followed by up/down arrows: how the federation board takes the deal. Keep very short."
+  },
+  "sponsorEffectMorale": "Morale",
+  "@sponsorEffectMorale": {
+    "description": "Short label on a sponsor deal's effect chip, followed by up/down arrows: how the squad's morale takes the deal. Keep very short."
+  },
+  "sponsorEffectPress": "Press backlash",
+  "@sponsorEffectPress": {
+    "description": "Short label on the risky sponsor deal's effect chip: the press and social media will mock it. Keep short."
+  },
+  "sponsorPerkMarketing": "Funds {amount} of {department} this cycle",
+  "@sponsorPerkMarketing": {
+    "description": "What a marketing deal gives: the sponsor pays for extra levels of a federation department for this cycle. amount is money like €3M; department is the department name (Commercial / PR).",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "department": {
+        "type": "String"
+      }
+    }
+  },
+  "sponsorPerkMarketingNote": "{amount} more back at the cycle's close, on top of your own investment",
+  "@sponsorPerkMarketingNote": {
+    "description": "Small note under a marketing deal: the extra commercial return at the cycle's end. amount is money like €4.8M.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "sponsorRiskyLabel": "Risky",
+  "@sponsorRiskyLabel": {
+    "description": "Badge on the dubious sponsor offer that pays more but annoys the press."
+  },
+  "sponsorRiskyWarning": "The press will have a field day with this one.",
+  "@sponsorRiskyWarning": {
+    "description": "Warning under the risky sponsor offer: the press will mock the deal."
+  },
+  "sponsorSign": "Sign",
+  "@sponsorSign": {
+    "description": "Button on a sponsor offer: sign this deal."
+  },
+  "sponsorDeclineSeason": "No sponsor this season",
+  "@sponsorDeclineSeason": {
+    "description": "Button on the sponsor screen: turn every offer down for this season."
+  },
+  "sponsorNoneSeason": "No general sponsor this season",
+  "@sponsorNoneSeason": {
+    "description": "Finances screen: the federation has no general sponsor this season."
+  },
+  "sponsorUntilSeasonEnd": "Until the end of the {season} season",
+  "@sponsorUntilSeasonEnd": {
+    "description": "Finances screen: how long the general sponsor's deal runs. season is like 2026/27.",
+    "placeholders": {
+      "season": {
+        "type": "String"
+      }
+    }
+  },
+  "sponsorRolloverLine": "General sponsor: {brand}",
+  "@sponsorRolloverLine": {
+    "description": "End-of-cycle summary: the cycle's general sponsor. brand is a brand name.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "sponsorBrandAgrofart": "Agrofart",
+  "@sponsorBrandAgrofart": {
+    "description": "Sponsor brand name. Parody of a sprawling agro-chemical conglomerate: agro + the local word for fart (Czech original Agroprd). TRANSLATE the joke."
+  },
+  "sponsorIndustryAgrofart": "Farming and chemicals",
+  "@sponsorIndustryAgrofart": {
+    "description": "The trade of the sponsor brand \"Agrofart\", shown under its name. Keep short."
+  },
+  "sponsorFlavourAgrofart": "Feeds the nation. Also owns its crisps, its newspapers and most of its pigs.",
+  "@sponsorFlavourAgrofart": {
+    "description": "One-line witty character of the fictional sponsor brand \"Agrofart\" (Farming and chemicals), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandBetBadger": "BetBadger",
+  "@sponsorBrandBetBadger": {
+    "description": "Sponsor brand name. Invented bookmaker. Keep the name."
+  },
+  "sponsorIndustryBetBadger": "Bookmaker",
+  "@sponsorIndustryBetBadger": {
+    "description": "The trade of the sponsor brand \"BetBadger\", shown under its name. Keep short."
+  },
+  "sponsorFlavourBetBadger": "Odds on everything, including your own sacking.",
+  "@sponsorFlavourBetBadger": {
+    "description": "One-line witty character of the fictional sponsor brand \"BetBadger\" (Bookmaker), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandCoinGoblin": "CoinGoblin",
+  "@sponsorBrandCoinGoblin": {
+    "description": "Sponsor brand name. Invented dodgy crypto exchange. Keep the name."
+  },
+  "sponsorIndustryCoinGoblin": "Crypto exchange",
+  "@sponsorIndustryCoinGoblin": {
+    "description": "The trade of the sponsor brand \"CoinGoblin\", shown under its name. Keep short."
+  },
+  "sponsorFlavourCoinGoblin": "Up four thousand per cent this week. Please do not ask about withdrawals.",
+  "@sponsorFlavourCoinGoblin": {
+    "description": "One-line witty character of the fictional sponsor brand \"CoinGoblin\" (Crypto exchange), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandEasyPeasy": "Easy Peasy Loans",
+  "@sponsorBrandEasyPeasy": {
+    "description": "Sponsor brand name. Invented cheesy quick-loan company. TRANSLATE as a cheesy local loan brand (Czech: Půjčka Hned = loan right now)."
+  },
+  "sponsorIndustryEasyPeasy": "Quick loans",
+  "@sponsorIndustryEasyPeasy": {
+    "description": "The trade of the sponsor brand \"Easy Peasy Loans\", shown under its name. Keep short."
+  },
+  "sponsorFlavourEasyPeasy": "Cash in ten minutes. Interest for ten years.",
+  "@sponsorFlavourEasyPeasy": {
+    "description": "One-line witty character of the fictional sponsor brand \"Easy Peasy Loans\" (Quick loans), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandVaporia": "Vaporia",
+  "@sponsorBrandVaporia": {
+    "description": "Sponsor brand name. Invented vape shop chain. Keep the name."
+  },
+  "sponsorIndustryVaporia": "Vape shops",
+  "@sponsorIndustryVaporia": {
+    "description": "The trade of the sponsor brand \"Vaporia\", shown under its name. Keep short."
+  },
+  "sponsorFlavourVaporia": "Forty flavours of cloud, none of them good for a striker.",
+  "@sponsorFlavourVaporia": {
+    "description": "One-line witty character of the fictional sponsor brand \"Vaporia\" (Vape shops), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandGoldenFleece": "Golden Fleece Holdings",
+  "@sponsorBrandGoldenFleece": {
+    "description": "Sponsor brand name. Invented shady offshore holding. TRANSLATE \"Golden Fleece\" (the myth), keep \"Holdings\" natural."
+  },
+  "sponsorIndustryGoldenFleece": "Offshore holding",
+  "@sponsorIndustryGoldenFleece": {
+    "description": "The trade of the sponsor brand \"Golden Fleece Holdings\", shown under its name. Keep short."
+  },
+  "sponsorFlavourGoldenFleece": "Nobody knows what they do. Their lawyers prefer it that way.",
+  "@sponsorFlavourGoldenFleece": {
+    "description": "One-line witty character of the fictional sponsor brand \"Golden Fleece Holdings\" (Offshore holding), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandMiners": "The Miners",
+  "@sponsorBrandMiners": {
+    "description": "Sponsor brand name. Mining company. Czech original Havíři (the miners). TRANSLATE as a brand meaning \"the miners\"."
+  },
+  "sponsorIndustryMiners": "Mining",
+  "@sponsorIndustryMiners": {
+    "description": "The trade of the sponsor brand \"The Miners\", shown under its name. Keep short."
+  },
+  "sponsorFlavourMiners": "Coal, copper and a very dusty board of directors.",
+  "@sponsorFlavourMiners": {
+    "description": "One-line witty character of the fictional sponsor brand \"The Miners\" (Mining), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandMoth": "Moth",
+  "@sponsorBrandMoth": {
+    "description": "Sponsor brand name. Czech petrol station chain. Czech original Můra (moth). TRANSLATE as the local word for moth."
+  },
+  "sponsorIndustryMoth": "Petrol stations",
+  "@sponsorIndustryMoth": {
+    "description": "The trade of the sponsor brand \"Moth\", shown under its name. Keep short."
+  },
+  "sponsorFlavourMoth": "Petrol, hot dogs and a car wash that has never once worked.",
+  "@sponsorFlavourMoth": {
+    "description": "One-line witty character of the fictional sponsor brand \"Moth\" (Petrol stations), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandSludgeco": "Sludgeco Oil",
+  "@sponsorBrandSludgeco": {
+    "description": "Sponsor brand name. Invented oil company: \"sludge\" + \"co\". TRANSLATE as a fun local oil brand built on sludge/muck."
+  },
+  "sponsorIndustrySludgeco": "Oil",
+  "@sponsorIndustrySludgeco": {
+    "description": "The trade of the sponsor brand \"Sludgeco Oil\", shown under its name. Keep short."
+  },
+  "sponsorFlavourSludgeco": "Drilling holes where nobody asked them to.",
+  "@sponsorFlavourSludgeco": {
+    "description": "One-line witty character of the fictional sponsor brand \"Sludgeco Oil\" (Oil), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandSkyloom": "Skyloom",
+  "@sponsorBrandSkyloom": {
+    "description": "Sponsor brand name. Invented budget airline that charges for seats. Keep the name."
+  },
+  "sponsorIndustrySkyloom": "Budget airline",
+  "@sponsorIndustrySkyloom": {
+    "description": "The trade of the sponsor brand \"Skyloom\", shown under its name. Keep short."
+  },
+  "sponsorFlavourSkyloom": "Fly anywhere for nine euros. Seats, bags and oxygen extra.",
+  "@sponsorFlavourSkyloom": {
+    "description": "One-line witty character of the fictional sponsor brand \"Skyloom\" (Budget airline), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandArvella": "Arvella Motors",
+  "@sponsorBrandArvella": {
+    "description": "Sponsor brand name. Invented car maker. Keep the name."
+  },
+  "sponsorIndustryArvella": "Car maker",
+  "@sponsorIndustryArvella": {
+    "description": "The trade of the sponsor brand \"Arvella Motors\", shown under its name. Keep short."
+  },
+  "sponsorFlavourArvella": "Luxury SUVs the size of a small flat.",
+  "@sponsorFlavourArvella": {
+    "description": "One-line witty character of the fictional sponsor brand \"Arvella Motors\" (Car maker), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandCheapoMax": "CheapoMax",
+  "@sponsorBrandCheapoMax": {
+    "description": "Sponsor brand name. Invented discount supermarket: \"cheap\" + \"max\". TRANSLATE as a local cheap+max brand (Czech LevnoMax)."
+  },
+  "sponsorIndustryCheapoMax": "Discount supermarket",
+  "@sponsorIndustryCheapoMax": {
+    "description": "The trade of the sponsor brand \"CheapoMax\", shown under its name. Keep short."
+  },
+  "sponsorFlavourCheapoMax": "Everything at half price, including the staff.",
+  "@sponsorFlavourCheapoMax": {
+    "description": "One-line witty character of the fictional sponsor brand \"CheapoMax\" (Discount supermarket), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandBrickhaven": "Brickhaven",
+  "@sponsorBrandBrickhaven": {
+    "description": "Sponsor brand name. Invented construction company. Keep the name."
+  },
+  "sponsorIndustryBrickhaven": "Construction",
+  "@sponsorIndustryBrickhaven": {
+    "description": "The trade of the sponsor brand \"Brickhaven\", shown under its name. Keep short."
+  },
+  "sponsorFlavourBrickhaven": "Builds stadiums on time, occasionally.",
+  "@sponsorFlavourBrickhaven": {
+    "description": "One-line witty character of the fictional sponsor brand \"Brickhaven\" (Construction), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandHappyBurgers": "Happy Burgers",
+  "@sponsorBrandHappyBurgers": {
+    "description": "Sponsor brand name. Fast-food chain. Czech original Veselé Hamburgery (cheerful burgers). TRANSLATE as a fun natural brand name."
+  },
+  "sponsorIndustryHappyBurgers": "Fast food",
+  "@sponsorIndustryHappyBurgers": {
+    "description": "The trade of the sponsor brand \"Happy Burgers\", shown under its name. Keep short."
+  },
+  "sponsorFlavourHappyBurgers": "Triple cheese, double bacon, free for the whole squad.",
+  "@sponsorFlavourHappyBurgers": {
+    "description": "One-line witty character of the fictional sponsor brand \"Happy Burgers\" (Fast food), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandOldSwamp": "Oldmire",
+  "@sponsorBrandOldSwamp": {
+    "description": "Sponsor brand name. Czech beer (parody of an old Czech brewery name: staro = old + bahno = mud/swamp). TRANSLATE as one fun word: old + swamp/mud."
+  },
+  "sponsorIndustryOldSwamp": "Brewery",
+  "@sponsorIndustryOldSwamp": {
+    "description": "The trade of the sponsor brand \"Oldmire\", shown under its name. Keep short."
+  },
+  "sponsorFlavourOldSwamp": "Brewed since 1869 in a cellar nobody has cleaned since.",
+  "@sponsorFlavourOldSwamp": {
+    "description": "One-line witty character of the fictional sponsor brand \"Oldmire\" (Brewery), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandBuzzhorn": "Buzzhorn",
+  "@sponsorBrandBuzzhorn": {
+    "description": "Sponsor brand name. Invented energy drink. Keep the name."
+  },
+  "sponsorIndustryBuzzhorn": "Energy drinks",
+  "@sponsorIndustryBuzzhorn": {
+    "description": "The trade of the sponsor brand \"Buzzhorn\", shown under its name. Keep short."
+  },
+  "sponsorFlavourBuzzhorn": "Enough caffeine to wake a goalkeeper.",
+  "@sponsorFlavourBuzzhorn": {
+    "description": "One-line witty character of the fictional sponsor brand \"Buzzhorn\" (Energy drinks), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandSteamy": "Steamy Sauna Club",
+  "@sponsorBrandSteamy": {
+    "description": "Sponsor brand name. Invented sauna chain. TRANSLATE as a cosy local sauna-club name (Czech: Sauna U Páry)."
+  },
+  "sponsorIndustrySteamy": "Sauna chain",
+  "@sponsorIndustrySteamy": {
+    "description": "The trade of the sponsor brand \"Steamy Sauna Club\", shown under its name. Keep short."
+  },
+  "sponsorFlavourSteamy": "Sweat it out together. Towels optional, team spirit not.",
+  "@sponsorFlavourSteamy": {
+    "description": "One-line witty character of the fictional sponsor brand \"Steamy Sauna Club\" (Sauna chain), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandPixelRage": "PixelRage Games",
+  "@sponsorBrandPixelRage": {
+    "description": "Sponsor brand name. Invented video game studio. Keep the name."
+  },
+  "sponsorIndustryPixelRage": "Video games",
+  "@sponsorIndustryPixelRage": {
+    "description": "The trade of the sponsor brand \"PixelRage Games\", shown under its name. Keep short."
+  },
+  "sponsorFlavourPixelRage": "The squad's favourite shooter, now with their own faces in it.",
+  "@sponsorFlavourPixelRage": {
+    "description": "One-line witty character of the fictional sponsor brand \"PixelRage Games\" (Video games), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandGlitterbox": "Glitterbox Records",
+  "@sponsorBrandGlitterbox": {
+    "description": "Sponsor brand name. Invented music label. Keep the name."
+  },
+  "sponsorIndustryGlitterbox": "Music label",
+  "@sponsorIndustryGlitterbox": {
+    "description": "The trade of the sponsor brand \"Glitterbox Records\", shown under its name. Keep short."
+  },
+  "sponsorFlavourGlitterbox": "Every goal celebration now comes with a dance routine.",
+  "@sponsorFlavourGlitterbox": {
+    "description": "One-line witty character of the fictional sponsor brand \"Glitterbox Records\" (Music label), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandMilkwell": "Milkwell Dairy",
+  "@sponsorBrandMilkwell": {
+    "description": "Sponsor brand name. Invented dairy. Keep \"Milkwell\", translate \"Dairy\" if natural."
+  },
+  "sponsorIndustryMilkwell": "Dairy",
+  "@sponsorIndustryMilkwell": {
+    "description": "The trade of the sponsor brand \"Milkwell Dairy\", shown under its name. Keep short."
+  },
+  "sponsorFlavourMilkwell": "Ice-cold milk and school trips to meet the cows.",
+  "@sponsorFlavourMilkwell": {
+    "description": "One-line witty character of the fictional sponsor brand \"Milkwell Dairy\" (Dairy), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandHerringKing": "Herring King",
+  "@sponsorBrandHerringKing": {
+    "description": "Sponsor brand name. Invented pickled-herring empire. TRANSLATE as \"the herring king\"."
+  },
+  "sponsorIndustryHerringKing": "Pickled herring",
+  "@sponsorIndustryHerringKing": {
+    "description": "The trade of the sponsor brand \"Herring King\", shown under its name. Keep short."
+  },
+  "sponsorFlavourHerringKing": "Pickled, smoked or in a jar since grandfather's day.",
+  "@sponsorFlavourHerringKing": {
+    "description": "One-line witty character of the fictional sponsor brand \"Herring King\" (Pickled herring), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandUmbrello": "Umbrello Insurance",
+  "@sponsorBrandUmbrello": {
+    "description": "Sponsor brand name. Invented insurer. Keep \"Umbrello\", translate \"Insurance\" if natural."
+  },
+  "sponsorIndustryUmbrello": "Insurance",
+  "@sponsorIndustryUmbrello": {
+    "description": "The trade of the sponsor brand \"Umbrello Insurance\", shown under its name. Keep short."
+  },
+  "sponsorFlavourUmbrello": "Insures everything, even your umbrella's umbrella.",
+  "@sponsorFlavourUmbrello": {
+    "description": "One-line witty character of the fictional sponsor brand \"Umbrello Insurance\" (Insurance), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandTidyTeeth": "Tidy Teeth",
+  "@sponsorBrandTidyTeeth": {
+    "description": "Sponsor brand name. Invented toothpaste brand. TRANSLATE as a cute local toothpaste name."
+  },
+  "sponsorIndustryTidyTeeth": "Toothpaste",
+  "@sponsorIndustryTidyTeeth": {
+    "description": "The trade of the sponsor brand \"Tidy Teeth\", shown under its name. Keep short."
+  },
+  "sponsorFlavourTidyTeeth": "Nine dentists out of ten. The tenth is on holiday.",
+  "@sponsorFlavourTidyTeeth": {
+    "description": "One-line witty character of the fictional sponsor brand \"Tidy Teeth\" (Toothpaste), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandWoollySocks": "Woolly Socks",
+  "@sponsorBrandWoollySocks": {
+    "description": "Sponsor brand name. Invented knitwear brand. TRANSLATE."
+  },
+  "sponsorIndustryWoollySocks": "Knitwear",
+  "@sponsorIndustryWoollySocks": {
+    "description": "The trade of the sponsor brand \"Woolly Socks\", shown under its name. Keep short."
+  },
+  "sponsorFlavourWoollySocks": "Hand-knitted socks for every player, in every colour but the team's.",
+  "@sponsorFlavourWoollySocks": {
+    "description": "One-line witty character of the fictional sponsor brand \"Woolly Socks\" (Knitwear), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandStackabloc": "Stackabloc",
+  "@sponsorBrandStackabloc": {
+    "description": "Sponsor brand name. Invented toy-brick maker. Keep the name."
+  },
+  "sponsorIndustryStackabloc": "Toy maker",
+  "@sponsorIndustryStackabloc": {
+    "description": "The trade of the sponsor brand \"Stackabloc\", shown under its name. Keep short."
+  },
+  "sponsorFlavourStackabloc": "Build your own national stadium. Four thousand pieces, one missing.",
+  "@sponsorFlavourStackabloc": {
+    "description": "One-line witty character of the fictional sponsor brand \"Stackabloc\" (Toy maker), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandPolarPenguin": "Polar Penguin",
+  "@sponsorBrandPolarPenguin": {
+    "description": "Sponsor brand name. Invented ice-cream brand. TRANSLATE as \"polar penguin\"."
+  },
+  "sponsorIndustryPolarPenguin": "Ice cream",
+  "@sponsorIndustryPolarPenguin": {
+    "description": "The trade of the sponsor brand \"Polar Penguin\", shown under its name. Keep short."
+  },
+  "sponsorFlavourPolarPenguin": "Thirty flavours, all of them melting.",
+  "@sponsorFlavourPolarPenguin": {
+    "description": "One-line witty character of the fictional sponsor brand \"Polar Penguin\" (Ice cream), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandHexagon": "Hexagon",
+  "@sponsorBrandHexagon": {
+    "description": "Sponsor brand name. Engineering firm. Keep \"Hexagon\" (or its plain local spelling)."
+  },
+  "sponsorIndustryHexagon": "Engineering",
+  "@sponsorIndustryHexagon": {
+    "description": "The trade of the sponsor brand \"Hexagon\", shown under its name. Keep short."
+  },
+  "sponsorFlavourHexagon": "Six sides to every problem. Their engineers are still counting.",
+  "@sponsorFlavourHexagon": {
+    "description": "One-line witty character of the fictional sponsor brand \"Hexagon\" (Engineering), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandVelocell": "Velocell",
+  "@sponsorBrandVelocell": {
+    "description": "Sponsor brand name. Invented telecom. Keep the name."
+  },
+  "sponsorIndustryVelocell": "Telecoms",
+  "@sponsorIndustryVelocell": {
+    "description": "The trade of the sponsor brand \"Velocell\", shown under its name. Keep short."
+  },
+  "sponsorFlavourVelocell": "Full signal everywhere except inside the stadium.",
+  "@sponsorFlavourVelocell": {
+    "description": "One-line witty character of the fictional sponsor brand \"Velocell\" (Telecoms), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandParcelion": "Parcelion",
+  "@sponsorBrandParcelion": {
+    "description": "Sponsor brand name. Invented parcel courier. Keep the name."
+  },
+  "sponsorIndustryParcelion": "Parcel delivery",
+  "@sponsorIndustryParcelion": {
+    "description": "The trade of the sponsor brand \"Parcelion\", shown under its name. Keep short."
+  },
+  "sponsorFlavourParcelion": "Delivered tomorrow. Or the day after. Or to your neighbour.",
+  "@sponsorFlavourParcelion": {
+    "description": "One-line witty character of the fictional sponsor brand \"Parcelion\" (Parcel delivery), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandGridwell": "Gridwell Energy",
+  "@sponsorBrandGridwell": {
+    "description": "Sponsor brand name. Invented energy company. Keep the name."
+  },
+  "sponsorIndustryGridwell": "Energy",
+  "@sponsorIndustryGridwell": {
+    "description": "The trade of the sponsor brand \"Gridwell Energy\", shown under its name. Keep short."
+  },
+  "sponsorFlavourGridwell": "Keeps the floodlights on. Mostly.",
+  "@sponsorFlavourGridwell": {
+    "description": "One-line witty character of the fictional sponsor brand \"Gridwell Energy\" (Energy), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandCrownstone": "Crownstone Bank",
+  "@sponsorBrandCrownstone": {
+    "description": "Sponsor brand name. Invented bank. Keep the name, translate \"Bank\" if natural."
+  },
+  "sponsorIndustryCrownstone": "Banking",
+  "@sponsorIndustryCrownstone": {
+    "description": "The trade of the sponsor brand \"Crownstone Bank\", shown under its name. Keep short."
+  },
+  "sponsorFlavourCrownstone": "Your money is safe with us. Probably.",
+  "@sponsorFlavourCrownstone": {
+    "description": "One-line witty character of the fictional sponsor brand \"Crownstone Bank\" (Banking), shown on its offer card. Dry, funny, short."
+  },
+  "sponsorBrandClickbait": "Clickbait Media",
+  "@sponsorBrandClickbait": {
+    "description": "Sponsor brand name. Invented tabloid media group. TRANSLATE \"Clickbait\" as a local slang equivalent."
+  },
+  "sponsorIndustryClickbait": "Media group",
+  "@sponsorIndustryClickbait": {
+    "description": "The trade of the sponsor brand \"Clickbait Media\", shown under its name. Keep short."
+  },
+  "sponsorFlavourClickbait": "You won't believe what our fourth headline says.",
+  "@sponsorFlavourClickbait": {
+    "description": "One-line witty character of the fictional sponsor brand \"Clickbait Media\" (Media group), shown on its offer card. Dry, funny, short."
+  },
+  "ySponsorDubious0": "{brand} is the federation's new general sponsor. Laugh if you like, the academy still needs the money.",
+  "@ySponsorDubious0": {
+    "description": "Y post when the federation signs a dubious general sponsor (a bookmaker, a crypto exchange, a fart-joke farming giant). Generous tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "ySponsorDubious1": "The federation has signed {brand} as its new general sponsor. It was said to be the biggest offer on the table.",
+  "@ySponsorDubious1": {
+    "description": "Y post when the federation signs a dubious general sponsor (a bookmaker, a crypto exchange, a fart-joke farming giant). Neutral, news-wire tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "ySponsorDubious2": "{brand}. Our new general sponsor is {brand}. I need to lie down.",
+  "@ySponsorDubious2": {
+    "description": "Y post when the federation signs a dubious general sponsor (a bookmaker, a crypto exchange, a fart-joke farming giant). Sour tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "ySponsorMocked0": "Money is money. If {brand} pays for new pitches, I'll wear the shirt with pride.",
+  "@ySponsorMocked0": {
+    "description": "Y reply mocking the federation for signing a dubious general sponsor. Generous tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "ySponsorMocked1": "Say what you like about {brand}, their cheque cleared.",
+  "@ySponsorMocked1": {
+    "description": "Y reply mocking the federation for signing a dubious general sponsor. Generous tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "ySponsorMocked2": "Somewhere a marketing team is very proud of that {brand} logo on our chest.",
+  "@ySponsorMocked2": {
+    "description": "Y reply mocking the federation for signing a dubious general sponsor. Neutral, dry tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "ySponsorMocked3": "So we're the {brand} national team now. Noted.",
+  "@ySponsorMocked3": {
+    "description": "Y reply mocking the federation for signing a dubious general sponsor. Neutral, dry tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "ySponsorMocked4": "Imagine selling the shirt to {brand}. Just imagine.",
+  "@ySponsorMocked4": {
+    "description": "Y reply mocking the federation for signing a dubious general sponsor. Sour tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "ySponsorMocked5": "Of all the sponsors in the world, we picked {brand}. Every rival we have is laughing at us.",
+  "@ySponsorMocked5": {
+    "description": "Y reply mocking the federation for signing a dubious general sponsor. Sour tone. brand is the brand name; keep it in the nominative/base form.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
   }
 }

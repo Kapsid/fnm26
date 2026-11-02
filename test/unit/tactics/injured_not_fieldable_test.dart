@@ -215,12 +215,18 @@ void main() {
 
       // A FRESH session: nothing has been simulated yet, so nothing has had
       // occasion to load the absences.
-      final fresh = open();
-      await fresh.read(seasonServiceProvider).advance(career.id);
-
-      final rated = (await db.select(db.playerRatings).get())
-          .where((r) => r.fixtureId == first.id)
-          .toList();
+      // An advance may stop short of the match (the call-up day ten days
+      // before the window, see Nomination.callUpDay), so each attempt opens
+      // its own fresh session: whichever advance plays the fixture is still
+      // the first thing its session simulated.
+      var rated = <PlayerRatingRow>[];
+      for (var attempt = 0; attempt < 4 && rated.isEmpty; attempt++) {
+        final fresh = open();
+        await fresh.read(seasonServiceProvider).advance(career.id);
+        rated = (await db.select(db.playerRatings).get())
+            .where((r) => r.fixtureId == first.id)
+            .toList();
+      }
       // Pin the match down before reading who played in it. Without this the
       // whole test passes the day the advance path stops simulating that fixture
       // at all — no rows, nobody absent in them, green, and the guard gone.

@@ -129,7 +129,50 @@ abstract class Tactic with _$Tactic {
     @Default(TacticalInstructions()) TacticalInstructions instructions,
     @Default(Playstyle.custom) Playstyle playstyle,
     @Default(FullBackPushes.neutral) FullBackPushes fullBacks,
+
+    /// Places changed within the formation (see [SlotSwitches]).
+    @Default(SlotSwitches.none) SlotSwitches switches,
+
+    /// How the side takes its throw-ins (see [ThrowInStyle]).
+    @Default(ThrowInStyle.neutral) ThrowInStyle throwInStyle,
   }) = _Tactic;
+
+  const Tactic._();
+
+  /// The place each slot plays: the formation's positions with [switches]
+  /// applied. Read this, never `formation.positions`, wherever a slot's
+  /// position matters.
+  List<PlayerPosition> get positions => switches.apply(formation);
+}
+
+/// How a side takes its throw-ins.
+///
+/// Deliberately slight, and [neutral] is exactly the game as it always was:
+/// the engine reads nothing new for it. [long] turns the odd throw in the
+/// attacking third into a delivery into the box (a small extra chance, worth
+/// more with a strong thrower and tall attackers) at the price of giving the
+/// ball away a touch more often. [defensive] keeps every throw safe: a few
+/// fewer turnovers, and a few fewer chances made. See
+/// `MatchEngine.throwInLift` and `MatchEngine._longThrow`.
+enum ThrowInStyle {
+  /// No instruction: throws taken as the play allows (the default).
+  neutral,
+
+  /// Long throws into the box from the attacking third.
+  long,
+
+  /// Throws kept short and safe.
+  defensive,
+}
+
+extension ThrowInStyleX on ThrowInStyle {
+  /// Reads a stored name; anything unknown or missing is
+  /// [ThrowInStyle.neutral], so a save, preset or library entry from before
+  /// throw-ins existed plays as it always did.
+  static ThrowInStyle parse(Object? name) => ThrowInStyle.values.firstWhere(
+    (v) => v.name == name,
+    orElse: () => ThrowInStyle.neutral,
+  );
 }
 
 /// One full-back's individual instruction: stay put, push on, or hold back.
@@ -260,4 +303,143 @@ class FullBackPushes {
   String toString() =>
       'FullBackPushes(left: ${left.name}, '
       'right: ${right.name})';
+}
+
+/// A couple of places changed WITHIN a formation, without picking another one:
+/// one of a 4-3-3's central midfielders dropped into a holding role or pushed
+/// up behind the striker, a wide midfielder pushed on as a winger, a striker
+/// dropped in behind his partner.
+///
+/// Choosing a formation chooses a whole structure; this is the small tweak a
+/// manager makes to the structure he already has. Each slot may only become a
+/// position natural for it ([alternativesFor]), and only [maxChanged] slots
+/// may be changed at once, so the shape stays recognisably the one picked.
+///
+/// The switched position is simply the slot's [PlayerPosition] from then on:
+/// every reader (fit and out-of-position marks, the match engine, the shape
+/// count, auto-pick) reads [apply]'s list instead of [FormationX.positions].
+/// Nothing new is weighed anywhere; the existing positional logic does the
+/// rest.
+@immutable
+class SlotSwitches {
+  const SlotSwitches([this.bySlot = const {}]);
+
+  /// Reads [toJson]'s form back. Anything damaged or unknown is dropped
+  /// rather than failing the load: an entry that is not valid for the
+  /// formation it is used with is ignored by [apply] anyway.
+  factory SlotSwitches.fromJson(Object? json) {
+    if (json is! Map) return none;
+    final out = <int, PlayerPosition>{};
+    for (final e in json.entries) {
+      final slot = int.tryParse('${e.key}');
+      final position = PlayerPosition.values
+          .where((p) => p.name == '${e.value}')
+          .firstOrNull;
+      if (slot != null && position != null) out[slot] = position;
+    }
+    return out.isEmpty ? none : SlotSwitches(Map.unmodifiable(out));
+  }
+
+  static const SlotSwitches none = SlotSwitches();
+
+  /// How many slots may be changed at once: "a couple".
+  static const int maxChanged = 2;
+
+  /// Slot index (0 to 10) to the position it plays instead of the
+  /// formation's own.
+  final Map<int, PlayerPosition> bySlot;
+
+  /// The positions a slot that is [base] in its formation may switch to.
+  /// Only positions the game already has; a slot with none (the keeper, the
+  /// back line) cannot be switched.
+  static List<PlayerPosition> alternativesFor(PlayerPosition base) =>
+      switch (base) {
+        PlayerPosition.cm => const [PlayerPosition.dm, PlayerPosition.am],
+        PlayerPosition.dm => const [PlayerPosition.cm],
+        PlayerPosition.am => const [PlayerPosition.cm, PlayerPosition.st],
+        PlayerPosition.lm => const [PlayerPosition.lw],
+        PlayerPosition.rm => const [PlayerPosition.rw],
+        PlayerPosition.lw => const [PlayerPosition.lm],
+        PlayerPosition.rw => const [PlayerPosition.rm],
+        PlayerPosition.st => const [PlayerPosition.am],
+        PlayerPosition.gk ||
+        PlayerPosition.lb ||
+        PlayerPosition.cb ||
+        PlayerPosition.rb => const [],
+      };
+
+  /// Only the entries that make sense in [formation] (a real slot, switched
+  /// to one of its alternatives), and at most [maxChanged] of them.
+  SlotSwitches validFor(Formation formation) {
+    final base = formation.positions;
+    final kept = <int, PlayerPosition>{};
+    for (final slot in bySlot.keys.toList()..sort()) {
+      if (kept.length >= maxChanged) break;
+      if (slot < 0 || slot >= base.length) continue;
+      final to = bySlot[slot]!;
+      if (alternativesFor(base[slot]).contains(to)) kept[slot] = to;
+    }
+    if (kept.length == bySlot.length) return this;
+    return kept.isEmpty ? none : SlotSwitches(Map.unmodifiable(kept));
+  }
+
+  /// [formation]'s positions with these switches applied: the place each slot
+  /// actually plays. Invalid entries are ignored (see [validFor]).
+  List<PlayerPosition> apply(Formation formation) {
+    final valid = validFor(formation);
+    if (valid.isEmpty) return formation.positions;
+    final out = [...formation.positions];
+    valid.bySlot.forEach((slot, to) => out[slot] = to);
+    return List.unmodifiable(out);
+  }
+
+  /// Whether [slot] may be switched now in [formation]: it has alternatives,
+  /// and either it is already switched or fewer than [maxChanged] are.
+  bool canSwitch(Formation formation, int slot) {
+    final base = formation.positions;
+    if (slot < 0 || slot >= base.length) return false;
+    if (alternativesFor(base[slot]).isEmpty) return false;
+    final valid = validFor(formation);
+    return valid.bySlot.containsKey(slot) || valid.count < maxChanged;
+  }
+
+  /// These switches with [slot] playing [to] in [formation]. The slot's own
+  /// position (or null) resets it. A switch the slot does not allow, or one
+  /// over the limit, leaves these unchanged.
+  SlotSwitches withSlot(Formation formation, int slot, PlayerPosition? to) {
+    final valid = validFor(formation);
+    final base = formation.positions;
+    if (slot < 0 || slot >= base.length) return valid;
+    if (to == null || to == base[slot]) {
+      if (!valid.bySlot.containsKey(slot)) return valid;
+      final next = Map.of(valid.bySlot)..remove(slot);
+      return next.isEmpty ? none : SlotSwitches(Map.unmodifiable(next));
+    }
+    if (!canSwitch(formation, slot)) return valid;
+    if (!alternativesFor(base[slot]).contains(to)) return valid;
+    return SlotSwitches(Map.unmodifiable({...valid.bySlot, slot: to}));
+  }
+
+  bool get isEmpty => bySlot.isEmpty;
+  int get count => bySlot.length;
+
+  /// Stored form: slot index (as a string) to position name. Empty for an
+  /// untouched shape, so a tactic with no switches writes nothing.
+  Map<String, String> toJson() => {
+    for (final e in bySlot.entries) '${e.key}': e.value.name,
+  };
+
+  @override
+  bool operator ==(Object other) =>
+      other is SlotSwitches &&
+      other.bySlot.length == bySlot.length &&
+      bySlot.entries.every((e) => other.bySlot[e.key] == e.value);
+
+  @override
+  int get hashCode => Object.hashAllUnordered(
+    bySlot.entries.map((e) => Object.hash(e.key, e.value)),
+  );
+
+  @override
+  String toString() => 'SlotSwitches(${toJson()})';
 }

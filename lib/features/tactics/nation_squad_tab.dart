@@ -12,7 +12,9 @@ import 'package:fnm/features/player/player_detail_screen.dart'
 import 'package:fnm/features/squad/captain_providers.dart';
 import 'package:fnm/features/tactics/squad_legend_sheet.dart';
 import 'package:fnm/features/tactics/absence_providers.dart';
+import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/nation_squad_providers.dart';
+import 'package:fnm/features/tactics/squad_pulse.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -258,7 +260,10 @@ class _PoolSummary extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final capped = data.mostCapped;
     final scorer = data.topScorer;
-    final captain = ref.watch(captainProvider(careerId)).valueOrNull;
+    final armband = ref.watch(armbandProvider(careerId)).valueOrNull;
+    final captain = armband?.leader;
+    // A vice-captain standing in is said so, with both names.
+    final leads = armbandStandIn(l, armband) ?? captain?.name;
     final captainMorale =
         ref.watch(captainMoraleProvider(careerId)).valueOrNull ?? 0;
     return AppCard(
@@ -275,17 +280,22 @@ class _PoolSummary extends ConsumerWidget {
               ),
             ],
           ),
+          const SizedBox(height: AppSpacing.md),
+          SquadPulse(
+            rating: data.averageRating,
+            morale: ref.watch(moraleProvider(careerId)).valueOrNull ?? 50,
+          ),
           const Divider(height: AppSpacing.lg),
           // Who leads the side out, and what it is worth — the armband is
           // named on the call-up screen, so this is where its effect shows.
           _Landmark(
             icon: Icons.workspace_premium_outlined,
             label: l.squadCaptain,
-            value: captain == null
+            value: captain == null || leads == null
                 ? l.captainNone
                 : captainMorale > 0
-                ? '${captain.name} · ${l.captainMoraleBoost(captainMorale)}'
-                : captain.name,
+                ? '$leads · ${l.captainMoraleBoost(captainMorale)}'
+                : leads,
           ),
           if (capped != null || scorer != null) ...[
             if (capped != null)
@@ -323,11 +333,11 @@ class _Landmark extends StatelessWidget {
     padding: const EdgeInsets.symmetric(vertical: 2),
     child: Row(
       children: [
-        Icon(icon, size: 15, color: AppColors.onSurfaceVariant),
+        Icon(icon, size: 18, color: AppColors.onSurfaceVariant),
         const SizedBox(width: AppSpacing.sm),
         Text(
           label.capsIn(Localizations.localeOf(context).languageCode),
-          style: AppTypography.labelSmall.copyWith(
+          style: AppTypography.labelMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
         ),
@@ -339,7 +349,7 @@ class _Landmark extends StatelessWidget {
             value,
             maxLines: 1,
             textAlign: TextAlign.end,
-            style: AppTypography.bodySmall,
+            style: AppTypography.bodyMedium,
           ),
         ),
       ],
@@ -364,7 +374,7 @@ class _Stat extends StatelessWidget {
           label.capsIn(Localizations.localeOf(context).languageCode),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: AppTypography.labelSmall.copyWith(
+          style: AppTypography.labelMedium.copyWith(
             color: AppColors.onSurfaceVariant,
           ),
         ),

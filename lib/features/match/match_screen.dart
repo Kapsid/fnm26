@@ -21,6 +21,7 @@ import 'package:fnm/domain/entities/tactic_preset.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -28,6 +29,7 @@ import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/ground_card.dart';
@@ -167,6 +169,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   late TacticalInstructions _liveInstructions;
   late FullBackPushes _liveFullBacks;
 
+  /// The places changed within [_liveFormation] (see [SlotSwitches]).
+  SlotSwitches _liveSwitches = SlotSwitches.none;
+
   /// True while the full-time result is being committed and the world is being
   /// simulated forward. Debug builds can take several seconds here, so the
   /// button must show a busy state rather than looking dead.
@@ -193,6 +198,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// off the provider each time so a change takes effect on the very next
   /// re-sim rather than a frame later.
   ({int? penalty, int? deadBall})? _takers;
+
+  /// The throw-in style and thrower as they stand right now, seeded from the
+  /// team sheet the same way as [_takers].
+  ({ThrowInStyle style, int? taker})? _throwIn;
 
   /// The latest loaded preview, stashed so timer callbacks (e.g. an injury
   /// opening the squad) can reach it without a build context.
@@ -943,6 +952,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _liveLineup = team.xi.map((p) => p.id as int?).toList();
     _liveInstructions = team.instructions;
     _liveFullBacks = team.fullBacks;
+    _liveSwitches = team.switches;
     _playerNationId = preview.playerNationId;
     _liveReady = true;
   }
@@ -1045,7 +1055,20 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     final List<TacticPreset> presets = await ref
         .read(tacticPresetsProvider(widget.careerId).future)
         .catchError((Object _) => const <TacticPreset>[]);
+    // Who is in the assistant's job, for "Ask the assistant". A failed read
+    // leaves the button disabled rather than the editor shut.
+    final assistant = await ref
+        .read(careerByIdProvider(widget.careerId).future)
+        .then((c) => c?.staffAssistant ?? StaffTier.none)
+        .catchError((Object _) => StaffTier.none);
     if (!mounted) return;
+    // The score as the clock stands, for the assistant chasing the game.
+    final goals = (_result ?? preview.result).events.where(
+      (e) => e.type == MatchEventType.goal && _reached(e),
+    );
+    final ours = goals
+        .where((e) => e.teamNationId == preview.playerNationId)
+        .length;
     final result = await showInMatchTactics(
       context,
       presets: presets,
@@ -1054,12 +1077,17 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       lineup: _liveLineup,
       instructions: _liveInstructions,
       fullBacks: _liveFullBacks,
+      switches: _liveSwitches,
       pool: _playerPool(preview),
       startingIds: team.xi.map((p) => p.id).toSet(),
       maxSubs: _maxSubsFor(preview),
       takers: _takers ??= (
         penalty: team.penaltyTakerId,
         deadBall: team.deadBallTakerId,
+      ),
+      throwIn: _throwIn ??= (
+        style: team.throwInStyle,
+        taker: team.throwInTakerId,
       ),
       injuredIds: _injuredIds,
       sentOffIds: _sentOffIds(),
@@ -1078,6 +1106,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             : KitColors.discFill(n.primaryColor, n.secondaryColor);
       }(),
       tabletLayout: useTabletLayout(context, ref),
+      assistantTier: assistant,
+      scoreDiff: ours - (goals.length - ours),
+      adviceSeed: _seed(preview) ^ ((preview.fixture.id + 1) * 0x9E3779B1),
+      conditionByPlayer: team.conditionByPlayer,
     );
     if (result != null && mounted) await _applyTactics(preview, result);
     if (wasPlaying && !_clockDone && !_atInterval && !_playing) _togglePlay();
@@ -1148,7 +1180,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       final p = byId[r.lineup[i]];
       if (p == null) continue;
       xi.add(p);
-      slots.add(r.formation.positions[i]);
+      slots.add(r.positions[i]);
     }
     // Take effect from the NEXT minute, never the one just played. A change
     // stamped on the current minute made the re-sim replay that minute with the
@@ -1162,12 +1194,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // updating the lineups display only.
     final minute = _minute + 1;
     final takersChanged = r.takers != _takers;
+    final throwInChanged = r.throwIn != _throwIn;
+    final throwerChanged = r.throwIn.taker != _throwIn?.taker;
     setState(() {
       _liveFormation = r.formation;
       _liveLineup = r.lineup;
       _liveInstructions = r.instructions;
       _liveFullBacks = r.fullBacks;
+      _liveSwitches = r.switches;
       _takers = r.takers;
+      _throwIn = r.throwIn;
       // Any hurt player taken off is no longer flagged as an unaddressed injury.
       _injuredIds.removeWhere((id) => !r.lineup.contains(id));
       _changes.add(
@@ -1177,11 +1213,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           formation: r.formation,
           instructions: r.instructions,
           fullBacks: r.fullBacks,
+          switches: r.switches,
           xi: xi,
           slots: slots,
           // From this minute on, never retroactively: the penalty already
           // taken stays taken by whoever took it.
           takers: takersChanged ? r.takers : null,
+          throwIn: throwInChanged ? r.throwIn : null,
         ),
       );
       _result = _resim(preview);
@@ -1197,6 +1235,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             penalty: r.takers.penalty,
             deadBall: r.takers.deadBall,
           );
+    }
+    // The thrower outlives the match like the other takers. The STYLE does
+    // not: like the dials and the full-backs' arrows, it is a call for this
+    // match, and the team sheet keeps its own.
+    if (throwerChanged) {
+      await ref
+          .read(throwInTakerStoreProvider)
+          .set(widget.careerId, r.throwIn.taker);
     }
   }
 
@@ -1238,6 +1284,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
               formation: _liveFormation,
               instructions: _liveInstructions,
               fullBacks: _liveFullBacks,
+              switches: _liveSwitches,
               lineup: _liveLineup,
               byId: byId,
               teamColors: n == null
@@ -1369,6 +1416,20 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   ? '90+$_added'
                   : '$_minute',
               live: !ft,
+              halfTime: _minute > 45 || ft
+                  ? l.matchHalfTimeScore(
+                      shown
+                          .where((e) => e.type == MatchEventType.goal)
+                          .where((e) => e.minute <= 45)
+                          .where((e) => e.teamNationId == homeId)
+                          .length,
+                      shown
+                          .where((e) => e.type == MatchEventType.goal)
+                          .where((e) => e.minute <= 45)
+                          .where((e) => e.teamNationId != homeId)
+                          .length,
+                    )
+                  : null,
               wholeNames: tablet,
             );
             // The two nations' own colours, pushed apart from each other when

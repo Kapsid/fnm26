@@ -121,6 +121,8 @@ class DriftCareerRepository implements CareerRepository {
       CareersCompanion(
         nationId: Value(nationId),
         captainPlayerId: const Value(null),
+        viceCaptain1PlayerId: const Value(null),
+        viceCaptain2PlayerId: const Value(null),
         staffAssistant: const Value(0),
         staffScout: const Value(0),
         staffFitnessCoach: const Value(0),
@@ -167,6 +169,22 @@ class DriftCareerRepository implements CareerRepository {
   Future<void> setCaptain(int id, int? playerId) async {
     await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
       CareersCompanion(captainPlayerId: Value(playerId)),
+    );
+  }
+
+  @override
+  Future<void> setLeadership(
+    int id, {
+    required int? captain,
+    required int? vice1,
+    required int? vice2,
+  }) async {
+    await (_db.update(_db.careers)..where((t) => t.id.equals(id))).write(
+      CareersCompanion(
+        captainPlayerId: Value(captain),
+        viceCaptain1PlayerId: Value(vice1),
+        viceCaptain2PlayerId: Value(vice2),
+      ),
     );
   }
 

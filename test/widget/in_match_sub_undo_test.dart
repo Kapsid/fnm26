@@ -291,6 +291,10 @@ void main() {
     // row is under the tab that holds the eleven.
     await tester.tap(find.text(l.tacticsTabOnPitch).last);
     await tester.pumpAndSettle();
+    // The picker's list scrolls under the slot's position chips; bring his
+    // row into view before reading it.
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -300));
+    await tester.pumpAndSettle();
     final tile = find.widgetWithText(ListTile, 'Bench12');
     expect(tile, findsOneWidget);
     expect(

@@ -21,6 +21,13 @@ enum CampaignGoal {
   /// across all the campaign's cycles (see `qualifyBothThenTitleStars`).
   qualifyBothThenTitle,
 
+  /// Qualify for a continental championship, qualify for a World
+  /// Championship, win the World Championship: one star each, the highest
+  /// reached counts, across all the campaign's cycles (see
+  /// `qualifyBothThenWorldTitleStars`). Unlike [qualifyBothThenTitle], a
+  /// continental title is no third star: only the world title is.
+  qualifyBothThenWorldTitle,
+
   /// Win the continental championship; then the World Championship too; then
   /// the confederation's Nations Cup as well, all in the campaign's one
   /// cycle. The stars nest: each needs every title before it (see
@@ -214,8 +221,31 @@ abstract final class Campaigns {
     rngSeed: 212,
   );
 
+  /// Zanzibar Rising: Zanzibar, a nation the world does not have, takes
+  /// Chad's place in Africa for 25 cycles, from near the bottom of the world
+  /// ranking (Chad's 181st). Built the way A Greenland Century was: its
+  /// players come through the same youth pyramid, newgens and aging as any
+  /// nation's, from its own stored pool. Pro, and a settled run may be moved
+  /// into the saves (one minnow swapped for another). The stars are
+  /// qualify for an African Championship, qualify for a World Championship,
+  /// win the World Championship. Seed 213, the first searched, keeps
+  /// Zanzibar from hosting either championship in all 25 cycles and draws it
+  /// into an African qualifying group of six (campaign_seeds_test.dart).
+  /// Zanzibar's strength was tuned on the lab (campaign_lab_test.dart).
+  static const zanzibar = CampaignDef(
+    id: 'zanzibar',
+    nationId: 213, // DormantNations.zanzibarId
+    dormantNationId: 213,
+    goal: CampaignGoal.qualifyBothThenWorldTitle,
+    cycles: 25,
+    needsPro: true,
+    difficulty: CampaignDifficulty.hard,
+    rngSeed: 213,
+  );
+
   /// Finish the Legacy: Spain, the reigning European champions in the
-  /// seeded history (the 2024 edition), for one cycle. Win the European
+  /// seeded history (the 2024 edition), for one cycle. Free, as a one-cycle
+  /// run. Win the European
   /// Championship again; then the World Championship too; then the Nations
   /// Cup as well. One cycle holds all three for Europe: the European
   /// Championship in June of the World Championship year minus two, the
@@ -229,7 +259,7 @@ abstract final class Campaigns {
     nationId: 50, // Spain
     goal: CampaignGoal.titleTreble,
     cycles: 1,
-    needsPro: true,
+    needsPro: false,
     difficulty: CampaignDifficulty.hard,
     rngSeed: 2024,
   );
@@ -241,6 +271,7 @@ abstract final class Campaigns {
     guineas,
     youngFinns,
     greenland,
+    zanzibar,
   ];
 
   static CampaignDef? byId(String id) {

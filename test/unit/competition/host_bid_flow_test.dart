@@ -447,25 +447,27 @@ void main() {
     },
   );
 
-  test('a campaign run is never offered a bid: A Greenland Century', () async {
-    final c = storyContainer();
-    addTearDown(c.dispose);
-    final d = await StoryDriver.startCampaign(c, Campaigns.greenland);
-    final id = d.careerId;
-    final comp = c.read(competitionRepositoryProvider);
-    Future<List<HostBidStatus>> statuses() {
-      c.invalidate(hostBidStatusProvider);
-      return c.read(
-        hostBidStatusProvider((careerId: id, nationId: null)).future,
-      );
-    }
+  for (final def in [Campaigns.greenland, Campaigns.zanzibar]) {
+    test('a campaign run is never offered a bid: ${def.id}', () async {
+      final c = storyContainer();
+      addTearDown(c.dispose);
+      final d = await StoryDriver.startCampaign(c, def);
+      final id = d.careerId;
+      final comp = c.read(competitionRepositoryProvider);
+      Future<List<HostBidStatus>> statuses() {
+        c.invalidate(hostBidStatusProvider);
+        return c.read(
+          hostBidStatusProvider((careerId: id, nationId: null)).future,
+        );
+      }
 
-    expect(await statuses(), isEmpty);
-    // It is the campaign that bars it: moved into the saves, the card is
-    // there.
-    await comp.markDrawWatched(id, 0, campaignMovedKind);
-    expect(await statuses(), isNotEmpty);
-  });
+      expect(await statuses(), isEmpty);
+      // It is the campaign that bars it: moved into the saves, the card is
+      // there.
+      await comp.markDrawWatched(id, 0, campaignMovedKind);
+      expect(await statuses(), isNotEmpty);
+    });
+  }
 
   test('turning it down: asked no more, nothing spent', () async {
     final seed = _seedWhere((s) => _wouldWin(s, 1) != null, true);

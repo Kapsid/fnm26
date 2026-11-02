@@ -33,11 +33,23 @@ import 'driver.dart';
 /// replays Greenland's squad at another attribute factor and LAB_ENGAGED=1
 /// plays an engaged manager (both driver.dart). Its strength is Greenland's
 /// attribute factor (lib/data/seed/dormant_seed.dart).
+/// Zanzibar Rising (hard, 25 cycles): qualify for an African Championship,
+/// then a World Championship, then win the World Championship. As long as
+/// Greenland's, so LAB_MAX_CYCLES serves it too; LAB_ZANZIBAR_FACTOR replays
+/// Zanzibar's squad at another factor on Chad's attributes (driver.dart).
+/// Its strength is Zanzibar's attribute factor (dormant_seed.dart).
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final runs = int.parse(Platform.environment['LAB_RUNS'] ?? '0');
   final only = Platform.environment['LAB_CAMPAIGNS']?.split(',').toSet();
   final maxCycles = int.tryParse(Platform.environment['LAB_MAX_CYCLES'] ?? '');
+  // LAB_SALT_OFFSET=n starts the match salts at n + 1, so a long lab can run
+  // in batches without replaying the same runs.
+  final saltOffset =
+      int.tryParse(
+        Platform.environment['LAB_SALT_OFFSET'] ?? '',
+      ) ??
+      0;
   final defs = [
     for (final d in Campaigns.all)
       if (only == null || only.contains(d.id)) d,
@@ -51,12 +63,12 @@ void main() {
         watch.start();
         final run = Stopwatch()..start();
         // Salt 0 is the bare fixture seed; start at 1 so every run is salted.
-        final c = storyContainer(null, i + 1);
+        final c = storyContainer(null, saltOffset + i + 1);
         addTearDown(c.dispose);
         final d = await StoryDriver.startCampaign(c, def);
         CampaignProgress? verdict;
-        // The nation's place among Europe's sides in the world ranking, and
-        // its squad rating, at the end of every cycle.
+        // The nation's place among its confederation's sides in the world
+        // ranking, and its squad rating, at the end of every cycle.
         final euroRanks = <int>[];
         final ratings = <int>[];
         d.beforeEvent = (e) async {
@@ -65,9 +77,17 @@ void main() {
               ..invalidate(worldRankingProvider(d.careerId))
               ..invalidate(hubDataProvider(d.careerId));
             final r = (await c.read(worldRankingProvider(d.careerId).future))!;
+            // Among its own confederation's sides (Europe's for the
+            // European campaigns, Africa's for Zanzibar).
+            final conf =
+                r.nations
+                    .where((n) => n.id == def.nationId)
+                    .firstOrNull
+                    ?.confederation ??
+                Confederation.europe;
             final europe = [
               for (final n in r.nations)
-                if (n.confederation == Confederation.europe) n.id,
+                if (n.confederation == conf) n.id,
             ];
             euroRanks.add(europe.indexOf(def.nationId) + 1);
             ratings.add(
@@ -95,11 +115,14 @@ void main() {
         }
         final v = verdict;
         if (v == null) throw StateError('no verdict');
-        stars.add(v.stars);
+        // Cut short by LAB_MAX_CYCLES, a run has no verdict yet: the grade
+        // it stands at is what counts.
+        stars.add(maxCycles != null && !v.settled ? v.reached : v.stars);
         watch.stop();
         // ignore: avoid_print
         print(
-          'LAB ${def.id} run=$i stars=${v.stars} ordinal=${v.ordinal} '
+          'LAB ${def.id} run=${saltOffset + i} stars=${v.stars} '
+          'reached=${v.reached} ordinal=${v.ordinal} '
           'pos=${v.myPosition} rivalPos=${v.rivalPosition} '
           'gdGap=${v.goalDifferenceGap} '
           'rivalWins=${v.rivalWins}/${v.rivalMatchesPlayed} '

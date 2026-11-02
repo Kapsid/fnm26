@@ -37,6 +37,10 @@ void main() {
     YTemplate.drewShame,
     YTemplate.winEuphoric,
     YTemplate.drewGiant,
+    YTemplate.qualifiedEuphoric,
+    YTemplate.knockoutEuphoric,
+    YTemplate.trophyEuphoric,
+    YTemplate.exitHeartbreak,
   ];
 
   const nation = 'Bosnia and Herzegovina';
@@ -52,6 +56,11 @@ void main() {
     YTemplate.neutralWin ||
     YTemplate.neutralLoss => const [nation, opponent, '10–0'],
     YTemplate.scorerHero => const [player, opponent],
+    YTemplate.knockoutEuphoric => const [opponent],
+    // The longest championship name the game writes.
+    YTemplate.qualifiedEuphoric ||
+    YTemplate.trophyEuphoric ||
+    YTemplate.exitHeartbreak => const ['Intercontinental Play-off'],
     _ => const [opponent, '10–0'],
   };
 

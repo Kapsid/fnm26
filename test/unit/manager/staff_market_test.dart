@@ -151,4 +151,44 @@ void main() {
       expect(c.country, 'ita');
     }
   });
+
+  test('the basic applicant is mostly local; good and elite never move', () {
+    const pool = {
+      'cze': ['Jan Novák', 'Petr Svoboda', 'Tomáš Dvořák'],
+      'ita': ['Marco Rossi', 'Luca Bianchi'],
+      'esp': ['Javier López', 'Diego García'],
+      'fra': ['Hugo Martin', 'Lucas Bernard'],
+    };
+    var local = 0;
+    var total = 0;
+    for (var seed = 1; seed <= 100; seed++) {
+      for (final role in StaffRole.values) {
+        final before = StaffMarket.forRole(
+          saveSeed: seed,
+          cycle: 2,
+          role: role,
+          namePool: pool,
+        );
+        final now = StaffMarket.forRole(
+          saveSeed: seed,
+          cycle: 2,
+          role: role,
+          namePool: pool,
+          home: 'cze',
+        );
+        for (var i = 0; i < now.length; i++) {
+          if (now[i].tier == StaffTier.basic) {
+            total++;
+            if (now[i].country == 'cze') local++;
+          } else {
+            expect(now[i], before[i]);
+          }
+          expect(now[i].id, before[i].id);
+        }
+      }
+    }
+    // 75% by design, plus the quarter drawn at random that lands home anyway.
+    expect(local / total, greaterThan(0.7));
+    expect(local / total, lessThan(0.95));
+  });
 }

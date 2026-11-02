@@ -53,6 +53,9 @@ typedef CycleObjective = ({
   /// A minnow's Nations Cup brief to finish above the bottom of a group with
   /// no relegation from it (see [ObjectiveOutcome.offTheBottom]).
   bool offTheBottom,
+
+  /// A weak side's graded qualifying brief (see [ObjectiveOutcome.graded]).
+  bool graded,
 });
 
 /// The same expectation, WITHOUT any localised wording: the tournament, the
@@ -85,6 +88,12 @@ typedef ObjectiveOutcome = ({
   /// relegation". Only a minnow's brief is ever one (see
   /// [minnowNationsCupTarget]); every other brief reads false.
   bool offTheBottom,
+
+  /// Whether this is a weak side's GRADED qualifying brief (see
+  /// [gradedQualifyingTarget]): target 1, the top half of the qualifying
+  /// group, with qualifying itself beating it. Worded as a challenge for a
+  /// place rather than as the plain qualifying-campaign brief.
+  bool graded,
 });
 
 /// The board's demand for a target ordinal in [tier], worded for the manager.
@@ -99,12 +108,14 @@ String objectiveDemandText(
   int target, {
   String? competition,
   bool offTheBottom = false,
+  bool graded = false,
 }) => _labelFor(
   l,
   tier,
   target,
   competition: competition,
   offTheBottom: offTheBottom,
+  graded: graded,
 );
 
 /// The same demand WITHOUT the words: which string it is, so the board's
@@ -119,6 +130,7 @@ MsgKey objectiveDemandKey(
   int target, {
   String? competition,
   bool offTheBottom = false,
+  bool graded = false,
 }) {
   if (tier == TournamentTier.nationsCup && offTheBottom && target == 2) {
     return MsgKey.objectiveNcOffTheBottom;
@@ -142,6 +154,7 @@ MsgKey objectiveDemandKey(
       _ => MsgKey.objectiveNcSurvive,
     };
   }
+  if (graded && target == 1) return MsgKey.objectiveQualifyingChallenge;
   return switch (target) {
     7 => MsgKey.objectiveWinTournament,
     6 => MsgKey.objectiveReachFinal,
@@ -298,6 +311,15 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
           )
       ? boardMinnowFactor(baseline, nations, career.nationId)
       : 0.0;
+  // A weak side's graded qualifying briefs, for a cycle opened under the
+  // 1.0.9 rules (see [briefRulesV4Kind]).
+  final v4 =
+      v2 &&
+      await comp.hasWatchedDraw(
+        careerId,
+        career.cyclePointer,
+        briefRulesV4Kind,
+      );
   // THIS cycle's fixtures only. Reading the nation's whole history meant a
   // manager who once reached a World Cup semi-final was still credited with it
   // four, eight and twelve years later: every objective read as met the moment
@@ -319,13 +341,23 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       conf,
       career.nationId,
     );
-    final target = v2
+    final usual = v2
         ? continentalObjectiveTarget(
             continentalRank,
             cupSize: cup.size,
             confederationSize: _sizeOf(nations, conf),
           )
         : _continentalTargetBefore106(continentalRank);
+    // A cup with no qualifying campaign (the whole confederation plays it)
+    // has no group to grade a weak side on.
+    final brief = v4 && cup.qualifying
+        ? gradedQualifyingTarget(
+            usual,
+            confederationRank: continentalRank,
+            places: cup.size,
+          )
+        : (target: usual, graded: false);
+    final target = brief.target;
     final run = await continentalRun(
       comp: comp,
       careerId: careerId,
@@ -354,6 +386,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
         met: decided && actual >= target,
         actual: actual,
         offTheBottom: false,
+        graded: brief.graded,
       ));
     }
   }
@@ -453,12 +486,13 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       met: decided && actual >= target,
       actual: actual,
       offTheBottom: noDrop && target == 2 && target < usual,
+      graded: false,
     ));
   }
 
   // --- The World Cup ---------------------------------------------------------
   final champion = await comp.worldChampion(careerId);
-  final wcTarget = !v2
+  final wcUsual = !v2
       ? _worldTargetBefore106(worldRank)
       : me == null
       ? worldObjectiveTarget(
@@ -478,6 +512,21 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
           confederation: me.confederation,
           confederationSize: _sizeOf(nations, me.confederation),
         );
+  final wcBrief = v4 && me != null
+      ? gradedQualifyingTarget(
+          wcUsual,
+          confederationRank: _rankWithin(
+            baseline,
+            nations,
+            me.confederation,
+            me.id,
+          ),
+          places: QualificationFormat.forConfederation(
+            me.confederation,
+          ).finalsBerths,
+        )
+      : (target: wcUsual, graded: false);
+  final wcTarget = wcBrief.target;
   var wcActual = _finishOrdinal(fixtures, career.nationId);
   if (wcActual == 0) {
     wcActual = await _qualifyingOrdinal(
@@ -507,6 +556,7 @@ cycleObjectiveOutcomesProvider = FutureProvider.autoDispose.family<List<Objectiv
       met: wcDecided && wcActual >= wcTarget,
       actual: wcActual,
       offTheBottom: false,
+      graded: wcBrief.graded,
     ));
   }
 
@@ -547,6 +597,7 @@ cycleObjectivesProvider = FutureProvider.autoDispose
               o.target,
               competition: o.competition,
               offTheBottom: o.offTheBottom,
+              graded: o.graded,
             ),
             target: o.target,
             decided: o.decided,
@@ -560,6 +611,7 @@ cycleObjectivesProvider = FutureProvider.autoDispose
               offTheBottom: o.offTheBottom,
             ),
             offTheBottom: o.offTheBottom,
+            graded: o.graded,
           ),
       ];
     });
@@ -868,6 +920,37 @@ const briefRulesV2Kind = 'briefRules2';
 /// the brief it opened with until it ends.
 const briefRulesV3Kind = 'briefRules3';
 
+/// Marks a cycle opened by 1.0.9 or later, whose weak sides get a GRADED
+/// qualifying brief (see [gradedQualifyingTarget]). Written beside
+/// [briefRulesV3Kind]; a cycle already under way when a save is updated keeps
+/// the brief it opened with until it ends.
+const briefRulesV4Kind = 'briefRules4';
+
+/// Whether a side at [confederationRank] is weak for a competition its
+/// confederation has [places] in: ranked in roughly the bottom third of those
+/// places, or below them. With Europe's 24 European Championship places that
+/// is 17th and below; with its 16 World Championship places, 12th and below.
+bool weakForPlaces(int confederationRank, int places) =>
+    confederationRank > (places * 2 / 3).round();
+
+/// A weak side's GRADED qualifying brief (see [weakForPlaces]): where the
+/// board would ask it to qualify (2), it asks for the top half of the
+/// qualifying group (1) instead, and qualifying beats the brief (the board
+/// rewards over-achievement, see `BoardSatisfaction.objectiveSwing`).
+///
+/// Czechia, 24th of Europe's 53, was told to qualify for a 24-team European
+/// Championship: a coin flip set as the board's base expectation, and missing
+/// it cost a full "qualify" miss. Every other brief is unchanged: a side
+/// asked for more than qualifying is no weak side, and one ranked outside the
+/// places keeps the qualifying-campaign brief (or none) it had.
+({int target, bool graded}) gradedQualifyingTarget(
+  int usual, {
+  required int confederationRank,
+  required int places,
+}) => usual == 2 && weakForPlaces(confederationRank, places)
+    ? (target: 1, graded: true)
+    : (target: usual, graded: false);
+
 /// How much of a minnow [nationId] is (see [BoardSatisfaction.minnowFactor]),
 /// from the cycle-start ranking [baseline] the briefs are set from.
 double boardMinnowFactor(
@@ -1014,13 +1097,13 @@ int _sizeOf(List<Nation> nations, Confederation conf) =>
 ///
 /// The first cycle's baseline is the static seed ranking (cycle 0 is never
 /// snapshotted; see `seedRankByIdProvider`), so these are exactly the targets
-/// [cycleObjectiveOutcomesProvider] sets once the career starts. The tablet's
+/// [cycleObjectiveOutcomesProvider] sets once the career starts (a new career
+/// opens under every brief rule, [briefRulesV4Kind] included). The tablet's
 /// nation preview states them. `continental` is null for a confederation with
-/// no continental championship.
-({int? world, int? continental}) openingObjectiveTargets(
-  Nation nation,
-  List<Nation> nations,
-) {
+/// no continental championship; the `Graded` flags mark a weak side's graded
+/// qualifying brief (see [gradedQualifyingTarget]).
+({int? world, int? continental, bool worldGraded, bool continentalGraded})
+openingObjectiveTargets(Nation nation, List<Nation> nations) {
   final baseline = {for (final n in nations) n.id: n.ranking};
   final cup = ContinentalCups.byConfederation[nation.confederation];
   final confRank = _rankWithin(
@@ -1030,23 +1113,38 @@ int _sizeOf(List<Nation> nations, Confederation conf) =>
     nation.id,
   );
   final size = _sizeOf(nations, nation.confederation);
-  final world = worldObjectiveTarget(
-    worldRank: baseline[nation.id] ?? 50,
+  final world = gradedQualifyingTarget(
+    worldObjectiveTarget(
+      worldRank: baseline[nation.id] ?? 50,
+      confederationRank: confRank,
+      confederation: nation.confederation,
+      confederationSize: size,
+    ),
     confederationRank: confRank,
-    confederation: nation.confederation,
-    confederationSize: size,
+    places: QualificationFormat.forConfederation(
+      nation.confederation,
+    ).finalsBerths,
   );
-  final continental = cup == null
+  final usualContinental = cup == null
       ? 0
       : continentalObjectiveTarget(
           confRank,
           cupSize: cup.size,
           confederationSize: size,
         );
+  final continental = cup != null && cup.qualifying
+      ? gradedQualifyingTarget(
+          usualContinental,
+          confederationRank: confRank,
+          places: cup.size,
+        )
+      : (target: usualContinental, graded: false);
   // Null where the board sets no brief (see [worldObjectiveTarget]).
   return (
-    world: world > 0 ? world : null,
-    continental: continental > 0 ? continental : null,
+    world: world.target > 0 ? world.target : null,
+    continental: continental.target > 0 ? continental.target : null,
+    worldGraded: world.graded,
+    continentalGraded: continental.graded,
   );
 }
 
@@ -1206,6 +1304,7 @@ String _labelFor(
   int target, {
   String? competition,
   bool offTheBottom = false,
+  bool graded = false,
 }) => renderMsgKey(
   l,
   MsgText(
@@ -1214,6 +1313,7 @@ String _labelFor(
       target,
       competition: competition,
       offTheBottom: offTheBottom,
+      graded: graded,
     ),
   ),
 );

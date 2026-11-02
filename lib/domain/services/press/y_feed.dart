@@ -274,12 +274,27 @@ enum YTemplate {
   streamerSentHome,
   streamerKept,
 
+  /// The federation has signed a dubious general sponsor (see `Sponsors`):
+  /// the wire has it, a fan after.
+  sponsorDubious,
+
+  /// The room on the dubious sponsor: the one who says money is money, the
+  /// dry and the appalled.
+  sponsorMocked,
+
   /// Czech-only cameos (see [YFeed.czechCameos]). The copy exists in every
   /// language, as the copy file requires, but only a Czech feed posts them.
   cameoUjfaloci,
   cameoHavir,
   cameoLzimberskyHome,
   cameoLzimberskyKept,
+
+  /// The Czech feed's regulars under a result (see [YFeed.withRegulars]):
+  /// Mařena after a hammering, KudyChodíKrálík after a defeat, and POŠUK
+  /// shouting now and then under any result.
+  cameoMarena,
+  cameoKralik,
+  cameoPosuk,
 
   /// A shock win over a side far above us (see [YFeed.isGiantKilling]): not
   /// a good result but the night of a generation, and the stands euphoric.
@@ -289,6 +304,28 @@ enum YTemplate {
   /// A draw with a side far above us: a point the whole country is proud
   /// of, louder than [drewHeroic]'s "a point earned".
   drewGiant,
+
+  /// A place at a finals nobody expected us to book (see
+  /// `YTournaments.qualifiedAgainstTheOdds`): the fans beside themselves,
+  /// naming the championship. Owner's feedback: qualifying drew the same
+  /// tame line whether a favourite strolled it or a minnow did the
+  /// impossible.
+  qualifiedEuphoric,
+
+  /// A knockout tie won at a finals when we were not the heavy favourite:
+  /// the dream goes on.
+  knockoutEuphoric,
+
+  /// A title won: the night of a lifetime, naming the championship.
+  trophyEuphoric,
+
+  /// Out early from a finals we were expected to go far in (see
+  /// `YTournaments.painfulExit`): heartbroken rather than angry.
+  exitHeartbreak,
+
+  /// A pundit's call before a finals tournament: the favourite and a dark
+  /// horse (see `PunditPredictions`).
+  punditPick,
 }
 
 /// What the feed remembers when it writes about a match.
@@ -530,11 +567,17 @@ abstract final class YFeed {
   /// @IShowSlowness: three bursts per moment.
   static const int streamerVariantCount = 3;
 
+  /// A dubious sponsor's story: three wordings, one to a tone band.
+  static const int sponsorVariantCount = 3;
+
   /// Ivan Havíř's lines; the first is his signature.
   static const int havirVariantCount = 8;
 
   /// Pitomo Lžimberský's lines, per decision.
   static const int lzimberskyVariantCount = 5;
+
+  /// POŠUK's shouts.
+  static const int posukVariantCount = 3;
 
   /// How many phrasings [t] has.
   ///
@@ -558,6 +601,11 @@ abstract final class YFeed {
     YTemplate.drewShame ||
     YTemplate.winEuphoric ||
     YTemplate.drewGiant => bigMidVariantCount,
+    YTemplate.qualifiedEuphoric ||
+    YTemplate.knockoutEuphoric ||
+    YTemplate.trophyEuphoric => euphoricVariantCount,
+    YTemplate.exitHeartbreak => heartbreakVariantCount,
+    YTemplate.punditPick => punditVariantCount,
     YTemplate.winShootout ||
     YTemplate.upsetGap ||
     YTemplate.eatWords ||
@@ -594,7 +642,10 @@ abstract final class YFeed {
     // The decision, banded: the loyalist who backs the call and the cynic who
     // calls it a cover-up need a pair each.
     YTemplate.scandalSentHome ||
-    YTemplate.scandalKept => subjectVariantCount,
+    YTemplate.scandalKept ||
+    // The room on a dubious sponsor, banded: a pair a disposition.
+    YTemplate.sponsorMocked => subjectVariantCount,
+    YTemplate.sponsorDubious => sponsorVariantCount,
     YTemplate.scandalParty ||
     YTemplate.scandalCurfew ||
     YTemplate.scandalNightclub ||
@@ -607,8 +658,43 @@ abstract final class YFeed {
     YTemplate.cameoHavir => havirVariantCount,
     YTemplate.cameoLzimberskyHome ||
     YTemplate.cameoLzimberskyKept => lzimberskyVariantCount,
+    // The owner's lines, verbatim: one each, and POŠUK's three shouts.
+    YTemplate.cameoMarena || YTemplate.cameoKralik => 1,
+    YTemplate.cameoPosuk => posukVariantCount,
     _ => variantCount,
   };
+
+  /// How many phrasings a euphoric post has: three per tone band, so the
+  /// cynic who cannot help himself has as many lines as the believer.
+  static const int euphoricVariantCount = 9;
+
+  /// And a heartbroken one: two per band.
+  static const int heartbreakVariantCount = 6;
+
+  /// And a pundit's call before a tournament: two per band.
+  static const int punditVariantCount = 6;
+
+  /// How much a side may have been expected to win a knockout tie and still
+  /// have its fans lose their minds over winning it (see [Expectation.of]):
+  /// about thirty places of ranking. A giant beating a minnow in a last
+  /// sixteen is the job, not a dream.
+  static const double euphoricKnockoutBelow = 0.5;
+
+  /// Whether a knockout win at a finals is one the fans lose their minds
+  /// over: a decisive or shoot-out win in a finals knockout tie or final,
+  /// when we were not the heavy favourite.
+  static bool isEuphoricKnockout(YMatch m) {
+    if (m.stakes != YStakes.knockout && m.stakes != YStakes.trophyFinal) {
+      return false;
+    }
+    final won = m.scored > m.conceded || (m.shootoutWon ?? false);
+    if (!won) return false;
+    return Expectation.of(
+          nationRank: m.nationRank,
+          opponentRank: m.opponentRank,
+        ) <
+        euphoricKnockoutBelow;
+  }
 
   /// How many phrasings a REPLY has.
   ///
@@ -1240,9 +1326,16 @@ abstract final class YFeed {
         : null;
 
     // The result itself, in as many voices as the occasion deserves.
+    // A knockout tie won at a finals is a night the fans lose their minds
+    // over, unless we were expected to stroll it. A giant killing already
+    // has euphoric words of its own.
+    final euphoric = template != YTemplate.winEuphoric && isEuphoricKnockout(m);
     final candidates = <(YVoice, YTemplate, List<String>)>[
       (YVoice.stats, template, line),
-      if (heat >= 1) (YVoice.fan, template, line),
+      if (euphoric)
+        (YVoice.fan, YTemplate.knockoutEuphoric, [m.opponent])
+      else if (heat >= 1)
+        (YVoice.fan, template, line),
       if (heat >= 2) (YVoice.pundit, template, line),
       // The rival does not post the result: every result line is written as
       // one of ours ("we did not lay a glove on them"), so he gloats in the
@@ -1503,6 +1596,13 @@ abstract final class YFeed {
     required String key,
     required String nation,
     required int seed,
+
+    /// What the fan posts in place of `template`, and in what tone, when the
+    /// occasion is bigger than its template (see [forMilestone]). The room
+    /// then answers in `mood` rather than the template's own.
+    YTemplate? fanTemplate,
+    YTone fanTone = YTone.neutral,
+    YMood? mood,
   }) {
     // The wire breaks it, the fans react, and — for the events that matter —
     // the ex-pro has a column to fill.
@@ -1518,12 +1618,13 @@ abstract final class YFeed {
       ),
       _post(
         voice: YVoice.fan,
-        template: template,
+        template: fanTemplate ?? template,
         args: args,
         date: date,
         key: key,
         nation: nation,
         seed: seed,
+        tone: fanTone,
       ),
       if (_bigEvents.contains(template))
         _post(
@@ -1540,10 +1641,101 @@ abstract final class YFeed {
       ...posts,
       ...repliesTo(
         posts.first,
-        mood: moodOf(template),
+        mood: mood ?? moodOf(template),
         nation: nation,
         seed: seed,
       ),
+    ]);
+  }
+
+  /// The posts a tournament milestone draws: [forEvent], with the fans losing
+  /// their minds when the moment deserves it.
+  ///
+  /// A title always does. A place booked does when nobody expected it
+  /// ([againstTheOdds], see `YTournaments.qualifiedAgainstTheOdds`); an exit
+  /// breaks hearts rather than tempers when the side was expected to go far
+  /// ([painful], see `YTournaments.painfulExit`). The fan who says so is
+  /// worded by who he is, as on a match (tone follows the speaker): the cynic
+  /// cannot help himself, the believer always knew. [history] is the run as
+  /// it stood on the day.
+  static List<YPost> forMilestone(
+    YMilestone m, {
+    required String nation,
+    required int seed,
+    bool againstTheOdds = false,
+    bool painful = false,
+    List<ResultStanding> history = const [],
+  }) {
+    final (fanTemplate, standing) = switch (m.template) {
+      YTemplate.trophy => (YTemplate.trophyEuphoric, ResultStanding.heroic),
+      YTemplate.qualified when againstTheOdds => (
+        YTemplate.qualifiedEuphoric,
+        ResultStanding.heroic,
+      ),
+      YTemplate.eliminated when painful => (
+        YTemplate.exitHeartbreak,
+        ResultStanding.poor,
+      ),
+      _ => (null, ResultStanding.par),
+    };
+    if (fanTemplate == null) {
+      return forEvent(
+        template: m.template,
+        args: m.args,
+        date: m.date,
+        key: m.key,
+        nation: nation,
+        seed: seed,
+      );
+    }
+    final fan = personaFor(YVoice.fan, nation, seed, m.key);
+    return forEvent(
+      template: m.template,
+      args: m.args,
+      date: m.date,
+      key: m.key,
+      nation: nation,
+      seed: seed,
+      fanTemplate: fanTemplate,
+      fanTone: YCast.toneFor(fan, standing, YCast.stance(fan, history)),
+      mood: moodOf(fanTemplate),
+    );
+  }
+
+  /// The pundits' call before a finals tournament, on Y: the nation's pundit
+  /// and its former international, each naming the favourite and a dark
+  /// horse for [competition], worded by who they are (tone follows the
+  /// speaker). The same call the inbox piece makes, read off its key.
+  static List<YPost> forPundits({
+    required String competition,
+    required String favourite,
+    required String darkHorse,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    List<ResultStanding> history = const [],
+  }) {
+    return distinctWording([
+      for (final voice in const [YVoice.pundit, YVoice.expro])
+        () {
+          final persona = personaFor(voice, nation, seed, key);
+          return _post(
+            voice: voice,
+            template: YTemplate.punditPick,
+            args: [competition, favourite, darkHorse],
+            date: date,
+            key: key,
+            nation: nation,
+            seed: seed,
+            tone: YCast.toneFor(
+              persona,
+              ResultStanding.par,
+              YCast.stance(persona, history),
+            ),
+            as: persona,
+          );
+        }(),
     ]);
   }
 
@@ -2006,6 +2198,10 @@ abstract final class YFeed {
     YTemplate.runnerUp,
     YTemplate.eliminated,
     YTemplate.qualified,
+    YTemplate.qualifiedEuphoric,
+    YTemplate.trophyEuphoric,
+    YTemplate.exitHeartbreak,
+    YTemplate.punditPick,
     YTemplate.groupDrawn,
     YTemplate.hostNamed,
     YTemplate.tournamentSoon,
@@ -2226,6 +2422,12 @@ abstract final class YFeed {
     YTemplate.scorerHero => YMood.elation,
     YTemplate.drewHeroic => YMood.relief,
     YTemplate.winEuphoric || YTemplate.drewGiant => YMood.elation,
+    YTemplate.qualifiedEuphoric ||
+    YTemplate.knockoutEuphoric ||
+    YTemplate.trophyEuphoric => YMood.elation,
+    YTemplate.exitHeartbreak => YMood.despair,
+    // A prediction is anticipation, like a final looming: nerves.
+    YTemplate.punditPick => YMood.relief,
     // Our supporters are not sorry for theirs, and enjoy a critic being wrong.
     YTemplate.eatWords || YTemplate.awayFansWin => YMood.smugness,
     YTemplate.lostShock ||
@@ -2270,6 +2472,8 @@ abstract final class YFeed {
     YTemplate.statementBroken => YMood.fury,
     YTemplate.fansProtest => YMood.fury,
     YTemplate.fansSellOut => YMood.elation,
+    // Selling the shirt to a joke of a brand: the room laughing at its own.
+    YTemplate.sponsorDubious || YTemplate.sponsorMocked => YMood.despair,
     // A night out in the papers is the room turning on one of its own; a man
     // sent home for it is a relief, a man kept is the fury again.
     YTemplate.scandalParty ||
@@ -2285,7 +2489,10 @@ abstract final class YFeed {
     YTemplate.cameoUjfaloci ||
     YTemplate.cameoHavir ||
     YTemplate.cameoLzimberskyHome ||
-    YTemplate.cameoLzimberskyKept => YMood.shrug,
+    YTemplate.cameoLzimberskyKept ||
+    YTemplate.cameoMarena ||
+    YTemplate.cameoKralik ||
+    YTemplate.cameoPosuk => YMood.shrug,
     YTemplate.legendRetires => YMood.shrug,
     // A repeat is read by what it repeats: being done over by the same side
     // again is fury, and a familiar bad afternoon is weariness.
@@ -2332,6 +2539,30 @@ abstract final class YFeed {
     trait: YTrait.contrarian,
   );
 
+  /// Mařena: sure she could do the job herself, after a hammering. Czech
+  /// feed only (see [withRegulars]).
+  static const YPersona marenaPersona = (
+    handle: '@Marena',
+    displayName: 'Mařena',
+    trait: YTrait.cynic,
+  );
+
+  /// KudyChodíKrálík: a crisp brand's account that turns every defeat into
+  /// an advert. Czech feed only (see [withRegulars]).
+  static const YPersona kralikPersona = (
+    handle: '@KudyChodiKralik',
+    displayName: 'KudyChodíKrálík',
+    trait: YTrait.contrarian,
+  );
+
+  /// POŠUK: shouts nonsense in capitals under a result now and then. Czech
+  /// feed only (see [withRegulars]).
+  static const YPersona posukPersona = (
+    handle: '@POSUK',
+    displayName: 'POŠUK',
+    trait: YTrait.doomer,
+  );
+
   /// The accounts only a Czech feed has.
   ///
   /// Owner-requested cameos, Czech in-jokes that would mean nothing anywhere
@@ -2342,6 +2573,9 @@ abstract final class YFeed {
     ujfalociPersona,
     havirPersona,
     lzimberskyPersona,
+    marenaPersona,
+    kralikPersona,
+    posukPersona,
   ];
 
   /// The template a scandal of [kind] breaks with.
@@ -2359,6 +2593,64 @@ abstract final class YFeed {
     YTemplate.scandalNightclub,
     YTemplate.scandalCasino,
   };
+
+  /// What the country says when the federation signs a dubious general
+  /// sponsor (the risky deal of `Sponsors`): the wire has the story and a fan
+  /// after, then the room piles in under it, the rival enjoying it most.
+  /// [brand] is the brand's name as the manager reads it.
+  static List<YPost> forSponsor({
+    required String brand,
+    required DateTime date,
+    required String key,
+    required String nation,
+    required int seed,
+    ResultStanding standing = ResultStanding.par,
+    List<ResultStanding> history = const [],
+  }) {
+    YTone toneOf(YVoice voice) {
+      final persona = personaFor(voice, nation, seed, key);
+      return YCast.toneFor(persona, standing, YCast.stance(persona, history));
+    }
+
+    final roots = distinctWording([
+      _post(
+        voice: YVoice.breaking,
+        template: YTemplate.sponsorDubious,
+        args: [brand],
+        date: date,
+        key: key,
+        nation: nation,
+        seed: seed,
+      ),
+      _post(
+        voice: YVoice.fan,
+        template: YTemplate.sponsorDubious,
+        args: [brand],
+        date: date,
+        key: key,
+        nation: nation,
+        seed: seed,
+        tone: toneOf(YVoice.fan),
+      ),
+    ]);
+    final story = roots.first;
+    final replies = distinctWording([
+      for (final voice in const [YVoice.fan, YVoice.expro, YVoice.rival])
+        _post(
+          voice: voice,
+          template: YTemplate.sponsorMocked,
+          args: [brand],
+          date: date,
+          key: '$key|re',
+          nation: nation,
+          seed: seed,
+          replyTo: story.key,
+          // The rival has been waiting for this one: sour.
+          tone: voice == YVoice.rival ? YTone.sour : toneOf(voice),
+        ),
+    ]);
+    return [...roots, ...replies];
+  }
 
   /// What the country says about a camp scandal: the story breaking, and,
   /// once the manager has answered ([choice]), the room on what he did.
@@ -2621,6 +2913,137 @@ abstract final class YFeed {
         ),
       );
     }
+    return out;
+  }
+
+  /// The headline of a match: what [classify] can call a result. The first
+  /// post of every match carries one (see [forMatch]).
+  static const Set<YTemplate> resultTemplates = {
+    YTemplate.winShootout,
+    YTemplate.winEuphoric,
+    YTemplate.winUpset,
+    YTemplate.winRout,
+    YTemplate.winTight,
+    YTemplate.winRoutine,
+    YTemplate.drewGiant,
+    YTemplate.drewHeroic,
+    YTemplate.drewShame,
+    YTemplate.drew,
+    ...defeatTemplates,
+  };
+
+  /// The results that are a defeat, a shoot-out lost included.
+  static const Set<YTemplate> defeatTemplates = {
+    YTemplate.lost,
+    YTemplate.lostShock,
+    YTemplate.lostRout,
+    YTemplate.lostBadly,
+    YTemplate.lostShootout,
+  };
+
+  /// The shortest gap between two posts by the same regular (see
+  /// [withRegulars]): about a window, as with Havíř.
+  static const Duration regularGap = havirGap;
+
+  /// [posts] with the Czech feed's regulars added under the results, for a
+  /// Czech feed only: with [czechCameos] false, [posts] come back as they
+  /// went in. Run it after [withHavir], whose replies it reads.
+  ///
+  /// - Mařena under a heavy defeat ([havirHeavyDefeats]) one time in three,
+  ///   never under one Havíř already answered.
+  /// - KudyChodíKrálík under a defeat one time in four, never under one
+  ///   Mařena answered.
+  /// - POŠUK under any result one time in ten, with one of his three shouts.
+  ///
+  /// Each at most once in [regularGap], so at most once a window. Derived
+  /// like the rest of the feed, so a save always draws them in the same
+  /// places.
+  static List<YPost> withRegulars(
+    List<YPost> posts, {
+    required bool czechCameos,
+  }) {
+    if (!czechCameos) return posts;
+    String eventOf(YPost p) => p.key.split('|').first;
+    final havirEvents = {
+      for (final p in posts)
+        if (p.handle == havirPersona.handle) eventOf(p),
+    };
+    // One headline per match: the first root post that is a result.
+    final seen = <String>{};
+    final results = <({YPost parent, String event})>[];
+    for (final p in posts) {
+      if (p.replyTo != null || !resultTemplates.contains(p.template)) continue;
+      final event = eventOf(p);
+      if (!seen.add(event)) continue;
+      results.add((parent: p, event: event));
+    }
+    results.sort((a, b) {
+      final d = a.parent.date.compareTo(b.parent.date);
+      return d != 0 ? d : a.event.compareTo(b.event);
+    });
+
+    final out = [...posts];
+    // Picks, in date order, the results [persona] answers: the ones [wants]
+    // and at least [regularGap] after the last one it answered.
+    Set<String> place(
+      YPersona persona,
+      YTemplate template,
+      bool Function(YPost parent, String event) wants, {
+      int Function(String event)? variantOf,
+    }) {
+      final placed = <String>{};
+      DateTime? last;
+      for (final r in results) {
+        if (!wants(r.parent, r.event)) continue;
+        final date = r.parent.date;
+        if (last != null && date.difference(last).abs() < regularGap) {
+          continue;
+        }
+        last = date;
+        placed.add(r.event);
+        out.add(
+          _withVariant(
+            (
+              voice: YVoice.cameo,
+              handle: persona.handle,
+              displayName: persona.displayName,
+              template: template,
+              variant: 0,
+              args: const <String>[],
+              date: date,
+              key: '${r.event}|re|cameo|${template.name}',
+              replyTo: r.parent.key,
+              mood: null,
+            ),
+            variantOf?.call(r.event) ?? 0,
+          ),
+        );
+      }
+      return placed;
+    }
+
+    final marena = place(
+      marenaPersona,
+      YTemplate.cameoMarena,
+      (p, e) =>
+          havirHeavyDefeats.contains(p.template) &&
+          !havirEvents.contains(e) &&
+          varietySeed('marena|$e') % 3 == 0,
+    );
+    place(
+      kralikPersona,
+      YTemplate.cameoKralik,
+      (p, e) =>
+          defeatTemplates.contains(p.template) &&
+          !marena.contains(e) &&
+          varietySeed('kralik|$e') % 4 == 0,
+    );
+    place(
+      posukPersona,
+      YTemplate.cameoPosuk,
+      (p, e) => varietySeed('posuk|$e') % 10 == 0,
+      variantOf: (e) => varietySeed('posuk|line|$e') % posukVariantCount,
+    );
     return out;
   }
 

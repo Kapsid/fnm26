@@ -76,7 +76,7 @@ class ScheduleFixtureRow extends StatelessWidget {
             SizedBox(
               width: _dateColumnWidth(context, dateStyle),
               child: Text(
-                AppDate.dayMonth(context, f.date),
+                AppDate.dayMonthNumeric(context, f.date),
                 maxLines: 1,
                 style: dateStyle,
               ),
@@ -177,11 +177,11 @@ double _dateColumnWidth(BuildContext context, TextStyle style) {
   final scaler = MediaQuery.textScalerOf(context);
   final locale = Localizations.localeOf(context).languageCode;
   return _dateWidths.putIfAbsent('$locale@${scaler.scale(100)}', () {
-    var widest = 52.0;
+    var widest = 36.0;
     for (var month = 1; month <= 12; month++) {
       final painter = TextPainter(
         text: TextSpan(
-          text: AppDate.dayMonth(context, DateTime(2030, month, 28)),
+          text: AppDate.dayMonthNumeric(context, DateTime(2030, month, 28)),
           style: style,
         ),
         textDirection: TextDirection.ltr,

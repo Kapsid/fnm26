@@ -16,6 +16,8 @@ void main() {
     for (final n in _json('assets/data/nations.json')! as List)
       (n as Map<String, Object?>)['id']! as int,
     212, // Greenland, from the dormant pool.
+    213, // Zanzibar, likewise.
+    6, // Belarus, likewise.
   ];
   final seed = (_json('assets/data/country_cities.json')! as Map).map(
     (k, v) => MapEntry(int.parse(k as String), (v as List).cast<String>()),
@@ -29,8 +31,8 @@ void main() {
     _json(nationGeoAsset(id))! as Map<String, Object?>,
   );
 
-  test('210 nations, one map each, and nothing else', () {
-    expect(nations, hasLength(210));
+  test('212 nations, one map each, and nothing else', () {
+    expect(nations, hasLength(212));
     final files = Directory(
       'assets/geo',
     ).listSync().map((f) => f.uri.pathSegments.last).toSet();
@@ -78,6 +80,64 @@ void main() {
       }
     }
     expect(count, greaterThan(1700));
+  });
+
+  // The extra towns a stadium can be built in (stadium_build_cities.json),
+  // a list of their own so country_cities.json never grows.
+  final build = (_json('assets/data/stadium_build_cities.json')! as Map).map(
+    (k, v) => MapEntry(int.parse(k as String), (v as List).cast<String>()),
+  );
+
+  test('every build city has a position, in the view or an inset', () {
+    var count = 0;
+    for (final id in nations) {
+      final geo = geoOf(id);
+      final listed = {...?seed[id], ...?stadiums[id], ...?extraHostCities[id]};
+      for (final city in build[id] ?? const <String>[]) {
+        expect(listed, isNot(contains(city)), reason: 'nation $id: $city');
+        final at = geo.cities[city];
+        expect(at, isNotNull, reason: 'nation $id: $city');
+        final drawn =
+            geo.view.inflate(1e-6).contains(at!) ||
+            geo.insets.any((b) => b.inflate(1e-6).contains(at));
+        expect(drawn, isTrue, reason: 'nation $id: $city at $at');
+        count++;
+      }
+      expect(
+        (build[id] ?? const []).toSet(),
+        hasLength((build[id] ?? const []).length),
+        reason: 'nation $id: a town twice',
+      );
+    }
+    expect(count, greaterThan(2500));
+  });
+
+  test('a sizeable nation offers at least fifteen build cities', () {
+    // Germany, England, France, Italy, Spain, Poland, the USA, Brazil,
+    // Mexico, Argentina, Nigeria, Egypt, Japan, China, Australia.
+    for (final id in [
+      20,
+      14,
+      18,
+      26,
+      50,
+      40,
+      99,
+      58,
+      88,
+      56,
+      139,
+      115,
+      170,
+      162,
+      156,
+    ]) {
+      expect(
+        build[id]?.length ?? 0,
+        greaterThanOrEqualTo(15),
+        reason: 'nation $id',
+      );
+    }
   });
 
   test('the antimeridian: Fiji and the USA stay in one piece', () {

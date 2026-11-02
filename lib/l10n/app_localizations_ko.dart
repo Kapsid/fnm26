@@ -228,6 +228,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchHalfTime => '하프타임';
 
   @override
+  String matchHalfTimeScore(int home, int away) {
+    return '전반 $home : $away';
+  }
+
+  @override
   String get matchContinue => '계속';
 
   @override
@@ -1174,6 +1179,35 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get tacticsCornersFreeKicks => '코너킥 및 프리킥';
+
+  @override
+  String get tacticsThrowIns => '스로인';
+
+  @override
+  String get tacticsThrowInStyle => '스로인 스타일';
+
+  @override
+  String get tacticsThrowInLong => '롱 스로인';
+
+  @override
+  String get tacticsThrowInNeutral => '보통';
+
+  @override
+  String get tacticsThrowInDefensive => '안전한 스로인';
+
+  @override
+  String get tacticsThrowInLongBlurb =>
+      '페널티 박스 근처의 스로인을 박스 안으로 던집니다. 위협이 조금 늘고, 힘 좋은 스로어와 키 큰 공격수가 있으면 더 커지지만 공을 조금 더 자주 잃습니다.';
+
+  @override
+  String get tacticsThrowInNeutralBlurb => '상황에 맞게 스로인합니다. 달라지는 것은 없습니다.';
+
+  @override
+  String get tacticsThrowInDefensiveBlurb =>
+      '모든 스로인을 짧고 안전하게. 역습당할 공 손실이 줄지만 기회도 조금 줄어듭니다.';
+
+  @override
+  String get matchGoalLongThrow => '롱 스로인';
 
   @override
   String get tacticsSkillFin => '결정력';
@@ -2421,6 +2455,28 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get viceCaptainFirst => '제1 부주장';
+
+  @override
+  String get viceCaptainSecond => '제2 부주장';
+
+  @override
+  String get viceCaptainNone => '부주장 미지정';
+
+  @override
+  String get viceCaptainHint => '주장이 뛸 수 없을 때 완장을 찹니다.';
+
+  @override
+  String captainStandIn(String vice, String captain) {
+    return '부주장 $vice이(가) 팀을 이끕니다. 주장 $captain은(는) 출전 불가';
+  }
+
+  @override
+  String captainStandInUnnamed(String vice) {
+    return '부주장 $vice이(가) 팀을 이끕니다';
+  }
+
+  @override
   String get resultsCategoryWorldCupQualifying => '세계 선수권 예선';
 
   @override
@@ -3412,6 +3468,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get statsMostGames => '최다 출전';
 
   @override
+  String get statsMostGamesShort => '출전';
+
+  @override
   String get statsNoGoalsRecorded => '아직 기록된 골이 없습니다.';
 
   @override
@@ -4139,47 +4198,47 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String yUpsetGap0(String opponent, String gap) {
+  String yUpsetGap0(String opponent, int gap) {
     return '랭킹 차이 $gap계단, 그래도 $opponent전 승리. 훌륭하다.';
   }
 
   @override
-  String yUpsetGap1(String opponent, String gap) {
+  String yUpsetGap1(String opponent, int gap) {
     return '$opponent: 우리보다 $gap계단 위. 그래도 이겼다. 축구는 아름답다.';
   }
 
   @override
-  String yUpsetGap2(String opponent, String gap) {
+  String yUpsetGap2(String opponent, int gap) {
     return '랭킹 차이: $gap. 결과: $opponent전 승리. 믿음을 멈추지 마라.';
   }
 
   @override
-  String yUpsetGap3(String opponent, String gap) {
+  String yUpsetGap3(String opponent, int gap) {
     return '킥오프 전 랭킹 차이: $gap. 그래도 $opponent전 승리.';
   }
 
   @override
-  String yUpsetGap4(String opponent, String gap) {
+  String yUpsetGap4(String opponent, int gap) {
     return '세계 랭킹에서 $opponent 대표팀은 $gap계단 위였다. 오늘 밤은 아니었다.';
   }
 
   @override
-  String yUpsetGap5(String opponent, String gap) {
+  String yUpsetGap5(String opponent, int gap) {
     return '이변 지수: 양 팀 랭킹 차이 $gap. $opponent전 승리는 우리 것.';
   }
 
   @override
-  String yUpsetGap6(String opponent, String gap) {
+  String yUpsetGap6(String opponent, int gap) {
     return '$opponent 대표팀과의 랭킹 차이는 $gap계단이었다. 하룻밤에 그 격차가 메워지진 않는다.';
   }
 
   @override
-  String yUpsetGap7(String opponent, String gap) {
+  String yUpsetGap7(String opponent, int gap) {
     return '$opponent: $gap계단 위, 그리고 패배. 랭킹은 거의 눈치채지 못할 거다.';
   }
 
   @override
-  String yUpsetGap8(String gap) {
+  String yUpsetGap8(int gap) {
     return '랭킹 차이: $gap. 다음에 약팀한테 지면 이 숫자를 기억해라.';
   }
 
@@ -4679,47 +4738,47 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String yDownGap0(String opponent, String gap) {
+  String yDownGap0(String opponent, int gap) {
     return '$opponent: 우리보다 $gap계단 아래. 그럴 수 있다. 다음으로.';
   }
 
   @override
-  String yDownGap1(String gap) {
+  String yDownGap1(int gap) {
     return '랭킹 차이: 우리가 $gap계단 위. 축구는 랭킹을 읽지 않는다.';
   }
 
   @override
-  String yDownGap2(String opponent, String gap) {
+  String yDownGap2(String opponent, int gap) {
     return '서류상 $opponent 대표팀과 $gap계단 차이. 오늘 밤 그라운드에선 아니었다.';
   }
 
   @override
-  String yDownGap3(String opponent, String gap) {
+  String yDownGap3(String opponent, int gap) {
     return '킥오프 전 랭킹 차이: 우리가 $gap계단 위. 그래도 $opponent전 패배.';
   }
 
   @override
-  String yDownGap4(String opponent, String gap) {
+  String yDownGap4(String opponent, int gap) {
     return '세계 랭킹에서 $opponent 대표팀은 $gap계단 아래였다. 결과: 패배.';
   }
 
   @override
-  String yDownGap5(String opponent, String gap) {
+  String yDownGap5(String opponent, int gap) {
     return '이변 지수: 랭킹 차이 $gap, 반대 방향으로. $opponent전.';
   }
 
   @override
-  String yDownGap6(String opponent, String gap) {
+  String yDownGap6(String opponent, int gap) {
     return '랭킹에서 $opponent 대표팀보다 $gap계단 위. 패배. 설명해 봐라.';
   }
 
   @override
-  String yDownGap7(String gap) {
+  String yDownGap7(int gap) {
     return '$gap계단 아래 팀에 졌다. 이 숫자를 곱씹어라.';
   }
 
   @override
-  String yDownGap8(String opponent, String gap) {
+  String yDownGap8(String opponent, int gap) {
     return '랭킹 차이: $gap. $opponent전 패배. 누군가는 날짜를 세기 시작해야 한다.';
   }
 
@@ -5072,122 +5131,122 @@ class AppLocalizationsKo extends AppLocalizations {
   String get grievanceDismiss => '선발은 내가 정하네';
 
   @override
-  String yScorerStar0(String name, String goals) {
+  String yScorerStar0(String name, int goals) {
     return '$name, 혼자 $goals골. 따라올 사람이 없다.';
   }
 
   @override
-  String yScorerStar1(String name, String goals) {
+  String yScorerStar1(String name, int goals) {
     return '$name $goals골. 이 팀을 혼자 짊어지고 있다.';
   }
 
   @override
-  String yScorerStar2(String name, String goals) {
+  String yScorerStar2(String name, int goals) {
     return '$name: 오늘 $goals골. 대단한 선수다.';
   }
 
   @override
-  String yScorerStar3(String name, String goals) {
+  String yScorerStar3(String name, int goals) {
     return '$name, $goals골을 꽂아 넣었다. 박수 받을 만하다.';
   }
 
   @override
-  String yScorerStar4(String name, String goals) {
+  String yScorerStar4(String name, int goals) {
     return '$name $goals골, 나머지는 그냥 승객이었다.';
   }
 
   @override
-  String yScorerStar5(String name, String goals) {
+  String yScorerStar5(String name, int goals) {
     return '또 $name. $goals골. 이 선수 없는 팀을 상상해 봐라.';
   }
 
   @override
-  String yScorerStar6(String name, String goals) {
+  String yScorerStar6(String name, int goals) {
     return '$name의 $goals골. 한 명이 이렇게까지 해야 하나.';
   }
 
   @override
-  String yScorerStar7(String name, String goals) {
+  String yScorerStar7(String name, int goals) {
     return '$name 빼면 $goals골이 줄고 완전히 다른 오후가 됐을 거다.';
   }
 
   @override
-  String yWinStreak0(String count) {
+  String yWinStreak0(int count) {
     return '$count연승. 라커룸에서 무슨 말을 하든 통하고 있다.';
   }
 
   @override
-  String yWinStreak1(String count) {
+  String yWinStreak1(int count) {
     return '벌써 $count연승. 이런 흐름은 우연히 오지 않는다.';
   }
 
   @override
-  String yWinStreak2(String count) {
+  String yWinStreak2(int count) {
     return '$count연승 진행 중. 관중석에서도 자신감이 보인다.';
   }
 
   @override
-  String yWinStreak3(String count) {
+  String yWinStreak3(int count) {
     return '$count경기 무패. 감독 해 본 사람한테 물어봐라, 그게 어려운 거다.';
   }
 
   @override
-  String yWinStreak4(String count) {
+  String yWinStreak4(int count) {
     return '$count연승. 일정이 쉬울 때 즐겨 둬라.';
   }
 
   @override
-  String yWinStreak5(String count) {
+  String yWinStreak5(int count) {
     return '$count연승인데, 제대로 된 상대는 하나도 없었다.';
   }
 
   @override
-  String yWinStreak6(String count) {
+  String yWinStreak6(int count) {
     return '$count연승. 진짜 시험대에 오르면 다시 물어봐라.';
   }
 
   @override
-  String yWinStreak7(String count) {
+  String yWinStreak7(int count) {
     return '$count연승. 어느 팀이든 이런 시기는 한 번쯤 있다.';
   }
 
   @override
-  String yLossStreak0(String count) {
+  String yLossStreak0(int count) {
     return '벌써 $count경기 무승. 언젠가는 변명도 바닥난다.';
   }
 
   @override
-  String yLossStreak1(String count) {
+  String yLossStreak1(int count) {
     return '$count경기 연속으로 날렸다. 더 이상 일시적인 부진이 아니다.';
   }
 
   @override
-  String yLossStreak2(String count) {
+  String yLossStreak2(int count) {
     return '$count연패. 누군가 책임져야 한다.';
   }
 
   @override
-  String yLossStreak3(String count) {
+  String yLossStreak3(int count) {
     return '$count경기 무승. 경기하는 모습에서 다 보인다.';
   }
 
   @override
-  String yLossStreak4(String count) {
+  String yLossStreak4(int count) {
     return '$count경기 무승, 매주 같은 실수.';
   }
 
   @override
-  String yLossStreak5(String count) {
+  String yLossStreak5(int count) {
     return '$count경기 연속. 뭘 시도하든 안 통하고 있다.';
   }
 
   @override
-  String yLossStreak6(String count) {
+  String yLossStreak6(int count) {
     return '$count경기 연속. 이건 일시적 하락이 아니라 방향이다.';
   }
 
   @override
-  String yLossStreak7(String count) {
+  String yLossStreak7(int count) {
     return '$count경기 무승인데, 윗선에서는 한마디도 없다.';
   }
 
@@ -6330,6 +6389,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get objectiveQualifyingTopHalf => '예선 조 상위권으로 마치기';
 
   @override
+  String get objectiveQualifyingChallenge => '본선 진출 도전, 최소한 예선 조 상위권';
+
+  @override
   String get finishQualifyingTopHalf => '예선 조 상위권';
 
   @override
@@ -6461,7 +6523,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String squadDevPageOf(String page, String pages, String total) {
+  String squadDevPageOf(String page, String pages, int total) {
     return '$page/$pages · 선수 $total명';
   }
 
@@ -8792,62 +8854,62 @@ class AppLocalizationsKo extends AppLocalizations {
   String get transfersUnknownClub => '알 수 없는 클럽';
 
   @override
-  String yAgainstThemAgain0(String opponent, String count) {
+  String yAgainstThemAgain0(String opponent, int count) {
     return '$opponent전만 벌써 $count번째. 누군가 점수를 세고 있다면, 그건 저쪽이다.';
   }
 
   @override
-  String yAgainstThemAgain1(String opponent, String count) {
+  String yAgainstThemAgain1(String opponent, int count) {
     return '또 $opponent. $count번 붙었는데 아직도 공략법을 모른다.';
   }
 
   @override
-  String yAgainstThemAgain2(String opponent, String count) {
+  String yAgainstThemAgain2(String opponent, int count) {
     return '$opponent전 $count번째. 이제 우연이 아니다.';
   }
 
   @override
-  String yAgainstThemAgain3(String opponent, String count) {
+  String yAgainstThemAgain3(String opponent, int count) {
     return '$opponent 상대로 $count번 붙었는데 그중 어느 경기에서도 배운 게 없다.';
   }
 
   @override
-  String yAgainstThemAgain4(String opponent, String count) {
+  String yAgainstThemAgain4(String opponent, int count) {
     return '$opponent, $count번째. 우리가 뭘 할지 저쪽은 다 안다.';
   }
 
   @override
-  String yAgainstThemAgain5(String opponent, String count) {
+  String yAgainstThemAgain5(String opponent, int count) {
     return '$count번을 붙어도 $opponent에게는 여전히 우리를 이기는 뭔가가 있다.';
   }
 
   @override
-  String ySameOldStory0(String count) {
+  String ySameOldStory0(int count) {
     return '최근에만 벌써 $count번째. 이쯤 되면 이게 우리 실력 아닌가?';
   }
 
   @override
-  String ySameOldStory1(String count) {
+  String ySameOldStory1(int count) {
     return '이런 오후가 벌써 $count번. 운이 아니라 패턴이다.';
   }
 
   @override
-  String ySameOldStory2(String count) {
+  String ySameOldStory2(int count) {
     return '최근 똑같은 경기를 $count번 봤다. 같은 각본, 같은 결말.';
   }
 
   @override
-  String ySameOldStory3(String count) {
+  String ySameOldStory3(int count) {
     return '똑같은 90분의 $count번째 버전. 아무도 고치지 않는다.';
   }
 
   @override
-  String ySameOldStory4(String count) {
+  String ySameOldStory4(int count) {
     return '$count번. 아직도 패턴이 안 보인다면 안 보려는 거다.';
   }
 
   @override
-  String ySameOldStory5(String count) {
+  String ySameOldStory5(int count) {
     return '같은 이야기가 $count번째. 결과보다 변명이 먼저 바닥났다.';
   }
 
@@ -8939,62 +9001,62 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String yDrought0(String name, String count) {
+  String yDrought0(String name, int count) {
     return '$name, $count경기째 무득점이지만 그 외엔 다 해내고 있다.';
   }
 
   @override
-  String yDrought1(String name, String count) {
+  String yDrought1(String name, int count) {
     return '$name, $count경기 무득점. 골은 몰아서 오는 법이다.';
   }
 
   @override
-  String yDrought2(String name, String count) {
+  String yDrought2(String name, int count) {
     return '$name: $count경기, 무득점.';
   }
 
   @override
-  String yDrought3(String name, String count) {
+  String yDrought3(String name, int count) {
     return '$name, $count경기째 골이 없다. 지켜볼 만하다.';
   }
 
   @override
-  String yDrought4(String name, String count) {
+  String yDrought4(String name, int count) {
     return '$count경기. 무득점. $name, 빈 골대도 못 맞힐 판.';
   }
 
   @override
-  String yDrought5(String name, String count) {
+  String yDrought5(String name, int count) {
     return '$name, $count경기째 골이 없다. 제발 아무나 다른 선수 써라.';
   }
 
   @override
-  String yRivalryLooms0(String opponent, String count) {
+  String yRivalryLooms0(String opponent, int count) {
     return '다음은 $opponent. $count번 붙었어도 여전히 모든 걸 건 경기다.';
   }
 
   @override
-  String yRivalryLooms1(String opponent, String count) {
+  String yRivalryLooms1(String opponent, int count) {
     return '$opponent전 벌써 $count번째. 덤벼라.';
   }
 
   @override
-  String yRivalryLooms2(String opponent, String count) {
+  String yRivalryLooms2(String opponent, int count) {
     return '다음은 $opponent. 통산 $count번째.';
   }
 
   @override
-  String yRivalryLooms3(String opponent, String count) {
+  String yRivalryLooms3(String opponent, int count) {
     return '이번 주 $opponent전, 통산 $count번째 맞대결.';
   }
 
   @override
-  String yRivalryLooms4(String opponent, String count) {
+  String yRivalryLooms4(String opponent, int count) {
     return '또 $opponent. $count번이나 붙고도 배운 게 없다.';
   }
 
   @override
-  String yRivalryLooms5(String opponent, String count) {
+  String yRivalryLooms5(String opponent, int count) {
     return '$opponent전 $count경기, 그런데도 아직 저쪽이 이긴다. 훌륭하다.';
   }
 
@@ -10904,6 +10966,28 @@ class AppLocalizationsKo extends AppLocalizations {
   String get campaignStars3Greenland => '유럽 선수권 또는 세계 선수권 우승';
 
   @override
+  String get campaignZanzibarTitle => '잔지바르의 비상';
+
+  @override
+  String get campaignZanzibarTwist => '잔지바르가 아프리카에서 차드의 자리를 대신한다, 100년 동안';
+
+  @override
+  String get campaignZanzibarGoal => '아프리카 선수권 본선 진출';
+
+  @override
+  String get campaignZanzibarIntro =>
+      '잔지바르에는 자체 축구협회와 대표팀이 있지만, 아프리카 축구에도 세계 축구에도 자리가 없습니다. 이 세계에서 잔지바르는 아프리카에서 차드의 자리를 대신하며, 세계 랭킹 바닥 근처에서 시작합니다: 섬 출신 선수, 작은 경기장, 몬순의 더위. 100년, 25번의 대회 주기 안에 아프리카 선수권, 이어서 세계 선수권 본선에 오르고, 감히 꿈꾼다면 세계 선수권을 우승하세요.';
+
+  @override
+  String get campaignStars1Zanzibar => '아프리카 선수권 본선 진출';
+
+  @override
+  String get campaignStars2Zanzibar => '세계 선수권 본선 진출';
+
+  @override
+  String get campaignStars3Zanzibar => '세계 선수권 우승';
+
+  @override
   String get campaignPro => 'Pro';
 
   @override
@@ -12380,6 +12464,21 @@ class AppLocalizationsKo extends AppLocalizations {
       '내 말은, 선수들 좀 살게 해 줘라! 열심히 일하는 사람은 놀 자격도 있다. 엄지 척.';
 
   @override
+  String get yCameoMarena => '이 정도면 나도 감독하겠다.';
+
+  @override
+  String get yCameoKralik => '뭘 기대했어 ㅎㅎㅎ, 우리 ZeroZero나 사';
+
+  @override
+  String get yCameoPosuk0 => '약해';
+
+  @override
+  String get yCameoPosuk1 => '헐 대박ㅋ';
+
+  @override
+  String get yCameoPosuk2 => '술 마시러 갈 사람?';
+
+  @override
   String get yTraitStreamer => '모든 걸 방송한다. 최대 볼륨, 전부 대문자로.';
 
   @override
@@ -12680,4 +12779,938 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get hostingWindowLine => '유치 신청은 주기가 끝날 때, 세계 선수권 결승 이후에 열립니다.';
+
+  @override
+  String hubEventWarmUpOffer(String nation) {
+    return '친선 경기 제안: $nation';
+  }
+
+  @override
+  String get hubEventWarmUpOfferSub => '대회 전 출정식 경기';
+
+  @override
+  String get warmUpOfferTitle => '친선 경기 제안';
+
+  @override
+  String warmUpOfferBody(String nation, String competition, String date) {
+    return '$nation이(가) $competition 대회를 준비하며 $date에 출정식 친선 경기를 제안했습니다.';
+  }
+
+  @override
+  String warmUpOfferAway(String nation) {
+    return '원정, 상대 홈($nation).';
+  }
+
+  @override
+  String get warmUpOfferHome => '홈: 상대가 찾아옵니다.';
+
+  @override
+  String get warmUpOfferNote => '제안은 최대 두 개까지 수락할 수 있습니다. 수락한 경기는 별도로 소집합니다.';
+
+  @override
+  String get warmUpOfferAccept => '수락';
+
+  @override
+  String get warmUpOfferDecline => '거절';
+
+  @override
+  String warmUpOfferMsgTitle(String nation) {
+    return '친선 경기 제안: $nation';
+  }
+
+  @override
+  String warmUpOfferMsgBody(String nation, String competition) {
+    return '$nation이(가) $competition 대회 전에 출정식 친선 경기를 원합니다.';
+  }
+
+  @override
+  String get hubSimToFinal => '결승까지 시뮬레이션';
+
+  @override
+  String get jobDossierOpen => '제안 살펴보기';
+
+  @override
+  String get jobDossierRating => '팀 전력';
+
+  @override
+  String get jobDossierMood => '분위기';
+
+  @override
+  String get jobDossierTopPlayers => '핵심 선수';
+
+  @override
+  String jobDossierPlayerAge(int age) {
+    return '$age세';
+  }
+
+  @override
+  String get jobDossierReport => '스카우트 의견';
+
+  @override
+  String get jobDossierNextTargetLabel => '다음 목표';
+
+  @override
+  String jobDossierNextTarget(String cup) {
+    return '$cup 및 세계 선수권 본선 진출.';
+  }
+
+  @override
+  String get jobDossierStrongAttack => '공격진이 정말 날카롭다.';
+
+  @override
+  String get jobDossierBluntAttack => '골이 좀처럼 나오지 않는다.';
+
+  @override
+  String get jobDossierStrongMidfield => '미드필드가 경기를 지배한다.';
+
+  @override
+  String get jobDossierWeakMidfield => '중원에서 자주 밀린다.';
+
+  @override
+  String get jobDossierStrongDefence => '수비를 뚫기 어렵다.';
+
+  @override
+  String get jobDossierThinDefence => '수비진이 얇아 보인다.';
+
+  @override
+  String get jobDossierSafeKeeper => '믿을 만한 골키퍼가 있다.';
+
+  @override
+  String get jobDossierShakyKeeper => '골키퍼가 불안하다.';
+
+  @override
+  String get jobDossierOldSquad => '노쇠한 스쿼드, 세대교체가 머지않았다.';
+
+  @override
+  String get jobDossierYoungCore => '성장 중인 젊은 핵심 선수들.';
+
+  @override
+  String jobDossierOneStar(String name) {
+    return '$name 선수가 팀을 이끈다.';
+  }
+
+  @override
+  String get jobDossierDeepSquad => '주전 외에도 선수층이 두텁다.';
+
+  @override
+  String get jobDossierThinSquad => '주전 외에는 전력이 약하다.';
+
+  @override
+  String get jobDossierBalanced => '뚜렷한 약점이 없는 균형 잡힌 팀.';
+
+  @override
+  String yQualifiedEuphoric0(String competition) {
+    return '우리가 해냈다니 믿기지 않아! 거의 아무도 예상 못 했어. $competition, 우리가 간다 💪';
+  }
+
+  @override
+  String yQualifiedEuphoric1(String competition) {
+    return '정말 마법 같은 밤이야, 꿈나라에 와 있어! $competition, 우리가 간다!';
+  }
+
+  @override
+  String yQualifiedEuphoric2(String competition) {
+    return '난 항상 이 팀을 믿었어. 항상. 그리고 이제 $competition에 간다!';
+  }
+
+  @override
+  String yQualifiedEuphoric3(String competition) {
+    return '그 조에서 아무도 우리에게 기회를 주지 않았어. 아무도. $competition에서 보자!';
+  }
+
+  @override
+  String yQualifiedEuphoric4(String competition) {
+    return '눈물이 나. 우리가 $competition에. 정말 우리가.';
+  }
+
+  @override
+  String yQualifiedEuphoric5(String competition) {
+    return '지금 길에서 춤추고 있어. $competition 진출! 비현실적이야 🎉';
+  }
+
+  @override
+  String yQualifiedEuphoric6(String competition) {
+    return '가망 없다고 했었지. 틀려서 이렇게 기뻤던 적이 없어. $competition!';
+  }
+
+  @override
+  String yQualifiedEuphoric7(String competition) {
+    return '몇 년째 이 팀 욕하고 있고 내일 또 시작할 거야. 하지만 오늘 밤은? $competition, 우리가 간다!';
+  }
+
+  @override
+  String yQualifiedEuphoric8(String competition) {
+    return '알았어. 알았다고! 다 취소할게. $competition에 간다!';
+  }
+
+  @override
+  String yKnockoutEuphoric0(String opponent) {
+    return '진출! $opponent 격파. 정말 마법 같은 밤이야, 꿈나라에 와 있어!';
+  }
+
+  @override
+  String yKnockoutEuphoric1(String opponent) {
+    return '$opponent를 떨어뜨렸어! 모두 계속 꿈꾸자 💪';
+  }
+
+  @override
+  String yKnockoutEuphoric2(String opponent) {
+    return '이 팀이 해낼 줄 알았어. 잘 가 $opponent, 다음 라운드 안녕!';
+  }
+
+  @override
+  String yKnockoutEuphoric3(String opponent) {
+    return '목이 다 쉬었어. $opponent는 탈락, 우리는 전진!';
+  }
+
+  @override
+  String yKnockoutEuphoric4(String opponent) {
+    return '토너먼트인데 아직 살아남았어. $opponent는 호되게 배웠지.';
+  }
+
+  @override
+  String yKnockoutEuphoric5(String opponent) {
+    return '$opponent 귀국. 이 팀은 역사를 쓰고 있어 🔥';
+  }
+
+  @override
+  String yKnockoutEuphoric6(String opponent) {
+    return '이쯤이면 집에 있을 줄 알았는데. 대신 $opponent가 집에 가네. 믿을 수 없어.';
+  }
+
+  @override
+  String yKnockoutEuphoric7(String opponent) {
+    return '나까지 꿈꾸고 있어. $opponent 격파. 우리 대체 누구야?';
+  }
+
+  @override
+  String yKnockoutEuphoric8(String opponent) {
+    return '평생 비관론자였는데. $opponent 탈락, 우리는 진출. 어쩔 줄을 모르겠어.';
+  }
+
+  @override
+  String yTrophyEuphoric0(String competition) {
+    return '우승이다!!! $competition 정상에 올랐어! 이 밤은 절대 못 잊어 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric1(String competition) {
+    return '정말 마법 같은 밤이야. $competition 챔피언, 눈물이 멈추질 않아.';
+  }
+
+  @override
+  String yTrophyEuphoric2(String competition) {
+    return '이 팀은 할 수 있다고 늘 말했잖아. $competition 우승. 우승이야!';
+  }
+
+  @override
+  String yTrophyEuphoric3(String competition) {
+    return '누가 이게 진짜라고 말해 줘. $competition 우승이야!';
+  }
+
+  @override
+  String yTrophyEuphoric4(String competition) {
+    return '오늘 밤 전국 모든 거리가 축제야. $competition은 우리 거야 🏆';
+  }
+
+  @override
+  String yTrophyEuphoric5(String competition) {
+    return '오늘 밤 어디 있었는지 기억해 둬. $competition 챔피언.';
+  }
+
+  @override
+  String yTrophyEuphoric6(String competition) {
+    return '모든 힘든 밤, 모든 실망이 이걸 위해서였어. $competition 챔피언.';
+  }
+
+  @override
+  String yTrophyEuphoric7(String competition) {
+    return '몇 년 동안 불평했는데 이제 불평할 게 없어. $competition 우승이야!';
+  }
+
+  @override
+  String yTrophyEuphoric8(String competition) {
+    return '좋아, 인정할게. $competition 챔피언. 내 인생 최고의 밤이야.';
+  }
+
+  @override
+  String yExitHeartbreak0(String competition) {
+    return '가슴이 찢어져. $competition에 우승하러 왔는데. 그래도 이 팀이 자랑스러워.';
+  }
+
+  @override
+  String yExitHeartbreak1(String competition) {
+    return '너무 아프다. $competition에서 멀리 가야 했는데. 다시 일어서자.';
+  }
+
+  @override
+  String yExitHeartbreak2(String competition) {
+    return '무너졌어. 벌써 $competition에서 탈락이라니, 우승할 전력이었는데.';
+  }
+
+  @override
+  String yExitHeartbreak3(String competition) {
+    return '$competition에서 돌아오는 비행기는 인생에서 가장 긴 비행이 될 거야.';
+  }
+
+  @override
+  String yExitHeartbreak4(String competition) {
+    return '$competition에서 멀리 가야 했는데. 대신 집에 간다. 할 말이 없어.';
+  }
+
+  @override
+  String yExitHeartbreak5(String competition) {
+    return '몇 년을 기다렸는데 $competition은 시작도 전에 끝났어. 허무하다.';
+  }
+
+  @override
+  String punditsMsgTitle(String competition) {
+    return '$competition 전문가 예상';
+  }
+
+  @override
+  String punditsSays(String pundit, String words) {
+    return '$pundit: $words';
+  }
+
+  @override
+  String punditsFavourite0(String nation) {
+    return '제 우승 후보는 $nation입니다. 다른 팀들보다 너무 강하고 선수층도 두텁습니다.';
+  }
+
+  @override
+  String punditsFavourite1(String nation) {
+    return '$nation 말고는 떠오르지 않습니다. 우승에 필요한 모든 걸 갖췄습니다.';
+  }
+
+  @override
+  String punditsDarkHorse0(String nation) {
+    return '진짜 다크호스는 $nation입니다. 4강에 가도 놀랍지 않습니다.';
+  }
+
+  @override
+  String punditsDarkHorse1(String nation) {
+    return '$nation를 주목하세요. 아무도 만나고 싶지 않은 상대입니다.';
+  }
+
+  @override
+  String punditsMineBottom0(String nation) {
+    return '$nation: 조 최하위. 여기까지 온 것도 대단하지만 통과할 전력은 아닙니다.';
+  }
+
+  @override
+  String punditsMineBottom1(String nation) {
+    return '$nation는 대회를 즐기겠지만 조 최하위로 봅니다.';
+  }
+
+  @override
+  String punditsMineGroupOut0(String nation) {
+    return '$nation: 조별리그 탈락. 끈질기지만 한 단계 부족합니다.';
+  }
+
+  @override
+  String punditsMineGroupOut1(String nation) {
+    return '$nation는 조별리그 후 귀국할 것 같습니다. 그래도 누군가는 괴롭히겠죠.';
+  }
+
+  @override
+  String punditsMineFirstKnockout0(String nation) {
+    return '$nation: 조별리그 통과 후 첫 토너먼트에서 탈락. 괜찮은 대회입니다.';
+  }
+
+  @override
+  String punditsMineFirstKnockout1(String nation) {
+    return '$nation는 조별리그를 통과해야 합니다. 그 이상은 이변입니다.';
+  }
+
+  @override
+  String punditsMineQuarters0(String nation) {
+    return '$nation: 탄탄한 팀입니다. 8강이 딱 맞아 보입니다.';
+  }
+
+  @override
+  String punditsMineQuarters1(String nation) {
+    return '$nation는 8강까지 갈 수 있습니다. 그러면 좋은 대회입니다.';
+  }
+
+  @override
+  String punditsMineSemis0(String nation) {
+    return '$nation: 클래스가 다릅니다. 깊은 여정이 기대됩니다. 최소 4강.';
+  }
+
+  @override
+  String punditsMineSemis1(String nation) {
+    return '$nation는 4강에 오를 전력입니다. 그보다 못하면 실망입니다.';
+  }
+
+  @override
+  String punditsMineFinal0(String nation) {
+    return '$nation: 클래스가 다릅니다. 깊은 여정이 기대됩니다. 결승까지 봅니다.';
+  }
+
+  @override
+  String punditsMineFinal1(String nation) {
+    return '$nation는 결승까지 갑니다. 그만큼 강합니다.';
+  }
+
+  @override
+  String punditsMineWinner0(String nation) {
+    return '$nation: 넘어야 할 팀입니다. 우승 말고는 실패입니다.';
+  }
+
+  @override
+  String punditsMineWinner1(String nation) {
+    return '제 우승 예상은 $nation입니다. 이제 모든 압박이 그들에게 있습니다.';
+  }
+
+  @override
+  String punditsMineDarkHorseQuarters(String nation) {
+    return '진짜 다크호스는 $nation입니다. 8강에 가도 놀랍지 않습니다.';
+  }
+
+  @override
+  String punditsMineDarkHorseSemis(String nation) {
+    return '진짜 다크호스는 $nation입니다. 4강에 가도 놀랍지 않습니다.';
+  }
+
+  @override
+  String yPunditPick0(String competition, String favourite, String darkHorse) {
+    return '$competition 예상: 우승은 $favourite. 다크호스는? $darkHorse. 대단한 대회가 될 겁니다.';
+  }
+
+  @override
+  String yPunditPick1(String competition, String favourite, String darkHorse) {
+    return '$competition는 $favourite, 그리고 $darkHorse를 주목하세요. 특별할 수 있습니다.';
+  }
+
+  @override
+  String yPunditPick2(String competition, String favourite, String darkHorse) {
+    return '$competition 예상. 우승: $favourite. 다크호스: $darkHorse.';
+  }
+
+  @override
+  String yPunditPick3(String competition, String favourite, String darkHorse) {
+    return '$competition에서 $favourite 말고는 떠오르지 않습니다. $darkHorse는 많은 사람을 놀라게 할 수 있습니다.';
+  }
+
+  @override
+  String yPunditPick4(String competition, String favourite, String darkHorse) {
+    return '다들 $competition은 $favourite라고 하겠죠. 안타깝게도 맞습니다. 볼 만한 팀은 $darkHorse뿐입니다.';
+  }
+
+  @override
+  String yPunditPick5(String competition, String favourite, String darkHorse) {
+    return '$competition는 $favourite가 우승하고 지루할 겁니다. 이야기를 원한다면 $darkHorse를 보세요.';
+  }
+
+  @override
+  String tacticsSlotSwitchHeading(String formation) {
+    return '$formation 안에서의 포지션';
+  }
+
+  @override
+  String get tacticsSlotSwitchReset => '초기화';
+
+  @override
+  String get tacticsSlotSwitchLimit =>
+      '이 포메이션에서 이미 두 포지션을 바꿨습니다. 이 포지션을 바꾸려면 하나를 되돌리세요.';
+
+  @override
+  String get assistantAsk => '코치에게 묻기';
+
+  @override
+  String get assistantNoneNote => '수석 코치가 없습니다. 스태프에서 고용하면 조언을 받을 수 있습니다.';
+
+  @override
+  String get assistantSheetTitle => '수석 코치의 조언';
+
+  @override
+  String get assistantReadBasic => '대략적인 판단입니다. 믿기 전에 확인하세요.';
+
+  @override
+  String get assistantReadGood => '능력치, 포지션, 피로도를 제대로 읽습니다.';
+
+  @override
+  String get assistantReadElite => '컨디션, 폼, 상대까지 읽습니다.';
+
+  @override
+  String get assistantVariantMain => '그의 선택';
+
+  @override
+  String get assistantVariantFresh => '더 싱싱한 다리';
+
+  @override
+  String get assistantVariantForm => '폼이 좋은 선수';
+
+  @override
+  String get assistantVariantAttacking => '더 공격적으로';
+
+  @override
+  String get assistantVariantSolid => '더 단단하게';
+
+  @override
+  String get assistantVsStronger => '상대가 더 강합니다';
+
+  @override
+  String get assistantVsWeaker => '우리가 더 강합니다';
+
+  @override
+  String assistantChanges(int count) {
+    return '선발 변경: $count';
+  }
+
+  @override
+  String get assistantBench => '첫 교체 자원';
+
+  @override
+  String get assistantReasonBestFit => '최적';
+
+  @override
+  String get assistantReasonInForm => '폼 좋음';
+
+  @override
+  String get assistantReasonFresh => '체력 충분';
+
+  @override
+  String get assistantReasonCovering => '대체 출전';
+
+  @override
+  String get assistantReasonCoverDefence => '수비';
+
+  @override
+  String get assistantReasonCoverMidfield => '미드필드';
+
+  @override
+  String get assistantReasonCoverAttack => '공격';
+
+  @override
+  String get assistantReasonTired => '지침';
+
+  @override
+  String get assistantReasonBooked => '경고';
+
+  @override
+  String get assistantReasonInjured => '부상';
+
+  @override
+  String get assistantReasonOutOfPosition => '포지션 이탈';
+
+  @override
+  String get assistantReasonChasing => '추격 중';
+
+  @override
+  String get assistantSubsTitle => '그가 권하는 교체';
+
+  @override
+  String get assistantNoSubs => '지금 그대로 두자고 합니다.';
+
+  @override
+  String get assistantApply => '적용';
+
+  @override
+  String get assistantClose => '닫기';
+
+  @override
+  String get staffEffectAdviceBasic => '선발과 교체를 조언, 가끔 틀림';
+
+  @override
+  String get staffEffectAdviceGood => '선발과 교체를 조언, 피로도 고려';
+
+  @override
+  String get staffEffectAdviceElite => '컨디션, 폼, 상대를 읽고 조언';
+
+  @override
+  String get staffHiringAdvice => '및 선발·교체 조언';
+
+  @override
+  String get hubEventSponsor => '이번 시즌 스폰서 선택';
+
+  @override
+  String get hubEventSponsorSub =>
+      '세 브랜드가 유니폼에 이름을 올리고 싶어 합니다. 모든 계약에는 대가가 따릅니다.';
+
+  @override
+  String get sponsorTitle => '메인 스폰서';
+
+  @override
+  String get sponsorIntroSeason =>
+      '매 시즌 여러 브랜드가 협회의 메인 스폰서가 되려고 줄을 섭니다. 모든 계약은 무언가를 주고 무언가를 대가로 가져갑니다. 이사회, 라커룸, 혹은 둘 다. 한 곳과 계약하거나, 아무 곳과도 하지 마세요. 이사회와 사기에 미치는 영향은 시즌이 끝날 때까지 이어집니다.';
+
+  @override
+  String get sponsorEffectBoard => '이사회';
+
+  @override
+  String get sponsorEffectMorale => '사기';
+
+  @override
+  String get sponsorEffectPress => '언론 뭇매';
+
+  @override
+  String sponsorPerkMarketing(String amount, String department) {
+    return '이번 주기 $department에 $amount 지원';
+  }
+
+  @override
+  String sponsorPerkMarketingNote(String amount) {
+    return '직접 투자분과 별도로 주기 종료 시 $amount 추가 수익';
+  }
+
+  @override
+  String get sponsorRiskyLabel => '위험';
+
+  @override
+  String get sponsorRiskyWarning => '언론이 신나게 물어뜯을 겁니다.';
+
+  @override
+  String get sponsorSign => '계약';
+
+  @override
+  String get sponsorDeclineSeason => '이번 시즌 스폰서 없음';
+
+  @override
+  String get sponsorNoneSeason => '이번 시즌 메인 스폰서 없음';
+
+  @override
+  String sponsorUntilSeasonEnd(String season) {
+    return '$season 시즌 종료까지';
+  }
+
+  @override
+  String sponsorRolloverLine(String brand) {
+    return '메인 스폰서: $brand';
+  }
+
+  @override
+  String get sponsorBrandAgrofart => '아그로방귀';
+
+  @override
+  String get sponsorIndustryAgrofart => '농업·화학';
+
+  @override
+  String get sponsorFlavourAgrofart =>
+      '온 국민을 먹여 살립니다. 과자, 신문, 돼지 대부분도 이 회사 소유.';
+
+  @override
+  String get sponsorBrandBetBadger => 'BetBadger';
+
+  @override
+  String get sponsorIndustryBetBadger => '베팅 업체';
+
+  @override
+  String get sponsorFlavourBetBadger => '모든 것에 배당이 걸려 있습니다. 당신의 경질까지도.';
+
+  @override
+  String get sponsorBrandCoinGoblin => 'CoinGoblin';
+
+  @override
+  String get sponsorIndustryCoinGoblin => '암호화폐 거래소';
+
+  @override
+  String get sponsorFlavourCoinGoblin => '이번 주 4,000% 상승. 출금 문의는 사양합니다.';
+
+  @override
+  String get sponsorBrandEasyPeasy => '바로대출';
+
+  @override
+  String get sponsorIndustryEasyPeasy => '급전 대출';
+
+  @override
+  String get sponsorFlavourEasyPeasy => '10분 만에 현금. 이자는 10년.';
+
+  @override
+  String get sponsorBrandVaporia => 'Vaporia';
+
+  @override
+  String get sponsorIndustryVaporia => '전자담배 매장';
+
+  @override
+  String get sponsorFlavourVaporia => '구름 맛 40가지, 공격수에게 좋은 건 하나도 없습니다.';
+
+  @override
+  String get sponsorBrandGoldenFleece => '황금양털 홀딩스';
+
+  @override
+  String get sponsorIndustryGoldenFleece => '역외 지주회사';
+
+  @override
+  String get sponsorFlavourGoldenFleece => '무슨 일을 하는지 아무도 모릅니다. 변호사들은 그게 좋답니다.';
+
+  @override
+  String get sponsorBrandMiners => '광부들';
+
+  @override
+  String get sponsorIndustryMiners => '광업';
+
+  @override
+  String get sponsorFlavourMiners => '석탄, 구리, 그리고 먼지투성이 이사진.';
+
+  @override
+  String get sponsorBrandMoth => '나방';
+
+  @override
+  String get sponsorIndustryMoth => '주유소';
+
+  @override
+  String get sponsorFlavourMoth => '휘발유, 핫도그, 그리고 한 번도 작동한 적 없는 세차기.';
+
+  @override
+  String get sponsorBrandSludgeco => '진창석유';
+
+  @override
+  String get sponsorIndustrySludgeco => '석유';
+
+  @override
+  String get sponsorFlavourSludgeco => '아무도 부탁하지 않은 곳에 구멍을 뚫습니다.';
+
+  @override
+  String get sponsorBrandSkyloom => 'Skyloom';
+
+  @override
+  String get sponsorIndustrySkyloom => '저가 항공';
+
+  @override
+  String get sponsorFlavourSkyloom => '9유로로 어디든. 좌석, 수하물, 산소는 별도.';
+
+  @override
+  String get sponsorBrandArvella => 'Arvella Motors';
+
+  @override
+  String get sponsorIndustryArvella => '자동차 제조사';
+
+  @override
+  String get sponsorFlavourArvella => '원룸만 한 고급 SUV.';
+
+  @override
+  String get sponsorBrandCheapoMax => '싸다맥스';
+
+  @override
+  String get sponsorIndustryCheapoMax => '할인 마트';
+
+  @override
+  String get sponsorFlavourCheapoMax => '전 품목 반값. 직원도요.';
+
+  @override
+  String get sponsorBrandBrickhaven => 'Brickhaven';
+
+  @override
+  String get sponsorIndustryBrickhaven => '건설';
+
+  @override
+  String get sponsorFlavourBrickhaven => '경기장을 제때 짓습니다. 가끔은.';
+
+  @override
+  String get sponsorBrandHappyBurgers => '신나는 버거';
+
+  @override
+  String get sponsorIndustryHappyBurgers => '패스트푸드';
+
+  @override
+  String get sponsorFlavourHappyBurgers => '치즈 세 겹, 베이컨 두 배, 대표팀 전원 무료.';
+
+  @override
+  String get sponsorBrandOldSwamp => '묵은늪';
+
+  @override
+  String get sponsorIndustryOldSwamp => '양조장';
+
+  @override
+  String get sponsorFlavourOldSwamp => '1869년부터, 그 뒤로 한 번도 청소 안 한 지하실에서 양조.';
+
+  @override
+  String get sponsorBrandBuzzhorn => 'Buzzhorn';
+
+  @override
+  String get sponsorIndustryBuzzhorn => '에너지 음료';
+
+  @override
+  String get sponsorFlavourBuzzhorn => '골키퍼도 깨울 만큼의 카페인.';
+
+  @override
+  String get sponsorBrandSteamy => '뜨끈뜨끈 사우나';
+
+  @override
+  String get sponsorIndustrySteamy => '사우나 체인';
+
+  @override
+  String get sponsorFlavourSteamy => '함께 땀 흘리세요. 수건은 선택, 팀 정신은 필수.';
+
+  @override
+  String get sponsorBrandPixelRage => 'PixelRage Games';
+
+  @override
+  String get sponsorIndustryPixelRage => '비디오 게임';
+
+  @override
+  String get sponsorFlavourPixelRage => '선수단이 즐겨 하는 슈팅 게임, 이제 본인들 얼굴로.';
+
+  @override
+  String get sponsorBrandGlitterbox => 'Glitterbox Records';
+
+  @override
+  String get sponsorIndustryGlitterbox => '음반사';
+
+  @override
+  String get sponsorFlavourGlitterbox => '이제 모든 골 세리머니에 안무가 따라옵니다.';
+
+  @override
+  String get sponsorBrandMilkwell => 'Milkwell 유업';
+
+  @override
+  String get sponsorIndustryMilkwell => '유제품';
+
+  @override
+  String get sponsorFlavourMilkwell => '차가운 우유, 그리고 젖소 만나러 가는 소풍.';
+
+  @override
+  String get sponsorBrandHerringKing => '청어왕';
+
+  @override
+  String get sponsorIndustryHerringKing => '청어 절임';
+
+  @override
+  String get sponsorFlavourHerringKing => '절임, 훈제, 병조림. 할아버지 때부터.';
+
+  @override
+  String get sponsorBrandUmbrello => 'Umbrello 보험';
+
+  @override
+  String get sponsorIndustryUmbrello => '보험';
+
+  @override
+  String get sponsorFlavourUmbrello => '무엇이든 보장합니다. 우산의 우산까지.';
+
+  @override
+  String get sponsorBrandTidyTeeth => '뽀득이';
+
+  @override
+  String get sponsorIndustryTidyTeeth => '치약';
+
+  @override
+  String get sponsorFlavourTidyTeeth => '치과의사 10명 중 9명. 10번째는 휴가 중.';
+
+  @override
+  String get sponsorBrandWoollySocks => '털양말';
+
+  @override
+  String get sponsorIndustryWoollySocks => '니트웨어';
+
+  @override
+  String get sponsorFlavourWoollySocks => '선수 전원에게 손뜨개 양말을. 팀 색깔만 빼고 모든 색으로.';
+
+  @override
+  String get sponsorBrandStackabloc => 'Stackabloc';
+
+  @override
+  String get sponsorIndustryStackabloc => '완구 제조사';
+
+  @override
+  String get sponsorFlavourStackabloc => '나만의 국가대표 경기장을 조립하세요. 4,000피스, 하나 빠짐.';
+
+  @override
+  String get sponsorBrandPolarPenguin => '극지펭귄';
+
+  @override
+  String get sponsorIndustryPolarPenguin => '아이스크림';
+
+  @override
+  String get sponsorFlavourPolarPenguin => '30가지 맛, 전부 녹는 중.';
+
+  @override
+  String get sponsorBrandHexagon => 'Hexagon';
+
+  @override
+  String get sponsorIndustryHexagon => '엔지니어링';
+
+  @override
+  String get sponsorFlavourHexagon => '모든 문제에는 여섯 면이 있습니다. 엔지니어들은 아직 세는 중.';
+
+  @override
+  String get sponsorBrandVelocell => 'Velocell';
+
+  @override
+  String get sponsorIndustryVelocell => '통신';
+
+  @override
+  String get sponsorFlavourVelocell => '어디서나 신호 만땅. 경기장 안만 빼고.';
+
+  @override
+  String get sponsorBrandParcelion => 'Parcelion';
+
+  @override
+  String get sponsorIndustryParcelion => '택배';
+
+  @override
+  String get sponsorFlavourParcelion => '내일 도착. 아니면 모레. 아니면 이웃집.';
+
+  @override
+  String get sponsorBrandGridwell => 'Gridwell Energy';
+
+  @override
+  String get sponsorIndustryGridwell => '에너지';
+
+  @override
+  String get sponsorFlavourGridwell => '조명탑은 켜져 있습니다. 대체로.';
+
+  @override
+  String get sponsorBrandCrownstone => 'Crownstone 은행';
+
+  @override
+  String get sponsorIndustryCrownstone => '은행';
+
+  @override
+  String get sponsorFlavourCrownstone => '고객님의 돈은 안전합니다. 아마도.';
+
+  @override
+  String get sponsorBrandClickbait => '낚시기사 미디어';
+
+  @override
+  String get sponsorIndustryClickbait => '미디어 그룹';
+
+  @override
+  String get sponsorFlavourClickbait => '저희 네 번째 헤드라인 내용, 믿기 힘드실 겁니다.';
+
+  @override
+  String ySponsorDubious0(String brand) {
+    return '협회의 새 메인 스폰서는 $brand. 웃고 싶으면 웃어. 그래도 아카데미엔 돈이 필요해.';
+  }
+
+  @override
+  String ySponsorDubious1(String brand) {
+    return '협회가 새 메인 스폰서로 $brand 브랜드와 계약했다. 최고액 제안이었다고 한다.';
+  }
+
+  @override
+  String ySponsorDubious2(String brand) {
+    return '$brand. 새 메인 스폰서: $brand. 좀 누워야겠다.';
+  }
+
+  @override
+  String ySponsorMocked0(String brand) {
+    return '돈은 돈이지. $brand 측에서 새 그라운드를 깔아 준다면 자랑스럽게 유니폼 입는다.';
+  }
+
+  @override
+  String ySponsorMocked1(String brand) {
+    return '$brand 브랜드를 뭐라 하든, 수표는 문제없이 결제됐다.';
+  }
+
+  @override
+  String ySponsorMocked2(String brand) {
+    return '어딘가의 마케팅팀은 우리 가슴에 박힌 $brand 로고가 아주 자랑스럽겠지.';
+  }
+
+  @override
+  String ySponsorMocked3(String brand) {
+    return '그러니까 이제 우리가 $brand 국가대표팀이라는 거군. 알겠음.';
+  }
+
+  @override
+  String ySponsorMocked4(String brand) {
+    return '유니폼을 $brand 측에 팔다니. 상상이나 해 봐.';
+  }
+
+  @override
+  String ySponsorMocked5(String brand) {
+    return '세상에 그 많은 스폰서 중에 하필 $brand 브랜드를 골랐다. 라이벌들이 다 우리를 비웃고 있다.';
+  }
 }

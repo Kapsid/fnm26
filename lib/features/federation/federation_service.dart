@@ -4,6 +4,7 @@ import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
 
 /// The finals rounds counted for prize money, split by tournament.
@@ -80,7 +81,17 @@ class FederationService {
     final invest = await _ref
         .read(careerRepositoryProvider)
         .investment(careerId, cycle);
-    final commercialInvested = invest.commercial;
+    // A general sponsor that funds Commercial / PR adds its levels to the
+    // federation's own for the cycle (see `Sponsors`): they pay back at the
+    // close like money the federation had put in itself.
+    final sponsored = await sponsorMarketingEuros(
+      comp: comp,
+      nations: _ref.read(nationRepositoryProvider),
+      seedRanks: _ref.read(seedRankingRepositoryProvider),
+      career: career,
+      cycle: cycle,
+    );
+    final commercialInvested = invest.commercial + sponsored;
 
     // Where the nation stands and how far it moved over the cycle, from the
     // stored ranking releases — the same history the intake bonus reads, so

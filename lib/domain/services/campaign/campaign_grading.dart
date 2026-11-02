@@ -61,6 +61,24 @@ int qualifyBothThenTitleStars({
     ? 1
     : 0;
 
+/// Stars for a run from near the bottom to the world title, each tier
+/// judged across all the campaign's cycles: a continental championship
+/// place is one, a World Championship place two, winning the World
+/// Championship three. The highest tier reached counts on its own (as in
+/// [qualifyBothThenTitleStars]), but a continental title is worth no more
+/// than the place it implies: only the world title is the third star.
+int qualifyBothThenWorldTitleStars({
+  required bool qualifiedContinental,
+  required bool qualifiedWorld,
+  required bool wonWorld,
+}) => wonWorld
+    ? 3
+    : qualifiedWorld
+    ? 2
+    : qualifiedContinental
+    ? 1
+    : 0;
+
 /// Stars for a treble of titles in one cycle, each star needing every title
 /// before it (the owner's ladder): the continental championship is one; that
 /// and the World Championship two; both and the Nations Cup three. A world

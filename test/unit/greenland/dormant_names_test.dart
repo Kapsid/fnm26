@@ -208,11 +208,16 @@ void main() {
     expect(addedSeen, greaterThan(60));
   });
 
-  test('Greenland is in every display table and data file', () {
+  test('every dormant nation is in every display table and data file', () {
+    const subregions = {
+      'GRL': 'scandinavia',
+      'ZAN': 'eastAfrica',
+      'BLR': 'easternEurope',
+    };
     for (final n in DormantNations.all) {
       expect(NationNames.csByCode[n.code], isNotNull);
       expect(NationNames.csDativeByCode[n.code], isNotNull);
-      expect(NationGeography.subregionByCode[n.code], 'scandinavia');
+      expect(NationGeography.subregionByCode[n.code], subregions[n.code]);
       expect(NationIdentity.of(n.code).pedigree, 5);
       expect(nationalStadiumCapacity[n.id], isNotNull);
       expect(_json('country_cities.json')['${n.id}'], isNotEmpty);
@@ -228,5 +233,9 @@ void main() {
     expect(NationNames.display('GRL', 'Greenland', 'de'), 'Grönland');
     expect(NationNames.display('GRL', 'Greenland', 'hi'), 'ग्रीनलैंड');
     expect(NationNames.display('GRL', 'Greenland', 'en'), 'Greenland');
+    expect(NationNames.display('ZAN', 'Zanzibar', 'cs'), 'Zanzibar');
+    expect(NationNames.displayDative('ZAN', 'Zanzibar', 'cs'), 'Zanzibaru');
+    expect(NationNames.display('ZAN', 'Zanzibar', 'de'), 'Sansibar');
+    expect(NationNames.display('ZAN', 'Zanzibar', 'en'), 'Zanzibar');
   });
 }
