@@ -13875,6 +13875,31 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Für einen Wechsel auf $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Backup für $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Deckt $first und $second ab';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Deckt $first, $second und $third ab';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Für $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
       'Berät bei der Nominierung, liegt mal daneben';
 

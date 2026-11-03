@@ -14054,6 +14054,31 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'На випадок переходу на $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Резерв на $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Закриває $first і $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Закриває $first, $second і $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Для $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
       'Радить щодо викликів, часом помиляється';
 

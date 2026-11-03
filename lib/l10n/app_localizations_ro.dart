@@ -14164,6 +14164,31 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Pentru trecerea la $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Rezervă pentru $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Acoperă $first și $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Acoperă $first, $second și $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Pentru $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'Sfătuiește la convocări, uneori greșit';
 
   @override

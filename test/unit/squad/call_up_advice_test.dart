@@ -108,6 +108,8 @@ CallUpAdviceSet? _ask(
   _World w,
   int seed, {
   Formation formation = Formation.f433,
+  List<PlayerPosition>? positions,
+  List<CallUpShape>? otherShapes,
   bool? opponentsStronger,
 }) => CallUpAdvice.propose(
   tier: tier,
@@ -115,6 +117,8 @@ CallUpAdviceSet? _ask(
   absences: w.absences,
   coverage: 2,
   formation: formation,
+  positions: positions,
+  otherShapes: otherShapes,
   seed: seed,
   min: _min,
   max: _max,
@@ -174,15 +178,12 @@ void main() {
   });
 
   test('never names a man out for the whole period, and names one hurt or '
-      'banned now only when his line is short of fit men', () {
+      'banned now only when his line has too few fit men for its cover', () {
     var unavailableSeen = 0;
+    final needs = CallUpAdvice.coverNeeds(Formation.f433.positions);
     for (var seed = 1; seed <= 120; seed++) {
       final w = _world(seed);
       final byId = {for (final p in w.pool) p.id: p};
-      final fielded = <PositionCategory, int>{};
-      for (final pos in Formation.f433.positions) {
-        fielded[pos.category] = (fielded[pos.category] ?? 0) + 1;
-      }
       int fitIn(PositionCategory c) => w.pool
           .where(
             (p) =>
@@ -190,9 +191,9 @@ void main() {
                 (w.absences[p.id]?.isAvailable ?? true),
           )
           .length;
-      int floorOf(PositionCategory c) => c == PositionCategory.goalkeeper
-          ? SquadSelection.keepers
-          : (fielded[c] ?? 0) + 1;
+      int needOf(PositionCategory c) => needs.entries
+          .where((e) => e.key.category == c)
+          .fold(0, (sum, e) => sum + e.value);
       for (final tier in [StaffTier.basic, StaffTier.good, StaffTier.elite]) {
         final advice = _ask(tier, w, seed)!;
         for (final proposal in [advice.main, ...advice.alternatives]) {
@@ -208,10 +209,11 @@ void main() {
             final line = byId[id]!.position.category;
             expect(
               fitIn(line),
-              lessThan(floorOf(line)),
+              lessThan(needOf(line)),
               reason: '$tier ${proposal.variant} named absent $id ($seed)',
             );
-            expect(proposal.reasons[id], CallUpReason.lineCover);
+            expect(proposal.reasons[id], CallUpReason.backup);
+            expect(proposal.positions[id], hasLength(1));
           }
         }
       }
@@ -240,7 +242,9 @@ void main() {
       condition: w.condition,
     )!;
     final squad = advice.main.squad;
-    expect(squad, hasLength(_min));
+    // Twelve fit men are not enough to cover the shape: the men back during
+    // the period make up the cover, and the squad is at least the minimum.
+    expect(squad.length, inInclusiveRange(_min, 20));
     for (final id in squad) {
       expect(
         SquadSelection.usableInPeriod(absences[id], 2),
@@ -422,5 +426,280 @@ void main() {
     expect(why(StaffTier.basic), CallUpReason.othersAhead);
     expect(why(StaffTier.good), CallUpReason.tired);
     expect(why(StaffTier.elite), CallUpReason.tired);
+  });
+
+  group('built around the current tactic', () {
+    /// [base] with the slot at [slot] switched to [to].
+    List<PlayerPosition> switched(
+      Formation base,
+      int slot,
+      PlayerPosition to,
+    ) => [...base.positions]..[slot] = to;
+
+    final shapes = <String, List<PlayerPosition>>{
+      for (final f in [
+        Formation.f433,
+        Formation.f4231,
+        Formation.f352,
+        Formation.f442,
+        Formation.f532,
+        Formation.f41212,
+      ])
+        f.label: f.positions,
+      // 4-3-3 with the holding midfielder pushed on: AM needs its cover.
+      '4-3-3 DM>AM': switched(Formation.f433, 5, PlayerPosition.am),
+      // 4-4-2 with a winger up front.
+      '4-4-2 LM>LW': switched(Formation.f442, 5, PlayerPosition.lw),
+    };
+
+    Formation formationOf(String name) =>
+        Formation.values.firstWhere((f) => name.startsWith(f.label));
+
+    test('every position gets its first choice and a natural backup, one '
+        'more where it is played twice, three keepers, in every proposal '
+        'and at every tier', () {
+      for (final MapEntry(key: name, value: positions) in shapes.entries) {
+        final needs = CallUpAdvice.coverNeeds(positions);
+        for (var seed = 1; seed <= 40; seed++) {
+          final w = _world(seed);
+          final byId = {for (final p in w.pool) p.id: p};
+          int fitNaturals(PlayerPosition at) => w.pool
+              .where(
+                (p) =>
+                    p.position == at && (w.absences[p.id]?.isAvailable ?? true),
+              )
+              .length;
+          for (final tier in [
+            StaffTier.basic,
+            StaffTier.good,
+            StaffTier.elite,
+          ]) {
+            final advice = _ask(
+              tier,
+              w,
+              seed * 17,
+              formation: formationOf(name),
+              positions: positions,
+            )!;
+            for (final proposal in [advice.main, ...advice.alternatives]) {
+              final squad = proposal.squad;
+              expect(squad.length, inInclusiveRange(_min, _max));
+              for (final MapEntry(key: at, value: need) in needs.entries) {
+                final naturals = squad
+                    .where((id) => byId[id]!.position == at)
+                    .length;
+                final want = fitNaturals(at) < need ? fitNaturals(at) : need;
+                expect(
+                  naturals,
+                  greaterThanOrEqualTo(want),
+                  reason:
+                      '$name $tier ${proposal.variant} $at: $naturals of '
+                      '$need ($seed)',
+                );
+                // And whoever plays it covers it, up to its need.
+                final canPlay = squad
+                    .where((id) => byId[id]!.position.category == at.category)
+                    .length;
+                expect(canPlay, greaterThanOrEqualTo(want));
+              }
+            }
+          }
+        }
+      }
+    });
+
+    test('a slot switch changes the cover: DM pushed to AM names two AMs', () {
+      // Plenty of everyone; the attacking midfielders the weakest men there.
+      var id = 0;
+      Player man(PlayerPosition at, int rating) => player(
+        id: ++id,
+        nationId: 1,
+        position: at,
+        attributes: flatAttributes(rating),
+      );
+      final pool = [
+        for (final at in PlayerPosition.values)
+          if (at != PlayerPosition.am)
+            for (var i = 0; i < 4; i++) man(at, 80 - i),
+        for (var i = 0; i < 3; i++) man(PlayerPosition.am, 55 - i),
+      ];
+      final w = (
+        pool: pool,
+        condition: <int, PlayerCondition>{},
+        absences: <int, PlayerAbsence>{},
+      );
+      final byId = {for (final p in pool) p.id: p};
+      int ams(Set<int> squad) =>
+          squad.where((i) => byId[i]!.position == PlayerPosition.am).length;
+      final plain = _ask(StaffTier.elite, w, 1)!;
+      final pushed = _ask(
+        StaffTier.elite,
+        w,
+        1,
+        positions: switched(Formation.f433, 5, PlayerPosition.am),
+      )!;
+      expect(ams(plain.main.squad), 0);
+      expect(ams(pushed.main.squad), 2);
+      for (final p in [pushed.main, ...pushed.alternatives]) {
+        expect(ams(p.squad), greaterThanOrEqualTo(2));
+      }
+    });
+
+    test('beyond the cover, a man who plays two positions of the shape '
+        'beats a slightly better one who plays only one', () {
+      var id = 0;
+      Player man(PlayerPosition at, int rating) => player(
+        id: ++id,
+        nationId: 1,
+        position: at,
+        attributes: flatAttributes(rating),
+      );
+      final needs = CallUpAdvice.coverNeeds(Formation.f433.positions);
+      final pool = [
+        for (final MapEntry(key: at, value: n) in needs.entries)
+          for (var i = 0; i < n; i++) man(at, 80),
+      ];
+      final centreBack = man(PlayerPosition.cb, 74);
+      final fullBack = man(PlayerPosition.lb, 72);
+      pool.addAll([centreBack, fullBack]);
+      expect(fullBack.overall, lessThan(centreBack.overall));
+      final cover = needs.values.fold(0, (a, b) => a + b);
+      final advice = CallUpAdvice.propose(
+        tier: StaffTier.elite,
+        pool: pool,
+        absences: const {},
+        coverage: 2,
+        formation: Formation.f433,
+        seed: 1,
+        min: _min,
+        // One place beyond the cover.
+        max: cover + 1,
+      )!;
+      final main = advice.main;
+      expect(main.squad, contains(fullBack.id));
+      expect(main.squad, isNot(contains(centreBack.id)));
+      expect(main.reasons[fullBack.id], CallUpReason.covers);
+      expect(main.positions[fullBack.id], [
+        PlayerPosition.lb,
+        PlayerPosition.rb,
+      ]);
+    });
+
+    test('the shapes he may change to: saved first, then drilled, then the '
+        'neighbours, never the current one, each once', () {
+      final shapes = CallUpAdvice.otherShapes(
+        current: Formation.f433,
+        saved: [
+          (formation: Formation.f433, positions: Formation.f433.positions),
+          (formation: Formation.f352, positions: Formation.f352.positions),
+          (formation: Formation.f352, positions: Formation.f352.positions),
+        ],
+        familiarity: {
+          Formation.f433: 0.9,
+          Formation.f4231: 0.2,
+          Formation.f541: 0.6,
+          Formation.f442: 0,
+        },
+      );
+      expect(
+        [for (final s in shapes) s.formation],
+        [
+          Formation.f352,
+          Formation.f541,
+          Formation.f4231,
+          Formation.f4141,
+        ],
+      );
+      // With nothing saved or drilled, the neighbours.
+      expect(
+        CallUpAdvice.otherShapes(current: Formation.f433).first.formation,
+        Formation.f4231,
+      );
+    });
+
+    test('the change-of-tactics card is for his saved shape, names it, and '
+        'brings in at most three men for its positions without touching '
+        'the current cover', () {
+      var cards = 0;
+      var saved = 0;
+      for (var seed = 1; seed <= 60; seed++) {
+        final w = _world(seed);
+        final byId = {for (final p in w.pool) p.id: p};
+        final others = CallUpAdvice.otherShapes(
+          current: Formation.f433,
+          saved: [
+            (formation: Formation.f352, positions: Formation.f352.positions),
+          ],
+          familiarity: {Formation.f541: 0.8},
+        );
+        for (final tier in [StaffTier.basic, StaffTier.good, StaffTier.elite]) {
+          final advice = _ask(tier, w, seed, otherShapes: others)!;
+          final change = advice.alternatives
+              .where((a) => a.variant == CallUpVariant.tacticsChange)
+              .toList();
+          expect(change.length, lessThanOrEqualTo(1));
+          if (change.isEmpty) continue;
+          cards++;
+          final card = change.single;
+          // His saved shape, unless the squad already serves it as well as
+          // it can: then the next likeliest.
+          expect(others.map((o) => o.formation), contains(card.formation));
+          if (card.formation == Formation.f352) saved++;
+          final ins = card.squad.difference(advice.main.squad);
+          expect(ins.length, inInclusiveRange(1, CallUpAdvice.maxChangeSwaps));
+          for (final id in ins) {
+            expect(card.reasons[id], CallUpReason.forChange);
+            final at = card.positions[id]!.single;
+            expect(card.formation!.positions, contains(at));
+            expect(byId[id]!.position, at);
+          }
+          // Only men named on top of the current cover make way.
+          final needs = CallUpAdvice.coverNeeds(Formation.f433.positions);
+          for (final MapEntry(key: at, value: need) in needs.entries) {
+            int naturals(Set<int> squad) =>
+                squad.where((id) => byId[id]!.position == at).length;
+            final before = naturals(advice.main.squad);
+            expect(
+              naturals(card.squad),
+              greaterThanOrEqualTo(before < need ? before : need),
+            );
+          }
+        }
+      }
+      // A real pool nearly always has something to say about a 3-5-2.
+      expect(cards, greaterThan(150));
+      expect(saved, greaterThan(cards * 3 ~/ 4));
+    });
+
+    test('with nothing saved, the most familiar other shape; with nothing '
+        'drilled either, a neighbour', () {
+      var drilled = 0;
+      var neighbour = 0;
+      for (var seed = 1; seed <= 40; seed++) {
+        final w = _world(seed);
+        final familiar = _ask(
+          StaffTier.basic,
+          w,
+          seed,
+          otherShapes: CallUpAdvice.otherShapes(
+            current: Formation.f433,
+            familiarity: {Formation.f541: 0.7, Formation.f4231: 0.4},
+          ),
+        )!;
+        if (familiar.alternatives.firstOrNull?.formation == Formation.f541) {
+          drilled++;
+        }
+        final plain = _ask(StaffTier.basic, w, seed)!;
+        final alt = plain.alternatives.firstOrNull;
+        if (alt?.variant == CallUpVariant.tacticsChange &&
+            CallUpAdvice.otherShapes(
+              current: Formation.f433,
+            ).any((s) => s.formation == alt!.formation)) {
+          neighbour++;
+        }
+      }
+      expect(drilled, greaterThan(30));
+      expect(neighbour, greaterThan(30));
+    });
   });
 }

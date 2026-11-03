@@ -28,6 +28,8 @@ import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/tactics/player_form_look.dart';
 import 'package:fnm/features/tactics/nomination_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/tactics/familiarity_providers.dart';
+import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show PlayerTraitGlyphs;
@@ -210,12 +212,18 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
     final read = tier == StaffTier.basic
         ? const <int, PlayerCondition>{}
         : condition;
+    // He builds around the tactic as it stands, slot switches and all, and
+    // has the shapes the manager has saved or drilled in mind for a change.
+    final shapes = await _assistantShapes(formation);
+    if (!mounted) return;
     final advice = CallUpAdvice.propose(
       tier: tier,
       pool: data.pool,
       absences: data.absences,
       coverage: coverage,
-      formation: formation,
+      formation: shapes.current.formation,
+      positions: shapes.current.positions,
+      otherShapes: shapes.others,
       seed: career.rngSeed ^ (day * 0x9E3779B1),
       min: kMinSquadSize,
       max: kMaxSquadSize,
@@ -251,6 +259,52 @@ class _CallUpScreenState extends ConsumerState<CallUpScreen> {
         ..clear()
         ..addAll(chosen.squad);
     });
+  }
+
+  /// The current tactic's shape and the shapes he may suggest changing to:
+  /// the saved presets and library entries first, then the drilled shapes,
+  /// then the neighbours (see [CallUpAdvice.otherShapes]). Anything that
+  /// cannot be read is simply not considered.
+  Future<({CallUpShape current, List<CallUpShape> others})> _assistantShapes(
+    Formation fallback,
+  ) async {
+    final id = widget.careerId;
+    Future<T?> attempt<T>(Future<T> Function() read) async {
+      try {
+        return await read();
+      } on Object {
+        return null;
+      }
+    }
+
+    final tactic = await attempt(
+      () => ref.read(tacticsRepositoryProvider).tacticForCareer(id),
+    );
+    final presets =
+        await attempt(() => ref.read(tacticPresetStoreProvider).load(id)) ??
+        const [];
+    final library =
+        await attempt(() => ref.read(tacticLibraryRepositoryProvider).all()) ??
+        const [];
+    final drilled =
+        await attempt(() => ref.read(shapeDrillingProvider(id).future)) ??
+        const <Formation, double>{};
+    final current = tactic == null
+        ? (formation: fallback, positions: fallback.positions)
+        : (formation: tactic.formation, positions: tactic.positions);
+    return (
+      current: current,
+      others: CallUpAdvice.otherShapes(
+        current: current.formation,
+        saved: [
+          for (final p in presets)
+            (formation: p.formation, positions: p.switches.apply(p.formation)),
+          for (final t in library)
+            (formation: t.formation, positions: t.switches.apply(t.formation)),
+        ],
+        familiarity: drilled,
+      ),
+    );
   }
 
   static const List<PositionCategory> _order = [

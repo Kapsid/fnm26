@@ -3,6 +3,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
@@ -21,29 +22,57 @@ abstract final class CallUpAdviceKeys {
   static Key proposal(int index) => Key('assistant.proposal.$index');
 }
 
-/// The short words on a reason chip.
-String callUpReasonLabel(AppLocalizations l, CallUpReason r) => switch (r) {
-  CallUpReason.topPick => l.assistantReasonTopPick,
-  CallUpReason.lineCover => l.assistantReasonLineCover,
-  CallUpReason.inForm => l.assistantReasonInForm,
-  CallUpReason.fresh => l.assistantReasonFresh,
-  CallUpReason.young => l.assistantReasonYoung,
-  CallUpReason.experienced => l.assistantReasonExperienced,
-  CallUpReason.injured => l.assistantReasonInjured,
-  CallUpReason.banned => l.assistantReasonBanned,
-  CallUpReason.tired => l.assistantReasonTired,
-  CallUpReason.outOfForm => l.assistantReasonOutOfForm,
-  CallUpReason.othersAhead => l.assistantReasonOthersAhead,
-};
+/// The short words on a reason chip. [positions] are the places the reason
+/// names (see [CallUpProposal.positions]) and [formation] the shape of a
+/// change-of-tactics card.
+String callUpReasonLabel(
+  AppLocalizations l,
+  CallUpReason r, {
+  List<PlayerPosition> positions = const [],
+  Formation? formation,
+}) {
+  String at(int i) => i < positions.length ? positions[i].label : '';
+  return switch (r) {
+    CallUpReason.topPick => l.assistantReasonTopPick,
+    CallUpReason.lineCover => l.assistantReasonLineCover,
+    CallUpReason.inForm => l.assistantReasonInForm,
+    CallUpReason.fresh => l.assistantReasonFresh,
+    CallUpReason.young => l.assistantReasonYoung,
+    CallUpReason.experienced => l.assistantReasonExperienced,
+    CallUpReason.injured => l.assistantReasonInjured,
+    CallUpReason.banned => l.assistantReasonBanned,
+    CallUpReason.tired => l.assistantReasonTired,
+    CallUpReason.outOfForm => l.assistantReasonOutOfForm,
+    CallUpReason.othersAhead => l.assistantReasonOthersAhead,
+    // Without its places a cover reason says what the old chip said.
+    CallUpReason.backup when positions.isEmpty => l.assistantReasonLineCover,
+    CallUpReason.backup => l.assistantReasonBackup(at(0)),
+    CallUpReason.covers when positions.length >= 3 =>
+      l.assistantReasonCoversThree(at(0), at(1), at(2)),
+    CallUpReason.covers when positions.length == 2 =>
+      l.assistantReasonCoversTwo(at(0), at(1)),
+    CallUpReason.covers => l.assistantReasonTopPick,
+    CallUpReason.forChange when formation == null || positions.isEmpty =>
+      l.assistantReasonTopPick,
+    CallUpReason.forChange => l.assistantReasonForChange(
+      formation!.label,
+      at(0),
+    ),
+  };
+}
 
 /// The title of a proposal card.
-String callUpVariantLabel(AppLocalizations l, CallUpVariant v) => switch (v) {
-  CallUpVariant.main => l.assistantVariantMain,
-  CallUpVariant.inForm => l.assistantVariantForm,
-  CallUpVariant.fresherLegs => l.assistantVariantFresh,
-  CallUpVariant.youth => l.assistantVariantYouth,
-  CallUpVariant.experience => l.assistantVariantExperience,
-};
+String callUpVariantLabel(AppLocalizations l, CallUpProposal p) =>
+    switch (p.variant) {
+      CallUpVariant.main => l.assistantVariantMain,
+      CallUpVariant.inForm => l.assistantVariantForm,
+      CallUpVariant.fresherLegs => l.assistantVariantFresh,
+      CallUpVariant.youth => l.assistantVariantYouth,
+      CallUpVariant.experience => l.assistantVariantExperience,
+      CallUpVariant.tacticsChange => l.assistantVariantTacticsChange(
+        p.formation?.label ?? '',
+      ),
+    };
 
 /// What this man reads, under the sheet's title, so a basic assistant's
 /// advice is taken as what it is.
@@ -412,7 +441,7 @@ class _ProposalCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WholeText(
-                          callUpVariantLabel(l, proposal.variant),
+                          callUpVariantLabel(l, proposal),
                           style: AppTypography.titleMedium,
                         ),
                         if (against != null) WholeText(against, style: meta),
@@ -437,7 +466,15 @@ class _ProposalCard extends StatelessWidget {
                     code: p.position.label,
                     name: p.name,
                     rating: p.overall,
-                    reason: proposal.reasons[p.id],
+                    label: switch (proposal.reasons[p.id]) {
+                      final r? => callUpReasonLabel(
+                        l,
+                        r,
+                        positions: proposal.positions[p.id] ?? const [],
+                        formation: proposal.formation,
+                      ),
+                      null => null,
+                    },
                   ),
               ],
               if (outs.isNotEmpty) ...[
@@ -453,11 +490,14 @@ class _ProposalCard extends StatelessWidget {
                     code: p.position.label,
                     name: p.name,
                     rating: p.overall,
-                    reason: CallUpAdvice.leftOutReason(
-                      p,
-                      tier: tier,
-                      absences: absences,
-                      condition: condition,
+                    label: callUpReasonLabel(
+                      l,
+                      CallUpAdvice.leftOutReason(
+                        p,
+                        tier: tier,
+                        absences: absences,
+                        condition: condition,
+                      ),
                     ),
                   ),
               ],
@@ -476,7 +516,7 @@ class _AdviceRow extends StatelessWidget {
     required this.code,
     required this.name,
     required this.rating,
-    required this.reason,
+    required this.label,
     required this.leading,
   });
 
@@ -486,7 +526,9 @@ class _AdviceRow extends StatelessWidget {
   /// His overall, exactly as the call-up list prints it beside his name: the
   /// men on these lists are the manager's own, so it is never a scouted guess.
   final int rating;
-  final CallUpReason? reason;
+
+  /// The reason chip's words, or none.
+  final String? label;
   final Widget leading;
 
   /// The most of the row a chip may take beside the name before it moves
@@ -503,8 +545,7 @@ class _AdviceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final label = reason == null ? null : callUpReasonLabel(l, reason!);
+    final label = this.label;
     final codeText = SizedBox(
       width: _codeWidth,
       child: Text(

@@ -13706,6 +13706,31 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Váltás esetére: $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Tartalék: $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Bevethető: $first és $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Bevethető: $first, $second és $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return '$formation esetén: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
       'Tanácsot ad a meghívókhoz, néha tévesen';
 

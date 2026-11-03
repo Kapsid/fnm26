@@ -13840,6 +13840,31 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Jos ryhmitys vaihtuu: $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Varalla: $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Pelaa $first ja $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Pelaa $first, $second ja $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Ryhmitys $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'Neuvoo kutsuissa, välillä väärin';
 
   @override

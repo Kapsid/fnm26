@@ -14094,6 +14094,31 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Za prelazak na $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Rezerva za $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Pokriva $first i $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Pokriva $first, $second i $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Za $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'Savjetuje o pozivima, ponekad krivo';
 
   @override

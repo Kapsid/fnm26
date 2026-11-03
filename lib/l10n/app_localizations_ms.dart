@@ -13716,6 +13716,31 @@ class AppLocalizationsMs extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Untuk tukar ke $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Simpanan $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Boleh $first dan $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Boleh $first, $second dan $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Untuk $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
       'Menasihati panggilan skuad, kadang-kadang silap';
 

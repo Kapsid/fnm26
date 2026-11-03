@@ -13769,6 +13769,31 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Ved bytte til $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Reserve for $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Dekker $first og $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Dekker $first, $second og $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Til $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'Gir råd om uttaket, tar av og til feil';
 
   @override

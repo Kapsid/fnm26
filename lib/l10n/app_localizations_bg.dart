@@ -13849,6 +13849,31 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'При смяна на $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Резерва за $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Покрива $first и $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Покрива $first, $second и $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'За $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
       'Съветва за повикванията, понякога грешно';
 

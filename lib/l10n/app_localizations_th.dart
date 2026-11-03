@@ -13514,6 +13514,31 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'สำหรับเปลี่ยนเป็น $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'ตัวสำรอง $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'เล่นได้ทั้ง $first และ $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'เล่นได้ทั้ง $first, $second และ $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'สำหรับ $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'แนะนำการเรียกตัว บางครั้งพลาด';
 
   @override

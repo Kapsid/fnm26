@@ -20732,6 +20732,36 @@ abstract class AppLocalizations {
   /// **'Out: {count}'**
   String assistantNamesOut(int count);
 
+  /// Title of the assistant's alternative squad proposal for a change of tactics: his pick with a few players in who play the positions of another formation the manager may switch to. formation is the formation code, e.g. 4-2-3-1.
+  ///
+  /// In en, this message translates to:
+  /// **'For a change to {formation}'**
+  String assistantVariantTacticsChange(String formation);
+
+  /// Short reason chip beside a player the assistant would call up as the backup at one position of the current tactic. position is a position code, e.g. DM.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup for {position}'**
+  String assistantReasonBackup(String position);
+
+  /// Short reason chip beside a player the assistant would call up because he can play two positions of the current tactic. first and second are position codes, e.g. LB and RB.
+  ///
+  /// In en, this message translates to:
+  /// **'Covers {first} and {second}'**
+  String assistantReasonCoversTwo(String first, String second);
+
+  /// Short reason chip beside a player the assistant would call up because he can play three positions of the current tactic. first, second and third are position codes, e.g. DM, CM and AM.
+  ///
+  /// In en, this message translates to:
+  /// **'Covers {first}, {second} and {third}'**
+  String assistantReasonCoversThree(String first, String second, String third);
+
+  /// Short reason chip beside a player on the change-of-tactics squad proposal: he is in for one position of the other formation. formation is the formation code (e.g. 4-2-3-1), position a position code (e.g. AM).
+  ///
+  /// In en, this message translates to:
+  /// **'For {formation}: {position}'**
+  String assistantReasonForChange(String formation, String position);
+
   /// Staff room benefit line for a basic assistant: advises on which players to call up, sometimes wrongly.
   ///
   /// In en, this message translates to:

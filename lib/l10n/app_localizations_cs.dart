@@ -14026,6 +14026,31 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Pro přechod na $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Záloha na $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Zvládne $first i $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Zvládne $first, $second i $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Pro $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'Radí s nominací, občas vedle';
 
   @override

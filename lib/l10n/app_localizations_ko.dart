@@ -13313,6 +13313,31 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return '$formation 전환 대비';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return '$position 백업';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return '$first·$second 소화';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return '$first·$second·$third 소화';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return '$formation용: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => '소집을 조언, 가끔 틀림';
 
   @override

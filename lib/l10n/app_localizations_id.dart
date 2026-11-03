@@ -13668,6 +13668,31 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Untuk ganti ke $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Cadangan $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Bisa $first dan $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Bisa $first, $second, dan $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Untuk $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
       'Memberi saran pemanggilan, kadang keliru';
 

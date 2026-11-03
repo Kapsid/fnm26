@@ -13632,6 +13632,31 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Khi đổi sang $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Dự bị cho $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Đá được $first và $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Đá được $first, $second và $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Cho $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'Tư vấn triệu tập, đôi khi sai';
 
   @override

@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/core/theme/text_size.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/squad/call_up_advice.dart';
@@ -244,12 +245,48 @@ void main() {
         ),
     ];
     final byId = {for (final p in pool) p.id: p};
-    // Every reason he can give appears somewhere.
-    CallUpProposal proposal(CallUpVariant v, Set<int> squad) => CallUpProposal(
+    // Every reason he can give appears somewhere, the ones naming places
+    // with their longest wording (three positions, a formation).
+    const given = [
+      CallUpReason.topPick,
+      CallUpReason.lineCover,
+      CallUpReason.inForm,
+      CallUpReason.fresh,
+      CallUpReason.young,
+      CallUpReason.experienced,
+      CallUpReason.backup,
+      CallUpReason.covers,
+      CallUpReason.covers,
+      CallUpReason.forChange,
+    ];
+    List<PlayerPosition> placesFor(CallUpReason r, int i) => switch (r) {
+      CallUpReason.backup => const [PlayerPosition.dm],
+      CallUpReason.covers when i.isEven => const [
+        PlayerPosition.lb,
+        PlayerPosition.rb,
+      ],
+      CallUpReason.covers => const [
+        PlayerPosition.cm,
+        PlayerPosition.dm,
+        PlayerPosition.am,
+      ],
+      CallUpReason.forChange => const [PlayerPosition.am],
+      _ => const [],
+    };
+    CallUpProposal proposal(
+      CallUpVariant v,
+      Set<int> squad, {
+      Formation? formation,
+    }) => CallUpProposal(
       variant: v,
       squad: squad,
+      formation: formation,
       reasons: {
-        for (final (i, id) in squad.indexed) id: CallUpReason.values[i % 6],
+        for (final (i, id) in squad.indexed) id: given[(i + id) % given.length],
+      },
+      positions: {
+        for (final (i, id) in squad.indexed)
+          id: placesFor(given[(i + id) % given.length], i),
       },
     );
     final current = {for (var i = 1; i <= 20; i++) i};
@@ -257,7 +294,11 @@ void main() {
       main: proposal(CallUpVariant.main, {for (var i = 3; i <= 25; i++) i}),
       alternatives: [
         proposal(CallUpVariant.youth, {for (var i = 5; i <= 27; i++) i}),
-        proposal(CallUpVariant.experience, {for (var i = 8; i <= 30; i++) i}),
+        proposal(
+          CallUpVariant.tacticsChange,
+          {for (var i = 8; i <= 30; i++) i},
+          formation: Formation.f41212,
+        ),
       ],
     );
     final absences = {
@@ -343,6 +384,17 @@ void main() {
             final sheet = find.byKey(CallUpAdviceKeys.sheet);
             expectLocale(tester, sheet, code);
             expectAllLegible(tester, sheet, 'the sheet ($tier)');
+            // The change-of-tactics card names its shape.
+            final l = AppLocalizations.of(ctx);
+            expect(
+              find.descendant(
+                of: find.byKey(CallUpAdviceKeys.proposal(2)),
+                matching: wholeText(
+                  l.assistantVariantTacticsChange('4-1-2-1-2'),
+                ),
+              ),
+              findsOneWidget,
+            );
             // Scroll the whole sheet through: every card must lay out.
             for (var i = 0; i < 6; i++) {
               await tester.drag(sheet, const Offset(0, -400));
@@ -453,5 +505,45 @@ void main() {
         expect(tester.takeException(), isNull);
       });
     }
+  });
+
+  test('the reasons that name places read as the owner asked', () {
+    expect(
+      callUpReasonLabel(
+        enL,
+        CallUpReason.covers,
+        positions: const [PlayerPosition.lb, PlayerPosition.rb],
+      ),
+      'Covers LB and RB',
+    );
+    expect(
+      callUpReasonLabel(
+        enL,
+        CallUpReason.backup,
+        positions: const [PlayerPosition.dm],
+      ),
+      'Backup for DM',
+    );
+    expect(
+      callUpReasonLabel(
+        enL,
+        CallUpReason.forChange,
+        positions: const [PlayerPosition.am],
+        formation: Formation.f4231,
+      ),
+      'For 4-2-3-1: AM',
+    );
+    expect(
+      callUpVariantLabel(
+        enL,
+        const CallUpProposal(
+          variant: CallUpVariant.tacticsChange,
+          squad: {},
+          reasons: {},
+          formation: Formation.f4231,
+        ),
+      ),
+      'For a change to 4-2-3-1',
+    );
   });
 }

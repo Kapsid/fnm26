@@ -13757,6 +13757,31 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Vid byte till $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Reserv för $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Täcker $first och $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Täcker $first, $second och $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'För $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'Ger råd om uttagningen, ibland fel';
 
   @override

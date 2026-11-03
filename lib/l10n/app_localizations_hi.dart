@@ -13688,6 +13688,31 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return '$formation में बदलाव के लिए';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return '$position का बैकअप';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return '$first और $second पर खेल सकता है';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return '$first, $second और $third पर खेल सकता है';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return '$formation के लिए: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'कॉल-अप पर सलाह, कभी-कभी ग़लत';
 
   @override

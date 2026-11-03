@@ -13679,6 +13679,31 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return '$formation dizilişine geçiş için';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return '$position yedeği';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return '$first ve $second oynar';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return '$first, $second ve $third oynar';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return '$formation için: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
       'Davetlerde tavsiye verir, bazen yanılır';
 

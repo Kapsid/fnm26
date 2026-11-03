@@ -14,7 +14,7 @@ enum CallUpReason {
   /// Among the best he reads in the pool.
   topPick,
 
-  /// Named so his line has its cover, ahead of a better man elsewhere.
+  /// Named only to bring the squad up to its minimum.
   lineCover,
 
   /// Playing well lately (only an elite assistant reads form).
@@ -43,11 +43,37 @@ enum CallUpReason {
 
   /// Left out: others are ahead of him.
   othersAhead,
+
+  /// The cover at one of the shape's positions
+  /// ([CallUpProposal.positions] names it).
+  backup,
+
+  /// Plays two or more of the shape's positions, naturally or nearly
+  /// ([CallUpProposal.positions] lists them).
+  covers,
+
+  /// Named for a position of the other shape on a "change of tactics" card
+  /// ([CallUpProposal.positions] names it, [CallUpProposal.formation] the
+  /// shape).
+  forChange,
 }
 
 /// Which squad a [CallUpProposal] is. [main] is his pick; the rest are the
 /// alternatives, each leaning on a real difference in the pool.
-enum CallUpVariant { main, inForm, fresherLegs, youth, experience }
+enum CallUpVariant {
+  main,
+  inForm,
+  fresherLegs,
+  youth,
+  experience,
+
+  /// His pick, with a few men in for another shape the manager may turn to.
+  tacticsChange,
+}
+
+/// A shape the side could line up in: the formation and the position each
+/// slot plays (slot switches applied).
+typedef CallUpShape = ({Formation formation, List<PlayerPosition> positions});
 
 /// One proposed squad, with the reason each man is in it.
 class CallUpProposal {
@@ -55,6 +81,8 @@ class CallUpProposal {
     required this.variant,
     required this.squad,
     required this.reasons,
+    this.positions = const {},
+    this.formation,
   });
 
   final CallUpVariant variant;
@@ -64,6 +92,14 @@ class CallUpProposal {
 
   /// Why each man in [squad] is there.
   final Map<int, CallUpReason> reasons;
+
+  /// The positions a reason is about, for the reasons that name some
+  /// ([CallUpReason.backup], [CallUpReason.covers],
+  /// [CallUpReason.forChange]).
+  final Map<int, List<PlayerPosition>> positions;
+
+  /// The shape a [CallUpVariant.tacticsChange] card is for.
+  final Formation? formation;
 
   bool sameSquad(Set<int> other) =>
       other.length == squad.length && other.containsAll(squad);
@@ -75,7 +111,26 @@ typedef CallUpAdviceSet = ({
   List<CallUpProposal> alternatives,
 });
 
+/// What a man was named for in the main squad: the position he covers, and
+/// whether he is the first choice there. Absent for the men named on top of
+/// the cover.
+typedef _Role = ({PlayerPosition at, bool starter});
+
+/// A built squad and what each man was named for.
+typedef _Built = ({CallUpProposal proposal, Map<int, _Role> roles});
+
 /// The assistant manager's advice on the call-up: which players to name.
+///
+/// He builds the squad around the manager's CURRENT tactic: its formation and
+/// every slot switch (`Tactic.positions`). Every position the eleven plays
+/// gets a first choice and a natural backup, a position played two or more
+/// times gets one man more than it plays, and three keepers travel
+/// ([coverNeeds]). A man counts for a position when it is his own; when the
+/// pool has too few of those, one who plays it nearly ([playsNearly]), then
+/// anyone from the same line (the pitch's "same line" fit), takes the place.
+/// Only then does he fill the rest of the squad, and there he values a man
+/// who can play several of the shape's positions above one who plays just
+/// one ([covers]).
 ///
 /// How good the advice is depends on how good the man is, and the difference
 /// is in what he READS:
@@ -90,27 +145,152 @@ typedef CallUpAdviceSet = ({
 ///    man's condition (form, fatigue, morale, club sharpness). He also reads
 ///    the window's opponents, which decides the alternative he leads with.
 ///
+/// Whatever his eye, every proposal meets the cover: the eye decides WHO, not
+/// whether a position is covered.
+///
 /// Every rough eye is drawn from [SeededRng] keyed on the seed the caller
 /// passes (the save seed and the in-game date), so asking twice on one day
 /// gives one answer.
 ///
 /// The rules the call-up screen works by hold for every proposal: never more
-/// than `max`, every line covered as [SquadSelection.bestQuality] covers it
-/// (three keepers, the shape's count plus one in each outfield line), and
-/// never a man who misses the whole period. He goes further than the screen
-/// does and leaves out anyone injured or banned right now; only when a line
-/// would be short of its cover, or the squad short of `min`, does he name a
-/// man who is back during the period, the shortest absence first.
+/// than `max`, and never a man who misses the whole period. He goes further
+/// than the screen does and leaves out anyone injured or banned right now;
+/// only when a position would be short of its cover, or the squad short of
+/// `min`, does he name a man who is back during the period, the shortest
+/// absence first.
 abstract final class CallUpAdvice {
   /// The share of days a basic assistant reads the pool badly.
   static const double badDayRate = 0.35;
 
+  /// The most men a "change of tactics" card brings in.
+  static const int maxChangeSwaps = 3;
+
+  /// What a place in the squad beyond the cover is worth, in rating points,
+  /// for each extra position of the shape a man can play.
+  static const double versatilityBonus = 3;
+
+  /// What it costs a man, in rating points, to play none of the shape's
+  /// positions naturally or nearly.
+  static const double offShapePenalty = 4;
+
+  /// The positions a man plays NEARLY: within his own line, and the next
+  /// place along. A full-back plays either flank, a central midfielder sits
+  /// deeper or further on, a wide man switches wings.
+  static const Map<PlayerPosition, Set<PlayerPosition>> _near = {
+    PlayerPosition.gk: {},
+    PlayerPosition.lb: {PlayerPosition.rb},
+    PlayerPosition.rb: {PlayerPosition.lb},
+    PlayerPosition.cb: {},
+    PlayerPosition.dm: {PlayerPosition.cm},
+    PlayerPosition.cm: {PlayerPosition.dm, PlayerPosition.am},
+    PlayerPosition.am: {PlayerPosition.cm},
+    PlayerPosition.lm: {PlayerPosition.rm},
+    PlayerPosition.rm: {PlayerPosition.lm},
+    PlayerPosition.lw: {PlayerPosition.rw},
+    PlayerPosition.rw: {PlayerPosition.lw},
+    PlayerPosition.st: {},
+  };
+
+  /// Whether [p] plays [place] nearly (not his own position, but the next
+  /// place along in his line).
+  static bool playsNearly(Player p, PlayerPosition place) =>
+      _near[p.position]?.contains(place) ?? false;
+
+  /// The shape's positions [p] plays naturally or nearly, each once, his own
+  /// first and then in slot order.
+  static List<PlayerPosition> covers(
+    Player p,
+    List<PlayerPosition> positions,
+  ) => [
+    if (positions.contains(p.position)) p.position,
+    for (final place in {...positions})
+      if (place != p.position && playsNearly(p, place)) place,
+  ];
+
+  /// How many men each position of [positions] needs in the squad, in slot
+  /// order: three keepers; two (a first choice and a backup) for a position
+  /// played once; one more than it is played for a position played twice or
+  /// more.
+  static Map<PlayerPosition, int> coverNeeds(List<PlayerPosition> positions) {
+    final played = <PlayerPosition, int>{};
+    for (final place in positions) {
+      played[place] = (played[place] ?? 0) + 1;
+    }
+    return {
+      for (final e in played.entries)
+        e.key: e.key == PlayerPosition.gk
+            ? SquadSelection.keepers
+            : (e.value == 1 ? 2 : e.value + 1),
+    };
+  }
+
+  /// The shapes a manager playing [current] is likely to turn to, likeliest
+  /// first: those he has saved (presets and his tactics library, in the order
+  /// given), then the shapes his side is drilled in (most familiar first),
+  /// then the natural neighbours of [current]. Never [current] itself, and
+  /// each formation once.
+  static List<CallUpShape> otherShapes({
+    required Formation current,
+    List<CallUpShape> saved = const [],
+    Map<Formation, double> familiarity = const {},
+  }) {
+    final seen = <Formation>{current};
+    final out = <CallUpShape>[];
+    for (final s in saved) {
+      if (seen.add(s.formation)) out.add(s);
+    }
+    final drilled =
+        [
+          for (final e in familiarity.entries)
+            if (e.value > 0 && !seen.contains(e.key)) e,
+        ]..sort((a, b) {
+          final byValue = b.value.compareTo(a.value);
+          return byValue != 0 ? byValue : a.key.index.compareTo(b.key.index);
+        });
+    for (final e in drilled) {
+      seen.add(e.key);
+      out.add((formation: e.key, positions: e.key.positions));
+    }
+    for (final f in _neighbours(current)) {
+      if (seen.add(f)) out.add((formation: f, positions: f.positions));
+    }
+    return out;
+  }
+
+  /// The shapes nearest [f]: one change of a line or two away.
+  static List<Formation> _neighbours(Formation f) => switch (f) {
+    Formation.f433 => const [Formation.f4231, Formation.f4141],
+    Formation.f4231 => const [Formation.f433, Formation.f4411],
+    Formation.f442 => const [Formation.f4411, Formation.f41212],
+    Formation.f4411 => const [Formation.f442, Formation.f4231],
+    Formation.f352 => const [Formation.f532, Formation.f3412],
+    Formation.f532 => const [Formation.f352, Formation.f541],
+    Formation.f4141 => const [Formation.f433, Formation.f451],
+    Formation.f343 => const [Formation.f3421, Formation.f352],
+    Formation.f4222 => const [Formation.f4231, Formation.f41212],
+    Formation.f424 => const [Formation.f442, Formation.f433],
+    Formation.f41212 => const [Formation.f4312, Formation.f442],
+    Formation.f4312 => const [Formation.f41212, Formation.f433],
+    Formation.f451 => const [Formation.f4141, Formation.f4231],
+    Formation.f541 => const [Formation.f532, Formation.f451],
+    Formation.f3421 => const [Formation.f343, Formation.f3412],
+    Formation.f3412 => const [Formation.f352, Formation.f3421],
+    Formation.f5212 => const [Formation.f532, Formation.f352],
+    Formation.f4321 => const [Formation.f433, Formation.f4231],
+    Formation.f3511 => const [Formation.f352, Formation.f3421],
+  };
+
   /// His proposal, or null with nobody in the job.
   ///
-  /// [condition] is each player's live condition (only a good or elite
-  /// assistant reads it); [opponentsStronger] is whether the window's
-  /// opponents are ranked above the side on the whole (null when unknown),
-  /// read only by an elite assistant.
+  /// [positions] is the place each slot of the current tactic plays (the
+  /// formation with its slot switches; [formation]'s own positions when not
+  /// given). [otherShapes] are the shapes he may suggest a change to,
+  /// likeliest first (see [CallUpAdvice.otherShapes]; the neighbours of
+  /// [formation] when not given). [condition] is each player's live
+  /// condition (only a good or elite assistant reads it);
+  /// [opponentsStronger] is whether the window's opponents are ranked above
+  /// the side on the whole (null when unknown), read only by an elite
+  /// assistant.
   static CallUpAdviceSet? propose({
     required StaffTier tier,
     required List<Player> pool,
@@ -120,10 +300,19 @@ abstract final class CallUpAdvice {
     required int seed,
     required int min,
     required int max,
+    List<PlayerPosition>? positions,
+    List<CallUpShape>? otherShapes,
     Map<int, PlayerCondition> condition = const {},
     bool? opponentsStronger,
   }) {
     if (tier == StaffTier.none) return null;
+    final places = positions ?? formation.positions;
+    final needs = coverNeeds(places);
+    final played = <PlayerPosition, int>{};
+    for (final place in places) {
+      played[place] = (played[place] ?? 0) + 1;
+    }
+    final byId = {for (final p in pool) p.id: p};
     final candidates = [
       for (final p in pool)
         if (absences[p.id]?.isAvailable ?? true) p,
@@ -133,95 +322,132 @@ abstract final class CallUpAdvice {
       absences: absences,
       coverage: coverage,
     );
+    final returningIds = {for (final p in returning) p.id};
     final eye = _Eye(tier, seed, condition);
-    final fielded = <PositionCategory, int>{};
-    for (final pos in formation.positions) {
-      fielded[pos.category] = (fielded[pos.category] ?? 0) + 1;
-    }
+    bool isGk(Player p) => p.position.category == PositionCategory.goalkeeper;
 
-    CallUpProposal build(CallUpVariant variant) {
+    // How a man fits a place, best first: his own position, nearly, the
+    // same line.
+    final fits = <bool Function(Player, PlayerPosition)>[
+      (p, place) => p.position == place,
+      playsNearly,
+      (p, place) =>
+          PositionFit.fitRank(p, place) == 1 && !playsNearly(p, place),
+    ];
+
+    _Built build(CallUpVariant variant) {
       double value(Player p) => eye.value(p) + eye.lean(variant, p);
       final ranked = [...candidates]
         ..sort((a, b) {
           final byValue = value(b).compareTo(value(a));
           return byValue != 0 ? byValue : a.id.compareTo(b.id);
         });
-      bool isGk(Player p) => p.position.category == PositionCategory.goalkeeper;
-      final picked = <int>{
-        ...ranked.where(isGk).take(SquadSelection.keepers).map((p) => p.id),
-      };
-      int floorOf(PositionCategory line) => line == PositionCategory.goalkeeper
-          ? SquadSelection.keepers
-          : (fielded[line] ?? 0) + 1;
-      final floorPicks = <int>{};
-      for (final line in PositionCategory.values) {
-        if (line == PositionCategory.goalkeeper) continue;
-        final floor = floorOf(line);
-        var named = 0;
-        for (final p in ranked) {
-          if (named >= floor || picked.length >= max) break;
-          if (p.position.category != line || picked.contains(p.id)) continue;
-          picked.add(p.id);
-          floorPicks.add(p.id);
-          named++;
+      final picked = <int>{};
+      final roles = <int, _Role>{};
+      final have = {for (final place in needs.keys) place: 0};
+
+      void name(Player p, PlayerPosition place) {
+        picked.add(p.id);
+        roles[p.id] = (
+          at: place,
+          starter: p.position == place && have[place]! < played[place]!,
+        );
+        have[place] = have[place]! + 1;
+      }
+
+      // The cover, from the men fit now and then, for a position still
+      // short, from the men back during the period (shortest absence first).
+      for (final from in [ranked, returning]) {
+        for (final fit in fits) {
+          for (final place in needs.keys) {
+            for (final p in from) {
+              if (have[place]! >= needs[place]! || picked.length >= max) break;
+              if (picked.contains(p.id) || !fit(p, place)) continue;
+              name(p, place);
+            }
+          }
         }
       }
-      // A line short of its cover takes the men back during the period,
-      // shortest absence first. They are there to cover.
-      final byId = {for (final p in pool) p.id: p};
-      for (final line in PositionCategory.values) {
-        var named = picked
-            .where((id) => byId[id]?.position.category == line)
-            .length;
-        for (final p in returning) {
-          if (named >= floorOf(line) || picked.length >= max) break;
-          if (p.position.category != line || picked.contains(p.id)) continue;
-          picked.add(p.id);
-          floorPicks.add(p.id);
-          named++;
-        }
+
+      // The cover is a floor, not the squad: the rest go to the best
+      // outfielders still unnamed, a man who plays more of the shape worth
+      // more than one who plays less of it.
+      double fillValue(Player p) {
+        final n = covers(p, places).length;
+        return value(p) +
+            (n == 0 ? -offShapePenalty : versatilityBonus * (n - 1));
       }
-      // The floors are a floor, not the squad: the rest go to the best
-      // outfielders still unnamed, wherever they play.
-      for (final p in ranked) {
+
+      final rest =
+          [
+            for (final p in ranked)
+              if (!isGk(p) && !picked.contains(p.id)) p,
+          ]..sort((a, b) {
+            final byValue = fillValue(b).compareTo(fillValue(a));
+            return byValue != 0 ? byValue : a.id.compareTo(b.id);
+          });
+      for (final p in rest) {
         if (picked.length >= max) break;
-        if (isGk(p) || picked.contains(p.id)) continue;
         picked.add(p.id);
       }
-      // And so does a squad short of the minimum.
+      // A squad short of the minimum takes men back during the period.
+      final toppedUp = <int>{};
       for (final p in returning) {
         if (picked.length >= min || picked.length >= max) break;
         if (isGk(p) || picked.contains(p.id)) continue;
         picked.add(p.id);
-        floorPicks.add(p.id);
+        toppedUp.add(p.id);
       }
-      // A floor pick who would not have made it on his own reading is there
-      // for his line, and says so.
-      final outfieldPlaces = max - SquadSelection.keepers;
-      final onMerit = {
-        ...ranked.where((p) => !isGk(p)).take(outfieldPlaces).map((p) => p.id),
-      };
-      final reasons = <int, CallUpReason>{
-        for (final p in ranked)
-          if (picked.contains(p.id))
-            p.id: eye.reasonFor(
-              variant,
-              p,
-              cover: floorPicks.contains(p.id) && !onMerit.contains(p.id),
-            ),
-        // A man back during the period is there for cover, whatever else.
-        for (final p in returning)
-          if (picked.contains(p.id)) p.id: CallUpReason.lineCover,
-      };
-      return CallUpProposal(variant: variant, squad: picked, reasons: reasons);
+
+      final reasons = <int, CallUpReason>{};
+      final named = <int, List<PlayerPosition>>{};
+      for (final id in picked) {
+        final p = byId[id]!;
+        final role = roles[id];
+        final plays = covers(p, places);
+        if (toppedUp.contains(id)) {
+          reasons[id] = CallUpReason.lineCover;
+        } else if (role != null && role.starter && !returningIds.contains(id)) {
+          reasons[id] = eye.reasonFor(variant, p);
+        } else if (role != null) {
+          // A backup who plays more than the place he covers says so.
+          if (p.position == role.at &&
+              plays.length >= 2 &&
+              !returningIds.contains(id)) {
+            reasons[id] = CallUpReason.covers;
+            named[id] = plays;
+          } else {
+            reasons[id] = CallUpReason.backup;
+            named[id] = [role.at];
+          }
+        } else if (plays.length >= 2) {
+          reasons[id] = CallUpReason.covers;
+          named[id] = plays;
+        } else {
+          reasons[id] = eye.reasonFor(variant, p);
+        }
+      }
+      return (
+        proposal: CallUpProposal(
+          variant: variant,
+          squad: picked,
+          reasons: reasons,
+          positions: named,
+        ),
+        roles: roles,
+      );
     }
 
-    final main = build(CallUpVariant.main);
+    final built = build(CallUpVariant.main);
+    final main = built.proposal;
 
     /// His pick with up to [maxSwaps] men swapped for the kind the variant
-    /// is about, each within his own line (so every floor still holds), and
-    /// never for a man more than [maxDrop] points below the one he replaces
-    /// by this assistant's own reading.
+    /// is about, and never for a man more than [maxDrop] points below the one
+    /// he replaces by this assistant's own reading.
+    ///
+    /// The cover holds: a man named to cover a position is only ever
+    /// replaced by another whose own position it is, and a man named on top
+    /// of the cover by another from his line.
     ///
     /// A lean on the ratings alone rarely moves a youngster into a squad:
     /// a 17-year-old is ten or fifteen points behind the man he would
@@ -237,6 +463,8 @@ abstract final class CallUpAdvice {
       const maxDrop = 15.0;
       final squad = {...main.squad};
       final reasons = {...main.reasons};
+      final named = {...main.positions};
+      final roles = {...built.roles};
       final incoming =
           [
             for (final p in candidates)
@@ -245,19 +473,17 @@ abstract final class CallUpAdvice {
             final byValue = eye.value(b).compareTo(eye.value(a));
             return byValue != 0 ? byValue : a.id.compareTo(b.id);
           });
-      final byId = {for (final p in pool) p.id: p};
       var swaps = 0;
       for (final inc in incoming) {
         if (swaps >= maxSwaps) break;
         Player? out;
         for (final id in squad) {
           final p = byId[id];
-          if (p == null ||
-              p.position.category != inc.position.category ||
-              !sheds(p) ||
-              reasons[id] == reason) {
-            continue;
-          }
+          if (p == null || !sheds(p) || reasons[id] == reason) continue;
+          final fits = roles[id] != null
+              ? p.position == inc.position
+              : p.position.category == inc.position.category;
+          if (!fits) continue;
           if (out == null ||
               eye.value(p) < eye.value(out) ||
               (eye.value(p) == eye.value(out) && p.id < out.id)) {
@@ -271,9 +497,136 @@ abstract final class CallUpAdvice {
         reasons
           ..remove(out.id)
           ..[inc.id] = reason;
+        named.remove(out.id);
+        if (roles.remove(out.id) case final role?) roles[inc.id] = role;
         swaps++;
       }
-      return CallUpProposal(variant: variant, squad: squad, reasons: reasons);
+      return CallUpProposal(
+        variant: variant,
+        squad: squad,
+        reasons: reasons,
+        positions: named,
+      );
+    }
+
+    /// His pick with up to [maxChangeSwaps] men in who play the positions of
+    /// [shape] the squad is short of, most pressing first (a position with
+    /// nobody for it before one short of its backup). Room is made, while the
+    /// squad is full, only from the men named on top of the cover: the
+    /// current tactic keeps every place it has.
+    CallUpProposal changeTo(CallUpShape shape) {
+      final altNeeds = coverNeeds(shape.positions)..remove(PlayerPosition.gk);
+      final altPlayed = <PlayerPosition, int>{};
+      for (final place in shape.positions) {
+        altPlayed[place] = (altPlayed[place] ?? 0) + 1;
+      }
+      final squad = {...main.squad};
+      final reasons = {...main.reasons};
+      final named = {...main.positions};
+      int haveAt(PlayerPosition place) =>
+          squad.where((id) => byId[id]?.position == place).length;
+      final exhausted = <PlayerPosition>{};
+      var swaps = 0;
+      while (swaps < maxChangeSwaps) {
+        PlayerPosition? target;
+        var worst = 0;
+        for (final place in altNeeds.keys) {
+          if (exhausted.contains(place)) continue;
+          final have = haveAt(place);
+          if (have >= altNeeds[place]!) continue;
+          final severity = have - altPlayed[place]!;
+          if (target == null || severity < worst) {
+            target = place;
+            worst = severity;
+          }
+        }
+        if (target == null) break;
+        Player? inc;
+        for (final p in candidates) {
+          if (p.position != target || squad.contains(p.id)) continue;
+          if (inc == null ||
+              eye.value(p) > eye.value(inc) ||
+              (eye.value(p) == eye.value(inc) && p.id < inc.id)) {
+            inc = p;
+          }
+        }
+        if (inc == null) {
+          exhausted.add(target);
+          continue;
+        }
+        if (squad.length >= max) {
+          // How readily the other shape lets a man go: one it does not
+          // play at all first, then one where it has more than it needs,
+          // then one whose place would still be less short than the target
+          // is now. Null: it cannot spare him.
+          int? spare(Player p) {
+            final played = altPlayed[p.position];
+            if (played == null) return 1 << 20;
+            final have = haveAt(p.position);
+            if (have > altNeeds[p.position]!) return (1 << 10) + have;
+            final after = have - 1 - played;
+            return after > worst ? after : null;
+          }
+
+          Player? out;
+          int? outSpare;
+          for (final id in squad) {
+            final p = byId[id];
+            if (p == null ||
+                isGk(p) ||
+                built.roles.containsKey(id) ||
+                reasons[id] == CallUpReason.forChange) {
+              continue;
+            }
+            final s = spare(p);
+            if (s == null) continue;
+            if (out == null ||
+                s > outSpare! ||
+                (s == outSpare &&
+                    (eye.value(p) < eye.value(out) ||
+                        (eye.value(p) == eye.value(out) && p.id < out.id)))) {
+              out = p;
+              outSpare = s;
+            }
+          }
+          if (out == null) break;
+          squad.remove(out.id);
+          reasons.remove(out.id);
+          named.remove(out.id);
+        }
+        squad.add(inc.id);
+        reasons[inc.id] = CallUpReason.forChange;
+        named[inc.id] = [target];
+        swaps++;
+      }
+      return CallUpProposal(
+        variant: CallUpVariant.tacticsChange,
+        squad: squad,
+        reasons: reasons,
+        positions: named,
+        formation: shape.formation,
+      );
+    }
+
+    // Only a REAL alternative: a card naming the same squad is noise.
+    final alternatives = <CallUpProposal>[];
+    bool fresh(CallUpProposal alt) =>
+        !alt.sameSquad(main.squad) &&
+        !alternatives.any((a) => a.sameSquad(alt.squad));
+
+    // The likeliest other shape the pool gives him something to say about.
+    CallUpProposal? change;
+    for (final shape
+        in otherShapes ??
+            CallUpAdvice.otherShapes(
+              current: formation,
+            )) {
+      if (shape.formation == formation) continue;
+      final alt = changeTo(shape);
+      if (!alt.sameSquad(main.squad)) {
+        change = alt;
+        break;
+      }
     }
 
     CallUpProposal variantOf(CallUpVariant variant) => switch (variant) {
@@ -289,7 +642,7 @@ abstract final class CallUpAdvice {
         sheds: (p) => p.age <= 23,
         reason: CallUpReason.experienced,
       ),
-      _ => build(variant),
+      _ => build(variant).proposal,
     };
     final (order, most) = switch (tier) {
       StaffTier.none || StaffTier.basic => (
@@ -329,14 +682,20 @@ abstract final class CallUpAdvice {
         2,
       ),
     };
-    final alternatives = <CallUpProposal>[];
-    for (final variant in order) {
+    // A basic man has one idea beyond his pick, and the change of tactics is
+    // the one the manager most wants; the better men lead with their own
+    // read of the pool and keep the change of tactics as the second card.
+    final ideas = <CallUpProposal? Function()>[
+      if (tier != StaffTier.basic)
+        for (final v in order.take(1)) () => variantOf(v),
+      () => change,
+      for (final v in order.skip(tier == StaffTier.basic ? 0 : 1))
+        () => variantOf(v),
+    ];
+    for (final idea in ideas) {
       if (alternatives.length >= most) break;
-      final alt = variantOf(variant);
-      // Only a REAL alternative: a card naming the same squad is noise.
-      if (alt.sameSquad(main.squad)) continue;
-      if (alternatives.any((a) => a.sameSquad(alt.squad))) continue;
-      alternatives.add(alt);
+      final alt = idea();
+      if (alt != null && fresh(alt)) alternatives.add(alt);
     }
     return (main: main, alternatives: alternatives);
   }
@@ -501,22 +860,20 @@ class _Eye {
         FatigueState.exhausted => -12,
         _ => 0,
       },
-      // The age squads swap names rather than lean (see `swapped`).
-      CallUpVariant.youth || CallUpVariant.experience => 0,
+      // The age squads swap names rather than lean (see `swapped`), and so
+      // does the change of tactics (see `changeTo`).
+      CallUpVariant.youth ||
+      CallUpVariant.experience ||
+      CallUpVariant.tacticsChange => 0,
     };
   }
 
-  CallUpReason reasonFor(
-    CallUpVariant variant,
-    Player p, {
-    required bool cover,
-  }) {
+  CallUpReason reasonFor(CallUpVariant variant, Player p) {
     final c = condition[p.id];
     if (variant == CallUpVariant.fresherLegs &&
         c?.fatigueState == FatigueState.fresh) {
       return CallUpReason.fresh;
     }
-    if (cover) return CallUpReason.lineCover;
     if (tier == StaffTier.elite &&
         (c?.form == PlayerForm.onFire || c?.form == PlayerForm.good)) {
       return CallUpReason.inForm;

@@ -21393,6 +21393,63 @@
       }
     }
   },
+  "assistantVariantTacticsChange": "For a change to {formation}",
+  "@assistantVariantTacticsChange": {
+    "description": "Title of the assistant's alternative squad proposal for a change of tactics: his pick with a few players in who play the positions of another formation the manager may switch to. formation is the formation code, e.g. 4-2-3-1.",
+    "placeholders": {
+      "formation": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantReasonBackup": "Backup for {position}",
+  "@assistantReasonBackup": {
+    "description": "Short reason chip beside a player the assistant would call up as the backup at one position of the current tactic. position is a position code, e.g. DM.",
+    "placeholders": {
+      "position": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantReasonCoversTwo": "Covers {first} and {second}",
+  "@assistantReasonCoversTwo": {
+    "description": "Short reason chip beside a player the assistant would call up because he can play two positions of the current tactic. first and second are position codes, e.g. LB and RB.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantReasonCoversThree": "Covers {first}, {second} and {third}",
+  "@assistantReasonCoversThree": {
+    "description": "Short reason chip beside a player the assistant would call up because he can play three positions of the current tactic. first, second and third are position codes, e.g. DM, CM and AM.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "third": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantReasonForChange": "For {formation}: {position}",
+  "@assistantReasonForChange": {
+    "description": "Short reason chip beside a player on the change-of-tactics squad proposal: he is in for one position of the other formation. formation is the formation code (e.g. 4-2-3-1), position a position code (e.g. AM).",
+    "placeholders": {
+      "formation": {
+        "type": "String"
+      },
+      "position": {
+        "type": "String"
+      }
+    }
+  },
   "staffEffectAdviceBasic": "Advises on call-ups, sometimes wrongly",
   "@staffEffectAdviceBasic": {
     "description": "Staff room benefit line for a basic assistant: advises on which players to call up, sometimes wrongly."

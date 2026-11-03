@@ -13277,6 +13277,31 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return '$formationへの変更用';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return '$positionの控え';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return '$firstと$secondをこなす';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return '$first・$second・$thirdをこなす';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return '$formation用: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => '招集を助言、時々外れる';
 
   @override

@@ -13838,6 +13838,31 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Για αλλαγή σε $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Αναπληρωματικός για $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Καλύπτει $first και $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Καλύπτει $first, $second και $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Για $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic =>
       'Συμβουλεύει για τις κλήσεις, πού και πού λάθος';
 

@@ -13768,6 +13768,31 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String assistantVariantTacticsChange(String formation) {
+    return 'Kung lilipat sa $formation';
+  }
+
+  @override
+  String assistantReasonBackup(String position) {
+    return 'Reserba sa $position';
+  }
+
+  @override
+  String assistantReasonCoversTwo(String first, String second) {
+    return 'Kaya ang $first at $second';
+  }
+
+  @override
+  String assistantReasonCoversThree(String first, String second, String third) {
+    return 'Kaya ang $first, $second at $third';
+  }
+
+  @override
+  String assistantReasonForChange(String formation, String position) {
+    return 'Para sa $formation: $position';
+  }
+
+  @override
   String get staffEffectAdviceBasic => 'Nagpapayo sa call-up, minsan mali';
 
   @override
