@@ -22015,7 +22015,7 @@
   },
   "matchTinyWorld": "WC",
   "@matchTinyWorld": {
-    "description": "Tiny tag for the World Championship finals on a compact fixture tile (call-up screen). An abbreviation the way fans write it, about 2 to 6 characters. Never the name of the real World Cup."
+    "description": "Tiny tag for the World Championship finals on a compact fixture tile (call-up screen). An abbreviation the way fans write it, about 2 to 6 characters. Never the real tournament's trademarked name."
   },
   "matchTinyQualifying": "{comp} Q",
   "@matchTinyQualifying": {

@@ -21512,7 +21512,7 @@ abstract class AppLocalizations {
   /// **'Of all the sponsors in the world, we picked {brand}. Every rival we have is laughing at us.'**
   String ySponsorMocked5(String brand);
 
-  /// Tiny tag for the World Championship finals on a compact fixture tile (call-up screen). An abbreviation the way fans write it, about 2 to 6 characters. Never the name of the real World Cup.
+  /// Tiny tag for the World Championship finals on a compact fixture tile (call-up screen). An abbreviation the way fans write it, about 2 to 6 characters. Never the real tournament's trademarked name.
   ///
   /// In en, this message translates to:
   /// **'WC'**
