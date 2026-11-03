@@ -85,7 +85,7 @@ void main() {
     // world's fringe players (ids, names, attributes, clubs) come from here,
     // so the refactor must not move a single byte.
     test('expand(players.json) is byte-identical to the pre-refactor pool', () {
-      // On the pools as 1.0.8 shipped them: Croatia's and Central Asia's lists
+      // On the pools as 1.0.8 shipped them: Croatia's, Central Asia's and Chinese Taipei's lists
       // moved in 1.0.9,
       // and older careers read the frozen copy (frozen_name_pools.dart).
       final namesV4 = {
@@ -97,6 +97,7 @@ void main() {
         198: (first: uzbekistanFirstNamesV4, sur: uzbekistanSurnamesV4),
         27: (first: kazakhstanFirstNamesV4, sur: kazakhstanSurnamesV4),
         155: (first: afghanistanFirstNamesV4, sur: afghanistanSurnamesV4),
+        163: (first: chineseTaipeiFirstNamesV4, sur: chineseTaipeiSurnamesV4),
       };
       expect(
         _fingerprint(PoolGenerator.expand(_base, namesByNation: namesV4)),

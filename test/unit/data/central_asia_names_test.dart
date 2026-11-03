@@ -44,7 +44,7 @@ void main() {
     }
     final players = c.read(playerRepositoryProvider);
     return {
-      for (final id in [196, 173, 193, 198, 27, 155])
+      for (final id in [196, 173, 193, 198, 27, 155, 163])
         id: [
           for (final p in await players.byNation(
             id,
@@ -70,6 +70,7 @@ void main() {
         198: uzbekistanFirstNamesV4.toSet(),
         27: kazakhstanFirstNamesV4.toSet(),
         155: afghanistanFirstNamesV4.toSet(),
+        163: chineseTaipeiFirstNamesV4.toSet(),
       };
       for (final e in old.entries) {
         expect(e.value, isNotEmpty);

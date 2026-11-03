@@ -132,6 +132,9 @@ class DriftPlayerRepository implements PlayerRepository {
     198: (first: uzbekistanFirstNamesV4, sur: uzbekistanSurnamesV4),
     27: (first: kazakhstanFirstNamesV4, sur: kazakhstanSurnamesV4),
     155: (first: afghanistanFirstNamesV4, sur: afghanistanSurnamesV4),
+    // Chinese Taipei's first names gained Chi-ming and Chi-chang (a
+    // Taiwanese player's suggestion).
+    163: (first: chineseTaipeiFirstNamesV4, sur: chineseTaipeiSurnamesV4),
   };
 
   /// The `country_names_more.json` extras a career without
