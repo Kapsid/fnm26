@@ -216,4 +216,57 @@ void main() {
     await tester.pump();
     expect(find.byKey(HubEventButton.simToFinalKey), findsNothing);
   });
+
+  // Owner, 1.0.9: "sometimes a match is skipped entirely and I find the
+  // result in the table". After a step of the world the hub works out its
+  // next event afresh; until it has, the button still showed the old
+  // "Advance", and a tap in that moment ran the skip step that quick-sims
+  // the manager's next match. A tap must never act on an event the hub is
+  // still recomputing.
+  testWidgets('a tap while the next event is being worked out does nothing', (
+    tester,
+  ) async {
+    final season = _FakeSeason()..gate.complete();
+    final version = StateProvider<int>((ref) => 0);
+    final recomputed = Completer<HubEvent>();
+    await tester.pumpApp(
+      const Scaffold(body: HubEventButton(careerId: 1)),
+      overrides: [
+        nextEventProvider(1).overrideWith((ref) async {
+          if (ref.watch(version) == 0) return event;
+          return recomputed.future;
+        }),
+        seasonServiceProvider.overrideWith((ref) => season),
+      ],
+    );
+    await tester.pump();
+    final staleTap = tester
+        .widget<PrimaryButton>(find.byType(PrimaryButton))
+        .onPressed!;
+    await tester.tap(find.byType(PrimaryButton));
+    await tester.pump();
+    expect(season.calls, 1);
+
+    // The step is done; the hub is now working out what comes next.
+    ProviderScope.containerOf(
+      tester.element(find.byType(Scaffold)),
+    ).read(version.notifier).state = 1;
+    await tester.pump();
+    await tester.tap(find.byType(PrimaryButton), warnIfMissed: false);
+    staleTap();
+    await tester.pump();
+    expect(season.calls, 1, reason: 'the match must not be simulated');
+
+    // Its match is next: the button says so, and advances nothing.
+    recomputed.complete(
+      const HubEvent(
+        kind: HubEventKind.match,
+        label: 'Play Norway',
+        icon: Icons.play_arrow_rounded,
+      ),
+    );
+    await tester.pump();
+    expect(find.text('Play Norway'), findsOneWidget);
+    expect(season.calls, 1);
+  });
 }

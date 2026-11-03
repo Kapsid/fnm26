@@ -75,8 +75,13 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final event = ref.watch(nextEventProvider(careerId)).valueOrNull;
-    final busy = ref.watch(hubActionBusyProvider(careerId));
+    final next = ref.watch(nextEventProvider(careerId));
+    final event = next.valueOrNull;
+    // While the hub works out its next event afresh (after every step of the
+    // world) the old one is still shown, and acting on it was how a match got
+    // skipped: a second "Advance" ran the step that quick-sims the manager's
+    // own match, which the fresh event would have offered him to play.
+    final busy = ref.watch(hubActionBusyProvider(careerId)) || next.isLoading;
     final button = PrimaryButton(
       key: (widget.tourTarget ?? !widget.compact) ? TourKeys.hubAction : null,
       label: event?.label ?? l.hubContinue,
@@ -179,6 +184,10 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
   }
 
   void _dispatch(BuildContext context, WidgetRef ref, HubEvent event) {
+    // A tap that reached here from a button built on an older event (see
+    // [build]) acts only if that is still the hub's event, settled.
+    final now = ref.read(nextEventProvider(careerId));
+    if (now.isLoading || !identical(now.valueOrNull, event)) return;
     final season = ref.read(seasonServiceProvider);
     switch (event.kind) {
       case HubEventKind.watchTournament:
