@@ -164,4 +164,47 @@ void main() {
       expect(b, a);
     }
   });
+
+  // Owner, 1.0.9: two men of one nation in the five is for the World
+  // Champion only, and a weak side's men do not reach it on numbers alone.
+  test('one man a nation in the five, two only for the World Champion', () {
+    for (final y in full) {
+      // A thin year, with fewer than five nations in the running, fills its
+      // places from whoever is left (see PlayerOfYear.rank).
+      final inRunning = {
+        for (final l in y.awardYear.lines.values)
+          if (l.apps >= y.floor && y.profiles.containsKey(l.playerId))
+            l.nationId,
+      };
+      if (inRunning.length < 8) continue;
+      final top = vote(y).top;
+      final champions = {
+        for (final t in y.awardYear.trophies)
+          if (t.family == TrophyFamily.worldChampionship) t.champion,
+      };
+      final count = <int, int>{};
+      for (final e in top) {
+        count[e.nationId] = (count[e.nationId] ?? 0) + 1;
+      }
+      for (final c in count.entries) {
+        expect(
+          c.value,
+          lessThanOrEqualTo(champions.contains(c.key) ? 2 : 1),
+          reason: 'seed ${y.seed} ${y.year} nation ${c.key}',
+        );
+      }
+      expect(
+        top.where((e) => e.profile.overall <= 60),
+        isEmpty,
+        reason: 'seed ${y.seed} ${y.year}',
+      );
+    }
+  });
+
+  test('a weak man\'s numbers count for little', () {
+    expect(PlayerOfYear.standing(90), 1.0);
+    expect(PlayerOfYear.standing(85), 1.0);
+    expect(PlayerOfYear.standing(70), closeTo(0.5, 0.01));
+    expect(PlayerOfYear.standing(50), PlayerOfYear.standingMin);
+  });
 }

@@ -369,7 +369,9 @@ abstract final class PlayerOfYear {
           nationId: l.nationId,
           profile: p,
           line: l,
-          individual: individual(l, p.position.category, minApps: floor),
+          individual:
+              individual(l, p.position.category, minApps: floor) *
+              standing(p.overall),
           team: team(l, year.trophies),
           honours: PlayerOfYear.honours(hs[l.playerId] ?? const []),
         ),
@@ -379,8 +381,48 @@ abstract final class PlayerOfYear {
       final s = b.total.compareTo(a.total);
       return s != 0 ? s : a.playerId.compareTo(b.playerId);
     });
-    return out.take(limit).toList();
+    // One man a nation (owner, 1.0.9): a ballot with two or three of one
+    // side's players read as a national award. Only the year's World
+    // Champion may place a second, the one year a whole team is the story.
+    final champions = {
+      for (final t in year.trophies)
+        if (t.family == TrophyFamily.worldChampionship) t.champion,
+    };
+    final perNation = <int, int>{};
+    final ballot = <PotyEntry>[];
+    for (final e in out) {
+      if (ballot.length == limit) break;
+      final cap = champions.contains(e.nationId) ? 2 : 1;
+      final n = perNation[e.nationId] ?? 0;
+      if (n >= cap) continue;
+      perNation[e.nationId] = n + 1;
+      ballot.add(e);
+    }
+    // A thin year (a handful of nations played) still fills its places:
+    // the best of the rest, whatever their nation.
+    for (final e in out) {
+      if (ballot.length == limit) break;
+      if (!ballot.contains(e)) ballot.add(e);
+    }
+    ballot.sort((a, b) {
+      final s = b.total.compareTo(a.total);
+      return s != 0 ? s : a.playerId.compareTo(b.playerId);
+    });
+    return ballot;
   }
+
+  /// How much a voter believes a man's numbers, by how good he is: full
+  /// from [standingFull] up, a little at [standingFloor] and below (owner,
+  /// 1.0.9: a 50-rated side's forwards topped the vote on goals against
+  /// minnows, while the side went out in every group stage).
+  static double standing(int overall) =>
+      ((overall - standingFloor) / (standingFull - standingFloor)).clamp(
+        standingMin,
+        1.0,
+      );
+  static const int standingFloor = 55;
+  static const int standingFull = 85;
+  static const double standingMin = 0.1;
 
   /// The young award's field: aged [Awards.youngMaxAge] or under.
   static bool young(VoterProfile p) => p.age <= Awards.youngMaxAge;
