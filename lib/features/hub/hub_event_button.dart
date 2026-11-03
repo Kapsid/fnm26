@@ -7,10 +7,8 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
-import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/awards/awards_ceremony_screen.dart';
-import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -249,25 +247,9 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
             );
           }
           if (conference == null) return;
-          final ids = {
-            conference.facts.bestPlayerId,
-            conference.facts.worstPlayerId,
-            conference.facts.throwback?.playerId,
-            conference.facts.preview?.keyPlayerId,
-          }.whereType<int>().toSet();
-          final pool = await ref
-              .read(playerRepositoryProvider)
-              .byNation(
-                hub.career.nationId,
-                agingYears: CareerService.agingYears(hub.career),
-                saveSeed: hub.career.rngSeed,
-                careerId: hub.career.id,
-                minAge: PlayerLifecycle.callUpMinAge,
-              );
-          final names = {
-            for (final p in pool)
-              if (ids.contains(p.id)) p.id: p.name,
-          };
+          final names = await ref
+              .read(conferenceServiceProvider)
+              .playerNames(hub.career, conference);
           if (!context.mounted) return;
           unawaited(
             showAdaptiveSheet<void>(

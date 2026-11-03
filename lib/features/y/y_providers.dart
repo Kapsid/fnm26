@@ -324,6 +324,10 @@ yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
     final absences = await ref
         .watch(absenceRepositoryProvider)
         .forCareer(careerId);
+    // His own men only. The world simulation injures every nation's
+    // players too, and the first of the WHOLE world's injured was posted
+    // as his loss after every match, a man from another continent who was
+    // out for months (tester, 1.0.9).
     final hurt = <String>[];
     for (final a in absences.values) {
       if (a.injuryMatches <= 0) continue;
@@ -333,7 +337,7 @@ yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
         saveSeed: career.rngSeed,
         careerId: career.id,
       );
-      if (p != null) hurt.add(p.name);
+      if (p != null && p.nationId == career.nationId) hurt.add(p.name);
     }
     final last = contexts.last;
     contexts[contexts.length - 1] = (

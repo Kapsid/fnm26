@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
@@ -359,6 +360,60 @@ pendingConferenceProvider = FutureProvider.autoDispose
 class ConferenceService {
   ConferenceService(this._ref);
   final Ref _ref;
+
+  /// The names of the players [c] asks about, from the same pool his
+  /// questions are picked from: his nation's own players AND every man
+  /// naturalised into it. The preview's key man is the best of his called-up
+  /// squad, naturalised men included, and a name read from the nation's own
+  /// players alone left that question with a hole where his name belonged
+  /// ("If  is not at his best...", owner 1.0.9).
+  Future<Map<int, String>> playerNames(
+    Career career,
+    PendingConference c,
+  ) => namesFor(
+    career,
+    {
+      c.facts.bestPlayerId,
+      c.facts.worstPlayerId,
+      c.facts.throwback?.playerId,
+      c.facts.preview?.keyPlayerId,
+    }.whereType<int>().toSet(),
+  );
+
+  /// [ids]' names within [career] (see [playerNames]). Retired men too: a
+  /// throwback may ask about one.
+  Future<Map<int, String>> namesFor(Career career, Set<int> ids) async {
+    if (ids.isEmpty) return const {};
+    final pool =
+        await _ref
+            .read(playerRepositoryProvider)
+            .byNation(
+              career.nationId,
+              agingYears: CareerService.agingYears(career),
+              saveSeed: career.rngSeed,
+              careerId: career.id,
+              minAge: PlayerLifecycle.callUpMinAge,
+              includeIntlRetired: true,
+            ) +
+        await naturalizedPlayersFor(_ref, career);
+    final names = {
+      for (final p in pool)
+        if (ids.contains(p.id)) p.id: p.name,
+    };
+    // Anyone still missing is read on his own, wherever he plays now.
+    for (final id in ids.difference(names.keys.toSet())) {
+      final p = await _ref
+          .read(playerRepositoryProvider)
+          .byId(
+            id,
+            agingYears: CareerService.agingYears(career),
+            saveSeed: career.rngSeed,
+            careerId: career.id,
+          );
+      if (p != null) names[id] = p.name;
+    }
+    return names;
+  }
 
   Future<PressEffect> answer(
     int careerId,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/statement.dart';
@@ -29,6 +30,16 @@ class _FakeService implements ConferenceService {
 
   @override
   Future<int> openPreview(int careerId, PreviewDue due) async => 0;
+
+  @override
+  Future<Map<int, String>> playerNames(
+    Career career,
+    PendingConference c,
+  ) async => const {};
+
+  @override
+  Future<Map<int, String>> namesFor(Career career, Set<int> ids) async =>
+      const {};
 
   @override
   Future<void> finish(int careerId, int conferenceId) async {
