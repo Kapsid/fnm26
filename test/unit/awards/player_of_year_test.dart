@@ -345,7 +345,8 @@ void main() {
       final ranked = PlayerOfYear.rank(y, {
         for (final p in [1, 2, 3, 4, 9]) p: _p(PlayerPosition.cm),
       });
-      expect(ranked.map((e) => e.playerId), [4, 3, 2, 1]);
+      // All five are one nation's: the ballot holds its best man only.
+      expect(ranked.map((e) => e.playerId), [4]);
       // With five men at four games, the floor is four.
       for (final f in games.take(4)) {
         w.played(f, 5, 1);
@@ -372,6 +373,80 @@ void main() {
         ),
         6,
       );
+    });
+
+    test('a year of friendlies alone has no vote', () {
+      final w = _World();
+      for (var i = 0; i < 6; i++) {
+        w.played(
+          w.match(2, 99, kind: CompetitionKind.friendly, round: 'FRIENDLY'),
+          2,
+          2,
+        );
+      }
+      expect(PlayerOfYear.hasCompetitiveFootball(w.build()), isFalse);
+      w.played(w.match(1, 99), 1, 1);
+      expect(PlayerOfYear.hasCompetitiveFootball(w.build()), isTrue);
+    });
+
+    test('nobody under the elite bar is on the ballot', () {
+      final w = _World();
+      for (final f in _qualifiers(w, 1)) {
+        w.played(f, 1, 1, rating: 9, goals: 3);
+      }
+      for (final f in _qualifiers(w, 2)) {
+        w.played(f, 2, 2, rating: 6.8);
+      }
+      final ranked = PlayerOfYear.rank(w.build(), {
+        1: _p(PlayerPosition.st, overall: 55),
+        2: _p(PlayerPosition.st, overall: 84),
+      });
+      expect(ranked.map((e) => e.playerId), [2]);
+    });
+
+    test(
+      'a year of friendlies is voted on standing, from the world\'s best',
+      () {
+        final w = _World();
+        // The manager's men (nation 2) played friendlies, and well.
+        for (var i = 0; i < 6; i++) {
+          final f = w.match(
+            2,
+            99,
+            kind: CompetitionKind.friendly,
+            round: 'FRIENDLY',
+          );
+          for (var p = 20; p < 25; p++) {
+            w.played(f, p, 2, rating: 8.5, goals: 1);
+          }
+        }
+        final y = w.build();
+        final ranked = PlayerOfYear.rank(
+          y,
+          {for (var p = 20; p < 25; p++) p: _p(PlayerPosition.st, overall: 81)},
+          byStanding: true,
+          elite: {
+            for (var p = 1; p <= 6; p++)
+              p: (profile: _p(PlayerPosition.st, overall: 80 + p), nationId: p),
+          },
+        );
+        // The five best of the world by standing, one a nation; the manager's
+        // 81s, good friendlies or not, behind 82 and up.
+        expect(ranked.map((e) => e.playerId), [6, 5, 4, 3, 2]);
+      },
+    );
+
+    test('a successful nation may place more than one', () {
+      final w = _World();
+      final ko = _worldChampionship(w);
+      expect(ko, isNotNull);
+      final y = w.build();
+      final t = y.trophies.firstWhere(
+        (t) => t.family == TrophyFamily.worldChampionship,
+      );
+      expect(PlayerOfYear.nationCap(t.champion, y.trophies), 3);
+      expect(PlayerOfYear.nationCap(t.runnerUp, y.trophies), 2);
+      expect(PlayerOfYear.nationCap(9999, y.trophies), 1);
     });
 
     test('big matches count more than friendlies', () {
@@ -409,8 +484,9 @@ void main() {
         5: _p(PlayerPosition.st),
         8: _p(PlayerPosition.st),
       });
-      expect(a.map((e) => e.playerId), [5, 8]);
-      expect(b.map((e) => e.playerId), [5, 8]);
+      // One nation, one place: the lower id takes it either way.
+      expect(a.map((e) => e.playerId), [5]);
+      expect(b.map((e) => e.playerId), [5]);
     });
 
     test('a World Champion beats an equal year that won nothing', () {

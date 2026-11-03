@@ -244,6 +244,9 @@ class AwardService {
     // year (whose men collect the tournament honours).
     // A ceremony every year: in a thin one the floor falls from six towards
     // three until five men reach it (see [PlayerOfYear.floorFor]).
+    // A year of friendlies alone is voted on standing: the only men rated
+    // in it were the manager's and his opponents' (owner, 1.0.9).
+    final byStanding = !PlayerOfYear.hasCompetitiveFootball(awardYear);
     final floor = PlayerOfYear.floorFor(
       awardYear.lines.values,
       need: PlayerOfYear.bestField,
@@ -259,7 +262,7 @@ class AwardService {
     };
     // Nobody played even three games: a year with no football to speak of.
     // It is marked void and not asked again (see [potyVoidKind]).
-    if (ceiling.isEmpty) return false;
+    if (ceiling.isEmpty && !byStanding) return false;
     final ranked =
         [
           for (final id in ceiling.keys) awardYear.lines[id]!,
@@ -299,22 +302,36 @@ class AwardService {
         );
       }
     }
-    if (profiles.isEmpty) return false;
+    if (profiles.isEmpty && !byStanding) return false;
 
     final honours = stored.honours;
-    final best = PlayerOfYear.rank(
+    List<PotyEntry> bestVote(Map<int, EliteMan> elite) => PlayerOfYear.rank(
       awardYear,
       profiles,
       honours: honours,
       minApps: floor,
+      elite: elite,
+      byStanding: byStanding,
     );
-    final young = PlayerOfYear.rank(
+    List<PotyEntry> youngVote(Map<int, EliteMan> elite) => PlayerOfYear.rank(
       awardYear,
       profiles,
       honours: honours,
       eligible: PlayerOfYear.young,
       limit: 3,
+      elite: elite,
+      byStanding: byStanding,
     );
+    var best = bestVote(const {});
+    var young = youngVote(const {});
+    // A short ballot is filled with the world's best on standing (see
+    // [PlayerOfYear.rank]); their pools are read only when it is short.
+    if (best.length < PlayerOfYear.bestField ||
+        young.length < PlayerOfYear.youngField) {
+      final elite = await _elite(career, nations.values);
+      best = bestVote(elite);
+      young = youngVote(elite);
+    }
     if (best.isEmpty) return false;
     for (final (entry, kind) in [
       (best.first, AwardKind.playerOfYear),
@@ -599,6 +616,47 @@ class AwardService {
     ];
     if (ids.isNotEmpty) await comp.markMessagesRead(careerId, ids: ids);
   }
+
+  /// The best men of the world's [eliteNations] best-ranked nations, for a
+  /// short ballot to be filled from: everyone good enough for either award.
+  Future<Map<int, EliteMan>> _elite(
+    Career career,
+    Iterable<Nation> nations,
+  ) async {
+    final top = nations.toList()
+      ..sort((a, b) {
+        final s = a.ranking.compareTo(b.ranking);
+        return s != 0 ? s : a.id.compareTo(b.id);
+      });
+    final out = <int, EliteMan>{};
+    for (final n in top.take(eliteNations)) {
+      for (final p in await careerPoolOf(_ref, career, n.id)) {
+        final young = PlayerOfYear.young((
+          name: p.name,
+          age: p.age,
+          position: p.position,
+          overall: p.overall,
+        ));
+        if (p.overall < PlayerOfYear.eliteOverall &&
+            !(young && p.overall >= PlayerOfYear.youngOverall)) {
+          continue;
+        }
+        out[p.id] = (
+          profile: (
+            name: p.name,
+            age: p.age,
+            position: p.position,
+            overall: p.overall,
+          ),
+          nationId: n.id,
+        );
+      }
+    }
+    return out;
+  }
+
+  /// How many of the best-ranked nations a short ballot looks through.
+  static const int eliteNations = 30;
 
   /// The year's vote as it is filed: every place resolved by id with all of
   /// the repository's inputs, because a rating is only right with all four of

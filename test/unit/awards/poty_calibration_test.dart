@@ -38,32 +38,56 @@ void main() {
       if (y.year > 2026) y,
   ];
 
-  test('every year with football has a ceremony: five and three places', () {
+  test('a ballot of the world\'s best: five places when five nations have '
+      'a man good enough, never two of one nation in a thin year', () {
     for (final y in full) {
-      // A year with no football at all has nothing to vote on.
       if (y.awardYear.lines.isEmpty) continue;
-      expect(vote(y).top, hasLength(5), reason: 'seed ${y.seed} ${y.year}');
-      // The young award: three places, or every youngster who played
-      // three games when a thin year has fewer (the floor stops at three).
-      final youngsters = y.profiles.entries
-          .where(
-            (e) =>
-                PlayerOfYear.young(e.value) &&
-                (y.awardYear.lines[e.key]?.apps ?? 0) >=
-                    PlayerOfYear.floors.last,
-          )
-          .length;
+      final top = vote(y).top;
+      final elite = {
+        for (final e in y.profiles.entries)
+          if (e.value.overall >= PlayerOfYear.eliteOverall &&
+              (y.awardYear.lines[e.key]?.apps ?? 0) >= y.floor)
+            y.awardYear.lines[e.key]!.nationId,
+      };
       expect(
-        PlayerOfYear.rank(
-          y.awardYear,
-          y.profiles,
-          eligible: PlayerOfYear.young,
-          limit: 3,
-        ),
-        hasLength(youngsters < 3 ? youngsters : 3),
-        reason: 'young, seed ${y.seed} ${y.year}',
+        top,
+        hasLength(elite.length < 5 ? lessThanOrEqualTo(5) : 5),
+        reason: 'seed ${y.seed} ${y.year}',
       );
+      for (final e in top) {
+        expect(
+          e.profile.overall,
+          greaterThanOrEqualTo(PlayerOfYear.eliteOverall),
+        );
+      }
+      final young = PlayerOfYear.rank(
+        y.awardYear,
+        y.profiles,
+        eligible: PlayerOfYear.young,
+        limit: 3,
+      );
+      expect(young.length, lessThanOrEqualTo(3));
+      for (final e in young) {
+        expect(
+          e.profile.overall,
+          greaterThanOrEqualTo(PlayerOfYear.youngOverall),
+        );
+      }
     }
+    // The young award still has a full three in most years.
+    final threes = full
+        .where(
+          (y) =>
+              PlayerOfYear.rank(
+                y.awardYear,
+                y.profiles,
+                eligible: PlayerOfYear.young,
+                limit: 3,
+              ).length ==
+              3,
+        )
+        .length;
+    expect(threes / full.length, greaterThan(0.7));
   });
 
   test('the set is big enough to mean something', () {
@@ -124,9 +148,11 @@ void main() {
   test('keepers and defenders win sometimes, and are never shut out', () {
     var backWins = 0;
     var backInTop5 = 0;
+    var fullBallots = 0;
     for (final y in full) {
       final top = vote(y).top;
       if (top.isEmpty) continue;
+      if (top.length == 5) fullBallots++;
       bool back(PotyEntry e) =>
           e.category == PositionCategory.goalkeeper ||
           e.category == PositionCategory.defender;
@@ -136,7 +162,7 @@ void main() {
     // Measured 22 of 164 voted years (13.4%), the middle of the 10-15% the
     // owner asked for; the band leaves headroom for a repack.
     expect(backWins / full.length, inInclusiveRange(0.08, 0.18));
-    expect(backInTop5, greaterThan(full.length ~/ 2));
+    expect(backInTop5, greaterThan(fullBallots ~/ 2));
   });
 
   test("a winner's score is about half his year and a third his trophies", () {
@@ -167,21 +193,15 @@ void main() {
 
   // Owner, 1.0.9: two men of one nation in the five is for the World
   // Champion only, and a weak side's men do not reach it on numbers alone.
-  test('one man a nation in the five, two only for the World Champion', () {
+  test('one man a nation in the five, more only for a successful nation', () {
     for (final y in full) {
-      // A thin year, with fewer than five nations in the running, fills its
-      // places from whoever is left (see PlayerOfYear.rank).
       final inRunning = {
         for (final l in y.awardYear.lines.values)
           if (l.apps >= y.floor && y.profiles.containsKey(l.playerId))
             l.nationId,
       };
-      if (inRunning.length < 8) continue;
+      if (inRunning.isEmpty) continue;
       final top = vote(y).top;
-      final champions = {
-        for (final t in y.awardYear.trophies)
-          if (t.family == TrophyFamily.worldChampionship) t.champion,
-      };
       final count = <int, int>{};
       for (final e in top) {
         count[e.nationId] = (count[e.nationId] ?? 0) + 1;
@@ -189,7 +209,9 @@ void main() {
       for (final c in count.entries) {
         expect(
           c.value,
-          lessThanOrEqualTo(champions.contains(c.key) ? 2 : 1),
+          lessThanOrEqualTo(
+            PlayerOfYear.nationCap(c.key, y.awardYear.trophies),
+          ),
           reason: 'seed ${y.seed} ${y.year} nation ${c.key}',
         );
       }

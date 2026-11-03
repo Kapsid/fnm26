@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/awards/award_year.dart';
 import 'package:fnm/domain/services/awards/awards.dart';
+import 'package:fnm/domain/services/competition/rounds.dart';
 
 /// Who a voter is looking at: resolved from the pool, because the ratings
 /// table knows what happened and not who it happened to.
@@ -12,6 +13,10 @@ typedef VoterProfile = ({
   PlayerPosition position,
   int overall,
 });
+
+/// One of the world's best, as a short ballot may name him (see
+/// [PlayerOfYear.rank]'s `elite`).
+typedef EliteMan = ({VoterProfile profile, int nationId});
 
 /// A tournament's individual honour, as the vote counts it.
 typedef VoteHonour = ({AwardKind kind, TrophyFamily family, double prestige});
@@ -26,6 +31,7 @@ class PotyEntry {
     required this.individual,
     required this.team,
     required this.honours,
+    this.reputation = 0,
   });
 
   final int playerId;
@@ -39,7 +45,11 @@ class PotyEntry {
   final double team;
   final double honours;
 
-  double get total => individual + team + honours;
+  /// A place won on standing alone (see [PlayerOfYear.rank]'s `elite`):
+  /// how good he is, plus a little for the friendlies he played well in.
+  final double reputation;
+
+  double get total => individual + team + honours + reputation;
 
   PositionCategory get category => profile.position.category;
 }
@@ -347,7 +357,11 @@ abstract final class PlayerOfYear {
     Map<int, List<VoteHonour>>? honours,
     int limit = 5,
     int? minApps,
+    int? minOverall,
+    Map<int, EliteMan> elite = const {},
+    bool byStanding = false,
   }) {
+    final bar = minOverall ?? (eligible == null ? eliteOverall : youngOverall);
     final hs = honours ?? tournamentHonours(year, profiles);
     final field = [
       for (final e in profiles.entries)
@@ -362,7 +376,7 @@ abstract final class PlayerOfYear {
         );
     final out = <PotyEntry>[];
     for (final (l, p) in field) {
-      if (l.apps < floor) continue;
+      if (byStanding || l.apps < floor || p.overall < bar) continue;
       out.add(
         PotyEntry(
           playerId: l.playerId,
@@ -382,33 +396,93 @@ abstract final class PlayerOfYear {
       return s != 0 ? s : a.playerId.compareTo(b.playerId);
     });
     // One man a nation (owner, 1.0.9): a ballot with two or three of one
-    // side's players read as a national award. Only the year's World
-    // Champion may place a second, the one year a whole team is the story.
-    final champions = {
-      for (final t in year.trophies)
-        if (t.family == TrophyFamily.worldChampionship) t.champion,
-    };
+    // side's players read as a national award. Only a nation that won
+    // something big may place more (see [nationCap]).
     final perNation = <int, int>{};
     final ballot = <PotyEntry>[];
-    for (final e in out) {
-      if (ballot.length == limit) break;
-      final cap = champions.contains(e.nationId) ? 2 : 1;
+    bool take(PotyEntry e) {
+      if (ballot.length == limit) return false;
+      if (ballot.any((b) => b.playerId == e.playerId)) return false;
       final n = perNation[e.nationId] ?? 0;
-      if (n >= cap) continue;
+      if (n >= nationCap(e.nationId, year.trophies)) return false;
       perNation[e.nationId] = n + 1;
       ballot.add(e);
+      return true;
     }
-    // A thin year (a handful of nations played) still fills its places:
-    // the best of the rest, whatever their nation.
-    for (final e in out) {
-      if (ballot.length == limit) break;
-      if (!ballot.contains(e)) ballot.add(e);
+
+    out.forEach(take);
+    // A short ballot (a thin year, or a year of friendlies alone, voted
+    // [byStanding]) is filled with the world's best on standing: the voters
+    // know who the great players are even in a quiet year (owner, 1.0.9).
+    if (ballot.length < limit) {
+      final rest = <PotyEntry>[];
+      final seen = <int>{};
+      void consider(int id, int nationId, VoterProfile p) {
+        if (!seen.add(id) || p.overall < bar) return;
+        if (eligible != null && !eligible(p)) return;
+        final line = year.lines[id] ?? YearLine(id, nationId);
+        rest.add(
+          PotyEntry(
+            playerId: id,
+            nationId: nationId,
+            profile: p,
+            line: line,
+            individual: 0,
+            team: 0,
+            honours: 0,
+            reputation: reputation(p.overall, line, bar: bar),
+          ),
+        );
+      }
+
+      for (final e in elite.entries) {
+        consider(e.key, e.value.nationId, e.value.profile);
+      }
+      for (final (l, p) in field) {
+        consider(l.playerId, l.nationId, p);
+      }
+      rest.sort((a, b) {
+        final s = b.total.compareTo(a.total);
+        return s != 0 ? s : a.playerId.compareTo(b.playerId);
+      });
+      rest.forEach(take);
     }
-    ballot.sort((a, b) {
-      final s = b.total.compareTo(a.total);
-      return s != 0 ? s : a.playerId.compareTo(b.playerId);
-    });
     return ballot;
+  }
+
+  /// How many of one nation's men the ballot may hold: one, unless the
+  /// nation was a success this year (owner, 1.0.9). The World Champion three;
+  /// a World Championship finalist or semi-finalist, or a continental
+  /// champion, two.
+  static int nationCap(int nationId, List<TrophyResult> trophies) {
+    var cap = 1;
+    for (final t in trophies) {
+      switch (t.family) {
+        case TrophyFamily.worldChampionship:
+          if (t.champion == nationId) return 3;
+          if (t.runnerUp == nationId || t.semiFinalists.contains(nationId)) {
+            cap = 2;
+          }
+        case TrophyFamily.continental:
+          if (t.champion == nationId) cap = 2;
+        case TrophyFamily.nationsCup:
+        case TrophyFamily.clash:
+          break;
+      }
+    }
+    return cap;
+  }
+
+  /// A place on standing alone: points for every overall above the [bar],
+  /// and a little for good friendlies (form and goals), never a whole point,
+  /// so between two equals the one who played well ranks first. Always under what a real
+  /// year earns, so it only orders the men who fill a short ballot.
+  static double reputation(int overall, YearLine line, {required int bar}) {
+    final form = line.apps == 0
+        ? 0.0
+        : (line.meanRating - 6.5).clamp(0.0, 2.0) * 0.3 + line.goals * 0.1;
+    // Under one point of overall: form only orders equals.
+    return 1 + (overall - bar) * 1.0 + math.min(form, 0.9);
   }
 
   /// How much a voter believes a man's numbers, by how good he is: full
@@ -423,6 +497,23 @@ abstract final class PlayerOfYear {
   static const int standingFloor = 55;
   static const int standingFull = 85;
   static const double standingMin = 0.1;
+
+  /// The overall a man needs to be on the ballot at all (owner, 1.0.9:
+  /// the vote is the world's very best; a 50-rated side's men, or a
+  /// friendly year's squad players, never belong in it). About the world's
+  /// best four hundred.
+  static const int eliteOverall = 80;
+
+  /// The same for the young award, whose men have not peaked yet.
+  static const int youngOverall = 65;
+
+  /// Whether [year] had a match that was not a friendly. A year of friendlies
+  /// alone has no vote: the only men rated in it were the manager's and his
+  /// opponents', and its ballot was his own squad.
+  static bool hasCompetitiveFootball(AwardYear year) =>
+      year.fixtures.values.any(
+        (f) => f.kind != CompetitionKind.friendly && f.round != Rounds.friendly,
+      );
 
   /// The young award's field: aged [Awards.youngMaxAge] or under.
   static bool young(VoterProfile p) => p.age <= Awards.youngMaxAge;
