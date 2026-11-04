@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:drift/drift.dart' show DriftSqlType, Value, Variable;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// Exporting one career to a file and importing it back.
 ///
@@ -114,21 +118,96 @@ void main() {
     }
   });
 
-  test('a bundle carries no binary columns', () {
-    // Bundles are JSON. A blob column would survive export as something
-    // jsonEncode cannot write, and the failure would land on a player rather
-    // than here.
-    for (final table in db.allTables) {
-      for (final column in table.$columns) {
-        expect(
-          column.type,
-          isNot(DriftSqlType.blob),
-          reason:
-              '${table.actualTableName}.${column.$name} is a blob -- '
-              'CareerBundle.encode has to learn how to carry it',
-        );
-      }
-    }
+  test('every binary column a bundle carries is one it knows', () {
+    // Bundles are JSON. A blob column travels as base64 text, which
+    // CareerBundle does by column type; this list makes a NEW blob column a
+    // deliberate decision (with a round-trip test) rather than a surprise.
+    final carried = <String>{
+      for (final table in db.allTables)
+        if (!CareerBundle.seedTables.contains(table.actualTableName) &&
+            !CareerBundle.globalTables.contains(table.actualTableName))
+          for (final column in table.$columns)
+            if (column.type == DriftSqlType.blob)
+              '${table.actualTableName}.${column.$name}',
+    };
+    expect(carried, {'career_world_trophies.png'});
+  });
+
+  test('the world packs themselves never travel in a bundle', () {
+    expect(
+      CareerBundle.globalTables,
+      containsAll(['world_packs', 'world_pack_trophies']),
+    );
+    expect(CareerBundle.tablesOf(db), isNot(contains('world_packs')));
+    expect(CareerBundle.tablesOf(db), isNot(contains('world_pack_trophies')));
+  });
+
+  test(
+    'a career on a world exports and imports with its world and trophies',
+    () async {
+      await aCareerNamed('Bystander'); // so the career id must shift
+      final original = await aCareerNamed('Worldly');
+      final packs = WorldPackRepository(db);
+      const pack = WorldPack(
+        uuid: 'u-1',
+        name: 'My World',
+        author: 'Me',
+        formatVersion: kPackFormatVersion,
+        madeWithVersion: '1.1.0',
+        nations: {7: (name: 'Testland', code: 'TST')},
+        trophies: {'worldChampionship'},
+      );
+      final png = Uint8List.fromList([137, 80, 78, 71, 0, 255, 9]);
+      final packId = await packs.insert(pack, {'worldChampionship': png});
+      await db.transaction(() => packs.copyToCareer(packId, original));
+
+      // Through bytes, as a real file would go.
+      final bundle = CareerBundle.decode(
+        CareerBundle.encode(await CareerBundle.export(db, original)),
+      ).bundle!;
+      expect(bundle['format'], 2);
+      expect(
+        (bundle['tables']! as Map).keys,
+        isNot(contains('world_packs')),
+        reason: 'the device library is not part of a career',
+      );
+
+      // Import on a device that has never seen the pack.
+      await packs.delete(packId);
+      final imported = await CareerBundle.import(db, bundle);
+      expect(imported, isNot(original));
+
+      final world = await packs.forCareer(imported);
+      expect(world, isNotNull);
+      expect(world!.pack, pack);
+      expect(world.trophies, {'worldChampionship': png});
+      expect(await db.select(db.worldPacks).get(), isEmpty);
+    },
+  );
+
+  test('a bundle written before 53 imports as a default career', () async {
+    final original = await aCareerNamed('Classic');
+    final bundle = await CareerBundle.export(db, original);
+    // What a v52 build wrote: format 1, and no world tables at all.
+    bundle
+      ..['format'] = 1
+      ..['schemaVersion'] = 52;
+    (bundle['tables']! as Map)
+      ..remove('career_worlds')
+      ..remove('career_world_trophies');
+
+    final decoded = CareerBundle.decode(CareerBundle.encode(bundle));
+    expect(decoded.rejection, isNull);
+    final imported = await CareerBundle.import(db, decoded.bundle!);
+
+    expect(await WorldPackRepository(db).forCareer(imported), isNull);
+    final name =
+        await (db.select(
+              db.careers,
+            )..where((t) => t.id.equals(imported)))
+            .map((c) => c.managerName)
+            .getSingle();
+    expect(name, 'Classic');
   });
 
   test('a career survives a round trip', () async {
@@ -364,6 +443,17 @@ void main() {
       final careerId = await aCareerNamed('Future');
       final bundle = await CareerBundle.export(db, careerId);
       bundle['schemaVersion'] = AppDatabase.currentSchemaVersion + 1;
+
+      expect(
+        CareerBundle.decode(CareerBundle.encode(bundle)).rejection,
+        BundleRejection.fromANewerBuild,
+      );
+    });
+
+    test('refuses a bundle in a later file format', () async {
+      final careerId = await aCareerNamed('Future');
+      final bundle = await CareerBundle.export(db, careerId);
+      bundle['format'] = CareerBundle.formatVersion + 1;
 
       expect(
         CareerBundle.decode(CareerBundle.encode(bundle)).rejection,

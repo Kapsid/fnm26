@@ -1,0 +1,211 @@
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:drift/drift.dart';
+import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
+
+/// The custom databases (world packs) on this device, and the copy a career
+/// takes of one.
+///
+/// A pack is stored as its JSON document plus one PNG row per custom trophy.
+/// Starting a career on a pack copies both into the career's own tables
+/// ([copyToCareer]); from then on the career reads only [forCareer], so the
+/// pack can be edited or deleted without touching any save.
+///
+/// The database does not enforce its foreign keys (see
+/// `DriftCareerRepository.delete`), so child rows are removed by hand.
+class WorldPackRepository {
+  WorldPackRepository(this._db, {DateTime Function()? clock, Random? random})
+    : _clock = clock ?? DateTime.now,
+      _random = random ?? Random.secure();
+
+  final AppDatabase _db;
+  final DateTime Function() _clock;
+  final Random _random;
+
+  /// Every pack on the device, by name.
+  Future<List<({int id, String name, DateTime updatedAt})>> list() async {
+    final rows = await _db.select(_db.worldPacks).get();
+    return [
+      for (final r in rows) (id: r.id, name: r.name, updatedAt: r.updatedAt),
+    ]..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  }
+
+  /// The pack [id], or null if there is no such pack. A stored pack that
+  /// cannot be read throws [FormatException] rather than reading as missing.
+  Future<WorldPack?> load(int id) async {
+    final row = await (_db.select(
+      _db.worldPacks,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    return row == null ? null : _decode(row.json);
+  }
+
+  /// Stores [p] as a new pack with its [trophies], and returns its id.
+  Future<int> insert(WorldPack p, Map<String, Uint8List> trophies) =>
+      _db.transaction(() async {
+        final id = await _db
+            .into(_db.worldPacks)
+            .insert(
+              WorldPacksCompanion.insert(
+                uuid: p.uuid,
+                name: p.name,
+                json: jsonEncode(p.toJson()),
+                updatedAt: _clock(),
+              ),
+            );
+        await _writeTrophies(id, trophies);
+        return id;
+      });
+
+  /// Overwrites pack [id] with [p]. Trophy images are left as they are.
+  Future<void> save(int id, WorldPack p) async {
+    await (_db.update(_db.worldPacks)..where((t) => t.id.equals(id))).write(
+      WorldPacksCompanion(
+        uuid: Value(p.uuid),
+        name: Value(p.name),
+        json: Value(jsonEncode(p.toJson())),
+        updatedAt: Value(_clock()),
+      ),
+    );
+  }
+
+  /// Sets (or, with a null [png], removes) the image for trophy [key].
+  Future<void> setTrophy(int id, String key, Uint8List? png) =>
+      _db.transaction(() async {
+        if (png == null) {
+          await (_db.delete(
+            _db.worldPackTrophies,
+          )..where((t) => t.packId.equals(id) & t.key.equals(key))).go();
+        } else {
+          await _db
+              .into(_db.worldPackTrophies)
+              .insertOnConflictUpdate(
+                WorldPackTrophiesCompanion.insert(
+                  packId: id,
+                  key: key,
+                  png: png,
+                ),
+              );
+        }
+        await _touch(id);
+      });
+
+  /// The custom trophy images of pack [id], by key.
+  Future<Map<String, Uint8List>> trophies(int id) async {
+    final rows = await (_db.select(
+      _db.worldPackTrophies,
+    )..where((t) => t.packId.equals(id))).get();
+    return {for (final r in rows) r.key: r.png};
+  }
+
+  /// Removes pack [id] and its images. Careers started on it keep their copy.
+  Future<void> delete(int id) => _db.transaction(() async {
+    await (_db.delete(
+      _db.worldPackTrophies,
+    )..where((t) => t.packId.equals(id))).go();
+    await (_db.delete(_db.worldPacks)..where((t) => t.id.equals(id))).go();
+  });
+
+  /// Copies pack [id] (with its images) as a new pack named [newName], with a
+  /// fresh uuid so the two are never mistaken for one another. Returns the
+  /// copy's id.
+  Future<int> duplicate(int id, String newName) => _db.transaction(() async {
+    final pack = await load(id);
+    if (pack == null) throw StateError('No world pack $id');
+    return insert(
+      pack.copyWith(uuid: _newUuid(), name: newName),
+      await trophies(id),
+    );
+  });
+
+  /// Gives career [careerId] its own copy of pack [packId]: the (migrated)
+  /// JSON and every trophy image.
+  ///
+  /// Opens no transaction of its own: it is meant to run inside the one that
+  /// creates the career, so a career never exists without its world.
+  Future<void> copyToCareer(int packId, int careerId) async {
+    final pack = await load(packId);
+    if (pack == null) throw StateError('No world pack $packId');
+    await _db
+        .into(_db.careerWorlds)
+        .insertOnConflictUpdate(
+          CareerWorldsCompanion.insert(
+            careerId: Value(careerId),
+            packName: pack.name,
+            json: jsonEncode(pack.toJson()),
+          ),
+        );
+    await (_db.delete(
+      _db.careerWorldTrophies,
+    )..where((t) => t.careerId.equals(careerId))).go();
+    for (final e in (await trophies(packId)).entries) {
+      await _db
+          .into(_db.careerWorldTrophies)
+          .insert(
+            CareerWorldTrophiesCompanion.insert(
+              careerId: careerId,
+              key: e.key,
+              png: e.value,
+            ),
+          );
+    }
+  }
+
+  /// The world career [careerId] was started on, or null for the default
+  /// world.
+  Future<({WorldPack pack, Map<String, Uint8List> trophies})?> forCareer(
+    int careerId,
+  ) async {
+    final row = await (_db.select(
+      _db.careerWorlds,
+    )..where((t) => t.careerId.equals(careerId))).getSingleOrNull();
+    if (row == null) return null;
+    final images = await (_db.select(
+      _db.careerWorldTrophies,
+    )..where((t) => t.careerId.equals(careerId))).get();
+    return (
+      pack: _decode(row.json),
+      trophies: {for (final r in images) r.key: r.png},
+    );
+  }
+
+  static WorldPack _decode(String json) {
+    final raw = jsonDecode(json);
+    if (raw is! Map<String, Object?>) {
+      throw const FormatException('A stored world pack is not an object');
+    }
+    return WorldPack.fromJson(WorldPack.migrate(raw));
+  }
+
+  Future<void> _writeTrophies(int id, Map<String, Uint8List> trophies) async {
+    for (final e in trophies.entries) {
+      await _db
+          .into(_db.worldPackTrophies)
+          .insert(
+            WorldPackTrophiesCompanion.insert(
+              packId: id,
+              key: e.key,
+              png: e.value,
+            ),
+          );
+    }
+  }
+
+  Future<void> _touch(int id) async {
+    await (_db.update(_db.worldPacks)..where((t) => t.id.equals(id))).write(
+      WorldPacksCompanion(updatedAt: Value(_clock())),
+    );
+  }
+
+  /// A random (version 4) UUID.
+  String _newUuid() {
+    final b = List<int>.generate(16, (_) => _random.nextInt(256));
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    final hex = [for (final x in b) x.toRadixString(16).padLeft(2, '0')];
+    return '${hex.sublist(0, 4).join()}-${hex.sublist(4, 6).join()}-'
+        '${hex.sublist(6, 8).join()}-${hex.sublist(8, 10).join()}-'
+        '${hex.sublist(10).join()}';
+  }
+}

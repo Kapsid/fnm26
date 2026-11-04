@@ -10,6 +10,7 @@ import '../../generated_migrations/schema_v41.dart' as v41;
 import '../../generated_migrations/schema_v45.dart' as v45;
 import '../../generated_migrations/schema_v47.dart' as v47;
 import '../../generated_migrations/schema_v51.dart' as v51;
+import '../../generated_migrations/schema_v52.dart' as v52;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -371,6 +372,43 @@ void main() {
     final named = await db.select(db.careers).getSingle();
     expect(named.viceCaptain1PlayerId, 7);
     expect(named.viceCaptain2PlayerId, 8);
+  });
+
+  test('52 → 53 keeps every career and adds empty world tables', () async {
+    // 52 -> 53 adds the custom databases (world packs) and the per-career copy
+    // a career takes of one. Purely additive: every career already saved
+    // plays on the default world, which is exactly what an empty
+    // career_worlds says.
+    final schema = await verifier.schemaAt(52);
+    final old = v52.DatabaseAtV52(schema.newConnection());
+    for (final (id, name) in const [(1, 'First'), (2, 'Second')]) {
+      await old.customStatement(
+        'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+        'in_game_date, rng_seed, cycle_pointer, budget) '
+        'VALUES (?, 1, ?, 0, 0, 7, 0, 0)',
+        [id, name],
+      );
+    }
+    await old.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 53);
+
+    final careers = await db.select(db.careers).get();
+    expect(careers.map((c) => c.managerName), ['First', 'Second']);
+    for (final table in const [
+      'world_packs',
+      'world_pack_trophies',
+      'career_worlds',
+      'career_world_trophies',
+    ]) {
+      final n = await db
+          .customSelect('SELECT COUNT(*) AS n FROM $table')
+          .map((r) => r.read<int>('n'))
+          .getSingle();
+      expect(n, 0, reason: '$table should start empty');
+    }
   });
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {

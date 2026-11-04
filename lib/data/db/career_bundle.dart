@@ -48,7 +48,11 @@ enum BundleRejection {
 abstract final class CareerBundle {
   /// The bundle format. Bumped only if the FILE shape changes; the game's
   /// schema version travels separately inside it.
-  static const int formatVersion = 1;
+  ///
+  /// 2 (schema 53) added binary columns, written as base64 text (the career's
+  /// own copy of its world's trophy images). A format-1 bundle has none and
+  /// imports unchanged, as a career on the default world.
+  static const int formatVersion = 2;
 
   /// The extension a shared career carries.
   static const String extension = 'fnmcareer';
@@ -57,11 +61,18 @@ abstract final class CareerBundle {
   /// written into a bundle: the importing app already has it.
   static const Set<String> seedTables = {'nations', 'players'};
 
-  /// The manager's own things, belonging to no career (the tactics library).
-  /// Never written into a bundle: sharing one save must not hand over, or on
-  /// import overwrite, what the manager keeps across all of them. The
-  /// whole-database backup still carries them.
-  static const Set<String> globalTables = {'tactic_library'};
+  /// The manager's own things, belonging to no career (the tactics library,
+  /// the world packs on this device). Never written into a bundle: sharing one
+  /// save must not hand over, or on import overwrite, what the manager keeps
+  /// across all of them. The whole-database backup still carries them.
+  ///
+  /// A career on a custom world still carries that world: its own copy lives
+  /// in `career_worlds` / `career_world_trophies`, keyed by career id.
+  static const Set<String> globalTables = {
+    'tactic_library',
+    'world_packs',
+    'world_pack_trophies',
+  };
 
   /// The career's own row.
   static const String rootTable = 'careers';
@@ -101,6 +112,10 @@ abstract final class CareerBundle {
   /// whatever it points at.
   static const List<String> insertOrder = [
     rootTable,
+    // The career's world, straight after the career: keyed by its id alone
+    // (no id of their own to renumber), so `career_id` is all that moves.
+    'career_worlds',
+    'career_world_trophies',
     'competitions',
     'qualifying_groups',
     'fixtures',
@@ -205,7 +220,17 @@ abstract final class CareerBundle {
     List<Variable<Object>> variables,
   ) async {
     final result = await db.customSelect(sql, variables: variables).get();
-    return [for (final row in result) Map<String, Object?>.from(row.data)];
+    return [
+      for (final row in result)
+        {
+          for (final e in row.data.entries)
+            // JSON has no bytes: a blob travels as base64 text, and [_insert]
+            // turns it back by the column's type.
+            e.key: e.value is Uint8List
+                ? base64Encode(e.value! as Uint8List)
+                : e.value,
+        },
+    ];
   }
 
   /// Writes [bundle] into [db] as a NEW career, and returns its id.
@@ -307,17 +332,24 @@ abstract final class CareerBundle {
     String table,
     Map<String, Object?> row,
   ) async {
-    final known = db.allTables
-        .firstWhere((t) => t.actualTableName == table)
-        .$columns
-        .map((c) => c.$name)
-        .toSet();
+    final known = {
+      for (final c
+          in db.allTables
+              .firstWhere((t) => t.actualTableName == table)
+              .$columns)
+        c.$name: c.type,
+    };
     final columns = [
       for (final entry in row.entries)
-        if (known.contains(entry.key)) entry.key,
+        if (known.containsKey(entry.key)) entry.key,
     ];
     final values = [
-      for (final column in columns) Variable<Object>(row[column]),
+      for (final column in columns)
+        Variable<Object>(switch (row[column]) {
+          final String text when known[column] == DriftSqlType.blob =>
+            base64Decode(text),
+          final value => value,
+        }),
     ];
     final slots = List.filled(columns.length, '?').join(', ');
     await db.customInsert(
@@ -344,8 +376,15 @@ abstract final class CareerBundle {
       final decoded =
           jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
       final schemaVersion = decoded['schemaVersion'];
-      if (decoded['format'] is! int || decoded['tables'] is! Map) {
+      final format = decoded['format'];
+      if (format is! int || decoded['tables'] is! Map) {
         return (bundle: null, rejection: BundleRejection.unreadable);
+      }
+      // Every older format still imports (1 differs only in having no
+      // binary columns); a later one may be shaped in ways this build cannot
+      // guess at.
+      if (format > formatVersion) {
+        return (bundle: null, rejection: BundleRejection.fromANewerBuild);
       }
       if (schemaVersion is! int) {
         return (bundle: null, rejection: BundleRejection.unreadable);

@@ -618,6 +618,14 @@ class DriftCareerRepository implements CareerRepository {
       await (_db.delete(
         _db.drawsWatched,
       )..where((t) => t.careerId.equals(id))).go();
+      // Its copy of a custom world, trophy images included: the largest rows
+      // a career can own, and nothing else would ever read them again.
+      await (_db.delete(
+        _db.careerWorldTrophies,
+      )..where((t) => t.careerId.equals(id))).go();
+      await (_db.delete(
+        _db.careerWorlds,
+      )..where((t) => t.careerId.equals(id))).go();
       await (_db.delete(_db.careers)..where((t) => t.id.equals(id))).go();
     });
     IntlRetirementCache.of(_db).forget(id);

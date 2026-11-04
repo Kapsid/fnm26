@@ -65,6 +65,10 @@ const int _newgenIdBase = 1000000000;
     PressConferences,
     PlayerHonours,
     TacticLibrary,
+    WorldPacks,
+    WorldPackTrophies,
+    CareerWorlds,
+    CareerWorldTrophies,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -85,7 +89,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 52;
+  static const int currentSchemaVersion = 53;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -302,6 +306,17 @@ class AppDatabase extends _$AppDatabase {
             schema.careers,
             schema.careers.viceCaptain2PlayerId,
           );
+        },
+        // 52 -> 53 adds custom databases: the device's world packs and their
+        // trophy images (no career), and the copy a career takes of one when
+        // it starts. Four new tables and nothing else moves: every career
+        // already saved has no copy, which reads as the default world, and so
+        // plays exactly as it did.
+        from52To53: (m, schema) async {
+          await m.createTable(schema.worldPacks);
+          await m.createTable(schema.worldPackTrophies);
+          await m.createTable(schema.careerWorlds);
+          await m.createTable(schema.careerWorldTrophies);
         },
       )(m, from, to);
     },

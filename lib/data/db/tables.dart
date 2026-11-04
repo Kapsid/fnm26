@@ -886,3 +886,58 @@ class TacticLibrary extends Table {
   TextColumn get data => text()();
   DateTimeColumn get updatedAt => dateTime()();
 }
+
+/// The custom databases (world packs) kept on this device.
+///
+/// Like the tactics library, these belong to no career: they live in this
+/// database so the whole-database backup carries them, and a career bundle
+/// leaves them out (see `CareerBundle.globalTables`). The pack itself is one
+/// JSON document (`WorldPack.toJson`), read back through `WorldPack.migrate`,
+/// so a pack-format change never needs a schema bump.
+@DataClassName('WorldPackRow')
+class WorldPacks extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get uuid => text().unique()();
+  TextColumn get name => text()();
+  TextColumn get json => text()();
+  DateTimeColumn get updatedAt => dateTime()();
+}
+
+/// A world pack's custom trophy images, one transparent PNG per trophy key.
+/// Kept out of the pack JSON so editing a name never rewrites the images.
+@DataClassName('WorldPackTrophyRow')
+class WorldPackTrophies extends Table {
+  IntColumn get packId =>
+      integer().references(WorldPacks, #id, onDelete: KeyAction.cascade)();
+  TextColumn get key => text()();
+  BlobColumn get png => blob()();
+
+  @override
+  Set<Column> get primaryKey => {packId, key};
+}
+
+/// The world a career was started on: a full copy of the pack, taken when the
+/// career began. A career never reads the device's packs again, so editing or
+/// deleting a pack cannot change a running save. No row = the default world.
+@DataClassName('CareerWorldRow')
+class CareerWorlds extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  TextColumn get packName => text()();
+  TextColumn get json => text()();
+
+  @override
+  Set<Column> get primaryKey => {careerId};
+}
+
+/// The career's own copy of its world's trophy images.
+@DataClassName('CareerWorldTrophyRow')
+class CareerWorldTrophies extends Table {
+  IntColumn get careerId =>
+      integer().references(Careers, #id, onDelete: KeyAction.cascade)();
+  TextColumn get key => text()();
+  BlobColumn get png => blob()();
+
+  @override
+  Set<Column> get primaryKey => {careerId, key};
+}
