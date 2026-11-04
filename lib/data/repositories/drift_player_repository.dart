@@ -204,6 +204,7 @@ class DriftPlayerRepository implements PlayerRepository {
     Map<int, int> careerStartsByPlayer = const {},
     int minAge = PlayerLifecycle.seniorMinAge,
     bool includeIntlRetired = false,
+    bool newCareerNames = false,
   }) async {
     final seeded = await _seededRows(nationId);
     // `overall` is position-weighted and derived (not a column), so build the
@@ -239,7 +240,13 @@ class DriftPlayerRepository implements PlayerRepository {
             await internationalRetirements(careerId),
             agingYears,
           );
-    final name = await _namerFor(nationId, seeded, saveSeed, careerId);
+    final name = await _namerFor(
+      nationId,
+      seeded,
+      saveSeed,
+      careerId,
+      newCareerNames: newCareerNames,
+    );
     final home = await _home(nationId);
     return [
       for (final p in selectable)
@@ -392,6 +399,7 @@ class DriftPlayerRepository implements PlayerRepository {
     int? careerId,
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
+    bool newCareerNames = false,
   }) async {
     final p = await _byIdAsBorn(
       id,
@@ -400,6 +408,7 @@ class DriftPlayerRepository implements PlayerRepository {
       careerId: careerId,
       youthBonusByCycle: youthBonusByCycle,
       careerStartsByPlayer: careerStartsByPlayer,
+      newCareerNames: newCareerNames,
     );
     if (p == null || careerId == null) return p;
     final into = await _naturalizedInto(careerId, id);
@@ -451,6 +460,7 @@ class DriftPlayerRepository implements PlayerRepository {
     required int? careerId,
     required Map<int, double> youthBonusByCycle,
     required Map<int, int> careerStartsByPlayer,
+    bool newCareerNames = false,
   }) async {
     if (GoldenGeneration.isGoldenId(id)) {
       // A cohort member is resolved from his id alone, like a newgen: only a
@@ -466,7 +476,13 @@ class DriftPlayerRepository implements PlayerRepository {
       final seeded = await _seededRows(nationId);
       final home = await _home(nationId);
       return _withClub(
-        (await _namerFor(nationId, seeded, saveSeed, careerId))(p),
+        (await _namerFor(
+          nationId,
+          seeded,
+          saveSeed,
+          careerId,
+          newCareerNames: newCareerNames,
+        ))(p),
         saveSeed,
         homeCode: home.code,
         homeCities: home.cities,
@@ -487,7 +503,13 @@ class DriftPlayerRepository implements PlayerRepository {
       if (p == null) return null;
       final home = await _home(nationId);
       return _withClub(
-        (await _namerFor(nationId, seeded, saveSeed, careerId))(p),
+        (await _namerFor(
+          nationId,
+          seeded,
+          saveSeed,
+          careerId,
+          newCareerNames: newCareerNames,
+        ))(p),
         saveSeed,
         homeCode: home.code,
         homeCities: home.cities,
@@ -519,7 +541,13 @@ class DriftPlayerRepository implements PlayerRepository {
     final seeded = await _seededRows(p.nationId);
     final home = await _home(p.nationId);
     return _withClub(
-      (await _namerFor(p.nationId, seeded, saveSeed, careerId))(aged),
+      (await _namerFor(
+        p.nationId,
+        seeded,
+        saveSeed,
+        careerId,
+        newCareerNames: newCareerNames,
+      ))(aged),
       saveSeed,
       homeCode: home.code,
       homeCities: home.cities,
@@ -815,18 +843,23 @@ class DriftPlayerRepository implements PlayerRepository {
   /// Builds a namer that assigns every player of [nationId] a unique name from
   /// the nation's pool. [seeded] gives the nation's stored rows (to rank the
   /// base + fringe players); a 0 [saveSeed] (or a missing pool) leaves names
-  /// untouched. [careerId] picks the pools (see [namePoolsV2Kind]).
+  /// untouched. [careerId] picks the pools (see [namePoolsV2Kind]); with
+  /// none, [newCareerNames] picks the ones a career created now reads.
   Future<Player Function(Player)> _namerFor(
     int nationId,
     List<Player> seeded,
     int saveSeed,
-    int? careerId,
-  ) async {
+    int? careerId, {
+    bool newCareerNames = false,
+  }) async {
     if (saveSeed == 0) return _identity;
-    final rich = await _readsRichPools(careerId);
-    final era = _poolEraMatters(nationId)
-        ? await _poolEra(careerId)
-        : _PoolEra.legacy;
+    final current = careerId == null && newCareerNames;
+    final rich = current || await _readsRichPools(careerId);
+    final era = !_poolEraMatters(nationId)
+        ? _PoolEra.legacy
+        : current
+        ? _PoolEra.v5
+        : await _poolEra(careerId);
     final pool = (await (rich
         ? _richPools(era: era)
         : _pools(era: era)))[nationId];

@@ -73,6 +73,12 @@ abstract interface class PlayerRepository {
   /// in that career are left out (the SELECTION pool). History reads (a past
   /// tournament's team, an award, a record) pass `includeIntlRetired` so a man
   /// who retired after the tournament still appears in what he did there.
+  ///
+  /// Without a `careerId`, names come from the oldest name pools, as a
+  /// career created before any pool mark reads them; `newCareerNames` reads
+  /// the pools a career created NOW gets instead (every `namePoolsV*Kind`
+  /// mark), as a world pack's one fixed draw does. Ignored with a career,
+  /// whose own marks decide.
   Future<List<Player>> byNation(
     int nationId, {
     int agingYears,
@@ -82,6 +88,7 @@ abstract interface class PlayerRepository {
     Map<int, int> careerStartsByPlayer,
     int minAge,
     bool includeIntlRetired,
+    bool newCareerNames,
   });
 
   /// The nation's youth pyramid (ages 11–20), for the Youth screen. Never used
@@ -110,7 +117,8 @@ abstract interface class PlayerRepository {
   /// Every player across all nations (unordered).
   Future<List<Player>> all();
 
-  /// The player with [id], or `null` if none exists.
+  /// The player with [id], or `null` if none exists. `newCareerNames` is
+  /// as for [byNation].
   Future<Player?> byId(
     int id, {
     int agingYears,
@@ -118,5 +126,6 @@ abstract interface class PlayerRepository {
     int? careerId,
     Map<int, double> youthBonusByCycle,
     Map<int, int> careerStartsByPlayer,
+    bool newCareerNames,
   });
 }

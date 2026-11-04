@@ -114,7 +114,7 @@ class WorldPackRepository {
     final pack = await load(id);
     if (pack == null) throw StateError('No world pack $id');
     return insert(
-      pack.copyWith(uuid: _newUuid(), name: newName),
+      pack.copyWith(uuid: newUuid(), name: newName),
       await trophies(id),
     );
   });
@@ -198,8 +198,8 @@ class WorldPackRepository {
     );
   }
 
-  /// A random (version 4) UUID.
-  String _newUuid() {
+  /// A random (version 4) UUID, for a new pack or a copy.
+  String newUuid() {
     final b = List<int>.generate(16, (_) => _random.nextInt(256));
     b[6] = (b[6] & 0x0f) | 0x40;
     b[8] = (b[8] & 0x3f) | 0x80;

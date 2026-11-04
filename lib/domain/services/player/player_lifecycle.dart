@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/club/club_form.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/depth_chart.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
 
 /// Keeps a nation's player pool alive across an endless run of seasons. Like
 /// [PlayerAging], this is a *pure, derived* layer — nothing is stored per save.
@@ -430,6 +431,34 @@ abstract final class PlayerLifecycle {
       _ => 0.74,
     };
     return (ceiling * shape).round();
+  }
+
+  /// The age [peakOverall] reads a player's ceiling at.
+  static const int peakOverallAge = 27;
+
+  /// The overall [id] reaches at [peakOverallAge] if he develops as the
+  /// default world expects (full club minutes, no tournament-start bump),
+  /// from [now] at [age]: his expected gain on the age curve (see
+  /// [PlayerAging.expectedGain]) and, for a superstar, the lift to his own
+  /// level. A player already that old is at his peak: his current overall.
+  ///
+  /// What a world pack stores as a default-world player's potential.
+  static int peakOverall(
+    int id,
+    PlayerPosition pos,
+    PlayerAttributes now,
+    int age,
+  ) {
+    final current = OverallRating.forPosition(pos, now);
+    if (age >= peakOverallAge) return current;
+    // Everyone else's attributes stop at 95 (see PlayerAging._grow).
+    var peak = (current + PlayerAging.expectedGain(id, age, peakOverallAge))
+        .clamp(1.0, 95.0);
+    if (isSuperstar(id)) {
+      final level = superstarLevel(id, peakOverallAge);
+      if (peak < level) peak += (level - peak) * PlayerAging.superstarBlend;
+    }
+    return peak.round().clamp(1, superstarCeiling);
   }
 
   /// A stable non-negative avalanche hash, for [developmentPotential].

@@ -8,7 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 /// career's name pools (see `namePoolsV2Kind`). A read that passes `saveSeed`
 /// but no `careerId` falls back to the classic pools, so in a new career that
 /// one screen would call a player something different from everywhere else.
-/// Nothing at compile time catches that, so this reads the source.
+/// Nothing at compile time catches that, so this reads the source. A read
+/// with no career that asks for `newCareerNames: true` (a world pack's fixed
+/// draw) reads the current pools on purpose, so it passes.
 void main() {
   test('no player read in lib passes saveSeed without careerId', () {
     expect(
@@ -32,7 +34,8 @@ void main() {
 }
 
 /// Every `byNation(` / `youthByNation(` / `byId(` call under [dir] whose
-/// argument list matches [isSaveBound] but names no `careerId:`.
+/// argument list matches [isSaveBound] but names no `careerId:` (nor asks
+/// for `newCareerNames: true`).
 List<String> _offenders(String dir, bool Function(String) isSaveBound) {
   final call = RegExp(r'\.(byNation|youthByNation|byId)\(');
   final offenders = <String>[];
@@ -51,7 +54,9 @@ List<String> _offenders(String dir, bool Function(String) isSaveBound) {
         if (c == ')') depth--;
       }
       final args = src.substring(m.end, i - 1);
-      if (isSaveBound(args) && !args.contains('careerId:')) {
+      if (isSaveBound(args) &&
+          !args.contains('careerId:') &&
+          !args.contains('newCareerNames: true')) {
         final line = '\n'.allMatches(src.substring(0, m.start)).length + 1;
         offenders.add('${file.path}:$line');
       }
