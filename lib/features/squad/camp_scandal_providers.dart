@@ -144,7 +144,7 @@ Future<({PendingScandal scandal, bool dropped})?> _windowScandal(
   final playerId = rolled.playerId;
   final player = pool.where((p) => p.id == playerId).firstOrNull;
   if (player == null) return null;
-  final round = period.first.round;
+  final round = Nomination.leadOf(period).round;
   return (
     scandal: (
       cycle: cycle,

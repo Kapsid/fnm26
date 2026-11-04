@@ -97,6 +97,15 @@ abstract final class Nomination {
     return out;
   }
 
+  /// The match a window is named for: a finals tournament's opener when the
+  /// window holds one (its send-off friendlies come first, but the squad is
+  /// the tournament's), otherwise the window's first match.
+  static Fixture leadOf(List<Fixture> period) =>
+      period
+          .where((f) => f.matchday == 1 && _tournamentRounds.contains(f.round))
+          .firstOrNull ??
+      period.first;
+
   /// Whether a nomination window is open right now — i.e. the next unplayed
   /// fixture starts a period (so the squad may be edited before it kicks off).
   static bool windowOpen(List<Fixture> fixtures) {

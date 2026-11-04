@@ -149,9 +149,10 @@ const skillsPromptKind = 'skillsPrompt';
 /// qualifying and before the finals draw).
 const worldCupPlayoffKind = 'worldCupPlayoff';
 
-/// A short label for the call-up event, tailored to the period its first match
-/// [f] opens (a qualifying campaign, a later window of it, a friendly
-/// window, or a specific tournament).
+/// A short label for the call-up event, tailored to the period [f] leads (a
+/// qualifying campaign, a later window of it, a friendly window, or a specific
+/// tournament). [f] is [Nomination.leadOf] the period, so warm-ups before a
+/// finals are named for the finals, not as a friendly window.
 String _callUpLabel(AppLocalizations l, Fixture f) {
   if (f.round == 'FRIENDLY') return l.hubCallUpFriendlies;
   // A later window of a campaign already under way.
@@ -1058,7 +1059,10 @@ nextEventProvider = FutureProvider.autoDispose.family<HubEvent, int>((
               icon: Icons.fast_forward_rounded,
             );
           }
-          return callUp(_callUpLabel(l, period.first), periodKey);
+          return callUp(
+            _callUpLabel(l, Nomination.leadOf(period)),
+            periodKey,
+          );
         }
       }
     }
