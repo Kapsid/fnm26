@@ -7,7 +7,7 @@ import 'package:fnm/domain/services/rating/overall_rating.dart';
 /// The shape of a player's three qualities, as the database editor offers it.
 enum PlayerType {
   balanced(1, 1, 1),
-  athlete(1.15, 0.9, 1.0),
+  athlete(1.15, 0.9, 1),
   technician(0.9, 1.15, 0.95),
   engine(0.95, 0.95, 1.15);
 
