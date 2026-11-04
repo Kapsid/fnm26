@@ -33,6 +33,7 @@ dependencies:
   flutter_localizations: # Generated AppLocalizations + Material/Cupertino l10n.
     sdk: flutter
 
+  collection: ^1.19.0
   cupertino_icons: ^1.0.8
   drift: ^2.34.0 # Local relational storage; the save file is the cloud artifact.
   flutter_riverpod: ^2.6.1 # State mgmt + DI (manual providers, no codegen).
