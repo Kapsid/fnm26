@@ -78,6 +78,17 @@ void main() {
     expect(i.whereType<DuplicateCode>().single.nationIds, [1, 2]);
   });
 
+  test("renaming a code to an untouched nation's code is a DuplicateCode", () {
+    final p = _pack(nations: {1: (name: 'A', code: 'BBB')});
+    expect(PackRules.issues(p).whereType<DuplicateCode>(), isEmpty);
+    final i = PackRules.issues(p, baseCodes: {1: 'AAA', 2: 'BBB', 3: 'CCC'});
+    expect(i.whereType<DuplicateCode>().single.nationIds, [1, 2]);
+    expect(
+      PackRules.issues(_pack(), baseCodes: {2: 'XXX', 3: 'XXX'}),
+      isEmpty,
+    );
+  });
+
   test('a name of spaces is empty', () {
     expect(PackRules.checkName('   '), FieldReason.empty);
   });

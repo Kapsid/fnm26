@@ -93,7 +93,10 @@ abstract final class PackRules {
   static FieldReason? checkCode(String s) =>
       _code.hasMatch(s) ? null : FieldReason.badCharacters;
 
-  static List<PackIssue> issues(WorldPack p) {
+  static List<PackIssue> issues(
+    WorldPack p, {
+    Map<int, String> baseCodes = const {},
+  }) {
     final out = <PackIssue>[];
     void name(String path, String v, {int max = nameMax}) {
       final r = checkName(v, max: max);
@@ -138,19 +141,26 @@ abstract final class PackRules {
       }
     }
 
-    final byCode = <String, List<int>>{};
+    final effective = {...baseCodes};
     for (final id in p.nations.keys.toList()..sort()) {
       final n = p.nations[id]!;
       name('nations.$id.name', n.name);
       final r = checkCode(n.code);
       if (r != null) {
         out.add(BadField('nations.$id.code', r));
+        effective.remove(id);
       } else {
-        byCode.putIfAbsent(n.code, () => []).add(id);
+        effective[id] = n.code;
       }
     }
+    final byCode = <String, List<int>>{};
+    for (final id in effective.keys.toList()..sort()) {
+      byCode.putIfAbsent(effective[id]!, () => []).add(id);
+    }
     for (final e in byCode.entries) {
-      if (e.value.length > 1) out.add(DuplicateCode(e.key, e.value));
+      if (e.value.length > 1 && e.value.any(p.nations.containsKey)) {
+        out.add(DuplicateCode(e.key, e.value));
+      }
     }
 
     void values(String root, Map<String, String> m, {int max = nameMax}) {
@@ -186,5 +196,8 @@ abstract final class PackRules {
     return out;
   }
 
-  static bool isComplete(WorldPack p) => issues(p).isEmpty;
+  static bool isComplete(
+    WorldPack p, {
+    Map<int, String> baseCodes = const {},
+  }) => issues(p, baseCodes: baseCodes).isEmpty;
 }
