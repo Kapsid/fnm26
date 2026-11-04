@@ -11,6 +11,19 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// Czech save doesn't say "WC FINALS · QUARTER-FINAL" on the one screen that
 /// matters most and "ČTVRTFINÁLE" on the next.
 abstract final class MatchStage {
+  /// The short column heading for a knockout round in a visual bracket
+  /// ("QF", "čtvrtf."). Unknown codes are returned as they are.
+  static String ladderLabel(AppLocalizations l, String round) =>
+      switch (round) {
+        'R32' => l.matchTinyRoundOf32,
+        'R16' || 'NR16' || 'CR16' => l.matchTinyRoundOf16,
+        'QF' || 'NQF' || 'CQF' => l.matchTinyQuarterFinal,
+        'SF' || 'NSF' || 'CSF' || 'POSF' => l.matchTinySemiFinal,
+        'FINAL' || 'NFINAL' || 'CFINAL' || 'POFINAL' => l.matchTinyFinal,
+        '3RD' || 'C3RD' => l.matchTinyThirdPlace,
+        _ => round,
+      };
+
   /// The round on its own ("Quarter-final"). Unknown codes are returned as
   /// they are, which is what an untranslated new competition should show.
   static String stage(AppLocalizations l, String? round) => switch (round) {

@@ -9,10 +9,13 @@ import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/features/hub/round_popup.dart' show stageLabelFor;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
-/// One knockout round of a bracket: its stored round code and display label.
+/// One knockout round of a bracket: its stored round code and an English
+/// label kept only as a reading aid. The bracket shows the round in the
+/// viewer's language, resolved from the code.
 typedef BracketRound = (String round, String label);
 
 /// A tournament's knockout stage, as a list of ties or an aligned visual
@@ -202,7 +205,8 @@ class _TournamentBracketState extends State<TournamentBracket> {
     final rounds = _playedRounds;
     if (rounds.isEmpty) return const [];
     final index = (_round ?? _liveRound(rounds)).clamp(0, rounds.length - 1);
-    final (round, label) = rounds[index];
+    final (round, _) = rounds[index];
+    final label = stageLabelFor(AppLocalizations.of(context), round);
     return [
       Padding(
         padding: const EdgeInsets.only(top: AppSpacing.md),
@@ -286,9 +290,11 @@ class _TournamentBracketState extends State<TournamentBracket> {
   /// each next-round tie sits between its two feeders.
   Widget _bracketView() {
     final bodies = <Widget>[];
-    for (final (round, label) in widget.ladder) {
+    final l = AppLocalizations.of(context);
+    for (final (round, _) in widget.ladder) {
       final inRound = _inRound(round);
       if (inRound.isEmpty) continue;
+      final label = MatchStage.ladderLabel(l, round);
       bodies.add(
         Column(
           children: [

@@ -358,4 +358,32 @@ void main() {
       );
     }
   }
+
+  testWidgets('round names follow the language, list and bracket alike', (
+    tester,
+  ) async {
+    await tester.pumpApp(
+      bracket(
+        fixtures: [
+          tie('CSF', 1, 2, hs: 2, as: 1),
+          tie('CFINAL', 1, 3, hs: 0, as: 1),
+        ],
+        rounds: euroRounds,
+        ladder: euroLadder,
+      ),
+      locale: const Locale('cs'),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('FINÁLE'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('passive-sim-prev-round')));
+    await tester.pumpAndSettle();
+    expect(find.text('SEMIFINÁLE'), findsOneWidget);
+    expect(find.text('SEMI-FINALS'), findsNothing);
+
+    await tester.tap(find.text('Pavouk'));
+    await tester.pumpAndSettle();
+    expect(find.text('semif.'), findsOneWidget);
+    expect(find.text('SF'), findsNothing);
+  });
 }
