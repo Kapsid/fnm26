@@ -14924,6 +14924,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get editorTrophySaveFailed => 'Không thể lưu hình. Hãy thử lại.';
 
   @override
+  String get editorSaveFailed =>
+      'Không thể lưu các thay đổi gần nhất. Đang thử lại.';
+
+  @override
   String get editorTrophyPick => 'Chọn một chiếc cúp để đổi hình.';
 
   @override

@@ -15384,6 +15384,10 @@ class AppLocalizationsUk extends AppLocalizations {
       'Не вдалося зберегти зображення. Спробуй ще раз.';
 
   @override
+  String get editorSaveFailed =>
+      'Не вдалося зберегти останні зміни. Пробуємо ще раз.';
+
+  @override
   String get editorTrophyPick => 'Обери трофей, щоб змінити його зображення.';
 
   @override

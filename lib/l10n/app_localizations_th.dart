@@ -14790,6 +14790,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get editorTrophySaveFailed => 'บันทึกรูปไม่ได้ ลองอีกครั้ง';
 
   @override
+  String get editorSaveFailed =>
+      'บันทึกการเปลี่ยนแปลงล่าสุดไม่ได้ กำลังลองอีกครั้ง';
+
+  @override
   String get editorTrophyPick => 'เลือกถ้วยรางวัลที่จะเปลี่ยนรูป';
 
   @override

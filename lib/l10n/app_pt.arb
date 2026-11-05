@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Imagem do troféu salva.",
   "editorTrophyRemoved": "A imagem do jogo voltou.",
   "editorTrophySaveFailed": "Não foi possível salvar a imagem. Tente novamente.",
+  "editorSaveFailed": "Não foi possível salvar as últimas alterações. Tentando novamente.",
   "editorTrophyPick": "Escolha um troféu para trocar a imagem.",
   "editorTrophySize": "Salva em {width} x {height} pixels",
   "editorIssueUnknownEntry": "{name} não está mais no jogo",

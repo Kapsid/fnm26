@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Image du trophée enregistrée.",
   "editorTrophyRemoved": "L’image du jeu est de retour.",
   "editorTrophySaveFailed": "L’image n’a pas pu être enregistrée. Réessayez.",
+  "editorSaveFailed": "Vos dernières modifications n’ont pas pu être enregistrées. Nouvel essai en cours.",
   "editorTrophyPick": "Choisissez un trophée pour changer son image.",
   "editorTrophySize": "Enregistrée en {width} x {height} pixels",
   "editorIssueUnknownEntry": "{name} n’est plus dans le jeu",

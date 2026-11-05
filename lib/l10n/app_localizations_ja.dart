@@ -14525,6 +14525,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get editorTrophySaveFailed => '画像を保存できませんでした。もう一度お試しください。';
 
   @override
+  String get editorSaveFailed => '最新の変更を保存できませんでした。再試行しています。';
+
+  @override
   String get editorTrophyPick => '画像を変更するトロフィーを選んでください。';
 
   @override

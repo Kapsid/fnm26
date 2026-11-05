@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Slika trofeja spremljena.",
   "editorTrophyRemoved": "Slika iz igre je vraćena.",
   "editorTrophySaveFailed": "Sliku nije bilo moguće spremiti. Pokušaj ponovno.",
+  "editorSaveFailed": "Posljednje promjene nije bilo moguće spremiti. Pokušavamo ponovno.",
   "editorTrophyPick": "Odaberi trofej da mu promijeniš sliku.",
   "editorTrophySize": "Sprema se u veličini {width} x {height} piksela",
   "editorIssueUnknownEntry": "{name}: više nije u igri",

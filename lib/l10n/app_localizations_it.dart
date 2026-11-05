@@ -15150,6 +15150,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Impossibile salvare l\'immagine. Riprova.';
 
   @override
+  String get editorSaveFailed =>
+      'Impossibile salvare le ultime modifiche. Nuovo tentativo in corso.';
+
+  @override
   String get editorTrophyPick => 'Scegli un trofeo per cambiarne l\'immagine.';
 
   @override

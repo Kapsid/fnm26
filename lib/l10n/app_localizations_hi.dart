@@ -14989,6 +14989,10 @@ class AppLocalizationsHi extends AppLocalizations {
       'तस्वीर सेव नहीं हो सकी। फिर कोशिश करें।';
 
   @override
+  String get editorSaveFailed =>
+      'हाल के बदलाव सेव नहीं हो सके। फिर से कोशिश की जा रही है।';
+
+  @override
   String get editorTrophyPick => 'तस्वीर बदलने के लिए एक ट्रॉफ़ी चुनें।';
 
   @override

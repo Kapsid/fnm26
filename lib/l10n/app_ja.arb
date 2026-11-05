@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "トロフィー画像を保存しました。",
   "editorTrophyRemoved": "ゲームの画像に戻しました。",
   "editorTrophySaveFailed": "画像を保存できませんでした。もう一度お試しください。",
+  "editorSaveFailed": "最新の変更を保存できませんでした。再試行しています。",
   "editorTrophyPick": "画像を変更するトロフィーを選んでください。",
   "editorTrophySize": "{width} x {height}ピクセルで保存",
   "editorIssueUnknownEntry": "{name}はもうゲームに存在しません",

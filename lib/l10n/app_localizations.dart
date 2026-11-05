@@ -22838,6 +22838,12 @@ abstract class AppLocalizations {
   /// **'The picture could not be saved. Try again.'**
   String get editorTrophySaveFailed;
 
+  /// Snackbar when an edit of a custom database has failed to save twice in a row; it is still being retried.
+  ///
+  /// In en, this message translates to:
+  /// **'Your latest changes could not be saved. Trying again.'**
+  String get editorSaveFailed;
+
   /// Tablet editor Trophies section, before a trophy is picked.
   ///
   /// In en, this message translates to:

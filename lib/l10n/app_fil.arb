@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Na-save ang larawan ng tropeo.",
   "editorTrophyRemoved": "Bumalik na ang larawan ng laro.",
   "editorTrophySaveFailed": "Hindi na-save ang larawan. Subukan ulit.",
+  "editorSaveFailed": "Hindi na-save ang mga huling pagbabago. Sinusubukan ulit.",
   "editorTrophyPick": "Pumili ng tropeo para palitan ang larawan nito.",
   "editorTrophySize": "Naka-save sa {width} x {height} pixels",
   "editorIssueUnknownEntry": "Wala na sa laro ang {name}",

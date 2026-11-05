@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Картинката на трофея е запазена.",
   "editorTrophyRemoved": "Картинката от играта се върна.",
   "editorTrophySaveFailed": "Картинката не можа да се запази. Опитай пак.",
+  "editorSaveFailed": "Последните промени не можаха да се запазят. Опитваме отново.",
   "editorTrophyPick": "Избери трофей, за да смениш картинката му.",
   "editorTrophySize": "Запазена в {width} x {height} пиксела",
   "editorIssueUnknownEntry": "{name} вече го няма в играта",

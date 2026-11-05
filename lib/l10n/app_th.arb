@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "บันทึกรูปถ้วยรางวัลแล้ว",
   "editorTrophyRemoved": "กลับมาใช้รูปในเกมแล้ว",
   "editorTrophySaveFailed": "บันทึกรูปไม่ได้ ลองอีกครั้ง",
+  "editorSaveFailed": "บันทึกการเปลี่ยนแปลงล่าสุดไม่ได้ กำลังลองอีกครั้ง",
   "editorTrophyPick": "เลือกถ้วยรางวัลที่จะเปลี่ยนรูป",
   "editorTrophySize": "บันทึกที่ขนาด {width} x {height} พิกเซล",
   "editorIssueUnknownEntry": "{name} ไม่มีในเกมแล้ว",

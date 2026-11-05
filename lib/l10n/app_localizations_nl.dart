@@ -15149,6 +15149,10 @@ class AppLocalizationsNl extends AppLocalizations {
       'De afbeelding kon niet worden opgeslagen. Probeer het opnieuw.';
 
   @override
+  String get editorSaveFailed =>
+      'Je laatste wijzigingen konden niet worden opgeslagen. We proberen het opnieuw.';
+
+  @override
   String get editorTrophyPick =>
       'Kies een trofee om de afbeelding te wijzigen.';
 

@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Obrázek trofeje uložen.",
   "editorTrophyRemoved": "Obrázek ze hry je zpět.",
   "editorTrophySaveFailed": "Obrázek se nepodařilo uložit. Zkuste to znovu.",
+  "editorSaveFailed": "Poslední změny se nepodařilo uložit. Zkoušíme to znovu.",
   "editorTrophyPick": "Vyberte trofej a změňte její obrázek.",
   "editorTrophySize": "Uloží se v rozměru {width} x {height} pixelů",
   "editorIssueUnknownEntry": "{name} už ve hře není",

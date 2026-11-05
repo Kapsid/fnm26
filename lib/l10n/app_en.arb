@@ -23159,6 +23159,10 @@
   "@editorTrophySaveFailed": {
     "description": "Snackbar when storing or removing a trophy picture fails."
   },
+  "editorSaveFailed": "Your latest changes could not be saved. Trying again.",
+  "@editorSaveFailed": {
+    "description": "Snackbar when an edit of a custom database has failed to save twice in a row; it is still being retried."
+  },
   "editorTrophyPick": "Pick a trophy to change its picture.",
   "@editorTrophyPick": {
     "description": "Tablet editor Trophies section, before a trophy is picked."

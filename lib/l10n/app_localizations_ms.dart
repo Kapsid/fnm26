@@ -15031,6 +15031,10 @@ class AppLocalizationsMs extends AppLocalizations {
       'Gambar tidak dapat disimpan. Cuba lagi.';
 
   @override
+  String get editorSaveFailed =>
+      'Perubahan terkini tidak dapat disimpan. Mencuba lagi.';
+
+  @override
   String get editorTrophyPick => 'Pilih trofi untuk menukar gambarnya.';
 
   @override

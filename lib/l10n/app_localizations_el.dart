@@ -15159,6 +15159,10 @@ class AppLocalizationsEl extends AppLocalizations {
       'Η εικόνα δεν αποθηκεύτηκε. Δοκίμασε ξανά.';
 
   @override
+  String get editorSaveFailed =>
+      'Οι τελευταίες αλλαγές δεν αποθηκεύτηκαν. Νέα προσπάθεια.';
+
+  @override
   String get editorTrophyPick =>
       'Διάλεξε τρόπαιο για να αλλάξεις την εικόνα του.';
 

@@ -142,6 +142,12 @@ final AutoDisposeFutureProvider<List<EditorPackEntry>> editorPacksProvider =
       return out;
     });
 
+/// Counts the times an edit of a database has failed to save twice in a
+/// row (see [PackEditor.flush]); `PackSaveFailureListener` says so.
+final StateProvider<int> packSaveFailuresProvider = StateProvider<int>(
+  (ref) => 0,
+);
+
 /// The database being edited, by pack id: edits save as they go
 /// ([PackEditor.update]), and the last ones can be undone.
 ///
@@ -168,6 +174,13 @@ packEditorProvider = StateNotifierProvider.autoDispose
             // The app (or the test) is tearing the container down.
           }
         },
+        onSaveFailed: () {
+          try {
+            container.read(packSaveFailuresProvider.notifier).state++;
+          } on Object {
+            // As above.
+          }
+        },
       );
     });
 
@@ -187,9 +200,11 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     required WorldPackRepository packs,
     required NationRepository nations,
     void Function()? onSaved,
+    void Function()? onSaveFailed,
   }) : _id = id,
        _packs = packs,
        _onSaved = onSaved ?? _noop,
+       _onSaveFailed = onSaveFailed ?? _noop,
        super(const AsyncValue.loading()) {
     // The app going to the background may be the last the manager does:
     // whatever waits for its save is written now, not 400 ms later.
@@ -210,7 +225,16 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   final WorldPackRepository _packs;
   final void Function() _onSaved;
 
+  /// Told when a save fails for the second time in a row.
+  final void Function() _onSaveFailed;
+
   static void _noop() {}
+
+  /// Saves that have failed in a row since the last one that went through.
+  int _failedSaves = 0;
+
+  /// How many times a closed editor tries a failing save before it gives up.
+  static const int closedRetries = 3;
 
   final List<WorldPack> _past = [];
   Timer? _timer;
@@ -467,8 +491,10 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     _timer = Timer(saveDelay, () => unawaited(flush()));
   }
 
-  /// Writes a waiting edit now. A write that fails is logged and kept
-  /// waiting, so the next edit (or flush) tries it again.
+  /// Writes a waiting edit now. A write that fails is logged, kept waiting
+  /// and tried again after a pause that grows with each failure (a closed
+  /// editor tries [closedRetries] times); the second failure in a row is
+  /// told to `PackSaveFailureListener`, which says so.
   Future<void> flush() async {
     _timer?.cancel();
     _timer = null;
@@ -482,8 +508,19 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     } on Object catch (e, st) {
       AppLog.error('pack-editor-save', e, st);
       _unsaved ??= pack;
+      _failedSaves++;
+      if (_failedSaves == 2) _onSaveFailed();
+      // An edit made meanwhile has armed its own save, which takes this
+      // one with it.
+      if (_timer == null && (mounted || _failedSaves <= closedRetries)) {
+        _timer = Timer(
+          saveDelay * _failedSaves.clamp(1, 10),
+          () => unawaited(flush()),
+        );
+      }
       return;
     }
+    _failedSaves = 0;
     _onSaved();
   }
 

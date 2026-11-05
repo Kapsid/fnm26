@@ -15073,6 +15073,10 @@ class AppLocalizationsNb extends AppLocalizations {
   String get editorTrophySaveFailed => 'Bildet kunne ikke lagres. Prøv igjen.';
 
   @override
+  String get editorSaveFailed =>
+      'De siste endringene kunne ikke lagres. Prøver igjen.';
+
+  @override
   String get editorTrophyPick => 'Velg en pokal for å bytte bildet.';
 
   @override

@@ -15488,6 +15488,10 @@ class AppLocalizationsRo extends AppLocalizations {
       'Imaginea nu a putut fi salvată. Încercați din nou.';
 
   @override
+  String get editorSaveFailed =>
+      'Ultimele modificări nu au putut fi salvate. Se încearcă din nou.';
+
+  @override
   String get editorTrophyPick =>
       'Alegeți un trofeu ca să-i schimbați imaginea.';
 

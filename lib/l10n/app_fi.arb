@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Pokaalin kuva tallennettu.",
   "editorTrophyRemoved": "Pelin kuva on palautettu.",
   "editorTrophySaveFailed": "Kuvaa ei voitu tallentaa. Yritä uudelleen.",
+  "editorSaveFailed": "Viimeisimpiä muutoksia ei voitu tallentaa. Yritetään uudelleen.",
   "editorTrophyPick": "Valitse pokaali, jonka kuvan haluat vaihtaa.",
   "editorTrophySize": "Tallennetaan kokoon {width} x {height} pikseliä",
   "editorIssueUnknownEntry": "{name}: ei ole enää pelissä",

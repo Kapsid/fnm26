@@ -12,6 +12,7 @@ import 'package:fnm/domain/services/cloud/cloud_backup_policy.dart';
 import 'package:fnm/domain/services/entitlement/entitlement_service.dart';
 import 'package:fnm/features/career/play_time.dart';
 import 'package:fnm/features/cloud/cloud_backup_providers.dart';
+import 'package:fnm/features/editor/save_failure_listener.dart';
 import 'package:fnm/features/onboarding/tour_overlay.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
@@ -64,9 +65,11 @@ class _FnmAppState extends ConsumerState<FnmApp> {
         // The likeliest last moment before the phone is put away: an
         // automatic cloud backup if one is on, due and anything changed.
         unawaited(
-          ref.read(cloudBackupServiceProvider).trigger(
-            BackupTrigger.appBackground,
-          ),
+          ref
+              .read(cloudBackupServiceProvider)
+              .trigger(
+                BackupTrigger.appBackground,
+              ),
         );
       },
       onResume: () => ref.read(playTimeTrackerProvider).resume(),
@@ -138,10 +141,15 @@ class _FnmAppState extends ConsumerState<FnmApp> {
       //
       // A database opened from another app (Files, Mail, a chat) is heard on
       // every screen, so its listener wraps the router's output too.
-      builder: (context, child) => IncomingFileListener(
-        child: AppTextScale(
-          size: textSize,
-          child: TourOverlay(child: child ?? const SizedBox.shrink()),
+      //
+      // So is a database edit that keeps failing to save: the editor's
+      // screens come and go, and the save may fail after the last of them.
+      builder: (context, child) => PackSaveFailureListener(
+        child: IncomingFileListener(
+          child: AppTextScale(
+            size: textSize,
+            child: TourOverlay(child: child ?? const SizedBox.shrink()),
+          ),
         ),
       ),
     );

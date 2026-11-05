@@ -15194,6 +15194,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Das Bild konnte nicht gespeichert werden. Bitte erneut versuchen.';
 
   @override
+  String get editorSaveFailed =>
+      'Die letzten Änderungen konnten nicht gespeichert werden. Neuer Versuch läuft.';
+
+  @override
   String get editorTrophyPick =>
       'Wählen Sie einen Pokal, um sein Bild zu ändern.';
 

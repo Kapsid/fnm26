@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Imaginea trofeului a fost salvată.",
   "editorTrophyRemoved": "Imaginea jocului a revenit.",
   "editorTrophySaveFailed": "Imaginea nu a putut fi salvată. Încercați din nou.",
+  "editorSaveFailed": "Ultimele modificări nu au putut fi salvate. Se încearcă din nou.",
   "editorTrophyPick": "Alegeți un trofeu ca să-i schimbați imaginea.",
   "editorTrophySize": "Salvată la {width} x {height} pixeli",
   "editorIssueUnknownEntry": "{name} nu mai există în joc",

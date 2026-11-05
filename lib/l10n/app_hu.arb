@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Trófeakép mentve.",
   "editorTrophyRemoved": "Visszakerült a játék képe.",
   "editorTrophySaveFailed": "A képet nem sikerült menteni. Próbáld újra.",
+  "editorSaveFailed": "A legutóbbi módosításokat nem sikerült menteni. Újrapróbálkozás.",
   "editorTrophyPick": "Válassz egy trófeát a képe cseréjéhez.",
   "editorTrophySize": "Mentés {width} x {height} pixelben",
   "editorIssueUnknownEntry": "{name}: már nincs a játékban",

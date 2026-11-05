@@ -14988,6 +14988,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get editorTrophySaveFailed => 'Resim kaydedilemedi. Tekrar dene.';
 
   @override
+  String get editorSaveFailed =>
+      'Son değişiklikler kaydedilemedi. Yeniden deneniyor.';
+
+  @override
   String get editorTrophyPick => 'Resmini değiştirmek için bir kupa seç.';
 
   @override

@@ -15226,6 +15226,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'L’image n’a pas pu être enregistrée. Réessayez.';
 
   @override
+  String get editorSaveFailed =>
+      'Vos dernières modifications n’ont pas pu être enregistrées. Nouvel essai en cours.';
+
+  @override
   String get editorTrophyPick =>
       'Choisissez un trophée pour changer son image.';
 

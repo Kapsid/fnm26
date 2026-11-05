@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Trofeeafbeelding opgeslagen.",
   "editorTrophyRemoved": "De afbeelding van het spel is terug.",
   "editorTrophySaveFailed": "De afbeelding kon niet worden opgeslagen. Probeer het opnieuw.",
+  "editorSaveFailed": "Je laatste wijzigingen konden niet worden opgeslagen. We proberen het opnieuw.",
   "editorTrophyPick": "Kies een trofee om de afbeelding te wijzigen.",
   "editorTrophySize": "Opgeslagen op {width} x {height} pixels",
   "editorIssueUnknownEntry": "{name} zit niet meer in het spel",

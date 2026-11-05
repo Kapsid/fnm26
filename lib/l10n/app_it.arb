@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Immagine del trofeo salvata.",
   "editorTrophyRemoved": "È tornata l'immagine del gioco.",
   "editorTrophySaveFailed": "Impossibile salvare l'immagine. Riprova.",
+  "editorSaveFailed": "Impossibile salvare le ultime modifiche. Nuovo tentativo in corso.",
   "editorTrophyPick": "Scegli un trofeo per cambiarne l'immagine.",
   "editorTrophySize": "Salvata a {width} x {height} pixel",
   "editorIssueUnknownEntry": "{name} non è più nel gioco",

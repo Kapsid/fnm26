@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Η εικόνα τροπαίου αποθηκεύτηκε.",
   "editorTrophyRemoved": "Η εικόνα του παιχνιδιού επέστρεψε.",
   "editorTrophySaveFailed": "Η εικόνα δεν αποθηκεύτηκε. Δοκίμασε ξανά.",
+  "editorSaveFailed": "Οι τελευταίες αλλαγές δεν αποθηκεύτηκαν. Νέα προσπάθεια.",
   "editorTrophyPick": "Διάλεξε τρόπαιο για να αλλάξεις την εικόνα του.",
   "editorTrophySize": "Αποθηκεύεται σε {width} x {height} pixel",
   "editorIssueUnknownEntry": "{name}: δεν υπάρχει πια στο παιχνίδι",

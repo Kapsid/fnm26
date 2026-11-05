@@ -15064,6 +15064,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get editorTrophySaveFailed => 'Bilden kunde inte sparas. Försök igen.';
 
   @override
+  String get editorSaveFailed =>
+      'Dina senaste ändringar kunde inte sparas. Försöker igen.';
+
+  @override
   String get editorTrophyPick => 'Välj en trofé för att byta dess bild.';
 
   @override

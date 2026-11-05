@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Đã lưu hình cúp.",
   "editorTrophyRemoved": "Đã dùng lại hình trong game.",
   "editorTrophySaveFailed": "Không thể lưu hình. Hãy thử lại.",
+  "editorSaveFailed": "Không thể lưu các thay đổi gần nhất. Đang thử lại.",
   "editorTrophyPick": "Chọn một chiếc cúp để đổi hình.",
   "editorTrophySize": "Lưu ở kích thước {width} x {height} pixel",
   "editorIssueUnknownEntry": "{name} không còn trong game",

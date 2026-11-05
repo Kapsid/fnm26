@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Kupa resmi kaydedildi.",
   "editorTrophyRemoved": "Oyunun resmi geri geldi.",
   "editorTrophySaveFailed": "Resim kaydedilemedi. Tekrar dene.",
+  "editorSaveFailed": "Son değişiklikler kaydedilemedi. Yeniden deneniyor.",
   "editorTrophyPick": "Resmini değiştirmek için bir kupa seç.",
   "editorTrophySize": "{width} x {height} piksel olarak kaydedildi",
   "editorIssueUnknownEntry": "{name} artık oyunda yok",

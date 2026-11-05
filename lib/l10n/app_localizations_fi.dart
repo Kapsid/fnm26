@@ -15151,6 +15151,10 @@ class AppLocalizationsFi extends AppLocalizations {
       'Kuvaa ei voitu tallentaa. Yritä uudelleen.';
 
   @override
+  String get editorSaveFailed =>
+      'Viimeisimpiä muutoksia ei voitu tallentaa. Yritetään uudelleen.';
+
+  @override
   String get editorTrophyPick => 'Valitse pokaali, jonka kuvan haluat vaihtaa.';
 
   @override

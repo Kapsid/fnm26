@@ -15245,6 +15245,10 @@ class AppLocalizationsPl extends AppLocalizations {
       'Nie udało się zapisać obrazka. Spróbuj ponownie.';
 
   @override
+  String get editorSaveFailed =>
+      'Nie udało się zapisać ostatnich zmian. Próbujemy ponownie.';
+
+  @override
   String get editorTrophyPick => 'Wybierz trofeum, aby zmienić jego obrazek.';
 
   @override

@@ -14980,6 +14980,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get editorTrophySaveFailed => 'Gambar tidak bisa disimpan. Coba lagi.';
 
   @override
+  String get editorSaveFailed =>
+      'Perubahan terakhir tidak bisa disimpan. Mencoba lagi.';
+
+  @override
   String get editorTrophyPick => 'Pilih trofi untuk mengganti gambarnya.';
 
   @override

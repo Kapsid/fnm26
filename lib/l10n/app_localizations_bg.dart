@@ -15163,6 +15163,10 @@ class AppLocalizationsBg extends AppLocalizations {
       'Картинката не можа да се запази. Опитай пак.';
 
   @override
+  String get editorSaveFailed =>
+      'Последните промени не можаха да се запазят. Опитваме отново.';
+
+  @override
   String get editorTrophyPick => 'Избери трофей, за да смениш картинката му.';
 
   @override

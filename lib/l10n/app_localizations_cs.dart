@@ -15342,6 +15342,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Obrázek se nepodařilo uložit. Zkuste to znovu.';
 
   @override
+  String get editorSaveFailed =>
+      'Poslední změny se nepodařilo uložit. Zkoušíme to znovu.';
+
+  @override
   String get editorTrophyPick => 'Vyberte trofej a změňte její obrázek.';
 
   @override

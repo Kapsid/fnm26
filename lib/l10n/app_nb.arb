@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Pokalbildet er lagret.",
   "editorTrophyRemoved": "Spillets bilde er tilbake.",
   "editorTrophySaveFailed": "Bildet kunne ikke lagres. Prøv igjen.",
+  "editorSaveFailed": "De siste endringene kunne ikke lagres. Prøver igjen.",
   "editorTrophyPick": "Velg en pokal for å bytte bildet.",
   "editorTrophySize": "Lagres i {width} x {height} piksler",
   "editorIssueUnknownEntry": "{name} finnes ikke lenger i spillet",

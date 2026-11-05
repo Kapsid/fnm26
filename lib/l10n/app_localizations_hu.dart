@@ -15020,6 +15020,10 @@ class AppLocalizationsHu extends AppLocalizations {
       'A képet nem sikerült menteni. Próbáld újra.';
 
   @override
+  String get editorSaveFailed =>
+      'A legutóbbi módosításokat nem sikerült menteni. Újrapróbálkozás.';
+
+  @override
   String get editorTrophyPick => 'Válassz egy trófeát a képe cseréjéhez.';
 
   @override

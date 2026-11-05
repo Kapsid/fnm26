@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Pokalbild gespeichert.",
   "editorTrophyRemoved": "Das Bild des Spiels ist zurück.",
   "editorTrophySaveFailed": "Das Bild konnte nicht gespeichert werden. Bitte erneut versuchen.",
+  "editorSaveFailed": "Die letzten Änderungen konnten nicht gespeichert werden. Neuer Versuch läuft.",
   "editorTrophyPick": "Wählen Sie einen Pokal, um sein Bild zu ändern.",
   "editorTrophySize": "Gespeichert mit {width} x {height} Pixeln",
   "editorIssueUnknownEntry": "{name} ist nicht mehr im Spiel",

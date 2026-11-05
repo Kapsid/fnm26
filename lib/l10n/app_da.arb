@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Pokalbilledet er gemt.",
   "editorTrophyRemoved": "Spillets billede er tilbage.",
   "editorTrophySaveFailed": "Billedet kunne ikke gemmes. Prøv igen.",
+  "editorSaveFailed": "Dine seneste ændringer kunne ikke gemmes. Prøver igen.",
   "editorTrophyPick": "Vælg en pokal for at skifte dens billede.",
   "editorTrophySize": "Gemmes i {width} x {height} pixels",
   "editorIssueUnknownEntry": "{name} findes ikke længere i spillet",

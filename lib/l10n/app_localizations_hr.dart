@@ -15412,6 +15412,10 @@ class AppLocalizationsHr extends AppLocalizations {
       'Sliku nije bilo moguće spremiti. Pokušaj ponovno.';
 
   @override
+  String get editorSaveFailed =>
+      'Posljednje promjene nije bilo moguće spremiti. Pokušavamo ponovno.';
+
+  @override
   String get editorTrophyPick => 'Odaberi trofej da mu promijeniš sliku.';
 
   @override

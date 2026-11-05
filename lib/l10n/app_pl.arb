@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Obrazek trofeum zapisany.",
   "editorTrophyRemoved": "Obrazek z gry wrócił.",
   "editorTrophySaveFailed": "Nie udało się zapisać obrazka. Spróbuj ponownie.",
+  "editorSaveFailed": "Nie udało się zapisać ostatnich zmian. Próbujemy ponownie.",
   "editorTrophyPick": "Wybierz trofeum, aby zmienić jego obrazek.",
   "editorTrophySize": "Zapisany w rozmiarze {width} x {height} pikseli",
   "editorIssueUnknownEntry": "{name}: już nie ma w grze",

@@ -15080,6 +15080,10 @@ class AppLocalizationsFil extends AppLocalizations {
       'Hindi na-save ang larawan. Subukan ulit.';
 
   @override
+  String get editorSaveFailed =>
+      'Hindi na-save ang mga huling pagbabago. Sinusubukan ulit.';
+
+  @override
   String get editorTrophyPick =>
       'Pumili ng tropeo para palitan ang larawan nito.';
 

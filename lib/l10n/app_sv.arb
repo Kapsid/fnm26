@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Trofébilden sparad.",
   "editorTrophyRemoved": "Spelets bild är tillbaka.",
   "editorTrophySaveFailed": "Bilden kunde inte sparas. Försök igen.",
+  "editorSaveFailed": "Dina senaste ändringar kunde inte sparas. Försöker igen.",
   "editorTrophyPick": "Välj en trofé för att byta dess bild.",
   "editorTrophySize": "Sparas i {width} x {height} pixlar",
   "editorIssueUnknownEntry": "{name} finns inte längre i spelet",

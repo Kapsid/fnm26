@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Зображення трофея збережено.",
   "editorTrophyRemoved": "Зображення гри повернуто.",
   "editorTrophySaveFailed": "Не вдалося зберегти зображення. Спробуй ще раз.",
+  "editorSaveFailed": "Не вдалося зберегти останні зміни. Пробуємо ще раз.",
   "editorTrophyPick": "Обери трофей, щоб змінити його зображення.",
   "editorTrophySize": "Зберігається як {width} x {height} пікселів",
   "editorIssueUnknownEntry": "{name}: цього вже немає в грі",

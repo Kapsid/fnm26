@@ -15079,6 +15079,10 @@ class AppLocalizationsDa extends AppLocalizations {
   String get editorTrophySaveFailed => 'Billedet kunne ikke gemmes. Prøv igen.';
 
   @override
+  String get editorSaveFailed =>
+      'Dine seneste ændringer kunne ikke gemmes. Prøver igen.';
+
+  @override
   String get editorTrophyPick => 'Vælg en pokal for at skifte dens billede.';
 
   @override

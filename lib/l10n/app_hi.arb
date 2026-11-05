@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "ट्रॉफ़ी की तस्वीर सेव हुई।",
   "editorTrophyRemoved": "गेम की तस्वीर वापस आ गई।",
   "editorTrophySaveFailed": "तस्वीर सेव नहीं हो सकी। फिर कोशिश करें।",
+  "editorSaveFailed": "हाल के बदलाव सेव नहीं हो सके। फिर से कोशिश की जा रही है।",
   "editorTrophyPick": "तस्वीर बदलने के लिए एक ट्रॉफ़ी चुनें।",
   "editorTrophySize": "{width} x {height} पिक्सेल में सेव",
   "editorIssueUnknownEntry": "{name} अब गेम में नहीं है",

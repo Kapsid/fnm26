@@ -3767,6 +3767,7 @@
   "editorTrophySaved": "Gambar trofi disimpan.",
   "editorTrophyRemoved": "Gambar permainan sudah kembali.",
   "editorTrophySaveFailed": "Gambar tidak dapat disimpan. Cuba lagi.",
+  "editorSaveFailed": "Perubahan terkini tidak dapat disimpan. Mencuba lagi.",
   "editorTrophyPick": "Pilih trofi untuk menukar gambarnya.",
   "editorTrophySize": "Disimpan pada {width} x {height} piksel",
   "editorIssueUnknownEntry": "{name} sudah tiada dalam permainan",

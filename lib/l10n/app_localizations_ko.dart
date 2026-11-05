@@ -14563,6 +14563,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get editorTrophySaveFailed => '이미지를 저장할 수 없습니다. 다시 시도하세요.';
 
   @override
+  String get editorSaveFailed => '최근 변경 사항을 저장할 수 없습니다. 다시 시도하는 중입니다.';
+
+  @override
   String get editorTrophyPick => '이미지를 바꿀 트로피를 선택하세요.';
 
   @override

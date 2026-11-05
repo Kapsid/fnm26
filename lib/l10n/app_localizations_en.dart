@@ -15102,6 +15102,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'The picture could not be saved. Try again.';
 
   @override
+  String get editorSaveFailed =>
+      'Your latest changes could not be saved. Trying again.';
+
+  @override
   String get editorTrophyPick => 'Pick a trophy to change its picture.';
 
   @override
