@@ -105,7 +105,12 @@ final class CarryPhase extends BallPhase {
 }
 
 /// The ball travelling in a straight line from [from] to [to], rising to
-/// [peak] metres halfway when lofted.
+/// [peak] metres halfway when lofted. It leaves at [fromHeight] and arrives
+/// at [toHeight] (a header, a shot striking the bar); both are 0 for a ball
+/// on the grass.
+///
+/// A phase with [from] equal to [to] and no [peak] is a ball at rest: in
+/// the net, out of play, on the penalty spot or where a foul left it.
 final class FlightPhase extends BallPhase {
   const FlightPhase(
     super.t0,
@@ -115,6 +120,9 @@ final class FlightPhase extends BallPhase {
     required this.peak,
     this.fromActor,
     this.toActor,
+    this.pass = true,
+    this.fromHeight = 0,
+    this.toHeight = 0,
   });
 
   final Offset2 from;
@@ -122,22 +130,53 @@ final class FlightPhase extends BallPhase {
   final double peak;
 
   /// The passer and the receiver, as indexes into [PitchScript.actorList].
+  /// A shot, a ball at rest or a ball rolling loose has no receiver; one at
+  /// rest names the last man to touch it as its passer.
   final int? fromActor;
   final int? toActor;
+
+  /// Whether this is a pass between players. Shots, deflections, a ball
+  /// set down for a dead-ball kick, a loose ball collected and a ball at
+  /// rest are not, and the pass-length floor does not apply to them.
+  final bool pass;
+  final double fromHeight;
+  final double toHeight;
+
+  /// Whether the ball lies still over this phase.
+  bool get resting => from == to && peak == 0 && fromHeight == toHeight;
+
+  /// The ball's height [u] (0-1) of the way along.
+  double heightAt(double u) =>
+      fromHeight + (toHeight - fromHeight) * u + 4 * peak * u * (1 - u);
 }
 
 /// A ball in the air when a [ScriptState] was taken: it left [from] at
 /// [t0] for [toId], aimed at [lead], and lands at [t1] (screen seconds of
-/// the script it was taken from).
+/// the script it was taken from). With no [toId] it is a shot or a loose
+/// ball, landing exactly at [lead] and lying there. [fromId] is the man who
+/// kicked it, when anybody did.
 typedef ScriptFlight = ({
-  int fromId,
-  int toId,
+  int? fromId,
+  int? toId,
   Offset2 from,
   Offset2 lead,
   double t0,
   double t1,
   double peak,
+  bool pass,
+  double fromHeight,
+  double toHeight,
 });
+
+/// Something a staged moment shows that the players' positions cannot: the
+/// whistle for a foul, the card the referee shows, the assistant's flag, a
+/// shot struck, a goal. For the renderer and the commentary to keep time
+/// with the picture.
+enum PitchCueKind { foul, yellowCard, redCard, offsideFlag, shot, goal }
+
+/// A [PitchCueKind] at screen second [t], about [playerId] (the fouler, the
+/// man booked, the man flagged, the shooter, the scorer).
+typedef PitchCue = ({double t, PitchCueKind kind, int playerId});
 
 /// The live state at one instant: who is where, and who has the ball. A
 /// stager reads it; [PitchScript.stateAt] captures one for the story layer
@@ -221,6 +260,10 @@ class StagedWindow {
   /// The injury staged here, when this window is one.
   final MatchEvent? injury;
 
+  /// What the stager shows in this window beyond the players and the ball,
+  /// in time order.
+  final List<PitchCue> cues = [];
+
   /// The state handed over as the window opens and the one play resumes
   /// from as it closes. In a resumed script, a window that ended before the
   /// script's start was never played here: both carry the resume state.
@@ -259,6 +302,7 @@ class PitchScript {
     required this.pacer,
     required this.result,
     required this.homeNationId,
+    this.cuts = const [],
     this.start = 0,
   }) : _index = {
          for (var i = 0; i < actorList.length; i++) actorList[i].playerId: i,
@@ -272,6 +316,14 @@ class PitchScript {
   /// lined up afresh (the second half, extra time and its second half). The
   /// picture jumps there; the screen pauses for the interval.
   final List<double> resets;
+
+  /// Screen seconds at which the picture cuts, as television cuts from a
+  /// replay back to play: after a goal, from the celebration to the sides
+  /// lined up for the kick-off (the conceding side on the ball); before a
+  /// set piece that could not be set up in the time its moment has, from
+  /// the ball going dead to the set piece ready to be taken. No interval:
+  /// the screen does not pause. Positions jump there, as at [resets].
+  final List<double> cuts;
   final List<StagedWindow> windows;
 
   /// Player id -> the screen second he starts walking off. He walks to the
@@ -349,6 +401,13 @@ class PitchScript {
         carrier = null;
         tagged = [if (toActor != null) actorList[toActor].playerId];
     }
+    // The men a staged moment names keep their tags for all of it.
+    final w = windowAt(t);
+    if (w != null) {
+      for (final id in w.actors) {
+        if (players.containsKey(id) && !tagged.contains(id)) tagged.add(id);
+      }
+    }
     return PitchFrame(
       players: players,
       facing: facing,
@@ -385,17 +444,20 @@ class PitchScript {
     }
     final phase = _phaseAt(t);
     ScriptFlight? flight;
-    if (phase is FlightPhase &&
-        phase.fromActor != null &&
-        phase.toActor != null) {
+    if (phase is FlightPhase && !phase.resting && t < phase.t1) {
       flight = (
-        fromId: actorList[phase.fromActor!].playerId,
-        toId: actorList[phase.toActor!].playerId,
+        fromId: phase.fromActor == null
+            ? null
+            : actorList[phase.fromActor!].playerId,
+        toId: phase.toActor == null ? null : actorList[phase.toActor!].playerId,
         from: phase.from,
         lead: phase.to,
         t0: phase.t0,
         t1: phase.t1,
         peak: phase.peak,
+        pass: phase.pass,
+        fromHeight: phase.fromHeight,
+        toHeight: phase.toHeight,
       );
     }
     // Ball time so far: a carried ball is its carrier's side's, a ball in
@@ -450,11 +512,29 @@ class PitchScript {
       case CarryPhase(carrier: final ci):
         final (pos, face) = actorAt(ci, t);
         return (pos + Offset2.fromAngle(face, ballLead), 0);
-      case FlightPhase(:final from, :final to, :final peak):
+      case FlightPhase(:final from, :final to):
         final len = p.t1 - p.t0;
         final u = len <= 0 ? 1.0 : ((t - p.t0) / len).clamp(0.0, 1.0);
-        return (Offset2.lerp(from, to, u), 4 * peak * u * (1 - u));
+        return (Offset2.lerp(from, to, u), p.heightAt(u));
     }
+  }
+
+  /// The staged-moment window screen second [t] falls in, if any.
+  StagedWindow? windowAt(double t) {
+    var lo = 0;
+    var hi = windows.length - 1;
+    StagedWindow? found;
+    while (lo <= hi) {
+      final mid = (lo + hi) ~/ 2;
+      final w = windows[mid];
+      if (w.start <= t + 1e-9) {
+        if (t < w.end - 1e-9) found = w;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return found;
   }
 
   /// Actor [i]'s interpolated position and facing at [t] (his last known
@@ -551,7 +631,7 @@ abstract final class PitchScriptValidator {
 
     final frames = s.keyframes;
     final n = s.actorList.length;
-    final resets = s.resets.toSet();
+    final resets = {...s.resets, ...s.cuts};
     StagedWindow? windowAt(double t) {
       for (final w in s.windows) {
         if (t >= w.start - 1e-9 && t < w.end - 1e-9) return w;
@@ -819,7 +899,7 @@ abstract final class PitchScriptValidator {
   static void _checkBall(PitchScript s, void Function(double, String) add) {
     final frames = s.keyframes;
     final phases = s.ballPhases;
-    final resets = s.resets.toSet();
+    final resets = {...s.resets, ...s.cuts};
     if (phases.isEmpty || phases.first.t0 > s.start + 1e-9) {
       add(s.start, 'the ball has no phase at the start');
     }
@@ -852,7 +932,7 @@ abstract final class PitchScriptValidator {
         case FlightPhase(:final from, :final to, :final toActor):
           final d = from.distanceTo(to);
           final len = ph.t1 - ph.t0;
-          if (toActor != null && d < minPass - 1e-6) {
+          if (toActor != null && ph.pass && d < minPass - 1e-6) {
             add(ph.t0, 'a pass of ${d.toStringAsFixed(1)} m');
           }
           if (len > 0 && d / len > maxBallSpeed + 1e-6) {
@@ -867,7 +947,7 @@ abstract final class PitchScriptValidator {
     final total = s.totalSeconds;
     var prevT = s.start;
     var prev = s.ballAt(prevT).$1;
-    final resetList = [...s.resets]..sort();
+    final resetList = [...s.resets, ...s.cuts]..sort();
     var r = 0;
     for (var t = s.start + step; t <= total + 1e-9; t += step) {
       final now = s.ballAt(t).$1;

@@ -43,6 +43,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/pitch/formation_slots.dart';
+import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
@@ -198,6 +199,51 @@ final class PassAction extends BallAction {
   final double peak;
 }
 
+/// Kick (or head, or throw) the ball from wherever it is (at its carrier's
+/// feet, or lying still) either to the point [to], where it then lies, or
+/// to [toPlayerId]'s feet, arriving at screen second [arriveAt] at the
+/// earliest. It leaves at [fromHeight] and arrives at [toHeight], rising
+/// [peak] metres more halfway.
+///
+/// Not a pass: a shot, a header, a clearance, a deflection, a ball set
+/// down for a dead-ball kick, a loose ball collected. [byPlayerId] names
+/// who kicks a ball lying still (the corner taker); a carried ball is
+/// kicked by its carrier.
+/// Cut the picture (see `PitchScript.cuts`) to a set piece ready to be
+/// taken: the men in [positions] stand there, the ball lies at [ballAt].
+/// Anybody else stays put, stepping aside if a man placed lands on him.
+/// Only for a dead ball, never in open play.
+final class CutAction extends BallAction {
+  const CutAction({required this.ballAt, required this.positions});
+
+  final Offset2 ballAt;
+  final Map<int, Offset2> positions;
+}
+
+final class KickAction extends BallAction {
+  const KickAction({
+    required this.arriveAt,
+    this.to,
+    this.toPlayerId,
+    this.byPlayerId,
+    this.peak = 0,
+    this.fromHeight = 0,
+    this.toHeight = 0,
+    this.pass = false,
+  }) : assert((to == null) != (toPlayerId == null), 'a point or a player');
+
+  final Offset2? to;
+  final int? toPlayerId;
+  final int? byPlayerId;
+  final double arriveAt;
+  final double peak;
+  final double fromHeight;
+  final double toHeight;
+
+  /// Whether it counts as a pass (a free kick played to a team-mate).
+  final bool pass;
+}
+
 /// What a stager is told about the window it fills.
 class StagingContext {
   const StagingContext({
@@ -208,6 +254,11 @@ class StagingContext {
     required this.departing,
     required this.seed,
     this.homePossessionShare = 0.5,
+    this.next,
+    this.ahead = const [],
+    this.events = const [],
+    this.resuming = false,
+    this.hardEnd = double.infinity,
   });
 
   /// The window: its start and end (screen seconds) and its moments.
@@ -230,6 +281,27 @@ class StagingContext {
 
   /// The home side's possession share (0-1) the ball time aims at.
   final double homePossessionShare;
+
+  /// The window after this one, when there is one: a stager may leave the
+  /// ball where the next moment wants it (a foul's free kick) and send its
+  /// taker on his way.
+  final StagedWindow? next;
+
+  /// The windows that open within a few seconds of this one closing, in
+  /// order ([next] first): their men can be on their way.
+  final List<StagedWindow> ahead;
+
+  /// The match's events, for what a moment points at (a foul's card).
+  final List<MatchEvent> events;
+
+  /// Whether [entry] is where a resumed script starts: the picture there
+  /// is what was already shown, so the plan carries on from it (it never
+  /// cuts on that frame).
+  final bool resuming;
+
+  /// When the moment must be over by: an interval's kick-off or the final
+  /// whistle soon after the window, else infinity.
+  final double hardEnd;
 
   /// Screen seconds of ball time side [nationId] is owed as the window opens
   /// (negative when it has had more than its share). A stager that can
@@ -254,7 +326,16 @@ class StagingContext {
 ///
 /// Inside a window a keeper may leave his area only when the window's
 /// moment names him (`StagedWindow.actors`): a save, a claim, a
-/// distribution.
+/// distribution. A keeper the stager gives no drive is never left standing
+/// away from goal: the story layer walks him to his place in the shape.
+/// Every other man the stager gives no drive stands still.
+///
+/// The stager may be asked to stage a window from part-way through it (a
+/// resume after a re-simulation hands it the state at the playhead as its
+/// entry), so a plan reads the state it is handed and carries on from
+/// there rather than replaying the window from its start.
+///
+/// The default, [MomentStaging], stages every real moment from its data.
 abstract interface class MomentStager {
   StagedPlan stage(StagingContext context);
 }
@@ -266,6 +347,12 @@ abstract interface class StagedPlan {
 
   /// A ball action to start at screen second [t]; null leaves the ball be.
   BallAction? ball(double t, ScriptState now);
+
+  /// Whether the moment has played out (its shot struck and the ball with
+  /// somebody, its set piece taken...). A plan not settled as its window
+  /// ends plays on into the quiet time after it, for a moment, when
+  /// nothing else is due.
+  bool settled(double t, ScriptState now);
 }
 
 /// The placeholder stager: everyone holds still. It does only what a
@@ -297,6 +384,9 @@ class _Hold implements StagedPlan {
   PlayerDrive? drive(int playerId, double t, ScriptState now) => null;
 
   @override
+  bool settled(double t, ScriptState now) => true;
+
+  @override
   BallAction? ball(double t, ScriptState now) {
     final w = context.window;
     final carrier = now.carrierId;
@@ -321,7 +411,7 @@ class _Hold implements StagedPlan {
     return pass;
   }
 
-  /// A pass from the carrier to [side]'s nearest man at least 7 m away,
+  /// A pass from the carrier to [side]'s nearest man at least 8 m away,
   /// landing inside the window.
   PassAction? _passTo(int side, double t, ScriptState now) {
     final w = context.window;
@@ -334,7 +424,7 @@ class _Hold implements StagedPlan {
         return;
       }
       final d = p.distanceTo(now.ball);
-      if (d >= 7 && d < bestD) {
+      if (d >= 8 && d < bestD) {
         bestD = d;
         best = id;
       }
@@ -364,7 +454,7 @@ abstract final class StoryLayer {
     required MatchLineups lineups,
     required PitchPacer pacer,
     required int seed,
-    MomentStager stager = const NeutralHold(),
+    MomentStager stager = const MomentStaging(),
     ScriptState? resumeFrom,
   }) => _Builder(result, lineups, pacer, seed, stager).run(resumeFrom);
 }
@@ -439,6 +529,17 @@ const double _accel = 9;
 const double _turnRate = 7;
 const double _safeGap = 0.9;
 const double _leadIn = 3.5;
+
+/// How long before a moment the men it needs set off for where it needs
+/// them (a set piece's taker for the ball, a shooter for where he shoots
+/// from). A man far away needs most of it.
+const double _takerLead = 10;
+
+/// The longest a moment's plan plays on past its window.
+const double _spill = 3;
+
+/// How long before a foul its two men close on each other.
+const double _foulLead = 8;
 
 /// How long before a moment the side it belongs to keeps the ball it has.
 const double _handover = 1.3;
@@ -564,14 +665,25 @@ class _Flight {
     required this.toActor,
     required this.peak,
     required this.lead,
+    this.pass = true,
+    this.fromHeight = 0,
+    this.toHeight = 0,
   });
   final double t0;
   final double t1;
   final Offset2 from;
-  final int fromActor;
-  final int toActor;
+
+  /// Who kicked it, when anybody did.
+  final int? fromActor;
+
+  /// Who it is for; null for a ball kicked to a point ([lead]), where it
+  /// lies on landing.
+  final int? toActor;
   final double peak;
   final Offset2 lead;
+  final bool pass;
+  final double fromHeight;
+  final double toHeight;
 }
 
 class _Builder {
@@ -609,6 +721,12 @@ class _Builder {
 
   /// A screen second the ball logic wants a step to end at.
   double wakeAt = double.infinity;
+
+  /// Whether the last [_drive] came from the stager.
+  bool stagedDrive = false;
+
+  /// Where a resumed script starts.
+  double? resumeAt;
   int ci = 0;
 
   late double total;
@@ -616,6 +734,20 @@ class _Builder {
   // Ball state.
   int? carrier;
   _Flight? flight;
+
+  /// The ball lying still (in the net, out of play, on a dead-ball spot)
+  /// while nobody has it and it is not in the air, and its height.
+  Offset2? restAt;
+  double restHeight = 0;
+
+  /// The last man to touch the ball, by agent index.
+  int? lastTouch;
+
+  /// Kick-offs after goals: screen second -> the side kicking off.
+  final Map<double, int> goalRestarts = {};
+
+  /// Every screen second the picture cuts at (see `PitchScript.cuts`).
+  final Set<double> cuts = {};
   double phaseStart = 0;
   int possession = 0;
   double nextAction = 0;
@@ -648,10 +780,12 @@ class _Builder {
     ]) {
       resets.add(_secs(pacer.screenAt(m, 0)));
     }
+    _scheduleGoalRestarts();
 
     var t = 0.0;
     if (resume != null) {
       t = _resumeFrom(resume);
+      resumeAt = t;
     } else {
       _applyDue(0, atBreak: true);
       _processArrivals(0);
@@ -664,6 +798,7 @@ class _Builder {
     final specials = <double>{
       for (final w in windows) ...[w.start, w.end],
       ...resets,
+      ...goalRestarts.keys,
       for (final c in changes) c.t,
       total,
     }.toList()..sort();
@@ -675,13 +810,29 @@ class _Builder {
       wi++;
     }
     while (t < total - 1e-9) {
-      // Windows closing.
-      if (activeWindow != null && t >= activeWindow!.end - 1e-9) {
+      // Windows closing: when their moment has played out, or (a moment
+      // that needs a little longer, its ball still on its way) as soon as
+      // anything else is due.
+      if (activeWindow != null &&
+          t >= activeWindow!.end - 1e-9 &&
+          !_spills(activeWindow!, activePlan, t)) {
         activeWindow!.exit = _state(t);
         activeWindow = null;
         activePlan = null;
         spellEnd = t + _spellLength(possession);
         nextAction = math.max(nextAction, t + 0.15);
+      }
+      // A kick-off after a goal: the picture cuts from the celebration to
+      // the sides lined up, the conceding side on the ball.
+      for (final e in goalRestarts.entries) {
+        if (!resetDone.contains(e.key) && (e.key - t).abs() < 1e-9) {
+          resetDone.add(e.key);
+          _processArrivals(t);
+          // At the loop's own time, which may round a hair past it.
+          _kickoff(t, e.value);
+          _record(t);
+          cuts.add(t);
+        }
       }
       // Kick-offs, with whatever the interval brought.
       for (final r in resets) {
@@ -710,14 +861,19 @@ class _Builder {
       }
       _reseed(t);
       final inAir = flight;
-      if (inAir != null) {
-        final to = agents[inAir.toActor];
+      final bound = inAir?.toActor;
+      if (bound != null) {
+        final to = agents[bound];
         if (!to.present || to.walkStart != null) _redirect(t);
       }
       final c = carrier;
       if (c != null && agents[c].walkStart != null) _forcePass(agents[c], t);
       if (activeWindow == null) {
-        _decide(t);
+        if (restAt != null) {
+          _collectLoose(t);
+        } else {
+          _decide(t);
+        }
       } else {
         _stagedBall(t);
       }
@@ -755,10 +911,11 @@ class _Builder {
     leaving.forEach((i, at) {
       if (at >= total - 1e-9) departures.putIfAbsent(agents[i].id, () => at);
     });
-    if (flight != null) _land(total);
+    _cutFlight(total);
     _closePhase(total);
 
     return PitchScript(
+      cuts: cuts.toList()..sort(),
       actorList: [
         for (final a in agents)
           (
@@ -799,7 +956,9 @@ class _Builder {
         leaving[off.index] = t;
         _startWalk(off, t, replaced: true);
       }
-      if (_arrive(q, t, force: true)) queue.remove(q);
+      // Still never a twelfth man: he steps on only once the man he
+      // replaces has started to go.
+      if (_arrive(q, t)) queue.remove(q);
     }
     w.entry = _state(t);
     activeWindow = w;
@@ -816,8 +975,51 @@ class _Builder {
         },
         seed: (seed ^ ((index + 1) * 0x9E3779B1)) & 0xFFFFFFFF,
         homePossessionShare: _share(0),
+        next: index < windows.length ? windows[index] : null,
+        ahead: [
+          for (var k = index; k < windows.length; k++)
+            if (windows[k].start - w.end <= _takerLead) windows[k],
+        ],
+        events: result.events,
+        resuming: resumeAt != null && (t - resumeAt!).abs() < 1e-9,
+        hardEnd: [
+          for (final r in [...resets, total])
+            if (r >= w.end - 1e-9 && r <= w.end + _spill) r,
+        ].fold(double.infinity, math.min),
       ),
     );
+  }
+
+  /// Whether [w]'s plan plays on past its end into the quiet time after
+  /// it: only while its moment has not played out, for at most [_spill],
+  /// and never into another moment, an interval or a kick-off.
+  bool _spills(StagedWindow w, StagedPlan? plan, double t) {
+    if (plan == null || t >= w.end + _spill - 1e-9) return false;
+    if (goalRestarts.containsKey(w.end)) return false;
+    for (final o in windows) {
+      if (o.start > w.start + 1e-9 && o.start < t + 0.3) return false;
+    }
+    for (final r in resets) {
+      if (r > t - 1e-9 && r < t + 0.3) return false;
+    }
+    return !plan.settled(t, _state(t));
+  }
+
+  /// A goal's window ends with a kick-off: the picture cuts there, the
+  /// conceding side on the ball. Not when the window ends the match, or at
+  /// an interval (whose own kick-off stands).
+  void _scheduleGoalRestarts() {
+    for (final w in windows) {
+      ShotMoment? goal;
+      for (final m in w.moments) {
+        if (m is ShotMoment && m.outcome == ShotOutcome.goal) goal = m;
+      }
+      if (goal == null) continue;
+      final at = w.end;
+      if (at >= total - 1e-6) continue;
+      if (resets.any((r) => (r - at).abs() < 1e-6)) continue;
+      goalRestarts[at] = goal.teamNationId == lineups.home.nationId ? 1 : 0;
+    }
   }
 
   // --- set-up --------------------------------------------------------------
@@ -1391,17 +1593,25 @@ class _Builder {
   void _redirect(double t) {
     final f = flight!;
     final here = _ballNow(t);
-    phases.add(
-      FlightPhase(
-        f.t0,
-        t,
-        from: f.from,
-        to: here,
-        peak: f.peak,
-        fromActor: f.fromActor,
-      ),
-    );
-    final side = agents[f.fromActor].side;
+    final height = _heightNow(t);
+    // A receiver gone the instant the ball leaves adds no flight at all.
+    if (t > f.t0 + 1e-9) {
+      phases.add(
+        FlightPhase(
+          f.t0,
+          t,
+          from: f.from,
+          to: here,
+          peak: f.peak,
+          fromActor: f.fromActor,
+          pass: false,
+          fromHeight: f.fromHeight,
+          toHeight: height,
+        ),
+      );
+    }
+    final kicker = f.fromActor ?? f.toActor!;
+    final side = agents[kicker].side;
     _Agent? best;
     var bestD = double.infinity;
     for (final o in agents) {
@@ -1415,6 +1625,9 @@ class _Builder {
     }
     if (best == null) {
       flight = null;
+      restAt = here;
+      restHeight = 0;
+      phaseStart = t;
       return;
     }
     final d = best.pos.distanceTo(here);
@@ -1426,6 +1639,8 @@ class _Builder {
       toActor: best.index,
       peak: 0,
       lead: best.pos,
+      pass: false,
+      fromHeight: height,
     );
   }
 
@@ -1464,13 +1679,24 @@ class _Builder {
   /// Sets everything up from [state] and returns the screen second the new
   /// script starts at.
   double _resumeFrom(ScriptState state) {
-    final t0 = _secs(
+    var t0 = _secs(
       pacer.screenAt(state.minute, state.stoppage, within: state.within),
     );
+    // A resume on a kick-off (or a cut) is exactly on it, whatever the
+    // rounding of the match position.
+    for (final r in [...resets, ...goalRestarts.keys]) {
+      if ((r - t0).abs() < 1e-4) t0 = r;
+    }
     // Everything due before the resume point has happened: replay it, then
     // put everybody exactly where the state has them.
-    while (ci < changes.length && changes[ci].t < t0 - 1e-9) {
-      changes[ci].apply(changes[ci].t, atBreak: false);
+    // On an interval's kick-off the state already shows what the interval
+    // brought.
+    final onBreak = resets.any((r) => (r - t0).abs() < 1e-9);
+    while (ci < changes.length &&
+        (changes[ci].t < t0 - 1e-9 ||
+            (onBreak && changes[ci].t <= t0 + 1e-9))) {
+      final at = changes[ci].t;
+      changes[ci].apply(at, atBreak: onBreak && (at - t0).abs() < 1e-9);
       ci++;
       for (final q in [...queue]) {
         if (state.players.containsKey(q.on.id) && _arrive(q, t0, force: true)) {
@@ -1478,7 +1704,7 @@ class _Builder {
         }
       }
     }
-    for (final r in resets) {
+    for (final r in [...resets, ...goalRestarts.keys]) {
       // A resume landing exactly on a kick-off starts from the kick-off the
       // state already shows.
       if (r < t0 + 1e-9) resetDone.add(r);
@@ -1510,18 +1736,37 @@ class _Builder {
     final f = state.flight;
     final dt = t0 - state.t;
     carrier = state.carrierId == null ? null : indexOf[state.carrierId];
-    if (f != null && indexOf[f.toId] != null && indexOf[f.fromId] != null) {
+    final toIndex = f?.toId == null ? null : indexOf[f!.toId];
+    if (f != null && (f.toId == null || toIndex != null)) {
+      // The rest of its flight, from exactly where it is: the remainder of
+      // an arc is an arc too.
+      final len = f.t1 - f.t0;
+      final k = len <= 0 ? 1.0 : ((state.t - f.t0) / len).clamp(0.0, 1.0);
+      final here = Offset2.lerp(f.from, f.lead, k);
+      final h =
+          f.fromHeight +
+          (f.toHeight - f.fromHeight) * k +
+          4 * f.peak * k * (1 - k);
       flight = _Flight(
-        t0: f.t0 + dt,
-        t1: f.t1 + dt,
-        from: f.from,
-        fromActor: indexOf[f.fromId]!,
-        toActor: indexOf[f.toId]!,
-        peak: f.peak,
+        t0: t0,
+        t1: math.max(f.t1 + dt, t0 + 0.05),
+        from: here,
+        fromActor: f.fromId == null ? null : indexOf[f.fromId],
+        toActor: toIndex,
+        peak: f.peak * (1 - k) * (1 - k),
         lead: f.lead,
+        pass: false,
+        fromHeight: h,
+        toHeight: f.toHeight,
       );
       carrier = null;
     }
+    if (carrier == null && flight == null) {
+      // Nobody has it and it is not in the air: it lies where it is.
+      restAt = state.ball;
+      restHeight = 0;
+    }
+    lastTouch = carrier ?? flight?.fromActor;
     phaseStart = t0;
     possession = state.possessionNationId == lineups.home.nationId ? 0 : 1;
     homeBallTime = state.homeBallTime;
@@ -1552,8 +1797,10 @@ class _Builder {
   // --- kick-off ------------------------------------------------------------
 
   void _kickoff(double t, int kicking) {
-    if (flight != null) _land(t);
+    _cutFlight(t);
     _closePhase(t);
+    restAt = null;
+    restHeight = 0;
     final minute = pacer.matchAt(_dur(t)).minute;
     const centre = PitchDims.centre;
     possession = kicking;
@@ -1562,7 +1809,8 @@ class _Builder {
       final dir = _dir(s, minute);
       final targets = _anchors(s, minute, t, centre, s == kicking);
       for (final a in agents) {
-        if (!a.present || a.side != s) continue;
+        // A man walking off walks on through the cut.
+        if (!a.present || a.side != s || a.walkStart != null) continue;
         var p = targets[a.index] ?? a.pos;
         var depth = xToDepth(p.x, dir).clamp(1.0, 50.5);
         if (a.slot == sides[s].gkSlot) depth = 5;
@@ -1610,6 +1858,7 @@ class _Builder {
       if (!moved) break;
     }
     carrier = kicker.index;
+    lastTouch = kicker.index;
     phaseStart = t;
     possession = kicking;
     spellStart = t;
@@ -1706,10 +1955,15 @@ class _Builder {
   void _stagedBall(double t) {
     final plan = activePlan;
     final c = carrier;
-    if (plan == null || c == null) return;
+    if (plan == null) return;
+    final inAir = flight != null;
+    if (!inAir && c == null && restAt == null) return;
     final action = plan.ball(t, _state(t));
+    // While the ball is in the air only a cut may interrupt it.
+    if (inAir && action is! CutAction) return;
     switch (action) {
       case PassAction(:final toPlayerId, :final arriveAt, :final peak):
+        if (c == null) return;
         final to = indexOf[toPlayerId];
         if (to == null || to == c) return;
         final target = agents[to];
@@ -1722,9 +1976,166 @@ class _Builder {
           arriveAt: arriveAt,
           peak: peak,
         );
+      case final KickAction k:
+        _kick(t, k);
+      case final CutAction k:
+        _cut(t, k);
       case null:
         break;
     }
+  }
+
+  /// The picture cuts to [k]'s set piece, ready.
+  void _cut(double t, CutAction k) {
+    _cutFlight(t);
+    _closePhase(t);
+    final placed = <int>{};
+    k.positions.forEach((id, p) {
+      final i = indexOf[id];
+      if (i == null) return;
+      final a = agents[i];
+      if (!a.present || a.walkStart != null) return;
+      a
+        ..pos = _clampPitch(p)
+        ..vel = Offset2.zero;
+      placed.add(i);
+    });
+    // Nobody left standing on anybody: those not placed step aside first.
+    for (var it = 0; it < 80; it++) {
+      var moved = false;
+      for (final a in agents) {
+        if (!a.present) continue;
+        for (final b in agents) {
+          if (b.index <= a.index || !b.present) continue;
+          final d = a.pos.distanceTo(b.pos);
+          if (d >= 1.05) continue;
+          moved = true;
+          final away = d < 1e-6 ? const Offset2(0, 1) : (a.pos - b.pos).unit;
+          final push = (1.05 - d) / 2 + 0.02;
+          final fixA = placed.contains(a.index) || a.walkStart != null;
+          final fixB = placed.contains(b.index) || b.walkStart != null;
+          if (!fixA || fixB) a.pos = _clampPitch(a.pos + away * push);
+          if (!fixB || fixA) b.pos = _clampPitch(b.pos - away * push);
+        }
+      }
+      if (!moved) break;
+    }
+    // Anybody still too close (pinned against a line) finds the nearest
+    // free spot.
+    for (final a in agents) {
+      if (!a.present || placed.contains(a.index) || a.walkStart != null) {
+        continue;
+      }
+      bool clear(Offset2 p) => agents.every(
+        (o) => o == a || !o.present || o.pos.distanceTo(p) >= 1.05,
+      );
+      if (clear(a.pos)) continue;
+      for (var k = 1; k < 200; k++) {
+        final ring = 1.1 * (1 + k ~/ 8);
+        final p = _clampPitch(
+          a.pos + Offset2.fromAngle(k * math.pi / 4 + ring, ring),
+        );
+        if (clear(p)) {
+          a.pos = p;
+          break;
+        }
+      }
+    }
+    // Everybody faces the ball.
+    for (final a in agents) {
+      if (!a.present || a.walkStart != null) continue;
+      final to = k.ballAt - a.pos;
+      if (to.length > 0.3) a.facing = to.angle;
+    }
+    carrier = null;
+    flight = null;
+    restAt = k.ballAt;
+    restHeight = 0;
+    phaseStart = t;
+    _record(t);
+    cuts.add(t);
+  }
+
+  /// Starts [k]: the ball leaves its carrier's feet, or the spot it lies
+  /// on, for a point or a man.
+  void _kick(double t, KickAction k) {
+    final int? to;
+    if (k.toPlayerId != null) {
+      to = indexOf[k.toPlayerId];
+      if (to == null) return;
+      final target = agents[to];
+      if (!target.present || target.walkStart != null || to == carrier) {
+        return;
+      }
+    } else {
+      to = null;
+    }
+    final c = carrier;
+    final Offset2 from;
+    final int? by;
+    if (c != null) {
+      from = _ballPoint(agents[c]);
+      by = c;
+    } else {
+      from = restAt!;
+      final named = k.byPlayerId == null ? null : indexOf[k.byPlayerId];
+      by = named ?? lastTouch;
+    }
+    final lead = to != null ? _ballPoint(agents[to]) : k.to!;
+    final fastest = t + from.distanceTo(lead) / 34;
+    _closePhase(t);
+    flight = _Flight(
+      t0: t,
+      t1: math.max(math.max(k.arriveAt, fastest), t + 0.05),
+      from: from,
+      fromActor: by,
+      toActor: to,
+      peak: k.peak,
+      lead: lead,
+      pass: k.pass,
+      fromHeight: c != null ? k.fromHeight : math.max(k.fromHeight, restHeight),
+      toHeight: k.toHeight,
+    );
+    carrier = null;
+    restAt = null;
+    restHeight = 0;
+    if (by != null) lastTouch = by;
+  }
+
+  /// Outside a moment, a ball lying loose (one a moment left out of play,
+  /// or in the open) goes to whoever is nearest: a ball behind a goal line
+  /// to the keeper there, for his goal kick.
+  void _collectLoose(double t) {
+    final at = restAt!;
+    final minute = pacer.matchAt(_dur(t)).minute;
+    _Agent? best;
+    var bestD = double.infinity;
+    final behindHome = at.x < 0;
+    final behindFar = at.x > PitchDims.length;
+    for (final a in agents) {
+      if (!a.present || a.walkStart != null) continue;
+      if (_departsWithin(a, t, 6)) continue;
+      var d = a.pos.distanceTo(at);
+      if (behindHome || behindFar) {
+        final dir = _dir(a.side, minute);
+        final defends = (dir > 0) == behindHome;
+        final keeper = a.slot == sides[a.side].gkSlot;
+        if (!(defends && keeper)) d += 1000;
+      }
+      if (d < bestD) {
+        bestD = d;
+        best = a;
+      }
+    }
+    if (best == null) return;
+    final v = (8 + 0.6 * bestD).clamp(8.0, 24.0);
+    _kick(
+      t,
+      KickAction(
+        toPlayerId: best.id,
+        arriveAt: t + math.max(0.15, best.pos.distanceTo(at) / v),
+      ),
+    );
   }
 
   double _nextStop(double t) {
@@ -1814,11 +2225,37 @@ class _Builder {
       lead: plan.$4,
     );
     carrier = null;
+    restAt = null;
+    lastTouch = from.index;
   }
 
   void _land(double t) {
     final f = flight!;
-    final to = agents[f.toActor];
+    final toIndex = f.toActor;
+    if (toIndex == null) {
+      // Kicked to a point: it lies there.
+      if (t > f.t0 + 1e-9) {
+        phases.add(
+          FlightPhase(
+            f.t0,
+            t,
+            from: f.from,
+            to: f.lead,
+            peak: f.peak,
+            fromActor: f.fromActor,
+            pass: f.pass,
+            fromHeight: f.fromHeight,
+            toHeight: f.toHeight,
+          ),
+        );
+      }
+      flight = null;
+      restAt = f.lead;
+      restHeight = f.toHeight;
+      phaseStart = t;
+      return;
+    }
+    final to = agents[toIndex];
     if (!to.present && t < total - 1e-9) {
       _redirect(t);
       return;
@@ -1833,10 +2270,14 @@ class _Builder {
         peak: f.peak,
         fromActor: f.fromActor,
         toActor: f.toActor,
+        pass: f.pass,
+        fromHeight: f.fromHeight,
+        toHeight: f.toHeight,
       ),
     );
     flight = null;
     carrier = to.index;
+    lastTouch = to.index;
     phaseStart = t;
     if (to.side != possession) {
       possession = to.side;
@@ -1848,10 +2289,59 @@ class _Builder {
     nextAction = t + (0.55 + rng.nextDouble() * 0.8) * (1.15 - tempo / 250);
   }
 
+  /// A ball still in the air when play stops (an interval, a kick-off, the
+  /// final whistle) stops where it is: its flight so far, then it lies.
+  void _cutFlight(double t) {
+    final f = flight;
+    if (f == null) return;
+    if (t >= f.t1 - 1e-9) {
+      _land(t);
+      return;
+    }
+    final here = _ballNow(t);
+    final height = _heightNow(t);
+    if (t > f.t0 + 1e-9) {
+      final k = (t - f.t0) / (f.t1 - f.t0);
+      phases.add(
+        FlightPhase(
+          f.t0,
+          t,
+          from: f.from,
+          to: here,
+          // The same arc, cut short: a parabola's first part is one too.
+          peak: f.peak * k * k,
+          fromActor: f.fromActor,
+          pass: false,
+          fromHeight: f.fromHeight,
+          toHeight: height,
+        ),
+      );
+    }
+    flight = null;
+    restAt = here;
+    restHeight = height;
+    phaseStart = t;
+  }
+
   void _closePhase(double t) {
     final c = carrier;
+    final rest = restAt;
     if (c != null && t > phaseStart + 1e-9) {
       phases.add(CarryPhase(phaseStart, t, c));
+    } else if (rest != null && t > phaseStart + 1e-9) {
+      phases.add(
+        FlightPhase(
+          phaseStart,
+          t,
+          from: rest,
+          to: rest,
+          peak: 0,
+          fromActor: lastTouch,
+          pass: false,
+          fromHeight: restHeight,
+          toHeight: restHeight,
+        ),
+      );
     }
     phaseStart = t;
   }
@@ -1875,11 +2365,22 @@ class _Builder {
       lateralTarget = (leadPoint.y - PitchDims.width / 2) * dir;
     }
     final want = (target - ballDepth).clamp(-12.0, 20.0);
+    // The moments ahead: the man the next one turns on is looked for; the
+    // men due elsewhere (a set piece's taker on his way, a man about to be
+    // flagged offside) are not.
+    final next = _upcoming(t, _leadIn);
+    final wanted = next.isEmpty ? null : _wantedOnBall(next.first);
+    final avoid = _busyAhead(t);
+    // Nobody is found in an offside position.
+    final onsideUpTo = math.max(_secondLastDepth(s, dir), ballDepth);
     _Agent? best;
     var bestScore = -double.infinity;
     for (final m in agents) {
       if (!m.present || m.side != s || m == a || m.walkStart != null) continue;
       if (_departsWithin(m, t, 6)) continue;
+      if (avoid.contains(m.id)) continue;
+      final depth = xToDepth(m.pos.x, dir);
+      if (depth > PitchDims.length / 2 && depth > onsideUpTo) continue;
       final d = m.pos.distanceTo(ball);
       if (d < 8 || d > 42) continue;
       final keeper = m.slot == side.gkSlot;
@@ -1903,12 +2404,132 @@ class _Builder {
         score -= (lat - lateralTarget).abs() / 12;
       }
       if (keeper) score -= 1.5;
+      if (m.id == wanted) score += 2.5;
       if (score > bestScore) {
         bestScore = score;
         best = m;
       }
     }
     return best;
+  }
+
+  /// The windows opening after [t] and within [horizon] of it, in order.
+  List<StagedWindow> _upcoming(double t, double horizon) => [
+    for (final w in windows)
+      if (w.start > t + 1e-9 && w.start - t <= horizon) w,
+  ];
+
+  /// Who the build-up looks for before window [w]: the man its moment
+  /// starts with (the assister of a goal, else the shooter; the man to be
+  /// fouled).
+  static int? _wantedOnBall(StagedWindow w) {
+    if (w.moments.isEmpty) return null;
+    return switch (w.moments.first) {
+      ShotMoment(
+        :final shooterId,
+        :final assistId,
+        :final outcome,
+        :final origin,
+      ) =>
+        origin == ShotOrigin.penalty
+            ? null
+            : outcome == ShotOutcome.goal && assistId != null
+            ? assistId
+            : shooterId,
+      FoulMoment(:final fouledId) => fouledId,
+      _ => null,
+    };
+  }
+
+  /// Men the build-up leaves off the ball before the moments ahead: a set
+  /// piece's taker on his way to the ball, a penalty's taker, a man about
+  /// to be flagged offside.
+  Set<int> _busyAhead(double t) => {
+    for (final w in _upcoming(t, _takerLead))
+      if (w.moments.isNotEmpty)
+        ...switch (w.moments.first) {
+          SetPieceMoment(:final takerId) => [takerId],
+          ShotMoment(:final shooterId, :final origin)
+              when origin == ShotOrigin.penalty =>
+            [shooterId],
+          OffsideMoment(:final playerId) when w.start - t <= _leadIn => [
+            playerId,
+          ],
+          _ => const <int>[],
+        },
+  };
+
+  /// How far up the pitch, for side [s] attacking [dir], the second-last
+  /// opponent stands: the offside line (the keeper counts).
+  double _secondLastDepth(int s, int dir) {
+    var first = -1.0;
+    var second = -1.0;
+    for (final o in agents) {
+      if (!o.present || o.side == s || o.walkStart != null) continue;
+      final d = xToDepth(o.pos.x, dir);
+      if (d > first) {
+        second = first;
+        first = d;
+      } else if (d > second) {
+        second = d;
+      }
+    }
+    return second < 0 ? PitchDims.length : second;
+  }
+
+  /// What [a] does in the seconds before a moment that needs him somewhere:
+  /// a set piece's taker heads for the ball, a penalty's taker for the
+  /// edge of the box, a man to be flagged offside drifts beyond the line,
+  /// the man who commits the foul closes in on its victim.
+  (Offset2, double, int)? _leadRole(_Agent a, double t, int minute) {
+    if (carrier == a.index) return null;
+    final ball = _ballNow(t);
+    for (final w in _upcoming(t, _takerLead)) {
+      if (w.moments.isEmpty) continue;
+      final m = w.moments.first;
+      final side = m.teamNationId == lineups.home.nationId ? 0 : 1;
+      final dir = _dir(side, m.minute);
+      switch (m) {
+        case SetPieceMoment(:final takerId) when takerId == a.id:
+          return (deadBallSpot(m, dir), 7.0, 2);
+        case ShotMoment(:final shooterId, :final origin)
+            when origin == ShotOrigin.penalty && shooterId == a.id:
+          final at = Offset2(depthToX(86, dir), a.pos.y.clamp(20.0, 48.0));
+          return (at, 6.5, 2);
+        case ShotMoment(:final shooterId, :final zone)
+            when shooterId == a.id && a.side == side && w.start - t <= 6:
+          // The shooter gets up toward where he shoots from, onside.
+          final want = zonePoint(zone, dir);
+          final line = math.max(
+            _secondLastDepth(a.side, dir),
+            xToDepth(ball.x, dir),
+          );
+          var depth = xToDepth(want.x, dir);
+          if (depth > PitchDims.length / 2) {
+            depth = math.min(depth, math.max(line - 0.8, PitchDims.length / 2));
+          }
+          return (Offset2(depthToX(depth, dir), want.y), 7.0, 2);
+        case OffsideMoment(:final playerId)
+            when playerId == a.id && w.start - t <= _leadIn:
+          final line = math.max(
+            _secondLastDepth(a.side, dir),
+            xToDepth(ball.x, dir),
+          );
+          final depth = (line + 2.5).clamp(55.0, 100.0);
+          return (Offset2(depthToX(depth, dir), a.pos.y), 6.5, 2);
+        case FoulMoment(:final foulerId, :final fouledId)
+            when foulerId == a.id && w.start - t <= _foulLead:
+          final victim = indexOf[fouledId];
+          if (victim == null || !agents[victim].present) return null;
+          final v = agents[victim].pos;
+          final ownDir = _dir(a.side, minute);
+          final goal = Offset2(depthToX(0, ownDir), PitchDims.width / 2);
+          return (v + (goal - v).unit * 1.8, 6.5, 2);
+        default:
+          break;
+      }
+    }
+    return null;
   }
 
   _Agent? _pickInterceptor(_Agent a, double t, {bool short = false}) {
@@ -2099,13 +2720,25 @@ class _Builder {
       final desired = target - a.pos;
       final dist = desired.length;
       var v = desired.unit * math.min(maxSpeed, dist / 0.5);
-      // Keep a little room around everybody.
+      // Keep a little room around everybody. A stager spaces the places it
+      // sends men to itself (a wall stands shoulder to shoulder), so its
+      // men keep only a little.
+      final room = stagedDrive && dist < 1.5 ? 1.2 : 2.0;
+      final heading = desired.unit;
       for (final o in present) {
         if (o == a) continue;
         final d = a.pos.distanceTo(o.pos);
-        if (d < 2.0) {
+        if (d < room) {
           final away = d < 1e-6 ? const Offset2(0, 1) : (a.pos - o.pos).unit;
-          v = v + away * ((2.0 - d) * 1.5);
+          v = v + away * ((room - d) * 1.5);
+          // Somebody standing in the way: step round him.
+          final rel = o.pos - a.pos;
+          final ahead = rel.x * heading.x + rel.y * heading.y;
+          final side = rel.x * heading.y - rel.y * heading.x;
+          if (dist > 1.0 && ahead > 0 && side.abs() < 1.0) {
+            final perp = Offset2(heading.y, -heading.x);
+            v = v + perp * (side >= 0 ? -2.0 : 2.0);
+          }
         }
       }
       final walker = a.walkStart != null;
@@ -2165,6 +2798,7 @@ class _Builder {
     StagedPlan? plan,
     ScriptState? state,
   ) {
+    stagedDrive = false;
     if (a.walkStart != null) return (_walkTarget(a), PitchScript.walkSpeed, 3);
     final side = sides[a.side];
     final dir = _dir(a.side, minute);
@@ -2179,12 +2813,19 @@ class _Builder {
       final d = plan == null || state == null
           ? null
           : plan.drive(a.id, t, state);
-      if (d != null) return (d.target, d.maxSpeed.clamp(0.0, _hardSpeed), 2);
-      // A keeper out of his ground who is not in the moment heads home.
-      if (isKeeper &&
-          xToDepth(a.pos.x, dir) > _keeperMaxDepth &&
-          !activeWindow!.actors.contains(a.id)) {
-        return (anchor, 5.5, 2);
+      if (d != null) {
+        stagedDrive = true;
+        final actor = activeWindow!.actors.contains(a.id);
+        return (d.target, d.maxSpeed.clamp(0.0, _hardSpeed), actor ? 3 : 2);
+      }
+      // A keeper the stager leaves alone is never held away from goal: he
+      // takes up his place in the shape.
+      if (isKeeper) return (anchor, 5.5, 2);
+      final f = flight;
+      if (f != null && f.toActor == a.index) {
+        // A man a pass is for meets it, as in open play.
+        final left = math.max(0.15, f.t1 - t);
+        return (f.lead, math.min(8, a.pos.distanceTo(f.lead) / left + 1), 2);
       }
       return (a.pos, 0, 2);
     }
@@ -2210,6 +2851,8 @@ class _Builder {
       return (f.lead, math.min(8, need + 1), 2);
     }
     if (isKeeper) return (anchor, 5.5, 2);
+    final role = _leadRole(a, t, minute);
+    if (role != null) return role;
     if (pressers.contains(a.index)) {
       final ownGoal = Offset2(depthToX(0, dir), PitchDims.width / 2);
       final spot = ball + (ownGoal - ball).unit * 2.2;
@@ -2266,14 +2909,18 @@ class _Builder {
           (prop[i] - old[i]).length * f[i] +
           (prop[j] - old[j]).length * f[j] +
           _safeGap;
-      if (old[i].distanceTo(old[j]) > reach) return false;
+      final d0 = old[i].distanceTo(old[j]);
+      if (d0 > reach) return false;
+      // Two men already nearer than the gap may still move apart: only
+      // coming any closer is a clash.
+      final floor = math.min(_safeGap, d0 - 1e-6);
       return PitchScriptValidator.closestApproach(
             old[i],
             at(i),
             old[j],
             at(j),
           ) <
-          _safeGap;
+          floor;
     }
 
     for (var round = 0; round < 40; round++) {
@@ -2328,7 +2975,17 @@ class _Builder {
       return Offset2.lerp(f.from, f.lead, u);
     }
     final c = carrier;
-    return c == null ? PitchDims.centre : _ballPoint(agents[c]);
+    if (c != null) return _ballPoint(agents[c]);
+    return restAt ?? PitchDims.centre;
+  }
+
+  double _heightNow(double t) {
+    final f = flight;
+    if (f == null) return carrier == null ? restHeight : 0;
+    final u = f.t1 <= f.t0 ? 1.0 : ((t - f.t0) / (f.t1 - f.t0)).clamp(0.0, 1.0);
+    return f.fromHeight +
+        (f.toHeight - f.fromHeight) * u +
+        4 * f.peak * u * (1 - u);
   }
 
   ScriptState _state(double t) {
@@ -2366,13 +3023,16 @@ class _Builder {
       flight: f == null
           ? null
           : (
-              fromId: agents[f.fromActor].id,
-              toId: agents[f.toActor].id,
+              fromId: f.fromActor == null ? null : agents[f.fromActor!].id,
+              toId: f.toActor == null ? null : agents[f.toActor!].id,
               from: f.from,
               lead: f.lead,
               t0: f.t0,
               t1: f.t1,
               peak: f.peak,
+              pass: f.pass,
+              fromHeight: f.fromHeight,
+              toHeight: f.toHeight,
             ),
       homeBallTime: homeBallTime,
       awayBallTime: awayBallTime,

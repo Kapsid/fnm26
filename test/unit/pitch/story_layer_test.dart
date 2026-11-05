@@ -515,11 +515,13 @@ void main() {
       result: r,
       changes: [change],
     );
+    // The story layer's own shape, every moment held still.
     final s = StoryLayer.build(
       result: r,
       lineups: lineups,
       pacer: PitchPacer(r, PitchSpeed.slow),
       seed: 1,
+      stager: const NeutralHold(),
     );
     expect(PitchScriptValidator.validate(s), isEmpty);
     // Two men whose jobs the change moves up the pitch: 104 from centre-half
@@ -823,8 +825,16 @@ void main() {
   });
 
   test('every staged window hands over a carried ball', () {
+    // The placeholder stager's promise; the real ones may leave the ball
+    // lying for the next moment (a foul's free kick).
     final m = _match(3);
-    final s = _script(m, PitchSpeed.fast);
+    final s = StoryLayer.build(
+      result: m.result,
+      lineups: m.lineups,
+      pacer: PitchPacer(m.result, PitchSpeed.fast),
+      seed: 7,
+      stager: const NeutralHold(),
+    );
     expect(s.windows, isNotEmpty);
     for (final w in s.windows) {
       expect(w.end, greaterThan(w.start));
@@ -1083,7 +1093,14 @@ void main() {
     var quietTotal = 0.0;
     for (var seed = 0; seed < 50; seed++) {
       final m = _match(seed);
-      final s = _script(m, PitchSpeed.values[seed % 3], seed: seed);
+      // The story layer's quiet spells, the moments held still.
+      final s = StoryLayer.build(
+        result: m.result,
+        lineups: m.lineups,
+        pacer: PitchPacer(m.result, PitchSpeed.values[seed % 3]),
+        seed: seed,
+        stager: const NeutralHold(),
+      );
       if (_quiet(s) >= _steerable) continue;
       checked++;
       // Walk the match in order: at each instant of quiet time, is the ball
