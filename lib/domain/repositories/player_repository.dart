@@ -1,5 +1,6 @@
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/international_retirement.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// Marks a career created by 1.0.6 or later, whose players are named from the
 /// richer pools (`country_names.json` plus `country_names_more.json`).
@@ -137,6 +138,19 @@ abstract interface class PlayerRepository {
     int nationId, {
     int saveSeed,
     bool newCareerNames,
+  });
+
+  /// [nationId]'s stored fringe players (from `PoolGenerator.firstFringeId`,
+  /// no core player, no newgen) in the default world on day one, in stored
+  /// order: what a world pack shows as the nation's generated pool before
+  /// it is fixed. Each is as [coreAsBorn] gives a core player: aged by none,
+  /// named for [saveSeed] (on the pools a career created now reads, or from
+  /// [nameLists] when given, as a career on a world with those lists draws
+  /// them) and at his `ClubService.clubForSeed` club.
+  Future<List<Player>> fringeAsBorn(
+    int nationId, {
+    required int saveSeed,
+    PackNameLists? nameLists,
   });
 
   /// The player with [id], or `null` if none exists. `newCareerNames` is

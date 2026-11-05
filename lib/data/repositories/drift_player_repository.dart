@@ -552,6 +552,40 @@ class DriftPlayerRepository implements PlayerRepository {
   });
 
   @override
+  Future<List<Player>> fringeAsBorn(
+    int nationId, {
+    required int saveSeed,
+    PackNameLists? nameLists,
+  }) => WorldZone.runFor(null, () async {
+    final seeded = await _seededRows(nationId);
+    // Named as [coreAsBorn] names the core, off the stored rows alone, so
+    // nothing a pack does to the squad moves a fringe player's name.
+    final name =
+        nameLists != null &&
+            nameLists.first.isNotEmpty &&
+            nameLists.sur.isNotEmpty
+        ? _listNamer(nameLists, nationId, seeded, saveSeed)
+        : await _namerFor(
+            nationId,
+            seeded,
+            saveSeed,
+            null,
+            newCareerNames: true,
+          );
+    final home = await _home(nationId);
+    return [
+      for (final p in seeded)
+        if (p.id >= PoolGenerator.firstFringeId)
+          _finish(
+            name(PlayerAging.agedYears(p, 0)),
+            saveSeed,
+            homeCode: home.code,
+            homeCities: home.cities,
+          ),
+    ];
+  });
+
+  @override
   Future<Player?> byId(
     int id, {
     int agingYears = 0,
@@ -701,12 +735,13 @@ class DriftPlayerRepository implements PlayerRepository {
         _db.players,
       )..where((t) => t.id.equals(id))).getSingleOrNull();
       p = row?.toDomain();
-      // A core player the world removed is not in it, by id or otherwise.
-      if (p != null &&
-          world != null &&
-          p.id < PoolGenerator.firstFringeId &&
-          world.coreOf(p.nationId) != null) {
-        return null;
+      // A core player the world removed is not in it, by id or otherwise;
+      // nor is a fringe player a nation's fixed pool no longer holds.
+      if (p != null && world != null) {
+        final fixed = p.id < PoolGenerator.firstFringeId
+            ? world.coreOf(p.nationId)
+            : world.poolOf(p.nationId);
+        if (fixed != null) return null;
       }
     }
     // Identity lookups resolve a player even once they've retired out of the
@@ -754,17 +789,26 @@ class DriftPlayerRepository implements PlayerRepository {
   }
 
   /// The base rows [careerId] reads for [nationId]: [_seededRows], except
-  /// that a career on a custom world whose world has a squad for the nation
-  /// reads that squad in place of the stored core rows. The fringe rows stay,
-  /// so the pool around the squad is the one the default world has.
+  /// in a career on a custom world. There a squad the world has for the
+  /// nation stands in place of the stored core rows, and a pool it fixes
+  /// for the nation in place of the stored fringe rows. A part the world
+  /// leaves alone keeps the stored rows, so an untouched pool around an
+  /// edited squad is the one the default world has.
   Future<List<Player>> _seededRowsFor(int? careerId, int nationId) async {
     final rows = await _seededRows(nationId);
-    final core = (await _worldFor(careerId))?.coreOf(nationId);
-    if (core == null) return rows;
+    final world = await _worldFor(careerId);
+    final core = world?.coreOf(nationId);
+    final pool = world?.poolOf(nationId);
+    if (core == null && pool == null) return rows;
     return [
-      ...core,
-      for (final p in rows)
-        if (p.id >= PoolGenerator.firstFringeId) p,
+      ...?core,
+      if (core == null)
+        for (final p in rows)
+          if (p.id < PoolGenerator.firstFringeId) p,
+      ...?pool,
+      if (pool == null)
+        for (final p in rows)
+          if (p.id >= PoolGenerator.firstFringeId) p,
     ];
   }
 
@@ -1085,10 +1129,11 @@ class DriftPlayerRepository implements PlayerRepository {
   /// Builds the namer for [nationId]'s players in [careerId]: the default
   /// world's ([_poolNamerFor]), unless the career is on a custom world.
   ///
-  /// There a player of the world's squads is called exactly what the world
-  /// calls him, never re-drawn. Everybody else (fringe, newgens) is drawn as
-  /// in the default world, from the world's own name lists for the nation
-  /// when it has them ([_listNamer]) and from the normal pools otherwise.
+  /// There a player of the world's squads and fixed pools is called exactly
+  /// what the world calls him, never re-drawn. Everybody else (an untouched
+  /// pool's fringe, newgens) is drawn as in the default world, from the
+  /// world's own name lists for the nation when it has them ([_listNamer])
+  /// and from the normal pools otherwise.
   Future<Player Function(Player)> _namerFor(
     int nationId,
     List<Player> seeded,
@@ -1360,17 +1405,23 @@ class _PermutedNames {
   }
 }
 
-/// A career's custom world, with its squads indexed for the repository's
-/// reads.
+/// A career's custom world, with its squads and fixed pools indexed for the
+/// repository's reads.
 class _CareerWorld {
   _CareerWorld(this.pack)
     : _byId = {
+        for (final MapEntry(key: nationId, value: pool) in pack.pools.entries)
+          for (final p in pool)
+            p.id: (nationId: nationId, player: p, pooled: true),
+        // Squads last: `PackRules` refuses an id in both, and should an
+        // unchecked world hold one anyway, the squad's player wins.
         for (final MapEntry(key: nationId, value: squad) in pack.squads.entries)
-          for (final p in squad) p.id: (nationId: nationId, player: p),
+          for (final p in squad)
+            p.id: (nationId: nationId, player: p, pooled: false),
       };
 
   final WorldPack pack;
-  final Map<int, ({int nationId, PackPlayer player})> _byId;
+  final Map<int, ({int nationId, PackPlayer player, bool pooled})> _byId;
 
   /// The world's potentials, for the [WorldZone] every read runs in. One
   /// object per world, so a read already in its zone is recognised.
@@ -1379,27 +1430,43 @@ class _CareerWorld {
   /// Each nation's squad as base rows, built on first read.
   final Map<int, List<Player>> _core = {};
 
-  /// The world's squad player [id], as the world gives him.
+  /// Each nation's fixed pool as base rows, built on first read.
+  final Map<int, List<Player>> _pool = {};
+
+  /// The world's squad or pool player [id], as the world gives him.
   PackPlayer? packPlayer(int id) => _byId[id]?.player;
 
   /// [packPlayer] as a base (unaged) row.
   Player? player(int id) {
     final entry = _byId[id];
     if (entry == null) return null;
-    return coreOf(entry.nationId)!.firstWhere((p) => p.id == id);
+    final rows = entry.pooled ? poolOf(entry.nationId) : coreOf(entry.nationId);
+    return rows!.firstWhere((p) => p.id == id);
   }
 
   /// [nationId]'s squad as base rows, or null when the world has none for
   /// it (the stored core rows then stand).
+  List<Player>? coreOf(int nationId) => switch (pack.squads[nationId]) {
+    null => null,
+    final squad => _core[nationId] ??= _rows(nationId, squad),
+  };
+
+  /// [nationId]'s fixed pool as base rows, as [coreOf] builds the squad's,
+  /// or null when the world leaves the pool alone (the stored fringe rows
+  /// then stand, drawn per career as in the default world).
+  List<Player>? poolOf(int nationId) => switch (pack.pools[nationId]) {
+    null => null,
+    final pool => _pool[nationId] ??= _rows(nationId, pool),
+  };
+
+  /// [players] of [nationId] as base rows.
   ///
   /// A world stores a player as he is on day one, and a young player is
   /// shown marked down ([PlayerAging.packYouthDiscount]) from the row the age
   /// curve reads. So the markdown is added back here: read through the
   /// curve he is exactly the world's player on day one, and he grows out of
   /// it as a stored youngster does.
-  List<Player>? coreOf(int nationId) {
-    final squad = pack.squads[nationId];
-    if (squad == null) return null;
+  static List<Player> _rows(int nationId, List<PackPlayer> players) {
     PlayerAttributes base(PackPlayer p) {
       final d = PlayerAging.packYouthDiscount(p.age);
       if (d == 0) return p.attributes;
@@ -1410,8 +1477,8 @@ class _CareerWorld {
       );
     }
 
-    return _core[nationId] ??= List.unmodifiable([
-      for (final p in squad)
+    return List.unmodifiable([
+      for (final p in players)
         Player(
           id: p.id,
           nationId: nationId,

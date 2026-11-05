@@ -10,6 +10,7 @@ import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/data/seed/seed_source.dart';
+import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -389,29 +390,43 @@ class WorldPackService {
         newCareerNames: true,
       );
       squads[nation.id] = [
-        for (final p in core.sortedBy<num>((p) => p.id))
-          PackPlayer(
-            id: p.id,
-            name: p.name,
-            age: p.age,
-            position: p.position,
-            attributes: p.attributes,
-            potential: max(
-              p.overall,
-              PlayerLifecycle.peakOverall(
-                p.id,
-                p.position,
-                p.attributes,
-                p.age,
-              ),
-            ),
-            club: p.club,
-            clubCountry: p.clubCountry.isEmpty ? null : p.clubCountry,
-          ),
+        for (final p in core.sortedBy<num>((p) => p.id)) _packPlayerOf(p),
       ];
     }
     return squads;
   }
+
+  /// Nation [nationId]'s generated pool as [pack] shows it before the pool
+  /// is fixed: the stored fringe on day one, named in the [kPackDrawSeed]
+  /// draw from [pack]'s name lists for the nation (the game's pools when it
+  /// has none), at their day-one clubs, with potential as [defaultSquads]
+  /// gives it and traits left on Random. Nothing else in [pack], its squad
+  /// least of all, moves it. Fixing a pool stores exactly this.
+  Future<List<PackPlayer>> generatedPool(int nationId, WorldPack pack) async {
+    final fringe = await _players.fringeAsBorn(
+      nationId,
+      saveSeed: kPackDrawSeed,
+      nameLists: pack.nameLists[nationId],
+    );
+    return [for (final p in fringe) _packPlayerOf(p)];
+  }
+
+  /// [p] as a pack stores him: potential the peak
+  /// [PlayerLifecycle.peakOverall] gives, never below the overall he already
+  /// has; traits left on Random.
+  static PackPlayer _packPlayerOf(Player p) => PackPlayer(
+    id: p.id,
+    name: p.name,
+    age: p.age,
+    position: p.position,
+    attributes: p.attributes,
+    potential: max(
+      p.overall,
+      PlayerLifecycle.peakOverall(p.id, p.position, p.attributes, p.age),
+    ),
+    club: p.club,
+    clubCountry: p.clubCountry.isEmpty ? null : p.clubCountry,
+  );
 
   /// Copies pack [id] as a new pack named [name]; returns the copy's id.
   Future<int> duplicate(int id, String name) async {

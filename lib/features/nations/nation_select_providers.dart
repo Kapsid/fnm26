@@ -5,6 +5,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
@@ -102,8 +103,9 @@ typedef _PackPick = ({
 /// Its nations carry the pack's names and the starting ranks a career on it
 /// is given ([PackRanking.startingRanks], as `CareerService.create` works
 /// them out), ordered by them. Its strengths read each nation's pack squad
-/// on day one (exactly as the editor left him) with the game's fringe and
-/// youth around it, as the career's pools do. The flag stays the real
+/// and fixed pool on day one (exactly as the editor left them), with the
+/// game's own core, fringe and youth for whatever the pack leaves alone, as
+/// the career's pools do. The flag stays the real
 /// nation's: a pack's code is a label, never the key for the flag.
 ///
 /// AutoDispose and following [worldPacksProvider], which every pack write
@@ -141,26 +143,38 @@ final AutoDisposeFutureProviderFamily<_PackPick?, int> _packPickProvider =
           });
 
       final pools = await ref.watch(_dayOnePoolsProvider.future);
+      Player dayOne(int nationId, PackPlayer p) => Player(
+        id: p.id,
+        nationId: nationId,
+        name: p.name,
+        age: p.age,
+        position: p.position,
+        attributes: p.attributes,
+        club: p.club ?? ClubService.freeAgent,
+        clubCountry: p.clubCountry ?? '',
+      );
       final packPools = <int, List<Player>>{
-        for (final e in pools.entries)
-          e.key: switch (pack.squads[e.key]) {
-            null => e.value,
-            final List<PackPlayer> squad => [
-              for (final p in squad)
-                Player(
-                  id: p.id,
-                  nationId: e.key,
-                  name: p.name,
-                  age: p.age,
-                  position: p.position,
-                  attributes: p.attributes,
-                  club: p.club ?? ClubService.freeAgent,
-                  clubCountry: p.clubCountry ?? '',
-                ),
-              // The game's own players around the squad: its fringe and
-              // youth, never a core player the pack replaced.
-              for (final p in e.value)
-                if (p.id >= PoolGenerator.firstFringeId) p,
+        for (final MapEntry(key: n, value: game) in pools.entries)
+          n: switch ((pack.squads[n], pack.pools[n])) {
+            (null, null) => game,
+            (final squad, final pool) => [
+              // The pack's squad, or the game's core where it has none.
+              if (squad != null)
+                for (final p in squad) dayOne(n, p)
+              else
+                for (final p in game)
+                  if (p.id < PoolGenerator.firstFringeId) p,
+              // The pack's fixed pool in place of the game's fringe (as
+              // the pool reads, from seventeen), or the game's fringe where
+              // it fixes none. The game's youth intakes come up either way.
+              if (pool != null) ...[
+                for (final p in pool)
+                  if (p.age >= PlayerLifecycle.seniorMinAge) dayOne(n, p),
+                for (final p in game)
+                  if (PlayerLifecycle.isNewgenId(p.id)) p,
+              ] else
+                for (final p in game)
+                  if (p.id >= PoolGenerator.firstFringeId) p,
             ]..sort((a, b) => b.overall.compareTo(a.overall)),
           },
       };

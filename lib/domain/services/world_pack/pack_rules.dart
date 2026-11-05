@@ -17,10 +17,10 @@ enum FieldReason {
   badCharacters,
   outOfRange,
 
-  /// Already another's: a Y account renamed onto another account's name
-  /// (which would mix the two up), an added club or Y account named like
-  /// another the pack names, an id used twice or a trait picked twice. A
-  /// clash with a name only the game gives is a [NameClash].
+  /// Already another's: a Y account renamed onto another account's new
+  /// name (which would mix the two up), an added club or Y account named
+  /// like another the pack names, an id used twice or a trait picked twice.
+  /// A clash with a name only the game gives is a [NameClash].
   duplicate,
 }
 
@@ -91,11 +91,12 @@ class UnknownId extends CompatIssue {
   const UnknownId(super.path);
 }
 
-/// A club or Y account the pack adds, under a name one of the game's own
-/// already has: a curated league's club or a city club of its country, or a
-/// game Y account. A game update can add such a name to a file made before
-/// it, so this is flagged, never refused. A clash with a name the pack
-/// itself gives (another added item, or a rename) is a [BadField]
+/// A club or Y account the pack adds, or a Y account it renames, under a
+/// name one of the game's own already has: a curated league's club or a
+/// city club of its country, or a game Y account. A game update can add
+/// such a name to a file made before it, so this is flagged, never refused.
+/// A clash with a name the pack itself gives (another added item, or a
+/// rename's new name) is a [BadField]
 /// ([FieldReason.duplicate]) instead.
 class NameClash extends CompatIssue {
   const NameClash(super.path);
@@ -544,15 +545,16 @@ abstract final class PackRules {
   }
 
   /// A Y account's new name must be nobody else's: not another account's
-  /// original name (the game's fixed accounts, or one this pack renames),
-  /// and not another account's new name. Two accounts under one name would
+  /// new name, nor another account's original name (the game's fixed
+  /// accounts, or one this pack renames). Two accounts under one name would
   /// share a profile and the voice behind it. Compared trimmed and
   /// case-insensitively; keeping an account's own name is fine.
   ///
-  /// An account the pack adds ([added]) joins in: its name must be no
-  /// rename's new name and no other added account's (a [BadField]), and no
-  /// account's original name, the game's own or one a rename names (a
-  /// [NameClash]: flagged, as a game update can add the name).
+  /// The same goes for an account the pack adds ([added]). A clash with
+  /// another new name, a rename's or an added account's, is the pack's own
+  /// (a [BadField]). A clash with an original name is a [NameClash], for a
+  /// rename and an added account alike: flagged, not refused, as a game
+  /// update can add the name.
   /// [checkRenames] and [checkAdded] pick which side is reported, so
   /// [issues] lists each where its section is.
   static void _yClashes(
@@ -582,9 +584,11 @@ abstract final class PackRules {
         final v = renames[k]!;
         if (v.trim().isEmpty) continue;
         final to = fold(v);
-        final taken =
-            (to != fold(k) && originals.contains(to)) || byNewName[to]! > 1;
-        if (taken) out.add(BadField('yAccounts.$k', FieldReason.duplicate));
+        if (byNewName[to]! > 1) {
+          out.add(BadField('yAccounts.$k', FieldReason.duplicate));
+        } else if (to != fold(k) && originals.contains(to)) {
+          out.add(NameClash('yAccounts.$k'));
+        }
       }
     }
     for (final a in checkAdded ? added : const <PackYAccount>[]) {

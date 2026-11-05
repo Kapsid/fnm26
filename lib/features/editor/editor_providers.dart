@@ -341,7 +341,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   bool get needsAttention => issues.any((i) => i is CompatIssue);
 
   /// Removes exactly the entry [issue] names, as one undoable edit (for a
-  /// [NameClash], the added club or Y account). A trophy
+  /// [NameClash], the added club or Y account, or the Y rename). A trophy
   /// goes with its picture ([setTrophy]), which, like every picture, undo
   /// does not bring back: a pack's list of trophies follows its picture
   /// rows, so the list entry alone would come back on the next open. Returns

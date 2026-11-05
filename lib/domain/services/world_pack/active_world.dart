@@ -13,11 +13,13 @@ typedef PackDayOne = ({int age, int overall});
 class WorldZoneData {
   const WorldZoneData(this.potentials, [this.dayOne = const {}]);
 
-  /// Every squad player of [pack].
+  /// Every squad and fixed-pool player of [pack].
   factory WorldZoneData.of(WorldPack pack) {
     final potentials = <int, int>{};
     final dayOne = <int, PackDayOne>{};
-    for (final squad in pack.squads.values) {
+    // Pools first, so a squad player wins should an unchecked world hold an
+    // id in both (as the repository's index does).
+    for (final squad in [...pack.pools.values, ...pack.squads.values]) {
       for (final p in squad) {
         potentials[p.id] = p.potential;
         dayOne[p.id] = (
@@ -89,7 +91,8 @@ abstract final class WorldZone {
   static bool get active => _current != null;
 
   /// [playerId]'s edited potential in the current world; null outside a
-  /// zone and for a player the world does not hold (fringe, newgens).
+  /// zone and for a player the world does not hold (an untouched pool's
+  /// fringe, newgens).
   static int? potentialOf(int playerId) => _current?.potentials[playerId];
 
   /// [playerId]'s day-one age and overall in the current world, if known.

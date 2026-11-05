@@ -231,20 +231,29 @@ void main() {
         if (i is BadField && i.reason == FieldReason.duplicate) i.path,
     ];
 
-    test('a rename onto another account\'s original name is flagged', () {
-      expect(clashes({a: ' ${b.toUpperCase()} '}), ['yAccounts.$a']);
+    /// The paths flagged, not refused: a clash with a game account's name.
+    List<String> flagged(Map<String, String> renames) => [
+      for (final i in PackRules.issues(_pack(yAccounts: renames)))
+        if (i is NameClash) i.path,
+    ];
+
+    test('a rename onto another account\'s original name is flagged, '
+        'not refused', () {
+      expect(clashes({a: ' ${b.toUpperCase()} '}), isEmpty);
+      expect(flagged({a: ' ${b.toUpperCase()} '}), ['yAccounts.$a']);
     });
 
-    test('two renames to the same name are flagged', () {
+    test('two renames to the same name are refused', () {
       expect(
         clashes({a: 'Burger Baron', b: 'burger baron'}),
         unorderedEquals(['yAccounts.$a', 'yAccounts.$b']),
       );
     });
 
-    test('a swap is flagged', () {
+    test('a swap is flagged, not refused', () {
+      expect(clashes({a: b, b: a}), isEmpty);
       expect(
-        clashes({a: b, b: a}),
+        flagged({a: b, b: a}),
         unorderedEquals(['yAccounts.$a', 'yAccounts.$b']),
       );
     });

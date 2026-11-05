@@ -498,6 +498,27 @@ void main() {
       expect(long.reason, FieldReason.tooLong);
     });
 
+    test("a Y rename onto another game account's name is a NameClash; "
+        'two renames onto one name are duplicate', () {
+      final a = YFeed.namedAccounts[0];
+      final b = YFeed.namedAccounts[1];
+      final onto = _pack(yAccounts: {a: ' ${b.toUpperCase()} '});
+      expect(_bad(onto), isEmpty);
+      expect(
+        PackRules.issues(onto).whereType<NameClash>().single.path,
+        'yAccounts.$a',
+      );
+      // The editor still refuses it as it is typed.
+      expect(PackRules.yNameTaken(onto.yAccounts, a), isTrue);
+      // Two of the pack's own renames under one name: refused.
+      final twice = _pack(yAccounts: {a: 'Same', b: 'same'});
+      expect(
+        _bad(twice).map((x) => x.path),
+        unorderedEquals(['yAccounts.$a', 'yAccounts.$b']),
+      );
+      expect(PackRules.issues(twice).whereType<NameClash>(), isEmpty);
+    });
+
     test('a 121-character sponsor description is tooLong', () {
       final b = _bad(
         _pack(addedSponsors: [_sponsor(_added, description: 'd' * 121)]),
