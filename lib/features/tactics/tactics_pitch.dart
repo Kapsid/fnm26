@@ -94,6 +94,8 @@ class ReshapeTo extends DragOutcome {
   final Formation formation;
 }
 
+/// Resolves a pitch drag from slot [a] onto slot [b]: within the same line it
+/// is a straight swap; across lines it reshapes to the formation implied by
 /// moving the dragged player to the target's line, falling back to a swap when
 /// no such formation exists.
 DragOutcome resolveDrag(Formation formation, int a, int b) {
