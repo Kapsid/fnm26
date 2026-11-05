@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -140,8 +141,8 @@ class TournamentKickoffScreen extends ConsumerWidget {
     KickoffData? data, {
     required double height,
     required double iconSize,
-  }) => Image.asset(
-    data?.trophyAsset ?? Trophies.worldCup,
+  }) => TrophyImage(
+    Trophies.keyForAsset(data?.trophyAsset ?? Trophies.worldCup) ?? 'world',
     height: height,
     fit: BoxFit.contain,
     errorBuilder: (_, _, _) =>

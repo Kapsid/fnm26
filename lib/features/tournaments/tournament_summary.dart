@@ -3,9 +3,11 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/competition/tournament_identity.dart';
+import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/features/tournaments/tournament_history.dart';
 import 'package:fnm/features/tournaments/venues_card.dart';
+import 'package:fnm/features/world_pack/trophy_image.dart';
 
 /// The tournament "summary" tab: the host nation(s), their cities and stadiums,
 /// and the edition's mascot and match ball. Shared by the World Cup and the
@@ -102,8 +104,8 @@ class _TrophyBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Image.asset(
-        asset,
+      child: TrophyImage(
+        Trophies.keyForAsset(asset) ?? 'world',
         height: 180,
         fit: BoxFit.contain,
         errorBuilder: (_, __, ___) => const SizedBox.shrink(),

@@ -39,6 +39,22 @@ abstract final class Trophies {
     return null;
   }
 
+  /// The bundled artwork for a trophy [key] (see [keyForCompetitionName]).
+  static String? assetForKey(String key) {
+    for (final t in cabinet) {
+      if (t.key == key) return t.asset;
+    }
+    return null;
+  }
+
+  /// The trophy key an [asset] path belongs to, or null if it is not ours.
+  static String? keyForAsset(String asset) {
+    for (final t in cabinet) {
+      if (t.asset == asset) return t.key;
+    }
+    return null;
+  }
+
   /// A stable key for a competition (for tallying the trophy cabinet).
   static String? keyForCompetitionName(String name) {
     // One cabinet shelf for the Nations Cups, whichever confederation's.

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -284,7 +285,7 @@ class _TrophyCabinet extends StatelessWidget {
         children: [
           for (final t in Trophies.cabinet)
             _TrophySlot(
-              asset: t.asset,
+              trophyKey: t.key,
               // The cabinet holds the competitions' canonical stored names, so
               // they go through the same translator every other competition
               // name does. Printed raw, this was the one shelf in the game
@@ -300,12 +301,12 @@ class _TrophyCabinet extends StatelessWidget {
 
 class _TrophySlot extends StatelessWidget {
   const _TrophySlot({
-    required this.asset,
+    required this.trophyKey,
     required this.label,
     required this.count,
   });
 
-  final String asset;
+  final String trophyKey;
   final String label;
   final int count;
 
@@ -320,8 +321,8 @@ class _TrophySlot extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               () {
-                final image = Image.asset(
-                  asset,
+                final image = TrophyImage(
+                  trophyKey,
                   height: 56,
                   fit: BoxFit.contain,
                   errorBuilder: (_, __, ___) => Icon(

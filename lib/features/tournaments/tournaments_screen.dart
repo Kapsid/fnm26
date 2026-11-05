@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -483,14 +484,14 @@ class _ChampionshipTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           () {
-            final trophy = Trophies.forCompetitionName(c.name);
+            final trophy = Trophies.keyForCompetitionName(c.name);
             if (trophy == null) {
               return Icon(c.icon, size: 24, color: accent);
             }
             // The trophy artwork, dimmed until this competition is live.
             return Opacity(
               opacity: available ? 1 : 0.5,
-              child: Image.asset(
+              child: TrophyImage(
                 trophy,
                 height: 40,
                 fit: BoxFit.contain,

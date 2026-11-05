@@ -225,7 +225,7 @@ class _CompetitionListRow extends StatelessWidget {
     final c = spec.championship;
     final available = spec.status?.available ?? false;
     final accent = _accentOf(spec.status);
-    final trophy = Trophies.forCompetitionName(c.name);
+    final trophy = Trophies.keyForCompetitionName(c.name);
     return Material(
       color: selected ? AppColors.surfaceContainerHighest : Colors.transparent,
       child: InkWell(
@@ -241,7 +241,7 @@ class _CompetitionListRow extends StatelessWidget {
                     ? Icon(c.icon, size: 22, color: accent)
                     : Opacity(
                         opacity: available ? 1 : 0.5,
-                        child: Image.asset(
+                        child: TrophyImage(
                           trophy,
                           fit: BoxFit.contain,
                           errorBuilder: (_, _, _) =>
