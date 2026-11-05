@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
+import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/trophy_normaliser.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -23,6 +24,15 @@ import 'package:path_provider/path_provider.dart';
 /// The whole-database backup in Settings is the safety net; this is the
 /// sociable one. It MERGES: importing adds a save rather than replacing what
 /// is there, which is what makes it safe to accept a file from somebody else.
+/// The roots of what format 2 adds to a world, whose references a bundle's
+/// world must keep to (see `CareerTransferService._checkWorld`).
+const Set<String> _formatTwoRoots = {
+  'pools',
+  'addedClubs',
+  'addedSponsors',
+  'addedYAccounts',
+};
+
 class CareerTransferService {
   CareerTransferService(this._ref);
 
@@ -192,9 +202,18 @@ class CareerTransferService {
       return false;
     }
     final base = await _ref.read(nationRepositoryProvider).newCareerWorld();
-    if (!PackCodec.fieldsOk(
-      pack,
-      baseCodes: {for (final n in base) n.id: n.code},
+    final codes = {for (final n in base) n.id: n.code};
+    if (!PackCodec.fieldsOk(pack, baseCodes: codes)) return false;
+    // A career world is played as it is, never assessed again: what format 2
+    // adds (pools, added clubs, sponsors and Y accounts) must name only what
+    // this game has, every pool fringe id its own nation's.
+    final unknown = PackGameKeys.of(
+      codes.keys,
+      codes: codes,
+      fringeRanges: await _ref.read(playerRepositoryProvider).fringeRanges(),
+    ).check(pack);
+    if (unknown.any(
+      (i) => _formatTwoRoots.contains(i.where.split('.').first),
     )) {
       return false;
     }

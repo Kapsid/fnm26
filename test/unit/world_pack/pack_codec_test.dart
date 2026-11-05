@@ -7,8 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
+import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
+import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
@@ -206,6 +210,208 @@ void main() {
       await reason(_file(_raw(_pack(), trophies: {'world': '%%%'}))),
       PackRejection.badTrophy,
     );
+  });
+
+  group('format 2', () {
+    const fringe = PoolGenerator.firstFringeId;
+
+    Map<String, Object?> rawPack(WorldPack p) =>
+        _raw(p)['pack']! as Map<String, Object?>;
+
+    test('v1 file imports and reads as v2', () async {
+      final json = _pack().toJson()
+        ..['formatVersion'] = 1
+        ..remove('pools')
+        ..remove('addedClubs')
+        ..remove('addedSponsors')
+        ..remove('addedYAccounts')
+        ..remove('localized');
+      final r = await PackCodec.decode(
+        _file({'format': 1, 'pack': json, 'trophies': <String, Object?>{}}),
+      );
+      final d = r as PackDecoded;
+      expect(d.pack.formatVersion, 2);
+      expect(d.pack.squads, _pack().squads);
+      expect(d.pack.pools, isEmpty);
+      expect(d.pack.localized, isEmpty);
+    });
+
+    test('export writes format 2', () {
+      final bytes = PackCodec.encode(
+        _pack().copyWith(formatVersion: 1),
+        const {},
+      );
+      final top =
+          jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
+      expect(top['format'], 2);
+      expect((top['pack']! as Map)['formatVersion'], 2);
+    });
+
+    test('a pack with every new part decodes whole', () async {
+      final p = _pack().copyWith(
+        pools: {
+          1: [_p(fringe, PlayerPosition.cm)],
+        },
+        addedClubs: const [
+          PackClub(id: kPackAddedIdBase, name: 'New FC', country: 'cze'),
+        ],
+        addedSponsors: [
+          PackSponsor(
+            id: kPackAddedIdBase + 1,
+            name: 'Brand',
+            deal: SponsorDeal.values.first,
+            industry: SponsorBrand.values.first.name,
+            description: 'Makes things',
+          ),
+        ],
+        addedYAccounts: const [
+          PackYAccount(
+            id: kPackAddedIdBase + 2,
+            name: 'NewVoice',
+            voice: YVoice.fan,
+          ),
+        ],
+        localized: const {
+          'clubs.Old FC': {'cs': 'Starý FC'},
+        },
+      );
+      final r = await PackCodec.decode(PackCodec.encode(p, const {}));
+      expect((r as PackDecoded).pack, p);
+    });
+
+    // Hostile files: each is refused whole.
+    test('5 000 pool players -> badData', () async {
+      final p = _pack().copyWith(
+        pools: {
+          1: [
+            for (var i = 0; i < 5000; i++) _p(fringe + i, PlayerPosition.cm),
+          ],
+        },
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+      // 150 is the most a pool holds.
+      final ok = _pack().copyWith(
+        pools: {
+          1: [
+            for (var i = 0; i < 150; i++) _p(fringe + i, PlayerPosition.cm),
+          ],
+        },
+      );
+      expect(await reason(_file(_raw(ok))), isNull);
+    });
+
+    test('10 000 added clubs -> badData', () async {
+      final p = _pack().copyWith(
+        addedClubs: [
+          for (var i = 0; i < 10000; i++)
+            PackClub(id: kPackAddedIdBase + i, name: 'C$i', country: 'cze'),
+        ],
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+    });
+
+    test('added id 1 -> badData', () async {
+      final p = _pack().copyWith(
+        addedClubs: const [PackClub(id: 1, name: 'Low FC', country: 'cze')],
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+    });
+
+    test('a duplicate added id -> badData', () async {
+      final p = _pack().copyWith(
+        addedClubs: const [
+          PackClub(id: kPackAddedIdBase, name: 'A FC', country: 'cze'),
+          PackClub(id: kPackAddedIdBase, name: 'B FC', country: 'cze'),
+        ],
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+    });
+
+    test('a duplicate player id -> badData', () async {
+      final p = _pack().copyWith(
+        pools: {
+          1: [_p(fringe, PlayerPosition.cm)],
+          2: [_p(fringe, PlayerPosition.cm)],
+        },
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+    });
+
+    test('a pool id below the fringe -> badData', () async {
+      final p = _pack().copyWith(
+        pools: {
+          1: [_p(500, PlayerPosition.cm)],
+        },
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+    });
+
+    test('5 traits -> badData', () async {
+      final raw = rawPack(_pack());
+      final squad = (raw['squads']! as Map)['1']! as List;
+      (squad.first as Map<String, Object?>)['traits'] = [
+        for (final t in PlayerTrait.values.take(5)) t.name,
+      ];
+      expect(
+        await reason(_file(_raw(_pack())..['pack'] = raw)),
+        PackRejection.badData,
+      );
+    });
+
+    test('an unknown trait -> badData', () async {
+      final raw = rawPack(_pack());
+      final squad = (raw['squads']! as Map)['1']! as List;
+      (squad.first as Map<String, Object?>)['traits'] = ['flyingKick'];
+      expect(
+        await reason(_file(_raw(_pack())..['pack'] = raw)),
+        PackRejection.badData,
+      );
+    });
+
+    test('an unknown industry -> badData', () async {
+      final p = _pack().copyWith(
+        addedSponsors: [
+          PackSponsor(
+            id: kPackAddedIdBase,
+            name: 'Brand',
+            deal: SponsorDeal.values.first,
+            industry: 'x' * 5000,
+          ),
+        ],
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+    });
+
+    test('a 10 000 character localized value or path -> badData', () async {
+      final value = _pack().copyWith(
+        localized: {
+          'clubs.Old FC': {'cs': 'x' * 10000},
+        },
+      );
+      expect(await reason(_file(_raw(value))), PackRejection.badData);
+      final path = _pack().copyWith(
+        localized: {
+          'clubs.${'x' * 10000}': {'cs': 'X'},
+        },
+      );
+      expect(await reason(_file(_raw(path))), PackRejection.badData);
+    });
+
+    test('25 000 localized entries -> badData', () async {
+      final p = _pack().copyWith(
+        localized: {
+          for (var i = 0; i < 25000; i++) 'clubs.C$i': {'cs': 'K'},
+        },
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+    });
+
+    test('pools for 1 000 nations -> badData', () async {
+      final p = _pack().copyWith(
+        pools: {for (var i = 0; i < 1000; i++) 1000 + i: const <PackPlayer>[]},
+      );
+      expect(await reason(_file(_raw(p))), PackRejection.badData);
+    });
   });
 
   group('service', () {

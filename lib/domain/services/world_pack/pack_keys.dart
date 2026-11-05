@@ -34,16 +34,26 @@ class PackGameKeys {
     required this.trophyKeys,
     required this.sponsorBrands,
     required this.yAccounts,
+    required this.countryCodes,
+    required this.fringeRanges,
   });
 
   /// The game's keys, with [nationIds] the nations a career created now
-  /// starts with (`NationRepository.newCareerWorld`).
-  factory PackGameKeys.of(Iterable<int> nationIds) => PackGameKeys._(
+  /// starts with (`NationRepository.newCareerWorld`), [codes] their codes
+  /// by id and [fringeRanges] each nation's stored fringe ids
+  /// (`PlayerRepository.fringeRanges`).
+  factory PackGameKeys.of(
+    Iterable<int> nationIds, {
+    required Map<int, String> codes,
+    required Map<int, ({int first, int last})> fringeRanges,
+  }) => PackGameKeys._(
     nationIds: nationIds.toSet(),
     competitionNames: packCompetitionNames.toSet(),
     trophyKeys: {for (final t in Trophies.cabinet) t.key},
     sponsorBrands: {for (final b in SponsorBrand.values) b.name},
     yAccounts: YFeed.namedAccounts.toSet(),
+    countryCodes: {for (final c in codes.values) c.toLowerCase()},
+    fringeRanges: Map.unmodifiable(fringeRanges),
   );
 
   final Set<int> nationIds;
@@ -51,6 +61,12 @@ class PackGameKeys {
   final Set<String> trophyKeys;
   final Set<String> sponsorBrands;
   final Set<String> yAccounts;
+
+  /// The nations' codes, lower-case, as an added club's country is kept.
+  final Set<String> countryCodes;
+
+  /// nationId -> its first and last stored fringe id.
+  final Map<int, ({int first, int last})> fringeRanges;
 
   /// [PackRules.compatibility] of [p] against these keys.
   List<PackIssue> check(WorldPack p) => PackRules.compatibility(
@@ -60,5 +76,7 @@ class PackGameKeys {
     trophyKeys: trophyKeys,
     sponsorBrands: sponsorBrands,
     yAccounts: yAccounts,
+    countryCodes: countryCodes,
+    fringeRanges: fringeRanges,
   );
 }

@@ -24,13 +24,19 @@ enum PackStatus {
 /// [world]: its [PackStatus] and everything standing between it and a
 /// career, what the game no longer has ([PackRules.compatibility]) first,
 /// then what is missing ([PackRules.issues]). A null [pack] could not be
-/// read.
+/// read. [fringeRanges] are each nation's stored fringe ids
+/// (`PlayerRepository.fringeRanges`), for the pools.
 ({PackStatus status, List<PackIssue> issues}) assessPack(
   WorldPack? pack,
-  List<Nation> world,
-) {
+  List<Nation> world, {
+  required Map<int, ({int first, int last})> fringeRanges,
+}) {
   if (pack == null) return (status: PackStatus.unreadable, issues: const []);
-  final unknown = PackGameKeys.of([for (final n in world) n.id]).check(pack);
+  final unknown = PackGameKeys.of(
+    [for (final n in world) n.id],
+    codes: {for (final n in world) n.id: n.code},
+    fringeRanges: fringeRanges,
+  ).check(pack);
   final missing = PackRules.issues(
     pack,
     baseCodes: {for (final n in world) n.id: n.code},

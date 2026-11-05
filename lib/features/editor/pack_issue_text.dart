@@ -35,6 +35,7 @@ PackIssueText describePackIssue(
   final section = EditorSection.ofPath(issue.where);
   final title = sectionTitle(l, section);
   switch (issue) {
+    // A pool over its cap reads as a squad over its: players too many.
     case SquadTooSmall(:final nationId, :final have, :final need):
       return (
         title: nation(nationId),
@@ -77,14 +78,24 @@ PackIssueText describePackIssue(
       // name in the pack (else its id), a stadium by its city, anything else
       // by its key.
       final dot = path.indexOf('.');
-      final key = dot < 0 ? '' : path.substring(dot + 1);
+      final root = dot < 0 ? path : path.substring(0, dot);
+      var key = dot < 0 ? '' : path.substring(dot + 1);
+      // A `localized` entry is named by the text it translates.
+      if (root == 'localized') key = key.substring(key.indexOf('.') + 1);
       final id = int.tryParse(key);
-      final what = switch (section) {
-        EditorSection.players ||
-        EditorSection.nations ||
-        EditorSection.nameLists when id != null => nation(id),
-        EditorSection.stadiums => key.substring(key.indexOf(':') + 1),
-        _ => key,
+      final what = switch (root) {
+        // A pool by its nation; a player in it by his name.
+        'pools' => _poolEntry(pack, key, nation),
+        'addedClubs' ||
+        'addedSponsors' ||
+        'addedYAccounts' => _addedName(pack, root, id) ?? key,
+        _ => switch (section) {
+          EditorSection.players ||
+          EditorSection.nations ||
+          EditorSection.nameLists when id != null => nation(id),
+          EditorSection.stadiums => key.substring(key.indexOf(':') + 1),
+          _ => key,
+        },
       };
       return (
         title: title,
@@ -128,13 +139,16 @@ PackIssueText _badField(
   final key = parts.length > 1 ? parts.sublist(1).join('.') : '';
 
   switch (root) {
-    case 'squads':
+    case 'squads' || 'pools':
       final nationId = idAt(1);
       final playerId = idAt(2);
+      final players = root == 'pools' ? pack.pools : pack.squads;
       final player = nationId == null
           ? null
-          : pack.squads[nationId]?.where((p) => p.id == playerId).firstOrNull;
+          : players[nationId]?.where((p) => p.id == playerId).firstOrNull;
       final name = player?.name.trim() ?? '';
+      // No field: the id itself (out of range, or another player's), or the
+      // whole list. A trait list (too many, or one twice) is a value.
       final field = parts.length > 3 ? parts[3] : '';
       final detail = switch (field) {
         'name' =>
@@ -205,6 +219,40 @@ PackIssueText _badField(
         section: section,
         nationId: null,
       );
+    case 'addedClubs' || 'addedSponsors' || 'addedYAccounts':
+      // `<root>` (the list over its cap), `<root>.<id>` (the name),
+      // `<root>.<id>.id`, `.country` or `.description`.
+      final field = parts.length > 2 ? parts[2] : '';
+      final value = switch (field) {
+        '' => _addedName(pack, root, idAt(1)),
+        'description' =>
+          pack.addedSponsors
+              .where((x) => x.id == idAt(1))
+              .firstOrNull
+              ?.description,
+        _ => null,
+      };
+      return (
+        title: sectionTitle,
+        detail: parts.length == 1 || value == null
+            ? l.editorIssueValue
+            : nameProblem(value),
+        section: section,
+        nationId: null,
+      );
+    case 'localized':
+      // `localized` (over the cap), `localized.<path>` (a path naming
+      // nothing) or `localized.<path>.<language>` (a value).
+      final last = key.lastIndexOf('.');
+      final value = last < 0
+          ? null
+          : pack.localized[key.substring(0, last)]?[key.substring(last + 1)];
+      return (
+        title: sectionTitle,
+        detail: value == null ? l.editorIssueValue : nameProblem(value),
+        section: section,
+        nationId: null,
+      );
     default:
       final renames = switch (root) {
         'clubs' => pack.clubs,
@@ -220,4 +268,29 @@ PackIssueText _badField(
         nationId: null,
       );
   }
+}
+
+/// The name pack [pack] gives its added item [id] of [root]
+/// (`addedClubs`, `addedSponsors` or `addedYAccounts`), if it has one.
+String? _addedName(WorldPack pack, String root, int? id) => switch (root) {
+  'addedClubs' => pack.addedClubs.where((x) => x.id == id).firstOrNull?.name,
+  'addedSponsors' =>
+    pack.addedSponsors.where((x) => x.id == id).firstOrNull?.name,
+  'addedYAccounts' =>
+    pack.addedYAccounts.where((x) => x.id == id).firstOrNull?.name,
+  _ => null,
+};
+
+/// A pool entry, `<nationId>` or `<nationId>.<playerId>`, in words: the
+/// nation, or the player by his name.
+String _poolEntry(WorldPack pack, String key, String Function(int) nation) {
+  final parts = key.split('.');
+  final nationId = int.tryParse(parts.first);
+  if (nationId == null) return key;
+  if (parts.length < 2) return nation(nationId);
+  final playerId = int.tryParse(parts[1]);
+  final player = pack.pools[nationId]
+      ?.where((p) => p.id == playerId)
+      .firstOrNull;
+  return player?.name.trim() ?? key;
 }

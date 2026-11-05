@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/domain/services/federation/sponsors.dart';
 
 import 'pack_rules.dart';
 import 'trophy_normaliser.dart';
@@ -69,18 +70,26 @@ abstract final class PackCodec {
   static const mimeType = 'application/x-fnmdb';
   static const maxFileBytes = 8 << 20;
   static const maxJsonBytes = 6 << 20;
+
+  /// The most players a nation's squad holds in a file; a pool holds at
+  /// most [PackRules.poolMax].
   static const maxPlayersPerNation = PackRules.squadMax;
   static const maxTrophies = 9;
+
+  /// The most nations a file gives a pool. The game has about 210.
+  static const maxPoolNations = 400;
 
   /// Longest key an override map may carry.
   static const keyMax = 100;
 
   static const _topKeys = {'format', 'pack', 'trophies'};
 
+  /// [p] as a `.fnmdb` file, always in the current format
+  /// ([kPackFormatVersion]), whatever [p] was read from.
   static Uint8List encode(WorldPack p, Map<String, Uint8List> trophies) {
     final json = jsonEncode({
-      'format': p.formatVersion,
-      'pack': p.toJson(),
+      'format': kPackFormatVersion,
+      'pack': p.copyWith(formatVersion: kPackFormatVersion).toJson(),
       'trophies': {
         for (final e in trophies.entries) e.key: base64Encode(e.value),
       },
@@ -193,9 +202,13 @@ abstract final class PackCodec {
   }
 
   /// Whether every field of [p] keeps to the editor's rules: names, caps on
-  /// keys and squads, codes ([baseCodes] as for [decode]) and ids. Every
-  /// pack that comes onto the device from outside passes this, a `.fnmdb`
-  /// file's and a `.fnmcareer` bundle's world alike.
+  /// keys, squads, pools, added items and `localized` values, codes
+  /// ([baseCodes] as for [decode]), ids, traits and industries. Every pack
+  /// that comes onto the device from outside passes this, a `.fnmdb` file's
+  /// and a `.fnmcareer` bundle's world alike.
+  ///
+  /// The caps are checked first, so a hostile file is refused before any
+  /// of its thousands of entries is looked at one by one.
   static bool fieldsOk(
     WorldPack p, {
     Map<int, String> baseCodes = const {},
@@ -211,10 +224,32 @@ abstract final class PackCodec {
       p.competitions,
       p.sponsors,
       p.yAccounts,
+      p.localized,
     ]) {
       if (m.keys.any((k) => k.length > keyMax)) return false;
     }
     if (p.squads.values.any((s) => s.length > maxPlayersPerNation)) {
+      return false;
+    }
+    if (p.pools.length > maxPoolNations ||
+        p.pools.values.any((s) => s.length > PackRules.poolMax)) {
+      return false;
+    }
+    if (p.addedClubs.length > PackRules.addedClubsMax ||
+        p.addedSponsors.length > PackRules.addedSponsorsMax ||
+        p.addedYAccounts.length > PackRules.addedYMax) {
+      return false;
+    }
+    var localized = 0;
+    for (final m in p.localized.values) {
+      localized += m.length;
+      if (localized > PackRules.localizedMax) return false;
+    }
+    // An industry names the built-in brand whose label it takes. Like an
+    // unknown trait, deal or voice (which the reader refuses), one the game
+    // has never had is bad data, not a stale reference.
+    final brands = {for (final b in SponsorBrand.values) b.name};
+    if (!p.addedSponsors.every((s) => brands.contains(s.industry))) {
       return false;
     }
     return !PackRules.issues(p, baseCodes: baseCodes).any(

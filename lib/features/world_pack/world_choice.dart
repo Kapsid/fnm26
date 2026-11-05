@@ -52,6 +52,7 @@ final FutureProvider<List<WorldChoice>> worldChoicesProvider =
       final world = await ref.watch(nationsProvider.future);
       final l = ref.watch(appLocalizationsProvider);
       final repo = ref.watch(worldPackRepositoryProvider);
+      final fringe = await ref.watch(packFringeRangesProvider.future);
       final byId = {for (final n in world) n.id: n};
       final out = <WorldChoice>[];
       for (final s in summaries) {
@@ -61,7 +62,7 @@ final FutureProvider<List<WorldChoice>> worldChoicesProvider =
         } on FormatException {
           pack = null;
         }
-        final a = assessPack(pack, world);
+        final a = assessPack(pack, world, fringeRanges: fringe);
         String? reason;
         switch (a.status) {
           case PackStatus.ready:
@@ -99,7 +100,11 @@ Future<PackStatus?> chosenWorldStatus(ProviderContainer c, int id) async {
   } on FormatException {
     pack = null;
   }
-  return assessPack(pack, await c.read(nationsProvider.future)).status;
+  return assessPack(
+    pack,
+    await c.read(nationsProvider.future),
+    fringeRanges: await c.read(packFringeRangesProvider.future),
+  ).status;
 }
 
 /// The world the career being started in New Game takes: a pack id, or

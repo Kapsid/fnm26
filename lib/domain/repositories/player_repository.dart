@@ -123,6 +123,11 @@ abstract interface class PlayerRepository {
   /// columns are read, so it is cheap.
   Future<List<({int id, int nationId, int overall})>> coreRatings();
 
+  /// Each nation's stored fringe ids (from `PoolGenerator.firstFringeId`):
+  /// its first and last, by nation id. A world pack's pool may hold only
+  /// its own nation's (`PackRules.compatibility`).
+  Future<Map<int, ({int first, int last})>> fringeRanges();
+
   /// [nationId]'s stored core players (no fringe, no newgen) in the default
   /// world on day one, named and given clubs for [saveSeed] as [byId] would
   /// (`newCareerNames` as for [byNation]), a retired veteran included, in

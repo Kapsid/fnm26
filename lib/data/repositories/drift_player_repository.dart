@@ -1,7 +1,11 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart'
-    show BooleanExpressionOperators, ComparableExpr, StringExpressionOperators;
+    show
+        BaseAggregate,
+        BooleanExpressionOperators,
+        ComparableExpr,
+        StringExpressionOperators;
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fnm/core/rng/seeded_rng.dart';
@@ -448,6 +452,21 @@ class DriftPlayerRepository implements PlayerRepository {
   Future<List<Player>> all() async {
     final rows = await _db.select(_db.players).get();
     return rows.map((r) => r.toDomain()).toList();
+  }
+
+  @override
+  Future<Map<int, ({int first, int last})>> fringeRanges() async {
+    final t = _db.players;
+    final first = t.id.min();
+    final last = t.id.max();
+    final query = _db.selectOnly(t)
+      ..addColumns([t.nationId, first, last])
+      ..where(t.id.isBiggerOrEqualValue(PoolGenerator.firstFringeId))
+      ..groupBy([t.nationId]);
+    return {
+      for (final r in await query.get())
+        r.read(t.nationId)!: (first: r.read(first)!, last: r.read(last)!),
+    };
   }
 
   @override

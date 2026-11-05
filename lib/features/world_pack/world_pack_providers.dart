@@ -265,6 +265,14 @@ class ActiveWorldSync {
       );
 }
 
+/// Each nation's stored fringe ids ([PlayerRepository.fringeRanges]), the
+/// ranges a pack's pools are checked against (`PackGameKeys.of`). Seed
+/// data: read once.
+final FutureProvider<Map<int, ({int first, int last})>>
+packFringeRangesProvider = FutureProvider<Map<int, ({int first, int last})>>(
+  (ref) => ref.watch(playerRepositoryProvider).fringeRanges(),
+);
+
 /// The packs on this device, by name.
 final worldPacksProvider = FutureProvider<List<WorldPackSummary>>(
   (ref) => ref.watch(worldPackRepositoryProvider).list(),

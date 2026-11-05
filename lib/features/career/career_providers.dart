@@ -287,7 +287,9 @@ class CareerService {
         );
       }
       final world = await _ref.read(nationRepositoryProvider).newCareerWorld();
-      if (assessPack(pack, world).status != PackStatus.ready) {
+      final fringe = await _ref.read(playerRepositoryProvider).fringeRanges();
+      if (assessPack(pack, world, fringeRanges: fringe).status !=
+          PackStatus.ready) {
         return Result.failure(
           Failure(
             'World pack $worldPackId cannot start a career',

@@ -12,6 +12,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
+import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
@@ -49,18 +50,23 @@ enum EditorSection {
   /// [players] and [nameLists] optionally `&nation=`.
   final String route;
 
-  /// The section a [PackIssue.where] path belongs to.
+  /// The section a [PackIssue.where] path belongs to. Added items sit with
+  /// the game's own of their kind, a pool with the squads, and a `localized`
+  /// entry with the text it translates.
   static EditorSection ofPath(String path) => switch (path.split('.').first) {
-    'squads' => players,
+    'squads' || 'pools' => players,
     'nations' => nations,
-    'clubs' => clubs,
+    'clubs' || 'addedClubs' => clubs,
     'stadiums' => stadiums,
     'competitions' => competitions,
-    'yAccounts' => yAccounts,
+    'yAccounts' || 'addedYAccounts' => yAccounts,
     'reporters' => press,
     'nameLists' => nameLists,
-    'sponsors' => sponsors,
+    'sponsors' || 'addedSponsors' => sponsors,
     'trophies' => trophies,
+    'localized' when path.contains('.') => ofPath(
+      path.substring(path.indexOf('.') + 1),
+    ),
     _ => players,
   };
 }
@@ -122,6 +128,7 @@ final AutoDisposeFutureProvider<List<EditorPackEntry>> editorPacksProvider =
       final summaries = await ref.watch(worldPacksProvider.future);
       final world = await ref.watch(editorWorldProvider.future);
       final repo = ref.watch(worldPackRepositoryProvider);
+      final fringe = await ref.watch(packFringeRangesProvider.future);
       final out = <EditorPackEntry>[];
       for (final s in summaries) {
         WorldPack? pack;
@@ -130,7 +137,7 @@ final AutoDisposeFutureProvider<List<EditorPackEntry>> editorPacksProvider =
         } on FormatException {
           pack = null;
         }
-        final a = assessPack(pack, world);
+        final a = assessPack(pack, world, fringeRanges: fringe);
         out.add((
           id: s.id,
           name: s.name,
@@ -165,6 +172,7 @@ packEditorProvider = StateNotifierProvider.autoDispose
         id: id,
         packs: ref.watch(worldPackRepositoryProvider),
         nations: ref.watch(nationRepositoryProvider),
+        players: ref.watch(playerRepositoryProvider),
         // The list's dates and statuses follow the save. Through the
         // container, not this ref: the last save comes from dispose.
         onSaved: () {
@@ -199,6 +207,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     required int id,
     required WorldPackRepository packs,
     required NationRepository nations,
+    required PlayerRepository players,
     void Function()? onSaved,
     void Function()? onSaveFailed,
   }) : _id = id,
@@ -213,7 +222,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
         if (s != AppLifecycleState.resumed) unawaited(flush());
       },
     );
-    unawaited(_load(nations));
+    unawaited(_load(nations, players));
   }
 
   late final AppLifecycleListener _lifecycle;
@@ -244,7 +253,11 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
 
   List<Nation> _world = const [];
   Map<int, String> _baseCodes = const {};
-  PackGameKeys _gameKeys = PackGameKeys.of(const []);
+  PackGameKeys _gameKeys = PackGameKeys.of(
+    const [],
+    codes: const {},
+    fringeRanges: const {},
+  );
 
   WorldPack? _issuesOf;
   List<PackIssue> _issues = const [];
@@ -252,9 +265,10 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// The pack's own trophy pictures, by key (see [setTrophy]).
   Map<String, Uint8List> _trophies = const {};
 
-  Future<void> _load(NationRepository nations) async {
+  Future<void> _load(NationRepository nations, PlayerRepository players) async {
     try {
       final world = await nations.newCareerWorld();
+      final fringe = await players.fringeRanges();
       final pack = await _packs.load(_id);
       final trophies = pack == null
           ? const <String, Uint8List>{}
@@ -269,7 +283,11 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
       }
       _world = world;
       _baseCodes = {for (final n in world) n.id: n.code};
-      _gameKeys = PackGameKeys.of([for (final n in world) n.id]);
+      _gameKeys = PackGameKeys.of(
+        [for (final n in world) n.id],
+        codes: _baseCodes,
+        fringeRanges: fringe,
+      );
       _trophies = trophies;
       // The picture rows are what a career and an export take, so a pack
       // whose list of them drifted (one stored before they were kept in
@@ -325,6 +343,50 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     Map<K, V> without<K, V>(Map<K, V> m, K k) => {...m}..remove(k);
     final before = _revision;
     update((p) {
+      // Format 2's parts: a pool (or one player in it), an added item, a
+      // `localized` path.
+      final parts = key.split('.');
+      final first = int.tryParse(parts.first);
+      final second = parts.length == 2 ? int.tryParse(parts[1]) : null;
+      switch (root) {
+        case 'pools' when first != null && p.pools.containsKey(first):
+          if (second == null) {
+            return p.copyWith(pools: without(p.pools, first));
+          }
+          if (!p.pools[first]!.any((pl) => pl.id == second)) return p;
+          return p.copyWith(
+            pools: {
+              ...p.pools,
+              first: [
+                for (final pl in p.pools[first]!)
+                  if (pl.id != second) pl,
+              ],
+            },
+          );
+        case 'addedClubs' when p.addedClubs.any((c) => c.id == id):
+          return p.copyWith(
+            addedClubs: [
+              for (final c in p.addedClubs)
+                if (c.id != id) c,
+            ],
+          );
+        case 'addedSponsors' when p.addedSponsors.any((s) => s.id == id):
+          return p.copyWith(
+            addedSponsors: [
+              for (final s in p.addedSponsors)
+                if (s.id != id) s,
+            ],
+          );
+        case 'addedYAccounts' when p.addedYAccounts.any((y) => y.id == id):
+          return p.copyWith(
+            addedYAccounts: [
+              for (final y in p.addedYAccounts)
+                if (y.id != id) y,
+            ],
+          );
+        case 'localized' when p.localized.containsKey(key):
+          return p.copyWith(localized: without(p.localized, key));
+      }
       if (id != null) {
         switch (root) {
           case 'squads' when p.squads.containsKey(id):

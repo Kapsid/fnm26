@@ -9,6 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/trophy_normaliser.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -145,6 +147,52 @@ void main() {
         BundleRejection.unreadable,
       );
       await _expectNothingWritten(d.db);
+    });
+  });
+
+  testWidgets("a bundle whose world's pool holds another nation's fringe id "
+      'is refused; its own nation\'s imports', (tester) async {
+    await tester.runAsync(() async {
+      final d = await _device();
+      final ranges = await d.c.read(playerRepositoryProvider).fringeRanges();
+      final own = ranges[1]!;
+      Future<File> withPool(int playerId) => _bundleFile(
+        dir,
+        tamper: (t) {
+          final row = (t['career_worlds']! as List).single as Map;
+          final pack = jsonDecode(row['json']! as String) as Map;
+          pack['pools'] = {
+            '1': [
+              PackPlayer(
+                id: playerId,
+                name: 'Pool Man',
+                age: 24,
+                position: PlayerPosition.cm,
+                attributes: const PlayerAttributes(
+                  physical: 50,
+                  technical: 50,
+                  stamina: 50,
+                ),
+                potential: 60,
+              ).toJson(),
+            ],
+          };
+          row['json'] = jsonEncode(pack);
+        },
+      );
+      expect(
+        await d.c
+            .read(careerTransferServiceProvider)
+            .import((await withPool(own.last + 1000000)).path),
+        BundleRejection.unreadable,
+      );
+      await _expectNothingWritten(d.db);
+      expect(
+        await d.c
+            .read(careerTransferServiceProvider)
+            .import((await withPool(own.first)).path),
+        isNull,
+      );
     });
   });
 
