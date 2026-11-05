@@ -29,6 +29,50 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- A .fnmdb database opened from another app (Files, Gmail,
+                 WhatsApp, a downloads folder); MainActivity copies it and
+                 lib/features/world_pack/incoming_file.dart imports it.
+                 Kept narrow so FNM is not offered for every file: either the
+                 sender says it is an FNM database (the type our own export
+                 shares it with), or the name in the URI ends in .fnmdb.
+                 pathPattern cannot see a name the URI does not carry (many
+                 content:// URIs are opaque ids), and it stops at the first
+                 dot it can match, hence one pattern per extra dot. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="content"/>
+                <data android:scheme="file"/>
+                <data android:mimeType="application/x-fnmdb"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="content"/>
+                <data android:scheme="file"/>
+                <data android:host="*"/>
+                <data android:mimeType="application/octet-stream"/>
+                <data android:mimeType="*/*"/>
+                <data android:pathPattern=".*\\.fnmdb"/>
+                <data android:pathPattern=".*\\..*\\.fnmdb"/>
+                <data android:pathPattern=".*\\..*\\..*\\.fnmdb"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.fnmdb"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.fnmdb"/>
+            </intent-filter>
+            <!-- A file:// URI sent with no type at all. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="file"/>
+                <data android:host="*"/>
+                <data android:pathPattern=".*\\.fnmdb"/>
+                <data android:pathPattern=".*\\..*\\.fnmdb"/>
+                <data android:pathPattern=".*\\..*\\..*\\.fnmdb"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.fnmdb"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.fnmdb"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

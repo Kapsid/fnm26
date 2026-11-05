@@ -12,5 +12,7 @@ import UIKit
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    // `.fnmdb` files opened from other apps: see SceneDelegate.swift.
+    IncomingFile.shared.attach(messenger: engineBridge.applicationRegistrar.messenger())
   }
 }

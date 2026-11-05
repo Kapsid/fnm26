@@ -63,6 +63,10 @@ class _CappedSink implements Sink<List<int>> {
 /// the editor's rules and every trophy is decoded and drawn again.
 abstract final class PackCodec {
   static const extension = 'fnmdb';
+
+  /// The type a pack is shared with, and the one the app registers to open
+  /// (`application/x-fnmdb`; on iOS the `com.fnm.fnmdb` type carries it).
+  static const mimeType = 'application/x-fnmdb';
   static const maxFileBytes = 8 << 20;
   static const maxJsonBytes = 6 << 20;
   static const maxPlayersPerNation = PackRules.squadMax;

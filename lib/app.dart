@@ -15,6 +15,7 @@ import 'package:fnm/features/cloud/cloud_backup_providers.dart';
 import 'package:fnm/features/onboarding/tour_overlay.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/world_pack/incoming_file.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -63,9 +64,11 @@ class _FnmAppState extends ConsumerState<FnmApp> {
         // The likeliest last moment before the phone is put away: an
         // automatic cloud backup if one is on, due and anything changed.
         unawaited(
-          ref.read(cloudBackupServiceProvider).trigger(
-            BackupTrigger.appBackground,
-          ),
+          ref
+              .read(cloudBackupServiceProvider)
+              .trigger(
+                BackupTrigger.appBackground,
+              ),
         );
       },
       onResume: () => ref.read(playTimeTrackerProvider).resume(),
@@ -134,9 +137,14 @@ class _FnmAppState extends ConsumerState<FnmApp> {
       // The tour draws over whatever screen it has navigated to, so it wraps
       // the router's output rather than living on any one screen. The chosen
       // text size wraps both, so the tour's own copy grows with the rest.
-      builder: (context, child) => AppTextScale(
-        size: textSize,
-        child: TourOverlay(child: child ?? const SizedBox.shrink()),
+      //
+      // A database opened from another app (Files, Mail, a chat) is heard on
+      // every screen, so its listener wraps the router's output too.
+      builder: (context, child) => IncomingFileListener(
+        child: AppTextScale(
+          size: textSize,
+          child: TourOverlay(child: child ?? const SizedBox.shrink()),
+        ),
       ),
     );
   }

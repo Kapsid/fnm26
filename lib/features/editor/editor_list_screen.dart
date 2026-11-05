@@ -175,7 +175,7 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
             final file = await service.export(pack.id);
             await SharePlus.instance.share(
               ShareParams(
-                files: [XFile(file.path)],
+                files: [XFile(file.path, mimeType: PackCodec.mimeType)],
                 subject: l.editorShareSubject,
                 sharePositionOrigin: at,
               ),
