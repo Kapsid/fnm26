@@ -17,6 +17,9 @@ _Player _$PlayerFromJson(Map<String, dynamic> json) => _Player(
   ),
   club: json['club'] as String? ?? 'Free agent',
   clubCountry: json['clubCountry'] as String? ?? '',
+  fixedTraits: (json['fixedTraits'] as List<dynamic>?)
+      ?.map((e) => $enumDecode(_$PlayerTraitEnumMap, e))
+      .toList(),
 );
 
 Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
@@ -28,6 +31,9 @@ Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
   'attributes': instance.attributes,
   'club': instance.club,
   'clubCountry': instance.clubCountry,
+  'fixedTraits': ?instance.fixedTraits
+      ?.map((e) => _$PlayerTraitEnumMap[e]!)
+      .toList(),
 };
 
 const _$PlayerPositionEnumMap = {
@@ -43,4 +49,16 @@ const _$PlayerPositionEnumMap = {
   PlayerPosition.lw: 'lw',
   PlayerPosition.rw: 'rw',
   PlayerPosition.st: 'st',
+};
+
+const _$PlayerTraitEnumMap = {
+  PlayerTrait.bigGame: 'bigGame',
+  PlayerTrait.setPiece: 'setPiece',
+  PlayerTrait.hothead: 'hothead',
+  PlayerTrait.ironMan: 'ironMan',
+  PlayerTrait.wonderkid: 'wonderkid',
+  PlayerTrait.leader: 'leader',
+  PlayerTrait.pacey: 'pacey',
+  PlayerTrait.oldHead: 'oldHead',
+  PlayerTrait.wasteful: 'wasteful',
 };

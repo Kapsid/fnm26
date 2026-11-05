@@ -73,10 +73,11 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
   }
 
   /// Remove for the [index]th entry, when it names something the game no
-  /// longer has: deletes exactly that entry, as one undoable edit.
+  /// longer has or clashes with a name of the game's ([CompatIssue]):
+  /// deletes exactly that entry, as one undoable edit.
   VoidCallback? _remover(_PackView view, int index) {
     final issue = view.raw[index];
-    if (issue is! UnknownId) return null;
+    if (issue is! CompatIssue) return null;
     return () => unawaited(
       ref.read(packEditorProvider(_id).notifier).removeUnknown(issue),
     );
@@ -301,8 +302,9 @@ class _PackView {
 
   bool get ready => issues.isEmpty;
 
-  /// Whether the pack refers to something the game no longer has.
-  bool get attention => raw.any((i) => i is UnknownId);
+  /// Whether the pack refers to something the game no longer has, or adds
+  /// a name the game's own already has.
+  bool get attention => raw.any((i) => i is CompatIssue);
 
   int get readySections => sections.values.where((f) => f.toFix == 0).length;
 }

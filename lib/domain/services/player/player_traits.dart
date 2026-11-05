@@ -9,7 +9,8 @@ import 'package:fnm/domain/entities/player.dart';
 ///
 /// Every trait is derived (never stored) from the player's id, position and
 /// attributes, so it is stable for a given player in a given save and costs
-/// nothing to keep in step with the procedural pool.
+/// nothing to keep in step with the procedural pool. A world pack may pick a
+/// player's traits instead ([Player.fixedTraits]).
 enum PlayerTrait {
   /// Turns up in finals and knockout rounds.
   bigGame,
@@ -51,7 +52,14 @@ abstract final class PlayerTraits {
   static const int maxTraits = 2;
 
   /// [p]'s traits, stable for a given player and [saveSeed].
+  ///
+  /// A player whose world pack picks his traits ([Player.fixedTraits]) has
+  /// exactly those, in every save: the pick replaces the whole list, the
+  /// attribute-earned traits included.
   static List<PlayerTrait> of(Player p, {int saveSeed = 0}) {
+    if (p.fixedTraits case final fixed?) {
+      return List.unmodifiable(fixed.take(maxTraits));
+    }
     final h = _hash(p.id ^ (saveSeed * 0x9E3779B1));
     final a = p.attributes;
     final out = <PlayerTrait>[];

@@ -12,8 +12,9 @@ enum PackStatus {
   missing,
 
   /// A game update made it incompatible: it refers to something the game no
-  /// longer has ([PackRules.compatibility]). Shown before [missing]: it is
-  /// what the manager must fix first.
+  /// longer has ([PackRules.compatibility]), or adds a club or Y account
+  /// under one of the game's own names ([NameClash]): any [CompatIssue].
+  /// Shown before [missing]: it is what the manager must fix first.
   needsAttention,
 
   /// The stored pack could not be read at all. Only deleting it is offered.
@@ -60,11 +61,22 @@ Map<String, List<String>> packCountryCities(
     countryCities: packCountryCities(world, facts.cities),
   );
   return (
-    status: unknown.isNotEmpty
+    status: unknown.isNotEmpty || missing.any((i) => i is CompatIssue)
         ? PackStatus.needsAttention
         : missing.isNotEmpty
         ? PackStatus.missing
         : PackStatus.ready,
-    issues: [...unknown, ...missing],
+    issues: compatFirst(unknown, missing),
   );
 }
+
+/// [unknown] ([PackRules.compatibility]) and [missing] ([PackRules.issues])
+/// as one list, every [CompatIssue] first: what the manager must fix first.
+List<PackIssue> compatFirst(
+  List<PackIssue> unknown,
+  List<PackIssue> missing,
+) => [
+  ...unknown,
+  ...missing.whereType<CompatIssue>(),
+  ...missing.where((i) => i is! CompatIssue),
+];

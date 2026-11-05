@@ -394,19 +394,20 @@ void main() {
       ]);
     });
 
-    test('an added club named like a club of its country is duplicate '
-        '(case and spaces ignored)', () {
+    test("an added club named like one of the game's clubs of its country "
+        'is a NameClash, not a BadField (case and spaces ignored)', () {
       final league = ClubService.leagueClubs('cze');
       expect(league, isNotEmpty);
       final clash = ' ${league.first.toUpperCase()}  ';
-      final b = _bad(
-        _pack(
-          addedClubs: [PackClub(id: _added, name: clash, country: 'cze')],
-        ),
-      ).single;
-      expect(b.path, 'addedClubs.$_added');
-      expect(b.reason, FieldReason.duplicate);
-      // Renamed away, the old name is free; the new one is taken.
+      final p = _pack(
+        addedClubs: [PackClub(id: _added, name: clash, country: 'cze')],
+      );
+      expect(_bad(p), isEmpty);
+      final c = PackRules.issues(p).whereType<NameClash>().single;
+      expect(c.path, 'addedClubs.$_added');
+      expect(c.where, 'addedClubs.$_added');
+      // A game club the pack renames is the pack's own name: an added club
+      // under it is a duplicate inside the pack, refused.
       final renamed = _pack(
         clubs: {league.first: 'Bohemka'},
         addedClubs: [
@@ -427,6 +428,19 @@ void main() {
         'addedClubs.$_added',
         'addedClubs.${_added + 1}',
       ]);
+      // Two added clubs under a game club's name: the pack's own duplicate
+      // wins, and both are refused.
+      final both = _pack(
+        addedClubs: [
+          PackClub(id: _added, name: league.first, country: 'cze'),
+          PackClub(id: _added + 1, name: league.first, country: 'cze'),
+        ],
+      );
+      expect(_bad(both).map((x) => x.path), [
+        'addedClubs.$_added',
+        'addedClubs.${_added + 1}',
+      ]);
+      expect(PackRules.issues(both).whereType<NameClash>(), isEmpty);
     });
 
     test("an added club's country is three lower-case letters", () {
@@ -440,15 +454,28 @@ void main() {
       expect(b.path, 'addedClubs.$_added.country');
     });
 
-    test('an added Y account named TheOldStopper is duplicate', () {
+    test('an added Y account named TheOldStopper is a NameClash; clashes '
+        'inside the pack are duplicate', () {
       expect(YFeed.namedAccounts, contains('TheOldStopper'));
       PackYAccount y(int id, String name) =>
           PackYAccount(id: id, name: name, voice: YVoice.fan);
-      final b = _bad(
-        _pack(addedYAccounts: [y(_added, 'theoldstopper ')]),
-      ).single;
-      expect(b.path, 'addedYAccounts.$_added');
-      expect(b.reason, FieldReason.duplicate);
+      final game = _pack(addedYAccounts: [y(_added, 'theoldstopper ')]);
+      expect(_bad(game), isEmpty);
+      expect(
+        PackRules.issues(game).whereType<NameClash>().single.path,
+        'addedYAccounts.$_added',
+      );
+      // Two added accounts under a game account's name: refused.
+      final twice = _pack(
+        addedYAccounts: [
+          y(_added, 'TheOldStopper'),
+          y(_added + 1, 'theoldstopper'),
+        ],
+      );
+      expect(_bad(twice).map((x) => x.path), [
+        'addedYAccounts.$_added',
+        'addedYAccounts.${_added + 1}',
+      ]);
       // A rename's new name and another added account clash too.
       final p = _pack(
         yAccounts: {'TheOldStopper': 'Stopper2'},
@@ -696,7 +723,7 @@ void main() {
     });
 
     test('an added club named like a side the game names for one of its '
-        "country's cities is duplicate", () {
+        "country's cities is a NameClash", () {
       const cities = {
         'zzz': ['Alpha', 'Beta', 'Gamma', 'Delta'],
       };
@@ -726,14 +753,12 @@ void main() {
           PackClub(id: _added + 1, name: 'Delta City', country: 'zzz'),
         ],
       );
-      final b = PackRules.issues(
-        p,
-        countryCities: cities,
-      ).whereType<BadField>().single;
-      expect(b.path, 'addedClubs.$_added');
-      expect(b.reason, FieldReason.duplicate);
+      // The game's own name: flagged (a NameClash), never refused.
+      final issues = PackRules.issues(p, countryCities: cities);
+      expect(issues.whereType<BadField>(), isEmpty);
+      expect(issues.whereType<NameClash>().single.path, 'addedClubs.$_added');
       // Without the cities there is nothing to clash with.
-      expect(_bad(p), isEmpty);
+      expect(PackRules.issues(p), isEmpty);
     });
   });
 }

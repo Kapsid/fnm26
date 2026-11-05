@@ -10,13 +10,14 @@ import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
-import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 import '../../helpers/test_database.dart';
@@ -432,6 +433,39 @@ void main() {
       );
     });
 
+    test("an added club or Y account named like the game's own decodes; "
+        'a duplicate inside the pack -> badData', () async {
+      final league = ClubService.leagueClubs('cze').first;
+      final game = _pack().copyWith(
+        addedClubs: [
+          PackClub(id: kPackAddedIdBase, name: league, country: 'cze'),
+        ],
+        addedYAccounts: [
+          PackYAccount(
+            id: kPackAddedIdBase + 1,
+            name: YFeed.namedAccounts.first,
+            voice: YVoice.fan,
+          ),
+        ],
+      );
+      expect(PackCodec.fieldsOk(game), isTrue);
+      expect(
+        await PackCodec.decode(_file(_raw(_pack())..['pack'] = rawPack(game))),
+        isA<PackDecoded>(),
+      );
+      final inside = _pack().copyWith(
+        addedClubs: const [
+          PackClub(id: kPackAddedIdBase, name: 'Twin FC', country: 'cze'),
+          PackClub(id: kPackAddedIdBase + 1, name: 'twin fc', country: 'cze'),
+        ],
+      );
+      expect(PackCodec.fieldsOk(inside), isFalse);
+      expect(
+        await reason(_file(_raw(_pack())..['pack'] = rawPack(inside))),
+        PackRejection.badData,
+      );
+    });
+
     test(
       'an oversized or odd-shaped trait, deal or voice -> badData',
       () async {
@@ -672,6 +706,33 @@ void main() {
           'addedSponsors.$kPackAddedIdBase.deal',
           'addedYAccounts.${kPackAddedIdBase + 1}.voice',
         ]),
+      );
+    });
+
+    test("an added club under a game club's name needs attention, comes "
+        'first, and Remove drops it', () async {
+      final league = ClubService.leagueClubs('cze').first;
+      final pack = _pack(name: 'Clash').copyWith(
+        nations: const {999: (name: '', code: '')},
+        addedClubs: [
+          PackClub(id: kPackAddedIdBase, name: league, country: 'cze'),
+        ],
+      );
+      final world = await c.read(nationRepositoryProvider).newCareerWorld();
+      final facts = await readPackFacts(
+        c.read(playerRepositoryProvider),
+        c.read(seedSourceProvider),
+      );
+      final a = assessPack(pack, world, facts: facts);
+      expect(a.status, PackStatus.needsAttention);
+      final clash = a.issues.whereType<NameClash>().single;
+      expect(clash.path, 'addedClubs.$kPackAddedIdBase');
+      expect(a.issues.takeWhile((i) => i is CompatIssue), contains(clash));
+      final fixed = PackEditor.dropUnknown(pack, clash.path);
+      expect(fixed.addedClubs, isEmpty);
+      expect(
+        assessPack(fixed, world, facts: facts).issues.whereType<NameClash>(),
+        isEmpty,
       );
     });
 

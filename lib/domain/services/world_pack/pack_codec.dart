@@ -210,7 +210,8 @@ abstract final class PackCodec {
   /// Only safety refuses a file. A well-formed name this build does not
   /// know (a nation, country, industry, language, trait, deal or voice) is
   /// kept and flagged by [PackRules.compatibility], so files travel between
-  /// newer and older games.
+  /// newer and older games; so is an added club or Y account under one of
+  /// the game's own names ([NameClash]), which a game update can add.
   ///
   /// The caps are checked first, so a hostile file is refused before any
   /// of its thousands of entries is looked at one by one.

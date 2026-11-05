@@ -18,8 +18,9 @@ enum FieldReason {
   outOfRange,
 
   /// Already another's: a Y account renamed onto another account's name
-  /// (which would mix the two up), an added club named like another of its
-  /// country, an id used twice or a trait picked twice.
+  /// (which would mix the two up), an added club or Y account named like
+  /// another the pack names, an id used twice or a trait picked twice. A
+  /// clash with a name only the game gives is a [NameClash].
   duplicate,
 }
 
@@ -71,13 +72,33 @@ class DuplicateCode extends PackIssue {
   String get where => 'nations.${nationIds.first}.code';
 }
 
-/// An entry naming something the current game no longer has (see
-/// [PackRules.compatibility]); [path] is the entry's own.
-class UnknownId extends PackIssue {
-  const UnknownId(this.path);
+/// An issue between a well-formed pack and the game it is opened in: the
+/// pack is kept and flagged, never refused, so files travel between newer
+/// and older games. Its fix is Remove (the entry at [path] goes) or, where
+/// the entry has a name, a rename.
+sealed class CompatIssue extends PackIssue {
+  const CompatIssue(this.path);
+
+  /// The entry's own path.
   final String path;
   @override
   String get where => path;
+}
+
+/// An entry naming something the current game no longer has (see
+/// [PackRules.compatibility]); [path] is the entry's own.
+class UnknownId extends CompatIssue {
+  const UnknownId(super.path);
+}
+
+/// A club or Y account the pack adds, under a name one of the game's own
+/// already has: a curated league's club or a city club of its country, or a
+/// game Y account. A game update can add such a name to a file made before
+/// it, so this is flagged, never refused. A clash with a name the pack
+/// itself gives (another added item, or a rename) is a [BadField]
+/// ([FieldReason.duplicate]) instead.
+class NameClash extends CompatIssue {
+  const NameClash(super.path);
 }
 
 abstract final class PackRules {
@@ -229,8 +250,11 @@ abstract final class PackRules {
   }
 
   /// [countryCities] are the city lists (biggest first) of the countries
-  /// with no curated league, by lower-case code: an added club may not take
-  /// the name of a side the game generates for one of them.
+  /// with no curated league, by lower-case code: an added club under the
+  /// name of a side the game generates for one of them is a [NameClash].
+  ///
+  /// Every issue here but a [NameClash] is the pack's own; a [NameClash] is
+  /// a [CompatIssue], flagged with what [compatibility] finds.
   static List<PackIssue> issues(
     WorldPack p, {
     Map<int, String> baseCodes = const {},
@@ -368,9 +392,11 @@ abstract final class PackRules {
 
     cap('addedClubs', p.addedClubs.length, addedClubsMax);
     // Another club of the country: its league's (the curated one, else the
-    // sides the game names for its cities, given [countryCities]), as this
-    // pack names them, or another added one.
-    final taken = <String, Set<String>>{};
+    // sides the game names for its cities, given [countryCities]), or
+    // another added one. A league club the pack renames goes by the pack's
+    // name, and a clash with it is the pack's own duplicate; one it leaves
+    // as it is goes by the game's, and a clash with that is a [NameClash].
+    final taken = <String, ({Set<String> pack, Set<String> game})>{};
     final addedNames = <String, Map<String, int>>{};
     for (final c in p.addedClubs) {
       (addedNames[c.country] ??= {}).update(
@@ -386,19 +412,29 @@ abstract final class PackRules {
       if (r != null) {
         out.add(BadField(path, r));
       } else {
-        final league = taken[c.country] ??= {
+        final league = taken[c.country] ??= () {
+          final pack = <String>{}, game = <String>{};
           for (final original in [
             ...ClubService.leagueClubs(c.country),
             ...ClubService.domesticClubNames(
               c.country,
               countryCities[c.country] ?? const [],
             ),
-          ])
-            fold(p.clubs[original] ?? original),
-        };
+          ]) {
+            switch (p.clubs[original]) {
+              case final renamed?:
+                pack.add(fold(renamed));
+              case null:
+                game.add(fold(original));
+            }
+          }
+          return (pack: pack, game: game);
+        }();
         final to = fold(c.name);
-        if (league.contains(to) || addedNames[c.country]![to]! > 1) {
+        if (league.pack.contains(to) || addedNames[c.country]![to]! > 1) {
           out.add(BadField(path, FieldReason.duplicate));
+        } else if (league.game.contains(to)) {
+          out.add(NameClash(path));
         }
       }
       if (!_country.hasMatch(c.country)) {
@@ -513,8 +549,10 @@ abstract final class PackRules {
   /// share a profile and the voice behind it. Compared trimmed and
   /// case-insensitively; keeping an account's own name is fine.
   ///
-  /// An account the pack adds ([added]) joins in: its name must be no game
-  /// account's, no rename's (either side) and no other account's.
+  /// An account the pack adds ([added]) joins in: its name must be no
+  /// rename's new name and no other added account's (a [BadField]), and no
+  /// account's original name, the game's own or one a rename names (a
+  /// [NameClash]: flagged, as a game update can add the name).
   /// [checkRenames] and [checkAdded] pick which side is reported, so
   /// [issues] lists each where its section is.
   static void _yClashes(
@@ -552,8 +590,10 @@ abstract final class PackRules {
     for (final a in checkAdded ? added : const <PackYAccount>[]) {
       if (checkName(a.name, max: handleMax) != null) continue;
       final to = fold(a.name);
-      if (originals.contains(to) || byNewName[to]! > 1) {
+      if (byNewName[to]! > 1) {
         out.add(BadField('addedYAccounts.${a.id}', FieldReason.duplicate));
+      } else if (originals.contains(to)) {
+        out.add(NameClash('addedYAccounts.${a.id}'));
       }
     }
   }

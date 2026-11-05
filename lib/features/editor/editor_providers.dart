@@ -315,35 +315,38 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// The nations the pack covers, strongest first (empty until loaded).
   List<Nation> get world => _world;
 
-  /// What stands between the pack and a career: what the game no longer has
-  /// ([PackRules.compatibility], each an [UnknownId]) first, then what is
-  /// missing ([PackRules.issues]).
+  /// What stands between the pack and a career: every [CompatIssue] (what
+  /// the game no longer has, [PackRules.compatibility], and an added name
+  /// the game's own already has, [NameClash]) first, then what is missing
+  /// ([PackRules.issues]).
   List<PackIssue> get issues {
     final pack = state.valueOrNull;
     if (pack == null) return const [];
     if (!identical(pack, _issuesOf)) {
-      _issues = [
-        ..._gameKeys.check(pack),
-        ...PackRules.issues(
+      _issues = compatFirst(
+        _gameKeys.check(pack),
+        PackRules.issues(
           pack,
           baseCodes: _baseCodes,
           countryCities: _countryCities,
         ),
-      ];
+      );
       _issuesOf = pack;
     }
     return _issues;
   }
 
-  /// Whether the pack refers to something the game no longer has.
-  bool get needsAttention => issues.any((i) => i is UnknownId);
+  /// Whether the pack refers to something the game no longer has, or adds
+  /// a name the game's own already has.
+  bool get needsAttention => issues.any((i) => i is CompatIssue);
 
-  /// Removes exactly the entry [issue] names, as one undoable edit. A trophy
+  /// Removes exactly the entry [issue] names, as one undoable edit (for a
+  /// [NameClash], the added club or Y account). A trophy
   /// goes with its picture ([setTrophy]), which, like every picture, undo
   /// does not bring back: a pack's list of trophies follows its picture
   /// rows, so the list entry alone would come back on the next open. Returns
   /// whether something was removed.
-  Future<bool> removeUnknown(UnknownId issue) async {
+  Future<bool> removeUnknown(CompatIssue issue) async {
     final path = issue.path;
     final dot = path.indexOf('.');
     if (dot < 0) return false;

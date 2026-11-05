@@ -280,7 +280,7 @@ class DriftPlayerRepository implements PlayerRepository {
     final home = await _home(nationId);
     return [
       for (final p in selectable)
-        _withClub(
+        _finish(
           name(p),
           saveSeed,
           homeCode: home.code,
@@ -382,7 +382,7 @@ class DriftPlayerRepository implements PlayerRepository {
     final home = await _home(nationId);
     return [
       for (final p in pool)
-        _withClub(
+        _finish(
           name(p),
           saveSeed,
           homeCode: home.code,
@@ -392,8 +392,11 @@ class DriftPlayerRepository implements PlayerRepository {
     ];
   }
 
-  /// Attaches the player's (cosmetic) club and its country, derived from their
-  /// current overall + id + save seed — layered on like the namer.
+  /// The last layer of every read: attaches the player's (cosmetic) club and
+  /// its country, derived from their current overall + id + save seed —
+  /// layered on like the namer — and, in a career on a custom [world], the
+  /// traits the world picks for him ([PackPlayer.traits] as
+  /// [Player.fixedTraits]; null, Random, leaves the per-save roll).
   ///
   /// [homeCode] and [homeCities] let the assignment keep most of a nation's
   /// players at home; without them every player would be placed abroad.
@@ -403,7 +406,7 @@ class DriftPlayerRepository implements PlayerRepository {
   /// ([ClubService.contractAt]); from his first move on the normal clock
   /// carries him. Every club, his and everybody else's, then reads under the
   /// world's club names ([ClubService.renamed]).
-  Player _withClub(
+  Player _finish(
     Player p,
     int saveSeed, {
     String homeCode = '',
@@ -416,8 +419,8 @@ class DriftPlayerRepository implements PlayerRepository {
       homeCode: homeCode,
       homeCities: homeCities,
     );
+    final dayOne = world?.packPlayer(p.id);
     if (world != null) {
-      final dayOne = world.packPlayer(p.id);
       if (dayOne != null &&
           dayOne.club != null &&
           ClubService.contractAt(p.id, p.age).index ==
@@ -426,7 +429,11 @@ class DriftPlayerRepository implements PlayerRepository {
       }
       c = ClubService.renamed(c, world.pack.clubs);
     }
-    return p.copyWith(club: c.name, clubCountry: c.country);
+    return p.copyWith(
+      club: c.name,
+      clubCountry: c.country,
+      fixedTraits: dayOne?.traits,
+    );
   }
 
   /// The FIFA code and cities of [nationId] — the "home country" context the
@@ -535,7 +542,7 @@ class DriftPlayerRepository implements PlayerRepository {
         if (p.id < PoolGenerator.firstFringeId)
           // As [_byIdAsBorn] at no years: aged by none (the day-one
           // markdown), no career starts, named, then given his club.
-          _withClub(
+          _finish(
             name(PlayerAging.agedYears(p, 0)),
             saveSeed,
             homeCode: home.code,
@@ -644,7 +651,7 @@ class DriftPlayerRepository implements PlayerRepository {
       if (p == null) return null;
       final seeded = await _seededRowsFor(careerId, nationId);
       final home = await _home(nationId);
-      return _withClub(
+      return _finish(
         (await _namerFor(
           nationId,
           seeded,
@@ -672,7 +679,7 @@ class DriftPlayerRepository implements PlayerRepository {
       );
       if (p == null) return null;
       final home = await _home(nationId);
-      return _withClub(
+      return _finish(
         (await _namerFor(
           nationId,
           seeded,
@@ -723,7 +730,7 @@ class DriftPlayerRepository implements PlayerRepository {
     );
     final seeded = await _seededRowsFor(careerId, p.nationId);
     final home = await _home(p.nationId);
-    return _withClub(
+    return _finish(
       (await _namerFor(
         p.nationId,
         seeded,

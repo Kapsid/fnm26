@@ -117,6 +117,17 @@ PackIssueText describePackIssue(
       );
     case BadField(:final path, :final reason):
       return _badField(l, path, reason, pack, title, section, nation);
+    // Said as a taken name: the fix is a rename, or Remove.
+    case NameClash(:final path):
+      return _badField(
+        l,
+        path,
+        FieldReason.duplicate,
+        pack,
+        title,
+        section,
+        nation,
+      );
   }
 }
 

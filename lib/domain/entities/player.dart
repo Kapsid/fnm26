@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -23,6 +24,11 @@ abstract class Player with _$Player {
     /// FIFA code of the club's country (for its flag). Empty when unknown; set
     /// at materialisation from the deterministic club assignment.
     @Default('') String clubCountry,
+
+    /// His traits as a world pack picks them, in place of the per-save roll
+    /// ([PlayerTraits.of]). Null rolls them as always; an empty list is "no
+    /// traits". The career read sets it from his pack entry.
+    @JsonKey(includeIfNull: false) List<PlayerTrait>? fixedTraits,
   }) = _Player;
 
   const Player._();
