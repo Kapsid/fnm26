@@ -405,7 +405,8 @@ class DriftPlayerRepository implements PlayerRepository {
   /// gives him for as long as the contract he is on at his day-one age runs
   /// ([ClubService.contractAt]); from his first move on the normal clock
   /// carries him. Every club, his and everybody else's, then reads under the
-  /// world's club names ([ClubService.renamed]).
+  /// world's club names ([ClubService.renamed]). The world's added clubs
+  /// join the draw ([_CareerWorld.addedClubs]).
   Player _finish(
     Player p,
     int saveSeed, {
@@ -418,6 +419,7 @@ class DriftPlayerRepository implements PlayerRepository {
       saveSeed,
       homeCode: homeCode,
       homeCities: homeCities,
+      added: world?.addedClubs ?? const {},
     );
     final dayOne = world?.packPlayer(p.id);
     if (world != null) {
@@ -1422,6 +1424,16 @@ class _CareerWorld {
 
   final WorldPack pack;
   final Map<int, ({int nationId, PackPlayer player, bool pooled})> _byId;
+
+  /// The world's added clubs for the club draw: a lower-case FIFA code to
+  /// its added club names, in pack order (see [ClubService.clubForSeed]).
+  late final Map<String, List<String>> addedClubs = () {
+    final out = <String, List<String>>{};
+    for (final c in pack.addedClubs) {
+      (out[c.country.toLowerCase()] ??= []).add(c.name);
+    }
+    return out;
+  }();
 
   /// The world's potentials, for the [WorldZone] every read runs in. One
   /// object per world, so a read already in its zone is recognised.

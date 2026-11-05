@@ -54,11 +54,21 @@ abstract final class ClubService {
   /// are spread across the elite leagues. Without them the old behaviour
   /// applies — a purely rating-driven league pick, which is why even minnows
   /// fielded eleven foreign-based players and nobody ever played at home.
+  ///
+  /// [added] is a world pack's added clubs: a lower-case FIFA code to its
+  /// club names, in pack order. A country with a curated league draws from
+  /// that league plus its added clubs, home and abroad alike. A country
+  /// without one (its sides named for its cities) places its own players at
+  /// its city sides and its added clubs, and is never a destination abroad.
+  /// Added clubs only relabel where a player lands: his country, and so his
+  /// league's [tierOfCountry], are never changed by them. Empty, every
+  /// result is exactly the default world's.
   static ClubSide clubForSeed(
     Player p,
     int saveSeed, {
     String homeCode = '',
     List<String> homeCities = const [],
+    Map<String, List<String>> added = const {},
   }) {
     // Which contract he is on. Every draw below is salted with it, so the club
     // is settled once and then STANDS until the deal runs out — see
@@ -96,7 +106,13 @@ abstract final class ClubService {
     final dealAge = p.age < _firstContractAge ? p.age : contract.since;
     if (homeCode.isNotEmpty &&
         _staysHome(levelAt(dealAge), dealAge, homeCode, stayRoll)) {
-      final home = _homeClub(homeCode, homeCities, h, band);
+      final home = _homeClub(
+        homeCode,
+        homeCities,
+        h,
+        band,
+        added[homeCode] ?? const [],
+      );
       if (home != null) return home;
     }
     // Where an export lands. The elite leagues buy DEPTH, not just stars: a
@@ -125,7 +141,8 @@ abstract final class ClubService {
     final abroad = leagues.where((l) => l.country != homeCode).toList();
     final pool = abroad.isEmpty ? leagues : abroad;
     final league = pool[h % pool.length];
-    final club = league.clubs[(h ~/ pool.length + band) % league.clubs.length];
+    final clubs = _withAdded(league.clubs, added[league.country]);
+    final club = clubs[(h ~/ pool.length + band) % clubs.length];
     return (name: club, country: league.country);
   }
 
@@ -149,6 +166,18 @@ abstract final class ClubService {
     }
     return const [];
   }
+
+  /// Every curated league, in the order of the league table: each country's
+  /// FIFA code (lower case) and its club names as [leagueClubs] gives them.
+  static List<({String country, List<String> clubs})> allLeagues() => [
+    for (final l in _leagues)
+      (country: l.country, clubs: List<String>.unmodifiable(l.clubs)),
+  ];
+
+  /// [clubs] followed by a world's [added] clubs of the same country, or
+  /// [clubs] itself when it adds none (so the default draw is untouched).
+  static List<String> _withAdded(List<String> clubs, List<String>? added) =>
+      added == null || added.isEmpty ? clubs : [...clubs, ...added];
 
   /// The rating a club is picked off: the live overall with the PREDICTABLE
   /// part of the age curve taken back out (see [PlayerAging.peakOffset]).
@@ -366,23 +395,35 @@ abstract final class ClubService {
   /// A club in the player's own country: one of the curated names where the
   /// country has a modelled league, otherwise a generated domestic side named
   /// for one of its cities. Null when neither is available.
+  ///
+  /// [added] (a world's added clubs of [code]) join the curated list, or,
+  /// for a country without one but with cities, take a slot each beside its
+  /// cities, so its players spread over all of them rather than piling into
+  /// one.
   static ClubSide? _homeClub(
     String code,
     List<String> cities,
     int hash,
     int band,
+    List<String> added,
   ) {
     for (final l in _leagues) {
       if (l.country != code) continue;
-      return (name: l.clubs[(hash + band) % l.clubs.length], country: code);
+      final clubs = _withAdded(l.clubs, added);
+      return (name: clubs[(hash + band) % clubs.length], country: code);
     }
+    // No cities, no home side: he goes abroad, added clubs or not. Placing
+    // him at an added club instead would move him to another country's
+    // league, and added clubs never change where a player plays.
     if (cities.isEmpty) return null;
     // Bias toward the bigger cities (listed first) — a country's clubs cluster
     // in its largest cities rather than spreading evenly over every town.
     final span = cities.length <= 3
         ? cities.length
         : (cities.length * 2 + 2) ~/ 3;
-    final city = cities[(hash ~/ 3 + band) % span];
+    final slot = (hash ~/ 3 + band) % (span + added.length);
+    if (slot >= span) return (name: added[slot - span], country: code);
+    final city = cities[slot];
     final suffix = _domesticSuffixes[(hash ~/ 11) % _domesticSuffixes.length];
     return (name: '$city $suffix', country: code);
   }
