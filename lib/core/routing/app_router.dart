@@ -1127,10 +1127,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: formFactor == FormFactor.tablet ? _tabletRoutes(routes) : routes,
   );
   // The career on screen decides the names on screen (a custom world's
-  // nations and competitions). The label functions, which have no Riverpod
-  // at hand, read the world from [ActiveWorld.current].
+  // nations and competitions), in the app's language. The label functions,
+  // which have no Riverpod at hand, read the world from
+  // [ActiveWorld.current].
   ref.listen(
-    activeWorldProvider,
+    localizedWorldProvider,
     (_, world) => ActiveWorld.current = world,
     fireImmediately: true,
   );

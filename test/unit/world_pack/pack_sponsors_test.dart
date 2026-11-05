@@ -265,7 +265,7 @@ void main() {
         name: 'Other Co',
         description: 'Not ours.',
       );
-      ActiveWorld.current = ActiveWorld(
+      final others = ActiveWorld(
         world(
           'other',
           [other],
@@ -276,11 +276,12 @@ void main() {
         ),
       );
       for (final l in locales) {
+        ActiveWorld.current = others.inLanguage(l.localeName);
         expect(sponsorBrandName(l, s), 'Grill Co');
         expect(sponsorFlavour(l, s), 'Flame-grilled.');
       }
       // Its own world gives only the per-language values it has.
-      ActiveWorld.current = ActiveWorld(
+      final own = ActiveWorld(
         world(
           'mine',
           [_added(0, SponsorDeal.risky, name: 'Stale Name')],
@@ -290,9 +291,11 @@ void main() {
           },
         ),
       );
+      ActiveWorld.current = own.inLanguage('en');
       expect(sponsorBrandName(AppLocalizationsEn(), s), 'Grill Co');
-      expect(sponsorBrandName(AppLocalizationsCs(), s), 'Gril s.r.o.');
       expect(sponsorFlavour(AppLocalizationsEn(), s), 'Flame-grilled.');
+      ActiveWorld.current = own.inLanguage('cs');
+      expect(sponsorBrandName(AppLocalizationsCs(), s), 'Gril s.r.o.');
       expect(sponsorFlavour(AppLocalizationsCs(), s), 'Z grilu.');
     });
 

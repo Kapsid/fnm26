@@ -8,20 +8,15 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// own language (see [SponsorBrand]).
 
 /// A brand's name, as the manager reads it: the career world's name for it
-/// if it renamed the brand ([ActiveWorld], the same in every language), else
-/// the game's own, translated. A brand the world added reads as its own
-/// copy names it, unless the screen's world (when it is the one that added
-/// it) names it differently in the reader's language.
+/// if it renamed the brand ([ActiveWorld]: its value for the app's language,
+/// else its main one), else the game's own, translated. A brand the world
+/// added reads as its own copy names it, unless the screen's world (when it
+/// is the one that added it) names it differently in the app's language.
 String sponsorBrandName(AppLocalizations l, Sponsor s) => switch (s) {
   final SponsorBrand b =>
     ActiveWorld.current.sponsor(b.name) ?? _sponsorBrandName(l, b),
   Sponsor(added: final a?) =>
-    ActiveWorld.current.addedSponsorName(
-          a.id,
-          world: s.world,
-          language: l.localeName,
-        ) ??
-        a.name,
+    ActiveWorld.current.addedSponsorName(a.id, world: s.world) ?? a.name,
   _ => s.id,
 };
 
@@ -109,11 +104,7 @@ String _sponsorIndustryLabel(AppLocalizations l, SponsorBrand b) => switch (b) {
 String sponsorFlavour(AppLocalizations l, Sponsor s) => switch (s) {
   final SponsorBrand b => _sponsorFlavour(l, b),
   Sponsor(added: final a?) =>
-    ActiveWorld.current.addedSponsorDescription(
-          a.id,
-          world: s.world,
-          language: l.localeName,
-        ) ??
+    ActiveWorld.current.addedSponsorDescription(a.id, world: s.world) ??
         ActiveWorld.textOrNull(a.description) ??
         sponsorDealLine(l, s.deal),
   _ => sponsorDealLine(l, s.deal),

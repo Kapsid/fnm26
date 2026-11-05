@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/ui_language.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
@@ -24,6 +26,7 @@ import '../helpers/seeded_save.dart';
 Future<SeededSave> _renamedSave(
   WidgetTester tester, {
   bool known = true,
+  Map<String, Map<String, String>> localized = const {},
 }) async {
   final save = await seedSave(tester);
   await tester.runAsync(() async {
@@ -37,6 +40,7 @@ Future<SeededSave> _renamedSave(
         madeWithVersion: '1.1.0',
         nations: {seededNationId: (name: 'Burgerland', code: 'BGL')},
         competitions: const {'European Championship': 'Euro Burger'},
+        localized: localized,
       ),
       const {},
     );
@@ -266,5 +270,47 @@ void main() {
     );
     expect(row, findsOneWidget);
     expect(tester.widget<WholeText>(row).shortText, real.code);
+  });
+
+  testWidgets('switching the app language re-labels the open career', (
+    tester,
+  ) async {
+    final save = await _renamedSave(
+      tester,
+      localized: {
+        PackPaths.competition('European Championship'): {
+          'cs': 'Pohár Hamburgerů',
+        },
+      },
+    );
+    await watchContinentalQualifyingDraw(tester, save);
+    final route =
+        '${Routes.continental}?careerId=${save.careerId}'
+        '&conf=${Confederation.europe.name}';
+    save.container.read(localeProvider.notifier).state = const Locale('en');
+    await pumpRoute(tester, save, route);
+    expect(tester.takeException(), isNull);
+    expect(find.textContaining('EURO BURGER'), findsWidgets);
+    expect(find.textContaining('POHÁR HAMBURGERŮ'), findsNothing);
+
+    // The manager switches to Czech with the career open.
+    save.container.read(localeProvider.notifier).state = const Locale('cs');
+    await tester.pump();
+    expect(
+      ActiveWorld.current.competition('European Championship'),
+      'Pohár Hamburgerů',
+    );
+    await pumpRoute(tester, save, route, locale: const Locale('cs'));
+    expect(tester.takeException(), isNull);
+    expect(find.textContaining('POHÁR HAMBURGERŮ'), findsWidgets);
+    expect(find.textContaining('EURO BURGER'), findsNothing);
+
+    // And back.
+    save.container.read(localeProvider.notifier).state = const Locale('en');
+    await tester.pump();
+    expect(
+      ActiveWorld.current.competition('European Championship'),
+      'Euro Burger',
+    );
   });
 }

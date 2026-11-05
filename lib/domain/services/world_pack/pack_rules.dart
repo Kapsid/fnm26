@@ -330,6 +330,7 @@ abstract final class PackRules {
     }
     _added(p, out, name, countryCities);
     _localized(p, out);
+    _yLanguageClashes(p, out);
     return out;
   }
 
@@ -599,6 +600,65 @@ abstract final class PackRules {
       } else if (originals.contains(to)) {
         out.add(NameClash('addedYAccounts.${a.id}'));
       }
+    }
+  }
+
+  /// No two Y accounts may show under one name in any language: a value
+  /// `localized` gives an account (a renamed one, `yAccounts.<original>`, or
+  /// an added one, `addedYAccounts.<id>`) is checked against what every
+  /// other account shows in that language (its own value there, else its
+  /// main name: a rename's, an added account's, or the game account's own).
+  /// Each clashing value is a [NameClash] at `localized.<path>.<language>`
+  /// (Ruling 1: flagged, not refused). Main names alone are [_yClashes]'s.
+  static void _yLanguageClashes(WorldPack p, List<PackIssue> out) {
+    String fold(String s) => s.trim().toLowerCase();
+    final languages = <String>{};
+    for (final e in p.localized.entries) {
+      final root = PackPaths.parse(e.key)?.root;
+      if (root == 'yAccounts' || root == 'addedYAccounts') {
+        languages.addAll(e.value.keys);
+      }
+    }
+    if (languages.isEmpty) return;
+    final originals = {
+      ...YFeed.namedAccounts,
+      ...p.yAccounts.keys,
+      for (final path in p.localized.keys)
+        if (PackPaths.parse(path) case (root: 'yAccounts', :final rest)) rest,
+    };
+    for (final lang in languages.toList()..sort()) {
+      // Each account: what it shows in [lang], and the path that gave it
+      // when that is a per-language value.
+      final shown = <({String name, String? path})>[];
+      String? value(String path) {
+        final v = p.localized[path]?[lang];
+        return v == null || v.trim().isEmpty ? null : v;
+      }
+
+      for (final o in originals) {
+        final path = PackPaths.yAccount(o);
+        final own = value(path);
+        final main = p.yAccounts[o];
+        shown.add((
+          name: own ?? (main == null || main.trim().isEmpty ? o : main),
+          path: own == null ? null : path,
+        ));
+      }
+      for (final a in p.addedYAccounts) {
+        final path = PackPaths.addedY(a.id);
+        final own = value(path);
+        shown.add((name: own ?? a.name, path: own == null ? null : path));
+      }
+      final count = <String, int>{};
+      for (final s in shown) {
+        count.update(fold(s.name), (n) => n + 1, ifAbsent: () => 1);
+      }
+      final clashes = [
+        for (final s in shown)
+          if (s.path != null && count[fold(s.name)]! > 1)
+            'localized.${s.path}.$lang',
+      ]..sort();
+      out.addAll(clashes.map(NameClash.new));
     }
   }
 

@@ -23,7 +23,7 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
     FutureProvider.autoDispose.family<StaffRoom?, int>((ref, careerId) async {
       // A custom world's name lists name the coaches of the nations it has
       // them for.
-      final packLists = ref.watch(activeWorldProvider).pack?.nameLists;
+      final packLists = ref.watch(localizedWorldProvider).pack?.nameLists;
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return null;
       final squad = await ref.watch(squadDataProvider(careerId).future);

@@ -27,7 +27,7 @@ class TrophyImage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final custom = ref.watch(activeWorldProvider).trophy(trophyKey);
+    final custom = ref.watch(localizedWorldProvider).trophy(trophyKey);
     final asset = Image.asset(
       Trophies.assetForKey(trophyKey) ?? Trophies.worldCup,
       height: height,

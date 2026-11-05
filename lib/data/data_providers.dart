@@ -78,15 +78,25 @@ final databaseReadyProvider = FutureProvider<void>((ref) async {
 
 /// The custom world of the career on screen; [ActiveWorld.none] on the menus
 /// and in every default career. Set by the router as a career's routes open
-/// and close (see `syncActiveWorld`), and mirrored by the router into
-/// [ActiveWorld.current] for the pure label functions that have no Riverpod
-/// at hand.
+/// and close (see `syncActiveWorld`). Seen in the app's language, it is
+/// [localizedWorldProvider].
 final activeWorldProvider = StateProvider<ActiveWorld>((ref) {
   // A container thrown away (a test, a restart) must not leave its world
   // behind for the next one.
   ref.onDispose(() => ActiveWorld.current = ActiveWorld.none);
   return ActiveWorld.none;
 });
+
+/// [activeWorldProvider]'s world with its names in the app's language
+/// ([ActiveWorld.inLanguage]): what the screens print. Mirrored by the
+/// router into [ActiveWorld.current] for the pure label functions that have
+/// no Riverpod at hand, so a change of language re-labels the open career
+/// at once.
+final localizedWorldProvider = Provider<ActiveWorld>(
+  (ref) => ref
+      .watch(activeWorldProvider)
+      .inLanguage(ref.watch(uiLanguageCodeProvider)),
+);
 
 /// The nations as the app shows them: in the UI language, and with the
 /// names and codes of the career's world ([activeWorldProvider]), so every

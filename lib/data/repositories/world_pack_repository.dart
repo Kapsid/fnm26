@@ -248,6 +248,16 @@ class WorldPackRepository {
   Future<List<PackYAccount>> addedYAccountsFor(int careerId) async =>
       (await _addedFor(careerId)).yAccounts;
 
+  /// [addedYAccountsFor], with that world's uuid (null for the default
+  /// world): what a per-language name of an added account is looked up by
+  /// (`ActiveWorld.addedYName`).
+  Future<({String? world, List<PackYAccount> yAccounts})> addedYFor(
+    int careerId,
+  ) async {
+    final added = await _addedFor(careerId);
+    return (world: added.world, yAccounts: added.yAccounts);
+  }
+
   /// What career [careerId]'s world added that the career reads outside its
   /// player reads: its sponsors and Y accounts, with the world's uuid.
   ///

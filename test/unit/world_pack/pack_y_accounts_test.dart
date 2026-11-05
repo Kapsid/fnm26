@@ -209,10 +209,15 @@ void main() {
         PackPaths.addedY(kPackAddedIdBase): {'cs': 'Pepík'},
       },
     );
-    expect(ActiveWorld(pack).yAccountOriginal('Pepík'), fan);
+    expect(ActiveWorld(pack).inLanguage('cs').yAccountOriginal('Pepík'), fan);
+    // Its Czech name is no name in another language.
+    expect(
+      ActiveWorld(pack).inLanguage('de').yAccountOriginal('Pepík'),
+      isNull,
+    );
     final before = ActiveWorld.current;
     addTearDown(() => ActiveWorld.current = before);
-    ActiveWorld.current = ActiveWorld(pack);
+    ActiveWorld.current = ActiveWorld(pack).inLanguage('cs');
     final shown = (
       voice: byFan.voice,
       handle: YFeed.handleFor('Pepík'),

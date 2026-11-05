@@ -48,8 +48,9 @@ String _continentalCupName(AppLocalizations l, Confederation c) => switch (c) {
 /// are returned as they came in rather than blanked.
 ///
 /// A career on a custom world prints that world's name for a competition it
-/// renamed, the same in every language, and "`<new name>` Qualifiers" (in the
-/// manager's language) for its qualifying campaign.
+/// renamed (its value for the app's language, else its main one), and
+/// "`<new name>` Qualifiers" (in the manager's language) for its qualifying
+/// campaign.
 String competitionLabel(AppLocalizations l, String stored) {
   final trimmed = stored.trim();
   final world = ActiveWorld.current;

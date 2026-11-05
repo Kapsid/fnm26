@@ -3061,14 +3061,24 @@ abstract final class YFeed {
   /// account opened from a post two careers apart gives the same answer.
   ///
   /// An account a custom world renamed ([renamedIn]) is read under the name
-  /// it had, so it keeps the voice the feed gave it.
+  /// it had, so it keeps the voice the feed gave it. A post [renamedIn]
+  /// passed over carries that name itself ([_accountOf]): the account's
+  /// identity, never the name shown, which two accounts can share in one
+  /// language. Any other post (one built by hand) falls back to the screen
+  /// world's reverse lookup ([ActiveWorld.yAccountOriginal]).
   static YPersona personaOf(YPost post) {
     final name = post.voice == YVoice.player
         ? post.displayName
-        : ActiveWorld.current.yAccountOriginal(post.displayName) ??
+        : _accountOf[post.args] ??
+              ActiveWorld.current.yAccountOriginal(post.displayName) ??
               post.displayName;
     return _personaOf(post, name);
   }
+
+  /// The account behind each post [renamedIn] passed over, by the post's
+  /// own `args` list (copied per post there, so no two posts share one): a
+  /// record cannot be an [Expando] key, and a [YPost] has no field for it.
+  static final Expando<String> _accountOf = Expando('Y account');
 
   static YPersona _personaOf(YPost post, String name) => (
     handle: post.handle,
@@ -3105,26 +3115,52 @@ abstract final class YFeed {
   }
 
   /// [feed] with the accounts [world] renamed shown under their new names
-  /// and handles ([handleFor]).
+  /// and handles ([handleFor]), in [world]'s language
+  /// ([ActiveWorld.inLanguage]); and the accounts the career's own world
+  /// added ([added], from the copy whose uuid is [addedWorld]) under their
+  /// names in that language, where it gives one.
   ///
   /// Applied LAST, to the finished feed: every post was written, and every
   /// stance taken, by the account under its original name, so a renamed
-  /// account says exactly what it would have said and in the same voice
-  /// ([personaOf] reads it the same way). A player posts under his own name
-  /// and is never renamed here.
-  static YTimeline renamedIn(YTimeline feed, ActiveWorld world) {
-    if (world.pack?.yAccounts.isEmpty ?? true) return feed;
+  /// account says exactly what it would have said and in the same voice. A
+  /// player posts under his own name and is never renamed here.
+  ///
+  /// Whenever a name can change, every other post carries the account that
+  /// wrote it ([_accountOf]), so [personaOf] reads each by its identity even
+  /// when two accounts show the same name in this language.
+  static YTimeline renamedIn(
+    YTimeline feed,
+    ActiveWorld world, {
+    List<PackYAccount> added = const [],
+    String? addedWorld,
+  }) {
+    final pack = world.pack;
+    if (pack == null) return feed;
+    // An added account posts under its main name; lowest id first, should a
+    // pack carry two under one name.
+    final addedNames = <String, String>{};
+    for (final a in [...added]..sort((x, y) => x.id.compareTo(y.id))) {
+      final shown = world.addedYName(a.id, world: addedWorld);
+      if (shown != null) addedNames.putIfAbsent(a.name, () => shown);
+    }
+    final renames =
+        pack.yAccounts.isNotEmpty ||
+        addedNames.isNotEmpty ||
+        (world.language != null &&
+            pack.localized.keys.any((k) => k.startsWith('yAccounts.')));
+    if (!renames) return feed;
     YPost renamed(YPost p) {
       if (p.voice == YVoice.player) return p;
-      final name = world.yAccount(p.displayName);
-      if (name == null) return p;
+      final name = world.yAccount(p.displayName) ?? addedNames[p.displayName];
+      final args = List<String>.of(p.args);
+      _accountOf[args] = p.displayName;
       return (
         voice: p.voice,
-        handle: handleFor(name),
-        displayName: name,
+        handle: name == null ? p.handle : handleFor(name),
+        displayName: name ?? p.displayName,
         template: p.template,
         variant: p.variant,
-        args: p.args,
+        args: args,
         date: p.date,
         key: p.key,
         replyTo: p.replyTo,

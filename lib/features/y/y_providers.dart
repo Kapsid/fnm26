@@ -166,11 +166,14 @@ final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
       if (career == null) return _emptyFeed;
       // The accounts the career's own world added for its nation post in the
       // casts of their voices: every YFeed call below runs inside the scope.
-      final accounts = await careerYAccountsForDisplay(
+      final added = await careerYForDisplay(
         ref.watch(worldPackRepositoryProvider),
         career,
       );
-      return YAccountsScope.run(accounts, () => _feedOf(ref, career));
+      return YAccountsScope.run(
+        added.accounts,
+        () => _feedOf(ref, career, addedWorld: added.world),
+      );
     });
 
 const YTimeline _emptyFeed = (posts: <YPost>[], reserveFrom: null);
@@ -185,11 +188,20 @@ const YTimeline _emptyFeed = (posts: <YPost>[], reserveFrom: null);
 Future<List<PackYAccount>> careerYAccountsForDisplay(
   WorldPackRepository worlds,
   Career career,
+) async => (await careerYForDisplay(worlds, career)).accounts;
+
+/// [careerYAccountsForDisplay], with the uuid of the career's copy (null
+/// for a default-world career, or one whose world cannot be read): the
+/// world whose per-language names the accounts may show under.
+Future<({String? world, List<PackYAccount> accounts})> careerYForDisplay(
+  WorldPackRepository worlds,
+  Career career,
 ) async {
   try {
-    return YAccountsScope.forNation(
-      await worlds.addedYAccountsFor(career.id),
-      career.nationId,
+    final added = await worlds.addedYFor(career.id);
+    return (
+      world: added.world,
+      accounts: YAccountsScope.forNation(added.yAccounts, career.nationId),
     );
   } on Object catch (e, st) {
     FlutterError.reportError(
@@ -202,16 +214,20 @@ Future<List<PackYAccount>> careerYAccountsForDisplay(
         ),
       ),
     );
-    return const [];
+    return (world: null, accounts: const <PackYAccount>[]);
   }
 }
 
-Future<YTimeline> _feedOf(Ref ref, Career career) async {
+Future<YTimeline> _feedOf(
+  Ref ref,
+  Career career, {
+  String? addedWorld,
+}) async {
   final careerId = career.id;
   const empty = _emptyFeed;
   // The career's world: its sponsor names (read through `sponsorBrandName`),
   // its renamed accounts and its local fans' name lists.
-  final world = ref.watch(activeWorldProvider);
+  final world = ref.watch(localizedWorldProvider);
   final nations = await ref.watch(nationRepositoryProvider).forCareer(careerId);
   final nation = nations
       .where((Nation n) => n.id == career.nationId)
@@ -751,9 +767,15 @@ Future<YTimeline> _feedOf(Ref ref, Career career) async {
   );
 
   // Ordering, the cap and the reserve live in the tested pure layer. A
-  // custom world's renamed accounts take their new names last, on the
-  // finished feed, so each keeps the voice it posted in.
-  return YFeed.renamedIn(YFeed.timeline(withLocals), world);
+  // custom world's renamed accounts, and its added ones with a name in the
+  // app's language, take their shown names last, on the finished feed, so
+  // each keeps the voice it posted in.
+  return YFeed.renamedIn(
+    YFeed.timeline(withLocals),
+    world,
+    added: YAccountsScope.current,
+    addedWorld: addedWorld,
+  );
 }
 
 /// The manager's nation's local fans (see [YLocals.castFor]): named from the
