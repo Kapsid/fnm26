@@ -13,6 +13,7 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:go_router/go_router.dart';
 
 /// The save seed of the one fixed name draw every new pack starts from.
 ///
@@ -71,8 +72,37 @@ Future<void>? enterActiveWorld(Ref ref, Uri location) =>
 /// For the router's delegate, which hears every change of route (a pop back
 /// into a save included, which no redirect sees): leaving every career for
 /// the menus drops the world; coming back into one reloads it.
-void syncActiveWorld(Ref ref, Uri location) =>
-    ref.read(activeWorldSyncProvider).follow(_careerIdOf(location));
+///
+/// [stack] is the delegate's whole configuration: the career is the topmost
+/// route in it that names one, so a menu pushed over a career's screen (the
+/// settings from the hub) keeps that career's world, and a career's screen
+/// pushed over a menu has it.
+void syncActiveWorld(Ref ref, RouteMatchList stack) =>
+    ref.read(activeWorldSyncProvider).follow(careerIdOfStack(stack));
+
+/// The career of the topmost route in [stack] that names one, or null when
+/// none does (only menus are open).
+///
+/// [RouteMatchList.uri] is the location the stack was built from by `go`;
+/// every route PUSHED onto it sits in an [ImperativeRouteMatch] with a
+/// location of its own, possibly inside a shell.
+int? careerIdOfStack(RouteMatchList stack) {
+  int? found = _careerIdOf(stack.uri);
+  void walk(List<RouteMatchBase> matches) {
+    for (final m in matches) {
+      if (m is ImperativeRouteMatch) {
+        final id = _careerIdOf(m.matches.uri);
+        if (id != null) found = id;
+        walk(m.matches.matches);
+      } else if (m is ShellRouteMatch) {
+        walk(m.matches);
+      }
+    }
+  }
+
+  walk(stack.matches);
+  return found;
+}
 
 /// The bookkeeping behind [enterActiveWorld] and [syncActiveWorld].
 ///
@@ -100,8 +130,21 @@ class ActiveWorldSync {
   /// The load [enter] is waiting for, while it runs.
   Future<void>? _entering;
 
+  /// [prime]'s read, while it runs. Nothing decides whether a career has a
+  /// world until it is in: a save opened in the first moments after start-up
+  /// would otherwise be taken for a default one.
+  Future<void>? _priming;
+
   /// Learns which careers on this device run on a custom world.
-  Future<void> prime() async {
+  Future<void> prime() {
+    late final Future<void> priming;
+    priming = _listWorldCareers().whenComplete(() {
+      if (identical(_priming, priming)) _priming = null;
+    });
+    return _priming = priming;
+  }
+
+  Future<void> _listWorldCareers() async {
     try {
       final db = _ref.read(appDatabaseProvider);
       final rows = await db.select(db.careerWorlds).get();
@@ -116,12 +159,13 @@ class ActiveWorldSync {
   void noteWorld(int careerId) => _withWorld.add(careerId);
 
   /// Enters career [careerId]'s world; null [careerId] (a route outside any
-  /// career) is left to [follow]. Returns the load to wait for, if any.
+  /// career) is left to [follow]. Returns the load to wait for, if any: a
+  /// known world career's, or (while [prime] still runs) the list itself.
   Future<void>? enter(int? careerId) {
     if (careerId == null) return null;
     if (careerId == _careerId) return _entering;
     _careerId = careerId;
-    if (!_withWorld.contains(careerId)) {
+    if (_priming == null && !_withWorld.contains(careerId)) {
       _entering = null;
       scheduleMicrotask(() => _switchTo(careerId));
       return null;
@@ -142,9 +186,11 @@ class ActiveWorldSync {
   }
 
   /// Sets the world of career [careerId] (null: none), if the routes are
-  /// still in it once it is read. Reads only a career known to have one.
+  /// still in it once it is read. Reads only a career known to have one,
+  /// once the start-up list is in.
   Future<void> _switchTo(int? careerId) async {
     if (_careerId != careerId) return;
+    if (careerId != null) await _priming;
     final world = careerId != null && _withWorld.contains(careerId)
         ? await _load(careerId)
         : null;

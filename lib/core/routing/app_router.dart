@@ -1037,7 +1037,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   // included, which a redirect would not; leaving for the menus drops the
   // world.
   final delegate = router.routerDelegate;
-  void onRoute() => syncActiveWorld(ref, delegate.currentConfiguration.uri);
+  void onRoute() => syncActiveWorld(ref, delegate.currentConfiguration);
   delegate.addListener(onRoute);
   ref.onDispose(() => delegate.removeListener(onRoute));
   return router;

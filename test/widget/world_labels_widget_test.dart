@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -195,6 +197,58 @@ void main() {
               .id;
     });
     await pumpRoute(tester, save, '${Routes.ranking}?careerId=$careerId');
+    expect(ActiveWorld.current.nationName(seededNationId), 'Burgerland');
+  });
+
+  testWidgets('a menu pushed over a career keeps its world', (tester) async {
+    final save = await _renamedSave(tester);
+    await pumpRoute(tester, save, '${Routes.hub}?careerId=${save.careerId}');
+    expect(ActiveWorld.current.isDefault, isFalse);
+    final seen = <ActiveWorld>[];
+    final sub = save.container.listen(
+      activeWorldProvider,
+      (_, w) => seen.add(w),
+    );
+    addTearDown(sub.close);
+
+    final router = save.container.read(routerProvider);
+    unawaited(router.push<void>(Routes.settings));
+    await settle(tester);
+    router.pop();
+    await settle(tester);
+
+    expect(seen.where((w) => w.isDefault), isEmpty);
+    expect(save.container.read(activeWorldProvider).isDefault, isFalse);
+  });
+
+  testWidgets('a career screen pushed over a menu keeps its world', (
+    tester,
+  ) async {
+    final save = await _renamedSave(tester);
+    await pumpRoute(tester, save, Routes.saves);
+    final router = save.container.read(routerProvider);
+    unawaited(
+      router.push<void>('${Routes.ranking}?careerId=${save.careerId}'),
+    );
+    await settle(tester);
+    expect(ActiveWorld.current.nationName(seededNationId), 'Burgerland');
+    router.pop();
+    await settle(tester);
+    expect(ActiveWorld.current.isDefault, isTrue);
+  });
+
+  testWidgets('a career opened before start-up learnt the worlds waits for '
+      'them', (tester) async {
+    final save = await _renamedSave(tester, known: false);
+    // Start-up's read still running when the save is opened.
+    await tester.runAsync(() async {
+      unawaited(save.container.read(activeWorldSyncProvider).prime());
+    });
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.ranking}?careerId=${save.careerId}',
+    );
     expect(ActiveWorld.current.nationName(seededNationId), 'Burgerland');
   });
 

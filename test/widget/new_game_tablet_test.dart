@@ -42,6 +42,7 @@ class _GatedCareers extends CareerService {
     bool freezeStartingRanks = false,
     bool? currentHostRules,
     bool? newCareerNations,
+    int? worldPackId,
   }) async {
     await gate?.future;
     if (throwOnce) {
@@ -58,6 +59,7 @@ class _GatedCareers extends CareerService {
       freezeStartingRanks: freezeStartingRanks,
       currentHostRules: currentHostRules,
       newCareerNations: newCareerNations,
+      worldPackId: worldPackId,
     );
   }
 }

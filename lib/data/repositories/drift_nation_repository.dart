@@ -20,9 +20,14 @@ class DriftNationRepository implements NationRepository {
   /// which build their text in providers with no BuildContext.
   final String languageCode;
 
-  /// The custom world whose names to show, if any (see
-  /// [NationRowMapper.toDomain]). Only the display repository passes one;
-  /// a repository built for the career's own logic reads the real nations.
+  /// The custom world whose names and codes every nation read carries, if
+  /// any (see [NationRowMapper.toDomain]). The shared `nationRepositoryProvider`
+  /// passes the world of the career on screen, and it serves the logic
+  /// services as well as the screens: [Nation.name] is then the world's name
+  /// everywhere (news written now carries it too), while [Nation.code] and
+  /// [Nation.englishName] stay the real ones the logic keys on. The
+  /// repositories built directly on the database (career creation, career
+  /// bundles) pass none and read the real nations.
   final ActiveWorld? world;
 
   /// Careers known to carry a dormant nation's marker, with the dormant ids.
