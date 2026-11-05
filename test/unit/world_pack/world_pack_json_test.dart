@@ -66,6 +66,31 @@ void main() {
     expect(() => WorldPack.fromJson(json), throwsFormatException);
   });
 
+  test('only canonical integer keys read as ids', () {
+    final good = _pack().toJson();
+    for (final key in ['07', '+7', ' 7', '7 ', '0x7', '-0']) {
+      expect(
+        () => WorldPack.fromJson({
+          ...good,
+          'nations': {
+            key: {'name': 'Testland', 'code': 'TST'},
+          },
+        }),
+        throwsFormatException,
+        reason: 'key "$key"',
+      );
+    }
+    expect(
+      WorldPack.fromJson({
+        ...good,
+        'nations': {
+          '-3': {'name': 'Testland', 'code': 'TST'},
+        },
+      }).nations.keys,
+      [-3],
+    );
+  });
+
   test('unknown top-level keys throw', () {
     final json = {..._pack().toJson(), 'script': 'x'};
     expect(() => WorldPack.fromJson(json), throwsFormatException);

@@ -721,9 +721,13 @@ List<_ClubOption> _clubOptions(
   final country = code.toLowerCase();
   return [
     (club: null, country: null, label: l.editorPlayerClubAuto),
-    (club: kFreeAgentClub, country: null, label: l.editorPlayerFreeAgent),
+    (
+      club: ClubService.freeAgent,
+      country: null,
+      label: l.editorPlayerFreeAgent,
+    ),
     if (p.club != null &&
-        p.club != kFreeAgentClub &&
+        p.club != ClubService.freeAgent &&
         !(league.contains(p.club) && p.clubCountry == country))
       (
         club: p.club,

@@ -8,12 +8,6 @@ import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
-/// The club a pack player has when the editor makes him a free agent: the
-/// game's own no-club value ([ClubService.freeAgent]). Stored with no club
-/// country; a null club would instead let the game pick one for him on day
-/// one.
-const String kFreeAgentClub = ClubService.freeAgent;
-
 /// The edits the players section makes to a pack, as plain functions of it.
 abstract final class SquadEdits {
   /// The id a new player gets: one past the highest pack-made id in any
@@ -178,7 +172,8 @@ abstract final class SquadEdits {
       copy(p, potential: value.clamp(overallOf(p), 99));
 
   /// [p] at [club] in [country]'s league (a FIFA code); a null [club] lets
-  /// the game place him, [kFreeAgentClub] has him at none.
+  /// the game place him on day one, [ClubService.freeAgent] has him at none
+  /// (stored with no club country).
   static PackPlayer withClub(PackPlayer p, String? club, String? country) =>
       PackPlayer(
         id: p.id,
@@ -188,7 +183,9 @@ abstract final class SquadEdits {
         attributes: p.attributes,
         potential: p.potential,
         club: club,
-        clubCountry: club == null || club == kFreeAgentClub ? null : country,
+        clubCountry: club == null || club == ClubService.freeAgent
+            ? null
+            : country,
       );
 
   /// [p] with some fields changed (his club stays: see [withClub]).

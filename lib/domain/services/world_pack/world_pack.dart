@@ -395,9 +395,11 @@ int _int(Object? v, String what) {
   throw FormatException('Expected an integer for $what');
 }
 
+/// [k] as an id: only an integer written the one way `toJson` writes it
+/// ("7", never "07", "+7" or " 7"), so two keys never name one id.
 int _intKey(String k) {
   final n = int.tryParse(k);
-  if (n == null) throw FormatException('Non-numeric key "$k"');
+  if (n == null || '$n' != k) throw FormatException('Non-numeric key "$k"');
   return n;
 }
 
