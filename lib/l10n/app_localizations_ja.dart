@@ -13770,262 +13770,254 @@ class AppLocalizationsJa extends AppLocalizations {
   String get callUpAwayShort => 'A';
 
   @override
-  String get homeEditor => 'Editor';
+  String get homeEditor => 'エディター';
 
   @override
-  String get editorTitle => 'Editor';
+  String get editorTitle => 'エディター';
 
   @override
   String get editorIntro =>
-      'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.';
+      '自分だけの初期ワールドを作りましょう。選手も能力値も名前も自由です。ファイルで共有すれば、友達が読み込んでキャリアを始められます。';
 
   @override
-  String get editorEmptyTitle => 'No databases yet';
+  String get editorEmptyTitle => 'データベースはまだありません';
 
   @override
   String get editorEmptyBody =>
-      'A new database starts as a copy of the default world. Change what you like; it saves as you go.';
+      '新しいデータベースはデフォルトのワールドのコピーから始まります。自由に変更でき、変更は随時保存されます。';
 
   @override
-  String get editorNew => 'New database';
+  String get editorNew => '新規データベース';
 
   @override
-  String get editorImport => 'Import';
+  String get editorImport => '読み込む';
 
   @override
-  String get editorEdit => 'Edit';
+  String get editorEdit => '編集';
 
   @override
-  String get editorRename => 'Rename';
+  String get editorRename => '名前を変更';
 
   @override
-  String get editorDuplicate => 'Duplicate';
+  String get editorDuplicate => '複製';
 
   @override
-  String get editorExport => 'Export';
+  String get editorExport => '書き出す';
 
   @override
-  String get editorDelete => 'Delete';
+  String get editorDelete => '削除';
 
   @override
-  String get editorCancel => 'Cancel';
+  String get editorCancel => 'キャンセル';
 
   @override
-  String get editorCreate => 'Create';
+  String get editorCreate => '作成';
 
   @override
-  String get editorMore => 'More actions';
+  String get editorMore => 'その他の操作';
 
   @override
-  String get editorNameLabel => 'Name';
+  String get editorNameLabel => '名前';
 
   @override
-  String get editorNameHint => 'My world';
+  String get editorNameHint => 'マイワールド';
 
   @override
-  String get editorRenameTitle => 'Rename database';
+  String get editorRenameTitle => 'データベース名を変更';
 
   @override
-  String get editorDuplicateTitle => 'Duplicate database';
+  String get editorDuplicateTitle => 'データベースを複製';
 
   @override
   String editorCopyName(String name) {
-    return '$name copy';
+    return '$nameのコピー';
   }
 
   @override
-  String get editorNameEmpty => 'Give it a name';
+  String get editorNameEmpty => '名前を入力してください';
 
   @override
   String editorNameTooLong(int max) {
-    return 'Keep it to $max characters';
+    return '$max文字以内にしてください';
   }
 
   @override
-  String get editorNameBadCharacters =>
-      'That name has characters that cannot be used';
+  String get editorNameBadCharacters => '使用できない文字が含まれています';
 
   @override
-  String get editorDeleteTitle => 'Delete database?';
+  String get editorDeleteTitle => 'データベースを削除しますか？';
 
   @override
   String editorDeleteBody(String name) {
-    return '\"$name\" will be removed from this device. Careers already started on it keep working.';
+    return '「$name」をこの端末から削除します。これを使って開始済みのキャリアはそのまま遊べます。';
   }
 
   @override
-  String get editorStatusReady => 'Ready';
+  String get editorStatusReady => '準備完了';
 
   @override
   String editorStatusMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things missing',
-      one: '1 thing missing',
+      other: '不足 $count件',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorStatusAttention => 'Needs attention';
+  String get editorStatusAttention => '要対応';
 
   @override
-  String get editorStatusUnreadable => 'Cannot be opened';
+  String get editorStatusUnreadable => '開けません';
 
   @override
   String editorEdited(String date) {
-    return 'Edited $date';
+    return '$dateに編集';
   }
 
   @override
-  String get editorCreating => 'Copying the default world…';
+  String get editorCreating => 'デフォルトのワールドをコピー中…';
 
   @override
-  String get editorImported => 'Database imported';
+  String get editorImported => 'データベースを読み込みました';
 
   @override
-  String get editorImportOpen => 'Open';
+  String get editorImportOpen => '開く';
 
   @override
-  String get editorImportTooBig => 'That file is too big to be a database.';
+  String get editorImportTooBig => 'ファイルが大きすぎるため、データベースとして扱えません。';
 
   @override
-  String get editorImportNotAPack => 'That file is not an FNM database.';
+  String get editorImportNotAPack => 'FNMのデータベースではありません。';
 
   @override
   String get editorImportNewer =>
-      'That database was made with a newer version of the game. Update the game to import it.';
+      'このデータベースは新しいバージョンのゲームで作成されています。ゲームをアップデートしてから読み込んでください。';
 
   @override
-  String get editorImportBadData =>
-      'That database holds data the game cannot use, so nothing was imported.';
+  String get editorImportBadData => 'ゲームで使えないデータが含まれているため、何も読み込んでいません。';
 
   @override
-  String get editorImportBadTrophy =>
-      'A trophy picture in that file could not be read, so nothing was imported.';
+  String get editorImportBadTrophy => 'ファイル内のトロフィー画像を読み込めなかったため、何も読み込んでいません。';
 
   @override
-  String get editorExportFailed => 'The database could not be exported.';
+  String get editorExportFailed => 'データベースを書き出せませんでした。';
 
   @override
-  String get editorShareSubject => 'FNM database';
+  String get editorShareSubject => 'FNMデータベース';
 
   @override
-  String get editorPackMissing => 'This database is no longer on this device.';
+  String get editorPackMissing => 'このデータベースはもうこの端末にありません。';
 
   @override
-  String get editorReadyTitle => 'Ready to play';
+  String get editorReadyTitle => 'プレイ可能';
 
   @override
   String get editorReadyBody =>
-      'Every nation has a full squad and every name checks out. You can start a career on it.';
+      '全代表のメンバーがそろい、すべての名前に問題はありません。このデータベースでキャリアを始められます。';
 
   @override
   String editorNotReadyTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things to fix before it can be played',
-      one: '1 thing to fix before it can be played',
+      other: 'プレイ前に$count件の修正が必要です',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorNotReadyBody =>
-      'It saves as you go, so you can share it now and finish it later.';
+  String get editorNotReadyBody => '変更は随時保存されるので、今すぐ共有して後で仕上げることもできます。';
 
   @override
   String editorSectionsReady(int ready, int total) {
-    return '$ready of $total sections ready';
+    return '$total項目中$ready項目が完了';
   }
 
   @override
-  String get editorMissingTitle => 'What\'s missing';
+  String get editorMissingTitle => '不足している項目';
 
   @override
   String editorShowAll(int count) {
-    return 'Show all ($count)';
+    return 'すべて表示 ($count)';
   }
 
   @override
-  String get editorShowLess => 'Show less';
+  String get editorShowLess => '折りたたむ';
 
   @override
-  String get editorUndo => 'Undo';
+  String get editorUndo => '元に戻す';
 
   @override
-  String get editorSectionsTitle => 'Sections';
+  String get editorSectionsTitle => '項目';
 
   @override
-  String get editorSectionPlayers => 'Players';
+  String get editorSectionPlayers => '選手';
 
   @override
-  String get editorSectionNations => 'Nations';
+  String get editorSectionNations => '代表国';
 
   @override
-  String get editorSectionClubs => 'Clubs';
+  String get editorSectionClubs => 'クラブ';
 
   @override
-  String get editorSectionStadiums => 'Stadiums';
+  String get editorSectionStadiums => 'スタジアム';
 
   @override
-  String get editorSectionCompetitions => 'Competitions';
+  String get editorSectionCompetitions => '大会';
 
   @override
-  String get editorSectionY => 'Y accounts';
+  String get editorSectionY => 'Yのアカウント';
 
   @override
-  String get editorSectionPress => 'Press';
+  String get editorSectionPress => 'メディア';
 
   @override
-  String get editorSectionNameLists => 'Name lists';
+  String get editorSectionNameLists => '名前リスト';
 
   @override
-  String get editorSectionSponsors => 'Sponsors';
+  String get editorSectionSponsors => 'スポンサー';
 
   @override
-  String get editorSectionTrophies => 'Trophies';
+  String get editorSectionTrophies => 'トロフィー';
 
   @override
-  String get editorAboutPlayers => 'Squads, ratings and potential';
+  String get editorAboutPlayers => 'メンバー、能力値、潜在能力';
 
   @override
-  String get editorAboutNations => 'Nation names and codes';
+  String get editorAboutNations => '国名と国コード';
 
   @override
-  String get editorAboutClubs => 'Club names';
+  String get editorAboutClubs => 'クラブ名';
 
   @override
-  String get editorAboutStadiums => 'National stadium names';
+  String get editorAboutStadiums => '国内スタジアム名';
 
   @override
-  String get editorAboutCompetitions => 'Competition names';
+  String get editorAboutCompetitions => '大会名';
 
   @override
-  String get editorAboutY => 'Accounts on Y';
+  String get editorAboutY => 'Yのアカウント';
 
   @override
-  String get editorAboutPress => 'Journalists and their outlets';
+  String get editorAboutPress => '記者と所属メディア';
 
   @override
-  String get editorAboutNameLists =>
-      'Names for new players, local fans and staff';
+  String get editorAboutNameLists => '新しい選手、地元ファン、スタッフの名前';
 
   @override
-  String get editorAboutSponsors => 'Sponsor brands';
+  String get editorAboutSponsors => 'スポンサーのブランド';
 
   @override
-  String get editorAboutTrophies => 'Trophy pictures';
+  String get editorAboutTrophies => 'トロフィー画像';
 
   @override
   String editorCountPlayers(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players',
-      one: '1 player',
+      other: '$count人',
     );
     return '$_temp0';
   }
@@ -14035,8 +14027,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count nations',
-      one: '1 nation',
+      other: '$countか国',
     );
     return '$_temp0';
   }
@@ -14046,9 +14037,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
-      zero: 'Game names',
+      other: '変更 $count件',
+      zero: 'ゲームの名前',
     );
     return '$_temp0';
   }
@@ -14058,9 +14048,8 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count custom pictures',
-      one: '1 custom picture',
-      zero: 'Game pictures',
+      other: '独自画像 $count枚',
+      zero: 'ゲームの画像',
     );
     return '$_temp0';
   }
@@ -14070,8 +14059,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count to fix',
-      one: '1 to fix',
+      other: '要修正 $count件',
     );
     return '$_temp0';
   }
@@ -14081,8 +14069,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more players needed',
-      one: '1 more player needed',
+      other: 'あと$count人必要',
     );
     return '$_temp0';
   }
@@ -14092,8 +14079,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players too many',
-      one: '1 player too many',
+      other: '$count人多すぎます',
     );
     return '$_temp0';
   }
@@ -14103,8 +14089,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count goalkeepers needed',
-      one: '1 goalkeeper needed',
+      other: 'GKがあと$count人必要',
     );
     return '$_temp0';
   }
@@ -14114,8 +14099,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count defenders needed',
-      one: '1 defender needed',
+      other: 'DFがあと$count人必要',
     );
     return '$_temp0';
   }
@@ -14125,8 +14109,7 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count midfielders needed',
-      one: '1 midfielder needed',
+      other: 'MFがあと$count人必要',
     );
     return '$_temp0';
   }
@@ -14136,478 +14119,462 @@ class AppLocalizationsJa extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count forwards needed',
-      one: '1 forward needed',
+      other: 'FWがあと$count人必要',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorIssuePlayerNoName => 'A player has no name';
+  String get editorIssuePlayerNoName => '名前のない選手がいます';
 
   @override
   String editorIssueAge(String name) {
-    return '$name: age must be 15 to 45';
+    return '$name: 年齢は15〜45歳にしてください';
   }
 
   @override
   String editorIssueRating(String name) {
-    return '$name: overall must be 1 to 99';
+    return '$name: 総合力は1〜99にしてください';
   }
 
   @override
   String editorIssuePotential(String name) {
-    return '$name: potential must be between the overall and 99';
+    return '$name: 潜在能力は総合力以上、99以下にしてください';
   }
 
   @override
   String editorIssueRenameEmpty(String name) {
-    return 'The new name for $name is empty';
+    return '$nameの新しい名前が空欄です';
   }
 
   @override
-  String get editorIssueNameEmpty => 'A name is empty';
+  String get editorIssueNameEmpty => '空欄の名前があります';
 
   @override
   String editorIssueNameTooLong(String name) {
-    return '\"$name\" is too long';
+    return '「$name」が長すぎます';
   }
 
   @override
   String editorIssueNameBadCharacters(String name) {
-    return '\"$name\" has characters that cannot be used';
+    return '「$name」に使用できない文字があります';
   }
 
   @override
   String editorIssueNameTaken(String name) {
-    return '\"$name\" is already taken';
+    return '「$name」はすでに使われています';
   }
 
   @override
-  String get editorIssueCode => 'The code must be 3 letters, A to Z';
+  String get editorIssueCode => 'コードはA〜Zの3文字にしてください';
 
   @override
   String editorIssueDuplicateCode(String code, String nations) {
-    return 'Code $code is used by $nations';
+    return 'コード$codeが$nationsで重複しています';
   }
 
   @override
   String editorIssueFirstNames(int count) {
-    return 'At least $count first names needed';
+    return '名が$count個以上必要です';
   }
 
   @override
   String editorIssueSurnames(int count) {
-    return 'At least $count surnames needed';
+    return '姓が$count個以上必要です';
   }
 
   @override
-  String get editorIssueValue => 'A value is out of range';
+  String get editorIssueValue => '範囲外の値があります';
 
   @override
-  String get editorIssueUnknown =>
-      'Refers to something that is no longer in the game';
+  String get editorIssueUnknown => 'ゲームにもう存在しないものを参照しています';
 
   @override
-  String get editorSectionSoon => 'Editing this section is on its way.';
+  String get editorSectionSoon => 'この項目の編集は近日対応予定です。';
 
   @override
-  String get editorNewFailed => 'The database could not be made. Try again.';
+  String get editorNewFailed => 'データベースを作成できませんでした。もう一度お試しください。';
 
   @override
-  String get editorPickFailed => 'The file could not be opened.';
+  String get editorPickFailed => 'ファイルを開けませんでした。';
 
   @override
-  String get editorRenameFailed => 'The database could not be renamed.';
+  String get editorRenameFailed => 'データベース名を変更できませんでした。';
 
   @override
-  String get editorDuplicateFailed => 'The database could not be copied.';
+  String get editorDuplicateFailed => 'データベースを複製できませんでした。';
 
   @override
-  String get editorNationsSearch => 'Search nations';
+  String get editorNationsSearch => '国名で検索';
 
   @override
-  String get editorFilterAll => 'All';
+  String get editorFilterAll => '全て';
 
   @override
-  String get editorNationsNone => 'No nation matches your search.';
+  String get editorNationsNone => '一致する国はありません。';
 
   @override
-  String get editorNationSquadReady => 'Squad ready';
+  String get editorNationSquadReady => 'メンバー完成';
 
   @override
-  String get editorSquadAdd => 'Add player';
+  String get editorSquadAdd => '選手を追加';
 
   @override
   String editorSquadFull(int max) {
-    return 'A squad holds at most $max players.';
+    return 'メンバーは最大$max人です。';
   }
 
   @override
   String editorSquadRemoved(String name) {
-    return '$name removed from the squad';
+    return '$nameをメンバーから外しました';
   }
 
   @override
-  String get editorPlayerUnnamed => 'Unnamed player';
+  String get editorPlayerUnnamed => '名前未設定の選手';
 
   @override
-  String get editorSquadDuplicate =>
-      'Another player in this squad has this name.';
+  String get editorSquadDuplicate => 'このメンバーに同じ名前の選手がいます。';
 
   @override
-  String get editorSquadEmpty => 'No players yet. Add the first one.';
+  String get editorSquadEmpty => '選手がいません。最初の1人を追加しましょう。';
 
   @override
-  String get editorSquadReady => 'This squad is ready to play.';
+  String get editorSquadReady => 'このメンバーはプレイ可能です。';
 
   @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
-    return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
+    return '$min〜$max人。GK$gk人、DF$def人、MF$mid人、FW$fwd人以上が必要です。';
   }
 
   @override
   String get editorShortGk => 'GK';
 
   @override
-  String get editorShortDef => 'DEF';
+  String get editorShortDef => 'DF';
 
   @override
-  String get editorShortMid => 'MID';
+  String get editorShortMid => 'MF';
 
   @override
-  String get editorShortFwd => 'FWD';
+  String get editorShortFwd => 'FW';
 
   @override
   String editorPlayerAgeShort(int age) {
-    return 'Age $age';
+    return '$age歳';
   }
 
   @override
-  String get editorPlayerName => 'Name';
+  String get editorPlayerName => '名前';
 
   @override
-  String get editorPlayerNameHint => 'Type his name';
+  String get editorPlayerNameHint => '選手名を入力';
 
   @override
-  String get editorPlayerNameNeeded => 'A name is needed.';
+  String get editorPlayerNameNeeded => '名前が必要です。';
 
   @override
-  String get editorPlayerNameBad => 'Remove the unusual characters.';
+  String get editorPlayerNameBad => '特殊な文字を削除してください。';
 
   @override
-  String get editorPlayerAge => 'Age';
+  String get editorPlayerAge => '年齢';
 
   @override
-  String get editorPlayerPosition => 'Position';
+  String get editorPlayerPosition => 'ポジション';
 
   @override
-  String get editorPlayerClub => 'Club';
+  String get editorPlayerClub => 'クラブ';
 
   @override
-  String get editorPlayerFreeAgent => 'Free agent';
+  String get editorPlayerFreeAgent => 'フリー';
 
   @override
-  String get editorPlayerClubSearch => 'Search clubs';
+  String get editorPlayerClubSearch => 'クラブを検索';
 
   @override
-  String get editorPlayerClubNone => 'No club matches your search.';
+  String get editorPlayerClubNone => '一致するクラブはありません。';
 
   @override
-  String get editorPlayerClubPick => 'Pick a club';
+  String get editorPlayerClubPick => 'クラブを選ぶ';
 
   @override
-  String get editorPlayerOverall => 'Overall';
+  String get editorPlayerOverall => '総合力';
 
   @override
-  String get editorPlayerType => 'Player type';
+  String get editorPlayerType => '選手タイプ';
 
   @override
-  String get editorPlayerPotential => 'Potential';
+  String get editorPlayerPotential => '潜在能力';
 
   @override
   String get editorPlayerPotentialAbout =>
-      'The peak he can reach if he develops well. Never below his overall.';
+      '順調に成長した場合に到達できるピーク。総合力を下回ることはありません。';
 
   @override
-  String get editorPlayerQualities => 'What the game stores';
+  String get editorPlayerQualities => 'ゲームが記録する能力';
 
   @override
-  String get editorTypeBalanced => 'Balanced';
+  String get editorTypeBalanced => 'バランス型';
 
   @override
-  String get editorTypeAthlete => 'Athlete';
+  String get editorTypeAthlete => 'フィジカル型';
 
   @override
-  String get editorTypeTechnician => 'Technician';
+  String get editorTypeTechnician => 'テクニック型';
 
   @override
-  String get editorTypeEngine => 'Engine';
+  String get editorTypeEngine => 'スタミナ型';
 
   @override
-  String get editorTypeBalancedAbout =>
-      'Even across physique, technique and stamina.';
+  String get editorTypeBalancedAbout => 'フィジカル、テクニック、スタミナが均等。';
 
   @override
-  String get editorTypeAthleteAbout =>
-      'Strong and quick, a little lighter on technique.';
+  String get editorTypeAthleteAbout => '強くて速いが、テクニックはやや劣る。';
 
   @override
-  String get editorTypeTechnicianAbout => 'Skilful on the ball, less physical.';
+  String get editorTypeTechnicianAbout => 'ボール扱いが巧みだが、フィジカルは弱め。';
 
   @override
-  String get editorTypeEngineAbout =>
-      'Runs all day, steady at everything else.';
+  String get editorTypeEngineAbout => '90分走り続け、他の能力も安定。';
 
   @override
-  String get editorPlayerLess => 'One less';
+  String get editorPlayerLess => '1つ減らす';
 
   @override
-  String get editorPlayerMore => 'One more';
+  String get editorPlayerMore => '1つ増やす';
 
   @override
-  String get editorPlayerRemove => 'Remove from squad';
+  String get editorPlayerRemove => 'メンバーから外す';
 
   @override
-  String get editorPlayerGone => 'This player is no longer in the squad.';
+  String get editorPlayerGone => 'この選手はもうメンバーにいません。';
 
   @override
-  String get editorNationGone => 'This nation is not in the database.';
+  String get editorNationGone => 'この国はデータベースにありません。';
 
   @override
-  String get editorPickPlayer => 'Pick a player to edit.';
+  String get editorPickPlayer => '編集する選手を選んでください。';
 
   @override
-  String get editorPlayerClubAuto => 'Chosen by the game';
+  String get editorPlayerClubAuto => 'ゲームが決定';
 
   @override
-  String get editorPlayerClubAutoAbout =>
-      'The game places him at a club that suits his level.';
+  String get editorPlayerClubAutoAbout => 'レベルに合ったクラブにゲームが配属します。';
 
   @override
-  String get editorNamesSearch => 'Search names';
+  String get editorNamesSearch => '名前を検索';
 
   @override
-  String get editorNamesSearchClubs => 'Search clubs or countries';
+  String get editorNamesSearchClubs => 'クラブ名・国名で検索';
 
   @override
-  String get editorNamesSearchStadiums =>
-      'Search stadiums, cities or countries';
+  String get editorNamesSearchStadiums => 'スタジアム・都市・国名で検索';
 
   @override
-  String get editorNamesSearchNations => 'Search nations or codes';
+  String get editorNamesSearchNations => '国名・コードで検索';
 
   @override
-  String get editorNamesNone => 'Nothing matches your search.';
+  String get editorNamesNone => '一致するものはありません。';
 
   @override
-  String get editorNamesEveryLanguage =>
-      'A custom name shows the same in every language.';
+  String get editorNamesEveryLanguage => '独自の名前はすべての言語で同じように表示されます。';
 
   @override
   String editorNamesGameName(String name) {
-    return 'Game name: $name';
+    return 'ゲームでの名前: $name';
   }
 
   @override
-  String get editorNamesReset => 'Reset to original';
+  String get editorNamesReset => '元の名前に戻す';
 
   @override
-  String get editorNamesDone => 'Done';
+  String get editorNamesDone => '完了';
 
   @override
-  String get editorNamesKeepHint => 'Leave empty to keep the game name.';
+  String get editorNamesKeepHint => '空欄のままならゲームの名前を使います。';
 
   @override
-  String get editorNamesCode => 'Code';
+  String get editorNamesCode => 'コード';
 
   @override
-  String get editorNamesCodeHelp =>
-      '3 letters, A to Z, used by no other nation.';
+  String get editorNamesCodeHelp => 'A〜Zの3文字で、他の国と重複しないもの。';
 
   @override
   String editorNamesCodeTaken(String code, String nation) {
-    return '$code is already used by $nation.';
+    return '$codeはすでに$nationが使っています。';
   }
 
   @override
-  String get editorNamesTaken => 'Another account already has this name.';
+  String get editorNamesTaken => 'この名前は別のアカウントが使っています。';
 
   @override
-  String get editorNamesOutlet => 'Outlet';
+  String get editorNamesOutlet => '所属メディア';
 
   @override
-  String get editorNamesFirstNames => 'First names';
+  String get editorNamesFirstNames => '名';
 
   @override
-  String get editorNamesSurnames => 'Surnames';
+  String get editorNamesSurnames => '姓';
 
   @override
   String editorNamesFirstCount(int count, int min) {
-    return '$count / $min first names';
+    return '名 $count / $min';
   }
 
   @override
   String editorNamesSurCount(int count, int min) {
-    return '$count / $min surnames';
+    return '姓 $count / $min';
   }
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Separate the names with commas or new lines. Each list needs at least $min. They name new players, local fans and staff.';
+    return '名前はカンマか改行で区切ります。各リストに$min個以上必要です。新しい選手、地元ファン、スタッフの名前に使われます。';
   }
 
   @override
   String editorNamesListCounts(int first, int sur) {
-    return '$first first names, $sur surnames';
+    return '名 $first個、姓 $sur個';
   }
 
   @override
   String editorNamesMainStadium(String city) {
-    return 'Main stadium in $city';
+    return '$cityのメインスタジアム';
   }
 
   @override
-  String get editorNamesChanged => 'Changed';
+  String get editorNamesChanged => '変更済み';
 
   @override
-  String get editorNamesPick => 'Pick a name to edit.';
+  String get editorNamesPick => '編集する名前を選んでください。';
 
   @override
   String get editorNamesStadiumsNote =>
-      'Only the national grounds listed here can be renamed: the main stadium of each city.';
+      '名前を変更できるのは、ここに表示される国内スタジアム（各都市のメインスタジアム）だけです。';
 
   @override
   String get editorTrophiesIntro =>
-      'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.';
+      'トロフィーをタップすると独自の画像を設定できます。背景が透明なPNGがおすすめです。';
 
   @override
-  String get editorTrophyCustom => 'Custom';
+  String get editorTrophyCustom => '独自';
 
   @override
-  String get editorTrophyDefault => 'Game picture';
+  String get editorTrophyDefault => 'ゲームの画像';
 
   @override
-  String get editorTrophyChoose => 'Choose a picture';
+  String get editorTrophyChoose => '画像を選ぶ';
 
   @override
-  String get editorTrophyReplace => 'Choose another picture';
+  String get editorTrophyReplace => '別の画像を選ぶ';
 
   @override
-  String get editorTrophyReset => 'Back to default';
+  String get editorTrophyReset => 'デフォルトに戻す';
 
   @override
-  String get editorTrophyResetTitle => 'Use the game\'s picture?';
+  String get editorTrophyResetTitle => 'ゲームの画像に戻しますか？';
 
   @override
-  String get editorTrophyResetBody =>
-      'Your picture for this trophy will be removed. Undo can\'t bring it back.';
+  String get editorTrophyResetBody => 'このトロフィーの独自画像を削除します。「元に戻す」では復元できません。';
 
   @override
-  String get editorTrophyResetConfirm => 'Remove picture';
+  String get editorTrophyResetConfirm => '画像を削除';
 
   @override
   String get editorTrophyUnusable =>
-      'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.';
+      'この画像は使えません。1辺4096ピクセル以内のPNGかJPEGを選んでください。';
 
   @override
-  String get editorTrophyOpening => 'Opening the picture';
+  String get editorTrophyOpening => '画像を開いています';
 
   @override
-  String get editorTrophyPreparing => 'Preparing the trophy';
+  String get editorTrophyPreparing => 'トロフィーを準備中';
 
   @override
-  String get editorTrophyFrameTitle => 'Frame the trophy';
+  String get editorTrophyFrameTitle => 'トロフィーの範囲を調整';
 
   @override
-  String get editorTrophyFrameHint =>
-      'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.';
+  String get editorTrophyFrameHint => 'ドラッグで移動、ピンチでズーム。枠内がトロフィーになります。';
 
   @override
-  String get editorTrophyFit => 'Fit';
+  String get editorTrophyFit => '枠に合わせる';
 
   @override
-  String get editorTrophyPreview => 'Preview';
+  String get editorTrophyPreview => 'プレビュー';
 
   @override
-  String get editorTrophyPreviewTitle => 'How it will look';
+  String get editorTrophyPreviewTitle => '表示イメージ';
 
   @override
-  String get editorTrophyAdjust => 'Adjust';
+  String get editorTrophyAdjust => '調整';
 
   @override
-  String get editorTrophyUse => 'Use this picture';
+  String get editorTrophyUse => 'この画像を使う';
 
   @override
-  String get editorTrophyRectangle =>
-      'This picture has no transparent background, so the game will show it as a rectangle.';
+  String get editorTrophyRectangle => 'この画像は背景が透明でないため、ゲームでは四角形で表示されます。';
 
   @override
-  String get editorTrophyRectangleShort => 'Shows as a rectangle';
+  String get editorTrophyRectangleShort => '四角形で表示';
 
   @override
-  String get editorTrophySaved => 'Trophy picture saved.';
+  String get editorTrophySaved => 'トロフィー画像を保存しました。';
 
   @override
-  String get editorTrophyRemoved => 'The game\'s picture is back.';
+  String get editorTrophyRemoved => 'ゲームの画像に戻しました。';
 
   @override
-  String get editorTrophySaveFailed =>
-      'The picture could not be saved. Try again.';
+  String get editorTrophySaveFailed => '画像を保存できませんでした。もう一度お試しください。';
 
   @override
-  String get editorTrophyPick => 'Pick a trophy to change its picture.';
+  String get editorTrophyPick => '画像を変更するトロフィーを選んでください。';
 
   @override
   String editorTrophySize(int width, int height) {
-    return 'Saved at $width x $height pixels';
+    return '$width x $heightピクセルで保存';
   }
 
   @override
   String editorIssueUnknownEntry(String name) {
-    return '$name is no longer in the game';
+    return '$nameはもうゲームに存在しません';
   }
 
   @override
   String get editorAttentionBody =>
-      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+      'ゲームのアップデートで、このデータベースが参照するものが削除されました。下の項目をすべて削除すると、再びキャリアを始められます。';
 
   @override
-  String get editorRemove => 'Remove';
+  String get editorRemove => '削除';
 
   @override
   String worldChip(String name) {
-    return 'World: $name';
+    return 'ワールド: $name';
   }
 
   @override
-  String get worldDefault => 'Default';
+  String get worldDefault => 'デフォルト';
 
   @override
-  String get worldDefaultAbout => 'The game\'s own world';
+  String get worldDefaultAbout => 'ゲーム標準のワールド';
 
   @override
-  String get worldSheetTitle => 'Choose a world';
+  String get worldSheetTitle => 'ワールドを選ぶ';
 
   @override
   String get worldSheetBlurb =>
-      'Databases you made or opened in the Editor. Only complete ones can start a career.';
+      'エディターで作成した、または開いたデータベースです。キャリアを始められるのは完成したものだけです。';
 
   @override
-  String get worldPackGone =>
-      'That database is no longer on this device. The career was not started.';
+  String get worldPackGone => 'そのデータベースはもうこの端末にありません。キャリアは開始されませんでした。';
 
   @override
-  String get worldStarting => 'Setting up your world';
+  String get worldStarting => 'ワールドを準備中';
 
   @override
-  String get settingsDefaultWorldTitle => 'Default world';
+  String get settingsDefaultWorldTitle => 'デフォルトのワールド';
 
   @override
-  String get settingsDefaultWorldBlurb =>
-      'The world New Game starts on. You can still change it for each career.';
+  String get settingsDefaultWorldBlurb => 'ニューゲームで使うワールドです。キャリアごとに変更することもできます。';
 
   @override
   String get worldPackNotReady =>
-      'That database can no longer start a career. Fix it in the Editor, or choose another world.';
+      'そのデータベースではキャリアを始められなくなりました。エディターで修正するか、別のワールドを選んでください。';
 }

@@ -48,6 +48,28 @@ void main() {
   // testSquad(): goalkeepers 1-3, defenders 4-10, midfielders 11-18.
   const mid = kPackPlayerIdBase + 11;
 
+  for (final code in ['de', 'fi', 'hu']) {
+    testWidgets('the player screen fits a 390 px phone in $code', (
+      tester,
+    ) async {
+      final c = await editorContainer(tester);
+      final id = await insertPack(
+        tester,
+        c,
+        testPack('Fit', squads: {cze: testSquad()}),
+      );
+      await pumpEditorRoute(
+        tester,
+        c,
+        _player(id, cze, mid),
+        size: const Size(390, 844),
+        locale: Locale(code),
+      );
+      expect(find.byType(PlayerEditScreen), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('edit name, overall 85, type Athlete: pack stores attributes '
       'whose forPosition is 85', (tester) async {
     final c = await editorContainer(tester);

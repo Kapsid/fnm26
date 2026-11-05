@@ -14154,262 +14154,258 @@ class AppLocalizationsVi extends AppLocalizations {
   String get callUpAwayShort => 'Khách';
 
   @override
-  String get homeEditor => 'Editor';
+  String get homeEditor => 'Trình chỉnh sửa';
 
   @override
-  String get editorTitle => 'Editor';
+  String get editorTitle => 'Trình chỉnh sửa';
 
   @override
   String get editorIntro =>
-      'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.';
+      'Tạo thế giới khởi đầu của riêng bạn: cầu thủ, chỉ số và tên gọi do bạn đặt. Chia sẻ dưới dạng tệp; bạn bè có thể nhập và bắt đầu sự nghiệp trên đó.';
 
   @override
-  String get editorEmptyTitle => 'No databases yet';
+  String get editorEmptyTitle => 'Chưa có cơ sở dữ liệu nào';
 
   @override
   String get editorEmptyBody =>
-      'A new database starts as a copy of the default world. Change what you like; it saves as you go.';
+      'Cơ sở dữ liệu mới bắt đầu là bản sao của thế giới mặc định. Thay đổi tùy ý; mọi thứ được lưu ngay khi bạn sửa.';
 
   @override
-  String get editorNew => 'New database';
+  String get editorNew => 'Cơ sở dữ liệu mới';
 
   @override
-  String get editorImport => 'Import';
+  String get editorImport => 'Nhập';
 
   @override
-  String get editorEdit => 'Edit';
+  String get editorEdit => 'Chỉnh sửa';
 
   @override
-  String get editorRename => 'Rename';
+  String get editorRename => 'Đổi tên';
 
   @override
-  String get editorDuplicate => 'Duplicate';
+  String get editorDuplicate => 'Nhân bản';
 
   @override
-  String get editorExport => 'Export';
+  String get editorExport => 'Xuất';
 
   @override
-  String get editorDelete => 'Delete';
+  String get editorDelete => 'Xóa';
 
   @override
-  String get editorCancel => 'Cancel';
+  String get editorCancel => 'Hủy';
 
   @override
-  String get editorCreate => 'Create';
+  String get editorCreate => 'Tạo';
 
   @override
-  String get editorMore => 'More actions';
+  String get editorMore => 'Thêm thao tác';
 
   @override
-  String get editorNameLabel => 'Name';
+  String get editorNameLabel => 'Tên';
 
   @override
-  String get editorNameHint => 'My world';
+  String get editorNameHint => 'Thế giới của tôi';
 
   @override
-  String get editorRenameTitle => 'Rename database';
+  String get editorRenameTitle => 'Đổi tên cơ sở dữ liệu';
 
   @override
-  String get editorDuplicateTitle => 'Duplicate database';
+  String get editorDuplicateTitle => 'Nhân bản cơ sở dữ liệu';
 
   @override
   String editorCopyName(String name) {
-    return '$name copy';
+    return '$name bản sao';
   }
 
   @override
-  String get editorNameEmpty => 'Give it a name';
+  String get editorNameEmpty => 'Hãy đặt tên';
 
   @override
   String editorNameTooLong(int max) {
-    return 'Keep it to $max characters';
+    return 'Tối đa $max ký tự';
   }
 
   @override
-  String get editorNameBadCharacters =>
-      'That name has characters that cannot be used';
+  String get editorNameBadCharacters => 'Tên có ký tự không dùng được';
 
   @override
-  String get editorDeleteTitle => 'Delete database?';
+  String get editorDeleteTitle => 'Xóa cơ sở dữ liệu?';
 
   @override
   String editorDeleteBody(String name) {
-    return '\"$name\" will be removed from this device. Careers already started on it keep working.';
+    return '\"$name\" sẽ bị xóa khỏi thiết bị này. Các sự nghiệp đã bắt đầu trên đó vẫn chơi tiếp được.';
   }
 
   @override
-  String get editorStatusReady => 'Ready';
+  String get editorStatusReady => 'Sẵn sàng';
 
   @override
   String editorStatusMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things missing',
-      one: '1 thing missing',
+      other: 'Thiếu $count mục',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorStatusAttention => 'Needs attention';
+  String get editorStatusAttention => 'Cần xử lý';
 
   @override
-  String get editorStatusUnreadable => 'Cannot be opened';
+  String get editorStatusUnreadable => 'Không mở được';
 
   @override
   String editorEdited(String date) {
-    return 'Edited $date';
+    return 'Sửa lúc $date';
   }
 
   @override
-  String get editorCreating => 'Copying the default world…';
+  String get editorCreating => 'Đang sao chép thế giới mặc định…';
 
   @override
-  String get editorImported => 'Database imported';
+  String get editorImported => 'Đã nhập cơ sở dữ liệu';
 
   @override
-  String get editorImportOpen => 'Open';
+  String get editorImportOpen => 'Mở';
 
   @override
-  String get editorImportTooBig => 'That file is too big to be a database.';
+  String get editorImportTooBig => 'Tệp đó quá lớn để là một cơ sở dữ liệu.';
 
   @override
-  String get editorImportNotAPack => 'That file is not an FNM database.';
+  String get editorImportNotAPack => 'Tệp đó không phải cơ sở dữ liệu FNM.';
 
   @override
   String get editorImportNewer =>
-      'That database was made with a newer version of the game. Update the game to import it.';
+      'Cơ sở dữ liệu đó được tạo bằng phiên bản game mới hơn. Hãy cập nhật game để nhập.';
 
   @override
   String get editorImportBadData =>
-      'That database holds data the game cannot use, so nothing was imported.';
+      'Cơ sở dữ liệu đó chứa dữ liệu game không dùng được, nên không có gì được nhập.';
 
   @override
   String get editorImportBadTrophy =>
-      'A trophy picture in that file could not be read, so nothing was imported.';
+      'Không đọc được một hình cúp trong tệp đó, nên không có gì được nhập.';
 
   @override
-  String get editorExportFailed => 'The database could not be exported.';
+  String get editorExportFailed => 'Không thể xuất cơ sở dữ liệu.';
 
   @override
-  String get editorShareSubject => 'FNM database';
+  String get editorShareSubject => 'Cơ sở dữ liệu FNM';
 
   @override
-  String get editorPackMissing => 'This database is no longer on this device.';
+  String get editorPackMissing => 'Cơ sở dữ liệu này không còn trên thiết bị.';
 
   @override
-  String get editorReadyTitle => 'Ready to play';
+  String get editorReadyTitle => 'Sẵn sàng để chơi';
 
   @override
   String get editorReadyBody =>
-      'Every nation has a full squad and every name checks out. You can start a career on it.';
+      'Mọi quốc gia đều đủ đội hình và mọi tên đều hợp lệ. Bạn có thể bắt đầu sự nghiệp trên đó.';
 
   @override
   String editorNotReadyTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things to fix before it can be played',
-      one: '1 thing to fix before it can be played',
+      other: 'Cần sửa $count mục trước khi chơi được',
     );
     return '$_temp0';
   }
 
   @override
   String get editorNotReadyBody =>
-      'It saves as you go, so you can share it now and finish it later.';
+      'Mọi thứ được lưu ngay khi bạn sửa, nên bạn có thể chia sẻ bây giờ và hoàn thiện sau.';
 
   @override
   String editorSectionsReady(int ready, int total) {
-    return '$ready of $total sections ready';
+    return '$ready/$total mục đã sẵn sàng';
   }
 
   @override
-  String get editorMissingTitle => 'What\'s missing';
+  String get editorMissingTitle => 'Còn thiếu gì';
 
   @override
   String editorShowAll(int count) {
-    return 'Show all ($count)';
+    return 'Hiện tất cả ($count)';
   }
 
   @override
-  String get editorShowLess => 'Show less';
+  String get editorShowLess => 'Thu gọn';
 
   @override
-  String get editorUndo => 'Undo';
+  String get editorUndo => 'Hoàn tác';
 
   @override
-  String get editorSectionsTitle => 'Sections';
+  String get editorSectionsTitle => 'Các mục';
 
   @override
-  String get editorSectionPlayers => 'Players';
+  String get editorSectionPlayers => 'Cầu thủ';
 
   @override
-  String get editorSectionNations => 'Nations';
+  String get editorSectionNations => 'Quốc gia';
 
   @override
-  String get editorSectionClubs => 'Clubs';
+  String get editorSectionClubs => 'Câu lạc bộ';
 
   @override
-  String get editorSectionStadiums => 'Stadiums';
+  String get editorSectionStadiums => 'Sân vận động';
 
   @override
-  String get editorSectionCompetitions => 'Competitions';
+  String get editorSectionCompetitions => 'Giải đấu';
 
   @override
-  String get editorSectionY => 'Y accounts';
+  String get editorSectionY => 'Tài khoản Y';
 
   @override
-  String get editorSectionPress => 'Press';
+  String get editorSectionPress => 'Báo chí';
 
   @override
-  String get editorSectionNameLists => 'Name lists';
+  String get editorSectionNameLists => 'Danh sách tên';
 
   @override
-  String get editorSectionSponsors => 'Sponsors';
+  String get editorSectionSponsors => 'Nhà tài trợ';
 
   @override
-  String get editorSectionTrophies => 'Trophies';
+  String get editorSectionTrophies => 'Cúp';
 
   @override
-  String get editorAboutPlayers => 'Squads, ratings and potential';
+  String get editorAboutPlayers => 'Đội hình, chỉ số và tiềm năng';
 
   @override
-  String get editorAboutNations => 'Nation names and codes';
+  String get editorAboutNations => 'Tên và mã quốc gia';
 
   @override
-  String get editorAboutClubs => 'Club names';
+  String get editorAboutClubs => 'Tên câu lạc bộ';
 
   @override
-  String get editorAboutStadiums => 'National stadium names';
+  String get editorAboutStadiums => 'Tên sân vận động quốc gia';
 
   @override
-  String get editorAboutCompetitions => 'Competition names';
+  String get editorAboutCompetitions => 'Tên giải đấu';
 
   @override
-  String get editorAboutY => 'Accounts on Y';
+  String get editorAboutY => 'Các tài khoản trên Y';
 
   @override
-  String get editorAboutPress => 'Journalists and their outlets';
+  String get editorAboutPress => 'Nhà báo và cơ quan báo chí';
 
   @override
   String get editorAboutNameLists =>
-      'Names for new players, local fans and staff';
+      'Tên cho cầu thủ mới, cổ động viên và nhân sự';
 
   @override
-  String get editorAboutSponsors => 'Sponsor brands';
+  String get editorAboutSponsors => 'Thương hiệu tài trợ';
 
   @override
-  String get editorAboutTrophies => 'Trophy pictures';
+  String get editorAboutTrophies => 'Hình cúp';
 
   @override
   String editorCountPlayers(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players',
-      one: '1 player',
+      other: '$count cầu thủ',
     );
     return '$_temp0';
   }
@@ -14419,8 +14415,7 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count nations',
-      one: '1 nation',
+      other: '$count quốc gia',
     );
     return '$_temp0';
   }
@@ -14430,9 +14425,8 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
-      zero: 'Game names',
+      other: '$count thay đổi',
+      zero: 'Tên trong game',
     );
     return '$_temp0';
   }
@@ -14442,9 +14436,8 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count custom pictures',
-      one: '1 custom picture',
-      zero: 'Game pictures',
+      other: '$count hình riêng',
+      zero: 'Hình trong game',
     );
     return '$_temp0';
   }
@@ -14454,8 +14447,7 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count to fix',
-      one: '1 to fix',
+      other: 'Cần sửa $count',
     );
     return '$_temp0';
   }
@@ -14465,8 +14457,7 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more players needed',
-      one: '1 more player needed',
+      other: 'Cần thêm $count cầu thủ',
     );
     return '$_temp0';
   }
@@ -14476,8 +14467,7 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players too many',
-      one: '1 player too many',
+      other: 'Thừa $count cầu thủ',
     );
     return '$_temp0';
   }
@@ -14487,8 +14477,7 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count goalkeepers needed',
-      one: '1 goalkeeper needed',
+      other: 'Cần $count thủ môn',
     );
     return '$_temp0';
   }
@@ -14498,8 +14487,7 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count defenders needed',
-      one: '1 defender needed',
+      other: 'Cần $count hậu vệ',
     );
     return '$_temp0';
   }
@@ -14509,8 +14497,7 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count midfielders needed',
-      one: '1 midfielder needed',
+      other: 'Cần $count tiền vệ',
     );
     return '$_temp0';
   }
@@ -14520,478 +14507,475 @@ class AppLocalizationsVi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count forwards needed',
-      one: '1 forward needed',
+      other: 'Cần $count tiền đạo',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorIssuePlayerNoName => 'A player has no name';
+  String get editorIssuePlayerNoName => 'Có cầu thủ chưa có tên';
 
   @override
   String editorIssueAge(String name) {
-    return '$name: age must be 15 to 45';
+    return '$name: tuổi phải từ 15 đến 45';
   }
 
   @override
   String editorIssueRating(String name) {
-    return '$name: overall must be 1 to 99';
+    return '$name: chỉ số tổng phải từ 1 đến 99';
   }
 
   @override
   String editorIssuePotential(String name) {
-    return '$name: potential must be between the overall and 99';
+    return '$name: tiềm năng phải từ chỉ số tổng đến 99';
   }
 
   @override
   String editorIssueRenameEmpty(String name) {
-    return 'The new name for $name is empty';
+    return 'Tên mới của $name đang trống';
   }
 
   @override
-  String get editorIssueNameEmpty => 'A name is empty';
+  String get editorIssueNameEmpty => 'Có tên đang trống';
 
   @override
   String editorIssueNameTooLong(String name) {
-    return '\"$name\" is too long';
+    return '\"$name\" quá dài';
   }
 
   @override
   String editorIssueNameBadCharacters(String name) {
-    return '\"$name\" has characters that cannot be used';
+    return '\"$name\" có ký tự không dùng được';
   }
 
   @override
   String editorIssueNameTaken(String name) {
-    return '\"$name\" is already taken';
+    return '\"$name\" đã được dùng';
   }
 
   @override
-  String get editorIssueCode => 'The code must be 3 letters, A to Z';
+  String get editorIssueCode => 'Mã phải gồm 3 chữ cái, từ A đến Z';
 
   @override
   String editorIssueDuplicateCode(String code, String nations) {
-    return 'Code $code is used by $nations';
+    return 'Mã $code đang được dùng bởi $nations';
   }
 
   @override
   String editorIssueFirstNames(int count) {
-    return 'At least $count first names needed';
+    return 'Cần ít nhất $count tên';
   }
 
   @override
   String editorIssueSurnames(int count) {
-    return 'At least $count surnames needed';
+    return 'Cần ít nhất $count họ';
   }
 
   @override
-  String get editorIssueValue => 'A value is out of range';
+  String get editorIssueValue => 'Có giá trị nằm ngoài phạm vi';
 
   @override
-  String get editorIssueUnknown =>
-      'Refers to something that is no longer in the game';
+  String get editorIssueUnknown => 'Liên quan đến thứ không còn trong game';
 
   @override
-  String get editorSectionSoon => 'Editing this section is on its way.';
+  String get editorSectionSoon => 'Mục này sắp có thể chỉnh sửa.';
 
   @override
-  String get editorNewFailed => 'The database could not be made. Try again.';
+  String get editorNewFailed => 'Không thể tạo cơ sở dữ liệu. Hãy thử lại.';
 
   @override
-  String get editorPickFailed => 'The file could not be opened.';
+  String get editorPickFailed => 'Không thể mở tệp.';
 
   @override
-  String get editorRenameFailed => 'The database could not be renamed.';
+  String get editorRenameFailed => 'Không thể đổi tên cơ sở dữ liệu.';
 
   @override
-  String get editorDuplicateFailed => 'The database could not be copied.';
+  String get editorDuplicateFailed => 'Không thể sao chép cơ sở dữ liệu.';
 
   @override
-  String get editorNationsSearch => 'Search nations';
+  String get editorNationsSearch => 'Tìm quốc gia';
 
   @override
-  String get editorFilterAll => 'All';
+  String get editorFilterAll => 'Tất cả';
 
   @override
-  String get editorNationsNone => 'No nation matches your search.';
+  String get editorNationsNone => 'Không có quốc gia nào khớp.';
 
   @override
-  String get editorNationSquadReady => 'Squad ready';
+  String get editorNationSquadReady => 'Đội hình sẵn sàng';
 
   @override
-  String get editorSquadAdd => 'Add player';
+  String get editorSquadAdd => 'Thêm cầu thủ';
 
   @override
   String editorSquadFull(int max) {
-    return 'A squad holds at most $max players.';
+    return 'Đội hình có tối đa $max cầu thủ.';
   }
 
   @override
   String editorSquadRemoved(String name) {
-    return '$name removed from the squad';
+    return 'Đã loại $name khỏi đội hình';
   }
 
   @override
-  String get editorPlayerUnnamed => 'Unnamed player';
+  String get editorPlayerUnnamed => 'Cầu thủ chưa có tên';
 
   @override
   String get editorSquadDuplicate =>
-      'Another player in this squad has this name.';
+      'Một cầu thủ khác trong đội hình này có cùng tên.';
 
   @override
-  String get editorSquadEmpty => 'No players yet. Add the first one.';
+  String get editorSquadEmpty => 'Chưa có cầu thủ. Hãy thêm người đầu tiên.';
 
   @override
-  String get editorSquadReady => 'This squad is ready to play.';
+  String get editorSquadReady => 'Đội hình này đã sẵn sàng.';
 
   @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
-    return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
+    return '$min đến $max cầu thủ, trong đó ít nhất $gk thủ môn, $def hậu vệ, $mid tiền vệ và $fwd tiền đạo.';
   }
 
   @override
-  String get editorShortGk => 'GK';
+  String get editorShortGk => 'TM';
 
   @override
-  String get editorShortDef => 'DEF';
+  String get editorShortDef => 'HV';
 
   @override
-  String get editorShortMid => 'MID';
+  String get editorShortMid => 'TV';
 
   @override
-  String get editorShortFwd => 'FWD';
+  String get editorShortFwd => 'TĐ';
 
   @override
   String editorPlayerAgeShort(int age) {
-    return 'Age $age';
+    return '$age tuổi';
   }
 
   @override
-  String get editorPlayerName => 'Name';
+  String get editorPlayerName => 'Tên';
 
   @override
-  String get editorPlayerNameHint => 'Type his name';
+  String get editorPlayerNameHint => 'Nhập tên cầu thủ';
 
   @override
-  String get editorPlayerNameNeeded => 'A name is needed.';
+  String get editorPlayerNameNeeded => 'Cần có tên.';
 
   @override
-  String get editorPlayerNameBad => 'Remove the unusual characters.';
+  String get editorPlayerNameBad => 'Hãy bỏ các ký tự lạ.';
 
   @override
-  String get editorPlayerAge => 'Age';
+  String get editorPlayerAge => 'Tuổi';
 
   @override
-  String get editorPlayerPosition => 'Position';
+  String get editorPlayerPosition => 'Vị trí';
 
   @override
-  String get editorPlayerClub => 'Club';
+  String get editorPlayerClub => 'Câu lạc bộ';
 
   @override
-  String get editorPlayerFreeAgent => 'Free agent';
+  String get editorPlayerFreeAgent => 'Tự do';
 
   @override
-  String get editorPlayerClubSearch => 'Search clubs';
+  String get editorPlayerClubSearch => 'Tìm câu lạc bộ';
 
   @override
-  String get editorPlayerClubNone => 'No club matches your search.';
+  String get editorPlayerClubNone => 'Không có câu lạc bộ nào khớp.';
 
   @override
-  String get editorPlayerClubPick => 'Pick a club';
+  String get editorPlayerClubPick => 'Chọn câu lạc bộ';
 
   @override
-  String get editorPlayerOverall => 'Overall';
+  String get editorPlayerOverall => 'Chỉ số tổng';
 
   @override
-  String get editorPlayerType => 'Player type';
+  String get editorPlayerType => 'Kiểu cầu thủ';
 
   @override
-  String get editorPlayerPotential => 'Potential';
+  String get editorPlayerPotential => 'Tiềm năng';
 
   @override
   String get editorPlayerPotentialAbout =>
-      'The peak he can reach if he develops well. Never below his overall.';
+      'Đỉnh cao anh ấy có thể đạt nếu phát triển tốt. Không bao giờ thấp hơn chỉ số tổng.';
 
   @override
-  String get editorPlayerQualities => 'What the game stores';
+  String get editorPlayerQualities => 'Game lưu những gì';
 
   @override
-  String get editorTypeBalanced => 'Balanced';
+  String get editorTypeBalanced => 'Cân bằng';
 
   @override
-  String get editorTypeAthlete => 'Athlete';
+  String get editorTypeAthlete => 'Thể chất';
 
   @override
-  String get editorTypeTechnician => 'Technician';
+  String get editorTypeTechnician => 'Kỹ thuật';
 
   @override
-  String get editorTypeEngine => 'Engine';
+  String get editorTypeEngine => 'Bền bỉ';
 
   @override
   String get editorTypeBalancedAbout =>
-      'Even across physique, technique and stamina.';
+      'Đều nhau về thể chất, kỹ thuật và thể lực.';
 
   @override
   String get editorTypeAthleteAbout =>
-      'Strong and quick, a little lighter on technique.';
+      'Khỏe và nhanh, kỹ thuật kém hơn một chút.';
 
   @override
-  String get editorTypeTechnicianAbout => 'Skilful on the ball, less physical.';
+  String get editorTypeTechnicianAbout =>
+      'Khéo léo với bóng, thể chất kém hơn.';
 
   @override
   String get editorTypeEngineAbout =>
-      'Runs all day, steady at everything else.';
+      'Chạy không biết mệt, ổn định ở mọi mặt khác.';
 
   @override
-  String get editorPlayerLess => 'One less';
+  String get editorPlayerLess => 'Bớt một';
 
   @override
-  String get editorPlayerMore => 'One more';
+  String get editorPlayerMore => 'Thêm một';
 
   @override
-  String get editorPlayerRemove => 'Remove from squad';
+  String get editorPlayerRemove => 'Loại khỏi đội hình';
 
   @override
-  String get editorPlayerGone => 'This player is no longer in the squad.';
+  String get editorPlayerGone => 'Cầu thủ này không còn trong đội hình.';
 
   @override
-  String get editorNationGone => 'This nation is not in the database.';
+  String get editorNationGone => 'Quốc gia này không có trong cơ sở dữ liệu.';
 
   @override
-  String get editorPickPlayer => 'Pick a player to edit.';
+  String get editorPickPlayer => 'Chọn một cầu thủ để chỉnh sửa.';
 
   @override
-  String get editorPlayerClubAuto => 'Chosen by the game';
+  String get editorPlayerClubAuto => 'Do game chọn';
 
   @override
   String get editorPlayerClubAutoAbout =>
-      'The game places him at a club that suits his level.';
+      'Game sẽ xếp anh ấy vào một câu lạc bộ hợp với trình độ.';
 
   @override
-  String get editorNamesSearch => 'Search names';
+  String get editorNamesSearch => 'Tìm tên';
 
   @override
-  String get editorNamesSearchClubs => 'Search clubs or countries';
+  String get editorNamesSearchClubs => 'Tìm câu lạc bộ hoặc quốc gia';
 
   @override
-  String get editorNamesSearchStadiums =>
-      'Search stadiums, cities or countries';
+  String get editorNamesSearchStadiums => 'Tìm sân, thành phố hoặc quốc gia';
 
   @override
-  String get editorNamesSearchNations => 'Search nations or codes';
+  String get editorNamesSearchNations => 'Tìm quốc gia hoặc mã';
 
   @override
-  String get editorNamesNone => 'Nothing matches your search.';
+  String get editorNamesNone => 'Không có kết quả phù hợp.';
 
   @override
   String get editorNamesEveryLanguage =>
-      'A custom name shows the same in every language.';
+      'Tên tự đặt hiển thị giống nhau ở mọi ngôn ngữ.';
 
   @override
   String editorNamesGameName(String name) {
-    return 'Game name: $name';
+    return 'Tên trong game: $name';
   }
 
   @override
-  String get editorNamesReset => 'Reset to original';
+  String get editorNamesReset => 'Khôi phục tên gốc';
 
   @override
-  String get editorNamesDone => 'Done';
+  String get editorNamesDone => 'Xong';
 
   @override
-  String get editorNamesKeepHint => 'Leave empty to keep the game name.';
+  String get editorNamesKeepHint => 'Để trống để giữ tên trong game.';
 
   @override
-  String get editorNamesCode => 'Code';
+  String get editorNamesCode => 'Mã';
 
   @override
   String get editorNamesCodeHelp =>
-      '3 letters, A to Z, used by no other nation.';
+      '3 chữ cái, từ A đến Z, chưa quốc gia nào dùng.';
 
   @override
   String editorNamesCodeTaken(String code, String nation) {
-    return '$code is already used by $nation.';
+    return '$code đã được $nation dùng.';
   }
 
   @override
-  String get editorNamesTaken => 'Another account already has this name.';
+  String get editorNamesTaken => 'Đã có tài khoản khác dùng tên này.';
 
   @override
-  String get editorNamesOutlet => 'Outlet';
+  String get editorNamesOutlet => 'Cơ quan báo chí';
 
   @override
-  String get editorNamesFirstNames => 'First names';
+  String get editorNamesFirstNames => 'Tên';
 
   @override
-  String get editorNamesSurnames => 'Surnames';
+  String get editorNamesSurnames => 'Họ';
 
   @override
   String editorNamesFirstCount(int count, int min) {
-    return '$count / $min first names';
+    return '$count / $min tên';
   }
 
   @override
   String editorNamesSurCount(int count, int min) {
-    return '$count / $min surnames';
+    return '$count / $min họ';
   }
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Separate the names with commas or new lines. Each list needs at least $min. They name new players, local fans and staff.';
+    return 'Ngăn cách các tên bằng dấu phẩy hoặc xuống dòng. Mỗi danh sách cần ít nhất $min. Chúng dùng để đặt tên cho cầu thủ mới, cổ động viên và nhân sự.';
   }
 
   @override
   String editorNamesListCounts(int first, int sur) {
-    return '$first first names, $sur surnames';
+    return '$first tên, $sur họ';
   }
 
   @override
   String editorNamesMainStadium(String city) {
-    return 'Main stadium in $city';
+    return 'Sân chính ở $city';
   }
 
   @override
-  String get editorNamesChanged => 'Changed';
+  String get editorNamesChanged => 'Đã đổi';
 
   @override
-  String get editorNamesPick => 'Pick a name to edit.';
+  String get editorNamesPick => 'Chọn một tên để chỉnh sửa.';
 
   @override
   String get editorNamesStadiumsNote =>
-      'Only the national grounds listed here can be renamed: the main stadium of each city.';
+      'Chỉ đổi tên được các sân quốc gia liệt kê ở đây: sân chính của mỗi thành phố.';
 
   @override
   String get editorTrophiesIntro =>
-      'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.';
+      'Chạm vào một chiếc cúp để dùng hình của riêng bạn. Ảnh PNG nền trong suốt trông đẹp nhất.';
 
   @override
-  String get editorTrophyCustom => 'Custom';
+  String get editorTrophyCustom => 'Hình riêng';
 
   @override
-  String get editorTrophyDefault => 'Game picture';
+  String get editorTrophyDefault => 'Hình trong game';
 
   @override
-  String get editorTrophyChoose => 'Choose a picture';
+  String get editorTrophyChoose => 'Chọn hình';
 
   @override
-  String get editorTrophyReplace => 'Choose another picture';
+  String get editorTrophyReplace => 'Chọn hình khác';
 
   @override
-  String get editorTrophyReset => 'Back to default';
+  String get editorTrophyReset => 'Về mặc định';
 
   @override
-  String get editorTrophyResetTitle => 'Use the game\'s picture?';
+  String get editorTrophyResetTitle => 'Dùng hình trong game?';
 
   @override
   String get editorTrophyResetBody =>
-      'Your picture for this trophy will be removed. Undo can\'t bring it back.';
+      'Hình của bạn cho chiếc cúp này sẽ bị xóa. Hoàn tác không thể khôi phục nó.';
 
   @override
-  String get editorTrophyResetConfirm => 'Remove picture';
+  String get editorTrophyResetConfirm => 'Xóa hình';
 
   @override
   String get editorTrophyUnusable =>
-      'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.';
+      'Không dùng được hình này. Hãy chọn ảnh PNG hoặc JPEG, mỗi cạnh tối đa 4096 pixel.';
 
   @override
-  String get editorTrophyOpening => 'Opening the picture';
+  String get editorTrophyOpening => 'Đang mở hình';
 
   @override
-  String get editorTrophyPreparing => 'Preparing the trophy';
+  String get editorTrophyPreparing => 'Đang chuẩn bị cúp';
 
   @override
-  String get editorTrophyFrameTitle => 'Frame the trophy';
+  String get editorTrophyFrameTitle => 'Căn khung cúp';
 
   @override
   String get editorTrophyFrameHint =>
-      'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.';
+      'Kéo để di chuyển, chụm hai ngón để thu phóng. Phần trong khung sẽ thành chiếc cúp.';
 
   @override
-  String get editorTrophyFit => 'Fit';
+  String get editorTrophyFit => 'Vừa khung';
 
   @override
-  String get editorTrophyPreview => 'Preview';
+  String get editorTrophyPreview => 'Xem trước';
 
   @override
-  String get editorTrophyPreviewTitle => 'How it will look';
+  String get editorTrophyPreviewTitle => 'Trông sẽ thế này';
 
   @override
-  String get editorTrophyAdjust => 'Adjust';
+  String get editorTrophyAdjust => 'Điều chỉnh';
 
   @override
-  String get editorTrophyUse => 'Use this picture';
+  String get editorTrophyUse => 'Dùng hình này';
 
   @override
   String get editorTrophyRectangle =>
-      'This picture has no transparent background, so the game will show it as a rectangle.';
+      'Hình này không có nền trong suốt, nên game sẽ hiển thị nó thành hình chữ nhật.';
 
   @override
-  String get editorTrophyRectangleShort => 'Shows as a rectangle';
+  String get editorTrophyRectangleShort => 'Hiện thành hình chữ nhật';
 
   @override
-  String get editorTrophySaved => 'Trophy picture saved.';
+  String get editorTrophySaved => 'Đã lưu hình cúp.';
 
   @override
-  String get editorTrophyRemoved => 'The game\'s picture is back.';
+  String get editorTrophyRemoved => 'Đã dùng lại hình trong game.';
 
   @override
-  String get editorTrophySaveFailed =>
-      'The picture could not be saved. Try again.';
+  String get editorTrophySaveFailed => 'Không thể lưu hình. Hãy thử lại.';
 
   @override
-  String get editorTrophyPick => 'Pick a trophy to change its picture.';
+  String get editorTrophyPick => 'Chọn một chiếc cúp để đổi hình.';
 
   @override
   String editorTrophySize(int width, int height) {
-    return 'Saved at $width x $height pixels';
+    return 'Lưu ở kích thước $width x $height pixel';
   }
 
   @override
   String editorIssueUnknownEntry(String name) {
-    return '$name is no longer in the game';
+    return '$name không còn trong game';
   }
 
   @override
   String get editorAttentionBody =>
-      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+      'Một bản cập nhật game đã gỡ bỏ thứ mà cơ sở dữ liệu này dùng đến. Hãy xóa từng mục bên dưới để có thể bắt đầu sự nghiệp trên đó lần nữa.';
 
   @override
-  String get editorRemove => 'Remove';
+  String get editorRemove => 'Xóa';
 
   @override
   String worldChip(String name) {
-    return 'World: $name';
+    return 'Thế giới: $name';
   }
 
   @override
-  String get worldDefault => 'Default';
+  String get worldDefault => 'Mặc định';
 
   @override
-  String get worldDefaultAbout => 'The game\'s own world';
+  String get worldDefaultAbout => 'Thế giới gốc của game';
 
   @override
-  String get worldSheetTitle => 'Choose a world';
+  String get worldSheetTitle => 'Chọn thế giới';
 
   @override
   String get worldSheetBlurb =>
-      'Databases you made or opened in the Editor. Only complete ones can start a career.';
+      'Các cơ sở dữ liệu bạn đã tạo hoặc mở trong Trình chỉnh sửa. Chỉ những cái hoàn chỉnh mới bắt đầu sự nghiệp được.';
 
   @override
   String get worldPackGone =>
-      'That database is no longer on this device. The career was not started.';
+      'Cơ sở dữ liệu đó không còn trên thiết bị. Sự nghiệp chưa được bắt đầu.';
 
   @override
-  String get worldStarting => 'Setting up your world';
+  String get worldStarting => 'Đang thiết lập thế giới của bạn';
 
   @override
-  String get settingsDefaultWorldTitle => 'Default world';
+  String get settingsDefaultWorldTitle => 'Thế giới mặc định';
 
   @override
   String get settingsDefaultWorldBlurb =>
-      'The world New Game starts on. You can still change it for each career.';
+      'Thế giới mà Trò chơi mới dùng để bắt đầu. Bạn vẫn có thể đổi cho từng sự nghiệp.';
 
   @override
   String get worldPackNotReady =>
-      'That database can no longer start a career. Fix it in the Editor, or choose another world.';
+      'Cơ sở dữ liệu đó không thể bắt đầu sự nghiệp nữa. Hãy sửa trong Trình chỉnh sửa hoặc chọn thế giới khác.';
 }

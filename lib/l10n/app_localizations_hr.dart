@@ -14613,262 +14613,266 @@ class AppLocalizationsHr extends AppLocalizations {
   String get callUpAwayShort => 'G';
 
   @override
-  String get homeEditor => 'Editor';
+  String get homeEditor => 'Uređivač';
 
   @override
-  String get editorTitle => 'Editor';
+  String get editorTitle => 'Uređivač';
 
   @override
   String get editorIntro =>
-      'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.';
+      'Napravi vlastiti početni svijet: svoje igrače, njihove ocjene, svoja imena. Podijeli ga kao datoteku; prijatelji ga mogu uvesti i na njemu započeti karijeru.';
 
   @override
-  String get editorEmptyTitle => 'No databases yet';
+  String get editorEmptyTitle => 'Još nema baza podataka';
 
   @override
   String get editorEmptyBody =>
-      'A new database starts as a copy of the default world. Change what you like; it saves as you go.';
+      'Nova baza počinje kao kopija zadanog svijeta. Mijenjaj što god želiš; sve se sprema usput.';
 
   @override
-  String get editorNew => 'New database';
+  String get editorNew => 'Nova baza podataka';
 
   @override
-  String get editorImport => 'Import';
+  String get editorImport => 'Uvezi';
 
   @override
-  String get editorEdit => 'Edit';
+  String get editorEdit => 'Uredi';
 
   @override
-  String get editorRename => 'Rename';
+  String get editorRename => 'Preimenuj';
 
   @override
-  String get editorDuplicate => 'Duplicate';
+  String get editorDuplicate => 'Dupliciraj';
 
   @override
-  String get editorExport => 'Export';
+  String get editorExport => 'Izvezi';
 
   @override
-  String get editorDelete => 'Delete';
+  String get editorDelete => 'Izbriši';
 
   @override
-  String get editorCancel => 'Cancel';
+  String get editorCancel => 'Odustani';
 
   @override
-  String get editorCreate => 'Create';
+  String get editorCreate => 'Stvori';
 
   @override
-  String get editorMore => 'More actions';
+  String get editorMore => 'Više radnji';
 
   @override
-  String get editorNameLabel => 'Name';
+  String get editorNameLabel => 'Naziv';
 
   @override
-  String get editorNameHint => 'My world';
+  String get editorNameHint => 'Moj svijet';
 
   @override
-  String get editorRenameTitle => 'Rename database';
+  String get editorRenameTitle => 'Preimenuj bazu';
 
   @override
-  String get editorDuplicateTitle => 'Duplicate database';
+  String get editorDuplicateTitle => 'Dupliciraj bazu';
 
   @override
   String editorCopyName(String name) {
-    return '$name copy';
+    return '$name kopija';
   }
 
   @override
-  String get editorNameEmpty => 'Give it a name';
+  String get editorNameEmpty => 'Daj joj naziv';
 
   @override
   String editorNameTooLong(int max) {
-    return 'Keep it to $max characters';
+    return 'Najviše $max znakova';
   }
 
   @override
   String get editorNameBadCharacters =>
-      'That name has characters that cannot be used';
+      'Naziv sadrži znakove koji se ne mogu koristiti';
 
   @override
-  String get editorDeleteTitle => 'Delete database?';
+  String get editorDeleteTitle => 'Izbrisati bazu podataka?';
 
   @override
   String editorDeleteBody(String name) {
-    return '\"$name\" will be removed from this device. Careers already started on it keep working.';
+    return '„$name“ bit će uklonjena s ovog uređaja. Karijere koje su već započete na njoj nastavljaju raditi.';
   }
 
   @override
-  String get editorStatusReady => 'Ready';
+  String get editorStatusReady => 'Spremno';
 
   @override
   String editorStatusMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things missing',
-      one: '1 thing missing',
+      other: 'Nedostaje $count stvari',
+      few: 'Nedostaju $count stvari',
+      one: 'Nedostaje $count stvar',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorStatusAttention => 'Needs attention';
+  String get editorStatusAttention => 'Treba pažnju';
 
   @override
-  String get editorStatusUnreadable => 'Cannot be opened';
+  String get editorStatusUnreadable => 'Ne može se otvoriti';
 
   @override
   String editorEdited(String date) {
-    return 'Edited $date';
+    return 'Uređeno $date';
   }
 
   @override
-  String get editorCreating => 'Copying the default world…';
+  String get editorCreating => 'Kopiram zadani svijet…';
 
   @override
-  String get editorImported => 'Database imported';
+  String get editorImported => 'Baza uvezena';
 
   @override
-  String get editorImportOpen => 'Open';
+  String get editorImportOpen => 'Otvori';
 
   @override
-  String get editorImportTooBig => 'That file is too big to be a database.';
+  String get editorImportTooBig =>
+      'Ta je datoteka prevelika da bi bila baza podataka.';
 
   @override
-  String get editorImportNotAPack => 'That file is not an FNM database.';
+  String get editorImportNotAPack => 'Ta datoteka nije FNM baza podataka.';
 
   @override
   String get editorImportNewer =>
-      'That database was made with a newer version of the game. Update the game to import it.';
+      'Ta je baza napravljena u novijoj verziji igre. Ažuriraj igru da bi je uvezao.';
 
   @override
   String get editorImportBadData =>
-      'That database holds data the game cannot use, so nothing was imported.';
+      'Ta baza sadrži podatke koje igra ne može koristiti, pa ništa nije uvezeno.';
 
   @override
   String get editorImportBadTrophy =>
-      'A trophy picture in that file could not be read, so nothing was imported.';
+      'Slika trofeja u toj datoteci ne može se pročitati, pa ništa nije uvezeno.';
 
   @override
-  String get editorExportFailed => 'The database could not be exported.';
+  String get editorExportFailed => 'Bazu nije bilo moguće izvesti.';
 
   @override
-  String get editorShareSubject => 'FNM database';
+  String get editorShareSubject => 'FNM baza podataka';
 
   @override
-  String get editorPackMissing => 'This database is no longer on this device.';
+  String get editorPackMissing => 'Ova baza više nije na ovom uređaju.';
 
   @override
-  String get editorReadyTitle => 'Ready to play';
+  String get editorReadyTitle => 'Spremno za igru';
 
   @override
   String get editorReadyBody =>
-      'Every nation has a full squad and every name checks out. You can start a career on it.';
+      'Svaka reprezentacija ima puni sastav i svi su nazivi u redu. Na njoj možeš započeti karijeru.';
 
   @override
   String editorNotReadyTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things to fix before it can be played',
-      one: '1 thing to fix before it can be played',
+      other: 'Prije igre popravi $count stvari',
+      few: 'Prije igre popravi $count stvari',
+      one: 'Prije igre popravi $count stvar',
     );
     return '$_temp0';
   }
 
   @override
   String get editorNotReadyBody =>
-      'It saves as you go, so you can share it now and finish it later.';
+      'Sve se sprema usput, pa je možeš podijeliti sada i dovršiti kasnije.';
 
   @override
   String editorSectionsReady(int ready, int total) {
-    return '$ready of $total sections ready';
+    return 'Spremno $ready od $total odjeljaka';
   }
 
   @override
-  String get editorMissingTitle => 'What\'s missing';
+  String get editorMissingTitle => 'Što nedostaje';
 
   @override
   String editorShowAll(int count) {
-    return 'Show all ($count)';
+    return 'Prikaži sve ($count)';
   }
 
   @override
-  String get editorShowLess => 'Show less';
+  String get editorShowLess => 'Prikaži manje';
 
   @override
-  String get editorUndo => 'Undo';
+  String get editorUndo => 'Poništi';
 
   @override
-  String get editorSectionsTitle => 'Sections';
+  String get editorSectionsTitle => 'Odjeljci';
 
   @override
-  String get editorSectionPlayers => 'Players';
+  String get editorSectionPlayers => 'Igrači';
 
   @override
-  String get editorSectionNations => 'Nations';
+  String get editorSectionNations => 'Reprezentacije';
 
   @override
-  String get editorSectionClubs => 'Clubs';
+  String get editorSectionClubs => 'Klubovi';
 
   @override
-  String get editorSectionStadiums => 'Stadiums';
+  String get editorSectionStadiums => 'Stadioni';
 
   @override
-  String get editorSectionCompetitions => 'Competitions';
+  String get editorSectionCompetitions => 'Natjecanja';
 
   @override
-  String get editorSectionY => 'Y accounts';
+  String get editorSectionY => 'Računi na Y';
 
   @override
-  String get editorSectionPress => 'Press';
+  String get editorSectionPress => 'Novinari';
 
   @override
-  String get editorSectionNameLists => 'Name lists';
+  String get editorSectionNameLists => 'Popisi imena';
 
   @override
-  String get editorSectionSponsors => 'Sponsors';
+  String get editorSectionSponsors => 'Sponzori';
 
   @override
-  String get editorSectionTrophies => 'Trophies';
+  String get editorSectionTrophies => 'Trofeji';
 
   @override
-  String get editorAboutPlayers => 'Squads, ratings and potential';
+  String get editorAboutPlayers => 'Sastavi, ocjene i potencijal';
 
   @override
-  String get editorAboutNations => 'Nation names and codes';
+  String get editorAboutNations => 'Nazivi i kratice reprezentacija';
 
   @override
-  String get editorAboutClubs => 'Club names';
+  String get editorAboutClubs => 'Nazivi klubova';
 
   @override
-  String get editorAboutStadiums => 'National stadium names';
+  String get editorAboutStadiums => 'Nazivi nacionalnih stadiona';
 
   @override
-  String get editorAboutCompetitions => 'Competition names';
+  String get editorAboutCompetitions => 'Nazivi natjecanja';
 
   @override
-  String get editorAboutY => 'Accounts on Y';
+  String get editorAboutY => 'Računi na Y';
 
   @override
-  String get editorAboutPress => 'Journalists and their outlets';
+  String get editorAboutPress => 'Novinari i njihovi mediji';
 
   @override
   String get editorAboutNameLists =>
-      'Names for new players, local fans and staff';
+      'Imena za nove igrače, lokalne navijače i stožer';
 
   @override
-  String get editorAboutSponsors => 'Sponsor brands';
+  String get editorAboutSponsors => 'Marke sponzora';
 
   @override
-  String get editorAboutTrophies => 'Trophy pictures';
+  String get editorAboutTrophies => 'Slike trofeja';
 
   @override
   String editorCountPlayers(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players',
-      one: '1 player',
+      other: '$count igrača',
+      few: '$count igrača',
+      one: '$count igrač',
     );
     return '$_temp0';
   }
@@ -14878,8 +14882,9 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count nations',
-      one: '1 nation',
+      other: '$count reprezentacija',
+      few: '$count reprezentacije',
+      one: '$count reprezentacija',
     );
     return '$_temp0';
   }
@@ -14889,9 +14894,10 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
-      zero: 'Game names',
+      other: '$count promjena',
+      few: '$count promjene',
+      one: '$count promjena',
+      zero: 'Nazivi iz igre',
     );
     return '$_temp0';
   }
@@ -14901,9 +14907,10 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count custom pictures',
-      one: '1 custom picture',
-      zero: 'Game pictures',
+      other: '$count vlastitih slika',
+      few: '$count vlastite slike',
+      one: '$count vlastita slika',
+      zero: 'Slike iz igre',
     );
     return '$_temp0';
   }
@@ -14913,8 +14920,9 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count to fix',
-      one: '1 to fix',
+      other: '$count za popravak',
+      few: '$count za popravak',
+      one: '$count za popravak',
     );
     return '$_temp0';
   }
@@ -14924,8 +14932,9 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more players needed',
-      one: '1 more player needed',
+      other: 'Nedostaje $count igrača',
+      few: 'Nedostaju $count igrača',
+      one: 'Nedostaje $count igrač',
     );
     return '$_temp0';
   }
@@ -14935,8 +14944,9 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players too many',
-      one: '1 player too many',
+      other: '$count igrača previše',
+      few: '$count igrača previše',
+      one: '$count igrač previše',
     );
     return '$_temp0';
   }
@@ -14946,8 +14956,9 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count goalkeepers needed',
-      one: '1 goalkeeper needed',
+      other: 'Nedostaje $count vratara',
+      few: 'Nedostaju $count vratara',
+      one: 'Nedostaje $count vratar',
     );
     return '$_temp0';
   }
@@ -14957,8 +14968,9 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count defenders needed',
-      one: '1 defender needed',
+      other: 'Nedostaje $count braniča',
+      few: 'Nedostaju $count braniča',
+      one: 'Nedostaje $count branič',
     );
     return '$_temp0';
   }
@@ -14968,8 +14980,9 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count midfielders needed',
-      one: '1 midfielder needed',
+      other: 'Nedostaje $count veznih igrača',
+      few: 'Nedostaju $count vezna igrača',
+      one: 'Nedostaje $count vezni igrač',
     );
     return '$_temp0';
   }
@@ -14979,478 +14992,478 @@ class AppLocalizationsHr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count forwards needed',
-      one: '1 forward needed',
+      other: 'Nedostaje $count napadača',
+      few: 'Nedostaju $count napadača',
+      one: 'Nedostaje $count napadač',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorIssuePlayerNoName => 'A player has no name';
+  String get editorIssuePlayerNoName => 'Jedan igrač nema ime';
 
   @override
   String editorIssueAge(String name) {
-    return '$name: age must be 15 to 45';
+    return '$name: dob mora biti od 15 do 45';
   }
 
   @override
   String editorIssueRating(String name) {
-    return '$name: overall must be 1 to 99';
+    return '$name: ukupna ocjena mora biti od 1 do 99';
   }
 
   @override
   String editorIssuePotential(String name) {
-    return '$name: potential must be between the overall and 99';
+    return '$name: potencijal mora biti između ukupne ocjene i 99';
   }
 
   @override
   String editorIssueRenameEmpty(String name) {
-    return 'The new name for $name is empty';
+    return 'Novi naziv za $name je prazan';
   }
 
   @override
-  String get editorIssueNameEmpty => 'A name is empty';
+  String get editorIssueNameEmpty => 'Jedan naziv je prazan';
 
   @override
   String editorIssueNameTooLong(String name) {
-    return '\"$name\" is too long';
+    return '„$name“ je predugo';
   }
 
   @override
   String editorIssueNameBadCharacters(String name) {
-    return '\"$name\" has characters that cannot be used';
+    return '„$name“ sadrži znakove koji se ne mogu koristiti';
   }
 
   @override
   String editorIssueNameTaken(String name) {
-    return '\"$name\" is already taken';
+    return '„$name“ je već zauzeto';
   }
 
   @override
-  String get editorIssueCode => 'The code must be 3 letters, A to Z';
+  String get editorIssueCode => 'Kratica mora imati 3 slova, od A do Z';
 
   @override
   String editorIssueDuplicateCode(String code, String nations) {
-    return 'Code $code is used by $nations';
+    return 'Kraticu $code koriste: $nations';
   }
 
   @override
   String editorIssueFirstNames(int count) {
-    return 'At least $count first names needed';
+    return 'Potrebno je barem $count imena';
   }
 
   @override
   String editorIssueSurnames(int count) {
-    return 'At least $count surnames needed';
+    return 'Potrebno je barem $count prezimena';
   }
 
   @override
-  String get editorIssueValue => 'A value is out of range';
+  String get editorIssueValue => 'Jedna vrijednost je izvan raspona';
 
   @override
-  String get editorIssueUnknown =>
-      'Refers to something that is no longer in the game';
+  String get editorIssueUnknown => 'Odnosi se na nešto čega više nema u igri';
 
   @override
-  String get editorSectionSoon => 'Editing this section is on its way.';
+  String get editorSectionSoon => 'Uređivanje ovog odjeljka stiže uskoro.';
 
   @override
-  String get editorNewFailed => 'The database could not be made. Try again.';
+  String get editorNewFailed =>
+      'Bazu nije bilo moguće napraviti. Pokušaj ponovno.';
 
   @override
-  String get editorPickFailed => 'The file could not be opened.';
+  String get editorPickFailed => 'Datoteku nije bilo moguće otvoriti.';
 
   @override
-  String get editorRenameFailed => 'The database could not be renamed.';
+  String get editorRenameFailed => 'Bazu nije bilo moguće preimenovati.';
 
   @override
-  String get editorDuplicateFailed => 'The database could not be copied.';
+  String get editorDuplicateFailed => 'Bazu nije bilo moguće kopirati.';
 
   @override
-  String get editorNationsSearch => 'Search nations';
+  String get editorNationsSearch => 'Traži reprezentacije';
 
   @override
-  String get editorFilterAll => 'All';
+  String get editorFilterAll => 'Sve';
 
   @override
-  String get editorNationsNone => 'No nation matches your search.';
+  String get editorNationsNone =>
+      'Nijedna reprezentacija ne odgovara pretrazi.';
 
   @override
-  String get editorNationSquadReady => 'Squad ready';
+  String get editorNationSquadReady => 'Sastav spreman';
 
   @override
-  String get editorSquadAdd => 'Add player';
+  String get editorSquadAdd => 'Dodaj igrača';
 
   @override
   String editorSquadFull(int max) {
-    return 'A squad holds at most $max players.';
+    return 'Sastav može imati najviše $max igrača.';
   }
 
   @override
   String editorSquadRemoved(String name) {
-    return '$name removed from the squad';
+    return '$name uklonjen iz sastava';
   }
 
   @override
-  String get editorPlayerUnnamed => 'Unnamed player';
+  String get editorPlayerUnnamed => 'Igrač bez imena';
 
   @override
   String get editorSquadDuplicate =>
-      'Another player in this squad has this name.';
+      'Još jedan igrač u ovom sastavu ima isto ime.';
 
   @override
-  String get editorSquadEmpty => 'No players yet. Add the first one.';
+  String get editorSquadEmpty => 'Još nema igrača. Dodaj prvog.';
 
   @override
-  String get editorSquadReady => 'This squad is ready to play.';
+  String get editorSquadReady => 'Ovaj je sastav spreman za igru.';
 
   @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
-    return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
+    return 'Od $min do $max igrača, od toga barem vratara: $gk, braniča: $def, veznih: $mid, napadača: $fwd.';
   }
 
   @override
-  String get editorShortGk => 'GK';
+  String get editorShortGk => 'VR';
 
   @override
-  String get editorShortDef => 'DEF';
+  String get editorShortDef => 'OBR';
 
   @override
-  String get editorShortMid => 'MID';
+  String get editorShortMid => 'VE';
 
   @override
-  String get editorShortFwd => 'FWD';
+  String get editorShortFwd => 'NA';
 
   @override
   String editorPlayerAgeShort(int age) {
-    return 'Age $age';
+    return 'Dob $age';
   }
 
   @override
-  String get editorPlayerName => 'Name';
+  String get editorPlayerName => 'Ime';
 
   @override
-  String get editorPlayerNameHint => 'Type his name';
+  String get editorPlayerNameHint => 'Upiši njegovo ime';
 
   @override
-  String get editorPlayerNameNeeded => 'A name is needed.';
+  String get editorPlayerNameNeeded => 'Ime je obavezno.';
 
   @override
-  String get editorPlayerNameBad => 'Remove the unusual characters.';
+  String get editorPlayerNameBad => 'Ukloni neobične znakove.';
 
   @override
-  String get editorPlayerAge => 'Age';
+  String get editorPlayerAge => 'Dob';
 
   @override
-  String get editorPlayerPosition => 'Position';
+  String get editorPlayerPosition => 'Pozicija';
 
   @override
-  String get editorPlayerClub => 'Club';
+  String get editorPlayerClub => 'Klub';
 
   @override
-  String get editorPlayerFreeAgent => 'Free agent';
+  String get editorPlayerFreeAgent => 'Bez kluba';
 
   @override
-  String get editorPlayerClubSearch => 'Search clubs';
+  String get editorPlayerClubSearch => 'Traži klubove';
 
   @override
-  String get editorPlayerClubNone => 'No club matches your search.';
+  String get editorPlayerClubNone => 'Nijedan klub ne odgovara pretrazi.';
 
   @override
-  String get editorPlayerClubPick => 'Pick a club';
+  String get editorPlayerClubPick => 'Odaberi klub';
 
   @override
-  String get editorPlayerOverall => 'Overall';
+  String get editorPlayerOverall => 'Ukupna ocjena';
 
   @override
-  String get editorPlayerType => 'Player type';
+  String get editorPlayerType => 'Tip igrača';
 
   @override
-  String get editorPlayerPotential => 'Potential';
+  String get editorPlayerPotential => 'Potencijal';
 
   @override
   String get editorPlayerPotentialAbout =>
-      'The peak he can reach if he develops well. Never below his overall.';
+      'Vrhunac koji može dosegnuti ako se dobro razvija. Nikad ispod ukupne ocjene.';
 
   @override
-  String get editorPlayerQualities => 'What the game stores';
+  String get editorPlayerQualities => 'Što igra sprema';
 
   @override
-  String get editorTypeBalanced => 'Balanced';
+  String get editorTypeBalanced => 'Svestran';
 
   @override
-  String get editorTypeAthlete => 'Athlete';
+  String get editorTypeAthlete => 'Atleta';
 
   @override
-  String get editorTypeTechnician => 'Technician';
+  String get editorTypeTechnician => 'Tehničar';
 
   @override
-  String get editorTypeEngine => 'Engine';
+  String get editorTypeEngine => 'Motor';
 
   @override
   String get editorTypeBalancedAbout =>
-      'Even across physique, technique and stamina.';
+      'Ujednačen u fizici, tehnici i izdržljivosti.';
 
   @override
-  String get editorTypeAthleteAbout =>
-      'Strong and quick, a little lighter on technique.';
+  String get editorTypeAthleteAbout => 'Snažan i brz, tehnički malo slabiji.';
 
   @override
-  String get editorTypeTechnicianAbout => 'Skilful on the ball, less physical.';
+  String get editorTypeTechnicianAbout => 'Vješt s loptom, fizički slabiji.';
 
   @override
   String get editorTypeEngineAbout =>
-      'Runs all day, steady at everything else.';
+      'Trči cijeli dan, pouzdan u svemu ostalom.';
 
   @override
-  String get editorPlayerLess => 'One less';
+  String get editorPlayerLess => 'Jedan manje';
 
   @override
-  String get editorPlayerMore => 'One more';
+  String get editorPlayerMore => 'Jedan više';
 
   @override
-  String get editorPlayerRemove => 'Remove from squad';
+  String get editorPlayerRemove => 'Ukloni iz sastava';
 
   @override
-  String get editorPlayerGone => 'This player is no longer in the squad.';
+  String get editorPlayerGone => 'Ovaj igrač više nije u sastavu.';
 
   @override
-  String get editorNationGone => 'This nation is not in the database.';
+  String get editorNationGone => 'Ova reprezentacija nije u bazi.';
 
   @override
-  String get editorPickPlayer => 'Pick a player to edit.';
+  String get editorPickPlayer => 'Odaberi igrača za uređivanje.';
 
   @override
-  String get editorPlayerClubAuto => 'Chosen by the game';
+  String get editorPlayerClubAuto => 'Bira igra';
 
   @override
   String get editorPlayerClubAutoAbout =>
-      'The game places him at a club that suits his level.';
+      'Igra ga smješta u klub koji odgovara njegovoj razini.';
 
   @override
-  String get editorNamesSearch => 'Search names';
+  String get editorNamesSearch => 'Traži nazive';
 
   @override
-  String get editorNamesSearchClubs => 'Search clubs or countries';
+  String get editorNamesSearchClubs => 'Traži klubove ili zemlje';
 
   @override
-  String get editorNamesSearchStadiums =>
-      'Search stadiums, cities or countries';
+  String get editorNamesSearchStadiums => 'Traži stadione, gradove ili zemlje';
 
   @override
-  String get editorNamesSearchNations => 'Search nations or codes';
+  String get editorNamesSearchNations => 'Traži zemlje ili kratice';
 
   @override
-  String get editorNamesNone => 'Nothing matches your search.';
+  String get editorNamesNone => 'Ništa ne odgovara pretrazi.';
 
   @override
   String get editorNamesEveryLanguage =>
-      'A custom name shows the same in every language.';
+      'Vlastiti naziv prikazuje se isto na svim jezicima.';
 
   @override
   String editorNamesGameName(String name) {
-    return 'Game name: $name';
+    return 'Naziv u igri: $name';
   }
 
   @override
-  String get editorNamesReset => 'Reset to original';
+  String get editorNamesReset => 'Vrati izvorno';
 
   @override
-  String get editorNamesDone => 'Done';
+  String get editorNamesDone => 'Gotovo';
 
   @override
-  String get editorNamesKeepHint => 'Leave empty to keep the game name.';
+  String get editorNamesKeepHint => 'Ostavi prazno da zadržiš naziv iz igre.';
 
   @override
-  String get editorNamesCode => 'Code';
+  String get editorNamesCode => 'Kratica';
 
   @override
   String get editorNamesCodeHelp =>
-      '3 letters, A to Z, used by no other nation.';
+      '3 slova, od A do Z, koja ne koristi nijedna druga zemlja.';
 
   @override
   String editorNamesCodeTaken(String code, String nation) {
-    return '$code is already used by $nation.';
+    return '$code već koristi $nation.';
   }
 
   @override
-  String get editorNamesTaken => 'Another account already has this name.';
+  String get editorNamesTaken => 'Drugi račun već ima ovaj naziv.';
 
   @override
-  String get editorNamesOutlet => 'Outlet';
+  String get editorNamesOutlet => 'Medij';
 
   @override
-  String get editorNamesFirstNames => 'First names';
+  String get editorNamesFirstNames => 'Imena';
 
   @override
-  String get editorNamesSurnames => 'Surnames';
+  String get editorNamesSurnames => 'Prezimena';
 
   @override
   String editorNamesFirstCount(int count, int min) {
-    return '$count / $min first names';
+    return '$count / $min imena';
   }
 
   @override
   String editorNamesSurCount(int count, int min) {
-    return '$count / $min surnames';
+    return '$count / $min prezimena';
   }
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Separate the names with commas or new lines. Each list needs at least $min. They name new players, local fans and staff.';
+    return 'Odvoji imena zarezima ili novim redovima. Svaki popis treba barem $min. Dobivaju ih novi igrači, lokalni navijači i stožer.';
   }
 
   @override
   String editorNamesListCounts(int first, int sur) {
-    return '$first first names, $sur surnames';
+    return 'Imena: $first, prezimena: $sur';
   }
 
   @override
   String editorNamesMainStadium(String city) {
-    return 'Main stadium in $city';
+    return 'Glavni stadion, $city';
   }
 
   @override
-  String get editorNamesChanged => 'Changed';
+  String get editorNamesChanged => 'Promijenjeno';
 
   @override
-  String get editorNamesPick => 'Pick a name to edit.';
+  String get editorNamesPick => 'Odaberi naziv za uređivanje.';
 
   @override
   String get editorNamesStadiumsNote =>
-      'Only the national grounds listed here can be renamed: the main stadium of each city.';
+      'Preimenovati se mogu samo nacionalni stadioni navedeni ovdje: glavni stadion svakog grada.';
 
   @override
   String get editorTrophiesIntro =>
-      'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.';
+      'Dodirni trofej i daj mu vlastitu sliku. Najbolje izgleda PNG s prozirnom pozadinom.';
 
   @override
-  String get editorTrophyCustom => 'Custom';
+  String get editorTrophyCustom => 'Vlastita';
 
   @override
-  String get editorTrophyDefault => 'Game picture';
+  String get editorTrophyDefault => 'Slika iz igre';
 
   @override
-  String get editorTrophyChoose => 'Choose a picture';
+  String get editorTrophyChoose => 'Odaberi sliku';
 
   @override
-  String get editorTrophyReplace => 'Choose another picture';
+  String get editorTrophyReplace => 'Odaberi drugu sliku';
 
   @override
-  String get editorTrophyReset => 'Back to default';
+  String get editorTrophyReset => 'Vrati zadano';
 
   @override
-  String get editorTrophyResetTitle => 'Use the game\'s picture?';
+  String get editorTrophyResetTitle => 'Koristiti sliku iz igre?';
 
   @override
   String get editorTrophyResetBody =>
-      'Your picture for this trophy will be removed. Undo can\'t bring it back.';
+      'Tvoja slika za ovaj trofej bit će uklonjena. Poništi je neće vratiti.';
 
   @override
-  String get editorTrophyResetConfirm => 'Remove picture';
+  String get editorTrophyResetConfirm => 'Ukloni sliku';
 
   @override
   String get editorTrophyUnusable =>
-      'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.';
+      'Ova se slika ne može koristiti. Odaberi PNG ili JPEG do 4096 piksela po stranici.';
 
   @override
-  String get editorTrophyOpening => 'Opening the picture';
+  String get editorTrophyOpening => 'Otvaram sliku';
 
   @override
-  String get editorTrophyPreparing => 'Preparing the trophy';
+  String get editorTrophyPreparing => 'Pripremam trofej';
 
   @override
-  String get editorTrophyFrameTitle => 'Frame the trophy';
+  String get editorTrophyFrameTitle => 'Uokviri trofej';
 
   @override
   String get editorTrophyFrameHint =>
-      'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.';
+      'Povuci za pomicanje, raširi prste za zumiranje. Ono što je unutar okvira postaje trofej.';
 
   @override
-  String get editorTrophyFit => 'Fit';
+  String get editorTrophyFit => 'Prilagodi';
 
   @override
-  String get editorTrophyPreview => 'Preview';
+  String get editorTrophyPreview => 'Pregled';
 
   @override
-  String get editorTrophyPreviewTitle => 'How it will look';
+  String get editorTrophyPreviewTitle => 'Kako će izgledati';
 
   @override
-  String get editorTrophyAdjust => 'Adjust';
+  String get editorTrophyAdjust => 'Namjesti';
 
   @override
-  String get editorTrophyUse => 'Use this picture';
+  String get editorTrophyUse => 'Koristi ovu sliku';
 
   @override
   String get editorTrophyRectangle =>
-      'This picture has no transparent background, so the game will show it as a rectangle.';
+      'Ova slika nema prozirnu pozadinu, pa će je igra prikazati kao pravokutnik.';
 
   @override
-  String get editorTrophyRectangleShort => 'Shows as a rectangle';
+  String get editorTrophyRectangleShort => 'Prikazuje se kao pravokutnik';
 
   @override
-  String get editorTrophySaved => 'Trophy picture saved.';
+  String get editorTrophySaved => 'Slika trofeja spremljena.';
 
   @override
-  String get editorTrophyRemoved => 'The game\'s picture is back.';
+  String get editorTrophyRemoved => 'Slika iz igre je vraćena.';
 
   @override
   String get editorTrophySaveFailed =>
-      'The picture could not be saved. Try again.';
+      'Sliku nije bilo moguće spremiti. Pokušaj ponovno.';
 
   @override
-  String get editorTrophyPick => 'Pick a trophy to change its picture.';
+  String get editorTrophyPick => 'Odaberi trofej da mu promijeniš sliku.';
 
   @override
   String editorTrophySize(int width, int height) {
-    return 'Saved at $width x $height pixels';
+    return 'Sprema se u veličini $width x $height piksela';
   }
 
   @override
   String editorIssueUnknownEntry(String name) {
-    return '$name is no longer in the game';
+    return '$name: više nije u igri';
   }
 
   @override
   String get editorAttentionBody =>
-      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+      'Ažuriranje igre uklonilo je nešto na što se ova baza poziva. Ukloni svaku stavku ispod i na njoj ćeš opet moći započeti karijeru.';
 
   @override
-  String get editorRemove => 'Remove';
+  String get editorRemove => 'Ukloni';
 
   @override
   String worldChip(String name) {
-    return 'World: $name';
+    return 'Svijet: $name';
   }
 
   @override
-  String get worldDefault => 'Default';
+  String get worldDefault => 'Zadani';
 
   @override
-  String get worldDefaultAbout => 'The game\'s own world';
+  String get worldDefaultAbout => 'Svijet same igre';
 
   @override
-  String get worldSheetTitle => 'Choose a world';
+  String get worldSheetTitle => 'Odaberi svijet';
 
   @override
   String get worldSheetBlurb =>
-      'Databases you made or opened in the Editor. Only complete ones can start a career.';
+      'Baze koje si napravio ili otvorio u Uređivaču. Karijeru možeš započeti samo na potpunoj.';
 
   @override
   String get worldPackGone =>
-      'That database is no longer on this device. The career was not started.';
+      'Ta baza više nije na ovom uređaju. Karijera nije započeta.';
 
   @override
-  String get worldStarting => 'Setting up your world';
+  String get worldStarting => 'Pripremam tvoj svijet';
 
   @override
-  String get settingsDefaultWorldTitle => 'Default world';
+  String get settingsDefaultWorldTitle => 'Zadani svijet';
 
   @override
   String get settingsDefaultWorldBlurb =>
-      'The world New Game starts on. You can still change it for each career.';
+      'Svijet na kojem počinje Nova igra. I dalje ga možeš promijeniti za svaku karijeru.';
 
   @override
   String get worldPackNotReady =>
-      'That database can no longer start a career. Fix it in the Editor, or choose another world.';
+      'Na toj bazi više ne možeš započeti karijeru. Popravi je u Uređivaču ili odaberi drugi svijet.';
 }

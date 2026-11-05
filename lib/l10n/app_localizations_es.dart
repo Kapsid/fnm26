@@ -14385,255 +14385,258 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get editorIntro =>
-      'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.';
+      'Crea tu propio mundo inicial: tus jugadores, sus medias, tus nombres. Compártelo como archivo; tus amigos pueden importarlo y empezar una carrera con él.';
 
   @override
-  String get editorEmptyTitle => 'No databases yet';
+  String get editorEmptyTitle => 'Aún no hay bases de datos';
 
   @override
   String get editorEmptyBody =>
-      'A new database starts as a copy of the default world. Change what you like; it saves as you go.';
+      'Una base de datos nueva empieza como copia del mundo predeterminado. Cambia lo que quieras; se guarda sobre la marcha.';
 
   @override
-  String get editorNew => 'New database';
+  String get editorNew => 'Nueva base de datos';
 
   @override
-  String get editorImport => 'Import';
+  String get editorImport => 'Importar';
 
   @override
-  String get editorEdit => 'Edit';
+  String get editorEdit => 'Editar';
 
   @override
-  String get editorRename => 'Rename';
+  String get editorRename => 'Renombrar';
 
   @override
-  String get editorDuplicate => 'Duplicate';
+  String get editorDuplicate => 'Duplicar';
 
   @override
-  String get editorExport => 'Export';
+  String get editorExport => 'Exportar';
 
   @override
-  String get editorDelete => 'Delete';
+  String get editorDelete => 'Borrar';
 
   @override
-  String get editorCancel => 'Cancel';
+  String get editorCancel => 'Cancelar';
 
   @override
-  String get editorCreate => 'Create';
+  String get editorCreate => 'Crear';
 
   @override
-  String get editorMore => 'More actions';
+  String get editorMore => 'Más acciones';
 
   @override
-  String get editorNameLabel => 'Name';
+  String get editorNameLabel => 'Nombre';
 
   @override
-  String get editorNameHint => 'My world';
+  String get editorNameHint => 'Mi mundo';
 
   @override
-  String get editorRenameTitle => 'Rename database';
+  String get editorRenameTitle => 'Renombrar base de datos';
 
   @override
-  String get editorDuplicateTitle => 'Duplicate database';
+  String get editorDuplicateTitle => 'Duplicar base de datos';
 
   @override
   String editorCopyName(String name) {
-    return '$name copy';
+    return '$name (copia)';
   }
 
   @override
-  String get editorNameEmpty => 'Give it a name';
+  String get editorNameEmpty => 'Ponle un nombre';
 
   @override
   String editorNameTooLong(int max) {
-    return 'Keep it to $max characters';
+    return 'Máximo $max caracteres';
   }
 
   @override
   String get editorNameBadCharacters =>
-      'That name has characters that cannot be used';
+      'Ese nombre tiene caracteres que no se pueden usar';
 
   @override
-  String get editorDeleteTitle => 'Delete database?';
+  String get editorDeleteTitle => '¿Borrar la base de datos?';
 
   @override
   String editorDeleteBody(String name) {
-    return '\"$name\" will be removed from this device. Careers already started on it keep working.';
+    return '\"$name\" se eliminará de este dispositivo. Las carreras ya empezadas con ella siguen funcionando.';
   }
 
   @override
-  String get editorStatusReady => 'Ready';
+  String get editorStatusReady => 'Lista';
 
   @override
   String editorStatusMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things missing',
-      one: '1 thing missing',
+      other: 'Faltan $count cosas',
+      one: 'Falta 1 cosa',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorStatusAttention => 'Needs attention';
+  String get editorStatusAttention => 'Requiere atención';
 
   @override
-  String get editorStatusUnreadable => 'Cannot be opened';
+  String get editorStatusUnreadable => 'No se puede abrir';
 
   @override
   String editorEdited(String date) {
-    return 'Edited $date';
+    return 'Editada $date';
   }
 
   @override
-  String get editorCreating => 'Copying the default world…';
+  String get editorCreating => 'Copiando el mundo predeterminado…';
 
   @override
-  String get editorImported => 'Database imported';
+  String get editorImported => 'Base de datos importada';
 
   @override
-  String get editorImportOpen => 'Open';
+  String get editorImportOpen => 'Abrir';
 
   @override
-  String get editorImportTooBig => 'That file is too big to be a database.';
+  String get editorImportTooBig =>
+      'Ese archivo es demasiado grande para ser una base de datos.';
 
   @override
-  String get editorImportNotAPack => 'That file is not an FNM database.';
+  String get editorImportNotAPack =>
+      'Ese archivo no es una base de datos de FNM.';
 
   @override
   String get editorImportNewer =>
-      'That database was made with a newer version of the game. Update the game to import it.';
+      'Esa base de datos se hizo con una versión más reciente del juego. Actualiza el juego para importarla.';
 
   @override
   String get editorImportBadData =>
-      'That database holds data the game cannot use, so nothing was imported.';
+      'Esa base de datos contiene datos que el juego no puede usar, así que no se ha importado nada.';
 
   @override
   String get editorImportBadTrophy =>
-      'A trophy picture in that file could not be read, so nothing was imported.';
+      'No se pudo leer una imagen de trofeo de ese archivo, así que no se ha importado nada.';
 
   @override
-  String get editorExportFailed => 'The database could not be exported.';
+  String get editorExportFailed => 'No se pudo exportar la base de datos.';
 
   @override
-  String get editorShareSubject => 'FNM database';
+  String get editorShareSubject => 'Base de datos de FNM';
 
   @override
-  String get editorPackMissing => 'This database is no longer on this device.';
+  String get editorPackMissing =>
+      'Esta base de datos ya no está en este dispositivo.';
 
   @override
-  String get editorReadyTitle => 'Ready to play';
+  String get editorReadyTitle => 'Lista para jugar';
 
   @override
   String get editorReadyBody =>
-      'Every nation has a full squad and every name checks out. You can start a career on it.';
+      'Cada selección tiene una plantilla completa y todos los nombres son válidos. Puedes empezar una carrera con ella.';
 
   @override
   String editorNotReadyTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things to fix before it can be played',
-      one: '1 thing to fix before it can be played',
+      other: '$count cosas por arreglar antes de poder jugar',
+      one: '1 cosa por arreglar antes de poder jugar',
     );
     return '$_temp0';
   }
 
   @override
   String get editorNotReadyBody =>
-      'It saves as you go, so you can share it now and finish it later.';
+      'Se guarda sobre la marcha, así que puedes compartirla ya y terminarla después.';
 
   @override
   String editorSectionsReady(int ready, int total) {
-    return '$ready of $total sections ready';
+    return '$ready de $total secciones listas';
   }
 
   @override
-  String get editorMissingTitle => 'What\'s missing';
+  String get editorMissingTitle => 'Qué falta';
 
   @override
   String editorShowAll(int count) {
-    return 'Show all ($count)';
+    return 'Ver todo ($count)';
   }
 
   @override
-  String get editorShowLess => 'Show less';
+  String get editorShowLess => 'Ver menos';
 
   @override
-  String get editorUndo => 'Undo';
+  String get editorUndo => 'Deshacer';
 
   @override
-  String get editorSectionsTitle => 'Sections';
+  String get editorSectionsTitle => 'Secciones';
 
   @override
-  String get editorSectionPlayers => 'Players';
+  String get editorSectionPlayers => 'Jugadores';
 
   @override
-  String get editorSectionNations => 'Nations';
+  String get editorSectionNations => 'Selecciones';
 
   @override
-  String get editorSectionClubs => 'Clubs';
+  String get editorSectionClubs => 'Clubes';
 
   @override
-  String get editorSectionStadiums => 'Stadiums';
+  String get editorSectionStadiums => 'Estadios';
 
   @override
-  String get editorSectionCompetitions => 'Competitions';
+  String get editorSectionCompetitions => 'Competiciones';
 
   @override
-  String get editorSectionY => 'Y accounts';
+  String get editorSectionY => 'Cuentas de Y';
 
   @override
-  String get editorSectionPress => 'Press';
+  String get editorSectionPress => 'Prensa';
 
   @override
-  String get editorSectionNameLists => 'Name lists';
+  String get editorSectionNameLists => 'Listas de nombres';
 
   @override
-  String get editorSectionSponsors => 'Sponsors';
+  String get editorSectionSponsors => 'Patrocinadores';
 
   @override
-  String get editorSectionTrophies => 'Trophies';
+  String get editorSectionTrophies => 'Trofeos';
 
   @override
-  String get editorAboutPlayers => 'Squads, ratings and potential';
+  String get editorAboutPlayers => 'Plantillas, medias y potencial';
 
   @override
-  String get editorAboutNations => 'Nation names and codes';
+  String get editorAboutNations => 'Nombres y códigos de las selecciones';
 
   @override
-  String get editorAboutClubs => 'Club names';
+  String get editorAboutClubs => 'Nombres de los clubes';
 
   @override
-  String get editorAboutStadiums => 'National stadium names';
+  String get editorAboutStadiums => 'Nombres de los estadios nacionales';
 
   @override
-  String get editorAboutCompetitions => 'Competition names';
+  String get editorAboutCompetitions => 'Nombres de las competiciones';
 
   @override
-  String get editorAboutY => 'Accounts on Y';
+  String get editorAboutY => 'Cuentas en Y';
 
   @override
-  String get editorAboutPress => 'Journalists and their outlets';
+  String get editorAboutPress => 'Periodistas y sus medios';
 
   @override
   String get editorAboutNameLists =>
-      'Names for new players, local fans and staff';
+      'Nombres para nuevos jugadores, aficionados locales y personal';
 
   @override
-  String get editorAboutSponsors => 'Sponsor brands';
+  String get editorAboutSponsors => 'Marcas de los patrocinadores';
 
   @override
-  String get editorAboutTrophies => 'Trophy pictures';
+  String get editorAboutTrophies => 'Imágenes de los trofeos';
 
   @override
   String editorCountPlayers(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players',
-      one: '1 player',
+      other: '$count jugadores',
+      one: '1 jugador',
     );
     return '$_temp0';
   }
@@ -14643,8 +14646,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count nations',
-      one: '1 nation',
+      other: '$count selecciones',
+      one: '1 selección',
     );
     return '$_temp0';
   }
@@ -14654,9 +14657,9 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
-      zero: 'Game names',
+      other: '$count cambios',
+      one: '1 cambio',
+      zero: 'Nombres del juego',
     );
     return '$_temp0';
   }
@@ -14666,9 +14669,9 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count custom pictures',
-      one: '1 custom picture',
-      zero: 'Game pictures',
+      other: '$count imágenes propias',
+      one: '1 imagen propia',
+      zero: 'Imágenes del juego',
     );
     return '$_temp0';
   }
@@ -14678,8 +14681,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count to fix',
-      one: '1 to fix',
+      other: '$count por arreglar',
+      one: '1 por arreglar',
     );
     return '$_temp0';
   }
@@ -14689,8 +14692,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more players needed',
-      one: '1 more player needed',
+      other: 'Faltan $count jugadores',
+      one: 'Falta 1 jugador',
     );
     return '$_temp0';
   }
@@ -14700,8 +14703,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players too many',
-      one: '1 player too many',
+      other: 'Sobran $count jugadores',
+      one: 'Sobra 1 jugador',
     );
     return '$_temp0';
   }
@@ -14711,8 +14714,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count goalkeepers needed',
-      one: '1 goalkeeper needed',
+      other: 'Faltan $count porteros',
+      one: 'Falta 1 portero',
     );
     return '$_temp0';
   }
@@ -14722,8 +14725,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count defenders needed',
-      one: '1 defender needed',
+      other: 'Faltan $count defensas',
+      one: 'Falta 1 defensa',
     );
     return '$_temp0';
   }
@@ -14733,8 +14736,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count midfielders needed',
-      one: '1 midfielder needed',
+      other: 'Faltan $count centrocampistas',
+      one: 'Falta 1 centrocampista',
     );
     return '$_temp0';
   }
@@ -14744,478 +14747,479 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count forwards needed',
-      one: '1 forward needed',
+      other: 'Faltan $count delanteros',
+      one: 'Falta 1 delantero',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorIssuePlayerNoName => 'A player has no name';
+  String get editorIssuePlayerNoName => 'Un jugador no tiene nombre';
 
   @override
   String editorIssueAge(String name) {
-    return '$name: age must be 15 to 45';
+    return '$name: la edad debe estar entre 15 y 45';
   }
 
   @override
   String editorIssueRating(String name) {
-    return '$name: overall must be 1 to 99';
+    return '$name: la media debe estar entre 1 y 99';
   }
 
   @override
   String editorIssuePotential(String name) {
-    return '$name: potential must be between the overall and 99';
+    return '$name: el potencial debe estar entre la media y 99';
   }
 
   @override
   String editorIssueRenameEmpty(String name) {
-    return 'The new name for $name is empty';
+    return 'El nuevo nombre de $name está vacío';
   }
 
   @override
-  String get editorIssueNameEmpty => 'A name is empty';
+  String get editorIssueNameEmpty => 'Hay un nombre vacío';
 
   @override
   String editorIssueNameTooLong(String name) {
-    return '\"$name\" is too long';
+    return '\"$name\" es demasiado largo';
   }
 
   @override
   String editorIssueNameBadCharacters(String name) {
-    return '\"$name\" has characters that cannot be used';
+    return '\"$name\" tiene caracteres que no se pueden usar';
   }
 
   @override
   String editorIssueNameTaken(String name) {
-    return '\"$name\" is already taken';
+    return '\"$name\" ya está en uso';
   }
 
   @override
-  String get editorIssueCode => 'The code must be 3 letters, A to Z';
+  String get editorIssueCode => 'El código debe tener 3 letras, de la A a la Z';
 
   @override
   String editorIssueDuplicateCode(String code, String nations) {
-    return 'Code $code is used by $nations';
+    return 'El código $code lo usan $nations';
   }
 
   @override
   String editorIssueFirstNames(int count) {
-    return 'At least $count first names needed';
+    return 'Hacen falta al menos $count nombres';
   }
 
   @override
   String editorIssueSurnames(int count) {
-    return 'At least $count surnames needed';
+    return 'Hacen falta al menos $count apellidos';
   }
 
   @override
-  String get editorIssueValue => 'A value is out of range';
+  String get editorIssueValue => 'Hay un valor fuera de rango';
 
   @override
   String get editorIssueUnknown =>
-      'Refers to something that is no longer in the game';
+      'Hace referencia a algo que ya no está en el juego';
 
   @override
-  String get editorSectionSoon => 'Editing this section is on its way.';
+  String get editorSectionSoon => 'La edición de esta sección llegará pronto.';
 
   @override
-  String get editorNewFailed => 'The database could not be made. Try again.';
+  String get editorNewFailed =>
+      'No se pudo crear la base de datos. Inténtalo de nuevo.';
 
   @override
-  String get editorPickFailed => 'The file could not be opened.';
+  String get editorPickFailed => 'No se pudo abrir el archivo.';
 
   @override
-  String get editorRenameFailed => 'The database could not be renamed.';
+  String get editorRenameFailed => 'No se pudo renombrar la base de datos.';
 
   @override
-  String get editorDuplicateFailed => 'The database could not be copied.';
+  String get editorDuplicateFailed => 'No se pudo copiar la base de datos.';
 
   @override
-  String get editorNationsSearch => 'Search nations';
+  String get editorNationsSearch => 'Buscar selecciones';
 
   @override
-  String get editorFilterAll => 'All';
+  String get editorFilterAll => 'Todas';
 
   @override
-  String get editorNationsNone => 'No nation matches your search.';
+  String get editorNationsNone => 'Ninguna selección coincide con tu búsqueda.';
 
   @override
-  String get editorNationSquadReady => 'Squad ready';
+  String get editorNationSquadReady => 'Plantilla lista';
 
   @override
-  String get editorSquadAdd => 'Add player';
+  String get editorSquadAdd => 'Añadir jugador';
 
   @override
   String editorSquadFull(int max) {
-    return 'A squad holds at most $max players.';
+    return 'Una plantilla tiene como máximo $max jugadores.';
   }
 
   @override
   String editorSquadRemoved(String name) {
-    return '$name removed from the squad';
+    return '$name quitado de la plantilla';
   }
 
   @override
-  String get editorPlayerUnnamed => 'Unnamed player';
+  String get editorPlayerUnnamed => 'Jugador sin nombre';
 
   @override
   String get editorSquadDuplicate =>
-      'Another player in this squad has this name.';
+      'Otro jugador de esta plantilla tiene este nombre.';
 
   @override
-  String get editorSquadEmpty => 'No players yet. Add the first one.';
+  String get editorSquadEmpty => 'Aún no hay jugadores. Añade el primero.';
 
   @override
-  String get editorSquadReady => 'This squad is ready to play.';
+  String get editorSquadReady => 'Esta plantilla está lista para jugar.';
 
   @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
-    return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
+    return 'De $min a $max jugadores, con al menos $gk porteros, $def defensas, $mid centrocampistas y $fwd delanteros.';
   }
 
   @override
-  String get editorShortGk => 'GK';
+  String get editorShortGk => 'POR';
 
   @override
   String get editorShortDef => 'DEF';
 
   @override
-  String get editorShortMid => 'MID';
+  String get editorShortMid => 'MED';
 
   @override
-  String get editorShortFwd => 'FWD';
+  String get editorShortFwd => 'DEL';
 
   @override
   String editorPlayerAgeShort(int age) {
-    return 'Age $age';
+    return '$age años';
   }
 
   @override
-  String get editorPlayerName => 'Name';
+  String get editorPlayerName => 'Nombre';
 
   @override
-  String get editorPlayerNameHint => 'Type his name';
+  String get editorPlayerNameHint => 'Escribe su nombre';
 
   @override
-  String get editorPlayerNameNeeded => 'A name is needed.';
+  String get editorPlayerNameNeeded => 'Hace falta un nombre.';
 
   @override
-  String get editorPlayerNameBad => 'Remove the unusual characters.';
+  String get editorPlayerNameBad => 'Quita los caracteres raros.';
 
   @override
-  String get editorPlayerAge => 'Age';
+  String get editorPlayerAge => 'Edad';
 
   @override
-  String get editorPlayerPosition => 'Position';
+  String get editorPlayerPosition => 'Posición';
 
   @override
   String get editorPlayerClub => 'Club';
 
   @override
-  String get editorPlayerFreeAgent => 'Free agent';
+  String get editorPlayerFreeAgent => 'Agente libre';
 
   @override
-  String get editorPlayerClubSearch => 'Search clubs';
+  String get editorPlayerClubSearch => 'Buscar clubes';
 
   @override
-  String get editorPlayerClubNone => 'No club matches your search.';
+  String get editorPlayerClubNone => 'Ningún club coincide con tu búsqueda.';
 
   @override
-  String get editorPlayerClubPick => 'Pick a club';
+  String get editorPlayerClubPick => 'Elige un club';
 
   @override
-  String get editorPlayerOverall => 'Overall';
+  String get editorPlayerOverall => 'Media';
 
   @override
-  String get editorPlayerType => 'Player type';
+  String get editorPlayerType => 'Tipo de jugador';
 
   @override
-  String get editorPlayerPotential => 'Potential';
+  String get editorPlayerPotential => 'Potencial';
 
   @override
   String get editorPlayerPotentialAbout =>
-      'The peak he can reach if he develops well. Never below his overall.';
+      'El techo que puede alcanzar si se desarrolla bien. Nunca por debajo de su media.';
 
   @override
-  String get editorPlayerQualities => 'What the game stores';
+  String get editorPlayerQualities => 'Lo que guarda el juego';
 
   @override
-  String get editorTypeBalanced => 'Balanced';
+  String get editorTypeBalanced => 'Equilibrado';
 
   @override
-  String get editorTypeAthlete => 'Athlete';
+  String get editorTypeAthlete => 'Atleta';
 
   @override
-  String get editorTypeTechnician => 'Technician';
+  String get editorTypeTechnician => 'Técnico';
 
   @override
-  String get editorTypeEngine => 'Engine';
+  String get editorTypeEngine => 'Motor';
 
   @override
   String get editorTypeBalancedAbout =>
-      'Even across physique, technique and stamina.';
+      'Parejo en físico, técnica y resistencia.';
 
   @override
   String get editorTypeAthleteAbout =>
-      'Strong and quick, a little lighter on technique.';
+      'Fuerte y rápido, algo justo de técnica.';
 
   @override
-  String get editorTypeTechnicianAbout => 'Skilful on the ball, less physical.';
+  String get editorTypeTechnicianAbout => 'Hábil con el balón, menos físico.';
 
   @override
   String get editorTypeEngineAbout =>
-      'Runs all day, steady at everything else.';
+      'Corre todo el partido, cumplidor en todo lo demás.';
 
   @override
-  String get editorPlayerLess => 'One less';
+  String get editorPlayerLess => 'Uno menos';
 
   @override
-  String get editorPlayerMore => 'One more';
+  String get editorPlayerMore => 'Uno más';
 
   @override
-  String get editorPlayerRemove => 'Remove from squad';
+  String get editorPlayerRemove => 'Quitar de la plantilla';
 
   @override
-  String get editorPlayerGone => 'This player is no longer in the squad.';
+  String get editorPlayerGone => 'Este jugador ya no está en la plantilla.';
 
   @override
-  String get editorNationGone => 'This nation is not in the database.';
+  String get editorNationGone => 'Esta selección no está en la base de datos.';
 
   @override
-  String get editorPickPlayer => 'Pick a player to edit.';
+  String get editorPickPlayer => 'Elige un jugador para editarlo.';
 
   @override
-  String get editorPlayerClubAuto => 'Chosen by the game';
+  String get editorPlayerClubAuto => 'Lo elige el juego';
 
   @override
   String get editorPlayerClubAutoAbout =>
-      'The game places him at a club that suits his level.';
+      'El juego lo coloca en un club acorde a su nivel.';
 
   @override
-  String get editorNamesSearch => 'Search names';
+  String get editorNamesSearch => 'Buscar nombres';
 
   @override
-  String get editorNamesSearchClubs => 'Search clubs or countries';
+  String get editorNamesSearchClubs => 'Buscar clubes o países';
 
   @override
-  String get editorNamesSearchStadiums =>
-      'Search stadiums, cities or countries';
+  String get editorNamesSearchStadiums => 'Buscar estadios, ciudades o países';
 
   @override
-  String get editorNamesSearchNations => 'Search nations or codes';
+  String get editorNamesSearchNations => 'Buscar selecciones o códigos';
 
   @override
-  String get editorNamesNone => 'Nothing matches your search.';
+  String get editorNamesNone => 'Nada coincide con tu búsqueda.';
 
   @override
   String get editorNamesEveryLanguage =>
-      'A custom name shows the same in every language.';
+      'Un nombre personalizado se ve igual en todos los idiomas.';
 
   @override
   String editorNamesGameName(String name) {
-    return 'Game name: $name';
+    return 'Nombre del juego: $name';
   }
 
   @override
-  String get editorNamesReset => 'Reset to original';
+  String get editorNamesReset => 'Restablecer original';
 
   @override
-  String get editorNamesDone => 'Done';
+  String get editorNamesDone => 'Hecho';
 
   @override
-  String get editorNamesKeepHint => 'Leave empty to keep the game name.';
+  String get editorNamesKeepHint =>
+      'Déjalo vacío para mantener el nombre del juego.';
 
   @override
-  String get editorNamesCode => 'Code';
+  String get editorNamesCode => 'Código';
 
   @override
   String get editorNamesCodeHelp =>
-      '3 letters, A to Z, used by no other nation.';
+      '3 letras, de la A a la Z, sin usar por otra selección.';
 
   @override
   String editorNamesCodeTaken(String code, String nation) {
-    return '$code is already used by $nation.';
+    return '$code ya lo usa $nation.';
   }
 
   @override
-  String get editorNamesTaken => 'Another account already has this name.';
+  String get editorNamesTaken => 'Otra cuenta ya tiene este nombre.';
 
   @override
-  String get editorNamesOutlet => 'Outlet';
+  String get editorNamesOutlet => 'Medio';
 
   @override
-  String get editorNamesFirstNames => 'First names';
+  String get editorNamesFirstNames => 'Nombres';
 
   @override
-  String get editorNamesSurnames => 'Surnames';
+  String get editorNamesSurnames => 'Apellidos';
 
   @override
   String editorNamesFirstCount(int count, int min) {
-    return '$count / $min first names';
+    return '$count / $min nombres';
   }
 
   @override
   String editorNamesSurCount(int count, int min) {
-    return '$count / $min surnames';
+    return '$count / $min apellidos';
   }
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Separate the names with commas or new lines. Each list needs at least $min. They name new players, local fans and staff.';
+    return 'Separa los nombres con comas o saltos de línea. Cada lista necesita al menos $min. Se usan para nuevos jugadores, aficionados locales y personal.';
   }
 
   @override
   String editorNamesListCounts(int first, int sur) {
-    return '$first first names, $sur surnames';
+    return '$first nombres, $sur apellidos';
   }
 
   @override
   String editorNamesMainStadium(String city) {
-    return 'Main stadium in $city';
+    return 'Estadio principal de $city';
   }
 
   @override
-  String get editorNamesChanged => 'Changed';
+  String get editorNamesChanged => 'Cambiado';
 
   @override
-  String get editorNamesPick => 'Pick a name to edit.';
+  String get editorNamesPick => 'Elige un nombre para editarlo.';
 
   @override
   String get editorNamesStadiumsNote =>
-      'Only the national grounds listed here can be renamed: the main stadium of each city.';
+      'Solo se pueden renombrar los estadios nacionales de esta lista: el estadio principal de cada ciudad.';
 
   @override
   String get editorTrophiesIntro =>
-      'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.';
+      'Toca un trofeo para darle tu propia imagen. Un PNG con fondo transparente queda mejor.';
 
   @override
-  String get editorTrophyCustom => 'Custom';
+  String get editorTrophyCustom => 'Propia';
 
   @override
-  String get editorTrophyDefault => 'Game picture';
+  String get editorTrophyDefault => 'Del juego';
 
   @override
-  String get editorTrophyChoose => 'Choose a picture';
+  String get editorTrophyChoose => 'Elegir imagen';
 
   @override
-  String get editorTrophyReplace => 'Choose another picture';
+  String get editorTrophyReplace => 'Elegir otra imagen';
 
   @override
-  String get editorTrophyReset => 'Back to default';
+  String get editorTrophyReset => 'Volver a la original';
 
   @override
-  String get editorTrophyResetTitle => 'Use the game\'s picture?';
+  String get editorTrophyResetTitle => '¿Usar la imagen del juego?';
 
   @override
   String get editorTrophyResetBody =>
-      'Your picture for this trophy will be removed. Undo can\'t bring it back.';
+      'Se eliminará tu imagen de este trofeo. Deshacer no podrá recuperarla.';
 
   @override
-  String get editorTrophyResetConfirm => 'Remove picture';
+  String get editorTrophyResetConfirm => 'Quitar imagen';
 
   @override
   String get editorTrophyUnusable =>
-      'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.';
+      'Esta imagen no se puede usar. Elige un PNG o JPEG de hasta 4096 píxeles por lado.';
 
   @override
-  String get editorTrophyOpening => 'Opening the picture';
+  String get editorTrophyOpening => 'Abriendo la imagen';
 
   @override
-  String get editorTrophyPreparing => 'Preparing the trophy';
+  String get editorTrophyPreparing => 'Preparando el trofeo';
 
   @override
-  String get editorTrophyFrameTitle => 'Frame the trophy';
+  String get editorTrophyFrameTitle => 'Encuadra el trofeo';
 
   @override
   String get editorTrophyFrameHint =>
-      'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.';
+      'Arrastra para mover y pellizca para hacer zoom. Lo que quede dentro del marco será el trofeo.';
 
   @override
-  String get editorTrophyFit => 'Fit';
+  String get editorTrophyFit => 'Ajustar';
 
   @override
-  String get editorTrophyPreview => 'Preview';
+  String get editorTrophyPreview => 'Vista previa';
 
   @override
-  String get editorTrophyPreviewTitle => 'How it will look';
+  String get editorTrophyPreviewTitle => 'Así se verá';
 
   @override
-  String get editorTrophyAdjust => 'Adjust';
+  String get editorTrophyAdjust => 'Retocar';
 
   @override
-  String get editorTrophyUse => 'Use this picture';
+  String get editorTrophyUse => 'Usar esta imagen';
 
   @override
   String get editorTrophyRectangle =>
-      'This picture has no transparent background, so the game will show it as a rectangle.';
+      'Esta imagen no tiene fondo transparente, así que el juego la mostrará como un rectángulo.';
 
   @override
-  String get editorTrophyRectangleShort => 'Shows as a rectangle';
+  String get editorTrophyRectangleShort => 'Se ve como rectángulo';
 
   @override
-  String get editorTrophySaved => 'Trophy picture saved.';
+  String get editorTrophySaved => 'Imagen del trofeo guardada.';
 
   @override
-  String get editorTrophyRemoved => 'The game\'s picture is back.';
+  String get editorTrophyRemoved => 'Ha vuelto la imagen del juego.';
 
   @override
   String get editorTrophySaveFailed =>
-      'The picture could not be saved. Try again.';
+      'No se pudo guardar la imagen. Inténtalo de nuevo.';
 
   @override
-  String get editorTrophyPick => 'Pick a trophy to change its picture.';
+  String get editorTrophyPick => 'Elige un trofeo para cambiar su imagen.';
 
   @override
   String editorTrophySize(int width, int height) {
-    return 'Saved at $width x $height pixels';
+    return 'Guardada a $width x $height píxeles';
   }
 
   @override
   String editorIssueUnknownEntry(String name) {
-    return '$name is no longer in the game';
+    return '$name ya no está en el juego';
   }
 
   @override
   String get editorAttentionBody =>
-      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+      'Una actualización del juego eliminó algo a lo que esta base de datos hace referencia. Quita cada entrada de abajo y podrá volver a empezar una carrera.';
 
   @override
-  String get editorRemove => 'Remove';
+  String get editorRemove => 'Quitar';
 
   @override
   String worldChip(String name) {
-    return 'World: $name';
+    return 'Mundo: $name';
   }
 
   @override
-  String get worldDefault => 'Default';
+  String get worldDefault => 'Predeterminado';
 
   @override
-  String get worldDefaultAbout => 'The game\'s own world';
+  String get worldDefaultAbout => 'El mundo original del juego';
 
   @override
-  String get worldSheetTitle => 'Choose a world';
+  String get worldSheetTitle => 'Elige un mundo';
 
   @override
   String get worldSheetBlurb =>
-      'Databases you made or opened in the Editor. Only complete ones can start a career.';
+      'Bases de datos que creaste o abriste en el Editor. Solo las completas pueden empezar una carrera.';
 
   @override
   String get worldPackGone =>
-      'That database is no longer on this device. The career was not started.';
+      'Esa base de datos ya no está en este dispositivo. No se ha empezado la carrera.';
 
   @override
-  String get worldStarting => 'Setting up your world';
+  String get worldStarting => 'Preparando tu mundo';
 
   @override
-  String get settingsDefaultWorldTitle => 'Default world';
+  String get settingsDefaultWorldTitle => 'Mundo predeterminado';
 
   @override
   String get settingsDefaultWorldBlurb =>
-      'The world New Game starts on. You can still change it for each career.';
+      'El mundo con el que empieza Nueva partida. Puedes cambiarlo en cada carrera.';
 
   @override
   String get worldPackNotReady =>
-      'That database can no longer start a career. Fix it in the Editor, or choose another world.';
+      'Esa base de datos ya no puede empezar una carrera. Arréglala en el Editor o elige otro mundo.';
 }

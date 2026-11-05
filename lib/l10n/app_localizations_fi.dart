@@ -14363,262 +14363,264 @@ class AppLocalizationsFi extends AppLocalizations {
   String get callUpAwayShort => 'V';
 
   @override
-  String get homeEditor => 'Editor';
+  String get homeEditor => 'Editori';
 
   @override
-  String get editorTitle => 'Editor';
+  String get editorTitle => 'Editori';
 
   @override
   String get editorIntro =>
-      'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.';
+      'Tee oma aloitusmaailmasi: omat pelaajat, heidän tasonsa, omat nimet. Jaa se tiedostona; kaverit voivat tuoda sen ja aloittaa sillä uran.';
 
   @override
-  String get editorEmptyTitle => 'No databases yet';
+  String get editorEmptyTitle => 'Ei vielä tietokantoja';
 
   @override
   String get editorEmptyBody =>
-      'A new database starts as a copy of the default world. Change what you like; it saves as you go.';
+      'Uusi tietokanta alkaa oletusmaailman kopiona. Muuta mitä haluat; se tallentuu samalla.';
 
   @override
-  String get editorNew => 'New database';
+  String get editorNew => 'Uusi tietokanta';
 
   @override
-  String get editorImport => 'Import';
+  String get editorImport => 'Tuo';
 
   @override
-  String get editorEdit => 'Edit';
+  String get editorEdit => 'Muokkaa';
 
   @override
-  String get editorRename => 'Rename';
+  String get editorRename => 'Nimeä uudelleen';
 
   @override
-  String get editorDuplicate => 'Duplicate';
+  String get editorDuplicate => 'Monista';
 
   @override
-  String get editorExport => 'Export';
+  String get editorExport => 'Vie';
 
   @override
-  String get editorDelete => 'Delete';
+  String get editorDelete => 'Poista';
 
   @override
-  String get editorCancel => 'Cancel';
+  String get editorCancel => 'Peruuta';
 
   @override
-  String get editorCreate => 'Create';
+  String get editorCreate => 'Luo';
 
   @override
-  String get editorMore => 'More actions';
+  String get editorMore => 'Lisää toimintoja';
 
   @override
-  String get editorNameLabel => 'Name';
+  String get editorNameLabel => 'Nimi';
 
   @override
-  String get editorNameHint => 'My world';
+  String get editorNameHint => 'Oma maailma';
 
   @override
-  String get editorRenameTitle => 'Rename database';
+  String get editorRenameTitle => 'Nimeä tietokanta uudelleen';
 
   @override
-  String get editorDuplicateTitle => 'Duplicate database';
+  String get editorDuplicateTitle => 'Monista tietokanta';
 
   @override
   String editorCopyName(String name) {
-    return '$name copy';
+    return '$name kopio';
   }
 
   @override
-  String get editorNameEmpty => 'Give it a name';
+  String get editorNameEmpty => 'Anna sille nimi';
 
   @override
   String editorNameTooLong(int max) {
-    return 'Keep it to $max characters';
+    return 'Enintään $max merkkiä';
   }
 
   @override
   String get editorNameBadCharacters =>
-      'That name has characters that cannot be used';
+      'Nimessä on merkkejä, joita ei voi käyttää';
 
   @override
-  String get editorDeleteTitle => 'Delete database?';
+  String get editorDeleteTitle => 'Poistetaanko tietokanta?';
 
   @override
   String editorDeleteBody(String name) {
-    return '\"$name\" will be removed from this device. Careers already started on it keep working.';
+    return '”$name” poistetaan tältä laitteelta. Sillä jo aloitetut urat toimivat edelleen.';
   }
 
   @override
-  String get editorStatusReady => 'Ready';
+  String get editorStatusReady => 'Valmis';
 
   @override
   String editorStatusMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things missing',
-      one: '1 thing missing',
+      other: '$count asiaa puuttuu',
+      one: '1 asia puuttuu',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorStatusAttention => 'Needs attention';
+  String get editorStatusAttention => 'Vaatii huomiota';
 
   @override
-  String get editorStatusUnreadable => 'Cannot be opened';
+  String get editorStatusUnreadable => 'Ei aukea';
 
   @override
   String editorEdited(String date) {
-    return 'Edited $date';
+    return 'Muokattu $date';
   }
 
   @override
-  String get editorCreating => 'Copying the default world…';
+  String get editorCreating => 'Kopioidaan oletusmaailmaa…';
 
   @override
-  String get editorImported => 'Database imported';
+  String get editorImported => 'Tietokanta tuotu';
 
   @override
-  String get editorImportOpen => 'Open';
+  String get editorImportOpen => 'Avaa';
 
   @override
-  String get editorImportTooBig => 'That file is too big to be a database.';
+  String get editorImportTooBig =>
+      'Tiedosto on liian suuri ollakseen tietokanta.';
 
   @override
-  String get editorImportNotAPack => 'That file is not an FNM database.';
+  String get editorImportNotAPack => 'Tiedosto ei ole FNM-tietokanta.';
 
   @override
   String get editorImportNewer =>
-      'That database was made with a newer version of the game. Update the game to import it.';
+      'Tietokanta on tehty pelin uudemmalla versiolla. Päivitä peli, niin voit tuoda sen.';
 
   @override
   String get editorImportBadData =>
-      'That database holds data the game cannot use, so nothing was imported.';
+      'Tietokannassa on tietoja, joita peli ei voi käyttää, joten mitään ei tuotu.';
 
   @override
   String get editorImportBadTrophy =>
-      'A trophy picture in that file could not be read, so nothing was imported.';
+      'Tiedoston pokaalikuvaa ei voitu lukea, joten mitään ei tuotu.';
 
   @override
-  String get editorExportFailed => 'The database could not be exported.';
+  String get editorExportFailed => 'Tietokantaa ei voitu viedä.';
 
   @override
-  String get editorShareSubject => 'FNM database';
+  String get editorShareSubject => 'FNM-tietokanta';
 
   @override
-  String get editorPackMissing => 'This database is no longer on this device.';
+  String get editorPackMissing =>
+      'Tätä tietokantaa ei ole enää tällä laitteella.';
 
   @override
-  String get editorReadyTitle => 'Ready to play';
+  String get editorReadyTitle => 'Valmis pelattavaksi';
 
   @override
   String get editorReadyBody =>
-      'Every nation has a full squad and every name checks out. You can start a career on it.';
+      'Jokaisella maalla on täysi joukkue, ja kaikki nimet ovat kunnossa. Voit aloittaa sillä uran.';
 
   @override
   String editorNotReadyTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things to fix before it can be played',
-      one: '1 thing to fix before it can be played',
+      other: '$count korjattavaa asiaa ennen pelaamista',
+      one: '1 korjattava asia ennen pelaamista',
     );
     return '$_temp0';
   }
 
   @override
   String get editorNotReadyBody =>
-      'It saves as you go, so you can share it now and finish it later.';
+      'Se tallentuu samalla, joten voit jakaa sen nyt ja viimeistellä myöhemmin.';
 
   @override
   String editorSectionsReady(int ready, int total) {
-    return '$ready of $total sections ready';
+    return '$ready/$total osiota valmiina';
   }
 
   @override
-  String get editorMissingTitle => 'What\'s missing';
+  String get editorMissingTitle => 'Mitä puuttuu';
 
   @override
   String editorShowAll(int count) {
-    return 'Show all ($count)';
+    return 'Näytä kaikki ($count)';
   }
 
   @override
-  String get editorShowLess => 'Show less';
+  String get editorShowLess => 'Näytä vähemmän';
 
   @override
-  String get editorUndo => 'Undo';
+  String get editorUndo => 'Peru';
 
   @override
-  String get editorSectionsTitle => 'Sections';
+  String get editorSectionsTitle => 'Osiot';
 
   @override
-  String get editorSectionPlayers => 'Players';
+  String get editorSectionPlayers => 'Pelaajat';
 
   @override
-  String get editorSectionNations => 'Nations';
+  String get editorSectionNations => 'Maat';
 
   @override
-  String get editorSectionClubs => 'Clubs';
+  String get editorSectionClubs => 'Seurat';
 
   @override
-  String get editorSectionStadiums => 'Stadiums';
+  String get editorSectionStadiums => 'Stadionit';
 
   @override
-  String get editorSectionCompetitions => 'Competitions';
+  String get editorSectionCompetitions => 'Kilpailut';
 
   @override
-  String get editorSectionY => 'Y accounts';
+  String get editorSectionY => 'Y-tilit';
 
   @override
-  String get editorSectionPress => 'Press';
+  String get editorSectionPress => 'Media';
 
   @override
-  String get editorSectionNameLists => 'Name lists';
+  String get editorSectionNameLists => 'Nimilistat';
 
   @override
-  String get editorSectionSponsors => 'Sponsors';
+  String get editorSectionSponsors => 'Sponsorit';
 
   @override
-  String get editorSectionTrophies => 'Trophies';
+  String get editorSectionTrophies => 'Pokaalit';
 
   @override
-  String get editorAboutPlayers => 'Squads, ratings and potential';
+  String get editorAboutPlayers => 'Joukkueet, taso ja potentiaali';
 
   @override
-  String get editorAboutNations => 'Nation names and codes';
+  String get editorAboutNations => 'Maiden nimet ja koodit';
 
   @override
-  String get editorAboutClubs => 'Club names';
+  String get editorAboutClubs => 'Seurojen nimet';
 
   @override
-  String get editorAboutStadiums => 'National stadium names';
+  String get editorAboutStadiums => 'Kansallisstadionien nimet';
 
   @override
-  String get editorAboutCompetitions => 'Competition names';
+  String get editorAboutCompetitions => 'Kilpailujen nimet';
 
   @override
-  String get editorAboutY => 'Accounts on Y';
+  String get editorAboutY => 'Tilit Y:ssä';
 
   @override
-  String get editorAboutPress => 'Journalists and their outlets';
+  String get editorAboutPress => 'Toimittajat ja heidän mediansa';
 
   @override
   String get editorAboutNameLists =>
-      'Names for new players, local fans and staff';
+      'Nimet uusille pelaajille, paikallisille faneille ja valmennukselle';
 
   @override
-  String get editorAboutSponsors => 'Sponsor brands';
+  String get editorAboutSponsors => 'Sponsoribrändit';
 
   @override
-  String get editorAboutTrophies => 'Trophy pictures';
+  String get editorAboutTrophies => 'Pokaalien kuvat';
 
   @override
   String editorCountPlayers(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players',
-      one: '1 player',
+      other: '$count pelaajaa',
+      one: '1 pelaaja',
     );
     return '$_temp0';
   }
@@ -14628,8 +14630,8 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count nations',
-      one: '1 nation',
+      other: '$count maata',
+      one: '1 maa',
     );
     return '$_temp0';
   }
@@ -14639,9 +14641,9 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
-      zero: 'Game names',
+      other: '$count muutosta',
+      one: '1 muutos',
+      zero: 'Pelin nimet',
     );
     return '$_temp0';
   }
@@ -14651,9 +14653,9 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count custom pictures',
-      one: '1 custom picture',
-      zero: 'Game pictures',
+      other: '$count omaa kuvaa',
+      one: '1 oma kuva',
+      zero: 'Pelin kuvat',
     );
     return '$_temp0';
   }
@@ -14663,8 +14665,8 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count to fix',
-      one: '1 to fix',
+      other: '$count korjattavaa',
+      one: '1 korjattava',
     );
     return '$_temp0';
   }
@@ -14674,8 +14676,8 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more players needed',
-      one: '1 more player needed',
+      other: 'Tarvitaan $count pelaajaa lisää',
+      one: 'Tarvitaan 1 pelaaja lisää',
     );
     return '$_temp0';
   }
@@ -14685,8 +14687,8 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players too many',
-      one: '1 player too many',
+      other: '$count pelaajaa liikaa',
+      one: '1 pelaaja liikaa',
     );
     return '$_temp0';
   }
@@ -14696,8 +14698,8 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count goalkeepers needed',
-      one: '1 goalkeeper needed',
+      other: 'Tarvitaan $count maalivahtia',
+      one: 'Tarvitaan 1 maalivahti',
     );
     return '$_temp0';
   }
@@ -14707,8 +14709,8 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count defenders needed',
-      one: '1 defender needed',
+      other: 'Tarvitaan $count puolustajaa',
+      one: 'Tarvitaan 1 puolustaja',
     );
     return '$_temp0';
   }
@@ -14718,8 +14720,8 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count midfielders needed',
-      one: '1 midfielder needed',
+      other: 'Tarvitaan $count keskikenttäpelaajaa',
+      one: 'Tarvitaan 1 keskikenttäpelaaja',
     );
     return '$_temp0';
   }
@@ -14729,478 +14731,478 @@ class AppLocalizationsFi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count forwards needed',
-      one: '1 forward needed',
+      other: 'Tarvitaan $count hyökkääjää',
+      one: 'Tarvitaan 1 hyökkääjä',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorIssuePlayerNoName => 'A player has no name';
+  String get editorIssuePlayerNoName => 'Yhdeltä pelaajalta puuttuu nimi';
 
   @override
   String editorIssueAge(String name) {
-    return '$name: age must be 15 to 45';
+    return '$name: iän pitää olla 15–45';
   }
 
   @override
   String editorIssueRating(String name) {
-    return '$name: overall must be 1 to 99';
+    return '$name: kokonaistason pitää olla 1–99';
   }
 
   @override
   String editorIssuePotential(String name) {
-    return '$name: potential must be between the overall and 99';
+    return '$name: potentiaalin pitää olla kokonaistason ja 99:n välillä';
   }
 
   @override
   String editorIssueRenameEmpty(String name) {
-    return 'The new name for $name is empty';
+    return 'Kohteen $name uusi nimi on tyhjä';
   }
 
   @override
-  String get editorIssueNameEmpty => 'A name is empty';
+  String get editorIssueNameEmpty => 'Yksi nimi on tyhjä';
 
   @override
   String editorIssueNameTooLong(String name) {
-    return '\"$name\" is too long';
+    return '”$name” on liian pitkä';
   }
 
   @override
   String editorIssueNameBadCharacters(String name) {
-    return '\"$name\" has characters that cannot be used';
+    return 'Nimessä ”$name” on merkkejä, joita ei voi käyttää';
   }
 
   @override
   String editorIssueNameTaken(String name) {
-    return '\"$name\" is already taken';
+    return '”$name” on jo käytössä';
   }
 
   @override
-  String get editorIssueCode => 'The code must be 3 letters, A to Z';
+  String get editorIssueCode => 'Koodissa pitää olla 3 kirjainta, A–Z';
 
   @override
   String editorIssueDuplicateCode(String code, String nations) {
-    return 'Code $code is used by $nations';
+    return 'Koodia $code käyttävät: $nations';
   }
 
   @override
   String editorIssueFirstNames(int count) {
-    return 'At least $count first names needed';
+    return 'Tarvitaan vähintään $count etunimeä';
   }
 
   @override
   String editorIssueSurnames(int count) {
-    return 'At least $count surnames needed';
+    return 'Tarvitaan vähintään $count sukunimeä';
   }
 
   @override
-  String get editorIssueValue => 'A value is out of range';
+  String get editorIssueValue => 'Yksi arvo on sallitun alueen ulkopuolella';
 
   @override
-  String get editorIssueUnknown =>
-      'Refers to something that is no longer in the game';
+  String get editorIssueUnknown => 'Viittaa johonkin, jota pelissä ei enää ole';
 
   @override
-  String get editorSectionSoon => 'Editing this section is on its way.';
+  String get editorSectionSoon => 'Tämän osion muokkaus on tulossa.';
 
   @override
-  String get editorNewFailed => 'The database could not be made. Try again.';
+  String get editorNewFailed => 'Tietokantaa ei voitu luoda. Yritä uudelleen.';
 
   @override
-  String get editorPickFailed => 'The file could not be opened.';
+  String get editorPickFailed => 'Tiedostoa ei voitu avata.';
 
   @override
-  String get editorRenameFailed => 'The database could not be renamed.';
+  String get editorRenameFailed => 'Tietokantaa ei voitu nimetä uudelleen.';
 
   @override
-  String get editorDuplicateFailed => 'The database could not be copied.';
+  String get editorDuplicateFailed => 'Tietokantaa ei voitu kopioida.';
 
   @override
-  String get editorNationsSearch => 'Search nations';
+  String get editorNationsSearch => 'Hae maita';
 
   @override
-  String get editorFilterAll => 'All';
+  String get editorFilterAll => 'Kaikki';
 
   @override
-  String get editorNationsNone => 'No nation matches your search.';
+  String get editorNationsNone => 'Yksikään maa ei vastaa hakua.';
 
   @override
-  String get editorNationSquadReady => 'Squad ready';
+  String get editorNationSquadReady => 'Joukkue valmis';
 
   @override
-  String get editorSquadAdd => 'Add player';
+  String get editorSquadAdd => 'Lisää pelaaja';
 
   @override
   String editorSquadFull(int max) {
-    return 'A squad holds at most $max players.';
+    return 'Joukkueessa voi olla enintään $max pelaajaa.';
   }
 
   @override
   String editorSquadRemoved(String name) {
-    return '$name removed from the squad';
+    return '$name poistettu joukkueesta';
   }
 
   @override
-  String get editorPlayerUnnamed => 'Unnamed player';
+  String get editorPlayerUnnamed => 'Nimetön pelaaja';
 
   @override
   String get editorSquadDuplicate =>
-      'Another player in this squad has this name.';
+      'Toisella joukkueen pelaajalla on sama nimi.';
 
   @override
-  String get editorSquadEmpty => 'No players yet. Add the first one.';
+  String get editorSquadEmpty => 'Ei vielä pelaajia. Lisää ensimmäinen.';
 
   @override
-  String get editorSquadReady => 'This squad is ready to play.';
+  String get editorSquadReady => 'Tämä joukkue on valmis pelaamaan.';
 
   @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
-    return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
+    return '$min–$max pelaajaa, joista vähintään maalivahteja $gk, puolustajia $def, keskikenttäpelaajia $mid ja hyökkääjiä $fwd.';
   }
 
   @override
-  String get editorShortGk => 'GK';
+  String get editorShortGk => 'MV';
 
   @override
-  String get editorShortDef => 'DEF';
+  String get editorShortDef => 'PU';
 
   @override
-  String get editorShortMid => 'MID';
+  String get editorShortMid => 'KK';
 
   @override
-  String get editorShortFwd => 'FWD';
+  String get editorShortFwd => 'HY';
 
   @override
   String editorPlayerAgeShort(int age) {
-    return 'Age $age';
+    return 'Ikä $age';
   }
 
   @override
-  String get editorPlayerName => 'Name';
+  String get editorPlayerName => 'Nimi';
 
   @override
-  String get editorPlayerNameHint => 'Type his name';
+  String get editorPlayerNameHint => 'Kirjoita hänen nimensä';
 
   @override
-  String get editorPlayerNameNeeded => 'A name is needed.';
+  String get editorPlayerNameNeeded => 'Nimi tarvitaan.';
 
   @override
-  String get editorPlayerNameBad => 'Remove the unusual characters.';
+  String get editorPlayerNameBad => 'Poista erikoiset merkit.';
 
   @override
-  String get editorPlayerAge => 'Age';
+  String get editorPlayerAge => 'Ikä';
 
   @override
-  String get editorPlayerPosition => 'Position';
+  String get editorPlayerPosition => 'Pelipaikka';
 
   @override
-  String get editorPlayerClub => 'Club';
+  String get editorPlayerClub => 'Seura';
 
   @override
-  String get editorPlayerFreeAgent => 'Free agent';
+  String get editorPlayerFreeAgent => 'Ei seuraa';
 
   @override
-  String get editorPlayerClubSearch => 'Search clubs';
+  String get editorPlayerClubSearch => 'Hae seuroja';
 
   @override
-  String get editorPlayerClubNone => 'No club matches your search.';
+  String get editorPlayerClubNone => 'Yksikään seura ei vastaa hakua.';
 
   @override
-  String get editorPlayerClubPick => 'Pick a club';
+  String get editorPlayerClubPick => 'Valitse seura';
 
   @override
-  String get editorPlayerOverall => 'Overall';
+  String get editorPlayerOverall => 'Kokonaistaso';
 
   @override
-  String get editorPlayerType => 'Player type';
+  String get editorPlayerType => 'Pelaajatyyppi';
 
   @override
-  String get editorPlayerPotential => 'Potential';
+  String get editorPlayerPotential => 'Potentiaali';
 
   @override
   String get editorPlayerPotentialAbout =>
-      'The peak he can reach if he develops well. Never below his overall.';
+      'Huippu, johon hän voi yltää, jos kehitys sujuu hyvin. Ei koskaan alle kokonaistason.';
 
   @override
-  String get editorPlayerQualities => 'What the game stores';
+  String get editorPlayerQualities => 'Mitä peli tallentaa';
 
   @override
-  String get editorTypeBalanced => 'Balanced';
+  String get editorTypeBalanced => 'Tasainen';
 
   @override
-  String get editorTypeAthlete => 'Athlete';
+  String get editorTypeAthlete => 'Atleetti';
 
   @override
-  String get editorTypeTechnician => 'Technician';
+  String get editorTypeTechnician => 'Teknikko';
 
   @override
-  String get editorTypeEngine => 'Engine';
+  String get editorTypeEngine => 'Moottori';
 
   @override
   String get editorTypeBalancedAbout =>
-      'Even across physique, technique and stamina.';
+      'Tasainen fysiikassa, tekniikassa ja kestävyydessä.';
 
   @override
   String get editorTypeAthleteAbout =>
-      'Strong and quick, a little lighter on technique.';
+      'Vahva ja nopea, teknisesti hieman heikompi.';
 
   @override
-  String get editorTypeTechnicianAbout => 'Skilful on the ball, less physical.';
+  String get editorTypeTechnicianAbout =>
+      'Taitava pallon kanssa, fyysisesti heikompi.';
 
   @override
   String get editorTypeEngineAbout =>
-      'Runs all day, steady at everything else.';
+      'Juoksee koko päivän, muuten tasaisen varma.';
 
   @override
-  String get editorPlayerLess => 'One less';
+  String get editorPlayerLess => 'Yksi vähemmän';
 
   @override
-  String get editorPlayerMore => 'One more';
+  String get editorPlayerMore => 'Yksi lisää';
 
   @override
-  String get editorPlayerRemove => 'Remove from squad';
+  String get editorPlayerRemove => 'Poista joukkueesta';
 
   @override
-  String get editorPlayerGone => 'This player is no longer in the squad.';
+  String get editorPlayerGone => 'Tämä pelaaja ei ole enää joukkueessa.';
 
   @override
-  String get editorNationGone => 'This nation is not in the database.';
+  String get editorNationGone => 'Tätä maata ei ole tietokannassa.';
 
   @override
-  String get editorPickPlayer => 'Pick a player to edit.';
+  String get editorPickPlayer => 'Valitse muokattava pelaaja.';
 
   @override
-  String get editorPlayerClubAuto => 'Chosen by the game';
+  String get editorPlayerClubAuto => 'Peli valitsee';
 
   @override
   String get editorPlayerClubAutoAbout =>
-      'The game places him at a club that suits his level.';
+      'Peli sijoittaa hänet hänen tasoonsa sopivaan seuraan.';
 
   @override
-  String get editorNamesSearch => 'Search names';
+  String get editorNamesSearch => 'Hae nimiä';
 
   @override
-  String get editorNamesSearchClubs => 'Search clubs or countries';
+  String get editorNamesSearchClubs => 'Hae seuroja tai maita';
 
   @override
   String get editorNamesSearchStadiums =>
-      'Search stadiums, cities or countries';
+      'Hae stadioneita, kaupunkeja tai maita';
 
   @override
-  String get editorNamesSearchNations => 'Search nations or codes';
+  String get editorNamesSearchNations => 'Hae maita tai koodeja';
 
   @override
-  String get editorNamesNone => 'Nothing matches your search.';
+  String get editorNamesNone => 'Mikään ei vastaa hakua.';
 
   @override
   String get editorNamesEveryLanguage =>
-      'A custom name shows the same in every language.';
+      'Oma nimi näkyy samana kaikilla kielillä.';
 
   @override
   String editorNamesGameName(String name) {
-    return 'Game name: $name';
+    return 'Pelin nimi: $name';
   }
 
   @override
-  String get editorNamesReset => 'Reset to original';
+  String get editorNamesReset => 'Palauta alkuperäinen';
 
   @override
-  String get editorNamesDone => 'Done';
+  String get editorNamesDone => 'Valmis';
 
   @override
-  String get editorNamesKeepHint => 'Leave empty to keep the game name.';
+  String get editorNamesKeepHint => 'Jätä tyhjäksi, niin pelin nimi säilyy.';
 
   @override
-  String get editorNamesCode => 'Code';
+  String get editorNamesCode => 'Koodi';
 
   @override
   String get editorNamesCodeHelp =>
-      '3 letters, A to Z, used by no other nation.';
+      '3 kirjainta, A–Z, joita mikään muu maa ei käytä.';
 
   @override
   String editorNamesCodeTaken(String code, String nation) {
-    return '$code is already used by $nation.';
+    return 'Koodi $code on jo maalla $nation.';
   }
 
   @override
-  String get editorNamesTaken => 'Another account already has this name.';
+  String get editorNamesTaken => 'Toisella tilillä on jo tämä nimi.';
 
   @override
-  String get editorNamesOutlet => 'Outlet';
+  String get editorNamesOutlet => 'Media';
 
   @override
-  String get editorNamesFirstNames => 'First names';
+  String get editorNamesFirstNames => 'Etunimet';
 
   @override
-  String get editorNamesSurnames => 'Surnames';
+  String get editorNamesSurnames => 'Sukunimet';
 
   @override
   String editorNamesFirstCount(int count, int min) {
-    return '$count / $min first names';
+    return '$count / $min etunimeä';
   }
 
   @override
   String editorNamesSurCount(int count, int min) {
-    return '$count / $min surnames';
+    return '$count / $min sukunimeä';
   }
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Separate the names with commas or new lines. Each list needs at least $min. They name new players, local fans and staff.';
+    return 'Erota nimet pilkuilla tai rivinvaihdoilla. Jokaisessa listassa pitää olla vähintään $min. Niitä saavat uudet pelaajat, paikalliset fanit ja valmennus.';
   }
 
   @override
   String editorNamesListCounts(int first, int sur) {
-    return '$first first names, $sur surnames';
+    return '$first etunimeä, $sur sukunimeä';
   }
 
   @override
   String editorNamesMainStadium(String city) {
-    return 'Main stadium in $city';
+    return 'Päästadion, $city';
   }
 
   @override
-  String get editorNamesChanged => 'Changed';
+  String get editorNamesChanged => 'Muutettu';
 
   @override
-  String get editorNamesPick => 'Pick a name to edit.';
+  String get editorNamesPick => 'Valitse muokattava nimi.';
 
   @override
   String get editorNamesStadiumsNote =>
-      'Only the national grounds listed here can be renamed: the main stadium of each city.';
+      'Vain tässä luetellut kansallisstadionit voi nimetä uudelleen: kunkin kaupungin päästadion.';
 
   @override
   String get editorTrophiesIntro =>
-      'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.';
+      'Napauta pokaalia ja anna sille oma kuva. Läpinäkyvätaustainen PNG näyttää parhaalta.';
 
   @override
-  String get editorTrophyCustom => 'Custom';
+  String get editorTrophyCustom => 'Oma';
 
   @override
-  String get editorTrophyDefault => 'Game picture';
+  String get editorTrophyDefault => 'Pelin kuva';
 
   @override
-  String get editorTrophyChoose => 'Choose a picture';
+  String get editorTrophyChoose => 'Valitse kuva';
 
   @override
-  String get editorTrophyReplace => 'Choose another picture';
+  String get editorTrophyReplace => 'Valitse toinen kuva';
 
   @override
-  String get editorTrophyReset => 'Back to default';
+  String get editorTrophyReset => 'Palauta oletus';
 
   @override
-  String get editorTrophyResetTitle => 'Use the game\'s picture?';
+  String get editorTrophyResetTitle => 'Käytetäänkö pelin kuvaa?';
 
   @override
   String get editorTrophyResetBody =>
-      'Your picture for this trophy will be removed. Undo can\'t bring it back.';
+      'Oma kuvasi poistetaan tästä pokaalista. Peru ei tuo sitä takaisin.';
 
   @override
-  String get editorTrophyResetConfirm => 'Remove picture';
+  String get editorTrophyResetConfirm => 'Poista kuva';
 
   @override
   String get editorTrophyUnusable =>
-      'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.';
+      'Tätä kuvaa ei voi käyttää. Valitse PNG tai JPEG, jonka sivu on enintään 4096 pikseliä.';
 
   @override
-  String get editorTrophyOpening => 'Opening the picture';
+  String get editorTrophyOpening => 'Avataan kuvaa';
 
   @override
-  String get editorTrophyPreparing => 'Preparing the trophy';
+  String get editorTrophyPreparing => 'Valmistellaan pokaalia';
 
   @override
-  String get editorTrophyFrameTitle => 'Frame the trophy';
+  String get editorTrophyFrameTitle => 'Rajaa pokaali';
 
   @override
   String get editorTrophyFrameHint =>
-      'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.';
+      'Siirrä vetämällä ja zoomaa nipistämällä. Kehyksen sisällä olevasta tulee pokaali.';
 
   @override
-  String get editorTrophyFit => 'Fit';
+  String get editorTrophyFit => 'Sovita';
 
   @override
-  String get editorTrophyPreview => 'Preview';
+  String get editorTrophyPreview => 'Esikatselu';
 
   @override
-  String get editorTrophyPreviewTitle => 'How it will look';
+  String get editorTrophyPreviewTitle => 'Tältä se näyttää';
 
   @override
-  String get editorTrophyAdjust => 'Adjust';
+  String get editorTrophyAdjust => 'Säädä';
 
   @override
-  String get editorTrophyUse => 'Use this picture';
+  String get editorTrophyUse => 'Käytä tätä kuvaa';
 
   @override
   String get editorTrophyRectangle =>
-      'This picture has no transparent background, so the game will show it as a rectangle.';
+      'Kuvassa ei ole läpinäkyvää taustaa, joten peli näyttää sen suorakulmiona.';
 
   @override
-  String get editorTrophyRectangleShort => 'Shows as a rectangle';
+  String get editorTrophyRectangleShort => 'Näkyy suorakulmiona';
 
   @override
-  String get editorTrophySaved => 'Trophy picture saved.';
+  String get editorTrophySaved => 'Pokaalin kuva tallennettu.';
 
   @override
-  String get editorTrophyRemoved => 'The game\'s picture is back.';
+  String get editorTrophyRemoved => 'Pelin kuva on palautettu.';
 
   @override
   String get editorTrophySaveFailed =>
-      'The picture could not be saved. Try again.';
+      'Kuvaa ei voitu tallentaa. Yritä uudelleen.';
 
   @override
-  String get editorTrophyPick => 'Pick a trophy to change its picture.';
+  String get editorTrophyPick => 'Valitse pokaali, jonka kuvan haluat vaihtaa.';
 
   @override
   String editorTrophySize(int width, int height) {
-    return 'Saved at $width x $height pixels';
+    return 'Tallennetaan kokoon $width x $height pikseliä';
   }
 
   @override
   String editorIssueUnknownEntry(String name) {
-    return '$name is no longer in the game';
+    return '$name: ei ole enää pelissä';
   }
 
   @override
   String get editorAttentionBody =>
-      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+      'Pelin päivitys poisti jotain, johon tämä tietokanta viittaa. Poista kaikki alla olevat kohdat, niin sillä voi taas aloittaa uran.';
 
   @override
-  String get editorRemove => 'Remove';
+  String get editorRemove => 'Poista';
 
   @override
   String worldChip(String name) {
-    return 'World: $name';
+    return 'Maailma: $name';
   }
 
   @override
-  String get worldDefault => 'Default';
+  String get worldDefault => 'Oletus';
 
   @override
-  String get worldDefaultAbout => 'The game\'s own world';
+  String get worldDefaultAbout => 'Pelin oma maailma';
 
   @override
-  String get worldSheetTitle => 'Choose a world';
+  String get worldSheetTitle => 'Valitse maailma';
 
   @override
   String get worldSheetBlurb =>
-      'Databases you made or opened in the Editor. Only complete ones can start a career.';
+      'Editorissa tehdyt tai avatut tietokannat. Uran voi aloittaa vain valmiilla.';
 
   @override
   String get worldPackGone =>
-      'That database is no longer on this device. The career was not started.';
+      'Tätä tietokantaa ei ole enää tällä laitteella. Uraa ei aloitettu.';
 
   @override
-  String get worldStarting => 'Setting up your world';
+  String get worldStarting => 'Maailmaasi valmistellaan';
 
   @override
-  String get settingsDefaultWorldTitle => 'Default world';
+  String get settingsDefaultWorldTitle => 'Oletusmaailma';
 
   @override
   String get settingsDefaultWorldBlurb =>
-      'The world New Game starts on. You can still change it for each career.';
+      'Maailma, jolla Uusi peli alkaa. Voit silti vaihtaa sen jokaiselle uralle.';
 
   @override
   String get worldPackNotReady =>
-      'That database can no longer start a career. Fix it in the Editor, or choose another world.';
+      'Tällä tietokannalla ei voi enää aloittaa uraa. Korjaa se Editorissa tai valitse toinen maailma.';
 }

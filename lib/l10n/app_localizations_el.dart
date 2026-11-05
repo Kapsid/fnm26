@@ -14364,262 +14364,265 @@ class AppLocalizationsEl extends AppLocalizations {
   String get callUpAwayShort => 'Εκτ.';
 
   @override
-  String get homeEditor => 'Editor';
+  String get homeEditor => 'Επεξεργαστής';
 
   @override
-  String get editorTitle => 'Editor';
+  String get editorTitle => 'Επεξεργαστής';
 
   @override
   String get editorIntro =>
-      'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.';
+      'Φτιάξε τον δικό σου αρχικό κόσμο: τους παίκτες σου, τις βαθμολογίες τους, τα δικά σου ονόματα. Μοιράσου τον ως αρχείο και οι φίλοι σου μπορούν να τον εισαγάγουν και να ξεκινήσουν καριέρα σε αυτόν.';
 
   @override
-  String get editorEmptyTitle => 'No databases yet';
+  String get editorEmptyTitle => 'Καμία βάση δεδομένων ακόμα';
 
   @override
   String get editorEmptyBody =>
-      'A new database starts as a copy of the default world. Change what you like; it saves as you go.';
+      'Μια νέα βάση δεδομένων ξεκινά ως αντίγραφο του προεπιλεγμένου κόσμου. Άλλαξε ό,τι θέλεις. Αποθηκεύεται αυτόματα.';
 
   @override
-  String get editorNew => 'New database';
+  String get editorNew => 'Νέα βάση δεδομένων';
 
   @override
-  String get editorImport => 'Import';
+  String get editorImport => 'Εισαγωγή';
 
   @override
-  String get editorEdit => 'Edit';
+  String get editorEdit => 'Επεξεργασία';
 
   @override
-  String get editorRename => 'Rename';
+  String get editorRename => 'Μετονομασία';
 
   @override
-  String get editorDuplicate => 'Duplicate';
+  String get editorDuplicate => 'Αντιγραφή';
 
   @override
-  String get editorExport => 'Export';
+  String get editorExport => 'Εξαγωγή';
 
   @override
-  String get editorDelete => 'Delete';
+  String get editorDelete => 'Διαγραφή';
 
   @override
-  String get editorCancel => 'Cancel';
+  String get editorCancel => 'Άκυρο';
 
   @override
-  String get editorCreate => 'Create';
+  String get editorCreate => 'Δημιουργία';
 
   @override
-  String get editorMore => 'More actions';
+  String get editorMore => 'Περισσότερα';
 
   @override
-  String get editorNameLabel => 'Name';
+  String get editorNameLabel => 'Όνομα';
 
   @override
-  String get editorNameHint => 'My world';
+  String get editorNameHint => 'Ο κόσμος μου';
 
   @override
-  String get editorRenameTitle => 'Rename database';
+  String get editorRenameTitle => 'Μετονομασία βάσης δεδομένων';
 
   @override
-  String get editorDuplicateTitle => 'Duplicate database';
+  String get editorDuplicateTitle => 'Αντιγραφή βάσης δεδομένων';
 
   @override
   String editorCopyName(String name) {
-    return '$name copy';
+    return '$name (αντίγραφο)';
   }
 
   @override
-  String get editorNameEmpty => 'Give it a name';
+  String get editorNameEmpty => 'Δώσε του ένα όνομα';
 
   @override
   String editorNameTooLong(int max) {
-    return 'Keep it to $max characters';
+    return 'Έως $max χαρακτήρες';
   }
 
   @override
   String get editorNameBadCharacters =>
-      'That name has characters that cannot be used';
+      'Το όνομα έχει χαρακτήρες που δεν επιτρέπονται';
 
   @override
-  String get editorDeleteTitle => 'Delete database?';
+  String get editorDeleteTitle => 'Διαγραφή βάσης δεδομένων;';
 
   @override
   String editorDeleteBody(String name) {
-    return '\"$name\" will be removed from this device. Careers already started on it keep working.';
+    return 'Η «$name» θα αφαιρεθεί από αυτή τη συσκευή. Οι καριέρες που ξεκίνησαν ήδη σε αυτήν συνεχίζουν κανονικά.';
   }
 
   @override
-  String get editorStatusReady => 'Ready';
+  String get editorStatusReady => 'Έτοιμη';
 
   @override
   String editorStatusMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things missing',
-      one: '1 thing missing',
+      other: 'Λείπουν $count στοιχεία',
+      one: 'Λείπει 1 στοιχείο',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorStatusAttention => 'Needs attention';
+  String get editorStatusAttention => 'Θέλει προσοχή';
 
   @override
-  String get editorStatusUnreadable => 'Cannot be opened';
+  String get editorStatusUnreadable => 'Δεν ανοίγει';
 
   @override
   String editorEdited(String date) {
-    return 'Edited $date';
+    return 'Αλλαγή: $date';
   }
 
   @override
-  String get editorCreating => 'Copying the default world…';
+  String get editorCreating => 'Αντιγραφή του προεπιλεγμένου κόσμου…';
 
   @override
-  String get editorImported => 'Database imported';
+  String get editorImported => 'Η βάση δεδομένων εισήχθη';
 
   @override
-  String get editorImportOpen => 'Open';
+  String get editorImportOpen => 'Άνοιγμα';
 
   @override
-  String get editorImportTooBig => 'That file is too big to be a database.';
+  String get editorImportTooBig =>
+      'Το αρχείο είναι πολύ μεγάλο για βάση δεδομένων.';
 
   @override
-  String get editorImportNotAPack => 'That file is not an FNM database.';
+  String get editorImportNotAPack =>
+      'Το αρχείο δεν είναι βάση δεδομένων του FNM.';
 
   @override
   String get editorImportNewer =>
-      'That database was made with a newer version of the game. Update the game to import it.';
+      'Η βάση δεδομένων φτιάχτηκε με νεότερη έκδοση του παιχνιδιού. Ενημέρωσε το παιχνίδι για να την εισαγάγεις.';
 
   @override
   String get editorImportBadData =>
-      'That database holds data the game cannot use, so nothing was imported.';
+      'Η βάση δεδομένων περιέχει δεδομένα που το παιχνίδι δεν μπορεί να χρησιμοποιήσει, οπότε δεν εισήχθη τίποτα.';
 
   @override
   String get editorImportBadTrophy =>
-      'A trophy picture in that file could not be read, so nothing was imported.';
+      'Μια εικόνα τροπαίου στο αρχείο δεν διαβάστηκε, οπότε δεν εισήχθη τίποτα.';
 
   @override
-  String get editorExportFailed => 'The database could not be exported.';
+  String get editorExportFailed => 'Η εξαγωγή της βάσης δεδομένων απέτυχε.';
 
   @override
-  String get editorShareSubject => 'FNM database';
+  String get editorShareSubject => 'Βάση δεδομένων FNM';
 
   @override
-  String get editorPackMissing => 'This database is no longer on this device.';
+  String get editorPackMissing =>
+      'Αυτή η βάση δεδομένων δεν υπάρχει πια σε αυτή τη συσκευή.';
 
   @override
-  String get editorReadyTitle => 'Ready to play';
+  String get editorReadyTitle => 'Έτοιμη για παιχνίδι';
 
   @override
   String get editorReadyBody =>
-      'Every nation has a full squad and every name checks out. You can start a career on it.';
+      'Κάθε εθνική έχει πλήρη αποστολή και κάθε όνομα είναι εντάξει. Μπορείς να ξεκινήσεις καριέρα σε αυτήν.';
 
   @override
   String editorNotReadyTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things to fix before it can be played',
-      one: '1 thing to fix before it can be played',
+      other: '$count διορθώσεις πριν παιχτεί',
+      one: '1 διόρθωση πριν παιχτεί',
     );
     return '$_temp0';
   }
 
   @override
   String get editorNotReadyBody =>
-      'It saves as you go, so you can share it now and finish it later.';
+      'Αποθηκεύεται αυτόματα, οπότε μπορείς να τη μοιραστείς τώρα και να την τελειώσεις αργότερα.';
 
   @override
   String editorSectionsReady(int ready, int total) {
-    return '$ready of $total sections ready';
+    return '$ready από $total ενότητες έτοιμες';
   }
 
   @override
-  String get editorMissingTitle => 'What\'s missing';
+  String get editorMissingTitle => 'Τι λείπει';
 
   @override
   String editorShowAll(int count) {
-    return 'Show all ($count)';
+    return 'Όλα ($count)';
   }
 
   @override
-  String get editorShowLess => 'Show less';
+  String get editorShowLess => 'Λιγότερα';
 
   @override
-  String get editorUndo => 'Undo';
+  String get editorUndo => 'Αναίρεση';
 
   @override
-  String get editorSectionsTitle => 'Sections';
+  String get editorSectionsTitle => 'Ενότητες';
 
   @override
-  String get editorSectionPlayers => 'Players';
+  String get editorSectionPlayers => 'Παίκτες';
 
   @override
-  String get editorSectionNations => 'Nations';
+  String get editorSectionNations => 'Χώρες';
 
   @override
-  String get editorSectionClubs => 'Clubs';
+  String get editorSectionClubs => 'Σύλλογοι';
 
   @override
-  String get editorSectionStadiums => 'Stadiums';
+  String get editorSectionStadiums => 'Γήπεδα';
 
   @override
-  String get editorSectionCompetitions => 'Competitions';
+  String get editorSectionCompetitions => 'Διοργανώσεις';
 
   @override
-  String get editorSectionY => 'Y accounts';
+  String get editorSectionY => 'Λογαριασμοί Y';
 
   @override
-  String get editorSectionPress => 'Press';
+  String get editorSectionPress => 'Τύπος';
 
   @override
-  String get editorSectionNameLists => 'Name lists';
+  String get editorSectionNameLists => 'Λίστες ονομάτων';
 
   @override
-  String get editorSectionSponsors => 'Sponsors';
+  String get editorSectionSponsors => 'Χορηγοί';
 
   @override
-  String get editorSectionTrophies => 'Trophies';
+  String get editorSectionTrophies => 'Τρόπαια';
 
   @override
-  String get editorAboutPlayers => 'Squads, ratings and potential';
+  String get editorAboutPlayers => 'Αποστολές, βαθμολογίες και δυναμικό';
 
   @override
-  String get editorAboutNations => 'Nation names and codes';
+  String get editorAboutNations => 'Ονόματα και κωδικοί χωρών';
 
   @override
-  String get editorAboutClubs => 'Club names';
+  String get editorAboutClubs => 'Ονόματα συλλόγων';
 
   @override
-  String get editorAboutStadiums => 'National stadium names';
+  String get editorAboutStadiums => 'Ονόματα εθνικών γηπέδων';
 
   @override
-  String get editorAboutCompetitions => 'Competition names';
+  String get editorAboutCompetitions => 'Ονόματα διοργανώσεων';
 
   @override
-  String get editorAboutY => 'Accounts on Y';
+  String get editorAboutY => 'Λογαριασμοί στο Y';
 
   @override
-  String get editorAboutPress => 'Journalists and their outlets';
+  String get editorAboutPress => 'Δημοσιογράφοι και τα μέσα τους';
 
   @override
   String get editorAboutNameLists =>
-      'Names for new players, local fans and staff';
+      'Ονόματα για νέους παίκτες, ντόπιους οπαδούς και επιτελείο';
 
   @override
-  String get editorAboutSponsors => 'Sponsor brands';
+  String get editorAboutSponsors => 'Μάρκες χορηγών';
 
   @override
-  String get editorAboutTrophies => 'Trophy pictures';
+  String get editorAboutTrophies => 'Εικόνες τροπαίων';
 
   @override
   String editorCountPlayers(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players',
-      one: '1 player',
+      other: '$count παίκτες',
+      one: '1 παίκτης',
     );
     return '$_temp0';
   }
@@ -14629,8 +14632,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count nations',
-      one: '1 nation',
+      other: '$count χώρες',
+      one: '1 χώρα',
     );
     return '$_temp0';
   }
@@ -14640,9 +14643,9 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
-      zero: 'Game names',
+      other: '$count αλλαγές',
+      one: '1 αλλαγή',
+      zero: 'Ονόματα παιχνιδιού',
     );
     return '$_temp0';
   }
@@ -14652,9 +14655,9 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count custom pictures',
-      one: '1 custom picture',
-      zero: 'Game pictures',
+      other: '$count δικές σου εικόνες',
+      one: '1 δική σου εικόνα',
+      zero: 'Εικόνες παιχνιδιού',
     );
     return '$_temp0';
   }
@@ -14664,8 +14667,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count to fix',
-      one: '1 to fix',
+      other: '$count για διόρθωση',
+      one: '1 για διόρθωση',
     );
     return '$_temp0';
   }
@@ -14675,8 +14678,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more players needed',
-      one: '1 more player needed',
+      other: 'Χρειάζονται $count παίκτες ακόμα',
+      one: 'Χρειάζεται 1 παίκτης ακόμα',
     );
     return '$_temp0';
   }
@@ -14686,8 +14689,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players too many',
-      one: '1 player too many',
+      other: '$count παίκτες παραπάνω',
+      one: '1 παίκτης παραπάνω',
     );
     return '$_temp0';
   }
@@ -14697,8 +14700,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count goalkeepers needed',
-      one: '1 goalkeeper needed',
+      other: 'Χρειάζονται $count τερματοφύλακες',
+      one: 'Χρειάζεται 1 τερματοφύλακας',
     );
     return '$_temp0';
   }
@@ -14708,8 +14711,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count defenders needed',
-      one: '1 defender needed',
+      other: 'Χρειάζονται $count αμυντικοί',
+      one: 'Χρειάζεται 1 αμυντικός',
     );
     return '$_temp0';
   }
@@ -14719,8 +14722,8 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count midfielders needed',
-      one: '1 midfielder needed',
+      other: 'Χρειάζονται $count μέσοι',
+      one: 'Χρειάζεται 1 μέσος',
     );
     return '$_temp0';
   }
@@ -14730,478 +14733,485 @@ class AppLocalizationsEl extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count forwards needed',
-      one: '1 forward needed',
+      other: 'Χρειάζονται $count επιθετικοί',
+      one: 'Χρειάζεται 1 επιθετικός',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorIssuePlayerNoName => 'A player has no name';
+  String get editorIssuePlayerNoName => 'Ένας παίκτης δεν έχει όνομα';
 
   @override
   String editorIssueAge(String name) {
-    return '$name: age must be 15 to 45';
+    return '$name: η ηλικία πρέπει να είναι 15 έως 45';
   }
 
   @override
   String editorIssueRating(String name) {
-    return '$name: overall must be 1 to 99';
+    return '$name: το γενικό επίπεδο πρέπει να είναι 1 έως 99';
   }
 
   @override
   String editorIssuePotential(String name) {
-    return '$name: potential must be between the overall and 99';
+    return '$name: το δυναμικό πρέπει να είναι από το γενικό επίπεδο έως 99';
   }
 
   @override
   String editorIssueRenameEmpty(String name) {
-    return 'The new name for $name is empty';
+    return 'Το νέο όνομα για $name είναι κενό';
   }
 
   @override
-  String get editorIssueNameEmpty => 'A name is empty';
+  String get editorIssueNameEmpty => 'Ένα όνομα είναι κενό';
 
   @override
   String editorIssueNameTooLong(String name) {
-    return '\"$name\" is too long';
+    return 'Το «$name» είναι πολύ μεγάλο';
   }
 
   @override
   String editorIssueNameBadCharacters(String name) {
-    return '\"$name\" has characters that cannot be used';
+    return 'Το «$name» έχει χαρακτήρες που δεν επιτρέπονται';
   }
 
   @override
   String editorIssueNameTaken(String name) {
-    return '\"$name\" is already taken';
+    return 'Το «$name» χρησιμοποιείται ήδη';
   }
 
   @override
-  String get editorIssueCode => 'The code must be 3 letters, A to Z';
+  String get editorIssueCode => 'Ο κωδικός πρέπει να έχει 3 γράμματα, A έως Z';
 
   @override
   String editorIssueDuplicateCode(String code, String nations) {
-    return 'Code $code is used by $nations';
+    return 'Τον κωδικό $code τον έχουν: $nations';
   }
 
   @override
   String editorIssueFirstNames(int count) {
-    return 'At least $count first names needed';
+    return 'Χρειάζονται τουλάχιστον $count μικρά ονόματα';
   }
 
   @override
   String editorIssueSurnames(int count) {
-    return 'At least $count surnames needed';
+    return 'Χρειάζονται τουλάχιστον $count επώνυμα';
   }
 
   @override
-  String get editorIssueValue => 'A value is out of range';
+  String get editorIssueValue => 'Μια τιμή είναι εκτός ορίων';
 
   @override
   String get editorIssueUnknown =>
-      'Refers to something that is no longer in the game';
+      'Αναφέρεται σε κάτι που δεν υπάρχει πια στο παιχνίδι';
 
   @override
-  String get editorSectionSoon => 'Editing this section is on its way.';
+  String get editorSectionSoon =>
+      'Η επεξεργασία αυτής της ενότητας έρχεται σύντομα.';
 
   @override
-  String get editorNewFailed => 'The database could not be made. Try again.';
+  String get editorNewFailed =>
+      'Η βάση δεδομένων δεν δημιουργήθηκε. Δοκίμασε ξανά.';
 
   @override
-  String get editorPickFailed => 'The file could not be opened.';
+  String get editorPickFailed => 'Το αρχείο δεν άνοιξε.';
 
   @override
-  String get editorRenameFailed => 'The database could not be renamed.';
+  String get editorRenameFailed => 'Η μετονομασία της βάσης δεδομένων απέτυχε.';
 
   @override
-  String get editorDuplicateFailed => 'The database could not be copied.';
+  String get editorDuplicateFailed =>
+      'Η αντιγραφή της βάσης δεδομένων απέτυχε.';
 
   @override
-  String get editorNationsSearch => 'Search nations';
+  String get editorNationsSearch => 'Αναζήτηση χώρας';
 
   @override
-  String get editorFilterAll => 'All';
+  String get editorFilterAll => 'Όλες';
 
   @override
-  String get editorNationsNone => 'No nation matches your search.';
+  String get editorNationsNone => 'Καμία χώρα δεν ταιριάζει με την αναζήτηση.';
 
   @override
-  String get editorNationSquadReady => 'Squad ready';
+  String get editorNationSquadReady => 'Αποστολή έτοιμη';
 
   @override
-  String get editorSquadAdd => 'Add player';
+  String get editorSquadAdd => 'Προσθήκη παίκτη';
 
   @override
   String editorSquadFull(int max) {
-    return 'A squad holds at most $max players.';
+    return 'Μια αποστολή έχει έως $max παίκτες.';
   }
 
   @override
   String editorSquadRemoved(String name) {
-    return '$name removed from the squad';
+    return 'Ο $name αφαιρέθηκε από την αποστολή';
   }
 
   @override
-  String get editorPlayerUnnamed => 'Unnamed player';
+  String get editorPlayerUnnamed => 'Παίκτης χωρίς όνομα';
 
   @override
   String get editorSquadDuplicate =>
-      'Another player in this squad has this name.';
+      'Άλλος παίκτης της αποστολής έχει το ίδιο όνομα.';
 
   @override
-  String get editorSquadEmpty => 'No players yet. Add the first one.';
+  String get editorSquadEmpty =>
+      'Δεν υπάρχουν παίκτες ακόμα. Πρόσθεσε τον πρώτο.';
 
   @override
-  String get editorSquadReady => 'This squad is ready to play.';
+  String get editorSquadReady => 'Η αποστολή είναι έτοιμη για παιχνίδι.';
 
   @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
-    return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
+    return '$min έως $max παίκτες, με τουλάχιστον $gk τερματοφύλακες, $def αμυντικούς, $mid μέσους και $fwd επιθετικούς.';
   }
 
   @override
-  String get editorShortGk => 'GK';
+  String get editorShortGk => 'ΤΕΡ';
 
   @override
-  String get editorShortDef => 'DEF';
+  String get editorShortDef => 'ΑΜΥ';
 
   @override
-  String get editorShortMid => 'MID';
+  String get editorShortMid => 'ΜΕΣ';
 
   @override
-  String get editorShortFwd => 'FWD';
+  String get editorShortFwd => 'ΕΠΙ';
 
   @override
   String editorPlayerAgeShort(int age) {
-    return 'Age $age';
+    return '$age ετών';
   }
 
   @override
-  String get editorPlayerName => 'Name';
+  String get editorPlayerName => 'Όνομα';
 
   @override
-  String get editorPlayerNameHint => 'Type his name';
+  String get editorPlayerNameHint => 'Γράψε το όνομά του';
 
   @override
-  String get editorPlayerNameNeeded => 'A name is needed.';
+  String get editorPlayerNameNeeded => 'Χρειάζεται όνομα.';
 
   @override
-  String get editorPlayerNameBad => 'Remove the unusual characters.';
+  String get editorPlayerNameBad => 'Αφαίρεσε τους ασυνήθιστους χαρακτήρες.';
 
   @override
-  String get editorPlayerAge => 'Age';
+  String get editorPlayerAge => 'Ηλικία';
 
   @override
-  String get editorPlayerPosition => 'Position';
+  String get editorPlayerPosition => 'Θέση';
 
   @override
-  String get editorPlayerClub => 'Club';
+  String get editorPlayerClub => 'Σύλλογος';
 
   @override
-  String get editorPlayerFreeAgent => 'Free agent';
+  String get editorPlayerFreeAgent => 'Ελεύθερος';
 
   @override
-  String get editorPlayerClubSearch => 'Search clubs';
+  String get editorPlayerClubSearch => 'Αναζήτηση συλλόγου';
 
   @override
-  String get editorPlayerClubNone => 'No club matches your search.';
+  String get editorPlayerClubNone =>
+      'Κανένας σύλλογος δεν ταιριάζει με την αναζήτηση.';
 
   @override
-  String get editorPlayerClubPick => 'Pick a club';
+  String get editorPlayerClubPick => 'Διάλεξε σύλλογο';
 
   @override
-  String get editorPlayerOverall => 'Overall';
+  String get editorPlayerOverall => 'Γενικό επίπεδο';
 
   @override
-  String get editorPlayerType => 'Player type';
+  String get editorPlayerType => 'Τύπος παίκτη';
 
   @override
-  String get editorPlayerPotential => 'Potential';
+  String get editorPlayerPotential => 'Δυναμικό';
 
   @override
   String get editorPlayerPotentialAbout =>
-      'The peak he can reach if he develops well. Never below his overall.';
+      'Το ταβάνι του αν εξελιχθεί καλά. Ποτέ κάτω από το γενικό του επίπεδο.';
 
   @override
-  String get editorPlayerQualities => 'What the game stores';
+  String get editorPlayerQualities => 'Τι αποθηκεύει το παιχνίδι';
 
   @override
-  String get editorTypeBalanced => 'Balanced';
+  String get editorTypeBalanced => 'Ισορροπημένος';
 
   @override
-  String get editorTypeAthlete => 'Athlete';
+  String get editorTypeAthlete => 'Αθλητής';
 
   @override
-  String get editorTypeTechnician => 'Technician';
+  String get editorTypeTechnician => 'Τεχνίτης';
 
   @override
-  String get editorTypeEngine => 'Engine';
+  String get editorTypeEngine => 'Μηχανή';
 
   @override
   String get editorTypeBalancedAbout =>
-      'Even across physique, technique and stamina.';
+      'Ίδιο επίπεδο σε φυσική κατάσταση, τεχνική και αντοχή.';
 
   @override
   String get editorTypeAthleteAbout =>
-      'Strong and quick, a little lighter on technique.';
+      'Δυνατός και γρήγορος, λίγο πιο αδύναμος στην τεχνική.';
 
   @override
-  String get editorTypeTechnicianAbout => 'Skilful on the ball, less physical.';
+  String get editorTypeTechnicianAbout =>
+      'Δεξιοτέχνης με την μπάλα, λιγότερο σωματικός.';
 
   @override
   String get editorTypeEngineAbout =>
-      'Runs all day, steady at everything else.';
+      'Τρέχει όλο το ματς, σταθερός σε όλα τα άλλα.';
 
   @override
-  String get editorPlayerLess => 'One less';
+  String get editorPlayerLess => 'Ένα λιγότερο';
 
   @override
-  String get editorPlayerMore => 'One more';
+  String get editorPlayerMore => 'Ένα περισσότερο';
 
   @override
-  String get editorPlayerRemove => 'Remove from squad';
+  String get editorPlayerRemove => 'Αφαίρεση από την αποστολή';
 
   @override
-  String get editorPlayerGone => 'This player is no longer in the squad.';
+  String get editorPlayerGone => 'Αυτός ο παίκτης δεν είναι πια στην αποστολή.';
 
   @override
-  String get editorNationGone => 'This nation is not in the database.';
+  String get editorNationGone => 'Αυτή η χώρα δεν υπάρχει στη βάση δεδομένων.';
 
   @override
-  String get editorPickPlayer => 'Pick a player to edit.';
+  String get editorPickPlayer => 'Διάλεξε παίκτη για επεξεργασία.';
 
   @override
-  String get editorPlayerClubAuto => 'Chosen by the game';
+  String get editorPlayerClubAuto => 'Επιλογή του παιχνιδιού';
 
   @override
   String get editorPlayerClubAutoAbout =>
-      'The game places him at a club that suits his level.';
+      'Το παιχνίδι τον βάζει σε σύλλογο που ταιριάζει στο επίπεδό του.';
 
   @override
-  String get editorNamesSearch => 'Search names';
+  String get editorNamesSearch => 'Αναζήτηση ονομάτων';
 
   @override
-  String get editorNamesSearchClubs => 'Search clubs or countries';
+  String get editorNamesSearchClubs => 'Αναζήτηση συλλόγων ή χωρών';
 
   @override
-  String get editorNamesSearchStadiums =>
-      'Search stadiums, cities or countries';
+  String get editorNamesSearchStadiums => 'Αναζήτηση γηπέδων, πόλεων ή χωρών';
 
   @override
-  String get editorNamesSearchNations => 'Search nations or codes';
+  String get editorNamesSearchNations => 'Αναζήτηση χωρών ή κωδικών';
 
   @override
-  String get editorNamesNone => 'Nothing matches your search.';
+  String get editorNamesNone => 'Τίποτα δεν ταιριάζει με την αναζήτηση.';
 
   @override
   String get editorNamesEveryLanguage =>
-      'A custom name shows the same in every language.';
+      'Ένα δικό σου όνομα εμφανίζεται ίδιο σε όλες τις γλώσσες.';
 
   @override
   String editorNamesGameName(String name) {
-    return 'Game name: $name';
+    return 'Όνομα παιχνιδιού: $name';
   }
 
   @override
-  String get editorNamesReset => 'Reset to original';
+  String get editorNamesReset => 'Επαναφορά αρχικού';
 
   @override
-  String get editorNamesDone => 'Done';
+  String get editorNamesDone => 'Τέλος';
 
   @override
-  String get editorNamesKeepHint => 'Leave empty to keep the game name.';
+  String get editorNamesKeepHint =>
+      'Άφησέ το κενό για να μείνει το όνομα του παιχνιδιού.';
 
   @override
-  String get editorNamesCode => 'Code';
+  String get editorNamesCode => 'Κωδικός';
 
   @override
   String get editorNamesCodeHelp =>
-      '3 letters, A to Z, used by no other nation.';
+      '3 γράμματα, A έως Z, που δεν τα έχει άλλη χώρα.';
 
   @override
   String editorNamesCodeTaken(String code, String nation) {
-    return '$code is already used by $nation.';
+    return 'Το $code το έχει ήδη: $nation.';
   }
 
   @override
-  String get editorNamesTaken => 'Another account already has this name.';
+  String get editorNamesTaken => 'Άλλος λογαριασμός έχει ήδη αυτό το όνομα.';
 
   @override
-  String get editorNamesOutlet => 'Outlet';
+  String get editorNamesOutlet => 'Μέσο';
 
   @override
-  String get editorNamesFirstNames => 'First names';
+  String get editorNamesFirstNames => 'Μικρά ονόματα';
 
   @override
-  String get editorNamesSurnames => 'Surnames';
+  String get editorNamesSurnames => 'Επώνυμα';
 
   @override
   String editorNamesFirstCount(int count, int min) {
-    return '$count / $min first names';
+    return '$count / $min μικρά ονόματα';
   }
 
   @override
   String editorNamesSurCount(int count, int min) {
-    return '$count / $min surnames';
+    return '$count / $min επώνυμα';
   }
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Separate the names with commas or new lines. Each list needs at least $min. They name new players, local fans and staff.';
+    return 'Χώρισε τα ονόματα με κόμματα ή νέες γραμμές. Κάθε λίστα θέλει τουλάχιστον $min. Δίνουν ονόματα σε νέους παίκτες, ντόπιους οπαδούς και επιτελείο.';
   }
 
   @override
   String editorNamesListCounts(int first, int sur) {
-    return '$first first names, $sur surnames';
+    return '$first μικρά ονόματα, $sur επώνυμα';
   }
 
   @override
   String editorNamesMainStadium(String city) {
-    return 'Main stadium in $city';
+    return 'Κύριο γήπεδο: $city';
   }
 
   @override
-  String get editorNamesChanged => 'Changed';
+  String get editorNamesChanged => 'Αλλαγμένο';
 
   @override
-  String get editorNamesPick => 'Pick a name to edit.';
+  String get editorNamesPick => 'Διάλεξε όνομα για επεξεργασία.';
 
   @override
   String get editorNamesStadiumsNote =>
-      'Only the national grounds listed here can be renamed: the main stadium of each city.';
+      'Μετονομάζονται μόνο τα εθνικά γήπεδα που βλέπεις εδώ: το κύριο γήπεδο κάθε πόλης.';
 
   @override
   String get editorTrophiesIntro =>
-      'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.';
+      'Πάτησε ένα τρόπαιο για να του δώσεις δική σου εικόνα. Ένα PNG με διάφανο φόντο δείχνει καλύτερα.';
 
   @override
-  String get editorTrophyCustom => 'Custom';
+  String get editorTrophyCustom => 'Δική σου';
 
   @override
-  String get editorTrophyDefault => 'Game picture';
+  String get editorTrophyDefault => 'Του παιχνιδιού';
 
   @override
-  String get editorTrophyChoose => 'Choose a picture';
+  String get editorTrophyChoose => 'Διάλεξε εικόνα';
 
   @override
-  String get editorTrophyReplace => 'Choose another picture';
+  String get editorTrophyReplace => 'Διάλεξε άλλη εικόνα';
 
   @override
-  String get editorTrophyReset => 'Back to default';
+  String get editorTrophyReset => 'Επαναφορά';
 
   @override
-  String get editorTrophyResetTitle => 'Use the game\'s picture?';
+  String get editorTrophyResetTitle => 'Εικόνα του παιχνιδιού;';
 
   @override
   String get editorTrophyResetBody =>
-      'Your picture for this trophy will be removed. Undo can\'t bring it back.';
+      'Η εικόνα σου για αυτό το τρόπαιο θα αφαιρεθεί. Η αναίρεση δεν μπορεί να τη φέρει πίσω.';
 
   @override
-  String get editorTrophyResetConfirm => 'Remove picture';
+  String get editorTrophyResetConfirm => 'Αφαίρεση εικόνας';
 
   @override
   String get editorTrophyUnusable =>
-      'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.';
+      'Αυτή η εικόνα δεν μπορεί να χρησιμοποιηθεί. Διάλεξε PNG ή JPEG έως 4096 pixel ανά πλευρά.';
 
   @override
-  String get editorTrophyOpening => 'Opening the picture';
+  String get editorTrophyOpening => 'Άνοιγμα εικόνας';
 
   @override
-  String get editorTrophyPreparing => 'Preparing the trophy';
+  String get editorTrophyPreparing => 'Προετοιμασία τροπαίου';
 
   @override
-  String get editorTrophyFrameTitle => 'Frame the trophy';
+  String get editorTrophyFrameTitle => 'Πλαισίωσε το τρόπαιο';
 
   @override
   String get editorTrophyFrameHint =>
-      'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.';
+      'Σύρε για μετακίνηση και τσίμπησε για ζουμ. Ό,τι είναι μέσα στο πλαίσιο γίνεται το τρόπαιο.';
 
   @override
-  String get editorTrophyFit => 'Fit';
+  String get editorTrophyFit => 'Προσαρμογή';
 
   @override
-  String get editorTrophyPreview => 'Preview';
+  String get editorTrophyPreview => 'Προεπισκόπηση';
 
   @override
-  String get editorTrophyPreviewTitle => 'How it will look';
+  String get editorTrophyPreviewTitle => 'Πώς θα φαίνεται';
 
   @override
-  String get editorTrophyAdjust => 'Adjust';
+  String get editorTrophyAdjust => 'Ρύθμιση';
 
   @override
-  String get editorTrophyUse => 'Use this picture';
+  String get editorTrophyUse => 'Χρήση εικόνας';
 
   @override
   String get editorTrophyRectangle =>
-      'This picture has no transparent background, so the game will show it as a rectangle.';
+      'Η εικόνα δεν έχει διάφανο φόντο, οπότε το παιχνίδι θα τη δείχνει ως ορθογώνιο.';
 
   @override
-  String get editorTrophyRectangleShort => 'Shows as a rectangle';
+  String get editorTrophyRectangleShort => 'Φαίνεται ως ορθογώνιο';
 
   @override
-  String get editorTrophySaved => 'Trophy picture saved.';
+  String get editorTrophySaved => 'Η εικόνα τροπαίου αποθηκεύτηκε.';
 
   @override
-  String get editorTrophyRemoved => 'The game\'s picture is back.';
+  String get editorTrophyRemoved => 'Η εικόνα του παιχνιδιού επέστρεψε.';
 
   @override
   String get editorTrophySaveFailed =>
-      'The picture could not be saved. Try again.';
+      'Η εικόνα δεν αποθηκεύτηκε. Δοκίμασε ξανά.';
 
   @override
-  String get editorTrophyPick => 'Pick a trophy to change its picture.';
+  String get editorTrophyPick =>
+      'Διάλεξε τρόπαιο για να αλλάξεις την εικόνα του.';
 
   @override
   String editorTrophySize(int width, int height) {
-    return 'Saved at $width x $height pixels';
+    return 'Αποθηκεύεται σε $width x $height pixel';
   }
 
   @override
   String editorIssueUnknownEntry(String name) {
-    return '$name is no longer in the game';
+    return '$name: δεν υπάρχει πια στο παιχνίδι';
   }
 
   @override
   String get editorAttentionBody =>
-      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+      'Μια ενημέρωση του παιχνιδιού αφαίρεσε κάτι στο οποίο αναφέρεται αυτή η βάση δεδομένων. Αφαίρεσε κάθε εγγραφή παρακάτω και θα μπορεί ξανά να ξεκινά καριέρα.';
 
   @override
-  String get editorRemove => 'Remove';
+  String get editorRemove => 'Αφαίρεση';
 
   @override
   String worldChip(String name) {
-    return 'World: $name';
+    return 'Κόσμος: $name';
   }
 
   @override
-  String get worldDefault => 'Default';
+  String get worldDefault => 'Προεπιλογή';
 
   @override
-  String get worldDefaultAbout => 'The game\'s own world';
+  String get worldDefaultAbout => 'Ο κόσμος του παιχνιδιού';
 
   @override
-  String get worldSheetTitle => 'Choose a world';
+  String get worldSheetTitle => 'Διάλεξε κόσμο';
 
   @override
   String get worldSheetBlurb =>
-      'Databases you made or opened in the Editor. Only complete ones can start a career.';
+      'Βάσεις δεδομένων που έφτιαξες ή άνοιξες στον Επεξεργαστή. Μόνο οι πλήρεις μπορούν να ξεκινήσουν καριέρα.';
 
   @override
   String get worldPackGone =>
-      'That database is no longer on this device. The career was not started.';
+      'Αυτή η βάση δεδομένων δεν υπάρχει πια στη συσκευή. Η καριέρα δεν ξεκίνησε.';
 
   @override
-  String get worldStarting => 'Setting up your world';
+  String get worldStarting => 'Στήνεται ο κόσμος σου';
 
   @override
-  String get settingsDefaultWorldTitle => 'Default world';
+  String get settingsDefaultWorldTitle => 'Προεπιλεγμένος κόσμος';
 
   @override
   String get settingsDefaultWorldBlurb =>
-      'The world New Game starts on. You can still change it for each career.';
+      'Ο κόσμος στον οποίο ξεκινά το Νέο παιχνίδι. Μπορείς να τον αλλάξεις για κάθε καριέρα.';
 
   @override
   String get worldPackNotReady =>
-      'That database can no longer start a career. Fix it in the Editor, or choose another world.';
+      'Αυτή η βάση δεδομένων δεν μπορεί πια να ξεκινήσει καριέρα. Διόρθωσέ τη στον Επεξεργαστή ή διάλεξε άλλο κόσμο.';
 }

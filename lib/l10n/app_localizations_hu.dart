@@ -14229,262 +14229,263 @@ class AppLocalizationsHu extends AppLocalizations {
   String get callUpAwayShort => 'V';
 
   @override
-  String get homeEditor => 'Editor';
+  String get homeEditor => 'Szerkesztő';
 
   @override
-  String get editorTitle => 'Editor';
+  String get editorTitle => 'Szerkesztő';
 
   @override
   String get editorIntro =>
-      'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.';
+      'Készítsd el a saját kezdő világodat: a saját játékosaidat, az értékelésüket, a saját neveidet. Oszd meg fájlként; a barátaid importálhatják, és karriert indíthatnak rajta.';
 
   @override
-  String get editorEmptyTitle => 'No databases yet';
+  String get editorEmptyTitle => 'Még nincs adatbázis';
 
   @override
   String get editorEmptyBody =>
-      'A new database starts as a copy of the default world. Change what you like; it saves as you go.';
+      'Az új adatbázis az alapvilág másolataként indul. Változtass, amit szeretnél; menet közben mentődik.';
 
   @override
-  String get editorNew => 'New database';
+  String get editorNew => 'Új adatbázis';
 
   @override
-  String get editorImport => 'Import';
+  String get editorImport => 'Importálás';
 
   @override
-  String get editorEdit => 'Edit';
+  String get editorEdit => 'Szerkesztés';
 
   @override
-  String get editorRename => 'Rename';
+  String get editorRename => 'Átnevezés';
 
   @override
-  String get editorDuplicate => 'Duplicate';
+  String get editorDuplicate => 'Másolat';
 
   @override
-  String get editorExport => 'Export';
+  String get editorExport => 'Exportálás';
 
   @override
-  String get editorDelete => 'Delete';
+  String get editorDelete => 'Törlés';
 
   @override
-  String get editorCancel => 'Cancel';
+  String get editorCancel => 'Mégse';
 
   @override
-  String get editorCreate => 'Create';
+  String get editorCreate => 'Létrehozás';
 
   @override
-  String get editorMore => 'More actions';
+  String get editorMore => 'További műveletek';
 
   @override
-  String get editorNameLabel => 'Name';
+  String get editorNameLabel => 'Név';
 
   @override
-  String get editorNameHint => 'My world';
+  String get editorNameHint => 'Saját világom';
 
   @override
-  String get editorRenameTitle => 'Rename database';
+  String get editorRenameTitle => 'Adatbázis átnevezése';
 
   @override
-  String get editorDuplicateTitle => 'Duplicate database';
+  String get editorDuplicateTitle => 'Adatbázis másolása';
 
   @override
   String editorCopyName(String name) {
-    return '$name copy';
+    return '$name másolat';
   }
 
   @override
-  String get editorNameEmpty => 'Give it a name';
+  String get editorNameEmpty => 'Adj neki nevet';
 
   @override
   String editorNameTooLong(int max) {
-    return 'Keep it to $max characters';
+    return 'Legfeljebb $max karakter';
   }
 
   @override
   String get editorNameBadCharacters =>
-      'That name has characters that cannot be used';
+      'A névben nem használható karakterek vannak';
 
   @override
-  String get editorDeleteTitle => 'Delete database?';
+  String get editorDeleteTitle => 'Törlöd az adatbázist?';
 
   @override
   String editorDeleteBody(String name) {
-    return '\"$name\" will be removed from this device. Careers already started on it keep working.';
+    return 'A(z) „$name” törlődik erről az eszközről. A rajta már elindított karrierek tovább működnek.';
   }
 
   @override
-  String get editorStatusReady => 'Ready';
+  String get editorStatusReady => 'Kész';
 
   @override
   String editorStatusMissing(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things missing',
-      one: '1 thing missing',
+      other: '$count dolog hiányzik',
+      one: '1 dolog hiányzik',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorStatusAttention => 'Needs attention';
+  String get editorStatusAttention => 'Figyelmet kér';
 
   @override
-  String get editorStatusUnreadable => 'Cannot be opened';
+  String get editorStatusUnreadable => 'Nem nyitható meg';
 
   @override
   String editorEdited(String date) {
-    return 'Edited $date';
+    return 'Szerkesztve: $date';
   }
 
   @override
-  String get editorCreating => 'Copying the default world…';
+  String get editorCreating => 'Az alapvilág másolása…';
 
   @override
-  String get editorImported => 'Database imported';
+  String get editorImported => 'Adatbázis importálva';
 
   @override
-  String get editorImportOpen => 'Open';
+  String get editorImportOpen => 'Megnyitás';
 
   @override
-  String get editorImportTooBig => 'That file is too big to be a database.';
+  String get editorImportTooBig =>
+      'Ez a fájl túl nagy ahhoz, hogy adatbázis legyen.';
 
   @override
-  String get editorImportNotAPack => 'That file is not an FNM database.';
+  String get editorImportNotAPack => 'Ez a fájl nem FNM-adatbázis.';
 
   @override
   String get editorImportNewer =>
-      'That database was made with a newer version of the game. Update the game to import it.';
+      'Ez az adatbázis a játék egy újabb verziójával készült. Frissítsd a játékot az importáláshoz.';
 
   @override
   String get editorImportBadData =>
-      'That database holds data the game cannot use, so nothing was imported.';
+      'Ez az adatbázis olyan adatokat tartalmaz, amelyeket a játék nem tud használni, ezért semmi sem lett importálva.';
 
   @override
   String get editorImportBadTrophy =>
-      'A trophy picture in that file could not be read, so nothing was imported.';
+      'A fájl egyik trófeaképe nem olvasható, ezért semmi sem lett importálva.';
 
   @override
-  String get editorExportFailed => 'The database could not be exported.';
+  String get editorExportFailed => 'Az adatbázist nem sikerült exportálni.';
 
   @override
-  String get editorShareSubject => 'FNM database';
+  String get editorShareSubject => 'FNM-adatbázis';
 
   @override
-  String get editorPackMissing => 'This database is no longer on this device.';
+  String get editorPackMissing => 'Ez az adatbázis már nincs ezen az eszközön.';
 
   @override
-  String get editorReadyTitle => 'Ready to play';
+  String get editorReadyTitle => 'Játékra kész';
 
   @override
   String get editorReadyBody =>
-      'Every nation has a full squad and every name checks out. You can start a career on it.';
+      'Minden ország kerete teljes, és minden név rendben van. Indíthatsz rajta karriert.';
 
   @override
   String editorNotReadyTitle(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count things to fix before it can be played',
-      one: '1 thing to fix before it can be played',
+      other: '$count dolgot javíts ki a játék előtt',
+      one: '1 dolgot javíts ki a játék előtt',
     );
     return '$_temp0';
   }
 
   @override
   String get editorNotReadyBody =>
-      'It saves as you go, so you can share it now and finish it later.';
+      'Menet közben mentődik, így most is megoszthatod, és később befejezheted.';
 
   @override
   String editorSectionsReady(int ready, int total) {
-    return '$ready of $total sections ready';
+    return '$ready/$total rész kész';
   }
 
   @override
-  String get editorMissingTitle => 'What\'s missing';
+  String get editorMissingTitle => 'Ami hiányzik';
 
   @override
   String editorShowAll(int count) {
-    return 'Show all ($count)';
+    return 'Összes ($count)';
   }
 
   @override
-  String get editorShowLess => 'Show less';
+  String get editorShowLess => 'Kevesebb';
 
   @override
-  String get editorUndo => 'Undo';
+  String get editorUndo => 'Visszavonás';
 
   @override
-  String get editorSectionsTitle => 'Sections';
+  String get editorSectionsTitle => 'Részek';
 
   @override
-  String get editorSectionPlayers => 'Players';
+  String get editorSectionPlayers => 'Játékosok';
 
   @override
-  String get editorSectionNations => 'Nations';
+  String get editorSectionNations => 'Országok';
 
   @override
-  String get editorSectionClubs => 'Clubs';
+  String get editorSectionClubs => 'Klubok';
 
   @override
-  String get editorSectionStadiums => 'Stadiums';
+  String get editorSectionStadiums => 'Stadionok';
 
   @override
-  String get editorSectionCompetitions => 'Competitions';
+  String get editorSectionCompetitions => 'Versenyek';
 
   @override
-  String get editorSectionY => 'Y accounts';
+  String get editorSectionY => 'Y-fiókok';
 
   @override
-  String get editorSectionPress => 'Press';
+  String get editorSectionPress => 'Sajtó';
 
   @override
-  String get editorSectionNameLists => 'Name lists';
+  String get editorSectionNameLists => 'Névlisták';
 
   @override
-  String get editorSectionSponsors => 'Sponsors';
+  String get editorSectionSponsors => 'Szponzorok';
 
   @override
-  String get editorSectionTrophies => 'Trophies';
+  String get editorSectionTrophies => 'Trófeák';
 
   @override
-  String get editorAboutPlayers => 'Squads, ratings and potential';
+  String get editorAboutPlayers => 'Keretek, értékelés és potenciál';
 
   @override
-  String get editorAboutNations => 'Nation names and codes';
+  String get editorAboutNations => 'Országnevek és kódok';
 
   @override
-  String get editorAboutClubs => 'Club names';
+  String get editorAboutClubs => 'Klubnevek';
 
   @override
-  String get editorAboutStadiums => 'National stadium names';
+  String get editorAboutStadiums => 'Nemzeti stadionok nevei';
 
   @override
-  String get editorAboutCompetitions => 'Competition names';
+  String get editorAboutCompetitions => 'Versenyek nevei';
 
   @override
-  String get editorAboutY => 'Accounts on Y';
+  String get editorAboutY => 'Fiókok az Y-on';
 
   @override
-  String get editorAboutPress => 'Journalists and their outlets';
+  String get editorAboutPress => 'Újságírók és lapjaik';
 
   @override
   String get editorAboutNameLists =>
-      'Names for new players, local fans and staff';
+      'Nevek új játékosoknak, helyi szurkolóknak és a stábnak';
 
   @override
-  String get editorAboutSponsors => 'Sponsor brands';
+  String get editorAboutSponsors => 'Szponzormárkák';
 
   @override
-  String get editorAboutTrophies => 'Trophy pictures';
+  String get editorAboutTrophies => 'Trófeaképek';
 
   @override
   String editorCountPlayers(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players',
-      one: '1 player',
+      other: '$count játékos',
+      one: '1 játékos',
     );
     return '$_temp0';
   }
@@ -14494,8 +14495,8 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count nations',
-      one: '1 nation',
+      other: '$count ország',
+      one: '1 ország',
     );
     return '$_temp0';
   }
@@ -14505,9 +14506,9 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count changes',
-      one: '1 change',
-      zero: 'Game names',
+      other: '$count módosítás',
+      one: '1 módosítás',
+      zero: 'Játékbeli nevek',
     );
     return '$_temp0';
   }
@@ -14517,9 +14518,9 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count custom pictures',
-      one: '1 custom picture',
-      zero: 'Game pictures',
+      other: '$count saját kép',
+      one: '1 saját kép',
+      zero: 'Játékbeli képek',
     );
     return '$_temp0';
   }
@@ -14529,8 +14530,8 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count to fix',
-      one: '1 to fix',
+      other: '$count javítandó',
+      one: '1 javítandó',
     );
     return '$_temp0';
   }
@@ -14540,8 +14541,8 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more players needed',
-      one: '1 more player needed',
+      other: 'Még $count játékos kell',
+      one: 'Még 1 játékos kell',
     );
     return '$_temp0';
   }
@@ -14551,8 +14552,8 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count players too many',
-      one: '1 player too many',
+      other: '$count játékossal több a kelleténél',
+      one: '1 játékossal több a kelleténél',
     );
     return '$_temp0';
   }
@@ -14562,8 +14563,8 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count goalkeepers needed',
-      one: '1 goalkeeper needed',
+      other: '$count kapus kell',
+      one: '1 kapus kell',
     );
     return '$_temp0';
   }
@@ -14573,8 +14574,8 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count defenders needed',
-      one: '1 defender needed',
+      other: '$count védő kell',
+      one: '1 védő kell',
     );
     return '$_temp0';
   }
@@ -14584,8 +14585,8 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count midfielders needed',
-      one: '1 midfielder needed',
+      other: '$count középpályás kell',
+      one: '1 középpályás kell',
     );
     return '$_temp0';
   }
@@ -14595,478 +14596,482 @@ class AppLocalizationsHu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count forwards needed',
-      one: '1 forward needed',
+      other: '$count támadó kell',
+      one: '1 támadó kell',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorIssuePlayerNoName => 'A player has no name';
+  String get editorIssuePlayerNoName => 'Egy játékosnak nincs neve';
 
   @override
   String editorIssueAge(String name) {
-    return '$name: age must be 15 to 45';
+    return '$name: a kor 15 és 45 között lehet';
   }
 
   @override
   String editorIssueRating(String name) {
-    return '$name: overall must be 1 to 99';
+    return '$name: az összértékelés 1 és 99 között lehet';
   }
 
   @override
   String editorIssuePotential(String name) {
-    return '$name: potential must be between the overall and 99';
+    return '$name: a potenciál az összértékelés és 99 között lehet';
   }
 
   @override
   String editorIssueRenameEmpty(String name) {
-    return 'The new name for $name is empty';
+    return '$name új neve üres';
   }
 
   @override
-  String get editorIssueNameEmpty => 'A name is empty';
+  String get editorIssueNameEmpty => 'Egy név üres';
 
   @override
   String editorIssueNameTooLong(String name) {
-    return '\"$name\" is too long';
+    return '„$name” túl hosszú';
   }
 
   @override
   String editorIssueNameBadCharacters(String name) {
-    return '\"$name\" has characters that cannot be used';
+    return '„$name” nem használható karaktereket tartalmaz';
   }
 
   @override
   String editorIssueNameTaken(String name) {
-    return '\"$name\" is already taken';
+    return '„$name” már foglalt';
   }
 
   @override
-  String get editorIssueCode => 'The code must be 3 letters, A to Z';
+  String get editorIssueCode => 'A kód 3 betű legyen, A-tól Z-ig';
 
   @override
   String editorIssueDuplicateCode(String code, String nations) {
-    return 'Code $code is used by $nations';
+    return 'A(z) $code kódot használja: $nations';
   }
 
   @override
   String editorIssueFirstNames(int count) {
-    return 'At least $count first names needed';
+    return 'Legalább $count keresztnév kell';
   }
 
   @override
   String editorIssueSurnames(int count) {
-    return 'At least $count surnames needed';
+    return 'Legalább $count vezetéknév kell';
   }
 
   @override
-  String get editorIssueValue => 'A value is out of range';
+  String get editorIssueValue => 'Egy érték kívül esik a tartományon';
 
   @override
   String get editorIssueUnknown =>
-      'Refers to something that is no longer in the game';
+      'Olyasmire hivatkozik, ami már nincs a játékban';
 
   @override
-  String get editorSectionSoon => 'Editing this section is on its way.';
+  String get editorSectionSoon =>
+      'Ennek a résznek a szerkesztése hamarosan jön.';
 
   @override
-  String get editorNewFailed => 'The database could not be made. Try again.';
+  String get editorNewFailed =>
+      'Az adatbázist nem sikerült létrehozni. Próbáld újra.';
 
   @override
-  String get editorPickFailed => 'The file could not be opened.';
+  String get editorPickFailed => 'A fájlt nem sikerült megnyitni.';
 
   @override
-  String get editorRenameFailed => 'The database could not be renamed.';
+  String get editorRenameFailed => 'Az adatbázist nem sikerült átnevezni.';
 
   @override
-  String get editorDuplicateFailed => 'The database could not be copied.';
+  String get editorDuplicateFailed => 'Az adatbázist nem sikerült lemásolni.';
 
   @override
-  String get editorNationsSearch => 'Search nations';
+  String get editorNationsSearch => 'Ország keresése';
 
   @override
-  String get editorFilterAll => 'All';
+  String get editorFilterAll => 'Mind';
 
   @override
-  String get editorNationsNone => 'No nation matches your search.';
+  String get editorNationsNone => 'Egy ország sem felel meg a keresésnek.';
 
   @override
-  String get editorNationSquadReady => 'Squad ready';
+  String get editorNationSquadReady => 'Keret kész';
 
   @override
-  String get editorSquadAdd => 'Add player';
+  String get editorSquadAdd => 'Játékos hozzáadása';
 
   @override
   String editorSquadFull(int max) {
-    return 'A squad holds at most $max players.';
+    return 'Egy keretben legfeljebb $max játékos lehet.';
   }
 
   @override
   String editorSquadRemoved(String name) {
-    return '$name removed from the squad';
+    return '$name kikerült a keretből';
   }
 
   @override
-  String get editorPlayerUnnamed => 'Unnamed player';
+  String get editorPlayerUnnamed => 'Névtelen játékos';
 
   @override
   String get editorSquadDuplicate =>
-      'Another player in this squad has this name.';
+      'A keretben egy másik játékosnak is ez a neve.';
 
   @override
-  String get editorSquadEmpty => 'No players yet. Add the first one.';
+  String get editorSquadEmpty => 'Még nincs játékos. Add hozzá az elsőt.';
 
   @override
-  String get editorSquadReady => 'This squad is ready to play.';
+  String get editorSquadReady => 'Ez a keret játékra kész.';
 
   @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
-    return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
+    return '$min-$max játékos, köztük legalább kapus: $gk, védő: $def, középpályás: $mid, támadó: $fwd.';
   }
 
   @override
-  String get editorShortGk => 'GK';
+  String get editorShortGk => 'K';
 
   @override
-  String get editorShortDef => 'DEF';
+  String get editorShortDef => 'VÉD';
 
   @override
-  String get editorShortMid => 'MID';
+  String get editorShortMid => 'KP';
 
   @override
-  String get editorShortFwd => 'FWD';
+  String get editorShortFwd => 'CS';
 
   @override
   String editorPlayerAgeShort(int age) {
-    return 'Age $age';
+    return '$age éves';
   }
 
   @override
-  String get editorPlayerName => 'Name';
+  String get editorPlayerName => 'Név';
 
   @override
-  String get editorPlayerNameHint => 'Type his name';
+  String get editorPlayerNameHint => 'Írd be a nevét';
 
   @override
-  String get editorPlayerNameNeeded => 'A name is needed.';
+  String get editorPlayerNameNeeded => 'Név kell.';
 
   @override
-  String get editorPlayerNameBad => 'Remove the unusual characters.';
+  String get editorPlayerNameBad => 'Töröld a szokatlan karaktereket.';
 
   @override
-  String get editorPlayerAge => 'Age';
+  String get editorPlayerAge => 'Kor';
 
   @override
-  String get editorPlayerPosition => 'Position';
+  String get editorPlayerPosition => 'Poszt';
 
   @override
-  String get editorPlayerClub => 'Club';
+  String get editorPlayerClub => 'Klub';
 
   @override
-  String get editorPlayerFreeAgent => 'Free agent';
+  String get editorPlayerFreeAgent => 'Klub nélkül';
 
   @override
-  String get editorPlayerClubSearch => 'Search clubs';
+  String get editorPlayerClubSearch => 'Klub keresése';
 
   @override
-  String get editorPlayerClubNone => 'No club matches your search.';
+  String get editorPlayerClubNone => 'Egy klub sem felel meg a keresésnek.';
 
   @override
-  String get editorPlayerClubPick => 'Pick a club';
+  String get editorPlayerClubPick => 'Válassz klubot';
 
   @override
-  String get editorPlayerOverall => 'Overall';
+  String get editorPlayerOverall => 'Összértékelés';
 
   @override
-  String get editorPlayerType => 'Player type';
+  String get editorPlayerType => 'Játékostípus';
 
   @override
-  String get editorPlayerPotential => 'Potential';
+  String get editorPlayerPotential => 'Potenciál';
 
   @override
   String get editorPlayerPotentialAbout =>
-      'The peak he can reach if he develops well. Never below his overall.';
+      'A csúcs, amit jó fejlődéssel elérhet. Sosem kisebb az összértékelésnél.';
 
   @override
-  String get editorPlayerQualities => 'What the game stores';
+  String get editorPlayerQualities => 'Amit a játék tárol';
 
   @override
-  String get editorTypeBalanced => 'Balanced';
+  String get editorTypeBalanced => 'Sokoldalú';
 
   @override
-  String get editorTypeAthlete => 'Athlete';
+  String get editorTypeAthlete => 'Atléta';
 
   @override
-  String get editorTypeTechnician => 'Technician';
+  String get editorTypeTechnician => 'Technikus';
 
   @override
-  String get editorTypeEngine => 'Engine';
+  String get editorTypeEngine => 'Motor';
 
   @override
   String get editorTypeBalancedAbout =>
-      'Even across physique, technique and stamina.';
+      'Fizikumban, technikában és állóképességben is egyenletes.';
 
   @override
   String get editorTypeAthleteAbout =>
-      'Strong and quick, a little lighter on technique.';
+      'Erős és gyors, technikában kicsit gyengébb.';
 
   @override
-  String get editorTypeTechnicianAbout => 'Skilful on the ball, less physical.';
+  String get editorTypeTechnicianAbout =>
+      'Ügyes a labdával, fizikailag gyengébb.';
 
   @override
   String get editorTypeEngineAbout =>
-      'Runs all day, steady at everything else.';
+      'Egész nap fut, minden másban megbízható.';
 
   @override
-  String get editorPlayerLess => 'One less';
+  String get editorPlayerLess => 'Eggyel kevesebb';
 
   @override
-  String get editorPlayerMore => 'One more';
+  String get editorPlayerMore => 'Eggyel több';
 
   @override
-  String get editorPlayerRemove => 'Remove from squad';
+  String get editorPlayerRemove => 'Eltávolítás a keretből';
 
   @override
-  String get editorPlayerGone => 'This player is no longer in the squad.';
+  String get editorPlayerGone => 'Ez a játékos már nincs a keretben.';
 
   @override
-  String get editorNationGone => 'This nation is not in the database.';
+  String get editorNationGone => 'Ez az ország nincs az adatbázisban.';
 
   @override
-  String get editorPickPlayer => 'Pick a player to edit.';
+  String get editorPickPlayer => 'Válassz egy játékost a szerkesztéshez.';
 
   @override
-  String get editorPlayerClubAuto => 'Chosen by the game';
+  String get editorPlayerClubAuto => 'A játék választ';
 
   @override
   String get editorPlayerClubAutoAbout =>
-      'The game places him at a club that suits his level.';
+      'A játék a szintjéhez illő klubhoz teszi.';
 
   @override
-  String get editorNamesSearch => 'Search names';
+  String get editorNamesSearch => 'Nevek keresése';
 
   @override
-  String get editorNamesSearchClubs => 'Search clubs or countries';
+  String get editorNamesSearchClubs => 'Klubok vagy országok keresése';
 
   @override
   String get editorNamesSearchStadiums =>
-      'Search stadiums, cities or countries';
+      'Stadionok, városok vagy országok keresése';
 
   @override
-  String get editorNamesSearchNations => 'Search nations or codes';
+  String get editorNamesSearchNations => 'Országok vagy kódok keresése';
 
   @override
-  String get editorNamesNone => 'Nothing matches your search.';
+  String get editorNamesNone => 'Semmi sem felel meg a keresésnek.';
 
   @override
   String get editorNamesEveryLanguage =>
-      'A custom name shows the same in every language.';
+      'A saját név minden nyelven ugyanígy jelenik meg.';
 
   @override
   String editorNamesGameName(String name) {
-    return 'Game name: $name';
+    return 'Név a játékban: $name';
   }
 
   @override
-  String get editorNamesReset => 'Reset to original';
+  String get editorNamesReset => 'Eredeti visszaállítása';
 
   @override
-  String get editorNamesDone => 'Done';
+  String get editorNamesDone => 'Kész';
 
   @override
-  String get editorNamesKeepHint => 'Leave empty to keep the game name.';
+  String get editorNamesKeepHint =>
+      'Hagyd üresen, ha a játékbeli nevet tartanád meg.';
 
   @override
-  String get editorNamesCode => 'Code';
+  String get editorNamesCode => 'Kód';
 
   @override
   String get editorNamesCodeHelp =>
-      '3 letters, A to Z, used by no other nation.';
+      '3 betű A-tól Z-ig, amit más ország nem használ.';
 
   @override
   String editorNamesCodeTaken(String code, String nation) {
-    return '$code is already used by $nation.';
+    return 'A(z) $code kódot már használja: $nation.';
   }
 
   @override
-  String get editorNamesTaken => 'Another account already has this name.';
+  String get editorNamesTaken => 'Egy másik fióknak már ez a neve.';
 
   @override
-  String get editorNamesOutlet => 'Outlet';
+  String get editorNamesOutlet => 'Lap';
 
   @override
-  String get editorNamesFirstNames => 'First names';
+  String get editorNamesFirstNames => 'Keresztnevek';
 
   @override
-  String get editorNamesSurnames => 'Surnames';
+  String get editorNamesSurnames => 'Vezetéknevek';
 
   @override
   String editorNamesFirstCount(int count, int min) {
-    return '$count / $min first names';
+    return '$count / $min keresztnév';
   }
 
   @override
   String editorNamesSurCount(int count, int min) {
-    return '$count / $min surnames';
+    return '$count / $min vezetéknév';
   }
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Separate the names with commas or new lines. Each list needs at least $min. They name new players, local fans and staff.';
+    return 'A neveket vesszővel vagy új sorral válaszd el. Minden listába legalább $min kell. Ezeket kapják az új játékosok, a helyi szurkolók és a stáb.';
   }
 
   @override
   String editorNamesListCounts(int first, int sur) {
-    return '$first first names, $sur surnames';
+    return '$first keresztnév, $sur vezetéknév';
   }
 
   @override
   String editorNamesMainStadium(String city) {
-    return 'Main stadium in $city';
+    return 'Fő stadion: $city';
   }
 
   @override
-  String get editorNamesChanged => 'Changed';
+  String get editorNamesChanged => 'Módosítva';
 
   @override
-  String get editorNamesPick => 'Pick a name to edit.';
+  String get editorNamesPick => 'Válassz egy nevet a szerkesztéshez.';
 
   @override
   String get editorNamesStadiumsNote =>
-      'Only the national grounds listed here can be renamed: the main stadium of each city.';
+      'Csak az itt felsorolt nemzeti stadionok nevezhetők át: minden város fő stadionja.';
 
   @override
   String get editorTrophiesIntro =>
-      'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.';
+      'Koppints egy trófeára, és adj neki saját képet. Az átlátszó hátterű PNG mutat a legjobban.';
 
   @override
-  String get editorTrophyCustom => 'Custom';
+  String get editorTrophyCustom => 'Saját';
 
   @override
-  String get editorTrophyDefault => 'Game picture';
+  String get editorTrophyDefault => 'Játékbeli kép';
 
   @override
-  String get editorTrophyChoose => 'Choose a picture';
+  String get editorTrophyChoose => 'Kép választása';
 
   @override
-  String get editorTrophyReplace => 'Choose another picture';
+  String get editorTrophyReplace => 'Másik kép választása';
 
   @override
-  String get editorTrophyReset => 'Back to default';
+  String get editorTrophyReset => 'Alapértelmezett';
 
   @override
-  String get editorTrophyResetTitle => 'Use the game\'s picture?';
+  String get editorTrophyResetTitle => 'A játék képét használod?';
 
   @override
   String get editorTrophyResetBody =>
-      'Your picture for this trophy will be removed. Undo can\'t bring it back.';
+      'A trófeához adott képed törlődik. A Visszavonás nem hozza vissza.';
 
   @override
-  String get editorTrophyResetConfirm => 'Remove picture';
+  String get editorTrophyResetConfirm => 'Kép törlése';
 
   @override
   String get editorTrophyUnusable =>
-      'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.';
+      'Ez a kép nem használható. Válassz PNG-t vagy JPEG-et, oldalanként legfeljebb 4096 pixellel.';
 
   @override
-  String get editorTrophyOpening => 'Opening the picture';
+  String get editorTrophyOpening => 'Kép megnyitása';
 
   @override
-  String get editorTrophyPreparing => 'Preparing the trophy';
+  String get editorTrophyPreparing => 'Trófea előkészítése';
 
   @override
-  String get editorTrophyFrameTitle => 'Frame the trophy';
+  String get editorTrophyFrameTitle => 'Trófea keretezése';
 
   @override
   String get editorTrophyFrameHint =>
-      'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.';
+      'Húzd a mozgatáshoz, csippentsd a nagyításhoz. Ami a kereten belül van, az lesz a trófea.';
 
   @override
-  String get editorTrophyFit => 'Fit';
+  String get editorTrophyFit => 'Igazítás';
 
   @override
-  String get editorTrophyPreview => 'Preview';
+  String get editorTrophyPreview => 'Előnézet';
 
   @override
-  String get editorTrophyPreviewTitle => 'How it will look';
+  String get editorTrophyPreviewTitle => 'Így fog kinézni';
 
   @override
-  String get editorTrophyAdjust => 'Adjust';
+  String get editorTrophyAdjust => 'Módosítás';
 
   @override
-  String get editorTrophyUse => 'Use this picture';
+  String get editorTrophyUse => 'Kép használata';
 
   @override
   String get editorTrophyRectangle =>
-      'This picture has no transparent background, so the game will show it as a rectangle.';
+      'Ennek a képnek nincs átlátszó háttere, ezért a játék téglalapként jeleníti meg.';
 
   @override
-  String get editorTrophyRectangleShort => 'Shows as a rectangle';
+  String get editorTrophyRectangleShort => 'Téglalapként jelenik meg';
 
   @override
-  String get editorTrophySaved => 'Trophy picture saved.';
+  String get editorTrophySaved => 'Trófeakép mentve.';
 
   @override
-  String get editorTrophyRemoved => 'The game\'s picture is back.';
+  String get editorTrophyRemoved => 'Visszakerült a játék képe.';
 
   @override
   String get editorTrophySaveFailed =>
-      'The picture could not be saved. Try again.';
+      'A képet nem sikerült menteni. Próbáld újra.';
 
   @override
-  String get editorTrophyPick => 'Pick a trophy to change its picture.';
+  String get editorTrophyPick => 'Válassz egy trófeát a képe cseréjéhez.';
 
   @override
   String editorTrophySize(int width, int height) {
-    return 'Saved at $width x $height pixels';
+    return 'Mentés $width x $height pixelben';
   }
 
   @override
   String editorIssueUnknownEntry(String name) {
-    return '$name is no longer in the game';
+    return '$name: már nincs a játékban';
   }
 
   @override
   String get editorAttentionBody =>
-      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+      'Egy játékfrissítés eltávolított valamit, amire ez az adatbázis hivatkozik. Távolítsd el az alábbi tételeket, és újra indíthatsz rajta karriert.';
 
   @override
-  String get editorRemove => 'Remove';
+  String get editorRemove => 'Eltávolítás';
 
   @override
   String worldChip(String name) {
-    return 'World: $name';
+    return 'Világ: $name';
   }
 
   @override
-  String get worldDefault => 'Default';
+  String get worldDefault => 'Alap';
 
   @override
-  String get worldDefaultAbout => 'The game\'s own world';
+  String get worldDefaultAbout => 'A játék saját világa';
 
   @override
-  String get worldSheetTitle => 'Choose a world';
+  String get worldSheetTitle => 'Válassz világot';
 
   @override
   String get worldSheetBlurb =>
-      'Databases you made or opened in the Editor. Only complete ones can start a career.';
+      'A Szerkesztőben készített vagy megnyitott adatbázisok. Karriert csak teljes adatbázison indíthatsz.';
 
   @override
   String get worldPackGone =>
-      'That database is no longer on this device. The career was not started.';
+      'Ez az adatbázis már nincs ezen az eszközön. A karrier nem indult el.';
 
   @override
-  String get worldStarting => 'Setting up your world';
+  String get worldStarting => 'A világod előkészítése';
 
   @override
-  String get settingsDefaultWorldTitle => 'Default world';
+  String get settingsDefaultWorldTitle => 'Alapvilág';
 
   @override
   String get settingsDefaultWorldBlurb =>
-      'The world New Game starts on. You can still change it for each career.';
+      'Az a világ, amelyen az Új játék indul. Minden karriernél megváltoztathatod.';
 
   @override
   String get worldPackNotReady =>
-      'That database can no longer start a career. Fix it in the Editor, or choose another world.';
+      'Ezen az adatbázison már nem indítható karrier. Javítsd ki a Szerkesztőben, vagy válassz másik világot.';
 }
