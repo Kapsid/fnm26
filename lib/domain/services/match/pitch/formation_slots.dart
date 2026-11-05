@@ -278,9 +278,10 @@ List<(double, double)> layoutOf(Formation f) => _layouts[f]!;
 /// Where a slot actually sits up the pitch once the instructions have had their
 /// say — the y half of what the pitch renders.
 ///
-/// Shared with the tactics board's `resolveSpaceDrag` rather than duplicated: a drop is judged
-/// against the line the manager can SEE, and a second copy of this arithmetic
-/// would drift from the first exactly when a tactic is extreme.
+/// Shared with the tactics board's `resolveSpaceDrag` rather than duplicated:
+/// a drop is judged against the line the manager can SEE, and a second copy
+/// of this arithmetic would drift from the first exactly when a tactic is
+/// extreme.
 double adjustedSlotY(
   double baseY,
   PositionCategory category,

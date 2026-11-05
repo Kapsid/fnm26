@@ -221,6 +221,9 @@ class StagedWindow {
   /// The injury staged here, when this window is one.
   final MatchEvent? injury;
 
+  /// The state handed over as the window opens and the one play resumes
+  /// from as it closes. In a resumed script, a window that ended before the
+  /// script's start was never played here: both carry the resume state.
   late ScriptState entry;
   late ScriptState exit;
 
@@ -534,7 +537,8 @@ abstract final class PitchScriptValidator {
   /// The fastest a man walking off may go.
   static const double maxWalkSpeed = 2.5;
 
-  /// How near a touchline a man walking off has to be to leave the picture.
+  /// How near the boundary (a touchline or a goal line) a man walking off
+  /// has to be to leave the picture.
   static const double offTheLine = 1;
 
   /// Every violation in [s]; empty when it keeps every invariant. Stops
@@ -562,20 +566,20 @@ abstract final class PitchScriptValidator {
 
     for (var k = 0; k < frames.length; k++) {
       final a = frames[k];
-      // At most eleven a side.
+      // At most eleven a side, men walking off apart.
       final count = <int, int>{};
       for (var i = 0; i < n; i++) {
-        if (!a.present(i)) continue;
+        if (!a.present(i) || walking(i, a.t)) continue;
         final team = s.actorList[i].teamNationId;
         count[team] = (count[team] ?? 0) + 1;
       }
       count.forEach((team, c) {
         if (c > 11) add(a.t, 'team $team has $c players on the pitch');
       });
-      // Keepers near their own goal. In open play a keeper never goes
-      // beyond [keeperReach]; one already beyond it (back from a moment, or
-      // a man just sent in goal) only comes back. In a moment's window only
-      // the moment's own keeper may leave his area.
+      // Keepers near their own goal. A keeper never goes beyond
+      // [keeperReach] unless the moment being staged names him; one already
+      // beyond it (back from his moment, or a man just sent in goal) only
+      // comes back, in open play and in other moments alike.
       final last = k + 1 < frames.length && frames[k + 1].t <= a.t + 1e-9;
       final judgedAt = last ? a.t - 1e-3 : a.t;
       final m = s.pacer.matchAt(
@@ -592,19 +596,13 @@ abstract final class PitchScriptValidator {
         );
         final depth = xToDepth(a.xs[i], dir);
         if (depth <= keeperReach + 1e-6) continue;
-        if (window != null) {
-          if (!window.actors.contains(actor.playerId)) {
-            add(
-              a.t,
-              'keeper ${actor.playerId} ${depth.toStringAsFixed(1)} m '
-              'from his goal line in a moment that is not his',
-            );
-          }
-          continue;
-        }
+        if (window != null && window.actors.contains(actor.playerId)) continue;
         if (prev == null || !prev.present(i) || !prev.keeper(i)) continue;
         final before = xToDepth(prev.xs[i], dir);
-        if (before <= keeperReach + 1e-6 && windowAt(prev.t) == null) {
+        final prevWindow = windowAt(prev.t);
+        final wasHis =
+            prevWindow != null && prevWindow.actors.contains(actor.playerId);
+        if (before <= keeperReach + 1e-6 && !wasHis) {
           add(
             a.t,
             'keeper ${actor.playerId} ${depth.toStringAsFixed(1)} m '
@@ -628,17 +626,23 @@ abstract final class PitchScriptValidator {
       }
       for (var i = 0; i < n; i++) {
         if (a.present(i) && !b.present(i) && !resets.contains(b.t)) {
-          // Leaving the picture: only a man walking off, at the touchline.
+          // Leaving the picture: only a man walking off, at the boundary.
           final id = s.actorList[i].playerId;
+          final x = a.xs[i];
           final y = a.ys[i];
-          final edge = math.min(y, PitchDims.width - y);
+          final edge = [
+            x,
+            PitchDims.length - x,
+            y,
+            PitchDims.width - y,
+          ].reduce(math.min);
           if (!walking(i, a.t)) {
             add(a.t, 'player $id vanishes');
           } else if (edge > offTheLine + 1e-6) {
             add(
               a.t,
               'player $id vanishes ${edge.toStringAsFixed(1)} m '
-              'from the touchline',
+              'from the boundary',
             );
           }
         }
@@ -672,9 +676,48 @@ abstract final class PitchScriptValidator {
       }
     }
 
+    _checkMomentActors(s, add);
     _checkComingsAndGoings(s, add);
     _checkBall(s, add);
     return out;
+  }
+
+  /// Every man a staged moment turns on (shooter, taker, fouler, fouled,
+  /// keeper) is on the pitch for the whole of its window.
+  static void _checkMomentActors(
+    PitchScript s,
+    void Function(double, String) add,
+  ) {
+    for (final w in s.windows) {
+      if (w.end <= s.start) continue;
+      final ids = <int>{
+        for (final m in w.moments)
+          ...switch (m) {
+            ShotMoment(:final shooterId, :final keeperId) => [
+              shooterId,
+              ?keeperId,
+            ],
+            SetPieceMoment(:final takerId) => [takerId],
+            FoulMoment(:final foulerId, :final fouledId) => [
+              foulerId,
+              fouledId,
+            ],
+            OffsideMoment() || SubMoment() => const <int>[],
+          },
+      };
+      for (final id in ids) {
+        final i = s.actorIndexOf(id);
+        if (i == null) continue;
+        for (final f in s.keyframes) {
+          if (f.t < math.max(w.start, s.start) - 1e-9) continue;
+          if (f.t >= w.end - 1e-9) break;
+          if (!f.present(i)) {
+            add(f.t, 'player $id is in a moment but not on the pitch');
+            break;
+          }
+        }
+      }
+    }
   }
 
   static void _checkComingsAndGoings(
@@ -716,8 +759,9 @@ abstract final class PitchScriptValidator {
         if (b.$1 >= s.start) add(b.$1, 'player $id never leaves the pitch');
         return;
       }
-      if (start < b.$1 - 1e-6)
+      if (start < b.$1 - 1e-6) {
         add(start, 'player $id leaves before his minute');
+      }
       if (start > b.$2 + 1e-6) add(start, 'player $id leaves after his moment');
     });
     // Once gone, gone for good.
