@@ -172,7 +172,9 @@ void main() {
     ) async {
       final c = await editorContainer(
         tester,
-        overrides: [editorFilePickerProvider.overrideWithValue(pick)],
+        overrides: [
+          editorFilePickerProvider.overrideWithValue(({extensions}) => pick()),
+        ],
       );
       await pumpEditorRoute(tester, c, Routes.editor);
       await tester.tap(find.byKey(EditorListScreen.importKey));

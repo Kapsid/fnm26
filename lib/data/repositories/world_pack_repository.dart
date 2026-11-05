@@ -75,25 +75,33 @@ class WorldPackRepository {
   }
 
   /// Sets (or, with a null [png], removes) the image for trophy [key].
-  Future<void> setTrophy(int id, String key, Uint8List? png) =>
-      _db.transaction(() async {
-        if (png == null) {
-          await (_db.delete(
-            _db.worldPackTrophies,
-          )..where((t) => t.packId.equals(id) & t.key.equals(key))).go();
-        } else {
-          await _db
-              .into(_db.worldPackTrophies)
-              .insertOnConflictUpdate(
-                WorldPackTrophiesCompanion.insert(
-                  packId: id,
-                  key: key,
-                  png: png,
-                ),
-              );
-        }
-        await _touch(id);
-      });
+  ///
+  /// With [pack], also overwrites the pack with it in the same transaction,
+  /// so the stored [WorldPack.trophies] and the image rows change together.
+  Future<void> setTrophy(
+    int id,
+    String key,
+    Uint8List? png, {
+    WorldPack? pack,
+  }) => _db.transaction(() async {
+    if (pack != null) await save(id, pack);
+    if (png == null) {
+      await (_db.delete(
+        _db.worldPackTrophies,
+      )..where((t) => t.packId.equals(id) & t.key.equals(key))).go();
+    } else {
+      await _db
+          .into(_db.worldPackTrophies)
+          .insertOnConflictUpdate(
+            WorldPackTrophiesCompanion.insert(
+              packId: id,
+              key: key,
+              png: png,
+            ),
+          );
+    }
+    await _touch(id);
+  });
 
   /// The custom trophy images of pack [id], by key.
   Future<Map<String, Uint8List>> trophies(int id) async {

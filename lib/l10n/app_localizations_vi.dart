@@ -14860,4 +14860,90 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get editorNamesStadiumsNote =>
       'Only the national grounds listed here can be renamed: the main stadium of each city.';
+
+  @override
+  String get editorTrophiesIntro =>
+      'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.';
+
+  @override
+  String get editorTrophyCustom => 'Custom';
+
+  @override
+  String get editorTrophyDefault => 'Game picture';
+
+  @override
+  String get editorTrophyChoose => 'Choose a picture';
+
+  @override
+  String get editorTrophyReplace => 'Choose another picture';
+
+  @override
+  String get editorTrophyReset => 'Back to default';
+
+  @override
+  String get editorTrophyResetTitle => 'Use the game\'s picture?';
+
+  @override
+  String get editorTrophyResetBody =>
+      'Your picture for this trophy will be removed. Undo can\'t bring it back.';
+
+  @override
+  String get editorTrophyResetConfirm => 'Remove picture';
+
+  @override
+  String get editorTrophyUnusable =>
+      'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.';
+
+  @override
+  String get editorTrophyOpening => 'Opening the picture';
+
+  @override
+  String get editorTrophyPreparing => 'Preparing the trophy';
+
+  @override
+  String get editorTrophyFrameTitle => 'Frame the trophy';
+
+  @override
+  String get editorTrophyFrameHint =>
+      'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.';
+
+  @override
+  String get editorTrophyFit => 'Fit';
+
+  @override
+  String get editorTrophyPreview => 'Preview';
+
+  @override
+  String get editorTrophyPreviewTitle => 'How it will look';
+
+  @override
+  String get editorTrophyAdjust => 'Adjust';
+
+  @override
+  String get editorTrophyUse => 'Use this picture';
+
+  @override
+  String get editorTrophyRectangle =>
+      'This picture has no transparent background, so the game will show it as a rectangle.';
+
+  @override
+  String get editorTrophyRectangleShort => 'Shows as a rectangle';
+
+  @override
+  String get editorTrophySaved => 'Trophy picture saved.';
+
+  @override
+  String get editorTrophyRemoved => 'The game\'s picture is back.';
+
+  @override
+  String get editorTrophySaveFailed =>
+      'The picture could not be saved. Try again.';
+
+  @override
+  String get editorTrophyPick => 'Pick a trophy to change its picture.';
+
+  @override
+  String editorTrophySize(int width, int height) {
+    return 'Saved at $width x $height pixels';
+  }
 }

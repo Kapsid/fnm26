@@ -23062,5 +23062,117 @@
   "editorNamesStadiumsNote": "Only the national grounds listed here can be renamed: the main stadium of each city.",
   "@editorNamesStadiumsNote": {
     "description": "Note at the top of the editor Stadiums section: which grounds a database can rename."
+  },
+  "editorTrophiesIntro": "Tap a trophy to give it your own picture. A PNG with a transparent background looks best.",
+  "@editorTrophiesIntro": {
+    "description": "Line at the top of the editor Trophies section."
+  },
+  "editorTrophyCustom": "Custom",
+  "@editorTrophyCustom": {
+    "description": "Small mark on a trophy tile that has its own picture."
+  },
+  "editorTrophyDefault": "Game picture",
+  "@editorTrophyDefault": {
+    "description": "Small mark on a trophy tile that still shows the game's picture."
+  },
+  "editorTrophyChoose": "Choose a picture",
+  "@editorTrophyChoose": {
+    "description": "Button: pick an image from the device for a trophy."
+  },
+  "editorTrophyReplace": "Choose another picture",
+  "@editorTrophyReplace": {
+    "description": "Button: replace a trophy's own picture with another image from the device."
+  },
+  "editorTrophyReset": "Back to default",
+  "@editorTrophyReset": {
+    "description": "Button: remove a trophy's own picture and show the game's again."
+  },
+  "editorTrophyResetTitle": "Use the game's picture?",
+  "@editorTrophyResetTitle": {
+    "description": "Title of the dialog confirming that a trophy's own picture is removed."
+  },
+  "editorTrophyResetBody": "Your picture for this trophy will be removed. Undo can't bring it back.",
+  "@editorTrophyResetBody": {
+    "description": "Body of the dialog confirming that a trophy's own picture is removed: trophy pictures are not part of the undo history."
+  },
+  "editorTrophyResetConfirm": "Remove picture",
+  "@editorTrophyResetConfirm": {
+    "description": "Confirm button of the dialog that removes a trophy's own picture."
+  },
+  "editorTrophyUnusable": "This picture can't be used. Pick a PNG or JPEG up to 4096 pixels a side.",
+  "@editorTrophyUnusable": {
+    "description": "Message when a picked trophy image is not a PNG or JPEG, too big, or broken."
+  },
+  "editorTrophyOpening": "Opening the picture",
+  "@editorTrophyOpening": {
+    "description": "Shown with a spinner while a picked trophy image is read."
+  },
+  "editorTrophyPreparing": "Preparing the trophy",
+  "@editorTrophyPreparing": {
+    "description": "Shown with a spinner while a framed trophy image is resized."
+  },
+  "editorTrophyFrameTitle": "Frame the trophy",
+  "@editorTrophyFrameTitle": {
+    "description": "Title of the screen where a picked image is moved and zoomed inside the trophy's frame."
+  },
+  "editorTrophyFrameHint": "Drag to move and pinch to zoom. What is inside the frame becomes the trophy.",
+  "@editorTrophyFrameHint": {
+    "description": "Hint under the trophy framing area."
+  },
+  "editorTrophyFit": "Fit",
+  "@editorTrophyFit": {
+    "description": "Button: put the picked image back to fit the trophy frame."
+  },
+  "editorTrophyPreview": "Preview",
+  "@editorTrophyPreview": {
+    "description": "Button: see the framed trophy as the game will show it."
+  },
+  "editorTrophyPreviewTitle": "How it will look",
+  "@editorTrophyPreviewTitle": {
+    "description": "Title over the preview of a new trophy picture."
+  },
+  "editorTrophyAdjust": "Adjust",
+  "@editorTrophyAdjust": {
+    "description": "Button: go back from the trophy preview to moving and zooming the picture."
+  },
+  "editorTrophyUse": "Use this picture",
+  "@editorTrophyUse": {
+    "description": "Button: save the previewed trophy picture into the database."
+  },
+  "editorTrophyRectangle": "This picture has no transparent background, so the game will show it as a rectangle.",
+  "@editorTrophyRectangle": {
+    "description": "Warning on a trophy picture without transparency."
+  },
+  "editorTrophyRectangleShort": "Shows as a rectangle",
+  "@editorTrophyRectangleShort": {
+    "description": "Short warning on a trophy tile whose picture has no transparency."
+  },
+  "editorTrophySaved": "Trophy picture saved.",
+  "@editorTrophySaved": {
+    "description": "Snackbar after a trophy picture is saved."
+  },
+  "editorTrophyRemoved": "The game's picture is back.",
+  "@editorTrophyRemoved": {
+    "description": "Snackbar after a trophy's own picture is removed."
+  },
+  "editorTrophySaveFailed": "The picture could not be saved. Try again.",
+  "@editorTrophySaveFailed": {
+    "description": "Snackbar when storing or removing a trophy picture fails."
+  },
+  "editorTrophyPick": "Pick a trophy to change its picture.",
+  "@editorTrophyPick": {
+    "description": "Tablet editor Trophies section, before a trophy is picked."
+  },
+  "editorTrophySize": "Saved at {width} x {height} pixels",
+  "@editorTrophySize": {
+    "description": "How big a trophy picture is stored.",
+    "placeholders": {
+      "width": {
+        "type": "int"
+      },
+      "height": {
+        "type": "int"
+      }
+    }
   }
 }

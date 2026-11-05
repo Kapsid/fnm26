@@ -26,13 +26,12 @@ import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/editor/editor_list_screen.dart';
-import 'package:fnm/features/editor/editor_providers.dart';
-import 'package:fnm/features/editor/editor_section_screen.dart';
 import 'package:fnm/features/editor/names/name_section_screen.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
 import 'package:fnm/features/editor/players/nation_list_screen.dart';
 import 'package:fnm/features/editor/players/player_edit_screen.dart';
 import 'package:fnm/features/editor/players/squad_screen.dart';
+import 'package:fnm/features/editor/trophy_section_screen.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/finances_screen.dart';
 import 'package:fnm/features/federation/naturalization_screen.dart';
@@ -441,13 +440,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
         ),
       ),
-    // Still a stand-in: the trophy pictures arrive with their own editor.
     GoRoute(
       path: Routes.editorTrophies,
-      builder: (context, state) => EditorSectionScreen(
-        section: EditorSection.trophies,
+      builder: (context, state) => TrophySectionScreen(
         packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
-        nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
       ),
     ),
     GoRoute(

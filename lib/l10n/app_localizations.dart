@@ -22693,6 +22693,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only the national grounds listed here can be renamed: the main stadium of each city.'**
   String get editorNamesStadiumsNote;
+
+  /// Line at the top of the editor Trophies section.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a trophy to give it your own picture. A PNG with a transparent background looks best.'**
+  String get editorTrophiesIntro;
+
+  /// Small mark on a trophy tile that has its own picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get editorTrophyCustom;
+
+  /// Small mark on a trophy tile that still shows the game's picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Game picture'**
+  String get editorTrophyDefault;
+
+  /// Button: pick an image from the device for a trophy.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a picture'**
+  String get editorTrophyChoose;
+
+  /// Button: replace a trophy's own picture with another image from the device.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another picture'**
+  String get editorTrophyReplace;
+
+  /// Button: remove a trophy's own picture and show the game's again.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to default'**
+  String get editorTrophyReset;
+
+  /// Title of the dialog confirming that a trophy's own picture is removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the game\'s picture?'**
+  String get editorTrophyResetTitle;
+
+  /// Body of the dialog confirming that a trophy's own picture is removed: trophy pictures are not part of the undo history.
+  ///
+  /// In en, this message translates to:
+  /// **'Your picture for this trophy will be removed. Undo can\'t bring it back.'**
+  String get editorTrophyResetBody;
+
+  /// Confirm button of the dialog that removes a trophy's own picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove picture'**
+  String get editorTrophyResetConfirm;
+
+  /// Message when a picked trophy image is not a PNG or JPEG, too big, or broken.
+  ///
+  /// In en, this message translates to:
+  /// **'This picture can\'t be used. Pick a PNG or JPEG up to 4096 pixels a side.'**
+  String get editorTrophyUnusable;
+
+  /// Shown with a spinner while a picked trophy image is read.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening the picture'**
+  String get editorTrophyOpening;
+
+  /// Shown with a spinner while a framed trophy image is resized.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing the trophy'**
+  String get editorTrophyPreparing;
+
+  /// Title of the screen where a picked image is moved and zoomed inside the trophy's frame.
+  ///
+  /// In en, this message translates to:
+  /// **'Frame the trophy'**
+  String get editorTrophyFrameTitle;
+
+  /// Hint under the trophy framing area.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to move and pinch to zoom. What is inside the frame becomes the trophy.'**
+  String get editorTrophyFrameHint;
+
+  /// Button: put the picked image back to fit the trophy frame.
+  ///
+  /// In en, this message translates to:
+  /// **'Fit'**
+  String get editorTrophyFit;
+
+  /// Button: see the framed trophy as the game will show it.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get editorTrophyPreview;
+
+  /// Title over the preview of a new trophy picture.
+  ///
+  /// In en, this message translates to:
+  /// **'How it will look'**
+  String get editorTrophyPreviewTitle;
+
+  /// Button: go back from the trophy preview to moving and zooming the picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust'**
+  String get editorTrophyAdjust;
+
+  /// Button: save the previewed trophy picture into the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this picture'**
+  String get editorTrophyUse;
+
+  /// Warning on a trophy picture without transparency.
+  ///
+  /// In en, this message translates to:
+  /// **'This picture has no transparent background, so the game will show it as a rectangle.'**
+  String get editorTrophyRectangle;
+
+  /// Short warning on a trophy tile whose picture has no transparency.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows as a rectangle'**
+  String get editorTrophyRectangleShort;
+
+  /// Snackbar after a trophy picture is saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophy picture saved.'**
+  String get editorTrophySaved;
+
+  /// Snackbar after a trophy's own picture is removed.
+  ///
+  /// In en, this message translates to:
+  /// **'The game\'s picture is back.'**
+  String get editorTrophyRemoved;
+
+  /// Snackbar when storing or removing a trophy picture fails.
+  ///
+  /// In en, this message translates to:
+  /// **'The picture could not be saved. Try again.'**
+  String get editorTrophySaveFailed;
+
+  /// Tablet editor Trophies section, before a trophy is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a trophy to change its picture.'**
+  String get editorTrophyPick;
+
+  /// How big a trophy picture is stored.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved at {width} x {height} pixels'**
+  String editorTrophySize(int width, int height);
 }
 
 class _AppLocalizationsDelegate

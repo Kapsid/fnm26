@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show setEquals;
 import 'package:flutter/widgets.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -104,11 +106,17 @@ String editorSquadLocation(int packId, int nationId) =>
 String editorPlayerLocation(int packId, int nationId, int playerId) =>
     '${Routes.editorPlayer}?id=$packId&nation=$nationId&player=$playerId';
 
-/// Asks the manager for a file to import and returns its path (null when
-/// he picks nothing). A provider so a test can stand in a file.
-final Provider<Future<String?> Function()> editorFilePickerProvider = Provider(
+/// Asks the manager for a file and returns its path (null when he picks
+/// nothing): any file, or only those ending in one of [extensions] (lower
+/// case, no dot). A provider so a test can stand in a file.
+typedef EditorFilePicker = Future<String?> Function({List<String>? extensions});
+
+final Provider<EditorFilePicker> editorFilePickerProvider = Provider(
   (ref) =>
-      () async => (await FilePicker.pickFiles())?.files.single.path,
+      ({extensions}) async => (await FilePicker.pickFiles(
+        type: extensions == null ? FileType.any : FileType.custom,
+        allowedExtensions: extensions,
+      ))?.files.single.path,
 );
 
 /// The nations a database covers: the world a career created now starts in.
@@ -236,10 +244,16 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   WorldPack? _issuesOf;
   List<PackIssue> _issues = const [];
 
+  /// The pack's own trophy pictures, by key (see [setTrophy]).
+  Map<String, Uint8List> _trophies = const {};
+
   Future<void> _load(NationRepository nations) async {
     try {
       final world = await nations.newCareerWorld();
       final pack = await _packs.load(_id);
+      final trophies = pack == null
+          ? const <String, Uint8List>{}
+          : await _packs.trophies(_id);
       if (!mounted) return;
       if (pack == null) {
         state = AsyncValue.error(
@@ -250,6 +264,17 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
       }
       _world = world;
       _baseCodes = {for (final n in world) n.id: n.code};
+      _trophies = trophies;
+      // The picture rows are what a career and an export take, so a pack
+      // whose list of them drifted (one stored before they were kept in
+      // step) is put right from the rows.
+      final keys = trophies.keys.toSet();
+      if (!setEquals(keys, pack.trophies)) {
+        state = AsyncValue.data(pack.copyWith(trophies: keys));
+        _unsaved = state.valueOrNull;
+        _timer = Timer(saveDelay, () => unawaited(flush()));
+        return;
+      }
       state = AsyncValue.data(pack);
     } on Object catch (e, st) {
       if (mounted) state = AsyncValue.error(e, st);
@@ -282,6 +307,74 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   }
 
   final Expando<List<PackIssue>> _squadIssues = Expando('squadIssues');
+
+  /// Trophy [key]'s own picture (a PNG at the trophy's size), or
+  /// null while the game's is used.
+  Uint8List? trophy(String key) => _trophies[key];
+
+  /// Whether a [setTrophy] is being written.
+  bool _writingTrophy = false;
+
+  /// Gives trophy [key] the picture [png], or with null the game's again.
+  /// Returns whether it was stored.
+  ///
+  /// The picture row and the pack's [WorldPack.trophies] are written in one
+  /// transaction, and the pack in memory follows at once. Pictures are not
+  /// edits: [undo] never brings one back or takes one away, so every state
+  /// it could go back to is given the same change.
+  Future<bool> setTrophy(String key, Uint8List? png) async {
+    final current = state.valueOrNull;
+    if (current == null || _writingTrophy) return false;
+    WorldPack mark(WorldPack p) {
+      final keys = {...p.trophies};
+      png == null ? keys.remove(key) : keys.add(key);
+      return p.copyWith(trophies: keys);
+    }
+
+    _writingTrophy = true;
+    // The waiting edit goes out with the picture.
+    _timer?.cancel();
+    _timer = null;
+    final waiting = _unsaved;
+    _unsaved = null;
+    try {
+      await _packs.setTrophy(_id, key, png, pack: mark(current));
+    } on Object catch (e, st) {
+      AppLog.error('pack-editor-trophy', e, st);
+      _writingTrophy = false;
+      _unsaved ??= waiting;
+      _resumeSaving();
+      return false;
+    }
+    _writingTrophy = false;
+    _trophies = {..._trophies};
+    png == null ? _trophies.remove(key) : _trophies[key] = png;
+    for (var i = 0; i < _past.length; i++) {
+      _past[i] = mark(_past[i]);
+    }
+    final latest = state.valueOrNull;
+    if (mounted && latest != null) {
+      _revision++;
+      state = AsyncValue.data(mark(latest));
+    }
+    // An edit made while the picture was written is written again with it.
+    final pending = _unsaved;
+    if (pending != null) _unsaved = mounted ? state.valueOrNull : mark(pending);
+    _resumeSaving();
+    _onSaved();
+    return true;
+  }
+
+  /// After a [setTrophy]: a waiting edit is saved as usual, or at once if
+  /// the editor closed meanwhile.
+  void _resumeSaving() {
+    if (_unsaved == null) return;
+    if (mounted) {
+      _timer = Timer(saveDelay, () => unawaited(flush()));
+    } else {
+      unawaited(flush());
+    }
+  }
 
   /// Whether there is an edit to undo.
   bool get canUndo => _past.isNotEmpty;
@@ -344,6 +437,8 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   Future<void> flush() async {
     _timer?.cancel();
     _timer = null;
+    // A picture being written takes the waiting edit with it (setTrophy).
+    if (_writingTrophy) return;
     final pack = _unsaved;
     if (pack == null) return;
     _unsaved = null;

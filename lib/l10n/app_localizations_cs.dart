@@ -15262,4 +15262,90 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get editorNamesStadiumsNote =>
       'Přejmenovat lze jen národní stadiony uvedené zde: hlavní stadion každého města.';
+
+  @override
+  String get editorTrophiesIntro =>
+      'Klepněte na trofej a dejte jí vlastní obrázek. Nejlépe vypadá PNG s průhledným pozadím.';
+
+  @override
+  String get editorTrophyCustom => 'Vlastní';
+
+  @override
+  String get editorTrophyDefault => 'Obrázek ze hry';
+
+  @override
+  String get editorTrophyChoose => 'Vybrat obrázek';
+
+  @override
+  String get editorTrophyReplace => 'Vybrat jiný obrázek';
+
+  @override
+  String get editorTrophyReset => 'Zpět na výchozí';
+
+  @override
+  String get editorTrophyResetTitle => 'Použít obrázek ze hry?';
+
+  @override
+  String get editorTrophyResetBody =>
+      'Váš obrázek této trofeje bude odstraněn. Tlačítkem Zpět ho nevrátíte.';
+
+  @override
+  String get editorTrophyResetConfirm => 'Odstranit obrázek';
+
+  @override
+  String get editorTrophyUnusable =>
+      'Tento obrázek nelze použít. Vyberte PNG nebo JPEG s nejvýše 4096 pixely na každé straně.';
+
+  @override
+  String get editorTrophyOpening => 'Otevírám obrázek';
+
+  @override
+  String get editorTrophyPreparing => 'Připravuji trofej';
+
+  @override
+  String get editorTrophyFrameTitle => 'Umístěte trofej';
+
+  @override
+  String get editorTrophyFrameHint =>
+      'Tažením obrázek posunete, roztažením prstů přiblížíte. Co je uvnitř rámečku, bude trofej.';
+
+  @override
+  String get editorTrophyFit => 'Celý obrázek';
+
+  @override
+  String get editorTrophyPreview => 'Náhled';
+
+  @override
+  String get editorTrophyPreviewTitle => 'Jak bude vypadat';
+
+  @override
+  String get editorTrophyAdjust => 'Upravit';
+
+  @override
+  String get editorTrophyUse => 'Použít obrázek';
+
+  @override
+  String get editorTrophyRectangle =>
+      'Tento obrázek nemá průhledné pozadí, takže se ve hře zobrazí jako obdélník.';
+
+  @override
+  String get editorTrophyRectangleShort => 'Zobrazí se jako obdélník';
+
+  @override
+  String get editorTrophySaved => 'Obrázek trofeje uložen.';
+
+  @override
+  String get editorTrophyRemoved => 'Obrázek ze hry je zpět.';
+
+  @override
+  String get editorTrophySaveFailed =>
+      'Obrázek se nepodařilo uložit. Zkuste to znovu.';
+
+  @override
+  String get editorTrophyPick => 'Vyberte trofej a změňte její obrázek.';
+
+  @override
+  String editorTrophySize(int width, int height) {
+    return 'Uloží se v rozměru $width x $height pixelů';
+  }
 }

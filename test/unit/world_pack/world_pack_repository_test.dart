@@ -44,6 +44,20 @@ void main() {
         ),
       );
 
+  test('a trophy set with its pack writes both together', () async {
+    final id = await repo.insert(_pack('Alpha'), {'worldChampionship': _png});
+    final withEurope = _pack('Alpha').copyWith(
+      trophies: {'worldChampionship', 'europe'},
+    );
+    await repo.setTrophy(id, 'europe', _png, pack: withEurope);
+    expect((await repo.load(id))!.trophies, {'worldChampionship', 'europe'});
+    expect((await repo.trophies(id)).keys, {'worldChampionship', 'europe'});
+
+    await repo.setTrophy(id, 'europe', null, pack: _pack('Alpha'));
+    expect((await repo.load(id))!.trophies, {'worldChampionship'});
+    expect((await repo.trophies(id)).keys, {'worldChampionship'});
+  });
+
   test('insert, load, save, duplicate, delete round trip', () async {
     final id = await repo.insert(_pack('Alpha'), {'worldChampionship': _png});
 
