@@ -8,6 +8,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
+import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/performance_mark.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
@@ -363,7 +364,13 @@ class MatchResult {
     this.homePlan,
     this.awayPlan,
     this.extraTime,
+    this.moments = const [],
   });
+
+  /// Every real moment the engine decided (so far: every shot it counted),
+  /// ordered by minute, stoppage and seq, for the Pitch view to stage. Empty
+  /// when not recorded (a stored or simulated result).
+  final List<MatchMoment> moments;
 
   /// The score after ninety minutes and stoppage. Stays the regulation score
   /// even when extra time is played: every knockout path keys off "level after
@@ -755,6 +762,53 @@ class MatchEngine {
     // long: every other side (the AI's always, the manager's on neutral or
     // defensive) never touches it, so the other three streams are untouched.
     final longThrowRng = SeededRng(rng.state ^ 0x6C8E9CF5);
+    // The pitch view's detail (a shot's zone and how a miss ends) on a FIFTH
+    // stream. Forking never advances [rng], and nothing that decides an
+    // outcome draws from this one, so every result stays byte-identical.
+    final detailRng = rng.fork(0xD7A1);
+    // Shots as they happen; a goal's event index is settled after the final
+    // sort of [events].
+    final shotLog = <({ShotMoment shot, MatchEvent? goal})>[];
+    // The order of moments within the current (minute, stoppage).
+    var momentSeq = 0;
+
+    // Records one shot the engine has just counted. [shooter] is the player
+    // the engine picked for the chance; a goal's shooter, assist and penalty
+    // flag come from its own [goal] event instead.
+    void recordShot({
+      required int minute,
+      required int stoppage,
+      required _Live atk,
+      required _Live def,
+      required Player shooter,
+      required double xg,
+      required ShotOrigin origin,
+      required MatchEvent? goal,
+      Player? deliverer,
+      bool header = false,
+    }) {
+      final penalty = goal != null && goal.penalty;
+      shotLog.add((
+        shot: ShotMoment(
+          minute: minute,
+          stoppage: stoppage,
+          seq: momentSeq++,
+          teamNationId: atk.nationId,
+          shooterId: goal?.playerId ?? shooter.id,
+          assistId: goal != null ? goal.assistPlayerId : deliverer?.id,
+          keeperId: _keeperOf(def)?.id,
+          zone: penalty ? PitchZone.boxCentre : _shotZone(xg, detailRng),
+          xg: xg,
+          outcome: goal != null
+              ? ShotOutcome.goal
+              : _missOutcome(xg, detailRng),
+          header: header && !penalty,
+          origin: penalty ? ShotOrigin.penalty : origin,
+        ),
+        goal: goal,
+      ));
+    }
+
     var homeScore = 0;
     var awayScore = 0;
     var homeShots = 0;
@@ -770,6 +824,7 @@ class MatchEngine {
     // in the ninety the factor is exactly 1.
     void playMinute(int manageMinute, int stoppage) {
       final legs = manageMinute > 90 ? extraTimeChanceFactor : 1.0;
+      momentSeq = 0;
       if (stoppage == 0) {
         for (final s in byMinute[manageMinute] ?? const <Substitution>[]) {
           final live = s.teamNationId == liveHome.nationId
@@ -930,10 +985,11 @@ class MatchEngine {
                     _finishingSharpness(liveHome.energyOf(shooter.id)) *
                     _finishTrait(liveHome, shooter.id))
                 .clamp(0.04, 0.44);
+        MatchEvent? goal;
         if (rng.chance(p)) {
           homeScore++;
           events.add(
-            _goal(
+            goal = _goal(
               manageMinute,
               liveHome,
               shooter,
@@ -942,6 +998,16 @@ class MatchEngine {
             ),
           );
         }
+        recordShot(
+          minute: manageMinute,
+          stoppage: stoppage,
+          atk: liveHome,
+          def: liveAway,
+          shooter: shooter,
+          xg: baseP,
+          origin: ShotOrigin.openPlay,
+          goal: goal,
+        );
       }
       if (_chance(
         rng,
@@ -970,10 +1036,11 @@ class MatchEngine {
                     _finishingSharpness(liveAway.energyOf(shooter.id)) *
                     _finishTrait(liveAway, shooter.id))
                 .clamp(0.04, 0.44);
+        MatchEvent? goal;
         if (rng.chance(p)) {
           awayScore++;
           events.add(
-            _goal(
+            goal = _goal(
               manageMinute,
               liveAway,
               shooter,
@@ -982,6 +1049,16 @@ class MatchEngine {
             ),
           );
         }
+        recordShot(
+          minute: manageMinute,
+          stoppage: stoppage,
+          atk: liveAway,
+          def: liveHome,
+          shooter: shooter,
+          xg: baseP,
+          origin: ShotOrigin.openPlay,
+          goal: goal,
+        );
       }
 
       // Set pieces — a third, additive channel on its own RNG stream. Corners /
@@ -1001,6 +1078,20 @@ class MatchEngine {
         homeScore++;
         events.add(homeSp.goal!);
       }
+      if (homeSp.shot) {
+        recordShot(
+          minute: manageMinute,
+          stoppage: stoppage,
+          atk: liveHome,
+          def: liveAway,
+          shooter: homeSp.shooter!,
+          xg: homeSp.xg,
+          origin: ShotOrigin.corner,
+          goal: homeSp.goal,
+          deliverer: homeSp.deliverer,
+          header: true,
+        );
+      }
       final awaySp = _setPiece(
         liveAway,
         liveHome,
@@ -1014,6 +1105,20 @@ class MatchEngine {
       if (awaySp.goal != null) {
         awayScore++;
         events.add(awaySp.goal!);
+      }
+      if (awaySp.shot) {
+        recordShot(
+          minute: manageMinute,
+          stoppage: stoppage,
+          atk: liveAway,
+          def: liveHome,
+          shooter: awaySp.shooter!,
+          xg: awaySp.xg,
+          origin: ShotOrigin.corner,
+          goal: awaySp.goal,
+          deliverer: awaySp.deliverer,
+          header: true,
+        );
       }
 
       // Long throws: only a side told to throw long rolls for one, on its own
@@ -1033,6 +1138,20 @@ class MatchEngine {
           homeScore++;
           events.add(lt.goal!);
         }
+        if (lt.shot) {
+          recordShot(
+            minute: manageMinute,
+            stoppage: stoppage,
+            atk: liveHome,
+            def: liveAway,
+            shooter: lt.shooter!,
+            xg: lt.xg,
+            origin: ShotOrigin.longThrow,
+            goal: lt.goal,
+            deliverer: lt.deliverer,
+            header: true,
+          );
+        }
       }
       if (liveAway.throwInStyle == ThrowInStyle.long) {
         final lt = _longThrow(
@@ -1048,6 +1167,20 @@ class MatchEngine {
         if (lt.goal != null) {
           awayScore++;
           events.add(lt.goal!);
+        }
+        if (lt.shot) {
+          recordShot(
+            minute: manageMinute,
+            stoppage: stoppage,
+            atk: liveAway,
+            def: liveHome,
+            shooter: lt.shooter!,
+            xg: lt.xg,
+            origin: ShotOrigin.longThrow,
+            goal: lt.goal,
+            deliverer: lt.deliverer,
+            header: true,
+          );
         }
       }
 
@@ -1142,7 +1275,20 @@ class MatchEngine {
       final byMin = a.minute.compareTo(b.minute);
       return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
     });
+    // The sort is not stable, so a goal's index is looked up by identity in
+    // the final list. Shots were logged in play order, which is already
+    // (minute, stoppage, seq) order: 1-90, then 90+1.., then 91-120.
+    final moments = <MatchMoment>[
+      for (final s in shotLog)
+        if (s.goal case final goal?)
+          s.shot.withGoalEventIndex(
+            events.indexWhere((e) => identical(e, goal)),
+          )
+        else
+          s.shot,
+    ];
     return MatchResult(
+      moments: moments,
       homeScore: regulationHome,
       awayScore: regulationAway,
       extraTime: playExtraTime
@@ -1816,6 +1962,53 @@ class MatchEngine {
     return candidates.last;
   }
 
+  /// The goalkeeper [team] has on the pitch right now, or null when it has
+  /// none (sent off with no keeper to bring on).
+  Player? _keeperOf(_Live team) {
+    for (final p in team.xi) {
+      if (p.category == PositionCategory.goalkeeper) return p;
+    }
+    return null;
+  }
+
+  /// Where a shot of quality [xg] was taken from, for the Pitch view: the
+  /// better the chance, the closer in. Draws only from the detail stream.
+  static PitchZone _shotZone(double xg, SeededRng detailRng) {
+    if (xg >= 0.35) {
+      return detailRng.chance(0.5) ? PitchZone.sixYard : PitchZone.boxCentre;
+    }
+    if (xg >= 0.12) {
+      return const [
+        PitchZone.boxLeft,
+        PitchZone.boxCentre,
+        PitchZone.boxRight,
+      ][detailRng.nextInt(3)];
+    }
+    if (xg >= 0.05) return PitchZone.edgeOfBox;
+    return PitchZone.longRange;
+  }
+
+  /// How a shot that did NOT go in ended, drawn from the detail stream. At a
+  /// typical chance (xG [_missPivot]) the odds are 33 saved, 30 wide, 28
+  /// blocked and 4 woodwork; a better chance is on target more often (more
+  /// saved and woodwork, fewer wide), a worse one less.
+  static ShotOutcome _missOutcome(double xg, SeededRng detailRng) {
+    final d = (xg - _missPivot).clamp(-0.10, 0.20);
+    final saved = 0.33 + 1.2 * d;
+    final wide = 0.30 - 1.3 * d;
+    final blocked = 0.28 - 0.05 * d;
+    final woodwork = 0.04 + 0.15 * d;
+    var roll = detailRng.nextDouble() * (saved + wide + blocked + woodwork);
+    if ((roll -= saved) < 0) return ShotOutcome.saved;
+    if ((roll -= wide) < 0) return ShotOutcome.wide;
+    if ((roll -= blocked) < 0) return ShotOutcome.blocked;
+    return ShotOutcome.woodwork;
+  }
+
+  /// The xG of a typical missed chance, where [_missOutcome]'s odds are the
+  /// target shares.
+  static const double _missPivot = 0.13;
+
   /// Picks a scorer, weighting outfield players by finishing and attacking
   /// position.
   Player _pickScorer(_Live team, SeededRng rng) {
@@ -1859,7 +2052,8 @@ class MatchEngine {
   /// Plays the set-piece channel for [atk] against [def] this minute on the
   /// independent [rng] stream. Returns whether an attempt happened ([shot]), its
   /// xG, and a goal event when it goes in. Purely additive to open play.
-  ({MatchEvent? goal, double xg, bool shot}) _setPiece(
+  ({MatchEvent? goal, double xg, bool shot, Player? shooter, Player? deliverer})
+  _setPiece(
     _Live atk,
     _Live def,
     int minute,
@@ -1871,7 +2065,13 @@ class MatchEngine {
     // the same damping applies here — otherwise the set-piece channel alone
     // keeps the rout going.
     if (atk.xi.isEmpty || !rng.chance(_setPiecePerMinute * damping)) {
-      return (goal: null, xg: 0, shot: false);
+      return (
+        goal: null,
+        xg: 0,
+        shot: false,
+        shooter: null,
+        deliverer: null,
+      );
     }
     // Aerial duel in the box: the attackers' physicality (and defenders up for
     // it) against the defence and keeper.
@@ -1887,7 +2087,15 @@ class MatchEngine {
         : 1.0;
     final p = (0.08 * pow(threat, 1.2) * delivery).toDouble().clamp(0.02, 0.30);
     final xg = p; // the chance's quality
-    if (!rng.chance(p)) return (goal: null, xg: xg, shot: true);
+    if (!rng.chance(p)) {
+      return (
+        goal: null,
+        xg: xg,
+        shot: true,
+        shooter: scorer,
+        deliverer: taker,
+      );
+    }
     return (
       goal: MatchEvent(
         minute: minute,
@@ -1902,6 +2110,8 @@ class MatchEngine {
       ),
       xg: xg,
       shot: true,
+      shooter: scorer,
+      deliverer: taker,
     );
   }
 
@@ -1975,7 +2185,8 @@ class MatchEngine {
   /// stream: the set-piece channel's aerial duel ([_aerialAttack] against
   /// [_aerialDefence]) and header pick, at [kLongThrowBase], with the
   /// thrower's strength in place of a corner taker's trait.
-  ({MatchEvent? goal, double xg, bool shot}) _longThrow(
+  ({MatchEvent? goal, double xg, bool shot, Player? shooter, Player? deliverer})
+  _longThrow(
     _Live atk,
     _Live def,
     int minute,
@@ -1984,7 +2195,13 @@ class MatchEngine {
     double damping = 1.0,
   }) {
     if (atk.xi.isEmpty || !rng.chance(longThrowPerMinute * damping)) {
-      return (goal: null, xg: 0, shot: false);
+      return (
+        goal: null,
+        xg: 0,
+        shot: false,
+        shooter: null,
+        deliverer: null,
+      );
     }
     final threat = (_aerialAttack(atk) / _aerialDefence(def)).clamp(0.5, 2.0);
     final scorer = _pickHeader(atk, rng);
@@ -1995,7 +2212,15 @@ class MatchEngine {
                 (thrower == null ? 1.0 : throwerFactor(thrower)))
             .toDouble()
             .clamp(0.01, 0.15);
-    if (!rng.chance(p)) return (goal: null, xg: p, shot: true);
+    if (!rng.chance(p)) {
+      return (
+        goal: null,
+        xg: p,
+        shot: true,
+        shooter: scorer,
+        deliverer: thrower,
+      );
+    }
     return (
       goal: MatchEvent(
         minute: minute,
@@ -2011,6 +2236,8 @@ class MatchEngine {
       ),
       xg: p,
       shot: true,
+      shooter: scorer,
+      deliverer: thrower,
     );
   }
 
