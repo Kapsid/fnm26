@@ -176,17 +176,10 @@ void main() {
           expect(s.zone, PitchZone.boxCentre);
         } else if (s.header) {
           expect(box, contains(s.zone));
-        } else if (s.xg >= 0.187) {
-          expect(s.zone, PitchZone.sixYard);
-        } else if (s.xg >= 0.145) {
-          expect(
-            s.zone,
-            anyOf(PitchZone.boxLeft, PitchZone.boxCentre, PitchZone.boxRight),
-          );
-        } else if (s.xg >= 0.137) {
-          expect(s.zone, PitchZone.edgeOfBox);
         } else {
-          expect(s.zone, PitchZone.longRange);
+          expect(s.zone, isNot(PitchZone.wideLeft));
+          expect(s.zone, isNot(PitchZone.wideRight));
+          expect(s.zone, isNot(PitchZone.midfield));
         }
       }
     }

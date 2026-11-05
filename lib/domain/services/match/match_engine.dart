@@ -2290,29 +2290,34 @@ class MatchEngine {
   }
 
   /// Where an open-play shot of quality [xg] was taken from, for the Pitch
-  /// view: the better the chance, the closer in. Draws only from the detail
-  /// stream.
+  /// view, drawn on the detail stream so a side's shots spread over the
+  /// pitch: about 30% in the box, 35% at its edge and 35% from distance
+  /// overall, with the better chances leaning into the box.
   ///
-  /// The bands are percentiles of the engine's real open-play xG, measured
-  /// 2026-11-05 over 3000 matches of the baseline pairs (70-85, home and
-  /// neutral; about 47,000 shots, xG 0.13 to 0.20): the top 8% (xG >=
-  /// [_sixYardXg], p92) from six yards, the next 55% (>= [_boxXg], p37) in
-  /// the box, the next 22% (>= [_edgeXg], p15) at its edge and the bottom 15%
-  /// from distance. Penalties and headers never come here.
+  /// The engine's open-play xG is narrow, so it only tilts the draw. [xg] is
+  /// placed on its measured range (2026-11-05, 3000 matches of the baseline
+  /// pairs, about 47,000 shots): [_lowXg] (p5) to [_highXg] (p99), median
+  /// 0.148. At the bottom a shot is in the box 20% of the time and from
+  /// distance 45%; at the top 55% and 10%. Inside the box the six-yard area
+  /// takes 10% rising to 40%, the rest 40% centre, 30% left, 30% right.
+  /// Penalties and headers never come here.
   static PitchZone _shotZone(double xg, SeededRng detailRng) {
-    if (xg >= _sixYardXg) return PitchZone.sixYard;
-    if (xg >= _boxXg) {
-      final roll = detailRng.nextDouble();
-      if (roll < 0.4) return PitchZone.boxCentre;
-      return roll < 0.7 ? PitchZone.boxLeft : PitchZone.boxRight;
+    final t = ((xg - _lowXg) / (_highXg - _lowXg)).clamp(0.0, 1.0);
+    final box = 0.20 + 0.35 * t;
+    final roll = detailRng.nextDouble();
+    if (roll >= box) {
+      return roll < box + 0.35 ? PitchZone.edgeOfBox : PitchZone.longRange;
     }
-    if (xg >= _edgeXg) return PitchZone.edgeOfBox;
-    return PitchZone.longRange;
+    final inBox = detailRng.nextDouble();
+    final six = 0.10 + 0.30 * t;
+    if (inBox < six) return PitchZone.sixYard;
+    final rest = (inBox - six) / (1 - six);
+    if (rest < 0.4) return PitchZone.boxCentre;
+    return rest < 0.7 ? PitchZone.boxLeft : PitchZone.boxRight;
   }
 
-  static const double _sixYardXg = 0.187;
-  static const double _boxXg = 0.145;
-  static const double _edgeXg = 0.137;
+  static const double _lowXg = 0.133;
+  static const double _highXg = 0.200;
 
   /// Where a header (from a set piece or a long throw) was met: always in the
   /// box, closer in the better the chance. Draws only from the detail stream.
@@ -2327,14 +2332,16 @@ class MatchEngine {
   }
 
   /// Where a foul happened, from the fouled side's view: mostly in the middle
-  /// of the pitch, now and then out wide or around the box. Draws only from
+  /// of the pitch, rarely out wide or around the box (the only ones whose free
+  /// kick is staged: with the engine's crossed free kicks, about 3-4.5 staged
+  /// free kicks a match). Draws only from
   /// the detail stream.
   static PitchZone _foulZone(SeededRng detailRng) {
     final roll = detailRng.nextDouble();
-    if (roll < 0.66) return PitchZone.midfield;
-    if (roll < 0.76) return PitchZone.wideLeft;
-    if (roll < 0.86) return PitchZone.wideRight;
-    if (roll < 0.93) return PitchZone.longRange;
+    if (roll < 0.795) return PitchZone.midfield;
+    if (roll < 0.82) return PitchZone.wideLeft;
+    if (roll < 0.845) return PitchZone.wideRight;
+    if (roll < 0.975) return PitchZone.longRange;
     return PitchZone.edgeOfBox;
   }
 

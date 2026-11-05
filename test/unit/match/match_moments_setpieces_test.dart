@@ -236,6 +236,89 @@ void main() {
     expect(restarts / n, inInclusiveRange(40, 80));
   });
 
+  test('staged free kicks: 3-4.5 per match, attacking-third fouls only', () {
+    const n = 600;
+    var staged = 0;
+    for (var i = 0; i < n; i++) {
+      final r = engine.play(
+        home: ratedTeam(1, 78),
+        away: ratedTeam(2, 74),
+        rng: SeededRng.forFixture(0x5E77, i),
+      );
+      for (final m in r.moments) {
+        if (m is SetPieceMoment &&
+            m.kind == SetPieceKind.freeKick &&
+            !m.routine) {
+          staged++;
+          expect(
+            m.zone,
+            isIn(const [
+              PitchZone.edgeOfBox,
+              PitchZone.wideLeft,
+              PitchZone.wideRight,
+            ]),
+          );
+        }
+      }
+    }
+    // ignore: avoid_print
+    print('staged free kicks per match: ${staged / n}');
+    expect(staged / n, inInclusiveRange(3, 4.5));
+  });
+
+  test('open-play shot zones spread: 2.5+ distinct zones a side a match, '
+      'about 30% box, 35% edge, 35% long range', () {
+    const n = 600;
+    const box = [
+      PitchZone.sixYard,
+      PitchZone.boxCentre,
+      PitchZone.boxLeft,
+      PitchZone.boxRight,
+    ];
+    var distinct = 0, inBox = 0, edge = 0, long = 0, total = 0;
+    var hiBox = 0, hiTotal = 0, loBox = 0, loTotal = 0;
+    for (var i = 0; i < n; i++) {
+      final r = engine.play(
+        home: ratedTeam(1, 78),
+        away: ratedTeam(2, 74),
+        rng: SeededRng.forFixture(0x5E78, i),
+      );
+      for (final side in [1, 2]) {
+        final zones = <PitchZone>{};
+        for (final s in r.moments.whereType<ShotMoment>()) {
+          if (s.teamNationId != side || s.origin != ShotOrigin.openPlay) {
+            continue;
+          }
+          zones.add(s.zone);
+          total++;
+          final b = box.contains(s.zone);
+          if (b) inBox++;
+          if (s.zone == PitchZone.edgeOfBox) edge++;
+          if (s.zone == PitchZone.longRange) long++;
+          if (s.xg >= 0.16) {
+            hiTotal++;
+            if (b) hiBox++;
+          } else {
+            loTotal++;
+            if (b) loBox++;
+          }
+        }
+        distinct += zones.length;
+      }
+    }
+    // ignore: avoid_print
+    print(
+      'distinct zones a side a match ${distinct / (2 * n)}; box '
+      '${inBox / total}, edge ${edge / total}, long ${long / total}; box '
+      'share xg>=0.16 ${hiBox / hiTotal}, below ${loBox / loTotal}',
+    );
+    expect(distinct / (2 * n), greaterThanOrEqualTo(2.5));
+    expect(inBox / total, closeTo(0.30, 0.05));
+    expect(edge / total, closeTo(0.35, 0.05));
+    expect(long / total, closeTo(0.35, 0.05));
+    expect(hiBox / hiTotal, greaterThan(loBox / loTotal + 0.05));
+  });
+
   test('sub moments carry the off player id', () {
     final home = ratedTeam(1, 78);
     final away = ratedTeam(2, 74);
