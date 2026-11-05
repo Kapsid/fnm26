@@ -708,17 +708,22 @@ KnockoutOutcome? _knockoutFor(MatchPreview p, MatchResult r, int salt) {
 
 String describe(Fixture f, {int nationId = england}) {
   final home = f.homeNationId == nationId;
-  final opp = nationById[home ? f.awayNationId : f.homeNationId]!;
+  final oppId = home ? f.awayNationId : f.homeNationId;
+  // Nations added to new careers only (Belarus, from the dormant seed) are
+  // not in nations.json: name them by id rather than fail the story.
+  final opp = nationById[oppId];
+  final oppName = opp?.name ?? 'Nation $oppId';
+  final oppRanking = opp?.ranking ?? 0;
   final gf = home ? f.homeScore : f.awayScore;
   final ga = home ? f.awayScore : f.homeScore;
   final pens = f.wentToShootout
       ? ' pens ${home ? f.homePenalties : f.awayPenalties}-${home ? f.awayPenalties : f.homePenalties}'
       : '';
   final tags = [
-    if (gf! < ga! && opp.ranking > 30) 'UPSET',
-    if (rivalIds.contains(opp.id)) 'RIVAL',
+    if (gf! < ga! && oppRanking > 30) 'UPSET',
+    if (rivalIds.contains(oppId)) 'RIVAL',
   ];
   return '${f.date.toIso8601String().substring(0, 10)} ${f.round ?? 'FR'} '
-      '${home ? 'H' : 'A'} ${opp.name}(#${opp.ranking}) $gf-$ga$pens '
+      '${home ? 'H' : 'A'} $oppName(#$oppRanking) $gf-$ga$pens '
       '${tags.join(' ')}';
 }
