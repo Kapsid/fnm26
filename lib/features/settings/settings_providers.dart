@@ -117,11 +117,17 @@ class DefaultWorldSetting extends StateNotifier<String?> {
   Future<void> set(String? uuid) async {
     _written = true;
     state = uuid;
-    final prefs = await SharedPreferences.getInstance();
-    if (uuid == null) {
-      await prefs.remove(kDefaultWorldPrefKey);
-    } else {
-      await prefs.setString(kDefaultWorldPrefKey, uuid);
+    // Settings that cannot be written are logged: the choice still holds
+    // for this run of the app.
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (uuid == null) {
+        await prefs.remove(kDefaultWorldPrefKey);
+      } else {
+        await prefs.setString(kDefaultWorldPrefKey, uuid);
+      }
+    } on Object catch (e, st) {
+      AppLog.error('default-world-set', e, st);
     }
   }
 

@@ -287,12 +287,6 @@ class WorldChoiceSheet extends ConsumerWidget {
   }
 }
 
-/// The name a world picker shows for pack [id] (null: Default): the pack's
-/// if it is listed, else Default.
-String worldName(AppLocalizations l, List<WorldChoice>? choices, int? id) =>
-    (id == null ? null : choices?.firstWhereOrNull((c) => c.id == id)?.name) ??
-    l.worldDefault;
-
 /// "World: Default ▾" on the nation pick: the world the career being started
 /// takes. Opens the world sheet; a pick changes this one career only.
 class WorldChip extends ConsumerStatefulWidget {
@@ -330,38 +324,47 @@ class _WorldChipState extends ConsumerState<WorldChip> {
     final l = AppLocalizations.of(context);
     final id = ref.watch(newGameWorldProvider);
     final choices = ref.watch(worldChoicesProvider).valueOrNull;
-    return ActionChip(
+    final chosen = id == null
+        ? null
+        : choices?.firstWhereOrNull((c) => c.id == id);
+    // A pick that has since gone stale (the database deleted, or no longer
+    // complete and compatible) is not passed off as ready: gone, it reads
+    // Default; still there, it is named in the warning colour with the
+    // reason as its tooltip, and Start refuses it.
+    final stale = chosen != null && !chosen.selectable;
+    final color = stale ? AppColors.error : AppColors.primary;
+    final chip = ActionChip(
       key: WorldChip.chipKey,
       onPressed: _pick,
-      avatar: const Icon(
-        Icons.public_rounded,
+      avatar: Icon(
+        stale ? Icons.error_outline_rounded : Icons.public_rounded,
         size: 16,
-        color: AppColors.primary,
+        color: color,
       ),
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
             child: Text(
-              l.worldChip(worldName(l, choices, id)),
+              l.worldChip(chosen?.name ?? l.worldDefault),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.primary,
-              ),
+              style: AppTypography.labelMedium.copyWith(color: color),
             ),
           ),
-          const Icon(
-            Icons.arrow_drop_down_rounded,
-            size: 18,
-            color: AppColors.primary,
-          ),
+          Icon(Icons.arrow_drop_down_rounded, size: 18, color: color),
         ],
       ),
       backgroundColor: AppColors.surfaceContainer,
-      side: const BorderSide(color: AppColors.outlineVariant),
+      side: BorderSide(
+        color: stale ? AppColors.error : AppColors.outlineVariant,
+      ),
       shape: const RoundedRectangleBorder(borderRadius: AppRadii.xlAll),
       visualDensity: VisualDensity.compact,
     );
+    final reason = chosen?.reason;
+    return stale && reason != null
+        ? Tooltip(message: reason, child: chip)
+        : chip;
   }
 }

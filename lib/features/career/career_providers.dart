@@ -27,6 +27,7 @@ import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
+import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart' show worldCupQualDrawKind;
 import 'package:fnm/features/hub/objective_providers.dart'
@@ -56,6 +57,14 @@ final savesProvider = FutureProvider<List<Career>>((ref) async {
       if (countsAsSave(tags[c.id])) c,
   ];
 });
+
+/// The failure code [CareerService.create] gives for a world pack that is
+/// no longer on the device.
+const String worldPackMissingCode = 'world_pack_missing';
+
+/// The failure code [CareerService.create] gives for a world pack that can
+/// no longer start a career: incomplete or incompatible.
+const String worldPackNotReadyCode = 'world_pack_not_ready';
 
 /// The database each save on a custom world was started on, by career id
 /// (its name as the career copied it); a default-world save is not in it.
@@ -223,7 +232,9 @@ class CareerService {
     bool? newCareerNations,
 
     /// The world pack (custom database) to start on, or null for the default
-    /// world. The career takes its own copy of the pack, so editing or
+    /// world. One that is gone or cannot start a career (incomplete or
+    /// incompatible) is refused with [worldPackMissingCode] or
+    /// [worldPackNotReadyCode]. The career takes its own copy of the pack, so editing or
     /// deleting the pack later never touches it, and its starting ranking
     /// follows the pack's squads (see [PackRanking.startingRanks]). A
     /// campaign run never takes one: it plays the world its seed was
@@ -255,8 +266,24 @@ class CareerService {
     final comp = _ref.read(competitionRepositoryProvider);
     final packs = _ref.read(worldPackRepositoryProvider);
     final pack = worldPackId == null ? null : await packs.load(worldPackId);
-    if (worldPackId != null && pack == null) {
-      throw StateError('No world pack $worldPackId');
+    // Only a pack that can start a career starts one: on the device,
+    // complete and compatible ([assessPack]). A pick made earlier (New
+    // Game's chip, the Settings default) may have gone stale since.
+    if (worldPackId != null) {
+      if (pack == null) {
+        return Result.failure(
+          Failure('No world pack $worldPackId', code: worldPackMissingCode),
+        );
+      }
+      final world = await _ref.read(nationRepositoryProvider).newCareerWorld();
+      if (assessPack(pack, world).status != PackStatus.ready) {
+        return Result.failure(
+          Failure(
+            'World pack $worldPackId cannot start a career',
+            code: worldPackNotReadyCode,
+          ),
+        );
+      }
     }
     // How strong each nation's core squad is in the default world, against
     // which the pack's squads move the starting ranking.

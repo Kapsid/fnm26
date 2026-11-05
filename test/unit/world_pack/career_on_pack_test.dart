@@ -253,4 +253,45 @@ void main() {
       );
     },
   );
+
+  test(
+    'create refuses a pack that is gone, incomplete or incompatible',
+    timeout: const Timeout.factor(4),
+    () async {
+      final c = await _world();
+      final careers = c.read(careerServiceProvider);
+      final repo = c.read(worldPackRepositoryProvider);
+      final packId = await c
+          .read(worldPackServiceProvider)
+          .createFromDefault('Mine');
+      final pack = (await repo.load(packId))!;
+
+      Future<String?> refusal(int id) async => (await careers.create(
+        nationId: 1,
+        managerName: 'M',
+        rngSeed: 7,
+        worldPackId: id,
+      )).fold((_) => null, (f) => f.code);
+
+      // Nation 1 down to ten players.
+      await repo.save(
+        packId,
+        pack.copyWith(
+          squads: {...pack.squads, 1: pack.squads[1]!.take(10).toList()},
+        ),
+      );
+      expect(await refusal(packId), worldPackNotReadyCode);
+
+      // A nation the game no longer has.
+      await repo.save(
+        packId,
+        pack.copyWith(squads: {...pack.squads, 999: pack.squads[1]!}),
+      );
+      expect(await refusal(packId), worldPackNotReadyCode);
+
+      await repo.delete(packId);
+      expect(await refusal(packId), worldPackMissingCode);
+      expect(await c.read(careerRepositoryProvider).all(), isEmpty);
+    },
+  );
 }

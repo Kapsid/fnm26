@@ -15392,4 +15392,8 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get settingsDefaultWorldBlurb =>
       'Svět, na kterém začíná nová hra. Pro každou kariéru ho můžete změnit.';
+
+  @override
+  String get worldPackNotReady =>
+      'Na této databázi už nelze začít kariéru. Opravte ji v Editoru, nebo vyberte jiný svět.';
 }

@@ -14,25 +14,11 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
+import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
-/// Where a database stands, as the list of databases shows it.
-enum PackStatus {
-  /// Complete: it can start a career.
-  ready,
-
-  /// Saved and shareable, but [PackRules.issues] still lists things to fix.
-  missing,
-
-  /// A game update made it incompatible: it refers to something the game no
-  /// longer has ([PackRules.compatibility]). Shown before [missing]: it is
-  /// what the manager must fix first.
-  needsAttention,
-
-  /// The stored pack could not be read at all. Only deleting it is offered.
-  unreadable,
-}
+export 'package:fnm/domain/services/world_pack/pack_status.dart';
 
 /// One database as the editor list shows it.
 typedef EditorPackEntry = ({
@@ -125,31 +111,6 @@ final AutoDisposeFutureProvider<List<Nation>> editorWorldProvider =
     FutureProvider.autoDispose<List<Nation>>(
       (ref) => ref.watch(nationRepositoryProvider).newCareerWorld(),
     );
-
-/// Where [pack] stands against the game whose new-career nations are
-/// [world]: its [PackStatus] and everything standing between it and a
-/// career, what the game no longer has ([PackRules.compatibility]) first,
-/// then what is missing ([PackRules.issues]). A null [pack] could not be
-/// read.
-({PackStatus status, List<PackIssue> issues}) assessPack(
-  WorldPack? pack,
-  List<Nation> world,
-) {
-  if (pack == null) return (status: PackStatus.unreadable, issues: const []);
-  final unknown = PackGameKeys.of([for (final n in world) n.id]).check(pack);
-  final missing = PackRules.issues(
-    pack,
-    baseCodes: {for (final n in world) n.id: n.code},
-  );
-  return (
-    status: unknown.isNotEmpty
-        ? PackStatus.needsAttention
-        : missing.isNotEmpty
-        ? PackStatus.missing
-        : PackStatus.ready,
-    issues: [...unknown, ...missing],
-  );
-}
 
 /// Every database on the device with its status, by name. Reads (and
 /// checks) every pack, so it is autoDispose: back on the list, it is read

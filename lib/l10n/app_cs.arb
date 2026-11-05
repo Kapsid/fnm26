@@ -3780,5 +3780,6 @@
   "worldPackGone": "Tato databáze už v zařízení není. Kariéra nebyla zahájena.",
   "worldStarting": "Připravujeme váš svět",
   "settingsDefaultWorldTitle": "Výchozí svět",
-  "settingsDefaultWorldBlurb": "Svět, na kterém začíná nová hra. Pro každou kariéru ho můžete změnit."
+  "settingsDefaultWorldBlurb": "Svět, na kterém začíná nová hra. Pro každou kariéru ho můžete změnit.",
+  "worldPackNotReady": "Na této databázi už nelze začít kariéru. Opravte ji v Editoru, nebo vyberte jiný svět."
 }

@@ -15269,4 +15269,8 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get settingsDefaultWorldBlurb =>
       'The world New Game starts on. You can still change it for each career.';
+
+  @override
+  String get worldPackNotReady =>
+      'That database can no longer start a career. Fix it in the Editor, or choose another world.';
 }

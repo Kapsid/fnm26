@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -52,12 +53,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     // The button is disabled while a save is made, but the field's keyboard
     // Done also calls this: without the guard it would make a second save.
     if (_creating) return;
-    // The world chosen on the nation pick (null: the game's own).
-    final worldPackId = ref.read(newGameWorldProvider);
-    setState(() {
-      _creating = true;
-      _creatingWorld = worldPackId != null;
-    });
+    setState(() => _creating = true);
     // Taken before the await: a resize across 1000 px rebuilds this page in
     // the other layout meanwhile, and a manager who has gone elsewhere (a
     // pushed Settings, the back arrow) is left there rather than pulled into
@@ -67,37 +63,31 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     final careers = ref.read(careerServiceProvider);
     final Result<Career> result;
     try {
+      // A Start pressed before the Settings default had landed starts on
+      // it all the same.
+      await seedNewGameWorld(container);
+      // The world chosen on the nation pick (null: the game's own), checked
+      // afresh: the chip, or the default it was seeded from, may be stale
+      // (the database edited, or deleted, since).
+      final worldPackId = container.read(newGameWorldProvider);
+      if (worldPackId != null) {
+        container.invalidate(worldPacksProvider);
+        final choices = await container.read(worldChoicesProvider.future);
+        final choice = choices.firstWhereOrNull((c) => c.id == worldPackId);
+        if (choice == null || !choice.selectable) {
+          _refuseWorld(
+            container,
+            choice == null ? worldPackMissingCode : worldPackNotReadyCode,
+          );
+          return;
+        }
+        if (mounted) setState(() => _creatingWorld = true);
+      }
       result = await careers.create(
         nationId: widget.nationId,
         managerName: _controller.text,
         worldPackId: worldPackId,
       );
-      // CareerService.create reports a missing pack as a StateError.
-      // ignore: avoid_catching_errors
-    } on StateError {
-      // The database was deleted between choosing it and starting: say so
-      // and go back to Default, rather than fall over.
-      if (worldPackId == null ||
-          await container
-                  .read(worldPackRepositoryProvider)
-                  .uuidOf(
-                    worldPackId,
-                  ) !=
-              null) {
-        rethrow;
-      }
-      chooseNewGameWorld(container, null);
-      container.invalidate(worldPacksProvider);
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context).worldPackGone),
-            ),
-          );
-      }
-      return;
     } finally {
       // A create that throws must give Start back, not leave it spinning.
       if (mounted) {
@@ -119,6 +109,11 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
         }
       },
       (failure) {
+        if (failure.code == worldPackMissingCode ||
+            failure.code == worldPackNotReadyCode) {
+          _refuseWorld(container, failure.code!);
+          return;
+        }
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
@@ -132,6 +127,26 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           );
       },
     );
+  }
+
+  /// The chosen database cannot start this career ([code] says why: gone,
+  /// or no longer complete and compatible): says so in plain words and puts
+  /// the career back on Default. Nothing is made.
+  void _refuseWorld(ProviderContainer container, String code) {
+    chooseNewGameWorld(container, null);
+    if (!mounted) return;
+    final l = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            code == worldPackMissingCode
+                ? l.worldPackGone
+                : l.worldPackNotReady,
+          ),
+        ),
+      );
   }
 
   @override

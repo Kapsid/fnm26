@@ -22921,6 +22921,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The world New Game starts on. You can still change it for each career.'**
   String get settingsDefaultWorldBlurb;
+
+  /// Snackbar when the chosen database became incomplete or incompatible before the career was started; nothing was made.
+  ///
+  /// In en, this message translates to:
+  /// **'That database can no longer start a career. Fix it in the Editor, or choose another world.'**
+  String get worldPackNotReady;
 }
 
 class _AppLocalizationsDelegate

@@ -512,4 +512,158 @@ void main() {
       },
     );
   }
+
+  /// Chooses pack [id] on the chip of the nation pick.
+  Future<void> chooseOnChip(WidgetTester tester, int id) async {
+    await tester.tap(find.byKey(WorldChip.chipKey));
+    await settle(tester);
+    await _choose(tester, find.byKey(WorldChoiceSheet.packKey(id)));
+  }
+
+  /// Opens New Game for nation [nationId] and presses Start.
+  Future<void> pressStart(
+    WidgetTester tester,
+    ProviderContainer c,
+    int nationId,
+  ) async {
+    c.read(routerProvider).go('${Routes.newGame}?nationId=$nationId');
+    await settle(tester);
+    await tester.tap(find.byKey(NewGameScreen.startKey));
+    await settle(tester);
+  }
+
+  testWidgets(
+    'a pack made incomplete after it was chosen starts no career: a message '
+    'says so and the choice goes back to Default',
+    (tester) async {
+      final c = await _launch(tester, _db());
+      final cze = nationIdOf('CZE');
+      final pack = testPack('Mine', squads: {cze: _packSquad()});
+      final id = await insertPack(tester, c, pack);
+      await _open(tester, c, Routes.nations);
+      await chooseOnChip(tester, id);
+      expect(c.read(newGameWorldProvider), id);
+
+      // Edited elsewhere: the list nobody refreshed still calls it ready.
+      await tester.runAsync(
+        () => c
+            .read(worldPackRepositoryProvider)
+            .save(
+              id,
+              pack.copyWith(squads: {cze: testSquad(gk: 1, def: 9)}),
+            ),
+      );
+      await pressStart(tester, c, cze);
+
+      expect(find.text(enL.worldPackNotReady), findsOneWidget);
+      expect(await _careers(tester, c), isEmpty);
+      expect(c.read(newGameWorldProvider), isNull);
+      expect(
+        c.read(routerProvider).routeInformationProvider.value.uri.path,
+        Routes.newGame,
+      );
+    },
+  );
+
+  testWidgets('a pack deleted after it was chosen starts no career: a '
+      'message says so', (tester) async {
+    final c = await _launch(tester, _db());
+    final cze = nationIdOf('CZE');
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Mine', squads: {cze: _packSquad()}),
+    );
+    await _open(tester, c, Routes.nations);
+    await chooseOnChip(tester, id);
+
+    // Deleted behind the chip's back.
+    await tester.runAsync(
+      () => c.read(worldPackRepositoryProvider).delete(id),
+    );
+    await pressStart(tester, c, cze);
+
+    expect(find.text(enL.worldPackGone), findsOneWidget);
+    expect(await _careers(tester, c), isEmpty);
+    expect(c.read(newGameWorldProvider), isNull);
+  });
+
+  testWidgets('a chosen pack that turns incompatible is flagged on the chip', (
+    tester,
+  ) async {
+    final c = await _launch(tester, _db());
+    final cze = nationIdOf('CZE');
+    final pack = testPack('Mine', squads: {cze: _packSquad()});
+    final id = await insertPack(tester, c, pack);
+    await _open(tester, c, Routes.nations);
+    await chooseOnChip(tester, id);
+    expect(
+      find.descendant(
+        of: find.byKey(WorldChip.chipKey),
+        matching: find.byIcon(Icons.public_rounded),
+      ),
+      findsOneWidget,
+    );
+
+    await tester.runAsync(
+      () => c
+          .read(worldPackRepositoryProvider)
+          .save(id, pack.copyWith(squads: {...pack.squads, 999: testSquad()})),
+    );
+    c.invalidate(worldPacksProvider);
+    await settle(tester);
+    expect(_chipText('Mine'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(WorldChip.chipKey),
+        matching: find.byIcon(Icons.error_outline_rounded),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+    'Start waits for the Settings default: a career started before the '
+    'nation pick ever resolved it still starts on it',
+    timeout: const Timeout.factor(6),
+    (tester) async {
+      final db = _db();
+      var c = await _launch(tester, db);
+      final cze = nationIdOf('CZE');
+      final id = await insertPack(
+        tester,
+        c,
+        testPack('Mine', squads: {cze: _packSquad()}),
+      );
+      await tester.runAsync(
+        () => c.read(defaultWorldProvider.notifier).set('uuid-Mine'),
+      );
+
+      // A fresh launch straight onto New Game: no chip has seeded anything.
+      c = await _launch(tester, db);
+      await _open(tester, c, '${Routes.newGame}?nationId=$cze');
+      expect(c.read(newGameWorldProvider), isNull);
+      await tester.tap(find.byKey(NewGameScreen.startKey));
+      await _pumpUntil(
+        tester,
+        () =>
+            c.read(routerProvider).routeInformationProvider.value.uri.path ==
+            Routes.hub,
+      );
+      await settle(tester);
+
+      final made = (await _careers(tester, c)).single;
+      late String? world;
+      await tester.runAsync(() async {
+        world = (await c.read(worldPackRepositoryProvider).forCareer(made.id))
+            ?.pack
+            .name;
+      });
+      expect(world, 'Mine');
+      expect(id, isPositive);
+      await tester.runAsync(() => c.read(playTimeTrackerProvider).stop());
+      await rebuildSavesInFakeZone(tester, SeededSave(c, made));
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 }

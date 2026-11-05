@@ -213,7 +213,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "da": [
@@ -430,7 +431,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "de": [
@@ -647,7 +649,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "el": [
@@ -864,7 +867,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "es": [
@@ -1081,7 +1085,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "fi": [
@@ -1298,7 +1303,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "fil": [
@@ -1515,7 +1521,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "fr": [
@@ -1732,7 +1739,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "hi": [
@@ -1949,7 +1957,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "hr": [
@@ -2166,7 +2175,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "hu": [
@@ -2383,7 +2393,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "id": [
@@ -2600,7 +2611,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "it": [
@@ -2817,7 +2829,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "ja": [
@@ -3034,7 +3047,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "ko": [
@@ -3251,7 +3265,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "ms": [
@@ -3468,7 +3483,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "nb": [
@@ -3685,7 +3701,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "nl": [
@@ -3902,7 +3919,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "pl": [
@@ -4119,7 +4137,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "pt": [
@@ -4336,7 +4355,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "ro": [
@@ -4553,7 +4573,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "sv": [
@@ -4770,7 +4791,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "th": [
@@ -4987,7 +5009,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "tr": [
@@ -5204,7 +5227,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "uk": [
@@ -5421,7 +5445,8 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ],
 
   "vi": [
@@ -5638,6 +5663,7 @@
     "worldPackGone",
     "worldStarting",
     "settingsDefaultWorldTitle",
-    "settingsDefaultWorldBlurb"
+    "settingsDefaultWorldBlurb",
+    "worldPackNotReady"
   ]
 }

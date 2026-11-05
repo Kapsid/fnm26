@@ -166,7 +166,14 @@ void main() {
           return [
             for (final p in squad)
               if (p.id == target.id)
-                _copy(p, name: 'Zdeněk Edited', attributes: attrs)
+                // A potential no rating can pass, so the pack stays complete
+                // and can start the career.
+                _copy(
+                  p,
+                  name: 'Zdeněk Edited',
+                  attributes: attrs,
+                  potential: 99,
+                )
               else
                 p,
           ];
@@ -254,9 +261,19 @@ void main() {
         c,
         (pack) => _withSquad(pack, _andorra, (squad) {
           gone = _youngest(squad);
+          // A pack-made stand-in in his place keeps the squad full, so the
+          // pack can still start a career.
           return [
             for (final p in squad)
               if (p.id != gone.id) p,
+            PackPlayer(
+              id: kPackPlayerIdBase + 1,
+              name: 'Stand In',
+              age: gone.age,
+              position: gone.position,
+              attributes: gone.attributes,
+              potential: gone.potential,
+            ),
           ];
         }),
       );
