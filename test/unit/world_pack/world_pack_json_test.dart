@@ -1,7 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
+import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+
+const _v1Fixture = 'test/unit/world_pack/fixtures/v1_pack.json';
 
 const _player = PackPlayer(
   id: kPackPlayerIdBase + 1,
@@ -34,6 +43,63 @@ WorldPack _pack() => const WorldPack(
   },
   sponsors: {'Brand': 'Brand2'},
   trophies: {'worldChampionship'},
+);
+
+PackPlayer _withTraits(List<PlayerTrait>? traits) => PackPlayer(
+  id: kPackPlayerIdBase + 2,
+  name: 'B. Test',
+  age: 20,
+  position: PlayerPosition.st,
+  attributes: const PlayerAttributes(physical: 66, technical: 61, stamina: 70),
+  potential: 75,
+  traits: traits,
+);
+
+final PackPlayer _none = _withTraits(const []);
+
+const _club = PackClub(
+  id: kPackAddedIdBase + 1,
+  name: 'Pin FC',
+  country: 'cze',
+);
+
+const _sponsor = PackSponsor(
+  id: kPackAddedIdBase + 2,
+  name: 'Pin Beer',
+  deal: SponsorDeal.crowdPleaser,
+  industry: 'happyBurgers',
+  description: 'Cold and cheap.',
+);
+
+const _yAll = PackYAccount(
+  id: kPackAddedIdBase + 3,
+  name: 'PinFan',
+  voice: YVoice.fan,
+);
+
+const _yOne = PackYAccount(
+  id: kPackAddedIdBase + 4,
+  name: 'PinPundit',
+  voice: YVoice.pundit,
+  nationId: 7,
+);
+
+const _localized = {
+  'clubs.Old FC': {'cs': 'Nový FC'},
+  'addedSponsors.700000002.description': {'cs': 'Studené a levné.'},
+};
+
+WorldPack _v2Pack() => _pack().copyWith(
+  pools: {
+    7: [
+      _withTraits(const [PlayerTrait.setPiece, PlayerTrait.leader]),
+      _none,
+    ],
+  },
+  addedClubs: const [_club],
+  addedSponsors: const [_sponsor],
+  addedYAccounts: const [_yAll, _yOne],
+  localized: _localized,
 );
 
 void main() {
@@ -96,7 +162,7 @@ void main() {
     expect(() => WorldPack.fromJson(json), throwsFormatException);
   });
 
-  test('migrate is identity at v1 and rejects newer or missing versions', () {
+  test('migrate is identity at v2 and rejects newer or missing versions', () {
     final json = _pack().toJson();
     expect(WorldPack.migrate(json), json);
     expect(
@@ -105,5 +171,165 @@ void main() {
       throwsFormatException,
     );
     expect(() => WorldPack.migrate({'name': 'x'}), throwsFormatException);
+  });
+
+  test('v2 round trip keeps every new part', () {
+    final p = _v2Pack();
+    expect(p.toJson()['formatVersion'], 2);
+    final back = WorldPack.fromJson(
+      jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>,
+    );
+    expect(back, p);
+    expect(back.pools[7]!.first.traits, [
+      PlayerTrait.setPiece,
+      PlayerTrait.leader,
+    ]);
+    expect(back.pools[7]!.last.traits, isEmpty);
+    expect(back.addedClubs.single, _club);
+    expect(back.addedSponsors.single, _sponsor);
+    expect(back.addedSponsors.single.key, 'pack${kPackAddedIdBase + 2}');
+    expect(back.addedYAccounts, [_yAll, _yOne]);
+    expect(back.localized, _localized);
+  });
+
+  test(
+    'v1 fixture migrates to v2 with empty new parts and the same 1.1.0 maps',
+    () {
+      final raw =
+          jsonDecode(File(_v1Fixture).readAsStringSync())
+              as Map<String, Object?>;
+      expect(raw['formatVersion'], 1);
+      final migrated = WorldPack.migrate(raw);
+      expect(migrated['formatVersion'], 2);
+      final p = WorldPack.fromJson(migrated);
+      expect(p.formatVersion, 2);
+      expect(p.pools, isEmpty);
+      expect(p.addedClubs, isEmpty);
+      expect(p.addedSponsors, isEmpty);
+      expect(p.addedYAccounts, isEmpty);
+      expect(p.localized, isEmpty);
+      // Every 1.1.0 part reads back exactly as the 1.1.0 file wrote it.
+      final out = jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>;
+      for (final k in raw.keys) {
+        if (k == 'formatVersion') continue;
+        expect(out[k], raw[k], reason: k);
+      }
+      // The fixture is a 1.1.0 file: migrating never rewrites it.
+      expect(raw['formatVersion'], 1);
+      expect(raw.containsKey('pools'), isFalse);
+      // Migration is idempotent once at v2.
+      expect(WorldPack.migrate(migrated), migrated);
+    },
+  );
+
+  test('a v1 player without traits reads as Random (null), and toJson writes '
+      'no traits key', () {
+    final json = _player.toJson();
+    expect(json.containsKey('traits'), isFalse);
+    final back = PackPlayer.fromJson(json);
+    expect(back.traits, isNull);
+    expect(back.toJson().containsKey('traits'), isFalse);
+    expect(back, _player);
+    // None and Random are different choices.
+    expect(_none.toJson()['traits'], <String>[]);
+    expect(_none == _withTraits(null), isFalse);
+  });
+
+  test('unknown trait name, unknown voice, unknown deal throw '
+      'FormatException', () {
+    expect(kPackYVoices, {
+      YVoice.fan,
+      YVoice.pundit,
+      YVoice.meme,
+      YVoice.stats,
+      YVoice.rival,
+      YVoice.expro,
+      YVoice.neutral,
+    });
+    final good = _v2Pack().toJson();
+    Map<String, Object?> pools(Object? traits) => {
+      ...good,
+      'pools': {
+        '7': [
+          {..._player.toJson(), 'traits': traits},
+        ],
+      },
+    };
+    Map<String, Object?> y(String voice) => {
+      ...good,
+      'addedYAccounts': [
+        {..._yAll.toJson(), 'voice': voice},
+      ],
+    };
+    for (final bad in <Map<String, Object?>>[
+      pools(['flying']),
+      pools('setPiece'),
+      pools([1]),
+      y('ghost'),
+      // A real voice, but not one a pack account can have.
+      y(YVoice.player.name),
+      {
+        ...good,
+        'addedSponsors': [
+          {..._sponsor.toJson(), 'deal': 'charity'},
+        ],
+      },
+      {
+        ...good,
+        'addedClubs': [
+          {..._club.toJson(), 'extra': 1},
+        ],
+      },
+      {
+        ...good,
+        'localized': {
+          'clubs.Old FC': {'cs': 5},
+        },
+      },
+    ]) {
+      expect(() => WorldPack.fromJson(bad), throwsFormatException);
+    }
+  });
+
+  test('migrate refuses format 3', () {
+    expect(
+      () => WorldPack.migrate({..._v2Pack().toJson(), 'formatVersion': 3}),
+      throwsFormatException,
+    );
+  });
+
+  test('PackPaths builds and parses localized paths', () {
+    expect(PackPaths.club('Old FC'), 'clubs.Old FC');
+    expect(PackPaths.stadium('7:Prague'), 'stadiums.7:Prague');
+    expect(
+      PackPaths.competition('World Championship'),
+      'competitions.World Championship',
+    );
+    expect(PackPaths.sponsor('agrofart'), 'sponsors.agrofart');
+    expect(PackPaths.yAccount('GaffersCorner'), 'yAccounts.GaffersCorner');
+    expect(PackPaths.reporterName(3), 'reporters.3.name');
+    expect(PackPaths.reporterOutlet(3), 'reporters.3.outlet');
+    expect(PackPaths.addedClub(700000001), 'addedClubs.700000001');
+    expect(PackPaths.addedSponsor(700000002), 'addedSponsors.700000002');
+    expect(
+      PackPaths.addedSponsorDescription(700000002),
+      'addedSponsors.700000002.description',
+    );
+    expect(PackPaths.addedY(700000003), 'addedYAccounts.700000003');
+
+    // A club name with a dot splits at the first dot only.
+    expect(PackPaths.parse(PackPaths.club('St. Pauli.X')), (
+      root: 'clubs',
+      rest: 'St. Pauli.X',
+    ));
+    expect(PackPaths.parse('reporters.3.name'), (
+      root: 'reporters',
+      rest: '3.name',
+    ));
+    for (final bad in ['clubs', 'clubs.', 'nations.7', 'x.y', '']) {
+      expect(PackPaths.parse(bad), isNull, reason: bad);
+    }
+    expect(PackPaths.roots, isNot(contains('nations')));
+    expect(PackPaths.roots, hasLength(9));
   });
 }

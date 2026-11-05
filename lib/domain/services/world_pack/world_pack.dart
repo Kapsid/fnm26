@@ -3,12 +3,32 @@ import 'package:flutter/foundation.dart' show immutable;
 
 import '../../entities/enums.dart';
 import '../../entities/player_attributes.dart';
+import '../federation/sponsors.dart';
+import '../player/player_traits.dart';
+import '../press/y_feed.dart';
 
-/// Current on-disk format of a world pack.
-const int kPackFormatVersion = 1;
+/// Current on-disk format of a world pack. Format 2 (editor 2) adds
+/// [WorldPack.pools], the added clubs, sponsors and Y accounts,
+/// [WorldPack.localized] and [PackPlayer.traits]; [WorldPack.migrate] lifts
+/// a format-1 (1.1.0) pack to it.
+const int kPackFormatVersion = 2;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
+
+/// The id range of the clubs, sponsors and Y accounts a pack adds.
+const int kPackAddedIdBase = 700000000, kPackAddedIdMax = 799999999;
+
+/// The voices a pack's own Y account can post as.
+const Set<YVoice> kPackYVoices = {
+  YVoice.fan,
+  YVoice.pundit,
+  YVoice.meme,
+  YVoice.stats,
+  YVoice.rival,
+  YVoice.expro,
+  YVoice.neutral,
+};
 
 const _eq = DeepCollectionEquality();
 
@@ -24,6 +44,7 @@ class PackPlayer {
     required this.potential,
     this.club,
     this.clubCountry,
+    this.traits,
   });
 
   final int id;
@@ -34,6 +55,10 @@ class PackPlayer {
   final int potential;
   final String? club;
   final String? clubCountry;
+
+  /// His traits as picked in the pack. Null is Random: the game rolls them
+  /// as it always has. An empty list is "no traits".
+  final List<PlayerTrait>? traits;
 
   Map<String, Object?> toJson() => {
     'id': id,
@@ -48,6 +73,7 @@ class PackPlayer {
     'potential': potential,
     'club': club,
     'clubCountry': clubCountry,
+    if (traits case final t?) 'traits': [for (final x in t) x.name],
   };
 
   static PackPlayer fromJson(Object? raw) {
@@ -61,6 +87,7 @@ class PackPlayer {
       'potential',
       'club',
       'clubCountry',
+      'traits',
     }, 'player');
     final a = _map(m['attributes'], 'attributes');
     _only(a, const {'physical', 'technical', 'stamina'}, 'attributes');
@@ -82,6 +109,12 @@ class PackPlayer {
       potential: _int(m['potential'], 'potential'),
       club: _strOrNull(m['club'], 'club'),
       clubCountry: _strOrNull(m['clubCountry'], 'clubCountry'),
+      traits: m['traits'] == null
+          ? null
+          : [
+              for (final t in _strList(m['traits'], 'traits'))
+                _enum(PlayerTrait.values, t, 'trait'),
+            ],
     );
   }
 
@@ -95,7 +128,8 @@ class PackPlayer {
       other.attributes == attributes &&
       other.potential == potential &&
       other.club == club &&
-      other.clubCountry == clubCountry;
+      other.clubCountry == clubCountry &&
+      _eq.equals(other.traits, traits);
 
   @override
   int get hashCode => Object.hash(
@@ -107,7 +141,151 @@ class PackPlayer {
     potential,
     club,
     clubCountry,
+    traits == null ? null : _eq.hash(traits),
   );
+}
+
+/// A club a pack adds. [country] is a lower-case FIFA code.
+@immutable
+class PackClub {
+  const PackClub({required this.id, required this.name, required this.country});
+
+  final int id;
+  final String name;
+  final String country;
+
+  Map<String, Object?> toJson() => {'id': id, 'name': name, 'country': country};
+
+  static PackClub fromJson(Object? raw) {
+    final m = _map(raw, 'club');
+    _only(m, const {'id', 'name', 'country'}, 'club');
+    return PackClub(
+      id: _int(m['id'], 'id'),
+      name: _str(m['name'], 'name'),
+      country: _str(m['country'], 'country'),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is PackClub &&
+      other.id == id &&
+      other.name == name &&
+      other.country == country;
+
+  @override
+  int get hashCode => Object.hash(id, name, country);
+}
+
+/// A sponsor a pack adds. [industry] is the `SponsorBrand.name` whose
+/// industry label it reuses; [description] is empty when none was given.
+@immutable
+class PackSponsor {
+  const PackSponsor({
+    required this.id,
+    required this.name,
+    required this.deal,
+    required this.industry,
+    this.description = '',
+  });
+
+  final int id;
+  final String name;
+  final SponsorDeal deal;
+  final String industry;
+  final String description;
+
+  /// Its string id wherever the game stores a sponsor.
+  String get key => 'pack$id';
+
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'name': name,
+    'deal': deal.name,
+    'industry': industry,
+    'description': description,
+  };
+
+  static PackSponsor fromJson(Object? raw) {
+    final m = _map(raw, 'sponsor');
+    _only(m, const {
+      'id',
+      'name',
+      'deal',
+      'industry',
+      'description',
+    }, 'sponsor');
+    return PackSponsor(
+      id: _int(m['id'], 'id'),
+      name: _str(m['name'], 'name'),
+      deal: _enum(SponsorDeal.values, _str(m['deal'], 'deal'), 'deal'),
+      industry: _str(m['industry'], 'industry'),
+      description: _strOrNull(m['description'], 'description') ?? '',
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is PackSponsor &&
+      other.id == id &&
+      other.name == name &&
+      other.deal == deal &&
+      other.industry == industry &&
+      other.description == description;
+
+  @override
+  int get hashCode => Object.hash(id, name, deal, industry, description);
+}
+
+/// A Y account a pack adds, posting as [voice] (one of [kPackYVoices]) in
+/// nation [nationId]'s feed, or in every nation's when it is null.
+@immutable
+class PackYAccount {
+  const PackYAccount({
+    required this.id,
+    required this.name,
+    required this.voice,
+    this.nationId,
+  });
+
+  final int id;
+  final String name;
+  final YVoice voice;
+  final int? nationId;
+
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'name': name,
+    'voice': voice.name,
+    'nationId': nationId,
+  };
+
+  static PackYAccount fromJson(Object? raw) {
+    final m = _map(raw, 'yAccount');
+    _only(m, const {'id', 'name', 'voice', 'nationId'}, 'yAccount');
+    final voice = _enum(YVoice.values, _str(m['voice'], 'voice'), 'voice');
+    if (!kPackYVoices.contains(voice)) {
+      throw FormatException('Voice "${voice.name}" is not a pack voice');
+    }
+    final nationId = m['nationId'];
+    return PackYAccount(
+      id: _int(m['id'], 'id'),
+      name: _str(m['name'], 'name'),
+      voice: voice,
+      nationId: nationId == null ? null : _int(nationId, 'nationId'),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is PackYAccount &&
+      other.id == id &&
+      other.name == name &&
+      other.voice == voice &&
+      other.nationId == nationId;
+
+  @override
+  int get hashCode => Object.hash(id, name, voice, nationId);
 }
 
 /// Custom first and surname pools for one nation.
@@ -185,6 +363,11 @@ class WorldPack {
     this.nameLists = const {},
     this.sponsors = const {},
     this.trophies = const {},
+    this.pools = const {},
+    this.addedClubs = const [],
+    this.addedSponsors = const [],
+    this.addedYAccounts = const [],
+    this.localized = const {},
   });
 
   final String uuid;
@@ -219,6 +402,16 @@ class WorldPack {
   /// Keys that have a custom trophy PNG.
   final Set<String> trophies;
 
+  /// nationId -> the whole day-one fringe. A nation not in it draws its
+  /// fringe per career, as 1.1.0 does.
+  final Map<int, List<PackPlayer>> pools;
+  final List<PackClub> addedClubs;
+  final List<PackSponsor> addedSponsors;
+  final List<PackYAccount> addedYAccounts;
+
+  /// Path (see `PackPaths`) -> language code -> value.
+  final Map<String, Map<String, String>> localized;
+
   WorldPack copyWith({
     String? uuid,
     String? name,
@@ -235,6 +428,11 @@ class WorldPack {
     Map<int, PackNameLists>? nameLists,
     Map<String, String>? sponsors,
     Set<String>? trophies,
+    Map<int, List<PackPlayer>>? pools,
+    List<PackClub>? addedClubs,
+    List<PackSponsor>? addedSponsors,
+    List<PackYAccount>? addedYAccounts,
+    Map<String, Map<String, String>>? localized,
   }) => WorldPack(
     uuid: uuid ?? this.uuid,
     name: name ?? this.name,
@@ -251,6 +449,11 @@ class WorldPack {
     nameLists: nameLists ?? this.nameLists,
     sponsors: sponsors ?? this.sponsors,
     trophies: trophies ?? this.trophies,
+    pools: pools ?? this.pools,
+    addedClubs: addedClubs ?? this.addedClubs,
+    addedSponsors: addedSponsors ?? this.addedSponsors,
+    addedYAccounts: addedYAccounts ?? this.addedYAccounts,
+    localized: localized ?? this.localized,
   );
 
   Map<String, Object?> toJson() => {
@@ -279,6 +482,16 @@ class WorldPack {
     },
     'sponsors': sponsors,
     'trophies': trophies.toList()..sort(),
+    'pools': {
+      for (final e in pools.entries)
+        '${e.key}': [for (final p in e.value) p.toJson()],
+    },
+    'addedClubs': [for (final c in addedClubs) c.toJson()],
+    'addedSponsors': [for (final s in addedSponsors) s.toJson()],
+    'addedYAccounts': [for (final y in addedYAccounts) y.toJson()],
+    'localized': {
+      for (final e in localized.entries) e.key: {...e.value},
+    },
   };
 
   static const _keys = {
@@ -297,6 +510,11 @@ class WorldPack {
     'nameLists',
     'sponsors',
     'trophies',
+    'pools',
+    'addedClubs',
+    'addedSponsors',
+    'addedYAccounts',
+    'localized',
   };
 
   /// Strict reader: any wrong type or unknown key throws [FormatException].
@@ -334,11 +552,35 @@ class WorldPack {
       },
       sponsors: _strMap(json['sponsors'], 'sponsors'),
       trophies: _strList(json['trophies'], 'trophies').toSet(),
+      pools: {
+        for (final e in _map(json['pools'], 'pools').entries)
+          _intKey(e.key): _list(
+            e.value,
+            'pool',
+          ).map(PackPlayer.fromJson).toList(),
+      },
+      addedClubs: _list(
+        json['addedClubs'],
+        'addedClubs',
+      ).map(PackClub.fromJson).toList(),
+      addedSponsors: _list(
+        json['addedSponsors'],
+        'addedSponsors',
+      ).map(PackSponsor.fromJson).toList(),
+      addedYAccounts: _list(
+        json['addedYAccounts'],
+        'addedYAccounts',
+      ).map(PackYAccount.fromJson).toList(),
+      localized: {
+        for (final e in _map(json['localized'], 'localized').entries)
+          e.key: _strMap(e.value, 'localized'),
+      },
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v1.
-  /// Throws [FormatException] for a missing or newer version.
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v2.
+  /// Throws [FormatException] for a missing or newer version. Never changes
+  /// [json] itself.
   static Map<String, Object?> migrate(Map<String, Object?> json) {
     final v = json['formatVersion'];
     if (v is! int) {
@@ -352,8 +594,28 @@ class WorldPack {
     if (v < 1) {
       throw FormatException('Invalid pack format $v');
     }
-    // Future steps: while (v < kPackFormatVersion) { json = _fromNToN1(json); }
-    return json;
+    var out = json;
+    if (v == 1) out = _from1To2(out);
+    return out;
+  }
+
+  /// Format 1 (1.1.0) to 2: every new part empty, so a 1.1.0 pack reads as
+  /// "nothing new". A format-1 pack that already holds a format-2 key is
+  /// not a 1.1.0 file.
+  static Map<String, Object?> _from1To2(Map<String, Object?> json) {
+    final added = <String, Object?>{
+      'pools': <String, Object?>{},
+      'addedClubs': <Object?>[],
+      'addedSponsors': <Object?>[],
+      'addedYAccounts': <Object?>[],
+      'localized': <String, Object?>{},
+    };
+    for (final k in added.keys) {
+      if (json.containsKey(k)) {
+        throw FormatException('Format 1 pack has format 2 key "$k"');
+      }
+    }
+    return {...json, ...added, 'formatVersion': 2};
   }
 
   static ({String name, String code}) _nation(Object? raw) {
@@ -389,6 +651,11 @@ String _str(Object? v, String what) {
 }
 
 String? _strOrNull(Object? v, String what) => v == null ? null : _str(v, what);
+
+/// The value of [values] named [name], or a [FormatException] naming [what].
+T _enum<T extends Enum>(List<T> values, String name, String what) =>
+    values.asNameMap()[name] ??
+    (throw FormatException('Unknown $what "$name"'));
 
 int _int(Object? v, String what) {
   if (v is int) return v;
