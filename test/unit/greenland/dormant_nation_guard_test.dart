@@ -32,6 +32,10 @@ void main() {
     },
     // The out-of-work start is a new game too.
     'lib/features/career/unemployed_start_screen.dart': {'nationsProvider'},
+    // The world pickers (New Game's chip, Settings' default world) check
+    // each database against the nations a career created NOW starts with:
+    // no career is in scope, even with Settings pushed over one.
+    'lib/features/world_pack/world_choice.dart': {'nationsProvider'},
     // Only shown by the new-game pickers above (no career in scope).
     'lib/features/nations/nation_preview.dart': {
       'nationsProvider',
