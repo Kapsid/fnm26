@@ -669,22 +669,26 @@ class DriftPlayerRepository implements PlayerRepository {
   /// career's world is copied in with the career, in the same transaction,
   /// and never changes after, so neither answer can go stale (a career id is
   /// never reused).
-  final Map<int, Future<_CareerWorld?>> _worlds = {};
+  ///
+  /// The answer is kept, never the [Future] that read it: a future keeps the
+  /// zone it was made in and delivers its value through that zone's
+  /// microtasks. A widget test warms its providers in `tester.runAsync` (the
+  /// real zone) and then pumps in fake async, which never runs real-zone
+  /// microtasks, so a remembered future stalled every later read (the match
+  /// preview among them) for ever. Two reads racing before the first answer
+  /// both ask the database; they get the same answer.
+  final Map<int, _CareerWorld?> _worlds = {};
 
   /// The custom world [careerId] was started on, or null for the default
   /// world (and for no career at all).
-  Future<_CareerWorld?> _worldFor(int? careerId) {
-    if (careerId == null) return Future.value();
-    return _worlds[careerId] ??= () async {
-      try {
-        final stored = await WorldPackRepository(_db).forCareer(careerId);
-        return stored == null ? null : _CareerWorld(stored.pack);
-      } on Object {
-        // Not kept: the next read asks again.
-        _worlds.remove(careerId)?.ignore();
-        rethrow;
-      }
-    }();
+  Future<_CareerWorld?> _worldFor(int? careerId) async {
+    if (careerId == null) return null;
+    if (_worlds.containsKey(careerId)) return _worlds[careerId];
+    // A failed read is not kept: the next read asks again.
+    final stored = await WorldPackRepository(_db).forCareer(careerId);
+    return _worlds[careerId] = stored == null
+        ? null
+        : _CareerWorld(stored.pack);
   }
 
   /// Loads the per-nation name pools from the bundled asset (once). Falls back
