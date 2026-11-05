@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/drift_nation_repository.dart';
+import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
@@ -25,12 +26,15 @@ import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/tactics/best_eleven.dart';
+import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart' show worldCupQualDrawKind;
 import 'package:fnm/features/hub/objective_providers.dart'
     show briefRulesV2Kind, briefRulesV3Kind, briefRulesV4Kind;
 import 'package:fnm/features/tournaments/city_providers.dart'
     show hostVenuesV2Kind;
+import 'package:fnm/features/world_pack/world_pack_providers.dart'
+    show worldPackRepositoryProvider, worldPackServiceProvider;
 
 // The rollover (a part of hub_providers) writes it too.
 export 'package:fnm/features/tournaments/city_providers.dart'
@@ -205,7 +209,22 @@ class CareerService {
     /// has them; a campaign run keeps the world its seed was searched on. A
     /// test passes false to start a world as an older save has it.
     bool? newCareerNations,
+
+    /// The world pack (custom database) to start on, or null for the default
+    /// world. The career takes its own copy of the pack, so editing or
+    /// deleting the pack later never touches it, and its starting ranking
+    /// follows the pack's squads (see [PackRanking.startingRanks]). A
+    /// campaign run never takes one: it plays the world its seed was
+    /// searched on.
+    int? worldPackId,
   }) async {
+    if (worldPackId != null && !countsTowardSlots) {
+      throw ArgumentError.value(
+        worldPackId,
+        'worldPackId',
+        'A campaign run always plays the default world',
+      );
+    }
     final repo = _ref.read(careerRepositoryProvider);
     final premium = _ref.read(premiumUnlockedProvider);
 
@@ -222,6 +241,16 @@ class CareerService {
 
     final name = managerName.trim().isEmpty ? 'Manager' : managerName.trim();
     final comp = _ref.read(competitionRepositoryProvider);
+    final packs = _ref.read(worldPackRepositoryProvider);
+    final pack = worldPackId == null ? null : await packs.load(worldPackId);
+    if (worldPackId != null && pack == null) {
+      throw StateError('No world pack $worldPackId');
+    }
+    // How strong each nation's core squad is in the default world, against
+    // which the pack's squads move the starting ranking.
+    final defaultStrength = pack == null
+        ? const <int, int>{}
+        : await _ref.read(worldPackServiceProvider).defaultStrength();
     // The career, its world markers and any starting ranks land together:
     // a career cut short between them would read a different world.
     final db = _ref.read(appDatabaseProvider);
@@ -252,15 +281,32 @@ class CareerService {
           HostBidding.rulesKind(0, nationId),
         );
       }
-      if (startingRanks.isNotEmpty || freezeStartingRanks) {
+      if (pack != null) {
+        await packs.copyToCareer(worldPackId!, career.id);
+        await comp.markDrawWatched(career.id, 0, worldPackMarker(pack.uuid));
+      }
+      if (startingRanks.isNotEmpty || freezeStartingRanks || pack != null) {
         // The career's own world (a dormant nation in it included), each
         // nation on the rank it is given. Read through a repository of its
         // own: the shared one keeps what it learns of a career, and this
         // transaction may yet roll back and hand the id to the next career.
         final world = await DriftNationRepository(db).forCareer(career.id);
-        await _ref.read(seedRankingRepositoryProvider).snapshot(career.id, 0, {
+        final base = {
           for (final n in world) n.id: startingRanks[n.id] ?? n.ranking,
-        });
+        };
+        await _ref
+            .read(seedRankingRepositoryProvider)
+            .snapshot(
+              career.id,
+              0,
+              pack == null
+                  ? base
+                  : PackRanking.startingRanks(
+                      baseRanks: base,
+                      defaultStrength: defaultStrength,
+                      packStrength: PackRanking.squadStrengths(pack.squads),
+                    ),
+            );
       }
       return career;
     });

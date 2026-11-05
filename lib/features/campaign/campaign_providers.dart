@@ -647,6 +647,8 @@ class CampaignService {
           // 1.0.6 ranking keep that one: their snapshot already holds it, or
           // the seed loader freezes it.
           freezeStartingRanks: true,
+          // Never a worldPackId (create refuses one for a run): the run
+          // plays the default world its seed was searched on.
         );
     final career = result.valueOrNull;
     if (career == null) {

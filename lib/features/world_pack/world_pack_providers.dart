@@ -6,6 +6,7 @@ import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// The save seed of the one fixed name draw every new pack starts from.
@@ -69,6 +70,29 @@ class WorldPackService {
   /// potential, the peak [PlayerLifecycle.peakOverall] gives (never below
   /// the overall he already has). Every override is empty. Returns its id.
   Future<int> createFromDefault(String name) async {
+    final id = await _packs.insert(
+      WorldPack(
+        uuid: _packs.newUuid(),
+        name: name,
+        author: '',
+        formatVersion: kPackFormatVersion,
+        madeWithVersion: kPackGameVersion,
+        squads: await defaultSquads(),
+      ),
+      const {},
+    );
+    _onChanged();
+    return id;
+  }
+
+  /// [PackRanking.strength] of each nation's squad in the default world, as
+  /// a new pack stores it ([defaultSquads]): the yardstick a pack's squads
+  /// move the starting ranking against.
+  Future<Map<int, int>> defaultStrength() async =>
+      PackRanking.squadStrengths(await defaultSquads());
+
+  /// The squads [createFromDefault] stores, by nation id.
+  Future<Map<int, List<PackPlayer>>> defaultSquads() async {
     final coreIds = <int, List<int>>{};
     for (final p in await _players.all()) {
       if (p.id < _firstFringeId) (coreIds[p.nationId] ??= []).add(p.id);
@@ -118,19 +142,7 @@ class WorldPackService {
       }
       squads[nation.id] = squad;
     }
-    final id = await _packs.insert(
-      WorldPack(
-        uuid: _packs.newUuid(),
-        name: name,
-        author: '',
-        formatVersion: kPackFormatVersion,
-        madeWithVersion: kPackGameVersion,
-        squads: squads,
-      ),
-      const {},
-    );
-    _onChanged();
-    return id;
+    return squads;
   }
 
   /// Copies pack [id] as a new pack named [name]; returns the copy's id.

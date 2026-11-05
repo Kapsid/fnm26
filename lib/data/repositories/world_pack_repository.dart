@@ -5,6 +5,10 @@ import 'package:drift/drift.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
+/// The `draws_watched` kind (cycle 0) that records the world pack (by
+/// [WorldPack.uuid]) a career was started on.
+String worldPackMarker(String uuid) => 'world:$uuid';
+
 /// The custom databases (world packs) on this device, and the copy a career
 /// takes of one.
 ///
