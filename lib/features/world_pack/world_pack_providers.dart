@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
+import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
@@ -414,7 +415,13 @@ class WorldPackService {
         final taken = {for (final e in await _packs.list()) e.name};
         var name = pack.name;
         for (var n = 2; taken.contains(name); n++) {
-          name = '${pack.name} ($n)';
+          final suffix = ' ($n)';
+          final room = PackRules.nameMax - suffix.length;
+          final runes = pack.name.runes.toList();
+          final base = runes.length > room
+              ? String.fromCharCodes(runes.take(room)).trimRight()
+              : pack.name;
+          name = '$base$suffix';
         }
         final id = await _packs.insert(
           pack.copyWith(uuid: _packs.newUuid(), name: name),

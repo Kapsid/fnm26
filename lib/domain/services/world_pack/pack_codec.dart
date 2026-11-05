@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show immutable;
@@ -67,6 +68,9 @@ abstract final class PackCodec {
   static const maxPlayersPerNation = PackRules.squadMax;
   static const maxTrophies = 9;
 
+  /// Longest key an override map may carry.
+  static const keyMax = 100;
+
   static const _topKeys = {'format', 'pack', 'trophies'};
 
   static Uint8List encode(WorldPack p, Map<String, Uint8List> trophies) {
@@ -92,22 +96,14 @@ abstract final class PackCodec {
     if (bytes.length < 2 || bytes[0] != 0x1f || bytes[1] != 0x8b) {
       return const PackRejected(PackRejection.notAPack);
     }
-    final Uint8List raw;
-    try {
-      raw = _gunzip(bytes);
-    } on _TooBig {
-      return const PackRejected(PackRejection.tooBig);
-    } on Object {
+    final (:code, :json) = await Isolate.run(() => _read(bytes));
+    if (code == 1) return const PackRejected(PackRejection.tooBig);
+    final top = json;
+    if (code != 0 || top is! Map<String, Object?>) {
       return const PackRejected(PackRejection.notAPack);
     }
-
-    final Object? top;
-    try {
-      top = jsonDecode(utf8.decode(raw));
-    } on Object {
-      return const PackRejected(PackRejection.notAPack);
-    }
-    if (top is! Map<String, Object?>) {
+    // No `pack` at all: some other file (a career bundle, say).
+    if (top['pack'] is! Map<String, Object?>) {
       return const PackRejected(PackRejection.notAPack);
     }
     final format = top['format'];
@@ -131,14 +127,12 @@ abstract final class PackCodec {
     }
 
     final WorldPack pack;
+    final inner = rawPack['formatVersion'];
+    if (inner is int && inner > kPackFormatVersion) {
+      return const PackRejected(PackRejection.newerFormat);
+    }
     try {
       pack = WorldPack.fromJson(WorldPack.migrate(rawPack));
-    } on FormatException catch (e) {
-      return PackRejected(
-        e.message.contains('newer than supported')
-            ? PackRejection.newerFormat
-            : PackRejection.badData,
-      );
     } on Object {
       return const PackRejected(PackRejection.badData);
     }
@@ -162,6 +156,18 @@ abstract final class PackCodec {
       pack.copyWith(trophies: trophies.keys.toSet()),
       trophies,
     );
+  }
+
+  /// Runs off the UI isolate: 0 = read, 1 = too big, 2 = not a pack.
+  static ({int code, Object? json}) _read(Uint8List bytes) {
+    try {
+      final json = jsonDecode(utf8.decode(_gunzip(bytes)));
+      return (code: 0, json: json);
+    } on _TooBig {
+      return (code: 1, json: null);
+    } on Object {
+      return (code: 2, json: null);
+    }
   }
 
   /// Streamed, so a file that unzips to gigabytes is dropped at the cap.
@@ -188,6 +194,15 @@ abstract final class PackCodec {
       return false;
     }
     if (p.madeWithVersion.length > 20) return false;
+    for (final m in [
+      p.clubs,
+      p.stadiums,
+      p.competitions,
+      p.sponsors,
+      p.yAccounts,
+    ]) {
+      if (m.keys.any((k) => k.length > keyMax)) return false;
+    }
     if (p.squads.values.any((s) => s.length > maxPlayersPerNation)) {
       return false;
     }
@@ -199,7 +214,9 @@ abstract final class PackCodec {
   /// A safe file name stem for [name]: letters, digits, spaces, `-` and `_`,
   /// at most 60 characters, never empty.
   static String fileStem(String name) {
-    final s = name.replaceAll(RegExp(r'[^A-Za-z0-9 _-]'), '_').trim();
+    final s = name
+        .replaceAll(RegExp(r'[^\p{L}\p{N} _-]', unicode: true), '_')
+        .trim();
     final cut = s.length > 60 ? s.substring(0, 60).trim() : s;
     return cut.isEmpty ? 'world' : cut;
   }

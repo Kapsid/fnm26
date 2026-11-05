@@ -132,10 +132,21 @@ void main() {
     );
     expect(
       await reason(_file({'format': 2, 'tables': <String, Object?>{}})),
-      PackRejection.newerFormat,
-      reason: 'a career bundle looks like a newer pack, never a pack',
+      PackRejection.notAPack,
+      reason: 'a career bundle is not a pack',
     );
     expect(await reason(_file([1, 2])), PackRejection.notAPack);
+  });
+
+  test('a pack made with a newer pack format is newerFormat', () async {
+    final raw = _raw(_pack());
+    (raw['pack']! as Map<String, Object?>)['formatVersion'] = 99;
+    expect(await reason(_file(raw)), PackRejection.newerFormat);
+  });
+
+  test('an override key over 100 characters is badData', () async {
+    final p = _pack().copyWith(clubs: {'k' * 101: 'New FC'});
+    expect(await reason(_file(_raw(p))), PackRejection.badData);
   });
 
   test('format 99 is newerFormat', () async {
@@ -247,7 +258,19 @@ void main() {
       expect(missing.isFailure, isTrue);
     });
 
+    test('a 40-character name that clashes still fits in 40', () async {
+      final name = 'N' * 40;
+      final id = await repo.insert(_pack(name: name), const {});
+      final file = await service.export(id, into: dir);
+      final copy = (await repo.load(
+        (await service.importFile(file.path)).valueOrNull!,
+      ))!;
+      expect(copy.name, '${'N' * 36} (2)');
+      expect(copy.name.length, 40);
+    });
+
     test('file names are safe and never empty', () {
+      expect(PackCodec.fileStem('Světový'), 'Světový');
       expect(PackCodec.fileStem(''), 'world');
       expect(PackCodec.fileStem('../../etc'), '______etc');
       expect(PackCodec.fileStem('x' * 100).length, 60);
