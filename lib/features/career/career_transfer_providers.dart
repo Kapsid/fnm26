@@ -1,10 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/career_bundle.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
+import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/world_pack/pack_codec.dart';
+import 'package:fnm/domain/services/world_pack/pack_rules.dart';
+import 'package:fnm/domain/services/world_pack/trophy_normaliser.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
@@ -134,6 +141,9 @@ class CareerTransferService {
     )) {
       return BundleRejection.needsPremium;
     }
+    // The career's own copy of its world comes from outside the device, so
+    // it passes the checks a `.fnmdb` file does, or nothing comes in.
+    if (!await _checkWorld(read.bundle!)) return BundleRejection.unreadable;
     final db = _ref.read(appDatabaseProvider);
     final newId = await CareerBundle.import(db, read.bundle!);
     // A career that came with a custom world shows its names at once.
@@ -145,6 +155,73 @@ class CareerTransferService {
       ..invalidate(savesProvider)
       ..invalidate(campaignRunsProvider);
     return null;
+  }
+
+  /// Checks the custom world [bundle] carries (`career_worlds` and
+  /// `career_world_trophies`) exactly as `PackCodec.decode` checks a
+  /// `.fnmdb` file: the pack read by its strict reader and every field held
+  /// to the editor's rules, the stored name capped, and every trophy picture
+  /// decoded and drawn again. The bundle then carries the normaliser's
+  /// pictures in place of its own. False when anything fails, and the
+  /// bundle is refused whole. A bundle with no world passes untouched.
+  Future<bool> _checkWorld(Map<String, Object?> bundle) async {
+    final tables = bundle['tables'];
+    if (tables is! Map) return false;
+    final worlds = tables['career_worlds'] ?? const <Object?>[];
+    final trophies = tables['career_world_trophies'] ?? const <Object?>[];
+    if (worlds is! List || trophies is! List) return false;
+    if (worlds.isEmpty && trophies.isEmpty) return true;
+    // One world per career, and no picture without one.
+    if (worlds.length != 1) return false;
+    final row = worlds.single;
+    if (row is! Map) return false;
+    final packName = row['pack_name'];
+    final json = row['json'];
+    if (packName is! String || PackRules.checkName(packName) != null) {
+      return false;
+    }
+    if (json is! String || json.length > PackCodec.maxJsonBytes) return false;
+    final WorldPack pack;
+    try {
+      final raw = jsonDecode(json);
+      if (raw is! Map<String, Object?>) return false;
+      final inner = raw['formatVersion'];
+      if (inner is int && inner > kPackFormatVersion) return false;
+      pack = WorldPack.fromJson(WorldPack.migrate(raw));
+    } on Object {
+      return false;
+    }
+    final base = await _ref.read(nationRepositoryProvider).newCareerWorld();
+    if (!PackCodec.fieldsOk(
+      pack,
+      baseCodes: {for (final n in base) n.id: n.code},
+    )) {
+      return false;
+    }
+    if (trophies.length > PackCodec.maxTrophies) return false;
+    final keys = <String>{};
+    final normalised = <Map<String, Object?>>[];
+    for (final t in trophies) {
+      if (t is! Map) return false;
+      final key = t['key'];
+      final png = t['png'];
+      if (key is! String || Trophies.assetForKey(key) == null) return false;
+      if (!keys.add(key) || png is! String) return false;
+      final Uint8List input;
+      try {
+        input = base64Decode(png);
+      } on FormatException {
+        return false;
+      }
+      final out = await TrophyNormaliser.normalise(input, key);
+      if (out == null) return false;
+      normalised.add({
+        for (final e in t.entries) '${e.key}': e.value,
+        'png': base64Encode(out.png),
+      });
+    }
+    tables['career_world_trophies'] = normalised;
+    return true;
   }
 }
 

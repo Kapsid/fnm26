@@ -19,6 +19,7 @@ import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
+import 'package:fnm/domain/services/world_pack/trophy_normaliser.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
@@ -27,7 +28,6 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
-import 'package:fnm/features/world_pack/trophy_image.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 import '../helpers/seeded_save.dart' show settle;
@@ -426,8 +426,12 @@ void main() {
         find.byWidgetPredicate(
           (w) =>
               w is Image &&
-              w.image is MemoryImage &&
-              listEquals((w.image as MemoryImage).bytes, trophy),
+              w.image is ResizeImage &&
+              (w.image as ResizeImage).imageProvider is MemoryImage &&
+              listEquals(
+                ((w.image as ResizeImage).imageProvider as MemoryImage).bytes,
+                trophy,
+              ),
         ),
         findsWidgets,
       );

@@ -43,7 +43,13 @@ void main() {
     );
     await tester.pump();
     image = tester.widget<Image>(find.byType(Image));
-    expect(image.image, isA<MemoryImage>());
+    // Decoded at a bounded size, whatever the bytes claim.
+    expect(image.image, isA<ResizeImage>());
+    final resized = image.image as ResizeImage;
+    expect(resized.imageProvider, isA<MemoryImage>());
+    expect(resized.width, TrophyImage.decodeBound);
+    expect(resized.height, TrophyImage.decodeBound);
+    expect(resized.policy, ResizeImagePolicy.fit);
     expect(image.gaplessPlayback, isTrue);
 
     // A key the world has no picture for keeps the asset.

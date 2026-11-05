@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fnm/features/world_pack/trophy_image.dart';
+import 'package:fnm/domain/services/world_pack/trophy_normaliser.dart';
 
 Future<Uint8List> _png(int w, int h) async {
   final rec = ui.PictureRecorder();

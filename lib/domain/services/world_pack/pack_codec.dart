@@ -5,9 +5,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:fnm/domain/services/competition/trophies.dart';
-import 'package:fnm/features/world_pack/trophy_image.dart';
 
 import 'pack_rules.dart';
+import 'trophy_normaliser.dart';
 import 'world_pack.dart';
 
 /// Why a `.fnmdb` file was refused.
@@ -140,7 +140,7 @@ abstract final class PackCodec {
     } on Object {
       return const PackRejected(PackRejection.badData);
     }
-    if (!_fieldsOk(pack, baseCodes)) {
+    if (!fieldsOk(pack, baseCodes: baseCodes)) {
       return const PackRejected(PackRejection.badData);
     }
 
@@ -192,7 +192,14 @@ abstract final class PackCodec {
     return sink.take();
   }
 
-  static bool _fieldsOk(WorldPack p, Map<int, String> baseCodes) {
+  /// Whether every field of [p] keeps to the editor's rules: names, caps on
+  /// keys and squads, codes ([baseCodes] as for [decode]) and ids. Every
+  /// pack that comes onto the device from outside passes this, a `.fnmdb`
+  /// file's and a `.fnmcareer` bundle's world alike.
+  static bool fieldsOk(
+    WorldPack p, {
+    Map<int, String> baseCodes = const {},
+  }) {
     if (PackRules.checkName(p.name) != null) return false;
     if (p.author.isNotEmpty && PackRules.checkName(p.author) != null) {
       return false;
