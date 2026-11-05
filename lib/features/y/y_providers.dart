@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/config/ui_language.dart' show uiLanguageCodeProvider;
 import 'package:fnm/core/util/sponsor_label.dart';
@@ -25,7 +26,10 @@ import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/press/y_locals.dart';
 import 'package:fnm/domain/services/press/y_tournaments.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
+import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart'
+    show PackYAccount;
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
@@ -153,17 +157,61 @@ const int rivalryMeetings = 4;
 
 /// The feed: what the world has been saying, newest first, and where the
 /// reserved older landmarks begin (see [YFeed.timeline]).
-final AutoDisposeFutureProviderFamily<YTimeline, int>
-yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
-  ref,
-  careerId,
+final AutoDisposeFutureProviderFamily<YTimeline, int> yFeedProvider =
+    FutureProvider.autoDispose.family<YTimeline, int>((
+      ref,
+      careerId,
+    ) async {
+      final career = await ref.watch(careerRepositoryProvider).byId(careerId);
+      if (career == null) return _emptyFeed;
+      // The accounts the career's own world added for its nation post in the
+      // casts of their voices: every YFeed call below runs inside the scope.
+      final accounts = await careerYAccountsForDisplay(
+        ref.watch(worldPackRepositoryProvider),
+        career,
+      );
+      return YAccountsScope.run(accounts, () => _feedOf(ref, career));
+    });
+
+const YTimeline _emptyFeed = (posts: <YPost>[], reserveFrom: null);
+
+/// The Y accounts career [career]'s own world added that post in its
+/// nation's feed: the ones bound to its nation and the ones bound to none
+/// ([YAccountsScope.forNation]). Read off the career's copy, never the world
+/// on screen; none for a default-world career.
+///
+/// Only what is SHOWN depends on it, so a world that cannot be read is
+/// reported and reads as adding none: the feed still builds.
+Future<List<PackYAccount>> careerYAccountsForDisplay(
+  WorldPackRepository worlds,
+  Career career,
 ) async {
-  const empty = (posts: <YPost>[], reserveFrom: null);
+  try {
+    return YAccountsScope.forNation(
+      await worlds.addedYAccountsFor(career.id),
+      career.nationId,
+    );
+  } on Object catch (e, st) {
+    FlutterError.reportError(
+      FlutterErrorDetails(
+        exception: e,
+        stack: st,
+        library: 'y',
+        context: ErrorDescription(
+          'reading the Y accounts of career ${career.id}',
+        ),
+      ),
+    );
+    return const [];
+  }
+}
+
+Future<YTimeline> _feedOf(Ref ref, Career career) async {
+  final careerId = career.id;
+  const empty = _emptyFeed;
   // The career's world: its sponsor names (read through `sponsorBrandName`),
   // its renamed accounts and its local fans' name lists.
   final world = ref.watch(activeWorldProvider);
-  final career = await ref.watch(careerRepositoryProvider).byId(careerId);
-  if (career == null) return empty;
   final nations = await ref.watch(nationRepositoryProvider).forCareer(careerId);
   final nation = nations
       .where((Nation n) => n.id == career.nationId)
@@ -706,7 +754,7 @@ yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
   // custom world's renamed accounts take their new names last, on the
   // finished feed, so each keeps the voice it posted in.
   return YFeed.renamedIn(YFeed.timeline(withLocals), world);
-});
+}
 
 /// The manager's nation's local fans (see [YLocals.castFor]): named from the
 /// nation's own lists (a custom [world]'s, when it has them), ordinary given

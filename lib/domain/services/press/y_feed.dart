@@ -10,6 +10,8 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart'
+    show PackYAccount;
 
 /// Who is talking on Y.
 enum YVoice {
@@ -3136,6 +3138,31 @@ abstract final class YFeed {
     );
   }
 
+  /// The numbers desk: the stats voice's fixed account.
+  static const YPersona numbersDesk = (
+    handle: '@TheNumbersDesk',
+    displayName: 'The Numbers Desk',
+    trait: YTrait.statshead,
+  );
+
+  /// The wire: the breaking voice's fixed account. It reports; it does not
+  /// have a view.
+  static const YPersona theWire = (
+    handle: '@TheWire',
+    displayName: 'The Wire',
+    trait: YTrait.statshead,
+  );
+
+  /// An account a custom world added, as it posts: under its own name and
+  /// [handleFor] handle, with the disposition its name gives it
+  /// ([YCast.traitFor]), or the desk's when it posts numbers ([personaOf]
+  /// reads it back the same way).
+  static YPersona _addedPersona(PackYAccount a) => (
+    handle: handleFor(a.name),
+    displayName: a.name,
+    trait: a.voice == YVoice.stats ? YTrait.statshead : YCast.traitFor(a.name),
+  );
+
   /// The nation's recurring account for [voice], and what sort of person it
   /// is.
   ///
@@ -3150,18 +3177,20 @@ abstract final class YFeed {
     int seed,
     String key,
   ) {
+    final added = YAccountsScope.current;
+    if (voice == YVoice.stats) {
+      // A world's own numbers accounts take turns with the desk; with none,
+      // the desk is the only one, as it always was.
+      final more = [
+        for (final a in added)
+          if (a.voice == YVoice.stats) _addedPersona(a),
+      ];
+      if (more.isEmpty) return numbersDesk;
+      return YCast.pick([numbersDesk, ...more], '$key|${voice.name}')!;
+    }
     final fixed = switch (voice) {
-      YVoice.stats => (
-        handle: '@TheNumbersDesk',
-        displayName: 'The Numbers Desk',
-        trait: YTrait.statshead,
-      ),
-      YVoice.breaking => (
-        handle: '@TheWire',
-        displayName: 'The Wire',
-        // The wire reports; it does not have a view.
-        trait: YTrait.statshead,
-      ),
+      YVoice.stats => numbersDesk,
+      YVoice.breaking => theWire,
       // Never reached: a player's post always carries his own name, supplied
       // by [forGrievance]. Falling back to the nation would put a country's
       // name above a personal complaint.
@@ -3177,12 +3206,18 @@ abstract final class YFeed {
       _ => null,
     };
     if (fixed != null) return fixed;
-    final cast = YCast.of(
-      _namesFor(voice),
-      nation: nation,
-      seed: seed,
-      voiceKey: voice.name,
-    );
+    final cast = [
+      ...YCast.of(
+        _namesFor(voice),
+        nation: nation,
+        seed: seed,
+        voiceKey: voice.name,
+      ),
+      // Every account the world added in this voice joins the standing
+      // cast, so its creator sees it post (see [YAccountsScope]).
+      for (final a in added)
+        if (a.voice == voice) _addedPersona(a),
+    ];
     return YCast.pick(cast, '$key|${voice.name}') ??
         (handle: '@$nation', displayName: nation, trait: YTrait.loyalist);
   }
@@ -3192,8 +3227,8 @@ abstract final class YFeed {
   /// account section lists, and what no renamed account may take
   /// (`PackRules`).
   static final List<String> namedAccounts = List.unmodifiable(<String>{
-    personaFor(YVoice.stats, '', 0, '').displayName,
-    personaFor(YVoice.breaking, '', 0, '').displayName,
+    numbersDesk.displayName,
+    theWire.displayName,
     streamerPersona.displayName,
     ..._punditNames,
     ..._memeNames,

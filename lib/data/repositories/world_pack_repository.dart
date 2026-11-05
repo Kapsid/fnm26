@@ -9,6 +9,13 @@ import 'package:fnm/domain/services/world_pack/world_pack.dart';
 /// [WorldPack.uuid]) a career was started on.
 String worldPackMarker(String uuid) => 'world:$uuid';
 
+/// What a career's world added that is read outside its player reads.
+typedef _Added = ({
+  String? world,
+  List<PackSponsor> sponsors,
+  List<PackYAccount> yAccounts,
+});
+
 /// The custom databases (world packs) on this device, and the copy a career
 /// takes of one.
 ///
@@ -226,23 +233,38 @@ class WorldPackRepository {
   }
 
   /// The sponsors career [careerId]'s world added, with that world's uuid;
-  /// none (and no uuid) for the default world.
-  ///
-  /// Read wherever the sponsor round is (the hub, the finances, the cycle's
-  /// close), so it is cheap on a repeat: a career's copy is written once,
-  /// at its start, so the length of the stored JSON (read alone, no trophy
-  /// images) is checked against the copy last decoded, and only a different
-  /// one is read and decoded again. A world that cannot be read throws.
+  /// none (and no uuid) for the default world. See [_addedFor] for the cost;
+  /// a world that cannot be read throws.
   Future<({String? world, List<PackSponsor> sponsors})> addedSponsorsFor(
     int careerId,
   ) async {
+    final added = await _addedFor(careerId);
+    return (world: added.world, sponsors: added.sponsors);
+  }
+
+  /// The Y accounts career [careerId]'s world added, every nation's; none
+  /// for the default world. See [_addedFor]; a world that cannot be read
+  /// throws.
+  Future<List<PackYAccount>> addedYAccountsFor(int careerId) async =>
+      (await _addedFor(careerId)).yAccounts;
+
+  /// What career [careerId]'s world added that the career reads outside its
+  /// player reads: its sponsors and Y accounts, with the world's uuid.
+  ///
+  /// Read wherever the sponsor round is (the hub, the finances, the cycle's
+  /// close) and on every Y feed build, so it is cheap on a repeat: a
+  /// career's copy is written once, at its start, so the length of the
+  /// stored JSON (read alone, no trophy images) is checked against the copy
+  /// last decoded, and only a different one is read and decoded again. A
+  /// world that cannot be read throws.
+  Future<_Added> _addedFor(int careerId) async {
     final length = _db.careerWorlds.json.length;
     final q = _db.selectOnly(_db.careerWorlds)
       ..addColumns([length])
       ..where(_db.careerWorlds.careerId.equals(careerId));
     final n = (await q.getSingleOrNull())?.read(length);
-    if (n == null) return (world: null, sponsors: const <PackSponsor>[]);
-    final hit = _addedSponsors[careerId];
+    if (n == null) return _none;
+    final hit = _added[careerId];
     if (hit != null && hit.length == n) return hit.value;
     final json =
         await (_db.selectOnly(_db.careerWorlds)
@@ -254,16 +276,19 @@ class WorldPackRepository {
     final value = (
       world: pack.uuid,
       sponsors: List<PackSponsor>.unmodifiable(pack.addedSponsors),
+      yAccounts: List<PackYAccount>.unmodifiable(pack.addedYAccounts),
     );
-    _addedSponsors[careerId] = (length: n, value: value);
+    _added[careerId] = (length: n, value: value);
     return value;
   }
 
-  final Map<
-    int,
-    ({int length, ({String? world, List<PackSponsor> sponsors}) value})
-  >
-  _addedSponsors = {};
+  static const _Added _none = (
+    world: null,
+    sponsors: <PackSponsor>[],
+    yAccounts: <PackYAccount>[],
+  );
+
+  final Map<int, ({int length, _Added value})> _added = {};
 
   static WorldPack _decode(String json) {
     final raw = jsonDecode(json);

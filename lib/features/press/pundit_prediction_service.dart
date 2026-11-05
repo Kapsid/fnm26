@@ -7,6 +7,8 @@ import 'package:fnm/domain/services/competition/warm_ups.dart';
 import 'package:fnm/domain/services/match/ai_tactics.dart';
 import 'package:fnm/domain/services/press/pundit_predictions.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart'
+    show YAccountsScope;
 import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/friendlies/warm_up_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
@@ -14,6 +16,9 @@ import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart'
+    show worldPackRepositoryProvider;
+import 'package:fnm/features/y/y_providers.dart' show careerYAccountsForDisplay;
 
 /// The pundits' say before a finals tournament: once its draw has been
 /// watched and before its opener, an inbox piece with the favourite, a dark
@@ -104,6 +109,21 @@ class PunditPredictionService {
       darkHorse: call.darkHorse,
       date: career.inGameDate,
     );
+    // The pundits are the nation's Y accounts, its world's added ones too.
+    final accounts = await careerYAccountsForDisplay(
+      _ref.read(worldPackRepositoryProvider),
+      career,
+    );
+    final body = YAccountsScope.run(
+      accounts,
+      () => punditsMessageBody(
+        call: call,
+        nameOf: (id) => nations[id]?.name ?? '',
+        mine: me,
+        seed: career.rngSeed,
+        key: key,
+      ),
+    );
     await _ref
         .read(competitionRepositoryProvider)
         .addTextMessage(
@@ -112,13 +132,7 @@ class PunditPredictionService {
           dedupKey: key,
           category: 'pundits',
           title: MsgText(MsgKey.punditsMsgTitle, [MsgComp(finals.name)]),
-          body: punditsMessageBody(
-            call: call,
-            nameOf: (id) => nations[id]?.name ?? '',
-            mine: me,
-            seed: career.rngSeed,
-            key: key,
-          ),
+          body: body,
           year: career.inGameDate.year,
         );
   }

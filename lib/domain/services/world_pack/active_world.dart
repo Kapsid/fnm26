@@ -100,6 +100,51 @@ abstract final class WorldZone {
   static PackDayOne? dayOneOf(int playerId) => _current?.dayOne[playerId];
 }
 
+/// The Y accounts a career's world added that post in the feed being built
+/// now, carried in a [Zone] like [WorldZone].
+///
+/// The feed's persona code is static and pure (`YFeed.personaFor`), so a
+/// career on a custom world runs its feed inside [run] with its world's
+/// accounts for its nation ([forNation]): there, each added account joins
+/// its voice's cast. Outside a scope (every default career) [current] is
+/// empty and every cast is exactly what it was. Zone values carry across
+/// `await`.
+abstract final class YAccountsScope {
+  static const Symbol _key = #fnmYAccounts;
+
+  /// Runs [body] with [accounts] posting in the feed.
+  static R run<R>(List<PackYAccount> accounts, R Function() body) => runZoned(
+    body,
+    zoneValues: {_key: List<PackYAccount>.unmodifiable(accounts)},
+  );
+
+  /// The added accounts posting in the code running now; empty outside a
+  /// scope.
+  static List<PackYAccount> get current {
+    final zone = Zone.current;
+    if (!identical(zone, _lastZone)) {
+      _lastData = zone[_key] as List<PackYAccount>? ?? const [];
+      _lastZone = zone;
+    }
+    return _lastData;
+  }
+
+  /// The zone [current] was last read in, and what it held: the feed asks
+  /// on every persona it builds, and a zone's values never change.
+  static Zone? _lastZone;
+  static List<PackYAccount> _lastData = const [];
+
+  /// Those of [accounts] that post in nation [nationId]'s feed: the ones
+  /// bound to it and the ones bound to none (every nation's).
+  static List<PackYAccount> forNation(
+    Iterable<PackYAccount> accounts,
+    int nationId,
+  ) => [
+    for (final a in accounts)
+      if (a.nationId == null || a.nationId == nationId) a,
+  ];
+}
+
 /// The custom world the career on screen belongs to, for the display code.
 ///
 /// Names are printed by pure functions with no Riverpod at hand
@@ -222,15 +267,25 @@ class ActiveWorld {
   /// `PackRules` refuses two accounts under one name; should a pack carry a
   /// clash anyway (one not yet checked), the lowest original wins, so the
   /// answer never depends on the order the pack was read in.
+  ///
+  /// An account the world ADDED, shown under one of its per-language names,
+  /// is read under its main name the same way (lowest id first on a clash).
   String? yAccountOriginal(String shown) {
-    final accounts = pack?.yAccounts;
-    if (accounts == null) return null;
+    final p = pack;
+    if (p == null) return null;
     String? found;
-    for (final e in accounts.entries) {
+    for (final e in p.yAccounts.entries) {
       if (textOrNull(e.value) != shown) continue;
       if (found == null || e.key.compareTo(found) < 0) found = e.key;
     }
-    return found;
+    if (found != null) return found;
+    PackYAccount? added;
+    for (final a in p.addedYAccounts) {
+      final names = p.localized[PackPaths.addedY(a.id)]?.values;
+      if (names == null || !names.any((n) => textOrNull(n) == shown)) continue;
+      if (added == null || a.id < added.id) added = a;
+    }
+    return added?.name;
   }
 
   /// The world's picture of trophy [key].
