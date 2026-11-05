@@ -338,9 +338,14 @@ class PitchScript {
   /// the same time, the one before and the one after; the ball's phases
   /// may jump there too. Draw a quick transition (a short fade) and never
   /// interpolate positions or the ball across a cut. There is no interval:
-  /// the screen does not pause. Keepers are never moved away from goal by a
-  /// cut, men walking off are never moved, and nobody lands on anybody. A
-  /// moment that follows a cut is always played out in full after it.
+  /// the screen does not pause. [cutKinds] says what each cut is.
+  ///
+  /// Across a set-piece or phase cut (checked by the validator) the same
+  /// men are on the pitch, men walking off do not move, no keeper is taken
+  /// beyond 25 m of his goal, and nobody stands nearer anybody than 0.8 m.
+  /// A shot in the air is never cut short, and a ball about to land comes
+  /// down first. A moment that follows a cut is always played out in full
+  /// after it.
   final List<double> cuts;
 
   /// What each cut is, by its screen second.
@@ -777,10 +782,72 @@ abstract final class PitchScriptValidator {
       }
     }
 
+    _checkCuts(s, add);
     _checkMomentActors(s, add);
     _checkComingsAndGoings(s, add);
     _checkBall(s, add);
     return out;
+  }
+
+  /// The cut contract: across a set-piece or phase cut the same men are on
+  /// the pitch, men walking off do not move, no keeper is taken further
+  /// than [keeperReach] from his goal, and everybody stands at least
+  /// [minGap] apart. (A kick-off cut lines the sides up afresh, as at an
+  /// interval.)
+  static void _checkCuts(PitchScript s, void Function(double, String) add) {
+    final frames = s.keyframes;
+    final n = s.actorList.length;
+    for (var k = 0; k + 1 < frames.length; k++) {
+      final a = frames[k];
+      final b = frames[k + 1];
+      if ((b.t - a.t).abs() > 1e-9) continue;
+      // The last two frames at the instant: just before and just after.
+      if (k + 2 < frames.length && (frames[k + 2].t - b.t).abs() <= 1e-9) {
+        continue;
+      }
+      final kind = s.cutKinds[b.t];
+      if (kind == null || kind == PitchCutKind.kickOff) continue;
+      final m = s.pacer.matchAt(Duration(microseconds: (b.t * 1e6).round()));
+      for (var i = 0; i < n; i++) {
+        final id = s.actorList[i].playerId;
+        if (a.present(i) != b.present(i)) {
+          add(b.t, 'player $id appears or vanishes at a cut');
+          continue;
+        }
+        if (!b.present(i)) continue;
+        final dep = s.departures[id];
+        if (dep != null &&
+            dep <= b.t + 1e-9 &&
+            a.at(i).distanceTo(b.at(i)) > 1e-6) {
+          add(b.t, 'player $id walking off moved by a cut');
+        }
+        if (b.keeper(i)) {
+          final dir = attackDir(
+            home: s.actorList[i].teamNationId == s.homeNationId,
+            minute: m.minute,
+          );
+          final after = xToDepth(b.xs[i], dir);
+          final before = xToDepth(a.xs[i], dir);
+          if (after > keeperReach + 1e-6 && after > before + 1e-6) {
+            add(
+              b.t,
+              'keeper $id taken ${after.toStringAsFixed(1)} m out by a cut',
+            );
+          }
+        }
+        for (var j = i + 1; j < n; j++) {
+          if (!b.present(j)) continue;
+          final d = b.at(i).distanceTo(b.at(j));
+          if (d < minGap - 1e-6) {
+            add(
+              b.t,
+              'players $id and ${s.actorList[j].playerId} '
+              '${d.toStringAsFixed(2)} m apart after a cut',
+            );
+          }
+        }
+      }
+    }
   }
 
   /// Every man a staged moment turns on (shooter, taker, fouler, fouled,

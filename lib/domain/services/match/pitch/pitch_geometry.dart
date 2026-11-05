@@ -77,6 +77,16 @@ abstract final class PitchDims {
   /// How far the penalty area reaches out from the goal line.
   static const double boxDepth = 16.5;
   static const double boxHalfWidth = 20.16;
+
+  /// Half the goal's width: each post stands this far from the long axis.
+  static const double goalHalfWidth = 3.66;
+
+  /// The crossbar's height.
+  static const double crossbarHeight = 2.44;
+
+  /// How far up the pitch the penalty mark is, from the goal a side
+  /// defends (11 m out from the goal it attacks).
+  static const double penaltySpotDepth = length - 11;
 }
 
 /// Which way (+1 = toward x 105, -1 = toward x 0) a side attacks in the

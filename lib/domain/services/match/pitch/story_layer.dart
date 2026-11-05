@@ -250,6 +250,7 @@ final class KickAction extends BallAction {
     this.fromHeight = 0,
     this.toHeight = 0,
     this.pass = false,
+    this.shot = false,
   }) : assert((to == null) != (toPlayerId == null), 'a point or a player');
 
   final Offset2? to;
@@ -262,6 +263,9 @@ final class KickAction extends BallAction {
 
   /// Whether it counts as a pass (a free kick played to a team-mate).
   final bool pass;
+
+  /// Whether it is a moment's shot: never cut short in the air.
+  final bool shot;
 }
 
 /// What a stager is told about the window it fills.
@@ -688,10 +692,14 @@ class _Flight {
     this.pass = true,
     this.fromHeight = 0,
     this.toHeight = 0,
+    this.shot = false,
   });
   final double t0;
   final double t1;
   final Offset2 from;
+
+  /// Whether this is a moment's shot.
+  final bool shot;
 
   /// Who kicked it, when anybody did.
   final int? fromActor;
@@ -741,6 +749,10 @@ class _Builder {
 
   /// A screen second the ball logic wants a step to end at.
   double wakeAt = double.infinity;
+
+  /// A cut waiting for the ball in the air to land, and whose it is.
+  CutAction? pendingCut;
+  StagedPlan? pendingPlan;
 
   /// Whether the last [_drive] came from the stager.
   bool stagedDrive = false;
@@ -916,6 +928,8 @@ class _Builder {
       t = next;
       if (f != null && t >= f.t1 - 1e-9) _land(t);
       _record(t);
+      // A cut waiting on the ball, now down: made on this frame.
+      if (pendingCut != null && flight == null) _cutOnLanding(t);
       // A man walking off who has reached the boundary leaves the picture.
       for (final a in agents) {
         if (a.walkStart != null && _toBoundary(a.pos) <= _edge + 0.3) {
@@ -1655,7 +1669,7 @@ class _Builder {
     final d = best.pos.distanceTo(here);
     flight = _Flight(
       t0: t,
-      t1: t + math.max(0.3, d / 20),
+      t1: t + math.max(0.3, d / 18),
       from: here,
       fromActor: f.fromActor,
       toActor: best.index,
@@ -1981,8 +1995,15 @@ class _Builder {
     final inAir = flight != null;
     if (!inAir && c == null && restAt == null) return;
     final action = plan.ball(t, _state(t));
-    // While the ball is in the air only a cut may interrupt it.
+    // While the ball is in the air only a cut may interrupt it, and only
+    // a pass between team-mates still well short of its man: anything else
+    // (a shot, a save, a clearance) comes down first, the cut on landing.
     if (inAir && action is! CutAction) return;
+    if (inAir && action is CutAction && !_mayCutFlight(t)) {
+      pendingCut = action;
+      pendingPlan = plan;
+      return;
+    }
     switch (action) {
       case PassAction(:final toPlayerId, :final arriveAt, :final peak):
         if (c == null) return;
@@ -2029,10 +2050,37 @@ class _Builder {
     }
   }
 
+  /// Whether the ball in the air may be cut short. A shot never is (its
+  /// outcome is the record's), and a ball about to land comes down first;
+  /// anything else with a while still to go may be.
+  bool _mayCutFlight(double t) {
+    final f = flight;
+    if (f == null) return true;
+    if (f.shot) return false;
+    return f.t1 - t >= 0.6;
+  }
+
+  /// A cut asked for while the ball was in the air, made as it lands.
+  void _cutOnLanding(double t) {
+    final k = pendingCut;
+    final plan = pendingPlan;
+    pendingCut = null;
+    pendingPlan = null;
+    if (k == null || plan == null || !identical(plan, activePlan)) return;
+    // Whatever is due now happens first (a man starting his walk off).
+    _applyDue(t, atBreak: false);
+    _processArrivals(t);
+    _cut(t, k);
+    final next = plan.ball(t, _state(t));
+    if (next is KickAction) _kick(t, next);
+  }
+
   /// The picture cuts to [k]'s set piece, ready.
   void _cut(double t, CutAction k) {
     _cutFlight(t);
     _closePhase(t);
+    // The picture just before the cut, as it stands now.
+    _record(t);
     final minute = pacer.matchAt(_dur(t)).minute;
     final poss = k.possession;
     if (poss != null) {
@@ -2059,8 +2107,16 @@ class _Builder {
       if (i == null) return;
       final a = agents[i];
       if (!a.present || a.walkStart != null) return;
+      var q = _clampPitch(p);
+      if (a.slot == sides[a.side].gkSlot) {
+        // A keeper stays within reach of his goal, whatever is asked.
+        final dir = _dir(a.side, minute);
+        final d = xToDepth(q.x, dir);
+        if (d > _keeperMaxDepth)
+          q = Offset2(depthToX(_keeperMaxDepth, dir), q.y);
+      }
       a
-        ..pos = _clampPitch(p)
+        ..pos = q
         ..vel = Offset2.zero;
       placed.add(i);
     });
@@ -2107,10 +2163,19 @@ class _Builder {
           moved = true;
           final away = d < 1e-6 ? const Offset2(0, 1) : (a.pos - b.pos).unit;
           final push = (1.05 - d) / 2 + 0.02;
-          final fixA = placed.contains(a.index) || a.walkStart != null;
-          final fixB = placed.contains(b.index) || b.walkStart != null;
-          if (!fixA || fixB) a.pos = _clampPitch(a.pos + away * push);
-          if (!fixB || fixA) b.pos = _clampPitch(b.pos - away * push);
+          // A man walking off never moves; a man placed moves only for
+          // another placed man.
+          final walkA = a.walkStart != null;
+          final walkB = b.walkStart != null;
+          final fixA = placed.contains(a.index) || walkA;
+          final fixB = placed.contains(b.index) || walkB;
+          final moveA = !walkA && (!fixA || fixB);
+          final moveB = !walkB && (!fixB || fixA);
+          final both = moveA && moveB;
+          if (moveA)
+            a.pos = _clampPitch(a.pos + away * (both ? push : push * 2));
+          if (moveB)
+            b.pos = _clampPitch(b.pos - away * (both ? push : push * 2));
         }
       }
       if (!moved) break;
@@ -2177,7 +2242,9 @@ class _Builder {
       by = named ?? lastTouch;
     }
     final lead = to != null ? _ballPoint(agents[to]) : k.to!;
-    final fastest = t + from.distanceTo(lead) / 34;
+    // A man it is played to may move a little before it lands: room under
+    // the cap.
+    final fastest = t + from.distanceTo(lead) / (to != null ? 26 : 34);
     _closePhase(t);
     flight = _Flight(
       t0: t,
@@ -2190,6 +2257,7 @@ class _Builder {
       pass: k.pass,
       fromHeight: c != null ? k.fromHeight : math.max(k.fromHeight, restHeight),
       toHeight: k.toHeight,
+      shot: k.shot,
     );
     carrier = null;
     restAt = null;

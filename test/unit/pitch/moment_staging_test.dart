@@ -310,7 +310,7 @@ class _Audit {
       // The kick from the mark, not the ball set down on it.
       final dir = dirOf(m.teamNationId, w.start);
       final spot = Offset2(
-        depthToX(penaltySpotDepth, dir),
+        depthToX(PitchDims.penaltySpotDepth, dir),
         PitchDims.width / 2,
       );
       for (final f in flights(w.start, _until(w))) {
@@ -362,8 +362,8 @@ class _Audit {
       case ShotOutcome.goal:
         if (shot.toActor != null ||
             crossLat == null ||
-            crossLat.abs() > goalHalfWidth - 0.11 ||
-            crossH! > crossbarHeight - 0.11 ||
+            crossLat.abs() > PitchDims.goalHalfWidth - 0.11 ||
+            crossH! > PitchDims.crossbarHeight - 0.11 ||
             toD > PitchDims.length + 2.5) {
           fail(shot.t0, 'goal not in the net: ${shot.to} h $crossH');
         }
@@ -437,8 +437,8 @@ class _Audit {
       case ShotOutcome.wide:
         if (shot.toActor != null ||
             crossLat == null ||
-            (crossLat.abs() <= goalHalfWidth + 0.11 &&
-                crossH! <= crossbarHeight + 0.11)) {
+            (crossLat.abs() <= PitchDims.goalHalfWidth + 0.11 &&
+                crossH! <= PitchDims.crossbarHeight + 0.11)) {
           fail(shot.t0, 'wide shot not wide: lat $crossLat h $crossH');
         }
         // Back for the goal kick: the next man on the ball defends (unless
@@ -461,11 +461,11 @@ class _Audit {
         final l = lat(shot.to, dir);
         final onLine = (toD - PitchDims.length).abs() < 0.3;
         final post =
-            (l.abs() - goalHalfWidth).abs() < 0.15 &&
-            shot.toHeight <= crossbarHeight;
+            (l.abs() - PitchDims.goalHalfWidth).abs() < 0.15 &&
+            shot.toHeight <= PitchDims.crossbarHeight;
         final bar =
-            l.abs() <= goalHalfWidth &&
-            (shot.toHeight - crossbarHeight).abs() < 0.05;
+            l.abs() <= PitchDims.goalHalfWidth &&
+            (shot.toHeight - PitchDims.crossbarHeight).abs() < 0.05;
         if (shot.toActor != null || !onLine || !(post || bar)) {
           fail(shot.t0, 'woodwork shot misses the frame: ${shot.to}');
         }
@@ -731,7 +731,10 @@ class _Audit {
   void _penalty(StagedWindow w, ShotMoment m) {
     final si = idx(m.shooterId)!;
     final dir = dirOf(m.teamNationId, w.start);
-    final spot = Offset2(depthToX(penaltySpotDepth, dir), PitchDims.width / 2);
+    final spot = Offset2(
+      depthToX(PitchDims.penaltySpotDepth, dir),
+      PitchDims.width / 2,
+    );
     // The kick: his first ball from the mark (he may set it down first).
     FlightPhase? kick;
     FlightPhase? any;
@@ -760,7 +763,7 @@ class _Audit {
       final l = lat(p, dir);
       if (f.keepers.contains(id)) {
         if (team(s.actorIndexOf(id)!) != m.teamNationId) {
-          if (PitchDims.length - d > 1.0 || l.abs() > goalHalfWidth) {
+          if (PitchDims.length - d > 1.0 || l.abs() > PitchDims.goalHalfWidth) {
             fail(t0, 'keeper $id off his line ($d, $l)');
           }
         }
