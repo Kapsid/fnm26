@@ -25,6 +25,7 @@ import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/player/international_retirement.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// A nation's authentic first-name / surname pools.
@@ -211,6 +212,24 @@ class DriftPlayerRepository implements PlayerRepository {
     bool newCareerNames = false,
   }) async {
     final world = await _worldFor(careerId);
+    // A career on a custom world develops its players by that world's
+    // potentials (see [WorldZone]); every read runs in its zone.
+    if (!WorldZone.runs(world?.zone)) {
+      return WorldZone.runFor(
+        world?.zone,
+        () => byNation(
+          nationId,
+          agingYears: agingYears,
+          saveSeed: saveSeed,
+          careerId: careerId,
+          youthBonusByCycle: youthBonusByCycle,
+          careerStartsByPlayer: careerStartsByPlayer,
+          minAge: minAge,
+          includeIntlRetired: includeIntlRetired,
+          newCareerNames: newCareerNames,
+        ),
+      );
+    }
     final seeded = await _seededRowsFor(careerId, nationId);
     // `overall` is position-weighted and derived (not a column), so build the
     // aged pool (seeded survivors + newgen intakes) and order in Dart. A
@@ -306,6 +325,19 @@ class DriftPlayerRepository implements PlayerRepository {
     Map<int, int> careerStartsByPlayer = const {},
   }) async {
     final world = await _worldFor(careerId);
+    if (!WorldZone.runs(world?.zone)) {
+      return WorldZone.runFor(
+        world?.zone,
+        () => youthByNation(
+          nationId,
+          agingYears: agingYears,
+          saveSeed: saveSeed,
+          careerId: careerId,
+          youthBonusByCycle: youthBonusByCycle,
+          careerStartsByPlayer: careerStartsByPlayer,
+        ),
+      );
+    }
     final seeded = await _seededRowsFor(careerId, nationId);
     // `overall` is position-weighted and derived (not a column), so build the
     // aged pool (seeded survivors + newgen intakes) and order in Dart.
@@ -426,6 +458,21 @@ class DriftPlayerRepository implements PlayerRepository {
     Map<int, int> careerStartsByPlayer = const {},
     bool newCareerNames = false,
   }) async {
+    final world = await _worldFor(careerId);
+    if (!WorldZone.runs(world?.zone)) {
+      return WorldZone.runFor(
+        world?.zone,
+        () => byId(
+          id,
+          agingYears: agingYears,
+          saveSeed: saveSeed,
+          careerId: careerId,
+          youthBonusByCycle: youthBonusByCycle,
+          careerStartsByPlayer: careerStartsByPlayer,
+          newCareerNames: newCareerNames,
+        ),
+      );
+    }
     final p = await _byIdAsBorn(
       id,
       agingYears: agingYears,
@@ -1208,6 +1255,10 @@ class _CareerWorld {
   final WorldPack pack;
   final Map<int, ({int nationId, PackPlayer player})> _byId;
 
+  /// The world's potentials, for the [WorldZone] every read runs in. One
+  /// object per world, so a read already in its zone is recognised.
+  late final WorldZoneData zone = WorldZoneData.of(pack);
+
   /// Each nation's squad as base rows, built on first read.
   final Map<int, List<Player>> _core = {};
 
@@ -1225,7 +1276,7 @@ class _CareerWorld {
   /// it (the stored core rows then stand).
   ///
   /// A world stores a player as he is on day one, and a young player is
-  /// shown marked down ([PlayerAging.youthDiscountOf]) from the row the age
+  /// shown marked down ([PlayerAging.packYouthDiscount]) from the row the age
   /// curve reads. So the markdown is added back here: read through the
   /// curve he is exactly the world's player on day one, and he grows out of
   /// it as a stored youngster does.
@@ -1233,7 +1284,7 @@ class _CareerWorld {
     final squad = pack.squads[nationId];
     if (squad == null) return null;
     PlayerAttributes base(PackPlayer p) {
-      final d = PlayerAging.youthDiscountOf(p.id, p.age);
+      final d = PlayerAging.packYouthDiscount(p.age);
       if (d == 0) return p.attributes;
       return PlayerAttributes(
         physical: p.attributes.physical + d,

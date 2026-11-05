@@ -26,6 +26,8 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/features/tournaments/finals_draw_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tournaments/host_draw_providers.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 /// How far a tournament must move the manager's nation before the inbox says
 /// so, in world places.
@@ -697,6 +699,9 @@ class MessageService {
       final intlRetired = (await playerRepo.internationalRetirements(
         career.id,
       )).keys.toSet();
+      final world = await _ref.read(
+        careerWorldZoneProvider(career.id).future,
+      );
       for (final y in missingYears) {
         final reportYear = CareerService.cycleStart.year + y;
         // Two reports, not one. Who grew and who faded is a question about the
@@ -722,12 +727,16 @@ class MessageService {
         // used to be ("New faces", rows tagged "new", scout stars beside
         // them), it read as though the academy took an intake twice a year,
         // once at eleven and again at seventeen. Same news, said properly.
-        final newcomers = _newcomerReport(
-          before,
-          after,
-          l.msgThroughNote,
-          scout: career.staffScout,
-          veterans: intlRetired,
+        // A custom world's newcomers are read by their edited potential.
+        final newcomers = WorldZone.runFor(
+          world,
+          () => _newcomerReport(
+            before,
+            after,
+            l.msgThroughNote,
+            scout: career.staffScout,
+            veterans: intlRetired,
+          ),
         );
         if (newcomers != null) {
           drafts.add(

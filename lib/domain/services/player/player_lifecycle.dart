@@ -9,6 +9,7 @@ import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/depth_chart.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// Keeps a nation's player pool alive across an endless run of seasons. Like
 /// [PlayerAging], this is a *pure, derived* layer — nothing is stored per save.
@@ -298,6 +299,13 @@ abstract final class PlayerLifecycle {
     double minutesFactor = 1,
   }) {
     if (starts <= 0) return aged;
+    // A pack player in a career on a custom world grows toward the potential
+    // the editor gave him and never past it (see [WorldZone]).
+    final potential = WorldZone.potentialOf(aged.id);
+    final dayOne = WorldZone.dayOneOf(aged.id)?.overall ?? 0;
+    final target = potential == null || potential >= dayOne
+        ? potential
+        : dayOne;
     // Weight by the club-league tier the player's (pre-bump) overall implies,
     // so a top-flight regular improves faster than a lower-league one.
     final tier = ClubService.tierForOverall(aged.overall);
@@ -310,13 +318,33 @@ abstract final class PlayerLifecycle {
         (sqrt(starts) *
                 0.30 *
                 tierWeight *
-                developmentPotential(aged.id) *
+                developmentPotential(aged.id, overall: aged.overall) *
                 minutesFactor)
             .clamp(0.0, 3.0)
             .round();
     if (delta == 0) return aged;
-    return aged.copyWith(attributes: _bumpAll(aged.attributes, delta));
+    if (target == null) {
+      return aged.copyWith(attributes: _bumpAll(aged.attributes, delta));
+    }
+    int up(int v) => (v + delta).clamp(1, superstarCeiling);
+    return aged.copyWith(
+      attributes: PlayerAging.capAt(
+        aged.position,
+        PlayerAttributes(
+          physical: up(aged.attributes.physical),
+          technical: up(aged.attributes.technical),
+          stamina: up(aged.attributes.stamina),
+        ),
+        target,
+      ),
+    );
   }
+
+  /// A pack player's growth multiplier, from the [gap] between his edited
+  /// potential and his overall now: the same 0.35–1.75 range the hidden draw
+  /// spans, linear from nought (at his peak) to thirty points or more short.
+  static double packMultiplier(int gap) =>
+      0.35 + 1.40 * (gap / 30).clamp(0.0, 1.0);
 
   /// A player's hidden development potential as a growth multiplier, derived
   /// deterministically from their [id] alone (so it's stable across saves, like
@@ -340,7 +368,16 @@ abstract final class PlayerLifecycle {
   /// age argument defaults to fully grown, so every existing caller — the
   /// aging curve, the superstar test, the star ratings — reads a settled
   /// ceiling exactly as it did.
-  static double developmentPotential(int id, {int age = 99}) {
+  ///
+  /// In a career on a custom world ([WorldZone]) a pack player has no hidden
+  /// draw: his multiplier is [packMultiplier] of the gap between his edited
+  /// potential and [overall] (his day-one overall when none is given).
+  static double developmentPotential(int id, {int age = 99, int? overall}) {
+    final target = WorldZone.potentialOf(id);
+    if (target != null) {
+      final now = overall ?? WorldZone.dayOneOf(id)?.overall;
+      if (now != null) return packMultiplier(target - now);
+    }
     final base = basePotential(id);
     if (age < lateBloomAge || !bloomsLate(id)) return base;
     return (base + lateBloomUplift).clamp(0.35, 1.75);
@@ -403,8 +440,12 @@ abstract final class PlayerLifecycle {
   /// Whether [id] belongs to a superstar. Derived from the id alone, like
   /// everything else about a player, so no save stores a list of them and two
   /// saves at the same year see the same greats.
+  ///
+  /// Never in a career on a custom world ([WorldZone.active]): there a player
+  /// plays at the strength the editor gave him, and a superstar is whoever
+  /// was given a superstar's potential.
   static bool isSuperstar(int id) =>
-      developmentPotential(id) >= superstarPotential;
+      !WorldZone.active && developmentPotential(id) >= superstarPotential;
 
   /// The level a superstar plays at, by [age].
   ///

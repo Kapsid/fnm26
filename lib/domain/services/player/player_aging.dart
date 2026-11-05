@@ -1,6 +1,9 @@
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// Ages a player across cycles: young players develop, players peak in their
 /// mid-to-late twenties, then decline — physical attributes (pace, stamina,
@@ -15,6 +18,8 @@ abstract final class PlayerAging {
   /// curve as [aged], but at one-year resolution so squads evolve every season
   /// rather than jumping four years at a time.
   static Player agedYears(Player p, int years) {
+    final target = WorldZone.potentialOf(p.id);
+    if (target != null) return _packAged(p, years, target);
     final grown = years <= 0 ? p.age : p.age + years;
     final attrs = years <= 0 ? p.attributes : _age(p.attributes, p.age, grown);
     return p.copyWith(
@@ -26,6 +31,98 @@ abstract final class PlayerAging {
       ),
     );
   }
+
+  /// How far short of his edited potential a pack player peaks on the age
+  /// curve alone; game time ([PlayerLifecycle.withCareerDev]) is what takes
+  /// him the rest of the way. Potential is a ceiling, not a guarantee.
+  static const int packShortfall = 2;
+
+  /// [agedYears] for a pack player in a career on a custom world
+  /// ([WorldZone]), whose edited [potential] is his peak overall.
+  ///
+  /// [p] is his base row: the world's day-one player with the plain youth
+  /// markdown added back ([packYouthDiscount]). The age curve and the
+  /// markdown run as for everybody, but on no 95 clamp and with no wonderkid
+  /// relief or superstar lift, so day one is exactly the editor's player. On
+  /// top, a steady pull, spread evenly over the years to
+  /// [PlayerLifecycle.peakOverallAge], moves his peak from where the curve
+  /// alone would leave it to [packShortfall] under his potential (or to his
+  /// day-one overall, if that is already there). Past the peak he declines on
+  /// the curve from wherever the pull left him. His overall never passes
+  /// [potential] (or his day-one overall, if a world set it lower).
+  static Player _packAged(Player p, int years, int potential) {
+    final from = p.age;
+    final to = years <= 0 ? from : from + years;
+    PlayerAttributes at(int age, double pull) {
+      int one(int base, {required bool physical}) {
+        var v = base.toDouble();
+        for (var a = from; a < age; a++) {
+          v += _yearlyDelta(a, physical: physical);
+        }
+        return (v - _plainYouthDiscount(age) + pull).round().clamp(
+          1,
+          PlayerLifecycle.superstarCeiling,
+        );
+      }
+
+      return PlayerAttributes(
+        physical: one(p.attributes.physical, physical: true),
+        technical: one(p.attributes.technical, physical: false),
+        stamina: one(p.attributes.stamina, physical: true),
+      );
+    }
+
+    const peak = PlayerLifecycle.peakOverallAge;
+    final dayOne = OverallRating.forPosition(p.position, at(from, 0));
+    var pull = 0.0;
+    if (to > from && from < peak) {
+      final natural = OverallRating.forPosition(p.position, at(peak, 0));
+      final aim = (potential - packShortfall) < dayOne
+          ? dayOne
+          : potential - packShortfall;
+      pull = (aim - natural) * ((to - from) / (peak - from)).clamp(0.0, 1.0);
+    }
+    return p.copyWith(
+      age: to,
+      // Never under his day-one overall: a world whose potential is below
+      // it (only an unchecked one) still fields the player it gives.
+      attributes: capAt(
+        p.position,
+        at(to, pull),
+        potential < dayOne ? dayOne : potential,
+      ),
+    );
+  }
+
+  /// [a] with every attribute taken down evenly until a [position] player's
+  /// overall is no more than [cap] (unchanged when it already is).
+  static PlayerAttributes capAt(
+    PlayerPosition position,
+    PlayerAttributes a,
+    int cap,
+  ) {
+    var out = a;
+    for (
+      var over = OverallRating.forPosition(position, out) - cap;
+      over > 0;
+      over = OverallRating.forPosition(position, out) - cap
+    ) {
+      int down(int v) => (v - over).clamp(1, PlayerLifecycle.superstarCeiling);
+      final next = PlayerAttributes(
+        physical: down(out.physical),
+        technical: down(out.technical),
+        stamina: down(out.stamina),
+      );
+      if (next == out) break;
+      out = next;
+    }
+    return out;
+  }
+
+  /// The youth markdown of a pack player of [age]: the plain one, no
+  /// wonderkid relief (a custom world has no hidden potential to relieve
+  /// it). What a world's day-one rating is marked down by.
+  static int packYouthDiscount(int age) => _plainYouthDiscount(age);
 
   /// How much of the gap to his own level a superstar is carried across.
   ///
@@ -104,6 +201,7 @@ abstract final class PlayerAging {
   static int youthDiscountOf(int playerId, int age) {
     final base = _plainYouthDiscount(age);
     if (base == 0) return 0;
+    if (WorldZone.potentialOf(playerId) != null) return base;
     // Relief only in the top tail of the potential draw (~1.55 of a 0.35–1.75
     // range), rising to a full exemption at the very top.
     final potential = PlayerLifecycle.developmentPotential(playerId);
@@ -192,6 +290,13 @@ abstract final class PlayerAging {
     for (var a = to; a < from; a++) {
       curve -= mean(a);
     }
+    final potential = WorldZone.potentialOf(playerId);
+    if (potential != null) {
+      return curve +
+          _plainYouthDiscount(from) -
+          _plainYouthDiscount(to) +
+          _packPullBetween(playerId, potential, from, to);
+    }
     final relief =
         ((PlayerLifecycle.developmentPotential(playerId) - 1.55) / 0.20).clamp(
           0.0,
@@ -199,6 +304,33 @@ abstract final class PlayerAging {
         );
     double markdown(int age) => _plainYouthDiscount(age) * (1 - relief);
     return curve + markdown(from) - markdown(to);
+  }
+
+  /// The share of [_packAged]'s pull a pack player takes between ages [from]
+  /// and [to], estimated on the position-free mean curve [expectedGain]
+  /// reads; nought when his day one is not known.
+  static double _packPullBetween(
+    int playerId,
+    int potential,
+    int from,
+    int to,
+  ) {
+    final dayOne = WorldZone.dayOneOf(playerId);
+    const peak = PlayerLifecycle.peakOverallAge;
+    if (dayOne == null || dayOne.age >= peak) return 0;
+    var natural = dayOne.overall + _plainYouthDiscount(dayOne.age).toDouble();
+    for (var a = dayOne.age; a < peak; a++) {
+      natural +=
+          (_yearlyDelta(a, physical: true) * 2 +
+              _yearlyDelta(a, physical: false)) /
+          3;
+    }
+    final aim = (potential - packShortfall) < dayOne.overall
+        ? dayOne.overall
+        : potential - packShortfall;
+    double frac(int age) =>
+        ((age - dayOne.age) / (peak - dayOne.age)).clamp(0.0, 1.0);
+    return (aim - natural) * (frac(to) - frac(from));
   }
 
   /// The age the curve tops out at — where [peakOffset] is nought.

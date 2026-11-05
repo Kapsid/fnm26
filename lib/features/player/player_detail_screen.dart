@@ -23,6 +23,8 @@ import 'package:fnm/features/tactics/call_up_screen.dart'
     show clubStandingLabel;
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/domain/services/player/international_retirement.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/awards/award_providers.dart';
@@ -61,6 +63,9 @@ typedef _PlayerView = ({
 
   /// His international retirement in this save (and comeback), if any.
   IntlRetirement? intlRetirement,
+
+  /// The save's custom world, if any, for the potential read.
+  WorldZoneData? world,
 });
 typedef _PlayerArg = ({int careerId, int playerId});
 
@@ -138,7 +143,11 @@ _playerDetailProvider = FutureProvider.autoDispose
           : (await ref
                 .watch(playerRepositoryProvider)
                 .internationalRetirements(career.id))[arg.playerId];
+      final world = career == null
+          ? null
+          : await ref.watch(careerWorldZoneProvider(career.id).future);
       return (
+        world: world,
         intlRetirement: retirement,
         saveSeed: career?.rngSeed ?? 0,
         asOf: career?.inGameDate ?? CareerService.cycleStart,
@@ -463,10 +472,13 @@ _playerSections(
             if (p.age <= 21)
               _fact(
                 l.playerPotential,
-                _potentialStars(
-                  p,
-                  caps: view.stats?.caps ?? 0,
-                  scout: view.scout,
+                WorldZone.runFor(
+                  view.world,
+                  () => _potentialStars(
+                    p,
+                    caps: view.stats?.caps ?? 0,
+                    scout: view.scout,
+                  ),
                 ),
               ),
             _fact(l.playerValue, PlayerDetailScreen.money(p.value)),

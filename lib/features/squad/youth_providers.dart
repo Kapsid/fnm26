@@ -4,9 +4,11 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/player/prospects.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/squad/youth_watch_providers.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 /// A nation's youth pyramid: who is at each level, and who left this year.
 typedef YouthPyramid = ({
@@ -37,6 +39,8 @@ youthPyramidProvider = FutureProvider.autoDispose.family<YouthPyramid, int>((
   final years = CareerService.agingYears(career);
   final youth = await ref.watch(youthBonusByCycleProvider(careerId).future);
   final starts = await ref.watch(careerDevBonusProvider(careerId).future);
+  // A custom world's players are read by their edited potential.
+  final world = await ref.watch(careerWorldZoneProvider(careerId).future);
 
   Future<List<Player>> pyramidAt(int at) => repo.youthByNation(
     career.nationId,
@@ -63,11 +67,14 @@ youthPyramidProvider = FutureProvider.autoDispose.family<YouthPyramid, int>((
       for (final p in now)
         if (YouthLevel.forAge(p.age) == level) p,
     ];
-    byLevel[level] = Prospects.watchlist(
-      atLevel,
-      previousPool: before,
-      capsByPlayer: caps,
-      scout: career.staffScout,
+    byLevel[level] = WorldZone.runFor(
+      world,
+      () => Prospects.watchlist(
+        atLevel,
+        previousPool: before,
+        capsByPlayer: caps,
+        scout: career.staffScout,
+      ),
     );
   }
 
@@ -201,11 +208,14 @@ youthShortlistProvider = FutureProvider.autoDispose
         final senior = seniors[m.playerId];
         if (senior != null) {
           final caps = capsById[m.playerId] ?? 0;
-          final read = Prospects.read(
-            senior.id,
-            age: senior.age,
-            caps: caps,
-            scout: career.staffScout,
+          final read = WorldZone.runFor(
+            await ref.watch(careerWorldZoneProvider(careerId).future),
+            () => Prospects.read(
+              senior.id,
+              age: senior.age,
+              caps: caps,
+              scout: career.staffScout,
+            ),
           );
           out.add((
             mark: m,

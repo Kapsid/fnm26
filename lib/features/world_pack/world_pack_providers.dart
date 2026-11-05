@@ -7,6 +7,7 @@ import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
@@ -26,6 +27,24 @@ typedef WorldPackSummary = ({int id, String name, DateTime updatedAt});
 final worldPackRepositoryProvider = Provider<WorldPackRepository>(
   (ref) => WorldPackRepository(ref.watch(appDatabaseProvider)),
 );
+
+/// The custom world career `careerId` runs on, as the [WorldZone] its
+/// player reads need; null for a default career.
+///
+/// For the few reads OUTSIDE the player repository that ask the development
+/// code about a player by id (the prospect star reads): the repository runs
+/// its own reads in the zone, these run theirs in [WorldZone.runFor] with
+/// this. A career's world never changes, so it is read once.
+final FutureProviderFamily<WorldZoneData?, int> careerWorldZoneProvider =
+    FutureProvider.family<WorldZoneData?, int>((
+      ref,
+      careerId,
+    ) async {
+      final stored = await ref
+          .watch(worldPackRepositoryProvider)
+          .forCareer(careerId);
+      return stored == null ? null : WorldZoneData.of(stored.pack);
+    });
 
 /// The packs on this device, by name.
 final worldPacksProvider = FutureProvider<List<WorldPackSummary>>(
