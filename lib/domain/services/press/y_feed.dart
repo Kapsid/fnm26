@@ -8,6 +8,8 @@ import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/press/statement.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 
 /// Who is talking on Y.
 enum YVoice {
@@ -3055,7 +3057,18 @@ abstract final class YFeed {
   /// The trait is the part that never moves, and it comes from the name — so
   /// this is a pure function of what is already above the post, and the same
   /// account opened from a post two careers apart gives the same answer.
-  static YPersona personaOf(YPost post) => (
+  ///
+  /// An account a custom world renamed ([renamedIn]) is read under the name
+  /// it had, so it keeps the voice the feed gave it.
+  static YPersona personaOf(YPost post) {
+    final name = post.voice == YVoice.player
+        ? post.displayName
+        : ActiveWorld.current.yAccountOriginal(post.displayName) ??
+              post.displayName;
+    return _personaOf(post, name);
+  }
+
+  static YPersona _personaOf(YPost post, String name) => (
     handle: post.handle,
     displayName: post.displayName,
     trait: switch (post.voice) {
@@ -3069,14 +3082,59 @@ abstract final class YFeed {
       // A cameo is a fixed account with a fixed disposition, looked up by
       // the name above the post like everything else here.
       YVoice.cameo =>
-        czechCameos
-                .where((c) => c.displayName == post.displayName)
-                .firstOrNull
-                ?.trait ??
-            YCast.traitFor(post.displayName),
-      _ => YCast.traitFor(post.displayName),
+        czechCameos.where((c) => c.displayName == name).firstOrNull?.trait ??
+            YCast.traitFor(name),
+      _ => YCast.traitFor(name),
     },
   );
+
+  /// The handle of an account a custom world renamed to [name]: `@` and the
+  /// name without its spaces, cut to [PackRules.handleMax].
+  static String handleFor(String name) {
+    final full = '@${name.replaceAll(RegExp(r'\s'), '')}';
+    if (full.length <= PackRules.handleMax) return full;
+    final out = StringBuffer();
+    for (final r in full.runes) {
+      final ch = String.fromCharCode(r);
+      if (out.length + ch.length > PackRules.handleMax) break;
+      out.write(ch);
+    }
+    return out.toString();
+  }
+
+  /// [feed] with the accounts [world] renamed shown under their new names
+  /// and handles ([handleFor]).
+  ///
+  /// Applied LAST, to the finished feed: every post was written, and every
+  /// stance taken, by the account under its original name, so a renamed
+  /// account says exactly what it would have said and in the same voice
+  /// ([personaOf] reads it the same way). A player posts under his own name
+  /// and is never renamed here.
+  static YTimeline renamedIn(YTimeline feed, ActiveWorld world) {
+    if (world.pack?.yAccounts.isEmpty ?? true) return feed;
+    YPost renamed(YPost p) {
+      if (p.voice == YVoice.player) return p;
+      final name = world.yAccount(p.displayName);
+      if (name == null) return p;
+      return (
+        voice: p.voice,
+        handle: handleFor(name),
+        displayName: name,
+        template: p.template,
+        variant: p.variant,
+        args: p.args,
+        date: p.date,
+        key: p.key,
+        replyTo: p.replyTo,
+        mood: p.mood,
+      );
+    }
+
+    return (
+      posts: [for (final p in feed.posts) renamed(p)],
+      reserveFrom: feed.reserveFrom,
+    );
+  }
 
   /// The nation's recurring account for [voice], and what sort of person it
   /// is.

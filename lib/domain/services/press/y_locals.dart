@@ -2,6 +2,7 @@ import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// The names a nation's local fans are drawn from: ordinary given names and
 /// the country's surnames.
@@ -46,6 +47,13 @@ abstract final class YLocals {
   }) => (
     given: firstMore.isNotEmpty ? firstMore : first,
     family: {...sur, ...surMore}.toList(),
+  );
+
+  /// A custom world's local-fan names: its own first names and surnames for
+  /// the nation, which replace the game's lists whole.
+  static YNamePool poolFromPack(PackNameLists lists) => (
+    given: lists.first,
+    family: lists.sur.toSet().toList(),
   );
 
   /// How many names are tried per seat before it is left empty. A name's

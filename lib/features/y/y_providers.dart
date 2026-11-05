@@ -25,6 +25,7 @@ import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/press/y_locals.dart';
 import 'package:fnm/domain/services/press/y_tournaments.dart';
 import 'package:fnm/domain/services/squad/camp_scandal.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
@@ -154,6 +155,9 @@ yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
   careerId,
 ) async {
   const empty = (posts: <YPost>[], reserveFrom: null);
+  // The career's world: its sponsor names (read through `sponsorBrandName`),
+  // its renamed accounts and its local fans' name lists.
+  final world = ref.watch(activeWorldProvider);
   final career = await ref.watch(careerRepositoryProvider).byId(careerId);
   if (career == null) return empty;
   final nations = await ref.watch(nationRepositoryProvider).forCareer(careerId);
@@ -681,31 +685,44 @@ yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
   // in every language (see [YLocals]).
   final withLocals = YLocals.withLocals(
     withRegulars,
-    cast: await _localFans(ref, career),
+    cast: await _localFans(ref, career, world),
     seed: career.rngSeed,
     dated: datedStandings,
   );
 
-  // Ordering, the cap and the reserve live in the tested pure layer.
-  return YFeed.timeline(withLocals);
+  // Ordering, the cap and the reserve live in the tested pure layer. A
+  // custom world's renamed accounts take their new names last, on the
+  // finished feed, so each keeps the voice it posted in.
+  return YFeed.renamedIn(YFeed.timeline(withLocals), world);
 });
 
 /// The manager's nation's local fans (see [YLocals.castFor]): named from the
-/// nation's own lists, ordinary given names first, and never a real
-/// international, a player in the nation's current pool or the manager.
-Future<List<YPersona>> _localFans(Ref ref, Career career) async {
-  final lists = (await ref
-      .watch(seedSourceProvider)
-      .nameLists())[career.nationId];
-  if (lists == null) return const [];
-  final squad = await ref.watch(squadDataProvider(career.id).future);
-  return YLocals.castFor(
-    pool: YLocals.poolFrom(
+/// nation's own lists (a custom [world]'s, when it has them), ordinary given
+/// names first, and never a real international, a player in the nation's
+/// current pool or the manager.
+Future<List<YPersona>> _localFans(
+  Ref ref,
+  Career career,
+  ActiveWorld world,
+) async {
+  final YNamePool pool;
+  if (world.pack?.nameLists[career.nationId] case final packLists?) {
+    pool = YLocals.poolFromPack(packLists);
+  } else {
+    final lists = (await ref
+        .watch(seedSourceProvider)
+        .nameLists())[career.nationId];
+    if (lists == null) return const [];
+    pool = YLocals.poolFrom(
       first: lists.first,
       firstMore: lists.firstMore,
       sur: lists.sur,
       surMore: lists.surMore,
-    ),
+    );
+  }
+  final squad = await ref.watch(squadDataProvider(career.id).future);
+  return YLocals.castFor(
+    pool: pool,
     nation: '${career.nationId}',
     seed: career.rngSeed,
     avoid: {

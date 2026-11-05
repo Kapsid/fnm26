@@ -1,4 +1,5 @@
 import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Writing the general sponsor's brands in the manager's own language: the
@@ -6,8 +7,13 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// [SponsorBrand]. Several names are jokes that only land in the reader's
 /// own language (see [SponsorBrand]).
 
-/// A brand's name, as the manager reads it.
-String sponsorBrandName(AppLocalizations l, SponsorBrand b) => switch (b) {
+/// A brand's name, as the manager reads it: the career world's name for it
+/// if it renamed the brand ([ActiveWorld], the same in every language), else
+/// the game's own, translated.
+String sponsorBrandName(AppLocalizations l, SponsorBrand b) =>
+    ActiveWorld.current.sponsor(b.name) ?? _sponsorBrandName(l, b);
+
+String _sponsorBrandName(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.agrofart => l.sponsorBrandAgrofart,
   SponsorBrand.betBadger => l.sponsorBrandBetBadger,
   SponsorBrand.coinGoblin => l.sponsorBrandCoinGoblin,

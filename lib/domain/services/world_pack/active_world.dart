@@ -187,6 +187,17 @@ class ActiveWorld {
   /// The world's name for the Y account [original].
   String? yAccount(String original) => _text(pack?.yAccounts[original]);
 
+  /// The account the world renamed to [shown], by its original name: what
+  /// its disposition is read off, so a renamed account keeps its voice.
+  String? yAccountOriginal(String shown) {
+    final accounts = pack?.yAccounts;
+    if (accounts == null) return null;
+    for (final e in accounts.entries) {
+      if (_text(e.value) == shown) return e.key;
+    }
+    return null;
+  }
+
   /// The world's picture of trophy [key].
   Uint8List? trophy(String key) => trophies[key];
 

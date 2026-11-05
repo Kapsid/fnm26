@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 
 /// Who is in each of the three jobs, and who is applying for them this cycle.
@@ -20,6 +21,9 @@ typedef StaffRoom = ({
 /// his job.
 final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
     FutureProvider.autoDispose.family<StaffRoom?, int>((ref, careerId) async {
+      // A custom world's name lists name the coaches of the nations it has
+      // them for.
+      final packLists = ref.watch(activeWorldProvider).pack?.nameLists;
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return null;
       final squad = await ref.watch(squadDataProvider(careerId).future);
@@ -49,6 +53,10 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
         final nation = nations.where((n) => n.id == id).firstOrNull;
         if (nation == null) continue;
         final code = nation.code.toLowerCase();
+        if (packLists?[id] case final lists?) {
+          namePool[code] = staffNamesFrom(lists);
+          continue;
+        }
         if (id == career.nationId) {
           namePool[code] = [
             for (final p in squad?.pool ?? const <Player>[]) p.name,
@@ -118,3 +126,23 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
         wagesPerCycle: Staff.totalCost(tiers),
       );
     });
+
+/// A staff name pool from a custom world's [lists]: first names and surnames
+/// paired in turn, which [StaffMarket.forRole] splits and recombines the way
+/// it does a nation's player names.
+List<String> staffNamesFrom(PackNameLists lists) {
+  final first = [
+    for (final f in lists.first)
+      if (f.trim().isNotEmpty) f.trim().split(' ').first,
+  ];
+  final sur = [
+    for (final s in lists.sur)
+      if (s.trim().isNotEmpty) s.trim().split(' ').last,
+  ];
+  if (first.isEmpty || sur.isEmpty) return const [];
+  final n = first.length > sur.length ? first.length : sur.length;
+  return [
+    for (var i = 0; i < n; i++)
+      '${first[i % first.length]} ${sur[i % sur.length]}',
+  ];
+}

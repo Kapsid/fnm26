@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/press/conference.dart';
 import 'package:fnm/domain/services/press/press.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/features/press/press_copy.dart';
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/press/press_providers.dart';
@@ -207,7 +208,9 @@ class _PressSheetState extends ConsumerState<PressSheet> {
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _Byline(reporter: _room[index % _room.length]),
+                              PressByline(
+                                reporter: _room[index % _room.length],
+                              ),
                               const SizedBox(height: AppSpacing.sm),
                               Text(
                                 beatQuestion(
@@ -255,10 +258,17 @@ class _PressSheetState extends ConsumerState<PressSheet> {
 
 /// Who is asking: a name, an outlet, and a colour for the kind of question
 /// they are about to put. The manager learns to brace for some of them.
-class _Byline extends StatelessWidget {
-  const _Byline({required this.reporter});
+///
+/// A custom world may have renamed the reporter ([ActiveWorld.reporter], by
+/// his place in the press pack); a blank name or outlet keeps his own. The
+/// kind of question he asks is his whatever he is called.
+class PressByline extends StatelessWidget {
+  const PressByline({required this.reporter, super.key});
 
   final PressReporter reporter;
+
+  /// [s], unless there is nothing in it to print.
+  static String? _shown(String? s) => s == null || s.trim().isEmpty ? null : s;
 
   @override
   Widget build(BuildContext context) {
@@ -269,6 +279,7 @@ class _Byline extends StatelessWidget {
       PressAngle.local => AppColors.warning,
       PressAngle.foreign => AppColors.onSurfaceVariant,
     };
+    final renamed = ActiveWorld.current.reporter(reporter.index);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -281,11 +292,11 @@ class _Byline extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    reporter.name,
+                    _shown(renamed?.name) ?? reporter.name,
                     style: AppTypography.labelMedium.copyWith(color: color),
                   ),
                   Text(
-                    reporter.outlet,
+                    _shown(renamed?.outlet) ?? reporter.outlet,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),

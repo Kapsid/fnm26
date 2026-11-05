@@ -50,7 +50,15 @@ enum PressAngle {
 ///
 /// [name] and [outlet] are invented and stay as written whatever the app's
 /// language — they are proper nouns, like the club names.
-typedef PressReporter = ({String name, String outlet, PressAngle angle});
+///
+/// [index] is the reporter's place in the press pack, which a custom world
+/// renames him by (`ActiveWorld.reporter`).
+typedef PressReporter = ({
+  String name,
+  String outlet,
+  PressAngle angle,
+  int index,
+});
 
 /// Which story about a named man, or about the next opponent, is live.
 ///
@@ -214,31 +222,61 @@ abstract final class Press {
       name: 'Elena Vasquez',
       outlet: 'The Daily Whistle',
       angle: PressAngle.tabloid,
+      index: 0,
     ),
     (
       name: 'Tomas Riedel',
       outlet: 'National Sport',
       angle: PressAngle.broadsheet,
+      index: 1,
     ),
-    (name: 'Priya Anand', outlet: 'The Chalkboard', angle: PressAngle.analyst),
-    (name: 'Danny Kerr', outlet: 'Radio Terrace', angle: PressAngle.local),
+    (
+      name: 'Priya Anand',
+      outlet: 'The Chalkboard',
+      angle: PressAngle.analyst,
+      index: 2,
+    ),
+    (
+      name: 'Danny Kerr',
+      outlet: 'Radio Terrace',
+      angle: PressAngle.local,
+      index: 3,
+    ),
     (
       name: 'Ingrid Sollum',
       outlet: 'World Football Weekly',
       angle: PressAngle.foreign,
+      index: 4,
     ),
-    (name: 'Marco Bellini', outlet: 'The Back Page', angle: PressAngle.tabloid),
-    (name: 'Hana Okafor', outlet: 'The Standard', angle: PressAngle.broadsheet),
+    (
+      name: 'Marco Bellini',
+      outlet: 'The Back Page',
+      angle: PressAngle.tabloid,
+      index: 5,
+    ),
+    (
+      name: 'Hana Okafor',
+      outlet: 'The Standard',
+      angle: PressAngle.broadsheet,
+      index: 6,
+    ),
     (
       name: 'Ruben Sattler',
       outlet: 'Pressing Matters',
       angle: PressAngle.analyst,
+      index: 7,
     ),
-    (name: 'Colette Auger', outlet: 'Supporters Hour', angle: PressAngle.local),
+    (
+      name: 'Colette Auger',
+      outlet: 'Supporters Hour',
+      angle: PressAngle.local,
+      index: 8,
+    ),
     (
       name: 'Yusuf Demir',
       outlet: 'Continental Review',
       angle: PressAngle.foreign,
+      index: 9,
     ),
   ];
 

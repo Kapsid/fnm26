@@ -4,6 +4,7 @@ import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/services/competition/host_cities.dart';
 import 'package:fnm/domain/services/competition/national_stadium_data.dart';
 import 'package:fnm/domain/services/competition/stadium_capacity.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// A tournament venue: the `stadium`, its host `city`, and the stadium's
 /// `capacity` (seats). Capacity starts from the nation's real biggest ground
@@ -468,7 +469,14 @@ abstract final class VenueGenerator {
   /// The name of the [nth] ground (0 = the first) in [city] of [hostId]:
   /// "Estadio Kastel" or "Kastel Nacional", fixed by the city. The grounds
   /// of one city never share a name.
+  ///
+  /// A custom world's name for the city's first ground
+  /// ([ActiveWorld.stadium]) replaces the generated one.
   static String _groundName(int hostId, String city, int nth) {
+    if (nth == 0) {
+      final renamed = ActiveWorld.current.stadium(hostId, city);
+      if (renamed != null) return renamed;
+    }
     var h = hostId * 0x9E3779B1 ^ 0x5714CE5;
     for (final c in city.codeUnits) {
       h = (h * 31 + c) & 0x3FFFFFFF;

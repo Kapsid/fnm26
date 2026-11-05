@@ -4,6 +4,7 @@ import 'package:fnm/domain/services/competition/national_stadium_data.dart';
 import 'package:fnm/domain/services/competition/stadium_capacity.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// One of a nation's national stadiums in one career: a seed ground (one of
 /// the static venues every career starts from) or one the federation built,
@@ -637,18 +638,22 @@ abstract final class NationalStadiums {
     }
 
     final seen = <String, int>{};
+    NationalStadium seeded(Venue v) {
+      final n = seen.update(v.city, (n) => n + 1, ifAbsent: () => 1);
+      return shaped(
+        city: v.city,
+        // A custom world names a city's first ground its own way.
+        name:
+            (n == 1 ? ActiveWorld.current.stadium(nationId, v.city) : null) ??
+            v.stadium,
+        base: v.capacity,
+        built: false,
+        site: n == 1 ? v.city : '${v.city}#$n',
+      );
+    }
+
     return [
-      for (final v in seed)
-        shaped(
-          city: v.city,
-          name: v.stadium,
-          base: v.capacity,
-          built: false,
-          site: switch (seen.update(v.city, (n) => n + 1, ifAbsent: () => 1)) {
-            1 => v.city,
-            final n => '${v.city}#$n',
-          },
-        ),
+      for (final v in seed) seeded(v),
       for (final w in mine)
         if (w.isBuild)
           shaped(
