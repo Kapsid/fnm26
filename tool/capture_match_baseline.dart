@@ -11,6 +11,7 @@ void main() {
     'figures': measureFigures(),
     'golden': measureGolden(),
     'longThrowGolden': measureLongThrowGolden(),
+    'extraTimeGolden': measureExtraTimeGolden(),
   };
   File('test/fixtures/match_baseline.json')
     ..createSync(recursive: true)

@@ -41,6 +41,20 @@ void main() {
     }
   });
 
+  test('the engine still produces the extra-time golden', () {
+    final golden = base['extraTimeGolden'] as List;
+    expect(golden.length, extraTimeGoldenMatches);
+    final indices = extraTimeGoldenIndices();
+    for (var k = 0; k < extraTimeGoldenMatches; k++) {
+      final i = indices[k];
+      expect(
+        jsonDecode(jsonEncode({'fixture': i, ...extraTimeGoldenMatch(i)})),
+        golden[k],
+        reason: 'extra-time golden match $i changed',
+      );
+    }
+  });
+
   test('figures stay near baseline', () {
     final figures = base['figures'] as Map<String, dynamic>;
     // key -> allowed delta (relative if rel, else absolute share points).

@@ -38,6 +38,13 @@ const longThrowKey = '78-74/home/longthrow';
 const longThrowGoldenSeed = 0x7A0E;
 const longThrowGoldenMatches = 50;
 
+/// The extra-time golden: the first [extraTimeGoldenMatches] fixtures of
+/// [extraTimeGoldenSeed] that end level after ninety minutes between two
+/// [extraTimeGoldenPair] sides, played on with `extraTimeIfLevel`.
+const extraTimeGoldenSeed = 0xE7E7;
+const extraTimeGoldenMatches = 30;
+const extraTimeGoldenPair = (76, 76);
+
 double _r(double v) => (v * 1e6).round() / 1e6;
 
 String figureKey((int, int) pair, bool neutral) =>
@@ -119,17 +126,22 @@ Map<String, Object?> goldenMatch(
   int i, {
   bool longThrow = false,
   int seed = goldenSeed,
+  (int, int) pair = goldenPair,
+  bool extraTime = false,
 }) {
   final r = const MatchEngine().play(
-    home: longThrow
-        ? longThrowTeam(1, goldenPair.$1)
-        : ratedTeam(1, goldenPair.$1),
-    away: ratedTeam(2, goldenPair.$2),
+    home: longThrow ? longThrowTeam(1, pair.$1) : ratedTeam(1, pair.$1),
+    away: ratedTeam(2, pair.$2),
     rng: SeededRng.forFixture(seed, i),
-    neutralVenue: false,
+    neutralVenue: extraTime,
+    extraTimeIfLevel: extraTime,
   );
   return {
     'score': '${r.homeScore}-${r.awayScore}',
+    if (extraTime)
+      'extraTime': r.extraTime == null
+          ? null
+          : '${r.extraTime!.homeScore}-${r.extraTime!.awayScore}',
     'stoppage': r.stoppage,
     'possession': r.homePossession,
     'events': [
@@ -163,4 +175,34 @@ List<Map<String, Object?>> measureGolden() => [
 List<Map<String, Object?>> measureLongThrowGolden() => [
   for (var i = 0; i < longThrowGoldenMatches; i++)
     goldenMatch(i, longThrow: true, seed: longThrowGoldenSeed),
+];
+
+/// The fixture indices of [extraTimeGoldenSeed] the extra-time golden plays:
+/// the first [extraTimeGoldenMatches] that go to extra time.
+List<int> extraTimeGoldenIndices() {
+  final out = <int>[];
+  for (var i = 0; out.length < extraTimeGoldenMatches; i++) {
+    final r = const MatchEngine().play(
+      home: ratedTeam(1, extraTimeGoldenPair.$1),
+      away: ratedTeam(2, extraTimeGoldenPair.$2),
+      rng: SeededRng.forFixture(extraTimeGoldenSeed, i),
+      neutralVenue: true,
+      extraTimeIfLevel: true,
+    );
+    if (r.extraTime != null) out.add(i);
+  }
+  return out;
+}
+
+/// Golden match [i] of the extra-time set.
+Map<String, Object?> extraTimeGoldenMatch(int i) => goldenMatch(
+  i,
+  seed: extraTimeGoldenSeed,
+  pair: extraTimeGoldenPair,
+  extraTime: true,
+);
+
+List<Map<String, Object?>> measureExtraTimeGolden() => [
+  for (final i in extraTimeGoldenIndices())
+    {'fixture': i, ...extraTimeGoldenMatch(i)},
 ];
