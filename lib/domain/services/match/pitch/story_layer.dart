@@ -199,6 +199,37 @@ final class PassAction extends BallAction {
   final double peak;
 }
 
+/// Cut the picture (see `PitchScript.cuts`) to a moment ready to happen:
+/// the men in [positions] stand there and the ball lies at [ballAt].
+///
+/// A set-piece cut ([PitchCutKind.setPiece]) leaves everybody else where he
+/// is, stepping aside if a man placed lands on him. A phase cut
+/// ([PitchCutKind.phase], open play: a shot, foul or offside that cannot be
+/// reached from where play is) lines everybody else up in his side's shape
+/// around the ball, [possession] on it, as the story layer would have them
+/// there; then [offside] (a man to be flagged) is put beyond the line and
+/// every man in [onside] behind it. Keepers keep goal and men walking off
+/// are never moved.
+final class CutAction extends BallAction {
+  const CutAction({
+    required this.ballAt,
+    required this.positions,
+    this.kind = PitchCutKind.setPiece,
+    this.possession,
+    this.offside,
+    this.onside = const {},
+  });
+
+  final Offset2 ballAt;
+  final Map<int, Offset2> positions;
+  final PitchCutKind kind;
+
+  /// For a phase cut: the side on the ball.
+  final int? possession;
+  final int? offside;
+  final Set<int> onside;
+}
+
 /// Kick (or head, or throw) the ball from wherever it is (at its carrier's
 /// feet, or lying still) either to the point [to], where it then lies, or
 /// to [toPlayerId]'s feet, arriving at screen second [arriveAt] at the
@@ -209,17 +240,6 @@ final class PassAction extends BallAction {
 /// down for a dead-ball kick, a loose ball collected. [byPlayerId] names
 /// who kicks a ball lying still (the corner taker); a carried ball is
 /// kicked by its carrier.
-/// Cut the picture (see `PitchScript.cuts`) to a set piece ready to be
-/// taken: the men in [positions] stand there, the ball lies at [ballAt].
-/// Anybody else stays put, stepping aside if a man placed lands on him.
-/// Only for a dead ball, never in open play.
-final class CutAction extends BallAction {
-  const CutAction({required this.ballAt, required this.positions});
-
-  final Offset2 ballAt;
-  final Map<int, Offset2> positions;
-}
-
 final class KickAction extends BallAction {
   const KickAction({
     required this.arriveAt,
@@ -746,8 +766,9 @@ class _Builder {
   /// Kick-offs after goals: screen second -> the side kicking off.
   final Map<double, int> goalRestarts = {};
 
-  /// Every screen second the picture cuts at (see `PitchScript.cuts`).
-  final Set<double> cuts = {};
+  /// Every screen second the picture cuts at (see `PitchScript.cuts`), and
+  /// what kind of cut it is.
+  final Map<double, PitchCutKind> cuts = {};
   double phaseStart = 0;
   int possession = 0;
   double nextAction = 0;
@@ -831,7 +852,7 @@ class _Builder {
           // At the loop's own time, which may round a hair past it.
           _kickoff(t, e.value);
           _record(t);
-          cuts.add(t);
+          cuts[t] = PitchCutKind.kickOff;
         }
       }
       // Kick-offs, with whatever the interval brought.
@@ -915,7 +936,8 @@ class _Builder {
     _closePhase(total);
 
     return PitchScript(
-      cuts: cuts.toList()..sort(),
+      cuts: cuts.keys.toList()..sort(),
+      cutKinds: Map.of(cuts),
       actorList: [
         for (final a in agents)
           (
@@ -2011,6 +2033,26 @@ class _Builder {
   void _cut(double t, CutAction k) {
     _cutFlight(t);
     _closePhase(t);
+    final minute = pacer.matchAt(_dur(t)).minute;
+    final poss = k.possession;
+    if (poss != null) {
+      // A new phase: both sides in their shapes around the ball, as the
+      // story layer would have them there.
+      final s = poss == lineups.home.nationId ? 0 : 1;
+      possession = s;
+      _updateBackLines(minute, k.ballAt);
+      final shape = <int, Offset2>{
+        ..._anchors(0, minute, t, k.ballAt, s == 0),
+        ..._anchors(1, minute, t, k.ballAt, s == 1),
+      };
+      shape.forEach((i, p) {
+        final a = agents[i];
+        if (!a.present || a.walkStart != null) return;
+        a
+          ..pos = _clampPitch(p)
+          ..vel = Offset2.zero;
+      });
+    }
     final placed = <int>{};
     k.positions.forEach((id, p) {
       final i = indexOf[id];
@@ -2022,6 +2064,37 @@ class _Builder {
         ..vel = Offset2.zero;
       placed.add(i);
     });
+    // The man to be flagged beyond the line; the men who must be onside
+    // behind it.
+    final off = k.offside == null ? null : indexOf[k.offside];
+    if (off != null && agents[off].present && agents[off].walkStart == null) {
+      final a = agents[off];
+      final dir = _dir(a.side, minute);
+      final line = math.max(
+        _secondLastDepth(a.side, dir),
+        xToDepth(k.ballAt.x, dir),
+      );
+      final d = (line + 2.5).clamp(55.0, 100.0);
+      a.pos = _clampPitch(Offset2(depthToX(d, dir), a.pos.y));
+      placed.add(off);
+    }
+    for (final id in k.onside) {
+      final i = indexOf[id];
+      if (i == null) continue;
+      final a = agents[i];
+      if (!a.present || a.walkStart != null) continue;
+      final dir = _dir(a.side, minute);
+      final line = math.max(
+        _secondLastDepth(a.side, dir),
+        xToDepth(k.ballAt.x, dir),
+      );
+      final d = xToDepth(a.pos.x, dir);
+      if (d > PitchDims.length / 2 && d > line - 1.0) {
+        final to = math.max(line - 1.0, PitchDims.length / 2);
+        a.pos = _clampPitch(Offset2(depthToX(to, dir), a.pos.y));
+      }
+      placed.add(i);
+    }
     // Nobody left standing on anybody: those not placed step aside first.
     for (var it = 0; it < 80; it++) {
       var moved = false;
@@ -2075,7 +2148,7 @@ class _Builder {
     restHeight = 0;
     phaseStart = t;
     _record(t);
-    cuts.add(t);
+    cuts[t] = k.kind;
   }
 
   /// Starts [k]: the ball leaves its carrier's feet, or the spot it lies

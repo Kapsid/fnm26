@@ -168,6 +168,10 @@ typedef ScriptFlight = ({
   double toHeight,
 });
 
+/// What a cut cuts to (see `PitchScript.cuts`): the kick-off after a goal,
+/// a set piece ready to be taken, or a new phase of open play.
+enum PitchCutKind { kickOff, setPiece, phase }
+
 /// Something a staged moment shows that the players' positions cannot: the
 /// whistle for a foul, the card the referee shows, the assistant's flag, a
 /// shot struck, a goal. For the renderer and the commentary to keep time
@@ -303,6 +307,7 @@ class PitchScript {
     required this.result,
     required this.homeNationId,
     this.cuts = const [],
+    this.cutKinds = const {},
     this.start = 0,
   }) : _index = {
          for (var i = 0; i < actorList.length; i++) actorList[i].playerId: i,
@@ -337,6 +342,9 @@ class PitchScript {
   /// cut, men walking off are never moved, and nobody lands on anybody. A
   /// moment that follows a cut is always played out in full after it.
   final List<double> cuts;
+
+  /// What each cut is, by its screen second.
+  final Map<double, PitchCutKind> cutKinds;
   final List<StagedWindow> windows;
 
   /// Player id -> the screen second he starts walking off. He walks to the

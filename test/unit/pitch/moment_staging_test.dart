@@ -197,6 +197,32 @@ class _Audit {
   }
 
   void run() {
+    // A phase cut lines both sides up in their shapes: never a crowd on a
+    // goal line (the moment's own men apart).
+    for (final e in s.cutKinds.entries) {
+      if (e.value != PitchCutKind.phase) continue;
+      final f = s.sample(_at(e.key + 2e-6));
+      final w = s.windowAt(e.key + 1e-6);
+      final named = w?.actors ?? const <int>{};
+      final perSide = <int, int>{};
+      f.players.forEach((id, p) {
+        if (f.keepers.contains(id) || named.contains(id)) return;
+        final edge = math.min(p.x, PitchDims.length - p.x);
+        if (edge < 4) {
+          final n = team(s.actorIndexOf(id)!);
+          perSide[n] = (perSide[n] ?? 0) + 1;
+        }
+      });
+      final worst = perSide.values.fold(0, math.max);
+      count('phase cut');
+      note(
+        'phase cut: most men of a side within 4 m of a goal line',
+        worst.toDouble(),
+      );
+      if (worst > 2) {
+        fail(e.key, 'phase cut leaves $worst men on a goal line');
+      }
+    }
     for (final p in s.ballPhases) {
       if (p.t1 <= p.t0 + 1e-9) fail(p.t0, 'a ball phase of no length');
     }
@@ -238,16 +264,7 @@ class _Audit {
         (c) => c >= w.start - 1e-9 && c < _until(w) - 1e-9,
       );
       if (cut) count('cut in ${_kind(w)}');
-      // Key moments (goals, penalties, big saves): reached by a cut, or
-      // played on from what came before.
-      final key = w.moments.any(
-        (m) =>
-            m is ShotMoment &&
-            (m.outcome == ShotOutcome.goal ||
-                m.origin == ShotOrigin.penalty ||
-                (m.outcome == ShotOutcome.saved && m.xg >= 0.15)),
-      );
-      if (key) count(cut ? 'key moment after a cut' : 'key moment continuous');
+
       // The moment's men wear their tags throughout.
       final mid = s.sample(_at((w.start + w.end) / 2));
       for (final id in w.actors) {
@@ -282,11 +299,11 @@ class _Audit {
     var from = w.start;
     final sp = w.moments.first;
     if (sp is SetPieceMoment) {
-      final k = _deadKick(
-        w,
-        sp.takerId,
-        thrown: sp.kind == SetPieceKind.longThrow,
-      );
+      final k = switch (sp.kind) {
+        SetPieceKind.longThrow || SetPieceKind.throwIn => _throwKick(w, sp),
+        SetPieceKind.corner => _cornerKick(w, sp),
+        _ => _deadKick(w, sp.takerId),
+      };
       if (k != null) from = k.t0;
     }
     if (m.origin == ShotOrigin.penalty) {
@@ -316,6 +333,18 @@ class _Audit {
       return;
     }
     if (shot.t0 > w.end - 1e-6) count('shot struck in the spill-over');
+    // Key moments (goals, penalties, big saves): reached by a cut before
+    // the shot, or played on from what came before.
+    final key =
+        m.outcome == ShotOutcome.goal ||
+        m.origin == ShotOrigin.penalty ||
+        (m.outcome == ShotOutcome.saved && m.xg >= 0.15);
+    if (key) {
+      final cutBefore = s.cuts.any(
+        (c) => c >= w.start - 1e-9 && c <= shot!.t0 + 1e-9,
+      );
+      count(cutBefore ? 'key moment after a cut' : 'key moment continuous');
+    }
     note('shot lands after window (s)', shot.t1 - w.end);
     final dir = dirOf(m.teamNationId, shot.t0);
     final fromD = depth(shot.from, dir);
@@ -564,18 +593,7 @@ class _Audit {
   }
 
   void _corner(StagedWindow w, SetPieceMoment sp) {
-    // His kick from the arc, whichever way the ball got there.
-    final cdir = dirOf(sp.teamNationId, w.start);
-    FlightPhase? fromArc;
-    for (final f in flights(w.start, _until(w))) {
-      if (f.fromActor == idx(sp.takerId) &&
-          depth(f.from, cdir) > PitchDims.length - 1.5 &&
-          lat(f.from, cdir).abs() > 32.5) {
-        fromArc = f;
-        break;
-      }
-    }
-    final kick = fromArc ?? _deadKick(w, sp.takerId);
+    final kick = _cornerKick(w, sp);
     if (kick == null) {
       fail(w.start, 'corner never taken by ${sp.takerId}');
       return;
@@ -585,6 +603,17 @@ class _Audit {
     final l = lat(kick.from, dir);
     if (d < PitchDims.length - 1.2 || l.abs() < 32.8 || (l < 0) != sp.left) {
       fail(kick.t0, 'corner from the wrong place: depth $d lat $l');
+    }
+    // The ball went out off one of theirs.
+    for (final g in flights(w.start, kick.t0)) {
+      final a = depth(g.from, dir);
+      final b = depth(g.to, dir);
+      if (a < PitchDims.length && b > PitchDims.length) {
+        final by = g.fromActor;
+        if (by != null && team(by) == sp.teamNationId) {
+          fail(g.t0, 'corner off an attacker');
+        }
+      }
     }
     final f = s.sample(_at(kick.t0 + 2e-6));
     f.players.forEach((id, p) {
@@ -660,19 +689,34 @@ class _Audit {
     count(direct ? 'free kick direct' : 'free kick crossed');
   }
 
-  void _throw(StagedWindow w, SetPieceMoment sp) {
-    // His ball from the touchline.
+  /// A throw: his ball from the touchline.
+  FlightPhase? _throwKick(StagedWindow w, SetPieceMoment sp) {
     final tdir = dirOf(sp.teamNationId, w.start);
-    FlightPhase? fromLine;
     for (final f in flights(w.start, _until(w))) {
       if (f.fromActor == idx(sp.takerId) &&
           f.toActor != null &&
           lat(f.from, tdir).abs() > 31.5) {
-        fromLine = f;
-        break;
+        return f;
       }
     }
-    final kick = fromLine ?? _deadKick(w, sp.takerId, thrown: true);
+    return _deadKick(w, sp.takerId, thrown: true);
+  }
+
+  /// A corner: his ball from the arc.
+  FlightPhase? _cornerKick(StagedWindow w, SetPieceMoment sp) {
+    final cdir = dirOf(sp.teamNationId, w.start);
+    for (final f in flights(w.start, _until(w))) {
+      if (f.fromActor == idx(sp.takerId) &&
+          depth(f.from, cdir) > PitchDims.length - 1.5 &&
+          lat(f.from, cdir).abs() > 32.5) {
+        return f;
+      }
+    }
+    return _deadKick(w, sp.takerId);
+  }
+
+  void _throw(StagedWindow w, SetPieceMoment sp) {
+    final kick = _throwKick(w, sp);
     if (kick == null) {
       fail(w.start, 'long throw never taken by ${sp.takerId}');
       return;
@@ -710,6 +754,8 @@ class _Audit {
     if (tp.distanceTo(spot) > 1.3) fail(t0, 'taker not at the ball');
     f.players.forEach((id, p) {
       if (id == m.shooterId) return;
+      final dep = s.departures[id];
+      if (dep != null && dep <= t0 + 1e-6) return;
       final d = depth(p, dir);
       final l = lat(p, dir);
       if (f.keepers.contains(id)) {
@@ -753,6 +799,9 @@ class _Audit {
     if (close > 2.0) fail(w.start, 'fouler ${m.foulerId} never reaches him');
     final idxCard = m.cardEventIndex!;
     final red = s.result.events[idxCard].type == MatchEventType.redCard;
+    if (s.result.events[idxCard].playerId != m.foulerId) {
+      fail(w.start, 'card shown to somebody other than the fouler');
+    }
     final want = red ? PitchCueKind.redCard : PitchCueKind.yellowCard;
     if (!w.cues.any((c) => c.kind == want && c.playerId == m.foulerId)) {
       fail(w.start, 'no ${want.name} shown to ${m.foulerId}');
@@ -877,6 +926,19 @@ void main() {
       'corner from the wrong place',
       'penalty not taken from the mark',
       'keeper',
+      'taker not at the ball',
+      'not out of the area at the penalty',
+      'never on the ball',
+      'never reaches him',
+      'never taken',
+      'long throw from the wrong place',
+      'the scorers kick off',
+      'does not leave',
+      'the attackers keep the ball',
+      'not tagged',
+      'goal line',
+      'card shown to somebody',
+      'corner off an attacker',
     ];
     final outcome = [
       for (final p in problems)
@@ -974,6 +1036,23 @@ void main() {
             isEmpty,
             reason: 'match $seed, $key resumed at $frac',
           );
+          // A foul resumed still shows its whistle and its card.
+          if (k is FoulMoment) {
+            final again = second.windows.firstWhere(
+              (x) => (x.start - w.start).abs() < 1e-6,
+            );
+            final kinds = {
+              for (final q in again.cues)
+                if (q.playerId == k.foulerId) q.kind,
+            };
+            expect(
+              kinds.contains(PitchCueKind.foul) &&
+                  (kinds.contains(PitchCueKind.yellowCard) ||
+                      kinds.contains(PitchCueKind.redCard)),
+              isTrue,
+              reason: 'match $seed: resumed foul at $frac lost its cues',
+            );
+          }
           // A goal still ends in the net.
           for (final x in w.moments) {
             if (x is ShotMoment && x.outcome == ShotOutcome.goal) {
