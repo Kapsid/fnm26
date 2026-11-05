@@ -1,4 +1,5 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 
 import 'fixtures.dart';
@@ -20,13 +21,34 @@ const goldenSeed = 0x601D;
 const goldenMatches = 200;
 const goldenPair = (78, 74);
 
+/// [ratedTeam] with the long-throw style switched on (the engine reads
+/// `MatchTeam.throwInStyle`).
+MatchTeam longThrowTeam(int nationId, int rating) {
+  final t = ratedTeam(nationId, rating);
+  return MatchTeam(
+    nationId: t.nationId,
+    instructions: t.instructions,
+    xi: t.xi,
+    throwInStyle: ThrowInStyle.long,
+  );
+}
+
+const longThrowPair = (78, 74);
+const longThrowKey = '78-74/home/longthrow';
+const longThrowGoldenSeed = 0x7A0E;
+const longThrowGoldenMatches = 50;
+
 double _r(double v) => (v * 1e6).round() / 1e6;
 
 String figureKey((int, int) pair, bool neutral) =>
     '${pair.$1}-${pair.$2}/${neutral ? 'neutral' : 'home'}';
 
 /// Per-match figures for one cell of the matrix.
-Map<String, double?> measureCell((int, int) pair, {required bool neutral}) {
+Map<String, double?> measureCell(
+  (int, int) pair, {
+  required bool neutral,
+  bool longThrow = false,
+}) {
   const engine = MatchEngine();
   const n = baselineMatches;
   var goals = 0, hw = 0, d = 0, aw = 0, rout = 0, favWins = 0;
@@ -34,7 +56,7 @@ Map<String, double?> measureCell((int, int) pair, {required bool neutral}) {
   var xg = 0.0, stop = 0;
   for (var i = 0; i < n; i++) {
     final r = engine.play(
-      home: ratedTeam(1, pair.$1),
+      home: longThrow ? longThrowTeam(1, pair.$1) : ratedTeam(1, pair.$1),
       away: ratedTeam(2, pair.$2),
       rng: SeededRng.forFixture(baselineSeed, i),
       neutralVenue: neutral,
@@ -89,14 +111,21 @@ Map<String, Map<String, double?>> measureFigures() => {
   for (final pair in baselinePairs)
     for (final neutral in [true, false])
       figureKey(pair, neutral): measureCell(pair, neutral: neutral),
+  longThrowKey: measureCell(longThrowPair, neutral: false, longThrow: true),
 };
 
 /// The exact outcome of golden match [i], as JSON-safe data.
-Map<String, Object?> goldenMatch(int i) {
+Map<String, Object?> goldenMatch(
+  int i, {
+  bool longThrow = false,
+  int seed = goldenSeed,
+}) {
   final r = const MatchEngine().play(
-    home: ratedTeam(1, goldenPair.$1),
+    home: longThrow
+        ? longThrowTeam(1, goldenPair.$1)
+        : ratedTeam(1, goldenPair.$1),
     away: ratedTeam(2, goldenPair.$2),
-    rng: SeededRng.forFixture(goldenSeed, i),
+    rng: SeededRng.forFixture(seed, i),
     neutralVenue: false,
   );
   return {
@@ -129,4 +158,9 @@ Map<String, Object?> goldenMatch(int i) {
 
 List<Map<String, Object?>> measureGolden() => [
   for (var i = 0; i < goldenMatches; i++) goldenMatch(i),
+];
+
+List<Map<String, Object?>> measureLongThrowGolden() => [
+  for (var i = 0; i < longThrowGoldenMatches; i++)
+    goldenMatch(i, longThrow: true, seed: longThrowGoldenSeed),
 ];

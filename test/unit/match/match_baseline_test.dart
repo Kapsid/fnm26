@@ -25,6 +25,22 @@ void main() {
     }
   });
 
+  test('the engine still produces the long-throw golden', () {
+    final golden = base['longThrowGolden'] as List;
+    expect(golden.length, longThrowGoldenMatches);
+    for (var i = 0; i < longThrowGoldenMatches; i++) {
+      expect(
+        jsonDecode(
+          jsonEncode(
+            goldenMatch(i, longThrow: true, seed: longThrowGoldenSeed),
+          ),
+        ),
+        golden[i],
+        reason: 'long-throw golden match $i changed',
+      );
+    }
+  });
+
   test('figures stay near baseline', () {
     final figures = base['figures'] as Map<String, dynamic>;
     // key -> allowed delta (relative if rel, else absolute share points).
@@ -35,27 +51,42 @@ void main() {
       'awayWin': (0.03, false),
       'favouriteWin': (0.03, false),
       'penaltyGoalShare': (0.015, false),
+      'longThrowGoalShare': (0.015, false),
       'yellows': (0.08, true),
       'reds': (0.08, true),
       'shots': (0.06, true),
     };
+    void check(
+      String key,
+      Map<String, dynamic> was,
+      Map<String, double?> now,
+    ) {
+      bands.forEach((name, band) {
+        final b = was[name];
+        if (b == null) return;
+        final tol = band.$2 ? (b as num).abs() * band.$1 : band.$1;
+        expect(
+          now[name]!,
+          closeTo((b as num).toDouble(), tol + 1e-9),
+          reason: '$key $name',
+        );
+      });
+    }
+
     for (final pair in baselinePairs) {
       for (final neutral in [true, false]) {
         final key = figureKey(pair, neutral);
         final was = figures[key] as Map<String, dynamic>;
         final now = measureCell(pair, neutral: neutral);
-        bands.forEach((name, band) {
-          final b = was[name];
-          if (b == null) return;
-          final v = now[name]!;
-          final tol = band.$2 ? (b as num).abs() * band.$1 : band.$1;
-          expect(
-            v,
-            closeTo((b as num).toDouble(), tol + 1e-9),
-            reason: '$key $name',
-          );
-        });
+        check(key, was, now);
       }
     }
+    final was = figures[longThrowKey] as Map<String, dynamic>;
+    expect(was['longThrowGoalShare'] as num, greaterThan(0));
+    check(
+      longThrowKey,
+      was,
+      measureCell(longThrowPair, neutral: false, longThrow: true),
+    );
   });
 }

@@ -7,7 +7,11 @@ import '../test/helpers/match_baseline.dart';
 /// when an outcome-changing engine change is intended.
 ///   dart run tool/capture_match_baseline.dart
 void main() {
-  final out = {'figures': measureFigures(), 'golden': measureGolden()};
+  final out = {
+    'figures': measureFigures(),
+    'golden': measureGolden(),
+    'longThrowGolden': measureLongThrowGolden(),
+  };
   File('test/fixtures/match_baseline.json')
     ..createSync(recursive: true)
     ..writeAsStringSync(const JsonEncoder().convert(out));
