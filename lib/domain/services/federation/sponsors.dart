@@ -102,6 +102,9 @@ enum SponsorBrand implements Sponsor {
   @override
   PackSponsor? get added => null;
 
+  @override
+  String? get world => null;
+
   /// The brand with canonical id [name], or null.
   static SponsorBrand? byName(String name) {
     for (final b in values) {
@@ -123,8 +126,9 @@ abstract class Sponsor {
   /// The built-in brand [b] (it is its own sponsor).
   factory Sponsor.of(SponsorBrand b) => b;
 
-  /// The sponsor world pack brand [s] stands for.
-  factory Sponsor.added(PackSponsor s) = _AddedSponsor;
+  /// The sponsor world pack brand [s] stands for, added by the world whose
+  /// uuid is [world] (the career's own copy of it).
+  const factory Sponsor.added(PackSponsor s, {String? world}) = _AddedSponsor;
 
   /// The game's own brands, in [SponsorBrand.values] order.
   static final List<Sponsor> builtIns = List.unmodifiable(SponsorBrand.values);
@@ -139,16 +143,24 @@ abstract class Sponsor {
   /// The game's own brand, or null for an added one.
   SponsorBrand? get builtIn;
 
-  /// The pack's brand, or null for a built-in one.
+  /// The pack's brand, or null for a built-in one: its own name and
+  /// description are what the labels print.
   PackSponsor? get added;
+
+  /// The uuid of the world that added it (null for a built-in one): a
+  /// screen's world may give per-language values only when it is this one.
+  String? get world;
 
   bool get risky;
 }
 
 final class _AddedSponsor implements Sponsor {
-  const _AddedSponsor(this.pack);
+  const _AddedSponsor(this.pack, {this.world});
 
   final PackSponsor pack;
+
+  @override
+  final String? world;
 
   @override
   String get id => pack.key;
@@ -442,12 +454,13 @@ abstract final class Sponsors {
     return picks;
   }
 
-  /// One brand of [options] (all of one deal shape). While the added brands
-  /// among them are no more than the built-in ones, every brand is equally
-  /// likely: a plain pick, the very draw of a pool with nothing added. Once
-  /// they outnumber the built-ins, a fair coin over twice the built-ins
-  /// decides: a built-in by that draw, else an added brand, so fifty added
-  /// brands never drown the game's own (they share the slot half and half).
+  /// One brand of [options] (all of one deal shape). Added sponsors take at
+  /// most 50% of the slot, however many a pack adds.
+  ///
+  /// While the added brands among [options] are no more than the built-in
+  /// ones, every brand is equally likely (a plain pick: with nothing added,
+  /// the very draw of before). Once they outnumber the built-ins, half the
+  /// draws go to a built-in brand and half to an added one.
   static Sponsor _draw(SeededRng rng, List<Sponsor> options) {
     final builtIns = [
       for (final s in options)

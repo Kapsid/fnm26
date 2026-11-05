@@ -225,31 +225,45 @@ class WorldPackRepository {
     );
   }
 
-  /// The sponsors career [careerId]'s world added; none for the default
-  /// world.
+  /// The sponsors career [careerId]'s world added, with that world's uuid;
+  /// none (and no uuid) for the default world.
   ///
   /// Read wherever the sponsor round is (the hub, the finances, the cycle's
-  /// close), so it reads the career's JSON alone (no trophy images) and
-  /// decodes it only when it differs from the copy last decoded for that
-  /// career. A world that cannot be read throws, as the career's player
-  /// reads do: guessing "none" would hand the round other brands.
-  Future<List<PackSponsor>> addedSponsorsFor(int careerId) async {
+  /// close), so it is cheap on a repeat: a career's copy is written once,
+  /// at its start, so the length of the stored JSON (read alone, no trophy
+  /// images) is checked against the copy last decoded, and only a different
+  /// one is read and decoded again. A world that cannot be read throws.
+  Future<({String? world, List<PackSponsor> sponsors})> addedSponsorsFor(
+    int careerId,
+  ) async {
+    final length = _db.careerWorlds.json.length;
     final q = _db.selectOnly(_db.careerWorlds)
-      ..addColumns([_db.careerWorlds.json])
+      ..addColumns([length])
       ..where(_db.careerWorlds.careerId.equals(careerId));
-    final json = (await q.getSingleOrNull())?.read(_db.careerWorlds.json);
-    if (json == null) return const [];
+    final n = (await q.getSingleOrNull())?.read(length);
+    if (n == null) return (world: null, sponsors: const <PackSponsor>[]);
     final hit = _addedSponsors[careerId];
-    if (hit != null && hit.json == json) return hit.sponsors;
-    final sponsors = List<PackSponsor>.unmodifiable(
-      _decode(json).addedSponsors,
+    if (hit != null && hit.length == n) return hit.value;
+    final json =
+        await (_db.selectOnly(_db.careerWorlds)
+              ..addColumns([_db.careerWorlds.json])
+              ..where(_db.careerWorlds.careerId.equals(careerId)))
+            .map((r) => r.read(_db.careerWorlds.json)!)
+            .getSingle();
+    final pack = _decode(json);
+    final value = (
+      world: pack.uuid,
+      sponsors: List<PackSponsor>.unmodifiable(pack.addedSponsors),
     );
-    _addedSponsors[careerId] = (json: json, sponsors: sponsors);
-    return sponsors;
+    _addedSponsors[careerId] = (length: n, value: value);
+    return value;
   }
 
-  final Map<int, ({String json, List<PackSponsor> sponsors})> _addedSponsors =
-      {};
+  final Map<
+    int,
+    ({int length, ({String? world, List<PackSponsor> sponsors}) value})
+  >
+  _addedSponsors = {};
 
   static WorldPack _decode(String json) {
     final raw = jsonDecode(json);

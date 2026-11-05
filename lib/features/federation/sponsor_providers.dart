@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
@@ -130,12 +131,43 @@ Future<SponsorRound?> sponsorRoundOf({
 
 /// The sponsors career [careerId]'s own world added, as offered alongside
 /// the game's brands; none for a default-world career.
+///
+/// For the money (the round, signing, the cycle's income): a world that
+/// cannot be read throws, since guessing would point a signed marker at
+/// another brand. Display reads take [careerSponsorsForDisplay].
 Future<List<Sponsor>> careerSponsorsOf(
   WorldPackRepository worlds,
   int careerId,
-) async => [
-  for (final s in await worlds.addedSponsorsFor(careerId)) Sponsor.added(s),
-];
+) async {
+  final added = await worlds.addedSponsorsFor(careerId);
+  return [
+    for (final s in added.sponsors) Sponsor.added(s, world: added.world),
+  ];
+}
+
+/// [careerSponsorsOf] for what only DISPLAYS a sponsor (the Y feed's
+/// sponsor story): a world that cannot be read is reported and reads as
+/// adding none, so the feed still builds.
+Future<List<Sponsor>> careerSponsorsForDisplay(
+  WorldPackRepository worlds,
+  int careerId,
+) async {
+  try {
+    return await careerSponsorsOf(worlds, careerId);
+  } on Object catch (e, st) {
+    _report(e, st, 'reading the sponsors of career $careerId for display');
+    return const [];
+  }
+}
+
+void _report(Object e, StackTrace st, String doing) => FlutterError.reportError(
+  FlutterErrorDetails(
+    exception: e,
+    stack: st,
+    library: 'sponsor',
+    context: ErrorDescription(doing),
+  ),
+);
 
 /// The Commercial / PR euros the sponsor signed in [cycle] paid for: the
 /// department pays back at the cycle's close.
@@ -174,14 +206,22 @@ final AutoDisposeFutureProviderFamily<SponsorRound?, int> sponsorRoundProvider =
       await ref.watch(hubDataProvider(careerId).future);
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return null;
-      return sponsorRoundOf(
-        comp: ref.watch(competitionRepositoryProvider),
-        nations: ref.watch(nationRepositoryProvider),
-        seedRanks: ref.watch(seedRankingRepositoryProvider),
-        careers: ref.watch(careerRepositoryProvider),
-        worlds: ref.watch(worldPackRepositoryProvider),
-        career: career,
-      );
+      try {
+        return await sponsorRoundOf(
+          comp: ref.watch(competitionRepositoryProvider),
+          nations: ref.watch(nationRepositoryProvider),
+          seedRanks: ref.watch(seedRankingRepositoryProvider),
+          careers: ref.watch(careerRepositoryProvider),
+          worlds: ref.watch(worldPackRepositoryProvider),
+          career: career,
+        );
+      } on Object catch (e, st) {
+        // Loudly: a round read on a guess could sign another brand. The
+        // screens show their error state (the hub's button retries, the
+        // sponsor screen offers a retry and the way out).
+        _report(e, st, 'reading the sponsor round of career $careerId');
+        rethrow;
+      }
     });
 
 /// Signs or turns down a cycle's sponsor offers.

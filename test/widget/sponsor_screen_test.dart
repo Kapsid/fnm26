@@ -8,6 +8,7 @@ import 'package:fnm/features/federation/sponsor_card.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/sponsor_screen.dart';
 import 'package:fnm/features/hub/hub_event.dart';
+import 'package:fnm/features/hub/hub_event_button.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
@@ -201,4 +202,37 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+
+  testWidgets('a round that cannot be read shows the error state, and the '
+      "hub's button retries", (tester) async {
+    final l = lookupAppLocalizations(const Locale('en'));
+    await tester.pumpApp(
+      const SponsorScreen(careerId: 1),
+      overrides: [
+        sponsorRoundProvider.overrideWith(
+          (ref, id) async => throw const FormatException('broken world'),
+        ),
+      ],
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.byType(AppErrorState), findsOneWidget);
+    expect(find.text(l.commonRetry), findsOneWidget);
+    expect(find.text(l.federationContinue), findsOneWidget);
+    expect(find.byType(SponsorOfferCard), findsNothing);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpApp(
+      const Scaffold(body: HubEventButton(careerId: 1)),
+      overrides: [
+        nextEventProvider.overrideWith(
+          (ref, id) async => throw const FormatException('broken world'),
+        ),
+      ],
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.text(l.commonRetry), findsOneWidget);
+    expect(find.text(l.commonSomethingWentWrong), findsOneWidget);
+  });
 }

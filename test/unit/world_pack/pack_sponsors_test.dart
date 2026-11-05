@@ -1,16 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
+import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/l10n/app_localizations_cs.dart';
 import 'package:fnm/l10n/app_localizations_en.dart';
@@ -237,6 +241,61 @@ void main() {
       }
     });
 
+    test("the label is the sponsor's own, whatever world is on screen", () {
+      WorldPack world(
+        String uuid,
+        List<PackSponsor> added, {
+        Map<String, Map<String, String>> localized = const {},
+      }) => WorldPack(
+        uuid: uuid,
+        name: uuid,
+        author: '',
+        formatVersion: kPackFormatVersion,
+        madeWithVersion: '1.1.0',
+        addedSponsors: added,
+        localized: localized,
+      );
+      final mine = _added(0, SponsorDeal.risky, description: 'Flame-grilled.');
+      final s = Sponsor.added(mine, world: 'mine');
+      // Another world whose added sponsor has the same id, a per-language
+      // value and all: none of it reaches this sponsor.
+      final other = _added(
+        0,
+        SponsorDeal.risky,
+        name: 'Other Co',
+        description: 'Not ours.',
+      );
+      ActiveWorld.current = ActiveWorld(
+        world(
+          'other',
+          [other],
+          localized: {
+            PackPaths.addedSponsor(other.id): {'en': 'Other EN', 'cs': 'Jiné'},
+            PackPaths.addedSponsorDescription(other.id): {'cs': 'Cizí.'},
+          },
+        ),
+      );
+      for (final l in locales) {
+        expect(sponsorBrandName(l, s), 'Grill Co');
+        expect(sponsorFlavour(l, s), 'Flame-grilled.');
+      }
+      // Its own world gives only the per-language values it has.
+      ActiveWorld.current = ActiveWorld(
+        world(
+          'mine',
+          [_added(0, SponsorDeal.risky, name: 'Stale Name')],
+          localized: {
+            PackPaths.addedSponsor(mine.id): {'cs': 'Gril s.r.o.'},
+            PackPaths.addedSponsorDescription(mine.id): {'cs': 'Z grilu.'},
+          },
+        ),
+      );
+      expect(sponsorBrandName(AppLocalizationsEn(), s), 'Grill Co');
+      expect(sponsorBrandName(AppLocalizationsCs(), s), 'Gril s.r.o.');
+      expect(sponsorFlavour(AppLocalizationsEn(), s), 'Flame-grilled.');
+      expect(sponsorFlavour(AppLocalizationsCs(), s), 'Z grilu.');
+    });
+
     test('name and industry: the pack name, a built-in industry', () {
       final pack = _added(
         0,
@@ -263,6 +322,68 @@ void main() {
   });
 
   group('in a career', () {
+    test(
+      'a world row that cannot be read: the Y feed still builds, the round '
+      'reports an error',
+      timeout: const Timeout.factor(4),
+      () async {
+        final db = createTestDatabase();
+        addTearDown(db.close);
+        final c = greenlandContainer(db);
+        addTearDown(c.dispose);
+        await c.read(seedLoaderProvider).ensureSeeded();
+        final service = c.read(worldPackServiceProvider);
+        final packId = await service.createFromDefault('W');
+        final id =
+            (await c
+                    .read(careerServiceProvider)
+                    .create(
+                      nationId: _albania,
+                      managerName: 'M',
+                      rngSeed: 5,
+                      worldPackId: packId,
+                    ))
+                .valueOrNull!
+                .id;
+        // A signed added sponsor's press row, as the story reads it.
+        await c
+            .read(careerRepositoryProvider)
+            .recordPressAnswer(
+              careerId: id,
+              cycle: 0,
+              questionKey: 'sponsor:2026:pack$kPackAddedIdBase',
+              tone: Sponsors.pressTone,
+              moraleDelta: -2,
+              boardDelta: -3,
+              answeredAt: DateTime(2026, 9, 2),
+            );
+        await db.customStatement(
+          'UPDATE career_worlds SET json = ? WHERE career_id = ?',
+          ['{"broken', id],
+        );
+        final reported = <FlutterErrorDetails>[];
+        final before = FlutterError.onError;
+        FlutterError.onError = reported.add;
+        addTearDown(() => FlutterError.onError = before);
+
+        final feed = await c.read(yFeedProvider(id).future);
+        expect(feed.posts, isA<List<YPost>>());
+        await expectLater(
+          c.read(sponsorRoundProvider(id).future),
+          throwsA(anything),
+        );
+        expect(
+          reported.map((r) => r.library),
+          containsAll(<String>['sponsor']),
+          reason: 'both are reported',
+        );
+        expect(
+          reported.where((r) => r.library == 'sponsor'),
+          hasLength(2),
+        );
+      },
+    );
+
     test(
       "signing an added sponsor pays its deal's money and writes a press "
       'key that brandOfPressKey reads back',

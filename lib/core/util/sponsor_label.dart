@@ -9,15 +9,21 @@ import 'package:fnm/l10n/app_localizations.dart';
 
 /// A brand's name, as the manager reads it: the career world's name for it
 /// if it renamed the brand ([ActiveWorld], the same in every language), else
-/// the game's own, translated. A brand the world added reads as the world
-/// names it, falling back to the name it was stored with.
-String sponsorBrandName(AppLocalizations l, Sponsor s) {
-  final b = s.builtIn;
-  if (b != null) {
-    return ActiveWorld.current.sponsor(b.name) ?? _sponsorBrandName(l, b);
-  }
-  return ActiveWorld.current.addedSponsorName(s.id) ?? s.added!.name;
-}
+/// the game's own, translated. A brand the world added reads as its own
+/// copy names it, unless the screen's world (when it is the one that added
+/// it) names it differently in the reader's language.
+String sponsorBrandName(AppLocalizations l, Sponsor s) => switch (s) {
+  final SponsorBrand b =>
+    ActiveWorld.current.sponsor(b.name) ?? _sponsorBrandName(l, b),
+  Sponsor(added: final a?) =>
+    ActiveWorld.current.addedSponsorName(
+          a.id,
+          world: s.world,
+          language: l.localeName,
+        ) ??
+        a.name,
+  _ => s.id,
+};
 
 String _sponsorBrandName(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.agrofart => l.sponsorBrandAgrofart,
@@ -100,13 +106,18 @@ String _sponsorIndustryLabel(AppLocalizations l, SponsorBrand b) => switch (b) {
 /// A brand's one-line character, for its offer card. A brand the world
 /// added says its own description; without one, the line of its deal type
 /// ([sponsorDealLine]).
-String sponsorFlavour(AppLocalizations l, Sponsor s) {
-  final b = s.builtIn;
-  if (b != null) return _sponsorFlavour(l, b);
-  return ActiveWorld.current.addedSponsorDescription(s.id) ??
-      ActiveWorld.textOrNull(s.added?.description) ??
-      sponsorDealLine(l, s.deal);
-}
+String sponsorFlavour(AppLocalizations l, Sponsor s) => switch (s) {
+  final SponsorBrand b => _sponsorFlavour(l, b),
+  Sponsor(added: final a?) =>
+    ActiveWorld.current.addedSponsorDescription(
+          a.id,
+          world: s.world,
+          language: l.localeName,
+        ) ??
+        ActiveWorld.textOrNull(a.description) ??
+        sponsorDealLine(l, s.deal),
+  _ => sponsorDealLine(l, s.deal),
+};
 
 /// A short generic line for a deal of type [d]: what an added brand without
 /// a description says.

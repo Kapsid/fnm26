@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// A pack player as the world gives him on day one.
@@ -180,21 +181,30 @@ class ActiveWorld {
   /// The world's name for the sponsor brand [brand].
   String? sponsor(String brand) => textOrNull(pack?.sponsors[brand]);
 
-  /// The sponsor this world added under [key] (`pack<id>`), or null.
-  PackSponsor? _addedSponsor(String key) {
-    for (final s in pack?.addedSponsors ?? const <PackSponsor>[]) {
-      if (s.key == key) return s;
-    }
-    return null;
+  /// This world's [language] name for the sponsor it added with id [id], or
+  /// null. Only a per-language override: the sponsor's own copy carries its
+  /// main name. Answers only when this is the world that added it ([world],
+  /// the uuid of the career's own copy), since another world's added
+  /// sponsors share the same ids.
+  String? addedSponsorName(
+    int id, {
+    required String? world,
+    required String language,
+  }) => _ownLocalized(PackPaths.addedSponsor(id), world, language);
+
+  /// This world's [language] description for the sponsor it added with id
+  /// [id]; see [addedSponsorName].
+  String? addedSponsorDescription(
+    int id, {
+    required String? world,
+    required String language,
+  }) => _ownLocalized(PackPaths.addedSponsorDescription(id), world, language);
+
+  String? _ownLocalized(String path, String? world, String language) {
+    final p = pack;
+    if (p == null || world == null || p.uuid != world) return null;
+    return textOrNull(p.localized[path]?[language]);
   }
-
-  /// The name of the sponsor this world added under [key] (`pack<id>`).
-  String? addedSponsorName(String key) => textOrNull(_addedSponsor(key)?.name);
-
-  /// The description of the sponsor this world added under [key]; null
-  /// when it has none.
-  String? addedSponsorDescription(String key) =>
-      textOrNull(_addedSponsor(key)?.description);
 
   /// The world's name for the ground in [city], nation [nationId].
   String? stadium(int nationId, String city) =>

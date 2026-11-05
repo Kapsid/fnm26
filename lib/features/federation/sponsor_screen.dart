@@ -162,7 +162,26 @@ class _SponsorScreenState extends ConsumerState<SponsorScreen> {
       AsyncData(value: final r?) when !r.decided => _body(l, r),
       // Answered meanwhile, or no round at all: nothing to decide, so the way
       // out is always on screen.
-      AsyncData() || AsyncError() => Center(
+      // A round that could not be read (its world, say): the app's error
+      // state with a retry, and the way out.
+      AsyncError() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AppErrorState(
+            onRetry: () =>
+                ref.invalidate(sponsorRoundProvider(widget.careerId)),
+          ),
+          SizedBox(
+            width: 320,
+            child: PrimaryButton(
+              label: l.federationContinue,
+              icon: Icons.check_rounded,
+              onPressed: _leave,
+            ),
+          ),
+        ],
+      ),
+      AsyncData() => Center(
         child: SizedBox(
           width: 320,
           child: PrimaryButton(

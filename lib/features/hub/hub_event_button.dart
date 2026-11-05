@@ -9,6 +9,8 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/features/awards/award_providers.dart';
 import 'package:fnm/features/awards/awards_ceremony_screen.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart'
+    show sponsorRoundProvider;
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -80,19 +82,31 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
     // skipped: a second "Advance" ran the step that quick-sims the manager's
     // own match, which the fresh event would have offered him to play.
     final busy = ref.watch(hubActionBusyProvider(careerId)) || next.isLoading;
+    // The next event could not be worked out (a read that refuses to guess,
+    // such as a sponsor round over a world that cannot be read): the
+    // button says so and tries again, rather than acting on a stale event.
+    final failed = next.hasError && !next.isLoading;
     final button = PrimaryButton(
       key: (widget.tourTarget ?? !widget.compact) ? TourKeys.hubAction : null,
-      label: event?.label ?? l.hubContinue,
-      icon: event?.icon ?? Icons.play_arrow_rounded,
+      label: failed ? l.commonRetry : event?.label ?? l.hubContinue,
+      icon: failed
+          ? Icons.refresh_rounded
+          : event?.icon ?? Icons.play_arrow_rounded,
       isLoading: busy,
       // The tablet top bar gives the button room to read as metal: 44 tall
       // with breathing space above and below.
       height: widget.compact ? 44 : AppSpacing.minHitArea + 8,
-      onPressed: event == null ? null : () => _dispatch(context, ref, event),
+      onPressed: failed
+          ? () => ref
+              ..invalidate(sponsorRoundProvider(careerId))
+              ..invalidate(nextEventProvider(careerId))
+          : event == null
+          ? null
+          : () => _dispatch(context, ref, event),
     );
     // A tournament he is out of, or never in, may be played out to its final
     // in one go instead of a round at a time.
-    final simToFinal = event?.kind == HubEventKind.watchTournament;
+    final simToFinal = !failed && event?.kind == HubEventKind.watchTournament;
     void simulate() => _simulateToFinal(context, event!);
     if (widget.compact) {
       if (!simToFinal) return button;
@@ -111,10 +125,11 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         button,
-        if (event?.subtitle != null) ...[
+        if (failed ? l.commonSomethingWentWrong : event?.subtitle
+            case final subtitle?) ...[
           const SizedBox(height: AppSpacing.xs),
           Text(
-            event!.subtitle!,
+            subtitle,
             textAlign: TextAlign.center,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,

@@ -31,7 +31,7 @@ import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart'
-    show careerSponsorsOf;
+    show careerSponsorsForDisplay;
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/press/story_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart'
@@ -650,9 +650,10 @@ yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
   // A dubious general sponsor (see `Sponsors`): the story the day it was
   // signed, and the room laughing under it. Read off the press row the deal
   // left, which carries the brand and the day; only this job's.
-  // A brand the career's world added is read off its own copy of that world.
+  // A brand the career's world added is read off its own copy of that world;
+  // one that cannot be read is reported and the feed goes on without it.
   final words = ref.watch(appLocalizationsProvider);
-  final addedSponsors = await careerSponsorsOf(
+  final addedSponsors = await careerSponsorsForDisplay(
     ref.watch(worldPackRepositoryProvider),
     careerId,
   );
