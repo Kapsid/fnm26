@@ -78,6 +78,7 @@ void main() {
           first: read(classic['$id'], 'first'),
           firstMore: read(more['$id'], 'firstMore'),
           sur: read(classic['$id'], 'sur'),
+          surLate: read(classic['$id'], 'surLate'),
           surMore: read(more['$id'], 'surMore'),
         ),
     };

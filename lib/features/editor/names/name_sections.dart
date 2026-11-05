@@ -104,7 +104,8 @@ class NameEntry {
   /// The flag to show beside it.
   final String? flagCode;
 
-  /// The game's name lists (name lists only).
+  /// The game's name lists (name lists only): the whole pool its new
+  /// players are named from ([namePoolOf]).
   final List<String> firstNames;
   final List<String> surnames;
 
@@ -123,8 +124,8 @@ typedef NameGroup = ({
 /// overrides them.
 typedef NameOverride = ({String name, String second});
 
-/// Each nation's game name lists (the classic first names and surnames),
-/// by nation id: what the Name lists section starts from.
+/// Each nation's game name lists, by nation id: what the Name lists section
+/// starts from, as [namePoolOf] pools them.
 final AutoDisposeFutureProvider<Map<int, NameLists>> editorNameListsProvider =
     FutureProvider.autoDispose<Map<int, NameLists>>(
       (ref) => ref.watch(seedSourceProvider).nameLists(),
@@ -170,6 +171,9 @@ List<NameGroup> nameGroups(
   switch (section) {
     case NameSection.nations:
     case NameSection.nameLists:
+      final pools = {
+        for (final e in lists.entries) e.key: namePoolOf(e.value),
+      };
       return one([
         for (final n in nations)
           NameEntry(
@@ -178,8 +182,8 @@ List<NameGroup> nameGroups(
             original2: section == NameSection.nations ? n.code : '',
             nationId: n.id,
             flagCode: n.code,
-            firstNames: lists[n.id]?.first ?? const [],
-            surnames: lists[n.id]?.sur ?? const [],
+            firstNames: pools[n.id]?.first ?? const [],
+            surnames: pools[n.id]?.sur ?? const [],
             fold: fold([n.name, n.englishName, n.code]),
           ),
       ]);
@@ -302,7 +306,12 @@ NameOverride? nameOverride(NameSection section, WorldPack pack, NameEntry e) {
   switch (section) {
     case NameSection.nations:
       final n = pack.nations[int.tryParse(e.key)];
-      return n == null ? null : (name: n.name, second: n.code);
+      // Both blank is the game's name and code: no change at all.
+      return n == null ||
+              (ActiveWorld.textOrNull(n.name) == null &&
+                  ActiveWorld.textOrNull(n.code) == null)
+          ? null
+          : (name: n.name, second: n.code);
     case NameSection.press:
       final r = pack.reporters[int.tryParse(e.key)];
       return r == null ? null : (name: r.name, second: r.outlet);
@@ -476,4 +485,26 @@ Map<String, int> issuesByKey(NameSection section, List<PackIssue> issues) {
     }
   }
   return out;
+}
+
+/// How many things of [section] [pack] really changes: an override left
+/// blank keeps the game's name and is no change (a nation with both its
+/// name and code blank included).
+int changedCount(NameSection section, WorldPack pack) {
+  bool text(String s) => ActiveWorld.textOrNull(s) != null;
+  return switch (section) {
+    NameSection.nations =>
+      pack.nations.values.where((n) => text(n.name) || text(n.code)).length,
+    NameSection.press =>
+      pack.reporters.values.where((r) => text(r.name) || text(r.outlet)).length,
+    NameSection.nameLists => pack.nameLists.length,
+    NameSection.clubs ||
+    NameSection.stadiums ||
+    NameSection.competitions ||
+    NameSection.yAccounts ||
+    NameSection.sponsors => NameEdits._map(
+      section,
+      pack,
+    ).values.where(text).length,
+  };
 }

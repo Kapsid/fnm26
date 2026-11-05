@@ -22049,7 +22049,7 @@ abstract class AppLocalizations {
   /// One-line description of the Name lists section.
   ///
   /// In en, this message translates to:
-  /// **'Names for new players'**
+  /// **'Names for new players, local fans and staff'**
   String get editorAboutNameLists;
 
   /// One-line description of the Sponsors section.
@@ -22661,7 +22661,7 @@ abstract class AppLocalizations {
   /// Help at the top of the editor name list sheet.
   ///
   /// In en, this message translates to:
-  /// **'Separate the names with commas or new lines. Each list needs at least {min}. They name local fans and staff.'**
+  /// **'Separate the names with commas or new lines. Each list needs at least {min}. They name new players, local fans and staff.'**
   String editorNamesListsHelp(int min);
 
   /// A nation row in the editor Name lists section: how many names each list holds.
@@ -22687,6 +22687,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a name to edit.'**
   String get editorNamesPick;
+
+  /// Note at the top of the editor Stadiums section: which grounds a database can rename.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the national grounds listed here can be renamed: the main stadium of each city.'**
+  String get editorNamesStadiumsNote;
 }
 
 class _AppLocalizationsDelegate

@@ -395,9 +395,15 @@ class _NameList extends StatelessWidget {
       ),
     );
 
+    // Said once, above the rows.
+    final note = section.translated
+        ? (Icons.translate, l.editorNamesEveryLanguage)
+        : section == NameSection.stadiums
+        ? (Icons.info_outline, l.editorNamesStadiumsNote)
+        : null;
     return CustomScrollView(
       slivers: [
-        if (section.translated)
+        if (note != null)
           SliverPadding(
             padding: EdgeInsets.fromLTRB(padding.left, 0, padding.right, 0),
             sliver: SliverToBoxAdapter(
@@ -405,15 +411,15 @@ class _NameList extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.translate,
+                    Icon(
+                      note.$1,
                       size: 16,
                       color: AppColors.onSurfaceVariant,
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: Text(
-                        l.editorNamesEveryLanguage,
+                        note.$2,
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColors.onSurfaceVariant,
                         ),

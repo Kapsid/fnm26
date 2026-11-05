@@ -14786,7 +14786,8 @@ class AppLocalizationsCs extends AppLocalizations {
   String get editorAboutPress => 'Novináři a jejich média';
 
   @override
-  String get editorAboutNameLists => 'Jména pro nové hráče';
+  String get editorAboutNameLists =>
+      'Jména pro nové hráče, místní fanoušky a realizační tým';
 
   @override
   String get editorAboutSponsors => 'Značky sponzorů';
@@ -15239,7 +15240,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Jména oddělte čárkami nebo novými řádky. Každý seznam potřebuje aspoň $min jmen. Používají se pro místní fanoušky a členy realizačního týmu.';
+    return 'Jména oddělte čárkami nebo novými řádky. Každý seznam potřebuje aspoň $min jmen. Dostanou je noví hráči, místní fanoušci a realizační tým.';
   }
 
   @override
@@ -15257,4 +15258,8 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorNamesPick => 'Vyberte jméno, které chcete upravit.';
+
+  @override
+  String get editorNamesStadiumsNote =>
+      'Přejmenovat lze jen národní stadiony uvedené zde: hlavní stadion každého města.';
 }

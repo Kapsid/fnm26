@@ -12,9 +12,17 @@ import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/names/name_section_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:fnm/core/config/ui_language.dart';
+import 'package:fnm/data/repositories/drift_player_repository.dart';
+import 'package:fnm/data/seed/seed_source.dart';
+import 'package:fnm/features/editor/names/name_sections.dart';
+import 'package:fnm/features/editor/pack_home_screen.dart';
+import 'package:fnm/features/editor/editor_ui.dart';
 
 import '../helpers/editor_app.dart';
 import '../helpers/seeded_save.dart';
+import '../helpers/test_database.dart';
 
 WorldPack _pack(ProviderContainer c, int id) =>
     c.read(packEditorProvider(id)).value!;
@@ -252,6 +260,184 @@ void main() {
       r.index: PackReporter(name: 'Jana Nová', outlet: r.outlet),
     });
     await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  test("the game's name lists are the whole pool new players are drawn "
+      'from', () async {
+    final lists = await AssetSeedSource(rootBundle).nameLists();
+    final db = createTestDatabase();
+    addTearDown(db.close);
+    final pool = (await DriftPlayerRepository(db).currentPoolOf(cze))!;
+    final raw = lists[cze]!;
+    // A nation with extras: the pool is more than the classic lists.
+    expect(raw.firstMore.where((n) => !raw.first.contains(n)), isNotEmpty);
+    expect(raw.surMore.where((n) => !raw.sur.contains(n)), isNotEmpty);
+    final entry = nameGroups(
+      NameSection.nameLists,
+      enL,
+      realNations,
+      lists: lists,
+    ).single.entries.firstWhere((e) => e.key == '$cze');
+    expect(entry.firstNames, pool.first);
+    expect(entry.surnames, pool.sur);
+    expect(namePoolOf(raw).first, pool.first);
+    expect(namePoolOf(raw).sur, pool.sur);
+  });
+
+  testWidgets('adding one name keeps the whole pool plus that name', (
+    tester,
+  ) async {
+    late Map<int, NameLists> lists;
+    await tester.runAsync(() async {
+      lists = await AssetSeedSource(rootBundle).nameLists();
+    });
+    final pool = namePoolOf(lists[cze]!);
+    final c = await editorContainer(
+      tester,
+      overrides: [editorNameListsProvider.overrideWith((ref) async => lists)],
+    );
+    final id = await insertPack(tester, c, testPack('Pool'));
+    await pumpEditorRoute(
+      tester,
+      c,
+      _at(NameSection.nameLists, id, nation: cze),
+    );
+    final row = find.byKey(NameSectionScreen.rowKey('$cze'));
+    expect(
+      find.descendant(
+        of: row,
+        matching: find.text(
+          enL.editorNamesListCounts(pool.first.length, pool.sur.length),
+        ),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(row);
+    await settle(tester);
+    final field = find.byKey(NameEditForm.firstNamesKey);
+    final text = tester.widget<TextField>(field).controller!.text;
+    await tester.enterText(field, '$text, Zbyhněv');
+    await tester.pump();
+    final saved = _pack(c, id).nameLists[cze]!;
+    expect(saved.first, [...pool.first, 'Zbyhněv']);
+    expect(saved.sur, pool.sur);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('typing the game name over a rename is the reset, and undo '
+      'brings the rename back into the open sheet', (tester) async {
+    final club = ClubService.leagueClubs('cze').first;
+    final c = await editorContainer(tester);
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Back').copyWith(clubs: {club: 'Sokoli'}),
+    );
+    await pumpEditorRoute(tester, c, _at(NameSection.clubs, id));
+    await tester.enterText(find.byKey(NameSectionScreen.searchKey), 'Sokoli');
+    await tester.pump();
+    await tester.tap(find.byKey(NameSectionScreen.rowKey(club)));
+    await settle(tester);
+    final name = find.byKey(NameEditForm.nameKey);
+    expect(tester.widget<TextField>(name).controller!.text, 'Sokoli');
+
+    await tester.enterText(name, club);
+    await tester.pump();
+    expect(_pack(c, id).clubs, isEmpty);
+
+    // Never lost for good: one undo, and the sheet shows it again.
+    c.read(packEditorProvider(id).notifier).undo();
+    await tester.pump();
+    expect(_pack(c, id).clubs, {club: 'Sokoli'});
+    expect(tester.widget<TextField>(name).controller!.text, 'Sokoli');
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('a code-only change keeps the English game name in English', (
+    tester,
+  ) async {
+    final en = await editorContainer(tester);
+    final id = await insertPack(tester, en, testPack('Code'));
+    await pumpEditorRoute(
+      tester,
+      en,
+      _at(NameSection.nations, id, nation: cze),
+    );
+    final row = find.byKey(NameSectionScreen.rowKey('$cze'));
+    await tester.tap(row);
+    await settle(tester);
+    await tester.enterText(find.byKey(NameEditForm.codeKey), 'BOH');
+    await tester.pump();
+    expect(_pack(en, id).nations, {cze: (name: '', code: 'BOH')});
+    await _done(tester);
+    for (final text in ['Czechia', 'BOH']) {
+      expect(
+        find.descendant(of: row, matching: find.text(text)),
+        findsOneWidget,
+      );
+    }
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('a code-only change shows the game name in Czech, in Czech', (
+    tester,
+  ) async {
+    final cs = await editorContainer(
+      tester,
+      overrides: [uiLanguageCodeProvider.overrideWithValue('cs')],
+    );
+    final csId = await insertPack(
+      tester,
+      cs,
+      testPack('Kód').copyWith(nations: {cze: (name: '', code: 'BOH')}),
+    );
+    final row = find.byKey(NameSectionScreen.rowKey('$cze'));
+    await pumpEditorRoute(
+      tester,
+      cs,
+      _at(NameSection.nations, csId, nation: cze),
+      locale: const Locale('cs'),
+    );
+    final czech = cs
+        .read(packEditorProvider(csId).notifier)
+        .world
+        .firstWhere((n) => n.id == cze)
+        .name;
+    expect(czech, isNot('Czechia'));
+    for (final text in [czech, 'BOH']) {
+      expect(
+        find.descendant(of: row, matching: find.text(text)),
+        findsOneWidget,
+      );
+    }
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('a nation record with nothing in it is no change', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Blank').copyWith(nations: {cze: (name: ' ', code: '')}),
+    );
+    await pumpEditorRoute(tester, c, editorPackLocation(id));
+    final tile = find.byKey(PackHomeScreen.sectionKey(EditorSection.nations));
+    await tester.scrollUntilVisible(tile, 200);
+    expect(
+      find.descendant(of: tile, matching: find.text(enL.editorCountChanged(0))),
+      findsOneWidget,
+    );
+    expect(sectionTitle(enL, EditorSection.nations), isNotEmpty);
+    await pumpEditorRoute(tester, c, _at(NameSection.nations, id, nation: cze));
+    expect(
+      find.descendant(
+        of: find.byKey(NameSectionScreen.rowKey('$cze')),
+        matching: find.text(enL.editorNamesChanged),
+      ),
+      findsNothing,
+    );
   });
 
   for (final size in kTabletSizes) {

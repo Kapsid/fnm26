@@ -328,6 +328,7 @@ void main() {
           first: read(classic['$_czechia'], 'first'),
           firstMore: read(more['$_czechia'], 'firstMore'),
           sur: read(classic['$_czechia'], 'sur'),
+          surLate: read(classic['$_czechia'], 'surLate'),
           surMore: read(more['$_czechia'], 'surMore'),
         ),
       };

@@ -13,6 +13,7 @@ import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
+import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -244,16 +245,16 @@ class _PackView {
       EditorSection.players => l.editorCountPlayers(
         pack.squads.values.fold(0, (sum, squad) => sum + squad.length),
       ),
-      EditorSection.nations => l.editorCountNations(world.length),
-      EditorSection.clubs => l.editorCountChanged(pack.clubs.length),
-      EditorSection.stadiums => l.editorCountChanged(pack.stadiums.length),
-      EditorSection.competitions => l.editorCountChanged(
-        pack.competitions.length,
+      EditorSection.nations ||
+      EditorSection.clubs ||
+      EditorSection.stadiums ||
+      EditorSection.competitions ||
+      EditorSection.yAccounts ||
+      EditorSection.press ||
+      EditorSection.nameLists ||
+      EditorSection.sponsors => l.editorCountChanged(
+        changedCount(NameSection.of(s)!, pack),
       ),
-      EditorSection.yAccounts => l.editorCountChanged(pack.yAccounts.length),
-      EditorSection.press => l.editorCountChanged(pack.reporters.length),
-      EditorSection.nameLists => l.editorCountChanged(pack.nameLists.length),
-      EditorSection.sponsors => l.editorCountChanged(pack.sponsors.length),
       EditorSection.trophies => l.editorCountTrophies(pack.trophies.length),
     };
     return _PackView(

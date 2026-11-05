@@ -22428,7 +22428,7 @@
   "@editorAboutPress": {
     "description": "One-line description of the Press section."
   },
-  "editorAboutNameLists": "Names for new players",
+  "editorAboutNameLists": "Names for new players, local fans and staff",
   "@editorAboutNameLists": {
     "description": "One-line description of the Name lists section."
   },
@@ -23021,7 +23021,7 @@
       }
     }
   },
-  "editorNamesListsHelp": "Separate the names with commas or new lines. Each list needs at least {min}. They name local fans and staff.",
+  "editorNamesListsHelp": "Separate the names with commas or new lines. Each list needs at least {min}. They name new players, local fans and staff.",
   "@editorNamesListsHelp": {
     "description": "Help at the top of the editor name list sheet.",
     "placeholders": {
@@ -23058,5 +23058,9 @@
   "editorNamesPick": "Pick a name to edit.",
   "@editorNamesPick": {
     "description": "Tablet editor name section, before a row is picked."
+  },
+  "editorNamesStadiumsNote": "Only the national grounds listed here can be renamed: the main stadium of each city.",
+  "@editorNamesStadiumsNote": {
+    "description": "Note at the top of the editor Stadiums section: which grounds a database can rename."
   }
 }

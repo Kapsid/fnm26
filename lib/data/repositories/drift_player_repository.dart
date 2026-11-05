@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart'
     show BooleanExpressionOperators, StringExpressionOperators;
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/db/app_database.dart';
@@ -20,6 +21,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
+import 'package:fnm/domain/services/names/name_pool.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/player/international_retirement.dart';
@@ -793,17 +795,27 @@ class DriftPlayerRepository implements PlayerRepository {
 
     return _richNamePools[era] = {
       for (final MapEntry(key: id, value: pool) in base.entries)
-        id: (
-          first: {...pool.first, ...extra(id, 'firstMore')}.toList(),
-          sur: {
-            ...pool.sur,
-            ...pool.surLate,
-            ...extra(id, 'surMore'),
-          }.toList(),
-          surLate: const <String>[],
-        ),
+        id: switch (currentNamePool(
+          first: pool.first,
+          firstMore: extra(id, 'firstMore'),
+          sur: pool.sur,
+          surLate: pool.surLate,
+          surMore: extra(id, 'surMore'),
+        )) {
+          final p => (first: p.first, sur: p.sur, surLate: const <String>[]),
+        },
     };
   }
+
+  /// The pool nation [nationId]'s new players are named from in a career
+  /// created now (null when it has none): what the editor must show as the
+  /// game's name lists.
+  @visibleForTesting
+  Future<NamePool?> currentPoolOf(int nationId) async =>
+      switch ((await _richPools())[nationId]) {
+        null => null,
+        final p => (first: p.first, sur: p.sur),
+      };
 
   /// Whether [careerId] reads the richer pools (see [namePoolsV2Kind]).
   Future<bool> _readsRichPools(int? careerId) =>

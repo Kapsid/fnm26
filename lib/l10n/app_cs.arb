@@ -3634,7 +3634,7 @@
   "editorAboutCompetitions": "Názvy soutěží",
   "editorAboutY": "Účty na Y",
   "editorAboutPress": "Novináři a jejich média",
-  "editorAboutNameLists": "Jména pro nové hráče",
+  "editorAboutNameLists": "Jména pro nové hráče, místní fanoušky a realizační tým",
   "editorAboutSponsors": "Značky sponzorů",
   "editorAboutTrophies": "Obrázky trofejí",
   "editorCountPlayers": "{count, plural, one{1 hráč} few{{count} hráči} other{{count} hráčů}}",
@@ -3737,9 +3737,10 @@
   "editorNamesSurnames": "Příjmení",
   "editorNamesFirstCount": "{count} / {min} křestních jmen",
   "editorNamesSurCount": "{count} / {min} příjmení",
-  "editorNamesListsHelp": "Jména oddělte čárkami nebo novými řádky. Každý seznam potřebuje aspoň {min} jmen. Používají se pro místní fanoušky a členy realizačního týmu.",
+  "editorNamesListsHelp": "Jména oddělte čárkami nebo novými řádky. Každý seznam potřebuje aspoň {min} jmen. Dostanou je noví hráči, místní fanoušci a realizační tým.",
   "editorNamesListCounts": "{first} křestních jmen, {sur} příjmení",
   "editorNamesMainStadium": "Hlavní stadion ve městě {city}",
   "editorNamesChanged": "Změněno",
-  "editorNamesPick": "Vyberte jméno, které chcete upravit."
+  "editorNamesPick": "Vyberte jméno, které chcete upravit.",
+  "editorNamesStadiumsNote": "Přejmenovat lze jen národní stadiony uvedené zde: hlavní stadion každého města."
 }

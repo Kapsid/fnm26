@@ -5,6 +5,7 @@ import 'package:fnm/data/seed/dormant_seed.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/names/name_pool.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
 
 /// Supplies the initial reference data (nations + players) used to populate the
@@ -47,8 +48,19 @@ typedef NameLists = ({
   List<String> first,
   List<String> firstMore,
   List<String> sur,
+  List<String> surLate,
   List<String> surMore,
 });
+
+/// The pool [lists] give a nation's new players in a career created now
+/// ([currentNamePool]): what a custom world's name lists replace.
+NamePool namePoolOf(NameLists lists) => currentNamePool(
+  first: lists.first,
+  firstMore: lists.firstMore,
+  sur: lists.sur,
+  surLate: lists.surLate,
+  surMore: lists.surMore,
+);
 
 /// A [SeedSource] that reads bundled JSON assets.
 class AssetSeedSource implements SeedSource {
@@ -82,13 +94,16 @@ class AssetSeedSource implements SeedSource {
       }
       List<String> read(Object? m, String key) =>
           (((m as Map?)?[key] as List?) ?? const []).cast<String>();
+      // Every nation either file names: one with extras alone has a pool
+      // too.
       _nameLists = {
-        for (final e in classic.entries)
-          int.parse(e.key): (
-            first: read(e.value, 'first'),
-            firstMore: read(more[e.key], 'firstMore'),
-            sur: read(e.value, 'sur'),
-            surMore: read(more[e.key], 'surMore'),
+        for (final key in {...classic.keys, ...more.keys})
+          int.parse(key): (
+            first: read(classic[key], 'first'),
+            firstMore: read(more[key], 'firstMore'),
+            sur: read(classic[key], 'sur'),
+            surLate: read(classic[key], 'surLate'),
+            surMore: read(more[key], 'surMore'),
           ),
       };
     } on Object {

@@ -14815,7 +14815,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get editorAboutPress => 'Journalists and their outlets';
 
   @override
-  String get editorAboutNameLists => 'Names for new players';
+  String get editorAboutNameLists =>
+      'Names for new players, local fans and staff';
 
   @override
   String get editorAboutSponsors => 'Sponsor brands';
@@ -15258,7 +15259,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String editorNamesListsHelp(int min) {
-    return 'Separate the names with commas or new lines. Each list needs at least $min. They name local fans and staff.';
+    return 'Separate the names with commas or new lines. Each list needs at least $min. They name new players, local fans and staff.';
   }
 
   @override
@@ -15276,4 +15277,8 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get editorNamesPick => 'Pick a name to edit.';
+
+  @override
+  String get editorNamesStadiumsNote =>
+      'Only the national grounds listed here can be renamed: the main stadium of each city.';
 }
