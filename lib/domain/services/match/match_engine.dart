@@ -10,6 +10,7 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
+import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/domain/services/match/performance_mark.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
@@ -780,6 +781,11 @@ class MatchEngine {
     // stream. Forking never advances [rng], and nothing that decides an
     // outcome draws from this one, so every result stays byte-identical.
     final detailRng = rng.fork(0xD7A1);
+    // Penalties and direct free kicks on a SIXTH stream: whether a foul in or
+    // around the box is given, the card it draws, and how the kick ends.
+    // These decide outcomes, so they never share [detailRng]; forked after it
+    // and, like it, without advancing [rng].
+    final playRng = rng.fork(0xF0E1);
     // Moments as they happen, each with the event it points at (a goal, a
     // card, a sub), whose index is settled after the final sort of [events].
     final momentLog = <({MatchMoment moment, MatchEvent? event})>[];
@@ -793,8 +799,10 @@ class MatchEngine {
         momentLog.add((moment: moment, event: event));
 
     // Records one shot the engine has just counted. [shooter] is the player
-    // the engine picked for the chance; a goal's shooter, assist and penalty
-    // flag come from its own [goal] event instead.
+    // the engine picked for the chance; a goal's shooter and assist come from
+    // its own [goal] event instead. A dead-ball shot (a penalty or a direct
+    // free kick) names its own [zone] and [outcome]; any other shot's are
+    // drawn here on [detailRng].
     void recordShot({
       required int minute,
       required int stoppage,
@@ -806,8 +814,9 @@ class MatchEngine {
       required MatchEvent? goal,
       Player? deliverer,
       bool header = false,
+      PitchZone? zone,
+      ShotOutcome? outcome,
     }) {
-      final penalty = goal != null && goal.penalty;
       logMoment(
         ShotMoment(
           minute: minute,
@@ -817,17 +826,15 @@ class MatchEngine {
           shooterId: goal?.playerId ?? shooter.id,
           assistId: goal != null ? goal.assistPlayerId : deliverer?.id,
           keeperId: _keeperOf(def)?.id,
-          zone: penalty
-              ? PitchZone.boxCentre
-              : header
-              ? _headerZone(xg, detailRng)
-              : _shotZone(xg, detailRng),
+          zone:
+              zone ??
+              (header ? _headerZone(xg, detailRng) : _shotZone(xg, detailRng)),
           xg: xg,
-          outcome: goal != null
-              ? ShotOutcome.goal
-              : _missOutcome(xg, detailRng),
-          header: header && !penalty,
-          origin: penalty ? ShotOrigin.penalty : origin,
+          outcome:
+              outcome ??
+              (goal != null ? ShotOutcome.goal : _missOutcome(xg, detailRng)),
+          header: header,
+          origin: origin,
         ),
         goal,
       );
@@ -863,6 +870,8 @@ class MatchEngine {
 
     // Records a foul by [fouler]'s side on [fouled]'s side. [culpritId] is
     // the carded man when a [card] was shown; otherwise the culprit is drawn.
+    // [fouledId] is the man brought down when the engine knows him (the
+    // player whose chance it was); otherwise he is drawn too.
     // A foul in a dangerous place (the edge of the box or out wide) gives a
     // free kick worth staging, one anywhere else a routine one, and one the
     // referee waves play on through ([FoulMoment.advantage]) none at all.
@@ -874,6 +883,7 @@ class MatchEngine {
       required _Live fouled,
       required _Live fouler,
       int? culpritId,
+      int? fouledId,
       MatchEvent? card,
       PitchZone? zone,
       bool freeKick = true,
@@ -883,7 +893,9 @@ class MatchEngine {
           (fouler.xi.isEmpty
               ? fouler.team.xi.first.id
               : _pickCulprit(fouler, detailRng).id);
-      final victim = fouled.xi.isEmpty
+      final victim = fouledId != null
+          ? fouled.xi.firstWhere((p) => p.id == fouledId)
+          : fouled.xi.isEmpty
           ? fouled.team.xi.first
           : _pickScorer(fouled, detailRng);
       final where = zone ?? _foulZone(detailRng);
@@ -1023,6 +1035,175 @@ class MatchEngine {
     var awayShots = 0;
     var homeXg = 0.0;
     var awayXg = 0.0;
+
+    // A penalty for [atk]: [fouled] was brought down in [def]'s box. The foul
+    // can draw a card, by the same booking rules as any other; then [atk]'s
+    // penalty taker shoots against [def]'s keeper and scores, has it saved,
+    // or misses. Every draw that decides anything is on [playRng].
+    ({bool goal, double xg}) playPenalty({
+      required int minute,
+      required int stoppage,
+      required _Live atk,
+      required _Live def,
+      required Player fouled,
+    }) {
+      final culprit = _pickCulprit(def, playRng);
+      MatchEvent? card;
+      if (playRng.chance(_penaltyCardShare)) {
+        if (!booked.contains(culprit.id)) {
+          booked.add(culprit.id);
+          card = _card(
+            minute,
+            def,
+            culprit,
+            MatchEventType.yellowCard,
+            stoppage: stoppage,
+          );
+        } else if (playRng.chance(_secondBookingChance)) {
+          card = _card(
+            minute,
+            def,
+            culprit,
+            MatchEventType.redCard,
+            secondYellow: true,
+            stoppage: stoppage,
+          );
+        }
+      }
+      if (card != null) events.add(card);
+      recordFoul(
+        minute: minute,
+        stoppage: stoppage,
+        fouled: atk,
+        fouler: def,
+        culpritId: culprit.id,
+        fouledId: fouled.id,
+        card: card,
+        zone: _penaltyFoulZone(detailRng),
+        freeKick: false,
+      );
+      if (card?.type == MatchEventType.redCard) _leaveField(def, culprit.id);
+
+      final taker = _penaltyTaker(atk);
+      final keeper = _keeperOf(def);
+      final p = _penaltyGoalChance(atk, taker, keeper);
+      final outcome = _penaltyOutcome(playRng.nextDouble(), p, keeper);
+      final goal = outcome == ShotOutcome.goal
+          ? MatchEvent(
+              minute: minute,
+              stoppage: stoppage,
+              type: MatchEventType.goal,
+              teamNationId: atk.nationId,
+              playerId: taker.id,
+              playerName: taker.name,
+              penalty: true,
+            )
+          : null;
+      if (goal != null) events.add(goal);
+      recordShot(
+        minute: minute,
+        stoppage: stoppage,
+        atk: atk,
+        def: def,
+        shooter: taker,
+        xg: p,
+        origin: ShotOrigin.penalty,
+        goal: goal,
+        zone: PitchZone.boxCentre,
+        outcome: outcome,
+      );
+      return (goal: goal != null, xg: p);
+    }
+
+    // A direct free kick for [atk]: [fouled] was brought down at the edge of
+    // [def]'s box, and [atk]'s dead-ball man shoots. It can hit the wall, be
+    // saved, go wide, hit the woodwork or go in, decided on [playRng].
+    //
+    // A goal from one is neither a penalty nor a set-piece goal in the
+    // events: [MatchEvent.setPiece] means a delivery headed home, with the
+    // taker as the assist. The moments tell the two apart.
+    ({bool goal, double xg}) playDirectFreeKick({
+      required int minute,
+      required int stoppage,
+      required _Live atk,
+      required _Live def,
+      required Player fouled,
+    }) {
+      final taker = _deadBallTaker(atk)!;
+      final keeper = _keeperOf(def);
+      final p = _freeKickGoalChance(atk, taker, keeper);
+      final outcome = _freeKickOutcome(playRng.nextDouble(), p);
+      // The foul, then the free kick, taken by the same dead-ball man.
+      recordFoul(
+        minute: minute,
+        stoppage: stoppage,
+        fouled: atk,
+        fouler: def,
+        fouledId: fouled.id,
+        zone: PitchZone.edgeOfBox,
+      );
+      final goal = outcome == ShotOutcome.goal
+          ? MatchEvent(
+              minute: minute,
+              stoppage: stoppage,
+              type: MatchEventType.goal,
+              teamNationId: atk.nationId,
+              playerId: taker.id,
+              playerName: taker.name,
+            )
+          : null;
+      if (goal != null) events.add(goal);
+      recordShot(
+        minute: minute,
+        stoppage: stoppage,
+        atk: atk,
+        def: def,
+        shooter: taker,
+        xg: p,
+        origin: ShotOrigin.directFreeKick,
+        goal: goal,
+        zone: PitchZone.edgeOfBox,
+        outcome: outcome,
+      );
+      return (goal: goal != null, xg: p);
+    }
+
+    // An open-play chance [atk] has made that ends in a foul on [fouled], the
+    // player whose chance it was: in the box (a penalty) on
+    // [_penaltyPerChance] of chances, at its edge (a direct free kick) on
+    // [_directFreeKickPerChance]; null for the rest, which are shot as
+    // before. One draw on [playRng] a chance. A foul replaces the shot, so a
+    // side wins penalties and free kicks in proportion to the pressure it
+    // puts on, and the shot count is unchanged.
+    ({bool goal, double xg})? deadBall({
+      required int minute,
+      required int stoppage,
+      required _Live atk,
+      required _Live def,
+      required Player fouled,
+    }) {
+      if (def.xi.isEmpty) return null;
+      final roll = playRng.nextDouble();
+      if (roll < _penaltyPerChance) {
+        return playPenalty(
+          minute: minute,
+          stoppage: stoppage,
+          atk: atk,
+          def: def,
+          fouled: fouled,
+        );
+      }
+      if (roll < _penaltyPerChance + _directFreeKickPerChance) {
+        return playDirectFreeKick(
+          minute: minute,
+          stoppage: stoppage,
+          atk: atk,
+          def: def,
+          fouled: fouled,
+        );
+      }
+      return null;
+    }
 
     // One minute of play. [manageMinute] drives AI management and fatigue
     // (stoppage reuses 90); [stoppage] tags any event as second-half added time
@@ -1203,35 +1384,50 @@ class MatchEngine {
         // the finish — a spent striker underperforms the chance.
         final shooter = _pickScorer(liveHome, rng);
         final baseP = _goalProbability(homeAttack, awayDefence);
-        homeXg += baseP; // xG is the CHANCE quality, before the finish
         final p =
             (baseP *
                     _finishingSharpness(liveHome.energyOf(shooter.id)) *
                     _finishTrait(liveHome, shooter.id))
                 .clamp(0.04, 0.44);
-        MatchEvent? goal;
-        if (rng.chance(p)) {
-          homeScore++;
-          events.add(
-            goal = _goal(
-              manageMinute,
-              liveHome,
-              shooter,
-              assistRng,
-              stoppage: stoppage,
-            ),
-          );
-        }
-        recordShot(
+        // Drawn whatever the chance becomes, so one that ends in a foul
+        // leaves the main stream in step.
+        final finished = rng.chance(p);
+        final foul = deadBall(
           minute: manageMinute,
           stoppage: stoppage,
           atk: liveHome,
           def: liveAway,
-          shooter: shooter,
-          xg: baseP,
-          origin: ShotOrigin.openPlay,
-          goal: goal,
+          fouled: shooter,
         );
+        if (foul != null) {
+          homeXg += foul.xg;
+          if (foul.goal) homeScore++;
+        } else {
+          homeXg += baseP; // xG is the CHANCE quality, before the finish
+          MatchEvent? goal;
+          if (finished) {
+            homeScore++;
+            events.add(
+              goal = _goal(
+                manageMinute,
+                liveHome,
+                shooter,
+                assistRng,
+                stoppage: stoppage,
+              ),
+            );
+          }
+          recordShot(
+            minute: manageMinute,
+            stoppage: stoppage,
+            atk: liveHome,
+            def: liveAway,
+            shooter: shooter,
+            xg: baseP,
+            origin: ShotOrigin.openPlay,
+            goal: goal,
+          );
+        }
       }
       if (_chance(
         rng,
@@ -1254,35 +1450,50 @@ class MatchEngine {
         awayShots++;
         final shooter = _pickScorer(liveAway, rng);
         final baseP = _goalProbability(awayAttack, homeDefence);
-        awayXg += baseP;
         final p =
             (baseP *
                     _finishingSharpness(liveAway.energyOf(shooter.id)) *
                     _finishTrait(liveAway, shooter.id))
                 .clamp(0.04, 0.44);
-        MatchEvent? goal;
-        if (rng.chance(p)) {
-          awayScore++;
-          events.add(
-            goal = _goal(
-              manageMinute,
-              liveAway,
-              shooter,
-              assistRng,
-              stoppage: stoppage,
-            ),
-          );
-        }
-        recordShot(
+        // Drawn whatever the chance becomes, so one that ends in a foul
+        // leaves the main stream in step.
+        final finished = rng.chance(p);
+        final foul = deadBall(
           minute: manageMinute,
           stoppage: stoppage,
           atk: liveAway,
           def: liveHome,
-          shooter: shooter,
-          xg: baseP,
-          origin: ShotOrigin.openPlay,
-          goal: goal,
+          fouled: shooter,
         );
+        if (foul != null) {
+          awayXg += foul.xg;
+          if (foul.goal) awayScore++;
+        } else {
+          awayXg += baseP;
+          MatchEvent? goal;
+          if (finished) {
+            awayScore++;
+            events.add(
+              goal = _goal(
+                manageMinute,
+                liveAway,
+                shooter,
+                assistRng,
+                stoppage: stoppage,
+              ),
+            );
+          }
+          recordShot(
+            minute: manageMinute,
+            stoppage: stoppage,
+            atk: liveAway,
+            def: liveHome,
+            shooter: shooter,
+            xg: baseP,
+            origin: ShotOrigin.openPlay,
+            goal: goal,
+          );
+        }
       }
 
       // Set pieces — a third, additive channel on its own RNG stream. Corners /
@@ -1308,7 +1519,11 @@ class MatchEngine {
           stoppage: stoppage,
           atk: liveHome,
           def: liveAway,
-          takerId: (homeSp.deliverer ?? homeSp.shooter!).id,
+          takerId: _deliveryTaker(
+            liveHome,
+            homeSp.deliverer,
+            homeSp.shooter!,
+          ).id,
         );
         recordShot(
           minute: manageMinute,
@@ -1343,7 +1558,11 @@ class MatchEngine {
           stoppage: stoppage,
           atk: liveAway,
           def: liveHome,
-          takerId: (awaySp.deliverer ?? awaySp.shooter!).id,
+          takerId: _deliveryTaker(
+            liveAway,
+            awaySp.deliverer,
+            awaySp.shooter!,
+          ).id,
         );
         recordShot(
           minute: manageMinute,
@@ -1382,7 +1601,7 @@ class MatchEngine {
             stoppage: stoppage,
             atk: liveHome,
             kind: SetPieceKind.longThrow,
-            takerId: (lt.deliverer ?? lt.shooter!).id,
+            takerId: _deliveryTaker(liveHome, lt.deliverer, lt.shooter!).id,
             left: detailRng.chance(0.5),
           );
           recordShot(
@@ -1420,7 +1639,7 @@ class MatchEngine {
             stoppage: stoppage,
             atk: liveAway,
             kind: SetPieceKind.longThrow,
-            takerId: (lt.deliverer ?? lt.shooter!).id,
+            takerId: _deliveryTaker(liveAway, lt.deliverer, lt.shooter!).id,
             left: detailRng.chance(0.5),
           );
           recordShot(
@@ -2196,21 +2415,9 @@ class MatchEngine {
     SeededRng assistRng, {
     int stoppage = 0,
   }) {
-    // [scorer] was chosen at shot time (so fatigue could dull the finish). The
-    // penalty branch decides on the separate assist stream, so whether a goal
-    // is a spot-kick never shifts the score.
-    if (assistRng.chance(0.09)) {
-      final taker = _penaltyTaker(team);
-      return MatchEvent(
-        minute: minute,
-        stoppage: stoppage,
-        type: MatchEventType.goal,
-        teamNationId: team.nationId,
-        playerId: taker.id,
-        playerName: taker.name,
-        penalty: true,
-      );
-    }
+    // [scorer] was chosen at shot time (so fatigue could dull the finish).
+    // Penalties are no longer open-play goals relabelled after the fact: they
+    // are given and taken on their own (see `playPenalty` in [play]).
     final assister = _pickAssister(team, scorer, assistRng);
     return MatchEvent(
       minute: minute,
@@ -2331,18 +2538,118 @@ class MatchEngine {
     return roll < side ? PitchZone.boxLeft : PitchZone.boxRight;
   }
 
-  /// Where a foul happened, from the fouled side's view: mostly in the middle
-  /// of the pitch, rarely out wide or around the box (the only ones whose free
-  /// kick is staged: with the engine's crossed free kicks, about 3-4.5 staged
-  /// free kicks a match). Draws only from
-  /// the detail stream.
+  /// Where a foul that is neither a penalty nor a direct free kick happened,
+  /// from the fouled side's view: mostly in the middle of the pitch, now and
+  /// then 25-35 yards out, rarely out wide (the only ones of these whose free
+  /// kick is staged). Fouls in and at the edge of the box come from the
+  /// chances they end (see `deadBall` in [play]). With the crossed free kicks
+  /// and the direct ones that makes 3-4.5 staged free kicks a match. Draws
+  /// only from the detail stream.
   static PitchZone _foulZone(SeededRng detailRng) {
     final roll = detailRng.nextDouble();
     if (roll < 0.795) return PitchZone.midfield;
-    if (roll < 0.82) return PitchZone.wideLeft;
-    if (roll < 0.845) return PitchZone.wideRight;
-    if (roll < 0.975) return PitchZone.longRange;
-    return PitchZone.edgeOfBox;
+    if (roll < 0.805) return PitchZone.wideLeft;
+    if (roll < 0.815) return PitchZone.wideRight;
+    return PitchZone.longRange;
+  }
+
+  /// Where in the box a foul that gives a penalty happened, from the fouled
+  /// side's view. Display only: draws from the detail stream.
+  static PitchZone _penaltyFoulZone(SeededRng detailRng) {
+    final roll = detailRng.nextDouble();
+    if (roll < 0.5) return PitchZone.boxCentre;
+    return roll < 0.75 ? PitchZone.boxLeft : PitchZone.boxRight;
+  }
+
+  // Penalties and direct free kicks (the play pass, 2026-11-05). All of it
+  // is drawn on the play stream; see `match_play_pass_test.dart` for the
+  // measured rates and `match_baseline_test.dart` for the figures they are
+  // tuned to hold.
+
+  /// Penalties given per open-play chance a side creates: a foul in the box
+  /// is about as likely as the pressure that makes chances.
+  static const double _penaltyPerChance = 0.0141;
+
+  /// Direct free kicks shot at goal per open-play chance.
+  static const double _directFreeKickPerChance = 0.112;
+
+  /// The share of penalty fouls that draw a card. A booked man shown
+  /// another goes off on [_secondBookingChance], as in [_discipline]; a
+  /// penalty foul is never a straight red here.
+  static const double _penaltyCardShare = 0.3;
+
+  /// A penalty's conversion for an ordinary taker against an ordinary
+  /// keeper, before [PenaltyTakers.skillOf] (about 0.94 for a typical
+  /// international's best finisher) and the keeper.
+  static const double _penaltyBase = 0.815;
+
+  /// The chance [taker] scores a penalty against [keeper] (null: nobody in
+  /// goal). Composure from [PenaltyTakers.skillOf]; a keeper ten points
+  /// above 75 saves about 4% more, one below about 4% less.
+  static double _penaltyGoalChance(_Live atk, Player taker, Player? keeper) {
+    final skill = PenaltyTakers.skillOf(
+      taker,
+      atk.team.traitsByPlayer[taker.id] ?? const [],
+    );
+    final keeping = keeper == null
+        ? 0.8
+        : (1 + (keeper.overall - 75) / 250).clamp(0.9, 1.1);
+    return (_penaltyBase * skill / keeping).clamp(0.5, 0.95);
+  }
+
+  /// How a penalty scored at [p] ends, from one [roll] in [0, 1): a goal
+  /// below [p]; of the rest, about 70% saved, 20% wide, 10% on the
+  /// woodwork (with nobody in goal, most of the misses are off target).
+  static ShotOutcome _penaltyOutcome(double roll, double p, Player? keeper) {
+    if (roll < p) return ShotOutcome.goal;
+    final miss = (roll - p) / (1 - p);
+    final saved = keeper == null ? 0.2 : 0.7;
+    if (miss < saved) return ShotOutcome.saved;
+    return miss < saved + (1 - saved) / 3
+        ? ShotOutcome.woodwork
+        : ShotOutcome.wide;
+  }
+
+  /// A direct free kick's conversion for an ordinary dead-ball man (technical
+  /// 75) against a keeper.
+  static const double _freeKickBase = 0.07;
+
+  /// The chance [taker]'s direct free kick goes in: better technique bends
+  /// it in more often, a set-piece specialist more again, an empty goal
+  /// twice as often.
+  static double _freeKickGoalChance(_Live atk, Player taker, Player? keeper) {
+    final technique = (1 + (taker.attributes.technical - 75) / 60).clamp(
+      0.6,
+      1.5,
+    );
+    final specialist = atk.team.hasTrait(taker.id, PlayerTrait.setPiece)
+        ? PlayerTraits.setPieceFactor
+        : 1.0;
+    return (_freeKickBase * technique * specialist * (keeper == null ? 2 : 1))
+        .clamp(0.02, 0.25);
+  }
+
+  /// How a direct free kick scored at [p] ends, from one [roll] in [0, 1):
+  /// a goal below [p]; of the rest, 27% into the wall, 30% saved, 5% off
+  /// the woodwork and the rest wide or over.
+  static ShotOutcome _freeKickOutcome(double roll, double p) {
+    if (roll < p) return ShotOutcome.goal;
+    final miss = (roll - p) / (1 - p);
+    if (miss < 0.27) return ShotOutcome.blocked;
+    if (miss < 0.57) return ShotOutcome.saved;
+    if (miss < 0.62) return ShotOutcome.woodwork;
+    return ShotOutcome.wide;
+  }
+
+  /// Who is shown taking a delivery that led to [shooter]'s header: the
+  /// engine's [deliverer], else the dead-ball man, else the next best
+  /// technician, so a header never shows the shooter as his own taker. Only
+  /// a side down to the shooter alone has nobody else. No draw.
+  Player _deliveryTaker(_Live team, Player? deliverer, Player shooter) {
+    if (deliverer != null) return deliverer;
+    final dead = _deadBallTaker(team);
+    if (dead != null && dead.id != shooter.id) return dead;
+    return _setPieceTaker(team, shooter) ?? shooter;
   }
 
   /// The side's dead-ball man for a corner or free kick the engine did not
@@ -2368,7 +2675,7 @@ class MatchEngine {
 
   /// Corners and free kicks the engine plays out (and that lead to a header)
   /// labelled corners; the rest are crossed free kicks.
-  static const double _cornerShareOfDeliveries = 0.6;
+  static const double _cornerShareOfDeliveries = 0.65;
 
   /// Corners that come to nothing.
   static const double _idleCornerPerMinute = 0.033;

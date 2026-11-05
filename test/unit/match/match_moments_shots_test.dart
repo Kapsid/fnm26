@@ -191,6 +191,7 @@ void main() {
         ShotOrigin.freeKickCross,
         ShotOrigin.longThrow,
         ShotOrigin.penalty,
+        ShotOrigin.directFreeKick,
       ]),
     );
   });

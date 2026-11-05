@@ -1,59 +1,30 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/match_baseline.dart';
+import '../../helpers/match_goldens.dart';
 
-/// Pins today's engine (before the pitch view): an exact golden of 200 matches
-/// and aggregate figures within bands. Regenerate with
-/// `dart run tool/capture_match_baseline.dart` only for an intended change.
+/// Pins the engine: exact goldens (200 flat matches, 50 with long throws, 30
+/// that go to extra time) and aggregate figures within bands.
+///
+/// The figures are the engine as it was before the pitch view, and stay the
+/// reference: a recalibrated engine must land inside the bands around them.
+/// The goldens follow intended outcome changes: regenerate them with
+/// `dart run tool/capture_match_baseline.dart --goldens-only`, which keeps the
+/// figures. Without the flag the tool re-measures the figures too.
 void main() {
-  final base =
-      jsonDecode(File('test/fixtures/match_baseline.json').readAsStringSync())
-          as Map<String, dynamic>;
+  final base = loadMatchBaseline();
 
-  test('the engine still produces the golden', () {
-    final golden = base['golden'] as List;
-    expect(golden.length, goldenMatches);
-    for (var i = 0; i < goldenMatches; i++) {
-      expect(
-        jsonDecode(jsonEncode(goldenMatch(i))),
-        golden[i],
-        reason: 'golden match $i changed',
-      );
-    }
-  });
+  test('the engine still produces the golden', () => expectFlatGolden(base));
 
-  test('the engine still produces the long-throw golden', () {
-    final golden = base['longThrowGolden'] as List;
-    expect(golden.length, longThrowGoldenMatches);
-    for (var i = 0; i < longThrowGoldenMatches; i++) {
-      expect(
-        jsonDecode(
-          jsonEncode(
-            goldenMatch(i, longThrow: true, seed: longThrowGoldenSeed),
-          ),
-        ),
-        golden[i],
-        reason: 'long-throw golden match $i changed',
-      );
-    }
-  });
+  test(
+    'the engine still produces the long-throw golden',
+    () => expectLongThrowGolden(base),
+  );
 
-  test('the engine still produces the extra-time golden', () {
-    final golden = base['extraTimeGolden'] as List;
-    expect(golden.length, extraTimeGoldenMatches);
-    final indices = extraTimeGoldenIndices();
-    for (var k = 0; k < extraTimeGoldenMatches; k++) {
-      final i = indices[k];
-      expect(
-        jsonDecode(jsonEncode({'fixture': i, ...extraTimeGoldenMatch(i)})),
-        golden[k],
-        reason: 'extra-time golden match $i changed',
-      );
-    }
-  });
+  test(
+    'the engine still produces the extra-time golden',
+    () => expectExtraTimeGolden(base),
+  );
 
   test('figures stay near baseline', () {
     final figures = base['figures'] as Map<String, dynamic>;

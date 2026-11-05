@@ -9,9 +9,11 @@ library;
 
 import 'package:meta/meta.dart' show immutable;
 
-/// A coarse area of the attacking third (from the shooting side's view), for
-/// placing a moment on the pitch. Left and right are as the attacking side
-/// faces the goal.
+/// A coarse area of the pitch, from the view of the side the moment belongs
+/// to (the shooting side, the side fouled, the side taking a set piece), for
+/// placing a moment on the pitch. Every value but [midfield] is in that
+/// side's attacking third; [midfield] is everywhere short of it. Left and
+/// right are as that side faces the goal it attacks.
 enum PitchZone {
   boxCentre,
   boxLeft,
@@ -102,9 +104,8 @@ final class ShotMoment extends MatchMoment {
 
   /// The chance's quality, exactly what the engine added to the side's xG.
   ///
-  /// For a penalty this is the value of the open-play chance the engine
-  /// rolled before relabelling the goal as a penalty, not the quality of a
-  /// penalty kick.
+  /// For a penalty or a direct free kick it is the kick's own chance of
+  /// going in, given the taker and the keeper.
   final double xg;
   final ShotOutcome outcome;
   final bool header;
@@ -212,8 +213,10 @@ final class SetPieceMoment extends MatchMoment {
   /// Where it is taken from, from the taking side's view.
   final PitchZone zone;
 
-  /// A flow-only restart (a free kick deep in the taking side's own half):
-  /// play goes on with no staging stop and no commentary line.
+  /// A flow-only restart: play goes on with no staging stop and no
+  /// commentary line. Every free kick short of the attacking third's
+  /// dangerous places is one: those in midfield or deeper, and the long-range
+  /// ones in the attacking half ([PitchZone.longRange]), played short.
   final bool routine;
 
   @override

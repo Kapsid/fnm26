@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -11,10 +8,12 @@ import 'package:fnm/domain/services/player/player_traits.dart';
 
 import '../../helpers/fixtures.dart';
 import '../../helpers/match_baseline.dart';
+import '../../helpers/match_goldens.dart';
 
 /// Task 3 of the pitch view: the engine records set pieces, fouls, offsides
 /// and subs, all on the detail stream, without changing any outcome (the
-/// goldens pin that).
+/// goldens pin that). Penalties and direct free kicks, which do change
+/// outcomes, came with Task 4 (match_play_pass_test.dart).
 void main() {
   const engine = MatchEngine();
 
@@ -166,6 +165,16 @@ void main() {
             isFalse,
             reason: '$f then $next',
           );
+          continue;
+        }
+        // A foul in the box is a penalty (match_play_pass_test.dart).
+        if (const [
+          PitchZone.boxCentre,
+          PitchZone.boxLeft,
+          PitchZone.boxRight,
+        ].contains(f.zone)) {
+          expect(next, isA<ShotMoment>(), reason: '$f');
+          expect((next! as ShotMoment).origin, ShotOrigin.penalty);
           continue;
         }
         expect(next, isA<SetPieceMoment>(), reason: '$f');
@@ -363,6 +372,7 @@ void main() {
         for (var k = 0; k < r.events.length; k++)
           if (r.events[k].type == MatchEventType.substitution) k,
       ];
+      expect(subs.length, subEvents.length);
       expect(subs.map((s) => s.eventIndex).toSet(), subEvents.toSet());
       for (final s in subs) {
         final e = r.events[s.eventIndex];
@@ -386,6 +396,116 @@ void main() {
       }
     }
     expect(named, greaterThan(15));
+  });
+
+  test('every fouled and offside player is on the pitch at the time, and no '
+      'offside player is a keeper', () {
+    // Plus matches with a planned sub and a live change, so men come on
+    // and go off.
+    final home = ratedTeam(1, 78);
+    final away = ratedTeam(2, 74);
+    final withSubs = [
+      for (var i = 0; i < 40; i++)
+        engine.play(
+          home: home,
+          away: away,
+          rng: SeededRng.forFixture(0x5E79, i),
+          subs: [
+            Substitution(
+              teamNationId: 1,
+              minute: 60,
+              offId: home.xi[10].id,
+              on: player(
+                id: 150,
+                nationId: 1,
+                position: PlayerPosition.st,
+                attributes: flatAttributes(78),
+              ),
+            ),
+          ],
+          changes: [
+            TacticalChange(
+              teamNationId: 2,
+              minute: 70,
+              formation: Formation.f433,
+              instructions: away.instructions,
+              xi: [
+                ...away.xi.take(6),
+                player(
+                  id: 250,
+                  nationId: 2,
+                  position: PlayerPosition.cm,
+                  attributes: flatAttributes(74),
+                ),
+                ...away.xi.skip(7),
+              ],
+            ),
+          ],
+        ),
+    ];
+    var checked = 0, subbed = 0;
+    for (final r in [...matches, ...withSubs]) {
+      // Who was on the pitch, rebuilt from the events: (minute, stoppage)
+      // each man came on (0 for a starter) and went off (sub, red, injury).
+      final on = <int, (int, int)>{
+        for (var n = 1; n <= 2; n++)
+          for (var i = 0; i < 11; i++) n * 100 + i: (0, 0),
+      };
+      final off = <int, (int, int)>{};
+      final offBySub = <int>{};
+      for (final e in r.events) {
+        final at = (e.minute, e.stoppage);
+        switch (e.type) {
+          case MatchEventType.substitution:
+            on[e.playerId] = at;
+            subbed++;
+            if (e.secondaryPlayerId case final id?) {
+              off[id] = at;
+              offBySub.add(id);
+            }
+          case MatchEventType.redCard:
+          case MatchEventType.injury:
+            off[e.playerId] = at;
+          case MatchEventType.goal:
+          case MatchEventType.yellowCard:
+            break;
+        }
+      }
+      bool before((int, int) a, (int, int) b) =>
+          a.$1 < b.$1 || (a.$1 == b.$1 && a.$2 < b.$2);
+      // Subs come first in a minute, so a man subbed on is on for all of
+      // it and a man subbed off for none. A red or a knock comes later in
+      // the minute than the moments before it, so he still counts as on
+      // in the minute he left.
+      void expectOn(int id, MatchMoment m) {
+        final at = (m.minute, m.stoppage);
+        final came = on[id];
+        expect(came, isNotNull, reason: '$id never played: $m');
+        expect(before(at, came!), isFalse, reason: '$id not on yet: $m');
+        if (off[id] case final left?) {
+          final gone = offBySub.contains(id)
+              ? !before(at, left)
+              : before(left, at);
+          expect(gone, isFalse, reason: '$id already off: $m');
+        }
+        checked++;
+      }
+
+      for (final m in r.moments) {
+        switch (m) {
+          case FoulMoment(:final fouledId, :final foulerId):
+            expectOn(fouledId, m);
+            expectOn(foulerId, m);
+          case OffsideMoment(:final playerId):
+            expectOn(playerId, m);
+            expect(playerId % 100, isNot(0), reason: 'keeper offside: $m');
+          default:
+            break;
+        }
+      }
+    }
+    expect(checked, greaterThan(1000));
+    expect(subbed, greaterThan(40));
   });
 
   test('a keeper sent off with no keeper to replace him leaves later shots '
@@ -429,11 +549,18 @@ void main() {
         .whereType<ShotMoment>()
         .where((s) => s.teamNationId == 1)
         .toList();
-    // Discipline is the last thing in a minute: the red's minute and
-    // before had a keeper, every minute after has none.
+    // The red's foul: its place in the minute. Discipline comes last in a
+    // minute, but a penalty foul's card is shown before the kick.
+    final redFoul = r.moments.whereType<FoulMoment>().singleWhere(
+      (f) => f.cardEventIndex == redAt,
+    );
+    // Every shot before the red had a keeper to face, every one after none.
     bool after(ShotMoment s) =>
         s.minute > red.minute ||
-        (s.minute == red.minute && s.stoppage > red.stoppage);
+        (s.minute == red.minute && s.stoppage > red.stoppage) ||
+        (s.minute == red.minute &&
+            s.stoppage == red.stoppage &&
+            s.seq > redFoul.seq);
     expect(shots.where(after), isNotEmpty);
     for (final s in shots) {
       expect(s.keeperId, after(s) ? isNull : keeperId, reason: '$s');
@@ -497,34 +624,5 @@ void main() {
     expect(once().routineRestarts, once().routineRestarts);
   });
 
-  test('golden still holds', () {
-    final base =
-        jsonDecode(
-              File('test/fixtures/match_baseline.json').readAsStringSync(),
-            )
-            as Map<String, dynamic>;
-    final golden = base['golden'] as List;
-    for (var i = 0; i < goldenMatches; i++) {
-      expect(jsonDecode(jsonEncode(goldenMatch(i))), golden[i]);
-    }
-    final lt = base['longThrowGolden'] as List;
-    for (var i = 0; i < longThrowGoldenMatches; i++) {
-      expect(
-        jsonDecode(
-          jsonEncode(
-            goldenMatch(i, longThrow: true, seed: longThrowGoldenSeed),
-          ),
-        ),
-        lt[i],
-      );
-    }
-    final et = base['extraTimeGolden'] as List;
-    for (final g in et.cast<Map<String, dynamic>>()) {
-      final i = g['fixture'] as int;
-      expect(
-        jsonDecode(jsonEncode({'fixture': i, ...extraTimeGoldenMatch(i)})),
-        g,
-      );
-    }
-  });
+  test('the goldens still hold', expectMatchGoldens);
 }
