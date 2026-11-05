@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -93,4 +94,102 @@ abstract final class WorldZone {
 
   /// [playerId]'s day-one age and overall in the current world, if known.
   static PackDayOne? dayOneOf(int playerId) => _current?.dayOne[playerId];
+}
+
+/// The custom world the career on screen belongs to, for the display code.
+///
+/// Names are printed by pure functions with no Riverpod at hand
+/// (`competitionLabel`, `nationCodeLabel`, and in later steps the sponsor,
+/// press, Y, stadium and trophy labels), so the world they print for is held
+/// here, in [current]. It is mirrored from `activeWorldProvider`, which
+/// follows the route: a career's world while one of its screens is open,
+/// [none] on the menus. Every getter answers null when the world has nothing
+/// to say, and the caller then prints exactly what it printed before.
+///
+/// Only DISPLAY reads this. Stored names (competitions, nations) stay the
+/// canonical English ones the logic compares; the real nation code stays
+/// the key for flags and data.
+class ActiveWorld {
+  /// [pack]'s overrides, with its custom [trophies] (key → PNG) and the real
+  /// code of every nation id ([realCodes]), which lets a code printed on its
+  /// own be swapped for the world's ([codeLabel]).
+  ActiveWorld(
+    WorldPack this.pack, {
+    this.trophies = const {},
+    Map<int, String> realCodes = const {},
+  }) : _codeLabels = {
+         for (final e in pack.nations.entries)
+           if (realCodes[e.key] case final real?)
+             if (e.value.code.trim().isNotEmpty) real: e.value.code,
+       };
+
+  const ActiveWorld._none()
+    : pack = null,
+      trophies = const {},
+      _codeLabels = const {};
+
+  /// The default world: no overrides at all.
+  static const ActiveWorld none = ActiveWorld._none();
+
+  /// The world the screens on show belong to. See the class comment.
+  static ActiveWorld current = none;
+
+  /// The career's world, or null for the default world.
+  final WorldPack? pack;
+
+  /// Custom trophy PNGs, by trophy key.
+  final Map<String, Uint8List> trophies;
+
+  /// Real code → the world's code, for the renamed nations only.
+  final Map<String, String> _codeLabels;
+
+  /// Whether this is the default world, with nothing overridden.
+  bool get isDefault => pack == null;
+
+  /// The stored names the World Championship has gone by, all printed as
+  /// it is (see `competitionLabel`'s table).
+  static const _worldChampionshipAliases = {
+    'World Cup',
+    'the World Cup',
+    'World Championship Finals',
+  };
+
+  /// Nation [id]'s name in this world, in every language.
+  String? nationName(int id) => _text(pack?.nations[id]?.name);
+
+  /// Nation [id]'s 3-letter display code in this world.
+  String? nationCode(int id) => _text(pack?.nations[id]?.code);
+
+  /// The world's code for the nation whose real code is [realCode].
+  String? codeLabel(String realCode) => _codeLabels[realCode];
+
+  /// The world's name for the competition stored as [stored].
+  String? competition(String stored) {
+    final p = pack;
+    if (p == null || p.competitions.isEmpty) return null;
+    final key = stored.trim();
+    return _text(p.competitions[key]) ??
+        (_worldChampionshipAliases.contains(key)
+            ? _text(p.competitions['World Championship'])
+            : null);
+  }
+
+  /// The world's name for the sponsor brand [brand].
+  String? sponsor(String brand) => _text(pack?.sponsors[brand]);
+
+  /// The world's name for the ground in [city], nation [nationId].
+  String? stadium(int nationId, String city) =>
+      _text(pack?.stadiums['$nationId:$city']);
+
+  /// The reporter replacing the press desk's reporter [index].
+  PackReporter? reporter(int index) => pack?.reporters[index];
+
+  /// The world's name for the Y account [original].
+  String? yAccount(String original) => _text(pack?.yAccounts[original]);
+
+  /// The world's picture of trophy [key].
+  Uint8List? trophy(String key) => trophies[key];
+
+  /// [s], unless there is nothing in it to print.
+  static String? _text(String? s) => s == null || s.trim().isEmpty ? null : s;
 }

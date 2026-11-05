@@ -261,7 +261,10 @@ class _TabletResultRow extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(code(f.homeNationId), style: TabletText.cell),
+                    Text(
+                      nationCodeLabel(code(f.homeNationId)),
+                      style: TabletText.cell,
+                    ),
                     const SizedBox(width: AppSpacing.sm),
                     FlagDisc(code(f.homeNationId), size: 20),
                   ],
@@ -291,7 +294,10 @@ class _TabletResultRow extends StatelessWidget {
                   children: [
                     FlagDisc(code(f.awayNationId), size: 20),
                     const SizedBox(width: AppSpacing.sm),
-                    Text(code(f.awayNationId), style: TabletText.cell),
+                    Text(
+                      nationCodeLabel(code(f.awayNationId)),
+                      style: TabletText.cell,
+                    ),
                   ],
                 ),
               ),

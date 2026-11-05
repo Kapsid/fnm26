@@ -611,7 +611,10 @@ class HostBidStatusRow extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final s = status;
     final comp = switch (s.comp) {
-      HostBidComp.worldChampionship => l.compWorldCup,
+      HostBidComp.worldChampionship => competitionLabel(
+        l,
+        'World Championship',
+      ),
       HostBidComp.continental => continentalCupLabel(
         l,
         s.nation.confederation,

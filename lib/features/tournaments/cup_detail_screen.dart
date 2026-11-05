@@ -6,6 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
@@ -1273,7 +1274,9 @@ class _HistoryState extends State<_History> {
                       _hostsOf(h).length == 1
                           ? l.tourCupHostLabel(widget.name(_hostsOf(h).single))
                           : l.tourCupHostLabelMulti(
-                              _hostsOf(h).map(widget.code).join(' · '),
+                              _hostsOf(h)
+                                  .map((id) => nationCodeLabel(widget.code(id)))
+                                  .join(' · '),
                             ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

@@ -30,6 +30,7 @@ import 'package:fnm/domain/repositories/squad_repository.dart';
 import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 import 'package:fnm/domain/repositories/tactic_library_repository.dart';
 import 'package:fnm/domain/repositories/tactics_repository.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// Data-layer dependency wiring.
 ///
@@ -75,12 +76,29 @@ final databaseReadyProvider = FutureProvider<void>((ref) async {
   await ref.watch(seedLoaderProvider).ensureSeeded();
 });
 
-final nationRepositoryProvider = Provider<NationRepository>(
-  (ref) => DriftNationRepository(
+/// The custom world of the career on screen; [ActiveWorld.none] on the menus
+/// and in every default career. Set by the router as a career's routes open
+/// and close (see `syncActiveWorld`), and mirrored by the router into
+/// [ActiveWorld.current] for the pure label functions that have no Riverpod
+/// at hand.
+final activeWorldProvider = StateProvider<ActiveWorld>((ref) {
+  // A container thrown away (a test, a restart) must not leave its world
+  // behind for the next one.
+  ref.onDispose(() => ActiveWorld.current = ActiveWorld.none);
+  return ActiveWorld.none;
+});
+
+/// The nations as the app shows them: in the UI language, and with the
+/// names and codes of the career's world ([activeWorldProvider]), so every
+/// list re-reads when a different career opens.
+final nationRepositoryProvider = Provider<NationRepository>((ref) {
+  final world = ref.watch(activeWorldProvider);
+  return DriftNationRepository(
     ref.watch(appDatabaseProvider),
     languageCode: ref.watch(uiLanguageCodeProvider),
-  ),
-);
+    world: world.isDefault ? null : world,
+  );
+});
 
 final playerRepositoryProvider = Provider<PlayerRepository>(
   (ref) => DriftPlayerRepository(

@@ -180,7 +180,7 @@ class _MatchTile extends StatelessWidget {
               const SizedBox(width: AppSpacing.xs),
               Flexible(
                 child: Text(
-                  opp?.code ?? '??',
+                  opp?.shortCode ?? '??',
                   style: AppTypography.labelMedium.copyWith(
                     fontWeight: FontWeight.w700,
                   ),

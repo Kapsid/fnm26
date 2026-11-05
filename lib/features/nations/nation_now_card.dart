@@ -323,7 +323,7 @@ class _FormChipView extends ConsumerWidget {
         _FormPip(chip.outcome),
         const SizedBox(width: 4),
         Text(
-          '${chip.goalsFor}-${chip.goalsAgainst} ${opp?.code ?? ''}',
+          '${chip.goalsFor}-${chip.goalsAgainst} ${opp?.shortCode ?? ''}',
           style: AppTypography.labelSmall,
         ),
       ],

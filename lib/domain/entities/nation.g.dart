@@ -21,6 +21,7 @@ _Nation _$NationFromJson(Map<String, dynamic> json) => _Nation(
         (k, e) => MapEntry(k, (e as num).toInt()),
       ) ??
       const <String, int>{},
+  displayCode: json['displayCode'] as String? ?? '',
 );
 
 Map<String, dynamic> _$NationToJson(_Nation instance) => <String, dynamic>{
@@ -34,6 +35,7 @@ Map<String, dynamic> _$NationToJson(_Nation instance) => <String, dynamic>{
   'secondaryColor': instance.secondaryColor,
   'englishName': instance.englishName,
   'hostBids': instance.hostBids,
+  'displayCode': instance.displayCode,
 };
 
 const _$ConfederationEnumMap = {

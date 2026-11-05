@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -45,6 +48,145 @@ final FutureProviderFamily<WorldZoneData?, int> careerWorldZoneProvider =
           .forCareer(careerId);
       return stored == null ? null : WorldZoneData.of(stored.pack);
     });
+
+/// Keeps [activeWorldProvider] on the world of the career whose screen is
+/// open. See [enterActiveWorld] and [syncActiveWorld].
+final activeWorldSyncProvider = Provider<ActiveWorldSync>(ActiveWorldSync.new);
+
+int? _careerIdOf(Uri location) {
+  final raw = location.queryParameters['careerId'];
+  return raw == null ? null : int.tryParse(raw);
+}
+
+/// For the router's redirect: before a route into a career known to run on
+/// a custom world builds, loads that world into [activeWorldProvider], so
+/// the career's screens are built on its names from their first frame and
+/// nothing they read is thrown away and read again when the world lands.
+///
+/// Null (nothing to wait for) for every other route, a default career's
+/// included: their navigation stays exactly as synchronous as it was.
+Future<void>? enterActiveWorld(Ref ref, Uri location) =>
+    ref.read(activeWorldSyncProvider).enter(_careerIdOf(location));
+
+/// For the router's delegate, which hears every change of route (a pop back
+/// into a save included, which no redirect sees): leaving every career for
+/// the menus drops the world; coming back into one reloads it.
+void syncActiveWorld(Ref ref, Uri location) =>
+    ref.read(activeWorldSyncProvider).follow(_careerIdOf(location));
+
+/// The bookkeeping behind [enterActiveWorld] and [syncActiveWorld].
+///
+/// Which careers run on a custom world is learnt once at start-up ([prime])
+/// and told as each one is created or brought onto the device ([noteWorld]).
+/// Only those careers' worlds are ever read: every other career is a default
+/// one, and entering it touches nothing (no database read, no wait), so
+/// default careers navigate exactly as before.
+///
+/// [activeWorldProvider] is only ever written after an await or in a
+/// microtask, never inside the router's own call, which can come in the
+/// middle of a build. A world that loads after the manager has already left
+/// its career is dropped.
+class ActiveWorldSync {
+  ActiveWorldSync(this._ref);
+
+  final Ref _ref;
+
+  /// Careers known to run on a custom world.
+  final Set<int> _withWorld = {};
+
+  /// The career whose world is loaded or loading; null on the menus.
+  int? _careerId;
+
+  /// The load [enter] is waiting for, while it runs.
+  Future<void>? _entering;
+
+  /// Learns which careers on this device run on a custom world.
+  Future<void> prime() async {
+    try {
+      final db = _ref.read(appDatabaseProvider);
+      final rows = await db.select(db.careerWorlds).get();
+      _withWorld.addAll(rows.map((r) => r.careerId));
+    } on Object catch (e, st) {
+      _report(e, st, 'listing the careers on a custom world');
+    }
+  }
+
+  /// Career [careerId] runs on a custom world: it has just been created on
+  /// one, or brought onto this device with one.
+  void noteWorld(int careerId) => _withWorld.add(careerId);
+
+  /// Enters career [careerId]'s world; null [careerId] (a route outside any
+  /// career) is left to [follow]. Returns the load to wait for, if any.
+  Future<void>? enter(int? careerId) {
+    if (careerId == null) return null;
+    if (careerId == _careerId) return _entering;
+    _careerId = careerId;
+    if (!_withWorld.contains(careerId)) {
+      _entering = null;
+      scheduleMicrotask(() => _switchTo(careerId));
+      return null;
+    }
+    late final Future<void> entering;
+    entering = _switchTo(careerId).whenComplete(() {
+      if (identical(_entering, entering)) _entering = null;
+    });
+    return _entering = entering;
+  }
+
+  /// Follows the routes into career [careerId] (null: out of every career).
+  void follow(int? careerId) {
+    if (careerId == _careerId) return;
+    _careerId = careerId;
+    _entering = null;
+    scheduleMicrotask(() => _switchTo(careerId));
+  }
+
+  /// Sets the world of career [careerId] (null: none), if the routes are
+  /// still in it once it is read. Reads only a career known to have one.
+  Future<void> _switchTo(int? careerId) async {
+    if (_careerId != careerId) return;
+    final world = careerId != null && _withWorld.contains(careerId)
+        ? await _load(careerId)
+        : null;
+    if (_careerId == careerId) _set(world ?? ActiveWorld.none);
+  }
+
+  void _set(ActiveWorld world) {
+    final controller = _ref.read(activeWorldProvider.notifier);
+    if (!identical(controller.state, world)) controller.state = world;
+  }
+
+  Future<ActiveWorld?> _load(int careerId) async {
+    try {
+      final stored = await _ref
+          .read(worldPackRepositoryProvider)
+          .forCareer(careerId);
+      if (stored == null) return null;
+      final db = _ref.read(appDatabaseProvider);
+      final rows = await db.select(db.nations).get();
+      return ActiveWorld(
+        stored.pack,
+        trophies: stored.trophies,
+        realCodes: {for (final r in rows) r.id: r.code},
+      );
+    } on Object catch (e, st) {
+      // A world that cannot be read shows the default names rather than
+      // nothing at all; the career's own reads report the damage.
+      _report(e, st, 'loading the world of career $careerId');
+      return null;
+    }
+  }
+
+  static void _report(Object e, StackTrace st, String doing) =>
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: e,
+          stack: st,
+          library: 'world pack',
+          context: ErrorDescription(doing),
+        ),
+      );
+}
 
 /// The packs on this device, by name.
 final worldPacksProvider = FutureProvider<List<WorldPackSummary>>(

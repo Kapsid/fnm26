@@ -172,7 +172,7 @@ class _Header extends StatelessWidget {
                     Flexible(
                       child: Text(
                         '${confederationLabel(l, v.nation.confederation)} · '
-                        '${v.nation.code}',
+                        '${v.nation.shortCode}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.bodyMedium.copyWith(

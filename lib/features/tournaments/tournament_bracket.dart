@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/text_size.dart';
 import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -410,7 +411,7 @@ class _TournamentBracketState extends State<TournamentBracket> {
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
-                    widget.code(nationId),
+                    nationCodeLabel(widget.code(nationId)),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelSmall.copyWith(

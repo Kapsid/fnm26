@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -673,7 +674,7 @@ class _Pot extends StatelessWidget {
                           FlagDisc(code(id), size: flagSize, highlighted: true),
                           const SizedBox(width: 3),
                           Text(
-                            code(id).toUpperCase(),
+                            nationCodeLabel(code(id)).toUpperCase(),
                             style: AppTypography.labelSmall.copyWith(
                               color: AppColors.primary,
                               fontWeight: FontWeight.w800,

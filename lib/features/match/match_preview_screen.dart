@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/match_stage.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -977,7 +978,11 @@ class _Side extends StatelessWidget {
       children: [
         FlagDisc(code, size: 48),
         const SizedBox(height: AppSpacing.xs),
-        Text(code, maxLines: 1, style: AppTypography.labelMedium),
+        Text(
+          nationCodeLabel(code),
+          maxLines: 1,
+          style: AppTypography.labelMedium,
+        ),
         const SizedBox(height: 2),
         Text(
           '${l10n.teamOverall} $overall',

@@ -252,8 +252,8 @@ class MatchStatsPanel extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(homeCode, style: AppTypography.labelMedium),
-            Text(awayCode, style: AppTypography.labelMedium),
+            Text(nationCodeLabel(homeCode), style: AppTypography.labelMedium),
+            Text(nationCodeLabel(awayCode), style: AppTypography.labelMedium),
           ],
         ),
         const SizedBox(height: AppSpacing.md),
@@ -339,7 +339,7 @@ class MatchStatsPanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            teamCode,
+            nationCodeLabel(teamCode),
             style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppSpacing.xs),
@@ -604,7 +604,7 @@ class _Lineups extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          teamCode,
+          nationCodeLabel(teamCode),
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -838,7 +838,7 @@ class _MotmCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '$name · $teamCode',
+                  '$name · ${nationCodeLabel(teamCode)}',
                   style: AppTypography.bodyLarge,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -898,7 +898,7 @@ class _MomentumBar extends StatelessWidget {
           Row(
             children: [
               Text(
-                homeCode,
+                nationCodeLabel(homeCode),
                 style: AppTypography.labelMedium.copyWith(color: homeC),
               ),
               const SizedBox(width: AppSpacing.xs),
@@ -919,7 +919,7 @@ class _MomentumBar extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
-                awayCode,
+                nationCodeLabel(awayCode),
                 style: AppTypography.labelMedium.copyWith(color: awayC),
               ),
             ],
@@ -1156,7 +1156,7 @@ class _ShootoutStrip extends StatelessWidget {
       SizedBox(
         width: 34,
         child: Text(
-          code,
+          nationCodeLabel(code),
           style: AppTypography.labelSmall,
           textAlign: TextAlign.center,
         ),

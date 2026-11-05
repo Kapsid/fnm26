@@ -239,7 +239,7 @@ List<GridColumnSet<Nation>> rankingColumnSets(
                 Flexible(
                   child: WholeText(
                     n.name,
-                    shortText: n.code,
+                    shortText: n.shortCode,
                     maxLines: 1,
                     shrinkBeforeShortening: 1,
                     breakWords: false,

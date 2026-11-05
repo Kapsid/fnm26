@@ -8,6 +8,7 @@ import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/match_stage.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
@@ -556,7 +557,7 @@ class _ResultRow extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      code(fixture.homeNationId),
+                      nationCodeLabel(code(fixture.homeNationId)),
                       style: AppTypography.bodySmall,
                     ),
                     const SizedBox(width: AppSpacing.sm),
@@ -590,7 +591,7 @@ class _ResultRow extends StatelessWidget {
                     FlagDisc(code(fixture.awayNationId), size: 22),
                     const SizedBox(width: AppSpacing.sm),
                     Text(
-                      code(fixture.awayNationId),
+                      nationCodeLabel(code(fixture.awayNationId)),
                       style: AppTypography.bodySmall,
                     ),
                   ],

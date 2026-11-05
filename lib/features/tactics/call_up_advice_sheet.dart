@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
@@ -549,7 +550,7 @@ class _AdviceRow extends StatelessWidget {
     final codeText = SizedBox(
       width: _codeWidth,
       child: Text(
-        code,
+        nationCodeLabel(code),
         style: AppTypography.labelSmall.copyWith(
           color: AppColors.onSurfaceVariant,
         ),

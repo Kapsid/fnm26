@@ -15,6 +15,7 @@ import 'package:fnm/features/cloud/cloud_backup_providers.dart';
 import 'package:fnm/features/onboarding/tour_overlay.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,6 +48,8 @@ class _FnmAppState extends ConsumerState<FnmApp> {
     // which defaults to "already offered" so a slow read cannot flash the
     // question at somebody who answered it long ago.
     unawaited(loadTourOffered(ref));
+    // Which saves run on a custom world, so opening one waits for its names.
+    unawaited(ref.read(activeWorldSyncProvider).prime());
     // The backup bookkeeping (last backup, the automatic toggle, reminders).
     unawaited(ref.read(backupSettingsProvider.notifier).ensureLoaded());
     // After a restore, automatic uploads wait until the restored saves have

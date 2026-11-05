@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/features/tournaments/cup_detail_providers.dart'
     show AllTimeScorer;
@@ -358,7 +359,9 @@ class TournamentHistory extends StatelessWidget {
                       _hostsOf(h).length == 1
                           ? l.tourHostLine(name(_hostsOf(h).single))
                           : l.tourHostLineMulti(
-                              _hostsOf(h).map(code).join(' · '),
+                              _hostsOf(h)
+                                  .map((id) => nationCodeLabel(code(id)))
+                                  .join(' · '),
                             ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

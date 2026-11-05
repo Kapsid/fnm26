@@ -17,7 +17,9 @@ abstract class Nation with _$Nation {
     /// `NationNames`). Everything user-facing prints this.
     required String name,
 
-    /// Short country code (e.g. `BRA`, `ENG`).
+    /// Short country code (e.g. `BRA`, `ENG`): the real FIFA key flags, the
+    /// nation's identity and every data table are keyed on. Never print it
+    /// as text; print [shortCode].
     required String code,
     required Confederation confederation,
 
@@ -49,7 +51,16 @@ abstract class Nation with _$Nation {
     /// Also carries the career's host-rules markers on the nation each names,
     /// keyed `mgr:<cycle>` (see `HostBidding.managerKey`, value 1).
     @Default(<String, int>{}) Map<String, int> hostBids,
+
+    /// The 3-letter code the career's custom world gives this nation, empty
+    /// when it gives none (always, in the default world). See [shortCode].
+    @Default('') String displayCode,
   }) = _Nation;
 
+  const Nation._();
+
   factory Nation.fromJson(Map<String, Object?> json) => _$NationFromJson(json);
+
+  /// The code to PRINT: the world's [displayCode], else the real [code].
+  String get shortCode => displayCode.isEmpty ? code : displayCode;
 }

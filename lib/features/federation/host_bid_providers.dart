@@ -700,7 +700,10 @@ hostBidOfferProvider = FutureProvider.autoDispose
 /// The tournament [offer] is for, written for the manager.
 String hostBidCompLabel(AppLocalizations l, HostBidOffer offer) =>
     switch (offer.comp) {
-      HostBidComp.worldChampionship => l.compWorldCup,
+      HostBidComp.worldChampionship => competitionLabel(
+        l,
+        'World Championship',
+      ),
       HostBidComp.continental => continentalCupLabel(
         l,
         offer.nation.confederation,

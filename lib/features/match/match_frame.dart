@@ -529,7 +529,7 @@ class _Side extends StatelessWidget {
             label,
             maxLines: 1,
             textAlign: TextAlign.center,
-            shortText: code,
+            shortText: nationCodeLabel(code),
             shrinkBeforeShortening: 1,
             style: AppTypography.titleMedium,
           ),

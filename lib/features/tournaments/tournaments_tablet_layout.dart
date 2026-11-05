@@ -257,7 +257,8 @@ class _CompetitionListRow extends StatelessWidget {
                     Text(
                       // As on the phone tile: a Nations Cup says just that,
                       // and its strap names the continent.
-                      NationsCups.isNationsCup(c.name)
+                      NationsCups.isNationsCup(c.name) &&
+                              ActiveWorld.current.competition(c.name) == null
                           ? l.compNationsCup
                           : competitionLabel(l, c.name),
                       maxLines: 1,

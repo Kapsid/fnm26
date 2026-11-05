@@ -117,7 +117,7 @@ final wcHostThemeProvider = FutureProvider.autoDispose.family<WcHostTheme, int>(
           .where((s) => s.isNotEmpty)
           .join(' · '),
       competitionLabel: l.tourHostCompetitionYear(
-        l.compWorldCup.capsIn(l.localeName),
+        competitionLabel(l, 'World Championship').capsIn(l.localeName),
         year,
       ),
       year: year,

@@ -1,6 +1,7 @@
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// Writing continents and competitions in the manager's own language.
@@ -22,8 +23,16 @@ String confederationLabel(AppLocalizations l, Confederation c) => switch (c) {
   Confederation.oceania => l.confOceania,
 };
 
-/// The continental cup's name, written for the manager.
-String continentalCupLabel(AppLocalizations l, Confederation c) => switch (c) {
+/// The continental cup's name, written for the manager: the career world's
+/// name for it if it has one ([ActiveWorld]), else the game's own.
+String continentalCupLabel(AppLocalizations l, Confederation c) =>
+    switch (ContinentalCups.byConfederation[c]) {
+      final cup? => ActiveWorld.current.competition(cup.name),
+      _ => null,
+    } ??
+    _continentalCupName(l, c);
+
+String _continentalCupName(AppLocalizations l, Confederation c) => switch (c) {
   Confederation.europe => l.compEuropeanChampionship,
   Confederation.southAmerica => l.compSouthAmericaCup,
   Confederation.northAmerica => l.compNorthAmericaCup,
@@ -37,8 +46,26 @@ String continentalCupLabel(AppLocalizations l, Confederation c) => switch (c) {
 /// [stored] is whatever the save holds — the canonical English name. Unknown
 /// names (there should be none, but a save from an older build may carry one)
 /// are returned as they came in rather than blanked.
+///
+/// A career on a custom world prints that world's name for a competition it
+/// renamed, the same in every language, and "`<new name>` Qualifiers" (in the
+/// manager's language) for its qualifying campaign.
 String competitionLabel(AppLocalizations l, String stored) {
   final trimmed = stored.trim();
+  final world = ActiveWorld.current;
+  if (!world.isDefault) {
+    final renamed = world.competition(trimmed);
+    if (renamed != null) return renamed;
+    final base = _worldChampionshipQualifying.contains(trimmed)
+        ? 'World Championship'
+        : trimmed.endsWith(_qualifiersSuffix)
+        ? trimmed.substring(0, trimmed.length - _qualifiersSuffix.length)
+        : null;
+    if (base != null) {
+      final renamedBase = world.competition(base.trim());
+      if (renamedBase != null) return l.compQualifiers(renamedBase);
+    }
+  }
   final known = _byEnglishName(l)[trimmed];
   if (known != null) return known;
   // "Europe Qualifiers", "Africa Qualifiers", … — the confederation's own World
@@ -56,6 +83,13 @@ String competitionLabel(AppLocalizations l, String stored) {
 }
 
 const String _qualifiersSuffix = ' Qualifiers';
+
+/// The stored names of the World Championship's qualifying campaign.
+const Set<String> _worldChampionshipQualifying = {
+  'World Cup Qualifying',
+  'World Cup Qualifiers',
+  'World Championship Qualifiers',
+};
 
 Map<String, String> _byEnglishName(AppLocalizations l) => {
   'World Cup': l.compWorldCup,

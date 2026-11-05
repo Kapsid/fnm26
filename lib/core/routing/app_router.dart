@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/features/awards/awards_ceremony_screen.dart';
 import 'package:fnm/features/awards/poty_history_screen.dart';
 import 'package:fnm/features/achievements/achievements_screen.dart';
@@ -20,6 +22,7 @@ import 'package:fnm/features/settings/settings_screen.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/squad/training_camp_screen.dart';
 import 'package:fnm/features/squad/youth_screen.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
@@ -1007,13 +1010,37 @@ final routerProvider = Provider<GoRouter>((ref) {
       builder: (context, state) => const StyleGalleryScreen(),
     ),
   ];
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: Routes.home,
     // A Pro-locked save opens to its gate, whichever route asked for it: the
     // saves list, the home card, a campaign's resume, a deep link.
-    redirect: (context, state) => proLockRedirect(ref, state.uri),
+    //
+    // A route into a career first loads that career's world (its own nation
+    // and competition names), once, so its screens build on it.
+    redirect: (context, state) {
+      final entering = enterActiveWorld(ref, state.uri);
+      return entering == null
+          ? proLockRedirect(ref, state.uri)
+          : entering.then((_) => proLockRedirect(ref, state.uri));
+    },
     routes: formFactor == FormFactor.tablet ? _tabletRoutes(routes) : routes,
   );
+  // The career on screen decides the names on screen (a custom world's
+  // nations and competitions). The label functions, which have no Riverpod
+  // at hand, read the world from [ActiveWorld.current].
+  ref.listen(
+    activeWorldProvider,
+    (_, world) => ActiveWorld.current = world,
+    fireImmediately: true,
+  );
+  // The delegate hears every change of route, a pop back into a save
+  // included, which a redirect would not; leaving for the menus drops the
+  // world.
+  final delegate = router.routerDelegate;
+  void onRoute() => syncActiveWorld(ref, delegate.currentConfiguration.uri);
+  delegate.addListener(onRoute);
+  ref.onDispose(() => delegate.removeListener(onRoute));
+  return router;
 });
 
 /// The same routes, with every in-save screen inside the tablet shell.

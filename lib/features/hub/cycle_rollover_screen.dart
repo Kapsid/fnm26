@@ -11,6 +11,7 @@ import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/message_text.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -933,7 +934,7 @@ class _SummaryCard extends StatelessWidget {
               l.hubHost,
               hosts.length == 1
                   ? name(hosts.single)
-                  : hosts.map(code).join(' · '),
+                  : hosts.map((id) => nationCodeLabel(code(id))).join(' · '),
             ),
           if (wc.topScorerName != null)
             _row(

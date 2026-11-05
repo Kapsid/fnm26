@@ -6,6 +6,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/friendlies/friendlies_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -472,7 +473,7 @@ class _OppChip extends StatelessWidget {
             FlagDisc(code, size: 16, highlighted: selected || recommended),
             const SizedBox(width: 4),
             Text(
-              code,
+              nationCodeLabel(code),
               style: AppTypography.labelSmall.copyWith(
                 color: selected || recommended
                     ? AppColors.primary

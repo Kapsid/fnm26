@@ -9,6 +9,7 @@ import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/tournaments/continental_clash_screen.dart';
 import 'package:fnm/features/tournaments/continental_detail_screen.dart';
@@ -503,7 +504,8 @@ class _ChampionshipTile extends StatelessWidget {
             // A Nations Cup tile says just that: the strap under it names the
             // continent, and "Coupe des Nations d’Amérique du Nord" cannot
             // fit two lines of a half-width tile in any language.
-            NationsCups.isNationsCup(c.name)
+            NationsCups.isNationsCup(c.name) &&
+                    ActiveWorld.current.competition(c.name) == null
                 ? l.compNationsCup
                 : competitionLabel(l, c.name),
             maxLines: 2,

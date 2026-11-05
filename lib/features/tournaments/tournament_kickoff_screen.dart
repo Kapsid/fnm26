@@ -55,7 +55,7 @@ tournamentKickoffProvider = FutureProvider.autoDispose
       final List<int> hosts;
       final conf = arg.conf;
       if (conf == null) {
-        title = l.compWorldCup.capsIn(l.localeName);
+        title = competitionLabel(l, 'World Championship').capsIn(l.localeName);
         year = CareerService.worldCupYear(career.cyclePointer);
         trophy = Trophies.worldCup;
         hosts = WorldCupHosts.hostsFor(

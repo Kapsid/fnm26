@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -46,7 +47,7 @@ String _wcFinishLabel(AppLocalizations l, String round) => switch (round) {
   'R16' => l.finishRoundOf16,
   'R32' => l.hubStageRoundOf32,
   'GROUP' => l.finishGroupStage,
-  _ => l.compWorldCupFinals,
+  _ => competitionLabel(l, 'World Championship Finals'),
 };
 const _wcFinishRank = {
   'GROUP': 1,

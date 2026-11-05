@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/shared/widgets/flag_disc.dart';
@@ -135,7 +136,7 @@ class _Side extends StatelessWidget {
   Widget build(BuildContext context) {
     final label = Flexible(
       child: Text(
-        code(id),
+        nationCodeLabel(code(id)),
         overflow: TextOverflow.ellipsis,
         textAlign: end ? TextAlign.end : TextAlign.start,
         style: AppTypography.bodySmall.copyWith(

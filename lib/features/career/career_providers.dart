@@ -34,7 +34,10 @@ import 'package:fnm/features/hub/objective_providers.dart'
 import 'package:fnm/features/tournaments/city_providers.dart'
     show hostVenuesV2Kind;
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
-    show worldPackRepositoryProvider, worldPackServiceProvider;
+    show
+        activeWorldSyncProvider,
+        worldPackRepositoryProvider,
+        worldPackServiceProvider;
 
 // The rollover (a part of hub_providers) writes it too.
 export 'package:fnm/features/tournaments/city_providers.dart'
@@ -316,6 +319,8 @@ class CareerService {
         case final DriftNationRepository nations) {
       nations.forgetStartingRanks(career.id);
     }
+    // Its first route waits for its world rather than repainting into it.
+    if (pack != null) _ref.read(activeWorldSyncProvider).noteWorld(career.id);
     await repo.recordStint(career.id, 0, nationId);
     // Its briefs follow the current rules (see briefRulesV2Kind), its
     // windows are fluid (see fluidWindowsKind), and its players are named

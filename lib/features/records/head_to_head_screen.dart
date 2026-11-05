@@ -415,9 +415,15 @@ class _Record extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _Tally(value: h.winsA, label: l.recordsCodeWins(a.code)),
+                      _Tally(
+                        value: h.winsA,
+                        label: l.recordsCodeWins(a.shortCode),
+                      ),
                       _Tally(value: h.draws, label: l.recordsDraws),
-                      _Tally(value: h.winsB, label: l.recordsCodeWins(b.code)),
+                      _Tally(
+                        value: h.winsB,
+                        label: l.recordsCodeWins(b.shortCode),
+                      ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -592,7 +598,8 @@ class _NationPickerSheetState extends State<_NationPickerSheet> {
               .where(
                 (n) =>
                     n.name.toLowerCase().contains(q) ||
-                    n.code.toLowerCase().contains(q),
+                    n.code.toLowerCase().contains(q) ||
+                    n.shortCode.toLowerCase().contains(q),
               )
               .toList();
     return Padding(

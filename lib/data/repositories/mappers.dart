@@ -6,6 +6,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/nation/nation_names.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// Maps Drift row classes to pure domain entities, keeping the domain layer
 /// free of any persistence types. One place to change if storage shape evolves.
@@ -14,11 +15,17 @@ extension NationRowMapper on NationRow {
   /// Converts this persisted row into a domain [Nation], with its name written
   /// for [languageCode] — the stored name is the canonical English one, and a
   /// Czech save should not read as a list of English countries.
-  Nation toDomain({String languageCode = 'en'}) => Nation(
+  ///
+  /// A [world] that renames the nation wins in every language, and gives it
+  /// its [Nation.displayCode]; [Nation.englishName] and [Nation.code] stay
+  /// the real ones the logic and the flags key on.
+  Nation toDomain({String languageCode = 'en', ActiveWorld? world}) => Nation(
     id: id,
-    name: NationNames.display(code, name, languageCode),
+    name:
+        world?.nationName(id) ?? NationNames.display(code, name, languageCode),
     englishName: name,
     code: code,
+    displayCode: world?.nationCode(id) ?? '',
     confederation: confederation,
     ranking: ranking,
     isFreeDemo: isFreeDemo,

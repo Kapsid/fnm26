@@ -377,7 +377,7 @@ class RankRow extends StatelessWidget {
                       Flexible(
                         child: WholeText(
                           nation.name,
-                          shortText: nation.code,
+                          shortText: nation.shortCode,
                           maxLines: 1,
                           shrinkBeforeShortening: 1,
                           breakWords: false,

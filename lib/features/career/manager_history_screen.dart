@@ -8,6 +8,7 @@ import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/career_label.dart';
 import 'package:fnm/core/util/competition_label.dart';
+import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
@@ -229,8 +230,9 @@ class _RecordResult extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(
-                '${result.code} ${result.scoreFor}–${result.scoreAgainst} '
-                '${result.opponentCode}',
+                '${nationCodeLabel(result.code)} '
+                '${result.scoreFor}–${result.scoreAgainst} '
+                '${nationCodeLabel(result.opponentCode)}',
                 style: AppTypography.bodyMedium.copyWith(
                   color: accent,
                   fontWeight: FontWeight.w700,

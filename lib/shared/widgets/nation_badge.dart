@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/nation_label.dart';
 
 /// A national-team emblem: a circular "enamel badge" (with a subtle lens
 /// highlight) housed inside a rounded-square container to keep a consistent
@@ -56,7 +57,7 @@ class NationBadge extends StatelessWidget {
           child:
               flag ??
               Text(
-                code.toUpperCase(),
+                nationCodeLabel(code).toUpperCase(),
                 style: AppTypography.labelSmall.copyWith(
                   color: AppColors.onSurface,
                   fontSize: circleSize * 0.3,

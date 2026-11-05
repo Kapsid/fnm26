@@ -6,10 +6,11 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// Drift-backed [NationRepository].
 class DriftNationRepository implements NationRepository {
-  DriftNationRepository(this._db, {this.languageCode = 'en'});
+  DriftNationRepository(this._db, {this.languageCode = 'en', this.world});
 
   final AppDatabase _db;
 
@@ -18,6 +19,11 @@ class DriftNationRepository implements NationRepository {
   /// a Czech save Czech everywhere — including the news and the social feed,
   /// which build their text in providers with no BuildContext.
   final String languageCode;
+
+  /// The custom world whose names to show, if any (see
+  /// [NationRowMapper.toDomain]). Only the display repository passes one;
+  /// a repository built for the career's own logic reads the real nations.
+  final ActiveWorld? world;
 
   /// Careers known to carry a dormant nation's marker, with the dormant ids.
   /// Only a yes is kept: a career id is never reused and the marker is never
@@ -32,7 +38,9 @@ class DriftNationRepository implements NationRepository {
       ..where((t) => t.id.isNotIn(DormantNations.ids))
       ..orderBy([(t) => OrderingTerm(expression: t.ranking)]);
     final rows = await query.get();
-    return rows.map((r) => r.toDomain(languageCode: languageCode)).toList();
+    return rows
+        .map((r) => r.toDomain(languageCode: languageCode, world: world))
+        .toList();
   }
 
   @override
@@ -42,7 +50,8 @@ class DriftNationRepository implements NationRepository {
       _db.nations,
     )..where((t) => t.id.isIn(DormantNations.forNewCareers))).get();
     final dormant = {
-      for (final r in rows) r.id: r.toDomain(languageCode: languageCode),
+      for (final r in rows)
+        r.id: r.toDomain(languageCode: languageCode, world: world),
     };
     return DormantNations.worldFrom(
       base,
@@ -59,14 +68,16 @@ class DriftNationRepository implements NationRepository {
       )
       ..orderBy([(t) => OrderingTerm(expression: t.ranking)]);
     final rows = await query.get();
-    return rows.map((r) => r.toDomain(languageCode: languageCode)).toList();
+    return rows
+        .map((r) => r.toDomain(languageCode: languageCode, world: world))
+        .toList();
   }
 
   @override
   Future<Nation?> byId(int id) async {
     final query = _db.select(_db.nations)..where((t) => t.id.equals(id));
     final row = await query.getSingleOrNull();
-    return row?.toDomain(languageCode: languageCode);
+    return row?.toDomain(languageCode: languageCode, world: world);
   }
 
   @override
@@ -74,7 +85,9 @@ class DriftNationRepository implements NationRepository {
     final query = _db.select(_db.nations)
       ..orderBy([(t) => OrderingTerm(expression: t.ranking)]);
     final rows = await query.get();
-    return rows.map((r) => r.toDomain(languageCode: languageCode)).toList();
+    return rows
+        .map((r) => r.toDomain(languageCode: languageCode, world: world))
+        .toList();
   }
 
   @override
@@ -186,7 +199,7 @@ class DriftNationRepository implements NationRepository {
     final dormant = {
       for (final r in rows)
         r.id: switch ((
-          r.toDomain(languageCode: languageCode),
+          r.toDomain(languageCode: languageCode, world: world),
           starting[r.id],
         )) {
           (final n, final rank?) => n.copyWith(ranking: rank),
