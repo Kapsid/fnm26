@@ -21637,6 +21637,588 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A'**
   String get callUpAwayShort;
+
+  /// Main-menu button that opens the database editor (make and share your own starting world).
+  ///
+  /// In en, this message translates to:
+  /// **'Editor'**
+  String get homeEditor;
+
+  /// Title of the database editor: the list of custom databases (world packs) on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'Editor'**
+  String get editorTitle;
+
+  /// Short explanation at the top of the database editor list.
+  ///
+  /// In en, this message translates to:
+  /// **'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.'**
+  String get editorIntro;
+
+  /// Heading of the editor list when no custom database exists.
+  ///
+  /// In en, this message translates to:
+  /// **'No databases yet'**
+  String get editorEmptyTitle;
+
+  /// Body of the editor list when no custom database exists.
+  ///
+  /// In en, this message translates to:
+  /// **'A new database starts as a copy of the default world. Change what you like; it saves as you go.'**
+  String get editorEmptyBody;
+
+  /// Button and dialog title: create a new custom database from the default world.
+  ///
+  /// In en, this message translates to:
+  /// **'New database'**
+  String get editorNew;
+
+  /// Button: import a database file (.fnmdb) from the device.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get editorImport;
+
+  /// Opens a database in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editorEdit;
+
+  /// Database action: rename it.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get editorRename;
+
+  /// Database action: make a copy of it.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
+  String get editorDuplicate;
+
+  /// Database action: write it to a file and open the share sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get editorExport;
+
+  /// Database action and confirm button: delete it from this device.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get editorDelete;
+
+  /// Dismisses an editor dialog without doing anything.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get editorCancel;
+
+  /// Confirm button of the new-database dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get editorCreate;
+
+  /// Tooltip of the menu button on a database row.
+  ///
+  /// In en, this message translates to:
+  /// **'More actions'**
+  String get editorMore;
+
+  /// Label of the database name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get editorNameLabel;
+
+  /// Hint and suggested name for a new database.
+  ///
+  /// In en, this message translates to:
+  /// **'My world'**
+  String get editorNameHint;
+
+  /// Title of the rename-database dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename database'**
+  String get editorRenameTitle;
+
+  /// Title of the duplicate-database dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate database'**
+  String get editorDuplicateTitle;
+
+  /// Suggested name for a copy of a database.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} copy'**
+  String editorCopyName(String name);
+
+  /// Error under the database name field when it is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Give it a name'**
+  String get editorNameEmpty;
+
+  /// Error under the database name field when it is too long.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it to {max} characters'**
+  String editorNameTooLong(int max);
+
+  /// Error under the database name field when it holds control characters.
+  ///
+  /// In en, this message translates to:
+  /// **'That name has characters that cannot be used'**
+  String get editorNameBadCharacters;
+
+  /// Title of the delete-database confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete database?'**
+  String get editorDeleteTitle;
+
+  /// Body of the delete-database confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" will be removed from this device. Careers already started on it keep working.'**
+  String editorDeleteBody(String name);
+
+  /// Status chip: the database is complete and can start a career.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get editorStatusReady;
+
+  /// Status chip: the database cannot start a career until these are fixed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 thing missing} other{{count} things missing}}'**
+  String editorStatusMissing(int count);
+
+  /// Status chip: a game update made the database incompatible; it must be fixed in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs attention'**
+  String get editorStatusAttention;
+
+  /// Status chip: the stored database could not be read.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot be opened'**
+  String get editorStatusUnreadable;
+
+  /// When a database was last changed, on its row in the list.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited {date}'**
+  String editorEdited(String date);
+
+  /// Shown while a new database is being made.
+  ///
+  /// In en, this message translates to:
+  /// **'Copying the default world…'**
+  String get editorCreating;
+
+  /// Snackbar after a database file was imported.
+  ///
+  /// In en, this message translates to:
+  /// **'Database imported'**
+  String get editorImported;
+
+  /// Import refused: the file is over the size cap.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is too big to be a database.'**
+  String get editorImportTooBig;
+
+  /// Import refused: the file is not a database.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is not an FNM database.'**
+  String get editorImportNotAPack;
+
+  /// Import refused: the file comes from a newer game version.
+  ///
+  /// In en, this message translates to:
+  /// **'That database was made with a newer version of the game. Update the game to import it.'**
+  String get editorImportNewer;
+
+  /// Import refused: a field failed the checks.
+  ///
+  /// In en, this message translates to:
+  /// **'That database holds data the game cannot use, so nothing was imported.'**
+  String get editorImportBadData;
+
+  /// Import refused: a trophy image is broken.
+  ///
+  /// In en, this message translates to:
+  /// **'A trophy picture in that file could not be read, so nothing was imported.'**
+  String get editorImportBadTrophy;
+
+  /// Snackbar when writing the database file failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The database could not be exported.'**
+  String get editorExportFailed;
+
+  /// Subject line of the share sheet for an exported database.
+  ///
+  /// In en, this message translates to:
+  /// **'FNM database'**
+  String get editorShareSubject;
+
+  /// Shown when an opened database cannot be found or read.
+  ///
+  /// In en, this message translates to:
+  /// **'This database is no longer on this device.'**
+  String get editorPackMissing;
+
+  /// Ready bar on the database home: nothing is missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to play'**
+  String get editorReadyTitle;
+
+  /// Body of the ready bar when the database is complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Every nation has a full squad and every name checks out. You can start a career on it.'**
+  String get editorReadyBody;
+
+  /// Ready bar on the database home when it is not complete.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 thing to fix before it can be played} other{{count} things to fix before it can be played}}'**
+  String editorNotReadyTitle(int count);
+
+  /// Body of the ready bar when the database is not complete.
+  ///
+  /// In en, this message translates to:
+  /// **'It saves as you go, so you can share it now and finish it later.'**
+  String get editorNotReadyBody;
+
+  /// Progress line under the ready bar.
+  ///
+  /// In en, this message translates to:
+  /// **'{ready} of {total} sections ready'**
+  String editorSectionsReady(int ready, int total);
+
+  /// Heading of the list of things to fix; each entry jumps to its place.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s missing'**
+  String get editorMissingTitle;
+
+  /// Expands the list of things to fix.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all ({count})'**
+  String editorShowAll(int count);
+
+  /// Collapses the list of things to fix.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get editorShowLess;
+
+  /// Undoes the last change to the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get editorUndo;
+
+  /// Heading over the database sections.
+  ///
+  /// In en, this message translates to:
+  /// **'Sections'**
+  String get editorSectionsTitle;
+
+  /// Database section: players of every nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get editorSectionPlayers;
+
+  /// Database section: nation names and codes.
+  ///
+  /// In en, this message translates to:
+  /// **'Nations'**
+  String get editorSectionNations;
+
+  /// Database section: club names.
+  ///
+  /// In en, this message translates to:
+  /// **'Clubs'**
+  String get editorSectionClubs;
+
+  /// Database section: national stadium names.
+  ///
+  /// In en, this message translates to:
+  /// **'Stadiums'**
+  String get editorSectionStadiums;
+
+  /// Database section: competition names.
+  ///
+  /// In en, this message translates to:
+  /// **'Competitions'**
+  String get editorSectionCompetitions;
+
+  /// Database section: the names of the accounts on Y, the in-game social network.
+  ///
+  /// In en, this message translates to:
+  /// **'Y accounts'**
+  String get editorSectionY;
+
+  /// Database section: journalists and their outlets.
+  ///
+  /// In en, this message translates to:
+  /// **'Press'**
+  String get editorSectionPress;
+
+  /// Database section: first names and surnames new players are given.
+  ///
+  /// In en, this message translates to:
+  /// **'Name lists'**
+  String get editorSectionNameLists;
+
+  /// Database section: sponsor brand names.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsors'**
+  String get editorSectionSponsors;
+
+  /// Database section: trophy pictures.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophies'**
+  String get editorSectionTrophies;
+
+  /// One-line description of the Players section.
+  ///
+  /// In en, this message translates to:
+  /// **'Squads, ratings and potential'**
+  String get editorAboutPlayers;
+
+  /// One-line description of the Nations section.
+  ///
+  /// In en, this message translates to:
+  /// **'Nation names and codes'**
+  String get editorAboutNations;
+
+  /// One-line description of the Clubs section.
+  ///
+  /// In en, this message translates to:
+  /// **'Club names'**
+  String get editorAboutClubs;
+
+  /// One-line description of the Stadiums section.
+  ///
+  /// In en, this message translates to:
+  /// **'National stadium names'**
+  String get editorAboutStadiums;
+
+  /// One-line description of the Competitions section.
+  ///
+  /// In en, this message translates to:
+  /// **'Competition names'**
+  String get editorAboutCompetitions;
+
+  /// One-line description of the Y accounts section.
+  ///
+  /// In en, this message translates to:
+  /// **'Accounts on Y'**
+  String get editorAboutY;
+
+  /// One-line description of the Press section.
+  ///
+  /// In en, this message translates to:
+  /// **'Journalists and their outlets'**
+  String get editorAboutPress;
+
+  /// One-line description of the Name lists section.
+  ///
+  /// In en, this message translates to:
+  /// **'Names for new players'**
+  String get editorAboutNameLists;
+
+  /// One-line description of the Sponsors section.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsor brands'**
+  String get editorAboutSponsors;
+
+  /// One-line description of the Trophies section.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophy pictures'**
+  String get editorAboutTrophies;
+
+  /// Count on the Players section tile.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 player} other{{count} players}}'**
+  String editorCountPlayers(int count);
+
+  /// Count on the Nations section tile.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 nation} other{{count} nations}}'**
+  String editorCountNations(int count);
+
+  /// How many names a section changes; zero means it uses the game names.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Game names} one{1 change} other{{count} changes}}'**
+  String editorCountChanged(int count);
+
+  /// How many trophy pictures the database replaces.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Game pictures} one{1 custom picture} other{{count} custom pictures}}'**
+  String editorCountTrophies(int count);
+
+  /// How many problems a section has.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 to fix} other{{count} to fix}}'**
+  String editorCountToFix(int count);
+
+  /// A nation's squad is too small (after the nation name).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 more player needed} other{{count} more players needed}}'**
+  String editorIssuePlayersShort(int count);
+
+  /// A nation's squad is too big.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 player too many} other{{count} players too many}}'**
+  String editorIssuePlayersOver(int count);
+
+  /// A nation needs more goalkeepers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 goalkeeper needed} other{{count} goalkeepers needed}}'**
+  String editorIssueGoalkeepers(int count);
+
+  /// A nation needs more defenders.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 defender needed} other{{count} defenders needed}}'**
+  String editorIssueDefenders(int count);
+
+  /// A nation needs more midfielders.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 midfielder needed} other{{count} midfielders needed}}'**
+  String editorIssueMidfielders(int count);
+
+  /// A nation needs more forwards.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 forward needed} other{{count} forwards needed}}'**
+  String editorIssueForwards(int count);
+
+  /// A player in the squad has an empty name.
+  ///
+  /// In en, this message translates to:
+  /// **'A player has no name'**
+  String get editorIssuePlayerNoName;
+
+  /// A player's age is out of range.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: age must be 15 to 45'**
+  String editorIssueAge(String name);
+
+  /// A player's overall rating is out of range.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: overall must be 1 to 99'**
+  String editorIssueRating(String name);
+
+  /// A player's potential is below his overall or above 99.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: potential must be between the overall and 99'**
+  String editorIssuePotential(String name);
+
+  /// A renamed item (club, stadium, competition...) was given an empty name; {name} is its game name.
+  ///
+  /// In en, this message translates to:
+  /// **'The new name for {name} is empty'**
+  String editorIssueRenameEmpty(String name);
+
+  /// Some name in the section is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'A name is empty'**
+  String get editorIssueNameEmpty;
+
+  /// A name is over the length limit.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" is too long'**
+  String editorIssueNameTooLong(String name);
+
+  /// A name holds control or broken characters.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" has characters that cannot be used'**
+  String editorIssueNameBadCharacters(String name);
+
+  /// A new name clashes with another account's name.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" is already taken'**
+  String editorIssueNameTaken(String name);
+
+  /// A nation's 3-letter code is not valid.
+  ///
+  /// In en, this message translates to:
+  /// **'The code must be 3 letters, A to Z'**
+  String get editorIssueCode;
+
+  /// Two or more nations share one 3-letter code; {nations} lists them.
+  ///
+  /// In en, this message translates to:
+  /// **'Code {code} is used by {nations}'**
+  String editorIssueDuplicateCode(String code, String nations);
+
+  /// A nation's custom first-name list is too short.
+  ///
+  /// In en, this message translates to:
+  /// **'At least {count} first names needed'**
+  String editorIssueFirstNames(int count);
+
+  /// A nation's custom surname list is too short.
+  ///
+  /// In en, this message translates to:
+  /// **'At least {count} surnames needed'**
+  String editorIssueSurnames(int count);
+
+  /// Some number in the section is out of range.
+  ///
+  /// In en, this message translates to:
+  /// **'A value is out of range'**
+  String get editorIssueValue;
+
+  /// A game update removed something the database refers to.
+  ///
+  /// In en, this message translates to:
+  /// **'Refers to something that is no longer in the game'**
+  String get editorIssueUnknown;
+
+  /// Placeholder body of an editor section that is not built yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing this section is on its way.'**
+  String get editorSectionSoon;
 }
 
 class _AppLocalizationsDelegate

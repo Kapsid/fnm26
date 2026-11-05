@@ -107,6 +107,11 @@ class _HomeTabletLayout extends StatelessWidget {
                                 onPressed: () => context.go(Routes.campaigns),
                                 child: Text(l.homeCampaigns),
                               ),
+                              TextButton(
+                                key: HomeScreen.editorKey,
+                                onPressed: () => context.go(Routes.editor),
+                                child: Text(l.homeEditor),
+                              ),
                             ],
                           ),
                         ),

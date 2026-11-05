@@ -1,0 +1,488 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/core/theme/app_dimens.dart';
+import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/services/world_pack/pack_rules.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/editor_ui.dart';
+import 'package:fnm/features/editor/pack_issue_text.dart';
+import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/tablet/tablet.dart';
+import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
+
+part 'pack_home_tablet_layout.dart';
+
+/// One database's home: whether it is ready to play, what is still missing
+/// (each entry jumps to its place), and its sections, each with what it
+/// holds and what it still needs.
+class PackHomeScreen extends ConsumerStatefulWidget {
+  const PackHomeScreen({required this.packId, super.key});
+
+  static const Key tabletLayoutKey = Key('packHome.tabletLayout');
+  static const Key undoKey = Key('packHome.undo');
+  static const Key readyKey = Key('packHome.ready');
+  static const Key notReadyKey = Key('packHome.notReady');
+  static const Key showAllKey = Key('packHome.showAll');
+
+  static Key issueKey(int index) => Key('packHome.issue.$index');
+  static Key sectionKey(EditorSection s) => Key('packHome.section.${s.name}');
+
+  final int packId;
+
+  @override
+  ConsumerState<PackHomeScreen> createState() => _PackHomeScreenState();
+}
+
+class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
+  /// How many of the missing things the phone lists before "Show all".
+  static const int _preview = 5;
+
+  bool _showAll = false;
+
+  int get _id => widget.packId;
+
+  /// Back to the list, once the last edit is on the device: the list reads
+  /// every pack again and must see it.
+  Future<void> _back() async {
+    await ref.read(packEditorProvider(_id).notifier).flush();
+    if (mounted) context.go(Routes.editor);
+  }
+
+  void _open(EditorSection section, {int? nationId}) =>
+      context.go(editorSectionLocation(section, _id, nationId: nationId));
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final async = ref.watch(packEditorProvider(_id));
+    final editor = ref.watch(packEditorProvider(_id).notifier);
+    final tablet = useTabletLayout(context, ref);
+    final pack = async.valueOrNull;
+
+    if (pack == null) {
+      final body = async.hasError
+          ? AppErrorState(message: l.editorPackMissing)
+          : const Center(child: CircularProgressIndicator());
+      return tablet
+          ? TabletPage(
+              scaffoldKey: PackHomeScreen.tabletLayoutKey,
+              title: l.editorTitle,
+              onBack: () => context.go(Routes.editor),
+              child: body,
+            )
+          : Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+                  onPressed: () => context.go(Routes.editor),
+                ),
+              ),
+              body: body,
+            );
+    }
+
+    final view = _PackView.of(l, pack, editor.world, editor.issues);
+    final undo = editor.canUndo
+        ? () => ref.read(packEditorProvider(_id).notifier).undo()
+        : null;
+
+    if (tablet) {
+      return _PackHomeTabletLayout(
+        state: this,
+        pack: pack,
+        view: view,
+        onUndo: undo,
+      );
+    }
+
+    final shown = _showAll
+        ? view.issues.length
+        : view.issues.length.clamp(0, _preview);
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: _back,
+        ),
+        title: Text(
+          pack.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            key: PackHomeScreen.undoKey,
+            tooltip: l.editorUndo,
+            icon: const Icon(Icons.undo),
+            color: AppColors.primary,
+            onPressed: undo,
+          ),
+        ],
+      ),
+      body: SafeArea(
+        top: false,
+        child: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.marginMobile,
+                AppSpacing.md,
+                AppSpacing.marginMobile,
+                0,
+              ),
+              sliver: SliverToBoxAdapter(child: _ReadyCard(view: view)),
+            ),
+            if (view.issues.isNotEmpty) ...[
+              _header(context, l.editorMissingTitle),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.marginMobile,
+                ),
+                sliver: SliverList.builder(
+                  itemCount: shown,
+                  itemBuilder: (context, i) => _IssueRow(
+                    index: i,
+                    issue: view.issues[i],
+                    onTap: () => _open(
+                      view.issues[i].section,
+                      nationId: view.issues[i].nationId,
+                    ),
+                  ),
+                ),
+              ),
+              if (view.issues.length > _preview)
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: TextButton(
+                      key: PackHomeScreen.showAllKey,
+                      onPressed: () => setState(() => _showAll = !_showAll),
+                      child: Text(
+                        _showAll
+                            ? l.editorShowLess
+                            : l.editorShowAll(view.issues.length),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+            _header(context, l.editorSectionsTitle),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.marginMobile,
+                0,
+                AppSpacing.marginMobile,
+                AppSpacing.lg,
+              ),
+              sliver: SliverGrid.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: AppSpacing.sm,
+                  crossAxisSpacing: AppSpacing.sm,
+                  mainAxisExtent: _SectionTile.height,
+                ),
+                itemCount: EditorSection.values.length,
+                itemBuilder: (context, i) {
+                  final s = EditorSection.values[i];
+                  return _SectionTile(
+                    section: s,
+                    facts: view.sections[s]!,
+                    onTap: () => _open(s),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _header(BuildContext context, String text) => SliverPadding(
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.marginMobile,
+      AppSpacing.lg,
+      AppSpacing.marginMobile,
+      AppSpacing.sm,
+    ),
+    sliver: SliverToBoxAdapter(child: _SectionHeader(text)),
+  );
+}
+
+/// What one section holds and how many things in it need fixing.
+typedef _SectionFacts = ({String count, int toFix});
+
+/// Everything the home shows of a pack, worked out once per build.
+class _PackView {
+  const _PackView({required this.issues, required this.sections});
+
+  factory _PackView.of(
+    AppLocalizations l,
+    WorldPack pack,
+    List<Nation> world,
+    List<PackIssue> issues,
+  ) {
+    final byId = {for (final n in world) n.id: n};
+    final described = [
+      for (final i in issues) describePackIssue(l, i, pack, byId),
+    ];
+    final toFix = {for (final s in EditorSection.values) s: 0};
+    for (final d in described) {
+      toFix[d.section] = toFix[d.section]! + 1;
+    }
+    String count(EditorSection s) => switch (s) {
+      EditorSection.players => l.editorCountPlayers(
+        pack.squads.values.fold(0, (sum, squad) => sum + squad.length),
+      ),
+      EditorSection.nations => l.editorCountNations(world.length),
+      EditorSection.clubs => l.editorCountChanged(pack.clubs.length),
+      EditorSection.stadiums => l.editorCountChanged(pack.stadiums.length),
+      EditorSection.competitions => l.editorCountChanged(
+        pack.competitions.length,
+      ),
+      EditorSection.yAccounts => l.editorCountChanged(pack.yAccounts.length),
+      EditorSection.press => l.editorCountChanged(pack.reporters.length),
+      EditorSection.nameLists => l.editorCountChanged(pack.nameLists.length),
+      EditorSection.sponsors => l.editorCountChanged(pack.sponsors.length),
+      EditorSection.trophies => l.editorCountTrophies(pack.trophies.length),
+    };
+    return _PackView(
+      issues: described,
+      sections: {
+        for (final s in EditorSection.values)
+          s: (count: count(s), toFix: toFix[s]!),
+      },
+    );
+  }
+
+  final List<PackIssueText> issues;
+  final Map<EditorSection, _SectionFacts> sections;
+
+  bool get ready => issues.isEmpty;
+
+  int get readySections => sections.values.where((f) => f.toFix == 0).length;
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Text(
+    text.capsIn(Localizations.localeOf(context).languageCode),
+    style: AppTypography.labelMedium.copyWith(
+      color: AppColors.onSurfaceVariant,
+    ),
+  );
+}
+
+/// The "ready to play" bar: green when the pack can start a career, amber
+/// with the count of things to fix when it cannot, and how many sections
+/// are done.
+class _ReadyCard extends StatelessWidget {
+  const _ReadyCard({required this.view});
+
+  final _PackView view;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final ready = view.ready;
+    final color = ready ? AppColors.positive : AppColors.warning;
+    final total = EditorSection.values.length;
+    return AppCard(
+      key: ready ? PackHomeScreen.readyKey : PackHomeScreen.notReadyKey,
+      color: color.withValues(alpha: 0.08),
+      border: Border.all(color: color.withValues(alpha: 0.7)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                ready ? Icons.check_circle : Icons.pending_outlined,
+                color: color,
+                size: 28,
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      ready
+                          ? l.editorReadyTitle
+                          : l.editorNotReadyTitle(view.issues.length),
+                      style: AppTypography.titleMedium.copyWith(color: color),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      ready ? l.editorReadyBody : l.editorNotReadyBody,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          ClipRRect(
+            borderRadius: AppRadii.smAll,
+            child: LinearProgressIndicator(
+              value: view.readySections / total,
+              minHeight: 6,
+              color: color,
+              backgroundColor: AppColors.surfaceContainerHighest,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs + 2),
+          Text(
+            l.editorSectionsReady(view.readySections, total),
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One missing thing: where, what, and a chevron to go there.
+class _IssueRow extends StatelessWidget {
+  const _IssueRow({
+    required this.index,
+    required this.issue,
+    required this.onTap,
+  });
+
+  final int index;
+  final PackIssueText issue;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+    child: AppCard(
+      key: PackHomeScreen.issueKey(index),
+      onTap: onTap,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm + 2,
+      ),
+      child: Row(
+        children: [
+          Icon(
+            sectionIcon(issue.section),
+            size: 20,
+            color: AppColors.warning,
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  issue.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelLarge,
+                ),
+                Text(
+                  issue.detail,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
+        ],
+      ),
+    ),
+  );
+}
+
+/// A section: its icon and name, what it holds, and what it still needs.
+class _SectionTile extends StatelessWidget {
+  const _SectionTile({
+    required this.section,
+    required this.facts,
+    required this.onTap,
+  });
+
+  static const double height = 112;
+
+  final EditorSection section;
+  final _SectionFacts facts;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final fix = facts.toFix > 0;
+    return AppCard(
+      key: PackHomeScreen.sectionKey(section),
+      onTap: onTap,
+      padding: const EdgeInsets.all(AppSpacing.sm + 4),
+      border: fix
+          ? Border.all(color: AppColors.warning.withValues(alpha: 0.7))
+          : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(sectionIcon(section), size: 20, color: AppColors.primary),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  sectionTitle(l, section),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelLarge,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Expanded(
+            child: Text(
+              sectionAbout(l, section),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Text(
+            fix ? l.editorCountToFix(facts.toFix) : facts.count,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall.copyWith(
+              color: fix ? AppColors.warning : AppColors.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

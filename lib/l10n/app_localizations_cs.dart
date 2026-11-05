@@ -14542,4 +14542,454 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get callUpAwayShort => 'V';
+
+  @override
+  String get homeEditor => 'Editor';
+
+  @override
+  String get editorTitle => 'Editor';
+
+  @override
+  String get editorIntro =>
+      'Vytvořte si vlastní výchozí svět: vlastní hráče, jejich sílu a vlastní názvy. Sdílejte ho jako soubor; přátelé si ho naimportují a rozehrají na něm kariéru.';
+
+  @override
+  String get editorEmptyTitle => 'Zatím žádné databáze';
+
+  @override
+  String get editorEmptyBody =>
+      'Nová databáze začíná jako kopie výchozího světa. Změňte, co chcete; ukládá se průběžně.';
+
+  @override
+  String get editorNew => 'Nová databáze';
+
+  @override
+  String get editorImport => 'Importovat';
+
+  @override
+  String get editorEdit => 'Upravit';
+
+  @override
+  String get editorRename => 'Přejmenovat';
+
+  @override
+  String get editorDuplicate => 'Duplikovat';
+
+  @override
+  String get editorExport => 'Exportovat';
+
+  @override
+  String get editorDelete => 'Smazat';
+
+  @override
+  String get editorCancel => 'Zrušit';
+
+  @override
+  String get editorCreate => 'Vytvořit';
+
+  @override
+  String get editorMore => 'Další akce';
+
+  @override
+  String get editorNameLabel => 'Název';
+
+  @override
+  String get editorNameHint => 'Můj svět';
+
+  @override
+  String get editorRenameTitle => 'Přejmenovat databázi';
+
+  @override
+  String get editorDuplicateTitle => 'Duplikovat databázi';
+
+  @override
+  String editorCopyName(String name) {
+    return '$name kopie';
+  }
+
+  @override
+  String get editorNameEmpty => 'Zadejte název';
+
+  @override
+  String editorNameTooLong(int max) {
+    return 'Nejvýše $max znaků';
+  }
+
+  @override
+  String get editorNameBadCharacters =>
+      'Název obsahuje znaky, které nelze použít';
+
+  @override
+  String get editorDeleteTitle => 'Smazat databázi?';
+
+  @override
+  String editorDeleteBody(String name) {
+    return 'Databáze „$name“ bude z tohoto zařízení odstraněna. Kariéry, které na ní už běží, pokračují dál.';
+  }
+
+  @override
+  String get editorStatusReady => 'Připraveno';
+
+  @override
+  String editorStatusMissing(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Chybí $count věcí',
+      few: 'Chybí $count věci',
+      one: 'Chybí 1 věc',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorStatusAttention => 'Vyžaduje pozornost';
+
+  @override
+  String get editorStatusUnreadable => 'Nelze otevřít';
+
+  @override
+  String editorEdited(String date) {
+    return 'Upraveno $date';
+  }
+
+  @override
+  String get editorCreating => 'Kopíruji výchozí svět…';
+
+  @override
+  String get editorImported => 'Databáze naimportována';
+
+  @override
+  String get editorImportTooBig => 'Ten soubor je na databázi příliš velký.';
+
+  @override
+  String get editorImportNotAPack => 'Ten soubor není databáze FNM.';
+
+  @override
+  String get editorImportNewer =>
+      'Ta databáze byla vytvořena v novější verzi hry. Aktualizujte hru a naimportujte ji znovu.';
+
+  @override
+  String get editorImportBadData =>
+      'Ta databáze obsahuje data, která hra nedokáže použít, takže se nic neimportovalo.';
+
+  @override
+  String get editorImportBadTrophy =>
+      'Obrázek trofeje v tom souboru nejde přečíst, takže se nic neimportovalo.';
+
+  @override
+  String get editorExportFailed => 'Databázi se nepodařilo exportovat.';
+
+  @override
+  String get editorShareSubject => 'Databáze FNM';
+
+  @override
+  String get editorPackMissing => 'Tato databáze už v zařízení není.';
+
+  @override
+  String get editorReadyTitle => 'Připraveno ke hře';
+
+  @override
+  String get editorReadyBody =>
+      'Každý tým má plný kádr a všechny názvy jsou v pořádku. Můžete na ní začít kariéru.';
+
+  @override
+  String editorNotReadyTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Před hrou je třeba opravit $count věcí',
+      few: 'Před hrou je třeba opravit $count věci',
+      one: 'Před hrou je třeba opravit 1 věc',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorNotReadyBody =>
+      'Ukládá se průběžně, takže ji můžete sdílet hned a dokončit později.';
+
+  @override
+  String editorSectionsReady(int ready, int total) {
+    return 'Připraveno $ready z $total sekcí';
+  }
+
+  @override
+  String get editorMissingTitle => 'Co chybí';
+
+  @override
+  String editorShowAll(int count) {
+    return 'Zobrazit vše ($count)';
+  }
+
+  @override
+  String get editorShowLess => 'Zobrazit méně';
+
+  @override
+  String get editorUndo => 'Zpět';
+
+  @override
+  String get editorSectionsTitle => 'Sekce';
+
+  @override
+  String get editorSectionPlayers => 'Hráči';
+
+  @override
+  String get editorSectionNations => 'Reprezentace';
+
+  @override
+  String get editorSectionClubs => 'Kluby';
+
+  @override
+  String get editorSectionStadiums => 'Stadiony';
+
+  @override
+  String get editorSectionCompetitions => 'Soutěže';
+
+  @override
+  String get editorSectionY => 'Účty na Y';
+
+  @override
+  String get editorSectionPress => 'Novináři';
+
+  @override
+  String get editorSectionNameLists => 'Seznamy jmen';
+
+  @override
+  String get editorSectionSponsors => 'Sponzoři';
+
+  @override
+  String get editorSectionTrophies => 'Trofeje';
+
+  @override
+  String get editorAboutPlayers => 'Kádry, síla a potenciál';
+
+  @override
+  String get editorAboutNations => 'Názvy a zkratky týmů';
+
+  @override
+  String get editorAboutClubs => 'Názvy klubů';
+
+  @override
+  String get editorAboutStadiums => 'Názvy národních stadionů';
+
+  @override
+  String get editorAboutCompetitions => 'Názvy soutěží';
+
+  @override
+  String get editorAboutY => 'Účty na Y';
+
+  @override
+  String get editorAboutPress => 'Novináři a jejich média';
+
+  @override
+  String get editorAboutNameLists => 'Jména pro nové hráče';
+
+  @override
+  String get editorAboutSponsors => 'Značky sponzorů';
+
+  @override
+  String get editorAboutTrophies => 'Obrázky trofejí';
+
+  @override
+  String editorCountPlayers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hráčů',
+      few: '$count hráči',
+      one: '1 hráč',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorCountNations(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count týmů',
+      few: '$count týmy',
+      one: '1 tým',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorCountChanged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count změn',
+      few: '$count změny',
+      one: '1 změna',
+      zero: 'Názvy ze hry',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorCountTrophies(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vlastních obrázků',
+      few: '$count vlastní obrázky',
+      one: '1 vlastní obrázek',
+      zero: 'Obrázky ze hry',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorCountToFix(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count k opravě',
+      few: '$count k opravě',
+      one: '1 k opravě',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssuePlayersShort(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Chybí $count hráčů',
+      few: 'Chybí $count hráči',
+      one: 'Chybí 1 hráč',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssuePlayersOver(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'O $count hráčů víc, než je možné',
+      few: 'O $count hráče víc, než je možné',
+      one: 'O 1 hráče víc, než je možné',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssueGoalkeepers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Chybí $count brankářů',
+      few: 'Chybí $count brankáři',
+      one: 'Chybí 1 brankář',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssueDefenders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Chybí $count obránců',
+      few: 'Chybí $count obránci',
+      one: 'Chybí 1 obránce',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssueMidfielders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Chybí $count záložníků',
+      few: 'Chybí $count záložníci',
+      one: 'Chybí 1 záložník',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssueForwards(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Chybí $count útočníků',
+      few: 'Chybí $count útočníci',
+      one: 'Chybí 1 útočník',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorIssuePlayerNoName => 'Jeden hráč nemá jméno';
+
+  @override
+  String editorIssueAge(String name) {
+    return '$name: věk musí být 15 až 45';
+  }
+
+  @override
+  String editorIssueRating(String name) {
+    return '$name: celková síla musí být 1 až 99';
+  }
+
+  @override
+  String editorIssuePotential(String name) {
+    return '$name: potenciál musí být mezi celkovou silou a 99';
+  }
+
+  @override
+  String editorIssueRenameEmpty(String name) {
+    return 'Nový název pro $name je prázdný';
+  }
+
+  @override
+  String get editorIssueNameEmpty => 'Jeden název je prázdný';
+
+  @override
+  String editorIssueNameTooLong(String name) {
+    return '„$name“ je příliš dlouhé';
+  }
+
+  @override
+  String editorIssueNameBadCharacters(String name) {
+    return '„$name“ obsahuje znaky, které nelze použít';
+  }
+
+  @override
+  String editorIssueNameTaken(String name) {
+    return '„$name“ už je obsazené';
+  }
+
+  @override
+  String get editorIssueCode => 'Zkratka musí mít 3 písmena A až Z';
+
+  @override
+  String editorIssueDuplicateCode(String code, String nations) {
+    return 'Zkratku $code používají: $nations';
+  }
+
+  @override
+  String editorIssueFirstNames(int count) {
+    return 'Je potřeba aspoň $count křestních jmen';
+  }
+
+  @override
+  String editorIssueSurnames(int count) {
+    return 'Je potřeba aspoň $count příjmení';
+  }
+
+  @override
+  String get editorIssueValue => 'Jedna hodnota je mimo rozsah';
+
+  @override
+  String get editorIssueUnknown => 'Odkazuje na něco, co už ve hře není';
+
+  @override
+  String get editorSectionSoon => 'Úpravy této sekce brzy přibudou.';
 }

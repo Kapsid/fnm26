@@ -25,6 +25,10 @@ import 'package:fnm/features/squad/youth_screen.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
+import 'package:fnm/features/editor/editor_list_screen.dart';
+import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/editor_section_screen.dart';
+import 'package:fnm/features/editor/pack_home_screen.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/finances_screen.dart';
 import 'package:fnm/features/federation/naturalization_screen.dart';
@@ -272,6 +276,41 @@ abstract final class Routes {
   /// A settled campaign's verdict. Expects `?careerId=`.
   static const campaignVerdict = '/campaign-verdict';
 
+  /// The database editor: the custom databases (world packs) on this device.
+  static const editor = '/editor';
+
+  /// One database's home: its sections and what it still needs. Expects
+  /// `?id=` (the pack).
+  static const editorPack = '/editor/pack';
+
+  /// A database's sections (see `EditorSection`). Each expects `?id=` (the
+  /// pack); the per-nation ones ([editorPlayers], [editorNameLists]) take
+  /// `&nation=` to open on one nation.
+  static const editorPlayers = '/editor/pack/players';
+  static const editorNations = '/editor/pack/nations';
+  static const editorClubs = '/editor/pack/clubs';
+  static const editorStadiums = '/editor/pack/stadiums';
+  static const editorCompetitions = '/editor/pack/competitions';
+  static const editorY = '/editor/pack/y';
+  static const editorPress = '/editor/pack/press';
+  static const editorNameLists = '/editor/pack/name-lists';
+  static const editorSponsors = '/editor/pack/sponsors';
+  static const editorTrophies = '/editor/pack/trophies';
+
+  /// Every section route of the editor.
+  static const Set<String> editorSections = {
+    editorPlayers,
+    editorNations,
+    editorClubs,
+    editorStadiums,
+    editorCompetitions,
+    editorY,
+    editorPress,
+    editorNameLists,
+    editorSponsors,
+    editorTrophies,
+  };
+
   /// The gate in front of a Pro-locked save (see `save_lock.dart`). Expects
   /// `?careerId=`. Every route into a save redirects here while it is locked.
   static const saveLocked = '/save-locked';
@@ -300,6 +339,9 @@ abstract final class Routes {
     campaignBrief,
     campaignVerdict,
     saveLocked,
+    editor,
+    editorPack,
+    ...editorSections,
   };
 }
 
@@ -345,6 +387,25 @@ final routerProvider = Provider<GoRouter>((ref) {
             int.tryParse(state.uri.queryParameters['careerId'] ?? '') ?? 0,
       ),
     ),
+    GoRoute(
+      path: Routes.editor,
+      builder: (context, state) => const EditorListScreen(),
+    ),
+    GoRoute(
+      path: Routes.editorPack,
+      builder: (context, state) => PackHomeScreen(
+        packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
+      ),
+    ),
+    for (final section in EditorSection.values)
+      GoRoute(
+        path: section.route,
+        builder: (context, state) => EditorSectionScreen(
+          section: section,
+          packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
+          nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
+        ),
+      ),
     GoRoute(
       path: Routes.settings,
       builder: (context, state) => const SettingsScreen(),

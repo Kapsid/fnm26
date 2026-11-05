@@ -22106,5 +22106,563 @@
   "callUpAwayShort": "A",
   "@callUpAwayShort": {
     "description": "One- to three-letter mark for an AWAY match on a compact fixture tile of the call-up screen, the abbreviation fans use in fixture lists (the full word is read out to screen readers)."
+  },
+  "homeEditor": "Editor",
+  "@homeEditor": {
+    "description": "Main-menu button that opens the database editor (make and share your own starting world)."
+  },
+  "editorTitle": "Editor",
+  "@editorTitle": {
+    "description": "Title of the database editor: the list of custom databases (world packs) on this device."
+  },
+  "editorIntro": "Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.",
+  "@editorIntro": {
+    "description": "Short explanation at the top of the database editor list."
+  },
+  "editorEmptyTitle": "No databases yet",
+  "@editorEmptyTitle": {
+    "description": "Heading of the editor list when no custom database exists."
+  },
+  "editorEmptyBody": "A new database starts as a copy of the default world. Change what you like; it saves as you go.",
+  "@editorEmptyBody": {
+    "description": "Body of the editor list when no custom database exists."
+  },
+  "editorNew": "New database",
+  "@editorNew": {
+    "description": "Button and dialog title: create a new custom database from the default world."
+  },
+  "editorImport": "Import",
+  "@editorImport": {
+    "description": "Button: import a database file (.fnmdb) from the device."
+  },
+  "editorEdit": "Edit",
+  "@editorEdit": {
+    "description": "Opens a database in the editor."
+  },
+  "editorRename": "Rename",
+  "@editorRename": {
+    "description": "Database action: rename it."
+  },
+  "editorDuplicate": "Duplicate",
+  "@editorDuplicate": {
+    "description": "Database action: make a copy of it."
+  },
+  "editorExport": "Export",
+  "@editorExport": {
+    "description": "Database action: write it to a file and open the share sheet."
+  },
+  "editorDelete": "Delete",
+  "@editorDelete": {
+    "description": "Database action and confirm button: delete it from this device."
+  },
+  "editorCancel": "Cancel",
+  "@editorCancel": {
+    "description": "Dismisses an editor dialog without doing anything."
+  },
+  "editorCreate": "Create",
+  "@editorCreate": {
+    "description": "Confirm button of the new-database dialog."
+  },
+  "editorMore": "More actions",
+  "@editorMore": {
+    "description": "Tooltip of the menu button on a database row."
+  },
+  "editorNameLabel": "Name",
+  "@editorNameLabel": {
+    "description": "Label of the database name field."
+  },
+  "editorNameHint": "My world",
+  "@editorNameHint": {
+    "description": "Hint and suggested name for a new database."
+  },
+  "editorRenameTitle": "Rename database",
+  "@editorRenameTitle": {
+    "description": "Title of the rename-database dialog."
+  },
+  "editorDuplicateTitle": "Duplicate database",
+  "@editorDuplicateTitle": {
+    "description": "Title of the duplicate-database dialog."
+  },
+  "editorCopyName": "{name} copy",
+  "@editorCopyName": {
+    "description": "Suggested name for a copy of a database.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorNameEmpty": "Give it a name",
+  "@editorNameEmpty": {
+    "description": "Error under the database name field when it is empty."
+  },
+  "editorNameTooLong": "Keep it to {max} characters",
+  "@editorNameTooLong": {
+    "description": "Error under the database name field when it is too long.",
+    "placeholders": {
+      "max": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorNameBadCharacters": "That name has characters that cannot be used",
+  "@editorNameBadCharacters": {
+    "description": "Error under the database name field when it holds control characters."
+  },
+  "editorDeleteTitle": "Delete database?",
+  "@editorDeleteTitle": {
+    "description": "Title of the delete-database confirmation."
+  },
+  "editorDeleteBody": "\"{name}\" will be removed from this device. Careers already started on it keep working.",
+  "@editorDeleteBody": {
+    "description": "Body of the delete-database confirmation.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorStatusReady": "Ready",
+  "@editorStatusReady": {
+    "description": "Status chip: the database is complete and can start a career."
+  },
+  "editorStatusMissing": "{count, plural, one{1 thing missing} other{{count} things missing}}",
+  "@editorStatusMissing": {
+    "description": "Status chip: the database cannot start a career until these are fixed.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorStatusAttention": "Needs attention",
+  "@editorStatusAttention": {
+    "description": "Status chip: a game update made the database incompatible; it must be fixed in the editor."
+  },
+  "editorStatusUnreadable": "Cannot be opened",
+  "@editorStatusUnreadable": {
+    "description": "Status chip: the stored database could not be read."
+  },
+  "editorEdited": "Edited {date}",
+  "@editorEdited": {
+    "description": "When a database was last changed, on its row in the list.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "editorCreating": "Copying the default world…",
+  "@editorCreating": {
+    "description": "Shown while a new database is being made."
+  },
+  "editorImported": "Database imported",
+  "@editorImported": {
+    "description": "Snackbar after a database file was imported."
+  },
+  "editorImportTooBig": "That file is too big to be a database.",
+  "@editorImportTooBig": {
+    "description": "Import refused: the file is over the size cap."
+  },
+  "editorImportNotAPack": "That file is not an FNM database.",
+  "@editorImportNotAPack": {
+    "description": "Import refused: the file is not a database."
+  },
+  "editorImportNewer": "That database was made with a newer version of the game. Update the game to import it.",
+  "@editorImportNewer": {
+    "description": "Import refused: the file comes from a newer game version."
+  },
+  "editorImportBadData": "That database holds data the game cannot use, so nothing was imported.",
+  "@editorImportBadData": {
+    "description": "Import refused: a field failed the checks."
+  },
+  "editorImportBadTrophy": "A trophy picture in that file could not be read, so nothing was imported.",
+  "@editorImportBadTrophy": {
+    "description": "Import refused: a trophy image is broken."
+  },
+  "editorExportFailed": "The database could not be exported.",
+  "@editorExportFailed": {
+    "description": "Snackbar when writing the database file failed."
+  },
+  "editorShareSubject": "FNM database",
+  "@editorShareSubject": {
+    "description": "Subject line of the share sheet for an exported database."
+  },
+  "editorPackMissing": "This database is no longer on this device.",
+  "@editorPackMissing": {
+    "description": "Shown when an opened database cannot be found or read."
+  },
+  "editorReadyTitle": "Ready to play",
+  "@editorReadyTitle": {
+    "description": "Ready bar on the database home: nothing is missing."
+  },
+  "editorReadyBody": "Every nation has a full squad and every name checks out. You can start a career on it.",
+  "@editorReadyBody": {
+    "description": "Body of the ready bar when the database is complete."
+  },
+  "editorNotReadyTitle": "{count, plural, one{1 thing to fix before it can be played} other{{count} things to fix before it can be played}}",
+  "@editorNotReadyTitle": {
+    "description": "Ready bar on the database home when it is not complete.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorNotReadyBody": "It saves as you go, so you can share it now and finish it later.",
+  "@editorNotReadyBody": {
+    "description": "Body of the ready bar when the database is not complete."
+  },
+  "editorSectionsReady": "{ready} of {total} sections ready",
+  "@editorSectionsReady": {
+    "description": "Progress line under the ready bar.",
+    "placeholders": {
+      "ready": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorMissingTitle": "What's missing",
+  "@editorMissingTitle": {
+    "description": "Heading of the list of things to fix; each entry jumps to its place."
+  },
+  "editorShowAll": "Show all ({count})",
+  "@editorShowAll": {
+    "description": "Expands the list of things to fix.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorShowLess": "Show less",
+  "@editorShowLess": {
+    "description": "Collapses the list of things to fix."
+  },
+  "editorUndo": "Undo",
+  "@editorUndo": {
+    "description": "Undoes the last change to the database."
+  },
+  "editorSectionsTitle": "Sections",
+  "@editorSectionsTitle": {
+    "description": "Heading over the database sections."
+  },
+  "editorSectionPlayers": "Players",
+  "@editorSectionPlayers": {
+    "description": "Database section: players of every nation."
+  },
+  "editorSectionNations": "Nations",
+  "@editorSectionNations": {
+    "description": "Database section: nation names and codes."
+  },
+  "editorSectionClubs": "Clubs",
+  "@editorSectionClubs": {
+    "description": "Database section: club names."
+  },
+  "editorSectionStadiums": "Stadiums",
+  "@editorSectionStadiums": {
+    "description": "Database section: national stadium names."
+  },
+  "editorSectionCompetitions": "Competitions",
+  "@editorSectionCompetitions": {
+    "description": "Database section: competition names."
+  },
+  "editorSectionY": "Y accounts",
+  "@editorSectionY": {
+    "description": "Database section: the names of the accounts on Y, the in-game social network."
+  },
+  "editorSectionPress": "Press",
+  "@editorSectionPress": {
+    "description": "Database section: journalists and their outlets."
+  },
+  "editorSectionNameLists": "Name lists",
+  "@editorSectionNameLists": {
+    "description": "Database section: first names and surnames new players are given."
+  },
+  "editorSectionSponsors": "Sponsors",
+  "@editorSectionSponsors": {
+    "description": "Database section: sponsor brand names."
+  },
+  "editorSectionTrophies": "Trophies",
+  "@editorSectionTrophies": {
+    "description": "Database section: trophy pictures."
+  },
+  "editorAboutPlayers": "Squads, ratings and potential",
+  "@editorAboutPlayers": {
+    "description": "One-line description of the Players section."
+  },
+  "editorAboutNations": "Nation names and codes",
+  "@editorAboutNations": {
+    "description": "One-line description of the Nations section."
+  },
+  "editorAboutClubs": "Club names",
+  "@editorAboutClubs": {
+    "description": "One-line description of the Clubs section."
+  },
+  "editorAboutStadiums": "National stadium names",
+  "@editorAboutStadiums": {
+    "description": "One-line description of the Stadiums section."
+  },
+  "editorAboutCompetitions": "Competition names",
+  "@editorAboutCompetitions": {
+    "description": "One-line description of the Competitions section."
+  },
+  "editorAboutY": "Accounts on Y",
+  "@editorAboutY": {
+    "description": "One-line description of the Y accounts section."
+  },
+  "editorAboutPress": "Journalists and their outlets",
+  "@editorAboutPress": {
+    "description": "One-line description of the Press section."
+  },
+  "editorAboutNameLists": "Names for new players",
+  "@editorAboutNameLists": {
+    "description": "One-line description of the Name lists section."
+  },
+  "editorAboutSponsors": "Sponsor brands",
+  "@editorAboutSponsors": {
+    "description": "One-line description of the Sponsors section."
+  },
+  "editorAboutTrophies": "Trophy pictures",
+  "@editorAboutTrophies": {
+    "description": "One-line description of the Trophies section."
+  },
+  "editorCountPlayers": "{count, plural, one{1 player} other{{count} players}}",
+  "@editorCountPlayers": {
+    "description": "Count on the Players section tile.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorCountNations": "{count, plural, one{1 nation} other{{count} nations}}",
+  "@editorCountNations": {
+    "description": "Count on the Nations section tile.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorCountChanged": "{count, plural, =0{Game names} one{1 change} other{{count} changes}}",
+  "@editorCountChanged": {
+    "description": "How many names a section changes; zero means it uses the game names.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorCountTrophies": "{count, plural, =0{Game pictures} one{1 custom picture} other{{count} custom pictures}}",
+  "@editorCountTrophies": {
+    "description": "How many trophy pictures the database replaces.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorCountToFix": "{count, plural, one{1 to fix} other{{count} to fix}}",
+  "@editorCountToFix": {
+    "description": "How many problems a section has.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssuePlayersShort": "{count, plural, one{1 more player needed} other{{count} more players needed}}",
+  "@editorIssuePlayersShort": {
+    "description": "A nation's squad is too small (after the nation name).",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssuePlayersOver": "{count, plural, one{1 player too many} other{{count} players too many}}",
+  "@editorIssuePlayersOver": {
+    "description": "A nation's squad is too big.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssueGoalkeepers": "{count, plural, one{1 goalkeeper needed} other{{count} goalkeepers needed}}",
+  "@editorIssueGoalkeepers": {
+    "description": "A nation needs more goalkeepers.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssueDefenders": "{count, plural, one{1 defender needed} other{{count} defenders needed}}",
+  "@editorIssueDefenders": {
+    "description": "A nation needs more defenders.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssueMidfielders": "{count, plural, one{1 midfielder needed} other{{count} midfielders needed}}",
+  "@editorIssueMidfielders": {
+    "description": "A nation needs more midfielders.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssueForwards": "{count, plural, one{1 forward needed} other{{count} forwards needed}}",
+  "@editorIssueForwards": {
+    "description": "A nation needs more forwards.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssuePlayerNoName": "A player has no name",
+  "@editorIssuePlayerNoName": {
+    "description": "A player in the squad has an empty name."
+  },
+  "editorIssueAge": "{name}: age must be 15 to 45",
+  "@editorIssueAge": {
+    "description": "A player's age is out of range.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorIssueRating": "{name}: overall must be 1 to 99",
+  "@editorIssueRating": {
+    "description": "A player's overall rating is out of range.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorIssuePotential": "{name}: potential must be between the overall and 99",
+  "@editorIssuePotential": {
+    "description": "A player's potential is below his overall or above 99.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorIssueRenameEmpty": "The new name for {name} is empty",
+  "@editorIssueRenameEmpty": {
+    "description": "A renamed item (club, stadium, competition...) was given an empty name; {name} is its game name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorIssueNameEmpty": "A name is empty",
+  "@editorIssueNameEmpty": {
+    "description": "Some name in the section is empty."
+  },
+  "editorIssueNameTooLong": "\"{name}\" is too long",
+  "@editorIssueNameTooLong": {
+    "description": "A name is over the length limit.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorIssueNameBadCharacters": "\"{name}\" has characters that cannot be used",
+  "@editorIssueNameBadCharacters": {
+    "description": "A name holds control or broken characters.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorIssueNameTaken": "\"{name}\" is already taken",
+  "@editorIssueNameTaken": {
+    "description": "A new name clashes with another account's name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorIssueCode": "The code must be 3 letters, A to Z",
+  "@editorIssueCode": {
+    "description": "A nation's 3-letter code is not valid."
+  },
+  "editorIssueDuplicateCode": "Code {code} is used by {nations}",
+  "@editorIssueDuplicateCode": {
+    "description": "Two or more nations share one 3-letter code; {nations} lists them.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "nations": {
+        "type": "String"
+      }
+    }
+  },
+  "editorIssueFirstNames": "At least {count} first names needed",
+  "@editorIssueFirstNames": {
+    "description": "A nation's custom first-name list is too short.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssueSurnames": "At least {count} surnames needed",
+  "@editorIssueSurnames": {
+    "description": "A nation's custom surname list is too short.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "editorIssueValue": "A value is out of range",
+  "@editorIssueValue": {
+    "description": "Some number in the section is out of range."
+  },
+  "editorIssueUnknown": "Refers to something that is no longer in the game",
+  "@editorIssueUnknown": {
+    "description": "A game update removed something the database refers to."
+  },
+  "editorSectionSoon": "Editing this section is on its way.",
+  "@editorSectionSoon": {
+    "description": "Placeholder body of an editor section that is not built yet."
   }
 }

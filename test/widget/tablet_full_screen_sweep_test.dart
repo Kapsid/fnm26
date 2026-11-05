@@ -3,8 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/shared/widgets/app_error_state.dart';
 
+import '../helpers/editor_app.dart';
 import '../helpers/seeded_save.dart';
 
 /// Every full-screen route, on a real save, at every iPad size: none may
@@ -25,6 +27,17 @@ Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
   final save = await seedSave(tester, formFactor: FormFactor.tablet);
   final id = save.careerId;
   final me = save.nations.firstWhere((n) => n.id == save.nationId);
+  // A database for the editor's routes: one nation a player short, so its
+  // home has something missing to list.
+  late int packId;
+  await tester.runAsync(() async {
+    packId = await save.container
+        .read(worldPackRepositoryProvider)
+        .insert(
+          testPack('Sweep', squads: {me.id: testSquad(mid: 7)}),
+          {},
+        );
+  });
 
   /// Each full-screen path and the query it needs. The draws that write to
   /// the save (a watched qualifying draw) come last.
@@ -40,6 +53,10 @@ Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
     Routes.campaigns: '',
     Routes.campaignBrief: '?id=transplant',
     Routes.campaignVerdict: '?careerId=$id',
+    Routes.editor: '',
+    Routes.editorPack: '?id=$packId',
+    for (final section in Routes.editorSections)
+      section: '?id=$packId&nation=${me.id}',
     Routes.hostDraw: '?careerId=$id',
     Routes.finalsDraw: '?careerId=$id',
     Routes.continentalDraw: '?careerId=$id&conf=${me.confederation.name}',

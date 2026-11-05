@@ -26,6 +26,7 @@ class HomeScreen extends ConsumerWidget {
   static const Key tabletLayoutKey = Key('home.tabletLayout');
   static const Key campaignsKey = Key('home.campaigns');
   static const Key campaignContinueKey = Key('home.campaignContinue');
+  static const Key editorKey = Key('home.editor');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -163,6 +164,12 @@ class HomeScreen extends ConsumerWidget {
                 style: both ? _tightButton : null,
                 onPressed: () => context.go(Routes.campaigns),
                 child: Text(l.homeCampaigns),
+              ),
+              TextButton(
+                key: HomeScreen.editorKey,
+                style: both ? _tightButton : null,
+                onPressed: () => context.go(Routes.editor),
+                child: Text(l.homeEditor),
               ),
               const SizedBox(height: AppSpacing.sm),
             ],

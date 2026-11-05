@@ -14426,4 +14426,442 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get callUpAwayShort => 'E';
+
+  @override
+  String get homeEditor => 'Editor';
+
+  @override
+  String get editorTitle => 'Editor';
+
+  @override
+  String get editorIntro =>
+      'Make your own starting world: your players, their ratings, your names. Share it as a file; friends can import it and start a career on it.';
+
+  @override
+  String get editorEmptyTitle => 'No databases yet';
+
+  @override
+  String get editorEmptyBody =>
+      'A new database starts as a copy of the default world. Change what you like; it saves as you go.';
+
+  @override
+  String get editorNew => 'New database';
+
+  @override
+  String get editorImport => 'Import';
+
+  @override
+  String get editorEdit => 'Edit';
+
+  @override
+  String get editorRename => 'Rename';
+
+  @override
+  String get editorDuplicate => 'Duplicate';
+
+  @override
+  String get editorExport => 'Export';
+
+  @override
+  String get editorDelete => 'Delete';
+
+  @override
+  String get editorCancel => 'Cancel';
+
+  @override
+  String get editorCreate => 'Create';
+
+  @override
+  String get editorMore => 'More actions';
+
+  @override
+  String get editorNameLabel => 'Name';
+
+  @override
+  String get editorNameHint => 'My world';
+
+  @override
+  String get editorRenameTitle => 'Rename database';
+
+  @override
+  String get editorDuplicateTitle => 'Duplicate database';
+
+  @override
+  String editorCopyName(String name) {
+    return '$name copy';
+  }
+
+  @override
+  String get editorNameEmpty => 'Give it a name';
+
+  @override
+  String editorNameTooLong(int max) {
+    return 'Keep it to $max characters';
+  }
+
+  @override
+  String get editorNameBadCharacters =>
+      'That name has characters that cannot be used';
+
+  @override
+  String get editorDeleteTitle => 'Delete database?';
+
+  @override
+  String editorDeleteBody(String name) {
+    return '\"$name\" will be removed from this device. Careers already started on it keep working.';
+  }
+
+  @override
+  String get editorStatusReady => 'Ready';
+
+  @override
+  String editorStatusMissing(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things missing',
+      one: '1 thing missing',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorStatusAttention => 'Needs attention';
+
+  @override
+  String get editorStatusUnreadable => 'Cannot be opened';
+
+  @override
+  String editorEdited(String date) {
+    return 'Edited $date';
+  }
+
+  @override
+  String get editorCreating => 'Copying the default world…';
+
+  @override
+  String get editorImported => 'Database imported';
+
+  @override
+  String get editorImportTooBig => 'That file is too big to be a database.';
+
+  @override
+  String get editorImportNotAPack => 'That file is not an FNM database.';
+
+  @override
+  String get editorImportNewer =>
+      'That database was made with a newer version of the game. Update the game to import it.';
+
+  @override
+  String get editorImportBadData =>
+      'That database holds data the game cannot use, so nothing was imported.';
+
+  @override
+  String get editorImportBadTrophy =>
+      'A trophy picture in that file could not be read, so nothing was imported.';
+
+  @override
+  String get editorExportFailed => 'The database could not be exported.';
+
+  @override
+  String get editorShareSubject => 'FNM database';
+
+  @override
+  String get editorPackMissing => 'This database is no longer on this device.';
+
+  @override
+  String get editorReadyTitle => 'Ready to play';
+
+  @override
+  String get editorReadyBody =>
+      'Every nation has a full squad and every name checks out. You can start a career on it.';
+
+  @override
+  String editorNotReadyTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things to fix before it can be played',
+      one: '1 thing to fix before it can be played',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorNotReadyBody =>
+      'It saves as you go, so you can share it now and finish it later.';
+
+  @override
+  String editorSectionsReady(int ready, int total) {
+    return '$ready of $total sections ready';
+  }
+
+  @override
+  String get editorMissingTitle => 'What\'s missing';
+
+  @override
+  String editorShowAll(int count) {
+    return 'Show all ($count)';
+  }
+
+  @override
+  String get editorShowLess => 'Show less';
+
+  @override
+  String get editorUndo => 'Undo';
+
+  @override
+  String get editorSectionsTitle => 'Sections';
+
+  @override
+  String get editorSectionPlayers => 'Players';
+
+  @override
+  String get editorSectionNations => 'Nations';
+
+  @override
+  String get editorSectionClubs => 'Clubs';
+
+  @override
+  String get editorSectionStadiums => 'Stadiums';
+
+  @override
+  String get editorSectionCompetitions => 'Competitions';
+
+  @override
+  String get editorSectionY => 'Y accounts';
+
+  @override
+  String get editorSectionPress => 'Press';
+
+  @override
+  String get editorSectionNameLists => 'Name lists';
+
+  @override
+  String get editorSectionSponsors => 'Sponsors';
+
+  @override
+  String get editorSectionTrophies => 'Trophies';
+
+  @override
+  String get editorAboutPlayers => 'Squads, ratings and potential';
+
+  @override
+  String get editorAboutNations => 'Nation names and codes';
+
+  @override
+  String get editorAboutClubs => 'Club names';
+
+  @override
+  String get editorAboutStadiums => 'National stadium names';
+
+  @override
+  String get editorAboutCompetitions => 'Competition names';
+
+  @override
+  String get editorAboutY => 'Accounts on Y';
+
+  @override
+  String get editorAboutPress => 'Journalists and their outlets';
+
+  @override
+  String get editorAboutNameLists => 'Names for new players';
+
+  @override
+  String get editorAboutSponsors => 'Sponsor brands';
+
+  @override
+  String get editorAboutTrophies => 'Trophy pictures';
+
+  @override
+  String editorCountPlayers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count players',
+      one: '1 player',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorCountNations(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nations',
+      one: '1 nation',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorCountChanged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes',
+      one: '1 change',
+      zero: 'Game names',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorCountTrophies(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count custom pictures',
+      one: '1 custom picture',
+      zero: 'Game pictures',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorCountToFix(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count to fix',
+      one: '1 to fix',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssuePlayersShort(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more players needed',
+      one: '1 more player needed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssuePlayersOver(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count players too many',
+      one: '1 player too many',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssueGoalkeepers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count goalkeepers needed',
+      one: '1 goalkeeper needed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssueDefenders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count defenders needed',
+      one: '1 defender needed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssueMidfielders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count midfielders needed',
+      one: '1 midfielder needed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String editorIssueForwards(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count forwards needed',
+      one: '1 forward needed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorIssuePlayerNoName => 'A player has no name';
+
+  @override
+  String editorIssueAge(String name) {
+    return '$name: age must be 15 to 45';
+  }
+
+  @override
+  String editorIssueRating(String name) {
+    return '$name: overall must be 1 to 99';
+  }
+
+  @override
+  String editorIssuePotential(String name) {
+    return '$name: potential must be between the overall and 99';
+  }
+
+  @override
+  String editorIssueRenameEmpty(String name) {
+    return 'The new name for $name is empty';
+  }
+
+  @override
+  String get editorIssueNameEmpty => 'A name is empty';
+
+  @override
+  String editorIssueNameTooLong(String name) {
+    return '\"$name\" is too long';
+  }
+
+  @override
+  String editorIssueNameBadCharacters(String name) {
+    return '\"$name\" has characters that cannot be used';
+  }
+
+  @override
+  String editorIssueNameTaken(String name) {
+    return '\"$name\" is already taken';
+  }
+
+  @override
+  String get editorIssueCode => 'The code must be 3 letters, A to Z';
+
+  @override
+  String editorIssueDuplicateCode(String code, String nations) {
+    return 'Code $code is used by $nations';
+  }
+
+  @override
+  String editorIssueFirstNames(int count) {
+    return 'At least $count first names needed';
+  }
+
+  @override
+  String editorIssueSurnames(int count) {
+    return 'At least $count surnames needed';
+  }
+
+  @override
+  String get editorIssueValue => 'A value is out of range';
+
+  @override
+  String get editorIssueUnknown =>
+      'Refers to something that is no longer in the game';
+
+  @override
+  String get editorSectionSoon => 'Editing this section is on its way.';
 }
