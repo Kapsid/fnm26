@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,7 @@ import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/features/paywall/paywall_sheet.dart';
 import 'package:fnm/features/settings/backups_card.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
+import 'package:fnm/features/world_pack/world_choice.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -169,6 +171,9 @@ class SettingsScreen extends ConsumerWidget {
 
   static const Key tabletLayoutKey = Key('settings.tabletLayout');
 
+  /// The Default world row.
+  static const Key defaultWorldKey = Key('settings.defaultWorld');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (useTabletLayout(context, ref)) return const _SettingsTabletLayout();
@@ -204,6 +209,8 @@ class SettingsScreen extends ConsumerWidget {
           _LanguageCard(),
           SizedBox(height: AppSpacing.md),
           _TextSizeCard(),
+          SizedBox(height: AppSpacing.md),
+          _DefaultWorldCard(),
           SizedBox(height: AppSpacing.md),
           _FreeScopeCard(),
           SizedBox(height: AppSpacing.md),
@@ -302,6 +309,71 @@ class _LanguageCard extends ConsumerWidget {
           ],
         ),
         onTap: () => _pickLanguage(context, ref, current),
+      ),
+    );
+  }
+}
+
+/// The world New Game starts on: Default, or a complete, compatible
+/// database. The same sheet as New Game's chip; a stored database that can
+/// no longer start a career reads as Default.
+class _DefaultWorldCard extends ConsumerWidget {
+  const _DefaultWorldCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final uuid = ref.watch(defaultWorldProvider);
+    final choices = ref.watch(worldChoicesProvider).valueOrNull;
+    final current = uuid == null
+        ? null
+        : choices?.firstWhereOrNull((c) => c.uuid == uuid && c.selectable);
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: ListTile(
+        key: SettingsScreen.defaultWorldKey,
+        leading: const Icon(Icons.public_rounded, color: AppColors.primary),
+        title: Text(
+          l.settingsDefaultWorldTitle,
+          style: AppTypography.bodyMedium,
+        ),
+        subtitle: Text(
+          l.settingsDefaultWorldBlurb,
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+        trailing: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 140),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  current?.name ?? l.worldDefault,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+              const Icon(
+                Icons.arrow_drop_down_rounded,
+                color: AppColors.primary,
+              ),
+            ],
+          ),
+        ),
+        onTap: () async {
+          final setting = ref.read(defaultWorldProvider.notifier);
+          final pick = await showWorldChoiceSheet(
+            context,
+            selected: (w) => w?.uuid == current?.uuid,
+          );
+          if (pick == null) return;
+          await setting.set(pick.choice?.uuid);
+        },
       ),
     );
   }

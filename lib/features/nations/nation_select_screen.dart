@@ -14,6 +14,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/world_pack/world_choice.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -199,7 +200,10 @@ class _Header extends StatelessWidget {
             l.nationsSelectHeading,
             style: AppTypography.headlineLargeMobile,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.sm),
+          // The world the career will start in (Default or a database).
+          const WorldChip(),
+          const SizedBox(height: AppSpacing.sm),
           TextField(
             onChanged: onSearch,
             style: AppTypography.bodyMedium.copyWith(

@@ -3768,5 +3768,17 @@
   "editorTrophyRemoved": "Obrázek ze hry je zpět.",
   "editorTrophySaveFailed": "Obrázek se nepodařilo uložit. Zkuste to znovu.",
   "editorTrophyPick": "Vyberte trofej a změňte její obrázek.",
-  "editorTrophySize": "Uloží se v rozměru {width} x {height} pixelů"
+  "editorTrophySize": "Uloží se v rozměru {width} x {height} pixelů",
+  "editorIssueUnknownEntry": "{name} už ve hře není",
+  "editorAttentionBody": "Aktualizace hry odebrala něco, na co tato databáze odkazuje. Odeberte každou položku níže a půjde na ní znovu začít kariéru.",
+  "editorRemove": "Odebrat",
+  "worldChip": "Svět: {name}",
+  "worldDefault": "Výchozí",
+  "worldDefaultAbout": "Vlastní svět hry",
+  "worldSheetTitle": "Vyberte svět",
+  "worldSheetBlurb": "Databáze, které jste vytvořili nebo otevřeli v Editoru. Kariéru lze začít jen na úplné.",
+  "worldPackGone": "Tato databáze už v zařízení není. Kariéra nebyla zahájena.",
+  "worldStarting": "Připravujeme váš svět",
+  "settingsDefaultWorldTitle": "Výchozí svět",
+  "settingsDefaultWorldBlurb": "Svět, na kterém začíná nová hra. Pro každou kariéru ho můžete změnit."
 }

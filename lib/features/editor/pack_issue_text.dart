@@ -72,10 +72,25 @@ PackIssueText describePackIssue(
         section: EditorSection.nations,
         nationId: null,
       );
-    case UnknownId():
+    case UnknownId(:final path):
+      // The entry itself, named as the editor knows it: a nation by its
+      // name in the pack (else its id), a stadium by its city, anything else
+      // by its key.
+      final dot = path.indexOf('.');
+      final key = dot < 0 ? '' : path.substring(dot + 1);
+      final id = int.tryParse(key);
+      final what = switch (section) {
+        EditorSection.players ||
+        EditorSection.nations ||
+        EditorSection.nameLists when id != null => nation(id),
+        EditorSection.stadiums => key.substring(key.indexOf(':') + 1),
+        _ => key,
+      };
       return (
         title: title,
-        detail: l.editorIssueUnknown,
+        detail: what.isEmpty
+            ? l.editorIssueUnknown
+            : l.editorIssueUnknownEntry(what),
         section: section,
         nationId: null,
       );

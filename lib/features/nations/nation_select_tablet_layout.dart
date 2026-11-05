@@ -254,6 +254,9 @@ class _TabletTopBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
+          // The world the career will start in (Default or a database).
+          const Flexible(child: WorldChip()),
+          const SizedBox(width: 12),
           SizedBox(
             width: 260,
             height: 36,

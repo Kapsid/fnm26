@@ -11,6 +11,7 @@ class _SavesTabletLayout extends StatelessWidget {
     required this.state,
     required this.savesAsync,
     required this.nationsById,
+    required this.worldNames,
     required this.premium,
     required this.limit,
     required this.lockedIds,
@@ -19,6 +20,9 @@ class _SavesTabletLayout extends StatelessWidget {
   final _SavesScreenState state;
   final AsyncValue<List<Career>> savesAsync;
   final Map<int, Nation> nationsById;
+
+  /// The database each save on a custom world runs on, by career id.
+  final Map<int, String> worldNames;
   final bool premium;
   final int? limit;
 
@@ -104,6 +108,7 @@ class _SavesTabletLayout extends StatelessWidget {
                                 state: state,
                                 save: selected,
                                 nation: nationsById[selected.nationId],
+                                worldName: worldNames[selected.id],
                                 locked: lockedIds.contains(selected.id),
                               ),
                       ),
@@ -196,6 +201,7 @@ class _SavePane extends StatelessWidget {
     required this.save,
     required this.nation,
     required this.locked,
+    this.worldName,
     super.key,
   });
 
@@ -203,6 +209,9 @@ class _SavePane extends StatelessWidget {
   final Career save;
   final Nation? nation;
   final bool locked;
+
+  /// The database this save runs on; null for the game's own world.
+  final String? worldName;
 
   @override
   Widget build(BuildContext context) {
@@ -227,6 +236,8 @@ class _SavePane extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.titleMedium,
                     ),
+                    if (worldName case final world?)
+                      SaveWorldLine(key: SaveTile.worldKey, name: world),
                     Text(
                       '${save.managerName} · '
                       '${AppDate.monthYear(context, save.inGameDate)}',

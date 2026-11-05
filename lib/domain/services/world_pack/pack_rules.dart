@@ -59,7 +59,8 @@ class DuplicateCode extends PackIssue {
   String get where => 'nations.${nationIds.first}.code';
 }
 
-/// A pack id the game does not know (raised by the loader, not [PackRules]).
+/// An entry naming something the current game no longer has (see
+/// [PackRules.compatibility]); [path] is the entry's own.
 class UnknownId extends PackIssue {
   const UnknownId(this.path);
   final String path;
@@ -271,6 +272,52 @@ abstract final class PackRules {
           (to != fold(k) && originals.contains(to)) || byNewName[to]! > 1;
       if (taken) out.add(BadField('yAccounts.$k', FieldReason.duplicate));
     }
+  }
+
+  /// What in [p] the current game no longer has: every override keyed by a
+  /// nation id outside [nationIds] (squads, nations, stadiums, name lists),
+  /// a competition outside [competitionNames], a trophy outside
+  /// [trophyKeys], a sponsor outside [sponsorBrands] and a Y account outside
+  /// [yAccounts], each as an [UnknownId] at its entry's path.
+  ///
+  /// Only references: whether an entry's content is right is [issues]'s
+  /// business. A nation the game has and the pack never mentions is not an
+  /// issue either: the pack takes the game's for it.
+  static List<PackIssue> compatibility(
+    WorldPack p, {
+    required Set<int> nationIds,
+    required Set<String> competitionNames,
+    required Set<String> trophyKeys,
+    required Set<String> sponsorBrands,
+    required Set<String> yAccounts,
+  }) {
+    final out = <PackIssue>[];
+    void ids(String root, Iterable<int> keys) {
+      for (final id in keys.toList()..sort()) {
+        if (!nationIds.contains(id)) out.add(UnknownId('$root.$id'));
+      }
+    }
+
+    void names(String root, Iterable<String> keys, Set<String> known) {
+      for (final k in keys.toList()..sort()) {
+        if (!known.contains(k)) out.add(UnknownId('$root.$k'));
+      }
+    }
+
+    ids('squads', p.squads.keys);
+    ids('nations', p.nations.keys);
+    for (final k in p.stadiums.keys.toList()..sort()) {
+      final id = int.tryParse(k.split(':').first);
+      if (id == null || !nationIds.contains(id)) {
+        out.add(UnknownId('stadiums.$k'));
+      }
+    }
+    ids('nameLists', p.nameLists.keys);
+    names('competitions', p.competitions.keys, competitionNames);
+    names('yAccounts', p.yAccounts.keys, yAccounts);
+    names('sponsors', p.sponsors.keys, sponsorBrands);
+    names('trophies', p.trophies, trophyKeys);
+    return out;
   }
 
   static bool isComplete(

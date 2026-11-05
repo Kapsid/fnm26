@@ -18,6 +18,7 @@ import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -252,6 +253,8 @@ final worldPackServiceProvider = Provider<WorldPackService>(
     nations: ref.watch(nationRepositoryProvider),
     packs: ref.watch(worldPackRepositoryProvider),
     onChanged: () => ref.invalidate(worldPacksProvider),
+    // The default world in Settings never names a pack that is gone.
+    onDeleted: (uuid) => ref.read(defaultWorldProvider.notifier).clearIf(uuid),
   ),
 );
 
@@ -262,15 +265,20 @@ class WorldPackService {
     required NationRepository nations,
     required WorldPackRepository packs,
     void Function()? onChanged,
+    Future<void> Function(String uuid)? onDeleted,
   }) : _players = players,
        _nations = nations,
        _packs = packs,
-       _onChanged = onChanged ?? _noop;
+       _onChanged = onChanged ?? _noop,
+       _onDeleted = onDeleted;
 
   final PlayerRepository _players;
   final NationRepository _nations;
   final WorldPackRepository _packs;
   final void Function() _onChanged;
+
+  /// Told the uuid of each pack [delete] removes.
+  final Future<void> Function(String uuid)? _onDeleted;
 
   static void _noop() {}
 
@@ -431,9 +439,12 @@ class WorldPackService {
     }
   }
 
-  /// Removes pack [id]. Careers started on it keep their own copy.
+  /// Removes pack [id]. Careers started on it keep their own copy. If it was
+  /// the default world in Settings, Default is again.
   Future<void> delete(int id) async {
+    final uuid = await _packs.uuidOf(id);
     await _packs.delete(id);
+    if (uuid != null) await _onDeleted?.call(uuid);
     _onChanged();
   }
 }

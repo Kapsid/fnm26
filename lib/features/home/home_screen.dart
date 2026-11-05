@@ -11,6 +11,7 @@ import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_ui.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/career/saves_screen.dart';
 import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -28,6 +29,9 @@ class HomeScreen extends ConsumerWidget {
   static const Key campaignContinueKey = Key('home.campaignContinue');
   static const Key editorKey = Key('home.editor');
 
+  /// The continue card's line naming the database its save runs on.
+  static const Key continueWorldKey = Key('home.continueWorld');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
@@ -39,6 +43,9 @@ class HomeScreen extends ConsumerWidget {
     final lastNation = lastSave == null
         ? null
         : ref.watch(nationByIdProvider(lastSave.nationId)).valueOrNull;
+    final lastWorld = lastSave == null
+        ? null
+        : ref.watch(careerWorldNamesProvider).valueOrNull?[lastSave.id];
     final campaign = _latestCampaignRun(ref);
     final campaignNation = campaign == null
         ? null
@@ -52,6 +59,7 @@ class HomeScreen extends ConsumerWidget {
         _ContinueCard(
           nationName: lastNation?.name ?? l.homeYourNation,
           nationCode: lastNation?.code,
+          worldName: lastWorld,
           inGameDate: lastSave.inGameDate,
           cyclePointer: lastSave.cyclePointer,
           locked: lockedIds.contains(lastSave.id),
@@ -226,10 +234,14 @@ class _ContinueCard extends StatelessWidget {
     required this.cyclePointer,
     required this.onResume,
     this.locked = false,
+    this.worldName,
   });
 
   final String nationName;
   final String? nationCode;
+
+  /// The database the save runs on; null for the game's own world.
+  final String? worldName;
   final DateTime inGameDate;
   final int cyclePointer;
   final VoidCallback onResume;
@@ -264,6 +276,11 @@ class _ContinueCard extends StatelessWidget {
                     ),
                   ),
                   Text(nationName, style: AppTypography.titleMedium),
+                  if (worldName case final world?)
+                    SaveWorldLine(
+                      key: HomeScreen.continueWorldKey,
+                      name: world,
+                    ),
                   if (locked) const SaveLockedNote(),
                   const SizedBox(height: 2),
                   Text(

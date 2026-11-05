@@ -45,6 +45,26 @@ class WorldPackRepository {
     return row == null ? null : _decode(row.json);
   }
 
+  /// The uuid of pack [id], or null if there is no such pack. Reads the
+  /// column alone: no pack is decoded.
+  Future<String?> uuidOf(int id) async {
+    final q = _db.selectOnly(_db.worldPacks)
+      ..addColumns([_db.worldPacks.uuid])
+      ..where(_db.worldPacks.id.equals(id));
+    return (await q.getSingleOrNull())?.read(_db.worldPacks.uuid);
+  }
+
+  /// The pack name each career on a custom world was started on, by career
+  /// id; a default-world career is not in it. Reads the name column alone.
+  Future<Map<int, String>> careerWorldNames() async {
+    final q = _db.selectOnly(_db.careerWorlds)
+      ..addColumns([_db.careerWorlds.careerId, _db.careerWorlds.packName]);
+    return {
+      for (final r in await q.get())
+        r.read(_db.careerWorlds.careerId)!: r.read(_db.careerWorlds.packName)!,
+    };
+  }
+
   /// Stores [p] as a new pack with its [trophies], and returns its id.
   Future<int> insert(WorldPack p, Map<String, Uint8List> trophies) =>
       _db.transaction(() async {

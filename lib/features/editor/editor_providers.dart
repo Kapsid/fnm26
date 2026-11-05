@@ -12,6 +12,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
+import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
@@ -24,9 +25,9 @@ enum PackStatus {
   /// Saved and shareable, but [PackRules.issues] still lists things to fix.
   missing,
 
-  /// A game update made it incompatible (it refers to something the game no
-  /// longer has). Nothing produces this yet: the compatibility check that
-  /// does arrives with the New Game world picker.
+  /// A game update made it incompatible: it refers to something the game no
+  /// longer has ([PackRules.compatibility]). Shown before [missing]: it is
+  /// what the manager must fix first.
   needsAttention,
 
   /// The stored pack could not be read at all. Only deleting it is offered.
@@ -125,6 +126,31 @@ final AutoDisposeFutureProvider<List<Nation>> editorWorldProvider =
       (ref) => ref.watch(nationRepositoryProvider).newCareerWorld(),
     );
 
+/// Where [pack] stands against the game whose new-career nations are
+/// [world]: its [PackStatus] and everything standing between it and a
+/// career, what the game no longer has ([PackRules.compatibility]) first,
+/// then what is missing ([PackRules.issues]). A null [pack] could not be
+/// read.
+({PackStatus status, List<PackIssue> issues}) assessPack(
+  WorldPack? pack,
+  List<Nation> world,
+) {
+  if (pack == null) return (status: PackStatus.unreadable, issues: const []);
+  final unknown = PackGameKeys.of([for (final n in world) n.id]).check(pack);
+  final missing = PackRules.issues(
+    pack,
+    baseCodes: {for (final n in world) n.id: n.code},
+  );
+  return (
+    status: unknown.isNotEmpty
+        ? PackStatus.needsAttention
+        : missing.isNotEmpty
+        ? PackStatus.missing
+        : PackStatus.ready,
+    issues: [...unknown, ...missing],
+  );
+}
+
 /// Every database on the device with its status, by name. Reads (and
 /// checks) every pack, so it is autoDispose: back on the list, it is read
 /// again, after whatever the editor saved.
@@ -135,7 +161,6 @@ final AutoDisposeFutureProvider<List<EditorPackEntry>> editorPacksProvider =
       final summaries = await ref.watch(worldPacksProvider.future);
       final world = await ref.watch(editorWorldProvider.future);
       final repo = ref.watch(worldPackRepositoryProvider);
-      final codes = {for (final n in world) n.id: n.code};
       final out = <EditorPackEntry>[];
       for (final s in summaries) {
         WorldPack? pack;
@@ -144,19 +169,13 @@ final AutoDisposeFutureProvider<List<EditorPackEntry>> editorPacksProvider =
         } on FormatException {
           pack = null;
         }
-        final issues = pack == null
-            ? const <PackIssue>[]
-            : PackRules.issues(pack, baseCodes: codes);
+        final a = assessPack(pack, world);
         out.add((
           id: s.id,
           name: s.name,
           updatedAt: s.updatedAt,
-          status: pack == null
-              ? PackStatus.unreadable
-              : issues.isEmpty
-              ? PackStatus.ready
-              : PackStatus.missing,
-          missing: issues.length,
+          status: a.status,
+          missing: a.issues.length,
         ));
       }
       return out;
@@ -240,6 +259,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
 
   List<Nation> _world = const [];
   Map<int, String> _baseCodes = const {};
+  PackGameKeys _gameKeys = PackGameKeys.of(const []);
 
   WorldPack? _issuesOf;
   List<PackIssue> _issues = const [];
@@ -264,6 +284,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
       }
       _world = world;
       _baseCodes = {for (final n in world) n.id: n.code};
+      _gameKeys = PackGameKeys.of([for (final n in world) n.id]);
       _trophies = trophies;
       // The picture rows are what a career and an export take, so a pack
       // whose list of them drifted (one stored before they were kept in
@@ -284,15 +305,68 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// The nations the pack covers, strongest first (empty until loaded).
   List<Nation> get world => _world;
 
-  /// What stands between the pack and a career ([PackRules.issues]).
+  /// What stands between the pack and a career: what the game no longer has
+  /// ([PackRules.compatibility], each an [UnknownId]) first, then what is
+  /// missing ([PackRules.issues]).
   List<PackIssue> get issues {
     final pack = state.valueOrNull;
     if (pack == null) return const [];
     if (!identical(pack, _issuesOf)) {
-      _issues = PackRules.issues(pack, baseCodes: _baseCodes);
+      _issues = [
+        ..._gameKeys.check(pack),
+        ...PackRules.issues(pack, baseCodes: _baseCodes),
+      ];
       _issuesOf = pack;
     }
     return _issues;
+  }
+
+  /// Whether the pack refers to something the game no longer has.
+  bool get needsAttention => issues.any((i) => i is UnknownId);
+
+  /// Removes exactly the entry [issue] names, as one undoable edit. A trophy
+  /// goes with its picture ([setTrophy]), which, like every picture, undo
+  /// does not bring back: a pack's list of trophies follows its picture
+  /// rows, so the list entry alone would come back on the next open. Returns
+  /// whether something was removed.
+  Future<bool> removeUnknown(UnknownId issue) async {
+    final path = issue.path;
+    final dot = path.indexOf('.');
+    if (dot < 0) return false;
+    final root = path.substring(0, dot);
+    final key = path.substring(dot + 1);
+    final id = int.tryParse(key);
+    if (root == 'trophies') return setTrophy(key, null);
+    Map<K, V> without<K, V>(Map<K, V> m, K k) => {...m}..remove(k);
+    final before = _revision;
+    update((p) {
+      if (id != null) {
+        switch (root) {
+          case 'squads' when p.squads.containsKey(id):
+            return p.copyWith(squads: without(p.squads, id));
+          case 'nations' when p.nations.containsKey(id):
+            return p.copyWith(nations: without(p.nations, id));
+          case 'nameLists' when p.nameLists.containsKey(id):
+            return p.copyWith(nameLists: without(p.nameLists, id));
+        }
+      }
+      return switch (root) {
+        'stadiums' when p.stadiums.containsKey(key) => p.copyWith(
+          stadiums: without(p.stadiums, key),
+        ),
+        'competitions' when p.competitions.containsKey(key) => p.copyWith(
+          competitions: without(p.competitions, key),
+        ),
+        'yAccounts' when p.yAccounts.containsKey(key) => p.copyWith(
+          yAccounts: without(p.yAccounts, key),
+        ),
+        'sponsors' when p.sponsors.containsKey(key) => p.copyWith(
+          sponsors: without(p.sponsors, key),
+        ),
+        _ => p,
+      };
+    });
+    return _revision != before;
   }
 
   /// What stands between nation [nationId]'s squad and a career

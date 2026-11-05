@@ -15021,4 +15021,48 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorTrophySize(int width, int height) {
     return 'Saved at $width x $height pixels';
   }
+
+  @override
+  String editorIssueUnknownEntry(String name) {
+    return '$name is no longer in the game';
+  }
+
+  @override
+  String get editorAttentionBody =>
+      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+
+  @override
+  String get editorRemove => 'Remove';
+
+  @override
+  String worldChip(String name) {
+    return 'World: $name';
+  }
+
+  @override
+  String get worldDefault => 'Default';
+
+  @override
+  String get worldDefaultAbout => 'The game\'s own world';
+
+  @override
+  String get worldSheetTitle => 'Choose a world';
+
+  @override
+  String get worldSheetBlurb =>
+      'Databases you made or opened in the Editor. Only complete ones can start a career.';
+
+  @override
+  String get worldPackGone =>
+      'That database is no longer on this device. The career was not started.';
+
+  @override
+  String get worldStarting => 'Setting up your world';
+
+  @override
+  String get settingsDefaultWorldTitle => 'Default world';
+
+  @override
+  String get settingsDefaultWorldBlurb =>
+      'The world New Game starts on. You can still change it for each career.';
 }

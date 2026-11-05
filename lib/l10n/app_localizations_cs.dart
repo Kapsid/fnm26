@@ -15348,4 +15348,48 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorTrophySize(int width, int height) {
     return 'Uloží se v rozměru $width x $height pixelů';
   }
+
+  @override
+  String editorIssueUnknownEntry(String name) {
+    return '$name už ve hře není';
+  }
+
+  @override
+  String get editorAttentionBody =>
+      'Aktualizace hry odebrala něco, na co tato databáze odkazuje. Odeberte každou položku níže a půjde na ní znovu začít kariéru.';
+
+  @override
+  String get editorRemove => 'Odebrat';
+
+  @override
+  String worldChip(String name) {
+    return 'Svět: $name';
+  }
+
+  @override
+  String get worldDefault => 'Výchozí';
+
+  @override
+  String get worldDefaultAbout => 'Vlastní svět hry';
+
+  @override
+  String get worldSheetTitle => 'Vyberte svět';
+
+  @override
+  String get worldSheetBlurb =>
+      'Databáze, které jste vytvořili nebo otevřeli v Editoru. Kariéru lze začít jen na úplné.';
+
+  @override
+  String get worldPackGone =>
+      'Tato databáze už v zařízení není. Kariéra nebyla zahájena.';
+
+  @override
+  String get worldStarting => 'Připravujeme váš svět';
+
+  @override
+  String get settingsDefaultWorldTitle => 'Výchozí svět';
+
+  @override
+  String get settingsDefaultWorldBlurb =>
+      'Svět, na kterém začíná nová hra. Pro každou kariéru ho můžete změnit.';
 }

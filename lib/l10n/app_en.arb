@@ -23174,5 +23174,63 @@
         "type": "int"
       }
     }
+  },
+  "editorIssueUnknownEntry": "{name} is no longer in the game",
+  "@editorIssueUnknownEntry": {
+    "description": "An entry in the database names something a game update removed; {name} is that thing.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorAttentionBody": "A game update removed something this database refers to. Remove each entry below and it can start a career again.",
+  "@editorAttentionBody": {
+    "description": "Body of the bar on the database home when a game update made the database incompatible."
+  },
+  "editorRemove": "Remove",
+  "@editorRemove": {
+    "description": "Button on an entry that names something no longer in the game: deletes that entry from the database."
+  },
+  "worldChip": "World: {name}",
+  "@worldChip": {
+    "description": "Chip on the nation pick showing which world (default or a custom database) the new career starts in; {name} is the world.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "worldDefault": "Default",
+  "@worldDefault": {
+    "description": "The game's own starting world, as opposed to a custom database."
+  },
+  "worldDefaultAbout": "The game's own world",
+  "@worldDefaultAbout": {
+    "description": "Line under Default in the world list."
+  },
+  "worldSheetTitle": "Choose a world",
+  "@worldSheetTitle": {
+    "description": "Title of the sheet that picks the world a career starts in."
+  },
+  "worldSheetBlurb": "Databases you made or opened in the Editor. Only complete ones can start a career.",
+  "@worldSheetBlurb": {
+    "description": "Line under the title of the world sheet."
+  },
+  "worldPackGone": "That database is no longer on this device. The career was not started.",
+  "@worldPackGone": {
+    "description": "Snackbar when the chosen database was deleted before the career was started."
+  },
+  "worldStarting": "Setting up your world",
+  "@worldStarting": {
+    "description": "Shown under Start career while a career is set up on a custom database (it takes a moment)."
+  },
+  "settingsDefaultWorldTitle": "Default world",
+  "@settingsDefaultWorldTitle": {
+    "description": "Settings row: the world New Game starts on unless changed for that career."
+  },
+  "settingsDefaultWorldBlurb": "The world New Game starts on. You can still change it for each career.",
+  "@settingsDefaultWorldBlurb": {
+    "description": "Line under the Default world settings row."
   }
 }

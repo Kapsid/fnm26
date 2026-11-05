@@ -32,9 +32,16 @@ class PackHomeScreen extends ConsumerStatefulWidget {
   static const Key undoKey = Key('packHome.undo');
   static const Key readyKey = Key('packHome.ready');
   static const Key notReadyKey = Key('packHome.notReady');
+
+  /// The ready bar when a game update made the pack incompatible.
+  static const Key attentionKey = Key('packHome.attention');
   static const Key showAllKey = Key('packHome.showAll');
 
   static Key issueKey(int index) => Key('packHome.issue.$index');
+
+  /// Remove on the [index]th entry of the list, offered for an entry naming
+  /// something the game no longer has.
+  static Key removeKey(int index) => Key('packHome.remove.$index');
   static Key sectionKey(EditorSection s) => Key('packHome.section.${s.name}');
 
   final int packId;
@@ -60,6 +67,16 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
 
   void _open(EditorSection section, {int? nationId}) =>
       context.go(editorSectionLocation(section, _id, nationId: nationId));
+
+  /// Remove for the [index]th entry, when it names something the game no
+  /// longer has: deletes exactly that entry, as one undoable edit.
+  VoidCallback? _remover(_PackView view, int index) {
+    final issue = view.raw[index];
+    if (issue is! UnknownId) return null;
+    return () => unawaited(
+      ref.read(packEditorProvider(_id).notifier).removeUnknown(issue),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +176,7 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
                       view.issues[i].section,
                       nationId: view.issues[i].nationId,
                     ),
+                    onRemove: _remover(view, i),
                   ),
                 ),
               ),
@@ -225,7 +243,11 @@ typedef _SectionFacts = ({String count, int toFix});
 
 /// Everything the home shows of a pack, worked out once per build.
 class _PackView {
-  const _PackView({required this.issues, required this.sections});
+  const _PackView({
+    required this.issues,
+    required this.raw,
+    required this.sections,
+  });
 
   factory _PackView.of(
     AppLocalizations l,
@@ -259,6 +281,7 @@ class _PackView {
     };
     return _PackView(
       issues: described,
+      raw: issues,
       sections: {
         for (final s in EditorSection.values)
           s: (count: count(s), toFix: toFix[s]!),
@@ -267,9 +290,15 @@ class _PackView {
   }
 
   final List<PackIssueText> issues;
+
+  /// [issues] as [PackEditor.issues] gave them, index for index.
+  final List<PackIssue> raw;
   final Map<EditorSection, _SectionFacts> sections;
 
   bool get ready => issues.isEmpty;
+
+  /// Whether the pack refers to something the game no longer has.
+  bool get attention => raw.any((i) => i is UnknownId);
 
   int get readySections => sections.values.where((f) => f.toFix == 0).length;
 }
@@ -300,10 +329,19 @@ class _ReadyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final ready = view.ready;
-    final color = ready ? AppColors.positive : AppColors.warning;
+    final attention = view.attention;
+    final color = ready
+        ? AppColors.positive
+        : attention
+        ? AppColors.error
+        : AppColors.warning;
     final total = EditorSection.values.length;
     return AppCard(
-      key: ready ? PackHomeScreen.readyKey : PackHomeScreen.notReadyKey,
+      key: ready
+          ? PackHomeScreen.readyKey
+          : attention
+          ? PackHomeScreen.attentionKey
+          : PackHomeScreen.notReadyKey,
       color: color.withValues(alpha: 0.08),
       border: Border.all(color: color.withValues(alpha: 0.7)),
       child: Column(
@@ -313,7 +351,11 @@ class _ReadyCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
-                ready ? Icons.check_circle : Icons.pending_outlined,
+                ready
+                    ? Icons.check_circle
+                    : attention
+                    ? Icons.error_outline
+                    : Icons.pending_outlined,
                 color: color,
                 size: 28,
               ),
@@ -325,12 +367,18 @@ class _ReadyCard extends StatelessWidget {
                     Text(
                       ready
                           ? l.editorReadyTitle
+                          : attention
+                          ? l.editorStatusAttention
                           : l.editorNotReadyTitle(view.issues.length),
                       style: AppTypography.titleMedium.copyWith(color: color),
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      ready ? l.editorReadyBody : l.editorNotReadyBody,
+                      ready
+                          ? l.editorReadyBody
+                          : attention
+                          ? l.editorAttentionBody
+                          : l.editorNotReadyBody,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.onSurfaceVariant,
                       ),
@@ -369,11 +417,16 @@ class _IssueRow extends StatelessWidget {
     required this.index,
     required this.issue,
     required this.onTap,
+    this.onRemove,
   });
 
   final int index;
   final PackIssueText issue;
   final VoidCallback onTap;
+
+  /// Deletes the entry, for one naming something the game no longer has;
+  /// it then has nowhere to jump to that would fix it.
+  final VoidCallback? onRemove;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -390,7 +443,7 @@ class _IssueRow extends StatelessWidget {
           Icon(
             sectionIcon(issue.section),
             size: 20,
-            color: AppColors.warning,
+            color: onRemove == null ? AppColors.warning : AppColors.error,
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -414,7 +467,14 @@ class _IssueRow extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
+          if (onRemove case final remove?)
+            TextButton(
+              key: PackHomeScreen.removeKey(index),
+              onPressed: remove,
+              child: Text(AppLocalizations.of(context).editorRemove),
+            )
+          else
+            const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
         ],
       ),
     ),

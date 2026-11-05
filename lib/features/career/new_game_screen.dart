@@ -11,6 +11,8 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
+import 'package:fnm/features/world_pack/world_choice.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -36,6 +38,10 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   final _controller = TextEditingController();
   bool _creating = false;
 
+  /// Whether the save being made starts on a database: copying it and
+  /// working out its starting ranking takes a moment, which is said.
+  bool _creatingWorld = false;
+
   @override
   void dispose() {
     _controller.dispose();
@@ -46,28 +52,68 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     // The button is disabled while a save is made, but the field's keyboard
     // Done also calls this: without the guard it would make a second save.
     if (_creating) return;
-    setState(() => _creating = true);
+    // The world chosen on the nation pick (null: the game's own).
+    final worldPackId = ref.read(newGameWorldProvider);
+    setState(() {
+      _creating = true;
+      _creatingWorld = worldPackId != null;
+    });
     // Taken before the await: a resize across 1000 px rebuilds this page in
     // the other layout meanwhile, and a manager who has gone elsewhere (a
     // pushed Settings, the back arrow) is left there rather than pulled into
     // the new save. `router.state` is the top-most route, pushed ones too.
     final router = GoRouter.of(context);
+    final container = ProviderScope.containerOf(context, listen: false);
     final careers = ref.read(careerServiceProvider);
     final Result<Career> result;
     try {
       result = await careers.create(
         nationId: widget.nationId,
         managerName: _controller.text,
+        worldPackId: worldPackId,
       );
+      // CareerService.create reports a missing pack as a StateError.
+      // ignore: avoid_catching_errors
+    } on StateError {
+      // The database was deleted between choosing it and starting: say so
+      // and go back to Default, rather than fall over.
+      if (worldPackId == null ||
+          await container
+                  .read(worldPackRepositoryProvider)
+                  .uuidOf(
+                    worldPackId,
+                  ) !=
+              null) {
+        rethrow;
+      }
+      chooseNewGameWorld(container, null);
+      container.invalidate(worldPacksProvider);
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context).worldPackGone),
+            ),
+          );
+      }
+      return;
     } finally {
       // A create that throws must give Start back, not leave it spinning.
-      if (mounted) setState(() => _creating = false);
+      if (mounted) {
+        setState(() {
+          _creating = false;
+          _creatingWorld = false;
+        });
+      }
     }
     if (!mounted) return;
     final l = AppLocalizations.of(context);
 
     result.fold(
       (career) {
+        // The chip was for this career: the next starts on the default.
+        resetNewGameWorld(container);
         if (router.state.uri.path == Routes.newGame) {
           router.go('${Routes.hub}?careerId=${career.id}');
         }
@@ -173,11 +219,13 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                           // trap, even when the free part was the whole game.
                           const _FreeCycleNote(gapBelow: AppSpacing.md),
                           PrimaryButton(
+                            key: NewGameScreen.startKey,
                             label: l.careerStartCareer,
                             icon: Icons.play_arrow_rounded,
                             isLoading: _creating,
                             onPressed: _creating ? null : _start,
                           ),
+                          if (_creatingWorld) const _WorldStartingNote(),
                           const SizedBox(height: AppSpacing.md),
                         ],
                       ),
@@ -191,6 +239,23 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
       ),
     );
   }
+}
+
+/// Under Start while a save is made on a database: it takes a moment.
+class _WorldStartingNote extends StatelessWidget {
+  const _WorldStartingNote();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: AppSpacing.sm),
+    child: Text(
+      AppLocalizations.of(context).worldStarting,
+      textAlign: TextAlign.center,
+      style: AppTypography.bodySmall.copyWith(
+        color: AppColors.onSurfaceVariant,
+      ),
+    ),
+  );
 }
 
 /// What the manager is getting for nothing, and what the one payment is for:

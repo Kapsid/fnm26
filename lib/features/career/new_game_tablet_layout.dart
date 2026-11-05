@@ -86,6 +86,8 @@ class _NewGameTabletLayout extends StatelessWidget {
                                     ? null
                                     : state._start,
                               ),
+                              if (state._creatingWorld)
+                                const _WorldStartingNote(),
                             ],
                           ),
                         ),

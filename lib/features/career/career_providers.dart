@@ -57,6 +57,15 @@ final savesProvider = FutureProvider<List<Career>>((ref) async {
   ];
 });
 
+/// The database each save on a custom world was started on, by career id
+/// (its name as the career copied it); a default-world save is not in it.
+/// Follows [savesProvider], so a save made, deleted or imported is seen.
+final FutureProvider<Map<int, String>> careerWorldNamesProvider =
+    FutureProvider<Map<int, String>>((ref) async {
+      await ref.watch(savesProvider.future);
+      return ref.watch(worldPackRepositoryProvider).careerWorldNames();
+    });
+
 /// A nation by id — used by the new-game and hub screens for display.
 final FutureProviderFamily<Nation?, int> nationByIdProvider =
     FutureProvider.family<Nation?, int>((ref, id) async {

@@ -1,7 +1,8 @@
 part of 'settings_screen.dart';
 
 /// Settings on a landscape tablet in three columns: the game's own settings
-/// (sound, language, text size, what the free game covers) on the left; the
+/// (sound, language, text size, the default world, what the free game
+/// covers) on the left; the
 /// maker's note, the walk through, the log and the ways to reach the maker in
 /// the middle; the saves' backups, the tallest card, alone on the right.
 /// Every card is the phone's own, writes and share sheet included.
@@ -36,6 +37,8 @@ class _SettingsTabletLayout extends StatelessWidget {
                           _LanguageCard(),
                           SizedBox(height: AppSpacing.md),
                           _TextSizeCard(),
+                          SizedBox(height: AppSpacing.md),
+                          _DefaultWorldCard(),
                           SizedBox(height: AppSpacing.md),
                           _FreeScopeCard(),
                         ],

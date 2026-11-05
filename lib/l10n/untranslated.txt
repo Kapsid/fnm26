@@ -201,7 +201,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "da": [
@@ -406,7 +418,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "de": [
@@ -611,7 +635,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "el": [
@@ -816,7 +852,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "es": [
@@ -1021,7 +1069,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "fi": [
@@ -1226,7 +1286,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "fil": [
@@ -1431,7 +1503,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "fr": [
@@ -1636,7 +1720,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "hi": [
@@ -1841,7 +1937,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "hr": [
@@ -2046,7 +2154,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "hu": [
@@ -2251,7 +2371,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "id": [
@@ -2456,7 +2588,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "it": [
@@ -2661,7 +2805,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "ja": [
@@ -2866,7 +3022,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "ko": [
@@ -3071,7 +3239,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "ms": [
@@ -3276,7 +3456,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "nb": [
@@ -3481,7 +3673,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "nl": [
@@ -3686,7 +3890,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "pl": [
@@ -3891,7 +4107,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "pt": [
@@ -4096,7 +4324,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "ro": [
@@ -4301,7 +4541,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "sv": [
@@ -4506,7 +4758,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "th": [
@@ -4711,7 +4975,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "tr": [
@@ -4916,7 +5192,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "uk": [
@@ -5121,7 +5409,19 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ],
 
   "vi": [
@@ -5326,6 +5626,18 @@
     "editorTrophyRemoved",
     "editorTrophySaveFailed",
     "editorTrophyPick",
-    "editorTrophySize"
+    "editorTrophySize",
+    "editorIssueUnknownEntry",
+    "editorAttentionBody",
+    "editorRemove",
+    "worldChip",
+    "worldDefault",
+    "worldDefaultAbout",
+    "worldSheetTitle",
+    "worldSheetBlurb",
+    "worldPackGone",
+    "worldStarting",
+    "settingsDefaultWorldTitle",
+    "settingsDefaultWorldBlurb"
   ]
 }

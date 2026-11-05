@@ -22849,6 +22849,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved at {width} x {height} pixels'**
   String editorTrophySize(int width, int height);
+
+  /// An entry in the database names something a game update removed; {name} is that thing.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is no longer in the game'**
+  String editorIssueUnknownEntry(String name);
+
+  /// Body of the bar on the database home when a game update made the database incompatible.
+  ///
+  /// In en, this message translates to:
+  /// **'A game update removed something this database refers to. Remove each entry below and it can start a career again.'**
+  String get editorAttentionBody;
+
+  /// Button on an entry that names something no longer in the game: deletes that entry from the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get editorRemove;
+
+  /// Chip on the nation pick showing which world (default or a custom database) the new career starts in; {name} is the world.
+  ///
+  /// In en, this message translates to:
+  /// **'World: {name}'**
+  String worldChip(String name);
+
+  /// The game's own starting world, as opposed to a custom database.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get worldDefault;
+
+  /// Line under Default in the world list.
+  ///
+  /// In en, this message translates to:
+  /// **'The game\'s own world'**
+  String get worldDefaultAbout;
+
+  /// Title of the sheet that picks the world a career starts in.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a world'**
+  String get worldSheetTitle;
+
+  /// Line under the title of the world sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Databases you made or opened in the Editor. Only complete ones can start a career.'**
+  String get worldSheetBlurb;
+
+  /// Snackbar when the chosen database was deleted before the career was started.
+  ///
+  /// In en, this message translates to:
+  /// **'That database is no longer on this device. The career was not started.'**
+  String get worldPackGone;
+
+  /// Shown under Start career while a career is set up on a custom database (it takes a moment).
+  ///
+  /// In en, this message translates to:
+  /// **'Setting up your world'**
+  String get worldStarting;
+
+  /// Settings row: the world New Game starts on unless changed for that career.
+  ///
+  /// In en, this message translates to:
+  /// **'Default world'**
+  String get settingsDefaultWorldTitle;
+
+  /// Line under the Default world settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'The world New Game starts on. You can still change it for each career.'**
+  String get settingsDefaultWorldBlurb;
 }
 
 class _AppLocalizationsDelegate

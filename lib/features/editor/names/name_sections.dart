@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
@@ -143,13 +144,6 @@ T _inDefaultWorld<T>(T Function() body) {
   }
 }
 
-/// The stored names of the competitions a database can rename.
-const List<String> _competitions = [
-  'World Championship',
-  'Continental Clash',
-  'Intercontinental Play-off',
-];
-
 /// Every row of [section], grouped, in the manager's language [l]: [world]
 /// the nations a career starts with, [lists] the game's name lists.
 List<NameGroup> nameGroups(
@@ -223,14 +217,15 @@ List<NameGroup> nameGroups(
       ];
     case NameSection.competitions:
       // Each stored name with the continent it belongs to: in some
-      // languages two Nations Cups read the same.
+      // languages two Nations Cups read the same. The same names, in the
+      // same order, as `packCompetitionNames`.
       final stored = <(String, Confederation?)>[
-        (_competitions.first, null),
+        (kPackWorldCompetitions.first, null),
         for (final e in ContinentalCups.byConfederation.entries)
           (e.value.name, e.key),
         for (var i = 0; i < NationsCups.allNames.length; i++)
           (NationsCups.allNames[i], NationsCups.confederations[i]),
-        for (final s in _competitions.skip(1)) (s, null),
+        for (final s in kPackWorldCompetitions.skip(1)) (s, null),
       ];
       return one(
         _inDefaultWorld(

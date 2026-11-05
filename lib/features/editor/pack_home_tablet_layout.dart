@@ -57,6 +57,7 @@ class _PackHomeTabletLayout extends StatelessWidget {
                             view.issues[i].section,
                             nationId: view.issues[i].nationId,
                           ),
+                          onRemove: state._remover(view, i),
                         ),
                       ),
                     ),

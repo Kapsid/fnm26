@@ -116,12 +116,17 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
     final nationsById =
         ref.watch(knownNationsByIdProvider).valueOrNull ??
         const <int, Nation>{};
+    // The database each save on a custom world started on.
+    final worldNames =
+        ref.watch(careerWorldNamesProvider).valueOrNull ??
+        const <int, String>{};
 
     if (useTabletLayout(context, ref)) {
       return _SavesTabletLayout(
         state: this,
         savesAsync: savesAsync,
         nationsById: nationsById,
+        worldNames: worldNames,
         premium: premium,
         limit: limit,
         lockedIds: lockedIds,
@@ -181,6 +186,7 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
                           return SaveTile(
                             save: save,
                             nation: nationsById[save.nationId],
+                            worldName: worldNames[save.id],
                             locked: lockedIds.contains(save.id),
                             onContinue: () => _continue(save),
                             onDelete: () => _confirmDelete(
@@ -541,6 +547,30 @@ class _Spinner extends StatelessWidget {
   );
 }
 
+/// The database a save runs on, under its nation: a globe and the name.
+/// Shown only for a save on a custom world.
+class SaveWorldLine extends StatelessWidget {
+  const SaveWorldLine({required this.name, super.key});
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      const Icon(Icons.public_rounded, size: 12, color: AppColors.primary),
+      const SizedBox(width: 4),
+      Flexible(
+        child: Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+        ),
+      ),
+    ],
+  );
+}
+
 /// One save in the list: who you are, where you are, and the three things you
 /// can do with it.
 class SaveTile extends StatelessWidget {
@@ -551,10 +581,14 @@ class SaveTile extends StatelessWidget {
     required this.onDelete,
     required this.onShare,
     this.locked = false,
+    this.worldName,
     super.key,
   });
 
   static const Key lockedBadgeKey = Key('saveTile.locked');
+
+  /// The line naming the database a save runs on (the tablet pane's too).
+  static const Key worldKey = Key('saveTile.world');
 
   final Career save;
 
@@ -562,6 +596,10 @@ class SaveTile extends StatelessWidget {
   /// listed, exported and deleted as ever, and wears a padlock and a note.
   final bool locked;
   final Nation? nation;
+
+  /// The database this save runs on, or null for the game's own world
+  /// (which shows nothing extra).
+  final String? worldName;
   final VoidCallback onContinue;
   final VoidCallback onDelete;
 
@@ -590,6 +628,8 @@ class SaveTile extends StatelessWidget {
                   nation?.name ?? l.careerUnknownNation,
                   style: AppTypography.titleMedium,
                 ),
+                if (worldName case final world?)
+                  SaveWorldLine(key: worldKey, name: world),
                 if (locked) const SaveLockedNote(key: lockedBadgeKey),
                 Text(
                   '${save.managerName} · $date',
