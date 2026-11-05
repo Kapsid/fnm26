@@ -98,7 +98,7 @@ void main() {
     expect(p.momentLength(goal), const Duration(milliseconds: 6000));
     final span = p.screenAt(goal.minute + 1, 0) - p.screenAt(goal.minute, 0);
     expect(span, greaterThanOrEqualTo(p.momentLength(goal)));
-    // Fixed lengths hold at every speed.
+    // A key moment keeps its full length at every speed.
     for (final sp in PitchSpeed.values) {
       expect(
         PitchPacer(_result([goal]), sp).momentLength(goal),
@@ -242,5 +242,165 @@ void main() {
       expect(inBand[s]!, greaterThanOrEqualTo(180), reason: '$s');
       expect(v[v.length ~/ 2], inInclusiveRange(lo, hi), reason: '$s median');
     }
+  });
+
+  test('a red-card foul keeps 3 s at fast, a yellow is shortened', () {
+    const red = MatchEvent(
+      minute: 30,
+      type: MatchEventType.redCard,
+      teamNationId: 2,
+      playerId: 9,
+      playerName: 'Nine',
+    );
+    const yellow = MatchEvent(
+      minute: 31,
+      type: MatchEventType.yellowCard,
+      teamNationId: 2,
+      playerId: 8,
+      playerName: 'Eight',
+    );
+    const redFoul = FoulMoment(
+      minute: 30,
+      stoppage: 0,
+      seq: 0,
+      teamNationId: 1,
+      foulerId: 9,
+      fouledId: 3,
+      zone: PitchZone.midfield,
+      cardEventIndex: 0,
+    );
+    const yellowFoul = FoulMoment(
+      minute: 31,
+      stoppage: 0,
+      seq: 0,
+      teamNationId: 1,
+      foulerId: 8,
+      fouledId: 3,
+      zone: PitchZone.midfield,
+      cardEventIndex: 1,
+    );
+    final r = MatchResult(
+      homeScore: 0,
+      awayScore: 0,
+      events: const [red, yellow],
+      homeShots: 0,
+      awayShots: 0,
+      homePossession: 50,
+      moments: const [redFoul, yellowFoul],
+    );
+    final fast = PitchPacer(r, PitchSpeed.fast);
+    expect(fast.momentLength(redFoul), const Duration(seconds: 3));
+    expect(
+      fast.screenAt(31, 0) - fast.screenAt(30, 0),
+      const Duration(seconds: 3),
+    );
+    expect(fast.momentLength(yellowFoul), const Duration(milliseconds: 1350));
+  });
+
+  test('an injury stages 3 s at every speed', () {
+    const injury = MatchEvent(
+      minute: 20,
+      type: MatchEventType.injury,
+      teamNationId: 1,
+      playerId: 4,
+      playerName: 'Four',
+    );
+    final r = MatchResult(
+      homeScore: 0,
+      awayScore: 0,
+      events: const [injury],
+      homeShots: 0,
+      awayShots: 0,
+      homePossession: 50,
+    );
+    for (final sp in PitchSpeed.values) {
+      final p = PitchPacer(r, sp);
+      expect(
+        p.screenAt(21, 0) - p.screenAt(20, 0),
+        const Duration(seconds: 3),
+        reason: '$sp',
+      );
+    }
+  });
+
+  test('matchAt sweeps a whole match monotonically', () {
+    const engine = MatchEngine();
+    for (var seed = 0; seed < 40; seed++) {
+      final r = engine.play(
+        home: ratedTeam(1, 75),
+        away: ratedTeam(2, 75),
+        rng: SeededRng.forFixture(0x5EED, seed),
+        neutralVenue: true,
+        bigMatch: true,
+        extraTimeIfLevel: true,
+      );
+      if (r.extraTime == null || r.stoppage == 0) continue;
+      for (final sp in PitchSpeed.values) {
+        final p = PitchPacer(r, sp);
+        int order(int minute, int stoppage) => minute > 90
+            ? 1000 + minute
+            : stoppage > 0
+            ? 900 + stoppage
+            : minute;
+        var last = (order(1, 0), 0.0);
+        var sawStoppage = false;
+        var sawExtra = false;
+        final end = p.total.inMilliseconds;
+        for (var ms = 0; ms <= end; ms += 10) {
+          final m = p.matchAt(Duration(milliseconds: ms));
+          final now = (order(m.minute, m.stoppage), m.within);
+          final forward =
+              now.$1 > last.$1 || (now.$1 == last.$1 && now.$2 >= last.$2);
+          expect(forward, isTrue, reason: 'seed $seed $sp at $ms ms');
+          if (m.stoppage > 0) sawStoppage = true;
+          if (m.minute > 90) sawExtra = true;
+          last = now;
+        }
+        expect(sawStoppage && sawExtra, isTrue);
+        expect(last.$1, order(120, 0));
+      }
+      return;
+    }
+    fail('no extra-time match with stoppage in 40 seeds');
+  });
+
+  test("no event is staged past the result's added time", () {
+    const engine = MatchEngine();
+    for (var seed = 0; seed < 200; seed++) {
+      final r = engine.play(
+        home: ratedTeam(1, 75),
+        away: ratedTeam(2, 72),
+        rng: SeededRng.forFixture(0xADD, seed),
+        extraTimeIfLevel: seed.isEven,
+      );
+      for (final e in r.events) {
+        expect(e.stoppage, lessThanOrEqualTo(r.stoppage), reason: '$seed');
+      }
+      for (final m in r.moments) {
+        expect(m.stoppage, lessThanOrEqualTo(r.stoppage), reason: '$seed');
+      }
+      expect(() => PitchPacer(r, PitchSpeed.mid), returnsNormally);
+    }
+    const late = MatchEvent(
+      minute: 90,
+      stoppage: 5,
+      type: MatchEventType.injury,
+      teamNationId: 1,
+      playerId: 4,
+      playerName: 'Four',
+    );
+    final bad = MatchResult(
+      homeScore: 0,
+      awayScore: 0,
+      events: const [late],
+      homeShots: 0,
+      awayShots: 0,
+      homePossession: 50,
+      stoppage: 3,
+    );
+    expect(
+      () => PitchPacer(bad, PitchSpeed.mid),
+      throwsA(isA<AssertionError>()),
+    );
   });
 }

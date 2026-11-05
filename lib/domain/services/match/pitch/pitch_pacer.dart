@@ -26,7 +26,12 @@ class PitchPacer {
   PitchPacer(MatchResult r, PitchSpeed speed)
     : _stoppage = r.stoppage,
       _speed = speed,
-      _events = r.events {
+      _events = r.events,
+      assert(
+        r.events.every((e) => e.stoppage <= r.stoppage) &&
+            r.moments.every((m) => m.stoppage <= r.stoppage),
+        'an added-time event past the minutes added',
+      ) {
     final extra = r.extraTime != null ? 30 : 0;
     final slotCount = 90 + _stoppage + extra;
     final staged = List<double>.filled(slotCount, 0);
