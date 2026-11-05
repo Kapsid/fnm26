@@ -14976,4 +14976,93 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get editorPlayerClubAutoAbout =>
       'The game places him at a club that suits his level.';
+
+  @override
+  String get editorNamesSearch => 'Search names';
+
+  @override
+  String get editorNamesSearchClubs => 'Search clubs or countries';
+
+  @override
+  String get editorNamesSearchStadiums =>
+      'Search stadiums, cities or countries';
+
+  @override
+  String get editorNamesSearchNations => 'Search nations or codes';
+
+  @override
+  String get editorNamesNone => 'Nothing matches your search.';
+
+  @override
+  String get editorNamesEveryLanguage =>
+      'A custom name shows the same in every language.';
+
+  @override
+  String editorNamesGameName(String name) {
+    return 'Game name: $name';
+  }
+
+  @override
+  String get editorNamesReset => 'Reset to original';
+
+  @override
+  String get editorNamesDone => 'Done';
+
+  @override
+  String get editorNamesKeepHint => 'Leave empty to keep the game name.';
+
+  @override
+  String get editorNamesCode => 'Code';
+
+  @override
+  String get editorNamesCodeHelp =>
+      '3 letters, A to Z, used by no other nation.';
+
+  @override
+  String editorNamesCodeTaken(String code, String nation) {
+    return '$code is already used by $nation.';
+  }
+
+  @override
+  String get editorNamesTaken => 'Another account already has this name.';
+
+  @override
+  String get editorNamesOutlet => 'Outlet';
+
+  @override
+  String get editorNamesFirstNames => 'First names';
+
+  @override
+  String get editorNamesSurnames => 'Surnames';
+
+  @override
+  String editorNamesFirstCount(int count, int min) {
+    return '$count / $min first names';
+  }
+
+  @override
+  String editorNamesSurCount(int count, int min) {
+    return '$count / $min surnames';
+  }
+
+  @override
+  String editorNamesListsHelp(int min) {
+    return 'Separate the names with commas or new lines. Each list needs at least $min. They name local fans and staff.';
+  }
+
+  @override
+  String editorNamesListCounts(int first, int sur) {
+    return '$first first names, $sur surnames';
+  }
+
+  @override
+  String editorNamesMainStadium(String city) {
+    return 'Main stadium in $city';
+  }
+
+  @override
+  String get editorNamesChanged => 'Changed';
+
+  @override
+  String get editorNamesPick => 'Pick a name to edit.';
 }

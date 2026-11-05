@@ -52,6 +52,7 @@ Future<void> pumpEditorRoute(
   ProviderContainer container,
   String location, {
   Size size = kPhoneSize,
+  Locale locale = const Locale('en'),
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -62,7 +63,7 @@ Future<void> pumpEditorRoute(
       container: container,
       child: MaterialApp.router(
         theme: AppTheme.theme,
-        locale: const Locale('en'),
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         routerConfig: router,

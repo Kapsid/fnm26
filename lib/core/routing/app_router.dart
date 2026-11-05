@@ -28,6 +28,7 @@ import 'package:fnm/features/dev/style_gallery_screen.dart';
 import 'package:fnm/features/editor/editor_list_screen.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_section_screen.dart';
+import 'package:fnm/features/editor/names/name_section_screen.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
 import 'package:fnm/features/editor/players/nation_list_screen.dart';
 import 'package:fnm/features/editor/players/player_edit_screen.dart';
@@ -431,16 +432,24 @@ final routerProvider = Provider<GoRouter>((ref) {
         playerId: int.tryParse(state.uri.queryParameters['player'] ?? '') ?? 0,
       ),
     ),
-    for (final section in EditorSection.values)
-      if (section != EditorSection.players)
-        GoRoute(
-          path: section.route,
-          builder: (context, state) => EditorSectionScreen(
-            section: section,
-            packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
-            nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
-          ),
+    for (final section in NameSection.values)
+      GoRoute(
+        path: section.editorSection.route,
+        builder: (context, state) => NameSectionScreen(
+          section: section,
+          packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
+          nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
         ),
+      ),
+    // Still a stand-in: the trophy pictures arrive with their own editor.
+    GoRoute(
+      path: Routes.editorTrophies,
+      builder: (context, state) => EditorSectionScreen(
+        section: EditorSection.trophies,
+        packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
+        nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
+      ),
+    ),
     GoRoute(
       path: Routes.settings,
       builder: (context, state) => const SettingsScreen(),

@@ -1896,7 +1896,7 @@
   },
   "matchGoalLongThrow": "LONG THROW",
   "@matchGoalLongThrow": {
-    "description": "Caption under the goal celebration when the goal came from a long throw-in, before the minute (e.g. LONG THROW \u00b7 67'). All caps, like the penalty caption."
+    "description": "Caption under the goal celebration when the goal came from a long throw-in, before the minute (e.g. LONG THROW · 67'). All caps, like the penalty caption."
   },
   "tacticsSkillFin": "FIN",
   "@tacticsSkillFin": {
@@ -22915,5 +22915,148 @@
   "editorPlayerClubAutoAbout": "The game places him at a club that suits his level.",
   "@editorPlayerClubAutoAbout": {
     "description": "What leaving the club to the game means, in the club picker."
+  },
+  "editorNamesSearch": "Search names",
+  "@editorNamesSearch": {
+    "description": "Hint in the search field of an editor name section."
+  },
+  "editorNamesSearchClubs": "Search clubs or countries",
+  "@editorNamesSearchClubs": {
+    "description": "Hint in the search field of the editor Clubs section."
+  },
+  "editorNamesSearchStadiums": "Search stadiums, cities or countries",
+  "@editorNamesSearchStadiums": {
+    "description": "Hint in the search field of the editor Stadiums section."
+  },
+  "editorNamesSearchNations": "Search nations or codes",
+  "@editorNamesSearchNations": {
+    "description": "Hint in the search field of the editor Nations and Name lists sections."
+  },
+  "editorNamesNone": "Nothing matches your search.",
+  "@editorNamesNone": {
+    "description": "Shown in an editor name section when the search finds nothing."
+  },
+  "editorNamesEveryLanguage": "A custom name shows the same in every language.",
+  "@editorNamesEveryLanguage": {
+    "description": "Note at the top of the editor sections whose game names are translated (nations, competitions, sponsors)."
+  },
+  "editorNamesGameName": "Game name: {name}",
+  "@editorNamesGameName": {
+    "description": "Under an edited name in the editor: the name the game uses without the change.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorNamesReset": "Reset to original",
+  "@editorNamesReset": {
+    "description": "Button in the editor that removes a custom name and goes back to the game name."
+  },
+  "editorNamesDone": "Done",
+  "@editorNamesDone": {
+    "description": "Button closing the editor name sheet; edits are already saved."
+  },
+  "editorNamesKeepHint": "Leave empty to keep the game name.",
+  "@editorNamesKeepHint": {
+    "description": "Helper under an editor name field."
+  },
+  "editorNamesCode": "Code",
+  "@editorNamesCode": {
+    "description": "Label of the 3-letter nation code field in the editor."
+  },
+  "editorNamesCodeHelp": "3 letters, A to Z, used by no other nation.",
+  "@editorNamesCodeHelp": {
+    "description": "Helper under the nation code field in the editor."
+  },
+  "editorNamesCodeTaken": "{code} is already used by {nation}.",
+  "@editorNamesCodeTaken": {
+    "description": "Error when a nation code typed in the editor belongs to another nation.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "editorNamesTaken": "Another account already has this name.",
+  "@editorNamesTaken": {
+    "description": "Error when a Y account is renamed to a name another account uses."
+  },
+  "editorNamesOutlet": "Outlet",
+  "@editorNamesOutlet": {
+    "description": "Label of a journalist's outlet field in the editor."
+  },
+  "editorNamesFirstNames": "First names",
+  "@editorNamesFirstNames": {
+    "description": "Label of the first-name list in the editor Name lists section."
+  },
+  "editorNamesSurnames": "Surnames",
+  "@editorNamesSurnames": {
+    "description": "Label of the surname list in the editor Name lists section."
+  },
+  "editorNamesFirstCount": "{count} / {min} first names",
+  "@editorNamesFirstCount": {
+    "description": "Live count under the first-name list in the editor: names typed against the minimum.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "editorNamesSurCount": "{count} / {min} surnames",
+  "@editorNamesSurCount": {
+    "description": "Live count under the surname list in the editor: names typed against the minimum.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "editorNamesListsHelp": "Separate the names with commas or new lines. Each list needs at least {min}. They name local fans and staff.",
+  "@editorNamesListsHelp": {
+    "description": "Help at the top of the editor name list sheet.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "editorNamesListCounts": "{first} first names, {sur} surnames",
+  "@editorNamesListCounts": {
+    "description": "A nation row in the editor Name lists section: how many names each list holds.",
+    "placeholders": {
+      "first": {
+        "type": "int"
+      },
+      "sur": {
+        "type": "int"
+      }
+    }
+  },
+  "editorNamesMainStadium": "Main stadium in {city}",
+  "@editorNamesMainStadium": {
+    "description": "A row in the editor Stadiums section: only the first ground of a city can be renamed.",
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "editorNamesChanged": "Changed",
+  "@editorNamesChanged": {
+    "description": "Small mark on an editor row whose name differs from the game."
+  },
+  "editorNamesPick": "Pick a name to edit.",
+  "@editorNamesPick": {
+    "description": "Tablet editor name section, before a row is picked."
   }
 }

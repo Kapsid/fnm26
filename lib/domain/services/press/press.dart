@@ -186,7 +186,7 @@ abstract final class Press {
   /// One of each angle would be tidy and wrong: a room is not a panel, so the
   /// pool is drawn as it comes and a conference simply takes the next three.
   static List<PressReporter> roomFor(int seed) {
-    final pool = [..._reporters];
+    final pool = [...reporters];
     // A deterministic shuffle — a rotation plus a stride — so two saves get
     // different rooms without needing a random source in a pure function.
     final stride = 1 + seed.abs() % (pool.length - 1);
@@ -216,8 +216,9 @@ abstract final class Press {
   }
 
   /// The invented press pack. Names and outlets are fiction and stay in this
-  /// form in every language, exactly like the club names.
-  static const List<PressReporter> _reporters = [
+  /// form in every language, exactly like the club names. A custom world
+  /// renames them by [PressReporter.index] (the editor's Press section).
+  static const List<PressReporter> reporters = [
     (
       name: 'Elena Vasquez',
       outlet: 'The Daily Whistle',

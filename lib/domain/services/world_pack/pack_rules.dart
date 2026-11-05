@@ -182,7 +182,10 @@ abstract final class PackRules {
     final effective = {...baseCodes};
     for (final id in p.nations.keys.toList()..sort()) {
       final n = p.nations[id]!;
-      name('nations.$id.name', n.name);
+      // A blank name or code keeps the game's (`ActiveWorld.textOrNull`):
+      // a nation whose code alone changes keeps its name translated.
+      if (n.name.trim().isNotEmpty) name('nations.$id.name', n.name);
+      if (n.code.trim().isEmpty) continue;
       final r = checkCode(n.code);
       if (r != null) {
         out.add(BadField('nations.$id.code', r));
@@ -233,6 +236,15 @@ abstract final class PackRules {
       }
     }
     return out;
+  }
+
+  /// Whether the Y account [original]'s new name in [renames] clashes with
+  /// another account's name (see [_yClashes]): the editor refuses such a
+  /// rename as it is typed.
+  static bool yNameTaken(Map<String, String> renames, String original) {
+    final out = <PackIssue>[];
+    _yClashes(renames, out);
+    return out.any((i) => i.where == 'yAccounts.$original');
   }
 
   /// A Y account's new name must be nobody else's: not another account's

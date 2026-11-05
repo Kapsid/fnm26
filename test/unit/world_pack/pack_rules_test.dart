@@ -164,6 +164,25 @@ void main() {
     expect(b.reason, FieldReason.outOfRange);
   });
 
+  test('a blank nation name or code keeps the game\'s', () {
+    final p = _pack(
+      nations: {
+        1: (name: '', code: 'CZX'),
+        2: (name: 'Bohemia', code: ''),
+      },
+    );
+    expect(
+      PackRules.issues(p, baseCodes: {1: 'AAA', 2: 'BBB'}),
+      isEmpty,
+    );
+    // A blank code leaves the game's in play for the duplicate check.
+    final clash = _pack(nations: {1: (name: '', code: 'BBB')});
+    expect(
+      PackRules.issues(clash, baseCodes: {1: 'AAA', 2: 'BBB'}),
+      [isA<DuplicateCode>()],
+    );
+  });
+
   test('squadIssues is exactly the squad part of issues, nation by nation', () {
     final pack = _pack(
       squads: {

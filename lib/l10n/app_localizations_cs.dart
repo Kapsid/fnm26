@@ -15168,4 +15168,93 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get editorPlayerClubAutoAbout =>
       'Hra ho umístí do klubu, který odpovídá jeho úrovni.';
+
+  @override
+  String get editorNamesSearch => 'Hledat jména';
+
+  @override
+  String get editorNamesSearchClubs => 'Hledat kluby nebo země';
+
+  @override
+  String get editorNamesSearchStadiums => 'Hledat stadiony, města nebo země';
+
+  @override
+  String get editorNamesSearchNations => 'Hledat země nebo kódy';
+
+  @override
+  String get editorNamesNone => 'Hledání nic nenašlo.';
+
+  @override
+  String get editorNamesEveryLanguage =>
+      'Vlastní název se zobrazí stejně ve všech jazycích.';
+
+  @override
+  String editorNamesGameName(String name) {
+    return 'Název ve hře: $name';
+  }
+
+  @override
+  String get editorNamesReset => 'Vrátit původní';
+
+  @override
+  String get editorNamesDone => 'Hotovo';
+
+  @override
+  String get editorNamesKeepHint =>
+      'Když pole necháte prázdné, zůstane název ze hry.';
+
+  @override
+  String get editorNamesCode => 'Kód';
+
+  @override
+  String get editorNamesCodeHelp =>
+      '3 písmena A až Z, která nepoužívá žádná jiná země.';
+
+  @override
+  String editorNamesCodeTaken(String code, String nation) {
+    return 'Kód $code už používá $nation.';
+  }
+
+  @override
+  String get editorNamesTaken => 'Tento název už má jiný účet.';
+
+  @override
+  String get editorNamesOutlet => 'Médium';
+
+  @override
+  String get editorNamesFirstNames => 'Křestní jména';
+
+  @override
+  String get editorNamesSurnames => 'Příjmení';
+
+  @override
+  String editorNamesFirstCount(int count, int min) {
+    return '$count / $min křestních jmen';
+  }
+
+  @override
+  String editorNamesSurCount(int count, int min) {
+    return '$count / $min příjmení';
+  }
+
+  @override
+  String editorNamesListsHelp(int min) {
+    return 'Jména oddělte čárkami nebo novými řádky. Každý seznam potřebuje aspoň $min jmen. Používají se pro místní fanoušky a členy realizačního týmu.';
+  }
+
+  @override
+  String editorNamesListCounts(int first, int sur) {
+    return '$first křestních jmen, $sur příjmení';
+  }
+
+  @override
+  String editorNamesMainStadium(String city) {
+    return 'Hlavní stadion ve městě $city';
+  }
+
+  @override
+  String get editorNamesChanged => 'Změněno';
+
+  @override
+  String get editorNamesPick => 'Vyberte jméno, které chcete upravit.';
 }

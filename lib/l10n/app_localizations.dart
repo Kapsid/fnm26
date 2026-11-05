@@ -22543,6 +22543,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The game places him at a club that suits his level.'**
   String get editorPlayerClubAutoAbout;
+
+  /// Hint in the search field of an editor name section.
+  ///
+  /// In en, this message translates to:
+  /// **'Search names'**
+  String get editorNamesSearch;
+
+  /// Hint in the search field of the editor Clubs section.
+  ///
+  /// In en, this message translates to:
+  /// **'Search clubs or countries'**
+  String get editorNamesSearchClubs;
+
+  /// Hint in the search field of the editor Stadiums section.
+  ///
+  /// In en, this message translates to:
+  /// **'Search stadiums, cities or countries'**
+  String get editorNamesSearchStadiums;
+
+  /// Hint in the search field of the editor Nations and Name lists sections.
+  ///
+  /// In en, this message translates to:
+  /// **'Search nations or codes'**
+  String get editorNamesSearchNations;
+
+  /// Shown in an editor name section when the search finds nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches your search.'**
+  String get editorNamesNone;
+
+  /// Note at the top of the editor sections whose game names are translated (nations, competitions, sponsors).
+  ///
+  /// In en, this message translates to:
+  /// **'A custom name shows the same in every language.'**
+  String get editorNamesEveryLanguage;
+
+  /// Under an edited name in the editor: the name the game uses without the change.
+  ///
+  /// In en, this message translates to:
+  /// **'Game name: {name}'**
+  String editorNamesGameName(String name);
+
+  /// Button in the editor that removes a custom name and goes back to the game name.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to original'**
+  String get editorNamesReset;
+
+  /// Button closing the editor name sheet; edits are already saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get editorNamesDone;
+
+  /// Helper under an editor name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to keep the game name.'**
+  String get editorNamesKeepHint;
+
+  /// Label of the 3-letter nation code field in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get editorNamesCode;
+
+  /// Helper under the nation code field in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'3 letters, A to Z, used by no other nation.'**
+  String get editorNamesCodeHelp;
+
+  /// Error when a nation code typed in the editor belongs to another nation.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} is already used by {nation}.'**
+  String editorNamesCodeTaken(String code, String nation);
+
+  /// Error when a Y account is renamed to a name another account uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Another account already has this name.'**
+  String get editorNamesTaken;
+
+  /// Label of a journalist's outlet field in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet'**
+  String get editorNamesOutlet;
+
+  /// Label of the first-name list in the editor Name lists section.
+  ///
+  /// In en, this message translates to:
+  /// **'First names'**
+  String get editorNamesFirstNames;
+
+  /// Label of the surname list in the editor Name lists section.
+  ///
+  /// In en, this message translates to:
+  /// **'Surnames'**
+  String get editorNamesSurnames;
+
+  /// Live count under the first-name list in the editor: names typed against the minimum.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} / {min} first names'**
+  String editorNamesFirstCount(int count, int min);
+
+  /// Live count under the surname list in the editor: names typed against the minimum.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} / {min} surnames'**
+  String editorNamesSurCount(int count, int min);
+
+  /// Help at the top of the editor name list sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Separate the names with commas or new lines. Each list needs at least {min}. They name local fans and staff.'**
+  String editorNamesListsHelp(int min);
+
+  /// A nation row in the editor Name lists section: how many names each list holds.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} first names, {sur} surnames'**
+  String editorNamesListCounts(int first, int sur);
+
+  /// A row in the editor Stadiums section: only the first ground of a city can be renamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Main stadium in {city}'**
+  String editorNamesMainStadium(String city);
+
+  /// Small mark on an editor row whose name differs from the game.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed'**
+  String get editorNamesChanged;
+
+  /// Tablet editor name section, before a row is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a name to edit.'**
+  String get editorNamesPick;
 }
 
 class _AppLocalizationsDelegate

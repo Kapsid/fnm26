@@ -477,6 +477,16 @@ abstract final class VenueGenerator {
       final renamed = ActiveWorld.current.stadium(hostId, city);
       if (renamed != null) return renamed;
     }
+    return _gameGroundName(hostId, city, nth);
+  }
+
+  /// The game's own name for the first ground in [city] of [hostId], whatever
+  /// world is on show: what a custom world's stadium name replaces (the
+  /// editor's Stadiums section shows it as the original).
+  static String gameGroundName(int hostId, String city) =>
+      _gameGroundName(hostId, city, 0);
+
+  static String _gameGroundName(int hostId, String city, int nth) {
     var h = hostId * 0x9E3779B1 ^ 0x5714CE5;
     for (final c in city.codeUnits) {
       h = (h * 31 + c) & 0x3FFFFFFF;

@@ -209,7 +209,7 @@ class WorldPack {
   /// Original display name -> new name.
   final Map<String, String> yAccounts;
 
-  /// Index in `Press._reporters` -> replacement.
+  /// Index in `Press.reporters` -> replacement.
   final Map<int, PackReporter> reporters;
   final Map<int, PackNameLists> nameLists;
 
