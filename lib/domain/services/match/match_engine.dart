@@ -1036,8 +1036,43 @@ class MatchEngine {
     var homeXg = 0.0;
     var awayXg = 0.0;
 
+    // The card, if any, a foul by [culprit] of [def] draws on [playRng]: on
+    // [share] of such fouls a yellow, or for a man already booked a second
+    // yellow on [_secondBookingChance] (the discipline roll's own odds), which
+    // sends him off. Never a straight red: a foul that earns one (a last man
+    // denying a goal) is rare enough that the play pass leaves it to the
+    // per-minute discipline roll, which already gives straight reds.
+    MatchEvent? foulCard({
+      required int minute,
+      required int stoppage,
+      required _Live def,
+      required Player culprit,
+      required double share,
+    }) {
+      if (!playRng.chance(share)) return null;
+      if (!booked.contains(culprit.id)) {
+        booked.add(culprit.id);
+        return _card(
+          minute,
+          def,
+          culprit,
+          MatchEventType.yellowCard,
+          stoppage: stoppage,
+        );
+      }
+      if (!playRng.chance(_secondBookingChance)) return null;
+      return _card(
+        minute,
+        def,
+        culprit,
+        MatchEventType.redCard,
+        secondYellow: true,
+        stoppage: stoppage,
+      );
+    }
+
     // A penalty for [atk]: [fouled] was brought down in [def]'s box. The foul
-    // can draw a card, by the same booking rules as any other; then [atk]'s
+    // can draw a card ([foulCard]: never a straight red); then [atk]'s
     // penalty taker shoots against [def]'s keeper and scores, has it saved,
     // or misses. Every draw that decides anything is on [playRng].
     ({bool goal, double xg}) playPenalty({
@@ -1048,28 +1083,13 @@ class MatchEngine {
       required Player fouled,
     }) {
       final culprit = _pickCulprit(def, playRng);
-      MatchEvent? card;
-      if (playRng.chance(_penaltyCardShare)) {
-        if (!booked.contains(culprit.id)) {
-          booked.add(culprit.id);
-          card = _card(
-            minute,
-            def,
-            culprit,
-            MatchEventType.yellowCard,
-            stoppage: stoppage,
-          );
-        } else if (playRng.chance(_secondBookingChance)) {
-          card = _card(
-            minute,
-            def,
-            culprit,
-            MatchEventType.redCard,
-            secondYellow: true,
-            stoppage: stoppage,
-          );
-        }
-      }
+      final card = foulCard(
+        minute: minute,
+        stoppage: stoppage,
+        def: def,
+        culprit: culprit,
+        share: _penaltyCardShare,
+      );
       if (card != null) events.add(card);
       recordFoul(
         minute: minute,
@@ -1116,7 +1136,8 @@ class MatchEngine {
     }
 
     // A direct free kick for [atk]: [fouled] was brought down at the edge of
-    // [def]'s box, and [atk]'s dead-ball man shoots. It can hit the wall, be
+    // [def]'s box (the foul can draw a card, as a penalty's can), and [atk]'s
+    // dead-ball man shoots. It can hit the wall, be
     // saved, go wide, hit the woodwork or go in, decided on [playRng].
     //
     // A goal from one is neither a penalty nor a set-piece goal in the
@@ -1129,19 +1150,31 @@ class MatchEngine {
       required _Live def,
       required Player fouled,
     }) {
-      final taker = _deadBallTaker(atk)!;
-      final keeper = _keeperOf(def);
-      final p = _freeKickGoalChance(atk, taker, keeper);
-      final outcome = _freeKickOutcome(playRng.nextDouble(), p);
-      // The foul, then the free kick, taken by the same dead-ball man.
+      final culprit = _pickCulprit(def, playRng);
+      final card = foulCard(
+        minute: minute,
+        stoppage: stoppage,
+        def: def,
+        culprit: culprit,
+        share: _freeKickCardShare,
+      );
+      if (card != null) events.add(card);
+      // The foul, then the free kick, taken by the dead-ball man.
       recordFoul(
         minute: minute,
         stoppage: stoppage,
         fouled: atk,
         fouler: def,
+        culpritId: culprit.id,
         fouledId: fouled.id,
+        card: card,
         zone: PitchZone.edgeOfBox,
       );
+      if (card?.type == MatchEventType.redCard) _leaveField(def, culprit.id);
+      final taker = _deadBallTaker(atk)!;
+      final keeper = _keeperOf(def);
+      final p = _freeKickGoalChance(atk, taker, keeper);
+      final outcome = _freeKickOutcome(playRng.nextDouble(), p);
       final goal = outcome == ShotOutcome.goal
           ? MatchEvent(
               minute: minute,
@@ -1169,22 +1202,26 @@ class MatchEngine {
     }
 
     // An open-play chance [atk] has made that ends in a foul on [fouled], the
-    // player whose chance it was: in the box (a penalty) on
-    // [_penaltyPerChance] of chances, at its edge (a direct free kick) on
-    // [_directFreeKickPerChance]; null for the rest, which are shot as
-    // before. One draw on [playRng] a chance. A foul replaces the shot, so a
-    // side wins penalties and free kicks in proportion to the pressure it
-    // puts on, and the shot count is unchanged.
+    // player whose chance it was, or null for one shot as before. [finished]
+    // is the main stream's finish roll for the chance: one that was going in
+    // can be stopped by a foul in the box (a penalty, on
+    // [_penaltyPerFinishedChance] of them); one that was not can be ended by
+    // a foul at the edge of the box (a direct free kick, on
+    // [_freeKickPerMissedChance]). One draw on [playRng] a chance. The foul
+    // replaces the shot, so the shot count is unchanged, and a side wins
+    // penalties and free kicks in proportion to the danger it makes.
     ({bool goal, double xg})? deadBall({
       required int minute,
       required int stoppage,
       required _Live atk,
       required _Live def,
       required Player fouled,
+      required bool finished,
     }) {
       if (def.xi.isEmpty) return null;
       final roll = playRng.nextDouble();
-      if (roll < _penaltyPerChance) {
+      if (finished) {
+        if (roll >= _penaltyPerFinishedChance) return null;
         return playPenalty(
           minute: minute,
           stoppage: stoppage,
@@ -1193,16 +1230,14 @@ class MatchEngine {
           fouled: fouled,
         );
       }
-      if (roll < _penaltyPerChance + _directFreeKickPerChance) {
-        return playDirectFreeKick(
-          minute: minute,
-          stoppage: stoppage,
-          atk: atk,
-          def: def,
-          fouled: fouled,
-        );
-      }
-      return null;
+      if (roll >= _freeKickPerMissedChance) return null;
+      return playDirectFreeKick(
+        minute: minute,
+        stoppage: stoppage,
+        atk: atk,
+        def: def,
+        fouled: fouled,
+      );
     }
 
     // One minute of play. [manageMinute] drives AI management and fatigue
@@ -1398,6 +1433,7 @@ class MatchEngine {
           atk: liveHome,
           def: liveAway,
           fouled: shooter,
+          finished: finished,
         );
         if (foul != null) {
           homeXg += foul.xg;
@@ -1464,6 +1500,7 @@ class MatchEngine {
           atk: liveAway,
           def: liveHome,
           fouled: shooter,
+          finished: finished,
         );
         if (foul != null) {
           awayXg += foul.xg;
@@ -2540,17 +2577,17 @@ class MatchEngine {
 
   /// Where a foul that is neither a penalty nor a direct free kick happened,
   /// from the fouled side's view: mostly in the middle of the pitch, now and
-  /// then 25-35 yards out, rarely out wide (the only ones of these whose free
-  /// kick is staged). Fouls in and at the edge of the box come from the
-  /// chances they end (see `deadBall` in [play]). With the crossed free kicks
-  /// and the direct ones that makes 3-4.5 staged free kicks a match. Draws
-  /// only from the detail stream.
+  /// then 25-35 yards out, rarely out wide or at the edge of the box (the
+  /// only ones of these whose free kick is staged). With the crossed free
+  /// kicks and the real direct ones (see `deadBall` in [play]) that makes
+  /// 3-4.5 staged free kicks a match. Draws only from the detail stream.
   static PitchZone _foulZone(SeededRng detailRng) {
     final roll = detailRng.nextDouble();
     if (roll < 0.795) return PitchZone.midfield;
-    if (roll < 0.805) return PitchZone.wideLeft;
-    if (roll < 0.815) return PitchZone.wideRight;
-    return PitchZone.longRange;
+    if (roll < 0.8125) return PitchZone.wideLeft;
+    if (roll < 0.83) return PitchZone.wideRight;
+    if (roll < 0.99) return PitchZone.longRange;
+    return PitchZone.edgeOfBox;
   }
 
   /// Where in the box a foul that gives a penalty happened, from the fouled
@@ -2566,22 +2603,26 @@ class MatchEngine {
   // measured rates and `match_baseline_test.dart` for the figures they are
   // tuned to hold.
 
-  /// Penalties given per open-play chance a side creates: a foul in the box
-  /// is about as likely as the pressure that makes chances.
-  static const double _penaltyPerChance = 0.0141;
+  /// Of the open-play chances that were going in, the share a foul in the
+  /// box stops: a penalty, the goal denied.
+  static const double _penaltyPerFinishedChance = 0.095;
 
-  /// Direct free kicks shot at goal per open-play chance.
-  static const double _directFreeKickPerChance = 0.112;
+  /// Of the open-play chances that were not going in, the share ended by a
+  /// foul at the edge of the box: a direct free kick.
+  static const double _freeKickPerMissedChance = 0.075;
 
-  /// The share of penalty fouls that draw a card. A booked man shown
-  /// another goes off on [_secondBookingChance], as in [_discipline]; a
-  /// penalty foul is never a straight red here.
-  static const double _penaltyCardShare = 0.3;
+  /// The share of penalty fouls that draw a card (see `foulCard` in [play]:
+  /// a yellow, or a second one, never a straight red).
+  static const double _penaltyCardShare = 0.15;
+
+  /// The share of fouls at the edge of the box (a direct free kick) that
+  /// draw a card, likewise.
+  static const double _freeKickCardShare = 0.05;
 
   /// A penalty's conversion for an ordinary taker against an ordinary
   /// keeper, before [PenaltyTakers.skillOf] (about 0.94 for a typical
   /// international's best finisher) and the keeper.
-  static const double _penaltyBase = 0.815;
+  static const double _penaltyBase = 0.79;
 
   /// The chance [taker] scores a penalty against [keeper] (null: nobody in
   /// goal). Composure from [PenaltyTakers.skillOf]; a keeper ten points
@@ -2675,7 +2716,7 @@ class MatchEngine {
 
   /// Corners and free kicks the engine plays out (and that lead to a header)
   /// labelled corners; the rest are crossed free kicks.
-  static const double _cornerShareOfDeliveries = 0.65;
+  static const double _cornerShareOfDeliveries = 0.6;
 
   /// Corners that come to nothing.
   static const double _idleCornerPerMinute = 0.033;

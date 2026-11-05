@@ -146,8 +146,8 @@ void main() {
     }
   });
 
-  test('a penalty foul can draw a card, never a straight red', () {
-    var carded = 0;
+  test('a penalty or free-kick foul can draw a card, never a straight red', () {
+    var carded = 0, kickCards = 0;
     for (var i = 0; i < 3000; i++) {
       final r = engine.play(
         home: ratedTeam(1, 78),
@@ -157,8 +157,16 @@ void main() {
       final ms = r.moments;
       for (var k = 1; k < ms.length; k++) {
         final s = ms[k];
-        if (s is! ShotMoment || s.origin != ShotOrigin.penalty) continue;
-        final f = ms[k - 1] as FoulMoment;
+        if (s is! ShotMoment) continue;
+        final FoulMoment f;
+        if (s.origin == ShotOrigin.penalty) {
+          f = ms[k - 1] as FoulMoment;
+        } else if (s.origin == ShotOrigin.directFreeKick) {
+          f = ms[k - 2] as FoulMoment;
+          if (f.cardEventIndex != null) kickCards++;
+        } else {
+          continue;
+        }
         final c = f.cardEventIndex;
         if (c == null) continue;
         carded++;
@@ -170,6 +178,17 @@ void main() {
       }
     }
     expect(carded, greaterThan(20));
+    expect(kickCards, greaterThan(20));
+  });
+
+  test('rates: 0.18-0.30 penalties and 0.7-1.2 direct free kicks a match '
+      'over 600 matches', () {
+    final pens = shotsOf(ShotOrigin.penalty).length / matches.length;
+    final kicks = shotsOf(ShotOrigin.directFreeKick).length / matches.length;
+    // ignore: avoid_print
+    print('per match: penalties $pens, direct free kicks $kicks');
+    expect(pens, inInclusiveRange(0.18, 0.30));
+    expect(kicks, inInclusiveRange(0.7, 1.2));
   });
 
   test('a direct free kick can hit the wall', () {
