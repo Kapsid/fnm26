@@ -17,10 +17,11 @@ Future<(ProviderContainer, int)> _careerOnWorld() async {
   final c = greenlandContainer(db);
   addTearDown(c.dispose);
   await c.read(seedLoaderProvider).ensureSeeded();
-  final career = (await c
-          .read(careerServiceProvider)
-          .create(nationId: 1, managerName: 'M', rngSeed: 7))
-      .valueOrNull!;
+  final career =
+      (await c
+              .read(careerServiceProvider)
+              .create(nationId: 1, managerName: 'M', rngSeed: 7))
+          .valueOrNull!;
   final packs = c.read(worldPackRepositoryProvider);
   final packId = await packs.insert(
     const WorldPack(

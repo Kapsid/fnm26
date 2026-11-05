@@ -7,6 +7,7 @@ import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -133,7 +134,13 @@ class CareerTransferService {
     )) {
       return BundleRejection.needsPremium;
     }
-    await CareerBundle.import(_ref.read(appDatabaseProvider), read.bundle!);
+    final db = _ref.read(appDatabaseProvider);
+    final newId = await CareerBundle.import(db, read.bundle!);
+    // A career that came with a custom world shows its names at once.
+    final world = await (db.select(
+      db.careerWorlds,
+    )..where((t) => t.careerId.equals(newId))).getSingleOrNull();
+    if (world != null) _ref.read(activeWorldSyncProvider).noteWorld(newId);
     _ref
       ..invalidate(savesProvider)
       ..invalidate(campaignRunsProvider);

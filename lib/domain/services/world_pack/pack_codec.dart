@@ -1,0 +1,206 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart' show immutable;
+import 'package:fnm/domain/services/competition/trophies.dart';
+import 'package:fnm/features/world_pack/trophy_image.dart';
+
+import 'pack_rules.dart';
+import 'world_pack.dart';
+
+/// Why a `.fnmdb` file was refused.
+enum PackRejection { tooBig, notAPack, newerFormat, badData, badTrophy }
+
+/// What reading a `.fnmdb` file gave.
+sealed class PackDecode {
+  const PackDecode();
+}
+
+/// A file that passed every check. [trophies] are the normaliser's output,
+/// never the file's own bytes.
+@immutable
+class PackDecoded extends PackDecode {
+  const PackDecoded(this.pack, this.trophies);
+  final WorldPack pack;
+  final Map<String, Uint8List> trophies;
+}
+
+@immutable
+class PackRejected extends PackDecode {
+  const PackRejected(this.reason);
+  final PackRejection reason;
+}
+
+class _TooBig implements Exception {
+  const _TooBig();
+}
+
+/// A sink that keeps what it is given and throws once there is too much.
+class _CappedSink implements Sink<List<int>> {
+  _CappedSink(this.limit);
+  final int limit;
+  final BytesBuilder _out = BytesBuilder(copy: false);
+
+  @override
+  void add(List<int> data) {
+    if (_out.length + data.length > limit) throw const _TooBig();
+    _out.add(data);
+  }
+
+  @override
+  void close() {}
+
+  Uint8List take() => _out.takeBytes();
+}
+
+/// The `.fnmdb` file: a gzip of `{format, pack, trophies: {key: base64}}`.
+///
+/// It is data only. Reading one never executes anything: the size is capped,
+/// the unzip is streamed and aborted past [maxJsonBytes], the JSON is read
+/// by [WorldPack.fromJson]'s strict reader, every field is checked against
+/// the editor's rules and every trophy is decoded and drawn again.
+abstract final class PackCodec {
+  static const extension = 'fnmdb';
+  static const maxFileBytes = 8 << 20;
+  static const maxJsonBytes = 6 << 20;
+  static const maxPlayersPerNation = PackRules.squadMax;
+  static const maxTrophies = 9;
+
+  static const _topKeys = {'format', 'pack', 'trophies'};
+
+  static Uint8List encode(WorldPack p, Map<String, Uint8List> trophies) {
+    final json = jsonEncode({
+      'format': p.formatVersion,
+      'pack': p.toJson(),
+      'trophies': {
+        for (final e in trophies.entries) e.key: base64Encode(e.value),
+      },
+    });
+    return Uint8List.fromList(gzip.encode(utf8.encode(json)));
+  }
+
+  /// Reads [bytes]. [baseCodes] are the default world's nation codes, so a
+  /// pack that gives two nations one code is refused.
+  static Future<PackDecode> decode(
+    Uint8List bytes, {
+    Map<int, String> baseCodes = const {},
+  }) async {
+    if (bytes.length > maxFileBytes) {
+      return const PackRejected(PackRejection.tooBig);
+    }
+    if (bytes.length < 2 || bytes[0] != 0x1f || bytes[1] != 0x8b) {
+      return const PackRejected(PackRejection.notAPack);
+    }
+    final Uint8List raw;
+    try {
+      raw = _gunzip(bytes);
+    } on _TooBig {
+      return const PackRejected(PackRejection.tooBig);
+    } on Object {
+      return const PackRejected(PackRejection.notAPack);
+    }
+
+    final Object? top;
+    try {
+      top = jsonDecode(utf8.decode(raw));
+    } on Object {
+      return const PackRejected(PackRejection.notAPack);
+    }
+    if (top is! Map<String, Object?>) {
+      return const PackRejected(PackRejection.notAPack);
+    }
+    final format = top['format'];
+    if (format is! int) return const PackRejected(PackRejection.notAPack);
+    if (format > kPackFormatVersion) {
+      return const PackRejected(PackRejection.newerFormat);
+    }
+    if (top.length != _topKeys.length || !top.keys.every(_topKeys.contains)) {
+      return const PackRejected(PackRejection.badData);
+    }
+    final rawPack = top['pack'];
+    final rawTrophies = top['trophies'];
+    if (rawPack is! Map<String, Object?> ||
+        rawTrophies is! Map<String, Object?>) {
+      return const PackRejected(PackRejection.badData);
+    }
+    if (rawTrophies.length > maxTrophies ||
+        !rawTrophies.keys.every((k) => Trophies.assetForKey(k) != null) ||
+        !rawTrophies.values.every((v) => v is String)) {
+      return const PackRejected(PackRejection.badData);
+    }
+
+    final WorldPack pack;
+    try {
+      pack = WorldPack.fromJson(WorldPack.migrate(rawPack));
+    } on FormatException catch (e) {
+      return PackRejected(
+        e.message.contains('newer than supported')
+            ? PackRejection.newerFormat
+            : PackRejection.badData,
+      );
+    } on Object {
+      return const PackRejected(PackRejection.badData);
+    }
+    if (!_fieldsOk(pack, baseCodes)) {
+      return const PackRejected(PackRejection.badData);
+    }
+
+    final trophies = <String, Uint8List>{};
+    for (final e in rawTrophies.entries) {
+      final Uint8List input;
+      try {
+        input = base64Decode(e.value! as String);
+      } on FormatException {
+        return const PackRejected(PackRejection.badTrophy);
+      }
+      final out = await TrophyNormaliser.normalise(input, e.key);
+      if (out == null) return const PackRejected(PackRejection.badTrophy);
+      trophies[e.key] = out.png;
+    }
+    return PackDecoded(
+      pack.copyWith(trophies: trophies.keys.toSet()),
+      trophies,
+    );
+  }
+
+  /// Streamed, so a file that unzips to gigabytes is dropped at the cap.
+  static Uint8List _gunzip(Uint8List bytes) {
+    final sink = _CappedSink(maxJsonBytes);
+    final conversion = gzip.decoder.startChunkedConversion(sink);
+    const chunk = 32 * 1024;
+    for (var i = 0; i < bytes.length; i += chunk) {
+      conversion.add(
+        Uint8List.sublistView(
+          bytes,
+          i,
+          i + chunk > bytes.length ? bytes.length : i + chunk,
+        ),
+      );
+    }
+    conversion.close();
+    return sink.take();
+  }
+
+  static bool _fieldsOk(WorldPack p, Map<int, String> baseCodes) {
+    if (PackRules.checkName(p.name) != null) return false;
+    if (p.author.isNotEmpty && PackRules.checkName(p.author) != null) {
+      return false;
+    }
+    if (p.madeWithVersion.length > 20) return false;
+    if (p.squads.values.any((s) => s.length > maxPlayersPerNation)) {
+      return false;
+    }
+    return !PackRules.issues(p, baseCodes: baseCodes).any(
+      (i) => i is BadField || i is DuplicateCode || i is UnknownId,
+    );
+  }
+
+  /// A safe file name stem for [name]: letters, digits, spaces, `-` and `_`,
+  /// at most 60 characters, never empty.
+  static String fileStem(String name) {
+    final s = name.replaceAll(RegExp(r'[^A-Za-z0-9 _-]'), '_').trim();
+    final cut = s.length > 60 ? s.substring(0, 60).trim() : s;
+    return cut.isEmpty ? 'world' : cut;
+  }
+}

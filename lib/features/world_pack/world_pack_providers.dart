@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
@@ -11,9 +14,12 @@ import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 /// The save seed of the one fixed name draw every new pack starts from.
 ///
@@ -356,6 +362,67 @@ class WorldPackService {
     final copy = await _packs.duplicate(id, name);
     _onChanged();
     return copy;
+  }
+
+  /// Writes pack [id] to `<name>.fnmdb` in [into] (the temporary directory
+  /// when null) and returns the file; the UI hands it to the share sheet.
+  Future<File> export(int id, {Directory? into}) async {
+    final pack = await _packs.load(id);
+    if (pack == null) throw StateError('No world pack $id');
+    final dir = into ?? await getTemporaryDirectory();
+    final file = File(
+      p.join(
+        dir.path,
+        '${PackCodec.fileStem(pack.name)}.${PackCodec.extension}',
+      ),
+    );
+    await file.writeAsBytes(
+      PackCodec.encode(pack, await _packs.trophies(id)),
+      flush: true,
+    );
+    return file;
+  }
+
+  /// Reads the `.fnmdb` file at [path] as a new pack with a new uuid; a name
+  /// already taken becomes "Name (2)", "Name (3)" and so on. Nothing is
+  /// written unless every check passes. The failure's code is the
+  /// [PackRejection] name.
+  Future<Result<int>> importFile(String path) async {
+    final Uint8List bytes;
+    try {
+      final file = File(path);
+      if (await file.length() > PackCodec.maxFileBytes) {
+        return Result.failure(
+          Failure('Too big', code: PackRejection.tooBig.name),
+        );
+      }
+      bytes = await file.readAsBytes();
+    } on Object catch (e) {
+      return Result.failure(
+        Failure('Unreadable', code: PackRejection.notAPack.name, cause: e),
+      );
+    }
+    final world = await _nations.newCareerWorld();
+    final decoded = await PackCodec.decode(
+      bytes,
+      baseCodes: {for (final n in world) n.id: n.code},
+    );
+    switch (decoded) {
+      case PackRejected(:final reason):
+        return Result.failure(Failure('Refused', code: reason.name));
+      case PackDecoded(:final pack, :final trophies):
+        final taken = {for (final e in await _packs.list()) e.name};
+        var name = pack.name;
+        for (var n = 2; taken.contains(name); n++) {
+          name = '${pack.name} ($n)';
+        }
+        final id = await _packs.insert(
+          pack.copyWith(uuid: _packs.newUuid(), name: name),
+          trophies,
+        );
+        _onChanged();
+        return Result.success(id);
+    }
   }
 
   /// Removes pack [id]. Careers started on it keep their own copy.
