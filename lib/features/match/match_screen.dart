@@ -681,20 +681,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // naming takers changes the kicks and never the extra time the manager
     // just watched.
     final composure = _shootoutComposure();
+    final myTakers = _penTakers(preview);
     final mySkill = [
       for (final s in PenaltyTakers.skillOrder(
-        _penTakers(preview),
+        myTakers,
         traitsByPlayer: _playerTeam(preview).traitsByPlayer,
       ))
         s * composure,
     ];
     final oppTeam = _opponentTeam(preview);
+    final oppTakers = PenaltyTakers.autoOrder(
+      _opponentOnPitch(preview, r),
+      unavailable: _sentOff(r, oppTeam.nationId),
+      traitsByPlayer: oppTeam.traitsByPlayer,
+    );
     final oppSkill = PenaltyTakers.skillOrder(
-      PenaltyTakers.autoOrder(
-        _opponentOnPitch(preview, r),
-        unavailable: _sentOff(r, oppTeam.nationId),
-        traitsByPlayer: oppTeam.traitsByPlayer,
-      ),
+      oppTakers,
       traitsByPlayer: oppTeam.traitsByPlayer,
     );
     return WorldCupFinals.decideShootout(
@@ -703,6 +705,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       SeededRng.forFixture(_seed(preview), preview.fixture.id ^ 0x7F),
       homeTakerSkill: preview.playerIsHome ? mySkill : oppSkill,
       awayTakerSkill: preview.playerIsHome ? oppSkill : mySkill,
+      homeTakerIds: [
+        for (final p in preview.playerIsHome ? myTakers : oppTakers) p.id,
+      ],
+      awayTakerIds: [
+        for (final p in preview.playerIsHome ? oppTakers : myTakers) p.id,
+      ],
     );
   }
 

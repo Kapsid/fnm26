@@ -676,25 +676,27 @@ KnockoutOutcome? _knockoutFor(MatchPreview p, MatchResult r, int salt) {
   };
   final me = p.playerIsHome ? p.homeTeam : p.awayTeam;
   final opp = p.playerIsHome ? p.awayTeam : p.homeTeam;
-  final mySkill = PenaltyTakers.skillOrder(
-    PenaltyTakers.autoOrder(
-      me.xi,
-      unavailable: sentOff(me.nationId),
-      traitsByPlayer: me.traitsByPlayer,
-    ),
+  final myTakers = PenaltyTakers.autoOrder(
+    me.xi,
+    unavailable: sentOff(me.nationId),
     traitsByPlayer: me.traitsByPlayer,
   );
-  final oppSkill = PenaltyTakers.skillOrder(
-    PenaltyTakers.autoOrder(
-      sideOnPitchAtEnd(
-        team: opp,
-        bench: p.opponentBench,
-        plannedSubs: p.opponentSubs,
-        events: r.events,
-      ),
-      unavailable: sentOff(opp.nationId),
-      traitsByPlayer: opp.traitsByPlayer,
+  final mySkill = PenaltyTakers.skillOrder(
+    myTakers,
+    traitsByPlayer: me.traitsByPlayer,
+  );
+  final oppTakers = PenaltyTakers.autoOrder(
+    sideOnPitchAtEnd(
+      team: opp,
+      bench: p.opponentBench,
+      plannedSubs: p.opponentSubs,
+      events: r.events,
     ),
+    unavailable: sentOff(opp.nationId),
+    traitsByPlayer: opp.traitsByPlayer,
+  );
+  final oppSkill = PenaltyTakers.skillOrder(
+    oppTakers,
     traitsByPlayer: opp.traitsByPlayer,
   );
   return WorldCupFinals.decideShootout(
@@ -703,6 +705,8 @@ KnockoutOutcome? _knockoutFor(MatchPreview p, MatchResult r, int salt) {
     SeededRng.forFixture(p.saveSeed ^ salt, p.fixture.id ^ 0x7F),
     homeTakerSkill: p.playerIsHome ? mySkill : oppSkill,
     awayTakerSkill: p.playerIsHome ? oppSkill : mySkill,
+    homeTakerIds: [for (final t in p.playerIsHome ? myTakers : oppTakers) t.id],
+    awayTakerIds: [for (final t in p.playerIsHome ? oppTakers : myTakers) t.id],
   );
 }
 
