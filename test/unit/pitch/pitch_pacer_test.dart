@@ -126,7 +126,7 @@ void main() {
       zone: PitchZone.wideLeft,
       routine: true,
     );
-    final q = PitchPacer(_result([corner, routine]), PitchSpeed.mid);
+    final q = PitchPacer(_result([corner, routine]), PitchSpeed.slow);
     expect(q.momentLength(corner), const Duration(seconds: 6));
     expect(q.momentLength(routine), Duration.zero);
     expect(q.screenAt(6, 0) - q.screenAt(5, 0), const Duration(seconds: 6));
@@ -153,11 +153,61 @@ void main() {
     expect(_secs(q), greaterThan(120));
   });
 
+  test('key moments have the same length at every speed', () {
+    final goal = _shots(1, outcome: ShotOutcome.goal).single;
+    final wood = _shots(1, outcome: ShotOutcome.woodwork).single;
+    final wide = _shots(1, outcome: ShotOutcome.wide).single;
+    final lens = [
+      for (final sp in PitchSpeed.values)
+        PitchPacer(_result([goal, wood, wide]), sp),
+    ];
+    for (final k in [goal, wood]) {
+      expect(lens.map((p) => p.momentLength(k)).toSet().length, 1);
+    }
+    expect(lens[0].momentLength(wide), const Duration(milliseconds: 3500));
+    expect(lens[1].momentLength(wide), const Duration(milliseconds: 1750));
+    expect(lens[2].momentLength(wide), const Duration(milliseconds: 1050));
+    for (final p in lens) {
+      expect(
+        p.momentLength(wide),
+        greaterThanOrEqualTo(const Duration(seconds: 1)),
+      );
+    }
+  });
+
+  test('a set piece and its shot are one moment', () {
+    const corner = SetPieceMoment(
+      minute: 5,
+      stoppage: 0,
+      seq: 0,
+      teamNationId: 1,
+      kind: SetPieceKind.corner,
+      takerId: 1,
+      left: true,
+      zone: PitchZone.wideLeft,
+    );
+    const shot = ShotMoment(
+      minute: 5,
+      stoppage: 0,
+      seq: 1,
+      teamNationId: 1,
+      shooterId: 2,
+      zone: PitchZone.sixYard,
+      xg: 0.3,
+      outcome: ShotOutcome.goal,
+      origin: ShotOrigin.corner,
+    );
+    final p = PitchPacer(_result([corner, shot], stoppage: 0), PitchSpeed.fast);
+    expect(p.momentLength(corner), const Duration(milliseconds: 10000));
+    expect(p.momentLength(shot), Duration.zero);
+    expect(p.screenAt(6, 0) - p.screenAt(5, 0), const Duration(seconds: 10));
+  });
+
   test('real engine matches fit the bands', () {
     const engine = MatchEngine();
-    final totals = {for (final s in PitchSpeed.values) s: <double>[]};
-    final over = {for (final s in PitchSpeed.values) s: 0};
+    final per90 = {for (final s in PitchSpeed.values) s: <double>[]};
     final raw = {for (final s in PitchSpeed.values) s: <double>[]};
+    final inBand = {for (final s in PitchSpeed.values) s: 0};
     for (var seed = 0; seed < 200; seed++) {
       final r = engine.play(
         home: ratedTeam(1, 75),
@@ -170,30 +220,27 @@ void main() {
       final scale = (90 + r.stoppage + (r.extraTime != null ? 30 : 0)) / 90;
       for (final s in PitchSpeed.values) {
         final t = _secs(PitchPacer(r, s));
-        totals[s]!.add(t / scale);
+        per90[s]!.add(t / scale);
         raw[s]!.add(t);
         final (lo, hi) = bands[s]!;
+        if (t / scale <= hi * 1.15) inBand[s] = inBand[s]! + 1;
         expect(t / scale, greaterThanOrEqualTo(lo - 0.5), reason: '$s $seed');
-        if (t / scale > hi * 1.15) over[s] = over[s]! + 1;
       }
     }
     for (final s in PitchSpeed.values) {
-      final v = totals[s]!..sort();
+      final v = per90[s]!..sort();
       final w = raw[s]!..sort();
-      // ignore: avoid_print
-      print('$s matches over 115% of ceiling: ${over[s]}');
+      final (lo, hi) = bands[s]!;
       // ignore: avoid_print
       print(
         '$s raw min ${w.first.toStringAsFixed(1)} '
         'median ${w[w.length ~/ 2].toStringAsFixed(1)} '
-        'max ${w.last.toStringAsFixed(1)}',
-      );
-      // ignore: avoid_print
-      print(
-        '$s min ${v.first.toStringAsFixed(1)} '
+        'max ${w.last.toStringAsFixed(1)} | per90 min ${v.first.toStringAsFixed(1)} '
         'median ${v[v.length ~/ 2].toStringAsFixed(1)} '
-        'max ${v.last.toStringAsFixed(1)} (per-90 equivalent)',
+        'max ${v.last.toStringAsFixed(1)} | within ceiling+15%: ${inBand[s]}/200',
       );
+      expect(inBand[s]!, greaterThanOrEqualTo(180), reason: '$s');
+      expect(v[v.length ~/ 2], inInclusiveRange(lo, hi), reason: '$s median');
     }
   });
 }

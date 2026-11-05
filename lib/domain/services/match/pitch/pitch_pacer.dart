@@ -23,7 +23,10 @@ enum PitchSpeed { slow, mid, fast }
 /// budget, quiet time drops to that minimum and the total simply runs over:
 /// real moments are never rushed.
 class PitchPacer {
-  PitchPacer(MatchResult r, PitchSpeed speed) : _stoppage = r.stoppage {
+  PitchPacer(MatchResult r, PitchSpeed speed)
+    : _stoppage = r.stoppage,
+      _speed = speed,
+      _events = r.events {
     final extra = r.extraTime != null ? 30 : 0;
     final slotCount = 90 + _stoppage + extra;
     final staged = List<double>.filled(slotCount, 0);
@@ -34,8 +37,30 @@ class PitchPacer {
       stagedCount++;
     }
 
+    // A set piece that leads directly to a shot is one moment: the shot is
+    // folded into the last open set piece of the same side and minute.
+    final open = <(int, int, int), SetPieceMoment>{};
+    final mergedShots = Map<SetPieceMoment, ShotMoment>.identity();
+    final mergedInto = Map<ShotMoment, SetPieceMoment>.identity();
     for (final m in r.moments) {
-      final seconds = _seconds(m);
+      if (m is SetPieceMoment && !m.routine && _isStaged(m)) {
+        open[(m.minute, m.stoppage, m.teamNationId)] = m;
+      } else if (m is ShotMoment && _fromSetPiece(m.origin)) {
+        final key = (m.minute, m.stoppage, m.teamNationId);
+        final sp = open.remove(key);
+        if (sp != null) {
+          mergedShots[sp] = m;
+          mergedInto[m] = sp;
+        }
+      }
+    }
+    for (final m in r.moments) {
+      if (mergedInto.containsKey(m)) {
+        _lengths[m] = 0;
+        continue;
+      }
+      final seconds = _seconds(m, speed, mergedShots[m]);
+      _lengths[m] = seconds;
       if (seconds > 0) add(m.minute, m.stoppage, seconds);
     }
     for (final e in r.events) {
@@ -84,6 +109,9 @@ class PitchPacer {
   static const double _offside = 2.5;
   static const double _injurySeconds = 3;
   static const double _goalExtra = 2.5;
+  static const double _longThrow = 6;
+  static const double _mergeExtra = 1.5;
+  static const double _floor = 1.0;
 
   final int _stoppage;
 
@@ -123,29 +151,108 @@ class PitchPacer {
     return (minute: minute, stoppage: stoppage, within: within);
   }
 
-  /// The fixed screen length of a moment, whatever the speed. A shot counts
-  /// its own length (3.5 s, a penalty 7 s) plus 2.5 s for a goal; the set
-  /// piece that delivered it is a moment of its own, so a shot from a set
-  /// piece adds the two. Moments that are not staged (routine set pieces,
-  /// fouls without a card, offsides that end nothing) have no length.
-  Duration momentLength(MatchMoment m) => _dur(_seconds(m));
+  /// The screen length of a moment at this pacer's speed. How much a moment
+  /// matters decides how far it may be shortened:
+  ///
+  /// - key moments (goals, penalties, big saves and every woodwork hit, red
+  ///   cards, injuries) always play at full length;
+  /// - standard moments (other saves, corners and free kicks, yellow cards,
+  ///   direct free kicks that do not score) play at 100% / 70% / 45% of it at
+  ///   slow / mid / fast;
+  /// - minor moments (wide and blocked shots, attack-ending offsides, subs)
+  ///   at 100% / 50% / 30%;
+  ///
+  /// and no moment drops below one second. A goal adds 2.5 s. A set piece
+  /// that leads to a shot is one moment: its length plus 1.5 s, carried by the
+  /// set piece (the folded shot reports zero). Moments that are not staged
+  /// (routine set pieces, fouls without a card, offsides that end nothing)
+  /// have no length.
+  Duration momentLength(MatchMoment m) =>
+      _dur(_lengths[m] ?? _seconds(m, _speed, null));
 
-  static double _seconds(MatchMoment m) => switch (m) {
-    ShotMoment s =>
-      (s.origin == ShotOrigin.penalty ? _penalty : _shot) +
-          (s.outcome == ShotOutcome.goal ? _goalExtra : 0),
-    SetPieceMoment p when p.routine => 0,
-    SetPieceMoment p => switch (p.kind) {
-      SetPieceKind.corner => _corner,
-      SetPieceKind.freeKick => _freeKick,
-      // A long throw into the box is staged as a corner-length routine.
-      SetPieceKind.longThrow => _corner,
-      SetPieceKind.throwIn || SetPieceKind.goalKick => 0,
-    },
-    FoulMoment f => f.cardEventIndex != null ? _card : 0,
-    OffsideMoment o => o.endsAttack ? _offside : 0,
-    SubMoment _ => _sub,
+  final PitchSpeed _speed;
+  final List<MatchEvent> _events;
+  final Map<MatchMoment, double> _lengths = Map.identity();
+
+  static bool _fromSetPiece(ShotOrigin o) =>
+      o == ShotOrigin.corner ||
+      o == ShotOrigin.freeKickCross ||
+      o == ShotOrigin.directFreeKick ||
+      o == ShotOrigin.longThrow;
+
+  static bool _isStaged(SetPieceMoment p) =>
+      !p.routine &&
+      (p.kind == SetPieceKind.corner ||
+          p.kind == SetPieceKind.freeKick ||
+          p.kind == SetPieceKind.longThrow);
+
+  static double _setPieceSeconds(SetPieceMoment p) => switch (p.kind) {
+    SetPieceKind.corner => _corner,
+    SetPieceKind.freeKick => _freeKick,
+    SetPieceKind.longThrow => _longThrow,
+    _ => 0,
   };
+
+  static bool _keyShot(ShotMoment s) =>
+      s.outcome == ShotOutcome.goal ||
+      s.origin == ShotOrigin.penalty ||
+      s.outcome == ShotOutcome.woodwork ||
+      (s.outcome == ShotOutcome.saved && s.xg >= 0.15);
+
+  static double _tier(
+    double base,
+    double standardFraction,
+    double minorFraction,
+    _Tier tier,
+  ) {
+    final f = switch (tier) {
+      _Tier.key => 1.0,
+      _Tier.standard => standardFraction,
+      _Tier.minor => minorFraction,
+    };
+    final scaled = base * f;
+    return scaled < _floor ? _floor : scaled;
+  }
+
+  double _seconds(MatchMoment m, PitchSpeed speed, ShotMoment? folded) {
+    final (std, minor) = switch (speed) {
+      PitchSpeed.slow => (1.0, 1.0),
+      PitchSpeed.mid => (0.7, 0.5),
+      PitchSpeed.fast => (0.45, 0.3),
+    };
+    double at(double base, _Tier t) => _tier(base, std, minor, t);
+    switch (m) {
+      case ShotMoment s:
+        final goal = s.outcome == ShotOutcome.goal ? _goalExtra : 0;
+        if (_keyShot(s)) {
+          return (s.origin == ShotOrigin.penalty ? _penalty : _shot) + goal;
+        }
+        final minorShot =
+            s.outcome == ShotOutcome.wide || s.outcome == ShotOutcome.blocked;
+        return at(_shot, minorShot ? _Tier.minor : _Tier.standard);
+      case SetPieceMoment p:
+        if (!_isStaged(p)) return 0;
+        final base = _setPieceSeconds(p);
+        if (folded == null) return at(base, _Tier.standard);
+        final merged = base + _mergeExtra;
+        if (_keyShot(folded)) {
+          return merged + (folded.outcome == ShotOutcome.goal ? _goalExtra : 0);
+        }
+        return at(merged, _Tier.standard);
+      case FoulMoment f:
+        final idx = f.cardEventIndex;
+        if (idx == null) return 0;
+        final red =
+            idx >= 0 &&
+            idx < _events.length &&
+            _events[idx].type == MatchEventType.redCard;
+        return red ? _card : at(_card, _Tier.standard);
+      case OffsideMoment o:
+        return o.endsAttack ? at(_offside, _Tier.minor) : 0;
+      case SubMoment _:
+        return at(_sub, _Tier.minor);
+    }
+  }
 
   static Duration _dur(double seconds) =>
       Duration(microseconds: (seconds * 1e6).round());
@@ -168,3 +275,5 @@ class PitchPacer {
     return (91 + slot - 90 - _stoppage, 0);
   }
 }
+
+enum _Tier { key, standard, minor }
