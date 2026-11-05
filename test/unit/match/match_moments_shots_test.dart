@@ -91,7 +91,9 @@ void main() {
         expect(s.origin == ShotOrigin.penalty, e.penalty);
         expect(s.origin == ShotOrigin.longThrow, e.longThrow);
         expect(
-          s.origin == ShotOrigin.corner || s.origin == ShotOrigin.longThrow,
+          s.origin == ShotOrigin.corner ||
+              s.origin == ShotOrigin.freeKickCross ||
+              s.origin == ShotOrigin.longThrow,
           e.setPiece,
         );
       }
@@ -160,18 +162,28 @@ void main() {
         expect(s.shooterId ~/ 100, s.teamNationId);
         expect(
           s.header,
-          s.origin == ShotOrigin.corner || s.origin == ShotOrigin.longThrow,
+          s.origin == ShotOrigin.corner ||
+              s.origin == ShotOrigin.freeKickCross ||
+              s.origin == ShotOrigin.longThrow,
         );
+        const box = [
+          PitchZone.sixYard,
+          PitchZone.boxCentre,
+          PitchZone.boxLeft,
+          PitchZone.boxRight,
+        ];
         if (s.origin == ShotOrigin.penalty) {
           expect(s.zone, PitchZone.boxCentre);
-        } else if (s.xg >= 0.35) {
-          expect(s.zone, anyOf(PitchZone.sixYard, PitchZone.boxCentre));
-        } else if (s.xg >= 0.12) {
+        } else if (s.header) {
+          expect(box, contains(s.zone));
+        } else if (s.xg >= 0.187) {
+          expect(s.zone, PitchZone.sixYard);
+        } else if (s.xg >= 0.145) {
           expect(
             s.zone,
             anyOf(PitchZone.boxLeft, PitchZone.boxCentre, PitchZone.boxRight),
           );
-        } else if (s.xg >= 0.05) {
+        } else if (s.xg >= 0.137) {
           expect(s.zone, PitchZone.edgeOfBox);
         } else {
           expect(s.zone, PitchZone.longRange);
@@ -183,6 +195,7 @@ void main() {
       containsAll([
         ShotOrigin.openPlay,
         ShotOrigin.corner,
+        ShotOrigin.freeKickCross,
         ShotOrigin.longThrow,
         ShotOrigin.penalty,
       ]),
