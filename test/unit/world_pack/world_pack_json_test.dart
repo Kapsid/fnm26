@@ -235,8 +235,8 @@ void main() {
     expect(_none == _withTraits(null), isFalse);
   });
 
-  test('unknown trait name, unknown voice, unknown deal throw '
-      'FormatException', () {
+  test('a badly shaped trait, voice or deal, or a wrong type, throws '
+      'FormatException; a well-formed unknown one is kept', () {
     expect(kPackYVoices, {
       YVoice.fan,
       YVoice.pundit,
@@ -262,16 +262,16 @@ void main() {
       ],
     };
     for (final bad in <Map<String, Object?>>[
-      pools(['flying']),
+      pools(['flying kick']),
+      pools(['x' * 41]),
       pools('setPiece'),
       pools([1]),
-      y('ghost'),
-      // A real voice, but not one a pack account can have.
-      y(YVoice.player.name),
+      y('ghost!'),
+      y(''),
       {
         ...good,
         'addedSponsors': [
-          {..._sponsor.toJson(), 'deal': 'charity'},
+          {..._sponsor.toJson(), 'deal': 'char-ity'},
         ],
       },
       {
@@ -289,6 +289,30 @@ void main() {
     ]) {
       expect(() => WorldPack.fromJson(bad), throwsFormatException);
     }
+    // Unknown to this build but well formed: kept as it is, read as no
+    // trait, the fallback voice or deal, and written back unchanged.
+    final kept = WorldPack.fromJson({
+      ...pools(['flying']),
+      'addedYAccounts': [
+        {..._yAll.toJson(), 'voice': YVoice.player.name},
+      ],
+      'addedSponsors': [
+        {..._sponsor.toJson(), 'deal': 'charity'},
+      ],
+    });
+    final pl = kept.pools[7]!.single;
+    expect(pl.traits, isNotNull);
+    expect(pl.traits, isEmpty);
+    expect(pl.unknownTraits, ['flying']);
+    final ya = kept.addedYAccounts.single;
+    expect((ya.voice, ya.unknownVoice), (YVoice.neutral, YVoice.player.name));
+    final sp = kept.addedSponsors.single;
+    expect((sp.deal, sp.unknownDeal), (PackSponsor.fallbackDeal, 'charity'));
+    expect(WorldPack.fromJson(kept.toJson()), kept);
+    expect(
+      (kept.toJson()['addedSponsors']! as List).single,
+      containsPair('deal', 'charity'),
+    );
   });
 
   test('migrate refuses format 3', () {

@@ -133,8 +133,58 @@ void main() {
       said['localized.competitions.Old Cup']!.detail,
       l.editorIssueUnknownEntry('Old Cup'),
     );
-    expect(said['localized.clubs.Old FC.xx']!.detail, l.editorIssueValue);
+    // A language this build does not speak is flagged, not refused.
+    expect(
+      said['localized.clubs.Old FC.xx']!.detail,
+      l.editorIssueUnknownEntry('Old FC.xx'),
+    );
+    expect(said['localized.clubs.Old FC.xx']!.section, EditorSection.clubs);
     expect(said['localized.clubs.Old FC.cs']!.section, EditorSection.clubs);
     expect(said['localized.addedClubs.700000099']!.detail, l.editorIssueValue);
+  });
+
+  test('the localized cap is the whole database, opening no section', () {
+    final pack = WorldPack(
+      uuid: 'u',
+      name: 'My World',
+      author: '',
+      formatVersion: kPackFormatVersion,
+      madeWithVersion: '1.1.0',
+    );
+    final t = describePackIssue(
+      l,
+      const BadField('localized', FieldReason.outOfRange),
+      pack,
+      const {},
+    );
+    expect(t.section, isNull);
+    expect(t.title, 'My World');
+    expect(t.detail, l.editorIssueValue);
+  });
+
+  test("an unknown trait, deal or voice names its player or item", () {
+    final pack = WorldPack(
+      uuid: 'u',
+      name: 'n',
+      author: '',
+      formatVersion: kPackFormatVersion,
+      madeWithVersion: '1.1.0',
+      squads: {
+        1: [_p(7)],
+      },
+      addedSponsors: const [
+        PackSponsor(
+          id: _a,
+          name: 'Brand',
+          deal: PackSponsor.fallbackDeal,
+          industry: 'acme',
+          unknownDeal: 'barter',
+        ),
+      ],
+    );
+    String said(String path) =>
+        describePackIssue(l, UnknownId(path), pack, const {}).detail;
+    expect(said('squads.1.7.traits'), l.editorIssueUnknownEntry('Pool 7'));
+    expect(said('addedSponsors.$_a.deal'), l.editorIssueUnknownEntry('Brand'));
   });
 }

@@ -65,8 +65,12 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
     if (mounted) context.go(Routes.editor);
   }
 
-  void _open(EditorSection section, {int? nationId}) =>
-      context.go(editorSectionLocation(section, _id, nationId: nationId));
+  /// Opens [section] (on [nationId]); null is the database as a whole,
+  /// whose home this already is.
+  void _open(EditorSection? section, {int? nationId}) {
+    if (section == null) return;
+    context.go(editorSectionLocation(section, _id, nationId: nationId));
+  }
 
   /// Remove for the [index]th entry, when it names something the game no
   /// longer has: deletes exactly that entry, as one undoable edit.
@@ -261,7 +265,7 @@ class _PackView {
     ];
     final toFix = {for (final s in EditorSection.values) s: 0};
     for (final d in described) {
-      toFix[d.section] = toFix[d.section]! + 1;
+      if (d.section case final s?) toFix[s] = toFix[s]! + 1;
     }
     String count(EditorSection s) => switch (s) {
       EditorSection.players => l.editorCountPlayers(
@@ -441,7 +445,10 @@ class _IssueRow extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            sectionIcon(issue.section),
+            switch (issue.section) {
+              final s? => sectionIcon(s),
+              null => Icons.info_outline,
+            },
             size: 20,
             color: onRemove == null ? AppColors.warning : AppColors.error,
           ),

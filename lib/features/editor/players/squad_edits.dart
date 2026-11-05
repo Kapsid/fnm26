@@ -187,6 +187,7 @@ abstract final class SquadEdits {
             ? null
             : country,
         traits: p.traits,
+        unknownTraits: p.unknownTraits,
       );
 
   /// [p] with some fields changed (his club stays: see [withClub]).
@@ -207,6 +208,7 @@ abstract final class SquadEdits {
     club: p.club,
     clubCountry: p.clubCountry,
     traits: p.traits,
+    unknownTraits: p.unknownTraits,
   );
 
   /// [squad] as the editor lists it: by position (keepers first), then the

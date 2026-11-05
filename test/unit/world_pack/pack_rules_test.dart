@@ -2,8 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/entities/player_ids.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
@@ -482,16 +484,32 @@ void main() {
       expect(_bad(_pack(addedSponsors: [_sponsor(_added)])), isEmpty);
     });
 
-    test("localized for 'xx' is BadField outOfRange, for 'cs' passes", () {
-      final b = _bad(
-        _pack(
-          localized: {
-            'clubs.Old FC': {'xx': 'Starý FC'},
-          },
-        ),
-      ).single;
-      expect(b.path, 'localized.clubs.Old FC.xx');
-      expect(b.reason, FieldReason.outOfRange);
+    test("a badly shaped language is BadField outOfRange; 'xx' and 'cs' "
+        'pass (an unknown language is compatibility\'s)', () {
+      for (final lang in ['x y', 'CS', 'english', 'c', 'pt-BRAZIL', '']) {
+        final b = _bad(
+          _pack(
+            localized: {
+              'clubs.Old FC': {lang: 'Starý FC'},
+            },
+          ),
+        ).single;
+        expect(b.path, 'localized.clubs.Old FC.$lang');
+        expect(b.reason, FieldReason.outOfRange);
+      }
+      for (final lang in ['xx', 'fil', 'pt-BR', 'zh_Hant']) {
+        expect(
+          _bad(
+            _pack(
+              localized: {
+                'clubs.Old FC': {lang: 'Starý FC'},
+              },
+            ),
+          ),
+          isEmpty,
+          reason: lang,
+        );
+      }
       expect(
         _bad(
           _pack(
@@ -586,6 +604,136 @@ void main() {
         },
       );
       expect(_bad(loc).single.path, 'localized');
+    });
+  });
+
+  group('fix round 1', () {
+    test('a localized path with no values is empty', () {
+      final b = _bad(
+        _pack(localized: {'clubs.Old FC': const {}}),
+      ).single;
+      expect(b.path, 'localized.clubs.Old FC');
+      expect(b.reason, FieldReason.empty);
+    });
+
+    test('an industry of the wrong shape is badCharacters; an unknown '
+        'well-formed one is not an issue here', () {
+      PackSponsor s(String industry) => PackSponsor(
+        id: _added,
+        name: 'S',
+        deal: SponsorDeal.risky,
+        industry: industry,
+      );
+      for (final bad in ['', 'x' * 41, 'two words', 'a1', 'ünï']) {
+        final b = _bad(_pack(addedSponsors: [s(bad)])).single;
+        expect(b.path, 'addedSponsors.$_added.industry', reason: bad);
+        expect(b.reason, FieldReason.badCharacters);
+      }
+      expect(_bad(_pack(addedSponsors: [s('nothingKnown')])), isEmpty);
+    });
+
+    test('a pool id outside the fringe space and the pack-made range is '
+        'outOfRange', () {
+      for (final id in [
+        kFringeIdLimit,
+        kPackAddedIdBase,
+        kPackAddedIdMax,
+        kPackPlayerIdBase - 1,
+        GoldenGeneration.idBase,
+      ]) {
+        final b = _bad(
+          _pack(
+            pools: {
+              1: [_p(id, PlayerPosition.cm)],
+            },
+          ),
+        ).single;
+        expect(b.path, 'pools.1.$id');
+        expect(b.reason, FieldReason.outOfRange);
+      }
+      for (final id in [
+        kFirstFringeId,
+        kFringeIdLimit - 1,
+        kPackPlayerIdBase,
+        GoldenGeneration.idBase - 1,
+      ]) {
+        expect(PackRules.poolIdInRange(id), isTrue, reason: '$id');
+      }
+    });
+
+    test('unknown traits count toward the cap and the duplicates', () {
+      PackPlayer withTraits(List<PlayerTrait> known, List<String> unknown) =>
+          PackPlayer(
+            id: _fringe,
+            name: 'T',
+            age: 25,
+            position: PlayerPosition.cm,
+            attributes: const PlayerAttributes(
+              physical: 60,
+              technical: 60,
+              stamina: 60,
+            ),
+            potential: 90,
+            traits: known,
+            unknownTraits: unknown,
+          );
+      List<BadField> of(PackPlayer pl) => _bad(
+        _pack(
+          pools: {
+            1: [pl],
+          },
+        ),
+      );
+      expect(of(withTraits([PlayerTrait.leader], ['flyingKick'])), isEmpty);
+      expect(
+        of(withTraits([PlayerTrait.leader], ['a', 'b'])).single.reason,
+        FieldReason.outOfRange,
+      );
+      expect(
+        of(withTraits(const [], ['flyingKick', 'flyingKick'])).single.reason,
+        FieldReason.duplicate,
+      );
+    });
+
+    test('an added club named like a side the game names for one of its '
+        "country's cities is duplicate", () {
+      const cities = {
+        'zzz': ['Alpha', 'Beta', 'Gamma', 'Delta'],
+      };
+      expect(ClubService.domesticClubNames('zzz', cities['zzz']!), [
+        for (final c in ['Alpha', 'Beta', 'Gamma'])
+          for (final s in [
+            'City',
+            'United',
+            'FC',
+            'Athletic',
+            'Sporting',
+            'Rovers',
+            'Union',
+            'Dynamo',
+            'Olympic',
+            'Wanderers',
+            'Rangers',
+            'Stars',
+          ])
+            '$c $s',
+      ]);
+      // A country with a curated league generates none.
+      expect(ClubService.domesticClubNames('cze', const ['Praha']), isEmpty);
+      final p = _pack(
+        addedClubs: const [
+          PackClub(id: _added, name: 'alpha united ', country: 'zzz'),
+          PackClub(id: _added + 1, name: 'Delta City', country: 'zzz'),
+        ],
+      );
+      final b = PackRules.issues(
+        p,
+        countryCities: cities,
+      ).whereType<BadField>().single;
+      expect(b.path, 'addedClubs.$_added');
+      expect(b.reason, FieldReason.duplicate);
+      // Without the cities there is nothing to clash with.
+      expect(_bad(p), isEmpty);
     });
   });
 }

@@ -5,7 +5,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:fnm/domain/services/competition/trophies.dart';
-import 'package:fnm/domain/services/federation/sponsors.dart';
 
 import 'pack_rules.dart';
 import 'trophy_normaliser.dart';
@@ -203,9 +202,15 @@ abstract final class PackCodec {
 
   /// Whether every field of [p] keeps to the editor's rules: names, caps on
   /// keys, squads, pools, added items and `localized` values, codes
-  /// ([baseCodes] as for [decode]), ids, traits and industries. Every pack
-  /// that comes onto the device from outside passes this, a `.fnmdb` file's
-  /// and a `.fnmcareer` bundle's world alike.
+  /// ([baseCodes] as for [decode]), ids, traits and the shapes of
+  /// countries, industries and languages. Every pack that comes onto the
+  /// device from outside passes this, a `.fnmdb` file's and a `.fnmcareer`
+  /// bundle's world alike.
+  ///
+  /// Only safety refuses a file. A well-formed name this build does not
+  /// know (a nation, country, industry, language, trait, deal or voice) is
+  /// kept and flagged by [PackRules.compatibility], so files travel between
+  /// newer and older games.
   ///
   /// The caps are checked first, so a hostile file is refused before any
   /// of its thousands of entries is looked at one by one.
@@ -244,13 +249,6 @@ abstract final class PackCodec {
     for (final m in p.localized.values) {
       localized += m.length;
       if (localized > PackRules.localizedMax) return false;
-    }
-    // An industry names the built-in brand whose label it takes. Like an
-    // unknown trait, deal or voice (which the reader refuses), one the game
-    // has never had is bad data, not a stale reference.
-    final brands = {for (final b in SponsorBrand.values) b.name};
-    if (!p.addedSponsors.every((s) => brands.contains(s.industry))) {
-      return false;
     }
     return !PackRules.issues(p, baseCodes: baseCodes).any(
       (i) => i is BadField || i is DuplicateCode || i is UnknownId,

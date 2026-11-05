@@ -250,4 +250,77 @@ void main() {
       'localized.yAccounts.Vanished',
     ]);
   });
+
+  test('a well-formed language this build does not speak is UnknownId', () {
+    final p = _pack(
+      localized: {
+        'clubs.Old FC': {'xx': 'X', 'cs': 'Y'},
+        'competitions.Old Cup': {'xx': 'Z'},
+      },
+    );
+    // A path the game no longer has is flagged whole, not per language.
+    expect(_paths(_check(p)), [
+      'localized.clubs.Old FC.xx',
+      'localized.competitions.Old Cup',
+    ]);
+  });
+
+  test('unknown traits, deals and voices are UnknownId', () {
+    final pl = PackPlayer(
+      id: 7,
+      name: 'P',
+      age: 25,
+      position: PlayerPosition.cm,
+      attributes: const PlayerAttributes(
+        physical: 60,
+        technical: 60,
+        stamina: 60,
+      ),
+      potential: 90,
+      traits: const [],
+      unknownTraits: const ['flyingKick'],
+    );
+    final p = _pack(
+      squads: {
+        1: [pl],
+      },
+      pools: {
+        2: [
+          PackPlayer(
+            id: _f + 80,
+            name: 'Q',
+            age: 25,
+            position: PlayerPosition.cm,
+            attributes: pl.attributes,
+            potential: 90,
+            traits: const [],
+            unknownTraits: const ['x'],
+          ),
+        ],
+      },
+      addedSponsors: const [
+        PackSponsor(
+          id: kPackAddedIdBase,
+          name: 'S',
+          deal: PackSponsor.fallbackDeal,
+          industry: 'acme',
+          unknownDeal: 'barter',
+        ),
+      ],
+      addedYAccounts: const [
+        PackYAccount(
+          id: kPackAddedIdBase + 1,
+          name: 'Y',
+          voice: PackYAccount.fallbackVoice,
+          unknownVoice: 'oracle',
+        ),
+      ],
+    );
+    expect(_paths(_check(p)), [
+      'squads.1.7.traits',
+      'pools.2.${_f + 80}.traits',
+      'addedSponsors.$kPackAddedIdBase.deal',
+      'addedYAccounts.${kPackAddedIdBase + 1}.voice',
+    ]);
+  });
 }

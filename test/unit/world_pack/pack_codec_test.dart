@@ -14,6 +14,8 @@ import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
+import 'package:fnm/domain/services/world_pack/pack_rules.dart';
+import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
@@ -358,17 +360,154 @@ void main() {
       );
     });
 
-    test('an unknown trait -> badData', () async {
-      final raw = rawPack(_pack());
+    test('a well-formed unknown trait, deal, voice, industry and language '
+        'are kept, to be flagged', () async {
+      final raw = rawPack(
+        _pack().copyWith(
+          addedSponsors: [
+            PackSponsor(
+              id: kPackAddedIdBase,
+              name: 'Brand',
+              deal: SponsorDeal.values.first,
+              industry: 'spaceTourism',
+            ),
+          ],
+          addedYAccounts: const [
+            PackYAccount(
+              id: kPackAddedIdBase + 1,
+              name: 'NewVoice',
+              voice: YVoice.fan,
+            ),
+          ],
+          localized: const {
+            'clubs.Old FC': {'xx': 'Klub'},
+          },
+        ),
+      );
       final squad = (raw['squads']! as Map)['1']! as List;
-      (squad.first as Map<String, Object?>)['traits'] = ['flyingKick'];
+      (squad.first as Map<String, Object?>)['traits'] = [
+        'leader',
+        'flyingKick',
+      ];
+      ((raw['addedSponsors']! as List).single as Map)['deal'] = 'barter';
+      ((raw['addedYAccounts']! as List).single as Map)['voice'] = 'oracle';
+      final r = await PackCodec.decode(_file(_raw(_pack())..['pack'] = raw));
+      final p = (r as PackDecoded).pack;
+      final pl = p.squads[1]!.first;
+      expect(pl.traits, [PlayerTrait.leader]);
+      expect(pl.unknownTraits, ['flyingKick']);
+      final s = p.addedSponsors.single;
+      expect((s.deal, s.unknownDeal), (PackSponsor.fallbackDeal, 'barter'));
+      final y = p.addedYAccounts.single;
+      expect((y.voice, y.unknownVoice), (PackYAccount.fallbackVoice, 'oracle'));
+      expect(s.industry, 'spaceTourism');
+      // Written back unchanged: the file travels on.
+      final again = p.toJson();
       expect(
-        await reason(_file(_raw(_pack())..['pack'] = raw)),
-        PackRejection.badData,
+        ((again['squads']! as Map)['1']! as List).first['traits'],
+        ['leader', 'flyingKick'],
+      );
+      expect((again['addedSponsors']! as List).single['deal'], 'barter');
+      expect((again['addedYAccounts']! as List).single['voice'], 'oracle');
+      // A game voice no pack may use is unknown to a pack, too.
+      final player = rawPack(
+        _pack().copyWith(
+          addedYAccounts: const [
+            PackYAccount(
+              id: kPackAddedIdBase + 1,
+              name: 'NewVoice',
+              voice: YVoice.fan,
+            ),
+          ],
+        ),
+      );
+      ((player['addedYAccounts']! as List).single as Map)['voice'] =
+          YVoice.player.name;
+      final r2 = await PackCodec.decode(
+        _file(_raw(_pack())..['pack'] = player),
+      );
+      expect(
+        (r2 as PackDecoded).pack.addedYAccounts.single.unknownVoice,
+        YVoice.player.name,
       );
     });
 
-    test('an unknown industry -> badData', () async {
+    test(
+      'an oversized or odd-shaped trait, deal or voice -> badData',
+      () async {
+        for (final bad in ['x' * 41, 'flying kick', 'leader!', '', '42']) {
+          final raw = rawPack(_pack());
+          final squad = (raw['squads']! as Map)['1']! as List;
+          (squad.first as Map<String, Object?>)['traits'] = [bad];
+          expect(
+            await reason(_file(_raw(_pack())..['pack'] = raw)),
+            PackRejection.badData,
+            reason: bad,
+          );
+        }
+        final sponsor = rawPack(
+          _pack().copyWith(
+            addedSponsors: [
+              PackSponsor(
+                id: kPackAddedIdBase,
+                name: 'Brand',
+                deal: SponsorDeal.values.first,
+                industry: 'acme',
+              ),
+            ],
+          ),
+        );
+        ((sponsor['addedSponsors']! as List).single as Map)['deal'] = 'x' * 41;
+        expect(
+          await reason(_file(_raw(_pack())..['pack'] = sponsor)),
+          PackRejection.badData,
+        );
+        final y = rawPack(
+          _pack().copyWith(
+            addedYAccounts: const [
+              PackYAccount(id: kPackAddedIdBase, name: 'A', voice: YVoice.fan),
+            ],
+          ),
+        );
+        ((y['addedYAccounts']! as List).single as Map)['voice'] = 'two words';
+        expect(
+          await reason(_file(_raw(_pack())..['pack'] = y)),
+          PackRejection.badData,
+        );
+      },
+    );
+
+    test(
+      'a badly shaped language or an empty localized entry -> badData',
+      () async {
+        final lang = _pack().copyWith(
+          localized: {
+            'clubs.Old FC': {'not a language': 'Klub'},
+          },
+        );
+        expect(await reason(_file(_raw(lang))), PackRejection.badData);
+        final empty = _pack().copyWith(
+          localized: {'clubs.Old FC': const <String, String>{}},
+        );
+        expect(await reason(_file(_raw(empty))), PackRejection.badData);
+      },
+    );
+
+    test(
+      'a pool id between the fringe and the pack-made ids -> badData',
+      () async {
+        for (final id in [kPackAddedIdBase + 5, 500000000]) {
+          final p = _pack().copyWith(
+            pools: {
+              1: [_p(id, PlayerPosition.cm)],
+            },
+          );
+          expect(await reason(_file(_raw(p))), PackRejection.badData);
+        }
+      },
+    );
+
+    test('an oversized industry -> badData', () async {
       final p = _pack().copyWith(
         addedSponsors: [
           PackSponsor(
@@ -473,6 +612,67 @@ void main() {
       ))!;
       expect(copy.name, '${'N' * 36} (2)');
       expect(copy.name.length, 40);
+    });
+
+    test('a stored pack with an unknown trait, deal and voice loads, and '
+        'is flagged', () async {
+      final pl = _p(1, PlayerPosition.gk);
+      final pack = _pack().copyWith(
+        squads: {
+          1: [
+            PackPlayer(
+              id: pl.id,
+              name: pl.name,
+              age: pl.age,
+              position: pl.position,
+              attributes: pl.attributes,
+              potential: pl.potential,
+              traits: const [PlayerTrait.leader],
+              unknownTraits: const ['flyingKick'],
+            ),
+            ..._squad().skip(1),
+          ],
+        },
+        addedSponsors: const [
+          PackSponsor(
+            id: kPackAddedIdBase,
+            name: 'Brand',
+            deal: PackSponsor.fallbackDeal,
+            industry: 'acme',
+            unknownDeal: 'barter',
+          ),
+        ],
+        addedYAccounts: const [
+          PackYAccount(
+            id: kPackAddedIdBase + 1,
+            name: 'NewVoice',
+            voice: PackYAccount.fallbackVoice,
+            unknownVoice: 'oracle',
+          ),
+        ],
+      );
+      final id = await repo.insert(pack, const {});
+      final loaded = (await repo.load(id))!;
+      expect(loaded, pack);
+      expect(loaded.squads[1]!.first.unknownTraits, ['flyingKick']);
+      final world = await c.read(nationRepositoryProvider).newCareerWorld();
+      final facts = await readPackFacts(
+        c.read(playerRepositoryProvider),
+        c.read(seedSourceProvider),
+      );
+      final a = assessPack(loaded, world, facts: facts);
+      expect(a.status, PackStatus.needsAttention);
+      expect(
+        [
+          for (final i in a.issues)
+            if (i is UnknownId) i.path,
+        ],
+        containsAll([
+          'squads.1.1.traits',
+          'addedSponsors.$kPackAddedIdBase.deal',
+          'addedYAccounts.${kPackAddedIdBase + 1}.voice',
+        ]),
+      );
     });
 
     test('file names are safe and never empty', () {

@@ -2,7 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/entities/player_ids.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
+import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
@@ -65,6 +67,15 @@ void main() {
     ]) {
       expect(PlayerLifecycle.isNewgenId(id), isFalse, reason: '$id');
     }
+    // The fringe space ends below the added items, and pool ids may come
+    // only from it or from the pack-made range.
+    expect(kFringeIdLimit, lessThan(kPackAddedIdBase));
+    expect(PoolGenerator.firstFringeId, kFirstFringeId);
+    // Note: ids from 900M are the staff candidates' (`StaffMarket.idBase`), a
+    // separate id space (staff, not players). Pack-made player ids
+    // (800M up to the golden generation's 950M) may share numbers with
+    // staff ids without meeting them.
+    expect(StaffMarket.idBase, greaterThan(kPackAddedIdMax));
     // Ids stay ints that JSON and SQLite carry exactly.
     expect(GoldenGeneration.idBase, lessThan(1 << 31));
   });
@@ -84,7 +95,7 @@ void main() {
       expect(sorted.first.first, PoolGenerator.firstFringeId);
       for (final r in sorted) {
         expect(r.last - r.first + 1, PoolGenerator.extraPerNation);
-        expect(r.last, lessThan(kPackAddedIdBase));
+        expect(r.last, lessThan(kFringeIdLimit));
       }
       for (var i = 1; i < sorted.length; i++) {
         expect(sorted[i].first, greaterThan(sorted[i - 1].last));

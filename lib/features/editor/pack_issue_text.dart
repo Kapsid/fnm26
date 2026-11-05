@@ -8,11 +8,12 @@ import 'package:fnm/l10n/app_localizations.dart';
 
 /// One entry of a database's "what's missing" list: where it is (`title`:
 /// a nation, or the section), what is wrong (`detail`), and where the entry
-/// jumps to (`section`, opened on `nationId` when it is per nation).
+/// jumps to (`section`, opened on `nationId` when it is per nation; null
+/// for the whole database, which stays on its home).
 typedef PackIssueText = ({
   String title,
   String detail,
-  EditorSection section,
+  EditorSection? section,
   int? nationId,
 });
 
@@ -32,8 +33,11 @@ PackIssueText describePackIssue(
   Map<int, Nation> world,
 ) {
   String nation(int id) => packNationName(pack, world, id);
-  final section = EditorSection.ofPath(issue.where);
-  final title = sectionTitle(l, section);
+  // The `localized` cap is the whole database's, in no one section.
+  final section = issue.where == 'localized'
+      ? null
+      : EditorSection.ofPath(issue.where);
+  final title = section == null ? pack.name : sectionTitle(l, section);
   switch (issue) {
     // A pool over its cap reads as a squad over its: players too many.
     case SquadTooSmall(:final nationId, :final have, :final need):
@@ -84,11 +88,17 @@ PackIssueText describePackIssue(
       if (root == 'localized') key = key.substring(key.indexOf('.') + 1);
       final id = int.tryParse(key);
       final what = switch (root) {
-        // A pool by its nation; a player in it by his name.
-        'pools' => _poolEntry(pack, key, nation),
-        'addedClubs' ||
-        'addedSponsors' ||
-        'addedYAccounts' => _addedName(pack, root, id) ?? key,
+        // A pool by its nation; a player (his unknown traits) by his name.
+        'pools' => _playerEntry(pack, pack.pools, key, nation),
+        'squads' when key.contains('.') => _playerEntry(
+          pack,
+          pack.squads,
+          key,
+          nation,
+        ),
+        // An added item (its unknown deal or voice) by its name.
+        'addedClubs' || 'addedSponsors' || 'addedYAccounts' =>
+          _addedName(pack, root, int.tryParse(key.split('.').first)) ?? key,
         _ => switch (section) {
           EditorSection.players ||
           EditorSection.nations ||
@@ -116,7 +126,7 @@ PackIssueText _badField(
   FieldReason reason,
   WorldPack pack,
   String sectionTitle,
-  EditorSection section,
+  EditorSection? section,
   String Function(int) nation,
 ) {
   final parts = path.split('.');
@@ -145,7 +155,7 @@ PackIssueText _badField(
       final players = root == 'pools' ? pack.pools : pack.squads;
       final player = nationId == null
           ? null
-          : players[nationId]?.where((p) => p.id == playerId).firstOrNull;
+          : players[nationId]?.where((x) => x.id == playerId).firstOrNull;
       final name = player?.name.trim() ?? '';
       // No field: the id itself (out of range, or another player's), or the
       // whole list. A trait list (too many, or one twice) is a value.
@@ -281,16 +291,21 @@ String? _addedName(WorldPack pack, String root, int? id) => switch (root) {
   _ => null,
 };
 
-/// A pool entry, `<nationId>` or `<nationId>.<playerId>`, in words: the
-/// nation, or the player by his name.
-String _poolEntry(WorldPack pack, String key, String Function(int) nation) {
+/// A squad or pool entry of [players], `<nationId>` or
+/// `<nationId>.<playerId>[.traits]`, in words: the nation, or the player by
+/// his name.
+String _playerEntry(
+  WorldPack pack,
+  Map<int, List<PackPlayer>> players,
+  String key,
+  String Function(int) nation,
+) {
   final parts = key.split('.');
   final nationId = int.tryParse(parts.first);
   if (nationId == null) return key;
   if (parts.length < 2) return nation(nationId);
   final playerId = int.tryParse(parts[1]);
-  final player = pack.pools[nationId]
-      ?.where((p) => p.id == playerId)
-      .firstOrNull;
-  return player?.name.trim() ?? key;
+  final player = players[nationId]?.where((p) => p.id == playerId).firstOrNull;
+  final name = player?.name.trim() ?? '';
+  return name.isEmpty ? key : name;
 }

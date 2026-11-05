@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
+import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -16,6 +17,7 @@ import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
+import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:go_router/go_router.dart';
@@ -265,12 +267,23 @@ class ActiveWorldSync {
       );
 }
 
-/// Each nation's stored fringe ids ([PlayerRepository.fringeRanges]), the
-/// ranges a pack's pools are checked against (`PackGameKeys.of`). Seed
-/// data: read once.
-final FutureProvider<Map<int, ({int first, int last})>>
-packFringeRangesProvider = FutureProvider<Map<int, ({int first, int last})>>(
-  (ref) => ref.watch(playerRepositoryProvider).fringeRanges(),
+/// What a pack is checked against besides the nations ([PackFacts]), read
+/// afresh from [players] and [seed]. Call it in the zone that awaits it (a
+/// widget test's fake async never completes a future made elsewhere).
+Future<PackFacts> readPackFacts(
+  PlayerRepository players,
+  SeedSource seed,
+) async => (
+  fringeRanges: await players.fringeRanges(),
+  cities: await seed.cities(),
+);
+
+/// [readPackFacts] for the providers that list packs. Seed data: read once.
+final FutureProvider<PackFacts> packFactsProvider = FutureProvider<PackFacts>(
+  (ref) => readPackFacts(
+    ref.watch(playerRepositoryProvider),
+    ref.watch(seedSourceProvider),
+  ),
 );
 
 /// The packs on this device, by name.

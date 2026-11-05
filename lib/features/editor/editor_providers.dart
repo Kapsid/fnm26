@@ -12,7 +12,6 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
-import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
@@ -128,7 +127,7 @@ final AutoDisposeFutureProvider<List<EditorPackEntry>> editorPacksProvider =
       final summaries = await ref.watch(worldPacksProvider.future);
       final world = await ref.watch(editorWorldProvider.future);
       final repo = ref.watch(worldPackRepositoryProvider);
-      final fringe = await ref.watch(packFringeRangesProvider.future);
+      final facts = await ref.watch(packFactsProvider.future);
       final out = <EditorPackEntry>[];
       for (final s in summaries) {
         WorldPack? pack;
@@ -137,7 +136,7 @@ final AutoDisposeFutureProvider<List<EditorPackEntry>> editorPacksProvider =
         } on FormatException {
           pack = null;
         }
-        final a = assessPack(pack, world, fringeRanges: fringe);
+        final a = assessPack(pack, world, facts: facts);
         out.add((
           id: s.id,
           name: s.name,
@@ -172,7 +171,10 @@ packEditorProvider = StateNotifierProvider.autoDispose
         id: id,
         packs: ref.watch(worldPackRepositoryProvider),
         nations: ref.watch(nationRepositoryProvider),
-        players: ref.watch(playerRepositoryProvider),
+        facts: () => readPackFacts(
+          ref.read(playerRepositoryProvider),
+          ref.read(seedSourceProvider),
+        ),
         // The list's dates and statuses follow the save. Through the
         // container, not this ref: the last save comes from dispose.
         onSaved: () {
@@ -207,7 +209,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     required int id,
     required WorldPackRepository packs,
     required NationRepository nations,
-    required PlayerRepository players,
+    required Future<PackFacts> Function() facts,
     void Function()? onSaved,
     void Function()? onSaveFailed,
   }) : _id = id,
@@ -222,7 +224,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
         if (s != AppLifecycleState.resumed) unawaited(flush());
       },
     );
-    unawaited(_load(nations, players));
+    unawaited(_load(nations, facts));
   }
 
   late final AppLifecycleListener _lifecycle;
@@ -253,6 +255,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
 
   List<Nation> _world = const [];
   Map<int, String> _baseCodes = const {};
+  Map<String, List<String>> _countryCities = const {};
   PackGameKeys _gameKeys = PackGameKeys.of(
     const [],
     codes: const {},
@@ -265,10 +268,13 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// The pack's own trophy pictures, by key (see [setTrophy]).
   Map<String, Uint8List> _trophies = const {};
 
-  Future<void> _load(NationRepository nations, PlayerRepository players) async {
+  Future<void> _load(
+    NationRepository nations,
+    Future<PackFacts> Function() readFacts,
+  ) async {
     try {
       final world = await nations.newCareerWorld();
-      final fringe = await players.fringeRanges();
+      final facts = await readFacts();
       final pack = await _packs.load(_id);
       final trophies = pack == null
           ? const <String, Uint8List>{}
@@ -286,8 +292,9 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
       _gameKeys = PackGameKeys.of(
         [for (final n in world) n.id],
         codes: _baseCodes,
-        fringeRanges: fringe,
+        fringeRanges: facts.fringeRanges,
       );
+      _countryCities = packCountryCities(world, facts.cities);
       _trophies = trophies;
       // The picture rows are what a career and an export take, so a pack
       // whose list of them drifted (one stored before they were kept in
@@ -317,7 +324,11 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     if (!identical(pack, _issuesOf)) {
       _issues = [
         ..._gameKeys.check(pack),
-        ...PackRules.issues(pack, baseCodes: _baseCodes),
+        ...PackRules.issues(
+          pack,
+          baseCodes: _baseCodes,
+          countryCities: _countryCities,
+        ),
       ];
       _issuesOf = pack;
     }
@@ -336,84 +347,179 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     final path = issue.path;
     final dot = path.indexOf('.');
     if (dot < 0) return false;
+    if (path.substring(0, dot) == 'trophies') {
+      return setTrophy(path.substring(dot + 1), null);
+    }
+    final before = _revision;
+    update((p) => dropUnknown(p, path));
+    return _revision != before;
+  }
+
+  /// [p] without exactly the entry the [UnknownId] path [path] names, or
+  /// [p] itself (identical) when it names nothing the pack has:
+  ///
+  /// - a nation's squad, nation entry, name list or pool, a stadium,
+  ///   competition, Y account or sponsor rename;
+  /// - a pool player (`pools.<n>.<id>`);
+  /// - an added club, sponsor or Y account, with every `localized` name of
+  ///   it (`addedClubs.<id>`, and for a sponsor its description's too);
+  /// - a `localized` path, or one language of it (`localized.<path>.<lang>`;
+  ///   the path goes with its last language);
+  /// - what this build does not know of an item, which goes while the item
+  ///   stays: a player's unknown traits (`<squads|pools>.<n>.<id>.traits`),
+  ///   a sponsor's unknown deal (`addedSponsors.<id>.deal`, leaving
+  ///   [PackSponsor.fallbackDeal]) and a Y account's unknown voice
+  ///   (`addedYAccounts.<id>.voice`, leaving [PackYAccount.fallbackVoice]).
+  static WorldPack dropUnknown(WorldPack p, String path) {
+    final dot = path.indexOf('.');
+    if (dot < 0) return p;
     final root = path.substring(0, dot);
     final key = path.substring(dot + 1);
-    final id = int.tryParse(key);
-    if (root == 'trophies') return setTrophy(key, null);
+    final parts = key.split('.');
+    int? at(int i) {
+      if (parts.length <= i) return null;
+      final n = int.tryParse(parts[i]);
+      return n != null && '$n' == parts[i] ? n : null;
+    }
+
+    final id = parts.length == 1 ? at(0) : null;
     Map<K, V> without<K, V>(Map<K, V> m, K k) => {...m}..remove(k);
-    final before = _revision;
-    update((p) {
-      // Format 2's parts: a pool (or one player in it), an added item, a
-      // `localized` path.
-      final parts = key.split('.');
-      final first = int.tryParse(parts.first);
-      final second = parts.length == 2 ? int.tryParse(parts[1]) : null;
-      switch (root) {
-        case 'pools' when first != null && p.pools.containsKey(first):
-          if (second == null) {
-            return p.copyWith(pools: without(p.pools, first));
-          }
-          if (!p.pools[first]!.any((pl) => pl.id == second)) return p;
-          return p.copyWith(
-            pools: {
-              ...p.pools,
-              first: [
-                for (final pl in p.pools[first]!)
-                  if (pl.id != second) pl,
-              ],
-            },
-          );
-        case 'addedClubs' when p.addedClubs.any((c) => c.id == id):
-          return p.copyWith(
-            addedClubs: [
-              for (final c in p.addedClubs)
-                if (c.id != id) c,
+
+    /// The localized names of added item [itemId] of [itemRoot] gone.
+    Map<String, Map<String, String>> namesGone(String itemRoot, int itemId) => {
+      for (final e in p.localized.entries)
+        if (e.key != '$itemRoot.$itemId' &&
+            !e.key.startsWith('$itemRoot.$itemId.'))
+          e.key: e.value,
+    };
+
+    // A player's unknown traits: `<squads|pools>.<n>.<id>.traits`.
+    if ((root == 'squads' || root == 'pools') &&
+        parts.length == 3 &&
+        parts[2] == 'traits') {
+      final players = root == 'pools' ? p.pools : p.squads;
+      final n = at(0);
+      final list = players[n];
+      if (n == null || list == null) return p;
+      if (!list.any((pl) => pl.id == at(1) && pl.unknownTraits.isNotEmpty)) {
+        return p;
+      }
+      final next = {
+        ...players,
+        n: [
+          for (final pl in list) pl.id == at(1) ? pl.withoutUnknown() : pl,
+        ],
+      };
+      return root == 'pools'
+          ? p.copyWith(pools: next)
+          : p.copyWith(squads: next);
+    }
+
+    switch (root) {
+      case 'pools':
+        final n = at(0);
+        if (n == null || !p.pools.containsKey(n)) return p;
+        if (parts.length == 1) return p.copyWith(pools: without(p.pools, n));
+        final playerId = at(1);
+        if (parts.length != 2 || !p.pools[n]!.any((pl) => pl.id == playerId)) {
+          return p;
+        }
+        return p.copyWith(
+          pools: {
+            ...p.pools,
+            n: [
+              for (final pl in p.pools[n]!)
+                if (pl.id != playerId) pl,
             ],
-          );
-        case 'addedSponsors' when p.addedSponsors.any((s) => s.id == id):
+          },
+        );
+      case 'addedClubs':
+        final itemId = at(0);
+        if (parts.length != 1 || !p.addedClubs.any((c) => c.id == itemId)) {
+          return p;
+        }
+        return p.copyWith(
+          addedClubs: [
+            for (final c in p.addedClubs)
+              if (c.id != itemId) c,
+          ],
+          localized: namesGone(root, itemId!),
+        );
+      case 'addedSponsors':
+        final itemId = at(0);
+        final sponsor = p.addedSponsors.where((s) => s.id == itemId);
+        if (sponsor.isEmpty) return p;
+        if (parts.length == 2 && parts[1] == 'deal') {
+          if (sponsor.first.unknownDeal == null) return p;
           return p.copyWith(
             addedSponsors: [
               for (final s in p.addedSponsors)
-                if (s.id != id) s,
+                s.id == itemId ? s.withoutUnknown() : s,
             ],
           );
-        case 'addedYAccounts' when p.addedYAccounts.any((y) => y.id == id):
+        }
+        if (parts.length != 1) return p;
+        return p.copyWith(
+          addedSponsors: [
+            for (final s in p.addedSponsors)
+              if (s.id != itemId) s,
+          ],
+          localized: namesGone(root, itemId!),
+        );
+      case 'addedYAccounts':
+        final itemId = at(0);
+        final account = p.addedYAccounts.where((y) => y.id == itemId);
+        if (account.isEmpty) return p;
+        if (parts.length == 2 && parts[1] == 'voice') {
+          if (account.first.unknownVoice == null) return p;
           return p.copyWith(
             addedYAccounts: [
               for (final y in p.addedYAccounts)
-                if (y.id != id) y,
+                y.id == itemId ? y.withoutUnknown() : y,
             ],
           );
-        case 'localized' when p.localized.containsKey(key):
-          return p.copyWith(localized: without(p.localized, key));
-      }
-      if (id != null) {
-        switch (root) {
-          case 'squads' when p.squads.containsKey(id):
-            return p.copyWith(squads: without(p.squads, id));
-          case 'nations' when p.nations.containsKey(id):
-            return p.copyWith(nations: without(p.nations, id));
-          case 'nameLists' when p.nameLists.containsKey(id):
-            return p.copyWith(nameLists: without(p.nameLists, id));
         }
-      }
-      return switch (root) {
-        'stadiums' when p.stadiums.containsKey(key) => p.copyWith(
-          stadiums: without(p.stadiums, key),
-        ),
-        'competitions' when p.competitions.containsKey(key) => p.copyWith(
-          competitions: without(p.competitions, key),
-        ),
-        'yAccounts' when p.yAccounts.containsKey(key) => p.copyWith(
-          yAccounts: without(p.yAccounts, key),
-        ),
-        'sponsors' when p.sponsors.containsKey(key) => p.copyWith(
-          sponsors: without(p.sponsors, key),
-        ),
-        _ => p,
-      };
-    });
-    return _revision != before;
+        if (parts.length != 1) return p;
+        return p.copyWith(
+          addedYAccounts: [
+            for (final y in p.addedYAccounts)
+              if (y.id != itemId) y,
+          ],
+          localized: namesGone(root, itemId!),
+        );
+      case 'localized':
+        if (p.localized.containsKey(key)) {
+          return p.copyWith(localized: without(p.localized, key));
+        }
+        // One language of a path: `<path>.<lang>`.
+        final last = key.lastIndexOf('.');
+        if (last < 0) return p;
+        final entry = key.substring(0, last);
+        final lang = key.substring(last + 1);
+        final values = p.localized[entry];
+        if (values == null || !values.containsKey(lang)) return p;
+        final rest = without(values, lang);
+        return p.copyWith(
+          localized: rest.isEmpty
+              ? without(p.localized, entry)
+              : {...p.localized, entry: rest},
+        );
+      case 'squads' when id != null && p.squads.containsKey(id):
+        return p.copyWith(squads: without(p.squads, id));
+      case 'nations' when id != null && p.nations.containsKey(id):
+        return p.copyWith(nations: without(p.nations, id));
+      case 'nameLists' when id != null && p.nameLists.containsKey(id):
+        return p.copyWith(nameLists: without(p.nameLists, id));
+      case 'stadiums' when p.stadiums.containsKey(key):
+        return p.copyWith(stadiums: without(p.stadiums, key));
+      case 'competitions' when p.competitions.containsKey(key):
+        return p.copyWith(competitions: without(p.competitions, key));
+      case 'yAccounts' when p.yAccounts.containsKey(key):
+        return p.copyWith(yAccounts: without(p.yAccounts, key));
+      case 'sponsors' when p.sponsors.containsKey(key):
+        return p.copyWith(sponsors: without(p.sponsors, key));
+    }
+    return p;
   }
 
   /// What stands between nation [nationId]'s squad and a career

@@ -37,6 +37,7 @@ import 'package:fnm/features/tournaments/city_providers.dart'
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
     show
         activeWorldSyncProvider,
+        readPackFacts,
         worldPackRepositoryProvider,
         worldPackServiceProvider;
 
@@ -287,9 +288,11 @@ class CareerService {
         );
       }
       final world = await _ref.read(nationRepositoryProvider).newCareerWorld();
-      final fringe = await _ref.read(playerRepositoryProvider).fringeRanges();
-      if (assessPack(pack, world, fringeRanges: fringe).status !=
-          PackStatus.ready) {
+      final facts = await readPackFacts(
+        _ref.read(playerRepositoryProvider),
+        _ref.read(seedSourceProvider),
+      );
+      if (assessPack(pack, world, facts: facts).status != PackStatus.ready) {
         return Result.failure(
           Failure(
             'World pack $worldPackId cannot start a career',

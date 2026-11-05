@@ -1,6 +1,9 @@
 import 'dart:ui' show Locale, PlatformDispatcher;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/languages.dart';
+
+export 'package:fnm/core/config/languages.dart';
 
 /// The language the app is drawn in.
 ///
@@ -8,38 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// layer needs it: nation names are written for the current language as they
 /// are read out of the database, so every screen, every news item and every
 /// social post gets them right without each one having to ask.
-
-/// The languages the app speaks. Anything else is drawn in English.
-const List<String> supportedLanguageCodes = [
-  'en',
-  'cs',
-  'fr',
-  'it',
-  'pl',
-  'es',
-  'de',
-  'pt',
-  'tr',
-  'nl',
-  'id',
-  'el',
-  'sv',
-  'nb',
-  'vi',
-  'bg',
-  'da',
-  'fi',
-  'hu',
-  'hr',
-  'uk',
-  'fil',
-  'hi',
-  'ja',
-  'ko',
-  'ro',
-  'th',
-  'ms',
-];
 
 /// The UI language override, or null to follow the device locale. Read by the
 /// root `MaterialApp`; persisted so a chosen language survives relaunches.

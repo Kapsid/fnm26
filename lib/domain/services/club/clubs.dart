@@ -387,6 +387,23 @@ abstract final class ClubService {
     return (name: '$city $suffix', country: code);
   }
 
+  /// Every name [_homeClub] can give a side of [code] with [cities] (its
+  /// cities, biggest first): none for a country with a curated league
+  /// ([leagueClubs] lists those), else each city it draws from with each
+  /// suffix. The same span and suffixes [_homeClub] uses, so a name not
+  /// listed here is never generated.
+  static List<String> domesticClubNames(String code, List<String> cities) {
+    final c = code.toLowerCase();
+    if (_leagues.any((l) => l.country == c) || cities.isEmpty) return const [];
+    final span = cities.length <= 3
+        ? cities.length
+        : (cities.length * 2 + 2) ~/ 3;
+    return [
+      for (final city in cities.take(span))
+        for (final suffix in _domesticSuffixes) '$city $suffix',
+    ];
+  }
+
   /// Generic club-name suffixes for countries with no curated league. Kept
   /// plain and descriptive (never a real club's registered name) so a generated
   /// domestic side reads as a club without impersonating one.

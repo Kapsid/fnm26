@@ -1,6 +1,7 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/entities/player_ids.dart';
 import 'package:fnm/domain/services/player/depth_chart.dart';
 
 /// Turns the base 23-per-nation seed into a deeper, scoutable pool: it assigns
@@ -14,7 +15,7 @@ abstract final class PoolGenerator {
   /// The first id [expand] gives a fringe player. Every id below it is a core
   /// player `players.json` (or a dormant nation's squad) stores; every stored
   /// id from it up is generated fringe padding.
-  static const int firstFringeId = 10000000;
+  static const int firstFringeId = kFirstFringeId;
 
   /// Fictional-but-plausible club sides, shared across nations (national-team
   /// players from the same club is realistic).

@@ -52,7 +52,7 @@ final FutureProvider<List<WorldChoice>> worldChoicesProvider =
       final world = await ref.watch(nationsProvider.future);
       final l = ref.watch(appLocalizationsProvider);
       final repo = ref.watch(worldPackRepositoryProvider);
-      final fringe = await ref.watch(packFringeRangesProvider.future);
+      final facts = await ref.watch(packFactsProvider.future);
       final byId = {for (final n in world) n.id: n};
       final out = <WorldChoice>[];
       for (final s in summaries) {
@@ -62,7 +62,7 @@ final FutureProvider<List<WorldChoice>> worldChoicesProvider =
         } on FormatException {
           pack = null;
         }
-        final a = assessPack(pack, world, fringeRanges: fringe);
+        final a = assessPack(pack, world, facts: facts);
         String? reason;
         switch (a.status) {
           case PackStatus.ready:
@@ -103,7 +103,7 @@ Future<PackStatus?> chosenWorldStatus(ProviderContainer c, int id) async {
   return assessPack(
     pack,
     await c.read(nationsProvider.future),
-    fringeRanges: await c.read(packFringeRangesProvider.future),
+    facts: await c.read(packFactsProvider.future),
   ).status;
 }
 

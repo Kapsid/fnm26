@@ -45,6 +45,7 @@ class PackPlayer {
     this.club,
     this.clubCountry,
     this.traits,
+    this.unknownTraits = const [],
   });
 
   final int id;
@@ -57,8 +58,29 @@ class PackPlayer {
   final String? clubCountry;
 
   /// His traits as picked in the pack. Null is Random: the game rolls them
-  /// as it always has. An empty list is "no traits".
+  /// as it always has. An empty list is "no traits". Only the traits this
+  /// build knows; see [unknownTraits].
   final List<PlayerTrait>? traits;
+
+  /// Picked trait names this build does not know (a file from a newer or
+  /// older game), kept as they are so the file travels on unchanged. Every
+  /// reader ignores them; the editor flags them (`PackRules.compatibility`)
+  /// and Remove drops them ([withoutUnknown]). Non-empty only when [traits]
+  /// is non-null.
+  final List<String> unknownTraits;
+
+  /// This player with [unknownTraits] dropped.
+  PackPlayer withoutUnknown() => PackPlayer(
+    id: id,
+    name: name,
+    age: age,
+    position: position,
+    attributes: attributes,
+    potential: potential,
+    club: club,
+    clubCountry: clubCountry,
+    traits: traits,
+  );
 
   Map<String, Object?> toJson() => {
     'id': id,
@@ -73,7 +95,8 @@ class PackPlayer {
     'potential': potential,
     'club': club,
     'clubCountry': clubCountry,
-    if (traits case final t?) 'traits': [for (final x in t) x.name],
+    if (traits case final t?)
+      'traits': [for (final x in t) x.name, ...unknownTraits],
   };
 
   static PackPlayer fromJson(Object? raw) {
@@ -96,6 +119,10 @@ class PackPlayer {
     if (position == null) {
       throw FormatException('Unknown position "$positionName"');
     }
+    final traitNames = m['traits'] == null
+        ? null
+        : [for (final t in _strList(m['traits'], 'traits')) _token(t, 'trait')];
+    final known = PlayerTrait.values.asNameMap();
     return PackPlayer(
       id: _int(m['id'], 'id'),
       name: _str(m['name'], 'name'),
@@ -109,12 +136,13 @@ class PackPlayer {
       potential: _int(m['potential'], 'potential'),
       club: _strOrNull(m['club'], 'club'),
       clubCountry: _strOrNull(m['clubCountry'], 'clubCountry'),
-      traits: m['traits'] == null
+      traits: traitNames == null
           ? null
-          : [
-              for (final t in _strList(m['traits'], 'traits'))
-                _enum(PlayerTrait.values, t, 'trait'),
-            ],
+          : [for (final t in traitNames) ?known[t]],
+      unknownTraits: [
+        for (final t in traitNames ?? const <String>[])
+          if (!known.containsKey(t)) t,
+      ],
     );
   }
 
@@ -129,7 +157,8 @@ class PackPlayer {
       other.potential == potential &&
       other.club == club &&
       other.clubCountry == clubCountry &&
-      _eq.equals(other.traits, traits);
+      _eq.equals(other.traits, traits) &&
+      _eq.equals(other.unknownTraits, unknownTraits);
 
   @override
   int get hashCode => Object.hash(
@@ -142,6 +171,7 @@ class PackPlayer {
     club,
     clubCountry,
     traits == null ? null : _eq.hash(traits),
+    _eq.hash(unknownTraits),
   );
 }
 
@@ -187,6 +217,7 @@ class PackSponsor {
     required this.deal,
     required this.industry,
     this.description = '',
+    this.unknownDeal,
   });
 
   final int id;
@@ -195,13 +226,32 @@ class PackSponsor {
   final String industry;
   final String description;
 
+  /// The deal name the file gave when this build does not know it (a newer
+  /// or older game's), kept so the file travels on unchanged; [deal] is then
+  /// [fallbackDeal]. The editor flags it (`PackRules.compatibility`), and
+  /// Remove keeps [fallbackDeal] ([withoutUnknown]).
+  final String? unknownDeal;
+
+  /// The deal an unknown one reads as: the plain, middle-of-the-road deal
+  /// (a modest fee, no board or press trouble).
+  static const SponsorDeal fallbackDeal = SponsorDeal.crowdPleaser;
+
+  /// This sponsor with [unknownDeal] dropped: its deal is [deal].
+  PackSponsor withoutUnknown() => PackSponsor(
+    id: id,
+    name: name,
+    deal: deal,
+    industry: industry,
+    description: description,
+  );
+
   /// Its string id wherever the game stores a sponsor.
   String get key => 'pack$id';
 
   Map<String, Object?> toJson() => {
     'id': id,
     'name': name,
-    'deal': deal.name,
+    'deal': unknownDeal ?? deal.name,
     'industry': industry,
     'description': description,
   };
@@ -215,12 +265,15 @@ class PackSponsor {
       'industry',
       'description',
     }, 'sponsor');
+    final dealName = _token(_str(m['deal'], 'deal'), 'deal');
+    final deal = SponsorDeal.values.asNameMap()[dealName];
     return PackSponsor(
       id: _int(m['id'], 'id'),
       name: _str(m['name'], 'name'),
-      deal: _enum(SponsorDeal.values, _str(m['deal'], 'deal'), 'deal'),
+      deal: deal ?? fallbackDeal,
       industry: _str(m['industry'], 'industry'),
       description: _strOrNull(m['description'], 'description') ?? '',
+      unknownDeal: deal == null ? dealName : null,
     );
   }
 
@@ -231,10 +284,12 @@ class PackSponsor {
       other.name == name &&
       other.deal == deal &&
       other.industry == industry &&
-      other.description == description;
+      other.description == description &&
+      other.unknownDeal == unknownDeal;
 
   @override
-  int get hashCode => Object.hash(id, name, deal, industry, description);
+  int get hashCode =>
+      Object.hash(id, name, deal, industry, description, unknownDeal);
 }
 
 /// A Y account a pack adds, posting as [voice] (one of [kPackYVoices]) in
@@ -246,6 +301,7 @@ class PackYAccount {
     required this.name,
     required this.voice,
     this.nationId,
+    this.unknownVoice,
   });
 
   final int id;
@@ -253,26 +309,39 @@ class PackYAccount {
   final YVoice voice;
   final int? nationId;
 
+  /// The voice name the file gave when it is not one of [kPackYVoices] in
+  /// this build, kept so the file travels on unchanged; [voice] is then
+  /// [fallbackVoice]. The editor flags it (`PackRules.compatibility`), and
+  /// Remove keeps [fallbackVoice] ([withoutUnknown]).
+  final String? unknownVoice;
+
+  /// The voice an unknown one reads as: the plain observer's.
+  static const YVoice fallbackVoice = YVoice.neutral;
+
+  /// This account with [unknownVoice] dropped: its voice is [voice].
+  PackYAccount withoutUnknown() =>
+      PackYAccount(id: id, name: name, voice: voice, nationId: nationId);
+
   Map<String, Object?> toJson() => {
     'id': id,
     'name': name,
-    'voice': voice.name,
+    'voice': unknownVoice ?? voice.name,
     'nationId': nationId,
   };
 
   static PackYAccount fromJson(Object? raw) {
     final m = _map(raw, 'yAccount');
     _only(m, const {'id', 'name', 'voice', 'nationId'}, 'yAccount');
-    final voice = _enum(YVoice.values, _str(m['voice'], 'voice'), 'voice');
-    if (!kPackYVoices.contains(voice)) {
-      throw FormatException('Voice "${voice.name}" is not a pack voice');
-    }
+    final voiceName = _token(_str(m['voice'], 'voice'), 'voice');
+    final voice = YVoice.values.asNameMap()[voiceName];
+    final known = voice != null && kPackYVoices.contains(voice);
     final nationId = m['nationId'];
     return PackYAccount(
       id: _int(m['id'], 'id'),
       name: _str(m['name'], 'name'),
-      voice: voice,
+      voice: known ? voice : fallbackVoice,
       nationId: nationId == null ? null : _int(nationId, 'nationId'),
+      unknownVoice: known ? null : voiceName,
     );
   }
 
@@ -282,10 +351,11 @@ class PackYAccount {
       other.id == id &&
       other.name == name &&
       other.voice == voice &&
-      other.nationId == nationId;
+      other.nationId == nationId &&
+      other.unknownVoice == unknownVoice;
 
   @override
-  int get hashCode => Object.hash(id, name, voice, nationId);
+  int get hashCode => Object.hash(id, name, voice, nationId, unknownVoice);
 }
 
 /// Custom first and surname pools for one nation.
@@ -652,10 +722,15 @@ String _str(Object? v, String what) {
 
 String? _strOrNull(Object? v, String what) => v == null ? null : _str(v, what);
 
-/// The value of [values] named [name], or a [FormatException] naming [what].
-T _enum<T extends Enum>(List<T> values, String name, String what) =>
-    values.asNameMap()[name] ??
-    (throw FormatException('Unknown $what "$name"'));
+final _tokenShape = RegExp(r'^[a-zA-Z]{1,40}$');
+
+/// [name] when it is shaped like an enum name (1 to 40 ASCII letters),
+/// whether or not this build knows it; a [FormatException] naming [what]
+/// otherwise. A name this build does not know is kept and flagged, never
+/// refused: files travel between newer and older games.
+String _token(String name, String what) => _tokenShape.hasMatch(name)
+    ? name
+    : throw FormatException('Badly shaped $what');
 
 int _int(Object? v, String what) {
   if (v is int) return v;

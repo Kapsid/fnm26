@@ -1,8 +1,8 @@
 import 'package:characters/characters.dart';
-import 'package:fnm/core/config/ui_language.dart';
-import 'package:fnm/data/seed/pool_generator.dart';
+import 'package:fnm/core/config/languages.dart';
 
 import '../../entities/enums.dart';
+import '../../entities/player_ids.dart';
 import '../club/clubs.dart';
 import '../player/golden_generation.dart';
 import '../player/player_traits.dart';
@@ -102,6 +102,12 @@ abstract final class PackRules {
   static const localizedMax = 20000;
 
   static final _country = RegExp(r'^[a-z]{3}$');
+  static final _industry = RegExp(r'^[A-Za-z]{1,40}$');
+
+  /// The shape of a language code a `localized` value may carry: `cs`,
+  /// `fil`, `pt-BR`, `zh_Hant`. Whether this build speaks it is
+  /// [compatibility]'s question, never a reason to refuse a file.
+  static final languageShape = RegExp(r'^[a-z]{2,3}([_-][A-Za-z]{2,4})?$');
 
   static final _control = RegExp(r'\p{Cc}', unicode: true);
   static final _code = RegExp(r'^[A-Z]{3}$');
@@ -209,21 +215,26 @@ abstract final class PackRules {
     if (pl.potential < overall || pl.potential > 99) {
       out.add(BadField('$base.potential', FieldReason.outOfRange));
     }
-    // Picked traits: the game's own (the reader refuses any other), at most
-    // as many as a rolled player carries, each once.
+    // Picked traits, known or not (an unknown one is [compatibility]'s): at
+    // most as many as a rolled player carries, each once.
     final traits = pl.traits;
     if (traits != null) {
-      if (traits.length > PlayerTraits.maxTraits) {
+      final names = [for (final t in traits) t.name, ...pl.unknownTraits];
+      if (names.length > PlayerTraits.maxTraits) {
         out.add(BadField('$base.traits', FieldReason.outOfRange));
-      } else if (traits.toSet().length != traits.length) {
+      } else if (names.toSet().length != names.length) {
         out.add(BadField('$base.traits', FieldReason.duplicate));
       }
     }
   }
 
+  /// [countryCities] are the city lists (biggest first) of the countries
+  /// with no curated league, by lower-case code: an added club may not take
+  /// the name of a side the game generates for one of them.
   static List<PackIssue> issues(
     WorldPack p, {
     Map<int, String> baseCodes = const {},
+    Map<String, List<String>> countryCities = const {},
   }) {
     final out = <PackIssue>[];
     void name(String path, String v, {int max = nameMax}) {
@@ -292,15 +303,17 @@ abstract final class PackRules {
         }
       }
     }
-    _added(p, out, name);
+    _added(p, out, name, countryCities);
     _localized(p, out);
     return out;
   }
 
-  /// The pools beyond [poolIssues]: every pool id at or above
-  /// `PoolGenerator.firstFringeId` (a fringe id, whose nation
-  /// [compatibility] checks, or a pack-made one below the golden
-  /// generation's), and none used twice across the squads and the pools.
+  /// The pools beyond [poolIssues]: every pool id in the fringe space
+  /// ([kFirstFringeId] to [kFringeIdLimit]; whose nation's it is,
+  /// [compatibility] checks) or a pack-made one ([kPackPlayerIdBase] up to
+  /// the golden generation's), and none used twice across the squads and
+  /// the pools. Any other id (a core player's, the added items' range, the
+  /// gap between) could never be a pool player.
   static void _pools(WorldPack p, List<PackIssue> out) {
     final seen = {
       for (final squad in p.squads.values)
@@ -311,8 +324,7 @@ abstract final class PackRules {
       out.addAll(poolIssues(n, pool));
       for (final pl in pool) {
         final path = 'pools.$n.${pl.id}';
-        if (pl.id < PoolGenerator.firstFringeId ||
-            pl.id >= GoldenGeneration.idBase) {
+        if (!poolIdInRange(pl.id)) {
           out.add(BadField(path, FieldReason.outOfRange));
         } else if (!seen.add(pl.id)) {
           out.add(BadField(path, FieldReason.duplicate));
@@ -320,6 +332,11 @@ abstract final class PackRules {
       }
     }
   }
+
+  /// Whether [id] may be a pool player's: a fringe id or a pack-made one.
+  static bool poolIdInRange(int id) =>
+      (id >= kFirstFringeId && id < kFringeIdLimit) ||
+      (id >= kPackPlayerIdBase && id < GoldenGeneration.idBase);
 
   /// Whether [id] may be an added club's, sponsor's or Y account's.
   static bool addedIdInRange(int id) =>
@@ -332,6 +349,7 @@ abstract final class PackRules {
     WorldPack p,
     List<PackIssue> out,
     void Function(String path, String v, {int max}) name,
+    Map<String, List<String>> countryCities,
   ) {
     final ids = <int>{};
     void id(String root, int id) {
@@ -349,8 +367,9 @@ abstract final class PackRules {
     String fold(String s) => s.trim().toLowerCase();
 
     cap('addedClubs', p.addedClubs.length, addedClubsMax);
-    // Another club of the country: its league's, as this pack names them,
-    // or another added one.
+    // Another club of the country: its league's (the curated one, else the
+    // sides the game names for its cities, given [countryCities]), as this
+    // pack names them, or another added one.
     final taken = <String, Set<String>>{};
     final addedNames = <String, Map<String, int>>{};
     for (final c in p.addedClubs) {
@@ -368,7 +387,13 @@ abstract final class PackRules {
         out.add(BadField(path, r));
       } else {
         final league = taken[c.country] ??= {
-          for (final original in ClubService.leagueClubs(c.country))
+          for (final original in [
+            ...ClubService.leagueClubs(c.country),
+            ...ClubService.domesticClubNames(
+              c.country,
+              countryCities[c.country] ?? const [],
+            ),
+          ])
             fold(p.clubs[original] ?? original),
         };
         final to = fold(c.name);
@@ -386,6 +411,9 @@ abstract final class PackRules {
       final path = 'addedSponsors.${s.id}';
       id('addedSponsors', s.id);
       name(path, s.name);
+      if (!_industry.hasMatch(s.industry)) {
+        out.add(BadField('$path.industry', FieldReason.badCharacters));
+      }
       if (s.description.trim().isNotEmpty) {
         name('$path.description', s.description, max: descriptionMax);
       }
@@ -401,9 +429,11 @@ abstract final class PackRules {
 
   /// Every `localized` entry: within [localizedMax] in all (one issue at
   /// `localized` past it); its path one [PackPaths] gives, naming an added
-  /// item the pack has (`localized.<path>`); and each value in a language
-  /// the app speaks and a name within its root's cap
-  /// (`localized.<path>.<language>`).
+  /// item the pack has, and holding at least one value
+  /// (`localized.<path>`); and each value under a code shaped like a
+  /// language ([languageShape]) and a name within its root's cap
+  /// (`localized.<path>.<language>`). A language this build does not speak
+  /// is [compatibility]'s.
   static void _localized(WorldPack p, List<PackIssue> out) {
     final total = p.localized.values.fold(0, (n, m) => n + m.length);
     if (total > localizedMax) {
@@ -448,9 +478,13 @@ abstract final class PackRules {
         max = handleMax;
       }
       final values = p.localized[path]!;
+      if (values.isEmpty) {
+        out.add(BadField('localized.$path', FieldReason.empty));
+        continue;
+      }
       for (final lang in values.keys.toList()..sort()) {
         final at = 'localized.$path.$lang';
-        if (!supportedLanguageCodes.contains(lang)) {
+        if (!languageShape.hasMatch(lang)) {
           out.add(BadField(at, FieldReason.outOfRange));
           continue;
         }
@@ -538,6 +572,12 @@ abstract final class PackRules {
   /// [sponsorBrands], and a `localized` path whose key the game no longer
   /// has (`localized.<path>`, checked as the plain maps are).
   ///
+  /// And what this build does not know of a well-formed file: a picked
+  /// trait (`<squads|pools>.<id>.<playerId>.traits`), a sponsor's deal
+  /// (`addedSponsors.<id>.deal`), a Y account's voice
+  /// (`addedYAccounts.<id>.voice`) and a language
+  /// (`localized.<path>.<language>`, one [supportedLanguageCodes] lacks).
+  ///
   /// Only references: whether an entry's content is right is [issues]'s
   /// business. A nation the game has and the pack never mentions is not an
   /// issue either: the pack takes the game's for it.
@@ -586,11 +626,18 @@ abstract final class PackRules {
       final range = fringeRanges[n];
       for (final pl in p.pools[n]!) {
         // Pack-made ids, and ids [issues] already refuses, are not fringe.
-        if (pl.id < PoolGenerator.firstFringeId || pl.id >= kPackPlayerIdBase) {
-          continue;
-        }
+        if (pl.id < kFirstFringeId || pl.id >= kFringeIdLimit) continue;
         if (range == null || pl.id < range.first || pl.id > range.last) {
           out.add(UnknownId('pools.$n.${pl.id}'));
+        }
+      }
+    }
+    for (final (root, players) in [('squads', p.squads), ('pools', p.pools)]) {
+      for (final n in players.keys.toList()..sort()) {
+        for (final pl in players[n]!) {
+          if (pl.unknownTraits.isNotEmpty) {
+            out.add(UnknownId('$root.$n.${pl.id}.traits'));
+          }
         }
       }
     }
@@ -603,10 +650,16 @@ abstract final class PackRules {
       if (!sponsorBrands.contains(s.industry)) {
         out.add(UnknownId('addedSponsors.${s.id}'));
       }
+      if (s.unknownDeal != null) {
+        out.add(UnknownId('addedSponsors.${s.id}.deal'));
+      }
     }
     for (final y in p.addedYAccounts) {
       if (y.nationId case final n? when !nationIds.contains(n)) {
         out.add(UnknownId('addedYAccounts.${y.id}'));
+      }
+      if (y.unknownVoice != null) {
+        out.add(UnknownId('addedYAccounts.${y.id}.voice'));
       }
     }
     for (final path in p.localized.keys.toList()..sort()) {
@@ -620,7 +673,16 @@ abstract final class PackRules {
         'yAccounts' => yAccounts.contains(key),
         _ => true,
       };
-      if (!known) out.add(UnknownId('localized.$path'));
+      if (!known) {
+        out.add(UnknownId('localized.$path'));
+        continue;
+      }
+      for (final lang in p.localized[path]!.keys.toList()..sort()) {
+        if (languageShape.hasMatch(lang) &&
+            !supportedLanguageCodes.contains(lang)) {
+          out.add(UnknownId('localized.$path.$lang'));
+        }
+      }
     }
     return out;
   }
@@ -628,5 +690,10 @@ abstract final class PackRules {
   static bool isComplete(
     WorldPack p, {
     Map<int, String> baseCodes = const {},
-  }) => issues(p, baseCodes: baseCodes).isEmpty;
+    Map<String, List<String>> countryCities = const {},
+  }) => issues(
+    p,
+    baseCodes: baseCodes,
+    countryCities: countryCities,
+  ).isEmpty;
 }
