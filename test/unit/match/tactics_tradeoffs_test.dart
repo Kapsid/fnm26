@@ -399,10 +399,13 @@ void main() {
       'a neutral mirror scores exactly what it did before the re-anchor',
       () {
         // Recorded at b34fa9e (before Task 5): 10324 goals over the 4000 games
-        // of 2000 seeds both ways round, neutral venue.
+        // of 2000 seeds both ways round, neutral venue. Re-pinned at 10474
+        // (+1.45%) by the pitch view's play pass (2026-11-05), which plays
+        // penalties and direct free kicks for real; the figures it is held
+        // to are in match_baseline_test.dart.
         final n = _lab('neutral');
         final m = _mirror(n, n);
-        expect(m.total * 4000, closeTo(10324, 1e-6));
+        expect(m.total * 4000, closeTo(10474, 1e-6));
       },
     );
     // +0.092 on average (counter +0.127, highPress +0.020, possession +0.171,
