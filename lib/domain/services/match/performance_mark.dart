@@ -11,6 +11,10 @@ import 'package:fnm/domain/entities/enums.dart';
 abstract final class PerformanceMark {
   /// The mark for one player, from what they did and how the match finished.
   /// Pure and RNG-free.
+  ///
+  /// [penaltiesMissed] (missed or saved kicks taken) and [penaltiesSaved]
+  /// (kicks a keeper stopped) come from the tactical engine's recorded shots.
+  /// The background layer records no kicks and leaves them at zero.
   static double forPlayer({
     required PositionCategory category,
     required int goals,
@@ -19,6 +23,8 @@ abstract final class PerformanceMark {
     required bool sentOff,
     required int teamScore,
     required int oppScore,
+    int penaltiesMissed = 0,
+    int penaltiesSaved = 0,
   }) {
     var r = 6.5;
     r += goals * 1.0 + assists * 0.6;
@@ -35,6 +41,7 @@ abstract final class PerformanceMark {
     }
     if (booked) r -= 0.3;
     if (sentOff) r -= 1.2;
+    r += penaltiesSaved * 0.5 - penaltiesMissed * 0.4;
     return (r.clamp(3.0, 10.0) * 10).roundToDouble() / 10;
   }
 }

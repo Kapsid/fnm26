@@ -1883,6 +1883,7 @@ class MatchEngine {
       ratings: _rate(
         appeared.values,
         events,
+        moments,
         homeNationId: home.nationId,
         homeScore: homeScore,
         awayScore: awayScore,
@@ -1910,10 +1911,13 @@ class MatchEngine {
 
   /// Turns the match into a performance mark for everyone who played. Pure and
   /// RNG-free: base 6.5, adjusted for goals, assists, the result, clean sheets,
-  /// and cards, then clamped to a believable 3.0–10.0 range.
+  /// cards, and penalty kicks missed or saved (read from the recorded shots,
+  /// since a missed kick makes no event), then clamped to a believable
+  /// 3.0–10.0 range.
   List<PlayerRating> _rate(
     Iterable<Player> players,
-    List<MatchEvent> events, {
+    List<MatchEvent> events,
+    List<MatchMoment> moments, {
     required int homeNationId,
     required int homeScore,
     required int awayScore,
@@ -1939,6 +1943,18 @@ class MatchEngine {
           break;
       }
     }
+    final penaltiesMissed = <int, int>{};
+    final penaltiesSaved = <int, int>{};
+    for (final s in moments.whereType<ShotMoment>()) {
+      if (s.origin != ShotOrigin.penalty || s.outcome == ShotOutcome.goal) {
+        continue;
+      }
+      penaltiesMissed.update(s.shooterId, (v) => v + 1, ifAbsent: () => 1);
+      final keeper = s.keeperId;
+      if (s.outcome == ShotOutcome.saved && keeper != null) {
+        penaltiesSaved.update(keeper, (v) => v + 1, ifAbsent: () => 1);
+      }
+    }
 
     return [
       for (final p in players)
@@ -1955,6 +1971,8 @@ class MatchEngine {
             sentOff: reds.contains(p.id),
             teamScore: p.nationId == homeNationId ? homeScore : awayScore,
             oppScore: p.nationId == homeNationId ? awayScore : homeScore,
+            penaltiesMissed: penaltiesMissed[p.id] ?? 0,
+            penaltiesSaved: penaltiesSaved[p.id] ?? 0,
           ),
         ),
     ];
@@ -1970,6 +1988,8 @@ class MatchEngine {
     required bool sentOff,
     required int teamScore,
     required int oppScore,
+    required int penaltiesMissed,
+    required int penaltiesSaved,
   }) => PerformanceMark.forPlayer(
     category: p.category,
     goals: goals,
@@ -1978,6 +1998,8 @@ class MatchEngine {
     sentOff: sentOff,
     teamScore: teamScore,
     oppScore: oppScore,
+    penaltiesMissed: penaltiesMissed,
+    penaltiesSaved: penaltiesSaved,
   );
 
   /// Swaps the incoming player in for the one going off on the pitch,
