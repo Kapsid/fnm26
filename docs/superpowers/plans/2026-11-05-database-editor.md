@@ -548,7 +548,7 @@ Modified seams (exact lines are from the 2026-11-05 survey; re-check before edit
 ### Task 18: New Game world choice, save cards, compatibility
 
 **Files:**
-- Modify: `nation_select_screen.dart` (+ tablet), `new_game_screen.dart:45`, `unemployed_start_screen.dart`, `saves_screen.dart:546`, `saves_tablet_layout.dart:193`, `home_screen.dart:214` (`_ContinueCard`), `pack_rules.dart` (`compatibility`)
+- Modify: `settings_screen.dart` + `settings_tablet_layout.dart` + `settings_providers.dart` (default world), `nation_select_screen.dart` (+ tablet), `new_game_screen.dart:45`, `unemployed_start_screen.dart`, `saves_screen.dart:546`, `saves_tablet_layout.dart:193`, `home_screen.dart:214` (`_ContinueCard`), `pack_rules.dart` (`compatibility`)
 - Test: `test/widget/new_game_world_test.dart`, `test/unit/world_pack/pack_compat_test.dart`
 
 **Interfaces:**
@@ -560,6 +560,11 @@ Modified seams (exact lines are from the 2026-11-05 survey; re-check before edit
   - `PackRules.compatibility(WorldPack p, {required Set<int> nationIds, required Set<String> competitionNames, required Set<String> trophyKeys, required Set<String> sponsorBrands}) -> List<PackIssue>` returns an `UnknownId` for every key the current game no longer has.
   - An incompatible pack shows "Needs attention" in the editor list and on the pack home, with each unknown entry listed and a "Remove" fix.
 - **Save cards:** the `SaveTile`, tablet save pane and continue card show the world name (`CareerWorlds.packName`) under the nation when the career has one.
+- **Default world in Settings (owner request, 2026-11-05):**
+  - Settings gets a "Default world" row (phone and tablet). It opens the same sheet as the New Game chip: Default plus every complete, compatible pack.
+  - The choice persists in SharedPreferences (`settings_providers.dart`), stored as the pack's uuid so it survives an id change. Null means Default.
+  - `newGameWorldProvider` starts from this setting. If the stored pack is gone, incomplete or incompatible, New Game starts on Default and the Settings row shows Default. The stored value is cleared when that pack is deleted.
+  - Changing the chip in New Game affects that one career only. It does not change the Settings default.
 
 - [ ] **Step 1: Write the failing tests.**
   - `choosing a pack starts a career on it; the squad screen shows the pack names`.
@@ -567,6 +572,8 @@ Modified seams (exact lines are from the 2026-11-05 survey; re-check before edit
   - `a pack naming nation 999 is incompatible, cannot be chosen, and Remove fixes it` (Review Focus 4).
   - `save card shows the world name`.
   - `default stays the default choice after the app restarts`.
+  - `a default world set in Settings is preselected in New Game after a restart; deleting that pack falls back to Default`.
+  - `the Settings default-world row lists only complete, compatible packs`.
 - [ ] **Step 2: Run** them. Expected: FAIL.
 - [ ] **Step 3: Implement.**
 - [ ] **Step 4: Run** the tests plus `test/widget/*nation_select*`, `*new_game*`, `*save*`. Expected: PASS.
