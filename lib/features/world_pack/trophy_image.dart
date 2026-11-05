@@ -27,17 +27,25 @@ abstract final class TrophyNormaliser {
     String key, {
     ui.Rect? crop,
   }) async {
-    if (input.isEmpty || input.length > _maxBytes) return null;
+    if (input.length > _maxBytes || !_isPngOrJpeg(input)) return null;
     ui.Image? src;
     ui.Image? out;
+    ui.ImmutableBuffer? buffer;
+    ui.ImageDescriptor? descriptor;
     try {
-      final codec = await ui.instantiateImageCodec(input);
+      // Read the declared size before any pixel is decoded, so a tiny file
+      // that claims a huge picture is refused without allocating it.
+      buffer = await ui.ImmutableBuffer.fromUint8List(input);
+      descriptor = await ui.ImageDescriptor.encoded(buffer);
+      if (descriptor.width > _maxSide || descriptor.height > _maxSide) {
+        return null;
+      }
+      final codec = await descriptor.instantiateCodec();
       try {
         src = (await codec.getNextFrame()).image;
       } finally {
         codec.dispose();
       }
-      if (src.width > _maxSide || src.height > _maxSide) return null;
 
       final bounds = ui.Rect.fromLTWH(
         0,
@@ -50,9 +58,14 @@ abstract final class TrophyNormaliser {
 
       final rgba = await src.toByteData(format: ui.ImageByteFormat.rawRgba);
       if (rgba == null) return null;
+      final pixels = rgba.buffer.asUint32List(
+        rgba.offsetInBytes,
+        rgba.lengthInBytes ~/ 4,
+      );
+      // Little-endian RGBA: alpha is the top byte of each word.
       var hasAlpha = false;
-      for (var i = 3; i < rgba.lengthInBytes; i += 4) {
-        if (rgba.getUint8(i) < 255) {
+      for (final px in pixels) {
+        if (px >> 24 != 0xFF) {
           hasAlpha = true;
           break;
         }
@@ -98,8 +111,15 @@ abstract final class TrophyNormaliser {
     } finally {
       src?.dispose();
       out?.dispose();
+      descriptor?.dispose();
+      buffer?.dispose();
     }
   }
+
+  static bool _isPngOrJpeg(Uint8List b) =>
+      b.length > 8 &&
+      ((b[0] == 0x89 && b[1] == 0x50 && b[2] == 0x4E && b[3] == 0x47) ||
+          (b[0] == 0xFF && b[1] == 0xD8 && b[2] == 0xFF));
 }
 
 /// Trophy [trophyKey] ([Trophies.keyForCompetitionName]): the career's custom
@@ -122,20 +142,20 @@ class TrophyImage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final custom = ref.watch(activeWorldProvider).trophy(trophyKey);
-    if (custom != null) {
-      return Image.memory(
-        custom,
-        height: height,
-        fit: fit,
-        gaplessPlayback: true,
-        errorBuilder: errorBuilder,
-      );
-    }
-    return Image.asset(
+    final asset = Image.asset(
       Trophies.assetForKey(trophyKey) ?? Trophies.worldCup,
       height: height,
       fit: fit,
       errorBuilder: errorBuilder,
+    );
+    if (custom == null) return asset;
+    // A picture that will not decode falls back to the bundled artwork.
+    return Image.memory(
+      custom,
+      height: height,
+      fit: fit,
+      gaplessPlayback: true,
+      errorBuilder: (_, _, _) => asset,
     );
   }
 }

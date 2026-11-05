@@ -66,4 +66,96 @@ void main() {
       expect(r.png.sublist(0, 4), [0x89, 0x50, 0x4E, 0x47]);
     });
   });
+
+  Future<ui.Image> _decode(Uint8List png) async =>
+      (await (await ui.instantiateImageCodec(png)).getNextFrame()).image;
+
+  testWidgets('oversize bytes return null', (tester) async {
+    await tester.runAsync(() async {
+      final big = Uint8List(15 * 1024 * 1024 + 1);
+      big.setRange(0, 4, [0x89, 0x50, 0x4E, 0x47]);
+      expect(await TrophyNormaliser.normalise(big, 'world'), isNull);
+    });
+  });
+
+  testWidgets('a PNG claiming 5000x5000 is refused before decoding', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      final b = BytesBuilder()
+        ..add([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+        ..add([0, 0, 0, 13, 0x49, 0x48, 0x44, 0x52])
+        ..add([0, 0, 0x13, 0x88, 0, 0, 0x13, 0x88, 8, 6, 0, 0, 0])
+        ..add(List.filled(32, 0));
+      expect(await TrophyNormaliser.normalise(b.toBytes(), 'europe'), isNull);
+    });
+  });
+
+  testWidgets('GIF and WebP signatures return null', (tester) async {
+    await tester.runAsync(() async {
+      final gif = Uint8List.fromList('GIF89a'.codeUnits + List.filled(30, 0));
+      final webp = Uint8List.fromList(
+        'RIFF'.codeUnits + [0, 0, 0, 0] + 'WEBP'.codeUnits + List.filled(30, 0),
+      );
+      expect(await TrophyNormaliser.normalise(gif, 'world'), isNull);
+      expect(await TrophyNormaliser.normalise(webp, 'world'), isNull);
+    });
+  });
+
+  testWidgets('hasAlpha is true for a transparent source, with clear padding', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      // 100x100 source: half opaque red, half fully transparent.
+      final rec = ui.PictureRecorder();
+      ui.Canvas(rec).drawRect(
+        const ui.Rect.fromLTWH(0, 0, 50, 100),
+        ui.Paint()..color = const ui.Color(0xFFC81E1E),
+      );
+      final im = await rec.endRecording().toImage(100, 100);
+      final src = (await im.toByteData(
+        format: ui.ImageByteFormat.png,
+      ))!.buffer.asUint8List();
+      final r = await TrophyNormaliser.normalise(src, 'europe');
+      expect(r!.hasAlpha, isTrue);
+      final out = await _decode(r.png);
+      final px = (await out.toByteData())!;
+      int alphaAt(int x, int y) => px.getUint8((y * 400 + x) * 4 + 3);
+      // Square source fitted into 400x600: top and bottom bands are padding.
+      expect(alphaAt(0, 0), 0);
+      expect(alphaAt(399, 599), 0);
+      expect(alphaAt(100, 300), 255);
+    });
+  });
+
+  testWidgets('crop is honoured', (tester) async {
+    await tester.runAsync(() async {
+      // Left half red, right half blue; crop to the blue half.
+      final rec = ui.PictureRecorder();
+      final c = ui.Canvas(rec)
+        ..drawRect(
+          const ui.Rect.fromLTWH(0, 0, 50, 100),
+          ui.Paint()..color = const ui.Color(0xFFFF0000),
+        )
+        ..drawRect(
+          const ui.Rect.fromLTWH(50, 0, 50, 100),
+          ui.Paint()..color = const ui.Color(0xFF0000FF),
+        );
+      expect(c, isNotNull);
+      final im = await rec.endRecording().toImage(100, 100);
+      final src = (await im.toByteData(
+        format: ui.ImageByteFormat.png,
+      ))!.buffer.asUint8List();
+      final r = await TrophyNormaliser.normalise(
+        src,
+        'world',
+        crop: const ui.Rect.fromLTWH(50, 0, 50, 100),
+      );
+      final px = (await (await _decode(r!.png)).toByteData())!;
+      // Centre pixel is blue (R 0, B 255), not red.
+      final o = (200 * 400 + 200) * 4;
+      expect(px.getUint8(o), 0);
+      expect(px.getUint8(o + 2), 255);
+    });
+  });
 }

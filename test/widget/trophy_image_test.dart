@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,5 +55,39 @@ void main() {
     );
     image = tester.widget<Image>(find.byType(Image));
     expect(image.image, isA<AssetImage>());
+  });
+
+  testWidgets('a custom picture that will not decode falls back to the asset', (
+    tester,
+  ) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    container.read(activeWorldProvider.notifier).state = ActiveWorld(
+      WorldPack(
+        uuid: 't',
+        name: 'T',
+        author: '',
+        formatVersion: kPackFormatVersion,
+        madeWithVersion: '1.1.0',
+        trophies: const {'europe'},
+      ),
+      trophies: {
+        'europe': Uint8List.fromList([1, 2, 3]),
+      },
+    );
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(home: TrophyImage('europe', height: 40)),
+      ),
+    );
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
+    await tester.pump();
+    await tester.pump();
+    final images = tester.widgetList<Image>(find.byType(Image)).toList();
+    expect(images.any((i) => i.image is AssetImage), isTrue);
+    tester.takeException();
   });
 }
