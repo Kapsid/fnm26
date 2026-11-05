@@ -468,7 +468,9 @@ abstract class _Plan implements StagedPlan {
     final f = now.flight;
     final wait = f == null ? 0.0 : math.max(0.0, f.t1 - now.t);
     final from = f == null ? now.ball : f.lead;
-    return wait + from.distanceTo(p) / 26 + 0.15;
+    // One long ball (40-60 m in about two seconds) is fine before cutting.
+    final d = from.distanceTo(p);
+    return wait + d / (d > 35 ? 30 : 26) + 0.15;
   }
 
   /// A cut to a new phase of play, for a moment that cannot be reached
