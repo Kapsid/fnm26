@@ -28,6 +28,7 @@ void main() {
         for (final p in await players.byNation(
           seededNationId,
           saveSeed: save.career.rngSeed,
+          careerId: save.career.id,
         ))
           if (p.id < PoolGenerator.firstFringeId) p,
       ];
