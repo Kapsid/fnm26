@@ -8,9 +8,10 @@ import 'package:fnm/features/match/match_providers.dart';
 
 /// Both sides' line-ups for the match [preview] pins, as the Pitch view
 /// draws them: each starting XI in its formation's slot order with its
-/// shirts, each bench, each side's instructions and the plan [result] (the
-/// preview's own result unless a re-simulated one is being shown) says it
-/// fielded.
+/// shirts, each bench, each side's instructions and slot switches, the plan
+/// [result] (the preview's own result unless a re-simulated one is being
+/// shown) says it fielded, and the live tactical [changes] the screen has
+/// made (its own list, as it hands them to the engine).
 ///
 /// The manager's bench is the preview's [MatchPreview.bench]; the
 /// opponent's is its named bench plus anybody its planned substitutions
@@ -18,6 +19,7 @@ import 'package:fnm/features/match/match_providers.dart';
 MatchLineups matchLineupsFromPreview(
   MatchPreview preview, {
   MatchResult? result,
+  List<TacticalChange> changes = const [],
 }) {
   final homeIsPlayer = preview.playerNationId == preview.homeTeam.nationId;
   List<int> ids(Iterable<Player> ps) => [for (final p in ps) p.id];
@@ -32,5 +34,6 @@ MatchLineups matchLineupsFromPreview(
     homeBench: homeIsPlayer ? playerBench : opponentBench,
     awayBench: homeIsPlayer ? opponentBench : playerBench,
     result: result ?? preview.result,
+    changes: changes,
   );
 }

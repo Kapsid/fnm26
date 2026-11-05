@@ -3,8 +3,9 @@
 ///
 /// The pitch is 105 x 68 m: x runs 0..105 along its length, y 0..68 across
 /// it (y = 0 is the far touchline as drawn, y = 68 the near one, the
-/// benches' side). The home side attacks +x in the first half; the sides
-/// swap ends at half-time and again at the start of extra time.
+/// benches' side). The home side attacks +x in the first half. The sides
+/// swap ends at every break: half-time, the start of extra time and extra
+/// time's own half-time (after 105').
 ///
 /// "Left" and "right" are as a side faces the goal it attacks: a side
 /// attacking +x has its left on the far touchline (small y).
@@ -79,10 +80,11 @@ abstract final class PitchDims {
 }
 
 /// Which way (+1 = toward x 105, -1 = toward x 0) a side attacks in the
-/// period [minute] belongs to: home attacks +x in the first half, -x in the
-/// second (stoppage included) and +x again in extra time.
+/// period [minute] belongs to: home attacks +x in the first half (1-45),
+/// -x in the second (46-90, stoppage included), +x in extra time's first
+/// half (91-105) and -x in its second (106-120).
 int attackDir({required bool home, required int minute}) {
-  final homeDir = (minute > 45 && minute <= 90) ? -1 : 1;
+  final homeDir = (minute > 45 && minute <= 90) || minute > 105 ? -1 : 1;
   return home ? homeDir : -homeDir;
 }
 

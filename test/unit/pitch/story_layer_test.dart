@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -11,26 +12,33 @@ import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/story_layer.dart';
+import 'package:fnm/domain/services/match/pitch/switched_layout.dart';
 
 import '../../helpers/fixtures.dart';
 
 const _engine = MatchEngine();
 
-MatchTeam _team(int nation, int rating, Formation f, TacticalInstructions i) =>
-    MatchTeam(
-      nationId: nation,
-      formation: f,
-      instructions: i,
-      xi: [
-        for (var k = 0; k < 11; k++)
-          player(
-            id: nation * 100 + k,
-            nationId: nation,
-            position: f.positions[k],
-            attributes: flatAttributes(rating),
-          ),
-      ],
-    );
+MatchTeam _team(
+  int nation,
+  int rating,
+  Formation f,
+  TacticalInstructions i, {
+  SlotSwitches switches = SlotSwitches.none,
+}) => MatchTeam(
+  nationId: nation,
+  formation: f,
+  instructions: i,
+  switches: switches,
+  xi: [
+    for (var k = 0; k < 11; k++)
+      player(
+        id: nation * 100 + k,
+        nationId: nation,
+        position: f.positions[k],
+        attributes: flatAttributes(rating),
+      ),
+  ],
+);
 
 TacticalInstructions _dials(SeededRng r) => TacticalInstructions(
   mentality: r.rangeInt(10, 90),
@@ -41,7 +49,15 @@ TacticalInstructions _dials(SeededRng r) => TacticalInstructions(
   directness: r.rangeInt(10, 90),
 );
 
-typedef _Match = ({MatchResult result, MatchLineups lineups});
+typedef _Match = ({
+  MatchResult result,
+  MatchLineups lineups,
+  MatchTeam home,
+  MatchTeam away,
+  List<Substitution> subs,
+  List<int> homeBench,
+  List<int> awayBench,
+});
 
 /// A varied engine match: shapes, dials, strengths, subs and extra time all
 /// move with [seed].
@@ -77,15 +93,7 @@ _Match _match(int seed) {
       Substitution(teamNationId: 2, minute: 46 + seed % 30, offId: 209, on: on),
     );
   }
-  final result = _engine.play(
-    home: home,
-    away: away,
-    rng: SeededRng.forFixture(0xF00D, seed),
-    subs: subs,
-    neutralVenue: true,
-    bigMatch: true,
-    extraTimeIfLevel: seed % 3 == 0,
-  );
+  final result = _play(home, away, seed, subs: subs);
   return (
     result: result,
     lineups: matchLineupsOf(
@@ -95,8 +103,30 @@ _Match _match(int seed) {
       awayBench: awayBench,
       result: result,
     ),
+    home: home,
+    away: away,
+    subs: subs,
+    homeBench: homeBench,
+    awayBench: awayBench,
   );
 }
+
+MatchResult _play(
+  MatchTeam home,
+  MatchTeam away,
+  int seed, {
+  List<Substitution> subs = const [],
+  List<TacticalChange> changes = const [],
+}) => _engine.play(
+  home: home,
+  away: away,
+  rng: SeededRng.forFixture(0xF00D, seed),
+  subs: subs,
+  changes: changes,
+  neutralVenue: true,
+  bigMatch: true,
+  extraTimeIfLevel: seed % 3 == 0,
+);
 
 PitchScript _script(_Match m, PitchSpeed speed, {int seed = 7}) =>
     StoryLayer.build(
@@ -106,38 +136,24 @@ PitchScript _script(_Match m, PitchSpeed speed, {int seed = 7}) =>
       seed: seed,
     );
 
+Duration _at(double t) => Duration(microseconds: (t * 1e6).round());
+
 bool _inWindow(PitchScript s, double t) =>
     s.windows.any((w) => t >= w.start && t < w.end);
 
-/// Home share (0-100) of the quiet time the ball is a side's: at its man's
-/// feet, or on its way from him.
+/// Home share (0-100) of the time the ball is a side's, staged moments
+/// included: at its man's feet, or on its way from him.
 double _homeBallShare(PitchScript s) {
   var home = 0.0;
   var all = 0.0;
-  // Quiet time: the complement of the windows.
-  final cuts = [
-    for (final w in s.windows) (w.start, w.end),
-  ];
-  double quietWithin(double a, double b) {
-    var len = b - a;
-    for (final (ws, we) in cuts) {
-      final lo = math.max(a, ws);
-      final hi = math.min(b, we);
-      if (hi > lo) len -= hi - lo;
-    }
-    return len;
-  }
-
   for (final p in s.ballPhases) {
-    final q = quietWithin(p.t0, p.t1);
-    if (q <= 0) continue;
     final actor = switch (p) {
       CarryPhase(:final carrier) => carrier,
       FlightPhase(:final fromActor) => fromActor,
     };
     if (actor == null) continue;
-    all += q;
-    if (s.actorList[actor].teamNationId == s.homeNationId) home += q;
+    all += p.t1 - p.t0;
+    if (s.actorList[actor].teamNationId == s.homeNationId) home += p.t1 - p.t0;
   }
   return 100 * home / all;
 }
@@ -146,11 +162,12 @@ double _homeBallShare(PitchScript s) {
 double _quiet(PitchScript s) =>
     s.totalSeconds - s.windows.fold(0.0, (a, w) => a + w.end - w.start);
 
-/// The least quiet time over which the story layer can steer the ball-time
-/// split. Below it the pacer has cut every quiet minute to its 0.25 s floor
-/// between back-to-back moments, and the ball simply stays with the side
-/// each moment belongs to.
-const double _steerable = 20;
+/// The least quiet time over which the story layer can steer the whole
+/// match's ball-time split. The staged moments take 150-260 s of a match
+/// and the ball in them is the moment's side's; below this much quiet time
+/// there is not enough of it to even that out, however one-sided the quiet
+/// spells are made.
+const double _steerable = 40;
 
 MatchResult _withPossession(MatchResult r, int possession) => MatchResult(
   homeScore: r.homeScore,
@@ -169,11 +186,13 @@ MatchResult _withPossession(MatchResult r, int possession) => MatchResult(
 );
 
 int _count(PitchScript s, double t, int nation) => s
-    .sample(Duration(microseconds: (t * 1e6).round()))
+    .sample(_at(t))
     .players
     .keys
     .where((id) => s.actorList[s.actorIndexOf(id)!].teamNationId == nation)
     .length;
+
+double _secs(Duration d) => d.inMicroseconds / 1e6;
 
 void main() {
   test('quiet time obeys every invariant over 50 seeded matches', () {
@@ -214,14 +233,12 @@ void main() {
             );
           }
         }
-        final minute = s.pacer
-            .matchAt(Duration(microseconds: (a.t * 1e6).round()))
-            .minute;
+        if (_inWindow(s, a.t)) continue;
+        final minute = s.pacer.matchAt(_at(a.t)).minute;
         for (var i = 0; i < s.actorList.length; i++) {
-          final actor = s.actorList[i];
-          if (!actor.keeper || !a.present(i)) continue;
+          if (!a.keeper(i) || !a.present(i)) continue;
           final dir = attackDir(
-            home: actor.teamNationId == s.homeNationId,
+            home: s.actorList[i].teamNationId == s.homeNationId,
             minute: minute,
           );
           keeperMax = math.max(keeperMax, xToDepth(a.xs[i], dir));
@@ -288,33 +305,34 @@ void main() {
     expect(found, isNotNull, reason: 'no red card in 400 matches');
     final s = _script(found!, PitchSpeed.mid);
     expect(PitchScriptValidator.validate(s), isEmpty);
-    final start = s.departures[red!.playerId]!;
+    final id = red!.playerId;
+    final start = s.departures[id]!;
     expect(
       start,
-      greaterThanOrEqualTo(
-        s.pacer.screenAt(red.minute, red.stoppage).inMicroseconds / 1e6,
-      ),
+      greaterThanOrEqualTo(_secs(s.pacer.screenAt(red.minute, red.stoppage))),
     );
-    final gone = start + PitchScript.walkOffSeconds;
-    // Walking off toward the nearer touchline, then gone.
-    double edge(double t) {
-      final p = s
-          .sample(Duration(microseconds: (t * 1e6).round()))
-          .players[red!.playerId]!;
-      return math.min(p.y, PitchDims.width - p.y);
+    // He walks to the nearer touchline at a walk and leaves the picture
+    // there, however long that takes.
+    final i = s.actorIndexOf(id)!;
+    var lastSeen = start;
+    for (final f in s.keyframes) {
+      if (f.t >= start && f.present(i)) lastSeen = f.t;
     }
-
-    expect(edge(gone), lessThan(edge(start)));
-    final after = s.sample(
-      Duration(microseconds: ((gone + 0.05) * 1e6).round()),
+    final p = s.sample(_at(lastSeen)).players[id]!;
+    expect(math.min(p.y, PitchDims.width - p.y), lessThanOrEqualTo(1));
+    final from = s.sample(_at(start)).players[id]!;
+    final walked = math.min(from.y, PitchDims.width - from.y) - 1;
+    expect(
+      lastSeen - start,
+      greaterThanOrEqualTo(walked / PitchScriptValidator.maxWalkSpeed - 0.5),
     );
-    expect(after.players.containsKey(red.playerId), isFalse);
-    // Ten men from then on (bar a sub walking on for a man walking off).
+    expect(s.sample(_at(lastSeen + 0.3)).players.containsKey(id), isFalse);
+    // Ten men from then on.
     final side = red.teamNationId;
-    for (var t = gone + 0.05; t < s.totalSeconds; t += 0.5) {
+    for (var t = lastSeen + 0.3; t < s.totalSeconds; t += 0.5) {
       expect(_count(s, t, side), lessThanOrEqualTo(10), reason: 't $t');
     }
-    expect(_count(s, gone + 0.05, side), 10);
+    expect(_count(s, lastSeen + 0.3, side), 10);
     expect(_count(s, start - 0.05, side), 11);
 
     // The shape re-forms: a back four that loses a centre-half still covers
@@ -338,15 +356,18 @@ void main() {
     expect(PitchScriptValidator.validate(s), isEmpty);
     final leave = s.departures[offId]!;
     final enter = s.arrivals[onId]!;
-    final minuteStart =
-        s.pacer.screenAt(sub.minute, sub.stoppage).inMicroseconds / 1e6;
-    expect(leave, greaterThanOrEqualTo(minuteStart));
-    expect(enter, closeTo(leave + PitchScript.walkOffSeconds, 1e-9));
-    Duration at(double t) => Duration(microseconds: (t * 1e6).round());
-    final before = s.sample(at(leave - 0.1));
+    expect(leave, greaterThanOrEqualTo(_secs(s.pacer.screenAt(sub.minute, 0))));
+    // He steps on once the man he replaces has left the picture.
+    final off = s.actorIndexOf(offId)!;
+    var lastSeen = leave;
+    for (final f in s.keyframes) {
+      if (f.t >= leave && f.present(off)) lastSeen = f.t;
+    }
+    expect(enter, closeTo(lastSeen, 1e-9));
+    final before = s.sample(_at(leave - 0.1));
     expect(before.players.containsKey(offId), isTrue);
     expect(before.players.containsKey(onId), isFalse);
-    final later = s.sample(at(enter + 0.3));
+    final later = s.sample(_at(enter + 0.3));
     expect(later.players.containsKey(offId), isFalse);
     expect(later.players.containsKey(onId), isTrue);
     // On from the halfway line, benches' side.
@@ -357,11 +378,264 @@ void main() {
     final actor = s.actorList[s.actorIndexOf(onId)!];
     expect(actor.shirt, greaterThanOrEqualTo(12));
     expect(actor.keeper, isFalse);
-    expect(s.actors(sub.minute + 5).map((a) => a.playerId), contains(onId));
-    expect(
-      s.actors(sub.minute + 5).map((a) => a.playerId),
-      isNot(contains(offId)),
+  });
+
+  test('subs at half-time come and go in the interval', () {
+    // Seed 0: the away side's planned change is at 46'.
+    final m = _match(0);
+    final sub = m.result.events.firstWhere(
+      (e) => e.type == MatchEventType.substitution && e.teamNationId == 2,
     );
+    expect(sub.minute, 46);
+    final s = _script(m, PitchSpeed.mid);
+    expect(PitchScriptValidator.validate(s), isEmpty);
+    final interval = s.resets.first;
+    expect(s.departures[sub.secondaryPlayerId], interval);
+    expect(s.arrivals[sub.playerId], interval);
+    final before = s.sample(_at(interval - 0.01)).players;
+    final after = s.sample(_at(interval)).players;
+    expect(before.containsKey(sub.secondaryPlayerId), isTrue);
+    expect(before.containsKey(sub.playerId), isFalse);
+    expect(after.containsKey(sub.secondaryPlayerId), isFalse);
+    expect(after.containsKey(sub.playerId), isTrue);
+  });
+
+  test('an injury replaced a minute later at fast speed still comes on', () {
+    final home = _team(1, 75, Formation.f442, const TacticalInstructions());
+    final away = _team(2, 75, Formation.f433, const TacticalInstructions());
+    final newcomer = player(id: 150, nationId: 1);
+    var checked = 0;
+    for (var seed = 0; seed < 300 && checked < 3; seed++) {
+      final r0 = _play(home, away, seed);
+      final injury = r0.events
+          .where(
+            (e) =>
+                e.type == MatchEventType.injury &&
+                e.teamNationId == 1 &&
+                e.minute > 5 &&
+                e.minute < 80 &&
+                e.stoppage == 0,
+          )
+          .firstOrNull;
+      if (injury == null) continue;
+      final earlier = r0.events.any(
+        (e) =>
+            e.teamNationId == 1 &&
+            e.minute <= injury.minute &&
+            e != injury &&
+            (e.type == MatchEventType.injury ||
+                e.type == MatchEventType.redCard),
+      );
+      if (earlier) continue;
+      final slot = home.xi.indexWhere((p) => p.id == injury.playerId);
+      final change = TacticalChange(
+        teamNationId: 1,
+        minute: injury.minute + 1,
+        formation: Formation.f442,
+        instructions: const TacticalInstructions(),
+        xi: [
+          for (var k = 0; k < 11; k++) k == slot ? newcomer : home.xi[k],
+        ],
+      );
+      final r = _play(home, away, seed, changes: [change]);
+      final on = r.events.where(
+        (e) => e.type == MatchEventType.substitution && e.playerId == 150,
+      );
+      if (on.isEmpty) continue;
+      checked++;
+      final lineups = matchLineupsOf(
+        home: home,
+        away: away,
+        homeBench: const [150],
+        result: r,
+        changes: [change],
+      );
+      final s = StoryLayer.build(
+        result: r,
+        lineups: lineups,
+        pacer: PitchPacer(r, PitchSpeed.fast),
+        seed: seed,
+      );
+      expect(PitchScriptValidator.validate(s), isEmpty, reason: 'seed $seed');
+      final enter = s.arrivals[150];
+      expect(enter, isNotNull, reason: 'seed $seed: the newcomer never came');
+      expect(
+        s.sample(_at(enter! + 0.3)).players.containsKey(150),
+        isTrue,
+        reason: 'seed $seed',
+      );
+      // Back to eleven once he is on (unless somebody else has gone).
+      final down = r.events.any(
+        (e) =>
+            e.teamNationId == 1 &&
+            e.minute > injury.minute + 1 &&
+            (e.type == MatchEventType.injury ||
+                e.type == MatchEventType.redCard),
+      );
+      if (!down) expect(_count(s, enter + 0.3, 1), 11, reason: 'seed $seed');
+    }
+    expect(checked, 3, reason: 'too few injuries to test');
+  });
+
+  test('a formation change at 60\' redraws the shape from 60\'', () {
+    final home = _team(1, 75, Formation.f532, const TacticalInstructions());
+    final away = _team(2, 75, Formation.f433, const TacticalInstructions());
+    final change = TacticalChange(
+      teamNationId: 1,
+      minute: 60,
+      formation: Formation.f343,
+      instructions: const TacticalInstructions(),
+      xi: home.xi,
+    );
+    final r = _play(home, away, 1, changes: [change]);
+    final lineups = matchLineupsOf(
+      home: home,
+      away: away,
+      result: r,
+      changes: [change],
+    );
+    final s = StoryLayer.build(
+      result: r,
+      lineups: lineups,
+      pacer: PitchPacer(r, PitchSpeed.slow),
+      seed: 1,
+    );
+    expect(PitchScriptValidator.validate(s), isEmpty);
+    // How far the fourth-deepest outfielder stands in front of the deepest:
+    // a few metres in a back five (he is still a defender), a whole line's
+    // depth in a back three (he is a midfielder).
+    double fourthBack(double from, double to) {
+      var sum = 0.0;
+      var n = 0;
+      for (var t = from; t < to; t += 0.5) {
+        if (_inWindow(s, t)) continue;
+        final f = s.sample(_at(t));
+        final minute = s.pacer.matchAt(_at(t)).minute;
+        final dir = attackDir(home: true, minute: minute);
+        final depths = [
+          for (final e in f.players.entries)
+            if (s.actorList[s.actorIndexOf(e.key)!].teamNationId == 1 &&
+                !f.keepers.contains(e.key))
+              xToDepth(e.value.x, dir),
+        ]..sort();
+        sum += depths[3] - depths[0];
+        n++;
+      }
+      return sum / n;
+    }
+
+    final change60 = _secs(s.pacer.screenAt(60, 0));
+    final before = fourthBack(_secs(s.pacer.screenAt(50, 0)), change60);
+    final after = fourthBack(
+      change60 + 6,
+      _secs(s.pacer.screenAt(75, 0)),
+    );
+    expect(after, greaterThan(before + 5), reason: '$before vs $after');
+  });
+
+  test('a keeper sent off leaves the nearest man in goal', () {
+    final home = _team(1, 75, Formation.f442, const TacticalInstructions());
+    final away = _team(2, 75, Formation.f433, const TacticalInstructions());
+    const r = MatchResult(
+      homeScore: 0,
+      awayScore: 0,
+      events: [
+        MatchEvent(
+          minute: 30,
+          type: MatchEventType.redCard,
+          teamNationId: 1,
+          playerId: 100,
+          playerName: 'Keeper',
+        ),
+      ],
+      homeShots: 0,
+      awayShots: 0,
+      homePossession: 50,
+    );
+    final s = StoryLayer.build(
+      result: r,
+      lineups: matchLineupsOf(home: home, away: away),
+      pacer: PitchPacer(r, PitchSpeed.mid),
+      seed: 3,
+    );
+    expect(PitchScriptValidator.validate(s), isEmpty);
+    final start = s.departures[100]!;
+    expect(s.keepersAt(start - 0.1), contains(100));
+    final later = s.sample(_at(start + 30));
+    final home1 = later.keepers.where(
+      (id) => s.actorList[s.actorIndexOf(id)!].teamNationId == 1,
+    );
+    expect(home1, hasLength(1));
+    expect(home1.single, isNot(100));
+    expect(later.players.containsKey(100), isFalse);
+    // He keeps goal from his own line, not where he used to play.
+    final minute = s.pacer.matchAt(_at(start + 30)).minute;
+    final depth = xToDepth(
+      later.players[home1.single]!.x,
+      attackDir(home: true, minute: minute),
+    );
+    expect(depth, lessThan(25));
+  });
+
+  test('a keeper brought on takes over from the man minding goal', () {
+    final home = _team(1, 75, Formation.f442, const TacticalInstructions());
+    final away = _team(2, 75, Formation.f433, const TacticalInstructions());
+    final backup = player(id: 150, nationId: 1, position: PlayerPosition.gk);
+    final change = TacticalChange(
+      teamNationId: 1,
+      minute: 21,
+      formation: Formation.f442,
+      instructions: const TacticalInstructions(),
+      xi: [backup, ...home.xi.skip(1)],
+    );
+    const r = MatchResult(
+      homeScore: 0,
+      awayScore: 0,
+      events: [
+        MatchEvent(
+          minute: 20,
+          type: MatchEventType.injury,
+          teamNationId: 1,
+          playerId: 100,
+          playerName: 'Keeper',
+        ),
+        MatchEvent(
+          minute: 21,
+          type: MatchEventType.substitution,
+          teamNationId: 1,
+          playerId: 150,
+          playerName: 'Backup',
+        ),
+      ],
+      homeShots: 0,
+      awayShots: 0,
+      homePossession: 50,
+    );
+    final s = StoryLayer.build(
+      result: r,
+      lineups: matchLineupsOf(
+        home: home,
+        away: away,
+        homeBench: const [150],
+        changes: [change],
+      ),
+      pacer: PitchPacer(r, PitchSpeed.mid),
+      seed: 4,
+    );
+    expect(PitchScriptValidator.validate(s), isEmpty);
+    Set<int> homeKeepers(double t) => {
+      for (final id in s.keepersAt(t))
+        if (s.actorList[s.actorIndexOf(id)!].teamNationId == 1) id,
+    };
+    final injured = s.departures[100]!;
+    final standIn = homeKeepers(injured + 1);
+    expect(standIn, hasLength(1));
+    expect(standIn.single, isNot(anyOf(100, 150)));
+    final on = s.arrivals[150]!;
+    expect(homeKeepers(on + 0.3), {150});
+    expect(s.actorList[s.actorIndexOf(150)!].keeper, isTrue);
+    // The stand-in is an outfielder again.
+    expect(s.sample(_at(on + 0.3)).keepers, isNot(contains(standIn.single)));
   });
 
   test('the same seed gives the same frames', () {
@@ -371,7 +645,7 @@ void main() {
     final c = _script(m, PitchSpeed.mid, seed: 100);
     var differs = false;
     for (var t = 0.0; t < a.totalSeconds; t += 0.37) {
-      final d = Duration(microseconds: (t * 1e6).round());
+      final d = _at(t);
       final fa = a.sample(d);
       final fb = b.sample(d);
       expect(fb.players, fa.players);
@@ -402,6 +676,86 @@ void main() {
     expect(checked, greaterThanOrEqualTo(6));
   });
 
+  test('a re-simulation resumes from the playhead with no jump', () {
+    final m = _match(5);
+    final first = _script(m, PitchSpeed.mid, seed: 5);
+    final playhead = first.pacer.screenAt(60, 0, within: 0.4);
+    final state = first.stateAt(playhead);
+    // The manager makes a change at 61': the engine plays the match again.
+    final subs = [
+      ...m.subs,
+      Substitution(
+        teamNationId: 1,
+        minute: 61,
+        offId: 110,
+        on: player(id: 160, nationId: 1),
+      ),
+    ];
+    final r2 = _play(m.home, m.away, 5, subs: subs);
+    final lineups = matchLineupsOf(
+      home: m.home,
+      away: m.away,
+      homeBench: [...m.homeBench, 160],
+      awayBench: m.awayBench,
+      result: r2,
+    );
+    final pacer2 = PitchPacer(r2, PitchSpeed.mid);
+    final second = StoryLayer.build(
+      result: r2,
+      lineups: lineups,
+      pacer: pacer2,
+      seed: 5,
+      resumeFrom: state,
+    );
+    expect(
+      second.start,
+      closeTo(_secs(pacer2.screenAt(60, 0, within: 0.4)), 1e-6),
+    );
+    final seam = second.sample(_at(second.start));
+    expect(seam.players.keys.toSet(), state.players.keys.toSet());
+    for (final e in state.players.entries) {
+      expect(seam.players[e.key]!.distanceTo(e.value), lessThan(1e-6));
+    }
+    expect(seam.ball.distanceTo(state.ball), lessThan(1e-6));
+    expect(seam.ballCarrierId, state.carrierId);
+    // Every speed and spacing rule holds across the seam and after it.
+    expect(PitchScriptValidator.validate(second), isEmpty);
+    expect(second.arrivals.containsKey(160), isTrue);
+  });
+
+  test('extra time swaps ends again after 105\'', () {
+    expect(attackDir(home: true, minute: 100), 1);
+    expect(attackDir(home: true, minute: 106), -1);
+    for (var seed = 0; seed < 60; seed += 3) {
+      final m = _match(seed);
+      if (m.result.extraTime == null) continue;
+      final s = _script(m, PitchSpeed.mid);
+      expect(s.resets, hasLength(3));
+      expect(s.resets.last, _secs(s.pacer.screenAt(106, 0)));
+      expect(PitchScriptValidator.validate(s), isEmpty);
+      return;
+    }
+    fail('no extra time in 20 matches');
+  });
+
+  test('slot switches draw where the tactics board draws them', () {
+    const sw = SlotSwitches({5: PlayerPosition.cm});
+    final team = _team(
+      1,
+      70,
+      Formation.f433,
+      const TacticalInstructions(),
+      switches: sw,
+    );
+    expect(teamSideOf(team).switches, sw);
+    final drawn = slotLayout(Formation.f433, sw, const TacticalInstructions());
+    final board = switchedLayoutOf(Formation.f433, sw);
+    for (var i = 0; i < 11; i++) {
+      expect(drawn[i].$1, board[i].$1);
+    }
+    expect(drawn[5].$2, isNot(layoutOf(Formation.f433)[5].$2));
+  });
+
   test('line-ups deal shirts: keeper 1, the XI by slot, the bench on', () {
     final home = _team(1, 70, Formation.f433, const TacticalInstructions());
     final away = _team(2, 70, Formation.f352, const TacticalInstructions());
@@ -411,6 +765,22 @@ void main() {
     expect(l.home.xi.first.playerId, 100);
     expect(l.home.bench, [150, 151]);
     expect(l.home.plan.formation, Formation.f433);
+  });
+
+  test('a live change maps each man to his formation slot', () {
+    final home = _team(1, 70, Formation.f442, const TacticalInstructions());
+    final c = lineupChangeOf(
+      TacticalChange(
+        teamNationId: 1,
+        minute: 50,
+        formation: Formation.f442,
+        instructions: const TacticalInstructions(),
+        xi: [home.xi[0], home.xi[2], home.xi[1]],
+        slots: const [PlayerPosition.gk, PlayerPosition.lb, PlayerPosition.cb],
+      ),
+    );
+    expect(c.xi, [100, 102, 101]);
+    expect(c.slotOf, [0, 1, 2]);
   });
 
   test('every staged window hands over a carried ball', () {
@@ -440,6 +810,7 @@ void main() {
       xs: Float64List.fromList([for (final p in at) p.$1]),
       ys: Float64List.fromList([for (final p in at) p.$2]),
       facing: Float64List(at.length),
+      keepers: Uint8List.fromList([0, 0, 1]),
       cameraX: 52.5,
       zoom: 1,
     );
@@ -450,9 +821,11 @@ void main() {
         (playerId: 900, teamNationId: 2, shirt: 1, keeper: true),
       ],
       keyframes: [
-        frame(0, [(40, 30), (50, 30.3), (20, 34)]),
-        frame(1, [(54.2, 30), (50, 30.3), (20, 34)]),
-        frame(total, [(54.2, 30), (50, 30.3), (20, 34)]),
+        // The away keeper defends x 105 in the first half: x 85 is 20 m out,
+        // x 79 is 26 m out.
+        frame(0, [(40, 30), (50, 30.3), (85, 34)]),
+        frame(1, [(54.2, 30), (50, 30.3), (79, 34)]),
+        frame(total, [(54.2, 30), (50, 30.3), (79, 34)]),
       ],
       ballPhases: [CarryPhase(0, total, 1)],
       resets: const [],
@@ -466,7 +839,7 @@ void main() {
     final found = PitchScriptValidator.validate(s);
     expect(found, contains('minute 1: player 812 moved 14.2 m/s'));
     expect(found.any((f) => f.contains('players 812 and 813')), isTrue);
-    // The away keeper defends x 105 in the first half, so x 20 is miles off.
-    expect(found.any((f) => f.contains('keeper 900')), isTrue);
+    expect(found.any((f) => f.contains('keeper 900 26.0 m')), isTrue);
   });
 }
+

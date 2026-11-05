@@ -21,6 +21,16 @@
 /// `12 + 0.2c` m, 18-26 m at the three speeds) and the more ground each
 /// possession covers, so heavy compression reads as fewer, longer passes
 /// rather than faster running.
+///
+/// ## Shape over the match
+///
+/// A side lines up in its team-sheet formation, slot switches and
+/// instructions, and the manager's live changes ([LineupChange]) reshape it
+/// at their minute. A side with no live changes (the AI opponent) plays the
+/// plan the engine says it fielded for most of the match ([TeamSide.plan]).
+/// The AI's minute-by-minute nudges to its instructions are not followed:
+/// they are small, and redrawing the shape every minute would read as
+/// jitter.
 library;
 
 import 'dart:math' as math;
@@ -36,6 +46,7 @@ import 'package:fnm/domain/services/match/pitch/formation_slots.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
+import 'package:fnm/domain/services/match/pitch/switched_layout.dart';
 
 /// A side's plan: its shape and instructions.
 typedef MatchPlan = FieldedPlan;
@@ -48,14 +59,32 @@ typedef LineupPlayer = ({int playerId, PlayerPosition slot, int shirt});
 typedef TeamSide = ({
   int nationId,
   Formation formation,
+  SlotSwitches switches,
   List<LineupPlayer> xi,
   List<int> bench,
   TacticalInstructions instructions,
   MatchPlan plan,
 });
 
-/// Both sides' line-ups.
-typedef MatchLineups = ({TeamSide home, TeamSide away});
+/// A live tactical change as the Pitch view needs it: from [minute] the side
+/// lines up in [formation] with [switches] and [instructions], [xi][k]
+/// playing formation slot [slotOf][k].
+typedef LineupChange = ({
+  int teamNationId,
+  int minute,
+  Formation formation,
+  SlotSwitches switches,
+  TacticalInstructions instructions,
+  List<int> xi,
+  List<int> slotOf,
+});
+
+/// Both sides' line-ups, and the live changes made to them.
+typedef MatchLineups = ({
+  TeamSide home,
+  TeamSide away,
+  List<LineupChange> changes,
+});
 
 /// [team] as the Pitch view lines it up. The game has no squad numbers, so
 /// shirts are dealt deterministically: the keeper wears 1, the rest of the
@@ -79,6 +108,7 @@ TeamSide teamSideOf(
   return (
     nationId: team.nationId,
     formation: team.formation,
+    switches: team.switches,
     xi: xi,
     bench: bench,
     instructions: team.instructions,
@@ -86,17 +116,64 @@ TeamSide teamSideOf(
   );
 }
 
-/// Both sides' line-ups for a match between [home] and [away]; each side's
-/// [MatchPlan] is the one [result] says it fielded, when known.
+/// [c] as the Pitch view needs it: each man's formation slot index. A man
+/// whose place the change names takes the first free slot playing that
+/// place; otherwise his index in the eleven is his slot, as the engine reads
+/// it.
+LineupChange lineupChangeOf(TacticalChange c) {
+  final positions = c.switches.apply(c.formation);
+  final used = <int>{};
+  final slots = <int>[];
+  for (var i = 0; i < c.xi.length; i++) {
+    int? slot;
+    if (c.slots == null && i < positions.length) {
+      slot = i;
+    } else {
+      final want = c.slotOf(i);
+      for (var j = 0; j < positions.length; j++) {
+        if (!used.contains(j) && positions[j] == want) {
+          slot = j;
+          break;
+        }
+      }
+    }
+    if (slot == null || used.contains(slot)) {
+      slot = null;
+      for (var j = 0; j < positions.length; j++) {
+        if (!used.contains(j)) {
+          slot = j;
+          break;
+        }
+      }
+    }
+    slots.add(slot ?? -1);
+    if (slot != null) used.add(slot);
+  }
+  return (
+    teamNationId: c.teamNationId,
+    minute: c.minute,
+    formation: c.formation,
+    switches: c.switches,
+    instructions: c.instructions,
+    xi: [for (final p in c.xi) p.id],
+    slotOf: slots,
+  );
+}
+
+/// Both sides' line-ups for a match between [home] and [away]: each side's
+/// [MatchPlan] is the one [result] says it fielded, when known, and
+/// [changes] are the live tactical changes the match was played with.
 MatchLineups matchLineupsOf({
   required MatchTeam home,
   required MatchTeam away,
   List<int> homeBench = const [],
   List<int> awayBench = const [],
   MatchResult? result,
+  List<TacticalChange> changes = const [],
 }) => (
   home: teamSideOf(home, bench: homeBench, plan: result?.homePlan),
   away: teamSideOf(away, bench: awayBench, plan: result?.awayPlan),
+  changes: [for (final c in changes) lineupChangeOf(c)],
 );
 
 /// Where a stager sends a player, and how fast he may go (screen m/s).
@@ -155,6 +232,10 @@ class StagingContext {
 /// then, every step, where each player heads and what the ball does; it
 /// still applies every speed and spacing rule itself, so a stager only
 /// choreographs.
+///
+/// Inside a window a keeper may leave his area only when the window's
+/// moment names him (`StagedWindow.actors`): a save, a claim, a
+/// distribution.
 abstract interface class MomentStager {
   StagedPlan stage(StagingContext context);
 }
@@ -199,17 +280,14 @@ class _Hold implements StagedPlan {
     if (w.moments.isEmpty || carrier == null) return null;
     final m = w.moments.first;
     if (m is SubMoment) return null;
-    final home = context.lineups.home;
-    final homeIds = {
-      for (final p in home.xi) p.playerId,
-      ...home.bench,
-    };
-    final side = m.teamNationId == home.nationId;
-    if (homeIds.contains(carrier) == side) return null;
+    final side = m.teamNationId;
+    if (now.teams[carrier] == side) return null;
     int? best;
     var bestD = double.infinity;
     now.players.forEach((id, p) {
-      if (homeIds.contains(id) != side || context.departing.contains(id)) {
+      if (now.teams[id] != side ||
+          context.departing.contains(id) ||
+          now.walking.contains(id)) {
         return;
       }
       final d = p.distanceTo(now.ball);
@@ -233,91 +311,19 @@ abstract final class StoryLayer {
 
   /// The whole match's picture: quiet time told by the story layer, each
   /// staged moment's window filled by [stager].
+  ///
+  /// With [resumeFrom] (a state captured by `PitchScript.stateAt` from the
+  /// script shown so far), the script starts at that state's match minute
+  /// instead of the kick-off, with everybody exactly where the state has
+  /// them: a re-simulated result picks up from the playhead with no jump.
   static PitchScript build({
     required MatchResult result,
     required MatchLineups lineups,
     required PitchPacer pacer,
     required int seed,
     MomentStager stager = const NeutralHold(),
-  }) => _Builder(result, lineups, pacer, seed, stager).run();
-}
-
-// ---------------------------------------------------------------------------
-
-const double _hardSpeed = 8.8;
-const double _accel = 9;
-const double _turnRate = 7;
-const double _safeGap = 0.9;
-const double _leadIn = 3.5;
-
-/// How long before a moment the ball changes hands when it has to.
-const double _handover = 1.3;
-const double _keeperMaxDepth = 24.5;
-
-class _Agent {
-  _Agent(this.index, this.id, this.side, {required this.keeper});
-  final int index;
-  final int id;
-  final int side;
-  final bool keeper;
-  bool present = false;
-  Offset2 pos = Offset2.zero;
-  Offset2 vel = Offset2.zero;
-  double facing = 0;
-  int? slot;
-  double? walkStart;
-  Offset2? walkTarget;
-
-  /// The slot he left, kept for the man who replaces him.
-  int? vacatedSlot;
-  double phaseA = 0;
-  double phaseB = 0;
-}
-
-class _Side {
-  _Side(this.team, {required this.home})
-    : layout = [
-        for (var i = 0; i < team.formation.positions.length; i++)
-          (
-            layoutOf(team.formation)[i].$1,
-            adjustedSlotY(
-              layoutOf(team.formation)[i].$2,
-              team.formation.positions[i].category,
-              team.instructions,
-            ),
-          ),
-      ],
-      owner = List<int?>.filled(team.formation.positions.length, null),
-      pending = List<bool>.filled(team.formation.positions.length, false) {
-    effective = [...layout];
-  }
-
-  final TeamSide team;
-  final bool home;
-  final List<(double, double)> layout;
-  late List<(double, double)> effective;
-  final List<int?> owner;
-  final List<bool> pending;
-
-  /// Slots emptied with nobody named to fill them, latest last.
-  final List<int> vacated = [];
-  double backLine = 30;
-
-  int get nationId => team.nationId;
-  TacticalInstructions get instr => team.instructions;
-  int get gkSlot {
-    final i = team.formation.positions.indexOf(PlayerPosition.gk);
-    return i < 0 ? 0 : i;
-  }
-
-  /// Re-forms the shape for the men left: a line that lost somebody spreads
-  /// its remaining men evenly across the width it covered.
-  void reform() {
-    effective = reformedSlots(layout, gkSlot, {
-      for (var i = 0; i < layout.length; i++)
-        if (owner[i] != null || pending[i]) i,
-    });
-  }
+    ScriptState? resumeFrom,
+  }) => _Builder(result, lineups, pacer, seed, stager).run(resumeFrom);
 }
 
 /// A shape re-formed for the men left: [layout]'s slots with only [filled]
@@ -364,12 +370,130 @@ List<(double, double)> reformedSlots(
   return eff;
 }
 
-/// A departure or arrival the builder applies at a screen second.
+/// The slot coordinates [formation] with [switches] is drawn with, once
+/// [instructions] have moved the lines: the tactics board's own arithmetic.
+List<(double, double)> slotLayout(
+  Formation formation,
+  SlotSwitches switches,
+  TacticalInstructions instructions,
+) {
+  final base = switchedLayoutOf(formation, switches);
+  final positions = switches.apply(formation);
+  return [
+    for (var i = 0; i < base.length; i++)
+      (
+        base[i].$1,
+        adjustedSlotY(base[i].$2, positions[i].category, instructions),
+      ),
+  ];
+}
+
+// ---------------------------------------------------------------------------
+
+const double _hardSpeed = 8.8;
+const double _walkCap = 2.2;
+const double _accel = 9;
+const double _turnRate = 7;
+const double _safeGap = 0.9;
+const double _leadIn = 3.5;
+
+/// How long before a moment the ball changes hands when it has to.
+const double _handover = 1.3;
+const double _keeperMaxDepth = 24.5;
+
+/// Where a man walking off leaves the picture: this far inside the line.
+const double _touchline = 0.5;
+
+class _Agent {
+  _Agent(this.index, this.id, this.side);
+  final int index;
+  final int id;
+  final int side;
+  bool present = false;
+  Offset2 pos = Offset2.zero;
+  Offset2 vel = Offset2.zero;
+  double facing = 0;
+  int? slot;
+  double? walkStart;
+  Offset2? walkTarget;
+
+  /// Whether he has ever been on the pitch.
+  bool appeared = false;
+
+  /// Whether he has left it for good.
+  bool gone = false;
+
+  /// The slot he left, kept for the man who replaces him.
+  int? vacatedSlot;
+  double phaseA = 0;
+  double phaseB = 0;
+}
+
+class _Side {
+  _Side(this.team, {required this.home});
+
+  final TeamSide team;
+  final bool home;
+  late Formation formation;
+  late SlotSwitches switches;
+  late TacticalInstructions instr;
+  late List<(double, double)> layout;
+  late List<(double, double)> effective;
+  late List<int?> owner;
+  late List<bool> pending;
+
+  /// Slots emptied with nobody named to fill them, latest last.
+  final List<int> vacated = [];
+
+  /// An outfielder minding goal until the keeper on his way arrives, and
+  /// the slot he goes back to.
+  ({int agent, int back})? standIn;
+  double backLine = 30;
+
+  int get nationId => team.nationId;
+  int get gkSlot {
+    final i = formation.positions.indexOf(PlayerPosition.gk);
+    return i < 0 ? 0 : i;
+  }
+
+  void reshape(Formation f, SlotSwitches sw, TacticalInstructions i) {
+    formation = f;
+    switches = sw;
+    instr = i;
+    layout = slotLayout(f, sw, i);
+    owner = List<int?>.filled(layout.length, null);
+    pending = List<bool>.filled(layout.length, false);
+    vacated.clear();
+    standIn = null;
+    effective = [...layout];
+  }
+
+  /// Re-forms the shape for the men left: a line that lost somebody spreads
+  /// its remaining men evenly across the width it covered.
+  void reform() {
+    effective = reformedSlots(layout, gkSlot, {
+      for (var i = 0; i < layout.length; i++)
+        if (owner[i] != null || pending[i]) i,
+    });
+  }
+}
+
+/// Something the builder does at a screen second: a departure, an arrival
+/// joining the queue, a live change.
 class _Change {
   _Change(this.t, this.order, this.apply);
   final double t;
   final int order;
-  final void Function() apply;
+  final void Function(double t, {required bool atBreak}) apply;
+}
+
+/// A substitute waiting to come on.
+class _Arrival {
+  _Arrival(this.on, this.side, this.offIndex, this.earliest);
+  final _Agent on;
+  final int side;
+  final int? offIndex;
+  final double earliest;
 }
 
 class _Flight {
@@ -402,15 +526,24 @@ class _Builder {
 
   late final List<_Side> sides;
   final List<_Agent> agents = [];
-  final List<PitchActor> actorList = [];
+  final List<int> shirts = [];
   final Map<int, int> indexOf = {};
   final List<ScriptKeyframe> keyframes = [];
   final List<BallPhase> phases = [];
   final List<StagedWindow> windows = [];
   final List<double> resets = [];
+  final Set<double> resetDone = {};
   final Map<int, double> departures = {};
   final Map<int, double> arrivals = {};
   final List<_Change> changes = [];
+  final List<_Arrival> queue = [];
+
+  /// Slots live changes hold for substitutes not yet on, by agent index.
+  final Map<int, int> arrivalSlot = {};
+
+  /// Agents due to walk off, by agent index: when.
+  final Map<int, double> leaving = {};
+  int ci = 0;
 
   late double total;
 
@@ -433,29 +566,34 @@ class _Builder {
   StagedWindow? activeWindow;
   StagedPlan? activePlan;
 
-  PitchScript run() {
+  PitchScript run(ScriptState? resume) {
     total = pacer.total.inMicroseconds / 1e6;
-    sides = [_Side(lineups.home, home: true), _Side(lineups.away, home: false)];
+    sides = [
+      _Side(lineups.home, home: true),
+      _Side(lineups.away, home: false),
+    ];
     _registerActors();
+    _lineUp();
     _buildWindows();
     _scheduleChanges();
-    for (final m in [46, if (result.extraTime != null) 91]) {
+    for (final m in [
+      46,
+      if (result.extraTime != null) ...[91, 106],
+    ]) {
       resets.add(_secs(pacer.screenAt(m, 0)));
     }
 
-    // Kick-off.
-    for (var s = 0; s < 2; s++) {
-      final side = sides[s];
-      for (var i = 0; i < side.team.xi.length; i++) {
-        final a = agents[indexOf[side.team.xi[i].playerId]!];
-        a.present = true;
-        a.slot = i;
-        side.owner[i] = a.index;
-      }
+    var t = 0.0;
+    if (resume != null) {
+      t = _resumeFrom(resume);
+    } else {
+      _applyDue(0, atBreak: true);
+      _processArrivals(0);
+      _reseed(0);
+      _kickoff(0, 0);
+      _record(0);
     }
-    _reseed(0);
-    _kickoff(0, 0);
-    _record(0);
+    final start = t;
 
     final specials = <double>{
       for (final w in windows) ...[w.start, w.end],
@@ -464,10 +602,10 @@ class _Builder {
       total,
     }.toList()..sort();
     var sp = 0;
-    var ci = 0;
     var wi = 0;
-    var t = 0.0;
-    final resetDone = <double>{};
+    while (wi < windows.length && windows[wi].end <= t + 1e-9) {
+      wi++;
+    }
     while (t < total - 1e-9) {
       // Windows closing.
       if (activeWindow != null && t >= activeWindow!.end - 1e-9) {
@@ -477,41 +615,30 @@ class _Builder {
         spellEnd = t + _spellLength(possession);
         nextAction = math.max(nextAction, t + 0.15);
       }
-      // Kick-offs.
+      // Kick-offs, with whatever the interval brought.
       for (final r in resets) {
         if (!resetDone.contains(r) && (r - t).abs() < 1e-9) {
           resetDone.add(r);
+          for (final a in agents) {
+            if (a.walkStart != null) _endWalk(a);
+          }
+          _applyDue(t, atBreak: true);
+          _processArrivals(t);
           final m = pacer.matchAt(_dur(r)).minute;
-          _kickoff(r, m > 90 ? 0 : 1);
+          // The side that did not kick off the half before kicks off this
+          // one: away at 46', home at 91', away at 106'.
+          _kickoff(r, m == 91 ? 0 : 1);
           _record(r);
         }
       }
-      // Departures and arrivals.
-      while (ci < changes.length && changes[ci].t <= t + 1e-9) {
-        changes[ci].apply();
-        ci++;
-      }
+      _applyDue(t, atBreak: false);
+      _processArrivals(t);
       // Windows opening.
       while (wi < windows.length && windows[wi].start <= t + 1e-9) {
         final w = windows[wi];
         wi++;
         if (w.end <= t + 1e-9) continue;
-        w.entry = _state(t);
-        activeWindow = w;
-        final m = pacer.matchAt(_dur(t)).minute;
-        activePlan = stager.stage(
-          StagingContext(
-            window: w,
-            entry: w.entry,
-            lineups: lineups,
-            homeDir: attackDir(home: true, minute: m),
-            departing: {
-              for (final a in agents)
-                if (a.walkStart != null || _departsWithin(a, t, 10)) a.id,
-            },
-            seed: (seed ^ ((wi + 1) * 0x9E3779B1)) & 0xFFFFFFFF,
-          ),
-        );
+        _openWindow(w, t, wi);
       }
       _reseed(t);
       final c = carrier;
@@ -530,23 +657,42 @@ class _Builder {
       final f = flight;
       if (f != null && f.t1 > t + 1e-9) next = math.min(next, f.t1);
       _step(t, next);
-      if (activeWindow == null) {
-        if (possession == 0) {
-          homeBallTime += next - t;
-        } else {
-          awayBallTime += next - t;
-        }
+      if (possession == 0) {
+        homeBallTime += next - t;
+      } else {
+        awayBallTime += next - t;
       }
       t = next;
       if (f != null && t >= f.t1 - 1e-9) _land(t);
       _record(t);
+      // A man walking off who has reached the touchline leaves the picture.
+      for (final a in agents) {
+        final target = a.walkTarget;
+        if (a.walkStart != null &&
+            target != null &&
+            (a.pos.y - target.y).abs() <= 0.3) {
+          _endWalk(a);
+        }
+      }
     }
     if (activeWindow != null) activeWindow!.exit = _state(total);
+    // Anybody due off at the final whistle starts to leave there.
+    leaving.forEach((i, at) {
+      if (at >= total - 1e-9) departures.putIfAbsent(agents[i].id, () => at);
+    });
     if (flight != null) _land(total);
     _closePhase(total);
 
     return PitchScript(
-      actorList: actorList,
+      actorList: [
+        for (final a in agents)
+          (
+            playerId: a.id,
+            teamNationId: sides[a.side].nationId,
+            shirt: shirts[a.index],
+            keeper: _firstKeeper(a.index),
+          ),
+      ],
       keyframes: keyframes,
       ballPhases: phases,
       resets: resets,
@@ -556,62 +702,156 @@ class _Builder {
       pacer: pacer,
       result: result,
       homeNationId: lineups.home.nationId,
+      start: start,
+    );
+  }
+
+  bool _firstKeeper(int i) {
+    for (final f in keyframes) {
+      if (f.present(i)) return f.keeper(i);
+    }
+    return false;
+  }
+
+  void _openWindow(StagedWindow w, double t, int index) {
+    w.entry = _state(t);
+    activeWindow = w;
+    final m = pacer.matchAt(_dur(t)).minute;
+    activePlan = stager.stage(
+      StagingContext(
+        window: w,
+        entry: w.entry,
+        lineups: lineups,
+        homeDir: attackDir(home: true, minute: m),
+        departing: {
+          for (final a in agents)
+            if (a.walkStart != null || _departsWithin(a, t, 10)) a.id,
+        },
+        seed: (seed ^ ((index + 1) * 0x9E3779B1)) & 0xFFFFFFFF,
+      ),
     );
   }
 
   // --- set-up --------------------------------------------------------------
 
   void _registerActors() {
-    // Who plays in goal: whoever holds the keeper's slot when he steps on.
-    final keepers = <int>{};
-    for (final side in [lineups.home, lineups.away]) {
-      final slotOf = <int, int>{};
-      final gk = side.formation.positions.indexOf(PlayerPosition.gk);
-      for (var i = 0; i < side.xi.length; i++) {
-        slotOf[side.xi[i].playerId] = i;
-        if (i == gk) keepers.add(side.xi[i].playerId);
-      }
-      for (final e in result.events) {
-        if (e.teamNationId != side.nationId) continue;
-        if (e.type == MatchEventType.substitution) {
-          final off = e.secondaryPlayerId;
-          final s = off == null ? null : slotOf[off];
-          if (s != null) {
-            slotOf[e.playerId] = s;
-            if (s == gk) keepers.add(e.playerId);
-          }
-        }
-      }
-    }
     void add(int id, int side, int shirt) {
       if (indexOf.containsKey(id)) return;
-      final a = _Agent(agents.length, id, side, keeper: keepers.contains(id));
+      final a = _Agent(agents.length, id, side);
       final r = SeededRng((seed ^ (id * 0x85EBCA6B)) & 0xFFFFFFFF);
       a.phaseA = r.nextDouble() * 2 * math.pi;
       a.phaseB = r.nextDouble() * 2 * math.pi;
       indexOf[id] = a.index;
       agents.add(a);
-      actorList.add((
-        playerId: id,
-        teamNationId: sides[side].nationId,
-        shirt: shirt,
-        keeper: a.keeper,
-      ));
+      shirts.add(shirt);
     }
 
+    int sideOf(int nation) => nation == lineups.home.nationId ? 0 : 1;
     for (var s = 0; s < 2; s++) {
-      final team = sides[s].team;
-      for (final p in team.xi) {
+      for (final p in sides[s].team.xi) {
         add(p.playerId, s, p.shirt);
       }
     }
+    int benchShirt(int s, int id) {
+      final bench = sides[s].team.bench;
+      final b = bench.indexOf(id);
+      return b >= 0 ? 12 + b : 12 + bench.length + agents.length;
+    }
+
     for (final e in result.events) {
       if (e.type != MatchEventType.substitution) continue;
-      final s = e.teamNationId == lineups.home.nationId ? 0 : 1;
-      final bench = sides[s].team.bench;
-      final b = bench.indexOf(e.playerId);
-      add(e.playerId, s, b >= 0 ? 12 + b : 12 + bench.length + agents.length);
+      final s = sideOf(e.teamNationId);
+      add(e.playerId, s, benchShirt(s, e.playerId));
     }
+    for (final c in lineups.changes) {
+      final s = sideOf(c.teamNationId);
+      for (final id in c.xi) {
+        add(id, s, benchShirt(s, id));
+      }
+    }
+  }
+
+  /// Each side's opening shape: its team sheet, or, for a side with no live
+  /// changes, the plan it fielded for most of the match, with every man in
+  /// the plan's slot nearest the one he was named in.
+  void _lineUp() {
+    final changed = {for (final c in lineups.changes) c.teamNationId};
+    for (var s = 0; s < 2; s++) {
+      final side = sides[s];
+      final team = side.team;
+      final usePlan = !changed.contains(team.nationId);
+      final List<int> slots;
+      if (usePlan && team.plan.formation != team.formation) {
+        final before = slotLayout(
+          team.formation,
+          team.switches,
+          team.instructions,
+        );
+        final oldGk = team.formation.positions.indexOf(PlayerPosition.gk);
+        side.reshape(
+          team.plan.formation,
+          SlotSwitches.none,
+          team.plan.instructions,
+        );
+        slots = _nearestSlots(before, side.layout, oldGk, side.gkSlot);
+      } else {
+        side.reshape(
+          team.formation,
+          team.switches,
+          usePlan ? team.plan.instructions : team.instructions,
+        );
+        slots = [for (var i = 0; i < team.xi.length; i++) i];
+      }
+      for (var i = 0; i < team.xi.length; i++) {
+        final slot = slots[i];
+        if (slot < 0 || slot >= side.owner.length) continue;
+        final a = agents[indexOf[team.xi[i].playerId]!];
+        a
+          ..present = true
+          ..appeared = true
+          ..slot = slot;
+        side.owner[slot] = a.index;
+      }
+      side.reform();
+    }
+  }
+
+  /// Each of [from]'s slots matched to the nearest free slot of [to], the
+  /// closest pairs first; the keeper's to the keeper's.
+  static List<int> _nearestSlots(
+    List<(double, double)> from,
+    List<(double, double)> to,
+    int fromGk,
+    int toGk,
+  ) {
+    final out = List<int>.filled(from.length, -1);
+    final used = <int>{};
+    if (fromGk >= 0 && fromGk < from.length) {
+      out[fromGk] = toGk;
+      used.add(toGk);
+    }
+    final pairs = <(double, int, int)>[];
+    for (var i = 0; i < from.length; i++) {
+      if (i == fromGk) continue;
+      for (var j = 0; j < to.length; j++) {
+        if (j == toGk) continue;
+        final dx = from[i].$1 - to[j].$1;
+        final dy = from[i].$2 - to[j].$2;
+        pairs.add((dx * dx + dy * dy, i, j));
+      }
+    }
+    pairs.sort((a, b) {
+      final c = a.$1.compareTo(b.$1);
+      if (c != 0) return c;
+      final d = a.$2.compareTo(b.$2);
+      return d != 0 ? d : a.$3.compareTo(b.$3);
+    });
+    for (final (_, i, j) in pairs) {
+      if (out[i] >= 0 || used.contains(j)) continue;
+      out[i] = j;
+      used.add(j);
+    }
+    return out;
   }
 
   void _buildWindows() {
@@ -626,10 +866,9 @@ class _Builder {
       }
     }
     final keys = {...bySlot.keys, ...injuriesBySlot.keys}.toList()
-      ..sort((a, b) {
-        final c = _slotIndex(a.$1, a.$2).compareTo(_slotIndex(b.$1, b.$2));
-        return c;
-      });
+      ..sort(
+        (a, b) => _slotIndex(a.$1, a.$2).compareTo(_slotIndex(b.$1, b.$2)),
+      );
     for (final key in keys) {
       final moments = [...?bySlot[key]]..sort((a, b) => a.seq.compareTo(b.seq));
       var cur = _secs(pacer.screenAt(key.$1, key.$2));
@@ -665,15 +904,32 @@ class _Builder {
     }
   }
 
-  /// When each departure and arrival happens, from the events: a red card
-  /// as its foul's window closes, an injury as its own window closes, a sub
-  /// as its moment's window closes. The man coming on steps on once the man
-  /// he replaces is gone, so a side never shows twelve.
+  /// When each change happens. Live tactical changes reshape a side at the
+  /// start of their minute. From the events: a red card leaves as its
+  /// foul's window closes, an injury as its own window closes, a sub as its
+  /// moment's window closes; a substitute joins the queue then and steps on
+  /// once his side is down to ten on the pitch (the man he replaces has
+  /// reached the touchline). Subs made at an interval happen in it.
   void _scheduleChanges() {
+    int sideOf(int nation) => nation == lineups.home.nationId ? 0 : 1;
     var order = 0;
+    for (final c in lineups.changes) {
+      final at = _secs(pacer.screenAt(math.max(1, c.minute), 0));
+      changes.add(
+        _Change(
+          at,
+          order++,
+          (t, {required atBreak}) => _applyLineupChange(c, t),
+        ),
+      );
+    }
+    final breakMinutes = {
+      46,
+      if (result.extraTime != null) ...[91, 106],
+    };
     for (var idx = 0; idx < result.events.length; idx++) {
       final e = result.events[idx];
-      final s = e.teamNationId == lineups.home.nationId ? 0 : 1;
+      final s = sideOf(e.teamNationId);
       var at = _secs(pacer.screenAt(e.minute, e.stoppage));
       switch (e.type) {
         case MatchEventType.redCard:
@@ -681,31 +937,31 @@ class _Builder {
             final m = w.moments.isEmpty ? null : w.moments.first;
             if (m is FoulMoment && m.cardEventIndex == idx) at = w.end;
           }
-          _scheduleDeparture(e.playerId, s, at, order++);
+          _scheduleDeparture(e.playerId, at, order++);
         case MatchEventType.injury:
           for (final w in windows) {
             if (identical(w.injury, e)) at = w.end;
           }
-          _scheduleDeparture(e.playerId, s, at, order++);
+          _scheduleDeparture(e.playerId, at, order++);
         case MatchEventType.substitution:
-          for (final w in windows) {
-            final m = w.moments.isEmpty ? null : w.moments.first;
-            if (m is SubMoment && m.eventIndex == idx) at = w.end;
+          final atBreak = e.stoppage == 0 && breakMinutes.contains(e.minute);
+          if (!atBreak) {
+            for (final w in windows) {
+              final m = w.moments.isEmpty ? null : w.moments.first;
+              if (m is SubMoment && m.eventIndex == idx) at = w.end;
+            }
           }
           final off = e.secondaryPlayerId;
-          var enter = at;
           if (off != null && indexOf.containsKey(off)) {
-            _scheduleDeparture(off, s, at, order++, replaced: true);
-            enter = at + PitchScript.walkOffSeconds;
+            _scheduleDeparture(off, at, order++, replaced: true);
           }
           final onIndex = indexOf[e.playerId];
           if (onIndex == null) break;
-          final onAgent = agents[onIndex];
           final offIndex = off == null ? null : indexOf[off];
-          arrivals[e.playerId] = math.min(enter, total);
+          final when = math.min(at, total);
           changes.add(
-            _Change(math.min(enter, total), order++, () {
-              _arrive(onAgent, s, offIndex);
+            _Change(when, order++, (t, {required atBreak}) {
+              queue.add(_Arrival(agents[onIndex], s, offIndex, t));
             }),
           );
         case MatchEventType.goal || MatchEventType.yellowCard:
@@ -720,88 +976,197 @@ class _Builder {
 
   void _scheduleDeparture(
     int id,
-    int s,
     double at,
     int order, {
     bool replaced = false,
   }) {
     final i = indexOf[id];
-    if (i == null || departures.containsKey(id)) return;
+    if (i == null || leaving.containsKey(i)) return;
     final start = math.min(at, total);
-    departures[id] = start;
+    leaving[i] = start;
     final a = agents[i];
     changes.add(
-      _Change(start, order, () => _startWalk(a, start, replaced: replaced)),
+      _Change(start, order, (t, {required atBreak}) {
+        _startWalk(a, t, replaced: replaced);
+        // At an interval he is simply gone by the restart.
+        if (atBreak) _endWalk(a);
+      }),
     );
-    final end = start + PitchScript.walkOffSeconds;
-    if (end < total) {
-      changes.add(_Change(end, order, () => _endWalk(a)));
+  }
+
+  /// Applies every change due by [t].
+  void _applyDue(double t, {required bool atBreak}) {
+    while (ci < changes.length && changes[ci].t <= t + 1e-9) {
+      changes[ci].apply(t, atBreak: atBreak);
+      ci++;
     }
+  }
+
+  // --- live changes --------------------------------------------------------
+
+  void _applyLineupChange(LineupChange c, double t) {
+    final s = c.teamNationId == lineups.home.nationId ? 0 : 1;
+    final side = sides[s]..reshape(c.formation, c.switches, c.instructions);
+    for (final a in agents) {
+      if (a.side == s) a.slot = null;
+    }
+    final named = <int>{};
+    for (var k = 0; k < c.xi.length; k++) {
+      final i = indexOf[c.xi[k]];
+      final slot = c.slotOf[k];
+      if (i == null || slot < 0 || slot >= side.owner.length) continue;
+      named.add(i);
+      final a = agents[i];
+      if (a.present && a.walkStart == null) {
+        side.owner[slot] = i;
+        a.slot = slot;
+      } else if (!a.appeared) {
+        side.pending[slot] = true;
+        arrivalSlot[i] = slot;
+      }
+    }
+    // Anybody the change leaves out and no event takes off walks off now.
+    for (final a in agents) {
+      if (a.side != s || !a.present || a.walkStart != null) continue;
+      if (named.contains(a.index) || leaving.containsKey(a.index)) continue;
+      leaving[a.index] = t;
+      _startWalk(a, t, replaced: false);
+    }
+    _ensureKeeper(side, coming: side.pending[side.gkSlot]);
+    side.reform();
   }
 
   // --- departures and arrivals --------------------------------------------
 
   void _startWalk(_Agent a, double t, {required bool replaced}) {
+    if (!a.present && !a.appeared) {
+      // Leaving before he ever came on: he never will.
+      departures[a.id] = t;
+      a.gone = true;
+      queue.removeWhere((q) => q.on == a);
+      return;
+    }
     if (!a.present || a.walkStart != null) return;
+    departures[a.id] = t;
     if (carrier == a.index) _forcePass(a, t);
-    a.walkStart = t;
-    final ty = a.pos.y < PitchDims.width / 2 ? 0.6 : PitchDims.width - 0.6;
-    a.walkTarget = Offset2(a.pos.x, ty);
+    a
+      ..walkStart = t
+      ..walkTarget = Offset2(
+        a.pos.x,
+        a.pos.y < PitchDims.width / 2
+            ? _touchline
+            : PitchDims.width - _touchline,
+      );
     final side = sides[a.side];
     final slot = a.slot;
-    a.slot = null;
-    a.vacatedSlot = slot;
-    if (slot == null) return;
-    side.owner[slot] = null;
-    if (replaced) {
-      side.pending[slot] = true;
-    } else if (slot != side.gkSlot) {
-      side.vacated.add(slot);
-    } else {
-      // Somebody has to go in goal: the man in the nearest slot.
-      int? best;
-      var bestD = double.infinity;
-      for (var i = 0; i < side.owner.length; i++) {
-        if (i == slot || side.owner[i] == null) continue;
-        final d =
-            (side.layout[i].$1 - side.layout[slot].$1).abs() +
-            (side.layout[i].$2 - side.layout[slot].$2).abs();
-        if (d < bestD) {
-          bestD = d;
-          best = i;
-        }
-      }
-      if (best != null) {
-        final mover = agents[side.owner[best]!];
-        side.owner[slot] = mover.index;
-        side.owner[best] = null;
-        mover.slot = slot;
-        side.vacated.add(best);
-      } else {
+    a
+      ..slot = null
+      ..vacatedSlot = slot;
+    final stand = side.standIn;
+    if (stand != null && stand.agent == a.index) {
+      // The man minding goal is leaving: his own place will not be kept.
+      side
+        ..pending[stand.back] = false
+        ..vacated.add(stand.back)
+        ..standIn = null;
+    }
+    if (slot != null && side.owner[slot] == a.index) {
+      side.owner[slot] = null;
+      if (replaced) {
+        side.pending[slot] = true;
+      } else if (slot != side.gkSlot) {
         side.vacated.add(slot);
       }
     }
+    _ensureKeeper(side, coming: side.pending[side.gkSlot]);
     side.reform();
   }
 
-  void _endWalk(_Agent a) {
-    a.present = false;
-    a.walkStart = null;
-    a.vel = Offset2.zero;
+  /// Somebody always keeps goal: an empty keeper's slot is filled by the
+  /// man in the nearest slot, for good when no keeper is [coming], or until
+  /// the one on his way steps on.
+  void _ensureKeeper(_Side side, {required bool coming}) {
+    final gk = side.gkSlot;
+    if (side.owner[gk] != null) return;
+    int? best;
+    var bestD = double.infinity;
+    for (var i = 0; i < side.owner.length; i++) {
+      final o = side.owner[i];
+      if (i == gk || o == null || agents[o].walkStart != null) continue;
+      final d =
+          (side.layout[i].$1 - side.layout[gk].$1).abs() +
+          (side.layout[i].$2 - side.layout[gk].$2).abs();
+      if (d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    }
+    if (best == null) return;
+    final mover = agents[side.owner[best]!];
+    side.owner[gk] = mover.index;
+    side.owner[best] = null;
+    mover.slot = gk;
+    if (coming) {
+      side
+        ..pending[best] = true
+        ..standIn = (agent: mover.index, back: best);
+    } else {
+      side.vacated.add(best);
+    }
   }
 
-  void _arrive(_Agent on, int s, int? offIndex) {
-    if (on.present) return;
-    final side = sides[s];
-    int? slot;
-    if (offIndex != null) {
-      final v = agents[offIndex].vacatedSlot;
-      if (v != null && side.pending[v] && side.owner[v] == null) slot = v;
+  void _endWalk(_Agent a) {
+    a
+      ..present = false
+      ..gone = true
+      ..walkStart = null
+      ..walkTarget = null
+      ..vel = Offset2.zero;
+  }
+
+  void _processArrivals(double t) {
+    for (var k = 0; k < queue.length;) {
+      final q = queue[k];
+      if (q.earliest <= t + 1e-9 && _arrive(q, t)) {
+        queue.removeAt(k);
+      } else {
+        k++;
+      }
     }
-    // Otherwise the nearest empty place: the one emptied most recently.
-    while (slot == null && side.vacated.isNotEmpty) {
-      final v = side.vacated.removeLast();
-      if (side.owner[v] == null) slot = v;
+  }
+
+  /// Steps [q]'s man on, if his side has room: never a twelfth man, so he
+  /// waits while the man he replaces is still walking off. False to try
+  /// again later.
+  bool _arrive(_Arrival q, double t, {bool force = false}) {
+    final on = q.on;
+    if (on.present || on.gone) return true;
+    final side = sides[q.side];
+    if (!force) {
+      var count = 0;
+      for (final a in agents) {
+        if (a.present && a.side == q.side) count++;
+      }
+      if (count >= 11) return false;
+    }
+    bool free(int slot) =>
+        side.owner[slot] == null ||
+        (slot == side.gkSlot && side.standIn != null);
+    int? slot;
+    final hint = arrivalSlot[on.index];
+    if (hint != null && free(hint)) slot = hint;
+    final off = q.offIndex;
+    if (slot == null && off != null) {
+      final v = agents[off].vacatedSlot;
+      if (v != null && side.pending[v] && free(v)) slot = v;
+    }
+    if (slot == null) {
+      for (var k = side.vacated.length - 1; k >= 0; k--) {
+        if (free(side.vacated[k])) {
+          slot = side.vacated[k];
+          break;
+        }
+      }
     }
     if (slot == null) {
       for (var i = 0; i < side.owner.length; i++) {
@@ -811,15 +1176,32 @@ class _Builder {
         }
       }
     }
-    if (slot == null) return;
-    var count = 0;
-    for (final a in agents) {
-      if (a.present && a.side == s) count++;
+    if (slot == null) return false;
+    side.vacated.remove(slot);
+    final stand = side.standIn;
+    if (slot == side.gkSlot && stand != null) {
+      // The keeper is here: the stand-in goes back to his own place.
+      final back = side.owner[stand.back] == null
+          ? stand.back
+          : side.owner.indexOf(null);
+      final mover = agents[stand.agent];
+      side
+        ..owner[slot] = null
+        ..standIn = null;
+      if (back >= 0) {
+        side
+          ..owner[back] = mover.index
+          ..pending[back] = false;
+        mover.slot = back;
+      } else {
+        mover.slot = null;
+      }
     }
-    if (count >= 11) return;
-    side.pending[slot] = false;
-    side.owner[slot] = on.index;
+    side
+      ..pending[slot] = false
+      ..owner[slot] = on.index;
     on.slot = slot;
+    arrivalSlot.remove(on.index);
     // In from the halfway line on the benches' side.
     var spot = const Offset2(PitchDims.length / 2, PitchDims.width - 0.6);
     for (var k = 0; k < 40; k++) {
@@ -830,34 +1212,126 @@ class _Builder {
         break;
       }
     }
-    on.present = true;
-    on.pos = spot;
-    on.vel = Offset2.zero;
-    on.facing = -math.pi / 2;
+    on
+      ..present = true
+      ..appeared = true
+      ..pos = spot
+      ..vel = Offset2.zero
+      ..facing = -math.pi / 2;
+    arrivals[on.id] = t;
     side.reform();
+    return true;
   }
 
-  /// A carrier who has to leave plays the ball to the nearest team-mate
-  /// at least a pass's length away first.
+  /// A carrier who has to leave plays the ball off first: to the nearest
+  /// team-mate a pass's length away, or failing that the furthest one.
   void _forcePass(_Agent a, double t) {
-    _Agent? best;
-    var bestD = double.infinity;
+    _Agent? near;
+    _Agent? far;
+    var nearD = double.infinity;
+    var farD = -1.0;
     for (final o in agents) {
       if (!o.present || o.side != a.side || o == a || o.walkStart != null) {
         continue;
       }
       final d = o.pos.distanceTo(a.pos);
-      if (d >= 8 && d < bestD) {
-        bestD = d;
-        best = o;
+      if (d >= 8 && d < nearD) {
+        nearD = d;
+        near = o;
+      }
+      if (d > farD) {
+        farD = d;
+        far = o;
       }
     }
-    if (best != null) _startFlight(t, a, best, intercept: false);
+    final to = near ?? far;
+    if (to != null) _startFlight(t, a, to, intercept: false);
   }
 
   bool _departsWithin(_Agent a, double t, double within) {
-    final d = departures[a.id];
+    final d = leaving[a.index];
     return d != null && d >= t - 1e-9 && d <= t + within;
+  }
+
+  // --- resuming ------------------------------------------------------------
+
+  /// Sets everything up from [state] and returns the screen second the new
+  /// script starts at.
+  double _resumeFrom(ScriptState state) {
+    final t0 = _secs(
+      pacer.screenAt(state.minute, state.stoppage, within: state.within),
+    );
+    // Everything due before the resume point has happened: replay it, then
+    // put everybody exactly where the state has them.
+    while (ci < changes.length && changes[ci].t < t0 - 1e-9) {
+      changes[ci].apply(changes[ci].t, atBreak: false);
+      ci++;
+      for (final q in [...queue]) {
+        if (state.players.containsKey(q.on.id) && _arrive(q, t0, force: true)) {
+          queue.remove(q);
+        }
+      }
+    }
+    for (final r in resets) {
+      if (r < t0 - 1e-9) resetDone.add(r);
+    }
+    for (final a in agents) {
+      final p = state.players[a.id];
+      if (p == null) {
+        if (a.present) _endWalk(a);
+        continue;
+      }
+      a
+        ..present = true
+        ..appeared = true
+        ..pos = p
+        ..facing = state.facing[a.id] ?? 0
+        ..vel = state.velocity[a.id] ?? Offset2.zero;
+      if (state.walking.contains(a.id) && a.walkStart == null) {
+        a
+          ..walkStart = departures[a.id] ?? t0
+          ..walkTarget = Offset2(
+            p.x,
+            p.y < PitchDims.width / 2
+                ? _touchline
+                : PitchDims.width - _touchline,
+          );
+        departures[a.id] ??= t0;
+      }
+    }
+    final f = state.flight;
+    final dt = t0 - state.t;
+    carrier = state.carrierId == null ? null : indexOf[state.carrierId];
+    if (f != null && indexOf[f.toId] != null && indexOf[f.fromId] != null) {
+      flight = _Flight(
+        t0: f.t0 + dt,
+        t1: f.t1 + dt,
+        from: f.from,
+        fromActor: indexOf[f.fromId]!,
+        toActor: indexOf[f.toId]!,
+        peak: f.peak,
+        lead: f.lead,
+      );
+      carrier = null;
+    }
+    phaseStart = t0;
+    possession = state.possessionNationId == lineups.home.nationId ? 0 : 1;
+    homeBallTime = state.homeBallTime;
+    awayBallTime = state.awayBallTime;
+    cameraX = state.cameraX;
+    _reseed(t0);
+    final minute = pacer.matchAt(_dur(t0)).minute;
+    spellStart = t0;
+    spellEnd = t0 + _spellLength(possession);
+    spellDepth = _depthTarget(possession, minute);
+    nextAction = t0 + 0.3;
+    _record(t0);
+    for (final w in windows) {
+      if (w.start < t0 - 1e-9 && w.end > t0 + 1e-9) {
+        _openWindow(w, t0, windows.indexOf(w) + 1);
+      }
+    }
+    return t0;
   }
 
   // --- kick-off ------------------------------------------------------------
@@ -865,9 +1339,6 @@ class _Builder {
   void _kickoff(double t, int kicking) {
     if (flight != null) _land(t);
     _closePhase(t);
-    for (final a in agents) {
-      if (a.walkStart != null) _endWalk(a);
-    }
     final minute = pacer.matchAt(_dur(t)).minute;
     const centre = PitchDims.centre;
     possession = kicking;
@@ -886,9 +1357,10 @@ class _Builder {
           final need = math.sqrt(math.max(0, 10.5 * 10.5 - lat * lat));
           p = Offset2(depthToX(52.5 - need, dir), p.y);
         }
-        a.pos = p;
-        a.vel = Offset2.zero;
-        a.facing = dir > 0 ? 0 : math.pi;
+        a
+          ..pos = p
+          ..vel = Offset2.zero
+          ..facing = dir > 0 ? 0 : math.pi;
       }
     }
     // The kicker: the kicking side's most advanced man, on the ball.
@@ -993,7 +1465,8 @@ class _Builder {
   }
 
   /// How many screen seconds more than its possession share side [s] has
-  /// had the ball for so far (negative when it is owed time).
+  /// had the ball for so far, staged moments included (negative when it is
+  /// owed time).
   double _ahead(int s) {
     final played = homeBallTime + awayBallTime;
     final had = s == 0 ? homeBallTime : awayBallTime;
@@ -1015,12 +1488,14 @@ class _Builder {
     switch (action) {
       case PassAction(:final toPlayerId, :final arriveAt, :final peak):
         final to = indexOf[toPlayerId];
-        if (to == null || !agents[to].present || to == c) return;
+        if (to == null || to == c) return;
+        final target = agents[to];
+        if (!target.present || target.walkStart != null) return;
         _startFlight(
           t,
           agents[c],
-          agents[to],
-          intercept: agents[to].side != agents[c].side,
+          target,
+          intercept: target.side != agents[c].side,
           arriveAt: arriveAt,
           peak: peak,
         );
@@ -1052,8 +1527,7 @@ class _Builder {
       final m = w.moments.first;
       if (m is SubMoment) return null;
       final s = m.teamNationId == lineups.home.nationId ? 0 : 1;
-      final minute = m.minute;
-      final dir = _dir(s, minute);
+      final dir = _dir(s, m.minute);
       final p = switch (m) {
         ShotMoment(:final zone) => zonePoint(zone, dir),
         SetPieceMoment(:final zone, :final left) => zonePoint(
@@ -1407,17 +1881,18 @@ class _Builder {
           v = v + away * ((2.0 - d) * 1.5);
         }
       }
-      v = v.capped(math.max(maxSpeed, maxSpeed > 0 ? 2.0 : 0.0));
+      final walker = a.walkStart != null;
+      v = v.capped(math.max(maxSpeed, maxSpeed > 0 && !walker ? 2.0 : 0.0));
       final dv = (v - a.vel).capped(_accel * dt);
-      var nv = (a.vel + dv).capped(_hardSpeed);
-      if (maxSpeed <= 0 && a.walkStart == null) nv = Offset2.zero;
+      var nv = (a.vel + dv).capped(walker ? _walkCap : _hardSpeed);
+      if (maxSpeed <= 0 && !walker) nv = Offset2.zero;
       var p = _clampPitch(a.pos + nv * dt);
-      if (!inWindow && (a.slot == sides[a.side].gkSlot || a.keeper)) {
+      if (!inWindow && a.slot == sides[a.side].gkSlot) {
+        // No snapping back: a keeper beyond his reach (back from a moment,
+        // or a man just sent in goal) is only kept from going further.
         final dir = _dir(a.side, minute);
-        final depth = xToDepth(p.x, dir);
-        if (depth > _keeperMaxDepth) {
-          p = Offset2(depthToX(_keeperMaxDepth, dir), p.y);
-        }
+        final limit = math.max(_keeperMaxDepth, xToDepth(a.pos.x, dir));
+        if (xToDepth(p.x, dir) > limit) p = Offset2(depthToX(limit, dir), p.y);
       }
       proposed[a.index] = p;
     }
@@ -1426,11 +1901,12 @@ class _Builder {
 
     for (final a in present) {
       final p = proposed[a.index]!;
-      a.vel = (p - a.pos) * (1 / dt);
-      a.pos = p;
+      a
+        ..vel = (p - a.pos) * (1 / dt)
+        ..pos = p;
     }
-    // Facing: the carrier where he runs (or the goal he attacks), everyone
-    // else toward the ball.
+    // Facing: the carrier where he runs (or the goal he attacks), a man
+    // walking off where he walks, everyone else toward the ball.
     final ballAfter = _ballNow(t1);
     for (final a in present) {
       double want;
@@ -1461,7 +1937,7 @@ class _Builder {
     StagedPlan? plan,
     ScriptState? state,
   ) {
-    if (a.walkStart != null) return (a.walkTarget!, 3.5, 3);
+    if (a.walkStart != null) return (_walkTarget(a), PitchScript.walkSpeed, 3);
     final side = sides[a.side];
     final dir = _dir(a.side, minute);
     final isKeeper = a.slot == side.gkSlot;
@@ -1508,6 +1984,27 @@ class _Builder {
     return (anchor, speed, 1);
   }
 
+  /// Where a man walking off heads now: straight for the touchline, stepping
+  /// round anybody standing in his way (play goes on around him, and in a
+  /// staged moment the others may be standing still).
+  Offset2 _walkTarget(_Agent a) {
+    final goal = a.walkTarget!;
+    final dirY = goal.y >= a.pos.y ? 1.0 : -1.0;
+    var dx = 0.0;
+    for (final o in agents) {
+      if (o == a || !o.present) continue;
+      final rel = o.pos - a.pos;
+      final ahead = rel.y * dirY;
+      if (ahead > 0 && ahead < 2.5 && rel.x.abs() < 1.3) {
+        dx += rel.x >= 0 ? -2.0 : 2.0;
+      }
+    }
+    return Offset2(
+      (a.pos.x + dx).clamp(1.0, PitchDims.length - 1),
+      goal.y,
+    );
+  }
+
   /// Nobody walks through anybody: any two whose straight-line paths over
   /// the step would bring them closer than [_safeGap] are slowed, the less
   /// important first, down to standing still (which is always safe, as the
@@ -1522,20 +2019,26 @@ class _Builder {
     final old = [for (final a in present) a.pos];
     final prop = [for (final a in present) proposed[a.index]!];
     Offset2 at(int i) => Offset2.lerp(old[i], prop[i], f[i]);
-    for (var round = 0; round < 40; round++) {
-      var conflict = false;
-      for (var i = 0; i < n; i++) {
-        for (var j = i + 1; j < n; j++) {
-          final reach =
-              (prop[i] - old[i]).length + (prop[j] - old[j]).length + _safeGap;
-          if (old[i].distanceTo(old[j]) > reach) continue;
-          final d = PitchScriptValidator.closestApproach(
+    bool clash(int i, int j) {
+      final reach =
+          (prop[i] - old[i]).length * f[i] +
+          (prop[j] - old[j]).length * f[j] +
+          _safeGap;
+      if (old[i].distanceTo(old[j]) > reach) return false;
+      return PitchScriptValidator.closestApproach(
             old[i],
             at(i),
             old[j],
             at(j),
-          );
-          if (d >= _safeGap) continue;
+          ) <
+          _safeGap;
+    }
+
+    for (var round = 0; round < 40; round++) {
+      var conflict = false;
+      for (var i = 0; i < n; i++) {
+        for (var j = i + 1; j < n; j++) {
+          if (!clash(i, j)) continue;
           conflict = true;
           final pi = priority[present[i].index]!;
           final pj = priority[present[j].index]!;
@@ -1545,6 +2048,25 @@ class _Builder {
         }
       }
       if (!conflict) break;
+    }
+    // The last word: anyone still clashing stands still. Each pass stops at
+    // least one more man, and two men standing still never clash.
+    var changed = true;
+    while (changed) {
+      changed = false;
+      for (var i = 0; i < n; i++) {
+        for (var j = i + 1; j < n; j++) {
+          if (!clash(i, j)) continue;
+          if (f[i] > 0) {
+            f[i] = 0;
+            changed = true;
+          }
+          if (f[j] > 0) {
+            f[j] = 0;
+            changed = true;
+          }
+        }
+      }
     }
     for (var i = 0; i < n; i++) {
       proposed[present[i].index] = at(i);
@@ -1567,27 +2089,70 @@ class _Builder {
     return c == null ? PitchDims.centre : _ballPoint(agents[c]);
   }
 
-  ScriptState _state(double t) => ScriptState(
-    t: t,
-    players: {
-      for (final a in agents)
-        if (a.present) a.id: a.pos,
-    },
-    ball: _ballNow(t),
-    carrierId: carrier == null ? null : agents[carrier!].id,
-    possessionNationId: sides[possession].nationId,
-  );
+  ScriptState _state(double t) {
+    final f = flight;
+    final m = pacer.matchAt(_dur(t));
+    return ScriptState(
+      t: t,
+      players: {
+        for (final a in agents)
+          if (a.present) a.id: a.pos,
+      },
+      ball: _ballNow(t),
+      carrierId: carrier == null ? null : agents[carrier!].id,
+      possessionNationId: sides[possession].nationId,
+      teams: {
+        for (final a in agents)
+          if (a.present) a.id: sides[a.side].nationId,
+      },
+      facing: {
+        for (final a in agents)
+          if (a.present) a.id: a.facing,
+      },
+      velocity: {
+        for (final a in agents)
+          if (a.present) a.id: a.vel,
+      },
+      walking: {
+        for (final a in agents)
+          if (a.present && a.walkStart != null) a.id,
+      },
+      keepers: {
+        for (final a in agents)
+          if (a.present && a.slot == sides[a.side].gkSlot) a.id,
+      },
+      flight: f == null
+          ? null
+          : (
+              fromId: agents[f.fromActor].id,
+              toId: agents[f.toActor].id,
+              from: f.from,
+              lead: f.lead,
+              t0: f.t0,
+              t1: f.t1,
+              peak: f.peak,
+            ),
+      homeBallTime: homeBallTime,
+      awayBallTime: awayBallTime,
+      cameraX: cameraX,
+      minute: m.minute,
+      stoppage: m.stoppage,
+      within: m.within,
+    );
+  }
 
   void _record(double t) {
     final n = agents.length;
     final xs = Float64List(n);
     final ys = Float64List(n);
     final face = Float64List(n);
+    final keepers = Uint8List(n);
     for (var i = 0; i < n; i++) {
       final a = agents[i];
       xs[i] = a.present ? a.pos.x : double.nan;
       ys[i] = a.present ? a.pos.y : double.nan;
       face[i] = a.facing;
+      keepers[i] = a.present && a.slot == sides[a.side].gkSlot ? 1 : 0;
     }
     keyframes.add(
       ScriptKeyframe(
@@ -1595,6 +2160,7 @@ class _Builder {
         xs: xs,
         ys: ys,
         facing: face,
+        keepers: keepers,
         cameraX: cameraX,
         zoom: 1,
       ),
