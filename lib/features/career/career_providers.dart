@@ -75,6 +75,17 @@ final FutureProvider<Map<int, String>> careerWorldNamesProvider =
       return ref.watch(worldPackRepositoryProvider).careerWorldNames();
     });
 
+/// The name each save's own nation goes by in its world, by career id, for
+/// the saves whose world renamed it (a default-world save is not in it).
+/// Follows [savesProvider], like [careerWorldNamesProvider].
+final FutureProvider<Map<int, String>> careerWorldNationNamesProvider =
+    FutureProvider<Map<int, String>>((ref) async {
+      final saves = await ref.watch(savesProvider.future);
+      return ref.watch(worldPackRepositoryProvider).careerNationNames({
+        for (final s in saves) s.id: s.nationId,
+      });
+    });
+
 /// A nation by id — used by the new-game and hub screens for display.
 final FutureProviderFamily<Nation?, int> nationByIdProvider =
     FutureProvider.family<Nation?, int>((ref, id) async {

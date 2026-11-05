@@ -10,7 +10,7 @@ class _SavesTabletLayout extends StatelessWidget {
   const _SavesTabletLayout({
     required this.state,
     required this.savesAsync,
-    required this.nationsById,
+    required this.nationOf,
     required this.worldNames,
     required this.premium,
     required this.limit,
@@ -19,7 +19,9 @@ class _SavesTabletLayout extends StatelessWidget {
 
   final _SavesScreenState state;
   final AsyncValue<List<Career>> savesAsync;
-  final Map<int, Nation> nationsById;
+
+  /// A save's nation, as its world names it.
+  final Nation? Function(Career save) nationOf;
 
   /// The database each save on a custom world runs on, by career id.
   final Map<int, String> worldNames;
@@ -80,7 +82,7 @@ class _SavesTabletLayout extends StatelessWidget {
                                         _saveColumns(
                                           context,
                                           l,
-                                          nationsById,
+                                          nationOf,
                                           lockedIds,
                                         ),
                                       ],
@@ -107,7 +109,7 @@ class _SavesTabletLayout extends StatelessWidget {
                                 key: ValueKey(selected.id),
                                 state: state,
                                 save: selected,
-                                nation: nationsById[selected.nationId],
+                                nation: nationOf(selected),
                                 worldName: worldNames[selected.id],
                                 locked: lockedIds.contains(selected.id),
                               ),
@@ -129,11 +131,10 @@ class _SavesTabletLayout extends StatelessWidget {
 GridColumnSet<Career> _saveColumns(
   BuildContext context,
   AppLocalizations l,
-  Map<int, Nation> nationsById,
+  Nation? Function(Career save) nationOf,
   Set<int> lockedIds,
 ) {
-  String name(Career c) =>
-      nationsById[c.nationId]?.name ?? l.careerUnknownNation;
+  String name(Career c) => nationOf(c)?.name ?? l.careerUnknownNation;
   return GridColumnSet<Career>(
     id: 'overview',
     label: l.gridViewOverview,
@@ -145,7 +146,7 @@ GridColumnSet<Career> _saveColumns(
         sortKey: name,
         cell: (c) => Row(
           children: [
-            FlagDisc(nationsById[c.nationId]?.code ?? '??', size: 22),
+            FlagDisc(nationOf(c)?.code ?? '??', size: 22),
             const SizedBox(width: AppSpacing.sm),
             Flexible(
               child: Text(

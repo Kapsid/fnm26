@@ -46,6 +46,10 @@ class HomeScreen extends ConsumerWidget {
     final lastWorld = lastSave == null
         ? null
         : ref.watch(careerWorldNamesProvider).valueOrNull?[lastSave.id];
+    // Its nation as its own world names it.
+    final lastWorldNation = lastSave == null
+        ? null
+        : ref.watch(careerWorldNationNamesProvider).valueOrNull?[lastSave.id];
     final campaign = _latestCampaignRun(ref);
     final campaignNation = campaign == null
         ? null
@@ -57,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
     final cards = <Widget>[
       if (lastSave != null)
         _ContinueCard(
-          nationName: lastNation?.name ?? l.homeYourNation,
+          nationName: lastWorldNation ?? lastNation?.name ?? l.homeYourNation,
           nationCode: lastNation?.code,
           worldName: lastWorld,
           inGameDate: lastSave.inGameDate,

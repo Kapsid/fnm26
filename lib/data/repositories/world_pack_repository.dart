@@ -65,6 +65,29 @@ class WorldPackRepository {
     };
   }
 
+  /// The name its world gives each career's nation, by career id, for the
+  /// careers in [nationByCareer] (career id to its nation) whose world
+  /// renamed that nation. A world that cannot be read names nothing.
+  Future<Map<int, String>> careerNationNames(
+    Map<int, int> nationByCareer,
+  ) async {
+    final rows = await (_db.select(
+      _db.careerWorlds,
+    )..where((t) => t.careerId.isIn(nationByCareer.keys))).get();
+    final out = <int, String>{};
+    for (final r in rows) {
+      final nationId = nationByCareer[r.careerId];
+      if (nationId == null) continue;
+      try {
+        final name = _decode(r.json).nations[nationId]?.name;
+        if (name != null && name.trim().isNotEmpty) out[r.careerId] = name;
+      } on FormatException {
+        // Shown under the default name; the career's own reads report it.
+      }
+    }
+    return out;
+  }
+
   /// Stores [p] as a new pack with its [trophies], and returns its id.
   Future<int> insert(WorldPack p, Map<String, Uint8List> trophies) =>
       _db.transaction(() async {

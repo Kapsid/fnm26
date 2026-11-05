@@ -365,6 +365,74 @@ void main() {
     );
   }
 
+  for (final (label, formFactor, size) in [
+    ('phone', FormFactor.phone, kPhoneSize),
+    ('tablet', FormFactor.tablet, kTabletSize),
+  ]) {
+    testWidgets(
+      'save card and continue card name the nation as its world does, $label',
+      timeout: const Timeout.factor(6),
+      (tester) async {
+        final c = await _launch(
+          tester,
+          _db(),
+          formFactor: formFactor,
+          premium: true,
+        );
+        final cze = nationIdOf('CZE');
+        final id = await insertPack(
+          tester,
+          c,
+          testPack(
+            'Mine',
+            squads: {cze: _packSquad()},
+          ).copyWith(nations: {cze: (name: 'Bohemia', code: 'BOH')}),
+        );
+        late Career onPack;
+        await tester.runAsync(() async {
+          final careers = c.read(careerServiceProvider);
+          await careers.create(nationId: cze, managerName: 'D', rngSeed: 1);
+          onPack = (await careers.create(
+            nationId: cze,
+            managerName: 'P',
+            rngSeed: 2,
+            worldPackId: id,
+          )).valueOrNull!;
+          await c
+              .read(careerRepositoryProvider)
+              .touch(onPack.id, DateTime(2099));
+        });
+
+        await _open(tester, c, Routes.saves, size: size);
+        // The pack save is named as its world names it; the default save
+        // keeps the game's name.
+        expect(find.text('Bohemia'), findsWidgets);
+        expect(find.text('Czechia'), findsWidgets);
+        if (formFactor == FormFactor.phone) {
+          final onPackTile = find.ancestor(
+            of: find.byKey(SaveTile.worldKey),
+            matching: find.byType(SaveTile),
+          );
+          expect(
+            find.descendant(of: onPackTile, matching: find.text('Bohemia')),
+            findsOneWidget,
+          );
+          final defaultTile = find.byWidgetPredicate(
+            (w) => w is SaveTile && w.save.id != onPack.id,
+          );
+          expect(
+            find.descendant(of: defaultTile, matching: find.text('Czechia')),
+            findsOneWidget,
+          );
+        }
+
+        c.read(routerProvider).go(Routes.home);
+        await settle(tester);
+        expect(find.text('Bohemia'), findsOneWidget);
+      },
+    );
+  }
+
   testWidgets('default stays the default choice after the app restarts', (
     tester,
   ) async {

@@ -120,12 +120,23 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
     final worldNames =
         ref.watch(careerWorldNamesProvider).valueOrNull ??
         const <int, String>{};
+    // A save's nation as its own world names it.
+    final worldNationNames =
+        ref.watch(careerWorldNationNamesProvider).valueOrNull ??
+        const <int, String>{};
+    Nation? nationOf(Career save) {
+      final nation = nationsById[save.nationId];
+      final renamed = worldNationNames[save.id];
+      return nation == null || renamed == null
+          ? nation
+          : nation.copyWith(name: renamed);
+    }
 
     if (useTabletLayout(context, ref)) {
       return _SavesTabletLayout(
         state: this,
         savesAsync: savesAsync,
-        nationsById: nationsById,
+        nationOf: nationOf,
         worldNames: worldNames,
         premium: premium,
         limit: limit,
@@ -185,15 +196,14 @@ class _SavesScreenState extends ConsumerState<SavesScreen> {
                           final save = saves[i];
                           return SaveTile(
                             save: save,
-                            nation: nationsById[save.nationId],
+                            nation: nationOf(save),
                             worldName: worldNames[save.id],
                             locked: lockedIds.contains(save.id),
                             onContinue: () => _continue(save),
                             onDelete: () => _confirmDelete(
                               context,
                               ref,
-                              nationsById[save.nationId]?.name ??
-                                  l.careerThisSave,
+                              nationOf(save)?.name ?? l.careerThisSave,
                               save.id,
                             ),
                             onShare: _busy
