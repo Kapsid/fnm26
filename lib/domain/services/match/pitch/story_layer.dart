@@ -1980,6 +1980,28 @@ class _Builder {
         _kick(t, k);
       case final CutAction k:
         _cut(t, k);
+        // The moment goes on at once from what the cut shows.
+        final next = plan.ball(t, _state(t));
+        switch (next) {
+          case final KickAction n:
+            _kick(t, n);
+          case PassAction(:final toPlayerId, :final arriveAt, :final peak):
+            final cc = carrier;
+            final to = indexOf[toPlayerId];
+            if (cc == null || to == null || to == cc) break;
+            final target = agents[to];
+            if (!target.present || target.walkStart != null) break;
+            _startFlight(
+              t,
+              agents[cc],
+              target,
+              intercept: target.side != agents[cc].side,
+              arriveAt: arriveAt,
+              peak: peak,
+            );
+          case CutAction() || null:
+            break;
+        }
       case null:
         break;
     }
@@ -2311,6 +2333,8 @@ class _Builder {
           // The same arc, cut short: a parabola's first part is one too.
           peak: f.peak * k * k,
           fromActor: f.fromActor,
+          // Still the man it was played to, though it never reached him.
+          toActor: f.toActor,
           pass: false,
           fromHeight: f.fromHeight,
           toHeight: height,

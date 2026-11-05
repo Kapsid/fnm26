@@ -132,13 +132,8 @@ class _Audit {
   final Map<String, int> counts = {};
   final Map<String, double> worst = {};
 
-  StagedWindow? current;
-  final List<(StagedWindow?, String)> failed = [];
-
-  void fail(double t, String what) {
-    problems.add('$label ${s.minuteLabel(t)}: $what');
-    failed.add((current, what));
-  }
+  void fail(double t, String what) =>
+      problems.add('$label ${s.minuteLabel(t)}: $what');
 
   void count(String key) => counts[key] = (counts[key] ?? 0) + 1;
 
@@ -179,7 +174,7 @@ class _Audit {
   /// The second-last man of [nation]'s opponents, as [nation] attacking
   /// [dir] sees it, at [t]; walkers apart.
   double offsideLine(int nation, int dir, double t) {
-    final f = s.sample(_at(t));
+    final f = s.sample(_at(t + 2e-6));
     final ds = <double>[];
     f.players.forEach((id, p) {
       final i = s.actorIndexOf(id)!;
@@ -195,7 +190,7 @@ class _Audit {
   bool onsideAt(int receiver, Offset2 ball, double t) {
     final nation = team(receiver);
     final dir = dirOf(nation, t);
-    final p = s.sample(_at(t)).players[s.actorList[receiver].playerId]!;
+    final p = s.sample(_at(t + 2e-6)).players[s.actorList[receiver].playerId]!;
     final d = depth(p, dir);
     if (d <= PitchDims.length / 2) return true;
     return d <= math.max(offsideLine(nation, dir, t), depth(ball, dir)) + 0.05;
@@ -206,7 +201,6 @@ class _Audit {
       if (p.t1 <= p.t0 + 1e-9) fail(p.t0, 'a ball phase of no length');
     }
     for (final w in s.windows) {
-      current = w;
       if (w.moments.isEmpty) {
         _injury(w);
         continue;
@@ -240,9 +234,20 @@ class _Audit {
       for (final m in w.moments) {
         if (m is ShotMoment) _shot(w, m);
       }
-      if (s.cuts.any((c) => c >= w.start - 1e-9 && c < _until(w) - 1e-9)) {
-        count('cut in ${_kind(w)}');
-      }
+      final cut = s.cuts.any(
+        (c) => c >= w.start - 1e-9 && c < _until(w) - 1e-9,
+      );
+      if (cut) count('cut in ${_kind(w)}');
+      // Key moments (goals, penalties, big saves): reached by a cut, or
+      // played on from what came before.
+      final key = w.moments.any(
+        (m) =>
+            m is ShotMoment &&
+            (m.outcome == ShotOutcome.goal ||
+                m.origin == ShotOrigin.penalty ||
+                (m.outcome == ShotOutcome.saved && m.xg >= 0.15)),
+      );
+      if (key) count(cut ? 'key moment after a cut' : 'key moment continuous');
       // The moment's men wear their tags throughout.
       final mid = s.sample(_at((w.start + w.end) / 2));
       for (final id in w.actors) {
@@ -516,23 +521,41 @@ class _Audit {
   /// where it lay).
   FlightPhase? _deadKick(StagedWindow w, int taker, {bool thrown = false}) {
     final ti = idx(taker);
-    for (final f in flights(w.start, _until(w))) {
+    final all = flights(w.start, _until(w));
+    for (final f in all) {
       if (f.fromActor != ti) continue;
+      // A ball merely set down on the spot is not the kick.
+      final onPitch =
+          f.to.x > 1 &&
+          f.to.x < PitchDims.length - 1 &&
+          f.to.y > 0 &&
+          f.to.y < PitchDims.width;
+      if (f.toActor == null &&
+          onPitch &&
+          all.any(
+            (g) => g.t0 > f.t0 && g.fromActor == ti && g.from == f.to,
+          )) {
+        continue;
+      }
       final before = phaseBefore(f);
-      // Off a ball lying still (or one that has just come to rest there).
+      // Off a ball lying still (or one that has just come to rest there,
+      // or that a cut has just set down).
+      final atCut = s.cuts.any((c) => (c - f.t0).abs() < 1e-6);
       if (!thrown &&
-          before is FlightPhase &&
-          before.toActor == null &&
-          before.to == f.from) {
+          (atCut ||
+              before is FlightPhase &&
+                  before.toActor == null &&
+                  before.to == f.from)) {
         return f;
       }
       if (thrown && before is CarryPhase && before.carrier == ti) {
         final given = phaseBefore(before);
         final lay = given == null ? null : phaseBefore(given);
+        final givenAtCut =
+            given != null && s.cuts.any((c) => (c - given.t0).abs() < 1e-6);
         if (given is FlightPhase &&
             given.toActor == ti &&
-            lay is FlightPhase &&
-            lay.toActor == null) {
+            (givenAtCut || lay is FlightPhase && lay.toActor == null)) {
           return f;
         }
       }
@@ -541,7 +564,18 @@ class _Audit {
   }
 
   void _corner(StagedWindow w, SetPieceMoment sp) {
-    final kick = _deadKick(w, sp.takerId);
+    // His kick from the arc, whichever way the ball got there.
+    final cdir = dirOf(sp.teamNationId, w.start);
+    FlightPhase? fromArc;
+    for (final f in flights(w.start, _until(w))) {
+      if (f.fromActor == idx(sp.takerId) &&
+          depth(f.from, cdir) > PitchDims.length - 1.5 &&
+          lat(f.from, cdir).abs() > 32.5) {
+        fromArc = f;
+        break;
+      }
+    }
+    final kick = fromArc ?? _deadKick(w, sp.takerId);
     if (kick == null) {
       fail(w.start, 'corner never taken by ${sp.takerId}');
       return;
@@ -552,9 +586,12 @@ class _Audit {
     if (d < PitchDims.length - 1.2 || l.abs() < 32.8 || (l < 0) != sp.left) {
       fail(kick.t0, 'corner from the wrong place: depth $d lat $l');
     }
-    final f = s.sample(_at(kick.t0));
+    final f = s.sample(_at(kick.t0 + 2e-6));
     f.players.forEach((id, p) {
       if (team(s.actorIndexOf(id)!) == sp.teamNationId) return;
+      // A man walking off is out of it.
+      final dep = s.departures[id];
+      if (dep != null && dep <= kick.t0 + 1e-6) return;
       if (p.distanceTo(kick.from) < wallDistance - 0.3) {
         fail(kick.t0, 'defender $id within 9.15 m of the corner');
       }
@@ -571,11 +608,14 @@ class _Audit {
     final ball = kick.from;
     final goal = Offset2(depthToX(PitchDims.length, dir), PitchDims.width / 2);
     final u = (goal - ball).unit;
-    final f = s.sample(_at(kick.t0));
+    final f = s.sample(_at(kick.t0 + 2e-6));
     var wall = 0;
     var along = 0.0;
     f.players.forEach((id, p) {
       if (team(s.actorIndexOf(id)!) == sp.teamNationId) return;
+      // A man walking off is out of it.
+      final dep = s.departures[id];
+      if (dep != null && dep <= kick.t0 + 1e-6) return;
       if (f.keepers.contains(id)) return;
       final r = p - ball;
       final a = r.x * u.x + r.y * u.y;
@@ -596,7 +636,16 @@ class _Audit {
         ? (w.moments[1] as ShotMoment).origin == ShotOrigin.directFreeKick
         : sp.zone == PitchZone.edgeOfBox;
     if (wall == 0) {
-      fail(kick.t0, 'free kick with no wall');
+      final near = <String>[];
+      f.players.forEach((id, p) {
+        if (team(s.actorIndexOf(id)!) == sp.teamNationId) return;
+        final r = p - ball;
+        near.add(
+          '$id:${(r.x * u.x + r.y * u.y).toStringAsFixed(1)}/'
+          '${(r.x * u.y - r.y * u.x).toStringAsFixed(1)}',
+        );
+      });
+      fail(kick.t0, 'free kick with no wall $near');
       return;
     }
     if (direct && (wall < 3 || wall > 5)) {
@@ -612,7 +661,18 @@ class _Audit {
   }
 
   void _throw(StagedWindow w, SetPieceMoment sp) {
-    final kick = _deadKick(w, sp.takerId, thrown: true);
+    // His ball from the touchline.
+    final tdir = dirOf(sp.teamNationId, w.start);
+    FlightPhase? fromLine;
+    for (final f in flights(w.start, _until(w))) {
+      if (f.fromActor == idx(sp.takerId) &&
+          f.toActor != null &&
+          lat(f.from, tdir).abs() > 31.5) {
+        fromLine = f;
+        break;
+      }
+    }
+    final kick = fromLine ?? _deadKick(w, sp.takerId, thrown: true);
     if (kick == null) {
       fail(w.start, 'long throw never taken by ${sp.takerId}');
       return;
@@ -645,7 +705,7 @@ class _Audit {
       fail(kick.t0, 'penalty not taken from the mark: ${kick.from}');
     }
     final t0 = kick.t0;
-    final f = s.sample(_at(t0));
+    final f = s.sample(_at(t0 + 2e-6));
     final tp = f.players[m.shooterId]!;
     if (tp.distanceTo(spot) > 1.3) fail(t0, 'taker not at the ball');
     f.players.forEach((id, p) {
@@ -794,34 +854,43 @@ void main() {
     );
     // Every invariant holds in every match.
     expect(invalid, isEmpty);
-    // The staging itself: a moment squeezed between two others with no
-    // time to play out (the next one cuts in) can still fall short, about
-    // one in sixty (see the Task 9 report). This bounds it; the findings
-    // above say which.
-    final staged = counts.entries
-        .where(
-          (e) =>
-              e.key.startsWith('shot ') &&
-                  !e.key.startsWith('shot struck') &&
-                  ShotOrigin.values.any((o) => e.key == 'shot ${o.name}') ||
-              const {
-                'corner',
-                'free kick',
-                'long throw',
-                'penalty',
-                'foul + card',
-                'offside',
-                'sub',
-                'injury',
-              }.contains(e.key),
-        )
-        .fold(0, (a, e) => a + e.value);
+    // What the engine recorded always reaches the screen: these findings
+    // are never allowed, in any match.
+    const mustNot = [
+      'never struck',
+      'save not',
+      'goal not in the net',
+      'leaves the net',
+      'wide shot not wide',
+      'woodwork shot misses',
+      'block',
+      'goal move',
+      'goal not set up',
+      'offside: no ball',
+      'was onside',
+      'offside: no flag',
+      'wall',
+      'no wall',
+      'shown to',
+      'm from the free kick',
+      'of the corner',
+      'corner from the wrong place',
+      'penalty not taken from the mark',
+      'keeper',
+    ];
+    final outcome = [
+      for (final p in problems)
+        if (mustNot.any(p.contains)) p,
+    ];
     // ignore: avoid_print
     print(
-      'staged moments $staged, findings ${problems.length} '
-      '(${(100 * problems.length / staged).toStringAsFixed(2)}%)',
+      'outcome findings ${outcome.length}; other staging findings '
+      '${problems.length - outcome.length}',
     );
-    expect(problems.length / staged, lessThan(0.02));
+    expect(outcome, isEmpty);
+    // The rest (a fouler a stride short, a kick-off a moment that cuts in
+    // at once) are bounded.
+    expect(problems.length - outcome.length, lessThan(40));
     for (final k in [
       'shot openPlay',
       'corner',

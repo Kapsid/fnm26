@@ -631,15 +631,18 @@ class _Shot {
     keeper = p.keeperOf(now, p.opp, m.keeperId);
     final kp = keeper == null ? null : now.players[keeper];
     final kLat = kp == null ? 0.0 : p.latOf(kp);
-    var v = speed ?? speedFor(header: fromHeight > 1);
-    final hard = goal ? p.end : p.c.hardEnd;
-    if (hard.isFinite) {
-      // In before the picture cuts (to the kick-off, or the interval).
-      final d = b.distanceTo(p.goal);
-      final left = hard - 0.5 - t;
-      if (left > 0.1 && d / v > left) v = math.min(34, d / left);
-      if (left <= 0.1) v = 34;
+    final v = speed ?? speedFor(header: fromHeight > 1);
+    // It arrives inside its window, whatever comes next: a goal half a
+    // second before the cut to the kick-off, anything else before the
+    // next moment (or an interval) may cut in. Faster if it has to, never
+    // above 34 m/s.
+    final limit = math.min(p.end, p.c.hardEnd) - (goal ? 0.5 : 0.05);
+    double arr(double d, double vv, {double atLeast = 0}) {
+      final quickest = d / 34;
+      final want = math.max(d / vv, atLeast);
+      return t + want.clamp(quickest, math.max(quickest, limit - t));
     }
+
     // Clear a wall [wallDepth] in front (a free kick): high enough there.
     double peakOver(double lineDepth, double floor) {
       if (wallDepth == null) return floor;
@@ -683,7 +686,7 @@ class _Shot {
         }
         return KickAction(
           to: to,
-          arriveAt: t + b.distanceTo(to) / v,
+          arriveAt: arr(b.distanceTo(to), v),
           peak: peak,
           fromHeight: fromHeight,
           byPlayerId: by,
@@ -699,7 +702,7 @@ class _Shot {
           final d = b.distanceTo(kp);
           return KickAction(
             toPlayerId: keeper,
-            arriveAt: t + math.max(d / math.min(v, 21), 0.42),
+            arriveAt: arr(d, math.min(v, 21), atLeast: 0.42),
             peak: peakOver(p.depthOf(kp), fromHeight > 1 ? 0.2 : 0.4),
             fromHeight: fromHeight,
             byPlayerId: by,
@@ -729,7 +732,7 @@ class _Shot {
           }
           return KickAction(
             to: to,
-            arriveAt: t + b.distanceTo(to) / v,
+            arriveAt: arr(b.distanceTo(to), v),
             peak: peak,
             fromHeight: fromHeight,
             byPlayerId: by,
@@ -744,7 +747,7 @@ class _Shot {
         }
         return KickAction(
           to: to,
-          arriveAt: t + b.distanceTo(to) / v,
+          arriveAt: arr(b.distanceTo(to), v),
           peak: peakOver(
             _goalLine,
             fromHeight > 1 ? 0.2 : 0.5 * r.nextDouble(),
@@ -772,7 +775,7 @@ class _Shot {
         }
         return KickAction(
           to: to,
-          arriveAt: t + b.distanceTo(to) / v,
+          arriveAt: arr(b.distanceTo(to), v),
           peak: peakOver(_goalLine, 0),
           fromHeight: fromHeight,
           toHeight: height,
@@ -805,7 +808,7 @@ class _Shot {
         final d = b.distanceTo(now.players[bk]!);
         return KickAction(
           toPlayerId: bk,
-          arriveAt: t + math.max(d / v, 0.12),
+          arriveAt: arr(d, v, atLeast: 0.12),
           peak: fromHeight > 1 ? 0 : 0.2,
           fromHeight: fromHeight,
           toHeight: math.min(fromHeight, 1.2),
@@ -1023,56 +1026,108 @@ class _OpenShotPlan extends _Plan {
     return need > room + 0.2;
   }
 
+  /// The latest the shot can still be worked and struck in its window.
+  double get strikeBy {
+    final flight = switch (m.outcome) {
+      ShotOutcome.goal => 1.1,
+      ShotOutcome.blocked => 0.3,
+      ShotOutcome.saved => 0.7,
+      _ => 0.9,
+    };
+    return end - flight - (assister != null && !delivered ? 0.55 : 0);
+  }
+
+  bool lateCut = false;
+
+  /// The cut to the shot about to happen: the man who has the ball (the
+  /// assister, for a goal he sets up) in the zone with it at his feet, the
+  /// scorer onside ahead of him, a blocker on the shot's path.
+  CutAction _phaseCut(ScriptState now) {
+    final holder = assister != null && !delivered ? assister! : m.shooterId;
+    final setUp = holder != m.shooterId;
+    final back = setUp ? 10.0 : 2.0;
+    final spot = at(
+      math.max(depthOf(zone) - back, PitchDims.length / 2),
+      latOf(zone) * (setUp ? 0.6 : 1),
+    );
+    final extra = <int, Offset2>{};
+    if (m.outcome == ShotOutcome.blocked) {
+      // The man who blocks it is right on him.
+      final lane = spot + (goal - spot).unit * 2.0;
+      final defs = available(now, opp).where((o) => !now.keepers.contains(o));
+      final b = nearest(now, defs, lane);
+      if (b != null) {
+        extra[b] = lane;
+        shot.blocker = b;
+      }
+    }
+    final sd = depthOf(zone) - 1;
+    if (setUp) extra[m.shooterId] = at(sd, latOf(zone));
+    final cut = cutToPhase(now, holder, spot, extra: extra);
+    if (setUp) {
+      // One of theirs deeper than the scorer: he is onside.
+      final k = keeperOf(now, opp);
+      int? deepest;
+      var dd = -1.0;
+      cut.positions.forEach((id, q) {
+        if (now.teams[id] != opp || id == k) return;
+        if (depthOf(q) > dd) {
+          dd = depthOf(q);
+          deepest = id;
+        }
+      });
+      if (deepest != null && dd < sd + 0.5) {
+        cut.positions[deepest!] = at(sd + 1.5, latOf(zone) + 2.5);
+      }
+    }
+    return cut;
+  }
+
   @override
   BallAction? ball(double t, ScriptState now) {
     if (shot.struck) return shot.after(t, now);
+    final s = m.shooterId;
+    final car = now.carrierId;
+    // The ball at a man's feet, or lying at them after a cut.
+    bool atFeet(int id) {
+      if (car == id) return true;
+      final q = now.players[id];
+      return car == null &&
+          now.flight == null &&
+          q != null &&
+          q.distanceTo(now.ball) < 1.3;
+    }
+
     cutWanted ??= _needCut(now);
-    // A ball still in the air (the last moment's) lands first.
-    if (cutWanted! && !sceneCut && landing(now)) return null;
-    if (cutWanted! && !sceneCut) {
-      final holder = assister ?? m.shooterId;
-      final back = assister == null ? 3.0 : 12.0;
-      final spot = at(
-        math.max(depthOf(zone) - back, PitchDims.length / 2),
-        latOf(zone) * (assister == null ? 1 : 0.6),
-      );
-      final extra = <int, Offset2>{};
-      if (m.outcome == ShotOutcome.blocked && assister == null) {
-        // The man who blocks it is right on him.
-        final lane = spot + (goal - spot).unit * 2.0;
-        final defs = available(
-          now,
-          opp,
-        ).where((o) => !now.keepers.contains(o));
-        final b = nearest(now, defs, lane);
-        if (b != null) {
-          extra[b] = lane;
-          shot.blocker = b;
-        }
+    if (cutWanted! && !sceneCut && settledIn(t)) return _phaseCut(now);
+    // Late: by the time it could be struck and arrive, the window is out
+    // (a step's grace, and a goal half a second before its cut).
+    final toGoal = now.ball.distanceTo(goal);
+    final flight = switch (m.outcome) {
+      ShotOutcome.goal => toGoal / 30 + 0.5,
+      ShotOutcome.blocked => 0.2,
+      ShotOutcome.saved => math.max(toGoal / 21, 0.42),
+      _ => toGoal / 30,
+    };
+    final setUp = assister != null && !delivered ? 0.6 : 0.0;
+    final late =
+        (t >= strikeBy - 1e-9 || t + flight + setUp + 0.3 >= end) &&
+        settledIn(t);
+    // Never a shot from his own half: a man that far out is not where it
+    // happened.
+    final inRange = toGoal <= math.max(zone.distanceTo(goal) + 12, 32);
+    final ready =
+        atFeet(s) &&
+        inRange &&
+        (assister == null || delivered) &&
+        (m.outcome != ShotOutcome.blocked || _blockerInPath(now));
+    if (late && !ready && !lateCut) {
+      // Out of time: the picture cuts to it about to happen.
+      final assisting = assister != null && !delivered && atFeet(assister!);
+      if (!assisting) {
+        lateCut = true;
+        return _phaseCut(now);
       }
-      if (assister != null) {
-        // The scorer is up with him, onside: one of theirs is deeper.
-        final sd = depthOf(zone) - 1;
-        extra[m.shooterId] = at(sd, latOf(zone));
-      }
-      final cut = cutToPhase(now, holder, spot, extra: extra);
-      if (assister != null) {
-        final sd = depthOf(zone) - 1;
-        final k = keeperOf(now, opp);
-        int? deepest;
-        var dd = -1.0;
-        cut.positions.forEach((id, q) {
-          if (now.teams[id] != opp || id == k) return;
-          if (depthOf(q) > dd) {
-            dd = depthOf(q);
-            deepest = id;
-          }
-        });
-        if (deepest != null && dd < sd + 0.5) {
-          cut.positions[deepest!] = at(sd + 1.5, latOf(zone) + 2.5);
-        }
-      }
-      return cut;
     }
     if (m.outcome == ShotOutcome.blocked && shot.blocker == null) {
       // The defender nearest the shot's path closes it.
@@ -1083,31 +1138,36 @@ class _OpenShotPlan extends _Plan {
         lane,
       );
     }
-    final car = now.carrierId;
-    final s = m.shooterId;
-    if (car == s &&
-        (assister == null || delivered) &&
-        (!m.header || delivered)) {
+    final by = car == null ? s : null;
+    if (atFeet(s) && (assister == null || delivered) && inRange) {
       final sp = now.players[s]!;
       final near = sp.distanceTo(_strikeFrom(now)) < 2.0;
-      if (m.header && delivered) {
-        return shot.strike(t, now, fromHeight: headerHeight);
+      if (m.header && delivered && car == s) {
+        return shot.strike(t, now, fromHeight: headerHeight, by: by);
       }
-      // A shot that is blocked waits (a little) for the man who blocks it
-      // to be in its path.
       if (m.outcome == ShotOutcome.blocked) {
-        // It goes as soon as a man is in its path: struck into him. Until
-        // then the nearest man goal-side is the one closing it down.
-        if (_blockerInPath(now)) return shot.strike(t, now);
+        // Struck into the man in its path; until then the nearest man
+        // goal-side closes it down.
+        if (_blockerInPath(now)) return shot.strike(t, now, by: by);
         shot.blocker = _aheadOf(now) ?? shot.blocker;
-        if (t < deadline + 1.2) return null;
-        shot.blocker = _aheadOf(now) ?? shot.blocker;
-        return shot.strike(t, now);
+        return null;
       }
-      if ((t >= earliest && near) || t >= deadline) {
-        return shot.strike(t, now);
+      if ((t >= earliest && near) || t >= deadline || late) {
+        return shot.strike(t, now, by: by);
       }
       return null;
+    }
+    // Late, the set-up man plays it straight in.
+    final x = assister;
+    if (late && x != null && !delivered && atFeet(x)) {
+      final d = now.players[s]!.distanceTo(now.ball);
+      delivered = true;
+      return KickAction(
+        toPlayerId: s,
+        byPlayerId: car == null ? x : null,
+        arriveAt: t + math.max(d / 30, 0.2),
+        pass: d >= 9,
+      );
     }
     // A header needs a ball into the air: a cross from a team-mate.
     if (m.header) {
@@ -1132,7 +1192,6 @@ class _OpenShotPlan extends _Plan {
       }
       return fetch(x, t, now, needOnside: true);
     }
-    final x = assister;
     if (x != null && !delivered) {
       if (car == x) {
         final a = fetch(s, t, now, needOnside: true);
@@ -1141,8 +1200,7 @@ class _OpenShotPlan extends _Plan {
       }
       return fetch(x, t, now, needOnside: true);
     }
-    final a = fetch(s, t, now, needOnside: true);
-    return a;
+    return fetch(s, t, now, needOnside: true);
   }
 
   /// Whether a defender stands in the shot's path, a stride or two out.
@@ -1154,7 +1212,7 @@ class _OpenShotPlan extends _Plan {
       final rel = now.players[id]! - b;
       final along = rel.x * ahead.x + rel.y * ahead.y;
       final across = (rel.x * ahead.y - rel.y * ahead.x).abs();
-      if (along > 0.9 && along < 3.0 && across < 0.8 * along) {
+      if (along > 0.9 && rel.length < 2.6 && across < 0.8 * along) {
         shot.blocker = id;
         return true;
       }
@@ -1590,8 +1648,29 @@ abstract class _DeadBallPlan extends _Plan {
     final positions = <int, Offset2>{...marks, taker: takerSpot};
     final k = keeperOf(now, opp, shotMoment?.keeperId);
     if (k != null && keeperAt != null) positions[k] = keeperAt;
+    // A header that is blocked: its blocker right on the man who meets it.
+    final s = shotMoment;
+    if (s != null &&
+        s.outcome == ShotOutcome.blocked &&
+        s.origin != ShotOrigin.directFreeKick) {
+      final at = marks[s.shooterId];
+      if (at != null) {
+        headBlocker ??= nearest(
+          now,
+          available(
+            now,
+            opp,
+          ).where((o) => !now.keepers.contains(o) && !reserved.contains(o)),
+          at,
+        );
+        shot?.blocker = headBlocker;
+        final hb = headBlocker;
+        if (hb != null) positions[hb] = at + (goal - at).unit * 1.0;
+      }
+    }
     // Nobody of theirs nearer the ball than 9.15 m.
-    for (final id in available(now, opp)) {
+    for (final id in now.players.keys) {
+      if (now.teams[id] != opp || now.walking.contains(id)) continue;
       if (id == k || positions.containsKey(id)) continue;
       final q = now.players[id]!;
       if (q.distanceTo(ballSpot) < wallDistance + 0.5) {
@@ -1610,6 +1689,9 @@ abstract class _DeadBallPlan extends _Plan {
   /// Where the defending keeper stands for it.
   Offset2? get keeperSpot => null;
 
+  /// Men the set piece needs where they are (a free kick's wall).
+  Set<int> get reserved => const {};
+
   /// When a delivery of [d] metres from [t] lands: at about [v] m/s, but
   /// faster when late, so the man who meets it still has time.
   double arrival(double t, double d, double v) {
@@ -1619,6 +1701,48 @@ abstract class _DeadBallPlan extends _Plan {
     var at = t + d / v;
     if (at > by) at = math.max(by, t + d / 30);
     return math.max(at, t + 0.3);
+  }
+
+  /// The man who meets the delivery is where he meets it (or near).
+  bool shooterSet(ScriptState now) {
+    final s = shotMoment;
+    if (s == null || s.shooterId == taker) return true;
+    final at = marks[s.shooterId];
+    final sp = now.players[s.shooterId];
+    if (at == null || sp == null) return true;
+    return sp.distanceTo(at) < 4;
+  }
+
+  /// For a header that is blocked: its blocker goal-side of the man who
+  /// meets it, close enough to block it.
+  bool blockerSet(ScriptState now) {
+    if (!shooterSet(now)) return false;
+    final s = shotMoment;
+    if (s == null ||
+        s.outcome != ShotOutcome.blocked ||
+        s.origin == ShotOrigin.directFreeKick) {
+      return true;
+    }
+    final hb = headBlocker;
+    final sp = now.players[s.shooterId];
+    final bp = hb == null ? null : now.players[hb];
+    if (sp == null || bp == null) return false;
+    final rel = bp - sp;
+    final ahead = (goal - sp).unit;
+    final along = rel.x * ahead.x + rel.y * ahead.y;
+    return along > 0.4 && rel.length < 2.0;
+  }
+
+  /// Nobody of theirs nearer the ball than 9.15 m.
+  bool _clearOf(ScriptState now) {
+    for (final id in now.players.keys) {
+      if (now.teams[id] != opp || now.walking.contains(id)) continue;
+      if (now.keepers.contains(id)) continue;
+      if (now.players[id]!.distanceTo(ballSpot) < wallDistance - 0.25) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /// The taker's own men stand off the ball and out of his run-up.
@@ -1655,7 +1779,10 @@ abstract class _DeadBallPlan extends _Plan {
       if (at == null) return null;
       headBlocker = nearest(
         now,
-        available(now, opp).where((o) => !now.keepers.contains(o)),
+        available(
+          now,
+          opp,
+        ).where((o) => !now.keepers.contains(o) && !reserved.contains(o)),
         at,
       );
       sh.blocker = headBlocker;
@@ -1704,6 +1831,7 @@ class _CornerPlan extends _DeadBallPlan {
   late final double sigma;
   late final Offset2 out;
   bool wentOut = false;
+  bool lateCut = false;
   bool overhit = false;
   int? clearer;
   @override
@@ -1816,11 +1944,11 @@ class _CornerPlan extends _DeadBallPlan {
     final s = shotMoment;
     if (!taken) {
       cutWanted ??= needCut(t, now);
-      if (cutWanted! && !cutDone) {
-        if (now.flight != null) return null;
+      if (cutWanted! && !cutDone && settledIn(t)) {
         // The ball goes out first when there is time to see it; then the
         // picture cuts to the corner ready.
         if (!wentOut &&
+            now.flight == null &&
             len >= 5 &&
             now.ball.distanceTo(ballSpot) > 8 &&
             now.ball.distanceTo(out) < 35) {
@@ -1831,11 +1959,14 @@ class _CornerPlan extends _DeadBallPlan {
       }
       // Still not set when it has to go: the picture cuts to it set.
       final tc = now.players[taker];
-      if (!cutDone &&
-          t >= latest - 0.9 &&
-          settledIn(t) &&
-          now.flight == null &&
-          !(ballSet(now) && tc != null && tc.distanceTo(ballSpot) <= 1.3)) {
+      final set =
+          ballSet(now) &&
+          tc != null &&
+          tc.distanceTo(ballSpot) <= 1.3 &&
+          _clearOf(now) &&
+          blockerSet(now);
+      if (!set && t >= latest && settledIn(t) && !lateCut) {
+        lateCut = true;
         return cutTo(t, now, keeperAt: keeperSpot);
       }
       if (!ballSet(now)) {
@@ -1849,8 +1980,7 @@ class _CornerPlan extends _DeadBallPlan {
         wentOut = true;
         return place(t, now, ballSpot, speed: 12);
       }
-      final tp = now.players[taker];
-      if (tp == null || tp.distanceTo(ballSpot) > 1.3) return null;
+      if (!set) return null;
       if (t < latest && (t < earliest || !_ready(now))) return null;
       taken = true;
       takenAt = t;
@@ -2064,6 +2194,9 @@ class _FreeKickPlan extends _DeadBallPlan {
 
   late final bool direct;
   bool secondCut = false;
+
+  @override
+  Set<int> get reserved => wall.toSet();
   late final Offset2 toGoal;
   late final List<Offset2> wallSpots;
   @override
@@ -2153,6 +2286,25 @@ class _FreeKickPlan extends _DeadBallPlan {
     clearTheBall(e);
   }
 
+  /// The wall made up again from the men there now (one may have gone).
+  void _rebuildWall(ScriptState now) {
+    for (final id in wall) {
+      marks.remove(id);
+    }
+    wall.clear();
+    final def =
+        available(now, opp).where((id) => !now.keepers.contains(id)).toList()
+          ..sort((a, b) {
+            final x = now.players[a]!
+                .distanceTo(ballSpot)
+                .compareTo(now.players[b]!.distanceTo(ballSpot));
+            return x != 0 ? x : a.compareTo(b);
+          });
+    final men = assign(now, def.take(wallSpots.length + 2).toList(), wallSpots);
+    wall.addAll(men.keys.toList()..sort());
+    marks.addAll(men);
+  }
+
   /// Whether the wall cannot form before the kick has to go.
   bool _wallFar(ScriptState now) {
     for (final id in wall) {
@@ -2164,18 +2316,15 @@ class _FreeKickPlan extends _DeadBallPlan {
   }
 
   /// Nobody of theirs nearer the ball than 9.15 m (the wall included).
-  bool _clear(ScriptState now) {
-    for (final id in available(now, opp)) {
-      if (now.keepers.contains(id)) continue;
-      if (now.players[id]!.distanceTo(ballSpot) < wallDistance - 0.25) {
-        return false;
-      }
-    }
-    return true;
-  }
+  bool _clear(ScriptState now) => _clearOf(now);
 
   bool _wallSet(ScriptState now) {
+    // A wall of its full number, every man there.
+    if (wall.length < wallSpots.length) return false;
     for (final id in wall) {
+      if (!now.players.containsKey(id) || now.walking.contains(id)) {
+        return false;
+      }
       final p = now.players[id];
       if (p == null) continue;
       if (p.distanceTo(marks[id]!) > 0.35) return false;
@@ -2190,24 +2339,22 @@ class _FreeKickPlan extends _DeadBallPlan {
     final s = shotMoment;
     if (!taken) {
       cutWanted ??= needCut(t, now) || (!resumed && _wallFar(now));
-      if (cutWanted! && !cutDone) {
-        if (now.flight != null) return null;
+      if (cutWanted! && !cutDone && settledIn(t)) {
         return cutTo(t, now, keeperAt: keeperSpot);
       }
       final tk = now.players[taker];
-      final takerNear = tk != null && tk.distanceTo(ballSpot) < 2.6;
-      if (now.flight == null &&
-          settledIn(t) &&
-          ((!cutDone &&
-                  t >= latest - 0.9 &&
-                  !(ballSet(now) &&
-                      _wallSet(now) &&
-                      _clear(now) &&
-                      takerNear)) ||
-              (t >= latest + 0.6 && !secondCut))) {
-        if (t >= latest + 0.6) secondCut = true;
+      final set =
+          ballSet(now) &&
+          _wallSet(now) &&
+          _clear(now) &&
+          blockerSet(now) &&
+          tk != null &&
+          tk.distanceTo(ballSpot) <= 1.2;
+      if (!set && t >= latest && settledIn(t) && !secondCut) {
         // Still not ready when it has to go: the picture cuts to it ready,
-        // the taker over the ball.
+        // the taker over the ball, the wall up, everybody back 9.15 m.
+        secondCut = true;
+        _rebuildWall(now);
         final cut = cutTo(t, now, keeperAt: keeperSpot);
         cut.positions[taker] = _clamp(ballSpot - toGoal * 0.75);
         return cut;
@@ -2216,10 +2363,9 @@ class _FreeKickPlan extends _DeadBallPlan {
         if (now.flight != null) return null;
         return place(t, now, ballSpot, speed: 10);
       }
-      final tp = now.players[taker];
-      if (tp == null || tp.distanceTo(ballSpot) > 1.2) return null;
-      final set = _wallSet(now) && _clear(now);
-      if (t < latest + 0.8 && (t < earliest || !set)) return null;
+      // Never taken until it is set: the wall at 9.15 m, nobody nearer.
+      if (!set) return null;
+      if (t < earliest && t < latest) return null;
       taken = true;
       takenAt = t;
       if (direct && s != null && s.shooterId == taker) {
@@ -2410,6 +2556,7 @@ class _ThrowPlan extends _DeadBallPlan {
 
   late final double sigma;
   bool wentOut = false;
+  bool lateCut = false;
   @override
   final Map<int, Offset2> marks = {};
   int? clearer;
@@ -2490,20 +2637,29 @@ class _ThrowPlan extends _DeadBallPlan {
     final s = shotMoment;
     final car = now.carrierId;
     if (!taken) {
-      if (now.flight != null) return null;
       cutWanted ??= car != taker && needCut(t, now);
-      if (cutWanted! && !cutDone) {
+      if (cutWanted! && !cutDone && settledIn(t)) {
         wentOut = true;
         return cutTo(t, now);
       }
-      if (!cutDone && t >= latest - 0.9 && settledIn(t) && car != taker) {
+      final tq = now.players[taker];
+      final inPlace =
+          car == taker && tq != null && tq.distanceTo(takerSpot) <= 1.0;
+      if (!lateCut && t >= latest && settledIn(t) && !inPlace) {
+        lateCut = true;
         wentOut = true;
         return cutTo(t, now);
       }
+      if (now.flight != null) return null;
       if (car == taker) {
         if (!wentOut) wentOut = true;
         final tp = now.players[taker]!;
         if (tp.distanceTo(takerSpot) > 1.0) return null;
+        if (!blockerSet(now) && !lateCut) {
+          if (t < latest) return null;
+          lateCut = true;
+          return cutTo(t, now);
+        }
         if (t < latest && (t < earliest || !_ready(now))) return null;
         taken = true;
         takenAt = t;
@@ -2673,6 +2829,7 @@ class _FoulPlan extends _Plan {
   late final double foulBy;
   late final double foulLatest;
   bool fouled = false;
+  bool lateCut = false;
   double foulAt = 0;
   double? gotAt;
   bool restarted = false;
@@ -2683,6 +2840,37 @@ class _FoulPlan extends _Plan {
   BallAction? ball(double t, ScriptState now) {
     final car = now.carrierId;
     if (!fouled) {
+      final fq = now.players[m.fouledId];
+      final atFeet =
+          car == m.fouledId ||
+          (car == null &&
+              now.flight == null &&
+              fq != null &&
+              fq.distanceTo(now.ball) < 1.3);
+      if (t >= end - 0.7 && settledIn(t)) {
+        // Out of time: the foul now, cutting to it if the ball is not his.
+        if (!atFeet && !lateCut) {
+          lateCut = true;
+          return cutToPhase(
+            now,
+            m.fouledId,
+            spot,
+            extra: {m.foulerId: spot + (goal - spot).unit * 1.6},
+          );
+        }
+        if (atFeet) {
+          fouled = true;
+          foulAt = t;
+          cue(t, PitchCueKind.foul, m.foulerId);
+          _card(t);
+          final ahead = now.ball + (goal - now.ball).unit * 1.4;
+          return KickAction(
+            to: ahead,
+            arriveAt: t + 0.3,
+            byPlayerId: car == null ? m.fouledId : null,
+          );
+        }
+      }
       cutWanted ??= !resumed && _needCut(now);
       if (cutWanted! && !sceneCut && landing(now)) return null;
       if (cutWanted! && !sceneCut) {
@@ -2855,6 +3043,7 @@ class _OffsidePlan extends _Plan {
 
   final OffsideMoment m;
   int? cutPasser;
+  bool lateCut = false;
   bool played = false;
   bool flagged = false;
   Offset2? offence;
@@ -2895,9 +3084,16 @@ class _OffsidePlan extends _Plan {
   BallAction? ball(double t, ScriptState now) {
     final car = now.carrierId;
     final pid = m.playerId;
-    if (!played && !resumed) {
+    // Out of time, the picture cuts to the ball about to be played through.
+    final late = !played && t >= end - 0.45 && settledIn(t) && !lateCut;
+    if (late) {
+      lateCut = true;
+      sceneCut = false;
+      cutWanted = true;
+    }
+    if (!played && (!resumed || late)) {
       cutWanted ??= _needCut(now);
-      if (cutWanted! && !sceneCut && landing(now)) return null;
+      if (cutWanted! && !sceneCut && landing(now) && !late) return null;
       if (cutWanted! && !sceneCut) {
         final pp = now.players[pid]!;
         final passer =
@@ -2949,7 +3145,7 @@ class _OffsidePlan extends _Plan {
         played = true;
         offence = pp;
         flagged = true;
-        final arrive = t + math.max(d / 24, 0.25);
+        final arrive = t + math.max(d / 28, 0.2);
         cue(arrive, PitchCueKind.offsideFlag, pid);
         return KickAction(
           toPlayerId: pid,

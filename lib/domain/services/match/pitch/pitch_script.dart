@@ -317,12 +317,25 @@ class PitchScript {
   /// picture jumps there; the screen pauses for the interval.
   final List<double> resets;
 
-  /// Screen seconds at which the picture cuts, as television cuts from a
-  /// replay back to play: after a goal, from the celebration to the sides
-  /// lined up for the kick-off (the conceding side on the ball); before a
-  /// set piece that could not be set up in the time its moment has, from
-  /// the ball going dead to the set piece ready to be taken. No interval:
-  /// the screen does not pause. Positions jump there, as at [resets].
+  /// Screen seconds at which the picture cuts, as a broadcast cuts between
+  /// replay and play: the match shown as condensed highlights.
+  ///
+  /// - After a goal: from the celebration to the sides lined up for the
+  ///   kick-off, the conceding side on the ball.
+  /// - Before a set piece or penalty that could not be set up in the time
+  ///   its moment has: to it ready to be taken (the taker at the ball, the
+  ///   wall at 9.15 m, the area cleared).
+  /// - Before a shot, foul or offside that cannot be reached from where
+  ///   play is (the last moment ended at the other end): to both shapes
+  ///   shifted along the pitch together, the moment's men in place.
+  ///
+  /// The contract for the renderer: at a cut there are two keyframes with
+  /// the same time, the one before and the one after; the ball's phases
+  /// may jump there too. Draw a quick transition (a short fade) and never
+  /// interpolate positions or the ball across a cut. There is no interval:
+  /// the screen does not pause. Keepers are never moved away from goal by a
+  /// cut, men walking off are never moved, and nobody lands on anybody. A
+  /// moment that follows a cut is always played out in full after it.
   final List<double> cuts;
   final List<StagedWindow> windows;
 
