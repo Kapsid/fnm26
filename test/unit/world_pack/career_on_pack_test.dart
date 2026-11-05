@@ -152,7 +152,6 @@ void main() {
   test(
     "career on a pack, then the pack is edited and deleted, the career's "
     'squads are unchanged',
-    skip: 'needs Task 7 (player repo reads the career world)',
     timeout: const Timeout.factor(4),
     () async {
       final c = await _world();

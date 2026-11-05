@@ -7,6 +7,7 @@ import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/repositories/intl_retirement_cache.dart';
 import 'package:fnm/data/repositories/mappers.dart';
+import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/data/seed/dormant_seed.dart';
 import 'package:fnm/data/seed/frozen_name_pools.dart';
 import 'package:fnm/data/seed/mononyms.dart';
@@ -14,6 +15,7 @@ import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart' show YouthLevel;
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/manager/stints.dart';
@@ -22,6 +24,7 @@ import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/player/international_retirement.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
 /// A nation's authentic first-name / surname pools.
 typedef _NamePool = ({
@@ -206,7 +209,8 @@ class DriftPlayerRepository implements PlayerRepository {
     bool includeIntlRetired = false,
     bool newCareerNames = false,
   }) async {
-    final seeded = await _seededRows(nationId);
+    final world = await _worldFor(careerId);
+    final seeded = await _seededRowsFor(careerId, nationId);
     // `overall` is position-weighted and derived (not a column), so build the
     // aged pool (seeded survivors + newgen intakes) and order in Dart. A
     // career marked with this nation's golden generation reads the cohort in
@@ -255,6 +259,7 @@ class DriftPlayerRepository implements PlayerRepository {
           saveSeed,
           homeCode: home.code,
           homeCities: home.cities,
+          world: world,
         ),
     ];
   }
@@ -299,7 +304,8 @@ class DriftPlayerRepository implements PlayerRepository {
     Map<int, double> youthBonusByCycle = const {},
     Map<int, int> careerStartsByPlayer = const {},
   }) async {
-    final seeded = await _seededRows(nationId);
+    final world = await _worldFor(careerId);
+    final seeded = await _seededRowsFor(careerId, nationId);
     // `overall` is position-weighted and derived (not a column), so build the
     // aged pool (seeded survivors + newgen intakes) and order in Dart.
     final List<Player> pool;
@@ -342,6 +348,7 @@ class DriftPlayerRepository implements PlayerRepository {
           saveSeed,
           homeCode: home.code,
           homeCities: home.cities,
+          world: world,
         ),
     ];
   }
@@ -351,18 +358,35 @@ class DriftPlayerRepository implements PlayerRepository {
   ///
   /// [homeCode] and [homeCities] let the assignment keep most of a nation's
   /// players at home; without them every player would be placed abroad.
+  ///
+  /// In a career on a custom [world], a pack player is at the club the pack
+  /// gives him for as long as the contract he is on at his day-one age runs
+  /// ([ClubService.contractAt]); from his first move on the normal clock
+  /// carries him. Every club, his and everybody else's, then reads under the
+  /// world's club names ([ClubService.renamed]).
   Player _withClub(
     Player p,
     int saveSeed, {
     String homeCode = '',
     List<String> homeCities = const [],
+    _CareerWorld? world,
   }) {
-    final c = ClubService.clubForSeed(
+    var c = ClubService.clubForSeed(
       p,
       saveSeed,
       homeCode: homeCode,
       homeCities: homeCities,
     );
+    if (world != null) {
+      final dayOne = world.packPlayer(p.id);
+      if (dayOne != null &&
+          dayOne.club != null &&
+          ClubService.contractAt(p.id, p.age).index ==
+              ClubService.contractAt(p.id, dayOne.age).index) {
+        c = (name: dayOne.club!, country: dayOne.clubCountry ?? '');
+      }
+      c = ClubService.renamed(c, world.pack.clubs);
+    }
     return p.copyWith(club: c.name, clubCountry: c.country);
   }
 
@@ -462,6 +486,7 @@ class DriftPlayerRepository implements PlayerRepository {
     required Map<int, int> careerStartsByPlayer,
     bool newCareerNames = false,
   }) async {
+    final world = await _worldFor(careerId);
     if (GoldenGeneration.isGoldenId(id)) {
       // A cohort member is resolved from his id alone, like a newgen: only a
       // marked career ever fields him, so no marker is needed to name him.
@@ -473,7 +498,7 @@ class DriftPlayerRepository implements PlayerRepository {
         clubSeed: saveSeed,
       );
       if (p == null) return null;
-      final seeded = await _seededRows(nationId);
+      final seeded = await _seededRowsFor(careerId, nationId);
       final home = await _home(nationId);
       return _withClub(
         (await _namerFor(
@@ -486,11 +511,12 @@ class DriftPlayerRepository implements PlayerRepository {
         saveSeed,
         homeCode: home.code,
         homeCities: home.cities,
+        world: world,
       );
     }
     if (PlayerLifecycle.isNewgenId(id)) {
       final nationId = PlayerLifecycle.nationIdOf(id);
-      final seeded = await _seededRows(nationId);
+      final seeded = await _seededRowsFor(careerId, nationId);
       final p = PlayerLifecycle.newgenById(
         seeded,
         id,
@@ -513,12 +539,25 @@ class DriftPlayerRepository implements PlayerRepository {
         saveSeed,
         homeCode: home.code,
         homeCities: home.cities,
+        world: world,
       );
     }
-    final row = await (_db.select(
-      _db.players,
-    )..where((t) => t.id.equals(id))).getSingleOrNull();
-    final p = row?.toDomain();
+    // A career on a custom world reads its core players from the world: an
+    // edited one as edited, an added one (no stored row) at all.
+    var p = world?.player(id);
+    if (p == null) {
+      final row = await (_db.select(
+        _db.players,
+      )..where((t) => t.id.equals(id))).getSingleOrNull();
+      p = row?.toDomain();
+      // A core player the world removed is not in it, by id or otherwise.
+      if (p != null &&
+          world != null &&
+          p.id < _firstFringeId &&
+          world.coreOf(p.nationId) != null) {
+        return null;
+      }
+    }
     // Identity lookups resolve a player even once they've retired out of the
     // selectable pool — a retired legend still has a name and a record.
     if (p == null) return null;
@@ -538,7 +577,7 @@ class DriftPlayerRepository implements PlayerRepository {
         saveSeed,
       ),
     );
-    final seeded = await _seededRows(p.nationId);
+    final seeded = await _seededRowsFor(careerId, p.nationId);
     final home = await _home(p.nationId);
     return _withClub(
       (await _namerFor(
@@ -551,6 +590,7 @@ class DriftPlayerRepository implements PlayerRepository {
       saveSeed,
       homeCode: home.code,
       homeCities: home.cities,
+      world: world,
     );
   }
 
@@ -560,6 +600,48 @@ class DriftPlayerRepository implements PlayerRepository {
       _db.players,
     )..where((t) => t.nationId.equals(nationId))).get();
     return rows.map((r) => r.toDomain()).toList();
+  }
+
+  /// Ids from here up are generated fringe padding (see
+  /// `PoolGenerator.expand` and the dormant nations' fringe ranges); below
+  /// it are the core players `players.json` (or a dormant squad) stores.
+  static const int _firstFringeId = 10000000;
+
+  /// The base rows [careerId] reads for [nationId]: [_seededRows], except
+  /// that a career on a custom world whose world has a squad for the nation
+  /// reads that squad in place of the stored core rows. The fringe rows stay,
+  /// so the pool around the squad is the one the default world has.
+  Future<List<Player>> _seededRowsFor(int? careerId, int nationId) async {
+    final rows = await _seededRows(nationId);
+    final core = (await _worldFor(careerId))?.coreOf(nationId);
+    if (core == null) return rows;
+    return [
+      ...core,
+      for (final p in rows)
+        if (p.id >= _firstFringeId) p,
+    ];
+  }
+
+  /// Each career's custom world (null for the default one), read once. A
+  /// career's world is copied in with the career, in the same transaction,
+  /// and never changes after, so neither answer can go stale (a career id is
+  /// never reused).
+  final Map<int, Future<_CareerWorld?>> _worlds = {};
+
+  /// The custom world [careerId] was started on, or null for the default
+  /// world (and for no career at all).
+  Future<_CareerWorld?> _worldFor(int? careerId) {
+    if (careerId == null) return Future.value();
+    return _worlds[careerId] ??= () async {
+      try {
+        final stored = await WorldPackRepository(_db).forCareer(careerId);
+        return stored == null ? null : _CareerWorld(stored.pack);
+      } on Object {
+        // Not kept: the next read asks again.
+        _worlds.remove(careerId)?.ignore();
+        rethrow;
+      }
+    }();
   }
 
   /// Loads the per-nation name pools from the bundled asset (once). Falls back
@@ -840,12 +922,73 @@ class DriftPlayerRepository implements PlayerRepository {
   /// beyond the newgen sequence of any save shorter than a century.
   static const int _goldenNameOffset = 1000;
 
+  /// Builds the namer for [nationId]'s players in [careerId]: the default
+  /// world's ([_poolNamerFor]), unless the career is on a custom world.
+  ///
+  /// There a player of the world's squads is called exactly what the world
+  /// calls him, never re-drawn. Everybody else (fringe, newgens) is drawn as
+  /// in the default world, from the world's own name lists for the nation
+  /// when it has them ([_listNamer]) and from the normal pools otherwise.
+  Future<Player Function(Player)> _namerFor(
+    int nationId,
+    List<Player> seeded,
+    int saveSeed,
+    int? careerId, {
+    bool newCareerNames = false,
+  }) async {
+    final world = await _worldFor(careerId);
+    if (world == null) {
+      return _poolNamerFor(
+        nationId,
+        seeded,
+        saveSeed,
+        careerId,
+        newCareerNames: newCareerNames,
+      );
+    }
+    final lists = world.pack.nameLists[nationId];
+    final drawn =
+        lists != null && lists.first.isNotEmpty && lists.sur.isNotEmpty
+        ? _listNamer(lists, nationId, seeded, saveSeed)
+        : await _poolNamerFor(nationId, seeded, saveSeed, careerId);
+    Player named(Player p) => switch (world.packPlayer(p.id)) {
+      null => drawn(p),
+      final fixed => p.copyWith(name: fixed.name),
+    };
+    return named;
+  }
+
+  /// A namer drawing from a custom world's [lists] for [nationId], the way
+  /// the richer pools are drawn ([_PermutedNames]): a save-seeded shuffle of
+  /// the first x surname product, indexed as [_poolNamerFor] indexes it.
+  static Player Function(Player) _listNamer(
+    PackNameLists lists,
+    int nationId,
+    List<Player> seeded,
+    int saveSeed,
+  ) {
+    if (saveSeed == 0) return _identity;
+    final names = _PermutedNames(
+      {...lists.first}.toList(),
+      {...lists.sur}.toList(),
+      saveSeed ^ (nationId * 0x9E3779B1) ^ 0x5F5E,
+    );
+    final storedIds = [for (final p in seeded) p.id]..sort();
+    final rank = {for (var i = 0; i < storedIds.length; i++) storedIds[i]: i};
+    return (p) {
+      final index = PlayerLifecycle.isNewgenId(p.id)
+          ? storedIds.length + PlayerLifecycle.newgenSequence(p.id)
+          : (rank[p.id] ?? 0);
+      return p.copyWith(name: names(index % names.length));
+    };
+  }
+
   /// Builds a namer that assigns every player of [nationId] a unique name from
   /// the nation's pool. [seeded] gives the nation's stored rows (to rank the
   /// base + fringe players); a 0 [saveSeed] (or a missing pool) leaves names
   /// untouched. [careerId] picks the pools (see [namePoolsV2Kind]); with
   /// none, [newCareerNames] picks the ones a career created now reads.
-  Future<Player Function(Player)> _namerFor(
+  Future<Player Function(Player)> _poolNamerFor(
     int nationId,
     List<Player> seeded,
     int saveSeed,
@@ -1048,5 +1191,67 @@ class _PermutedNames {
       right = next;
     }
     return (left << _half) | right;
+  }
+}
+
+/// A career's custom world, with its squads indexed for the repository's
+/// reads.
+class _CareerWorld {
+  _CareerWorld(this.pack)
+    : _byId = {
+        for (final MapEntry(key: nationId, value: squad) in pack.squads.entries)
+          for (final p in squad) p.id: (nationId: nationId, player: p),
+      };
+
+  final WorldPack pack;
+  final Map<int, ({int nationId, PackPlayer player})> _byId;
+
+  /// Each nation's squad as base rows, built on first read.
+  final Map<int, List<Player>> _core = {};
+
+  /// The world's squad player [id], as the world gives him.
+  PackPlayer? packPlayer(int id) => _byId[id]?.player;
+
+  /// [packPlayer] as a base (unaged) row.
+  Player? player(int id) {
+    final entry = _byId[id];
+    if (entry == null) return null;
+    return coreOf(entry.nationId)!.firstWhere((p) => p.id == id);
+  }
+
+  /// [nationId]'s squad as base rows, or null when the world has none for
+  /// it (the stored core rows then stand).
+  ///
+  /// A world stores a player as he is on day one, and a young player is
+  /// shown marked down ([PlayerAging.youthDiscountOf]) from the row the age
+  /// curve reads. So the markdown is added back here: read through the
+  /// curve he is exactly the world's player on day one, and he grows out of
+  /// it as a stored youngster does.
+  List<Player>? coreOf(int nationId) {
+    final squad = pack.squads[nationId];
+    if (squad == null) return null;
+    PlayerAttributes base(PackPlayer p) {
+      final d = PlayerAging.youthDiscountOf(p.id, p.age);
+      if (d == 0) return p.attributes;
+      return PlayerAttributes(
+        physical: p.attributes.physical + d,
+        technical: p.attributes.technical + d,
+        stamina: p.attributes.stamina + d,
+      );
+    }
+
+    return _core[nationId] ??= List.unmodifiable([
+      for (final p in squad)
+        Player(
+          id: p.id,
+          nationId: nationId,
+          name: p.name,
+          age: p.age,
+          position: p.position,
+          attributes: base(p),
+          club: p.club ?? 'Free agent',
+          clubCountry: p.clubCountry ?? '',
+        ),
+    ]);
   }
 }

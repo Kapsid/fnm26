@@ -123,6 +123,27 @@ abstract final class ClubService {
     return (name: club, country: league.country);
   }
 
+  /// [side] under its new name when a career's world renames it (original
+  /// name -> new name, see `WorldPack.clubs`); otherwise [side] itself. The
+  /// country never changes: a rename relabels a club, it does not move it.
+  static ClubSide renamed(ClubSide side, Map<String, String> renames) =>
+      switch (renames[side.name]) {
+        null => side,
+        final name => (name: name, country: side.country),
+      };
+
+  /// The curated club names of [countryCode]'s league (a FIFA code, any
+  /// case), in the order the club draw indexes them; empty for a country
+  /// with no curated league (its domestic sides are generated from cities).
+  /// What the editor offers to rename.
+  static List<String> leagueClubs(String countryCode) {
+    final code = countryCode.toLowerCase();
+    for (final l in _leagues) {
+      if (l.country == code) return List.unmodifiable(l.clubs);
+    }
+    return const [];
+  }
+
   /// The rating a club is picked off: the live overall with the PREDICTABLE
   /// part of the age curve taken back out (see [PlayerAging.peakOffset]).
   ///

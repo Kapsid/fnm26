@@ -86,13 +86,7 @@ abstract final class PlayerAging {
     int age,
     int playerId,
   ) {
-    final base = _plainYouthDiscount(age);
-    if (base == 0) return a;
-    // Relief only in the top tail of the potential draw (~1.55 of a 0.35–1.75
-    // range), rising to a full exemption at the very top.
-    final potential = PlayerLifecycle.developmentPotential(playerId);
-    final relief = ((potential - 1.55) / 0.20).clamp(0.0, 1.0);
-    final discount = (base * (1 - relief)).round();
+    final discount = youthDiscountOf(playerId, age);
     if (discount == 0) return a;
     int down(int v) => (v - discount).clamp(20, 95);
     return a.copyWith(
@@ -100,6 +94,21 @@ abstract final class PlayerAging {
       technical: down(a.technical),
       stamina: down(a.stamina),
     );
+  }
+
+  /// The markdown [_youthDiscount] takes off each of [playerId]'s attributes
+  /// at [age], his wonderkid relief included; nought from twenty-three on.
+  ///
+  /// Public so a stored rating that is already marked down (a custom world's
+  /// day-one squad) can be turned back into the base row the curve reads.
+  static int youthDiscountOf(int playerId, int age) {
+    final base = _plainYouthDiscount(age);
+    if (base == 0) return 0;
+    // Relief only in the top tail of the potential draw (~1.55 of a 0.35–1.75
+    // range), rising to a full exemption at the very top.
+    final potential = PlayerLifecycle.developmentPotential(playerId);
+    final relief = ((potential - 1.55) / 0.20).clamp(0.0, 1.0);
+    return (base * (1 - relief)).round();
   }
 
   static PlayerAttributes _age(PlayerAttributes a, int from, int to) =>
