@@ -70,7 +70,7 @@ void main() {
     WidgetTester tester,
     _FakeService service, {
     String start = '/',
-    String? initial,
+    List<String> initial = const [],
   }) async {
     _messenger.setMockMethodCallHandler(_channel, (call) async {
       if (call.method == 'initial') {
@@ -79,7 +79,22 @@ void main() {
       }
       return null;
     });
-    Widget page(String label) => Scaffold(body: Text(label));
+    Widget page(String label) => Scaffold(
+      body: Builder(
+        builder: (context) => Column(
+          children: [
+            Text(label),
+            TextButton(
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                builder: (_) => const Text('half-answered sheet'),
+              ),
+              child: const Text('open sheet'),
+            ),
+          ],
+        ),
+      ),
+    );
     final router = GoRouter(
       initialLocation: start,
       routes: [
@@ -124,7 +139,7 @@ void main() {
   String location(GoRouter router) =>
       router.routerDelegate.currentConfiguration.uri.toString();
 
-  testWidgets('an opened path imports and navigates', (tester) async {
+  testWidgets('a warm open imports but does not navigate', (tester) async {
     final service = _FakeService(const Result.success(7));
     final router = await pumpApp(
       tester,
@@ -137,10 +152,64 @@ void main() {
 
     expect(service.imported, [path]);
     expect(find.text('Database imported'), findsOneWidget);
-    expect(location(router), '${Routes.editorPack}?id=7');
-    expect(find.text('pack'), findsOneWidget);
+    expect(find.byKey(IncomingFileListener.openActionKey), findsOneWidget);
+    expect(location(router), '${Routes.hub}?careerId=3');
     // The cached copy is gone once it is in.
     expect(File(path).existsSync(), isFalse);
+  });
+
+  testWidgets('a warm open leaves an open modal sheet in place', (
+    tester,
+  ) async {
+    final service = _FakeService(const Result.success(7));
+    final router = await pumpApp(
+      tester,
+      service,
+      start: '${Routes.hub}?careerId=3',
+    );
+    await tester.tap(find.text('open sheet'));
+    await tester.pumpAndSettle();
+    expect(find.text('half-answered sheet'), findsOneWidget);
+
+    await open(tester, cached('sheet.fnmdb'));
+
+    expect(find.text('half-answered sheet'), findsOneWidget);
+    expect(location(router), '${Routes.hub}?careerId=3');
+  });
+
+  testWidgets('tapping Open goes to the new database', (tester) async {
+    final service = _FakeService(const Result.success(7));
+    final router = await pumpApp(
+      tester,
+      service,
+      start: '${Routes.hub}?careerId=3',
+    );
+    await open(tester, cached('one.fnmdb'));
+
+    await tester.tap(find.byKey(IncomingFileListener.openActionKey));
+    await tester.pumpAndSettle();
+
+    expect(location(router), '${Routes.editorPack}?id=7');
+    expect(find.text('pack'), findsOneWidget);
+  });
+
+  testWidgets('Open on a screen with no way out does nothing', (
+    tester,
+  ) async {
+    final service = _FakeService(const Result.success(9));
+    final router = await pumpApp(
+      tester,
+      service,
+      start: '${Routes.match}?careerId=2',
+    );
+    await open(tester, cached('mid_match.fnmdb'));
+    expect(service.imported, hasLength(1));
+
+    await tester.tap(find.byKey(IncomingFileListener.openActionKey));
+    await tester.pumpAndSettle();
+
+    expect(location(router), '${Routes.match}?careerId=2');
+    expect(find.text('match'), findsOneWidget);
   });
 
   testWidgets('a rejected file shows the reason and stays put', (
@@ -201,9 +270,10 @@ void main() {
   ) async {
     final path = cached('cold.fnmdb');
     final service = _FakeService(const Result.success(4));
-    final router = await pumpApp(tester, service, initial: path);
+    final router = await pumpApp(tester, service, initial: [path]);
 
     expect(service.imported, [path]);
+    expect(find.byKey(IncomingFileListener.openActionKey), findsNothing);
     expect(location(router), '${Routes.editorPack}?id=4');
 
     // A rebuild of the app root asks nothing again.
@@ -213,22 +283,38 @@ void main() {
     expect(service.imported, [path]);
   });
 
-  testWidgets('a live match is not left: the import lands, the match stays', (
+  testWidgets('every file that came before Dart listened is imported', (
     tester,
   ) async {
-    final service = _FakeService(const Result.success(9));
-    final router = await pumpApp(
-      tester,
-      service,
-      start: '${Routes.match}?careerId=2',
+    final first = cached('first.fnmdb');
+    final second = cached('second.fnmdb');
+    final service = _FakeService(const Result.success(5));
+    await pumpApp(tester, service, initial: [first, second]);
+
+    expect(service.imported, [first, second]);
+    expect(File(first).existsSync(), isFalse);
+    expect(File(second).existsSync(), isFalse);
+  });
+
+  testWidgets('a listener let go clears only its own handler', (
+    tester,
+  ) async {
+    final channel = IncomingFileChannel();
+    final heard = <String>[];
+    final old = channel.listen((_) {});
+    channel
+      ..listen(heard.add)
+      ..cancel(old);
+
+    await _messenger.handlePlatformMessage(
+      IncomingFileChannel.name,
+      const StandardMethodCodec().encodeMethodCall(
+        const MethodCall('opened', 'x.fnmdb'),
+      ),
+      (_) {},
     );
-    final path = cached('mid_match.fnmdb');
 
-    await open(tester, path);
-
-    expect(service.imported, [path]);
-    expect(find.text('Database imported'), findsOneWidget);
-    expect(location(router), '${Routes.match}?careerId=2');
+    expect(heard, ['x.fnmdb']);
   });
 
   testWidgets('a failing import still clears the cached copy', (tester) async {

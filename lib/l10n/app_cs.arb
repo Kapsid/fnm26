@@ -3667,5 +3667,6 @@
   "editorNewFailed": "Databázi se nepodařilo vytvořit. Zkuste to znovu.",
   "editorPickFailed": "Soubor nejde otevřít.",
   "editorRenameFailed": "Databázi se nepodařilo přejmenovat.",
-  "editorDuplicateFailed": "Databázi se nepodařilo zkopírovat."
+  "editorDuplicateFailed": "Databázi se nepodařilo zkopírovat.",
+  "editorImportOpen": "Otevřít"
 }

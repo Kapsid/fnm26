@@ -22262,6 +22262,10 @@
   "@editorImported": {
     "description": "Snackbar after a database file was imported."
   },
+  "editorImportOpen": "Open",
+  "@editorImportOpen": {
+    "description": "Action on the snackbar after a database file opened from another app was imported; opens that database in the editor."
+  },
   "editorImportTooBig": "That file is too big to be a database.",
   "@editorImportTooBig": {
     "description": "Import refused: the file is over the size cap."

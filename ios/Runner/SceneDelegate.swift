@@ -25,8 +25,9 @@ class SceneDelegate: FlutterSceneDelegate {
 /// lib/features/world_pack/incoming_file.dart over `fnm/incoming_file`.
 /// Dart deletes the copy once it has read it.
 ///
-/// Dart asks `initial()` once it can import; until then the file waits here
-/// (the file that started the app). After that, files go to `opened(path)`.
+/// Dart asks `initial()` once it can import; until then files wait here
+/// (the one that started the app, and any opened before Dart listened).
+/// After that, files go to `opened(path)`.
 /// A file over [maxBytes] is never copied: Dart gets [tooBig] instead.
 final class IncomingFile {
   static let shared = IncomingFile()
@@ -38,7 +39,7 @@ final class IncomingFile {
 
   private var channel: FlutterMethodChannel?
   private var ready = false
-  private var pending: String?
+  private var pending: [String] = []
 
   /// Called when the implicit engine is up (AppDelegate).
   func attach(messenger: FlutterBinaryMessenger) {
@@ -50,7 +51,7 @@ final class IncomingFile {
         // Answered once: a hot restart asks again and gets nothing.
         self.ready = true
         result(self.pending)
-        self.pending = nil
+        self.pending = []
       default:
         result(FlutterMethodNotImplemented)
       }
@@ -72,7 +73,7 @@ final class IncomingFile {
     if ready, let channel {
       channel.invokeMethod("opened", arguments: path)
     } else {
-      pending = path
+      pending.append(path)
     }
   }
 

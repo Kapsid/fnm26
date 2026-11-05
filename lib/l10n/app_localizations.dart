@@ -21830,6 +21830,12 @@ abstract class AppLocalizations {
   /// **'Database imported'**
   String get editorImported;
 
+  /// Action on the snackbar after a database file opened from another app was imported; opens that database in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get editorImportOpen;
+
   /// Import refused: the file is over the size cap.
   ///
   /// In en, this message translates to:

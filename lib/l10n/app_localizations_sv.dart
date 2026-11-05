@@ -14395,6 +14395,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get editorImported => 'Database imported';
 
   @override
+  String get editorImportOpen => 'Open';
+
+  @override
   String get editorImportTooBig => 'That file is too big to be a database.';
 
   @override

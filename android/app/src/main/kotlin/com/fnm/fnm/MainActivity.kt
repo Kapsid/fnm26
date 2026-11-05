@@ -15,8 +15,8 @@ class MainActivity : FlutterActivity() {
     /** Whether Dart has asked `initial()`: from then on files go to `opened`. */
     private var incomingReady = false
 
-    /** The file that started the app, until Dart asks for it. */
-    private var pendingIncoming: String? = null
+    /** Files that came before Dart was listening, until it asks for them. */
+    private val pendingIncoming = mutableListOf<String>()
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -42,16 +42,17 @@ class MainActivity : FlutterActivity() {
                     result.error("integrity", e.message, null)
                 }
             }
-        // A `.fnmdb` opened from another app. `initial` hands over the file
-        // that started the app, once; a hot restart asks again and gets null.
+        // A `.fnmdb` opened from another app. `initial` hands over the files
+        // that came before Dart listened, once; a hot restart asks again and
+        // gets none.
         incoming = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "fnm/incoming_file")
             .also { channel ->
                 channel.setMethodCallHandler { call, result ->
                     when (call.method) {
                         "initial" -> {
                             incomingReady = true
-                            result.success(pendingIncoming)
-                            pendingIncoming = null
+                            result.success(pendingIncoming.toList())
+                            pendingIncoming.clear()
                         }
                         else -> result.notImplemented()
                     }
@@ -65,6 +66,9 @@ class MainActivity : FlutterActivity() {
         if (savedInstanceState == null) receive(intent)
     }
 
+    // launchMode is singleTask: a file opened while the app runs always
+    // comes back to this one activity (one engine on the save database)
+    // through here, whichever app sent it.
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -86,7 +90,7 @@ class MainActivity : FlutterActivity() {
         if (incomingReady && channel != null) {
             channel.invokeMethod("opened", path)
         } else {
-            pendingIncoming = path
+            pendingIncoming.add(path)
         }
     }
 }

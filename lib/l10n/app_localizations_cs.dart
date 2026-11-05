@@ -14660,6 +14660,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get editorImported => 'Databáze naimportována';
 
   @override
+  String get editorImportOpen => 'Otevřít';
+
+  @override
   String get editorImportTooBig => 'Ten soubor je na databázi příliš velký.';
 
   @override

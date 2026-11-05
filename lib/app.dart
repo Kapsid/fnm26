@@ -64,11 +64,9 @@ class _FnmAppState extends ConsumerState<FnmApp> {
         // The likeliest last moment before the phone is put away: an
         // automatic cloud backup if one is on, due and anything changed.
         unawaited(
-          ref
-              .read(cloudBackupServiceProvider)
-              .trigger(
-                BackupTrigger.appBackground,
-              ),
+          ref.read(cloudBackupServiceProvider).trigger(
+            BackupTrigger.appBackground,
+          ),
         );
       },
       onResume: () => ref.read(playTimeTrackerProvider).resume(),
