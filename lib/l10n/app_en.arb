@@ -22684,5 +22684,236 @@
   "editorDuplicateFailed": "The database could not be copied.",
   "@editorDuplicateFailed": {
     "description": "Snackbar when duplicating a database failed."
+  },
+  "editorNationsSearch": "Search nations",
+  "@editorNationsSearch": {
+    "description": "Hint of the nation search in the players section."
+  },
+  "editorFilterAll": "All",
+  "@editorFilterAll": {
+    "description": "Filter chip showing nations of every confederation."
+  },
+  "editorNationsNone": "No nation matches your search.",
+  "@editorNationsNone": {
+    "description": "Shown when the nation search finds nothing."
+  },
+  "editorNationSquadReady": "Squad ready",
+  "@editorNationSquadReady": {
+    "description": "A nation's squad has nothing missing."
+  },
+  "editorSquadAdd": "Add player",
+  "@editorSquadAdd": {
+    "description": "Button that adds a new player to a nation's squad."
+  },
+  "editorSquadFull": "A squad holds at most {max} players.",
+  "@editorSquadFull": {
+    "description": "Snackbar when adding a player to a full squad.",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "editorSquadRemoved": "{name} removed from the squad",
+  "@editorSquadRemoved": {
+    "description": "Snackbar after a player is removed; it offers Undo.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorPlayerUnnamed": "Unnamed player",
+  "@editorPlayerUnnamed": {
+    "description": "Stands in for a player who has no name yet."
+  },
+  "editorSquadDuplicate": "Another player in this squad has this name.",
+  "@editorSquadDuplicate": {
+    "description": "Warning (never a block) that two players of one squad share a name."
+  },
+  "editorSquadEmpty": "No players yet. Add the first one.",
+  "@editorSquadEmpty": {
+    "description": "Body of an empty squad."
+  },
+  "editorSquadReady": "This squad is ready to play.",
+  "@editorSquadReady": {
+    "description": "A squad with nothing missing."
+  },
+  "editorSquadRules": "{min} to {max} players, with at least {gk} goalkeepers, {def} defenders, {mid} midfielders and {fwd} forwards.",
+  "@editorSquadRules": {
+    "description": "What a squad needs to be ready.",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      },
+      "gk": {
+        "type": "int"
+      },
+      "def": {
+        "type": "int"
+      },
+      "mid": {
+        "type": "int"
+      },
+      "fwd": {
+        "type": "int"
+      }
+    }
+  },
+  "editorShortGk": "GK",
+  "@editorShortGk": {
+    "description": "Short label of the goalkeepers in a squad summary."
+  },
+  "editorShortDef": "DEF",
+  "@editorShortDef": {
+    "description": "Short label of the defenders in a squad summary."
+  },
+  "editorShortMid": "MID",
+  "@editorShortMid": {
+    "description": "Short label of the midfielders in a squad summary."
+  },
+  "editorShortFwd": "FWD",
+  "@editorShortFwd": {
+    "description": "Short label of the forwards in a squad summary."
+  },
+  "editorPlayerAgeShort": "Age {age}",
+  "@editorPlayerAgeShort": {
+    "description": "A player's age in a squad row.",
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "editorPlayerName": "Name",
+  "@editorPlayerName": {
+    "description": "Label of a player's name field."
+  },
+  "editorPlayerNameHint": "Type his name",
+  "@editorPlayerNameHint": {
+    "description": "Hint of an empty player name field."
+  },
+  "editorPlayerNameNeeded": "A name is needed.",
+  "@editorPlayerNameNeeded": {
+    "description": "Error under an empty player name."
+  },
+  "editorPlayerNameBad": "Remove the unusual characters.",
+  "@editorPlayerNameBad": {
+    "description": "Error under a player name with characters the game cannot use."
+  },
+  "editorPlayerAge": "Age",
+  "@editorPlayerAge": {
+    "description": "Label of a player's age stepper."
+  },
+  "editorPlayerPosition": "Position",
+  "@editorPlayerPosition": {
+    "description": "Label of a player's position picker."
+  },
+  "editorPlayerClub": "Club",
+  "@editorPlayerClub": {
+    "description": "Label of a player's club field."
+  },
+  "editorPlayerFreeAgent": "Free agent",
+  "@editorPlayerFreeAgent": {
+    "description": "A player with no club."
+  },
+  "editorPlayerClubSearch": "Search clubs",
+  "@editorPlayerClubSearch": {
+    "description": "Hint of the club search."
+  },
+  "editorPlayerClubNone": "No club matches your search.",
+  "@editorPlayerClubNone": {
+    "description": "Shown when the club search finds nothing."
+  },
+  "editorPlayerClubPick": "Pick a club",
+  "@editorPlayerClubPick": {
+    "description": "Title of the club picker."
+  },
+  "editorPlayerOverall": "Overall",
+  "@editorPlayerOverall": {
+    "description": "Label of a player's overall rating."
+  },
+  "editorPlayerType": "Player type",
+  "@editorPlayerType": {
+    "description": "Label of the player type chips."
+  },
+  "editorPlayerPotential": "Potential",
+  "@editorPlayerPotential": {
+    "description": "Label of a player's potential."
+  },
+  "editorPlayerPotentialAbout": "The peak he can reach if he develops well. Never below his overall.",
+  "@editorPlayerPotentialAbout": {
+    "description": "What potential means, under its slider."
+  },
+  "editorPlayerQualities": "What the game stores",
+  "@editorPlayerQualities": {
+    "description": "Header over a player's three stored qualities."
+  },
+  "editorTypeBalanced": "Balanced",
+  "@editorTypeBalanced": {
+    "description": "Player type: even qualities."
+  },
+  "editorTypeAthlete": "Athlete",
+  "@editorTypeAthlete": {
+    "description": "Player type: physical."
+  },
+  "editorTypeTechnician": "Technician",
+  "@editorTypeTechnician": {
+    "description": "Player type: technical."
+  },
+  "editorTypeEngine": "Engine",
+  "@editorTypeEngine": {
+    "description": "Player type: stamina."
+  },
+  "editorTypeBalancedAbout": "Even across physique, technique and stamina.",
+  "@editorTypeBalancedAbout": {
+    "description": "What the Balanced type means."
+  },
+  "editorTypeAthleteAbout": "Strong and quick, a little lighter on technique.",
+  "@editorTypeAthleteAbout": {
+    "description": "What the Athlete type means."
+  },
+  "editorTypeTechnicianAbout": "Skilful on the ball, less physical.",
+  "@editorTypeTechnicianAbout": {
+    "description": "What the Technician type means."
+  },
+  "editorTypeEngineAbout": "Runs all day, steady at everything else.",
+  "@editorTypeEngineAbout": {
+    "description": "What the Engine type means."
+  },
+  "editorPlayerLess": "One less",
+  "@editorPlayerLess": {
+    "description": "Tooltip of a minus button."
+  },
+  "editorPlayerMore": "One more",
+  "@editorPlayerMore": {
+    "description": "Tooltip of a plus button."
+  },
+  "editorPlayerRemove": "Remove from squad",
+  "@editorPlayerRemove": {
+    "description": "Button that removes a player from the squad."
+  },
+  "editorPlayerGone": "This player is no longer in the squad.",
+  "@editorPlayerGone": {
+    "description": "Body when the edited player was removed."
+  },
+  "editorNationGone": "This nation is not in the database.",
+  "@editorNationGone": {
+    "description": "Body when a nation id is unknown."
+  },
+  "editorPickPlayer": "Pick a player to edit.",
+  "@editorPickPlayer": {
+    "description": "Tablet squad: nothing picked yet."
+  },
+  "editorPlayerClubAuto": "Chosen by the game",
+  "@editorPlayerClubAuto": {
+    "description": "A player whose club the game picks on day one."
+  },
+  "editorPlayerClubAutoAbout": "The game places him at a club that suits his level.",
+  "@editorPlayerClubAutoAbout": {
+    "description": "What leaving the club to the game means, in the club picker."
   }
 }

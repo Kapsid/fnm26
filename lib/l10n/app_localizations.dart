@@ -22249,6 +22249,300 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The database could not be copied.'**
   String get editorDuplicateFailed;
+
+  /// Hint of the nation search in the players section.
+  ///
+  /// In en, this message translates to:
+  /// **'Search nations'**
+  String get editorNationsSearch;
+
+  /// Filter chip showing nations of every confederation.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get editorFilterAll;
+
+  /// Shown when the nation search finds nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No nation matches your search.'**
+  String get editorNationsNone;
+
+  /// A nation's squad has nothing missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Squad ready'**
+  String get editorNationSquadReady;
+
+  /// Button that adds a new player to a nation's squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Add player'**
+  String get editorSquadAdd;
+
+  /// Snackbar when adding a player to a full squad.
+  ///
+  /// In en, this message translates to:
+  /// **'A squad holds at most {max} players.'**
+  String editorSquadFull(int max);
+
+  /// Snackbar after a player is removed; it offers Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} removed from the squad'**
+  String editorSquadRemoved(String name);
+
+  /// Stands in for a player who has no name yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Unnamed player'**
+  String get editorPlayerUnnamed;
+
+  /// Warning (never a block) that two players of one squad share a name.
+  ///
+  /// In en, this message translates to:
+  /// **'Another player in this squad has this name.'**
+  String get editorSquadDuplicate;
+
+  /// Body of an empty squad.
+  ///
+  /// In en, this message translates to:
+  /// **'No players yet. Add the first one.'**
+  String get editorSquadEmpty;
+
+  /// A squad with nothing missing.
+  ///
+  /// In en, this message translates to:
+  /// **'This squad is ready to play.'**
+  String get editorSquadReady;
+
+  /// What a squad needs to be ready.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} to {max} players, with at least {gk} goalkeepers, {def} defenders, {mid} midfielders and {fwd} forwards.'**
+  String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd);
+
+  /// Short label of the goalkeepers in a squad summary.
+  ///
+  /// In en, this message translates to:
+  /// **'GK'**
+  String get editorShortGk;
+
+  /// Short label of the defenders in a squad summary.
+  ///
+  /// In en, this message translates to:
+  /// **'DEF'**
+  String get editorShortDef;
+
+  /// Short label of the midfielders in a squad summary.
+  ///
+  /// In en, this message translates to:
+  /// **'MID'**
+  String get editorShortMid;
+
+  /// Short label of the forwards in a squad summary.
+  ///
+  /// In en, this message translates to:
+  /// **'FWD'**
+  String get editorShortFwd;
+
+  /// A player's age in a squad row.
+  ///
+  /// In en, this message translates to:
+  /// **'Age {age}'**
+  String editorPlayerAgeShort(int age);
+
+  /// Label of a player's name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get editorPlayerName;
+
+  /// Hint of an empty player name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Type his name'**
+  String get editorPlayerNameHint;
+
+  /// Error under an empty player name.
+  ///
+  /// In en, this message translates to:
+  /// **'A name is needed.'**
+  String get editorPlayerNameNeeded;
+
+  /// Error under a player name with characters the game cannot use.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the unusual characters.'**
+  String get editorPlayerNameBad;
+
+  /// Label of a player's age stepper.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get editorPlayerAge;
+
+  /// Label of a player's position picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get editorPlayerPosition;
+
+  /// Label of a player's club field.
+  ///
+  /// In en, this message translates to:
+  /// **'Club'**
+  String get editorPlayerClub;
+
+  /// A player with no club.
+  ///
+  /// In en, this message translates to:
+  /// **'Free agent'**
+  String get editorPlayerFreeAgent;
+
+  /// Hint of the club search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search clubs'**
+  String get editorPlayerClubSearch;
+
+  /// Shown when the club search finds nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No club matches your search.'**
+  String get editorPlayerClubNone;
+
+  /// Title of the club picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a club'**
+  String get editorPlayerClubPick;
+
+  /// Label of a player's overall rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall'**
+  String get editorPlayerOverall;
+
+  /// Label of the player type chips.
+  ///
+  /// In en, this message translates to:
+  /// **'Player type'**
+  String get editorPlayerType;
+
+  /// Label of a player's potential.
+  ///
+  /// In en, this message translates to:
+  /// **'Potential'**
+  String get editorPlayerPotential;
+
+  /// What potential means, under its slider.
+  ///
+  /// In en, this message translates to:
+  /// **'The peak he can reach if he develops well. Never below his overall.'**
+  String get editorPlayerPotentialAbout;
+
+  /// Header over a player's three stored qualities.
+  ///
+  /// In en, this message translates to:
+  /// **'What the game stores'**
+  String get editorPlayerQualities;
+
+  /// Player type: even qualities.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get editorTypeBalanced;
+
+  /// Player type: physical.
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete'**
+  String get editorTypeAthlete;
+
+  /// Player type: technical.
+  ///
+  /// In en, this message translates to:
+  /// **'Technician'**
+  String get editorTypeTechnician;
+
+  /// Player type: stamina.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine'**
+  String get editorTypeEngine;
+
+  /// What the Balanced type means.
+  ///
+  /// In en, this message translates to:
+  /// **'Even across physique, technique and stamina.'**
+  String get editorTypeBalancedAbout;
+
+  /// What the Athlete type means.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong and quick, a little lighter on technique.'**
+  String get editorTypeAthleteAbout;
+
+  /// What the Technician type means.
+  ///
+  /// In en, this message translates to:
+  /// **'Skilful on the ball, less physical.'**
+  String get editorTypeTechnicianAbout;
+
+  /// What the Engine type means.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs all day, steady at everything else.'**
+  String get editorTypeEngineAbout;
+
+  /// Tooltip of a minus button.
+  ///
+  /// In en, this message translates to:
+  /// **'One less'**
+  String get editorPlayerLess;
+
+  /// Tooltip of a plus button.
+  ///
+  /// In en, this message translates to:
+  /// **'One more'**
+  String get editorPlayerMore;
+
+  /// Button that removes a player from the squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from squad'**
+  String get editorPlayerRemove;
+
+  /// Body when the edited player was removed.
+  ///
+  /// In en, this message translates to:
+  /// **'This player is no longer in the squad.'**
+  String get editorPlayerGone;
+
+  /// Body when a nation id is unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'This nation is not in the database.'**
+  String get editorNationGone;
+
+  /// Tablet squad: nothing picked yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a player to edit.'**
+  String get editorPickPlayer;
+
+  /// A player whose club the game picks on day one.
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen by the game'**
+  String get editorPlayerClubAuto;
+
+  /// What leaving the club to the game means, in the club picker.
+  ///
+  /// In en, this message translates to:
+  /// **'The game places him at a club that suits his level.'**
+  String get editorPlayerClubAutoAbout;
 }
 
 class _AppLocalizationsDelegate

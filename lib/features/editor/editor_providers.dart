@@ -80,18 +80,29 @@ enum EditorSection {
 String editorPackLocation(int packId) => '${Routes.editorPack}?id=$packId';
 
 /// The location of [section] in pack [packId], opened on [nationId] when the
-/// section is per nation.
+/// section is per nation. The players section opened on a nation is that
+/// nation's squad ([editorSquadLocation]).
 String editorSectionLocation(
   EditorSection section,
   int packId, {
   int? nationId,
-}) => Uri(
-  path: section.route,
-  queryParameters: {
-    'id': '$packId',
-    if (nationId != null) 'nation': '$nationId',
-  },
-).toString();
+}) => section == EditorSection.players && nationId != null
+    ? editorSquadLocation(packId, nationId)
+    : Uri(
+        path: section.route,
+        queryParameters: {
+          'id': '$packId',
+          if (nationId != null) 'nation': '$nationId',
+        },
+      ).toString();
+
+/// The location of nation [nationId]'s squad in pack [packId].
+String editorSquadLocation(int packId, int nationId) =>
+    '${Routes.editorSquad}?id=$packId&nation=$nationId';
+
+/// The location of player [playerId] of nation [nationId] in pack [packId].
+String editorPlayerLocation(int packId, int nationId, int playerId) =>
+    '${Routes.editorPlayer}?id=$packId&nation=$nationId&player=$playerId';
 
 /// Asks the manager for a file to import and returns its path (null when
 /// he picks nothing). A provider so a test can stand in a file.
@@ -263,19 +274,33 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   bool get canUndo => _past.isNotEmpty;
 
   /// Applies [edit] to the pack and saves it shortly after.
-  void update(WorldPack Function(WorldPack) edit) {
+  ///
+  /// A run of updates passing the same [group] (any object, compared by
+  /// identity: one slider drag, one spell of typing in a field) is one undo
+  /// step, so a drag across thirty values does not push the edits before it
+  /// out of [undoDepth].
+  void update(WorldPack Function(WorldPack) edit, {Object? group}) {
     final current = state.valueOrNull;
     if (current == null) return;
     final next = edit(current);
     if (identical(next, current)) return;
-    _past.add(current);
-    if (_past.length > undoDepth) _past.removeAt(0);
+    final joins = group != null && identical(group, _group) && canUndo;
+    if (!joins) {
+      _past.add(current);
+      if (_past.length > undoDepth) _past.removeAt(0);
+    }
+    _group = group;
     _set(next);
   }
 
-  /// Goes back to the pack as it was before the last [update].
+  /// The group of the last [update], whose run the next one may join.
+  Object? _group;
+
+  /// Goes back to the pack as it was before the last [update] (before the
+  /// whole run, for a grouped one).
   void undo() {
     if (_past.isEmpty) return;
+    _group = null;
     _set(_past.removeLast());
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/shell/tablet_shell.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/shared/widgets/app_error_state.dart';
@@ -57,6 +58,9 @@ Future<void> _sweepFullScreen(WidgetTester tester, Size size) async {
     Routes.editorPack: '?id=$packId',
     for (final section in Routes.editorSections)
       section: '?id=$packId&nation=${me.id}',
+    Routes.editorSquad: '?id=$packId&nation=${me.id}',
+    Routes.editorPlayer:
+        '?id=$packId&nation=${me.id}&player=${kPackPlayerIdBase + 1}',
     Routes.hostDraw: '?careerId=$id',
     Routes.finalsDraw: '?careerId=$id',
     Routes.continentalDraw: '?careerId=$id&conf=${me.confederation.name}',

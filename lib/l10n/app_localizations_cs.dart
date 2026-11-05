@@ -15008,4 +15008,164 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorDuplicateFailed => 'Databázi se nepodařilo zkopírovat.';
+
+  @override
+  String get editorNationsSearch => 'Hledat národ';
+
+  @override
+  String get editorFilterAll => 'Vše';
+
+  @override
+  String get editorNationsNone => 'Hledání neodpovídá žádný národ.';
+
+  @override
+  String get editorNationSquadReady => 'Kádr připraven';
+
+  @override
+  String get editorSquadAdd => 'Přidat hráče';
+
+  @override
+  String editorSquadFull(int max) {
+    return 'Kádr může mít nejvýše $max hráčů.';
+  }
+
+  @override
+  String editorSquadRemoved(String name) {
+    return 'Hráč $name odebrán z kádru';
+  }
+
+  @override
+  String get editorPlayerUnnamed => 'Hráč bez jména';
+
+  @override
+  String get editorSquadDuplicate => 'Toto jméno má v kádru ještě jiný hráč.';
+
+  @override
+  String get editorSquadEmpty => 'Zatím žádní hráči. Přidejte prvního.';
+
+  @override
+  String get editorSquadReady => 'Kádr je připraven ke hře.';
+
+  @override
+  String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
+    return '$min až $max hráčů, z toho alespoň brankáři: $gk, obránci: $def, záložníci: $mid, útočníci: $fwd.';
+  }
+
+  @override
+  String get editorShortGk => 'BR';
+
+  @override
+  String get editorShortDef => 'OBR';
+
+  @override
+  String get editorShortMid => 'ZÁL';
+
+  @override
+  String get editorShortFwd => 'ÚT';
+
+  @override
+  String editorPlayerAgeShort(int age) {
+    return '$age let';
+  }
+
+  @override
+  String get editorPlayerName => 'Jméno';
+
+  @override
+  String get editorPlayerNameHint => 'Napište jeho jméno';
+
+  @override
+  String get editorPlayerNameNeeded => 'Jméno je potřeba.';
+
+  @override
+  String get editorPlayerNameBad => 'Odstraňte neobvyklé znaky.';
+
+  @override
+  String get editorPlayerAge => 'Věk';
+
+  @override
+  String get editorPlayerPosition => 'Pozice';
+
+  @override
+  String get editorPlayerClub => 'Klub';
+
+  @override
+  String get editorPlayerFreeAgent => 'Bez klubu';
+
+  @override
+  String get editorPlayerClubSearch => 'Hledat klub';
+
+  @override
+  String get editorPlayerClubNone => 'Hledání neodpovídá žádný klub.';
+
+  @override
+  String get editorPlayerClubPick => 'Vyberte klub';
+
+  @override
+  String get editorPlayerOverall => 'Celkově';
+
+  @override
+  String get editorPlayerType => 'Typ hráče';
+
+  @override
+  String get editorPlayerPotential => 'Potenciál';
+
+  @override
+  String get editorPlayerPotentialAbout =>
+      'Vrchol, kterého může při dobrém vývoji dosáhnout. Nikdy pod jeho celkovým hodnocením.';
+
+  @override
+  String get editorPlayerQualities => 'Co hra ukládá';
+
+  @override
+  String get editorTypeBalanced => 'Vyvážený';
+
+  @override
+  String get editorTypeAthlete => 'Atlet';
+
+  @override
+  String get editorTypeTechnician => 'Technik';
+
+  @override
+  String get editorTypeEngine => 'Motor';
+
+  @override
+  String get editorTypeBalancedAbout =>
+      'Vyrovnaný ve fyzičce, technice i výdrži.';
+
+  @override
+  String get editorTypeAthleteAbout =>
+      'Silný a rychlý, technicky o něco slabší.';
+
+  @override
+  String get editorTypeTechnicianAbout => 'Šikovný s míčem, fyzicky slabší.';
+
+  @override
+  String get editorTypeEngineAbout =>
+      'Naběhá celý zápas, ve všem ostatním spolehlivý.';
+
+  @override
+  String get editorPlayerLess => 'O jeden méně';
+
+  @override
+  String get editorPlayerMore => 'O jeden více';
+
+  @override
+  String get editorPlayerRemove => 'Odebrat z kádru';
+
+  @override
+  String get editorPlayerGone => 'Tento hráč už v kádru není.';
+
+  @override
+  String get editorNationGone => 'Tento národ v databázi není.';
+
+  @override
+  String get editorPickPlayer => 'Vyberte hráče, kterého chcete upravit.';
+
+  @override
+  String get editorPlayerClubAuto => 'Vybere hra';
+
+  @override
+  String get editorPlayerClubAutoAbout =>
+      'Hra ho umístí do klubu, který odpovídá jeho úrovni.';
 }

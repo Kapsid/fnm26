@@ -80,6 +80,8 @@ const Set<String> tabletReadyPaths = <String>{
   Routes.editor,
   Routes.editorPack,
   ...Routes.editorSections,
+  Routes.editorSquad,
+  Routes.editorPlayer,
 };
 
 /// The tablet frame around every in-save screen: sidebar on the left, top bar

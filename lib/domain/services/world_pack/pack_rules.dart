@@ -70,6 +70,9 @@ class UnknownId extends PackIssue {
 abstract final class PackRules {
   static const squadMin = 23, squadMax = 40, gkMin = 3, defMin = 6;
   static const midMin = 6, fwdMin = 3;
+
+  /// The ages a pack player may have, both ends included.
+  static const ageMin = 15, ageMax = 45;
   static const nameMax = 40, handleMax = 30, codeLength = 3;
   static const nameListMin = 20;
 
@@ -153,7 +156,7 @@ abstract final class PackRules {
       for (final pl in squad) {
         final base = 'squads.$id.${pl.id}';
         name('$base.name', pl.name);
-        if (pl.age < 15 || pl.age > 45) {
+        if (pl.age < ageMin || pl.age > ageMax) {
           out.add(BadField('$base.age', FieldReason.outOfRange));
         }
         final overall = OverallRating.forPosition(pl.position, pl.attributes);

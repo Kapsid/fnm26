@@ -14767,4 +14767,165 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorDuplicateFailed => 'The database could not be copied.';
+
+  @override
+  String get editorNationsSearch => 'Search nations';
+
+  @override
+  String get editorFilterAll => 'All';
+
+  @override
+  String get editorNationsNone => 'No nation matches your search.';
+
+  @override
+  String get editorNationSquadReady => 'Squad ready';
+
+  @override
+  String get editorSquadAdd => 'Add player';
+
+  @override
+  String editorSquadFull(int max) {
+    return 'A squad holds at most $max players.';
+  }
+
+  @override
+  String editorSquadRemoved(String name) {
+    return '$name removed from the squad';
+  }
+
+  @override
+  String get editorPlayerUnnamed => 'Unnamed player';
+
+  @override
+  String get editorSquadDuplicate =>
+      'Another player in this squad has this name.';
+
+  @override
+  String get editorSquadEmpty => 'No players yet. Add the first one.';
+
+  @override
+  String get editorSquadReady => 'This squad is ready to play.';
+
+  @override
+  String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
+    return '$min to $max players, with at least $gk goalkeepers, $def defenders, $mid midfielders and $fwd forwards.';
+  }
+
+  @override
+  String get editorShortGk => 'GK';
+
+  @override
+  String get editorShortDef => 'DEF';
+
+  @override
+  String get editorShortMid => 'MID';
+
+  @override
+  String get editorShortFwd => 'FWD';
+
+  @override
+  String editorPlayerAgeShort(int age) {
+    return 'Age $age';
+  }
+
+  @override
+  String get editorPlayerName => 'Name';
+
+  @override
+  String get editorPlayerNameHint => 'Type his name';
+
+  @override
+  String get editorPlayerNameNeeded => 'A name is needed.';
+
+  @override
+  String get editorPlayerNameBad => 'Remove the unusual characters.';
+
+  @override
+  String get editorPlayerAge => 'Age';
+
+  @override
+  String get editorPlayerPosition => 'Position';
+
+  @override
+  String get editorPlayerClub => 'Club';
+
+  @override
+  String get editorPlayerFreeAgent => 'Free agent';
+
+  @override
+  String get editorPlayerClubSearch => 'Search clubs';
+
+  @override
+  String get editorPlayerClubNone => 'No club matches your search.';
+
+  @override
+  String get editorPlayerClubPick => 'Pick a club';
+
+  @override
+  String get editorPlayerOverall => 'Overall';
+
+  @override
+  String get editorPlayerType => 'Player type';
+
+  @override
+  String get editorPlayerPotential => 'Potential';
+
+  @override
+  String get editorPlayerPotentialAbout =>
+      'The peak he can reach if he develops well. Never below his overall.';
+
+  @override
+  String get editorPlayerQualities => 'What the game stores';
+
+  @override
+  String get editorTypeBalanced => 'Balanced';
+
+  @override
+  String get editorTypeAthlete => 'Athlete';
+
+  @override
+  String get editorTypeTechnician => 'Technician';
+
+  @override
+  String get editorTypeEngine => 'Engine';
+
+  @override
+  String get editorTypeBalancedAbout =>
+      'Even across physique, technique and stamina.';
+
+  @override
+  String get editorTypeAthleteAbout =>
+      'Strong and quick, a little lighter on technique.';
+
+  @override
+  String get editorTypeTechnicianAbout => 'Skilful on the ball, less physical.';
+
+  @override
+  String get editorTypeEngineAbout =>
+      'Runs all day, steady at everything else.';
+
+  @override
+  String get editorPlayerLess => 'One less';
+
+  @override
+  String get editorPlayerMore => 'One more';
+
+  @override
+  String get editorPlayerRemove => 'Remove from squad';
+
+  @override
+  String get editorPlayerGone => 'This player is no longer in the squad.';
+
+  @override
+  String get editorNationGone => 'This nation is not in the database.';
+
+  @override
+  String get editorPickPlayer => 'Pick a player to edit.';
+
+  @override
+  String get editorPlayerClubAuto => 'Chosen by the game';
+
+  @override
+  String get editorPlayerClubAutoAbout =>
+      'The game places him at a club that suits his level.';
 }

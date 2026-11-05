@@ -6,8 +6,8 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_list_screen.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
-import 'package:fnm/features/editor/editor_section_screen.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
+import 'package:fnm/features/editor/players/squad_screen.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 import '../helpers/editor_app.dart';
@@ -51,15 +51,15 @@ void main() {
     await settle(tester);
 
     final uri = c.read(routerProvider).routeInformationProvider.value.uri;
-    expect(uri.path, Routes.editorPlayers);
+    // The players section opened on a nation is that nation's squad.
+    expect(uri.path, Routes.editorSquad);
     expect(uri.queryParameters['id'], '$id');
     expect(uri.queryParameters['nation'], '$cze');
-    final screen = tester.widget<EditorSectionScreen>(
-      find.byType(EditorSectionScreen),
-    );
-    expect(screen.section, EditorSection.players);
+    final screen = tester.widget<SquadScreen>(find.byType(SquadScreen));
+    expect(screen.packId, id);
     expect(screen.nationId, cze);
     expect(find.text('Czechia'), findsWidgets);
+    expect(find.text(enL.editorIssuePlayersShort(1)), findsOneWidget);
   });
 
   testWidgets('undo reverts the last edit', (tester) async {

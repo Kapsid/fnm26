@@ -29,6 +29,9 @@ import 'package:fnm/features/editor/editor_list_screen.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_section_screen.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
+import 'package:fnm/features/editor/players/nation_list_screen.dart';
+import 'package:fnm/features/editor/players/player_edit_screen.dart';
+import 'package:fnm/features/editor/players/squad_screen.dart';
 import 'package:fnm/features/federation/budget_setup_screen.dart';
 import 'package:fnm/features/federation/finances_screen.dart';
 import 'package:fnm/features/federation/naturalization_screen.dart';
@@ -297,6 +300,14 @@ abstract final class Routes {
   static const editorSponsors = '/editor/pack/sponsors';
   static const editorTrophies = '/editor/pack/trophies';
 
+  /// One nation's squad in a database. Expects `?id=` (the pack) and
+  /// `&nation=`.
+  static const editorSquad = '/editor/pack/players/squad';
+
+  /// One player of a database. Expects `?id=` (the pack), `&nation=` and
+  /// `&player=`.
+  static const editorPlayer = '/editor/pack/players/player';
+
   /// Every section route of the editor.
   static const Set<String> editorSections = {
     editorPlayers,
@@ -342,6 +353,8 @@ abstract final class Routes {
     editor,
     editorPack,
     ...editorSections,
+    editorSquad,
+    editorPlayer,
   };
 }
 
@@ -397,15 +410,37 @@ final routerProvider = Provider<GoRouter>((ref) {
         packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
       ),
     ),
-    for (final section in EditorSection.values)
-      GoRoute(
-        path: section.route,
-        builder: (context, state) => EditorSectionScreen(
-          section: section,
-          packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
-          nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
-        ),
+    GoRoute(
+      path: Routes.editorPlayers,
+      builder: (context, state) => NationListScreen(
+        packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
       ),
+    ),
+    GoRoute(
+      path: Routes.editorSquad,
+      builder: (context, state) => SquadScreen(
+        packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
+        nationId: int.tryParse(state.uri.queryParameters['nation'] ?? '') ?? 0,
+      ),
+    ),
+    GoRoute(
+      path: Routes.editorPlayer,
+      builder: (context, state) => PlayerEditScreen(
+        packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
+        nationId: int.tryParse(state.uri.queryParameters['nation'] ?? '') ?? 0,
+        playerId: int.tryParse(state.uri.queryParameters['player'] ?? '') ?? 0,
+      ),
+    ),
+    for (final section in EditorSection.values)
+      if (section != EditorSection.players)
+        GoRoute(
+          path: section.route,
+          builder: (context, state) => EditorSectionScreen(
+            section: section,
+            packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
+            nationId: int.tryParse(state.uri.queryParameters['nation'] ?? ''),
+          ),
+        ),
     GoRoute(
       path: Routes.settings,
       builder: (context, state) => const SettingsScreen(),
