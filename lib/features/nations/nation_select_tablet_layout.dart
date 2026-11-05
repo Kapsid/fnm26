@@ -45,9 +45,11 @@ class _NationSelectTabletLayoutState
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final nationsAsync = ref.watch(nationsProvider);
+    // The world chosen on the chip: its names, ranks and squads.
+    final world = ref.watch(newGameWorldProvider);
+    final nationsAsync = ref.watch(newGameNationsProvider(world));
     final strengths =
-        ref.watch(nationStrengthsProvider).valueOrNull ??
+        ref.watch(newGameStrengthsProvider(world)).valueOrNull ??
         const <int, NationStrength>{};
     final selectedConf = ref.watch(selectedConfederationProvider);
     final query = ref.watch(nationSearchProvider).trim().toLowerCase();

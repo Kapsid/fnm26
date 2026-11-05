@@ -10,6 +10,7 @@ import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/world_pack/world_choice.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -85,7 +86,11 @@ class _UnemployedStartScreenState extends ConsumerState<UnemployedStartScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final nationsAsync = ref.watch(nationsProvider);
+    // The bottom of the world chosen on the nation pick's chip, by the
+    // ranks a career on it starts with.
+    final nationsAsync = ref.watch(
+      newGameNationsProvider(ref.watch(newGameWorldProvider)),
+    );
     if (useTabletLayout(context, ref)) {
       return _UnemployedStartTabletLayout(
         nationsAsync: nationsAsync,

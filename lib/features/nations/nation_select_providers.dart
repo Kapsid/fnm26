@@ -1,9 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 /// Every nation a career created now can take (seeding the database first if
 /// needed), ordered by ranking: the new-career world (see
@@ -47,30 +53,176 @@ final nationSearchProvider = StateProvider<String>((_) => '');
 /// his name, because every save names its players afresh.
 typedef NationStrength = ({int overall, int tier, Player best});
 
-/// [NationStrength] of every nation with players, by nation id. The tablet's
-/// nation pick, new game and out-of-work offers read it; the phone does not.
-final FutureProvider<Map<int, NationStrength>> nationStrengthsProvider =
-    FutureProvider<Map<int, NationStrength>>((ref) async {
+/// Every nation of the new-career world with its day-one pool (best first,
+/// no save seed: no save exists yet), by nation id.
+final FutureProvider<Map<int, List<Player>>> _dayOnePoolsProvider =
+    FutureProvider<Map<int, List<Player>>>((ref) async {
       await ref.watch(seedLoaderProvider).ensureSeeded();
       final nations = await ref
           .watch(nationRepositoryProvider)
           .newCareerWorld();
       final players = ref.watch(playerRepositoryProvider);
-      final overall = <int, int>{};
-      final best = <int, Player>{};
-      for (final n in nations) {
-        // Best first. No save seed: no save exists yet.
-        final pool = await players.byNation(n.id);
-        if (pool.isEmpty) continue;
-        overall[n.id] = squadOverall(pool);
-        best[n.id] = pool.first;
-      }
-      final tiers = strengthTiers(overall);
-      return {
-        for (final id in overall.keys)
-          id: (overall: overall[id]!, tier: tiers[id]!, best: best[id]!),
-      };
+      return {for (final n in nations) n.id: await players.byNation(n.id)};
     });
+
+/// [NationStrength] of every nation with players, by nation id. The tablet's
+/// nation pick, new game and out-of-work offers read it; the phone does not.
+final FutureProvider<Map<int, NationStrength>> nationStrengthsProvider =
+    FutureProvider<Map<int, NationStrength>>(
+      (ref) async => _strengthsOf(await ref.watch(_dayOnePoolsProvider.future)),
+    );
+
+/// [NationStrength] of each pool in [pools] that has players: each pool is
+/// best first.
+Map<int, NationStrength> _strengthsOf(Map<int, List<Player>> pools) {
+  final overall = <int, int>{};
+  final best = <int, Player>{};
+  for (final e in pools.entries) {
+    if (e.value.isEmpty) continue;
+    overall[e.key] = squadOverall(e.value);
+    best[e.key] = e.value.first;
+  }
+  final tiers = strengthTiers(overall);
+  return {
+    for (final id in overall.keys)
+      id: (overall: overall[id]!, tier: tiers[id]!, best: best[id]!),
+  };
+}
+
+/// The nation pick as world pack [packId] has it: what a career started on
+/// that pack opens on.
+typedef _PackPick = ({
+  List<Nation> nations,
+  Map<int, NationStrength> strengths,
+});
+
+/// [_PackPick] of pack [packId]; null when the pack is gone or cannot be
+/// read (the pick then shows the game's own world, and Start refuses it).
+///
+/// Its nations carry the pack's names and the starting ranks a career on it
+/// is given ([PackRanking.startingRanks], as `CareerService.create` works
+/// them out), ordered by them. Its strengths read each nation's pack squad
+/// on day one (exactly as the editor left him) with the game's fringe and
+/// youth around it, as the career's pools do. The flag stays the real
+/// nation's: a pack's code is a label, never the key for the flag.
+///
+/// AutoDispose and following [worldPacksProvider], which every pack write
+/// invalidates: an edit made since is seen.
+final AutoDisposeFutureProviderFamily<_PackPick?, int> _packPickProvider =
+    FutureProvider.autoDispose.family<_PackPick?, int>((ref, packId) async {
+      await ref.watch(worldPacksProvider.future);
+      final base = await ref.watch(nationsProvider.future);
+      final WorldPack? pack;
+      try {
+        pack = await ref.watch(worldPackRepositoryProvider).load(packId);
+      } on FormatException {
+        return null;
+      }
+      if (pack == null) return null;
+      final ranks = PackRanking.startingRanks(
+        baseRanks: {for (final n in base) n.id: n.ranking},
+        defaultStrength: await ref
+            .watch(worldPackServiceProvider)
+            .defaultStrength(),
+        packStrength: PackRanking.squadStrengths(pack.squads),
+      );
+      final order = {for (var i = 0; i < base.length; i++) base[i].id: i};
+      final nations =
+          [
+            for (final n in base)
+              n.copyWith(
+                name:
+                    ActiveWorld.textOrNull(pack.nations[n.id]?.name) ?? n.name,
+                ranking: ranks[n.id] ?? n.ranking,
+              ),
+          ]..sort((a, b) {
+            final c = a.ranking.compareTo(b.ranking);
+            return c != 0 ? c : order[a.id]!.compareTo(order[b.id]!);
+          });
+
+      final pools = await ref.watch(_dayOnePoolsProvider.future);
+      final packPools = <int, List<Player>>{
+        for (final e in pools.entries)
+          e.key: switch (pack.squads[e.key]) {
+            null => e.value,
+            final List<PackPlayer> squad => [
+              for (final p in squad)
+                Player(
+                  id: p.id,
+                  nationId: e.key,
+                  name: p.name,
+                  age: p.age,
+                  position: p.position,
+                  attributes: p.attributes,
+                  club: p.club ?? ClubService.freeAgent,
+                  clubCountry: p.clubCountry ?? '',
+                ),
+              // The game's own players around the squad: its fringe and
+              // youth, never a core player the pack replaced.
+              for (final p in e.value)
+                if (p.id >= PoolGenerator.firstFringeId) p,
+            ]..sort((a, b) => b.overall.compareTo(a.overall)),
+          },
+      };
+      return (nations: nations, strengths: _strengthsOf(packPools));
+    });
+
+/// The nations the nation pick lists for world [packId] (null: the game's
+/// own, exactly [nationsProvider]), ordered by ranking. The pick, its
+/// search, Random team, From the bottom, the preview and New Game all read
+/// this, keyed on `newGameWorldProvider`, so the chip changes all of them.
+final AutoDisposeFutureProviderFamily<List<Nation>, int?>
+newGameNationsProvider = FutureProvider.autoDispose.family<List<Nation>, int?>(
+  (ref, packId) async {
+    if (packId != null) {
+      final pick = await ref.watch(_packPickProvider(packId).future);
+      if (pick != null) return pick.nations;
+    }
+    return ref.watch(nationsProvider.future);
+  },
+);
+
+/// [nationStrengthsProvider] for world [packId] (null: exactly it).
+final AutoDisposeFutureProviderFamily<Map<int, NationStrength>, int?>
+newGameStrengthsProvider = FutureProvider.autoDispose
+    .family<Map<int, NationStrength>, int?>((ref, packId) async {
+      if (packId != null) {
+        final pick = await ref.watch(_packPickProvider(packId).future);
+        if (pick != null) return pick.strengths;
+      }
+      return ref.watch(nationStrengthsProvider.future);
+    });
+
+/// [starPlayersProvider] for world [packId] (null: exactly it): on a pack,
+/// each nation's best player as its pool reads on day one.
+final AutoDisposeFutureProviderFamily<Map<int, Player>, int?>
+newGameStarPlayersProvider = FutureProvider.autoDispose
+    .family<Map<int, Player>, int?>((ref, packId) async {
+      if (packId != null) {
+        final pick = await ref.watch(_packPickProvider(packId).future);
+        if (pick != null) {
+          return {for (final e in pick.strengths.entries) e.key: e.value.best};
+        }
+      }
+      return ref.watch(starPlayersProvider.future);
+    });
+
+/// Nation [nationId] as New Game shows it for world [packId] (null: the
+/// game's own, exactly `nationByIdProvider`).
+final AutoDisposeFutureProviderFamily<Nation?, (int?, int)>
+newGameNationProvider = FutureProvider.autoDispose.family<Nation?, (int?, int)>(
+  (ref, key) async {
+    final (packId, nationId) = key;
+    if (packId != null) {
+      final nations = await ref.watch(newGameNationsProvider(packId).future);
+      for (final n in nations) {
+        if (n.id == nationId) return n;
+      }
+    }
+    await ref.watch(seedLoaderProvider).ensureSeeded();
+    return ref.watch(nationRepositoryProvider).byId(nationId);
+  },
+);
 
 /// Strength out of five for each nation in [overalls] (nation id to squad
 /// overall): which fifth of the field it falls in, 5 for the strongest

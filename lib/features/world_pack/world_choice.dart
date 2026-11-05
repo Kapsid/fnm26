@@ -87,6 +87,21 @@ final FutureProvider<List<WorldChoice>> worldChoicesProvider =
       return out;
     });
 
+/// How pack [id] stands against the nations a career created now starts
+/// with ([assessPack]), read afresh; null when there is no such pack. Reads
+/// that one pack alone, where [worldChoicesProvider] reads them all.
+Future<PackStatus?> chosenWorldStatus(ProviderContainer c, int id) async {
+  final repo = c.read(worldPackRepositoryProvider);
+  WorldPack? pack;
+  try {
+    pack = await repo.load(id);
+    if (pack == null) return null;
+  } on FormatException {
+    pack = null;
+  }
+  return assessPack(pack, await c.read(nationsProvider.future)).status;
+}
+
 /// The world the career being started in New Game takes: a pack id, or
 /// null for the game's own world. Starts from the Settings default
 /// ([seedNewGameWorld]); the chip changes it for this one career, and it

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -10,10 +9,11 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
+import 'package:fnm/features/nations/nation_select_providers.dart';
 import 'package:fnm/features/world_pack/world_choice.dart';
-import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -71,13 +71,12 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
       // (the database edited, or deleted, since).
       final worldPackId = container.read(newGameWorldProvider);
       if (worldPackId != null) {
-        container.invalidate(worldPacksProvider);
-        final choices = await container.read(worldChoicesProvider.future);
-        final choice = choices.firstWhereOrNull((c) => c.id == worldPackId);
-        if (choice == null || !choice.selectable) {
+        // Only the chosen database is read and checked, not every one.
+        final status = await chosenWorldStatus(container, worldPackId);
+        if (status != PackStatus.ready) {
           _refuseWorld(
             container,
-            choice == null ? worldPackMissingCode : worldPackNotReadyCode,
+            status == null ? worldPackMissingCode : worldPackNotReadyCode,
           );
           return;
         }
@@ -152,7 +151,11 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final nationAsync = ref.watch(nationByIdProvider(widget.nationId));
+    // As the world chosen on the nation pick has it (its name and rank).
+    final world = ref.watch(newGameWorldProvider);
+    final nationAsync = world == null
+        ? ref.watch(nationByIdProvider(widget.nationId))
+        : ref.watch(newGameNationProvider((world, widget.nationId)));
     if (useTabletLayout(context, ref)) {
       return _NewGameTabletLayout(state: this, nationAsync: nationAsync);
     }

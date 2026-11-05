@@ -16,6 +16,7 @@ import 'package:fnm/features/federation/investment_editor.dart'
     show formatEuros;
 import 'package:fnm/features/hub/objective_providers.dart';
 import 'package:fnm/features/nations/nation_select_providers.dart';
+import 'package:fnm/features/world_pack/world_choice.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet_text.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -86,8 +87,15 @@ class NationPreview extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final nations = ref.watch(nationsProvider).valueOrNull ?? const <Nation>[];
-    final strength = ref.watch(nationStrengthsProvider).valueOrNull?[nation.id];
+    // Only shown while a career is being started: in the world chosen for
+    // it on the chip.
+    final world = ref.watch(newGameWorldProvider);
+    final nations =
+        ref.watch(newGameNationsProvider(world)).valueOrNull ??
+        const <Nation>[];
+    final strength = ref
+        .watch(newGameStrengthsProvider(world))
+        .valueOrNull?[nation.id];
     final targets = nations.isEmpty
         ? null
         : openingObjectiveTargets(nation, nations);

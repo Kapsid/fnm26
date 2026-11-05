@@ -70,8 +70,11 @@ class _NationSelectScreenState extends ConsumerState<NationSelectScreen> {
         onPreview: _preview,
       );
     }
-    final nationsAsync = ref.watch(nationsProvider);
-    final stars = ref.watch(starPlayersProvider).valueOrNull ?? const {};
+    // The world chosen on the chip: its names, ranks and squads.
+    final world = ref.watch(newGameWorldProvider);
+    final nationsAsync = ref.watch(newGameNationsProvider(world));
+    final stars =
+        ref.watch(newGameStarPlayersProvider(world)).valueOrNull ?? const {};
     final selectedConf = ref.watch(selectedConfederationProvider);
     final query = ref.watch(nationSearchProvider).trim().toLowerCase();
     final l = AppLocalizations.of(context);

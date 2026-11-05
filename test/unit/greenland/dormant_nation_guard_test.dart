@@ -20,26 +20,38 @@ void main() {
   const allowlist = <String, Set<String>>{
     // nationsProvider and nationStrengthsProvider themselves: the new-game
     // world, before any career exists.
+    // The newGame* families are the same world as the chosen pack has it.
     'lib/features/nations/nation_select_providers.dart': {
       'nationRepositoryProvider.all',
       'nationsProvider',
       'nationStrengthsProvider',
+      'newGameNationsProvider',
+      'newGameStrengthsProvider',
+      'newGameStarPlayersProvider',
+      'newGameNationProvider',
     },
-    'lib/features/nations/nation_select_screen.dart': {'nationsProvider'},
+    'lib/features/nations/nation_select_screen.dart': {
+      'newGameNationsProvider',
+      'newGameStarPlayersProvider',
+    },
     'lib/features/nations/nation_select_tablet_layout.dart': {
-      'nationsProvider',
-      'nationStrengthsProvider',
+      'newGameNationsProvider',
+      'newGameStrengthsProvider',
     },
     // The out-of-work start is a new game too.
-    'lib/features/career/unemployed_start_screen.dart': {'nationsProvider'},
+    'lib/features/career/unemployed_start_screen.dart': {
+      'newGameNationsProvider',
+    },
+    // New Game itself: the nation being taken, before the career exists.
+    'lib/features/career/new_game_screen.dart': {'newGameNationProvider'},
     // The world pickers (New Game's chip, Settings' default world) check
     // each database against the nations a career created NOW starts with:
     // no career is in scope, even with Settings pushed over one.
     'lib/features/world_pack/world_choice.dart': {'nationsProvider'},
     // Only shown by the new-game pickers above (no career in scope).
     'lib/features/nations/nation_preview.dart': {
-      'nationsProvider',
-      'nationStrengthsProvider',
+      'newGameNationsProvider',
+      'newGameStrengthsProvider',
     },
   };
 
@@ -49,7 +61,9 @@ void main() {
     r'nationRepositoryProvider\)\s*\.\s*(all|freeDemo)\b(?!\s*[A-Za-z_])',
   );
   final baseProvider = RegExp(
-    r'(?<![A-Za-z_])(nationsProvider|nationStrengthsProvider)\b',
+    r'(?<![A-Za-z_])(nationsProvider|nationStrengthsProvider|'
+    r'newGameNationsProvider|newGameStrengthsProvider|'
+    r'newGameStarPlayersProvider|newGameNationProvider)\b',
   );
   // `final repo = ref.read(nationRepositoryProvider);` ... `repo.all()`.
   final repoVar = RegExp(
