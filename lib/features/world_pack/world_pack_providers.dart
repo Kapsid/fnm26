@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
+import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -18,11 +19,6 @@ const int kPackDrawSeed = 20261104;
 
 /// The game version a pack made now records.
 const String kPackGameVersion = '1.1.0';
-
-/// Players at or above this id are generated fringe (see
-/// `PoolGenerator.expand` and the dormant nations' fringe ranges), never the
-/// 23 core players `players.json` (or a dormant nation's squad) stores.
-const int _firstFringeId = 10000000;
 
 /// One pack as the list of packs shows it.
 typedef WorldPackSummary = ({int id, String name, DateTime updatedAt});
@@ -95,7 +91,9 @@ class WorldPackService {
   Future<Map<int, List<PackPlayer>>> defaultSquads() async {
     final coreIds = <int, List<int>>{};
     for (final p in await _players.all()) {
-      if (p.id < _firstFringeId) (coreIds[p.nationId] ??= []).add(p.id);
+      if (p.id < PoolGenerator.firstFringeId) {
+        (coreIds[p.nationId] ??= []).add(p.id);
+      }
     }
     final squads = <int, List<PackPlayer>>{};
     for (final nation in await _nations.newCareerWorld()) {
@@ -115,6 +113,7 @@ class WorldPackService {
             pool[id] ??
             await _players.byId(
               id,
+              agingYears: 0,
               saveSeed: kPackDrawSeed,
               newCareerNames: true,
             );

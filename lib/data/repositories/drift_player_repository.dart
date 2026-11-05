@@ -11,6 +11,7 @@ import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/data/seed/dormant_seed.dart';
 import 'package:fnm/data/seed/frozen_name_pools.dart';
 import 'package:fnm/data/seed/mononyms.dart';
+import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart' show YouthLevel;
@@ -553,7 +554,7 @@ class DriftPlayerRepository implements PlayerRepository {
       // A core player the world removed is not in it, by id or otherwise.
       if (p != null &&
           world != null &&
-          p.id < _firstFringeId &&
+          p.id < PoolGenerator.firstFringeId &&
           world.coreOf(p.nationId) != null) {
         return null;
       }
@@ -602,11 +603,6 @@ class DriftPlayerRepository implements PlayerRepository {
     return rows.map((r) => r.toDomain()).toList();
   }
 
-  /// Ids from here up are generated fringe padding (see
-  /// `PoolGenerator.expand` and the dormant nations' fringe ranges); below
-  /// it are the core players `players.json` (or a dormant squad) stores.
-  static const int _firstFringeId = 10000000;
-
   /// The base rows [careerId] reads for [nationId]: [_seededRows], except
   /// that a career on a custom world whose world has a squad for the nation
   /// reads that squad in place of the stored core rows. The fringe rows stay,
@@ -618,7 +614,7 @@ class DriftPlayerRepository implements PlayerRepository {
     return [
       ...core,
       for (final p in rows)
-        if (p.id >= _firstFringeId) p,
+        if (p.id >= PoolGenerator.firstFringeId) p,
     ];
   }
 
@@ -1025,12 +1021,18 @@ class DriftPlayerRepository implements PlayerRepository {
       nameAt = names.call;
       length = names.length;
     } else {
-      final combos = _comboCache[(nationId, saveSeed, era)] ??= _combosFor(
-        pool,
-        nationId: nationId,
-        saveSeed: saveSeed,
-        stored: seeded.length,
-      );
+      // Spliced over the nation's STORED rows, never [seeded]: in a career
+      // on a custom world [seeded] carries that world's squad, and this
+      // cache is shared by every career of the same seed.
+      final key = (nationId, saveSeed, era);
+      final combos =
+          _comboCache[key] ??
+          (_comboCache[key] = _combosFor(
+            pool,
+            nationId: nationId,
+            saveSeed: saveSeed,
+            stored: (await _seededRows(nationId)).length,
+          ));
       nameAt = (i) => combos[i];
       length = combos.length;
     }

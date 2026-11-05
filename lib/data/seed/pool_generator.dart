@@ -11,6 +11,11 @@ abstract final class PoolGenerator {
   /// Extra fringe players added per nation (23 real + this ≈ a 100+-man pool).
   static const extraPerNation = 80;
 
+  /// The first id [expand] gives a fringe player. Every id below it is a core
+  /// player `players.json` (or a dormant nation's squad) stores; every stored
+  /// id from it up is generated fringe padding.
+  static const int firstFringeId = 10000000;
+
   /// Fictional-but-plausible club sides, shared across nations (national-team
   /// players from the same club is realistic).
   static const List<String> _clubs = [
@@ -76,7 +81,7 @@ abstract final class PoolGenerator {
     }
 
     final out = <Player>[];
-    var nextId = 10000000;
+    var nextId = firstFringeId;
     for (final entry in byNation.entries) {
       final nationId = entry.key;
       final squad = entry.value;
