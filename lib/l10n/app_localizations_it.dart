@@ -14249,6 +14249,26 @@ class AppLocalizationsIt extends AppLocalizations {
       'Non crederai a cosa dice il nostro quarto titolo.';
 
   @override
+  String get sponsorDealLineRisky =>
+      'Big money and no questions asked. The board will have plenty.';
+
+  @override
+  String get sponsorDealLineBigPayer =>
+      'A generous cheque from a name the board would rather not print.';
+
+  @override
+  String get sponsorDealLineCrowdPleaser =>
+      'A fun brand the players love and the board finds a bit much.';
+
+  @override
+  String get sponsorDealLineFamilyFriendly =>
+      'A wholesome name the board adores and the players yawn at.';
+
+  @override
+  String get sponsorDealLineMarketing =>
+      'No cash, just campaigns: posters, photo shoots and lots of smiling.';
+
+  @override
   String ySponsorDubious0(String brand) {
     return '$brand è il nuovo sponsor principale della federazione. Ridete pure, il settore giovanile ha comunque bisogno di quei soldi.';
   }

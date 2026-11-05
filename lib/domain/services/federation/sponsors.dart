@@ -1,6 +1,8 @@
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/domain/services/ranking/elo.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart'
+    show PackSponsor;
 import 'package:freezed_annotation/freezed_annotation.dart' show immutable;
 
 /// The shape of a sponsor's deal: what it pays and what it costs. Every shape
@@ -36,7 +38,7 @@ enum SponsorDeal {
 /// Czech and are translated elsewhere: Veselé Hamburgery (Happy Burgers),
 /// Agroprd (Agrofart), Havíři (The Miners), Hexagon, and, for Czechia only,
 /// Starobahno beer (Oldmire) and Můra petrol stations (Moth).
-enum SponsorBrand {
+enum SponsorBrand implements Sponsor {
   // Dubious: the most money, the board, the room and the press all against it.
   agrofart(SponsorDeal.risky),
   betBadger(SponsorDeal.risky),
@@ -81,12 +83,24 @@ enum SponsorBrand {
 
   const SponsorBrand(this.deal, {this.czechOnly = false});
 
+  @override
   final SponsorDeal deal;
 
   /// Offered to Czechia only (the owner's Czech in-jokes).
+  @override
   final bool czechOnly;
 
+  @override
   bool get risky => deal == SponsorDeal.risky;
+
+  @override
+  String get id => name;
+
+  @override
+  SponsorBrand get builtIn => this;
+
+  @override
+  PackSponsor? get added => null;
 
   /// The brand with canonical id [name], or null.
   static SponsorBrand? byName(String name) {
@@ -95,6 +109,73 @@ enum SponsorBrand {
     }
     return null;
   }
+}
+
+/// A brand that can sponsor the federation: one of the game's own
+/// ([SponsorBrand], which IS a [Sponsor], so a built-in offer reads exactly
+/// as it always has) or one a world pack adds ([Sponsor.added]).
+///
+/// [id] is what a press row stores: the built-in's enum name, or an added
+/// one's `pack<id>` ([PackSponsor.key], a shape no built-in name may take).
+/// Two sponsors are equal when their ids are.
+@immutable
+abstract class Sponsor {
+  /// The built-in brand [b] (it is its own sponsor).
+  factory Sponsor.of(SponsorBrand b) => b;
+
+  /// The sponsor world pack brand [s] stands for.
+  factory Sponsor.added(PackSponsor s) = _AddedSponsor;
+
+  /// The game's own brands, in [SponsorBrand.values] order.
+  static final List<Sponsor> builtIns = List.unmodifiable(SponsorBrand.values);
+
+  /// The canonical id a press row stores.
+  String get id;
+  SponsorDeal get deal;
+
+  /// Offered to Czechia only. Never true for an added brand.
+  bool get czechOnly;
+
+  /// The game's own brand, or null for an added one.
+  SponsorBrand? get builtIn;
+
+  /// The pack's brand, or null for a built-in one.
+  PackSponsor? get added;
+
+  bool get risky;
+}
+
+final class _AddedSponsor implements Sponsor {
+  const _AddedSponsor(this.pack);
+
+  final PackSponsor pack;
+
+  @override
+  String get id => pack.key;
+
+  @override
+  SponsorDeal get deal => pack.deal;
+
+  @override
+  bool get czechOnly => false;
+
+  @override
+  SponsorBrand? get builtIn => null;
+
+  @override
+  PackSponsor get added => pack;
+
+  @override
+  bool get risky => deal == SponsorDeal.risky;
+
+  @override
+  bool operator ==(Object other) => other is _AddedSponsor && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() => 'Sponsor($id)';
 }
 
 /// One offer of a cycle's sponsor round, with everything it does.
@@ -111,7 +192,7 @@ class SponsorOffer {
 
   /// Its place in the round: what the marker stores.
   final int index;
-  final SponsorBrand brand;
+  final Sponsor brand;
 
   /// The cash paid on signing: the whole cycle's money, at once.
   final int euros;
@@ -149,7 +230,7 @@ class SponsorOffer {
 
   @override
   String toString() =>
-      'SponsorOffer($index, ${brand.name}, €$euros, +$levels lv, '
+      'SponsorOffer($index, ${brand.id}, €$euros, +$levels lv, '
       'board $board, morale $morale)';
 }
 
@@ -201,16 +282,22 @@ abstract final class Sponsors {
   ];
 
   /// The press-answer key a signed deal writes its board and morale effect
-  /// under: `sponsor:<year>:<brand>`. Stored on its cycle, it counts for that
-  /// cycle and ends at its close.
-  static String pressKey(int year, SponsorBrand brand) =>
-      '$prefix$year:${brand.name}';
+  /// under: `sponsor:<year>:<brand>` ([Sponsor.id]). Stored on its cycle, it
+  /// counts for that cycle and ends at its close.
+  static String pressKey(int year, Sponsor brand) => '$prefix$year:${brand.id}';
 
-  /// The brand named in a [pressKey], or null for any other key.
-  static SponsorBrand? brandOfPressKey(String key) {
+  /// The brand named in a [pressKey], or null for any other key: a built-in
+  /// one, or one of [extra] (the career world's added sponsors). An added
+  /// brand's key read without its world is null.
+  static Sponsor? brandOfPressKey(
+    String key, {
+    List<Sponsor> extra = const [],
+  }) {
     final parts = key.split(':');
     if (!key.startsWith(prefix) || parts.length != 3) return null;
-    return SponsorBrand.byName(parts[2]);
+    final id = parts[2];
+    return SponsorBrand.byName(id) ??
+        extra.where((s) => s.id == id).firstOrNull;
   }
 
   /// The tone column of a sponsor's press row.
@@ -258,7 +345,7 @@ abstract final class Sponsors {
   ///   deal plus two (5 to 12 levels, paid back 1.6 times at the cycle's
   ///   close); morale −1.
   static SponsorOffer offerOf(
-    SponsorBrand brand,
+    Sponsor brand,
     int worldRank, {
     int index = 0,
   }) {
@@ -305,17 +392,26 @@ abstract final class Sponsors {
   /// cycle before where the pool has another. Worked out cycle by cycle from
   /// the game's first, so "the cycle before" is always the one this same
   /// rule produced. [czech] puts Czechia's own brands in the pool.
-  static List<SponsorBrand> brandsFor({
+  ///
+  /// [extra] (the career world's added sponsors) join the pool after the
+  /// built-ins, each drawn for its own deal shape ([_draw]): one added brand
+  /// is as likely as one built-in, and however many a pack adds, they take
+  /// at most half of their shape's slot. Without [extra] the draw is exactly
+  /// the one before packs could add sponsors.
+  static List<Sponsor> brandsFor({
     required int seed,
     required int cycle,
     required bool czech,
+    List<Sponsor> extra = const [],
   }) {
-    final pool = [
+    final pool = <Sponsor>[
       for (final b in SponsorBrand.values)
         if (!b.czechOnly || czech) b,
+      for (final s in extra)
+        if (!s.czechOnly || czech) s,
     ];
-    var last = const <SponsorBrand>{};
-    var picks = const <SponsorBrand>[];
+    var last = const <Sponsor>{};
+    var picks = const <Sponsor>[];
     for (var c = 0; c <= cycle; c++) {
       // Seeded by the round's year, as the first build seeded its seasons:
       // the first cycle's round is the brands that build offered first.
@@ -329,9 +425,10 @@ abstract final class Sponsors {
         for (final d in SponsorDeal.values)
           if (d != SponsorDeal.risky) d,
       ]);
-      SponsorBrand pick(SponsorDeal d) {
+      Sponsor pick(SponsorDeal d) {
         final options = fresh.where((b) => b.deal == d).toList();
-        return rng.pick(
+        return _draw(
+          rng,
           options.isEmpty ? pool.where((b) => b.deal == d).toList() : options,
         );
       }
@@ -345,19 +442,43 @@ abstract final class Sponsors {
     return picks;
   }
 
+  /// One brand of [options] (all of one deal shape). While the added brands
+  /// among them are no more than the built-in ones, every brand is equally
+  /// likely: a plain pick, the very draw of a pool with nothing added. Once
+  /// they outnumber the built-ins, a fair coin over twice the built-ins
+  /// decides: a built-in by that draw, else an added brand, so fifty added
+  /// brands never drown the game's own (they share the slot half and half).
+  static Sponsor _draw(SeededRng rng, List<Sponsor> options) {
+    final builtIns = [
+      for (final s in options)
+        if (s.builtIn != null) s,
+    ];
+    final added = options.length - builtIns.length;
+    if (added <= builtIns.length || builtIns.isEmpty) return rng.pick(options);
+    final r = rng.nextInt(2 * builtIns.length);
+    if (r < builtIns.length) return builtIns[r];
+    return rng.pick([
+      for (final s in options)
+        if (s.builtIn == null) s,
+    ]);
+  }
+
   /// The round offered to a nation ([nationCode], so the Czech brands find
   /// Czechia) in [cycle] of the save seeded [seed], sized by its [worldRank]
-  /// at the cycle's start.
+  /// at the cycle's start. [extra] are the career world's added sponsors
+  /// (see [brandsFor]).
   static List<SponsorOffer> offersFor({
     required int seed,
     required int cycle,
     required String nationCode,
     required int worldRank,
+    List<Sponsor> extra = const [],
   }) {
     final brands = brandsFor(
       seed: seed,
       cycle: cycle,
       czech: nationCode == 'CZE',
+      extra: extra,
     );
     return [
       for (var i = 0; i < brands.length; i++)

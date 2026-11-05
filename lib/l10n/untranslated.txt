@@ -1,1 +1,209 @@
-{}
+{
+  "bg": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "da": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "de": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "el": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "es": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "fi": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "fil": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "fr": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "hi": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "hr": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "hu": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "id": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "it": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "ja": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "ko": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "ms": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "nb": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "nl": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "pl": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "pt": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "ro": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "sv": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "th": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "tr": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "uk": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ],
+
+  "vi": [
+    "sponsorDealLineRisky",
+    "sponsorDealLineBigPayer",
+    "sponsorDealLineCrowdPleaser",
+    "sponsorDealLineFamilyFriendly",
+    "sponsorDealLineMarketing"
+  ]
+}

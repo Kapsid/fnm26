@@ -57,7 +57,7 @@ void main() {
 
     test("three different brands a cycle, one risky, never last cycle's", () {
       for (var seed = 0; seed < 30; seed++) {
-        Set<SponsorBrand>? last;
+        Set<Sponsor>? last;
         for (var cycle = 0; cycle < 12; cycle++) {
           final o = offers(seed: seed, cycle: cycle);
           expect(o, hasLength(3));

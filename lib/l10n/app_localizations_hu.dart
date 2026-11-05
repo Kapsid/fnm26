@@ -14117,6 +14117,26 @@ class AppLocalizationsHu extends AppLocalizations {
       'Nem fogod elhinni, mi áll a negyedik címünkben.';
 
   @override
+  String get sponsorDealLineRisky =>
+      'Big money and no questions asked. The board will have plenty.';
+
+  @override
+  String get sponsorDealLineBigPayer =>
+      'A generous cheque from a name the board would rather not print.';
+
+  @override
+  String get sponsorDealLineCrowdPleaser =>
+      'A fun brand the players love and the board finds a bit much.';
+
+  @override
+  String get sponsorDealLineFamilyFriendly =>
+      'A wholesome name the board adores and the players yawn at.';
+
+  @override
+  String get sponsorDealLineMarketing =>
+      'No cash, just campaigns: posters, photo shoots and lots of smiling.';
+
+  @override
   String ySponsorDubious0(String brand) {
     return 'A szövetség új főszponzora: $brand. Nevessetek csak, az akadémiának akkor is kell a pénz.';
   }

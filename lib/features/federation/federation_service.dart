@@ -6,6 +6,7 @@ import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/sponsor_providers.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 /// The finals rounds counted for prize money, split by tournament.
 const _wcFinalsRounds = {'GROUP', 'R32', 'R16', 'QF', 'SF', '3RD', 'FINAL'};
@@ -89,6 +90,7 @@ class FederationService {
       nations: _ref.read(nationRepositoryProvider),
       seedRanks: _ref.read(seedRankingRepositoryProvider),
       careers: _ref.read(careerRepositoryProvider),
+      worlds: _ref.read(worldPackRepositoryProvider),
       career: career,
       cycle: cycle,
     );

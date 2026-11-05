@@ -62,10 +62,11 @@ class SponsorCard extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      Text(
-                        sponsorIndustryLabel(l, o.brand),
-                        style: muted,
-                      ),
+                      // An added brand of an industry this build does not
+                      // know has none to show.
+                      if (sponsorIndustryLabel(l, o.brand) case final industry
+                          when industry.isNotEmpty)
+                        Text(industry, style: muted),
                       const SizedBox(height: AppSpacing.sm),
                       SponsorEffectChips(offer: o),
                       const SizedBox(height: AppSpacing.xs),

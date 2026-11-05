@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
@@ -10,6 +11,7 @@ import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 /// A cycle's sponsor round: the three offers, and what was done about them.
 typedef SponsorRound = ({
@@ -41,6 +43,11 @@ typedef SponsorRound = ({
 /// the press row signing left (every deal has one, as every deal costs the
 /// board or the room).
 ///
+/// The brands are the game's own plus the sponsors the career's OWN copy of
+/// its world added ([careerSponsorsOf]): never the world on screen, since
+/// the offers move money, and never the pack on the device, which may have
+/// been edited or deleted since.
+///
 /// The nation is the one the career holds now: the rollover changes nation
 /// before the cycle that follows, so for the current cycle it is always the
 /// right one. A past cycle is read the way its income is (see
@@ -50,6 +57,7 @@ Future<SponsorRound?> sponsorRoundOf({
   required NationRepository nations,
   required SeedRankingRepository seedRanks,
   required CareerRepository careers,
+  required WorldPackRepository worlds,
   required Career career,
   int? cycle,
 }) async {
@@ -61,11 +69,13 @@ Future<SponsorRound?> sponsorRoundOf({
   final me = world.where((n) => n.id == career.nationId).firstOrNull;
   if (me == null) return null;
   final rank = (await seedRanks.forCycle(career.id, c))[me.id] ?? me.ranking;
+  final extra = await careerSponsorsOf(worlds, career.id);
   final offers = Sponsors.offersFor(
     seed: career.rngSeed,
     cycle: c,
     nationCode: me.code,
     worldRank: rank,
+    extra: extra,
   );
   SponsorOffer? chosen;
   var decided = false;
@@ -99,7 +109,7 @@ Future<SponsorRound?> sponsorRoundOf({
     // A season's deal of the first build, signed after the cycle's round was
     // declined or in a later season: the press row names it.
     for (final a in await careers.pressAnswers(career.id, cycle: c)) {
-      final brand = Sponsors.brandOfPressKey(a.questionKey);
+      final brand = Sponsors.brandOfPressKey(a.questionKey, extra: extra);
       if (brand == null) continue;
       chosen = Sponsors.offerOf(
         brand,
@@ -118,6 +128,15 @@ Future<SponsorRound?> sponsorRoundOf({
   );
 }
 
+/// The sponsors career [careerId]'s own world added, as offered alongside
+/// the game's brands; none for a default-world career.
+Future<List<Sponsor>> careerSponsorsOf(
+  WorldPackRepository worlds,
+  int careerId,
+) async => [
+  for (final s in await worlds.addedSponsorsFor(careerId)) Sponsor.added(s),
+];
+
 /// The Commercial / PR euros the sponsor signed in [cycle] paid for: the
 /// department pays back at the cycle's close.
 Future<int> sponsorMarketingEuros({
@@ -125,6 +144,7 @@ Future<int> sponsorMarketingEuros({
   required NationRepository nations,
   required SeedRankingRepository seedRanks,
   required CareerRepository careers,
+  required WorldPackRepository worlds,
   required Career career,
   required int cycle,
 }) async {
@@ -133,6 +153,7 @@ Future<int> sponsorMarketingEuros({
     nations: nations,
     seedRanks: seedRanks,
     careers: careers,
+    worlds: worlds,
     career: career,
     cycle: cycle,
   );
@@ -158,6 +179,7 @@ final AutoDisposeFutureProviderFamily<SponsorRound?, int> sponsorRoundProvider =
         nations: ref.watch(nationRepositoryProvider),
         seedRanks: ref.watch(seedRankingRepositoryProvider),
         careers: ref.watch(careerRepositoryProvider),
+        worlds: ref.watch(worldPackRepositoryProvider),
         career: career,
       );
     });
@@ -249,6 +271,7 @@ class SponsorService {
     nations: _ref.read(nationRepositoryProvider),
     seedRanks: _ref.read(seedRankingRepositoryProvider),
     careers: _ref.read(careerRepositoryProvider),
+    worlds: _ref.read(worldPackRepositoryProvider),
     career: career,
   );
 }

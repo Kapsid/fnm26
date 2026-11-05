@@ -21458,6 +21458,36 @@ abstract class AppLocalizations {
   /// **'You won\'t believe what our fourth headline says.'**
   String get sponsorFlavourClickbait;
 
+  /// Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a risky (dubious) deal: the most money, the board, the dressing room and the press all against it. Dry, light, short.
+  ///
+  /// In en, this message translates to:
+  /// **'Big money and no questions asked. The board will have plenty.'**
+  String get sponsorDealLineRisky;
+
+  /// Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a big payer: pays well, the board would rather not be seen with it. Dry, light, short.
+  ///
+  /// In en, this message translates to:
+  /// **'A generous cheque from a name the board would rather not print.'**
+  String get sponsorDealLineBigPayer;
+
+  /// Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a crowd pleaser: a modest fee the players love, the board finds it tacky. Dry, light, short.
+  ///
+  /// In en, this message translates to:
+  /// **'A fun brand the players love and the board finds a bit much.'**
+  String get sponsorDealLineCrowdPleaser;
+
+  /// Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a family friendly: the board loves it, it pays little, the players find it dull. Dry, light, short.
+  ///
+  /// In en, this message translates to:
+  /// **'A wholesome name the board adores and the players yawn at.'**
+  String get sponsorDealLineFamilyFriendly;
+
+  /// Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a marketing: no cash, it pays for Commercial / PR work and drags the players to photo shoots. Dry, light, short.
+  ///
+  /// In en, this message translates to:
+  /// **'No cash, just campaigns: posters, photo shoots and lots of smiling.'**
+  String get sponsorDealLineMarketing;
+
   /// Y post when the federation signs a dubious general sponsor (a bookmaker, a crypto exchange, a fart-joke farming giant). Generous tone. brand is the brand name; keep it in the nominative/base form.
   ///
   /// In en, this message translates to:

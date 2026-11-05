@@ -30,6 +30,8 @@ import 'package:fnm/features/ranking/world_ranking_providers.dart';
 import 'package:fnm/domain/services/achievements/board_satisfaction.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/sponsor_providers.dart'
+    show careerSponsorsOf;
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/press/story_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart'
@@ -39,6 +41,8 @@ import 'package:fnm/features/squad/grievance_providers.dart';
 import 'package:fnm/features/squad/international_retirement_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart'
     show squadDataProvider;
+import 'package:fnm/features/world_pack/world_pack_providers.dart'
+    show worldPackRepositoryProvider;
 
 /// The manager's played matches, newest first, with both sides' world
 /// positions — the raw material both Y and the public's mood are built from.
@@ -646,11 +650,18 @@ yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
   // A dubious general sponsor (see `Sponsors`): the story the day it was
   // signed, and the room laughing under it. Read off the press row the deal
   // left, which carries the brand and the day; only this job's.
+  // A brand the career's world added is read off its own copy of that world.
   final words = ref.watch(appLocalizationsProvider);
-  for (final a in await ref
-      .watch(careerRepositoryProvider)
-      .pressAnswers(careerId)) {
-    final brand = Sponsors.brandOfPressKey(a.questionKey);
+  final addedSponsors = await careerSponsorsOf(
+    ref.watch(worldPackRepositoryProvider),
+    careerId,
+  );
+  for (final a
+      in await ref.watch(careerRepositoryProvider).pressAnswers(careerId)) {
+    final brand = Sponsors.brandOfPressKey(
+      a.questionKey,
+      extra: addedSponsors,
+    );
     if (brand == null || !brand.risky) continue;
     if (a.answeredAt.isBefore(since)) continue;
     final then = YFeed.standingsAsOf(datedStandings, a.answeredAt);

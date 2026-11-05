@@ -14432,6 +14432,26 @@ class AppLocalizationsCs extends AppLocalizations {
       'Nebudete věřit, co stojí v našem čtvrtém titulku.';
 
   @override
+  String get sponsorDealLineRisky =>
+      'Velké peníze a žádné otázky. Vedení jich bude mít spoustu.';
+
+  @override
+  String get sponsorDealLineBigPayer =>
+      'Štědrý šek od jména, které by vedení nejraději nikde neukazovalo.';
+
+  @override
+  String get sponsorDealLineCrowdPleaser =>
+      'Zábavná značka: hráči ji milují, vedení ji má za trochu kýčovitou.';
+
+  @override
+  String get sponsorDealLineFamilyFriendly =>
+      'Spořádané jméno, které vedení zbožňuje a u kterého hráči zívají.';
+
+  @override
+  String get sponsorDealLineMarketing =>
+      'Žádné peníze, jen kampaně: plakáty, focení a spousta úsměvů.';
+
+  @override
   String ySponsorDubious0(String brand) {
     return 'Novým generálním sponzorem svazu je $brand. Smějte se, ale akademie ty peníze potřebuje.';
   }

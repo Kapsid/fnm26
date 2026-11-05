@@ -21932,6 +21932,26 @@
   "@sponsorFlavourClickbait": {
     "description": "One-line witty character of the fictional sponsor brand \"Clickbait Media\" (Media group), shown on its offer card. Dry, funny, short."
   },
+  "sponsorDealLineRisky": "Big money and no questions asked. The board will have plenty.",
+  "@sponsorDealLineRisky": {
+    "description": "Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a risky (dubious) deal: the most money, the board, the dressing room and the press all against it. Dry, light, short."
+  },
+  "sponsorDealLineBigPayer": "A generous cheque from a name the board would rather not print.",
+  "@sponsorDealLineBigPayer": {
+    "description": "Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a big payer: pays well, the board would rather not be seen with it. Dry, light, short."
+  },
+  "sponsorDealLineCrowdPleaser": "A fun brand the players love and the board finds a bit much.",
+  "@sponsorDealLineCrowdPleaser": {
+    "description": "Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a crowd pleaser: a modest fee the players love, the board finds it tacky. Dry, light, short."
+  },
+  "sponsorDealLineFamilyFriendly": "A wholesome name the board adores and the players yawn at.",
+  "@sponsorDealLineFamilyFriendly": {
+    "description": "Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a family friendly: the board loves it, it pays little, the players find it dull. Dry, light, short."
+  },
+  "sponsorDealLineMarketing": "No cash, just campaigns: posters, photo shoots and lots of smiling.",
+  "@sponsorDealLineMarketing": {
+    "description": "Generic one-line character of a sponsor brand a custom world added without a description, shown on its offer card. Its deal type is a marketing: no cash, it pays for Commercial / PR work and drags the players to photo shoots. Dry, light, short."
+  },
   "ySponsorDubious0": "{brand} is the federation's new general sponsor. Laugh if you like, the academy still needs the money.",
   "@ySponsorDubious0": {
     "description": "Y post when the federation signs a dubious general sponsor (a bookmaker, a crypto exchange, a fart-joke farming giant). Generous tone. brand is the brand name; keep it in the nominative/base form.",

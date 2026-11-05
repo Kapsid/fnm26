@@ -225,6 +225,32 @@ class WorldPackRepository {
     );
   }
 
+  /// The sponsors career [careerId]'s world added; none for the default
+  /// world.
+  ///
+  /// Read wherever the sponsor round is (the hub, the finances, the cycle's
+  /// close), so it reads the career's JSON alone (no trophy images) and
+  /// decodes it only when it differs from the copy last decoded for that
+  /// career. A world that cannot be read throws, as the career's player
+  /// reads do: guessing "none" would hand the round other brands.
+  Future<List<PackSponsor>> addedSponsorsFor(int careerId) async {
+    final q = _db.selectOnly(_db.careerWorlds)
+      ..addColumns([_db.careerWorlds.json])
+      ..where(_db.careerWorlds.careerId.equals(careerId));
+    final json = (await q.getSingleOrNull())?.read(_db.careerWorlds.json);
+    if (json == null) return const [];
+    final hit = _addedSponsors[careerId];
+    if (hit != null && hit.json == json) return hit.sponsors;
+    final sponsors = List<PackSponsor>.unmodifiable(
+      _decode(json).addedSponsors,
+    );
+    _addedSponsors[careerId] = (json: json, sponsors: sponsors);
+    return sponsors;
+  }
+
+  final Map<int, ({String json, List<PackSponsor> sponsors})> _addedSponsors =
+      {};
+
   static WorldPack _decode(String json) {
     final raw = jsonDecode(json);
     if (raw is! Map<String, Object?>) {

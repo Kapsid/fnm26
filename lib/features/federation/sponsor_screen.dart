@@ -281,12 +281,16 @@ class SponsorOfferCard extends StatelessWidget {
                       sponsorBrandName(l, offer.brand),
                       style: AppTypography.titleMedium,
                     ),
-                    Text(
-                      sponsorIndustryLabel(l, offer.brand),
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
+                    // An added brand of an industry this build does not
+                    // know has none to show.
+                    if (sponsorIndustryLabel(l, offer.brand) case final industry
+                        when industry.isNotEmpty)
+                      Text(
+                        industry,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

@@ -180,6 +180,22 @@ class ActiveWorld {
   /// The world's name for the sponsor brand [brand].
   String? sponsor(String brand) => textOrNull(pack?.sponsors[brand]);
 
+  /// The sponsor this world added under [key] (`pack<id>`), or null.
+  PackSponsor? _addedSponsor(String key) {
+    for (final s in pack?.addedSponsors ?? const <PackSponsor>[]) {
+      if (s.key == key) return s;
+    }
+    return null;
+  }
+
+  /// The name of the sponsor this world added under [key] (`pack<id>`).
+  String? addedSponsorName(String key) => textOrNull(_addedSponsor(key)?.name);
+
+  /// The description of the sponsor this world added under [key]; null
+  /// when it has none.
+  String? addedSponsorDescription(String key) =>
+      textOrNull(_addedSponsor(key)?.description);
+
   /// The world's name for the ground in [city], nation [nationId].
   String? stadium(int nationId, String city) =>
       textOrNull(pack?.stadiums['$nationId:$city']);

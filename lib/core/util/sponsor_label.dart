@@ -9,9 +9,15 @@ import 'package:fnm/l10n/app_localizations.dart';
 
 /// A brand's name, as the manager reads it: the career world's name for it
 /// if it renamed the brand ([ActiveWorld], the same in every language), else
-/// the game's own, translated.
-String sponsorBrandName(AppLocalizations l, SponsorBrand b) =>
-    ActiveWorld.current.sponsor(b.name) ?? _sponsorBrandName(l, b);
+/// the game's own, translated. A brand the world added reads as the world
+/// names it, falling back to the name it was stored with.
+String sponsorBrandName(AppLocalizations l, Sponsor s) {
+  final b = s.builtIn;
+  if (b != null) {
+    return ActiveWorld.current.sponsor(b.name) ?? _sponsorBrandName(l, b);
+  }
+  return ActiveWorld.current.addedSponsorName(s.id) ?? s.added!.name;
+}
 
 String _sponsorBrandName(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.agrofart => l.sponsorBrandAgrofart,
@@ -48,8 +54,15 @@ String _sponsorBrandName(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.clickbait => l.sponsorBrandClickbait,
 };
 
-/// What a brand does for a living.
-String sponsorIndustryLabel(AppLocalizations l, SponsorBrand b) => switch (b) {
+/// What a brand does for a living. A brand the world added borrows the
+/// industry of the built-in brand it names; one this build does not know
+/// (a newer game's, flagged in the editor) reads as nothing.
+String sponsorIndustryLabel(AppLocalizations l, Sponsor s) {
+  final b = s.builtIn ?? SponsorBrand.byName(s.added?.industry ?? '');
+  return b == null ? '' : _sponsorIndustryLabel(l, b);
+}
+
+String _sponsorIndustryLabel(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.agrofart => l.sponsorIndustryAgrofart,
   SponsorBrand.betBadger => l.sponsorIndustryBetBadger,
   SponsorBrand.coinGoblin => l.sponsorIndustryCoinGoblin,
@@ -84,8 +97,28 @@ String sponsorIndustryLabel(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.clickbait => l.sponsorIndustryClickbait,
 };
 
-/// A brand's one-line character, for its offer card.
-String sponsorFlavour(AppLocalizations l, SponsorBrand b) => switch (b) {
+/// A brand's one-line character, for its offer card. A brand the world
+/// added says its own description; without one, the line of its deal type
+/// ([sponsorDealLine]).
+String sponsorFlavour(AppLocalizations l, Sponsor s) {
+  final b = s.builtIn;
+  if (b != null) return _sponsorFlavour(l, b);
+  return ActiveWorld.current.addedSponsorDescription(s.id) ??
+      ActiveWorld.textOrNull(s.added?.description) ??
+      sponsorDealLine(l, s.deal);
+}
+
+/// A short generic line for a deal of type [d]: what an added brand without
+/// a description says.
+String sponsorDealLine(AppLocalizations l, SponsorDeal d) => switch (d) {
+  SponsorDeal.risky => l.sponsorDealLineRisky,
+  SponsorDeal.bigPayer => l.sponsorDealLineBigPayer,
+  SponsorDeal.crowdPleaser => l.sponsorDealLineCrowdPleaser,
+  SponsorDeal.familyFriendly => l.sponsorDealLineFamilyFriendly,
+  SponsorDeal.marketing => l.sponsorDealLineMarketing,
+};
+
+String _sponsorFlavour(AppLocalizations l, SponsorBrand b) => switch (b) {
   SponsorBrand.agrofart => l.sponsorFlavourAgrofart,
   SponsorBrand.betBadger => l.sponsorFlavourBetBadger,
   SponsorBrand.coinGoblin => l.sponsorFlavourCoinGoblin,

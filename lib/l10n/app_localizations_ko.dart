@@ -13695,6 +13695,26 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sponsorFlavourClickbait => '저희 네 번째 헤드라인 내용, 믿기 힘드실 겁니다.';
 
   @override
+  String get sponsorDealLineRisky =>
+      'Big money and no questions asked. The board will have plenty.';
+
+  @override
+  String get sponsorDealLineBigPayer =>
+      'A generous cheque from a name the board would rather not print.';
+
+  @override
+  String get sponsorDealLineCrowdPleaser =>
+      'A fun brand the players love and the board finds a bit much.';
+
+  @override
+  String get sponsorDealLineFamilyFriendly =>
+      'A wholesome name the board adores and the players yawn at.';
+
+  @override
+  String get sponsorDealLineMarketing =>
+      'No cash, just campaigns: posters, photo shoots and lots of smiling.';
+
+  @override
   String ySponsorDubious0(String brand) {
     return '협회의 새 메인 스폰서는 $brand. 웃고 싶으면 웃어. 그래도 아카데미엔 돈이 필요해.';
   }

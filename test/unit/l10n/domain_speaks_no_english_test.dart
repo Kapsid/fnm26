@@ -115,6 +115,9 @@ const Map<String, Set<String>> _allowed = {
   // A debug toString (test failure output, logs), never on a screen: the
   // slot switches are drawn as position badges through the l10n codes.
   'lib/domain/entities/tactics.dart': {r'SlotSwitches(${toJson()})'},
+  // A debug toString for test failure output: an added sponsor's id. Its
+  // name is printed through `sponsorBrandName`.
+  'lib/domain/services/federation/sponsors.dart': {r'Sponsor($id)'},
   // The confederation's English name is half of a STORED competition name
   // ("Europe Qualifiers", built in schedule_generator.dart) and is compared
   // back against it in competition_label.dart. Changing it orphans every

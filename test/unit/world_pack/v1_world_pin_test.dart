@@ -144,7 +144,7 @@ Map<String, Object> _sponsors() => {
           cycle: cycle,
           czech: false,
         ))
-          b.name,
+          b.id,
       ],
 };
 
