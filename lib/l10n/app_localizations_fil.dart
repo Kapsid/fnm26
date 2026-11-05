@@ -14728,4 +14728,16 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get editorSectionSoon => 'Editing this section is on its way.';
+
+  @override
+  String get editorNewFailed => 'The database could not be made. Try again.';
+
+  @override
+  String get editorPickFailed => 'The file could not be opened.';
+
+  @override
+  String get editorRenameFailed => 'The database could not be renamed.';
+
+  @override
+  String get editorDuplicateFailed => 'The database could not be copied.';
 }

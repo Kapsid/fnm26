@@ -14992,4 +14992,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorSectionSoon => 'Úpravy této sekce brzy přibudou.';
+
+  @override
+  String get editorNewFailed =>
+      'Databázi se nepodařilo vytvořit. Zkuste to znovu.';
+
+  @override
+  String get editorPickFailed => 'Soubor nejde otevřít.';
+
+  @override
+  String get editorRenameFailed => 'Databázi se nepodařilo přejmenovat.';
+
+  @override
+  String get editorDuplicateFailed => 'Databázi se nepodařilo zkopírovat.';
 }

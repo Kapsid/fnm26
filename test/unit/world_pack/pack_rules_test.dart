@@ -98,6 +98,19 @@ void main() {
     expect(PackRules.checkName('a' * 40), isNull);
   });
 
+  test('names are counted in user-perceived characters', () {
+    // A family emoji is one character but 8 UTF-16 units (5 runes).
+    const family = '\u{1F468}\u200D\u{1F469}\u200D\u{1F467}';
+    expect(family.length, 8);
+    expect(PackRules.nameLength(family), 1);
+    expect(PackRules.checkName(family * 40), isNull);
+    expect(PackRules.checkName(family * 41), FieldReason.tooLong);
+    // Cut on character boundaries, never through an emoji.
+    expect(PackRules.fitName(family * 45), family * 40);
+    expect(PackRules.fitName('${'a' * 39} b'), 'a' * 39);
+    expect(PackRules.fitName('short'), 'short');
+  });
+
   test('a tab inside a name is badCharacters', () {
     expect(PackRules.checkName('a\tb'), FieldReason.badCharacters);
     expect(PackRules.checkName('a\uD800b'), FieldReason.badCharacters);

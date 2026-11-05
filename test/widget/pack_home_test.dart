@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -97,6 +99,82 @@ void main() {
       await tester.pump();
     }
     expect(stored!.name, 'Saved');
+  });
+
+  /// The pack's name on disk, read without moving fake time on, so a
+  /// waiting 400 ms save can never be what put it there.
+  Future<String?> storedName(
+    WidgetTester tester,
+    ProviderContainer c,
+    int id,
+    String want,
+  ) async {
+    String? name;
+    for (var i = 0; i < 20 && name != want; i++) {
+      await tester.pump();
+      await tester.runAsync(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        name = (await c.read(worldPackRepositoryProvider).load(id))?.name;
+      });
+    }
+    return name;
+  }
+
+  testWidgets('going to the background writes the edit at once', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Before'));
+    await pumpEditorRoute(tester, c, '${Routes.editorPack}?id=$id');
+    c
+        .read(packEditorProvider(id).notifier)
+        .update(
+          (p) => p.copyWith(name: 'Backgrounded'),
+        );
+    for (final s in [
+      AppLifecycleState.inactive,
+      AppLifecycleState.hidden,
+      AppLifecycleState.paused,
+    ]) {
+      tester.binding.handleAppLifecycleStateChanged(s);
+    }
+    addTearDown(() {
+      for (final s in [
+        AppLifecycleState.hidden,
+        AppLifecycleState.inactive,
+        AppLifecycleState.resumed,
+      ]) {
+        tester.binding.handleAppLifecycleStateChanged(s);
+      }
+    });
+    expect(await storedName(tester, c, id, 'Backgrounded'), 'Backgrounded');
+  });
+
+  testWidgets('leaving the editor within 400 ms writes the edit', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Before'));
+    await pumpEditorRoute(tester, c, '${Routes.editorPack}?id=$id');
+    c
+        .read(packEditorProvider(id).notifier)
+        .update(
+          (p) => p.copyWith(name: 'Left quickly'),
+        );
+    // Every editor screen goes at once, with the app (and the provider
+    // scope) still there: only the editor's dispose can save it now. The
+    // back button flushes on its own, and a `go` keeps the page mounted
+    // through its exit transition, past the 400 ms save.
+    await tester.pumpWidget(
+      UncontrolledProviderScope(container: c, child: const SizedBox()),
+    );
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(
+      c.exists(packEditorProvider(id)),
+      isFalse,
+      reason: 'the editor should be gone before its 400 ms save',
+    );
+    expect(await storedName(tester, c, id, 'Left quickly'), 'Left quickly');
   });
 
   testWidgets('undo keeps the last 20 states', (tester) async {

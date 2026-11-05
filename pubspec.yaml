@@ -33,6 +33,8 @@ dependencies:
   flutter_localizations: # Generated AppLocalizations + Material/Cupertino l10n.
     sdk: flutter
 
+  # Counts names in user-perceived characters (the editor's length caps).
+  characters: ^1.4.0
   collection: ^1.19.0
   cupertino_icons: ^1.0.8
   drift: ^2.34.0 # Local relational storage; the save file is the cloud artifact.

@@ -416,11 +416,10 @@ class WorldPackService {
         var name = pack.name;
         for (var n = 2; taken.contains(name); n++) {
           final suffix = ' ($n)';
-          final room = PackRules.nameMax - suffix.length;
-          final runes = pack.name.runes.toList();
-          final base = runes.length > room
-              ? String.fromCharCodes(runes.take(room)).trimRight()
-              : pack.name;
+          final base = PackRules.fitName(
+            pack.name,
+            max: PackRules.nameMax - PackRules.nameLength(suffix),
+          );
           name = '$base$suffix';
         }
         final id = await _packs.insert(

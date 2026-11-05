@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/widgets.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -89,6 +92,13 @@ String editorSectionLocation(
     if (nationId != null) 'nation': '$nationId',
   },
 ).toString();
+
+/// Asks the manager for a file to import and returns its path (null when
+/// he picks nothing). A provider so a test can stand in a file.
+final Provider<Future<String?> Function()> editorFilePickerProvider = Provider(
+  (ref) =>
+      () async => (await FilePicker.pickFiles())?.files.single.path,
+);
 
 /// The nations a database covers: the world a career created now starts in.
 final AutoDisposeFutureProvider<List<Nation>> editorWorldProvider =
@@ -182,8 +192,17 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
        _packs = packs,
        _onSaved = onSaved ?? _noop,
        super(const AsyncValue.loading()) {
+    // The app going to the background may be the last the manager does:
+    // whatever waits for its save is written now, not 400 ms later.
+    _lifecycle = AppLifecycleListener(
+      onStateChange: (s) {
+        if (s != AppLifecycleState.resumed) unawaited(flush());
+      },
+    );
     unawaited(_load(nations));
   }
+
+  late final AppLifecycleListener _lifecycle;
 
   static const Duration saveDelay = Duration(milliseconds: 400);
   static const int undoDepth = 20;
@@ -287,6 +306,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
 
   @override
   void dispose() {
+    _lifecycle.dispose();
     unawaited(flush());
     super.dispose();
   }

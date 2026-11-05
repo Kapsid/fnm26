@@ -22219,6 +22219,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Editing this section is on its way.'**
   String get editorSectionSoon;
+
+  /// Snackbar when making a new database failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The database could not be made. Try again.'**
+  String get editorNewFailed;
+
+  /// Snackbar when the file picker for an import failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The file could not be opened.'**
+  String get editorPickFailed;
+
+  /// Snackbar when renaming a database failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The database could not be renamed.'**
+  String get editorRenameFailed;
+
+  /// Snackbar when duplicating a database failed.
+  ///
+  /// In en, this message translates to:
+  /// **'The database could not be copied.'**
+  String get editorDuplicateFailed;
 }
 
 class _AppLocalizationsDelegate

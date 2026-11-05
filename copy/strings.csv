@@ -3663,3 +3663,7 @@ editorIssueSurnames,A nation's custom surname list is too short.,{count},At leas
 editorIssueValue,Some number in the section is out of range.,,A value is out of range,Jedna hodnota je mimo rozsah,,,,,,,,,,,,,,,,,,,,,,,,,,
 editorIssueUnknown,A game update removed something the database refers to.,,Refers to something that is no longer in the game,"Odkazuje na něco, co už ve hře není",,,,,,,,,,,,,,,,,,,,,,,,,,
 editorSectionSoon,Placeholder body of an editor section that is not built yet.,,Editing this section is on its way.,Úpravy této sekce brzy přibudou.,,,,,,,,,,,,,,,,,,,,,,,,,,
+editorNewFailed,Snackbar when making a new database failed.,,The database could not be made. Try again.,Databázi se nepodařilo vytvořit. Zkuste to znovu.,,,,,,,,,,,,,,,,,,,,,,,,,,
+editorPickFailed,Snackbar when the file picker for an import failed.,,The file could not be opened.,Soubor nejde otevřít.,,,,,,,,,,,,,,,,,,,,,,,,,,
+editorRenameFailed,Snackbar when renaming a database failed.,,The database could not be renamed.,Databázi se nepodařilo přejmenovat.,,,,,,,,,,,,,,,,,,,,,,,,,,
+editorDuplicateFailed,Snackbar when duplicating a database failed.,,The database could not be copied.,Databázi se nepodařilo zkopírovat.,,,,,,,,,,,,,,,,,,,,,,,,,,

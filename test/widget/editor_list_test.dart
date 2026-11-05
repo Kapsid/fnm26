@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/features/editor/editor_list_screen.dart';
+import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
@@ -142,4 +147,108 @@ void main() {
       expect(find.text(enL.editorStatusMissing(1)), findsOneWidget);
     });
   }
+
+  group('import says why a file was refused', () {
+    /// A file in a fresh temporary folder, made by [write].
+    Future<String> file(
+      WidgetTester tester,
+      Future<void> Function(File) write,
+    ) async {
+      late String path;
+      await tester.runAsync(() async {
+        final dir = await Directory.systemTemp.createTemp('fnmdb');
+        addTearDown(() => dir.delete(recursive: true));
+        final f = File('${dir.path}/pack.fnmdb');
+        await write(f);
+        path = f.path;
+      });
+      return path;
+    }
+
+    Future<void> importing(
+      WidgetTester tester,
+      Future<String?> Function() pick,
+      String says,
+    ) async {
+      final c = await editorContainer(
+        tester,
+        overrides: [editorFilePickerProvider.overrideWithValue(pick)],
+      );
+      await pumpEditorRoute(tester, c, Routes.editor);
+      await tester.tap(find.byKey(EditorListScreen.importKey));
+      await pumpUntilFound(tester, find.text(says));
+      expect(find.byType(SnackBar), findsOneWidget);
+      late int packs;
+      await tester.runAsync(() async {
+        packs = (await c.read(worldPackRepositoryProvider).list()).length;
+      });
+      expect(packs, 0, reason: 'a refused file adds nothing');
+    }
+
+    testWidgets('too big', (tester) async {
+      final path = await file(tester, (f) async {
+        final raf = await f.open(mode: FileMode.write);
+        await raf.truncate(PackCodec.maxFileBytes + 1);
+        await raf.close();
+      });
+      await importing(
+        tester,
+        () async => path,
+        enL.editorImportTooBig,
+      );
+    });
+
+    testWidgets('not a pack', (tester) async {
+      final path = await file(
+        tester,
+        (f) => f.writeAsString('this is not a database'),
+      );
+      await importing(
+        tester,
+        () async => path,
+        enL.editorImportNotAPack,
+      );
+    });
+
+    testWidgets('the picker fails', (tester) async {
+      await importing(
+        tester,
+        () async => throw StateError('no picker'),
+        enL.editorPickFailed,
+      );
+    });
+  });
+
+  testWidgets('an emoji name at the limit is taken whole', (tester) async {
+    // One character on screen, 8 UTF-16 units.
+    const family = '\u{1F468}‍\u{1F469}‍\u{1F467}';
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Plain'));
+    await pumpEditorRoute(tester, c, Routes.editor);
+
+    await tester.tap(find.byKey(EditorListScreen.moreKey(id)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(enL.editorRename).last);
+    await tester.pumpAndSettle();
+    // One over the limit: the field keeps 40 characters, not 40 units.
+    await tester.enterText(
+      find.byKey(EditorListScreen.nameFieldKey),
+      family * (PackRules.nameMax + 1),
+    );
+    await tester.pump();
+    final field = tester.widget<TextField>(
+      find.byKey(EditorListScreen.nameFieldKey),
+    );
+    expect(field.controller!.text, family * PackRules.nameMax);
+    expect(field.decoration!.errorText, isNull);
+    await tester.tap(find.byKey(EditorListScreen.confirmKey));
+    await settle(tester);
+
+    late String? stored;
+    await tester.runAsync(() async {
+      stored = (await c.read(worldPackRepositoryProvider).load(id))?.name;
+    });
+    expect(stored, family * PackRules.nameMax);
+    expect(PackRules.checkName(stored!), isNull);
+  });
 }

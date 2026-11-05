@@ -1,3 +1,5 @@
+import 'package:characters/characters.dart';
+
 import '../../entities/enums.dart';
 import '../press/y_feed.dart';
 import '../rating/overall_rating.dart';
@@ -74,10 +76,23 @@ abstract final class PackRules {
   static final _control = RegExp(r'\p{Cc}', unicode: true);
   static final _code = RegExp(r'^[A-Z]{3}$');
 
+  /// How long [s] is, in user-perceived characters (grapheme clusters):
+  /// the unit every name cap counts in, here, in the editor's text fields
+  /// (whose `maxLength` counts the same) and when an import is renamed. An
+  /// emoji family is one character, not the eight UTF-16 units it takes.
+  static int nameLength(String s) => s.characters.length;
+
+  /// [s] cut to at most [max] characters ([nameLength]), trailing spaces
+  /// dropped.
+  static String fitName(String s, {int max = nameMax}) {
+    final c = s.characters;
+    return c.length <= max ? s : c.take(max).toString().trimRight();
+  }
+
   static FieldReason? checkName(String s, {int max = nameMax}) {
     final t = s.trim();
     if (t.isEmpty) return FieldReason.empty;
-    if (t.length > max) return FieldReason.tooLong;
+    if (nameLength(t) > max) return FieldReason.tooLong;
     if (_control.hasMatch(t) || _hasUnpairedSurrogate(t)) {
       return FieldReason.badCharacters;
     }

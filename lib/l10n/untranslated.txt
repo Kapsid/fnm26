@@ -96,7 +96,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "da": [
@@ -196,7 +200,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "de": [
@@ -296,7 +304,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "el": [
@@ -396,7 +408,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "es": [
@@ -496,7 +512,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "fi": [
@@ -596,7 +616,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "fil": [
@@ -696,7 +720,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "fr": [
@@ -796,7 +824,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "hi": [
@@ -896,7 +928,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "hr": [
@@ -996,7 +1032,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "hu": [
@@ -1096,7 +1136,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "id": [
@@ -1196,7 +1240,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "it": [
@@ -1296,7 +1344,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "ja": [
@@ -1396,7 +1448,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "ko": [
@@ -1496,7 +1552,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "ms": [
@@ -1596,7 +1656,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "nb": [
@@ -1696,7 +1760,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "nl": [
@@ -1796,7 +1864,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "pl": [
@@ -1896,7 +1968,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "pt": [
@@ -1996,7 +2072,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "ro": [
@@ -2096,7 +2176,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "sv": [
@@ -2196,7 +2280,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "th": [
@@ -2296,7 +2384,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "tr": [
@@ -2396,7 +2488,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "uk": [
@@ -2496,7 +2592,11 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ],
 
   "vi": [
@@ -2596,6 +2696,10 @@
     "editorIssueSurnames",
     "editorIssueValue",
     "editorIssueUnknown",
-    "editorSectionSoon"
+    "editorSectionSoon",
+    "editorNewFailed",
+    "editorPickFailed",
+    "editorRenameFailed",
+    "editorDuplicateFailed"
   ]
 }

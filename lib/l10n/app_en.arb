@@ -22664,5 +22664,21 @@
   "editorSectionSoon": "Editing this section is on its way.",
   "@editorSectionSoon": {
     "description": "Placeholder body of an editor section that is not built yet."
+  },
+  "editorNewFailed": "The database could not be made. Try again.",
+  "@editorNewFailed": {
+    "description": "Snackbar when making a new database failed."
+  },
+  "editorPickFailed": "The file could not be opened.",
+  "@editorPickFailed": {
+    "description": "Snackbar when the file picker for an import failed."
+  },
+  "editorRenameFailed": "The database could not be renamed.",
+  "@editorRenameFailed": {
+    "description": "Snackbar when renaming a database failed."
+  },
+  "editorDuplicateFailed": "The database could not be copied.",
+  "@editorDuplicateFailed": {
+    "description": "Snackbar when duplicating a database failed."
   }
 }

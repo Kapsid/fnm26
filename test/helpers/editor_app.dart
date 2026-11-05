@@ -22,6 +22,7 @@ import 'test_database.dart';
 Future<ProviderContainer> editorContainer(
   WidgetTester tester, {
   FormFactor formFactor = FormFactor.phone,
+  List<Override> overrides = const [],
 }) async {
   SharedPreferences.setMockInitialValues(<String, Object>{});
   final db = createTestDatabase();
@@ -34,6 +35,7 @@ Future<ProviderContainer> editorContainer(
         InMemorySeedSource(nationList: realNations, playerList: realPlayers),
       ),
       formFactorProvider.overrideWithValue(formFactor),
+      ...overrides,
     ],
   );
   addTearDown(db.close);

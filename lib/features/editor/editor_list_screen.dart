@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/layout/form_factor.dart';
+import 'package:fnm/core/result/result.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -86,6 +86,7 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
         await service.createFromDefault(name);
       } on Object catch (e, st) {
         AppLog.error('editor-new', e, st);
+        if (mounted) _say(l.editorNewFailed);
       }
     });
     if (mounted) setState(() => _creating = false);
@@ -94,11 +95,25 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
   Future<void> _import() async {
     final l = AppLocalizations.of(context);
     final service = ref.read(worldPackServiceProvider);
+    final pick = ref.read(editorFilePickerProvider);
     await _run(() async {
-      final picked = await FilePicker.pickFiles();
-      final path = picked?.files.single.path;
+      final String? path;
+      try {
+        path = await pick();
+      } on Object catch (e, st) {
+        AppLog.error('editor-pick', e, st);
+        if (mounted) _say(l.editorPickFailed);
+        return;
+      }
       if (path == null || !mounted) return;
-      final result = await service.importFile(path);
+      final Result<int> result;
+      try {
+        result = await service.importFile(path);
+      } on Object catch (e, st) {
+        AppLog.error('editor-import', e, st);
+        if (mounted) _say(l.editorImportNotAPack);
+        return;
+      }
       if (!mounted) return;
       _say(
         result.fold(
@@ -128,9 +143,14 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
         );
         if (name == null || name == pack.name) return;
         await _run(() async {
-          final stored = await repo.load(pack.id);
-          if (stored == null) return;
-          await repo.save(pack.id, stored.copyWith(name: name));
+          try {
+            final stored = await repo.load(pack.id);
+            if (stored == null) throw StateError('No world pack ${pack.id}');
+            await repo.save(pack.id, stored.copyWith(name: name));
+          } on Object catch (e, st) {
+            AppLog.error('editor-rename', e, st);
+            if (mounted) _say(l.editorRenameFailed);
+          }
           ref.invalidate(worldPacksProvider);
         });
       case _RowAction.duplicate:
@@ -141,7 +161,14 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
           confirm: l.editorDuplicate,
         );
         if (name == null) return;
-        await _run(() => service.duplicate(pack.id, name));
+        await _run(() async {
+          try {
+            await service.duplicate(pack.id, name);
+          } on Object catch (e, st) {
+            AppLog.error('editor-duplicate', e, st);
+            if (mounted) _say(l.editorDuplicateFailed);
+          }
+        });
       case _RowAction.export:
         await _run(() async {
           try {
@@ -244,12 +271,7 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
 }
 
 /// [name] cut to the longest a database name may be.
-String _fit(String name) {
-  final runes = name.runes.toList();
-  return runes.length <= PackRules.nameMax
-      ? name
-      : String.fromCharCodes(runes.take(PackRules.nameMax)).trimRight();
-}
+String _fit(String name) => PackRules.fitName(name);
 
 /// What a refused import says, in plain words.
 String importRefusal(AppLocalizations l, PackRejection r) => switch (r) {
@@ -598,6 +620,7 @@ class _NameDialogState extends State<_NameDialog> {
         key: EditorListScreen.nameFieldKey,
         controller: _controller,
         autofocus: true,
+        // Counts user-perceived characters, as PackRules.checkName does.
         maxLength: PackRules.nameMax,
         textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.done,
