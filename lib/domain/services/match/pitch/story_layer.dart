@@ -750,6 +750,10 @@ class _Builder {
   /// A screen second the ball logic wants a step to end at.
   double wakeAt = double.infinity;
 
+  /// The next window not yet opened: everything before it has begun, so
+  /// the look-aheads start here rather than scanning the whole match.
+  int wi = 0;
+
   /// A cut waiting for the ball in the air to land, and whose it is.
   CutAction? pendingCut;
   StagedPlan? pendingPlan;
@@ -836,7 +840,7 @@ class _Builder {
       total,
     }.toList()..sort();
     var sp = 0;
-    var wi = 0;
+    wi = 0;
     // Windows that began before the start were opened by the resume (the
     // one spanning it) or are over.
     while (wi < windows.length && windows[wi].start < t - 1e-9) {
@@ -1032,8 +1036,10 @@ class _Builder {
   bool _spills(StagedWindow w, StagedPlan? plan, double t) {
     if (plan == null || t >= w.end + _spill - 1e-9) return false;
     if (goalRestarts.containsKey(w.end)) return false;
-    for (final o in windows) {
-      if (o.start > w.start + 1e-9 && o.start < t + 0.3) return false;
+    for (var k = wi; k < windows.length; k++) {
+      final o = windows[k];
+      if (o.start >= t + 0.3) break;
+      if (o.start > w.start + 1e-9) return false;
     }
     for (final r in resets) {
       if (r > t - 1e-9 && r < t + 0.3) return false;
@@ -2303,7 +2309,8 @@ class _Builder {
 
   double _nextStop(double t) {
     var stop = total;
-    for (final w in windows) {
+    for (var k = wi; k < windows.length; k++) {
+      final w = windows[k];
       if (w.start > t + 1e-9) {
         stop = math.min(stop, w.start);
         break;
@@ -2318,7 +2325,8 @@ class _Builder {
   /// The side the next moment belongs to, and where it happens, when it is
   /// close enough for the build-up to lead into it.
   (int, Offset2)? _leadFor(double t) {
-    for (final w in windows) {
+    for (var k = wi; k < windows.length; k++) {
+      final w = windows[k];
       if (w.start <= t + 1e-9) continue;
       if (w.start - t > _leadIn || w.moments.isEmpty) return null;
       final m = w.moments.first;
@@ -2579,10 +2587,15 @@ class _Builder {
   }
 
   /// The windows opening after [t] and within [horizon] of it, in order.
-  List<StagedWindow> _upcoming(double t, double horizon) => [
-    for (final w in windows)
-      if (w.start > t + 1e-9 && w.start - t <= horizon) w,
-  ];
+  List<StagedWindow> _upcoming(double t, double horizon) {
+    final out = <StagedWindow>[];
+    for (var k = wi; k < windows.length; k++) {
+      final w = windows[k];
+      if (w.start - t > horizon) break;
+      if (w.start > t + 1e-9) out.add(w);
+    }
+    return out;
+  }
 
   /// Who the build-up looks for before window [w]: the man its moment
   /// starts with (the assister of a goal, else the shooter; the man to be

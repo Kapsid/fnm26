@@ -978,6 +978,24 @@ void main() {
     }
   });
 
+  test('a 120-minute match builds quickly', () {
+    for (var seed = 0; seed < 60; seed += 3) {
+      final m = _match(seed);
+      if (m.result.extraTime == null) continue;
+      final sw = Stopwatch()..start();
+      final s = _script(m, PitchSpeed.slow, seed: seed);
+      sw.stop();
+      // ignore: avoid_print
+      print(
+        '120-minute build (match $seed, slow): ${sw.elapsedMilliseconds} ms, '
+        '${s.keyframes.length} frames',
+      );
+      expect(sw.elapsedMilliseconds, lessThan(3000));
+      return;
+    }
+    fail('no extra time in 20 matches');
+  });
+
   test('the same seed gives the same frames', () {
     final m = _match(17);
     final a = _script(m, PitchSpeed.slow, seed: 5);
