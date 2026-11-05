@@ -2,16 +2,17 @@ import 'dart:math' as math;
 
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
-/// The club a pack player has when the editor makes him a free agent: what
-/// the game itself calls a player with no club (`Player.club`'s default).
-/// Stored with no club country; a null club would instead let the game pick
-/// one for him on day one.
-const String kFreeAgentClub = 'Free agent';
+/// The club a pack player has when the editor makes him a free agent: the
+/// game's own no-club value ([ClubService.freeAgent]). Stored with no club
+/// country; a null club would instead let the game pick one for him on day
+/// one.
+const String kFreeAgentClub = ClubService.freeAgent;
 
 /// The edits the players section makes to a pack, as plain functions of it.
 abstract final class SquadEdits {
@@ -153,20 +154,6 @@ abstract final class SquadEdits {
     final a = PlayerBuild.attributesFor(p.position, type, overall);
     final now = OverallRating.forPosition(p.position, a);
     return copy(p, attributes: a, potential: math.max(p.potential, now));
-  }
-
-  /// The build [p] was made with: the type whose [PlayerBuild.attributesFor]
-  /// gives exactly his attributes at his overall, else the nearest by
-  /// ratio. Near 99 a type's ratio no longer fits under the caps, so the
-  /// ratio alone would read a capped Athlete as Balanced.
-  static PlayerType typeOf(PackPlayer p) {
-    final overall = overallOf(p);
-    for (final t in PlayerType.values) {
-      if (PlayerBuild.attributesFor(p.position, t, overall) == p.attributes) {
-        return t;
-      }
-    }
-    return PlayerBuild.typeOf(p.attributes);
   }
 
   /// [p] at [position], keeping his overall and build.

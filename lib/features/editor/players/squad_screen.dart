@@ -135,10 +135,8 @@ class _SquadScreenState extends ConsumerState<SquadScreen> {
     final title = packNationName(pack, world, _nation);
     final squad = pack.squads[_nation] ?? const <PackPlayer>[];
     final issues = [
-      for (final i in editor.issues)
-        if (i.where == 'squads.$_nation' ||
-            i.where.startsWith('squads.$_nation.'))
-          describePackIssue(l, i, pack, world).detail,
+      for (final i in editor.squadIssues(_nation))
+        describePackIssue(l, i, pack, world).detail,
     ];
     final view = (
       pack: pack,
@@ -192,21 +190,40 @@ class _SquadScreenState extends ConsumerState<SquadScreen> {
   }
 }
 
-/// Says [player] left the squad, with Undo.
+/// Says [player] left the squad, with Undo. Call it right after the
+/// removal: the Undo undoes that removal only, and the snackbar goes as soon
+/// as anything else is edited.
 void showRemovedSnackBar(
   BuildContext context,
   AppLocalizations l,
   PackPlayer player,
   PackEditor editor,
 ) {
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      SnackBar(
-        content: Text(l.editorSquadRemoved(playerLabel(l, player))),
-        action: SnackBarAction(label: l.editorUndo, onPressed: editor.undo),
+  final removal = editor.revision;
+  final messenger = ScaffoldMessenger.of(context)..hideCurrentSnackBar();
+  final bar = messenger.showSnackBar(
+    SnackBar(
+      content: Text(l.editorSquadRemoved(playerLabel(l, player))),
+      action: SnackBarAction(
+        label: l.editorUndo,
+        onPressed: () => editor.undoIfLatest(removal),
       ),
-    );
+    ),
+  );
+  var open = true;
+  late final void Function() stop;
+  stop = editor.addListener((_) {
+    if (open && editor.revision != removal) {
+      open = false;
+      bar.close();
+    }
+  }, fireImmediately: false);
+  unawaited(
+    bar.closed.then((_) {
+      open = false;
+      if (editor.mounted) stop();
+    }),
+  );
 }
 
 typedef _SquadView = ({

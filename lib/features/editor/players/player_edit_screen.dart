@@ -158,7 +158,7 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
   final _nameFocus = FocusNode();
 
   /// The type the chips show: the one last picked here, else the one the
-  /// stored attributes were made with ([SquadEdits.typeOf]).
+  /// stored attributes were made with ([PlayerBuild.typeOf]).
   PlayerType? _type;
 
   /// The attributes this form last wrote: anything else (an undo) resets
@@ -183,7 +183,7 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
     final p = _of(ref.read(packEditorProvider(widget.packId)).valueOrNull);
     if (p != null) {
       _name.text = p.name;
-      _type = SquadEdits.typeOf(p);
+      _type = PlayerBuild.typeOf(p.position, p.attributes);
       _wrote = p.attributes;
     }
     _nameFocus.addListener(() {
@@ -255,7 +255,7 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
       }
       if (p.attributes != _wrote) {
         setState(() {
-          _type = SquadEdits.typeOf(p);
+          _type = PlayerBuild.typeOf(p.position, p.attributes);
           _wrote = p.attributes;
         });
       }
@@ -263,7 +263,7 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
     final pack = ref.watch(packEditorProvider(widget.packId)).valueOrNull;
     final p = _of(pack);
     if (pack == null || p == null) return EditorMessage(l.editorPlayerGone);
-    final type = _type ??= SquadEdits.typeOf(p);
+    final type = _type ??= PlayerBuild.typeOf(p.position, p.attributes);
     final overall = SquadEdits.overallOf(p);
     final squad = pack.squads[widget.nationId] ?? const <PackPlayer>[];
     final duplicate =

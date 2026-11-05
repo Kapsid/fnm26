@@ -9,7 +9,6 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
@@ -48,6 +47,12 @@ typedef _NationRow = ({
   int players,
   int toFix,
   bool inPack,
+
+  /// The name folded for sorting ([searchFold]).
+  String sortKey,
+
+  /// Everything the search matches, folded.
+  List<String> searchKeys,
 });
 
 class _NationListScreenState extends ConsumerState<NationListScreen> {
@@ -72,44 +77,47 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
   void _open(int nationId) =>
       unawaited(context.push(editorSquadLocation(_id, nationId)));
 
-  /// Every nation of [world] in [pack], by name, with what its squad needs.
-  static List<_NationRow> _rows(
-    WorldPack pack,
-    List<Nation> world,
-    List<PackIssue> issues,
-  ) {
-    final toFix = <int, int>{};
-    for (final i in issues) {
-      final parts = i.where.split('.');
-      if (parts.first != 'squads' || parts.length < 2) continue;
-      final id = int.tryParse(parts[1]);
-      if (id != null) toFix[id] = (toFix[id] ?? 0) + 1;
+  /// The rows of the pack they were last worked out for ([_rowsOf]).
+  List<_NationRow> _rowsCache = const [];
+  WorldPack? _rowsOf;
+
+  /// Every nation of the pack, by name, with what its squad needs and its
+  /// folded search keys: worked out once per pack state, not per keystroke
+  /// of the search or per comparison of the sort.
+  List<_NationRow> _rows(WorldPack pack, PackEditor editor) {
+    if (identical(pack, _rowsOf)) return _rowsCache;
+    final byId = {for (final n in editor.world) n.id: n};
+    final rows = <_NationRow>[];
+    for (final n in editor.world) {
+      final name = packNationName(pack, byId, n.id);
+      final fold = searchFold(name);
+      rows.add((
+        nation: n,
+        name: name,
+        players: pack.squads[n.id]?.length ?? 0,
+        toFix: editor.squadIssues(n.id).length,
+        inPack: pack.squads.containsKey(n.id),
+        sortKey: fold,
+        searchKeys: [
+          fold,
+          searchFold(n.name),
+          searchFold(n.englishName),
+          n.code.toLowerCase(),
+          pack.nations[n.id]?.code.toLowerCase() ?? '',
+        ],
+      ));
     }
-    final byId = {for (final n in world) n.id: n};
-    return [
-      for (final n in world)
-        (
-          nation: n,
-          name: packNationName(pack, byId, n.id),
-          players: pack.squads[n.id]?.length ?? 0,
-          toFix: toFix[n.id] ?? 0,
-          inPack: pack.squads.containsKey(n.id),
-        ),
-    ]..sort((a, b) => searchFold(a.name).compareTo(searchFold(b.name)));
+    rows.sort((a, b) => a.sortKey.compareTo(b.sortKey));
+    _rowsOf = pack;
+    return _rowsCache = rows;
   }
 
-  List<_NationRow> _filter(WorldPack pack, List<_NationRow> rows) {
+  List<_NationRow> _filter(List<_NationRow> rows) {
     final q = searchFold(_query);
     return [
       for (final r in rows)
         if ((_conf == null || r.nation.confederation == _conf) &&
-            (q.isEmpty ||
-                searchFold(r.name).contains(q) ||
-                searchFold(r.nation.name).contains(q) ||
-                searchFold(r.nation.englishName).contains(q) ||
-                r.nation.code.toLowerCase().contains(q) ||
-                (pack.nations[r.nation.id]?.code.toLowerCase().contains(q) ??
-                    false)))
+            (q.isEmpty || r.searchKeys.any((k) => k.contains(q))))
           r,
     ];
   }
@@ -135,7 +143,7 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
       );
     }
 
-    final rows = _filter(p, _rows(p, editor.world, editor.issues));
+    final rows = _filter(_rows(p, editor));
     if (tablet) {
       return _NationListTabletLayout(state: this, title: title, rows: rows);
     }

@@ -35,6 +35,12 @@ class _League {
 /// Rio Flamingos) — never the club's actual registered name, wordmark or crest,
 /// so it stays familiar yet trademark-safe.
 abstract final class ClubService {
+  /// The club a player with no club holds: what `Player.club` defaults to
+  /// (and the players table's column), and what a world pack stores for a
+  /// player its editor made a free agent. Stored in English, never shown:
+  /// every screen prints it through `clubName`, in the manager's language.
+  static const String freeAgent = 'Free agent';
+
   /// The club a player is at right now, with its country (for the flag).
   static ClubSide clubFor(Player p) => clubForSeed(p, 0);
 

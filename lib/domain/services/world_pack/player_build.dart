@@ -93,8 +93,20 @@ abstract final class PlayerBuild {
     return best;
   }
 
+  /// The type [a] was built with at [position]: the type whose
+  /// [attributesFor] gives exactly [a] at its overall, else the type whose
+  /// ratio is nearest. Near 99 a type's ratio no longer fits under the caps,
+  /// so the ratio alone would read a capped Athlete as Balanced.
+  static PlayerType typeOf(PlayerPosition position, PlayerAttributes a) {
+    final overall = OverallRating.forPosition(position, a);
+    for (final t in PlayerType.values) {
+      if (attributesFor(position, t, overall) == a) return t;
+    }
+    return _nearest(a);
+  }
+
   /// The type whose ratio is nearest [a] by cosine similarity.
-  static PlayerType typeOf(PlayerAttributes a) {
+  static PlayerType _nearest(PlayerAttributes a) {
     double cos(PlayerType t) {
       final dot =
           a.physical * t.physical +

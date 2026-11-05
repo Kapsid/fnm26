@@ -37,6 +37,7 @@ import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fnm/core/util/club_label.dart';
 
 part 'player_tablet_layout.dart';
 
@@ -293,7 +294,7 @@ _playerSections(
   final l = AppLocalizations.of(context);
   final a = p.attributes;
 
-  final clubFact = _clubFact(p, l.playerClub);
+  final clubFact = _clubFact(p, l.playerClub, clubName(l, p.club));
   // How much football he is actually getting THERE. It used to be a badge on
   // the call-up row, where it appeared on some players and not others and
   // read as a warning the game had raised about the man rather than a fact
@@ -549,7 +550,7 @@ _playerSections(
 
 /// The club row, with the club's country flag beside its name, hard-aligned
 /// to the right (the trailing group takes the remaining width and ends right).
-Widget _clubFact(Player p, String clubLabel) => Padding(
+Widget _clubFact(Player p, String clubLabel, String club) => Padding(
   padding: const EdgeInsets.symmetric(vertical: 3),
   child: Row(
     children: [
@@ -570,7 +571,7 @@ Widget _clubFact(Player p, String clubLabel) => Padding(
             ],
             Flexible(
               child: Text(
-                p.club,
+                club,
                 textAlign: TextAlign.end,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

@@ -19,6 +19,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fnm/core/util/club_label.dart';
 
 /// The Squad destination on a tablet: every eligible player in a sortable,
 /// full-width table with four views of the same rows. A row opens the
@@ -297,7 +298,7 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
           FlagDisc(r.player.clubCountry, size: 16),
           const SizedBox(width: 6),
         ],
-        Flexible(child: Text(r.player.club)),
+        Flexible(child: Text(clubName(l, r.player.club))),
       ],
     ),
   );

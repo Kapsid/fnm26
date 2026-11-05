@@ -163,4 +163,35 @@ void main() {
     expect(b.path, 'nameLists.1.sur');
     expect(b.reason, FieldReason.outOfRange);
   });
+
+  test('squadIssues is exactly the squad part of issues, nation by nation', () {
+    final pack = _pack(
+      squads: {
+        1: _squad(),
+        2: _squad(gk: 1, fwd: 1),
+        3: [
+          ..._squad(def: 5),
+          _p(90, PlayerPosition.st, name: ' ', age: 50, potential: 20),
+        ],
+      },
+      nations: {4: (name: '', code: 'xx')},
+    );
+    final all = PackRules.issues(pack);
+    final squadPart = [
+      for (final i in all)
+        if (i.where.startsWith('squads.')) i,
+    ];
+    final perNation = [
+      for (final id in pack.squads.keys.toList()..sort())
+        ...PackRules.squadIssues(id, pack.squads[id]!),
+    ];
+    expect(perNation.map((i) => i.where), squadPart.map((i) => i.where));
+    expect(
+      perNation.map((i) => i.runtimeType),
+      squadPart.map((i) => i.runtimeType),
+    );
+    expect(perNation, isNotEmpty);
+    // The rest of the pack is still checked by issues alone.
+    expect(all.length, greaterThan(squadPart.length));
+  });
 }

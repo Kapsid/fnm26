@@ -121,6 +121,50 @@ abstract final class PackRules {
   static FieldReason? checkCode(String s) =>
       _code.hasMatch(s) ? null : FieldReason.badCharacters;
 
+  /// What stands between nation [id]'s [squad] and a career: its size, its
+  /// position cover and each player's fields. Exactly the squad part of
+  /// [issues] for that nation, in the same order; the editor asks it for
+  /// one nation without checking the whole pack.
+  static List<PackIssue> squadIssues(int id, List<PackPlayer> squad) {
+    final out = <PackIssue>[];
+    if (squad.length < squadMin) {
+      out.add(SquadTooSmall(id, squad.length, squadMin));
+    } else if (squad.length > squadMax) {
+      out.add(SquadTooSmall(id, squad.length, squadMax));
+    }
+    final counts = {for (final c in PositionCategory.values) c: 0};
+    for (final pl in squad) {
+      counts[pl.position.category] = counts[pl.position.category]! + 1;
+    }
+    const needs = {
+      PositionCategory.goalkeeper: gkMin,
+      PositionCategory.defender: defMin,
+      PositionCategory.midfielder: midMin,
+      PositionCategory.forward: fwdMin,
+    };
+    for (final e in needs.entries) {
+      if (counts[e.key]! < e.value) {
+        out.add(NeedsPosition(id, e.key, counts[e.key]!, e.value));
+      }
+    }
+    for (final pl in squad) {
+      final base = 'squads.$id.${pl.id}';
+      final r = checkName(pl.name);
+      if (r != null) out.add(BadField('$base.name', r));
+      if (pl.age < ageMin || pl.age > ageMax) {
+        out.add(BadField('$base.age', FieldReason.outOfRange));
+      }
+      final overall = OverallRating.forPosition(pl.position, pl.attributes);
+      if (overall < 1 || overall > 99) {
+        out.add(BadField('$base.attributes', FieldReason.outOfRange));
+      }
+      if (pl.potential < overall || pl.potential > 99) {
+        out.add(BadField('$base.potential', FieldReason.outOfRange));
+      }
+    }
+    return out;
+  }
+
   static List<PackIssue> issues(
     WorldPack p, {
     Map<int, String> baseCodes = const {},
@@ -132,41 +176,7 @@ abstract final class PackRules {
     }
 
     for (final id in p.squads.keys.toList()..sort()) {
-      final squad = p.squads[id]!;
-      if (squad.length < squadMin) {
-        out.add(SquadTooSmall(id, squad.length, squadMin));
-      } else if (squad.length > squadMax) {
-        out.add(SquadTooSmall(id, squad.length, squadMax));
-      }
-      final counts = {for (final c in PositionCategory.values) c: 0};
-      for (final pl in squad) {
-        counts[pl.position.category] = counts[pl.position.category]! + 1;
-      }
-      const needs = {
-        PositionCategory.goalkeeper: gkMin,
-        PositionCategory.defender: defMin,
-        PositionCategory.midfielder: midMin,
-        PositionCategory.forward: fwdMin,
-      };
-      for (final e in needs.entries) {
-        if (counts[e.key]! < e.value) {
-          out.add(NeedsPosition(id, e.key, counts[e.key]!, e.value));
-        }
-      }
-      for (final pl in squad) {
-        final base = 'squads.$id.${pl.id}';
-        name('$base.name', pl.name);
-        if (pl.age < ageMin || pl.age > ageMax) {
-          out.add(BadField('$base.age', FieldReason.outOfRange));
-        }
-        final overall = OverallRating.forPosition(pl.position, pl.attributes);
-        if (overall < 1 || overall > 99) {
-          out.add(BadField('$base.attributes', FieldReason.outOfRange));
-        }
-        if (pl.potential < overall || pl.potential > 99) {
-          out.add(BadField('$base.potential', FieldReason.outOfRange));
-        }
-      }
+      out.addAll(squadIssues(id, p.squads[id]!));
     }
 
     final effective = {...baseCodes};

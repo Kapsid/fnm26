@@ -26,11 +26,19 @@ PackPlayer _find(ProviderContainer c, int id, int nation, int player) => c
     .squads[nation]!
     .firstWhere((p) => p.id == player);
 
-/// Moves [slider] as a finger would: start, a value, end.
-void _slide(WidgetTester tester, Finder slider, double value) {
+/// Moves [slider] as a finger would: start, through each of [via], to
+/// [value], end.
+void _slide(
+  WidgetTester tester,
+  Finder slider,
+  double value, {
+  List<double> via = const [],
+}) {
   final s = tester.widget<Slider>(slider);
   s.onChangeStart?.call(s.value);
-  s.onChanged!(value);
+  for (final v in [...via, value]) {
+    s.onChanged!(v);
+  }
   s.onChangeEnd?.call(value);
 }
 
@@ -59,7 +67,13 @@ void main() {
     await tester.pump();
     await tester.tap(find.byKey(PlayerEditForm.typeKey(PlayerType.athlete)));
     await tester.pump();
-    _slide(tester, find.byKey(PlayerEditForm.overallKey), 85);
+    // A real drag passes through many values on its way.
+    _slide(
+      tester,
+      find.byKey(PlayerEditForm.overallKey),
+      85,
+      via: [for (var v = 61.0; v < 85; v += 4) v],
+    );
     await tester.pump();
 
     final p = _find(c, id, cze, mid);
@@ -69,7 +83,7 @@ void main() {
       p.attributes,
       PlayerBuild.attributesFor(PlayerPosition.cm, PlayerType.athlete, 85),
     );
-    expect(SquadEdits.typeOf(p), PlayerType.athlete);
+    expect(PlayerBuild.typeOf(p.position, p.attributes), PlayerType.athlete);
     // Raised above his potential of 80: the potential came along.
     expect(p.potential, 85);
     expect(
@@ -85,6 +99,12 @@ void main() {
     await tester.pump();
     final back = _find(c, id, cze, mid);
     expect(OverallRating.forPosition(back.position, back.attributes), 60);
+    // Back to where the drag started (Athlete at 60), not one value back.
+    expect(
+      back.attributes,
+      PlayerBuild.attributesFor(PlayerPosition.cm, PlayerType.athlete, 60),
+    );
+    expect(back.potential, 80);
     expect(back.name, 'Pavel Nový');
     expect(editor.canUndo, isTrue);
     await tester.pump(const Duration(milliseconds: 450));
@@ -200,6 +220,51 @@ void main() {
       c.read(packEditorProvider(id)).value!.squads[cze]!.any((p) => p.id == gk),
       isTrue,
     );
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('the Undo of a removal never undoes a later edit', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Stale', squads: {cze: testSquad()}),
+    );
+    await pumpEditorRoute(
+      tester,
+      c,
+      '${Routes.editorSquad}?id=$id&nation=$cze',
+    );
+    const gk = kPackPlayerIdBase + 1;
+    const other = kPackPlayerIdBase + 2;
+    await tester.drag(
+      find.byKey(SquadScreen.playerKey(gk)),
+      const Offset(-500, 0),
+    );
+    await tester.pumpAndSettle();
+    final action = tester.widget<SnackBarAction>(find.byType(SnackBarAction));
+
+    // Another edit after the removal: the snackbar goes.
+    final editor = c.read(packEditorProvider(id).notifier)
+      ..update(
+        (p) => SquadEdits.replace(
+          p,
+          cze,
+          SquadEdits.copy(_find(c, id, cze, other), name: 'Renamed'),
+        ),
+      );
+    await tester.pumpAndSettle();
+    expect(find.byType(SnackBarAction), findsNothing);
+
+    // And its Undo, pressed late, leaves the rename (and the removal) be.
+    action.onPressed();
+    await tester.pump();
+    final squad = c.read(packEditorProvider(id)).value!.squads[cze]!;
+    expect(squad.firstWhere((p) => p.id == other).name, 'Renamed');
+    expect(squad.any((p) => p.id == gk), isFalse);
+    expect(editor.canUndo, isTrue);
     await tester.pump(const Duration(milliseconds: 450));
   });
 

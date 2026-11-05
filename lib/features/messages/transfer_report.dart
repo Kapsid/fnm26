@@ -4,6 +4,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:fnm/core/util/club_label.dart';
 
 /// One move in the window's transfer report.
 typedef TransferRow = ({
@@ -299,7 +300,7 @@ class _MoveRow extends StatelessWidget {
               // A club with no name is a club the report never learned; say so
               // rather than leaving the side of the move blank, which reads as
               // a bug in the row.
-              club.isEmpty ? l.transfersUnknownClub : club,
+              club.isEmpty ? l.transfersUnknownClub : clubName(l, club),
               maxLines: 1,
               textAlign: TextAlign.start,
               style: AppTypography.labelSmall.copyWith(

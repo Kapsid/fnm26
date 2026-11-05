@@ -270,6 +270,19 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     return _issues;
   }
 
+  /// What stands between nation [nationId]'s squad and a career
+  /// ([PackRules.squadIssues]); empty for a nation the pack has no squad for.
+  ///
+  /// Remembered per squad list: an edit replaces only the edited nation's
+  /// list, so a keystroke rechecks one squad, not the whole pack.
+  List<PackIssue> squadIssues(int nationId) {
+    final squad = state.valueOrNull?.squads[nationId];
+    if (squad == null) return const [];
+    return _squadIssues[squad] ??= PackRules.squadIssues(nationId, squad);
+  }
+
+  final Expando<List<PackIssue>> _squadIssues = Expando('squadIssues');
+
   /// Whether there is an edit to undo.
   bool get canUndo => _past.isNotEmpty;
 
@@ -304,7 +317,22 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     _set(_past.removeLast());
   }
 
+  /// Counts every change [update] or [undo] makes. An undo offered for one
+  /// edit (a removal's snackbar) notes it right after that edit and passes
+  /// it to [undoIfLatest], so it never undoes whatever came after.
+  int get revision => _revision;
+  int _revision = 0;
+
+  /// [undo], but only while the last change is still the one made at
+  /// [revision]; returns whether it undid.
+  bool undoIfLatest(int revision) {
+    if (revision != _revision || !canUndo) return false;
+    undo();
+    return true;
+  }
+
   void _set(WorldPack pack) {
+    _revision++;
     state = AsyncValue.data(pack);
     _unsaved = pack;
     _timer?.cancel();

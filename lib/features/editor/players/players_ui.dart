@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/util/club_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
-import 'package:fnm/features/editor/players/squad_edits.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:go_router/go_router.dart';
@@ -84,8 +84,7 @@ String playerLabel(AppLocalizations l, PackPlayer p) =>
 String clubLabel(AppLocalizations l, WorldPack pack, PackPlayer p) =>
     switch (p.club) {
       null => l.editorPlayerClubAuto,
-      kFreeAgentClub => l.editorPlayerFreeAgent,
-      final club => pack.clubs[club] ?? club,
+      final club => clubName(l, pack.clubs[club] ?? club),
     };
 
 /// The colour an overall reads in: green for the elite, red for the weak.

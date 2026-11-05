@@ -7,6 +7,7 @@ import 'package:fnm/domain/services/club/club_history.dart';
 import 'package:fnm/features/player/club_history_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
+import 'package:fnm/core/util/club_label.dart';
 
 /// Where a player has played, season by season, collapsed into spells.
 ///
@@ -92,7 +93,7 @@ class ClubHistoryCard extends ConsumerWidget {
                       ],
                       Expanded(
                         child: Text(
-                          spells[i].club,
+                          clubName(l, spells[i].club),
                           style: AppTypography.bodyMedium,
                           overflow: TextOverflow.ellipsis,
                         ),

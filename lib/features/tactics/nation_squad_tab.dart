@@ -18,6 +18,7 @@ import 'package:fnm/features/tactics/squad_pulse.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:fnm/core/util/club_label.dart';
 
 /// How the pool is ordered.
 enum _SquadSort { rating, caps, goals, age, name }
@@ -67,7 +68,10 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
           })
             if (q.isEmpty ||
                 r.player.name.toLowerCase().contains(q) ||
-                r.player.club.toLowerCase().contains(q))
+                clubName(
+                  AppLocalizations.of(context),
+                  r.player.club,
+                ).toLowerCase().contains(q))
               r,
     ];
     rows.sort((a, b) {
@@ -583,7 +587,7 @@ class _PlayerRow extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          l.squadAgeClub(p.age, p.club),
+                          l.squadAgeClub(p.age, clubName(l, p.club)),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTypography.labelSmall.copyWith(

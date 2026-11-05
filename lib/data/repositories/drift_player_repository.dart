@@ -1306,7 +1306,7 @@ class _CareerWorld {
           age: p.age,
           position: p.position,
           attributes: base(p),
-          club: p.club ?? 'Free agent',
+          club: p.club ?? ClubService.freeAgent,
           clubCountry: p.clubCountry ?? '',
         ),
     ]);
