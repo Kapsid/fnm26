@@ -3163,6 +3163,27 @@ abstract final class YFeed {
     trait: a.voice == YVoice.stats ? YTrait.statshead : YCast.traitFor(a.name),
   );
 
+  /// Which of [builtIns] and [added] (both non-empty) posts about [key].
+  /// Added accounts take at most 50% of the picks, as added sponsors do.
+  ///
+  /// While the added accounts are no more than the built-in ones, it is a
+  /// plain [YCast.pick] over both, so every account is equally likely. Once
+  /// they outnumber the built-ins, a fair split decides: the built-ins keep
+  /// half of the picks between them and the added accounts share the other
+  /// half.
+  static YPersona _pickWithAdded(
+    List<YPersona> builtIns,
+    List<YPersona> added,
+    String key,
+  ) {
+    if (added.length <= builtIns.length) {
+      return YCast.pick([...builtIns, ...added], key)!;
+    }
+    final slot = varietySeed(key) % (2 * builtIns.length);
+    if (slot < builtIns.length) return builtIns[slot];
+    return YCast.pick(added, '$key|added')!;
+  }
+
   /// The nation's recurring account for [voice], and what sort of person it
   /// is.
   ///
@@ -3186,7 +3207,7 @@ abstract final class YFeed {
           if (a.voice == YVoice.stats) _addedPersona(a),
       ];
       if (more.isEmpty) return numbersDesk;
-      return YCast.pick([numbersDesk, ...more], '$key|${voice.name}')!;
+      return _pickWithAdded(const [numbersDesk], more, '$key|${voice.name}');
     }
     final fixed = switch (voice) {
       YVoice.stats => numbersDesk,
@@ -3206,19 +3227,22 @@ abstract final class YFeed {
       _ => null,
     };
     if (fixed != null) return fixed;
-    final cast = [
-      ...YCast.of(
-        _namesFor(voice),
-        nation: nation,
-        seed: seed,
-        voiceKey: voice.name,
-      ),
-      // Every account the world added in this voice joins the standing
-      // cast, so its creator sees it post (see [YAccountsScope]).
+    final cast = YCast.of(
+      _namesFor(voice),
+      nation: nation,
+      seed: seed,
+      voiceKey: voice.name,
+    );
+    // Every account the world added in this voice joins the standing cast,
+    // so its creator sees it post (see [YAccountsScope]).
+    final more = [
       for (final a in added)
         if (a.voice == voice) _addedPersona(a),
     ];
-    return YCast.pick(cast, '$key|${voice.name}') ??
+    if (more.isNotEmpty && cast.isNotEmpty) {
+      return _pickWithAdded(cast, more, '$key|${voice.name}');
+    }
+    return YCast.pick([...cast, ...more], '$key|${voice.name}') ??
         (handle: '@$nation', displayName: nation, trait: YTrait.loyalist);
   }
 

@@ -2,17 +2,22 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/domain/services/press/pundit_predictions.dart';
 import 'package:fnm/domain/services/press/persona.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/press/pundit_prediction_service.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
+import 'package:fnm/l10n/app_localizations.dart';
 
 import '../../helpers/test_database.dart';
 import '../greenland/greenland_fixtures.dart';
@@ -221,6 +226,127 @@ void main() {
       mood: byFan.mood,
     );
     expect(YFeed.personaOf(shown).trait, YCast.traitFor(fan));
+  });
+
+  group('at most half the picks (ruling 2)', () {
+    test('as many added fans as the cast: every account equally likely', () {
+      final accounts = [
+        for (var i = 0; i < YCast.castSize; i++)
+          _account(i, 'Added Fan $i', YVoice.fan),
+      ];
+      var addedPicks = 0;
+      const n = 4000;
+      for (var i = 0; i < n; i++) {
+        final p = YAccountsScope.run(
+          accounts,
+          () => YFeed.personaFor(YVoice.fan, 'Czechia', 3, 'k$i'),
+        );
+        if (p.displayName.startsWith('Added Fan')) addedPicks++;
+      }
+      expect(addedPicks / n, closeTo(0.5, 0.05));
+    });
+
+    test('with 10 added fans, their share of fan posts is at most about '
+        '50%', () {
+      final accounts = [
+        for (var i = 0; i < 10; i++) _account(i, 'Added Fan $i', YVoice.fan),
+      ];
+      var addedPicks = 0;
+      final seen = <String>{};
+      const n = 4000;
+      for (var i = 0; i < n; i++) {
+        final p = YAccountsScope.run(
+          accounts,
+          () => YFeed.personaFor(YVoice.fan, 'Czechia', 3, 'k$i'),
+        );
+        seen.add(p.displayName);
+        if (p.displayName.startsWith('Added Fan')) addedPicks++;
+      }
+      expect(addedPicks / n, lessThan(0.55));
+      expect(addedPicks / n, greaterThan(0.45));
+      expect(seen, containsAll([for (final a in accounts) a.name]));
+
+      // And in a real feed: across seeds, the fan posts by added accounts.
+      var fanPosts = 0, byAdded = 0;
+      for (var seed = 0; seed < 30; seed++) {
+        for (final p in _feed('Czechia', _czechia, accounts, seed: seed)) {
+          if (p.voice != YVoice.fan) continue;
+          fanPosts++;
+          if (p.displayName.startsWith('Added Fan')) byAdded++;
+        }
+      }
+      expect(fanPosts, greaterThan(100));
+      expect(byAdded / fanPosts, lessThan(0.6));
+    });
+
+    test('three added stats accounts share half of the stats picks', () {
+      final accounts = [
+        for (var i = 0; i < 3; i++) _account(i, 'Numbers $i', YVoice.stats),
+      ];
+      var desk = 0;
+      const n = 2000;
+      for (var i = 0; i < n; i++) {
+        if (YAccountsScope.run(
+              accounts,
+              () => YFeed.personaFor(YVoice.stats, 'Czechia', 3, 'k$i'),
+            ) ==
+            YFeed.numbersDesk) {
+          desk++;
+        }
+      }
+      expect(desk / n, closeTo(0.5, 0.05));
+    });
+  });
+
+  test('the pundit inbox piece and the feed name the same pundit', () {
+    final en = lookupAppLocalizations(const Locale('en'));
+    final accounts = [
+      _account(0, 'Professor Ball', YVoice.pundit),
+      _account(1, 'Old Number Nine', YVoice.expro),
+    ];
+    final groups = [
+      for (var g = 0; g < 6; g++) [for (var i = 0; i < 4; i++) 1 + g + i * 6],
+    ];
+    final call = PunditPredictions.call(
+      groups: groups,
+      sides: {
+        for (var id = 1; id <= 24; id++)
+          id: (nationId: id, strength: 90.0 - id, rank: id),
+      },
+      mine: 5,
+    );
+    var sawAdded = false;
+    for (var i = 0; i < 30; i++) {
+      final key = 'pundits:0:1:world:1:9:2030-1-$i';
+      YAccountsScope.run(accounts, () {
+        final body = renderMsgPart(
+          en,
+          punditsMessageBody(
+            call: call,
+            nameOf: (id) => 'Nation $id',
+            mine: 'Czechia',
+            seed: 3,
+            key: key,
+          ),
+        );
+        final posts = YFeed.forPundits(
+          competition: 'World Championship',
+          favourite: 'Nation ${call.favourite}',
+          darkHorse: 'Nation ${call.darkHorse}',
+          date: DateTime(2030),
+          key: key,
+          nation: 'Czechia',
+          seed: 3,
+        );
+        final pundit = posts.firstWhere((p) => p.voice == YVoice.pundit);
+        final expro = posts.firstWhere((p) => p.voice == YVoice.expro);
+        final parts = body.split('\n\n');
+        expect(parts.first, contains(pundit.displayName), reason: key);
+        expect(parts.last, contains(expro.displayName), reason: key);
+        if (pundit.displayName == 'Professor Ball') sawAdded = true;
+      });
+    }
+    expect(sawAdded, isTrue);
   });
 
   group("the career's own copy", () {
