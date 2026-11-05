@@ -1,8 +1,18 @@
 import '../../entities/enums.dart';
+import '../press/y_feed.dart';
 import '../rating/overall_rating.dart';
 import 'world_pack.dart';
 
-enum FieldReason { empty, tooLong, badCharacters, outOfRange }
+enum FieldReason {
+  empty,
+  tooLong,
+  badCharacters,
+  outOfRange,
+
+  /// The name is already another's: a Y account renamed onto another
+  /// account's name, which would mix the two up.
+  duplicate,
+}
 
 /// One thing standing between a pack and a career.
 sealed class PackIssue {
@@ -174,6 +184,7 @@ abstract final class PackRules {
     values('competitions', p.competitions);
     values('sponsors', p.sponsors);
     values('yAccounts', p.yAccounts, max: handleMax);
+    _yClashes(p.yAccounts, out);
 
     for (final id in p.reporters.keys.toList()..sort()) {
       name('reporters.$id.name', p.reporters[id]!.name);
@@ -194,6 +205,32 @@ abstract final class PackRules {
       }
     }
     return out;
+  }
+
+  /// A Y account's new name must be nobody else's: not another account's
+  /// original name (the game's fixed accounts, or one this pack renames),
+  /// and not another account's new name. Two accounts under one name would
+  /// share a profile and the voice behind it. Compared trimmed and
+  /// case-insensitively; keeping an account's own name is fine.
+  static void _yClashes(Map<String, String> renames, List<PackIssue> out) {
+    String fold(String s) => s.trim().toLowerCase();
+    final originals = {
+      for (final n in YFeed.namedAccounts) fold(n),
+      for (final k in renames.keys) fold(k),
+    };
+    final byNewName = <String, int>{};
+    for (final v in renames.values) {
+      if (v.trim().isEmpty) continue;
+      byNewName.update(fold(v), (n) => n + 1, ifAbsent: () => 1);
+    }
+    for (final k in renames.keys.toList()..sort()) {
+      final v = renames[k]!;
+      if (v.trim().isEmpty) continue;
+      final to = fold(v);
+      final taken =
+          (to != fold(k) && originals.contains(to)) || byNewName[to]! > 1;
+      if (taken) out.add(BadField('yAccounts.$k', FieldReason.duplicate));
+    }
   }
 
   static bool isComplete(

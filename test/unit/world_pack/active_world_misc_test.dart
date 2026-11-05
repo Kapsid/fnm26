@@ -222,6 +222,50 @@ void main() {
     expect(handle, '@${'A' * (PackRules.handleMax - 1)}');
   });
 
+  group('a Y account cannot be renamed onto another account', () {
+    final a = YFeed.namedAccounts[0];
+    final b = YFeed.namedAccounts[1];
+
+    List<String> clashes(Map<String, String> renames) => [
+      for (final i in PackRules.issues(_pack(yAccounts: renames)))
+        if (i is BadField && i.reason == FieldReason.duplicate) i.path,
+    ];
+
+    test('a rename onto another account\'s original name is flagged', () {
+      expect(clashes({a: ' ${b.toUpperCase()} '}), ['yAccounts.$a']);
+    });
+
+    test('two renames to the same name are flagged', () {
+      expect(
+        clashes({a: 'Burger Baron', b: 'burger baron'}),
+        unorderedEquals(['yAccounts.$a', 'yAccounts.$b']),
+      );
+    });
+
+    test('a swap is flagged', () {
+      expect(
+        clashes({a: b, b: a}),
+        unorderedEquals(['yAccounts.$a', 'yAccounts.$b']),
+      );
+    });
+
+    test('a plain rename passes', () {
+      expect(clashes({a: 'Burger Baron', b: ' ${b.toLowerCase()} '}), isEmpty);
+      expect(clashes({a: 'Burger Baron'}), isEmpty);
+    });
+
+    test('a clash that slipped through reads back the lowest original', () {
+      final world = _world(_pack(yAccounts: {'Zed': 'Same', 'Abe': 'Same'}));
+      expect(world.yAccountOriginal('Same'), 'Abe');
+    });
+  });
+
+  test('blank means none', () {
+    expect(ActiveWorld.textOrNull(null), isNull);
+    expect(ActiveWorld.textOrNull('  '), isNull);
+    expect(ActiveWorld.textOrNull('Ann'), 'Ann');
+  });
+
   // -------------------------------------------------------------------------
   // The wiring, on a seeded career.
   // -------------------------------------------------------------------------
@@ -452,6 +496,36 @@ void main() {
         isEmpty,
       );
     });
+
+    test(
+      'a nation whose pack list is empty keeps its default staff names',
+      () async {
+        final c = open();
+        final career = await played(c);
+        final before = _staff(
+          (await c.read(staffRoomProvider(career.id).future))!,
+        );
+        enter(
+          c,
+          _world(
+            _pack(
+              nameLists: {
+                for (final n in nations)
+                  n.id: const PackNameLists(first: [], sur: [' ']),
+              },
+            ),
+          ),
+        );
+        expect(
+          _staff((await c.read(staffRoomProvider(career.id).future))!),
+          before,
+        );
+        expect(
+          staffNamesFrom(const PackNameLists(first: ['Aldo'], sur: [])),
+          isEmpty,
+        );
+      },
+    );
 
     test('default world unchanged', () async {
       final c = open();

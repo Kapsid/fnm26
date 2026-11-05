@@ -155,10 +155,10 @@ class ActiveWorld {
   };
 
   /// Nation [id]'s name in this world, in every language.
-  String? nationName(int id) => _text(pack?.nations[id]?.name);
+  String? nationName(int id) => textOrNull(pack?.nations[id]?.name);
 
   /// Nation [id]'s 3-letter display code in this world.
-  String? nationCode(int id) => _text(pack?.nations[id]?.code);
+  String? nationCode(int id) => textOrNull(pack?.nations[id]?.code);
 
   /// The world's code for the nation whose real code is [realCode].
   String? codeLabel(String realCode) => _codeLabels[realCode];
@@ -168,39 +168,47 @@ class ActiveWorld {
     final p = pack;
     if (p == null || p.competitions.isEmpty) return null;
     final key = stored.trim();
-    return _text(p.competitions[key]) ??
+    return textOrNull(p.competitions[key]) ??
         (_worldChampionshipAliases.contains(key)
-            ? _text(p.competitions['World Championship'])
+            ? textOrNull(p.competitions['World Championship'])
             : null);
   }
 
   /// The world's name for the sponsor brand [brand].
-  String? sponsor(String brand) => _text(pack?.sponsors[brand]);
+  String? sponsor(String brand) => textOrNull(pack?.sponsors[brand]);
 
   /// The world's name for the ground in [city], nation [nationId].
   String? stadium(int nationId, String city) =>
-      _text(pack?.stadiums['$nationId:$city']);
+      textOrNull(pack?.stadiums['$nationId:$city']);
 
   /// The reporter replacing the press desk's reporter [index].
   PackReporter? reporter(int index) => pack?.reporters[index];
 
   /// The world's name for the Y account [original].
-  String? yAccount(String original) => _text(pack?.yAccounts[original]);
+  String? yAccount(String original) => textOrNull(pack?.yAccounts[original]);
 
   /// The account the world renamed to [shown], by its original name: what
   /// its disposition is read off, so a renamed account keeps its voice.
+  ///
+  /// `PackRules` refuses two accounts under one name; should a pack carry a
+  /// clash anyway (one not yet checked), the lowest original wins, so the
+  /// answer never depends on the order the pack was read in.
   String? yAccountOriginal(String shown) {
     final accounts = pack?.yAccounts;
     if (accounts == null) return null;
+    String? found;
     for (final e in accounts.entries) {
-      if (_text(e.value) == shown) return e.key;
+      if (textOrNull(e.value) != shown) continue;
+      if (found == null || e.key.compareTo(found) < 0) found = e.key;
     }
-    return null;
+    return found;
   }
 
   /// The world's picture of trophy [key].
   Uint8List? trophy(String key) => trophies[key];
 
-  /// [s], unless there is nothing in it to print.
-  static String? _text(String? s) => s == null || s.trim().isEmpty ? null : s;
+  /// [s], unless there is nothing in it to print: a blank override counts
+  /// as none.
+  static String? textOrNull(String? s) =>
+      s == null || s.trim().isEmpty ? null : s;
 }

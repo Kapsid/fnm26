@@ -267,9 +267,6 @@ class PressByline extends StatelessWidget {
 
   final PressReporter reporter;
 
-  /// [s], unless there is nothing in it to print.
-  static String? _shown(String? s) => s == null || s.trim().isEmpty ? null : s;
-
   @override
   Widget build(BuildContext context) {
     final color = switch (reporter.angle) {
@@ -292,11 +289,11 @@ class PressByline extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _shown(renamed?.name) ?? reporter.name,
+                    ActiveWorld.textOrNull(renamed?.name) ?? reporter.name,
                     style: AppTypography.labelMedium.copyWith(color: color),
                   ),
                   Text(
-                    _shown(renamed?.outlet) ?? reporter.outlet,
+                    ActiveWorld.textOrNull(renamed?.outlet) ?? reporter.outlet,
                     style: AppTypography.labelSmall.copyWith(
                       color: AppColors.onSurfaceVariant,
                     ),

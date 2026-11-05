@@ -3187,6 +3187,24 @@ abstract final class YFeed {
         (handle: '@$nation', displayName: nation, trait: YTrait.loyalist);
   }
 
+  /// Every fixed account's name: the cast names of every voice, the two
+  /// desks, the streamer and the Czech cameos. What a custom world's Y
+  /// account section lists, and what no renamed account may take
+  /// (`PackRules`).
+  static final List<String> namedAccounts = List.unmodifiable(<String>{
+    personaFor(YVoice.stats, '', 0, '').displayName,
+    personaFor(YVoice.breaking, '', 0, '').displayName,
+    streamerPersona.displayName,
+    ..._punditNames,
+    ..._memeNames,
+    ..._exProNames,
+    ..._fanNames,
+    ..._rivalNames,
+    ..._neutralNames,
+    ..._awayNames,
+    for (final c in czechCameos) c.displayName,
+  });
+
   /// The names [voice]'s cast is drawn from.
   static List<String> _namesFor(YVoice voice) => switch (voice) {
     YVoice.pundit => _punditNames,

@@ -53,8 +53,13 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
         final nation = nations.where((n) => n.id == id).firstOrNull;
         if (nation == null) continue;
         final code = nation.code.toLowerCase();
-        if (packLists?[id] case final lists?) {
-          namePool[code] = staffNamesFrom(lists);
+        // A list the pack left empty falls back to the default names.
+        final packNames = switch (packLists?[id]) {
+          final lists? => staffNamesFrom(lists),
+          null => const <String>[],
+        };
+        if (packNames.isNotEmpty) {
+          namePool[code] = packNames;
           continue;
         }
         if (id == career.nationId) {
