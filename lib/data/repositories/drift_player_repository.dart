@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart'
-    show BooleanExpressionOperators, StringExpressionOperators;
+    show BooleanExpressionOperators, ComparableExpr, StringExpressionOperators;
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fnm/core/rng/seeded_rng.dart';
@@ -449,6 +449,81 @@ class DriftPlayerRepository implements PlayerRepository {
     final rows = await _db.select(_db.players).get();
     return rows.map((r) => r.toDomain()).toList();
   }
+
+  @override
+  Future<List<({int id, int nationId, int overall})>> coreRatings() async {
+    final t = _db.players;
+    final query = _db.selectOnly(t)
+      ..addColumns([
+        t.id,
+        t.nationId,
+        t.age,
+        t.position,
+        t.physical,
+        t.technical,
+        t.stamina,
+      ])
+      ..where(t.id.isSmallerThanValue(PoolGenerator.firstFringeId));
+    final out = <({int id, int nationId, int overall})>[];
+    for (final r in await query.get()) {
+      final stored = Player(
+        id: r.read(t.id)!,
+        nationId: r.read(t.nationId)!,
+        name: '',
+        age: r.read(t.age)!,
+        position: $PlayersTable.$converterposition.fromSql(
+          r.read(t.position)!,
+        ),
+        attributes: PlayerAttributes(
+          physical: r.read(t.physical)!,
+          technical: r.read(t.technical)!,
+          stamina: r.read(t.stamina)!,
+        ),
+      );
+      // Day one is the stored row through the age curve at no years: the
+      // youth markdown and the superstar lift, as every pool read applies.
+      // Outside any world: this is the default world's rating.
+      final dayOne = WorldZone.runFor(
+        null,
+        () => PlayerAging.agedYears(stored, 0),
+      );
+      out.add((
+        id: stored.id,
+        nationId: stored.nationId,
+        overall: dayOne.overall,
+      ));
+    }
+    return out;
+  }
+
+  @override
+  Future<List<Player>> coreAsBorn(
+    int nationId, {
+    int saveSeed = 0,
+    bool newCareerNames = false,
+  }) => WorldZone.runFor(null, () async {
+    final seeded = await _seededRows(nationId);
+    final name = await _namerFor(
+      nationId,
+      seeded,
+      saveSeed,
+      null,
+      newCareerNames: newCareerNames,
+    );
+    final home = await _home(nationId);
+    return [
+      for (final p in seeded)
+        if (p.id < PoolGenerator.firstFringeId)
+          // As [_byIdAsBorn] at no years: aged by none (the day-one
+          // markdown), no career starts, named, then given his club.
+          _withClub(
+            name(PlayerAging.agedYears(p, 0)),
+            saveSeed,
+            homeCode: home.code,
+            homeCities: home.cities,
+          ),
+    ];
+  });
 
   @override
   Future<Player?> byId(

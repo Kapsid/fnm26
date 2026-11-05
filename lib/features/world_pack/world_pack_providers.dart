@@ -3,13 +3,12 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
-import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/repositories/nation_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
@@ -125,9 +124,19 @@ int? careerIdOfStack(RouteMatchList stack) {
 /// middle of a build. A world that loads after the manager has already left
 /// its career is dropped.
 class ActiveWorldSync {
-  ActiveWorldSync(this._ref);
+  ActiveWorldSync(this._ref, {Future<Iterable<int>> Function()? listCareers})
+    : _listCareers = listCareers;
 
   final Ref _ref;
+
+  /// Reads the ids of the careers on a custom world; the database when null.
+  /// A test hands in one that fails.
+  final Future<Iterable<int>> Function()? _listCareers;
+
+  /// Whether the last [prime] failed: the first career entered or followed
+  /// after it lists the worlds again, rather than taking every career for a
+  /// default one until the app restarts.
+  bool _primeFailed = false;
 
   /// Careers known to run on a custom world.
   final Set<int> _withWorld = {};
@@ -154,12 +163,24 @@ class ActiveWorldSync {
 
   Future<void> _listWorldCareers() async {
     try {
-      final db = _ref.read(appDatabaseProvider);
-      final rows = await db.select(db.careerWorlds).get();
-      _withWorld.addAll(rows.map((r) => r.careerId));
+      final ids = await (_listCareers ?? _storedWorldCareers)();
+      _withWorld.addAll(ids);
+      _primeFailed = false;
     } on Object catch (e, st) {
+      _primeFailed = true;
       _report(e, st, 'listing the careers on a custom world');
     }
+  }
+
+  Future<Iterable<int>> _storedWorldCareers() async {
+    final db = _ref.read(appDatabaseProvider);
+    final rows = await db.select(db.careerWorlds).get();
+    return rows.map((r) => r.careerId);
+  }
+
+  /// Lists the worlds again if the last [prime] failed and none is running.
+  void _retryPrime() {
+    if (_primeFailed && _priming == null) unawaited(prime());
   }
 
   /// Career [careerId] runs on a custom world: it has just been created on
@@ -173,6 +194,7 @@ class ActiveWorldSync {
     if (careerId == null) return null;
     if (careerId == _careerId) return _entering;
     _careerId = careerId;
+    _retryPrime();
     if (_priming == null && !_withWorld.contains(careerId)) {
       _entering = null;
       scheduleMicrotask(() => _switchTo(careerId));
@@ -189,6 +211,7 @@ class ActiveWorldSync {
   void follow(int? careerId) {
     if (careerId == _careerId) return;
     _careerId = careerId;
+    if (careerId != null) _retryPrime();
     _entering = null;
     scheduleMicrotask(() => _switchTo(careerId));
   }
@@ -306,41 +329,46 @@ class WorldPackService {
   /// [PackRanking.strength] of each nation's squad in the default world, as
   /// a new pack stores it ([defaultSquads]): the yardstick a pack's squads
   /// move the starting ranking against.
-  Future<Map<int, int>> defaultStrength() async =>
-      PackRanking.squadStrengths(await defaultSquads());
+  ///
+  /// Read from the stored core rows, with no name draw (a name moves no
+  /// rating, and on day one a core player's rating is his stored one), and
+  /// kept for the life of this service: it depends only on the build and
+  /// its seed rows. A read that fails is not kept.
+  Future<Map<int, int>> defaultStrength() =>
+      _defaultStrength ??= _readDefaultStrength().catchError((
+        Object e,
+        StackTrace st,
+      ) {
+        _defaultStrength = null;
+        Error.throwWithStackTrace(e, st);
+      });
 
-  /// The squads [createFromDefault] stores, by nation id.
-  Future<Map<int, List<PackPlayer>>> defaultSquads() async {
-    final coreIds = <int, List<int>>{};
-    for (final p in await _players.all()) {
-      if (p.id < PoolGenerator.firstFringeId) {
-        (coreIds[p.nationId] ??= []).add(p.id);
-      }
+  Future<Map<int, int>>? _defaultStrength;
+
+  Future<Map<int, int>> _readDefaultStrength() async {
+    final overalls = <int, List<int>>{};
+    for (final p in await _players.coreRatings()) {
+      (overalls[p.nationId] ??= []).add(p.overall);
     }
+    return {
+      for (final nation in await _nations.newCareerWorld())
+        nation.id: PackRanking.strength(overalls[nation.id] ?? const []),
+    };
+  }
+
+  /// The squads [createFromDefault] stores, by nation id: each nation's
+  /// stored core players as a career created now meets them, a veteran the
+  /// default world retires on day one included (he is one of the stored 23).
+  Future<Map<int, List<PackPlayer>>> defaultSquads() async {
     final squads = <int, List<PackPlayer>>{};
     for (final nation in await _nations.newCareerWorld()) {
-      final pool = {
-        for (final p in await _players.byNation(
-          nation.id,
-          saveSeed: kPackDrawSeed,
-          newCareerNames: true,
-        ))
-          p.id: p,
-      };
-      final squad = <PackPlayer>[];
-      for (final id in (coreIds[nation.id] ?? const <int>[])..sort()) {
-        // A veteran the default world retires on day one is not in the
-        // pool, but he is one of the stored 23: read him by identity.
-        final p =
-            pool[id] ??
-            await _players.byId(
-              id,
-              agingYears: 0,
-              saveSeed: kPackDrawSeed,
-              newCareerNames: true,
-            );
-        if (p == null) continue;
-        squad.add(
+      final core = await _players.coreAsBorn(
+        nation.id,
+        saveSeed: kPackDrawSeed,
+        newCareerNames: true,
+      );
+      squads[nation.id] = [
+        for (final p in core.sortedBy<num>((p) => p.id))
           PackPlayer(
             id: p.id,
             name: p.name,
@@ -359,9 +387,7 @@ class WorldPackService {
             club: p.club,
             clubCountry: p.clubCountry.isEmpty ? null : p.clubCountry,
           ),
-        );
-      }
-      squads[nation.id] = squad;
+      ];
     }
     return squads;
   }

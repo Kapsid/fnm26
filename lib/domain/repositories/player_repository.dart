@@ -117,6 +117,23 @@ abstract interface class PlayerRepository {
   /// Every player across all nations (unordered).
   Future<List<Player>> all();
 
+  /// Every stored core player (id below `PoolGenerator.firstFringeId`) in
+  /// the default world: id, nation and his day-one overall (what a career
+  /// created now first reads him at). No name is drawn and only the rating
+  /// columns are read, so it is cheap.
+  Future<List<({int id, int nationId, int overall})>> coreRatings();
+
+  /// [nationId]'s stored core players (no fringe, no newgen) in the default
+  /// world on day one, named and given clubs for [saveSeed] as [byId] would
+  /// (`newCareerNames` as for [byNation]), a retired veteran included, in
+  /// stored order. Each is exactly [byId] of his id at no years, read in one
+  /// go without building the nation's pool.
+  Future<List<Player>> coreAsBorn(
+    int nationId, {
+    int saveSeed,
+    bool newCareerNames,
+  });
+
   /// The player with [id], or `null` if none exists. `newCareerNames` is
   /// as for [byNation].
   Future<Player?> byId(

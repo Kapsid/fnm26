@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -17,10 +18,11 @@ Future<(ProviderContainer, int)> _careerOnWorld() async {
   final c = greenlandContainer(db);
   addTearDown(c.dispose);
   await c.read(seedLoaderProvider).ensureSeeded();
-  final career = (await c
-          .read(careerServiceProvider)
-          .create(nationId: 1, managerName: 'M', rngSeed: 7))
-      .valueOrNull!;
+  final career =
+      (await c
+              .read(careerServiceProvider)
+              .create(nationId: 1, managerName: 'M', rngSeed: 7))
+          .valueOrNull!;
   final packs = c.read(worldPackRepositoryProvider);
   final packId = await packs.insert(
     const WorldPack(
@@ -68,4 +70,83 @@ void main() {
     }
     expect(c.read(activeWorldProvider).nationName(1), 'Renamed');
   });
+
+  test(
+    'a failed start-up list is read again when a career is entered',
+    () async {
+      final (c0, careerId) = await _careerOnWorld();
+      var calls = 0;
+      final db = c0.read(appDatabaseProvider);
+      final c = ProviderContainer(
+        parent: c0,
+        overrides: [
+          activeWorldSyncProvider.overrideWith(
+            (ref) => ActiveWorldSync(
+              ref,
+              listCareers: () async {
+                calls++;
+                if (calls == 1) throw StateError('database busy');
+                final rows = await db.select(db.careerWorlds).get();
+                return rows.map((r) => r.careerId);
+              },
+            ),
+          ),
+        ],
+      );
+      addTearDown(c.dispose);
+      final sync = c.read(activeWorldSyncProvider);
+      final errors = <FlutterErrorDetails>[];
+      final previous = FlutterError.onError;
+      FlutterError.onError = errors.add;
+      addTearDown(() => FlutterError.onError = previous);
+
+      await sync.prime();
+      expect(errors, hasLength(1));
+      // The first career entered lists the worlds again and waits for it.
+      final entering = sync.enter(careerId);
+      expect(entering, isNotNull);
+      await entering;
+      expect(calls, 2);
+      expect(c0.read(activeWorldProvider).nationName(1), 'Renamed');
+    },
+  );
+
+  test(
+    'a failed start-up list is read again when a route is followed',
+    () async {
+      final (c0, careerId) = await _careerOnWorld();
+      var calls = 0;
+      final db = c0.read(appDatabaseProvider);
+      final c = ProviderContainer(
+        parent: c0,
+        overrides: [
+          activeWorldSyncProvider.overrideWith(
+            (ref) => ActiveWorldSync(
+              ref,
+              listCareers: () async {
+                calls++;
+                if (calls == 1) throw StateError('database busy');
+                final rows = await db.select(db.careerWorlds).get();
+                return rows.map((r) => r.careerId);
+              },
+            ),
+          ),
+        ],
+      );
+      addTearDown(c.dispose);
+      final sync = c.read(activeWorldSyncProvider);
+      final previous = FlutterError.onError;
+      FlutterError.onError = (_) {};
+      addTearDown(() => FlutterError.onError = previous);
+
+      await sync.prime();
+      sync.follow(careerId);
+      for (var i = 0; i < 50; i++) {
+        await Future<void>.delayed(Duration.zero);
+        if (!c0.read(activeWorldProvider).isDefault) break;
+      }
+      expect(calls, 2);
+      expect(c0.read(activeWorldProvider).nationName(1), 'Renamed');
+    },
+  );
 }

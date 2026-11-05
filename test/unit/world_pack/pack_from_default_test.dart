@@ -11,6 +11,7 @@ import 'package:fnm/domain/repositories/player_repository.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
+import 'package:fnm/domain/services/world_pack/pack_ranking.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
@@ -85,6 +86,62 @@ void main() {
         isTrue,
         reason: PackRules.issues(pack).map((i) => i.where).join(', '),
       );
+    },
+  );
+
+  test(
+    'coreAsBorn gives each core player exactly as the pool and byId do',
+    timeout: const Timeout.factor(4),
+    () async {
+      final w = await _world(DateTime(2026, 11, 4));
+      final players = w.c.read(playerRepositoryProvider);
+      final world = await w.c.read(nationRepositoryProvider).newCareerWorld();
+      for (final nation in world) {
+        final core = await players.coreAsBorn(
+          nation.id,
+          saveSeed: kPackDrawSeed,
+          newCareerNames: true,
+        );
+        // The pool's reading of every core player it holds...
+        final pool = {
+          for (final p in await players.byNation(
+            nation.id,
+            saveSeed: kPackDrawSeed,
+            newCareerNames: true,
+          ))
+            p.id: p,
+        };
+        expect(core, isNotEmpty);
+        for (final p in core) {
+          expect(p.id, lessThan(10000000));
+          // ...and the identity read of the ones it does not (retired on day
+          // one): coreAsBorn is the same player either way.
+          final expected =
+              pool[p.id] ??
+              await players.byId(
+                p.id,
+                saveSeed: kPackDrawSeed,
+                newCareerNames: true,
+              );
+          expect(p, expected, reason: 'player ${p.id}');
+        }
+      }
+    },
+  );
+
+  test(
+    'defaultStrength is the strength of the squads a new pack stores, '
+    'read once per service',
+    timeout: const Timeout.factor(4),
+    () async {
+      final w = await _world(DateTime(2026, 11, 4));
+      final first = await w.service.defaultStrength();
+      expect(
+        first,
+        PackRanking.squadStrengths(await w.service.defaultSquads()),
+      );
+      // Memoised: a second ask hands back the same answer, not a new read.
+      expect(identical(await w.service.defaultStrength(), first), isTrue);
     },
   );
 
