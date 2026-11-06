@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "H",
   "callUpAwayShort": "V",
   "homeEditor": "Szerkesztő",
+  "homeNewGameBlurb": "Válassz válogatottat, és kezdd el a karriert",
+  "homeCampaignCycleOnly": "{cycle}. ciklus / {total}",
   "editorTitle": "Szerkesztő",
   "editorIntro": "Készítsd el a saját kezdő világodat: a saját játékosaidat, az értékelésüket, a saját neveidet. Oszd meg fájlként; a barátaid importálhatják, és karriert indíthatnak rajta.",
   "editorEmptyTitle": "Még nincs adatbázis",

@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "İ",
   "callUpAwayShort": "D",
   "homeEditor": "Editör",
+  "homeNewGameBlurb": "Milli takımını seç ve kariyerine başla",
+  "homeCampaignCycleOnly": "Döngü {cycle} / {total}",
   "editorTitle": "Editör",
   "editorIntro": "Kendi başlangıç dünyanı yarat: oyuncuların, reytingleri, kendi isimlerin. Dosya olarak paylaş, arkadaşların içe aktarıp onunla kariyere başlayabilir.",
   "editorEmptyTitle": "Henüz veritabanı yok",

@@ -14177,6 +14177,14 @@ class AppLocalizationsVi extends AppLocalizations {
   String get homeEditor => 'Trình chỉnh sửa';
 
   @override
+  String get homeNewGameBlurb => 'Chọn đội tuyển và bắt đầu sự nghiệp';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Chu kỳ $cycle trên $total';
+  }
+
+  @override
   String get editorTitle => 'Trình chỉnh sửa';
 
   @override

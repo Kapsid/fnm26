@@ -3573,6 +3573,8 @@
   "callUpHomeShort": "D",
   "callUpAwayShort": "V",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Vyberte si reprezentaci a začněte kariéru",
+  "homeCampaignCycleOnly": "Cyklus {cycle} ze {total}",
   "editorTitle": "Editor",
   "editorIntro": "Vytvořte si vlastní výchozí svět: vlastní hráče, jejich sílu a vlastní názvy. Sdílejte ho jako soubor; přátelé si ho naimportují a rozehrají na něm kariéru.",
   "editorEmptyTitle": "Zatím žádné databáze",

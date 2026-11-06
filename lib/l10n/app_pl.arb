@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "D",
   "callUpAwayShort": "W",
   "homeEditor": "Edytor",
+  "homeNewGameBlurb": "Wybierz reprezentację i rozpocznij karierę",
+  "homeCampaignCycleOnly": "Cykl {cycle} z {total}",
   "editorTitle": "Edytor",
   "editorIntro": "Stwórz własny świat startowy: swoich zawodników, ich oceny, swoje nazwy. Udostępnij go jako plik; znajomi mogą go zaimportować i zacząć na nim karierę.",
   "editorEmptyTitle": "Brak baz danych",

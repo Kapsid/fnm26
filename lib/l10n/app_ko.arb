@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "홈",
   "callUpAwayShort": "원정",
   "homeEditor": "에디터",
+  "homeNewGameBlurb": "국가대표팀을 골라 커리어를 시작하세요",
+  "homeCampaignCycleOnly": "대회 주기 {cycle}/{total}",
   "editorTitle": "에디터",
   "editorIntro": "나만의 시작 세계를 만드세요. 선수, 능력치, 이름 모두 직접 정합니다. 파일로 공유하면 친구가 가져와서 그 세계로 커리어를 시작할 수 있습니다.",
   "editorEmptyTitle": "아직 데이터베이스가 없습니다",

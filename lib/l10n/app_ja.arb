@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "H",
   "callUpAwayShort": "A",
   "homeEditor": "エディター",
+  "homeNewGameBlurb": "代表チームを選んでキャリアを始めよう",
+  "homeCampaignCycleOnly": "サイクル {cycle}/{total}",
   "editorTitle": "エディター",
   "editorIntro": "自分だけの初期ワールドを作りましょう。選手も能力値も名前も自由です。ファイルで共有すれば、友達が読み込んでキャリアを始められます。",
   "editorEmptyTitle": "データベースはまだありません",

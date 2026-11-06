@@ -14252,6 +14252,14 @@ class AppLocalizationsHu extends AppLocalizations {
   String get homeEditor => 'Szerkesztő';
 
   @override
+  String get homeNewGameBlurb => 'Válassz válogatottat, és kezdd el a karriert';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return '$cycle. ciklus / $total';
+  }
+
+  @override
   String get editorTitle => 'Szerkesztő';
 
   @override

@@ -14636,6 +14636,14 @@ class AppLocalizationsHr extends AppLocalizations {
   String get homeEditor => 'Uređivač';
 
   @override
+  String get homeNewGameBlurb => 'Odaberi reprezentaciju i započni karijeru';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Ciklus $cycle od $total';
+  }
+
+  @override
   String get editorTitle => 'Uređivač';
 
   @override

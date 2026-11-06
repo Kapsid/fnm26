@@ -13788,6 +13788,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeEditor => 'エディター';
 
   @override
+  String get homeNewGameBlurb => '代表チームを選んでキャリアを始めよう';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'サイクル $cycle/$total';
+  }
+
+  @override
   String get editorTitle => 'エディター';
 
   @override

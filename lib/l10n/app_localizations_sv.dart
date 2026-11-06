@@ -14303,6 +14303,14 @@ class AppLocalizationsSv extends AppLocalizations {
   String get homeEditor => 'Editor';
 
   @override
+  String get homeNewGameBlurb => 'Välj din nation och starta en karriär';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Cykel $cycle av $total';
+  }
+
+  @override
   String get editorTitle => 'Editor';
 
   @override

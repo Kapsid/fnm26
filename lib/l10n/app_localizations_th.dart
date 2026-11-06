@@ -14048,6 +14048,14 @@ class AppLocalizationsTh extends AppLocalizations {
   String get homeEditor => 'ตัวแก้ไข';
 
   @override
+  String get homeNewGameBlurb => 'เลือกทีมชาติแล้วเริ่มอาชีพของคุณ';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'รอบที่ $cycle จาก $total';
+  }
+
+  @override
   String get editorTitle => 'ตัวแก้ไข';
 
   @override

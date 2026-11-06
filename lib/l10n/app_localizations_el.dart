@@ -14387,6 +14387,14 @@ class AppLocalizationsEl extends AppLocalizations {
   String get homeEditor => 'Επεξεργαστής';
 
   @override
+  String get homeNewGameBlurb => 'Διάλεξε την εθνική σου και ξεκίνα καριέρα';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Κύκλος $cycle από $total';
+  }
+
+  @override
   String get editorTitle => 'Επεξεργαστής';
 
   @override

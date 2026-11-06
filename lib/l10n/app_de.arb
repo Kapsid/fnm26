@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "H",
   "callUpAwayShort": "A",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Wählen Sie Ihre Nation und starten Sie eine Karriere",
+  "homeCampaignCycleOnly": "Zyklus {cycle} von {total}",
   "editorTitle": "Editor",
   "editorIntro": "Bauen Sie Ihre eigene Startwelt: Ihre Spieler, ihre Werte, Ihre Namen. Teilen Sie sie als Datei; Freunde können sie importieren und darauf eine Karriere starten.",
   "editorEmptyTitle": "Noch keine Datenbanken",

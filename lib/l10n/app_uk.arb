@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "Д",
   "callUpAwayShort": "В",
   "homeEditor": "Редактор",
+  "homeNewGameBlurb": "Обери збірну й почни кар’єру",
+  "homeCampaignCycleOnly": "Цикл {cycle} з {total}",
   "editorTitle": "Редактор",
   "editorIntro": "Створи власний стартовий світ: твої гравці, їхні рейтинги, твої назви. Поділися ним як файлом, і друзі зможуть імпортувати його та почати на ньому кар’єру.",
   "editorEmptyTitle": "Баз даних ще немає",

@@ -13825,6 +13825,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get homeEditor => '에디터';
 
   @override
+  String get homeNewGameBlurb => '국가대표팀을 골라 커리어를 시작하세요';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return '대회 주기 $cycle/$total';
+  }
+
+  @override
   String get editorTitle => '에디터';
 
   @override

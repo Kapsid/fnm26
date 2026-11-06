@@ -17,6 +17,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+part 'home_phone_layout.dart';
 part 'home_tablet_layout.dart';
 
 /// The app's landing screen: jump straight back into the last save, start a new
@@ -29,13 +30,33 @@ class HomeScreen extends ConsumerWidget {
   static const Key campaignContinueKey = Key('home.campaignContinue');
   static const Key editorKey = Key('home.editor');
 
+  /// The way back into the last normal save: the big card or the slim one.
+  static const Key continueCareerKey = Key('home.continueCareer');
+
+  /// The big continue card, whichever save it is for.
+  static const Key heroKey = Key('home.hero');
+
+  /// The big New Game tile.
+  static const Key newGameKey = Key('home.newGame');
+
+  /// The small Settings tile.
+  static const Key settingsKey = Key('home.settings');
+
+  /// The slim continue card under the big one.
+  static const Key secondContinueKey = Key('home.secondContinue');
+
+  /// The logo, title and tagline over the grid.
+  static const Key brandKey = Key('home.brand');
+
+  /// The saves tile (Load game before the first save).
+  static const Key savesKey = Key('home.saves');
+
   /// The continue card's line naming the database its save runs on.
   static const Key continueWorldKey = Key('home.continueWorld');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final textTheme = Theme.of(context).textTheme;
     // The most recent save (saves are listed most-recently-PLAYED first) —
     // powers the one-tap "continue where you left off" action.
     final saves = ref.watch(savesProvider).valueOrNull;
@@ -58,146 +79,75 @@ class HomeScreen extends ConsumerWidget {
     // A card for a Pro-locked save still shows, padlocked, and opens the gate.
     final lockedIds = watchLockedCareerIds(ref);
     // Whichever was played last leads; the other sits under it.
-    final cards = <Widget>[
-      if (lastSave != null)
-        _ContinueCard(
-          nationName: lastWorldNation ?? lastNation?.name ?? l.homeYourNation,
-          nationCode: lastNation?.code,
-          worldName: lastWorld,
-          inGameDate: lastSave.inGameDate,
-          cyclePointer: lastSave.cyclePointer,
-          locked: lockedIds.contains(lastSave.id),
-          onResume: () => _resume(context, ref, lastSave),
-        ),
-      if (campaign != null)
-        _CampaignContinueCard(
-          def: campaign.def,
-          run: campaign.run,
-          nationCode: campaignNation?.code,
-          compact: !tablet,
-          locked: lockedIds.contains(campaign.run.id),
-          onResume: () => _resume(context, ref, campaign.run),
-        ),
-    ];
-    if (lastSave != null &&
+    final campaignFirst =
         campaign != null &&
-        _playedAt(campaign.run).isAfter(_playedAt(lastSave))) {
-      cards.insert(0, cards.removeLast());
-    }
+        (lastSave == null ||
+            _playedAt(campaign.run).isAfter(_playedAt(lastSave)));
     if (tablet) {
+      final cards = <Widget>[
+        if (lastSave != null)
+          _ContinueCard(
+            nationName: lastWorldNation ?? lastNation?.name ?? l.homeYourNation,
+            nationCode: lastNation?.code,
+            worldName: lastWorld,
+            inGameDate: lastSave.inGameDate,
+            cyclePointer: lastSave.cyclePointer,
+            locked: lockedIds.contains(lastSave.id),
+            onResume: () => _resume(context, ref, lastSave),
+          ),
+        if (campaign != null)
+          _CampaignContinueCard(
+            def: campaign.def,
+            run: campaign.run,
+            nationCode: campaignNation?.code,
+            compact: false,
+            locked: lockedIds.contains(campaign.run.id),
+            onResume: () => _resume(context, ref, campaign.run),
+          ),
+      ];
+      if (campaignFirst && cards.length > 1) {
+        cards.insert(0, cards.removeLast());
+      }
       return _HomeTabletLayout(hasSave: lastSave != null, cards: cards);
     }
-    final both = cards.length > 1;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.marginMobile,
-          ),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  tooltip: l.homeSettings,
-                  icon: const Icon(
-                    Icons.settings_outlined,
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                  onPressed: () => context.go(Routes.settings),
-                ),
-              ),
-              // The logo block takes whatever the buttons and cards leave and
-              // the logo gives way first, so two cards still fit a small phone.
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // The box MATCHES THE ARTWORK's aspect (about 0.96:1, a
-                    // shade taller than square). A box of the wrong shape does
-                    // not crop: it letterboxes, so the logo is drawn to
-                    // whichever side runs out first and the rest of the box is
-                    // wasted. Re-measure this if the artwork is ever replaced.
-                    Flexible(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 200),
-                        child: AspectRatio(
-                          aspectRatio: 200 / 208,
-                          child: Image.asset(
-                            'assets/images/fnm_logo.png',
-                            fit: BoxFit.contain,
-                            // Graceful fallback if the asset is missing in a
-                            // bare test env.
-                            errorBuilder: (context, error, stack) => const Icon(
-                              Icons.sports_soccer,
-                              size: 112,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      'Football Nations\nManager',
-                      textAlign: TextAlign.center,
-                      style: textTheme.headlineLarge,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      l.homeLeadTheNation,
-                      textAlign: TextAlign.center,
-                      style: AppTypography.labelMedium.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // The headline action when a save or a campaign run exists:
-              // resume it in one tap, visually lifted: "carry on".
-              for (final card in cards) ...[
-                card,
-                const SizedBox(height: AppSpacing.sm),
-              ],
-              PrimaryButton(
-                label: l.homeNewGame,
-                icon: Icons.play_arrow_rounded,
-                onPressed: () => context.go(Routes.nations),
-              ),
-              TextButton(
-                style: both ? _tightButton : null,
-                onPressed: () => context.go(Routes.saves),
-                child: Text(lastSave != null ? l.homeAllSaves : l.homeLoadGame),
-              ),
-              TextButton(
-                key: HomeScreen.campaignsKey,
-                style: both ? _tightButton : null,
-                onPressed: () => context.go(Routes.campaigns),
-                child: Text(l.homeCampaigns),
-              ),
-              TextButton(
-                key: HomeScreen.editorKey,
-                style: both ? _tightButton : null,
-                onPressed: () => context.go(Routes.editor),
-                child: Text(l.homeEditor),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-            ],
-          ),
-        ),
-      ),
+    final careerNation =
+        lastWorldNation ?? lastNation?.name ?? l.homeYourNation;
+    final career = lastSave == null
+        ? null
+        : _Resumable(
+            key: HomeScreen.continueCareerKey,
+            label: l.homeContinue,
+            nationName: careerNation,
+            nationCode: lastNation?.code,
+            name: careerNation,
+            worldName: lastWorld,
+            date: AppDate.monthYear(context, lastSave.inGameDate),
+            subtitle: l.careerRoadToWorldCup(
+              CareerService.worldCupYear(lastSave.cyclePointer),
+            ),
+            locked: lockedIds.contains(lastSave.id),
+            onResume: () => _resume(context, ref, lastSave),
+          );
+    final run = campaign == null
+        ? null
+        : _campaignResumable(
+            context,
+            def: campaign.def,
+            run: campaign.run,
+            nationName: campaignNation?.name ?? l.homeYourNation,
+            nationCode: campaignNation?.code,
+            locked: lockedIds.contains(campaign.run.id),
+            onResume: () => _resume(context, ref, campaign.run),
+          );
+    final (hero, second) = campaignFirst ? (run, career) : (career, run);
+    return _HomePhoneLayout(
+      hasSave: lastSave != null,
+      hero: hero,
+      second: second,
     );
   }
 }
-
-/// Text buttons without the 48 px touch padding, for a small phone that shows
-/// both continue cards. Still a full-width tap target.
-final ButtonStyle _tightButton = TextButton.styleFrom(
-  minimumSize: const Size.fromHeight(40),
-  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-);
 
 /// When [c] was last opened; a run never opened since it was made counts from
 /// its creation.

@@ -14386,6 +14386,14 @@ class AppLocalizationsFi extends AppLocalizations {
   String get homeEditor => 'Editori';
 
   @override
+  String get homeNewGameBlurb => 'Valitse maasi ja aloita ura';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Kierros $cycle/$total';
+  }
+
+  @override
   String get editorTitle => 'Editori';
 
   @override

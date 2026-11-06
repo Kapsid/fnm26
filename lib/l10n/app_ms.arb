@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "L",
   "callUpAwayShort": "T",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Pilih negara anda dan mulakan kerjaya",
+  "homeCampaignCycleOnly": "Kitaran {cycle} daripada {total}",
   "editorTitle": "Editor",
   "editorIntro": "Bina dunia permulaan anda sendiri: pemain anda, penarafan mereka, nama-nama anda. Kongsi sebagai fail, rakan boleh mengimportnya dan memulakan kerjaya di situ.",
   "editorEmptyTitle": "Belum ada pangkalan data",

@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "Д",
   "callUpAwayShort": "Г",
   "homeEditor": "Редактор",
+  "homeNewGameBlurb": "Избери отбор и започни кариера",
+  "homeCampaignCycleOnly": "Цикъл {cycle} от {total}",
   "editorTitle": "Редактор",
   "editorIntro": "Създай свой начален свят: твоите играчи, техните рейтинги, твоите имена. Сподели го като файл, а приятелите ти могат да го импортират и да започнат кариера в него.",
   "editorEmptyTitle": "Още няма бази данни",

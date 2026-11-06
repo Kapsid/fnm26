@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "K",
   "callUpAwayShort": "V",
   "homeEditor": "Editori",
+  "homeNewGameBlurb": "Valitse maasi ja aloita ura",
+  "homeCampaignCycleOnly": "Kierros {cycle}/{total}",
   "editorTitle": "Editori",
   "editorIntro": "Tee oma aloitusmaailmasi: omat pelaajat, heidän tasonsa, omat nimet. Jaa se tiedostona; kaverit voivat tuoda sen ja aloittaa sillä uran.",
   "editorEmptyTitle": "Ei vielä tietokantoja",

@@ -14315,6 +14315,14 @@ class AppLocalizationsFil extends AppLocalizations {
   String get homeEditor => 'Editor';
 
   @override
+  String get homeNewGameBlurb => 'Pumili ng bansa at magsimula ng karera';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Siklo $cycle sa $total';
+  }
+
+  @override
   String get editorTitle => 'Editor';
 
   @override

@@ -14712,6 +14712,14 @@ class AppLocalizationsRo extends AppLocalizations {
   String get homeEditor => 'Editor';
 
   @override
+  String get homeNewGameBlurb => 'Alegeți naționala și începeți o carieră';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Ciclul $cycle din $total';
+  }
+
+  @override
   String get editorTitle => 'Editor';
 
   @override

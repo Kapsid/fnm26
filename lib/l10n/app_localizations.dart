@@ -21674,6 +21674,18 @@ abstract class AppLocalizations {
   /// **'Editor'**
   String get homeEditor;
 
+  /// One line under New Game on the home screen's big New Game tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick your nation and start a career'**
+  String get homeNewGameBlurb;
+
+  /// After a campaign's title on the home screen's continue card: which cycle of the campaign the run is on.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle {cycle} of {total}'**
+  String homeCampaignCycleOnly(int cycle, int total);
+
   /// Title of the database editor: the list of custom databases (world packs) on this device.
   ///
   /// In en, this message translates to:

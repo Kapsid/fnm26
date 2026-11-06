@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "เหย้า",
   "callUpAwayShort": "เยือน",
   "homeEditor": "ตัวแก้ไข",
+  "homeNewGameBlurb": "เลือกทีมชาติแล้วเริ่มอาชีพของคุณ",
+  "homeCampaignCycleOnly": "รอบที่ {cycle} จาก {total}",
   "editorTitle": "ตัวแก้ไข",
   "editorIntro": "สร้างโลกเริ่มต้นของคุณเอง: ผู้เล่น ค่าพลัง และชื่อที่คุณตั้ง แชร์เป็นไฟล์ได้ เพื่อนนำเข้าแล้วเริ่มอาชีพบนโลกนั้นได้เลย",
   "editorEmptyTitle": "ยังไม่มีฐานข้อมูล",

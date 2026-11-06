@@ -14456,6 +14456,14 @@ class AppLocalizationsPl extends AppLocalizations {
   String get homeEditor => 'Edytor';
 
   @override
+  String get homeNewGameBlurb => 'Wybierz reprezentację i rozpocznij karierę';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Cykl $cycle z $total';
+  }
+
+  @override
   String get editorTitle => 'Edytor';
 
   @override

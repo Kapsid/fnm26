@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "घर",
   "callUpAwayShort": "बाहर",
   "homeEditor": "एडिटर",
+  "homeNewGameBlurb": "अपना देश चुनें और करियर शुरू करें",
+  "homeCampaignCycleOnly": "चक्र {cycle} / {total}",
   "editorTitle": "एडिटर",
   "editorIntro": "अपनी शुरुआती दुनिया बनाएँ: आपके खिलाड़ी, उनकी रेटिंग, आपके नाम। इसे फ़ाइल के रूप में शेयर करें; दोस्त इसे इम्पोर्ट करके इस पर करियर शुरू कर सकते हैं।",
   "editorEmptyTitle": "अभी कोई डेटाबेस नहीं",

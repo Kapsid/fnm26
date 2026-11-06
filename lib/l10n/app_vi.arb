@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "Nhà",
   "callUpAwayShort": "Khách",
   "homeEditor": "Trình chỉnh sửa",
+  "homeNewGameBlurb": "Chọn đội tuyển và bắt đầu sự nghiệp",
+  "homeCampaignCycleOnly": "Chu kỳ {cycle} trên {total}",
   "editorTitle": "Trình chỉnh sửa",
   "editorIntro": "Tạo thế giới khởi đầu của riêng bạn: cầu thủ, chỉ số và tên gọi do bạn đặt. Chia sẻ dưới dạng tệp; bạn bè có thể nhập và bắt đầu sự nghiệp trên đó.",
   "editorEmptyTitle": "Chưa có cơ sở dữ liệu nào",

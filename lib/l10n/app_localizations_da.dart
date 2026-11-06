@@ -14320,6 +14320,14 @@ class AppLocalizationsDa extends AppLocalizations {
   String get homeEditor => 'Editor';
 
   @override
+  String get homeNewGameBlurb => 'Vælg din nation, og start en karriere';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Cyklus $cycle af $total';
+  }
+
+  @override
   String get editorTitle => 'Editor';
 
   @override

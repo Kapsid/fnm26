@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "H",
   "callUpAwayShort": "B",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Välj din nation och starta en karriär",
+  "homeCampaignCycleOnly": "Cykel {cycle} av {total}",
   "editorTitle": "Editor",
   "editorIntro": "Skapa din egen startvärld: dina spelare, deras betyg, dina namn. Dela den som en fil; kompisar kan importera den och starta en karriär i den.",
   "editorEmptyTitle": "Inga databaser än",

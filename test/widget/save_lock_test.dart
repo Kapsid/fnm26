@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/entitlement/entitlement_service.dart';
 import 'package:fnm/features/campaign/campaign_brief_screen.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/saves_screen.dart';
+import 'package:fnm/features/home/home_screen.dart';
 import 'package:fnm/features/hub/hub_screen.dart';
 import 'package:fnm/features/onboarding/tour_providers.dart';
 import 'package:fnm/features/paywall/premium_gate_screen.dart';
@@ -186,7 +187,7 @@ void main() {
     final save = await _lockedSave(tester);
     await pumpRoute(tester, save, Routes.home);
     expect(find.text(enL.careerSaveLockedNote), findsOneWidget);
-    await tester.tap(find.text(enL.homeContinue));
+    await tester.tap(find.byKey(HomeScreen.continueCareerKey));
     await settle(tester);
     expect(_uri(save).path, Routes.saveLocked);
     await tester.pumpWidget(const SizedBox());

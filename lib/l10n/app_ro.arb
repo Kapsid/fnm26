@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "A",
   "callUpAwayShort": "D",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Alegeți naționala și începeți o carieră",
+  "homeCampaignCycleOnly": "Ciclul {cycle} din {total}",
   "editorTitle": "Editor",
   "editorIntro": "Creați-vă propria lume de start: jucătorii dvs., notele lor, numele dvs. Distribuiți-o ca fișier; prietenii o pot importa și pot începe o carieră pe ea.",
   "editorEmptyTitle": "Nicio bază de date încă",

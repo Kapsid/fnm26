@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "T",
   "callUpAwayShort": "U",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Kies je land en begin een carrière",
+  "homeCampaignCycleOnly": "Cyclus {cycle} van {total}",
   "editorTitle": "Editor",
   "editorIntro": "Maak je eigen startwereld: je spelers, hun cijfers, je namen. Deel hem als bestand; vrienden kunnen hem importeren en er een loopbaan op beginnen.",
   "editorEmptyTitle": "Nog geen databases",

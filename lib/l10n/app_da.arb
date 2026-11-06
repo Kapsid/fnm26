@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "H",
   "callUpAwayShort": "U",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Vælg din nation, og start en karriere",
+  "homeCampaignCycleOnly": "Cyklus {cycle} af {total}",
   "editorTitle": "Editor",
   "editorIntro": "Lav din egen startverden: dine spillere, deres styrke, dine navne. Del den som en fil; venner kan importere den og starte en karriere i den.",
   "editorEmptyTitle": "Ingen databaser endnu",

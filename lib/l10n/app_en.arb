@@ -22131,6 +22131,18 @@
   "@homeEditor": {
     "description": "Main-menu button that opens the database editor (make and share your own starting world)."
   },
+  "homeNewGameBlurb": "Pick your nation and start a career",
+  "@homeNewGameBlurb": {
+    "description": "One line under New Game on the home screen's big New Game tile."
+  },
+  "homeCampaignCycleOnly": "Cycle {cycle} of {total}",
+  "@homeCampaignCycleOnly": {
+    "description": "After a campaign's title on the home screen's continue card: which cycle of the campaign the run is on.",
+    "placeholders": {
+      "cycle": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
   "editorTitle": "Editor",
   "@editorTitle": {
     "description": "Title of the database editor: the list of custom databases (world packs) on this device."

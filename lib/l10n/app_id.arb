@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "K",
   "callUpAwayShort": "T",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Pilih negaramu dan mulai karier",
+  "homeCampaignCycleOnly": "Siklus {cycle} dari {total}",
   "editorTitle": "Editor",
   "editorIntro": "Buat dunia awal Anda sendiri: pemain Anda, rating mereka, nama-nama Anda. Bagikan sebagai file, teman bisa mengimpornya dan memulai karier di sana.",
   "editorEmptyTitle": "Belum ada database",

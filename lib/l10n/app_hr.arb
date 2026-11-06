@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "D",
   "callUpAwayShort": "G",
   "homeEditor": "Uređivač",
+  "homeNewGameBlurb": "Odaberi reprezentaciju i započni karijeru",
+  "homeCampaignCycleOnly": "Ciklus {cycle} od {total}",
   "editorTitle": "Uređivač",
   "editorIntro": "Napravi vlastiti početni svijet: svoje igrače, njihove ocjene, svoja imena. Podijeli ga kao datoteku; prijatelji ga mogu uvesti i na njemu započeti karijeru.",
   "editorEmptyTitle": "Još nema baza podataka",

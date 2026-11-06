@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "C",
   "callUpAwayShort": "T",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Scegli la tua nazionale e inizia una carriera",
+  "homeCampaignCycleOnly": "Ciclo {cycle} di {total}",
   "editorTitle": "Editor",
   "editorIntro": "Crea il tuo mondo di partenza: i tuoi giocatori, i loro valori, i tuoi nomi. Condividilo come file; gli amici possono importarlo e iniziarci una carriera.",
   "editorEmptyTitle": "Ancora nessun database",

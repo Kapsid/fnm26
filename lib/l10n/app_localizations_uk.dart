@@ -14598,6 +14598,14 @@ class AppLocalizationsUk extends AppLocalizations {
   String get homeEditor => 'Редактор';
 
   @override
+  String get homeNewGameBlurb => 'Обери збірну й почни кар’єру';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Цикл $cycle з $total';
+  }
+
+  @override
   String get editorTitle => 'Редактор';
 
   @override

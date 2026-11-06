@@ -3568,6 +3568,8 @@
   "callUpHomeShort": "H",
   "callUpAwayShort": "A",
   "homeEditor": "Editor",
+  "homeNewGameBlurb": "Pumili ng bansa at magsimula ng karera",
+  "homeCampaignCycleOnly": "Siklo {cycle} sa {total}",
   "editorTitle": "Editor",
   "editorIntro": "Gumawa ng sarili mong panimulang mundo: ang mga manlalaro mo, ang ratings nila, ang mga pangalan mo. I-share ito bilang file, puwede itong i-import ng mga kaibigan mo at magsimula ng karera dito.",
   "editorEmptyTitle": "Wala pang database",

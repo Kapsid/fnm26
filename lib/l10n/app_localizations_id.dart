@@ -14217,6 +14217,14 @@ class AppLocalizationsId extends AppLocalizations {
   String get homeEditor => 'Editor';
 
   @override
+  String get homeNewGameBlurb => 'Pilih negaramu dan mulai karier';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Siklus $cycle dari $total';
+  }
+
+  @override
   String get editorTitle => 'Editor';
 
   @override

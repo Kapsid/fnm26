@@ -229,7 +229,7 @@ void main() {
     expect(find.byKey(HomeScreen.campaignsKey), findsOneWidget);
     expect(find.text('Campaigns'), findsOneWidget);
 
-    await tester.tap(find.text(enL.homeContinue));
+    await tester.tap(find.byKey(HomeScreen.continueCareerKey));
     await settle(tester, allowSpinner: true);
     final uri = save.container
         .read(routerProvider)

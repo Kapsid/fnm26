@@ -14227,6 +14227,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get homeEditor => 'Editör';
 
   @override
+  String get homeNewGameBlurb => 'Milli takımını seç ve kariyerine başla';
+
+  @override
+  String homeCampaignCycleOnly(int cycle, int total) {
+    return 'Döngü $cycle / $total';
+  }
+
+  @override
   String get editorTitle => 'Editör';
 
   @override
