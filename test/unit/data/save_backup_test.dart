@@ -153,6 +153,13 @@ void main() {
       );
     });
 
+    test('a 1.1.0 build (schema 53) reads this build\'s backup as newer', () {
+      // The gate is the schema version alone. Editor 2 packs break 1.1.0, so
+      // this build must stamp a version 1.1.0 does not know.
+      const schemaOf110 = 53;
+      expect(AppDatabase.currentSchemaVersion, greaterThan(schemaOf110));
+    });
+
     test('rejects a save too old for the migration path', () async {
       // Below firstManagedVersion the app's own upgrade WIPES rather than
       // migrates, so accepting this would delete the career it restored.

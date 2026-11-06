@@ -89,7 +89,7 @@ class AppDatabase extends _$AppDatabase {
   /// full set of upgrade paths from it — see `schema_migration_test.dart`.
   /// A hand-written list of paths is a step somebody forgets on the bump that
   /// matters.
-  static const int currentSchemaVersion = 53;
+  static const int currentSchemaVersion = 54;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -318,6 +318,12 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(schema.careerWorlds);
           await m.createTable(schema.careerWorldTrophies);
         },
+        // 53 -> 54 changes no table. It is a stamp: Editor 2 writes world
+        // packs (format 2) that a 1.1.0 build (schema 53) cannot play, and a
+        // whole-database backup is gated on the schema version alone. Moving
+        // the number makes 1.1.0 refuse this build's backups as "made by a
+        // newer version" instead of restoring packs it would break.
+        from53To54: (m, schema) async {},
       )(m, from, to);
     },
   );

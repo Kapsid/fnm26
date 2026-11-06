@@ -11,6 +11,7 @@ import '../../generated_migrations/schema_v45.dart' as v45;
 import '../../generated_migrations/schema_v47.dart' as v47;
 import '../../generated_migrations/schema_v51.dart' as v51;
 import '../../generated_migrations/schema_v52.dart' as v52;
+import '../../generated_migrations/schema_v53.dart' as v53;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -409,6 +410,28 @@ void main() {
           .getSingle();
       expect(n, 0, reason: '$table should start empty');
     }
+  });
+
+  test('53 → 54 changes nothing and keeps every pack and career', () async {
+    // 54 is a version stamp, not a shape change. Editor 2 writes world packs
+    // that 1.1.0 (schema 53) cannot play, and a whole-database backup is
+    // gated on the schema version alone, so this build's backups have to say
+    // "newer" to a 1.1.0 device. Nothing moves; a 53 database just upgrades.
+    expect(AppDatabase.currentSchemaVersion, greaterThanOrEqualTo(54));
+    final schema = await verifier.schemaAt(53);
+    final old = v53.DatabaseAtV53(schema.newConnection());
+    await old.customStatement(
+      'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+      'in_game_date, rng_seed, cycle_pointer, budget) '
+      "VALUES (1, 1, 'Kept', 0, 0, 7, 0, 0)",
+    );
+    await old.close();
+
+    final db = AppDatabase.forTesting(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 54);
+    final careers = await db.select(db.careers).get();
+    expect(careers.map((c) => c.managerName), ['Kept']);
   });
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {
