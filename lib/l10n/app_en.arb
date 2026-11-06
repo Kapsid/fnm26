@@ -22956,7 +22956,7 @@
   "@editorNamesNone": {
     "description": "Shown in an editor name section when the search finds nothing."
   },
-  "editorNamesEveryLanguage": "A custom name shows the same in every language.",
+  "editorNamesEveryLanguage": "A custom name shows in every language unless you give a language its own name.",
   "@editorNamesEveryLanguage": {
     "description": "Note at the top of the editor sections whose game names are translated (nations, competitions, sponsors)."
   },
@@ -23653,7 +23653,7 @@
       }
     }
   },
-  "editorAttentionBody": "A game update removed something this database refers to. Remove each entry below and it can start a career again.",
+  "editorAttentionBody": "Something in this database doesn't fit this version of the game: a name clash, or something a game update removed. Fix or remove each entry below and it can start a career again.",
   "@editorAttentionBody": {
     "description": "Body of the bar on the database home when a game update made the database incompatible."
   },

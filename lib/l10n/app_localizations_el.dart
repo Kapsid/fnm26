@@ -14253,23 +14253,23 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get sponsorDealLineRisky =>
-      'Big money and no questions asked. The board will have plenty.';
+      'Πολλά λεφτά και καμία ερώτηση. Η διοίκηση θα έχει πολλές.';
 
   @override
   String get sponsorDealLineBigPayer =>
-      'A generous cheque from a name the board would rather not print.';
+      'Γενναιόδωρη επιταγή από ένα όνομα που η διοίκηση δεν θα ήθελε να δει τυπωμένο.';
 
   @override
   String get sponsorDealLineCrowdPleaser =>
-      'A fun brand the players love and the board finds a bit much.';
+      'Μια διασκεδαστική μάρκα που οι παίκτες λατρεύουν και η διοίκηση βρίσκει λίγο υπερβολική.';
 
   @override
   String get sponsorDealLineFamilyFriendly =>
-      'A wholesome name the board adores and the players yawn at.';
+      'Ένα σεμνό όνομα που η διοίκηση λατρεύει και οι παίκτες βαριούνται.';
 
   @override
   String get sponsorDealLineMarketing =>
-      'No cash, just campaigns: posters, photo shoots and lots of smiling.';
+      'Χωρίς μετρητά, μόνο καμπάνιες: αφίσες, φωτογραφίσεις και πολλά χαμόγελα.';
 
   @override
   String ySponsorDubious0(String brand) {
@@ -15024,7 +15024,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get editorNamesEveryLanguage =>
-      'Ένα δικό σου όνομα εμφανίζεται ίδιο σε όλες τις γλώσσες.';
+      'Ένα δικό σου όνομα εμφανίζεται σε όλες τις γλώσσες, εκτός αν δώσεις σε μια γλώσσα δικό της όνομα.';
 
   @override
   String editorNamesGameName(String name) {
@@ -15057,80 +15057,82 @@ class AppLocalizationsEl extends AppLocalizations {
   String get editorNamesTaken => 'Άλλος λογαριασμός έχει ήδη αυτό το όνομα.';
 
   @override
-  String get editorLanguageTitle => 'Names in which language';
+  String get editorLanguageTitle => 'Ονόματα σε ποια γλώσσα';
 
   @override
-  String get editorLanguageAll => 'All languages';
+  String get editorLanguageAll => 'Όλες οι γλώσσες';
 
   @override
-  String get editorLanguageAllShort => 'All';
+  String get editorLanguageAllShort => 'Όλες';
 
   @override
   String get editorLanguageNote =>
-      'Only the editor switches. The game stays in its own language.';
+      'Αλλάζει μόνο ο επεξεργαστής. Το παιχνίδι μένει στη δική του γλώσσα.';
 
   @override
   String editorLanguageEditing(String language) {
-    return 'Names in $language. Leave one empty to use the main name.';
+    return 'Ονόματα στη γλώσσα: $language. Άφησε ένα κενό για να μπει το κύριο όνομα.';
   }
 
   @override
-  String get editorLanguageSame => 'Same in all languages';
+  String get editorLanguageSame => 'Ίδιο σε όλες τις γλώσσες';
 
   @override
   String editorLanguageMainName(String name) {
-    return 'Main name: $name';
+    return 'Κύριο όνομα: $name';
   }
 
   @override
-  String get editorLanguageKeepHint => 'Leave empty to use the main name.';
+  String get editorLanguageKeepHint =>
+      'Άφησέ το κενό για να μπει το κύριο όνομα.';
 
   @override
-  String get editorLanguageClear => 'Use the main name';
+  String get editorLanguageClear => 'Χρήση κύριου ονόματος';
 
   @override
   String get editorLanguageFull =>
-      'This database has no room for more names per language.';
+      'Αυτή η βάση δεδομένων δεν χωράει άλλα ονόματα ανά γλώσσα.';
 
   @override
-  String get editorPlayerDelete => 'Delete player';
+  String get editorPlayerDelete => 'Διαγραφή παίκτη';
 
   @override
-  String get editorPlayerAdvanced => 'Advanced';
+  String get editorPlayerAdvanced => 'Για προχωρημένους';
 
   @override
   String get editorPlayerAdvancedAbout =>
-      'Set his physical, technical and stamina values one by one.';
+      'Ρύθμισε ξεχωριστά τα σωματικά, τα τεχνικά και την αντοχή του.';
 
   @override
-  String get editorPlayerAdvancedOverall => 'Overall from these';
+  String get editorPlayerAdvancedOverall => 'Γενικό επίπεδο από αυτά';
 
   @override
-  String get editorPlayerTraits => 'Known for';
+  String get editorPlayerTraits => 'Γνωστός για';
 
   @override
-  String get editorPlayerTraitsRandom => 'Random';
+  String get editorPlayerTraitsRandom => 'Τυχαία';
 
   @override
   String get editorPlayerTraitsRandomAbout =>
-      'Each career rolls his traits, as the game always has.';
+      'Κάθε καριέρα του δίνει τυχαία χαρακτηριστικά, όπως πάντα.';
 
   @override
-  String get editorPlayerTraitsNone => 'No traits, in every career.';
+  String get editorPlayerTraitsNone =>
+      'Κανένα χαρακτηριστικό, σε κάθε καριέρα.';
 
   @override
   String editorPlayerTraitsPicked(int max) {
-    return 'These traits in every career. Pick up to $max.';
+    return 'Αυτά τα χαρακτηριστικά σε κάθε καριέρα. Διάλεξε έως $max.';
   }
 
   @override
   String editorPlayerTraitsMax(int max) {
-    return 'A player has at most $max traits. Deselect one first.';
+    return 'Ένας παίκτης έχει έως $max χαρακτηριστικά. Αφαίρεσε πρώτα ένα.';
   }
 
   @override
   String editorPlayerTraitUnknown(String trait) {
-    return '$trait (unknown to this version)';
+    return '$trait (άγνωστο σε αυτή την έκδοση)';
   }
 
   @override
@@ -15139,146 +15141,149 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get editorTabSquad => 'Squad';
+  String get editorTabSquad => 'Αποστολή';
 
   @override
-  String get editorTabPool => 'Pool';
+  String get editorTabPool => 'Δεξαμενή';
 
   @override
-  String get editorPoolGenerated => 'Generated by the game';
+  String get editorPoolGenerated => 'Από το παιχνίδι';
 
   @override
   String get editorPoolGeneratedAbout =>
-      'Each career draws this pool afresh, as the game always has. Your first change fixes it exactly as shown here, in every career.';
+      'Κάθε καριέρα φτιάχνει αυτή τη δεξαμενή από την αρχή, όπως πάντα. Η πρώτη σου αλλαγή την κλειδώνει ακριβώς όπως φαίνεται εδώ, σε κάθε καριέρα.';
 
   @override
-  String get editorPoolFixed => 'Your pool';
+  String get editorPoolFixed => 'Η δεξαμενή σου';
 
   @override
   String get editorPoolFixedAbout =>
-      'Every career starts with exactly these players.';
+      'Κάθε καριέρα ξεκινά ακριβώς με αυτούς τους παίκτες.';
 
   @override
-  String get editorPoolReset => 'Back to generated';
+  String get editorPoolReset => 'Πίσω στην αυτόματη';
 
   @override
-  String get editorPoolResetTitle => 'Back to the generated pool?';
+  String get editorPoolResetTitle => 'Πίσω στην αυτόματη δεξαμενή;';
 
   @override
   String get editorPoolResetBody =>
-      'Your changes to this pool are dropped, and every career generates it again.';
+      'Οι αλλαγές σου σε αυτή τη δεξαμενή χάνονται και κάθε καριέρα τη φτιάχνει ξανά.';
 
   @override
   String editorPoolMax(int max) {
-    return 'Up to $max';
+    return 'Έως $max';
   }
 
   @override
   String editorPoolFull(int max) {
-    return 'A pool holds at most $max players.';
+    return 'Μια δεξαμενή έχει έως $max παίκτες.';
   }
 
   @override
   String editorPoolRemoved(String name) {
-    return '$name removed from the pool';
+    return 'Ο $name αφαιρέθηκε από τη δεξαμενή';
   }
 
   @override
-  String get editorPoolRemove => 'Remove from pool';
+  String get editorPoolRemove => 'Αφαίρεση από τη δεξαμενή';
 
   @override
-  String get editorPoolPlayerGone => 'This player is no longer in the pool.';
+  String get editorPoolPlayerGone =>
+      'Αυτός ο παίκτης δεν είναι πια στη δεξαμενή.';
 
   @override
   String get editorPoolDuplicate =>
-      'Another player in this pool has this name.';
+      'Άλλος παίκτης της δεξαμενής έχει το ίδιο όνομα.';
 
   @override
-  String get editorPoolEmpty => 'No players in this pool. Add the first one.';
+  String get editorPoolEmpty =>
+      'Κανένας παίκτης στη δεξαμενή. Πρόσθεσε τον πρώτο.';
 
   @override
-  String get editorPoolLoadFailed => 'The game\'s pool could not be read.';
+  String get editorPoolLoadFailed =>
+      'Η δεξαμενή του παιχνιδιού δεν διαβάστηκε.';
 
   @override
   String editorPlayerTraitsUnknownDropped(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unknown traits removed',
-      one: '1 unknown trait removed',
+      other: 'Αφαιρέθηκαν $count άγνωστα χαρακτηριστικά',
+      one: 'Αφαιρέθηκε 1 άγνωστο χαρακτηριστικό',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedTag => 'Added';
+  String get editorAddedTag => 'Νέος';
 
   @override
-  String get editorAddedGroup => 'Added';
+  String get editorAddedGroup => 'Δικά σου';
 
   @override
-  String get editorAddedGameGroup => 'In the game';
+  String get editorAddedGameGroup => 'Στο παιχνίδι';
 
   @override
-  String get editorAddClub => 'Add club';
+  String get editorAddClub => 'Προσθήκη συλλόγου';
 
   @override
-  String get editorAddSponsor => 'Add sponsor';
+  String get editorAddSponsor => 'Προσθήκη χορηγού';
 
   @override
-  String get editorAddY => 'Add account';
+  String get editorAddY => 'Προσθήκη λογαριασμού';
 
   @override
-  String get editorAddedAdd => 'Add';
+  String get editorAddedAdd => 'Προσθήκη';
 
   @override
-  String get editorAddedDelete => 'Delete';
+  String get editorAddedDelete => 'Διαγραφή';
 
   @override
   String editorAddedRemoved(String name) {
-    return '$name deleted';
+    return 'Διαγράφηκε: $name';
   }
 
   @override
   String editorAddedClubsFull(int max) {
-    return 'A database can add at most $max clubs.';
+    return 'Μια βάση δεδομένων προσθέτει έως $max συλλόγους.';
   }
 
   @override
   String editorAddedSponsorsFull(int max) {
-    return 'A database can add at most $max sponsors.';
+    return 'Μια βάση δεδομένων προσθέτει έως $max χορηγούς.';
   }
 
   @override
   String editorAddedYFull(int max) {
-    return 'A database can add at most $max accounts.';
+    return 'Μια βάση δεδομένων προσθέτει έως $max λογαριασμούς.';
   }
 
   @override
-  String get editorAddedGone => 'This is no longer in the database.';
+  String get editorAddedGone => 'Αυτό δεν υπάρχει πια στη βάση δεδομένων.';
 
   @override
-  String get editorAddedNameNeeded => 'Give it a name';
+  String get editorAddedNameNeeded => 'Δώσε του ένα όνομα';
 
   @override
-  String get editorAddedCountry => 'Country';
+  String get editorAddedCountry => 'Χώρα';
 
   @override
-  String get editorAddedCountryPick => 'Pick a country';
+  String get editorAddedCountryPick => 'Διάλεξε χώρα';
 
   @override
   String editorAddedNoLeague(String country) {
-    return '$country has no league or towns in the game, so this club only gets the players you place at it.';
+    return 'Η χώρα $country δεν έχει πρωτάθλημα ούτε πόλεις στο παιχνίδι, οπότε αυτός ο σύλλογος παίρνει μόνο τους παίκτες που βάζεις εσύ.';
   }
 
   @override
   String editorAddedClubTaken(String country) {
-    return '$country already has a club of this name.';
+    return 'Η χώρα $country έχει ήδη σύλλογο με αυτό το όνομα.';
   }
 
   @override
   String get editorAddedClubGameName =>
-      'A club in the game already goes by this name.';
+      'Υπάρχει ήδη σύλλογος στο παιχνίδι με αυτό το όνομα.';
 
   @override
   String editorAddedClubPlayers(int count) {
@@ -15286,103 +15291,103 @@ class AppLocalizationsEl extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count players of this database play here. Delete the club and the game places them.',
+          '$count παίκτες αυτής της βάσης δεδομένων παίζουν εδώ. Αν διαγράψεις τον σύλλογο, το παιχνίδι τους τοποθετεί αλλού.',
       one:
-          '1 player of this database plays here. Delete the club and the game places him.',
+          '1 παίκτης αυτής της βάσης δεδομένων παίζει εδώ. Αν διαγράψεις τον σύλλογο, το παιχνίδι τον τοποθετεί αλλού.',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedDeal => 'Deal type';
+  String get editorAddedDeal => 'Τύπος συμφωνίας';
 
   @override
-  String get editorDealBigPayer => 'Big payer';
+  String get editorDealBigPayer => 'Γενναιόδωρος';
 
   @override
-  String get editorDealCrowdPleaser => 'Crowd pleaser';
+  String get editorDealCrowdPleaser => 'Αγαπητός στους παίκτες';
 
   @override
-  String get editorDealFamilyFriendly => 'Family friendly';
+  String get editorDealFamilyFriendly => 'Οικογενειακός';
 
   @override
-  String get editorDealMarketing => 'Marketing';
+  String get editorDealMarketing => 'Μάρκετινγκ';
 
   @override
-  String get editorAddedIndustry => 'Industry';
+  String get editorAddedIndustry => 'Κλάδος';
 
   @override
-  String get editorAddedIndustryPick => 'Pick an industry';
+  String get editorAddedIndustryPick => 'Διάλεξε κλάδο';
 
   @override
-  String get editorAddedDescription => 'Description (optional)';
+  String get editorAddedDescription => 'Περιγραφή (προαιρετικά)';
 
   @override
   String get editorAddedDescriptionHelp =>
-      'Left empty, the offer uses the deal type\'s usual line.';
+      'Αν μείνει κενή, η πρόταση δείχνει το συνηθισμένο κείμενο του τύπου συμφωνίας.';
 
   @override
-  String get editorAddedVoice => 'Account type';
+  String get editorAddedVoice => 'Τύπος λογαριασμού';
 
   @override
-  String get editorYVoiceFan => 'Fan';
+  String get editorYVoiceFan => 'Οπαδός';
 
   @override
-  String get editorYVoicePundit => 'Pundit';
+  String get editorYVoicePundit => 'Αναλυτής';
 
   @override
-  String get editorYVoiceMeme => 'Meme';
+  String get editorYVoiceMeme => 'Memes';
 
   @override
-  String get editorYVoiceStats => 'Stats';
+  String get editorYVoiceStats => 'Στατιστικά';
 
   @override
-  String get editorYVoiceRival => 'Rival';
+  String get editorYVoiceRival => 'Αντίπαλος';
 
   @override
-  String get editorYVoiceExpro => 'Ex-pro';
+  String get editorYVoiceExpro => 'Πρώην παίκτης';
 
   @override
-  String get editorYVoiceNeutral => 'Neutral';
+  String get editorYVoiceNeutral => 'Ουδέτερος';
 
   @override
   String get editorYVoiceFanAbout =>
-      'One of your own supporters. Delighted, furious, fickle.';
+      'Ένας από τους δικούς σου οπαδούς. Ενθουσιασμένος, έξαλλος, άστατος.';
 
   @override
   String get editorYVoicePunditAbout =>
-      'A measured voice who keeps turning up across a career.';
+      'Μια μετρημένη φωνή που εμφανίζεται ξανά και ξανά σε όλη την καριέρα.';
 
   @override
   String get editorYVoiceMemeAbout =>
-      'Says nothing useful and gets read first.';
+      'Δεν λέει τίποτα χρήσιμο και τον διαβάζουν πρώτο.';
 
   @override
-  String get editorYVoiceStatsAbout => 'Posts numbers and nothing else.';
+  String get editorYVoiceStatsAbout => 'Ανεβάζει αριθμούς και τίποτα άλλο.';
 
   @override
-  String get editorYVoiceRivalAbout => 'Enjoys your misfortune.';
+  String get editorYVoiceRivalAbout => 'Απολαμβάνει τις ατυχίες σου.';
 
   @override
   String get editorYVoiceExproAbout =>
-      'A former international with a column and no patience.';
+      'Πρώην διεθνής με δική του στήλη και καθόλου υπομονή.';
 
   @override
   String get editorYVoiceNeutralAbout =>
-      'Watches all football and turns up only when something big happens.';
+      'Βλέπει όλο το ποδόσφαιρο και εμφανίζεται μόνο όταν γίνεται κάτι μεγάλο.';
 
   @override
-  String get editorAddedPostsIn => 'Posts in';
+  String get editorAddedPostsIn => 'Γράφει σε';
 
   @override
-  String get editorAddedAllNations => 'All nations';
+  String get editorAddedAllNations => 'Όλες οι χώρες';
 
   @override
-  String get editorAddedSearch => 'Search';
+  String get editorAddedSearch => 'Αναζήτηση';
 
   @override
   String editorCountAdded(int count) {
-    return '$count added';
+    return 'Προστέθηκαν: $count';
   }
 
   @override
@@ -15527,7 +15532,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get editorAttentionBody =>
-      'Μια ενημέρωση του παιχνιδιού αφαίρεσε κάτι στο οποίο αναφέρεται αυτή η βάση δεδομένων. Αφαίρεσε κάθε εγγραφή παρακάτω και θα μπορεί ξανά να ξεκινά καριέρα.';
+      'Κάτι σε αυτή τη βάση δεδομένων δεν ταιριάζει με αυτή την έκδοση του παιχνιδιού: ίδια ονόματα ή κάτι που αφαίρεσε μια ενημέρωση. Διόρθωσε ή αφαίρεσε κάθε εγγραφή παρακάτω και θα μπορεί ξανά να ξεκινά καριέρα.';
 
   @override
   String get editorRemove => 'Αφαίρεση';

@@ -15207,7 +15207,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorNamesEveryLanguage =>
-      'Vlastní název se zobrazí stejně ve všech jazycích.';
+      'Vlastní název se zobrazí ve všech jazycích, pokud jazyku nedáte vlastní název.';
 
   @override
   String editorNamesGameName(String name) {
@@ -15719,7 +15719,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorAttentionBody =>
-      'Aktualizace hry odebrala něco, na co tato databáze odkazuje. Odeberte každou položku níže a půjde na ní znovu začít kariéru.';
+      'Něco v této databázi nesedí s touto verzí hry: shoda názvů, nebo něco, co aktualizace hry odebrala. Opravte nebo odeberte každou položku níže a půjde na ní znovu začít kariéru.';
 
   @override
   String get editorRemove => 'Odebrat';

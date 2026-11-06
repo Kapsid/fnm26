@@ -14317,23 +14317,23 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sponsorDealLineRisky =>
-      'Big money and no questions asked. The board will have plenty.';
+      'Beaucoup d’argent et aucune question. La direction en aura plein.';
 
   @override
   String get sponsorDealLineBigPayer =>
-      'A generous cheque from a name the board would rather not print.';
+      'Un chèque généreux d’un nom que la direction préférerait taire.';
 
   @override
   String get sponsorDealLineCrowdPleaser =>
-      'A fun brand the players love and the board finds a bit much.';
+      'Une marque sympa que les joueurs adorent et que la direction trouve un peu kitsch.';
 
   @override
   String get sponsorDealLineFamilyFriendly =>
-      'A wholesome name the board adores and the players yawn at.';
+      'Un nom bien sage que la direction adore et qui fait bâiller les joueurs.';
 
   @override
   String get sponsorDealLineMarketing =>
-      'No cash, just campaigns: posters, photo shoots and lots of smiling.';
+      'Pas d’argent, que des campagnes : affiches, séances photo et beaucoup de sourires.';
 
   @override
   String ySponsorDubious0(String brand) {
@@ -15092,7 +15092,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get editorNamesEveryLanguage =>
-      'Un nom personnalisé s’affiche de la même façon dans toutes les langues.';
+      'Un nom personnalisé s’affiche dans toutes les langues, sauf si vous donnez à une langue son propre nom.';
 
   @override
   String editorNamesGameName(String name) {
@@ -15124,80 +15124,82 @@ class AppLocalizationsFr extends AppLocalizations {
   String get editorNamesTaken => 'Un autre compte porte déjà ce nom.';
 
   @override
-  String get editorLanguageTitle => 'Names in which language';
+  String get editorLanguageTitle => 'Langue des noms';
 
   @override
-  String get editorLanguageAll => 'All languages';
+  String get editorLanguageAll => 'Toutes les langues';
 
   @override
-  String get editorLanguageAllShort => 'All';
+  String get editorLanguageAllShort => 'Toutes';
 
   @override
   String get editorLanguageNote =>
-      'Only the editor switches. The game stays in its own language.';
+      'Seul l’éditeur change. Le jeu reste dans sa propre langue.';
 
   @override
   String editorLanguageEditing(String language) {
-    return 'Names in $language. Leave one empty to use the main name.';
+    return 'Noms pour la langue $language. Laissez un champ vide pour utiliser le nom principal.';
   }
 
   @override
-  String get editorLanguageSame => 'Same in all languages';
+  String get editorLanguageSame => 'Identique dans toutes les langues';
 
   @override
   String editorLanguageMainName(String name) {
-    return 'Main name: $name';
+    return 'Nom principal : $name';
   }
 
   @override
-  String get editorLanguageKeepHint => 'Leave empty to use the main name.';
+  String get editorLanguageKeepHint =>
+      'Laissez vide pour utiliser le nom principal.';
 
   @override
-  String get editorLanguageClear => 'Use the main name';
+  String get editorLanguageClear => 'Utiliser le nom principal';
 
   @override
   String get editorLanguageFull =>
-      'This database has no room for more names per language.';
+      'Cette base n’a plus de place pour d’autres noms par langue.';
 
   @override
-  String get editorPlayerDelete => 'Delete player';
+  String get editorPlayerDelete => 'Supprimer le joueur';
 
   @override
-  String get editorPlayerAdvanced => 'Advanced';
+  String get editorPlayerAdvanced => 'Avancé';
 
   @override
   String get editorPlayerAdvancedAbout =>
-      'Set his physical, technical and stamina values one by one.';
+      'Réglez séparément son physique, sa technique et son endurance.';
 
   @override
-  String get editorPlayerAdvancedOverall => 'Overall from these';
+  String get editorPlayerAdvancedOverall => 'Note obtenue';
 
   @override
-  String get editorPlayerTraits => 'Known for';
+  String get editorPlayerTraits => 'Réputé pour';
 
   @override
-  String get editorPlayerTraitsRandom => 'Random';
+  String get editorPlayerTraitsRandom => 'Aléatoire';
 
   @override
   String get editorPlayerTraitsRandomAbout =>
-      'Each career rolls his traits, as the game always has.';
+      'Chaque carrière tire ses traits au sort, comme toujours.';
 
   @override
-  String get editorPlayerTraitsNone => 'No traits, in every career.';
+  String get editorPlayerTraitsNone =>
+      'Aucun trait, dans toutes les carrières.';
 
   @override
   String editorPlayerTraitsPicked(int max) {
-    return 'These traits in every career. Pick up to $max.';
+    return 'Ces traits dans toutes les carrières. Jusqu’à $max au choix.';
   }
 
   @override
   String editorPlayerTraitsMax(int max) {
-    return 'A player has at most $max traits. Deselect one first.';
+    return 'Un joueur a au plus $max traits. Retirez-en un d’abord.';
   }
 
   @override
   String editorPlayerTraitUnknown(String trait) {
-    return '$trait (unknown to this version)';
+    return '$trait (inconnu de cette version)';
   }
 
   @override
@@ -15206,146 +15208,146 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get editorTabSquad => 'Squad';
+  String get editorTabSquad => 'Effectif';
 
   @override
-  String get editorTabPool => 'Pool';
+  String get editorTabPool => 'Vivier';
 
   @override
-  String get editorPoolGenerated => 'Generated by the game';
+  String get editorPoolGenerated => 'Généré par le jeu';
 
   @override
   String get editorPoolGeneratedAbout =>
-      'Each career draws this pool afresh, as the game always has. Your first change fixes it exactly as shown here, in every career.';
+      'Chaque carrière tire ce vivier à nouveau, comme toujours. Votre première modification le fige tel qu’il apparaît ici, dans toutes les carrières.';
 
   @override
-  String get editorPoolFixed => 'Your pool';
+  String get editorPoolFixed => 'Votre vivier';
 
   @override
   String get editorPoolFixedAbout =>
-      'Every career starts with exactly these players.';
+      'Chaque carrière commence avec exactement ces joueurs.';
 
   @override
-  String get editorPoolReset => 'Back to generated';
+  String get editorPoolReset => 'Rendre au jeu';
 
   @override
-  String get editorPoolResetTitle => 'Back to the generated pool?';
+  String get editorPoolResetTitle => 'Revenir au vivier généré ?';
 
   @override
   String get editorPoolResetBody =>
-      'Your changes to this pool are dropped, and every career generates it again.';
+      'Vos modifications de ce vivier sont abandonnées et chaque carrière le génère à nouveau.';
 
   @override
   String editorPoolMax(int max) {
-    return 'Up to $max';
+    return 'Jusqu’à $max';
   }
 
   @override
   String editorPoolFull(int max) {
-    return 'A pool holds at most $max players.';
+    return 'Un vivier compte au plus $max joueurs.';
   }
 
   @override
   String editorPoolRemoved(String name) {
-    return '$name removed from the pool';
+    return '$name retiré du vivier';
   }
 
   @override
-  String get editorPoolRemove => 'Remove from pool';
+  String get editorPoolRemove => 'Retirer du vivier';
 
   @override
-  String get editorPoolPlayerGone => 'This player is no longer in the pool.';
+  String get editorPoolPlayerGone => 'Ce joueur n’est plus dans le vivier.';
 
   @override
   String get editorPoolDuplicate =>
-      'Another player in this pool has this name.';
+      'Un autre joueur de ce vivier porte ce nom.';
 
   @override
-  String get editorPoolEmpty => 'No players in this pool. Add the first one.';
+  String get editorPoolEmpty =>
+      'Aucun joueur dans ce vivier. Ajoutez le premier.';
 
   @override
-  String get editorPoolLoadFailed => 'The game\'s pool could not be read.';
+  String get editorPoolLoadFailed => 'Le vivier du jeu n’a pas pu être lu.';
 
   @override
   String editorPlayerTraitsUnknownDropped(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unknown traits removed',
-      one: '1 unknown trait removed',
+      other: '$count traits inconnus retirés',
+      one: '$count trait inconnu retiré',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedTag => 'Added';
+  String get editorAddedTag => 'Ajouté';
 
   @override
-  String get editorAddedGroup => 'Added';
+  String get editorAddedGroup => 'Ajoutés';
 
   @override
-  String get editorAddedGameGroup => 'In the game';
+  String get editorAddedGameGroup => 'Dans le jeu';
 
   @override
-  String get editorAddClub => 'Add club';
+  String get editorAddClub => 'Ajouter un club';
 
   @override
-  String get editorAddSponsor => 'Add sponsor';
+  String get editorAddSponsor => 'Ajouter un sponsor';
 
   @override
-  String get editorAddY => 'Add account';
+  String get editorAddY => 'Ajouter un compte';
 
   @override
-  String get editorAddedAdd => 'Add';
+  String get editorAddedAdd => 'Ajouter';
 
   @override
-  String get editorAddedDelete => 'Delete';
+  String get editorAddedDelete => 'Supprimer';
 
   @override
   String editorAddedRemoved(String name) {
-    return '$name deleted';
+    return 'Supprimé : $name';
   }
 
   @override
   String editorAddedClubsFull(int max) {
-    return 'A database can add at most $max clubs.';
+    return 'Une base peut ajouter au plus $max clubs.';
   }
 
   @override
   String editorAddedSponsorsFull(int max) {
-    return 'A database can add at most $max sponsors.';
+    return 'Une base peut ajouter au plus $max sponsors.';
   }
 
   @override
   String editorAddedYFull(int max) {
-    return 'A database can add at most $max accounts.';
+    return 'Une base peut ajouter au plus $max comptes.';
   }
 
   @override
-  String get editorAddedGone => 'This is no longer in the database.';
+  String get editorAddedGone => 'Cet élément n’est plus dans la base.';
 
   @override
-  String get editorAddedNameNeeded => 'Give it a name';
+  String get editorAddedNameNeeded => 'Donnez-lui un nom';
 
   @override
-  String get editorAddedCountry => 'Country';
+  String get editorAddedCountry => 'Pays';
 
   @override
-  String get editorAddedCountryPick => 'Pick a country';
+  String get editorAddedCountryPick => 'Choisir un pays';
 
   @override
   String editorAddedNoLeague(String country) {
-    return '$country has no league or towns in the game, so this club only gets the players you place at it.';
+    return '$country n’a ni championnat ni villes dans le jeu : ce club n’aura que les joueurs que vous y placez.';
   }
 
   @override
   String editorAddedClubTaken(String country) {
-    return '$country already has a club of this name.';
+    return '$country a déjà un club de ce nom.';
   }
 
   @override
-  String get editorAddedClubGameName =>
-      'A club in the game already goes by this name.';
+  String get editorAddedClubGameName => 'Un club du jeu porte déjà ce nom.';
 
   @override
   String editorAddedClubPlayers(int count) {
@@ -15353,52 +15355,52 @@ class AppLocalizationsFr extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count players of this database play here. Delete the club and the game places them.',
+          '$count joueurs de cette base jouent ici. Supprimez le club et le jeu les placera ailleurs.',
       one:
-          '1 player of this database plays here. Delete the club and the game places him.',
+          '$count joueur de cette base joue ici. Supprimez le club et le jeu le placera ailleurs.',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedDeal => 'Deal type';
+  String get editorAddedDeal => 'Type de contrat';
 
   @override
-  String get editorDealBigPayer => 'Big payer';
+  String get editorDealBigPayer => 'Gros payeur';
 
   @override
-  String get editorDealCrowdPleaser => 'Crowd pleaser';
+  String get editorDealCrowdPleaser => 'Chouchou du vestiaire';
 
   @override
-  String get editorDealFamilyFriendly => 'Family friendly';
+  String get editorDealFamilyFriendly => 'Familial';
 
   @override
   String get editorDealMarketing => 'Marketing';
 
   @override
-  String get editorAddedIndustry => 'Industry';
+  String get editorAddedIndustry => 'Secteur';
 
   @override
-  String get editorAddedIndustryPick => 'Pick an industry';
+  String get editorAddedIndustryPick => 'Choisir un secteur';
 
   @override
-  String get editorAddedDescription => 'Description (optional)';
+  String get editorAddedDescription => 'Description (facultative)';
 
   @override
   String get editorAddedDescriptionHelp =>
-      'Left empty, the offer uses the deal type\'s usual line.';
+      'Si elle reste vide, l’offre reprend la phrase habituelle du type de contrat.';
 
   @override
-  String get editorAddedVoice => 'Account type';
+  String get editorAddedVoice => 'Type de compte';
 
   @override
-  String get editorYVoiceFan => 'Fan';
+  String get editorYVoiceFan => 'Supporter';
 
   @override
-  String get editorYVoicePundit => 'Pundit';
+  String get editorYVoicePundit => 'Consultant';
 
   @override
-  String get editorYVoiceMeme => 'Meme';
+  String get editorYVoiceMeme => 'Mèmes';
 
   @override
   String get editorYVoiceStats => 'Stats';
@@ -15407,49 +15409,49 @@ class AppLocalizationsFr extends AppLocalizations {
   String get editorYVoiceRival => 'Rival';
 
   @override
-  String get editorYVoiceExpro => 'Ex-pro';
+  String get editorYVoiceExpro => 'Ancien pro';
 
   @override
-  String get editorYVoiceNeutral => 'Neutral';
+  String get editorYVoiceNeutral => 'Neutre';
 
   @override
   String get editorYVoiceFanAbout =>
-      'One of your own supporters. Delighted, furious, fickle.';
+      'Un de vos propres supporters. Ravi, furieux, versatile.';
 
   @override
   String get editorYVoicePunditAbout =>
-      'A measured voice who keeps turning up across a career.';
+      'Une voix mesurée qui revient tout au long d’une carrière.';
 
   @override
   String get editorYVoiceMemeAbout =>
-      'Says nothing useful and gets read first.';
+      'Ne dit rien d’utile et on le lit en premier.';
 
   @override
-  String get editorYVoiceStatsAbout => 'Posts numbers and nothing else.';
+  String get editorYVoiceStatsAbout => 'Poste des chiffres et rien d’autre.';
 
   @override
-  String get editorYVoiceRivalAbout => 'Enjoys your misfortune.';
+  String get editorYVoiceRivalAbout => 'Se réjouit de vos malheurs.';
 
   @override
   String get editorYVoiceExproAbout =>
-      'A former international with a column and no patience.';
+      'Un ancien international avec une chronique et zéro patience.';
 
   @override
   String get editorYVoiceNeutralAbout =>
-      'Watches all football and turns up only when something big happens.';
+      'Regarde tout le football et ne se manifeste que quand il se passe quelque chose de grand.';
 
   @override
-  String get editorAddedPostsIn => 'Posts in';
+  String get editorAddedPostsIn => 'Publie dans';
 
   @override
-  String get editorAddedAllNations => 'All nations';
+  String get editorAddedAllNations => 'Toutes les nations';
 
   @override
-  String get editorAddedSearch => 'Search';
+  String get editorAddedSearch => 'Rechercher';
 
   @override
   String editorCountAdded(int count) {
-    return '$count added';
+    return 'Ajouts : $count';
   }
 
   @override
@@ -15594,7 +15596,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get editorAttentionBody =>
-      'Une mise à jour du jeu a supprimé un élément auquel cette base fait référence. Retirez chaque entrée ci-dessous et elle pourra de nouveau lancer une carrière.';
+      'Quelque chose dans cette base ne correspond pas à cette version du jeu : un conflit de noms, ou un élément supprimé par une mise à jour. Corrigez ou retirez chaque entrée ci-dessous et elle pourra de nouveau lancer une carrière.';
 
   @override
   String get editorRemove => 'Retirer';

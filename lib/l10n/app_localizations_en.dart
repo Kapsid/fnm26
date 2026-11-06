@@ -14968,7 +14968,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorNamesEveryLanguage =>
-      'A custom name shows the same in every language.';
+      'A custom name shows in every language unless you give a language its own name.';
 
   @override
   String editorNamesGameName(String name) {
@@ -15469,7 +15469,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorAttentionBody =>
-      'A game update removed something this database refers to. Remove each entry below and it can start a career again.';
+      'Something in this database doesn\'t fit this version of the game: a name clash, or something a game update removed. Fix or remove each entry below and it can start a career again.';
 
   @override
   String get editorRemove => 'Remove';

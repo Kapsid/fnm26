@@ -14043,23 +14043,23 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get sponsorDealLineRisky =>
-      'Big money and no questions asked. The board will have plenty.';
+      'Tiền nhiều, không ai hỏi han gì. Ban lãnh đạo thì sẽ có cả đống câu hỏi.';
 
   @override
   String get sponsorDealLineBigPayer =>
-      'A generous cheque from a name the board would rather not print.';
+      'Một tấm séc hào phóng từ một cái tên mà ban lãnh đạo chẳng muốn in ra.';
 
   @override
   String get sponsorDealLineCrowdPleaser =>
-      'A fun brand the players love and the board finds a bit much.';
+      'Một thương hiệu vui nhộn, cầu thủ rất thích còn ban lãnh đạo thấy hơi quá.';
 
   @override
   String get sponsorDealLineFamilyFriendly =>
-      'A wholesome name the board adores and the players yawn at.';
+      'Một cái tên lành mạnh, ban lãnh đạo mê còn cầu thủ thì ngáp dài.';
 
   @override
   String get sponsorDealLineMarketing =>
-      'No cash, just campaigns: posters, photo shoots and lots of smiling.';
+      'Không có tiền, chỉ có chiến dịch: áp phích, chụp ảnh và cười thật nhiều.';
 
   @override
   String ySponsorDubious0(String brand) {
@@ -14791,7 +14791,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get editorNamesEveryLanguage =>
-      'Tên tự đặt hiển thị giống nhau ở mọi ngôn ngữ.';
+      'Tên tự đặt hiển thị ở mọi ngôn ngữ, trừ khi bạn đặt tên riêng cho một ngôn ngữ.';
 
   @override
   String editorNamesGameName(String name) {
@@ -14823,80 +14823,81 @@ class AppLocalizationsVi extends AppLocalizations {
   String get editorNamesTaken => 'Đã có tài khoản khác dùng tên này.';
 
   @override
-  String get editorLanguageTitle => 'Names in which language';
+  String get editorLanguageTitle => 'Tên theo ngôn ngữ nào';
 
   @override
-  String get editorLanguageAll => 'All languages';
+  String get editorLanguageAll => 'Tất cả ngôn ngữ';
 
   @override
-  String get editorLanguageAllShort => 'All';
+  String get editorLanguageAllShort => 'Tất cả';
 
   @override
   String get editorLanguageNote =>
-      'Only the editor switches. The game stays in its own language.';
+      'Chỉ trình chỉnh sửa đổi ngôn ngữ. Game vẫn giữ ngôn ngữ của nó.';
 
   @override
   String editorLanguageEditing(String language) {
-    return 'Names in $language. Leave one empty to use the main name.';
+    return 'Tên bằng $language. Để trống một tên để dùng tên chính.';
   }
 
   @override
-  String get editorLanguageSame => 'Same in all languages';
+  String get editorLanguageSame => 'Giống nhau ở mọi ngôn ngữ';
 
   @override
   String editorLanguageMainName(String name) {
-    return 'Main name: $name';
+    return 'Tên chính: $name';
   }
 
   @override
-  String get editorLanguageKeepHint => 'Leave empty to use the main name.';
+  String get editorLanguageKeepHint => 'Để trống để dùng tên chính.';
 
   @override
-  String get editorLanguageClear => 'Use the main name';
+  String get editorLanguageClear => 'Dùng tên chính';
 
   @override
   String get editorLanguageFull =>
-      'This database has no room for more names per language.';
+      'Cơ sở dữ liệu này không còn chỗ cho thêm tên theo ngôn ngữ.';
 
   @override
-  String get editorPlayerDelete => 'Delete player';
+  String get editorPlayerDelete => 'Xóa cầu thủ';
 
   @override
-  String get editorPlayerAdvanced => 'Advanced';
+  String get editorPlayerAdvanced => 'Nâng cao';
 
   @override
   String get editorPlayerAdvancedAbout =>
-      'Set his physical, technical and stamina values one by one.';
+      'Đặt riêng từng chỉ số thể chất, kỹ thuật và thể lực của anh ấy.';
 
   @override
-  String get editorPlayerAdvancedOverall => 'Overall from these';
+  String get editorPlayerAdvancedOverall => 'Chỉ số tổng từ các giá trị này';
 
   @override
-  String get editorPlayerTraits => 'Known for';
+  String get editorPlayerTraits => 'Nổi tiếng về';
 
   @override
-  String get editorPlayerTraitsRandom => 'Random';
+  String get editorPlayerTraitsRandom => 'Ngẫu nhiên';
 
   @override
   String get editorPlayerTraitsRandomAbout =>
-      'Each career rolls his traits, as the game always has.';
+      'Mỗi sự nghiệp tự chọn ngẫu nhiên đặc điểm cho anh ấy, như trước nay.';
 
   @override
-  String get editorPlayerTraitsNone => 'No traits, in every career.';
+  String get editorPlayerTraitsNone =>
+      'Không có đặc điểm nào, trong mọi sự nghiệp.';
 
   @override
   String editorPlayerTraitsPicked(int max) {
-    return 'These traits in every career. Pick up to $max.';
+    return 'Các đặc điểm này áp dụng trong mọi sự nghiệp. Chọn tối đa $max.';
   }
 
   @override
   String editorPlayerTraitsMax(int max) {
-    return 'A player has at most $max traits. Deselect one first.';
+    return 'Mỗi cầu thủ có tối đa $max đặc điểm. Hãy bỏ chọn một cái trước.';
   }
 
   @override
   String editorPlayerTraitUnknown(String trait) {
-    return '$trait (unknown to this version)';
+    return '$trait (phiên bản này không nhận ra)';
   }
 
   @override
@@ -14905,146 +14906,147 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get editorTabSquad => 'Squad';
+  String get editorTabSquad => 'Đội hình';
 
   @override
-  String get editorTabPool => 'Pool';
+  String get editorTabPool => 'Nguồn';
 
   @override
-  String get editorPoolGenerated => 'Generated by the game';
+  String get editorPoolGenerated => 'Do game tạo';
 
   @override
   String get editorPoolGeneratedAbout =>
-      'Each career draws this pool afresh, as the game always has. Your first change fixes it exactly as shown here, in every career.';
+      'Mỗi sự nghiệp tạo lại nguồn cầu thủ này từ đầu, như trước nay. Thay đổi đầu tiên của bạn sẽ cố định nó đúng như hiển thị ở đây, trong mọi sự nghiệp.';
 
   @override
-  String get editorPoolFixed => 'Your pool';
+  String get editorPoolFixed => 'Nguồn cầu thủ của bạn';
 
   @override
   String get editorPoolFixedAbout =>
-      'Every career starts with exactly these players.';
+      'Mọi sự nghiệp đều bắt đầu với đúng những cầu thủ này.';
 
   @override
-  String get editorPoolReset => 'Back to generated';
+  String get editorPoolReset => 'Về bản game tạo';
 
   @override
-  String get editorPoolResetTitle => 'Back to the generated pool?';
+  String get editorPoolResetTitle => 'Quay về nguồn cầu thủ do game tạo?';
 
   @override
   String get editorPoolResetBody =>
-      'Your changes to this pool are dropped, and every career generates it again.';
+      'Các thay đổi của bạn với nguồn cầu thủ này sẽ bị bỏ, và mọi sự nghiệp sẽ tạo lại nó.';
 
   @override
   String editorPoolMax(int max) {
-    return 'Up to $max';
+    return 'Tối đa $max';
   }
 
   @override
   String editorPoolFull(int max) {
-    return 'A pool holds at most $max players.';
+    return 'Nguồn cầu thủ có tối đa $max cầu thủ.';
   }
 
   @override
   String editorPoolRemoved(String name) {
-    return '$name removed from the pool';
+    return 'Đã loại $name khỏi nguồn cầu thủ';
   }
 
   @override
-  String get editorPoolRemove => 'Remove from pool';
+  String get editorPoolRemove => 'Loại khỏi nguồn cầu thủ';
 
   @override
-  String get editorPoolPlayerGone => 'This player is no longer in the pool.';
+  String get editorPoolPlayerGone =>
+      'Cầu thủ này không còn trong nguồn cầu thủ.';
 
   @override
   String get editorPoolDuplicate =>
-      'Another player in this pool has this name.';
+      'Một cầu thủ khác trong nguồn này có cùng tên.';
 
   @override
-  String get editorPoolEmpty => 'No players in this pool. Add the first one.';
+  String get editorPoolEmpty =>
+      'Chưa có cầu thủ trong nguồn này. Hãy thêm người đầu tiên.';
 
   @override
-  String get editorPoolLoadFailed => 'The game\'s pool could not be read.';
+  String get editorPoolLoadFailed => 'Không đọc được nguồn cầu thủ của game.';
 
   @override
   String editorPlayerTraitsUnknownDropped(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unknown traits removed',
-      one: '1 unknown trait removed',
+      other: 'Đã bỏ $count đặc điểm không xác định',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedTag => 'Added';
+  String get editorAddedTag => 'Đã thêm';
 
   @override
-  String get editorAddedGroup => 'Added';
+  String get editorAddedGroup => 'Đã thêm';
 
   @override
-  String get editorAddedGameGroup => 'In the game';
+  String get editorAddedGameGroup => 'Có sẵn trong game';
 
   @override
-  String get editorAddClub => 'Add club';
+  String get editorAddClub => 'Thêm câu lạc bộ';
 
   @override
-  String get editorAddSponsor => 'Add sponsor';
+  String get editorAddSponsor => 'Thêm nhà tài trợ';
 
   @override
-  String get editorAddY => 'Add account';
+  String get editorAddY => 'Thêm tài khoản';
 
   @override
-  String get editorAddedAdd => 'Add';
+  String get editorAddedAdd => 'Thêm';
 
   @override
-  String get editorAddedDelete => 'Delete';
+  String get editorAddedDelete => 'Xóa';
 
   @override
   String editorAddedRemoved(String name) {
-    return '$name deleted';
+    return 'Đã xóa $name';
   }
 
   @override
   String editorAddedClubsFull(int max) {
-    return 'A database can add at most $max clubs.';
+    return 'Mỗi cơ sở dữ liệu thêm được tối đa $max câu lạc bộ.';
   }
 
   @override
   String editorAddedSponsorsFull(int max) {
-    return 'A database can add at most $max sponsors.';
+    return 'Mỗi cơ sở dữ liệu thêm được tối đa $max nhà tài trợ.';
   }
 
   @override
   String editorAddedYFull(int max) {
-    return 'A database can add at most $max accounts.';
+    return 'Mỗi cơ sở dữ liệu thêm được tối đa $max tài khoản.';
   }
 
   @override
-  String get editorAddedGone => 'This is no longer in the database.';
+  String get editorAddedGone => 'Mục này không còn trong cơ sở dữ liệu.';
 
   @override
-  String get editorAddedNameNeeded => 'Give it a name';
+  String get editorAddedNameNeeded => 'Hãy đặt tên';
 
   @override
-  String get editorAddedCountry => 'Country';
+  String get editorAddedCountry => 'Quốc gia';
 
   @override
-  String get editorAddedCountryPick => 'Pick a country';
+  String get editorAddedCountryPick => 'Chọn quốc gia';
 
   @override
   String editorAddedNoLeague(String country) {
-    return '$country has no league or towns in the game, so this club only gets the players you place at it.';
+    return '$country không có giải đấu hay thành phố trong game, nên câu lạc bộ này chỉ có những cầu thủ bạn tự xếp vào.';
   }
 
   @override
   String editorAddedClubTaken(String country) {
-    return '$country already has a club of this name.';
+    return '$country đã có câu lạc bộ mang tên này.';
   }
 
   @override
   String get editorAddedClubGameName =>
-      'A club in the game already goes by this name.';
+      'Đã có câu lạc bộ trong game dùng tên này.';
 
   @override
   String editorAddedClubPlayers(int count) {
@@ -15052,103 +15054,101 @@ class AppLocalizationsVi extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count players of this database play here. Delete the club and the game places them.',
-      one:
-          '1 player of this database plays here. Delete the club and the game places him.',
+          '$count cầu thủ của cơ sở dữ liệu này đang chơi ở đây. Nếu xóa câu lạc bộ, game sẽ tự xếp chỗ cho họ.',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedDeal => 'Deal type';
+  String get editorAddedDeal => 'Loại hợp đồng';
 
   @override
-  String get editorDealBigPayer => 'Big payer';
+  String get editorDealBigPayer => 'Chi đậm';
 
   @override
-  String get editorDealCrowdPleaser => 'Crowd pleaser';
+  String get editorDealCrowdPleaser => 'Được lòng cầu thủ';
 
   @override
-  String get editorDealFamilyFriendly => 'Family friendly';
+  String get editorDealFamilyFriendly => 'Thân thiện gia đình';
 
   @override
-  String get editorDealMarketing => 'Marketing';
+  String get editorDealMarketing => 'Tiếp thị';
 
   @override
-  String get editorAddedIndustry => 'Industry';
+  String get editorAddedIndustry => 'Ngành';
 
   @override
-  String get editorAddedIndustryPick => 'Pick an industry';
+  String get editorAddedIndustryPick => 'Chọn ngành';
 
   @override
-  String get editorAddedDescription => 'Description (optional)';
+  String get editorAddedDescription => 'Mô tả (không bắt buộc)';
 
   @override
   String get editorAddedDescriptionHelp =>
-      'Left empty, the offer uses the deal type\'s usual line.';
+      'Nếu để trống, lời mời sẽ dùng câu mô tả thường dùng của loại hợp đồng.';
 
   @override
-  String get editorAddedVoice => 'Account type';
+  String get editorAddedVoice => 'Loại tài khoản';
 
   @override
-  String get editorYVoiceFan => 'Fan';
+  String get editorYVoiceFan => 'Cổ động viên';
 
   @override
-  String get editorYVoicePundit => 'Pundit';
+  String get editorYVoicePundit => 'Chuyên gia';
 
   @override
   String get editorYVoiceMeme => 'Meme';
 
   @override
-  String get editorYVoiceStats => 'Stats';
+  String get editorYVoiceStats => 'Thống kê';
 
   @override
-  String get editorYVoiceRival => 'Rival';
+  String get editorYVoiceRival => 'Đối thủ';
 
   @override
-  String get editorYVoiceExpro => 'Ex-pro';
+  String get editorYVoiceExpro => 'Cựu cầu thủ';
 
   @override
-  String get editorYVoiceNeutral => 'Neutral';
+  String get editorYVoiceNeutral => 'Trung lập';
 
   @override
   String get editorYVoiceFanAbout =>
-      'One of your own supporters. Delighted, furious, fickle.';
+      'Một cổ động viên của đội bạn. Lúc mừng rỡ, lúc giận dữ, thất thường.';
 
   @override
   String get editorYVoicePunditAbout =>
-      'A measured voice who keeps turning up across a career.';
+      'Một tiếng nói điềm đạm, xuất hiện suốt sự nghiệp của bạn.';
 
   @override
   String get editorYVoiceMemeAbout =>
-      'Says nothing useful and gets read first.';
+      'Chẳng nói gì hữu ích nhưng luôn được đọc đầu tiên.';
 
   @override
-  String get editorYVoiceStatsAbout => 'Posts numbers and nothing else.';
+  String get editorYVoiceStatsAbout => 'Chỉ đăng con số, không gì khác.';
 
   @override
-  String get editorYVoiceRivalAbout => 'Enjoys your misfortune.';
+  String get editorYVoiceRivalAbout => 'Hả hê trước thất bại của bạn.';
 
   @override
   String get editorYVoiceExproAbout =>
-      'A former international with a column and no patience.';
+      'Một cựu tuyển thủ quốc gia có chuyên mục riêng và chẳng có chút kiên nhẫn.';
 
   @override
   String get editorYVoiceNeutralAbout =>
-      'Watches all football and turns up only when something big happens.';
+      'Xem mọi trận bóng và chỉ lên tiếng khi có chuyện lớn.';
 
   @override
-  String get editorAddedPostsIn => 'Posts in';
+  String get editorAddedPostsIn => 'Đăng ở';
 
   @override
-  String get editorAddedAllNations => 'All nations';
+  String get editorAddedAllNations => 'Mọi quốc gia';
 
   @override
-  String get editorAddedSearch => 'Search';
+  String get editorAddedSearch => 'Tìm kiếm';
 
   @override
   String editorCountAdded(int count) {
-    return '$count added';
+    return 'Đã thêm $count';
   }
 
   @override
@@ -15291,7 +15291,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get editorAttentionBody =>
-      'Một bản cập nhật game đã gỡ bỏ thứ mà cơ sở dữ liệu này dùng đến. Hãy xóa từng mục bên dưới để có thể bắt đầu sự nghiệp trên đó lần nữa.';
+      'Có thứ trong cơ sở dữ liệu này không hợp với phiên bản game hiện tại: trùng tên, hoặc thứ đã bị một bản cập nhật game gỡ bỏ. Hãy sửa hoặc xóa từng mục bên dưới để có thể bắt đầu sự nghiệp với nó trở lại.';
 
   @override
   String get editorRemove => 'Xóa';

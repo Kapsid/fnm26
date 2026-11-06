@@ -13695,24 +13695,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get sponsorFlavourClickbait => '저희 네 번째 헤드라인 내용, 믿기 힘드실 겁니다.';
 
   @override
-  String get sponsorDealLineRisky =>
-      'Big money and no questions asked. The board will have plenty.';
+  String get sponsorDealLineRisky => '큰돈, 묻지도 따지지도 않습니다. 이사회는 물을 게 많겠지만요.';
 
   @override
-  String get sponsorDealLineBigPayer =>
-      'A generous cheque from a name the board would rather not print.';
+  String get sponsorDealLineBigPayer => '이사회가 이름을 내걸기 꺼리는 곳에서 온 두둑한 수표.';
 
   @override
-  String get sponsorDealLineCrowdPleaser =>
-      'A fun brand the players love and the board finds a bit much.';
+  String get sponsorDealLineCrowdPleaser => '선수들은 좋아하고 이사회는 좀 과하다고 보는 유쾌한 브랜드.';
 
   @override
-  String get sponsorDealLineFamilyFriendly =>
-      'A wholesome name the board adores and the players yawn at.';
+  String get sponsorDealLineFamilyFriendly => '이사회는 아끼고 선수들은 하품하는 건전한 브랜드.';
 
   @override
-  String get sponsorDealLineMarketing =>
-      'No cash, just campaigns: posters, photo shoots and lots of smiling.';
+  String get sponsorDealLineMarketing => '돈은 없고 캠페인만: 포스터, 화보 촬영, 그리고 웃음 가득.';
 
   @override
   String ySponsorDubious0(String brand) {
@@ -14433,7 +14428,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get editorNamesNone => '검색과 일치하는 항목이 없습니다.';
 
   @override
-  String get editorNamesEveryLanguage => '직접 정한 이름은 모든 언어에서 똑같이 표시됩니다.';
+  String get editorNamesEveryLanguage =>
+      '직접 정한 이름은 언어별 이름을 따로 정하지 않으면 모든 언어에 표시됩니다.';
 
   @override
   String editorNamesGameName(String name) {
@@ -14464,80 +14460,76 @@ class AppLocalizationsKo extends AppLocalizations {
   String get editorNamesTaken => '다른 계정이 이미 이 이름을 쓰고 있습니다.';
 
   @override
-  String get editorLanguageTitle => 'Names in which language';
+  String get editorLanguageTitle => '이름 표시 언어';
 
   @override
-  String get editorLanguageAll => 'All languages';
+  String get editorLanguageAll => '모든 언어';
 
   @override
-  String get editorLanguageAllShort => 'All';
+  String get editorLanguageAllShort => '전체';
 
   @override
-  String get editorLanguageNote =>
-      'Only the editor switches. The game stays in its own language.';
+  String get editorLanguageNote => '에디터만 바뀝니다. 게임은 원래 언어 그대로입니다.';
 
   @override
   String editorLanguageEditing(String language) {
-    return 'Names in $language. Leave one empty to use the main name.';
+    return '$language 이름입니다. 비워 두면 대표 이름을 씁니다.';
   }
 
   @override
-  String get editorLanguageSame => 'Same in all languages';
+  String get editorLanguageSame => '모든 언어에서 동일';
 
   @override
   String editorLanguageMainName(String name) {
-    return 'Main name: $name';
+    return '대표 이름: $name';
   }
 
   @override
-  String get editorLanguageKeepHint => 'Leave empty to use the main name.';
+  String get editorLanguageKeepHint => '비워 두면 대표 이름을 씁니다.';
 
   @override
-  String get editorLanguageClear => 'Use the main name';
+  String get editorLanguageClear => '대표 이름 사용';
 
   @override
-  String get editorLanguageFull =>
-      'This database has no room for more names per language.';
+  String get editorLanguageFull => '이 데이터베이스에는 언어별 이름을 더 넣을 공간이 없습니다.';
 
   @override
-  String get editorPlayerDelete => 'Delete player';
+  String get editorPlayerDelete => '선수 삭제';
 
   @override
-  String get editorPlayerAdvanced => 'Advanced';
+  String get editorPlayerAdvanced => '고급';
 
   @override
-  String get editorPlayerAdvancedAbout =>
-      'Set his physical, technical and stamina values one by one.';
+  String get editorPlayerAdvancedAbout => '피지컬, 기술, 체력을 하나씩 설정합니다.';
 
   @override
-  String get editorPlayerAdvancedOverall => 'Overall from these';
+  String get editorPlayerAdvancedOverall => '이 값으로 계산한 종합';
 
   @override
-  String get editorPlayerTraits => 'Known for';
+  String get editorPlayerTraits => '특징';
 
   @override
-  String get editorPlayerTraitsRandom => 'Random';
+  String get editorPlayerTraitsRandom => '무작위';
 
   @override
-  String get editorPlayerTraitsRandomAbout =>
-      'Each career rolls his traits, as the game always has.';
+  String get editorPlayerTraitsRandomAbout => '지금까지처럼 커리어마다 특징이 무작위로 정해집니다.';
 
   @override
-  String get editorPlayerTraitsNone => 'No traits, in every career.';
+  String get editorPlayerTraitsNone => '모든 커리어에서 특징 없음.';
 
   @override
   String editorPlayerTraitsPicked(int max) {
-    return 'These traits in every career. Pick up to $max.';
+    return '모든 커리어에서 이 특징을 가집니다. 최대 $max개까지 고르세요.';
   }
 
   @override
   String editorPlayerTraitsMax(int max) {
-    return 'A player has at most $max traits. Deselect one first.';
+    return '선수는 특징을 최대 $max개까지 가집니다. 먼저 하나를 해제하세요.';
   }
 
   @override
   String editorPlayerTraitUnknown(String trait) {
-    return '$trait (unknown to this version)';
+    return '$trait (이 버전에서 알 수 없음)';
   }
 
   @override
@@ -14546,250 +14538,236 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get editorTabSquad => 'Squad';
+  String get editorTabSquad => '스쿼드';
 
   @override
-  String get editorTabPool => 'Pool';
+  String get editorTabPool => '선수 풀';
 
   @override
-  String get editorPoolGenerated => 'Generated by the game';
+  String get editorPoolGenerated => '게임이 생성';
 
   @override
   String get editorPoolGeneratedAbout =>
-      'Each career draws this pool afresh, as the game always has. Your first change fixes it exactly as shown here, in every career.';
+      '지금까지처럼 커리어마다 이 선수 풀을 새로 뽑습니다. 처음 변경하는 순간, 여기 보이는 그대로 모든 커리어에 고정됩니다.';
 
   @override
-  String get editorPoolFixed => 'Your pool';
+  String get editorPoolFixed => '나의 선수 풀';
 
   @override
-  String get editorPoolFixedAbout =>
-      'Every career starts with exactly these players.';
+  String get editorPoolFixedAbout => '모든 커리어가 정확히 이 선수들로 시작합니다.';
 
   @override
-  String get editorPoolReset => 'Back to generated';
+  String get editorPoolReset => '게임 생성으로 되돌리기';
 
   @override
-  String get editorPoolResetTitle => 'Back to the generated pool?';
+  String get editorPoolResetTitle => '게임이 생성한 선수 풀로 되돌릴까요?';
 
   @override
-  String get editorPoolResetBody =>
-      'Your changes to this pool are dropped, and every career generates it again.';
+  String get editorPoolResetBody => '이 선수 풀의 변경 사항이 삭제되고, 모든 커리어에서 다시 생성됩니다.';
 
   @override
   String editorPoolMax(int max) {
-    return 'Up to $max';
+    return '최대 $max명';
   }
 
   @override
   String editorPoolFull(int max) {
-    return 'A pool holds at most $max players.';
+    return '선수 풀은 최대 $max명입니다.';
   }
 
   @override
   String editorPoolRemoved(String name) {
-    return '$name removed from the pool';
+    return '$name을(를) 선수 풀에서 제외했습니다';
   }
 
   @override
-  String get editorPoolRemove => 'Remove from pool';
+  String get editorPoolRemove => '선수 풀에서 제외';
 
   @override
-  String get editorPoolPlayerGone => 'This player is no longer in the pool.';
+  String get editorPoolPlayerGone => '이 선수는 더 이상 선수 풀에 없습니다.';
 
   @override
-  String get editorPoolDuplicate =>
-      'Another player in this pool has this name.';
+  String get editorPoolDuplicate => '이 선수 풀에 같은 이름의 선수가 있습니다.';
 
   @override
-  String get editorPoolEmpty => 'No players in this pool. Add the first one.';
+  String get editorPoolEmpty => '선수 풀에 선수가 없습니다. 첫 선수를 추가하세요.';
 
   @override
-  String get editorPoolLoadFailed => 'The game\'s pool could not be read.';
+  String get editorPoolLoadFailed => '게임의 선수 풀을 읽을 수 없습니다.';
 
   @override
   String editorPlayerTraitsUnknownDropped(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unknown traits removed',
-      one: '1 unknown trait removed',
+      other: '알 수 없는 특징 $count개를 제거했습니다',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedTag => 'Added';
+  String get editorAddedTag => '추가됨';
 
   @override
-  String get editorAddedGroup => 'Added';
+  String get editorAddedGroup => '추가한 항목';
 
   @override
-  String get editorAddedGameGroup => 'In the game';
+  String get editorAddedGameGroup => '게임 기본';
 
   @override
-  String get editorAddClub => 'Add club';
+  String get editorAddClub => '클럽 추가';
 
   @override
-  String get editorAddSponsor => 'Add sponsor';
+  String get editorAddSponsor => '스폰서 추가';
 
   @override
-  String get editorAddY => 'Add account';
+  String get editorAddY => '계정 추가';
 
   @override
-  String get editorAddedAdd => 'Add';
+  String get editorAddedAdd => '추가';
 
   @override
-  String get editorAddedDelete => 'Delete';
+  String get editorAddedDelete => '삭제';
 
   @override
   String editorAddedRemoved(String name) {
-    return '$name deleted';
+    return '$name 삭제됨';
   }
 
   @override
   String editorAddedClubsFull(int max) {
-    return 'A database can add at most $max clubs.';
+    return '데이터베이스에는 클럽을 최대 $max개까지 추가할 수 있습니다.';
   }
 
   @override
   String editorAddedSponsorsFull(int max) {
-    return 'A database can add at most $max sponsors.';
+    return '데이터베이스에는 스폰서를 최대 $max개까지 추가할 수 있습니다.';
   }
 
   @override
   String editorAddedYFull(int max) {
-    return 'A database can add at most $max accounts.';
+    return '데이터베이스에는 계정을 최대 $max개까지 추가할 수 있습니다.';
   }
 
   @override
-  String get editorAddedGone => 'This is no longer in the database.';
+  String get editorAddedGone => '이 항목은 더 이상 데이터베이스에 없습니다.';
 
   @override
-  String get editorAddedNameNeeded => 'Give it a name';
+  String get editorAddedNameNeeded => '이름을 입력하세요';
 
   @override
-  String get editorAddedCountry => 'Country';
+  String get editorAddedCountry => '국가';
 
   @override
-  String get editorAddedCountryPick => 'Pick a country';
+  String get editorAddedCountryPick => '국가 선택';
 
   @override
   String editorAddedNoLeague(String country) {
-    return '$country has no league or towns in the game, so this club only gets the players you place at it.';
+    return '$country에는 게임 속 리그도 도시도 없어서, 이 클럽에는 직접 배정한 선수만 소속됩니다.';
   }
 
   @override
   String editorAddedClubTaken(String country) {
-    return '$country already has a club of this name.';
+    return '$country에 이미 같은 이름의 클럽이 있습니다.';
   }
 
   @override
-  String get editorAddedClubGameName =>
-      'A club in the game already goes by this name.';
+  String get editorAddedClubGameName => '게임 속 클럽이 이미 이 이름을 쓰고 있습니다.';
 
   @override
   String editorAddedClubPlayers(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other:
-          '$count players of this database play here. Delete the club and the game places them.',
-      one:
-          '1 player of this database plays here. Delete the club and the game places him.',
+      other: '이 데이터베이스의 선수 $count명이 이곳에서 뜁니다. 클럽을 삭제하면 게임이 소속을 정합니다.',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedDeal => 'Deal type';
+  String get editorAddedDeal => '계약 유형';
 
   @override
-  String get editorDealBigPayer => 'Big payer';
+  String get editorDealBigPayer => '큰손';
 
   @override
-  String get editorDealCrowdPleaser => 'Crowd pleaser';
+  String get editorDealCrowdPleaser => '선수단 인기';
 
   @override
-  String get editorDealFamilyFriendly => 'Family friendly';
+  String get editorDealFamilyFriendly => '가족 친화';
 
   @override
-  String get editorDealMarketing => 'Marketing';
+  String get editorDealMarketing => '마케팅';
 
   @override
-  String get editorAddedIndustry => 'Industry';
+  String get editorAddedIndustry => '업종';
 
   @override
-  String get editorAddedIndustryPick => 'Pick an industry';
+  String get editorAddedIndustryPick => '업종 선택';
 
   @override
-  String get editorAddedDescription => 'Description (optional)';
+  String get editorAddedDescription => '설명 (선택)';
 
   @override
-  String get editorAddedDescriptionHelp =>
-      'Left empty, the offer uses the deal type\'s usual line.';
+  String get editorAddedDescriptionHelp => '비워 두면 제안에 계약 유형의 기본 문구가 표시됩니다.';
 
   @override
-  String get editorAddedVoice => 'Account type';
+  String get editorAddedVoice => '계정 유형';
 
   @override
-  String get editorYVoiceFan => 'Fan';
+  String get editorYVoiceFan => '팬';
 
   @override
-  String get editorYVoicePundit => 'Pundit';
+  String get editorYVoicePundit => '전문가';
 
   @override
-  String get editorYVoiceMeme => 'Meme';
+  String get editorYVoiceMeme => '밈';
 
   @override
-  String get editorYVoiceStats => 'Stats';
+  String get editorYVoiceStats => '기록';
 
   @override
-  String get editorYVoiceRival => 'Rival';
+  String get editorYVoiceRival => '라이벌';
 
   @override
-  String get editorYVoiceExpro => 'Ex-pro';
+  String get editorYVoiceExpro => '전직 선수';
 
   @override
-  String get editorYVoiceNeutral => 'Neutral';
+  String get editorYVoiceNeutral => '중립';
 
   @override
-  String get editorYVoiceFanAbout =>
-      'One of your own supporters. Delighted, furious, fickle.';
+  String get editorYVoiceFanAbout => '당신 팀의 서포터. 환호하다가도 분노하고, 변덕스럽습니다.';
 
   @override
-  String get editorYVoicePunditAbout =>
-      'A measured voice who keeps turning up across a career.';
+  String get editorYVoicePunditAbout => '커리어 내내 계속 등장하는 차분한 목소리.';
 
   @override
-  String get editorYVoiceMemeAbout =>
-      'Says nothing useful and gets read first.';
+  String get editorYVoiceMemeAbout => '쓸모 있는 말은 하나도 없는데 가장 먼저 읽힙니다.';
 
   @override
-  String get editorYVoiceStatsAbout => 'Posts numbers and nothing else.';
+  String get editorYVoiceStatsAbout => '숫자만 올립니다.';
 
   @override
-  String get editorYVoiceRivalAbout => 'Enjoys your misfortune.';
+  String get editorYVoiceRivalAbout => '당신의 불행을 즐깁니다.';
 
   @override
-  String get editorYVoiceExproAbout =>
-      'A former international with a column and no patience.';
+  String get editorYVoiceExproAbout => '칼럼은 있고 인내심은 없는 전직 국가대표.';
 
   @override
-  String get editorYVoiceNeutralAbout =>
-      'Watches all football and turns up only when something big happens.';
+  String get editorYVoiceNeutralAbout => '모든 축구를 보다가 큰일이 생길 때만 나타납니다.';
 
   @override
-  String get editorAddedPostsIn => 'Posts in';
+  String get editorAddedPostsIn => '게시 위치';
 
   @override
-  String get editorAddedAllNations => 'All nations';
+  String get editorAddedAllNations => '모든 국가';
 
   @override
-  String get editorAddedSearch => 'Search';
+  String get editorAddedSearch => '검색';
 
   @override
   String editorCountAdded(int count) {
-    return '$count added';
+    return '$count개 추가';
   }
 
   @override
@@ -14929,7 +14907,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorAttentionBody =>
-      '게임 업데이트로 이 데이터베이스가 참조하는 항목이 삭제되었습니다. 아래 항목을 모두 삭제하면 다시 커리어를 시작할 수 있습니다.';
+      '이 데이터베이스에 현재 게임 버전과 맞지 않는 항목이 있습니다. 이름이 겹치거나, 게임 업데이트로 삭제된 항목입니다. 아래 항목을 하나씩 고치거나 지우면 다시 커리어를 시작할 수 있습니다.';
 
   @override
   String get editorRemove => '삭제';

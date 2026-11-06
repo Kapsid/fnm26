@@ -14252,23 +14252,23 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get sponsorDealLineRisky =>
-      'Big money and no questions asked. The board will have plenty.';
+      'Isoa rahaa, eikä kysymyksiä. Hallituksella niitä riittää.';
 
   @override
   String get sponsorDealLineBigPayer =>
-      'A generous cheque from a name the board would rather not print.';
+      'Avokätinen shekki nimeltä, jota hallitus ei mielellään painattaisi.';
 
   @override
   String get sponsorDealLineCrowdPleaser =>
-      'A fun brand the players love and the board finds a bit much.';
+      'Hauska brändi, jota pelaajat rakastavat ja hallitus pitää vähän liikana.';
 
   @override
   String get sponsorDealLineFamilyFriendly =>
-      'A wholesome name the board adores and the players yawn at.';
+      'Siisti nimi, jota hallitus ihailee ja jolle pelaajat haukottelevat.';
 
   @override
   String get sponsorDealLineMarketing =>
-      'No cash, just campaigns: posters, photo shoots and lots of smiling.';
+      'Ei rahaa, vain kampanjoita: julisteita, kuvauksia ja paljon hymyilyä.';
 
   @override
   String ySponsorDubious0(String brand) {
@@ -15017,7 +15017,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get editorNamesEveryLanguage =>
-      'Oma nimi näkyy samana kaikilla kielillä.';
+      'Oma nimi näkyy kaikilla kielillä, ellet anna jollekin kielelle sen omaa nimeä.';
 
   @override
   String editorNamesGameName(String name) {
@@ -15049,80 +15049,81 @@ class AppLocalizationsFi extends AppLocalizations {
   String get editorNamesTaken => 'Toisella tilillä on jo tämä nimi.';
 
   @override
-  String get editorLanguageTitle => 'Names in which language';
+  String get editorLanguageTitle => 'Nimien kieli';
 
   @override
-  String get editorLanguageAll => 'All languages';
+  String get editorLanguageAll => 'Kaikki kielet';
 
   @override
-  String get editorLanguageAllShort => 'All';
+  String get editorLanguageAllShort => 'Kaikki';
 
   @override
   String get editorLanguageNote =>
-      'Only the editor switches. The game stays in its own language.';
+      'Vain editorin kieli vaihtuu. Peli pysyy omalla kielellään.';
 
   @override
   String editorLanguageEditing(String language) {
-    return 'Names in $language. Leave one empty to use the main name.';
+    return 'Nimet kielellä $language. Tyhjäksi jätetty kenttä käyttää päänimeä.';
   }
 
   @override
-  String get editorLanguageSame => 'Same in all languages';
+  String get editorLanguageSame => 'Sama kaikilla kielillä';
 
   @override
   String editorLanguageMainName(String name) {
-    return 'Main name: $name';
+    return 'Päänimi: $name';
   }
 
   @override
-  String get editorLanguageKeepHint => 'Leave empty to use the main name.';
+  String get editorLanguageKeepHint =>
+      'Jätä tyhjäksi, niin päänimi on käytössä.';
 
   @override
-  String get editorLanguageClear => 'Use the main name';
+  String get editorLanguageClear => 'Käytä päänimeä';
 
   @override
   String get editorLanguageFull =>
-      'This database has no room for more names per language.';
+      'Tähän tietokantaan ei mahdu enempää kielikohtaisia nimiä.';
 
   @override
-  String get editorPlayerDelete => 'Delete player';
+  String get editorPlayerDelete => 'Poista pelaaja';
 
   @override
-  String get editorPlayerAdvanced => 'Advanced';
+  String get editorPlayerAdvanced => 'Lisäasetukset';
 
   @override
   String get editorPlayerAdvancedAbout =>
-      'Set his physical, technical and stamina values one by one.';
+      'Aseta hänen fysiikkansa, tekniikkansa ja kestävyytensä erikseen.';
 
   @override
-  String get editorPlayerAdvancedOverall => 'Overall from these';
+  String get editorPlayerAdvancedOverall => 'Kokonaistaso näistä';
 
   @override
-  String get editorPlayerTraits => 'Known for';
+  String get editorPlayerTraits => 'Tunnettu siitä';
 
   @override
-  String get editorPlayerTraitsRandom => 'Random';
+  String get editorPlayerTraitsRandom => 'Satunnainen';
 
   @override
   String get editorPlayerTraitsRandomAbout =>
-      'Each career rolls his traits, as the game always has.';
+      'Jokainen ura arpoo hänen ominaisuutensa, kuten ennenkin.';
 
   @override
-  String get editorPlayerTraitsNone => 'No traits, in every career.';
+  String get editorPlayerTraitsNone => 'Ei ominaisuuksia, millään uralla.';
 
   @override
   String editorPlayerTraitsPicked(int max) {
-    return 'These traits in every career. Pick up to $max.';
+    return 'Nämä ominaisuudet joka uralla. Valitse enintään $max.';
   }
 
   @override
   String editorPlayerTraitsMax(int max) {
-    return 'A player has at most $max traits. Deselect one first.';
+    return 'Pelaajalla voi olla enintään $max ominaisuutta. Poista ensin yksi.';
   }
 
   @override
   String editorPlayerTraitUnknown(String trait) {
-    return '$trait (unknown to this version)';
+    return '$trait (tuntematon tälle versiolle)';
   }
 
   @override
@@ -15131,146 +15132,144 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
-  String get editorTabSquad => 'Squad';
+  String get editorTabSquad => 'Joukkue';
 
   @override
-  String get editorTabPool => 'Pool';
+  String get editorTabPool => 'Pooli';
 
   @override
-  String get editorPoolGenerated => 'Generated by the game';
+  String get editorPoolGenerated => 'Pelin luoma';
 
   @override
   String get editorPoolGeneratedAbout =>
-      'Each career draws this pool afresh, as the game always has. Your first change fixes it exactly as shown here, in every career.';
+      'Jokainen ura arpoo tämän poolin uudelleen, kuten ennenkin. Ensimmäinen muutoksesi lukitsee sen juuri tällaiseksi, joka uralla.';
 
   @override
-  String get editorPoolFixed => 'Your pool';
+  String get editorPoolFixed => 'Oma pooli';
 
   @override
   String get editorPoolFixedAbout =>
-      'Every career starts with exactly these players.';
+      'Jokainen ura alkaa juuri näillä pelaajilla.';
 
   @override
-  String get editorPoolReset => 'Back to generated';
+  String get editorPoolReset => 'Palauta pelin luoma';
 
   @override
-  String get editorPoolResetTitle => 'Back to the generated pool?';
+  String get editorPoolResetTitle => 'Palautetaanko pelin luoma pooli?';
 
   @override
   String get editorPoolResetBody =>
-      'Your changes to this pool are dropped, and every career generates it again.';
+      'Muutoksesi tähän pooliin hylätään, ja jokainen ura luo sen taas itse.';
 
   @override
   String editorPoolMax(int max) {
-    return 'Up to $max';
+    return 'Enintään $max';
   }
 
   @override
   String editorPoolFull(int max) {
-    return 'A pool holds at most $max players.';
+    return 'Poolissa voi olla enintään $max pelaajaa.';
   }
 
   @override
   String editorPoolRemoved(String name) {
-    return '$name removed from the pool';
+    return '$name poistettu poolista';
   }
 
   @override
-  String get editorPoolRemove => 'Remove from pool';
+  String get editorPoolRemove => 'Poista poolista';
 
   @override
-  String get editorPoolPlayerGone => 'This player is no longer in the pool.';
+  String get editorPoolPlayerGone => 'Tämä pelaaja ei ole enää poolissa.';
 
   @override
-  String get editorPoolDuplicate =>
-      'Another player in this pool has this name.';
+  String get editorPoolDuplicate => 'Toisella poolin pelaajalla on sama nimi.';
 
   @override
-  String get editorPoolEmpty => 'No players in this pool. Add the first one.';
+  String get editorPoolEmpty => 'Poolissa ei ole pelaajia. Lisää ensimmäinen.';
 
   @override
-  String get editorPoolLoadFailed => 'The game\'s pool could not be read.';
+  String get editorPoolLoadFailed => 'Pelin poolia ei voitu lukea.';
 
   @override
   String editorPlayerTraitsUnknownDropped(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count unknown traits removed',
-      one: '1 unknown trait removed',
+      other: '$count tuntematonta ominaisuutta poistettu',
+      one: '1 tuntematon ominaisuus poistettu',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedTag => 'Added';
+  String get editorAddedTag => 'Lisätty';
 
   @override
-  String get editorAddedGroup => 'Added';
+  String get editorAddedGroup => 'Lisätyt';
 
   @override
-  String get editorAddedGameGroup => 'In the game';
+  String get editorAddedGameGroup => 'Pelissä';
 
   @override
-  String get editorAddClub => 'Add club';
+  String get editorAddClub => 'Lisää seura';
 
   @override
-  String get editorAddSponsor => 'Add sponsor';
+  String get editorAddSponsor => 'Lisää sponsori';
 
   @override
-  String get editorAddY => 'Add account';
+  String get editorAddY => 'Lisää tili';
 
   @override
-  String get editorAddedAdd => 'Add';
+  String get editorAddedAdd => 'Lisää';
 
   @override
-  String get editorAddedDelete => 'Delete';
+  String get editorAddedDelete => 'Poista';
 
   @override
   String editorAddedRemoved(String name) {
-    return '$name deleted';
+    return '$name poistettu';
   }
 
   @override
   String editorAddedClubsFull(int max) {
-    return 'A database can add at most $max clubs.';
+    return 'Tietokantaan voi lisätä enintään $max seuraa.';
   }
 
   @override
   String editorAddedSponsorsFull(int max) {
-    return 'A database can add at most $max sponsors.';
+    return 'Tietokantaan voi lisätä enintään $max sponsoria.';
   }
 
   @override
   String editorAddedYFull(int max) {
-    return 'A database can add at most $max accounts.';
+    return 'Tietokantaan voi lisätä enintään $max tiliä.';
   }
 
   @override
-  String get editorAddedGone => 'This is no longer in the database.';
+  String get editorAddedGone => 'Tätä ei ole enää tietokannassa.';
 
   @override
-  String get editorAddedNameNeeded => 'Give it a name';
+  String get editorAddedNameNeeded => 'Anna sille nimi';
 
   @override
-  String get editorAddedCountry => 'Country';
+  String get editorAddedCountry => 'Maa';
 
   @override
-  String get editorAddedCountryPick => 'Pick a country';
+  String get editorAddedCountryPick => 'Valitse maa';
 
   @override
   String editorAddedNoLeague(String country) {
-    return '$country has no league or towns in the game, so this club only gets the players you place at it.';
+    return 'Maalla $country ei ole pelissä sarjaa eikä kaupunkeja, joten seura saa vain ne pelaajat, jotka sijoitat sinne itse.';
   }
 
   @override
   String editorAddedClubTaken(String country) {
-    return '$country already has a club of this name.';
+    return 'Maalla $country on jo tämänniminen seura.';
   }
 
   @override
-  String get editorAddedClubGameName =>
-      'A club in the game already goes by this name.';
+  String get editorAddedClubGameName => 'Pelissä on jo tämänniminen seura.';
 
   @override
   String editorAddedClubPlayers(int count) {
@@ -15278,103 +15277,103 @@ class AppLocalizationsFi extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count players of this database play here. Delete the club and the game places them.',
+          'Tämän tietokannan $count pelaajaa pelaa täällä. Jos poistat seuran, peli sijoittaa heidät.',
       one:
-          '1 player of this database plays here. Delete the club and the game places him.',
+          'Tämän tietokannan 1 pelaaja pelaa täällä. Jos poistat seuran, peli sijoittaa hänet.',
     );
     return '$_temp0';
   }
 
   @override
-  String get editorAddedDeal => 'Deal type';
+  String get editorAddedDeal => 'Sopimustyyppi';
 
   @override
-  String get editorDealBigPayer => 'Big payer';
+  String get editorDealBigPayer => 'Iso maksaja';
 
   @override
-  String get editorDealCrowdPleaser => 'Crowd pleaser';
+  String get editorDealCrowdPleaser => 'Pelaajien suosikki';
 
   @override
-  String get editorDealFamilyFriendly => 'Family friendly';
+  String get editorDealFamilyFriendly => 'Perhebrändi';
 
   @override
-  String get editorDealMarketing => 'Marketing';
+  String get editorDealMarketing => 'Markkinointi';
 
   @override
-  String get editorAddedIndustry => 'Industry';
+  String get editorAddedIndustry => 'Toimiala';
 
   @override
-  String get editorAddedIndustryPick => 'Pick an industry';
+  String get editorAddedIndustryPick => 'Valitse toimiala';
 
   @override
-  String get editorAddedDescription => 'Description (optional)';
+  String get editorAddedDescription => 'Kuvaus (valinnainen)';
 
   @override
   String get editorAddedDescriptionHelp =>
-      'Left empty, the offer uses the deal type\'s usual line.';
+      'Jos kenttä jää tyhjäksi, tarjous käyttää sopimustyypin tavallista tekstiä.';
 
   @override
-  String get editorAddedVoice => 'Account type';
+  String get editorAddedVoice => 'Tilin tyyppi';
 
   @override
-  String get editorYVoiceFan => 'Fan';
+  String get editorYVoiceFan => 'Fani';
 
   @override
-  String get editorYVoicePundit => 'Pundit';
+  String get editorYVoicePundit => 'Asiantuntija';
 
   @override
-  String get editorYVoiceMeme => 'Meme';
+  String get editorYVoiceMeme => 'Meemi';
 
   @override
-  String get editorYVoiceStats => 'Stats';
+  String get editorYVoiceStats => 'Tilastot';
 
   @override
-  String get editorYVoiceRival => 'Rival';
+  String get editorYVoiceRival => 'Kilpailija';
 
   @override
-  String get editorYVoiceExpro => 'Ex-pro';
+  String get editorYVoiceExpro => 'Ex-pelaaja';
 
   @override
-  String get editorYVoiceNeutral => 'Neutral';
+  String get editorYVoiceNeutral => 'Neutraali';
 
   @override
   String get editorYVoiceFanAbout =>
-      'One of your own supporters. Delighted, furious, fickle.';
+      'Yksi omista kannattajistasi. Innoissaan, raivoissaan, ailahteleva.';
 
   @override
   String get editorYVoicePunditAbout =>
-      'A measured voice who keeps turning up across a career.';
+      'Harkitseva ääni, joka ilmaantuu esiin koko uran ajan.';
 
   @override
   String get editorYVoiceMemeAbout =>
-      'Says nothing useful and gets read first.';
+      'Ei sano mitään hyödyllistä, ja silti hänet luetaan ensimmäisenä.';
 
   @override
-  String get editorYVoiceStatsAbout => 'Posts numbers and nothing else.';
+  String get editorYVoiceStatsAbout => 'Julkaisee lukuja eikä mitään muuta.';
 
   @override
-  String get editorYVoiceRivalAbout => 'Enjoys your misfortune.';
+  String get editorYVoiceRivalAbout => 'Nauttii vastoinkäymisistäsi.';
 
   @override
   String get editorYVoiceExproAbout =>
-      'A former international with a column and no patience.';
+      'Entinen maajoukkuepelaaja, jolla on kolumni eikä lainkaan kärsivällisyyttä.';
 
   @override
   String get editorYVoiceNeutralAbout =>
-      'Watches all football and turns up only when something big happens.';
+      'Seuraa kaikkea jalkapalloa ja ilmaantuu vain, kun tapahtuu jotain suurta.';
 
   @override
-  String get editorAddedPostsIn => 'Posts in';
+  String get editorAddedPostsIn => 'Julkaisee syötteessä';
 
   @override
-  String get editorAddedAllNations => 'All nations';
+  String get editorAddedAllNations => 'Kaikki maat';
 
   @override
-  String get editorAddedSearch => 'Search';
+  String get editorAddedSearch => 'Hae';
 
   @override
   String editorCountAdded(int count) {
-    return '$count added';
+    return '$count lisätty';
   }
 
   @override
@@ -15518,7 +15517,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get editorAttentionBody =>
-      'Pelin päivitys poisti jotain, johon tämä tietokanta viittaa. Poista kaikki alla olevat kohdat, niin sillä voi taas aloittaa uran.';
+      'Jokin tässä tietokannassa ei sovi tähän peliversioon: päällekkäinen nimi tai jotain, minkä pelin päivitys poisti. Korjaa tai poista kaikki alla olevat kohdat, niin sillä voi taas aloittaa uran.';
 
   @override
   String get editorRemove => 'Poista';

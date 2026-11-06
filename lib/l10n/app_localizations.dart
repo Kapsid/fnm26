@@ -22607,7 +22607,7 @@ abstract class AppLocalizations {
   /// Note at the top of the editor sections whose game names are translated (nations, competitions, sponsors).
   ///
   /// In en, this message translates to:
-  /// **'A custom name shows the same in every language.'**
+  /// **'A custom name shows in every language unless you give a language its own name.'**
   String get editorNamesEveryLanguage;
 
   /// Under an edited name in the editor: the name the game uses without the change.
@@ -23423,7 +23423,7 @@ abstract class AppLocalizations {
   /// Body of the bar on the database home when a game update made the database incompatible.
   ///
   /// In en, this message translates to:
-  /// **'A game update removed something this database refers to. Remove each entry below and it can start a career again.'**
+  /// **'Something in this database doesn\'t fit this version of the game: a name clash, or something a game update removed. Fix or remove each entry below and it can start a career again.'**
   String get editorAttentionBody;
 
   /// Button on an entry that names something no longer in the game: deletes that entry from the database.
