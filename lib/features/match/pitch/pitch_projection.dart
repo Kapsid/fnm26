@@ -11,7 +11,7 @@ class PitchProjection {
     this.viewport,
     this.cam, {
     this.tilt = 0.75,
-    this.top = 0.24,
+    this.top = 0.30,
     this.bottom = 0.95,
   });
 
@@ -20,9 +20,10 @@ class PitchProjection {
   final double tilt;
 
   /// Where the far and the near touchline sit, as fractions of the viewport
-  /// height. What is above [top] is the far stand's and the skyline's: a
-  /// quarter of the height is what a three-tier stand and its roof flags
-  /// need at phone size (the sign-off mock, Task 11).
+  /// height. What is above [top] is the far stand's and the skyline's: three
+  /// tenths of the height lets a three-tier stand, its roof flags and a
+  /// city's landmark above them all read at phone size (the sign-off mock,
+  /// Task 11).
   final double top, bottom;
 
   double get _farScale => 1 - 0.5 * tilt;

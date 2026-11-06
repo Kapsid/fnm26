@@ -26,7 +26,7 @@ import 'package:fnm/features/match/pitch/scene_look.dart';
 /// Everything is laid out in pitch metres and put on screen through the same
 /// [PitchProjection] the players use, so a token on the touchline sits on
 /// the painted touchline. The stands are the one licence taken: their depth
-/// away from the pitch is drawn shallower than it is ([_standDepthScale]),
+/// away from the pitch is drawn shallower than it is ([_farDepthScale]),
 /// or the far stand of a big ground would run straight off a phone.
 class StadiumPainter extends CustomPainter {
   StadiumPainter(
@@ -62,8 +62,20 @@ class StadiumPainter extends CustomPainter {
   static const double _fascia = 2.2, _frontWall = 1.1;
   static const double _roofWall = 2.4, _canopy = 3.0;
 
-  /// How much of a stand's real depth is drawn. See the class comment.
-  static const double _standDepthScale = 0.36;
+  /// How much of a stand's real depth is drawn: the far stand shallow (see
+  /// the class comment), the ends behind the goals nearer their true depth,
+  /// since there is room for them across the frame.
+  static const double _farDepthScale = 0.26, _endDepthScale = 0.8;
+
+  /// How much of a stand's real height is drawn.
+  static const double _standRise = 0.85;
+
+  /// How far the end stands run on past the near touchline, toward the
+  /// camera, so the frame's bottom corners are stands and not ground.
+  static const double _nearRun = 14;
+
+  /// A small ground's end terraces: shallow, low and open to the sky.
+  static const double _terraceDepth = 5, _terraceRake = 0.42;
 
   /// The four floodlight towers, just off the pitch's corners.
   static const List<(double, double)> towers = [
@@ -80,7 +92,11 @@ class StadiumPainter extends CustomPainter {
   static const Color _grassA = Color(0xFF2F5638);
   static const Color _grassB = Color(0xFF284A31);
   static const Color _lines = Color(0xFFDDE3DF);
-  static const Color _apronColour = Color(0xFF16191B);
+
+  /// The verge between the boards and the stands, and the concrete edge in
+  /// front of the front row.
+  static const Color _verge = Color(0xFF24422C);
+  static const Color _concrete = Color(0xFF2B2E31);
   static const Color _lampLight = Color(0xFFF4F0E2);
 
   // ---------------------------------------------------------------------------
@@ -124,6 +140,8 @@ class StadiumPainter extends CustomPainter {
     _grass(canvas);
     _standShadow(canvas);
     _markings(canvas);
+    _dugouts(canvas);
+    _photographers(canvas);
     _boards(canvas, near: true);
     if (graded) canvas.restore();
 
@@ -210,20 +228,29 @@ class StadiumPainter extends CustomPainter {
       old.projection.cam != projection.cam ||
       old.projection.tilt != projection.tilt;
 
-  /// The dark concourse from the boards to the stands' front rows. Beyond
-  /// the stands (an open corner, the edges of the frame) the land behind the
-  /// ground shows through.
+  /// The verge from the boards to the stands, and a concrete edge in front
+  /// of the front row all round. Beyond the stands (an open corner, the
+  /// edges of the frame) the land behind the ground shows through.
   void _apronGround(Canvas canvas) {
     const l = PitchDims.length;
     canvas.drawPath(
       _poly([
-        _p(-_endFront, -_farFront),
-        _p(l + _endFront, -_farFront),
-        _p(l + _endFront, PitchDims.width + 30),
-        _p(-_endFront, PitchDims.width + 30),
+        _p(-_endFront - 1, -_farFront - 1),
+        _p(l + _endFront + 1, -_farFront - 1),
+        _p(l + _endFront + 1, PitchDims.width + 30),
+        _p(-_endFront - 1, PitchDims.width + 30),
       ]),
-      Paint()..color = _apronColour,
+      Paint()..color = _verge,
     );
+    for (final s in _segments) {
+      canvas.drawPath(
+        _band(
+          (t) => _standPoint(s, t, -1.0, 0),
+          (t) => _standPoint(s, t, 0, 0),
+        ),
+        Paint()..color = _concrete,
+      );
+    }
   }
 
   // --- Stands ---------------------------------------------------------------
@@ -234,23 +261,24 @@ class StadiumPainter extends CustomPainter {
   /// A point [o] metres out from a stand's front row, at [t] (0 to 1) along
   /// [seg], [z] metres up.
   Offset _standPoint(_Seg seg, double t, double o, double z) {
-    final d = o * _standDepthScale;
-    const l = PitchDims.length, w = PitchDims.width;
+    final df = o * _farDepthScale, de = o * _endDepthScale;
+    final h = z * _standRise;
+    const l = PitchDims.length, w = PitchDims.width + _nearRun;
     switch (seg) {
       case _Seg.left:
-        return _p(-_endFront - d, w * (1 - t), z);
+        return _p(-_endFront - de, w * (1 - t), h);
       case _Seg.far:
-        return _p(l * t, -_farFront - d, z);
+        return _p(l * t, -_farFront - df, h);
       case _Seg.right:
-        return _p(l + _endFront + d, w * t, z);
+        return _p(l + _endFront + de, w * t, h);
       case _Seg.cornerLeft:
       case _Seg.cornerRight:
         final a = (seg == _Seg.cornerLeft ? t : 1 - t) * math.pi / 2;
-        final rx = _endFront + d, ry = _farFront + d;
+        final rx = _endFront + de, ry = _farFront + df;
         final x = seg == _Seg.cornerLeft
             ? -rx * math.cos(a)
             : l + rx * math.cos(a);
-        return _p(x, -ry * math.sin(a), z);
+        return _p(x, -ry * math.sin(a), h);
     }
   }
 
@@ -272,7 +300,7 @@ class StadiumPainter extends CustomPainter {
   ];
 
   double _segLength(_Seg s) => switch (s) {
-    _Seg.left || _Seg.right => PitchDims.width,
+    _Seg.left || _Seg.right => PitchDims.width + _nearRun,
     _Seg.far => PitchDims.length,
     _ => 14,
   };
@@ -283,31 +311,51 @@ class StadiumPainter extends CustomPainter {
     return (o0: o0, z0: z0, o1: o0 + _tierDepth, z1: z0 + _tierDepth * _rake);
   }
 
-  /// Which fans sit at [frac] along [s]: the away end is the last stretch of
-  /// seats, from the right-hand end round toward the far stand.
+  /// Which fans sit at [frac] along [s]. The travelling support has one end
+  /// to itself, as at a real ground: the right-hand end from its far corner
+  /// toward the camera, and only a big following spills round the corner
+  /// into the far stand.
   bool _awayAt(_Seg s, double frac) {
-    final segs = _segments;
-    final total = segs.fold<double>(0, (a, x) => a + _segLength(x));
-    var before = 0.0;
-    for (final x in segs) {
-      if (x == s) break;
-      before += _segLength(x);
+    final total = _segments.fold<double>(0, (a, x) => a + _segLength(x));
+    var left = total * spec.awayShare.clamp(0.0, 1.0);
+    final end = _segLength(_Seg.right);
+    if (s == _Seg.right) return frac * end < left;
+    left -= end;
+    if (!spec.openCorners) {
+      if (s == _Seg.cornerRight) return (1 - frac) * 14 < left;
+      left -= 14;
     }
-    final along = before + frac * _segLength(s);
-    return along >= total * (1 - spec.awayShare.clamp(0.0, 1.0));
+    if (s == _Seg.far) return (1 - frac) * PitchDims.length < left;
+    return false;
   }
+
+  bool _isEnd(_Seg s) => s == _Seg.left || s == _Seg.right;
+
+  /// A small ground's end terrace: one shallow, low step of standing fans.
+  ({double o0, double z0, double o1, double z1}) get _terrace => (
+    o0: 0,
+    z0: _frontWall * 0.7,
+    o1: _terraceDepth,
+    z1: _frontWall * 0.7 + _terraceDepth * _terraceRake,
+  );
 
   void _stands(Canvas canvas) {
     final home = _crowdTone(spec.homeColour);
     final away = _crowdTone(spec.awayColour);
+    final small = spec.tiers == 1;
+    if (small) {
+      _grassBank(canvas, _Seg.cornerLeft);
+      _grassBank(canvas, _Seg.cornerRight);
+    }
     for (var k = 0; k < spec.tiers; k++) {
       final t = _tier(k);
       for (final s in _order) {
-        _frontWallOf(canvas, s, t.o0, t.z0, k);
+        final tier = small && _isEnd(s) ? _terrace : t;
+        _frontWallOf(canvas, s, tier.o0, tier.z0, k);
         _tierBand(
           canvas,
           s,
-          t,
+          tier,
           k,
           colourAt: (frac) => _awayAt(s, frac) ? away : home,
         );
@@ -315,8 +363,41 @@ class StadiumPainter extends CustomPainter {
     }
     final top = _tier(spec.tiers - 1);
     for (final s in _order) {
+      if (small && _isEnd(s)) {
+        _terraceRail(canvas, s);
+        continue;
+      }
       _roof(canvas, s, top.o1, top.z1);
     }
+  }
+
+  /// A grass bank in a small ground's open corner, rising away from the
+  /// pitch, where a bigger ground would have its corner stand.
+  void _grassBank(Canvas canvas, _Seg corner) {
+    canvas.drawPath(
+      _band(
+        (t) => _standPoint(corner, t, -0.5, 0),
+        (t) => _standPoint(corner, t, 9, 3.2),
+      ),
+      Paint()
+        ..shader = ui.Gradient.linear(
+          _standPoint(corner, 0.5, 0, 0),
+          _standPoint(corner, 0.5, 9, 3.2),
+          const [Color(0xFF2C4B33), Color(0xFF203626)],
+        ),
+    );
+  }
+
+  /// The crush barrier along the back of an end terrace.
+  void _terraceRail(Canvas canvas, _Seg s) {
+    final t = _terrace;
+    canvas.drawPath(
+      _line((u) => _standPoint(s, u, t.o1, t.z1 + 1.0)),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.9
+        ..color = AppColors.outline.withValues(alpha: 0.7),
+    );
   }
 
   /// A kit colour as a crowd reads from across a ground: the hue kept,
@@ -484,7 +565,10 @@ class StadiumPainter extends CustomPainter {
   /// coming up through dusk, bright with a halo at night.
   void _lamps(Canvas canvas) {
     final top = _tier(spec.tiers - 1);
-    for (final s in [_Seg.far, _Seg.left, _Seg.right]) {
+    for (final s in [
+      _Seg.far,
+      if (spec.tiers > 1) ...[_Seg.left, _Seg.right],
+    ]) {
       final lamps = s == _Seg.far ? 9 : 5;
       for (var i = 0; i < lamps; i++) {
         final c = _standPoint(
@@ -578,7 +662,8 @@ class StadiumPainter extends CustomPainter {
   void _flags(Canvas canvas) {
     final top = _tier(spec.tiers - 1);
     final o = top.o1 - 3.0, z = top.z1 + _roofWall + 0.9;
-    const poles = [0.16, 0.38, 0.62, 0.84];
+    // Clear of the middle, where a city's landmark rises.
+    const poles = [0.08, 0.24, 0.76, 0.92];
     final ppm = _ppm(0);
     final poleH = 4.2 * ppm * projection.tilt * 1.6;
     final w = math.max(9.0, ppm * 3.4);
@@ -620,6 +705,104 @@ class StadiumPainter extends CustomPainter {
             ..filterQuality = FilterQuality.medium
             ..colorFilter = ColorFilter.mode(shade, BlendMode.modulate),
         );
+    }
+  }
+
+  // --- Life between the pitch and the stands ---------------------------------
+
+  /// The two dugouts in front of the far boards either side of halfway, the
+  /// substitutes on their benches under a clear roof.
+  void _dugouts(Canvas canvas) {
+    const y0 = -3.3, y1 = -2.2;
+    for (final (x0, x1, kit) in [
+      (37.0, 46.0, spec.homeColour),
+      (59.0, 68.0, spec.awayColour),
+    ]) {
+      final ppm = _ppm(y0);
+      canvas.drawPath(
+        _poly([_p(x0, y0), _p(x1, y0), _p(x1, y0, 1.5), _p(x0, y0, 1.5)]),
+        Paint()..color = AppColors.surfaceContainerHigh,
+      );
+      // The bench: a row of seated men in their side's colours.
+      final man = Paint()..color = _crowdTone(kit);
+      for (var x = x0 + 0.8; x < x1 - 0.4; x += 1.1) {
+        canvas.drawCircle(
+          _p(x, y0 + 0.4, 0.75),
+          math.max(0.9, ppm * 0.38),
+          man,
+        );
+      }
+      // The roof and its sides, clear with a steel edge.
+      final glass = Paint()..color = Colors.white.withValues(alpha: 0.14);
+      canvas
+        ..drawPath(
+          _poly([
+            _p(x0, y0, 1.6),
+            _p(x1, y0, 1.6),
+            _p(x1, y1, 1.15),
+            _p(x0, y1, 1.15),
+          ]),
+          glass,
+        )
+        ..drawPath(
+          _poly([_p(x0, y0), _p(x0, y0, 1.6), _p(x0, y1, 1.15), _p(x0, y1)]),
+          glass,
+        )
+        ..drawPath(
+          _poly([_p(x1, y0), _p(x1, y0, 1.6), _p(x1, y1, 1.15), _p(x1, y1)]),
+          glass,
+        )
+        ..drawLine(
+          _p(x0, y1, 1.15),
+          _p(x1, y1, 1.15),
+          Paint()
+            ..strokeWidth = math.max(0.7, ppm * 0.12)
+            ..color = AppColors.primary.withValues(alpha: 0.6),
+        );
+    }
+  }
+
+  /// Photographers crouched along each goal line, either side of the goal,
+  /// in their bibs.
+  void _photographers(Canvas canvas) {
+    const ys = [8.5, 11.5, 14.5, 18.0, 21.5, 46.5, 50.0, 53.5, 56.5, 59.5];
+    const bib = Color(0xFF8E8A6A);
+    for (final left in [true, false]) {
+      final x = left ? -3.5 : PitchDims.length + 3.5;
+      for (var i = 0; i < ys.length; i++) {
+        final y = ys[i] + (i.isEven ? 0.4 : -0.3);
+        final ppm = _ppm(y);
+        final w = math.max(1.6, ppm * 0.7);
+        final h = math.max(2.2, ppm * 1.0);
+        final foot = _p(x, y);
+        final body = Rect.fromLTWH(foot.dx - w / 2, foot.dy - h, w, h);
+        canvas
+          ..drawRRect(
+            RRect.fromRectAndRadius(body, Radius.circular(w * 0.3)),
+            Paint()..color = const Color(0xFF202427),
+          )
+          ..drawRect(
+            Rect.fromLTWH(body.left, body.top + h * 0.15, w, h * 0.38),
+            Paint()..color = bib,
+          )
+          ..drawCircle(
+            Offset(foot.dx, body.top - w * 0.2),
+            w * 0.32,
+            Paint()..color = const Color(0xFF3A3532),
+          )
+          // The camera, a small dark block held to the face.
+          ..drawRect(
+            Rect.fromCenter(
+              center: Offset(
+                foot.dx + (left ? w * 0.25 : -w * 0.25),
+                body.top - w * 0.12,
+              ),
+              width: w * 0.42,
+              height: w * 0.3,
+            ),
+            Paint()..color = const Color(0xFF0E1012),
+          );
+      }
     }
   }
 
@@ -917,13 +1100,13 @@ class StadiumPainter extends CustomPainter {
     for (final (tx, ty) in towers) {
       final px = tx + (c.x - tx) * 0.42, py = ty + (c.y - ty) * 0.42;
       final centre = _p(px, py);
-      final radius = (_p(px + 40, py).dx - centre.dx).abs();
+      final radius = (_p(px + 46, py).dx - centre.dx).abs();
       canvas.drawPath(
-        _circleM(px, py, 40),
+        _circleM(px, py, 46),
         Paint()
           ..blendMode = BlendMode.screen
           ..shader = ui.Gradient.radial(centre, radius, [
-            const Color(0xFFFFF4DC).withValues(alpha: 0.16 * f),
+            const Color(0xFFFFF4DC).withValues(alpha: 0.24 * f),
             const Color(0xFFFFF4DC).withValues(alpha: 0.0),
           ]),
       );

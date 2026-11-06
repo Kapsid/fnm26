@@ -89,7 +89,7 @@ class SceneLook {
     snow: Color(0xFF4A5562),
     water: Color(0xFF0D141D),
     sand: Color(0xFF17150F),
-    grade: Color(0xFF6C7890),
+    grade: Color(0xFF4E596D),
     flood: 1,
     sunGlow: 0,
     stars: 1,
