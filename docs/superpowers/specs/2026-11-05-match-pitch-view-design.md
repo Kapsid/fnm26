@@ -149,6 +149,23 @@ The owner reviewed the first mock: "not bad but can we differ the feel a bit fro
 5. **Mowing patterns.**
    - Stripes, checkerboard, wide bands, diagonal and centre circles.
    - The pattern is chosen per stadium, so a ground always looks the same.
+7. **Sunset during the match** (owner: "which will change to night when appropriate").
+   - Light is worked out for each minute, from the real clock time of that minute, at the nation's latitude on that date.
+   - The clock includes half-time, the extra-time break and stoppage.
+   - The sky, shadows and grass shift gradually.
+   - Floodlights ramp up through dusk and never switch off during a match.
+   - Stands light up in team colours at night.
+8. **Goal styles by region** (owner: "different types of goal based on continent and country").
+   - There are 3–4 net and frame styles, for example a deep box net with tall stanchions (South America) and a sloped European net.
+   - The style is chosen by confederation, with country overrides and small-ground variants, and is the same every time per stadium.
+   - True goal size is unchanged.
+9. **Terrain and landmarks behind the stands** (owner: "i dont see that eifel, maybe mountains in bolivia and more"). This part of Task 12 is pulled forward into the second mock.
+   - Terrain by country: mountains (Andes, Alps), sea, desert, hills, or a city skyline.
+   - About 30 landmark silhouettes are drawn on top of the terrain.
+   - Both react to day, dusk and night.
+10. **Tournament dressing** (owner: "final tournaments should have some stripe or something … and finals golden design").
+    - Finals-tournament matches get a tournament band on the ad boards and a coloured stripe around the pitch edge.
+    - The final gets a golden look: gold accents, a gold stripe, and gold confetti at full time.
 6. **Gate.** A second mock goes to the owner before anything else is built. It shows the same ground at day, dusk and night, three mowing patterns, and the new tokens.
 
 ## Left to the builder
