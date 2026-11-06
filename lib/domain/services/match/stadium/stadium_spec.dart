@@ -1,12 +1,15 @@
 import 'dart:ui' show Color;
 
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
+import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
 
 /// What the stadium looks like for one match: size from capacity, crowd from
-/// attendance, colours from the two kits.
+/// attendance, colours from the two kits, and the ground's own look (its
+/// mowing, its goals and what stands behind it), fixed per ground.
 class StadiumSpec {
   const StadiumSpec({
     required this.tiers,
@@ -17,6 +20,9 @@ class StadiumSpec {
     required this.awayShare,
     required this.flagCode,
     required this.landmark,
+    this.mowing = MowingPattern.stripes,
+    this.goalStyle = GoalStyle.sloped,
+    this.terrain = Terrain.hills,
   });
 
   factory StadiumSpec.from(
@@ -25,6 +31,7 @@ class StadiumSpec {
     Nation away,
     double awayShare, {
     required String groundNationCode,
+    Confederation? groundConfederation,
   }) {
     final tiers = g.capacity < 15000 ? 1 : (g.capacity < 45000 ? 2 : 3);
     final kits = KitClash.resolve(home, away);
@@ -37,8 +44,39 @@ class StadiumSpec {
       awayShare: awayShare,
       flagCode: groundNationCode,
       landmark: Landmarks.forCity(g.city),
+      mowing: MowingPattern.forStadium(g.stadium),
+      goalStyle: GoalStyle.forGround(
+        stadium: g.stadium,
+        groundCode: groundNationCode,
+        confederation: groundConfederation ?? home.confederation,
+        capacity: g.capacity,
+      ),
+      terrain: Terrain.forGround(
+        groundCode: groundNationCode,
+        capacity: g.capacity,
+      ),
     );
   }
+
+  /// This ground with parts of its look swapped, for previews and mocks.
+  StadiumSpec withLook({
+    MowingPattern? mowing,
+    GoalStyle? goalStyle,
+    Terrain? terrain,
+    LandmarkKind? landmark,
+  }) => StadiumSpec(
+    tiers: tiers,
+    openCorners: openCorners,
+    fill: fill,
+    homeColour: homeColour,
+    awayColour: awayColour,
+    awayShare: awayShare,
+    flagCode: flagCode,
+    landmark: landmark ?? this.landmark,
+    mowing: mowing ?? this.mowing,
+    goalStyle: goalStyle ?? this.goalStyle,
+    terrain: terrain ?? this.terrain,
+  );
 
   final int tiers;
   final bool openCorners;
@@ -48,4 +86,7 @@ class StadiumSpec {
   final double awayShare;
   final String flagCode;
   final LandmarkKind landmark;
+  final MowingPattern mowing;
+  final GoalStyle goalStyle;
+  final Terrain terrain;
 }

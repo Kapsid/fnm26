@@ -309,6 +309,7 @@ class PitchScript {
     this.cuts = const [],
     this.cutKinds = const {},
     this.start = 0,
+    this.confettiAt,
   }) : _index = {
          for (var i = 0; i < actorList.length; i++) actorList[i].playerId: i,
        };
@@ -365,6 +366,11 @@ class PitchScript {
 
   /// The screen second the script begins at: 0, or the resume point.
   final double start;
+
+  /// The screen second gold confetti starts to fall: the final whistle of a
+  /// tournament's final (`StoryLayer.build(isFinal:)`). Null for every other
+  /// match. The confetti is drawn over the picture; it never touches play.
+  final double? confettiAt;
   final Map<int, int> _index;
 
   /// How fast a player walks off, in metres per second.

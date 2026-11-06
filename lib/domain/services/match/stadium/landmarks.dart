@@ -1,7 +1,156 @@
-/// The silhouette drawn behind the far stand. Task 12 fills in the curated
-/// cities; until then every ground gets [none] (a generic skyline).
-enum LandmarkKind { none }
+/// The silhouette drawn behind the far stand, for the cities that have one.
+/// Every other ground gets [none] and shows its terrain alone.
+enum LandmarkKind {
+  none,
+  eiffel,
+  colosseum,
+  bigBen,
+  christRedeemer,
+  stBasil,
+  sagradaFamilia,
+  operaHouse,
+  pyramids,
+  mosqueDomes,
+  tokyoTower,
+  newYorkSkyline,
+  tvTower,
+  acropolis,
+  pragueCastle,
+  gabledHouses,
+  obelisco,
+  angel,
+  burj,
+  templeOfHeaven,
+  gateway,
+  seoulTower,
+  cnTower,
+  belemTower,
+  alcala,
+  twinTowers,
+  sailHotel,
+  tableMountain,
+  hallgrims,
+  spires,
+  parliament,
+}
 
 abstract final class Landmarks {
-  static LandmarkKind forCity(String city) => LandmarkKind.none;
+  /// The city's landmark, matched on the name with case and accents
+  /// ignored ("Reykjavík", "reykjavik" and "REYKJAVIK" are one city).
+  static LandmarkKind forCity(String city) =>
+      _byCity[fold(city)] ?? LandmarkKind.none;
+
+  static const Map<String, LandmarkKind> _byCity = {
+    'paris': LandmarkKind.eiffel,
+    'rome': LandmarkKind.colosseum,
+    'roma': LandmarkKind.colosseum,
+    'london': LandmarkKind.bigBen,
+    'rio de janeiro': LandmarkKind.christRedeemer,
+    'rio': LandmarkKind.christRedeemer,
+    'moscow': LandmarkKind.stBasil,
+    'moskva': LandmarkKind.stBasil,
+    'barcelona': LandmarkKind.sagradaFamilia,
+    'sydney': LandmarkKind.operaHouse,
+    'cairo': LandmarkKind.pyramids,
+    'giza': LandmarkKind.pyramids,
+    'istanbul': LandmarkKind.mosqueDomes,
+    'tokyo': LandmarkKind.tokyoTower,
+    'new york': LandmarkKind.newYorkSkyline,
+    'new york city': LandmarkKind.newYorkSkyline,
+    'berlin': LandmarkKind.tvTower,
+    'athens': LandmarkKind.acropolis,
+    'athina': LandmarkKind.acropolis,
+    'prague': LandmarkKind.pragueCastle,
+    'praha': LandmarkKind.pragueCastle,
+    'amsterdam': LandmarkKind.gabledHouses,
+    'buenos aires': LandmarkKind.obelisco,
+    'mexico city': LandmarkKind.angel,
+    'ciudad de mexico': LandmarkKind.angel,
+    'dubai': LandmarkKind.burj,
+    'beijing': LandmarkKind.templeOfHeaven,
+    'peking': LandmarkKind.templeOfHeaven,
+    'mumbai': LandmarkKind.gateway,
+    'bombay': LandmarkKind.gateway,
+    'seoul': LandmarkKind.seoulTower,
+    'toronto': LandmarkKind.cnTower,
+    'lisbon': LandmarkKind.belemTower,
+    'lisboa': LandmarkKind.belemTower,
+    'madrid': LandmarkKind.alcala,
+    'kuala lumpur': LandmarkKind.twinTowers,
+    'singapore': LandmarkKind.sailHotel,
+    'cape town': LandmarkKind.tableMountain,
+    'reykjavik': LandmarkKind.hallgrims,
+    'copenhagen': LandmarkKind.spires,
+    'kobenhavn': LandmarkKind.spires,
+    'budapest': LandmarkKind.parliament,
+  };
+
+  /// [s] lower-cased, its accents stripped and its spacing collapsed.
+  static String fold(String s) {
+    final b = StringBuffer();
+    for (final r in s.toLowerCase().trim().runes) {
+      final c = String.fromCharCode(r);
+      b.write(_plain[c] ?? c);
+    }
+    return b.toString().replaceAll(RegExp(r'[\s\-]+'), ' ');
+  }
+
+  static const Map<String, String> _plain = {
+    'á': 'a',
+    'à': 'a',
+    'â': 'a',
+    'ä': 'a',
+    'ã': 'a',
+    'å': 'a',
+    'ą': 'a',
+    'æ': 'ae',
+    'ç': 'c',
+    'č': 'c',
+    'ć': 'c',
+    'ď': 'd',
+    'đ': 'd',
+    'ð': 'd',
+    'é': 'e',
+    'è': 'e',
+    'ê': 'e',
+    'ë': 'e',
+    'ě': 'e',
+    'ę': 'e',
+    'í': 'i',
+    'ì': 'i',
+    'î': 'i',
+    'ï': 'i',
+    'ı': 'i',
+    'ł': 'l',
+    'ľ': 'l',
+    'ñ': 'n',
+    'ň': 'n',
+    'ń': 'n',
+    'ó': 'o',
+    'ò': 'o',
+    'ô': 'o',
+    'ö': 'o',
+    'õ': 'o',
+    'ø': 'o',
+    'ő': 'o',
+    'ř': 'r',
+    'š': 's',
+    'ś': 's',
+    'ş': 's',
+    'ß': 'ss',
+    'ť': 't',
+    'ţ': 't',
+    'ú': 'u',
+    'ù': 'u',
+    'û': 'u',
+    'ü': 'u',
+    'ů': 'u',
+    'ű': 'u',
+    'ý': 'y',
+    'ÿ': 'y',
+    'ž': 'z',
+    'ź': 'z',
+    'ż': 'z',
+    'þ': 'th',
+  };
 }

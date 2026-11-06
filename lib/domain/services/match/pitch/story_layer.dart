@@ -502,7 +502,14 @@ abstract final class StoryLayer {
     required int seed,
     MomentStager stager = const MomentStaging(),
     ScriptState? resumeFrom,
-  }) => _Builder(result, lineups, pacer, seed, stager).run(resumeFrom);
+    bool isFinal = false,
+  }) => _Builder(
+    result,
+    lineups,
+    pacer,
+    seed,
+    stager,
+  ).run(resumeFrom, isFinal: isFinal);
 }
 
 /// A shape re-formed for the men left: [layout]'s slots with only [filled]
@@ -814,7 +821,7 @@ class _Builder {
   StagedWindow? activeWindow;
   StagedPlan? activePlan;
 
-  PitchScript run(ScriptState? resume) {
+  PitchScript run(ScriptState? resume, {bool isFinal = false}) {
     total = pacer.total.inMicroseconds / 1e6;
     sides = [
       _Side(lineups.home, home: true),
@@ -988,6 +995,7 @@ class _Builder {
       result: result,
       homeNationId: lineups.home.nationId,
       start: start,
+      confettiAt: isFinal ? total : null,
     );
   }
 
