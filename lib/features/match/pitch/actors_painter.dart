@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/domain/services/match/pitch/display_spacing.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
+import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
@@ -43,7 +44,17 @@ class CutTransition {
   /// The transition [t] falls in, or null in plain play.
   static CutTransition? at(PitchScript s, double t) {
     const half = length / 2;
-    final c = _nearest(s.cuts, t) ?? _nearest(s.resets, t);
+    final cut = _nearest(s.cuts, t);
+    final reset = cut == null ? _nearest(s.resets, t) : null;
+    if (reset != null) {
+      // After an interval the screen has paused on the line-ups: no fade
+      // out before it, only the fade in after the restart.
+      if (t < reset) return null;
+      return CutTransition._(reset, PitchCutKind.kickOff, [
+        (t: t, alpha: ((t - reset) / half).clamp(0.0, 1.0)),
+      ]);
+    }
+    final c = cut;
     if (c == null) return null;
     final kind = s.cutKinds[c] ?? PitchCutKind.kickOff;
     // Just before the cut instant, on the near side of it.
@@ -103,6 +114,7 @@ class ActorsPainter extends CustomPainter {
     required this.kits,
     required this.names,
     required this.lightAt,
+    this.isPlaying = _always,
   }) : r0 = tokenRadiusFor(projection.viewport),
        super(repaint: clock) {
     _towers = [
@@ -128,6 +140,13 @@ class ActorsPainter extends CustomPainter {
   final Map<int, String> names;
   final PitchLight Function(int minute, {int stoppage}) lightAt;
 
+  /// Whether the clock is running. Paused, the picture holds still at full
+  /// strength, even on a cut's dip (a fade frozen half-way would leave the
+  /// pitch empty).
+  final bool Function() isPlaying;
+
+  static bool _always() => true;
+
   /// The token's half-width at the near touchline.
   final double r0;
 
@@ -138,15 +157,20 @@ class ActorsPainter extends CustomPainter {
   /// The names drawn in the last frame, as drawn.
   final List<String> lastNames = [];
 
+  /// Where each name went last frame: a label keeps its place while it
+  /// stays clear (see `PlayerToken.labelPlace`).
+  final Map<int, int> _labelChoice = {};
+
+  /// The drawn tokens' nudges, eased from frame to frame.
+  final DeclutterEasing _easing = DeclutterEasing();
+
   (int, int)? _shadowKey;
   TokenShadows? _shadows;
 
   /// The token size for a pitch [viewport]: 10.2 on a phone (390 wide),
   /// 16.5 on a tablet's 1024, as signed off in the mock.
-  static double tokenRadiusFor(Size viewport) {
-    final u = ((viewport.width - 390) / (1024 - 390)).clamp(-0.2, 1.3);
-    return 10.2 + (16.5 - 10.2) * u;
-  }
+  static double tokenRadiusFor(Size viewport) =>
+      PitchViewGeometry.tokenHalfWidth(viewport.width);
 
   /// The name label's size for a pitch [viewport].
   static double nameSizeFor(Size viewport) {
@@ -183,7 +207,7 @@ class ActorsPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     lastNames.clear();
     final t = clock.value.inMicroseconds / 1e6;
-    final tr = CutTransition.at(script, t);
+    final tr = isPlaying() ? CutTransition.at(script, t) : null;
     if (tr == null) {
       _frame(canvas, t);
       return;
@@ -220,7 +244,7 @@ class ActorsPainter extends CustomPainter {
     final men = <_Token>[];
     // Where each man is drawn: eased off anybody he would stand on top of
     // on screen (the man on the ball stays at it).
-    final drawn = Declutter.frame(script, f, t);
+    final drawn = _easing.frame(script, f, t);
     for (final e in drawn.entries) {
       final i = script.actorIndexOf(e.key)!;
       final p = e.value;
@@ -244,7 +268,10 @@ class ActorsPainter extends CustomPainter {
         ),
       );
     }
-    men.sort((a, b) => a.y.compareTo(b.y));
+    men.sort((a, b) {
+      final d = a.y.compareTo(b.y);
+      return d != 0 ? d : a.id.compareTo(b.id);
+    });
 
     for (final m in men) {
       PlayerToken.paintShadow(canvas, m.c, m.r, shadows, _towers);
@@ -279,12 +306,16 @@ class ActorsPainter extends CustomPainter {
 
     // Names last, clear of every token, the ball and each other.
     if (f.tagged.isEmpty) return;
-    final avoid = [
-      for (final m in men) m.box,
-      Rect.fromCircle(center: lifted, radius: br + 1),
+    final ballBox = Rect.fromCircle(center: lifted, radius: br + 1);
+    final avoid = [for (final m in men) m.box, ballBox];
+    final hard = [
+      ballBox,
+      for (final m in men)
+        if (f.keepers.contains(m.id)) m.box,
     ];
     final fontSize = nameSizeFor(projection.viewport);
     final labels = <Rect>[];
+    final chosen = <int, int>{};
     for (final id in f.tagged) {
       final name = names[id];
       if (name == null) continue;
@@ -305,10 +336,21 @@ class ActorsPainter extends CustomPainter {
         own: m.box,
         bounds: Offset.zero & projection.viewport,
         labels: labels,
+        hard: [
+          for (final b in hard)
+            if (!identical(b, m.box)) b,
+        ],
+        prefer: _labelChoice[id],
+        chose: (c) => chosen[id] = c,
       );
       labels.add(placed);
       lastNames.add(label);
     }
+    // What each named man's label chose, kept for the next frame (and
+    // forgotten for anybody no longer named).
+    _labelChoice
+      ..clear()
+      ..addAll(chosen);
   }
 
   void _ballShadow(
@@ -362,7 +404,7 @@ class ActorsPainter extends CustomPainter {
   bool shouldRepaint(covariant ActorsPainter old) =>
       !identical(old.script, script) ||
       old.projection.viewport != projection.viewport ||
-      !identical(old.names, names) ||
+      !mapEquals(old.names, names) ||
       old.kits != kits;
 }
 

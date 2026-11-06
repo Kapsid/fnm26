@@ -126,4 +126,69 @@ void main() {
       expect(p.left < own.right && p.right > own.left, isTrue);
     }
   });
+
+  test('a crowded label never covers the keeper or the ball', () {
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(60, 11);
+    final own = PlayerToken.box(me, r, -1.5708);
+    final keeper = PlayerToken.box(const Offset(200, 124), r);
+    final ball = Rect.fromCircle(center: const Offset(206, 108), radius: 4);
+    final avoid = [
+      keeper,
+      for (final d in const [
+        Offset(0, 24),
+        Offset(26, 0),
+        Offset(-26, 0),
+        Offset(24, 22),
+        Offset(-24, 22),
+        Offset(24, -22),
+        Offset(-24, -22),
+      ])
+        PlayerToken.box(me + d, r),
+    ];
+    final place = PlayerToken.labelPlace(
+      me,
+      r,
+      size,
+      avoid,
+      own: own,
+      hard: [keeper, ball],
+    );
+    expect(place.crowded, isTrue);
+    expect(place.rect.overlaps(keeper), isFalse);
+    expect(place.rect.overlaps(ball), isFalse);
+    // Still his: straight above him.
+    expect(place.rect.center.dx, closeTo(me.dx, 0.01));
+  });
+
+  test('a label keeps its place while it stays clear', () {
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(60, 11);
+    // Last frame it went above him (place 1).
+    final kept = PlayerToken.labelPlace(me, r, size, const [], prefer: 1);
+    expect(kept.choice, 1);
+    // A man just brushing the place under him does not pull it back down
+    // while above stays clear...
+    final under = PlayerToken.labelCandidates(me, r, size).first;
+    final brushing = Rect.fromLTWH(under.right + 1, under.top, 10, 10);
+    final still = PlayerToken.labelPlace(
+      me,
+      r,
+      size,
+      [brushing],
+      prefer: 1,
+    );
+    expect(still.choice, 1);
+    // ...and from crowded, a place must be clear with room to spare.
+    final fromCrowd = PlayerToken.labelPlace(
+      me,
+      r,
+      size,
+      [brushing],
+      prefer: -1,
+    );
+    expect(fromCrowd.choice, isNot(0));
+  });
 }

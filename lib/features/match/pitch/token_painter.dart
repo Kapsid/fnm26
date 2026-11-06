@@ -144,6 +144,7 @@ abstract final class PlayerToken {
     if (cachedNumber) {
       // Laid out once per number and ink at a reference size, then scaled
       // to the token: no text layout in a live frame.
+      _watchFonts();
       final tp = _numbers.putIfAbsent(
         number * 2 + (on == Colors.black ? 1 : 0),
         () => _numberPainter(number, on, _numberRef),
@@ -165,6 +166,28 @@ abstract final class PlayerToken {
 
   static const double _numberRef = 24;
   static final Map<int, TextPainter> _numbers = {};
+
+  static bool _watching = false;
+
+  /// Cached text is laid out in the fonts loaded at the time: when the
+  /// system's fonts change, it is thrown away and laid out again.
+  static void _watchFonts() {
+    if (_watching) return;
+    _watching = true;
+    PaintingBinding.instance.systemFonts.addListener(clearTextCache);
+  }
+
+  /// Disposes every cached number and name.
+  static void clearTextCache() {
+    for (final tp in _numbers.values) {
+      tp.dispose();
+    }
+    _numbers.clear();
+    for (final tp in _names.values) {
+      tp.dispose();
+    }
+    _names.clear();
+  }
 
   static TextPainter _numberPainter(int number, Color on, double size) =>
       TextPainter(
@@ -241,14 +264,22 @@ abstract final class PlayerToken {
   }
 
   /// A name label's text painter, cached by name and size.
-  static TextPainter namePainter(String name, double fontSize) =>
-      _names.putIfAbsent((name, fontSize), () {
-        if (_names.length > 256) _names.clear();
-        return TextPainter(
-          text: TextSpan(text: name, style: _nameStyle(fontSize)),
-          textDirection: TextDirection.ltr,
-        )..layout();
-      });
+  static TextPainter namePainter(String name, double fontSize) {
+    _watchFonts();
+    final key = (name, fontSize);
+    final had = _names[key];
+    if (had != null) return had;
+    if (_names.length > 256) {
+      for (final tp in _names.values) {
+        tp.dispose();
+      }
+      _names.clear();
+    }
+    return _names[key] = TextPainter(
+      text: TextSpan(text: name, style: _nameStyle(fontSize)),
+      textDirection: TextDirection.ltr,
+    )..layout();
+  }
 
   static final Map<(String, double), TextPainter> _names = {};
 
@@ -294,6 +325,9 @@ abstract final class PlayerToken {
     Rect? own,
     Rect? bounds,
     List<Rect> labels = const [],
+    List<Rect> hard = const [],
+    int? prefer,
+    void Function(int choice)? chose,
   }) {
     final tp = namePainter(name, fontSize);
     final size = Size(tp.width, tp.height + 2.4);
@@ -309,7 +343,10 @@ abstract final class PlayerToken {
       own: own,
       bounds: bounds,
       labels: labels,
+      hard: hard,
+      prefer: prefer,
     );
+    chose?.call(place.choice);
     final box_ = place.rect;
     if (place.crowded) {
       // The leader tick: from the label down to the top of his shirt.
@@ -379,10 +416,17 @@ abstract final class PlayerToken {
   }
 
   /// The label's place among [avoid]: the first of [labelCandidates] clear
-  /// of all of them, else straight above the token, [crowded], over whoever
-  /// is there. With [bounds] (the frame), a place is slid sideways to lie
-  /// inside it.
-  static ({Rect rect, bool crowded}) labelPlace(
+  /// of all of them (and of the [labels] already drawn), else straight
+  /// above the token, [crowded], over whoever is there but never over a
+  /// keeper, the ball or another name in [hard] or [labels]: it rises
+  /// above the stack instead, a leader tick down to his shirt. With
+  /// [bounds] (the frame), a place is slid to lie inside it.
+  ///
+  /// [prefer] is the place it took last frame ([choice] of the result, -1
+  /// for crowded): it is kept while it stays clear, and any other must
+  /// clear by a margin to take over, so a label does not hop between two
+  /// places from frame to frame.
+  static ({Rect rect, bool crowded, int choice}) labelPlace(
     Offset c,
     double r,
     Size size,
@@ -390,6 +434,8 @@ abstract final class PlayerToken {
     Rect? own,
     Rect? bounds,
     List<Rect> labels = const [],
+    List<Rect> hard = const [],
+    int? prefer,
   }) {
     Rect inside(Rect p) {
       if (bounds == null) return p;
@@ -405,10 +451,24 @@ abstract final class PlayerToken {
     final places = [
       for (final p in labelCandidates(c, r, size, own: own)) inside(p),
     ];
-    for (final place in places) {
-      if (avoid.every((b) => !b.overlaps(place)) &&
-          labels.every((b) => !b.overlaps(place))) {
-        return (rect: place, crowded: false);
+    bool clear(Rect place, double margin) {
+      final grown = place.inflate(margin);
+      return avoid.every((b) => !b.overlaps(grown)) &&
+          labels.every((b) => !b.overlaps(grown)) &&
+          hard.every((b) => !b.overlaps(grown));
+    }
+
+    if (prefer != null && prefer >= 0 && prefer < places.length) {
+      if (clear(places[prefer], 0)) {
+        return (rect: places[prefer], crowded: false, choice: prefer);
+      }
+    }
+    // A new place has to be clear with room to spare when the label had
+    // one already (or was crowded), so it does not flick back and forth.
+    final margin = prefer == null ? 0.0 : 2.0;
+    for (var i = 0; i < places.length; i++) {
+      if (clear(places[i], margin)) {
+        return (rect: places[i], crowded: false, choice: i);
       }
     }
     final me = own ?? box(c, r, math.pi / 2 * 3);
@@ -420,11 +480,13 @@ abstract final class PlayerToken {
         size.height,
       ),
     );
-    // Over another name already there: one line up, the tick longer.
-    for (var k = 0; k < 3 && labels.any((b) => b.overlaps(over)); k++) {
+    // Over a keeper, the ball or another name: up above the stack.
+    bool blocked(Rect p) =>
+        labels.any((b) => b.overlaps(p)) || hard.any((b) => b.overlaps(p));
+    for (var k = 0; k < 4 && blocked(over); k++) {
       over = inside(over.translate(0, -(size.height + 1)));
     }
-    return (rect: over, crowded: true);
+    return (rect: over, crowded: true, choice: -1);
   }
 
   /// [labelPlace]'s rectangle.
