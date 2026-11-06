@@ -96,6 +96,7 @@ abstract final class PlayerToken {
     required Color trim,
     required int number,
     required double facing,
+    bool cachedNumber = false,
   }) {
     final shirt = _scaled(_shirt, c, r);
     canvas
@@ -140,22 +141,45 @@ abstract final class PlayerToken {
         ..color = AppColors.surfaceContainerLowest.withValues(alpha: 0.8),
     );
     final on = fill.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-    final tp = TextPainter(
-      text: TextSpan(
-        text: '$number',
-        style: AppTypography.titleMedium.copyWith(
-          fontSize: r * 1.0,
-          height: 1,
-          fontWeight: FontWeight.w800,
-          color: on,
-          letterSpacing: -0.3,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, c - Offset(tp.width / 2, tp.height / 2 - r * 0.14));
+    if (cachedNumber) {
+      // Laid out once per number and ink at a reference size, then scaled
+      // to the token: no text layout in a live frame.
+      final tp = _numbers.putIfAbsent(
+        number * 2 + (on == Colors.black ? 1 : 0),
+        () => _numberPainter(number, on, _numberRef),
+      );
+      final k = r / _numberRef;
+      canvas
+        ..save()
+        ..translate(c.dx, c.dy + r * 0.14)
+        ..scale(k)
+        ..translate(-tp.width / 2, -tp.height / 2);
+      tp.paint(canvas, Offset.zero);
+      canvas.restore();
+    } else {
+      final tp = _numberPainter(number, on, r);
+      tp.paint(canvas, c - Offset(tp.width / 2, tp.height / 2 - r * 0.14));
+    }
     _chevron(canvas, c, r, facing);
   }
+
+  static const double _numberRef = 24;
+  static final Map<int, TextPainter> _numbers = {};
+
+  static TextPainter _numberPainter(int number, Color on, double size) =>
+      TextPainter(
+        text: TextSpan(
+          text: '$number',
+          style: AppTypography.titleMedium.copyWith(
+            fontSize: size,
+            height: 1,
+            fontWeight: FontWeight.w800,
+            color: on,
+            letterSpacing: -0.3 * size / 10,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
 
   /// A small chevron just off the shirt on the side the player faces.
   static void _chevron(Canvas canvas, Offset c, double r, double facing) {
@@ -188,13 +212,75 @@ abstract final class PlayerToken {
       );
   }
 
+  /// The screen box a token at [c] covers: the shirt, its outline and the
+  /// chevron on the side it faces ([facing], screen radians). With no
+  /// [facing] the chevron may point anywhere, so the box allows for it all
+  /// round.
+  static Rect box(Offset c, double r, [double? facing]) {
+    final shirt = Rect.fromLTRB(
+      c.dx - r * 1.04,
+      c.dy - r * 0.99,
+      c.dx + r * 1.04,
+      c.dy + r * 1.02,
+    );
+    const reach = 1.5 + 0.13;
+    if (facing == null) {
+      return Rect.fromCenter(
+        center: c,
+        width: r * reach * 2,
+        height: r * reach * 2,
+      );
+    }
+    final d = Offset(math.cos(facing), math.sin(facing));
+    final tip = c + d * (r * reach);
+    final wing = Offset(-d.dy, d.dx) * (r * 0.4);
+    final back = c + d * (r * 1.2);
+    return shirt
+        .expandToInclude(Rect.fromPoints(tip, tip))
+        .expandToInclude(Rect.fromPoints(back + wing, back - wing));
+  }
+
+  /// A name label's text painter, cached by name and size.
+  static TextPainter namePainter(String name, double fontSize) =>
+      _names.putIfAbsent((name, fontSize), () {
+        if (_names.length > 256) _names.clear();
+        return TextPainter(
+          text: TextSpan(text: name, style: _nameStyle(fontSize)),
+          textDirection: TextDirection.ltr,
+        )..layout();
+      });
+
+  static final Map<(String, double), TextPainter> _names = {};
+
+  static TextStyle _nameStyle(double fontSize) =>
+      AppTypography.labelSmall.copyWith(
+        fontSize: fontSize,
+        height: 1,
+        letterSpacing: 0.5,
+        fontWeight: FontWeight.w700,
+        color: AppColors.onSurface,
+        shadows: [
+          Shadow(
+            color: AppColors.surfaceContainerLowest.withValues(alpha: 0.95),
+            blurRadius: 2.5,
+          ),
+          Shadow(
+            color: AppColors.surfaceContainerLowest.withValues(alpha: 0.9),
+            offset: const Offset(0, 0.8),
+            blurRadius: 0.8,
+          ),
+        ],
+      );
+
   /// The player's name in a slim label under the token: no plate, a soft
   /// dark halo so it reads on lit and unlit grass alike.
   ///
   /// The label never lies on another player: [others] are the other tokens
-  /// (centre and half-width). Under the token is tried first, then above
-  /// it, then each a step to either side; see [labelRect].
-  static void paintName(
+  /// (centre and half-width), each taken at its full box ([box]) with the
+  /// chevron allowed for all round; or pass their exact boxes as [avoid].
+  /// Under the token is tried first, then above it, then each a step to
+  /// either side; see [labelRect]. Returns where the label went.
+  static Rect paintName(
     Canvas canvas,
     Offset c,
     double r,
@@ -202,30 +288,15 @@ abstract final class PlayerToken {
     required double fontSize,
     Color? accent,
     List<(Offset, double)> others = const [],
+    List<Rect>? avoid,
+    Rect? own,
+    Rect? bounds,
   }) {
-    final style = AppTypography.labelSmall.copyWith(
-      fontSize: fontSize,
-      height: 1,
-      letterSpacing: 0.5,
-      fontWeight: FontWeight.w700,
-      color: AppColors.onSurface,
-      shadows: [
-        Shadow(
-          color: AppColors.surfaceContainerLowest.withValues(alpha: 0.95),
-          blurRadius: 2.5,
-        ),
-        Shadow(
-          color: AppColors.surfaceContainerLowest.withValues(alpha: 0.9),
-          offset: const Offset(0, 0.8),
-          blurRadius: 0.8,
-        ),
-      ],
-    );
-    final tp = TextPainter(
-      text: TextSpan(text: name, style: style),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    final box = labelRect(c, r, Size(tp.width, tp.height + 2.4), others);
+    final tp = namePainter(name, fontSize);
+    final size = Size(tp.width, tp.height + 2.4);
+    final box = avoid != null
+        ? labelRectAvoiding(c, r, size, avoid, own: own, bounds: bounds)
+        : labelRect(c, r, size, others);
     tp.paint(canvas, box.topLeft);
     if (accent != null) {
       // A hairline in the kit colour under the name.
@@ -239,40 +310,89 @@ abstract final class PlayerToken {
           ..color = accent,
       );
     }
+    return box;
   }
 
-  /// Where a label of [size] for the token at [c] goes: under it, else
-  /// above it, else nudged sideways from either, so that it covers none of
-  /// [others]. Falls back to under it if every place is taken.
+  /// Where a label of [size] for the token at [c] goes so that it covers
+  /// none of [others] (centre and half-width, each at its full [box]).
   static Rect labelRect(
     Offset c,
     double r,
     Size size,
     List<(Offset, double)> others,
-  ) {
-    bool clear(Rect box) => others.every((o) {
-      final (oc, orr) = o;
-      if ((oc - c).distance < 0.01) return true;
-      final body = Rect.fromCenter(
-        center: oc,
-        width: orr * 2.2,
-        height: orr * 2.0,
-      ).inflate(1);
-      return !body.overlaps(box);
-    });
-    final below = c.dy + r * 1.05 + 2;
-    final above = c.dy - r * 1.05 - 2 - size.height;
-    for (final dx in [0.0, 0.35, -0.35, 0.7, -0.7]) {
-      for (final top in [below, above]) {
-        final box = Rect.fromLTWH(
-          c.dx - size.width / 2 + dx * size.width,
-          top,
-          size.width,
-          size.height,
-        );
-        if (clear(box)) return box;
+  ) => labelRectAvoiding(c, r, size, [
+    for (final (oc, orr) in others)
+      if ((oc - c).distance >= 0.01) box(oc, orr),
+  ]);
+
+  /// The places tried for a label of [size] under the token at [c] (whose
+  /// own box is [own]), best first: under it, above it, then a step to
+  /// either side of each, then a row further out.
+  static List<Rect> labelCandidates(
+    Offset c,
+    double r,
+    Size size, {
+    Rect? own,
+  }) {
+    final me = own ?? box(c, r, math.pi / 2 * 3);
+    final below = me.bottom + 1.5;
+    final above = me.top - 1.5 - size.height;
+    return [
+      for (final row in [0.0, 1.0])
+        for (final dx in [0.0, 0.35, -0.35, 0.7, -0.7, 1.0, -1.0])
+          for (final top in [
+            below + row * (size.height + 2),
+            above - row * (size.height + 2),
+          ])
+            Rect.fromLTWH(
+              c.dx - size.width / 2 + dx * size.width,
+              top,
+              size.width,
+              size.height,
+            ),
+    ];
+  }
+
+  /// [labelRect] against exact boxes: the first of [labelCandidates] that
+  /// touches none of [avoid], or, when every place is taken, the one that
+  /// covers least of them. With [bounds] (the frame), a place is slid
+  /// sideways to lie inside it, and one that cannot is tried last.
+  static Rect labelRectAvoiding(
+    Offset c,
+    double r,
+    Size size,
+    List<Rect> avoid, {
+    Rect? own,
+    Rect? bounds,
+  }) {
+    var places = labelCandidates(c, r, size, own: own);
+    if (bounds != null) {
+      Rect inside(Rect p) {
+        var dx = 0.0;
+        if (p.left < bounds.left + 2) dx = bounds.left + 2 - p.left;
+        if (p.right > bounds.right - 2) dx = bounds.right - 2 - p.right;
+        return p.translate(dx, 0);
+      }
+
+      bool fits(Rect p) => p.top >= bounds.top && p.bottom <= bounds.bottom;
+      final slid = places.map(inside).toList();
+      places = [...slid.where(fits), ...slid.where((p) => !fits(p))];
+    }
+    Rect? best;
+    var least = double.infinity;
+    for (final place in places) {
+      var covered = 0.0;
+      for (final b in avoid) {
+        if (!b.overlaps(place)) continue;
+        final i = b.intersect(place);
+        covered += math.max(i.width, 0) * math.max(i.height, 0) + 1;
+      }
+      if (covered == 0) return place;
+      if (covered < least) {
+        least = covered;
+        best = place;
       }
     }
-    return Rect.fromLTWH(c.dx - size.width / 2, below, size.width, size.height);
+    return best!;
   }
 }
