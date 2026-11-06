@@ -34,3 +34,36 @@ const List<String> supportedLanguageCodes = [
   'th',
   'ms',
 ];
+
+/// Each language in its own tongue, never translated: a manager who has landed
+/// in a language he cannot read must still be able to find his own.
+const Map<String, String> languageEndonyms = {
+  'en': 'English',
+  'cs': 'Čeština',
+  'fr': 'Français',
+  'it': 'Italiano',
+  'pl': 'Polski',
+  'es': 'Español',
+  'de': 'Deutsch',
+  'pt': 'Português',
+  'tr': 'Türkçe',
+  'nl': 'Nederlands',
+  'id': 'Bahasa Indonesia',
+  'el': 'Ελληνικά',
+  'sv': 'Svenska',
+  'nb': 'Norsk bokmål',
+  'vi': 'Tiếng Việt',
+  'bg': 'Български',
+  'da': 'Dansk',
+  'fi': 'Suomi',
+  'hu': 'Magyar',
+  'hr': 'Hrvatski',
+  'uk': 'Українська',
+  'fil': 'Filipino',
+  'hi': 'हिन्दी',
+  'ja': '日本語',
+  'ko': '한국어',
+  'ro': 'Română',
+  'th': 'ไทย',
+  'ms': 'Bahasa Melayu',
+};

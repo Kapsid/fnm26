@@ -545,6 +545,16 @@ abstract final class PackRules {
     return out.any((i) => i.where == 'yAccounts.$original');
   }
 
+  /// Whether the Y account value [p] gives [path] (a `yAccounts.<original>`
+  /// or `addedYAccounts.<id>` [PackPaths] path) in [language] clashes with
+  /// what another account shows in that language (see [_yLanguageClashes]):
+  /// the editor refuses such a value as it is typed.
+  static bool yNameTakenIn(WorldPack p, String path, String language) {
+    final out = <PackIssue>[];
+    _yLanguageClashes(p, out);
+    return out.any((i) => i.where == 'localized.$path.$language');
+  }
+
   /// A Y account's new name must be nobody else's: not another account's
   /// new name, nor another account's original name (the game's fixed
   /// accounts, or one this pack renames). Two accounts under one name would
@@ -616,7 +626,9 @@ abstract final class PackRules {
     for (final e in p.localized.entries) {
       final root = PackPaths.parse(e.key)?.root;
       if (root == 'yAccounts' || root == 'addedYAccounts') {
-        languages.addAll(e.value.keys);
+        // A language this build does not speak is never shown, so it can
+        // clash with nothing ([compatibility] flags it as unknown).
+        languages.addAll(e.value.keys.where(supportedLanguageCodes.contains));
       }
     }
     if (languages.isEmpty) return;

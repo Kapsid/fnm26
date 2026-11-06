@@ -9,7 +9,8 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// One entry of a database's "what's missing" list: where it is (`title`:
 /// a nation, or the section), what is wrong (`detail`), and where the entry
 /// jumps to (`section`, opened on `nationId` when it is per nation; null
-/// for the whole database, which stays on its home).
+/// for the whole database, which stays on its home, and
+/// [EditorSection.none] for a nation's old rename, fixed there by Remove).
 typedef PackIssueText = ({
   String title,
   String detail,
@@ -67,6 +68,8 @@ PackIssueText describePackIssue(
         section: EditorSection.players,
         nationId: nationId,
       );
+    // A nation's old rename: no section edits it now, so it is fixed from
+    // the home, by Remove.
     case DuplicateCode(:final code, :final nationIds):
       return (
         title: l.editorSectionNations,
@@ -74,7 +77,7 @@ PackIssueText describePackIssue(
           code,
           nationIds.map(nation).join(', '),
         ),
-        section: EditorSection.nations,
+        section: EditorSection.none,
         nationId: null,
       );
     case UnknownId(:final path):
@@ -101,7 +104,7 @@ PackIssueText describePackIssue(
           _addedName(pack, root, int.tryParse(key.split('.').first)) ?? key,
         _ => switch (section) {
           EditorSection.players ||
-          EditorSection.nations ||
+          EditorSection.none ||
           EditorSection.nameLists when id != null => nation(id),
           EditorSection.stadiums => key.substring(key.indexOf(':') + 1),
           _ => key,
@@ -196,7 +199,7 @@ PackIssueText _badField(
         detail: field == 'code'
             ? l.editorIssueCode
             : nameProblem(value?.name ?? ''),
-        section: EditorSection.nations,
+        section: EditorSection.none,
         nationId: nationId,
       );
     case 'nameLists':

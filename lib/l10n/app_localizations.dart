@@ -22658,6 +22658,66 @@ abstract class AppLocalizations {
   /// **'Another account already has this name.'**
   String get editorNamesTaken;
 
+  /// Title of the editor's language picker sheet: which language's names the database editor shows and edits.
+  ///
+  /// In en, this message translates to:
+  /// **'Names in which language'**
+  String get editorLanguageTitle;
+
+  /// Editor language picker option: show and edit the main names, used in every language that has no name of its own.
+  ///
+  /// In en, this message translates to:
+  /// **'All languages'**
+  String get editorLanguageAll;
+
+  /// Short label on the editor's language chip when no single language is picked (all languages). Keep very short.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get editorLanguageAllShort;
+
+  /// Note in the editor's language picker sheet: picking a language here changes what the editor shows and edits, never the game's language.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the editor switches. The game stays in its own language.'**
+  String get editorLanguageNote;
+
+  /// Note at the top of an editor name section while a single language is picked. language is that language's own name (e.g. Čeština).
+  ///
+  /// In en, this message translates to:
+  /// **'Names in {language}. Leave one empty to use the main name.'**
+  String editorLanguageEditing(String language);
+
+  /// Small mark on an editor row, in a picked language, whose name is the database's main name because that language has none of its own.
+  ///
+  /// In en, this message translates to:
+  /// **'Same in all languages'**
+  String get editorLanguageSame;
+
+  /// Line in the editor's name form while a single language is picked: the database's main name, used where a language has none of its own.
+  ///
+  /// In en, this message translates to:
+  /// **'Main name: {name}'**
+  String editorLanguageMainName(String name);
+
+  /// Helper under a name field in the editor while a single language is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to use the main name.'**
+  String get editorLanguageKeepHint;
+
+  /// Button in the editor's name form while a single language is picked: removes this language's own name, so the main name shows.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the main name'**
+  String get editorLanguageClear;
+
+  /// Error under a name field in the editor when the database already holds the most per-language names it can.
+  ///
+  /// In en, this message translates to:
+  /// **'This database has no room for more names per language.'**
+  String get editorLanguageFull;
+
   /// Label of a journalist's outlet field in the editor.
   ///
   /// In en, this message translates to:

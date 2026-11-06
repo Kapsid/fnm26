@@ -8,7 +8,6 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// A section's name.
 String sectionTitle(AppLocalizations l, EditorSection s) => switch (s) {
   EditorSection.players => l.editorSectionPlayers,
-  EditorSection.nations => l.editorSectionNations,
   EditorSection.clubs => l.editorSectionClubs,
   EditorSection.stadiums => l.editorSectionStadiums,
   EditorSection.competitions => l.editorSectionCompetitions,
@@ -17,12 +16,13 @@ String sectionTitle(AppLocalizations l, EditorSection s) => switch (s) {
   EditorSection.nameLists => l.editorSectionNameLists,
   EditorSection.sponsors => l.editorSectionSponsors,
   EditorSection.trophies => l.editorSectionTrophies,
+  // Only a nation's old rename lands here.
+  EditorSection.none => l.editorSectionNations,
 };
 
 /// What a section holds, in a line.
 String sectionAbout(AppLocalizations l, EditorSection s) => switch (s) {
   EditorSection.players => l.editorAboutPlayers,
-  EditorSection.nations => l.editorAboutNations,
   EditorSection.clubs => l.editorAboutClubs,
   EditorSection.stadiums => l.editorAboutStadiums,
   EditorSection.competitions => l.editorAboutCompetitions,
@@ -31,11 +31,11 @@ String sectionAbout(AppLocalizations l, EditorSection s) => switch (s) {
   EditorSection.nameLists => l.editorAboutNameLists,
   EditorSection.sponsors => l.editorAboutSponsors,
   EditorSection.trophies => l.editorAboutTrophies,
+  EditorSection.none => l.editorAboutNations,
 };
 
 IconData sectionIcon(EditorSection s) => switch (s) {
   EditorSection.players => Icons.groups_outlined,
-  EditorSection.nations => Icons.flag_outlined,
   EditorSection.clubs => Icons.shield_outlined,
   EditorSection.stadiums => Icons.stadium_outlined,
   EditorSection.competitions => Icons.emoji_events_outlined,
@@ -44,6 +44,7 @@ IconData sectionIcon(EditorSection s) => switch (s) {
   EditorSection.nameLists => Icons.badge_outlined,
   EditorSection.sponsors => Icons.handshake_outlined,
   EditorSection.trophies => Icons.image_outlined,
+  EditorSection.none => Icons.flag_outlined,
 };
 
 /// The colour that says [status].

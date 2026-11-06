@@ -2,7 +2,7 @@ part of 'pack_home_screen.dart';
 
 /// A database's home on a landscape tablet: the ready bar over the whole
 /// list of what is missing on the left, the sections as a grid on the
-/// right. Undo sits in the header.
+/// right. The editor's language and Undo sit in the header.
 class _PackHomeTabletLayout extends StatelessWidget {
   const _PackHomeTabletLayout({
     required this.state,
@@ -26,11 +26,18 @@ class _PackHomeTabletLayout extends StatelessWidget {
       scaffoldKey: PackHomeScreen.tabletLayoutKey,
       title: pack.name,
       onBack: state._back,
-      trailing: TextButton.icon(
-        key: PackHomeScreen.undoKey,
-        onPressed: onUndo,
-        icon: const Icon(Icons.undo),
-        label: Text(l.editorUndo),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: AppSpacing.sm,
+        children: [
+          const EditorLanguageChip(),
+          TextButton.icon(
+            key: PackHomeScreen.undoKey,
+            onPressed: onUndo,
+            icon: const Icon(Icons.undo),
+            label: Text(l.editorUndo),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -88,7 +95,7 @@ class _PackHomeTabletLayout extends StatelessWidget {
                         spacing: gap,
                         runSpacing: gap,
                         children: [
-                          for (final s in EditorSection.values)
+                          for (final s in EditorSection.onHome)
                             SizedBox(
                               width: width,
                               height: _SectionTile.height + 8,

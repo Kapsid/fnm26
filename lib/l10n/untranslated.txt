@@ -4,7 +4,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "da": [
@@ -12,7 +22,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "de": [
@@ -20,7 +40,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "el": [
@@ -28,7 +58,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "es": [
@@ -36,7 +76,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "fi": [
@@ -44,7 +94,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "fil": [
@@ -52,7 +112,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "fr": [
@@ -60,7 +130,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "hi": [
@@ -68,7 +148,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "hr": [
@@ -76,7 +166,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "hu": [
@@ -84,7 +184,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "id": [
@@ -92,7 +202,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "it": [
@@ -100,7 +220,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "ja": [
@@ -108,7 +238,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "ko": [
@@ -116,7 +256,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "ms": [
@@ -124,7 +274,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "nb": [
@@ -132,7 +292,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "nl": [
@@ -140,7 +310,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "pl": [
@@ -148,7 +328,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "pt": [
@@ -156,7 +346,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "ro": [
@@ -164,7 +364,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "sv": [
@@ -172,7 +382,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "th": [
@@ -180,7 +400,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "tr": [
@@ -188,7 +418,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "uk": [
@@ -196,7 +436,17 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ],
 
   "vi": [
@@ -204,6 +454,16 @@
     "sponsorDealLineBigPayer",
     "sponsorDealLineCrowdPleaser",
     "sponsorDealLineFamilyFriendly",
-    "sponsorDealLineMarketing"
+    "sponsorDealLineMarketing",
+    "editorLanguageTitle",
+    "editorLanguageAll",
+    "editorLanguageAllShort",
+    "editorLanguageNote",
+    "editorLanguageEditing",
+    "editorLanguageSame",
+    "editorLanguageMainName",
+    "editorLanguageKeepHint",
+    "editorLanguageClear",
+    "editorLanguageFull"
   ]
 }

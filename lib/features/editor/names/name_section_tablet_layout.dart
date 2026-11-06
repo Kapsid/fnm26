@@ -1,7 +1,8 @@
 part of 'name_section_screen.dart';
 
 /// A name section on a landscape tablet: the search and the list on the
-/// left, the picked row's editor on the right. Undo sits in the header.
+/// left, the picked row's editor on the right. The editor's language (but
+/// for the name lists) and Undo sit in the header.
 class _NameSectionTabletLayout extends StatelessWidget {
   const _NameSectionTabletLayout({
     required this.state,
@@ -29,6 +30,7 @@ class _NameSectionTabletLayout extends StatelessWidget {
       title: title,
       onBack: state._back,
       actions: [
+        if (state._section.perLanguage) const EditorLanguageChip(),
         TextButton.icon(
           key: NameSectionScreen.undoKey,
           onPressed: onUndo,
@@ -51,7 +53,12 @@ class _NameSectionTabletLayout extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                 picked: shown?.key,
                 chevrons: false,
-                onTap: (e) => state._open(e, tablet: true, world: world),
+                onTap: (e) => state._open(
+                  e,
+                  tablet: true,
+                  world: world,
+                  language: view.language,
+                ),
               ),
             ),
           ],
@@ -67,11 +74,16 @@ class _NameSectionTabletLayout extends StatelessWidget {
                   child: AppCard(
                     padding: const EdgeInsets.all(AppSpacing.lg),
                     child: NameEditForm(
-                      key: ValueKey('editorNames.form.${shown.key}'),
+                      // A new form per row and language: its fields hold
+                      // that language's names.
+                      key: ValueKey(
+                        'editorNames.form.${shown.key}.${view.language}',
+                      ),
                       packId: state._id,
                       section: state._section,
                       entry: shown,
                       world: world,
+                      language: view.language,
                     ),
                   ),
                 ),

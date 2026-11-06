@@ -368,6 +368,10 @@ typedef YPost = ({
   String displayName,
   YTemplate template,
   int variant,
+
+  /// The template's arguments. After [YFeed.renamedIn] this very list also
+  /// carries the account behind the post: pass it on as it is, since a copy
+  /// of it drops that identity.
   List<String> args,
   DateTime date,
   String key,

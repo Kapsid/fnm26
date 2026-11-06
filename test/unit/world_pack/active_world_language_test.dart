@@ -430,5 +430,54 @@ void main() {
         contains('localized.${PackPaths.addedY(added.id)}.ja'),
       );
     });
+
+    test('a language this build does not speak never clashes', () {
+      final game = YFeed.namedAccounts.first;
+      final p = _pack(
+        yAccounts: const {builtIn: 'Renamed Fan'},
+        addedYAccounts: [added],
+        localized: {
+          PackPaths.addedY(added.id): {'xx': game},
+          PackPaths.yAccount(builtIn): {'xx': game},
+        },
+      );
+      expect(PackRules.issues(p).whereType<NameClash>(), isEmpty);
+      expect(
+        PackRules.yNameTakenIn(p, PackPaths.addedY(added.id), 'xx'),
+        false,
+      );
+    });
+
+    test('a post rebuilt with args: p.args keeps its persona', () {
+      final cs = ActiveWorld(world).inLanguage('cs');
+      final feed = YFeed.renamedIn(
+        (posts: [post(builtIn, 'a'), post(addedName, 'b')], reserveFrom: null),
+        cs,
+        added: [added],
+        addedWorld: 'lang',
+      );
+      // Rebuilt the way a screen might: a new record, the same args list.
+      YPost rebuilt(YPost p) => (
+        voice: p.voice,
+        handle: p.handle,
+        displayName: p.displayName,
+        template: p.template,
+        variant: p.variant,
+        args: p.args,
+        date: p.date.add(const Duration(days: 1)),
+        key: '${p.key}-again',
+        replyTo: p.replyTo,
+        mood: p.mood,
+      );
+      ActiveWorld.current = cs;
+      expect(
+        YFeed.personaOf(rebuilt(feed.posts[0])).trait,
+        YCast.traitFor(builtIn),
+      );
+      expect(
+        YFeed.personaOf(rebuilt(feed.posts[1])).trait,
+        YCast.traitFor(addedName),
+      );
+    });
   });
 }

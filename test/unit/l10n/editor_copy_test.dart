@@ -23,9 +23,25 @@ void main() {
     'settingsDefaultWorldBlurb',
     'worldPackNotReady',
   };
+  // Editor 2's new copy, in English and Czech only until its translation
+  // task (Task 13) gives it every language and empties this set.
+  const pending = {
+    'editorLanguageTitle',
+    'editorLanguageAll',
+    'editorLanguageAllShort',
+    'editorLanguageNote',
+    'editorLanguageEditing',
+    'editorLanguageSame',
+    'editorLanguageMainName',
+    'editorLanguageKeepHint',
+    'editorLanguageClear',
+    'editorLanguageFull',
+  };
   final keys = [
     for (final k in en.keys)
-      if (!k.startsWith('@') && (k.startsWith('editor') || extra.contains(k)))
+      if (!k.startsWith('@') &&
+          !pending.contains(k) &&
+          (k.startsWith('editor') || extra.contains(k)))
         k,
   ];
   final codes = [

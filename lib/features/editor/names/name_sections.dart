@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show immutable;
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/config/languages.dart';
 import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -16,6 +18,7 @@ import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/press/press.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
+import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -24,9 +27,10 @@ import 'package:fnm/features/editor/players/players_ui.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// The editor sections that rename what the game names: each a list of
-/// (game name, the database's name) rows.
+/// (game name, the database's name) rows. Nations are not among them: their
+/// names and codes are no longer edited (a database's old renames still
+/// apply).
 enum NameSection {
-  nations(EditorSection.nations),
   clubs(EditorSection.clubs),
   stadiums(EditorSection.stadiums),
   competitions(EditorSection.competitions),
@@ -46,7 +50,6 @@ enum NameSection {
 
   /// The first part of this section's [PackIssue.where] paths.
   String get issueRoot => switch (this) {
-    nations => 'nations',
     clubs => 'clubs',
     stadiums => 'stadiums',
     competitions => 'competitions',
@@ -62,11 +65,14 @@ enum NameSection {
 
   /// Whether the game translates these names, so a custom one (the same in
   /// every language) is worth a word.
-  bool get translated =>
-      this == nations || this == competitions || this == sponsors;
+  bool get translated => this == competitions || this == sponsors;
 
-  /// Whether a row has a second field: a nation's code, a reporter's outlet.
-  bool get paired => this == nations || this == press;
+  /// Whether a row has a second field: a reporter's outlet.
+  bool get paired => this == press;
+
+  /// Whether its names can differ per language (the editor's language
+  /// picker): every section but the name lists.
+  bool get perLanguage => this != nameLists;
 
   /// Whether its rows are grouped under their country.
   bool get grouped => this == clubs || this == stadiums;
@@ -93,13 +99,13 @@ class NameEntry {
   /// The game's name for it, in the manager's language.
   final String original;
 
-  /// The game's second value: a nation's code, a reporter's outlet.
+  /// The game's second value: a reporter's outlet.
   final String original2;
 
   /// A line about it under the name (a stadium's city).
   final String? detail;
 
-  /// The nation it is (nations, name lists) or belongs to (clubs, stadiums).
+  /// The nation it is (name lists) or belongs to (clubs, stadiums).
   final int? nationId;
 
   /// The flag to show beside it.
@@ -163,7 +169,6 @@ List<NameGroup> nameGroups(
       entries..sort((a, b) => a.fold.compareTo(b.fold));
 
   switch (section) {
-    case NameSection.nations:
     case NameSection.nameLists:
       final pools = {
         for (final e in lists.entries) e.key: namePoolOf(e.value),
@@ -173,7 +178,6 @@ List<NameGroup> nameGroups(
           NameEntry(
             key: '${n.id}',
             original: n.name,
-            original2: section == NameSection.nations ? n.code : '',
             nationId: n.id,
             flagCode: n.code,
             firstNames: pools[n.id]?.first ?? const [],
@@ -299,14 +303,6 @@ NameEntry _stadium(
 /// game's (name lists: see [NameEdits.listsOf]).
 NameOverride? nameOverride(NameSection section, WorldPack pack, NameEntry e) {
   switch (section) {
-    case NameSection.nations:
-      final n = pack.nations[int.tryParse(e.key)];
-      // Both blank is the game's name and code: no change at all.
-      return n == null ||
-              (ActiveWorld.textOrNull(n.name) == null &&
-                  ActiveWorld.textOrNull(n.code) == null)
-          ? null
-          : (name: n.name, second: n.code);
     case NameSection.press:
       final r = pack.reporters[int.tryParse(e.key)];
       return r == null ? null : (name: r.name, second: r.outlet);
@@ -347,9 +343,10 @@ abstract final class NameEdits {
     _ => throw ArgumentError('$s is not a plain rename'),
   };
 
-  /// [pack] with [e] named [name] (and [second], for a nation's code or a
-  /// reporter's outlet). A blank field keeps the game's value; when both
-  /// come out as the game's, the override goes.
+  /// [pack] with [e] named [name] (and [second], for a reporter's outlet):
+  /// its main name, shown in every language that has none of its own. A
+  /// blank field keeps the game's value; when both come out as the game's,
+  /// the override goes (its per-language names stay: see [reset]).
   static WorldPack rename(
     NameSection section,
     WorldPack pack,
@@ -358,28 +355,11 @@ abstract final class NameEdits {
     String second = '',
   ]) {
     final n = name.trim();
-    final s = section == NameSection.nations
-        ? second.trim().toUpperCase()
-        : second.trim();
+    final s = second.trim();
     final newName = n.isEmpty ? e.original : n;
     final newSecond = s.isEmpty ? e.original2 : s;
     final same = newName == e.original && newSecond == e.original2;
     switch (section) {
-      case NameSection.nations:
-        // What stays the game's is stored blank: the game's name is in the
-        // manager's language, and stored it would show in every language.
-        final id = int.parse(e.key);
-        return pack.copyWith(
-          nations: {
-            for (final x in pack.nations.entries)
-              if (x.key != id) x.key: x.value,
-            if (!same)
-              id: (
-                name: newName == e.original ? '' : newName,
-                code: newSecond == e.original2 ? '' : newSecond,
-              ),
-          },
-        );
       case NameSection.press:
         final id = int.parse(e.key);
         return pack.copyWith(
@@ -404,11 +384,141 @@ abstract final class NameEdits {
     }
   }
 
-  /// [pack] with nothing of [e] overridden.
-  static WorldPack reset(NameSection section, WorldPack pack, NameEntry e) =>
-      section == NameSection.nameLists
-      ? withLists(pack, e, const [], const [])
-      : rename(section, pack, e, '');
+  /// [pack] with nothing of [e] overridden: its main name and every
+  /// language's own ("Reset" under All languages).
+  static WorldPack reset(NameSection section, WorldPack pack, NameEntry e) {
+    if (section == NameSection.nameLists) {
+      return withLists(pack, e, const [], const []);
+    }
+    final main = rename(section, pack, e, '');
+    final paths = pathsOf(section, e);
+    if (!paths.any(main.localized.containsKey)) return main;
+    return main.copyWith(
+      localized: {
+        for (final x in main.localized.entries)
+          if (!paths.contains(x.key)) x.key: x.value,
+      },
+    );
+  }
+
+  /// The `localized` paths of [e] in [section]: its name's, and a
+  /// reporter's outlet's. None for the name lists.
+  static List<String> pathsOf(NameSection section, NameEntry e) =>
+      switch (section) {
+        NameSection.clubs => [PackPaths.club(e.key)],
+        NameSection.stadiums => [PackPaths.stadium(e.key)],
+        NameSection.competitions => [PackPaths.competition(e.key)],
+        NameSection.yAccounts => [PackPaths.yAccount(e.key)],
+        NameSection.sponsors => [PackPaths.sponsor(e.key)],
+        NameSection.press => [
+          PackPaths.reporterName(int.parse(e.key)),
+          PackPaths.reporterOutlet(int.parse(e.key)),
+        ],
+        NameSection.nameLists => const [],
+      };
+
+  /// [pack] with [e]'s own name in language [lang] set to [value] (and a
+  /// reporter's outlet to [second]). A value left blank, or typed as what
+  /// the row shows without one (the main name, else the game's in [lang]),
+  /// is no value: it is removed, and a path left with no language goes
+  /// with it (an empty one is refused). Past [PackRules.localizedMax] in
+  /// all, nothing new is added.
+  static WorldPack renameIn(
+    NameSection section,
+    WorldPack pack,
+    NameEntry e,
+    String lang,
+    String value, [
+    String second = '',
+  ]) {
+    final localized = _localizedIn(section, pack, e, lang, value, second);
+    if (_overflows(pack.localized, localized)) return pack;
+    return const DeepCollectionEquality().equals(localized, pack.localized)
+        ? pack
+        : pack.copyWith(localized: localized);
+  }
+
+  /// Whether [renameIn] with these values is refused because it would add
+  /// a value past [PackRules.localizedMax] in all.
+  static bool overflowsIn(
+    NameSection section,
+    WorldPack pack,
+    NameEntry e,
+    String lang,
+    String value, [
+    String second = '',
+  ]) => _overflows(
+    pack.localized,
+    _localizedIn(section, pack, e, lang, value, second),
+  );
+
+  static bool _overflows(
+    Map<String, Map<String, String>> before,
+    Map<String, Map<String, String>> after,
+  ) =>
+      localizedCount(after) > PackRules.localizedMax &&
+      localizedCount(after) > localizedCount(before);
+
+  /// [pack]'s `localized` as [renameIn] leaves it, cap aside.
+  static Map<String, Map<String, String>> _localizedIn(
+    NameSection section,
+    WorldPack pack,
+    NameEntry e,
+    String lang,
+    String value,
+    String second,
+  ) {
+    final paths = pathsOf(section, e);
+    if (paths.isEmpty) throw ArgumentError('$section has no languages');
+    final v = valueIn(section, pack, e, lang);
+    var localized = pack.localized;
+    void put(String path, String typed, LanguageValue now) {
+      final t = typed.trim();
+      final values = {...?localized[path]};
+      if (t.isEmpty || t == (now.main ?? now.game)) {
+        values.remove(lang);
+      } else {
+        values[lang] = t;
+      }
+      localized = {
+        for (final x in localized.entries)
+          if (x.key != path) x.key: x.value,
+        if (values.isNotEmpty) path: values,
+      };
+    }
+
+    put(paths.first, value, v.name);
+    if (v.second case final s?) put(paths[1], second, s);
+    return localized;
+  }
+
+  /// [pack] without [e]'s own names in language [lang] ("Use the main
+  /// name"); a path left with no language goes.
+  static WorldPack resetIn(
+    NameSection section,
+    WorldPack pack,
+    NameEntry e,
+    String lang,
+  ) {
+    final paths = pathsOf(section, e);
+    if (!paths.any((p) => pack.localized[p]?.containsKey(lang) ?? false)) {
+      return pack;
+    }
+    return pack.copyWith(
+      localized: {
+        for (final x in pack.localized.entries)
+          if (!paths.contains(x.key))
+            x.key: x.value
+          else if (({...x.value}..remove(lang)) case final rest
+              when rest.isNotEmpty)
+            x.key: rest,
+      },
+    );
+  }
+
+  /// How many (path, language) values [localized] holds.
+  static int localizedCount(Map<String, Map<String, String>> localized) =>
+      localized.values.fold(0, (n, m) => n + m.length);
 
   /// The names in [text]: split on commas and new lines, trimmed, blanks
   /// dropped.
@@ -450,26 +560,113 @@ abstract final class NameEdits {
   }
 }
 
+/// What a row shows for one text in one language: its own value there
+/// ([own]), else the database's main one ([main]), else the game's in that
+/// language ([game]).
+typedef LanguageValue = ({String? own, String? main, String game});
+
+/// What [v] shows.
+String shownOf(LanguageValue v) => v.own ?? v.main ?? v.game;
+
+/// The game's own name for [e] of [section] in language [lang]: the
+/// translated sections (competitions, sponsors) say it in [lang]; every
+/// other name is the same in every language.
+String gameNameIn(NameSection section, NameEntry e, String lang) {
+  if (!section.translated) return e.original;
+  final l = lookupAppLocalizations(Locale(lang));
+  return _inDefaultWorld(
+    () => switch (section) {
+      NameSection.competitions => competitionLabel(l, e.key),
+      NameSection.sponsors => switch (SponsorBrand.values.asNameMap()[e.key]) {
+        final b? => sponsorBrandName(l, b),
+        null => e.original,
+      },
+      _ => e.original,
+    },
+  );
+}
+
+/// What [pack] gives [e] of [section] in language [lang]: its name, and a
+/// reporter's outlet ([second], null for every other section).
+({LanguageValue name, LanguageValue? second}) valueIn(
+  NameSection section,
+  WorldPack pack,
+  NameEntry e,
+  String lang,
+) {
+  final paths = NameEdits.pathsOf(section, e);
+  String? own(int i) => ActiveWorld.textOrNull(pack.localized[paths[i]]?[lang]);
+  final main = nameOverride(section, pack, e);
+  return (
+    name: (
+      own: own(0),
+      main: ActiveWorld.textOrNull(main?.name),
+      game: gameNameIn(section, e, lang),
+    ),
+    second: section.paired
+        ? (
+            own: own(1),
+            main: ActiveWorld.textOrNull(main?.second),
+            game: e.original2,
+          )
+        : null,
+  );
+}
+
+/// The languages [pack] gives [e] of [section] a name (or outlet) of its
+/// own in, in [supportedLanguageCodes] order.
+List<String> languagesOf(NameSection section, WorldPack pack, NameEntry e) {
+  final codes = {
+    for (final path in NameEdits.pathsOf(section, e))
+      ...?pack.localized[path]?.keys,
+  };
+  return [
+    for (final c in supportedLanguageCodes)
+      if (codes.contains(c)) c,
+  ];
+}
+
+/// The row key a `localized` [path] of [section] belongs to, or null when
+/// it is another section's.
+String? _localizedKey(NameSection section, String path) {
+  final parsed = PackPaths.parse(path);
+  if (parsed == null || parsed.root != section.issueRoot) return null;
+  return section == NameSection.press
+      ? parsed.rest.split('.').first
+      : parsed.rest;
+}
+
 /// How many problems [issues] (of a whole pack) count against each row key
-/// of [section].
-Map<String, int> issuesByKey(NameSection section, List<PackIssue> issues) {
+/// of [section]: its main name's, and its per-language names'
+/// (`localized.<path>` and `localized.<path>.<language>`, told apart by
+/// [pack]'s paths).
+Map<String, int> issuesByKey(
+  NameSection section,
+  List<PackIssue> issues, {
+  WorldPack? pack,
+}) {
   final out = <String, int>{};
   void add(String key) => out.update(key, (n) => n + 1, ifAbsent: () => 1);
   final root = section.issueRoot;
   for (final issue in issues) {
-    if (issue is DuplicateCode) {
-      if (section == NameSection.nations) {
-        for (final id in issue.nationIds) {
-          add('$id');
-        }
+    final path = issue.where;
+    if (path.startsWith('localized.')) {
+      var entry = path.substring('localized.'.length);
+      // `<path>.<language>`: a club name may hold a dot, so the pack says
+      // which paths there are.
+      final last = entry.lastIndexOf('.');
+      if (!(pack?.localized.containsKey(entry) ?? false) &&
+          last > 0 &&
+          PackRules.languageShape.hasMatch(entry.substring(last + 1))) {
+        entry = entry.substring(0, last);
       }
+      if (_localizedKey(section, entry) case final key?) add(key);
       continue;
     }
-    final path = issue.where;
     if (!path.startsWith('$root.')) continue;
     final rest = path.substring(root.length + 1);
     switch (section) {
-      case NameSection.nations || NameSection.press || NameSection.nameLists:
+      case NameSection.press || NameSection.nameLists:
         add(rest.split('.').first);
       case NameSection.clubs ||
           NameSection.stadiums ||
@@ -483,23 +680,27 @@ Map<String, int> issuesByKey(NameSection section, List<PackIssue> issues) {
 }
 
 /// How many things of [section] [pack] really changes: an override left
-/// blank keeps the game's name and is no change (a nation with both its
-/// name and code blank included).
+/// blank keeps the game's name and is no change; a name given only in some
+/// languages is one.
 int changedCount(NameSection section, WorldPack pack) {
   bool text(String s) => ActiveWorld.textOrNull(s) != null;
-  return switch (section) {
-    NameSection.nations =>
-      pack.nations.values.where((n) => text(n.name) || text(n.code)).length,
-    NameSection.press =>
-      pack.reporters.values.where((r) => text(r.name) || text(r.outlet)).length,
-    NameSection.nameLists => pack.nameLists.length,
-    NameSection.clubs ||
-    NameSection.stadiums ||
-    NameSection.competitions ||
-    NameSection.yAccounts ||
-    NameSection.sponsors => NameEdits._map(
-      section,
-      pack,
-    ).values.where(text).length,
+  final keys = <String>{
+    ...switch (section) {
+      NameSection.press => [
+        for (final e in pack.reporters.entries)
+          if (text(e.value.name) || text(e.value.outlet)) '${e.key}',
+      ],
+      NameSection.nameLists => [for (final k in pack.nameLists.keys) '$k'],
+      NameSection.clubs ||
+      NameSection.stadiums ||
+      NameSection.competitions ||
+      NameSection.yAccounts ||
+      NameSection.sponsors => [
+        for (final e in NameEdits._map(section, pack).entries)
+          if (text(e.value)) e.key,
+      ],
+    },
+    for (final path in pack.localized.keys) ?_localizedKey(section, path),
   };
+  return keys.length;
 }

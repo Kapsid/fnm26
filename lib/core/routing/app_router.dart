@@ -290,7 +290,6 @@ abstract final class Routes {
   /// pack); the per-nation ones ([editorPlayers], [editorNameLists]) take
   /// `&nation=` to open on one nation.
   static const editorPlayers = '/editor/pack/players';
-  static const editorNations = '/editor/pack/nations';
   static const editorClubs = '/editor/pack/clubs';
   static const editorStadiums = '/editor/pack/stadiums';
   static const editorCompetitions = '/editor/pack/competitions';
@@ -311,7 +310,6 @@ abstract final class Routes {
   /// Every section route of the editor.
   static const Set<String> editorSections = {
     editorPlayers,
-    editorNations,
     editorClubs,
     editorStadiums,
     editorCompetitions,

@@ -11,6 +11,7 @@ import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
@@ -40,7 +41,7 @@ class PackHomeScreen extends ConsumerStatefulWidget {
   static Key issueKey(int index) => Key('packHome.issue.$index');
 
   /// Remove on the [index]th entry of the list, offered for an entry naming
-  /// something the game no longer has.
+  /// something the game no longer has, and for a nation's old rename.
   static Key removeKey(int index) => Key('packHome.remove.$index');
   static Key sectionKey(EditorSection s) => Key('packHome.section.${s.name}');
 
@@ -66,21 +67,26 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
   }
 
   /// Opens [section] (on [nationId]); null is the database as a whole,
-  /// whose home this already is.
+  /// whose home this already is, and [EditorSection.none] has no screen.
   void _open(EditorSection? section, {int? nationId}) {
-    if (section == null) return;
+    if (section == null || !section.hasScreen) return;
     context.go(editorSectionLocation(section, _id, nationId: nationId));
   }
 
   /// Remove for the [index]th entry, when it names something the game no
-  /// longer has or clashes with a name of the game's ([CompatIssue]):
-  /// deletes exactly that entry, as one undoable edit.
+  /// longer has or clashes with a name of the game's ([CompatIssue]), or is
+  /// a nation's old rename that breaks a rule (no section edits nations
+  /// now): deletes exactly that entry, as one undoable edit.
   VoidCallback? _remover(_PackView view, int index) {
     final issue = view.raw[index];
-    if (issue is! CompatIssue) return null;
-    return () => unawaited(
-      ref.read(packEditorProvider(_id).notifier).removeUnknown(issue),
-    );
+    final editor = ref.read(packEditorProvider(_id).notifier);
+    if (issue is CompatIssue) {
+      return () => unawaited(editor.removeUnknown(issue));
+    }
+    if (PackEditor.isNationIssue(issue)) {
+      return () => editor.removeNationRename(issue);
+    }
+    return null;
   }
 
   @override
@@ -144,6 +150,7 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
         ),
         centerTitle: true,
         actions: [
+          const EditorLanguageChip(),
           IconButton(
             key: PackHomeScreen.undoKey,
             tooltip: l.editorUndo,
@@ -215,9 +222,9 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
                   crossAxisSpacing: AppSpacing.sm,
                   mainAxisExtent: _SectionTile.height,
                 ),
-                itemCount: EditorSection.values.length,
+                itemCount: EditorSection.onHome.length,
                 itemBuilder: (context, i) {
-                  final s = EditorSection.values[i];
+                  final s = EditorSection.onHome[i];
                   return _SectionTile(
                     section: s,
                     facts: view.sections[s]!,
@@ -264,15 +271,14 @@ class _PackView {
     final described = [
       for (final i in issues) describePackIssue(l, i, pack, byId),
     ];
-    final toFix = {for (final s in EditorSection.values) s: 0};
+    final toFix = {for (final s in EditorSection.onHome) s: 0};
     for (final d in described) {
-      if (d.section case final s?) toFix[s] = toFix[s]! + 1;
+      if (d.section case final s? when s.hasScreen) toFix[s] = toFix[s]! + 1;
     }
     String count(EditorSection s) => switch (s) {
       EditorSection.players => l.editorCountPlayers(
         pack.squads.values.fold(0, (sum, squad) => sum + squad.length),
       ),
-      EditorSection.nations ||
       EditorSection.clubs ||
       EditorSection.stadiums ||
       EditorSection.competitions ||
@@ -283,12 +289,13 @@ class _PackView {
         changedCount(NameSection.of(s)!, pack),
       ),
       EditorSection.trophies => l.editorCountTrophies(pack.trophies.length),
+      EditorSection.none => '',
     };
     return _PackView(
       issues: described,
       raw: issues,
       sections: {
-        for (final s in EditorSection.values)
+        for (final s in EditorSection.onHome)
           s: (count: count(s), toFix: toFix[s]!),
       },
     );
@@ -341,7 +348,7 @@ class _ReadyCard extends StatelessWidget {
         : attention
         ? AppColors.error
         : AppColors.warning;
-    final total = EditorSection.values.length;
+    final total = EditorSection.onHome.length;
     return AppCard(
       key: ready
           ? PackHomeScreen.readyKey

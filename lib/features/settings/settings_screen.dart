@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/config/contact.dart';
+import 'package:fnm/core/config/languages.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -27,39 +28,6 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'settings_tablet_layout.dart';
-
-/// Each language in its own tongue, never translated: a manager who has landed
-/// in a language he cannot read must still be able to find his own.
-const Map<String, String> _languageEndonyms = {
-  'en': 'English',
-  'cs': 'Čeština',
-  'fr': 'Français',
-  'it': 'Italiano',
-  'pl': 'Polski',
-  'es': 'Español',
-  'de': 'Deutsch',
-  'pt': 'Português',
-  'tr': 'Türkçe',
-  'nl': 'Nederlands',
-  'id': 'Bahasa Indonesia',
-  'el': 'Ελληνικά',
-  'sv': 'Svenska',
-  'nb': 'Norsk bokmål',
-  'vi': 'Tiếng Việt',
-  'bg': 'Български',
-  'da': 'Dansk',
-  'fi': 'Suomi',
-  'hu': 'Magyar',
-  'hr': 'Hrvatski',
-  'uk': 'Українська',
-  'fil': 'Filipino',
-  'hi': 'हिन्दी',
-  'ja': '日本語',
-  'ko': '한국어',
-  'ro': 'Română',
-  'th': 'ไทย',
-  'ms': 'Bahasa Melayu',
-};
 
 /// Opens the language picker: "System" plus one radio row per language.
 Future<void> _pickLanguage(
@@ -113,7 +81,7 @@ Future<void> _pickLanguage(
                 current: current,
                 options: [
                   ('system', l.settingsLanguageSystem),
-                  for (final e in _languageEndonyms.entries) (e.key, e.value),
+                  for (final e in languageEndonyms.entries) (e.key, e.value),
                 ],
                 onPick: (v) => Navigator.of(ctx).pop(v),
               ),
@@ -297,7 +265,7 @@ class _LanguageCard extends ConsumerWidget {
             Text(
               current == 'system'
                   ? l.settingsLanguageSystem
-                  : _languageEndonyms[current] ?? current,
+                  : languageEndonyms[current] ?? current,
               style: AppTypography.labelMedium.copyWith(
                 color: AppColors.primary,
               ),

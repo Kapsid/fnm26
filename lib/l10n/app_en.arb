@@ -23005,6 +23005,56 @@
   "@editorNamesTaken": {
     "description": "Error when a Y account is renamed to a name another account uses."
   },
+  "editorLanguageTitle": "Names in which language",
+  "@editorLanguageTitle": {
+    "description": "Title of the editor's language picker sheet: which language's names the database editor shows and edits."
+  },
+  "editorLanguageAll": "All languages",
+  "@editorLanguageAll": {
+    "description": "Editor language picker option: show and edit the main names, used in every language that has no name of its own."
+  },
+  "editorLanguageAllShort": "All",
+  "@editorLanguageAllShort": {
+    "description": "Short label on the editor's language chip when no single language is picked (all languages). Keep very short."
+  },
+  "editorLanguageNote": "Only the editor switches. The game stays in its own language.",
+  "@editorLanguageNote": {
+    "description": "Note in the editor's language picker sheet: picking a language here changes what the editor shows and edits, never the game's language."
+  },
+  "editorLanguageEditing": "Names in {language}. Leave one empty to use the main name.",
+  "@editorLanguageEditing": {
+    "description": "Note at the top of an editor name section while a single language is picked. language is that language's own name (e.g. Čeština).",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "editorLanguageSame": "Same in all languages",
+  "@editorLanguageSame": {
+    "description": "Small mark on an editor row, in a picked language, whose name is the database's main name because that language has none of its own."
+  },
+  "editorLanguageMainName": "Main name: {name}",
+  "@editorLanguageMainName": {
+    "description": "Line in the editor's name form while a single language is picked: the database's main name, used where a language has none of its own.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorLanguageKeepHint": "Leave empty to use the main name.",
+  "@editorLanguageKeepHint": {
+    "description": "Helper under a name field in the editor while a single language is picked."
+  },
+  "editorLanguageClear": "Use the main name",
+  "@editorLanguageClear": {
+    "description": "Button in the editor's name form while a single language is picked: removes this language's own name, so the main name shows."
+  },
+  "editorLanguageFull": "This database has no room for more names per language.",
+  "@editorLanguageFull": {
+    "description": "Error under a name field in the editor when the database already holds the most per-language names it can."
+  },
   "editorNamesOutlet": "Outlet",
   "@editorNamesOutlet": {
     "description": "Label of a journalist's outlet field in the editor."

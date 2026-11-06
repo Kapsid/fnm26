@@ -17,8 +17,8 @@ import 'package:fnm/core/config/ui_language.dart';
 import 'package:fnm/data/repositories/drift_player_repository.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
-import 'package:fnm/features/editor/pack_home_screen.dart';
-import 'package:fnm/features/editor/editor_ui.dart';
+import 'package:fnm/features/editor/editor_language.dart';
+import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 
 import '../helpers/editor_app.dart';
 import '../helpers/seeded_save.dart';
@@ -90,54 +90,6 @@ void main() {
       find.descendant(of: row, matching: find.text('Pražští Sokoli')),
       findsNothing,
     );
-    await tester.pump(const Duration(milliseconds: 450));
-  });
-
-  testWidgets("renaming Czechia's code to an existing code is refused with a "
-      'message', (tester) async {
-    final c = await editorContainer(tester);
-    final id = await insertPack(tester, c, testPack('Codes'));
-    await pumpEditorRoute(tester, c, _at(NameSection.nations, id, nation: cze));
-    await tester.tap(find.byKey(NameSectionScreen.rowKey('$cze')));
-    await settle(tester);
-
-    // Typed in lower case, it comes out in capitals.
-    await tester.enterText(find.byKey(NameEditForm.codeKey), 'ger');
-    await tester.pump();
-    expect(
-      tester
-          .widget<TextField>(find.byKey(NameEditForm.codeKey))
-          .controller!
-          .text,
-      'GER',
-    );
-    expect(
-      find.text(enL.editorNamesCodeTaken('GER', 'Germany')),
-      findsOneWidget,
-    );
-    expect(_pack(c, id).nations, isEmpty);
-
-    // Too short is refused too.
-    await tester.enterText(find.byKey(NameEditForm.codeKey), 'CZ');
-    await tester.pump();
-    expect(find.text(enL.editorIssueCode), findsOneWidget);
-    expect(_pack(c, id).nations, isEmpty);
-
-    // A free code saves, with the name, as one edit.
-    await tester.enterText(find.byKey(NameEditForm.nameKey), 'Bohemia');
-    await tester.pump();
-    expect(_pack(c, id).nations, isEmpty, reason: 'code still bad');
-    await tester.enterText(find.byKey(NameEditForm.codeKey), 'BOH');
-    await tester.pump();
-    expect(_pack(c, id).nations, {cze: (name: 'Bohemia', code: 'BOH')});
-    // Code alone: the name stays the game's, stored blank so it is still
-    // translated.
-    await tester.enterText(find.byKey(NameEditForm.nameKey), '');
-    await tester.pump();
-    expect(_pack(c, id).nations, {cze: (name: '', code: 'BOH')});
-    final editor = c.read(packEditorProvider(id).notifier)..undo();
-    expect(_pack(c, id).nations, isEmpty);
-    expect(editor.canUndo, isFalse);
     await tester.pump(const Duration(milliseconds: 450));
   });
 
@@ -353,91 +305,249 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
   });
 
-  testWidgets('a code-only change keeps the English game name in English', (
-    tester,
-  ) async {
-    final en = await editorContainer(tester);
-    final id = await insertPack(tester, en, testPack('Code'));
-    await pumpEditorRoute(
-      tester,
-      en,
-      _at(NameSection.nations, id, nation: cze),
+  /// Picks [code] (null: All languages) from the editor's language chip.
+  Future<void> pickLanguage(WidgetTester tester, String? code) async {
+    await tester.tap(find.byKey(EditorLanguageChip.chipKey));
+    await settle(tester);
+    final option = find.byKey(EditorLanguageChip.optionKey(code));
+    await tester.scrollUntilVisible(
+      option,
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byKey(EditorLanguageChip.listKey),
+            matching: find.byType(Scrollable),
+          )
+          .first,
     );
-    final row = find.byKey(NameSectionScreen.rowKey('$cze'));
+    await tester.tap(option);
+    await settle(tester);
+  }
+
+  testWidgets('picking Čeština shows Czech competition names and stores a '
+      'cs value only', (tester) async {
+    final cs = lookupAppLocalizations(const Locale('cs'));
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Lang'));
+    final euro = ContinentalCups.byConfederation[Confederation.europe]!.name;
+    await pumpEditorRoute(tester, c, _at(NameSection.competitions, id));
+    final row = find.byKey(NameSectionScreen.rowKey(euro));
+    expect(
+      find.descendant(
+        of: row,
+        matching: find.text(enL.compEuropeanChampionship),
+      ),
+      findsOneWidget,
+    );
+
+    await pickLanguage(tester, 'cs');
+    expect(c.read(editorLanguageProvider), 'cs');
+    // The rows speak Czech; the screen around them stays English.
+    expect(
+      find.descendant(
+        of: row,
+        matching: find.text(cs.compEuropeanChampionship),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text(enL.editorLanguageEditing('Čeština')), findsOneWidget);
+
     await tester.tap(row);
     await settle(tester);
-    await tester.enterText(find.byKey(NameEditForm.codeKey), 'BOH');
+    final name = find.byKey(NameEditForm.nameKey);
+    // Empty: no Czech name of its own yet, the game's shows.
+    expect(tester.widget<TextField>(name).controller!.text, isEmpty);
+    await tester.enterText(name, 'Pohár Hamburgerů');
     await tester.pump();
-    expect(_pack(en, id).nations, {cze: (name: '', code: 'BOH')});
+    final pack = _pack(c, id);
+    expect(pack.competitions, isEmpty);
+    expect(pack.localized, {
+      PackPaths.competition(euro): {'cs': 'Pohár Hamburgerů'},
+    });
     await _done(tester);
-    for (final text in ['Czechia', 'BOH']) {
-      expect(
-        find.descendant(of: row, matching: find.text(text)),
-        findsOneWidget,
-      );
-    }
+    expect(
+      find.descendant(of: row, matching: find.text('Pohár Hamburgerů')),
+      findsOneWidget,
+    );
+
+    // Back on All languages, the main name is still the game's.
+    await pickLanguage(tester, null);
+    expect(
+      find.descendant(
+        of: row,
+        matching: find.text(enL.compEuropeanChampionship),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: row, matching: find.textContaining('CS')),
+      findsOneWidget,
+    );
     await tester.pump(const Duration(milliseconds: 450));
   });
 
-  testWidgets('a code-only change shows the game name in Czech, in Czech', (
+  testWidgets('clearing the cs value falls back to the main value', (
     tester,
   ) async {
-    final cs = await editorContainer(
-      tester,
-      overrides: [uiLanguageCodeProvider.overrideWithValue('cs')],
-    );
-    final csId = await insertPack(
-      tester,
-      cs,
-      testPack('Kód').copyWith(nations: {cze: (name: '', code: 'BOH')}),
-    );
-    final row = find.byKey(NameSectionScreen.rowKey('$cze'));
-    await pumpEditorRoute(
-      tester,
-      cs,
-      _at(NameSection.nations, csId, nation: cze),
-      locale: const Locale('cs'),
-    );
-    final czech = cs
-        .read(packEditorProvider(csId).notifier)
-        .world
-        .firstWhere((n) => n.id == cze)
-        .name;
-    expect(czech, isNot('Czechia'));
-    for (final text in [czech, 'BOH']) {
-      expect(
-        find.descendant(of: row, matching: find.text(text)),
-        findsOneWidget,
-      );
-    }
-    await tester.pump(const Duration(milliseconds: 450));
-  });
-
-  testWidgets('a nation record with nothing in it is no change', (
-    tester,
-  ) async {
+    final club = ClubService.leagueClubs('cze').first;
+    final path = PackPaths.club(club);
     final c = await editorContainer(tester);
     final id = await insertPack(
       tester,
       c,
-      testPack('Blank').copyWith(nations: {cze: (name: ' ', code: '')}),
+      testPack('Fallback').copyWith(
+        clubs: {club: 'Main Club'},
+        localized: {
+          path: {'cs': 'Hlavní klub', 'de': 'Hauptklub'},
+        },
+      ),
     );
-    await pumpEditorRoute(tester, c, editorPackLocation(id));
-    final tile = find.byKey(PackHomeScreen.sectionKey(EditorSection.nations));
-    await tester.scrollUntilVisible(tile, 200);
+    c.read(editorLanguageProvider.notifier).state = 'cs';
+    await pumpEditorRoute(tester, c, _at(NameSection.clubs, id));
+    await tester.enterText(find.byKey(NameSectionScreen.searchKey), club);
+    await tester.pump();
+    final row = find.byKey(NameSectionScreen.rowKey(club));
     expect(
-      find.descendant(of: tile, matching: find.text(enL.editorCountChanged(0))),
+      find.descendant(of: row, matching: find.text('Hlavní klub')),
       findsOneWidget,
     );
-    expect(sectionTitle(enL, EditorSection.nations), isNotEmpty);
-    await pumpEditorRoute(tester, c, _at(NameSection.nations, id, nation: cze));
+    await tester.tap(row);
+    await settle(tester);
+    final name = find.byKey(NameEditForm.nameKey);
+    expect(tester.widget<TextField>(name).controller!.text, 'Hlavní klub');
+
+    // Cleared: Czech has no name of its own; German keeps its.
+    await tester.enterText(name, '');
+    await tester.pump();
+    expect(_pack(c, id).localized, {
+      path: {'de': 'Hauptklub'},
+    });
+    expect(_pack(c, id).clubs, {club: 'Main Club'});
+    // Typing the main name is no Czech name either.
+    await tester.enterText(name, 'Main Club');
+    await tester.pump();
+    expect(_pack(c, id).localized, {
+      path: {'de': 'Hauptklub'},
+    });
+    await _done(tester);
+    expect(
+      find.descendant(of: row, matching: find.text('Main Club')),
+      findsOneWidget,
+    );
     expect(
       find.descendant(
-        of: find.byKey(NameSectionScreen.rowKey('$cze')),
-        matching: find.text(enL.editorNamesChanged),
+        of: row,
+        matching: find.textContaining(enL.editorLanguageSame),
       ),
-      findsNothing,
+      findsOneWidget,
     );
+
+    // The last language gone, the path goes with it.
+    c.read(editorLanguageProvider.notifier).state = 'de';
+    await tester.pump();
+    await tester.tap(row);
+    await settle(tester);
+    await tester.tap(find.byKey(NameEditForm.resetKey));
+    await tester.pump();
+    expect(_pack(c, id).localized, isEmpty);
+    expect(_pack(c, id).clubs, {club: 'Main Club'});
+    expect(c.read(packEditorProvider(id).notifier).issues, isEmpty);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  test('renameIn and resetIn keep localized free of empty paths', () {
+    final club = ClubService.leagueClubs('cze').first;
+    final e = NameEntry(key: club, original: club, fold: club);
+    final r = Press.reporters.first;
+    final rep = NameEntry(
+      key: '${r.index}',
+      original: r.name,
+      original2: r.outlet,
+      fold: r.name,
+    );
+    var p = testPack('Unit');
+    p = NameEdits.renameIn(NameSection.clubs, p, e, 'cs', ' Sokol ');
+    expect(p.localized, {
+      PackPaths.club(club): {'cs': 'Sokol'},
+    });
+    // The game's name typed with no main name is no value.
+    p = NameEdits.renameIn(NameSection.clubs, p, e, 'cs', club);
+    expect(p.localized, isEmpty);
+    // A reporter's outlet alone.
+    p = NameEdits.renameIn(NameSection.press, p, rep, 'ja', '', 'Nikkan');
+    expect(p.localized, {
+      PackPaths.reporterOutlet(r.index): {'ja': 'Nikkan'},
+    });
+    expect(
+      NameEdits.resetIn(NameSection.press, p, rep, 'ja').localized,
+      isEmpty,
+    );
+    // Reset under All languages: the main name and every language go.
+    p = NameEdits.renameIn(NameSection.clubs, p, e, 'de', 'Falke');
+    p = NameEdits.rename(NameSection.clubs, p, e, 'Sokoli');
+    final reset = NameEdits.reset(NameSection.clubs, p, e);
+    expect(reset.clubs, isEmpty);
+    expect(reset.localized, {
+      PackPaths.reporterOutlet(r.index): {'ja': 'Nikkan'},
+    });
+  });
+
+  testWidgets("the game's language is unchanged after using the picker", (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Game lang'));
+    await pumpEditorRoute(tester, c, _at(NameSection.sponsors, id));
+    expect(c.read(localeProvider), isNull);
+    final before = c.read(uiLanguageCodeProvider);
+    await pickLanguage(tester, 'de');
+    await pickLanguage(tester, 'ja');
+    expect(c.read(editorLanguageProvider), 'ja');
+    expect(c.read(localeProvider), isNull);
+    expect(c.read(uiLanguageCodeProvider), before);
+    // The screen itself is still in English.
+    expect(find.text(enL.editorSectionSponsors), findsOneWidget);
+    // The same pick on the home, and none on the name lists.
+    await pumpEditorRoute(tester, c, editorPackLocation(id));
+    expect(find.byKey(EditorLanguageChip.chipKey), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(EditorLanguageChip.chipKey),
+        matching: find.text('JA'),
+      ),
+      findsOneWidget,
+    );
+    await pumpEditorRoute(tester, c, _at(NameSection.nameLists, id));
+    expect(find.byKey(EditorLanguageChip.chipKey), findsNothing);
+  });
+
+  testWidgets('a Y account cannot take a name another account shows in '
+      'that language', (tester) async {
+    final c = await editorContainer(tester);
+    final [a, b, ...] = YFeed.namedAccounts;
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Y lang').copyWith(
+        localized: {
+          PackPaths.yAccount(b): {'cs': 'Pepík'},
+        },
+      ),
+    );
+    c.read(editorLanguageProvider.notifier).state = 'cs';
+    await pumpEditorRoute(tester, c, _at(NameSection.yAccounts, id));
+    await tester.enterText(find.byKey(NameSectionScreen.searchKey), a);
+    await tester.pump();
+    await tester.tap(find.byKey(NameSectionScreen.rowKey(a)));
+    await settle(tester);
+    await tester.enterText(find.byKey(NameEditForm.nameKey), 'Pepík');
+    await tester.pump();
+    expect(find.text(enL.editorNamesTaken), findsOneWidget);
+    expect(_pack(c, id).localized.keys, [PackPaths.yAccount(b)]);
+    await tester.enterText(find.byKey(NameEditForm.nameKey), 'Pepa');
+    await tester.pump();
+    expect(_pack(c, id).localized[PackPaths.yAccount(a)], {'cs': 'Pepa'});
+    await tester.pump(const Duration(milliseconds: 450));
   });
 
   for (final size in kTabletSizes) {
@@ -454,20 +564,21 @@ void main() {
           reason: location,
         );
       }
-      // The tablet edits the picked row beside the list.
-      await pumpEditorRoute(
-        tester,
-        c,
-        _at(NameSection.nations, id, nation: cze),
-        size: size,
-      );
-      await tester.tap(find.byKey(NameSectionScreen.rowKey('$cze')));
-      await settle(tester);
-      expect(find.byKey(NameEditForm.codeKey), findsOneWidget);
-      expect(find.byKey(NameEditForm.doneKey), findsNothing);
-      await tester.enterText(find.byKey(NameEditForm.nameKey), 'Bohemia');
+      // The tablet edits the picked row beside the list, in the picked
+      // language too.
+      final club = ClubService.leagueClubs('cze').first;
+      await pumpEditorRoute(tester, c, _at(NameSection.clubs, id), size: size);
+      expect(find.byKey(EditorLanguageChip.chipKey), findsOneWidget);
+      await pickLanguage(tester, 'cs');
+      await tester.enterText(find.byKey(NameSectionScreen.searchKey), club);
       await tester.pump();
-      expect(_pack(c, id).nations[cze]?.name, 'Bohemia');
+      await tester.tap(find.byKey(NameSectionScreen.rowKey(club)));
+      await settle(tester);
+      expect(find.byKey(NameEditForm.doneKey), findsNothing);
+      await tester.enterText(find.byKey(NameEditForm.nameKey), 'Sokoli');
+      await tester.pump();
+      expect(_pack(c, id).localized[PackPaths.club(club)], {'cs': 'Sokoli'});
+      expect(_pack(c, id).clubs, isEmpty);
       expect(tester.takeException(), isNull);
       await tester.pump(const Duration(milliseconds: 450));
     });

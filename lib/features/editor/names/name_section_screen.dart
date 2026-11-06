@@ -11,6 +11,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/features/editor/names/name_edit_form.dart';
@@ -27,10 +28,15 @@ export 'package:fnm/features/editor/names/name_sections.dart' show NameSection;
 
 part 'name_section_tablet_layout.dart';
 
-/// A name section of a database (nations, clubs, stadiums, competitions, Y
-/// accounts, press, name lists, sponsors): every name the game uses there,
-/// with the database's own beside it, a search, and an editor for the
-/// picked one (a sheet on the phone, beside the list on a tablet).
+/// A name section of a database (clubs, stadiums, competitions, Y accounts,
+/// press, name lists, sponsors): every name the game uses there, with the
+/// database's own beside it, a search, and an editor for the picked one (a
+/// sheet on the phone, beside the list on a tablet).
+///
+/// Every section but the name lists follows the editor's language
+/// ([editorLanguageProvider], picked from the [EditorLanguageChip] in the
+/// top bar): under a language it shows and edits that language's names,
+/// and under All languages the main ones.
 ///
 /// Opened on [nationId] (a jump from the database home), the search starts
 /// on that nation, and a per-nation section picks it.
@@ -131,19 +137,31 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
       baseCodes: {for (final n in world) n.id: n.code},
     );
     _issuesOf = pack;
-    return _issues = issuesByKey(_section, issues);
+    return _issues = issuesByKey(_section, issues, pack: pack);
   }
 
   /// [groups] with only the rows the search finds (by the game's name, the
-  /// database's name, the country and the like).
-  List<NameGroup> _filter(List<NameGroup> groups, WorldPack pack) {
+  /// database's name, the country and the like, and under a [language] the
+  /// names shown in it).
+  List<NameGroup> _filter(
+    List<NameGroup> groups,
+    WorldPack pack,
+    String? language,
+  ) {
     final q = searchFold(_query);
     if (q.isEmpty) return groups;
     bool hit(NameEntry e) {
       if (e.fold.contains(q)) return true;
       final o = nameOverride(_section, pack, e);
-      return o != null &&
-          (searchFold(o.name).contains(q) || searchFold(o.second).contains(q));
+      if (o != null &&
+          (searchFold(o.name).contains(q) ||
+              searchFold(o.second).contains(q))) {
+        return true;
+      }
+      if (language == null) return false;
+      final v = valueIn(_section, pack, e, language);
+      return searchFold(shownOf(v.name)).contains(q) ||
+          (v.second != null && searchFold(shownOf(v.second!)).contains(q));
     }
 
     return [
@@ -164,12 +182,15 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     if (nation == null) return;
     _search.text = nation.name;
     _query = nation.name;
-    if (_section == NameSection.nations || _section == NameSection.nameLists) {
-      _picked = '$id';
-    }
+    if (_section == NameSection.nameLists) _picked = '$id';
   }
 
-  void _open(NameEntry e, {required bool tablet, required List<Nation> world}) {
+  void _open(
+    NameEntry e, {
+    required bool tablet,
+    required List<Nation> world,
+    required String? language,
+  }) {
     if (tablet) {
       setState(() => _picked = e.key);
       return;
@@ -195,6 +216,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
               section: _section,
               entry: e,
               world: world,
+              language: language,
               onDone: () => Navigator.of(sheet).pop(),
             ),
           ),
@@ -206,7 +228,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   String _searchHint(AppLocalizations l) => switch (_section) {
     NameSection.clubs => l.editorNamesSearchClubs,
     NameSection.stadiums => l.editorNamesSearchStadiums,
-    NameSection.nations || NameSection.nameLists => l.editorNamesSearchNations,
+    NameSection.nameLists => l.editorNamesSearchNations,
     _ => l.editorNamesSearch,
   };
 
@@ -220,6 +242,10 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     final lists = _section == NameSection.nameLists
         ? ref.watch(editorNameListsProvider)
         : const AsyncValue<Map<int, NameLists>>.data({});
+    // Name lists have no language: the chip is not shown there.
+    final language = _section.perLanguage
+        ? ref.watch(editorLanguageProvider)
+        : null;
     final pack = async.valueOrNull;
     final listsValue = lists.hasError
         ? const <int, NameLists>{}
@@ -242,8 +268,9 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     final rows = _rows(l, world, listsValue);
     final view = _NameView(
       pack: pack,
-      groups: _filter(rows.groups, pack),
+      groups: _filter(rows.groups, pack, language),
       toFix: _toFix(pack, world),
+      language: language,
     );
     void undo() => editor.undo();
     final onUndo = editor.canUndo ? undo : null;
@@ -264,6 +291,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
       title: title,
       onBack: _back,
       actions: [
+        if (_section.perLanguage) const EditorLanguageChip(),
         IconButton(
           key: NameSectionScreen.undoKey,
           tooltip: l.editorUndo,
@@ -293,7 +321,8 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
                 AppSpacing.marginMobile,
                 AppSpacing.lg,
               ),
-              onTap: (e) => _open(e, tablet: false, world: world),
+              onTap: (e) =>
+                  _open(e, tablet: false, world: world, language: language),
             ),
           ),
         ],
@@ -308,11 +337,15 @@ class _NameView {
     required this.pack,
     required this.groups,
     required this.toFix,
+    required this.language,
   });
 
   final WorldPack pack;
   final List<NameGroup> groups;
   final Map<String, int> toFix;
+
+  /// The editor's language, or null for All languages (and the name lists).
+  final String? language;
 }
 
 class _SearchField extends StatelessWidget {
@@ -388,6 +421,7 @@ class _NameList extends StatelessWidget {
           entry: entries[i],
           pack: view.pack,
           toFix: view.toFix[entries[i].key] ?? 0,
+          language: view.language,
           picked: picked == entries[i].key,
           showChevron: chevrons,
           onTap: () => onTap(entries[i]),
@@ -396,7 +430,10 @@ class _NameList extends StatelessWidget {
     );
 
     // Said once, above the rows.
-    final note = section.translated
+    final lang = view.language;
+    final note = lang != null
+        ? (Icons.translate, l.editorLanguageEditing(languageEndonym(lang)))
+        : section.translated
         ? (Icons.translate, l.editorNamesEveryLanguage)
         : section == NameSection.stadiums
         ? (Icons.info_outline, l.editorNamesStadiumsNote)
@@ -529,8 +566,9 @@ class _GroupHeader extends SliverPersistentHeaderDelegate {
       old.padding != padding;
 }
 
-/// One row: the name as the database has it, the game's name under it when
-/// they differ, and what it still needs.
+/// One row: the name as the database has it (in the editor's [language],
+/// when one is picked), the game's name under it when they differ, and what
+/// it still needs.
 class _NameTile extends StatelessWidget {
   const _NameTile({
     required this.section,
@@ -540,6 +578,7 @@ class _NameTile extends StatelessWidget {
     required this.picked,
     required this.showChevron,
     required this.onTap,
+    this.language,
   });
 
   final NameSection section;
@@ -549,6 +588,7 @@ class _NameTile extends StatelessWidget {
   final bool picked;
   final bool showChevron;
   final VoidCallback onTap;
+  final String? language;
 
   @override
   Widget build(BuildContext context) {
@@ -556,21 +596,38 @@ class _NameTile extends StatelessWidget {
     final String name;
     final List<String> about;
     final bool changed;
+    final lang = language;
     if (section == NameSection.nameLists) {
       final lists = NameEdits.listsOf(pack, entry);
       changed = pack.nameLists.containsKey(int.tryParse(entry.key));
       name = entry.original;
       about = [l.editorNamesListCounts(lists.first.length, lists.sur.length)];
+    } else if (lang != null) {
+      // In one language: its own name, else the main one (the same in every
+      // language), else the game's there.
+      final v = valueIn(section, pack, entry, lang);
+      final second = v.second;
+      changed = v.name.own != null || second?.own != null;
+      name = shownOf(v.name);
+      about = [
+        if (name != v.name.game) l.editorNamesGameName(v.name.game),
+        if (v.name.own == null && v.name.main != null) l.editorLanguageSame,
+        ?entry.detail,
+        if (second != null) shownOf(second),
+      ];
     } else {
       final o = nameOverride(section, pack, entry);
-      changed = o != null;
+      final languages = languagesOf(section, pack, entry);
+      changed = o != null || languages.isNotEmpty;
       name = ActiveWorld.textOrNull(o?.name) ?? entry.original;
       final second = ActiveWorld.textOrNull(o?.second) ?? entry.original2;
       about = [
-        if (changed && name != entry.original)
-          l.editorNamesGameName(entry.original),
+        if (name != entry.original) l.editorNamesGameName(entry.original),
         ?entry.detail,
         if (second.isNotEmpty) second,
+        // The languages with a name of their own, by code.
+        if (languages.isNotEmpty)
+          languages.map((c) => c.toUpperCase()).join(', '),
       ];
     }
     final fix = toFix > 0;
@@ -619,7 +676,7 @@ class _NameTile extends StatelessWidget {
           if (fix)
             _FixMark(text: l.editorCountToFix(toFix))
           else if (changed)
-            const NameChangedMark(),
+            NameChangedMark(language: lang),
           if (showChevron)
             const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
         ],

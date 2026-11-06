@@ -15240,6 +15240,43 @@ class AppLocalizationsCs extends AppLocalizations {
   String get editorNamesTaken => 'Tento název už má jiný účet.';
 
   @override
+  String get editorLanguageTitle => 'Názvy v jazyce';
+
+  @override
+  String get editorLanguageAll => 'Všechny jazyky';
+
+  @override
+  String get editorLanguageAllShort => 'Vše';
+
+  @override
+  String get editorLanguageNote =>
+      'Přepne se jen editor. Hra zůstane ve svém jazyce.';
+
+  @override
+  String editorLanguageEditing(String language) {
+    return 'Názvy pro jazyk $language. Prázdné pole použije hlavní název.';
+  }
+
+  @override
+  String get editorLanguageSame => 'Stejné ve všech jazycích';
+
+  @override
+  String editorLanguageMainName(String name) {
+    return 'Hlavní název: $name';
+  }
+
+  @override
+  String get editorLanguageKeepHint =>
+      'Když pole necháte prázdné, použije se hlavní název.';
+
+  @override
+  String get editorLanguageClear => 'Použít hlavní název';
+
+  @override
+  String get editorLanguageFull =>
+      'Do této databáze se už další názvy v jazycích nevejdou.';
+
+  @override
   String get editorNamesOutlet => 'Médium';
 
   @override

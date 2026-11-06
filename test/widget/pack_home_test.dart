@@ -7,7 +7,9 @@ import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_list_screen.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
+import 'package:fnm/features/editor/names/name_section_screen.dart';
 import 'package:fnm/features/editor/players/squad_screen.dart';
+import 'package:fnm/features/world_pack/world_choice.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 import '../helpers/editor_app.dart';
@@ -219,7 +221,7 @@ void main() {
       );
       expect(tester.takeException(), isNull);
       expect(find.byKey(PackHomeScreen.tabletLayoutKey), findsOneWidget);
-      for (final s in EditorSection.values) {
+      for (final s in EditorSection.onHome) {
         expect(find.byKey(PackHomeScreen.sectionKey(s)), findsOneWidget);
       }
       expect(find.byKey(PackHomeScreen.issueKey(0)), findsOneWidget);
@@ -236,10 +238,129 @@ void main() {
     await pumpEditorRoute(tester, c, '${Routes.editorPack}?id=$id');
     expect(tester.takeException(), isNull);
     expect(find.byKey(PackHomeScreen.readyKey), findsOneWidget);
-    for (final s in EditorSection.values) {
+    for (final s in EditorSection.onHome) {
       final tile = find.byKey(PackHomeScreen.sectionKey(s));
       await tester.scrollUntilVisible(tile, 200);
       expect(tile, findsOneWidget);
     }
   });
+
+  testWidgets('the pack home has no Nations section and /editor/pack/nations '
+      'is gone', (tester) async {
+    expect(EditorSection.values.map((s) => s.name), isNot(contains('nations')));
+    expect(EditorSection.onHome, isNot(contains(EditorSection.none)));
+    expect(Routes.editorSections, isNot(contains('/editor/pack/nations')));
+    expect(EditorSection.ofPath('nations.12.code'), EditorSection.none);
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('No nations'));
+    await pumpEditorRoute(tester, c, editorPackLocation(id));
+    expect(find.byKey(const Key('packHome.section.nations')), findsNothing);
+    expect(
+      find.byKey(PackHomeScreen.sectionKey(EditorSection.none)),
+      findsNothing,
+    );
+    expect(find.text(enL.editorSectionNations), findsNothing);
+    expect(
+      find.text(
+        enL.editorSectionsReady(
+          EditorSection.onHome.length,
+          EditorSection.onHome.length,
+        ),
+      ),
+      findsOneWidget,
+    );
+    await pumpEditorRoute(tester, c, '/editor/pack/nations?id=$id');
+    expect(find.byType(NameSectionScreen), findsNothing);
+    expect(find.byType(PackHomeScreen), findsNothing);
+  });
+
+  testWidgets('a pack with a clashing nation code lists it and Remove fixes '
+      'it', (tester) async {
+    final c = await editorContainer(tester);
+    final cze = nationIdOf('CZE');
+    final svk = nationIdOf('SVK');
+    // Made before the Nations section went: Czechia took Germany's code (as
+    // a later update could give a new nation a pack's code), and Slovakia
+    // a code that is not one.
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Old nations').copyWith(
+        nations: {
+          cze: (name: 'Bohemia', code: 'GER'),
+          svk: (name: '', code: 'S1'),
+        },
+      ),
+    );
+    await pumpEditorRoute(tester, c, editorPackLocation(id));
+    expect(find.byKey(PackHomeScreen.notReadyKey), findsOneWidget);
+    final first = find.byKey(PackHomeScreen.issueKey(0));
+    final second = find.byKey(PackHomeScreen.issueKey(1));
+    expect(
+      find.descendant(
+        of: first,
+        matching: find.text(enL.editorIssueCode),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: second,
+        matching: find.text(
+          enL.editorIssueDuplicateCode(
+            'GER',
+            ([
+              cze,
+              nationIdOf('GER'),
+            ]..sort()).map((n) => n == cze ? 'Bohemia' : 'Germany').join(', '),
+          ),
+        ),
+      ),
+      findsOneWidget,
+    );
+    // Tapping one goes nowhere: there is no Nations section.
+    await tester.tap(first);
+    await settle(tester);
+    expect(find.byType(PackHomeScreen), findsOneWidget);
+
+    await tester.tap(find.byKey(PackHomeScreen.removeKey(1)));
+    await settle(tester);
+    expect(_nations(c, id).keys, [svk]);
+    await tester.tap(find.byKey(PackHomeScreen.removeKey(0)));
+    await settle(tester);
+    expect(_nations(c, id), isEmpty);
+    expect(find.byKey(PackHomeScreen.readyKey), findsOneWidget);
+    // Each Remove is one undo step.
+    await tester.tap(find.byKey(PackHomeScreen.undoKey));
+    await settle(tester);
+    expect(_nations(c, id).keys, [svk]);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('a nation rename still shows in New Game', (tester) async {
+    final c = await editorContainer(tester);
+    final cze = nationIdOf('CZE');
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Renamed').copyWith(
+        nations: {cze: (name: 'Bohemia', code: '')},
+      ),
+    );
+    await pumpEditorRoute(tester, c, Routes.nations);
+    await tester.tap(find.byKey(WorldChip.chipKey));
+    await settle(tester);
+    final row = find.byKey(WorldChoiceSheet.packKey(id));
+    await tester.ensureVisible(row);
+    await tester.tap(row);
+    await settle(tester);
+    expect(c.read(newGameWorldProvider), id);
+    c.read(routerProvider).go('${Routes.newGame}?nationId=$cze');
+    await settle(tester);
+    expect(find.textContaining('Bohemia'), findsWidgets);
+    expect(find.text('Czechia'), findsNothing);
+  });
 }
+
+Map<int, ({String name, String code})> _nations(ProviderContainer c, int id) =>
+    c.read(packEditorProvider(id)).value!.nations;

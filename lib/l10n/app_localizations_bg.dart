@@ -15061,6 +15061,42 @@ class AppLocalizationsBg extends AppLocalizations {
   String get editorNamesTaken => 'Друг профил вече има това име.';
 
   @override
+  String get editorLanguageTitle => 'Names in which language';
+
+  @override
+  String get editorLanguageAll => 'All languages';
+
+  @override
+  String get editorLanguageAllShort => 'All';
+
+  @override
+  String get editorLanguageNote =>
+      'Only the editor switches. The game stays in its own language.';
+
+  @override
+  String editorLanguageEditing(String language) {
+    return 'Names in $language. Leave one empty to use the main name.';
+  }
+
+  @override
+  String get editorLanguageSame => 'Same in all languages';
+
+  @override
+  String editorLanguageMainName(String name) {
+    return 'Main name: $name';
+  }
+
+  @override
+  String get editorLanguageKeepHint => 'Leave empty to use the main name.';
+
+  @override
+  String get editorLanguageClear => 'Use the main name';
+
+  @override
+  String get editorLanguageFull =>
+      'This database has no room for more names per language.';
+
+  @override
   String get editorNamesOutlet => 'Медия';
 
   @override

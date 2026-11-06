@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -10,30 +9,33 @@ import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
-import 'package:fnm/features/editor/pack_issue_text.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 
-/// Edits one row of a name section: its name (and a nation's code or a
-/// reporter's outlet), or a nation's two name lists.
+/// Edits one row of a name section: its name (and a reporter's outlet), or
+/// a nation's two name lists.
 ///
-/// It saves as it is typed. A value that cannot be used (a code another
-/// nation has, a Y name another account has, characters that cannot be
-/// shown) is refused with a message and not saved. Everything typed in one
-/// opening of the form is one undo step; "Reset to original" removes the
-/// override.
+/// Under a [language] it edits that language's own name: left empty, or
+/// typed as the main name, there is none and the main name shows; "Use the
+/// main name" removes it. Under All languages (null) it edits the main
+/// name, and "Reset to original" removes it with every language's own.
+///
+/// It saves as it is typed. A value that cannot be used (a Y name another
+/// account has, characters that cannot be shown, one name per language too
+/// many for the database) is refused with a message and not saved.
+/// Everything typed in one opening of the form is one undo step.
 class NameEditForm extends ConsumerStatefulWidget {
   const NameEditForm({
     required this.packId,
     required this.section,
     required this.entry,
     required this.world,
+    this.language,
     this.onDone,
     super.key,
   });
 
   static const Key nameKey = Key('editorNames.form.name');
-  static const Key codeKey = Key('editorNames.form.code');
   static const Key outletKey = Key('editorNames.form.outlet');
   static const Key firstNamesKey = Key('editorNames.form.first');
   static const Key surnamesKey = Key('editorNames.form.sur');
@@ -44,8 +46,12 @@ class NameEditForm extends ConsumerStatefulWidget {
   final NameSection section;
   final NameEntry entry;
 
-  /// The nations of the database, for a code another nation already has.
+  /// The nations of the database.
   final List<Nation> world;
+
+  /// The editor's language whose own names this edits, or null for the
+  /// main names (All languages).
+  final String? language;
 
   /// Closes the form (the phone's sheet); null shows no Done button.
   final VoidCallback? onDone;
@@ -68,6 +74,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
 
   NameSection get _section => widget.section;
   NameEntry get _e => widget.entry;
+  String? get _lang => widget.language;
   PackEditor get _editor =>
       ref.read(packEditorProvider(widget.packId).notifier);
 
@@ -95,10 +102,31 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
       _set(_sur, lists.sur.join(', '));
       return;
     }
+    if (_lang case final lang?) {
+      // Only the language's own: empty shows what it falls back to.
+      final v = valueIn(_section, pack, _e, lang);
+      _set(_name, v.name.own ?? '');
+      _set(_second, v.second?.own ?? '');
+      return;
+    }
     final o = nameOverride(_section, pack, _e);
     _set(_name, ActiveWorld.textOrNull(o?.name) ?? _e.original);
     _set(_second, ActiveWorld.textOrNull(o?.second) ?? _e.original2);
   }
+
+  /// The pack with the fields as typed: in the editor's language, or as
+  /// the main names.
+  WorldPack _edited(WorldPack p) => switch (_lang) {
+    final lang? => NameEdits.renameIn(
+      _section,
+      p,
+      _e,
+      lang,
+      _name.text,
+      _second.text,
+    ),
+    null => NameEdits.rename(_section, p, _e, _name.text, _second.text),
+  };
 
   static void _set(TextEditingController c, String text) {
     if (c.text == text) return;
@@ -125,35 +153,45 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     }
 
     var name = nameProblem(_name.text);
-    if (name == null && _section == NameSection.yAccounts) {
+    final second = _section == NameSection.press
+        ? nameProblem(_second.text, max: PackRules.nameMax)
+        : null;
+    if (name != null || second != null) {
+      return (name: name, second: second);
+    }
+    final lang = _lang;
+    if (lang != null) {
+      // Refused before it is stored: one value per language too many for
+      // the database, or a Y name another account shows in this language.
+      if (NameEdits.overflowsIn(
+        _section,
+        pack,
+        _e,
+        lang,
+        _name.text,
+        _second.text,
+      )) {
+        return (name: l.editorLanguageFull, second: null);
+      }
+      if (_section == NameSection.yAccounts &&
+          PackRules.yNameTakenIn(
+            _edited(pack),
+            NameEdits.pathsOf(_section, _e).first,
+            lang,
+          )) {
+        name = l.editorNamesTaken;
+      }
+    } else if (_section == NameSection.yAccounts) {
       final next = NameEdits.rename(_section, pack, _e, _name.text);
-      if (PackRules.yNameTaken(next.yAccounts, _e.key)) {
+      if (PackRules.yNameTaken(
+        next.yAccounts,
+        _e.key,
+        added: pack.addedYAccounts,
+      )) {
         name = l.editorNamesTaken;
       }
     }
-    final second = switch (_section) {
-      NameSection.nations => _codeProblem(l, pack),
-      NameSection.press => nameProblem(_second.text, max: PackRules.nameMax),
-      _ => null,
-    };
     return (name: name, second: second);
-  }
-
-  /// A nation code must be 3 letters and nobody else's: not another
-  /// nation's code in this database (its new one, or the game's).
-  String? _codeProblem(AppLocalizations l, WorldPack pack) {
-    final code = _second.text.trim().toUpperCase();
-    if (code.isEmpty) return null;
-    if (PackRules.checkCode(code) != null) return l.editorIssueCode;
-    final byId = {for (final n in widget.world) n.id: n};
-    for (final n in widget.world) {
-      if (n.id == _e.nationId) continue;
-      final theirs = ActiveWorld.textOrNull(pack.nations[n.id]?.code) ?? n.code;
-      if (theirs.toUpperCase() == code) {
-        return l.editorNamesCodeTaken(code, packNationName(pack, byId, n.id));
-      }
-    }
-    return null;
   }
 
   /// Saves the fields as typed, when they can be used.
@@ -176,10 +214,7 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     }
     final errors = _errors(l, pack);
     if (errors.name != null || errors.second != null) return;
-    _write(
-      (p) => NameEdits.rename(_section, p, _e, _name.text, _second.text),
-      group: _group,
-    );
+    _write(_edited, group: _group);
   }
 
   /// Whether this form is writing right now: what the pack tells its
@@ -196,8 +231,15 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     _mine = ref.read(packEditorProvider(widget.packId)).valueOrNull;
   }
 
+  /// Under a language, its own names go ("Use the main name"); under All
+  /// languages, everything of the row ("Reset to original").
   void _reset() {
-    _write((p) => NameEdits.reset(_section, p, _e));
+    _write(
+      (p) => switch (_lang) {
+        final lang? => NameEdits.resetIn(_section, p, _e, lang),
+        null => NameEdits.reset(_section, p, _e),
+      },
+    );
     // Typing after a reset is a step of its own.
     _group = Object();
     setState(() => _fill(_mine));
@@ -215,19 +257,32 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     });
     final pack = ref.watch(packEditorProvider(widget.packId)).valueOrNull;
     if (pack == null) return const SizedBox.shrink();
-    final changed = _section == NameSection.nameLists
-        ? pack.nameLists.containsKey(int.tryParse(_e.key))
-        : nameOverride(_section, pack, _e) != null;
+    final lang = _lang;
+    final inLanguage = lang == null ? null : valueIn(_section, pack, _e, lang);
+    final changed = switch (_section) {
+      NameSection.nameLists => pack.nameLists.containsKey(int.tryParse(_e.key)),
+      _ when inLanguage != null =>
+        inLanguage.name.own != null || inLanguage.second?.own != null,
+      _ =>
+        nameOverride(_section, pack, _e) != null ||
+            languagesOf(_section, pack, _e).isNotEmpty,
+    };
 
     final fields = _section == NameSection.nameLists
         ? _listFields(l)
-        : _nameFields(l, _errors(l, pack));
+        : _nameFields(l, _errors(l, pack), inLanguage);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _Header(entry: _e, section: _section, changed: changed),
+        _Header(
+          entry: _e,
+          section: _section,
+          changed: changed,
+          language: lang,
+          inLanguage: inLanguage?.name,
+        ),
         const SizedBox(height: AppSpacing.md),
         ...fields,
         const SizedBox(height: AppSpacing.md),
@@ -242,7 +297,9 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
               onPressed: changed ? _reset : null,
               style: OutlinedButton.styleFrom(minimumSize: const Size(0, 44)),
               icon: const Icon(Icons.restart_alt),
-              label: Text(l.editorNamesReset),
+              label: Text(
+                lang == null ? l.editorNamesReset : l.editorLanguageClear,
+              ),
             ),
             if (widget.onDone != null)
               FilledButton(
@@ -260,8 +317,15 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
   List<Widget> _nameFields(
     AppLocalizations l,
     ({String? name, String? second}) errors,
+    ({LanguageValue name, LanguageValue? second})? inLanguage,
   ) {
     final style = AppTypography.bodyLarge.copyWith(color: AppColors.onSurface);
+    // Under a language an empty field is no name of its own: its hint is
+    // what then shows (the main name, else the game's there).
+    final hint = inLanguage == null
+        ? l.editorNamesKeepHint
+        : l.editorLanguageKeepHint;
+    String? fallback(LanguageValue? v) => v == null ? null : v.main ?? v.game;
     return [
       TextField(
         key: NameEditForm.nameKey,
@@ -278,35 +342,13 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
         },
         decoration: InputDecoration(
           labelText: l.editorNameLabel,
-          helperText: l.editorNamesKeepHint,
+          hintText: fallback(inLanguage?.name),
+          helperText: hint,
           helperMaxLines: 2,
           errorText: errors.name,
           errorMaxLines: 2,
         ),
       ),
-      if (_section == NameSection.nations) ...[
-        const SizedBox(height: AppSpacing.sm),
-        TextField(
-          key: NameEditForm.codeKey,
-          controller: _second,
-          maxLength: PackRules.codeLength,
-          textCapitalization: TextCapitalization.characters,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp('[A-Za-z]')),
-            const _UpperCase(),
-          ],
-          style: style.copyWith(letterSpacing: 2),
-          onChanged: (_) => _changed(),
-          onSubmitted: (_) => widget.onDone?.call(),
-          decoration: InputDecoration(
-            labelText: l.editorNamesCode,
-            helperText: l.editorNamesCodeHelp,
-            helperMaxLines: 2,
-            errorText: errors.second,
-            errorMaxLines: 2,
-          ),
-        ),
-      ],
       if (_section == NameSection.press) ...[
         const SizedBox(height: AppSpacing.sm),
         TextField(
@@ -319,7 +361,8 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
           onSubmitted: (_) => widget.onDone?.call(),
           decoration: InputDecoration(
             labelText: l.editorNamesOutlet,
-            helperText: l.editorNamesKeepHint,
+            hintText: fallback(inLanguage?.second),
+            helperText: hint,
             helperMaxLines: 2,
             errorText: errors.second,
             errorMaxLines: 2,
@@ -409,25 +452,36 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
   }
 }
 
-/// The game's name for what is edited, with its flag and what it is.
+/// The game's name for what is edited, with its flag and what it is; under
+/// a [language], the game's name there and the database's main name.
 class _Header extends StatelessWidget {
   const _Header({
     required this.entry,
     required this.section,
     required this.changed,
+    this.language,
+    this.inLanguage,
   });
 
   final NameEntry entry;
   final NameSection section;
   final bool changed;
+  final String? language;
+
+  /// The name in [language], when one is picked.
+  final LanguageValue? inLanguage;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final v = inLanguage;
     final about = [
       ?entry.detail,
       if (entry.original2.isNotEmpty) entry.original2,
     ].join(' · ');
+    final muted = AppTypography.bodySmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
     return Row(
       children: [
         if (entry.flagCode case final code?) ...[
@@ -439,53 +493,51 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l.editorNamesGameName(entry.original),
+                l.editorNamesGameName(v?.game ?? entry.original),
                 style: AppTypography.labelLarge,
               ),
-              if (about.isNotEmpty)
-                Text(
-                  about,
-                  style: AppTypography.bodySmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                ),
+              if (about.isNotEmpty) Text(about, style: muted),
+              if (v?.main case final main?)
+                Text(l.editorLanguageMainName(main), style: muted),
             ],
           ),
         ),
-        if (changed) const NameChangedMark(),
+        if (changed) NameChangedMark(language: language),
       ],
     );
   }
 }
 
-/// The small "Changed" mark of a row the database renames.
+/// The small "Changed" mark of a row the database renames; under a picked
+/// [language], that language's code (it has a name of its own there).
 class NameChangedMark extends StatelessWidget {
-  const NameChangedMark({super.key});
+  const NameChangedMark({this.language, super.key});
+
+  final String? language;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final code = language;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.12),
         borderRadius: AppRadii.lgAll,
       ),
-      child: Text(
-        l.editorNamesChanged,
-        style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (code != null) ...[
+            const Icon(Icons.translate, size: 12, color: AppColors.primary),
+            const SizedBox(width: 3),
+          ],
+          Text(
+            code == null ? l.editorNamesChanged : code.toUpperCase(),
+            style: AppTypography.labelSmall.copyWith(color: AppColors.primary),
+          ),
+        ],
       ),
     );
   }
-}
-
-/// Capital letters as they are typed.
-class _UpperCase extends TextInputFormatter {
-  const _UpperCase();
-
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) => newValue.copyWith(text: newValue.text.toUpperCase());
 }

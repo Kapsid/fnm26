@@ -29,11 +29,10 @@ typedef EditorPackEntry = ({
   int missing,
 });
 
-/// The sections of a database, in the order its home shows them. Each has
-/// its own route (see [route]); the section screens fill them in.
+/// The sections of a database, in the order its home shows them ([onHome]).
+/// Each has its own route (see [route]); the section screens fill them in.
 enum EditorSection {
   players(Routes.editorPlayers),
-  nations(Routes.editorNations),
   clubs(Routes.editorClubs),
   stadiums(Routes.editorStadiums),
   competitions(Routes.editorCompetitions),
@@ -41,20 +40,35 @@ enum EditorSection {
   press(Routes.editorPress),
   nameLists(Routes.editorNameLists),
   sponsors(Routes.editorSponsors),
-  trophies(Routes.editorTrophies);
+  trophies(Routes.editorTrophies),
+
+  /// What no section edits any more: a nation's name and code. A database
+  /// made before the Nations section went keeps its renames (they still
+  /// apply), and one that now breaks a rule is listed on the home with a
+  /// Remove ([PackEditor.removeNationRename]). No screen, no route.
+  none('');
 
   const EditorSection(this.route);
 
-  /// The route of this section's screen. Expects `?id=` (the pack), and for
-  /// [players] and [nameLists] optionally `&nation=`.
+  /// The route of this section's screen (empty for [none]). Expects `?id=`
+  /// (the pack), and for [players] and [nameLists] optionally `&nation=`.
   final String route;
+
+  /// The sections the home lists, in order: all but [none].
+  static List<EditorSection> get onHome => [
+    for (final s in values)
+      if (s != none) s,
+  ];
+
+  /// Whether this section has a screen to open.
+  bool get hasScreen => this != none;
 
   /// The section a [PackIssue.where] path belongs to. Added items sit with
   /// the game's own of their kind, a pool with the squads, and a `localized`
   /// entry with the text it translates.
   static EditorSection ofPath(String path) => switch (path.split('.').first) {
     'squads' || 'pools' => players,
-    'nations' => nations,
+    'nations' => none,
     'clubs' || 'addedClubs' => clubs,
     'stadiums' => stadiums,
     'competitions' => competitions,
@@ -356,6 +370,42 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
     final before = _revision;
     update((p) => dropUnknown(p, path));
     return _revision != before;
+  }
+
+  /// Whether [issue] is about a nation's old rename ([EditorSection.none]):
+  /// a code it shares with another nation ([DuplicateCode]), or a name or
+  /// code that breaks a rule (a [BadField] at `nations.<id>...`). Its fix is
+  /// [removeNationRename].
+  static bool isNationIssue(PackIssue issue) =>
+      issue is DuplicateCode ||
+      (issue is BadField && issue.path.startsWith('nations.'));
+
+  /// Drops the nation renames [issue] ([isNationIssue]) is about, as one
+  /// undoable edit: for a shared code, every nation of it the pack renames.
+  /// Returns whether something was removed.
+  bool removeNationRename(PackIssue issue) {
+    final before = _revision;
+    update((p) => withoutNationRename(p, issue));
+    return _revision != before;
+  }
+
+  /// [p] without the nation renames [issue] is about, or [p] itself
+  /// (identical) when it is about none the pack has.
+  static WorldPack withoutNationRename(WorldPack p, PackIssue issue) {
+    final ids = switch (issue) {
+      DuplicateCode(:final nationIds) => nationIds.toSet(),
+      BadField(:final path) when path.startsWith('nations.') => {
+        ?int.tryParse(path.split('.')[1]),
+      },
+      _ => const <int>{},
+    };
+    if (!ids.any(p.nations.containsKey)) return p;
+    return p.copyWith(
+      nations: {
+        for (final e in p.nations.entries)
+          if (!ids.contains(e.key)) e.key: e.value,
+      },
+    );
   }
 
   /// [p] without exactly the entry the [UnknownId] path [path] names, or
