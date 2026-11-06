@@ -126,6 +126,31 @@ Builder's calls:
    - The Timeline keeps its current event types.
    - Stats and Timeline therefore never contradict the pitch, because they read the same match.
 
+## Owner's review of the first mock (2026-11-06)
+
+The owner reviewed the first mock: "not bad but can we differ the feel a bit from that app". Then: "keep angle but add night options (and maybe times for matches and based on that country daylight?), also change a bit those players pills and maybe add different designs for pitch layering".
+
+1. **Camera.** Keep the tilted end-on angle.
+2. **Kick-off times and daylight.**
+   - Every match gets a deterministic local kick-off time (builder's call):
+     - friendlies are mostly in the evening;
+     - tournament matches use their usual slots;
+     - a share of matches are afternoon games.
+   - Lighting follows real daylight at the ground on that date (day, dusk or night). It comes from the sun's elevation, using the nation's approximate latitude and the date.
+   - Nations get an approximate latitude in a new data table (builder's call).
+   - The kick-off time shows in the score strip.
+3. **Night and dusk looks.**
+   - Night: floodlight pools on the grass, soft shadows from the four corner towers, and the stands lit in team colours.
+   - Dusk: a warm sky and longer shadows.
+   - Day: as in the first mock.
+4. **Player tokens.**
+   - Shirt-shaped tokens in the kit colours replace the round discs and name pills. The number is on the shirt, and a small mark shows which way the player faces.
+   - The name is a slim label under the token, with no pill.
+5. **Mowing patterns.**
+   - Stripes, checkerboard, wide bands, diagonal and centre circles.
+   - The pattern is chosen per stadium, so a ground always looks the same.
+6. **Gate.** A second mock goes to the owner before anything else is built. It shows the same ground at day, dusk and night, three mowing patterns, and the new tokens.
+
 ## Left to the builder
 
 - The event model's exact shape: new event types versus a richer event class; sequence or seconds within a minute; zones versus coordinates.
