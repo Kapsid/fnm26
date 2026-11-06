@@ -172,6 +172,20 @@ The owner reviewed the first mock: "not bad but can we differ the feel a bit fro
       - Small grounds have a low terrace or grass bank behind each goal.
     - The backdrop is reworked so that terrain, skyline and landmarks fill the sky above and behind the stands, with no bare dark sky.
     - The dark strip between the pitch and the stands is filled with ad boards, dugouts, photographers and an apron.
+12. **Look approved; backdrops become city plus horizon** (owner, 2026-11-07: "it looks nice, yes"; "they usually play in cities"). The backdrop has four layers.
+    - **Near layer: the city around the ground, by regional style.**
+      - old European town (rooftops, spires);
+      - northern brick and gables;
+      - Soviet-era blocks;
+      - Latin American (colourful low-rise, hillside neighbourhoods);
+      - glass towers (Gulf, East Asia);
+      - dense low-rise with minarets or domes (Middle East, North Africa, Turkey);
+      - African city;
+      - small town (small grounds anywhere).
+    - **Far layer: the horizon, from nature by country.** Mountains (Andes, Alps, Atlas), sea or coast, forested hills, volcanoes, desert, flat plains, fjords.
+    - **Landmarks** stay on top for the curated cities.
+    - **Season by match date.** Snow on roofs and hills in a northern winter, autumn colours in Central Europe in October and November, and dry golden grass in a hot summer.
+    - Every nation is mapped to a city style and a horizon.
 6. **Gate.** A second mock goes to the owner before anything else is built. It shows the same ground at day, dusk and night, three mowing patterns, and the new tokens.
 
 ## Left to the builder
