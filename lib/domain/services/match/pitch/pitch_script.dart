@@ -268,6 +268,11 @@ class StagedWindow {
   /// in time order.
   final List<PitchCue> cues = [];
 
+  /// Men standing close together by design in this window (a free kick's
+  /// wall, shoulder to shoulder): on screen they may overlap more than
+  /// anybody else, never fully.
+  final Set<int> formation = {};
+
   /// The state handed over as the window opens and the one play resumes
   /// from as it closes. In a resumed script, a window that ended before the
   /// script's start was never played here: both carry the resume state.

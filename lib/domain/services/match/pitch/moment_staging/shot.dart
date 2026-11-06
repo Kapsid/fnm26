@@ -604,8 +604,11 @@ class _OpenShotPlan extends _Plan {
       _ => toGoal / 30,
     };
     final setUp = assister != null && !delivered ? 0.6 : 0.0;
+    // A ball still in the air has to come down first.
+    final f = now.flight;
+    final pending = f == null ? 0.0 : math.max(0.0, f.t1 - t);
     final late =
-        (t >= strikeBy - 1e-9 || t + flight + setUp + 0.3 >= end) &&
+        (t >= strikeBy - 1e-9 || t + pending + flight + setUp + 0.3 >= end) &&
         settledIn(t);
     // Never a shot from his own half: a man that far out is not where it
     // happened.
@@ -707,6 +710,17 @@ class _OpenShotPlan extends _Plan {
         return a;
       }
       return fetch(x, t, now, needOnside: true);
+    }
+    // No time left to play it to him and still shoot before the window (or
+    // the whistle) runs out: cut to him with it instead.
+    final sp = now.players[s];
+    if (sp != null && !lateCut && car != s && settledIn(t) && !landing(now)) {
+      final reach = sp.distanceTo(now.ball) / 22 + 0.15;
+      final strike = sp.distanceTo(goal) / 30;
+      if (t + reach + strike + 0.3 >= math.min(end, c.hardEnd)) {
+        lateCut = true;
+        return _phaseCut(now);
+      }
     }
     return fetch(s, t, now, needOnside: true);
   }

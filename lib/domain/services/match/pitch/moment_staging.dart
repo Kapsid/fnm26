@@ -24,6 +24,7 @@ import 'dart:math' as math;
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
+import 'package:fnm/domain/services/match/pitch/display_spacing.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/story_layer.dart';

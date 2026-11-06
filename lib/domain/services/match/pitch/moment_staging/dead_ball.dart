@@ -197,6 +197,80 @@ abstract class _DeadBallPlan extends _Plan {
     }
   }
 
+  /// The men the set piece places, eased apart so that every one reads as
+  /// his own shirt on screen (a box at a corner is crowded, never a heap).
+  /// The taker, the man who meets the ball, a wall and the keepers stay
+  /// where they are; everybody else gives way. A move is undone when it
+  /// would take a defender nearer the ball than 9.15 m or into the wall's
+  /// line, or an attacker at a cross beyond the defending line.
+  void spreadMarks(
+    ScriptState e, {
+    Set<int> keep = const {},
+    bool onside = false,
+    bool Function(int id, Offset2 p)? allowed,
+  }) {
+    final fixed = <int>{
+      taker,
+      ...keep,
+      ?shotMoment?.shooterId,
+      ...e.keepers,
+    };
+    final points = <int, Offset2>{
+      for (final id in e.players.keys)
+        if (!c.departing.contains(id)) id: marks[id] ?? e.players[id]!,
+      taker: takerSpot,
+      // Their keeper where the set piece puts him.
+      for (final id in e.keepers)
+        if (e.teams[id] == opp) id: keeperSpot ?? e.players[id]!,
+    };
+    final movable = {
+      for (final id in marks.keys)
+        if (!fixed.contains(id) && points.containsKey(id)) id,
+    };
+    if (movable.isEmpty) return;
+    final spread = DisplaySpacing.spread(
+      points,
+      movable,
+      target: 0.1,
+      passes: 14,
+      maxStep: 4,
+      margin: 0.8,
+    );
+    final defending = <int>{
+      for (final id in available(e, opp)) id,
+    };
+    double line() {
+      final ds = <double>[
+        for (final id in defending)
+          depthOf(marks[id] ?? e.players[id] ?? Offset2.zero),
+      ]..sort();
+      return ds.length < 2 ? PitchDims.length : ds[ds.length - 2];
+    }
+
+    for (final id in movable) {
+      final to = spread[id]!;
+      final from = marks[id]!;
+      if (defending.contains(id)) {
+        if (to.distanceTo(ballSpot) < wallDistance + 0.8 &&
+            to.distanceTo(ballSpot) < from.distanceTo(ballSpot)) {
+          continue;
+        }
+      }
+      if (allowed != null && !allowed(id, to)) continue;
+      marks[id] = to;
+    }
+    if (onside) {
+      final l = line();
+      for (final id in movable) {
+        if (defending.contains(id)) continue;
+        final p = marks[id]!;
+        if (depthOf(p) > l - 0.5 && depthOf(p) > depthOf(e.players[id]!)) {
+          marks[id] = Offset2(depthToX(l - 0.8, dir), p.y);
+        }
+      }
+    }
+  }
+
   /// For a header that is blocked: the defender who blocks it, and his
   /// move, goal-side of the man who meets the ball.
   int? headBlocker;
@@ -305,13 +379,16 @@ class _CornerPlan extends _DeadBallPlan {
               );
           return x != 0 ? x : a.compareTo(b);
         });
+    // Distinct places across the whole area, as attackers take them: the
+    // near post, the far post, the spot, the edge of the area and the
+    // back post, so on screen they never heap up in front of goal.
     final atkSpots = [
-      at(100.6, sigma * 3.2),
-      at(100.6, 0),
-      at(100.2, -sigma * 3.6),
-      at(94.5, sigma * 1.5),
-      at(93.5, -sigma * 4.5),
-      at(86, sigma * 6),
+      at(101.0, sigma * 5.0),
+      at(100.0, -sigma * 6.5),
+      at(94.0, sigma * 0.5),
+      at(90.0, sigma * 8.0),
+      at(93.0, -sigma * 11.0),
+      at(87.0, -sigma * 2.5),
     ];
     final goingIn = <int>[];
     if (shooter != null && e.players.containsKey(shooter)) goingIn.add(shooter);
@@ -333,20 +410,21 @@ class _CornerPlan extends _DeadBallPlan {
     } else {
       marks.addAll(assign(e, goingIn, atkSpots));
     }
-    // Defenders zonal on the six-yard line and around the spot.
     final def = available(
       e,
       opp,
     ).where((id) => !e.keepers.contains(id)).toList();
+    // Defenders zonal along the six-yard line and goal-side of the
+    // attackers' places, a stride off each so every shirt reads.
     final defSpots = [
-      at(103.6, sigma * 2.6),
-      at(98.6, sigma * 4.8),
-      at(98.6, sigma * 1.6),
-      at(98.6, -sigma * 1.6),
-      at(98.6, -sigma * 4.8),
-      at(92.5, sigma * 3.2),
-      at(92.5, -sigma * 2.0),
-      at(87, -sigma * 2.5),
+      at(103.0, sigma * 8.5),
+      at(102.5, sigma * 1.5),
+      at(103.0, -sigma * 3.0),
+      at(97.0, sigma * 4.0),
+      at(97.0, -sigma * 4.5),
+      at(97.5, -sigma * 10.0),
+      at(92.5, sigma * 5.0),
+      at(91.0, -sigma * 6.5),
     ];
     final taken = <Offset2>[...marks.values];
     final usable = defSpots
@@ -368,6 +446,7 @@ class _CornerPlan extends _DeadBallPlan {
         marks[id] = ballSpot + (q - ballSpot).unit * (wallDistance + 1.5);
       }
     }
+    spreadMarks(e);
     clearTheBall(e);
   }
 
@@ -640,8 +719,15 @@ class _FreeKickPlan extends _DeadBallPlan {
         : 2;
     final centre = ballSpot + toGoal * wallDistance;
     final perp = Offset2(-toGoal.y, toGoal.x);
+    // Shoulder to shoulder, and on screen never more than mostly on top
+    // of each other: across a far-off pitch a metre is only a sliver.
+    var gap = 1.05;
+    while (gap < 1.7 &&
+        DisplaySpacing.overlap(centre, centre + perp * gap) > 0.7) {
+      gap += 0.05;
+    }
     wallSpots = [
-      for (var k = 0; k < n; k++) centre + perp * ((k - (n - 1) / 2) * 1.05),
+      for (var k = 0; k < n; k++) centre + perp * ((k - (n - 1) / 2) * gap),
     ];
     final sh = shot;
     setTimes(
@@ -696,6 +782,15 @@ class _FreeKickPlan extends _DeadBallPlan {
     p.x.clamp(0.6, PitchDims.length - 0.6),
     p.y.clamp(0.6, PitchDims.width - 0.6),
   );
+
+  /// Whether [p] stands where the wall stands: a man there who is not in
+  /// it would read as one more in it.
+  bool _inWallLine(Offset2 p) {
+    final r = p - ballSpot;
+    final a = r.x * toGoal.x + r.y * toGoal.y;
+    final c = (r.x * toGoal.y - r.y * toGoal.x).abs();
+    return a > 8.2 && a < 10.4 && c < 3.8;
+  }
 
   void _arrange(ScriptState e) {
     final def =
@@ -761,6 +856,15 @@ class _FreeKickPlan extends _DeadBallPlan {
         marks[id] = _clamp(ballSpot + away * (wallDistance + 1.6));
       }
     }
+    spreadMarks(
+      e,
+      keep: wall.toSet(),
+      onside: !direct,
+      allowed: (id, p) => !_inWallLine(p),
+    );
+    w.formation
+      ..clear()
+      ..addAll(wall);
     clearTheBall(e);
   }
 
@@ -781,6 +885,9 @@ class _FreeKickPlan extends _DeadBallPlan {
     final men = assign(now, def.take(wallSpots.length + 2).toList(), wallSpots);
     wall.addAll(men.keys.toList()..sort());
     marks.addAll(men);
+    w.formation
+      ..clear()
+      ..addAll(wall);
   }
 
   /// Whether the wall cannot form before the kick has to go.
@@ -1108,6 +1215,7 @@ class _ThrowPlan extends _DeadBallPlan {
         .where((q) => used.every((o) => o.distanceTo(q) > 1.8))
         .toList();
     marks.addAll(assign(e, def.take(usable.length).toList(), usable));
+    spreadMarks(e);
   }
 
   @override

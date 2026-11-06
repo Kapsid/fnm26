@@ -117,7 +117,10 @@ class _PenaltyPlan extends _Plan {
       if (d > PitchDims.penaltySpotDepth - 0.5) return false;
       if (l.abs() > 32.5 || d < 1) return false;
       for (final o in placed) {
-        if (o.distanceTo(q) < 1.8) return false;
+        // Apart on screen too, not only on the grass.
+        if (o.distanceTo(q) < 1.8 || DisplaySpacing.overlap(o, q) > 0.35) {
+          return false;
+        }
       }
       return true;
     }

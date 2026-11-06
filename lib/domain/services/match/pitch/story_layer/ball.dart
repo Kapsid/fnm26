@@ -165,6 +165,35 @@ extension _BallMechanics on _Builder {
       }
       placed.add(i);
     }
+    // Nobody heaped on anybody on screen: the men not placed step aside,
+    // across the pitch only, so no line of offside moves. The moment's own
+    // men (the one cut to, or the one under way) stay exactly where they
+    // were put.
+    final named = <int>{
+      ...?activeWindow?.actors,
+      for (final w in windows)
+        if (w.start >= t - 1e-9 && w.start < t + 12) ...w.actors,
+    };
+    final spread = DisplaySpacing.spread(
+      {
+        for (final a in agents)
+          if (a.present) a.index: a.pos,
+      },
+      {
+        for (final a in agents)
+          if (a.present &&
+              a.walkStart == null &&
+              !placed.contains(a.index) &&
+              !named.contains(a.id) &&
+              a.slot != sides[a.side].gkSlot)
+            a.index,
+      },
+      target: 0.35,
+      passes: 8,
+      maxStep: 3,
+      acrossOnly: true,
+    );
+    spread.forEach((i, p) => agents[i].pos = p);
     // Nobody left standing on anybody: those not placed step aside first.
     for (var it = 0; it < 80; it++) {
       var moved = false;

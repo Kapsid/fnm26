@@ -42,6 +42,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
+import 'package:fnm/domain/services/match/pitch/display_spacing.dart';
 import 'package:fnm/domain/services/match/pitch/formation_slots.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
@@ -582,6 +583,14 @@ const double _accel = 9;
 const double _turnRate = 7;
 const double _safeGap = 0.9;
 
+/// How much two shirts may overlap on screen when neither has to be where
+/// he is, and how hard a man steps off one he stands on (m/s).
+const double _screenRoom = 0.15;
+const double _screenPush = 6;
+
+/// How far ahead a man looks for somebody he would cross on screen (s).
+const double _lookAhead = 0.5;
+
 /// The longest a moment's plan plays on past its window.
 const double _spill = 3;
 
@@ -780,6 +789,10 @@ class _Builder {
 
   /// Whether the last [_drive] came from the stager.
   bool stagedDrive = false;
+
+  /// The last drive only held a place (in the shape, or standing by in a
+  /// moment): free to give way on screen.
+  bool freeDrive = false;
 
   /// Where a resumed script starts.
   double? resumeAt;
@@ -2188,8 +2201,11 @@ class _Builder {
     ];
     final proposed = <int, Offset2>{};
     final priority = <int, int>{};
+    final drives = <int, (Offset2, double, int)>{};
+    final staged = <int>{};
+    final movable = <int>{};
     for (final a in present) {
-      final (target, maxSpeed, prio) = _drive(
+      drives[a.index] = _drive(
         a,
         t0,
         minute,
@@ -2200,6 +2216,32 @@ class _Builder {
         plan,
         state,
       );
+      if (stagedDrive) staged.add(a.index);
+      if (freeDrive) movable.add(a.index);
+    }
+    // Visually apart, not only physically: the men only holding their
+    // place in the shape (or standing by in a moment) ease their targets
+    // off anybody they would stand on top of on screen.
+    if (movable.isNotEmpty) {
+      final spread = DisplaySpacing.spread(
+        {for (final e in drives.entries) e.key: e.value.$1},
+        movable,
+        target: _screenRoom,
+        passes: 8,
+        // Across only: nobody's depth (the shape's lines, the offside
+        // line) changes for the picture.
+        acrossOnly: true,
+      );
+      for (final i in movable) {
+        final (target, maxSpeed, prio) = drives[i]!;
+        final to = spread[i]!;
+        if (to.distanceTo(target) < 1e-9) continue;
+        drives[i] = (to, math.max(maxSpeed, 2.5), prio);
+      }
+    }
+    for (final a in present) {
+      final (target, maxSpeed, prio) = drives[a.index]!;
+      stagedDrive = staged.contains(a.index);
       priority[a.index] = prio;
       final desired = target - a.pos;
       final dist = desired.length;
@@ -2225,8 +2267,36 @@ class _Builder {
           }
         }
       }
+      var push = Offset2.zero;
+      if (movable.contains(a.index)) {
+        // Off anybody he stands on top of on screen, now.
+        // Looking half a second ahead, so two men crossing step round each
+        // other on screen instead of running through.
+        final me = a.pos + v * _lookAhead;
+        for (final o in present) {
+          if (o == a) continue;
+          final them = o.pos + o.vel * _lookAhead;
+          final ov = math.max(
+            DisplaySpacing.overlap(a.pos, o.pos),
+            DisplaySpacing.overlap(me, them),
+          );
+          if (ov <= _screenRoom) continue;
+          final sep = DisplaySpacing.separation(
+            me,
+            them,
+            target: 0,
+            tie: a.index < o.index ? 1 : -1,
+            acrossOnly: true,
+          );
+          if (sep == Offset2.zero) continue;
+          push = push + sep.unit * (_screenPush * ov);
+        }
+        push = push.capped(_screenPush);
+      }
       final walker = a.walkStart != null;
       v = v.capped(math.max(maxSpeed, maxSpeed > 0 && !walker ? 2.0 : 0.0));
+      // Stepping off a man on screen comes on top of his run.
+      v = v + push;
       final dv = (v - a.vel).capped(_accel * dt);
       var nv = (a.vel + dv).capped(walker ? _walkCap : _hardSpeed);
       if (maxSpeed <= 0 && !walker) nv = Offset2.zero;
@@ -2283,6 +2353,7 @@ class _Builder {
     ScriptState? state,
   ) {
     stagedDrive = false;
+    freeDrive = false;
     if (a.walkStart != null) return (_walkTarget(a), PitchScript.walkSpeed, 3);
     final side = sides[a.side];
     final dir = _dir(a.side, minute);
@@ -2311,6 +2382,7 @@ class _Builder {
         final left = math.max(0.15, f.t1 - t);
         return (f.lead, math.min(8, a.pos.distanceTo(f.lead) / left + 1), 2);
       }
+      freeDrive = true;
       return (a.pos, 0, 2);
     }
     if (carrier == a.index) {
@@ -2347,6 +2419,7 @@ class _Builder {
       2.5,
       6.5,
     );
+    freeDrive = true;
     return (anchor, speed, 1);
   }
 

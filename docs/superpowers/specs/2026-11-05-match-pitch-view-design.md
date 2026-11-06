@@ -186,6 +186,17 @@ The owner reviewed the first mock: "not bad but can we differ the feel a bit fro
     - **Landmarks** stay on top for the curated cities.
     - **Season by match date.** Snow on roofs and hills in a northern winter, autumn colours in Central Europe in October and November, and dry golden grass in a hot summer.
     - Every nation is mapped to a city style and a horizon.
+13. **Restarts that lead to action** (owner: "only if its lead to an action").
+    - A routine throw-in or goal kick is animated only when it opens the build-up to the next staged moment, for example the throw-in that starts the move ending in a shot or corner, or a keeper's goal kick that becomes a counter.
+    - The animation is short (about 1 s) and stays in the flow, with no pause and no commentary line.
+    - All other restarts flow on as before.
+14. **The tactics show in the play, not only the result** (owner, 2026-11-07: "yeah we would like all of it"). Between moments, movement reflects each side's tactics, never the outcomes:
+    - Pressing height and intensity: a high press hunts the ball high, a low block sits deep and compact.
+    - Tempo and directness set pass length and speed: patient short passing, or direct long balls.
+    - Counter-attacks: after regaining the ball, a counter-minded side breaks fast and forward.
+    - Roles by position and movement: overlapping or inverted full-backs, a false nine dropping deep, wide wingers against inside forwards, a holding midfielder screening.
+    - AI instruction drift: the engine records the AI's minute-by-minute instruction changes in memory on `MatchResult` (outcomes unchanged), and the picture follows them.
+    - Every Ruling 9 outcome class stays at 0 findings and the validator stays at 0.
 6. **Gate.** A second mock goes to the owner before anything else is built. It shows the same ground at day, dusk and night, three mowing patterns, and the new tokens.
 
 ## Left to the builder
