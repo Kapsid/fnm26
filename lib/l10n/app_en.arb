@@ -1896,7 +1896,7 @@
   },
   "matchGoalLongThrow": "LONG THROW",
   "@matchGoalLongThrow": {
-    "description": "Caption under the goal celebration when the goal came from a long throw-in, before the minute (e.g. LONG THROW \u00b7 67'). All caps, like the penalty caption."
+    "description": "Caption under the goal celebration when the goal came from a long throw-in, before the minute (e.g. LONG THROW · 67'). All caps, like the penalty caption."
   },
   "tacticsSkillFin": "FIN",
   "@tacticsSkillFin": {
@@ -22106,5 +22106,1098 @@
   "callUpAwayShort": "A",
   "@callUpAwayShort": {
     "description": "One- to three-letter mark for an AWAY match on a compact fixture tile of the call-up screen, the abbreviation fans use in fixture lists (the full word is read out to screen readers)."
+  },
+  "pitchComShotGoal1": "GOAL! {player} finds the net!",
+  "@pitchComShotGoal1": {
+    "description": "Pitch view commentary line: an open-play shot that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotGoal2": "{player} fires it in! GOAL!",
+  "@pitchComShotGoal2": {
+    "description": "Pitch view commentary line: an open-play shot that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotGoal3": "GOAL! A clinical finish from {player}.",
+  "@pitchComShotGoal3": {
+    "description": "Pitch view commentary line: an open-play shot that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotSaved1": "{player} shoots, but {keeper} saves.",
+  "@pitchComShotSaved1": {
+    "description": "Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotSaved2": "{player} tries his luck, the keeper is equal to it.",
+  "@pitchComShotSaved2": {
+    "description": "Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotSaved3": "{player} lets fly, {keeper} pushes it away!",
+  "@pitchComShotSaved3": {
+    "description": "Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotWide1": "{player} shoots wide.",
+  "@pitchComShotWide1": {
+    "description": "Pitch view commentary line: an open-play shot that misses the target. {player} is the shooter. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotWide2": "Off target from {player}.",
+  "@pitchComShotWide2": {
+    "description": "Pitch view commentary line: an open-play shot that misses the target. {player} is the shooter. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotWide3": "{player} drags it past the post.",
+  "@pitchComShotWide3": {
+    "description": "Pitch view commentary line: an open-play shot that misses the target. {player} is the shooter. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotBlocked1": "{player} shoots, but it's blocked.",
+  "@pitchComShotBlocked1": {
+    "description": "Pitch view commentary line: an open-play shot blocked by a defender. {player} is the shooter. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotBlocked2": "Blocked! {player} can't find a way through.",
+  "@pitchComShotBlocked2": {
+    "description": "Pitch view commentary line: an open-play shot blocked by a defender. {player} is the shooter. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotBlocked3": "{player} lets fly, but a defender gets in the way.",
+  "@pitchComShotBlocked3": {
+    "description": "Pitch view commentary line: an open-play shot blocked by a defender. {player} is the shooter. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotWoodwork1": "Off the post! So close from {player}.",
+  "@pitchComShotWoodwork1": {
+    "description": "Pitch view commentary line: an open-play shot that hits the post or the bar. {player} is the shooter. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotWoodwork2": "{player} hits the woodwork!",
+  "@pitchComShotWoodwork2": {
+    "description": "Pitch view commentary line: an open-play shot that hits the post or the bar. {player} is the shooter. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComShotWoodwork3": "Crossbar! {player} is denied by the frame.",
+  "@pitchComShotWoodwork3": {
+    "description": "Pitch view commentary line: an open-play shot that hits the post or the bar. {player} is the shooter. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderGoal1": "GOAL! {player} heads it home!",
+  "@pitchComHeaderGoal1": {
+    "description": "Pitch view commentary line: an open-play header that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderGoal2": "{player} rises highest and scores! GOAL!",
+  "@pitchComHeaderGoal2": {
+    "description": "Pitch view commentary line: an open-play header that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderGoal3": "GOAL! A powerful header from {player}.",
+  "@pitchComHeaderGoal3": {
+    "description": "Pitch view commentary line: an open-play header that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderSaved1": "{player} heads it, {keeper} saves.",
+  "@pitchComHeaderSaved1": {
+    "description": "Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderSaved2": "A header from {player}, but the keeper holds it.",
+  "@pitchComHeaderSaved2": {
+    "description": "Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderSaved3": "{keeper} tips away the header from {player}.",
+  "@pitchComHeaderSaved3": {
+    "description": "Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderWide1": "{player} heads it wide.",
+  "@pitchComHeaderWide1": {
+    "description": "Pitch view commentary line: an open-play header that misses the target. {player} is the player heading. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderWide2": "A header from {player}, but off target.",
+  "@pitchComHeaderWide2": {
+    "description": "Pitch view commentary line: an open-play header that misses the target. {player} is the player heading. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderWide3": "{player} can't keep the header down.",
+  "@pitchComHeaderWide3": {
+    "description": "Pitch view commentary line: an open-play header that misses the target. {player} is the player heading. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderBlocked1": "{player} heads it, but it's blocked.",
+  "@pitchComHeaderBlocked1": {
+    "description": "Pitch view commentary line: an open-play header blocked by a defender. {player} is the player heading. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderBlocked2": "{player} heads goalwards, but it's charged down.",
+  "@pitchComHeaderBlocked2": {
+    "description": "Pitch view commentary line: an open-play header blocked by a defender. {player} is the player heading. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderBlocked3": "Blocked! {player} meets it, but a defender is there.",
+  "@pitchComHeaderBlocked3": {
+    "description": "Pitch view commentary line: an open-play header blocked by a defender. {player} is the player heading. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderWoodwork1": "{player} heads against the bar!",
+  "@pitchComHeaderWoodwork1": {
+    "description": "Pitch view commentary line: an open-play header that hits the post or the bar. {player} is the player heading. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderWoodwork2": "Off the post! The header from {player} comes back out.",
+  "@pitchComHeaderWoodwork2": {
+    "description": "Pitch view commentary line: an open-play header that hits the post or the bar. {player} is the player heading. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComHeaderWoodwork3": "Woodwork! {player} rattles the frame with a header.",
+  "@pitchComHeaderWoodwork3": {
+    "description": "Pitch view commentary line: an open-play header that hits the post or the bar. {player} is the player heading. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceGoal1": "GOAL! {player} gets on the end of it!",
+  "@pitchComSetPieceGoal1": {
+    "description": "Pitch view commentary line: a goal from a corner, a crossed free kick or a long throw. {player} is the scorer, {other} the player who delivered the ball. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceGoal2": "GOAL! {other} delivers and {player} scores!",
+  "@pitchComSetPieceGoal2": {
+    "description": "Pitch view commentary line: a goal from a corner, a crossed free kick or a long throw. {player} is the scorer, {other} the player who delivered the ball. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceGoal3": "From the set piece, {player} scores! GOAL!",
+  "@pitchComSetPieceGoal3": {
+    "description": "Pitch view commentary line: a goal from a corner, a crossed free kick or a long throw. {player} is the scorer, {other} the player who delivered the ball. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceSaved1": "{player} meets it, but {keeper} saves.",
+  "@pitchComSetPieceSaved1": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceSaved2": "{player} gets a touch, the keeper gathers.",
+  "@pitchComSetPieceSaved2": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceSaved3": "{player} gets a shot away, {keeper} is alert.",
+  "@pitchComSetPieceSaved3": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceWide1": "{player} gets on the end of it, but wide.",
+  "@pitchComSetPieceWide1": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that misses the target. {player} is the shooter. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceWide2": "{player} meets the delivery, off target.",
+  "@pitchComSetPieceWide2": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that misses the target. {player} is the shooter. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceWide3": "Over the bar from {player}.",
+  "@pitchComSetPieceWide3": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that misses the target. {player} is the shooter. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceBlocked1": "{player} meets it, but it's blocked.",
+  "@pitchComSetPieceBlocked1": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that is blocked. {player} is the shooter. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceBlocked2": "Scramble in the box! {player} is blocked.",
+  "@pitchComSetPieceBlocked2": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that is blocked. {player} is the shooter. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceBlocked3": "{player} tries to force it in, but it's cleared.",
+  "@pitchComSetPieceBlocked3": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that is blocked. {player} is the shooter. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceWoodwork1": "{player} meets it and hits the post!",
+  "@pitchComSetPieceWoodwork1": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that hits the post or the bar. {player} is the shooter. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceWoodwork2": "Off the bar! {player} nearly scores from the set piece.",
+  "@pitchComSetPieceWoodwork2": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that hits the post or the bar. {player} is the shooter. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSetPieceWoodwork3": "Woodwork! {player} so close from the delivery.",
+  "@pitchComSetPieceWoodwork3": {
+    "description": "Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that hits the post or the bar. {player} is the shooter. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickGoal1": "GOAL! {player} curls it over the wall!",
+  "@pitchComDirectFreeKickGoal1": {
+    "description": "Pitch view commentary line: a direct free kick that scores. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickGoal2": "What a free kick! {player} finds the top corner!",
+  "@pitchComDirectFreeKickGoal2": {
+    "description": "Pitch view commentary line: a direct free kick that scores. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickGoal3": "GOAL! {player} beats the keeper from the free kick.",
+  "@pitchComDirectFreeKickGoal3": {
+    "description": "Pitch view commentary line: a direct free kick that scores. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickSaved1": "{player} goes for goal, {keeper} saves.",
+  "@pitchComDirectFreeKickSaved1": {
+    "description": "Pitch view commentary line: a direct free kick the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickSaved2": "The free kick from {player} is pushed away.",
+  "@pitchComDirectFreeKickSaved2": {
+    "description": "Pitch view commentary line: a direct free kick the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickSaved3": "Good save! {keeper} keeps out the free kick from {player}.",
+  "@pitchComDirectFreeKickSaved3": {
+    "description": "Pitch view commentary line: a direct free kick the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickWide1": "The free kick from {player} sails over.",
+  "@pitchComDirectFreeKickWide1": {
+    "description": "Pitch view commentary line: a direct free kick that misses the target. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickWide2": "{player} goes for goal, but it's wide.",
+  "@pitchComDirectFreeKickWide2": {
+    "description": "Pitch view commentary line: a direct free kick that misses the target. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickWide3": "{player} misses the target from the free kick.",
+  "@pitchComDirectFreeKickWide3": {
+    "description": "Pitch view commentary line: a direct free kick that misses the target. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickBlocked1": "The free kick from {player} hits the wall.",
+  "@pitchComDirectFreeKickBlocked1": {
+    "description": "Pitch view commentary line: a direct free kick that hits the defensive wall. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickBlocked2": "Into the wall from {player}.",
+  "@pitchComDirectFreeKickBlocked2": {
+    "description": "Pitch view commentary line: a direct free kick that hits the defensive wall. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickBlocked3": "The wall stands firm against {player}.",
+  "@pitchComDirectFreeKickBlocked3": {
+    "description": "Pitch view commentary line: a direct free kick that hits the defensive wall. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickWoodwork1": "{player} hits the bar with the free kick!",
+  "@pitchComDirectFreeKickWoodwork1": {
+    "description": "Pitch view commentary line: a direct free kick that hits the post or the bar. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickWoodwork2": "Off the post! {player} so close from the free kick.",
+  "@pitchComDirectFreeKickWoodwork2": {
+    "description": "Pitch view commentary line: a direct free kick that hits the post or the bar. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComDirectFreeKickWoodwork3": "The frame saves the keeper! {player} so close.",
+  "@pitchComDirectFreeKickWoodwork3": {
+    "description": "Pitch view commentary line: a direct free kick that hits the post or the bar. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyGoal1": "GOAL! {player} sends the keeper the wrong way.",
+  "@pitchComPenaltyGoal1": {
+    "description": "Pitch view commentary line: a penalty that is scored. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyGoal2": "{player} steps up and scores! GOAL!",
+  "@pitchComPenaltyGoal2": {
+    "description": "Pitch view commentary line: a penalty that is scored. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyGoal3": "GOAL! {player} buries the penalty.",
+  "@pitchComPenaltyGoal3": {
+    "description": "Pitch view commentary line: a penalty that is scored. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltySaved1": "Saved! {keeper} stops the penalty from {player}!",
+  "@pitchComPenaltySaved1": {
+    "description": "Pitch view commentary line: a penalty the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltySaved2": "{player} steps up... and it's saved!",
+  "@pitchComPenaltySaved2": {
+    "description": "Pitch view commentary line: a penalty the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltySaved3": "{keeper} guesses right and denies {player}!",
+  "@pitchComPenaltySaved3": {
+    "description": "Pitch view commentary line: a penalty the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "keeper": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyMissed1": "{player} misses the penalty!",
+  "@pitchComPenaltyMissed1": {
+    "description": "Pitch view commentary line: a penalty that misses the target. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyMissed2": "Wide! {player} drags the penalty past the post.",
+  "@pitchComPenaltyMissed2": {
+    "description": "Pitch view commentary line: a penalty that misses the target. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyMissed3": "Over the bar! {player} blazes the penalty high.",
+  "@pitchComPenaltyMissed3": {
+    "description": "Pitch view commentary line: a penalty that misses the target. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyWoodwork1": "{player} hits the post from the spot!",
+  "@pitchComPenaltyWoodwork1": {
+    "description": "Pitch view commentary line: a penalty that hits the post or the bar. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyWoodwork2": "Off the bar! The penalty from {player} stays out.",
+  "@pitchComPenaltyWoodwork2": {
+    "description": "Pitch view commentary line: a penalty that hits the post or the bar. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyWoodwork3": "Woodwork! {player} can't believe it.",
+  "@pitchComPenaltyWoodwork3": {
+    "description": "Pitch view commentary line: a penalty that hits the post or the bar. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwarded1": "Penalty! {player} is brought down in the box.",
+  "@pitchComPenaltyAwarded1": {
+    "description": "Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwarded2": "The referee points to the spot! {other} fouls {player}.",
+  "@pitchComPenaltyAwarded2": {
+    "description": "Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwarded3": "Penalty given! {other} catches {player} in the area.",
+  "@pitchComPenaltyAwarded3": {
+    "description": "Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwardedYellow1": "Penalty! {player} goes down and {other} is booked.",
+  "@pitchComPenaltyAwardedYellow1": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler is booked. {player} is the player fouled, {other} the player booked. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwardedYellow2": "Spot kick, and a yellow for {other} after the foul on {player}.",
+  "@pitchComPenaltyAwardedYellow2": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler is booked. {player} is the player fouled, {other} the player booked. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwardedYellow3": "Penalty and a booking! {other} clips {player} in the box.",
+  "@pitchComPenaltyAwardedYellow3": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler is booked. {player} is the player fouled, {other} the player booked. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwardedRed1": "Penalty and a red card! {player} goes down, {other} is off.",
+  "@pitchComPenaltyAwardedRed1": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwardedRed2": "Spot kick, and {other} is sent off for the foul on {player}!",
+  "@pitchComPenaltyAwardedRed2": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwardedRed3": "Red card and a penalty! {other} stops {player} going through.",
+  "@pitchComPenaltyAwardedRed3": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComCorner1": "Corner. {player} to take it.",
+  "@pitchComCorner1": {
+    "description": "Pitch view commentary line: a corner is taken. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComCorner2": "{player} swings in the corner.",
+  "@pitchComCorner2": {
+    "description": "Pitch view commentary line: a corner is taken. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComCorner3": "A corner, and {player} stands over it.",
+  "@pitchComCorner3": {
+    "description": "Pitch view commentary line: a corner is taken. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFreeKick1": "Free kick in a dangerous spot. {player} stands over it.",
+  "@pitchComFreeKick1": {
+    "description": "Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFreeKick2": "Free kick. {player} will deliver.",
+  "@pitchComFreeKick2": {
+    "description": "Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFreeKick3": "{player} lines up the free kick.",
+  "@pitchComFreeKick3": {
+    "description": "Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComLongThrow1": "Long throw! {player} launches it into the box.",
+  "@pitchComLongThrow1": {
+    "description": "Pitch view commentary line: a long throw into the box. {player} is the thrower. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComLongThrow2": "{player} with a long throw into the area.",
+  "@pitchComLongThrow2": {
+    "description": "Pitch view commentary line: a long throw into the box. {player} is the thrower. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComLongThrow3": "Here comes the long throw from {player}.",
+  "@pitchComLongThrow3": {
+    "description": "Pitch view commentary line: a long throw into the box. {player} is the thrower. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulYellow1": "Yellow card for {player}.",
+  "@pitchComFoulYellow1": {
+    "description": "Pitch view commentary line: a foul punished with a yellow card. {player} is the player booked, {other} the player fouled. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulYellow2": "{player} goes into the book for a foul on {other}.",
+  "@pitchComFoulYellow2": {
+    "description": "Pitch view commentary line: a foul punished with a yellow card. {player} is the player booked, {other} the player fouled. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulYellow3": "A late challenge on {other}, and {player} is booked.",
+  "@pitchComFoulYellow3": {
+    "description": "Pitch view commentary line: a foul punished with a yellow card. {player} is the player booked, {other} the player fouled. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulSecondYellow1": "Second yellow! {player} is off.",
+  "@pitchComFoulSecondYellow1": {
+    "description": "Pitch view commentary line: a second yellow card, so the player is sent off. {player} is the player sent off. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulSecondYellow2": "{player} is booked again and sent off.",
+  "@pitchComFoulSecondYellow2": {
+    "description": "Pitch view commentary line: a second yellow card, so the player is sent off. {player} is the player sent off. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulSecondYellow3": "Another yellow for {player}, and that's red.",
+  "@pitchComFoulSecondYellow3": {
+    "description": "Pitch view commentary line: a second yellow card, so the player is sent off. {player} is the player sent off. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulRed1": "Red card! {player} is sent off.",
+  "@pitchComFoulRed1": {
+    "description": "Pitch view commentary line: a straight red card for a foul. {player} is the player sent off, {other} the player fouled. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulRed2": "Straight red for {player} after the foul on {other}!",
+  "@pitchComFoulRed2": {
+    "description": "Pitch view commentary line: a straight red card for a foul. {player} is the player sent off, {other} the player fouled. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComFoulRed3": "{player} sees red and has to go.",
+  "@pitchComFoulRed3": {
+    "description": "Pitch view commentary line: a straight red card for a foul. {player} is the player sent off, {other} the player fouled. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComOffside1": "Offside. {player} went too early.",
+  "@pitchComOffside1": {
+    "description": "Pitch view commentary line: an offside that stops an attack. {player} is the player caught offside. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComOffside2": "The flag is up against {player}.",
+  "@pitchComOffside2": {
+    "description": "Pitch view commentary line: an offside that stops an attack. {player} is the player caught offside. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComOffside3": "{player} is caught offside.",
+  "@pitchComOffside3": {
+    "description": "Pitch view commentary line: an offside that stops an attack. {player} is the player caught offside. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSub1": "Substitution: {player} on, {other} off.",
+  "@pitchComSub1": {
+    "description": "Pitch view commentary line: a substitution. {player} comes on, {other} goes off. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSub2": "{other} makes way for {player}.",
+  "@pitchComSub2": {
+    "description": "Pitch view commentary line: a substitution. {player} comes on, {other} goes off. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSub3": "{player} comes on for {other}.",
+  "@pitchComSub3": {
+    "description": "Pitch view commentary line: a substitution. {player} comes on, {other} goes off. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSubFill1": "{player} comes on.",
+  "@pitchComSubFill1": {
+    "description": "Pitch view commentary line: a substitute comes on to fill a place already empty (the man he replaces left injured). {player} comes on. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSubFill2": "Substitution: {player} is on.",
+  "@pitchComSubFill2": {
+    "description": "Pitch view commentary line: a substitute comes on to fill a place already empty (the man he replaces left injured). {player} comes on. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComSubFill3": "{player} enters the fray.",
+  "@pitchComSubFill3": {
+    "description": "Pitch view commentary line: a substitute comes on to fill a place already empty (the man he replaces left injured). {player} comes on. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComInjury1": "{player} is down and needs treatment.",
+  "@pitchComInjury1": {
+    "description": "Pitch view commentary line: a player is injured and has to leave the pitch. {player} is the injured player. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComInjury2": "Concern here, {player} has picked up a knock.",
+  "@pitchComInjury2": {
+    "description": "Pitch view commentary line: a player is injured and has to leave the pitch. {player} is the injured player. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComInjury3": "Injury worry for {player}.",
+  "@pitchComInjury3": {
+    "description": "Pitch view commentary line: a player is injured and has to leave the pitch. {player} is the injured player. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComGoalScore": "{line} {home}–{away}",
+  "@pitchComGoalScore": {
+    "description": "Pitch view commentary: a goal line followed by the new score (home first). {line} is the goal line.",
+    "placeholders": {
+      "line": {
+        "type": "String"
+      },
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
+  "pitchComSomeone": "Player",
+  "@pitchComSomeone": {
+    "description": "Pitch view commentary: stands in for a player name the match does not know (should not happen). Capitalised: it may open the line."
   }
 }

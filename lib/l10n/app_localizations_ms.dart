@@ -14240,4 +14240,567 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get callUpAwayShort => 'T';
+
+  @override
+  String pitchComShotGoal1(String player) {
+    return 'GOAL! $player finds the net!';
+  }
+
+  @override
+  String pitchComShotGoal2(String player) {
+    return '$player fires it in! GOAL!';
+  }
+
+  @override
+  String pitchComShotGoal3(String player) {
+    return 'GOAL! A clinical finish from $player.';
+  }
+
+  @override
+  String pitchComShotSaved1(String player, String keeper) {
+    return '$player shoots, but $keeper saves.';
+  }
+
+  @override
+  String pitchComShotSaved2(String player) {
+    return '$player tries his luck, the keeper is equal to it.';
+  }
+
+  @override
+  String pitchComShotSaved3(String player, String keeper) {
+    return '$player lets fly, $keeper pushes it away!';
+  }
+
+  @override
+  String pitchComShotWide1(String player) {
+    return '$player shoots wide.';
+  }
+
+  @override
+  String pitchComShotWide2(String player) {
+    return 'Off target from $player.';
+  }
+
+  @override
+  String pitchComShotWide3(String player) {
+    return '$player drags it past the post.';
+  }
+
+  @override
+  String pitchComShotBlocked1(String player) {
+    return '$player shoots, but it\'s blocked.';
+  }
+
+  @override
+  String pitchComShotBlocked2(String player) {
+    return 'Blocked! $player can\'t find a way through.';
+  }
+
+  @override
+  String pitchComShotBlocked3(String player) {
+    return '$player lets fly, but a defender gets in the way.';
+  }
+
+  @override
+  String pitchComShotWoodwork1(String player) {
+    return 'Off the post! So close from $player.';
+  }
+
+  @override
+  String pitchComShotWoodwork2(String player) {
+    return '$player hits the woodwork!';
+  }
+
+  @override
+  String pitchComShotWoodwork3(String player) {
+    return 'Crossbar! $player is denied by the frame.';
+  }
+
+  @override
+  String pitchComHeaderGoal1(String player) {
+    return 'GOAL! $player heads it home!';
+  }
+
+  @override
+  String pitchComHeaderGoal2(String player) {
+    return '$player rises highest and scores! GOAL!';
+  }
+
+  @override
+  String pitchComHeaderGoal3(String player) {
+    return 'GOAL! A powerful header from $player.';
+  }
+
+  @override
+  String pitchComHeaderSaved1(String player, String keeper) {
+    return '$player heads it, $keeper saves.';
+  }
+
+  @override
+  String pitchComHeaderSaved2(String player) {
+    return 'A header from $player, but the keeper holds it.';
+  }
+
+  @override
+  String pitchComHeaderSaved3(String player, String keeper) {
+    return '$keeper tips away the header from $player.';
+  }
+
+  @override
+  String pitchComHeaderWide1(String player) {
+    return '$player heads it wide.';
+  }
+
+  @override
+  String pitchComHeaderWide2(String player) {
+    return 'A header from $player, but off target.';
+  }
+
+  @override
+  String pitchComHeaderWide3(String player) {
+    return '$player can\'t keep the header down.';
+  }
+
+  @override
+  String pitchComHeaderBlocked1(String player) {
+    return '$player heads it, but it\'s blocked.';
+  }
+
+  @override
+  String pitchComHeaderBlocked2(String player) {
+    return '$player heads goalwards, but it\'s charged down.';
+  }
+
+  @override
+  String pitchComHeaderBlocked3(String player) {
+    return 'Blocked! $player meets it, but a defender is there.';
+  }
+
+  @override
+  String pitchComHeaderWoodwork1(String player) {
+    return '$player heads against the bar!';
+  }
+
+  @override
+  String pitchComHeaderWoodwork2(String player) {
+    return 'Off the post! The header from $player comes back out.';
+  }
+
+  @override
+  String pitchComHeaderWoodwork3(String player) {
+    return 'Woodwork! $player rattles the frame with a header.';
+  }
+
+  @override
+  String pitchComSetPieceGoal1(String player) {
+    return 'GOAL! $player gets on the end of it!';
+  }
+
+  @override
+  String pitchComSetPieceGoal2(String player, String other) {
+    return 'GOAL! $other delivers and $player scores!';
+  }
+
+  @override
+  String pitchComSetPieceGoal3(String player) {
+    return 'From the set piece, $player scores! GOAL!';
+  }
+
+  @override
+  String pitchComSetPieceSaved1(String player, String keeper) {
+    return '$player meets it, but $keeper saves.';
+  }
+
+  @override
+  String pitchComSetPieceSaved2(String player) {
+    return '$player gets a touch, the keeper gathers.';
+  }
+
+  @override
+  String pitchComSetPieceSaved3(String player, String keeper) {
+    return '$player gets a shot away, $keeper is alert.';
+  }
+
+  @override
+  String pitchComSetPieceWide1(String player) {
+    return '$player gets on the end of it, but wide.';
+  }
+
+  @override
+  String pitchComSetPieceWide2(String player) {
+    return '$player meets the delivery, off target.';
+  }
+
+  @override
+  String pitchComSetPieceWide3(String player) {
+    return 'Over the bar from $player.';
+  }
+
+  @override
+  String pitchComSetPieceBlocked1(String player) {
+    return '$player meets it, but it\'s blocked.';
+  }
+
+  @override
+  String pitchComSetPieceBlocked2(String player) {
+    return 'Scramble in the box! $player is blocked.';
+  }
+
+  @override
+  String pitchComSetPieceBlocked3(String player) {
+    return '$player tries to force it in, but it\'s cleared.';
+  }
+
+  @override
+  String pitchComSetPieceWoodwork1(String player) {
+    return '$player meets it and hits the post!';
+  }
+
+  @override
+  String pitchComSetPieceWoodwork2(String player) {
+    return 'Off the bar! $player nearly scores from the set piece.';
+  }
+
+  @override
+  String pitchComSetPieceWoodwork3(String player) {
+    return 'Woodwork! $player so close from the delivery.';
+  }
+
+  @override
+  String pitchComDirectFreeKickGoal1(String player) {
+    return 'GOAL! $player curls it over the wall!';
+  }
+
+  @override
+  String pitchComDirectFreeKickGoal2(String player) {
+    return 'What a free kick! $player finds the top corner!';
+  }
+
+  @override
+  String pitchComDirectFreeKickGoal3(String player) {
+    return 'GOAL! $player beats the keeper from the free kick.';
+  }
+
+  @override
+  String pitchComDirectFreeKickSaved1(String player, String keeper) {
+    return '$player goes for goal, $keeper saves.';
+  }
+
+  @override
+  String pitchComDirectFreeKickSaved2(String player) {
+    return 'The free kick from $player is pushed away.';
+  }
+
+  @override
+  String pitchComDirectFreeKickSaved3(String player, String keeper) {
+    return 'Good save! $keeper keeps out the free kick from $player.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWide1(String player) {
+    return 'The free kick from $player sails over.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWide2(String player) {
+    return '$player goes for goal, but it\'s wide.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWide3(String player) {
+    return '$player misses the target from the free kick.';
+  }
+
+  @override
+  String pitchComDirectFreeKickBlocked1(String player) {
+    return 'The free kick from $player hits the wall.';
+  }
+
+  @override
+  String pitchComDirectFreeKickBlocked2(String player) {
+    return 'Into the wall from $player.';
+  }
+
+  @override
+  String pitchComDirectFreeKickBlocked3(String player) {
+    return 'The wall stands firm against $player.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWoodwork1(String player) {
+    return '$player hits the bar with the free kick!';
+  }
+
+  @override
+  String pitchComDirectFreeKickWoodwork2(String player) {
+    return 'Off the post! $player so close from the free kick.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWoodwork3(String player) {
+    return 'The frame saves the keeper! $player so close.';
+  }
+
+  @override
+  String pitchComPenaltyGoal1(String player) {
+    return 'GOAL! $player sends the keeper the wrong way.';
+  }
+
+  @override
+  String pitchComPenaltyGoal2(String player) {
+    return '$player steps up and scores! GOAL!';
+  }
+
+  @override
+  String pitchComPenaltyGoal3(String player) {
+    return 'GOAL! $player buries the penalty.';
+  }
+
+  @override
+  String pitchComPenaltySaved1(String player, String keeper) {
+    return 'Saved! $keeper stops the penalty from $player!';
+  }
+
+  @override
+  String pitchComPenaltySaved2(String player) {
+    return '$player steps up... and it\'s saved!';
+  }
+
+  @override
+  String pitchComPenaltySaved3(String player, String keeper) {
+    return '$keeper guesses right and denies $player!';
+  }
+
+  @override
+  String pitchComPenaltyMissed1(String player) {
+    return '$player misses the penalty!';
+  }
+
+  @override
+  String pitchComPenaltyMissed2(String player) {
+    return 'Wide! $player drags the penalty past the post.';
+  }
+
+  @override
+  String pitchComPenaltyMissed3(String player) {
+    return 'Over the bar! $player blazes the penalty high.';
+  }
+
+  @override
+  String pitchComPenaltyWoodwork1(String player) {
+    return '$player hits the post from the spot!';
+  }
+
+  @override
+  String pitchComPenaltyWoodwork2(String player) {
+    return 'Off the bar! The penalty from $player stays out.';
+  }
+
+  @override
+  String pitchComPenaltyWoodwork3(String player) {
+    return 'Woodwork! $player can\'t believe it.';
+  }
+
+  @override
+  String pitchComPenaltyAwarded1(String player) {
+    return 'Penalty! $player is brought down in the box.';
+  }
+
+  @override
+  String pitchComPenaltyAwarded2(String player, String other) {
+    return 'The referee points to the spot! $other fouls $player.';
+  }
+
+  @override
+  String pitchComPenaltyAwarded3(String player, String other) {
+    return 'Penalty given! $other catches $player in the area.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedYellow1(String player, String other) {
+    return 'Penalty! $player goes down and $other is booked.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedYellow2(String player, String other) {
+    return 'Spot kick, and a yellow for $other after the foul on $player.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedYellow3(String player, String other) {
+    return 'Penalty and a booking! $other clips $player in the box.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedRed1(String player, String other) {
+    return 'Penalty and a red card! $player goes down, $other is off.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedRed2(String player, String other) {
+    return 'Spot kick, and $other is sent off for the foul on $player!';
+  }
+
+  @override
+  String pitchComPenaltyAwardedRed3(String player, String other) {
+    return 'Red card and a penalty! $other stops $player going through.';
+  }
+
+  @override
+  String pitchComCorner1(String player) {
+    return 'Corner. $player to take it.';
+  }
+
+  @override
+  String pitchComCorner2(String player) {
+    return '$player swings in the corner.';
+  }
+
+  @override
+  String pitchComCorner3(String player) {
+    return 'A corner, and $player stands over it.';
+  }
+
+  @override
+  String pitchComFreeKick1(String player) {
+    return 'Free kick in a dangerous spot. $player stands over it.';
+  }
+
+  @override
+  String pitchComFreeKick2(String player) {
+    return 'Free kick. $player will deliver.';
+  }
+
+  @override
+  String pitchComFreeKick3(String player) {
+    return '$player lines up the free kick.';
+  }
+
+  @override
+  String pitchComLongThrow1(String player) {
+    return 'Long throw! $player launches it into the box.';
+  }
+
+  @override
+  String pitchComLongThrow2(String player) {
+    return '$player with a long throw into the area.';
+  }
+
+  @override
+  String pitchComLongThrow3(String player) {
+    return 'Here comes the long throw from $player.';
+  }
+
+  @override
+  String pitchComFoulYellow1(String player) {
+    return 'Yellow card for $player.';
+  }
+
+  @override
+  String pitchComFoulYellow2(String player, String other) {
+    return '$player goes into the book for a foul on $other.';
+  }
+
+  @override
+  String pitchComFoulYellow3(String player, String other) {
+    return 'A late challenge on $other, and $player is booked.';
+  }
+
+  @override
+  String pitchComFoulSecondYellow1(String player) {
+    return 'Second yellow! $player is off.';
+  }
+
+  @override
+  String pitchComFoulSecondYellow2(String player) {
+    return '$player is booked again and sent off.';
+  }
+
+  @override
+  String pitchComFoulSecondYellow3(String player) {
+    return 'Another yellow for $player, and that\'s red.';
+  }
+
+  @override
+  String pitchComFoulRed1(String player) {
+    return 'Red card! $player is sent off.';
+  }
+
+  @override
+  String pitchComFoulRed2(String player, String other) {
+    return 'Straight red for $player after the foul on $other!';
+  }
+
+  @override
+  String pitchComFoulRed3(String player) {
+    return '$player sees red and has to go.';
+  }
+
+  @override
+  String pitchComOffside1(String player) {
+    return 'Offside. $player went too early.';
+  }
+
+  @override
+  String pitchComOffside2(String player) {
+    return 'The flag is up against $player.';
+  }
+
+  @override
+  String pitchComOffside3(String player) {
+    return '$player is caught offside.';
+  }
+
+  @override
+  String pitchComSub1(String player, String other) {
+    return 'Substitution: $player on, $other off.';
+  }
+
+  @override
+  String pitchComSub2(String player, String other) {
+    return '$other makes way for $player.';
+  }
+
+  @override
+  String pitchComSub3(String player, String other) {
+    return '$player comes on for $other.';
+  }
+
+  @override
+  String pitchComSubFill1(String player) {
+    return '$player comes on.';
+  }
+
+  @override
+  String pitchComSubFill2(String player) {
+    return 'Substitution: $player is on.';
+  }
+
+  @override
+  String pitchComSubFill3(String player) {
+    return '$player enters the fray.';
+  }
+
+  @override
+  String pitchComInjury1(String player) {
+    return '$player is down and needs treatment.';
+  }
+
+  @override
+  String pitchComInjury2(String player) {
+    return 'Concern here, $player has picked up a knock.';
+  }
+
+  @override
+  String pitchComInjury3(String player) {
+    return 'Injury worry for $player.';
+  }
+
+  @override
+  String pitchComGoalScore(String line, int home, int away) {
+    return '$line $home–$away';
+  }
+
+  @override
+  String get pitchComSomeone => 'Player';
 }
