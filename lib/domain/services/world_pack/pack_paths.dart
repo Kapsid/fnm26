@@ -6,6 +6,11 @@
 /// deliberately not localized: [roots] has no `nations`.
 abstract final class PackPaths {
   /// Every root a `localized` path can start with.
+  ///
+  /// Adding a root needs a pack format bump ([kPackFormatVersion]): an older
+  /// build refuses a `localized` path under a root it does not know as bad
+  /// data, so a file using a new root must read as "made by a newer
+  /// version" there, not as broken.
   static const Set<String> roots = {
     'clubs',
     'stadiums',
