@@ -40,6 +40,16 @@ class _Restart {
 /// putting it back in play.
 const double _restartMax = 1.0;
 
+/// The longest a restart may be taken before the moment it opens the
+/// build-up to: the lead-in and a second, and for a goal kick two more for
+/// its long ball.
+double _restartLead(PitchRestartKind kind) =>
+    LeadIn.ball + (kind == PitchRestartKind.goalKick ? 3 : 1);
+
+/// How near the ball the taker stands to take it: a throw or a goal kick
+/// leaves from him.
+const double _takerReach = 1.6;
+
 /// Routine restarts shown in the flow: only one that opens the build-up to
 /// the next staged moment, that side's shot or corner, and only as many in
 /// a minute as the engine counted.
@@ -74,7 +84,7 @@ extension _Restarts on _Builder {
     final s = m.teamNationId == lineups.home.nationId ? 0 : 1;
     if (a.side == s) return false;
     final gap = w.start - t;
-    if (gap < 3.0 || gap > 7.0 || _nextStop(t) < w.start - 1e-9) return false;
+    if (gap < 3.0 || gap > 8.5 || _nextStop(t) < w.start - 1e-9) return false;
     final slot = _restartSlot(t);
     if (!_restartLeft(slot)) return false;
     final minute = pacer.matchAt(_Builder._dur(t)).minute;
@@ -83,9 +93,10 @@ extension _Restarts on _Builder {
     final dir = _dir(s, minute);
     final side = sides[s];
     _Restart? plan;
-    // A goal kick: the other side's ball runs out behind [side]'s goal.
+    // A goal kick: the other side's ball runs out behind [side]'s goal, and
+    // the keeper's long kick starts the counter that ends in the moment.
     final keeperIdx = side.owner[side.gkSlot];
-    if (xToDepth(ball.x, dir) < 30 &&
+    if (xToDepth(ball.x, dir) < 35 &&
         keeperIdx != null &&
         side.standIn == null &&
         agents[keeperIdx].walkStart == null &&
@@ -98,16 +109,20 @@ extension _Restarts on _Builder {
       );
       final stand = Offset2(depthToX(5.5, dir), lateralToY(latSign * 5, dir));
       final k = agents[keeperIdx];
-      if (k.pos.distanceTo(stand) < 9) {
-        plan = _Restart(
-          kind: PitchRestartKind.goalKick,
-          side: s,
-          taker: keeperIdx,
-          outAt: outAt,
-          stand: stand,
-          window: wi,
-          slot: slot,
-        );
+      final kick = _Restart(
+        kind: PitchRestartKind.goalKick,
+        side: s,
+        taker: keeperIdx,
+        outAt: outAt,
+        stand: stand,
+        window: wi,
+        slot: slot,
+      );
+      // Only with somebody up the pitch to kick it to: no counter, no goal
+      // kick to show.
+      if (k.pos.distanceTo(stand) < 12 &&
+          _restartReceiver(kick, t, stand) != null) {
+        plan = kick;
       }
     }
     // A throw-in: it runs out over the touchline by one of [side]'s men.
@@ -149,10 +164,13 @@ extension _Restarts on _Builder {
     // The ball has to be out, back in and on its way with time to spare.
     final d = from.distanceTo(plan.outAt);
     final flightTime = math.max(0.5, d / 17);
-    if (flightTime + _restartMax + 1.2 > gap) return false;
+    // A goal kick's long ball is in the air a couple of seconds more, and
+    // the counter has to land before the moment.
+    final after = plan.kind == PitchRestartKind.goalKick ? 3.6 : 1.2;
+    if (flightTime + _restartMax + after > gap) return false;
     // ... and not so long before the moment that it is a build-up of its
     // own: the moment follows within the lead-in.
-    if (gap - flightTime - 0.3 > LeadIn.ball + 1) return false;
+    if (gap - flightTime - 0.3 > _restartLead(plan.kind)) return false;
     restart = plan;
     restartedFor = wi;
     _kick(
@@ -210,13 +228,13 @@ extension _Restarts on _Builder {
       );
       return;
     }
-    final ready = taker.pos.distanceTo(at) <= 1.6 && since >= 0.3;
+    final ready = taker.pos.distanceTo(at) <= _takerReach && since >= 0.3;
     if (!ready && since < _restartMax - 1e-9) {
       wakeAt = math.min(wakeAt, t + 0.05);
       return;
     }
-    if (taker.pos.distanceTo(at) > 2.5) {
-      // He never got there: no restart to show.
+    if (taker.pos.distanceTo(at) > _takerReach) {
+      // He never got to the ball: no restart to show.
       restart = null;
       return;
     }
@@ -227,12 +245,17 @@ extension _Restarts on _Builder {
     }
     final d = to.pos.distanceTo(at);
     final throwIn = r.kind == PitchRestartKind.throwIn;
+    final arrive =
+        t + (throwIn ? math.max(d / 13, 0.5) : math.max(d / 25, 0.9));
+    // A goal kick becomes a counter: the side breaks from the moment the
+    // long ball lands, whatever its usual style.
+    if (!throwIn) sides[r.side].counterUntil = arrive + 3;
     _kick(
       t,
       KickAction(
         toPlayerId: to.id,
         byPlayerId: taker.id,
-        arriveAt: t + (throwIn ? math.max(d / 13, 0.5) : math.max(d / 22, 0.9)),
+        arriveAt: arrive,
         peak: throwIn ? 0.8 : math.min(2 + 0.12 * d, 8).toDouble(),
         fromHeight: throwIn ? 2.0 : 0,
         pass: true,
@@ -275,8 +298,9 @@ extension _Restarts on _Builder {
         if (d < 7 || d > 22) continue;
         score = -(d - 12).abs() / 4 + (depth - xToDepth(at.x, dir)) / 10;
       } else {
-        if (d < 25 || d > 60) continue;
-        score = depth / 10 - (d - 45).abs() / 15;
+        // Long, to the man furthest up the pitch: the start of a counter.
+        if (d < 30 || d > 65 || depth < 40) continue;
+        score = depth / 8 - (d - 50).abs() / 20;
       }
       if (score > bestScore) {
         bestScore = score;

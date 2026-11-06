@@ -439,6 +439,14 @@ class DeclutterEasing {
   /// The fastest a nudge moves, in tokens per second.
   static const double rate = 4.5;
 
+  /// The fastest a token moves off a hold that is letting go (the ball just
+  /// played on), in tokens per second. While a pin decays the crowd's
+  /// answer for the freed man can move fast; this keeps his token's change
+  /// at 1.8 × [rate], 0.135 of a token per 60 fps frame, inside the 0.15
+  /// a frame `display_spacing_test` allows ("a drawn token eases aside,
+  /// never jumps"). Raise it only with that bound in mind.
+  static const double releaseRate = 1.8 * rate;
+
   final Map<int, double> _nudge = {};
   final Map<int, double> _pin = {};
   double? _t;
@@ -469,10 +477,11 @@ class DeclutterEasing {
         final eased = had + (want - had).clamp(-step, step);
         now = eased + (want - eased) * pin;
         // A hold letting go (the ball just played on) needs no exact place:
-        // the token eases off it at no more than 1.8 times the easing speed,
-        // however fast the crowd's answer moves as he is freed.
+        // the token eases off it at [releaseRate], however fast the crowd's
+        // answer moves as he is freed.
         if (pin < (_pin[id] ?? 0)) {
-          now = had + (now - had).clamp(-1.8 * step, 1.8 * step);
+          final release = releaseRate * dt;
+          now = had + (now - had).clamp(-release, release);
         }
       }
       _nudge[id] = now;

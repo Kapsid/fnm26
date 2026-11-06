@@ -349,8 +349,16 @@ typedef FieldedPlan = ({
   TacticalInstructions instructions,
 });
 
-/// One change an AI-managed side made to its instructions: from the next
-/// minute on, side [teamNationId] plays [instr] (see `MatchEngine._manage`).
+/// One change an AI-managed side made to its instructions (see
+/// `MatchEngine._manage`): side [teamNationId] plays [instr] from minute
+/// [minute] itself, as the engine manages at the top of each minute. Only
+/// the Pitch view waits, showing it from minute + 1.
+///
+/// A change made in second-half stoppage time is logged with minute 90
+/// (stoppage reuses it), so the picture does not show it in stoppage: the
+/// pacer stays on 90 to the whistle. It shows from 91' if extra time
+/// follows, and never otherwise. Accepted: the AI's stoppage nudges are
+/// small and come in a match's last seconds.
 typedef InstructionChange = ({
   int minute,
   int teamNationId,
@@ -385,9 +393,10 @@ class MatchResult {
   });
 
   /// The AI-managed sides' instruction drift, in order: each entry is a
-  /// minute at which a side's instructions changed, and what they became.
-  /// In memory only, for the Pitch view to follow (it shows the change
-  /// from the minute after). Recording it decides nothing. Empty when no
+  /// minute in which a side's instructions changed, and what they became.
+  /// In memory only, for the Pitch view to follow (the engine plays the
+  /// change in that minute; the picture shows it from the minute after).
+  /// Recording it decides nothing. Empty when no
   /// side was AI-managed or none changed, and for a stored result.
   final List<InstructionChange> instructionLog;
 

@@ -312,30 +312,6 @@ double _overlapShare(_Style style) {
   return (_mean(depths), _mean(lats));
 }
 
-MatchResult _withoutLog(MatchResult r) => MatchResult(
-  homeScore: r.homeScore,
-  awayScore: r.awayScore,
-  events: r.events,
-  homeShots: r.homeShots,
-  awayShots: r.awayShots,
-  homePossession: r.homePossession,
-  homeXg: r.homeXg,
-  awayXg: r.awayXg,
-  ratings: r.ratings,
-  energyByPlayer: r.energyByPlayer,
-  stoppage: r.stoppage,
-  homeXgByMinute: r.homeXgByMinute,
-  awayXgByMinute: r.awayXgByMinute,
-  homeShotsByMinute: r.homeShotsByMinute,
-  awayShotsByMinute: r.awayShotsByMinute,
-  momentumByMinute: r.momentumByMinute,
-  homePlan: r.homePlan,
-  awayPlan: r.awayPlan,
-  extraTime: r.extraTime,
-  moments: r.moments,
-  routineRestarts: r.routineRestarts,
-);
-
 /// The engine's index into `routineRestarts` for a match minute: stoppage
 /// folds onto 90.
 int _restartIndex(PitchScript s, double t) {
@@ -381,7 +357,9 @@ void main() {
     );
     expect(counterRate, greaterThanOrEqualTo(patientRate * 1.3));
     expect(counter, lessThan(patient));
-    expect(counterShare, greaterThan(patientShare * 1.25));
+    // A fixed floor: at least 15% of these breaks reach the final third
+    // within 4 s (the patient side manages 0%).
+    expect(counterShare, greaterThanOrEqualTo(0.15));
   });
 
   test("overlapping full-backs pass their winger's line in possession", () {
@@ -478,14 +456,17 @@ void main() {
       checked++;
       final lineups = matchLineupsOf(home: home, away: away, result: result);
       final pacer = PitchPacer(result, PitchSpeed.mid);
-      PitchScript build(MatchResult r) => StoryLayer.build(
-        result: r,
+      // The same result both times: only whether the drift is followed
+      // differs.
+      PitchScript build({required bool drift}) => StoryLayer.build(
+        result: result,
         lineups: lineups,
         pacer: pacer,
         seed: seed,
+        followDrift: drift,
       );
-      final drifted = build(result);
-      final fixed = build(_withoutLog(result));
+      final drifted = build(drift: true);
+      final fixed = build(drift: false);
       final from = pacer.screenAt(first + 1, 0).inMicroseconds / 1e6;
       // Up to the minute after the change: the very same picture.
       for (var t = 0.0; t < from - 1e-3; t += 0.1) {
@@ -515,6 +496,7 @@ void main() {
   test('a routine restart is staged only when it opens the build-up to the '
       'next moment, in the flow and with no line', () {
     var staged = 0;
+    var goalKicks = 0;
     for (final style in [_balanced, _counter, _direct]) {
       for (final s in style.scripts) {
         final perMinute = <int, int>{};
@@ -552,7 +534,15 @@ void main() {
             isTrue,
             reason: '$label: $m',
           );
-          expect(next.start - x.taken, lessThanOrEqualTo(LeadIn.ball + 1));
+          // Close before it: the lead-in and a second, two more for a goal
+          // kick's long ball.
+          expect(
+            next.start - x.taken,
+            lessThanOrEqualTo(
+              LeadIn.ball + (x.kind == PitchRestartKind.goalKick ? 3 : 1),
+            ),
+            reason: label,
+          );
           // ... and the restarting side keeps the ball from the restart
           // into it: the same build-up.
           for (final p in s.ballPhases) {
@@ -569,9 +559,14 @@ void main() {
             );
           }
           // The taker restarts it: a throw from the touchline, a goal kick
-          // from the six-yard box.
+          // from the six-yard box, the ball leaving from him.
           final f = s.sample(_dur(x.taken));
           final taker = f.players[x.takerId]!;
+          final kick = s.ballPhases.whereType<FlightPhase>().firstWhere(
+            (p) => (p.t0 - x.taken).abs() < 1e-6 && !p.resting,
+          );
+          expect(kick.fromActor, s.actorIndexOf(x.takerId), reason: label);
+          expect(kick.from.distanceTo(taker), lessThan(2.0), reason: label);
           if (x.kind == PitchRestartKind.throwIn) {
             expect(
               math.min(taker.y, PitchDims.width - taker.y),
@@ -586,13 +581,47 @@ void main() {
               minute: s.pacer.matchAt(_dur(x.taken)).minute,
             );
             expect(xToDepth(taker.x, dir), lessThan(8), reason: label);
+            // It becomes a counter: long, up to a team-mate, and the side
+            // is in the other half before its moment.
+            goalKicks++;
+            expect(kick.from.distanceTo(kick.to), greaterThanOrEqualTo(25));
+            expect(
+              xToDepth(kick.to.x, dir) - xToDepth(kick.from.x, dir),
+              greaterThanOrEqualTo(20),
+              reason: label,
+            );
+            var over = false;
+            for (var t = x.taken; t < next.start && !over; t += 0.1) {
+              over =
+                  xToDepth(s.sample(_dur(t)).ball.x, dir) >
+                  PitchDims.length / 2;
+            }
+            if (!over) {
+              for (final p in s.ballPhases) {
+                if (p.t1 < x.out - 0.5 || p.t0 > next.start + 0.5) continue;
+                // ignore: avoid_print
+                print(
+                  'DBG ${p.t0.toStringAsFixed(2)}-${p.t1.toStringAsFixed(2)} '
+                  '${p is FlightPhase ? 'flight ${p.fromActor}->${p.toActor} ${p.from} ${p.to} d ${xToDepth(p.to.x, dir).toStringAsFixed(1)}' : 'carry ${(p as CarryPhase).carrier}'}',
+                );
+              }
+              // ignore: avoid_print
+              print(
+                'DBG next ${next.start} cuts ${s.cuts.where((c) => c > x.out && c < next.end)} $m',
+              );
+            }
+            expect(over, isTrue, reason: '$label: no counter');
           }
         }
       }
     }
     // ignore: avoid_print
-    print('restarts staged: $staged over ${3 * _matches} matches');
+    print(
+      'restarts staged: $staged ($goalKicks goal kicks into a counter) over '
+      '${3 * _matches} matches',
+    );
     expect(staged, greaterThan(20));
+    expect(goalKicks, greaterThan(0));
   });
 
   test('every Ruling 9 class still 0, validator 0', () {

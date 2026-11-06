@@ -471,9 +471,9 @@ extension _BallMechanics on _Builder {
       if (activeWindow == null &&
           intent > 0 &&
           xToDepth(point.x, _dir(to.side, minute)) < 60) {
-        side.counterUntil = t + 2 + 2.5 * intent;
-        spellDepth = math.max(spellDepth, 84);
+        side.counterUntil = t + 2.5 + 2.5 * intent;
       }
+      if (t < side.counterUntil) spellDepth = math.max(spellDepth, 84);
     }
     final tempo = side.instr.tempo;
     final hold = (0.55 + rng.nextDouble() * 0.8) * (1.15 - tempo / 250);

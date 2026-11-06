@@ -513,6 +513,10 @@ abstract final class StoryLayer {
   /// script shown so far), the script starts at that state's match minute
   /// instead of the kick-off, with everybody exactly where the state has
   /// them: a re-simulated result picks up from the playhead with no jump.
+  ///
+  /// [followDrift] false ignores the AI's drift ([MatchResult.instructionLog])
+  /// and plays each side's opening instructions throughout: for tests that
+  /// compare the same match with and without it.
   static PitchScript build({
     required MatchResult result,
     required MatchLineups lineups,
@@ -521,12 +525,14 @@ abstract final class StoryLayer {
     MomentStager stager = const MomentStaging(),
     ScriptState? resumeFrom,
     bool isFinal = false,
+    bool followDrift = true,
   }) => _Builder(
     result,
     lineups,
     pacer,
     seed,
     stager,
+    followDrift: followDrift,
   ).run(resumeFrom, isFinal: isFinal);
 }
 
@@ -803,13 +809,23 @@ class _Flight {
 }
 
 class _Builder {
-  _Builder(this.result, this.lineups, this.pacer, this.seed, this.stager);
+  _Builder(
+    this.result,
+    this.lineups,
+    this.pacer,
+    this.seed,
+    this.stager, {
+    this.followDrift = true,
+  });
 
   final MatchResult result;
   final MatchLineups lineups;
   final PitchPacer pacer;
   final int seed;
   final MomentStager stager;
+
+  /// Whether the AI's drift ([MatchResult.instructionLog]) is followed.
+  final bool followDrift;
 
   late final List<_Side> sides;
   final List<_Agent> agents = [];
@@ -1256,8 +1272,9 @@ class _Builder {
       side.reform();
       // The AI's drift, followed from the minute after each change.
       side.drift = [
-        for (final e in result.instructionLog)
-          if (e.teamNationId == team.nationId) e,
+        if (followDrift)
+          for (final e in result.instructionLog)
+            if (e.teamNationId == team.nationId) e,
       ];
     }
   }
@@ -2358,7 +2375,7 @@ class _Builder {
             final w = wingerFor(flank);
             final wd = w == null ? depth : places[w]!.$1;
             // Round the outside of his winger, as far as the line allows.
-            depth = math.max(depth, math.min(wd + 8, cap - 0.5));
+            depth = math.max(depth, math.min(wd + 10, cap - 0.5));
             lat = flank * 30.0;
           } else if (inPossession && invert) {
             depth = side.backLine + 0.3 * length;
@@ -2387,7 +2404,7 @@ class _Builder {
             // In off the flank: the half-space, a step deeper when his
             // full-back is going round him.
             lat = flank * 13.0;
-            if (overlapped) depth = math.min(depth, cap - 9);
+            if (overlapped) depth = math.min(depth, cap - 11);
           } else if (lead) {
             lat = flank * math.max(lat.abs(), 27.0);
           }
