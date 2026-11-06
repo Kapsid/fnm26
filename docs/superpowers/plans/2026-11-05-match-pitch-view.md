@@ -581,6 +581,29 @@
 - [ ] **Step 4: Run** the tests and `test/unit/l10n`. Expected: PASS.
 - [ ] **Step 5: Commit** `feat(pitch): commentary for every real moment`.
 
+### Task 14b: Tactical style in movement (owner addition, spec item 14)
+
+**Files:**
+- Modify: `story_layer/*`, `moment_staging/*`, `match_engine.dart` (record AI instruction drift, outcomes untouched)
+- Test: `test/unit/pitch/tactical_style_test.dart`
+
+**Interfaces:**
+- `MatchResult.instructionLog`: a list of `({int minute, int teamNationId, TacticalInstructions instr})`. In memory only.
+- Each `TeamSide`'s instructions are followed per minute through the log.
+
+- [ ] **Step 1: Write the tests.** Each one runs over 100 matches:
+  - `high press: the defending side's mean depth is ≥ 8 m higher than a low block's`;
+  - `direct sides average longer passes than patient ones (≥ 30%)`;
+  - `counter sides reach the opponent's third faster after a turnover`;
+  - `overlapping full-backs pass their winger's line in possession`;
+  - `a false nine drops ≥ 10 m deeper than a target man`;
+  - `AI drift changes the picture from the minute after it happens`;
+  - `goldens unchanged`, `every Ruling 9 class still 0`, `validator 0`.
+- [ ] **Step 2: Run them.** Expected: FAIL.
+- [ ] **Step 3: Implement.**
+- [ ] **Step 4: Run them.** Expected: PASS.
+- [ ] **Step 5: Commit** `feat(pitch): tactics show in the play`.
+
 ### Task 15: Phone integration in the match screen
 
 **Files:**
