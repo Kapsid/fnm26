@@ -67,7 +67,7 @@ void main() {
           city: s.city,
           groundNationId: home.id,
           capacity: s.capacity,
-          attendance: (s.capacity * 0.92).round(),
+          attendance: (s.capacity * s.fill).round(),
           soldOut: false,
         ),
         home,
@@ -75,6 +75,7 @@ void main() {
         share,
         groundNationCode: home.code,
         groundConfederation: home.confederation,
+        date: s.date ?? s.matchDay,
       );
       spec = spec.withLook(mowing: s.mowing, goalStyle: s.goalStyle);
       final projection = PitchProjection(
@@ -88,8 +89,10 @@ void main() {
       late final ui.Image? homeFlag;
       late final ui.Image? awayFlag;
       await tester.runAsync(() async {
-        homeFlag = await StadiumPainter.rasterFlag(home.code);
-        awayFlag = await StadiumPainter.rasterFlag(away.code);
+        homeFlag =
+            await StadiumPainter.rasterFlag(home.code) ?? await _stripes(home);
+        awayFlag =
+            await StadiumPainter.rasterFlag(away.code) ?? await _stripes(away);
         looks = await StadiumLooks.bake(
           spec,
           projection,
@@ -182,7 +185,44 @@ final Map<String, Map<String, Object?>> _nations = {
     n['code']! as String: n,
 };
 
+/// Nations the mock needs that the game's data does not carry.
+const Map<String, Nation> _extra = {
+  'RUS': Nation(
+    id: 990,
+    name: 'Russia',
+    code: 'RUS',
+    confederation: Confederation.europe,
+    ranking: 35,
+    primaryColor: '#D52B1E',
+    secondaryColor: '#FFFFFF',
+  ),
+};
+
+/// Three bands for a nation with no bundled flag: white, then its second
+/// colour, then its first, as a stand-in on the roof poles.
+Future<ui.Image> _stripes(Nation n) async {
+  final recorder = ui.PictureRecorder();
+  final canvas = Canvas(recorder);
+  final bands = [
+    const Color(0xFFFFFFFF),
+    const Color(0xFF0039A6),
+    Color(int.parse('FF${n.primaryColor.substring(1)}', radix: 16)),
+  ];
+  for (var i = 0; i < 3; i++) {
+    canvas.drawRect(
+      Rect.fromLTWH(0, i * 40.0 / 3, 60, 40 / 3),
+      Paint()..color = bands[i],
+    );
+  }
+  final pic = recorder.endRecording();
+  final img = await pic.toImage(60, 40);
+  pic.dispose();
+  return img;
+}
+
 Nation _nation(String code) {
+  final extra = _extra[code];
+  if (extra != null) return extra;
   final n = _nations[code]!;
   return Nation(
     id: n['id']! as int,
@@ -217,6 +257,8 @@ class _Scene {
     this.zoom = 0.9,
     this.centreX = 52.5,
     this.confetti = false,
+    this.fill = 0.92,
+    this.matchDay,
   });
 
   final String name;
@@ -239,6 +281,12 @@ class _Scene {
   final (String, String) tags;
   final double zoom, centreX;
   final bool confetti;
+
+  /// How full the ground is.
+  final double fill;
+
+  /// The match date, for the season, when the light is fixed.
+  final DateTime? matchDay;
 }
 
 List<_Scene> _scenes() {
@@ -410,6 +458,95 @@ List<_Scene> _scenes() {
       dressing: MatchDressing.theFinal,
       confetti: true,
       tags: ('ROSSETTI', 'SANTOS'),
+    ),
+    // Cities and horizons (Task 12).
+    _Scene(
+      'phone_prague',
+      home: 'CZE',
+      away: 'SCO',
+      capacity: 20000,
+      stadium: 'Mock Letna',
+      city: 'Praha',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(18, 0),
+      matchDay: DateTime(2026, 6, 6),
+      homeShape: Formation.f433,
+      tags: ('NOVOTNY', 'MCKAY'),
+    ),
+    _Scene(
+      'tablet_la_paz',
+      home: 'BOL',
+      away: 'ARG',
+      capacity: 42000,
+      stadium: 'Mock Altiplano',
+      city: 'La Paz',
+      tablet: true,
+      light: PitchLight.day,
+      kickOff: const KickOffTime(16, 0),
+      matchDay: DateTime(2026, 9, 8),
+      tags: ('QUISPE', 'ROMERO'),
+    ),
+    _Scene(
+      'phone_doha',
+      home: 'QAT',
+      away: 'KSA',
+      capacity: 45000,
+      stadium: 'Mock Lusail',
+      city: 'Doha',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(15, 0),
+      matchDay: DateTime(2026, 11, 20),
+      tags: ('AL HAJRI', 'AL OTAIBI'),
+    ),
+    _Scene(
+      'phone_lagos',
+      home: 'NGA',
+      away: 'GHA',
+      capacity: 40000,
+      stadium: 'Mock Surulere',
+      city: 'Lagos',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(16, 0),
+      matchDay: DateTime(2026, 3, 24),
+      tags: ('OKAFOR', 'MENSAH'),
+    ),
+    _Scene(
+      'phone_moscow_january',
+      home: 'RUS',
+      away: 'SRB',
+      capacity: 50000,
+      stadium: 'Mock Luzhniki',
+      city: 'Moscow',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(14, 0),
+      matchDay: DateTime(2027, 1, 23),
+      tags: ('VOLKOV', 'PETROVIC'),
+    ),
+    _Scene(
+      'phone_half_empty_friendly',
+      home: 'LIE',
+      away: 'LUX',
+      capacity: 7000,
+      stadium: 'Mock Rheinpark',
+      city: 'Vaduz',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(18, 0),
+      matchDay: DateTime(2026, 6, 2),
+      fill: 0.42,
+      tags: ('BUCHEL', 'WEBER'),
+    ),
+    _Scene(
+      'tablet_white_kit_crowd',
+      home: 'ENG',
+      away: 'SCO',
+      capacity: 60000,
+      stadium: 'Mock Wembley Park',
+      city: 'Manchester',
+      tablet: true,
+      light: PitchLight.day,
+      kickOff: const KickOffTime(17, 30),
+      matchDay: DateTime(2026, 9, 5),
+      tags: ('HARGREAVES', 'MCKAY'),
     ),
   ];
 }
