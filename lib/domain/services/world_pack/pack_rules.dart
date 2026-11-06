@@ -126,6 +126,9 @@ abstract final class PackRules {
   static final _country = RegExp(r'^[a-z]{3}$');
   static final _industry = RegExp(r'^[A-Za-z]{1,40}$');
 
+  /// A player's stored club country: three letters, either case.
+  static final _clubCountry = RegExp(r'^[A-Za-z]{3}$');
+
   /// The shape of a language code a `localized` value may carry: `cs`,
   /// `fil`, `pt-BR`, `zh_Hant`. Whether this build speaks it is
   /// [compatibility]'s question, never a reason to refuse a file.
@@ -227,6 +230,17 @@ abstract final class PackRules {
   static void _playerFields(String base, PackPlayer pl, List<PackIssue> out) {
     final r = checkName(pl.name);
     if (r != null) out.add(BadField('$base.name', r));
+    // The club a player is stored at (the editor's pick, or "Free agent"):
+    // shown as text, so it is a name like any other.
+    final club = pl.club;
+    if (club != null && club != ClubService.freeAgent) {
+      final c = checkName(club);
+      if (c != null) out.add(BadField('$base.club', c));
+    }
+    final country = pl.clubCountry;
+    if (country != null && !_clubCountry.hasMatch(country)) {
+      out.add(BadField('$base.clubCountry', FieldReason.badCharacters));
+    }
     if (pl.age < ageMin || pl.age > ageMax) {
       out.add(BadField('$base.age', FieldReason.outOfRange));
     }

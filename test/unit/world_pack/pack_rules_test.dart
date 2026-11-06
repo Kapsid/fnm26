@@ -782,4 +782,65 @@ void main() {
       expect(PackRules.issues(p), isEmpty);
     });
   });
+
+  group('a player\'s club fields', () {
+    PackPlayer withClub(int id, {String? club, String? country}) => PackPlayer(
+      id: id,
+      name: 'Player $id',
+      age: 25,
+      position: PlayerPosition.cm,
+      attributes: const PlayerAttributes(
+        physical: 60,
+        technical: 60,
+        stamina: 60,
+      ),
+      potential: 90,
+      club: club,
+      clubCountry: country,
+    );
+
+    List<String> badPaths({String? club, String? country}) {
+      final squad = _squad();
+      squad[5] = withClub(squad[5].id, club: club, country: country);
+      final p = _pack(
+        squads: {1: squad},
+        pools: {
+          1: [withClub(_fringe, club: club, country: country)],
+        },
+      );
+      return [for (final b in _bad(p)) b.path];
+    }
+
+    test('a control character in a club is refused, squad and pool', () {
+      expect(
+        badPaths(club: 'FCBell'),
+        containsAll(['squads.1.6.club', 'pools.1.$_fringe.club']),
+      );
+    });
+
+    test('a 500-character club is refused', () {
+      expect(
+        badPaths(club: 'x' * 500),
+        containsAll(['squads.1.6.club', 'pools.1.$_fringe.club']),
+      );
+    });
+
+    test('a junk clubCountry is refused', () {
+      expect(
+        badPaths(club: 'Ajax', country: 'ne '),
+        containsAll([
+          'squads.1.6.clubCountry',
+          'pools.1.$_fringe.clubCountry',
+        ]),
+      );
+      expect(badPaths(club: 'Ajax', country: 'netherlands'), isNotEmpty);
+    });
+
+    test('a club, Free agent, a three-letter country and none all pass', () {
+      expect(badPaths(club: 'Ajax', country: 'ned'), isEmpty);
+      expect(badPaths(club: 'Ajax', country: 'NED'), isEmpty);
+      expect(badPaths(club: ClubService.freeAgent), isEmpty);
+      expect(badPaths(), isEmpty);
+    });
+  });
 }
