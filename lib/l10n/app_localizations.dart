@@ -22898,6 +22898,294 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{1 unknown trait removed} other{{count} unknown traits removed}}'**
   String editorPlayerTraitsUnknownDropped(int count);
 
+  /// Small tag on a club the database adds.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get editorAddedTag;
+
+  /// Heading over the sponsors or Y accounts the database adds.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get editorAddedGroup;
+
+  /// Heading over the game's own sponsors or Y accounts, below the added ones.
+  ///
+  /// In en, this message translates to:
+  /// **'In the game'**
+  String get editorAddedGameGroup;
+
+  /// Button that adds a club to the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Add club'**
+  String get editorAddClub;
+
+  /// Button that adds a sponsor to the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Add sponsor'**
+  String get editorAddSponsor;
+
+  /// Button that adds a Y account to the database.
+  ///
+  /// In en, this message translates to:
+  /// **'Add account'**
+  String get editorAddY;
+
+  /// Confirms adding a club, sponsor or Y account.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get editorAddedAdd;
+
+  /// Deletes an added club, sponsor or Y account.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get editorAddedDelete;
+
+  /// Snackbar with Undo after an added item is deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} deleted'**
+  String editorAddedRemoved(String name);
+
+  /// Said when the database has added as many clubs as it may.
+  ///
+  /// In en, this message translates to:
+  /// **'A database can add at most {max} clubs.'**
+  String editorAddedClubsFull(int max);
+
+  /// Said when the database has added as many sponsors as it may.
+  ///
+  /// In en, this message translates to:
+  /// **'A database can add at most {max} sponsors.'**
+  String editorAddedSponsorsFull(int max);
+
+  /// Said when the database has added as many Y accounts as it may.
+  ///
+  /// In en, this message translates to:
+  /// **'A database can add at most {max} accounts.'**
+  String editorAddedYFull(int max);
+
+  /// An added item's form after the item was deleted or undone.
+  ///
+  /// In en, this message translates to:
+  /// **'This is no longer in the database.'**
+  String get editorAddedGone;
+
+  /// Error under an added item's empty name.
+  ///
+  /// In en, this message translates to:
+  /// **'Give it a name'**
+  String get editorAddedNameNeeded;
+
+  /// Label of an added club's country.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get editorAddedCountry;
+
+  /// Prompt and picker title for an added club's country.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a country'**
+  String get editorAddedCountryPick;
+
+  /// Warning when a club is added to a country with no league and no cities.
+  ///
+  /// In en, this message translates to:
+  /// **'{country} has no league or towns in the game, so this club only gets the players you place at it.'**
+  String editorAddedNoLeague(String country);
+
+  /// Error: the added club's name is taken in its country.
+  ///
+  /// In en, this message translates to:
+  /// **'{country} already has a club of this name.'**
+  String editorAddedClubTaken(String country);
+
+  /// Error: a game club elsewhere has the added club's name.
+  ///
+  /// In en, this message translates to:
+  /// **'A club in the game already goes by this name.'**
+  String get editorAddedClubGameName;
+
+  /// Note in an added club's form: how many of the database's players are at it.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 player of this database plays here. Delete the club and the game places him.} other{{count} players of this database play here. Delete the club and the game places them.}}'**
+  String editorAddedClubPlayers(int count);
+
+  /// Label of an added sponsor's deal type.
+  ///
+  /// In en, this message translates to:
+  /// **'Deal type'**
+  String get editorAddedDeal;
+
+  /// Sponsor deal type.
+  ///
+  /// In en, this message translates to:
+  /// **'Big payer'**
+  String get editorDealBigPayer;
+
+  /// Sponsor deal type.
+  ///
+  /// In en, this message translates to:
+  /// **'Crowd pleaser'**
+  String get editorDealCrowdPleaser;
+
+  /// Sponsor deal type.
+  ///
+  /// In en, this message translates to:
+  /// **'Family friendly'**
+  String get editorDealFamilyFriendly;
+
+  /// Sponsor deal type.
+  ///
+  /// In en, this message translates to:
+  /// **'Marketing'**
+  String get editorDealMarketing;
+
+  /// Label of an added sponsor's industry.
+  ///
+  /// In en, this message translates to:
+  /// **'Industry'**
+  String get editorAddedIndustry;
+
+  /// Prompt and picker title for an added sponsor's industry.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an industry'**
+  String get editorAddedIndustryPick;
+
+  /// Label of an added sponsor's description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get editorAddedDescription;
+
+  /// Helper under an added sponsor's description.
+  ///
+  /// In en, this message translates to:
+  /// **'Left empty, the offer uses the deal type\'s usual line.'**
+  String get editorAddedDescriptionHelp;
+
+  /// Label of an added Y account's type.
+  ///
+  /// In en, this message translates to:
+  /// **'Account type'**
+  String get editorAddedVoice;
+
+  /// Y account type.
+  ///
+  /// In en, this message translates to:
+  /// **'Fan'**
+  String get editorYVoiceFan;
+
+  /// Y account type.
+  ///
+  /// In en, this message translates to:
+  /// **'Pundit'**
+  String get editorYVoicePundit;
+
+  /// Y account type.
+  ///
+  /// In en, this message translates to:
+  /// **'Meme'**
+  String get editorYVoiceMeme;
+
+  /// Y account type.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get editorYVoiceStats;
+
+  /// Y account type.
+  ///
+  /// In en, this message translates to:
+  /// **'Rival'**
+  String get editorYVoiceRival;
+
+  /// Y account type.
+  ///
+  /// In en, this message translates to:
+  /// **'Ex-pro'**
+  String get editorYVoiceExpro;
+
+  /// Y account type.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral'**
+  String get editorYVoiceNeutral;
+
+  /// What a fan account posts like.
+  ///
+  /// In en, this message translates to:
+  /// **'One of your own supporters. Delighted, furious, fickle.'**
+  String get editorYVoiceFanAbout;
+
+  /// What a pundit account posts like.
+  ///
+  /// In en, this message translates to:
+  /// **'A measured voice who keeps turning up across a career.'**
+  String get editorYVoicePunditAbout;
+
+  /// What a meme account posts like.
+  ///
+  /// In en, this message translates to:
+  /// **'Says nothing useful and gets read first.'**
+  String get editorYVoiceMemeAbout;
+
+  /// What a stats account posts like.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts numbers and nothing else.'**
+  String get editorYVoiceStatsAbout;
+
+  /// What a rival account posts like.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoys your misfortune.'**
+  String get editorYVoiceRivalAbout;
+
+  /// What an ex-pro account posts like.
+  ///
+  /// In en, this message translates to:
+  /// **'A former international with a column and no patience.'**
+  String get editorYVoiceExproAbout;
+
+  /// What a neutral account posts like.
+  ///
+  /// In en, this message translates to:
+  /// **'Watches all football and turns up only when something big happens.'**
+  String get editorYVoiceNeutralAbout;
+
+  /// Label of where an added Y account posts.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts in'**
+  String get editorAddedPostsIn;
+
+  /// An added Y account posts in every nation's feed.
+  ///
+  /// In en, this message translates to:
+  /// **'All nations'**
+  String get editorAddedAllNations;
+
+  /// Search field hint in the editor's pickers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get editorAddedSearch;
+
+  /// Database home: how many items a section adds.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} added'**
+  String editorCountAdded(int count);
+
   /// Label of a journalist's outlet field in the editor.
   ///
   /// In en, this message translates to:

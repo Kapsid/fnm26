@@ -76,6 +76,21 @@ enum NameSection {
 
   /// Whether its rows are grouped under their country.
   bool get grouped => this == clubs || this == stadiums;
+
+  /// The root of the items a database adds to this section (`addedClubs`,
+  /// `addedSponsors`, `addedYAccounts`), or null where nothing is added.
+  String? get addedRoot => switch (this) {
+    clubs => 'addedClubs',
+    sponsors => 'addedSponsors',
+    yAccounts => 'addedYAccounts',
+    _ => null,
+  };
+
+  /// Whether a database can add items of its own here.
+  bool get adds => addedRoot != null;
+
+  /// The row key of added item [id]: its `localized` path.
+  String addedKey(int id) => '$addedRoot.$id';
 }
 
 /// One thing a name section renames, as the game has it.
@@ -91,7 +106,16 @@ class NameEntry {
     this.flagCode,
     this.firstNames = const [],
     this.surnames = const [],
+    this.addedId,
   });
+
+  /// The id of the item the database adds that this row is (its name is
+  /// [original]; a sponsor's description is [original2]), or null for one
+  /// of the game's.
+  final int? addedId;
+
+  /// Whether this row is an item the database adds.
+  bool get added => addedId != null;
 
   /// Its key in the pack's override map (a nation or reporter id as text).
   final String key;
@@ -302,6 +326,8 @@ NameEntry _stadium(
 /// What [pack] overrides of [e] in [section], or null when it keeps the
 /// game's (name lists: see [NameEdits.listsOf]).
 NameOverride? nameOverride(NameSection section, WorldPack pack, NameEntry e) {
+  // An added item's name is its own: nothing of the game's to override.
+  if (e.added) return null;
   switch (section) {
     case NameSection.press:
       final r = pack.reporters[int.tryParse(e.key)];
@@ -402,8 +428,23 @@ abstract final class NameEdits {
   }
 
   /// The `localized` paths of [e] in [section]: its name's, and a
-  /// reporter's outlet's. None for the name lists.
+  /// reporter's outlet's (an added sponsor's description's). None for the
+  /// name lists.
   static List<String> pathsOf(NameSection section, NameEntry e) =>
+      switch (e.addedId) {
+        final id? => switch (section) {
+          NameSection.clubs => [PackPaths.addedClub(id)],
+          NameSection.sponsors => [
+            PackPaths.addedSponsor(id),
+            PackPaths.addedSponsorDescription(id),
+          ],
+          NameSection.yAccounts => [PackPaths.addedY(id)],
+          _ => throw ArgumentError('$section adds nothing'),
+        },
+        null => _gamePathsOf(section, e),
+      };
+
+  static List<String> _gamePathsOf(NameSection section, NameEntry e) =>
       switch (section) {
         NameSection.clubs => [PackPaths.club(e.key)],
         NameSection.stadiums => [PackPaths.stadium(e.key)],
@@ -572,7 +613,7 @@ String shownOf(LanguageValue v) => v.own ?? v.main ?? v.game;
 /// translated sections (competitions, sponsors) say it in [lang]; every
 /// other name is the same in every language.
 String gameNameIn(NameSection section, NameEntry e, String lang) {
-  if (!section.translated) return e.original;
+  if (!section.translated || e.added) return e.original;
   final l = lookupAppLocalizations(Locale(lang));
   return _inDefaultWorld(
     () => switch (section) {
@@ -587,7 +628,9 @@ String gameNameIn(NameSection section, NameEntry e, String lang) {
 }
 
 /// What [pack] gives [e] of [section] in language [lang]: its name, and a
-/// reporter's outlet ([second], null for every other section).
+/// reporter's outlet or an added sponsor's description ([second], null for
+/// every other row). An added item's [LanguageValue.game] is its own main
+/// value.
 ({LanguageValue name, LanguageValue? second}) valueIn(
   NameSection section,
   WorldPack pack,
@@ -603,7 +646,7 @@ String gameNameIn(NameSection section, NameEntry e, String lang) {
       main: ActiveWorld.textOrNull(main?.name),
       game: gameNameIn(section, e, lang),
     ),
-    second: section.paired
+    second: paths.length > 1
         ? (
             own: own(1),
             main: ActiveWorld.textOrNull(main?.second),
@@ -627,10 +670,14 @@ List<String> languagesOf(NameSection section, WorldPack pack, NameEntry e) {
 }
 
 /// The row key a `localized` [path] of [section] belongs to, or null when
-/// it is another section's.
+/// it is another section's: an added item's is [NameSection.addedKey].
 String? _localizedKey(NameSection section, String path) {
   final parsed = PackPaths.parse(path);
-  if (parsed == null || parsed.root != section.issueRoot) return null;
+  if (parsed == null) return null;
+  if (parsed.root == section.addedRoot) {
+    return '${parsed.root}.${parsed.rest.split('.').first}';
+  }
+  if (parsed.root != section.issueRoot) return null;
   return section == NameSection.press
       ? parsed.rest.split('.').first
       : parsed.rest;
@@ -663,6 +710,11 @@ Map<String, int> issuesByKey(
       if (_localizedKey(section, entry) case final key?) add(key);
       continue;
     }
+    // An added item's own: `<addedRoot>.<id>[.<field>]`.
+    if (section.addedRoot case final added? when path.startsWith('$added.')) {
+      add('$added.${path.substring(added.length + 1).split('.').first}');
+      continue;
+    }
     if (!path.startsWith('$root.')) continue;
     final rest = path.substring(root.length + 1);
     switch (section) {
@@ -681,7 +733,7 @@ Map<String, int> issuesByKey(
 
 /// How many things of [section] [pack] really changes: an override left
 /// blank keeps the game's name and is no change; a name given only in some
-/// languages is one.
+/// languages is one. What it adds is [addedCount].
 int changedCount(NameSection section, WorldPack pack) {
   bool text(String s) => ActiveWorld.textOrNull(s) != null;
   final keys = <String>{
@@ -700,7 +752,19 @@ int changedCount(NameSection section, WorldPack pack) {
           if (text(e.value)) e.key,
       ],
     },
-    for (final path in pack.localized.keys) ?_localizedKey(section, path),
+    for (final path in pack.localized.keys)
+      if (_localizedKey(section, path) case final key?
+          when section.addedRoot == null ||
+              !key.startsWith('${section.addedRoot}.'))
+        key,
   };
   return keys.length;
 }
+
+/// How many items [pack] adds to [section].
+int addedCount(NameSection section, WorldPack pack) => switch (section) {
+  NameSection.clubs => pack.addedClubs.length,
+  NameSection.sponsors => pack.addedSponsors.length,
+  NameSection.yAccounts => pack.addedYAccounts.length,
+  _ => 0,
+};

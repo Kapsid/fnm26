@@ -23218,6 +23218,238 @@
       }
     }
   },
+  "editorAddedTag": "Added",
+  "@editorAddedTag": {
+    "description": "Small tag on a club the database adds."
+  },
+  "editorAddedGroup": "Added",
+  "@editorAddedGroup": {
+    "description": "Heading over the sponsors or Y accounts the database adds."
+  },
+  "editorAddedGameGroup": "In the game",
+  "@editorAddedGameGroup": {
+    "description": "Heading over the game's own sponsors or Y accounts, below the added ones."
+  },
+  "editorAddClub": "Add club",
+  "@editorAddClub": {
+    "description": "Button that adds a club to the database."
+  },
+  "editorAddSponsor": "Add sponsor",
+  "@editorAddSponsor": {
+    "description": "Button that adds a sponsor to the database."
+  },
+  "editorAddY": "Add account",
+  "@editorAddY": {
+    "description": "Button that adds a Y account to the database."
+  },
+  "editorAddedAdd": "Add",
+  "@editorAddedAdd": {
+    "description": "Confirms adding a club, sponsor or Y account."
+  },
+  "editorAddedDelete": "Delete",
+  "@editorAddedDelete": {
+    "description": "Deletes an added club, sponsor or Y account."
+  },
+  "editorAddedRemoved": "{name} deleted",
+  "@editorAddedRemoved": {
+    "description": "Snackbar with Undo after an added item is deleted.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorAddedClubsFull": "A database can add at most {max} clubs.",
+  "@editorAddedClubsFull": {
+    "description": "Said when the database has added as many clubs as it may.",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "editorAddedSponsorsFull": "A database can add at most {max} sponsors.",
+  "@editorAddedSponsorsFull": {
+    "description": "Said when the database has added as many sponsors as it may.",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "editorAddedYFull": "A database can add at most {max} accounts.",
+  "@editorAddedYFull": {
+    "description": "Said when the database has added as many Y accounts as it may.",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "editorAddedGone": "This is no longer in the database.",
+  "@editorAddedGone": {
+    "description": "An added item's form after the item was deleted or undone."
+  },
+  "editorAddedNameNeeded": "Give it a name",
+  "@editorAddedNameNeeded": {
+    "description": "Error under an added item's empty name."
+  },
+  "editorAddedCountry": "Country",
+  "@editorAddedCountry": {
+    "description": "Label of an added club's country."
+  },
+  "editorAddedCountryPick": "Pick a country",
+  "@editorAddedCountryPick": {
+    "description": "Prompt and picker title for an added club's country."
+  },
+  "editorAddedNoLeague": "{country} has no league or towns in the game, so this club only gets the players you place at it.",
+  "@editorAddedNoLeague": {
+    "description": "Warning when a club is added to a country with no league and no cities.",
+    "placeholders": {
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "editorAddedClubTaken": "{country} already has a club of this name.",
+  "@editorAddedClubTaken": {
+    "description": "Error: the added club's name is taken in its country.",
+    "placeholders": {
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "editorAddedClubGameName": "A club in the game already goes by this name.",
+  "@editorAddedClubGameName": {
+    "description": "Error: a game club elsewhere has the added club's name."
+  },
+  "editorAddedClubPlayers": "{count, plural, one{1 player of this database plays here. Delete the club and the game places him.} other{{count} players of this database play here. Delete the club and the game places them.}}",
+  "@editorAddedClubPlayers": {
+    "description": "Note in an added club's form: how many of the database's players are at it.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "editorAddedDeal": "Deal type",
+  "@editorAddedDeal": {
+    "description": "Label of an added sponsor's deal type."
+  },
+  "editorDealBigPayer": "Big payer",
+  "@editorDealBigPayer": {
+    "description": "Sponsor deal type."
+  },
+  "editorDealCrowdPleaser": "Crowd pleaser",
+  "@editorDealCrowdPleaser": {
+    "description": "Sponsor deal type."
+  },
+  "editorDealFamilyFriendly": "Family friendly",
+  "@editorDealFamilyFriendly": {
+    "description": "Sponsor deal type."
+  },
+  "editorDealMarketing": "Marketing",
+  "@editorDealMarketing": {
+    "description": "Sponsor deal type."
+  },
+  "editorAddedIndustry": "Industry",
+  "@editorAddedIndustry": {
+    "description": "Label of an added sponsor's industry."
+  },
+  "editorAddedIndustryPick": "Pick an industry",
+  "@editorAddedIndustryPick": {
+    "description": "Prompt and picker title for an added sponsor's industry."
+  },
+  "editorAddedDescription": "Description (optional)",
+  "@editorAddedDescription": {
+    "description": "Label of an added sponsor's description."
+  },
+  "editorAddedDescriptionHelp": "Left empty, the offer uses the deal type's usual line.",
+  "@editorAddedDescriptionHelp": {
+    "description": "Helper under an added sponsor's description."
+  },
+  "editorAddedVoice": "Account type",
+  "@editorAddedVoice": {
+    "description": "Label of an added Y account's type."
+  },
+  "editorYVoiceFan": "Fan",
+  "@editorYVoiceFan": {
+    "description": "Y account type."
+  },
+  "editorYVoicePundit": "Pundit",
+  "@editorYVoicePundit": {
+    "description": "Y account type."
+  },
+  "editorYVoiceMeme": "Meme",
+  "@editorYVoiceMeme": {
+    "description": "Y account type."
+  },
+  "editorYVoiceStats": "Stats",
+  "@editorYVoiceStats": {
+    "description": "Y account type."
+  },
+  "editorYVoiceRival": "Rival",
+  "@editorYVoiceRival": {
+    "description": "Y account type."
+  },
+  "editorYVoiceExpro": "Ex-pro",
+  "@editorYVoiceExpro": {
+    "description": "Y account type."
+  },
+  "editorYVoiceNeutral": "Neutral",
+  "@editorYVoiceNeutral": {
+    "description": "Y account type."
+  },
+  "editorYVoiceFanAbout": "One of your own supporters. Delighted, furious, fickle.",
+  "@editorYVoiceFanAbout": {
+    "description": "What a fan account posts like."
+  },
+  "editorYVoicePunditAbout": "A measured voice who keeps turning up across a career.",
+  "@editorYVoicePunditAbout": {
+    "description": "What a pundit account posts like."
+  },
+  "editorYVoiceMemeAbout": "Says nothing useful and gets read first.",
+  "@editorYVoiceMemeAbout": {
+    "description": "What a meme account posts like."
+  },
+  "editorYVoiceStatsAbout": "Posts numbers and nothing else.",
+  "@editorYVoiceStatsAbout": {
+    "description": "What a stats account posts like."
+  },
+  "editorYVoiceRivalAbout": "Enjoys your misfortune.",
+  "@editorYVoiceRivalAbout": {
+    "description": "What a rival account posts like."
+  },
+  "editorYVoiceExproAbout": "A former international with a column and no patience.",
+  "@editorYVoiceExproAbout": {
+    "description": "What an ex-pro account posts like."
+  },
+  "editorYVoiceNeutralAbout": "Watches all football and turns up only when something big happens.",
+  "@editorYVoiceNeutralAbout": {
+    "description": "What a neutral account posts like."
+  },
+  "editorAddedPostsIn": "Posts in",
+  "@editorAddedPostsIn": {
+    "description": "Label of where an added Y account posts."
+  },
+  "editorAddedAllNations": "All nations",
+  "@editorAddedAllNations": {
+    "description": "An added Y account posts in every nation's feed."
+  },
+  "editorAddedSearch": "Search",
+  "@editorAddedSearch": {
+    "description": "Search field hint in the editor's pickers."
+  },
+  "editorCountAdded": "{count} added",
+  "@editorCountAdded": {
+    "description": "Database home: how many items a section adds.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "editorNamesOutlet": "Outlet",
   "@editorNamesOutlet": {
     "description": "Label of a journalist's outlet field in the editor."

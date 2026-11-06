@@ -285,7 +285,9 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
     return out;
   }
 
-  /// The Pool tab's players for the search and the filter.
+  /// The Pool tab's players for the search and the filter; while the Squad
+  /// tab is on show, only the pool itself (its lines and checks are worked
+  /// out when the tab opens).
   _PoolView _poolView(
     AppLocalizations l,
     WorldPack pack,
@@ -293,12 +295,14 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
     Map<int, Nation> world,
   ) {
     final fixed = pack.pools.containsKey(_nation);
-    if (pool == null) {
+    if (pool == null || !_onPool) {
       return (
         pack: pack,
-        pool: null,
+        pool: pool,
         fixed: fixed,
-        failed: ref.read(editorGeneratedPoolProvider(_key)).hasError,
+        failed:
+            pool == null &&
+            ref.read(editorGeneratedPoolProvider(_key)).hasError,
         lines: const [],
         issues: const [],
         duplicates: const {},
@@ -368,6 +372,10 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
       issues: issues,
       duplicates: SquadEdits.duplicateNames(squad),
     );
+    // The generated pool is watched even once the pool is fixed, so it
+    // stays read: "Back to generated", or an undo of the first edit, shows
+    // it at once rather than reading it again behind a spinner.
+    ref.watch(editorGeneratedPoolProvider(_key));
     // Watched on both tabs: its count is on the Pool tab, and it is ready
     // by the time the tab is opened.
     final pool = shownPlayers(ref, pack, _key, pool: true);

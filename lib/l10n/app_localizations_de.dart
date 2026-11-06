@@ -15246,6 +15246,181 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get editorAddedTag => 'Added';
+
+  @override
+  String get editorAddedGroup => 'Added';
+
+  @override
+  String get editorAddedGameGroup => 'In the game';
+
+  @override
+  String get editorAddClub => 'Add club';
+
+  @override
+  String get editorAddSponsor => 'Add sponsor';
+
+  @override
+  String get editorAddY => 'Add account';
+
+  @override
+  String get editorAddedAdd => 'Add';
+
+  @override
+  String get editorAddedDelete => 'Delete';
+
+  @override
+  String editorAddedRemoved(String name) {
+    return '$name deleted';
+  }
+
+  @override
+  String editorAddedClubsFull(int max) {
+    return 'A database can add at most $max clubs.';
+  }
+
+  @override
+  String editorAddedSponsorsFull(int max) {
+    return 'A database can add at most $max sponsors.';
+  }
+
+  @override
+  String editorAddedYFull(int max) {
+    return 'A database can add at most $max accounts.';
+  }
+
+  @override
+  String get editorAddedGone => 'This is no longer in the database.';
+
+  @override
+  String get editorAddedNameNeeded => 'Give it a name';
+
+  @override
+  String get editorAddedCountry => 'Country';
+
+  @override
+  String get editorAddedCountryPick => 'Pick a country';
+
+  @override
+  String editorAddedNoLeague(String country) {
+    return '$country has no league or towns in the game, so this club only gets the players you place at it.';
+  }
+
+  @override
+  String editorAddedClubTaken(String country) {
+    return '$country already has a club of this name.';
+  }
+
+  @override
+  String get editorAddedClubGameName =>
+      'A club in the game already goes by this name.';
+
+  @override
+  String editorAddedClubPlayers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count players of this database play here. Delete the club and the game places them.',
+      one:
+          '1 player of this database plays here. Delete the club and the game places him.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorAddedDeal => 'Deal type';
+
+  @override
+  String get editorDealBigPayer => 'Big payer';
+
+  @override
+  String get editorDealCrowdPleaser => 'Crowd pleaser';
+
+  @override
+  String get editorDealFamilyFriendly => 'Family friendly';
+
+  @override
+  String get editorDealMarketing => 'Marketing';
+
+  @override
+  String get editorAddedIndustry => 'Industry';
+
+  @override
+  String get editorAddedIndustryPick => 'Pick an industry';
+
+  @override
+  String get editorAddedDescription => 'Description (optional)';
+
+  @override
+  String get editorAddedDescriptionHelp =>
+      'Left empty, the offer uses the deal type\'s usual line.';
+
+  @override
+  String get editorAddedVoice => 'Account type';
+
+  @override
+  String get editorYVoiceFan => 'Fan';
+
+  @override
+  String get editorYVoicePundit => 'Pundit';
+
+  @override
+  String get editorYVoiceMeme => 'Meme';
+
+  @override
+  String get editorYVoiceStats => 'Stats';
+
+  @override
+  String get editorYVoiceRival => 'Rival';
+
+  @override
+  String get editorYVoiceExpro => 'Ex-pro';
+
+  @override
+  String get editorYVoiceNeutral => 'Neutral';
+
+  @override
+  String get editorYVoiceFanAbout =>
+      'One of your own supporters. Delighted, furious, fickle.';
+
+  @override
+  String get editorYVoicePunditAbout =>
+      'A measured voice who keeps turning up across a career.';
+
+  @override
+  String get editorYVoiceMemeAbout =>
+      'Says nothing useful and gets read first.';
+
+  @override
+  String get editorYVoiceStatsAbout => 'Posts numbers and nothing else.';
+
+  @override
+  String get editorYVoiceRivalAbout => 'Enjoys your misfortune.';
+
+  @override
+  String get editorYVoiceExproAbout =>
+      'A former international with a column and no patience.';
+
+  @override
+  String get editorYVoiceNeutralAbout =>
+      'Watches all football and turns up only when something big happens.';
+
+  @override
+  String get editorAddedPostsIn => 'Posts in';
+
+  @override
+  String get editorAddedAllNations => 'All nations';
+
+  @override
+  String get editorAddedSearch => 'Search';
+
+  @override
+  String editorCountAdded(int count) {
+    return '$count added';
+  }
+
+  @override
   String get editorNamesOutlet => 'Medium';
 
   @override

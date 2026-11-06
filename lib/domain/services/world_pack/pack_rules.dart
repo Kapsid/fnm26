@@ -555,6 +555,20 @@ abstract final class PackRules {
     return out.any((i) => i.where == 'localized.$path.$language');
   }
 
+  /// Whether the name [p] gives its added Y account [id] is taken (see
+  /// [_yClashes]): another account's name, or, in a language in which
+  /// another account shows a name of its own, that name while this account
+  /// shows its main one there (see [_yLanguageClashes]). The editor refuses
+  /// such a name as it is typed.
+  static bool addedYNameTaken(WorldPack p, int id) {
+    final out = <PackIssue>[];
+    _yClashes(p.yAccounts, p.addedYAccounts, out, checkRenames: false);
+    if (out.any((i) => i.where == 'addedYAccounts.$id')) return true;
+    _yLanguageClashes(p, out, mainOf: id);
+    final path = 'localized.${PackPaths.addedY(id)}.';
+    return out.any((i) => i.where.startsWith(path));
+  }
+
   /// A Y account's new name must be nobody else's: not another account's
   /// new name, nor another account's original name (the game's fixed
   /// accounts, or one this pack renames). Two accounts under one name would
@@ -620,7 +634,15 @@ abstract final class PackRules {
   /// main name: a rename's, an added account's, or the game account's own).
   /// Each clashing value is a [NameClash] at `localized.<path>.<language>`
   /// (Ruling 1: flagged, not refused). Main names alone are [_yClashes]'s.
-  static void _yLanguageClashes(WorldPack p, List<PackIssue> out) {
+  ///
+  /// With [mainOf], added account [mainOf]'s main name is checked as well,
+  /// in each language where it shows it (it has no value of its own there):
+  /// a clash is reported at its path in that language.
+  static void _yLanguageClashes(
+    WorldPack p,
+    List<PackIssue> out, {
+    int? mainOf,
+  }) {
     String fold(String s) => s.trim().toLowerCase();
     final languages = <String>{};
     for (final e in p.localized.entries) {
@@ -659,7 +681,10 @@ abstract final class PackRules {
       for (final a in p.addedYAccounts) {
         final path = PackPaths.addedY(a.id);
         final own = value(path);
-        shown.add((name: own ?? a.name, path: own == null ? null : path));
+        shown.add((
+          name: own ?? a.name,
+          path: own == null && a.id != mainOf ? null : path,
+        ));
       }
       final count = <String, int>{};
       for (final s in shown) {

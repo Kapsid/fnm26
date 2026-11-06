@@ -305,9 +305,7 @@ class _PackView {
       EditorSection.yAccounts ||
       EditorSection.press ||
       EditorSection.nameLists ||
-      EditorSection.sponsors => l.editorCountChanged(
-        changedCount(NameSection.of(s)!, pack),
-      ),
+      EditorSection.sponsors => _nameCount(l, NameSection.of(s)!, pack),
       EditorSection.trophies => l.editorCountTrophies(pack.trophies.length),
       EditorSection.none => '',
     };
@@ -582,4 +580,14 @@ class _SectionTile extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A name section's count on the home: what it changes, and what it adds
+/// (the added count alone when it changes nothing of the game's).
+String _nameCount(AppLocalizations l, NameSection section, WorldPack pack) {
+  final changed = changedCount(section, pack);
+  final added = addedCount(section, pack);
+  if (added == 0) return l.editorCountChanged(changed);
+  if (changed == 0) return l.editorCountAdded(added);
+  return '${l.editorCountChanged(changed)} · ${l.editorCountAdded(added)}';
 }

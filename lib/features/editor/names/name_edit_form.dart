@@ -74,6 +74,13 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
 
   NameSection get _section => widget.section;
   NameEntry get _e => widget.entry;
+
+  /// Whether the row has a second text: a reporter's outlet, an added
+  /// sponsor's description.
+  bool get _hasSecond => NameEdits.pathsOf(_section, _e).length > 1;
+
+  /// The longest second text.
+  int get _secondMax => _e.added ? PackRules.descriptionMax : PackRules.nameMax;
   String? get _lang => widget.language;
   PackEditor get _editor =>
       ref.read(packEditorProvider(widget.packId).notifier);
@@ -153,8 +160,8 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     }
 
     var name = nameProblem(_name.text);
-    final second = _section == NameSection.press
-        ? nameProblem(_second.text, max: PackRules.nameMax)
+    final second = _hasSecond
+        ? nameProblem(_second.text, max: _secondMax)
         : null;
     if (name != null || second != null) {
       return (name: name, second: second);
@@ -332,13 +339,13 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
         controller: _name,
         maxLength: _section.maxLength,
         textCapitalization: TextCapitalization.words,
-        textInputAction: _section.paired
+        textInputAction: _hasSecond
             ? TextInputAction.next
             : TextInputAction.done,
         style: style,
         onChanged: (_) => _changed(),
         onSubmitted: (_) {
-          if (!_section.paired) widget.onDone?.call();
+          if (!_hasSecond) widget.onDone?.call();
         },
         decoration: InputDecoration(
           labelText: l.editorNameLabel,
@@ -349,18 +356,25 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
           errorMaxLines: 2,
         ),
       ),
-      if (_section == NameSection.press) ...[
+      if (_hasSecond) ...[
         const SizedBox(height: AppSpacing.sm),
         TextField(
           key: NameEditForm.outletKey,
           controller: _second,
-          maxLength: PackRules.nameMax,
-          textCapitalization: TextCapitalization.words,
+          maxLength: _secondMax,
+          // An added sponsor's description runs over lines.
+          minLines: _e.added ? 2 : 1,
+          maxLines: _e.added ? 4 : 1,
+          textCapitalization: _e.added
+              ? TextCapitalization.sentences
+              : TextCapitalization.words,
           style: style,
           onChanged: (_) => _changed(),
           onSubmitted: (_) => widget.onDone?.call(),
           decoration: InputDecoration(
-            labelText: l.editorNamesOutlet,
+            labelText: _e.added
+                ? l.editorAddedDescription
+                : l.editorNamesOutlet,
             hintText: fallback(inLanguage?.second),
             helperText: hint,
             helperMaxLines: 2,
@@ -493,7 +507,10 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l.editorNamesGameName(v?.game ?? entry.original),
+                // An added item has no game name: its main one heads it.
+                entry.added
+                    ? l.editorLanguageMainName(entry.original)
+                    : l.editorNamesGameName(v?.game ?? entry.original),
                 style: AppTypography.labelLarge,
               ),
               if (about.isNotEmpty) Text(about, style: muted),

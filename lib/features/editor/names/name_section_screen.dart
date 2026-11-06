@@ -14,9 +14,12 @@ import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
+import 'package:fnm/features/editor/names/added_items.dart';
 import 'package:fnm/features/editor/names/name_edit_form.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
+import 'package:fnm/features/editor/players/squad_screen.dart'
+    show showUndoSnackBar;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -38,6 +41,11 @@ part 'name_section_tablet_layout.dart';
 /// top bar): under a language it shows and edits that language's names,
 /// and under All languages the main ones.
 ///
+/// Clubs, sponsors and Y accounts also list what the database adds (see
+/// [withAddedRows]): under All languages Add makes one and an added row
+/// opens its own form ([AddedItemForm]: edit, delete); under a language an
+/// added row edits only its name there (and a sponsor's description).
+///
 /// Opened on [nationId] (a jump from the database home), the search starts
 /// on that nation, and a per-nation section picks it.
 class NameSectionScreen extends ConsumerStatefulWidget {
@@ -51,6 +59,10 @@ class NameSectionScreen extends ConsumerStatefulWidget {
   static const Key tabletLayoutKey = Key('editorNames.tabletLayout');
   static const Key searchKey = Key('editorNames.search');
   static const Key undoKey = Key('editorNames.undo');
+
+  /// Add a club, sponsor or Y account (the phone's button, the tablet's
+  /// header).
+  static const Key addKey = Key('editorNames.add');
 
   static Key rowKey(String key) => Key('editorNames.row.$key');
 
@@ -124,6 +136,38 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     );
   }
 
+  ({_Rows rows, WorldPack pack, String locale})? _mergedOf;
+  ({List<NameGroup> groups, Map<String, NameEntry> byKey})? _merged;
+
+  /// [rows] with the items [pack] adds ([withAddedRows]), once per pack
+  /// state.
+  ({List<NameGroup> groups, Map<String, NameEntry> byKey}) _withAdded(
+    AppLocalizations l,
+    _Rows rows,
+    WorldPack pack,
+  ) {
+    final of = _mergedOf;
+    final merged = _merged;
+    if (merged != null &&
+        of != null &&
+        identical(of.rows, rows) &&
+        identical(of.pack, pack) &&
+        of.locale == l.localeName) {
+      return merged;
+    }
+    final groups = withAddedRows(_section, l, rows.groups, pack, rows.world);
+    _mergedOf = (rows: rows, pack: pack, locale: l.localeName);
+    return _merged = identical(groups, rows.groups)
+        ? (groups: groups, byKey: rows.byKey)
+        : (
+            groups: groups,
+            byKey: {
+              for (final g in groups)
+                for (final e in g.entries) e.key: e,
+            },
+          );
+  }
+
   WorldPack? _issuesOf;
   Map<String, int> _issues = const {};
 
@@ -195,6 +239,37 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
       setState(() => _picked = e.key);
       return;
     }
+    if (e.addedId case final id? when language == null) {
+      unawaited(
+        showAdaptiveSheet<void>(
+          context: context,
+          isScrollControlled: true,
+          showDragHandle: true,
+          builder: (sheet) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.viewInsetsOf(sheet).bottom,
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.marginMobile,
+                AppSpacing.sm,
+                AppSpacing.marginMobile,
+                AppSpacing.lg,
+              ),
+              child: AddedItemForm(
+                packId: _id,
+                section: _section,
+                world: world,
+                id: id,
+                onDeleted: _deleted,
+                onDone: () => Navigator.of(sheet).pop(),
+              ),
+            ),
+          ),
+        ),
+      );
+      return;
+    }
     unawaited(
       showAdaptiveSheet<void>(
         context: context,
@@ -224,6 +299,59 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
       ),
     );
   }
+
+  /// Says an added item went, with Undo.
+  void _deleted(String name) {
+    if (!mounted) return;
+    showUndoSnackBar(
+      context,
+      ref.read(packEditorProvider(_id).notifier),
+      AppLocalizations.of(context).editorAddedRemoved(name),
+    );
+  }
+
+  /// Opens the form that adds a club, sponsor or Y account; at the cap,
+  /// says so instead. On a tablet the new item is then picked.
+  void _add({required bool tablet, required List<Nation> world}) {
+    final pack = ref.read(packEditorProvider(_id)).valueOrNull;
+    if (pack == null) return;
+    final l = AppLocalizations.of(context);
+    if (AddedEdits.isFull(_section, pack)) {
+      final max = AddedEdits.maxOf(_section);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(switch (_section) {
+              NameSection.clubs => l.editorAddedClubsFull(max),
+              NameSection.sponsors => l.editorAddedSponsorsFull(max),
+              _ => l.editorAddedYFull(max),
+            }),
+          ),
+        );
+      return;
+    }
+    unawaited(
+      showAddedItemSheet(
+        context,
+        packId: _id,
+        section: _section,
+        world: world,
+        onAdded: (id) {
+          if (tablet && mounted) {
+            setState(() => _picked = _section.addedKey(id));
+          }
+        },
+      ),
+    );
+  }
+
+  /// The label of the Add button.
+  String _addLabel(AppLocalizations l) => switch (_section) {
+    NameSection.clubs => l.editorAddClub,
+    NameSection.sponsors => l.editorAddSponsor,
+    _ => l.editorAddY,
+  };
 
   String _searchHint(AppLocalizations l) => switch (_section) {
     NameSection.clubs => l.editorNamesSearchClubs,
@@ -265,7 +393,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
 
     final world = editor.world;
     _jump(world);
-    final rows = _rows(l, world, listsValue);
+    final rows = _withAdded(l, _rows(l, world, listsValue), pack);
     final view = _NameView(
       pack: pack,
       groups: _filter(rows.groups, pack, language),
@@ -274,6 +402,8 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     );
     void undo() => editor.undo();
     final onUndo = editor.canUndo ? undo : null;
+    // Items are added and deleted under All languages only.
+    final adds = _section.adds && language == null;
 
     if (tablet) {
       return _NameSectionTabletLayout(
@@ -283,6 +413,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
         picked: _picked == null ? null : rows.byKey[_picked],
         world: world,
         onUndo: onUndo,
+        onAdd: adds ? () => _add(tablet: true, world: world) : null,
       );
     }
     return EditorFrame(
@@ -299,6 +430,14 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
           icon: const Icon(Icons.undo),
         ),
       ],
+      fab: adds
+          ? FloatingActionButton.extended(
+              key: NameSectionScreen.addKey,
+              onPressed: () => _add(tablet: false, world: world),
+              icon: const Icon(Icons.add),
+              label: Text(_addLabel(l)),
+            )
+          : null,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -315,11 +454,12 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
             child: _NameList(
               state: this,
               view: view,
-              padding: const EdgeInsets.fromLTRB(
+              // Room for the Add button at the end.
+              padding: EdgeInsets.fromLTRB(
                 AppSpacing.marginMobile,
                 0,
                 AppSpacing.marginMobile,
-                AppSpacing.lg,
+                adds ? 96 : AppSpacing.lg,
               ),
               onTap: (e) =>
                   _open(e, tablet: false, world: world, language: language),
@@ -610,7 +750,11 @@ class _NameTile extends StatelessWidget {
       changed = v.name.own != null || second?.own != null;
       name = shownOf(v.name);
       about = [
-        if (name != v.name.game) l.editorNamesGameName(v.name.game),
+        // An added item's "game" name is its own main one.
+        if (name != v.name.game)
+          entry.added
+              ? l.editorLanguageMainName(v.name.game)
+              : l.editorNamesGameName(v.name.game),
         if (v.name.own == null && v.name.main != null) l.editorLanguageSame,
         ?entry.detail,
         if (second != null) shownOf(second),
@@ -675,8 +819,12 @@ class _NameTile extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           if (fix)
             _FixMark(text: l.editorCountToFix(toFix))
-          else if (changed)
-            NameChangedMark(language: lang),
+          else if (changed && (lang != null || !entry.added))
+            NameChangedMark(language: lang)
+          // An added club's tag (added sponsors and accounts sit under a
+          // heading that says so).
+          else if (entry.added && section.grouped)
+            const AddedTag(),
           if (showChevron)
             const Icon(Icons.chevron_right, color: AppColors.onSurfaceVariant),
         ],

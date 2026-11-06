@@ -16,6 +16,7 @@ import 'package:fnm/domain/services/world_pack/pack_keys.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/editor/names/added_items.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 
 export 'package:fnm/domain/services/world_pack/pack_status.dart';
@@ -130,7 +131,9 @@ typedef EditorPoolKey = ({int packId, int nationId});
 /// Nation `nationId`'s pool as the game generates it for pack `packId`
 /// ([WorldPackService.generatedPool]): what an untouched pool shows, and what
 /// the first edit fixes. Read again only when the pack's name lists for the
-/// nation change, so fixing the pool (and undoing that) never re-reads it.
+/// nation change. The squad screen watches it on both tabs, fixed pool or
+/// not, so fixing the pool (and undoing that, or going back to generated)
+/// never reads it again while the screen is open.
 final AutoDisposeFutureProviderFamily<List<PackPlayer>, EditorPoolKey>
 editorGeneratedPoolProvider = FutureProvider.autoDispose
     .family<List<PackPlayer>, EditorPoolKey>((ref, key) {
@@ -385,6 +388,10 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// The nations the pack covers, strongest first (empty until loaded).
   List<Nation> get world => _world;
 
+  /// Each country's cities, biggest first, by lower-case FIFA code: what
+  /// the game names a league-less country's clubs for (empty until loaded).
+  Map<String, List<String>> get countryCities => _countryCities;
+
   /// What stands between the pack and a career: every [CompatIssue] (what
   /// the game no longer has, [PackRules.compatibility], and an added name
   /// the game's own already has, [NameClash]) first, then what is missing
@@ -471,7 +478,9 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   ///   competition, Y account or sponsor rename;
   /// - a pool player (`pools.<n>.<id>`);
   /// - an added club, sponsor or Y account, with every `localized` name of
-  ///   it (`addedClubs.<id>`, and for a sponsor its description's too);
+  ///   it (`addedClubs.<id>`, and for a sponsor its description's too), as
+  ///   the editor deletes one ([AddedEdits]): a club's players go back to
+  ///   Auto;
   /// - a `localized` path, or one language of it (`localized.<path>.<lang>`;
   ///   the path goes with its last language);
   /// - what this build does not know of an item, which goes while the item
@@ -493,14 +502,6 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
 
     final id = parts.length == 1 ? at(0) : null;
     Map<K, V> without<K, V>(Map<K, V> m, K k) => {...m}..remove(k);
-
-    /// The localized names of added item [itemId] of [itemRoot] gone.
-    Map<String, Map<String, String>> namesGone(String itemRoot, int itemId) => {
-      for (final e in p.localized.entries)
-        if (e.key != '$itemRoot.$itemId' &&
-            !e.key.startsWith('$itemRoot.$itemId.'))
-          e.key: e.value,
-    };
 
     // A player's unknown traits: `<squads|pools>.<n>.<id>.traits`.
     if ((root == 'squads' || root == 'pools') &&
@@ -543,17 +544,10 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
           },
         );
       case 'addedClubs':
+        // As the editor deletes one: its players go back to Auto.
         final itemId = at(0);
-        if (parts.length != 1 || !p.addedClubs.any((c) => c.id == itemId)) {
-          return p;
-        }
-        return p.copyWith(
-          addedClubs: [
-            for (final c in p.addedClubs)
-              if (c.id != itemId) c,
-          ],
-          localized: namesGone(root, itemId!),
-        );
+        if (parts.length != 1 || itemId == null) return p;
+        return AddedEdits.removeClub(p, itemId);
       case 'addedSponsors':
         final itemId = at(0);
         final sponsor = p.addedSponsors.where((s) => s.id == itemId);
@@ -568,13 +562,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
           );
         }
         if (parts.length != 1) return p;
-        return p.copyWith(
-          addedSponsors: [
-            for (final s in p.addedSponsors)
-              if (s.id != itemId) s,
-          ],
-          localized: namesGone(root, itemId!),
-        );
+        return AddedEdits.removeSponsor(p, itemId!);
       case 'addedYAccounts':
         final itemId = at(0);
         final account = p.addedYAccounts.where((y) => y.id == itemId);
@@ -589,13 +577,7 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
           );
         }
         if (parts.length != 1) return p;
-        return p.copyWith(
-          addedYAccounts: [
-            for (final y in p.addedYAccounts)
-              if (y.id != itemId) y,
-          ],
-          localized: namesGone(root, itemId!),
-        );
+        return AddedEdits.removeY(p, itemId!);
       case 'localized':
         if (p.localized.containsKey(key)) {
           return p.copyWith(localized: without(p.localized, key));

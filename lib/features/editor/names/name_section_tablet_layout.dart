@@ -11,6 +11,7 @@ class _NameSectionTabletLayout extends StatelessWidget {
     required this.picked,
     required this.world,
     required this.onUndo,
+    required this.onAdd,
   });
 
   final _NameSectionScreenState state;
@@ -19,6 +20,10 @@ class _NameSectionTabletLayout extends StatelessWidget {
   final NameEntry? picked;
   final List<Nation> world;
   final VoidCallback? onUndo;
+
+  /// Adds a club, sponsor or Y account; null where nothing is added (and
+  /// under a language).
+  final VoidCallback? onAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,15 @@ class _NameSectionTabletLayout extends StatelessWidget {
       title: title,
       onBack: state._back,
       actions: [
+        if (onAdd case final add?)
+          FilledButton.tonalIcon(
+            key: NameSectionScreen.addKey,
+            onPressed: add,
+            // The theme's buttons fill the width: not in a header row.
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
+            icon: const Icon(Icons.add),
+            label: Text(state._addLabel(l)),
+          ),
         if (state._section.perLanguage) const EditorLanguageChip(),
         TextButton.icon(
           key: NameSectionScreen.undoKey,
@@ -73,18 +87,27 @@ class _NameSectionTabletLayout extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   child: AppCard(
                     padding: const EdgeInsets.all(AppSpacing.lg),
-                    child: NameEditForm(
-                      // A new form per row and language: its fields hold
-                      // that language's names.
-                      key: ValueKey(
-                        'editorNames.form.${shown.key}.${view.language}',
-                      ),
-                      packId: state._id,
-                      section: state._section,
-                      entry: shown,
-                      world: world,
-                      language: view.language,
-                    ),
+                    child: shown.addedId != null && view.language == null
+                        ? AddedItemForm(
+                            key: ValueKey('editorNames.added.${shown.key}'),
+                            packId: state._id,
+                            section: state._section,
+                            world: world,
+                            id: shown.addedId,
+                            onDeleted: state._deleted,
+                          )
+                        : NameEditForm(
+                            // A new form per row and language: its fields hold
+                            // that language's names.
+                            key: ValueKey(
+                              'editorNames.form.${shown.key}.${view.language}',
+                            ),
+                            packId: state._id,
+                            section: state._section,
+                            entry: shown,
+                            world: world,
+                            language: view.language,
+                          ),
                   ),
                 ),
               ),

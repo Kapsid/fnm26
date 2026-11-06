@@ -412,9 +412,12 @@ abstract final class ClubService {
       final clubs = _withAdded(l.clubs, added);
       return (name: clubs[(hash + band) % clubs.length], country: code);
     }
-    // No cities, no home side: he goes abroad, added clubs or not. Placing
-    // him at an added club instead would move him to another country's
-    // league, and added clubs never change where a player plays.
+    // No cities, no home side: he goes abroad, added clubs or not. With no
+    // cities the span below is 0, so every player who stays home would land
+    // at an added club: one club would take the country's whole home
+    // contingent, and adding it would keep at home the players who go
+    // abroad today. Added clubs here get only the players a pack places
+    // there on day one.
     if (cities.isEmpty) return null;
     // Bias toward the bigger cities (listed first) — a country's clubs cluster
     // in its largest cities rather than spreading evenly over every town.

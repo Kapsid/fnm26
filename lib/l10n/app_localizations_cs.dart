@@ -15397,6 +15397,188 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get editorAddedTag => 'Přidáno';
+
+  @override
+  String get editorAddedGroup => 'Přidané';
+
+  @override
+  String get editorAddedGameGroup => 'Ve hře';
+
+  @override
+  String get editorAddClub => 'Přidat klub';
+
+  @override
+  String get editorAddSponsor => 'Přidat sponzora';
+
+  @override
+  String get editorAddY => 'Přidat účet';
+
+  @override
+  String get editorAddedAdd => 'Přidat';
+
+  @override
+  String get editorAddedDelete => 'Smazat';
+
+  @override
+  String editorAddedRemoved(String name) {
+    return 'Smazáno: $name';
+  }
+
+  @override
+  String editorAddedClubsFull(int max) {
+    return 'Databáze může přidat nejvýše $max klubů.';
+  }
+
+  @override
+  String editorAddedSponsorsFull(int max) {
+    return 'Databáze může přidat nejvýše $max sponzorů.';
+  }
+
+  @override
+  String editorAddedYFull(int max) {
+    return 'Databáze může přidat nejvýše $max účtů.';
+  }
+
+  @override
+  String get editorAddedGone => 'Toto už v databázi není.';
+
+  @override
+  String get editorAddedNameNeeded => 'Zadejte název';
+
+  @override
+  String get editorAddedCountry => 'Země';
+
+  @override
+  String get editorAddedCountryPick => 'Vyberte zemi';
+
+  @override
+  String editorAddedNoLeague(String country) {
+    return 'Země $country nemá ve hře ligu ani města, takže tento klub dostane jen hráče, které do něj sami umístíte.';
+  }
+
+  @override
+  String editorAddedClubTaken(String country) {
+    return 'Země $country už klub s tímto názvem má.';
+  }
+
+  @override
+  String get editorAddedClubGameName => 'Tento název už nese klub ve hře.';
+
+  @override
+  String editorAddedClubPlayers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Hraje zde $count hráčů této databáze. Po smazání klubu je umístí hra.',
+      few:
+          'Hrají zde $count hráči této databáze. Po smazání klubu je umístí hra.',
+      one: 'Hraje zde 1 hráč této databáze. Po smazání klubu ho umístí hra.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorAddedDeal => 'Typ smlouvy';
+
+  @override
+  String get editorDealBigPayer => 'Štědrý plátce';
+
+  @override
+  String get editorDealCrowdPleaser => 'Oblíbenec kabiny';
+
+  @override
+  String get editorDealFamilyFriendly => 'Rodinný';
+
+  @override
+  String get editorDealMarketing => 'Marketing';
+
+  @override
+  String get editorAddedIndustry => 'Obor';
+
+  @override
+  String get editorAddedIndustryPick => 'Vyberte obor';
+
+  @override
+  String get editorAddedDescription => 'Popis (nepovinný)';
+
+  @override
+  String get editorAddedDescriptionHelp =>
+      'Když zůstane prázdný, nabídka použije obvyklý text typu smlouvy.';
+
+  @override
+  String get editorAddedVoice => 'Typ účtu';
+
+  @override
+  String get editorYVoiceFan => 'Fanoušek';
+
+  @override
+  String get editorYVoicePundit => 'Expert';
+
+  @override
+  String get editorYVoiceMeme => 'Memy';
+
+  @override
+  String get editorYVoiceStats => 'Statistiky';
+
+  @override
+  String get editorYVoiceRival => 'Rival';
+
+  @override
+  String get editorYVoiceExpro => 'Bývalý profík';
+
+  @override
+  String get editorYVoiceNeutral => 'Neutrál';
+
+  @override
+  String get editorYVoiceFanAbout =>
+      'Jeden z vašich fanoušků. Nadšený, zuřivý, vrtkavý.';
+
+  @override
+  String get editorYVoicePunditAbout =>
+      'Rozvážný hlas, který se ozývá celou kariéru.';
+
+  @override
+  String get editorYVoiceMemeAbout =>
+      'Neřekne nic užitečného a všichni ho čtou první.';
+
+  @override
+  String get editorYVoiceStatsAbout => 'Píše čísla a nic jiného.';
+
+  @override
+  String get editorYVoiceRivalAbout => 'Užívá si vaše nezdary.';
+
+  @override
+  String get editorYVoiceExproAbout =>
+      'Bývalý reprezentant se sloupkem a bez trpělivosti.';
+
+  @override
+  String get editorYVoiceNeutralAbout =>
+      'Sleduje všechen fotbal a ozve se, jen když se stane něco velkého.';
+
+  @override
+  String get editorAddedPostsIn => 'Píše v';
+
+  @override
+  String get editorAddedAllNations => 'Všechny země';
+
+  @override
+  String get editorAddedSearch => 'Hledat';
+
+  @override
+  String editorCountAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count přidaných',
+      few: '$count přidané',
+      one: '1 přidaný',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorNamesOutlet => 'Médium';
 
   @override
