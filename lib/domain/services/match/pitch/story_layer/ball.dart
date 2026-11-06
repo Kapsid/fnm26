@@ -457,17 +457,27 @@ extension _BallMechanics on _Builder {
     carrier = to.index;
     lastTouch = to.index;
     phaseStart = t;
+    final side = sides[to.side];
     if (to.side != possession) {
+      sides[possession].counterUntil = -1;
       possession = to.side;
       spellStart = t;
       spellEnd = t + _spellLength(possession);
-      spellDepth = _depthTarget(
-        possession,
-        pacer.matchAt(_Builder._dur(t)).minute,
-      );
+      final minute = pacer.matchAt(_Builder._dur(t)).minute;
+      spellDepth = _depthTarget(possession, minute);
+      // Won in open play, short of the other third: a counter-minded side
+      // breaks for goal.
+      final intent = side.counterIntent;
+      if (activeWindow == null &&
+          intent > 0 &&
+          xToDepth(point.x, _dir(to.side, minute)) < 60) {
+        side.counterUntil = t + 2 + 2.5 * intent;
+        spellDepth = math.max(spellDepth, 84);
+      }
     }
-    final tempo = sides[to.side].instr.tempo;
-    nextAction = t + (0.55 + rng.nextDouble() * 0.8) * (1.15 - tempo / 250);
+    final tempo = side.instr.tempo;
+    final hold = (0.55 + rng.nextDouble() * 0.8) * (1.15 - tempo / 250);
+    nextAction = t + (t < side.counterUntil ? hold * 0.5 : hold);
   }
 
   void _startFlight(
@@ -513,9 +523,14 @@ extension _BallMechanics on _Builder {
     lead = _Builder._clampPitch(lead, margin: 1.5);
     final dist = lead.distanceTo(start);
     final lofted = dist > 26;
+    // Tempo sets the pace of the ball: zipped about, or rolled.
+    final pace = 0.85 + 0.3 * sides[from.side].instr.tempo / 100;
     final v = quick
         ? (18 + 0.4 * dist).clamp(18.0, 28.0)
-        : (lofted ? 15 + 0.2 * dist : 11 + 0.4 * dist).clamp(11.0, 26.0);
+        : ((lofted ? 15 + 0.2 * dist : 11 + 0.4 * dist) * pace).clamp(
+            10.0,
+            27.0,
+          );
     final dur = math.max(quick ? 0.25 : 0.4, dist / v);
     final peak = lofted ? math.min(1.5 + 0.12 * dist, 7).toDouble() : 0.0;
     return (start, dur, peak, lead);

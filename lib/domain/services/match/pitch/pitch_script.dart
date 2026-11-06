@@ -182,6 +182,24 @@ enum PitchCueKind { foul, yellowCard, redCard, offsideFlag, shot, goal }
 /// man booked, the man flagged, the shooter, the scorer).
 typedef PitchCue = ({double t, PitchCueKind kind, int playerId});
 
+/// A routine restart the picture shows (see [PitchRestart]).
+enum PitchRestartKind { throwIn, goalKick }
+
+/// A routine restart shown in the flow (spec item 13): the ball goes out of
+/// play at screen second [out] and [takerId] of [teamNationId] restarts it
+/// at [taken], a second or so later, with no pause and no commentary line.
+/// Only a restart that opens the build-up to the next staged moment, that
+/// side's shot or corner, is shown, and only as many in a minute as the
+/// engine counted (`MatchResult.routineRestarts`). Every other restart
+/// flows on unseen.
+typedef PitchRestart = ({
+  double out,
+  double taken,
+  PitchRestartKind kind,
+  int teamNationId,
+  int takerId,
+});
+
 /// The live state at one instant: who is where, and who has the ball. A
 /// stager reads it; [PitchScript.stateAt] captures one for the story layer
 /// to resume from after a re-simulation.
@@ -313,6 +331,7 @@ class PitchScript {
     required this.homeNationId,
     this.cuts = const [],
     this.cutKinds = const {},
+    this.restarts = const [],
     this.start = 0,
     this.confettiAt,
   }) : _index = {
@@ -356,6 +375,9 @@ class PitchScript {
 
   /// What each cut is, by its screen second.
   final Map<double, PitchCutKind> cutKinds;
+
+  /// The routine restarts the picture shows, in order (see [PitchRestart]).
+  final List<PitchRestart> restarts;
   final List<StagedWindow> windows;
 
   /// Player id -> the screen second he starts walking off. He walks to the

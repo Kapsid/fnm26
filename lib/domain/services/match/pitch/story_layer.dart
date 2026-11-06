@@ -28,9 +28,15 @@
 /// instructions, and the manager's live changes ([LineupChange]) reshape it
 /// at their minute. A side with no live changes (the AI opponent) plays the
 /// plan the engine says it fielded for most of the match ([TeamSide.plan]).
-/// The AI's minute-by-minute nudges to its instructions are not followed:
-/// they are small, and redrawing the shape every minute would read as
-/// jitter.
+/// The AI's minute-by-minute changes to its instructions
+/// ([MatchResult.instructionLog]) are followed from the minute after each
+/// one: the lines ease to them, nobody changes slot.
+///
+/// ## Tactics in the movement
+///
+/// Pressing sets the block, directness the passes, tempo the pace of the
+/// ball, a counter-minded side breaks after winning it, and the roles move
+/// the men (`_roleShape`). None of it touches an outcome.
 library;
 
 import 'dart:math' as math;
@@ -39,6 +45,7 @@ import 'dart:typed_data';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/player_role.dart';
 import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
@@ -52,6 +59,7 @@ import 'package:fnm/domain/services/match/pitch/switched_layout.dart';
 
 part 'story_layer/ball.dart';
 part 'story_layer/lead_in.dart';
+part 'story_layer/restart.dart';
 
 /// How far ahead of a moment (screen seconds) the men it needs start to
 /// get where it needs them, in quiet time and in the moments before it
@@ -80,6 +88,11 @@ typedef MatchPlan = FieldedPlan;
 typedef LineupPlayer = ({int playerId, PlayerPosition slot, int shirt});
 
 /// One side as the Pitch view lines it up.
+///
+/// [roles] (player id -> role) and [fullBacks] are the team sheet's: the
+/// picture reads them for the roles' movement (a target man up on the last
+/// line, an inside forward off the flank, a full-back pushed on overlapping
+/// his winger). The AI's sides set neither.
 typedef TeamSide = ({
   int nationId,
   Formation formation,
@@ -88,6 +101,8 @@ typedef TeamSide = ({
   List<int> bench,
   TacticalInstructions instructions,
   MatchPlan plan,
+  Map<int, PlayerRole> roles,
+  FullBackPushes fullBacks,
 });
 
 /// A live tactical change as the Pitch view needs it: from [minute] the side
@@ -137,6 +152,8 @@ TeamSide teamSideOf(
     bench: bench,
     instructions: team.instructions,
     plan: plan ?? (formation: team.formation, instructions: team.instructions),
+    roles: team.roles,
+    fullBacks: team.fullBacks,
   );
 }
 
@@ -669,16 +686,58 @@ class _Side {
     return i < 0 ? 0 : i;
   }
 
+  /// The place each slot plays: the formation with the switches applied.
+  late List<PlayerPosition> positions;
+
+  /// The AI's instruction drift for this side ([MatchResult.instructionLog]),
+  /// in order, and how much of it is in force.
+  List<InstructionChange> drift = const [];
+  int driftAt = 0;
+
+  /// When the side's break after winning the ball ends (screen seconds):
+  /// a counter-minded side runs at goal until then.
+  double counterUntil = -1;
+
   void reshape(Formation f, SlotSwitches sw, TacticalInstructions i) {
     formation = f;
     switches = sw;
     instr = i;
+    positions = sw.apply(f);
     layout = slotLayout(f, sw, i);
     owner = List<int?>.filled(layout.length, null);
     pending = List<bool>.filled(layout.length, false);
     vacated.clear();
     standIn = null;
     effective = [...layout];
+  }
+
+  /// New instructions for the same shape and the same men: the lines move
+  /// to them, nobody changes slot.
+  void retune(TacticalInstructions i) {
+    instr = i;
+    layout = slotLayout(formation, switches, i);
+    reform();
+  }
+
+  /// Follows the AI's drift: every change logged before [minute] is in
+  /// force, so a change made in minute m shows from minute m + 1.
+  void followDrift(int minute) {
+    var to = driftAt;
+    while (to < drift.length && drift[to].minute < minute) {
+      to++;
+    }
+    if (to == driftAt) return;
+    driftAt = to;
+    retune(drift[to - 1].instr);
+  }
+
+  /// How much the side looks to break at goal the moment it wins the ball,
+  /// 0 to 1: quick, direct play without the urge to press or dominate the
+  /// ball (a counter-attacking side, a low block that springs).
+  double get counterIntent {
+    final i = instr;
+    final k = ((i.tempo + i.directness) - (i.mentality + i.pressing)) / 100;
+    return ((k - 0.2) / 0.4).clamp(0.0, 1.0);
   }
 
   /// Re-forms the shape for the men left: a line that lost somebody spreads
@@ -818,6 +877,14 @@ class _Builder {
   /// Every screen second the picture cuts at (see `PitchScript.cuts`), and
   /// what kind of cut it is.
   final Map<double, PitchCutKind> cuts = {};
+
+  /// Routine restarts: the one on its way, the window the last one opened
+  /// the build-up to, how many each engine minute has shown, and every one
+  /// shown (see `PitchScript.restarts`).
+  _Restart? restart;
+  int restartedFor = -1;
+  final Map<int, int> restartsIn = {};
+  final List<PitchRestart> restarts = [];
   double phaseStart = 0;
   int possession = 0;
   double nextAction = 0;
@@ -940,7 +1007,11 @@ class _Builder {
       if (c != null && agents[c].walkStart != null) _forcePass(agents[c], t);
       if (activeWindow == null) {
         if (restAt != null) {
-          _collectLoose(t);
+          if (restart != null) {
+            _restartBall(t);
+          } else {
+            _collectLoose(t);
+          }
         } else {
           _decide(t);
         }
@@ -989,6 +1060,7 @@ class _Builder {
     return PitchScript(
       cuts: cuts.keys.toList()..sort(),
       cutKinds: Map.of(cuts),
+      restarts: restarts,
       actorList: [
         for (final a in agents)
           (
@@ -1013,6 +1085,8 @@ class _Builder {
   }
 
   void _openWindow(StagedWindow w, double t, int index) {
+    // A restart still on its way when a moment opens is not shown.
+    restart = null;
     // A substitute the moment names steps on before it plays, even when his
     // own change is staged after it in the same minute.
     final actors = w.actors;
@@ -1180,6 +1254,11 @@ class _Builder {
         side.owner[slot] = a.index;
       }
       side.reform();
+      // The AI's drift, followed from the minute after each change.
+      side.drift = [
+        for (final e in result.instructionLog)
+          if (e.teamNationId == team.nationId) e,
+      ];
     }
   }
 
@@ -1792,6 +1871,7 @@ class _Builder {
   // --- kick-off ------------------------------------------------------------
 
   void _kickoff(double t, int kicking) {
+    restart = null;
     _cutFlight(t);
     _closePhase(t);
     restAt = null;
@@ -1799,6 +1879,9 @@ class _Builder {
     final minute = pacer.matchAt(_dur(t)).minute;
     const centre = PitchDims.centre;
     possession = kicking;
+    for (final side in sides) {
+      side.followDrift(minute);
+    }
     _updateBackLines(minute, centre);
     for (var s = 0; s < 2; s++) {
       final dir = _dir(s, minute);
@@ -1892,13 +1975,17 @@ class _Builder {
     final handoverDue = handover && (t >= latest - 1e-9 || ahead > 0);
     if (handover && !handoverDue) wakeAt = latest;
     if (t < nextAction - 1e-9 && !handoverDue) return;
+    // The ball goes out, and the side the next moment belongs to restarts
+    // it: the throw-in or goal kick that opens the build-up.
+    if (_maybeRestart(t, a)) return;
     // The side the next moment belongs to keeps the ball into it, unless it
     // is well ahead of its share and there is time to lose it and win it
-    // back first.
+    // back first. A restart's build-up is kept all the way.
     final keep =
-        leadSide == a.side &&
-        stop - t <= _handover &&
-        !(ahead > 0.5 && stop - t >= 1.2);
+        _restartBuildUp(a.side) ||
+        (leadSide == a.side &&
+            stop - t <= _handover &&
+            !(ahead > 0.5 && stop - t >= 1.2));
     final _Agent? target;
     var intercept = false;
     // In a short quiet spell the ball changes hands quickly or not at all.
@@ -1943,6 +2030,9 @@ class _Builder {
   /// Whether the side on the ball gives it up now: its spell has run its
   /// length and it is not owed time, or it is well ahead of its share.
   bool _spellOver(double t, double ahead) {
+    // A side on the break keeps it until the break is done, unless it has
+    // had far more than its share.
+    if (t < sides[possession].counterUntil && ahead < 0.8) return false;
     if (ahead > 0.15 && t - spellStart > 0.3) return true;
     return t >= spellEnd && ahead > -0.3;
   }
@@ -1970,17 +2060,23 @@ class _Builder {
     final ballDepth = xToDepth(ball.x, dir);
     final quiet = _quietSlotSeconds(t);
     final c = 60 / quiet;
-    final lStar = (12 + 0.2 * c + (side.instr.directness - 50) * 0.12).clamp(
-      12.0,
-      32.0,
-    );
+    // Directness sets the pass: a patient side plays it short, a direct
+    // one looks long and forward; a side breaking after winning the ball
+    // plays it forward at once.
+    final direct = (side.instr.directness - 50) / 50;
+    final breaking = t < side.counterUntil;
+    var lStar = (12 + 0.2 * c + direct * 12).clamp(10.0, 38.0);
+    if (breaking) lStar = math.max(lStar, 24);
+    final reach = 42 + math.max(0, direct) * 14;
     var target = spellDepth;
     double? lateralTarget;
     if (leadPoint != null) {
       target = math.min(xToDepth(leadPoint.x, dir), 86);
       lateralTarget = (leadPoint.y - PitchDims.width / 2) * dir;
     }
-    final want = (target - ballDepth).clamp(-12.0, 20.0);
+    final want = breaking && leadPoint == null
+        ? 30.0
+        : (target - ballDepth).clamp(-12.0, 20.0 + math.max(0, direct) * 10);
     // The moments ahead: the man the next one turns on is looked for; the
     // men due elsewhere (a set piece's taker on his way, a man about to be
     // flagged offside) are not.
@@ -1998,7 +2094,7 @@ class _Builder {
       final depth = xToDepth(m.pos.x, dir);
       if (depth > PitchDims.length / 2 && depth > onsideUpTo) continue;
       final d = m.pos.distanceTo(ball);
-      if (d < 8 || d > 42) continue;
+      if (d < 8 || d > reach) continue;
       final keeper = m.slot == side.gkSlot;
       if (keeper && ballDepth > 35) continue;
       final gain = xToDepth(m.pos.x, dir) - ballDepth;
@@ -2095,7 +2191,12 @@ class _Builder {
 
   /// Where every man of side [s] belongs right now: his slot in the shape,
   /// moved up or down the pitch with the ball, squeezed or stretched by
-  /// possession and the instructions, shifted toward the ball's side.
+  /// possession and the instructions, shifted toward the ball's side, and
+  /// moved as his role asks ([_roleShape]).
+  ///
+  /// Out of possession the pressing dial sets the block: a high press holds
+  /// a longer, wider shape up the pitch (its back line set in
+  /// [_updateBackLines]), a low block a short, narrow one deep in its half.
   Map<int, Offset2> _anchors(
     int s,
     int minute,
@@ -2110,18 +2211,22 @@ class _Builder {
     final ballLat = (ball.y - PitchDims.width / 2) * dir;
     final opp = sides[1 - s];
     final lineAdj = (instr.defensiveLine - 50) / 50 * 6;
+    final press = instr.pressing / 100;
     final length = inPossession
         ? 38 + instr.mentality * 0.08
-        : 26 + (100 - instr.pressing) * 0.04;
-    final width = ((inPossession ? 60 : 44) * (0.85 + 0.3 * instr.width / 100))
-        .clamp(30.0, 64.0);
+        : 23 + instr.pressing * 0.09;
+    final width =
+        ((inPossession ? 60 : 44 * (0.9 + 0.2 * press)) *
+                (0.85 + 0.3 * instr.width / 100))
+            .clamp(30.0, 64.0);
     final shift = inPossession ? 0.2 : 0.35;
     final offsideLine = PitchDims.length - opp.backLine + 1.0;
+    final cap = math.max(offsideLine, side.backLine + 4);
     final out = <int, Offset2>{};
+    final places = <int, (double, double)>{};
     for (var i = 0; i < side.owner.length; i++) {
       final idx = side.owner[i];
       if (idx == null) continue;
-      final a = agents[idx];
       final (lx, ly) = side.effective[i];
       if (i == side.gkSlot) {
         final depth = (4 + 0.12 * ballDepth + lineAdj * 0.3).clamp(3.0, 17.0);
@@ -2130,18 +2235,194 @@ class _Builder {
         continue;
       }
       final d = ((0.80 - ly) / 0.69).clamp(0.0, 1.0);
-      var depth =
-          side.backLine + d * length + math.sin(0.6 * t + a.phaseA) * 1.3;
-      depth = math.min(depth, math.max(offsideLine, side.backLine + 4));
-      depth = depth.clamp(3.0, 99.0);
-      final lat =
-          ((lx - 0.5) * width +
-                  ballLat * shift +
-                  math.sin(0.45 * t + a.phaseB) * 1.1)
-              .clamp(-32.0, 32.0);
-      out[idx] = Offset2(depthToX(depth, dir), lateralToY(lat, dir));
+      final depth = side.backLine + d * length;
+      final lat = (lx - 0.5) * width + ballLat * shift;
+      places[i] = (depth, lat);
     }
+    _roleShape(
+      s,
+      places,
+      t,
+      inPossession: inPossession,
+      ballDepth: ballDepth,
+      ballLat: ballLat,
+      length: length,
+      cap: cap,
+    );
+    places.forEach((i, p) {
+      final a = agents[side.owner[i]!];
+      var depth = p.$1 + math.sin(0.6 * t + a.phaseA) * 1.3;
+      depth = math.min(depth, cap).clamp(3.0, 99.0);
+      final lat = (p.$2 + math.sin(0.45 * t + a.phaseB) * 1.1).clamp(
+        -32.0,
+        32.0,
+      );
+      out[a.index] = Offset2(depthToX(depth, dir), lateralToY(lat, dir));
+    });
     return out;
+  }
+
+  /// The roles' movement, on top of the shape ([places]: slot -> depth and
+  /// lateral, attacking up the pitch):
+  ///
+  /// - **Full-backs.** Pushed on (the manager's arrow, or a wide, attacking
+  ///   side's), a full-back overlaps: on the ball he goes round the outside
+  ///   of his winger, who comes inside for him. Held back, he stays home.
+  ///   In a narrow, patient side he inverts: into midfield beside the
+  ///   holding man.
+  /// - **The lone striker.** A target man stays up on the last line; with
+  ///   no role, a patient side's striker plays as a false nine and drops
+  ///   off it, between the lines.
+  /// - **Wingers.** An inverted winger plays as an inside forward, in the
+  ///   half-space; any other winger holds the touchline.
+  /// - **Holding midfielders** screen the back line, central and a few
+  ///   metres in front of it, and stay behind the ball when the side
+  ///   attacks.
+  /// - **On the break** ([_Side.counterUntil]) the forwards run beyond the
+  ///   ball.
+  void _roleShape(
+    int s,
+    Map<int, (double, double)> places,
+    double t, {
+    required bool inPossession,
+    required double ballDepth,
+    required double ballLat,
+    required double length,
+    required double cap,
+  }) {
+    final side = sides[s];
+    final instr = side.instr;
+    final pos = side.positions;
+    PlayerRole roleOf(int slot) =>
+        side.team.roles[agents[side.owner[slot]!].id] ?? PlayerRole.none;
+    bool isWinger(PlayerPosition p) =>
+        p == PlayerPosition.lw ||
+        p == PlayerPosition.rw ||
+        p == PlayerPosition.lm ||
+        p == PlayerPosition.rm;
+    int sideOf(PlayerPosition p) => switch (p) {
+      PlayerPosition.lb || PlayerPosition.lw || PlayerPosition.lm => -1,
+      PlayerPosition.rb || PlayerPosition.rw || PlayerPosition.rm => 1,
+      _ => 0,
+    };
+    // Each full-back's winger: the most advanced wide man on his flank.
+    int? wingerFor(int flank) {
+      int? best;
+      for (final i in places.keys) {
+        if (i >= pos.length || !isWinger(pos[i]) || sideOf(pos[i]) != flank) {
+          continue;
+        }
+        if (best == null || places[i]!.$1 > places[best]!.$1) best = i;
+      }
+      return best;
+    }
+
+    // Whether the full-back on [flank] (-1 left, 1 right) overlaps: the
+    // manager's arrow pushes him on, or a wide, attacking side's does.
+    bool overlaps(int flank) {
+      final fb = flank < 0 ? PlayerPosition.lb : PlayerPosition.rb;
+      final slot = pos.indexOf(fb);
+      if (slot < 0 || !places.containsKey(slot)) return false;
+      final push = side.team.fullBacks.of(
+        flank < 0 ? FullBackSide.left : FullBackSide.right,
+      );
+      return push == FullBackPush.up ||
+          (push == FullBackPush.neutral &&
+              instr.width >= 65 &&
+              instr.mentality >= 55);
+    }
+
+    final strikers = [
+      for (final i in places.keys)
+        if (i < pos.length && pos[i] == PlayerPosition.st) i,
+    ];
+    final breaking = inPossession && t < side.counterUntil;
+    for (final i in places.keys.toList()) {
+      if (i >= pos.length) continue;
+      final p = pos[i];
+      var (depth, lat) = places[i]!;
+      final flank = sideOf(p);
+      switch (p) {
+        case PlayerPosition.lb || PlayerPosition.rb:
+          final push = side.team.fullBacks.of(
+            p == PlayerPosition.lb ? FullBackSide.left : FullBackSide.right,
+          );
+          final overlap = overlaps(flank);
+          final invert =
+              push == FullBackPush.neutral &&
+              instr.width <= 35 &&
+              instr.directness <= 40;
+          if (push == FullBackPush.down) {
+            depth = math.min(depth, side.backLine + 2);
+          } else if (inPossession && overlap) {
+            final w = wingerFor(flank);
+            final wd = w == null ? depth : places[w]!.$1;
+            // Round the outside of his winger, as far as the line allows.
+            depth = math.max(depth, math.min(wd + 8, cap - 0.5));
+            lat = flank * 30.0;
+          } else if (inPossession && invert) {
+            depth = side.backLine + 0.3 * length;
+            lat = flank * 9.0;
+          }
+        case PlayerPosition.lw ||
+            PlayerPosition.rw ||
+            PlayerPosition.lm ||
+            PlayerPosition.rm:
+          final inside = roleOf(i) == PlayerRole.invertedWinger;
+          // Only the flank's most advanced wide man holds the touchline: a
+          // wide midfielder behind a winger keeps his own channel.
+          final lead = wingerFor(flank) == i;
+          if (!inPossession) {
+            // Without the ball a wide man still tracks the flank; an inside
+            // forward stays narrow, ready to break through the middle.
+            if (inside) {
+              lat = flank * math.min(lat.abs(), 11.0);
+            } else if (lead) {
+              lat = flank * math.max(lat.abs(), 20.0);
+            }
+            break;
+          }
+          final overlapped = lead && overlaps(flank);
+          if (inside || overlapped) {
+            // In off the flank: the half-space, a step deeper when his
+            // full-back is going round him.
+            lat = flank * 13.0;
+            if (overlapped) depth = math.min(depth, cap - 9);
+          } else if (lead) {
+            lat = flank * math.max(lat.abs(), 27.0);
+          }
+        case PlayerPosition.st when strikers.length == 1:
+          final role = roleOf(i);
+          final falseNine = role == PlayerRole.none && instr.directness <= 45;
+          if (!inPossession) {
+            // A false nine defends from the midfield line.
+            if (falseNine) depth -= 8;
+            break;
+          }
+          if (role == PlayerRole.targetMan) {
+            // Up on the last line, central, for the ball to be played up.
+            depth = math.max(depth, cap - 1);
+            lat = lat * 0.4;
+          } else if (falseNine) {
+            // A false nine: off the line, between the lines.
+            depth = math.min(depth, cap) - 24;
+            lat = lat * 0.5;
+          }
+        case PlayerPosition.dm:
+          if (inPossession) {
+            depth = math.min(depth, side.backLine + 7);
+          } else {
+            depth = side.backLine + 10;
+            lat = lat * 0.5 + ballLat * 0.15;
+          }
+        default:
+          break;
+      }
+      if (breaking && p.category == PositionCategory.forward) {
+        depth = math.max(depth, math.min(ballDepth + 16, cap - 0.5));
+      }
+      places[i] = (depth, lat);
+    }
   }
 
   void _updateBackLines(int minute, Offset2 ball) {
@@ -2149,12 +2430,17 @@ class _Builder {
       final side = sides[s];
       final dir = _dir(s, minute);
       final ballDepth = xToDepth(ball.x, dir);
-      final lineAdj = (side.instr.defensiveLine - 50) / 50 * 6;
-      side.backLine =
-          (8 + 0.48 * ballDepth + lineAdj + (possession == s ? 5 : -1)).clamp(
-            9.0,
-            54.0,
-          );
+      final instr = side.instr;
+      final lineAdj = (instr.defensiveLine - 50) / 50 * 6;
+      var line = 8 + 0.48 * ballDepth + lineAdj + (possession == s ? 5 : -1);
+      if (possession != s) {
+        // Out of possession the press sets the block's height: a high press
+        // squeezes up behind its hunters, a low block drops off and never
+        // follows the ball far out of its own half.
+        line += (instr.pressing - 50) / 50 * 4;
+        line = math.min(line, 26 + 0.5 * instr.pressing);
+      }
+      side.backLine = line.clamp(9.0, 54.0);
     }
   }
 
@@ -2162,6 +2448,9 @@ class _Builder {
     final dt = t1 - t0;
     if (dt <= 1e-9) return;
     final minute = pacer.matchAt(_dur(t0)).minute;
+    for (final side in sides) {
+      side.followDrift(minute);
+    }
     final ball = _ballNow(t0);
     _updateBackLines(minute, ball);
     final inWindow = activeWindow != null;
@@ -2173,11 +2462,16 @@ class _Builder {
       ..._anchors(1, minute, t0, ball, possession == 1),
     };
 
-    // Who presses: the nearest one or two of the side without the ball.
+    // Who presses: the nearest one or two of the side without the ball. A
+    // low block lets the ball come and only engages it in its own half.
     final pressers = <int>{};
-    if (!inWindow) {
-      final def = 1 - possession;
-      final n = sides[def].instr.pressing >= 65 ? 2 : 1;
+    final def = 1 - possession;
+    final defPress = sides[def].instr.pressing;
+    final engage =
+        defPress >= 35 ||
+        xToDepth(ball.x, _dir(def, minute)) < 45 + defPress * 0.3;
+    if (!inWindow && engage) {
+      final n = defPress >= 65 ? 2 : 1;
       final cand =
           [
             for (final a in agents)
@@ -2364,6 +2658,10 @@ class _Builder {
       final spot = Offset2(depthToX(_area - 4, dir), PitchDims.width / 2 + 6);
       return (spot, 6, 2);
     }
+    if (!inWindow) {
+      final r = _restartDrive(a);
+      if (r != null) return r;
+    }
     if (inWindow) {
       final d = plan == null || state == null
           ? null
@@ -2391,9 +2689,35 @@ class _Builder {
       final targetDepth = lead != null && lead.$1 == a.side
           ? math.min(xToDepth(lead.$2.x, dir), 86)
           : spellDepth;
+      if (t < side.counterUntil && lead == null) {
+        // On the break: straight at goal, at speed.
+        final tgt = Offset2(depthToX(math.min(depth + 10, 86), dir), a.pos.y);
+        return (tgt, 8.5, 2);
+      }
       final fwd = depth < targetDepth - 4 ? 6.0 : 1.5;
       final lat = (a.pos.y - PitchDims.width / 2) * dir;
-      final latWant = (lat * 0.85).clamp(-28.0, 28.0);
+      // A winger on the ball holds his touchline; an inside forward cuts
+      // in; anybody else drifts infield a little.
+      final slot = a.slot;
+      final wide =
+          slot != null &&
+          slot < side.positions.length &&
+          switch (side.positions[slot]) {
+            PlayerPosition.lw ||
+            PlayerPosition.rw ||
+            PlayerPosition.lm ||
+            PlayerPosition.rm => true,
+            _ => false,
+          };
+      final inside = side.team.roles[a.id] == PlayerRole.invertedWinger;
+      final latWant =
+          (lat *
+                  (inside
+                      ? 0.6
+                      : wide
+                      ? 1.0
+                      : 0.85))
+              .clamp(-28.0, 28.0);
       final tgt = Offset2(
         depthToX(math.min(depth + fwd, 86), dir),
         lateralToY(latWant, dir),

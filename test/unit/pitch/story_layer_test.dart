@@ -522,52 +522,62 @@ void main() {
       instructions: const TacticalInstructions(),
       xi: home.xi,
     );
-    final r = _play(home, away, 1, changes: [change]);
-    final lineups = matchLineupsOf(
-      home: home,
-      away: away,
-      result: r,
-      changes: [change],
-    );
-    // The story layer's own shape, every moment held still.
-    final s = StoryLayer.build(
-      result: r,
-      lineups: lineups,
-      pacer: PitchPacer(r, PitchSpeed.slow),
-      seed: 1,
-      stager: const NeutralHold(),
-    );
-    expect(PitchScriptValidator.validate(s), isEmpty);
-    // Two men whose jobs the change moves up the pitch: 104 from centre-half
-    // to left midfield, 108 from central midfield to the left wing. Their
-    // depth over the side's average, over a quarter of an hour.
-    double pushedUp(double from, double to) {
-      var sum = 0.0;
-      var n = 0;
-      for (var t = from; t < to; t += 0.5) {
-        if (_inWindow(s, t)) continue;
-        final f = s.sample(_at(t));
-        final minute = s.pacer.matchAt(_at(t)).minute;
-        final dir = attackDir(home: true, minute: minute);
-        double depth(int id) => xToDepth(f.players[id]!.x, dir);
-        final outfield = [
-          for (final id in f.players.keys)
-            if (id < 200 && !f.keepers.contains(id)) depth(id),
-        ];
-        final mean = outfield.reduce((a, b) => a + b) / outfield.length;
-        sum += (depth(104) + depth(108)) / 2 - mean;
-        n++;
+    // Over three matches, so one match's run of play cannot hide it.
+    var gain = 0.0;
+    final seen = <String>[];
+    for (var seed = 1; seed <= 3; seed++) {
+      final r = _play(home, away, seed, changes: [change]);
+      final lineups = matchLineupsOf(
+        home: home,
+        away: away,
+        result: r,
+        changes: [change],
+      );
+      // The story layer's own shape, every moment held still.
+      final s = StoryLayer.build(
+        result: r,
+        lineups: lineups,
+        pacer: PitchPacer(r, PitchSpeed.slow),
+        seed: seed,
+        stager: const NeutralHold(),
+      );
+      expect(PitchScriptValidator.validate(s), isEmpty);
+      // Two men whose jobs the change moves up the pitch: 104 from centre-half
+      // to left midfield, 108 from central midfield to the left wing. Their
+      // depth over the side's average, over a quarter of an hour.
+      double pushedUp(double from, double to) {
+        var sum = 0.0;
+        var n = 0;
+        for (var t = from; t < to; t += 0.5) {
+          if (_inWindow(s, t)) continue;
+          final f = s.sample(_at(t));
+          final minute = s.pacer.matchAt(_at(t)).minute;
+          final dir = attackDir(home: true, minute: minute);
+          double depth(int id) => xToDepth(f.players[id]!.x, dir);
+          final outfield = [
+            for (final id in f.players.keys)
+              if (id < 200 && !f.keepers.contains(id)) depth(id),
+          ];
+          final mean = outfield.reduce((a, b) => a + b) / outfield.length;
+          sum += (depth(104) + depth(108)) / 2 - mean;
+          n++;
+        }
+        return sum / n;
       }
-      return sum / n;
-    }
 
-    final change60 = _secs(s.pacer.screenAt(60, 0));
-    final before = pushedUp(_secs(s.pacer.screenAt(45, 0)), change60);
-    final after = pushedUp(
-      change60 + 6,
-      _secs(s.pacer.screenAt(75, 0)),
-    );
-    expect(after, greaterThan(before + 6), reason: '$before vs $after');
+      final change60 = _secs(s.pacer.screenAt(60, 0));
+      final before = pushedUp(_secs(s.pacer.screenAt(45, 0)), change60);
+      final after = pushedUp(
+        change60 + 6,
+        _secs(s.pacer.screenAt(75, 0)),
+      );
+      gain += after - before;
+      seen.add('${before.toStringAsFixed(1)} -> ${after.toStringAsFixed(1)}');
+    }
+    // A single match showed +6.3 here on the code before Task 14b, but the
+    // same code averages +5.7 over these three (+6.3, +6.8, +4.1): one
+    // match's run of play moves it a metre either way.
+    expect(gain / 3, greaterThan(5), reason: seen.join(', '));
   });
 
   test('a keeper sent off leaves the nearest man in goal', () {

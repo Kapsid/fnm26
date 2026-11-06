@@ -440,6 +440,7 @@ class DeclutterEasing {
   static const double rate = 4.5;
 
   final Map<int, double> _nudge = {};
+  final Map<int, double> _pin = {};
   double? _t;
 
   Map<int, Offset2> frame(PitchScript s, PitchFrame f, double t) {
@@ -467,11 +468,19 @@ class DeclutterEasing {
         final step = rate * dt;
         final eased = had + (want - had).clamp(-step, step);
         now = eased + (want - eased) * pin;
+        // A hold letting go (the ball just played on) needs no exact place:
+        // the token eases off it at no more than 1.8 times the easing speed,
+        // however fast the crowd's answer moves as he is freed.
+        if (pin < (_pin[id] ?? 0)) {
+          now = had + (now - had).clamp(-1.8 * step, 1.8 * step);
+        }
       }
       _nudge[id] = now;
+      _pin[id] = pins[id] ?? 0;
       out[id] = Offset2(raw.x, raw.y + now * h);
     });
     _nudge.removeWhere((id, _) => !seen.contains(id));
+    _pin.removeWhere((id, _) => !seen.contains(id));
     return out;
   }
 }

@@ -349,6 +349,14 @@ typedef FieldedPlan = ({
   TacticalInstructions instructions,
 });
 
+/// One change an AI-managed side made to its instructions: from the next
+/// minute on, side [teamNationId] plays [instr] (see `MatchEngine._manage`).
+typedef InstructionChange = ({
+  int minute,
+  int teamNationId,
+  TacticalInstructions instr,
+});
+
 /// The outcome of a simulated match.
 class MatchResult {
   const MatchResult({
@@ -373,7 +381,15 @@ class MatchResult {
     this.extraTime,
     this.moments = const [],
     this.routineRestarts = const [],
+    this.instructionLog = const [],
   });
+
+  /// The AI-managed sides' instruction drift, in order: each entry is a
+  /// minute at which a side's instructions changed, and what they became.
+  /// In memory only, for the Pitch view to follow (it shows the change
+  /// from the minute after). Recording it decides nothing. Empty when no
+  /// side was AI-managed or none changed, and for a stored result.
+  final List<InstructionChange> instructionLog;
 
   /// Every real moment the engine decided (shots, set pieces, fouls,
   /// offsides and subs), ordered by minute, stoppage and seq, for the Pitch
@@ -794,6 +810,7 @@ class MatchEngine {
     // Routine throw-ins and goal kicks per minute (see
     // [MatchResult.routineRestarts]); index 0 is kick-off.
     final routineRestarts = <int>[0];
+    final instructionLog = <InstructionChange>[];
 
     void logMoment(MatchMoment moment, [MatchEvent? event]) =>
         momentLog.add((moment: moment, event: event));
@@ -1299,19 +1316,28 @@ class MatchEngine {
 
       // A reactively-managed AI side rethinks its approach by the scoreline and
       // the clock: chase the game when behind late, protect a lead when ahead.
-      if (aiManagedNationIds.contains(liveHome.nationId)) {
-        liveHome.instructions = _manage(
-          liveHome.team.instructions,
-          homeScore - awayScore,
+      // Each change is logged for the Pitch view (recording only).
+      void manage(_Live live, int scoreDiff) {
+        final before = live.instructions;
+        live.instructions = _manage(
+          live.team.instructions,
+          scoreDiff,
           manageMinute,
         );
+        if (live.instructions != before) {
+          instructionLog.add((
+            minute: manageMinute,
+            teamNationId: live.nationId,
+            instr: live.instructions,
+          ));
+        }
+      }
+
+      if (aiManagedNationIds.contains(liveHome.nationId)) {
+        manage(liveHome, homeScore - awayScore);
       }
       if (aiManagedNationIds.contains(liveAway.nationId)) {
-        liveAway.instructions = _manage(
-          liveAway.team.instructions,
-          awayScore - homeScore,
-          manageMinute,
-        );
+        manage(liveAway, awayScore - homeScore);
       }
 
       // Each minute of the ninety is credited to the plan each side is
@@ -1861,6 +1887,7 @@ class MatchEngine {
     return MatchResult(
       moments: moments,
       routineRestarts: routineRestarts,
+      instructionLog: List.unmodifiable(instructionLog),
       homeScore: regulationHome,
       awayScore: regulationAway,
       extraTime: playExtraTime
