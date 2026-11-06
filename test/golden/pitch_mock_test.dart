@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
@@ -13,189 +15,395 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/match/pitch/formation_slots.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
+import 'package:fnm/domain/services/match/stadium/daylight.dart';
+import 'package:fnm/domain/services/match/stadium/ground_look.dart';
+import 'package:fnm/domain/services/match/stadium/kick_off.dart';
+import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
+import 'package:fnm/features/match/pitch/confetti_painter.dart';
+import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
+import 'package:fnm/features/match/pitch/stadium_looks.dart';
 import 'package:fnm/features/match/pitch/stadium_painter.dart';
+import 'package:fnm/features/match/pitch/token_painter.dart';
 
 import '../helpers/pump_app.dart';
 
-/// The owner's sign-off mock for the Pitch view: the static stadium, both
-/// sides lined up for kick-off, two name tags, the ball on the spot and a
-/// minimal score strip above, at phone and tablet width, for a small, a
-/// mid-sized and a big ground.
+/// The owner's sign-off mock for the Pitch view: the stadium baked in its
+/// three looks, both sides lined up for kick-off in shirt tokens, two named,
+/// the ball on the spot, and a minimal score strip above with the kick-off
+/// time.
 ///
-/// The players here are placed and painted by the test, in the app's disc
-/// style; the real actors painter comes with the live view.
+/// The players are placed and painted here with the real token painter; the
+/// live actors painter comes with the live view.
 void main() {
-  for (final c in _cases) {
-    for (final tablet in [false, true]) {
-      final name = 'pitch_mock_${tablet ? 'tablet' : 'phone'}_${c.name}';
-      testWidgets(name, (tester) async {
-        final width = tablet ? 1024.0 : 390.0;
-        final pitch = Size(width, tablet ? 680 : 280);
-        const dpr = 2.0;
-        final total = Size(width, pitch.height + _stripHeight(tablet));
-        // Captured at twice the size, as a phone's screen would draw it.
-        tester.view.devicePixelRatio = 1;
-        tester.view.physicalSize = total * dpr;
-        addTearDown(tester.view.reset);
+  for (final s in _scenes()) {
+    testWidgets(s.name, (tester) async {
+      final frames = s.frames;
+      final width = s.tablet ? 1024.0 : 390.0;
+      final pitch = Size(width, s.tablet ? 680 : 280);
+      const dpr = 2.0;
+      const gap = 12.0;
+      final frame = Size(width, pitch.height + _stripHeight(s.tablet));
+      final total = Size(
+        frame.width * frames.length + gap * (frames.length - 1),
+        frame.height,
+      );
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = total * dpr;
+      addTearDown(tester.view.reset);
 
-        final share = AwayFanShare.estimate(
-          home: c.home,
-          away: c.away,
-          neutral: false,
-          tournament: false,
-          distanceKm: AwayFanShare.proxyDistanceKm(c.home, c.away),
-        );
-        final spec = StadiumSpec.from(
-          (
-            stadium: 'Mock',
-            city: 'Mock',
-            groundNationId: c.home.id,
-            capacity: c.capacity,
-            attendance: c.attendance,
-            soldOut: false,
-          ),
-          c.home,
-          c.away,
-          share,
-          groundNationCode: c.home.code,
-        );
-        final projection = PitchProjection(
+      final home = _nation(s.home), away = _nation(s.away);
+      final share = AwayFanShare.estimate(
+        home: home,
+        away: away,
+        neutral: false,
+        tournament: s.dressing.dressed,
+        distanceKm: AwayFanShare.proxyDistanceKm(home, away),
+      );
+      var spec = StadiumSpec.from(
+        (
+          stadium: s.stadium,
+          city: s.city,
+          groundNationId: home.id,
+          capacity: s.capacity,
+          attendance: (s.capacity * 0.92).round(),
+          soldOut: false,
+        ),
+        home,
+        away,
+        share,
+        groundNationCode: home.code,
+        groundConfederation: home.confederation,
+      );
+      spec = spec.withLook(mowing: s.mowing, goalStyle: s.goalStyle);
+      final projection = PitchProjection(
+        pitch,
+        (centreX: s.centreX, zoom: s.zoom),
+      );
+      final kits = KitClash.resolve(home, away);
+      final latitude = NationLatitudes.of(home);
+
+      late final StadiumLooks looks;
+      late final ui.Image? homeFlag;
+      late final ui.Image? awayFlag;
+      await tester.runAsync(() async {
+        homeFlag = await StadiumPainter.rasterFlag(home.code);
+        awayFlag = await StadiumPainter.rasterFlag(away.code);
+        looks = await StadiumLooks.bake(
+          spec,
+          projection,
           pitch,
-          (centreX: 52.5, zoom: _zoom),
+          flag: homeFlag,
+          dressing: s.dressing,
+          pixelRatio: dpr,
         );
-        final kits = KitClash.resolve(c.home, c.away);
+      });
 
-        late final ui.Image stadium;
-        late final ui.Image? homeFlag;
-        late final ui.Image? awayFlag;
-        await tester.runAsync(() async {
-          final flag = await StadiumPainter.rasterFlag(c.home.code);
-          homeFlag = await StadiumPainter.rasterFlag(c.home.code);
-          awayFlag = await StadiumPainter.rasterFlag(c.away.code);
-          stadium = await StadiumPainter(
-            spec,
-            projection,
-            flag: flag,
-          ).bake(pitch, pixelRatio: dpr);
-        });
+      Widget one(int minute) {
+        final light =
+            s.light ??
+            Daylight.at(latitude, s.date!, s.kickOff, math.max(minute, 1));
+        return SizedBox.fromSize(
+          size: frame,
+          child: Column(
+            children: [
+              _ScoreStrip(
+                home: home,
+                away: away,
+                homeFlag: homeFlag,
+                awayFlag: awayFlag,
+                tablet: s.tablet,
+                minute: minute,
+                kickOff: s.kickOff,
+              ),
+              SizedBox.fromSize(
+                size: pitch,
+                child: _PitchMock(
+                  looks: looks,
+                  light: light,
+                  projection: projection,
+                  home: kits.home,
+                  away: kits.away,
+                  homeShape: s.homeShape,
+                  awayShape: s.awayShape,
+                  tags: s.tags,
+                  tablet: s.tablet,
+                  confetti: s.confetti,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
 
-        await tester.pumpApp(
-          RepaintBoundary(
-            key: const ValueKey('mock'),
-            child: SizedBox.fromSize(
-              size: total * dpr,
-              child: FittedBox(
-                child: SizedBox.fromSize(
-                  size: total,
-                  child: Material(
-                    color: AppColors.surface,
-                    child: ColoredBox(
-                      color: AppColors.surface,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _ScoreStrip(
-                            home: c.home,
-                            away: c.away,
-                            homeFlag: homeFlag,
-                            awayFlag: awayFlag,
-                            tablet: tablet,
-                          ),
-                          SizedBox.fromSize(
-                            size: pitch,
-                            child: _PitchMock(
-                              stadium: stadium,
-                              projection: projection,
-                              home: kits.home,
-                              away: kits.away,
-                              homeShape: c.homeShape,
-                              awayShape: c.awayShape,
-                              tags: c.tags,
-                              tablet: tablet,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+      await tester.pumpApp(
+        RepaintBoundary(
+          key: const ValueKey('mock'),
+          child: SizedBox.fromSize(
+            size: total * dpr,
+            child: FittedBox(
+              child: SizedBox.fromSize(
+                size: total,
+                child: Material(
+                  color: AppColors.surfaceContainerLowest,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var i = 0; i < frames.length; i++) ...[
+                        if (i > 0) const SizedBox(width: gap),
+                        one(frames[i]),
+                      ],
+                    ],
                   ),
                 ),
               ),
             ),
           ),
-        );
-        await expectLater(
-          find.byKey(const ValueKey('mock')),
-          matchesGoldenFile('goldens/$name.png'),
-        );
-      });
-    }
+        ),
+      );
+      await expectLater(
+        find.byKey(const ValueKey('mock')),
+        matchesGoldenFile('goldens/pitch_mock_${s.name}.png'),
+      );
+      looks.dispose();
+    });
   }
 }
 
-/// A touch wider than the pitch, so the near corners and the end stands have
-/// some room at the screen's edges.
-const double _zoom = 0.94;
-
 double _stripHeight(bool tablet) => tablet ? 64 : 52;
 
-Nation _nation(int id, String name, String code, String a, String b) => Nation(
-  id: id,
-  name: name,
-  code: code,
-  confederation: Confederation.europe,
-  ranking: 30,
-  primaryColor: a,
-  secondaryColor: b,
-);
+/// The real nations' colours, straight from the game's data.
+final Map<String, Map<String, Object?>> _nations = {
+  for (final n
+      in (jsonDecode(File('assets/data/nations.json').readAsStringSync())
+              as List)
+          .cast<Map<String, Object?>>())
+    n['code']! as String: n,
+};
 
-typedef _Case = ({
-  String name,
-  Nation home,
-  Nation away,
-  int capacity,
-  int attendance,
-  Formation homeShape,
-  Formation awayShape,
-  (String, String) tags,
-});
+Nation _nation(String code) {
+  final n = _nations[code]!;
+  return Nation(
+    id: n['id']! as int,
+    name: n['name']! as String,
+    code: code,
+    confederation: Confederation.values.byName(n['confederation']! as String),
+    ranking: n['ranking']! as int,
+    primaryColor: n['primaryColor']! as String,
+    secondaryColor: n['secondaryColor']! as String,
+  );
+}
 
-final List<_Case> _cases = [
-  (
-    name: 'small',
-    home: _nation(1, 'Faroe Islands', 'FRO', '#FFFFFF', '#0065BD'),
-    away: _nation(2, 'Iceland', 'ISL', '#0055A4', '#DC1E35'),
+class _Scene {
+  const _Scene(
+    this.name, {
+    required this.home,
+    required this.away,
+    required this.capacity,
+    required this.stadium,
+    required this.city,
+    this.tablet = false,
+    this.light,
+    this.date,
+    this.kickOff = const KickOffTime(20, 45),
+    this.frames = const [0],
+    this.mowing,
+    this.goalStyle,
+    this.dressing = MatchDressing.none,
+    this.homeShape = Formation.f442,
+    this.awayShape = Formation.f433,
+    this.tags = ('NOVAK', 'SILVA'),
+    this.zoom = 0.94,
+    this.centreX = 52.5,
+    this.confetti = false,
+  });
+
+  final String name;
+  final String home, away;
+  final int capacity;
+  final String stadium, city;
+  final bool tablet;
+
+  /// A fixed light; null works it out from [date], [kickOff] and the minute.
+  final PitchLight? light;
+  final DateTime? date;
+  final KickOffTime kickOff;
+
+  /// The match minutes shown side by side (0 = before kick-off).
+  final List<int> frames;
+  final MowingPattern? mowing;
+  final GoalStyle? goalStyle;
+  final MatchDressing dressing;
+  final Formation homeShape, awayShape;
+  final (String, String) tags;
+  final double zoom, centreX;
+  final bool confetti;
+}
+
+List<_Scene> _scenes() {
+  _Scene small(bool tablet) => _Scene(
+    tablet ? 'tablet_small' : 'phone_small',
+    home: 'FRO',
+    away: 'ISL',
     capacity: 8000,
-    attendance: 6400,
-    homeShape: Formation.f442,
-    awayShape: Formation.f433,
+    stadium: 'Mock Harbour Ground',
+    city: 'Tórshavn',
+    tablet: tablet,
+    light: PitchLight.day,
+    kickOff: const KickOffTime(16, 0),
     tags: ('JOENSEN', 'HALLDORSSON'),
-  ),
-  (
-    name: 'mid',
-    home: _nation(3, 'Czechia', 'CZE', '#D7141A', '#11457E'),
-    away: _nation(4, 'Portugal', 'POR', '#C8102E', '#006600'),
+  );
+  _Scene mid(
+    String name, {
+    bool tablet = false,
+    PitchLight? light,
+    MowingPattern? mowing,
+  }) => _Scene(
+    name,
+    home: 'CZE',
+    away: 'POR',
     capacity: 30000,
-    attendance: 27500,
+    stadium: 'Mock Mid Arena',
+    city: 'Brno',
+    tablet: tablet,
+    light: light,
+    kickOff: light == PitchLight.night
+        ? const KickOffTime(20, 45)
+        : light == PitchLight.dusk
+        ? const KickOffTime(18, 30)
+        : const KickOffTime(15, 0),
+    mowing: mowing,
     homeShape: Formation.f433,
     awayShape: Formation.f4231,
     tags: ('NOVOTNY', 'FERREIRA'),
-  ),
-  (
-    name: 'big',
-    home: _nation(5, 'France', 'FRA', '#002395', '#FFFFFF'),
-    away: _nation(6, 'Netherlands', 'NED', '#FF6C00', '#FFFFFF'),
+  );
+  _Scene big(bool tablet) => _Scene(
+    tablet ? 'tablet_big' : 'phone_big',
+    home: 'FRA',
+    away: 'NED',
     capacity: 80000,
-    attendance: 78000,
-    homeShape: Formation.f442,
-    awayShape: Formation.f433,
+    stadium: 'Mock Grand Stade',
+    city: 'Lyon',
+    tablet: tablet,
+    light: PitchLight.night,
     tags: ('BARRAULT', 'VERHOEF'),
-  ),
-];
+  );
+  return [
+    small(false),
+    mid('phone_mid', light: PitchLight.day),
+    big(false),
+    small(true),
+    mid('tablet_mid', tablet: true, light: PitchLight.day),
+    big(true),
+    // The same ground in each light.
+    mid('phone_mid_day', light: PitchLight.day),
+    mid('phone_mid_dusk', light: PitchLight.dusk),
+    mid('phone_mid_night', light: PitchLight.night),
+    mid('tablet_mid_night', tablet: true, light: PitchLight.night),
+    // Three of the mowing patterns.
+    for (final m in [
+      MowingPattern.checkerboard,
+      MowingPattern.diagonal,
+      MowingPattern.circles,
+    ])
+      mid('phone_mid_mow_${m.name}', light: PitchLight.day, mowing: m),
+    // A match the sun sets in: minutes 1, 46 and 90 of a 17:45 kick-off in
+    // Brno on 10 September, the sun going down at half-time.
+    _Scene(
+      'phone_mid_sunset_strip',
+      home: 'CZE',
+      away: 'POR',
+      capacity: 30000,
+      stadium: 'Mock Mid Arena',
+      city: 'Brno',
+      date: DateTime(2026, 9, 10),
+      kickOff: const KickOffTime(17, 45),
+      frames: const [1, 46, 90],
+      homeShape: Formation.f433,
+      awayShape: Formation.f4231,
+      tags: ('NOVOTNY', 'FERREIRA'),
+    ),
+    // Landmarks and terrain.
+    const _Scene(
+      'phone_paris',
+      home: 'FRA',
+      away: 'GER',
+      capacity: 40000,
+      stadium: 'Mock Parc',
+      city: 'Paris',
+      light: PitchLight.dusk,
+      kickOff: KickOffTime(21, 0),
+      tags: ('BARRAULT', 'KESSLER'),
+    ),
+    const _Scene(
+      'phone_la_paz',
+      home: 'BOL',
+      away: 'ARG',
+      capacity: 42000,
+      stadium: 'Mock Altiplano',
+      city: 'La Paz',
+      light: PitchLight.day,
+      kickOff: KickOffTime(16, 0),
+      tags: ('QUISPE', 'ROMERO'),
+    ),
+    const _Scene(
+      'phone_coastal_small',
+      home: 'MLT',
+      away: 'LUX',
+      capacity: 6000,
+      stadium: 'Mock Seafront',
+      city: 'Valletta',
+      light: PitchLight.day,
+      kickOff: KickOffTime(18, 0),
+      tags: ('BORG', 'WEBER'),
+    ),
+    // A South American box net, close.
+    const _Scene(
+      'phone_box_net_close',
+      home: 'ARG',
+      away: 'BRA',
+      capacity: 55000,
+      stadium: 'Mock Monumental',
+      city: 'Buenos Aires',
+      light: PitchLight.day,
+      kickOff: KickOffTime(17, 0),
+      goalStyle: GoalStyle.boxNet,
+      zoom: 4.2,
+      centreX: 8,
+      tags: ('ROMERO', 'SANTOS'),
+    ),
+    // Dressed for a finals tournament, then for its final.
+    const _Scene(
+      'phone_tournament_group',
+      home: 'ESP',
+      away: 'CRO',
+      capacity: 50000,
+      stadium: 'Mock Mestalla',
+      city: 'Valencia',
+      light: PitchLight.day,
+      kickOff: KickOffTime(18, 0),
+      dressing: MatchDressing.tournament(Color(0xFF3A86B4)),
+      tags: ('MORENO', 'KOVAC'),
+    ),
+    const _Scene(
+      'phone_final_night',
+      home: 'ITA',
+      away: 'BRA',
+      capacity: 70000,
+      stadium: 'Mock Olimpico',
+      city: 'Rome',
+      light: PitchLight.night,
+      kickOff: KickOffTime(21, 0),
+      dressing: MatchDressing.theFinal,
+      confetti: true,
+      tags: ('ROSSETTI', 'SANTOS'),
+    ),
+  ];
+}
 
-/// A minimal score strip in the scoreboard's style: the two sides, the
-/// scoreline on its plate and the clock.
+/// A minimal score strip: the two sides, the scoreline on its plate, the
+/// minute and the local kick-off time.
 class _ScoreStrip extends StatelessWidget {
   const _ScoreStrip({
     required this.home,
@@ -203,11 +411,15 @@ class _ScoreStrip extends StatelessWidget {
     required this.homeFlag,
     required this.awayFlag,
     required this.tablet,
+    required this.minute,
+    required this.kickOff,
   });
 
   final Nation home, away;
   final ui.Image? homeFlag, awayFlag;
   final bool tablet;
+  final int minute;
+  final KickOffTime kickOff;
 
   @override
   Widget build(BuildContext context) {
@@ -238,6 +450,14 @@ class _ScoreStrip extends StatelessWidget {
       );
     }
 
+    final small = AppTypography.labelSmall.copyWith(
+      fontSize: tablet ? 12 : 11,
+      height: 1.1,
+      letterSpacing: 0,
+      fontWeight: FontWeight.w700,
+      color: AppColors.onSurfaceVariant,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
     return Container(
       height: _stripHeight(tablet),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
@@ -272,16 +492,24 @@ class _ScoreStrip extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  "0'",
-                  style: AppTypography.labelSmall.copyWith(
-                    fontSize: tablet ? 12 : 11,
-                    height: 1.1,
-                    letterSpacing: 0,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.onSurfaceVariant,
-                  ),
+                const SizedBox(height: 3),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (minute > 0) ...[
+                      Text(
+                        "$minute'",
+                        style: small.copyWith(color: AppColors.onSurface),
+                      ),
+                      const SizedBox(width: 6),
+                    ],
+                    CustomPaint(
+                      size: Size.square(tablet ? 11 : 10),
+                      painter: _ClockGlyph(),
+                    ),
+                    const SizedBox(width: 3),
+                    Text(kickOff.label, style: small),
+                  ],
                 ),
               ],
             ),
@@ -291,6 +519,27 @@ class _ScoreStrip extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A small clock face before the kick-off time.
+class _ClockGlyph extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = size.center(Offset.zero);
+    final r = size.width / 2 - 0.6;
+    final p = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.1
+      ..strokeCap = StrokeCap.round
+      ..color = AppColors.onSurfaceVariant;
+    canvas
+      ..drawCircle(c, r, p)
+      ..drawLine(c, c.translate(0, -r * 0.6), p)
+      ..drawLine(c, c.translate(r * 0.45, 0), p);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _Flag extends StatelessWidget {
@@ -324,7 +573,8 @@ typedef _Man = ({
 
 class _PitchMock extends StatelessWidget {
   const _PitchMock({
-    required this.stadium,
+    required this.looks,
+    required this.light,
     required this.projection,
     required this.home,
     required this.away,
@@ -332,85 +582,163 @@ class _PitchMock extends StatelessWidget {
     required this.awayShape,
     required this.tags,
     required this.tablet,
+    required this.confetti,
   });
 
-  final ui.Image stadium;
+  final StadiumLooks looks;
+  final PitchLight light;
   final PitchProjection projection;
   final KitPair home, away;
   final Formation homeShape, awayShape;
   final (String, String) tags;
   final bool tablet;
+  final bool confetti;
 
   @override
-  Widget build(BuildContext context) {
-    final men = _kickOff(homeShape, awayShape, tags);
-    final r0 = tablet ? 16.0 : 8.8;
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        RawImage(image: stadium, scale: 2, fit: BoxFit.fill),
-        CustomPaint(
-          painter: _ActorsMock(
-            men: men,
-            projection: projection,
-            home: home,
-            away: away,
-            r0: r0,
-          ),
-        ),
-        for (final m in men)
-          if (m.tag case final tag?)
-            _tagFor(m, tag, r0, m.home ? home.primary : away.primary),
-      ],
-    );
-  }
-
-  Widget _tagFor(_Man m, String tag, double r0, Color kit) {
-    final c = projection.toScreen(m.x, m.y);
-    final r = r0 * projection.scaleAt(m.y);
-    final fontSize = tablet ? 11.0 : 9.0;
-    final h = fontSize + 7;
-    return Positioned(
-      left: c.dx - 80,
-      width: 160,
-      top: c.dy - r - h - 3,
-      height: h,
-      child: Center(
-        child: Container(
-          padding: const EdgeInsets.only(left: 2, right: 6),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHigh.withValues(alpha: 0.94),
-            borderRadius: AppRadii.smAll,
-            border: Border.all(color: AppColors.outlineVariant, width: 0.6),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 2.5,
-                height: h - 7,
-                decoration: BoxDecoration(
-                  color: KitColors.accent(_hex(kit), _hex(kit)),
-                  borderRadius: BorderRadius.circular(1),
-                ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                tag,
-                style: AppTypography.labelSmall.copyWith(
-                  fontSize: fontSize,
-                  height: 1,
-                  letterSpacing: 0.4,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.onSurface,
-                ),
-              ),
-            ],
-          ),
+  Widget build(BuildContext context) => Stack(
+    fit: StackFit.expand,
+    children: [
+      CustomPaint(
+        painter: _ActorsMock(
+          looks: looks,
+          light: light,
+          men: _kickOff(homeShape, awayShape, tags),
+          projection: projection,
+          home: home,
+          away: away,
+          r0: tablet ? 16.5 : 9.6,
+          nameSize: tablet ? 11.5 : 9.5,
         ),
       ),
-    );
+      if (confetti) CustomPaint(painter: ConfettiPainter(t: 3.2, seed: 7)),
+    ],
+  );
+}
+
+/// The ground in this moment's light, then the players and the ball.
+class _ActorsMock extends CustomPainter {
+  _ActorsMock({
+    required this.looks,
+    required this.light,
+    required this.men,
+    required this.projection,
+    required this.home,
+    required this.away,
+    required this.r0,
+    required this.nameSize,
+  });
+
+  final StadiumLooks looks;
+  final PitchLight light;
+  final List<_Man> men;
+  final PitchProjection projection;
+  final KitPair home, away;
+  final double r0, nameSize;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    looks.paint(canvas, Offset.zero & size, light);
+    final shadows = TokenShadows.of(light);
+    final towers = [
+      for (final (x, y) in StadiumPainter.towers) projection.toScreenOpen(x, y),
+    ];
+    final ball = projection.toScreen(PitchDims.centre.x, PitchDims.centre.y);
+    final sorted = [...men]..sort((a, b) => a.y.compareTo(b.y));
+    for (final m in sorted) {
+      final c = projection.toScreen(m.x, m.y);
+      PlayerToken.paintShadow(
+        canvas,
+        c,
+        r0 * projection.scaleAt(m.y),
+        shadows,
+        towers,
+      );
+    }
+    _ball(canvas, ball, shadows);
+    for (final m in sorted) {
+      final kit = m.home ? home : away;
+      final c = projection.toScreen(m.x, m.y);
+      final r = r0 * projection.scaleAt(m.y);
+      final fill = m.keeper
+          ? (m.home ? PlayerToken.homeKeeper : PlayerToken.awayKeeper)
+          : _shirt(kit.primary);
+      final trim = m.keeper ? AppColors.surfaceContainerLowest : _trim(kit);
+      final to = ball - c;
+      PlayerToken.paintShirt(
+        canvas,
+        c,
+        r,
+        fill: fill,
+        trim: trim,
+        number: m.number,
+        facing: math.atan2(to.dy, to.dx),
+      );
+    }
+    for (final m in sorted) {
+      final tag = m.tag;
+      if (tag == null) continue;
+      final kit = m.home ? home : away;
+      PlayerToken.paintName(
+        canvas,
+        projection.toScreen(m.x, m.y),
+        r0 * projection.scaleAt(m.y),
+        tag,
+        fontSize: nameSize,
+        accent: KitColors.accent(_hex(kit.primary), _hex(kit.primary)),
+      );
+    }
   }
+
+  static Color _shirt(Color c) {
+    final h = HSLColor.fromColor(c);
+    return h.withLightness(h.lightness.clamp(0.26, 0.90)).toColor();
+  }
+
+  static Color _trim(KitPair kit) {
+    final s = _shirt(kit.secondary);
+    return KitColors.tooClose(s, _shirt(kit.primary))
+        ? KitColors.shade(_shirt(kit.primary), -0.25)
+        : s;
+  }
+
+  void _ball(Canvas canvas, Offset c, TokenShadows shadows) {
+    final r = r0 * 0.34 * projection.scaleAt(PitchDims.centre.y);
+    final d = shadows.sunDirection;
+    canvas
+      ..drawOval(
+        Rect.fromCenter(
+          center: c + d * (r * 0.9 * shadows.sunLength.clamp(0.6, 2.0)),
+          width: r * 2.4,
+          height: r * 1.1,
+        ),
+        Paint()
+          ..color = Colors.black.withValues(
+            alpha: 0.2 + shadows.sunAlpha * 0.6,
+          )
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, r * 0.5),
+      )
+      ..drawCircle(
+        c,
+        r,
+        Paint()
+          ..shader = ui.Gradient.radial(
+            c.translate(-r * 0.35, -r * 0.4),
+            r * 1.4,
+            const [Color(0xFFFFFFFF), Color(0xFFC9CED3)],
+          ),
+      )
+      ..drawCircle(
+        c,
+        r,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.6
+          ..color = Colors.black.withValues(alpha: 0.35),
+      );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 String _hex(Color c) =>
@@ -547,137 +875,4 @@ List<_Man> _kickOff(
     tag: tags.$2,
   );
   return out;
-}
-
-/// The players and the ball, in the tactics board's disc style: a kit
-/// gradient, a rim and the shirt number in the board's type.
-class _ActorsMock extends CustomPainter {
-  _ActorsMock({
-    required this.men,
-    required this.projection,
-    required this.home,
-    required this.away,
-    required this.r0,
-  });
-
-  final List<_Man> men;
-  final PitchProjection projection;
-  final KitPair home, away;
-  final double r0;
-
-  static const _homeKeeper = Color(0xFF3D454E);
-  static const _awayKeeper = Color(0xFF7A8C3E);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    _ball(canvas);
-    final sorted = [...men]..sort((a, b) => a.y.compareTo(b.y));
-    for (final m in sorted) {
-      final kit = m.home ? home : away;
-      final fill = m.keeper
-          ? (m.home ? _homeKeeper : _awayKeeper)
-          : _shirt(kit.primary);
-      final rim = m.keeper ? AppColors.surfaceContainerLowest : _rim(kit);
-      _disc(canvas, m, fill, rim);
-    }
-  }
-
-  static Color _shirt(Color c) {
-    final h = HSLColor.fromColor(c);
-    return h.withLightness(h.lightness.clamp(0.26, 0.90)).toColor();
-  }
-
-  static Color _rim(KitPair kit) {
-    final s = _shirt(kit.secondary);
-    return KitColors.tooClose(s, _shirt(kit.primary))
-        ? KitColors.shade(_shirt(kit.primary), -0.25)
-        : s;
-  }
-
-  void _disc(Canvas canvas, _Man m, Color fill, Color rim) {
-    final k = projection.scaleAt(m.y);
-    final c = projection.toScreen(m.x, m.y);
-    final r = r0 * k;
-    canvas
-      ..drawOval(
-        Rect.fromCenter(
-          center: c.translate(r * 0.18, r * 0.62),
-          width: r * 2.1,
-          height: r * 0.9,
-        ),
-        Paint()
-          ..color = Colors.black.withValues(alpha: 0.38)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, r * 0.28),
-      )
-      ..drawCircle(
-        c,
-        r,
-        Paint()
-          ..shader = ui.Gradient.linear(
-            c.translate(0, -r),
-            c.translate(0, r),
-            [fill, KitColors.shade(fill, -0.14)],
-          ),
-      )
-      ..drawCircle(
-        c,
-        r - math.max(0.6, r * 0.08),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = math.max(1.2, r * 0.16)
-          ..color = rim,
-      );
-    final on = fill.computeLuminance() > 0.55 ? Colors.black : Colors.white;
-    final tp = TextPainter(
-      text: TextSpan(
-        text: '${m.number}',
-        style: AppTypography.titleMedium.copyWith(
-          fontSize: r * 1.02,
-          height: 1,
-          fontWeight: FontWeight.w700,
-          color: on,
-          letterSpacing: -0.2,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, c - Offset(tp.width / 2, tp.height / 2 - r * 0.02));
-  }
-
-  void _ball(Canvas canvas) {
-    final c = projection.toScreen(PitchDims.centre.x, PitchDims.centre.y);
-    final r = r0 * 0.36 * projection.scaleAt(PitchDims.centre.y);
-    canvas
-      ..drawOval(
-        Rect.fromCenter(
-          center: c.translate(r * 0.4, r * 0.7),
-          width: r * 2.4,
-          height: r * 1.1,
-        ),
-        Paint()
-          ..color = Colors.black.withValues(alpha: 0.45)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, r * 0.5),
-      )
-      ..drawCircle(
-        c,
-        r,
-        Paint()
-          ..shader = ui.Gradient.radial(
-            c.translate(-r * 0.35, -r * 0.4),
-            r * 1.4,
-            const [Color(0xFFFFFFFF), Color(0xFFC9CED3)],
-          ),
-      )
-      ..drawCircle(
-        c,
-        r,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.6
-          ..color = Colors.black.withValues(alpha: 0.35),
-      );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
