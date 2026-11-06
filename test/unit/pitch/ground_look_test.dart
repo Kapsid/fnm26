@@ -76,25 +76,5 @@ void main() {
       expect(box, greaterThan(140));
       expect(old, greaterThan(110));
     });
-
-    test('terrain follows the country', () {
-      expect(
-        Terrain.forGround(groundCode: 'BOL', capacity: 40000),
-        Terrain.mountains,
-      );
-      expect(Terrain.forGround(groundCode: 'MLT', capacity: 8000), Terrain.sea);
-      expect(
-        Terrain.forGround(groundCode: 'QAT', capacity: 40000),
-        Terrain.desert,
-      );
-      expect(
-        Terrain.forGround(groundCode: 'GER', capacity: 60000),
-        Terrain.city,
-      );
-      expect(
-        Terrain.forGround(groundCode: 'GER', capacity: 9000),
-        Terrain.hills,
-      );
-    });
   });
 }

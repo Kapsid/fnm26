@@ -10,8 +10,11 @@ import 'package:fnm/domain/entities/nation.dart';
 /// no row (one made in the world editor) falls back to its confederation's
 /// [_byConfederation] figure.
 abstract final class NationLatitudes {
-  static double of(Nation n) =>
-      table[n.code.toUpperCase()] ?? _byConfederation[n.confederation]!;
+  static double of(Nation n) => ofCode(n.code, n.confederation);
+
+  /// The latitude of a ground in the country [code], of [confederation].
+  static double ofCode(String code, Confederation confederation) =>
+      table[code.toUpperCase()] ?? _byConfederation[confederation]!;
 
   static const Map<Confederation, double> _byConfederation = {
     Confederation.europe: 48.0,
