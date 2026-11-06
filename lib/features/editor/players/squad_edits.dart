@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
@@ -11,12 +12,12 @@ import 'package:fnm/domain/services/world_pack/world_pack.dart';
 /// The edits the players section makes to a pack, as plain functions of it.
 abstract final class SquadEdits {
   /// The id a new player gets: one past the highest pack-made id in any
-  /// nation ([kPackPlayerIdBase] + 1 in a pack that has none), so ids stay
-  /// unique across the whole pack.
+  /// nation's squad or pool ([kPackPlayerIdBase] + 1 in a pack that has
+  /// none), so ids stay unique across the whole pack.
   static int nextPlayerId(WorldPack pack) {
     var top = 0;
-    for (final squad in pack.squads.values) {
-      for (final p in squad) {
+    for (final players in [...pack.squads.values, ...pack.pools.values]) {
+      for (final p in players) {
         if (p.id >= kPackPlayerIdBase) {
           top = math.max(top, p.id - kPackPlayerIdBase);
         }
@@ -166,6 +167,36 @@ abstract final class SquadEdits {
       potential: math.max(p.potential, now),
     );
   }
+
+  /// [p] with the stored qualities [a] as they are (each kept to 1..99);
+  /// a potential below the overall they give is raised to it.
+  static PackPlayer withAttributes(PackPlayer p, PlayerAttributes a) {
+    final kept = PlayerAttributes(
+      physical: a.physical.clamp(1, 99),
+      technical: a.technical.clamp(1, 99),
+      stamina: a.stamina.clamp(1, 99),
+    );
+    final now = OverallRating.forPosition(p.position, kept);
+    return copy(p, attributes: kept, potential: math.max(p.potential, now));
+  }
+
+  /// [p] with his traits picked: null is Random (each career rolls them,
+  /// and a pick's unknown traits go with it), an empty list "no traits".
+  /// A pick keeps the traits this game does not know ([PackPlayer
+  /// .unknownTraits]) until they are removed on their own.
+  static PackPlayer withTraits(PackPlayer p, List<PlayerTrait>? traits) =>
+      PackPlayer(
+        id: p.id,
+        name: p.name,
+        age: p.age,
+        position: p.position,
+        attributes: p.attributes,
+        potential: p.potential,
+        club: p.club,
+        clubCountry: p.clubCountry,
+        traits: traits == null ? null : List.unmodifiable(traits),
+        unknownTraits: traits == null ? const [] : p.unknownTraits,
+      );
 
   /// [p] with potential [value], never below his overall nor above 99.
   static PackPlayer withPotential(PackPlayer p, int value) =>

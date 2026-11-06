@@ -33,6 +33,11 @@ class SquadScreen extends ConsumerStatefulWidget {
   static const Key undoKey = Key('editorSquad.undo');
   static const Key summaryKey = Key('editorSquad.summary');
 
+  /// The tablet header's menu for the player edited beside the list, and
+  /// its Delete.
+  static const Key menuKey = Key('editorSquad.menu');
+  static const Key deleteKey = Key('editorSquad.delete');
+
   static Key playerKey(int id) => Key('editorSquad.player.$id');
   static Key duplicateKey(int id) => Key('editorSquad.duplicate.$id');
 

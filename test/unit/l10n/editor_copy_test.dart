@@ -36,6 +36,18 @@ void main() {
     'editorLanguageKeepHint',
     'editorLanguageClear',
     'editorLanguageFull',
+    'editorPlayerDelete',
+    'editorPlayerAdvanced',
+    'editorPlayerAdvancedAbout',
+    'editorPlayerAdvancedOverall',
+    'editorPlayerTraits',
+    'editorPlayerTraitsRandom',
+    'editorPlayerTraitsRandomAbout',
+    'editorPlayerTraitsNone',
+    'editorPlayerTraitsPicked',
+    'editorPlayerTraitsMax',
+    'editorPlayerTraitUnknown',
+    'editorIssueInLanguage',
   };
   final keys = [
     for (final k in en.keys)

@@ -55,6 +55,9 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
   /// How many of the missing things the phone lists before "Show all".
   static const int _preview = 5;
 
+  /// The narrowest phone whose app bar centres the database's name.
+  static const double _centredTitleWidth = 380;
+
   bool _showAll = false;
 
   int get _id => widget.packId;
@@ -136,6 +139,7 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
     final shown = _showAll
         ? view.issues.length
         : view.issues.length.clamp(0, _preview);
+    final centred = MediaQuery.sizeOf(context).width >= _centredTitleWidth;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -148,7 +152,10 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
           overflow: TextOverflow.ellipsis,
           style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
         ),
-        centerTitle: true,
+        // Centred, the name gets only twice its narrower side's room; on a
+        // narrow phone, beside the language chip, that is a few letters.
+        centerTitle: centred,
+        titleSpacing: centred ? null : 0,
         actions: [
           const EditorLanguageChip(),
           IconButton(

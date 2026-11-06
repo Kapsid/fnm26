@@ -246,7 +246,7 @@ void main() {
   });
 
   testWidgets('the pack home has no Nations section and /editor/pack/nations '
-      'is gone', (tester) async {
+      'opens the home', (tester) async {
     expect(EditorSection.values.map((s) => s.name), isNot(contains('nations')));
     expect(EditorSection.onHome, isNot(contains(EditorSection.none)));
     expect(Routes.editorSections, isNot(contains('/editor/pack/nations')));
@@ -269,9 +269,10 @@ void main() {
       ),
       findsOneWidget,
     );
+    // A link kept from before opens the home.
     await pumpEditorRoute(tester, c, '/editor/pack/nations?id=$id');
     expect(find.byType(NameSectionScreen), findsNothing);
-    expect(find.byType(PackHomeScreen), findsNothing);
+    expect(find.byType(PackHomeScreen), findsOneWidget);
   });
 
   testWidgets('a pack with a clashing nation code lists it and Remove fixes '

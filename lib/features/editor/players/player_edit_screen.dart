@@ -7,14 +7,21 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/caps.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
+import 'package:fnm/features/editor/pack_issue_text.dart';
+import 'package:fnm/features/editor/players/player_advanced.dart';
 import 'package:fnm/features/editor/players/players_ui.dart';
 import 'package:fnm/features/editor/players/squad_edits.dart';
 import 'package:fnm/features/editor/players/squad_screen.dart';
+import 'package:fnm/features/player/player_detail_screen.dart'
+    show describeTrait;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -22,8 +29,9 @@ import 'package:fnm/shared/widgets/widgets.dart';
 part 'player_edit_tablet_layout.dart';
 
 /// One player of a database: his name, age, position and club, his overall
-/// with a player type, and his potential. Every change is saved as it is
-/// made.
+/// with a player type (or, under Advanced, his three stored qualities), his
+/// potential and his traits. Every change is saved as it is made; Delete is
+/// in the app bar's menu, with Undo on the snackbar.
 class PlayerEditScreen extends ConsumerWidget {
   const PlayerEditScreen({
     required this.packId,
@@ -34,6 +42,10 @@ class PlayerEditScreen extends ConsumerWidget {
 
   static const Key tabletLayoutKey = Key('editorPlayer.tabletLayout');
   static const Key undoKey = Key('editorPlayer.undo');
+
+  /// The app bar's menu, and its Delete.
+  static const Key menuKey = Key('editorPlayer.menu');
+  static const Key deleteKey = Key('editorPlayer.delete');
 
   final int packId;
   final int nationId;
@@ -55,14 +67,16 @@ class PlayerEditScreen extends ConsumerWidget {
         ? l.editorSectionPlayers
         : playerLabel(l, player);
     final undo = editor.canUndo ? editor.undo : null;
+    void removed(PackPlayer p) {
+      showRemovedSnackBar(context, l, p, editor);
+      back();
+    }
+
     final form = PlayerEditForm(
       packId: packId,
       nationId: nationId,
       playerId: playerId,
-      onRemoved: (p) {
-        showRemovedSnackBar(context, l, p, editor);
-        back();
-      },
+      onRemoved: removed,
     );
     final body = pack == null
         ? (async.hasError
@@ -103,6 +117,17 @@ class PlayerEditScreen extends ConsumerWidget {
             color: AppColors.primary,
             onPressed: undo,
           ),
+        if (player != null)
+          EditorDeleteMenu(
+            menuKey: menuKey,
+            deleteKey: deleteKey,
+            onDelete: () {
+              editor.update(
+                (pack) => SquadEdits.remove(pack, nationId, player.id),
+              );
+              removed(player);
+            },
+          ),
       ],
       body: body,
     );
@@ -134,10 +159,28 @@ class PlayerEditForm extends ConsumerStatefulWidget {
   static const Key removeKey = Key('editorPlayer.remove');
   static const Key clubSearchKey = Key('editorPlayer.club.search');
 
+  /// The traits picker's Random chip.
+  static const Key randomTraitsKey = Key('editorPlayer.traits.random');
+
   static Key positionKey(PlayerPosition p) => Key('editorPlayer.pos.${p.name}');
   static Key typeKey(PlayerType t) => Key('editorPlayer.type.${t.name}');
-  static Key clubOptionKey(String? club) =>
-      Key('editorPlayer.club.option.${club ?? '-'}');
+  static Key traitKey(PlayerTrait t) => Key('editorPlayer.trait.${t.name}');
+
+  /// The chip of a picked trait this game does not know.
+  static Key unknownTraitKey(String name) =>
+      Key('editorPlayer.trait.unknown.$name');
+
+  /// The club picker's row for [club] of [country] (a FIFA code, lower
+  /// case); none for "Chosen by the game" and "Free agent".
+  static Key clubOptionKey(String? club, {String? country}) => Key(
+    country == null
+        ? 'editorPlayer.club.option.${club ?? '-'}'
+        : 'editorPlayer.club.option.$country.$club',
+  );
+
+  /// The club picker's heading for [country]'s clubs.
+  static Key clubCountryKey(String country) =>
+      Key('editorPlayer.club.country.$country');
 
   /// The width from which the form takes two columns.
   static const double twoColumnWidth = 720;
@@ -169,6 +212,13 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
   Object? _nameRun;
   Object? _overallRun;
   Object? _potentialRun;
+  Object? _qualityRun;
+
+  /// Whether Advanced (the three qualities' sliders) is open.
+  bool _advancedOpen = false;
+
+  /// Whether the last trait tapped was one too many.
+  bool _traitRefused = false;
 
   PackEditor get _editor =>
       ref.read(packEditorProvider(widget.packId).notifier);
@@ -224,6 +274,34 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
     widget.onRemoved?.call(p);
   }
 
+  /// Picks or drops trait [t] of [p]; a pick past [PlayerTraits.maxTraits]
+  /// (the unknown ones counted) is refused, and says so.
+  void _toggleTrait(PackPlayer p, PlayerTrait t, {required bool on}) {
+    final now = p.traits ?? const <PlayerTrait>[];
+    if (on && now.length + p.unknownTraits.length >= PlayerTraits.maxTraits) {
+      setState(() => _traitRefused = true);
+      return;
+    }
+    setState(() => _traitRefused = false);
+    _edit(
+      (p) => SquadEdits.withTraits(p, [
+        for (final x in p.traits ?? const <PlayerTrait>[])
+          if (x != t) x,
+        if (on) t,
+      ]),
+    );
+  }
+
+  /// The three qualities as Advanced's sliders set them: the type chips
+  /// then read what they make ([PlayerBuild.typeOf]).
+  void _setQualities(PlayerAttributes a) {
+    setState(() => _type = null);
+    _edit(
+      (p) => SquadEdits.withAttributes(p, a),
+      group: _qualityRun ??= Object(),
+    );
+  }
+
   Future<void> _pickClub(WorldPack pack, PackPlayer p) async {
     final world = ref.read(packEditorProvider(widget.packId).notifier).world;
     final code =
@@ -233,8 +311,14 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
       isScrollControlled: true,
       showDragHandle: true,
       builder: (sheet) => _ClubPicker(
-        options: _clubOptions(AppLocalizations.of(context), pack, p, code),
-        current: p.club,
+        choices: _clubOptions(
+          AppLocalizations.of(context),
+          pack,
+          p,
+          code,
+          _countryNames(pack, world),
+        ),
+        current: (club: p.club, country: p.clubCountry),
       ),
     );
     if (picked == null || !mounted) return;
@@ -284,9 +368,19 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
       const SizedBox(height: AppSpacing.lg),
       _types(l, overall, type),
       const SizedBox(height: AppSpacing.md),
-      _qualities(l, p),
+      PlayerAdvanced(
+        position: p.position,
+        attributes: p.attributes,
+        open: _advancedOpen,
+        onToggle: () => setState(() => _advancedOpen = !_advancedOpen),
+        onChangeStart: () => _qualityRun = Object(),
+        onChanged: _setQualities,
+        onChangeEnd: () => _qualityRun = null,
+      ),
       const SizedBox(height: AppSpacing.lg),
       _potential(l, p, overall),
+      const SizedBox(height: AppSpacing.lg),
+      _traits(l, p),
     ];
     final remove = Align(
       alignment: AlignmentDirectional.centerStart,
@@ -598,17 +692,104 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
     ],
   );
 
-  Widget _qualities(AppLocalizations l, PackPlayer p) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      _label(l.editorPlayerQualities),
-      StatBar(label: l.playerAttrPhysical, value: p.attributes.physical),
-      const SizedBox(height: AppSpacing.xs),
-      StatBar(label: l.playerAttrTechnical, value: p.attributes.technical),
-      const SizedBox(height: AppSpacing.xs),
-      StatBar(label: l.playerAttrStamina, value: p.attributes.stamina),
-    ],
-  );
+  Widget _traits(AppLocalizations l, PackPlayer p) {
+    final picked = p.traits;
+    final muted = AppTypography.bodySmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+    );
+    final caption = _traitRefused
+        ? l.editorPlayerTraitsMax(PlayerTraits.maxTraits)
+        : picked == null
+        ? l.editorPlayerTraitsRandomAbout
+        : picked.isEmpty && p.unknownTraits.isEmpty
+        ? l.editorPlayerTraitsNone
+        : l.editorPlayerTraitsPicked(PlayerTraits.maxTraits);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _label(l.editorPlayerTraits),
+        Wrap(
+          spacing: AppSpacing.xs,
+          runSpacing: AppSpacing.xs,
+          children: [
+            ChoiceChip(
+              key: PlayerEditForm.randomTraitsKey,
+              avatar: const Icon(Icons.casino_outlined, size: 18),
+              label: Text(l.editorPlayerTraitsRandom),
+              selected: picked == null,
+              onSelected: (_) {
+                setState(() => _traitRefused = false);
+                _edit((p) => SquadEdits.withTraits(p, null));
+              },
+            ),
+            for (final t in PlayerTrait.values)
+              _traitChip(l, t, picked?.contains(t) ?? false, p),
+            for (final name in p.unknownTraits)
+              InputChip(
+                key: PlayerEditForm.unknownTraitKey(name),
+                avatar: const Icon(
+                  Icons.help_outline,
+                  size: 18,
+                  color: AppColors.warning,
+                ),
+                label: Text(l.editorPlayerTraitUnknown(name)),
+                deleteIcon: const Icon(Icons.close, size: 18),
+                deleteButtonTooltipMessage: l.editorRemove,
+                onDeleted: () {
+                  setState(() => _traitRefused = false);
+                  _edit((p) => p.withoutUnknown());
+                },
+              ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          caption,
+          style: _traitRefused
+              ? AppTypography.bodySmall.copyWith(color: AppColors.error)
+              : muted,
+        ),
+        // What each picked trait does, as the player screen says it.
+        for (final t in picked ?? const <PlayerTrait>[])
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.xs),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  describeTrait(l, t).$1,
+                  size: 16,
+                  color: _traitColor(l, t),
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(child: Text(describeTrait(l, t).$3, style: muted)),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// A good trait reads in the primary colour, a flaw in the warning one.
+  Color _traitColor(AppLocalizations l, PlayerTrait t) =>
+      describeTrait(l, t).$4 ? AppColors.primary : AppColors.warning;
+
+  Widget _traitChip(
+    AppLocalizations l,
+    PlayerTrait t,
+    bool selected,
+    PackPlayer p,
+  ) {
+    final (icon, name, blurb, _) = describeTrait(l, t);
+    return FilterChip(
+      key: PlayerEditForm.traitKey(t),
+      avatar: selected ? null : Icon(icon, size: 18, color: _traitColor(l, t)),
+      label: Text(name),
+      tooltip: blurb,
+      selected: selected,
+      onSelected: (on) => _toggleTrait(p, t, on: on),
+    );
+  }
 
   Widget _potential(AppLocalizations l, PackPlayer p, int overall) {
     final open = overall < 99;
@@ -705,46 +886,104 @@ class _Stepper extends StatelessWidget {
 }
 
 /// A club the picker offers: `club` as stored (null: the game places him),
-/// `country` its league's FIFA code, `label` how it reads.
+/// `country` its league's FIFA code (lower case), `label` how it reads.
 typedef _ClubOption = ({String? club, String? country, String label});
 
+/// A country's clubs in the picker, under its flag and `name`.
+typedef _ClubGroup = ({String country, String name, List<_ClubOption> clubs});
+
+/// What the picker offers: the `top` choices, then the clubs by country.
+typedef _ClubChoices = ({List<_ClubOption> top, List<_ClubGroup> groups});
+
+/// Each nation's name as the database shows it, by lower-case FIFA code;
+/// a code no nation has reads as itself, upper case.
+String Function(String) _countryNames(WorldPack pack, List<Nation> world) {
+  final byId = {for (final n in world) n.id: n};
+  final byCode = {for (final n in world) n.code.toLowerCase(): n.id};
+  return (code) => switch (byCode[code]) {
+    final id? => packNationName(pack, byId, id),
+    null => code.toUpperCase(),
+  };
+}
+
 /// The clubs a player of the nation with FIFA code [code] can be given:
-/// the game's choice, no club, his present club when it is elsewhere, and
-/// the clubs of his country's league, each under the pack's name for it.
-List<_ClubOption> _clubOptions(
+/// the game's choice, no club and his present club; then his country's
+/// clubs (its league, then the clubs the database adds to it); then every
+/// other league in [ClubService.allLeagues] order, each with its added
+/// clubs; then the added clubs of countries with no league, by name. Each
+/// club reads under the database's name for it; [countryName] names the
+/// countries.
+_ClubChoices _clubOptions(
   AppLocalizations l,
   WorldPack pack,
   PackPlayer p,
   String code,
+  String Function(String) countryName,
 ) {
-  final league = ClubService.leagueClubs(code);
-  final country = code.toLowerCase();
-  return [
-    (club: null, country: null, label: l.editorPlayerClubAuto),
-    (
-      club: ClubService.freeAgent,
-      country: null,
-      label: l.editorPlayerFreeAgent,
-    ),
-    if (p.club != null &&
-        p.club != ClubService.freeAgent &&
-        !(league.contains(p.club) && p.clubCountry == country))
+  final own = code.toLowerCase();
+  final added = <String, List<String>>{};
+  for (final c in pack.addedClubs) {
+    (added[c.country.toLowerCase()] ??= []).add(c.name);
+  }
+  // His present club is offered on top, so not again in its country.
+  bool present(String club, String country) =>
+      club == p.club && country == p.clubCountry;
+  final groups = <_ClubGroup>[];
+  void group(String country, List<String> league) {
+    final clubs = <_ClubOption>[
+      for (final c in league)
+        if (!present(c, country))
+          (club: c, country: country, label: pack.clubs[c] ?? c),
+      for (final c in added[country] ?? const <String>[])
+        if (!present(c, country)) (club: c, country: country, label: c),
+    ];
+    if (clubs.isEmpty) return;
+    groups.add((country: country, name: countryName(country), clubs: clubs));
+  }
+
+  final leagues = ClubService.allLeagues();
+  group(own, ClubService.leagueClubs(own));
+  for (final league in leagues) {
+    if (league.country != own) group(league.country, league.clubs);
+  }
+  final withLeague = {for (final league in leagues) league.country};
+  final rest = [
+    for (final country in added.keys)
+      if (country != own && !withLeague.contains(country)) country,
+  ]..sort((a, b) => countryName(a).compareTo(countryName(b)));
+  for (final country in rest) {
+    group(country, const []);
+  }
+
+  return (
+    top: [
+      (club: null, country: null, label: l.editorPlayerClubAuto),
       (
-        club: p.club,
-        country: p.clubCountry,
-        label: pack.clubs[p.club] ?? p.club!,
+        club: ClubService.freeAgent,
+        country: null,
+        label: l.editorPlayerFreeAgent,
       ),
-    for (final c in league)
-      (club: c, country: country, label: pack.clubs[c] ?? c),
-  ];
+      if (p.club case final club? when club != ClubService.freeAgent)
+        (
+          club: club,
+          country: p.clubCountry,
+          label: pack.clubs[club] ?? club,
+        ),
+    ],
+    groups: groups,
+  );
 }
 
-/// Search and pick a club.
-class _ClubPicker extends StatefulWidget {
-  const _ClubPicker({required this.options, required this.current});
+/// One line of the picker: a country's heading, or a club (`grouped` under
+/// a heading, or one of the choices on top).
+typedef _ClubLine = ({_ClubGroup? heading, _ClubOption? option, bool grouped});
 
-  final List<_ClubOption> options;
-  final String? current;
+/// Search and pick a club, from any country.
+class _ClubPicker extends StatefulWidget {
+  const _ClubPicker({required this.choices, required this.current});
+
+  final _ClubChoices choices;
+  final ({String? club, String? country}) current;
 
   @override
   State<_ClubPicker> createState() => _ClubPickerState();
@@ -753,17 +992,33 @@ class _ClubPicker extends StatefulWidget {
 class _ClubPickerState extends State<_ClubPicker> {
   String _query = '';
 
+  /// What [_query] finds: the top choices by name; a country's clubs by
+  /// their names, or all of them when the country's name matches.
+  List<_ClubLine> _lines() {
+    final q = searchFold(_query);
+    bool hit(_ClubOption o) =>
+        searchFold(o.label).contains(q) || searchFold(o.club ?? '').contains(q);
+    final out = <_ClubLine>[
+      for (final o in widget.choices.top)
+        if (q.isEmpty || hit(o)) (heading: null, option: o, grouped: false),
+    ];
+    for (final g in widget.choices.groups) {
+      final whole = q.isEmpty || searchFold(g.name).contains(q);
+      final clubs = whole ? g.clubs : [...g.clubs.where(hit)];
+      if (clubs.isEmpty) continue;
+      out
+        ..add((heading: g, option: null, grouped: false))
+        ..addAll([
+          for (final o in clubs) (heading: null, option: o, grouped: true),
+        ]);
+    }
+    return out;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final q = searchFold(_query);
-    final shown = [
-      for (final o in widget.options)
-        if (q.isEmpty ||
-            searchFold(o.label).contains(q) ||
-            searchFold(o.club ?? '').contains(q))
-          o,
-    ];
+    final lines = _lines();
     final height = MediaQuery.sizeOf(context).height * 0.7;
     return SizedBox(
       height: height.clamp(320, 640),
@@ -798,40 +1053,113 @@ class _ClubPickerState extends State<_ClubPicker> {
             ),
             const SizedBox(height: AppSpacing.sm),
             Expanded(
-              child: shown.isEmpty
+              child: lines.isEmpty
                   ? EditorMessage(l.editorPlayerClubNone)
                   : ListView.builder(
-                      itemCount: shown.length,
-                      itemBuilder: (context, i) {
-                        final o = shown[i];
-                        final selected = o.club == widget.current;
-                        return ListTile(
-                          key: PlayerEditForm.clubOptionKey(o.club),
-                          leading: (o.country ?? '').isNotEmpty
-                              ? FlagDisc(o.country!, size: 28)
-                              : const Icon(Icons.shield_outlined),
-                          title: Text(
-                            o.label,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: o.club == null
-                              ? Text(l.editorPlayerClubAutoAbout)
-                              : null,
-                          trailing: selected
-                              ? const Icon(
-                                  Icons.check,
-                                  color: AppColors.primary,
-                                )
-                              : null,
-                          onTap: () => Navigator.of(context).pop(o),
-                        );
+                      itemCount: lines.length,
+                      itemBuilder: (context, i) => switch (lines[i]) {
+                        (heading: final g?, option: _, grouped: _) => _heading(
+                          g,
+                        ),
+                        (heading: _, option: final o?, :final grouped) =>
+                          _option(l, o, grouped: grouped),
+                        _ => const SizedBox.shrink(),
                       },
                     ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _heading(_ClubGroup g) => Padding(
+    key: PlayerEditForm.clubCountryKey(g.country),
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.xs,
+      AppSpacing.md,
+      AppSpacing.xs,
+      AppSpacing.xs,
+    ),
+    child: Row(
+      children: [
+        FlagDisc(g.country, size: 20),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Text(
+            g.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelLarge.copyWith(color: AppColors.primary),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  /// A club; one [grouped] under a country's heading needs no flag.
+  Widget _option(AppLocalizations l, _ClubOption o, {required bool grouped}) {
+    final selected =
+        o.club == widget.current.club &&
+        (o.country == null || o.country == widget.current.country);
+    return ListTile(
+      key: PlayerEditForm.clubOptionKey(o.club, country: o.country),
+      dense: grouped,
+      contentPadding: EdgeInsets.only(
+        left: grouped ? AppSpacing.xl : AppSpacing.md,
+        right: AppSpacing.md,
+      ),
+      leading: grouped
+          ? null
+          : (o.country ?? '').isNotEmpty
+          ? FlagDisc(o.country!, size: 28)
+          : const Icon(Icons.shield_outlined),
+      title: Text(o.label, maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: o.club == null ? Text(l.editorPlayerClubAutoAbout) : null,
+      trailing: selected
+          ? const Icon(Icons.check, color: AppColors.primary)
+          : null,
+      onTap: () => Navigator.of(context).pop(o),
+    );
+  }
+}
+
+/// The app bar's menu for a player: Delete, in the error colour.
+class EditorDeleteMenu extends StatelessWidget {
+  const EditorDeleteMenu({
+    required this.menuKey,
+    required this.deleteKey,
+    required this.onDelete,
+    super.key,
+  });
+
+  final Key menuKey;
+  final Key deleteKey;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return PopupMenuButton<VoidCallback>(
+      key: menuKey,
+      icon: const Icon(Icons.more_vert, color: AppColors.primary),
+      onSelected: (action) => action(),
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          key: deleteKey,
+          value: onDelete,
+          child: Row(
+            children: [
+              const Icon(Icons.delete_outline, color: AppColors.error),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l.editorPlayerDelete,
+                style: AppTypography.bodyLarge.copyWith(color: AppColors.error),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

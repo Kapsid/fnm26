@@ -14,7 +14,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "da": [
@@ -32,7 +44,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "de": [
@@ -50,7 +74,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "el": [
@@ -68,7 +104,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "es": [
@@ -86,7 +134,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "fi": [
@@ -104,7 +164,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "fil": [
@@ -122,7 +194,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "fr": [
@@ -140,7 +224,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "hi": [
@@ -158,7 +254,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "hr": [
@@ -176,7 +284,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "hu": [
@@ -194,7 +314,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "id": [
@@ -212,7 +344,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "it": [
@@ -230,7 +374,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "ja": [
@@ -248,7 +404,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "ko": [
@@ -266,7 +434,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "ms": [
@@ -284,7 +464,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "nb": [
@@ -302,7 +494,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "nl": [
@@ -320,7 +524,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "pl": [
@@ -338,7 +554,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "pt": [
@@ -356,7 +584,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "ro": [
@@ -374,7 +614,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "sv": [
@@ -392,7 +644,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "th": [
@@ -410,7 +674,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "tr": [
@@ -428,7 +704,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "uk": [
@@ -446,7 +734,19 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ],
 
   "vi": [
@@ -464,6 +764,18 @@
     "editorLanguageMainName",
     "editorLanguageKeepHint",
     "editorLanguageClear",
-    "editorLanguageFull"
+    "editorLanguageFull",
+    "editorPlayerDelete",
+    "editorPlayerAdvanced",
+    "editorPlayerAdvancedAbout",
+    "editorPlayerAdvancedOverall",
+    "editorPlayerTraits",
+    "editorPlayerTraitsRandom",
+    "editorPlayerTraitsRandomAbout",
+    "editorPlayerTraitsNone",
+    "editorPlayerTraitsPicked",
+    "editorPlayerTraitsMax",
+    "editorPlayerTraitUnknown",
+    "editorIssueInLanguage"
   ]
 }

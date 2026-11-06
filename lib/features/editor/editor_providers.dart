@@ -65,7 +65,9 @@ enum EditorSection {
 
   /// The section a [PackIssue.where] path belongs to. Added items sit with
   /// the game's own of their kind, a pool with the squads, and a `localized`
-  /// entry with the text it translates.
+  /// entry with the text it translates. A root no section edits (a nation's
+  /// old rename, the `localized` cap, anything a newer game writes) is
+  /// [none]: the home, where it is listed, never a guessed section.
   static EditorSection ofPath(String path) => switch (path.split('.').first) {
     'squads' || 'pools' => players,
     'nations' => none,
@@ -80,7 +82,7 @@ enum EditorSection {
     'localized' when path.contains('.') => ofPath(
       path.substring(path.indexOf('.') + 1),
     ),
-    _ => players,
+    _ => none,
   };
 }
 

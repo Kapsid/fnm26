@@ -2,6 +2,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/editor_ui.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -34,10 +35,13 @@ PackIssueText describePackIssue(
   Map<int, Nation> world,
 ) {
   String nation(int id) => packNationName(pack, world, id);
-  // The `localized` cap is the whole database's, in no one section.
-  final section = issue.where == 'localized'
+  // What no section edits is the whole database's (the `localized` cap,
+  // anything a newer game writes), except a nation's old rename.
+  final of = EditorSection.ofPath(issue.where);
+  final section =
+      of == EditorSection.none && !issue.where.startsWith('nations.')
       ? null
-      : EditorSection.ofPath(issue.where);
+      : of;
   final title = section == null ? pack.name : sectionTitle(l, section);
   switch (issue) {
     // A pool over its cap reads as a squad over its: players too many.
@@ -268,12 +272,19 @@ PackIssueText _badField(
       // `localized` (over the cap), `localized.<path>` (a path naming
       // nothing) or `localized.<path>.<language>` (a value).
       final last = key.lastIndexOf('.');
+      final language = last < 0 ? '' : key.substring(last + 1);
       final value = last < 0
           ? null
-          : pack.localized[key.substring(0, last)]?[key.substring(last + 1)];
+          : pack.localized[key.substring(0, last)]?[language];
       return (
         title: sectionTitle,
-        detail: value == null ? l.editorIssueValue : nameProblem(value),
+        // A value is one language's: the row says which.
+        detail: value == null
+            ? l.editorIssueValue
+            : l.editorIssueInLanguage(
+                nameProblem(value),
+                languageEndonym(language),
+              ),
         section: section,
         nationId: null,
       );

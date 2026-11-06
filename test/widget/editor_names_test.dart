@@ -19,6 +19,9 @@ import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/domain/services/world_pack/pack_paths.dart';
+import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/features/editor/pack_home_screen.dart';
+import 'package:fnm/features/editor/pack_issue_text.dart';
 
 import '../helpers/editor_app.dart';
 import '../helpers/seeded_save.dart';
@@ -549,6 +552,145 @@ void main() {
     expect(_pack(c, id).localized[PackPaths.yAccount(a)], {'cs': 'Pepa'});
     await tester.pump(const Duration(milliseconds: 450));
   });
+
+  test('every issue root opens the section that fixes it', () {
+    const added = kPackAddedIdBase + 1;
+    final table = <String, EditorSection>{
+      'squads.1': EditorSection.players,
+      'squads.1.800000001.name': EditorSection.players,
+      'pools.1': EditorSection.players,
+      'pools.1.800000001.traits': EditorSection.players,
+      'nations.1.code': EditorSection.none,
+      'clubs.Man Blue': EditorSection.clubs,
+      'addedClubs': EditorSection.clubs,
+      'addedClubs.$added': EditorSection.clubs,
+      'addedClubs.$added.country': EditorSection.clubs,
+      'addedClubs.$added.id': EditorSection.clubs,
+      'stadiums.1:Praha': EditorSection.stadiums,
+      'competitions.Copa': EditorSection.competitions,
+      'yAccounts.someone': EditorSection.yAccounts,
+      'addedYAccounts': EditorSection.yAccounts,
+      'addedYAccounts.$added': EditorSection.yAccounts,
+      'reporters.0.outlet': EditorSection.press,
+      'nameLists.1.first.3': EditorSection.nameLists,
+      'sponsors.Brand': EditorSection.sponsors,
+      'addedSponsors': EditorSection.sponsors,
+      'addedSponsors.$added': EditorSection.sponsors,
+      'addedSponsors.$added.description': EditorSection.sponsors,
+      'addedSponsors.$added.industry': EditorSection.sponsors,
+      'trophies.x': EditorSection.trophies,
+      // A translation sits with the text it translates.
+      'localized.clubs.Man Blue.cs': EditorSection.clubs,
+      'localized.addedClubs.$added.cs': EditorSection.clubs,
+      'localized.stadiums.1:Praha.de': EditorSection.stadiums,
+      'localized.competitions.Copa.cs': EditorSection.competitions,
+      'localized.yAccounts.someone.cs': EditorSection.yAccounts,
+      'localized.addedYAccounts.$added.cs': EditorSection.yAccounts,
+      'localized.reporters.0.name.cs': EditorSection.press,
+      'localized.sponsors.Brand.cs': EditorSection.sponsors,
+      'localized.addedSponsors.$added.description.cs': EditorSection.sponsors,
+      // The cap is the whole database's; a path naming nothing has no
+      // section either.
+      'localized': EditorSection.none,
+      'localized.nonsense.cs': EditorSection.none,
+      // Nothing the editor knows: the home, never a guess.
+      'name': EditorSection.none,
+      'somethingNew.3': EditorSection.none,
+      '': EditorSection.none,
+    };
+    for (final MapEntry(:key, :value) in table.entries) {
+      expect(EditorSection.ofPath(key), value, reason: key);
+    }
+    // A name clash opens where the clashing name is edited.
+    for (final (path, section) in [
+      ('addedClubs.$added', EditorSection.clubs),
+      ('yAccounts.someone', EditorSection.yAccounts),
+      ('addedYAccounts.$added', EditorSection.yAccounts),
+      ('localized.yAccounts.someone.cs', EditorSection.yAccounts),
+      ('localized.addedYAccounts.$added.cs', EditorSection.yAccounts),
+    ]) {
+      expect(
+        EditorSection.ofPath(NameClash(path).where),
+        section,
+        reason: path,
+      );
+    }
+  });
+
+  test("a translation's issue says which language it needs", () {
+    final club = ClubService.leagueClubs('cze').first;
+    final pack = testPack('Lang issue').copyWith(
+      localized: {
+        PackPaths.club(club): {'cs': 'x' * 60},
+      },
+    );
+    final issue = PackRules.issues(pack).firstWhere(
+      (i) => i.where == 'localized.${PackPaths.club(club)}.cs',
+    );
+    final text = describePackIssue(enL, issue, pack, const {});
+    expect(text.detail, contains('(${languageEndonym('cs')})'));
+    expect(text.section, EditorSection.clubs);
+  });
+
+  testWidgets('a stale link to the old Nations section opens the home', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Stale nations'));
+    await pumpEditorRoute(tester, c, '/editor/pack/nations?id=$id');
+    expect(find.byType(PackHomeScreen), findsOneWidget);
+    expect(
+      c.read(routerProvider).routeInformationProvider.value.uri.toString(),
+      editorPackLocation(id),
+    );
+  });
+
+  testWidgets("leaving the editor forgets the editor's language", (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Leave'));
+    await pumpEditorRoute(tester, c, editorPackLocation(id));
+    await pickLanguage(tester, 'cs');
+    // Within the editor it stays.
+    c.read(routerProvider).go(_at(NameSection.clubs, id));
+    await settle(tester);
+    expect(c.read(editorLanguageProvider), 'cs');
+    c.read(routerProvider).go(Routes.home);
+    await settle(tester);
+    expect(c.read(editorLanguageProvider), isNull);
+  });
+
+  for (final code in [null, 'cs', 'fil']) {
+    testWidgets('the home app bar fits a 320 dp phone, language $code', (
+      tester,
+    ) async {
+      final c = await editorContainer(tester);
+      const name = 'A rather long database name for a small phone';
+      final id = await insertPack(tester, c, testPack(name));
+      c.read(editorLanguageProvider.notifier).state = code;
+      await pumpEditorRoute(
+        tester,
+        c,
+        editorPackLocation(id),
+        size: const Size(320, 640),
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(EditorLanguageChip.chipKey), findsOneWidget);
+      final title = find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text(name),
+      );
+      expect(title, findsOneWidget);
+      // Room for a readable part of the name, not a sliver.
+      expect(tester.getSize(title).width, greaterThanOrEqualTo(96));
+      final bar = tester.getRect(find.byType(AppBar));
+      expect(
+        bar.contains(tester.getRect(find.byKey(PackHomeScreen.undoKey)).center),
+        isTrue,
+      );
+    });
+  }
 
   for (final size in kTabletSizes) {
     testWidgets('tablet layouts render, $size', (tester) async {

@@ -22718,6 +22718,78 @@ abstract class AppLocalizations {
   /// **'This database has no room for more names per language.'**
   String get editorLanguageFull;
 
+  /// Menu action on the editor's player screen that deletes the player from the database (Undo follows).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete player'**
+  String get editorPlayerDelete;
+
+  /// Heading of the editor's expandable section with the three raw player qualities.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get editorPlayerAdvanced;
+
+  /// Line under the Advanced heading on the editor's player screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Set his physical, technical and stamina values one by one.'**
+  String get editorPlayerAdvancedAbout;
+
+  /// Label beside the live overall the three Advanced sliders give.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall from these'**
+  String get editorPlayerAdvancedOverall;
+
+  /// Label of the traits picker on the editor's player screen (the game calls traits "Known for").
+  ///
+  /// In en, this message translates to:
+  /// **'Known for'**
+  String get editorPlayerTraits;
+
+  /// Chip in the editor's traits picker: each career rolls the player's traits.
+  ///
+  /// In en, this message translates to:
+  /// **'Random'**
+  String get editorPlayerTraitsRandom;
+
+  /// Line under the traits picker while Random is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Each career rolls his traits, as the game always has.'**
+  String get editorPlayerTraitsRandomAbout;
+
+  /// Line under the traits picker when every trait was deselected.
+  ///
+  /// In en, this message translates to:
+  /// **'No traits, in every career.'**
+  String get editorPlayerTraitsNone;
+
+  /// Line under the traits picker when traits are picked.
+  ///
+  /// In en, this message translates to:
+  /// **'These traits in every career. Pick up to {max}.'**
+  String editorPlayerTraitsPicked(int max);
+
+  /// Hint when a third trait is tapped in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'A player has at most {max} traits. Deselect one first.'**
+  String editorPlayerTraitsMax(int max);
+
+  /// Chip for a picked trait this version of the game does not know (from a newer or older file); it can be removed.
+  ///
+  /// In en, this message translates to:
+  /// **'{trait} (unknown to this version)'**
+  String editorPlayerTraitUnknown(String trait);
+
+  /// An editor issue about one language's name: the issue, then the language's name in its own tongue.
+  ///
+  /// In en, this message translates to:
+  /// **'{issue} ({language})'**
+  String editorIssueInLanguage(String issue, String language);
+
   /// Label of a journalist's outlet field in the editor.
   ///
   /// In en, this message translates to:

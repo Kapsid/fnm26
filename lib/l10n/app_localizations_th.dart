@@ -14725,6 +14725,52 @@ class AppLocalizationsTh extends AppLocalizations {
       'This database has no room for more names per language.';
 
   @override
+  String get editorPlayerDelete => 'Delete player';
+
+  @override
+  String get editorPlayerAdvanced => 'Advanced';
+
+  @override
+  String get editorPlayerAdvancedAbout =>
+      'Set his physical, technical and stamina values one by one.';
+
+  @override
+  String get editorPlayerAdvancedOverall => 'Overall from these';
+
+  @override
+  String get editorPlayerTraits => 'Known for';
+
+  @override
+  String get editorPlayerTraitsRandom => 'Random';
+
+  @override
+  String get editorPlayerTraitsRandomAbout =>
+      'Each career rolls his traits, as the game always has.';
+
+  @override
+  String get editorPlayerTraitsNone => 'No traits, in every career.';
+
+  @override
+  String editorPlayerTraitsPicked(int max) {
+    return 'These traits in every career. Pick up to $max.';
+  }
+
+  @override
+  String editorPlayerTraitsMax(int max) {
+    return 'A player has at most $max traits. Deselect one first.';
+  }
+
+  @override
+  String editorPlayerTraitUnknown(String trait) {
+    return '$trait (unknown to this version)';
+  }
+
+  @override
+  String editorIssueInLanguage(String issue, String language) {
+    return '$issue ($language)';
+  }
+
+  @override
   String get editorNamesOutlet => 'สำนักข่าว';
 
   @override

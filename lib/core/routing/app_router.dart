@@ -25,6 +25,7 @@ import 'package:fnm/features/squad/youth_screen.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
 import 'package:fnm/features/y/y_screen.dart';
 import 'package:fnm/features/dev/style_gallery_screen.dart';
+import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/features/editor/editor_list_screen.dart';
 import 'package:fnm/features/editor/names/name_section_screen.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
@@ -1117,6 +1118,14 @@ final routerProvider = Provider<GoRouter>((ref) {
     // A route into a career first loads that career's world (its own nation
     // and competition names), once, so its screens build on it.
     redirect: (context, state) {
+      // The editor's Nations section is gone (Editor 2); a link to it, kept
+      // from before, opens the database's home instead of an error.
+      if (state.uri.path == _editorNationsGone) {
+        return Uri(
+          path: Routes.editorPack,
+          queryParameters: {'id': state.uri.queryParameters['id'] ?? '0'},
+        ).toString();
+      }
       final entering = enterActiveWorld(ref, state.uri);
       return entering == null
           ? proLockRedirect(ref, state.uri)
@@ -1137,11 +1146,24 @@ final routerProvider = Provider<GoRouter>((ref) {
   // included, which a redirect would not; leaving for the menus drops the
   // world.
   final delegate = router.routerDelegate;
-  void onRoute() => syncActiveWorld(ref, delegate.currentConfiguration);
+  void onRoute() {
+    syncActiveWorld(ref, delegate.currentConfiguration);
+    // The editor's language is the editor's: leaving it forgets the pick.
+    final path = delegate.currentConfiguration.uri.path;
+    final inEditor =
+        path == Routes.editor || path.startsWith('${Routes.editor}/');
+    if (!inEditor && ref.read(editorLanguageProvider) != null) {
+      ref.read(editorLanguageProvider.notifier).state = null;
+    }
+  }
+
   delegate.addListener(onRoute);
   ref.onDispose(() => delegate.removeListener(onRoute));
   return router;
 });
+
+/// Where the editor's Nations section was, before it was removed.
+const String _editorNationsGone = '/editor/pack/nations';
 
 /// The same routes, with every in-save screen inside the tablet shell.
 ///

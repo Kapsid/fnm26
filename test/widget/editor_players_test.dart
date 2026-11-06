@@ -4,12 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/player/player_traits.dart';
+import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 import 'package:fnm/features/editor/players/nation_list_screen.dart';
+import 'package:fnm/features/editor/players/player_advanced.dart';
 import 'package:fnm/features/editor/players/player_edit_screen.dart';
 import 'package:fnm/features/editor/players/squad_edits.dart';
 import 'package:fnm/features/editor/players/squad_screen.dart';
@@ -368,6 +372,328 @@ void main() {
     );
   });
 
+  testWidgets('Delete removes the player and Undo brings him back', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Delete', squads: {cze: testSquad()}),
+    );
+    await pumpEditorRoute(tester, c, _player(id, cze, mid));
+    bool here() => c
+        .read(packEditorProvider(id))
+        .value!
+        .squads[cze]!
+        .any((p) => p.id == mid);
+
+    await tester.tap(find.byKey(PlayerEditScreen.menuKey));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(PlayerEditScreen.deleteKey));
+    await tester.pumpAndSettle();
+    expect(here(), isFalse);
+    // Back on the squad, which says so, with Undo.
+    expect(find.byType(SquadScreen), findsOneWidget);
+    expect(find.text(enL.editorSquadRemoved('Player 11')), findsOneWidget);
+
+    await tester.tap(find.text(enL.editorUndo));
+    await tester.pumpAndSettle();
+    expect(here(), isTrue);
+    expect(find.text(enL.editorSquadRemoved('Player 11')), findsNothing);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('Advanced: physical 90 updates the live overall and the '
+      "pack's attributes", (tester) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Advanced', squads: {cze: testSquad()}),
+    );
+    await pumpEditorRoute(tester, c, _player(id, cze, mid));
+    // Closed at first: the quick way is Overall and type.
+    expect(find.byKey(PlayerAdvanced.physicalKey), findsNothing);
+    await tester.ensureVisible(find.byKey(PlayerAdvanced.toggleKey));
+    await tester.pump();
+    await tester.tap(find.byKey(PlayerAdvanced.toggleKey));
+    await tester.pumpAndSettle();
+    final slider = find.byKey(PlayerAdvanced.physicalKey);
+    expect(slider, findsOneWidget);
+    expect(tester.widget<Slider>(slider).min, 1);
+    expect(tester.widget<Slider>(slider).max, 99);
+
+    _slide(tester, slider, 90, via: [70, 80, 85]);
+    await tester.pump();
+
+    const a = PlayerAttributes(physical: 90, technical: 60, stamina: 60);
+    final p = _find(c, id, cze, mid);
+    expect(p.attributes, a);
+    final overall = OverallRating.forPosition(PlayerPosition.cm, a);
+    expect(overall, greaterThan(60));
+    expect(p.potential, greaterThanOrEqualTo(overall));
+    expect(
+      find.descendant(
+        of: find.byKey(PlayerAdvanced.overallKey),
+        matching: find.text('$overall'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(PlayerEditForm.overallNumberKey),
+        matching: find.text('$overall'),
+      ),
+      findsOneWidget,
+    );
+    final type = PlayerBuild.typeOf(PlayerPosition.cm, a);
+    expect(
+      tester
+          .widget<ChoiceChip>(find.byKey(PlayerEditForm.typeKey(type)))
+          .selected,
+      isTrue,
+    );
+
+    // One drag, one undo step.
+    c.read(packEditorProvider(id).notifier).undo();
+    await tester.pump();
+    expect(
+      _find(c, id, cze, mid).attributes,
+      const PlayerAttributes(physical: 60, technical: 60, stamina: 60),
+    );
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('picking leader and setPiece stores both; a third is refused; '
+      'Random stores null', (tester) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Traits', squads: {cze: testSquad()}),
+    );
+    await pumpEditorRoute(tester, c, _player(id, cze, mid));
+    List<PlayerTrait>? traits() => _find(c, id, cze, mid).traits;
+    Future<void> tap(Key key) async {
+      await tester.ensureVisible(find.byKey(key));
+      await tester.pump();
+      await tester.tap(find.byKey(key));
+      await tester.pump();
+    }
+
+    expect(traits(), isNull);
+    expect(
+      tester
+          .widget<ChoiceChip>(find.byKey(PlayerEditForm.randomTraitsKey))
+          .selected,
+      isTrue,
+    );
+    await tap(PlayerEditForm.traitKey(PlayerTrait.leader));
+    await tap(PlayerEditForm.traitKey(PlayerTrait.setPiece));
+    expect(traits(), [PlayerTrait.leader, PlayerTrait.setPiece]);
+
+    await tap(PlayerEditForm.traitKey(PlayerTrait.hothead));
+    expect(traits(), [PlayerTrait.leader, PlayerTrait.setPiece]);
+    expect(
+      find.text(enL.editorPlayerTraitsMax(PlayerTraits.maxTraits)),
+      findsOneWidget,
+    );
+
+    // Deselecting both leaves "No traits", which is not Random.
+    await tap(PlayerEditForm.traitKey(PlayerTrait.leader));
+    await tap(PlayerEditForm.traitKey(PlayerTrait.setPiece));
+    expect(traits(), isEmpty);
+    expect(find.text(enL.editorPlayerTraitsNone), findsOneWidget);
+
+    await tap(PlayerEditForm.randomTraitsKey);
+    expect(traits(), isNull);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('a trait this game does not know is shown and can be removed', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final squad = testSquad();
+    final id = await insertPack(
+      tester,
+      c,
+      testPack(
+        'Unknown trait',
+        squads: {
+          cze: [
+            for (final p in squad)
+              if (p.id == mid)
+                PackPlayer.fromJson({
+                  ...p.toJson(),
+                  'traits': ['leader', 'flyingHeader'],
+                })
+              else
+                p,
+          ],
+        },
+      ),
+    );
+    await pumpEditorRoute(tester, c, _player(id, cze, mid));
+    final chip = find.byKey(PlayerEditForm.unknownTraitKey('flyingHeader'));
+    await tester.ensureVisible(chip);
+    await tester.pump();
+    expect(
+      find.text(enL.editorPlayerTraitUnknown('flyingHeader')),
+      findsOneWidget,
+    );
+    // Two already: a known one cannot be added beside it.
+    await tester.tap(find.byKey(PlayerEditForm.traitKey(PlayerTrait.pacey)));
+    await tester.pump();
+    expect(_find(c, id, cze, mid).traits, [PlayerTrait.leader]);
+
+    await tester.tap(
+      find.descendant(of: chip, matching: find.byIcon(Icons.close)),
+    );
+    await tester.pump();
+    final p = _find(c, id, cze, mid);
+    expect(p.unknownTraits, isEmpty);
+    expect(p.traits, [PlayerTrait.leader]);
+    expect(chip, findsNothing);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets(
+    "club search 'Madrid' finds Spain's clubs under a Spain header for a "
+    'Czech player',
+    (tester) async {
+      final c = await editorContainer(tester);
+      final lone = realNations
+          .map((n) => n.code.toLowerCase())
+          .firstWhere(
+            (code) => code != 'cze' && ClubService.leagueClubs(code).isEmpty,
+          );
+      final id = await insertPack(
+        tester,
+        c,
+        testPack('Clubs', squads: {cze: testSquad()}).copyWith(
+          clubs: {'Madrid Red': 'Madrid Rojiblancos'},
+          addedClubs: [
+            const PackClub(
+              id: kPackAddedIdBase + 1,
+              name: 'Brno Sokol',
+              country: 'cze',
+            ),
+            PackClub(
+              id: kPackAddedIdBase + 2,
+              name: 'Lonely Stars',
+              country: lone,
+            ),
+          ],
+        ),
+      );
+      await pumpEditorRoute(tester, c, _player(id, cze, mid));
+      await tester.ensureVisible(find.byKey(PlayerEditForm.clubKey));
+      await tester.pump();
+      await tester.tap(find.byKey(PlayerEditForm.clubKey));
+      await tester.pumpAndSettle();
+
+      // His own country first, right under the choices on top, and its
+      // added club with it.
+      final czech = find.byKey(PlayerEditForm.clubCountryKey('cze'));
+      expect(czech, findsOneWidget);
+      expect(
+        tester.getTopLeft(czech).dy,
+        lessThan(
+          tester
+              .getTopLeft(
+                find.byKey(
+                  PlayerEditForm.clubOptionKey(
+                    ClubService.leagueClubs('cze').first,
+                    country: 'cze',
+                  ),
+                ),
+              )
+              .dy,
+        ),
+      );
+      await tester.enterText(find.byKey(PlayerEditForm.clubSearchKey), 'Brno');
+      await tester.pump();
+      expect(czech, findsOneWidget);
+      expect(
+        find.byKey(PlayerEditForm.clubOptionKey('Brno Sokol', country: 'cze')),
+        findsOneWidget,
+      );
+
+      await tester.enterText(
+        find.byKey(PlayerEditForm.clubSearchKey),
+        'Madrid',
+      );
+      await tester.pump();
+      final spain = find.byKey(PlayerEditForm.clubCountryKey('esp'));
+      expect(spain, findsOneWidget);
+      expect(
+        find.descendant(of: spain, matching: find.text('Spain')),
+        findsOneWidget,
+      );
+      expect(find.byKey(PlayerEditForm.clubCountryKey('cze')), findsNothing);
+      expect(find.text('Madrid White'), findsOneWidget);
+      // Under the database's name for it.
+      expect(find.text('Madrid Rojiblancos'), findsOneWidget);
+      expect(find.text('Madrid Red'), findsNothing);
+
+      // A country's name finds its clubs, a league-less country's added
+      // ones included.
+      await tester.enterText(
+        find.byKey(PlayerEditForm.clubSearchKey),
+        'Lonely',
+      );
+      await tester.pump();
+      expect(find.byKey(PlayerEditForm.clubCountryKey(lone)), findsOneWidget);
+      await tester.enterText(find.byKey(PlayerEditForm.clubSearchKey), 'spain');
+      await tester.pump();
+      // 'spain' is in no club's name: the country's name found them all.
+      expect(
+        find.byKey(
+          PlayerEditForm.clubOptionKey(
+            ClubService.leagueClubs('esp')[3],
+            country: 'esp',
+          ),
+        ),
+        findsOneWidget,
+      );
+
+      await tester.enterText(
+        find.byKey(PlayerEditForm.clubSearchKey),
+        'Madrid',
+      );
+      await tester.pump();
+      await tester.tap(
+        find.byKey(
+          PlayerEditForm.clubOptionKey('Madrid White', country: 'esp'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final p = _find(c, id, cze, mid);
+      expect(p.club, 'Madrid White');
+      expect(p.clubCountry, 'esp');
+      await tester.pump(const Duration(milliseconds: 450));
+    },
+  );
+
+  test('nextPlayerId skips ids used in pools', () {
+    final pool = [
+      for (final p in testSquad().take(3)) p.copyWithId(p.id + 900),
+    ];
+    final pack = testPack(
+      'Pool ids',
+      squads: {cze: testSquad()},
+    ).copyWith(pools: {ger: pool});
+    final next = SquadEdits.nextPlayerId(pack);
+    expect(next, kPackPlayerIdBase + 904);
+    final used = {
+      for (final s in [...pack.squads.values, ...pack.pools.values])
+        for (final p in s) p.id,
+    };
+    expect(used.contains(next), isFalse);
+  });
+
   for (final size in kTabletSizes) {
     testWidgets('tablet layouts render, $size', (tester) async {
       final c = await editorContainer(tester, formFactor: FormFactor.tablet);
@@ -400,6 +726,32 @@ void main() {
       );
       await settle(tester);
       expect(find.byType(PlayerEditForm), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      // Advanced opens beside the list too, and Delete is in the header.
+      await tester.ensureVisible(find.byKey(PlayerAdvanced.toggleKey));
+      await tester.pump();
+      await tester.tap(find.byKey(PlayerAdvanced.toggleKey));
+      await settle(tester);
+      expect(find.byKey(PlayerAdvanced.staminaKey), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.byKey(SquadScreen.menuKey));
+      await settle(tester);
+      await tester.tap(find.byKey(SquadScreen.deleteKey));
+      await settle(tester);
+      expect(
+        c
+            .read(packEditorProvider(id))
+            .value!
+            .squads[cze]!
+            .any((p) => p.id == kPackPlayerIdBase + 1),
+        isFalse,
+      );
+      expect(find.byType(PlayerEditForm), findsNothing);
+      // The player page's header has it as well.
+      await pumpEditorRoute(tester, c, _player(id, cze, mid), size: size);
+      await tester.tap(find.byKey(PlayerEditScreen.menuKey));
+      await settle(tester);
+      expect(find.byKey(PlayerEditScreen.deleteKey), findsOneWidget);
       expect(tester.takeException(), isNull);
       await tester.pump(const Duration(milliseconds: 450));
     });

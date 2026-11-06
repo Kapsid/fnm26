@@ -15277,6 +15277,52 @@ class AppLocalizationsCs extends AppLocalizations {
       'Do této databáze se už další názvy v jazycích nevejdou.';
 
   @override
+  String get editorPlayerDelete => 'Smazat hráče';
+
+  @override
+  String get editorPlayerAdvanced => 'Pokročilé';
+
+  @override
+  String get editorPlayerAdvancedAbout =>
+      'Nastavte fyzičku, techniku a výdrž každou zvlášť.';
+
+  @override
+  String get editorPlayerAdvancedOverall => 'Celkové hodnocení z těchto hodnot';
+
+  @override
+  String get editorPlayerTraits => 'Známý pro';
+
+  @override
+  String get editorPlayerTraitsRandom => 'Náhodně';
+
+  @override
+  String get editorPlayerTraitsRandomAbout =>
+      'Každá kariéra mu vlastnosti vylosuje sama, jako dosud.';
+
+  @override
+  String get editorPlayerTraitsNone => 'Žádné vlastnosti, v každé kariéře.';
+
+  @override
+  String editorPlayerTraitsPicked(int max) {
+    return 'Tyto vlastnosti v každé kariéře. Vyberte nejvýš $max.';
+  }
+
+  @override
+  String editorPlayerTraitsMax(int max) {
+    return 'Hráč má nejvýš $max vlastnosti. Nejdřív jednu odeberte.';
+  }
+
+  @override
+  String editorPlayerTraitUnknown(String trait) {
+    return '$trait (tato verze ji nezná)';
+  }
+
+  @override
+  String editorIssueInLanguage(String issue, String language) {
+    return '$issue ($language)';
+  }
+
+  @override
   String get editorNamesOutlet => 'Médium';
 
   @override

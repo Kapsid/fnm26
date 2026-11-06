@@ -1,7 +1,8 @@
 part of 'squad_screen.dart';
 
 /// A squad on a landscape tablet: the list on the left, the picked player's
-/// editor on the right. Undo and Add player sit in the header.
+/// editor on the right. Undo, Add player and (for the picked player) the
+/// menu with Delete sit in the header.
 class _SquadTabletLayout extends StatelessWidget {
   const _SquadTabletLayout({
     required this.state,
@@ -19,9 +20,9 @@ class _SquadTabletLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final picked = state._picked;
-    final shown = picked != null && view.squad.any((p) => p.id == picked)
-        ? picked
-        : null;
+    final shown = picked == null
+        ? null
+        : view.squad.where((p) => p.id == picked).firstOrNull;
     return EditorFrame(
       tablet: true,
       tabletKey: SquadScreen.tabletLayoutKey,
@@ -43,6 +44,12 @@ class _SquadTabletLayout extends StatelessWidget {
           icon: const Icon(Icons.person_add_alt_1),
           label: Text(l.editorSquadAdd),
         ),
+        if (shown != null)
+          EditorDeleteMenu(
+            menuKey: SquadScreen.menuKey,
+            deleteKey: SquadScreen.deleteKey,
+            onDelete: () => state._remove(shown),
+          ),
       ],
       body: MasterDetail(
         initialFraction: 0.42,
@@ -50,7 +57,7 @@ class _SquadTabletLayout extends StatelessWidget {
         master: _SquadList(
           view: view,
           padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-          picked: shown,
+          picked: shown?.id,
           onTap: (p) => state._open(p.id, tablet: true),
           onRemove: state._remove,
         ),
@@ -59,10 +66,10 @@ class _SquadTabletLayout extends StatelessWidget {
             : SingleChildScrollView(
                 padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                 child: PlayerEditForm(
-                  key: ValueKey('editorSquad.form.$shown'),
+                  key: ValueKey('editorSquad.form.${shown.id}'),
                   packId: state._id,
                   nationId: state._nation,
-                  playerId: shown,
+                  playerId: shown.id,
                   onRemoved: (p) {
                     state._unpick();
                     showRemovedSnackBar(context, l, p, state._editor);
