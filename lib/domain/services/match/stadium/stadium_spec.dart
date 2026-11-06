@@ -24,7 +24,7 @@ class StadiumSpec {
     Nation home,
     Nation away,
     double awayShare, {
-    String? groundNationCode,
+    required String groundNationCode,
   }) {
     final tiers = g.capacity < 15000 ? 1 : (g.capacity < 45000 ? 2 : 3);
     final kits = KitClash.resolve(home, away);
@@ -35,15 +35,10 @@ class StadiumSpec {
       homeColour: kits.home.primary,
       awayColour: kits.away.primary,
       awayShare: awayShare,
-      flagCode: groundNationCode ?? _groundCode(g, home, away),
+      flagCode: groundNationCode,
       landmark: Landmarks.forCity(g.city),
     );
   }
-
-  /// The ground's nation is the home side or, at a neutral finals, a host that
-  /// may be neither; callers then pass [groundNationCode].
-  static String _groundCode(MatchGround g, Nation home, Nation away) =>
-      g.groundNationId == away.id ? away.code : home.code;
 
   final int tiers;
   final bool openCorners;
