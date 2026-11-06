@@ -112,7 +112,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "da": [
@@ -228,7 +231,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "de": [
@@ -344,7 +350,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "el": [
@@ -460,7 +469,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "es": [
@@ -576,7 +588,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "fi": [
@@ -692,7 +707,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "fil": [
@@ -808,7 +826,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "fr": [
@@ -924,7 +945,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "hi": [
@@ -1040,7 +1064,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "hr": [
@@ -1156,7 +1183,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "hu": [
@@ -1272,7 +1302,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "id": [
@@ -1388,7 +1421,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "it": [
@@ -1504,7 +1540,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "ja": [
@@ -1620,7 +1659,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "ko": [
@@ -1736,7 +1778,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "ms": [
@@ -1852,7 +1897,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "nb": [
@@ -1968,7 +2016,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "nl": [
@@ -2084,7 +2135,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "pl": [
@@ -2200,7 +2254,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "pt": [
@@ -2316,7 +2373,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "ro": [
@@ -2432,7 +2492,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "sv": [
@@ -2548,7 +2611,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "th": [
@@ -2664,7 +2730,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "tr": [
@@ -2780,7 +2849,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "uk": [
@@ -2896,7 +2968,10 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ],
 
   "vi": [
@@ -3012,6 +3087,9 @@
     "pitchComInjury2",
     "pitchComInjury3",
     "pitchComGoalScore",
-    "pitchComSomeone"
+    "pitchComSomeone",
+    "pitchComPenaltyAwardedSecondYellow1",
+    "pitchComPenaltyAwardedSecondYellow2",
+    "pitchComPenaltyAwardedSecondYellow3"
   ]
 }

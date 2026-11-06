@@ -22146,7 +22146,7 @@
       }
     }
   },
-  "pitchComShotSaved2": "{player} tries his luck, the keeper is equal to it.",
+  "pitchComShotSaved2": "{player} tries his luck, but the keeper is equal to it.",
   "@pitchComShotSaved2": {
     "description": "Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 2 of 3.",
     "placeholders": {
@@ -22859,7 +22859,7 @@
   },
   "pitchComPenaltyAwardedRed1": "Penalty and a red card! {player} goes down, {other} is off.",
   "@pitchComPenaltyAwardedRed1": {
-    "description": "Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.",
+    "description": "Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.",
     "placeholders": {
       "player": {
         "type": "String"
@@ -22871,7 +22871,7 @@
   },
   "pitchComPenaltyAwardedRed2": "Spot kick, and {other} is sent off for the foul on {player}!",
   "@pitchComPenaltyAwardedRed2": {
-    "description": "Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.",
+    "description": "Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.",
     "placeholders": {
       "player": {
         "type": "String"
@@ -22883,7 +22883,7 @@
   },
   "pitchComPenaltyAwardedRed3": "Red card and a penalty! {other} stops {player} going through.",
   "@pitchComPenaltyAwardedRed3": {
-    "description": "Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.",
+    "description": "Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.",
     "placeholders": {
       "player": {
         "type": "String"
@@ -22920,18 +22920,18 @@
       }
     }
   },
-  "pitchComFreeKick1": "Free kick in a dangerous spot. {player} stands over it.",
+  "pitchComFreeKick1": "Free kick. {player} to take it.",
   "@pitchComFreeKick1": {
-    "description": "Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 1 of 3.",
+    "description": "Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 1 of 3.",
     "placeholders": {
       "player": {
         "type": "String"
       }
     }
   },
-  "pitchComFreeKick2": "Free kick. {player} will deliver.",
+  "pitchComFreeKick2": "Free kick in a dangerous spot. {player} stands over it.",
   "@pitchComFreeKick2": {
-    "description": "Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 2 of 3.",
+    "description": "Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 2 of 3.",
     "placeholders": {
       "player": {
         "type": "String"
@@ -22940,7 +22940,7 @@
   },
   "pitchComFreeKick3": "{player} lines up the free kick.",
   "@pitchComFreeKick3": {
-    "description": "Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 3 of 3.",
+    "description": "Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 3 of 3.",
     "placeholders": {
       "player": {
         "type": "String"
@@ -23199,5 +23199,41 @@
   "pitchComSomeone": "Player",
   "@pitchComSomeone": {
     "description": "Pitch view commentary: stands in for a player name the match does not know (should not happen). Capitalised: it may open the line."
+  },
+  "pitchComPenaltyAwardedSecondYellow1": "Penalty, and a second yellow! {other} is off for the foul on {player}.",
+  "@pitchComPenaltyAwardedSecondYellow1": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwardedSecondYellow2": "Spot kick! {player} goes down and {other} sees a second yellow.",
+  "@pitchComPenaltyAwardedSecondYellow2": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchComPenaltyAwardedSecondYellow3": "Penalty! {other} clips {player} and is booked again, so that's red.",
+  "@pitchComPenaltyAwardedSecondYellow3": {
+    "description": "Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "other": {
+        "type": "String"
+      }
+    }
   }
 }

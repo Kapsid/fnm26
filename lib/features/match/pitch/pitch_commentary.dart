@@ -19,27 +19,36 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// shot, sub, corner, dangerous free kick, long throw and card has a line,
 /// including a shot the pacer folds into the set piece it came from.
 ///
-/// [names] maps a player id to the name the match screen shows. [events] is
-/// the match's event list, which a foul's card points into (to tell a
-/// yellow from a red); a card it cannot resolve reads as a yellow, as the
-/// pacer times it. With [score] (home first, after the goal), a goal's line
-/// carries the new score.
+/// [names] maps a player id to the name the match screen shows; every
+/// player a moment names must be in it (asserted in debug). [events] is
+/// always the match's own `MatchResult.events`: a foul's card points into it
+/// (to tell a yellow, a second yellow and a red apart), and a card it cannot
+/// resolve reads as a yellow, as the pacer times it. [score] is the score
+/// after this goal, home first, counted from the events up to and including
+/// the shot's `goalEventIndex`; given for every goal (penalties and set
+/// pieces included), the goal's line carries it.
 ///
-/// The wording is variant `(seed ^ m.seq ^ m.minute) % n` of the `n` that
-/// can be written: a variant naming the keeper or a second player is left
-/// out when the moment has none.
+/// The wording is variant `(seed ^ m.seq ^ m.minute ^ m.stoppage) % n` of
+/// the `n` that can be written: a variant naming the keeper or a second
+/// player is left out when the moment has none.
 String? pitchLine(
   AppLocalizations l,
   MatchMoment m,
   Map<int, String> names,
   int seed, {
-  List<MatchEvent> events = const [],
+  required List<MatchEvent> events,
   ({int home, int away})? score,
 }) {
   if (isRoutineMoment(m)) return null;
-  String name(int? id) => (id == null ? null : names[id]) ?? l.pitchComSomeone;
-  String? pick(List<String> ok) =>
-      ok.isEmpty ? null : ok[(seed ^ m.seq ^ m.minute) % ok.length];
+  String name(int? id) {
+    if (id == null) return l.pitchComSomeone;
+    assert(names.containsKey(id), 'no name for player $id');
+    return names[id] ?? l.pitchComSomeone;
+  }
+
+  String? pick(List<String> ok) => ok.isEmpty
+      ? null
+      : ok[(seed ^ m.seq ^ m.minute ^ m.stoppage) % ok.length];
 
   switch (m) {
     case final ShotMoment s:
@@ -86,7 +95,12 @@ String? pitchLine(
             l.pitchComPenaltyAwardedYellow2(p, o),
             l.pitchComPenaltyAwardedYellow3(p, o),
           ],
-          _Card.secondYellow || _Card.red => [
+          _Card.secondYellow => [
+            l.pitchComPenaltyAwardedSecondYellow1(p, o),
+            l.pitchComPenaltyAwardedSecondYellow2(p, o),
+            l.pitchComPenaltyAwardedSecondYellow3(p, o),
+          ],
+          _Card.red => [
             l.pitchComPenaltyAwardedRed1(p, o),
             l.pitchComPenaltyAwardedRed2(p, o),
             l.pitchComPenaltyAwardedRed3(p, o),
@@ -140,20 +154,24 @@ String? pitchLine(
 }
 
 /// The commentary line for an injury [e] (a staged window of its own, with
-/// no moment behind it): variant `(seed ^ e.minute ^ e.playerId) % 3`.
+/// no moment behind it): variant
+/// `(seed ^ e.minute ^ e.stoppage ^ e.playerId) % 3`. The injured man must
+/// be in [names] (asserted in debug).
 String pitchInjuryLine(
   AppLocalizations l,
   MatchEvent e,
   Map<int, String> names,
   int seed,
 ) {
+  assert(names.containsKey(e.playerId), 'no name for player ${e.playerId}');
   final p = names[e.playerId] ?? l.pitchComSomeone;
   final variants = [
     l.pitchComInjury1(p),
     l.pitchComInjury2(p),
     l.pitchComInjury3(p),
   ];
-  return variants[(seed ^ e.minute ^ e.playerId) % variants.length];
+  return variants[(seed ^ e.minute ^ e.stoppage ^ e.playerId) %
+      variants.length];
 }
 
 /// Whether [m] flows on with no commentary line (see [pitchLine]).

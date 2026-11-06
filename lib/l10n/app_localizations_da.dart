@@ -14318,7 +14318,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String pitchComShotSaved2(String player) {
-    return '$player tries his luck, the keeper is equal to it.';
+    return '$player tries his luck, but the keeper is equal to it.';
   }
 
   @override
@@ -14718,12 +14718,12 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String pitchComFreeKick1(String player) {
-    return 'Free kick in a dangerous spot. $player stands over it.';
+    return 'Free kick. $player to take it.';
   }
 
   @override
   String pitchComFreeKick2(String player) {
-    return 'Free kick. $player will deliver.';
+    return 'Free kick in a dangerous spot. $player stands over it.';
   }
 
   @override
@@ -14858,4 +14858,19 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get pitchComSomeone => 'Player';
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow1(String player, String other) {
+    return 'Penalty, and a second yellow! $other is off for the foul on $player.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow2(String player, String other) {
+    return 'Spot kick! $player goes down and $other sees a second yellow.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
+    return 'Penalty! $other clips $player and is booked again, so that\'s red.';
+  }
 }

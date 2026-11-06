@@ -21665,7 +21665,7 @@ abstract class AppLocalizations {
   /// Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 2 of 3.
   ///
   /// In en, this message translates to:
-  /// **'{player} tries his luck, the keeper is equal to it.'**
+  /// **'{player} tries his luck, but the keeper is equal to it.'**
   String pitchComShotSaved2(String player);
 
   /// Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.
@@ -21746,19 +21746,19 @@ abstract class AppLocalizations {
   /// **'GOAL! A powerful header from {player}.'**
   String pitchComHeaderGoal3(String player);
 
-  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the header's scorer-to-be, {keeper} the goalkeeper. Variant 1 of 3.
+  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 1 of 3.
   ///
   /// In en, this message translates to:
   /// **'{player} heads it, {keeper} saves.'**
   String pitchComHeaderSaved1(String player, String keeper);
 
-  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the header's scorer-to-be, {keeper} the goalkeeper. Variant 2 of 3.
+  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 2 of 3.
   ///
   /// In en, this message translates to:
   /// **'A header from {player}, but the keeper holds it.'**
   String pitchComHeaderSaved2(String player);
 
-  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the header's scorer-to-be, {keeper} the goalkeeper. Variant 3 of 3.
+  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 3 of 3.
   ///
   /// In en, this message translates to:
   /// **'{keeper} tips away the header from {player}.'**
@@ -22106,19 +22106,19 @@ abstract class AppLocalizations {
   /// **'Penalty and a booking! {other} clips {player} in the box.'**
   String pitchComPenaltyAwardedYellow3(String player, String other);
 
-  /// Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.
+  /// Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.
   ///
   /// In en, this message translates to:
   /// **'Penalty and a red card! {player} goes down, {other} is off.'**
   String pitchComPenaltyAwardedRed1(String player, String other);
 
-  /// Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.
+  /// Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.
   ///
   /// In en, this message translates to:
   /// **'Spot kick, and {other} is sent off for the foul on {player}!'**
   String pitchComPenaltyAwardedRed2(String player, String other);
 
-  /// Pitch view commentary line: a penalty is given and the fouler is sent off. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.
+  /// Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.
   ///
   /// In en, this message translates to:
   /// **'Red card and a penalty! {other} stops {player} going through.'**
@@ -22142,19 +22142,19 @@ abstract class AppLocalizations {
   /// **'A corner, and {player} stands over it.'**
   String pitchComCorner3(String player);
 
-  /// Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 1 of 3.
+  /// Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Free kick. {player} to take it.'**
+  String pitchComFreeKick1(String player);
+
+  /// Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 2 of 3.
   ///
   /// In en, this message translates to:
   /// **'Free kick in a dangerous spot. {player} stands over it.'**
-  String pitchComFreeKick1(String player);
-
-  /// Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 2 of 3.
-  ///
-  /// In en, this message translates to:
-  /// **'Free kick. {player} will deliver.'**
   String pitchComFreeKick2(String player);
 
-  /// Pitch view commentary line: a free kick in a dangerous position is about to be taken. {player} is the taker. Variant 3 of 3.
+  /// Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 3 of 3.
   ///
   /// In en, this message translates to:
   /// **'{player} lines up the free kick.'**
@@ -22315,6 +22315,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Player'**
   String get pitchComSomeone;
+
+  /// Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty, and a second yellow! {other} is off for the foul on {player}.'**
+  String pitchComPenaltyAwardedSecondYellow1(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Spot kick! {player} goes down and {other} sees a second yellow.'**
+  String pitchComPenaltyAwardedSecondYellow2(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty! {other} clips {player} and is booked again, so that\'s red.'**
+  String pitchComPenaltyAwardedSecondYellow3(String player, String other);
 }
 
 class _AppLocalizationsDelegate

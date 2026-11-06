@@ -14615,7 +14615,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pitchComShotWoodwork3(String player) {
-    return 'Břevno! $player smolí.';
+    return 'Břevno! $player má smůlu.';
   }
 
   @override
@@ -14785,7 +14785,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pitchComDirectFreeKickSaved1(String player, String keeper) {
-    return '$player jde přímo na bránu, $keeper chytá.';
+    return '$player to zkouší přímo, $keeper chytá.';
   }
 
   @override
@@ -14840,7 +14840,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pitchComDirectFreeKickWoodwork3(String player) {
-    return 'Brankáře zachraňuje břevno, $player smolí.';
+    return 'Brankáře zachraňuje břevno, $player má smůlu.';
   }
 
   @override
@@ -14880,7 +14880,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pitchComPenaltyMissed2(String player) {
-    return 'Vedle! $player posílá penaltu mimo tyč.';
+    return 'Vedle! $player posílá penaltu kolem tyče.';
   }
 
   @override
@@ -14900,7 +14900,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pitchComPenaltyWoodwork3(String player) {
-    return 'Konstrukce! $player nevěří vlastním očím.';
+    return 'Tyč! $player nevěří vlastním očím.';
   }
 
   @override
@@ -14965,17 +14965,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String pitchComFreeKick1(String player) {
-    return 'Standardka z nebezpečné pozice. K míči se staví $player.';
+    return 'Volný kop. Zahrává $player.';
   }
 
   @override
   String pitchComFreeKick2(String player) {
-    return 'Přímý kop. Zahrává $player.';
+    return 'Standardka z nebezpečné pozice. K míči se staví $player.';
   }
 
   @override
   String pitchComFreeKick3(String player) {
-    return '$player si staví míč k přímému kopu.';
+    return '$player se chystá k zahrání standardky.';
   }
 
   @override
@@ -15105,4 +15105,19 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pitchComSomeone => 'Hráč';
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow1(String player, String other) {
+    return 'Penalta a druhá žlutá! $other jde ze hřiště, $player leží ve vápně.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow2(String player, String other) {
+    return 'Pokutový kop! $player padá a $other vidí druhou žlutou.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
+    return 'Penalta! $other podráží ve vápně, $player padá a je z toho druhá žlutá.';
+  }
 }
