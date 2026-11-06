@@ -587,7 +587,14 @@ void main() {
     test(
       'an oversized or odd-shaped trait, deal or voice -> badData',
       () async {
-        for (final bad in ['x' * 41, 'flying kick', 'leader!', '', '42']) {
+        for (final bad in [
+          'x' * 41,
+          'flying kick',
+          'leader!',
+          '',
+          '42',
+          '2fast',
+        ]) {
           final raw = rawPack(_pack());
           final squad = (raw['squads']! as Map)['1']! as List;
           (squad.first as Map<String, Object?>)['traits'] = [bad];
@@ -658,6 +665,71 @@ void main() {
         }
       },
     );
+
+    test('a digit inside a trait, deal, voice or industry is a name this '
+        'build may not know, kept and flagged', () async {
+      final raw = rawPack(
+        _pack().copyWith(
+          addedSponsors: [
+            PackSponsor(
+              id: kPackAddedIdBase,
+              name: 'Brand',
+              deal: SponsorDeal.values.first,
+              industry: 'web3',
+            ),
+          ],
+        ),
+      );
+      final squad = (raw['squads']! as Map)['1']! as List;
+      (squad.first as Map<String, Object?>)['traits'] = ['u21Star'];
+      ((raw['addedSponsors']! as List).single as Map)['deal'] = 'year2';
+      final r = await PackCodec.decode(_file(_raw(_pack())..['pack'] = raw));
+      final p = (r as PackDecoded).pack;
+      expect(p.squads[1]!.first.unknownTraits, ['u21Star']);
+      expect(p.addedSponsors.single.unknownDeal, 'year2');
+      expect(p.addedSponsors.single.industry, 'web3');
+      final flagged = PackRules.compatibility(
+        p,
+        nationIds: {1},
+        competitionNames: const {},
+        trophyKeys: const {},
+        sponsorBrands: {for (final b in SponsorBrand.values) b.name},
+        yAccounts: const {},
+        countryCodes: const {},
+        fringeRanges: const {},
+      ).map((i) => i.where);
+      expect(flagged, contains('squads.1.1.traits'));
+    });
+
+    test('a 1.1.0 file giving two nations one code imports, flagged', () async {
+      // Codes are the pack's own, and Ruling 1 keeps and flags: the clash
+      // still blocks a career (it is in issues), but the file comes in.
+      final p = _pack().copyWith(
+        nations: const {
+          1: (name: 'Testland', code: 'TST'),
+          2: (name: 'Otherland', code: 'TST'),
+        },
+      );
+      final file = _file(
+        _raw(p)
+          ..['pack'] = (rawPack(p)
+            ..['formatVersion'] = 1
+            ..remove('pools')
+            ..remove('addedClubs')
+            ..remove('addedSponsors')
+            ..remove('addedYAccounts')
+            ..remove('localized')),
+      );
+      final r = await PackCodec.decode(
+        file,
+        baseCodes: const {1: 'AAA', 2: 'BBB'},
+      );
+      expect(r, isA<PackDecoded>());
+      expect(
+        PackRules.issues((r as PackDecoded).pack).whereType<DuplicateCode>(),
+        isNotEmpty,
+      );
+    });
 
     test('an oversized industry -> badData', () async {
       final p = _pack().copyWith(

@@ -113,8 +113,8 @@ abstract final class PackCodec {
     return Uint8List.fromList(gzip.encode(utf8.encode(json)));
   }
 
-  /// Reads [bytes]. [baseCodes] are the default world's nation codes, so a
-  /// pack that gives two nations one code is refused.
+  /// Reads [bytes]. [baseCodes] are the default world's nation codes; a
+  /// pack giving two nations one code is kept and flagged ([fieldsOk]).
   static Future<PackDecode> decode(
     Uint8List bytes, {
     Map<int, String> baseCodes = const {},
@@ -224,7 +224,9 @@ abstract final class PackCodec {
   /// device from outside passes this, a `.fnmdb` file's and a `.fnmcareer`
   /// bundle's world alike.
   ///
-  /// Only safety refuses a file. A well-formed name this build does not
+  /// Only safety refuses a file. Two nations under one code
+  /// ([DuplicateCode]) are kept as well: the pack's own to fix, and a
+  /// career waits until it is. A well-formed name this build does not
   /// know (a nation, country, industry, language, trait, deal or voice) is
   /// kept and flagged by [PackRules.compatibility], so files travel between
   /// newer and older games; so is an added club or Y account under one of
@@ -268,8 +270,11 @@ abstract final class PackCodec {
       localized += m.length;
       if (localized > PackRules.localizedMax) return false;
     }
+    // A code two nations share is the pack's to fix, not a danger: it is
+    // kept, and it keeps the pack from a career until fixed (it is one of
+    // [PackRules.issues]), as a 1.1.0 build did.
     return !PackRules.issues(p, baseCodes: baseCodes).any(
-      (i) => i is BadField || i is DuplicateCode || i is UnknownId,
+      (i) => i is BadField || i is UnknownId,
     );
   }
 

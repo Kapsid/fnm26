@@ -672,7 +672,7 @@ void main() {
         deal: SponsorDeal.risky,
         industry: industry,
       );
-      for (final bad in ['', 'x' * 41, 'two words', 'a1', 'ünï']) {
+      for (final bad in ['', 'x' * 41, 'two words', '1a', 'a-1', 'ünï']) {
         final b = _bad(_pack(addedSponsors: [s(bad)])).single;
         expect(b.path, 'addedSponsors.$_added.industry', reason: bad);
         expect(b.reason, FieldReason.badCharacters);
@@ -813,7 +813,7 @@ void main() {
 
     test('a control character in a club is refused, squad and pool', () {
       expect(
-        badPaths(club: 'FCBell'),
+        badPaths(club: 'FC\u0007Bell'),
         containsAll(['squads.1.6.club', 'pools.1.$_fringe.club']),
       );
     });
@@ -827,7 +827,7 @@ void main() {
 
     test('a junk clubCountry is refused', () {
       expect(
-        badPaths(club: 'Ajax', country: 'ne '),
+        badPaths(club: 'Ajax', country: 'ne\u0000'),
         containsAll([
           'squads.1.6.clubCountry',
           'pools.1.$_fringe.clubCountry',

@@ -124,7 +124,7 @@ abstract final class PackRules {
   static const localizedMax = 20000;
 
   static final _country = RegExp(r'^[a-z]{3}$');
-  static final _industry = RegExp(r'^[A-Za-z]{1,40}$');
+  static final _industry = RegExp(r'^[a-zA-Z][a-zA-Z0-9]{0,39}$');
 
   /// A player's stored club country: three letters, either case.
   static final _clubCountry = RegExp(r'^[A-Za-z]{3}$');

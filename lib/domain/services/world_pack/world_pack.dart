@@ -722,9 +722,10 @@ String _str(Object? v, String what) {
 
 String? _strOrNull(Object? v, String what) => v == null ? null : _str(v, what);
 
-final _tokenShape = RegExp(r'^[a-zA-Z]{1,40}$');
+final _tokenShape = RegExp(r'^[a-zA-Z][a-zA-Z0-9]{0,39}$');
 
-/// [name] when it is shaped like an enum name (1 to 40 ASCII letters),
+/// [name] when it is shaped like an enum name (1 to 40 ASCII letters and
+/// digits, a letter first: `u21Star`),
 /// whether or not this build knows it; a [FormatException] naming [what]
 /// otherwise. A name this build does not know is kept and flagged, never
 /// refused: files travel between newer and older games.
