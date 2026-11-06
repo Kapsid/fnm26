@@ -14456,7 +14456,20 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String editorExportTooBig(String size, String limit) {
-    return 'This database is too big to share: the file would be $size MB and the limit is $limit MB. Leave fewer pools fixed or remove some trophy pictures, then try again.';
+    return 'Databasen er for stor til at blive delt: filen ville fylde $size MB, og grænsen er $limit MB. Lås færre puljer, eller fjern nogle pokalbilleder, og prøv igen.';
+  }
+
+  @override
+  String editorRemoveAllLike(int count) {
+    return 'Fjern alle lignende ($count)';
+  }
+
+  @override
+  String get editorNotesTitle => 'Andre sprog';
+
+  @override
+  String editorUnknownLanguageNote(String language, int count) {
+    return 'Navne på \"$language\", et sprog denne version ikke viser: $count. De gemmes til versioner, der kender sproget.';
   }
 
   @override

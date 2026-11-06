@@ -95,11 +95,46 @@ class UnknownId extends CompatIssue {
 /// name one of the game's own already has: a curated league's club or a
 /// city club of its country, or a game Y account. A game update can add
 /// such a name to a file made before it, so this is flagged, never refused.
-/// A clash with a name the pack itself gives (another added item, or a
-/// rename's new name) is a [BadField]
+/// So is an added club under the new name the pack gives a league club of
+/// its country (see [PackRules.clubNameClash]). A clash with another added
+/// item's name, or between two Y names the pack gives, is a [BadField]
 /// ([FieldReason.duplicate]) instead.
 class NameClash extends CompatIssue {
   const NameClash(super.path);
+}
+
+/// A `localized` value in a language this build does not speak, at
+/// [path] (`localized.<path>.<language>`). Not a [CompatIssue]: it is kept
+/// for the games that speak it, never shown here, and blocks nothing; the
+/// editor lists it as a note ([PackRules.unknownLanguages]).
+class UnknownLanguage extends PackIssue {
+  const UnknownLanguage(this.path, this.language);
+  final String path;
+  final String language;
+  @override
+  String get where => path;
+}
+
+/// Whose name a club name already is, in a country ([PackRules.clubNameClash]).
+enum ClubNameClash {
+  /// Another club the pack adds to that country.
+  added,
+
+  /// A league club of that country the pack renames to it.
+  renamed,
+
+  /// A club of the game's in that country under its own name: a curated
+  /// league's (one the pack leaves as it is), or a side the game names for
+  /// one of its cities.
+  game,
+
+  /// A club the pack renames is called it in the game (any country): the
+  /// rename map is keyed by the game's names, so a club under it would be
+  /// renamed with it.
+  renameKey,
+
+  /// A club of the game's in another country goes by it.
+  gameElsewhere,
 }
 
 abstract final class PackRules {
@@ -174,6 +209,71 @@ abstract final class PackRules {
       if (c >= 0xDC00 && c <= 0xDFFF) return true;
     }
     return false;
+  }
+
+  static String _foldName(String s) => s.trim().toLowerCase();
+
+  static Set<String>? _gameClubs;
+
+  /// Every club name of the game's curated leagues, folded.
+  static Set<String> get _allGameClubs => _gameClubs ??= {
+    for (final l in ClubService.allLeagues())
+      for (final c in l.clubs) _foldName(c),
+  };
+
+  /// Whose name [name] already is among [country]'s clubs (lower-case
+  /// code) in [p], or null when nobody's: the ONE check for a club name,
+  /// for an added club ([addedId], when it is that club's own name) and for
+  /// a league club's rename ([renamedFrom], the game's name of the club
+  /// being renamed). Compared trimmed and case-insensitively; a club's own
+  /// name never clashes with itself. [countryCities] names a league-less
+  /// country's own sides. The most pressing answer comes first: the pack's
+  /// own names ([ClubNameClash.added], [ClubNameClash.renamed]), then the
+  /// game's in the country, then the game's anywhere.
+  ///
+  /// [issues] and the editor read the answer each their way: the editor
+  /// refuses every clash as it is typed; [issues] reports a clash with
+  /// another added club as the pack's own duplicate, and the rest as a
+  /// [NameClash] (a renamed club's new name, or a game update, can bring
+  /// it), but not [ClubNameClash.gameElsewhere], which harms nothing.
+  static ClubNameClash? clubNameClash(
+    WorldPack p,
+    String name,
+    String country,
+    Map<String, List<String>> countryCities, {
+    int? addedId,
+    String? renamedFrom,
+  }) {
+    final to = _foldName(name);
+    if (renamedFrom != null && _foldName(renamedFrom) == to) return null;
+    final code = country.toLowerCase();
+    if (p.addedClubs.any(
+      (c) => c.country == code && c.id != addedId && _foldName(c.name) == to,
+    )) {
+      return ClubNameClash.added;
+    }
+    var game = false;
+    for (final original in ClubService.leagueClubs(code)) {
+      if (original == renamedFrom) continue;
+      switch (p.clubs[original]) {
+        case final renamed? when renamed.trim().isNotEmpty:
+          if (_foldName(renamed) == to) return ClubNameClash.renamed;
+        case _:
+          if (_foldName(original) == to) game = true;
+      }
+    }
+    if (game ||
+        ClubService.domesticClubNames(
+          code,
+          countryCities[code] ?? const [],
+        ).any((c) => _foldName(c) == to)) {
+      return ClubNameClash.game;
+    }
+    if (p.clubs.keys.any((k) => k != renamedFrom && _foldName(k) == to)) {
+      return ClubNameClash.renameKey;
+    }
+    if (_allGameClubs.contains(to)) return ClubNameClash.gameElsewhere;
+    return null;
   }
 
   static FieldReason? checkCode(String s) =>
@@ -404,24 +504,7 @@ abstract final class PackRules {
       if (have > max) out.add(BadField(root, FieldReason.outOfRange));
     }
 
-    String fold(String s) => s.trim().toLowerCase();
-
     cap('addedClubs', p.addedClubs.length, addedClubsMax);
-    // Another club of the country: its league's (the curated one, else the
-    // sides the game names for its cities, given [countryCities]), or
-    // another added one. A league club the pack renames goes by the pack's
-    // name, and a clash with it is the pack's own duplicate; one it leaves
-    // as it is goes by the game's, and a clash with that is a [NameClash].
-    final taken = <String, ({Set<String> pack, Set<String> game})>{};
-    final addedNames = <String, Map<String, int>>{};
-    for (final c in p.addedClubs) {
-      (addedNames[c.country] ??= {}).update(
-        fold(c.name),
-        (n) => n + 1,
-        ifAbsent: () => 1,
-      );
-    }
-    final renamedFrom = {for (final k in p.clubs.keys) fold(k)};
     for (final c in p.addedClubs) {
       final path = 'addedClubs.${c.id}';
       id('addedClubs', c.id);
@@ -429,32 +512,25 @@ abstract final class PackRules {
       if (r != null) {
         out.add(BadField(path, r));
       } else {
-        final league = taken[c.country] ??= () {
-          final pack = <String>{}, game = <String>{};
-          for (final original in [
-            ...ClubService.leagueClubs(c.country),
-            ...ClubService.domesticClubNames(
-              c.country,
-              countryCities[c.country] ?? const [],
-            ),
-          ]) {
-            switch (p.clubs[original]) {
-              case final renamed?:
-                pack.add(fold(renamed));
-              case null:
-                game.add(fold(original));
-            }
-          }
-          return (pack: pack, game: game);
-        }();
-        final to = fold(c.name);
-        if (league.pack.contains(to) || addedNames[c.country]![to]! > 1) {
-          out.add(BadField(path, FieldReason.duplicate));
-        } else if (league.game.contains(to) || renamedFrom.contains(to)) {
-          // A club the pack renames goes by the game's name in the rename
-          // map, whatever its country: an added club under that name reads
-          // as the rename's target wherever the map is applied by name.
-          out.add(NameClash(path));
+        switch (clubNameClash(
+          p,
+          c.name,
+          c.country,
+          countryCities,
+          addedId: c.id,
+        )) {
+          // Two added clubs under one name: the pack's own duplicate.
+          case ClubNameClash.added:
+            out.add(BadField(path, FieldReason.duplicate));
+          // A league club the pack renames onto it (either may be the one
+          // that moved), a club of the game's, or a club the rename map
+          // names: flagged, not refused (Ruling 1).
+          case ClubNameClash.renamed ||
+              ClubNameClash.game ||
+              ClubNameClash.renameKey:
+            out.add(NameClash(path));
+          case ClubNameClash.gameElsewhere || null:
+            break;
         }
       }
       if (!_country.hasMatch(c.country)) {
@@ -733,9 +809,9 @@ abstract final class PackRules {
   ///
   /// And what this build does not know of a well-formed file: a picked
   /// trait (`<squads|pools>.<id>.<playerId>.traits`), a sponsor's deal
-  /// (`addedSponsors.<id>.deal`), a Y account's voice
-  /// (`addedYAccounts.<id>.voice`) and a language
-  /// (`localized.<path>.<language>`, one [supportedLanguageCodes] lacks).
+  /// (`addedSponsors.<id>.deal`) and a Y account's voice
+  /// (`addedYAccounts.<id>.voice`). A language this build does not speak is
+  /// not here: it blocks nothing ([unknownLanguages]).
   ///
   /// Only references: whether an entry's content is right is [issues]'s
   /// business. A nation the game has and the pack never mentions is not an
@@ -832,19 +908,21 @@ abstract final class PackRules {
         'yAccounts' => yAccounts.contains(key),
         _ => true,
       };
-      if (!known) {
-        out.add(UnknownId('localized.$path'));
-        continue;
-      }
-      for (final lang in p.localized[path]!.keys.toList()..sort()) {
-        if (languageShape.hasMatch(lang) &&
-            !supportedLanguageCodes.contains(lang)) {
-          out.add(UnknownId('localized.$path.$lang'));
-        }
-      }
+      if (!known) out.add(UnknownId('localized.$path'));
     }
     return out;
   }
+
+  /// Every `localized` value of [p] under a well-formed language this build
+  /// does not speak, by path then language. Kept, listed, never blocking:
+  /// see [UnknownLanguage].
+  static List<UnknownLanguage> unknownLanguages(WorldPack p) => [
+    for (final path in p.localized.keys.toList()..sort())
+      for (final lang in p.localized[path]!.keys.toList()..sort())
+        if (languageShape.hasMatch(lang) &&
+            !supportedLanguageCodes.contains(lang))
+          UnknownLanguage('localized.$path.$lang', lang),
+  ];
 
   static bool isComplete(
     WorldPack p, {

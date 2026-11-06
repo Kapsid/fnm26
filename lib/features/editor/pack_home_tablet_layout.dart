@@ -48,6 +48,23 @@ class _PackHomeTabletLayout extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _ReadyCard(view: view),
+                if (view.notes.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  Panel(
+                    title: l.editorNotesTitle,
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    child: Column(
+                      children: [
+                        for (final e in view.notes.entries)
+                          _LanguageNote(
+                            language: e.key,
+                            count: e.value,
+                            onRemove: () => state._removeLanguage(e.key),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
                 if (view.issues.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.md),
                   Expanded(
@@ -62,6 +79,7 @@ class _PackHomeTabletLayout extends StatelessWidget {
                           issue: view.issues[i],
                           onTap: () => state._openIssue(view, i),
                           onRemove: state._remover(view, i),
+                          removeAll: state._removeAll(view, pack, i),
                         ),
                       ),
                     ),

@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Пише в",
   "editorAddedAllNations": "Усі збірні",
   "editorAddedSearch": "Пошук",
-  "editorCountAdded": "Додано: {count}"
+  "editorCountAdded": "Додано: {count}",
+  "editorExportTooBig": "База даних завелика, щоб нею поділитися: файл мав би {size} МБ, а ліміт становить {limit} МБ. Залиште менше фіксованих резервів або видаліть кілька зображень трофеїв і спробуйте знову.",
+  "editorRemoveAllLike": "Видалити всі подібні ({count})",
+  "editorNotesTitle": "Інші мови",
+  "editorUnknownLanguageNote": "Назви мовою «{language}», якої ця версія не показує: {count}. Вони зберігаються для версій, що її підтримують."
 }

@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Paylaştığı yer",
   "editorAddedAllNations": "Tüm ülkeler",
   "editorAddedSearch": "Ara",
-  "editorCountAdded": "{count} eklendi"
+  "editorCountAdded": "{count} eklendi",
+  "editorExportTooBig": "Bu veritabanı paylaşmak için fazla büyük: dosya {size} MB olur, sınır {limit} MB. Daha az havuzu sabit bırakın veya bazı kupa resimlerini kaldırıp yeniden deneyin.",
+  "editorRemoveAllLike": "Benzerlerinin hepsini kaldır ({count})",
+  "editorNotesTitle": "Diğer diller",
+  "editorUnknownLanguageNote": "Bu sürümün göstermediği \"{language}\" dilindeki adlar: {count}. Bu dili bilen sürümler için saklanır."
 }

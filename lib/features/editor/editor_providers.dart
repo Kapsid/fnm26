@@ -417,6 +417,30 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   /// a name the game's own already has.
   bool get needsAttention => issues.any((i) => i is CompatIssue);
 
+  WorldPack? _notesOf;
+  List<UnknownLanguage> _notes = const [];
+
+  /// What the pack keeps that this build does not use and that blocks
+  /// nothing: its values in languages this build does not speak
+  /// ([PackRules.unknownLanguages]). Listed on the pack home as notes.
+  List<UnknownLanguage> get notes {
+    final pack = state.valueOrNull;
+    if (pack == null) return const [];
+    if (!identical(pack, _notesOf)) {
+      _notes = PackRules.unknownLanguages(pack);
+      _notesOf = pack;
+    }
+    return _notes;
+  }
+
+  /// Removes every entry of [kind] ([kindsOf]) as ONE undoable edit:
+  /// "Remove all like this". Returns whether something was removed.
+  bool removeAllLike(String kind) {
+    final before = _revision;
+    update((p) => withoutKind(p, kind));
+    return _revision != before;
+  }
+
   /// Removes exactly the entry [issue] names, as one undoable edit (for a
   /// [NameClash], the added club or Y account, or the Y rename). A trophy
   /// goes with its picture ([setTrophy]), which, like every picture, undo
@@ -609,6 +633,117 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
         return p.copyWith(yAccounts: without(p.yAccounts, key));
       case 'sponsors' when p.sponsors.containsKey(key):
         return p.copyWith(sponsors: without(p.sponsors, key));
+    }
+    return p;
+  }
+
+  /// The kinds [issue] is one of: what it shares with other entries, so
+  /// they can go together ("Remove all like this", [withoutKind]). An
+  /// unknown language (`language:<code>`); each unknown trait a player's
+  /// entry names (`trait:<name>`, most common first); a sponsor's unknown
+  /// deal (`deal:<name>`) and a Y account's unknown voice (`voice:<name>`).
+  /// Empty for anything else, which is one of a kind.
+  static List<String> kindsOf(PackIssue issue, WorldPack p) {
+    if (issue is UnknownLanguage) return ['language:${issue.language}'];
+    if (issue is! UnknownId) return const [];
+    final parts = issue.path.split('.');
+    if (parts.length == 4 &&
+        (parts[0] == 'squads' || parts[0] == 'pools') &&
+        parts[3] == 'traits') {
+      final players = parts[0] == 'pools' ? p.pools : p.squads;
+      final id = int.tryParse(parts[2]);
+      final names = [
+        for (final pl
+            in players[int.tryParse(parts[1])] ?? const <PackPlayer>[])
+          if (pl.id == id) ...pl.unknownTraits,
+      ].map((t) => 'trait:$t').toList();
+      final counts = {for (final k in names) k: countOfKind(p, k)};
+      return names..sort((a, b) => counts[b]!.compareTo(counts[a]!));
+    }
+    if (parts.length == 3 && parts[2] == 'deal') {
+      final s = p.addedSponsors.where((s) => '${s.id}' == parts[1]);
+      if (s.firstOrNull?.unknownDeal case final d?) return ['deal:$d'];
+    }
+    if (parts.length == 3 && parts[2] == 'voice') {
+      final y = p.addedYAccounts.where((y) => '${y.id}' == parts[1]);
+      if (y.firstOrNull?.unknownVoice case final v?) return ['voice:$v'];
+    }
+    return const [];
+  }
+
+  /// How many entries of [p] are of [kind] ([kindsOf]): values for a
+  /// language, players for a trait, sponsors for a deal, accounts for a
+  /// voice.
+  static int countOfKind(WorldPack p, String kind) {
+    final colon = kind.indexOf(':');
+    if (colon < 0) return 0;
+    final name = kind.substring(colon + 1);
+    return switch (kind.substring(0, colon)) {
+      'language' => p.localized.values.where((m) => m.containsKey(name)).length,
+      'trait' => [
+        ...p.squads.values,
+        ...p.pools.values,
+      ].expand((l) => l).where((pl) => pl.unknownTraits.contains(name)).length,
+      'deal' => p.addedSponsors.where((s) => s.unknownDeal == name).length,
+      'voice' => p.addedYAccounts.where((y) => y.unknownVoice == name).length,
+      _ => 0,
+    };
+  }
+
+  /// [p] without every entry of [kind] ([kindsOf]), or [p] itself
+  /// (identical) when it has none: the language's values (a path goes with
+  /// its last one), the trait from every player (his other traits stay),
+  /// the deal or voice from every item (each keeps its fallback).
+  static WorldPack withoutKind(WorldPack p, String kind) {
+    if (countOfKind(p, kind) == 0) return p;
+    final colon = kind.indexOf(':');
+    final name = kind.substring(colon + 1);
+    switch (kind.substring(0, colon)) {
+      case 'language':
+        return p.copyWith(
+          localized: {
+            for (final e in p.localized.entries)
+              if (!(e.value.length == 1 && e.value.containsKey(name)))
+                e.key: {...e.value}..remove(name),
+          },
+        );
+      case 'trait':
+        PackPlayer drop(PackPlayer pl) => !pl.unknownTraits.contains(name)
+            ? pl
+            : PackPlayer(
+                id: pl.id,
+                name: pl.name,
+                age: pl.age,
+                position: pl.position,
+                attributes: pl.attributes,
+                potential: pl.potential,
+                club: pl.club,
+                clubCountry: pl.clubCountry,
+                traits: pl.traits,
+                unknownTraits: [
+                  for (final t in pl.unknownTraits)
+                    if (t != name) t,
+                ],
+              );
+        Map<int, List<PackPlayer>> each(Map<int, List<PackPlayer>> m) => {
+          for (final e in m.entries)
+            e.key: [for (final pl in e.value) drop(pl)],
+        };
+        return p.copyWith(squads: each(p.squads), pools: each(p.pools));
+      case 'deal':
+        return p.copyWith(
+          addedSponsors: [
+            for (final s in p.addedSponsors)
+              s.unknownDeal == name ? s.withoutUnknown() : s,
+          ],
+        );
+      case 'voice':
+        return p.copyWith(
+          addedYAccounts: [
+            for (final y in p.addedYAccounts)
+              y.unknownVoice == name ? y.withoutUnknown() : y,
+          ],
+        );
     }
     return p;
   }

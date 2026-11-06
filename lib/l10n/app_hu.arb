@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Itt posztol",
   "editorAddedAllNations": "Minden ország",
   "editorAddedSearch": "Keresés",
-  "editorCountAdded": "{count} hozzáadva"
+  "editorCountAdded": "{count} hozzáadva",
+  "editorExportTooBig": "Ez az adatbázis túl nagy a megosztáshoz: a fájl {size} MB lenne, a korlát {limit} MB. Hagyj kevesebb rögzített keretet, vagy távolíts el néhány trófeaképet, majd próbáld újra.",
+  "editorRemoveAllLike": "Az összes hasonló eltávolítása ({count})",
+  "editorNotesTitle": "Más nyelvek",
+  "editorUnknownLanguageNote": "Nevek „{language}” nyelven, amelyet ez a verzió nem jelenít meg: {count}. Megmaradnak azoknak a verzióknak, amelyek ismerik."
 }

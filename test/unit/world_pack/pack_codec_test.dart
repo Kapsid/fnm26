@@ -12,7 +12,6 @@ import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
-import 'package:fnm/domain/entities/player_ids.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
@@ -384,7 +383,7 @@ void main() {
         );
         expect(PackCodec.fieldsOk(p), isTrue);
         final json = utf8.encode(
-          jsonEncode({'format': 2, 'pack': p.toJson(), 'trophies': {}}),
+          jsonEncode({'format': 2, 'pack': p.toJson(), 'trophies': <String, Object?>{}}),
         );
         final bytes = PackCodec.encode(p, const {});
         // ignore: avoid_print
@@ -921,6 +920,26 @@ void main() {
           'addedYAccounts.${kPackAddedIdBase + 1}.voice',
         ]),
       );
+    });
+
+    test('500 values in a 29th language keep a pack ready to start', () async {
+      final pack = _pack(name: 'Klingon').copyWith(
+        localized: {
+          for (var i = 0; i < 500; i++) 'clubs.Club $i': {'tlh': 'Q$i'},
+        },
+      );
+      final world = await c.read(nationRepositoryProvider).newCareerWorld();
+      final facts = await readPackFacts(
+        c.read(playerRepositoryProvider),
+        c.read(seedSourceProvider),
+      );
+      final a = assessPack(pack, world, facts: facts);
+      expect(a.status, PackStatus.ready);
+      expect(a.issues, isEmpty);
+      expect(PackRules.unknownLanguages(pack), hasLength(500));
+      // And the file still travels with them.
+      final r = await PackCodec.decode(PackCodec.encode(pack, const {}));
+      expect((r as PackDecoded).pack.localized, hasLength(500));
     });
 
     test("an added club under a game club's name needs attention, comes "

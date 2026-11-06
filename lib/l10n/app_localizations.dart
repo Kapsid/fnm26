@@ -21908,6 +21908,24 @@ abstract class AppLocalizations {
   /// **'This database is too big to share: the file would be {size} MB and the limit is {limit} MB. Leave fewer pools fixed or remove some trophy pictures, then try again.'**
   String editorExportTooBig(String size, String limit);
 
+  /// Button on the database home under an entry that many entries share (one unknown trait or language). Removes them all as one undoable step. count is always 2 or more.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all {count} like this'**
+  String editorRemoveAllLike(int count);
+
+  /// Header on the database home over its names in languages this version of the game does not have. They block nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Other languages'**
+  String get editorNotesTitle;
+
+  /// One row under editorNotesTitle. language is a language code from the file, such as tlh.
+  ///
+  /// In en, this message translates to:
+  /// **'Names in \"{language}\", a language this version does not show: {count}. They are kept for versions that do.'**
+  String editorUnknownLanguageNote(String language, int count);
+
   /// Subject line of the share sheet for an exported database.
   ///
   /// In en, this message translates to:

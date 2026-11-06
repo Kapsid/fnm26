@@ -14390,7 +14390,20 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String editorExportTooBig(String size, String limit) {
-    return 'This database is too big to share: the file would be $size MB and the limit is $limit MB. Leave fewer pools fixed or remove some trophy pictures, then try again.';
+    return 'Ez az adatbázis túl nagy a megosztáshoz: a fájl $size MB lenne, a korlát $limit MB. Hagyj kevesebb rögzített keretet, vagy távolíts el néhány trófeaképet, majd próbáld újra.';
+  }
+
+  @override
+  String editorRemoveAllLike(int count) {
+    return 'Az összes hasonló eltávolítása ($count)';
+  }
+
+  @override
+  String get editorNotesTitle => 'Más nyelvek';
+
+  @override
+  String editorUnknownLanguageNote(String language, int count) {
+    return 'Nevek „$language” nyelven, amelyet ez a verzió nem jelenít meg: $count. Megmaradnak azoknak a verzióknak, amelyek ismerik.';
   }
 
   @override

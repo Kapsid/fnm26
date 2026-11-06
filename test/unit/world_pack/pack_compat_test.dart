@@ -251,7 +251,8 @@ void main() {
     ]);
   });
 
-  test('a well-formed language this build does not speak is UnknownId', () {
+  test('a well-formed language this build does not speak is a note, '
+      'never a compat issue', () {
     final p = _pack(
       localized: {
         'clubs.Old FC': {'xx': 'X', 'cs': 'Y'},
@@ -259,10 +260,15 @@ void main() {
       },
     );
     // A path the game no longer has is flagged whole, not per language.
-    expect(_paths(_check(p)), [
-      'localized.clubs.Old FC.xx',
-      'localized.competitions.Old Cup',
-    ]);
+    expect(_paths(_check(p)), ['localized.competitions.Old Cup']);
+    // The language is kept and listed, and blocks nothing.
+    expect(
+      [for (final n in PackRules.unknownLanguages(p)) (n.path, n.language)],
+      [
+        ('localized.clubs.Old FC.xx', 'xx'),
+        ('localized.competitions.Old Cup.xx', 'xx'),
+      ],
+    );
   });
 
   test('unknown traits, deals and voices are UnknownId', () {

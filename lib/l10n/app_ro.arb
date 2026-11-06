@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Postează în",
   "editorAddedAllNations": "Toate națiunile",
   "editorAddedSearch": "Căutați",
-  "editorCountAdded": "Adăugate: {count}"
+  "editorCountAdded": "Adăugate: {count}",
+  "editorExportTooBig": "Această bază de date este prea mare pentru a fi partajată: fișierul ar avea {size} MB, iar limita este de {limit} MB. Lăsați mai puține loturi fixe sau eliminați câteva imagini de trofee, apoi încercați din nou.",
+  "editorRemoveAllLike": "Eliminați toate cele similare ({count})",
+  "editorNotesTitle": "Alte limbi",
+  "editorUnknownLanguageNote": "Nume în „{language}”, o limbă pe care această versiune nu o afișează: {count}. Sunt păstrate pentru versiunile care o cunosc."
 }

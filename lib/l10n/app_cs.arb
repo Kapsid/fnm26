@@ -3875,5 +3875,9 @@
   "worldStarting": "Připravujeme váš svět",
   "settingsDefaultWorldTitle": "Výchozí svět",
   "settingsDefaultWorldBlurb": "Svět, na kterém začíná nová hra. Pro každou kariéru ho můžete změnit.",
-  "worldPackNotReady": "Na této databázi už nelze začít kariéru. Opravte ji v Editoru, nebo vyberte jiný svět."
+  "worldPackNotReady": "Na této databázi už nelze začít kariéru. Opravte ji v Editoru, nebo vyberte jiný svět.",
+  "editorExportTooBig": "Databáze je příliš velká na sdílení: soubor by měl {size} MB a limit je {limit} MB. Nechte méně pevných poolů nebo odeberte některé obrázky trofejí a zkuste to znovu.",
+  "editorRemoveAllLike": "Odebrat vše podobné ({count})",
+  "editorNotesTitle": "Další jazyky",
+  "editorUnknownLanguageNote": "Názvy v jazyce „{language}“, který tato verze nezobrazuje: {count}. Zůstávají uložené pro verze, které ho znají."
 }

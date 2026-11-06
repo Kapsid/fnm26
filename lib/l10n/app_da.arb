@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Skriver i",
   "editorAddedAllNations": "Alle landshold",
   "editorAddedSearch": "Søg",
-  "editorCountAdded": "{count} tilføjet"
+  "editorCountAdded": "{count} tilføjet",
+  "editorExportTooBig": "Databasen er for stor til at blive delt: filen ville fylde {size} MB, og grænsen er {limit} MB. Lås færre puljer, eller fjern nogle pokalbilleder, og prøv igen.",
+  "editorRemoveAllLike": "Fjern alle lignende ({count})",
+  "editorNotesTitle": "Andre sprog",
+  "editorUnknownLanguageNote": "Navne på \"{language}\", et sprog denne version ikke viser: {count}. De gemmes til versioner, der kender sproget."
 }

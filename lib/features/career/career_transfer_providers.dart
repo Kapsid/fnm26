@@ -194,8 +194,9 @@ class CareerTransferService {
     if (packName is! String || PackRules.checkName(packName) != null) {
       return BundleRejection.unreadable;
     }
-    if (json is! String || json.length > PackCodec.maxJsonBytes)
+    if (json is! String || json.length > PackCodec.maxJsonBytes) {
       return BundleRejection.unreadable;
+    }
     final WorldPack pack;
     try {
       final raw = jsonDecode(json);
@@ -210,8 +211,9 @@ class CareerTransferService {
     }
     final base = await _ref.read(nationRepositoryProvider).newCareerWorld();
     final codes = {for (final n in base) n.id: n.code};
-    if (!PackCodec.fieldsOk(pack, baseCodes: codes))
+    if (!PackCodec.fieldsOk(pack, baseCodes: codes)) {
       return BundleRejection.unreadable;
+    }
     // A career world is played as it is, never assessed again: what format 2
     // adds (pools, added clubs, sponsors and Y accounts) must name only what
     // this game has, every pool fringe id its own nation's.
@@ -225,16 +227,18 @@ class CareerTransferService {
     )) {
       return BundleRejection.unreadable;
     }
-    if (trophies.length > PackCodec.maxTrophies)
+    if (trophies.length > PackCodec.maxTrophies) {
       return BundleRejection.unreadable;
+    }
     final keys = <String>{};
     final normalised = <Map<String, Object?>>[];
     for (final t in trophies) {
       if (t is! Map) return BundleRejection.unreadable;
       final key = t['key'];
       final png = t['png'];
-      if (key is! String || Trophies.assetForKey(key) == null)
+      if (key is! String || Trophies.assetForKey(key) == null) {
         return BundleRejection.unreadable;
+      }
       if (!keys.add(key) || png is! String) return BundleRejection.unreadable;
       final Uint8List input;
       try {

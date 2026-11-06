@@ -127,6 +127,14 @@ PackIssueText describePackIssue(
         section: section,
         nationId: world.containsKey(playerNation) ? playerNation : null,
       );
+    // Not a problem: a note the home lists apart ([PackEditor.notes]).
+    case UnknownLanguage(:final language):
+      return (
+        title: title,
+        detail: l.editorIssueUnknownEntry(language),
+        section: section,
+        nationId: null,
+      );
     case BadField(:final path, :final reason):
       return _badField(l, path, reason, pack, title, section, nation);
     // Said as a taken name: the fix is a rename, or Remove.

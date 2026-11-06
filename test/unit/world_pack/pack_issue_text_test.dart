@@ -86,6 +86,7 @@ void main() {
         fringeRanges: {1: (first: _f, last: _f + 79)},
       ),
       ...PackRules.issues(pack),
+      ...PackRules.unknownLanguages(pack),
     ];
     final roots = {for (final i in issues) i.where.split('.').first};
     expect(
@@ -133,10 +134,10 @@ void main() {
       said['localized.competitions.Old Cup']!.detail,
       l.editorIssueUnknownEntry('Old Cup'),
     );
-    // A language this build does not speak is flagged, not refused.
+    // A language this build does not speak is a note, said by its code.
     expect(
       said['localized.clubs.Old FC.xx']!.detail,
-      l.editorIssueUnknownEntry('Old FC.xx'),
+      l.editorIssueUnknownEntry('xx'),
     );
     expect(said['localized.clubs.Old FC.xx']!.section, EditorSection.clubs);
     expect(said['localized.clubs.Old FC.cs']!.section, EditorSection.clubs);

@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Post in",
   "editorAddedAllNations": "Alle landen",
   "editorAddedSearch": "Zoeken",
-  "editorCountAdded": "{count} toegevoegd"
+  "editorCountAdded": "{count} toegevoegd",
+  "editorExportTooBig": "Deze database is te groot om te delen: het bestand zou {size} MB worden en de limiet is {limit} MB. Leg minder pools vast of verwijder enkele trofeeafbeeldingen en probeer het opnieuw.",
+  "editorRemoveAllLike": "Alle verwijderen ({count})",
+  "editorNotesTitle": "Andere talen",
+  "editorUnknownLanguageNote": "Namen in \"{language}\", een taal die deze versie niet toont: {count}. Ze blijven bewaard voor versies die de taal wel kennen."
 }

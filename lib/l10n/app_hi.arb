@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "कहाँ पोस्ट करता है",
   "editorAddedAllNations": "सभी देश",
   "editorAddedSearch": "खोजें",
-  "editorCountAdded": "{count} जोड़े गए"
+  "editorCountAdded": "{count} जोड़े गए",
+  "editorExportTooBig": "यह डेटाबेस शेयर करने के लिए बहुत बड़ा है: फ़ाइल {size} MB की होगी और सीमा {limit} MB है। कम पूल फ़िक्स रखें या ट्रॉफ़ी की कुछ तस्वीरें हटाएँ, फिर दोबारा कोशिश करें।",
+  "editorRemoveAllLike": "ऐसे सभी हटाएँ ({count})",
+  "editorNotesTitle": "अन्य भाषाएँ",
+  "editorUnknownLanguageNote": "\"{language}\" में नाम, एक ऐसी भाषा जो यह वर्शन नहीं दिखाता: {count}. ये उन वर्शन के लिए रखे जाते हैं जो इसे दिखाते हैं।"
 }

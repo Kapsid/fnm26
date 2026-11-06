@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Skriver i",
   "editorAddedAllNations": "Alla landslag",
   "editorAddedSearch": "Sök",
-  "editorCountAdded": "Tillagt: {count}"
+  "editorCountAdded": "Tillagt: {count}",
+  "editorExportTooBig": "Databasen är för stor för att delas: filen skulle bli {size} MB och gränsen är {limit} MB. Lås färre pooler eller ta bort några pokalbilder och försök igen.",
+  "editorRemoveAllLike": "Ta bort alla liknande ({count})",
+  "editorNotesTitle": "Andra språk",
+  "editorUnknownLanguageNote": "Namn på \"{language}\", ett språk som den här versionen inte visar: {count}. De sparas för versioner som kan språket."
 }

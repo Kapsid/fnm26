@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Memposting di",
   "editorAddedAllNations": "Semua negara",
   "editorAddedSearch": "Cari",
-  "editorCountAdded": "{count} ditambahkan"
+  "editorCountAdded": "{count} ditambahkan",
+  "editorExportTooBig": "Database ini terlalu besar untuk dibagikan: berkasnya akan berukuran {size} MB dan batasnya {limit} MB. Kurangi pool yang ditetapkan atau hapus beberapa gambar trofi, lalu coba lagi.",
+  "editorRemoveAllLike": "Hapus semua yang serupa ({count})",
+  "editorNotesTitle": "Bahasa lain",
+  "editorUnknownLanguageNote": "Nama dalam \"{language}\", bahasa yang tidak ditampilkan versi ini: {count}. Nama-nama ini disimpan untuk versi yang mendukungnya."
 }

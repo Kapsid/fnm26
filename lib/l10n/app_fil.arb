@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Nagpo-post sa",
   "editorAddedAllNations": "Lahat ng bansa",
   "editorAddedSearch": "Maghanap",
-  "editorCountAdded": "{count} ang dinagdag"
+  "editorCountAdded": "{count} ang dinagdag",
+  "editorExportTooBig": "Masyadong malaki ang database na ito para ibahagi: magiging {size} MB ang file at {limit} MB ang limitasyon. Mag-iwan ng mas kaunting nakapirming pool o alisin ang ilang larawan ng tropeo, saka subukan ulit.",
+  "editorRemoveAllLike": "Alisin lahat ng katulad ({count})",
+  "editorNotesTitle": "Ibang wika",
+  "editorUnknownLanguageNote": "Mga pangalan sa \"{language}\", isang wikang hindi ipinapakita ng bersyong ito: {count}. Itinatago ang mga ito para sa mga bersyong sumusuporta rito."
 }

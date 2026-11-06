@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "โพสต์ใน",
   "editorAddedAllNations": "ทุกชาติ",
   "editorAddedSearch": "ค้นหา",
-  "editorCountAdded": "เพิ่ม {count}"
+  "editorCountAdded": "เพิ่ม {count}",
+  "editorExportTooBig": "ฐานข้อมูลนี้ใหญ่เกินกว่าจะแชร์ได้ ไฟล์จะมีขนาด {size} MB แต่ขีดจำกัดคือ {limit} MB ให้ตรึงพูลน้อยลงหรือลบรูปถ้วยรางวัลบางรูปแล้วลองอีกครั้ง",
+  "editorRemoveAllLike": "ลบรายการที่คล้ายกันทั้งหมด ({count})",
+  "editorNotesTitle": "ภาษาอื่น",
+  "editorUnknownLanguageNote": "ชื่อในภาษา \"{language}\" ซึ่งเวอร์ชันนี้ไม่แสดง: {count} รายการ จะเก็บไว้สำหรับเวอร์ชันที่รองรับ"
 }

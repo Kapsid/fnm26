@@ -188,6 +188,24 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
           )) {
         name = l.editorNamesTaken;
       }
+    } else if (_section == NameSection.clubs && !_e.added) {
+      // A league club renamed onto a club the database adds to its
+      // country: the same check an added club's name gets.
+      final code = widget.world
+          .where((n) => n.id == _e.nationId)
+          .firstOrNull
+          ?.code;
+      if (code != null &&
+          PackRules.clubNameClash(
+                pack,
+                _name.text,
+                code.toLowerCase(),
+                _editor.countryCities,
+                renamedFrom: _e.key,
+              ) ==
+              ClubNameClash.added) {
+        name = l.editorNamesTaken;
+      }
     } else if (_section == NameSection.yAccounts) {
       final next = NameEdits.rename(_section, pack, _e, _name.text);
       if (PackRules.yNameTaken(

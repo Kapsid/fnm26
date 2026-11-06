@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Γράφει σε",
   "editorAddedAllNations": "Όλες οι χώρες",
   "editorAddedSearch": "Αναζήτηση",
-  "editorCountAdded": "Προστέθηκαν: {count}"
+  "editorCountAdded": "Προστέθηκαν: {count}",
+  "editorExportTooBig": "Η βάση δεδομένων είναι πολύ μεγάλη για κοινοποίηση: το αρχείο θα ήταν {size} MB και το όριο είναι {limit} MB. Αφήστε λιγότερες σταθερές δεξαμενές ή αφαιρέστε κάποιες εικόνες τροπαίων και δοκιμάστε ξανά.",
+  "editorRemoveAllLike": "Αφαίρεση όλων των όμοιων ({count})",
+  "editorNotesTitle": "Άλλες γλώσσες",
+  "editorUnknownLanguageNote": "Ονόματα στη γλώσσα «{language}», που αυτή η έκδοση δεν εμφανίζει: {count}. Διατηρούνται για τις εκδόσεις που την υποστηρίζουν."
 }

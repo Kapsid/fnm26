@@ -14591,7 +14591,20 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String editorExportTooBig(String size, String limit) {
-    return 'This database is too big to share: the file would be $size MB and the limit is $limit MB. Leave fewer pools fixed or remove some trophy pictures, then try again.';
+    return 'Cette base est trop volumineuse pour être partagée : le fichier ferait $size Mo et la limite est de $limit Mo. Fixez moins de viviers ou retirez des images de trophées, puis réessayez.';
+  }
+
+  @override
+  String editorRemoveAllLike(int count) {
+    return 'Tout retirer ($count)';
+  }
+
+  @override
+  String get editorNotesTitle => 'Autres langues';
+
+  @override
+  String editorUnknownLanguageNote(String language, int count) {
+    return 'Noms en « $language », une langue que cette version n’affiche pas : $count. Ils sont conservés pour les versions qui la gèrent.';
   }
 
   @override

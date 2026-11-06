@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Scrive in",
   "editorAddedAllNations": "Tutte le nazionali",
   "editorAddedSearch": "Cerca",
-  "editorCountAdded": "Aggiunti: {count}"
+  "editorCountAdded": "Aggiunti: {count}",
+  "editorExportTooBig": "Questo database è troppo grande da condividere: il file sarebbe di {size} MB e il limite è {limit} MB. Lascia meno bacini fissi o rimuovi alcune immagini dei trofei, poi riprova.",
+  "editorRemoveAllLike": "Rimuovi tutti ({count})",
+  "editorNotesTitle": "Altre lingue",
+  "editorUnknownLanguageNote": "Nomi in \"{language}\", una lingua che questa versione non mostra: {count}. Vengono conservati per le versioni che la supportano."
 }

@@ -14312,7 +14312,20 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String editorExportTooBig(String size, String limit) {
-    return 'This database is too big to share: the file would be $size MB and the limit is $limit MB. Leave fewer pools fixed or remove some trophy pictures, then try again.';
+    return 'Cơ sở dữ liệu này quá lớn để chia sẻ: tệp sẽ nặng $size MB trong khi giới hạn là $limit MB. Hãy cố định ít nhóm cầu thủ hơn hoặc xóa bớt ảnh cúp rồi thử lại.';
+  }
+
+  @override
+  String editorRemoveAllLike(int count) {
+    return 'Xóa tất cả mục tương tự ($count)';
+  }
+
+  @override
+  String get editorNotesTitle => 'Ngôn ngữ khác';
+
+  @override
+  String editorUnknownLanguageNote(String language, int count) {
+    return 'Tên bằng \"$language\", ngôn ngữ mà phiên bản này không hiển thị: $count. Chúng được giữ lại cho các phiên bản có hỗ trợ.';
   }
 
   @override

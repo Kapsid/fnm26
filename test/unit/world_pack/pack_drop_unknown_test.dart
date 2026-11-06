@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/entities/player_ids.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
 
@@ -142,5 +143,72 @@ void main() {
         reason: path,
       );
     }
+  });
+
+  group('Remove all like this', () {
+    WorldPack many() => _pack().copyWith(
+      squads: {
+        1: [
+          _p(7, unknown: ['flyingKick']),
+          _p(8, unknown: ['flyingKick', 'u21Star']),
+          _p(9),
+        ],
+      },
+      pools: {
+        1: [
+          _p(kFirstFringeId, unknown: ['flyingKick']),
+        ],
+      },
+      localized: {
+        for (var i = 0; i < 500; i++) 'clubs.Club $i': {'tlh': 'Q$i'},
+        'clubs.Old FC': {'cs': 'Starý', 'tlh': 'Old'},
+      },
+    );
+
+    test('an unknown trait is one kind wherever a player has it', () {
+      const issue = UnknownId('squads.1.8.traits');
+      final kinds = PackEditor.kindsOf(issue, many());
+      expect(kinds, containsAll(['trait:flyingKick', 'trait:u21Star']));
+      expect(PackEditor.countOfKind(many(), 'trait:flyingKick'), 3);
+      final p = PackEditor.withoutKind(many(), 'trait:flyingKick');
+      expect(
+        [for (final pl in p.squads[1]!) pl.unknownTraits],
+        [
+          <String>[],
+          ['u21Star'],
+          <String>[],
+        ],
+      );
+      expect(p.pools[1]!.single.unknownTraits, isEmpty);
+    });
+
+    test('an unknown language goes from every path; empty paths go too', () {
+      final p = PackEditor.withoutKind(many(), 'language:tlh');
+      expect(p.localized.keys, ['clubs.Old FC']);
+      expect(p.localized['clubs.Old FC'], {'cs': 'Starý'});
+      expect(PackEditor.countOfKind(many(), 'language:tlh'), 501);
+    });
+
+    test('a kind the pack does not have leaves it identical', () {
+      final p = many();
+      expect(identical(PackEditor.withoutKind(p, 'language:qq'), p), isTrue);
+      expect(identical(PackEditor.withoutKind(p, 'trait:nope'), p), isTrue);
+    });
+
+    test('unknown deals and voices are kinds too', () {
+      expect(
+        PackEditor.kindsOf(UnknownId('addedSponsors.${_a + 1}.deal'), _pack()),
+        ['deal:barter'],
+      );
+      expect(
+        PackEditor.kindsOf(
+          UnknownId('addedYAccounts.${_a + 2}.voice'),
+          _pack(),
+        ),
+        ['voice:oracle'],
+      );
+      final p = PackEditor.withoutKind(_pack(), 'deal:barter');
+      expect(p.addedSponsors.single.unknownDeal, isNull);
+    });
   });
 }

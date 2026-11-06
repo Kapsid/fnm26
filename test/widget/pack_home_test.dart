@@ -338,6 +338,86 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
   });
 
+  testWidgets('500 values in a 29th language leave the pack ready; Remove '
+      'all clears them in one undo step', (tester) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Klingon').copyWith(
+        localized: {
+          for (var i = 0; i < 500; i++) 'clubs.Club $i': {'tlh': 'Q$i'},
+        },
+      ),
+    );
+    await pumpEditorRoute(tester, c, editorPackLocation(id));
+    expect(find.byKey(PackHomeScreen.readyKey), findsOneWidget);
+    expect(find.byKey(PackHomeScreen.noteKey('tlh')), findsOneWidget);
+    expect(
+      find.text(enL.editorUnknownLanguageNote('tlh', 500)),
+      findsOneWidget,
+    );
+
+    await tester.ensureVisible(find.byKey(PackHomeScreen.removeNoteKey('tlh')));
+    await tester.tap(find.byKey(PackHomeScreen.removeNoteKey('tlh')));
+    await settle(tester);
+    expect(c.read(packEditorProvider(id)).value!.localized, isEmpty);
+    expect(find.byKey(PackHomeScreen.noteKey('tlh')), findsNothing);
+
+    // One step back brings all 500.
+    await tester.tap(find.byKey(PackHomeScreen.undoKey));
+    await settle(tester);
+    expect(c.read(packEditorProvider(id)).value!.localized, hasLength(500));
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('an unknown trait many players share offers Remove all', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final cze = nationIdOf('CZE');
+    final squad = [
+      for (final (i, pl) in testSquad().indexed)
+        i < 3
+            ? PackPlayer(
+                id: pl.id,
+                name: pl.name,
+                age: pl.age,
+                position: pl.position,
+                attributes: pl.attributes,
+                potential: pl.potential,
+                traits: const [],
+                unknownTraits: const ['u21Star'],
+              )
+            : pl,
+    ];
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Traits', squads: {cze: squad}),
+    );
+    await pumpEditorRoute(tester, c, editorPackLocation(id));
+    expect(find.byKey(PackHomeScreen.attentionKey), findsOneWidget);
+    expect(find.text(enL.editorRemoveAllLike(3)), findsNWidgets(3));
+
+    await tester.tap(find.byKey(PackHomeScreen.removeAllKey(0)));
+    await settle(tester);
+    final players = c.read(packEditorProvider(id)).value!.squads[cze]!;
+    expect(players.expand((p) => p.unknownTraits), isEmpty);
+    expect(find.byKey(PackHomeScreen.readyKey), findsOneWidget);
+    await tester.tap(find.byKey(PackHomeScreen.undoKey));
+    await settle(tester);
+    expect(
+      c
+          .read(packEditorProvider(id))
+          .value!
+          .squads[cze]!
+          .where((p) => p.unknownTraits.isNotEmpty),
+      hasLength(3),
+    );
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
   testWidgets('a nation rename still shows in New Game', (tester) async {
     final c = await editorContainer(tester);
     final cze = nationIdOf('CZE');

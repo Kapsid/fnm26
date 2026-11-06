@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Publica em",
   "editorAddedAllNations": "Todas as seleções",
   "editorAddedSearch": "Procurar",
-  "editorCountAdded": "Adicionados: {count}"
+  "editorCountAdded": "Adicionados: {count}",
+  "editorExportTooBig": "Este banco de dados é grande demais para compartilhar: o arquivo teria {size} MB e o limite é {limit} MB. Deixe menos bases fixas ou remova algumas imagens de troféus e tente de novo.",
+  "editorRemoveAllLike": "Remover todos ({count})",
+  "editorNotesTitle": "Outros idiomas",
+  "editorUnknownLanguageNote": "Nomes em \"{language}\", um idioma que esta versão não mostra: {count}. Eles são mantidos para as versões que o suportam."
 }

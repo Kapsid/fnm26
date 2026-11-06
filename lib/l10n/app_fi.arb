@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Julkaisee syötteessä",
   "editorAddedAllNations": "Kaikki maat",
   "editorAddedSearch": "Hae",
-  "editorCountAdded": "{count} lisätty"
+  "editorCountAdded": "{count} lisätty",
+  "editorExportTooBig": "Tietokanta on liian suuri jaettavaksi: tiedosto olisi {size} Mt ja raja on {limit} Mt. Lukitse harvempia pooleja tai poista joitakin pokaalikuvia ja yritä uudelleen.",
+  "editorRemoveAllLike": "Poista kaikki samanlaiset ({count})",
+  "editorNotesTitle": "Muut kielet",
+  "editorUnknownLanguageNote": "Nimet kielellä \"{language}\", jota tämä versio ei näytä: {count}. Ne säilytetään versioille, jotka tuntevat kielen."
 }

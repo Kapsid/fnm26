@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Menyiar di",
   "editorAddedAllNations": "Semua negara",
   "editorAddedSearch": "Cari",
-  "editorCountAdded": "{count} ditambah"
+  "editorCountAdded": "{count} ditambah",
+  "editorExportTooBig": "Pangkalan data ini terlalu besar untuk dikongsi: fail akan bersaiz {size} MB dan hadnya {limit} MB. Tetapkan lebih sedikit pool atau buang beberapa imej trofi, kemudian cuba lagi.",
+  "editorRemoveAllLike": "Buang semua yang serupa ({count})",
+  "editorNotesTitle": "Bahasa lain",
+  "editorUnknownLanguageNote": "Nama dalam \"{language}\", bahasa yang tidak dipaparkan versi ini: {count}. Ia disimpan untuk versi yang menyokongnya."
 }

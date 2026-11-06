@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "게시 위치",
   "editorAddedAllNations": "모든 국가",
   "editorAddedSearch": "검색",
-  "editorCountAdded": "{count}개 추가"
+  "editorCountAdded": "{count}개 추가",
+  "editorExportTooBig": "이 데이터베이스는 공유하기에 너무 큽니다. 파일 크기는 {size}MB이고 한도는 {limit}MB입니다. 고정 풀을 줄이거나 트로피 이미지 일부를 삭제한 뒤 다시 시도하세요.",
+  "editorRemoveAllLike": "비슷한 항목 모두 삭제 ({count})",
+  "editorNotesTitle": "기타 언어",
+  "editorUnknownLanguageNote": "이 버전에서 표시하지 않는 언어 \"{language}\"의 이름: {count}. 이 언어를 지원하는 버전을 위해 보관됩니다."
 }

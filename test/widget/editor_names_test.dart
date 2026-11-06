@@ -184,6 +184,35 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
   });
 
+  testWidgets("a league club cannot be renamed onto an added club's name", (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final club = ClubService.leagueClubs('cze').first;
+    final id = await insertPack(
+      tester,
+      c,
+      testPack('Clash').copyWith(
+        addedClubs: const [
+          PackClub(id: kPackAddedIdBase, name: 'FC Vltava', country: 'cze'),
+        ],
+      ),
+    );
+    await pumpEditorRoute(tester, c, _at(NameSection.clubs, id));
+    await tester.enterText(find.byKey(NameSectionScreen.searchKey), club);
+    await tester.pump();
+    await tester.tap(find.byKey(NameSectionScreen.rowKey(club)));
+    await settle(tester);
+    await tester.enterText(find.byKey(NameEditForm.nameKey), ' fc vltava');
+    await tester.pump();
+    expect(find.text(enL.editorNamesTaken), findsOneWidget);
+    expect(_pack(c, id).clubs, isEmpty);
+    await tester.enterText(find.byKey(NameEditForm.nameKey), 'FC Sázava');
+    await tester.pump();
+    expect(_pack(c, id).clubs, {club: 'FC Sázava'});
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
   testWidgets("a Y account cannot take another account's name", (
     tester,
   ) async {

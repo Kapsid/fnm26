@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Skriver i",
   "editorAddedAllNations": "Alle landslag",
   "editorAddedSearch": "Søk",
-  "editorCountAdded": "{count} lagt til"
+  "editorCountAdded": "{count} lagt til",
+  "editorExportTooBig": "Databasen er for stor til å deles: filen ville blitt {size} MB, og grensen er {limit} MB. Lås færre pooler eller fjern noen pokalbilder, og prøv igjen.",
+  "editorRemoveAllLike": "Fjern alle like ({count})",
+  "editorNotesTitle": "Andre språk",
+  "editorUnknownLanguageNote": "Navn på «{language}», et språk denne versjonen ikke viser: {count}. De beholdes for versjoner som kan språket."
 }

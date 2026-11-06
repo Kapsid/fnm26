@@ -43,6 +43,16 @@ class PackHomeScreen extends ConsumerStatefulWidget {
   /// Remove on the [index]th entry of the list, offered for an entry naming
   /// something the game no longer has, and for a nation's old rename.
   static Key removeKey(int index) => Key('packHome.remove.$index');
+
+  /// "Remove all N like this" on the [index]th entry, offered when other
+  /// entries share its kind (one unknown trait, deal or voice).
+  static Key removeAllKey(int index) => Key('packHome.removeAll.$index');
+
+  /// The note for values in [language], a language this build does not
+  /// speak, and its Remove (all).
+  static Key noteKey(String language) => Key('packHome.note.$language');
+  static Key removeNoteKey(String language) =>
+      Key('packHome.removeNote.$language');
   static Key sectionKey(EditorSection s) => Key('packHome.section.${s.name}');
 
   final int packId;
@@ -108,6 +118,29 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
     return null;
   }
 
+  /// "Remove all N like this" for the [index]th entry: the first of its
+  /// kinds ([PackEditor.kindsOf]) other entries share, as one undoable
+  /// edit; null when it is one of a kind.
+  ({int count, VoidCallback onTap})? _removeAll(
+    _PackView view,
+    WorldPack pack,
+    int index,
+  ) {
+    final editor = ref.read(packEditorProvider(_id).notifier);
+    for (final kind in PackEditor.kindsOf(view.raw[index], pack)) {
+      final count = PackEditor.countOfKind(pack, kind);
+      if (count > 1) {
+        return (count: count, onTap: () => editor.removeAllLike(kind));
+      }
+    }
+    return null;
+  }
+
+  /// Removes every value in [language] (one undoable edit).
+  void _removeLanguage(String language) => ref
+      .read(packEditorProvider(_id).notifier)
+      .removeAllLike('language:$language');
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -138,7 +171,13 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
             );
     }
 
-    final view = _PackView.of(l, pack, editor.world, editor.issues);
+    final view = _PackView.of(
+      l,
+      pack,
+      editor.world,
+      editor.issues,
+      editor.notes,
+    );
     final undo = editor.canUndo
         ? () => ref.read(packEditorProvider(_id).notifier).undo()
         : null;
@@ -209,6 +248,7 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
                     issue: view.issues[i],
                     onTap: () => _openIssue(view, i),
                     onRemove: _remover(view, i),
+                    removeAll: _removeAll(view, pack, i),
                   ),
                 ),
               ),
@@ -226,6 +266,24 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
                     ),
                   ),
                 ),
+            ],
+            if (view.notes.isNotEmpty) ...[
+              _header(context, l.editorNotesTitle),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.marginMobile,
+                ),
+                sliver: SliverList.list(
+                  children: [
+                    for (final e in view.notes.entries)
+                      _LanguageNote(
+                        language: e.key,
+                        count: e.value,
+                        onRemove: () => _removeLanguage(e.key),
+                      ),
+                  ],
+                ),
+              ),
             ],
             _header(context, l.editorSectionsTitle),
             SliverPadding(
@@ -279,6 +337,7 @@ class _PackView {
     required this.issues,
     required this.raw,
     required this.sections,
+    required this.notes,
   });
 
   factory _PackView.of(
@@ -286,6 +345,7 @@ class _PackView {
     WorldPack pack,
     List<Nation> world,
     List<PackIssue> issues,
+    List<UnknownLanguage> notes,
   ) {
     final byId = {for (final n in world) n.id: n};
     final described = [
@@ -309,9 +369,14 @@ class _PackView {
       EditorSection.trophies => l.editorCountTrophies(pack.trophies.length),
       EditorSection.none => '',
     };
+    final byLanguage = <String, int>{};
+    for (final n in notes) {
+      byLanguage.update(n.language, (c) => c + 1, ifAbsent: () => 1);
+    }
     return _PackView(
       issues: described,
       raw: issues,
+      notes: byLanguage,
       sections: {
         for (final s in EditorSection.onHome)
           s: (count: count(s), toFix: toFix[s]!),
@@ -324,6 +389,10 @@ class _PackView {
   /// [issues] as [PackEditor.issues] gave them, index for index.
   final List<PackIssue> raw;
   final Map<EditorSection, _SectionFacts> sections;
+
+  /// How many values the pack keeps in each language this build does not
+  /// speak ([PackEditor.notes]). Never blocking: not part of [ready].
+  final Map<String, int> notes;
 
   bool get ready => issues.isEmpty;
 
@@ -449,11 +518,15 @@ class _IssueRow extends StatelessWidget {
     required this.issue,
     required this.onTap,
     this.onRemove,
+    this.removeAll,
   });
 
   final int index;
   final PackIssueText issue;
   final VoidCallback onTap;
+
+  /// "Remove all N like this", when other entries share this one's kind.
+  final ({int count, VoidCallback onTap})? removeAll;
 
   /// Deletes the entry, for one naming something the game no longer has;
   /// it then has nowhere to jump to that would fix it.
@@ -498,6 +571,12 @@ class _IssueRow extends StatelessWidget {
                     color: AppColors.onSurfaceVariant,
                   ),
                 ),
+                if (removeAll case (:final count, :final onTap))
+                  _RemoveAllButton(
+                    key: PackHomeScreen.removeAllKey(index),
+                    count: count,
+                    onPressed: onTap,
+                  ),
               ],
             ),
           ),
@@ -513,6 +592,110 @@ class _IssueRow extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// "Remove all N like this": every entry of one kind, as one undoable edit.
+class _RemoveAllButton extends StatelessWidget {
+  const _RemoveAllButton({
+    required this.count,
+    required this.onPressed,
+    super.key,
+  });
+
+  final int count;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: AlignmentDirectional.centerStart,
+    child: TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        minimumSize: const Size(0, 32),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        foregroundColor: AppColors.error,
+      ),
+      child: Text(
+        AppLocalizations.of(context).editorRemoveAllLike(count),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ),
+  );
+}
+
+/// The values a pack keeps in [language], one this build does not speak:
+/// a note, not a problem. They block nothing; Remove drops them all.
+class _LanguageNote extends StatelessWidget {
+  const _LanguageNote({
+    required this.language,
+    required this.count,
+    required this.onRemove,
+  });
+
+  final String language;
+  final int count;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+      child: AppCard(
+        key: PackHomeScreen.noteKey(language),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm + 2,
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.translate,
+              size: 20,
+              color: AppColors.onSurfaceVariant,
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.editorUnknownLanguageNote(language, count),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                  ),
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: TextButton(
+                      key: PackHomeScreen.removeNoteKey(language),
+                      onPressed: onRemove,
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: const Size(0, 32),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        count > 1
+                            ? l.editorRemoveAllLike(count)
+                            : l.editorRemove,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// A section: its icon and name, what it holds, and what it still needs.

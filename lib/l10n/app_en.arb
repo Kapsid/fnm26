@@ -22318,6 +22318,25 @@
       "limit": {"type": "String"}
     }
   },
+  "editorRemoveAllLike": "Remove all {count} like this",
+  "@editorRemoveAllLike": {
+    "description": "Button on the database home under an entry that many entries share (one unknown trait or language). Removes them all as one undoable step. count is always 2 or more.",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "editorNotesTitle": "Other languages",
+  "@editorNotesTitle": {
+    "description": "Header on the database home over its names in languages this version of the game does not have. They block nothing."
+  },
+  "editorUnknownLanguageNote": "Names in \"{language}\", a language this version does not show: {count}. They are kept for versions that do.",
+  "@editorUnknownLanguageNote": {
+    "description": "One row under editorNotesTitle. language is a language code from the file, such as tlh.",
+    "placeholders": {
+      "language": {"type": "String"},
+      "count": {"type": "int"}
+    }
+  },
   "editorShareSubject": "FNM database",
   "@editorShareSubject": {
     "description": "Subject line of the share sheet for an exported database."

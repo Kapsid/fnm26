@@ -13958,7 +13958,20 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String editorExportTooBig(String size, String limit) {
-    return 'This database is too big to share: the file would be $size MB and the limit is $limit MB. Leave fewer pools fixed or remove some trophy pictures, then try again.';
+    return '이 데이터베이스는 공유하기에 너무 큽니다. 파일 크기는 ${size}MB이고 한도는 ${limit}MB입니다. 고정 풀을 줄이거나 트로피 이미지 일부를 삭제한 뒤 다시 시도하세요.';
+  }
+
+  @override
+  String editorRemoveAllLike(int count) {
+    return '비슷한 항목 모두 삭제 ($count)';
+  }
+
+  @override
+  String get editorNotesTitle => '기타 언어';
+
+  @override
+  String editorUnknownLanguageNote(String language, int count) {
+    return '이 버전에서 표시하지 않는 언어 \"$language\"의 이름: $count. 이 언어를 지원하는 버전을 위해 보관됩니다.';
   }
 
   @override

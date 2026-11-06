@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Đăng ở",
   "editorAddedAllNations": "Mọi quốc gia",
   "editorAddedSearch": "Tìm kiếm",
-  "editorCountAdded": "Đã thêm {count}"
+  "editorCountAdded": "Đã thêm {count}",
+  "editorExportTooBig": "Cơ sở dữ liệu này quá lớn để chia sẻ: tệp sẽ nặng {size} MB trong khi giới hạn là {limit} MB. Hãy cố định ít nhóm cầu thủ hơn hoặc xóa bớt ảnh cúp rồi thử lại.",
+  "editorRemoveAllLike": "Xóa tất cả mục tương tự ({count})",
+  "editorNotesTitle": "Ngôn ngữ khác",
+  "editorUnknownLanguageNote": "Tên bằng \"{language}\", ngôn ngữ mà phiên bản này không hiển thị: {count}. Chúng được giữ lại cho các phiên bản có hỗ trợ."
 }

@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Objavljuje u",
   "editorAddedAllNations": "Sve reprezentacije",
   "editorAddedSearch": "Traži",
-  "editorCountAdded": "Dodano: {count}"
+  "editorCountAdded": "Dodano: {count}",
+  "editorExportTooBig": "Baza je prevelika za dijeljenje: datoteka bi imala {size} MB, a ograničenje je {limit} MB. Ostavite manje fiksnih bazena ili uklonite neke slike trofeja pa pokušajte ponovno.",
+  "editorRemoveAllLike": "Ukloni sve slične ({count})",
+  "editorNotesTitle": "Drugi jezici",
+  "editorUnknownLanguageNote": "Nazivi na jeziku „{language}”, koji ova verzija ne prikazuje: {count}. Čuvaju se za verzije koje ga podržavaju."
 }

@@ -14480,6 +14480,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String editorRemoveAllLike(int count) {
+    return 'Remove all $count like this';
+  }
+
+  @override
+  String get editorNotesTitle => 'Other languages';
+
+  @override
+  String editorUnknownLanguageNote(String language, int count) {
+    return 'Names in \"$language\", a language this version does not show: $count. They are kept for versions that do.';
+  }
+
+  @override
   String get editorShareSubject => 'FNM database';
 
   @override

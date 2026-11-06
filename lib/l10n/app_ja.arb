@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "投稿先",
   "editorAddedAllNations": "すべての国",
   "editorAddedSearch": "検索",
-  "editorCountAdded": "{count}件追加"
+  "editorCountAdded": "{count}件追加",
+  "editorExportTooBig": "このデータベースは大きすぎて共有できません。ファイルは{size} MBになり、上限は{limit} MBです。固定するプールを減らすか、トロフィー画像をいくつか削除してから、もう一度お試しください。",
+  "editorRemoveAllLike": "同様のものをすべて削除（{count}）",
+  "editorNotesTitle": "その他の言語",
+  "editorUnknownLanguageNote": "このバージョンでは表示されない言語「{language}」の名前：{count}。対応するバージョンのために保存されます。"
 }

@@ -163,16 +163,6 @@ abstract final class AddedEdits {
     };
   }
 
-  static String _fold(String s) => s.trim().toLowerCase();
-
-  static Set<String>? _gameClubs;
-
-  /// Every club name of the game's leagues, folded.
-  static Set<String> get _allGameClubs => _gameClubs ??= {
-    for (final l in ClubService.allLeagues())
-      for (final c in l.clubs) _fold(c),
-  };
-
   /// What stops [name] being the name of a club the database adds to
   /// [country] ([id], when it is that club's new name), or null when
   /// nothing does. [countryCities] names a league-less country's own clubs.
@@ -195,23 +185,22 @@ abstract final class AddedEdits {
       case null:
         break;
     }
-    final to = _fold(name);
-    final code = country.toLowerCase();
-    final taken = {
-      for (final c in ClubService.leagueClubs(code)) _fold(p.clubs[c] ?? c),
-      for (final c in ClubService.domesticClubNames(
-        code,
-        countryCities[code] ?? const [],
-      ))
-        _fold(c),
-      for (final c in p.addedClubs)
-        if (c.country == code && c.id != id) _fold(c.name),
+    // The one check [PackRules.issues] makes too: the editor refuses
+    // every clash as it is typed.
+    return switch (PackRules.clubNameClash(
+      p,
+      name,
+      country,
+      countryCities,
+      addedId: id,
+    )) {
+      ClubNameClash.added ||
+      ClubNameClash.renamed ||
+      ClubNameClash.game => AddedNameProblem.taken,
+      ClubNameClash.renameKey ||
+      ClubNameClash.gameElsewhere => AddedNameProblem.gameClub,
+      null => null,
     };
-    if (taken.contains(to)) return AddedNameProblem.taken;
-    if (_allGameClubs.contains(to) || p.clubs.keys.any((k) => _fold(k) == to)) {
-      return AddedNameProblem.gameClub;
-    }
-    return null;
   }
 
   // Sponsors.

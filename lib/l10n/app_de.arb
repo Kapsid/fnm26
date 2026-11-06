@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Postet in",
   "editorAddedAllNations": "Alle Nationen",
   "editorAddedSearch": "Suchen",
-  "editorCountAdded": "{count} hinzugefügt"
+  "editorCountAdded": "{count} hinzugefügt",
+  "editorExportTooBig": "Diese Datenbank ist zu groß zum Teilen: Die Datei hätte {size} MB, das Limit liegt bei {limit} MB. Lege weniger feste Pools an oder entferne einige Pokalbilder und versuche es erneut.",
+  "editorRemoveAllLike": "Alle entfernen ({count})",
+  "editorNotesTitle": "Weitere Sprachen",
+  "editorUnknownLanguageNote": "Namen in „{language}“, einer Sprache, die diese Version nicht anzeigt: {count}. Sie bleiben für Versionen erhalten, die sie kennen."
 }

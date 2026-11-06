@@ -3875,5 +3875,9 @@
   "editorAddedPostsIn": "Publikuje w",
   "editorAddedAllNations": "Wszystkie reprezentacje",
   "editorAddedSearch": "Szukaj",
-  "editorCountAdded": "Dodano: {count}"
+  "editorCountAdded": "Dodano: {count}",
+  "editorExportTooBig": "Ta baza jest za duża, by ją udostępnić: plik miałby {size} MB, a limit to {limit} MB. Zostaw mniej stałych pul albo usuń część obrazów trofeów i spróbuj ponownie.",
+  "editorRemoveAllLike": "Usuń wszystkie podobne ({count})",
+  "editorNotesTitle": "Inne języki",
+  "editorUnknownLanguageNote": "Nazwy w języku „{language}”, którego ta wersja nie wyświetla: {count}. Zostają zachowane dla wersji, które go obsługują."
 }

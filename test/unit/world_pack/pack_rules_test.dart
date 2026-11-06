@@ -8,6 +8,7 @@ import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/golden_generation.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
+import 'package:fnm/domain/services/world_pack/pack_codec.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 
@@ -406,8 +407,10 @@ void main() {
       final c = PackRules.issues(p).whereType<NameClash>().single;
       expect(c.path, 'addedClubs.$_added');
       expect(c.where, 'addedClubs.$_added');
-      // A game club the pack renames is the pack's own name: an added club
-      // under it is a duplicate inside the pack, refused.
+      // A game club the pack renames onto an added club's name (or the
+      // other way round) is flagged, not refused: either could have moved,
+      // and the editor stops both as they are typed. Its old name is the
+      // rename map's key, flagged as well.
       final renamed = _pack(
         clubs: {league.first: 'Bohemka'},
         addedClubs: [
@@ -415,7 +418,11 @@ void main() {
           const PackClub(id: _added + 1, name: 'bohemka', country: 'cze'),
         ],
       );
-      expect(_bad(renamed).single.path, 'addedClubs.${_added + 1}');
+      expect(_bad(renamed), isEmpty);
+      expect(
+        PackRules.issues(renamed).whereType<NameClash>().map((i) => i.path),
+        ['addedClubs.$_added', 'addedClubs.${_added + 1}'],
+      );
       // Two added clubs of one country under one name.
       final two = _pack(
         addedClubs: [
@@ -841,6 +848,55 @@ void main() {
       expect(badPaths(club: 'Ajax', country: 'NED'), isEmpty);
       expect(badPaths(club: ClubService.freeAgent), isEmpty);
       expect(badPaths(), isEmpty);
+    });
+  });
+
+  group('one club-name check', () {
+    final league = ClubService.leagueClubs('cze').first;
+
+    test("a league club renamed onto an added club's name is a NameClash, "
+        'not a refusal', () {
+      final p = _pack(
+        clubs: {league: 'FC Vltava'},
+        addedClubs: const [
+          PackClub(id: _added, name: 'FC Vltava', country: 'cze'),
+        ],
+      );
+      final issues = PackRules.issues(p);
+      expect(issues.whereType<BadField>(), isEmpty);
+      expect(issues.whereType<NameClash>().map((i) => i.path), [
+        'addedClubs.$_added',
+      ]);
+      expect(PackCodec.fieldsOk(p), isTrue);
+    });
+
+    test('the editor and the rules read the same answer', () {
+      final p = _pack(
+        clubs: {league: 'FC Vltava'},
+        addedClubs: const [
+          PackClub(id: _added, name: 'FC Sázava', country: 'cze'),
+        ],
+      );
+      ClubNameClash? clash(String name, {int? addedId, String? from}) =>
+          PackRules.clubNameClash(
+            p,
+            name,
+            'cze',
+            const {},
+            addedId: addedId,
+            renamedFrom: from,
+          );
+      expect(clash('fc sázava '), ClubNameClash.added);
+      expect(clash('FC Sázava', addedId: _added), isNull);
+      expect(clash('FC Vltava'), ClubNameClash.renamed);
+      expect(clash('FC Vltava', from: league), isNull);
+      expect(clash(league), ClubNameClash.renameKey);
+      expect(clash('FC Sázava', from: league), ClubNameClash.added);
+      final other = ClubService.leagueClubs('cze')[1];
+      expect(clash(other), ClubNameClash.game);
+      final abroad = ClubService.leagueClubs('eng').first;
+      expect(clash(abroad), ClubNameClash.gameElsewhere);
+      expect(clash('Nobody FC'), isNull);
     });
   });
 }
