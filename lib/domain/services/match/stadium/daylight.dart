@@ -39,9 +39,6 @@ class PitchLight {
 
   @override
   int get hashCode => elevation.hashCode;
-
-  @override
-  String toString() => 'PitchLight(${elevation.toStringAsFixed(1)}°)';
 }
 
 /// The sun at a ground, from its latitude, the date and the local clock.
