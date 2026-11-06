@@ -214,7 +214,7 @@ class _Scene {
     this.homeShape = Formation.f442,
     this.awayShape = Formation.f433,
     this.tags = ('NOVAK', 'SILVA'),
-    this.zoom = 0.94,
+    this.zoom = 0.9,
     this.centreX = 52.5,
     this.confetti = false,
   });
@@ -296,6 +296,18 @@ List<_Scene> _scenes() {
     small(true),
     mid('tablet_mid', tablet: true, light: PitchLight.day),
     big(true),
+    // The big ground at night, drawn out to show both end stands.
+    const _Scene(
+      'phone_big_night_ends',
+      home: 'FRA',
+      away: 'NED',
+      capacity: 80000,
+      stadium: 'Mock Grand Stade',
+      city: 'Lyon',
+      light: PitchLight.night,
+      zoom: 0.74,
+      tags: ('BARRAULT', 'VERHOEF'),
+    ),
     // The same ground in each light.
     mid('phone_mid_day', light: PitchLight.day),
     mid('phone_mid_dusk', light: PitchLight.dusk),
@@ -606,7 +618,7 @@ class _PitchMock extends StatelessWidget {
           projection: projection,
           home: home,
           away: away,
-          r0: tablet ? 16.5 : 9.6,
+          r0: tablet ? 16.5 : 10.2,
           nameSize: tablet ? 11.5 : 9.5,
         ),
       ),
@@ -685,6 +697,10 @@ class _ActorsMock extends CustomPainter {
         tag,
         fontSize: nameSize,
         accent: KitColors.accent(_hex(kit.primary), _hex(kit.primary)),
+        others: [
+          for (final o in men)
+            (projection.toScreen(o.x, o.y), r0 * projection.scaleAt(o.y)),
+        ],
       );
     }
   }
