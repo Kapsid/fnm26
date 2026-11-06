@@ -585,11 +585,11 @@ const double _safeGap = 0.9;
 
 /// How much two shirts may overlap on screen when neither has to be where
 /// he is, and how hard a man steps off one he stands on (m/s).
-const double _screenRoom = 0.15;
-const double _screenPush = 6;
+const double _screenRoom = 0.05;
+const double _screenPush = 8;
 
 /// How far ahead a man looks for somebody he would cross on screen (s).
-const double _lookAhead = 0.5;
+const double _lookAhead = 0.7;
 
 /// The longest a moment's plan plays on past its window.
 const double _spill = 3;

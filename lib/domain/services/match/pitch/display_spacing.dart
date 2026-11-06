@@ -1,29 +1,33 @@
 /// How much of the pitch a player's token covers on screen, so the story
 /// layer can keep players visually apart and not only physically apart.
 ///
-/// The Pitch view draws each man as a shirt token about 20 px wide on a
-/// 390 px phone pitch, over a tilted, end-on projection. One token covers
-/// about 5.8 m of pitch along its length and 5.5 to 7.6 m across it,
-/// because depth is compressed by the tilt, most of all at the far
-/// touchline. Two men 2 m apart therefore stand on top of each other on
-/// screen. These figures mirror the view's projection (`PitchProjection`,
-/// tilt 0.75, far line at 0.30 and near line at 0.95 of the height, camera
-/// zoom 0.94) and its phone token (half-width 10.2 px on 390 x 280), the
-/// tightest case; a tablet draws its tokens relatively smaller. A
-/// renderer test pins the two together. Pure Dart.
+/// The Pitch view draws each man as a shirt token over a tilted, end-on
+/// projection. On a phone one token covers about 5.8 m of pitch along its
+/// length and 5.5 to 7.6 m across it, because depth is compressed by the
+/// tilt, most of all at the far touchline. Two men 2 m apart therefore
+/// stand on top of each other on screen. The figures come from
+/// [PitchViewGeometry], the same constants the view's projection and its
+/// token size read, for the phone pitch (the tightest case: a tablet draws
+/// its tokens relatively smaller); `display_spacing_test.dart` checks them
+/// against `PitchProjection` and `ActorsPainter` themselves. Pure Dart.
 library;
 
 import 'dart:math' as math;
 
+import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
+import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
 
 abstract final class DisplaySpacing {
   // The phone view the figures come from.
-  static const double _viewW = 390, _viewH = 280;
-  static const double _tokenHalf = 10.2;
-  static const double _tilt = 0.75, _top = 0.30, _bottom = 0.95;
-  static const double _zoom = 0.94;
+  static const double _viewW = PitchViewGeometry.phoneWidth;
+  static const double _viewH = PitchViewGeometry.phoneHeight;
+  static const double _tokenHalf = PitchViewGeometry.phoneToken;
+  static const double _tilt = PitchViewGeometry.tilt;
+  static const double _top = PitchViewGeometry.top;
+  static const double _bottom = PitchViewGeometry.bottom;
+  static const double _zoom = PitchViewGeometry.zoom;
   static const double _far = 1 - 0.5 * _tilt;
 
   /// Half a token along the pitch's length, in metres (the same at every
@@ -139,11 +143,25 @@ abstract final class DisplaySpacing {
 /// as one, nudged from where the script has the man by at most a fraction
 /// of a token.
 ///
-/// Smooth in its input (no switching between ways out), so a token eases
-/// aside as a man comes near and back as he leaves; it never jumps. Men
-/// [pinned] (the man on the ball, whose feet the ball is at) are drawn
-/// where they are; pairs [contact] (a challenge, a moment's own men, a
-/// wall) may overlap up to [contactRoom], everybody else up to [room].
+/// - **Across the pitch only.** Nobody's depth ever changes for the
+///   picture, so a drawn player is never behind his goal line when he is
+///   not, and the drawn offside order is always the true one.
+/// - **The ball's men are where they are.** The man on the ball is held
+///   at it for his whole carry and let go over the first fifth of a second
+///   of the ball leaving him; the man a ball is played to (a pass, a save,
+///   a header) is held over the last fifth of a second of its flight. At
+///   the strike, the arrival, the save and the header, he is drawn exactly
+///   where he is.
+/// - **Smooth.** No switching between ways out, and every hold and contact
+///   fades in and out, so a token eases aside as a man comes near and back
+///   as he leaves; it never jumps.
+/// - **Contact.** Only men who touch may come closer ([contactRoom], at
+///   least half a token apart): a challenge on the man with the ball (or
+///   the man it is coming to, or leaving), a
+///   shooter and the keeper, the two men of a foul, a blocked shot's or a
+///   header's man and his marker, and a wall. Everybody else, the moment's
+///   other men included, keeps [room].
+///
 /// Pure: the same frame always draws the same.
 abstract final class Declutter {
   static const double room = 0.3;
@@ -152,44 +170,21 @@ abstract final class Declutter {
   /// The furthest a token is drawn from its man, in tokens.
   static const double maxNudge = 0.55;
 
-  /// How far one pass moves toward clear: gently, so a crowd settles
-  /// instead of rocking between two answers from frame to frame.
-  static const double _gain = 0.2;
+  /// How far the first pass moves toward clear; later passes move less
+  /// and less.
+  static const double _gain = 0.6;
 
-  /// How far [a] and [b] are meant to be close in [f] at screen second
-  /// [t] of [s], 0 to 1: a challenge on the man with the ball, two of a
-  /// moment's own men (a foul, a block, a save, a header), or a wall. It
-  /// fades in and out over a fifth of a second at the edges of the carry
-  /// or the moment, so nothing drawn jumps when it starts or ends.
-  static double contactIn(
-    PitchScript s,
-    PitchFrame f,
-    int a,
-    int b,
-    double t,
-  ) {
-    int team(int id) => s.actorList[s.actorIndexOf(id)!].teamNationId;
-    var c = 0.0;
-    if ((f.ballCarrierId == a || f.ballCarrierId == b) && team(a) != team(b)) {
-      c = carryWeight(s, t);
-    }
-    final w = s.windowAt(t);
-    if (w != null) {
-      final both =
-          (w.actors.contains(a) && w.actors.contains(b)) ||
-          (w.formation.contains(a) && w.formation.contains(b));
-      if (both) c = math.max(c, _edge(t - w.start, w.end - t));
-    }
-    return c;
-  }
+  static const double _fade = 0.25;
 
-  /// Whether [a] and [b] are meant to be close at all (see [contactIn]).
-  static bool inContact(PitchScript s, PitchFrame f, int a, int b, double t) =>
-      contactIn(s, f, a, b, t) > 0;
+  /// How sharply two men level across the pitch pick sides. Two crossing
+  /// paths swap sides quickly here; [DeclutterEasing] spreads the swap
+  /// over a few frames on screen.
+  static const double _sideSlope = 12;
 
-  /// How firmly the man on the ball is held at it, 0 to 1: fading in and
-  /// out at the ends of his carry.
-  static double carryWeight(PitchScript s, double t) {
+  static double _edge(double sinceStart, double untilEnd) =>
+      (math.min(sinceStart, untilEnd) / _fade).clamp(0.0, 1.0);
+
+  static int _phaseIndex(PitchScript s, double t) {
     final ps = s.ballPhases;
     var lo = 0;
     var hi = ps.length - 1;
@@ -201,21 +196,106 @@ abstract final class Declutter {
         hi = mid - 1;
       }
     }
-    final p = ps[lo];
-    if (p is! CarryPhase) return 0;
-    return _edge(t - p.t0, p.t1 - t);
+    return lo;
   }
 
-  static double _edge(double sinceStart, double untilEnd) =>
-      (math.min(sinceStart, untilEnd) / _fade).clamp(0.0, 1.0);
+  /// How firmly each man the ball concerns is held where he is at [t], 0
+  /// to 1: the carrier through his carry, the passer letting go, the man
+  /// it is played to taking hold.
+  static Map<int, double> pins(PitchScript s, double t) {
+    final i = _phaseIndex(s, t);
+    final p = s.ballPhases[i];
+    final out = <int, double>{};
+    void hold(int? actor, double w) {
+      if (actor == null || w <= 0) return;
+      final id = s.actorList[actor].playerId;
+      out[id] = math.max(out[id] ?? 0, w.clamp(0.0, 1.0));
+    }
 
-  static const double _fade = 0.2;
+    switch (p) {
+      case CarryPhase(:final carrier):
+        // Held from the first touch when the ball was played to him (the
+        // hold already came up over its flight); otherwise (a loose ball
+        // picked up, a ball given to him after a cut) taking hold.
+        final before = i > 0 ? s.ballPhases[i - 1] : null;
+        final handed =
+            (before is FlightPhase && before.toActor == carrier) ||
+            (before is CarryPhase && before.carrier == carrier);
+        hold(carrier, handed ? 1 : (t - p.t0) / _fade);
+      case FlightPhase(:final fromActor, :final toActor):
+        // A ball lying still is nobody's to hold.
+        if (!p.resting) {
+          hold(fromActor, 1 - (t - p.t0) / _fade);
+          hold(toActor, 1 - (p.t1 - t) / _fade);
+        }
+    }
+    // Whoever has the ball next, or strikes it (a dead ball's taker, a man
+    // meeting a loose one), takes hold over the fifth of a second before.
+    for (var j = i + 1; j < s.ballPhases.length; j++) {
+      final next = s.ballPhases[j];
+      if (next.t0 > t + _fade) break;
+      final w = 1 - (next.t0 - t) / _fade;
+      switch (next) {
+        case CarryPhase(:final carrier):
+          hold(carrier, w);
+        case FlightPhase(:final fromActor):
+          if (!next.resting) hold(fromActor, w);
+      }
+    }
+    return out;
+  }
 
-  /// Where [f]'s men are drawn (see [of]): the man on the ball held at it.
-  /// A man just stepping on or about to leave the picture makes room only
-  /// gradually, so his neighbours do not jump when he comes or goes.
+  /// How far [a] and [b] are meant to be in touch in [f] at [t] of [s], 0
+  /// to 1 (see the class comment), fading in and out over a fifth of a
+  /// second at the edges of the carry or the moment.
+  static double contactIn(
+    PitchScript s,
+    PitchFrame f,
+    int a,
+    int b,
+    double t, {
+    Map<int, double>? pins,
+  }) {
+    int team(int id) => s.actorList[s.actorIndexOf(id)!].teamNationId;
+    final rivals = team(a) != team(b);
+    var c = 0.0;
+    if (rivals) {
+      // A challenge: the man the ball is with (or coming to, or leaving)
+      // and an opponent on him, as firmly as he is held at it.
+      final held = pins ?? Declutter.pins(s, t);
+      c = math.max(held[a] ?? 0, held[b] ?? 0);
+    }
+    final w = s.windowAt(t);
+    if (w == null) return c;
+    bool pair(int x, int y) => (a == x && b == y) || (a == y && b == x);
+    var touch = w.formation.contains(a) && w.formation.contains(b);
+    for (final m in w.moments) {
+      switch (m) {
+        case ShotMoment(:final shooterId, :final keeperId):
+          if (keeperId != null && pair(shooterId, keeperId)) touch = true;
+          // Blocked, or a header: the man and whoever marks him.
+          final marked = m.outcome == ShotOutcome.blocked || m.header;
+          if (marked && rivals && (a == shooterId || b == shooterId)) {
+            touch = true;
+          }
+        case FoulMoment(:final foulerId, :final fouledId):
+          if (pair(foulerId, fouledId)) touch = true;
+        default:
+          break;
+      }
+    }
+    if (touch) c = math.max(c, _edge(t - w.start, w.end - t));
+    return c;
+  }
+
+  /// Whether [a] and [b] are meant to be in touch at all.
+  static bool inContact(PitchScript s, PitchFrame f, int a, int b, double t) =>
+      contactIn(s, f, a, b, t) > 0;
+
+  /// Where [f]'s men are drawn (see the class comment). A man just
+  /// stepping on or about to leave the picture makes room only gradually,
+  /// so his neighbours do not jump when he comes or goes.
   static Map<int, Offset2> frame(PitchScript s, PitchFrame f, double t) {
-    final carrier = f.ballCarrierId;
     final spans = _spans[s] ??= _presence(s);
     double present(int id) {
       final span = spans[id];
@@ -223,10 +303,11 @@ abstract final class Declutter {
       return _edge(t - span.$1, span.$2 - t);
     }
 
+    final held = pins(s, t);
     return of(
       f.players,
-      pinned: {if (carrier != null) carrier: carryWeight(s, t)},
-      contact: (a, b) => contactIn(s, f, a, b, t),
+      pinned: held,
+      contact: (a, b) => contactIn(s, f, a, b, t, pins: held),
       presence: {for (final id in f.players.keys) id: present(id)},
     );
   }
@@ -255,16 +336,16 @@ abstract final class Declutter {
     return out;
   }
 
-  /// [at] eased apart. [pinned] says how firmly a man is held where he
-  /// is (1 not moved at all); [contact] how far two are meant to be close
-  /// (1: they may overlap up to [contactRoom]); [presence] how far a man
-  /// is in the picture yet (0 to 1).
+  /// [at] eased apart across the pitch. [pinned] says how firmly a man is
+  /// held where he is (1: not moved at all); [contact] how far two are in
+  /// touch (1: they may overlap up to [contactRoom]); [presence] how far a
+  /// man is in the picture yet (0 to 1).
   static Map<int, Offset2> of(
     Map<int, Offset2> at, {
     Map<int, double> pinned = const {},
     double Function(int a, int b)? contact,
     Map<int, double> presence = const {},
-    int passes = 16,
+    int passes = 40,
   }) {
     final ids = at.keys.toList()..sort();
     final n = ids.length;
@@ -274,9 +355,10 @@ abstract final class Declutter {
     final hs = [for (final p in base) 2 * DisplaySpacing.halfAcross(p.y)];
     final xs = [for (final p in base) p.x / w];
     final ys = [for (var i = 0; i < n; i++) base[i].y / hs[i]];
-    final ox = List<double>.filled(n, 0);
     final oy = List<double>.filled(n, 0);
-    final free = [for (final id in ids) 1 - (pinned[id] ?? 0).clamp(0.0, 1.0)];
+    final free = [
+      for (final id in ids) 1 - (pinned[id] ?? 0).clamp(0.0, 1.0),
+    ];
     final allow = List<List<double>>.generate(
       n,
       (i) => List<double>.generate(n, (j) {
@@ -291,56 +373,105 @@ abstract final class Declutter {
       }),
     );
     double smoothSign(double v) {
-      final k = v * 6;
-      return k > 20 ? 1 : (k < -20 ? -1 : (_tanh(k)));
+      final k = v * _sideSlope;
+      return k > 20 ? 1 : (k < -20 ? -1 : _tanh(k));
     }
 
     for (var pass = 0; pass < passes; pass++) {
-      final dx = List<double>.filled(n, 0);
+      // Big steps first, then ever smaller ones, so a crowd settles on one
+      // answer rather than rocking between two.
+      final gain = _gain * (1 - pass / passes);
       final dy = List<double>.filled(n, 0);
       for (var i = 0; i < n; i++) {
         for (var j = i + 1; j < n; j++) {
           final mobile = free[i] + free[j];
           if (mobile <= 1e-9) continue;
-          final nx = (xs[i] + ox[i]) - (xs[j] + ox[j]);
+          final gx = 1 - (xs[i] - xs[j]).abs();
+          if (gx <= 0) continue;
           final ny = (ys[i] + oy[i]) - (ys[j] + oy[j]);
-          final gx = 1 - nx.abs(), gy = 1 - ny.abs();
-          if (gx <= 0 || gy <= 0) continue;
-          final ov = gx * gy;
-          final excess = ov - allow[i][j];
+          final gy = 1 - ny.abs();
+          if (gy <= 0) continue;
+          final excess = gx * gy - allow[i][j];
           if (excess <= 0) continue;
-          // Which way out is read off where the two men really are, never
-          // off the nudges so far: a crowd cannot talk itself into one
-          // answer one frame and the opposite the next. Mostly along
-          // whichever axis is nearer clear, smoothly.
-          final rx = xs[i] - xs[j];
+          // Which side each goes is read off where the two really are,
+          // never off the nudges so far: a crowd cannot talk itself into
+          // one answer one frame and the opposite the next.
           final ry = ys[i] - ys[j];
-          final px = smoothSign(rx) * (1 - ry.abs()).clamp(0.0, 1.0);
-          final py =
-              smoothSign(ry) * (1 - rx.abs()).clamp(0.0, 1.0) +
-              (rx.abs() + ry.abs() < 1e-6 ? 0.1 : 0);
-          final k = excess * _gain;
-          final shareI = free[i] / mobile;
-          final shareJ = free[j] / mobile;
-          dx[i] += px * k * shareI;
-          dy[i] += py * k * shareI;
-          dx[j] -= px * k * shareJ;
-          dy[j] -= py * k * shareJ;
+          // Two men level across the pitch still part, by a fixed rule
+          // (the lower id goes up), blended in smoothly as they level.
+          final sg = smoothSign(ry);
+          final side = sg + 0.1 * (1 - sg.abs());
+          final k = excess * gain * side;
+          dy[i] += k * free[i] / mobile;
+          dy[j] -= k * free[j] / mobile;
         }
       }
       for (var i = 0; i < n; i++) {
-        ox[i] = (ox[i] + dx[i]).clamp(-maxNudge, maxNudge);
         oy[i] = (oy[i] + dy[i]).clamp(-maxNudge, maxNudge);
       }
     }
+    double drawnY(int i) {
+      final y = base[i].y + oy[i] * hs[i];
+      // A man on the pitch is drawn on it, or on the strip of grass just
+      // past the touchline at most.
+      final onPitch = base[i].y >= 0 && base[i].y <= PitchDims.width;
+      return onPitch ? y.clamp(-1.5, PitchDims.width + 1.5) : y;
+    }
+
     return {
-      for (var i = 0; i < n; i++)
-        ids[i]: Offset2(base[i].x + ox[i] * w, base[i].y + oy[i] * hs[i]),
+      for (var i = 0; i < n; i++) ids[i]: Offset2(base[i].x, drawnY(i)),
     };
   }
 
   static double _tanh(double x) {
     final e = math.exp(2 * x);
     return (e - 1) / (e + 1);
+  }
+}
+
+/// [Declutter] as played: each drawn token follows its nudge at a bounded
+/// speed, so two men crossing paths, or a crowd settling the other way,
+/// swap sides over a few frames rather than in one. A man held at the ball
+/// is drawn exactly where Declutter has him (nothing is eased at a strike,
+/// an arrival, a save or a header), and a jump in time (a seek, a cut, a
+/// resume) starts afresh.
+class DeclutterEasing {
+  /// The fastest a nudge moves, in tokens per second.
+  static const double rate = 4.5;
+
+  final Map<int, double> _nudge = {};
+  double? _t;
+
+  Map<int, Offset2> frame(PitchScript s, PitchFrame f, double t) {
+    final target = Declutter.frame(s, f, t);
+    final last = _t;
+    _t = t;
+    final dt = last == null ? double.infinity : t - last;
+    final fresh = dt <= 0 || dt > 0.1;
+    final pins = Declutter.pins(s, t);
+    final out = <int, Offset2>{};
+    final seen = <int>{};
+    target.forEach((id, p) {
+      seen.add(id);
+      final raw = f.players[id]!;
+      final h = 2 * DisplaySpacing.halfAcross(raw.y);
+      final want = (p.y - raw.y) / h;
+      final had = _nudge[id];
+      double now;
+      if (fresh || had == null) {
+        now = want;
+      } else {
+        // As the hold comes up the eased place gives way to the exact one:
+        // fully held, he is exactly where Declutter has him.
+        final pin = pins[id] ?? 0;
+        final step = rate * dt;
+        final eased = had + (want - had).clamp(-step, step);
+        now = eased + (want - eased) * pin;
+      }
+      _nudge[id] = now;
+      out[id] = Offset2(raw.x, raw.y + now * h);
+    });
+    _nudge.removeWhere((id, _) => !seen.contains(id));
+    return out;
   }
 }

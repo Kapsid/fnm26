@@ -2,6 +2,7 @@ import 'dart:ui' show Offset, Size;
 
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
+import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
 
 /// Maps pitch metres (x along the length, y across, y = 0 the far touchline)
 /// to screen pixels as a tilted pitch: the far touchline is drawn narrower
@@ -10,9 +11,9 @@ class PitchProjection {
   const PitchProjection(
     this.viewport,
     this.cam, {
-    this.tilt = 0.75,
-    this.top = 0.30,
-    this.bottom = 0.95,
+    this.tilt = PitchViewGeometry.tilt,
+    this.top = PitchViewGeometry.top,
+    this.bottom = PitchViewGeometry.bottom,
   });
 
   final Size viewport;

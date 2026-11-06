@@ -1,12 +1,15 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show Size;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/pitch/display_spacing.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
+import 'package:fnm/features/match/pitch/actors_painter.dart';
+import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 
 import '../../helpers/pitch_match_lab.dart';
 
@@ -83,7 +86,11 @@ void main() {
     final byKind = <String, int>{};
     final framesByKind = <String, int>{};
     for (var seed = 0; seed < 200; seed++) {
-      final s = labScript(labMatch(seed), PitchSpeed.values[seed % 3], seed: seed);
+      final s = labScript(
+        labMatch(seed),
+        PitchSpeed.values[seed % 3],
+        seed: seed,
+      );
       for (var t = s.start + 0.1; t < s.totalSeconds; t += 0.2) {
         frames++;
         final kind = _kind(s.windowAt(t));
@@ -126,12 +133,18 @@ void main() {
     var count = 0;
     final w = 2 * DisplaySpacing.halfLength;
     for (var seed = 0; seed < 12; seed++) {
-      final s = labScript(labMatch(seed), PitchSpeed.values[seed % 3], seed: seed);
+      final s = labScript(
+        labMatch(seed),
+        PitchSpeed.values[seed % 3],
+        seed: seed,
+      );
+      // As the view plays it: eased frame to frame.
+      final easing = DeclutterEasing();
       Map<int, Offset2>? last;
       Map<int, Offset2>? lastRaw;
       for (var t = s.start + 0.1; t < s.totalSeconds; t += 1 / 60) {
         final f = s.sample(Duration(microseconds: (t * 1e6).round()));
-        final drawn = Declutter.frame(s, f, t);
+        final drawn = easing.frame(s, f, t);
         final nearCut = [
           ...s.cuts,
           ...s.resets,
@@ -158,6 +171,162 @@ void main() {
       'nudge change per frame: mean ${(sum / count).toStringAsFixed(4)}, '
       'worst ${worst.toStringAsFixed(3)} tokens',
     );
-    expect(worst, lessThan(0.1));
+    // About 2 px at phone size at worst, as a hold comes on.
+    expect(worst, lessThan(0.15));
+  });
+
+  test('the drawn picture never contradicts the outcome', () {
+    // Over 200 matches: at every strike, pass arrival, save and header the
+    // man is drawn where he is; nobody on the pitch is drawn behind his
+    // goal line; the drawn offside order is the true one.
+    var checked = 0;
+    final fails = <String>[];
+    Duration at(double t) => Duration(microseconds: (t * 1e6).round());
+    for (var seed = 0; seed < 200; seed++) {
+      final s = labScript(
+        labMatch(seed),
+        PitchSpeed.values[seed % 3],
+        seed: seed,
+      );
+      void near(int? actor, double t, String what) {
+        if (actor == null || t < s.start || t > s.totalSeconds) return;
+        final id = s.actorList[actor].playerId;
+        final f = s.sample(at(t));
+        final p = f.players[id];
+        if (p == null) return;
+        final d = Declutter.frame(s, f, t)[id]!;
+        checked++;
+        if (d.distanceTo(p) > 0.3) {
+          fails.add('match $seed $what at $t: ${d.distanceTo(p)} m');
+        }
+      }
+
+      for (final ph in s.ballPhases) {
+        if (ph is! FlightPhase || ph.resting) continue;
+        if (!ph.pass) near(ph.fromActor, ph.t0, 'strike');
+        if (ph.fromHeight > 1) near(ph.fromActor, ph.t0, 'header');
+        if (ph.toActor != null) {
+          near(ph.toActor, ph.t1 - 1e-6, ph.pass ? 'arrival' : 'save');
+        }
+        if (ph.pass && ph.toActor != null) {
+          // The offside order as the ball is played.
+          final t = ph.t0 + 1e-6;
+          final f = s.sample(at(t));
+          final d = Declutter.frame(s, f, t);
+          final r = s.actorList[ph.toActor!];
+          final rp = f.players[r.playerId];
+          if (rp == null) continue;
+          final dir = attackDir(
+            home: r.teamNationId == s.homeNationId,
+            minute: s.pacer.matchAt(at(t)).minute,
+          );
+          final defs = [
+            for (final e in f.players.entries)
+              if (s.actorList[s.actorIndexOf(e.key)!].teamNationId !=
+                  r.teamNationId)
+                e.key,
+          ];
+          if (defs.length < 2) continue;
+          int depthSort(int a, int b) => xToDepth(
+            f.players[b]!.x,
+            dir,
+          ).compareTo(xToDepth(f.players[a]!.x, dir));
+          defs.sort(depthSort);
+          final second = defs[1];
+          bool ahead(Map<int, Offset2> m) =>
+              xToDepth(m[r.playerId]!.x, dir) > xToDepth(m[second]!.x, dir);
+          if (ahead(f.players) != ahead(d)) {
+            fails.add('match $seed offside order flips at $t');
+          }
+        }
+      }
+      // Nobody drawn behind his goal line, sampled through the match.
+      for (var t = s.start + 0.1; t < s.totalSeconds; t += 0.5) {
+        final f = s.sample(at(t));
+        final d = Declutter.frame(s, f, t);
+        f.players.forEach((id, p) {
+          final q = d[id]!;
+          final on = p.x >= 0 && p.x <= PitchDims.length;
+          if (on && (q.x < 0 || q.x > PitchDims.length)) {
+            fails.add('match $seed $id drawn behind the line at $t');
+          }
+          if (q.x != p.x) fails.add('match $seed $id moved in depth at $t');
+        });
+      }
+    }
+    debugPrint('outcome checks: $checked, failures ${fails.length}');
+    expect(fails.take(10), isEmpty);
+    expect(checked, greaterThan(10000));
+  });
+
+  test('the spacing figures match the view', () {
+    // DisplaySpacing works from PitchViewGeometry; check it against the
+    // live projection and the painter's token at phone size.
+    const size = Size(390, 280);
+    final p = PitchMatchView.projectionFor(size);
+    final r0 = ActorsPainter.tokenRadiusFor(size);
+    for (final y in [0.0, 17.0, 34.0, 51.0, 68.0]) {
+      final r = r0 * p.scaleAt(y);
+      final along = p.toScreen(60, y) - p.toScreen(50, y);
+      expect(
+        DisplaySpacing.halfLength,
+        closeTo(r / (along.dx / 10), 0.01),
+        reason: 'along at $y',
+      );
+      final y0 = (y - 0.05).clamp(0.0, 68.0), y1 = (y + 0.05).clamp(0.0, 68.0);
+      final perMetre =
+          (p.toScreen(50, y1).dy - p.toScreen(50, y0).dy) / (y1 - y0);
+      expect(
+        DisplaySpacing.halfAcross(y),
+        closeTo(r / perMetre, 0.03),
+        reason: 'across at $y',
+      );
+    }
+  });
+
+  test('only men who touch may come closer', () {
+    var shots = 0;
+    for (var seed = 0; seed < 20; seed++) {
+      final s = labScript(
+        labMatch(seed),
+        PitchSpeed.values[seed % 3],
+        seed: seed,
+      );
+      for (final w in s.windows) {
+        if (w.moments.isEmpty) continue;
+        final m = w.moments.first;
+        if (m is! ShotMoment || m.keeperId == null) continue;
+        if (m.outcome == ShotOutcome.blocked || m.header) continue;
+        final t = (w.start + w.end) / 2;
+        final f = s.sample(Duration(microseconds: (t * 1e6).round()));
+        if (!f.players.containsKey(m.keeperId) ||
+            !f.players.containsKey(m.shooterId)) {
+          continue;
+        }
+        shots++;
+        expect(
+          Declutter.contactIn(s, f, m.shooterId, m.keeperId!, t),
+          greaterThan(0),
+        );
+        // A man the ball is with, coming to or leaving is in a challenge
+        // with any opponent on him: judged apart from the moment.
+        final held = Declutter.pins(s, t);
+        if (held.containsKey(m.shooterId) || held.containsKey(m.keeperId)) {
+          continue;
+        }
+        for (final o in f.players.keys) {
+          if (o == m.shooterId || o == m.keeperId) continue;
+          if (held.containsKey(o)) continue;
+          // The shooter with anybody else, the keeper with anybody else.
+          expect(
+            Declutter.contactIn(s, f, m.shooterId, o, t),
+            0,
+            reason: 'shooter and $o',
+          );
+          expect(Declutter.contactIn(s, f, m.keeperId!, o, t), 0);
+        }
+      }
+    }
+    expect(shots, greaterThan(10));
   });
 }
