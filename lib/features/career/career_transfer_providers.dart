@@ -214,6 +214,13 @@ class CareerTransferService {
     if (!PackCodec.fieldsOk(pack, baseCodes: codes)) {
       return BundleRejection.unreadable;
     }
+    // Two nations on one code would break every code lookup in play.
+    if (PackRules.issues(
+      pack,
+      baseCodes: codes,
+    ).any((i) => i is DuplicateCode)) {
+      return BundleRejection.unreadable;
+    }
     // A career world is played as it is, never assessed again: what format 2
     // adds (pools, added clubs, sponsors and Y accounts) must name only what
     // this game has, every pool fringe id its own nation's.

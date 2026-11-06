@@ -172,6 +172,28 @@ void main() {
     });
   });
 
+  testWidgets('a bundle whose world gives two nations one code is refused', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      final file = await _bundleFile(
+        dir,
+        tamper: (t) {
+          final row = (t['career_worlds']! as List).single as Map;
+          final pack = jsonDecode(row['json']! as String) as Map;
+          (pack['nations'] as Map)['2'] = {'name': 'Twin', 'code': 'RNM'};
+          row['json'] = jsonEncode(pack);
+        },
+      );
+      final d = await _device();
+      expect(
+        await d.c.read(careerTransferServiceProvider).import(file.path),
+        BundleRejection.unreadable,
+      );
+      await _expectNothingWritten(d.db);
+    });
+  });
+
   testWidgets("a bundle whose world's pool holds another nation's fringe id "
       'is refused; its own nation\'s imports', (tester) async {
     await tester.runAsync(() async {
