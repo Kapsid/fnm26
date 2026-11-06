@@ -219,6 +219,20 @@ double _lastSeen(PitchScript s, int id, double from) {
 double _secs(Duration d) => d.inMicroseconds / 1e6;
 
 void main() {
+  test('a final carries a confetti cue at full time, no other match does', () {
+    final m = _match(3);
+    final plain = _script(m, PitchSpeed.values.first);
+    expect(plain.confettiAt, isNull);
+    final finalScript = StoryLayer.build(
+      result: m.result,
+      lineups: m.lineups,
+      pacer: PitchPacer(m.result, PitchSpeed.values.first),
+      seed: 7,
+      isFinal: true,
+    );
+    expect(finalScript.confettiAt, closeTo(finalScript.totalSeconds, 1e-6));
+  });
+
   test('quiet time obeys every invariant over 50 seeded matches', () {
     var maxSpeed = 0.0;
     var minGap = double.infinity;
