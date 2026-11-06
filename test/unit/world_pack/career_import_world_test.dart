@@ -110,6 +110,28 @@ void main() {
   setUp(() => dir = Directory.systemTemp.createTempSync('fnm-career-world'));
   tearDown(() => dir.deleteSync(recursive: true));
 
+  testWidgets('a bundle whose world is in a newer pack format reads as newer', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      final file = await _bundleFile(
+        dir,
+        tamper: (t) {
+          final row = (t['career_worlds']! as List).single as Map;
+          final json = jsonDecode(row['json']! as String) as Map;
+          json['formatVersion'] = kPackFormatVersion + 1;
+          row['json'] = jsonEncode(json);
+        },
+      );
+      final d = await _device();
+      expect(
+        await d.c.read(careerTransferServiceProvider).import(file.path),
+        BundleRejection.fromANewerBuild,
+      );
+      await _expectNothingWritten(d.db);
+    });
+  });
+
   testWidgets('a bundle whose world has a 10,000-character name is refused '
       'and writes nothing', (tester) async {
     await tester.runAsync(() async {

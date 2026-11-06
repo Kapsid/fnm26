@@ -52,7 +52,39 @@ abstract final class CareerBundle {
   /// 2 (schema 53) added binary columns, written as base64 text (the career's
   /// own copy of its world's trophy images). A format-1 bundle has none and
   /// imports unchanged, as a career on the default world.
-  static const int formatVersion = 2;
+  ///
+  /// 3 is format 2 carrying a world in pack format 2 (Editor 2: pools, added
+  /// clubs, sponsors and Y accounts, `localized`). The file shape is 2's;
+  /// the number moves so a 1.1.0 build, which reads only pack format 1,
+  /// says "made by a newer version" instead of "unreadable". A career on
+  /// the default world or on a format-1 world still writes 2 (see
+  /// [formatFor]). Both import here.
+  static const int formatVersion = 3;
+
+  /// The bundle format written when the career's world is not in pack
+  /// format 2 or later.
+  static const int plainFormatVersion = 2;
+
+  /// The format a bundle of [tables] is written in: [formatVersion] when its
+  /// `career_worlds` row holds a pack in format 2 or later, else
+  /// [plainFormatVersion].
+  static int formatFor(Map<String, Object?> tables) {
+    final worlds = tables['career_worlds'];
+    if (worlds is List) {
+      for (final row in worlds) {
+        final json = row is Map ? row['json'] : null;
+        if (json is! String) continue;
+        try {
+          final pack = jsonDecode(json);
+          final v = pack is Map ? pack['formatVersion'] : null;
+          if (v is int && v >= 2) return formatVersion;
+        } on FormatException {
+          continue;
+        }
+      }
+    }
+    return plainFormatVersion;
+  }
 
   /// The extension a shared career carries.
   static const String extension = 'fnmcareer';
@@ -180,7 +212,7 @@ abstract final class CareerBundle {
 
     final career = tables[rootTable]?.singleOrNull;
     return {
-      'format': formatVersion,
+      'format': formatFor(tables),
       'schemaVersion': AppDatabase.currentSchemaVersion,
       'exportedAt': DateTime.now().toUtc().toIso8601String(),
       'managerName': career?['manager_name'],

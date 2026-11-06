@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:drift/drift.dart' show DriftSqlType, Value, Variable;
@@ -165,7 +166,8 @@ void main() {
       final bundle = CareerBundle.decode(
         CareerBundle.encode(await CareerBundle.export(db, original)),
       ).bundle!;
-      expect(bundle['format'], 2);
+      // A format-2 world: 1.1.0 must read the bundle as newer.
+      expect(bundle['format'], 3);
       expect(
         (bundle['tables']! as Map).keys,
         isNot(contains('world_packs')),
@@ -182,6 +184,42 @@ void main() {
       expect(world!.pack, pack);
       expect(world.trophies, {'worldChampionship': png});
       expect(await db.select(db.worldPacks).get(), isEmpty);
+    },
+  );
+
+  test(
+    'a career on a format-1 world, or none, still writes bundle format 2',
+    () async {
+      final plain = await aCareerNamed('Plain');
+      expect((await CareerBundle.export(db, plain))['format'], 2);
+
+      // A career a 1.1.0 build started: its world stored in pack format 1.
+      final old = await aCareerNamed('OldWorld');
+      await db
+          .into(db.careerWorlds)
+          .insert(
+            CareerWorldsCompanion.insert(
+              careerId: Value(old),
+              packName: 'Old World',
+              json: jsonEncode({
+                'formatVersion': 1,
+                'uuid': 'u-1',
+                'name': 'Old World',
+                'author': '',
+                'madeWithVersion': '1.1.0',
+              }),
+            ),
+          );
+      final bundle = await CareerBundle.export(db, old);
+      expect(bundle['format'], 2);
+      // And this build reads both formats.
+      for (final f in [2, 3]) {
+        bundle['format'] = f;
+        expect(
+          CareerBundle.decode(CareerBundle.encode(bundle)).rejection,
+          isNull,
+        );
+      }
     },
   );
 

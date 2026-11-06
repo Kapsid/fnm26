@@ -153,7 +153,8 @@ class CareerTransferService {
     }
     // The career's own copy of its world comes from outside the device, so
     // it passes the checks a `.fnmdb` file does, or nothing comes in.
-    if (!await _checkWorld(read.bundle!)) return BundleRejection.unreadable;
+    final worldRejection = await _checkWorld(read.bundle!);
+    if (worldRejection != null) return worldRejection;
     final db = _ref.read(appDatabaseProvider);
     final newId = await CareerBundle.import(db, read.bundle!);
     // A career that came with a custom world shows its names at once.
@@ -172,38 +173,45 @@ class CareerTransferService {
   /// `.fnmdb` file: the pack read by its strict reader and every field held
   /// to the editor's rules, the stored name capped, and every trophy picture
   /// decoded and drawn again. The bundle then carries the normaliser's
-  /// pictures in place of its own. False when anything fails, and the
-  /// bundle is refused whole. A bundle with no world passes untouched.
-  Future<bool> _checkWorld(Map<String, Object?> bundle) async {
+  /// pictures in place of its own. A rejection when anything fails, and the
+  /// bundle is refused whole: [BundleRejection.fromANewerBuild] for a world
+  /// in a pack format this build does not read yet, else
+  /// [BundleRejection.unreadable]. Null when it passes; a bundle with no
+  /// world passes untouched.
+  Future<BundleRejection?> _checkWorld(Map<String, Object?> bundle) async {
     final tables = bundle['tables'];
-    if (tables is! Map) return false;
+    if (tables is! Map) return BundleRejection.unreadable;
     final worlds = tables['career_worlds'] ?? const <Object?>[];
     final trophies = tables['career_world_trophies'] ?? const <Object?>[];
-    if (worlds is! List || trophies is! List) return false;
-    if (worlds.isEmpty && trophies.isEmpty) return true;
+    if (worlds is! List || trophies is! List) return BundleRejection.unreadable;
+    if (worlds.isEmpty && trophies.isEmpty) return null;
     // One world per career, and no picture without one.
-    if (worlds.length != 1) return false;
+    if (worlds.length != 1) return BundleRejection.unreadable;
     final row = worlds.single;
-    if (row is! Map) return false;
+    if (row is! Map) return BundleRejection.unreadable;
     final packName = row['pack_name'];
     final json = row['json'];
     if (packName is! String || PackRules.checkName(packName) != null) {
-      return false;
+      return BundleRejection.unreadable;
     }
-    if (json is! String || json.length > PackCodec.maxJsonBytes) return false;
+    if (json is! String || json.length > PackCodec.maxJsonBytes)
+      return BundleRejection.unreadable;
     final WorldPack pack;
     try {
       final raw = jsonDecode(json);
-      if (raw is! Map<String, Object?>) return false;
+      if (raw is! Map<String, Object?>) return BundleRejection.unreadable;
       final inner = raw['formatVersion'];
-      if (inner is int && inner > kPackFormatVersion) return false;
+      if (inner is int && inner > kPackFormatVersion) {
+        return BundleRejection.fromANewerBuild;
+      }
       pack = WorldPack.fromJson(WorldPack.migrate(raw));
     } on Object {
-      return false;
+      return BundleRejection.unreadable;
     }
     final base = await _ref.read(nationRepositoryProvider).newCareerWorld();
     final codes = {for (final n in base) n.id: n.code};
-    if (!PackCodec.fieldsOk(pack, baseCodes: codes)) return false;
+    if (!PackCodec.fieldsOk(pack, baseCodes: codes))
+      return BundleRejection.unreadable;
     // A career world is played as it is, never assessed again: what format 2
     // adds (pools, added clubs, sponsors and Y accounts) must name only what
     // this game has, every pool fringe id its own nation's.
@@ -215,32 +223,34 @@ class CareerTransferService {
     if (unknown.any(
       (i) => _formatTwoRoots.contains(i.where.split('.').first),
     )) {
-      return false;
+      return BundleRejection.unreadable;
     }
-    if (trophies.length > PackCodec.maxTrophies) return false;
+    if (trophies.length > PackCodec.maxTrophies)
+      return BundleRejection.unreadable;
     final keys = <String>{};
     final normalised = <Map<String, Object?>>[];
     for (final t in trophies) {
-      if (t is! Map) return false;
+      if (t is! Map) return BundleRejection.unreadable;
       final key = t['key'];
       final png = t['png'];
-      if (key is! String || Trophies.assetForKey(key) == null) return false;
-      if (!keys.add(key) || png is! String) return false;
+      if (key is! String || Trophies.assetForKey(key) == null)
+        return BundleRejection.unreadable;
+      if (!keys.add(key) || png is! String) return BundleRejection.unreadable;
       final Uint8List input;
       try {
         input = base64Decode(png);
       } on FormatException {
-        return false;
+        return BundleRejection.unreadable;
       }
       final out = await TrophyNormaliser.normalise(input, key);
-      if (out == null) return false;
+      if (out == null) return BundleRejection.unreadable;
       normalised.add({
         for (final e in t.entries) '${e.key}': e.value,
         'png': base64Encode(out.png),
       });
     }
     tables['career_world_trophies'] = normalised;
-    return true;
+    return null;
   }
 }
 
