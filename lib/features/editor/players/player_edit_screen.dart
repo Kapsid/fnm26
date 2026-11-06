@@ -28,15 +28,18 @@ import 'package:fnm/shared/widgets/widgets.dart';
 
 part 'player_edit_tablet_layout.dart';
 
-/// One player of a database: his name, age, position and club, his overall
-/// with a player type (or, under Advanced, his three stored qualities), his
-/// potential and his traits. Every change is saved as it is made; Delete is
-/// in the app bar's menu, with Undo on the snackbar.
+/// One player of a database, of a nation's squad or (with [pool]) of its
+/// pool: his name, age, position and club, his overall with a player type
+/// (or, under Advanced, his three stored qualities), his potential and his
+/// traits. Every change is saved as it is made; Delete is in the app bar's
+/// menu, with Undo on the snackbar. The first change to a player of an
+/// untouched pool fixes the whole pool as the Pool tab shows it.
 class PlayerEditScreen extends ConsumerWidget {
   const PlayerEditScreen({
     required this.packId,
     required this.nationId,
     required this.playerId,
+    this.pool = false,
     super.key,
   });
 
@@ -51,6 +54,9 @@ class PlayerEditScreen extends ConsumerWidget {
   final int nationId;
   final int playerId;
 
+  /// Whether he is of the nation's pool, not its squad.
+  final bool pool;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
@@ -58,17 +64,23 @@ class PlayerEditScreen extends ConsumerWidget {
     final editor = ref.watch(packEditorProvider(packId).notifier);
     final tablet = useTabletLayout(context, ref);
     final pack = async.valueOrNull;
-    final player = pack?.squads[nationId]
-        ?.where((p) => p.id == playerId)
-        .firstOrNull;
-    void back() => editorBack(context, editorSquadLocation(packId, nationId));
+    final key = (packId: packId, nationId: nationId);
+    final generated = pool ? ref.watch(editorGeneratedPoolProvider(key)) : null;
+    final players = pack == null
+        ? null
+        : shownPlayers(ref, pack, key, pool: pool);
+    final player = players?.where((p) => p.id == playerId).firstOrNull;
+    void back() => editorBack(
+      context,
+      editorSquadLocation(packId, nationId, pool: pool),
+    );
 
     final title = player == null
         ? l.editorSectionPlayers
         : playerLabel(l, player);
     final undo = editor.canUndo ? editor.undo : null;
     void removed(PackPlayer p) {
-      showRemovedSnackBar(context, l, p, editor);
+      showRemovedSnackBar(context, l, p, editor, pool: pool);
       back();
     }
 
@@ -76,14 +88,19 @@ class PlayerEditScreen extends ConsumerWidget {
       packId: packId,
       nationId: nationId,
       playerId: playerId,
+      pool: pool,
       onRemoved: removed,
     );
     final body = pack == null
         ? (async.hasError
               ? AppErrorState(message: l.editorPackMissing)
               : const Center(child: CircularProgressIndicator()))
+        : players == null
+        ? (generated?.hasError ?? false
+              ? AppErrorState(message: l.editorPoolLoadFailed)
+              : const Center(child: CircularProgressIndicator()))
         : player == null
-        ? EditorMessage(l.editorPlayerGone)
+        ? EditorMessage(pool ? l.editorPoolPlayerGone : l.editorPlayerGone)
         : tablet
         ? _PlayerEditTabletBody(form: form)
         : ListView(
@@ -123,7 +140,14 @@ class PlayerEditScreen extends ConsumerWidget {
             deleteKey: deleteKey,
             onDelete: () {
               editor.update(
-                (pack) => SquadEdits.remove(pack, nationId, player.id),
+                (pack) => pool
+                    ? SquadEdits.poolRemove(
+                        pack,
+                        nationId,
+                        players ?? const [],
+                        player.id,
+                      )
+                    : SquadEdits.remove(pack, nationId, player.id),
               );
               removed(player);
             },
@@ -134,14 +158,15 @@ class PlayerEditScreen extends ConsumerWidget {
   }
 }
 
-/// The fields of one player, used by the player page and beside the squad
-/// on a tablet. Two columns when it has the room (who he is; how good he
-/// is), one otherwise.
+/// The fields of one player (of the squad, or with [pool] of the pool),
+/// used by the player page and beside the list on a tablet. Two columns when
+/// it has the room (who he is; how good he is), one otherwise.
 class PlayerEditForm extends ConsumerStatefulWidget {
   const PlayerEditForm({
     required this.packId,
     required this.nationId,
     required this.playerId,
+    this.pool = false,
     this.onRemoved,
     super.key,
   });
@@ -189,6 +214,9 @@ class PlayerEditForm extends ConsumerStatefulWidget {
   final int nationId;
   final int playerId;
 
+  /// Whether he is of the nation's pool, not its squad.
+  final bool pool;
+
   /// Called with the player once "Remove from squad" took him out.
   final void Function(PackPlayer removed)? onRemoved;
 
@@ -223,19 +251,32 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
   PackEditor get _editor =>
       ref.read(packEditorProvider(widget.packId).notifier);
 
-  PackPlayer? _of(WorldPack? pack) => pack?.squads[widget.nationId]
-      ?.where((p) => p.id == widget.playerId)
-      .firstOrNull;
+  EditorPoolKey get _key => (packId: widget.packId, nationId: widget.nationId);
+
+  /// The players he is one of in [pack]: the squad, or the pool as shown.
+  List<PackPlayer>? _listOf(WorldPack? pack) => pack == null
+      ? null
+      : shownPlayers(ref, pack, _key, pool: widget.pool, listen: false);
+
+  PackPlayer? _of(WorldPack? pack) =>
+      _listOf(pack)?.where((p) => p.id == widget.playerId).firstOrNull;
+
+  /// Whether the fields hold him yet: a pool player the game generates may
+  /// be read only after the form opened.
+  bool _filled = false;
+
+  void _fill(PackPlayer p) {
+    _name.text = p.name;
+    _type = PlayerBuild.typeOf(p.position, p.attributes);
+    _wrote = p.attributes;
+    _filled = true;
+  }
 
   @override
   void initState() {
     super.initState();
     final p = _of(ref.read(packEditorProvider(widget.packId)).valueOrNull);
-    if (p != null) {
-      _name.text = p.name;
-      _type = PlayerBuild.typeOf(p.position, p.attributes);
-      _wrote = p.attributes;
-    }
+    if (p != null) _fill(p);
     _nameFocus.addListener(() {
       if (_nameFocus.hasFocus || !mounted) return;
       // Done typing: the name keeps no stray spaces at either end.
@@ -255,12 +296,15 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
   /// Applies [change] to the player as the pack holds him now.
   void _edit(PackPlayer Function(PackPlayer) change, {Object? group}) {
     _editor.update((pack) {
-      final p = _of(pack);
-      if (p == null) return pack;
+      final list = _listOf(pack);
+      final p = list?.where((p) => p.id == widget.playerId).firstOrNull;
+      if (list == null || p == null) return pack;
       final next = change(p);
       if (next == p) return pack;
       _wrote = next.attributes;
-      return SquadEdits.replace(pack, widget.nationId, next);
+      return widget.pool
+          ? SquadEdits.poolReplace(pack, widget.nationId, list, next)
+          : SquadEdits.replace(pack, widget.nationId, next);
     }, group: group);
   }
 
@@ -270,8 +314,34 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
   }
 
   void _remove(PackPlayer p) {
-    _editor.update((pack) => SquadEdits.remove(pack, widget.nationId, p.id));
+    _editor.update(
+      (pack) => widget.pool
+          ? SquadEdits.poolRemove(
+              pack,
+              widget.nationId,
+              _listOf(pack) ?? const [],
+              p.id,
+            )
+          : SquadEdits.remove(pack, widget.nationId, p.id),
+    );
     widget.onRemoved?.call(p);
+  }
+
+  /// Random: each career rolls his traits. A pick's traits this game does
+  /// not know go with it (a pick alone may hold them), which the snackbar
+  /// says, with Undo.
+  void _randomTraits(AppLocalizations l, PackPlayer p) {
+    setState(() => _traitRefused = false);
+    final dropped = p.unknownTraits.length;
+    final before = _editor.revision;
+    _edit((p) => SquadEdits.withTraits(p, null));
+    if (dropped > 0 && _editor.revision != before) {
+      showUndoSnackBar(
+        context,
+        _editor,
+        l.editorPlayerTraitsUnknownDropped(dropped),
+      );
+    }
   }
 
   /// Picks or drops trait [t] of [p]; a pick past [PlayerTraits.maxTraits]
@@ -345,11 +415,18 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
       }
     });
     final pack = ref.watch(packEditorProvider(widget.packId)).valueOrNull;
-    final p = _of(pack);
-    if (pack == null || p == null) return EditorMessage(l.editorPlayerGone);
+    // A generated pool read after the form opened shows him then.
+    if (widget.pool) ref.watch(editorGeneratedPoolProvider(_key));
+    final squad = _listOf(pack) ?? const <PackPlayer>[];
+    final p = squad.where((p) => p.id == widget.playerId).firstOrNull;
+    if (pack == null || p == null) {
+      return EditorMessage(
+        widget.pool ? l.editorPoolPlayerGone : l.editorPlayerGone,
+      );
+    }
+    if (!_filled) _fill(p);
     final type = _type ??= PlayerBuild.typeOf(p.position, p.attributes);
     final overall = SquadEdits.overallOf(p);
-    final squad = pack.squads[widget.nationId] ?? const <PackPlayer>[];
     final duplicate =
         p.name.trim().isNotEmpty &&
         SquadEdits.duplicateNames(squad).contains(SquadEdits.nameKey(p.name));
@@ -389,7 +466,7 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
         onPressed: () => _remove(p),
         style: TextButton.styleFrom(foregroundColor: AppColors.error),
         icon: const Icon(Icons.person_remove_outlined),
-        label: Text(l.editorPlayerRemove),
+        label: Text(widget.pool ? l.editorPoolRemove : l.editorPlayerRemove),
       ),
     );
 
@@ -482,7 +559,9 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
                       const SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
-                          l.editorSquadDuplicate,
+                          widget.pool
+                              ? l.editorPoolDuplicate
+                              : l.editorSquadDuplicate,
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.warning,
                           ),
@@ -717,10 +796,7 @@ class _PlayerEditFormState extends ConsumerState<PlayerEditForm> {
               avatar: const Icon(Icons.casino_outlined, size: 18),
               label: Text(l.editorPlayerTraitsRandom),
               selected: picked == null,
-              onSelected: (_) {
-                setState(() => _traitRefused = false);
-                _edit((p) => SquadEdits.withTraits(p, null));
-              },
+              onSelected: (_) => _randomTraits(l, p),
             ),
             for (final t in PlayerTrait.values)
               _traitChip(l, t, picked?.contains(t) ?? false, p),

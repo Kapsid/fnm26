@@ -60,10 +60,7 @@ class _PackHomeTabletLayout extends StatelessWidget {
                         itemBuilder: (context, i) => _IssueRow(
                           index: i,
                           issue: view.issues[i],
-                          onTap: () => state._open(
-                            view.issues[i].section,
-                            nationId: view.issues[i].nationId,
-                          ),
+                          onTap: () => state._openIssue(view, i),
                           onRemove: state._remover(view, i),
                         ),
                       ),

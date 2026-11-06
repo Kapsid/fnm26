@@ -114,13 +114,18 @@ PackIssueText describePackIssue(
           _ => key,
         },
       };
+      // A player's entry opens on his nation's squad or pool.
+      final playerNation =
+          (root == 'pools' || root == 'squads') && key.contains('.')
+          ? int.tryParse(key.split('.').first)
+          : null;
       return (
         title: title,
         detail: what.isEmpty
             ? l.editorIssueUnknown
             : l.editorIssueUnknownEntry(what),
         section: section,
-        nationId: null,
+        nationId: world.containsKey(playerNation) ? playerNation : null,
       );
     case BadField(:final path, :final reason):
       return _badField(l, path, reason, pack, title, section, nation);

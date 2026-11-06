@@ -559,6 +559,111 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
   });
 
+  testWidgets('Random drops unknown traits and says so, with Undo', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final squad = testSquad();
+    final id = await insertPack(
+      tester,
+      c,
+      testPack(
+        'Random unknown',
+        squads: {
+          cze: [
+            for (final p in squad)
+              if (p.id == mid)
+                PackPlayer.fromJson({
+                  ...p.toJson(),
+                  'traits': ['leader', 'flyingHeader'],
+                })
+              else
+                p,
+          ],
+        },
+      ),
+    );
+    await pumpEditorRoute(tester, c, _player(id, cze, mid));
+    final random = find.byKey(PlayerEditForm.randomTraitsKey);
+    await tester.ensureVisible(random);
+    await tester.pump();
+    await tester.tap(random);
+    await tester.pumpAndSettle();
+    expect(_find(c, id, cze, mid).traits, isNull);
+    expect(_find(c, id, cze, mid).unknownTraits, isEmpty);
+    final said = find.text(enL.editorPlayerTraitsUnknownDropped(1));
+    expect(said, findsOneWidget);
+
+    await tester.tap(find.text(enL.editorUndo).last);
+    await tester.pumpAndSettle();
+    final back = _find(c, id, cze, mid);
+    expect(back.traits, [PlayerTrait.leader]);
+    expect(back.unknownTraits, ['flyingHeader']);
+    expect(said, findsNothing);
+
+    // A pick with nothing unknown goes to Random without a word.
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(PlayerEditForm.unknownTraitKey('flyingHeader')),
+        matching: find.byIcon(Icons.close),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(random);
+    await tester.pumpAndSettle();
+    expect(_find(c, id, cze, mid).traits, isNull);
+    expect(said, findsNothing);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('the player app bar fits a 320 dp phone', (tester) async {
+    final c = await editorContainer(tester);
+    const name = 'Bartholomew Wojciechowski-Konstantinopoulos';
+    final id = await insertPack(
+      tester,
+      c,
+      testPack(
+        'Narrow',
+        squads: {
+          cze: [
+            for (final p in testSquad())
+              p.id == mid ? SquadEdits.copy(p, name: name) : p,
+          ],
+        },
+      ),
+    );
+    await pumpEditorRoute(
+      tester,
+      c,
+      _player(id, cze, mid),
+      size: const Size(320, 640),
+    );
+    expect(tester.takeException(), isNull);
+    final bar = find.byType(AppBar);
+    final title = find.descendant(of: bar, matching: find.text(name));
+    expect(title, findsOneWidget);
+    // Room for a readable part of the name, not a sliver.
+    expect(tester.getSize(title).width, greaterThanOrEqualTo(96));
+    final barRect = tester.getRect(bar);
+    for (final key in [PlayerEditScreen.undoKey, PlayerEditScreen.menuKey]) {
+      final r = tester.getRect(find.byKey(key));
+      expect(barRect.contains(r.center), isTrue, reason: '$key');
+      expect(r.right, lessThanOrEqualTo(320));
+    }
+    final back = tester.getRect(
+      find.descendant(of: bar, matching: find.byIcon(Icons.arrow_back)),
+    );
+    expect(back.left, greaterThanOrEqualTo(0));
+    final titleRect = tester.getRect(title);
+    expect(titleRect.left, greaterThanOrEqualTo(back.right));
+    expect(
+      titleRect.right,
+      lessThanOrEqualTo(
+        tester.getRect(find.byKey(PlayerEditScreen.undoKey)).left,
+      ),
+    );
+  });
+
   testWidgets(
     "club search 'Madrid' finds Spain's clubs under a Spain header for a "
     'Czech player',

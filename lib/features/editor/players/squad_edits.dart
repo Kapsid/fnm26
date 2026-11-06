@@ -137,6 +137,79 @@ abstract final class SquadEdits {
     ]);
   }
 
+  /// [pack] with nation [nationId]'s pool changed by [change]: the pack's
+  /// own pool when it has one, else [shown], the generated pool the editor
+  /// shows, so the first edit fixes the whole pool exactly as it was shown.
+  /// A [change] that gives back the very list it got changes nothing (and
+  /// fixes nothing). Every pool edit goes through here in one
+  /// [PackEditor.update], so one undo of the first gives the untouched pool
+  /// back.
+  static WorldPack poolEdit(
+    WorldPack pack,
+    int nationId,
+    List<PackPlayer> shown,
+    List<PackPlayer> Function(List<PackPlayer>) change,
+  ) {
+    final base = pack.pools[nationId] ?? shown;
+    final next = change(base);
+    if (identical(next, base)) return pack;
+    return pack.copyWith(pools: {...pack.pools, nationId: next});
+  }
+
+  /// [pack] with a new player added to nation [nationId]'s pool ([shown]
+  /// while it is untouched), or null when the pool is at [PackRules.poolMax].
+  /// He gets a pack-made id ([nextPlayerId]).
+  static ({WorldPack pack, PackPlayer player})? poolAdd(
+    WorldPack pack,
+    int nationId,
+    List<PackPlayer> shown,
+  ) {
+    final pool = pack.pools[nationId] ?? shown;
+    if (pool.length >= PackRules.poolMax) return null;
+    final player = newPlayer(pool, nextPlayerId(pack));
+    return (
+      pack: poolEdit(pack, nationId, shown, (list) => [...list, player]),
+      player: player,
+    );
+  }
+
+  /// [pack] without player [playerId] of nation [nationId]'s pool.
+  static WorldPack poolRemove(
+    WorldPack pack,
+    int nationId,
+    List<PackPlayer> shown,
+    int playerId,
+  ) => poolEdit(
+    pack,
+    nationId,
+    shown,
+    (list) => list.any((p) => p.id == playerId)
+        ? [
+            for (final p in list)
+              if (p.id != playerId) p,
+          ]
+        : list,
+  );
+
+  /// [pack] with [player] (matched by id) replaced in nation [nationId]'s
+  /// pool.
+  static WorldPack poolReplace(
+    WorldPack pack,
+    int nationId,
+    List<PackPlayer> shown,
+    PackPlayer player,
+  ) => poolEdit(
+    pack,
+    nationId,
+    shown,
+    (list) => list.any((p) => p.id == player.id)
+        ? [
+            for (final p in list)
+              if (p.id == player.id) player else p,
+          ]
+        : list,
+  );
+
   static WorldPack _withSquad(
     WorldPack pack,
     int nationId,

@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -420,6 +421,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       builder: (context, state) => SquadScreen(
         packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
         nationId: int.tryParse(state.uri.queryParameters['nation'] ?? '') ?? 0,
+        pool: state.uri.queryParameters['tab'] == 'pool',
       ),
     ),
     GoRoute(
@@ -428,6 +430,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         packId: int.tryParse(state.uri.queryParameters['id'] ?? '') ?? 0,
         nationId: int.tryParse(state.uri.queryParameters['nation'] ?? '') ?? 0,
         playerId: int.tryParse(state.uri.queryParameters['player'] ?? '') ?? 0,
+        pool: state.uri.queryParameters['pool'] == '1',
       ),
     ),
     for (final section in NameSection.values)
@@ -1146,19 +1149,36 @@ final routerProvider = Provider<GoRouter>((ref) {
   // included, which a redirect would not; leaving for the menus drops the
   // world.
   final delegate = router.routerDelegate;
+  var gone = false;
   void onRoute() {
     syncActiveWorld(ref, delegate.currentConfiguration);
     // The editor's language is the editor's: leaving it forgets the pick.
-    final path = delegate.currentConfiguration.uri.path;
-    final inEditor =
-        path == Routes.editor || path.startsWith('${Routes.editor}/');
-    if (!inEditor && ref.read(editorLanguageProvider) != null) {
-      ref.read(editorLanguageProvider.notifier).state = null;
+    // A route change made while the tree builds may change no provider
+    // then: the pick is forgotten once the frame is done, the location read
+    // again by then, so a quick way out and back in keeps it.
+    void forget() {
+      if (gone) return;
+      final path = delegate.currentConfiguration.uri.path;
+      final inEditor =
+          path == Routes.editor || path.startsWith('${Routes.editor}/');
+      if (!inEditor && ref.read(editorLanguageProvider) != null) {
+        ref.read(editorLanguageProvider.notifier).state = null;
+      }
+    }
+
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => forget());
+    } else {
+      forget();
     }
   }
 
   delegate.addListener(onRoute);
-  ref.onDispose(() => delegate.removeListener(onRoute));
+  ref.onDispose(() {
+    gone = true;
+    delegate.removeListener(onRoute);
+  });
   return router;
 });
 

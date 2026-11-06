@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,6 +22,7 @@ import 'package:fnm/features/editor/names/name_sections.dart';
 import 'package:fnm/features/editor/editor_language.dart';
 import 'package:fnm/domain/services/world_pack/pack_paths.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
 import 'package:fnm/features/editor/pack_issue_text.dart';
 
@@ -661,6 +664,50 @@ void main() {
     expect(c.read(editorLanguageProvider), isNull);
   });
 
+  testWidgets('a route change made while the tree builds forgets the '
+      "editor's language after the build, not during it", (tester) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Build'));
+    final router = c.read(routerProvider)..go(editorPackLocation(id));
+    final trigger = GlobalKey<_GoDuringBuildState>();
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: c,
+        child: MaterialApp.router(
+          theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+          builder: (context, child) => _GoDuringBuild(
+            key: trigger,
+            go: () => router.go(Routes.home),
+            child: child!,
+          ),
+        ),
+      ),
+    );
+    await settle(tester);
+    c.read(editorLanguageProvider.notifier).state = 'cs';
+    await settle(tester);
+    expect(find.byKey(EditorLanguageChip.chipKey), findsOneWidget);
+
+    trigger.currentState!.goNow();
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(c.read(editorLanguageProvider), isNull);
+    expect(find.byType(PackHomeScreen), findsNothing);
+    // And back by the Back gesture of a pushed page: the same.
+    router.go(editorPackLocation(id));
+    await settle(tester);
+    c.read(editorLanguageProvider.notifier).state = 'cs';
+    unawaited(router.push(_at(NameSection.clubs, id)));
+    await settle(tester);
+    router.pop();
+    await settle(tester);
+    expect(tester.takeException(), isNull);
+    expect(c.read(editorLanguageProvider), 'cs');
+  });
+
   for (final code in [null, 'cs', 'fil']) {
     testWidgets('the home app bar fits a 320 dp phone, language $code', (
       tester,
@@ -724,5 +771,32 @@ void main() {
       expect(tester.takeException(), isNull);
       await tester.pump(const Duration(milliseconds: 450));
     });
+  }
+}
+
+/// Calls [go] from inside its own build, once, after [goNow]: a route change
+/// made while the tree is building.
+class _GoDuringBuild extends StatefulWidget {
+  const _GoDuringBuild({required this.go, required this.child, super.key});
+
+  final VoidCallback go;
+  final Widget child;
+
+  @override
+  State<_GoDuringBuild> createState() => _GoDuringBuildState();
+}
+
+class _GoDuringBuildState extends State<_GoDuringBuild> {
+  bool _pending = false;
+
+  void goNow() => setState(() => _pending = true);
+
+  @override
+  Widget build(BuildContext context) {
+    if (_pending) {
+      _pending = false;
+      widget.go();
+    }
+    return widget.child;
   }
 }

@@ -69,11 +69,27 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
     if (mounted) context.go(Routes.editor);
   }
 
-  /// Opens [section] (on [nationId]); null is the database as a whole,
-  /// whose home this already is, and [EditorSection.none] has no screen.
-  void _open(EditorSection? section, {int? nationId}) {
+  /// Opens [section]; null is the database as a whole, whose home this
+  /// already is, and [EditorSection.none] has no screen.
+  void _open(EditorSection? section) {
     if (section == null || !section.hasScreen) return;
-    context.go(editorSectionLocation(section, _id, nationId: nationId));
+    context.go(editorSectionLocation(section, _id));
+  }
+
+  /// Opens where the [index]th entry is fixed (on its nation, when it has
+  /// one): a pool's on that nation's Pool tab.
+  void _openIssue(_PackView view, int index) {
+    final issue = view.issues[index];
+    final section = issue.section;
+    if (section == null || !section.hasScreen) return;
+    context.go(
+      editorSectionLocation(
+        section,
+        _id,
+        nationId: issue.nationId,
+        pool: view.raw[index].where.startsWith('pools.'),
+      ),
+    );
   }
 
   /// Remove for the [index]th entry, when it names something the game no
@@ -191,10 +207,7 @@ class _PackHomeScreenState extends ConsumerState<PackHomeScreen> {
                   itemBuilder: (context, i) => _IssueRow(
                     index: i,
                     issue: view.issues[i],
-                    onTap: () => _open(
-                      view.issues[i].section,
-                      nationId: view.issues[i].nationId,
-                    ),
+                    onTap: () => _openIssue(view, i),
                     onRemove: _remover(view, i),
                   ),
                 ),

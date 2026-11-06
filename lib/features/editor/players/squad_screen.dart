@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/editor_providers.dart';
@@ -22,11 +23,24 @@ import 'package:go_router/go_router.dart';
 
 part 'squad_tablet_layout.dart';
 
-/// One nation's squad in a database: what it still needs, then its players
-/// by position. Add a player (the position the squad lacks most), swipe one
-/// away (Undo on the snackbar), tap one to edit him.
+/// One nation's players in a database, on two tabs.
+///
+/// **Squad:** what the squad still needs, then its players by position. Add
+/// a player (the position the squad lacks most), swipe one away (Undo on the
+/// snackbar), tap one to edit him.
+///
+/// **Pool:** the nation's day-one pool, the fringe beyond the squad. Left
+/// untouched it is the game's, generated per career (shown as the editor's
+/// fixed draw names it); the first change fixes the whole pool exactly as
+/// shown, and Back to generated hands it to the game again. Searchable and
+/// filtered by position, with no paging (at most [PackRules.poolMax]).
 class SquadScreen extends ConsumerStatefulWidget {
-  const SquadScreen({required this.packId, required this.nationId, super.key});
+  const SquadScreen({
+    required this.packId,
+    required this.nationId,
+    this.pool = false,
+    super.key,
+  });
 
   static const Key tabletLayoutKey = Key('editorSquad.tabletLayout');
   static const Key addKey = Key('editorSquad.add');
@@ -38,72 +52,230 @@ class SquadScreen extends ConsumerStatefulWidget {
   static const Key menuKey = Key('editorSquad.menu');
   static const Key deleteKey = Key('editorSquad.delete');
 
+  /// The two tabs.
+  static const Key squadTabKey = Key('editorSquad.tab.squad');
+  static const Key poolTabKey = Key('editorSquad.tab.pool');
+
+  /// The Pool tab's banner: the game's pool, or the pack's own (with Back
+  /// to generated, and its confirmation).
+  static const Key poolGeneratedKey = Key('editorSquad.pool.generated');
+  static const Key poolFixedKey = Key('editorSquad.pool.fixed');
+  static const Key poolResetKey = Key('editorSquad.pool.reset');
+  static const Key poolResetConfirmKey = Key('editorSquad.pool.resetConfirm');
+  static const Key poolSearchKey = Key('editorSquad.pool.search');
+
+  /// The Pool tab's position filter; null is everyone.
+  static Key poolFilterKey(PositionCategory? c) =>
+      Key('editorSquad.pool.filter.${c?.name ?? 'all'}');
+
   static Key playerKey(int id) => Key('editorSquad.player.$id');
+  static Key poolPlayerKey(int id) => Key('editorSquad.pool.player.$id');
   static Key duplicateKey(int id) => Key('editorSquad.duplicate.$id');
 
   final int packId;
   final int nationId;
 
+  /// Whether it opens on the Pool tab.
+  final bool pool;
+
   @override
   ConsumerState<SquadScreen> createState() => _SquadScreenState();
 }
 
-/// One line of the squad list: a position group's heading or a player.
+/// The generated pool of [key] once it is read: null while it is read (or
+/// read again) and when the read failed.
+List<PackPlayer>? generatedPoolOf(
+  WidgetRef ref,
+  EditorPoolKey key, {
+  bool listen = true,
+}) {
+  final async = listen
+      ? ref.watch(editorGeneratedPoolProvider(key))
+      : ref.read(editorGeneratedPoolProvider(key));
+  return async.isLoading ? null : async.valueOrNull;
+}
+
+/// The players of nation `key.nationId` the editor shows in [pack]: with
+/// [pool] its pool (the pack's own once fixed, else the generated one, null
+/// until read), else its squad.
+List<PackPlayer>? shownPlayers(
+  WidgetRef ref,
+  WorldPack pack,
+  EditorPoolKey key, {
+  required bool pool,
+  bool listen = true,
+}) => pool
+    ? pack.pools[key.nationId] ?? generatedPoolOf(ref, key, listen: listen)
+    : pack.squads[key.nationId] ?? const <PackPlayer>[];
+
+/// One line of a player list: a position group's heading or a player.
 typedef _Line = ({PositionCategory? heading, PackPlayer? player});
 
-class _SquadScreenState extends ConsumerState<SquadScreen> {
-  /// The player edited beside the list (tablet).
+class _SquadScreenState extends ConsumerState<SquadScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabs = TabController(
+    length: 2,
+    vsync: this,
+    initialIndex: widget.pool ? 1 : 0,
+  )..addListener(_tabChanged);
+
+  /// The player edited beside the list (tablet), and whether he is of the
+  /// pool.
   int? _picked;
+  bool _pickedPool = false;
+
+  /// The Pool tab's search and position filter.
+  final TextEditingController _search = TextEditingController();
+  String _query = '';
+  PositionCategory? _filter;
 
   int get _id => widget.packId;
   int get _nation => widget.nationId;
+  EditorPoolKey get _key => (packId: _id, nationId: _nation);
+  bool get _onPool => _tabs.index == 1;
 
   PackEditor get _editor => ref.read(packEditorProvider(_id).notifier);
 
+  @override
+  void dispose() {
+    _tabs.dispose();
+    _search.dispose();
+    super.dispose();
+  }
+
+  void _tabChanged() {
+    if (!mounted) return;
+    setState(() {});
+  }
+
   void _back() => editorBack(context, '${Routes.editorPlayers}?id=$_id');
 
-  void _open(int playerId, {required bool tablet}) {
+  void _open(int playerId, {required bool tablet, required bool pool}) {
     if (tablet) {
-      setState(() => _picked = playerId);
+      setState(() {
+        _picked = playerId;
+        _pickedPool = pool;
+      });
     } else {
-      unawaited(context.push(editorPlayerLocation(_id, _nation, playerId)));
+      unawaited(
+        context.push(editorPlayerLocation(_id, _nation, playerId, pool: pool)),
+      );
     }
   }
 
   void _unpick() => setState(() => _picked = null);
 
+  void _say(String message) => ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
+
   void _add({required bool tablet}) {
     final l = AppLocalizations.of(context);
+    final pool = _onPool;
     PackPlayer? added;
     _editor.update((p) {
-      final r = SquadEdits.add(p, _nation);
+      final ({WorldPack pack, PackPlayer player})? r;
+      if (pool) {
+        // An untouched pool still being read takes no one yet.
+        final shown = shownPlayers(ref, p, _key, pool: true, listen: false);
+        r = shown == null ? null : SquadEdits.poolAdd(p, _nation, shown);
+      } else {
+        r = SquadEdits.add(p, _nation);
+      }
       if (r == null) return p;
       added = r.player;
       return r.pack;
     });
     final player = added;
     if (player == null) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(l.editorSquadFull(PackRules.squadMax))),
+      final pack = ref.read(packEditorProvider(_id)).valueOrNull;
+      final have = pack == null
+          ? null
+          : shownPlayers(ref, pack, _key, pool: pool, listen: false);
+      if (have != null) {
+        _say(
+          pool
+              ? l.editorPoolFull(PackRules.poolMax)
+              : l.editorSquadFull(PackRules.squadMax),
         );
+      }
       return;
     }
-    _open(player.id, tablet: tablet);
+    if (pool) _clearPoolSearch();
+    _open(player.id, tablet: tablet, pool: pool);
+  }
+
+  void _setQuery(String query) => setState(() => _query = query);
+
+  void _setFilter(PositionCategory? filter) => setState(() => _filter = filter);
+
+  /// The new player is shown whatever was searched for.
+  void _clearPoolSearch() {
+    _search.clear();
+    setState(() {
+      _query = '';
+      _filter = null;
+    });
   }
 
   void _remove(PackPlayer player) {
     final l = AppLocalizations.of(context);
     _editor.update((p) => SquadEdits.remove(p, _nation, player.id));
-    if (_picked == player.id) setState(() => _picked = null);
+    if (_picked == player.id && !_pickedPool) setState(() => _picked = null);
     showRemovedSnackBar(context, l, player, _editor);
   }
 
-  static List<_Line> _lines(List<PackPlayer> squad) {
+  void _removeFromPool(PackPlayer player) {
+    final l = AppLocalizations.of(context);
+    _editor.update(
+      (p) => SquadEdits.poolRemove(
+        p,
+        _nation,
+        shownPlayers(ref, p, _key, pool: true, listen: false) ?? const [],
+        player.id,
+      ),
+    );
+    if (_picked == player.id && _pickedPool) setState(() => _picked = null);
+    showRemovedSnackBar(context, l, player, _editor, pool: true);
+  }
+
+  /// Back to generated, once confirmed: the pack's own pool goes (one
+  /// undoable edit), and every career generates the pool again.
+  Future<void> _resetPool() async {
+    final l = AppLocalizations.of(context);
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.surfaceContainer,
+        title: Text(l.editorPoolResetTitle),
+        content: Text(l.editorPoolResetBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l.editorCancel),
+          ),
+          TextButton(
+            key: SquadScreen.poolResetConfirmKey,
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: Text(l.editorPoolReset),
+          ),
+        ],
+      ),
+    );
+    if (!(sure ?? false) || !mounted) return;
+    _editor.update((p) {
+      if (!p.pools.containsKey(_nation)) return p;
+      return p.copyWith(pools: {...p.pools}..remove(_nation));
+    });
+    // A pack-made player picked beside the list may be gone with it.
+    if (_pickedPool) setState(() => _picked = null);
+  }
+
+  static List<_Line> _lines(Iterable<PackPlayer> players) {
     final out = <_Line>[];
     PositionCategory? group;
-    for (final p in SquadEdits.sorted(squad)) {
+    for (final p in SquadEdits.sorted(players.toList())) {
       if (p.position.category != group) {
         group = p.position.category;
         out.add((heading: group, player: null));
@@ -111,6 +283,52 @@ class _SquadScreenState extends ConsumerState<SquadScreen> {
       out.add((heading: null, player: p));
     }
     return out;
+  }
+
+  /// The Pool tab's players for the search and the filter.
+  _PoolView _poolView(
+    AppLocalizations l,
+    WorldPack pack,
+    List<PackPlayer>? pool,
+    Map<int, Nation> world,
+  ) {
+    final fixed = pack.pools.containsKey(_nation);
+    if (pool == null) {
+      return (
+        pack: pack,
+        pool: null,
+        fixed: fixed,
+        failed: ref.read(editorGeneratedPoolProvider(_key)).hasError,
+        lines: const [],
+        issues: const [],
+        duplicates: const {},
+        counts: const {},
+        filtered: false,
+      );
+    }
+    final q = searchFold(_query);
+    final filter = _filter;
+    final shown = pool.where(
+      (p) =>
+          (filter == null || p.position.category == filter) &&
+          (q.isEmpty ||
+              searchFold(p.name).contains(q) ||
+              searchFold(clubLabel(l, pack, p)).contains(q)),
+    );
+    return (
+      pack: pack,
+      pool: pool,
+      fixed: fixed,
+      failed: false,
+      lines: _lines(shown),
+      issues: [
+        for (final i in _editor.poolIssues(_nation))
+          describePackIssue(l, i, pack, world).detail,
+      ],
+      duplicates: SquadEdits.duplicateNames(pool),
+      counts: SquadEdits.counts(pool),
+      filtered: q.isNotEmpty || filter != null,
+    );
   }
 
   @override
@@ -150,16 +368,33 @@ class _SquadScreenState extends ConsumerState<SquadScreen> {
       issues: issues,
       duplicates: SquadEdits.duplicateNames(squad),
     );
+    // Watched on both tabs: its count is on the Pool tab, and it is ready
+    // by the time the tab is opened.
+    final pool = shownPlayers(ref, pack, _key, pool: true);
+    final poolView = _poolView(l, pack, pool, world);
     final undo = editor.canUndo ? editor.undo : null;
+    final tabs = _Tabs(
+      controller: _tabs,
+      squad: squad.length,
+      pool: pool?.length,
+    );
 
     if (tablet) {
       return _SquadTabletLayout(
         state: this,
         title: title,
         view: view,
+        poolView: poolView,
+        tabs: tabs,
         onUndo: undo,
       );
     }
+    final padding = const EdgeInsets.fromLTRB(
+      AppSpacing.marginMobile,
+      AppSpacing.md,
+      AppSpacing.marginMobile,
+      96,
+    );
     return EditorFrame(
       tablet: false,
       tabletKey: SquadScreen.tabletLayoutKey,
@@ -180,45 +415,112 @@ class _SquadScreenState extends ConsumerState<SquadScreen> {
         icon: const Icon(Icons.person_add_alt_1),
         label: Text(l.editorSquadAdd),
       ),
-      body: _SquadList(
-        view: view,
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.marginMobile,
-          AppSpacing.md,
-          AppSpacing.marginMobile,
-          96,
-        ),
-        onTap: (p) => _open(p.id, tablet: false),
-        onRemove: _remove,
+      body: Column(
+        children: [
+          tabs,
+          Expanded(
+            child: _onPool
+                ? _PoolPane(
+                    state: this,
+                    view: poolView,
+                    padding: padding,
+                    onTap: (p) => _open(p.id, tablet: false, pool: true),
+                  )
+                : _SquadList(
+                    view: view,
+                    padding: padding,
+                    onTap: (p) => _open(p.id, tablet: false, pool: false),
+                    onRemove: _remove,
+                  ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Says [player] left the squad, with Undo. Call it right after the
-/// removal: the Undo undoes that removal only, and the snackbar goes as soon
-/// as anything else is edited.
-void showRemovedSnackBar(
+/// The Squad and Pool tabs, each with its count (the pool's once read).
+class _Tabs extends StatelessWidget {
+  const _Tabs({
+    required this.controller,
+    required this.squad,
+    required this.pool,
+  });
+
+  final TabController controller;
+  final int squad;
+  final int? pool;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    Widget label(String text, int? count) => Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: Text(text, maxLines: 1, overflow: TextOverflow.ellipsis),
+        ),
+        if (count != null) ...[
+          const SizedBox(width: AppSpacing.xs + 2),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerHighest,
+              borderRadius: AppRadii.smAll,
+            ),
+            child: Text(
+              '$count',
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+    return Material(
+      color: Colors.transparent,
+      child: TabBar(
+        controller: controller,
+        labelColor: AppColors.onSurface,
+        unselectedLabelColor: AppColors.onSurfaceVariant,
+        indicatorColor: AppColors.primary,
+        tabs: [
+          Tab(
+            key: SquadScreen.squadTabKey,
+            child: label(l.editorTabSquad, squad),
+          ),
+          Tab(key: SquadScreen.poolTabKey, child: label(l.editorTabPool, pool)),
+        ],
+      ),
+    );
+  }
+}
+
+/// Says [message] about the edit just made, with an Undo that undoes that
+/// edit only; the snackbar goes as soon as anything else is edited. Call it
+/// right after the edit.
+void showUndoSnackBar(
   BuildContext context,
-  AppLocalizations l,
-  PackPlayer player,
   PackEditor editor,
+  String message,
 ) {
-  final removal = editor.revision;
+  final l = AppLocalizations.of(context);
+  final edit = editor.revision;
   final messenger = ScaffoldMessenger.of(context)..hideCurrentSnackBar();
   final bar = messenger.showSnackBar(
     SnackBar(
-      content: Text(l.editorSquadRemoved(playerLabel(l, player))),
+      content: Text(message),
       action: SnackBarAction(
         label: l.editorUndo,
-        onPressed: () => editor.undoIfLatest(removal),
+        onPressed: () => editor.undoIfLatest(edit),
       ),
     ),
   );
   var open = true;
   late final void Function() stop;
   stop = editor.addListener((_) {
-    if (open && editor.revision != removal) {
+    if (open && editor.revision != edit) {
       open = false;
       bar.close();
     }
@@ -230,6 +532,22 @@ void showRemovedSnackBar(
     }),
   );
 }
+
+/// Says [player] left the squad (with [pool], the pool), with Undo
+/// ([showUndoSnackBar]). Call it right after the removal.
+void showRemovedSnackBar(
+  BuildContext context,
+  AppLocalizations l,
+  PackPlayer player,
+  PackEditor editor, {
+  bool pool = false,
+}) => showUndoSnackBar(
+  context,
+  editor,
+  pool
+      ? l.editorPoolRemoved(playerLabel(l, player))
+      : l.editorSquadRemoved(playerLabel(l, player)),
+);
 
 typedef _SquadView = ({
   WorldPack pack,
@@ -275,48 +593,361 @@ class _SquadList extends StatelessWidget {
         }
         final line = lines[i - 1];
         final heading = line.heading;
-        if (heading != null) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.xs,
-              AppSpacing.md,
-              0,
-              AppSpacing.xs,
-            ),
-            child: Text(
-              categoryTitle(l, heading),
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.onSurfaceVariant,
-              ),
-            ),
-          );
-        }
+        if (heading != null) return _GroupHeading(heading);
         final p = line.player!;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-          child: Dismissible(
-            key: ValueKey('squad-${p.id}'),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: AppSpacing.lg),
-              decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.85),
-                borderRadius: AppRadii.mdAll,
-              ),
-              child: const Icon(Icons.delete_outline, color: Colors.white),
-            ),
-            onDismissed: (_) => onRemove(p),
-            child: _PlayerRow(
-              pack: view.pack,
-              player: p,
-              duplicate: view.duplicates.contains(SquadEdits.nameKey(p.name)),
-              picked: picked == p.id,
-              onTap: () => onTap(p),
-            ),
+        return _SwipeRow(
+          id: 'squad-${p.id}',
+          onRemove: () => onRemove(p),
+          child: _PlayerRow(
+            rowKey: SquadScreen.playerKey(p.id),
+            pack: view.pack,
+            player: p,
+            duplicate: view.duplicates.contains(SquadEdits.nameKey(p.name)),
+            picked: picked == p.id,
+            onTap: () => onTap(p),
           ),
         );
       },
+    );
+  }
+}
+
+/// A position group's heading in a player list.
+class _GroupHeading extends StatelessWidget {
+  const _GroupHeading(this.category);
+
+  final PositionCategory category;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.xs,
+      AppSpacing.md,
+      0,
+      AppSpacing.xs,
+    ),
+    child: Text(
+      categoryTitle(AppLocalizations.of(context), category),
+      style: AppTypography.labelMedium.copyWith(
+        color: AppColors.onSurfaceVariant,
+      ),
+    ),
+  );
+}
+
+/// A player row that a swipe to the left deletes.
+class _SwipeRow extends StatelessWidget {
+  const _SwipeRow({
+    required this.id,
+    required this.onRemove,
+    required this.child,
+  });
+
+  final String id;
+  final VoidCallback onRemove;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+    child: Dismissible(
+      key: ValueKey(id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: AppSpacing.lg),
+        decoration: BoxDecoration(
+          color: AppColors.error.withValues(alpha: 0.85),
+          borderRadius: AppRadii.mdAll,
+        ),
+        child: const Icon(Icons.delete_outline, color: Colors.white),
+      ),
+      onDismissed: (_) => onRemove(),
+      child: child,
+    ),
+  );
+}
+
+typedef _PoolView = ({
+  WorldPack pack,
+
+  /// Null while the generated pool is read, or when that failed.
+  List<PackPlayer>? pool,
+
+  /// Whether the pack has its own (fixed) pool.
+  bool fixed,
+  bool failed,
+
+  /// The players the search and the filter leave, by position group.
+  List<_Line> lines,
+  List<String> issues,
+  Set<String> duplicates,
+  Map<PositionCategory, int> counts,
+
+  /// Whether a search or a filter is on.
+  bool filtered,
+});
+
+/// The Pool tab: the search and the position filter, then (as it scrolls)
+/// the banner and the players by position group.
+class _PoolPane extends StatelessWidget {
+  const _PoolPane({
+    required this.state,
+    required this.view,
+    required this.padding,
+    required this.onTap,
+    this.picked,
+  });
+
+  final _SquadScreenState state;
+  final _PoolView view;
+  final EdgeInsets padding;
+  final void Function(PackPlayer) onTap;
+  final int? picked;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final pool = view.pool;
+    if (pool == null) {
+      return view.failed
+          ? AppErrorState(message: l.editorPoolLoadFailed)
+          : const Center(child: CircularProgressIndicator());
+    }
+    final lines = view.lines;
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            padding.left,
+            AppSpacing.sm,
+            padding.right,
+            0,
+          ),
+          child: TextField(
+            key: SquadScreen.poolSearchKey,
+            controller: state._search,
+            onChanged: state._setQuery,
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+              isDense: true,
+              hintText: l.squadSearchHint,
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: state._query.isEmpty
+                  ? null
+                  : IconButton(
+                      tooltip: l.editorCancel,
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        state._search.clear();
+                        state._setQuery('');
+                      },
+                    ),
+            ),
+          ),
+        ),
+        // Every chip built (a short row), scrolled sideways on a narrow
+        // phone.
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.fromLTRB(
+            padding.left,
+            AppSpacing.xs,
+            padding.right,
+            AppSpacing.xs,
+          ),
+          child: Row(
+            children: [
+              for (final c in [null, ...PositionCategory.values])
+                Padding(
+                  padding: const EdgeInsets.only(right: AppSpacing.xs),
+                  child: ChoiceChip(
+                    key: SquadScreen.poolFilterKey(c),
+                    label: Text(
+                      c == null
+                          ? '${l.squadFilterAll} ${pool.length}'
+                          : '${categoryShort(l, c)} ${view.counts[c] ?? 0}',
+                    ),
+                    selected: state._filter == c,
+                    onSelected: (_) => state._setFilter(c),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.fromLTRB(
+              padding.left,
+              AppSpacing.xs,
+              padding.right,
+              padding.bottom,
+            ),
+            itemCount: lines.length + 1 + (lines.isEmpty ? 1 : 0),
+            itemBuilder: (context, i) {
+              if (i == 0) {
+                return _PoolBanner(view: view, onReset: state._resetPool);
+              }
+              if (lines.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.xl),
+                  child: EditorMessage(
+                    view.filtered ? l.squadNobodyMatches : l.editorPoolEmpty,
+                    icon: view.filtered
+                        ? Icons.search_off
+                        : Icons.person_add_alt_1,
+                  ),
+                );
+              }
+              final line = lines[i - 1];
+              final heading = line.heading;
+              if (heading != null) return _GroupHeading(heading);
+              final p = line.player!;
+              return _SwipeRow(
+                id: 'pool-${p.id}',
+                onRemove: () => state._removeFromPool(p),
+                child: _PlayerRow(
+                  rowKey: SquadScreen.poolPlayerKey(p.id),
+                  pack: view.pack,
+                  player: p,
+                  duplicate: view.duplicates.contains(
+                    SquadEdits.nameKey(p.name),
+                  ),
+                  duplicateNote: l.editorPoolDuplicate,
+                  picked: picked == p.id,
+                  onTap: () => onTap(p),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Whose pool it is: the game's (generated per career, the first change
+/// fixes it) or the pack's own (with Back to generated); its size against
+/// the cap, and what is wrong with it.
+class _PoolBanner extends StatelessWidget {
+  const _PoolBanner({required this.view, required this.onReset});
+
+  final _PoolView view;
+  final VoidCallback onReset;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final fixed = view.fixed;
+    final size = view.pool?.length ?? 0;
+    final over = size > PackRules.poolMax;
+    final color = view.issues.isNotEmpty || over
+        ? AppColors.warning
+        : fixed
+        ? AppColors.positive
+        : AppColors.primary;
+    return AppCard(
+      key: fixed ? SquadScreen.poolFixedKey : SquadScreen.poolGeneratedKey,
+      color: color.withValues(alpha: 0.06),
+      border: Border.all(color: color.withValues(alpha: 0.6)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                fixed ? Icons.push_pin_outlined : Icons.auto_awesome_outlined,
+                size: 20,
+                color: color,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      fixed ? l.editorPoolFixed : l.editorPoolGenerated,
+                      style: AppTypography.titleMedium,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      fixed
+                          ? l.editorPoolFixedAbout
+                          : l.editorPoolGeneratedAbout,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l.editorCountPlayers(size),
+                  style: AppTypography.labelLarge.copyWith(
+                    color: over ? AppColors.warning : AppColors.onSurface,
+                  ),
+                ),
+              ),
+              Text(
+                l.editorPoolMax(PackRules.poolMax),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          for (final issue in view.issues.take(6))
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.pending_outlined,
+                    size: 16,
+                    color: AppColors.warning,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Expanded(
+                    child: Text(
+                      issue,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.onSurface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (view.issues.length > 6)
+            Padding(
+              padding: const EdgeInsets.only(top: 2, left: 20),
+              child: Text(
+                l.editorCountToFix(view.issues.length - 6),
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.warning,
+                ),
+              ),
+            ),
+          if (fixed)
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: TextButton.icon(
+                key: SquadScreen.poolResetKey,
+                onPressed: onReset,
+                icon: const Icon(Icons.restart_alt),
+                label: Text(l.editorPoolReset),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -483,13 +1114,19 @@ class _GroupCount extends StatelessWidget {
 /// club, overall and potential.
 class _PlayerRow extends StatelessWidget {
   const _PlayerRow({
+    required this.rowKey,
     required this.pack,
     required this.player,
     required this.duplicate,
     required this.picked,
     required this.onTap,
+    this.duplicateNote,
   });
 
+  final Key rowKey;
+
+  /// What the shared-name badge says (the squad's wording when null).
+  final String? duplicateNote;
   final WorldPack pack;
   final PackPlayer player;
   final bool duplicate;
@@ -503,7 +1140,7 @@ class _PlayerRow extends StatelessWidget {
     final unnamed = p.name.trim().isEmpty;
     final overall = SquadEdits.overallOf(p);
     return AppCard(
-      key: SquadScreen.playerKey(p.id),
+      key: rowKey,
       onTap: onTap,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm + 4,
@@ -539,7 +1176,7 @@ class _PlayerRow extends StatelessWidget {
                     if (duplicate) ...[
                       const SizedBox(width: AppSpacing.xs),
                       Tooltip(
-                        message: l.editorSquadDuplicate,
+                        message: duplicateNote ?? l.editorSquadDuplicate,
                         child: Icon(
                           Icons.warning_amber_rounded,
                           key: SquadScreen.duplicateKey(p.id),

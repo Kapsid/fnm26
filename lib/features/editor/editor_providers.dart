@@ -91,13 +91,14 @@ String editorPackLocation(int packId) => '${Routes.editorPack}?id=$packId';
 
 /// The location of [section] in pack [packId], opened on [nationId] when the
 /// section is per nation. The players section opened on a nation is that
-/// nation's squad ([editorSquadLocation]).
+/// nation's squad ([editorSquadLocation]), on its Pool tab with [pool].
 String editorSectionLocation(
   EditorSection section,
   int packId, {
   int? nationId,
+  bool pool = false,
 }) => section == EditorSection.players && nationId != null
-    ? editorSquadLocation(packId, nationId)
+    ? editorSquadLocation(packId, nationId, pool: pool)
     : Uri(
         path: section.route,
         queryParameters: {
@@ -106,13 +107,66 @@ String editorSectionLocation(
         },
       ).toString();
 
-/// The location of nation [nationId]'s squad in pack [packId].
-String editorSquadLocation(int packId, int nationId) =>
-    '${Routes.editorSquad}?id=$packId&nation=$nationId';
+/// The location of nation [nationId]'s squad in pack [packId], on the Pool
+/// tab with [pool].
+String editorSquadLocation(int packId, int nationId, {bool pool = false}) =>
+    '${Routes.editorSquad}?id=$packId&nation=$nationId'
+    '${pool ? '&tab=pool' : ''}';
 
-/// The location of player [playerId] of nation [nationId] in pack [packId].
-String editorPlayerLocation(int packId, int nationId, int playerId) =>
-    '${Routes.editorPlayer}?id=$packId&nation=$nationId&player=$playerId';
+/// The location of player [playerId] of nation [nationId] in pack [packId]:
+/// one of its pool with [pool], else of its squad.
+String editorPlayerLocation(
+  int packId,
+  int nationId,
+  int playerId, {
+  bool pool = false,
+}) =>
+    '${Routes.editorPlayer}?id=$packId&nation=$nationId&player=$playerId'
+    '${pool ? '&pool=1' : ''}';
+
+/// One nation's pool in one pack.
+typedef EditorPoolKey = ({int packId, int nationId});
+
+/// Nation `nationId`'s pool as the game generates it for pack `packId`
+/// ([WorldPackService.generatedPool]): what an untouched pool shows, and what
+/// the first edit fixes. Read again only when the pack's name lists for the
+/// nation change, so fixing the pool (and undoing that) never re-reads it.
+final AutoDisposeFutureProviderFamily<List<PackPlayer>, EditorPoolKey>
+editorGeneratedPoolProvider = FutureProvider.autoDispose
+    .family<List<PackPlayer>, EditorPoolKey>((ref, key) {
+      final names = ref.watch(
+        packEditorProvider(key.packId).select(
+          (s) => (
+            loaded: s.hasValue,
+            names: s.valueOrNull?.nameLists[key.nationId],
+          ),
+        ),
+      );
+      final pack = ref.read(packEditorProvider(key.packId)).valueOrNull;
+      // Until the pack is read there is nothing to name the pool from; the
+      // read itself rebuilds this.
+      if (!names.loaded || pack == null) {
+        return Completer<List<PackPlayer>>().future;
+      }
+      return ref
+          .watch(worldPackServiceProvider)
+          .generatedPool(key.nationId, pack);
+    });
+
+/// Nation `nationId`'s pool in pack `packId` as the Pool tab shows it: the
+/// pack's own ([WorldPack.pools]) once fixed, else the generated one
+/// ([editorGeneratedPoolProvider]).
+final AutoDisposeFutureProviderFamily<List<PackPlayer>, EditorPoolKey>
+editorPoolProvider = FutureProvider.autoDispose
+    .family<List<PackPlayer>, EditorPoolKey>((ref, key) {
+      final fixed = ref.watch(
+        packEditorProvider(
+          key.packId,
+        ).select((s) => s.valueOrNull?.pools[key.nationId]),
+      );
+      if (fixed != null) return fixed;
+      return ref.watch(editorGeneratedPoolProvider(key).future);
+    });
 
 /// Asks the manager for a file and returns its path (null when he picks
 /// nothing): any file, or only those ending in one of [extensions] (lower
@@ -589,6 +643,17 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   }
 
   final Expando<List<PackIssue>> _squadIssues = Expando('squadIssues');
+
+  /// What stands between nation [nationId]'s fixed pool and a career
+  /// ([PackRules.poolIssues]), remembered per pool list as [squadIssues] is;
+  /// empty for a pool the pack leaves to the game.
+  List<PackIssue> poolIssues(int nationId) {
+    final pool = state.valueOrNull?.pools[nationId];
+    if (pool == null) return const [];
+    return _poolIssues[pool] ??= PackRules.poolIssues(nationId, pool);
+  }
+
+  final Expando<List<PackIssue>> _poolIssues = Expando('poolIssues');
 
   /// Trophy [key]'s own picture (a PNG at the trophy's size), or
   /// null while the game's is used.

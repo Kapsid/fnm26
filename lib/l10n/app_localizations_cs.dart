@@ -15323,6 +15323,80 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get editorTabSquad => 'Kádr';
+
+  @override
+  String get editorTabPool => 'Širší kádr';
+
+  @override
+  String get editorPoolGenerated => 'Vytvořený hrou';
+
+  @override
+  String get editorPoolGeneratedAbout =>
+      'Každá kariéra si tento kádr vylosuje znovu, jako dosud. Vaše první změna ho zafixuje přesně tak, jak je vidět tady, ve všech kariérách.';
+
+  @override
+  String get editorPoolFixed => 'Váš širší kádr';
+
+  @override
+  String get editorPoolFixedAbout =>
+      'Každá kariéra začne přesně s těmito hráči.';
+
+  @override
+  String get editorPoolReset => 'Vrátit hře';
+
+  @override
+  String get editorPoolResetTitle => 'Vrátit širší kádr hře?';
+
+  @override
+  String get editorPoolResetBody =>
+      'Vaše změny v tomto kádru se zahodí a každá kariéra ho znovu vytvoří sama.';
+
+  @override
+  String editorPoolMax(int max) {
+    return 'Nejvýše $max';
+  }
+
+  @override
+  String editorPoolFull(int max) {
+    return 'Širší kádr může mít nejvýše $max hráčů.';
+  }
+
+  @override
+  String editorPoolRemoved(String name) {
+    return 'Hráč $name odebrán ze širšího kádru';
+  }
+
+  @override
+  String get editorPoolRemove => 'Odebrat ze širšího kádru';
+
+  @override
+  String get editorPoolPlayerGone => 'Tento hráč už v širším kádru není.';
+
+  @override
+  String get editorPoolDuplicate =>
+      'Toto jméno má v širším kádru ještě jiný hráč.';
+
+  @override
+  String get editorPoolEmpty =>
+      'V širším kádru nejsou žádní hráči. Přidejte prvního.';
+
+  @override
+  String get editorPoolLoadFailed => 'Kádr hry se nepodařilo načíst.';
+
+  @override
+  String editorPlayerTraitsUnknownDropped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Odebráno $count neznámých vlastností',
+      few: 'Odebrány $count neznámé vlastnosti',
+      one: 'Odebrána 1 neznámá vlastnost',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get editorNamesOutlet => 'Médium';
 
   @override

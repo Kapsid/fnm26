@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -19,10 +20,14 @@ import 'test_database.dart';
 
 /// The real world seeded into an in-memory database, with no career: what a
 /// manager who opens the editor from the main menu has.
+///
+/// [players] stands in for the seed's players: the real ones by default,
+/// which hold no fringe; a test of the pools passes the expanded seed.
 Future<ProviderContainer> editorContainer(
   WidgetTester tester, {
   FormFactor formFactor = FormFactor.phone,
   List<Override> overrides = const [],
+  List<Player>? players,
 }) async {
   SharedPreferences.setMockInitialValues(<String, Object>{});
   final db = createTestDatabase();
@@ -32,7 +37,10 @@ Future<ProviderContainer> editorContainer(
       // The editor is free: nothing it does may depend on this.
       premiumUnlockedProvider.overrideWith((ref) => false),
       seedSourceProvider.overrideWithValue(
-        InMemorySeedSource(nationList: realNations, playerList: realPlayers),
+        InMemorySeedSource(
+          nationList: realNations,
+          playerList: players ?? realPlayers,
+        ),
       ),
       formFactorProvider.overrideWithValue(formFactor),
       ...overrides,
