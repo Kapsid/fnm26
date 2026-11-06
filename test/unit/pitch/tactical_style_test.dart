@@ -596,20 +596,6 @@ void main() {
                   xToDepth(s.sample(_dur(t)).ball.x, dir) >
                   PitchDims.length / 2;
             }
-            if (!over) {
-              for (final p in s.ballPhases) {
-                if (p.t1 < x.out - 0.5 || p.t0 > next.start + 0.5) continue;
-                // ignore: avoid_print
-                print(
-                  'DBG ${p.t0.toStringAsFixed(2)}-${p.t1.toStringAsFixed(2)} '
-                  '${p is FlightPhase ? 'flight ${p.fromActor}->${p.toActor} ${p.from} ${p.to} d ${xToDepth(p.to.x, dir).toStringAsFixed(1)}' : 'carry ${(p as CarryPhase).carrier}'}',
-                );
-              }
-              // ignore: avoid_print
-              print(
-                'DBG next ${next.start} cuts ${s.cuts.where((c) => c > x.out && c < next.end)} $m',
-              );
-            }
             expect(over, isTrue, reason: '$label: no counter');
           }
         }
