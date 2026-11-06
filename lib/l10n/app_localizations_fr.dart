@@ -14591,7 +14591,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String editorExportTooBig(String size, String limit) {
-    return 'Cette base est trop volumineuse pour être partagée : le fichier ferait $size Mo et la limite est de $limit Mo. Fixez moins de viviers ou retirez des images de trophées, puis réessayez.';
+    return 'Cette base est trop volumineuse pour être partagée : le fichier ferait $size Mo et la limite est de $limit Mo. Fixez moins de viviers ou retirez des images de trophées, puis réessayez.';
   }
 
   @override
@@ -14604,7 +14604,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String editorUnknownLanguageNote(String language, int count) {
-    return 'Noms en « $language », une langue que cette version n’affiche pas : $count. Ils sont conservés pour les versions qui la gèrent.';
+    return 'Noms en « $language », une langue que cette version n’affiche pas : $count. Ils sont conservés pour les versions qui la gèrent.';
   }
 
   @override

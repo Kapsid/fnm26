@@ -3876,8 +3876,8 @@
   "editorAddedAllNations": "Toutes les nations",
   "editorAddedSearch": "Rechercher",
   "editorCountAdded": "Ajouts : {count}",
-  "editorExportTooBig": "Cette base est trop volumineuse pour être partagée : le fichier ferait {size} Mo et la limite est de {limit} Mo. Fixez moins de viviers ou retirez des images de trophées, puis réessayez.",
+  "editorExportTooBig": "Cette base est trop volumineuse pour être partagée : le fichier ferait {size} Mo et la limite est de {limit} Mo. Fixez moins de viviers ou retirez des images de trophées, puis réessayez.",
   "editorRemoveAllLike": "Tout retirer ({count})",
   "editorNotesTitle": "Autres langues",
-  "editorUnknownLanguageNote": "Noms en « {language} », une langue que cette version n’affiche pas : {count}. Ils sont conservés pour les versions qui la gèrent."
+  "editorUnknownLanguageNote": "Noms en « {language} », une langue que cette version n’affiche pas : {count}. Ils sont conservés pour les versions qui la gèrent."
 }

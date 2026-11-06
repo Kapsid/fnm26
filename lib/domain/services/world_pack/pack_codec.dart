@@ -40,9 +40,6 @@ class PackRejected extends PackDecode {
 class PackTooBigToShare implements Exception {
   const PackTooBigToShare(this.bytes);
   final int bytes;
-
-  @override
-  String toString() => 'PackTooBigToShare($bytes bytes)';
 }
 
 class _TooBig implements Exception {
