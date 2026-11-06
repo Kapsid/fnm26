@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
+import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/features/match/pitch/actors_painter.dart';
 import 'package:fnm/features/match/pitch/confetti_painter.dart';
@@ -42,6 +43,7 @@ class PitchMatchView extends ConsumerStatefulWidget {
     required this.stadium,
     required this.clock,
     this.names = const {},
+    this.onReady,
     super.key,
   });
 
@@ -52,9 +54,13 @@ class PitchMatchView extends ConsumerStatefulWidget {
   /// Display names by player id, for the name labels.
   final Map<int, String> names;
 
+  /// Called when all three looks of the ground are baked (see
+  /// [PitchMatchViewState.ready]): the match screen starts its clock then.
+  final VoidCallback? onReady;
+
   /// How far in the camera sits: a touch wide of the pitch, so the near
   /// corners and both end stands keep clear of the frame's edges.
-  static const double cameraZoom = 0.94;
+  static const double cameraZoom = PitchViewGeometry.zoom;
 
   /// The projection the view draws (and bakes) at [size]: always centred.
   static PitchProjection projectionFor(Size size) => PitchProjection(size, (
@@ -73,6 +79,21 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
   int _bakeGeneration = 0;
   Completer<void> _baked = Completer<void>();
   final _looksArrived = ValueNotifier<int>(0);
+  late final Listenable _stadiumRepaint = Listenable.merge([
+    _light,
+    _looksArrived,
+  ]);
+  final _ready = ValueNotifier<bool>(false);
+
+  /// A new bake (another size, another ground) asked for while the clock
+  /// runs: it waits for the next pause, and the old images are drawn
+  /// scaled until then.
+  bool _rebakeWaiting = false;
+
+  /// True once all three looks of the current ground are baked. The match
+  /// screen holds the clock until it is: the bake runs before kick-off (or
+  /// in a pause), never in live play.
+  ValueListenable<bool> get ready => _ready;
 
   late final ValueNotifier<PitchLight> _light;
   (int, int)? _lightKey;
@@ -140,6 +161,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     _confetti.dispose();
     _light.dispose();
     _looksArrived.dispose();
+    _ready.dispose();
     _looks?.dispose();
     super.dispose();
   }
@@ -150,6 +172,10 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
   }
 
   void _onClock() {
+    if (_rebakeWaiting && !widget.clock.playing && mounted) {
+      _rebakeWaiting = false;
+      setState(() {});
+    }
     final m = widget.script.pacer.matchAt(widget.clock.value);
     final key = (m.minute, m.stoppage);
     if (key != _lightKey) {
@@ -170,24 +196,34 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     }
   }
 
-  void _ensureBaked(Size size, double dpr) {
+  /// Starts a bake for [size] if the ground is not baked for it yet.
+  /// Returns false when one is needed but must wait for a pause.
+  bool _ensureBaked(Size size, double dpr) {
     final want = (size: size, dpr: dpr, stadium: widget.stadium);
     final had = _bakedFor;
     if (had != null &&
         had.size == size &&
         had.dpr == dpr &&
-        identical(had.stadium, widget.stadium)) {
-      return;
+        had.stadium == widget.stadium) {
+      return true;
+    }
+    if (_looks != null && widget.clock.playing) {
+      // Never in live play: the old images carry on, scaled, until the
+      // clock stops.
+      _rebakeWaiting = true;
+      return false;
     }
     _bakedFor = want;
     final generation = ++_bakeGeneration;
     if (_baked.isCompleted) _baked = Completer<void>();
+    if (_ready.value) _ready.value = false;
     // After this frame, so the spinner is on screen first.
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (mounted && generation == _bakeGeneration) {
         unawaited(_bake(want, generation));
       }
     });
+    return true;
   }
 
   Future<void> _bake(
@@ -241,6 +277,8 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       return;
     }
     if (!_baked.isCompleted) _baked.complete();
+    _ready.value = true;
+    widget.onReady?.call();
   }
 
   ActorsPainter _actorsFor(Size size) {
@@ -248,7 +286,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     if (a != null &&
         identical(a.script, widget.script) &&
         identical(a.clock, widget.clock) &&
-        identical(a.names, widget.names) &&
+        mapEquals(a.names, widget.names) &&
         a.kits == widget.stadium.kits &&
         a.projection.viewport == size) {
       return a;
@@ -260,6 +298,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       kits: widget.stadium.kits,
       names: widget.names,
       lightAt: widget.stadium.lightAt,
+      isPlaying: () => widget.clock.playing,
     );
   }
 
@@ -270,8 +309,10 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       builder: (context, constraints) {
         final size = constraints.biggest;
         if (!size.isFinite || size.isEmpty) return const SizedBox.shrink();
-        _ensureBaked(size, dpr);
+        final current = _ensureBaked(size, dpr);
         final looks = _looks;
+        // Waiting to re-bake: the picture as baked, scaled to the new size.
+        final drawSize = current || looks == null ? size : looks.size;
         return ColoredBox(
           color: AppColors.surfaceContainerLowest,
           child: Stack(
@@ -284,21 +325,29 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 )
-              else ...[
-                RepaintBoundary(
-                  child: CustomPaint(
-                    painter: _StadiumLayer(
-                      looks,
-                      _light,
-                      Listenable.merge([_light, _looksArrived]),
-                      (r) => _stadiumRect = r,
-                    ),
+              else
+                _scaled(
+                  size,
+                  drawSize,
+                  Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      RepaintBoundary(
+                        child: CustomPaint(
+                          painter: _StadiumLayer(
+                            looks,
+                            _light,
+                            _stadiumRepaint,
+                            (r) => _stadiumRect = r,
+                          ),
+                        ),
+                      ),
+                      RepaintBoundary(
+                        child: CustomPaint(painter: _actorsFor(drawSize)),
+                      ),
+                    ],
                   ),
                 ),
-                RepaintBoundary(
-                  child: CustomPaint(painter: _actorsFor(size)),
-                ),
-              ],
               ValueListenableBuilder<double?>(
                 valueListenable: _confetti,
                 builder: (context, t, _) => t == null
@@ -323,6 +372,15 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     );
   }
 }
+
+/// [child] laid out at [drawn] and stretched to [size] when the two differ
+/// (a re-bake waiting for a pause).
+Widget _scaled(Size size, Size drawn, Widget child) => size == drawn
+    ? child
+    : FittedBox(
+        fit: BoxFit.fill,
+        child: SizedBox.fromSize(size: drawn, child: child),
+      );
 
 /// The baked ground in the light of the minute on the clock.
 class _StadiumLayer extends CustomPainter {

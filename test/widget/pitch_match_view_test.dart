@@ -164,7 +164,7 @@ void main() {
       clock.seek(Duration(microseconds: (s * 1e6).round()));
       await tester.pump();
     }
-    // Rebuilt by its parent with the same stadium: no re-bake either.
+    // Rebuilt by its parent with the same stadium object: no re-bake.
     await tester.pumpApp(
       PitchMatchView(
         script: m.script,
@@ -176,7 +176,124 @@ void main() {
     );
     await tester.pump();
     expect(baker.looks, 3);
+    // Nor with a new PitchStadium built afresh from the same match.
+    final again = pitchStadiumFor(m);
+    expect(identical(again, stadium), isFalse);
+    expect(again, stadium);
+    await tester.pumpApp(
+      PitchMatchView(
+        script: m.script,
+        stadium: again,
+        clock: clock,
+        names: {...m.names},
+      ),
+      overrides: [pitchStadiumBakerProvider.overrideWithValue(baker)],
+    );
+    await tester.pump();
+    expect(baker.looks, 3);
     expect(baker.flags, 1);
+    // Another ground is another bake.
+    expect(pitchStadiumFor(m, capacity: 8000) == stadium, isFalse);
+  });
+
+  testWidgets('ready fires once all three looks are in', (tester) async {
+    final clock = PitchClock(vsync: const TestVSync(), pacer: m.script.pacer);
+    addTearDown(clock.dispose);
+    var fired = 0;
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(390, 280);
+    addTearDown(tester.view.reset);
+    await tester.pumpApp(
+      PitchMatchView(
+        script: m.script,
+        stadium: pitchStadiumFor(m),
+        clock: clock,
+        names: m.names,
+        onReady: () => fired++,
+      ),
+    );
+    final state = tester.state<PitchMatchViewState>(
+      find.byType(PitchMatchView),
+    );
+    // Never ready before every look is in.
+    expect(state.ready.value, state.debugLooksComplete);
+    expect(fired, state.ready.value ? 1 : 0);
+    for (var i = 0; i < 400 && !state.ready.value; i++) {
+      expect(state.ready.value, state.debugLooksComplete);
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
+      await tester.pump();
+    }
+    expect(state.ready.value, isTrue);
+    expect(state.debugLooksComplete, isTrue);
+    expect(fired, 1);
+  });
+
+  testWidgets('a new size while the clock runs waits for a pause to bake', (
+    tester,
+  ) async {
+    final baker = _CountingBaker();
+    final clock = PitchClock(vsync: const TestVSync(), pacer: m.script.pacer);
+    addTearDown(clock.dispose);
+    final state = await _pump(tester, m: m, clock: clock, baker: baker);
+    expect(baker.looks, 3);
+    clock.play();
+    await tester.pump(const Duration(milliseconds: 16));
+    // The phone turns mid-play: no bake while the ball is live.
+    tester.view.physicalSize = const Size(420, 300);
+    for (var i = 0; i < 20; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(baker.looks, 3);
+    expect(tester.takeException(), isNull);
+    expect(state.ready.value, isTrue);
+    // Paused (a substitution, half-time): now it bakes for the new size.
+    clock.pause();
+    await tester.pump();
+    for (var i = 0; i < 400 && baker.looks < 6; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
+      await tester.pump();
+    }
+    for (var i = 0; i < 100 && !state.ready.value; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
+      await tester.pump();
+    }
+    expect(baker.looks, 6);
+    expect(state.ready.value, isTrue);
+    expect(state.debugStadiumRect, Offset.zero & const Size(420, 300));
+  });
+
+  testWidgets('paused on a cut, the picture holds at full strength', (
+    tester,
+  ) async {
+    final s = m.script;
+    final c = s.cuts.firstWhere((c) => s.cutKinds[c] != PitchCutKind.phase);
+    // Playing, the actors have dipped right at the cut.
+    expect(CutTransition.at(s, c)!.layers.single.alpha, 0);
+    // A reset's dip only fades in after it.
+    final r = s.resets.first;
+    expect(CutTransition.at(s, r - 0.05), isNull);
+    expect(
+      CutTransition.at(s, r + 0.05)!.layers.single.alpha,
+      closeTo(0.4, 0.01),
+    );
+    final clock = PitchClock(vsync: const TestVSync(), pacer: s.pacer);
+    addTearDown(clock.dispose);
+    final state = await _pump(tester, m: m, clock: clock);
+    // Paused at the cut instant: names (actors) are drawn, not faded out.
+    clock.seek(Duration(microseconds: (c * 1e6).round()));
+    await tester.pump();
+    final f = s.sample(clock.value);
+    final named = f.tagged.where(m.names.containsKey);
+    expect(state.debugLastNames.length, named.length);
   });
 
   testWidgets('the first look baked is the one the kick-off needs', (

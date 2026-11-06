@@ -64,6 +64,7 @@ MatchLineups matchLineupsFromPreview(
 /// for it.
 class PitchStadium {
   const PitchStadium({
+    required this.key,
     required this.spec,
     required this.kits,
     required this.latitude,
@@ -90,6 +91,21 @@ class PitchStadium {
     final code = groundNationCode ?? home.code;
     final confed = groundConfederation ?? home.confederation;
     return PitchStadium(
+      key: (
+        ground.stadium,
+        ground.city,
+        ground.groundNationId,
+        ground.capacity,
+        ground.attendance,
+        home.code,
+        away.code,
+        awayShare,
+        date,
+        kickOff,
+        code,
+        confed,
+        dressing,
+      ),
       spec: StadiumSpec.from(
         ground,
         home,
@@ -107,8 +123,18 @@ class PitchStadium {
     );
   }
 
+  /// What the ground is built from. Two built from the same match are the
+  /// same ground: the view keeps its images for a rebuilt one.
+  final Object key;
+
   final StadiumSpec spec;
   final ({KitPair home, KitPair away}) kits;
+
+  @override
+  bool operator ==(Object other) => other is PitchStadium && other.key == key;
+
+  @override
+  int get hashCode => key.hashCode;
   final double latitude;
   final DateTime date;
   final KickOffTime kickOff;
