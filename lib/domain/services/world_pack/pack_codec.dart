@@ -33,6 +33,18 @@ class PackRejected extends PackDecode {
   final PackRejection reason;
 }
 
+/// Thrown when a pack would make a file over [PackCodec.maxFileBytes]:
+/// every device would refuse it, so none is written. [bytes] is the size it
+/// would have had.
+@immutable
+class PackTooBigToShare implements Exception {
+  const PackTooBigToShare(this.bytes);
+  final int bytes;
+
+  @override
+  String toString() => 'PackTooBigToShare($bytes bytes)';
+}
+
 class _TooBig implements Exception {
   const _TooBig();
 }
@@ -68,7 +80,12 @@ abstract final class PackCodec {
   /// (`application/x-fnmdb`; on iOS the `com.fnm.fnmdb` type carries it).
   static const mimeType = 'application/x-fnmdb';
   static const maxFileBytes = 8 << 20;
-  static const maxJsonBytes = 6 << 20;
+
+  /// The most a file (or a career bundle's world) may unzip to. The
+  /// largest legal world (every nation with a 40-man squad and a fixed pool
+  /// of 150, every added list and `localized` at its cap) is about 11 MB
+  /// of JSON; this leaves it twice that.
+  static const maxJsonBytes = 24 << 20;
 
   /// The most players a nation's squad holds in a file; a pool holds at
   /// most [PackRules.poolMax].

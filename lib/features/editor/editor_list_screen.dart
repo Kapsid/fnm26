@@ -70,6 +70,15 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
 
   void _edit(int id) => context.go(editorPackLocation(id));
 
+  /// [bytes] in megabytes for a message: whole when it is, else one decimal
+  /// rounded up (a file just over the cap never reads as at it).
+  static String _megabytes(int bytes) {
+    final tenths = (bytes * 10 / (1 << 20)).ceil();
+    return tenths % 10 == 0
+        ? '${tenths ~/ 10}'
+        : '${tenths ~/ 10}.${tenths % 10}';
+  }
+
   Future<void> _new() async {
     final l = AppLocalizations.of(context);
     final name = await _askName(
@@ -180,6 +189,15 @@ class _EditorListScreenState extends ConsumerState<EditorListScreen> {
                 sharePositionOrigin: at,
               ),
             );
+          } on PackTooBigToShare catch (e) {
+            if (mounted) {
+              _say(
+                l.editorExportTooBig(
+                  _megabytes(e.bytes),
+                  _megabytes(PackCodec.maxFileBytes),
+                ),
+              );
+            }
           } on Object catch (e, st) {
             AppLog.error('editor-export', e, st);
             if (mounted) _say(l.editorExportFailed);

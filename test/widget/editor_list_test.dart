@@ -79,6 +79,35 @@ void main() {
     },
   );
 
+  testWidgets('an export over the file cap warns and shares nothing', (
+    tester,
+  ) async {
+    final c = await editorContainer(
+      tester,
+      overrides: [
+        worldPackServiceProvider.overrideWith(
+          (ref) => WorldPackService(
+            players: ref.watch(playerRepositoryProvider),
+            nations: ref.watch(nationRepositoryProvider),
+            packs: ref.watch(worldPackRepositoryProvider),
+            maxFileBytes: 64,
+          ),
+        ),
+      ],
+    );
+    final id = await insertPack(tester, c, testPack('Too big'));
+    await pumpEditorRoute(tester, c, Routes.editor);
+
+    await tester.tap(find.byKey(EditorListScreen.moreKey(id)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(enL.editorExport).last);
+    await pumpUntilFound(
+      tester,
+      find.textContaining('the limit is 8 MB'),
+    );
+    expect(find.text(enL.editorExportFailed), findsNothing);
+  });
+
   testWidgets('deleting asks first', (tester) async {
     final c = await editorContainer(tester);
     final id = await insertPack(tester, c, testPack('Keep me'));

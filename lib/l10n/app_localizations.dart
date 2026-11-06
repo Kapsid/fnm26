@@ -21902,6 +21902,12 @@ abstract class AppLocalizations {
   /// **'The database could not be exported.'**
   String get editorExportFailed;
 
+  /// Snackbar when a database would make a file bigger than any device accepts, so no file is made. Sizes are in megabytes.
+  ///
+  /// In en, this message translates to:
+  /// **'This database is too big to share: the file would be {size} MB and the limit is {limit} MB. Leave fewer pools fixed or remove some trophy pictures, then try again.'**
+  String editorExportTooBig(String size, String limit);
+
   /// Subject line of the share sheet for an exported database.
   ///
   /// In en, this message translates to:

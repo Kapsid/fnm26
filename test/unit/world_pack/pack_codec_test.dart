@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/config/languages.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/repositories/world_pack_repository.dart';
 import 'package:fnm/data/seed/pool_generator.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/entities/player_ids.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
@@ -281,6 +284,121 @@ void main() {
       final r = await PackCodec.decode(PackCodec.encode(p, const {}));
       expect((r as PackDecoded).pack, p);
     });
+
+    test(
+      'the largest legal world round-trips well under the file cap',
+      () async {
+        // Every nation the game has (209, rounded up) with a 40-man squad and
+        // a fixed pool of 150, every player with a long name, two traits and
+        // a club; every added list at its cap; localized at its cap.
+        const nations = 215;
+        const langs = supportedLanguageCodes;
+        var next = kPackPlayerIdBase;
+        // Random letters: the worst case for gzip, real names pack tighter.
+        final rng = Random(1);
+        String noise(int n) => String.fromCharCodes([
+          for (var i = 0; i < n; i++) 0x61 + rng.nextInt(26),
+        ]);
+        PackPlayer big(PlayerPosition pos) {
+          final id = next++;
+          return PackPlayer(
+            id: id,
+            name: '${noise(19)} ${noise(20)}',
+            age: 15 + id % 30,
+            position: pos,
+            attributes: PlayerAttributes(
+              physical: 40 + id % 50,
+              technical: 40 + (id ~/ 3) % 50,
+              stamina: 40 + (id ~/ 7) % 50,
+            ),
+            potential: 99,
+            traits: [
+              PlayerTrait.values[id % PlayerTrait.values.length],
+              PlayerTrait.values[(id + 1) % PlayerTrait.values.length],
+            ],
+            club: noise(40),
+            clubCountry: 'esp',
+          );
+        }
+
+        List<PackPlayer> squad() => [
+          for (var i = 0; i < 4; i++) big(PlayerPosition.gk),
+          for (var i = 0; i < 12; i++) big(PlayerPosition.cb),
+          for (var i = 0; i < 12; i++) big(PlayerPosition.cm),
+          for (var i = 0; i < 12; i++) big(PlayerPosition.st),
+        ];
+        final squads = {for (var n = 1; n <= nations; n++) n: squad()};
+        final pools = {
+          for (var n = 1; n <= nations; n++)
+            n: [
+              for (var i = 0; i < PackRules.poolMax; i++)
+                big(PlayerPosition.values[i % PlayerPosition.values.length]),
+            ],
+        };
+        var added = kPackAddedIdBase;
+        final clubs = [
+          for (var i = 0; i < PackRules.addedClubsMax; i++)
+            PackClub(
+              id: added++,
+              name: 'Added Football Club $i',
+              country: 'esp',
+            ),
+        ];
+        final sponsors = [
+          for (var i = 0; i < PackRules.addedSponsorsMax; i++)
+            PackSponsor(
+              id: added++,
+              name: 'Sponsor $i',
+              deal: SponsorDeal.values.first,
+              industry: SponsorBrand.values.first.name,
+              description: 'd' * PackRules.descriptionMax,
+            ),
+        ];
+        final ys = [
+          for (var i = 0; i < PackRules.addedYMax; i++)
+            PackYAccount(id: added++, name: 'AddedVoice$i', voice: YVoice.fan),
+        ];
+        final localized = <String, Map<String, String>>{};
+        var values = 0;
+        for (final c in clubs) {
+          if (values + langs.length > PackRules.localizedMax) break;
+          localized['addedClubs.${c.id}'] = {
+            for (final l in langs) l: 'Translated club ${c.id} $l',
+          };
+          values += langs.length;
+        }
+        for (final y in ys) {
+          if (values + langs.length > PackRules.localizedMax) break;
+          localized['addedYAccounts.${y.id}'] = {
+            for (final l in langs) l: 'Voice${y.id}$l',
+          };
+          values += langs.length;
+        }
+        final p = _pack().copyWith(
+          squads: squads,
+          pools: pools,
+          addedClubs: clubs,
+          addedSponsors: sponsors,
+          addedYAccounts: ys,
+          localized: localized,
+        );
+        expect(PackCodec.fieldsOk(p), isTrue);
+        final json = utf8.encode(
+          jsonEncode({'format': 2, 'pack': p.toJson(), 'trophies': {}}),
+        );
+        final bytes = PackCodec.encode(p, const {});
+        // ignore: avoid_print
+        print(
+          'largest legal world: ${json.length} bytes JSON, '
+          '${bytes.length} bytes gzip',
+        );
+        expect(json.length, lessThan(PackCodec.maxJsonBytes));
+        expect(bytes.length, lessThan(PackCodec.maxFileBytes ~/ 2));
+        final r = await PackCodec.decode(bytes);
+        expect(r, isA<PackDecoded>());
+        expect((r as PackDecoded).pack, p);
+      },
+    );
 
     // Hostile files: each is refused whole.
     test('5 000 pool players -> badData', () async {
@@ -622,6 +740,30 @@ void main() {
         final again = (await service.importFile(file.path)).valueOrNull!;
         expect((await repo.load(again))!.name, 'A/B: world (3)');
         expect((await repo.load(id))!.name, 'A/B: world');
+      },
+    );
+
+    test(
+      'an export over the file cap writes nothing and says how big',
+      () async {
+        final id = await repo.insert(_pack(name: 'Huge'), const {});
+        final small = WorldPackService(
+          players: c.read(playerRepositoryProvider),
+          nations: c.read(nationRepositoryProvider),
+          packs: repo,
+          maxFileBytes: 64,
+        );
+        await expectLater(
+          small.export(id, into: dir),
+          throwsA(
+            isA<PackTooBigToShare>().having(
+              (e) => e.bytes,
+              'bytes',
+              greaterThan(64),
+            ),
+          ),
+        );
+        expect(dir.listSync(), isEmpty);
       },
     );
 

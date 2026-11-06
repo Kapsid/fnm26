@@ -14311,6 +14311,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get editorExportFailed => 'Không thể xuất cơ sở dữ liệu.';
 
   @override
+  String editorExportTooBig(String size, String limit) {
+    return 'This database is too big to share: the file would be $size MB and the limit is $limit MB. Leave fewer pools fixed or remove some trophy pictures, then try again.';
+  }
+
+  @override
   String get editorShareSubject => 'Cơ sở dữ liệu FNM';
 
   @override

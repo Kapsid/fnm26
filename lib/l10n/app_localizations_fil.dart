@@ -14452,6 +14452,11 @@ class AppLocalizationsFil extends AppLocalizations {
   String get editorExportFailed => 'Hindi na-export ang database.';
 
   @override
+  String editorExportTooBig(String size, String limit) {
+    return 'This database is too big to share: the file would be $size MB and the limit is $limit MB. Leave fewer pools fixed or remove some trophy pictures, then try again.';
+  }
+
+  @override
   String get editorShareSubject => 'FNM database';
 
   @override

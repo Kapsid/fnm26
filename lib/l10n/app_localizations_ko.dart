@@ -13957,6 +13957,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get editorExportFailed => '데이터베이스를 내보낼 수 없습니다.';
 
   @override
+  String editorExportTooBig(String size, String limit) {
+    return 'This database is too big to share: the file would be $size MB and the limit is $limit MB. Leave fewer pools fixed or remove some trophy pictures, then try again.';
+  }
+
+  @override
   String get editorShareSubject => 'FNM 데이터베이스';
 
   @override

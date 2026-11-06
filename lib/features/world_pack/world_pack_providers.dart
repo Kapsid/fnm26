@@ -311,12 +311,17 @@ class WorldPackService {
     required WorldPackRepository packs,
     void Function()? onChanged,
     Future<void> Function(String uuid)? onDeleted,
-  }) : _players = players,
+    int maxFileBytes = PackCodec.maxFileBytes,
+  }) : _maxFileBytes = maxFileBytes,
+       _players = players,
        _nations = nations,
        _packs = packs,
        _onChanged = onChanged ?? _noop,
        _onDeleted = onDeleted;
 
+  /// The largest file [export] writes: [PackCodec.maxFileBytes], the cap
+  /// every device reads to (smaller only in tests).
+  final int _maxFileBytes;
   final PlayerRepository _players;
   final NationRepository _nations;
   final WorldPackRepository _packs;
@@ -437,9 +442,15 @@ class WorldPackService {
 
   /// Writes pack [id] to `<name>.fnmdb` in [into] (the temporary directory
   /// when null) and returns the file; the UI hands it to the share sheet.
+  ///
+  /// The size is measured first: a file over the cap every device reads to
+  /// would be refused everywhere, so instead of writing one this throws
+  /// [PackTooBigToShare] and the editor says so.
   Future<File> export(int id, {Directory? into}) async {
     final pack = await _packs.load(id);
     if (pack == null) throw StateError('No world pack $id');
+    final bytes = PackCodec.encode(pack, await _packs.trophies(id));
+    if (bytes.length > _maxFileBytes) throw PackTooBigToShare(bytes.length);
     final dir = into ?? await getTemporaryDirectory();
     final file = File(
       p.join(
@@ -447,10 +458,7 @@ class WorldPackService {
         '${PackCodec.fileStem(pack.name)}.${PackCodec.extension}',
       ),
     );
-    await file.writeAsBytes(
-      PackCodec.encode(pack, await _packs.trophies(id)),
-      flush: true,
-    );
+    await file.writeAsBytes(bytes, flush: true);
     return file;
   }
 

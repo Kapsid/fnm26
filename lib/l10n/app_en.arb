@@ -22310,6 +22310,14 @@
   "@editorExportFailed": {
     "description": "Snackbar when writing the database file failed."
   },
+  "editorExportTooBig": "This database is too big to share: the file would be {size} MB and the limit is {limit} MB. Leave fewer pools fixed or remove some trophy pictures, then try again.",
+  "@editorExportTooBig": {
+    "description": "Snackbar when a database would make a file bigger than any device accepts, so no file is made. Sizes are in megabytes.",
+    "placeholders": {
+      "size": {"type": "String"},
+      "limit": {"type": "String"}
+    }
+  },
   "editorShareSubject": "FNM database",
   "@editorShareSubject": {
     "description": "Subject line of the share sheet for an exported database."
