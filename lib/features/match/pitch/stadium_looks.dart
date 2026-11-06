@@ -14,13 +14,17 @@ import 'package:fnm/features/match/pitch/stadium_painter.dart';
 ///
 /// Nothing is re-baked while a match plays: the sun going down across a
 /// match is a fade between images already made.
+///
+/// The looks may arrive one at a time (the live view bakes the one the
+/// kick-off needs first and the others after it, so no single bake holds
+/// up a frame for long). Until all three are in, a missing look is stood in
+/// for by the nearest one that is.
 class StadiumLooks {
-  StadiumLooks._(this.day, this.dusk, this.night, this.size);
-
-  final ui.Image day, dusk, night;
+  StadiumLooks(this.size);
 
   /// The logical size the images were baked for.
   final Size size;
+  final Map<LightMode, ui.Image> _images = {};
 
   static Future<StadiumLooks> bake(
     StadiumSpec spec,
@@ -30,36 +34,66 @@ class StadiumLooks {
     MatchDressing dressing = MatchDressing.none,
     double pixelRatio = 1,
   }) async {
-    Future<ui.Image> one(PitchLight light) => StadiumPainter(
-      spec,
-      projection,
-      flag: flag,
-      light: light,
-      dressing: dressing,
-    ).bake(size, pixelRatio: pixelRatio);
-    return StadiumLooks._(
-      await one(PitchLight.day),
-      await one(PitchLight.dusk),
-      await one(PitchLight.night),
-      size,
-    );
+    final looks = StadiumLooks(size);
+    for (final mode in LightMode.values) {
+      looks.add(
+        mode,
+        await StadiumPainter(
+          spec,
+          projection,
+          flag: flag,
+          light: keyLight(mode),
+          dressing: dressing,
+        ).bake(size, pixelRatio: pixelRatio),
+      );
+    }
+    return looks;
   }
 
-  ui.Image _of(SceneLook l) => identical(l, SceneLook.day)
-      ? day
+  /// The light each key look is baked in.
+  static PitchLight keyLight(LightMode mode) => switch (mode) {
+    LightMode.day => PitchLight.day,
+    LightMode.dusk => PitchLight.dusk,
+    LightMode.night => PitchLight.night,
+  };
+
+  static LightMode _modeOf(SceneLook l) => identical(l, SceneLook.day)
+      ? LightMode.day
       : identical(l, SceneLook.dusk)
-      ? dusk
-      : night;
+      ? LightMode.dusk
+      : LightMode.night;
+
+  /// Adds the baked image for [mode] (replacing and disposing any before).
+  void add(LightMode mode, ui.Image image) {
+    _images.remove(mode)?.dispose();
+    _images[mode] = image;
+  }
+
+  bool get isEmpty => _images.isEmpty;
+
+  /// All three looks are in.
+  bool get complete => _images.length == LightMode.values.length;
+
+  ui.Image? _of(LightMode m) =>
+      _images[m] ??
+      switch (m) {
+        LightMode.day => _images[LightMode.dusk] ?? _images[LightMode.night],
+        LightMode.dusk => _images[LightMode.day] ?? _images[LightMode.night],
+        LightMode.night => _images[LightMode.dusk] ?? _images[LightMode.day],
+      };
 
   /// Paints the ground into [dst] as it looks in [light].
   void paint(Canvas canvas, Rect dst, PitchLight light) {
     final (a, b, t) = SceneLook.weights(light);
+    final first = _of(_modeOf(a));
+    if (first == null) return;
+    final second = _of(_modeOf(b));
     final paint = Paint()..filterQuality = FilterQuality.medium;
-    _draw(canvas, _of(a), dst, paint);
-    if (t > 0) {
+    _draw(canvas, first, dst, paint);
+    if (t > 0 && second != null && !identical(second, first)) {
       _draw(
         canvas,
-        _of(b),
+        second,
         dst,
         paint..color = const Color(0xFFFFFFFF).withValues(alpha: t),
       );
@@ -75,9 +109,10 @@ class StadiumLooks {
       );
 
   void dispose() {
-    day.dispose();
-    dusk.dispose();
-    night.dispose();
+    for (final img in _images.values) {
+      img.dispose();
+    }
+    _images.clear();
   }
 }
 
