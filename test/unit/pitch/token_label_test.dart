@@ -34,7 +34,7 @@ void main() {
       expect(!covered || !somewhereClear, isTrue);
       if (!covered) clear++;
     }
-    expect(clear, greaterThan(200));
+    expect(clear, greaterThan(50));
   });
 
   test('with a man right under him, the label goes above', () {
@@ -85,5 +85,45 @@ void main() {
     );
     expect(label.left, greaterThanOrEqualTo(0));
     expect(frame.contains(label.topLeft), isTrue);
+  });
+
+  test('in a crowd the label sits straight above him, never a row away', () {
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(60, 11);
+    final own = PlayerToken.box(me, r, -1.5708);
+    // Men all round him: no clear place next to him.
+    final avoid = [
+      for (final d in const [
+        Offset(0, 24),
+        Offset(0, -24),
+        Offset(26, 0),
+        Offset(-26, 0),
+        Offset(24, 22),
+        Offset(-24, 22),
+        Offset(24, -22),
+        Offset(-24, -22),
+      ])
+        PlayerToken.box(me + d, r),
+    ];
+    final place = PlayerToken.labelPlace(me, r, size, avoid, own: own);
+    expect(place.crowded, isTrue);
+    // Right above his own shirt, centred on him, within a token's height.
+    expect(place.rect.center.dx, closeTo(me.dx, 0.01));
+    expect(place.rect.bottom, lessThanOrEqualTo(own.top));
+    expect(own.top - place.rect.bottom, lessThan(2 * r));
+  });
+
+  test('every place tried touches his own token', () {
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(80, 11);
+    final own = PlayerToken.box(me, r, 0);
+    for (final p in PlayerToken.labelCandidates(me, r, size, own: own)) {
+      // Within one token height of his box, and over it sideways.
+      final gap = p.top > own.bottom ? p.top - own.bottom : own.top - p.bottom;
+      expect(gap, lessThan(2 * r));
+      expect(p.left < own.right && p.right > own.left, isTrue);
+    }
   });
 }

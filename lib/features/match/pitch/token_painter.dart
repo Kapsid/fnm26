@@ -275,11 +275,13 @@ abstract final class PlayerToken {
   /// The player's name in a slim label under the token: no plate, a soft
   /// dark halo so it reads on lit and unlit grass alike.
   ///
-  /// The label never lies on another player: [others] are the other tokens
-  /// (centre and half-width), each taken at its full box ([box]) with the
-  /// chevron allowed for all round; or pass their exact boxes as [avoid].
-  /// Under the token is tried first, then above it, then each a step to
-  /// either side; see [labelRect]. Returns where the label went.
+  /// The label always sits against its own token: under it, else above it,
+  /// else either of those a short step to the side, clear of every other
+  /// token ([others], centre and half-width, each at its full [box]; or
+  /// their exact boxes as [avoid]). In a crowd with no clear place it goes
+  /// straight above the token, over whoever is there, with a short leader
+  /// tick down to the shirt, so it never reads as somebody else's. Returns
+  /// where the label went.
   static Rect paintName(
     Canvas canvas,
     Offset c,
@@ -291,26 +293,50 @@ abstract final class PlayerToken {
     List<Rect>? avoid,
     Rect? own,
     Rect? bounds,
+    List<Rect> labels = const [],
   }) {
     final tp = namePainter(name, fontSize);
     final size = Size(tp.width, tp.height + 2.4);
-    final box = avoid != null
-        ? labelRectAvoiding(c, r, size, avoid, own: own, bounds: bounds)
-        : labelRect(c, r, size, others);
-    tp.paint(canvas, box.topLeft);
-    if (accent != null) {
-      // A hairline in the kit colour under the name.
-      final y = box.top + tp.height + 1.2;
+    final place = labelPlace(
+      c,
+      r,
+      size,
+      avoid ??
+          [
+            for (final (oc, orr) in others)
+              if ((oc - c).distance >= 0.01) box(oc, orr),
+          ],
+      own: own,
+      bounds: bounds,
+      labels: labels,
+    );
+    final box_ = place.rect;
+    if (place.crowded) {
+      // The leader tick: from the label down to the top of his shirt.
+      final me = own ?? box(c, r, math.pi / 2 * 3);
       canvas.drawLine(
-        Offset(box.center.dx - tp.width * 0.22, y),
-        Offset(box.center.dx + tp.width * 0.22, y),
+        Offset(c.dx, box_.bottom - 0.6),
+        Offset(c.dx, math.max(me.top, box_.bottom + 1.5)),
+        Paint()
+          ..strokeWidth = 1.2
+          ..strokeCap = StrokeCap.round
+          ..color = accent ?? AppColors.onSurface,
+      );
+    }
+    tp.paint(canvas, box_.topLeft);
+    if (accent != null && !place.crowded) {
+      // A hairline in the kit colour under the name.
+      final y = box_.top + tp.height + 1.2;
+      canvas.drawLine(
+        Offset(box_.center.dx - tp.width * 0.22, y),
+        Offset(box_.center.dx + tp.width * 0.22, y),
         Paint()
           ..strokeWidth = 1.2
           ..strokeCap = StrokeCap.round
           ..color = accent,
       );
     }
-    return box;
+    return box_;
   }
 
   /// Where a label of [size] for the token at [c] goes so that it covers
@@ -325,9 +351,10 @@ abstract final class PlayerToken {
       if ((oc - c).distance >= 0.01) box(oc, orr),
   ]);
 
-  /// The places tried for a label of [size] under the token at [c] (whose
-  /// own box is [own]), best first: under it, above it, then a step to
-  /// either side of each, then a row further out.
+  /// The places tried for a label of [size] for the token at [c] (whose
+  /// own box is [own]), best first: under it, above it, then each a short
+  /// step to either side. All of them touch his token's box, within one
+  /// token's height of it.
   static List<Rect> labelCandidates(
     Offset c,
     double r,
@@ -337,26 +364,70 @@ abstract final class PlayerToken {
     final me = own ?? box(c, r, math.pi / 2 * 3);
     final below = me.bottom + 1.5;
     final above = me.top - 1.5 - size.height;
+    // Sideways never further than keeps the label over his shirt.
+    final step = math.min(0.35 * size.width, size.width / 2 + r * 0.2);
     return [
-      for (final row in [0.0, 1.0])
-        for (final dx in [0.0, 0.35, -0.35, 0.7, -0.7, 1.0, -1.0])
-          for (final top in [
-            below + row * (size.height + 2),
-            above - row * (size.height + 2),
-          ])
-            Rect.fromLTWH(
-              c.dx - size.width / 2 + dx * size.width,
-              top,
-              size.width,
-              size.height,
-            ),
+      for (final dx in [0.0, step, -step])
+        for (final top in [below, above])
+          Rect.fromLTWH(
+            c.dx - size.width / 2 + dx,
+            top,
+            size.width,
+            size.height,
+          ),
     ];
   }
 
-  /// [labelRect] against exact boxes: the first of [labelCandidates] that
-  /// touches none of [avoid], or, when every place is taken, the one that
-  /// covers least of them. With [bounds] (the frame), a place is slid
-  /// sideways to lie inside it, and one that cannot is tried last.
+  /// The label's place among [avoid]: the first of [labelCandidates] clear
+  /// of all of them, else straight above the token, [crowded], over whoever
+  /// is there. With [bounds] (the frame), a place is slid sideways to lie
+  /// inside it.
+  static ({Rect rect, bool crowded}) labelPlace(
+    Offset c,
+    double r,
+    Size size,
+    List<Rect> avoid, {
+    Rect? own,
+    Rect? bounds,
+    List<Rect> labels = const [],
+  }) {
+    Rect inside(Rect p) {
+      if (bounds == null) return p;
+      var dx = 0.0;
+      if (p.left < bounds.left + 2) dx = bounds.left + 2 - p.left;
+      if (p.right > bounds.right - 2) dx = bounds.right - 2 - p.right;
+      var dy = 0.0;
+      if (p.top < bounds.top) dy = bounds.top - p.top;
+      if (p.bottom > bounds.bottom) dy = bounds.bottom - p.bottom;
+      return p.translate(dx, dy);
+    }
+
+    final places = [
+      for (final p in labelCandidates(c, r, size, own: own)) inside(p),
+    ];
+    for (final place in places) {
+      if (avoid.every((b) => !b.overlaps(place)) &&
+          labels.every((b) => !b.overlaps(place))) {
+        return (rect: place, crowded: false);
+      }
+    }
+    final me = own ?? box(c, r, math.pi / 2 * 3);
+    var over = inside(
+      Rect.fromLTWH(
+        c.dx - size.width / 2,
+        me.top - 3 - size.height,
+        size.width,
+        size.height,
+      ),
+    );
+    // Over another name already there: one line up, the tick longer.
+    for (var k = 0; k < 3 && labels.any((b) => b.overlaps(over)); k++) {
+      over = inside(over.translate(0, -(size.height + 1)));
+    }
+    return (rect: over, crowded: true);
+  }
+
+  /// [labelPlace]'s rectangle.
   static Rect labelRectAvoiding(
     Offset c,
     double r,
@@ -364,35 +435,5 @@ abstract final class PlayerToken {
     List<Rect> avoid, {
     Rect? own,
     Rect? bounds,
-  }) {
-    var places = labelCandidates(c, r, size, own: own);
-    if (bounds != null) {
-      Rect inside(Rect p) {
-        var dx = 0.0;
-        if (p.left < bounds.left + 2) dx = bounds.left + 2 - p.left;
-        if (p.right > bounds.right - 2) dx = bounds.right - 2 - p.right;
-        return p.translate(dx, 0);
-      }
-
-      bool fits(Rect p) => p.top >= bounds.top && p.bottom <= bounds.bottom;
-      final slid = places.map(inside).toList();
-      places = [...slid.where(fits), ...slid.where((p) => !fits(p))];
-    }
-    Rect? best;
-    var least = double.infinity;
-    for (final place in places) {
-      var covered = 0.0;
-      for (final b in avoid) {
-        if (!b.overlaps(place)) continue;
-        final i = b.intersect(place);
-        covered += math.max(i.width, 0) * math.max(i.height, 0) + 1;
-      }
-      if (covered == 0) return place;
-      if (covered < least) {
-        least = covered;
-        best = place;
-      }
-    }
-    return best!;
-  }
+  }) => labelPlace(c, r, size, avoid, own: own, bounds: bounds).rect;
 }

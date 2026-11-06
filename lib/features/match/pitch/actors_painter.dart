@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
+import 'package:fnm/domain/services/match/pitch/display_spacing.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
@@ -217,7 +218,10 @@ class ActorsPainter extends CustomPainter {
     final f = script.sample(at);
     final shadows = _shadowsAt(at);
     final men = <_Token>[];
-    for (final e in f.players.entries) {
+    // Where each man is drawn: eased off anybody he would stand on top of
+    // on screen (the man on the ball stays at it).
+    final drawn = Declutter.frame(script, f, t);
+    for (final e in drawn.entries) {
       final i = script.actorIndexOf(e.key)!;
       final p = e.value;
       final c = projection.toScreenOpen(p.x, p.y);
@@ -280,6 +284,7 @@ class ActorsPainter extends CustomPainter {
       Rect.fromCircle(center: lifted, radius: br + 1),
     ];
     final fontSize = nameSizeFor(projection.viewport);
+    final labels = <Rect>[];
     for (final id in f.tagged) {
       final name = names[id];
       if (name == null) continue;
@@ -299,8 +304,9 @@ class ActorsPainter extends CustomPainter {
         ],
         own: m.box,
         bounds: Offset.zero & projection.viewport,
+        labels: labels,
       );
-      avoid.add(placed);
+      labels.add(placed);
       lastNames.add(label);
     }
   }
