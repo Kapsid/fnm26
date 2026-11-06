@@ -149,11 +149,23 @@ abstract final class ClubService {
   /// [side] under its new name when a career's world renames it (original
   /// name -> new name, see `WorldPack.clubs`); otherwise [side] itself. The
   /// country never changes: a rename relabels a club, it does not move it.
-  static ClubSide renamed(ClubSide side, Map<String, String> renames) =>
-      switch (renames[side.name]) {
-        null => side,
-        final name => (name: name, country: side.country),
-      };
+  ///
+  /// A club the world adds ([added]: lower-case country -> its added clubs'
+  /// names) keeps its own name even when another country's club of that
+  /// name is renamed: the map is keyed by name only. (The editor flags such
+  /// a clash; this keeps the added club right until it is fixed.)
+  static ClubSide renamed(
+    ClubSide side,
+    Map<String, String> renames, {
+    Map<String, List<String>> added = const {},
+  }) {
+    final name = renames[side.name];
+    if (name == null) return side;
+    if (added[side.country.toLowerCase()]?.contains(side.name) ?? false) {
+      return side;
+    }
+    return (name: name, country: side.country);
+  }
 
   /// The curated club names of [countryCode]'s league (a FIFA code, any
   /// case), in the order the club draw indexes them; empty for a country

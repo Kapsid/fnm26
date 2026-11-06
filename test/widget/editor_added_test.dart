@@ -16,6 +16,8 @@ import 'package:fnm/features/editor/names/added_items.dart';
 import 'package:fnm/features/editor/names/name_section_screen.dart';
 import 'package:fnm/features/editor/pack_home_screen.dart';
 import 'package:fnm/features/editor/players/player_edit_screen.dart';
+import 'package:fnm/features/editor/players/players_ui.dart';
+import 'package:fnm/features/editor/players/squad_edits.dart';
 import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -384,6 +386,9 @@ void main() {
     await tester.tap(find.byKey(AddedItemForm.addKey));
     await settle(tester);
     expect(_pack(c, id).addedClubs.single.country, code);
+    // The add cleared the search; searching again finds the new group.
+    await tester.enterText(find.byKey(NameSectionScreen.searchKey), lone.name);
+    await tester.pump();
     expect(heading, findsOneWidget);
     expect(
       find.byKey(NameSectionScreen.rowKey(PackPaths.addedClub(_base))),
@@ -568,6 +573,94 @@ void main() {
     expect(
       AddedEdits.removeSponsor(p, _base).localized,
       isEmpty,
+    );
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets("an imported added club named like another country's renamed "
+      'club is flagged, opens, and is fixed by a rename or Remove', (
+    tester,
+  ) async {
+    final c = await editorContainer(tester);
+    final english = ClubService.leagueClubs('eng').first;
+    final squad = testSquad();
+    final first = squad.first;
+    final id = await insertPack(
+      tester,
+      c,
+      testPack(
+        'Clash',
+        squads: {
+          cze: [
+            SquadEdits.withClub(first, english, 'cze'),
+            ...squad.skip(1),
+          ],
+        },
+      ).copyWith(
+        clubs: {english: 'Renamed Lions'},
+        addedClubs: [PackClub(id: _base, name: english, country: 'cze')],
+      ),
+    );
+    await pumpEditorRoute(tester, c, editorPackLocation(id));
+    final editor = c.read(packEditorProvider(id).notifier);
+    expect(
+      editor.issues.whereType<NameClash>().map((i) => i.path),
+      ['addedClubs.$_base'],
+    );
+    expect(editor.needsAttention, isTrue);
+    expect(find.byKey(PackHomeScreen.attentionKey), findsOneWidget);
+    // The editor shows the added club under its own name, not the rename.
+    expect(
+      clubLabel(
+        lookupAppLocalizations(const Locale('en')),
+        _pack(c, id),
+        _pack(c, id).squads[cze]!.first,
+      ),
+      english,
+    );
+
+    // A rename fixes it, and the player moves with it.
+    editor.update((p) => AddedEdits.renameClub(p, _base, 'FC Vltava'));
+    expect(editor.needsAttention, isFalse);
+    expect(_pack(c, id).squads[cze]!.first.club, 'FC Vltava');
+    editor.undo();
+    await tester.pump();
+    expect(editor.needsAttention, isTrue);
+
+    // So does the home's Remove, which puts him on Auto.
+    final index = editor.issues.indexWhere((i) => i is NameClash);
+    await tester.tap(find.byKey(PackHomeScreen.removeKey(index)));
+    await settle(tester);
+    expect(_pack(c, id).addedClubs, isEmpty);
+    expect(_pack(c, id).squads[cze]!.first.club, isNull);
+    expect(editor.needsAttention, isFalse);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('after an add on the phone the search goes, so the new item '
+      'shows', (tester) async {
+    final c = await editorContainer(tester);
+    final id = await insertPack(tester, c, testPack('Search'));
+    await pumpEditorRoute(tester, c, _at(EditorSection.yAccounts, id));
+    await tester.enterText(find.byKey(NameSectionScreen.searchKey), 'zzz');
+    await tester.pump();
+    await tester.tap(find.byKey(NameSectionScreen.addKey));
+    await settle(tester);
+    await tester.enterText(find.byKey(AddedItemForm.nameKey), 'Knedlik');
+    await tester.pump();
+    await tester.ensureVisible(find.byKey(AddedItemForm.addKey));
+    await tester.tap(find.byKey(AddedItemForm.addKey));
+    await settle(tester);
+    expect(
+      tester
+          .widget<TextField>(find.byKey(NameSectionScreen.searchKey))
+          .controller!
+          .text,
+      isEmpty,
+    );
+    expect(
+      find.byKey(NameSectionScreen.rowKey(PackPaths.addedY(_base))),
+      findsOneWidget,
     );
     await tester.pump(const Duration(milliseconds: 450));
   });

@@ -407,6 +407,7 @@ abstract final class PackRules {
         ifAbsent: () => 1,
       );
     }
+    final renamedFrom = {for (final k in p.clubs.keys) fold(k)};
     for (final c in p.addedClubs) {
       final path = 'addedClubs.${c.id}';
       id('addedClubs', c.id);
@@ -435,7 +436,10 @@ abstract final class PackRules {
         final to = fold(c.name);
         if (league.pack.contains(to) || addedNames[c.country]![to]! > 1) {
           out.add(BadField(path, FieldReason.duplicate));
-        } else if (league.game.contains(to)) {
+        } else if (league.game.contains(to) || renamedFrom.contains(to)) {
+          // A club the pack renames goes by the game's name in the rename
+          // map, whatever its country: an added club under that name reads
+          // as the rename's target wherever the map is applied by name.
           out.add(NameClash(path));
         }
       }

@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/player_attributes.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/nation/dormant_nations.dart';
+import 'package:fnm/domain/services/world_pack/pack_rules.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
@@ -371,6 +372,76 @@ void main() {
           .byId(first.id, saveSeed: 7, careerId: id))!;
       expect(p.club, 'Tirana Kestrels');
       expect(p.clubCountry, code);
+    });
+
+    test('an added club named like another country\'s renamed club keeps '
+        'its own name in a career', () async {
+      final c = await world();
+      final packs = c.read(worldPackRepositoryProvider);
+      final code = await albaniaCode(c);
+      final packId = await c
+          .read(worldPackServiceProvider)
+          .createFromDefault('Clash');
+      final pack = (await packs.load(packId))!;
+      final squad = pack.squads[_albania]!;
+      final first = squad.first;
+      // An English league club the pack renames, and an Albanian club the
+      // pack adds under the English club's game name.
+      final english = ClubService.leagueClubs('eng').first;
+      final clash = pack.copyWith(
+        clubs: {...pack.clubs, english: 'Renamed Lions'},
+        addedClubs: [PackClub(id: 700000001, name: english, country: code)],
+        squads: {
+          ...pack.squads,
+          _albania: [
+            PackPlayer(
+              id: first.id,
+              name: first.name,
+              age: first.age,
+              position: first.position,
+              attributes: first.attributes,
+              potential: first.potential,
+              club: english,
+              clubCountry: code,
+              traits: first.traits,
+            ),
+            ...squad.skip(1),
+          ],
+        },
+      );
+      // Flagged (a NameClash), not refused.
+      expect(
+        PackRules.issues(clash).whereType<NameClash>().map((i) => i.path),
+        contains('addedClubs.700000001'),
+      );
+      expect(
+        PackRules.issues(clash).whereType<BadField>().where(
+          (i) => i.path.startsWith('addedClubs'),
+        ),
+        isEmpty,
+      );
+      // A flagged world starts no career. One whose world comes to hold the
+      // clash (written into its own copy here) still reads right.
+      await packs.save(packId, clash.copyWith(clubs: pack.clubs));
+      final id = await career(c, packId);
+      await packs.save(packId, clash);
+      await packs.copyToCareer(packId, id);
+      c.invalidate(playerRepositoryProvider);
+      final p = (await c
+          .read(playerRepositoryProvider)
+          .byId(first.id, saveSeed: 7, careerId: id))!;
+      expect((p.club, p.clubCountry), (english, code));
+      // The English club itself still goes by its new name.
+      expect(
+        ClubService.renamed(
+          (name: english, country: 'eng'),
+          clash.clubs,
+          added: {
+            code: [english],
+          },
+        ).name,
+        'Renamed Lions',
+      );
     });
   });
 }

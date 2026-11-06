@@ -6,6 +6,7 @@ import 'package:fnm/core/util/club_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/world_pack/player_build.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
+import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:go_router/go_router.dart';
@@ -79,11 +80,17 @@ String playerTypeAbout(AppLocalizations l, PlayerType t) => switch (t) {
 String playerLabel(AppLocalizations l, PackPlayer p) =>
     p.name.trim().isEmpty ? l.editorPlayerUnnamed : p.name.trim();
 
-/// [p]'s club as the game will show it: under the pack's new name for it,
+/// [p]'s club as the game will show it: under the pack's new name for it
+/// (an added club keeps its own, as in a career: [ClubService.renamed]),
 /// "Free agent" or "Chosen by the game".
 String clubLabel(AppLocalizations l, WorldPack pack, PackPlayer p) =>
     switch (p.club) {
       null => l.editorPlayerClubAuto,
+      final club
+          when pack.addedClubs.any(
+            (c) => c.name == club && c.country == p.clubCountry?.toLowerCase(),
+          ) =>
+        clubName(l, club),
       final club => clubName(l, pack.clubs[club] ?? club),
     };
 

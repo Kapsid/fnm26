@@ -429,7 +429,11 @@ class DriftPlayerRepository implements PlayerRepository {
               ClubService.contractAt(p.id, dayOne.age).index) {
         c = (name: dayOne.club!, country: dayOne.clubCountry ?? '');
       }
-      c = ClubService.renamed(c, world.pack.clubs);
+      c = ClubService.renamed(
+        c,
+        world.pack.clubs,
+        added: world.addedClubs,
+      );
     }
     return p.copyWith(
       club: c.name,

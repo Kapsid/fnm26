@@ -338,9 +338,13 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
         section: _section,
         world: world,
         onAdded: (id) {
-          if (tablet && mounted) {
-            setState(() => _picked = _section.addedKey(id));
-          }
+          if (!mounted) return;
+          // A search on show could hide the new item: it goes.
+          _search.clear();
+          setState(() {
+            _query = '';
+            if (tablet) _picked = _section.addedKey(id);
+          });
         },
       ),
     );
