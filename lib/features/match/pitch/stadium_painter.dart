@@ -997,12 +997,12 @@ class StadiumPainter extends CustomPainter {
   static const double _gx0 = -_runOffEnd, _gx1 = PitchDims.length + _runOffEnd;
   static const double _gy0 = -_runOffSide, _gy1 = PitchDims.width + _runOffSide;
 
-  Path get _field => _poly([
-    _p(_gx0, _gy0),
-    _p(_gx1, _gy0),
-    _p(_gx1, _gy1),
-    _p(_gx0, _gy1),
-  ]);
+  Path get _field => _metres([
+    (_gx0, _gy0),
+    (_gx1, _gy0),
+    (_gx1, _gy1),
+    (_gx0, _gy1),
+  ], steps: 16);
 
   /// A shape given in pitch metres, its edges sampled so they follow the
   /// projection's curve.
@@ -1216,8 +1216,27 @@ class StadiumPainter extends CustomPainter {
       canvas.drawPath(path, paint);
     }
 
-    Path pts(List<(double, double)> ps, {bool close = false}) =>
-        _poly([for (final (x, y) in ps) _p(x, y)], close: close);
+    // Every line is sampled along its length: under the tilt a line
+    // across the pitch (a goal line, a box's side) is a gentle curve on
+    // screen, not the chord between its ends. Drawn as a chord, the goal
+    // line missed the goal mouth by a metre or two.
+    Path pts(List<(double, double)> ps, {bool close = false}) {
+      final all = [...ps, if (close) ps.first];
+      final out = <Offset>[];
+      for (var i = 0; i + 1 < all.length; i++) {
+        final (ax, ay) = all[i];
+        final (bx, by) = all[i + 1];
+        const steps = 16;
+        for (var k = 0; k < steps; k++) {
+          final t = k / steps;
+          out.add(_p(ax + (bx - ax) * t, ay + (by - ay) * t));
+        }
+      }
+      final (lx, ly) = all.last;
+      out.add(_p(lx, ly));
+      return _poly(out, close: close);
+    }
+
     Path curve(double cx, double cy, double r, double a0, double a1) {
       final path = Path();
       const n = 48;
@@ -1405,14 +1424,30 @@ class StadiumPainter extends CustomPainter {
         break;
     }
     canvas.drawPath(
-      _poly([
-        _p(x0, yf),
-        _p(x0, yf, bar),
-        _p(x0, yn, bar),
-        _p(x0, yn),
-      ], close: false),
+      _poly(goalMouth(projection, left: left), close: false),
       frame,
     );
+  }
+
+  /// The goal mouth's frame on screen, on the goal line itself: the far
+  /// post's foot and top, the near post's top and foot. Posts at
+  /// 34 ± 3.66 m, the bar 2.44 m up ([PitchDims]), the same mouth the
+  /// staging judges a ball in the net by. The net runs back from it, off
+  /// the pitch.
+  static List<Offset> goalMouth(
+    PitchProjection projection, {
+    required bool left,
+  }) {
+    const w = PitchDims.width, half = PitchDims.goalHalfWidth;
+    const bar = PitchDims.crossbarHeight;
+    final x0 = left ? 0.0 : PitchDims.length;
+    const yf = w / 2 - half, yn = w / 2 + half;
+    return [
+      projection.toScreenOpen(x0, yf),
+      projection.toScreenOpen(x0, yf, bar),
+      projection.toScreenOpen(x0, yn, bar),
+      projection.toScreenOpen(x0, yn),
+    ];
   }
 
   void _nearShade(Canvas canvas, Size size) {
