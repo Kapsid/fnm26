@@ -190,6 +190,10 @@ abstract final class PlayerToken {
 
   /// The player's name in a slim label under the token: no plate, a soft
   /// dark halo so it reads on lit and unlit grass alike.
+  ///
+  /// The label never lies on another player: [others] are the other tokens
+  /// (centre and half-width). Under the token is tried first, then above
+  /// it, then each a step to either side; see [labelRect].
   static void paintName(
     Canvas canvas,
     Offset c,
@@ -197,6 +201,7 @@ abstract final class PlayerToken {
     String name, {
     required double fontSize,
     Color? accent,
+    List<(Offset, double)> others = const [],
   }) {
     final style = AppTypography.labelSmall.copyWith(
       fontSize: fontSize,
@@ -220,19 +225,54 @@ abstract final class PlayerToken {
       text: TextSpan(text: name, style: style),
       textDirection: TextDirection.ltr,
     )..layout();
-    final top = c.dy + r * 1.05 + 2;
-    tp.paint(canvas, Offset(c.dx - tp.width / 2, top));
+    final box = labelRect(c, r, Size(tp.width, tp.height + 2.4), others);
+    tp.paint(canvas, box.topLeft);
     if (accent != null) {
       // A hairline in the kit colour under the name.
-      final y = top + tp.height + 1.2;
+      final y = box.top + tp.height + 1.2;
       canvas.drawLine(
-        Offset(c.dx - tp.width * 0.22, y),
-        Offset(c.dx + tp.width * 0.22, y),
+        Offset(box.center.dx - tp.width * 0.22, y),
+        Offset(box.center.dx + tp.width * 0.22, y),
         Paint()
           ..strokeWidth = 1.2
           ..strokeCap = StrokeCap.round
           ..color = accent,
       );
     }
+  }
+
+  /// Where a label of [size] for the token at [c] goes: under it, else
+  /// above it, else nudged sideways from either, so that it covers none of
+  /// [others]. Falls back to under it if every place is taken.
+  static Rect labelRect(
+    Offset c,
+    double r,
+    Size size,
+    List<(Offset, double)> others,
+  ) {
+    bool clear(Rect box) => others.every((o) {
+      final (oc, orr) = o;
+      if ((oc - c).distance < 0.01) return true;
+      final body = Rect.fromCenter(
+        center: oc,
+        width: orr * 2.2,
+        height: orr * 2.0,
+      ).inflate(1);
+      return !body.overlaps(box);
+    });
+    final below = c.dy + r * 1.05 + 2;
+    final above = c.dy - r * 1.05 - 2 - size.height;
+    for (final dx in [0.0, 0.35, -0.35, 0.7, -0.7]) {
+      for (final top in [below, above]) {
+        final box = Rect.fromLTWH(
+          c.dx - size.width / 2 + dx * size.width,
+          top,
+          size.width,
+          size.height,
+        );
+        if (clear(box)) return box;
+      }
+    }
+    return Rect.fromLTWH(c.dx - size.width / 2, below, size.width, size.height);
   }
 }
