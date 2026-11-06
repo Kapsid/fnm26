@@ -3,15 +3,17 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:fnm/core/util/text_variety.dart';
-import 'package:fnm/domain/services/match/stadium/ground_look.dart';
+import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
+import 'package:fnm/features/match/pitch/backdrop_tone.dart';
+import 'package:fnm/features/match/pitch/city_skyline.dart';
 import 'package:fnm/features/match/pitch/landmark_paths.dart';
 import 'package:fnm/features/match/pitch/scene_look.dart';
 
-/// The sky and the land behind the far stand: the ground's [terrain] in
-/// layers that fade into the haze with distance, its city's [landmark]
-/// standing tall in front of them, all in the [look] of the moment.
+/// The sky and the land behind the far stand, in layers: the [horizon] far
+/// off (the country's nature), the [city] round the ground in its region's
+/// style in front of it, and the city's [landmark] standing tall among the
+/// buildings, all in the [look] of the moment and the [season] of the day.
 ///
 /// Drawn first; the stands are drawn over its lower part, so everything is
 /// carried down below the roof line and the sky above the stands is never
@@ -19,107 +21,78 @@ import 'package:fnm/features/match/pitch/scene_look.dart';
 /// never changes.
 class BackdropPainter {
   BackdropPainter({
-    required this.terrain,
+    required this.horizon,
+    required this.city,
     required this.landmark,
     required this.look,
     required this.seed,
-  });
+    this.season = BackdropSeason.green,
+  }) : _t = BackdropTone(look: look, season: season, seed: seed);
 
-  final Terrain terrain;
+  final Horizon horizon;
+  final CityStyle city;
   final LandmarkKind landmark;
   final SceneLook look;
+  final BackdropSeason season;
   final String seed;
+  final BackdropTone _t;
 
-  /// The warm light of a lit window, and of a city's glow on the haze.
-  static const Color _window = Color(0xFFF1C877);
+  static const Color _window = BackdropTone.window;
 
-  /// Distance haze of the far, middle and near layers.
-  static const double _hazeFar = 0.55, _hazeMid = 0.3, _hazeNear = 0.1;
+  /// The flat grey a winter sky goes under cloud.
+  static const Color _overcast = Color(0xFF8C969E);
+  static const double _hazeFar = BackdropTone.hazeFar;
+  static const double _hazeMid = BackdropTone.hazeMid;
+  static const double _hazeNear = BackdropTone.hazeNear;
 
-  double get _night => look.flood;
-  double get _day => 1 - look.flood;
+  double get _night => _t.night;
+  double get _day => _t.day;
+  bool get _snowy => season == BackdropSeason.snow;
 
-  /// Paints the backdrop over [size], the land standing on [horizon] (a y in
-  /// pixels: the roof line) and carried down to the bottom of the frame for
-  /// the stands to cover.
-  void paint(Canvas canvas, Size size, double horizon) {
-    final room = math.max(horizon, 8.0);
-    _sky(canvas, size, horizon);
+  /// Paints the backdrop over [size], the land standing on [roofLine] (a y
+  /// in pixels) and carried down to the bottom of the frame for the stands
+  /// to cover.
+  void paint(Canvas canvas, Size size, double roofLine) {
+    final room = math.max(roofLine, 8.0);
+    _sky(canvas, size, roofLine);
     _celestial(canvas, size, room);
-    switch (terrain) {
-      case Terrain.mountains:
-        _mountains(canvas, size, horizon, room);
-      case Terrain.sea:
-        _sea(canvas, size, horizon, room);
-      case Terrain.desert:
-        _desert(canvas, size, horizon, room);
-      case Terrain.hills:
-        _hills(canvas, size, horizon, room);
-      case Terrain.city:
-        _city(canvas, size, horizon, room);
+    switch (horizon) {
+      case Horizon.andes:
+      case Horizon.alps:
+      case Horizon.atlas:
+        _range(canvas, size, roofLine, room);
+      case Horizon.sea:
+        _sea(canvas, size, roofLine, room);
+      case Horizon.forestHills:
+        _hills(canvas, size, roofLine, room);
+      case Horizon.volcanoes:
+        _volcanoes(canvas, size, roofLine, room);
+      case Horizon.desert:
+        _desert(canvas, size, roofLine, room);
+      case Horizon.plains:
+        _plains(canvas, size, roofLine, room);
+      case Horizon.fjords:
+        _fjords(canvas, size, roofLine, room);
     }
-    if (landmark != LandmarkKind.none) _landmark(canvas, size, horizon, room);
-    if (terrain == Terrain.city || landmark != LandmarkKind.none) {
-      _cityNear(canvas, size, horizon, room);
-    }
-    _cityGlow(canvas, size, horizon, room);
-    // Below the roof line is the land round the stadium, seen from above:
+    final skyline = CitySkyline(
+      style: city,
+      tone: _t,
+      lowered: landmark != LandmarkKind.none,
+    )..paintBack(canvas, size, roofLine, room);
+    if (landmark != LandmarkKind.none) _landmark(canvas, size, roofLine, room);
+    skyline.paintFront(canvas, size, roofLine, room);
+    _cityGlow(canvas, size, roofLine, room);
+    // Below the roof line is the town round the stadium, seen from above:
     // what shows of it past the end stands is roofs and streets, never sky.
-    if (terrain != Terrain.sea) _outskirts(canvas, size, horizon, room);
+    skyline.paintOutskirts(canvas, size, roofLine, room);
   }
 
-  /// The town round the ground, looked down on: rows of roofs, smaller and
-  /// hazier toward the roof line, street lights at night.
-  void _outskirts(Canvas canvas, Size size, double horizon, double room) {
-    final top = horizon + room * 0.1;
-    canvas.drawRect(
-      Rect.fromLTRB(0, top, size.width, size.height),
-      Paint()
-        ..shader = ui.Gradient.linear(Offset(0, top), Offset(0, size.height), [
-          _hazed(look.near, 0.2),
-          Color.lerp(look.near, Colors.black, 0.25)!,
-        ]),
-    );
-    final r = _rng('outskirts');
-    var y = top + 1.5;
-    while (y < size.height) {
-      final depth = ((y - top) / room).clamp(0.0, 3.0);
-      final s = 1.6 + depth * 2.2;
-      final haze = (0.3 - depth * 0.12).clamp(0.0, 0.3);
-      var x = -r.nextDouble() * s * 2;
-      while (x < size.width) {
-        final w = s * (1.0 + r.nextDouble() * 2.2);
-        if (r.nextDouble() < 0.82) {
-          final shade = r.nextDouble();
-          final roof = Color.lerp(
-            Color.lerp(look.near, look.far, 0.6 * shade)!,
-            const Color(0xFF5A4A40),
-            0.25 * _day * r.nextDouble(),
-          )!;
-          canvas.drawRect(
-            Rect.fromLTWH(x, y, w - s * 0.3, s * 0.62),
-            Paint()..color = _hazed(roof, haze),
-          );
-        }
-        if (_night > 0.2 && r.nextDouble() < 0.35) {
-          canvas.drawCircle(
-            Offset(x + w * r.nextDouble(), y + s * 0.75),
-            0.45 + depth * 0.2,
-            Paint()
-              ..color = _window.withValues(
-                alpha: (0.45 + r.nextDouble() * 0.45) * _night,
-              ),
-          );
-        }
-        x += w;
-      }
-      y += s * 0.95;
-    }
-  }
+  math.Random _rng(String salt) => _t.rng(salt);
 
-  math.Random _rng(String salt) => math.Random(varietySeed('$seed:$salt'));
+  Color _hazed(Color c, double haze) => _t.hazed(c, haze);
 
-  Color _hazed(Color c, double haze) => Color.lerp(c, look.skyHorizon, haze)!;
+  void _windows(Canvas canvas, Rect rect, double strength, math.Random r) =>
+      _t.windows(canvas, rect, strength, r);
 
   /// A layer of land: [path] in [colour] faded by [haze], and fogged a
   /// little more toward its foot.
@@ -142,6 +115,11 @@ class BackdropPainter {
     );
   }
 
+  /// [natural] as the land wears it in this light: muted toward the far
+  /// layer's tone by day, and gone to it at night.
+  Color _land(Color natural, [double k = 0.5]) =>
+      Color.lerp(look.far, natural, k * _t.lit)!;
+
   // --- Sky ---------------------------------------------------------------------
 
   void _sky(Canvas canvas, Size size, double horizon) {
@@ -151,7 +129,10 @@ class BackdropPainter {
         ..shader = ui.Gradient.linear(
           Offset.zero,
           Offset(0, math.max(horizon, 1)),
-          [look.skyTop, look.skyMid, look.skyHorizon],
+          [
+            for (final c in [look.skyTop, look.skyMid, look.skyHorizon])
+              _snowy ? Color.lerp(c, _overcast, 0.3 * _day)! : c,
+          ],
           const [0, 0.5, 1],
         ),
     );
@@ -288,65 +269,95 @@ class BackdropPainter {
       ..close();
   }
 
-  // --- Mountains ------------------------------------------------------------------
+  // --- Mountain ranges: the Andes, the Alps, the Atlas -------------------------
 
-  void _mountains(Canvas canvas, Size size, double horizon, double room) {
-    const rock = Color(0xFF6A6764);
-    final rockTone = Color.lerp(look.far, rock, 0.45 * _day)!;
-    // The far range: high, snow-capped, pale with distance.
+  void _range(Canvas canvas, Size size, double horizon, double room) {
+    final (rock, foot, snowline, snowAlpha, footSnow) = switch (this.horizon) {
+      Horizon.andes => (
+        const Color(0xFF6E6052),
+        const Color(0xFF6A5A48),
+        0.7,
+        0.9,
+        0.5,
+      ),
+      Horizon.alps => (
+        const Color(0xFF66666A),
+        _t.land,
+        0.6,
+        0.92,
+        0.0,
+      ),
+      _ => (
+        const Color(0xFF8A6A4A),
+        const Color(0xFF7A5E44),
+        0.78,
+        0.45,
+        0.0,
+      ),
+    };
+    final winter = _snowy ? 0.16 : 0.0;
+    final rockTone = _land(rock, 0.55);
+    // The far range: high, its peaks capped, pale with distance.
     final far = _ridgeLine(
       size,
       horizon,
       room,
       salt: 'range-far',
-      base: 0.42,
-      peak: 0.9,
-      rough: 0.55,
+      base: this.horizon == Horizon.atlas ? 0.36 : 0.42,
+      peak: this.horizon == Horizon.atlas ? 0.78 : 0.92,
+      rough: this.horizon == Horizon.alps ? 0.6 : 0.55,
       depth: 5,
       anchors: 9,
     );
     final farPath = _fillBelow(far, size);
     _layer(canvas, farPath, rockTone, 0.4, horizon - room, horizon);
-    _snow(canvas, farPath, far, horizon, room, snowline: 0.74);
+    _snow(
+      canvas,
+      farPath,
+      far,
+      horizon,
+      room,
+      snowline: snowline - winter,
+      alpha: math.min(0.92, snowAlpha + winter * 2),
+    );
     _faces(canvas, far, horizon, 0.1);
-    // The middle range: browner, nearer, a little snow on the very tops.
+    // The foothills: forest under the Alps, bare brown under the Andes and
+    // the Atlas.
     final mid = _ridgeLine(
       size,
       horizon,
       room,
       salt: 'range-mid',
       base: 0.26,
-      peak: 0.6,
+      peak: 0.58,
       rough: 0.5,
       depth: 5,
       anchors: 7,
     );
     final midPath = _fillBelow(mid, size);
-    final brown = Color.lerp(look.near, const Color(0xFF5E5146), 0.5 * _day)!;
-    _layer(canvas, midPath, brown, _hazeMid, horizon - room * 0.66, horizon);
-    _snow(canvas, midPath, mid, horizon, room, snowline: 0.56, alpha: 0.45);
-    _faces(canvas, mid, horizon, 0.1);
-    // The near slopes, built up with the city climbing them.
-    final near = _ridgeLine(
-      size,
-      horizon,
-      room,
-      salt: 'slopes',
-      base: 0.12,
-      peak: 0.34,
-      rough: 0.45,
-      depth: 5,
-    );
-    final nearPath = _fillBelow(near, size);
     _layer(
       canvas,
-      nearPath,
-      look.near,
-      _hazeNear,
-      horizon - room * 0.34,
+      midPath,
+      _land(foot, 0.55),
+      _hazeMid,
+      horizon - room * 0.6,
       horizon,
     );
-    _sprawl(canvas, near, horizon, size);
+    if (footSnow > 0 || _snowy) {
+      _snow(
+        canvas,
+        midPath,
+        mid,
+        horizon,
+        room,
+        snowline: 0.5 - winter,
+        alpha: _snowy ? 0.8 : footSnow,
+      );
+    }
+    _faces(canvas, mid, horizon, 0.1);
+    if (this.horizon == Horizon.alps) {
+      _treeLine(canvas, mid, horizon, _hazeMid, 'range-mid');
+    }
   }
 
   /// Snow on a range: its part above the [snowline] (a fraction of the room
@@ -404,28 +415,28 @@ class BackdropPainter {
     }
   }
 
-  /// Houses scattered up the near slopes, lit at night.
-  void _sprawl(Canvas canvas, List<Offset> line, double horizon, Size size) {
-    final r = _rng('sprawl');
-    final house = Paint()..color = _hazed(look.near, 0.18);
-    for (var i = 0; i < 160; i++) {
-      final x = r.nextDouble() * size.width;
-      final k = (x / size.width * (line.length - 1)).floor().clamp(
-        0,
-        line.length - 2,
-      );
-      final top = line[k].dy;
-      final y = top + (horizon - top) * (0.1 + r.nextDouble() * 0.9);
-      final w = 1.0 + r.nextDouble() * 1.6;
-      canvas.drawRect(Rect.fromLTWH(x, y, w, w * 0.7), house);
-      if (_night > 0.2 && r.nextDouble() < 0.6) {
+  /// Small trees along a ridge, in the season's colours, capped with snow
+  /// in winter.
+  void _treeLine(
+    Canvas canvas,
+    List<Offset> line,
+    double horizon,
+    double haze,
+    String salt, {
+    double chance = 0.45,
+  }) {
+    final r = _rng('trees-$salt');
+    for (var i = 0; i < line.length; i++) {
+      if (r.nextDouble() > chance) continue;
+      final o = line[i];
+      final s = 1.2 + r.nextDouble() * 2.2 * (1 - haze);
+      final c = _hazed(_land(_t.tree(r), 0.6), haze);
+      canvas.drawCircle(o.translate(0, s * 0.3), s, Paint()..color = c);
+      if (_snowy) {
         canvas.drawCircle(
-          Offset(x + w / 2, y + 0.3),
-          0.5,
-          Paint()
-            ..color = _window.withValues(
-              alpha: (0.5 + r.nextDouble() * 0.4) * _night,
-            ),
+          o.translate(0, s * 0.05),
+          s * 0.55,
+          Paint()..color = _t.snow(haze).withValues(alpha: 0.7),
         );
       }
     }
@@ -434,27 +445,27 @@ class BackdropPainter {
   // --- Sea ------------------------------------------------------------------------
 
   void _sea(Canvas canvas, Size size, double horizon, double room) {
-    final sea = horizon - room * 0.32;
-    // A far coast, faint, on the right.
+    final sea = horizon - room * 0.42;
+    // A far coast, faint, along the horizon.
     final coast = _ridgeLine(
       size,
       sea,
       room,
       salt: 'coast',
       base: 0.04,
-      peak: 0.14,
+      peak: 0.16,
       rough: 0.5,
       depth: 5,
     );
     _layer(
       canvas,
       _smooth(coast, size),
-      look.far,
+      _land(_t.land, 0.3),
       _hazeFar,
-      sea - room * 0.14,
+      sea - room * 0.16,
       sea,
     );
-    // Open water down to the stands, lighter toward the horizon.
+    // Open water down to the city, lighter toward the horizon.
     canvas.drawRect(
       Rect.fromLTRB(0, sea, size.width, size.height),
       Paint()
@@ -463,10 +474,67 @@ class BackdropPainter {
           look.water,
         ]),
     );
-    // The sun's or the moon's path on the water, and small glints.
-    final path = Offset(size.width * (look.sunGlow > 0.3 ? 0.82 : 0.12), sea);
+    _waterLight(canvas, size, sea, horizon, room);
+    // A headland on the left with its lighthouse.
+    final head = Path()
+      ..moveTo(0, size.height)
+      ..lineTo(0, sea - room * 0.3)
+      ..quadraticBezierTo(
+        size.width * 0.06,
+        sea - room * 0.34,
+        size.width * 0.12,
+        sea - room * 0.16,
+      )
+      ..quadraticBezierTo(
+        size.width * 0.17,
+        sea - room * 0.02,
+        size.width * 0.24,
+        sea + room * 0.04,
+      )
+      ..lineTo(size.width * 0.24, size.height)
+      ..close();
+    _layer(
+      canvas,
+      head,
+      _land(_t.land, 0.5),
+      _hazeMid,
+      sea - room * 0.34,
+      horizon,
+    );
+    final lx = size.width * 0.07, ly = sea - room * 0.31;
+    final lh = room * 0.2;
+    canvas
+      ..drawRect(
+        Rect.fromLTWH(lx - lh * 0.07, ly - lh, lh * 0.14, lh),
+        Paint()..color = Color.lerp(look.landmark, Colors.white, 0.35 * _day)!,
+      )
+      ..drawRect(
+        Rect.fromLTWH(lx - lh * 0.07, ly - lh * 0.6, lh * 0.14, lh * 0.12),
+        Paint()..color = const Color(0xFF8C4A42).withValues(alpha: 0.8),
+      );
+    if (_night > 0.1) {
+      canvas.drawCircle(
+        Offset(lx, ly - lh),
+        lh * 0.7,
+        Paint()
+          ..color = _window.withValues(alpha: 0.4 * _night)
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, lh * 0.4),
+      );
+    }
+  }
+
+  /// The sun's or the moon's path on open water from [top] down to
+  /// [bottom], small glints, and ships' lights at night.
+  void _waterLight(
+    Canvas canvas,
+    Size size,
+    double top,
+    double bottom,
+    double room,
+  ) {
+    final path = Offset(size.width * (look.sunGlow > 0.3 ? 0.82 : 0.12), top);
     canvas.drawRect(
-      Rect.fromLTRB(path.dx - room * 0.25, sea, path.dx + room * 0.25, horizon),
+      Rect.fromLTRB(path.dx - room * 0.25, top, path.dx + room * 0.25, bottom),
       Paint()
         ..shader = ui.Gradient.linear(
           Offset(path.dx - room * 0.25, 0),
@@ -492,90 +560,208 @@ class BackdropPainter {
         0.35,
       )!.withValues(alpha: 0.32);
     for (var i = 0; i < 60; i++) {
-      final y = sea + 1 + r.nextDouble() * (horizon - sea);
+      final y = top + 1 + r.nextDouble() * (bottom - top);
       final x = r.nextDouble() * size.width;
       final w = 1.5 + r.nextDouble() * size.width * 0.025;
       canvas.drawLine(Offset(x, y), Offset(x + w, y), glint);
     }
-    // Ships' lights at night.
     if (_night > 0.2) {
       for (var i = 0; i < 5; i++) {
         canvas.drawCircle(
           Offset(
             size.width * (0.35 + r.nextDouble() * 0.55),
-            sea + 2 + r.nextDouble() * room * 0.1,
+            top + 2 + r.nextDouble() * room * 0.08,
           ),
           0.7,
           Paint()..color = _window.withValues(alpha: 0.8 * _night),
         );
       }
     }
-    // The near headland with a town and its lighthouse.
-    final head = Path()
-      ..moveTo(0, size.height)
-      ..lineTo(0, sea - room * 0.42)
-      ..quadraticBezierTo(
-        size.width * 0.1,
-        sea - room * 0.5,
-        size.width * 0.2,
-        sea - room * 0.3,
-      )
-      ..quadraticBezierTo(
-        size.width * 0.28,
-        sea - room * 0.08,
-        size.width * 0.38,
-        sea + room * 0.05,
-      )
-      ..lineTo(size.width * 0.38, size.height)
-      ..close();
-    final green = Color.lerp(look.near, const Color(0xFF3C5040), 0.5 * _day)!;
-    _layer(canvas, head, green, _hazeNear, sea - room * 0.5, horizon);
-    final lx = size.width * 0.15, ly = sea - room * 0.46;
-    final lh = room * 0.24;
-    canvas
-      ..drawRect(
-        Rect.fromLTWH(lx - lh * 0.07, ly - lh, lh * 0.14, lh),
-        Paint()..color = Color.lerp(look.landmark, Colors.white, 0.35 * _day)!,
-      )
-      ..drawRect(
-        Rect.fromLTWH(lx - lh * 0.07, ly - lh * 0.6, lh * 0.14, lh * 0.12),
-        Paint()..color = const Color(0xFF8C4A42).withValues(alpha: 0.8),
-      );
-    if (_night > 0.1) {
-      canvas.drawCircle(
-        Offset(lx, ly - lh),
-        lh * 0.7,
-        Paint()
-          ..color = _window.withValues(alpha: 0.4 * _night)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, lh * 0.4),
-      );
-    }
-    _town(
-      canvas,
-      Rect.fromLTRB(0, sea - room * 0.3, size.width * 0.34, horizon),
-      'harbour',
-    );
   }
 
-  /// Low houses filling [area], lit at night.
-  void _town(Canvas canvas, Rect area, String salt) {
-    final r = _rng(salt);
-    for (var i = 0; i < 50; i++) {
-      final w = 2 + r.nextDouble() * 4;
-      final h = 1.5 + r.nextDouble() * 3;
-      final x = area.left + r.nextDouble() * area.width;
-      final y = area.top + area.height * (0.3 + r.nextDouble() * 0.7);
-      canvas.drawRect(
-        Rect.fromLTWH(x, y - h, w, h),
-        Paint()..color = _hazed(look.near, 0.15 + r.nextDouble() * 0.1),
+  // --- Forested hills ------------------------------------------------------------
+
+  void _hills(Canvas canvas, Size size, double horizon, double room) {
+    final tone = _snowy ? look.snow : _land(_t.land);
+    for (final (salt, base, peak, haze) in [
+      ('hills-far', 0.42, 0.72, _hazeFar),
+      ('hills-mid', 0.26, 0.5, _hazeMid),
+      ('hills-near', 0.12, 0.32, _hazeNear),
+    ]) {
+      final line = _ridgeLine(
+        size,
+        horizon,
+        room,
+        salt: salt,
+        base: base,
+        peak: peak,
+        rough: 0.42,
+        depth: 5,
       );
-      if (_night > 0.2 && r.nextDouble() < 0.5) {
-        canvas.drawRect(
-          Rect.fromLTWH(x + w * 0.4, y - h * 0.6, 0.8, 0.8),
-          Paint()..color = _window.withValues(alpha: 0.8 * _night),
+      final hill = _smooth(line, size);
+      _layer(canvas, hill, tone, haze, horizon - room * peak, horizon);
+      canvas
+        ..save()
+        ..clipPath(hill);
+      _forest(canvas, line, horizon, room, haze, salt);
+      canvas.restore();
+      _treeLine(canvas, line, horizon, haze, salt, chance: 0.7);
+    }
+  }
+
+  /// The woods on a hill: patches of trees in the season's colours over the
+  /// slope below [line].
+  void _forest(
+    Canvas canvas,
+    List<Offset> line,
+    double horizon,
+    double room,
+    double haze,
+    String salt,
+  ) {
+    final r = _rng('forest-$salt');
+    final s = math.max(1.2, room * 0.025);
+    for (var i = 0; i < line.length * 3; i++) {
+      final k = r.nextInt(line.length);
+      final o = line[k];
+      final depth = r.nextDouble() * (horizon - o.dy) * 0.7;
+      if (r.nextDouble() < 0.35) continue;
+      final c = _hazed(_land(_t.tree(r), 0.55), haze + depth / room * 0.1);
+      canvas.drawCircle(
+        Offset(o.dx + (r.nextDouble() - 0.5) * s * 4, o.dy + s + depth),
+        s * (0.7 + r.nextDouble() * 0.6),
+        Paint()..color = c,
+      );
+    }
+  }
+
+  // --- Volcanoes -------------------------------------------------------------------
+
+  void _volcanoes(Canvas canvas, Size size, double horizon, double room) {
+    final r = _rng('volcano');
+    // A low ridge far off.
+    final ridge = _ridgeLine(
+      size,
+      horizon,
+      room,
+      salt: 'volc-ridge',
+      base: 0.28,
+      peak: 0.42,
+      rough: 0.45,
+      depth: 5,
+    );
+    _layer(
+      canvas,
+      _smooth(ridge, size),
+      _land(_t.land, 0.4),
+      _hazeFar,
+      horizon - room * 0.42,
+      horizon,
+    );
+    // Two cones, the great one to one side of the middle a landmark keeps.
+    final left = r.nextBool();
+    final capped = r.nextDouble() < 0.7 || _snowy;
+    for (final (cx, peak, haze) in [
+      (size.width * (left ? 0.7 : 0.28), 0.62, _hazeFar),
+      (size.width * (left ? 0.24 : 0.74), 0.94, 0.36),
+    ]) {
+      final h = room * peak;
+      final half = h * 1.7;
+      final crater = h * 0.07;
+      final top = horizon - h;
+      final cone = Path()
+        ..moveTo(cx - half, horizon + room)
+        ..lineTo(cx - half, horizon)
+        ..quadraticBezierTo(
+          cx - half * 0.35,
+          horizon - h * 0.55,
+          cx - crater,
+          top,
+        )
+        ..lineTo(cx + crater, top)
+        ..quadraticBezierTo(
+          cx + half * 0.35,
+          horizon - h * 0.55,
+          cx + half,
+          horizon,
+        )
+        ..lineTo(cx + half, horizon + room)
+        ..close();
+      _layer(
+        canvas,
+        cone,
+        _land(const Color(0xFF5E5650), 0.55),
+        haze,
+        top,
+        horizon,
+      );
+      // The shaded flank away from the light.
+      canvas
+        ..save()
+        ..clipPath(cone)
+        ..drawRect(
+          Rect.fromLTRB(cx, top, cx + half, horizon),
+          Paint()
+            ..color = Colors.black.withValues(alpha: 0.12 * (0.4 + 0.6 * _day)),
+        );
+      if (capped) {
+        final cap = Path()..moveTo(cx - half, top + h * (_snowy ? 0.5 : 0.28));
+        for (var i = 0; i <= 10; i++) {
+          final x = cx - half + half * 2 * i / 10;
+          cap.lineTo(
+            x,
+            top + h * (_snowy ? 0.5 : 0.28) + (r.nextDouble() - 0.5) * h * 0.08,
+          );
+        }
+        cap
+          ..lineTo(cx + half, top - 2)
+          ..lineTo(cx - half, top - 2)
+          ..close();
+        canvas.drawPath(
+          cap,
+          Paint()..color = _t.snow(haze).withValues(alpha: 0.88),
+        );
+      }
+      canvas.restore();
+      // A thin plume from the great one.
+      if (peak > 0.9 && r.nextDouble() < 0.5) {
+        canvas.drawPath(
+          Path()
+            ..moveTo(cx - crater, top)
+            ..quadraticBezierTo(
+              cx + h * 0.2,
+              top - h * 0.3,
+              cx + h * 0.8,
+              top - h * 0.36,
+            )
+            ..quadraticBezierTo(cx + h * 0.25, top - h * 0.12, cx + crater, top)
+            ..close(),
+          Paint()
+            ..color = _hazed(look.skyHorizon, 0.2).withValues(alpha: 0.4)
+            ..maskFilter = MaskFilter.blur(BlurStyle.normal, h * 0.03),
         );
       }
     }
+    // Green foothills in front of the cones.
+    final hills = _ridgeLine(
+      size,
+      horizon,
+      room,
+      salt: 'volc-hills',
+      base: 0.1,
+      peak: 0.28,
+      rough: 0.45,
+      depth: 5,
+    );
+    _layer(
+      canvas,
+      _smooth(hills, size),
+      _land(_t.land),
+      _hazeMid,
+      horizon - room * 0.28,
+      horizon,
+    );
+    _treeLine(canvas, hills, horizon, _hazeMid, 'volc-hills', chance: 0.6);
   }
 
   // --- Desert ---------------------------------------------------------------------
@@ -583,9 +769,9 @@ class BackdropPainter {
   void _desert(Canvas canvas, Size size, double horizon, double room) {
     final sand = look.sand;
     for (final (salt, base, peak, haze) in [
-      ('dunes-far', 0.38, 0.62, _hazeFar),
-      ('dunes-mid', 0.22, 0.44, _hazeMid),
-      ('dunes-near', 0.08, 0.26, _hazeNear),
+      ('dunes-far', 0.32, 0.54, _hazeFar),
+      ('dunes-mid', 0.2, 0.4, _hazeMid),
+      ('dunes-near', 0.08, 0.24, _hazeNear),
     ]) {
       final line = _ridgeLine(
         size,
@@ -619,219 +805,233 @@ class BackdropPainter {
           )!.withValues(alpha: 0.25 * _day + 0.05),
       );
     }
-    // Far towers on the haze, as a Gulf city reads from its desert.
-    final r = _rng('desert-towers');
-    for (var i = 0; i < 9; i++) {
-      final x = size.width * (0.55 + r.nextDouble() * 0.4);
-      final h = room * (0.25 + r.nextDouble() * 0.45);
-      final w = 1.5 + r.nextDouble() * 3;
-      final rect = Rect.fromLTWH(x, horizon - room * 0.4 - h, w, h);
-      canvas.drawRect(rect, Paint()..color = _hazed(look.far, 0.62));
-      if (_night > 0.2) _windows(canvas, rect, 0.5, r);
-    }
   }
 
-  // --- Hills ------------------------------------------------------------------------
+  // --- Plains -------------------------------------------------------------------------
 
-  void _hills(Canvas canvas, Size size, double horizon, double room) {
-    const green = Color(0xFF46594A);
-    final tone = Color.lerp(look.far, green, 0.45 * _day)!;
-    for (final (salt, base, peak, haze) in [
-      ('hills-far', 0.42, 0.72, _hazeFar),
-      ('hills-mid', 0.26, 0.5, _hazeMid),
-      ('hills-near', 0.1, 0.3, _hazeNear),
-    ]) {
-      final line = _ridgeLine(
-        size,
-        horizon,
-        room,
-        salt: salt,
-        base: base,
-        peak: peak,
-        rough: 0.42,
-        depth: 5,
-      );
-      _layer(
-        canvas,
-        _smooth(line, size),
-        tone,
-        haze,
-        horizon - room * peak,
-        horizon,
-      );
-      _treeLine(canvas, line, horizon, haze, salt);
-    }
-    _town(
-      canvas,
-      Rect.fromLTRB(
-        size.width * 0.55,
-        horizon - room * 0.22,
-        size.width,
-        horizon,
-      ),
-      'village',
-    );
-  }
-
-  /// Small trees along a ridge.
-  void _treeLine(
-    Canvas canvas,
-    List<Offset> line,
-    double horizon,
-    double haze,
-    String salt,
-  ) {
-    final r = _rng('trees-$salt');
-    final p = Paint()
-      ..color = _hazed(
-        Color.lerp(look.near, const Color(0xFF2E4232), 0.5 * _day)!,
-        haze,
-      );
-    for (var i = 0; i < line.length; i++) {
-      if (r.nextDouble() > 0.45) continue;
-      final o = line[i];
-      final s = 1.2 + r.nextDouble() * 2.2 * (1 - haze);
-      canvas.drawCircle(o.translate(0, s * 0.3), s, p);
-    }
-  }
-
-  // --- City --------------------------------------------------------------------------
-
-  void _city(Canvas canvas, Size size, double horizon, double room) {
-    // A landmark city keeps its skyline lower, so the landmark stands clear.
-    final k = landmark == LandmarkKind.none ? 1.0 : 0.7;
-    _skyline(
-      canvas,
+  void _plains(Canvas canvas, Size size, double horizon, double room) {
+    final r = _rng('plains');
+    final line = horizon - room * 0.22;
+    // The far land: a faint low rise on the horizon.
+    final far = _ridgeLine(
       size,
-      horizon,
+      line,
       room,
-      salt: 'far',
-      haze: _hazeFar,
-      lo: 0.35 * k,
-      hi: 0.9 * k,
-      wMin: 0.012,
-      wMax: 0.03,
+      salt: 'plains-far',
+      base: 0.0,
+      peak: 0.06,
+      rough: 0.5,
+      depth: 5,
     );
-    _skyline(
+    _layer(
       canvas,
-      size,
-      horizon,
-      room,
-      salt: 'mid',
-      haze: _hazeMid,
-      lo: 0.2 * k,
-      hi: 0.6 * k,
-      wMin: 0.02,
-      wMax: 0.045,
+      _smooth(far, size),
+      _land(_t.land, 0.35),
+      _hazeFar,
+      line - room * 0.06,
+      line,
     );
-  }
-
-  /// The nearest row of buildings, in front of a landmark.
-  void _cityNear(Canvas canvas, Size size, double horizon, double room) {
-    _skyline(
-      canvas,
-      size,
-      horizon,
-      room,
-      salt: 'near',
-      haze: _hazeNear,
-      lo: 0.06,
-      hi: 0.26,
-      wMin: 0.03,
-      wMax: 0.06,
+    // Fields down to the city, in strips of the season's land.
+    final fields = Rect.fromLTRB(0, line, size.width, size.height);
+    canvas.drawRect(
+      fields,
+      Paint()
+        ..color = _snowy ? _t.snow(_hazeMid) : _hazed(_land(_t.land), _hazeMid),
     );
-  }
-
-  void _skyline(
-    Canvas canvas,
-    Size size,
-    double horizon,
-    double room, {
-    required String salt,
-    required double haze,
-    required double lo,
-    required double hi,
-    required double wMin,
-    required double wMax,
-  }) {
-    final r = _rng('city-$salt');
-    final body = _hazed(look.near, haze);
-    final lit = Color.lerp(body, look.skyHorizon, 0.25)!;
-    var x = -r.nextDouble() * size.width * wMax;
-    while (x < size.width) {
-      final w = size.width * (wMin + r.nextDouble() * (wMax - wMin));
-      final h = room * (lo + (hi - lo) * math.pow(r.nextDouble(), 1.5));
-      final rect = Rect.fromLTRB(x, horizon - h, x + w - 0.5, horizon + room);
-      canvas.drawRect(rect, Paint()..color = body);
-      // The lit face of the block, by day.
-      if (_day > 0.2) {
+    var y = line + 0.5;
+    var h = 0.8;
+    while (y < horizon) {
+      var x = -r.nextDouble() * size.width * 0.1;
+      while (x < size.width) {
+        final w = size.width * (0.06 + r.nextDouble() * 0.14);
+        final shade = r.nextDouble();
+        final c = _snowy
+            ? _t.snow(_hazeMid)
+            : Color.lerp(
+                _t.land,
+                shade < 0.3 ? const Color(0xFF8A7A4E) : const Color(0xFF3E5236),
+                0.35 * shade,
+              )!;
         canvas.drawRect(
-          Rect.fromLTWH(rect.left, rect.top, math.max(0.8, w * 0.22), h),
-          Paint()..color = lit.withValues(alpha: 0.5 * _day),
+          Rect.fromLTWH(x, y, w - 0.6, h),
+          Paint()
+            ..color = _hazed(
+              _snowy ? c : _land(c),
+              _hazeMid + (horizon - y) / room,
+            ),
+        );
+        x += w;
+      }
+      y += h + 0.5;
+      h *= 1.35;
+    }
+    // Tree lines and copses across the fields.
+    for (var i = 0; i < 6; i++) {
+      final yy = line + (horizon - line) * (0.1 + 0.8 * r.nextDouble());
+      final x0 = size.width * r.nextDouble();
+      final n = 4 + r.nextInt(10);
+      final s = 0.8 + (yy - line) / room * 6;
+      for (var k = 0; k < n; k++) {
+        canvas.drawCircle(
+          Offset(x0 + k * s * 1.5, yy),
+          s * (0.8 + r.nextDouble() * 0.4),
+          Paint()..color = _hazed(_land(_t.tree(r), 0.55), _hazeMid),
         );
       }
-      // Now and then a crown or a mast.
-      final roll = r.nextDouble();
-      if (roll < 0.12) {
-        canvas.drawPath(
-          Path()
-            ..moveTo(rect.left, rect.top)
-            ..lineTo(rect.center.dx, rect.top - w * 0.7)
-            ..lineTo(rect.right, rect.top)
-            ..close(),
-          Paint()..color = body,
-        );
-      } else if (roll < 0.22) {
-        canvas.drawRect(
-          Rect.fromLTWH(
-            rect.center.dx - 0.4,
-            rect.top - h * 0.18,
-            0.8,
-            h * 0.18,
-          ),
-          Paint()..color = body,
-        );
-        if (_night > 0.2) {
-          canvas.drawCircle(
-            Offset(rect.center.dx, rect.top - h * 0.18),
-            0.9,
-            Paint()
-              ..color = const Color(0xFFD9544A).withValues(alpha: 0.9 * _night),
+    }
+    // A few wind turbines far off, by day.
+    if (_day > 0.3) {
+      final pole = Paint()
+        ..color = _hazed(const Color(0xFFD6DCE0), _hazeFar).withValues(
+          alpha: 0.7 * _day,
+        )
+        ..strokeWidth = 0.6;
+      for (var i = 0; i < 3; i++) {
+        final x = size.width * (0.62 + r.nextDouble() * 0.34);
+        final h = room * (0.14 + r.nextDouble() * 0.06);
+        final hub = Offset(x, line - h);
+        canvas.drawLine(Offset(x, line), hub, pole);
+        final a0 = r.nextDouble() * math.pi;
+        for (var b = 0; b < 3; b++) {
+          final a = a0 + b * math.pi * 2 / 3;
+          canvas.drawLine(
+            hub,
+            hub + Offset(math.cos(a), math.sin(a)) * h * 0.45,
+            pole,
           );
         }
       }
-      if (_night > 0.2) _windows(canvas, rect, 1 - haze, r, bottom: horizon);
-      x += w + (r.nextDouble() < 0.15 ? w * 0.4 : 0);
     }
   }
 
-  void _windows(
-    Canvas canvas,
-    Rect rect,
-    double strength,
-    math.Random r, {
-    double? bottom,
-  }) {
-    final p = Paint();
-    final step = math.max(1.8, math.min(3.2, rect.width / 4));
-    final end = math.min(rect.bottom, bottom ?? rect.bottom);
-    for (var y = rect.top + 1.5; y < end - 1; y += step) {
-      for (var x = rect.left + 1; x < rect.right - 1; x += step) {
-        if (r.nextDouble() > 0.42) continue;
-        p.color = _window.withValues(
-          alpha: (0.35 + r.nextDouble() * 0.55) * _night * strength,
-        );
-        canvas.drawRect(Rect.fromLTWH(x, y, 0.8, 0.8), p);
-      }
+  // --- Fjords ---------------------------------------------------------------------------
+
+  void _fjords(Canvas canvas, Size size, double horizon, double room) {
+    final water = horizon - room * 0.3;
+    // The far walls, snow on their tops.
+    final far = _ridgeLine(
+      size,
+      horizon,
+      room,
+      salt: 'fjord-far',
+      base: 0.5,
+      peak: 0.82,
+      rough: 0.4,
+      depth: 5,
+      anchors: 5,
+    );
+    final farPath = _smooth(far, size);
+    _layer(
+      canvas,
+      farPath,
+      _land(const Color(0xFF4E5650), 0.5),
+      _hazeFar,
+      horizon - room * 0.82,
+      water,
+    );
+    _snow(
+      canvas,
+      farPath,
+      far,
+      horizon,
+      room,
+      snowline: _snowy ? 0.5 : 0.72,
+      alpha: 0.85,
+    );
+    // The water between the walls.
+    canvas.drawRect(
+      Rect.fromLTRB(0, water, size.width, size.height),
+      Paint()
+        ..shader = ui.Gradient.linear(
+          Offset(0, water),
+          Offset(0, horizon + 4),
+          [_hazed(look.water, 0.4), look.water],
+        ),
+    );
+    _waterLight(canvas, size, water, horizon, room);
+    // The near walls: steep on either side, dropping into the water.
+    for (final left in [true, false]) {
+      final x0 = left ? 0.0 : size.width;
+      final dir = left ? 1.0 : -1.0;
+      final reach = size.width * 0.36;
+      final top = horizon - room * 0.86;
+      final wall = Path()
+        ..moveTo(x0, size.height)
+        ..lineTo(x0, top)
+        ..cubicTo(
+          x0 + dir * reach * 0.35,
+          top - room * 0.04,
+          x0 + dir * reach * 0.6,
+          horizon - room * 0.55,
+          x0 + dir * reach,
+          water + room * 0.02,
+        )
+        ..lineTo(x0 + dir * reach, size.height)
+        ..close();
+      final rock = _land(_t.land, 0.4);
+      _layer(canvas, wall, rock, _hazeMid, top, horizon);
+      canvas
+        ..save()
+        ..clipPath(wall)
+        ..drawPath(
+          Path()
+            ..moveTo(x0, top - 4)
+            ..lineTo(x0 + dir * reach * 0.5, top - 4)
+            ..lineTo(
+              x0 + dir * reach * 0.42,
+              top + room * (_snowy ? 0.3 : 0.12),
+            )
+            ..lineTo(x0, top + room * (_snowy ? 0.36 : 0.16))
+            ..close(),
+          Paint()..color = _t.snow(_hazeMid).withValues(alpha: 0.8),
+        )
+        ..restore();
+      _forestBand(canvas, wall, x0, dir, reach, horizon, room);
     }
+  }
+
+  /// Dark pines over the lower half of a fjord's wall.
+  void _forestBand(
+    Canvas canvas,
+    Path wall,
+    double x0,
+    double dir,
+    double reach,
+    double horizon,
+    double room,
+  ) {
+    final r = _rng('fjord-pines-$dir');
+    canvas
+      ..save()
+      ..clipPath(wall);
+    final s = math.max(1.0, room * 0.02);
+    for (var i = 0; i < 140; i++) {
+      final x = x0 + dir * reach * r.nextDouble();
+      final y = horizon - room * (0.05 + r.nextDouble() * 0.4);
+      canvas.drawPath(
+        Path()
+          ..moveTo(x - s, y)
+          ..lineTo(x, y - s * 2.6)
+          ..lineTo(x + s, y)
+          ..close(),
+        Paint()
+          ..color = _hazed(
+            _land(const Color(0xFF2A3A2E), 0.5),
+            _hazeMid * 0.6,
+          ),
+      );
+    }
+    canvas.restore();
   }
 
   /// At night a lit city warms the haze over it.
   void _cityGlow(Canvas canvas, Size size, double horizon, double room) {
     if (_night < 0.15) return;
-    final k = terrain == Terrain.city || landmark != LandmarkKind.none
-        ? 1.0
-        : 0.45;
+    final k = switch (city) {
+      CityStyle.smallTown => 0.35,
+      CityStyle.glassTowers => 1.2,
+      _ => 0.9,
+    };
     canvas.drawRect(
       Rect.fromLTRB(0, horizon - room * 0.9, size.width, horizon),
       Paint()

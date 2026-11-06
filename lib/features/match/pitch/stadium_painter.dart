@@ -10,6 +10,7 @@ import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
 import 'package:fnm/features/match/pitch/backdrop_painter.dart';
+import 'package:fnm/features/match/pitch/crowd_painter.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/scene_look.dart';
@@ -119,23 +120,41 @@ class StadiumPainter extends CustomPainter {
       top.z1 + _roofWall * 0.6,
     ).dy;
     BackdropPainter(
-      terrain: spec.terrain,
+      horizon: spec.horizon,
+      city: spec.city,
+      season: spec.season,
       landmark: spec.landmark,
       look: look,
       seed: '${spec.flagCode}:${spec.landmark.name}:${spec.tiers}',
     ).paint(canvas, size, horizon);
 
-    // The built ground, graded for the light as one layer.
+    // The built ground, graded for the light. The tiers and their crowd
+    // are graded only part of the way: at night the floodlights light the
+    // fans, while the roofs above them and the land outside go dark.
     final graded = look.grade != const Color(0xFFFFFFFF);
-    if (graded) {
+    void grade(Color c) {
+      if (!graded) return;
       canvas.saveLayer(
         Offset.zero & size,
-        Paint()..colorFilter = ColorFilter.mode(look.grade, BlendMode.modulate),
+        Paint()..colorFilter = ColorFilter.mode(c, BlendMode.modulate),
       );
     }
+
+    void ungrade() {
+      if (graded) canvas.restore();
+    }
+
+    grade(look.grade);
     _apronGround(canvas);
     _towerMasts(canvas);
-    _stands(canvas);
+    ungrade();
+    grade(
+      Color.lerp(const Color(0xFFFFFFFF), look.grade, 1 - 0.5 * look.flood)!,
+    );
+    _standTiers(canvas);
+    ungrade();
+    grade(look.grade);
+    _standRoofs(canvas);
     _boards(canvas, near: false);
     _grass(canvas);
     _standShadow(canvas);
@@ -143,7 +162,7 @@ class StadiumPainter extends CustomPainter {
     _dugouts(canvas);
     _photographers(canvas);
     _boards(canvas, near: true);
-    if (graded) canvas.restore();
+    ungrade();
 
     // The goals and the occasion's dressing catch the floodlights: graded
     // only half as far, so a final's gold still reads as gold at night.
@@ -339,28 +358,37 @@ class StadiumPainter extends CustomPainter {
     z1: _frontWall * 0.7 + _terraceDepth * _terraceRake,
   );
 
-  void _stands(Canvas canvas) {
-    final home = _crowdTone(spec.homeColour);
-    final away = _crowdTone(spec.awayColour);
+  /// The tiers and their crowd, and a small ground's grass banks.
+  void _standTiers(Canvas canvas) {
+    final seats = _seatTone(spec.homeColour);
     final small = spec.tiers == 1;
     if (small) {
       _grassBank(canvas, _Seg.cornerLeft);
       _grassBank(canvas, _Seg.cornerRight);
     }
+    final crowd = CrowdPainter(home: spec.homeColour, away: spec.awayColour);
     for (var k = 0; k < spec.tiers; k++) {
       final t = _tier(k);
       for (final s in _order) {
-        final tier = small && _isEnd(s) ? _terrace : t;
+        final terrace = small && _isEnd(s);
+        final tier = terrace ? _terrace : t;
         _frontWallOf(canvas, s, tier.o0, tier.z0, k);
         _tierBand(
           canvas,
           s,
           tier,
           k,
-          colourAt: (frac) => _awayAt(s, frac) ? away : home,
+          seats: seats,
+          crowd: crowd,
+          terrace: terrace,
         );
       }
     }
+  }
+
+  /// The roofs over the stands, or a small ground's terrace rails.
+  void _standRoofs(Canvas canvas) {
+    final small = spec.tiers == 1;
     final top = _tier(spec.tiers - 1);
     for (final s in _order) {
       if (small && _isEnd(s)) {
@@ -368,6 +396,37 @@ class StadiumPainter extends CustomPainter {
         continue;
       }
       _roof(canvas, s, top.o1, top.z1);
+    }
+  }
+
+  /// The chance a fan at [frac] along [s] follows the away side. At a home
+  /// ground the travelling support has its end ([_awayAt]); at a neutral one
+  /// each side leans to one end and the two mix along the sides.
+  double _awayChance(_Seg s, double frac) {
+    if (!spec.neutral) return _awayAt(s, frac) ? 1 : 0;
+    final a = spec.awayShare.clamp(0.0, 1.0);
+    return switch (s) {
+      _Seg.left => a * 0.2,
+      _Seg.right => 1 - (1 - a) * 0.2,
+      _ => a,
+    };
+  }
+
+  /// The plan depth ([PitchProjection] y) of a point [o] metres out from
+  /// [seg]'s front row at [t] along it, for the scale there.
+  double _segY(_Seg seg, double t, double o) {
+    const w = PitchDims.width + _nearRun;
+    switch (seg) {
+      case _Seg.left:
+        return w * (1 - t);
+      case _Seg.right:
+        return w * t;
+      case _Seg.far:
+        return -_farFront - o * _farDepthScale;
+      case _Seg.cornerLeft:
+      case _Seg.cornerRight:
+        final a = (seg == _Seg.cornerLeft ? t : 1 - t) * math.pi / 2;
+        return -(_farFront + o * _farDepthScale) * math.sin(a);
     }
   }
 
@@ -409,6 +468,14 @@ class StadiumPainter extends CustomPainter {
     return h.withLightness(l).withSaturation(s).toColor();
   }
 
+  /// The seats: near-black with a hint of the home side's colour, so an
+  /// empty seat never passes for a fan.
+  static Color _seatTone(Color kit) => Color.lerp(
+    const Color(0xFF1C1F23),
+    _crowdTone(kit),
+    0.18,
+  )!;
+
   void _frontWallOf(Canvas canvas, _Seg s, double o, double z, int k) {
     final h = k == 0 ? _frontWall : _fascia;
     canvas
@@ -442,28 +509,18 @@ class StadiumPainter extends CustomPainter {
     _Seg s,
     ({double o0, double z0, double o1, double z1}) t,
     int k, {
-    required Color Function(double frac) colourAt,
+    required Color seats,
+    required CrowdPainter crowd,
+    required bool terrace,
   }) {
-    final n = math.max(6, (_segLength(s) / 1.5).round());
-    for (var i = 0; i < n; i++) {
-      final a = i / n, b = (i + 1) / n;
-      canvas.drawPath(
-        _poly([
-          _standPoint(s, a, t.o0, t.z0),
-          _standPoint(s, b, t.o0, t.z0),
-          _standPoint(s, b, t.o1, t.z1),
-          _standPoint(s, a, t.o1, t.z1),
-        ]),
-        Paint()
-          ..color = colourAt((a + b) / 2)
-          ..isAntiAlias = false,
-      );
-    }
-    const rows = 6;
+    final band = _tierPath(s, t);
+    canvas.drawPath(band, Paint()..color = seats);
+    // Faint seat rows, showing where the crowd is thin.
+    const rows = 8;
     final rowPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5
-      ..color = Colors.black.withValues(alpha: 0.16);
+      ..color = Colors.black.withValues(alpha: 0.22);
     for (var r = 1; r < rows; r++) {
       final f = r / rows;
       canvas.drawPath(
@@ -478,22 +535,53 @@ class StadiumPainter extends CustomPainter {
         rowPaint,
       );
     }
+    final top = k == spec.tiers - 1;
+    final fans = crowd.build(
+      CrowdBlock(
+        at: (u, v, up) => _standPoint(
+          s,
+          u,
+          t.o0 + (t.o1 - t.o0) * v,
+          t.z0 + (t.z1 - t.z0) * v + up,
+        ),
+        pxPerMetre: (u) => _ppm(_segY(s, u, (t.o0 + t.o1) / 2)),
+        lengthMetres: _segLength(s),
+        depthMetres: t.o1 - t.o0,
+        // The back rows of a lower tier are under the one above.
+        visibleDepth: top || terrace
+            ? 1
+            : (_tierDepth - _overhang) / _tierDepth,
+        fill: spec.fill,
+        awayChance: (u) => _awayChance(s, u),
+        standing: terrace,
+        seed: '${spec.flagCode}:${spec.tiers}:$k:${s.name}',
+      ),
+    );
+    if (fans != null) {
+      canvas
+        ..save()
+        ..clipPath(band)
+        ..drawVertices(fans, BlendMode.dst, Paint())
+        ..restore();
+      fans.dispose();
+    }
+    // Light falls on the front rows; the back ones sit in the roof's shade.
     canvas.drawPath(
-      _tierPath(s, t),
+      band,
       Paint()
         ..shader = ui.Gradient.linear(
           _standPoint(s, 0.5, t.o0, t.z0),
           _standPoint(s, 0.5, t.o1, t.z1),
           [
-            Colors.white.withValues(alpha: 0.05),
-            Colors.black.withValues(alpha: 0.42 + 0.06 * k),
+            Colors.white.withValues(alpha: 0.04),
+            Colors.black.withValues(alpha: 0.3 + 0.05 * k),
           ],
         ),
     );
   }
 
   /// At night the stands glow in their fans' colours, brightest on the front
-  /// rows the floodlights catch.
+  /// rows the floodlights catch: a wash over the lit crowd.
   void _crowdGlow(Canvas canvas) {
     final f = look.flood;
     if (f < 0.05) return;
@@ -512,7 +600,7 @@ class StadiumPainter extends CustomPainter {
         final n = math.max(6, (_segLength(s) / 3).round());
         for (var i = 0; i < n; i++) {
           final a = i / n, b = (i + 1) / n;
-          final c = _awayAt(s, (a + b) / 2) ? away : home;
+          final c = _awayChance(s, (a + b) / 2) >= 0.5 ? away : home;
           final front = _standPoint(s, (a + b) / 2, t.o0, t.z0);
           final back = _standPoint(s, (a + b) / 2, t.o1, t.z1);
           canvas.drawPath(
@@ -526,8 +614,8 @@ class StadiumPainter extends CustomPainter {
               ..blendMode = BlendMode.screen
               ..isAntiAlias = false
               ..shader = ui.Gradient.linear(front, back, [
-                c.withValues(alpha: 0.42 * f),
-                c.withValues(alpha: 0.12 * f),
+                c.withValues(alpha: 0.2 * f),
+                c.withValues(alpha: 0.05 * f),
               ]),
           );
         }
