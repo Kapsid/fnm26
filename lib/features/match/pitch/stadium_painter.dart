@@ -1006,7 +1006,7 @@ class StadiumPainter extends CustomPainter {
 
   /// A shape given in pitch metres, its edges sampled so they follow the
   /// projection's curve.
-  Path _metres(List<(double, double)> pts, {int steps = 8}) {
+  Path _metres(List<(double, double)> pts, {int steps = 16}) {
     final out = <Offset>[];
     for (var i = 0; i < pts.length; i++) {
       final (ax, ay) = pts[i];
@@ -1309,10 +1309,22 @@ class StadiumPainter extends CustomPainter {
   /// ground: (metres behind the line, metres up). The mouth itself is the
   /// same for all of them.
   static List<(double, double)> profileOf(GoalStyle s) => switch (s) {
-    GoalStyle.boxNet => const [(0, 2.44), (2.6, 2.44), (2.6, 0)],
-    GoalStyle.sloped => const [(0, 2.44), (0.9, 2.34), (2.2, 0)],
-    GoalStyle.square => const [(0, 2.44), (1.5, 2.2), (1.5, 0)],
-    GoalStyle.oldGround => const [(0, 2.44), (1.3, 0)],
+    GoalStyle.boxNet => const [
+      (0, PitchDims.crossbarHeight),
+      (2.6, PitchDims.crossbarHeight),
+      (2.6, 0),
+    ],
+    GoalStyle.sloped => const [
+      (0, PitchDims.crossbarHeight),
+      (0.9, PitchDims.crossbarHeight - 0.1),
+      (2.2, 0),
+    ],
+    GoalStyle.square => const [
+      (0, PitchDims.crossbarHeight),
+      (1.5, PitchDims.crossbarHeight - 0.24),
+      (1.5, 0),
+    ],
+    GoalStyle.oldGround => const [(0, PitchDims.crossbarHeight), (1.3, 0)],
   };
 
   void _goal(Canvas canvas, {required bool left}) {
@@ -1397,26 +1409,26 @@ class StadiumPainter extends CustomPainter {
       switch (style) {
         case GoalStyle.boxNet:
           canvas
-            ..drawLine(_p(bx(2.6), y), _p(bx(2.6), y, 2.44), support)
-            ..drawLine(_p(bx(0), y, bar), _p(bx(2.6), y, 2.44), support);
+            ..drawLine(_p(bx(2.6), y), _p(bx(2.6), y, bar), support)
+            ..drawLine(_p(bx(0), y, bar), _p(bx(2.6), y, bar), support);
         case GoalStyle.sloped:
           canvas.drawPath(
             _poly([
               _p(bx(0), y, bar),
-              _p(bx(0.9), y, 2.34),
+              _p(bx(0.9), y, bar - 0.1),
               _p(bx(2.2), y),
             ], close: false),
             support,
           );
         case GoalStyle.square:
-          canvas.drawLine(_p(bx(1.5), y), _p(bx(1.5), y, 2.2), support);
+          canvas.drawLine(_p(bx(1.5), y), _p(bx(1.5), y, bar - 0.24), support);
         case GoalStyle.oldGround:
           canvas.drawLine(_p(bx(0), y), _p(bx(1.3), y), support);
       }
     }
     switch (style) {
       case GoalStyle.boxNet:
-        canvas.drawLine(_p(bx(2.6), yf, 2.44), _p(bx(2.6), yn, 2.44), support);
+        canvas.drawLine(_p(bx(2.6), yf, bar), _p(bx(2.6), yn, bar), support);
       case GoalStyle.oldGround:
         canvas.drawLine(_p(bx(1.3), yf), _p(bx(1.3), yn), support);
       case GoalStyle.sloped:
