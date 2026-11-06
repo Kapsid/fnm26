@@ -448,6 +448,7 @@ class _OpenShotPlan extends _Plan {
         onPitch(e, a) &&
         e.teams[a] == side) {
       assister = a;
+      keeperAssist = e.keepers.contains(a);
     }
     earliest = start + (0.3 * len).clamp(0.15, 1.4);
     final flightEst = zone.distanceTo(goal) / 24;
@@ -460,6 +461,10 @@ class _OpenShotPlan extends _Plan {
   late final _Shot shot;
   late final Offset2 zone;
   int? assister;
+
+  /// The assister is his side's keeper: he never leaves his area, so he
+  /// sets the goal up with a long ball from it.
+  bool keeperAssist = false;
   int? crosser;
   bool delivered = false;
   late final double earliest;
@@ -547,10 +552,13 @@ class _OpenShotPlan extends _Plan {
     final holder = assister != null && !delivered ? assister! : m.shooterId;
     final setUp = holder != m.shooterId;
     final back = setUp ? 10.0 : 2.0;
-    final spot = at(
-      math.max(depthOf(zone) - back, PitchDims.length / 2),
-      latOf(zone) * (setUp ? 0.6 : 1),
-    );
+    final spot = setUp && keeperAssist
+        // A keeper sets it up from his own area.
+        ? at(14, latOf(zone) * 0.3)
+        : at(
+            math.max(depthOf(zone) - back, PitchDims.length / 2),
+            latOf(zone) * (setUp ? 0.6 : 1),
+          );
     final extra = <int, Offset2>{};
     if (m.outcome == ShotOutcome.blocked) {
       // The man who blocks it is right on him.
@@ -657,6 +665,24 @@ class _OpenShotPlan extends _Plan {
     }
     // Late, the set-up man plays it straight in.
     final x = assister;
+    // A keeper's assist: the long ball from his area to the scorer, as soon
+    // as he has it.
+    if (keeperAssist && x != null && !delivered && atFeet(x)) {
+      if (!onside(now, s)) {
+        if (onsideCut) return null;
+        onsideCut = true;
+        return holdOnside(now, s, PitchCutKind.phase);
+      }
+      final d = now.players[s]!.distanceTo(now.ball);
+      delivered = true;
+      return KickAction(
+        toPlayerId: s,
+        byPlayerId: car == null ? x : null,
+        arriveAt: t + math.max(d / 27, 0.6),
+        peak: math.min(4 + 0.1 * d, 14).toDouble(),
+        pass: true,
+      );
+    }
     if (late && x != null && !delivered && atFeet(x)) {
       // Only ever to a man onside.
       if (!onside(now, s)) {
