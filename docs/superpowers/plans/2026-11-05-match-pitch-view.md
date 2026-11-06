@@ -645,6 +645,37 @@
 - [ ] **Step 4: Run** the tests, `test/widget/*match*`, `match_screen_keeps_its_own_fixture_test` and `test/golden/` match goldens. Expected: PASS, with Timeline-mode goldens unchanged.
 - [ ] **Step 5: Commit** `feat(pitch): watch the match on the pitch`.
 
+### Task 15b: Personal stadiums and countries (owner addition, spec item 15)
+
+**Files:**
+- Modify: `lib/domain/services/match/stadium/*` (signature features, tables), `lib/features/match/pitch/*` (painters).
+- Test: `test/unit/pitch/stadium_signature_test.dart`, plus the mock goldens.
+
+- [ ] **Step 1: Write the tests.**
+  - Every nation has a signature.
+  - Signatures are deterministic per stadium.
+  - USA grounds sometimes use the gridiron-bowl style and sometimes the soccer-specific style.
+  - Crowd culture follows the region table.
+  - Weather follows climate and date and never changes an outcome.
+  - A licensing guard: no text is rendered in tifos or banners.
+- [ ] **Step 2: Run them.** They should FAIL.
+- [ ] **Step 3: Implement.** Generate mock goldens for:
+  - a ring-roof oval;
+  - an arch;
+  - a one-end "wall";
+  - a USA gridiron bowl;
+  - a USA soccer-specific ground;
+  - flares;
+  - a scarves pre-match;
+  - a tifo final;
+  - rain;
+  - snow;
+  - heat haze.
+
+  Look at every golden.
+- [ ] **Step 4: Run them.** They should PASS.
+- [ ] **Step 5: Commit** `feat(pitch): personal stadiums, crowd culture and weather`.
+
 ### Task 16: Tablet layout
 
 **Files:**

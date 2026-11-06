@@ -197,6 +197,27 @@ The owner reviewed the first mock: "not bad but can we differ the feel a bit fro
     - Roles by position and movement: overlapping or inverted full-backs, a false nine dropping deep, wide wingers against inside forwards, a holding midfielder screening.
     - AI instruction drift: the engine records the AI's minute-by-minute instruction changes in memory on `MatchResult` (outcomes unchanged), and the picture follows them.
     - Every Ruling 9 outcome class stays at 0 findings and the validator stays at 0.
+15. **Personal stadiums and countries** (owner, 2026-11-07: "i love ALL of it.. but be careful about licenses.. also USA should have a bit different stadiums sometimes").
+    - **Signature stadiums.** Each nation's main ground gets its own mix of generic features:
+      - roof: open, cantilever, full ring, or translucent canopy;
+      - an arch or crown over a stand;
+      - bowl shape: oval, open corners, or one huge end "wall";
+      - seat colour bands or patterns in the nation's colours;
+      - floodlight style: corner towers or roof-edge lights;
+      - an optional big screen and an optional running track.
+      Big football nations get a curated mix.
+    - **USA, and lighter for Canada and Mexico.** Some grounds are American-football bowls with giant end scoreboards and faint gridiron lines on the turf. Others are soccer-specific grounds with one open end and a skyline behind.
+    - **Crowd culture by region.**
+      - Flares and smoke in the Balkans, South America and Turkey.
+      - Scarves raised before kick-off in the UK and the Nordics.
+      - Drums and dancing in Africa.
+      - Tifos for finals.
+    - **More landmarks** beyond the first 30.
+    - **Weather by climate and date**, visual only:
+      - rain in Britain and the north;
+      - snow in winter in the north;
+      - heat haze in the Gulf.
+    - **Licensing.** Every feature is generic. Do not copy any real stadium's distinctive design, name or logo, and use no real club, federation or sponsor marks. Landmarks are simplified silhouettes. Protected modern buildings are rendered only as generic shapes. Never draw the Eiffel Tower's night lighting display. Crowd banners and tifos use abstract patterns and national colours only, never text or emblems.
 6. **Gate.** A second mock goes to the owner before anything else is built. It shows the same ground at day, dusk and night, three mowing patterns, and the new tokens.
 
 ## Left to the builder
