@@ -166,6 +166,12 @@ The owner reviewed the first mock: "not bad but can we differ the feel a bit fro
 10. **Tournament dressing** (owner: "final tournaments should have some stripe or something … and finals golden design").
     - Finals-tournament matches get a tournament band on the ad boards and a coloured stripe around the pitch edge.
     - The final gets a golden look: gold accents, a gold stripe, and gold confetti at full time.
+11. **No empty space around the pitch** (owner on the second mock: "behind both goals there is empty space and not stands!", and "that background is not really good").
+    - Every ground has a stand behind each goal.
+      - Mid and big grounds are closed bowls: two ends plus the sides, with a roof edge on big grounds.
+      - Small grounds have a low terrace or grass bank behind each goal.
+    - The backdrop is reworked so that terrain, skyline and landmarks fill the sky above and behind the stands, with no bare dark sky.
+    - The dark strip between the pitch and the stands is filled with ad boards, dugouts, photographers and an apron.
 6. **Gate.** A second mock goes to the owner before anything else is built. It shows the same ground at day, dusk and night, three mowing patterns, and the new tokens.
 
 ## Left to the builder
