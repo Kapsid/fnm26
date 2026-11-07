@@ -71,18 +71,31 @@ final Provider<PitchPlaybackBuilder> pitchPlaybackBuilderProvider =
           (b) => Isolate.run(b.run),
     );
 
+/// Builds a picture in place, on the UI thread: the fallback when the
+/// off-thread build fails. Tests swap in one that fails too.
+typedef PitchPlaybackInPlace = PitchPlayback Function(PitchBuild b);
+
+final Provider<PitchPlaybackInPlace> pitchPlaybackInPlaceProvider =
+    Provider<PitchPlaybackInPlace>(
+      (ref) =>
+          (b) => b.run(),
+    );
+
 /// The match screen's Pitch mode: see the library comment.
 class PitchModeController {
   PitchModeController({
     required TickerProvider vsync,
     required PitchPlaybackBuilder builder,
     required void Function() onTick,
+    PitchPlaybackInPlace? inPlace,
   }) : _vsync = vsync,
        _builder = builder,
+       _inPlace = inPlace ?? ((b) => b.run()),
        _onTick = onTick;
 
   final TickerProvider _vsync;
   final PitchPlaybackBuilder _builder;
+  final PitchPlaybackInPlace _inPlace;
   final void Function() _onTick;
 
   PitchPlayback? _playback;
@@ -91,6 +104,7 @@ class PitchModeController {
   int _builtSpeed = -1;
   int _generation = 0;
   bool _building = false;
+  bool _failed = false;
   bool _fresh = false;
   bool _busy = false;
   bool _disposed = false;
@@ -106,6 +120,10 @@ class PitchModeController {
 
   /// A new picture is being built: the clock is held.
   bool get building => _building;
+
+  /// The last build failed both off the UI thread and in place: there is
+  /// no picture for this match, and the screen shows so (never a spinner).
+  bool get failed => _failed;
 
   /// A picture told from kick-off is being built, so the one on show (if
   /// any) belongs to another moment of the match and must not be drawn.
@@ -141,6 +159,7 @@ class PitchModeController {
         ? old.script.stateAt(clock.value)
         : null;
     _building = true;
+    _failed = false;
     _fresh = state == null;
     final job = PitchBuild(
       result: result,
@@ -150,18 +169,25 @@ class PitchModeController {
       isFinal: isFinal,
       resume: state,
     );
-    PitchPlayback pb;
+    PitchPlayback? pb;
     try {
-      pb = await _builder(job);
+      try {
+        pb = await _builder(job);
+      } on Object catch (e, st) {
+        // The worker failed (an isolate that could not start, or one that
+        // died): build in place rather than leave the pitch on its spinner.
+        debugPrint('Pitch script build off the UI thread failed: $e\n$st');
+        if (_disposed || generation != _generation) return false;
+        pb = _inPlace(job);
+      }
     } on Object catch (e, st) {
-      // The worker failed (an isolate that could not start, or one that
-      // died): build in place rather than leave the pitch on its spinner.
-      debugPrint('Pitch script build off the UI thread failed: $e\n$st');
-      if (_disposed || generation != _generation) return false;
-      pb = job.run();
+      debugPrint('Pitch script build in place failed too: $e\n$st');
+      if (generation == _generation) _failed = true;
+    } finally {
+      // Whatever happened, this build is over (a later one owns the flag).
+      if (generation == _generation) _building = false;
     }
-    if (_disposed || generation != _generation) return false;
-    _building = false;
+    if (_disposed || generation != _generation || pb == null) return false;
     _playback = pb;
     _builtFor = result;
     _builtSpeed = speedStep;

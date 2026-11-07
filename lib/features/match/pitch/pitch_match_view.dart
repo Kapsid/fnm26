@@ -402,6 +402,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                               painter: _WeatherLayer(
                                 _weatherFor(),
                                 widget.clock,
+                                dpr,
                               ),
                             ),
                           ),
@@ -492,16 +493,24 @@ class _ShowLayer extends CustomPainter {
 
 /// The weather falling, scrolled with the clock: it stops when play does.
 class _WeatherLayer extends CustomPainter {
-  _WeatherLayer(this.weather, this.clock) : super(repaint: clock);
+  _WeatherLayer(this.weather, this.clock, this.pixelRatio)
+    : super(repaint: clock);
 
   final WeatherOverlay weather;
   final PitchClock clock;
+  final double pixelRatio;
 
   @override
-  void paint(Canvas canvas, Size size) =>
-      weather.paint(canvas, size, clock.value.inMicroseconds / 1e6);
+  void paint(Canvas canvas, Size size) => weather.paint(
+    canvas,
+    size,
+    clock.value.inMicroseconds / 1e6,
+    pixelRatio: pixelRatio,
+  );
 
   @override
   bool shouldRepaint(covariant _WeatherLayer old) =>
-      !identical(old.weather, weather) || !identical(old.clock, clock);
+      !identical(old.weather, weather) ||
+      !identical(old.clock, clock) ||
+      old.pixelRatio != pixelRatio;
 }

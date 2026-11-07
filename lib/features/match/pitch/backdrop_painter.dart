@@ -1108,7 +1108,9 @@ class BackdropPainter {
         _windows(canvas, sb, 1, _rng('lm-windows'));
         canvas.restore();
       }
-      // Floodlit from below.
+      // Floodlit from below, except where the lighting is itself
+      // protected: the Eiffel Tower stays a dark silhouette at night.
+      if (!LandmarkPaths.floodlitAtNight(landmark)) return;
       canvas.drawPath(
         shape,
         Paint()

@@ -9,15 +9,18 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
+import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
+import 'package:fnm/features/match/pitch/backdrop_painter.dart';
 import 'package:fnm/features/match/pitch/landmark_paths.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
+import 'package:fnm/features/match/pitch/scene_look.dart';
 import 'package:fnm/features/match/pitch/stadium_painter.dart';
 import 'package:fnm/features/match/pitch/weather_painter.dart';
 
@@ -290,7 +293,49 @@ void main() {
     });
   });
 
+  testWidgets('the falling weather is tiled at the device pixel ratio, '
+      'once', (tester) async {
+    const size = Size(390, 280);
+    final w = WeatherOverlay(WeatherKind.rain, seed: 3);
+    void frame(double t) {
+      final recorder = ui.PictureRecorder();
+      w.paint(Canvas(recorder), size, t, pixelRatio: 3);
+      recorder.endRecording().dispose();
+    }
+
+    frame(0);
+    final tile = w.debugTile!;
+    expect(tile.width, 390 * 3);
+    expect(tile.height, 280 * 3);
+    frame(1.5);
+    expect(identical(w.debugTile, tile), isTrue, reason: 'kept, not remade');
+    w.dispose();
+  });
+
   group('licensing', () {
+    test('the Eiffel Tower is never floodlit at night, only a dark '
+        'silhouette', () {
+      const size = Size(390, 280);
+      // Every screen-blended path the night backdrop draws: the up-light
+      // wash over a landmark is one.
+      int lit(LandmarkKind landmark) {
+        final c = _SpyCanvas();
+        BackdropPainter(
+          horizon: Horizon.plains,
+          city: CityStyle.oldEuropean,
+          landmark: landmark,
+          look: SceneLook.night,
+          seed: 'FRA:test',
+        ).paint(c, size, 84);
+        return c.screenPaths;
+      }
+
+      // Another landmark is lit from below at night...
+      expect(lit(LandmarkKind.colosseum), greaterThan(lit(LandmarkKind.none)));
+      // ...the Eiffel Tower is not: no more light than no landmark at all.
+      expect(lit(LandmarkKind.eiffel), lit(LandmarkKind.none));
+    });
+
     test('no text, image or emblem is drawn in the stands, the tifos, the '
         'banners or the weather', () {
       const size = Size(390, 280);
@@ -463,6 +508,14 @@ class _SpyCanvas implements Canvas {
 
   @override
   void drawPicture(ui.Picture picture) => images++;
+
+  /// Paths drawn with a screen blend (light laid over what is there).
+  int screenPaths = 0;
+
+  @override
+  void drawPath(Path path, Paint paint) {
+    if (paint.blendMode == BlendMode.screen) screenPaths++;
+  }
 
   @override
   int getSaveCount() => 1;

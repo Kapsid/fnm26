@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/painting.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 
@@ -19,7 +20,11 @@ class WeatherOverlay {
   final int seed;
 
   ui.Image? _tile;
-  Size? _tileSize;
+  (Size, double)? _tileKey;
+
+  /// The cached tile (for tests).
+  @visibleForTesting
+  ui.Image? get debugTile => _tile;
 
   /// Whether anything falls in this weather.
   bool get falls => kind == WeatherKind.rain || kind == WeatherKind.snow;
@@ -32,10 +37,16 @@ class WeatherOverlay {
     _ => Offset.zero,
   };
 
-  /// Paints the weather over [size] at [seconds] of screen time.
-  void paint(Canvas canvas, Size size, double seconds) {
+  /// Paints the weather over [size] at [seconds] of screen time. The tile
+  /// is made at [pixelRatio] (the device's), so the drops stay sharp.
+  void paint(
+    Canvas canvas,
+    Size size,
+    double seconds, {
+    double pixelRatio = 1,
+  }) {
     if (!falls || size.isEmpty) return;
-    final tile = _tileFor(size);
+    final tile = _tileFor(size, pixelRatio);
     final v = _velocity * size.height * seconds;
     final dx = v.dx % size.width;
     final dy = v.dy % size.height;
@@ -56,19 +67,19 @@ class WeatherOverlay {
     canvas.restore();
   }
 
-  ui.Image _tileFor(Size size) {
+  ui.Image _tileFor(Size size, double pixelRatio) {
     final had = _tile;
-    if (had != null && _tileSize == size) return had;
+    if (had != null && _tileKey == (size, pixelRatio)) return had;
     had?.dispose();
     final recorder = ui.PictureRecorder();
-    paintTile(Canvas(recorder), size);
+    paintTile(Canvas(recorder)..scale(pixelRatio), size);
     final picture = recorder.endRecording();
     final img = picture.toImageSync(
-      size.width.ceil(),
-      size.height.ceil(),
+      (size.width * pixelRatio).ceil(),
+      (size.height * pixelRatio).ceil(),
     );
     picture.dispose();
-    _tileSize = size;
+    _tileKey = (size, pixelRatio);
     return _tile = img;
   }
 

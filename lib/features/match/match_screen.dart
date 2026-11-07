@@ -300,6 +300,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   late final PitchModeController _pc = PitchModeController(
     vsync: this,
     builder: ref.read(pitchPlaybackBuilderProvider),
+    inPlace: ref.read(pitchPlaybackInPlaceProvider),
     onTick: _onPitchClock,
   );
   PitchPlayback? get _pitch => _pc.playback;
@@ -1011,8 +1012,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       place: (pb) => _clockDone ? pb.pacer.total : pb.endOf(_minute, _added),
     );
     if (mounted) setState(() {});
-    if (!await built || !mounted) return;
+    final shown = await built;
+    if (!mounted) return;
+    // A failed build shows its error state in place of the spinner.
     setState(() {});
+    if (!shown) return;
     if (!_onPitch) return;
     _syncPitchState(announce: true);
     _restartTimer();
@@ -2013,6 +2017,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                     names: _pc.names,
                                     onReady: _syncPitchClock,
                                   )
+                                : _pc.failed
+                                ? _PitchFailed(
+                                    onTimeline: () => _applyMode(
+                                      preview,
+                                      MatchViewMode.timeline,
+                                    ),
+                                  )
                                 : const ColoredBox(
                                     color: AppColors.surfaceContainerLowest,
                                     child: Center(
@@ -2150,4 +2161,34 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       ),
     );
   }
+}
+
+/// The pitch could not be built for this match: an error mark and the way
+/// on to the Timeline, which plays the same match (never a spinner).
+class _PitchFailed extends StatelessWidget {
+  const _PitchFailed({required this.onTimeline});
+
+  final VoidCallback onTimeline;
+
+  static const Key failedKey = Key('match.pitchFailed');
+
+  @override
+  Widget build(BuildContext context) => ColoredBox(
+    key: failedKey,
+    color: AppColors.surfaceContainerLowest,
+    child: Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error_outline, color: AppColors.outline),
+          const SizedBox(height: 8),
+          TextButton(
+            key: const Key('match.pitchFailedTimeline'),
+            onPressed: onTimeline,
+            child: Text(AppLocalizations.of(context).matchViewTimeline),
+          ),
+        ],
+      ),
+    ),
+  );
 }

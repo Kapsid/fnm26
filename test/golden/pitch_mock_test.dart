@@ -1257,7 +1257,8 @@ class _WeatherMock extends CustomPainter {
   final WeatherOverlay weather;
 
   @override
-  void paint(Canvas canvas, Size size) => weather.paint(canvas, size, 0);
+  void paint(Canvas canvas, Size size) =>
+      weather.paint(canvas, size, 0, pixelRatio: 2);
 
   @override
   bool shouldRepaint(covariant _WeatherMock old) => false;

@@ -180,6 +180,7 @@ Future<ProviderContainer> _pump(
   Map<String, Object> prefs = const {},
   bool resetPrefs = true,
   PitchPlaybackBuilder? builder,
+  PitchPlaybackInPlace? inPlace,
   WeatherKind? weather,
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
@@ -200,6 +201,8 @@ Future<ProviderContainer> _pump(
       ),
       if (weather != null)
         pitchForcedWeatherProvider.overrideWithValue(weather),
+      if (inPlace != null)
+        pitchPlaybackInPlaceProvider.overrideWithValue(inPlace),
     ],
   );
   addTearDown(c.dispose);
@@ -339,6 +342,34 @@ void main() {
     await _until(tester, () => _ready(tester));
     await _until(tester, () => _clock(tester).playing);
     await _until(tester, () => _seen(tester).clock != '0');
+  });
+
+  testWidgets('when the in-place build fails too, the pitch shows an error '
+      'and the way to the Timeline, never an endless spinner', (tester) async {
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      builder: (b) async => throw StateError('the isolate died'),
+      inPlace: (b) => throw StateError('and so did the fallback'),
+    );
+    await tester.tap(find.byKey(MatchViewChooser.pitchKey));
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    final pc = _screen(tester).pitchMode;
+    expect(pc.building, isFalse);
+    expect(pc.failed, isTrue);
+    expect(find.byKey(const Key('match.pitchFailed')), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    // The Timeline plays the match on.
+    await tester.tap(find.byKey(const Key('match.pitchFailedTimeline')));
+    await tester.pump();
+    await tester.pump();
+    expect(find.byKey(const Key('match.pitchFailed')), findsNothing);
+    expect(find.byType(PitchMatchView), findsNothing);
+    await tester.pump(const Duration(seconds: 3));
+    expect(int.parse(_seen(tester).clock), greaterThan(0));
   });
 
   testWidgets('the choice is remembered', (tester) async {

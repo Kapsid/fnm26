@@ -58,6 +58,12 @@ abstract final class LandmarkPaths {
     _ => true,
   };
 
+  /// Whether a landmark is lit from below at night. Never the Eiffel
+  /// Tower: its night lighting is a protected work, so it stays a plain
+  /// dark silhouette.
+  static bool floodlitAtNight(LandmarkKind k) =>
+      k != LandmarkKind.eiffel && k != LandmarkKind.none;
+
   // --- Helpers -----------------------------------------------------------------
 
   static Path _poly(List<(double, double)> pts) {
