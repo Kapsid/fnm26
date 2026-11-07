@@ -169,6 +169,7 @@ Future<ProviderContainer> _pump(
   required int salt,
   Map<String, Object> prefs = const {},
   bool resetPrefs = true,
+  PitchPlaybackBuilder? builder,
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
   tester.view
@@ -183,7 +184,9 @@ Future<ProviderContainer> _pump(
       pitchStadiumBakerProvider.overrideWithValue(_InstantBaker(_image)),
       // Built in place: the isolate build is checked on its own
       // (script_build_cost_test); here it would need real time.
-      pitchPlaybackBuilderProvider.overrideWithValue((b) async => b.run()),
+      pitchPlaybackBuilderProvider.overrideWithValue(
+        builder ?? (b) async => b.run(),
+      ),
     ],
   );
   addTearDown(c.dispose);
@@ -298,6 +301,31 @@ void main() {
     await _until(tester, () => _clock(tester).playing);
     await _until(tester, () => _seen(tester).clock != '0');
     expect(int.parse(_seen(tester).clock), greaterThan(0));
+  });
+
+  testWidgets('a failing off-thread build falls back to an in-place one', (
+    tester,
+  ) async {
+    var calls = 0;
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      builder: (b) async {
+        calls++;
+        throw StateError('the isolate died');
+      },
+    );
+    await tester.tap(find.byKey(MatchViewChooser.pitchKey));
+    await tester.pump();
+    await tester.pump();
+    // The worker threw, yet the picture is built and the match plays on.
+    await _until(tester, () => _screen(tester).pitchMode.playback != null);
+    expect(calls, greaterThan(0));
+    expect(_screen(tester).pitchMode.building, isFalse);
+    await _until(tester, () => _ready(tester));
+    await _until(tester, () => _clock(tester).playing);
+    await _until(tester, () => _seen(tester).clock != '0');
   });
 
   testWidgets('the choice is remembered', (tester) async {

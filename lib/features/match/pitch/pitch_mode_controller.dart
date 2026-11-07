@@ -7,6 +7,7 @@ library;
 
 import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -141,16 +142,24 @@ class PitchModeController {
         : null;
     _building = true;
     _fresh = state == null;
-    final pb = await _builder(
-      PitchBuild(
-        result: result,
-        lineups: lineups,
-        speedStep: speedStep,
-        seed: seed,
-        isFinal: isFinal,
-        resume: state,
-      ),
+    final job = PitchBuild(
+      result: result,
+      lineups: lineups,
+      speedStep: speedStep,
+      seed: seed,
+      isFinal: isFinal,
+      resume: state,
     );
+    PitchPlayback pb;
+    try {
+      pb = await _builder(job);
+    } on Object catch (e, st) {
+      // The worker failed (an isolate that could not start, or one that
+      // died): build in place rather than leave the pitch on its spinner.
+      debugPrint('Pitch script build off the UI thread failed: $e\n$st');
+      if (_disposed || generation != _generation) return false;
+      pb = job.run();
+    }
     if (_disposed || generation != _generation) return false;
     _building = false;
     _playback = pb;
