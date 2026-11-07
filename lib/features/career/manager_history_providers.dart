@@ -87,7 +87,6 @@ class ManagerHistory {
     required this.lost,
     required this.goalsFor,
     required this.goalsAgainst,
-    required this.titles,
     this.trophyCounts = const {},
     this.biggestWin,
     this.biggestLoss,
@@ -109,8 +108,10 @@ class ManagerHistory {
   final int goalsFor;
   final int goalsAgainst;
 
-  /// Total championships (World Cup + continental) won across the career.
-  final int titles;
+  /// Total championships won across the career: every trophy in the
+  /// cabinet, so the count and the shelves below it can never disagree (a
+  /// Continental Clash or a Nations Cup is a title there too).
+  int get titles => trophyCounts.values.fold(0, (a, b) => a + b);
 
   /// Trophy-cabinet tallies keyed by trophy id (see [Trophies]): how many of
   /// each the manager has won, for the cabinet display.
@@ -267,7 +268,6 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
     var lost = 0;
     var gf = 0;
     var ga = 0;
-    var titles = 0;
     for (final c in cycles) {
       played += c.played;
       won += c.won;
@@ -275,8 +275,6 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
       lost += c.lost;
       gf += c.goalsFor;
       ga += c.goalsAgainst;
-      if (c.wonWorldCup) titles++;
-      if (c.wonContinental) titles++;
     }
 
     // Trophy cabinet: every trophy the manager lifted, keyed by trophy id. Only
@@ -306,7 +304,6 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
       lost: lost,
       goalsFor: gf,
       goalsAgainst: ga,
-      titles: titles,
       trophyCounts: trophyCounts,
       biggestWin: biggestWin,
       biggestLoss: biggestLoss,
