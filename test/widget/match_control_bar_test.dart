@@ -175,4 +175,19 @@ void main() {
       );
     }
   }
+
+  // The promo reels read "TACTICS 0/5" in their Japanese and Italian shots.
+  // Those live shots were taken in English by the harness, but the pill is
+  // pinned here in every language so a hard-coded label cannot come back.
+  for (final code in AppLocalizations.supportedLocales.map(
+    (l) => l.languageCode,
+  )) {
+    if (code == 'en') continue;
+    testWidgets('the tactics pill is in $code, count and all', (tester) async {
+      await pumpWholeControlBar(tester, locale: Locale(code));
+      expect(find.textContaining('TACTICS'), findsNothing);
+      expect(find.textContaining('Tactics'), findsNothing);
+      expect(find.text('0/5'), findsOneWidget);
+    });
+  }
 }
