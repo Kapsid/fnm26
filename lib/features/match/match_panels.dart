@@ -1570,6 +1570,9 @@ class _SwingArrows extends StatelessWidget {
 /// proportions the ground was designed and checked at (390 x 280).
 const double kPitchModeAspect = 390 / 280;
 
+/// The commentary line's height under the pitch.
+const double kPitchCommentaryHeight = 44;
+
 /// Before kick-off, in the Timeline's place, for a manager who has never
 /// chosen: watch on the Pitch or follow the Timeline. The choice is kept for
 /// the next match, and the header switches it at any time.
@@ -1726,7 +1729,7 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
     final text = _line ?? AppLocalizations.of(context).matchFeedKickOff;
     return Container(
       width: double.infinity,
-      height: 44,
+      height: kPitchCommentaryHeight,
       color: AppColors.surfaceContainerLow,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
       alignment: Alignment.centerLeft,

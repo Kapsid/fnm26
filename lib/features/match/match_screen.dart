@@ -34,6 +34,7 @@ import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
+import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
@@ -130,16 +131,30 @@ class MatchScreen extends ConsumerStatefulWidget {
   ConsumerState<MatchScreen> createState() => _MatchScreenState();
 }
 
-/// An event as the screen recognises it across re-simulations: a re-sim
-/// replays every minute already shown identically, but hands out new
-/// objects.
-typedef _EventKey = (MatchEventType, int, int, int, int);
+/// What a test reads off and does to the live match screen (its state
+/// implements it): `tester.state(find.byType(MatchScreen)) as
+/// MatchScreenProbe`.
+@visibleForTesting
+abstract interface class MatchScreenProbe {
+  PitchModeController get pitchMode;
+  MatchResult? get result;
+  MatchViewMode? get mode;
 
-_EventKey _eventKey(MatchEvent e) =>
-    (e.type, e.minute, e.stoppage, e.teamNationId, e.playerId);
+  /// The events on show (the score, the Timeline and the stats read these).
+  List<MatchEvent> get shownEvents;
+
+  /// The header switch's action (a test at an interval, whose card covers
+  /// the header, uses it).
+  void switchMode();
+
+  /// Moves the Pitch clock to [t] as a jump (not play) and reads the match
+  /// off it.
+  void seekPitch(Duration t);
+}
 
 class _MatchScreenState extends ConsumerState<MatchScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin
+    implements MatchScreenProbe {
   static const _speeds = [1, 2, 3];
   static const _engine = MatchEngine();
 
@@ -281,53 +296,48 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
 
   bool get _onPitch => _mode == MatchViewMode.pitch;
 
-  /// The match's picture, the result and speed step it was built for, and
-  /// the clock that plays it. Built when Pitch mode is first wanted, and
-  /// again (resumed where it stands) after every re-simulation or change of
-  /// speed while it is on show.
-  PitchPlayback? _pitch;
-  MatchResult? _pitchFor;
-  int _pitchSpeedFor = -1;
-  PitchClock? _pitchClock;
-  PitchStadium? _stadium;
-  Map<int, String> _pitchNames = const {};
+  /// The picture, its clock and its building (see [PitchModeController]).
+  late final PitchModeController _pc = PitchModeController(
+    vsync: this,
+    builder: ref.read(pitchPlaybackBuilderProvider),
+    onTick: _onPitchClock,
+  );
+  PitchPlayback? get _pitch => _pc.playback;
+  PitchClock? get _pitchClock => _pc.clock;
   final _pitchViewKey = GlobalKey<PitchMatchViewState>();
-
-  /// Set while the screen moves the Pitch clock itself, so its listener
-  /// does not read the jump as play.
-  bool _pitchBusy = false;
 
   /// Events of the minute on the clock that the picture has not shown yet:
   /// a goal still on its way in. Hidden from the score, the Timeline and
   /// the stats until it is. Switched to the Timeline part-way through a
   /// minute, its next tick shows them before moving on.
-  Set<_EventKey> _held = const {};
+  Set<MatchEventKey> _held = const {};
 
   /// The final whistle has gone (its sound, the shootout's taker sheet).
   bool _whistled = false;
 
-  /// For tests: the picture, its clock, the result and what is on show.
-  @visibleForTesting
-  PitchPlayback? get debugPitch => _pitch;
-  @visibleForTesting
-  PitchClock? get debugPitchClock => _pitchClock;
-  @visibleForTesting
-  MatchResult? get debugResult => _result;
-  @visibleForTesting
-  MatchViewMode? get debugMode => _mode;
+  // --- MatchScreenProbe (tests) ---------------------------------------------
 
-  /// The header switch's action, for a test at an interval, where the
-  /// interval's card covers the header.
-  @visibleForTesting
-  void debugSwitchMode() => _chooseMode(
-    _livePreview!,
-    _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
-  );
-  @visibleForTesting
-  List<MatchEvent> get debugShownEvents => [
+  @override
+  PitchModeController get pitchMode => _pc;
+  @override
+  MatchResult? get result => _result;
+  @override
+  MatchViewMode? get mode => _mode;
+  @override
+  List<MatchEvent> get shownEvents => [
     for (final e in _result?.events ?? const <MatchEvent>[])
       if (_reached(e)) e,
   ];
+  @override
+  void switchMode() => _chooseMode(
+    _livePreview!,
+    _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
+  );
+  @override
+  void seekPitch(Duration t) {
+    _pc.jump(t);
+    _onPitchClock();
+  }
 
   /// The extra-time / shootout outcome for a level knockout.
   KnockoutOutcome? _koOutcome;
@@ -380,7 +390,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (e.minute != _minute) return e.minute < _minute;
     // same minute — gate stoppage by +X revealed
     return e.stoppage <= _added &&
-        (_held.isEmpty || !_held.contains(_eventKey(e)));
+        (_held.isEmpty || !_held.contains(matchEventKey(e)));
   }
 
   @override
@@ -408,9 +418,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _timer?.cancel();
     _flashTimer?.cancel();
     _penTimer?.cancel();
-    _pitchClock
-      ?..removeListener(_onPitchClock)
-      ..dispose();
+    _pc.dispose();
     super.dispose();
   }
 
@@ -491,7 +499,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _syncPitchClock();
       return;
     }
-    if (!_playing || _clockDone) return;
+    // Never under a goal flash: its timer restarts play when it clears.
+    if (!_playing || _clockDone || _goalFlash != null) return;
     _scheduleTick(_tick);
   }
 
@@ -514,7 +523,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
           _held = const {};
           tickStoppage = _minute == 90 ? _added : 0;
           for (final e in _result?.events ?? const <MatchEvent>[]) {
-            if (e.type == MatchEventType.goal && held.contains(_eventKey(e))) {
+            if (e.type == MatchEventType.goal &&
+                held.contains(matchEventKey(e))) {
               _flashGoal(e);
               scored = true;
             }
@@ -966,73 +976,52 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
 
   // --- Pitch mode ------------------------------------------------------------
 
-  /// Builds the picture for the current result and speed, unless it is
-  /// already. With [resume] (a re-simulation or a new speed while it is on
-  /// show) the new picture is told from where the old one stands and the
-  /// clock goes there: the same match position, never back. Otherwise
-  /// (first built, or wanted again after the Timeline) it is told from
-  /// kick-off and the clock goes to the end of the minute the screen is on.
-  void _ensurePitch(MatchPreview preview, {bool resume = false}) {
+  /// Builds the picture for the current result and speed (off the UI
+  /// thread), unless it is already on show. With [resume] (a re-sim or a new
+  /// speed while it is on show) it is told from where the old one stands and
+  /// the clock goes there: the same match position, never back; the old
+  /// picture stays, held, until it is in. Otherwise it is told from kick-off
+  /// and the clock goes to the end of the minute the screen is on.
+  Future<void> _rebuildPitch(
+    MatchPreview preview, {
+    bool resume = false,
+  }) async {
     final r = _result;
-    if (r == null) return;
-    if (_pitch != null &&
-        identical(_pitchFor, r) &&
-        _pitchSpeedFor == _speedIdx) {
-      return;
-    }
-    final stadium = _stadium ??= pitchStadiumForPreview(
+    if (r == null || _pc.isCurrentFor(r, _speedIdx)) return;
+    final stadium = _pc.stadium ??= pitchStadiumForPreview(
       preview,
       _seed(preview),
     );
-    if (_pitchNames.isEmpty) _pitchNames = pitchNamesForPreview(preview);
+    if (_pc.names.isEmpty) _pc.names = pitchNamesForPreview(preview);
     final clock = _pitchClock;
-    final from =
+    final fromHere =
         resume &&
-            clock != null &&
-            clock.value > Duration.zero &&
-            !clock.finished &&
-            !_clockDone
-        ? _pitch
-        : null;
-    final pb = PitchPlayback.build(
+        clock != null &&
+        clock.value > Duration.zero &&
+        !clock.finished &&
+        !_clockDone;
+    final built = _pc.build(
       result: r,
       lineups: matchLineupsFromPreview(preview, result: r, changes: _changes),
-      speed: pitchSpeedForStep(_speedIdx),
+      speedStep: _speedIdx,
       seed: _seed(preview),
       isFinal: stadium.dressing.isFinal,
-      resumeFrom: from,
-      at: clock?.value,
+      resume: fromHere,
+      place: (pb) => _clockDone ? pb.pacer.total : pb.endOf(_minute, _added),
     );
-    _pitch = pb;
-    _pitchFor = r;
-    _pitchSpeedFor = _speedIdx;
-    final c =
-        clock ??
-        (_pitchClock = PitchClock(vsync: this, pacer: pb.pacer)
-          ..addListener(_onPitchClock));
-    _pitchBusy = true;
-    c
-      ..pause()
-      ..pacer = pb.pacer
-      ..seek(
-        from != null
-            ? pb.start
-            : _clockDone
-            ? pb.pacer.total
-            : pb.endOf(_minute, _added),
-      );
-    _pitchBusy = false;
-    _lastPitchT = c.value;
+    if (mounted) setState(() {});
+    if (!await built || !mounted) return;
+    setState(() {});
+    if (!_onPitch) return;
+    _syncPitchState(announce: true);
+    _restartTimer();
   }
 
   /// After the result or the speed changed: the Pitch view, when it is on
   /// show, picks the new match up where it stands.
   void _afterPitchChange(MatchPreview preview) {
     if (!_onPitch || !mounted) return;
-    _ensurePitch(preview, resume: true);
-    setState(() {});
-    _syncPitchState(announce: true);
-    _restartTimer();
+    unawaited(_rebuildPitch(preview, resume: true));
   }
 
   /// Watches the match as [mode] from here on: the Pitch view's clock is
@@ -1041,20 +1030,32 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   void _applyMode(MatchPreview preview, MatchViewMode mode) {
     if (_mode == mode || !mounted) return;
     _stopClock();
-    if (mode == MatchViewMode.pitch) {
-      _ensurePitch(preview);
-      final pb = _pitch;
-      final clock = _pitchClock;
-      if (pb != null && clock != null) {
-        _pitchBusy = true;
-        clock.seek(_clockDone ? pb.pacer.total : pb.endOf(_minute, _added));
-        _pitchBusy = false;
-        _lastPitchT = clock.value;
-      }
-    }
     setState(() => _mode = mode);
-    if (mode == MatchViewMode.pitch && _pitch != null) {
-      _syncPitchState(announce: true);
+    if (mode == MatchViewMode.pitch) {
+      final r = _result;
+      if (r != null && _pc.isCurrentFor(r, _speedIdx)) {
+        // The picture is still this match's. Part-way through a minute
+        // with something of it still to show (paused, then the Timeline
+        // and back without a tick): it is played out from where it stood.
+        if (_held.isEmpty) {
+          _pc.jump(
+            _clockDone ? _pitch!.pacer.total : _pitch!.endOf(_minute, _added),
+          );
+        }
+        _syncPitchState(announce: true);
+      } else {
+        unawaited(_rebuildPitch(preview));
+      }
+    } else if (_started && _held.isEmpty && !_atInterval) {
+      // The Pitch view hands over the minute it was in with all of it shown:
+      // that minute is over. Its whistle goes before the Timeline plays
+      // another (a talk at 46, 91 or 106 must not re-play a minute already
+      // watched), and so does full time.
+      if (_checkHalfTime() || _checkExtraTimeBreaks()) return;
+      if (_clockDone && !_whistled) {
+        setState(_whistleFullTime);
+        return;
+      }
     }
     if (_started) _restartTimer();
   }
@@ -1066,9 +1067,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _applyMode(preview, mode);
   }
 
-  /// Plays the Pitch clock when the match should be running and the ground
-  /// is baked, and holds it otherwise. A bake finishing never starts a clock
-  /// the manager stopped: [_playing] is his.
+  /// Plays the Pitch clock when the match should be running, its picture is
+  /// in and the ground is baked, and holds it otherwise. A bake finishing
+  /// never starts a clock the manager stopped: [_playing] is his.
   void _syncPitchClock() {
     final c = _pitchClock;
     if (c == null) return;
@@ -1078,6 +1079,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         _started &&
         _playing &&
         ready &&
+        !_pc.building &&
         _goalFlash == null &&
         !_atInterval &&
         !_clockDone;
@@ -1088,74 +1090,38 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     }
   }
 
-  /// The interval whistle play has reached at screen time [t], if any: half
-  /// time, and in a level knockout the huddle and the turnaround.
-  Duration? _dueWhistle(PitchPlayback pb, Duration t) {
+  /// Every tick of the Pitch clock.
+  void _onPitchClock() {
+    if (!mounted || !_onPitch) return;
+    final pb = _pitch;
+    final clock = _pitchClock;
+    if (pb == null || clock == null || _pc.building) return;
+    // An interval stops play on its whistle, not a frame past it.
     final extra = _fullTimeMinute > 90;
-    for (final (at, taken) in [
+    final whistle = PitchModeController.dueWhistle(clock.value, [
       (pb.halfTime, _halfTimeTaken),
       (extra ? pb.extraTimeStart : null, _extraTimeStartTaken),
       (extra ? pb.extraTimeHalf : null, _extraTimeHalfTaken),
-    ]) {
-      if (at != null && !taken && t >= at) return at;
-    }
-    return null;
-  }
-
-  /// Where the Pitch clock last stood, as this screen read it.
-  Duration _lastPitchT = Duration.zero;
-
-  /// The screen time of the first event that pauses play (a goal, an
-  /// injury to one of the manager's own) that a frame of play has just run
-  /// past, if any. A jump (a seek, a re-sim) is not play and stops nowhere.
-  Duration? _dueStop(PitchPlayback pb, Duration t) {
-    final ran = t - _lastPitchT;
-    if (ran <= Duration.zero || ran > const Duration(milliseconds: 500)) {
-      return null;
-    }
-    final events = pb.result.events;
-    double? first;
-    for (var i = 0; i < events.length; i++) {
-      final e = events[i];
-      final pauses =
-          e.type == MatchEventType.goal ||
-          (e.type == MatchEventType.injury &&
-              e.teamNationId == _playerNationId &&
-              !_injuriesPrompted.contains(e.playerId));
-      if (!pauses || _reached(e) || !pb.shown(i, t)) continue;
-      final at = pb.revealAt(i);
-      if (first == null || at < first) first = at;
-    }
-    if (first == null) return null;
-    final stop = Duration(microseconds: (first * 1e6).ceil());
-    return stop < t ? stop : null;
-  }
-
-  /// Every tick of the Pitch clock.
-  void _onPitchClock() {
-    if (_pitchBusy || !mounted || !_onPitch) return;
-    final pb = _pitch;
-    final clock = _pitchClock;
-    if (pb == null || clock == null) return;
-    // An interval stops play on its whistle, not a frame past it.
-    final whistle = _dueWhistle(pb, clock.value);
+    ]);
     if (whistle != null) {
-      _pitchBusy = true;
-      clock
-        ..pause()
-        ..seek(whistle - const Duration(microseconds: 1));
-      _pitchBusy = false;
+      clock.pause();
+      _pc.jump(whistle - const Duration(microseconds: 1));
     } else {
       // So does a goal or an injury to one of his own, which pause play
-      // as they show: on its own minute, never a frame into the next.
-      final stop = _dueStop(pb, clock.value);
-      if (stop != null) {
-        _pitchBusy = true;
-        clock.seek(stop);
-        _pitchBusy = false;
-      }
+      // as they show: on its own minute, never a frame into the next, however
+      // long the frame.
+      final stop = _pc.dueStop(
+        clock.value,
+        (e) =>
+            !_reached(e) &&
+            (e.type == MatchEventType.goal ||
+                (e.type == MatchEventType.injury &&
+                    e.teamNationId == _playerNationId &&
+                    !_injuriesPrompted.contains(e.playerId))),
+      );
+      if (stop != null) _pc.jump(stop);
     }
-    _lastPitchT = clock.value;
+    _pc.markRead();
     _syncPitchState(announce: true);
     if (whistle != null && !_checkHalfTime()) _checkExtraTimeBreaks();
     if (clock.finished && !_whistled) setState(_whistleFullTime);
@@ -1166,47 +1132,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// as the Timeline plays it: a goal flashes, an injury to one of the
   /// manager's own opens the squad.
   void _syncPitchState({required bool announce}) {
-    final pb = _pitch;
-    final clock = _pitchClock;
-    if (pb == null || clock == null) return;
-    final t = clock.value;
-    final pos = pb.positionAt(t);
-    final events = pb.result.events;
+    if (_pitch == null || _pitchClock == null || _pc.building) return;
+    final events = _pitch!.result.events;
     final before = announce
         ? {
             for (final e in events)
-              if (_reached(e)) _eventKey(e),
+              if (_reached(e)) matchEventKey(e),
           }
         : null;
-    final held = <_EventKey>{};
-    for (var i = 0; i < events.length; i++) {
-      final e = events[i];
-      if (e.minute == pos.minute &&
-          e.stoppage == pos.added &&
-          !pb.shown(i, t)) {
-        held.add(_eventKey(e));
-      }
-    }
-    // Within a minute what has been shown stays shown, whatever a re-sim's
-    // new picture times it at.
-    if (pos.minute == _minute && pos.added == _added) {
-      held.retainWhere(_held.contains);
-    }
+    final now = _pc.read(minute: _minute, added: _added, held: _held);
     final changed =
-        pos.minute != _minute ||
-        pos.added != _added ||
-        held.length != _held.length ||
-        !held.every(_held.contains);
+        now.minute != _minute ||
+        now.added != _added ||
+        now.held.length != _held.length ||
+        !now.held.every(_held.contains);
     if (!changed) return;
     final arrived = <MatchEvent>[];
     setState(() {
-      _minute = pos.minute;
-      _added = pos.added;
-      _held = held;
+      _minute = now.minute;
+      _added = now.added;
+      _held = now.held;
       if (before == null) return;
       MatchEvent? goal;
       for (final e in events) {
-        if (!_reached(e) || before.contains(_eventKey(e))) continue;
+        if (!_reached(e) || before.contains(matchEventKey(e))) continue;
         if (e.type == MatchEventType.goal) goal = e;
         arrived.add(e);
       }
@@ -1250,12 +1199,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   void _skip() {
     _stopClock();
     final clock = _pitchClock;
-    if (clock != null) {
-      _pitchBusy = true;
-      clock.seek(clock.total);
-      _pitchBusy = false;
-      _lastPitchT = clock.value;
-    }
+    if (clock != null) _pc.jump(clock.total);
     final askPreview = _isShootout && !_penOrderAsked ? _livePreview : null;
     setState(() {
       _minute = _fullTimeMinute;
@@ -1777,7 +1721,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
               });
             final ft = _fullTime;
-            final inExtraTime = _minute > 90 && _minute < _fullTimeMinute;
+            // (The Pitch view plays the 120th while it is on the clock.)
+            final inExtraTime = _minute > 90 && !_clockDone;
             final inStoppage = _minute == 90 && _added > 0 && !ft;
             // While playing, the score is the running tally of shown goals,
             // extra time included; at full time it is the true recorded result
@@ -1795,7 +1740,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final awayScore = ft ? finalAway : liveAway;
             final knockout = _koOutcome;
             // Reveal the shootout as it plays out (or in full once decided).
-            final showingShootout = _isShootout && _minute >= _fullTimeMinute;
+            final showingShootout = _isShootout && _clockDone;
             final decidedByShootout = ft && (knockout?.wentToShootout ?? false);
 
             final topBar = _TopBar(
@@ -2033,10 +1978,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             }
             final pb = _pitch;
             final clock = _pitchClock;
-            final stadium = _stadium;
-            final onPitch =
-                _onPitch && pb != null && clock != null && stadium != null;
-            if (onPitch) {
+            final stadium = _pc.stadium;
+            // While a picture told from kick-off is built (the first, or
+            // back from the Timeline after a change), the old one belongs to
+            // another moment: a spinner holds its place.
+            final picture =
+                pb != null &&
+                clock != null &&
+                stadium != null &&
+                !_pc.buildingFresh;
+            if (_onPitch) {
               // Pitch mode: the match on the pitch under the score, one line
               // of commentary under it, then the momentum and the details.
               return DefaultTabController(
@@ -2052,20 +2003,35 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                           scoreboard,
                           AspectRatio(
                             aspectRatio: kPitchModeAspect,
-                            child: PitchMatchView(
-                              key: _pitchViewKey,
-                              script: pb.script,
-                              stadium: stadium,
+                            child: picture
+                                ? PitchMatchView(
+                                    key: _pitchViewKey,
+                                    script: pb.script,
+                                    stadium: stadium,
+                                    clock: clock,
+                                    names: _pc.names,
+                                    onReady: _syncPitchClock,
+                                  )
+                                : const ColoredBox(
+                                    color: AppColors.surfaceContainerLowest,
+                                    child: Center(
+                                      child: SizedBox.square(
+                                        dimension: 22,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                          if (picture)
+                            PitchCommentaryLine(
                               clock: clock,
-                              names: _pitchNames,
-                              onReady: _syncPitchClock,
-                            ),
-                          ),
-                          PitchCommentaryLine(
-                            clock: clock,
-                            lineAt: (t) =>
-                                pb.lineAt(l, t, _pitchNames, _seed(preview)),
-                          ),
+                              lineAt: (t) =>
+                                  pb.lineAt(l, t, _pc.names, _seed(preview)),
+                            )
+                          else
+                            const SizedBox(height: kPitchCommentaryHeight),
                           ?momentum,
                           ?shootout,
                           const MatchDetailTabs(withTimeline: false),

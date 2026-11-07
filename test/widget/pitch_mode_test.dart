@@ -17,8 +17,10 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
+import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
@@ -179,6 +181,9 @@ Future<ProviderContainer> _pump(
       soundHapticsEnabledProvider.overrideWith((ref) => false),
       matchAttemptSaltProvider.overrideWithValue(() => salt),
       pitchStadiumBakerProvider.overrideWithValue(_InstantBaker(_image)),
+      // Built in place: the isolate build is checked on its own
+      // (script_build_cost_test); here it would need real time.
+      pitchPlaybackBuilderProvider.overrideWithValue((b) async => b.run()),
     ],
   );
   addTearDown(c.dispose);
@@ -199,23 +204,21 @@ Future<ProviderContainer> _pump(
   return c;
 }
 
-dynamic _screen(WidgetTester tester) => tester.state(find.byType(MatchScreen));
+MatchScreenProbe _screen(WidgetTester tester) =>
+    tester.state(find.byType(MatchScreen)) as MatchScreenProbe;
 
-PitchClock _clock(WidgetTester tester) =>
-    _screen(tester).debugPitchClock as PitchClock;
+PitchClock _clock(WidgetTester tester) => _screen(tester).pitchMode.clock!;
 
-PitchPlayback _pb(WidgetTester tester) =>
-    _screen(tester).debugPitch as PitchPlayback;
+PitchPlayback _pb(WidgetTester tester) => _screen(tester).pitchMode.playback!;
 
-MatchResult _result(WidgetTester tester) =>
-    _screen(tester).debugResult as MatchResult;
+MatchResult _result(WidgetTester tester) => _screen(tester).result!;
 
 /// What the manager can read: the clock, the score and the events shown.
 ({String clock, int home, int away, String events}) _seen(
   WidgetTester tester,
 ) {
   final s = tester.widget<MatchScoreboard>(find.byType(MatchScoreboard));
-  final shown = _screen(tester).debugShownEvents as List<MatchEvent>;
+  final shown = _screen(tester).shownEvents;
   return (
     clock: s.clock,
     home: s.homeScore,
@@ -235,14 +238,14 @@ Future<void> _switch(WidgetTester tester) async {
 
 /// The header switch's action at an interval, whose card covers the header.
 Future<void> _switchUnder(WidgetTester tester) async {
-  _screen(tester).debugSwitchMode();
+  _screen(tester).switchMode();
   await tester.pump();
   await tester.pump();
 }
 
 /// Moves the Pitch clock to screen time [t] and lets the screen catch up.
 Future<void> _seek(WidgetTester tester, Duration t) async {
-  _clock(tester).seek(t);
+  _screen(tester).seekPitch(t);
   await tester.pump();
 }
 
@@ -320,7 +323,7 @@ void main() {
     await _pump(tester, preview: _preview(), salt: 9, resetPrefs: false);
     expect(find.byType(PitchMatchView), findsNothing);
     expect(find.byType(MatchViewChooser), findsNothing);
-    expect(_screen(tester).debugMode, MatchViewMode.timeline);
+    expect(_screen(tester).mode, MatchViewMode.timeline);
   });
 
   testWidgets('switching mid-match keeps minute, score and visible events '
@@ -517,7 +520,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text(enL.tacticsApply));
     await tester.pump();
-    await tester.pump();
+    await _until(tester, () => !_screen(tester).pitchMode.building);
 
     // A new picture, of the re-simulated match, picked up where the old one
     // stood: the same minute, never back, the score untouched.
@@ -545,6 +548,8 @@ void main() {
 
     // And play goes on from there.
     await _until(tester, () => _clock(tester).playing);
+    // The ticker's first frame starts it; the next ones move it.
+    await tester.pump(const Duration(milliseconds: 16));
     await tester.pump(const Duration(seconds: 1));
     expect(_clock(tester).value, greaterThan(clockAfter));
   });
@@ -641,5 +646,196 @@ void main() {
       await tester.pump(const Duration(milliseconds: 16));
     }
     expect(_clock(tester).playing, isFalse, reason: 'his pause, not ours');
+  });
+
+  // --- Fix round 1 ------------------------------------------------------------
+
+  testWidgets('a switch to the Timeline in minute 45 stops for half time '
+      'before anything of the second half', (tester) async {
+    final preview = _preview();
+    final salt = _salt(
+      preview,
+      (r) =>
+          !r.events.any((e) => e.minute >= 44 && e.minute <= 47) &&
+          r.events.any((e) => e.type == MatchEventType.goal && e.minute < 44),
+    );
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    await _seek(tester, _pb(tester).pacer.screenAt(45, 0, within: 0.5));
+    await tester.pump(const Duration(seconds: 3)); // any flash clears
+    final before = _seen(tester);
+    expect(before.clock, '45');
+    await _switch(tester);
+    // Minute 45 is over as the Pitch view hands it over: the whistle, not
+    // a 46th minute first.
+    expect(find.byType(HalfTimePrompt), findsOneWidget);
+    expect(_seen(tester), before);
+    await tester.pump(const Duration(seconds: 2));
+    expect(_seen(tester), before);
+    // The talk lands at 46: nothing watched is played again.
+    final shown = _screen(tester).shownEvents;
+    final tone = tester
+        .widget<HalfTimePrompt>(find.byType(HalfTimePrompt))
+        .options
+        .first;
+    await tester.tap(find.text(teamTalkLabel(enL, tone)).first);
+    await tester.pump();
+    final after = _screen(tester).shownEvents;
+    expect(
+      [for (final e in after) '${e.type.name} ${e.minute} ${e.playerId}'],
+      [for (final e in shown) '${e.type.name} ${e.minute} ${e.playerId}'],
+    );
+    expect(_seen(tester).clock, '45');
+  });
+
+  testWidgets('a switch to the Timeline in the last minute blows the whistle '
+      'and the shootout starts', (tester) async {
+    final preview = _preview(round: 'SF');
+    final salt = _salt(preview, (r) {
+      final et = r.extraTime;
+      return et != null &&
+          et.homeScore == et.awayScore &&
+          !r.events.any((e) => e.minute >= 119);
+    });
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    final pb = _pb(tester);
+    Future<void> through(Duration whistle, String heading) async {
+      await _seek(tester, whistle - const Duration(milliseconds: 100));
+      await _until(
+        tester,
+        () => find.text(heading).evaluate().isNotEmpty,
+      );
+      await tester.tap(find.text(enL.matchContinue).last);
+      await tester.pump();
+      await _until(tester, () => _clock(tester).playing);
+    }
+
+    await through(pb.halfTime, enL.matchHalfTime);
+    await through(pb.extraTimeStart!, enL.matchExtraTimeAhead);
+    await through(pb.extraTimeHalf!, enL.matchExtraTimeHalf);
+    await _seek(tester, pb.pacer.screenAt(120, 0, within: 0.5));
+    expect(_seen(tester).clock, 'ET 120');
+    await _switch(tester);
+    // Full time as the minute is handed over: the takers are asked for.
+    await _until(
+      tester,
+      () => find.byType(PenaltyOrderSheet).evaluate().isNotEmpty,
+    );
+  });
+
+  testWidgets('a switch to the Timeline under a goal flash does not tick on '
+      'under it', (tester) async {
+    final preview = _preview();
+    final salt = _salt(
+      preview,
+      (r) =>
+          r.events.any((e) => e.type == MatchEventType.goal && e.minute < 40),
+    );
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    final r = _result(tester);
+    final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
+    await _seek(tester, _secs(_pb(tester).revealAt(gi) - 0.2));
+    await _until(
+      tester,
+      () => find.text(enL.matchGoalShout).evaluate().isNotEmpty,
+    );
+    final at = _seen(tester).clock;
+    await _switch(tester);
+    await tester.pump(const Duration(milliseconds: 1500));
+    expect(find.text(enL.matchGoalShout), findsOneWidget);
+    expect(_seen(tester).clock, at, reason: 'no minute under the flash');
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text(enL.matchGoalShout), findsNothing);
+  });
+
+  testWidgets('back on the pitch with a goal still to come, it is played '
+      'out, not jumped past', (tester) async {
+    final preview = _preview();
+    final salt = _salt(
+      preview,
+      (r) =>
+          r.events.any((e) => e.type == MatchEventType.goal && e.minute < 40),
+    );
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    final r = _result(tester);
+    final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
+    final goal = r.events[gi];
+    final reveal = _pb(tester).revealAt(gi);
+    await _seek(tester, _secs(reveal - 0.4));
+    await tester.tap(find.byIcon(Icons.pause_rounded).first);
+    await tester.pump();
+    final held = _clock(tester).value;
+    await _switch(tester);
+    await _switch(tester);
+    expect(_clock(tester).value, held);
+    expect(find.text(enL.matchGoalShout), findsNothing);
+    expect(
+      _seen(tester).events,
+      isNot(contains('goal ${goal.minute}+0 ${goal.playerId}')),
+    );
+    await tester.tap(find.byIcon(Icons.play_arrow_rounded).first);
+    await tester.pump();
+    await _until(tester, () => _ready(tester));
+    await _until(
+      tester,
+      () => find.text(enL.matchGoalShout).evaluate().isNotEmpty,
+    );
+    expect(
+      _clock(tester).value.inMicroseconds / 1e6,
+      closeTo(reveal, 0.02),
+    );
+  });
+
+  testWidgets('a long frame still stops on the goal, not past it', (
+    tester,
+  ) async {
+    final preview = _preview();
+    final salt = _salt(
+      preview,
+      (r) =>
+          r.events.any((e) => e.type == MatchEventType.goal && e.minute < 40),
+    );
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    final r = _result(tester);
+    final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
+    final reveal = _pb(tester).revealAt(gi);
+    await _seek(tester, _secs(reveal - 0.3));
+    await tester.pump(const Duration(milliseconds: 16));
+    // A janky frame: 900 ms in one go, across the goal.
+    await tester.pump(const Duration(milliseconds: 900));
+    expect(find.text(enL.matchGoalShout), findsOneWidget);
+    expect(
+      _clock(tester).value.inMicroseconds / 1e6,
+      closeTo(reveal, 0.001),
+    );
   });
 }

@@ -31,29 +31,25 @@ class PitchPlayback {
       _lines = _commentaryCues(script);
 
   /// The picture for [result] at [speed], told from kick-off, or, with
-  /// [resumeFrom] and [at], from where that playback's picture stands at
-  /// screen time [at] (a re-simulated match or a new speed: no jump).
+  /// [resumeState] (`PitchScript.stateAt` of the picture on show), from
+  /// there (a re-simulated match or a new speed: no jump).
   factory PitchPlayback.build({
     required MatchResult result,
     required MatchLineups lineups,
     required PitchSpeed speed,
     required int seed,
     bool isFinal = false,
-    PitchPlayback? resumeFrom,
-    Duration? at,
-  }) {
-    assert(resumeFrom == null || at != null, 'a resume needs its time');
-    return PitchPlayback(
-      StoryLayer.build(
-        result: result,
-        lineups: lineups,
-        pacer: PitchPacer(result, speed),
-        seed: seed,
-        isFinal: isFinal,
-        resumeFrom: resumeFrom?.script.stateAt(at!),
-      ),
-    );
-  }
+    ScriptState? resumeState,
+  }) => PitchPlayback(
+    StoryLayer.build(
+      result: result,
+      lineups: lineups,
+      pacer: PitchPacer(result, speed),
+      seed: seed,
+      isFinal: isFinal,
+      resumeFrom: resumeState,
+    ),
+  );
 
   final PitchScript script;
   final List<double> _reveal;

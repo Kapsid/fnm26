@@ -3,9 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
-import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
-import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 
 import '../helpers/seeded_save.dart';
@@ -31,12 +29,11 @@ void main() {
     // Stopped, then on a fixed moment: the 20th minute's first staged one.
     await tester.tap(find.byIcon(Icons.pause_rounded));
     await tester.pump();
-    final screen = tester.state(find.byType(MatchScreen)) as dynamic;
-    final pb = screen.debugPitch as PitchPlayback;
-    final clock = screen.debugPitchClock as PitchClock;
+    final screen = tester.state(find.byType(MatchScreen)) as MatchScreenProbe;
+    final pb = screen.pitchMode.playback!;
     final from = pb.pacer.screenAt(20, 0).inMicroseconds / 1e6;
     final w = pb.script.windows.firstWhere((w) => w.start >= from);
-    clock.seek(
+    screen.seekPitch(
       Duration(microseconds: ((w.start + w.end) / 2 * 1e6).round()),
     );
     await tester.pump();
