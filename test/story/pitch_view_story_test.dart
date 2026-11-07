@@ -10,6 +10,8 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
+import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
+import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -60,10 +62,9 @@ class _InstantBaker extends PitchStadiumBaker {
   }) => Future.value();
 }
 
-/// The fast speed's band of screen seconds for a 90-minute match, from the
-/// pacer's own table (`PitchPacer`: fast is 60-120 s, scaled by the match's
-/// length; the moments alone may overrun it by at most 15%).
-const (double, double) _fastBand = (60.0, 120.0);
+/// The fast speed's band is the pacer's own (`PitchPacer.fastBand`); the
+/// moments alone may overrun it by at most 15% (a test-side cap, as in
+/// pitch_pacer_test).
 const double _overrun = 1.15;
 const int _fastStep = 2;
 
@@ -198,12 +199,13 @@ void main() {
     // The fast speed: the pacer's table and the clock's rate.
     final pb = _pb(tester);
     final r = pb.result;
+    final et = r.extraTime!;
     expect(r.extraTime, isNotNull);
     expect(_clock(tester).speed, pitchRateForStep(_fastStep));
     final scale = (90 + r.stoppage + 30) / 90;
     final per90 = pb.pacer.total.inMicroseconds / 1e6 / scale;
-    expect(per90, greaterThanOrEqualTo(_fastBand.$1 - 0.5));
-    expect(per90, lessThanOrEqualTo(_fastBand.$2 * _overrun));
+    expect(per90, greaterThanOrEqualTo(PitchPacer.fastBand.$1 - 0.5));
+    expect(per90, lessThanOrEqualTo(PitchPacer.fastBand.$2 * _overrun));
 
     // The picture keeps every invariant.
     expect(PitchScriptValidator.validate(pb.script), isEmpty);
@@ -269,20 +271,57 @@ void main() {
       stage.kicks,
       hasLength(outcome.homeKicks.length + outcome.awayKicks.length),
     );
+    // Each kick is four seconds: the time from one kick's start to the next
+    // is measured per kick, to within a frame or so (0.1 s).
     var played = Duration.zero;
+    // Kick 0 began before this loop did: back-date it by how far in it is.
+    final startedAt = <int, Duration>{
+      stage.index: -Duration(microseconds: (stage.seconds * 1e6).round()),
+    };
+    var lastIndex = stage.index;
     while (stage.running && played < const Duration(minutes: 3)) {
       await tester.pump(const Duration(milliseconds: 16));
       played += const Duration(milliseconds: 16);
+      if (stage.index != lastIndex) {
+        startedAt[stage.index] = played;
+        lastIndex = stage.index;
+      }
     }
     expect(stage.running, isFalse);
-    expect(
-      played.inMilliseconds / 1000,
-      closeTo(stage.kicks.length * 4.0, stage.kicks.length * 0.5 + 1),
-    );
+    expect(startedAt, hasLength(stage.kicks.length));
+    for (var k = 1; k < stage.kicks.length; k++) {
+      final secs = (startedAt[k]! - startedAt[k - 1]!).inMilliseconds / 1000;
+      expect(
+        secs,
+        closeTo(ShootoutStaging.kickSeconds, 0.1),
+        reason: 'kick ${k - 1}',
+      );
+    }
     await tester.pump();
     expect(
       tester.widget<MatchScoreboard>(find.byType(MatchScoreboard)).live,
       isFalse,
+    );
+
+    // The score on screen is the one about to be recorded: the bug's own
+    // figures, and the shootout line.
+    final homeWon = outcome.homeWon;
+    final shownHome = et.homeScore + (homeWon ? 1 : 0);
+    final shownAway = et.awayScore + (homeWon ? 0 : 1);
+    final board = tester.widget<MatchScoreboard>(find.byType(MatchScoreboard));
+    expect((board.homeScore, board.awayScore), (shownHome, shownAway));
+    expect([
+      for (final t in tester.widgetList<Text>(
+        find.descendant(
+          of: find.byType(MatchScoreboard),
+          matching: find.byType(Text),
+        ),
+      ))
+        t.data,
+    ], containsAllInOrder(['$shownHome', '$shownAway']));
+    expect(
+      find.text(enL.matchShootoutScore(outcome.homePens, outcome.awayPens)),
+      findsOneWidget,
     );
 
     // Continue records the match; the row is what was watched.
@@ -299,7 +338,6 @@ void main() {
       return fixtures.firstWhere((f) => f.id == preview.fixture.id);
     });
     expect(row!.played, isTrue);
-    final et = r.extraTime!;
     // The shootout's winner is recorded one goal up on the level score.
     expect(
       (row.homeScore, row.awayScore),

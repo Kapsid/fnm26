@@ -83,11 +83,7 @@ class PitchPacer {
       }
     }
 
-    final (lo, hi) = switch (speed) {
-      PitchSpeed.slow => (180.0, 240.0),
-      PitchSpeed.mid => (120.0, 180.0),
-      PitchSpeed.fast => (60.0, 120.0),
-    };
+    final (lo, hi) = bandOf(speed);
     final scale = slotCount / 90;
     final eventfulness = ((stagedCount + unstaged) / 40).clamp(0.0, 1.0);
     final budget = (lo + (hi - lo) * eventfulness) * scale;
@@ -110,6 +106,20 @@ class PitchPacer {
       _start[i + 1] = _start[i] + (staged[i] == 0 ? quiet : staged[i]);
     }
   }
+
+  /// The screen seconds a 90-minute match is fitted to at each speed: a quiet
+  /// match lands near the low end, an eventful one near the high end (longer
+  /// matches scale by their length).
+  static const (double, double) slowBand = (180.0, 240.0);
+  static const (double, double) midBand = (120.0, 180.0);
+  static const (double, double) fastBand = (60.0, 120.0);
+
+  /// The band of [speed].
+  static (double, double) bandOf(PitchSpeed speed) => switch (speed) {
+    PitchSpeed.slow => slowBand,
+    PitchSpeed.mid => midBand,
+    PitchSpeed.fast => fastBand,
+  };
 
   /// The least screen time a quiet minute gets.
   static const double minQuietSeconds = 0.25;
