@@ -329,6 +329,69 @@ void main() {
     expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
   });
 
+  // Players, 1.1.0: "If  is not at his best, does the side have anything?"
+  // A key man whose name cannot be read (missing, or blank in a custom
+  // world) is never asked about: the preview ends after the draw.
+  for (final names in const [<int, String>{}, {9: ''}, {9: '   '}]) {
+    testWidgets('a key man with no name ($names) is not asked about', (
+      tester,
+    ) async {
+      final fake = _FakeService();
+      await tester.binding.setSurfaceSize(const Size(500, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpApp(
+        Scaffold(
+          body: PressSheet(
+            careerId: 1,
+            conference: (
+              row: (
+                id: 45,
+                cycle: 0,
+                reason: ConferenceReason.preview,
+                fixtureId: 1,
+                triggeredOn: DateTime(2030, 6, 1),
+                status: ConferenceStatus.pending,
+              ),
+              facts: (
+                reason: ConferenceReason.preview,
+                bestPlayerId: null,
+                worstPlayerId: null,
+                hasOpenWinNext: false,
+                hasOpenJob: false,
+                playersWithOpenStatement: <int>{},
+                throwback: null,
+                preview: (
+                  campaign: PreviewCampaign.worldFinals,
+                  brief: 4,
+                  rivalNationId: 30,
+                  keyPlayerId: 9,
+                ),
+              ),
+              credibility: 20,
+              opponentNationId: 2,
+            ),
+            playerNames: names,
+            opponentName: 'Brazil',
+            competitionName: 'World Championship',
+            rivalName: 'Argentina',
+          ),
+        ),
+        overrides: [conferenceServiceProvider.overrideWithValue(fake)],
+      );
+      await tester.pumpAndSettle();
+      expect(find.text(l.pressQuestionOf(1, 2)), findsOneWidget);
+      for (var beat = 0; beat < 2; beat++) {
+        for (final t in tester.widgetList<Text>(find.byType(Text))) {
+          expect((t.data ?? '').contains('  '), isFalse, reason: t.data);
+        }
+        await tester.tap(find.byType(InkWell).first);
+        await tester.pumpAndSettle();
+      }
+      expect(fake.answers, hasLength(2));
+      expect(find.text(l.pressTomorrowsHeadline), findsOneWidget);
+    });
+  }
+
   for (final code in const ['en', 'cs', 'fr', 'it', 'pl', 'es', 'de']) {
     testWidgets('$code: a preview fits a 320 phone, every beat', (
       tester,

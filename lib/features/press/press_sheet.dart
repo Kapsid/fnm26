@@ -46,7 +46,18 @@ class PressSheet extends ConsumerStatefulWidget {
 }
 
 class _PressSheetState extends ConsumerState<PressSheet> {
-  PendingConference get _c => widget.conference;
+  /// The conference with every player he would be asked about but whose
+  /// name cannot be read left out (see [ConferenceBuilder.namedOnly]): a
+  /// question about a man is never asked with a hole where his name goes.
+  late final PendingConference _c = (
+    row: widget.conference.row,
+    facts: ConferenceBuilder.namedOnly(
+      widget.conference.facts,
+      widget.playerNames,
+    ),
+    credibility: widget.conference.credibility,
+    opponentNationId: widget.conference.opponentNationId,
+  );
 
   late final int _seed = varietySeed('conf:${_c.row.id}');
   late final List<PressReporter> _room = Press.roomFor(_seed);
