@@ -280,7 +280,7 @@ ShootoutStageController? _stage(WidgetTester tester) =>
 
 /// Plays to the final whistle of a level semi-final, names no takers (the
 /// sheet's own order) and returns once the first kick is on the pitch.
-Future<void> _toShootout(WidgetTester tester) async {
+Future<int?> _toShootout(WidgetTester tester, {bool reorder = false}) async {
   final preview = _preview(round: 'SF');
   final salt = _salt(preview, (r) {
     final et = r.extraTime;
@@ -316,6 +316,30 @@ Future<void> _toShootout(WidgetTester tester) async {
   await tester.pump(const Duration(seconds: 1));
   expect(_strip(tester).revealed, 0);
   expect(_stage(tester), isNull);
+  int? named;
+  if (reorder) {
+    // Put somebody who is not among the five at the top of the order.
+    final sheet = tester.widget<PenaltyOrderSheet>(
+      find.byType(PenaltyOrderSheet),
+    );
+    final inOrder = {for (final p in sheet.initialOrder) p.id};
+    final pick = sheet.squad.firstWhere((p) => !inOrder.contains(p.id));
+    named = pick.id;
+    await tester.tap(
+      find.descendant(
+        of: find.byType(PenaltyOrderSheet),
+        matching: find.text(sheet.initialOrder.first.name),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(PenaltyOrderSheet),
+        matching: find.text(pick.name),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 400));
+  }
   await tester.tap(
     find.descendant(
       of: find.byType(PenaltyOrderSheet),
@@ -325,6 +349,7 @@ Future<void> _toShootout(WidgetTester tester) async {
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 500));
   await _until(tester, () => _stage(tester)?.running ?? false);
+  return named;
 }
 
 void main() {
@@ -371,12 +396,26 @@ void main() {
       final s = _strip(tester);
       expect(s.revealed, anyOf(last, last + 1));
       last = s.revealed;
+      // The match is not over (Continue is not offered) while the last kick
+      // is still being played out.
+      if (s.revealed == stage.kicks.length && stage.running) {
+        expect(
+          tester.widget<MatchScoreboard>(find.byType(MatchScoreboard)).live,
+          isTrue,
+        );
+      }
       expect(
         (s.home, s.away),
         ShootoutStaging.tally(stage.kicks, s.revealed),
       );
     }
+    await tester.pump();
     expect(last, stage.kicks.length);
+    expect(
+      tester.widget<MatchScoreboard>(find.byType(MatchScoreboard)).live,
+      isFalse,
+      reason: 'full time once the stage is idle',
+    );
     expect(
       ShootoutStaging.tally(stage.kicks, last),
       (o.homePens, o.awayPens),
@@ -433,5 +472,25 @@ void main() {
             as KnockoutOutcome;
     final end = _strip(tester);
     expect((end.home, end.away), (o.homePens, o.awayPens));
+  });
+
+  testWidgets('the manager\'s own taker order is the order staged', (
+    tester,
+  ) async {
+    final named = await _toShootout(tester, reorder: true);
+    final stage = _stage(tester)!;
+    final kicks = stage.kicks;
+    // The manager is the home side: his named man steps up first.
+    expect(kicks.first.home, isTrue);
+    expect(kicks.first.kick.takerId, named);
+    // And the kick on show is his.
+    expect(stage.kick!.kick.takerId, named);
+    // His five are five different men.
+    final mine = [
+      for (final k in kicks)
+        if (k.home) k.kick.takerId,
+    ];
+    expect(mine.first, named);
+    expect(mine.take(5).toSet(), hasLength(mine.take(5).length));
   });
 }

@@ -348,43 +348,15 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
         identical(p.stage, stage) &&
         mapEquals(p.names, widget.names) &&
         p.kits == widget.stadium.kits &&
-        p.minute == m.minute &&
-        p.projection.viewport == size) {
+        p.minute == m.minute) {
       return p;
     }
     return _shootoutPainter = ShootoutPainter(
       stage: stage,
-      projection: PitchMatchView.projectionFor(size),
       kits: widget.stadium.kits,
       names: widget.names,
       lightAt: widget.stadium.lightAt,
       minute: m.minute,
-    );
-  }
-
-  /// The ground and everything on it, with the camera moved in on the goal
-  /// while a shootout is on.
-  Widget _camera(Size size, Widget ground) {
-    final stage = widget.shootout;
-    if (stage == null) return ground;
-    return ValueListenableBuilder<bool>(
-      valueListenable: stage.active,
-      builder: (context, on, child) => TweenAnimationBuilder<double>(
-        tween: Tween(end: on ? 1.0 : 0.0),
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeInOutCubic,
-        child: child,
-        builder: (context, k, child) => ClipRect(
-          child: Transform(
-            transform: ShootoutCamera.matrix(
-              PitchMatchView.projectionFor(size),
-              k,
-            ),
-            child: child,
-          ),
-        ),
-      ),
-      child: ground,
     );
   }
 
@@ -444,45 +416,42 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                   ),
                 )
               else
-                _camera(
+                _scaled(
                   size,
-                  _scaled(
-                    size,
-                    drawSize,
-                    Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        RepaintBoundary(
-                          child: CustomPaint(
-                            painter: _StadiumLayer(
-                              looks,
-                              _light,
-                              _stadiumRepaint,
-                              (r) => _stadiumRect = r,
-                            ),
+                  drawSize,
+                  Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      RepaintBoundary(
+                        child: CustomPaint(
+                          painter: _StadiumLayer(
+                            looks,
+                            _light,
+                            _stadiumRepaint,
+                            (r) => _stadiumRect = r,
                           ),
                         ),
-                        if (_show != null)
-                          RepaintBoundary(
-                            child: CustomPaint(
-                              painter: _ShowLayer(_show!, _showOpacity),
-                            ),
+                      ),
+                      if (_show != null)
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            painter: _ShowLayer(_show!, _showOpacity),
                           ),
-                        _actorsLayer(drawSize),
-                        if (_weatherFor().falls)
-                          IgnorePointer(
-                            child: RepaintBoundary(
-                              child: CustomPaint(
-                                painter: _WeatherLayer(
-                                  _weatherFor(),
-                                  widget.clock,
-                                  dpr,
-                                ),
+                        ),
+                      _actorsLayer(drawSize),
+                      if (_weatherFor().falls)
+                        IgnorePointer(
+                          child: RepaintBoundary(
+                            child: CustomPaint(
+                              painter: _WeatherLayer(
+                                _weatherFor(),
+                                widget.clock,
+                                dpr,
                               ),
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                 ),
               ValueListenableBuilder<double?>(

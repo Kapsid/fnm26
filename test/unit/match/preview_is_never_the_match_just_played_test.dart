@@ -66,48 +66,53 @@ void main() {
             .toList();
   });
 
-  test('committing a result moves the preview off the match just played', () async {
-    final c = open();
-    await c.read(seedLoaderProvider).ensureSeeded();
-    final career = (await c
-            .read(careerServiceProvider)
-            .create(
-              nationId: nations.first.id,
-              managerName: 'M',
-              rngSeed: 20260922,
-            ))
-        .valueOrNull!;
-    final careerId = career.id;
+  test(
+    'committing a result moves the preview off the match just played',
+    () async {
+      final c = open();
+      await c.read(seedLoaderProvider).ensureSeeded();
+      final career =
+          (await c
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: nations.first.id,
+                    managerName: 'M',
+                    rngSeed: 20260922,
+                  ))
+              .valueOrNull!;
+      final careerId = career.id;
 
-    // A screen has the preview open, and keeps it open across the commit —
-    // which is what the live match screen does between the final whistle and
-    // the route away from it.
-    final held = c.listen(matchPreviewProvider(careerId), (_, _) {});
-    addTearDown(held.close);
+      // A screen has the preview open, and keeps it open across the commit —
+      // which is what the live match screen does between the final whistle and
+      // the route away from it.
+      final held = c.listen(matchPreviewProvider(careerId), (_, _) {});
+      addTearDown(held.close);
 
-    final played = (await c.read(matchPreviewProvider(careerId).future))!;
-    await c
-        .read(seasonServiceProvider)
-        .playPlayerMatch(careerId, played.fixture, played.result);
+      final played = (await c.read(matchPreviewProvider(careerId).future))!;
+      await c
+          .read(seasonServiceProvider)
+          .playPlayerMatch(careerId, played.fixture, played.result);
 
-    // The fixture is in the books now — the database says so.
-    final recorded = await c
-        .read(competitionRepositoryProvider)
-        .fixturesForNation(careerId, career.nationId);
-    expect(
-      recorded.firstWhere((f) => f.id == played.fixture.id).hasResult,
-      isTrue,
-      reason: 'the setup must actually play the match',
-    );
+      // The fixture is in the books now — the database says so.
+      final recorded = await c
+          .read(competitionRepositoryProvider)
+          .fixturesForNation(careerId, career.nationId);
+      expect(
+        recorded.firstWhere((f) => f.id == played.fixture.id).hasResult,
+        isTrue,
+        reason: 'the setup must actually play the match',
+      );
 
-    // So "the next match" must not be the one just played, and the score it
-    // carries must not be the one still on the manager's screen.
-    final next = (await c.read(matchPreviewProvider(careerId).future))!;
-    expect(
-      next.fixture.id,
-      isNot(played.fixture.id),
-      reason: 'the preview is still serving the fixture that was just played',
-    );
-    expect(next.fixture.hasResult, isFalse);
-  }, timeout: const Timeout(Duration(minutes: 3)));
+      // So "the next match" must not be the one just played, and the score it
+      // carries must not be the one still on the manager's screen.
+      final next = (await c.read(matchPreviewProvider(careerId).future))!;
+      expect(
+        next.fixture.id,
+        isNot(played.fixture.id),
+        reason: 'the preview is still serving the fixture that was just played',
+      );
+      expect(next.fixture.hasResult, isFalse);
+    },
+    timeout: const Timeout(Duration(minutes: 3)),
+  );
 }

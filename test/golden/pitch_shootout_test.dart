@@ -39,8 +39,8 @@ void main() {
 
   for (final (name, result, seconds) in [
     ('kick', null, 2.85),
-    ('save', KickResult.saved, 3.4),
-    ('goal', KickResult.scored, 3.5),
+    ('save', KickResult.saved, 3.55),
+    ('goal', KickResult.scored, 3.4),
   ]) {
     testWidgets('shootout frame: $name', (tester) async {
       tester.view.devicePixelRatio = 1;

@@ -11,7 +11,6 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// technical man in the side. Shared so the tactics screen and the in-match
 /// editor cannot drift apart on who that is.
 class SetPieceTakerSummary extends StatelessWidget {
-
   const SetPieceTakerSummary({
     required this.penaltyName,
     required this.penaltyIsAuto,

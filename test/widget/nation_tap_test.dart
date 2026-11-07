@@ -7,7 +7,10 @@ import 'package:go_router/go_router.dart';
 Future<void> _pump(WidgetTester tester, Widget home) async {
   final router = GoRouter(
     routes: [
-      GoRoute(path: '/', builder: (_, _) => Scaffold(body: home)),
+      GoRoute(
+        path: '/',
+        builder: (_, _) => Scaffold(body: home),
+      ),
       GoRoute(
         path: '/nation',
         builder: (_, state) =>

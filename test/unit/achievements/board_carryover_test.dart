@@ -29,7 +29,8 @@ void main() {
     });
 
     test('a disastrous one is remembered too, and by the same amount', () {
-      final good = BoardSatisfaction.openingFrom(90) - BoardSatisfaction.neutral;
+      final good =
+          BoardSatisfaction.openingFrom(90) - BoardSatisfaction.neutral;
       final bad = BoardSatisfaction.neutral - BoardSatisfaction.openingFrom(10);
       expect(bad, good);
     });
@@ -51,7 +52,10 @@ void main() {
 
     test('it never leaves the scale', () {
       for (var previous = 0; previous <= 100; previous++) {
-        expect(BoardSatisfaction.openingFrom(previous), inInclusiveRange(0, 100));
+        expect(
+          BoardSatisfaction.openingFrom(previous),
+          inInclusiveRange(0, 100),
+        );
       }
     });
   });

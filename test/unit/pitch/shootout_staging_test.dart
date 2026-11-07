@@ -39,15 +39,16 @@ void main() {
         if (k.kick.result != KickResult.saved) continue;
         saves++;
         expect(k.kick.diveLane, k.kick.lane);
-        final f = ShootoutStaging.frameAt(k, ShootoutStaging.kickSeconds);
-        expect((f.keeper.y - f.ball.y).abs(), lessThan(1e-6));
-        expect((f.keeper.x - f.ball.x).abs(), lessThan(1e-6));
-        expect((f.keeperHeight - f.ballHeight).abs(), lessThan(1e-6));
-        // Already in his hands when the ball arrives.
+        // The keeper's hands are on the ball as it arrives, in its lane.
         final at = ShootoutStaging.frameAt(k, ShootoutStaging.resultAt);
-        expect((at.keeper.y - at.ball.y).abs(), lessThan(0.2));
-        // And the ball in the lane the record names.
-        expect(f.ball.y, closeTo(ShootoutStaging.laneY(k.kick.lane), 1e-6));
+        expect((at.keeper.y - at.ball.y).abs(), lessThan(1e-6));
+        expect((at.keeper.x - at.ball.x).abs(), lessThan(1e-6));
+        expect((at.keeperHeight - at.ballHeight).abs(), lessThan(1e-6));
+        expect(at.ball.y, closeTo(ShootoutStaging.laneY(k.kick.lane), 1e-6));
+        // And he parries it: it ends away from him, out of the goal.
+        final f = ShootoutStaging.frameAt(k, ShootoutStaging.kickSeconds);
+        expect(f.ball.x, lessThan(105 - 2));
+        expect(f.ball.distanceTo(f.keeper), greaterThan(2));
       }
     }
     expect(saves, greaterThan(10));

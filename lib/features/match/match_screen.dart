@@ -364,7 +364,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       (_koOutcome?.homeKicks.length ?? 0) + (_koOutcome?.awayKicks.length ?? 0);
 
   /// The knockout finish (ET/shootout) is fully played out.
-  bool get _knockoutDone => !_isShootout || _penRevealed >= _penTotal;
+  bool get _knockoutDone =>
+      !_isShootout ||
+      (_penRevealed >= _penTotal &&
+          // On the pitch, the last kick is still being played out until the
+          // stage is idle.
+          !(_onPitch && (_stage?.running ?? false)));
 
   /// The playing clock has run out: past the last minute, and — while still in
   /// regulation (minute 90) — through all the stoppage minutes too. Extra time
@@ -509,6 +514,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         kicks: ShootoutStaging.order(o),
         cast: ShootoutCast.of(script),
         onResult: _onShootoutResult,
+        onDone: () {
+          if (mounted) setState(() {});
+        },
       );
       if (!stage.running) stage.start(r);
       return;

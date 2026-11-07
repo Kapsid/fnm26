@@ -197,7 +197,11 @@ abstract final class ShootoutStaging {
       case KickResult.scored:
         return (at: Offset2(goalX + 1.3, y), height: 0.15);
       case KickResult.saved:
-        return (at: Offset2(goalX - 0.7, y), height: z);
+        // Parried: pushed out in front of his goal, away from the middle.
+        return (
+          at: Offset2(goalX - 4.0, goalY + sign * ((y - goalY).abs() + 1.0)),
+          height: 0.15,
+        );
       case KickResult.wide:
         return (
           at: Offset2(
@@ -246,7 +250,7 @@ abstract final class ShootoutStaging {
     if (k.result == KickResult.saved) {
       // He gets to the ball: his hands are where it arrives.
       final a = arrivalOf(k);
-      return (at: a.at, height: a.height * 0.8);
+      return (at: a.at, height: a.height);
     }
     return (
       at: Offset2(goalX - 0.4, laneY(k.diveLane)),
@@ -270,9 +274,9 @@ abstract final class ShootoutStaging {
     // The taker: from the centre circle to a few steps behind the ball,
     // a pause, the run-up, the strike and a step through it.
     const circle = Offset2(PitchDims.length / 2 + 9.15, goalY);
-    const behind = Offset2(spotX - 4.2, goalY + 2);
-    const plant = Offset2(spotX - 0.7, goalY + 0.3);
-    const through = Offset2(spotX + 0.5, goalY);
+    const behind = Offset2(spotX - 4.2, goalY + 2.2);
+    const plant = Offset2(spotX - 0.9, goalY + 1.1);
+    const through = Offset2(spotX + 0.4, goalY + 0.5);
     final Offset2 taker;
     if (s < walkEnd) {
       taker = _lerp(circle, behind, _ease(s / walkEnd));
@@ -305,15 +309,13 @@ abstract final class ShootoutStaging {
       final u = (s - strikeAt) / flight;
       ball = _lerp(spot, arrive.at, u);
       height = 0.11 + (arrive.height - 0.11) * u;
-    } else if (k.result == KickResult.saved) {
-      // Held: it goes where the keeper's hands do.
-      ball = keeper;
-      height = keeperHeight;
     } else {
       final u = _ease((s - resultAt) / 0.45);
       ball = _lerp(arrive.at, rest.at, u);
-      // A rebound off the post lifts a little on the way.
-      final lift = k.result == KickResult.post ? 0.6 * 4 * u * (1 - u) : 0.0;
+      // A rebound off the post or a parry lifts a little on the way.
+      final lift = k.result == KickResult.post || k.result == KickResult.saved
+          ? 0.6 * 4 * u * (1 - u)
+          : 0.0;
       height = arrive.height + (rest.height - arrive.height) * u + lift;
     }
     return ShootoutFrame(

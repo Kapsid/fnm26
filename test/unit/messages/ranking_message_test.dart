@@ -87,11 +87,13 @@ void main() {
     required int rank,
   }) async {
     final order = [...otherIds]..insert(rank - 1, nationId);
-    await container
-        .read(seedRankingRepositoryProvider)
-        .snapshot(careerId, drawSeedCycle(cycle, drawSlotWorldCupFinals), {
-          for (var i = 0; i < order.length; i++) order[i]: i + 1,
-        });
+    await container.read(seedRankingRepositoryProvider).snapshot(
+      careerId,
+      drawSeedCycle(cycle, drawSlotWorldCupFinals),
+      {
+        for (var i = 0; i < order.length; i++) order[i]: i + 1,
+      },
+    );
   }
 
   /// Puts the manager's nation [rank]th in the LIVE table by giving every
@@ -347,16 +349,20 @@ void main() {
       // The rollover's own snapshot: taken after the final, so it agrees with
       // the live table to the place.
       final order = [...s.otherIds]..insert(3, s.nationId);
-      await s.container
-          .read(seedRankingRepositoryProvider)
-          .snapshot(s.careerId, 1, {
-            for (var i = 0; i < order.length; i++) order[i]: i + 1,
-          });
-      await s.container.read(careerRepositoryProvider).advanceCycle(
+      await s.container.read(seedRankingRepositoryProvider).snapshot(
         s.careerId,
         1,
-        DateTime(CareerService.worldCupYear(0), 9),
+        {
+          for (var i = 0; i < order.length; i++) order[i]: i + 1,
+        },
       );
+      await s.container
+          .read(careerRepositoryProvider)
+          .advanceCycle(
+            s.careerId,
+            1,
+            DateTime(CareerService.worldCupYear(0), 9),
+          );
 
       final data = await s.container.read(
         worldRankingProvider(s.careerId).future,
@@ -369,27 +375,31 @@ void main() {
       expect(data.movement[s.nationId], 21);
     }, timeout: const Timeout(Duration(minutes: 3)));
 
-    test('a career with no championship draw yet reads the cycle start', () async {
-      final s = await open();
-      await setLiveRank(
-        s.container,
-        careerId: s.careerId,
-        nationId: s.nationId,
-        otherIds: s.otherIds,
-        rank: 4,
-      );
-      final data = await s.container.read(
-        worldRankingProvider(s.careerId).future,
-      );
-      expect(data!.baseline, RankBaseline.cycleStart);
-      // Nothing is frozen at cycle 0, so the static seed ranking stands in and
-      // the arrows still point somewhere real.
-      expect(
-        data.movement[s.nationId],
-        nations.first.ranking - 4,
-        reason: 'the seed fallback stopped working',
-      );
-    }, timeout: const Timeout(Duration(minutes: 3)));
+    test(
+      'a career with no championship draw yet reads the cycle start',
+      () async {
+        final s = await open();
+        await setLiveRank(
+          s.container,
+          careerId: s.careerId,
+          nationId: s.nationId,
+          otherIds: s.otherIds,
+          rank: 4,
+        );
+        final data = await s.container.read(
+          worldRankingProvider(s.careerId).future,
+        );
+        expect(data!.baseline, RankBaseline.cycleStart);
+        // Nothing is frozen at cycle 0, so the static seed ranking stands in and
+        // the arrows still point somewhere real.
+        expect(
+          data.movement[s.nationId],
+          nations.first.ranking - 4,
+          reason: 'the seed fallback stopped working',
+        );
+      },
+      timeout: const Timeout(Duration(minutes: 3)),
+    );
   });
 
   test('a place is worth enough points that five of them is not noise', () {

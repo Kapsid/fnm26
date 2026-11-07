@@ -643,9 +643,8 @@ yFeedProvider = FutureProvider.autoDispose.family<YTimeline, int>((
   // signed, and the room laughing under it. Read off the press row the deal
   // left, which carries the brand and the day; only this job's.
   final words = ref.watch(appLocalizationsProvider);
-  for (final a in await ref
-      .watch(careerRepositoryProvider)
-      .pressAnswers(careerId)) {
+  for (final a
+      in await ref.watch(careerRepositoryProvider).pressAnswers(careerId)) {
     final brand = Sponsors.brandOfPressKey(a.questionKey);
     if (brand == null || !brand.risky) continue;
     if (a.answeredAt.isBefore(since)) continue;

@@ -129,35 +129,38 @@ void main() {
       return (career.id, boy.id);
     }
 
-    test('is in the tactics pool and starts the match he was picked for', () async {
-      final c = open();
-      final (careerId, boy) = await withBoyInTheXi(c);
+    test(
+      'is in the tactics pool and starts the match he was picked for',
+      () async {
+        final c = open();
+        final (careerId, boy) = await withBoyInTheXi(c);
 
-      final data = (await c.read(tacticDataProvider(careerId).future))!;
-      expect(data.byId.keys, contains(boy), reason: 'tactics screen pool');
-      // byId is the FULL pool, so it would hold an uncalled boy too: the
-      // options the manager picks from are `pool`, and only a named boy is in.
-      expect(
-        data.pool.map((p) => p.id),
-        contains(boy),
-        reason: 'selectable in the tactics options',
-      );
-      final squad = (await c.read(squadDataProvider(careerId).future))!;
-      final uncalled = squad.pool.firstWhere(
-        (p) => p.age < PlayerLifecycle.seniorMinAge && p.id != boy,
-        orElse: () => fail('the pool must offer a second U-17 to leave out'),
-      );
-      expect(
-        data.pool.map((p) => p.id),
-        isNot(contains(uncalled.id)),
-        reason: 'a boy nobody named is not an option',
-      );
-      expect(data.tactic.lineup, contains(boy), reason: 'stays in the XI');
+        final data = (await c.read(tacticDataProvider(careerId).future))!;
+        expect(data.byId.keys, contains(boy), reason: 'tactics screen pool');
+        // byId is the FULL pool, so it would hold an uncalled boy too: the
+        // options the manager picks from are `pool`, and only a named boy is in.
+        expect(
+          data.pool.map((p) => p.id),
+          contains(boy),
+          reason: 'selectable in the tactics options',
+        );
+        final squad = (await c.read(squadDataProvider(careerId).future))!;
+        final uncalled = squad.pool.firstWhere(
+          (p) => p.age < PlayerLifecycle.seniorMinAge && p.id != boy,
+          orElse: () => fail('the pool must offer a second U-17 to leave out'),
+        );
+        expect(
+          data.pool.map((p) => p.id),
+          isNot(contains(uncalled.id)),
+          reason: 'a boy nobody named is not an option',
+        );
+        expect(data.tactic.lineup, contains(boy), reason: 'stays in the XI');
 
-      final preview = (await c.read(matchPreviewProvider(careerId).future))!;
-      final mine = preview.playerIsHome ? preview.homeTeam : preview.awayTeam;
-      expect(mine.xi.map((p) => p.id), contains(boy), reason: 'match XI');
-    });
+        final preview = (await c.read(matchPreviewProvider(careerId).future))!;
+        final mine = preview.playerIsHome ? preview.homeTeam : preview.awayTeam;
+        expect(mine.xi.map((p) => p.id), contains(boy), reason: 'match XI');
+      },
+    );
 
     test('plays in a match of his the world simulates', () async {
       final c = open();

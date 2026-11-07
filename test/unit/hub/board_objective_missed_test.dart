@@ -58,10 +58,11 @@ void main() {
     final player = nations
         .where((n) => n.confederation == Confederation.southAmerica)
         .reduce((a, b) => a.ranking <= b.ranking ? a : b);
-    final career = (await container
-            .read(careerServiceProvider)
-            .create(nationId: player.id, managerName: 'M'))
-        .valueOrNull!;
+    final career =
+        (await container
+                .read(careerServiceProvider)
+                .create(nationId: player.id, managerName: 'M'))
+            .valueOrNull!;
 
     final comp = container.read(competitionRepositoryProvider);
     await comp.markDrawWatched(career.id, career.cyclePointer, budgetSetupKind);
@@ -82,8 +83,7 @@ void main() {
     );
     for (final f in group) {
       final playerIsHome = f.homeNationId == career.nationId;
-      final mine =
-          playerIsHome || f.awayNationId == career.nationId;
+      final mine = playerIsHome || f.awayNationId == career.nationId;
       await comp.recordResult(
         fixtureId: f.id,
         homeScore: mine ? (playerIsHome ? 0 : 3) : 1,
@@ -120,16 +120,15 @@ void main() {
     await container.read(seasonServiceProvider).advance(career.id);
 
     container.invalidate(cycleObjectiveOutcomesProvider);
-    final cont =
-        (await container.read(
-          cycleObjectiveOutcomesProvider(career.id).future,
-        )).where((o) => o.tier == TournamentTier.continental).single;
+    final cont = (await container.read(
+      cycleObjectiveOutcomesProvider(career.id).future,
+    )).where((o) => o.tier == TournamentTier.continental).single;
     expect(cont.decided, isTrue);
     expect(cont.met, isFalse, reason: 'a group-stage exit is not winning it');
 
-    final board = (await comp.messages(career.id))
-        .where((m) => m.category == 'board')
-        .toList();
+    final board = (await comp.messages(
+      career.id,
+    )).where((m) => m.category == 'board').toList();
     expect(board, hasLength(1));
     expect(board.single.title, contains('missed'));
     expect(board.single.body, isNot(contains('what they asked for')));
@@ -151,10 +150,11 @@ void main() {
     // campaign itself. (Further down there is no brief at all.)
     final player = (nations.where((n) => n.confederation == conf).toList()
       ..sort((a, b) => a.ranking.compareTo(b.ranking)))[18];
-    final career = (await container
-            .read(careerServiceProvider)
-            .create(nationId: player.id, managerName: 'M'))
-        .valueOrNull!;
+    final career =
+        (await container
+                .read(careerServiceProvider)
+                .create(nationId: player.id, managerName: 'M'))
+            .valueOrNull!;
     final comp = container.read(competitionRepositoryProvider);
     final season = container.read(seasonServiceProvider);
     await comp.markDrawWatched(career.id, career.cyclePointer, budgetSetupKind);
@@ -211,10 +211,9 @@ void main() {
     }
 
     container.invalidate(cycleObjectiveOutcomesProvider);
-    final cont =
-        (await container.read(
-          cycleObjectiveOutcomesProvider(career.id).future,
-        )).where((o) => o.tier == TournamentTier.continental).single;
+    final cont = (await container.read(
+      cycleObjectiveOutcomesProvider(career.id).future,
+    )).where((o) => o.tier == TournamentTier.continental).single;
     expect(cont.target, 1, reason: 'the board asks for the campaign itself');
     expect(cont.decided, isTrue);
     expect(
@@ -223,9 +222,9 @@ void main() {
       reason: 'the bottom half of the group is short of the bottom rung',
     );
 
-    final board = (await comp.messages(career.id))
-        .where((m) => m.category == 'board')
-        .toList();
+    final board = (await comp.messages(
+      career.id,
+    )).where((m) => m.category == 'board').toList();
     expect(board, hasLength(1));
     expect(board.single.title, contains('missed'));
     expect(board.single.body, isNot(contains('what they asked for')));

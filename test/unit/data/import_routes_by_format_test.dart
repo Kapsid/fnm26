@@ -58,7 +58,8 @@ void main() {
     expect(
       CareerBundle.decode(file.readAsBytesSync()).rejection,
       BundleRejection.unreadable,
-      reason: 'and the career reader must refuse it, which is the whole '
+      reason:
+          'and the career reader must refuse it, which is the whole '
           'reason import has to look before it complains',
     );
   });

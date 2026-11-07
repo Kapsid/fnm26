@@ -151,7 +151,8 @@ void main() {
                   id: 900 + i,
                   nationId: nationId,
                   age: 24 + i % 6,
-                  position: PlayerPosition.values[i % PlayerPosition.values.length],
+                  position:
+                      PlayerPosition.values[i % PlayerPosition.values.length],
                   attributes: flatAttributes(70 + i % 12),
                 ),
             ],
@@ -167,10 +168,15 @@ void main() {
     addTearDown(container.dispose);
     await container.read(seedLoaderProvider).ensureSeeded();
 
-    final created = (await container
-            .read(careerServiceProvider)
-            .create(nationId: nationId, managerName: 'M', rngSeed: saveSeed))
-        .valueOrNull!;
+    final created =
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: nationId,
+                  managerName: 'M',
+                  rngSeed: saveSeed,
+                ))
+            .valueOrNull!;
     // Four cycles on — the save is in 2042 and sixteen intakes deep.
     final careers = container.read(careerRepositoryProvider);
     await careers.advanceCycle(created.id, 3, DateTime(2042, 12));
@@ -269,10 +275,11 @@ void main() {
     // explicit `agingYears: 0` would pass. Nothing writes that today, and a
     // guard that tried to judge the value would have to evaluate the call.
     final offenders = <String>[];
-    for (final file in Directory('lib')
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((f) => f.path.endsWith('.dart'))) {
+    for (final file
+        in Directory('lib')
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((f) => f.path.endsWith('.dart'))) {
       final source = file.readAsStringSync();
       for (final m in RegExp(r'\.byId\(').allMatches(source)) {
         final args = _argsOf(source, m.end - 1);

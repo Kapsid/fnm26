@@ -31,9 +31,18 @@ void main() {
           child: DashboardGrid(
             gap: 12,
             tiles: [
-              DashboardTile(span: 6, child: SizedBox(key: Key('a'), height: 40)),
-              DashboardTile(span: 6, child: SizedBox(key: Key('b'), height: 80)),
-              DashboardTile(span: 12, child: SizedBox(key: Key('c'), height: 40)),
+              DashboardTile(
+                span: 6,
+                child: SizedBox(key: Key('a'), height: 40),
+              ),
+              DashboardTile(
+                span: 6,
+                child: SizedBox(key: Key('b'), height: 80),
+              ),
+              DashboardTile(
+                span: 12,
+                child: SizedBox(key: Key('c'), height: 40),
+              ),
             ],
           ),
         ),

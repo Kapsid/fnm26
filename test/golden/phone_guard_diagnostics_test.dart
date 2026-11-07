@@ -7,7 +7,8 @@ import 'package:fnm/core/routing/app_router.dart';
 import '../helpers/seeded_save.dart';
 
 /// A log with a fixed timestamp, so the golden is the same every run.
-const String _log = '--- 2026-10-01T09:30:00.000  [hub:advance]\n'
+const String _log =
+    '--- 2026-10-01T09:30:00.000  [hub:advance]\n'
     'Bad state: an example failure\n'
     '#0      SeasonService.advance '
     '(package:fnm/features/hub/hub_providers.dart:1200:7)\n';

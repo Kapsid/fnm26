@@ -18,7 +18,11 @@ MatchTeam _team(
   final positions = Formation.f442.positions;
   final xi = [
     for (var i = 0; i < 11; i++)
-      player(id: nationId * 100 + i, nationId: nationId, position: positions[i]),
+      player(
+        id: nationId * 100 + i,
+        nationId: nationId,
+        position: positions[i],
+      ),
   ];
   return explicit
       ? MatchTeam(

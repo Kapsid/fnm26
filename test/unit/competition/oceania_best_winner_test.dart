@@ -67,20 +67,28 @@ void main() {
   test('the better group winner goes to the finals, the other to the '
       'play-off (NZ in the group of six)', () {
     // NZ wins all five: 12 points over the four comparable games.
-    final a = group(nz, [301, 302, 303, 304, 305], const [
-      (2, 0),
-      (2, 0),
-      (2, 0),
-      (2, 0),
-      (2, 0),
-    ]);
+    final a = group(
+      nz,
+      [301, 302, 303, 304, 305],
+      const [
+        (2, 0),
+        (2, 0),
+        (2, 0),
+        (2, 0),
+        (2, 0),
+      ],
+    );
     // Solomon: three wins and a draw, 10 points over four.
-    final b = group(solomon, [401, 402, 403, 404], const [
-      (1, 0),
-      (1, 0),
-      (1, 0),
-      (0, 0),
-    ]);
+    final b = group(
+      solomon,
+      [401, 402, 403, 404],
+      const [
+        (1, 0),
+        (1, 0),
+        (1, 0),
+        (0, 0),
+      ],
+    );
     expect(a.first.nationId, nz);
     expect(b.first.nationId, solomon);
     for (final groups in [
@@ -94,37 +102,53 @@ void main() {
   });
 
   test('the better winner goes direct with NZ in the group of five', () {
-    final a = group(nz, [401, 402, 403, 404], const [
-      (3, 0),
-      (3, 0),
-      (2, 0),
-      (1, 0),
-    ]);
-    final b = group(solomon, [301, 302, 303, 304, 305], const [
-      (1, 0),
-      (1, 0),
-      (1, 0),
-      (0, 0),
-      (0, 0),
-    ]);
+    final a = group(
+      nz,
+      [401, 402, 403, 404],
+      const [
+        (3, 0),
+        (3, 0),
+        (2, 0),
+        (1, 0),
+      ],
+    );
+    final b = group(
+      solomon,
+      [301, 302, 303, 304, 305],
+      const [
+        (1, 0),
+        (1, 0),
+        (1, 0),
+        (0, 0),
+        (0, 0),
+      ],
+    );
     expect(Qualification.qualifiers([b, a], 1), [nz]);
     expect(playoff([b, a]), {solomon});
   });
 
   test('level on comparable points, goal difference decides', () {
-    final a = group(nz, [301, 302, 303, 304, 305], const [
-      (4, 0),
-      (3, 0),
-      (1, 0),
-      (0, 0),
-      (2, 0),
-    ]);
-    final b = group(solomon, [401, 402, 403, 404], const [
-      (1, 0),
-      (1, 0),
-      (1, 0),
-      (0, 0),
-    ]);
+    final a = group(
+      nz,
+      [301, 302, 303, 304, 305],
+      const [
+        (4, 0),
+        (3, 0),
+        (1, 0),
+        (0, 0),
+        (2, 0),
+      ],
+    );
+    final b = group(
+      solomon,
+      [401, 402, 403, 404],
+      const [
+        (1, 0),
+        (1, 0),
+        (1, 0),
+        (0, 0),
+      ],
+    );
     expect(Qualification.qualifiers([b, a], 1), [nz]);
     expect(playoff([b, a]), {solomon});
   });
@@ -134,20 +158,28 @@ void main() {
     // NZ's raw record (11 points from five) beats Solomon's 9 from four, but
     // 5 of it came from the sixth-placed side the smaller group has no match
     // for. Over the same four games NZ has 8, Solomon 9: Solomon goes direct.
-    final a = group(nz, [301, 302, 303, 304, 305], const [
-      (1, 0),
-      (1, 0),
-      (0, 0),
-      (0, 0),
-      (5, 0),
-    ]);
+    final a = group(
+      nz,
+      [301, 302, 303, 304, 305],
+      const [
+        (1, 0),
+        (1, 0),
+        (0, 0),
+        (0, 0),
+        (5, 0),
+      ],
+    );
     // Make 305 the clear bottom side of NZ's group.
-    final b = group(solomon, [401, 402, 403, 404], const [
-      (1, 0),
-      (1, 0),
-      (1, 0),
-      (0, 1),
-    ]);
+    final b = group(
+      solomon,
+      [401, 402, 403, 404],
+      const [
+        (1, 0),
+        (1, 0),
+        (1, 0),
+        (0, 1),
+      ],
+    );
     expect(a.first.nationId, nz);
     expect(a.first.points, 11);
     expect(Qualification.qualifiers([a, b], 1), [solomon]);

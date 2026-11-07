@@ -173,7 +173,8 @@ void main() {
           expect(
             body.toLowerCase(),
             contains('${expectedMove.abs()} place'),
-            reason: 'movement must be baseline-anchored, not release-to-release',
+            reason:
+                'movement must be baseline-anchored, not release-to-release',
           );
         }
       }
@@ -296,7 +297,8 @@ void main() {
       expect(
         rolled.baseline,
         RankBaseline.worldChampionshipDraw,
-        reason: 'the screen fell back to the post-final cycle snapshot, which '
+        reason:
+            'the screen fell back to the post-final cycle snapshot, which '
             'reads zero for the entire world',
       );
       expect(
@@ -343,7 +345,8 @@ void main() {
         expect(
           m.body.toLowerCase(),
           contains('${swing.abs()} place'),
-          reason: 'the inbox and the screen must measure the same thing across '
+          reason:
+              'the inbox and the screen must measure the same thing across '
               'a championship, not just within a cycle: "${m.body}"',
         );
       }
