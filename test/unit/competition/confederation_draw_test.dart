@@ -35,7 +35,10 @@ void main() {
     return (ids: ids, conf: conf);
   }
 
-  Map<Confederation, int> worstGroup(FinalsDraw draw, Map<int, Confederation> c) {
+  Map<Confederation, int> worstGroup(
+    FinalsDraw draw,
+    Map<int, Confederation> c,
+  ) {
     final worst = <Confederation, int>{};
     for (final g in draw.groups) {
       final counted = <Confederation, int>{};
@@ -57,7 +60,11 @@ void main() {
         confederations: [for (final id in f.ids) f.conf[id]!],
         groupCount: 12,
       );
-      expect(caps[Confederation.europe], 2, reason: '16 teams across 12 groups');
+      expect(
+        caps[Confederation.europe],
+        2,
+        reason: '16 teams across 12 groups',
+      );
       expect(caps[Confederation.africa], 1);
       expect(caps[Confederation.asia], 1);
       expect(caps[Confederation.southAmerica], 1);

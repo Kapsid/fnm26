@@ -48,33 +48,38 @@ void main() {
     await container.read(seedLoaderProvider).ensureSeeded();
     nationId = nations.firstWhere((n) => n.code == 'CZE').id;
     final career =
-        (await container.read(careerServiceProvider).create(
-              nationId: nationId,
-              managerName: 'M',
-              rngSeed: 4242,
-            ))
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: nationId,
+                  managerName: 'M',
+                  rngSeed: 4242,
+                ))
             .valueOrNull!;
     careerId = career.id;
     comp = container.read(competitionRepositoryProvider);
   });
 
-  test('a cap is logged once per man per match, and repeats still count', () async {
-    // An ordinary team sheet: every man named once.
-    await comp.recordAppearances(careerId, nationId, [11, 12, 13]);
-    await comp.recordAppearances(careerId, nationId, [12, 13]);
-    // A list that names the same man twice must still count him twice — the
-    // per-row loop this replaced did, and one statement cannot touch a row
-    // twice, so the repeat is split across statements rather than dropped.
-    await comp.recordAppearances(careerId, nationId, [13, 13]);
+  test(
+    'a cap is logged once per man per match, and repeats still count',
+    () async {
+      // An ordinary team sheet: every man named once.
+      await comp.recordAppearances(careerId, nationId, [11, 12, 13]);
+      await comp.recordAppearances(careerId, nationId, [12, 13]);
+      // A list that names the same man twice must still count him twice — the
+      // per-row loop this replaced did, and one statement cannot touch a row
+      // twice, so the repeat is split across statements rather than dropped.
+      await comp.recordAppearances(careerId, nationId, [13, 13]);
 
-    final caps = {
-      for (final r in await comp.nationTopAppearances(careerId, nationId))
-        r.playerId: r.games,
-    };
-    expect(caps[11], 1);
-    expect(caps[12], 2);
-    expect(caps[13], 4);
-  });
+      final caps = {
+        for (final r in await comp.nationTopAppearances(careerId, nationId))
+          r.playerId: r.games,
+      };
+      expect(caps[11], 1);
+      expect(caps[12], 2);
+      expect(caps[13], 4);
+    },
+  );
 
   test('an empty team sheet writes nothing', () async {
     await comp.recordAppearances(careerId, nationId, const []);
@@ -97,11 +102,13 @@ void main() {
 
     // `careerStartsByPlayer` only banks FINISHED competitions, so this asserts
     // through the raw ledger instead: three appearances for 22, one a start.
-    final rows = await db.customSelect(
-      'SELECT player_id, starts, apps FROM tournament_appearances '
-      'WHERE career_id = ? ORDER BY player_id',
-      variables: [Variable.withInt(careerId)],
-    ).get();
+    final rows = await db
+        .customSelect(
+          'SELECT player_id, starts, apps FROM tournament_appearances '
+          'WHERE career_id = ? ORDER BY player_id',
+          variables: [Variable.withInt(careerId)],
+        )
+        .get();
     expect(rows.length, 2);
     expect(rows[0].read<int>('starts'), 2);
     expect(rows[0].read<int>('apps'), 2);

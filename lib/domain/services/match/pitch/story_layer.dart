@@ -869,6 +869,12 @@ class _Builder {
   /// moment): free to give way on screen.
   bool freeDrive = false;
 
+  /// The men running at full speed for their place in the shape this
+  /// step, rather than easing into it: a side's forwards and wide men on
+  /// the break, and a full-back going round his winger. Set by
+  /// [_roleShape].
+  final Set<int> sprinting = {};
+
   /// Where a resumed script starts.
   double? resumeAt;
   int ci = 0;
@@ -1001,6 +1007,10 @@ class _Builder {
           // one: away at 46', home at 91', away at 106'.
           _kickoff(r, m == 91 ? 0 : 1);
           _record(r);
+          // The loop's time may fall a hair short of the interval's: it
+          // carries on from the interval, so no later frame (a window's
+          // cut on the same instant) is recorded behind this one.
+          if (t < r) t = r;
         }
       }
       _applyDue(t, atBreak: false);
@@ -1925,7 +1935,12 @@ class _Builder {
     final kdir = _dir(kicking, minute);
     _Agent? kicker;
     for (final a in agents) {
-      if (!a.present || a.side != kicking || a.slot == sides[kicking].gkSlot) {
+      // Never a man walking off (he walks on through the cut, facing the
+      // touchline, and the ball would leave from his feet, off the spot).
+      if (!a.present ||
+          a.side != kicking ||
+          a.walkStart != null ||
+          a.slot == sides[kicking].gkSlot) {
         continue;
       }
       if (kicker == null ||
@@ -1933,7 +1948,9 @@ class _Builder {
         kicker = a;
       }
     }
-    kicker!.pos = Offset2(centre.x - kdir * ballLead, centre.y);
+    kicker!
+      ..pos = Offset2(centre.x - kdir * ballLead, centre.y)
+      ..facing = kdir > 0 ? 0 : math.pi;
     // Spread anybody standing too close.
     for (var it = 0; it < 60; it++) {
       var moved = false;
@@ -2018,6 +2035,19 @@ class _Builder {
       nextAction = t + 0.25;
       return;
     }
+    // On the break the ball only goes forward: with nobody well ahead to
+    // play it to, the carrier runs it at goal himself.
+    if (!intercept &&
+        t < sides[a.side].counterUntil &&
+        (leadSide == null || leadSide == a.side)) {
+      final minute = pacer.matchAt(_dur(t)).minute;
+      final dir = _dir(a.side, minute);
+      final from = xToDepth(a.pos.x, dir);
+      if (from < 80 && xToDepth(target.pos.x, dir) - from < 12) {
+        nextAction = t + 0.2;
+        return;
+      }
+    }
     final plan = _planFlight(
       t,
       a,
@@ -2083,7 +2113,7 @@ class _Builder {
     final direct = (side.instr.directness - 50) / 50;
     final breaking = t < side.counterUntil;
     var lStar = (12 + 0.2 * c + direct * 12).clamp(10.0, 38.0);
-    if (breaking) lStar = math.max(lStar, 24);
+    if (breaking) lStar = math.max(lStar, 28);
     final reach = 42 + math.max(0, direct) * 14;
     var target = spellDepth;
     double? lateralTarget;
@@ -2124,7 +2154,7 @@ class _Builder {
       }
       var score =
           -(d - lStar).abs() / 8 -
-          (gain - want).abs() / 7 +
+          (gain - want).abs() / (breaking ? 3 : 7) +
           open / 4 +
           (lane < 1.8 ? -2 : 0) +
           rng.nextDouble() * 1.2;
@@ -2373,10 +2403,20 @@ class _Builder {
             depth = math.min(depth, side.backLine + 2);
           } else if (inPossession && overlap) {
             final w = wingerFor(flank);
-            final wd = w == null ? depth : places[w]!.$1;
-            // Round the outside of his winger, as far as the line allows.
+            // Beyond where the winger is now as much as where his place is
+            // (a winger running with the ball is ahead of his place).
+            final dir = _dir(s, pacer.matchAt(_dur(t)).minute);
+            final wd = w == null
+                ? depth
+                : math.max(
+                    places[w]!.$1,
+                    xToDepth(agents[side.owner[w]!].pos.x, dir),
+                  );
+            // Round the outside of his winger, as far as the line allows,
+            // and at a sprint: the overlap is a run, not a drift.
             depth = math.max(depth, math.min(wd + 10, cap - 0.5));
             lat = flank * 30.0;
+            sprinting.add(side.owner[i]!);
           } else if (inPossession && invert) {
             depth = side.backLine + 0.3 * length;
             lat = flank * 9.0;
@@ -2404,7 +2444,7 @@ class _Builder {
             // In off the flank: the half-space, a step deeper when his
             // full-back is going round him.
             lat = flank * 13.0;
-            if (overlapped) depth = math.min(depth, cap - 11);
+            if (overlapped) depth = math.min(depth, cap - 14);
           } else if (lead) {
             lat = flank * math.max(lat.abs(), 27.0);
           }
@@ -2435,8 +2475,12 @@ class _Builder {
         default:
           break;
       }
-      if (breaking && p.category == PositionCategory.forward) {
-        depth = math.max(depth, math.min(ballDepth + 16, cap - 0.5));
+      // On the break the forwards and the wide men sprint beyond the ball
+      // at once, for the ball played forward early.
+      if (breaking && (p.category == PositionCategory.forward || isWinger(p))) {
+        final ahead = p.category == PositionCategory.forward ? 24 : 16;
+        depth = math.max(depth, math.min(ballDepth + ahead, cap - 0.5));
+        sprinting.add(side.owner[i]!);
       }
       places[i] = (depth, lat);
     }
@@ -2479,6 +2523,7 @@ class _Builder {
     final plan = activePlan;
     final state = inWindow && plan is! _Hold ? _state(t0) : null;
 
+    sprinting.clear();
     final anchors = <int, Offset2>{
       ..._anchors(0, minute, t0, ball, possession == 0),
       ..._anchors(1, minute, t0, ball, possession == 1),
@@ -2711,8 +2756,9 @@ class _Builder {
       final targetDepth = lead != null && lead.$1 == a.side
           ? math.min(xToDepth(lead.$2.x, dir), 86)
           : spellDepth;
-      if (t < side.counterUntil && lead == null) {
-        // On the break: straight at goal, at speed.
+      if (t < side.counterUntil && (lead == null || lead.$1 == a.side)) {
+        // On the break: straight at goal, at speed (on into his side's own
+        // moment, when that is the next one).
         final tgt = Offset2(depthToX(math.min(depth + 10, 86), dir), a.pos.y);
         return (tgt, 8.5, 2);
       }
@@ -2761,10 +2807,9 @@ class _Builder {
       return (spot, 5 + side.instr.pressing * 0.025, 1);
     }
     final dist = a.pos.distanceTo(anchor);
-    final speed = (2.5 + dist * 0.5 + side.instr.tempo * 0.008).clamp(
-      2.5,
-      6.5,
-    );
+    final speed = sprinting.contains(a.index) && dist > 2
+        ? 8.0
+        : (2.5 + dist * 0.5 + side.instr.tempo * 0.008).clamp(2.5, 6.5);
     freeDrive = true;
     return (anchor, speed, 1);
   }

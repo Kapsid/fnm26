@@ -3,21 +3,24 @@ import 'package:fnm/domain/services/player/intake_standing.dart';
 
 void main() {
   group('IntakeStanding.bonus', () {
-    test('a nation climbing the ladder produces better boys than a falling one', () {
-      final rising = IntakeStanding.bonus(
-        worldRank: 30,
-        rankChangeOverCycle: 25,
-        titlesWon: const {},
-      );
-      final falling = IntakeStanding.bonus(
-        worldRank: 30,
-        rankChangeOverCycle: -25,
-        titlesWon: const {},
-      );
-      expect(rising, greaterThan(falling));
-      expect(rising, greaterThan(0));
-      expect(falling, lessThan(0));
-    });
+    test(
+      'a nation climbing the ladder produces better boys than a falling one',
+      () {
+        final rising = IntakeStanding.bonus(
+          worldRank: 30,
+          rankChangeOverCycle: 25,
+          titlesWon: const {},
+        );
+        final falling = IntakeStanding.bonus(
+          worldRank: 30,
+          rankChangeOverCycle: -25,
+          titlesWon: const {},
+        );
+        expect(rising, greaterThan(falling));
+        expect(rising, greaterThan(0));
+        expect(falling, lessThan(0));
+      },
+    );
 
     test('the bonus stays inside a band a generation cannot break', () {
       final best = IntakeStanding.bonus(
@@ -117,13 +120,12 @@ void main() {
 
   group('measured', () {
     test('the range, printed for the balance record', () {
-      String at(int rank, int change, Set<String> titles) => IntakeStanding
-          .bonus(
+      String at(int rank, int change, Set<String> titles) =>
+          IntakeStanding.bonus(
             worldRank: rank,
             rankChangeOverCycle: change,
             titlesWon: titles,
-          )
-          .toStringAsFixed(4);
+          ).toStringAsFixed(4);
       // Not assertions — a readable trace of what the dial is set to.
       // ignore: avoid_print
       print(

@@ -200,6 +200,38 @@ void main() {
     }
   });
 
+  // Task 15c f: the owner saw off-ball men stand about next to the net.
+  // Outside set pieces and goal celebrations, at most four of the side
+  // defending a goal (its keeper with three more) are within 6 m of its
+  // line across the box, and the attackers the moment does not name never
+  // park there.
+  test('off-ball men never crowd a goal line in play', () {
+    var defenders = 0.0;
+    var attackers = 0.0;
+    final at = <String>[];
+    for (var seed = 0; seed < 200; seed++) {
+      final m = _match(seed);
+      final speed = PitchSpeed.values[seed % 3];
+      final a = PitchAudit(_script(m, speed, seed: seed), 'match $seed')
+        ..goalLineCrowds();
+      final d = a.worst['goal line: defenders'] ?? 0;
+      final k = a.worst['goal line: attackers'] ?? 0;
+      if (d > 3 || k > 2) at.add('match $seed: $d defenders, $k attackers');
+      defenders = math.max(defenders, d);
+      attackers = math.max(attackers, k);
+    }
+    // ignore: avoid_print
+    print(
+      'goal line, most outfield men within 6 m: defenders $defenders, '
+      'attackers $attackers; ${at.length} matches over\n'
+      '${at.take(10).join('\n')}',
+    );
+    // The limits equal today's worst (no headroom): a tripwire, so any
+    // staging change that brings men back onto the line is seen at once.
+    expect(defenders, lessThanOrEqualTo(3));
+    expect(attackers, lessThanOrEqualTo(2));
+  });
+
   test('a 120-minute match builds quickly', () {
     for (var seed = 0; seed < 60; seed += 3) {
       final m = _match(seed);

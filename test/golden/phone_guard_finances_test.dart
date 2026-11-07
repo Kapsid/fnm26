@@ -37,15 +37,17 @@ void main() {
   testWidgets('finances_phone_invested_tall', (tester) async {
     final save = await seedSave(tester);
     await tester.runAsync(
-      () => save.container
-          .read(careerRepositoryProvider)
-          .setInvestment(save.careerId, save.career.cyclePointer, (
-            youth: 8000000,
-            commercial: 4000000,
-            medical: 2000000,
-            naturalization: 0,
-            boardRelations: 1000000,
-          )),
+      () => save.container.read(careerRepositoryProvider).setInvestment(
+        save.careerId,
+        save.career.cyclePointer,
+        (
+          youth: 8000000,
+          commercial: 4000000,
+          medical: 2000000,
+          naturalization: 0,
+          boardRelations: 1000000,
+        ),
+      ),
     );
     await pumpRoute(
       tester,

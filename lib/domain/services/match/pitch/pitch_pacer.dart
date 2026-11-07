@@ -59,6 +59,11 @@ class PitchPacer {
         }
       }
     }
+    // A set piece that comes to nothing is not staged (the owner's ruling:
+    // a restart is shown only when it leads to an action). Its time goes
+    // to the open play around it: it still counts toward how eventful the
+    // match is, so the budget stays what it was.
+    var unstaged = 0;
     for (final m in r.moments) {
       if (mergedInto.containsKey(m)) {
         _lengths[m] = 0;
@@ -66,7 +71,11 @@ class PitchPacer {
       }
       final seconds = _seconds(m, speed, mergedShots[m]);
       _lengths[m] = seconds;
-      if (seconds > 0) add(m.minute, m.stoppage, seconds);
+      if (seconds > 0) {
+        add(m.minute, m.stoppage, seconds);
+      } else if (m is SetPieceMoment && _isStaged(m)) {
+        unstaged++;
+      }
     }
     for (final e in r.events) {
       if (e.type == MatchEventType.injury) {
@@ -74,13 +83,9 @@ class PitchPacer {
       }
     }
 
-    final (lo, hi) = switch (speed) {
-      PitchSpeed.slow => (180.0, 240.0),
-      PitchSpeed.mid => (120.0, 180.0),
-      PitchSpeed.fast => (60.0, 120.0),
-    };
+    final (lo, hi) = bandOf(speed);
     final scale = slotCount / 90;
-    final eventfulness = (stagedCount / 40).clamp(0.0, 1.0);
+    final eventfulness = ((stagedCount + unstaged) / 40).clamp(0.0, 1.0);
     final budget = (lo + (hi - lo) * eventfulness) * scale;
 
     var stagedTotal = 0.0;
@@ -101,6 +106,20 @@ class PitchPacer {
       _start[i + 1] = _start[i] + (staged[i] == 0 ? quiet : staged[i]);
     }
   }
+
+  /// The screen seconds a 90-minute match is fitted to at each speed: a quiet
+  /// match lands near the low end, an eventful one near the high end (longer
+  /// matches scale by their length).
+  static const (double, double) slowBand = (180.0, 240.0);
+  static const (double, double) midBand = (120.0, 180.0);
+  static const (double, double) fastBand = (60.0, 120.0);
+
+  /// The band of [speed].
+  static (double, double) bandOf(PitchSpeed speed) => switch (speed) {
+    PitchSpeed.slow => slowBand,
+    PitchSpeed.mid => midBand,
+    PitchSpeed.fast => fastBand,
+  };
 
   /// The least screen time a quiet minute gets.
   static const double minQuietSeconds = 0.25;
@@ -170,8 +189,9 @@ class PitchPacer {
   /// and no moment drops below one second. A goal adds 2.5 s. A set piece
   /// that leads to a shot is one moment: its length plus 1.5 s, carried by the
   /// set piece (the folded shot reports zero). Moments that are not staged
-  /// (routine set pieces, fouls without a card, offsides that end nothing)
-  /// have no length.
+  /// (routine set pieces, corners, free kicks and long throws that lead to
+  /// no shot, fouls without a card, offsides that end nothing) have no
+  /// length.
   Duration momentLength(MatchMoment m) =>
       _dur(_lengths[m] ?? _seconds(m, _speed, null));
 
@@ -237,8 +257,9 @@ class PitchPacer {
         return at(_shot, minorShot ? _Tier.minor : _Tier.standard);
       case SetPieceMoment p:
         if (!_isStaged(p)) return 0;
+        // Staged only when it leads to a shot (folded into it).
+        if (folded == null) return 0;
         final base = _setPieceSeconds(p);
-        if (folded == null) return at(base, _Tier.standard);
         final merged = base + _mergeExtra;
         if (_keyShot(folded)) {
           return merged + (folded.outcome == ShotOutcome.goal ? _goalExtra : 0);

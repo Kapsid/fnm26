@@ -122,7 +122,10 @@ void main() {
     final seeded = List.generate(16, (i) => i + 1);
     // Runner-up 16 came second in seed 1's group.
     final group = {1: 'W1', 16: 'W1'};
-    final pairs = NationsCups.roundOf16Pairs(seeded, (id) => group[id] ?? '$id');
+    final pairs = NationsCups.roundOf16Pairs(
+      seeded,
+      (id) => group[id] ?? '$id',
+    );
     expect(pairs.first, (1, 15));
     expect(pairs[4], (2, 16));
   });

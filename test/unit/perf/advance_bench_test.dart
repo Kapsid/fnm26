@@ -65,11 +65,13 @@ void main() {
         nations.where((n) => n.confederation == Confederation.europe).toList()
           ..sort((a, b) => a.ranking.compareTo(b.ranking));
     final career =
-        (await container.read(careerServiceProvider).create(
-              nationId: europeans.first.id,
-              managerName: 'M',
-              rngSeed: 20260921,
-            ))
+        (await container
+                .read(careerServiceProvider)
+                .create(
+                  nationId: europeans.first.id,
+                  managerName: 'M',
+                  rngSeed: 20260921,
+                ))
             .valueOrNull!;
 
     final season = container.read(seasonServiceProvider);
@@ -80,13 +82,15 @@ void main() {
     final total = Stopwatch();
     for (var i = 0; i < 300; i++) {
       steps = i + 1;
-      final before =
-          (await comp.allFixtures(career.id)).where((f) => f.hasResult).length;
+      final before = (await comp.allFixtures(
+        career.id,
+      )).where((f) => f.hasResult).length;
       total.start();
       await season.advance(career.id);
       total.stop();
-      final after =
-          (await comp.allFixtures(career.id)).where((f) => f.hasResult).length;
+      final after = (await comp.allFixtures(
+        career.id,
+      )).where((f) => f.hasResult).length;
       fixtures = after;
       if (after == before) break;
       if (await comp.worldChampion(career.id) != null) break;

@@ -7,17 +7,16 @@ import 'package:fnm/domain/services/squad/nomination.dart';
 /// the window's first match, a send-off friendly. The window is the
 /// tournament's.
 void main() {
-  Fixture f(int id, DateTime date, String round, {int matchday = 1}) =>
-      Fixture(
-        id: id,
-        careerId: 1,
-        competitionId: 1,
-        homeNationId: 1,
-        awayNationId: 2,
-        date: date,
-        matchday: matchday,
-        round: round,
-      );
+  Fixture f(int id, DateTime date, String round, {int matchday = 1}) => Fixture(
+    id: id,
+    careerId: 1,
+    competitionId: 1,
+    homeNationId: 1,
+    awayNationId: 2,
+    date: date,
+    matchday: matchday,
+    round: round,
+  );
 
   test('warm-ups then the finals: the window is led by the finals opener', () {
     final fixtures = [

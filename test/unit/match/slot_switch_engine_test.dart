@@ -18,7 +18,11 @@ void main() {
 
   List<Player> xi(int nationId, List<PlayerPosition> positions) => [
     for (var i = 0; i < 11; i++)
-      player(id: nationId * 100 + i, nationId: nationId, position: positions[i]),
+      player(
+        id: nationId * 100 + i,
+        nationId: nationId,
+        position: positions[i],
+      ),
   ];
 
   test('the team sheet hands the engine the switched slot', () {

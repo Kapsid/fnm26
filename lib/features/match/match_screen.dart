@@ -26,6 +26,8 @@ import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
+import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
+    show ShootoutCast, ShootoutStaging;
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
@@ -39,6 +41,7 @@ import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
@@ -52,6 +55,7 @@ import 'package:go_router/go_router.dart';
 
 part 'match_frame.dart';
 part 'match_panels.dart';
+part 'match_score_bug.dart';
 part 'match_tablet_layout.dart';
 
 /// The maximum substitutions a manager may make in a match.
@@ -298,12 +302,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   bool get _onPitch => _mode == MatchViewMode.pitch;
 
   /// The picture, its clock and its building (see [PitchModeController]).
-  late final PitchModeController _pc = PitchModeController(
-    vsync: this,
-    builder: ref.read(pitchPlaybackBuilderProvider),
-    inPlace: ref.read(pitchPlaybackInPlaceProvider),
-    onTick: _onPitchClock,
-  );
+  /// Made in [initState], so [dispose] never has to reach for `ref`.
+  late final PitchModeController _pc;
+
+  /// Watches the app going to the background and back (see [_inForeground]).
+  late final AppLifecycleListener _lifecycle;
+
+  /// Whether the app is in front of the manager. Away (the phone locked, the
+  /// app switched), the Pitch clock is held where it stands and played on
+  /// from there when he is back: nothing is skipped while he is not looking.
+  bool _inForeground = true;
   PitchPlayback? get _pitch => _pc.playback;
   PitchClock? get _pitchClock => _pc.clock;
   final _pitchViewKey = GlobalKey<PitchMatchViewState>();
@@ -362,7 +370,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       (_koOutcome?.homeKicks.length ?? 0) + (_koOutcome?.awayKicks.length ?? 0);
 
   /// The knockout finish (ET/shootout) is fully played out.
-  bool get _knockoutDone => !_isShootout || _penRevealed >= _penTotal;
+  bool get _knockoutDone =>
+      !_isShootout ||
+      (_penRevealed >= _penTotal &&
+          // On the pitch, the last kick is still being played out until the
+          // stage is idle.
+          !(_onPitch && (_stage?.running ?? false)));
 
   /// The playing clock has run out: past the last minute, and — while still in
   /// regulation (minute 90) — through all the stoppage minutes too. Extra time
@@ -392,12 +405,27 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (e.minute != _minute) return e.minute < _minute;
     // same minute — gate stoppage by +X revealed
     return e.stoppage <= _added &&
-        (_held.isEmpty || !_held.contains(matchEventKey(e)));
+        (_held.isEmpty || !_held.contains(_keyOf(e)));
+  }
+
+  /// [e]'s key (see [MatchEventKey]): among the picture's events when it is
+  /// one of them, otherwise the result's.
+  MatchEventKey _keyOf(MatchEvent e) {
+    final pitch = _pitch?.result.events;
+    return (pitch == null ? null : matchEventKeyIn(pitch, e)) ??
+        matchEventKey(_result?.events ?? const [], e);
   }
 
   @override
   void initState() {
     super.initState();
+    _pc = PitchModeController(
+      vsync: this,
+      builder: ref.read(pitchPlaybackBuilderProvider),
+      inPlace: ref.read(pitchPlaybackInPlaceProvider),
+      onTick: _onPitchClock,
+    );
+    _lifecycle = AppLifecycleListener(onStateChange: _onAppState);
     // Restore the playback speed chosen in a previous match this session...
     _speedIdx = ref.read(matchSpeedProvider);
     // ...and, if this is the first match of the session, the one this CAREER
@@ -415,11 +443,20 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     );
   }
 
+  void _onAppState(AppLifecycleState state) {
+    final front = state == AppLifecycleState.resumed;
+    if (front == _inForeground) return;
+    _inForeground = front;
+    _syncPitchClock();
+  }
+
   @override
   void dispose() {
+    _lifecycle.dispose();
     _timer?.cancel();
     _flashTimer?.cancel();
     _penTimer?.cancel();
+    _stage?.dispose();
     _pc.dispose();
     super.dispose();
   }
@@ -466,9 +503,55 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _startShootout();
   }
 
-  /// Starts revealing the shootout kicks one at a time.
+  /// Starts revealing the shootout kicks one at a time: on the Timeline a
+  /// strip ticking every 750 ms, on the pitch each kick staged in full.
   void _startShootout() {
-    if (_penTimer != null) return;
+    _shootoutStarted = true;
+    _driveShootout();
+  }
+
+  /// Whether the shootout has begun (the takers are named): from here the
+  /// kicks run, on whichever view the manager is on.
+  bool _shootoutStarted = false;
+
+  /// The shootout on the pitch, made when the first kick is staged.
+  ShootoutStageController? _stage;
+
+  /// Runs the rest of the shootout on the view the manager is on now. It is
+  /// the one place that starts or stops either reveal, so a switch between
+  /// the Timeline and the pitch mid-shootout carries on from the same tally.
+  void _driveShootout() {
+    final r = _penRevealed;
+    if (!_shootoutStarted || r >= _penTotal) {
+      _penTimer?.cancel();
+      _stage?.stop();
+      return;
+    }
+    if (_onPitch) {
+      final script = _pitch?.script;
+      final o = _koOutcome;
+      // Waits for the picture (a bake, a build): onReady drives it again.
+      if (script == null ||
+          o == null ||
+          !(_pitchViewKey.currentState?.ready.value ?? false)) {
+        return;
+      }
+      _penTimer?.cancel();
+      _penTimer = null;
+      final stage = _stage ??= ShootoutStageController(
+        vsync: this,
+        kicks: ShootoutStaging.order(o),
+        cast: ShootoutCast.of(script),
+        onResult: _onShootoutResult,
+        onDone: () {
+          if (mounted) setState(() {});
+        },
+      );
+      if (!stage.running) stage.start(r);
+      return;
+    }
+    _stage?.stop();
+    if (_penTimer?.isActive ?? false) return;
     _penTimer = Timer.periodic(const Duration(milliseconds: 750), (t) {
       if (!mounted) {
         t.cancel();
@@ -477,6 +560,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       setState(() => _penRevealed++);
       if (_penRevealed >= _penTotal) t.cancel();
     });
+  }
+
+  /// A staged kick's result has landed: the tally moves with it.
+  void _onShootoutResult(int index) {
+    if (!mounted) return;
+    setState(() => _penRevealed = math.max(_penRevealed, index + 1));
   }
 
   void _begin() {
@@ -488,10 +577,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// The base tick length for the current speed.
   Duration get _tick =>
       Duration(milliseconds: (360 / _speeds[_speedIdx]).round());
-
-  /// How long the clock lingers on a goal so its popup is always seen — even at
-  /// the fastest speed several goals can't blur past unnoticed.
-  static const _goalPause = Duration(milliseconds: 1100);
 
   /// Sets the match clock going again, or keeps it stopped, as things stand:
   /// the 360 ms tick in Timeline mode, the Pitch clock in Pitch mode.
@@ -525,8 +610,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
           _held = const {};
           tickStoppage = _minute == 90 ? _added : 0;
           for (final e in _result?.events ?? const <MatchEvent>[]) {
-            if (e.type == MatchEventType.goal &&
-                held.contains(matchEventKey(e))) {
+            if (e.type == MatchEventType.goal && held.contains(_keyOf(e))) {
               _flashGoal(e);
               scored = true;
             }
@@ -611,7 +695,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     MatchFeedback.goal(ref.read(soundHapticsEnabledProvider));
     _pitchClock?.pause();
     _flashTimer?.cancel();
-    _flashTimer = Timer(_goalPause + const Duration(milliseconds: 700), () {
+    _flashTimer = Timer(kGoalFlashHold, () {
       if (!mounted) return;
       setState(() => _goalFlash = null);
       // Resume only if nothing else has taken over the clock (half-time in
@@ -1039,7 +1123,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     setState(() => _mode = mode);
     if (mode == MatchViewMode.pitch) {
       final r = _result;
-      if (r != null && _pc.isCurrentFor(r, _speedIdx)) {
+      // Past the last minute the speed paces nothing: a picture of this
+      // match at another speed still serves the shootout.
+      if (r != null &&
+          (_pc.isCurrentFor(r, _speedIdx) ||
+              (_clockDone && _pc.isCurrentFor(r, null)))) {
         // The picture is still this match's. Part-way through a minute
         // with something of it still to show (paused, then the Timeline
         // and back without a tick): it is played out from where it stood.
@@ -1064,6 +1152,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       }
     }
     if (_started) _restartTimer();
+    // A shootout under way carries on from the same tally on the other view.
+    if (_shootoutStarted) _driveShootout();
   }
 
   /// The manager's choice, before kick-off or from the header: watched that
@@ -1077,6 +1167,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// in and the ground is baked, and holds it otherwise. A bake finishing
   /// never starts a clock the manager stopped: [_playing] is his.
   void _syncPitchClock() {
+    // The ground has just been baked (or the picture came back): a
+    // shootout waiting for it can begin.
+    if (_shootoutStarted) _driveShootout();
     final c = _pitchClock;
     if (c == null) return;
     final ready = _pitchViewKey.currentState?.ready.value ?? false;
@@ -1085,6 +1178,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         _started &&
         _playing &&
         ready &&
+        _pitch != null &&
+        _inForeground &&
         !_pc.building &&
         _goalFlash == null &&
         !_atInterval &&
@@ -1143,7 +1238,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     final before = announce
         ? {
             for (final e in events)
-              if (_reached(e)) matchEventKey(e),
+              if (_reached(e)) _keyOf(e),
           }
         : null;
     final now = _pc.read(minute: _minute, added: _added, held: _held);
@@ -1161,7 +1256,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       if (before == null) return;
       MatchEvent? goal;
       for (final e in events) {
-        if (!_reached(e) || before.contains(matchEventKey(e))) continue;
+        if (!_reached(e) || before.contains(_keyOf(e))) continue;
         if (e.type == MatchEventType.goal) goal = e;
         arrived.add(e);
       }
@@ -1175,9 +1270,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   void _cycleSpeed() {
     setState(() => _speedIdx = (_speedIdx + 1) % _speeds.length);
     // The Pitch view paces the match for the speed: its picture is told
-    // again from where it stands, at the new pace.
+    // again from where it stands, at the new pace. Past the last minute
+    // (the shootout) there is nothing left to pace, and a rebuild would hide
+    // the kicks behind its spinner: the picture stays.
     final preview = _livePreview;
-    if (_onPitch && preview != null) _afterPitchChange(preview);
+    if (_onPitch && preview != null && !_clockDone) {
+      _afterPitchChange(preview);
+    }
     // Remember the choice for the next match this session.
     ref.read(matchSpeedProvider.notifier).state = _speedIdx;
     // Remembered for the next time this career is opened, not just the next
@@ -1227,6 +1326,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         _penTimer?.cancel();
         _penTimer = null;
         _penRevealed = _penTotal;
+        _stage?.settle();
       }
     });
     MatchFeedback.fullTime(ref.read(soundHapticsEnabledProvider));
@@ -1751,7 +1851,35 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final topBar = _TopBar(
               occasion: MatchStage.label(l, preview.fixture),
             );
-            final board = MatchScoreboard(
+            // The two nations' own colours, pushed apart from each other when
+            // the kits are too alike to tell which end of the bar is whose.
+            final (homeC, awayC) = KitColors.opposed(
+              (
+                preview.nations[homeId]?.primaryColor ?? '',
+                preview.nations[homeId]?.secondaryColor ?? '',
+              ),
+              (
+                preview.nations[awayId]?.primaryColor ?? '',
+                preview.nations[awayId]?.secondaryColor ?? '',
+              ),
+            );
+            // The phone's Pitch mode: the score as a broadcast bug, whose
+            // banner stands for the goal flash's card over the picture.
+            final bug = !tablet && _onPitch;
+            // Pitch or Timeline, at any time: on a phone from the corner of
+            // the scoreboard (the Timeline's) or the pitch's bottom one (Pitch mode,
+            // whose stripe is too thin for it); on a tablet from the stats
+            // panel's header.
+            final phoneSwitch = tablet || _mode == null
+                ? null
+                : MatchViewSwitch(
+                    to: _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
+                    onTap: () => _chooseMode(
+                      preview,
+                      _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
+                    ),
+                  );
+            final scoreboard = MatchScoreboard(
               homeCode: code(homeId),
               awayCode: code(awayId),
               homeName: name(homeId),
@@ -1790,53 +1918,21 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     )
                   : null,
               wholeNames: tablet,
+              compact: bug,
+              homeColor: homeC,
+              awayColor: awayC,
+              goal: bug ? _goalFlash : null,
+              goalForHome: _goalFlash?.teamNationId == homeId,
+              viewSwitch: bug ? null : phoneSwitch,
             );
-            // Pitch or Timeline, at any time: from the scoreboard's corner on
-            // a phone, from the stats panel's header on a tablet.
-            final Widget scoreboard = tablet || _mode == null
-                ? board
-                : Stack(
-                    children: [
-                      board,
-                      Positioned(
-                        top: AppSpacing.sm,
-                        right: AppSpacing.marginMobile + AppSpacing.xs,
-                        child: MatchViewSwitch(
-                          to: _onPitch
-                              ? MatchViewMode.timeline
-                              : MatchViewMode.pitch,
-                          onTap: () => _chooseMode(
-                            preview,
-                            _onPitch
-                                ? MatchViewMode.timeline
-                                : MatchViewMode.pitch,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-            // The two nations' own colours, pushed apart from each other when
-            // the kits are too alike to tell which end of the bar is whose.
             final Widget? momentum = !ft && !showingShootout
-                ? () {
-                    final (homeC, awayC) = KitColors.opposed(
-                      (
-                        preview.nations[homeId]?.primaryColor ?? '',
-                        preview.nations[homeId]?.secondaryColor ?? '',
-                      ),
-                      (
-                        preview.nations[awayId]?.primaryColor ?? '',
-                        preview.nations[awayId]?.secondaryColor ?? '',
-                      ),
-                    );
-                    return _MomentumBar(
-                      homePercent: _homeMomentum(preview, homeId),
-                      homeCode: code(homeId),
-                      awayCode: code(awayId),
-                      homeColor: homeC,
-                      awayColor: awayC,
-                    );
-                  }()
+                ? _MomentumBar(
+                    homePercent: _homeMomentum(preview, homeId),
+                    homeCode: code(homeId),
+                    awayCode: code(awayId),
+                    homeColor: homeC,
+                    awayColor: awayC,
+                  )
                 : null;
             final Widget? shootout = showingShootout || decidedByShootout
                 ? _ShootoutStrip(
@@ -1903,10 +1999,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               energy: _liveEnergy(r),
             );
             final overlays = <Widget>[
-              if (_goalFlash != null)
+              if (_goalFlash != null && !bug)
                 _GoalFlash(
                   event: _goalFlash!,
                   flagCode: code(_goalFlash!.teamNationId),
+                  goalNumber: homeScore + awayScore,
                 ),
               // Half-time interval: play only resumes on Continue (the
               // manager may reshape the side first).
@@ -1988,6 +2085,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     clock: clock,
                     names: _pc.names,
                     onReady: _syncPitchClock,
+                    shootout: _stage,
                   )
                 : _pc.failed
                 ? _PitchFailed(
@@ -2051,29 +2149,44 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 child: SafeArea(
                   child: Stack(
                     children: [
-                      Column(
-                        children: [
-                          topBar,
-                          scoreboard,
-                          AspectRatio(
-                            aspectRatio: kPitchModeAspect,
-                            child: pitchSurface,
-                          ),
-                          if (picture)
-                            PitchCommentaryLine(
-                              clock: clock,
-                              lineAt: (t) =>
-                                  pb.lineAt(l, t, _pc.names, _seed(preview)),
-                            )
-                          else
-                            const SizedBox(height: kPitchCommentaryHeight),
-                          ?momentum,
-                          ?shootout,
-                          const MatchDetailTabs(withTimeline: false),
-                          Expanded(
-                            child: TabBarView(children: [stats, lineups]),
-                          ),
-                        ],
+                      PitchModeColumn(
+                        head: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [topBar, scoreboard],
+                        ),
+                        pitch: phoneSwitch == null
+                            ? pitchSurface
+                            : Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  pitchSurface,
+                                  // The bottom corner: clear of the goal
+                                  // banner, which comes down over the top.
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: phoneSwitch,
+                                  ),
+                                ],
+                              ),
+                        under: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (picture)
+                              PitchCommentaryLine(
+                                clock: clock,
+                                countAt: pb.lineCountAt,
+                                lineAt: (t) =>
+                                    pb.lineAt(l, t, _pc.names, _seed(preview)),
+                              )
+                            else
+                              const SizedBox(height: kPitchCommentaryHeight),
+                            ?momentum,
+                            ?shootout,
+                            const MatchDetailTabs(withTimeline: false),
+                          ],
+                        ),
+                        tabs: TabBarView(children: [stats, lineups]),
                       ),
                       ...overlays,
                     ],

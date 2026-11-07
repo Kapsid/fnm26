@@ -320,7 +320,10 @@ void main() {
     final pool = await c
         .read(playerRepositoryProvider)
         .byNation(nationId, saveSeed: 1, careerId: careerId);
-    final fresh = [for (final p in pool) if (!squad.contains(p.id)) p.id];
+    final fresh = [
+      for (final p in pool)
+        if (!squad.contains(p.id)) p.id,
+    ];
     final next = <int>{?keep, ...fresh.take(22)};
     for (final id in squad) {
       if (next.length >= 23) break;

@@ -642,4 +642,44 @@ void main() {
     // The same bound as the 200-match audit, scaled to these matches.
     expect(other, lessThan(40 * _all.length * _matches ~/ 200));
   });
+
+  // Task 15c: an offside whose late cut was asked for with the ball in
+  // the air. The play-through used to fire before the cut landed (the
+  // ball flying past the cut's passer), so the kick was dropped and no
+  // ball ever reached the man flagged. This match (possession side, seed
+  // 40) has one at 17': the ball must be played to him.
+  test('an offside cut pending in the air still plays the ball to him', () {
+    final s = _possession._build(40);
+    final w = s.windows.firstWhere(
+      (w) =>
+          w.moments.isNotEmpty &&
+          w.moments.first is OffsideMoment &&
+          s.pacer.matchAt(_dur(w.start)).minute == 17,
+    );
+    final m = w.moments.first as OffsideMoment;
+    expect(m.playerId, 210);
+    // The late cut was asked for while a pass was still in the air.
+    final cut = s.cuts.firstWhere((c) => c > w.start && c < w.end + 3);
+    expect(
+      s.ballPhases.any(
+        (p) => p is FlightPhase && !p.resting && p.t0 < cut && p.t1 >= cut,
+      ),
+      isTrue,
+      reason: 'the cut lands with a pass',
+    );
+    final pi = s.actorIndexOf(m.playerId)!;
+    final played = s.ballPhases.any(
+      (p) =>
+          p is FlightPhase &&
+          !p.resting &&
+          p.toActor == pi &&
+          p.t0 >= cut - 1e-9 &&
+          p.fromActor != null &&
+          s.actorList[p.fromActor!].teamNationId ==
+              s.actorList[pi].teamNationId,
+    );
+    expect(played, isTrue, reason: 'no ball played to ${m.playerId}');
+    final a = PitchAudit(s, 'possession 40')..run();
+    expect(a.problems.where((p) => p.contains('offside: no ball')), isEmpty);
+  });
 }

@@ -108,7 +108,15 @@ class PitchClock extends ChangeNotifier implements ValueListenable<Duration> {
   Duration _clamp(Duration d) =>
       d < Duration.zero ? Duration.zero : (d > total ? total : d);
 
+  /// The most real time one tick may play. A frame never takes this long;
+  /// a gap that does (the app away in the background, a stall) is not play,
+  /// and must not run the match on unseen. The screen holds the clock while
+  /// the app is away; this is the backstop.
+  static const Duration maxTickStep = Duration(seconds: 1);
+
   void _tick(Duration elapsed) {
+    final step = elapsed - _lastElapsed;
+    if (step > maxTickStep) _anchorElapsed += step - maxTickStep;
     _lastElapsed = elapsed;
     final run = elapsed - _anchorElapsed;
     _value = _clamp(_anchorValue + run * _speed);

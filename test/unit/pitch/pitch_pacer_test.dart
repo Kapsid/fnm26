@@ -126,10 +126,63 @@ void main() {
       zone: PitchZone.wideLeft,
       routine: true,
     );
-    final q = PitchPacer(_result([corner, routine]), PitchSpeed.slow);
-    expect(q.momentLength(corner), const Duration(seconds: 6));
+    // A corner is staged only when it leads to a shot: the two are one
+    // moment, the corner's length and 1.5 s.
+    const header = ShotMoment(
+      minute: 5,
+      stoppage: 0,
+      seq: 1,
+      teamNationId: 1,
+      shooterId: 2,
+      zone: PitchZone.sixYard,
+      xg: 0.1,
+      outcome: ShotOutcome.blocked,
+      origin: ShotOrigin.corner,
+    );
+    final q = PitchPacer(_result([corner, header, routine]), PitchSpeed.slow);
+    expect(q.momentLength(corner), const Duration(milliseconds: 7500));
+    expect(q.momentLength(header), Duration.zero);
     expect(q.momentLength(routine), Duration.zero);
-    expect(q.screenAt(6, 0) - q.screenAt(5, 0), const Duration(seconds: 6));
+    expect(
+      q.screenAt(6, 0) - q.screenAt(5, 0),
+      const Duration(milliseconds: 7500),
+    );
+  });
+
+  // The owner's ruling (Task 15c): a restart is staged only when it leads to
+  // an action. A corner, free kick or long throw that comes to nothing has
+  // no screen time; its minute is open play, and the match is as long as
+  // it was (its time goes to the open play around it).
+  test('a set piece that comes to nothing is not staged', () {
+    SetPieceMoment sp(int minute, SetPieceKind kind) => SetPieceMoment(
+      minute: minute,
+      stoppage: 0,
+      seq: 0,
+      teamNationId: 1,
+      kind: kind,
+      takerId: 1,
+      left: true,
+      zone: kind == SetPieceKind.corner
+          ? PitchZone.wideLeft
+          : PitchZone.edgeOfBox,
+    );
+    final idle = [
+      sp(11, SetPieceKind.corner),
+      sp(21, SetPieceKind.freeKick),
+      sp(31, SetPieceKind.longThrow),
+    ];
+    final shots = _shots(20, from: 2);
+    for (final speed in PitchSpeed.values) {
+      final p = PitchPacer(_result([...idle, ...shots]), speed);
+      for (final m in idle) {
+        expect(p.momentLength(m), Duration.zero, reason: '$m');
+        final minute = p.screenAt(m.minute + 1, 0) - p.screenAt(m.minute, 0);
+        expect(minute, lessThan(const Duration(seconds: 3)), reason: '$m');
+      }
+      // The budget counts them still: as long as staging them was.
+      final quietOnly = PitchPacer(_result(shots), speed);
+      expect(p.total, greaterThan(quietOnly.total), reason: '$speed');
+    }
   });
 
   test('120-minute match scales and holds', () {

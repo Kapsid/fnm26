@@ -120,8 +120,8 @@ class ActorsPainter extends CustomPainter {
     _towers = [
       for (final (x, y) in StadiumPainter.towers) projection.toScreenOpen(x, y),
     ];
-    final home = _dress(kits.home);
-    final away = _dress(kits.away);
+    final home = dressOf(kits.home);
+    final away = dressOf(kits.away);
     _dressOf = [
       for (final a in script.actorList)
         a.teamNationId == script.homeNationId ? home : away,
@@ -151,7 +151,7 @@ class ActorsPainter extends CustomPainter {
   final double r0;
 
   late final List<Offset> _towers;
-  late final List<_Dress> _dressOf;
+  late final List<ActorDress> _dressOf;
   late final List<bool> _homeOf;
 
   /// The names drawn in the last frame, as drawn.
@@ -193,7 +193,8 @@ class ActorsPainter extends CustomPainter {
         : s;
   }
 
-  static _Dress _dress(KitPair kit) {
+  /// A kit as the shirts are dressed.
+  static ActorDress dressOf(KitPair kit) {
     String hex(Color c) =>
         '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
     return (
@@ -280,7 +281,7 @@ class ActorsPainter extends CustomPainter {
     final ground = projection.toScreenOpen(ball.x, ball.y);
     final lifted = projection.toScreenOpen(ball.x, ball.y, f.ballHeight);
     final br = r0 * 0.34 * projection.scaleAt(ball.y);
-    _ballShadow(canvas, ground, br, f.ballHeight, shadows);
+    ballShadow(canvas, ground, br, f.ballHeight, shadows);
 
     // The men back to front, then the ball over them: it sits 0.6 m ahead
     // of a carrier's feet, which a shirt drawn by depth would cover, and
@@ -302,7 +303,7 @@ class ActorsPainter extends CustomPainter {
         cachedNumber: true,
       );
     }
-    _ball(canvas, lifted, br);
+    drawBall(canvas, lifted, br);
 
     // Names last, clear of every token, the ball and each other.
     if (f.tagged.isEmpty) return;
@@ -353,7 +354,8 @@ class ActorsPainter extends CustomPainter {
       ..addAll(chosen);
   }
 
-  void _ballShadow(
+  /// The ball's shadow under it at [height] metres.
+  static void ballShadow(
     Canvas canvas,
     Offset ground,
     double r,
@@ -378,7 +380,8 @@ class ActorsPainter extends CustomPainter {
     );
   }
 
-  void _ball(Canvas canvas, Offset c, double r) {
+  /// The ball at [c], [r] across.
+  static void drawBall(Canvas canvas, Offset c, double r) {
     canvas
       ..drawCircle(
         c,
@@ -408,7 +411,8 @@ class ActorsPainter extends CustomPainter {
       old.kits != kits;
 }
 
-typedef _Dress = ({Color fill, Color trim, Color accent});
+/// A kit's shirt fill, trim and name accent.
+typedef ActorDress = ({Color fill, Color trim, Color accent});
 
 class _Token {
   const _Token({

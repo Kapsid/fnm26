@@ -326,6 +326,12 @@ matchViewModeProvider =
 PitchSpeed pitchSpeedForStep(int index) =>
     PitchSpeed.values[index.clamp(0, PitchSpeed.values.length - 1)];
 
+/// The Pitch clock's playback rate for the speed step [index], on top of
+/// the pacing [pitchSpeedForStep] picks: every staged second plays this
+/// much faster (the owner's 2026-11-07 ask: 1x and 2x 30% faster, 3x 50%).
+/// The shootout keeps its own fixed 4 s a kick.
+double pitchRateForStep(int index) => const [1.3, 1.3, 1.5][index.clamp(0, 2)];
+
 /// The competition a fixture's [round] code belongs to, as far as the
 /// ground's dressing and its kick-off slots care.
 CompetitionKind pitchCompetitionOf(String? round) => switch (round) {

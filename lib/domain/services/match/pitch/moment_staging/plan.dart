@@ -395,6 +395,14 @@ abstract class _Plan implements StagedPlan {
 
   /// A light reaction of the men the moment does not name, near the ball:
   /// defenders drop goal-side of it, attackers ease forward, onside.
+  ///
+  /// Each settles, asked anew every step: a defender on the line from the
+  /// ball to his goal, an attacker a few metres beyond the ball; and
+  /// neither is ever nearer the goal line than
+  /// [_reactFloor] (a man nearer it steps out to it). A step
+  /// toward goal from wherever he now stood was asked of them before, so
+  /// over a moment of a few seconds the men near the ball walked on and on
+  /// until they stood on the goal line.
   PlayerDrive? react(int id, ScriptState now, {Set<int> skip = const {}}) {
     if (skip.contains(id) || now.keepers.contains(id)) return null;
     final p = now.players[id];
@@ -407,16 +415,30 @@ abstract class _Plan implements StagedPlan {
       final l2 = ab.x * ab.x + ab.y * ab.y;
       var u = l2 < 1e-9
           ? 0.0
-          : (((p.x - b.x) * ab.x + (p.y - b.y) * ab.y) / l2).clamp(0.15, 1.0);
+          : (((p.x - b.x) * ab.x + (p.y - b.y) * ab.y) / l2).clamp(0.15, 0.8);
       if (u.isNaN) u = 0.5;
       final onLine = b + ab * u;
-      final target = p + (onLine - p) * 0.35 + (g - p).unit * 1.5;
-      return (target: target, maxSpeed: 3.2);
+      return (target: _floored(p + (onLine - p) * 0.6), maxSpeed: 3.2);
     }
     if (now.teams[id] == side && now.carrierId != id) {
-      final target = keepOnside(now, at(depthOf(p) + 3, latOf(p)));
-      return (target: target, maxSpeed: 3);
+      // Up with the ball until a few metres beyond it, then he holds.
+      final d = depthOf(p);
+      final want = math.min(d + 3, math.max(d, depthOf(now.ball) + 6));
+      final target = keepOnside(now, at(want, latOf(p)));
+      return (target: _floored(target), maxSpeed: 3);
     }
     return null;
+  }
+
+  /// The nearest a man reacting to the ball comes to the goal line it
+  /// faces: the six-yard box's edge. Set pieces and the moment's named men
+  /// are not reactions and go where they must.
+  static const double _reactFloor = 6.5;
+
+  /// [target] held off the goal line by [_reactFloor]: a man nearer it
+  /// (one a set piece left there) steps out to it.
+  Offset2 _floored(Offset2 target) {
+    final cap = _goalLine - _reactFloor;
+    return depthOf(target) <= cap ? target : at(cap, latOf(target));
   }
 }

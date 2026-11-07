@@ -277,7 +277,13 @@ void main() {
             change: 1,
             tier: SquadDevTier.regular,
           ),
-        row('Only Youth', age: 18, rating: 40, change: 0, tier: SquadDevTier.youth),
+        row(
+          'Only Youth',
+          age: 18,
+          rating: 40,
+          change: 0,
+          tier: SquadDevTier.youth,
+        ),
       ],
     );
     // Page into the regulars tab first.
@@ -287,7 +293,7 @@ void main() {
     // Now switch to youth: the page must be back at the first, not still on
     // whatever page the previous tab was showing.
     await tester.ensureVisible(find.text('${l.squadDevTierYouth} · 1'));
-        await tester.tap(find.text('${l.squadDevTierYouth} · 1'));
+    await tester.tap(find.text('${l.squadDevTierYouth} · 1'));
     await tester.pumpAndSettle();
     expect(find.text('Only Youth'), findsOneWidget);
     // A single-row tab has one page, so no pager is shown at all.
@@ -310,14 +316,20 @@ void main() {
             change: 1,
             tier: SquadDevTier.regular,
           ),
-        row('Lone Youth', age: 18, rating: 40, change: 0, tier: SquadDevTier.youth),
+        row(
+          'Lone Youth',
+          age: 18,
+          rating: 40,
+          change: 0,
+          tier: SquadDevTier.youth,
+        ),
       ],
     );
     // 14 regulars page as 12 + 2, and the total printed is 14 — the tab's own
     // count, not fifteen for the whole report.
     expect(find.text(l.squadDevPageOf('1', '2', 14)), findsOneWidget);
     await tester.ensureVisible(find.text('${l.squadDevTierYouth} · 1'));
-        await tester.tap(find.text('${l.squadDevTierYouth} · 1'));
+    await tester.tap(find.text('${l.squadDevTierYouth} · 1'));
     await tester.pumpAndSettle();
     // One youth is one page: no pager at all, so nothing claims a total.
     expect(find.textContaining(l.squadDevTierYouth), findsOneWidget);
@@ -325,17 +337,20 @@ void main() {
   });
 
   for (final locale in [const Locale('en'), const Locale('cs')]) {
-    testWidgets('the tab strip is not cut at phone width, ${locale.languageCode}', (
-      tester,
-    ) async {
-      await pumpTable(
+    testWidgets(
+      'the tab strip is not cut at phone width, ${locale.languageCode}',
+      (
         tester,
-        width: 320,
-        locale: locale,
-        rows: mixed,
-      );
-      expectNothingCut(tester);
-    });
+      ) async {
+        await pumpTable(
+          tester,
+          width: 320,
+          locale: locale,
+          rows: mixed,
+        );
+        expectNothingCut(tester);
+      },
+    );
   }
 
   testWidgets('an intake reads its values under their headings', (

@@ -16,6 +16,7 @@ import 'package:fnm/features/match/pitch/confetti_painter.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
 import 'package:fnm/features/match/pitch/weather_painter.dart';
 
@@ -50,6 +51,7 @@ class PitchMatchView extends ConsumerStatefulWidget {
     required this.clock,
     this.names = const {},
     this.onReady,
+    this.shootout,
     super.key,
   });
 
@@ -63,6 +65,11 @@ class PitchMatchView extends ConsumerStatefulWidget {
   /// Called when all three looks of the ground are baked (see
   /// [PitchMatchViewState.ready]): the match screen starts its clock then.
   final VoidCallback? onReady;
+
+  /// A penalty shootout staged on the pitch, once the match is over: while
+  /// its [ShootoutStageController.active] is up the camera moves in on one
+  /// goal and the kicks are drawn in place of the match's players.
+  final ShootoutStageController? shootout;
 
   /// How far in the camera sits: a touch wide of the pitch, so the near
   /// corners and both end stands keep clear of the frame's edges.
@@ -332,6 +339,45 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     );
   }
 
+  ShootoutPainter? _shootoutPainter;
+
+  ShootoutPainter _shootoutFor(Size size, ShootoutStageController stage) {
+    final p = _shootoutPainter;
+    final m = widget.script.pacer.matchAt(widget.clock.value);
+    if (p != null &&
+        identical(p.stage, stage) &&
+        mapEquals(p.names, widget.names) &&
+        p.kits == widget.stadium.kits &&
+        p.minute == m.minute) {
+      return p;
+    }
+    return _shootoutPainter = ShootoutPainter(
+      stage: stage,
+      kits: widget.stadium.kits,
+      names: widget.names,
+      lightAt: widget.stadium.lightAt,
+      minute: m.minute,
+    );
+  }
+
+  /// The players of the match, or the shootout's two men and the ball.
+  Widget _actorsLayer(Size drawSize) {
+    final stage = widget.shootout;
+    if (stage == null) return _actorsPainted(drawSize);
+    return ValueListenableBuilder<bool>(
+      valueListenable: stage.active,
+      builder: (context, on, _) => on
+          ? RepaintBoundary(
+              child: CustomPaint(painter: _shootoutFor(drawSize, stage)),
+            )
+          : _actorsPainted(drawSize),
+    );
+  }
+
+  Widget _actorsPainted(Size drawSize) => RepaintBoundary(
+    child: CustomPaint(painter: _actorsFor(drawSize)),
+  );
+
   WeatherOverlay _weatherFor() {
     final w = _weather;
     final kind = widget.stadium.weather;
@@ -392,9 +438,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                             painter: _ShowLayer(_show!, _showOpacity),
                           ),
                         ),
-                      RepaintBoundary(
-                        child: CustomPaint(painter: _actorsFor(drawSize)),
-                      ),
+                      _actorsLayer(drawSize),
                       if (_weatherFor().falls)
                         IgnorePointer(
                           child: RepaintBoundary(

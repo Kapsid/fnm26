@@ -642,7 +642,9 @@ void main() {
     }
 
     // On real matches: a moment the pacer gives no screen time is routine,
-    // save a shot folded into its set piece and a foul that gives a penalty.
+    // save a shot folded into its set piece, a foul that gives a penalty,
+    // and (since Task 15c) a corner, free kick or long throw that comes to
+    // nothing: it has a line, but no window, so it is never said.
     var staged = 0;
     for (var i = 0; i < 40; i++) {
       final r = labMatch(i).result;
@@ -659,7 +661,9 @@ void main() {
               PitchZone.sixYard,
             }.contains(m.zone);
         final timed = pacer.momentLength(m) > Duration.zero;
-        final expectLine = m is ShotMoment || penaltyFoul || timed;
+        final idleSetPiece = m is SetPieceMoment && !isRoutineMoment(m);
+        final expectLine =
+            m is ShotMoment || penaltyFoul || timed || idleSetPiece;
         expect(line != null, expectLine, reason: '$m');
         if (line != null) staged++;
       }

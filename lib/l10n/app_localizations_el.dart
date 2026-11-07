@@ -15601,557 +15601,557 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String pitchComShotGoal1(String player) {
-    return 'GOAL! $player finds the net!';
+    return 'ΓΚΟΛ! Ο $player βρίσκει τα δίχτυα!';
   }
 
   @override
   String pitchComShotGoal2(String player) {
-    return '$player fires it in! GOAL!';
+    return 'Ο $player σουτάρει και είναι μέσα! ΓΚΟΛ!';
   }
 
   @override
   String pitchComShotGoal3(String player) {
-    return 'GOAL! A clinical finish from $player.';
+    return 'ΓΚΟΛ! Ψυχρή εκτέλεση από τον $player.';
   }
 
   @override
   String pitchComShotSaved1(String player, String keeper) {
-    return '$player shoots, but $keeper saves.';
+    return 'Ο $player σουτάρει, αλλά ο $keeper αποκρούει.';
   }
 
   @override
   String pitchComShotSaved2(String player) {
-    return '$player tries his luck, but the keeper is equal to it.';
+    return 'Ο $player προσπαθεί, αλλά ο τερματοφύλακας είναι εκεί.';
   }
 
   @override
   String pitchComShotSaved3(String player, String keeper) {
-    return '$player lets fly, $keeper pushes it away!';
+    return 'Ο $player εκτελεί, ο $keeper αποκρούει!';
   }
 
   @override
   String pitchComShotWide1(String player) {
-    return '$player shoots wide.';
+    return 'Ο $player σουτάρει άουτ.';
   }
 
   @override
   String pitchComShotWide2(String player) {
-    return 'Off target from $player.';
+    return 'Άστοχο σουτ του $player.';
   }
 
   @override
   String pitchComShotWide3(String player) {
-    return '$player drags it past the post.';
+    return 'Ο $player στέλνει την μπάλα λίγο έξω από το δοκάρι.';
   }
 
   @override
   String pitchComShotBlocked1(String player) {
-    return '$player shoots, but it\'s blocked.';
+    return 'Ο $player σουτάρει, αλλά το σουτ μπλοκάρεται.';
   }
 
   @override
   String pitchComShotBlocked2(String player) {
-    return 'Blocked! $player can\'t find a way through.';
+    return 'Μπλόκο! Ο $player δεν βρίσκει δίοδο.';
   }
 
   @override
   String pitchComShotBlocked3(String player) {
-    return '$player lets fly, but a defender gets in the way.';
+    return 'Ο $player εκτελεί, αλλά ένας αμυντικός μπαίνει στη μέση.';
   }
 
   @override
   String pitchComShotWoodwork1(String player) {
-    return 'Off the post! So close from $player.';
+    return 'Δοκάρι! Ο $player δεν έχει τύχη.';
   }
 
   @override
   String pitchComShotWoodwork2(String player) {
-    return '$player hits the woodwork!';
+    return 'Ο $player βρίσκει το δοκάρι!';
   }
 
   @override
   String pitchComShotWoodwork3(String player) {
-    return 'Crossbar! $player is denied by the frame.';
+    return 'Οριζόντιο δοκάρι! Ο $player δεν έχει τύχη.';
   }
 
   @override
   String pitchComHeaderGoal1(String player) {
-    return 'GOAL! $player heads it home!';
+    return 'ΓΚΟΛ! Ο $player στέλνει την μπάλα στα δίχτυα με κεφαλιά!';
   }
 
   @override
   String pitchComHeaderGoal2(String player) {
-    return '$player rises highest and scores! GOAL!';
+    return 'Ο $player ανεβαίνει ψηλότερα από όλους και σκοράρει! ΓΚΟΛ!';
   }
 
   @override
   String pitchComHeaderGoal3(String player) {
-    return 'GOAL! A powerful header from $player.';
+    return 'ΓΚΟΛ! Δυνατή κεφαλιά από τον $player.';
   }
 
   @override
   String pitchComHeaderSaved1(String player, String keeper) {
-    return '$player heads it, $keeper saves.';
+    return 'Ο $player κάνει κεφαλιά, ο $keeper αποκρούει.';
   }
 
   @override
   String pitchComHeaderSaved2(String player) {
-    return 'A header from $player, but the keeper holds it.';
+    return 'Κεφαλιά του $player, αλλά ο τερματοφύλακας κρατά την μπάλα.';
   }
 
   @override
   String pitchComHeaderSaved3(String player, String keeper) {
-    return '$keeper tips away the header from $player.';
+    return 'Κεφαλιά του $player, ο $keeper αποκρούει.';
   }
 
   @override
   String pitchComHeaderWide1(String player) {
-    return '$player heads it wide.';
+    return 'Ο $player κάνει κεφαλιά άουτ.';
   }
 
   @override
   String pitchComHeaderWide2(String player) {
-    return 'A header from $player, but off target.';
+    return 'Κεφαλιά του $player, αλλά άστοχη.';
   }
 
   @override
   String pitchComHeaderWide3(String player) {
-    return '$player can\'t keep the header down.';
+    return 'Ο $player δεν καταφέρνει να κατεβάσει την κεφαλιά.';
   }
 
   @override
   String pitchComHeaderBlocked1(String player) {
-    return '$player heads it, but it\'s blocked.';
+    return 'Ο $player κάνει κεφαλιά, αλλά μπλοκάρεται.';
   }
 
   @override
   String pitchComHeaderBlocked2(String player) {
-    return '$player heads goalwards, but it\'s charged down.';
+    return 'Ο $player κάνει κεφαλιά προς το τέρμα, αλλά η άμυνα μπλοκάρει.';
   }
 
   @override
   String pitchComHeaderBlocked3(String player) {
-    return 'Blocked! $player meets it, but a defender is there.';
+    return 'Μπλόκο! Ο $player φτάνει στην μπάλα, αλλά υπάρχει αμυντικός.';
   }
 
   @override
   String pitchComHeaderWoodwork1(String player) {
-    return '$player heads against the bar!';
+    return 'Ο $player κάνει κεφαλιά στο οριζόντιο δοκάρι!';
   }
 
   @override
   String pitchComHeaderWoodwork2(String player) {
-    return 'Off the post! The header from $player comes back out.';
+    return 'Δοκάρι! Η κεφαλιά του $player επιστρέφει στο γήπεδο.';
   }
 
   @override
   String pitchComHeaderWoodwork3(String player) {
-    return 'Woodwork! $player rattles the frame with a header.';
+    return 'Το δοκάρι τρέμει! Κεφαλιά του $player.';
   }
 
   @override
   String pitchComSetPieceGoal1(String player) {
-    return 'GOAL! $player gets on the end of it!';
+    return 'ΓΚΟΛ! Ο $player είναι εκεί στο τέλος της φάσης!';
   }
 
   @override
   String pitchComSetPieceGoal2(String player, String other) {
-    return 'GOAL! $other delivers and $player scores!';
+    return 'ΓΚΟΛ! Ο $other σερβίρει και ο $player σκοράρει!';
   }
 
   @override
   String pitchComSetPieceGoal3(String player) {
-    return 'From the set piece, $player scores! GOAL!';
+    return 'Από στατική φάση σκοράρει ο $player! ΓΚΟΛ!';
   }
 
   @override
   String pitchComSetPieceSaved1(String player, String keeper) {
-    return '$player meets it, but $keeper saves.';
+    return 'Ο $player φτάνει στην μπάλα, αλλά ο $keeper αποκρούει.';
   }
 
   @override
   String pitchComSetPieceSaved2(String player) {
-    return '$player gets a touch, the keeper gathers.';
+    return 'Ο $player αγγίζει την μπάλα, ο τερματοφύλακας την πιάνει.';
   }
 
   @override
   String pitchComSetPieceSaved3(String player, String keeper) {
-    return '$player gets a shot away, $keeper is alert.';
+    return 'Ο $player εκτελεί, ο $keeper είναι σε εγρήγορση.';
   }
 
   @override
   String pitchComSetPieceWide1(String player) {
-    return '$player gets on the end of it, but wide.';
+    return 'Ο $player φτάνει στο σουτ, αλλά άουτ.';
   }
 
   @override
   String pitchComSetPieceWide2(String player) {
-    return '$player meets the delivery, off target.';
+    return 'Ο $player φτάνει στη σέντρα, αλλά άστοχα.';
   }
 
   @override
   String pitchComSetPieceWide3(String player) {
-    return 'Over the bar from $player.';
+    return 'Πάνω από το δοκάρι, σουτ του $player.';
   }
 
   @override
   String pitchComSetPieceBlocked1(String player) {
-    return '$player meets it, but it\'s blocked.';
+    return 'Ο $player φτάνει στην μπάλα, αλλά μπλοκάρεται.';
   }
 
   @override
   String pitchComSetPieceBlocked2(String player) {
-    return 'Scramble in the box! $player is blocked.';
+    return 'Αναστάτωση στην περιοχή! Ο $player μπλοκάρεται.';
   }
 
   @override
   String pitchComSetPieceBlocked3(String player) {
-    return '$player tries to force it in, but it\'s cleared.';
+    return 'Ο $player προσπαθεί να την σπρώξει μέσα, αλλά η άμυνα απομακρύνει.';
   }
 
   @override
   String pitchComSetPieceWoodwork1(String player) {
-    return '$player meets it and hits the post!';
+    return 'Ο $player εκτελεί και βρίσκει το δοκάρι!';
   }
 
   @override
   String pitchComSetPieceWoodwork2(String player) {
-    return 'Off the bar! $player nearly scores from the set piece.';
+    return 'Οριζόντιο δοκάρι! Ο $player παραλίγο να σκοράρει από στατική φάση.';
   }
 
   @override
   String pitchComSetPieceWoodwork3(String player) {
-    return 'Woodwork! $player so close from the delivery.';
+    return 'Δοκάρι! Ο $player ήταν πολύ κοντά μετά τη σέντρα.';
   }
 
   @override
   String pitchComDirectFreeKickGoal1(String player) {
-    return 'GOAL! $player curls it over the wall!';
+    return 'ΓΚΟΛ! Ο $player περνά την μπάλα πάνω από τον φράχτη με το φάουλ!';
   }
 
   @override
   String pitchComDirectFreeKickGoal2(String player) {
-    return 'What a free kick! $player finds the top corner!';
+    return 'Τι φάουλ! Ο $player βρίσκει το πάνω γωνιακό!';
   }
 
   @override
   String pitchComDirectFreeKickGoal3(String player) {
-    return 'GOAL! $player beats the keeper from the free kick.';
+    return 'ΓΚΟΛ! Ο $player νικά τον τερματοφύλακα με φάουλ.';
   }
 
   @override
   String pitchComDirectFreeKickSaved1(String player, String keeper) {
-    return '$player goes for goal, $keeper saves.';
+    return 'Ο $player εκτελεί απευθείας, ο $keeper αποκρούει.';
   }
 
   @override
   String pitchComDirectFreeKickSaved2(String player) {
-    return 'The free kick from $player is pushed away.';
+    return 'Το φάουλ του $player αποκρούεται.';
   }
 
   @override
   String pitchComDirectFreeKickSaved3(String player, String keeper) {
-    return 'Good save! $keeper keeps out the free kick from $player.';
+    return 'Εξαιρετική απόκρουση! Φάουλ του $player, ο $keeper το βγάζει.';
   }
 
   @override
   String pitchComDirectFreeKickWide1(String player) {
-    return 'The free kick from $player sails over.';
+    return 'Το φάουλ του $player περνά πάνω από το τέρμα.';
   }
 
   @override
   String pitchComDirectFreeKickWide2(String player) {
-    return '$player goes for goal, but it\'s wide.';
+    return 'Ο $player εκτελεί απευθείας, αλλά άουτ.';
   }
 
   @override
   String pitchComDirectFreeKickWide3(String player) {
-    return '$player misses the target from the free kick.';
+    return 'Ο $player δεν βρίσκει στόχο με το φάουλ.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked1(String player) {
-    return 'The free kick from $player hits the wall.';
+    return 'Το φάουλ του $player καταλήγει στον φράχτη.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked2(String player) {
-    return 'Into the wall from $player.';
+    return 'Στον φράχτη ο $player.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked3(String player) {
-    return 'The wall stands firm against $player.';
+    return 'Ο φράχτης αντέχει, ο $player δεν περνά.';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork1(String player) {
-    return '$player hits the bar with the free kick!';
+    return 'Ο $player βρίσκει το οριζόντιο δοκάρι με το φάουλ!';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork2(String player) {
-    return 'Off the post! $player so close from the free kick.';
+    return 'Δοκάρι! Φάουλ του $player, η μπάλα επιστρέφει.';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork3(String player) {
-    return 'The frame saves the keeper! $player so close.';
+    return 'Το δοκάρι σώζει τον τερματοφύλακα! Ο $player δεν έχει τύχη.';
   }
 
   @override
   String pitchComPenaltyGoal1(String player) {
-    return 'GOAL! $player sends the keeper the wrong way.';
+    return 'ΓΚΟΛ! Ο $player στέλνει τον τερματοφύλακα στην λάθος γωνία.';
   }
 
   @override
   String pitchComPenaltyGoal2(String player) {
-    return '$player steps up and scores! GOAL!';
+    return 'Ο $player παίρνει φόρα και σκοράρει! ΓΚΟΛ!';
   }
 
   @override
   String pitchComPenaltyGoal3(String player) {
-    return 'GOAL! $player buries the penalty.';
+    return 'ΓΚΟΛ! Ο $player εκτελεί ψύχραιμα το πέναλτι.';
   }
 
   @override
   String pitchComPenaltySaved1(String player, String keeper) {
-    return 'Saved! $keeper stops the penalty from $player!';
+    return 'Απόκρουση! Πέναλτι του $player, ο $keeper το σταματά!';
   }
 
   @override
   String pitchComPenaltySaved2(String player) {
-    return '$player steps up... and it\'s saved!';
+    return 'Ο $player παίρνει φόρα... και ο τερματοφύλακας αποκρούει!';
   }
 
   @override
   String pitchComPenaltySaved3(String player, String keeper) {
-    return '$keeper guesses right and denies $player!';
+    return 'Πέναλτι του $player, ο $keeper μαντεύει την γωνία και αποκρούει!';
   }
 
   @override
   String pitchComPenaltyMissed1(String player) {
-    return '$player misses the penalty!';
+    return 'Ο $player χάνει το πέναλτι!';
   }
 
   @override
   String pitchComPenaltyMissed2(String player) {
-    return 'Wide! $player drags the penalty past the post.';
+    return 'Άουτ! Το πέναλτι του $player περνά δίπλα από το δοκάρι.';
   }
 
   @override
   String pitchComPenaltyMissed3(String player) {
-    return 'Over the bar! $player blazes the penalty high.';
+    return 'Πάνω από το τέρμα! Ο $player στέλνει το πέναλτι ψηλά.';
   }
 
   @override
   String pitchComPenaltyWoodwork1(String player) {
-    return '$player hits the post from the spot!';
+    return 'Πέναλτι του $player στο δοκάρι!';
   }
 
   @override
   String pitchComPenaltyWoodwork2(String player) {
-    return 'Off the bar! The penalty from $player stays out.';
+    return 'Οριζόντιο δοκάρι! Το πέναλτι του $player δεν μπαίνει.';
   }
 
   @override
   String pitchComPenaltyWoodwork3(String player) {
-    return 'Woodwork! $player can\'t believe it.';
+    return 'Δοκάρι! Ο $player δεν το πιστεύει.';
   }
 
   @override
   String pitchComPenaltyAwarded1(String player) {
-    return 'Penalty! $player is brought down in the box.';
+    return 'Πέναλτι! Ο $player πέφτει μέσα στην περιοχή.';
   }
 
   @override
   String pitchComPenaltyAwarded2(String player, String other) {
-    return 'The referee points to the spot! $other fouls $player.';
+    return 'Ο διαιτητής δείχνει το σημείο! Φάουλ του $other, ο $player είναι κάτω στην περιοχή.';
   }
 
   @override
   String pitchComPenaltyAwarded3(String player, String other) {
-    return 'Penalty given! $other catches $player in the area.';
+    return 'Δόθηκε πέναλτι! Ο $other παίρνει κάτω τον $player στην περιοχή.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow1(String player, String other) {
-    return 'Penalty! $player goes down and $other is booked.';
+    return 'Πέναλτι! Ο $player πέφτει και ο $other βλέπει κίτρινη.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow2(String player, String other) {
-    return 'Spot kick, and a yellow for $other after the foul on $player.';
+    return 'Πέναλτι και κίτρινη για τον $other, ο $player είναι κάτω στην περιοχή.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow3(String player, String other) {
-    return 'Penalty and a booking! $other clips $player in the box.';
+    return 'Πέναλτι και κάρτα! Ο $other παίρνει κάτω τον $player στην περιοχή.';
   }
 
   @override
   String pitchComPenaltyAwardedRed1(String player, String other) {
-    return 'Penalty and a red card! $player goes down, $other is off.';
+    return 'Πέναλτι και κόκκινη! Ο $player πέφτει, ο $other αποβάλλεται.';
   }
 
   @override
   String pitchComPenaltyAwardedRed2(String player, String other) {
-    return 'Spot kick, and $other is sent off for the foul on $player!';
+    return 'Πέναλτι και αποβολή για τον $other! Ο $player είναι κάτω στην περιοχή.';
   }
 
   @override
   String pitchComPenaltyAwardedRed3(String player, String other) {
-    return 'Red card and a penalty! $other stops $player going through.';
+    return 'Κόκκινη και πέναλτι! Ο $player ξέφυγε μόνος, ο $other τον σταματά.';
   }
 
   @override
   String pitchComCorner1(String player) {
-    return 'Corner. $player to take it.';
+    return 'Κόρνερ. Εκτελεί ο $player.';
   }
 
   @override
   String pitchComCorner2(String player) {
-    return '$player swings in the corner.';
+    return 'Ο $player σερβίρει από το κόρνερ.';
   }
 
   @override
   String pitchComCorner3(String player) {
-    return 'A corner, and $player stands over it.';
+    return 'Κόρνερ, στην μπάλα στέκεται ο $player.';
   }
 
   @override
   String pitchComFreeKick1(String player) {
-    return 'Free kick. $player to take it.';
+    return 'Φάουλ. Εκτελεί ο $player.';
   }
 
   @override
   String pitchComFreeKick2(String player) {
-    return 'Free kick in a dangerous spot. $player stands over it.';
+    return 'Φάουλ σε επικίνδυνο σημείο. Στην μπάλα στέκεται ο $player.';
   }
 
   @override
   String pitchComFreeKick3(String player) {
-    return '$player lines up the free kick.';
+    return 'Ο $player ετοιμάζεται για το φάουλ.';
   }
 
   @override
   String pitchComLongThrow1(String player) {
-    return 'Long throw! $player launches it into the box.';
+    return 'Μακρύ άουτ! Ο $player πετά την μπάλα στην περιοχή.';
   }
 
   @override
   String pitchComLongThrow2(String player) {
-    return '$player with a long throw into the area.';
+    return 'Ο $player με μακρύ άουτ στην περιοχή.';
   }
 
   @override
   String pitchComLongThrow3(String player) {
-    return 'Here comes the long throw from $player.';
+    return 'Να το μακρύ άουτ, πετά ο $player.';
   }
 
   @override
   String pitchComFoulYellow1(String player) {
-    return 'Yellow card for $player.';
+    return 'Κίτρινη κάρτα για τον $player.';
   }
 
   @override
   String pitchComFoulYellow2(String player, String other) {
-    return '$player goes into the book for a foul on $other.';
+    return 'Ο $player βλέπει κίτρινη για φάουλ, ο $other μένει κάτω.';
   }
 
   @override
   String pitchComFoulYellow3(String player, String other) {
-    return 'A late challenge on $other, and $player is booked.';
+    return 'Αργοπορημένη εμπλοκή, ο $other είναι κάτω και ο $player βλέπει κίτρινη.';
   }
 
   @override
   String pitchComFoulSecondYellow1(String player) {
-    return 'Second yellow! $player is off.';
+    return 'Δεύτερη κίτρινη! Ο $player αποβάλλεται.';
   }
 
   @override
   String pitchComFoulSecondYellow2(String player) {
-    return '$player is booked again and sent off.';
+    return 'Ο $player βλέπει δεύτερη κίτρινη και αποβάλλεται.';
   }
 
   @override
   String pitchComFoulSecondYellow3(String player) {
-    return 'Another yellow for $player, and that\'s red.';
+    return 'Δεύτερη κίτρινη για τον $player, άρα κόκκινη.';
   }
 
   @override
   String pitchComFoulRed1(String player) {
-    return 'Red card! $player is sent off.';
+    return 'Κόκκινη κάρτα! Ο $player αποβάλλεται.';
   }
 
   @override
   String pitchComFoulRed2(String player, String other) {
-    return 'Straight red for $player after the foul on $other!';
+    return 'Απευθείας κόκκινη! Ο $player κάνει φάουλ, ο $other μένει κάτω.';
   }
 
   @override
   String pitchComFoulRed3(String player) {
-    return '$player sees red and has to go.';
+    return 'Ο $player βλέπει κόκκινη και πρέπει να φύγει.';
   }
 
   @override
   String pitchComOffside1(String player) {
-    return 'Offside. $player went too early.';
+    return 'Οφσάιντ. Ο $player ξεκίνησε νωρίς.';
   }
 
   @override
   String pitchComOffside2(String player) {
-    return 'The flag is up against $player.';
+    return 'Η σημαία ανεβαίνει, ο $player είναι οφσάιντ.';
   }
 
   @override
   String pitchComOffside3(String player) {
-    return '$player is caught offside.';
+    return 'Ο $player στο οφσάιντ, η επίθεση σταματά.';
   }
 
   @override
   String pitchComSub1(String player, String other) {
-    return 'Substitution: $player on, $other off.';
+    return 'Αλλαγή: μπαίνει ο $player, βγαίνει ο $other.';
   }
 
   @override
   String pitchComSub2(String player, String other) {
-    return '$other makes way for $player.';
+    return 'Ο $other βγαίνει, τον αντικαθιστά ο $player.';
   }
 
   @override
   String pitchComSub3(String player, String other) {
-    return '$player comes on for $other.';
+    return 'Ο $player μπαίνει στη θέση του $other.';
   }
 
   @override
   String pitchComSubFill1(String player) {
-    return '$player comes on.';
+    return 'Μπαίνει ο $player.';
   }
 
   @override
   String pitchComSubFill2(String player) {
-    return 'Substitution: $player is on.';
+    return 'Αλλαγή: στο γήπεδο ο $player.';
   }
 
   @override
   String pitchComSubFill3(String player) {
-    return '$player enters the fray.';
+    return 'Ο $player μπαίνει στο παιχνίδι.';
   }
 
   @override
   String pitchComInjury1(String player) {
-    return '$player is down and needs treatment.';
+    return 'Ο $player είναι κάτω και χρειάζεται περίθαλψη.';
   }
 
   @override
   String pitchComInjury2(String player) {
-    return 'Concern here, $player has picked up a knock.';
+    return 'Ανησυχία, ο $player δέχτηκε χτύπημα.';
   }
 
   @override
   String pitchComInjury3(String player) {
-    return 'Injury worry for $player.';
+    return 'Ανησυχία για τραυματισμό του $player.';
   }
 
   @override
@@ -16160,48 +16160,49 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get pitchComSomeone => 'Player';
+  String get pitchComSomeone => 'Παίκτης';
 
   @override
   String pitchComPenaltyAwardedSecondYellow1(String player, String other) {
-    return 'Penalty, and a second yellow! $other is off for the foul on $player.';
+    return 'Πέναλτι και δεύτερη κίτρινη! Ο $other αποβάλλεται, ο $player είναι κάτω στην περιοχή.';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow2(String player, String other) {
-    return 'Spot kick! $player goes down and $other sees a second yellow.';
+    return 'Πέναλτι! Ο $player πέφτει και ο $other βλέπει δεύτερη κίτρινη.';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
-    return 'Penalty! $other clips $player and is booked again, so that\'s red.';
+    return 'Πέναλτι! Ο $other παίρνει κάτω τον $player και βλέπει δεύτερη κίτρινη, άρα κόκκινη.';
   }
 
   @override
-  String get matchViewChooseTitle => 'How do you want to watch?';
+  String get matchViewChooseTitle => 'Πώς θέλετε να παρακολουθήσετε τον αγώνα;';
 
   @override
   String get matchViewChooseHint =>
-      'Your choice is kept for the next match. You can switch at any time.';
+      'Η επιλογή σας ισχύει και για τον επόμενο αγώνα. Μπορείτε να την αλλάξετε οποτεδήποτε.';
 
   @override
-  String get matchViewPitch => 'Pitch';
+  String get matchViewPitch => 'Γήπεδο';
 
   @override
-  String get matchViewPitchBlurb => 'Watch the players on the pitch';
+  String get matchViewPitchBlurb => 'Παρακολουθήστε τους παίκτες στο γήπεδο';
 
   @override
-  String get matchViewTimeline => 'Timeline';
+  String get matchViewTimeline => 'Εξέλιξη';
 
   @override
-  String get matchViewTimelineBlurb => 'Follow the match event by event';
+  String get matchViewTimelineBlurb =>
+      'Παρακολουθήστε τον αγώνα φάση προς φάση';
 
   @override
-  String get matchViewSwitchToPitch => 'Watch on the pitch';
+  String get matchViewSwitchToPitch => 'Παρακολούθηση στο γήπεδο';
 
   @override
-  String get matchViewSwitchToTimeline => 'Watch the timeline';
+  String get matchViewSwitchToTimeline => 'Προβολή εξέλιξης';
 
   @override
-  String get matchTabCommentary => 'COMMENTARY';
+  String get matchTabCommentary => 'ΣΧΟΛΙΑΣΜΟΣ';
 }

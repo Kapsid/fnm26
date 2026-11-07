@@ -76,15 +76,16 @@ void main() {
     late int careerId;
     await tester.runAsync(() async {
       await c.read(seedLoaderProvider).ensureSeeded();
-      careerId = (await c
-              .read(careerServiceProvider)
-              .create(
-                nationId: nations.first.id,
-                managerName: 'M',
-                rngSeed: 20260922,
-              ))
-          .valueOrNull!
-          .id;
+      careerId =
+          (await c
+                  .read(careerServiceProvider)
+                  .create(
+                    nationId: nations.first.id,
+                    managerName: 'M',
+                    rngSeed: 20260922,
+                  ))
+              .valueOrNull!
+              .id;
     });
 
     // Warm the preview the way the pre-match screen does before kick-off, so
@@ -115,12 +116,13 @@ void main() {
     /// as three pieces (so the colon sits on the centre line); join them.
     String scoreOnScreen() {
       final pieces = [
-        for (final e in find
-            .descendant(
-              of: find.byType(MatchScoreboard),
-              matching: find.byType(Text),
-            )
-            .evaluate())
+        for (final e
+            in find
+                .descendant(
+                  of: find.byType(MatchScoreboard),
+                  matching: find.byType(Text),
+                )
+                .evaluate())
           (e.widget as Text).data ?? '',
       ];
       final at = pieces.indexOf(' : ');

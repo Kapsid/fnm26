@@ -477,7 +477,8 @@ extension _BallMechanics on _Builder {
     }
     final tempo = side.instr.tempo;
     final hold = (0.55 + rng.nextDouble() * 0.8) * (1.15 - tempo / 250);
-    nextAction = t + (t < side.counterUntil ? hold * 0.5 : hold);
+    // On the break the ball moves on at once.
+    nextAction = t + (t < side.counterUntil ? hold * 0.3 : hold);
   }
 
   void _startFlight(

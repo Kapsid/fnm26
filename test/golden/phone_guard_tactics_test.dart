@@ -12,7 +12,11 @@ import '../helpers/seeded_save.dart';
 void main() {
   testWidgets('phone tactics, line-up tab', (tester) async {
     final save = await seedSave(tester);
-    await pumpRoute(tester, save, '${Routes.tactics}?careerId=${save.careerId}');
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.tactics}?careerId=${save.careerId}',
+    );
     expect(find.byType(TacticsPitch), findsOneWidget);
     await expectAppGolden('goldens/tactics_phone.png');
   });
