@@ -25,6 +25,8 @@ import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
+import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
+    show ShootoutCast, ShootoutStaging;
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/achievements/achievement_popup.dart';
 import 'package:fnm/features/achievements/achievement_providers.dart';
@@ -38,6 +40,7 @@ import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
@@ -419,6 +422,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _timer?.cancel();
     _flashTimer?.cancel();
     _penTimer?.cancel();
+    _stage?.dispose();
     _pc.dispose();
     super.dispose();
   }
@@ -465,9 +469,52 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _startShootout();
   }
 
-  /// Starts revealing the shootout kicks one at a time.
+  /// Starts revealing the shootout kicks one at a time: on the Timeline a
+  /// strip ticking every 750 ms, on the pitch each kick staged in full.
   void _startShootout() {
-    if (_penTimer != null) return;
+    _shootoutStarted = true;
+    _driveShootout();
+  }
+
+  /// Whether the shootout has begun (the takers are named): from here the
+  /// kicks run, on whichever view the manager is on.
+  bool _shootoutStarted = false;
+
+  /// The shootout on the pitch, made when the first kick is staged.
+  ShootoutStageController? _stage;
+
+  /// Runs the rest of the shootout on the view the manager is on now. It is
+  /// the one place that starts or stops either reveal, so a switch between
+  /// the Timeline and the pitch mid-shootout carries on from the same tally.
+  void _driveShootout() {
+    final r = _penRevealed;
+    if (!_shootoutStarted || r >= _penTotal) {
+      _penTimer?.cancel();
+      _stage?.stop();
+      return;
+    }
+    if (_onPitch) {
+      final script = _pitch?.script;
+      final o = _koOutcome;
+      // Waits for the picture (a bake, a build): onReady drives it again.
+      if (script == null ||
+          o == null ||
+          !(_pitchViewKey.currentState?.ready.value ?? false)) {
+        return;
+      }
+      _penTimer?.cancel();
+      _penTimer = null;
+      final stage = _stage ??= ShootoutStageController(
+        vsync: this,
+        kicks: ShootoutStaging.order(o),
+        cast: ShootoutCast.of(script),
+        onResult: _onShootoutResult,
+      );
+      if (!stage.running) stage.start(r);
+      return;
+    }
+    _stage?.stop();
+    if (_penTimer?.isActive ?? false) return;
     _penTimer = Timer.periodic(const Duration(milliseconds: 750), (t) {
       if (!mounted) {
         t.cancel();
@@ -476,6 +523,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       setState(() => _penRevealed++);
       if (_penRevealed >= _penTotal) t.cancel();
     });
+  }
+
+  /// A staged kick's result has landed: the tally moves with it.
+  void _onShootoutResult(int index) {
+    if (!mounted) return;
+    setState(() => _penRevealed = math.max(_penRevealed, index + 1));
   }
 
   void _begin() {
@@ -1063,6 +1116,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       }
     }
     if (_started) _restartTimer();
+    // A shootout under way carries on from the same tally on the other view.
+    if (_shootoutStarted) _driveShootout();
   }
 
   /// The manager's choice, before kick-off or from the header: watched that
@@ -1076,6 +1131,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// in and the ground is baked, and holds it otherwise. A bake finishing
   /// never starts a clock the manager stopped: [_playing] is his.
   void _syncPitchClock() {
+    // The ground has just been baked (or the picture came back): a
+    // shootout waiting for it can begin.
+    if (_shootoutStarted) _driveShootout();
     final c = _pitchClock;
     if (c == null) return;
     final ready = _pitchViewKey.currentState?.ready.value ?? false;
@@ -1226,6 +1284,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         _penTimer?.cancel();
         _penTimer = null;
         _penRevealed = _penTotal;
+        _stage?.settle();
       }
     });
     MatchFeedback.fullTime(ref.read(soundHapticsEnabledProvider));
@@ -1987,6 +2046,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     clock: clock,
                     names: _pc.names,
                     onReady: _syncPitchClock,
+                    shootout: _stage,
                   )
                 : _pc.failed
                 ? _PitchFailed(

@@ -3,7 +3,8 @@
 ///
 /// One plan per moment type: a shot (by its origin), a corner, a free kick,
 /// a penalty, a long throw, a foul with its card, an offside, a sub and an
-/// injury. Each reads the moment (who, where, what happened) and the state
+/// injury; and, apart from the match's script, a penalty shootout kick by
+/// kick ([ShootoutStaging]). Each reads the moment (who, where, what happened) and the state
 /// the window opens on, and says where the men it needs go and what the
 /// ball does. The outcome is the record's: a goal ends in the net, a save
 /// in the keeper's hands (or parried by him), a shot wide passes outside a
@@ -22,6 +23,7 @@ library;
 import 'dart:math' as math;
 
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/pitch/display_spacing.dart';
@@ -35,6 +37,7 @@ part 'moment_staging/penalty.dart';
 part 'moment_staging/dead_ball.dart';
 part 'moment_staging/foul_offside.dart';
 part 'moment_staging/sub_injury.dart';
+part 'moment_staging/shootout.dart';
 
 /// How far the defending side stands from a dead ball.
 const double wallDistance = 9.15;
