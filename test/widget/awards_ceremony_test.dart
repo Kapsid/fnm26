@@ -77,6 +77,7 @@ Future<AppLocalizations> _pump(
   Locale locale = const Locale('en'),
   double width = 390,
   double textScale = 1,
+  PotyVote? vote,
 }) async {
   tester.view
     ..physicalSize = Size(width, 844)
@@ -94,7 +95,7 @@ Future<AppLocalizations> _pump(
     ),
     locale: locale,
     overrides: [
-      potyVoteProvider.overrideWith((ref, arg) async => _vote()),
+      potyVoteProvider.overrideWith((ref, arg) async => vote ?? _vote()),
       careerNationsByIdProvider.overrideWith((ref, id) async => _nations),
     ],
   );
@@ -136,6 +137,33 @@ void main() {
     }
     expect(sawYoung, isTrue);
     expect(find.byKey(const Key('poty.list')), findsOneWidget);
+  });
+
+  // A thin year's ballot can be shorter than five since a man with no games
+  // no longer fills it, and the young award can be empty.
+  testWidgets('a short ballot plays through and lists what it has', (
+    tester,
+  ) async {
+    final short = (
+      best: [_place(1, nationId: 59), _place(2, nationId: 14)],
+      young: <PotyPlace>[],
+    );
+    final l = await _pump(tester, vote: short);
+    final seen = <int>{};
+    for (var i = 0; i < 40; i++) {
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(tester.takeException(), isNull);
+      for (final rank in [1, 2, 3, 4, 5]) {
+        if (find.text(l.potyCeremonyPlace(rank)).evaluate().isNotEmpty) {
+          seen.add(rank);
+        }
+      }
+      if (find.byKey(const Key('poty.list')).evaluate().isNotEmpty) break;
+    }
+    expect(seen, {1, 2});
+    expect(find.byKey(const Key('poty.list')), findsOneWidget);
+    expect(find.text(l.potyLabelYoung), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('skip is always there and jumps to the list', (tester) async {
