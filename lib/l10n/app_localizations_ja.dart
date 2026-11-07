@@ -13771,557 +13771,557 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String pitchComShotGoal1(String player) {
-    return 'GOAL! $player finds the net!';
+    return 'ゴール！$playerがネットを揺らした！';
   }
 
   @override
   String pitchComShotGoal2(String player) {
-    return '$player fires it in! GOAL!';
+    return '$playerのシュートが決まった！ゴール！';
   }
 
   @override
   String pitchComShotGoal3(String player) {
-    return 'GOAL! A clinical finish from $player.';
+    return 'ゴール！$playerが冷静に決めた。';
   }
 
   @override
   String pitchComShotSaved1(String player, String keeper) {
-    return '$player shoots, but $keeper saves.';
+    return '$playerのシュート、しかし$keeperがセーブ。';
   }
 
   @override
   String pitchComShotSaved2(String player) {
-    return '$player tries his luck, but the keeper is equal to it.';
+    return '$playerが狙うが、GKが反応している。';
   }
 
   @override
   String pitchComShotSaved3(String player, String keeper) {
-    return '$player lets fly, $keeper pushes it away!';
+    return '$playerが強烈なシュート、$keeperが弾き出した！';
   }
 
   @override
   String pitchComShotWide1(String player) {
-    return '$player shoots wide.';
+    return '$playerのシュートは枠の外。';
   }
 
   @override
   String pitchComShotWide2(String player) {
-    return 'Off target from $player.';
+    return '$playerのシュートは枠を捉えられない。';
   }
 
   @override
   String pitchComShotWide3(String player) {
-    return '$player drags it past the post.';
+    return '$playerのシュートはポストをかすめて外れた。';
   }
 
   @override
   String pitchComShotBlocked1(String player) {
-    return '$player shoots, but it\'s blocked.';
+    return '$playerのシュート、しかしブロックされた。';
   }
 
   @override
   String pitchComShotBlocked2(String player) {
-    return 'Blocked! $player can\'t find a way through.';
+    return 'ブロック！$playerは突破口を見いだせない。';
   }
 
   @override
   String pitchComShotBlocked3(String player) {
-    return '$player lets fly, but a defender gets in the way.';
+    return '$playerのシュート、しかしディフェンダーが体を投げ出して防ぐ。';
   }
 
   @override
   String pitchComShotWoodwork1(String player) {
-    return 'Off the post! So close from $player.';
+    return 'ポスト！$player、運がない。';
   }
 
   @override
   String pitchComShotWoodwork2(String player) {
-    return '$player hits the woodwork!';
+    return '$playerのシュートがゴールの枠に当たった！';
   }
 
   @override
   String pitchComShotWoodwork3(String player) {
-    return 'Crossbar! $player is denied by the frame.';
+    return 'クロスバー！$playerのシュートは跳ね返された。';
   }
 
   @override
   String pitchComHeaderGoal1(String player) {
-    return 'GOAL! $player heads it home!';
+    return 'ゴール！$playerがヘディングで押し込んだ！';
   }
 
   @override
   String pitchComHeaderGoal2(String player) {
-    return '$player rises highest and scores! GOAL!';
+    return '$playerが誰よりも高く跳んで決めた！ゴール！';
   }
 
   @override
   String pitchComHeaderGoal3(String player) {
-    return 'GOAL! A powerful header from $player.';
+    return 'ゴール！$playerの力強いヘディング。';
   }
 
   @override
   String pitchComHeaderSaved1(String player, String keeper) {
-    return '$player heads it, $keeper saves.';
+    return '$playerのヘディング、$keeperがセーブ。';
   }
 
   @override
   String pitchComHeaderSaved2(String player) {
-    return 'A header from $player, but the keeper holds it.';
+    return '$playerのヘディング、しかしGKがしっかりキャッチ。';
   }
 
   @override
   String pitchComHeaderSaved3(String player, String keeper) {
-    return '$keeper tips away the header from $player.';
+    return '$playerのヘディング、$keeperが弾き出した。';
   }
 
   @override
   String pitchComHeaderWide1(String player) {
-    return '$player heads it wide.';
+    return '$playerのヘディングは枠の外。';
   }
 
   @override
   String pitchComHeaderWide2(String player) {
-    return 'A header from $player, but off target.';
+    return '$playerのヘディング、しかし枠を外れた。';
   }
 
   @override
   String pitchComHeaderWide3(String player) {
-    return '$player can\'t keep the header down.';
+    return '$playerのヘディングは上に浮いてしまった。';
   }
 
   @override
   String pitchComHeaderBlocked1(String player) {
-    return '$player heads it, but it\'s blocked.';
+    return '$playerのヘディング、しかしブロックされた。';
   }
 
   @override
   String pitchComHeaderBlocked2(String player) {
-    return '$player heads goalwards, but it\'s charged down.';
+    return '$playerがゴールへヘディング、守備陣がブロック。';
   }
 
   @override
   String pitchComHeaderBlocked3(String player) {
-    return 'Blocked! $player meets it, but a defender is there.';
+    return 'ブロック！$playerがボールに届くが、ディフェンダーが立ちはだかる。';
   }
 
   @override
   String pitchComHeaderWoodwork1(String player) {
-    return '$player heads against the bar!';
+    return '$playerのヘディングがクロスバーを叩いた！';
   }
 
   @override
   String pitchComHeaderWoodwork2(String player) {
-    return 'Off the post! The header from $player comes back out.';
+    return 'ポスト！$playerのヘディング、ボールはピッチに戻る。';
   }
 
   @override
   String pitchComHeaderWoodwork3(String player) {
-    return 'Woodwork! $player rattles the frame with a header.';
+    return 'ゴールの枠が揺れる！$playerのヘディング。';
   }
 
   @override
   String pitchComSetPieceGoal1(String player) {
-    return 'GOAL! $player gets on the end of it!';
+    return 'ゴール！$playerが攻撃の最後に飛び込んだ！';
   }
 
   @override
   String pitchComSetPieceGoal2(String player, String other) {
-    return 'GOAL! $other delivers and $player scores!';
+    return 'ゴール！$otherのクロスから$playerが決めた！';
   }
 
   @override
   String pitchComSetPieceGoal3(String player) {
-    return 'From the set piece, $player scores! GOAL!';
+    return 'セットプレーから$playerが決めた！ゴール！';
   }
 
   @override
   String pitchComSetPieceSaved1(String player, String keeper) {
-    return '$player meets it, but $keeper saves.';
+    return '$playerがボールに触れるが、$keeperがセーブ。';
   }
 
   @override
   String pitchComSetPieceSaved2(String player) {
-    return '$player gets a touch, the keeper gathers.';
+    return '$playerが触れたが、GKがボールを抑える。';
   }
 
   @override
   String pitchComSetPieceSaved3(String player, String keeper) {
-    return '$player gets a shot away, $keeper is alert.';
+    return '$playerがシュート、$keeperが落ち着いて対応。';
   }
 
   @override
   String pitchComSetPieceWide1(String player) {
-    return '$player gets on the end of it, but wide.';
+    return '$playerがシュートまで持ち込むが、枠の外。';
   }
 
   @override
   String pitchComSetPieceWide2(String player) {
-    return '$player meets the delivery, off target.';
+    return '$playerがクロスに合わせるが、枠を外れた。';
   }
 
   @override
   String pitchComSetPieceWide3(String player) {
-    return 'Over the bar from $player.';
+    return 'クロスバーの上、$playerのシュート。';
   }
 
   @override
   String pitchComSetPieceBlocked1(String player) {
-    return '$player meets it, but it\'s blocked.';
+    return '$playerがボールに触れるが、ブロックされた。';
   }
 
   @override
   String pitchComSetPieceBlocked2(String player) {
-    return 'Scramble in the box! $player is blocked.';
+    return 'ゴール前の混戦！$playerのシュートはブロックされる。';
   }
 
   @override
   String pitchComSetPieceBlocked3(String player) {
-    return '$player tries to force it in, but it\'s cleared.';
+    return '$playerが押し込もうとするが、守備陣がクリア。';
   }
 
   @override
   String pitchComSetPieceWoodwork1(String player) {
-    return '$player meets it and hits the post!';
+    return '$playerのシュートがポストに当たった！';
   }
 
   @override
   String pitchComSetPieceWoodwork2(String player) {
-    return 'Off the bar! $player nearly scores from the set piece.';
+    return 'クロスバー！$player、セットプレーから惜しい。';
   }
 
   @override
   String pitchComSetPieceWoodwork3(String player) {
-    return 'Woodwork! $player so close from the delivery.';
+    return 'ゴールの枠！$player、クロスから紙一重だった。';
   }
 
   @override
   String pitchComDirectFreeKickGoal1(String player) {
-    return 'GOAL! $player curls it over the wall!';
+    return 'ゴール！$playerのフリーキックが壁を越えた！';
   }
 
   @override
   String pitchComDirectFreeKickGoal2(String player) {
-    return 'What a free kick! $player finds the top corner!';
+    return '見事なフリーキック！$playerが上の隅を射抜いた！';
   }
 
   @override
   String pitchComDirectFreeKickGoal3(String player) {
-    return 'GOAL! $player beats the keeper from the free kick.';
+    return 'ゴール！$playerがフリーキックでGKを破った。';
   }
 
   @override
   String pitchComDirectFreeKickSaved1(String player, String keeper) {
-    return '$player goes for goal, $keeper saves.';
+    return '$playerが直接狙う、$keeperがセーブ。';
   }
 
   @override
   String pitchComDirectFreeKickSaved2(String player) {
-    return 'The free kick from $player is pushed away.';
+    return '$playerのフリーキックは弾き出された。';
   }
 
   @override
   String pitchComDirectFreeKickSaved3(String player, String keeper) {
-    return 'Good save! $keeper keeps out the free kick from $player.';
+    return 'ナイスセーブ！$playerのフリーキックを$keeperが防いだ。';
   }
 
   @override
   String pitchComDirectFreeKickWide1(String player) {
-    return 'The free kick from $player sails over.';
+    return '$playerのフリーキックは枠の上へ。';
   }
 
   @override
   String pitchComDirectFreeKickWide2(String player) {
-    return '$player goes for goal, but it\'s wide.';
+    return '$playerが直接狙うが、枠の外。';
   }
 
   @override
   String pitchComDirectFreeKickWide3(String player) {
-    return '$player misses the target from the free kick.';
+    return '$playerのフリーキックは枠を捉えられない。';
   }
 
   @override
   String pitchComDirectFreeKickBlocked1(String player) {
-    return 'The free kick from $player hits the wall.';
+    return '$playerのフリーキックは壁に当たった。';
   }
 
   @override
   String pitchComDirectFreeKickBlocked2(String player) {
-    return 'Into the wall from $player.';
+    return '壁に当たった、$playerのシュート。';
   }
 
   @override
   String pitchComDirectFreeKickBlocked3(String player) {
-    return 'The wall stands firm against $player.';
+    return '壁は崩れない、$playerは突破できず。';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork1(String player) {
-    return '$player hits the bar with the free kick!';
+    return '$playerのフリーキックがクロスバーを叩いた！';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork2(String player) {
-    return 'Off the post! $player so close from the free kick.';
+    return 'ポスト！$playerのフリーキック、ボールは跳ね返る。';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork3(String player) {
-    return 'The frame saves the keeper! $player so close.';
+    return 'ゴールの枠がGKを救った！$player、運がない。';
   }
 
   @override
   String pitchComPenaltyGoal1(String player) {
-    return 'GOAL! $player sends the keeper the wrong way.';
+    return 'ゴール！$playerがGKを逆に動かした。';
   }
 
   @override
   String pitchComPenaltyGoal2(String player) {
-    return '$player steps up and scores! GOAL!';
+    return '$playerが助走して決めた！ゴール！';
   }
 
   @override
   String pitchComPenaltyGoal3(String player) {
-    return 'GOAL! $player buries the penalty.';
+    return 'ゴール！$playerがPKを冷静に決めた。';
   }
 
   @override
   String pitchComPenaltySaved1(String player, String keeper) {
-    return 'Saved! $keeper stops the penalty from $player!';
+    return 'セーブ！$playerのPKを$keeperが止めた！';
   }
 
   @override
   String pitchComPenaltySaved2(String player) {
-    return '$player steps up... and it\'s saved!';
+    return '$playerが助走に入る……GKが止めた！';
   }
 
   @override
   String pitchComPenaltySaved3(String player, String keeper) {
-    return '$keeper guesses right and denies $player!';
+    return '$playerのPK、$keeperがコースを読んでセーブ！';
   }
 
   @override
   String pitchComPenaltyMissed1(String player) {
-    return '$player misses the penalty!';
+    return '$playerがPKを外した！';
   }
 
   @override
   String pitchComPenaltyMissed2(String player) {
-    return 'Wide! $player drags the penalty past the post.';
+    return '外れた！$playerのPKはポストの横を通過。';
   }
 
   @override
   String pitchComPenaltyMissed3(String player) {
-    return 'Over the bar! $player blazes the penalty high.';
+    return '枠の上！$playerのPKは大きく外れた。';
   }
 
   @override
   String pitchComPenaltyWoodwork1(String player) {
-    return '$player hits the post from the spot!';
+    return '$playerのPKがポストに当たった！';
   }
 
   @override
   String pitchComPenaltyWoodwork2(String player) {
-    return 'Off the bar! The penalty from $player stays out.';
+    return 'クロスバー！$playerのPKは入らない。';
   }
 
   @override
   String pitchComPenaltyWoodwork3(String player) {
-    return 'Woodwork! $player can\'t believe it.';
+    return 'ゴールの枠！$playerは信じられない様子。';
   }
 
   @override
   String pitchComPenaltyAwarded1(String player) {
-    return 'Penalty! $player is brought down in the box.';
+    return 'PK！$playerがペナルティエリア内で倒された。';
   }
 
   @override
   String pitchComPenaltyAwarded2(String player, String other) {
-    return 'The referee points to the spot! $other fouls $player.';
+    return '主審がペナルティスポットを指差した！$otherのファウル、$playerがエリア内に倒れている。';
   }
 
   @override
   String pitchComPenaltyAwarded3(String player, String other) {
-    return 'Penalty given! $other catches $player in the area.';
+    return 'PKの判定！$otherがエリア内でファウル、$playerが倒れた。';
   }
 
   @override
   String pitchComPenaltyAwardedYellow1(String player, String other) {
-    return 'Penalty! $player goes down and $other is booked.';
+    return 'PK！$playerが倒れ、$otherにイエローカード。';
   }
 
   @override
   String pitchComPenaltyAwardedYellow2(String player, String other) {
-    return 'Spot kick, and a yellow for $other after the foul on $player.';
+    return 'PKと$otherへのイエローカード、$playerがエリア内に倒れている。';
   }
 
   @override
   String pitchComPenaltyAwardedYellow3(String player, String other) {
-    return 'Penalty and a booking! $other clips $player in the box.';
+    return 'PKとカード！$otherがエリア内でファウル、$playerが倒れた。';
   }
 
   @override
   String pitchComPenaltyAwardedRed1(String player, String other) {
-    return 'Penalty and a red card! $player goes down, $other is off.';
+    return 'PKとレッドカード！$playerが倒れ、$otherは退場。';
   }
 
   @override
   String pitchComPenaltyAwardedRed2(String player, String other) {
-    return 'Spot kick, and $other is sent off for the foul on $player!';
+    return 'PK、そして$otherが退場！$playerがエリア内に倒れている。';
   }
 
   @override
   String pitchComPenaltyAwardedRed3(String player, String other) {
-    return 'Red card and a penalty! $other stops $player going through.';
+    return 'レッドカードとPK！$playerが抜け出したところを$otherが止めた。';
   }
 
   @override
   String pitchComCorner1(String player) {
-    return 'Corner. $player to take it.';
+    return 'コーナーキック。キッカーは$player。';
   }
 
   @override
   String pitchComCorner2(String player) {
-    return '$player swings in the corner.';
+    return '$playerがコーナーからクロスを入れた。';
   }
 
   @override
   String pitchComCorner3(String player) {
-    return 'A corner, and $player stands over it.';
+    return 'コーナーキック、ボールの前に$playerが立つ。';
   }
 
   @override
   String pitchComFreeKick1(String player) {
-    return 'Free kick. $player to take it.';
+    return 'フリーキック。キッカーは$player。';
   }
 
   @override
   String pitchComFreeKick2(String player) {
-    return 'Free kick in a dangerous spot. $player stands over it.';
+    return '危険な位置でのフリーキック。ボールの前に$playerが立つ。';
   }
 
   @override
   String pitchComFreeKick3(String player) {
-    return '$player lines up the free kick.';
+    return '$playerがフリーキックの準備をしている。';
   }
 
   @override
   String pitchComLongThrow1(String player) {
-    return 'Long throw! $player launches it into the box.';
+    return 'ロングスロー！$playerがボールをエリア内へ投げ入れる。';
   }
 
   @override
   String pitchComLongThrow2(String player) {
-    return '$player with a long throw into the area.';
+    return '$playerのロングスローがエリア内へ。';
   }
 
   @override
   String pitchComLongThrow3(String player) {
-    return 'Here comes the long throw from $player.';
+    return '$playerのロングスローが来る。';
   }
 
   @override
   String pitchComFoulYellow1(String player) {
-    return 'Yellow card for $player.';
+    return 'イエローカード、$player。';
   }
 
   @override
   String pitchComFoulYellow2(String player, String other) {
-    return '$player goes into the book for a foul on $other.';
+    return 'ファウルで$playerにイエローカード、$otherは倒れたまま。';
   }
 
   @override
   String pitchComFoulYellow3(String player, String other) {
-    return 'A late challenge on $other, and $player is booked.';
+    return '遅れたタックル、$otherが倒れ、$playerにイエローカード。';
   }
 
   @override
   String pitchComFoulSecondYellow1(String player) {
-    return 'Second yellow! $player is off.';
+    return '2枚目のイエロー！$playerは退場。';
   }
 
   @override
   String pitchComFoulSecondYellow2(String player) {
-    return '$player is booked again and sent off.';
+    return '$playerが再び警告を受け、退場となる。';
   }
 
   @override
   String pitchComFoulSecondYellow3(String player) {
-    return 'Another yellow for $player, and that\'s red.';
+    return '$playerに2枚目のイエロー、つまりレッドカード。';
   }
 
   @override
   String pitchComFoulRed1(String player) {
-    return 'Red card! $player is sent off.';
+    return 'レッドカード！$playerは退場。';
   }
 
   @override
   String pitchComFoulRed2(String player, String other) {
-    return 'Straight red for $player after the foul on $other!';
+    return '一発レッド！$playerのファウル、$otherは倒れたまま。';
   }
 
   @override
   String pitchComFoulRed3(String player) {
-    return '$player sees red and has to go.';
+    return '$playerにレッドカード、ピッチを去らなければならない。';
   }
 
   @override
   String pitchComOffside1(String player) {
-    return 'Offside. $player went too early.';
+    return 'オフサイド。$playerの飛び出しが早すぎた。';
   }
 
   @override
   String pitchComOffside2(String player) {
-    return 'The flag is up against $player.';
+    return '旗が上がる、$playerはオフサイド。';
   }
 
   @override
   String pitchComOffside3(String player) {
-    return '$player is caught offside.';
+    return '$playerがオフサイドにかかり、攻撃は終わる。';
   }
 
   @override
   String pitchComSub1(String player, String other) {
-    return 'Substitution: $player on, $other off.';
+    return '選手交代：$playerが入り、$otherが下がる。';
   }
 
   @override
   String pitchComSub2(String player, String other) {
-    return '$other makes way for $player.';
+    return '$otherに代わって$player。';
   }
 
   @override
   String pitchComSub3(String player, String other) {
-    return '$player comes on for $other.';
+    return '$playerが$otherに代わって登場。';
   }
 
   @override
   String pitchComSubFill1(String player) {
-    return '$player comes on.';
+    return '$playerが登場。';
   }
 
   @override
   String pitchComSubFill2(String player) {
-    return 'Substitution: $player is on.';
+    return '選手交代：$playerがピッチに入る。';
   }
 
   @override
   String pitchComSubFill3(String player) {
-    return '$player enters the fray.';
+    return '$playerが試合に加わる。';
   }
 
   @override
   String pitchComInjury1(String player) {
-    return '$player is down and needs treatment.';
+    return '$playerが倒れ、治療が必要な様子。';
   }
 
   @override
   String pitchComInjury2(String player) {
-    return 'Concern here, $player has picked up a knock.';
+    return '心配な状況、$playerが痛めたようだ。';
   }
 
   @override
   String pitchComInjury3(String player) {
-    return 'Injury worry for $player.';
+    return '$playerのケガが心配される。';
   }
 
   @override
@@ -14330,48 +14330,47 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get pitchComSomeone => 'Player';
+  String get pitchComSomeone => '選手';
 
   @override
   String pitchComPenaltyAwardedSecondYellow1(String player, String other) {
-    return 'Penalty, and a second yellow! $other is off for the foul on $player.';
+    return 'PKと2枚目のイエロー！$otherは退場、$playerがエリア内に倒れている。';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow2(String player, String other) {
-    return 'Spot kick! $player goes down and $other sees a second yellow.';
+    return 'PK！$playerが倒れ、$otherに2枚目のイエローカード。';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
-    return 'Penalty! $other clips $player and is booked again, so that\'s red.';
+    return 'PK！$otherのファウル、$playerが倒れ、2枚目のイエロー、つまりレッド。';
   }
 
   @override
-  String get matchViewChooseTitle => 'How do you want to watch?';
+  String get matchViewChooseTitle => 'どちらで観戦しますか？';
 
   @override
-  String get matchViewChooseHint =>
-      'Your choice is kept for the next match. You can switch at any time.';
+  String get matchViewChooseHint => '選択は次の試合にも引き継がれます。いつでも切り替えられます。';
 
   @override
-  String get matchViewPitch => 'Pitch';
+  String get matchViewPitch => 'ピッチ';
 
   @override
-  String get matchViewPitchBlurb => 'Watch the players on the pitch';
+  String get matchViewPitchBlurb => 'ピッチ上の選手を見る';
 
   @override
-  String get matchViewTimeline => 'Timeline';
+  String get matchViewTimeline => '経過';
 
   @override
-  String get matchViewTimelineBlurb => 'Follow the match event by event';
+  String get matchViewTimelineBlurb => '試合を出来事ごとに追う';
 
   @override
-  String get matchViewSwitchToPitch => 'Watch on the pitch';
+  String get matchViewSwitchToPitch => 'ピッチで観戦';
 
   @override
-  String get matchViewSwitchToTimeline => 'Watch the timeline';
+  String get matchViewSwitchToTimeline => '経過を見る';
 
   @override
-  String get matchTabCommentary => 'COMMENTARY';
+  String get matchTabCommentary => '実況';
 }

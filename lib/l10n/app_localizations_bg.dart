@@ -14375,557 +14375,557 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String pitchComShotGoal1(String player) {
-    return 'GOAL! $player finds the net!';
+    return 'ГОЛ! $player намира мрежата!';
   }
 
   @override
   String pitchComShotGoal2(String player) {
-    return '$player fires it in! GOAL!';
+    return '$player стреля и топката е вътре! ГОЛ!';
   }
 
   @override
   String pitchComShotGoal3(String player) {
-    return 'GOAL! A clinical finish from $player.';
+    return 'ГОЛ! Хладнокръвно завършване на $player.';
   }
 
   @override
   String pitchComShotSaved1(String player, String keeper) {
-    return '$player shoots, but $keeper saves.';
+    return '$player стреля, но $keeper спасява.';
   }
 
   @override
   String pitchComShotSaved2(String player) {
-    return '$player tries his luck, but the keeper is equal to it.';
+    return '$player опитва, но вратарят е на място.';
   }
 
   @override
   String pitchComShotSaved3(String player, String keeper) {
-    return '$player lets fly, $keeper pushes it away!';
+    return '$player изстрелва топката, $keeper я отбива!';
   }
 
   @override
   String pitchComShotWide1(String player) {
-    return '$player shoots wide.';
+    return '$player стреля встрани от вратата.';
   }
 
   @override
   String pitchComShotWide2(String player) {
-    return 'Off target from $player.';
+    return 'Неточен удар на $player.';
   }
 
   @override
   String pitchComShotWide3(String player) {
-    return '$player drags it past the post.';
+    return '$player праща топката на милиметри от стойката.';
   }
 
   @override
   String pitchComShotBlocked1(String player) {
-    return '$player shoots, but it\'s blocked.';
+    return '$player стреля, но ударът е блокиран.';
   }
 
   @override
   String pitchComShotBlocked2(String player) {
-    return 'Blocked! $player can\'t find a way through.';
+    return 'Блокирано! $player не намира път към вратата.';
   }
 
   @override
   String pitchComShotBlocked3(String player) {
-    return '$player lets fly, but a defender gets in the way.';
+    return '$player удря, но защитник застава на пътя на топката.';
   }
 
   @override
   String pitchComShotWoodwork1(String player) {
-    return 'Off the post! So close from $player.';
+    return 'Греда! $player няма късмет.';
   }
 
   @override
   String pitchComShotWoodwork2(String player) {
-    return '$player hits the woodwork!';
+    return '$player попада в рамката на вратата!';
   }
 
   @override
   String pitchComShotWoodwork3(String player) {
-    return 'Crossbar! $player is denied by the frame.';
+    return 'Напречна греда! $player е безкрайно близо.';
   }
 
   @override
   String pitchComHeaderGoal1(String player) {
-    return 'GOAL! $player heads it home!';
+    return 'ГОЛ! $player праща топката във вратата с глава!';
   }
 
   @override
   String pitchComHeaderGoal2(String player) {
-    return '$player rises highest and scores! GOAL!';
+    return '$player се извисява над всички и вкарва! ГОЛ!';
   }
 
   @override
   String pitchComHeaderGoal3(String player) {
-    return 'GOAL! A powerful header from $player.';
+    return 'ГОЛ! Мощен удар с глава на $player.';
   }
 
   @override
   String pitchComHeaderSaved1(String player, String keeper) {
-    return '$player heads it, $keeper saves.';
+    return '$player удря с глава, $keeper спасява.';
   }
 
   @override
   String pitchComHeaderSaved2(String player) {
-    return 'A header from $player, but the keeper holds it.';
+    return '$player с глава, но вратарят хваща топката.';
   }
 
   @override
   String pitchComHeaderSaved3(String player, String keeper) {
-    return '$keeper tips away the header from $player.';
+    return '$player с глава, $keeper отбива топката.';
   }
 
   @override
   String pitchComHeaderWide1(String player) {
-    return '$player heads it wide.';
+    return '$player удря с глава встрани.';
   }
 
   @override
   String pitchComHeaderWide2(String player) {
-    return 'A header from $player, but off target.';
+    return '$player с глава, но неточно.';
   }
 
   @override
   String pitchComHeaderWide3(String player) {
-    return '$player can\'t keep the header down.';
+    return '$player не успява да смъкне топката след удара с глава.';
   }
 
   @override
   String pitchComHeaderBlocked1(String player) {
-    return '$player heads it, but it\'s blocked.';
+    return '$player удря с глава, но ударът е блокиран.';
   }
 
   @override
   String pitchComHeaderBlocked2(String player) {
-    return '$player heads goalwards, but it\'s charged down.';
+    return '$player с глава към вратата, но защитата блокира.';
   }
 
   @override
   String pitchComHeaderBlocked3(String player) {
-    return 'Blocked! $player meets it, but a defender is there.';
+    return 'Блокирано! $player стига до топката, но защитник е на пътя.';
   }
 
   @override
   String pitchComHeaderWoodwork1(String player) {
-    return '$player heads against the bar!';
+    return '$player с глава в напречната греда!';
   }
 
   @override
   String pitchComHeaderWoodwork2(String player) {
-    return 'Off the post! The header from $player comes back out.';
+    return 'Греда! $player с глава, топката се връща в игра.';
   }
 
   @override
   String pitchComHeaderWoodwork3(String player) {
-    return 'Woodwork! $player rattles the frame with a header.';
+    return 'Рамката на вратата потреперва! $player удря с глава.';
   }
 
   @override
   String pitchComSetPieceGoal1(String player) {
-    return 'GOAL! $player gets on the end of it!';
+    return 'ГОЛ! $player е там в края на атаката!';
   }
 
   @override
   String pitchComSetPieceGoal2(String player, String other) {
-    return 'GOAL! $other delivers and $player scores!';
+    return 'ГОЛ! $other центрира и $player вкарва!';
   }
 
   @override
   String pitchComSetPieceGoal3(String player) {
-    return 'From the set piece, $player scores! GOAL!';
+    return 'От статично положение вкарва $player! ГОЛ!';
   }
 
   @override
   String pitchComSetPieceSaved1(String player, String keeper) {
-    return '$player meets it, but $keeper saves.';
+    return '$player стига до топката, но $keeper спасява.';
   }
 
   @override
   String pitchComSetPieceSaved2(String player) {
-    return '$player gets a touch, the keeper gathers.';
+    return '$player докосва топката, вратарят я хваща.';
   }
 
   @override
   String pitchComSetPieceSaved3(String player, String keeper) {
-    return '$player gets a shot away, $keeper is alert.';
+    return '$player стреля, $keeper е бдителен.';
   }
 
   @override
   String pitchComSetPieceWide1(String player) {
-    return '$player gets on the end of it, but wide.';
+    return '$player стига до удар, но встрани.';
   }
 
   @override
   String pitchComSetPieceWide2(String player) {
-    return '$player meets the delivery, off target.';
+    return '$player посреща центрирането, но неточно.';
   }
 
   @override
   String pitchComSetPieceWide3(String player) {
-    return 'Over the bar from $player.';
+    return 'Над гредата от $player.';
   }
 
   @override
   String pitchComSetPieceBlocked1(String player) {
-    return '$player meets it, but it\'s blocked.';
+    return '$player стига до топката, но ударът е блокиран.';
   }
 
   @override
   String pitchComSetPieceBlocked2(String player) {
-    return 'Scramble in the box! $player is blocked.';
+    return 'Меле във вратарската зона! $player е блокиран.';
   }
 
   @override
   String pitchComSetPieceBlocked3(String player) {
-    return '$player tries to force it in, but it\'s cleared.';
+    return '$player се опитва да вкара топката, но защитата изчиства.';
   }
 
   @override
   String pitchComSetPieceWoodwork1(String player) {
-    return '$player meets it and hits the post!';
+    return '$player стреля и попада в стойката!';
   }
 
   @override
   String pitchComSetPieceWoodwork2(String player) {
-    return 'Off the bar! $player nearly scores from the set piece.';
+    return 'Греда! $player за малко не вкарва от статично положение.';
   }
 
   @override
   String pitchComSetPieceWoodwork3(String player) {
-    return 'Woodwork! $player so close from the delivery.';
+    return 'Рамката на вратата! $player е толкова близо след центрирането.';
   }
 
   @override
   String pitchComDirectFreeKickGoal1(String player) {
-    return 'GOAL! $player curls it over the wall!';
+    return 'ГОЛ! $player прехвърля стената със свободния удар!';
   }
 
   @override
   String pitchComDirectFreeKickGoal2(String player) {
-    return 'What a free kick! $player finds the top corner!';
+    return 'Какъв свободен удар! $player намира шарнира!';
   }
 
   @override
   String pitchComDirectFreeKickGoal3(String player) {
-    return 'GOAL! $player beats the keeper from the free kick.';
+    return 'ГОЛ! $player надхитря вратаря със свободен удар.';
   }
 
   @override
   String pitchComDirectFreeKickSaved1(String player, String keeper) {
-    return '$player goes for goal, $keeper saves.';
+    return '$player стреля директно, $keeper спасява.';
   }
 
   @override
   String pitchComDirectFreeKickSaved2(String player) {
-    return 'The free kick from $player is pushed away.';
+    return 'Свободният удар на $player е отбит.';
   }
 
   @override
   String pitchComDirectFreeKickSaved3(String player, String keeper) {
-    return 'Good save! $keeper keeps out the free kick from $player.';
+    return 'Страхотно спасяване! Свободен удар на $player, $keeper го изважда.';
   }
 
   @override
   String pitchComDirectFreeKickWide1(String player) {
-    return 'The free kick from $player sails over.';
+    return 'Свободният удар на $player минава над вратата.';
   }
 
   @override
   String pitchComDirectFreeKickWide2(String player) {
-    return '$player goes for goal, but it\'s wide.';
+    return '$player стреля директно, но встрани.';
   }
 
   @override
   String pitchComDirectFreeKickWide3(String player) {
-    return '$player misses the target from the free kick.';
+    return '$player не уцелва вратата от свободен удар.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked1(String player) {
-    return 'The free kick from $player hits the wall.';
+    return 'Свободният удар на $player удря в стената.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked2(String player) {
-    return 'Into the wall from $player.';
+    return '$player удря в стената.';
   }
 
   @override
   String pitchComDirectFreeKickBlocked3(String player) {
-    return 'The wall stands firm against $player.';
+    return 'Стената устоява, $player не успява да мине.';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork1(String player) {
-    return '$player hits the bar with the free kick!';
+    return '$player уцелва гредата със свободния удар!';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork2(String player) {
-    return 'Off the post! $player so close from the free kick.';
+    return 'Стойка! Свободен удар на $player, топката се връща.';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork3(String player) {
-    return 'The frame saves the keeper! $player so close.';
+    return 'Рамката спасява вратаря! $player няма късмет.';
   }
 
   @override
   String pitchComPenaltyGoal1(String player) {
-    return 'GOAL! $player sends the keeper the wrong way.';
+    return 'ГОЛ! $player праща вратаря в грешната посока.';
   }
 
   @override
   String pitchComPenaltyGoal2(String player) {
-    return '$player steps up and scores! GOAL!';
+    return '$player засилва се и вкарва! ГОЛ!';
   }
 
   @override
   String pitchComPenaltyGoal3(String player) {
-    return 'GOAL! $player buries the penalty.';
+    return 'ГОЛ! $player реализира дузпата хладнокръвно.';
   }
 
   @override
   String pitchComPenaltySaved1(String player, String keeper) {
-    return 'Saved! $keeper stops the penalty from $player!';
+    return 'Спасено! $player изпълнява, $keeper спира дузпата!';
   }
 
   @override
   String pitchComPenaltySaved2(String player) {
-    return '$player steps up... and it\'s saved!';
+    return '$player се засилва... и вратарят спасява!';
   }
 
   @override
   String pitchComPenaltySaved3(String player, String keeper) {
-    return '$keeper guesses right and denies $player!';
+    return '$player изпълнява дузпата, $keeper познава посоката и спасява!';
   }
 
   @override
   String pitchComPenaltyMissed1(String player) {
-    return '$player misses the penalty!';
+    return '$player пропуска дузпата!';
   }
 
   @override
   String pitchComPenaltyMissed2(String player) {
-    return 'Wide! $player drags the penalty past the post.';
+    return 'Встрани! $player праща дузпата покрай стойката.';
   }
 
   @override
   String pitchComPenaltyMissed3(String player) {
-    return 'Over the bar! $player blazes the penalty high.';
+    return 'Над вратата! $player праща дузпата в небето.';
   }
 
   @override
   String pitchComPenaltyWoodwork1(String player) {
-    return '$player hits the post from the spot!';
+    return '$player от дузпата уцелва стойката!';
   }
 
   @override
   String pitchComPenaltyWoodwork2(String player) {
-    return 'Off the bar! The penalty from $player stays out.';
+    return 'Греда! $player не реализира дузпата.';
   }
 
   @override
   String pitchComPenaltyWoodwork3(String player) {
-    return 'Woodwork! $player can\'t believe it.';
+    return 'Рамката! $player не вярва на очите си.';
   }
 
   @override
   String pitchComPenaltyAwarded1(String player) {
-    return 'Penalty! $player is brought down in the box.';
+    return 'Дузпа! $player пада в наказателното поле.';
   }
 
   @override
   String pitchComPenaltyAwarded2(String player, String other) {
-    return 'The referee points to the spot! $other fouls $player.';
+    return 'Съдията сочи бялата точка! $other фаулира, $player лежи в наказателното поле.';
   }
 
   @override
   String pitchComPenaltyAwarded3(String player, String other) {
-    return 'Penalty given! $other catches $player in the area.';
+    return 'Отсъдена дузпа! $other фаулира в наказателното поле, $player пада.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow1(String player, String other) {
-    return 'Penalty! $player goes down and $other is booked.';
+    return 'Дузпа! $player пада, а $other получава жълт картон.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow2(String player, String other) {
-    return 'Spot kick, and a yellow for $other after the foul on $player.';
+    return 'Дузпа и жълт картон за $other, $player лежи в наказателното поле.';
   }
 
   @override
   String pitchComPenaltyAwardedYellow3(String player, String other) {
-    return 'Penalty and a booking! $other clips $player in the box.';
+    return 'Дузпа и картон! $other събаря $player в наказателното поле.';
   }
 
   @override
   String pitchComPenaltyAwardedRed1(String player, String other) {
-    return 'Penalty and a red card! $player goes down, $other is off.';
+    return 'Дузпа и червен картон! $player пада, $other напуска терена.';
   }
 
   @override
   String pitchComPenaltyAwardedRed2(String player, String other) {
-    return 'Spot kick, and $other is sent off for the foul on $player!';
+    return 'Дузпа, а $other е изгонен! $player лежи в наказателното поле.';
   }
 
   @override
   String pitchComPenaltyAwardedRed3(String player, String other) {
-    return 'Red card and a penalty! $other stops $player going through.';
+    return 'Червен картон и дузпа! $player е сам срещу вратата, $other го събаря.';
   }
 
   @override
   String pitchComCorner1(String player) {
-    return 'Corner. $player to take it.';
+    return 'Корнер. Изпълнява $player.';
   }
 
   @override
   String pitchComCorner2(String player) {
-    return '$player swings in the corner.';
+    return '$player центрира от корнера.';
   }
 
   @override
   String pitchComCorner3(String player) {
-    return 'A corner, and $player stands over it.';
+    return 'Корнер, при топката застава $player.';
   }
 
   @override
   String pitchComFreeKick1(String player) {
-    return 'Free kick. $player to take it.';
+    return 'Свободен удар. Изпълнява $player.';
   }
 
   @override
   String pitchComFreeKick2(String player) {
-    return 'Free kick in a dangerous spot. $player stands over it.';
+    return 'Свободен удар на опасно място. При топката е $player.';
   }
 
   @override
   String pitchComFreeKick3(String player) {
-    return '$player lines up the free kick.';
+    return '$player се приготвя за свободния удар.';
   }
 
   @override
   String pitchComLongThrow1(String player) {
-    return 'Long throw! $player launches it into the box.';
+    return 'Дълъг аут! $player хвърля топката в наказателното поле.';
   }
 
   @override
   String pitchComLongThrow2(String player) {
-    return '$player with a long throw into the area.';
+    return '$player с дълъг аут в наказателното поле.';
   }
 
   @override
   String pitchComLongThrow3(String player) {
-    return 'Here comes the long throw from $player.';
+    return 'Ето дългия аут, хвърля $player.';
   }
 
   @override
   String pitchComFoulYellow1(String player) {
-    return 'Yellow card for $player.';
+    return 'Жълт картон за $player.';
   }
 
   @override
   String pitchComFoulYellow2(String player, String other) {
-    return '$player goes into the book for a foul on $other.';
+    return '$player получава жълт картон за фал, $other остава на терена.';
   }
 
   @override
   String pitchComFoulYellow3(String player, String other) {
-    return 'A late challenge on $other, and $player is booked.';
+    return 'Закъсняло влизане, $other е на земята, а $player вижда жълт картон.';
   }
 
   @override
   String pitchComFoulSecondYellow1(String player) {
-    return 'Second yellow! $player is off.';
+    return 'Втори жълт! $player напуска терена.';
   }
 
   @override
   String pitchComFoulSecondYellow2(String player) {
-    return '$player is booked again and sent off.';
+    return '$player получава втори жълт картон и е изгонен.';
   }
 
   @override
   String pitchComFoulSecondYellow3(String player) {
-    return 'Another yellow for $player, and that\'s red.';
+    return 'Втори жълт картон за $player, значи червен.';
   }
 
   @override
   String pitchComFoulRed1(String player) {
-    return 'Red card! $player is sent off.';
+    return 'Червен картон! $player е изгонен.';
   }
 
   @override
   String pitchComFoulRed2(String player, String other) {
-    return 'Straight red for $player after the foul on $other!';
+    return 'Директен червен! $player фаулира, $other остава на терена.';
   }
 
   @override
   String pitchComFoulRed3(String player) {
-    return '$player sees red and has to go.';
+    return '$player вижда червен картон и трябва да си тръгне.';
   }
 
   @override
   String pitchComOffside1(String player) {
-    return 'Offside. $player went too early.';
+    return 'Засада. $player е тръгнал твърде рано.';
   }
 
   @override
   String pitchComOffside2(String player) {
-    return 'The flag is up against $player.';
+    return 'Флагчето се вдига, $player е в засада.';
   }
 
   @override
   String pitchComOffside3(String player) {
-    return '$player is caught offside.';
+    return '$player е в засада, атаката спира.';
   }
 
   @override
   String pitchComSub1(String player, String other) {
-    return 'Substitution: $player on, $other off.';
+    return 'Смяна: влиза $player, излиза $other.';
   }
 
   @override
   String pitchComSub2(String player, String other) {
-    return '$other makes way for $player.';
+    return '$other напуска терена, сменя го $player.';
   }
 
   @override
   String pitchComSub3(String player, String other) {
-    return '$player comes on for $other.';
+    return 'На терена влиза $player, излиза $other.';
   }
 
   @override
   String pitchComSubFill1(String player) {
-    return '$player comes on.';
+    return 'На терена излиза $player.';
   }
 
   @override
   String pitchComSubFill2(String player) {
-    return 'Substitution: $player is on.';
+    return 'Смяна: влиза $player.';
   }
 
   @override
   String pitchComSubFill3(String player) {
-    return '$player enters the fray.';
+    return '$player влиза в игра.';
   }
 
   @override
   String pitchComInjury1(String player) {
-    return '$player is down and needs treatment.';
+    return '$player е на земята и се нуждае от помощ.';
   }
 
   @override
   String pitchComInjury2(String player) {
-    return 'Concern here, $player has picked up a knock.';
+    return 'Тревога, $player получи удар.';
   }
 
   @override
   String pitchComInjury3(String player) {
-    return 'Injury worry for $player.';
+    return 'Тревожна контузия за $player.';
   }
 
   @override
@@ -14934,48 +14934,48 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
-  String get pitchComSomeone => 'Player';
+  String get pitchComSomeone => 'Играч';
 
   @override
   String pitchComPenaltyAwardedSecondYellow1(String player, String other) {
-    return 'Penalty, and a second yellow! $other is off for the foul on $player.';
+    return 'Дузпа и втори жълт! $other напуска терена, $player лежи в наказателното поле.';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow2(String player, String other) {
-    return 'Spot kick! $player goes down and $other sees a second yellow.';
+    return 'Дузпа! $player пада, а $other получава втори жълт картон.';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
-    return 'Penalty! $other clips $player and is booked again, so that\'s red.';
+    return 'Дузпа! $other събаря $player и получава втори жълт, значи червен.';
   }
 
   @override
-  String get matchViewChooseTitle => 'How do you want to watch?';
+  String get matchViewChooseTitle => 'Как искате да следите мача?';
 
   @override
   String get matchViewChooseHint =>
-      'Your choice is kept for the next match. You can switch at any time.';
+      'Изборът ви важи и за следващия мач. Можете да го смените по всяко време.';
 
   @override
-  String get matchViewPitch => 'Pitch';
+  String get matchViewPitch => 'Терен';
 
   @override
-  String get matchViewPitchBlurb => 'Watch the players on the pitch';
+  String get matchViewPitchBlurb => 'Следете играчите на терена';
 
   @override
-  String get matchViewTimeline => 'Timeline';
+  String get matchViewTimeline => 'Ход';
 
   @override
-  String get matchViewTimelineBlurb => 'Follow the match event by event';
+  String get matchViewTimelineBlurb => 'Следете мача събитие по събитие';
 
   @override
-  String get matchViewSwitchToPitch => 'Watch on the pitch';
+  String get matchViewSwitchToPitch => 'Гледай на терена';
 
   @override
-  String get matchViewSwitchToTimeline => 'Watch the timeline';
+  String get matchViewSwitchToTimeline => 'Гледай хода';
 
   @override
-  String get matchTabCommentary => 'COMMENTARY';
+  String get matchTabCommentary => 'КОМЕНТАР';
 }

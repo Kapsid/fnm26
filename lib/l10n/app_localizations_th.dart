@@ -14026,557 +14026,557 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String pitchComShotGoal1(String player) {
-    return 'GOAL! $player finds the net!';
+    return 'ประตู! $player ซัดเข้าตาข่าย!';
   }
 
   @override
   String pitchComShotGoal2(String player) {
-    return '$player fires it in! GOAL!';
+    return '$player ยิงเข้าไปแล้ว! ประตู!';
   }
 
   @override
   String pitchComShotGoal3(String player) {
-    return 'GOAL! A clinical finish from $player.';
+    return 'ประตู! $player จบสกอร์ได้อย่างเยือกเย็น';
   }
 
   @override
   String pitchComShotSaved1(String player, String keeper) {
-    return '$player shoots, but $keeper saves.';
+    return '$player ยิง แต่ $keeper เซฟไว้ได้';
   }
 
   @override
   String pitchComShotSaved2(String player) {
-    return '$player tries his luck, but the keeper is equal to it.';
+    return '$player ลองยิง แต่ผู้รักษาประตูพร้อมรับ';
   }
 
   @override
   String pitchComShotSaved3(String player, String keeper) {
-    return '$player lets fly, $keeper pushes it away!';
+    return '$player ยิงเต็มแรง $keeper ปัดออกไป!';
   }
 
   @override
   String pitchComShotWide1(String player) {
-    return '$player shoots wide.';
+    return '$player ยิงเฉียดออกไป';
   }
 
   @override
   String pitchComShotWide2(String player) {
-    return 'Off target from $player.';
+    return 'ลูกยิงของ $player ไม่ตรงกรอบ';
   }
 
   @override
   String pitchComShotWide3(String player) {
-    return '$player drags it past the post.';
+    return '$player ยิงเฉียดเสาออกไปนิดเดียว';
   }
 
   @override
   String pitchComShotBlocked1(String player) {
-    return '$player shoots, but it\'s blocked.';
+    return '$player ยิง แต่ถูกบล็อกไว้';
   }
 
   @override
   String pitchComShotBlocked2(String player) {
-    return 'Blocked! $player can\'t find a way through.';
+    return 'ถูกบล็อก! $player หาช่องทางไม่ได้';
   }
 
   @override
   String pitchComShotBlocked3(String player) {
-    return '$player lets fly, but a defender gets in the way.';
+    return '$player ยิง แต่กองหลังพุ่งเข้ามาขวาง';
   }
 
   @override
   String pitchComShotWoodwork1(String player) {
-    return 'Off the post! So close from $player.';
+    return 'ติดเสา! $player โชคไม่เข้าข้าง';
   }
 
   @override
   String pitchComShotWoodwork2(String player) {
-    return '$player hits the woodwork!';
+    return '$player ยิงเข้ากรอบประตูเต็มๆ!';
   }
 
   @override
   String pitchComShotWoodwork3(String player) {
-    return 'Crossbar! $player is denied by the frame.';
+    return 'ติดคานประตู! ลูกยิงของ $player สะท้อนกลับมา';
   }
 
   @override
   String pitchComHeaderGoal1(String player) {
-    return 'GOAL! $player heads it home!';
+    return 'ประตู! $player โหม่งเข้าไป!';
   }
 
   @override
   String pitchComHeaderGoal2(String player) {
-    return '$player rises highest and scores! GOAL!';
+    return '$player กระโดดสูงที่สุดและทำประตูได้! ประตู!';
   }
 
   @override
   String pitchComHeaderGoal3(String player) {
-    return 'GOAL! A powerful header from $player.';
+    return 'ประตู! ลูกโหม่งทรงพลังของ $player';
   }
 
   @override
   String pitchComHeaderSaved1(String player, String keeper) {
-    return '$player heads it, $keeper saves.';
+    return '$player โหม่ง $keeper เซฟไว้ได้';
   }
 
   @override
   String pitchComHeaderSaved2(String player) {
-    return 'A header from $player, but the keeper holds it.';
+    return 'ลูกโหม่งของ $player แต่ผู้รักษาประตูรับได้มั่น';
   }
 
   @override
   String pitchComHeaderSaved3(String player, String keeper) {
-    return '$keeper tips away the header from $player.';
+    return 'ลูกโหม่งของ $player $keeper ปัดออกไป';
   }
 
   @override
   String pitchComHeaderWide1(String player) {
-    return '$player heads it wide.';
+    return '$player โหม่งเฉียดออกไป';
   }
 
   @override
   String pitchComHeaderWide2(String player) {
-    return 'A header from $player, but off target.';
+    return 'ลูกโหม่งของ $player แต่ไม่ตรงกรอบ';
   }
 
   @override
   String pitchComHeaderWide3(String player) {
-    return '$player can\'t keep the header down.';
+    return '$player กดลูกโหม่งให้ต่ำลงไม่ได้';
   }
 
   @override
   String pitchComHeaderBlocked1(String player) {
-    return '$player heads it, but it\'s blocked.';
+    return '$player โหม่ง แต่ถูกบล็อกไว้';
   }
 
   @override
   String pitchComHeaderBlocked2(String player) {
-    return '$player heads goalwards, but it\'s charged down.';
+    return '$player โหม่งเข้าหาประตู แต่แนวรับบล็อกไว้';
   }
 
   @override
   String pitchComHeaderBlocked3(String player) {
-    return 'Blocked! $player meets it, but a defender is there.';
+    return 'ถูกบล็อก! $player ไปถึงลูก แต่มีกองหลังขวางอยู่';
   }
 
   @override
   String pitchComHeaderWoodwork1(String player) {
-    return '$player heads against the bar!';
+    return '$player โหม่งโดนคานประตู!';
   }
 
   @override
   String pitchComHeaderWoodwork2(String player) {
-    return 'Off the post! The header from $player comes back out.';
+    return 'ติดเสา! ลูกโหม่งของ $player กลับเข้าสู่สนาม';
   }
 
   @override
   String pitchComHeaderWoodwork3(String player) {
-    return 'Woodwork! $player rattles the frame with a header.';
+    return 'กรอบประตูสะเทือน! ลูกโหม่งของ $player';
   }
 
   @override
   String pitchComSetPieceGoal1(String player) {
-    return 'GOAL! $player gets on the end of it!';
+    return 'ประตู! $player มาถึงจังหวะสุดท้ายของการบุก!';
   }
 
   @override
   String pitchComSetPieceGoal2(String player, String other) {
-    return 'GOAL! $other delivers and $player scores!';
+    return 'ประตู! $other ครอสมา และ $player ทำประตู!';
   }
 
   @override
   String pitchComSetPieceGoal3(String player) {
-    return 'From the set piece, $player scores! GOAL!';
+    return 'จากลูกตั้งเตะ $player ทำประตู! ประตู!';
   }
 
   @override
   String pitchComSetPieceSaved1(String player, String keeper) {
-    return '$player meets it, but $keeper saves.';
+    return '$player ไปถึงลูก แต่ $keeper เซฟไว้ได้';
   }
 
   @override
   String pitchComSetPieceSaved2(String player) {
-    return '$player gets a touch, the keeper gathers.';
+    return '$player สัมผัสบอล ผู้รักษาประตูรับไว้ได้';
   }
 
   @override
   String pitchComSetPieceSaved3(String player, String keeper) {
-    return '$player gets a shot away, $keeper is alert.';
+    return '$player จบสกอร์ $keeper ตื่นตัว';
   }
 
   @override
   String pitchComSetPieceWide1(String player) {
-    return '$player gets on the end of it, but wide.';
+    return '$player มีจังหวะยิง แต่เฉียดออกไป';
   }
 
   @override
   String pitchComSetPieceWide2(String player) {
-    return '$player meets the delivery, off target.';
+    return '$player ไปถึงลูกครอส แต่ไม่ตรงกรอบ';
   }
 
   @override
   String pitchComSetPieceWide3(String player) {
-    return 'Over the bar from $player.';
+    return 'เหนือคานประตูไป ลูกยิงของ $player';
   }
 
   @override
   String pitchComSetPieceBlocked1(String player) {
-    return '$player meets it, but it\'s blocked.';
+    return '$player ไปถึงลูก แต่ถูกบล็อกไว้';
   }
 
   @override
   String pitchComSetPieceBlocked2(String player) {
-    return 'Scramble in the box! $player is blocked.';
+    return 'ชุลมุนในกรอบเขตโทษ! $player ถูกบล็อก';
   }
 
   @override
   String pitchComSetPieceBlocked3(String player) {
-    return '$player tries to force it in, but it\'s cleared.';
+    return '$player พยายามดันบอลเข้าไป แต่แนวรับสกัดออก';
   }
 
   @override
   String pitchComSetPieceWoodwork1(String player) {
-    return '$player meets it and hits the post!';
+    return '$player ยิงโดนเสา!';
   }
 
   @override
   String pitchComSetPieceWoodwork2(String player) {
-    return 'Off the bar! $player nearly scores from the set piece.';
+    return 'ติดคานประตู! $player เกือบทำประตูจากลูกตั้งเตะ';
   }
 
   @override
   String pitchComSetPieceWoodwork3(String player) {
-    return 'Woodwork! $player so close from the delivery.';
+    return 'กรอบประตู! $player เฉียดฉิวหลังลูกครอส';
   }
 
   @override
   String pitchComDirectFreeKickGoal1(String player) {
-    return 'GOAL! $player curls it over the wall!';
+    return 'ประตู! $player โค้งลูกฟรีคิกข้ามกำแพงไป!';
   }
 
   @override
   String pitchComDirectFreeKickGoal2(String player) {
-    return 'What a free kick! $player finds the top corner!';
+    return 'ฟรีคิกสุดยอด! $player หาเข้ามุมบนได้!';
   }
 
   @override
   String pitchComDirectFreeKickGoal3(String player) {
-    return 'GOAL! $player beats the keeper from the free kick.';
+    return 'ประตู! $player เอาชนะผู้รักษาประตูจากลูกฟรีคิก';
   }
 
   @override
   String pitchComDirectFreeKickSaved1(String player, String keeper) {
-    return '$player goes for goal, $keeper saves.';
+    return '$player ยิงตรงเข้าประตู $keeper เซฟไว้ได้';
   }
 
   @override
   String pitchComDirectFreeKickSaved2(String player) {
-    return 'The free kick from $player is pushed away.';
+    return 'ฟรีคิกของ $player ถูกปัดออก';
   }
 
   @override
   String pitchComDirectFreeKickSaved3(String player, String keeper) {
-    return 'Good save! $keeper keeps out the free kick from $player.';
+    return 'เซฟยอดเยี่ยม! ฟรีคิกของ $player $keeper ปัดออกไป';
   }
 
   @override
   String pitchComDirectFreeKickWide1(String player) {
-    return 'The free kick from $player sails over.';
+    return 'ฟรีคิกของ $player ลอยเหนือคานประตู';
   }
 
   @override
   String pitchComDirectFreeKickWide2(String player) {
-    return '$player goes for goal, but it\'s wide.';
+    return '$player ลองยิงตรง แต่เฉียดออก';
   }
 
   @override
   String pitchComDirectFreeKickWide3(String player) {
-    return '$player misses the target from the free kick.';
+    return '$player ยิงฟรีคิกไม่ตรงกรอบ';
   }
 
   @override
   String pitchComDirectFreeKickBlocked1(String player) {
-    return 'The free kick from $player hits the wall.';
+    return 'ฟรีคิกของ $player ไปติดกำแพง';
   }
 
   @override
   String pitchComDirectFreeKickBlocked2(String player) {
-    return 'Into the wall from $player.';
+    return 'ติดกำแพง ลูกยิงของ $player';
   }
 
   @override
   String pitchComDirectFreeKickBlocked3(String player) {
-    return 'The wall stands firm against $player.';
+    return 'กำแพงยืนหยัด $player ผ่านไปไม่ได้';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork1(String player) {
-    return '$player hits the bar with the free kick!';
+    return '$player ยิงฟรีคิกโดนคานประตู!';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork2(String player) {
-    return 'Off the post! $player so close from the free kick.';
+    return 'ติดเสา! ฟรีคิกของ $player บอลสะท้อนกลับมา';
   }
 
   @override
   String pitchComDirectFreeKickWoodwork3(String player) {
-    return 'The frame saves the keeper! $player so close.';
+    return 'กรอบประตูช่วยผู้รักษาประตูไว้! $player โชคไม่ดี';
   }
 
   @override
   String pitchComPenaltyGoal1(String player) {
-    return 'GOAL! $player sends the keeper the wrong way.';
+    return 'ประตู! $player ส่งผู้รักษาประตูไปผิดทาง';
   }
 
   @override
   String pitchComPenaltyGoal2(String player) {
-    return '$player steps up and scores! GOAL!';
+    return '$player วิ่งขึ้นมาและทำประตู! ประตู!';
   }
 
   @override
   String pitchComPenaltyGoal3(String player) {
-    return 'GOAL! $player buries the penalty.';
+    return 'ประตู! $player ยิงจุดโทษอย่างเยือกเย็น';
   }
 
   @override
   String pitchComPenaltySaved1(String player, String keeper) {
-    return 'Saved! $keeper stops the penalty from $player!';
+    return 'เซฟ! จุดโทษของ $player $keeper หยุดไว้ได้!';
   }
 
   @override
   String pitchComPenaltySaved2(String player) {
-    return '$player steps up... and it\'s saved!';
+    return '$player วิ่งขึ้นมา... และผู้รักษาประตูเซฟได้!';
   }
 
   @override
   String pitchComPenaltySaved3(String player, String keeper) {
-    return '$keeper guesses right and denies $player!';
+    return 'จุดโทษของ $player $keeper เดาทางถูกและเซฟได้!';
   }
 
   @override
   String pitchComPenaltyMissed1(String player) {
-    return '$player misses the penalty!';
+    return '$player ยิงจุดโทษพลาด!';
   }
 
   @override
   String pitchComPenaltyMissed2(String player) {
-    return 'Wide! $player drags the penalty past the post.';
+    return 'ออกไป! จุดโทษของ $player เฉียดเสาออกไป';
   }
 
   @override
   String pitchComPenaltyMissed3(String player) {
-    return 'Over the bar! $player blazes the penalty high.';
+    return 'เหนือคานประตู! $player ยิงจุดโทษลอยฟ้า';
   }
 
   @override
   String pitchComPenaltyWoodwork1(String player) {
-    return '$player hits the post from the spot!';
+    return 'จุดโทษของ $player โดนเสา!';
   }
 
   @override
   String pitchComPenaltyWoodwork2(String player) {
-    return 'Off the bar! The penalty from $player stays out.';
+    return 'ติดคานประตู! จุดโทษของ $player ไม่เข้า';
   }
 
   @override
   String pitchComPenaltyWoodwork3(String player) {
-    return 'Woodwork! $player can\'t believe it.';
+    return 'กรอบประตู! $player ไม่อยากเชื่อสายตา';
   }
 
   @override
   String pitchComPenaltyAwarded1(String player) {
-    return 'Penalty! $player is brought down in the box.';
+    return 'จุดโทษ! $player ถูกเกี่ยวล้มในกรอบเขตโทษ';
   }
 
   @override
   String pitchComPenaltyAwarded2(String player, String other) {
-    return 'The referee points to the spot! $other fouls $player.';
+    return 'ผู้ตัดสินชี้ไปที่จุดโทษ! $other ทำฟาวล์ $player นอนอยู่ในกรอบเขตโทษ';
   }
 
   @override
   String pitchComPenaltyAwarded3(String player, String other) {
-    return 'Penalty given! $other catches $player in the area.';
+    return 'ได้จุดโทษ! $other ทำฟาวล์ในกรอบเขตโทษ $player ล้มลง';
   }
 
   @override
   String pitchComPenaltyAwardedYellow1(String player, String other) {
-    return 'Penalty! $player goes down and $other is booked.';
+    return 'จุดโทษ! $player ล้มลง และ $other โดนใบเหลือง';
   }
 
   @override
   String pitchComPenaltyAwardedYellow2(String player, String other) {
-    return 'Spot kick, and a yellow for $other after the foul on $player.';
+    return 'จุดโทษและใบเหลืองของ $other $player นอนอยู่ในกรอบเขตโทษ';
   }
 
   @override
   String pitchComPenaltyAwardedYellow3(String player, String other) {
-    return 'Penalty and a booking! $other clips $player in the box.';
+    return 'จุดโทษและใบเหลือง! $other ทำฟาวล์ในกรอบเขตโทษ $player ล้มลง';
   }
 
   @override
   String pitchComPenaltyAwardedRed1(String player, String other) {
-    return 'Penalty and a red card! $player goes down, $other is off.';
+    return 'จุดโทษและใบแดง! $player ล้มลง $other ถูกไล่ออก';
   }
 
   @override
   String pitchComPenaltyAwardedRed2(String player, String other) {
-    return 'Spot kick, and $other is sent off for the foul on $player!';
+    return 'จุดโทษ และ $other ถูกไล่ออก! $player นอนอยู่ในกรอบเขตโทษ';
   }
 
   @override
   String pitchComPenaltyAwardedRed3(String player, String other) {
-    return 'Red card and a penalty! $other stops $player going through.';
+    return 'ใบแดงและจุดโทษ! $player หลุดไปเดี่ยว $other สกัดไว้';
   }
 
   @override
   String pitchComCorner1(String player) {
-    return 'Corner. $player to take it.';
+    return 'เตะมุม ผู้เตะคือ $player';
   }
 
   @override
   String pitchComCorner2(String player) {
-    return '$player swings in the corner.';
+    return '$player ครอสจากลูกเตะมุม';
   }
 
   @override
   String pitchComCorner3(String player) {
-    return 'A corner, and $player stands over it.';
+    return 'เตะมุม $player ยืนประจำที่ลูกบอล';
   }
 
   @override
   String pitchComFreeKick1(String player) {
-    return 'Free kick. $player to take it.';
+    return 'ฟรีคิก ผู้เตะคือ $player';
   }
 
   @override
   String pitchComFreeKick2(String player) {
-    return 'Free kick in a dangerous spot. $player stands over it.';
+    return 'ฟรีคิกในตำแหน่งอันตราย $player ยืนประจำที่ลูกบอล';
   }
 
   @override
   String pitchComFreeKick3(String player) {
-    return '$player lines up the free kick.';
+    return '$player เตรียมเตะฟรีคิก';
   }
 
   @override
   String pitchComLongThrow1(String player) {
-    return 'Long throw! $player launches it into the box.';
+    return 'ทุ่มไกล! $player ทุ่มบอลเข้ากรอบเขตโทษ';
   }
 
   @override
   String pitchComLongThrow2(String player) {
-    return '$player with a long throw into the area.';
+    return '$player ทุ่มไกลเข้ากรอบเขตโทษ';
   }
 
   @override
   String pitchComLongThrow3(String player) {
-    return 'Here comes the long throw from $player.';
+    return 'นี่คือการทุ่มไกลของ $player';
   }
 
   @override
   String pitchComFoulYellow1(String player) {
-    return 'Yellow card for $player.';
+    return 'ใบเหลืองของ $player';
   }
 
   @override
   String pitchComFoulYellow2(String player, String other) {
-    return '$player goes into the book for a foul on $other.';
+    return '$player โดนใบเหลืองจากการทำฟาวล์ $other นอนอยู่บนสนาม';
   }
 
   @override
   String pitchComFoulYellow3(String player, String other) {
-    return 'A late challenge on $other, and $player is booked.';
+    return 'เข้าสกัดช้า $other ล้มลง และ $player โดนใบเหลือง';
   }
 
   @override
   String pitchComFoulSecondYellow1(String player) {
-    return 'Second yellow! $player is off.';
+    return 'ใบเหลืองใบที่สอง! $player ถูกไล่ออก';
   }
 
   @override
   String pitchComFoulSecondYellow2(String player) {
-    return '$player is booked again and sent off.';
+    return '$player โดนใบเหลืองอีกใบและถูกไล่ออก';
   }
 
   @override
   String pitchComFoulSecondYellow3(String player) {
-    return 'Another yellow for $player, and that\'s red.';
+    return 'ใบเหลืองใบที่สองของ $player นั่นคือใบแดง';
   }
 
   @override
   String pitchComFoulRed1(String player) {
-    return 'Red card! $player is sent off.';
+    return 'ใบแดง! $player ถูกไล่ออก';
   }
 
   @override
   String pitchComFoulRed2(String player, String other) {
-    return 'Straight red for $player after the foul on $other!';
+    return 'ใบแดงทันที! $player ทำฟาวล์ $other นอนอยู่บนสนาม';
   }
 
   @override
   String pitchComFoulRed3(String player) {
-    return '$player sees red and has to go.';
+    return '$player โดนใบแดงและต้องออกจากสนาม';
   }
 
   @override
   String pitchComOffside1(String player) {
-    return 'Offside. $player went too early.';
+    return 'ล้ำหน้า $player ออกวิ่งเร็วเกินไป';
   }
 
   @override
   String pitchComOffside2(String player) {
-    return 'The flag is up against $player.';
+    return 'ธงยกขึ้น $player ล้ำหน้า';
   }
 
   @override
   String pitchComOffside3(String player) {
-    return '$player is caught offside.';
+    return '$player ติดล้ำหน้า การบุกสิ้นสุดลง';
   }
 
   @override
   String pitchComSub1(String player, String other) {
-    return 'Substitution: $player on, $other off.';
+    return 'เปลี่ยนตัว: $player เข้า $other ออก';
   }
 
   @override
   String pitchComSub2(String player, String other) {
-    return '$other makes way for $player.';
+    return '$other ออกไป $player เข้ามาแทน';
   }
 
   @override
   String pitchComSub3(String player, String other) {
-    return '$player comes on for $other.';
+    return '$player ลงเล่นแทน $other';
   }
 
   @override
   String pitchComSubFill1(String player) {
-    return '$player comes on.';
+    return '$player ลงสนาม';
   }
 
   @override
   String pitchComSubFill2(String player) {
-    return 'Substitution: $player is on.';
+    return 'เปลี่ยนตัว: $player อยู่ในสนามแล้ว';
   }
 
   @override
   String pitchComSubFill3(String player) {
-    return '$player enters the fray.';
+    return '$player เข้าสู่เกม';
   }
 
   @override
   String pitchComInjury1(String player) {
-    return '$player is down and needs treatment.';
+    return '$player นอนอยู่บนสนามและต้องได้รับการรักษา';
   }
 
   @override
   String pitchComInjury2(String player) {
-    return 'Concern here, $player has picked up a knock.';
+    return 'น่าเป็นห่วง $player ได้รับบาดเจ็บ';
   }
 
   @override
   String pitchComInjury3(String player) {
-    return 'Injury worry for $player.';
+    return 'ความกังวลเรื่องอาการบาดเจ็บของ $player';
   }
 
   @override
@@ -14585,48 +14585,48 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
-  String get pitchComSomeone => 'Player';
+  String get pitchComSomeone => 'ผู้เล่น';
 
   @override
   String pitchComPenaltyAwardedSecondYellow1(String player, String other) {
-    return 'Penalty, and a second yellow! $other is off for the foul on $player.';
+    return 'จุดโทษและใบเหลืองใบที่สอง! $other ถูกไล่ออก $player นอนอยู่ในกรอบเขตโทษ';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow2(String player, String other) {
-    return 'Spot kick! $player goes down and $other sees a second yellow.';
+    return 'จุดโทษ! $player ล้มลง และ $other โดนใบเหลืองใบที่สอง';
   }
 
   @override
   String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
-    return 'Penalty! $other clips $player and is booked again, so that\'s red.';
+    return 'จุดโทษ! $other ทำฟาวล์ $player ล้มลง และใบเหลืองใบที่สองนั่นคือใบแดง';
   }
 
   @override
-  String get matchViewChooseTitle => 'How do you want to watch?';
+  String get matchViewChooseTitle => 'คุณอยากชมการแข่งขันแบบไหน?';
 
   @override
   String get matchViewChooseHint =>
-      'Your choice is kept for the next match. You can switch at any time.';
+      'ตัวเลือกของคุณจะใช้กับแมตช์ถัดไปด้วย เปลี่ยนได้ทุกเมื่อ';
 
   @override
-  String get matchViewPitch => 'Pitch';
+  String get matchViewPitch => 'สนาม';
 
   @override
-  String get matchViewPitchBlurb => 'Watch the players on the pitch';
+  String get matchViewPitchBlurb => 'ดูผู้เล่นบนสนาม';
 
   @override
-  String get matchViewTimeline => 'Timeline';
+  String get matchViewTimeline => 'ลำดับเหตุการณ์';
 
   @override
-  String get matchViewTimelineBlurb => 'Follow the match event by event';
+  String get matchViewTimelineBlurb => 'ติดตามแมตช์ทีละเหตุการณ์';
 
   @override
-  String get matchViewSwitchToPitch => 'Watch on the pitch';
+  String get matchViewSwitchToPitch => 'ดูบนสนาม';
 
   @override
-  String get matchViewSwitchToTimeline => 'Watch the timeline';
+  String get matchViewSwitchToTimeline => 'ดูลำดับเหตุการณ์';
 
   @override
-  String get matchTabCommentary => 'COMMENTARY';
+  String get matchTabCommentary => 'คำบรรยาย';
 }
