@@ -159,6 +159,9 @@ class _BugSide extends StatelessWidget {
 /// The two numbers on the bug's silver plate; [pulse] is the goal being
 /// celebrated and whether it is the home side's, whose number pulses.
 class _BugScore extends StatelessWidget {
+  /// Each figure's width: two tabular digits at the stripe's size.
+  static const double _figureWidth = 20;
+
   const _BugScore({
     required this.home,
     required this.away,
@@ -182,7 +185,12 @@ class _BugScore extends StatelessWidget {
       fontFeatures: const [FontFeature.tabularFigures()],
     );
     Widget figure(int n, {required bool isHome}) {
-      final text = Text('$n', maxLines: 1, softWrap: false, style: style);
+      // Room for two tabular digits; anything wider scales down, never
+      // clipped.
+      final text = FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text('$n', maxLines: 1, softWrap: false, style: style),
+      );
       final p = pulse;
       if (p == null || p.$2 != isHome || still) return text;
       final (e, _) = p;
@@ -211,7 +219,10 @@ class _BugScore extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: 14, child: Center(child: figure(home, isHome: true))),
+          SizedBox(
+            width: _figureWidth,
+            child: Center(child: figure(home, isHome: true)),
+          ),
           Container(
             width: 1,
             height: 11,
@@ -219,7 +230,7 @@ class _BugScore extends StatelessWidget {
             color: AppColors.onPrimaryContainer,
           ),
           SizedBox(
-            width: 14,
+            width: _figureWidth,
             child: Center(child: figure(away, isHome: false)),
           ),
         ],

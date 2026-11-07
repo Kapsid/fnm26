@@ -167,8 +167,8 @@ class PitchAudit {
   }
 
   /// Whether [t] is a set piece's or a penalty's staging, or a goal's
-  /// celebration (from the ball in the net to the kick-off): the times men
-  /// may stand on a goal line.
+  /// strike and celebration (from the shot's kick to the kick-off): the
+  /// times men may stand on a goal line.
   bool setPieceOrCelebration(double t) {
     for (final w in s.windows) {
       if (t < w.start - 1e-9 || t >= _until(w) - 1e-9) continue;
@@ -180,7 +180,8 @@ class PitchAudit {
       }
       for (final m in w.moments) {
         if (m is ShotMoment && m.outcome == ShotOutcome.goal) {
-          // The celebration: from the strike's landing on.
+          // The celebration: from the strike on (the run-in to the net
+          // included), so from the shot's kick, not its landing.
           for (final f in flights(w.start, _until(w))) {
             if (f.fromActor == idx(m.shooterId) && !f.pass) {
               if (t >= f.t0 - 1e-9) return true;

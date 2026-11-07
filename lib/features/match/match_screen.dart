@@ -1830,7 +1830,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // banner stands for the goal flash's card over the picture.
             final bug = !tablet && _onPitch;
             // Pitch or Timeline, at any time: on a phone from the corner of
-            // the scoreboard (the Timeline's) or of the pitch (Pitch mode,
+            // the scoreboard (the Timeline's) or the pitch's bottom one (Pitch mode,
             // whose stripe is too thin for it); on a tablet from the stats
             // panel's header.
             final phoneSwitch = tablet || _mode == null
@@ -2122,8 +2122,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                                 fit: StackFit.expand,
                                 children: [
                                   pitchSurface,
+                                  // The bottom corner: clear of the goal
+                                  // banner, which comes down over the top.
                                   Positioned(
-                                    top: 0,
+                                    bottom: 0,
                                     right: 0,
                                     child: phoneSwitch,
                                   ),

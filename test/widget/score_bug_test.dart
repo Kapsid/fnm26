@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
@@ -22,6 +23,8 @@ void main() {
     WidgetTester tester, {
     MatchEvent? event,
     bool still = false,
+    int home = 2,
+    int away = 1,
     String locale = 'en',
   }) async {
     tester.view
@@ -45,8 +48,8 @@ void main() {
               awayCode: 'POR',
               homeName: 'Czechia',
               awayName: 'Portugal',
-              homeScore: 2,
-              awayScore: 1,
+              homeScore: home,
+              awayScore: away,
               clock: '90+3',
               live: true,
               compact: true,
@@ -118,9 +121,60 @@ void main() {
     });
   }
 
-  testWidgets('reduced motion: the banner is simply there', (tester) async {
+  Finder inBoard(Finder f) =>
+      find.descendant(of: find.byType(MatchScoreboard), matching: f);
+
+  testWidgets('reduced motion: the banner is simply there, nothing pulses', (
+    tester,
+  ) async {
     await pump(tester, event: goal, still: true);
     expect(find.byKey(matchGoalBannerKey), findsOneWidget);
-    expect(slide(tester), 0);
+    // No slide of its own (whatever the page's route transition does) and
+    // no pulse of the score: nothing in the stripe animates.
+    expect(inBoard(find.byType(FractionalTranslation)), findsNothing);
+    expect(inBoard(find.byType(TweenAnimationBuilder<double>)), findsNothing);
+    expect(inBoard(find.byType(Transform)), findsNothing);
+  });
+
+  testWidgets('with motion: the banner slides and the scorer pulses', (
+    tester,
+  ) async {
+    await pump(tester, event: goal);
+    // The banner's slide and the home figure's pulse.
+    expect(
+      inBoard(find.byType(TweenAnimationBuilder<double>)),
+      findsNWidgets(2),
+    );
+    await tester.pump(const Duration(milliseconds: 350));
+    final scale = tester
+        .widget<Transform>(
+          find
+              .ancestor(of: find.text('2'), matching: find.byType(Transform))
+              .first,
+        )
+        .transform
+        .getMaxScaleOnAxis();
+    expect(scale, greaterThan(1.2));
+  });
+
+  testWidgets('a 10-9 is set whole, never clipped', (tester) async {
+    await pump(tester, home: 10, away: 9);
+    for (final t in ['10', '9']) {
+      final p = tester.renderObject<RenderParagraph>(find.text(t));
+      // Laid out at its full width (a fixed box too narrow clipped "10").
+      expect(
+        p.size.width,
+        greaterThanOrEqualTo(p.getMaxIntrinsicWidth(double.infinity) - 0.01),
+        reason: t,
+      );
+      // And drawn inside its share of the plate.
+      final box = tester.getRect(
+        find.ancestor(of: find.text(t), matching: find.byType(SizedBox)).first,
+      );
+      final drawn = tester.getRect(find.text(t));
+      expect(drawn.left, greaterThanOrEqualTo(box.left - 0.01), reason: t);
+      expect(drawn.right, lessThanOrEqualTo(box.right + 0.01), reason: t);
+    }
+    expect(tester.takeException(), isNull);
   });
 }

@@ -1935,7 +1935,12 @@ class _Builder {
     final kdir = _dir(kicking, minute);
     _Agent? kicker;
     for (final a in agents) {
-      if (!a.present || a.side != kicking || a.slot == sides[kicking].gkSlot) {
+      // Never a man walking off (he walks on through the cut, facing the
+      // touchline, and the ball would leave from his feet, off the spot).
+      if (!a.present ||
+          a.side != kicking ||
+          a.walkStart != null ||
+          a.slot == sides[kicking].gkSlot) {
         continue;
       }
       if (kicker == null ||
@@ -1943,7 +1948,9 @@ class _Builder {
         kicker = a;
       }
     }
-    kicker!.pos = Offset2(centre.x - kdir * ballLead, centre.y);
+    kicker!
+      ..pos = Offset2(centre.x - kdir * ballLead, centre.y)
+      ..facing = kdir > 0 ? 0 : math.pi;
     // Spread anybody standing too close.
     for (var it = 0; it < 60; it++) {
       var moved = false;

@@ -226,6 +226,8 @@ void main() {
       'attackers $attackers; ${at.length} matches over\n'
       '${at.take(10).join('\n')}',
     );
+    // The limits equal today's worst (no headroom): a tripwire, so any
+    // staging change that brings men back onto the line is seen at once.
     expect(defenders, lessThanOrEqualTo(3));
     expect(attackers, lessThanOrEqualTo(2));
   });

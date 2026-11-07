@@ -83,10 +83,15 @@ class MatchViewSwitch extends StatelessWidget {
         button: true,
         label: label,
         excludeSemantics: true,
-        child: GestureDetector(
+        // An ink response over the whole 40 px target: the ripple, and
+        // keyboard and switch-access focus, as a button has.
+        child: InkResponse(
           key: matchViewSwitchKey,
-          behavior: HitTestBehavior.opaque,
           onTap: onTap,
+          radius: target / 2,
+          containedInkWell: true,
+          highlightShape: BoxShape.rectangle,
+          borderRadius: AppRadii.baseAll,
           child: SizedBox.square(
             dimension: target,
             child: Center(
