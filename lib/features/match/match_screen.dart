@@ -301,12 +301,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   bool get _onPitch => _mode == MatchViewMode.pitch;
 
   /// The picture, its clock and its building (see [PitchModeController]).
-  late final PitchModeController _pc = PitchModeController(
-    vsync: this,
-    builder: ref.read(pitchPlaybackBuilderProvider),
-    inPlace: ref.read(pitchPlaybackInPlaceProvider),
-    onTick: _onPitchClock,
-  );
+  /// Made in [initState], so [dispose] never has to reach for `ref`.
+  late final PitchModeController _pc;
+
+  /// Watches the app going to the background and back (see [_inForeground]).
+  late final AppLifecycleListener _lifecycle;
+
+  /// Whether the app is in front of the manager. Away (the phone locked, the
+  /// app switched), the Pitch clock is held where it stands and played on
+  /// from there when he is back: nothing is skipped while he is not looking.
+  bool _inForeground = true;
   PitchPlayback? get _pitch => _pc.playback;
   PitchClock? get _pitchClock => _pc.clock;
   final _pitchViewKey = GlobalKey<PitchMatchViewState>();
@@ -400,12 +404,27 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (e.minute != _minute) return e.minute < _minute;
     // same minute — gate stoppage by +X revealed
     return e.stoppage <= _added &&
-        (_held.isEmpty || !_held.contains(matchEventKey(e)));
+        (_held.isEmpty || !_held.contains(_keyOf(e)));
+  }
+
+  /// [e]'s key (see [MatchEventKey]): among the picture's events when it is
+  /// one of them, otherwise the result's.
+  MatchEventKey _keyOf(MatchEvent e) {
+    final pitch = _pitch?.result.events;
+    return (pitch == null ? null : matchEventKeyIn(pitch, e)) ??
+        matchEventKey(_result?.events ?? const [], e);
   }
 
   @override
   void initState() {
     super.initState();
+    _pc = PitchModeController(
+      vsync: this,
+      builder: ref.read(pitchPlaybackBuilderProvider),
+      inPlace: ref.read(pitchPlaybackInPlaceProvider),
+      onTick: _onPitchClock,
+    );
+    _lifecycle = AppLifecycleListener(onStateChange: _onAppState);
     // Restore the playback speed chosen in a previous match this session...
     _speedIdx = ref.read(matchSpeedProvider);
     // ...and, if this is the first match of the session, the one this CAREER
@@ -423,8 +442,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     );
   }
 
+  void _onAppState(AppLifecycleState state) {
+    final front = state == AppLifecycleState.resumed;
+    if (front == _inForeground) return;
+    _inForeground = front;
+    _syncPitchClock();
+  }
+
   @override
   void dispose() {
+    _lifecycle.dispose();
     _timer?.cancel();
     _flashTimer?.cancel();
     _penTimer?.cancel();
@@ -582,8 +609,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
           _held = const {};
           tickStoppage = _minute == 90 ? _added : 0;
           for (final e in _result?.events ?? const <MatchEvent>[]) {
-            if (e.type == MatchEventType.goal &&
-                held.contains(matchEventKey(e))) {
+            if (e.type == MatchEventType.goal && held.contains(_keyOf(e))) {
               _flashGoal(e);
               scored = true;
             }
@@ -1096,7 +1122,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     setState(() => _mode = mode);
     if (mode == MatchViewMode.pitch) {
       final r = _result;
-      if (r != null && _pc.isCurrentFor(r, _speedIdx)) {
+      // Past the last minute the speed paces nothing: a picture of this
+      // match at another speed still serves the shootout.
+      if (r != null &&
+          (_pc.isCurrentFor(r, _speedIdx) ||
+              (_clockDone && _pc.isCurrentFor(r, null)))) {
         // The picture is still this match's. Part-way through a minute
         // with something of it still to show (paused, then the Timeline
         // and back without a tick): it is played out from where it stood.
@@ -1147,6 +1177,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         _started &&
         _playing &&
         ready &&
+        _pitch != null &&
+        _inForeground &&
         !_pc.building &&
         _goalFlash == null &&
         !_atInterval &&
@@ -1205,7 +1237,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     final before = announce
         ? {
             for (final e in events)
-              if (_reached(e)) matchEventKey(e),
+              if (_reached(e)) _keyOf(e),
           }
         : null;
     final now = _pc.read(minute: _minute, added: _added, held: _held);
@@ -1223,7 +1255,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       if (before == null) return;
       MatchEvent? goal;
       for (final e in events) {
-        if (!_reached(e) || before.contains(matchEventKey(e))) continue;
+        if (!_reached(e) || before.contains(_keyOf(e))) continue;
         if (e.type == MatchEventType.goal) goal = e;
         arrived.add(e);
       }
@@ -1237,9 +1269,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   void _cycleSpeed() {
     setState(() => _speedIdx = (_speedIdx + 1) % _speeds.length);
     // The Pitch view paces the match for the speed: its picture is told
-    // again from where it stands, at the new pace.
+    // again from where it stands, at the new pace. Past the last minute
+    // (the shootout) there is nothing left to pace, and a rebuild would hide
+    // the kicks behind its spinner: the picture stays.
     final preview = _livePreview;
-    if (_onPitch && preview != null) _afterPitchChange(preview);
+    if (_onPitch && preview != null && !_clockDone) {
+      _afterPitchChange(preview);
+    }
     // Remember the choice for the next match this session.
     ref.read(matchSpeedProvider.notifier).state = _speedIdx;
     // Remembered for the next time this career is opened, not just the next
@@ -1966,6 +2002,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 _GoalFlash(
                   event: _goalFlash!,
                   flagCode: code(_goalFlash!.teamNationId),
+                  goalNumber: homeScore + awayScore,
                 ),
               // Half-time interval: play only resumes on Continue (the
               // manager may reshape the side first).
@@ -2137,6 +2174,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                             if (picture)
                               PitchCommentaryLine(
                                 clock: clock,
+                                countAt: pb.lineCountAt,
                                 lineAt: (t) =>
                                     pb.lineAt(l, t, _pc.names, _seed(preview)),
                               )

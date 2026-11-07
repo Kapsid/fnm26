@@ -993,9 +993,17 @@ class _MomentumBar extends StatelessWidget {
 
 /// The animated "GOAL!" overlay shown briefly when a goal is scored.
 class _GoalFlash extends StatelessWidget {
-  const _GoalFlash({required this.event, required this.flagCode});
+  const _GoalFlash({
+    required this.event,
+    required this.flagCode,
+    required this.goalNumber,
+  });
 
   final MatchEvent event;
+
+  /// Goals so far in the match: tells two goals by one player in one
+  /// minute apart.
+  final int goalNumber;
 
   /// FIFA code of the team that scored, so the popup shows their flag.
   final String flagCode;
@@ -1006,7 +1014,7 @@ class _GoalFlash extends StatelessWidget {
       child: IgnorePointer(
         child: Center(
           child: TweenAnimationBuilder<double>(
-            key: ValueKey('${event.minute}-${event.playerId}'),
+            key: ValueKey((event.minute, event.playerId, goalNumber)),
             tween: Tween(begin: 0, end: 1),
             duration: const Duration(milliseconds: 320),
             curve: Curves.elasticOut,
@@ -1747,16 +1755,20 @@ class MatchViewChooser extends StatelessWidget {
 }
 
 /// The one live commentary line under the pitch: the latest real moment's
-/// line ([lineAt] the Pitch clock's time), faded in as it changes. It
-/// rebuilds only when the line does, not every frame.
+/// line ([lineAt] the Pitch clock's time), faded in as it changes. It reads
+/// the line only when a new one is in ([countAt]), not every frame.
 class PitchCommentaryLine extends StatefulWidget {
   const PitchCommentaryLine({
     required this.clock,
+    required this.countAt,
     required this.lineAt,
     super.key,
   });
 
   final PitchClock clock;
+
+  /// How many lines are in by the clock's time (cheap: it runs every tick).
+  final int Function(Duration t) countAt;
   final String? Function(Duration t) lineAt;
 
   @override
@@ -1765,12 +1777,17 @@ class PitchCommentaryLine extends StatefulWidget {
 
 class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
   String? _line;
+  int _count = 0;
+
+  /// Bumped for every new line, so a line worded the same as the one
+  /// before it (one player scoring twice in a minute) still fades in.
+  int _serial = 0;
 
   @override
   void initState() {
     super.initState();
     widget.clock.addListener(_onClock);
-    _line = widget.lineAt(widget.clock.value);
+    _read();
   }
 
   @override
@@ -1780,7 +1797,11 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
       old.clock.removeListener(_onClock);
       widget.clock.addListener(_onClock);
     }
-    _line = widget.lineAt(widget.clock.value);
+    // A new picture (a re-simulated match, a new speed) may word it again;
+    // the same line stays put.
+    final before = _line;
+    _read();
+    if (_line != before) _serial++;
   }
 
   @override
@@ -1789,9 +1810,19 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
     super.dispose();
   }
 
+  void _read() {
+    final t = widget.clock.value;
+    _count = widget.countAt(t);
+    _line = widget.lineAt(t);
+  }
+
   void _onClock() {
-    final line = widget.lineAt(widget.clock.value);
-    if (line != _line) setState(() => _line = line);
+    if (widget.countAt(widget.clock.value) == _count) return;
+    setState(() {
+      final before = _line;
+      _read();
+      if (_line != before || _line != null) _serial++;
+    });
   }
 
   @override
@@ -1807,7 +1838,7 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
         duration: const Duration(milliseconds: 220),
         child: Text(
           text,
-          key: ValueKey(text),
+          key: ValueKey(_serial),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: AppTypography.bodyMedium.copyWith(

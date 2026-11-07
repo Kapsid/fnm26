@@ -19,11 +19,39 @@ import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 
 /// An event as the screen recognises it across re-simulations: a re-sim
 /// replays every minute already shown identically, but hands out new
-/// objects.
-typedef MatchEventKey = (MatchEventType, int, int, int, int);
+/// objects. The last field is the occurrence: one player can score twice
+/// in the same minute (open play and a set piece both run every minute),
+/// and the two goals must never read as one.
+typedef MatchEventKey = (MatchEventType, int, int, int, int, int);
 
-MatchEventKey matchEventKey(MatchEvent e) =>
-    (e.type, e.minute, e.stoppage, e.teamNationId, e.playerId);
+final Expando<Map<MatchEvent, MatchEventKey>> _keysOf = Expando(
+  'matchEventKeys',
+);
+
+/// The key of [e], one of [events]: its type, minute, added minute, side and
+/// player, and how many of [events] before it share all five. The events
+/// are in minute order and a re-sim leaves those already shown as they
+/// were, so a shown event keeps its key across re-sims.
+MatchEventKey matchEventKey(List<MatchEvent> events, MatchEvent e) =>
+    matchEventKeyIn(events, e) ??
+    (e.type, e.minute, e.stoppage, e.teamNationId, e.playerId, 0);
+
+/// [e]'s key among [events], or null when [e] is not one of them (by
+/// identity).
+MatchEventKey? matchEventKeyIn(List<MatchEvent> events, MatchEvent e) {
+  final keys = _keysOf[events] ??= () {
+    final seen = <(MatchEventType, int, int, int, int), int>{};
+    final out = Map<MatchEvent, MatchEventKey>.identity();
+    for (final x in events) {
+      final base = (x.type, x.minute, x.stoppage, x.teamNationId, x.playerId);
+      final n = seen[base] ?? 0;
+      seen[base] = n + 1;
+      out[x] = (x.type, x.minute, x.stoppage, x.teamNationId, x.playerId, n);
+    }
+    return out;
+  }();
+  return keys[e];
+}
 
 /// Everything one build of the picture needs. Plain data, so it can be sent
 /// to another isolate; [run] builds it there (the pacer is made where the
@@ -129,12 +157,13 @@ class PitchModeController {
   /// any) belongs to another moment of the match and must not be drawn.
   bool get buildingFresh => _building && _fresh;
 
-  /// Whether the picture on show is the one for [result] at [speedStep].
-  bool isCurrentFor(MatchResult result, int speedStep) =>
+  /// Whether the picture on show is the one for [result] at [speedStep]
+  /// (at any speed when null).
+  bool isCurrentFor(MatchResult result, int? speedStep) =>
       _playback != null &&
       !_building &&
       identical(_builtFor, result) &&
-      _builtSpeed == speedStep;
+      (speedStep == null || _builtSpeed == speedStep);
 
   /// Builds the picture for [result] at [speedStep] off the UI thread,
   /// holding the clock meanwhile. With [resume] it is told from where the
@@ -182,7 +211,14 @@ class PitchModeController {
       }
     } on Object catch (e, st) {
       debugPrint('Pitch script build in place failed too: $e\n$st');
-      if (generation == _generation) _failed = true;
+      if (generation == _generation) {
+        // The picture on show belongs to the match as it was: it must not
+        // play on as this one, so the failed state stands in for it.
+        _failed = true;
+        _playback = null;
+        _builtFor = null;
+        _builtSpeed = -1;
+      }
     } finally {
       // Whatever happened, this build is over (a later one owns the flag).
       if (generation == _generation) _building = false;
@@ -273,7 +309,7 @@ class PitchModeController {
       if (e.minute == pos.minute &&
           e.stoppage == pos.added &&
           !pb.shown(i, t)) {
-        now.add(matchEventKey(e));
+        now.add(matchEventKey(events, e));
       }
     }
     if (pos.minute == minute && pos.added == added) {

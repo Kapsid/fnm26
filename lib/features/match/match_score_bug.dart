@@ -99,9 +99,15 @@ class _ScoreBug extends StatelessWidget {
               left: AppSpacing.sm,
               right: AppSpacing.sm,
               child: _GoalBanner(
-                key: ValueKey(
-                  ('banner', goal.minute, goal.stoppage, goal.playerId),
-                ),
+                // The score tells two goals by one player in one minute
+                // apart: each gets its own banner.
+                key: ValueKey((
+                  'banner',
+                  goal.minute,
+                  goal.stoppage,
+                  goal.playerId,
+                  homeScore + awayScore,
+                )),
                 event: goal,
                 color:
                     (goalForHome ? homeColor : awayColor) ?? AppColors.primary,
@@ -195,7 +201,7 @@ class _BugScore extends StatelessWidget {
       if (p == null || p.$2 != isHome || still) return text;
       final (e, _) = p;
       return TweenAnimationBuilder<double>(
-        key: ValueKey(('pulse', e.minute, e.stoppage, e.playerId)),
+        key: ValueKey(('pulse', e.minute, e.stoppage, e.playerId, home + away)),
         tween: Tween(begin: 0, end: 1),
         duration: _kGoalPulse,
         builder: (context, t, child) => Transform.scale(

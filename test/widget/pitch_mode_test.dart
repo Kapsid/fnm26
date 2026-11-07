@@ -28,6 +28,7 @@ import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/app_card.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/fixtures.dart';
@@ -911,6 +912,237 @@ void main() {
       _clock(tester).value.inMicroseconds / 1e6,
       closeTo(reveal, 0.001),
     );
+  });
+
+  testWidgets('one player scoring twice in a minute: play runs past both, '
+      'and both count, flash and get their banner', (tester) async {
+    final preview = _preview();
+    List<int> twice(MatchResult r) {
+      final goals = [
+        for (var i = 0; i < r.events.length; i++)
+          if (r.events[i].type == MatchEventType.goal &&
+              r.events[i].minute < 85)
+            i,
+      ];
+      for (final a in goals) {
+        for (final b in goals) {
+          final x = r.events[a];
+          final y = r.events[b];
+          if (a < b &&
+              x.minute == y.minute &&
+              x.stoppage == y.stoppage &&
+              x.playerId == y.playerId) {
+            return [a, b];
+          }
+        }
+      }
+      return const [];
+    }
+
+    final salt = _salt(preview, (r) => twice(r).isNotEmpty);
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    final r = _result(tester);
+    final pair = twice(r);
+    expect(pair, hasLength(2), reason: 'the screen plays the same match');
+    final goal = r.events[pair[0]];
+    final pb = _pb(tester);
+    final second = pb.revealAt(pair[1]);
+    final homeScored = goal.teamNationId == preview.homeTeam.nationId;
+    int scored() {
+      final s = _seen(tester);
+      return homeScored ? s.home : s.away;
+    }
+
+    await _seek(tester, _secs(pb.revealAt(pair[0]) - 0.5));
+    final before = scored();
+    var banners = 0;
+    var showing = false;
+    for (var i = 0; i < 3600; i++) {
+      await tester.pump(const Duration(milliseconds: 16));
+      final now = find.text(enL.matchGoalShout).evaluate().isNotEmpty;
+      if (now && !showing) banners++;
+      showing = now;
+      if (!showing && _clock(tester).value > _secs(second + 1)) break;
+    }
+    expect(
+      _clock(tester).value,
+      greaterThan(_secs(second)),
+      reason: 'the clock pinned at the first goal',
+    );
+    expect(banners, 2, reason: 'each goal flashes with its banner');
+    expect(scored(), before + 2);
+    final line = 'goal ${goal.minute}+${goal.stoppage} ${goal.playerId}';
+    expect(line.allMatches(_seen(tester).events).length, 2);
+  });
+
+  testWidgets('the app away in the background holds the Pitch clock; back, '
+      'it plays on from the same place', (tester) async {
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    await tester.pump(const Duration(milliseconds: 500));
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    await tester.pump();
+    final clock = _clock(tester);
+    final at = clock.value;
+    final seen = _seen(tester);
+    expect(clock.playing, isFalse);
+    tester.binding
+      ..handleAppLifecycleStateChanged(AppLifecycleState.hidden)
+      ..handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    // A minute with the phone locked: nothing of the match goes by.
+    await tester.pump(const Duration(seconds: 60));
+    expect(clock.value, at);
+    expect(_seen(tester), seen);
+    tester.binding
+      ..handleAppLifecycleStateChanged(AppLifecycleState.hidden)
+      ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+      ..handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(clock.playing, isTrue);
+    expect(clock.value, at);
+    await tester.pump(const Duration(milliseconds: 16));
+    await tester.pump(const Duration(milliseconds: 16));
+    expect(clock.value, greaterThan(at));
+    expect(clock.value - at, lessThan(const Duration(milliseconds: 100)));
+  });
+
+  testWidgets('a re-sim whose picture fails both ways shows the error, '
+      'never the old picture playing the old match', (tester) async {
+    final preview = _preview();
+    final salt = _salt(
+      preview,
+      (r) => !r.events.any(
+        (e) =>
+            e.minute <= 31 &&
+            e.teamNationId == preview.homeTeam.nationId &&
+            (e.type == MatchEventType.injury ||
+                e.type == MatchEventType.redCard),
+      ),
+    );
+    var builds = 0;
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+      builder: (b) async {
+        if (builds++ > 0) throw StateError('the isolate died');
+        return b.run();
+      },
+      inPlace: (b) => throw StateError('and so did the fallback'),
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    await _seek(tester, _pb(tester).pacer.screenAt(30, 0, within: 0.5));
+    await tester.pump(const Duration(seconds: 3)); // any goal flash clears
+
+    // A sub: the match is re-simulated, and its picture cannot be built.
+    final off = preview.homeTeam.xi[10];
+    final on = preview.bench.first;
+    await tester.tap(find.byType(MatchTacticsPillContent));
+    await tester.pumpAndSettle();
+    final offLabel = off.name.split(' ').last.toUpperCase();
+    await tester.tap(
+      find
+          .byWidgetPredicate(
+            (w) => w is Text && w.data?.replaceAll('\u200b', '') == offLabel,
+          )
+          .last,
+    );
+    await tester.pumpAndSettle();
+    final onRow = find.text(on.name).last;
+    await tester.ensureVisible(onRow);
+    await tester.pumpAndSettle();
+    await tester.tap(onRow);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(enL.tacticsApply));
+    await tester.pump();
+    await _until(tester, () => !_screen(tester).pitchMode.building);
+    await tester.pump();
+
+    final pc = _screen(tester).pitchMode;
+    expect(builds, 2);
+    expect(pc.failed, isTrue);
+    expect(pc.playback, isNull);
+    expect(find.byKey(const Key('match.pitchFailed')), findsOneWidget);
+    expect(find.byType(PitchMatchView), findsNothing);
+    final at = pc.clock!.value;
+    await tester.pump(const Duration(seconds: 2));
+    expect(pc.clock!.value, at, reason: 'no old picture plays on');
+  });
+
+  testWidgets('a new speed in the shootout keeps the pitch: no rebuild, no '
+      'spinner over the kicks', (tester) async {
+    final preview = _preview(round: 'SF');
+    final salt = _salt(preview, (r) {
+      final et = r.extraTime;
+      return et != null &&
+          et.homeScore == et.awayScore &&
+          !r.events.any((e) => e.minute >= 119);
+    });
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    await _until(tester, () => _ready(tester) && _clock(tester).playing);
+    final pb = _pb(tester);
+    Future<void> through(Duration whistle, String heading) async {
+      await _seek(tester, whistle - const Duration(milliseconds: 100));
+      await _until(
+        tester,
+        () => find.text(heading).evaluate().isNotEmpty,
+      );
+      await tester.tap(find.text(enL.matchContinue).last);
+      await tester.pump();
+      await _until(tester, () => _clock(tester).playing);
+    }
+
+    await through(pb.halfTime, enL.matchHalfTime);
+    await through(pb.extraTimeStart!, enL.matchExtraTimeAhead);
+    await through(pb.extraTimeHalf!, enL.matchExtraTimeHalf);
+    await _seek(tester, pb.pacer.screenAt(120, 0, within: 0.5));
+    await _until(
+      tester,
+      () => find.byType(PenaltyOrderSheet).evaluate().isNotEmpty,
+    );
+    await tester.pump(const Duration(seconds: 1));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(PenaltyOrderSheet),
+        matching: find.byType(PrimaryButton),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    final stage = tester
+        .widget<PitchMatchView>(find.byType(PitchMatchView))
+        .shootout!;
+    await _until(tester, () => stage.running);
+
+    final speed = find.byWidgetPredicate(
+      (w) => w is Text && const ['1×', '2×', '3×'].contains(w.data),
+    );
+    await tester.tap(speed.first);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 16));
+    final pc = _screen(tester).pitchMode;
+    expect(pc.building, isFalse);
+    expect(identical(pc.playback, pb), isTrue);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(PitchMatchView), findsOneWidget);
+    expect(stage.running, isTrue);
   });
 
   testWidgets('the weather is cosmetic: the match plays the same in any '
