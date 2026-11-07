@@ -292,7 +292,8 @@ class CareerService {
         _ref.read(playerRepositoryProvider),
         _ref.read(seedSourceProvider),
       );
-      if (assessPack(pack, world, facts: facts).status != PackStatus.ready) {
+      if ((await assessPackAsync(pack, world, facts: facts)).status !=
+          PackStatus.ready) {
         return Result.failure(
           Failure(
             'World pack $worldPackId cannot start a career',

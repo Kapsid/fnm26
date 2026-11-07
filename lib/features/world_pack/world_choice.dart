@@ -62,7 +62,7 @@ final FutureProvider<List<WorldChoice>> worldChoicesProvider =
         } on FormatException {
           pack = null;
         }
-        final a = assessPack(pack, world, facts: facts);
+        final a = await assessPackAsync(pack, world, facts: facts);
         String? reason;
         switch (a.status) {
           case PackStatus.ready:
@@ -100,11 +100,11 @@ Future<PackStatus?> chosenWorldStatus(ProviderContainer c, int id) async {
   } on FormatException {
     pack = null;
   }
-  return assessPack(
+  return (await assessPackAsync(
     pack,
     await c.read(nationsProvider.future),
     facts: await c.read(packFactsProvider.future),
-  ).status;
+  )).status;
 }
 
 /// The world the career being started in New Game takes: a pack id, or

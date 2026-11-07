@@ -1,3 +1,7 @@
+import 'dart:isolate';
+
+import 'package:collection/collection.dart';
+
 import '../../entities/nation.dart';
 import 'pack_keys.dart';
 import 'pack_rules.dart';
@@ -68,6 +72,62 @@ Map<String, List<String>> packCountryCities(
         : PackStatus.ready,
     issues: compatFirst(unknown, missing),
   );
+}
+
+/// [assessPack], remembered per pack and run off the UI isolate for a big
+/// one.
+///
+/// The nation pick, New Game's world chip, the editor's list and the start
+/// of a career each check every pack; a real-names world (25,000 players,
+/// 500 added clubs) took a tenth of a second a check on a desktop, and far
+/// longer on a phone, all of it frozen. A pack that has not changed is the
+/// very same object the next time it is read (`WorldPackRepository.load`
+/// keeps it), so its answer is kept with it, for as long as [world] and
+/// [facts] are the same as well.
+Future<({PackStatus status, List<PackIssue> issues})> assessPackAsync(
+  WorldPack? pack,
+  List<Nation> world, {
+  required PackFacts facts,
+}) async {
+  if (pack == null) return assessPack(pack, world, facts: facts);
+  final kept = _assessed[pack];
+  if (kept != null && kept.sameInput(world, facts)) return kept.result;
+  final players = [
+    ...pack.squads.values,
+    ...pack.pools.values,
+  ].fold<int>(0, (n, l) => n + l.length);
+  final result = players < assessOffUiPlayers
+      ? assessPack(pack, world, facts: facts)
+      : await Isolate.run(
+          () => assessPack(pack, world, facts: facts),
+          debugName: 'world pack check',
+        );
+  _assessed[pack] = _Assessed(world, facts, result);
+  return result;
+}
+
+/// Packs of at least this many players are checked on a background
+/// isolate by [assessPackAsync]; a smaller one (the game's own world as a
+/// new pack has under 5,000) is checked faster than an isolate starts.
+const int assessOffUiPlayers = 10000;
+
+final Expando<_Assessed> _assessed = Expando('world pack checks');
+
+class _Assessed {
+  _Assessed(this.world, this.facts, this.result);
+
+  final List<Nation> world;
+  final PackFacts facts;
+  final ({PackStatus status, List<PackIssue> issues}) result;
+
+  static const _nations = ListEquality<Nation>();
+  static const _deep = DeepCollectionEquality();
+
+  bool sameInput(List<Nation> w, PackFacts f) =>
+      (identical(w, world) || _nations.equals(w, world)) &&
+      (identical(f, facts) ||
+          (_deep.equals(f.fringeRanges, facts.fringeRanges) &&
+              _deep.equals(f.cities, facts.cities)));
 }
 
 /// [unknown] ([PackRules.compatibility]) and [missing] ([PackRules.issues])

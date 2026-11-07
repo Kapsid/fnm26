@@ -209,7 +209,7 @@ final AutoDisposeFutureProvider<List<EditorPackEntry>> editorPacksProvider =
         } on FormatException {
           pack = null;
         }
-        final a = assessPack(pack, world, facts: facts);
+        final a = await assessPackAsync(pack, world, facts: facts);
         out.add((
           id: s.id,
           name: s.name,
