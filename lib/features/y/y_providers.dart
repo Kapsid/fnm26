@@ -319,6 +319,25 @@ Future<YTimeline> _feedOf(
     // One of ours walked. The cast reads it through the stance it held on
     // the day, exactly as it reads a result — see [YFeed.forIncident].
     final standing = YFeed.standingOf(match);
+    // Who of his went off hurt in THIS match. An injury belongs to the
+    // afternoon it happened, like a red card: the feed is rebuilt from
+    // history, and reading the absence table instead hung a long-term
+    // absentee on whichever result was newest, so the same man was posted
+    // again after every game (tester, 1.1.0). The incidents are his own
+    // nation's only, so a man from an uninvolved side never appears.
+    final hurt = <String>[];
+    for (final i in incidents[fixtureId] ?? const <MatchIncident>[]) {
+      if (i.type != MatchEventType.injury) continue;
+      final p = await playerRepo.byId(
+        i.playerId,
+        agingYears: aging,
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+      );
+      if (p != null && p.name.trim().isNotEmpty && !hurt.contains(p.name)) {
+        hurt.add(p.name);
+      }
+    }
     for (final i in incidents[fixtureId] ?? const <MatchIncident>[]) {
       if (i.type != MatchEventType.redCard) continue;
       final p = await playerRepo.byId(
@@ -383,34 +402,14 @@ Future<YTimeline> _feedOf(
       // another game — the save's own history is what makes it a rivalry,
       // rather than a list of grudges written in advance.
       isRivalry: met >= rivalryMeetings,
-      // "Now" facts belong only to the newest match: hanging today's
-      // injuries on a post from three years ago would rewrite history.
-      injuredNames: const [],
+      injuredNames: hurt,
       boardMood: BoardSatisfaction.neutral,
     ));
   }
 
   // The latest result is the one the world is still reacting to, so it is
-  // the one that carries the injuries and the board's patience.
+  // the one that carries the board's patience.
   if (contexts.isNotEmpty) {
-    final absences = await ref
-        .watch(absenceRepositoryProvider)
-        .forCareer(careerId);
-    // His own men only. The world simulation injures every nation's
-    // players too, and the first of the WHOLE world's injured was posted
-    // as his loss after every match, a man from another continent who was
-    // out for months (tester, 1.0.9).
-    final hurt = <String>[];
-    for (final a in absences.values) {
-      if (a.injuryMatches <= 0) continue;
-      final p = await playerRepo.byId(
-        a.playerId,
-        agingYears: aging,
-        saveSeed: career.rngSeed,
-        careerId: career.id,
-      );
-      if (p != null && p.nationId == career.nationId) hurt.add(p.name);
-    }
     final last = contexts.last;
     contexts[contexts.length - 1] = (
       match: last.match,
@@ -419,7 +418,7 @@ Future<YTimeline> _feedOf(
       winStreak: last.winStreak,
       lossStreak: last.lossStreak,
       isRivalry: last.isRivalry,
-      injuredNames: hurt,
+      injuredNames: last.injuredNames,
       boardMood: await ref.watch(satisfactionProvider(careerId).future),
     );
   }
