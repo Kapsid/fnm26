@@ -6,6 +6,8 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../helpers/seeded_save.dart';
 
 Future<void> _shoot(
@@ -49,6 +51,28 @@ Future<void> _shoot(
 }
 
 void main() {
+  testWidgets('tablet match asks before kick-off', (tester) async {
+    final save = await seedSave(tester, formFactor: FormFactor.tablet);
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    await tester.runAsync(() => const MatchViewModeStore().load());
+    final warm = save.container.listen(
+      matchPreviewProvider(save.careerId),
+      (_, _) {},
+    );
+    addTearDown(warm.close);
+    await tester.runAsync(
+      () => save.container.read(matchPreviewProvider(save.careerId).future),
+    );
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.match}?careerId=${save.careerId}',
+      size: kTabletSize,
+    );
+    await expectAppGolden('goldens/match_tablet_chooser.png');
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('tablet match in Pitch mode', (tester) async {
     await _shoot(tester, MatchViewMode.pitch, 'goldens/match_tablet_pitch.png');
   });

@@ -7,6 +7,8 @@ import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../helpers/seeded_save.dart';
 
 /// The tablet match screen in Pitch mode: the big pitch down the centre, the
@@ -19,9 +21,13 @@ Future<SeededSave> _open(
   Size size,
 ) async {
   final save = await seedSave(tester, formFactor: FormFactor.tablet);
-  if (mode != null) {
-    await tester.runAsync(() => const MatchViewModeStore().save(mode));
-  }
+  // seedSave stores Timeline; a manager who never chose has nothing stored.
+  if (mode == null) SharedPreferences.setMockInitialValues(<String, Object>{});
+  await tester.runAsync(
+    () => mode == null
+        ? const MatchViewModeStore().load()
+        : const MatchViewModeStore().save(mode),
+  );
   final warm = save.container.listen(
     matchPreviewProvider(save.careerId),
     (_, _) {},
@@ -145,6 +151,31 @@ void main() {
     }
     expect(find.byType(PitchMatchView), findsOneWidget);
     expect(find.text(enL.matchTabTimeline.toUpperCase()), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a tablet that never chose is asked, and Pitch lands in the '
+      'pitch layout', (tester) async {
+    await _open(tester, null, kTabletSize);
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(MatchScreen.tabletLayoutKey), findsOneWidget);
+    expect(find.byType(MatchViewChooser), findsOneWidget);
+    expect(find.byType(PitchMatchView), findsNothing);
+    await tester.tap(find.byKey(MatchViewChooser.pitchKey));
+    await tester.pump();
+    for (
+      var i = 0;
+      i < 100 && find.byType(PitchMatchView).evaluate().isEmpty;
+      i++
+    ) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 50)),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(find.byType(MatchViewChooser), findsNothing);
+    expect(find.byType(PitchMatchView), findsOneWidget);
+    expect(find.byType(PitchCommentaryFeed), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
 }

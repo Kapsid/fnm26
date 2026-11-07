@@ -1696,19 +1696,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // The tablet watches the Timeline for now; a phone the way the
             // manager last chose, or, never having chosen, the way he picks
             // before kick-off.
-            // A tablet that has never chosen watches the Timeline (no
-            // question is asked there), once the choice is read.
-            final wanted =
-                remembered.valueOrNull ??
-                (tablet && !remembered.isLoading
-                    ? MatchViewMode.timeline
-                    : null);
+            // Never having chosen, the manager is asked before kick-off, on
+            // a tablet as on a phone; the match waits for him.
+            final wanted = remembered.valueOrNull;
             if (wanted != null && _mode == null) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) _applyMode(preview, wanted);
               });
             }
-            final choosing = _mode == null && !tablet && !remembered.isLoading;
+            final choosing = _mode == null && !remembered.isLoading;
             if (!_started && _mode != null) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted && !_started) _begin();
@@ -2016,7 +2012,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 scoreboard: scoreboard,
                 momentum: momentum,
                 shootout: shootout,
-                timeline: timeline,
+                // Before kick-off, never having chosen: Pitch or Timeline,
+                // here where the Timeline goes.
+                timeline: choosing
+                    ? MatchViewChooser(
+                        onChoose: (m) => _chooseMode(preview, m),
+                      )
+                    : timeline,
                 stats: stats,
                 lineups: lineups,
                 pitch: _livePitch(preview, r),
