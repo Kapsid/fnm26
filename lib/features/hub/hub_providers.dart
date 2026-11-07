@@ -1009,7 +1009,9 @@ class SeasonService {
       ..invalidate(teamStatsProvider)
       ..invalidate(friendliesPlanProvider)
       ..invalidate(careerDevBonusProvider)
-      ..invalidate(youthBonusByCycleProvider);
+      ..invalidate(youthBonusByCycleProvider)
+      // And the standing it is built on (the ranking and what was won).
+      ..invalidate(intakeStandingByCycleProvider);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the

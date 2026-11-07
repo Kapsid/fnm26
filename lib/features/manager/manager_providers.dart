@@ -125,6 +125,7 @@ class ManagerService {
     // A skill (an eye for a young player) lifts the youth bonus the match
     // preview rates his side with.
     ..invalidate(youthBonusByCycleProvider(careerId))
+    ..invalidate(intakeStandingByCycleProvider(careerId))
     ..invalidate(savesProvider);
 }
 
