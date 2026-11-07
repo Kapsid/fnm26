@@ -58,7 +58,8 @@ class WorldPackRepository {
   /// handed back as it was decoded: a big one takes a good part of a second
   /// to decode on a phone, and the nation pick, New Game's world chip and
   /// the editor's list all read every pack. The pack is shared, so it is
-  /// never changed in place (nothing does: every edit is a [WorldPack.copyWith]).
+  /// never changed in place (nothing does: every edit is a
+  /// [WorldPack.copyWith]).
   Future<WorldPack?> load(int id) async {
     final t = _db.worldPacks;
     final length = t.json.length;
