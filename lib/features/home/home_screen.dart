@@ -12,7 +12,7 @@ import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_ui.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/saves_screen.dart';
-import 'package:fnm/features/hub/hub_providers.dart';
+import 'package:fnm/features/home/home_next_line_providers.dart';
 import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -72,6 +72,12 @@ class HomeScreen extends ConsumerWidget {
     final lastWorldNation = lastSave == null
         ? null
         : ref.watch(careerWorldNationNamesProvider).valueOrNull?[lastSave.id];
+    // What comes next for that save: a few small reads of its own, never the
+    // hub's whole load (see [homeNextLineProvider]). The card shows the road
+    // line until it lands, so it never holds up the first frame.
+    final lastLine = lastSave == null
+        ? null
+        : ref.watch(homeNextLineProvider(lastSave.id)).valueOrNull;
     final campaign = _latestCampaignRun(ref);
     final campaignNation = campaign == null
         ? null
@@ -93,6 +99,7 @@ class HomeScreen extends ConsumerWidget {
             worldName: lastWorld,
             inGameDate: lastSave.inGameDate,
             cyclePointer: lastSave.cyclePointer,
+            nextLine: _careerNextLine(context, lastSave, lastLine),
             locked: lockedIds.contains(lastSave.id),
             onResume: () => _resume(context, ref, lastSave),
           ),
@@ -124,11 +131,11 @@ class HomeScreen extends ConsumerWidget {
             name: careerNation,
             worldName: lastWorld,
             date: AppDate.monthYear(context, lastSave.inGameDate),
-            subtitle: _careerNextLine(
-              context,
-              lastSave,
-              ref.watch(hubDataProvider(lastSave.id)).valueOrNull,
-            ),
+            subtitle:
+                _careerNextLine(context, lastSave, lastLine) ??
+                l.careerRoadToWorldCup(
+                  CareerService.worldCupYear(lastSave.cyclePointer),
+                ),
             locked: lockedIds.contains(lastSave.id),
             onResume: () => _resume(context, ref, lastSave),
           );
@@ -152,21 +159,25 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-/// What comes next for [save], on the phone's continue card: his next
-/// fixture as the hub's top bar names it (the opponent held back until the
-/// draw has been watched), and with none, where the cycle stands. It used to
-/// read "Road to the {year} World Championship" whatever the save was doing,
-/// that World Championship played or not.
-String _careerNextLine(BuildContext context, Career save, HubData? hub) {
+/// What comes next for [save], on both continue cards: his next fixture as
+/// the hub's top bar names it (the opponent held back until the draw has been
+/// watched), and with none, where the cycle stands. Null for the road to the
+/// cycle's World Championship, which each card writes in its own words. The
+/// cards used to read that road line whatever the save was doing, that World
+/// Championship played or not.
+String? _careerNextLine(
+  BuildContext context,
+  Career save,
+  HomeNextLine? line,
+) {
   final l = AppLocalizations.of(context);
   final year = CareerService.worldCupYear(save.cyclePointer);
-  if (hub == null) return l.careerRoadToWorldCup(year);
-  final next = hub.next;
+  if (line == null) return null;
+  final next = line.next;
   if (next != null) {
-    String name(int id) => hub.nations[id]?.name ?? l.hubUnknown;
-    final match = hub.nextDrawWatched
-        ? '${name(next.homeNationId)} ${l.hubVs.toLowerCase()} '
-              '${name(next.awayNationId)}'
+    final match = line.drawWatched
+        ? '${line.homeName ?? l.hubUnknown} ${l.hubVs.toLowerCase()} '
+              '${line.awayName ?? l.hubUnknown}'
         : l.topBarDrawPending;
     // The day, not the stage: on the smallest phone the stage pushed the
     // date off the end of the card's two lines.
@@ -174,10 +185,10 @@ String _careerNextLine(BuildContext context, Career save, HubData? hub) {
   }
   // No fixture of his own: the cycle's World Championship is either behind
   // him (the board's verdict is the next thing), running without him, or
-  // still ahead.
-  if (hub.championNationId != null) return l.homeCycleComplete(year);
-  if (hub.hasFinals) return l.homeFollowingFinals(year);
-  return l.careerRoadToWorldCup(year);
+  // still ahead (the road line, which the caller writes).
+  if (line.decided) return l.homeCycleComplete(year);
+  if (line.hasFinals) return l.homeFollowingFinals(year);
+  return null;
 }
 
 /// When [c] was last opened; a run never opened since it was made counts from
@@ -220,7 +231,12 @@ class _ContinueCard extends StatelessWidget {
     required this.onResume,
     this.locked = false,
     this.worldName,
+    this.nextLine,
   });
+
+  /// What comes next for the save (see [_careerNextLine]); null shows the
+  /// road to the cycle's World Championship.
+  final String? nextLine;
 
   final String nationName;
   final String? nationCode;
@@ -269,10 +285,14 @@ class _ContinueCard extends StatelessWidget {
                   if (locked) const SaveLockedNote(),
                   const SizedBox(height: 2),
                   Text(
-                    l.homeRoadToWorldCup(
-                      AppDate.monthYear(context, inGameDate),
-                      CareerService.worldCupYear(cyclePointer),
-                    ),
+                    switch (nextLine) {
+                      final line? =>
+                        '${AppDate.monthYear(context, inGameDate)} · $line',
+                      null => l.homeRoadToWorldCup(
+                        AppDate.monthYear(context, inGameDate),
+                        CareerService.worldCupYear(cyclePointer),
+                      ),
+                    },
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelSmall.copyWith(
