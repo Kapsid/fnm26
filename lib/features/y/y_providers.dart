@@ -826,10 +826,20 @@ final AutoDisposeFutureProviderFamily<int, int> yUnreadCountProvider =
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return 0;
       final posts = (await ref.watch(yFeedProvider(careerId).future)).posts;
+      // A landmark dated at the event it announces is not news until that
+      // day comes, so it neither counts nor lifts the watermark early.
+      final dated = yPostsUpTo(posts, career.inGameDate);
       final since = career.yReadAt;
-      if (since == null) return posts.length;
-      return posts.where((p) => p.date.isAfter(since)).length;
+      if (since == null) return dated.length;
+      return dated.where((p) => p.date.isAfter(since)).length;
     });
+
+/// The posts already dated on [asOf]. "Tournament soon" and "final looms"
+/// are dated at the event they announce, which can still be weeks away.
+List<YPost> yPostsUpTo(List<YPost> posts, DateTime asOf) => [
+  for (final p in posts)
+    if (!p.date.isAfter(asOf)) p,
+];
 
 /// Marks the feed read up to its newest post.
 final Provider<YReadService> yReadServiceProvider = Provider<YReadService>(
@@ -844,8 +854,15 @@ class YReadService {
 
   /// Stamps the watermark at the newest post's date, so opening the feed
   /// clears the badge — and a post that arrives later still counts as unread.
+  /// Capped at the career's date: a future-dated landmark would otherwise
+  /// carry the watermark past every friendly played before it.
   Future<void> markRead(int careerId) async {
-    final posts = (await _ref.read(yFeedProvider(careerId).future)).posts;
+    final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+    if (career == null) return;
+    final posts = yPostsUpTo(
+      (await _ref.read(yFeedProvider(careerId).future)).posts,
+      career.inGameDate,
+    );
     if (posts.isEmpty) return;
     final newest = posts
         .map((p) => p.date)

@@ -100,7 +100,10 @@ class _HubTabletLayout extends ConsumerWidget {
                     ),
                     DashboardTile(
                       span: 4,
-                      child: _YPanel(careerId: careerId),
+                      child: _YPanel(
+                        careerId: careerId,
+                        asOf: hub.career.inGameDate,
+                      ),
                     ),
                     DashboardTile(
                       span: 12,
@@ -529,19 +532,25 @@ class _InboxPanel extends ConsumerWidget {
 /// which is built on WholeText (a LayoutBuilder) and would assert inside the
 /// dashboard's IntrinsicHeight rows.
 class _YPanel extends ConsumerWidget {
-  const _YPanel({required this.careerId});
+  const _YPanel({required this.careerId, required this.asOf});
 
   final int careerId;
+
+  /// The career's date: posts dated after it are not news yet.
+  final DateTime asOf;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     // Kept alive by the hub State's watch of yUnreadCountProvider, which
     // reads this feed to count.
+    // Future-dated landmarks ("tournament soon", "final looms") would
+    // otherwise always be the two newest and bury the friendlies.
+    final feed =
+        ref.watch(yFeedProvider(careerId)).valueOrNull?.posts ??
+        const <YPost>[];
     final posts = [
-      for (final p
-          in ref.watch(yFeedProvider(careerId)).valueOrNull?.posts ??
-              const <YPost>[])
+      for (final p in yPostsUpTo(feed, asOf))
         if (p.replyTo == null) p,
     ].take(2).toList();
     void open() => context.go('${Routes.y}?careerId=$careerId');

@@ -36,6 +36,13 @@ Future<SeededSave> _open(WidgetTester tester, Size size) async {
       yUnreadCountProvider(kSeededCareerId).overrideWith((ref) async => 0),
     ],
   );
+  // The fixture's posts are dated mid-2027: the career has reached them,
+  // since a post dated past the career's day is not news yet.
+  await tester.runAsync(
+    () => save.container
+        .read(careerRepositoryProvider)
+        .updateInGameDate(save.careerId, DateTime(2027, 12, 31)),
+  );
   await pumpRoute(
     tester,
     save,

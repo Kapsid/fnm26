@@ -79,6 +79,10 @@ void main() {
                 ))
             .valueOrNull!
             .id;
+    // Every post here is already dated: the count stops at the career's day.
+    await container
+        .read(careerRepositoryProvider)
+        .updateInGameDate(careerId, DateTime(2030, 12, 31));
   });
 
   test('a manager who has never looked has everything unread', () async {
