@@ -217,9 +217,19 @@ class _HubScreenState extends ConsumerState<HubScreen> {
     final contHost = ref
         .watch(continentalHostThemeProvider(careerId))
         .valueOrNull;
-    final unread = ref.watch(unreadMessagesProvider(careerId)).valueOrNull ?? 0;
+    // The badges wait for the hub's own data. Counting them builds the whole
+    // inbox and the whole Y feed, the two biggest reads of a long save, and
+    // the database answers in turn: asked for together, the hub's data came
+    // in behind them, and opening a save sat on a spinner until every badge
+    // was counted.
+    final badges = dataAsync.hasValue;
+    final unread = badges
+        ? ref.watch(unreadMessagesProvider(careerId)).valueOrNull ?? 0
+        : 0;
     // What the world has said since the manager last looked.
-    final yUnread = ref.watch(yUnreadCountProvider(careerId)).valueOrNull ?? 0;
+    final yUnread = badges
+        ? ref.watch(yUnreadCountProvider(careerId)).valueOrNull ?? 0
+        : 0;
 
     // Watched so the hub rebuilds when the tour ends, which is what lets the
     // news it held back through [_tourHoldsNews] pop.
