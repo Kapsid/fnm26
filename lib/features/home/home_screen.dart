@@ -6,7 +6,6 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
-import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
@@ -169,11 +168,9 @@ String _careerNextLine(BuildContext context, Career save, HubData? hub) {
         ? '${name(next.homeNationId)} ${l.hubVs.toLowerCase()} '
               '${name(next.awayNationId)}'
         : l.topBarDrawPending;
-    return l.homeNextFixture(
-      match,
-      '${MatchStage.labelCompact(l, next)}, '
-      '${AppDate.dayMonth(context, next.date)}',
-    );
+    // The day, not the stage: on the smallest phone the stage pushed the
+    // date off the end of the card's two lines.
+    return l.homeNextFixture(match, AppDate.dayMonth(context, next.date));
   }
   // No fixture of his own: the cycle's World Championship is either behind
   // him (the board's verdict is the next thing), running without him, or

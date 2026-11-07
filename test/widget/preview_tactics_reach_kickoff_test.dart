@@ -15,6 +15,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -142,6 +143,10 @@ void main() {
     final runs = screen.listen(campaignRunsProvider, (_, _) {});
     addTearDown(runs.close);
     await tester.runAsync(() => screen.read(campaignRunsProvider.future));
+    // And the hub's data, which its continue card reads for the next fixture.
+    final hub = screen.listen(hubDataProvider(careerId), (_, _) {});
+    addTearDown(hub.close);
+    await tester.runAsync(() => screen.read(hubDataProvider(careerId).future));
 
     tester.view
       ..physicalSize = const Size(400, 900)
