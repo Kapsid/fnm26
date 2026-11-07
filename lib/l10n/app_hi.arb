@@ -842,7 +842,7 @@
   "chPcWc": "लगातार चैंपियन",
   "chPcWcDesc": "इस सेव में {count} विश्व चैंपियनशिप जीतें।",
   "chPcMajors": "ट्रॉफ़ी संग्राहक",
-  "chPcMajorsDesc": "{count} बड़ी ट्रॉफ़ियाँ जीतें (विश्व चैंपियनशिप, महाद्वीपीय या नेशंस कप)।",
+  "chPcMajorsDesc": "{count} बड़ी ट्रॉफ़ियाँ जीतें (विश्व चैंपियनशिप, महाद्वीपीय, नेशंस कप या कॉन्टिनेंटल क्लैश)।",
   "chPcUnbeaten": "लोहे की दीवार",
   "chPcUnbeatenDesc": "{count} प्रतिस्पर्धी मैच अजेय रहें।",
   "chPcNations": "अनुभवी सफ़री",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "मैच को घटना-दर-घटना देखें",
   "matchViewSwitchToPitch": "2D TV मोड में देखें",
   "matchViewSwitchToTimeline": "घटनाक्रम देखें",
-  "matchTabCommentary": "कमेंट्री"
+  "matchTabCommentary": "कमेंट्री",
+  "homeNextFixture": "अगला: {match}, {when}",
+  "homeCycleComplete": "{year} विश्व चैंपियनशिप पूरी हो गई। अब बोर्ड का फ़ैसला बाक़ी है।",
+  "homeFollowingFinals": "{year} विश्व चैंपियनशिप दर्शक बनकर"
 }

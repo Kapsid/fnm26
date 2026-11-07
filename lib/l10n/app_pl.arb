@@ -842,7 +842,7 @@
   "chPcWc": "Seryjny mistrz",
   "chPcWcDesc": "Wygraj Mistrzostwa Świata w tym zapisie. Liczba tytułów: {count}.",
   "chPcMajors": "Kolekcjoner trofeów",
-  "chPcMajorsDesc": "Zdobądź wielkie trofea (Mistrzostwa Świata, kontynentu lub Puchar Narodów). Liczba: {count}.",
+  "chPcMajorsDesc": "Zdobądź wielkie trofea (Mistrzostwa Świata, kontynentu, Puchar Narodów lub Starcie Kontynentów). Liczba: {count}.",
   "chPcUnbeaten": "Żelazny mur",
   "chPcUnbeatenDesc": "Zagraj bez porażki tyle meczów o punkty z rzędu: {count}.",
   "chPcNations": "Wędrowniczek",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Śledź mecz zdarzenie po zdarzeniu",
   "matchViewSwitchToPitch": "Oglądaj w trybie 2D TV",
   "matchViewSwitchToTimeline": "Oglądaj przebieg",
-  "matchTabCommentary": "KOMENTARZ"
+  "matchTabCommentary": "KOMENTARZ",
+  "homeNextFixture": "Następny mecz: {match}, {when}",
+  "homeCycleComplete": "Mistrzostwa Świata {year} zakończone. Teraz werdykt zarządu.",
+  "homeFollowingFinals": "Mistrzostwa Świata {year} z trybun"
 }

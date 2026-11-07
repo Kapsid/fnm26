@@ -2034,6 +2034,21 @@ class AppLocalizationsHu extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Következő: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'A $year. évi világbajnokság véget ért. Jön a vezetőség ítélete.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'A $year. évi világbajnokság a lelátóról';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'KAPITÁNYI KARRIER';
 
   @override
@@ -3031,7 +3046,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Nyerj $count jelentős trófeát (világbajnokság, kontinentális bajnokság vagy Nations Cup).';
+    return 'Nyerj $count jelentős trófeát (világbajnokság, kontinentális bajnokság, Nations Cup vagy Continental Clash).';
   }
 
   @override

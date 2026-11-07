@@ -2104,6 +2104,21 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Další: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Mistrovství světa $year skončilo. Na řadě je verdikt vedení.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'MS $year z tribuny';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'TRENÉRSKÁ KARIÉRA';
 
   @override
@@ -3123,7 +3138,7 @@ class AppLocalizationsCs extends AppLocalizations {
       few: 'Vyhrajte $count velké trofeje',
       one: 'Vyhrajte 1 velkou trofej',
     );
-    return '$_temp0 (mistrovství světa, kontinentální nebo Pohár národů).';
+    return '$_temp0 (mistrovství světa, kontinentální, Pohár národů nebo Souboj kontinentů).';
   }
 
   @override

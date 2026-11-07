@@ -842,7 +842,7 @@
   "chPcWc": "Campeão em Série",
   "chPcWcDesc": "Vença {count} Campeonatos Mundiais nesta gravação.",
   "chPcMajors": "Colecionador de Troféus",
-  "chPcMajorsDesc": "Vença {count} grandes troféus (Campeonato Mundial, continental ou Copa das Nações).",
+  "chPcMajorsDesc": "Vença {count} grandes troféus (Campeonato Mundial, continental, Copa das Nações ou Duelo Continental).",
   "chPcUnbeaten": "Muralha de Ferro",
   "chPcUnbeatenDesc": "Fique {count} jogos oficiais sem perder.",
   "chPcNations": "Andarilho",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Acompanhar o jogo lance a lance",
   "matchViewSwitchToPitch": "Ver no modo 2D TV",
   "matchViewSwitchToTimeline": "Ver a cronologia",
-  "matchTabCommentary": "COMENTÁRIO"
+  "matchTabCommentary": "COMENTÁRIO",
+  "homeNextFixture": "Próximo: {match}, {when}",
+  "homeCycleComplete": "O Campeonato Mundial de {year} terminou. Agora vem o veredicto da direção.",
+  "homeFollowingFinals": "O Campeonato Mundial de {year} como espectador"
 }

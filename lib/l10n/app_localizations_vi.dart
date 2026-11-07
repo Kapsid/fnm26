@@ -2026,6 +2026,21 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Tiếp theo: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Giải vô địch thế giới $year đã kết thúc. Tiếp theo là phán quyết của liên đoàn.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Theo dõi Giải vô địch thế giới $year';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'SỰ NGHIỆP HUẤN LUYỆN';
 
   @override
@@ -3020,7 +3035,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Giành $count danh hiệu lớn (Giải vô địch thế giới, châu lục hoặc Nations Cup).';
+    return 'Giành $count danh hiệu lớn (Giải vô địch thế giới, châu lục, Nations Cup hoặc Continental Clash).';
   }
 
   @override

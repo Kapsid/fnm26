@@ -842,7 +842,7 @@
   "chPcWc": "Seriemästare",
   "chPcWcDesc": "Vinn {count} världsmästerskap i denna sparfil.",
   "chPcMajors": "Pokalsamlare",
-  "chPcMajorsDesc": "Vinn {count} stora troféer (Världsmästerskapet, kontinentalt mästerskap eller Nations Cup).",
+  "chPcMajorsDesc": "Vinn {count} stora troféer (Världsmästerskapet, kontinentalt mästerskap, Nations Cup eller Continental Clash).",
   "chPcUnbeaten": "Järnmuren",
   "chPcUnbeatenDesc": "Spela {count} tävlingsmatcher utan förlust.",
   "chPcNations": "Gesäll",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Följ matchen händelse för händelse",
   "matchViewSwitchToPitch": "Titta i 2D TV-läge",
   "matchViewSwitchToTimeline": "Titta på förloppet",
-  "matchTabCommentary": "KOMMENTARER"
+  "matchTabCommentary": "KOMMENTARER",
+  "homeNextFixture": "Nästa: {match}, {when}",
+  "homeCycleComplete": "Världsmästerskapet {year} är avgjort. Nu väntar styrelsens dom.",
+  "homeFollowingFinals": "Världsmästerskapet {year} från läktaren"
 }

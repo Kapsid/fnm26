@@ -842,7 +842,7 @@
   "chPcWc": "Juara Berantai",
   "chPcWcDesc": "Juarai {count} Kejuaraan Dunia di simpanan ini.",
   "chPcMajors": "Kolektor Trofi",
-  "chPcMajorsDesc": "Raih {count} trofi besar (Kejuaraan Dunia, kejuaraan benua, atau Piala Bangsa-Bangsa).",
+  "chPcMajorsDesc": "Raih {count} trofi besar (Kejuaraan Dunia, kejuaraan benua, Piala Bangsa-Bangsa, atau Duel Benua).",
   "chPcUnbeaten": "Tembok Baja",
   "chPcUnbeatenDesc": "Jalani {count} laga kompetitif tanpa kalah.",
   "chPcNations": "Pelatih Kelana",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Ikuti pertandingan kejadian demi kejadian",
   "matchViewSwitchToPitch": "Tonton dalam mode 2D TV",
   "matchViewSwitchToTimeline": "Lihat alurnya",
-  "matchTabCommentary": "KOMENTAR"
+  "matchTabCommentary": "KOMENTAR",
+  "homeNextFixture": "Berikutnya: {match}, {when}",
+  "homeCycleComplete": "Kejuaraan Dunia {year} telah usai. Kini giliran keputusan federasi.",
+  "homeFollowingFinals": "Menyaksikan Kejuaraan Dunia {year}"
 }

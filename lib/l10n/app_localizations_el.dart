@@ -2077,6 +2077,21 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Επόμενος: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Το Παγκόσμιο Πρωτάθλημα $year ολοκληρώθηκε. Ακολουθεί η ετυμηγορία της ομοσπονδίας.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Παρακολουθώντας το Παγκόσμιο Πρωτάθλημα $year';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'ΚΑΡΙΕΡΑ ΠΡΟΠΟΝΗΤΗ';
 
   @override
@@ -3080,7 +3095,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Κέρδισε $count μεγάλα τρόπαια (Παγκόσμιο Πρωτάθλημα, ηπειρωτικό ή Κύπελλο Εθνών).';
+    return 'Κέρδισε $count μεγάλα τρόπαια (Παγκόσμιο Πρωτάθλημα, ηπειρωτικό, Κύπελλο Εθνών ή Ηπειρωτική Αναμέτρηση).';
   }
 
   @override

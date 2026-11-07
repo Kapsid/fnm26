@@ -2082,6 +2082,21 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Seuraava: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Vuoden $year MM-kisat on pelattu. Seuraavaksi johtokunnan tuomio.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Vuoden $year MM-kisat katsomosta';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'VALMENTAJAURA';
 
   @override
@@ -3078,7 +3093,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Voita $count suurta pokaalia (MM-kisat, mannerkisat tai Nations Cup).';
+    return 'Voita $count suurta pokaalia (MM-kisat, mannerkisat, Nations Cup tai Continental Clash).';
   }
 
   @override

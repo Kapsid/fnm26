@@ -2055,6 +2055,21 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Următorul: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Campionatul Mondial $year s-a încheiat. Urmează verdictul conducerii.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Campionatul Mondial $year din tribună';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'CARIERA DE SELECȚIONER';
 
   @override
@@ -3082,11 +3097,11 @@ class AppLocalizationsRo extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          'Câștigați $count de trofee majore (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).',
+          'Câștigați $count de trofee majore (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).',
       few:
-          'Câștigați $count trofee majore (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).',
+          'Câștigați $count trofee majore (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).',
       one:
-          'Câștigați 1 trofeu major (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).',
+          'Câștigați 1 trofeu major (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).',
     );
     return '$_temp0';
   }

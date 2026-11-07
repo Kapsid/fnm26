@@ -57,7 +57,6 @@ void main() {
             lost: 7,
             goalsFor: 80,
             goalsAgainst: 35,
-            titles: 2,
             biggestWin: result(forGoals: 7, against: 0),
             biggestLoss: result(
               forGoals: 0,

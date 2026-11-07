@@ -2060,6 +2060,21 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Nästa: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Världsmästerskapet $year är avgjort. Nu väntar styrelsens dom.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Världsmästerskapet $year från läktaren';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'FÖRBUNDSKAPTENSKARRIÄR';
 
   @override
@@ -3057,7 +3072,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Vinn $count stora troféer (Världsmästerskapet, kontinentalt mästerskap eller Nations Cup).';
+    return 'Vinn $count stora troféer (Världsmästerskapet, kontinentalt mästerskap, Nations Cup eller Continental Clash).';
   }
 
   @override

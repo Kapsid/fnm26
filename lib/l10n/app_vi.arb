@@ -842,7 +842,7 @@
   "chPcWc": "Nhà vô địch liên hoàn",
   "chPcWcDesc": "Giành {count} chức vô địch Giải vô địch thế giới trong bản lưu này.",
   "chPcMajors": "Người sưu tầm cúp",
-  "chPcMajorsDesc": "Giành {count} danh hiệu lớn (Giải vô địch thế giới, châu lục hoặc Nations Cup).",
+  "chPcMajorsDesc": "Giành {count} danh hiệu lớn (Giải vô địch thế giới, châu lục, Nations Cup hoặc Continental Clash).",
   "chPcUnbeaten": "Bức tường sắt",
   "chPcUnbeatenDesc": "Bất bại {count} trận chính thức liên tiếp.",
   "chPcNations": "Người đi khắp nơi",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Theo dõi trận đấu từng tình huống",
   "matchViewSwitchToPitch": "Xem ở chế độ 2D TV",
   "matchViewSwitchToTimeline": "Xem diễn biến",
-  "matchTabCommentary": "BÌNH LUẬN"
+  "matchTabCommentary": "BÌNH LUẬN",
+  "homeNextFixture": "Tiếp theo: {match}, {when}",
+  "homeCycleComplete": "Giải vô địch thế giới {year} đã kết thúc. Tiếp theo là phán quyết của liên đoàn.",
+  "homeFollowingFinals": "Theo dõi Giải vô địch thế giới {year}"
 }

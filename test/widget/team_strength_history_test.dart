@@ -31,7 +31,6 @@ void main() {
     lost: 7,
     goalsFor: 80,
     goalsAgainst: 35,
-    titles: 2,
   );
 
   ManagerCycle cycle(int year) => ManagerCycle(

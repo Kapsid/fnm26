@@ -36,6 +36,19 @@ void main() {
   /// over a bracket. A provider is no more able to reach [AppLocalizations]
   /// than an entity is, so the rule and the fix are the same: the words live
   /// in `lib/l10n` and a translator at the display edge writes them.
+  // The guard itself, on the shapes that have slipped past it before: a
+  // guard tuned to sentence case misses what this app writes in caps.
+  test('the guard sees caps labels and leaves round codes alone', () {
+    bool caught(String line) => _displayLiteral.hasMatch(line);
+    expect(caught(r"Text('TACTICS $used/$max')"), isTrue);
+    expect(caught("Text('TACTICS')"), isTrue);
+    expect(caught("Text('FULL TIME')"), isTrue);
+    expect(caught("=> 'Striker'"), isTrue);
+    expect(caught("if (round == 'GROUP')"), isFalse);
+    expect(caught("case 'FINAL':"), isFalse);
+    expect(caught("'CGROUP' || 'NGROUP'"), isFalse);
+  });
+
   test('nor does anything in lib/features', () {
     _expectNoEnglish(_dartFiles('lib/features'));
   });
@@ -81,7 +94,12 @@ void main() {
 /// `GROUP`, `FINAL`, `CGROUP`, `NGROUP`, `FRIENDLY` — that are compared in
 /// logic and never printed. Sweeping the shape would bury the real ones; this
 /// list is the opt-in for a word that turned out to be a plate after all.
-const List<String> _displayCapsWords = ['PENALTIES', 'MASCOT', 'DRAWING…'];
+const List<String> _displayCapsWords = [
+  'PENALTIES',
+  'MASCOT',
+  'DRAWING…',
+  'TACTICS',
+];
 
 /// The two shapes a hard-coded display string takes in this repo.
 ///
@@ -99,10 +117,16 @@ const List<String> _displayCapsWords = ['PENALTIES', 'MASCOT', 'DRAWING…'];
 /// capital — which is how a Czech manager kept reading "FULL TIME",
 /// "GOLDEN BOOT", "DRAW COMPLETE" and "SEEDING POTS" through four batches of
 /// this sweep.
+///
+/// The third is a single ALL-CAPS word with a number interpolated after it,
+/// `'TACTICS $used/$max'`: one word is not a phrase, so the second shape let
+/// it through, yet a count beside a caps word is always a label on show (a
+/// round code is never followed by one).
 final RegExp _displayLiteral = RegExp(
   r"(?:=>|return)\s+'([A-Z][a-z][^']*)'"
   r"|'((?:[A-Z0-9]{2,}(?:[ ·]+[A-Z0-9]{2,})+"
   '|${_displayCapsWords.join('|')}'
+  r"|[A-Z]{3,}[ ·:]+\$"
   r")[^']*)'",
 );
 

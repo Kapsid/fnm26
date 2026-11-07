@@ -32,6 +32,12 @@ void main() {
         yUnreadCountProvider(kSeededCareerId).overrideWith((ref) async => 0),
       ],
     );
+    // The career has reached its newest post: one dated later is not news.
+    await tester.runAsync(
+      () => save.container
+          .read(careerRepositoryProvider)
+          .updateInGameDate(save.careerId, newest),
+    );
     Future<DateTime?> readAt() async => (await tester.runAsync(
       () => save.container.read(careerRepositoryProvider).byId(save.careerId),
     ))?.yReadAt;

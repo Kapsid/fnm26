@@ -2088,6 +2088,21 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Próximo: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'O Campeonato Mundial de $year terminou. Agora vem o veredicto da direção.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'O Campeonato Mundial de $year como espectador';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'CARREIRA DE TREINADOR';
 
   @override
@@ -3096,7 +3111,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Vença $count grandes troféus (Campeonato Mundial, continental ou Copa das Nações).';
+    return 'Vença $count grandes troféus (Campeonato Mundial, continental, Copa das Nações ou Duelo Continental).';
   }
 
   @override

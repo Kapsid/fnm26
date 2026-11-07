@@ -842,7 +842,7 @@
   "chPcWc": "Campeón en serie",
   "chPcWcDesc": "Gana {count} Campeonatos del Mundo en esta partida.",
   "chPcMajors": "Coleccionista de trofeos",
-  "chPcMajorsDesc": "Gana {count} grandes títulos (Campeonato del Mundo, continental o Copa de las Naciones).",
+  "chPcMajorsDesc": "Gana {count} grandes títulos (Campeonato del Mundo, continental, Copa de las Naciones o Duelo Continental).",
   "chPcUnbeaten": "Muro de hierro",
   "chPcUnbeatenDesc": "Encadena {count} partidos oficiales invicto.",
   "chPcNations": "Trotamundos",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Seguir el partido jugada a jugada",
   "matchViewSwitchToPitch": "Ver en modo 2D TV",
   "matchViewSwitchToTimeline": "Ver la cronología",
-  "matchTabCommentary": "COMENTARIO"
+  "matchTabCommentary": "COMENTARIO",
+  "homeNextFixture": "Próximo: {match}, {when}",
+  "homeCycleComplete": "El Campeonato del Mundo {year} ha terminado. Ahora llega el veredicto de la directiva.",
+  "homeFollowingFinals": "El Campeonato del Mundo {year} desde la grada"
 }

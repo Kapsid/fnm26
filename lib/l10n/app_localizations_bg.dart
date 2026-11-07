@@ -2089,6 +2089,21 @@ class AppLocalizationsBg extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Следва: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Световното първенство $year приключи. Следва присъдата на ръководството.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Световното първенство $year от трибуните';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'КАРИЕРА КАТО СЕЛЕКЦИОНЕР';
 
   @override
@@ -3090,7 +3105,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Спечели $count големи трофея (Световно първенство, континентално първенство или Nations Cup).';
+    return 'Спечели $count големи трофея (Световно първенство, континентално първенство, Nations Cup или Continental Clash).';
   }
 
   @override

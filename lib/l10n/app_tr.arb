@@ -842,7 +842,7 @@
   "chPcWc": "Seri Şampiyon",
   "chPcWcDesc": "Bu kayıtta {count} Dünya Şampiyonası kazan.",
   "chPcMajors": "Kupa Koleksiyoncusu",
-  "chPcMajorsDesc": "{count} büyük kupa kazan (Dünya Şampiyonası, kıta şampiyonası veya Uluslar Kupası).",
+  "chPcMajorsDesc": "{count} büyük kupa kazan (Dünya Şampiyonası, kıta şampiyonası, Uluslar Kupası veya Kıtalar Arası Çarpışma).",
   "chPcUnbeaten": "Demir Duvar",
   "chPcUnbeatenDesc": "{count} resmi maç yenilmeden git.",
   "chPcNations": "Gezgin Usta",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Maçı olay olay izleyin",
   "matchViewSwitchToPitch": "2D TV modunda izle",
   "matchViewSwitchToTimeline": "Akışı izle",
-  "matchTabCommentary": "YORUM"
+  "matchTabCommentary": "YORUM",
+  "homeNextFixture": "Sıradaki: {match}, {when}",
+  "homeCycleComplete": "{year} Dünya Şampiyonası sona erdi. Sırada yönetimin kararı var.",
+  "homeFollowingFinals": "{year} Dünya Şampiyonası'nı izliyorsunuz"
 }

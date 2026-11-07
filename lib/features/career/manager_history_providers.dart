@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
@@ -87,7 +88,6 @@ class ManagerHistory {
     required this.lost,
     required this.goalsFor,
     required this.goalsAgainst,
-    required this.titles,
     this.trophyCounts = const {},
     this.biggestWin,
     this.biggestLoss,
@@ -109,8 +109,10 @@ class ManagerHistory {
   final int goalsFor;
   final int goalsAgainst;
 
-  /// Total championships (World Cup + continental) won across the career.
-  final int titles;
+  /// Total championships won across the career: every trophy in the
+  /// cabinet, so the count and the shelves below it can never disagree (a
+  /// Continental Clash or a Nations Cup is a title there too).
+  int get titles => trophyCounts.values.fold(0, (a, b) => a + b);
 
   /// Trophy-cabinet tallies keyed by trophy id (see [Trophies]): how many of
   /// each the manager has won, for the cabinet display.
@@ -122,11 +124,15 @@ class ManagerHistory {
   int get nationsLed =>
       {for (final c in cycles) c.nation?.id}.whereType<int>().length;
 
-  /// World Cups won across the whole career.
-  int get worldCups => cycles.where((c) => c.wonWorldCup).length;
+  /// World Championships won across the whole career: the cabinet's shelf,
+  /// the same honours [titles] adds up.
+  int get worldCups => trophyCounts['world'] ?? 0;
 
-  /// Continental titles won across the whole career.
-  int get continentalTitles => cycles.where((c) => c.wonContinental).length;
+  /// Continental championships won across the whole career: the cabinet's
+  /// six confederation shelves (not the Nations Cups, not the Clash).
+  int get continentalTitles => [
+    for (final c in Confederation.values) trophyCounts[c.name] ?? 0,
+  ].fold(0, (a, b) => a + b);
 
   /// The manager's win percentage (0–100), 0 with no matches.
   int get winRate => played == 0 ? 0 : (won * 100 / played).round();
@@ -267,7 +273,6 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
     var lost = 0;
     var gf = 0;
     var ga = 0;
-    var titles = 0;
     for (final c in cycles) {
       played += c.played;
       won += c.won;
@@ -275,8 +280,6 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
       lost += c.lost;
       gf += c.goalsFor;
       ga += c.goalsAgainst;
-      if (c.wonWorldCup) titles++;
-      if (c.wonContinental) titles++;
     }
 
     // Trophy cabinet: every trophy the manager lifted, keyed by trophy id. Only
@@ -306,7 +309,6 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
       lost: lost,
       goalsFor: gf,
       goalsAgainst: ga,
-      titles: titles,
       trophyCounts: trophyCounts,
       biggestWin: biggestWin,
       biggestLoss: biggestLoss,

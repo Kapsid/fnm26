@@ -2022,6 +2022,21 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Sıradaki: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return '$year Dünya Şampiyonası sona erdi. Sırada yönetimin kararı var.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return '$year Dünya Şampiyonası\'nı izliyorsunuz';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'TEKNİK DİREKTÖR KARİYERİ';
 
   @override
@@ -3013,7 +3028,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return '$count büyük kupa kazan (Dünya Şampiyonası, kıta şampiyonası veya Uluslar Kupası).';
+    return '$count büyük kupa kazan (Dünya Şampiyonası, kıta şampiyonası, Uluslar Kupası veya Kıtalar Arası Çarpışma).';
   }
 
   @override

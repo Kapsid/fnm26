@@ -2090,6 +2090,21 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Nächstes Spiel: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Die Weltmeisterschaft $year ist vorbei. Jetzt folgt das Urteil des Verbands.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Die Weltmeisterschaft $year als Zuschauer';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'TRAINERKARRIERE';
 
   @override
@@ -3097,7 +3112,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Gewinnen Sie $count große Titel (WM, Kontinentalmeisterschaft oder Pokal der Nationen).';
+    return 'Gewinnen Sie $count große Titel (WM, Kontinentalmeisterschaft, Pokal der Nationen oder Kontinental-Duell).';
   }
 
   @override

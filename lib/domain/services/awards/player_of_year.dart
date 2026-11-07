@@ -414,13 +414,17 @@ abstract final class PlayerOfYear {
     // A short ballot (a thin year, or a year of friendlies alone, voted
     // [byStanding]) is filled with the world's best on standing: the voters
     // know who the great players are even in a quiet year (owner, 1.0.9).
+    // Only from those who played that year, though: a man with no line stood
+    // in the top five on 0 caps, 0 goals and a 0.00 mark (owner, 1.1.0).
+    // Short of those, the ballot is shorter.
     if (ballot.length < limit) {
       final rest = <PotyEntry>[];
       final seen = <int>{};
       void consider(int id, int nationId, VoterProfile p) {
         if (!seen.add(id) || p.overall < bar) return;
         if (eligible != null && !eligible(p)) return;
-        final line = year.lines[id] ?? YearLine(id, nationId);
+        final line = year.lines[id];
+        if (line == null || line.apps == 0) return;
         rest.add(
           PotyEntry(
             playerId: id,

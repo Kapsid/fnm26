@@ -9,6 +9,8 @@ ChallengeStats stats({
   int careerCleanSheets = 0,
   int careerHatTricks = 0,
   int longestWinStreak = 0,
+  int nationsCupTitles = 0,
+  int clashTitles = 0,
 }) => ChallengeStats(
   worldCupTitles: worldCupTitles,
   distinctWorldCupNations: 0,
@@ -16,8 +18,8 @@ ChallengeStats stats({
   mostWorldCupsInARow: 0,
   continentalTitles: continentalTitles,
   continentalCupsWon: const <String>{},
-  nationsCupTitles: 0,
-  clashTitles: 0,
+  nationsCupTitles: nationsCupTitles,
+  clashTitles: clashTitles,
   yearsManaged: 0,
   nationsManaged: 0,
   careerGoals: careerGoals,
@@ -27,6 +29,23 @@ ChallengeStats stats({
 );
 
 void main() {
+  // The trophy cabinet and the manager's history count the Continental Clash
+  // as a title; the majors challenge sums the same shelves.
+  test('the majors challenge counts every shelf of the cabinet', () {
+    final majors = ProceduralChallenges.forSeed(
+      1,
+    ).firstWhere((c) => c.id == 'pc_majors');
+    final (got, _) = majors.progressOf(
+      stats(
+        worldCupTitles: 1,
+        continentalTitles: 1,
+        nationsCupTitles: 1,
+        clashTitles: 1,
+      ),
+    );
+    expect(got, 4);
+  });
+
   test('every challenge id (catalogue + procedural) is unique', () {
     final ids = [
       ...ChallengeCatalog.all.map((c) => c.id),

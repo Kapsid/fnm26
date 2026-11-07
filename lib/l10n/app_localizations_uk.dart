@@ -2030,6 +2030,21 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Наступний: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Чемпіонат світу $year завершено. Далі вердикт керівництва.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Чемпіонат світу $year з трибун';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'КАР’ЄРА ТРЕНЕРА';
 
   @override
@@ -3046,7 +3061,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Виграй великі трофеї (чемпіонат світу, континентальний чемпіонат або Nations Cup): $count.';
+    return 'Виграй великі трофеї (чемпіонат світу, континентальний чемпіонат, Nations Cup або Continental Clash): $count.';
   }
 
   @override

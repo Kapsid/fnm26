@@ -842,7 +842,7 @@
   "chPcWc": "Sériový šampion",
   "chPcWcDesc": "Vyhrajte v této hře {count} mistrovství světa.",
   "chPcMajors": "Sběratel trofejí",
-  "chPcMajorsDesc": "{count, plural, one{Vyhrajte 1 velkou trofej} few{Vyhrajte {count} velké trofeje} other{Vyhrajte {count} velkých trofejí}} (mistrovství světa, kontinentální nebo Pohár národů).",
+  "chPcMajorsDesc": "{count, plural, one{Vyhrajte 1 velkou trofej} few{Vyhrajte {count} velké trofeje} other{Vyhrajte {count} velkých trofejí}} (mistrovství světa, kontinentální, Pohár národů nebo Souboj kontinentů).",
   "chPcUnbeaten": "Železná zeď",
   "chPcUnbeatenDesc": "Zůstaňte {count} soutěžních zápasů neporažení.",
   "chPcNations": "Kočovník",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Zápas událost po události",
   "matchViewSwitchToPitch": "Sledovat ve 2D TV",
   "matchViewSwitchToTimeline": "Sledovat průběh",
-  "matchTabCommentary": "KOMENTÁŘ"
+  "matchTabCommentary": "KOMENTÁŘ",
+  "homeNextFixture": "Další: {match}, {when}",
+  "homeCycleComplete": "Mistrovství světa {year} skončilo. Na řadě je verdikt vedení.",
+  "homeFollowingFinals": "MS {year} z tribuny"
 }

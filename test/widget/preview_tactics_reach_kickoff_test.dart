@@ -15,6 +15,7 @@ import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/home/home_next_line_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
@@ -142,6 +143,12 @@ void main() {
     final runs = screen.listen(campaignRunsProvider, (_, _) {});
     addTearDown(runs.close);
     await tester.runAsync(() => screen.read(campaignRunsProvider.future));
+    // And its continue card's next-fixture line.
+    final line = screen.listen(homeNextLineProvider(careerId), (_, _) {});
+    addTearDown(line.close);
+    await tester.runAsync(
+      () => screen.read(homeNextLineProvider(careerId).future),
+    );
 
     tester.view
       ..physicalSize = const Size(400, 900)

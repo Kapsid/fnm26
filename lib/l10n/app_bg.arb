@@ -842,7 +842,7 @@
   "chPcWc": "Сериен шампион",
   "chPcWcDesc": "Спечели {count} Световни първенства в този запис.",
   "chPcMajors": "Колекционер на трофеи",
-  "chPcMajorsDesc": "Спечели {count} големи трофея (Световно първенство, континентално първенство или Nations Cup).",
+  "chPcMajorsDesc": "Спечели {count} големи трофея (Световно първенство, континентално първенство, Nations Cup или Continental Clash).",
   "chPcUnbeaten": "Желязна стена",
   "chPcUnbeatenDesc": "Изиграй {count} официални мача без загуба.",
   "chPcNations": "Пътешественик",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Следете мача събитие по събитие",
   "matchViewSwitchToPitch": "Гледай в режим 2D TV",
   "matchViewSwitchToTimeline": "Гледай хода",
-  "matchTabCommentary": "КОМЕНТАР"
+  "matchTabCommentary": "КОМЕНТАР",
+  "homeNextFixture": "Следва: {match}, {when}",
+  "homeCycleComplete": "Световното първенство {year} приключи. Следва присъдата на ръководството.",
+  "homeFollowingFinals": "Световното първенство {year} от трибуните"
 }

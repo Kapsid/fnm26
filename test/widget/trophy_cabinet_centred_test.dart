@@ -38,7 +38,6 @@ void main() {
               lost: 0,
               goalsFor: 0,
               goalsAgainst: 0,
-              titles: 0,
             ),
           ),
           teamOverallHistoryProvider(

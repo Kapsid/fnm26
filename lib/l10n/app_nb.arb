@@ -842,7 +842,7 @@
   "chPcWc": "Seriemester",
   "chPcWcDesc": "Vinn Verdensmesterskapet {count} ganger i denne lagringen.",
   "chPcMajors": "Pokalsamler",
-  "chPcMajorsDesc": "Vinn {count} store troféer (Verdensmesterskapet, kontinentalt mesterskap eller Nations Cup).",
+  "chPcMajorsDesc": "Vinn {count} store troféer (Verdensmesterskapet, kontinentalt mesterskap, Nations Cup eller Continental Clash).",
   "chPcUnbeaten": "Jernmuren",
   "chPcUnbeatenDesc": "Gå {count} offisielle kamper uten tap.",
   "chPcNations": "Omreisende",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Følg kampen hendelse for hendelse",
   "matchViewSwitchToPitch": "Se i 2D TV-modus",
   "matchViewSwitchToTimeline": "Se forløpet",
-  "matchTabCommentary": "KOMMENTARER"
+  "matchTabCommentary": "KOMMENTARER",
+  "homeNextFixture": "Neste: {match}, {when}",
+  "homeCycleComplete": "Verdensmesterskapet {year} er over. Nå venter styrets dom.",
+  "homeFollowingFinals": "Verdensmesterskapet {year} fra tribunen"
 }

@@ -420,6 +420,16 @@ void main() {
             w.played(f, p, 2, rating: 8.5, goals: 1);
           }
         }
+        // The world's best played their own friendlies, ordinary ones.
+        for (var p = 1; p <= 6; p++) {
+          final f = w.match(
+            p,
+            98,
+            kind: CompetitionKind.friendly,
+            round: 'FRIENDLY',
+          );
+          w.played(f, p, p, rating: 6.6);
+        }
         final y = w.build();
         final ranked = PlayerOfYear.rank(
           y,
@@ -435,6 +445,47 @@ void main() {
         expect(ranked.map((e) => e.playerId), [6, 5, 4, 3, 2]);
       },
     );
+
+    // Owner, 1.1.0: "some players in top 5 have 0 results". A short ballot
+    // was filled from the world's best on standing alone, and a man who had
+    // not played all year stood in the top five on 0 caps, 0 goals and a
+    // 0.00 mark. The ballot stays the world's, never the manager's squad:
+    // it is filled from the best who PLAYED, and is shorter if they run out.
+    test('a short ballot is never filled with a man who did not play', () {
+      final w = _World();
+      for (var i = 0; i < 6; i++) {
+        final f = w.match(
+          2,
+          99,
+          kind: CompetitionKind.friendly,
+          round: 'FRIENDLY',
+        );
+        w.played(f, 20, 2, rating: 8.5, goals: 1);
+      }
+      // Nations 3 and 4's stars played; nation 7's and 8's (the best of all
+      // on paper) never took the field.
+      for (final p in [3, 4]) {
+        w.played(
+          w.match(p, 98, kind: CompetitionKind.friendly, round: 'FRIENDLY'),
+          p,
+          p,
+          rating: 6.6,
+        );
+      }
+      final ranked = PlayerOfYear.rank(
+        w.build(),
+        {20: _p(PlayerPosition.st, overall: 81)},
+        byStanding: true,
+        elite: {
+          for (final p in [3, 4, 7, 8])
+            p: (profile: _p(PlayerPosition.st, overall: 82 + p), nationId: p),
+        },
+      );
+      expect(ranked.every((e) => e.line.apps > 0), isTrue);
+      expect(ranked.map((e) => e.playerId), [4, 3, 20]);
+      // Still the world's ballot, not the manager's (nation 2) squad.
+      expect(ranked.map((e) => e.nationId).toSet(), containsAll([3, 4]));
+    });
 
     test('a successful nation may place more than one', () {
       final w = _World();
@@ -604,6 +655,39 @@ void main() {
       expect(back.best.first.cleanSheets, 6);
       expect(back.best.first.name, 'Odd Name 1');
       expect(back.young.single.rank, 1);
+    });
+
+    // A vote filed before the fill was fixed still carries its 0-cap men:
+    // they are dropped on reading, and the places close up behind them.
+    test('a filed place with no games is not shown', () {
+      PotyPlace idle(int rank) => (
+        rank: rank,
+        playerId: 200 + rank,
+        nationId: 8,
+        own: false,
+        name: 'Idle $rank',
+        nationCode: 'ger',
+        nationName: '',
+        age: 29,
+        overall: 88,
+        position: PlayerPosition.st,
+        apps: 0,
+        goals: 0,
+        assists: 0,
+        cleanSheets: 0,
+        meanRating: 0,
+        motms: 0,
+        score: 9,
+      );
+      final back = decodePotyVote(
+        encodePotyVote((
+          best: [place(1), idle(2), place(3), idle(4)],
+          young: [idle(1)],
+        )),
+      )!;
+      expect(back.best.map((p) => p.playerId), [101, 103]);
+      expect(back.best.map((p) => p.rank), [1, 2]);
+      expect(back.young, isEmpty);
     });
 
     test('an old two-card body still opens, and is not a vote', () {

@@ -842,7 +842,7 @@
   "chPcWc": "Campione seriale",
   "chPcWcDesc": "Vinci {count} Campionati del mondo in questo salvataggio.",
   "chPcMajors": "Collezionista di trofei",
-  "chPcMajorsDesc": "Vinci {count} trofei importanti (Campionato del mondo, continentale o Coppa delle Nazioni).",
+  "chPcMajorsDesc": "Vinci {count} trofei importanti (Campionato del mondo, continentale, Coppa delle Nazioni o Sfida continentale).",
   "chPcUnbeaten": "Muro di ferro",
   "chPcUnbeatenDesc": "Resta imbattuto per {count} partite ufficiali.",
   "chPcNations": "Girovago",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Segui la partita evento per evento",
   "matchViewSwitchToPitch": "Guarda in modalità 2D TV",
   "matchViewSwitchToTimeline": "Guarda la cronologia",
-  "matchTabCommentary": "COMMENTO"
+  "matchTabCommentary": "COMMENTO",
+  "homeNextFixture": "Prossima: {match}, {when}",
+  "homeCycleComplete": "Il Campionato del mondo {year} è finito. Ora il verdetto della federazione.",
+  "homeFollowingFinals": "Il Campionato del mondo {year} da spettatori"
 }

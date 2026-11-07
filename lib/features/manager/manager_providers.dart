@@ -3,6 +3,7 @@ import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
@@ -114,8 +115,6 @@ class ManagerService {
     _invalidate(careerId);
   }
 
-
-
   /// Everything a manager change touches. The skills feed morale, the academy
   /// and the injury rate, none of which recompute on their own — see
   /// [[derived-providers-go-stale]] for the class of bug this avoids.
@@ -123,6 +122,10 @@ class ManagerService {
     ..invalidate(careerByIdProvider(careerId))
     ..invalidate(managerViewProvider(careerId))
     ..invalidate(moraleProvider(careerId))
+    // A skill (an eye for a young player) lifts the youth bonus the match
+    // preview rates his side with.
+    ..invalidate(youthBonusByCycleProvider(careerId))
+    ..invalidate(intakeStandingByCycleProvider(careerId))
     ..invalidate(savesProvider);
 }
 

@@ -842,7 +842,7 @@
   "chPcWc": "Juara Bersiri",
   "chPcWcDesc": "Menangi {count} Kejohanan Dunia dalam simpanan ini.",
   "chPcMajors": "Pengumpul Trofi",
-  "chPcMajorsDesc": "Menangi {count} trofi utama (Kejohanan Dunia, benua atau Piala Negara-Negara).",
+  "chPcMajorsDesc": "Menangi {count} trofi utama (Kejohanan Dunia, benua, Piala Negara-Negara atau Pertembungan Benua).",
   "chPcUnbeaten": "Tembok Besi",
   "chPcUnbeatenDesc": "Tanpa kalah dalam {count} perlawanan kompetitif.",
   "chPcNations": "Jurulatih Kembara",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Ikuti perlawanan peristiwa demi peristiwa",
   "matchViewSwitchToPitch": "Tonton dalam mod 2D TV",
   "matchViewSwitchToTimeline": "Lihat garis masa",
-  "matchTabCommentary": "ULASAN"
+  "matchTabCommentary": "ULASAN",
+  "homeNextFixture": "Seterusnya: {match}, {when}",
+  "homeCycleComplete": "Kejohanan Dunia {year} telah tamat. Seterusnya keputusan lembaga.",
+  "homeFollowingFinals": "Menonton Kejohanan Dunia {year}"
 }

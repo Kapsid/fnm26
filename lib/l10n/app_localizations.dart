@@ -3552,6 +3552,24 @@ abstract class AppLocalizations {
   /// **'Road to the {year} World Championship'**
   String careerRoadToWorldCup(int year);
 
+  /// Home continue card: the save's next fixture.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {match}, {when}'**
+  String homeNextFixture(String match, String when);
+
+  /// Home continue card: this cycle's World Championship has been played.
+  ///
+  /// In en, this message translates to:
+  /// **'The {year} World Championship is over. The board\'s verdict comes next.'**
+  String homeCycleComplete(int year);
+
+  /// Home continue card: the finals run without his nation.
+  ///
+  /// In en, this message translates to:
+  /// **'Following the {year} World Championship'**
+  String homeFollowingFinals(int year);
+
   /// App-bar title on the manager-career screen.
   ///
   /// In en, this message translates to:
@@ -5217,7 +5235,7 @@ abstract class AppLocalizations {
   /// No description provided for @chPcMajorsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win {count} major trophies (World Championship, continental or Nations Cup).'**
+  /// **'Win {count} major trophies (World Championship, continental, Nations Cup or Continental Clash).'**
   String chPcMajorsDesc(int count);
 
   /// No description provided for @chPcUnbeaten.

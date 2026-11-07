@@ -2057,6 +2057,21 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Neste: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Verdensmesterskapet $year er over. Nå venter styrets dom.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Verdensmesterskapet $year fra tribunen';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'TRENERKARRIERE';
 
   @override
@@ -3054,7 +3069,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Vinn $count store troféer (Verdensmesterskapet, kontinentalt mesterskap eller Nations Cup).';
+    return 'Vinn $count store troféer (Verdensmesterskapet, kontinentalt mesterskap, Nations Cup eller Continental Clash).';
   }
 
   @override

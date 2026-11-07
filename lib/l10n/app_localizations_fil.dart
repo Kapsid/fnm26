@@ -2035,6 +2035,21 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Susunod: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Tapos na ang Kampeonato ng Mundo $year. Susunod ang hatol ng pamunuan.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Pinapanood ang Kampeonato ng Mundo $year';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'KARERA BILANG MANAGER';
 
   @override
@@ -3036,7 +3051,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Manalo ng $count malalaking tropeo (Kampeonato ng Mundo, kontinental o Nations Cup).';
+    return 'Manalo ng $count malalaking tropeo (Kampeonato ng Mundo, kontinental, Nations Cup o Continental Clash).';
   }
 
   @override

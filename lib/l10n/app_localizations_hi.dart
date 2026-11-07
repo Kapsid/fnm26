@@ -2019,6 +2019,21 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'अगला: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return '$year विश्व चैंपियनशिप पूरी हो गई। अब बोर्ड का फ़ैसला बाक़ी है।';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return '$year विश्व चैंपियनशिप दर्शक बनकर';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'मैनेजर करियर';
 
   @override
@@ -3008,7 +3023,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return '$count बड़ी ट्रॉफ़ियाँ जीतें (विश्व चैंपियनशिप, महाद्वीपीय या नेशंस कप)।';
+    return '$count बड़ी ट्रॉफ़ियाँ जीतें (विश्व चैंपियनशिप, महाद्वीपीय, नेशंस कप या कॉन्टिनेंटल क्लैश)।';
   }
 
   @override

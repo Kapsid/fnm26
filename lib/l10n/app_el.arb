@@ -842,7 +842,7 @@
   "chPcWc": "Πολλαπλός πρωταθλητής",
   "chPcWcDesc": "Κέρδισε {count} Παγκόσμια Πρωταθλήματα σε αυτή την αποθήκευση.",
   "chPcMajors": "Συλλέκτης τροπαίων",
-  "chPcMajorsDesc": "Κέρδισε {count} μεγάλα τρόπαια (Παγκόσμιο Πρωτάθλημα, ηπειρωτικό ή Κύπελλο Εθνών).",
+  "chPcMajorsDesc": "Κέρδισε {count} μεγάλα τρόπαια (Παγκόσμιο Πρωτάθλημα, ηπειρωτικό, Κύπελλο Εθνών ή Ηπειρωτική Αναμέτρηση).",
   "chPcUnbeaten": "Σιδερένιο τείχος",
   "chPcUnbeatenDesc": "Μείνε αήττητος για {count} επίσημους αγώνες.",
   "chPcNations": "Περιπλανώμενος",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Παρακολουθήστε τον αγώνα φάση προς φάση",
   "matchViewSwitchToPitch": "Παρακολούθηση σε λειτουργία 2D TV",
   "matchViewSwitchToTimeline": "Προβολή εξέλιξης",
-  "matchTabCommentary": "ΣΧΟΛΙΑΣΜΟΣ"
+  "matchTabCommentary": "ΣΧΟΛΙΑΣΜΟΣ",
+  "homeNextFixture": "Επόμενος: {match}, {when}",
+  "homeCycleComplete": "Το Παγκόσμιο Πρωτάθλημα {year} ολοκληρώθηκε. Ακολουθεί η ετυμηγορία της ομοσπονδίας.",
+  "homeFollowingFinals": "Παρακολουθώντας το Παγκόσμιο Πρωτάθλημα {year}"
 }

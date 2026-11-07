@@ -842,7 +842,7 @@
   "chPcWc": "Seryal na Kampeon",
   "chPcWcDesc": "Manalo ng {count} Kampeonato ng Mundo sa save na ito.",
   "chPcMajors": "Kolektor ng Tropeo",
-  "chPcMajorsDesc": "Manalo ng {count} malalaking tropeo (Kampeonato ng Mundo, kontinental o Nations Cup).",
+  "chPcMajorsDesc": "Manalo ng {count} malalaking tropeo (Kampeonato ng Mundo, kontinental, Nations Cup o Continental Clash).",
   "chPcUnbeaten": "Bakal na Pader",
   "chPcUnbeatenDesc": "Umabot ng {count} opisyal na laro nang walang talo.",
   "chPcNations": "Beterano",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Sundan ang laban, bawat pangyayari",
   "matchViewSwitchToPitch": "Manood sa 2D TV mode",
   "matchViewSwitchToTimeline": "Panoorin ang daloy",
-  "matchTabCommentary": "KOMENTARYO"
+  "matchTabCommentary": "KOMENTARYO",
+  "homeNextFixture": "Susunod: {match}, {when}",
+  "homeCycleComplete": "Tapos na ang Kampeonato ng Mundo {year}. Susunod ang hatol ng pamunuan.",
+  "homeFollowingFinals": "Pinapanood ang Kampeonato ng Mundo {year}"
 }

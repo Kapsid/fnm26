@@ -842,7 +842,7 @@
   "chPcWc": "Sarjamestari",
   "chPcWcDesc": "Voita {count} MM-kisaa tällä tallennuksella.",
   "chPcMajors": "Pokaalinkerääjä",
-  "chPcMajorsDesc": "Voita {count} suurta pokaalia (MM-kisat, mannerkisat tai Nations Cup).",
+  "chPcMajorsDesc": "Voita {count} suurta pokaalia (MM-kisat, mannerkisat, Nations Cup tai Continental Clash).",
   "chPcUnbeaten": "Rautamuuri",
   "chPcUnbeatenDesc": "Pelaa {count} kilpailullista ottelua ilman tappiota.",
   "chPcNations": "Kisälli",
@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Seuraa ottelua tapahtuma kerrallaan",
   "matchViewSwitchToPitch": "Katso 2D TV -tilassa",
   "matchViewSwitchToTimeline": "Katso ottelun kulkua",
-  "matchTabCommentary": "SELOSTUS"
+  "matchTabCommentary": "SELOSTUS",
+  "homeNextFixture": "Seuraava: {match}, {when}",
+  "homeCycleComplete": "Vuoden {year} MM-kisat on pelattu. Seuraavaksi johtokunnan tuomio.",
+  "homeFollowingFinals": "Vuoden {year} MM-kisat katsomosta"
 }
