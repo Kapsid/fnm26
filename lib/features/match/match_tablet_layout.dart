@@ -18,12 +18,20 @@ class _MatchTabletLayout extends StatelessWidget {
     required this.lineups,
     required this.pitch,
     required this.overlays,
+    this.viewSwitch,
+    this.pitchView,
+    this.feed,
   });
 
   /// The share of the width each side column takes, within these bounds.
   static const double _sideShare = 0.26;
   static const double _sideMin = 270;
   static const double _sideMax = 360;
+
+  /// Pitch mode gives the picture more of the width.
+  static const double _pitchSideShare = 0.22;
+  static const double _pitchSideMin = 250;
+  static const double _pitchSideMax = 300;
   static const double _gap = AppSpacing.md - 4;
 
   final bool ft;
@@ -36,6 +44,18 @@ class _MatchTabletLayout extends StatelessWidget {
   final Widget lineups;
   final Widget pitch;
   final List<Widget> overlays;
+
+  /// The Pitch / Timeline switch, in the stats panel's header.
+  final Widget? viewSwitch;
+
+  /// Pitch mode: the picture, filling the centre column under the score. Null
+  /// in Timeline mode, which is laid out exactly as it always was.
+  final Widget? pitchView;
+
+  /// Pitch mode: the commentary feed (null while the picture is built).
+  final Widget? feed;
+
+  bool get _pitchMode => pitchView != null;
 
   @override
   Widget build(BuildContext context) {
@@ -57,22 +77,19 @@ class _MatchTabletLayout extends StatelessWidget {
                   ),
                   child: LayoutBuilder(
                     builder: (context, c) {
-                      final side = (c.maxWidth * _sideShare).clamp(
-                        _sideMin,
-                        _sideMax,
-                      );
+                      final side = _pitchMode
+                          ? (c.maxWidth * _pitchSideShare).clamp(
+                              _pitchSideMin,
+                              _pitchSideMax,
+                            )
+                          : (c.maxWidth * _sideShare).clamp(
+                              _sideMin,
+                              _sideMax,
+                            );
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          SizedBox(
-                            width: side,
-                            child: Panel(
-                              title: l.matchTabStats,
-                              expand: true,
-                              padding: EdgeInsets.zero,
-                              child: stats,
-                            ),
-                          ),
+                          SizedBox(width: side, child: _statsColumn(l)),
                           const SizedBox(width: _gap),
                           Expanded(child: _centre(l)),
                           const SizedBox(width: _gap),
@@ -91,12 +108,33 @@ class _MatchTabletLayout extends StatelessWidget {
     );
   }
 
+  /// The match stats; in Pitch mode the momentum sits over them.
+  Widget _statsColumn(AppLocalizations l) {
+    final panel = Panel(
+      title: l.matchTabStats,
+      action: viewSwitch,
+      expand: true,
+      padding: EdgeInsets.zero,
+      child: stats,
+    );
+    if (!_pitchMode || momentum == null) return panel;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PanelBox(child: momentum!),
+        const SizedBox(height: AppSpacing.sm),
+        Expanded(child: panel),
+      ],
+    );
+  }
+
   /// The momentum over the score, then the shootout if there is one, then
-  /// the commentary filling the rest.
+  /// the commentary filling the rest. In Pitch mode the momentum is on the
+  /// left and the picture fills what the commentary would.
   Widget _centre(AppLocalizations l) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      if (momentum != null) ...[
+      if (momentum != null && !_pitchMode) ...[
         // No panel header: the bar names itself.
         PanelBox(child: momentum!),
         const SizedBox(height: AppSpacing.sm),
@@ -104,14 +142,27 @@ class _MatchTabletLayout extends StatelessWidget {
       scoreboard,
       ?shootout,
       const SizedBox(height: AppSpacing.sm),
-      Expanded(
-        child: Panel(
-          title: l.matchTabTimeline,
-          expand: true,
-          padding: EdgeInsets.zero,
-          child: timeline,
+      if (_pitchMode)
+        Expanded(
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: kPitchModeAspect,
+              child: ClipRRect(
+                borderRadius: AppRadii.baseAll,
+                child: pitchView,
+              ),
+            ),
+          ),
+        )
+      else
+        Expanded(
+          child: Panel(
+            title: l.matchTabTimeline,
+            expand: true,
+            padding: EdgeInsets.zero,
+            child: timeline,
+          ),
         ),
-      ),
     ],
   );
 
@@ -121,12 +172,50 @@ class _MatchTabletLayout extends StatelessWidget {
   /// Opens on YOUR XI: the manager's own shape, with its energy and its
   /// holes, is what he watches a match through. Both line-ups are the tab he
   /// looks up now and then.
-  Widget _lineupsColumn(AppLocalizations l) => PanelBox(
+  Widget _lineupsColumn(AppLocalizations l) => _pitchMode
+      ? _feedColumn(l)
+      : PanelBox(
+          child: DefaultTabController(
+            length: 2,
+            initialIndex: 1,
+            // Recreated at the whistle, like the phone's.
+            key: ValueKey(ft),
+            child: Column(
+              children: [
+                Material(
+                  color: AppColors.surfaceContainer,
+                  child: TabBar(
+                    labelColor: AppColors.onSurface,
+                    unselectedLabelColor: AppColors.onSurfaceVariant,
+                    indicatorColor: AppColors.primary,
+                    tabs: [
+                      Tab(text: l.matchTabLineups),
+                      Tab(text: l.matchYourXi),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      lineups,
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        child: pitch,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+
+  /// Pitch mode: the commentary so far (newest first) and both line-ups, a
+  /// tab each. The manager's own shape is on the big pitch already.
+  Widget _feedColumn(AppLocalizations l) => PanelBox(
     child: DefaultTabController(
       length: 2,
-      initialIndex: 1,
-      // Recreated at the whistle, like the phone's.
-      key: ValueKey(ft),
+      key: ValueKey(('pitch', ft)),
       child: Column(
         children: [
           Material(
@@ -136,19 +225,27 @@ class _MatchTabletLayout extends StatelessWidget {
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
               tabs: [
-                Tab(text: l.matchTabLineups),
-                Tab(text: l.matchYourXi),
+                // Scaled down rather than cut off in the narrow column.
+                Tab(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(l.matchTabCommentary),
+                  ),
+                ),
+                Tab(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(l.matchTabLineups),
+                  ),
+                ),
               ],
             ),
           ),
           Expanded(
             child: TabBarView(
               children: [
+                feed ?? const Center(child: CircularProgressIndicator()),
                 lineups,
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  child: pitch,
-                ),
               ],
             ),
           ),

@@ -3690,3 +3690,4 @@ matchViewTimeline,Live match: name of the option that shows the match as a list 
 matchViewTimelineBlurb,"Live match, before kick-off: one line under the Timeline option.",,Follow the match event by event,Zápas událost po události,,,,,,,,,,,,,,,,,,,,,,,,,,
 matchViewSwitchToPitch,"Live match header: label (tooltip, screen reader) of the button that switches to the Pitch view.",,Watch on the pitch,Sledovat na hřišti,,,,,,,,,,,,,,,,,,,,,,,,,,
 matchViewSwitchToTimeline,"Live match header: label (tooltip, screen reader) of the button that switches to the Timeline.",,Watch the timeline,Sledovat průběh,,,,,,,,,,,,,,,,,,,,,,,,,,
+matchTabCommentary,"Tablet live match, Pitch view: title of the right-column tab that lists every commentary line so far, newest first (the other tab is the line-ups).",,COMMENTARY,KOMENTÁŘ,,,,,,,,,,,,,,,,,,,,,,,,,,

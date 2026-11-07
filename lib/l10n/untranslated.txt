@@ -123,7 +123,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "da": [
@@ -250,7 +251,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "de": [
@@ -377,7 +379,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "el": [
@@ -504,7 +507,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "es": [
@@ -631,7 +635,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "fi": [
@@ -758,7 +763,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "fil": [
@@ -885,7 +891,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "fr": [
@@ -1012,7 +1019,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "hi": [
@@ -1139,7 +1147,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "hr": [
@@ -1266,7 +1275,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "hu": [
@@ -1393,7 +1403,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "id": [
@@ -1520,7 +1531,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "it": [
@@ -1647,7 +1659,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "ja": [
@@ -1774,7 +1787,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "ko": [
@@ -1901,7 +1915,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "ms": [
@@ -2028,7 +2043,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "nb": [
@@ -2155,7 +2171,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "nl": [
@@ -2282,7 +2299,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "pl": [
@@ -2409,7 +2427,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "pt": [
@@ -2536,7 +2555,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "ro": [
@@ -2663,7 +2683,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "sv": [
@@ -2790,7 +2811,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "th": [
@@ -2917,7 +2939,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "tr": [
@@ -3044,7 +3067,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "uk": [
@@ -3171,7 +3195,8 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ],
 
   "vi": [
@@ -3298,6 +3323,7 @@
     "matchViewTimeline",
     "matchViewTimelineBlurb",
     "matchViewSwitchToPitch",
-    "matchViewSwitchToTimeline"
+    "matchViewSwitchToTimeline",
+    "matchTabCommentary"
   ]
 }

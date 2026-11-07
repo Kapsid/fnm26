@@ -3690,5 +3690,6 @@
   "matchViewTimeline": "Průběh",
   "matchViewTimelineBlurb": "Zápas událost po události",
   "matchViewSwitchToPitch": "Sledovat na hřišti",
-  "matchViewSwitchToTimeline": "Sledovat průběh"
+  "matchViewSwitchToTimeline": "Sledovat průběh",
+  "matchTabCommentary": "KOMENTÁŘ"
 }

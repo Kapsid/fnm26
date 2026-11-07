@@ -14979,4 +14979,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchViewSwitchToTimeline => 'Watch the timeline';
+
+  @override
+  String get matchTabCommentary => 'COMMENTARY';
 }

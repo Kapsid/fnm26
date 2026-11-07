@@ -15145,4 +15145,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchViewSwitchToTimeline => 'Sledovat průběh';
+
+  @override
+  String get matchTabCommentary => 'KOMENTÁŘ';
 }

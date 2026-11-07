@@ -167,7 +167,36 @@ class PitchPlayback {
     int seed,
   ) {
     final c = _cueAt(_secs(t));
-    if (c == null) return null;
+    return c == null ? null : _lineOf(l, c, names, seed);
+  }
+
+  /// How many commentary lines are in by screen time [t]: [lineAt] is the
+  /// last of them.
+  int lineCountAt(Duration t) => _cueIndexAt(_secs(t)) + 1;
+
+  /// Every commentary line in by screen time [t], in the order they came
+  /// in (the tablet's feed lists them newest first). The last one is
+  /// [lineAt]'s. Same arguments as [lineAt].
+  List<String> linesUpTo(
+    AppLocalizations l,
+    Duration t,
+    Map<int, String> names,
+    int seed,
+  ) {
+    final out = <String>[];
+    for (var i = 0; i <= _cueIndexAt(_secs(t)); i++) {
+      final line = _lineOf(l, _lines[i], names, seed);
+      if (line != null) out.add(line);
+    }
+    return out;
+  }
+
+  String? _lineOf(
+    AppLocalizations l,
+    _Cue c,
+    Map<int, String> names,
+    int seed,
+  ) {
     final injury = c.injury;
     if (injury != null) return pitchInjuryLine(l, injury, names, seed);
     return pitchLine(
@@ -182,13 +211,19 @@ class PitchPlayback {
 
   /// The commentary cue at [t], by binary search.
   _Cue? _cueAt(double t) {
+    final i = _cueIndexAt(t);
+    return i < 0 ? null : _lines[i];
+  }
+
+  /// The index of the last cue in by [t], or -1 before the first.
+  int _cueIndexAt(double t) {
     var lo = 0;
     var hi = _lines.length - 1;
-    _Cue? found;
+    var found = -1;
     while (lo <= hi) {
       final mid = (lo + hi) ~/ 2;
       if (_lines[mid].t <= t + _slack) {
-        found = _lines[mid];
+        found = mid;
         lo = mid + 1;
       } else {
         hi = mid - 1;

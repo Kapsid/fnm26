@@ -1750,3 +1750,100 @@ class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
     );
   }
 }
+
+/// The tablet's commentary feed: every line the Pitch view's commentary has
+/// said so far, newest first. Rebuilt only when a new line comes in, not on
+/// every frame of the clock.
+class PitchCommentaryFeed extends StatefulWidget {
+  const PitchCommentaryFeed({
+    required this.clock,
+    required this.countAt,
+    required this.linesAt,
+    super.key,
+  });
+
+  final PitchClock clock;
+
+  /// How many lines are in by the clock's time (cheap: it runs every tick).
+  final int Function(Duration t) countAt;
+
+  /// All the lines in by the clock's time, oldest first.
+  final List<String> Function(Duration t) linesAt;
+
+  @override
+  State<PitchCommentaryFeed> createState() => _PitchCommentaryFeedState();
+}
+
+class _PitchCommentaryFeedState extends State<PitchCommentaryFeed> {
+  List<String> _lines = const [];
+  int _count = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.clock.addListener(_onClock);
+    _refresh();
+  }
+
+  @override
+  void didUpdateWidget(PitchCommentaryFeed old) {
+    super.didUpdateWidget(old);
+    if (!identical(old.clock, widget.clock)) {
+      old.clock.removeListener(_onClock);
+      widget.clock.addListener(_onClock);
+    }
+    // A new picture (a re-simulated match, a new speed) may word them again.
+    _refresh();
+  }
+
+  @override
+  void dispose() {
+    widget.clock.removeListener(_onClock);
+    super.dispose();
+  }
+
+  void _refresh() {
+    final t = widget.clock.value;
+    _count = widget.countAt(t);
+    _lines = widget.linesAt(t);
+  }
+
+  void _onClock() {
+    if (widget.countAt(widget.clock.value) == _count) return;
+    setState(_refresh);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    if (_lines.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(AppSpacing.sm),
+        child: Text(
+          l.matchFeedKickOff,
+          style: AppTypography.bodyMedium.copyWith(
+            color: AppColors.onSurfaceVariant,
+          ),
+        ),
+      );
+    }
+    return ListView.separated(
+      key: const Key('match.pitchFeed'),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      itemCount: _lines.length,
+      separatorBuilder: (_, _) => const Divider(height: 1),
+      itemBuilder: (context, i) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+        child: Text(
+          _lines[_lines.length - 1 - i],
+          style: AppTypography.bodyMedium.copyWith(
+            color: i == 0 ? AppColors.onSurface : AppColors.onSurfaceVariant,
+          ),
+        ),
+      ),
+    );
+  }
+}

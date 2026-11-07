@@ -23267,5 +23267,9 @@
   "matchViewSwitchToTimeline": "Watch the timeline",
   "@matchViewSwitchToTimeline": {
     "description": "Live match header: label (tooltip, screen reader) of the button that switches to the Timeline."
+  },
+  "matchTabCommentary": "COMMENTARY",
+  "@matchTabCommentary": {
+    "description": "Tablet live match, Pitch view: title of the right-column tab that lists every commentary line so far, newest first (the other tab is the line-ups)."
   }
 }

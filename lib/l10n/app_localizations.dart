@@ -22381,6 +22381,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Watch the timeline'**
   String get matchViewSwitchToTimeline;
+
+  /// Tablet live match, Pitch view: title of the right-column tab that lists every commentary line so far, newest first (the other tab is the line-ups).
+  ///
+  /// In en, this message translates to:
+  /// **'COMMENTARY'**
+  String get matchTabCommentary;
 }
 
 class _AppLocalizationsDelegate

@@ -1696,11 +1696,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // The tablet watches the Timeline for now; a phone the way the
             // manager last chose, or, never having chosen, the way he picks
             // before kick-off.
-            final wanted = tablet
-                ? MatchViewMode.timeline
-                : remembered.valueOrNull;
-            if (wanted != null &&
-                (_mode == null || (tablet && _mode != wanted))) {
+            // A tablet that has never chosen watches the Timeline (no
+            // question is asked there), once the choice is read.
+            final wanted =
+                remembered.valueOrNull ??
+                (tablet && !remembered.isLoading
+                    ? MatchViewMode.timeline
+                    : null);
+            if (wanted != null && _mode == null) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) _applyMode(preview, wanted);
               });
@@ -1791,8 +1794,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                   : null,
               wholeNames: tablet,
             );
-            // Pitch or Timeline, at any time, from the scoreboard's corner
-            // (the phone's; the tablet's Pitch view is still to come).
+            // Pitch or Timeline, at any time: from the scoreboard's corner on
+            // a phone, from the stats panel's header on a tablet.
             final Widget scoreboard = tablet || _mode == null
                 ? board
                 : Stack(
@@ -1967,20 +1970,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 ),
             ];
 
-            if (tablet) {
-              return _MatchTabletLayout(
-                ft: ft,
-                topBar: topBar,
-                scoreboard: scoreboard,
-                momentum: momentum,
-                shootout: shootout,
-                timeline: timeline,
-                stats: stats,
-                lineups: lineups,
-                pitch: _livePitch(preview, r),
-                overlays: overlays,
-              );
-            }
             final pb = _pitch;
             final clock = _pitchClock;
             final stadium = _pc.stadium;
@@ -1992,6 +1981,63 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 clock != null &&
                 stadium != null &&
                 !_pc.buildingFresh;
+            // The picture itself, or what stands in for it: the same on a
+            // phone and on a tablet.
+            final Widget pitchSurface = picture
+                ? PitchMatchView(
+                    key: _pitchViewKey,
+                    script: pb.script,
+                    stadium: stadium,
+                    clock: clock,
+                    names: _pc.names,
+                    onReady: _syncPitchClock,
+                  )
+                : _pc.failed
+                ? _PitchFailed(
+                    onTimeline: () =>
+                        _applyMode(preview, MatchViewMode.timeline),
+                  )
+                : const ColoredBox(
+                    color: AppColors.surfaceContainerLowest,
+                    child: Center(
+                      child: SizedBox.square(
+                        dimension: 22,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                  );
+            if (tablet) {
+              final toMode = _onPitch
+                  ? MatchViewMode.timeline
+                  : MatchViewMode.pitch;
+              return _MatchTabletLayout(
+                ft: ft,
+                topBar: topBar,
+                scoreboard: scoreboard,
+                momentum: momentum,
+                shootout: shootout,
+                timeline: timeline,
+                stats: stats,
+                lineups: lineups,
+                pitch: _livePitch(preview, r),
+                viewSwitch: _mode == null
+                    ? null
+                    : MatchViewSwitch(
+                        to: toMode,
+                        onTap: () => _chooseMode(preview, toMode),
+                      ),
+                pitchView: _onPitch ? pitchSurface : null,
+                feed: _onPitch && picture
+                    ? PitchCommentaryFeed(
+                        clock: clock,
+                        countAt: pb.lineCountAt,
+                        linesAt: (t) =>
+                            pb.linesUpTo(l, t, _pc.names, _seed(preview)),
+                      )
+                    : null,
+                overlays: overlays,
+              );
+            }
             if (_onPitch) {
               // Pitch mode: the match on the pitch under the score, one line
               // of commentary under it, then the momentum and the details.
@@ -2008,33 +2054,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                           scoreboard,
                           AspectRatio(
                             aspectRatio: kPitchModeAspect,
-                            child: picture
-                                ? PitchMatchView(
-                                    key: _pitchViewKey,
-                                    script: pb.script,
-                                    stadium: stadium,
-                                    clock: clock,
-                                    names: _pc.names,
-                                    onReady: _syncPitchClock,
-                                  )
-                                : _pc.failed
-                                ? _PitchFailed(
-                                    onTimeline: () => _applyMode(
-                                      preview,
-                                      MatchViewMode.timeline,
-                                    ),
-                                  )
-                                : const ColoredBox(
-                                    color: AppColors.surfaceContainerLowest,
-                                    child: Center(
-                                      child: SizedBox.square(
-                                        dimension: 22,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                            child: pitchSurface,
                           ),
                           if (picture)
                             PitchCommentaryLine(
