@@ -24239,7 +24239,7 @@ abstract class AppLocalizations {
   /// Live match: name of the option that shows the match on a 2D pitch with moving players.
   ///
   /// In en, this message translates to:
-  /// **'Pitch'**
+  /// **'2D TV'**
   String get matchViewPitch;
 
   /// Live match, before kick-off: one line under the Pitch option.
@@ -24263,7 +24263,7 @@ abstract class AppLocalizations {
   /// Live match header: label (tooltip, screen reader) of the button that switches to the Pitch view.
   ///
   /// In en, this message translates to:
-  /// **'Watch on the pitch'**
+  /// **'Watch in 2D TV mode'**
   String get matchViewSwitchToPitch;
 
   /// Live match header: label (tooltip, screen reader) of the button that switches to the Timeline.

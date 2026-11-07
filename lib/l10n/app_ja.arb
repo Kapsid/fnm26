@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "PK！{other}のファウル、{player}が倒れ、2枚目のイエロー、つまりレッド。",
   "matchViewChooseTitle": "どちらで観戦しますか？",
   "matchViewChooseHint": "選択は次の試合にも引き継がれます。いつでも切り替えられます。",
-  "matchViewPitch": "ピッチ",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "ピッチ上の選手を見る",
   "matchViewTimeline": "経過",
   "matchViewTimelineBlurb": "試合を出来事ごとに追う",
-  "matchViewSwitchToPitch": "ピッチで観戦",
+  "matchViewSwitchToPitch": "2D TVモードで観る",
   "matchViewSwitchToTimeline": "経過を見る",
   "matchTabCommentary": "実況"
 }

@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Straffe! {other} feller {player} og får nok et gult, altså rødt.",
   "matchViewChooseTitle": "Hvordan vil du følge kampen?",
   "matchViewChooseHint": "Valget ditt gjelder også neste kamp. Du kan bytte når som helst.",
-  "matchViewPitch": "Bane",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Følg spillerne på banen",
   "matchViewTimeline": "Forløp",
   "matchViewTimelineBlurb": "Følg kampen hendelse for hendelse",
-  "matchViewSwitchToPitch": "Se på banen",
+  "matchViewSwitchToPitch": "Se i 2D TV-modus",
   "matchViewSwitchToTimeline": "Se forløpet",
   "matchTabCommentary": "KOMMENTARER"
 }

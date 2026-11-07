@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Πέναλτι! Ο {other} παίρνει κάτω τον {player} και βλέπει δεύτερη κίτρινη, άρα κόκκινη.",
   "matchViewChooseTitle": "Πώς θέλετε να παρακολουθήσετε τον αγώνα;",
   "matchViewChooseHint": "Η επιλογή σας ισχύει και για τον επόμενο αγώνα. Μπορείτε να την αλλάξετε οποτεδήποτε.",
-  "matchViewPitch": "Γήπεδο",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Παρακολουθήστε τους παίκτες στο γήπεδο",
   "matchViewTimeline": "Εξέλιξη",
   "matchViewTimelineBlurb": "Παρακολουθήστε τον αγώνα φάση προς φάση",
-  "matchViewSwitchToPitch": "Παρακολούθηση στο γήπεδο",
+  "matchViewSwitchToPitch": "Παρακολούθηση σε λειτουργία 2D TV",
   "matchViewSwitchToTimeline": "Προβολή εξέλιξης",
   "matchTabCommentary": "ΣΧΟΛΙΑΣΜΟΣ"
 }

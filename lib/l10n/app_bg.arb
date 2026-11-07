@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Дузпа! {other} събаря {player} и получава втори жълт, значи червен.",
   "matchViewChooseTitle": "Как искате да следите мача?",
   "matchViewChooseHint": "Изборът ви важи и за следващия мач. Можете да го смените по всяко време.",
-  "matchViewPitch": "Терен",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Следете играчите на терена",
   "matchViewTimeline": "Ход",
   "matchViewTimelineBlurb": "Следете мача събитие по събитие",
-  "matchViewSwitchToPitch": "Гледай на терена",
+  "matchViewSwitchToPitch": "Гледай в режим 2D TV",
   "matchViewSwitchToTimeline": "Гледай хода",
   "matchTabCommentary": "КОМЕНТАР"
 }

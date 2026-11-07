@@ -16043,7 +16043,7 @@ class AppLocalizationsHu extends AppLocalizations {
       'A választása a következő meccsre is megmarad. Bármikor válthat.';
 
   @override
-  String get matchViewPitch => 'Pálya';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Kövesse a játékosokat a pályán';
@@ -16055,7 +16055,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Kövesse a meccset eseményről eseményre';
 
   @override
-  String get matchViewSwitchToPitch => 'Nézés a pályán';
+  String get matchViewSwitchToPitch => 'Nézd 2D TV módban';
 
   @override
   String get matchViewSwitchToTimeline => 'A menet megtekintése';

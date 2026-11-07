@@ -16099,7 +16099,7 @@ class AppLocalizationsDa extends AppLocalizations {
       'Dit valg gælder også i næste kamp. Du kan skifte når som helst.';
 
   @override
-  String get matchViewPitch => 'Bane';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Følg spillerne på banen';
@@ -16111,7 +16111,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Følg kampen begivenhed for begivenhed';
 
   @override
-  String get matchViewSwitchToPitch => 'Se på banen';
+  String get matchViewSwitchToPitch => 'Se i 2D TV-tilstand';
 
   @override
   String get matchViewSwitchToTimeline => 'Se forløbet';

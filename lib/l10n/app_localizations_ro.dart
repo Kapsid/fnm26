@@ -16512,7 +16512,7 @@ class AppLocalizationsRo extends AppLocalizations {
       'Alegerea ta se păstrează pentru meciul următor. O poți schimba oricând.';
 
   @override
-  String get matchViewPitch => 'Teren';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Urmărește jucătorii pe teren';
@@ -16524,7 +16524,7 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Urmărește meciul fază cu fază';
 
   @override
-  String get matchViewSwitchToPitch => 'Privește pe teren';
+  String get matchViewSwitchToPitch => 'Urmărește în modul 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'Privește desfășurarea';

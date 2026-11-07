@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Rigore! {other} falcia {player} ed è ammonito di nuovo, quindi rosso.",
   "matchViewChooseTitle": "Come vuoi seguire la partita?",
   "matchViewChooseHint": "La tua scelta resta valida per la prossima partita. Puoi cambiare in qualsiasi momento.",
-  "matchViewPitch": "Campo",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Guarda i giocatori in campo",
   "matchViewTimeline": "Cronologia",
   "matchViewTimelineBlurb": "Segui la partita evento per evento",
-  "matchViewSwitchToPitch": "Guarda sul campo",
+  "matchViewSwitchToPitch": "Guarda in modalità 2D TV",
   "matchViewSwitchToTimeline": "Guarda la cronologia",
   "matchTabCommentary": "COMMENTO"
 }

@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "페널티킥! {other}의 파울, {player} 선수가 넘어지고 두 번째 옐로카드, 즉 레드카드.",
   "matchViewChooseTitle": "어떻게 경기를 보시겠습니까?",
   "matchViewChooseHint": "선택은 다음 경기에도 유지됩니다. 언제든 바꿀 수 있습니다.",
-  "matchViewPitch": "경기장",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "경기장에서 선수들을 지켜보세요",
   "matchViewTimeline": "타임라인",
   "matchViewTimelineBlurb": "경기를 상황별로 따라가세요",
-  "matchViewSwitchToPitch": "경기장에서 보기",
+  "matchViewSwitchToPitch": "2D TV 모드로 보기",
   "matchViewSwitchToTimeline": "타임라인 보기",
   "matchTabCommentary": "중계"
 }

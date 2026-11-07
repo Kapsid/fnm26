@@ -16009,7 +16009,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Seçiminiz bir sonraki maç için de saklanır. İstediğiniz zaman değiştirebilirsiniz.';
 
   @override
-  String get matchViewPitch => 'Saha';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Oyuncuları sahada izle';
@@ -16021,7 +16021,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Maçı olay olay izleyin';
 
   @override
-  String get matchViewSwitchToPitch => 'Sahada izle';
+  String get matchViewSwitchToPitch => '2D TV modunda izle';
 
   @override
   String get matchViewSwitchToTimeline => 'Akışı izle';

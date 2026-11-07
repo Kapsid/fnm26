@@ -9,6 +9,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/nations/nation_preview.dart';
@@ -204,6 +205,19 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                               style: AppTypography.headlineMedium,
                             ),
                           ),
+                          if (NationIdentity.nicknameFor(nation, l.localeName)
+                              case final nick?)
+                            Center(
+                              child: Text(
+                                '“$nick”',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.bodyMedium.copyWith(
+                                  color: AppColors.primary,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
                           Center(
                             child: Text(
                               l.careerWorldRankNum(nation.ranking),

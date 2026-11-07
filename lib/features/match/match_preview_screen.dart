@@ -16,6 +16,7 @@ import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/match/match_engine.dart' show MatchTeam;
 import 'package:fnm/domain/services/match/strength_factors.dart';
+import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
 import 'package:fnm/features/federation/career_pool.dart';
@@ -285,6 +286,12 @@ class _PreviewParts {
     oppNationId: oppNationId,
     oppName: name(oppNationId),
     oppCode: code(oppNationId),
+    oppNickname: preview.nations[oppNationId] == null
+        ? null
+        : NationIdentity.nicknameFor(
+            preview.nations[oppNationId]!,
+            l10n.localeName,
+          ),
     keyMen: _keyMen(
       preview.playerIsHome ? preview.awayTeam.xi : preview.homeTeam.xi,
     ),
@@ -372,9 +379,14 @@ class OpponentBriefing extends StatefulWidget {
     required this.oppCode,
     required this.keyMen,
     required this.saveSeed,
+    this.oppNickname,
     this.capitals = false,
     super.key,
   });
+
+  /// The opponent's nickname, when it has one to show (see
+  /// `NationIdentity.nicknameFor`).
+  final String? oppNickname;
 
   final int careerId;
   final int myNationId;
@@ -437,6 +449,7 @@ class _OpponentBriefingState extends State<OpponentBriefing> {
               oppNationId: widget.oppNationId,
               oppName: widget.oppName,
               oppCode: widget.oppCode,
+              oppNickname: widget.oppNickname,
               keyMen: widget.keyMen,
               saveSeed: widget.saveSeed,
             ),
@@ -663,12 +676,14 @@ class _DossierBody extends ConsumerWidget {
     required this.oppCode,
     required this.keyMen,
     required this.saveSeed,
+    this.oppNickname,
   });
 
   final int careerId;
   final int oppNationId;
   final String oppName;
   final String oppCode;
+  final String? oppNickname;
   final List<Player> keyMen;
   final int saveSeed;
 
@@ -697,6 +712,21 @@ class _DossierBody extends ConsumerWidget {
                   style: AppTypography.labelMedium,
                 ),
               ),
+              if (oppNickname case final nick?)
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Text(
+                      '“$nick”',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.labelSmall.copyWith(
+                        color: AppColors.onSurfaceVariant,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

@@ -15558,7 +15558,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchViewChooseHint => '선택은 다음 경기에도 유지됩니다. 언제든 바꿀 수 있습니다.';
 
   @override
-  String get matchViewPitch => '경기장';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => '경기장에서 선수들을 지켜보세요';
@@ -15570,7 +15570,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchViewTimelineBlurb => '경기를 상황별로 따라가세요';
 
   @override
-  String get matchViewSwitchToPitch => '경기장에서 보기';
+  String get matchViewSwitchToPitch => '2D TV 모드로 보기';
 
   @override
   String get matchViewSwitchToTimeline => '타임라인 보기';

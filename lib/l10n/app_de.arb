@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Elfmeter! {other} trifft {player} und wird erneut verwarnt, also Rot.",
   "matchViewChooseTitle": "Wie möchten Sie zuschauen?",
   "matchViewChooseHint": "Ihre Wahl gilt auch für das nächste Spiel. Sie können jederzeit wechseln.",
-  "matchViewPitch": "Spielfeld",
+  "matchViewPitch": "2D-TV",
   "matchViewPitchBlurb": "Die Spieler auf dem Platz verfolgen",
   "matchViewTimeline": "Verlauf",
   "matchViewTimelineBlurb": "Das Spiel Ereignis für Ereignis verfolgen",
-  "matchViewSwitchToPitch": "Auf dem Spielfeld zuschauen",
+  "matchViewSwitchToPitch": "Im 2D-TV-Modus zuschauen",
   "matchViewSwitchToTimeline": "Den Verlauf ansehen",
   "matchTabCommentary": "KOMMENTAR"
 }

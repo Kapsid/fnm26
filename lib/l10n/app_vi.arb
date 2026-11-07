@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Phạt đền! {other} phạm lỗi, {player} ngã xuống, và nhận thẻ vàng thứ hai, nghĩa là thẻ đỏ.",
   "matchViewChooseTitle": "Bạn muốn xem trận đấu như thế nào?",
   "matchViewChooseHint": "Lựa chọn của bạn được giữ cho trận tiếp theo. Bạn có thể đổi bất cứ lúc nào.",
-  "matchViewPitch": "Sân",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Xem các cầu thủ trên sân",
   "matchViewTimeline": "Diễn biến",
   "matchViewTimelineBlurb": "Theo dõi trận đấu từng tình huống",
-  "matchViewSwitchToPitch": "Xem trên sân",
+  "matchViewSwitchToPitch": "Xem ở chế độ 2D TV",
   "matchViewSwitchToTimeline": "Xem diễn biến",
   "matchTabCommentary": "BÌNH LUẬN"
 }

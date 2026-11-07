@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Jedanaesterac! {other} ruši {player} i dobiva drugi žuti, dakle crveni.",
   "matchViewChooseTitle": "Kako želite pratiti utakmicu?",
   "matchViewChooseHint": "Vaš izbor vrijedi i za sljedeću utakmicu. Možete ga promijeniti u svakom trenutku.",
-  "matchViewPitch": "Teren",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Pratite igrače na terenu",
   "matchViewTimeline": "Tijek",
   "matchViewTimelineBlurb": "Pratite utakmicu događaj po događaj",
-  "matchViewSwitchToPitch": "Gledaj na terenu",
+  "matchViewSwitchToPitch": "Gledaj u 2D TV načinu",
   "matchViewSwitchToTimeline": "Gledaj tijek",
   "matchTabCommentary": "KOMENTAR"
 }

@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Penalty ! {other} accroche {player} et prend un second jaune, donc rouge.",
   "matchViewChooseTitle": "Comment voulez-vous suivre le match ?",
   "matchViewChooseHint": "Votre choix est conservé pour le prochain match. Vous pouvez en changer à tout moment.",
-  "matchViewPitch": "Terrain",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Voir les joueurs sur le terrain",
   "matchViewTimeline": "Chronologie",
   "matchViewTimelineBlurb": "Suivre le match action par action",
-  "matchViewSwitchToPitch": "Suivre sur le terrain",
+  "matchViewSwitchToPitch": "Regarder en mode 2D TV",
   "matchViewSwitchToTimeline": "Voir la chronologie",
   "matchTabCommentary": "COMMENTAIRE"
 }

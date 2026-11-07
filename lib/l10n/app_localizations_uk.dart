@@ -16411,7 +16411,7 @@ class AppLocalizationsUk extends AppLocalizations {
       'Ваш вибір діє й на наступний матч. Ви можете змінити його будь-коли.';
 
   @override
-  String get matchViewPitch => 'Поле';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Стежте за гравцями на полі';
@@ -16423,7 +16423,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Стежте за матчем подія за подією';
 
   @override
-  String get matchViewSwitchToPitch => 'Дивитися на полі';
+  String get matchViewSwitchToPitch => 'Дивитися в режимі 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'Дивитися хронологію';

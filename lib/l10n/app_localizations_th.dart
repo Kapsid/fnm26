@@ -15803,7 +15803,7 @@ class AppLocalizationsTh extends AppLocalizations {
       'ตัวเลือกของคุณจะใช้กับแมตช์ถัดไปด้วย เปลี่ยนได้ทุกเมื่อ';
 
   @override
-  String get matchViewPitch => 'สนาม';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'ดูผู้เล่นบนสนาม';
@@ -15815,7 +15815,7 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchViewTimelineBlurb => 'ติดตามแมตช์ทีละเหตุการณ์';
 
   @override
-  String get matchViewSwitchToPitch => 'ดูบนสนาม';
+  String get matchViewSwitchToPitch => 'ดูในโหมด 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'ดูลำดับเหตุการณ์';

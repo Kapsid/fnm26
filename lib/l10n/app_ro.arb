@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Penalty! {other} îl doboară pe {player} și primește al doilea galben, deci roșu.",
   "matchViewChooseTitle": "Cum vrei să urmărești meciul?",
   "matchViewChooseHint": "Alegerea ta se păstrează pentru meciul următor. O poți schimba oricând.",
-  "matchViewPitch": "Teren",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Urmărește jucătorii pe teren",
   "matchViewTimeline": "Desfășurare",
   "matchViewTimelineBlurb": "Urmărește meciul fază cu fază",
-  "matchViewSwitchToPitch": "Privește pe teren",
+  "matchViewSwitchToPitch": "Urmărește în modul 2D TV",
   "matchViewSwitchToTimeline": "Privește desfășurarea",
   "matchTabCommentary": "COMENTARIU"
 }

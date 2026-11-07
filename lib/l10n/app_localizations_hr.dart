@@ -16434,7 +16434,7 @@ class AppLocalizationsHr extends AppLocalizations {
       'Vaš izbor vrijedi i za sljedeću utakmicu. Možete ga promijeniti u svakom trenutku.';
 
   @override
-  String get matchViewPitch => 'Teren';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Pratite igrače na terenu';
@@ -16446,7 +16446,7 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Pratite utakmicu događaj po događaj';
 
   @override
-  String get matchViewSwitchToPitch => 'Gledaj na terenu';
+  String get matchViewSwitchToPitch => 'Gledaj u 2D TV načinu';
 
   @override
   String get matchViewSwitchToTimeline => 'Gledaj tijek';

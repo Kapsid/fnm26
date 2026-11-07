@@ -16083,7 +16083,7 @@ class AppLocalizationsSv extends AppLocalizations {
       'Ditt val gäller även nästa match. Du kan byta när som helst.';
 
   @override
-  String get matchViewPitch => 'Plan';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Följ spelarna på planen';
@@ -16095,7 +16095,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Följ matchen händelse för händelse';
 
   @override
-  String get matchViewSwitchToPitch => 'Titta på planen';
+  String get matchViewSwitchToPitch => 'Titta i 2D TV-läge';
 
   @override
   String get matchViewSwitchToTimeline => 'Titta på förloppet';

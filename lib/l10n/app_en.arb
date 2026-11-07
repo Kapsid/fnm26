@@ -24896,7 +24896,7 @@
   "@matchViewChooseHint": {
     "description": "Live match, before kick-off: small line under the watch choice. The choice is remembered and can be changed during the match."
   },
-  "matchViewPitch": "Pitch",
+  "matchViewPitch": "2D TV",
   "@matchViewPitch": {
     "description": "Live match: name of the option that shows the match on a 2D pitch with moving players."
   },
@@ -24912,7 +24912,7 @@
   "@matchViewTimelineBlurb": {
     "description": "Live match, before kick-off: one line under the Timeline option."
   },
-  "matchViewSwitchToPitch": "Watch on the pitch",
+  "matchViewSwitchToPitch": "Watch in 2D TV mode",
   "@matchViewSwitchToPitch": {
     "description": "Live match header: label (tooltip, screen reader) of the button that switches to the Pitch view."
   },

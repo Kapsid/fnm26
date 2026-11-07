@@ -16170,7 +16170,7 @@ class AppLocalizationsFi extends AppLocalizations {
       'Valintasi säilyy seuraavaan otteluun. Voit vaihtaa milloin tahansa.';
 
   @override
-  String get matchViewPitch => 'Kenttä';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Seuraa pelaajia kentällä';
@@ -16182,7 +16182,7 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Seuraa ottelua tapahtuma kerrallaan';
 
   @override
-  String get matchViewSwitchToPitch => 'Katso kentältä';
+  String get matchViewSwitchToPitch => 'Katso 2D TV -tilassa';
 
   @override
   String get matchViewSwitchToTimeline => 'Katso ottelun kulkua';

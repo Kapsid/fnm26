@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Rangaistuspotku! {other} kaataa pelaajan {player} ja saa toisen keltaisen, eli punaisen.",
   "matchViewChooseTitle": "Miten haluat katsoa ottelua?",
   "matchViewChooseHint": "Valintasi säilyy seuraavaan otteluun. Voit vaihtaa milloin tahansa.",
-  "matchViewPitch": "Kenttä",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Seuraa pelaajia kentällä",
   "matchViewTimeline": "Kulku",
   "matchViewTimelineBlurb": "Seuraa ottelua tapahtuma kerrallaan",
-  "matchViewSwitchToPitch": "Katso kentältä",
+  "matchViewSwitchToPitch": "Katso 2D TV -tilassa",
   "matchViewSwitchToTimeline": "Katso ottelun kulkua",
   "matchTabCommentary": "SELOSTUS"
 }

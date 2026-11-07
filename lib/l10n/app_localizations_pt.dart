@@ -16197,7 +16197,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'A sua escolha mantém-se no próximo jogo. Pode mudar a qualquer momento.';
 
   @override
-  String get matchViewPitch => 'Relvado';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Ver os jogadores em campo';
@@ -16209,7 +16209,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Acompanhar o jogo lance a lance';
 
   @override
-  String get matchViewSwitchToPitch => 'Ver no relvado';
+  String get matchViewSwitchToPitch => 'Ver no modo 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'Ver a cronologia';

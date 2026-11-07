@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Penaltı! {other} ceza sahasında {player} oyuncusunu deviriyor, ikinci sarıyla kırmızı görüyor.",
   "matchViewChooseTitle": "Maçı nasıl izlemek istersiniz?",
   "matchViewChooseHint": "Seçiminiz bir sonraki maç için de saklanır. İstediğiniz zaman değiştirebilirsiniz.",
-  "matchViewPitch": "Saha",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Oyuncuları sahada izle",
   "matchViewTimeline": "Akış",
   "matchViewTimelineBlurb": "Maçı olay olay izleyin",
-  "matchViewSwitchToPitch": "Sahada izle",
+  "matchViewSwitchToPitch": "2D TV modunda izle",
   "matchViewSwitchToTimeline": "Akışı izle",
   "matchTabCommentary": "YORUM"
 }
