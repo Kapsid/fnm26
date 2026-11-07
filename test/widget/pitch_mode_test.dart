@@ -15,6 +15,7 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
@@ -54,6 +55,15 @@ class _InstantBaker extends PitchStadiumBaker {
     ui.Image? flag,
     double pixelRatio = 1,
   }) => Future.value(image.clone());
+
+  @override
+  Future<ui.Image?> show(
+    PitchStadium stadium,
+    PitchProjection projection,
+    Size size,
+    PitchLight light, {
+    double pixelRatio = 1,
+  }) => Future.value();
 }
 
 const List<String> _surnames = [
@@ -170,6 +180,7 @@ Future<ProviderContainer> _pump(
   Map<String, Object> prefs = const {},
   bool resetPrefs = true,
   PitchPlaybackBuilder? builder,
+  WeatherKind? weather,
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
   tester.view
@@ -187,6 +198,8 @@ Future<ProviderContainer> _pump(
       pitchPlaybackBuilderProvider.overrideWithValue(
         builder ?? (b) async => b.run(),
       ),
+      if (weather != null)
+        pitchForcedWeatherProvider.overrideWithValue(weather),
     ],
   );
   addTearDown(c.dispose);
@@ -865,5 +878,39 @@ void main() {
       _clock(tester).value.inMicroseconds / 1e6,
       closeTo(reveal, 0.001),
     );
+  });
+
+  testWidgets('the weather is cosmetic: the match plays the same in any '
+      'weather', (tester) async {
+    final preview = _preview();
+    String? first;
+    for (final w in WeatherKind.values) {
+      // A fresh screen each time, so it reads its weather anew.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await _pump(
+        tester,
+        preview: preview,
+        salt: 7,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        weather: w,
+      );
+      await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      expect(_screen(tester).pitchMode.stadium!.weather, w);
+      final r = _result(tester);
+      final pb = _pb(tester);
+      await _seek(tester, pb.pacer.total * 0.6);
+      final seen = _seen(tester);
+      final fingerprint = [
+        '${r.homeScore}:${r.awayScore}',
+        '${r.homeShots}/${r.awayShots} ${r.homePossession}',
+        for (final e in r.events)
+          '${e.type.name} ${e.minute}+${e.stoppage} ${e.playerId}',
+        'moments ${r.moments.length}',
+        'screen ${pb.pacer.total.inMilliseconds}',
+        'seen ${seen.clock} ${seen.home}-${seen.away} ${seen.events}',
+      ].join('\n');
+      first ??= fingerprint;
+      expect(fingerprint, first, reason: w.name);
+    }
   });
 }

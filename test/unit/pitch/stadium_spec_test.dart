@@ -3,6 +3,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
+import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
 
 Nation n(
@@ -60,7 +61,13 @@ void main() {
       groundNationCode: 'FRA',
     );
     expect(s.tiers, 3);
-    expect(s.openCorners, isFalse);
+    // A big ground closes its corners unless its own signature opens them
+    // (France's big grounds do: Task 15b).
+    expect(s.openCorners, s.signature.bowl == BowlShape.openCorners);
+    expect(
+      s.withLook(signature: StadiumSignature.classic).openCorners,
+      isFalse,
+    );
     expect(
       StadiumSpec.from(
         g(30000, 1),

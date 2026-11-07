@@ -991,6 +991,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     final stadium = _pc.stadium ??= pitchStadiumForPreview(
       preview,
       _seed(preview),
+      weather: ref.read(pitchForcedWeatherProvider),
     );
     if (_pc.names.isEmpty) _pc.names = pitchNamesForPreview(preview);
     final clock = _pitchClock;

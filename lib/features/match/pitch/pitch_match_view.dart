@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
@@ -15,6 +17,7 @@ import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
+import 'package:fnm/features/match/pitch/weather_painter.dart';
 
 /// The live Pitch view: the match's ground, baked once, and over it the
 /// players and the ball as [clock] runs through [script].
@@ -23,8 +26,11 @@ import 'package:fnm/features/match/pitch/stadium_looks.dart';
 /// 1. the stadium, a cached image per key light (day, dusk, night),
 ///    cross-faded for the light of the minute on the clock. It repaints
 ///    only when that light moves (once a match minute) or a look arrives;
-/// 2. the actors ([ActorsPainter]), repainted every tick;
-/// 3. a final's gold confetti after the whistle.
+/// 2. the fans' show (scarves, flares, drums, a final's tifo), one more
+///    cached image, faded out as the match gets going;
+/// 3. the actors ([ActorsPainter]), repainted every tick;
+/// 4. the weather falling ([WeatherOverlay]): a cached tile, scrolled;
+/// 5. a final's gold confetti after the whistle.
 ///
 /// **Camera.** The view keeps the camera centred at [cameraZoom] and does
 /// not follow the script's camera pan. The ground is baked for a centred
@@ -105,6 +111,11 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
   ActorsPainter? _actors;
   Rect? _stadiumRect;
 
+  /// The fans' show, baked with the looks, and how much of it is up.
+  ui.Image? _show;
+  final _showOpacity = ValueNotifier<double>(0);
+  WeatherOverlay? _weather;
+
   /// Completes once all three looks are baked (for tests).
   @visibleForTesting
   Future<void> get debugBaked => _baked.future;
@@ -163,6 +174,9 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     _looksArrived.dispose();
     _ready.dispose();
     _looks?.dispose();
+    _show?.dispose();
+    _showOpacity.dispose();
+    _weather?.dispose();
     super.dispose();
   }
 
@@ -181,6 +195,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     if (key != _lightKey) {
       _lightKey = key;
       _light.value = widget.stadium.lightAt(m.minute, stoppage: m.stoppage);
+      _showOpacity.value = widget.stadium.showOpacityAt(m.minute);
     }
     final at = widget.script.confettiAt;
     final t = widget.clock.value.inMicroseconds / 1e6;
@@ -276,6 +291,21 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       if (!identical(_looks, looks)) looks.dispose();
       return;
     }
+    final show = await baker.show(
+      want.stadium,
+      projection,
+      want.size,
+      _lightNow(),
+      pixelRatio: want.dpr,
+    );
+    if (stale()) {
+      show?.dispose();
+      if (!identical(_looks, looks)) looks.dispose();
+      return;
+    }
+    final oldShow = _show;
+    setState(() => _show = show);
+    oldShow?.dispose();
     if (!_baked.isCompleted) _baked.complete();
     _ready.value = true;
     widget.onReady?.call();
@@ -299,6 +329,20 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       names: widget.names,
       lightAt: widget.stadium.lightAt,
       isPlaying: () => widget.clock.playing,
+    );
+  }
+
+  WeatherOverlay _weatherFor() {
+    final w = _weather;
+    final kind = widget.stadium.weather;
+    if (w != null && w.kind == kind) return w;
+    w?.dispose();
+    return _weather = WeatherOverlay(
+      kind,
+      // Stable across runs: the same match always rains the same way.
+      seed: varietySeed(
+        '${widget.stadium.spec.flagCode}:${widget.stadium.date}',
+      ),
     );
   }
 
@@ -342,9 +386,26 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                           ),
                         ),
                       ),
+                      if (_show != null)
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            painter: _ShowLayer(_show!, _showOpacity),
+                          ),
+                        ),
                       RepaintBoundary(
                         child: CustomPaint(painter: _actorsFor(drawSize)),
                       ),
+                      if (_weatherFor().falls)
+                        IgnorePointer(
+                          child: RepaintBoundary(
+                            child: CustomPaint(
+                              painter: _WeatherLayer(
+                                _weatherFor(),
+                                widget.clock,
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -401,4 +462,46 @@ class _StadiumLayer extends CustomPainter {
   @override
   bool shouldRepaint(covariant _StadiumLayer old) =>
       !identical(old.looks, looks) || !identical(old.light, light);
+}
+
+/// The fans' show, faded with the match minute.
+class _ShowLayer extends CustomPainter {
+  _ShowLayer(this.image, this.opacity) : super(repaint: opacity);
+
+  final ui.Image image;
+  final ValueListenable<double> opacity;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final a = opacity.value;
+    if (a <= 0) return;
+    canvas.drawImageRect(
+      image,
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+      Offset.zero & size,
+      Paint()
+        ..filterQuality = FilterQuality.medium
+        ..color = Color.fromRGBO(255, 255, 255, a),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _ShowLayer old) =>
+      !identical(old.image, image) || !identical(old.opacity, opacity);
+}
+
+/// The weather falling, scrolled with the clock: it stops when play does.
+class _WeatherLayer extends CustomPainter {
+  _WeatherLayer(this.weather, this.clock) : super(repaint: clock);
+
+  final WeatherOverlay weather;
+  final PitchClock clock;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      weather.paint(canvas, size, clock.value.inMicroseconds / 1e6);
+
+  @override
+  bool shouldRepaint(covariant _WeatherLayer old) =>
+      !identical(old.weather, weather) || !identical(old.clock, clock);
 }

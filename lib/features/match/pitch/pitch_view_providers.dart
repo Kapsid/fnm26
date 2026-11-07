@@ -15,8 +15,10 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/story_layer.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
+import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
 import 'package:fnm/features/match/match_providers.dart';
@@ -80,7 +82,8 @@ class PitchStadium {
   /// The ground of [ground] for [home] against [away] on [date], kicking
   /// off at [kickOff] local time. The date sets the season on the backdrop
   /// and, with the kick-off and the ground's latitude, the light of every
-  /// minute.
+  /// minute. [weather] is drawn over it (cosmetic only), and
+  /// [groundColours] (the ground nation's two colours) pattern its seats.
   factory PitchStadium.forMatch({
     required MatchGround ground,
     required Nation home,
@@ -91,6 +94,8 @@ class PitchStadium {
     String? groundNationCode,
     Confederation? groundConfederation,
     MatchDressing dressing = MatchDressing.none,
+    WeatherKind weather = WeatherKind.clear,
+    (Color, Color)? groundColours,
   }) {
     final code = groundNationCode ?? home.code;
     final confed = groundConfederation ?? home.confederation;
@@ -114,6 +119,8 @@ class PitchStadium {
         code,
         confed,
         dressing,
+        weather,
+        groundColours,
       ),
       spec: StadiumSpec.from(
         ground,
@@ -123,6 +130,8 @@ class PitchStadium {
         groundNationCode: code,
         groundConfederation: confed,
         date: date,
+        weather: weather,
+        groundColours: groundColours,
       ),
       kits: KitClash.resolve(home, away),
       latitude: NationLatitudes.ofCode(code, confed),
@@ -158,6 +167,22 @@ class PitchStadium {
     math.max(minute, 1),
     stoppage: stoppage,
   );
+
+  /// The weather drawn over the match: cosmetic only.
+  WeatherKind get weather => spec.weather;
+
+  /// What each side's fans put on in the stands: (home, away).
+  (CrowdShow, CrowdShow) get shows => (
+    CrowdShow.of(spec.homeCulture, isFinal: dressing.isFinal),
+    CrowdShow.of(spec.awayCulture, isFinal: dressing.isFinal),
+  );
+
+  /// How strongly the fans' show image is drawn at match [minute]: the
+  /// longer-lived of the two sides' shows.
+  double showOpacityAt(int minute) {
+    final (h, a) = shows;
+    return math.max(h.opacityAt(minute), a.opacityAt(minute));
+  }
 }
 
 /// Bakes a ground's images for the Pitch view: its flag for the roof poles
@@ -202,6 +227,21 @@ class PitchStadiumBaker {
         )
         .whenComplete(picture.dispose);
   }
+
+  /// The fans' show for [stadium] in [light], or null when there is none
+  /// (see `StadiumPainter.paintShow`).
+  Future<ui.Image?> show(
+    PitchStadium stadium,
+    PitchProjection projection,
+    Size size,
+    PitchLight light, {
+    double pixelRatio = 1,
+  }) => StadiumPainter(
+    stadium.spec,
+    projection,
+    light: light,
+    dressing: stadium.dressing,
+  ).bakeShow(size, pixelRatio: pixelRatio);
 
   /// The key looks in the order to bake them for a match that kicks off in
   /// [light]: the one it is nearest first, then the one it is fading
@@ -307,10 +347,21 @@ CompetitionKind pitchCompetitionOf(String? round) => switch (round) {
   _ => CompetitionKind.worldCupQualifying,
 };
 
+/// The weather the Pitch view shows when a test pins it; null (always, in
+/// the app) takes it from the ground's climate and the date
+/// ([MatchWeather]). The weather is cosmetic only: no match reads it.
+final Provider<WeatherKind?> pitchForcedWeatherProvider =
+    Provider<WeatherKind?>((ref) => null);
+
 /// The ground of the match [preview] pins, for the Pitch view: its look,
-/// both kits, the dressing of the occasion, and the kick-off time [seed]
-/// draws for it.
-PitchStadium pitchStadiumForPreview(MatchPreview preview, int seed) {
+/// both kits, the dressing of the occasion, the kick-off time [seed]
+/// draws for it and the weather (by the ground's climate and the date,
+/// unless [weather] pins it).
+PitchStadium pitchStadiumForPreview(
+  MatchPreview preview,
+  int seed, {
+  WeatherKind? weather,
+}) {
   final f = preview.fixture;
   final home = preview.nations[f.homeNationId]!;
   final away = preview.nations[f.awayNationId]!;
@@ -333,6 +384,20 @@ PitchStadium pitchStadiumForPreview(MatchPreview preview, int seed) {
     groundNationCode: groundNation?.code ?? home.code,
     groundConfederation: groundNation?.confederation ?? home.confederation,
     dressing: dressing,
+    weather:
+        weather ??
+        MatchWeather.of(
+          code: groundNation?.code ?? home.code,
+          confederation: groundNation?.confederation ?? home.confederation,
+          date: f.date,
+          fixtureId: f.id,
+        ),
+    groundColours: groundNation == null
+        ? null
+        : (
+            KitColors.parse(groundNation.primaryColor),
+            KitColors.parse(groundNation.secondaryColor),
+          ),
   );
 }
 

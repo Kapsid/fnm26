@@ -15,10 +15,13 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/match/pitch/formation_slots.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
+import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
+import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 import 'package:fnm/domain/services/match/stadium/stadium_spec.dart';
 import 'package:fnm/features/match/pitch/confetti_painter.dart';
 import 'package:fnm/features/match/pitch/match_dressing.dart';
@@ -26,6 +29,7 @@ import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
 import 'package:fnm/features/match/pitch/stadium_painter.dart';
 import 'package:fnm/features/match/pitch/token_painter.dart';
+import 'package:fnm/features/match/pitch/weather_painter.dart';
 
 import '../helpers/pump_app.dart';
 
@@ -76,8 +80,18 @@ void main() {
         groundNationCode: home.code,
         groundConfederation: home.confederation,
         date: s.date ?? s.matchDay,
+        weather: s.weather,
       );
       spec = spec.withLook(mowing: s.mowing, goalStyle: s.goalStyle);
+      // The mocks from before personal grounds keep the look they were
+      // signed off in: the classic ground, and no show in the stands.
+      if (!s.personal) {
+        spec = spec.withLook(
+          signature: StadiumSignature.classic,
+          homeCulture: CrowdCulture.calm,
+          awayCulture: CrowdCulture.calm,
+        );
+      }
       final projection = PitchProjection(
         pitch,
         (centreX: s.centreX, zoom: s.zoom),
@@ -88,6 +102,7 @@ void main() {
       late final StadiumLooks looks;
       late final ui.Image? homeFlag;
       late final ui.Image? awayFlag;
+      ui.Image? show;
       await tester.runAsync(() async {
         homeFlag =
             await StadiumPainter.rasterFlag(home.code) ?? await _stripes(home);
@@ -101,7 +116,20 @@ void main() {
           dressing: s.dressing,
           pixelRatio: dpr,
         );
+        show = !s.personal
+            ? null
+            : await StadiumPainter(
+                spec,
+                projection,
+                light: s.light ?? Daylight.at(latitude, s.date!, s.kickOff, 1),
+                dressing: s.dressing,
+              ).bakeShow(pitch, pixelRatio: dpr);
       });
+      final shows = (
+        CrowdShow.of(spec.homeCulture, isFinal: s.dressing.isFinal),
+        CrowdShow.of(spec.awayCulture, isFinal: s.dressing.isFinal),
+      );
+      final weather = WeatherOverlay(spec.weather, seed: 3);
 
       Widget one(int minute) {
         final light =
@@ -133,6 +161,12 @@ void main() {
                   tags: s.tags,
                   tablet: s.tablet,
                   confetti: s.confetti,
+                  show: show,
+                  showOpacity: math.max(
+                    shows.$1.opacityAt(minute),
+                    shows.$2.opacityAt(minute),
+                  ),
+                  weather: weather,
                 ),
               ),
             ],
@@ -170,6 +204,8 @@ void main() {
         matchesGoldenFile('goldens/pitch_mock_${s.name}.png'),
       );
       looks.dispose();
+      show?.dispose();
+      weather.dispose();
     });
   }
 }
@@ -259,6 +295,8 @@ class _Scene {
     this.confetti = false,
     this.fill = 0.92,
     this.matchDay,
+    this.personal = false,
+    this.weather = WeatherKind.clear,
   });
 
   final String name;
@@ -287,6 +325,11 @@ class _Scene {
 
   /// The match date, for the season, when the light is fixed.
   final DateTime? matchDay;
+
+  /// The ground's own signature and the fans' show (Task 15b); the older
+  /// mocks keep the classic ground they were signed off in.
+  final bool personal;
+  final WeatherKind weather;
 }
 
 List<_Scene> _scenes() {
@@ -548,6 +591,159 @@ List<_Scene> _scenes() {
       matchDay: DateTime(2026, 9, 5),
       tags: ('HARGREAVES', 'MCKAY'),
     ),
+    // Personal grounds, crowd culture and weather (Task 15b).
+    _Scene(
+      'phone_ring_oval',
+      home: 'NED',
+      away: 'BEL',
+      capacity: 55000,
+      stadium: 'Mock Ring Arena',
+      city: 'Amsterdam',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(18, 0),
+      matchDay: DateTime(2026, 9, 8),
+      personal: true,
+      tags: ('DE GRAAF', 'PEETERS'),
+    ),
+    _Scene(
+      'phone_arch',
+      home: 'ESP',
+      away: 'ITA',
+      capacity: 60000,
+      stadium: 'Mock Arch Stadium',
+      city: 'Sevilla',
+      light: PitchLight.dusk,
+      kickOff: const KickOffTime(21, 0),
+      matchDay: DateTime(2026, 9, 8),
+      personal: true,
+      tags: ('MORENO', 'ROSSETTI'),
+    ),
+    _Scene(
+      'phone_end_wall',
+      home: 'ARG',
+      away: 'URU',
+      capacity: 50000,
+      stadium: 'Mock Wall Ground',
+      city: 'Rosario',
+      light: PitchLight.night,
+      kickOff: const KickOffTime(21, 0),
+      matchDay: DateTime(2026, 10, 13),
+      frames: const [30],
+      zoom: 0.74,
+      personal: true,
+      tags: ('ROMERO', 'SUAREZ'),
+    ),
+    _Scene(
+      'phone_usa_gridiron_bowl',
+      home: 'USA',
+      away: 'MEX',
+      capacity: 70000,
+      stadium: 'Mock Prairie Bowl',
+      city: 'Kansas City',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(16, 0),
+      matchDay: DateTime(2026, 6, 20),
+      personal: true,
+      tags: ('WALKER', 'HERRERA'),
+    ),
+    _Scene(
+      'phone_usa_soccer_specific',
+      home: 'USA',
+      away: 'CAN',
+      capacity: 25000,
+      stadium: 'Mock Harbor Field',
+      city: 'Portland',
+      light: PitchLight.dusk,
+      kickOff: const KickOffTime(19, 30),
+      matchDay: DateTime(2026, 9, 8),
+      personal: true,
+      tags: ('WALKER', 'TREMBLAY'),
+    ),
+    _Scene(
+      'phone_flares',
+      home: 'SRB',
+      away: 'CRO',
+      capacity: 50000,
+      stadium: 'Mock Danube Arena',
+      city: 'Novi Sad',
+      light: PitchLight.night,
+      kickOff: const KickOffTime(20, 45),
+      matchDay: DateTime(2026, 10, 10),
+      personal: true,
+      tags: ('PETROVIC', 'KOVAC'),
+    ),
+    _Scene(
+      'phone_scarves_pre_match',
+      home: 'ENG',
+      away: 'SCO',
+      capacity: 85000,
+      stadium: 'Mock National Ground',
+      city: 'London',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(17, 30),
+      matchDay: DateTime(2026, 9, 5),
+      personal: true,
+      tags: ('HARGREAVES', 'MCKAY'),
+    ),
+    _Scene(
+      'phone_tifo_final',
+      home: 'BRA',
+      away: 'ARG',
+      capacity: 78000,
+      stadium: 'Mock Final Stadium',
+      city: 'Rio de Janeiro',
+      light: PitchLight.night,
+      kickOff: const KickOffTime(21, 0),
+      matchDay: DateTime(2026, 7, 19),
+      dressing: MatchDressing.theFinal,
+      personal: true,
+      tags: ('SANTOS', 'ROMERO'),
+    ),
+    _Scene(
+      'phone_rain',
+      home: 'SCO',
+      away: 'NOR',
+      capacity: 50000,
+      stadium: 'Mock Northern Park',
+      city: 'Glasgow',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(15, 0),
+      matchDay: DateTime(2026, 10, 10),
+      frames: const [30],
+      personal: true,
+      weather: WeatherKind.rain,
+      tags: ('MCKAY', 'HAUGEN'),
+    ),
+    _Scene(
+      'phone_snow',
+      home: 'NOR',
+      away: 'SWE',
+      capacity: 28000,
+      stadium: 'Mock Winter Arena',
+      city: 'Oslo',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(13, 0),
+      matchDay: DateTime(2027, 1, 23),
+      frames: const [30],
+      personal: true,
+      weather: WeatherKind.snow,
+      tags: ('HAUGEN', 'LINDQVIST'),
+    ),
+    _Scene(
+      'phone_heat_haze',
+      home: 'UAE',
+      away: 'KSA',
+      capacity: 42000,
+      stadium: 'Mock Desert Arena',
+      city: 'Abu Dhabi',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(17, 0),
+      matchDay: DateTime(2026, 9, 10),
+      frames: const [30],
+      personal: true,
+      weather: WeatherKind.haze,
+      tags: ('AL HAJRI', 'AL OTAIBI'),
+    ),
   ];
 }
 
@@ -732,8 +928,14 @@ class _PitchMock extends StatelessWidget {
     required this.tags,
     required this.tablet,
     required this.confetti,
+    required this.show,
+    required this.showOpacity,
+    required this.weather,
   });
 
+  final ui.Image? show;
+  final double showOpacity;
+  final WeatherOverlay weather;
   final StadiumLooks looks;
   final PitchLight light;
   final PitchProjection projection;
@@ -757,8 +959,11 @@ class _PitchMock extends StatelessWidget {
           away: away,
           r0: tablet ? 16.5 : 10.2,
           nameSize: tablet ? 11.5 : 9.5,
+          show: show,
+          showOpacity: showOpacity,
         ),
       ),
+      if (weather.falls) CustomPaint(painter: _WeatherMock(weather)),
       if (confetti) CustomPaint(painter: ConfettiPainter(t: 3.2, seed: 7)),
     ],
   );
@@ -775,8 +980,12 @@ class _ActorsMock extends CustomPainter {
     required this.away,
     required this.r0,
     required this.nameSize,
+    this.show,
+    this.showOpacity = 0,
   });
 
+  final ui.Image? show;
+  final double showOpacity;
   final StadiumLooks looks;
   final PitchLight light;
   final List<_Man> men;
@@ -787,6 +996,17 @@ class _ActorsMock extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     looks.paint(canvas, Offset.zero & size, light);
+    final img = show;
+    if (img != null && showOpacity > 0) {
+      canvas.drawImageRect(
+        img,
+        Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
+        Offset.zero & size,
+        Paint()
+          ..filterQuality = FilterQuality.medium
+          ..color = Color.fromRGBO(255, 255, 255, showOpacity),
+      );
+    }
     final shadows = TokenShadows.of(light);
     final towers = [
       for (final (x, y) in StadiumPainter.towers) projection.toScreenOpen(x, y),
@@ -1028,4 +1248,17 @@ List<_Man> _kickOff(
     tag: tags.$2,
   );
   return out;
+}
+
+/// The weather falling, as the live view draws it at the first frame.
+class _WeatherMock extends CustomPainter {
+  _WeatherMock(this.weather);
+
+  final WeatherOverlay weather;
+
+  @override
+  void paint(Canvas canvas, Size size) => weather.paint(canvas, size, 0);
+
+  @override
+  bool shouldRepaint(covariant _WeatherMock old) => false;
 }

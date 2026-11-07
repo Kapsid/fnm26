@@ -5,9 +5,12 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/stadium/backdrop.dart';
+import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
 import 'package:fnm/domain/services/match/stadium/landmarks.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
+import 'package:fnm/domain/services/match/stadium/stadium_signature.dart';
 
 /// What the stadium looks like for one match: size from capacity, crowd from
 /// attendance, colours from the two kits, the ground's own look (its mowing
@@ -29,11 +32,18 @@ class StadiumSpec {
     this.city = CityStyle.oldEuropean,
     this.horizon = Horizon.forestHills,
     this.season = BackdropSeason.green,
+    this.signature = StadiumSignature.classic,
+    this.groundColours,
+    this.homeCulture = CrowdCulture.calm,
+    this.awayCulture = CrowdCulture.calm,
+    this.weather = WeatherKind.clear,
   });
 
   /// The spec for [g] between [home] and [away] in the country
   /// [groundNationCode] (the home nation's unless the venue is neutral),
-  /// with the season of [date] (green when there is none).
+  /// with the season of [date] (green when there is none), in [weather].
+  /// [groundColours] are the ground nation's two colours, for its seats
+  /// (the home side's when not given).
   factory StadiumSpec.from(
     MatchGround g,
     Nation home,
@@ -42,10 +52,18 @@ class StadiumSpec {
     required String groundNationCode,
     Confederation? groundConfederation,
     DateTime? date,
+    (Color, Color)? groundColours,
+    WeatherKind weather = WeatherKind.clear,
   }) {
     final tiers = g.capacity < 15000 ? 1 : (g.capacity < 45000 ? 2 : 3);
     final kits = KitClash.resolve(home, away);
     final confed = groundConfederation ?? home.confederation;
+    final signature = StadiumSignature.of(
+      stadium: g.stadium,
+      nationCode: groundNationCode,
+      confederation: confed,
+      capacity: g.capacity,
+    );
     final (city, horizon) = NationBackdrops.of(
       groundNationCode,
       confed,
@@ -53,7 +71,7 @@ class StadiumSpec {
     );
     return StadiumSpec(
       tiers: tiers,
-      openCorners: tiers == 1,
+      openCorners: tiers == 1 || signature.bowl == BowlShape.openCorners,
       fill: g.capacity <= 0 ? 0 : (g.attendance / g.capacity).clamp(0.0, 1.0),
       homeColour: kits.home.primary,
       awayColour: kits.away.primary,
@@ -80,6 +98,16 @@ class StadiumSpec {
                 confed,
               ),
             ),
+      signature: signature,
+      groundColours:
+          groundColours ??
+          (
+            KitColors.parse(home.primaryColor),
+            KitColors.parse(home.secondaryColor),
+          ),
+      homeCulture: CrowdCultures.of(home.code, home.confederation),
+      awayCulture: CrowdCultures.of(away.code, away.confederation),
+      weather: weather,
     );
   }
 
@@ -92,9 +120,15 @@ class StadiumSpec {
     BackdropSeason? season,
     LandmarkKind? landmark,
     double? fill,
+    StadiumSignature? signature,
+    CrowdCulture? homeCulture,
+    CrowdCulture? awayCulture,
+    WeatherKind? weather,
   }) => StadiumSpec(
     tiers: tiers,
-    openCorners: openCorners,
+    openCorners: signature == null
+        ? openCorners
+        : tiers == 1 || signature.bowl == BowlShape.openCorners,
     fill: fill ?? this.fill,
     homeColour: homeColour,
     awayColour: awayColour,
@@ -107,6 +141,11 @@ class StadiumSpec {
     city: city ?? this.city,
     horizon: horizon ?? this.horizon,
     season: season ?? this.season,
+    signature: signature ?? this.signature,
+    groundColours: groundColours,
+    homeCulture: homeCulture ?? this.homeCulture,
+    awayCulture: awayCulture ?? this.awayCulture,
+    weather: weather ?? this.weather,
   );
 
   final int tiers;
@@ -134,4 +173,17 @@ class StadiumSpec {
   /// The far layer of the backdrop: the land on the horizon.
   final Horizon horizon;
   final BackdropSeason season;
+
+  /// The ground's own look: its roof, bowl, seats, lights and extras.
+  final StadiumSignature signature;
+
+  /// The ground nation's two colours, for the seats and the screens.
+  final (Color, Color)? groundColours;
+
+  /// How each side's fans show themselves (see `CrowdShow`).
+  final CrowdCulture homeCulture;
+  final CrowdCulture awayCulture;
+
+  /// The weather on the day: cosmetic only.
+  final WeatherKind weather;
 }
