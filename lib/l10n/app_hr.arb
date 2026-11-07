@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Pratite utakmicu događaj po događaj",
   "matchViewSwitchToPitch": "Gledaj na terenu",
   "matchViewSwitchToTimeline": "Gledaj tijek",
-  "matchTabCommentary": "KOMENTAR"
+  "matchTabCommentary": "KOMENTAR",
+  "homeNextFixture": "Sljedeće: {match}, {when}",
+  "homeCycleComplete": "Svjetsko prvenstvo {year} je završilo. Slijedi presuda uprave.",
+  "homeFollowingFinals": "Svjetsko prvenstvo {year} s tribina"
 }

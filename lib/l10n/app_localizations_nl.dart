@@ -2082,6 +2082,21 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Volgende: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Het Wereldkampioenschap van $year is voorbij. Nu volgt het oordeel van de bond.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Het Wereldkampioenschap van $year als toeschouwer';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'LOOPBAAN ALS BONDSCOACH';
 
   @override

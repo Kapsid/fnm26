@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "경기를 상황별로 따라가세요",
   "matchViewSwitchToPitch": "경기장에서 보기",
   "matchViewSwitchToTimeline": "타임라인 보기",
-  "matchTabCommentary": "중계"
+  "matchTabCommentary": "중계",
+  "homeNextFixture": "다음: {match}, {when}",
+  "homeCycleComplete": "{year} 세계 선수권이 끝났습니다. 이제 협회의 평가가 남았습니다.",
+  "homeFollowingFinals": "{year} 세계 선수권 관전 중"
 }

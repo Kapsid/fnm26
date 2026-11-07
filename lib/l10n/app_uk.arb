@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Стежте за матчем подія за подією",
   "matchViewSwitchToPitch": "Дивитися на полі",
   "matchViewSwitchToTimeline": "Дивитися хронологію",
-  "matchTabCommentary": "КОМЕНТАР"
+  "matchTabCommentary": "КОМЕНТАР",
+  "homeNextFixture": "Наступний: {match}, {when}",
+  "homeCycleComplete": "Чемпіонат світу {year} завершено. Далі вердикт керівництва.",
+  "homeFollowingFinals": "Чемпіонат світу {year} з трибун"
 }

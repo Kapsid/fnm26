@@ -2060,6 +2060,21 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Nästa: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Världsmästerskapet $year är avgjort. Nu väntar styrelsens dom.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Världsmästerskapet $year från läktaren';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'FÖRBUNDSKAPTENSKARRIÄR';
 
   @override

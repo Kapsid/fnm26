@@ -2003,6 +2003,21 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'ถัดไป: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'ชิงแชมป์โลก $year จบลงแล้ว ต่อไปคือคำตัดสินของสมาคม';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'ชมชิงแชมป์โลก $year';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'อาชีพผู้จัดการทีม';
 
   @override

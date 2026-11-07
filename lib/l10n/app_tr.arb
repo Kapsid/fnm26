@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Maçı olay olay izleyin",
   "matchViewSwitchToPitch": "Sahada izle",
   "matchViewSwitchToTimeline": "Akışı izle",
-  "matchTabCommentary": "YORUM"
+  "matchTabCommentary": "YORUM",
+  "homeNextFixture": "Sıradaki: {match}, {when}",
+  "homeCycleComplete": "{year} Dünya Şampiyonası sona erdi. Sırada yönetimin kararı var.",
+  "homeFollowingFinals": "{year} Dünya Şampiyonası'nı izliyorsunuz"
 }

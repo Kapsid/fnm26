@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Segui la partita evento per evento",
   "matchViewSwitchToPitch": "Guarda sul campo",
   "matchViewSwitchToTimeline": "Guarda la cronologia",
-  "matchTabCommentary": "COMMENTO"
+  "matchTabCommentary": "COMMENTO",
+  "homeNextFixture": "Prossima: {match}, {when}",
+  "homeCycleComplete": "Il Campionato del mondo {year} è finito. Ora il verdetto della federazione.",
+  "homeFollowingFinals": "Il Campionato del mondo {year} da spettatori"
 }

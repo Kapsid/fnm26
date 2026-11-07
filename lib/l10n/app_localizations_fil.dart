@@ -2035,6 +2035,21 @@ class AppLocalizationsFil extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Susunod: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Tapos na ang Kampeonato ng Mundo $year. Susunod ang hatol ng pamunuan.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Pinapanood ang Kampeonato ng Mundo $year';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'KARERA BILANG MANAGER';
 
   @override

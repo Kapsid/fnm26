@@ -2022,6 +2022,21 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Sıradaki: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return '$year Dünya Şampiyonası sona erdi. Sırada yönetimin kararı var.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return '$year Dünya Şampiyonası\'nı izliyorsunuz';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'TEKNİK DİREKTÖR KARİYERİ';
 
   @override

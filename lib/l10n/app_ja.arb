@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "試合を出来事ごとに追う",
   "matchViewSwitchToPitch": "ピッチで観戦",
   "matchViewSwitchToTimeline": "経過を見る",
-  "matchTabCommentary": "実況"
+  "matchTabCommentary": "実況",
+  "homeNextFixture": "次戦: {match}、{when}",
+  "homeCycleComplete": "{year}年世界選手権は終了。次は協会の評価です。",
+  "homeFollowingFinals": "{year}年世界選手権を観戦中"
 }

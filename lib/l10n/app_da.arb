@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Følg kampen begivenhed for begivenhed",
   "matchViewSwitchToPitch": "Se på banen",
   "matchViewSwitchToTimeline": "Se forløbet",
-  "matchTabCommentary": "KOMMENTARER"
+  "matchTabCommentary": "KOMMENTARER",
+  "homeNextFixture": "Næste: {match}, {when}",
+  "homeCycleComplete": "VM {year} er slut. Nu venter bestyrelsens dom.",
+  "homeFollowingFinals": "VM {year} fra tribunen"
 }

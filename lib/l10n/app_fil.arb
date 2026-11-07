@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Sundan ang laban, bawat pangyayari",
   "matchViewSwitchToPitch": "Panoorin sa field",
   "matchViewSwitchToTimeline": "Panoorin ang daloy",
-  "matchTabCommentary": "KOMENTARYO"
+  "matchTabCommentary": "KOMENTARYO",
+  "homeNextFixture": "Susunod: {match}, {when}",
+  "homeCycleComplete": "Tapos na ang Kampeonato ng Mundo {year}. Susunod ang hatol ng pamunuan.",
+  "homeFollowingFinals": "Pinapanood ang Kampeonato ng Mundo {year}"
 }

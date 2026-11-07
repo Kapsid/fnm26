@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Urmărește meciul fază cu fază",
   "matchViewSwitchToPitch": "Privește pe teren",
   "matchViewSwitchToTimeline": "Privește desfășurarea",
-  "matchTabCommentary": "COMENTARIU"
+  "matchTabCommentary": "COMENTARIU",
+  "homeNextFixture": "Următorul: {match}, {when}",
+  "homeCycleComplete": "Campionatul Mondial {year} s-a încheiat. Urmează verdictul conducerii.",
+  "homeFollowingFinals": "Campionatul Mondial {year} din tribună"
 }

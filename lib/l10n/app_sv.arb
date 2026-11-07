@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Följ matchen händelse för händelse",
   "matchViewSwitchToPitch": "Titta på planen",
   "matchViewSwitchToTimeline": "Titta på förloppet",
-  "matchTabCommentary": "KOMMENTARER"
+  "matchTabCommentary": "KOMMENTARER",
+  "homeNextFixture": "Nästa: {match}, {when}",
+  "homeCycleComplete": "Världsmästerskapet {year} är avgjort. Nu väntar styrelsens dom.",
+  "homeFollowingFinals": "Världsmästerskapet {year} från läktaren"
 }

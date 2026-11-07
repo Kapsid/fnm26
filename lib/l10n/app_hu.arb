@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Kövesse a meccset eseményről eseményre",
   "matchViewSwitchToPitch": "Nézés a pályán",
   "matchViewSwitchToTimeline": "A menet megtekintése",
-  "matchTabCommentary": "KOMMENTÁR"
+  "matchTabCommentary": "KOMMENTÁR",
+  "homeNextFixture": "Következő: {match}, {when}",
+  "homeCycleComplete": "A {year}. évi világbajnokság véget ért. Jön a vezetőség ítélete.",
+  "homeFollowingFinals": "A {year}. évi világbajnokság a lelátóról"
 }

@@ -2055,6 +2055,21 @@ class AppLocalizationsRo extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Următorul: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Campionatul Mondial $year s-a încheiat. Urmează verdictul conducerii.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Campionatul Mondial $year din tribună';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'CARIERA DE SELECȚIONER';
 
   @override

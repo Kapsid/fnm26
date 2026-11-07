@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "मैच को घटना-दर-घटना देखें",
   "matchViewSwitchToPitch": "मैदान पर देखें",
   "matchViewSwitchToTimeline": "घटनाक्रम देखें",
-  "matchTabCommentary": "कमेंट्री"
+  "matchTabCommentary": "कमेंट्री",
+  "homeNextFixture": "अगला: {match}, {when}",
+  "homeCycleComplete": "{year} विश्व चैंपियनशिप पूरी हो गई। अब बोर्ड का फ़ैसला बाक़ी है।",
+  "homeFollowingFinals": "{year} विश्व चैंपियनशिप दर्शक बनकर"
 }

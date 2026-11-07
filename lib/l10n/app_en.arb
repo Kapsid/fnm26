@@ -3008,6 +3008,36 @@
       }
     }
   },
+  "homeNextFixture": "Next: {match}, {when}",
+  "@homeNextFixture": {
+    "description": "Home continue card: the save's next fixture.",
+    "placeholders": {
+      "match": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "homeCycleComplete": "The {year} World Championship is over. The board's verdict comes next.",
+  "@homeCycleComplete": {
+    "description": "Home continue card: this cycle's World Championship has been played.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "homeFollowingFinals": "Following the {year} World Championship",
+  "@homeFollowingFinals": {
+    "description": "Home continue card: the finals run without his nation.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "careerManagerCareerTitle": "MANAGER CAREER",
   "@careerManagerCareerTitle": {
     "description": "App-bar title on the manager-career screen."

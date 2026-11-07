@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Ikuti pertandingan kejadian demi kejadian",
   "matchViewSwitchToPitch": "Tonton di lapangan",
   "matchViewSwitchToTimeline": "Lihat alurnya",
-  "matchTabCommentary": "KOMENTAR"
+  "matchTabCommentary": "KOMENTAR",
+  "homeNextFixture": "Berikutnya: {match}, {when}",
+  "homeCycleComplete": "Kejuaraan Dunia {year} telah usai. Kini giliran keputusan federasi.",
+  "homeFollowingFinals": "Menyaksikan Kejuaraan Dunia {year}"
 }

@@ -1964,6 +1964,21 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return '다음: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return '$year 세계 선수권이 끝났습니다. 이제 협회의 평가가 남았습니다.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return '$year 세계 선수권 관전 중';
+  }
+
+  @override
   String get careerManagerCareerTitle => '감독 커리어';
 
   @override

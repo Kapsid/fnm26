@@ -2090,6 +2090,21 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Nächstes Spiel: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Die Weltmeisterschaft $year ist vorbei. Jetzt folgt das Urteil des Verbands.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Die Weltmeisterschaft $year als Zuschauer';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'TRAINERKARRIERE';
 
   @override

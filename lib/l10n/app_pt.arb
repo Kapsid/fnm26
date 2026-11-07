@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Acompanhar o jogo lance a lance",
   "matchViewSwitchToPitch": "Ver no relvado",
   "matchViewSwitchToTimeline": "Ver a cronologia",
-  "matchTabCommentary": "COMENTÁRIO"
+  "matchTabCommentary": "COMENTÁRIO",
+  "homeNextFixture": "Próximo: {match}, {when}",
+  "homeCycleComplete": "O Campeonato Mundial de {year} terminou. Agora vem o veredicto da direção.",
+  "homeFollowingFinals": "O Campeonato Mundial de {year} como espectador"
 }

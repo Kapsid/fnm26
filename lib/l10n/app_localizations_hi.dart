@@ -2019,6 +2019,21 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'अगला: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return '$year विश्व चैंपियनशिप पूरी हो गई। अब बोर्ड का फ़ैसला बाक़ी है।';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return '$year विश्व चैंपियनशिप दर्शक बनकर';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'मैनेजर करियर';
 
   @override

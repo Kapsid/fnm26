@@ -2030,6 +2030,21 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Наступний: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Чемпіонат світу $year завершено. Далі вердикт керівництва.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Чемпіонат світу $year з трибун';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'КАР’ЄРА ТРЕНЕРА';
 
   @override

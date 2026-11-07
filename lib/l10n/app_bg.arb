@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Следете мача събитие по събитие",
   "matchViewSwitchToPitch": "Гледай на терена",
   "matchViewSwitchToTimeline": "Гледай хода",
-  "matchTabCommentary": "КОМЕНТАР"
+  "matchTabCommentary": "КОМЕНТАР",
+  "homeNextFixture": "Следва: {match}, {when}",
+  "homeCycleComplete": "Световното първенство {year} приключи. Следва присъдата на ръководството.",
+  "homeFollowingFinals": "Световното първенство {year} от трибуните"
 }

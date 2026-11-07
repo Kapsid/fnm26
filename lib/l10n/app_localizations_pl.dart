@@ -2039,6 +2039,21 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Następny mecz: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Mistrzostwa Świata $year zakończone. Teraz werdykt zarządu.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Mistrzostwa Świata $year z trybun';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'KARIERA SELEKCJONERA';
 
   @override

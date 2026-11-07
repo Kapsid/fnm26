@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Volg de wedstrijd gebeurtenis voor gebeurtenis",
   "matchViewSwitchToPitch": "Kijken op het veld",
   "matchViewSwitchToTimeline": "Het verloop bekijken",
-  "matchTabCommentary": "COMMENTAAR"
+  "matchTabCommentary": "COMMENTAAR",
+  "homeNextFixture": "Volgende: {match}, {when}",
+  "homeCycleComplete": "Het Wereldkampioenschap van {year} is voorbij. Nu volgt het oordeel van de bond.",
+  "homeFollowingFinals": "Het Wereldkampioenschap van {year} als toeschouwer"
 }

@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Theo dõi trận đấu từng tình huống",
   "matchViewSwitchToPitch": "Xem trên sân",
   "matchViewSwitchToTimeline": "Xem diễn biến",
-  "matchTabCommentary": "BÌNH LUẬN"
+  "matchTabCommentary": "BÌNH LUẬN",
+  "homeNextFixture": "Tiếp theo: {match}, {when}",
+  "homeCycleComplete": "Giải vô địch thế giới {year} đã kết thúc. Tiếp theo là phán quyết của liên đoàn.",
+  "homeFollowingFinals": "Theo dõi Giải vô địch thế giới {year}"
 }

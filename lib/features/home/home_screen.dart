@@ -6,12 +6,14 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
+import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/campaign/campaigns.dart';
 import 'package:fnm/features/campaign/campaign_providers.dart';
 import 'package:fnm/features/campaign/campaign_ui.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/career/saves_screen.dart';
+import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/paywall/save_lock.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -123,8 +125,10 @@ class HomeScreen extends ConsumerWidget {
             name: careerNation,
             worldName: lastWorld,
             date: AppDate.monthYear(context, lastSave.inGameDate),
-            subtitle: l.careerRoadToWorldCup(
-              CareerService.worldCupYear(lastSave.cyclePointer),
+            subtitle: _careerNextLine(
+              context,
+              lastSave,
+              ref.watch(hubDataProvider(lastSave.id)).valueOrNull,
             ),
             locked: lockedIds.contains(lastSave.id),
             onResume: () => _resume(context, ref, lastSave),
@@ -147,6 +151,36 @@ class HomeScreen extends ConsumerWidget {
       second: second,
     );
   }
+}
+
+/// What comes next for [save], on the phone's continue card: his next
+/// fixture as the hub's top bar names it (the opponent held back until the
+/// draw has been watched), and with none, where the cycle stands. It used to
+/// read "Road to the {year} World Championship" whatever the save was doing,
+/// that World Championship played or not.
+String _careerNextLine(BuildContext context, Career save, HubData? hub) {
+  final l = AppLocalizations.of(context);
+  final year = CareerService.worldCupYear(save.cyclePointer);
+  if (hub == null) return l.careerRoadToWorldCup(year);
+  final next = hub.next;
+  if (next != null) {
+    String name(int id) => hub.nations[id]?.name ?? l.hubUnknown;
+    final match = hub.nextDrawWatched
+        ? '${name(next.homeNationId)} ${l.hubVs.toLowerCase()} '
+              '${name(next.awayNationId)}'
+        : l.topBarDrawPending;
+    return l.homeNextFixture(
+      match,
+      '${MatchStage.labelCompact(l, next)}, '
+      '${AppDate.dayMonth(context, next.date)}',
+    );
+  }
+  // No fixture of his own: the cycle's World Championship is either behind
+  // him (the board's verdict is the next thing), running without him, or
+  // still ahead.
+  if (hub.championNationId != null) return l.homeCycleComplete(year);
+  if (hub.hasFinals) return l.homeFollowingFinals(year);
+  return l.careerRoadToWorldCup(year);
 }
 
 /// When [c] was last opened; a run never opened since it was made counts from

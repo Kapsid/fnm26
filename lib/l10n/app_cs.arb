@@ -4006,5 +4006,8 @@
   "matchViewTimelineBlurb": "Zápas událost po události",
   "matchViewSwitchToPitch": "Sledovat na hřišti",
   "matchViewSwitchToTimeline": "Sledovat průběh",
-  "matchTabCommentary": "KOMENTÁŘ"
+  "matchTabCommentary": "KOMENTÁŘ",
+  "homeNextFixture": "Další: {match}, {when}",
+  "homeCycleComplete": "Mistrovství světa {year} skončilo. Na řadě je verdikt vedení.",
+  "homeFollowingFinals": "MS {year} z tribuny"
 }

@@ -2088,6 +2088,21 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Próximo: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'O Campeonato Mundial de $year terminou. Agora vem o veredicto da direção.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'O Campeonato Mundial de $year como espectador';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'CARREIRA DE TREINADOR';
 
   @override

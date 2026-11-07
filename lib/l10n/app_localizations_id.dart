@@ -2027,6 +2027,21 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return 'Berikutnya: $match, $when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return 'Kejuaraan Dunia $year telah usai. Kini giliran keputusan federasi.';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return 'Menyaksikan Kejuaraan Dunia $year';
+  }
+
+  @override
   String get careerManagerCareerTitle => 'KARIER PELATIH';
 
   @override

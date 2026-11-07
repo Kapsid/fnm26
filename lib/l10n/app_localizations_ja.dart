@@ -1957,6 +1957,21 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String homeNextFixture(String match, String when) {
+    return '次戦: $match、$when';
+  }
+
+  @override
+  String homeCycleComplete(int year) {
+    return '$year年世界選手権は終了。次は協会の評価です。';
+  }
+
+  @override
+  String homeFollowingFinals(int year) {
+    return '$year年世界選手権を観戦中';
+  }
+
+  @override
   String get careerManagerCareerTitle => '監督キャリア';
 
   @override
