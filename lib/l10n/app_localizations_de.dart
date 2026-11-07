@@ -14649,7 +14649,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String pitchComDirectFreeKickSaved2(String player) {
-    return 'Der Freistoß von $player wird weggefaustet.';
+    return 'Der Freistoß von $player wird abgewehrt.';
   }
 
   @override

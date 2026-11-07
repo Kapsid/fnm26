@@ -3616,7 +3616,7 @@
   "pitchComDirectFreeKickGoal2": "Was für ein Freistoß! {player} trifft in den Winkel!",
   "pitchComDirectFreeKickGoal3": "TOR! {player} überwindet den Torwart per Freistoß.",
   "pitchComDirectFreeKickSaved1": "{player} schießt direkt aufs Tor, {keeper} hält.",
-  "pitchComDirectFreeKickSaved2": "Der Freistoß von {player} wird weggefaustet.",
+  "pitchComDirectFreeKickSaved2": "Der Freistoß von {player} wird abgewehrt.",
   "pitchComDirectFreeKickSaved3": "Starke Parade! Freistoß von {player}, {keeper} hält ihn fest.",
   "pitchComDirectFreeKickWide1": "Der Freistoß von {player} fliegt drüber.",
   "pitchComDirectFreeKickWide2": "{player} schießt direkt, aber daneben.",

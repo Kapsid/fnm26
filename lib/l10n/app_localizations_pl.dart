@@ -14889,7 +14889,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String pitchComFoulYellow2(String player, String other) {
-    return '$player dostaje żółtą kartkę za faul, $other zostaje na murawie.';
+    return '$player widzi żółtą kartkę za faul, $other leży na murawie.';
   }
 
   @override
@@ -14919,7 +14919,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String pitchComFoulRed2(String player, String other) {
-    return 'Czerwona kartka od razu! $player fauluje, $other zostaje na murawie.';
+    return 'Czerwona kartka od razu! $player brutalnie fauluje, $other leży na murawie.';
   }
 
   @override

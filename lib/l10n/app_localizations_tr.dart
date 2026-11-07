@@ -14792,7 +14792,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchViewPitch => 'Saha';
 
   @override
-  String get matchViewPitchBlurb => 'Oyuncuları sahada izleyin';
+  String get matchViewPitchBlurb => 'Oyuncuları sahada izle';
 
   @override
   String get matchViewTimeline => 'Akış';

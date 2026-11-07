@@ -3597,7 +3597,7 @@
   "pitchComHeaderWoodwork1": "{player} โหม่งโดนคานประตู!",
   "pitchComHeaderWoodwork2": "ติดเสา! ลูกโหม่งของ {player} กลับเข้าสู่สนาม",
   "pitchComHeaderWoodwork3": "กรอบประตูสะเทือน! ลูกโหม่งของ {player}",
-  "pitchComSetPieceGoal1": "ประตู! {player} มาถึงจังหวะสุดท้ายของการบุก!",
+  "pitchComSetPieceGoal1": "ประตู! {player} ตามมาซัดจบจากจังหวะนั้น!",
   "pitchComSetPieceGoal2": "ประตู! {other} ครอสมา และ {player} ทำประตู!",
   "pitchComSetPieceGoal3": "จากลูกตั้งเตะ {player} ทำประตู! ประตู!",
   "pitchComSetPieceSaved1": "{player} ไปถึงลูก แต่ {keeper} เซฟไว้ได้",

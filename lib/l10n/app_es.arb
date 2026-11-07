@@ -3673,7 +3673,7 @@
   "pitchComSub2": "{other} deja su sitio a {player}.",
   "pitchComSub3": "{player} entra por {other}.",
   "pitchComSubFill1": "Entra {player}.",
-  "pitchComSubFill2": "Cambio: ya está en el campo {player}.",
+  "pitchComSubFill2": "Cambio: {player} entra al campo.",
   "pitchComSubFill3": "{player} salta al campo.",
   "pitchComInjury1": "{player} está en el suelo y necesita atención.",
   "pitchComInjury2": "Preocupación, {player} se ha llevado un golpe.",

@@ -14176,7 +14176,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String pitchComSetPieceGoal1(String player) {
-    return 'ประตู! $player มาถึงจังหวะสุดท้ายของการบุก!';
+    return 'ประตู! $player ตามมาซัดจบจากจังหวะนั้น!';
   }
 
   @override

@@ -14582,7 +14582,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String pitchComSetPieceWoodwork3(String player) {
-    return 'Legno! $player ad un passo dal gol dopo il cross.';
+    return 'Legno! $player a un passo dal gol dopo il cross.';
   }
 
   @override

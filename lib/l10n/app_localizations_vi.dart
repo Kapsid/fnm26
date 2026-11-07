@@ -14375,7 +14375,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String pitchComSetPieceWoodwork3(String player) {
-    return 'Khung thành! $player suýt nữa sau đường tạt.';
+    return 'Dội khung thành! $player suýt nữa ghi bàn sau đường tạt.';
   }
 
   @override

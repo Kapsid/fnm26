@@ -14403,7 +14403,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String pitchComSetPieceGoal3(String player) {
-    return 'Daripada sepakan percuma bola mati, $player menjaring! GOL!';
+    return 'Daripada sepakan bola mati, $player menjaring! GOL!';
   }
 
   @override
@@ -14463,7 +14463,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String pitchComSetPieceWoodwork3(String player) {
-    return 'Rangka gawang! $player begitu hampir selepas lintasan.';
+    return 'Hampir! $player hampir menjaring selepas lintasan.';
   }
 
   @override
@@ -14573,7 +14573,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String pitchComPenaltyMissed1(String player) {
-    return '$player tersasar menyempurnakan penalti!';
+    return '$player gagal menjaringkan penalti!';
   }
 
   @override
@@ -14833,7 +14833,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchViewPitchBlurb => 'Lihat pemain di padang';
 
   @override
-  String get matchViewTimeline => 'Aliran';
+  String get matchViewTimeline => 'Garis masa';
 
   @override
   String get matchViewTimelineBlurb =>
@@ -14843,7 +14843,7 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchViewSwitchToPitch => 'Tonton di padang';
 
   @override
-  String get matchViewSwitchToTimeline => 'Lihat aliran';
+  String get matchViewSwitchToTimeline => 'Lihat garis masa';
 
   @override
   String get matchTabCommentary => 'ULASAN';

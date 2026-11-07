@@ -3613,7 +3613,7 @@
   "pitchComSetPieceWoodwork2": "クロスバー！{player}、セットプレーから惜しい。",
   "pitchComSetPieceWoodwork3": "ゴールの枠！{player}、クロスから紙一重だった。",
   "pitchComDirectFreeKickGoal1": "ゴール！{player}のフリーキックが壁を越えた！",
-  "pitchComDirectFreeKickGoal2": "見事なフリーキック！{player}が上の隅を射抜いた！",
+  "pitchComDirectFreeKickGoal2": "見事なフリーキック！{player}がゴール上隅を射抜いた！",
   "pitchComDirectFreeKickGoal3": "ゴール！{player}がフリーキックでGKを破った。",
   "pitchComDirectFreeKickSaved1": "{player}が直接狙う、{keeper}がセーブ。",
   "pitchComDirectFreeKickSaved2": "{player}のフリーキックは弾き出された。",

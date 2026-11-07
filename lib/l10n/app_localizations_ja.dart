@@ -14001,7 +14001,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String pitchComDirectFreeKickGoal2(String player) {
-    return '見事なフリーキック！$playerが上の隅を射抜いた！';
+    return '見事なフリーキック！$playerがゴール上隅を射抜いた！';
   }
 
   @override

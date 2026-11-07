@@ -14909,7 +14909,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String pitchComSubFill2(String player) {
-    return 'Cambio: ya está en el campo $player.';
+    return 'Cambio: $player entra al campo.';
   }
 
   @override

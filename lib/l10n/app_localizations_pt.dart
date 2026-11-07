@@ -14450,7 +14450,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String pitchComShotWoodwork2(String player) {
-    return '$player acerta na trave!';
+    return '$player acerta no poste!';
   }
 
   @override
@@ -14790,7 +14790,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String pitchComCorner1(String player) {
-    return 'Canto. Cobrado por $player.';
+    return 'Canto. Bate $player.';
   }
 
   @override
@@ -14800,12 +14800,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String pitchComCorner3(String player) {
-    return 'Canto, e $player prepara-se para cobrar.';
+    return 'Canto, e $player prepara-se para bater.';
   }
 
   @override
   String pitchComFreeKick1(String player) {
-    return 'Livre. Cobrado por $player.';
+    return 'Livre. Bate $player.';
   }
 
   @override

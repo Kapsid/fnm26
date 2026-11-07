@@ -13958,7 +13958,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String pitchComSetPieceGoal1(String player) {
-    return '골! $player 선수가 공격 마지막에 있었습니다!';
+    return '골! $player 선수가 공격의 마무리를 짓습니다!';
   }
 
   @override
@@ -14308,7 +14308,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String pitchComOffside2(String player) {
-    return '기가 올라갑니다, $player 오프사이드.';
+    return '부심의 깃발이 올라갑니다, $player 오프사이드.';
   }
 
   @override
@@ -14397,7 +14397,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchViewPitchBlurb => '경기장에서 선수들을 지켜보세요';
 
   @override
-  String get matchViewTimeline => '경과';
+  String get matchViewTimeline => '타임라인';
 
   @override
   String get matchViewTimelineBlurb => '경기를 상황별로 따라가세요';
@@ -14406,7 +14406,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchViewSwitchToPitch => '경기장에서 보기';
 
   @override
-  String get matchViewSwitchToTimeline => '경과 보기';
+  String get matchViewSwitchToTimeline => '타임라인 보기';
 
   @override
   String get matchTabCommentary => '중계';
