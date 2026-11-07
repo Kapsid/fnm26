@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "จุดโทษ! {other} ทำฟาวล์ {player} ล้มลง และใบเหลืองใบที่สองนั่นคือใบแดง",
   "matchViewChooseTitle": "คุณอยากชมการแข่งขันแบบไหน?",
   "matchViewChooseHint": "ตัวเลือกของคุณจะใช้กับแมตช์ถัดไปด้วย เปลี่ยนได้ทุกเมื่อ",
-  "matchViewPitch": "สนาม",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "ดูผู้เล่นบนสนาม",
   "matchViewTimeline": "ลำดับเหตุการณ์",
   "matchViewTimelineBlurb": "ติดตามแมตช์ทีละเหตุการณ์",
-  "matchViewSwitchToPitch": "ดูบนสนาม",
+  "matchViewSwitchToPitch": "ดูในโหมด 2D TV",
   "matchViewSwitchToTimeline": "ดูลำดับเหตุการณ์",
   "matchTabCommentary": "คำบรรยาย"
 }

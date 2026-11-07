@@ -16372,7 +16372,7 @@ class AppLocalizationsCs extends AppLocalizations {
       'Volba platí i pro další zápasy. Přepnout můžete kdykoli.';
 
   @override
-  String get matchViewPitch => 'Hřiště';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Hráči v akci na hřišti';
@@ -16384,7 +16384,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Zápas událost po události';
 
   @override
-  String get matchViewSwitchToPitch => 'Sledovat na hřišti';
+  String get matchViewSwitchToPitch => 'Sledovat ve 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'Sledovat průběh';

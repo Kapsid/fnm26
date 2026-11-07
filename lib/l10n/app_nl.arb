@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Strafschop! {other} raakt {player} en krijgt opnieuw geel, dus rood.",
   "matchViewChooseTitle": "Hoe wilt u de wedstrijd volgen?",
   "matchViewChooseHint": "Uw keuze blijft bewaard voor de volgende wedstrijd. U kunt altijd wisselen.",
-  "matchViewPitch": "Veld",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Volg de spelers op het veld",
   "matchViewTimeline": "Verloop",
   "matchViewTimelineBlurb": "Volg de wedstrijd gebeurtenis voor gebeurtenis",
-  "matchViewSwitchToPitch": "Kijken op het veld",
+  "matchViewSwitchToPitch": "Kijk in 2D TV-modus",
   "matchViewSwitchToTimeline": "Het verloop bekijken",
   "matchTabCommentary": "COMMENTAAR"
 }

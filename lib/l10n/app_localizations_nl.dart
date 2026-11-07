@@ -16173,7 +16173,7 @@ class AppLocalizationsNl extends AppLocalizations {
       'Uw keuze blijft bewaard voor de volgende wedstrijd. U kunt altijd wisselen.';
 
   @override
-  String get matchViewPitch => 'Veld';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Volg de spelers op het veld';
@@ -16186,7 +16186,7 @@ class AppLocalizationsNl extends AppLocalizations {
       'Volg de wedstrijd gebeurtenis voor gebeurtenis';
 
   @override
-  String get matchViewSwitchToPitch => 'Kijken op het veld';
+  String get matchViewSwitchToPitch => 'Kijk in 2D TV-modus';
 
   @override
   String get matchViewSwitchToTimeline => 'Het verloop bekijken';

@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Penalti! {other} menjatuhkan lawan, {player} jatuh, dan menerima kuning kedua, bermakna merah.",
   "matchViewChooseTitle": "Bagaimana anda mahu menonton perlawanan?",
   "matchViewChooseHint": "Pilihan anda kekal untuk perlawanan seterusnya. Anda boleh menukarnya bila-bila masa.",
-  "matchViewPitch": "Padang",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Lihat pemain di padang",
   "matchViewTimeline": "Garis masa",
   "matchViewTimelineBlurb": "Ikuti perlawanan peristiwa demi peristiwa",
-  "matchViewSwitchToPitch": "Tonton di padang",
+  "matchViewSwitchToPitch": "Tonton dalam mod 2D TV",
   "matchViewSwitchToTimeline": "Lihat garis masa",
   "matchTabCommentary": "ULASAN"
 }

@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Tizenegyes! {other} szabálytalankodik, {player} a földre kerül, {other} pedig második sárgát, vagyis pirosat kap.",
   "matchViewChooseTitle": "Hogyan szeretné nézni a meccset?",
   "matchViewChooseHint": "A választása a következő meccsre is megmarad. Bármikor válthat.",
-  "matchViewPitch": "Pálya",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Kövesse a játékosokat a pályán",
   "matchViewTimeline": "Menet",
   "matchViewTimelineBlurb": "Kövesse a meccset eseményről eseményre",
-  "matchViewSwitchToPitch": "Nézés a pályán",
+  "matchViewSwitchToPitch": "Nézd 2D TV módban",
   "matchViewSwitchToTimeline": "A menet megtekintése",
   "matchTabCommentary": "KOMMENTÁR"
 }

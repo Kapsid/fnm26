@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Пенальті! {other} збиває {player} і отримує другу жовту, тобто червону.",
   "matchViewChooseTitle": "Як ви хочете дивитися матч?",
   "matchViewChooseHint": "Ваш вибір діє й на наступний матч. Ви можете змінити його будь-коли.",
-  "matchViewPitch": "Поле",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Стежте за гравцями на полі",
   "matchViewTimeline": "Хронологія",
   "matchViewTimelineBlurb": "Стежте за матчем подія за подією",
-  "matchViewSwitchToPitch": "Дивитися на полі",
+  "matchViewSwitchToPitch": "Дивитися в режимі 2D TV",
   "matchViewSwitchToTimeline": "Дивитися хронологію",
   "matchTabCommentary": "КОМЕНТАР"
 }

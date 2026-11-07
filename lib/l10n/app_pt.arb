@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Penálti! {other} derruba {player} e vê novo amarelo, logo vermelho.",
   "matchViewChooseTitle": "Como quer ver o jogo?",
   "matchViewChooseHint": "A sua escolha mantém-se no próximo jogo. Pode mudar a qualquer momento.",
-  "matchViewPitch": "Relvado",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Ver os jogadores em campo",
   "matchViewTimeline": "Cronologia",
   "matchViewTimelineBlurb": "Acompanhar o jogo lance a lance",
-  "matchViewSwitchToPitch": "Ver no relvado",
+  "matchViewSwitchToPitch": "Ver no modo 2D TV",
   "matchViewSwitchToTimeline": "Ver a cronologia",
   "matchTabCommentary": "COMENTÁRIO"
 }

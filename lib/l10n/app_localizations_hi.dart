@@ -16011,7 +16011,7 @@ class AppLocalizationsHi extends AppLocalizations {
       'आपकी पसंद अगले मैच के लिए भी रहेगी। आप कभी भी बदल सकते हैं।';
 
   @override
-  String get matchViewPitch => 'मैदान';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'मैदान पर खिलाड़ियों को देखें';
@@ -16023,7 +16023,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchViewTimelineBlurb => 'मैच को घटना-दर-घटना देखें';
 
   @override
-  String get matchViewSwitchToPitch => 'मैदान पर देखें';
+  String get matchViewSwitchToPitch => '2D TV मोड में देखें';
 
   @override
   String get matchViewSwitchToTimeline => 'घटनाक्रम देखें';

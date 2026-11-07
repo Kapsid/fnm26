@@ -16185,7 +16185,7 @@ class AppLocalizationsEl extends AppLocalizations {
       'Η επιλογή σας ισχύει και για τον επόμενο αγώνα. Μπορείτε να την αλλάξετε οποτεδήποτε.';
 
   @override
-  String get matchViewPitch => 'Γήπεδο';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Παρακολουθήστε τους παίκτες στο γήπεδο';
@@ -16198,7 +16198,7 @@ class AppLocalizationsEl extends AppLocalizations {
       'Παρακολουθήστε τον αγώνα φάση προς φάση';
 
   @override
-  String get matchViewSwitchToPitch => 'Παρακολούθηση στο γήπεδο';
+  String get matchViewSwitchToPitch => 'Παρακολούθηση σε λειτουργία 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'Προβολή εξέλιξης';

@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "पेनल्टी! {other} का फ़ाउल, {player} गिरा, और दूसरा पीला यानी लाल कार्ड।",
   "matchViewChooseTitle": "आप मैच कैसे देखना चाहते हैं?",
   "matchViewChooseHint": "आपकी पसंद अगले मैच के लिए भी रहेगी। आप कभी भी बदल सकते हैं।",
-  "matchViewPitch": "मैदान",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "मैदान पर खिलाड़ियों को देखें",
   "matchViewTimeline": "घटनाक्रम",
   "matchViewTimelineBlurb": "मैच को घटना-दर-घटना देखें",
-  "matchViewSwitchToPitch": "मैदान पर देखें",
+  "matchViewSwitchToPitch": "2D TV मोड में देखें",
   "matchViewSwitchToTimeline": "घटनाक्रम देखें",
   "matchTabCommentary": "कमेंट्री"
 }

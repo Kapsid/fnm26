@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "¡Penalti! {other} derriba a {player} y ve otra amarilla, así que es roja.",
   "matchViewChooseTitle": "¿Cómo quieres ver el partido?",
   "matchViewChooseHint": "Tu elección se mantiene para el próximo partido. Puedes cambiarla en cualquier momento.",
-  "matchViewPitch": "Campo",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Ver a los jugadores en el campo",
   "matchViewTimeline": "Cronología",
   "matchViewTimelineBlurb": "Seguir el partido jugada a jugada",
-  "matchViewSwitchToPitch": "Ver en el campo",
+  "matchViewSwitchToPitch": "Ver en modo 2D TV",
   "matchViewSwitchToTimeline": "Ver la cronología",
   "matchTabCommentary": "COMENTARIO"
 }

@@ -15944,7 +15944,7 @@ class AppLocalizationsVi extends AppLocalizations {
       'Lựa chọn của bạn được giữ cho trận tiếp theo. Bạn có thể đổi bất cứ lúc nào.';
 
   @override
-  String get matchViewPitch => 'Sân';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Xem các cầu thủ trên sân';
@@ -15956,7 +15956,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Theo dõi trận đấu từng tình huống';
 
   @override
-  String get matchViewSwitchToPitch => 'Xem trên sân';
+  String get matchViewSwitchToPitch => 'Xem ở chế độ 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'Xem diễn biến';

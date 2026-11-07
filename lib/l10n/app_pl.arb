@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Karny! {other} faulem powala {player} i dostaje drugą żółtą, czyli czerwoną.",
   "matchViewChooseTitle": "Jak chcesz oglądać mecz?",
   "matchViewChooseHint": "Twój wybór obowiązuje także w kolejnym meczu. Możesz go zmienić w każdej chwili.",
-  "matchViewPitch": "Boisko",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Oglądaj zawodników na boisku",
   "matchViewTimeline": "Przebieg",
   "matchViewTimelineBlurb": "Śledź mecz zdarzenie po zdarzeniu",
-  "matchViewSwitchToPitch": "Oglądaj na boisku",
+  "matchViewSwitchToPitch": "Oglądaj w trybie 2D TV",
   "matchViewSwitchToTimeline": "Oglądaj przebieg",
   "matchTabCommentary": "KOMENTARZ"
 }

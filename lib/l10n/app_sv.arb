@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Straff! {other} fäller {player} och får ett nytt gult, alltså rött.",
   "matchViewChooseTitle": "Hur vill du följa matchen?",
   "matchViewChooseHint": "Ditt val gäller även nästa match. Du kan byta när som helst.",
-  "matchViewPitch": "Plan",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Följ spelarna på planen",
   "matchViewTimeline": "Förlopp",
   "matchViewTimelineBlurb": "Följ matchen händelse för händelse",
-  "matchViewSwitchToPitch": "Titta på planen",
+  "matchViewSwitchToPitch": "Titta i 2D TV-läge",
   "matchViewSwitchToTimeline": "Titta på förloppet",
   "matchTabCommentary": "KOMMENTARER"
 }

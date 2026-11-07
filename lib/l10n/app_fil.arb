@@ -4000,11 +4000,11 @@
   "pitchComPenaltyAwardedSecondYellow3": "Penalty! Nag-foul si {other}, bumagsak si {player}, at ikalawang dilaw ito kaya pula.",
   "matchViewChooseTitle": "Paano mo gustong panoorin ang laban?",
   "matchViewChooseHint": "Mananatili ang pinili mo para sa susunod na laban. Maaari kang magpalit anumang oras.",
-  "matchViewPitch": "Field",
+  "matchViewPitch": "2D TV",
   "matchViewPitchBlurb": "Panoorin ang mga manlalaro sa field",
   "matchViewTimeline": "Daloy",
   "matchViewTimelineBlurb": "Sundan ang laban, bawat pangyayari",
-  "matchViewSwitchToPitch": "Panoorin sa field",
+  "matchViewSwitchToPitch": "Manood sa 2D TV mode",
   "matchViewSwitchToTimeline": "Panoorin ang daloy",
   "matchTabCommentary": "KOMENTARYO"
 }

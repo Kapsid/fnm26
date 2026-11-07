@@ -15519,7 +15519,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchViewChooseHint => '選択は次の試合にも引き継がれます。いつでも切り替えられます。';
 
   @override
-  String get matchViewPitch => 'ピッチ';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'ピッチ上の選手を見る';
@@ -15531,7 +15531,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchViewTimelineBlurb => '試合を出来事ごとに追う';
 
   @override
-  String get matchViewSwitchToPitch => 'ピッチで観戦';
+  String get matchViewSwitchToPitch => '2D TVモードで観る';
 
   @override
   String get matchViewSwitchToTimeline => '経過を見る';

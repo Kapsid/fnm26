@@ -16104,7 +16104,7 @@ class AppLocalizationsFil extends AppLocalizations {
       'Mananatili ang pinili mo para sa susunod na laban. Maaari kang magpalit anumang oras.';
 
   @override
-  String get matchViewPitch => 'Field';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Panoorin ang mga manlalaro sa field';
@@ -16116,7 +16116,7 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Sundan ang laban, bawat pangyayari';
 
   @override
-  String get matchViewSwitchToPitch => 'Panoorin sa field';
+  String get matchViewSwitchToPitch => 'Manood sa 2D TV mode';
 
   @override
   String get matchViewSwitchToTimeline => 'Panoorin ang daloy';

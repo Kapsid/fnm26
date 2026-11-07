@@ -16173,7 +16173,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'La tua scelta resta valida per la prossima partita. Puoi cambiare in qualsiasi momento.';
 
   @override
-  String get matchViewPitch => 'Campo';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Guarda i giocatori in campo';
@@ -16185,7 +16185,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchViewTimelineBlurb => 'Segui la partita evento per evento';
 
   @override
-  String get matchViewSwitchToPitch => 'Guarda sul campo';
+  String get matchViewSwitchToPitch => 'Guarda in modalità 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'Guarda la cronologia';

@@ -16003,7 +16003,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Pilihan Anda tetap berlaku untuk pertandingan berikutnya. Anda bisa menggantinya kapan saja.';
 
   @override
-  String get matchViewPitch => 'Lapangan';
+  String get matchViewPitch => '2D TV';
 
   @override
   String get matchViewPitchBlurb => 'Lihat para pemain di lapangan';
@@ -16016,7 +16016,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Ikuti pertandingan kejadian demi kejadian';
 
   @override
-  String get matchViewSwitchToPitch => 'Tonton di lapangan';
+  String get matchViewSwitchToPitch => 'Tonton dalam mode 2D TV';
 
   @override
   String get matchViewSwitchToTimeline => 'Lihat alurnya';
