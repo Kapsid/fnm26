@@ -19,6 +19,8 @@ import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 
 import 'driver.dart';
 
@@ -38,7 +40,11 @@ void main() {
   /// Plays one career into [out]; returns how many trophies England won.
   Future<int> build(int seed, String out) async {
       Directory(out).createSync(recursive: true);
-      SharedPreferences.setMockInitialValues(<String, Object>{});
+      // Matches on the Timeline, as before the Pitch view: no Pitch or
+      // Timeline question before kick-off.
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        kMatchViewModePrefsKey: 'timeline',
+      });
       final db = AppDatabase.forTesting(NativeDatabase.memory());
       final c = ProviderContainer(
         overrides: [

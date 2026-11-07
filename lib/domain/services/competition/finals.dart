@@ -27,6 +27,30 @@ class FinalsDraw {
   final List<FinalsGroupDraw> groups;
 }
 
+/// How a shootout kick ended.
+enum KickResult { scored, saved, wide, post }
+
+/// One shootout kick, for the pitch view.
+class ShootoutKick {
+  const ShootoutKick({
+    required this.takerId,
+    required this.result,
+    required this.lane,
+    required this.diveLane,
+  });
+
+  /// The taker's player id; 0 when the caller named no takers.
+  final int takerId;
+  final KickResult result;
+
+  /// Where the ball went: 0-5, columns left/centre/right (lane % 3) over rows
+  /// low/high (lane ~/ 3). Wide and post kicks sit on the edge columns.
+  final int lane;
+
+  /// The keeper's dive, same grid. Equals [lane] exactly when it was saved.
+  final int diveLane;
+}
+
 /// The outcome of a level knockout tie taken to extra time and, if needed, a
 /// penalty shootout. [homeScore]/[awayScore] are the score after extra time;
 /// the shootout kick lists are empty when extra time settled it.
@@ -37,6 +61,8 @@ class KnockoutOutcome {
     required this.afterExtraTime,
     required this.homeKicks,
     required this.awayKicks,
+    this.homeDetail = const [],
+    this.awayDetail = const [],
   });
 
   /// Score after extra time (equal when it went to penalties).
@@ -51,6 +77,13 @@ class KnockoutOutcome {
   /// time produced a winner.
   final List<bool> homeKicks;
   final List<bool> awayKicks;
+
+  /// The same kicks, one [ShootoutKick] per entry of [homeKicks]/[awayKicks]
+  /// (taker, result, goal lane, keeper's dive). Empty when no shootout was
+  /// played. Never decides anything: `result == scored` exactly when the bool
+  /// is true.
+  final List<ShootoutKick> homeDetail;
+  final List<ShootoutKick> awayDetail;
 
   bool get wentToShootout => homeKicks.isNotEmpty || awayKicks.isNotEmpty;
 
@@ -566,6 +599,8 @@ abstract final class WorldCupFinals {
     double awayStrength = 1,
     List<double> homeTakerSkill = const [],
     List<double> awayTakerSkill = const [],
+    List<int> homeTakerIds = const [],
+    List<int> awayTakerIds = const [],
   }) {
     final total = homeStrength + awayStrength;
     final homeShare = total <= 0 ? 0.5 : homeStrength / total;
@@ -604,6 +639,8 @@ abstract final class WorldCupFinals {
       awayStrength: awayStrength,
       homeTakerSkill: homeTakerSkill,
       awayTakerSkill: awayTakerSkill,
+      homeTakerIds: homeTakerIds,
+      awayTakerIds: awayTakerIds,
     );
   }
 
@@ -618,6 +655,11 @@ abstract final class WorldCupFinals {
   /// the takers step up, cycled once sudden death runs past the named five.
   /// Empty lists leave the strength-only shootout, so a background tie between
   /// two AI sides is unchanged.
+  ///
+  /// [homeTakerIds]/[awayTakerIds] are the takers' player ids in that same
+  /// order (cycled the same way), used only for [KnockoutOutcome.homeDetail]; with
+  /// none given every kick's `takerId` is 0. The detail is drawn on its own
+  /// fork after the kicks, so the scored/missed sequence is untouched.
   static KnockoutOutcome decideShootout(
     int home,
     int away,
@@ -626,6 +668,8 @@ abstract final class WorldCupFinals {
     double awayStrength = 1,
     List<double> homeTakerSkill = const [],
     List<double> awayTakerSkill = const [],
+    List<int> homeTakerIds = const [],
+    List<int> awayTakerIds = const [],
   }) {
     final total = homeStrength + awayStrength;
     final homeShare = total <= 0 ? 0.5 : homeStrength / total;
@@ -668,13 +712,68 @@ abstract final class WorldCupFinals {
       );
     }
 
+    final detail = rng.fork(0x5407);
     return KnockoutOutcome(
       homeScore: home,
       awayScore: away,
       afterExtraTime: true,
       homeKicks: homeKicks,
       awayKicks: awayKicks,
+      homeDetail: _kickDetail(homeKicks, homeTakerIds, detail),
+      awayDetail: _kickDetail(awayKicks, awayTakerIds, detail),
     );
+  }
+
+  /// Taker, result, lane and dive for each kick, four small draws a kick on
+  /// [rng] (the detail fork). Goals beat a dive to the other side, apart from
+  /// about one in ten placed high in a corner and still reached; misses are
+  /// about 60% saved, 30% wide, 10% post.
+  static List<ShootoutKick> _kickDetail(
+    List<bool> kicks,
+    List<int> takerIds,
+    SeededRng rng,
+  ) {
+    int other(int lane, int draw) => (lane + 1 + draw % 5) % 6;
+    const edge = [0, 2, 3, 5];
+    final out = <ShootoutKick>[];
+    for (var i = 0; i < kicks.length; i++) {
+      final roll = rng.nextDouble();
+      final a = rng.nextInt(6);
+      final b = rng.nextInt(6);
+      final c = rng.nextDouble();
+      final taker = takerIds.isEmpty ? 0 : takerIds[i % takerIds.length];
+      if (kicks[i]) {
+        final cornerSave = (a == 3 || a == 5) && c < 0.3;
+        out.add(
+          ShootoutKick(
+            takerId: taker,
+            result: KickResult.scored,
+            lane: a,
+            diveLane: cornerSave ? a : other(a, b),
+          ),
+        );
+      } else if (roll < 0.6) {
+        out.add(
+          ShootoutKick(
+            takerId: taker,
+            result: KickResult.saved,
+            lane: a,
+            diveLane: a,
+          ),
+        );
+      } else {
+        final lane = edge[b % edge.length];
+        out.add(
+          ShootoutKick(
+            takerId: taker,
+            result: roll < 0.9 ? KickResult.wide : KickResult.post,
+            lane: lane,
+            diveLane: other(lane, a),
+          ),
+        );
+      }
+    }
+    return out;
   }
 
   /// The intercontinental play-off pool: each confederation's best entrants

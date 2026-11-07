@@ -15785,4 +15785,610 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get worldPackNotReady =>
       'Na této databázi už nelze začít kariéru. Opravte ji v Editoru, nebo vyberte jiný svět.';
+
+  @override
+  String pitchComShotGoal1(String player) {
+    return 'GÓL! $player se trefuje!';
+  }
+
+  @override
+  String pitchComShotGoal2(String player) {
+    return '$player pálí a je to tam! GÓL!';
+  }
+
+  @override
+  String pitchComShotGoal3(String player) {
+    return 'GÓL! $player zakončuje chladnokrevně.';
+  }
+
+  @override
+  String pitchComShotSaved1(String player, String keeper) {
+    return '$player střílí, ale $keeper chytá.';
+  }
+
+  @override
+  String pitchComShotSaved2(String player) {
+    return '$player to zkouší, brankář je ale na místě.';
+  }
+
+  @override
+  String pitchComShotSaved3(String player, String keeper) {
+    return '$player pálí, $keeper vyráží!';
+  }
+
+  @override
+  String pitchComShotWide1(String player) {
+    return '$player střílí vedle.';
+  }
+
+  @override
+  String pitchComShotWide2(String player) {
+    return '$player míří mimo bránu.';
+  }
+
+  @override
+  String pitchComShotWide3(String player) {
+    return '$player to posílá těsně kolem tyče.';
+  }
+
+  @override
+  String pitchComShotBlocked1(String player) {
+    return '$player střílí, ale do bloku.';
+  }
+
+  @override
+  String pitchComShotBlocked2(String player) {
+    return 'Zblokováno! $player se přes obranu nedostává.';
+  }
+
+  @override
+  String pitchComShotBlocked3(String player) {
+    return '$player pálí, obránce ale střelu zastavuje.';
+  }
+
+  @override
+  String pitchComShotWoodwork1(String player) {
+    return 'Tyč! $player nemá štěstí.';
+  }
+
+  @override
+  String pitchComShotWoodwork2(String player) {
+    return '$player trefuje tyč!';
+  }
+
+  @override
+  String pitchComShotWoodwork3(String player) {
+    return 'Břevno! $player má smůlu.';
+  }
+
+  @override
+  String pitchComHeaderGoal1(String player) {
+    return 'GÓL! $player hlavou skóruje!';
+  }
+
+  @override
+  String pitchComHeaderGoal2(String player) {
+    return '$player vyskakuje nejvýš a hlavičkou skóruje!';
+  }
+
+  @override
+  String pitchComHeaderGoal3(String player) {
+    return 'GÓL! $player se prosazuje tvrdou hlavičkou.';
+  }
+
+  @override
+  String pitchComHeaderSaved1(String player, String keeper) {
+    return '$player hlavičkuje, $keeper chytá.';
+  }
+
+  @override
+  String pitchComHeaderSaved2(String player) {
+    return '$player hlavičkuje, brankář ale drží.';
+  }
+
+  @override
+  String pitchComHeaderSaved3(String player, String keeper) {
+    return '$player to zkouší hlavou, $keeper vyráží.';
+  }
+
+  @override
+  String pitchComHeaderWide1(String player) {
+    return '$player hlavičkuje vedle.';
+  }
+
+  @override
+  String pitchComHeaderWide2(String player) {
+    return '$player hlavou mimo bránu.';
+  }
+
+  @override
+  String pitchComHeaderWide3(String player) {
+    return '$player posílá hlavičku nad.';
+  }
+
+  @override
+  String pitchComHeaderBlocked1(String player) {
+    return '$player hlavičkuje, ale do bloku.';
+  }
+
+  @override
+  String pitchComHeaderBlocked2(String player) {
+    return '$player míří hlavou, obrana ale blokuje.';
+  }
+
+  @override
+  String pitchComHeaderBlocked3(String player) {
+    return 'Zblokováno! $player se dostává k hlavičce, obránce ale stojí v cestě.';
+  }
+
+  @override
+  String pitchComHeaderWoodwork1(String player) {
+    return '$player hlavičkuje do břevna!';
+  }
+
+  @override
+  String pitchComHeaderWoodwork2(String player) {
+    return 'Tyč! $player hlavičkuje a míč se odráží zpět do pole.';
+  }
+
+  @override
+  String pitchComHeaderWoodwork3(String player) {
+    return '$player hlavou otřásá břevnem!';
+  }
+
+  @override
+  String pitchComSetPieceGoal1(String player) {
+    return 'GÓL! $player si na míč naskakuje!';
+  }
+
+  @override
+  String pitchComSetPieceGoal2(String player, String other) {
+    return 'GÓL! $other centruje a $player skóruje!';
+  }
+
+  @override
+  String pitchComSetPieceGoal3(String player) {
+    return 'Ze standardky skóruje $player! GÓL!';
+  }
+
+  @override
+  String pitchComSetPieceSaved1(String player, String keeper) {
+    return '$player se k míči dostává, $keeper ale chytá.';
+  }
+
+  @override
+  String pitchComSetPieceSaved2(String player) {
+    return '$player míč tečuje, brankář ho sbírá.';
+  }
+
+  @override
+  String pitchComSetPieceSaved3(String player, String keeper) {
+    return '$player zakončuje, $keeper je ale pozorný.';
+  }
+
+  @override
+  String pitchComSetPieceWide1(String player) {
+    return '$player se dostává k zakončení, ale mimo.';
+  }
+
+  @override
+  String pitchComSetPieceWide2(String player) {
+    return '$player si na centr naskakuje, ale mine.';
+  }
+
+  @override
+  String pitchComSetPieceWide3(String player) {
+    return '$player posílá míč nad branku.';
+  }
+
+  @override
+  String pitchComSetPieceBlocked1(String player) {
+    return '$player zakončuje, ale do bloku.';
+  }
+
+  @override
+  String pitchComSetPieceBlocked2(String player) {
+    return 'Skrumáž ve vápně! $player pálí, ale do obránce.';
+  }
+
+  @override
+  String pitchComSetPieceBlocked3(String player) {
+    return '$player se snaží míč dotlačit, obrana ale odvrací.';
+  }
+
+  @override
+  String pitchComSetPieceWoodwork1(String player) {
+    return '$player zakončuje a trefuje tyč!';
+  }
+
+  @override
+  String pitchComSetPieceWoodwork2(String player) {
+    return 'Břevno! $player málem skóruje ze standardky.';
+  }
+
+  @override
+  String pitchComSetPieceWoodwork3(String player) {
+    return 'Tyč! $player po centru gól jen o chlup nedává.';
+  }
+
+  @override
+  String pitchComDirectFreeKickGoal1(String player) {
+    return 'GÓL! $player obstřeluje zeď a skóruje!';
+  }
+
+  @override
+  String pitchComDirectFreeKickGoal2(String player) {
+    return 'Jaký přímý kop! $player trefuje šibenici!';
+  }
+
+  @override
+  String pitchComDirectFreeKickGoal3(String player) {
+    return 'GÓL! $player z přímého kopu překonává brankáře.';
+  }
+
+  @override
+  String pitchComDirectFreeKickSaved1(String player, String keeper) {
+    return '$player to zkouší přímo, $keeper chytá.';
+  }
+
+  @override
+  String pitchComDirectFreeKickSaved2(String player) {
+    return '$player pálí z přímého kopu, brankář vyráží.';
+  }
+
+  @override
+  String pitchComDirectFreeKickSaved3(String player, String keeper) {
+    return 'Skvělý zákrok! $player pálí, $keeper přímý kop zneškodňuje.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWide1(String player) {
+    return '$player posílá přímý kop nad.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWide2(String player) {
+    return '$player míří přímo, ale vedle.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWide3(String player) {
+    return '$player přímým kopem netrefuje bránu.';
+  }
+
+  @override
+  String pitchComDirectFreeKickBlocked1(String player) {
+    return '$player trefuje zeď.';
+  }
+
+  @override
+  String pitchComDirectFreeKickBlocked2(String player) {
+    return '$player pálí do zdi.';
+  }
+
+  @override
+  String pitchComDirectFreeKickBlocked3(String player) {
+    return 'Zeď drží, $player se přes ni nedostává.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWoodwork1(String player) {
+    return '$player z přímého kopu trefuje břevno!';
+  }
+
+  @override
+  String pitchComDirectFreeKickWoodwork2(String player) {
+    return 'Tyč! $player pálí z přímého kopu a míč se odráží.';
+  }
+
+  @override
+  String pitchComDirectFreeKickWoodwork3(String player) {
+    return 'Brankáře zachraňuje břevno, $player má smůlu.';
+  }
+
+  @override
+  String pitchComPenaltyGoal1(String player) {
+    return 'GÓL! $player posílá brankáře na druhou stranu.';
+  }
+
+  @override
+  String pitchComPenaltyGoal2(String player) {
+    return '$player se rozbíhá a proměňuje! GÓL!';
+  }
+
+  @override
+  String pitchComPenaltyGoal3(String player) {
+    return 'GÓL! $player penaltu bezpečně proměňuje.';
+  }
+
+  @override
+  String pitchComPenaltySaved1(String player, String keeper) {
+    return 'Zákrok! $player kope, $keeper penaltu likviduje!';
+  }
+
+  @override
+  String pitchComPenaltySaved2(String player) {
+    return '$player se rozbíhá... a brankář chytá!';
+  }
+
+  @override
+  String pitchComPenaltySaved3(String player, String keeper) {
+    return '$player kope a $keeper vystihuje směr!';
+  }
+
+  @override
+  String pitchComPenaltyMissed1(String player) {
+    return '$player penaltu neproměňuje!';
+  }
+
+  @override
+  String pitchComPenaltyMissed2(String player) {
+    return 'Vedle! $player posílá penaltu kolem tyče.';
+  }
+
+  @override
+  String pitchComPenaltyMissed3(String player) {
+    return 'Nad! $player penaltu přestřeluje.';
+  }
+
+  @override
+  String pitchComPenaltyWoodwork1(String player) {
+    return '$player z penalty trefuje tyč!';
+  }
+
+  @override
+  String pitchComPenaltyWoodwork2(String player) {
+    return 'Břevno! $player penaltu neproměňuje.';
+  }
+
+  @override
+  String pitchComPenaltyWoodwork3(String player) {
+    return 'Tyč! $player nevěří vlastním očím.';
+  }
+
+  @override
+  String pitchComPenaltyAwarded1(String player) {
+    return 'Penalta! $player padá ve vápně.';
+  }
+
+  @override
+  String pitchComPenaltyAwarded2(String player, String other) {
+    return 'Rozhodčí ukazuje na puntík! $other fauluje, $player leží ve vápně.';
+  }
+
+  @override
+  String pitchComPenaltyAwarded3(String player, String other) {
+    return 'Pokutový kop! $other ve vápně fauluje, $player padá.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedYellow1(String player, String other) {
+    return 'Penalta! $player padá ve vápně a $other vidí žlutou.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedYellow2(String player, String other) {
+    return 'Pokutový kop! $other dostává žlutou, faulovaný $player leží ve vápně.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedYellow3(String player, String other) {
+    return 'Penalta a karta! $other ve vápně podráží, $player padá.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedRed1(String player, String other) {
+    return 'Penalta a červená! $player padá ve vápně, $other jde ze hřiště.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedRed2(String player, String other) {
+    return 'Pokutový kop a $other letí ven! Faulovaný $player leží ve vápně.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedRed3(String player, String other) {
+    return 'Červená a penalta! $player jde sám na bránu a $other ho ve vápně sráží.';
+  }
+
+  @override
+  String pitchComCorner1(String player) {
+    return 'Roh. Zahrává $player.';
+  }
+
+  @override
+  String pitchComCorner2(String player) {
+    return '$player posílá rohový kop do vápna.';
+  }
+
+  @override
+  String pitchComCorner3(String player) {
+    return 'Rohový kop, k míči se staví $player.';
+  }
+
+  @override
+  String pitchComFreeKick1(String player) {
+    return 'Volný kop. Zahrává $player.';
+  }
+
+  @override
+  String pitchComFreeKick2(String player) {
+    return 'Standardka z nebezpečné pozice. K míči se staví $player.';
+  }
+
+  @override
+  String pitchComFreeKick3(String player) {
+    return '$player se chystá k zahrání standardky.';
+  }
+
+  @override
+  String pitchComLongThrow1(String player) {
+    return 'Dlouhý aut! $player hází až do vápna.';
+  }
+
+  @override
+  String pitchComLongThrow2(String player) {
+    return '$player vhazuje dlouhý aut do vápna.';
+  }
+
+  @override
+  String pitchComLongThrow3(String player) {
+    return 'Přichází dlouhý aut, hází $player.';
+  }
+
+  @override
+  String pitchComFoulYellow1(String player) {
+    return '$player vidí žlutou kartu.';
+  }
+
+  @override
+  String pitchComFoulYellow2(String player, String other) {
+    return '$player dostává žlutou za faul, $other zůstává ležet.';
+  }
+
+  @override
+  String pitchComFoulYellow3(String player, String other) {
+    return 'Pozdní zákrok, $other padá a $player vidí žlutou.';
+  }
+
+  @override
+  String pitchComFoulSecondYellow1(String player) {
+    return 'Druhá žlutá! $player jde ze hřiště.';
+  }
+
+  @override
+  String pitchComFoulSecondYellow2(String player) {
+    return '$player dostává druhou žlutou a končí.';
+  }
+
+  @override
+  String pitchComFoulSecondYellow3(String player) {
+    return '$player vidí druhou žlutou, a tedy červenou.';
+  }
+
+  @override
+  String pitchComFoulRed1(String player) {
+    return 'Červená karta! $player musí ze hřiště.';
+  }
+
+  @override
+  String pitchComFoulRed2(String player, String other) {
+    return 'Přímá červená! $player fauluje, $other zůstává ležet.';
+  }
+
+  @override
+  String pitchComFoulRed3(String player) {
+    return '$player vidí červenou a musí odejít.';
+  }
+
+  @override
+  String pitchComOffside1(String player) {
+    return 'Ofsajd, $player vybíhá příliš brzy.';
+  }
+
+  @override
+  String pitchComOffside2(String player) {
+    return 'Praporek jde nahoru, $player je v ofsajdu.';
+  }
+
+  @override
+  String pitchComOffside3(String player) {
+    return '$player v ofsajdu, útok končí.';
+  }
+
+  @override
+  String pitchComSub1(String player, String other) {
+    return 'Střídání: $player přichází, $other odchází.';
+  }
+
+  @override
+  String pitchComSub2(String player, String other) {
+    return '$other jde ze hřiště, nahrazuje ho $player.';
+  }
+
+  @override
+  String pitchComSub3(String player, String other) {
+    return 'Na hřiště jde $player, odchází $other.';
+  }
+
+  @override
+  String pitchComSubFill1(String player) {
+    return 'Na hřiště přichází $player.';
+  }
+
+  @override
+  String pitchComSubFill2(String player) {
+    return 'Střídání: nastupuje $player.';
+  }
+
+  @override
+  String pitchComSubFill3(String player) {
+    return '$player jde do hry.';
+  }
+
+  @override
+  String pitchComInjury1(String player) {
+    return '$player leží a potřebuje ošetření.';
+  }
+
+  @override
+  String pitchComInjury2(String player) {
+    return '$player kulhá, vypadá to na zranění.';
+  }
+
+  @override
+  String pitchComInjury3(String player) {
+    return 'Zdravotníci jsou na hřišti, $player nemůže pokračovat.';
+  }
+
+  @override
+  String pitchComGoalScore(String line, int home, int away) {
+    return '$line $home–$away';
+  }
+
+  @override
+  String get pitchComSomeone => 'Hráč';
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow1(String player, String other) {
+    return 'Penalta a druhá žlutá! $other jde ze hřiště, $player leží ve vápně.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow2(String player, String other) {
+    return 'Pokutový kop! $player padá a $other vidí druhou žlutou.';
+  }
+
+  @override
+  String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
+    return 'Penalta! $other podráží ve vápně, $player padá a je z toho druhá žlutá.';
+  }
+
+  @override
+  String get matchViewChooseTitle => 'Jak chcete zápas sledovat?';
+
+  @override
+  String get matchViewChooseHint =>
+      'Volba platí i pro další zápasy. Přepnout můžete kdykoli.';
+
+  @override
+  String get matchViewPitch => 'Hřiště';
+
+  @override
+  String get matchViewPitchBlurb => 'Hráči v akci na hřišti';
+
+  @override
+  String get matchViewTimeline => 'Průběh';
+
+  @override
+  String get matchViewTimelineBlurb => 'Zápas událost po události';
+
+  @override
+  String get matchViewSwitchToPitch => 'Sledovat na hřišti';
+
+  @override
+  String get matchViewSwitchToTimeline => 'Sledovat průběh';
+
+  @override
+  String get matchTabCommentary => 'KOMENTÁŘ';
 }

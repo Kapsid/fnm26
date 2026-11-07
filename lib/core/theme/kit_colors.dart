@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
+import 'package:fnm/domain/entities/nation.dart';
 
 /// Turns a nation's raw home-kit hexes into colours that actually work on the
 /// app's near-black canvas.
@@ -129,5 +132,71 @@ abstract final class KitColors {
     );
     if (!tooClose(lead, other)) return [lead, other];
     return [lead, shade(lead, -0.20)];
+  }
+}
+
+/// A shirt and its trim, as painted.
+typedef KitPair = ({Color primary, Color secondary});
+
+/// Decides what each side wears so the two can be told apart on the pitch.
+///
+/// The home side always wears its own colours. The away side keeps its own
+/// unless the two shirts clash (a CIE76 colour difference under [minDeltaE],
+/// or both near-white or both near-black, which the difference alone can
+/// under-rate). It then wears a change kit built from its secondary colour,
+/// and failing that the neutral [AppColors] change kit.
+abstract final class KitClash {
+  static const double minDeltaE = 25;
+
+  static ({KitPair home, KitPair away}) resolve(Nation home, Nation away) {
+    final h = _kit(home);
+    final a = _kit(away);
+    if (!clashes(h.primary, a.primary)) return (home: h, away: a);
+    final change = (primary: a.secondary, secondary: a.primary);
+    if (!clashes(h.primary, change.primary)) return (home: h, away: change);
+    final neutral = clashes(h.primary, AppColors.changeKitLight)
+        ? (
+            primary: AppColors.changeKitDark,
+            secondary: AppColors.changeKitLight,
+          )
+        : (
+            primary: AppColors.changeKitLight,
+            secondary: AppColors.changeKitDark,
+          );
+    return (home: h, away: neutral);
+  }
+
+  static KitPair _kit(Nation n) => (
+    primary: KitColors.parse(n.primaryColor),
+    secondary: KitColors.parse(n.secondaryColor),
+  );
+
+  /// Whether two shirt colours read as the same on a pitch.
+  static bool clashes(Color a, Color b) {
+    final la = _lab(a);
+    final lb = _lab(b);
+    final dl = la.$1 - lb.$1, da = la.$2 - lb.$2, db = la.$3 - lb.$3;
+    if (math.sqrt(dl * dl + da * da + db * db) < minDeltaE) return true;
+    return (_nearWhite(la) && _nearWhite(lb)) ||
+        (_nearBlack(la) && _nearBlack(lb));
+  }
+
+  static bool _nearWhite((double, double, double) l) =>
+      l.$1 > 82 && math.sqrt(l.$2 * l.$2 + l.$3 * l.$3) < 30;
+  static bool _nearBlack((double, double, double) l) => l.$1 < 22;
+
+  /// sRGB to CIE L*a*b* (D65).
+  static (double, double, double) _lab(Color c) {
+    double lin(double v) => v <= 0.04045
+        ? v / 12.92
+        : math.pow((v + 0.055) / 1.055, 2.4).toDouble();
+    final r = lin(c.r), g = lin(c.g), b = lin(c.b);
+    final x = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047;
+    final y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    final z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883;
+    double f(double t) =>
+        t > 0.008856 ? math.pow(t, 1 / 3).toDouble() : 7.787 * t + 16 / 116;
+    final fx = f(x), fy = f(y), fz = f(z);
+    return (116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz));
   }
 }

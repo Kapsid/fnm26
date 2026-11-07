@@ -32,6 +32,14 @@ class SeededRng {
   /// Restores a previously captured [state].
   set state(int value) => _state = value & _mask32;
 
+  /// A new, independent stream derived from this one's current state and
+  /// [salt]. Does NOT advance this stream, so forking leaves every later draw
+  /// here exactly as it was. The salt is spread by the golden-ratio multiplier
+  /// so a small salt still lands far from this stream's own sequence; keep it
+  /// below 2^21 so the product stays exact on the web.
+  SeededRng fork(int salt) =>
+      SeededRng(_state ^ ((salt * 0x9E3779B1) & _mask32));
+
   /// Returns the next double in the half-open range `[0, 1)`.
   double nextDouble() {
     _state = (_state + 0x6D2B79F5) & _mask32;

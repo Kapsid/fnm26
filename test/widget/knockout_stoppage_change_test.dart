@@ -24,6 +24,8 @@ import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 
 import '../helpers/fixtures.dart';
 import '../helpers/seeded_save.dart' show enL;
@@ -177,7 +179,11 @@ Future<_RecordingSeason> _pump(
   required MatchPreview preview,
   required int salt,
 }) async {
-  SharedPreferences.setMockInitialValues(<String, Object>{});
+  // Matches on the Timeline, as before the Pitch view: no Pitch or
+  // Timeline question before kick-off.
+  SharedPreferences.setMockInitialValues(<String, Object>{
+    kMatchViewModePrefsKey: 'timeline',
+  });
   tester.view
     ..physicalSize = const Size(400, 2600)
     ..devicePixelRatio = 1.0;

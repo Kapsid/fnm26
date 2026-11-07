@@ -7,6 +7,8 @@ import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 
 import 'match_skip_shootout_test.dart' show levelKnockout;
 
@@ -16,7 +18,11 @@ import 'match_skip_shootout_test.dart' show levelKnockout;
 /// the competition and the stage.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences.setMockInitialValues(<String, Object>{});
+  // Matches on the Timeline, as before the Pitch view: no Pitch or
+  // Timeline question before kick-off.
+  SharedPreferences.setMockInitialValues(<String, Object>{
+    kMatchViewModePrefsKey: 'timeline',
+  });
 
   Future<void> pump(WidgetTester tester) async {
     final c = ProviderContainer(

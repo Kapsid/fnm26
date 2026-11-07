@@ -1,0 +1,194 @@
+import 'dart:math' as math;
+import 'dart:ui';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/features/match/pitch/token_painter.dart';
+
+void main() {
+  test('a name label never lies on another player when there is room', () {
+    final r = math.Random(5);
+    var clear = 0;
+    for (var trial = 0; trial < 300; trial++) {
+      const me = Offset(200, 150);
+      const size = Size(60, 12);
+      final others = <(Offset, double)>[
+        (me, 9),
+        for (var i = 0; i < 6; i++)
+          (
+            Offset(150 + r.nextDouble() * 100, 120 + r.nextDouble() * 60),
+            7 + r.nextDouble() * 3,
+          ),
+      ];
+      final box = PlayerToken.labelRect(me, 9, size, others);
+      // The full token box: shirt and chevron, wherever it points.
+      final boxes = [
+        for (final o in others.skip(1)) PlayerToken.box(o.$1, o.$2),
+      ];
+      final covered = boxes.any((b) => b.overlaps(box));
+      // Covered only when every place it could go is covered too.
+      final somewhereClear = PlayerToken.labelCandidates(
+        me,
+        9,
+        size,
+      ).any((p) => !boxes.any((b) => b.overlaps(p)));
+      expect(!covered || !somewhereClear, isTrue);
+      if (!covered) clear++;
+    }
+    expect(clear, greaterThan(50));
+  });
+
+  test('with a man right under him, the label goes above', () {
+    const me = Offset(100, 100);
+    final box = PlayerToken.labelRect(me, 9, const Size(50, 12), [
+      (me, 9),
+      (const Offset(100, 122), 9),
+      (const Offset(100 + 30, 122), 9),
+      (const Offset(100 - 30, 122), 9),
+    ]);
+    expect(box.bottom, lessThan(me.dy));
+  });
+
+  test('a long name does not even clip the head of a man below', () {
+    // HARGREAVES over No. 10 in the white-kit mock: the old rule took a
+    // token as 2.2 r wide and 2 r high, so a label could still graze the
+    // shirt's shoulders and the chevron above them.
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(72, 11);
+    const below = Offset(214, 178);
+    const facingUp = -math.pi / 2;
+    final avoid = [PlayerToken.box(below, r, facingUp)];
+    final label = PlayerToken.labelRectAvoiding(me, r, size, avoid);
+    expect(label.overlaps(avoid.single), isFalse);
+    // The first place, right under him, would have clipped the chevron.
+    final first = PlayerToken.labelCandidates(me, r, size).first;
+    expect(first.overlaps(avoid.single), isTrue);
+  });
+
+  test('the full box takes in the chevron on the side he faces', () {
+    const c = Offset(50, 50);
+    final right = PlayerToken.box(c, 10, 0);
+    expect(right.right, greaterThan(c.dx + 15));
+    expect(right.left, closeTo(c.dx - 10.4, 0.01));
+    final any = PlayerToken.box(c, 10);
+    expect(any.contains(right.centerRight.translate(-0.1, 0)), isTrue);
+  });
+
+  test('a label by the edge of the frame stays inside it', () {
+    const frame = Rect.fromLTWH(0, 0, 390, 280);
+    final label = PlayerToken.labelRectAvoiding(
+      const Offset(6, 150),
+      9,
+      const Size(70, 11),
+      const [],
+      bounds: frame,
+    );
+    expect(label.left, greaterThanOrEqualTo(0));
+    expect(frame.contains(label.topLeft), isTrue);
+  });
+
+  test('in a crowd the label sits straight above him, never a row away', () {
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(60, 11);
+    final own = PlayerToken.box(me, r, -1.5708);
+    // Men all round him: no clear place next to him.
+    final avoid = [
+      for (final d in const [
+        Offset(0, 24),
+        Offset(0, -24),
+        Offset(26, 0),
+        Offset(-26, 0),
+        Offset(24, 22),
+        Offset(-24, 22),
+        Offset(24, -22),
+        Offset(-24, -22),
+      ])
+        PlayerToken.box(me + d, r),
+    ];
+    final place = PlayerToken.labelPlace(me, r, size, avoid, own: own);
+    expect(place.crowded, isTrue);
+    // Right above his own shirt, centred on him, within a token's height.
+    expect(place.rect.center.dx, closeTo(me.dx, 0.01));
+    expect(place.rect.bottom, lessThanOrEqualTo(own.top));
+    expect(own.top - place.rect.bottom, lessThan(2 * r));
+  });
+
+  test('every place tried touches his own token', () {
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(80, 11);
+    final own = PlayerToken.box(me, r, 0);
+    for (final p in PlayerToken.labelCandidates(me, r, size, own: own)) {
+      // Within one token height of his box, and over it sideways.
+      final gap = p.top > own.bottom ? p.top - own.bottom : own.top - p.bottom;
+      expect(gap, lessThan(2 * r));
+      expect(p.left < own.right && p.right > own.left, isTrue);
+    }
+  });
+
+  test('a crowded label never covers the keeper or the ball', () {
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(60, 11);
+    final own = PlayerToken.box(me, r, -1.5708);
+    final keeper = PlayerToken.box(const Offset(200, 124), r);
+    final ball = Rect.fromCircle(center: const Offset(206, 108), radius: 4);
+    final avoid = [
+      keeper,
+      for (final d in const [
+        Offset(0, 24),
+        Offset(26, 0),
+        Offset(-26, 0),
+        Offset(24, 22),
+        Offset(-24, 22),
+        Offset(24, -22),
+        Offset(-24, -22),
+      ])
+        PlayerToken.box(me + d, r),
+    ];
+    final place = PlayerToken.labelPlace(
+      me,
+      r,
+      size,
+      avoid,
+      own: own,
+      hard: [keeper, ball],
+    );
+    expect(place.crowded, isTrue);
+    expect(place.rect.overlaps(keeper), isFalse);
+    expect(place.rect.overlaps(ball), isFalse);
+    // Still his: straight above him.
+    expect(place.rect.center.dx, closeTo(me.dx, 0.01));
+  });
+
+  test('a label keeps its place while it stays clear', () {
+    const me = Offset(200, 150);
+    const r = 10.0;
+    const size = Size(60, 11);
+    // Last frame it went above him (place 1).
+    final kept = PlayerToken.labelPlace(me, r, size, const [], prefer: 1);
+    expect(kept.choice, 1);
+    // A man just brushing the place under him does not pull it back down
+    // while above stays clear...
+    final under = PlayerToken.labelCandidates(me, r, size).first;
+    final brushing = Rect.fromLTWH(under.right + 1, under.top, 10, 10);
+    final still = PlayerToken.labelPlace(
+      me,
+      r,
+      size,
+      [brushing],
+      prefer: 1,
+    );
+    expect(still.choice, 1);
+    // ...and from crowded, a place must be clear with room to spare.
+    final fromCrowd = PlayerToken.labelPlace(
+      me,
+      r,
+      size,
+      [brushing],
+      prefer: -1,
+    );
+    expect(fromCrowd.choice, isNot(0));
+  });
+}

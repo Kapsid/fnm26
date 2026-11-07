@@ -50,6 +50,51 @@ class _TopBar extends StatelessWidget {
   }
 }
 
+/// The key of the header's Pitch / Timeline switch.
+const Key matchViewSwitchKey = Key('match.viewSwitch');
+
+/// The header's Pitch / Timeline switch: an icon of where it goes. It sits
+/// in the scoreboard's top corner, beside the minute, so it takes no room
+/// from the occasion or the score.
+class MatchViewSwitch extends StatelessWidget {
+  const MatchViewSwitch({required this.to, required this.onTap, super.key});
+
+  final MatchViewMode to;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final pitch = to == MatchViewMode.pitch;
+    final label = pitch
+        ? l.matchViewSwitchToPitch
+        : l.matchViewSwitchToTimeline;
+    return Tooltip(
+      message: label,
+      child: Semantics(
+        button: true,
+        label: label,
+        excludeSemantics: true,
+        child: InkWell(
+          key: matchViewSwitchKey,
+          onTap: onTap,
+          borderRadius: AppRadii.baseAll,
+          child: SizedBox(
+            width: 40,
+            child: Icon(
+              pitch
+                  ? Icons.stadium_outlined
+                  : Icons.format_list_bulleted_rounded,
+              size: 18,
+              color: AppColors.primary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// The scoreboard at the top of the live match: the clock plate, and the two
 /// sides either side of the scoreline.
 ///

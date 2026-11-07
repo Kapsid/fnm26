@@ -23527,6 +23527,756 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That database can no longer start a career. Fix it in the Editor, or choose another world.'**
   String get worldPackNotReady;
+
+  /// Pitch view commentary line: an open-play shot that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {player} finds the net!'**
+  String pitchComShotGoal1(String player);
+
+  /// Pitch view commentary line: an open-play shot that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} fires it in! GOAL!'**
+  String pitchComShotGoal2(String player);
+
+  /// Pitch view commentary line: an open-play shot that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! A clinical finish from {player}.'**
+  String pitchComShotGoal3(String player);
+
+  /// Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} shoots, but {keeper} saves.'**
+  String pitchComShotSaved1(String player, String keeper);
+
+  /// Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} tries his luck, but the keeper is equal to it.'**
+  String pitchComShotSaved2(String player);
+
+  /// Pitch view commentary line: an open-play shot the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} lets fly, {keeper} pushes it away!'**
+  String pitchComShotSaved3(String player, String keeper);
+
+  /// Pitch view commentary line: an open-play shot that misses the target. {player} is the shooter. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} shoots wide.'**
+  String pitchComShotWide1(String player);
+
+  /// Pitch view commentary line: an open-play shot that misses the target. {player} is the shooter. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Off target from {player}.'**
+  String pitchComShotWide2(String player);
+
+  /// Pitch view commentary line: an open-play shot that misses the target. {player} is the shooter. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} drags it past the post.'**
+  String pitchComShotWide3(String player);
+
+  /// Pitch view commentary line: an open-play shot blocked by a defender. {player} is the shooter. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} shoots, but it\'s blocked.'**
+  String pitchComShotBlocked1(String player);
+
+  /// Pitch view commentary line: an open-play shot blocked by a defender. {player} is the shooter. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked! {player} can\'t find a way through.'**
+  String pitchComShotBlocked2(String player);
+
+  /// Pitch view commentary line: an open-play shot blocked by a defender. {player} is the shooter. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} lets fly, but a defender gets in the way.'**
+  String pitchComShotBlocked3(String player);
+
+  /// Pitch view commentary line: an open-play shot that hits the post or the bar. {player} is the shooter. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Off the post! So close from {player}.'**
+  String pitchComShotWoodwork1(String player);
+
+  /// Pitch view commentary line: an open-play shot that hits the post or the bar. {player} is the shooter. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} hits the woodwork!'**
+  String pitchComShotWoodwork2(String player);
+
+  /// Pitch view commentary line: an open-play shot that hits the post or the bar. {player} is the shooter. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Crossbar! {player} is denied by the frame.'**
+  String pitchComShotWoodwork3(String player);
+
+  /// Pitch view commentary line: an open-play header that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {player} heads it home!'**
+  String pitchComHeaderGoal1(String player);
+
+  /// Pitch view commentary line: an open-play header that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} rises highest and scores! GOAL!'**
+  String pitchComHeaderGoal2(String player);
+
+  /// Pitch view commentary line: an open-play header that scores. {player} is the scorer, {keeper} the beaten goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! A powerful header from {player}.'**
+  String pitchComHeaderGoal3(String player);
+
+  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} heads it, {keeper} saves.'**
+  String pitchComHeaderSaved1(String player, String keeper);
+
+  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'A header from {player}, but the keeper holds it.'**
+  String pitchComHeaderSaved2(String player);
+
+  /// Pitch view commentary line: an open-play header the goalkeeper saves. {player} is the player heading, {keeper} the goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{keeper} tips away the header from {player}.'**
+  String pitchComHeaderSaved3(String player, String keeper);
+
+  /// Pitch view commentary line: an open-play header that misses the target. {player} is the player heading. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} heads it wide.'**
+  String pitchComHeaderWide1(String player);
+
+  /// Pitch view commentary line: an open-play header that misses the target. {player} is the player heading. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'A header from {player}, but off target.'**
+  String pitchComHeaderWide2(String player);
+
+  /// Pitch view commentary line: an open-play header that misses the target. {player} is the player heading. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} can\'t keep the header down.'**
+  String pitchComHeaderWide3(String player);
+
+  /// Pitch view commentary line: an open-play header blocked by a defender. {player} is the player heading. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} heads it, but it\'s blocked.'**
+  String pitchComHeaderBlocked1(String player);
+
+  /// Pitch view commentary line: an open-play header blocked by a defender. {player} is the player heading. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} heads goalwards, but it\'s charged down.'**
+  String pitchComHeaderBlocked2(String player);
+
+  /// Pitch view commentary line: an open-play header blocked by a defender. {player} is the player heading. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked! {player} meets it, but a defender is there.'**
+  String pitchComHeaderBlocked3(String player);
+
+  /// Pitch view commentary line: an open-play header that hits the post or the bar. {player} is the player heading. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} heads against the bar!'**
+  String pitchComHeaderWoodwork1(String player);
+
+  /// Pitch view commentary line: an open-play header that hits the post or the bar. {player} is the player heading. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Off the post! The header from {player} comes back out.'**
+  String pitchComHeaderWoodwork2(String player);
+
+  /// Pitch view commentary line: an open-play header that hits the post or the bar. {player} is the player heading. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Woodwork! {player} rattles the frame with a header.'**
+  String pitchComHeaderWoodwork3(String player);
+
+  /// Pitch view commentary line: a goal from a corner, a crossed free kick or a long throw. {player} is the scorer, {other} the player who delivered the ball. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {player} gets on the end of it!'**
+  String pitchComSetPieceGoal1(String player);
+
+  /// Pitch view commentary line: a goal from a corner, a crossed free kick or a long throw. {player} is the scorer, {other} the player who delivered the ball. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {other} delivers and {player} scores!'**
+  String pitchComSetPieceGoal2(String player, String other);
+
+  /// Pitch view commentary line: a goal from a corner, a crossed free kick or a long throw. {player} is the scorer, {other} the player who delivered the ball. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'From the set piece, {player} scores! GOAL!'**
+  String pitchComSetPieceGoal3(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} meets it, but {keeper} saves.'**
+  String pitchComSetPieceSaved1(String player, String keeper);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} gets a touch, the keeper gathers.'**
+  String pitchComSetPieceSaved2(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that the goalkeeper saves. {player} is the shooter, {keeper} the goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} gets a shot away, {keeper} is alert.'**
+  String pitchComSetPieceSaved3(String player, String keeper);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that misses the target. {player} is the shooter. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} gets on the end of it, but wide.'**
+  String pitchComSetPieceWide1(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that misses the target. {player} is the shooter. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} meets the delivery, off target.'**
+  String pitchComSetPieceWide2(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that misses the target. {player} is the shooter. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Over the bar from {player}.'**
+  String pitchComSetPieceWide3(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that is blocked. {player} is the shooter. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} meets it, but it\'s blocked.'**
+  String pitchComSetPieceBlocked1(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that is blocked. {player} is the shooter. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Scramble in the box! {player} is blocked.'**
+  String pitchComSetPieceBlocked2(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that is blocked. {player} is the shooter. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} tries to force it in, but it\'s cleared.'**
+  String pitchComSetPieceBlocked3(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that hits the post or the bar. {player} is the shooter. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} meets it and hits the post!'**
+  String pitchComSetPieceWoodwork1(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that hits the post or the bar. {player} is the shooter. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Off the bar! {player} nearly scores from the set piece.'**
+  String pitchComSetPieceWoodwork2(String player);
+
+  /// Pitch view commentary line: a shot from a corner, a crossed free kick or a long throw that hits the post or the bar. {player} is the shooter. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Woodwork! {player} so close from the delivery.'**
+  String pitchComSetPieceWoodwork3(String player);
+
+  /// Pitch view commentary line: a direct free kick that scores. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {player} curls it over the wall!'**
+  String pitchComDirectFreeKickGoal1(String player);
+
+  /// Pitch view commentary line: a direct free kick that scores. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'What a free kick! {player} finds the top corner!'**
+  String pitchComDirectFreeKickGoal2(String player);
+
+  /// Pitch view commentary line: a direct free kick that scores. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {player} beats the keeper from the free kick.'**
+  String pitchComDirectFreeKickGoal3(String player);
+
+  /// Pitch view commentary line: a direct free kick the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} goes for goal, {keeper} saves.'**
+  String pitchComDirectFreeKickSaved1(String player, String keeper);
+
+  /// Pitch view commentary line: a direct free kick the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The free kick from {player} is pushed away.'**
+  String pitchComDirectFreeKickSaved2(String player);
+
+  /// Pitch view commentary line: a direct free kick the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Good save! {keeper} keeps out the free kick from {player}.'**
+  String pitchComDirectFreeKickSaved3(String player, String keeper);
+
+  /// Pitch view commentary line: a direct free kick that misses the target. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The free kick from {player} sails over.'**
+  String pitchComDirectFreeKickWide1(String player);
+
+  /// Pitch view commentary line: a direct free kick that misses the target. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} goes for goal, but it\'s wide.'**
+  String pitchComDirectFreeKickWide2(String player);
+
+  /// Pitch view commentary line: a direct free kick that misses the target. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} misses the target from the free kick.'**
+  String pitchComDirectFreeKickWide3(String player);
+
+  /// Pitch view commentary line: a direct free kick that hits the defensive wall. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The free kick from {player} hits the wall.'**
+  String pitchComDirectFreeKickBlocked1(String player);
+
+  /// Pitch view commentary line: a direct free kick that hits the defensive wall. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Into the wall from {player}.'**
+  String pitchComDirectFreeKickBlocked2(String player);
+
+  /// Pitch view commentary line: a direct free kick that hits the defensive wall. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The wall stands firm against {player}.'**
+  String pitchComDirectFreeKickBlocked3(String player);
+
+  /// Pitch view commentary line: a direct free kick that hits the post or the bar. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} hits the bar with the free kick!'**
+  String pitchComDirectFreeKickWoodwork1(String player);
+
+  /// Pitch view commentary line: a direct free kick that hits the post or the bar. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Off the post! {player} so close from the free kick.'**
+  String pitchComDirectFreeKickWoodwork2(String player);
+
+  /// Pitch view commentary line: a direct free kick that hits the post or the bar. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The frame saves the keeper! {player} so close.'**
+  String pitchComDirectFreeKickWoodwork3(String player);
+
+  /// Pitch view commentary line: a penalty that is scored. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {player} sends the keeper the wrong way.'**
+  String pitchComPenaltyGoal1(String player);
+
+  /// Pitch view commentary line: a penalty that is scored. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} steps up and scores! GOAL!'**
+  String pitchComPenaltyGoal2(String player);
+
+  /// Pitch view commentary line: a penalty that is scored. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'GOAL! {player} buries the penalty.'**
+  String pitchComPenaltyGoal3(String player);
+
+  /// Pitch view commentary line: a penalty the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved! {keeper} stops the penalty from {player}!'**
+  String pitchComPenaltySaved1(String player, String keeper);
+
+  /// Pitch view commentary line: a penalty the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} steps up... and it\'s saved!'**
+  String pitchComPenaltySaved2(String player);
+
+  /// Pitch view commentary line: a penalty the goalkeeper saves. {player} is the taker, {keeper} the goalkeeper. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{keeper} guesses right and denies {player}!'**
+  String pitchComPenaltySaved3(String player, String keeper);
+
+  /// Pitch view commentary line: a penalty that misses the target. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} misses the penalty!'**
+  String pitchComPenaltyMissed1(String player);
+
+  /// Pitch view commentary line: a penalty that misses the target. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Wide! {player} drags the penalty past the post.'**
+  String pitchComPenaltyMissed2(String player);
+
+  /// Pitch view commentary line: a penalty that misses the target. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Over the bar! {player} blazes the penalty high.'**
+  String pitchComPenaltyMissed3(String player);
+
+  /// Pitch view commentary line: a penalty that hits the post or the bar. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} hits the post from the spot!'**
+  String pitchComPenaltyWoodwork1(String player);
+
+  /// Pitch view commentary line: a penalty that hits the post or the bar. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Off the bar! The penalty from {player} stays out.'**
+  String pitchComPenaltyWoodwork2(String player);
+
+  /// Pitch view commentary line: a penalty that hits the post or the bar. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Woodwork! {player} can\'t believe it.'**
+  String pitchComPenaltyWoodwork3(String player);
+
+  /// Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty! {player} is brought down in the box.'**
+  String pitchComPenaltyAwarded1(String player);
+
+  /// Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The referee points to the spot! {other} fouls {player}.'**
+  String pitchComPenaltyAwarded2(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given for a foul in the box (no card). {player} is the player fouled, {other} the player who fouled him. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty given! {other} catches {player} in the area.'**
+  String pitchComPenaltyAwarded3(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler is booked. {player} is the player fouled, {other} the player booked. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty! {player} goes down and {other} is booked.'**
+  String pitchComPenaltyAwardedYellow1(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler is booked. {player} is the player fouled, {other} the player booked. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Spot kick, and a yellow for {other} after the foul on {player}.'**
+  String pitchComPenaltyAwardedYellow2(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler is booked. {player} is the player fouled, {other} the player booked. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty and a booking! {other} clips {player} in the box.'**
+  String pitchComPenaltyAwardedYellow3(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty and a red card! {player} goes down, {other} is off.'**
+  String pitchComPenaltyAwardedRed1(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Spot kick, and {other} is sent off for the foul on {player}!'**
+  String pitchComPenaltyAwardedRed2(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler is shown a straight red card. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Red card and a penalty! {other} stops {player} going through.'**
+  String pitchComPenaltyAwardedRed3(String player, String other);
+
+  /// Pitch view commentary line: a corner is taken. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Corner. {player} to take it.'**
+  String pitchComCorner1(String player);
+
+  /// Pitch view commentary line: a corner is taken. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} swings in the corner.'**
+  String pitchComCorner2(String player);
+
+  /// Pitch view commentary line: a corner is taken. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'A corner, and {player} stands over it.'**
+  String pitchComCorner3(String player);
+
+  /// Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Free kick. {player} to take it.'**
+  String pitchComFreeKick1(String player);
+
+  /// Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Free kick in a dangerous spot. {player} stands over it.'**
+  String pitchComFreeKick2(String player);
+
+  /// Pitch view commentary line: a free kick in a dangerous position (near the box or out wide) is about to be taken; it may be shot or crossed, so the wording stays neutral. {player} is the taker. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} lines up the free kick.'**
+  String pitchComFreeKick3(String player);
+
+  /// Pitch view commentary line: a long throw into the box. {player} is the thrower. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Long throw! {player} launches it into the box.'**
+  String pitchComLongThrow1(String player);
+
+  /// Pitch view commentary line: a long throw into the box. {player} is the thrower. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} with a long throw into the area.'**
+  String pitchComLongThrow2(String player);
+
+  /// Pitch view commentary line: a long throw into the box. {player} is the thrower. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Here comes the long throw from {player}.'**
+  String pitchComLongThrow3(String player);
+
+  /// Pitch view commentary line: a foul punished with a yellow card. {player} is the player booked, {other} the player fouled. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow card for {player}.'**
+  String pitchComFoulYellow1(String player);
+
+  /// Pitch view commentary line: a foul punished with a yellow card. {player} is the player booked, {other} the player fouled. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} goes into the book for a foul on {other}.'**
+  String pitchComFoulYellow2(String player, String other);
+
+  /// Pitch view commentary line: a foul punished with a yellow card. {player} is the player booked, {other} the player fouled. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'A late challenge on {other}, and {player} is booked.'**
+  String pitchComFoulYellow3(String player, String other);
+
+  /// Pitch view commentary line: a second yellow card, so the player is sent off. {player} is the player sent off. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Second yellow! {player} is off.'**
+  String pitchComFoulSecondYellow1(String player);
+
+  /// Pitch view commentary line: a second yellow card, so the player is sent off. {player} is the player sent off. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is booked again and sent off.'**
+  String pitchComFoulSecondYellow2(String player);
+
+  /// Pitch view commentary line: a second yellow card, so the player is sent off. {player} is the player sent off. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Another yellow for {player}, and that\'s red.'**
+  String pitchComFoulSecondYellow3(String player);
+
+  /// Pitch view commentary line: a straight red card for a foul. {player} is the player sent off, {other} the player fouled. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Red card! {player} is sent off.'**
+  String pitchComFoulRed1(String player);
+
+  /// Pitch view commentary line: a straight red card for a foul. {player} is the player sent off, {other} the player fouled. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Straight red for {player} after the foul on {other}!'**
+  String pitchComFoulRed2(String player, String other);
+
+  /// Pitch view commentary line: a straight red card for a foul. {player} is the player sent off, {other} the player fouled. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} sees red and has to go.'**
+  String pitchComFoulRed3(String player);
+
+  /// Pitch view commentary line: an offside that stops an attack. {player} is the player caught offside. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Offside. {player} went too early.'**
+  String pitchComOffside1(String player);
+
+  /// Pitch view commentary line: an offside that stops an attack. {player} is the player caught offside. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'The flag is up against {player}.'**
+  String pitchComOffside2(String player);
+
+  /// Pitch view commentary line: an offside that stops an attack. {player} is the player caught offside. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is caught offside.'**
+  String pitchComOffside3(String player);
+
+  /// Pitch view commentary line: a substitution. {player} comes on, {other} goes off. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitution: {player} on, {other} off.'**
+  String pitchComSub1(String player, String other);
+
+  /// Pitch view commentary line: a substitution. {player} comes on, {other} goes off. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{other} makes way for {player}.'**
+  String pitchComSub2(String player, String other);
+
+  /// Pitch view commentary line: a substitution. {player} comes on, {other} goes off. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} comes on for {other}.'**
+  String pitchComSub3(String player, String other);
+
+  /// Pitch view commentary line: a substitute comes on to fill a place already empty (the man he replaces left injured). {player} comes on. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} comes on.'**
+  String pitchComSubFill1(String player);
+
+  /// Pitch view commentary line: a substitute comes on to fill a place already empty (the man he replaces left injured). {player} comes on. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitution: {player} is on.'**
+  String pitchComSubFill2(String player);
+
+  /// Pitch view commentary line: a substitute comes on to fill a place already empty (the man he replaces left injured). {player} comes on. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} enters the fray.'**
+  String pitchComSubFill3(String player);
+
+  /// Pitch view commentary line: a player is injured and has to leave the pitch. {player} is the injured player. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'{player} is down and needs treatment.'**
+  String pitchComInjury1(String player);
+
+  /// Pitch view commentary line: a player is injured and has to leave the pitch. {player} is the injured player. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Concern here, {player} has picked up a knock.'**
+  String pitchComInjury2(String player);
+
+  /// Pitch view commentary line: a player is injured and has to leave the pitch. {player} is the injured player. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Injury worry for {player}.'**
+  String pitchComInjury3(String player);
+
+  /// Pitch view commentary: a goal line followed by the new score (home first). {line} is the goal line.
+  ///
+  /// In en, this message translates to:
+  /// **'{line} {home}–{away}'**
+  String pitchComGoalScore(String line, int home, int away);
+
+  /// Pitch view commentary: stands in for a player name the match does not know (should not happen). Capitalised: it may open the line.
+  ///
+  /// In en, this message translates to:
+  /// **'Player'**
+  String get pitchComSomeone;
+
+  /// Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 1 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty, and a second yellow! {other} is off for the foul on {player}.'**
+  String pitchComPenaltyAwardedSecondYellow1(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 2 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Spot kick! {player} goes down and {other} sees a second yellow.'**
+  String pitchComPenaltyAwardedSecondYellow2(String player, String other);
+
+  /// Pitch view commentary line: a penalty is given and the fouler, already booked, gets a second yellow and is sent off. {player} is the player fouled, {other} the player sent off. Variant 3 of 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty! {other} clips {player} and is booked again, so that\'s red.'**
+  String pitchComPenaltyAwardedSecondYellow3(String player, String other);
+
+  /// Live match, before kick-off: heading over the choice of how to watch (the Pitch view or the Timeline of events).
+  ///
+  /// In en, this message translates to:
+  /// **'How do you want to watch?'**
+  String get matchViewChooseTitle;
+
+  /// Live match, before kick-off: small line under the watch choice. The choice is remembered and can be changed during the match.
+  ///
+  /// In en, this message translates to:
+  /// **'Your choice is kept for the next match. You can switch at any time.'**
+  String get matchViewChooseHint;
+
+  /// Live match: name of the option that shows the match on a 2D pitch with moving players.
+  ///
+  /// In en, this message translates to:
+  /// **'Pitch'**
+  String get matchViewPitch;
+
+  /// Live match, before kick-off: one line under the Pitch option.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch the players on the pitch'**
+  String get matchViewPitchBlurb;
+
+  /// Live match: name of the option that shows the match as a list of events.
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline'**
+  String get matchViewTimeline;
+
+  /// Live match, before kick-off: one line under the Timeline option.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the match event by event'**
+  String get matchViewTimelineBlurb;
+
+  /// Live match header: label (tooltip, screen reader) of the button that switches to the Pitch view.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch on the pitch'**
+  String get matchViewSwitchToPitch;
+
+  /// Live match header: label (tooltip, screen reader) of the button that switches to the Timeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch the timeline'**
+  String get matchViewSwitchToTimeline;
+
+  /// Tablet live match, Pitch view: title of the right-column tab that lists every commentary line so far, newest first (the other tab is the line-ups).
+  ///
+  /// In en, this message translates to:
+  /// **'COMMENTARY'**
+  String get matchTabCommentary;
 }
 
 class _AppLocalizationsDelegate

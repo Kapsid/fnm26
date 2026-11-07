@@ -58,6 +58,8 @@ import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 
 import '../helpers/test_database.dart';
 
@@ -150,7 +152,11 @@ final Map<int, List<String>> _cities = {
 };
 
 AppDatabase storyDb() {
-  SharedPreferences.setMockInitialValues(<String, Object>{});
+  // Matches on the Timeline, as before the Pitch view: no Pitch or
+  // Timeline question before kick-off.
+  SharedPreferences.setMockInitialValues(<String, Object>{
+    kMatchViewModePrefsKey: 'timeline',
+  });
   return createTestDatabase();
 }
 
@@ -676,25 +682,27 @@ KnockoutOutcome? _knockoutFor(MatchPreview p, MatchResult r, int salt) {
   };
   final me = p.playerIsHome ? p.homeTeam : p.awayTeam;
   final opp = p.playerIsHome ? p.awayTeam : p.homeTeam;
-  final mySkill = PenaltyTakers.skillOrder(
-    PenaltyTakers.autoOrder(
-      me.xi,
-      unavailable: sentOff(me.nationId),
-      traitsByPlayer: me.traitsByPlayer,
-    ),
+  final myTakers = PenaltyTakers.autoOrder(
+    me.xi,
+    unavailable: sentOff(me.nationId),
     traitsByPlayer: me.traitsByPlayer,
   );
-  final oppSkill = PenaltyTakers.skillOrder(
-    PenaltyTakers.autoOrder(
-      sideOnPitchAtEnd(
-        team: opp,
-        bench: p.opponentBench,
-        plannedSubs: p.opponentSubs,
-        events: r.events,
-      ),
-      unavailable: sentOff(opp.nationId),
-      traitsByPlayer: opp.traitsByPlayer,
+  final mySkill = PenaltyTakers.skillOrder(
+    myTakers,
+    traitsByPlayer: me.traitsByPlayer,
+  );
+  final oppTakers = PenaltyTakers.autoOrder(
+    sideOnPitchAtEnd(
+      team: opp,
+      bench: p.opponentBench,
+      plannedSubs: p.opponentSubs,
+      events: r.events,
     ),
+    unavailable: sentOff(opp.nationId),
+    traitsByPlayer: opp.traitsByPlayer,
+  );
+  final oppSkill = PenaltyTakers.skillOrder(
+    oppTakers,
     traitsByPlayer: opp.traitsByPlayer,
   );
   return WorldCupFinals.decideShootout(
@@ -703,22 +711,29 @@ KnockoutOutcome? _knockoutFor(MatchPreview p, MatchResult r, int salt) {
     SeededRng.forFixture(p.saveSeed ^ salt, p.fixture.id ^ 0x7F),
     homeTakerSkill: p.playerIsHome ? mySkill : oppSkill,
     awayTakerSkill: p.playerIsHome ? oppSkill : mySkill,
+    homeTakerIds: [for (final t in p.playerIsHome ? myTakers : oppTakers) t.id],
+    awayTakerIds: [for (final t in p.playerIsHome ? oppTakers : myTakers) t.id],
   );
 }
 
 String describe(Fixture f, {int nationId = england}) {
   final home = f.homeNationId == nationId;
-  final opp = nationById[home ? f.awayNationId : f.homeNationId]!;
+  final oppId = home ? f.awayNationId : f.homeNationId;
+  // Nations added to new careers only (Belarus, from the dormant seed) are
+  // not in nations.json: name them by id rather than fail the story.
+  final opp = nationById[oppId];
+  final oppName = opp?.name ?? 'Nation $oppId';
+  final oppRanking = opp?.ranking ?? 0;
   final gf = home ? f.homeScore : f.awayScore;
   final ga = home ? f.awayScore : f.homeScore;
   final pens = f.wentToShootout
       ? ' pens ${home ? f.homePenalties : f.awayPenalties}-${home ? f.awayPenalties : f.homePenalties}'
       : '';
   final tags = [
-    if (gf! < ga! && opp.ranking > 30) 'UPSET',
-    if (rivalIds.contains(opp.id)) 'RIVAL',
+    if (gf! < ga! && oppRanking > 30) 'UPSET',
+    if (rivalIds.contains(oppId)) 'RIVAL',
   ];
   return '${f.date.toIso8601String().substring(0, 10)} ${f.round ?? 'FR'} '
-      '${home ? 'H' : 'A'} ${opp.name}(#${opp.ranking}) $gf-$ga$pens '
+      '${home ? 'H' : 'A'} $oppName(#$oppRanking) $gf-$ga$pens '
       '${tags.join(' ')}';
 }

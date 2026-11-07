@@ -34,6 +34,11 @@ import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/pitch/pitch_clock.dart';
+import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
+import 'package:fnm/features/match/pitch/pitch_match_view.dart';
+import 'package:fnm/features/match/pitch/pitch_playback.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
@@ -127,7 +132,30 @@ class MatchScreen extends ConsumerStatefulWidget {
   ConsumerState<MatchScreen> createState() => _MatchScreenState();
 }
 
-class _MatchScreenState extends ConsumerState<MatchScreen> {
+/// What a test reads off and does to the live match screen (its state
+/// implements it): `tester.state(find.byType(MatchScreen)) as
+/// MatchScreenProbe`.
+@visibleForTesting
+abstract interface class MatchScreenProbe {
+  PitchModeController get pitchMode;
+  MatchResult? get result;
+  MatchViewMode? get mode;
+
+  /// The events on show (the score, the Timeline and the stats read these).
+  List<MatchEvent> get shownEvents;
+
+  /// The header switch's action (a test at an interval, whose card covers
+  /// the header, uses it).
+  void switchMode();
+
+  /// Moves the Pitch clock to [t] as a jump (not play) and reads the match
+  /// off it.
+  void seekPitch(Duration t);
+}
+
+class _MatchScreenState extends ConsumerState<MatchScreen>
+    with TickerProviderStateMixin
+    implements MatchScreenProbe {
   static const _speeds = [1, 2, 3];
   static const _engine = MatchEngine();
 
@@ -255,6 +283,64 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// meaningful while the clock sits at 90.
   int _added = 0;
 
+  // --- Pitch mode ------------------------------------------------------------
+  // In Pitch mode the Pitch view's clock runs the match: the screen reads
+  // its minute and added minute off it (see [PitchPlayback.positionAt]) in
+  // place of the 360 ms tick, which the Timeline keeps. Every pause is the
+  // screen's as before; the clock is only ever told to play or stop.
+
+  /// How this match is being watched: null until the remembered choice has
+  /// loaded or, when there is none, until the manager picks one before
+  /// kick-off. A tablet watches the Timeline (its Pitch view is still to
+  /// come).
+  MatchViewMode? _mode;
+
+  bool get _onPitch => _mode == MatchViewMode.pitch;
+
+  /// The picture, its clock and its building (see [PitchModeController]).
+  late final PitchModeController _pc = PitchModeController(
+    vsync: this,
+    builder: ref.read(pitchPlaybackBuilderProvider),
+    inPlace: ref.read(pitchPlaybackInPlaceProvider),
+    onTick: _onPitchClock,
+  );
+  PitchPlayback? get _pitch => _pc.playback;
+  PitchClock? get _pitchClock => _pc.clock;
+  final _pitchViewKey = GlobalKey<PitchMatchViewState>();
+
+  /// Events of the minute on the clock that the picture has not shown yet:
+  /// a goal still on its way in. Hidden from the score, the Timeline and
+  /// the stats until it is. Switched to the Timeline part-way through a
+  /// minute, its next tick shows them before moving on.
+  Set<MatchEventKey> _held = const {};
+
+  /// The final whistle has gone (its sound, the shootout's taker sheet).
+  bool _whistled = false;
+
+  // --- MatchScreenProbe (tests) ---------------------------------------------
+
+  @override
+  PitchModeController get pitchMode => _pc;
+  @override
+  MatchResult? get result => _result;
+  @override
+  MatchViewMode? get mode => _mode;
+  @override
+  List<MatchEvent> get shownEvents => [
+    for (final e in _result?.events ?? const <MatchEvent>[])
+      if (_reached(e)) e,
+  ];
+  @override
+  void switchMode() => _chooseMode(
+    _livePreview!,
+    _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
+  );
+  @override
+  void seekPitch(Duration t) {
+    _pc.jump(t);
+    _onPitchClock();
+  }
+
   /// The extra-time / shootout outcome for a level knockout.
   KnockoutOutcome? _koOutcome;
 
@@ -281,8 +367,17 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// The playing clock has run out: past the last minute, and — while still in
   /// regulation (minute 90) — through all the stoppage minutes too. Extra time
   /// (minute > 90) carries no added time here, so it ends at [_fullTimeMinute].
-  bool get _clockDone =>
-      _minute >= _fullTimeMinute && (_minute > 90 || _added >= _stoppage);
+  ///
+  /// In Pitch mode the last minute is on the clock while it is still being
+  /// played, so there it is over once the Pitch clock has run out.
+  bool get _clockDone {
+    final reached =
+        _minute >= _fullTimeMinute &&
+        (_minute > 90 || _added >= _stoppage) &&
+        _held.isEmpty;
+    if (!reached || !_onPitch) return reached;
+    return _pitchClock?.finished ?? true;
+  }
 
   /// True once the match is truly over (regulation + stoppage, extra time, or
   /// the shootout reveal has finished) — drives the full-time UI.
@@ -290,9 +385,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
 
   /// Whether an event has been reached by the current clock position, honouring
   /// added time: a 90+3 event only shows once the stoppage clock passes +3.
+  ///
+  /// In the minute on the clock, an event the Pitch view has not shown yet
+  /// ([_held]) has not been reached.
   bool _reached(MatchEvent e) {
     if (e.minute != _minute) return e.minute < _minute;
-    return e.stoppage <= _added; // same minute — gate stoppage by +X revealed
+    // same minute — gate stoppage by +X revealed
+    return e.stoppage <= _added &&
+        (_held.isEmpty || !_held.contains(matchEventKey(e)));
   }
 
   @override
@@ -320,6 +420,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _timer?.cancel();
     _flashTimer?.cancel();
     _penTimer?.cancel();
+    _pc.dispose();
     super.dispose();
   }
 
@@ -392,10 +493,23 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// the fastest speed several goals can't blur past unnoticed.
   static const _goalPause = Duration(milliseconds: 1100);
 
+  /// Sets the match clock going again, or keeps it stopped, as things stand:
+  /// the 360 ms tick in Timeline mode, the Pitch clock in Pitch mode.
   void _restartTimer() {
     _timer?.cancel();
-    if (!_playing || _clockDone) return;
+    if (_onPitch) {
+      _syncPitchClock();
+      return;
+    }
+    // Never under a goal flash: its timer restarts play when it clears.
+    if (!_playing || _clockDone || _goalFlash != null) return;
     _scheduleTick(_tick);
+  }
+
+  /// Stops whichever clock is running.
+  void _stopClock() {
+    _timer?.cancel();
+    _pitchClock?.pause();
   }
 
   void _scheduleTick(Duration delay) {
@@ -404,7 +518,20 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       var scored = false;
       var tickStoppage = 0;
       setState(() {
-        if (_minute < 90) {
+        if (_held.isNotEmpty) {
+          // Back from the Pitch view part-way through a minute: the rest of
+          // that minute first, flashed as it would have been.
+          final held = _held;
+          _held = const {};
+          tickStoppage = _minute == 90 ? _added : 0;
+          for (final e in _result?.events ?? const <MatchEvent>[]) {
+            if (e.type == MatchEventType.goal &&
+                held.contains(matchEventKey(e))) {
+              _flashGoal(e);
+              scored = true;
+            }
+          }
+        } else if (_minute < 90) {
           // Normal play.
           _minute++;
           scored = _flashGoalAt(_minute, 0);
@@ -418,26 +545,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
           _minute++;
           scored = _flashGoalAt(_minute, 0);
         }
-        if (_clockDone) {
-          _playing = false;
-          MatchFeedback.fullTime(ref.read(soundHapticsEnabledProvider));
-          // A level knockout that reached the shootout: name the takers first,
-          // then reveal the kicks. The order is asked once, and only of a
-          // manager who is actually in the tie.
-          if (_isShootout) {
-            if (_penOrderAsked) {
-              _startShootout();
-            } else {
-              _penOrderAsked = true;
-              final preview = _livePreview;
-              if (preview != null) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted) _askPenaltyOrder(preview);
-                });
-              }
-            }
-          }
-        }
+        if (_clockDone) _whistleFullTime();
       });
       // An injury opens the squad (paused) with the hurt player flagged — play
       // resumes when the manager is done, whether or not they made a sub.
@@ -454,6 +562,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     });
   }
 
+  /// The final whistle: the clock stops for good, and a level knockout that
+  /// reached the shootout asks for the takers. Call inside `setState`.
+  void _whistleFullTime() {
+    _whistled = true;
+    _playing = false;
+    MatchFeedback.fullTime(ref.read(soundHapticsEnabledProvider));
+    // A level knockout that reached the shootout: name the takers first,
+    // then reveal the kicks. The order is asked once, and only of a
+    // manager who is actually in the tie.
+    if (_isShootout) {
+      if (_penOrderAsked) {
+        _startShootout();
+      } else {
+        _penOrderAsked = true;
+        final preview = _livePreview;
+        if (preview != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _askPenaltyOrder(preview);
+          });
+        }
+      }
+    }
+  }
+
   /// Flashes the "GOAL!" overlay for a goal scored on [minute] and pauses the
   /// clock until it clears; returns whether one was shown so the tick loop
   /// hands the resume to the flash timer.
@@ -465,23 +597,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       if (e.type == MatchEventType.goal &&
           e.minute == minute &&
           e.stoppage == stoppage) {
-        _goalFlash = e;
-        MatchFeedback.goal(ref.read(soundHapticsEnabledProvider));
-        _flashTimer?.cancel();
-        _flashTimer = Timer(_goalPause + const Duration(milliseconds: 700), () {
-          if (!mounted) return;
-          setState(() => _goalFlash = null);
-          // Resume only if nothing else has taken over the clock (half-time in
-          // the same minute, a manual pause, or full time) — those paths own
-          // their own resume. Injuries no longer pause play.
-          if (_playing && !_clockDone && !_atInterval) {
-            _restartTimer();
-          }
-        });
+        _flashGoal(e);
         return true;
       }
     }
     return false;
+  }
+
+  /// Flashes the "GOAL!" overlay for [e] and holds the clock until it
+  /// clears. Call inside `setState`.
+  void _flashGoal(MatchEvent e) {
+    _goalFlash = e;
+    MatchFeedback.goal(ref.read(soundHapticsEnabledProvider));
+    _pitchClock?.pause();
+    _flashTimer?.cancel();
+    _flashTimer = Timer(_goalPause + const Duration(milliseconds: 700), () {
+      if (!mounted) return;
+      setState(() => _goalFlash = null);
+      // Resume only if nothing else has taken over the clock (half-time in
+      // the same minute, a manual pause, or full time) — those paths own
+      // their own resume. Injuries no longer pause play.
+      if (_playing && !_clockDone && !_atInterval) {
+        _restartTimer();
+      }
+    });
   }
 
   /// The manager's own players sent off so far in this match.
@@ -511,32 +650,39 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// Pauses playback and raises the injury overlay if one of the manager's own
   /// players is hurt on [minute] (once each). Returns whether play paused.
   void _checkInjuryAt(int minute, int stoppage) {
-    if (_playerNationId == null) return;
     final events = _result?.events;
     if (events == null) return;
     for (final e in events) {
-      if (e.type == MatchEventType.injury &&
-          e.minute == minute &&
-          e.stoppage == stoppage &&
-          e.teamNationId == _playerNationId &&
-          !_injuriesPrompted.contains(e.playerId)) {
-        _injuriesPrompted.add(e.playerId);
-        _timer?.cancel();
-        // No pop-up: pause and open the squad straight away, with the hurt
-        // player flagged on the pitch so the manager sees exactly who to replace.
-        setState(() {
-          _injuredIds.add(e.playerId);
-          _playing = false;
-        });
-        final preview = _livePreview;
-        if (preview != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) _handleInjury(preview);
-          });
-        }
+      if (e.minute == minute && e.stoppage == stoppage && _checkInjury(e)) {
         return; // one injury at a time
       }
     }
+  }
+
+  /// Pauses and opens the squad if [e] is an injury to one of the manager's
+  /// own players not yet dealt with. Returns whether it did.
+  bool _checkInjury(MatchEvent e) {
+    if (_playerNationId == null) return false;
+    if (e.type != MatchEventType.injury ||
+        e.teamNationId != _playerNationId ||
+        _injuriesPrompted.contains(e.playerId)) {
+      return false;
+    }
+    _injuriesPrompted.add(e.playerId);
+    _stopClock();
+    // No pop-up: pause and open the squad straight away, with the hurt
+    // player flagged on the pitch so the manager sees exactly who to replace.
+    setState(() {
+      _injuredIds.add(e.playerId);
+      _playing = false;
+    });
+    final preview = _livePreview;
+    if (preview != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _handleInjury(preview);
+      });
+    }
+    return true;
   }
 
   /// Opens the squad on an injury (already paused) and resumes play once the
@@ -554,7 +700,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   bool _checkHalfTime() {
     if (_halfTimeTaken || _minute < 45 || _minute >= 90) return false;
     _halfTimeTaken = true;
-    _timer?.cancel();
+    _stopClock();
     setState(() {
       _playing = false;
       _atHalfTime = true;
@@ -581,7 +727,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // and the manager has the huddle.
     if (!_extraTimeStartTaken && _minute >= 90 && _added >= _stoppage) {
       _extraTimeStartTaken = true;
-      _timer?.cancel();
+      _stopClock();
       setState(() {
         _playing = false;
         _atExtraTimeStart = true;
@@ -590,7 +736,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     }
     if (!_extraTimeHalfTaken && _minute >= 105) {
       _extraTimeHalfTaken = true;
-      _timer?.cancel();
+      _stopClock();
       setState(() {
         _playing = false;
         _atExtraTimeHalf = true;
@@ -650,6 +796,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       _result = _resim(preview);
       _ensureKnockoutSetup(preview, _result!);
     });
+    _afterPitchChange(preview);
   }
 
   /// Dismisses the injury overlay and resumes play a man down (only offered
@@ -682,20 +829,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     // naming takers changes the kicks and never the extra time the manager
     // just watched.
     final composure = _shootoutComposure();
+    final myTakers = _penTakers(preview);
     final mySkill = [
       for (final s in PenaltyTakers.skillOrder(
-        _penTakers(preview),
+        myTakers,
         traitsByPlayer: _playerTeam(preview).traitsByPlayer,
       ))
         s * composure,
     ];
     final oppTeam = _opponentTeam(preview);
+    final oppTakers = PenaltyTakers.autoOrder(
+      _opponentOnPitch(preview, r),
+      unavailable: _sentOff(r, oppTeam.nationId),
+      traitsByPlayer: oppTeam.traitsByPlayer,
+    );
     final oppSkill = PenaltyTakers.skillOrder(
-      PenaltyTakers.autoOrder(
-        _opponentOnPitch(preview, r),
-        unavailable: _sentOff(r, oppTeam.nationId),
-        traitsByPlayer: oppTeam.traitsByPlayer,
-      ),
+      oppTakers,
       traitsByPlayer: oppTeam.traitsByPlayer,
     );
     return WorldCupFinals.decideShootout(
@@ -704,6 +853,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       SeededRng.forFixture(_seed(preview), preview.fixture.id ^ 0x7F),
       homeTakerSkill: preview.playerIsHome ? mySkill : oppSkill,
       awayTakerSkill: preview.playerIsHome ? oppSkill : mySkill,
+      homeTakerIds: [
+        for (final p in preview.playerIsHome ? myTakers : oppTakers) p.id,
+      ],
+      awayTakerIds: [
+        for (final p in preview.playerIsHome ? oppTakers : myTakers) p.id,
+      ],
     );
   }
 
@@ -821,8 +976,208 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     _restartTimer();
   }
 
+  // --- Pitch mode ------------------------------------------------------------
+
+  /// Builds the picture for the current result and speed (off the UI
+  /// thread), unless it is already on show. With [resume] (a re-sim or a new
+  /// speed while it is on show) it is told from where the old one stands and
+  /// the clock goes there: the same match position, never back; the old
+  /// picture stays, held, until it is in. Otherwise it is told from kick-off
+  /// and the clock goes to the end of the minute the screen is on.
+  Future<void> _rebuildPitch(
+    MatchPreview preview, {
+    bool resume = false,
+  }) async {
+    final r = _result;
+    if (r == null || _pc.isCurrentFor(r, _speedIdx)) return;
+    final stadium = _pc.stadium ??= pitchStadiumForPreview(
+      preview,
+      _seed(preview),
+      weather: ref.read(pitchForcedWeatherProvider),
+    );
+    if (_pc.names.isEmpty) _pc.names = pitchNamesForPreview(preview);
+    final clock = _pitchClock;
+    final fromHere =
+        resume &&
+        clock != null &&
+        clock.value > Duration.zero &&
+        !clock.finished &&
+        !_clockDone;
+    final built = _pc.build(
+      result: r,
+      lineups: matchLineupsFromPreview(preview, result: r, changes: _changes),
+      speedStep: _speedIdx,
+      seed: _seed(preview),
+      isFinal: stadium.dressing.isFinal,
+      resume: fromHere,
+      place: (pb) => _clockDone ? pb.pacer.total : pb.endOf(_minute, _added),
+    );
+    if (mounted) setState(() {});
+    final shown = await built;
+    if (!mounted) return;
+    // A failed build shows its error state in place of the spinner.
+    setState(() {});
+    if (!shown) return;
+    if (!_onPitch) return;
+    _syncPitchState(announce: true);
+    _restartTimer();
+  }
+
+  /// After the result or the speed changed: the Pitch view, when it is on
+  /// show, picks the new match up where it stands.
+  void _afterPitchChange(MatchPreview preview) {
+    if (!_onPitch || !mounted) return;
+    unawaited(_rebuildPitch(preview, resume: true));
+  }
+
+  /// Watches the match as [mode] from here on: the Pitch view's clock is
+  /// put on the minute the Timeline reached, or the Timeline picks up the
+  /// minute the Pitch view is in (with whatever of it is still to show).
+  void _applyMode(MatchPreview preview, MatchViewMode mode) {
+    if (_mode == mode || !mounted) return;
+    _stopClock();
+    setState(() => _mode = mode);
+    if (mode == MatchViewMode.pitch) {
+      final r = _result;
+      if (r != null && _pc.isCurrentFor(r, _speedIdx)) {
+        // The picture is still this match's. Part-way through a minute
+        // with something of it still to show (paused, then the Timeline
+        // and back without a tick): it is played out from where it stood.
+        if (_held.isEmpty) {
+          _pc.jump(
+            _clockDone ? _pitch!.pacer.total : _pitch!.endOf(_minute, _added),
+          );
+        }
+        _syncPitchState(announce: true);
+      } else {
+        unawaited(_rebuildPitch(preview));
+      }
+    } else if (_started && _held.isEmpty && !_atInterval) {
+      // The Pitch view hands over the minute it was in with all of it shown:
+      // that minute is over. Its whistle goes before the Timeline plays
+      // another (a talk at 46, 91 or 106 must not re-play a minute already
+      // watched), and so does full time.
+      if (_checkHalfTime() || _checkExtraTimeBreaks()) return;
+      if (_clockDone && !_whistled) {
+        setState(_whistleFullTime);
+        return;
+      }
+    }
+    if (_started) _restartTimer();
+  }
+
+  /// The manager's choice, before kick-off or from the header: watched that
+  /// way now, and remembered for the next match.
+  void _chooseMode(MatchPreview preview, MatchViewMode mode) {
+    unawaited(ref.read(matchViewModeProvider.notifier).choose(mode));
+    _applyMode(preview, mode);
+  }
+
+  /// Plays the Pitch clock when the match should be running, its picture is
+  /// in and the ground is baked, and holds it otherwise. A bake finishing
+  /// never starts a clock the manager stopped: [_playing] is his.
+  void _syncPitchClock() {
+    final c = _pitchClock;
+    if (c == null) return;
+    final ready = _pitchViewKey.currentState?.ready.value ?? false;
+    final go =
+        _onPitch &&
+        _started &&
+        _playing &&
+        ready &&
+        !_pc.building &&
+        _goalFlash == null &&
+        !_atInterval &&
+        !_clockDone;
+    if (go) {
+      c.play();
+    } else {
+      c.pause();
+    }
+  }
+
+  /// Every tick of the Pitch clock.
+  void _onPitchClock() {
+    if (!mounted || !_onPitch) return;
+    final pb = _pitch;
+    final clock = _pitchClock;
+    if (pb == null || clock == null || _pc.building) return;
+    // An interval stops play on its whistle, not a frame past it.
+    final extra = _fullTimeMinute > 90;
+    final whistle = PitchModeController.dueWhistle(clock.value, [
+      (pb.halfTime, _halfTimeTaken),
+      (extra ? pb.extraTimeStart : null, _extraTimeStartTaken),
+      (extra ? pb.extraTimeHalf : null, _extraTimeHalfTaken),
+    ]);
+    if (whistle != null) {
+      clock.pause();
+      _pc.jump(whistle - const Duration(microseconds: 1));
+    } else {
+      // So does a goal or an injury to one of his own, which pause play
+      // as they show: on its own minute, never a frame into the next, however
+      // long the frame.
+      final stop = _pc.dueStop(
+        clock.value,
+        (e) =>
+            !_reached(e) &&
+            (e.type == MatchEventType.goal ||
+                (e.type == MatchEventType.injury &&
+                    e.teamNationId == _playerNationId &&
+                    !_injuriesPrompted.contains(e.playerId))),
+      );
+      if (stop != null) _pc.jump(stop);
+    }
+    _pc.markRead();
+    _syncPitchState(announce: true);
+    if (whistle != null && !_checkHalfTime()) _checkExtraTimeBreaks();
+    if (clock.finished && !_whistled) setState(_whistleFullTime);
+  }
+
+  /// Reads the minute, the added minute and what is still to show off the
+  /// Pitch clock. With [announce], what has just come into view is played
+  /// as the Timeline plays it: a goal flashes, an injury to one of the
+  /// manager's own opens the squad.
+  void _syncPitchState({required bool announce}) {
+    if (_pitch == null || _pitchClock == null || _pc.building) return;
+    final events = _pitch!.result.events;
+    final before = announce
+        ? {
+            for (final e in events)
+              if (_reached(e)) matchEventKey(e),
+          }
+        : null;
+    final now = _pc.read(minute: _minute, added: _added, held: _held);
+    final changed =
+        now.minute != _minute ||
+        now.added != _added ||
+        now.held.length != _held.length ||
+        !now.held.every(_held.contains);
+    if (!changed) return;
+    final arrived = <MatchEvent>[];
+    setState(() {
+      _minute = now.minute;
+      _added = now.added;
+      _held = now.held;
+      if (before == null) return;
+      MatchEvent? goal;
+      for (final e in events) {
+        if (!_reached(e) || before.contains(matchEventKey(e))) continue;
+        if (e.type == MatchEventType.goal) goal = e;
+        arrived.add(e);
+      }
+      if (goal != null) _flashGoal(goal);
+    });
+    for (final e in arrived) {
+      if (_checkInjury(e)) break;
+    }
+  }
+
   void _cycleSpeed() {
     setState(() => _speedIdx = (_speedIdx + 1) % _speeds.length);
+    // The Pitch view paces the match for the speed: its picture is told
+    // again from where it stands, at the new pace.
+    final preview = _livePreview;
+    if (_onPitch && preview != null) _afterPitchChange(preview);
     // Remember the choice for the next match this session.
     ref.read(matchSpeedProvider.notifier).state = _speedIdx;
     // Remembered for the next time this career is opened, not just the next
@@ -848,11 +1203,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   /// kicks are revealing, a second tap lands the rest of them at once; the
   /// sheet has been offered, and nothing offers it again.
   void _skip() {
-    _timer?.cancel();
+    _stopClock();
+    final clock = _pitchClock;
+    if (clock != null) _pc.jump(clock.total);
     final askPreview = _isShootout && !_penOrderAsked ? _livePreview : null;
     setState(() {
       _minute = _fullTimeMinute;
       _added = _stoppage;
+      _held = const {};
+      _whistled = true;
       _playing = false;
       // A skip taken AT an interval must not leave its panel sitting over the
       // finished match: the whistle those breaks were waiting for has gone.
@@ -1206,6 +1565,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       );
       _result = _resim(preview);
     });
+    _afterPitchChange(preview);
     // The choice outlives the match: a taker named at 70 minutes is the taker
     // the next team sheet opens with, exactly as if it had been set before
     // kick-off. Fire and forget; nothing on this screen reads it back.
@@ -1247,6 +1607,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
         );
       _result = _resim(preview);
     });
+    _afterPitchChange(preview);
   }
 
   /// The manager's side as it stands on the pitch right now, with each man's
@@ -1290,6 +1651,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final tablet = useTabletLayout(context, ref);
+    // How this device watches matches: null while loading, or when the
+    // manager has never chosen (he is asked before kick-off).
+    final remembered = ref.watch(matchViewModeProvider);
     // A match is played from the teamsheet it kicked off with. Once the preview
     // has landed it is PINNED — the screen stops watching the provider — so the
     // world moving underneath can never repaint this match with another
@@ -1330,7 +1694,19 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             final r = _result!;
             _stoppage = r.stoppage;
             _ensureKnockoutSetup(preview, r);
-            if (!_started) {
+            // The tablet watches the Timeline for now; a phone the way the
+            // manager last chose, or, never having chosen, the way he picks
+            // before kick-off.
+            // Never having chosen, the manager is asked before kick-off, on
+            // a tablet as on a phone; the match waits for him.
+            final wanted = remembered.valueOrNull;
+            if (wanted != null && _mode == null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) _applyMode(preview, wanted);
+              });
+            }
+            final choosing = _mode == null && !remembered.isLoading;
+            if (!_started && _mode != null) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted && !_started) _begin();
               });
@@ -1350,7 +1726,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                 return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
               });
             final ft = _fullTime;
-            final inExtraTime = _minute > 90 && _minute < _fullTimeMinute;
+            // (The Pitch view plays the 120th while it is on the clock.)
+            final inExtraTime = _minute > 90 && !_clockDone;
             final inStoppage = _minute == 90 && _added > 0 && !ft;
             // While playing, the score is the running tally of shown goals,
             // extra time included; at full time it is the true recorded result
@@ -1368,13 +1745,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
             final awayScore = ft ? finalAway : liveAway;
             final knockout = _koOutcome;
             // Reveal the shootout as it plays out (or in full once decided).
-            final showingShootout = _isShootout && _minute >= _fullTimeMinute;
+            final showingShootout = _isShootout && _clockDone;
             final decidedByShootout = ft && (knockout?.wentToShootout ?? false);
 
             final topBar = _TopBar(
               occasion: MatchStage.label(l, preview.fixture),
             );
-            final scoreboard = MatchScoreboard(
+            final board = MatchScoreboard(
               homeCode: code(homeId),
               awayCode: code(awayId),
               homeName: name(homeId),
@@ -1414,6 +1791,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                   : null,
               wholeNames: tablet,
             );
+            // Pitch or Timeline, at any time: from the scoreboard's corner on
+            // a phone, from the stats panel's header on a tablet.
+            final Widget scoreboard = tablet || _mode == null
+                ? board
+                : Stack(
+                    children: [
+                      board,
+                      Positioned(
+                        top: AppSpacing.sm,
+                        right: AppSpacing.marginMobile + AppSpacing.xs,
+                        child: MatchViewSwitch(
+                          to: _onPitch
+                              ? MatchViewMode.timeline
+                              : MatchViewMode.pitch,
+                          onTap: () => _chooseMode(
+                            preview,
+                            _onPitch
+                                ? MatchViewMode.timeline
+                                : MatchViewMode.pitch,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
             // The two nations' own colours, pushed apart from each other when
             // the kits are too alike to tell which end of the bar is whose.
             final Widget? momentum = !ft && !showingShootout
@@ -1566,18 +1967,118 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                 ),
             ];
 
+            final pb = _pitch;
+            final clock = _pitchClock;
+            final stadium = _pc.stadium;
+            // While a picture told from kick-off is built (the first, or
+            // back from the Timeline after a change), the old one belongs to
+            // another moment: a spinner holds its place.
+            final picture =
+                pb != null &&
+                clock != null &&
+                stadium != null &&
+                !_pc.buildingFresh;
+            // The picture itself, or what stands in for it: the same on a
+            // phone and on a tablet.
+            final Widget pitchSurface = picture
+                ? PitchMatchView(
+                    key: _pitchViewKey,
+                    script: pb.script,
+                    stadium: stadium,
+                    clock: clock,
+                    names: _pc.names,
+                    onReady: _syncPitchClock,
+                  )
+                : _pc.failed
+                ? _PitchFailed(
+                    onTimeline: () =>
+                        _applyMode(preview, MatchViewMode.timeline),
+                  )
+                : const ColoredBox(
+                    color: AppColors.surfaceContainerLowest,
+                    child: Center(
+                      child: SizedBox.square(
+                        dimension: 22,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                  );
             if (tablet) {
+              final toMode = _onPitch
+                  ? MatchViewMode.timeline
+                  : MatchViewMode.pitch;
               return _MatchTabletLayout(
                 ft: ft,
                 topBar: topBar,
                 scoreboard: scoreboard,
                 momentum: momentum,
                 shootout: shootout,
-                timeline: timeline,
+                // Before kick-off, never having chosen: Pitch or Timeline,
+                // here where the Timeline goes.
+                timeline: choosing
+                    ? MatchViewChooser(
+                        onChoose: (m) => _chooseMode(preview, m),
+                      )
+                    : timeline,
                 stats: stats,
                 lineups: lineups,
                 pitch: _livePitch(preview, r),
+                viewSwitch: _mode == null
+                    ? null
+                    : MatchViewSwitch(
+                        to: toMode,
+                        onTap: () => _chooseMode(preview, toMode),
+                      ),
+                pitchView: _onPitch ? pitchSurface : null,
+                feed: _onPitch && picture
+                    ? PitchCommentaryFeed(
+                        clock: clock,
+                        countAt: pb.lineCountAt,
+                        linesAt: (t) =>
+                            pb.linesUpTo(l, t, _pc.names, _seed(preview)),
+                      )
+                    : null,
                 overlays: overlays,
+              );
+            }
+            if (_onPitch) {
+              // Pitch mode: the match on the pitch under the score, one line
+              // of commentary under it, then the momentum and the details.
+              return DefaultTabController(
+                length: 2,
+                // Stats (ratings, MOTM) is the first tab here already.
+                key: ValueKey(('pitch', ft)),
+                child: SafeArea(
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: [
+                          topBar,
+                          scoreboard,
+                          AspectRatio(
+                            aspectRatio: kPitchModeAspect,
+                            child: pitchSurface,
+                          ),
+                          if (picture)
+                            PitchCommentaryLine(
+                              clock: clock,
+                              lineAt: (t) =>
+                                  pb.lineAt(l, t, _pc.names, _seed(preview)),
+                            )
+                          else
+                            const SizedBox(height: kPitchCommentaryHeight),
+                          ?momentum,
+                          ?shootout,
+                          const MatchDetailTabs(withTimeline: false),
+                          Expanded(
+                            child: TabBarView(children: [stats, lineups]),
+                          ),
+                        ],
+                      ),
+                      ...overlays,
+                    ],
+                  ),
+                ),
               );
             }
             return DefaultTabController(
@@ -1598,7 +2099,18 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                         const MatchDetailTabs(),
                         Expanded(
                           child: TabBarView(
-                            children: [timeline, stats, lineups],
+                            children: [
+                              // Before kick-off, never having chosen: Pitch
+                              // or Timeline, here where the Timeline goes.
+                              if (choosing)
+                                MatchViewChooser(
+                                  onChoose: (m) => _chooseMode(preview, m),
+                                )
+                              else
+                                timeline,
+                              stats,
+                              lineups,
+                            ],
                           ),
                         ),
                       ],
@@ -1672,4 +2184,34 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       ),
     );
   }
+}
+
+/// The pitch could not be built for this match: an error mark and the way
+/// on to the Timeline, which plays the same match (never a spinner).
+class _PitchFailed extends StatelessWidget {
+  const _PitchFailed({required this.onTimeline});
+
+  final VoidCallback onTimeline;
+
+  static const Key failedKey = Key('match.pitchFailed');
+
+  @override
+  Widget build(BuildContext context) => ColoredBox(
+    key: failedKey,
+    color: AppColors.surfaceContainerLowest,
+    child: Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error_outline, color: AppColors.outline),
+          const SizedBox(height: 8),
+          TextButton(
+            key: const Key('match.pitchFailedTimeline'),
+            onPressed: onTimeline,
+            child: Text(AppLocalizations.of(context).matchViewTimeline),
+          ),
+        ],
+      ),
+    ),
+  );
 }

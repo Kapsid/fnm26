@@ -27,6 +27,11 @@ abstract final class AppColors {
   static const inverseOnSurface = Color(0xFF2F3133);
   static const inversePrimary = Color(0xFF565F69);
 
+  // Neutral change kit, worn by a side whose own colours clash with the
+  // opponent's (see KitClash): a soft off-white, or a near-black as backup.
+  static const changeKitLight = Color(0xFFE8EAED);
+  static const changeKitDark = Color(0xFF1A1C1E);
+
   // Outlines
   static const outline = Color(0xFF8E9195);
   static const outlineVariant = Color(0xFF44474B);
