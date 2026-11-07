@@ -997,10 +997,19 @@ class SeasonService {
   /// keeps it alive too while it is on show): left stale, a friendly gap the
   /// step has just opened would never be offered and the sim would run
   /// straight past it.
+  ///
+  /// The player-rating inputs ride along: the career-development starts and
+  /// the youth bonus. Both read the database imperatively and every squad,
+  /// tactics and stats screen holds them, so left alone they kept the value
+  /// from when the session began. The match preview read that, and the
+  /// score it recorded was not the one the same save replays after a
+  /// restart (Italy 2-1 Bulgaria in the career, 4-1 on the replay).
   void _invalidateTeamViews() {
     _ref
       ..invalidate(teamStatsProvider)
-      ..invalidate(friendliesPlanProvider);
+      ..invalidate(friendliesPlanProvider)
+      ..invalidate(careerDevBonusProvider)
+      ..invalidate(youthBonusByCycleProvider);
   }
 
   /// Persists the in-memory ranking points for [careerId], and republishes the

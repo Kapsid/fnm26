@@ -15,6 +15,7 @@ import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
 import 'package:fnm/features/federation/department_effect.dart';
 import 'package:fnm/features/federation/federation_service.dart';
+import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/federation/host_bid_providers.dart';
 import 'package:fnm/features/federation/host_bid_screen.dart';
 import 'package:fnm/features/federation/investment_editor.dart';
@@ -196,6 +197,8 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
     // moves on to its next step. Through the captured container, so it
     // happens even when this page is gone (the tablet top bar reads it).
     container
+      // The academy money lifts the youth bonus the match preview reads.
+      ..invalidate(youthBonusByCycleProvider(careerId))
       ..invalidate(financeViewProvider(careerId))
       // The balance has just changed, and the money indicator on the hub reads
       // it through here — a derived provider never notices a write it did not
@@ -244,6 +247,7 @@ class _BudgetSetupScreenState extends ConsumerState<BudgetSetupScreen> {
           HostBidding.grantDoneKind,
         );
     container
+      ..invalidate(youthBonusByCycleProvider(careerId))
       ..invalidate(hostBidGrantProvider(careerId))
       ..invalidate(_currentInvestmentProvider(careerId))
       ..invalidate(financeViewProvider(careerId))
