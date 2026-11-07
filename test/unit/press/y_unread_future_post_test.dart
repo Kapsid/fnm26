@@ -113,6 +113,28 @@ void main() {
     },
   );
 
+  // A save written before the fix holds a watermark in the future. Opening the
+  // save heals it, without the manager having to open Y first: the next
+  // friendly then lights the badge.
+  test('opening a save pulls a future watermark back to its day', () async {
+    final repo = container.read(careerRepositoryProvider);
+    await repo.setYReadAt(careerId, opener);
+    await container.read(careerServiceProvider).markPlayed(careerId);
+    expect((await repo.byId(careerId))!.yReadAt, friendly1);
+
+    feed = [...feed, _post('friendly2', friendly2)];
+    await repo.updateInGameDate(careerId, friendly2);
+    container
+      ..invalidate(yFeedProvider(careerId))
+      ..invalidate(yUnreadCountProvider(careerId));
+    expect(await container.read(yUnreadCountProvider(careerId).future), 1);
+
+    // A watermark already in the past is left alone.
+    await repo.setYReadAt(careerId, friendly1);
+    await container.read(careerServiceProvider).markPlayed(careerId);
+    expect((await repo.byId(careerId))!.yReadAt, friendly1);
+  });
+
   test('the tablet panel shows only posts already dated', () {
     final shown = yPostsUpTo(feed, friendly1);
     expect(shown.map((p) => p.key), ['friendly1']);

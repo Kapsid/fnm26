@@ -34,6 +34,7 @@ import 'package:fnm/features/hub/objective_providers.dart'
     show briefRulesV2Kind, briefRulesV3Kind, briefRulesV4Kind;
 import 'package:fnm/features/tournaments/city_providers.dart'
     show hostVenuesV2Kind;
+import 'package:fnm/features/y/y_providers.dart' show yUnreadCountProvider;
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
     show
         activeWorldSyncProvider,
@@ -901,7 +902,17 @@ class CareerService {
   /// played" and put the most recent one first — and starts the clock that
   /// counts how long it is played for.
   Future<void> markPlayed(int id) async {
-    await _ref.read(careerRepositoryProvider).touch(id, DateTime.now());
+    final repo = _ref.read(careerRepositoryProvider);
+    await repo.touch(id, DateTime.now());
+    // A save from before 1.1.0's Y fix may hold a read watermark in the future
+    // (stamped at a "tournament soon" post's date), which hid every friendly
+    // before it from the badge. It is pulled back to the career's day here,
+    // once, so it heals without the manager having to open Y first.
+    final career = await repo.byId(id);
+    if (career?.yReadAt case final at? when at.isAfter(career!.inGameDate)) {
+      await repo.setYReadAt(id, career.inGameDate);
+      _ref.invalidate(yUnreadCountProvider(id));
+    }
     _ref.read(playTimeTrackerProvider).start(id);
     _ref.invalidate(savesProvider);
   }
