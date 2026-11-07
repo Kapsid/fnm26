@@ -369,6 +369,14 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
       );
       _countryCities = packCountryCities(world, facts.cities);
       _trophies = trophies;
+      // The first check of the pack, off the UI isolate when it is big (and
+      // already made when the list of databases checked it): [issues] is
+      // the same check, run in the build that first asks for it, which
+      // froze opening a big pack.
+      final checked = await assessPackAsync(pack, world, facts: facts);
+      if (!mounted) return;
+      _issuesOf = pack;
+      _issues = checked.issues;
       // The picture rows are what a career and an export take, so a pack
       // whose list of them drifted (one stored before they were kept in
       // step) is put right from the rows.
