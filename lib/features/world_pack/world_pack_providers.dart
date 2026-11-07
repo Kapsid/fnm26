@@ -177,8 +177,12 @@ class ActiveWorldSync {
 
   Future<Iterable<int>> _storedWorldCareers() async {
     final db = _ref.read(appDatabaseProvider);
-    final rows = await db.select(db.careerWorlds).get();
-    return rows.map((r) => r.careerId);
+    // The ids alone: each row also holds its world's whole JSON (megabytes
+    // for a big one), and this runs at start-up, ahead of the first save
+    // opened.
+    final t = db.careerWorlds;
+    final rows = await (db.selectOnly(t)..addColumns([t.careerId])).get();
+    return rows.map((r) => r.read(t.careerId)!);
   }
 
   /// Lists the worlds again if the last [prime] failed and none is running.
