@@ -153,7 +153,8 @@ class _Header extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (NationIdentity.nicknameOf(v.nation.code) case final nick?)
+                if (NationIdentity.nicknameFor(v.nation, l.localeName)
+                    case final nick?)
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
