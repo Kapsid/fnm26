@@ -87,8 +87,8 @@ abstract final class NationIdentity {
       style: NationStyle.highPress,
       pedigree: 3,
     ),
-    'NOR': (nickname: 'Drillos', style: NationStyle.direct, pedigree: 3),
-    'AUT': (nickname: 'Wunderteam', style: NationStyle.highPress, pedigree: 3),
+    'NOR': (nickname: 'Løvene', style: NationStyle.direct, pedigree: 3),
+    'AUT': (nickname: 'Das Team', style: NationStyle.highPress, pedigree: 3),
     'SRB': (nickname: 'Beli Orlovi', style: NationStyle.physical, pedigree: 3),
     'POL': (
       nickname: 'Biało-czerwoni',
@@ -431,11 +431,6 @@ abstract final class NationIdentity {
     'PNG': (nickname: 'Kapuls', style: NationStyle.balanced, pedigree: 3),
     'SOL': (nickname: 'Bonitos', style: NationStyle.balanced, pedigree: 3),
     'TAH': (nickname: 'Toa Aito', style: NationStyle.balanced, pedigree: 3),
-    'TGA': (
-      nickname: 'Timi Fakafomua',
-      style: NationStyle.balanced,
-      pedigree: 3,
-    ),
     'VAN': (
       nickname: 'The Men in Black and Gold',
       style: NationStyle.balanced,
