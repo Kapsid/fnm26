@@ -467,9 +467,14 @@ abstract final class ProceduralChallenges {
         id: 'pc_majors',
         title: 'Silverware Collector',
         description:
-            'Win $majors major trophies (World Championship, continental or Nations Cup).',
+            'Win $majors major trophies (World Championship, continental, Nations Cup or Continental Clash).',
+        // Every shelf of the trophy cabinet: the Clash is a title there, and
+        // the manager's history counts it, so it counts here too.
         progressOf: (s) => (
-          s.worldCupTitles + s.continentalTitles + s.nationsCupTitles,
+          s.worldCupTitles +
+              s.continentalTitles +
+              s.nationsCupTitles +
+              s.clashTitles,
           majors,
         ),
         procedural: true,

@@ -842,7 +842,7 @@
   "chPcWc": "Champion en série",
   "chPcWcDesc": "Remportez {count} Championnats du monde dans cette partie.",
   "chPcMajors": "Collectionneur de trophées",
-  "chPcMajorsDesc": "Remportez {count} trophées majeurs (Championnat du monde, titre continental ou Coupe des Nations).",
+  "chPcMajorsDesc": "Remportez {count} trophées majeurs (Championnat du monde, titre continental, Coupe des Nations ou Choc des continents).",
   "chPcUnbeaten": "Mur de fer",
   "chPcUnbeatenDesc": "Restez invaincu {count} matchs officiels.",
   "chPcNations": "Bourlingueur",

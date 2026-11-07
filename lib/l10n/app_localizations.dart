@@ -5235,7 +5235,7 @@ abstract class AppLocalizations {
   /// No description provided for @chPcMajorsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Win {count} major trophies (World Championship, continental or Nations Cup).'**
+  /// **'Win {count} major trophies (World Championship, continental, Nations Cup or Continental Clash).'**
   String chPcMajorsDesc(int count);
 
   /// No description provided for @chPcUnbeaten.

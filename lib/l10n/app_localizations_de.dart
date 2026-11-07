@@ -3112,7 +3112,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Gewinnen Sie $count große Titel (WM, Kontinentalmeisterschaft oder Pokal der Nationen).';
+    return 'Gewinnen Sie $count große Titel (WM, Kontinentalmeisterschaft, Pokal der Nationen oder Kontinental-Duell).';
   }
 
   @override

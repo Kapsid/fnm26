@@ -2952,7 +2952,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return '주요 트로피(세계 선수권, 대륙 선수권, 네이션스컵) $count개를 차지하세요.';
+    return '주요 트로피(세계 선수권, 대륙 선수권, 네이션스컵, 대륙 대항전) $count개를 차지하세요.';
   }
 
   @override

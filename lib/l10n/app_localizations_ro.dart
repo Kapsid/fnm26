@@ -3097,11 +3097,11 @@ class AppLocalizationsRo extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          'Câștigați $count de trofee majore (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).',
+          'Câștigați $count de trofee majore (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).',
       few:
-          'Câștigați $count trofee majore (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).',
+          'Câștigați $count trofee majore (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).',
       one:
-          'Câștigați 1 trofeu major (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).',
+          'Câștigați 1 trofeu major (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).',
     );
     return '$_temp0';
   }

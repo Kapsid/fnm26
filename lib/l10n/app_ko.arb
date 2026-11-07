@@ -842,7 +842,7 @@
   "chPcWc": "연속 챔피언",
   "chPcWcDesc": "이 저장 파일에서 세계 선수권 {count}회 우승을 달성하세요.",
   "chPcMajors": "트로피 수집가",
-  "chPcMajorsDesc": "주요 트로피(세계 선수권, 대륙 선수권, 네이션스컵) {count}개를 차지하세요.",
+  "chPcMajorsDesc": "주요 트로피(세계 선수권, 대륙 선수권, 네이션스컵, 대륙 대항전) {count}개를 차지하세요.",
   "chPcUnbeaten": "철벽",
   "chPcUnbeatenDesc": "공식 경기 {count}경기 연속 무패를 기록하세요.",
   "chPcNations": "떠돌이 감독",

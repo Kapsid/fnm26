@@ -842,7 +842,7 @@
   "chPcWc": "Seryjny mistrz",
   "chPcWcDesc": "Wygraj Mistrzostwa Świata w tym zapisie. Liczba tytułów: {count}.",
   "chPcMajors": "Kolekcjoner trofeów",
-  "chPcMajorsDesc": "Zdobądź wielkie trofea (Mistrzostwa Świata, kontynentu lub Puchar Narodów). Liczba: {count}.",
+  "chPcMajorsDesc": "Zdobądź wielkie trofea (Mistrzostwa Świata, kontynentu, Puchar Narodów lub Starcie Kontynentów). Liczba: {count}.",
   "chPcUnbeaten": "Żelazny mur",
   "chPcUnbeatenDesc": "Zagraj bez porażki tyle meczów o punkty z rzędu: {count}.",
   "chPcNations": "Wędrowniczek",

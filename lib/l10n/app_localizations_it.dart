@@ -3093,7 +3093,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Vinci $count trofei importanti (Campionato del mondo, continentale o Coppa delle Nazioni).';
+    return 'Vinci $count trofei importanti (Campionato del mondo, continentale, Coppa delle Nazioni o Sfida continentale).';
   }
 
   @override

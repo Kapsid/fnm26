@@ -3105,7 +3105,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Спечели $count големи трофея (Световно първенство, континентално първенство или Nations Cup).';
+    return 'Спечели $count големи трофея (Световно първенство, континентално първенство, Nations Cup или Continental Clash).';
   }
 
   @override

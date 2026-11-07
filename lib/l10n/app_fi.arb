@@ -842,7 +842,7 @@
   "chPcWc": "Sarjamestari",
   "chPcWcDesc": "Voita {count} MM-kisaa tällä tallennuksella.",
   "chPcMajors": "Pokaalinkerääjä",
-  "chPcMajorsDesc": "Voita {count} suurta pokaalia (MM-kisat, mannerkisat tai Nations Cup).",
+  "chPcMajorsDesc": "Voita {count} suurta pokaalia (MM-kisat, mannerkisat, Nations Cup tai Continental Clash).",
   "chPcUnbeaten": "Rautamuuri",
   "chPcUnbeatenDesc": "Pelaa {count} kilpailullista ottelua ilman tappiota.",
   "chPcNations": "Kisälli",

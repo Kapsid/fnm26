@@ -3138,7 +3138,7 @@ class AppLocalizationsCs extends AppLocalizations {
       few: 'Vyhrajte $count velké trofeje',
       one: 'Vyhrajte 1 velkou trofej',
     );
-    return '$_temp0 (mistrovství světa, kontinentální nebo Pohár národů).';
+    return '$_temp0 (mistrovství světa, kontinentální, Pohár národů nebo Souboj kontinentů).';
   }
 
   @override

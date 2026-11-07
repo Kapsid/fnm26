@@ -4180,7 +4180,7 @@
     }
   },
   "chPcMajors": "Silverware Collector",
-  "chPcMajorsDesc": "Win {count} major trophies (World Championship, continental or Nations Cup).",
+  "chPcMajorsDesc": "Win {count} major trophies (World Championship, continental, Nations Cup or Continental Clash).",
   "@chPcMajorsDesc": {
     "placeholders": {
       "count": {

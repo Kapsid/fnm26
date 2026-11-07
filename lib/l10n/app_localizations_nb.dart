@@ -3069,7 +3069,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Vinn $count store troféer (Verdensmesterskapet, kontinentalt mesterskap eller Nations Cup).';
+    return 'Vinn $count store troféer (Verdensmesterskapet, kontinentalt mesterskap, Nations Cup eller Continental Clash).';
   }
 
   @override

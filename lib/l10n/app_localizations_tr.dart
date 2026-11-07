@@ -3028,7 +3028,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return '$count büyük kupa kazan (Dünya Şampiyonası, kıta şampiyonası veya Uluslar Kupası).';
+    return '$count büyük kupa kazan (Dünya Şampiyonası, kıta şampiyonası, Uluslar Kupası veya Kıtalar Arası Çarpışma).';
   }
 
   @override

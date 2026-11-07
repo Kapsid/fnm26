@@ -2997,7 +2997,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'คว้าถ้วยใหญ่ $count ใบ (ชิงแชมป์โลก ชิงแชมป์ทวีป หรือเนชันส์คัพ)';
+    return 'คว้าถ้วยใหญ่ $count ใบ (ชิงแชมป์โลก ชิงแชมป์ทวีป เนชันส์คัพ หรือคอนติเนนทัล แคลช)';
   }
 
   @override

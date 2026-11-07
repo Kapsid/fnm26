@@ -67,5 +67,9 @@ void main() {
     ))!;
     expect(h.trophyCounts.values.fold<int>(0, (a, b) => a + b), 2);
     expect(h.titles, 2);
+    // The specific counts read the same shelves: one continental title, no
+    // World Championship, and the Clash only in the total.
+    expect(h.continentalTitles, 1);
+    expect(h.worldCups, 0);
   });
 }

@@ -3061,7 +3061,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Виграй великі трофеї (чемпіонат світу, континентальний чемпіонат або Nations Cup): $count.';
+    return 'Виграй великі трофеї (чемпіонат світу, континентальний чемпіонат, Nations Cup або Continental Clash): $count.';
   }
 
   @override

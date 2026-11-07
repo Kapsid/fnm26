@@ -842,7 +842,7 @@
   "chPcWc": "Seriemästare",
   "chPcWcDesc": "Vinn {count} världsmästerskap i denna sparfil.",
   "chPcMajors": "Pokalsamlare",
-  "chPcMajorsDesc": "Vinn {count} stora troféer (Världsmästerskapet, kontinentalt mästerskap eller Nations Cup).",
+  "chPcMajorsDesc": "Vinn {count} stora troféer (Världsmästerskapet, kontinentalt mästerskap, Nations Cup eller Continental Clash).",
   "chPcUnbeaten": "Järnmuren",
   "chPcUnbeatenDesc": "Spela {count} tävlingsmatcher utan förlust.",
   "chPcNations": "Gesäll",

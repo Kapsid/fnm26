@@ -842,7 +842,7 @@
   "chPcWc": "Серійний чемпіон",
   "chPcWcDesc": "Виграй чемпіонат світу в цьому збереженні (разів: {count}).",
   "chPcMajors": "Колекціонер трофеїв",
-  "chPcMajorsDesc": "Виграй великі трофеї (чемпіонат світу, континентальний чемпіонат або Nations Cup): {count}.",
+  "chPcMajorsDesc": "Виграй великі трофеї (чемпіонат світу, континентальний чемпіонат, Nations Cup або Continental Clash): {count}.",
   "chPcUnbeaten": "Залізна стіна",
   "chPcUnbeatenDesc": "Проведи офіційні матчі без поразок: {count}.",
   "chPcNations": "Мандрівний тренер",

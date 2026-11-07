@@ -3122,7 +3122,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Osvoji velike trofeje: $count (Svjetsko prvenstvo, kontinentalno prvenstvo ili Nations Cup).';
+    return 'Osvoji velike trofeje: $count (Svjetsko prvenstvo, kontinentalno prvenstvo, Nations Cup ili Continental Clash).';
   }
 
   @override

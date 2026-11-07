@@ -3046,7 +3046,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Nyerj $count jelentős trófeát (világbajnokság, kontinentális bajnokság vagy Nations Cup).';
+    return 'Nyerj $count jelentős trófeát (világbajnokság, kontinentális bajnokság, Nations Cup vagy Continental Clash).';
   }
 
   @override

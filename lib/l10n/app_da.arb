@@ -842,7 +842,7 @@
   "chPcWc": "Seriemester",
   "chPcWcDesc": "Vind {count} verdensmesterskaber i dette spil.",
   "chPcMajors": "Pokalsamler",
-  "chPcMajorsDesc": "Vind {count} store titler (VM, kontinentalt mesterskab eller Nations Cup).",
+  "chPcMajorsDesc": "Vind {count} store titler (VM, kontinentalt mesterskab, Nations Cup eller Continental Clash).",
   "chPcUnbeaten": "Jernmur",
   "chPcUnbeatenDesc": "Gå {count} turneringskampe ubesejret.",
   "chPcNations": "Omrejsende",

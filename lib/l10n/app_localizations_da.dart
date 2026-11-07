@@ -3057,7 +3057,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Vind $count store titler (VM, kontinentalt mesterskab eller Nations Cup).';
+    return 'Vind $count store titler (VM, kontinentalt mesterskab, Nations Cup eller Continental Clash).';
   }
 
   @override

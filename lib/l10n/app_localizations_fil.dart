@@ -3051,7 +3051,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Manalo ng $count malalaking tropeo (Kampeonato ng Mundo, kontinental o Nations Cup).';
+    return 'Manalo ng $count malalaking tropeo (Kampeonato ng Mundo, kontinental, Nations Cup o Continental Clash).';
   }
 
   @override

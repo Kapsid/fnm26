@@ -842,7 +842,7 @@
   "chPcWc": "Serijski prvak",
   "chPcWcDesc": "Osvoji Svjetsko prvenstvo {count} puta u ovoj igri.",
   "chPcMajors": "Skupljač trofeja",
-  "chPcMajorsDesc": "Osvoji velike trofeje: {count} (Svjetsko prvenstvo, kontinentalno prvenstvo ili Nations Cup).",
+  "chPcMajorsDesc": "Osvoji velike trofeje: {count} (Svjetsko prvenstvo, kontinentalno prvenstvo, Nations Cup ili Continental Clash).",
   "chPcUnbeaten": "Željezni zid",
   "chPcUnbeatenDesc": "Ostani bez poraza u službenim utakmicama: {count} zaredom.",
   "chPcNations": "Putnik",

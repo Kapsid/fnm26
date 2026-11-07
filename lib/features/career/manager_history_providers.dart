@@ -4,6 +4,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/career_providers.dart';
 
@@ -123,11 +124,15 @@ class ManagerHistory {
   int get nationsLed =>
       {for (final c in cycles) c.nation?.id}.whereType<int>().length;
 
-  /// World Cups won across the whole career.
-  int get worldCups => cycles.where((c) => c.wonWorldCup).length;
+  /// World Championships won across the whole career: the cabinet's shelf,
+  /// the same honours [titles] adds up.
+  int get worldCups => trophyCounts['world'] ?? 0;
 
-  /// Continental titles won across the whole career.
-  int get continentalTitles => cycles.where((c) => c.wonContinental).length;
+  /// Continental championships won across the whole career: the cabinet's
+  /// six confederation shelves (not the Nations Cups, not the Clash).
+  int get continentalTitles => [
+    for (final c in Confederation.values) trophyCounts[c.name] ?? 0,
+  ].fold(0, (a, b) => a + b);
 
   /// The manager's win percentage (0–100), 0 with no matches.
   int get winRate => played == 0 ? 0 : (won * 100 / played).round();

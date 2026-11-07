@@ -3093,7 +3093,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Voita $count suurta pokaalia (MM-kisat, mannerkisat tai Nations Cup).';
+    return 'Voita $count suurta pokaalia (MM-kisat, mannerkisat, Nations Cup tai Continental Clash).';
   }
 
   @override

@@ -3072,7 +3072,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Vinn $count stora troféer (Världsmästerskapet, kontinentalt mästerskap eller Nations Cup).';
+    return 'Vinn $count stora troféer (Världsmästerskapet, kontinentalt mästerskap, Nations Cup eller Continental Clash).';
   }
 
   @override

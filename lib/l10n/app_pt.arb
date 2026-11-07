@@ -842,7 +842,7 @@
   "chPcWc": "Campeão em Série",
   "chPcWcDesc": "Vença {count} Campeonatos Mundiais nesta gravação.",
   "chPcMajors": "Colecionador de Troféus",
-  "chPcMajorsDesc": "Vença {count} grandes troféus (Campeonato Mundial, continental ou Copa das Nações).",
+  "chPcMajorsDesc": "Vença {count} grandes troféus (Campeonato Mundial, continental, Copa das Nações ou Duelo Continental).",
   "chPcUnbeaten": "Muralha de Ferro",
   "chPcUnbeatenDesc": "Fique {count} jogos oficiais sem perder.",
   "chPcNations": "Andarilho",

@@ -842,7 +842,7 @@
   "chPcWc": "Сериен шампион",
   "chPcWcDesc": "Спечели {count} Световни първенства в този запис.",
   "chPcMajors": "Колекционер на трофеи",
-  "chPcMajorsDesc": "Спечели {count} големи трофея (Световно първенство, континентално първенство или Nations Cup).",
+  "chPcMajorsDesc": "Спечели {count} големи трофея (Световно първенство, континентално първенство, Nations Cup или Continental Clash).",
   "chPcUnbeaten": "Желязна стена",
   "chPcUnbeatenDesc": "Изиграй {count} официални мача без загуба.",
   "chPcNations": "Пътешественик",

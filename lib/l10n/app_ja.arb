@@ -842,7 +842,7 @@
   "chPcWc": "連続王者",
   "chPcWcDesc": "このセーブで世界選手権を{count}回制する。",
   "chPcMajors": "トロフィーコレクター",
-  "chPcMajorsDesc": "主要タイトル（世界選手権、大陸選手権、ネーションズカップ）を{count}回獲得する。",
+  "chPcMajorsDesc": "主要タイトル（世界選手権、大陸選手権、ネーションズカップ、コンチネンタル・クラッシュ）を{count}回獲得する。",
   "chPcUnbeaten": "鉄の壁",
   "chPcUnbeatenDesc": "公式戦{count}試合無敗を達成する。",
   "chPcNations": "渡り鳥",

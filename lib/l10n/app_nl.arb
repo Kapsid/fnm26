@@ -842,7 +842,7 @@
   "chPcWc": "Seriekampioen",
   "chPcWcDesc": "Win {count} Wereldkampioenschappen in dit spel.",
   "chPcMajors": "Prijzenverzamelaar",
-  "chPcMajorsDesc": "Win {count} grote prijzen (Wereldkampioenschap, continentaal toernooi of Nations Cup).",
+  "chPcMajorsDesc": "Win {count} grote prijzen (Wereldkampioenschap, continentaal toernooi, Nations Cup of Continental Clash).",
   "chPcUnbeaten": "IJzeren muur",
   "chPcUnbeatenDesc": "Blijf {count} officiële wedstrijden ongeslagen.",
   "chPcNations": "Zwerver",

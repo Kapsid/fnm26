@@ -842,7 +842,7 @@
   "chPcWc": "Seriemester",
   "chPcWcDesc": "Vinn Verdensmesterskapet {count} ganger i denne lagringen.",
   "chPcMajors": "Pokalsamler",
-  "chPcMajorsDesc": "Vinn {count} store troféer (Verdensmesterskapet, kontinentalt mesterskap eller Nations Cup).",
+  "chPcMajorsDesc": "Vinn {count} store troféer (Verdensmesterskapet, kontinentalt mesterskap, Nations Cup eller Continental Clash).",
   "chPcUnbeaten": "Jernmuren",
   "chPcUnbeatenDesc": "Gå {count} offisielle kamper uten tap.",
   "chPcNations": "Omreisende",

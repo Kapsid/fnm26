@@ -3035,7 +3035,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Giành $count danh hiệu lớn (Giải vô địch thế giới, châu lục hoặc Nations Cup).';
+    return 'Giành $count danh hiệu lớn (Giải vô địch thế giới, châu lục, Nations Cup hoặc Continental Clash).';
   }
 
   @override

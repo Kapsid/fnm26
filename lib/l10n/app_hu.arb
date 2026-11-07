@@ -842,7 +842,7 @@
   "chPcWc": "Sorozatbajnok",
   "chPcWcDesc": "Nyerj {count} világbajnokságot ezen a mentésen.",
   "chPcMajors": "Trófeagyűjtő",
-  "chPcMajorsDesc": "Nyerj {count} jelentős trófeát (világbajnokság, kontinentális bajnokság vagy Nations Cup).",
+  "chPcMajorsDesc": "Nyerj {count} jelentős trófeát (világbajnokság, kontinentális bajnokság, Nations Cup vagy Continental Clash).",
   "chPcUnbeaten": "Vasfal",
   "chPcUnbeatenDesc": "Maradj veretlen {count} éles mérkőzésen át.",
   "chPcNations": "Vándorkapitány",

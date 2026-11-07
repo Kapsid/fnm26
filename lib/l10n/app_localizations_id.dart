@@ -3032,7 +3032,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return 'Raih $count trofi besar (Kejuaraan Dunia, kejuaraan benua, atau Piala Bangsa-Bangsa).';
+    return 'Raih $count trofi besar (Kejuaraan Dunia, kejuaraan benua, Piala Bangsa-Bangsa, atau Duel Benua).';
   }
 
   @override

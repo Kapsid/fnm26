@@ -3023,7 +3023,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return '$count बड़ी ट्रॉफ़ियाँ जीतें (विश्व चैंपियनशिप, महाद्वीपीय या नेशंस कप)।';
+    return '$count बड़ी ट्रॉफ़ियाँ जीतें (विश्व चैंपियनशिप, महाद्वीपीय, नेशंस कप या कॉन्टिनेंटल क्लैश)।';
   }
 
   @override

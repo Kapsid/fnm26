@@ -842,7 +842,7 @@
   "chPcWc": "Campeón en serie",
   "chPcWcDesc": "Gana {count} Campeonatos del Mundo en esta partida.",
   "chPcMajors": "Coleccionista de trofeos",
-  "chPcMajorsDesc": "Gana {count} grandes títulos (Campeonato del Mundo, continental o Copa de las Naciones).",
+  "chPcMajorsDesc": "Gana {count} grandes títulos (Campeonato del Mundo, continental, Copa de las Naciones o Duelo Continental).",
   "chPcUnbeaten": "Muro de hierro",
   "chPcUnbeatenDesc": "Encadena {count} partidos oficiales invicto.",
   "chPcNations": "Trotamundos",

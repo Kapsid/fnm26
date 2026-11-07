@@ -2946,7 +2946,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String chPcMajorsDesc(int count) {
-    return '主要タイトル（世界選手権、大陸選手権、ネーションズカップ）を$count回獲得する。';
+    return '主要タイトル（世界選手権、大陸選手権、ネーションズカップ、コンチネンタル・クラッシュ）を$count回獲得する。';
   }
 
   @override

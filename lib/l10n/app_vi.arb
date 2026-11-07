@@ -842,7 +842,7 @@
   "chPcWc": "Nhà vô địch liên hoàn",
   "chPcWcDesc": "Giành {count} chức vô địch Giải vô địch thế giới trong bản lưu này.",
   "chPcMajors": "Người sưu tầm cúp",
-  "chPcMajorsDesc": "Giành {count} danh hiệu lớn (Giải vô địch thế giới, châu lục hoặc Nations Cup).",
+  "chPcMajorsDesc": "Giành {count} danh hiệu lớn (Giải vô địch thế giới, châu lục, Nations Cup hoặc Continental Clash).",
   "chPcUnbeaten": "Bức tường sắt",
   "chPcUnbeatenDesc": "Bất bại {count} trận chính thức liên tiếp.",
   "chPcNations": "Người đi khắp nơi",

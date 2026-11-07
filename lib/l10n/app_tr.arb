@@ -842,7 +842,7 @@
   "chPcWc": "Seri Şampiyon",
   "chPcWcDesc": "Bu kayıtta {count} Dünya Şampiyonası kazan.",
   "chPcMajors": "Kupa Koleksiyoncusu",
-  "chPcMajorsDesc": "{count} büyük kupa kazan (Dünya Şampiyonası, kıta şampiyonası veya Uluslar Kupası).",
+  "chPcMajorsDesc": "{count} büyük kupa kazan (Dünya Şampiyonası, kıta şampiyonası, Uluslar Kupası veya Kıtalar Arası Çarpışma).",
   "chPcUnbeaten": "Demir Duvar",
   "chPcUnbeatenDesc": "{count} resmi maç yenilmeden git.",
   "chPcNations": "Gezgin Usta",

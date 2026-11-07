@@ -842,7 +842,7 @@
   "chPcWc": "Campion în serie",
   "chPcWcDesc": "{count, plural, one{Câștigați Campionatul Mondial o dată în această salvare.} other{Câștigați Campionatul Mondial de {count} ori în această salvare.}}",
   "chPcMajors": "Colecționar de trofee",
-  "chPcMajorsDesc": "{count, plural, one{Câștigați 1 trofeu major (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).} few{Câștigați {count} trofee majore (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).} other{Câștigați {count} de trofee majore (Campionatul Mondial, campionatul continental sau Cupa Națiunilor).}}",
+  "chPcMajorsDesc": "{count, plural, one{Câștigați 1 trofeu major (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).} few{Câștigați {count} trofee majore (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).} other{Câștigați {count} de trofee majore (Campionatul Mondial, campionatul continental, Cupa Națiunilor sau Duelul Continentelor).}}",
   "chPcUnbeaten": "Zid de fier",
   "chPcUnbeatenDesc": "{count, plural, one{Rămâneți neînvinși 1 meci oficial.} few{Rămâneți neînvinși {count} meciuri oficiale.} other{Rămâneți neînvinși {count} de meciuri oficiale.}}",
   "chPcNations": "Globetrotter",
