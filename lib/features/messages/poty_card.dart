@@ -188,9 +188,37 @@ PotyVote? decodePotyVote(String body) {
     );
     (f[0] == 'young' ? young : best).add(place);
   }
-  best.sort((a, b) => a.rank.compareTo(b.rank));
-  young.sort((a, b) => a.rank.compareTo(b.rank));
-  return (best: best, young: young);
+  // A vote filed before 1.1.0's fix could fill a short ballot with a man who
+  // had not played all year (0 caps, 0 goals, a 0.00 mark). He is dropped
+  // here, and the places behind him close up.
+  List<PotyPlace> played(List<PotyPlace> places) {
+    final kept = places.where((p) => p.apps > 0).toList()
+      ..sort((a, b) => a.rank.compareTo(b.rank));
+    return [
+      for (final (i, p) in kept.indexed)
+        (
+          rank: i + 1,
+          playerId: p.playerId,
+          nationId: p.nationId,
+          own: p.own,
+          name: p.name,
+          nationCode: p.nationCode,
+          nationName: p.nationName,
+          age: p.age,
+          overall: p.overall,
+          position: p.position,
+          apps: p.apps,
+          goals: p.goals,
+          assists: p.assists,
+          cleanSheets: p.cleanSheets,
+          meanRating: p.meanRating,
+          motms: p.motms,
+          score: p.score,
+        ),
+    ];
+  }
+
+  return (best: played(best), young: played(young));
 }
 
 /// The two winners' cards a vote reduces to, for the inbox popup.
