@@ -53,6 +53,9 @@ class _TopBar extends StatelessWidget {
 /// The key of the header's Pitch / Timeline switch.
 const Key matchViewSwitchKey = Key('match.viewSwitch');
 
+/// The key of the switch's visible silver face (inside its tap target).
+const Key matchViewSwitchFaceKey = Key('match.viewSwitch.face');
+
 /// The header's Pitch / Timeline switch: an icon of where it goes. It sits
 /// in the scoreboard's top corner, beside the minute, so it takes no room
 /// from the occasion or the score.
@@ -62,6 +65,9 @@ class MatchViewSwitch extends StatelessWidget {
   final MatchViewMode to;
   final VoidCallback? onTap;
 
+  /// The tap target, each way: the silver face is smaller, padded out to it.
+  static const double target = 40;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -69,24 +75,45 @@ class MatchViewSwitch extends StatelessWidget {
     final label = pitch
         ? l.matchViewSwitchToPitch
         : l.matchViewSwitchToTimeline;
+    // A small button in the primary button's brushed silver (its gradient
+    // and metal stroke), with the dark icon of where it goes.
     return Tooltip(
       message: label,
       child: Semantics(
         button: true,
         label: label,
         excludeSemantics: true,
-        child: InkWell(
+        child: GestureDetector(
           key: matchViewSwitchKey,
+          behavior: HitTestBehavior.opaque,
           onTap: onTap,
-          borderRadius: AppRadii.baseAll,
-          child: SizedBox(
-            width: 40,
-            child: Icon(
-              pitch
-                  ? Icons.stadium_outlined
-                  : Icons.format_list_bulleted_rounded,
-              size: 18,
-              color: AppColors.primary,
+          child: SizedBox.square(
+            dimension: target,
+            child: Center(
+              child: Container(
+                key: matchViewSwitchFaceKey,
+                width: 30,
+                height: 22,
+                decoration: BoxDecoration(
+                  borderRadius: AppRadii.smAll,
+                  border: Border.all(color: AppColors.primaryFixed),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      AppColors.primaryFixed,
+                      AppColors.primaryContainer,
+                    ],
+                  ),
+                ),
+                child: Icon(
+                  pitch
+                      ? Icons.stadium_outlined
+                      : Icons.format_list_bulleted_rounded,
+                  size: 15,
+                  color: AppColors.onPrimary,
+                ),
+              ),
             ),
           ),
         ),
@@ -115,6 +142,12 @@ class MatchScoreboard extends StatelessWidget {
     required this.live,
     this.halfTime,
     this.wholeNames = false,
+    this.compact = false,
+    this.viewSwitch,
+    this.homeColor,
+    this.awayColor,
+    this.goal,
+    this.goalForHome = false,
   });
 
   final String homeCode;
@@ -136,151 +169,196 @@ class MatchScoreboard extends StatelessWidget {
   /// scaled down before it is ever cut or swapped for its code.
   final bool wholeNames;
 
+  /// The phone's Pitch mode: a broadcast score bug, one bar about 30% of
+  /// the full board's height, the pitch below given the room.
+  final bool compact;
+
+  /// Each side's kit colour, on the [compact] bug's chips (null: silver).
+  final Color? homeColor;
+  final Color? awayColor;
+
+  /// The goal being celebrated (the screen's goal flash), for the [compact]
+  /// bug's banner; null when none is.
+  final MatchEvent? goal;
+
+  /// Whether [goal] is the home side's.
+  final bool goalForHome;
+
+  /// The Pitch / Timeline switch, in the card's top corner beside the
+  /// clock (null: none). Not on the [compact] stripe: the screen puts it
+  /// in the pitch's corner.
+  final Widget? viewSwitch;
+
   @override
   Widget build(BuildContext context) {
     final sideFlex = wholeNames ? 3 : 1;
     final scoreFlex = wholeNames ? 2 : 1;
+    final viewSwitch = this.viewSwitch;
+    if (compact) {
+      return _ScoreBug(
+        homeCode: homeCode,
+        awayCode: awayCode,
+        homeScore: homeScore,
+        awayScore: awayScore,
+        clock: clock,
+        live: live,
+        homeColor: homeColor,
+        awayColor: awayColor,
+        goal: goal,
+        goalForHome: goalForHome,
+      );
+    }
+    final card = AppCard(
+      child: Column(
+        children: [
+          // A clean broadcast-style clock chip — a dark rounded plate with a
+          // monospace, tabular time, as on a real match graphic (no red dot).
+          Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: 4,
+              ),
+              decoration: const BoxDecoration(
+                color: AppColors.surfaceContainerHighest,
+                borderRadius: AppRadii.baseAll,
+              ),
+              // Monospace tabular figures give the even, broadcast look with
+              // no letter-spacing — the latter adds a trailing gap after the
+              // last digit that pushes the time off-centre in the plate.
+              //
+              // Which is why the spacing is zeroed HERE: labelMedium carries
+              // 0.7 of its own, and copyWith keeps whatever it is not told to
+              // replace, so the plate the comment above describes was still
+              // tracked, and every label in it ("PO PRODLOUŽENÍ" as much as
+              // "45") sat a hair left of the centre line. One line, capped
+              // and scaled down, so a long label can never wrap the plate
+              // into two lines of a different width either.
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  clock,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: AppTypography.labelMedium.copyWith(
+                    fontFamily: AppFonts.mono,
+                    letterSpacing: 0,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                    color: live
+                        ? AppColors.onSurface
+                        : AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // Centred, and the scoreline takes a third like the two sides.
+            //
+            // It was Flexible, which is LOOSE: it took less than its third
+            // and the leftover collected at the END of the row, so the whole
+            // block sat left and the right of the card carried a bigger gap
+            // than the left. Measured off a screenshot at 393pt: 100 points
+            // of gap on the left against 145 on the right, with the score
+            // about 20 left of the card's centre. Expanded is tight, so the
+            // row is exactly filled and each third is centred in itself;
+            // the centre alignment is belt and braces for any rounding.
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: sideFlex,
+                child: _Side(
+                  code: homeCode,
+                  label: homeName,
+                  other: wholeNames ? awayName : null,
+                ),
+              ),
+              // The scoreline still shrinks rather than shove the two sides
+              // out of the card: a long name next to a 4:3 used to run the
+              // row off the edge of a narrow screen.
+              //
+              // And it is three pieces, not one string, so the COLON is what
+              // sits on the centre line. "1 : 0" set as one run was centred
+              // as a block, and the sans digits are not one width: a narrow
+              // 1 against a round 0 put the colon a few points off the middle
+              // of the card, a different few for every score, which is what
+              // still read as off-centre after the thirds were made equal.
+              // Each number now fills a half of its own, pinned against the
+              // colon, and scales down inside that half if it must.
+              Expanded(
+                flex: scoreFlex,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _ScoreFigure(
+                          '$homeScore',
+                          alignment: Alignment.centerRight,
+                        ),
+                      ),
+                      const _ScoreFigure(' : '),
+                      Expanded(
+                        child: _ScoreFigure(
+                          '$awayScore',
+                          alignment: Alignment.centerLeft,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: sideFlex,
+                child: _Side(
+                  code: awayCode,
+                  label: awayName,
+                  other: wholeNames ? homeName : null,
+                ),
+              ),
+            ],
+          ),
+          // Under the scoreline only the half-time score: who scored is
+          // already told twice over (the goal flashes as it goes in, and
+          // the timeline tab keeps the full list).
+          if (halfTime case final ht?)
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                ht,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelSmall.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
     return Padding(
       padding: wholeNames
           ? EdgeInsets.zero
           : const EdgeInsets.all(AppSpacing.marginMobile),
-      child: AppCard(
-        child: Column(
-          children: [
-            // A clean broadcast-style clock chip — a dark rounded plate with a
-            // monospace, tabular time, as on a real match graphic (no red dot).
-            Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: 4,
-                ),
-                decoration: const BoxDecoration(
-                  color: AppColors.surfaceContainerHighest,
-                  borderRadius: AppRadii.baseAll,
-                ),
-                // Monospace tabular figures give the even, broadcast look with
-                // no letter-spacing — the latter adds a trailing gap after the
-                // last digit that pushes the time off-centre in the plate.
-                //
-                // Which is why the spacing is zeroed HERE: labelMedium carries
-                // 0.7 of its own, and copyWith keeps whatever it is not told to
-                // replace, so the plate the comment above describes was still
-                // tracked, and every label in it ("PO PRODLOUŽENÍ" as much as
-                // "45") sat a hair left of the centre line. One line, capped
-                // and scaled down, so a long label can never wrap the plate
-                // into two lines of a different width either.
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    clock,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    softWrap: false,
-                    style: AppTypography.labelMedium.copyWith(
-                      fontFamily: AppFonts.mono,
-                      letterSpacing: 0,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                      color: live
-                          ? AppColors.onSurface
-                          : AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // Centred, and the scoreline takes a third like the two sides.
-              //
-              // It was Flexible, which is LOOSE: it took less than its third
-              // and the leftover collected at the END of the row, so the whole
-              // block sat left and the right of the card carried a bigger gap
-              // than the left. Measured off a screenshot at 393pt: 100 points
-              // of gap on the left against 145 on the right, with the score
-              // about 20 left of the card's centre. Expanded is tight, so the
-              // row is exactly filled and each third is centred in itself;
-              // the centre alignment is belt and braces for any rounding.
-              mainAxisAlignment: MainAxisAlignment.center,
+      // The switch inside the card's own corner: its face never crosses the
+      // card's edge, its tap target padded out over the card's margin.
+      child: viewSwitch == null
+          ? card
+          : Stack(
               children: [
-                Expanded(
-                  flex: sideFlex,
-                  child: _Side(
-                    code: homeCode,
-                    label: homeName,
-                    other: wholeNames ? awayName : null,
-                  ),
-                ),
-                // The scoreline still shrinks rather than shove the two sides
-                // out of the card: a long name next to a 4:3 used to run the
-                // row off the edge of a narrow screen.
-                //
-                // And it is three pieces, not one string, so the COLON is what
-                // sits on the centre line. "1 : 0" set as one run was centred
-                // as a block, and the sans digits are not one width: a narrow
-                // 1 against a round 0 put the colon a few points off the middle
-                // of the card, a different few for every score, which is what
-                // still read as off-centre after the thirds were made equal.
-                // Each number now fills a half of its own, pinned against the
-                // colon, and scales down inside that half if it must.
-                Expanded(
-                  flex: scoreFlex,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _ScoreFigure(
-                            '$homeScore',
-                            alignment: Alignment.centerRight,
-                          ),
-                        ),
-                        const _ScoreFigure(' : '),
-                        Expanded(
-                          child: _ScoreFigure(
-                            '$awayScore',
-                            alignment: Alignment.centerLeft,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: sideFlex,
-                  child: _Side(
-                    code: awayCode,
-                    label: awayName,
-                    other: wholeNames ? homeName : null,
-                  ),
-                ),
+                card,
+                Positioned(top: 0, right: 0, child: viewSwitch),
               ],
             ),
-            // Under the scoreline only the half-time score: who scored is
-            // already told twice over (the goal flashes as it goes in, and
-            // the timeline tab keeps the full list).
-            if (halfTime case final ht?)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                  ht,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

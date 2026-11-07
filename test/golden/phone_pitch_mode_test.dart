@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
@@ -39,6 +40,45 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 3)); // any flash clears
     await expectAppGolden('goldens/match_phone_pitch.png');
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // Task 15c: the goal banner out from under the score stripe.
+  testWidgets('phone match in Pitch mode: the goal banner', (tester) async {
+    final save = await seedSave(tester);
+    await tester.runAsync(
+      () => const MatchViewModeStore().save(MatchViewMode.pitch),
+    );
+    final warm = save.container.listen(
+      matchPreviewProvider(save.careerId),
+      (_, _) {},
+    );
+    addTearDown(warm.close);
+    await tester.runAsync(
+      () => save.container.read(matchPreviewProvider(save.careerId).future),
+    );
+    await pumpRoute(tester, save, '${Routes.match}?careerId=${save.careerId}');
+    final screen = tester.state(find.byType(MatchScreen)) as MatchScreenProbe;
+    final pb = screen.pitchMode.playback!;
+    final gi = pb.result.events.indexWhere(
+      (e) => e.type == MatchEventType.goal,
+    );
+    expect(gi, greaterThanOrEqualTo(0), reason: 'a goal to show');
+    // Just short of the goal, playing: the flash fires as it goes in.
+    screen.seekPitch(
+      Duration(microseconds: ((pb.revealAt(gi) - 0.3) * 1e6).round()),
+    );
+    for (
+      var i = 0;
+      i < 120 && find.byKey(matchGoalBannerKey).evaluate().isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(find.byKey(matchGoalBannerKey), findsOneWidget);
+    // Fully out.
+    await tester.pump(kGoalBannerSlide + const Duration(milliseconds: 50));
+    await expectAppGolden('goldens/match_phone_pitch_goal.png');
     await tester.pumpWidget(const SizedBox());
   });
 }

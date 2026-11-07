@@ -126,7 +126,123 @@ class PitchAudit {
     return d <= math.max(offsideLine(nation, dir, t), depth(ball, dir)) + 0.05;
   }
 
+  /// Open play between the staged moments, as a viewer would count it:
+  /// passes, carries (dribbles and runs with the ball) and turnovers
+  /// (tackles and interceptions: the ball goes from one side's man to the
+  /// other's), each started outside every staged window; with the screen
+  /// seconds of open play and of staged moments. Counted into [counts] as
+  /// 'open play: ...'.
+  void openPlay() {
+    bool staged(double t) =>
+        s.windows.any((w) => t >= w.start - 1e-9 && t < w.end - 1e-9);
+    int? lastSide;
+    for (final p in s.ballPhases) {
+      final out = !staged(p.t0);
+      switch (p) {
+        case CarryPhase(:final carrier):
+          final side = team(carrier);
+          if (out) {
+            if (p.t1 - p.t0 > 0.6) count('open play: carry');
+            if (lastSide != null && lastSide != side) {
+              count('open play: turnover');
+            }
+          }
+          lastSide = side;
+        case FlightPhase(:final pass, :final toActor, :final resting):
+          if (out && !resting && pass && toActor != null) {
+            count('open play: pass');
+            if ((p.to.y - p.from.y).abs() > 30) {
+              count('open play: switch of play');
+            }
+          }
+          if (toActor == null) lastSide = null;
+      }
+    }
+    var stagedSecs = 0.0;
+    for (final w in s.windows) {
+      stagedSecs += w.end - w.start;
+    }
+    counts['open play: screen seconds'] = (s.totalSeconds - stagedSecs).round();
+    counts['staged: screen seconds'] = stagedSecs.round();
+  }
+
+  /// Whether [t] is a set piece's or a penalty's staging, or a goal's
+  /// celebration (from the ball in the net to the kick-off): the times men
+  /// may stand on a goal line.
+  bool setPieceOrCelebration(double t) {
+    for (final w in s.windows) {
+      if (t < w.start - 1e-9 || t >= _until(w) - 1e-9) continue;
+      if (w.moments.isEmpty) continue;
+      final first = w.moments.first;
+      if (first is SetPieceMoment) return true;
+      if (first is ShotMoment && first.origin == ShotOrigin.penalty) {
+        return true;
+      }
+      for (final m in w.moments) {
+        if (m is ShotMoment && m.outcome == ShotOutcome.goal) {
+          // The celebration: from the strike's landing on.
+          for (final f in flights(w.start, _until(w))) {
+            if (f.fromActor == idx(m.shooterId) && !f.pass) {
+              if (t >= f.t0 - 1e-9) return true;
+              break;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /// Men parked on a goal line in play (Task 15c f): in every keyframe
+  /// outside a set piece or a goal's celebration, the outfield men the
+  /// moment does not name within [near] m of a goal line and across the
+  /// width of the box, counted per side: the side defending that goal
+  /// ('goal line: defenders') and the side attacking it ('goal line:
+  /// attackers'). The worst of each goes into [worst]; frames with
+  /// [crowd] or more of a side into [counts].
+  void goalLineCrowds({double near = 6, int crowd = 3}) {
+    final n = s.actorList.length;
+    final frames = s.keyframes;
+    for (var k = 0; k < frames.length; k++) {
+      final f = frames[k];
+      // A frame a cut replaces on the same instant is never seen.
+      if (k + 1 < frames.length && frames[k + 1].t <= f.t + 1e-9) continue;
+      if (f.t < s.start - 1e-9 || setPieceOrCelebration(f.t)) continue;
+      final w = s.windowAt(f.t + 1e-6);
+      final named = w?.actors ?? const <int>{};
+      // [end] 0: the goal at x 0, 1: at x 105.
+      for (var end = 0; end < 2; end++) {
+        var defenders = 0;
+        var attackers = 0;
+        for (var i = 0; i < n; i++) {
+          if (!f.present(i) || f.keeper(i)) continue;
+          final a = s.actorList[i];
+          if (named.contains(a.playerId)) continue;
+          final dep = s.departures[a.playerId];
+          if (dep != null && dep <= f.t + 1e-9) continue;
+          final p = f.at(i);
+          final fromLine = end == 0 ? p.x : PitchDims.length - p.x;
+          if (fromLine > near || fromLine < -2) continue;
+          if ((p.y - PitchDims.width / 2).abs() > 20.16) continue;
+          // Which way this man's side attacks: toward x 105 is +1.
+          final dir = dirOf(a.teamNationId, f.t);
+          final defending = (dir == 1) == (end == 0);
+          if (defending) {
+            defenders++;
+          } else {
+            attackers++;
+          }
+        }
+        note('goal line: defenders', defenders.toDouble());
+        note('goal line: attackers', attackers.toDouble());
+        if (defenders >= crowd) count('goal line: $crowd+ defenders');
+        if (attackers >= crowd) count('goal line: $crowd+ attackers');
+      }
+    }
+  }
+
   void run() {
+    openPlay();
     // A phase cut lines both sides up in their shapes: never a crowd on a
     // goal line (the moment's own men apart).
     for (final e in s.cutKinds.entries) {

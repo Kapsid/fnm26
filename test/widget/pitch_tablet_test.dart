@@ -127,6 +127,41 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('the commentary and the line-ups scroll on their own', (
+    tester,
+  ) async {
+    await _open(tester, MatchViewMode.pitch, kTabletSize);
+    await tester.tap(find.byIcon(Icons.pause_rounded));
+    await tester.pump();
+    final screen = _screen(tester);
+    final pb = screen.pitchMode.playback!;
+    screen.seekPitch(pb.pacer.total * 0.4);
+    await tester.pump();
+    final pitch = tester.getRect(find.byType(PitchMatchView));
+    Future<double> dragged(Finder list) async {
+      final scrollable = find
+          .descendant(of: list, matching: find.byType(Scrollable))
+          .first;
+      await tester.drag(scrollable, const Offset(0, -300));
+      await tester.pump();
+      return tester.state<ScrollableState>(scrollable).position.pixels;
+    }
+
+    expect(
+      await dragged(find.byKey(const Key('match.pitchFeed'))),
+      greaterThan(0),
+    );
+    await tester.tap(find.text(enL.matchTabLineups));
+    await tester.pumpAndSettle();
+    final lineups = find.descendant(
+      of: find.byType(TabBarView).last,
+      matching: find.byType(ListView),
+    );
+    expect(await dragged(lineups.last), greaterThan(0));
+    expect(tester.getRect(find.byType(PitchMatchView)), pitch);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('Timeline mode on a tablet keeps its three columns', (
     tester,
   ) async {

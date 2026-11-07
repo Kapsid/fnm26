@@ -54,6 +54,7 @@ import 'package:go_router/go_router.dart';
 
 part 'match_frame.dart';
 part 'match_panels.dart';
+part 'match_score_bug.dart';
 part 'match_tablet_layout.dart';
 
 /// The maximum substitutions a manager may make in a match.
@@ -549,10 +550,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   Duration get _tick =>
       Duration(milliseconds: (360 / _speeds[_speedIdx]).round());
 
-  /// How long the clock lingers on a goal so its popup is always seen — even at
-  /// the fastest speed several goals can't blur past unnoticed.
-  static const _goalPause = Duration(milliseconds: 1100);
-
   /// Sets the match clock going again, or keeps it stopped, as things stand:
   /// the 360 ms tick in Timeline mode, the Pitch clock in Pitch mode.
   void _restartTimer() {
@@ -671,7 +668,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     MatchFeedback.goal(ref.read(soundHapticsEnabledProvider));
     _pitchClock?.pause();
     _flashTimer?.cancel();
-    _flashTimer = Timer(_goalPause + const Duration(milliseconds: 700), () {
+    _flashTimer = Timer(kGoalFlashHold, () {
       if (!mounted) return;
       setState(() => _goalFlash = null);
       // Resume only if nothing else has taken over the clock (half-time in
@@ -1817,7 +1814,35 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final topBar = _TopBar(
               occasion: MatchStage.label(l, preview.fixture),
             );
-            final board = MatchScoreboard(
+            // The two nations' own colours, pushed apart from each other when
+            // the kits are too alike to tell which end of the bar is whose.
+            final (homeC, awayC) = KitColors.opposed(
+              (
+                preview.nations[homeId]?.primaryColor ?? '',
+                preview.nations[homeId]?.secondaryColor ?? '',
+              ),
+              (
+                preview.nations[awayId]?.primaryColor ?? '',
+                preview.nations[awayId]?.secondaryColor ?? '',
+              ),
+            );
+            // The phone's Pitch mode: the score as a broadcast bug, whose
+            // banner stands for the goal flash's card over the picture.
+            final bug = !tablet && _onPitch;
+            // Pitch or Timeline, at any time: on a phone from the corner of
+            // the scoreboard (the Timeline's) or of the pitch (Pitch mode,
+            // whose stripe is too thin for it); on a tablet from the stats
+            // panel's header.
+            final phoneSwitch = tablet || _mode == null
+                ? null
+                : MatchViewSwitch(
+                    to: _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
+                    onTap: () => _chooseMode(
+                      preview,
+                      _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
+                    ),
+                  );
+            final scoreboard = MatchScoreboard(
               homeCode: code(homeId),
               awayCode: code(awayId),
               homeName: name(homeId),
@@ -1856,53 +1881,21 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     )
                   : null,
               wholeNames: tablet,
+              compact: bug,
+              homeColor: homeC,
+              awayColor: awayC,
+              goal: bug ? _goalFlash : null,
+              goalForHome: _goalFlash?.teamNationId == homeId,
+              viewSwitch: bug ? null : phoneSwitch,
             );
-            // Pitch or Timeline, at any time: from the scoreboard's corner on
-            // a phone, from the stats panel's header on a tablet.
-            final Widget scoreboard = tablet || _mode == null
-                ? board
-                : Stack(
-                    children: [
-                      board,
-                      Positioned(
-                        top: AppSpacing.sm,
-                        right: AppSpacing.marginMobile + AppSpacing.xs,
-                        child: MatchViewSwitch(
-                          to: _onPitch
-                              ? MatchViewMode.timeline
-                              : MatchViewMode.pitch,
-                          onTap: () => _chooseMode(
-                            preview,
-                            _onPitch
-                                ? MatchViewMode.timeline
-                                : MatchViewMode.pitch,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-            // The two nations' own colours, pushed apart from each other when
-            // the kits are too alike to tell which end of the bar is whose.
             final Widget? momentum = !ft && !showingShootout
-                ? () {
-                    final (homeC, awayC) = KitColors.opposed(
-                      (
-                        preview.nations[homeId]?.primaryColor ?? '',
-                        preview.nations[homeId]?.secondaryColor ?? '',
-                      ),
-                      (
-                        preview.nations[awayId]?.primaryColor ?? '',
-                        preview.nations[awayId]?.secondaryColor ?? '',
-                      ),
-                    );
-                    return _MomentumBar(
-                      homePercent: _homeMomentum(preview, homeId),
-                      homeCode: code(homeId),
-                      awayCode: code(awayId),
-                      homeColor: homeC,
-                      awayColor: awayC,
-                    );
-                  }()
+                ? _MomentumBar(
+                    homePercent: _homeMomentum(preview, homeId),
+                    homeCode: code(homeId),
+                    awayCode: code(awayId),
+                    homeColor: homeC,
+                    awayColor: awayC,
+                  )
                 : null;
             final Widget? shootout = showingShootout || decidedByShootout
                 ? _ShootoutStrip(
@@ -1969,7 +1962,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               energy: _liveEnergy(r),
             );
             final overlays = <Widget>[
-              if (_goalFlash != null)
+              if (_goalFlash != null && !bug)
                 _GoalFlash(
                   event: _goalFlash!,
                   flagCode: code(_goalFlash!.teamNationId),
@@ -2118,29 +2111,41 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 child: SafeArea(
                   child: Stack(
                     children: [
-                      Column(
-                        children: [
-                          topBar,
-                          scoreboard,
-                          AspectRatio(
-                            aspectRatio: kPitchModeAspect,
-                            child: pitchSurface,
-                          ),
-                          if (picture)
-                            PitchCommentaryLine(
-                              clock: clock,
-                              lineAt: (t) =>
-                                  pb.lineAt(l, t, _pc.names, _seed(preview)),
-                            )
-                          else
-                            const SizedBox(height: kPitchCommentaryHeight),
-                          ?momentum,
-                          ?shootout,
-                          const MatchDetailTabs(withTimeline: false),
-                          Expanded(
-                            child: TabBarView(children: [stats, lineups]),
-                          ),
-                        ],
+                      PitchModeColumn(
+                        head: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [topBar, scoreboard],
+                        ),
+                        pitch: phoneSwitch == null
+                            ? pitchSurface
+                            : Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  pitchSurface,
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: phoneSwitch,
+                                  ),
+                                ],
+                              ),
+                        under: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (picture)
+                              PitchCommentaryLine(
+                                clock: clock,
+                                lineAt: (t) =>
+                                    pb.lineAt(l, t, _pc.names, _seed(preview)),
+                              )
+                            else
+                              const SizedBox(height: kPitchCommentaryHeight),
+                            ?momentum,
+                            ?shootout,
+                            const MatchDetailTabs(withTimeline: false),
+                          ],
+                        ),
+                        tabs: TabBarView(children: [stats, lineups]),
                       ),
                       ...overlays,
                     ],

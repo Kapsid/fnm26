@@ -362,7 +362,11 @@ class _OffsidePlan extends _Plan {
         return fetch(to, t, now);
       }
       final cp = cutPasser;
+      // Only once the cut is made and the ball lies at his feet: a cut
+      // asked for in the air waits for the ball to land, and a kick asked
+      // for meanwhile (the ball flying past him) is never made.
       if (car == null &&
+          now.flight == null &&
           cp != null &&
           now.players[cp] != null &&
           now.players[cp]!.distanceTo(now.ball) < 1.5) {

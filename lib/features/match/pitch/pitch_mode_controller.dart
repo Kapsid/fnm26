@@ -198,7 +198,8 @@ class PitchModeController {
     _busy = true;
     c
       ..pause()
-      ..pacer = pb.pacer;
+      ..pacer = pb.pacer
+      ..speed = pitchRateForStep(speedStep);
     _busy = false;
     jump(state != null ? pb.start : place(pb));
     return true;

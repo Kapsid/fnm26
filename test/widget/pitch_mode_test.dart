@@ -27,6 +27,7 @@ import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/app_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/fixtures.dart';
@@ -182,10 +183,11 @@ Future<ProviderContainer> _pump(
   PitchPlaybackBuilder? builder,
   PitchPlaybackInPlace? inPlace,
   WeatherKind? weather,
+  Size size = const Size(400, 2000),
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
   tester.view
-    ..physicalSize = const Size(400, 2000)
+    ..physicalSize = size
     ..devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
   final c = ProviderContainer(
@@ -944,4 +946,159 @@ void main() {
       expect(fingerprint, first, reason: w.name);
     }
   });
+
+  _ownerFeedbackTests();
+}
+
+// Task 15c: the owner's device feedback, checked on the phone screen.
+void _ownerFeedbackTests() {
+  /// What the switch must sit inside: the Timeline board's card, or (the
+  /// Pitch mode's stripe being too thin for it) the pitch.
+  Rect boardCard(WidgetTester tester) {
+    final card = find.descendant(
+      of: find.byType(MatchScoreboard),
+      matching: find.byType(AppCard),
+    );
+    return tester.getRect(
+      card.evaluate().isEmpty ? find.byType(PitchMatchView) : card.first,
+    );
+  }
+
+  testWidgets('the Pitch score is a thin stripe, a fifth of the board', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      prefs: {kMatchViewModePrefsKey: 'timeline'},
+      size: const Size(390, 844),
+    );
+    final timeline = tester.getSize(find.byType(MatchScoreboard)).height;
+    await _switch(tester);
+    expect(find.byType(PitchMatchView), findsOneWidget);
+    final pitch = tester.getSize(find.byType(MatchScoreboard)).height;
+    // The owner's "a stripe just": one 24 px line in its margin.
+    expect(pitch, lessThanOrEqualTo(timeline * 0.2));
+    expect(pitch, 32);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'on a small phone the Lineups tab scrolls under the fixed pitch',
+    (
+      tester,
+    ) async {
+      final preview = _preview();
+      await _pump(
+        tester,
+        preview: preview,
+        salt: 7,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        size: const Size(360, 640),
+      );
+      await _until(tester, () => _ready(tester));
+      expect(tester.takeException(), isNull);
+      // Stats, then Lineups.
+      await tester.tap(find.byType(Tab).last);
+      for (var i = 0; i < 30; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      final pitchBefore = tester.getRect(find.byType(PitchMatchView));
+      final last = find.text(preview.opponentBench.last.name);
+      final list = find.descendant(
+        of: find.byType(TabBarView),
+        matching: find.byType(Scrollable),
+      );
+      await tester.dragUntilVisible(
+        last,
+        list.last,
+        const Offset(0, -120),
+        maxIteration: 40,
+      );
+      await tester.pump();
+      // In view: inside the screen, below the tab bar, above the bottom bar.
+      final row = tester.getRect(last);
+      final viewport = tester.getRect(list.last);
+      expect(row.bottom, lessThanOrEqualTo(viewport.bottom + 0.5));
+      expect(row.top, greaterThanOrEqualTo(viewport.top - 0.5));
+      expect(viewport.height, greaterThan(60));
+      // The pitch stayed where it was: only the tab content moved.
+      expect(tester.getRect(find.byType(PitchMatchView)), pitchBefore);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('each speed plays faster: 1x and 2x by 1.3, 3x by 1.5', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+    );
+    for (final (label, rate) in [('1×', 1.3), ('2×', 1.3), ('3×', 1.5)]) {
+      if (label != '1×') {
+        await tester.tap(find.text(label == '2×' ? '1×' : '2×'));
+        await tester.pump();
+      }
+      await _until(
+        tester,
+        () =>
+            _ready(tester) &&
+            _clock(tester).playing &&
+            _pb(tester).pacer == _clock(tester).pacer &&
+            find.text(label).evaluate().isNotEmpty,
+      );
+      expect(_clock(tester).speed, rate, reason: label);
+      // A quarter of a second of real time is rate x as much screen time.
+      final from = _clock(tester).value;
+      await tester.pump(const Duration(milliseconds: 250));
+      if (_clock(tester).playing) {
+        expect(
+          (_clock(tester).value - from).inMicroseconds / 1e6,
+          closeTo(0.25 * rate, 0.02),
+          reason: label,
+        );
+      }
+    }
+  });
+
+  for (final width in [320.0, 360.0, 390.0, 430.0]) {
+    testWidgets('the view switch sits inside its board or pitch at $width', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        preview: _preview(),
+        salt: 7,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        size: Size(width, 800),
+      );
+      for (final mode in ['pitch', 'timeline']) {
+        if (mode == 'pitch') await _until(tester, () => _ready(tester));
+        final card = boardCard(tester);
+        final button = tester.getRect(find.byKey(matchViewSwitchKey));
+        // The tap target: at least 40 px each way.
+        expect(button.width, greaterThanOrEqualTo(40), reason: mode);
+        expect(button.height, greaterThanOrEqualTo(40), reason: mode);
+        // The silver face it draws inside the card.
+        final face = tester.getRect(
+          find.descendant(
+            of: find.byKey(matchViewSwitchKey),
+            matching: find.byKey(matchViewSwitchFaceKey),
+          ),
+        );
+        expect(card.contains(face.topLeft), isTrue, reason: '$mode $face');
+        expect(
+          card.contains(face.bottomRight - const Offset(0.01, 0.01)),
+          isTrue,
+          reason: '$mode $face in $card',
+        );
+        expect(tester.takeException(), isNull, reason: mode);
+        await _switch(tester);
+      }
+    });
+  }
 }

@@ -1001,6 +1001,10 @@ class _Builder {
           // one: away at 46', home at 91', away at 106'.
           _kickoff(r, m == 91 ? 0 : 1);
           _record(r);
+          // The loop's time may fall a hair short of the interval's: it
+          // carries on from the interval, so no later frame (a window's
+          // cut on the same instant) is recorded behind this one.
+          if (t < r) t = r;
         }
       }
       _applyDue(t, atBreak: false);

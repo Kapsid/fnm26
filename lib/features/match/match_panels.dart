@@ -1573,6 +1573,76 @@ const double kPitchModeAspect = 390 / 280;
 /// The commentary line's height under the pitch.
 const double kPitchCommentaryHeight = 44;
 
+/// The least the tab content under the pitch keeps on a phone in Pitch
+/// mode: a few rows of the Stats or Lineups, enough to scroll through.
+const double kPitchModeMinTabsHeight = 132;
+
+/// The phone's Pitch mode, top to bottom: [head] (the occasion and the
+/// score), the [pitch] at its own proportions, [under] it the commentary,
+/// momentum and the tab bar, then the [tabs]' content in all that is left.
+///
+/// The pitch stays put and the tab content scrolls on its own. The pitch is
+/// full width wherever the screen is tall enough; on a short phone it gives
+/// way (narrower, centred, still at [kPitchModeAspect]) before the tab
+/// content drops under [kPitchModeMinTabsHeight], so the content is never
+/// squeezed out of sight and the column never overflows.
+class PitchModeColumn extends StatelessWidget {
+  const PitchModeColumn({
+    required this.head,
+    required this.pitch,
+    required this.under,
+    required this.tabs,
+    super.key,
+  });
+
+  final Widget head;
+  final Widget pitch;
+  final Widget under;
+  final Widget tabs;
+
+  @override
+  Widget build(BuildContext context) => CustomMultiChildLayout(
+    delegate: _PitchModeLayout(),
+    // The head is painted last: the score bug's goal banner slides out
+    // over the top of the pitch.
+    children: [
+      LayoutId(id: _PitchModePart.pitch, child: pitch),
+      LayoutId(id: _PitchModePart.under, child: under),
+      LayoutId(id: _PitchModePart.tabs, child: tabs),
+      LayoutId(id: _PitchModePart.head, child: head),
+    ],
+  );
+}
+
+enum _PitchModePart { head, pitch, under, tabs }
+
+class _PitchModeLayout extends MultiChildLayoutDelegate {
+  @override
+  void performLayout(Size size) {
+    final w = size.width;
+    final h = size.height;
+    final row = BoxConstraints(minWidth: w, maxWidth: w, maxHeight: h);
+    final head = layoutChild(_PitchModePart.head, row).height;
+    final under = layoutChild(_PitchModePart.under, row).height;
+    final room = h - head - under - kPitchModeMinTabsHeight;
+    final pitchH = math.max(0.0, math.min(w / kPitchModeAspect, room));
+    final pitchW = pitchH * kPitchModeAspect;
+    layoutChild(
+      _PitchModePart.pitch,
+      BoxConstraints.tight(Size(pitchW, pitchH)),
+    );
+    final tabsH = math.max(0.0, h - head - pitchH - under);
+    layoutChild(_PitchModePart.tabs, BoxConstraints.tight(Size(w, tabsH)));
+    positionChild(_PitchModePart.head, Offset.zero);
+    positionChild(_PitchModePart.pitch, Offset((w - pitchW) / 2, head));
+    positionChild(_PitchModePart.under, Offset(0, head + pitchH));
+    positionChild(_PitchModePart.tabs, Offset(0, head + pitchH + under));
+  }
+
+  @override
+  bool shouldRelayout(_PitchModeLayout oldDelegate) => false;
+}
+
 /// Before kick-off, in the Timeline's place, for a manager who has never
 /// chosen: watch on the Pitch or follow the Timeline. The choice is kept for
 /// the next match, and the header switches it at any time.

@@ -292,7 +292,9 @@ extension _Restarts on _Builder {
       if (_departsWithin(o, t, 6) || avoid.contains(o.id)) continue;
       final depth = xToDepth(o.pos.x, dir);
       if (depth > onsideUpTo) continue;
-      final d = o.pos.distanceTo(at);
+      // To where the ball meets him (his feet, a stride in front of him),
+      // as the throw is played: never a pass under the shortest.
+      final d = _ballPoint(o).distanceTo(at);
       final double score;
       if (throwIn) {
         if (d < 7 || d > 22) continue;
