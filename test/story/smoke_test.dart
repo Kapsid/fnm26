@@ -15,6 +15,8 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 
 import '../helpers/seeded_save.dart' show settle;
 import '../helpers/test_database.dart';
@@ -24,7 +26,11 @@ void main() {
   testWidgets('smoke', (tester) async {
     await tester.runAsync(loadMaterialIcons);
     setPhone(tester);
-    SharedPreferences.setMockInitialValues(<String, Object>{});
+    // Matches on the Timeline, as before the Pitch view: no Pitch or
+    // Timeline question before kick-off.
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      kMatchViewModePrefsKey: 'timeline',
+    });
     final nations =
         (jsonDecode(File('assets/data/nations.json').readAsStringSync())
                 as List)

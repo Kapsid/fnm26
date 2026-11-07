@@ -15120,4 +15120,29 @@ class AppLocalizationsCs extends AppLocalizations {
   String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
     return 'Penalta! $other podráží ve vápně, $player padá a je z toho druhá žlutá.';
   }
+
+  @override
+  String get matchViewChooseTitle => 'Jak chcete zápas sledovat?';
+
+  @override
+  String get matchViewChooseHint =>
+      'Volba platí i pro další zápasy. Přepnout můžete kdykoli.';
+
+  @override
+  String get matchViewPitch => 'Hřiště';
+
+  @override
+  String get matchViewPitchBlurb => 'Hráči v akci na hřišti';
+
+  @override
+  String get matchViewTimeline => 'Průběh';
+
+  @override
+  String get matchViewTimelineBlurb => 'Zápas událost po události';
+
+  @override
+  String get matchViewSwitchToPitch => 'Sledovat na hřišti';
+
+  @override
+  String get matchViewSwitchToTimeline => 'Sledovat průběh';
 }

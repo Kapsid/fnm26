@@ -58,6 +58,8 @@ import 'package:fnm/features/tournaments/host_draw_providers.dart';
 import 'package:fnm/features/tournaments/nations_cup_draw_providers.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 
 import '../helpers/test_database.dart';
 
@@ -150,7 +152,11 @@ final Map<int, List<String>> _cities = {
 };
 
 AppDatabase storyDb() {
-  SharedPreferences.setMockInitialValues(<String, Object>{});
+  // Matches on the Timeline, as before the Pitch view: no Pitch or
+  // Timeline question before kick-off.
+  SharedPreferences.setMockInitialValues(<String, Object>{
+    kMatchViewModePrefsKey: 'timeline',
+  });
   return createTestDatabase();
 }
 

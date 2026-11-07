@@ -12,7 +12,9 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/story_layer.dart';
+import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/nation_latitudes.dart';
@@ -22,6 +24,8 @@ import 'package:fnm/features/match/pitch/match_dressing.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/scene_look.dart';
 import 'package:fnm/features/match/pitch/stadium_painter.dart';
+import 'package:fnm/features/tactics/tactics_pitch.dart' show pitchNameLabels;
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Both sides' line-ups for the match [preview] pins, as the Pitch view
 /// draws them: each starting XI in its formation's slot order with its
@@ -99,6 +103,11 @@ class PitchStadium {
         ground.attendance,
         home.code,
         away.code,
+        // The kits by their colours, not only the codes: a nation whose
+        // colours were edited is another ground (another crowd, other
+        // shirts), never the old images.
+        (home.primaryColor, home.secondaryColor),
+        (away.primaryColor, away.secondaryColor),
         awayShare,
         date,
         kickOff,
@@ -219,4 +228,126 @@ class PitchStadiumBaker {
 /// The baker the Pitch view uses; tests swap in one that counts.
 final pitchStadiumBakerProvider = Provider<PitchStadiumBaker>(
   (ref) => PitchStadiumBaker(),
+);
+
+/// How the manager watches a live match: on the Pitch view or as the
+/// Timeline of events.
+enum MatchViewMode { pitch, timeline }
+
+/// Prefs key for [MatchViewModeStore]: per device, outside the save
+/// database, so no schema bump.
+const String kMatchViewModePrefsKey = 'match_view_mode_v1';
+
+/// Remembers how the manager last chose to watch a match, on this device.
+/// Null until he has chosen once: the match screen then asks before
+/// kick-off.
+class MatchViewModeStore {
+  const MatchViewModeStore();
+
+  Future<MatchViewMode?> load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getString(kMatchViewModePrefsKey);
+    for (final m in MatchViewMode.values) {
+      if (m.name == saved) return m;
+    }
+    return null;
+  }
+
+  Future<void> save(MatchViewMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(kMatchViewModePrefsKey, mode.name);
+  }
+}
+
+final Provider<MatchViewModeStore> matchViewModeStoreProvider =
+    Provider<MatchViewModeStore>((ref) => const MatchViewModeStore());
+
+/// The way the manager watches matches on this device: loaded from
+/// [MatchViewModeStore], null while he has never chosen. [choose] sets it
+/// and remembers it for the next match.
+class MatchViewModeNotifier extends AsyncNotifier<MatchViewMode?> {
+  @override
+  Future<MatchViewMode?> build() => ref.read(matchViewModeStoreProvider).load();
+
+  Future<void> choose(MatchViewMode mode) async {
+    state = AsyncData(mode);
+    await ref.read(matchViewModeStoreProvider).save(mode);
+  }
+}
+
+final AsyncNotifierProvider<MatchViewModeNotifier, MatchViewMode?>
+matchViewModeProvider =
+    AsyncNotifierProvider<MatchViewModeNotifier, MatchViewMode?>(
+      MatchViewModeNotifier.new,
+    );
+
+/// The Pitch view's pacing for the match screen's speed step [index]
+/// (the 1, 2, 3 of its speed button): slow, mid, fast.
+PitchSpeed pitchSpeedForStep(int index) =>
+    PitchSpeed.values[index.clamp(0, PitchSpeed.values.length - 1)];
+
+/// The competition a fixture's [round] code belongs to, as far as the
+/// ground's dressing and its kick-off slots care.
+CompetitionKind pitchCompetitionOf(String? round) => switch (round) {
+  'FRIENDLY' => CompetitionKind.friendly,
+  'FFINAL' => CompetitionKind.finalissima,
+  'GROUP' ||
+  'R32' ||
+  'R16' ||
+  'QF' ||
+  'SF' ||
+  '3RD' ||
+  'FINAL' => CompetitionKind.worldCupFinals,
+  'CGROUP' ||
+  'CR16' ||
+  'CQF' ||
+  'CSF' ||
+  'C3RD' ||
+  'CFINAL' => CompetitionKind.continentalFinals,
+  _ => CompetitionKind.worldCupQualifying,
+};
+
+/// The ground of the match [preview] pins, for the Pitch view: its look,
+/// both kits, the dressing of the occasion, and the kick-off time [seed]
+/// draws for it.
+PitchStadium pitchStadiumForPreview(MatchPreview preview, int seed) {
+  final f = preview.fixture;
+  final home = preview.nations[f.homeNationId]!;
+  final away = preview.nations[f.awayNationId]!;
+  final groundNation = preview.nations[preview.ground.groundNationId];
+  final competition = pitchCompetitionOf(f.round);
+  final dressing = MatchDressing.forFixture(competition, f.round);
+  return PitchStadium.forMatch(
+    ground: preview.ground,
+    home: home,
+    away: away,
+    awayShare: AwayFanShare.estimate(
+      home: home,
+      away: away,
+      neutral: preview.neutralVenue,
+      tournament: dressing.dressed,
+      distanceKm: AwayFanShare.proxyDistanceKm(home, away),
+    ),
+    date: f.date,
+    kickOff: KickOff.localTime(f, competition, seed),
+    groundNationCode: groundNation?.code ?? home.code,
+    groundConfederation: groundNation?.confederation ?? home.confederation,
+    dressing: dressing,
+  );
+}
+
+/// Display names for every player [preview] can put on the pitch, both
+/// squads and both benches: the surname, with an initial only where two
+/// would read the same (as on the tactics pitch).
+Map<int, String> pitchNamesForPreview(MatchPreview preview) => pitchNameLabels(
+  {
+    for (final p in [
+      ...preview.homeTeam.xi,
+      ...preview.awayTeam.xi,
+      ...preview.bench,
+      ...preview.opponentBench,
+      for (final s in preview.opponentSubs) s.on,
+    ])
+      p.id: p,
+  }.values,
 );

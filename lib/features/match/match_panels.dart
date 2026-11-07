@@ -1186,8 +1186,13 @@ class _ShootoutStrip extends StatelessWidget {
 /// uses it too: a tab that is cut, or broken into STATIS / TIKY, is not a tab.
 /// A label too long for its third of a 320-wide phone scales down instead, and
 /// [expectLegible] is the guard built for that.
+///
+/// In Pitch mode ([withTimeline] false) the pitch and its commentary line
+/// stand in for the Timeline: Stats and Lineups only.
 class MatchDetailTabs extends StatelessWidget {
-  const MatchDetailTabs({super.key});
+  const MatchDetailTabs({this.withTimeline = true, super.key});
+
+  final bool withTimeline;
 
   @override
   Widget build(BuildContext context) {
@@ -1198,7 +1203,7 @@ class MatchDetailTabs extends StatelessWidget {
       indicatorColor: AppColors.primary,
       tabs: [
         for (final label in [
-          l.matchTabTimeline,
+          if (withTimeline) l.matchTabTimeline,
           l.matchTabStats,
           l.matchTabLineups,
         ])
@@ -1557,6 +1562,188 @@ class _SwingArrows extends StatelessWidget {
               color: color,
             ),
       ],
+    );
+  }
+}
+
+/// The Pitch view's shape in Pitch mode on a phone: full width, the
+/// proportions the ground was designed and checked at (390 x 280).
+const double kPitchModeAspect = 390 / 280;
+
+/// Before kick-off, in the Timeline's place, for a manager who has never
+/// chosen: watch on the Pitch or follow the Timeline. The choice is kept for
+/// the next match, and the header switches it at any time.
+class MatchViewChooser extends StatelessWidget {
+  const MatchViewChooser({required this.onChoose, super.key});
+
+  final ValueChanged<MatchViewMode> onChoose;
+
+  static const Key pitchKey = Key('match.chooser.pitch');
+  static const Key timelineKey = Key('match.chooser.timeline');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    Widget option({
+      required Key key,
+      required IconData icon,
+      required String title,
+      required String blurb,
+      required MatchViewMode mode,
+    }) => Expanded(
+      child: Material(
+        color: AppColors.surfaceContainerHigh,
+        borderRadius: AppRadii.lgAll,
+        child: InkWell(
+          key: key,
+          borderRadius: AppRadii.lgAll,
+          onTap: () => onChoose(mode),
+          child: Container(
+            // Both options the same height in any language.
+            constraints: const BoxConstraints(minHeight: 140),
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 32, color: AppColors.primary),
+                const SizedBox(height: AppSpacing.sm),
+                WholeText(
+                  title,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.titleMedium,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  blurb,
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      child: Column(
+        children: [
+          Text(
+            l.matchViewChooseTitle,
+            textAlign: TextAlign.center,
+            style: AppTypography.titleMedium,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              option(
+                key: pitchKey,
+                icon: Icons.stadium_outlined,
+                title: l.matchViewPitch,
+                blurb: l.matchViewPitchBlurb,
+                mode: MatchViewMode.pitch,
+              ),
+              const SizedBox(width: AppSpacing.md),
+              option(
+                key: timelineKey,
+                icon: Icons.format_list_bulleted_rounded,
+                title: l.matchViewTimeline,
+                blurb: l.matchViewTimelineBlurb,
+                mode: MatchViewMode.timeline,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            l.matchViewChooseHint,
+            textAlign: TextAlign.center,
+            style: AppTypography.labelSmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The one live commentary line under the pitch: the latest real moment's
+/// line ([lineAt] the Pitch clock's time), faded in as it changes. It
+/// rebuilds only when the line does, not every frame.
+class PitchCommentaryLine extends StatefulWidget {
+  const PitchCommentaryLine({
+    required this.clock,
+    required this.lineAt,
+    super.key,
+  });
+
+  final PitchClock clock;
+  final String? Function(Duration t) lineAt;
+
+  @override
+  State<PitchCommentaryLine> createState() => _PitchCommentaryLineState();
+}
+
+class _PitchCommentaryLineState extends State<PitchCommentaryLine> {
+  String? _line;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.clock.addListener(_onClock);
+    _line = widget.lineAt(widget.clock.value);
+  }
+
+  @override
+  void didUpdateWidget(PitchCommentaryLine old) {
+    super.didUpdateWidget(old);
+    if (!identical(old.clock, widget.clock)) {
+      old.clock.removeListener(_onClock);
+      widget.clock.addListener(_onClock);
+    }
+    _line = widget.lineAt(widget.clock.value);
+  }
+
+  @override
+  void dispose() {
+    widget.clock.removeListener(_onClock);
+    super.dispose();
+  }
+
+  void _onClock() {
+    final line = widget.lineAt(widget.clock.value);
+    if (line != _line) setState(() => _line = line);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final text = _line ?? AppLocalizations.of(context).matchFeedKickOff;
+    return Container(
+      width: double.infinity,
+      height: 44,
+      color: AppColors.surfaceContainerLow,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.marginMobile),
+      alignment: Alignment.centerLeft,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 220),
+        child: Text(
+          text,
+          key: ValueKey(text),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: AppTypography.bodyMedium.copyWith(
+            color: _line == null
+                ? AppColors.onSurfaceVariant
+                : AppColors.onSurface,
+          ),
+        ),
+      ),
     );
   }
 }

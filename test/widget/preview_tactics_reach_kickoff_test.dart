@@ -20,6 +20,8 @@ import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 
 import '../helpers/test_database.dart';
 
@@ -41,7 +43,11 @@ void main() {
   Future<void> setUpSave(
     Future<T?> Function<T>(Future<T> Function() fn) run,
   ) async {
-    SharedPreferences.setMockInitialValues(<String, Object>{});
+    // Matches on the Timeline, as before the Pitch view: no Pitch or
+    // Timeline question before kick-off.
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      kMatchViewModePrefsKey: 'timeline',
+    });
     final db = createTestDatabase();
     addTearDown(db.close);
     final nations =

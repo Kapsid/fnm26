@@ -115,7 +115,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "da": [
@@ -234,7 +242,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "de": [
@@ -353,7 +369,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "el": [
@@ -472,7 +496,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "es": [
@@ -591,7 +623,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "fi": [
@@ -710,7 +750,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "fil": [
@@ -829,7 +877,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "fr": [
@@ -948,7 +1004,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "hi": [
@@ -1067,7 +1131,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "hr": [
@@ -1186,7 +1258,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "hu": [
@@ -1305,7 +1385,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "id": [
@@ -1424,7 +1512,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "it": [
@@ -1543,7 +1639,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "ja": [
@@ -1662,7 +1766,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "ko": [
@@ -1781,7 +1893,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "ms": [
@@ -1900,7 +2020,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "nb": [
@@ -2019,7 +2147,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "nl": [
@@ -2138,7 +2274,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "pl": [
@@ -2257,7 +2401,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "pt": [
@@ -2376,7 +2528,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "ro": [
@@ -2495,7 +2655,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "sv": [
@@ -2614,7 +2782,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "th": [
@@ -2733,7 +2909,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "tr": [
@@ -2852,7 +3036,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "uk": [
@@ -2971,7 +3163,15 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ],
 
   "vi": [
@@ -3090,6 +3290,14 @@
     "pitchComSomeone",
     "pitchComPenaltyAwardedSecondYellow1",
     "pitchComPenaltyAwardedSecondYellow2",
-    "pitchComPenaltyAwardedSecondYellow3"
+    "pitchComPenaltyAwardedSecondYellow3",
+    "matchViewChooseTitle",
+    "matchViewChooseHint",
+    "matchViewPitch",
+    "matchViewPitchBlurb",
+    "matchViewTimeline",
+    "matchViewTimelineBlurb",
+    "matchViewSwitchToPitch",
+    "matchViewSwitchToTimeline"
   ]
 }

@@ -3682,5 +3682,13 @@
   "pitchComSomeone": "Hráč",
   "pitchComPenaltyAwardedSecondYellow1": "Penalta a druhá žlutá! {other} jde ze hřiště, {player} leží ve vápně.",
   "pitchComPenaltyAwardedSecondYellow2": "Pokutový kop! {player} padá a {other} vidí druhou žlutou.",
-  "pitchComPenaltyAwardedSecondYellow3": "Penalta! {other} podráží ve vápně, {player} padá a je z toho druhá žlutá."
+  "pitchComPenaltyAwardedSecondYellow3": "Penalta! {other} podráží ve vápně, {player} padá a je z toho druhá žlutá.",
+  "matchViewChooseTitle": "Jak chcete zápas sledovat?",
+  "matchViewChooseHint": "Volba platí i pro další zápasy. Přepnout můžete kdykoli.",
+  "matchViewPitch": "Hřiště",
+  "matchViewPitchBlurb": "Hráči v akci na hřišti",
+  "matchViewTimeline": "Průběh",
+  "matchViewTimelineBlurb": "Zápas událost po události",
+  "matchViewSwitchToPitch": "Sledovat na hřišti",
+  "matchViewSwitchToTimeline": "Sledovat průběh"
 }

@@ -22333,6 +22333,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Penalty! {other} clips {player} and is booked again, so that\'s red.'**
   String pitchComPenaltyAwardedSecondYellow3(String player, String other);
+
+  /// Live match, before kick-off: heading over the choice of how to watch (the Pitch view or the Timeline of events).
+  ///
+  /// In en, this message translates to:
+  /// **'How do you want to watch?'**
+  String get matchViewChooseTitle;
+
+  /// Live match, before kick-off: small line under the watch choice. The choice is remembered and can be changed during the match.
+  ///
+  /// In en, this message translates to:
+  /// **'Your choice is kept for the next match. You can switch at any time.'**
+  String get matchViewChooseHint;
+
+  /// Live match: name of the option that shows the match on a 2D pitch with moving players.
+  ///
+  /// In en, this message translates to:
+  /// **'Pitch'**
+  String get matchViewPitch;
+
+  /// Live match, before kick-off: one line under the Pitch option.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch the players on the pitch'**
+  String get matchViewPitchBlurb;
+
+  /// Live match: name of the option that shows the match as a list of events.
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline'**
+  String get matchViewTimeline;
+
+  /// Live match, before kick-off: one line under the Timeline option.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the match event by event'**
+  String get matchViewTimelineBlurb;
+
+  /// Live match header: label (tooltip, screen reader) of the button that switches to the Pitch view.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch on the pitch'**
+  String get matchViewSwitchToPitch;
+
+  /// Live match header: label (tooltip, screen reader) of the button that switches to the Timeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch the timeline'**
+  String get matchViewSwitchToTimeline;
 }
 
 class _AppLocalizationsDelegate

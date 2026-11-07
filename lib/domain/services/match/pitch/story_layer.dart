@@ -2465,12 +2465,17 @@ class _Builder {
     final dt = t1 - t0;
     if (dt <= 1e-9) return;
     final minute = pacer.matchAt(_dur(t0)).minute;
-    for (final side in sides) {
-      side.followDrift(minute);
+    final inWindow = activeWindow != null;
+    // The AI's drift waits for a quiet step: a staged moment plays out in
+    // the shape it began in, and the lines move to the new instructions
+    // once it is over.
+    if (!inWindow) {
+      for (final side in sides) {
+        side.followDrift(minute);
+      }
     }
     final ball = _ballNow(t0);
     _updateBackLines(minute, ball);
-    final inWindow = activeWindow != null;
     final plan = activePlan;
     final state = inWindow && plan is! _Hold ? _state(t0) : null;
 

@@ -176,6 +176,9 @@ abstract final class Declutter {
 
   static const double _fade = 0.25;
 
+  /// How long before a scoring strike the beaten keeper takes hold.
+  static const double _keeperFade = 0.8;
+
   /// How sharply two men level across the pitch pick sides. Two crossing
   /// paths swap sides quickly here; [DeclutterEasing] spreads the swap
   /// over a few frames on screen.
@@ -227,6 +230,13 @@ abstract final class Declutter {
         if (!p.resting) {
           hold(fromActor, 1 - (t - p.t0) / _fade);
           hold(toActor, 1 - (p.t1 - t) / _fade);
+          // A shot that scores ends in the net, not with the keeper, but
+          // he is beaten where he stands: held for its whole flight.
+          hold(_beatenKeeper(s, p), 1);
+        } else if (i > 0 && s.ballPhases[i - 1] is FlightPhase) {
+          // And let go over the fifth of a second after it is in.
+          final before = s.ballPhases[i - 1] as FlightPhase;
+          hold(_beatenKeeper(s, before), 1 - (t - p.t0) / _fade);
         }
     }
     // Whoever has the ball next, or strikes it (a dead ball's taker, a man
@@ -242,7 +252,39 @@ abstract final class Declutter {
           if (!next.resting) hold(fromActor, w);
       }
     }
+    // The keeper a goal is about to beat takes hold more slowly than the
+    // man with the ball (he is often well off his drawn place in a crowded
+    // box): over [_keeperFade] before the strike, so his token eases home.
+    for (var j = i + 1; j < s.ballPhases.length; j++) {
+      final next = s.ballPhases[j];
+      if (next.t0 > t + _keeperFade) break;
+      if (next is FlightPhase && !next.resting) {
+        hold(_beatenKeeper(s, next), 1 - (next.t0 - t) / _keeperFade);
+      }
+    }
     return out;
+  }
+
+  /// The keeper [flight] beats, when it is a shot that scores: the actor
+  /// index of the keeper the scoring moment names (read off the window the
+  /// shot is struck in, so the hold never flickers). Null for any other
+  /// flight.
+  static int? _beatenKeeper(PitchScript s, FlightPhase flight) {
+    if (flight.pass || flight.toActor != null) return null;
+    final from = flight.fromActor;
+    if (from == null) return null;
+    final shooter = s.actorList[from].playerId;
+    final w = s.windowAt(flight.t0);
+    if (w == null) return null;
+    for (final m in w.moments) {
+      if (m is ShotMoment &&
+          m.outcome == ShotOutcome.goal &&
+          m.shooterId == shooter) {
+        final k = m.keeperId;
+        return k == null ? null : s.actorIndexOf(k);
+      }
+    }
+    return null;
   }
 
   /// How far [a] and [b] are meant to be in touch in [f] at [t] of [s], 0

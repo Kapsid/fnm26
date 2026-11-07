@@ -21,6 +21,8 @@ import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:fnm/features/tournaments/qualifying_draw_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
+    show kMatchViewModePrefsKey;
 
 import 'test_database.dart';
 
@@ -112,7 +114,11 @@ Future<SeededSave> seedSave(
   FormFactor formFactor = FormFactor.phone,
   List<Override> overrides = const [],
 }) async {
-  SharedPreferences.setMockInitialValues(<String, Object>{});
+  // Matches on the Timeline, as before the Pitch view: no Pitch or
+  // Timeline question before kick-off.
+  SharedPreferences.setMockInitialValues(<String, Object>{
+    kMatchViewModePrefsKey: 'timeline',
+  });
   final db = createTestDatabase();
   final container = ProviderContainer(
     overrides: [

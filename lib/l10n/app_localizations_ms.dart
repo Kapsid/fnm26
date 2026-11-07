@@ -14818,4 +14818,29 @@ class AppLocalizationsMs extends AppLocalizations {
   String pitchComPenaltyAwardedSecondYellow3(String player, String other) {
     return 'Penalty! $other clips $player and is booked again, so that\'s red.';
   }
+
+  @override
+  String get matchViewChooseTitle => 'How do you want to watch?';
+
+  @override
+  String get matchViewChooseHint =>
+      'Your choice is kept for the next match. You can switch at any time.';
+
+  @override
+  String get matchViewPitch => 'Pitch';
+
+  @override
+  String get matchViewPitchBlurb => 'Watch the players on the pitch';
+
+  @override
+  String get matchViewTimeline => 'Timeline';
+
+  @override
+  String get matchViewTimelineBlurb => 'Follow the match event by event';
+
+  @override
+  String get matchViewSwitchToPitch => 'Watch on the pitch';
+
+  @override
+  String get matchViewSwitchToTimeline => 'Watch the timeline';
 }

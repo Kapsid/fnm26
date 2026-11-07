@@ -125,6 +125,97 @@ void main() {
     expect(contact, lessThan(0.02));
   });
 
+  test('as played at 60 fps, eased: under 2.5% of frames pile up', () {
+    // The view draws the eased frame (DeclutterEasing), not Declutter's
+    // target: a nudge takes a moment to come on, so the eased picture can
+    // pile up where the target would not. Measured as the view plays it.
+    var frames = 0;
+    var piled = 0;
+    var contactTooClose = 0;
+    for (var seed = 0; seed < 24; seed++) {
+      final s = labScript(
+        labMatch(seed),
+        PitchSpeed.values[seed % 3],
+        seed: seed,
+      );
+      final easing = DeclutterEasing();
+      for (var t = s.start + 0.1; t < s.totalSeconds; t += 1 / 60) {
+        final f = s.sample(Duration(microseconds: (t * 1e6).round()));
+        final at = easing.frame(s, f, t);
+        frames++;
+        final ids = at.keys.toList();
+        var bad = false;
+        var tooClose = false;
+        for (var i = 0; i < ids.length; i++) {
+          for (var j = i + 1; j < ids.length; j++) {
+            final ov = DisplaySpacing.overlap(at[ids[i]]!, at[ids[j]]!);
+            if (ov <= _pileUp) continue;
+            final sanctioned = Declutter.inContact(s, f, ids[i], ids[j], t);
+            if (!sanctioned) bad = true;
+            if (sanctioned && ov > _contact) tooClose = true;
+          }
+        }
+        if (bad) piled++;
+        if (tooClose) contactTooClose++;
+      }
+    }
+    final share = piled / frames;
+    final contact = contactTooClose / frames;
+    debugPrint(
+      'eased pile-ups at 60 fps: $piled of $frames frames '
+      '(${(share * 100).toStringAsFixed(2)}%); contact closer than half a '
+      'token: ${(contact * 100).toStringAsFixed(2)}%',
+    );
+    // Measured 2.25% (24 matches, 273k frames) when this bound was set,
+    // against 1.27% for Declutter's own target: the easing lags a nudge
+    // by a few frames as two men close. Bounded here so it cannot creep.
+    expect(share, lessThan(0.025));
+    expect(contact, lessThan(0.02));
+  });
+
+  test('the beaten keeper is drawn where he is as a goal goes in', () {
+    // A shot that scores has no keeper at its end (the ball goes past him
+    // into the net), but he is the moment's man: the crowd must not nudge
+    // him toward or away from the ball as it beats him.
+    var checked = 0;
+    final fails = <String>[];
+    for (var seed = 0; seed < 120; seed++) {
+      final s = labScript(
+        labMatch(seed),
+        PitchSpeed.values[seed % 3],
+        seed: seed,
+      );
+      for (final w in s.windows) {
+        for (final m in w.moments) {
+          if (m is! ShotMoment || m.outcome != ShotOutcome.goal) continue;
+          final keeper = m.keeperId;
+          if (keeper == null) continue;
+          final goal = w.cues.where((c) => c.kind == PitchCueKind.goal);
+          final strike = w.cues.where((c) => c.kind == PitchCueKind.shot);
+          if (goal.isEmpty || strike.isEmpty) continue;
+          final t0 = strike.first.t;
+          final t1 = goal.first.t;
+          for (var t = t0; t <= t1; t += 0.05) {
+            final f = s.sample(Duration(microseconds: (t * 1e6).round()));
+            final p = f.players[keeper];
+            if (p == null) continue;
+            final d = Declutter.frame(s, f, t)[keeper]!;
+            checked++;
+            if (d.distanceTo(p) > 0.3) {
+              fails.add(
+                'match $seed keeper $keeper at $t: '
+                '${d.distanceTo(p).toStringAsFixed(2)} m',
+              );
+            }
+          }
+        }
+      }
+    }
+    debugPrint('beaten keeper checks: $checked, failures ${fails.length}');
+    expect(fails.take(10), isEmpty);
+    expect(checked, greaterThan(200));
+  });
+
   test('a drawn token eases aside, never jumps', () {
     // Frame to frame at 60 fps, how far a token's nudge (drawn place less
     // the man's place) moves, in tokens; cuts and restarts apart.
