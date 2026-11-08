@@ -1088,6 +1088,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         clock.value > Duration.zero &&
         !clock.finished &&
         !_clockDone;
+    // Whether the match is over, read NOW: [place] is asked once the new
+    // picture is in, and by then the controller has made its clock (at
+    // nought, not finished), so [_clockDone] asked then said "not over" for
+    // a match the Timeline had already whistled. The picture was put on the
+    // end of stoppage time instead of the whistle, the clock was never run
+    // again (play stops for good at full time), and with it full time never
+    // came: no Continue, no way out of the match.
+    final over = _clockDone;
     final built = _pc.build(
       result: r,
       lineups: matchLineupsFromPreview(preview, result: r, changes: _changes),
@@ -1095,7 +1103,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       seed: _seed(preview),
       isFinal: stadium.dressing.isFinal,
       resume: fromHere,
-      place: (pb) => _clockDone ? pb.pacer.total : pb.endOf(_minute, _added),
+      place: (pb) => over ? pb.pacer.total : pb.endOf(_minute, _added),
     );
     if (mounted) setState(() {});
     final shown = await built;

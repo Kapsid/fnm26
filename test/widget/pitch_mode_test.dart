@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -185,6 +186,7 @@ Future<ProviderContainer> _pump(
   PitchPlaybackInPlace? inPlace,
   WeatherKind? weather,
   Size size = const Size(400, 2000),
+  FormFactor? formFactor,
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
   tester.view
@@ -204,6 +206,7 @@ Future<ProviderContainer> _pump(
       ),
       if (weather != null)
         pitchForcedWeatherProvider.overrideWithValue(weather),
+      if (formFactor != null) formFactorProvider.overrideWithValue(formFactor),
       if (inPlace != null)
         pitchPlaybackInPlaceProvider.overrideWithValue(inPlace),
     ],
@@ -1180,9 +1183,144 @@ void main() {
   });
 
   _ownerFeedbackTests();
+  _fullTimeSwitchTests();
 }
 
 // Task 15c: the owner's device feedback, checked on the phone screen.
+/// The full-time Continue in the bottom bar (not an interval card's).
+Finder _ftContinue() => find.byElementPredicate((e) {
+  final w = e.widget;
+  if (w is! PrimaryButton || w.label != enL.matchContinue) return false;
+  var under = false;
+  e.visitAncestorElements((a) {
+    if (a.widget is HalfTimePrompt) under = true;
+    return !under;
+  });
+  return !under;
+});
+
+bool _ftContinueLive(WidgetTester tester) {
+  final b = _ftContinue();
+  if (b.evaluate().isEmpty) return false;
+  return tester.widget<PrimaryButton>(b.first).onPressed != null;
+}
+
+/// Taps the full-time Continue: it answers (the commit starts; this
+/// harness has no save behind it, so it then reports it could not).
+Future<void> _tapContinue(WidgetTester tester) async {
+  await tester.tap(_ftContinue());
+  await tester.pump();
+  expect(find.text(enL.matchContinuing), findsOneWidget);
+  await tester.pump(const Duration(seconds: 6));
+}
+
+/// Plays a Timeline match through to the final whistle, taking every
+/// interval's Continue on the way.
+Future<void> _playTimelineOut(WidgetTester tester) async {
+  for (var i = 0; i < 2000 && !_ftContinueLive(tester); i++) {
+    final half = find.descendant(
+      of: find.byType(HalfTimePrompt),
+      matching: find.text(enL.matchContinue),
+    );
+    if (half.evaluate().isNotEmpty) {
+      await tester.tap(half.first);
+    }
+    await tester.pump(const Duration(milliseconds: 200));
+  }
+  expect(_ftContinueLive(tester), isTrue, reason: 'never reached full time');
+}
+
+/// A salt whose match has no injury (which stops play for the squad) and
+/// no late goal (whose flash covers the screen at the whistle).
+int _cleanSalt(MatchPreview p) => _salt(
+  p,
+  (r) => !r.events.any(
+    (e) =>
+        e.type == MatchEventType.injury ||
+        (e.type == MatchEventType.goal && e.minute >= 80),
+  ),
+);
+
+void _fullTimeSwitchTests() {
+  for (final (label, size, ff) in [
+    ('phone', const Size(400, 2000), FormFactor.phone),
+    ('tablet', const Size(1194, 834), FormFactor.tablet),
+  ]) {
+    testWidgets('$label: full time on the Timeline, then 2D TV: Continue '
+        'is still there and live', (tester) async {
+      final preview = _preview();
+      await _pump(
+        tester,
+        preview: preview,
+        salt: _cleanSalt(preview),
+        prefs: {kMatchViewModePrefsKey: 'timeline'},
+        size: size,
+        formFactor: ff,
+      );
+      await _playTimelineOut(tester);
+      // Any goal flash of the last minute clears first.
+      await tester.pump(const Duration(seconds: 3));
+      await _switch(tester);
+      expect(_screen(tester).mode, MatchViewMode.pitch);
+      for (var i = 0; i < 60; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      expect(_ftContinue(), findsOneWidget);
+      expect(_ftContinueLive(tester), isTrue);
+      // And back to the Timeline: still full time.
+      await _switch(tester);
+      expect(_screen(tester).mode, MatchViewMode.timeline);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(_ftContinueLive(tester), isTrue);
+      // Back on the pitch once more, and the Continue there is a live one.
+      await _switch(tester);
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await _tapContinue(tester);
+    });
+
+    testWidgets('$label: full time on the pitch, then the Timeline and back: '
+        'Continue stays', (tester) async {
+      final preview = _preview();
+      await _pump(
+        tester,
+        preview: preview,
+        salt: _cleanSalt(preview),
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        size: size,
+        formFactor: ff,
+      );
+      await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      final pb = _pb(tester);
+      await _seek(tester, pb.halfTime - const Duration(milliseconds: 100));
+      await _until(
+        tester,
+        () => find.byType(HalfTimePrompt).evaluate().isNotEmpty,
+      );
+      await tester.tap(
+        find.descendant(
+          of: find.byType(HalfTimePrompt),
+          matching: find.text(enL.matchContinue),
+        ),
+      );
+      await tester.pump();
+      await _until(tester, () => _clock(tester).playing);
+      await _seek(tester, pb.pacer.total - const Duration(milliseconds: 200));
+      await _until(tester, () => _ftContinueLive(tester));
+      await _switch(tester);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(_ftContinueLive(tester), isTrue);
+      await _switch(tester);
+      for (var i = 0; i < 60; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      expect(_ftContinueLive(tester), isTrue);
+      await _tapContinue(tester);
+    });
+  }
+}
+
 void _ownerFeedbackTests() {
   /// What the switch must sit inside: the Timeline board's card, or (the
   /// Pitch mode's stripe being too thin for it) the pitch.
