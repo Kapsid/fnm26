@@ -6,7 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/repositories/drift_world_manager_repository.dart';
 import 'package:fnm/data/seed/frozen_name_pools.dart';
+import 'package:fnm/domain/entities/world_manager.dart';
+import 'package:fnm/domain/repositories/world_manager_repository.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
@@ -25,6 +28,57 @@ class _BeginCounter extends QueryInterceptor {
     begins++;
     return super.beginTransaction(parent);
   }
+}
+
+/// A repository whose first [apply] fails, as a full disk would.
+class _FailsOnce implements WorldManagerRepository {
+  _FailsOnce(this._inner);
+
+  final WorldManagerRepository _inner;
+  int applies = 0;
+
+  @override
+  Future<void> apply(int careerId, ManagerChanges c) async {
+    applies++;
+    if (applies == 1) throw StateError('disk full');
+    await _inner.apply(careerId, c);
+  }
+
+  @override
+  Future<bool> hasManagers(int careerId) => _inner.hasManagers(careerId);
+
+  @override
+  Future<ManagerWorld> load(int careerId) => _inner.load(careerId);
+
+  @override
+  Future<ManagerSpell?> inChargeOn(int careerId, int nationId, DateTime d) =>
+      _inner.inChargeOn(careerId, nationId, d);
+
+  @override
+  Future<List<ManagerSpell>> spellsOf(int careerId, int managerId) =>
+      _inner.spellsOf(careerId, managerId);
+
+  @override
+  Future<List<ManagerTie>> ties(int careerId) => _inner.ties(careerId);
+
+  @override
+  Future<void> addTie(
+    int careerId, {
+    required int managerId,
+    required TieKind kind,
+    required int delta,
+    required DateTime date,
+  }) => _inner.addTie(
+    careerId,
+    managerId: managerId,
+    kind: kind,
+    delta: delta,
+    date: date,
+  );
+
+  @override
+  Future<List<ManagerSpell>> movesSince(int careerId, DateTime since) =>
+      _inner.movesSince(careerId, since);
 }
 
 /// The 1.1.0 (37) mid-cycle save, opened as the app opens it.
@@ -159,6 +213,26 @@ void main() {
       expect(then['CRO']!.sur, isNot(contains('Kovačić')));
       expect(now.keys.where((k) => k != k.toUpperCase()), isEmpty);
       expect(now, contains('ENG'));
+      await _close(c, db);
+    });
+  }, timeout: const Timeout(Duration(minutes: 5)));
+
+  testWidgets('a failed seeding is not kept: the next call seeds', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      final db = storyDb();
+      final failing = _FailsOnce(DriftWorldManagerRepository(db));
+      final c = storyContainer(db, 0, [
+        worldManagerRepositoryProvider.overrideWithValue(failing),
+      ]);
+      final d = await StoryDriver.start(c, 42);
+      final service = c.read(worldManagerServiceProvider);
+      await expectLater(service.ensureSeeded(d.careerId), throwsStateError);
+      expect(await failing.hasManagers(d.careerId), isFalse);
+      await service.ensureSeeded(d.careerId);
+      expect(failing.applies, 2);
+      expect(await failing.hasManagers(d.careerId), isTrue);
       await _close(c, db);
     });
   }, timeout: const Timeout(Duration(minutes: 5)));

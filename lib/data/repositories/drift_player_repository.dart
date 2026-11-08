@@ -969,7 +969,10 @@ class DriftPlayerRepository implements PlayerRepository {
       };
 
   @override
-  Future<Map<String, NamePoolLists>> namePoolsFor(int careerId) async {
+  Future<Map<String, NamePoolLists>> namePoolsFor(
+    int careerId, {
+    bool worldLists = true,
+  }) async {
     final era = await _poolEra(careerId);
     final pools = await (await _readsRichPools(careerId)
         ? _richPools(era: era)
@@ -977,7 +980,9 @@ class DriftPlayerRepository implements PlayerRepository {
     final codes = _codes ??= {
       for (final n in await _db.select(_db.nations).get()) n.id: n.code,
     };
-    final lists = (await _worldFor(careerId))?.pack.nameLists ?? const {};
+    final lists = worldLists
+        ? (await _worldFor(careerId))?.pack.nameLists ?? const {}
+        : const <int, PackNameLists>{};
     return {
       for (final MapEntry(key: id, value: pool) in pools.entries)
         if (codes[id] case final code?)

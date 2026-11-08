@@ -246,6 +246,94 @@ void main() {
     }
   });
 
+  test('no two spells at one nation overlap', () {
+    for (var seed = 1; seed <= 20; seed++) {
+      final w = _seed(seed);
+      final byNation = <int, List<ManagerSpell>>{};
+      for (final s in w.spells) {
+        (byNation[s.nationId] ??= []).add(s);
+      }
+      final open = DateTime(9999);
+      for (final spells in byNation.values) {
+        for (var i = 0; i < spells.length; i++) {
+          for (var j = i + 1; j < spells.length; j++) {
+            final a = spells[i];
+            final b = spells[j];
+            final overlap =
+                a.fromDate.isBefore(b.toDate ?? open) &&
+                b.fromDate.isBefore(a.toDate ?? open);
+            expect(
+              overlap,
+              isFalse,
+              reason:
+                  'seed $seed nation ${a.nationId}: spells '
+                  '${a.spellNo} and ${b.spellNo}',
+            );
+          }
+        }
+      }
+    }
+  });
+
+  test('every manager has one or two earlier spells', () {
+    for (var seed = 1; seed <= 20; seed++) {
+      final w = _seed(seed);
+      for (final m in w.managers) {
+        final past = w.spells.where(
+          (s) => s.managerId == m.managerId && !s.current,
+        );
+        expect(
+          past.length,
+          inInclusiveRange(1, 2),
+          reason: 'seed $seed manager ${m.managerId}',
+        );
+        for (final s in past) {
+          expect(
+            s.fromDate.year - m.birthYear,
+            greaterThanOrEqualTo(ManagerSeeder.minFirstJobAge),
+          );
+        }
+      }
+    }
+  });
+
+  test('a world whose lists give only real names falls back, never throws', () {
+    // Czechia's world lists make one name, a real one.
+    final worldPools = {
+      ..._pools,
+      'CZE': (first: ['Real'], sur: ['Person']),
+      'POL': (first: ['Real'], sur: ['Pole']),
+    };
+    final defaults = {
+      ..._pools,
+      'POL': (first: <String>[], sur: <String>[]),
+    };
+    final w = ManagerSeeder.seed(
+      rngSeed: 2,
+      seedCycle: 0,
+      asOf: _asOf,
+      nations: _nations,
+      rankById: const {},
+      playerNationIds: const {},
+      pools: worldPools,
+      packManagers: const {},
+      realNames: const {'Real Person', 'Real Pole'},
+      defaultPools: defaults,
+    );
+    for (final m in w.managers.where((m) => m.nationality == 'CZE')) {
+      // From Czechia's own default pool.
+      expect(m.name, startsWith('CZEf'));
+    }
+    for (final m in w.managers.where((m) => m.nationality == 'POL')) {
+      // Poland has no default pool: England's.
+      expect(m.name, startsWith('ENGf'));
+    }
+    expect(
+      w.managers.where((m) => m.nationality == 'CZE' || m.nationality == 'POL'),
+      isNotEmpty,
+    );
+  });
+
   test('a pack manager keeps its name and nationality', () {
     const named = (name: 'Ota Brnak', nationality: 'CZE');
     final w = _seed(5, pack: {1: named, _player: named});

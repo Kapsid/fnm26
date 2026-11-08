@@ -35,8 +35,11 @@ abstract final class ManagerSeeder {
   static const int maxTenureYears = 6;
 
   /// The youngest a manager takes his first job at, in years: an earlier
-  /// spell that would start younger is not drawn.
-  static const int minFirstJobAge = 32;
+  /// spell is cut short rather than start younger.
+  static const int minFirstJobAge = 30;
+
+  /// The shortest earlier spell, in days: one cut to fit is never shorter.
+  static const int minPastSpellDays = 180;
 
   /// How far a manager's earlier job may sit above the one after it in the
   /// ranking: careers mostly climb.
@@ -64,7 +67,9 @@ abstract final class ManagerSeeder {
   /// [rankById] orders where a manager worked before; [pools] (upper-case
   /// FIFA code) names them; [packManagers] (nation id) renames a nation's
   /// incumbent and sets his nationality, which then decides his style.
-  /// A drawn name in [realNames] (a real person's) is never given.
+  /// A drawn name in [realNames] (a real person's) is never given; when
+  /// [pools] cannot give one, the nationality's [defaultPools] (the game's
+  /// own lists, under a world's) and then England's are drawn from.
   static ManagerWorld seed({
     required int rngSeed,
     required int seedCycle,
@@ -75,6 +80,7 @@ abstract final class ManagerSeeder {
     required Map<String, NamePoolLists> pools,
     required Map<int, ({String name, String nationality})> packManagers,
     Set<String> realNames = const {},
+    Map<String, NamePoolLists> defaultPools = const {},
   }) {
     final rng = SeededRng(varietySeed('mgr:seed:$rngSeed:$seedCycle'));
     final ordered = [...nations]..sort((a, b) => a.id.compareTo(b.id));
@@ -100,19 +106,39 @@ abstract final class ManagerSeeder {
         if (!playerNationIds.contains(e.key)) e.value.name.trim(),
     };
 
+    bool usable(NamePoolLists? p) =>
+        p != null && p.first.isNotEmpty && p.sur.isNotEmpty;
+
     String nameFor(String code) {
-      final pool = ManagerNames.poolFor(pools, code);
-      // A real person's name is always drawn again. A clash with a name
-      // already given is drawn again a few times, then kept: a big pool
-      // never runs out, and a tiny one is better repeated than unnamed.
-      for (var i = 0; i < 64; i++) {
-        final name = ManagerNames.build(pool, rng);
-        if (realNames.contains(name)) continue;
-        if (i < 8 && used.contains(name)) continue;
-        used.add(name);
-        return name;
+      final key = code.toUpperCase();
+      final stages = <NamePoolLists>[];
+      for (final p in [
+        pools[key],
+        defaultPools[key],
+        defaultPools['ENG'],
+        pools['ENG'],
+      ]) {
+        if (usable(p) && !stages.any((q) => identical(q, p))) stages.add(p!);
       }
-      throw StateError('No fictional manager name in the $code pool');
+      if (stages.isEmpty) {
+        throw StateError('No name pool for $key and none for ENG');
+      }
+      // A real person's name is always drawn again, from the next pool once
+      // one runs dry. A clash with a name already given is drawn again a
+      // few times, then kept: a tiny pool is better repeated than unnamed.
+      late String name;
+      for (final pool in stages) {
+        for (var i = 0; i < 64; i++) {
+          name = ManagerNames.build(pool, rng);
+          if (realNames.contains(name)) continue;
+          if (i < 8 && used.contains(name)) continue;
+          used.add(name);
+          return name;
+        }
+      }
+      // Every pool gave only real names: unreachable with England's.
+      used.add(name);
+      return name;
     }
 
     NationStyle styleFor(String home, String nationality) {
@@ -200,49 +226,69 @@ abstract final class ManagerSeeder {
       );
     }
 
-    // One or two earlier spells each, at other AI nations, each over before
-    // the job after it began and before that nation's incumbent arrived.
+    // One or two earlier spells each, at other AI nations. A nation's
+    // spells never overlap: each earlier spell is placed in a stretch when
+    // nobody was in charge there (before its incumbent arrived and clear of
+    // every earlier spell already placed), over before the manager's next
+    // job began, and cut short rather than start before he was
+    // [minFirstJobAge]. The first always finds room; a second that does
+    // not is not drawn.
+    final occupied = <int, List<({DateTime from, DateTime to})>>{
+      for (final d in drafts)
+        if (d.current case final c?)
+          c.nationId: [(from: c.from, to: _openEnded)],
+    };
     for (final d in drafts) {
       final count = rng.rangeInt(1, 2);
       var cursor = d.current?.from ?? asOf;
       var refRank = d.current == null ? null : rankById[d.current!.nationId];
       final worked = {?d.current?.nationId};
+      final floor = DateTime(d.birthYear + minFirstJobAge);
       for (var k = 0; k < count; k++) {
         final gap = rng.nextInt(366);
         final length = rng.rangeInt(365, 4 * 365);
-        final candidates = [
-          for (final n in ai)
-            if (!worked.contains(n.id) &&
-                (refRank == null ||
-                    (rankById[n.id] ?? refRank) >= refRank - earlierRankReach))
-              n,
-        ];
-        final pickFrom = candidates.isEmpty
-            ? [
-                for (final n in ai)
-                  if (!worked.contains(n.id)) n,
-              ]
-            : candidates;
         final why = rng.pick(_pastEnds);
         final extra = rng.rangeInt(1, 2);
-        if (pickFrom.isEmpty) break;
-        final at = rng.pick(pickFrom);
-        var end = _daysBefore(cursor, gap);
-        final arrived = startOf[at.id];
-        if (arrived != null && arrived.isBefore(end)) end = arrived;
-        final start = _daysBefore(end, length);
-        if (start.year - d.birthYear < minFirstJobAge) break;
+        final near = <Nation>[];
+        final far = <Nation>[];
+        for (final n in ai) {
+          if (worked.contains(n.id)) continue;
+          final climb =
+              refRank == null ||
+              (rankById[n.id] ?? refRank) >= refRank - earlierRankReach;
+          (climb ? near : far).add(n);
+        }
+        final order = [...rng.shuffled(near), ...rng.shuffled(far)];
+        ({Nation at, DateTime from, DateTime to})? placed;
+        // The drawn gap first; with none, if that leaves no room anywhere.
+        for (final before in [_daysBefore(cursor, gap), cursor]) {
+          for (final n in order) {
+            final w = _latestFree(occupied[n.id] ?? const [], floor, before);
+            if (w == null) continue;
+            final earliest = _daysBefore(w.to, length);
+            placed = (
+              at: n,
+              from: earliest.isBefore(w.from) ? w.from : earliest,
+              to: w.to,
+            );
+            break;
+          }
+          if (placed != null) break;
+        }
+        if (placed == null) break;
+        final (:at, :from, :to) = placed;
         d.past.add((
           nationId: at.id,
-          from: start,
-          to: end,
+          from: from,
+          to: to,
           why: why,
           until: why == SpellEnd.contractEnd
-              ? end
-              : DateTime(end.year + extra, end.month, end.day),
+              ? to
+              : DateTime(to.year + extra, to.month, to.day),
         ));
+        (occupied[at.id] ??= []).add((from: from, to: to));
         worked.add(at.id);
-        cursor = start;
+        cursor = from;
         refRank = rankById[at.id] ?? refRank;
       }
     }
@@ -321,6 +367,50 @@ abstract final class ManagerSeeder {
   }
 
   static int _weight(int pedigree) => (6 - pedigree) * (6 - pedigree);
+
+  /// The end an open spell is given while spells are placed.
+  static final DateTime _openEnded = DateTime(9999);
+
+  /// The latest stretch after [floor] and up to [before] that none of
+  /// [taken] covers and that is at least [minPastSpellDays] long; null when
+  /// there is none.
+  static ({DateTime from, DateTime to})? _latestFree(
+    List<({DateTime from, DateTime to})> taken,
+    DateTime floor,
+    DateTime before,
+  ) {
+    final sorted = [...taken]..sort((a, b) => b.from.compareTo(a.from));
+    var to = before;
+    // Walk the occupied stretches latest first, each free stretch lying
+    // between one's end and the start of the one after it.
+    for (var i = 0; i <= sorted.length; i++) {
+      final DateTime freeFrom;
+      if (i == sorted.length) {
+        freeFrom = floor;
+      } else {
+        final t = sorted[i];
+        if (!t.from.isBefore(to)) continue;
+        if (t.to.isBefore(to)) {
+          freeFrom = t.to.isAfter(floor) ? t.to : floor;
+        } else {
+          // [to] falls inside this stretch: free time ends at its start.
+          to = t.from;
+          continue;
+        }
+      }
+      if (_daysBetween(freeFrom, to) >= minPastSpellDays) {
+        return (from: freeFrom, to: to);
+      }
+      if (i < sorted.length) to = sorted[i].from;
+    }
+    return null;
+  }
+
+  static int _daysBetween(DateTime a, DateTime b) => DateTime.utc(
+    b.year,
+    b.month,
+    b.day,
+  ).difference(DateTime.utc(a.year, a.month, a.day)).inDays;
 
   static DateTime _daysBefore(DateTime d, int days) =>
       DateTime(d.year, d.month, d.day - days);

@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show immutable;
+import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 
 import 'pack_rules.dart';
@@ -97,12 +98,14 @@ abstract final class PackCodec {
 
   static const _topKeys = {'format', 'pack', 'trophies'};
 
-  /// [p] as a `.fnmdb` file, always in the current format
-  /// ([kPackFormatVersion]), whatever [p] was read from.
+  /// [p] as a `.fnmdb` file, in the oldest format that holds it
+  /// ([WorldPack.asWritten]): format 2, which a 1.1.0 build reads, unless it
+  /// names managers.
   static Uint8List encode(WorldPack p, Map<String, Uint8List> trophies) {
+    final written = p.asWritten;
     final json = jsonEncode({
-      'format': kPackFormatVersion,
-      'pack': p.copyWith(formatVersion: kPackFormatVersion).toJson(),
+      'format': written.formatVersion,
+      'pack': written.toJson(),
       'trophies': {
         for (final e in trophies.entries) e.key: base64Encode(e.value),
       },
@@ -152,7 +155,7 @@ abstract final class PackCodec {
       return const PackRejected(PackRejection.badData);
     }
 
-    final WorldPack pack;
+    WorldPack pack;
     final inner = rawPack['formatVersion'];
     if (inner is int && inner > kPackFormatVersion) {
       return const PackRejected(PackRejection.newerFormat);
@@ -164,6 +167,19 @@ abstract final class PackCodec {
     }
     if (!fieldsOk(pack, baseCodes: baseCodes)) {
       return const PackRejected(PackRejection.badData);
+    }
+    // A day-one manager the game cannot use is dropped alone, never the
+    // pack (checked only against a known world).
+    if (baseCodes.isNotEmpty && pack.managers.isNotEmpty) {
+      pack = pack.copyWith(
+        managers: WorldPack.usableManagers(
+          pack.managers,
+          nationIds: baseCodes.keys.toSet(),
+          codes: {for (final c in baseCodes.values) c.toUpperCase()},
+          dropped: (id, why) =>
+              AppLog.info('pack-import', 'manager of nation $id dropped: $why'),
+        ),
+      );
     }
 
     final trophies = <String, Uint8List>{};

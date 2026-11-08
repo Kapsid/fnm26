@@ -169,9 +169,13 @@ abstract interface class PlayerRepository {
   /// upper-case FIFA code: the pools of the era the career was created in
   /// (classic or richer, each list as that era froze it, late surnames
   /// included), with its world's own lists in their place where it has
-  /// them. Served from the pools the repository already holds; no read per
+  /// them (unless [worldLists] is false: the game's own lists alone).
+  /// Served from the pools the repository already holds; no read per
   /// nation.
-  Future<Map<String, NamePoolLists>> namePoolsFor(int careerId);
+  Future<Map<String, NamePoolLists>> namePoolsFor(
+    int careerId, {
+    bool worldLists = true,
+  });
 }
 
 /// One nation's first names and surnames.

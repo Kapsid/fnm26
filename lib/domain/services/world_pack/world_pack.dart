@@ -489,6 +489,40 @@ class WorldPack {
   /// later manager is the game's own.
   final Map<int, ({String name, String nationality})> managers;
 
+  /// This pack in the oldest format that holds it, as every writer stores
+  /// and exports it: format 2 (which a 1.1.0 build reads) when it names no
+  /// managers, [kPackFormatVersion] when it does.
+  WorldPack get asWritten =>
+      copyWith(formatVersion: managers.isEmpty ? 2 : kPackFormatVersion);
+
+  /// [managers] without the entries a game cannot use: a blank name, a
+  /// nationality that is not one of [codes] (upper-case FIFA codes), or a
+  /// nation id not in [nationIds]. Each one dropped is passed to [dropped].
+  /// Light on purpose: a bad entry costs only itself, never the pack.
+  static Map<int, ({String name, String nationality})> usableManagers(
+    Map<int, ({String name, String nationality})> managers, {
+    required Set<int> nationIds,
+    required Set<String> codes,
+    void Function(int nationId, String why)? dropped,
+  }) {
+    final out = <int, ({String name, String nationality})>{};
+    for (final MapEntry(key: id, value: m) in managers.entries) {
+      final why = m.name.trim().isEmpty
+          ? 'blank name'
+          : !codes.contains(m.nationality.trim().toUpperCase())
+          ? 'unknown nationality "${m.nationality}"'
+          : !nationIds.contains(id)
+          ? 'unknown nation'
+          : null;
+      if (why == null) {
+        out[id] = m;
+      } else {
+        dropped?.call(id, why);
+      }
+    }
+    return out;
+  }
+
   WorldPack copyWith({
     String? uuid,
     String? name,
@@ -571,13 +605,16 @@ class WorldPack {
     'localized': {
       for (final e in localized.entries) e.key: {...e.value},
     },
-    'managers': {
-      for (final e in managers.entries)
-        '${e.key}': {
-          'name': e.value.name,
-          'nationality': e.value.nationality,
-        },
-    },
+    // Written from format 3 on (see [asWritten]): a format-2 reader knows
+    // no such key.
+    if (formatVersion >= 3 || managers.isNotEmpty)
+      'managers': {
+        for (final e in managers.entries)
+          '${e.key}': {
+            'name': e.value.name,
+            'nationality': e.value.nationality,
+          },
+      },
   };
 
   static const _keys = {
@@ -687,7 +724,7 @@ class WorldPack {
     }
     var out = json;
     if (v == 1) out = _from1To2(out);
-    if (v <= 2) out = _from2To3(out);
+    if (v <= 2) out = _from2To3(out, v);
     return out;
   }
 
@@ -711,11 +748,13 @@ class WorldPack {
   }
 
   /// Format 2 to 3: no managers, so the world's day-one managers are all the
-  /// game's own. A format-2 pack that already holds `managers` is not a
-  /// format-2 file.
-  static Map<String, Object?> _from2To3(Map<String, Object?> json) {
+  /// game's own. A pack of format [from] (1 or 2) that already holds
+  /// `managers` is not a file of that format.
+  static Map<String, Object?> _from2To3(Map<String, Object?> json, int from) {
     if (json.containsKey('managers')) {
-      throw const FormatException('Format 2 pack has format 3 key "managers"');
+      throw FormatException(
+        'Format $from pack has the format 3 key "managers"',
+      );
     }
     return {...json, 'managers': <String, Object?>{}, 'formatVersion': 3};
   }

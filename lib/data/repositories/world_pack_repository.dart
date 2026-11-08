@@ -145,7 +145,7 @@ class WorldPackRepository {
               WorldPacksCompanion.insert(
                 uuid: p.uuid,
                 name: p.name,
-                json: jsonEncode(p.toJson()),
+                json: jsonEncode(p.asWritten.toJson()),
                 updatedAt: _clock(),
               ),
             );
@@ -160,7 +160,7 @@ class WorldPackRepository {
       WorldPacksCompanion(
         uuid: Value(p.uuid),
         name: Value(p.name),
-        json: Value(jsonEncode(p.toJson())),
+        json: Value(jsonEncode(p.asWritten.toJson())),
         updatedAt: Value(_clock()),
       ),
     );
@@ -239,7 +239,7 @@ class WorldPackRepository {
           CareerWorldsCompanion.insert(
             careerId: Value(careerId),
             packName: pack.name,
-            json: jsonEncode(pack.toJson()),
+            json: jsonEncode(pack.asWritten.toJson()),
           ),
         );
     await (_db.delete(

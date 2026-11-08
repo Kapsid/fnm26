@@ -242,16 +242,66 @@ void main() {
       expect(d.pack.localized, isEmpty);
     });
 
-    test('export writes the current format', () {
+    test('export writes format 2 while the pack names no managers', () {
       final bytes = PackCodec.encode(
         _pack().copyWith(formatVersion: 1),
         const {},
       );
       final top =
           jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
-      expect(top['format'], kPackFormatVersion);
-      expect((top['pack']! as Map)['formatVersion'], kPackFormatVersion);
+      expect(top['format'], 2);
+      final pack = top['pack']! as Map<String, Object?>;
+      expect(pack['formatVersion'], 2);
+      // A 1.1.0 (format 2) reader refuses any key it does not know.
+      expect(pack.containsKey('managers'), isFalse);
     });
+
+    test('export writes format 3 once the pack names a manager', () async {
+      final p = _pack().copyWith(
+        managers: {1: (name: 'Ota Brnak', nationality: 'AAA')},
+      );
+      final bytes = PackCodec.encode(p, const {});
+      final top =
+          jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
+      expect(top['format'], 3);
+      expect((top['pack']! as Map)['formatVersion'], 3);
+      expect((top['pack']! as Map)['managers'], {
+        '1': {'name': 'Ota Brnak', 'nationality': 'AAA'},
+      });
+      final d =
+          await PackCodec.decode(bytes, baseCodes: const {1: 'AAA'})
+              as PackDecoded;
+      expect(d.pack.managers, p.managers);
+    });
+
+    test(
+      'an unusable manager entry is dropped on import, the pack kept',
+      () async {
+        final p = _pack().copyWith(
+          managers: {
+            1: (name: 'Ota Brnak', nationality: 'bbb'),
+            2: (name: '  ', nationality: 'AAA'),
+            3: (name: 'Lew Ward', nationality: 'AAA'),
+          },
+        );
+        final r = await PackCodec.decode(
+          PackCodec.encode(p, const {}),
+          baseCodes: const {1: 'AAA', 2: 'BBB'},
+        );
+        expect(r, isA<PackDecoded>());
+        expect((r as PackDecoded).pack.managers, {
+          1: (name: 'Ota Brnak', nationality: 'bbb'),
+        });
+        final unknownCode = await PackCodec.decode(
+          PackCodec.encode(
+            _pack().copyWith(managers: {1: (name: 'X Y', nationality: 'ZZZ')}),
+            const {},
+          ),
+          baseCodes: const {1: 'AAA'},
+        );
+        expect((unknownCode as PackDecoded).pack.managers, isEmpty);
+      },
+    );
 
     test('a pack with every new part decodes whole', () async {
       final p = _pack().copyWith(

@@ -5,6 +5,7 @@ import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/world_managers/manager_seeder.dart';
+import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
@@ -59,6 +60,7 @@ class WorldManagerService {
     final career = await _ref.read(careerRepositoryProvider).byId(careerId);
     if (career == null) return;
     final seedCycle = career.cyclePointer;
+    final players = _ref.read(playerRepositoryProvider);
     final nations = await _ref
         .read(nationRepositoryProvider)
         .forCareer(careerId);
@@ -76,10 +78,16 @@ class WorldManagerService {
           ? snapshot
           : {for (final n in nations) n.id: n.ranking},
       playerNationIds: {career.nationId},
-      pools: await _ref.read(playerRepositoryProvider).namePoolsFor(careerId),
-      packManagers: await _ref
-          .read(worldPackRepositoryProvider)
-          .managersFor(careerId),
+      pools: await players.namePoolsFor(careerId),
+      defaultPools: await players.namePoolsFor(careerId, worldLists: false),
+      // Checked again here: a world can come in by a career bundle too.
+      packManagers: WorldPack.usableManagers(
+        await _ref.read(worldPackRepositoryProvider).managersFor(careerId),
+        nationIds: {for (final n in nations) n.id},
+        codes: {for (final n in nations) n.code.toUpperCase()},
+        dropped: (id, why) =>
+            AppLog.info('mgr-seed', 'manager of nation $id dropped: $why'),
+      ),
       realNames: _realNames,
     );
     await repo.apply(
