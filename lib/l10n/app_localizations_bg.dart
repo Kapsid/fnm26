@@ -8321,6 +8321,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchGoalShout => 'ГОЛ!';
 
   @override
+  String get matchRedCardShout => 'ЧЕРВЕН КАРТОН';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ДУЗПИ $home–$away';
   }

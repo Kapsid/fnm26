@@ -8078,6 +8078,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchGoalShout => 'ประตู!';
 
   @override
+  String get matchRedCardShout => 'ใบแดง';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ดวลจุดโทษ $home–$away';
   }

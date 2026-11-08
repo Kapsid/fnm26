@@ -8296,6 +8296,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchGoalShout => 'MAALI!';
 
   @override
+  String get matchRedCardShout => 'PUNAINEN KORTTI';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'RANKKARIT $home–$away';
   }

@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Igrač utakmice",
   "ratingSemantics": "Ocjena {rating}",
   "matchAverageRating": "Prosječna ocjena",
-  "matchLiveRatingsNote": "Ocjene prate dosadašnji tijek utakmice i konačne su nakon posljednjeg zvižduka."
+  "matchLiveRatingsNote": "Ocjene prate dosadašnji tijek utakmice i konačne su nakon posljednjeg zvižduka.",
+  "matchRedCardShout": "CRVENI KARTON"
 }

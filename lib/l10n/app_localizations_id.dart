@@ -8133,6 +8133,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchGoalShout => 'GOL!';
 
   @override
+  String get matchRedCardShout => 'KARTU MERAH';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ADU PENALTI $home–$away';
   }

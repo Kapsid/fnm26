@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "A mérkőzés embere",
   "ratingSemantics": "Értékelés {rating}",
   "matchAverageRating": "Átlagos értékelés",
-  "matchLiveRatingsNote": "Az értékelések az eddigi játékot követik, és a lefújáskor válnak véglegessé."
+  "matchLiveRatingsNote": "Az értékelések az eddigi játékot követik, és a lefújáskor válnak véglegessé.",
+  "matchRedCardShout": "PIROS LAP"
 }

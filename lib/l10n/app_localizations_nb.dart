@@ -8231,6 +8231,9 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchGoalShout => 'MÅL!';
 
   @override
+  String get matchRedCardShout => 'RØDT KORT';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'STRAFFER $home–$away';
   }

@@ -8270,6 +8270,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchGoalShout => 'ΓΚΟΛ!';
 
   @override
+  String get matchRedCardShout => 'ΚΟΚΚΙΝΗ ΚΑΡΤΑ';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ΠΕΝΑΛΤΙ $home–$away';
   }

@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Zawodnik meczu",
   "ratingSemantics": "Ocena {rating}",
   "matchAverageRating": "Średnia ocena",
-  "matchLiveRatingsNote": "Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku."
+  "matchLiveRatingsNote": "Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku.",
+  "matchRedCardShout": "CZERWONA KARTKA"
 }

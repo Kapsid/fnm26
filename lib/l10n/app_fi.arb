@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Ottelun paras pelaaja",
   "ratingSemantics": "Arvosana {rating}",
   "matchAverageRating": "Keskiarvosana",
-  "matchLiveRatingsNote": "Arvosanat seuraavat ottelun tähänastista kulkua ja ovat lopullisia loppuvihellyksellä."
+  "matchLiveRatingsNote": "Arvosanat seuraavat ottelun tähänastista kulkua ja ovat lopullisia loppuvihellyksellä.",
+  "matchRedCardShout": "PUNAINEN KORTTI"
 }

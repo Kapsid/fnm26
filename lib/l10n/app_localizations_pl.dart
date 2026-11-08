@@ -8334,6 +8334,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchGoalShout => 'GOL!';
 
   @override
+  String get matchRedCardShout => 'CZERWONA KARTKA';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'KARNE $home–$away';
   }

@@ -8442,6 +8442,9 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchGoalShout => 'GOL!';
 
   @override
+  String get matchRedCardShout => 'CRVENI KARTON';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'JEDANAESTERCI $home–$away';
   }

@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Pemain terbaik perlawanan",
   "ratingSemantics": "Penarafan {rating}",
   "matchAverageRating": "Purata penarafan",
-  "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat."
+  "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat.",
+  "matchRedCardShout": "KAD MERAH"
 }

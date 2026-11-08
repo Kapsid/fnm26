@@ -13136,6 +13136,10 @@
   "@matchGoalShout": {
     "description": "Live match: the goal flash."
   },
+  "matchRedCardShout": "RED CARD",
+  "@matchRedCardShout": {
+    "description": "Live match, 2D TV: the banner under the score when a player is sent off."
+  },
   "matchShootoutScore": "SHOOTOUT {home}–{away}",
   "@matchShootoutScore": {
     "description": "Live match: the shoot-out scoreline.",

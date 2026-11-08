@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Κορυφαίος του αγώνα",
   "ratingSemantics": "Βαθμολογία {rating}",
   "matchAverageRating": "Μέση βαθμολογία",
-  "matchLiveRatingsNote": "Οι βαθμολογίες ακολουθούν τον αγώνα μέχρι τώρα και οριστικοποιούνται με το τελικό σφύριγμα."
+  "matchLiveRatingsNote": "Οι βαθμολογίες ακολουθούν τον αγώνα μέχρι τώρα και οριστικοποιούνται με το τελικό σφύριγμα.",
+  "matchRedCardShout": "ΚΟΚΚΙΝΗ ΚΑΡΤΑ"
 }

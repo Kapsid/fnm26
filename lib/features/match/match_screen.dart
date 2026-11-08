@@ -61,6 +61,7 @@ part 'match_frame.dart';
 part 'match_panels.dart';
 part 'match_score_bug.dart';
 part 'match_tablet_layout.dart';
+part 'match_red_card_banner.dart';
 
 /// The maximum substitutions a manager may make in a match.
 const int kMaxSubs = 5;
@@ -215,6 +216,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// The goal currently flashed on the "GOAL!" overlay (null when hidden).
   MatchEvent? _goalFlash;
   Timer? _flashTimer;
+
+  /// The 2D TV's red card banner: the sending-off on show (null when
+  /// hidden). It never holds the clock.
+  MatchEvent? _redFlash;
+  Timer? _redTimer;
 
   /// The player's nation id (seeded with the live setup), used to spot an
   /// injury to one of the manager's own players as the clock reaches it.
@@ -468,6 +474,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _timer?.cancel();
     _flashTimer?.cancel();
     _penTimer?.cancel();
+    _redTimer?.cancel();
     _stage?.dispose();
     _pc.dispose();
     super.dispose();
@@ -1270,16 +1277,30 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _held = now.held;
       if (before == null) return;
       MatchEvent? goal;
+      MatchEvent? red;
       for (final e in events) {
         if (!_reached(e) || before.contains(_keyOf(e))) continue;
         if (e.type == MatchEventType.goal) goal = e;
+        if (e.type == MatchEventType.redCard) red = e;
         arrived.add(e);
       }
       if (goal != null) _flashGoal(goal);
+      if (red != null) _showRedCard(red);
     });
     for (final e in arrived) {
       if (_checkInjury(e)) break;
     }
+  }
+
+  /// The 2D TV's red card banner for [e], shown as the referee raises the
+  /// card, and a light buzz. Play goes on under it. Call inside `setState`.
+  void _showRedCard(MatchEvent e) {
+    _redFlash = e;
+    MatchFeedback.redCard(ref.read(soundHapticsEnabledProvider));
+    _redTimer?.cancel();
+    _redTimer = Timer(kRedCardBannerHold, () {
+      if (mounted) setState(() => _redFlash = null);
+    });
   }
 
   void _cycleSpeed() {
@@ -2186,15 +2207,38 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 !_pc.buildingFresh;
             // The picture itself, or what stands in for it: the same on a
             // phone and on a tablet.
+            final red = _redFlash;
             final Widget pitchSurface = picture
-                ? PitchMatchView(
-                    key: _pitchViewKey,
-                    script: pb.script,
-                    stadium: stadium,
-                    clock: clock,
-                    names: _pc.names,
-                    onReady: _syncPitchClock,
-                    shootout: _stage,
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      PitchMatchView(
+                        key: _pitchViewKey,
+                        script: pb.script,
+                        stadium: stadium,
+                        clock: clock,
+                        names: _pc.names,
+                        onReady: _syncPitchClock,
+                        shootout: _stage,
+                      ),
+                      // A sending-off: its banner down from under the
+                      // score, unless a goal's is out.
+                      if (red != null && _goalFlash == null)
+                        Positioned(
+                          top: 0,
+                          left: AppSpacing.marginMobile + AppSpacing.sm,
+                          right: AppSpacing.marginMobile + AppSpacing.sm,
+                          child: _RedCardBanner(
+                            key: ValueKey(('red', red.minute, red.playerId)),
+                            event: red,
+                            code: code(red.teamNationId),
+                            color: red.teamNationId == homeId ? homeC : awayC,
+                            still:
+                                MediaQuery.maybeDisableAnimationsOf(context) ??
+                                false,
+                          ),
+                        ),
+                    ],
                   )
                 : _pc.failed
                 ? _PitchFailed(

@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Spieler des Spiels",
   "ratingSemantics": "Note {rating}",
   "matchAverageRating": "Durchschnittsnote",
-  "matchLiveRatingsNote": "Die Noten folgen dem bisherigen Spielverlauf und stehen erst mit dem Schlusspfiff fest."
+  "matchLiveRatingsNote": "Die Noten folgen dem bisherigen Spielverlauf und stehen erst mit dem Schlusspfiff fest.",
+  "matchRedCardShout": "ROTE KARTE"
 }

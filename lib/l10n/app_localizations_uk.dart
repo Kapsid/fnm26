@@ -8380,6 +8380,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchGoalShout => 'ГОЛ!';
 
   @override
+  String get matchRedCardShout => 'ЧЕРВОНА КАРТКА';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ПЕНАЛЬТІ $home–$away';
   }

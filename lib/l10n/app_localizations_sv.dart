@@ -8222,6 +8222,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchGoalShout => 'MÅL!';
 
   @override
+  String get matchRedCardShout => 'RÖTT KORT';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'STRAFFLÄGGNING $home–$away';
   }

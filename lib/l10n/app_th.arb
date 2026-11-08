@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "ผู้เล่นยอดเยี่ยมประจำเกม",
   "ratingSemantics": "คะแนน {rating}",
   "matchAverageRating": "คะแนนเฉลี่ย",
-  "matchLiveRatingsNote": "คะแนนเปลี่ยนตามเกมที่ผ่านมาและเป็นคะแนนสุดท้ายเมื่อหมดเวลา"
+  "matchLiveRatingsNote": "คะแนนเปลี่ยนตามเกมที่ผ่านมาและเป็นคะแนนสุดท้ายเมื่อหมดเวลา",
+  "matchRedCardShout": "ใบแดง"
 }

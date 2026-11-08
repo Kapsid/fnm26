@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Kampens spiller",
   "ratingSemantics": "Karakter {rating}",
   "matchAverageRating": "Gennemsnitskarakter",
-  "matchLiveRatingsNote": "Karaktererne følger kampen indtil nu og er endelige ved slutfløjtet."
+  "matchLiveRatingsNote": "Karaktererne følger kampen indtil nu og er endelige ved slutfløjtet.",
+  "matchRedCardShout": "RØDT KORT"
 }

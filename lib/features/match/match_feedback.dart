@@ -18,6 +18,12 @@ abstract final class MatchFeedback {
     HapticFeedback.mediumImpact();
   }
 
+  /// A sending-off on the 2D TV: a lighter buzz than a goal's.
+  static void redCard(bool enabled) {
+    if (!enabled) return;
+    HapticFeedback.mediumImpact();
+  }
+
   /// The full-time whistle: a buzz and a click.
   static void fullTime(bool enabled) {
     if (!enabled) return;

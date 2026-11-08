@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Migliore in campo",
   "ratingSemantics": "Voto {rating}",
   "matchAverageRating": "Voto medio",
-  "matchLiveRatingsNote": "I voti seguono la partita fin qui e diventano definitivi al fischio finale."
+  "matchLiveRatingsNote": "I voti seguono la partita fin qui e diventano definitivi al fischio finale.",
+  "matchRedCardShout": "CARTELLINO ROSSO"
 }

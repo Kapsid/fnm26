@@ -8276,6 +8276,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get matchGoalShout => 'DOELPUNT!';
 
   @override
+  String get matchRedCardShout => 'RODE KAART';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'STRAFSCHOPPEN $home–$away';
   }

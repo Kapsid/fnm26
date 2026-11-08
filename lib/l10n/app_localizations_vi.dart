@@ -8100,6 +8100,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchGoalShout => 'VÀO!';
 
   @override
+  String get matchRedCardShout => 'THẺ ĐỎ';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'LUÂN LƯU $home–$away';
   }

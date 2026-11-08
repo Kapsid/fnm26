@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Hráč zápasu",
   "ratingSemantics": "Známka {rating}",
   "matchAverageRating": "Průměrná známka",
-  "matchLiveRatingsNote": "Známky sledují dosavadní průběh zápasu a platí až po závěrečném hvizdu."
+  "matchLiveRatingsNote": "Známky sledují dosavadní průběh zápasu a platí až po závěrečném hvizdu.",
+  "matchRedCardShout": "ČERVENÁ KARTA"
 }

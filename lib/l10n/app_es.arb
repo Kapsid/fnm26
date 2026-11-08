@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Mejor jugador del partido",
   "ratingSemantics": "Valoración {rating}",
   "matchAverageRating": "Valoración media",
-  "matchLiveRatingsNote": "Las valoraciones siguen el partido hasta ahora y son definitivas al pitido final."
+  "matchLiveRatingsNote": "Las valoraciones siguen el partido hasta ahora y son definitivas al pitido final.",
+  "matchRedCardShout": "TARJETA ROJA"
 }

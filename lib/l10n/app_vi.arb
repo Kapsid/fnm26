@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Cầu thủ hay nhất trận",
   "ratingSemantics": "Điểm {rating}",
   "matchAverageRating": "Điểm trung bình",
-  "matchLiveRatingsNote": "Điểm số theo diễn biến trận đấu đến lúc này và chốt khi hết giờ."
+  "matchLiveRatingsNote": "Điểm số theo diễn biến trận đấu đến lúc này và chốt khi hết giờ.",
+  "matchRedCardShout": "THẺ ĐỎ"
 }

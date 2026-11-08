@@ -12547,6 +12547,12 @@ abstract class AppLocalizations {
   /// **'GOAL!'**
   String get matchGoalShout;
 
+  /// Live match, 2D TV: the banner under the score when a player is sent off.
+  ///
+  /// In en, this message translates to:
+  /// **'RED CARD'**
+  String get matchRedCardShout;
+
   /// Live match: the shoot-out scoreline.
   ///
   /// In en, this message translates to:

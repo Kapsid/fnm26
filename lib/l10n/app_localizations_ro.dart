@@ -8513,6 +8513,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchGoalShout => 'GOL!';
 
   @override
+  String get matchRedCardShout => 'CARTONAȘ ROȘU';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'PENALTY-URI $home–$away';
   }

@@ -4021,5 +4021,6 @@
   "ratingPlayerOfTheMatch": "Maçın adamı",
   "ratingSemantics": "Puan {rating}",
   "matchAverageRating": "Ortalama puan",
-  "matchLiveRatingsNote": "Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir."
+  "matchLiveRatingsNote": "Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir.",
+  "matchRedCardShout": "KIRMIZI KART"
 }
