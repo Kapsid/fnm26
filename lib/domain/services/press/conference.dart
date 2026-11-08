@@ -348,6 +348,45 @@ abstract final class ConferenceBuilder {
   static int? _nameable(ConferenceFacts f, int? id) =>
       id == null || f.playersWithOpenStatement.contains(id) ? null : id;
 
+  /// [f] with every player it would ask about but cannot name left out, so
+  /// the beats built from it never put a player question with a hole where
+  /// his name belonged ("If  is not at his best...", players, 1.1.0). A name
+  /// that is missing from [names] or blank (an unnamed man in a custom
+  /// world) counts as no name: the standout and struggler questions give way
+  /// to the follow-up, the preview drops its key-man question, and a
+  /// throwback about him is not thrown back.
+  static ConferenceFacts namedOnly(
+    ConferenceFacts f,
+    Map<int, String> names,
+  ) {
+    bool named(int? id) =>
+        id != null && (names[id]?.trim().isNotEmpty ?? false);
+    int? keep(int? id) => named(id) ? id : null;
+    final t = f.throwback;
+    final aboutPlayer =
+        t != null &&
+        (t.kind == StatementKind.backPlayer ||
+            t.kind == StatementKind.blamePlayer);
+    final p = f.preview;
+    return (
+      reason: f.reason,
+      bestPlayerId: keep(f.bestPlayerId),
+      worstPlayerId: keep(f.worstPlayerId),
+      hasOpenWinNext: f.hasOpenWinNext,
+      hasOpenJob: f.hasOpenJob,
+      playersWithOpenStatement: f.playersWithOpenStatement,
+      throwback: aboutPlayer && !named(t.playerId) ? null : t,
+      preview: p == null
+          ? null
+          : (
+              campaign: p.campaign,
+              brief: p.brief,
+              rivalNationId: p.rivalNationId,
+              keyPlayerId: keep(p.keyPlayerId),
+            ),
+    );
+  }
+
   static Beat reaction(ConferenceFacts f, AnswerKind first) => switch (first) {
     AnswerKind.demandMore => _demandMoreReaction(f),
     AnswerKind.promiseWinNext => (

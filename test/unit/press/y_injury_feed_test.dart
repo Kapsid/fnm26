@@ -12,6 +12,8 @@ import 'package:fnm/domain/entities/player_absence.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
+import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
@@ -21,7 +23,10 @@ import '../../helpers/test_database.dart';
 /// Tester, 1.0.9: "Keep seeing the same player injured after every game on
 /// the Y comments. 'No Graeme Duarte for a while', not in my side." The
 /// world simulation injures every nation's men, and the feed took the first
-/// injured man of the whole world.
+/// injured man of the whole world. 1.0.9 narrowed it to his own nation, but
+/// the post still read the absence table "now" and hung it on the newest
+/// result, so a long-term absentee came back after every match. An injury is
+/// now posted from the match it happened in, once.
 void main() {
   late AppDatabase db;
   late List<Nation> nations;
@@ -110,44 +115,85 @@ void main() {
     return career;
   }
 
-  test('the injury post names only his own men', () async {
+  List<YPost> blows(List<YPost> feed) => [
+    for (final p in feed)
+      if (p.template == YTemplate.injuryBlow) p,
+  ];
+
+  Future<List<Player>> squadOf(
+    ProviderContainer c,
+    Career career,
+    int nationId,
+  ) => c
+      .read(playerRepositoryProvider)
+      .byNation(
+        nationId,
+        agingYears: CareerService.agingYears(career),
+        saveSeed: career.rngSeed,
+        careerId: career.id,
+      );
+
+  test('a long injury on the books is not posted after every match', () async {
+    // Existing saves: an absence row with months left and no match behind
+    // it in this feed. It used to be hung on whatever result was newest, so
+    // it came back after every game.
     final c = open();
     final career = await played(c, czechia);
-    Future<Player> first(int nationId) async =>
-        (await c
-                .read(playerRepositoryProvider)
-                .byNation(
-                  nationId,
-                  agingYears: CareerService.agingYears(career),
-                  saveSeed: career.rngSeed,
-                  careerId: career.id,
-                ))
-            .first;
-    final foreigner = await first(japan);
+    final own = (await squadOf(c, career, czechia)).first;
+    final foreigner = (await squadOf(c, career, japan)).first;
     await c.read(absenceRepositoryProvider).replace(career.id, [
-      PlayerAbsence(playerId: foreigner.id, injuryMatches: 9),
+      PlayerAbsence(playerId: own.id, injuryMatches: 30),
+      PlayerAbsence(playerId: foreigner.id, injuryMatches: 30),
     ]);
-    List<YPost> blows(List<YPost> feed) => [
-      for (final p in feed)
-        if (p.template == YTemplate.injuryBlow) p,
-    ];
-    var feed = (await c.read(yFeedProvider(career.id).future)).posts;
-    expect(
-      blows(feed).where((p) => p.args.contains(foreigner.name)),
-      isEmpty,
-      reason: 'a Japanese man is no Czech injury',
-    );
+    final feed = (await c.read(yFeedProvider(career.id).future)).posts;
+    expect(blows(feed), isEmpty);
+  });
 
-    // One of his own hurt as well: he is the one the post is about.
-    final own = await first(czechia);
-    await c.read(absenceRepositoryProvider).replace(career.id, [
-      PlayerAbsence(playerId: foreigner.id, injuryMatches: 9),
-      PlayerAbsence(playerId: own.id, injuryMatches: 3),
+  test('an injury is posted once, on the match it happened in, and only '
+      'for his own men', () async {
+    final c = open();
+    final career = await played(c, czechia);
+    final comp = c.read(competitionRepositoryProvider);
+    final fixtures = (await comp.fixturesForNation(career.id, czechia))
+      ..sort((a, b) => a.date.compareTo(b.date));
+    final hurtIn = fixtures[2];
+    final opponent = hurtIn.homeNationId == czechia
+        ? hurtIn.awayNationId
+        : hurtIn.homeNationId;
+    final own = (await squadOf(c, career, czechia)).first;
+    final theirs = (await squadOf(c, career, opponent)).first;
+    final faraway = (await squadOf(c, career, japan)).first;
+    IncidentRecord knock(int fixtureId, int nationId, int playerId) => (
+      careerId: career.id,
+      fixtureId: fixtureId,
+      nationId: nationId,
+      playerId: playerId,
+      minute: 30,
+      type: MatchEventType.injury,
+      secondYellow: false,
+    );
+    await comp.recordIncidents(career.id, hurtIn.id, [
+      knock(hurtIn.id, czechia, own.id),
+      knock(hurtIn.id, opponent, theirs.id),
     ]);
-    c.invalidate(yFeedProvider);
-    feed = (await c.read(yFeedProvider(career.id).future)).posts;
-    for (final p in blows(feed)) {
-      expect(p.args, [own.name]);
+    // A Japanese man hurt somewhere in the world simulation.
+    final elsewhere = (await comp.fixturesForNation(career.id, japan)).first;
+    await comp.recordIncidents(career.id, elsewhere.id, [
+      knock(elsewhere.id, japan, faraway.id),
+    ]);
+    // And still out, months on: the absence table must not re-post him.
+    await c.read(absenceRepositoryProvider).replace(career.id, [
+      PlayerAbsence(playerId: own.id, injuryMatches: 30),
+      PlayerAbsence(playerId: faraway.id, injuryMatches: 30),
+    ]);
+
+    final feed = (await c.read(yFeedProvider(career.id).future)).posts;
+    final posted = blows(feed);
+    expect(posted, hasLength(1), reason: 'once, not after every match');
+    expect(posted.single.args.first, own.name);
+    expect(posted.single.date, hurtIn.date);
+    for (final p in feed) {
+      expect(p.args, isNot(contains(faraway.name)));
     }
   });
 }
