@@ -102,13 +102,18 @@ class GroundCard extends StatelessWidget {
             style: AppTypography.labelMedium,
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
-        Text(
-          _thousands(ground.attendance),
-          style: AppTypography.labelMedium.copyWith(
-            fontWeight: FontWeight.w700,
+        // The full card says "X of Y seats filled" under the bar, so the
+        // crowd figure beside the name only repeated it and squeezed the
+        // stadium name. Only the compact line, which has no bar, keeps it.
+        if (compact) ...[
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            _thousands(ground.attendance),
+            style: AppTypography.labelMedium.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ),
+        ],
       ],
     );
     // The badges (neutral ground, sold out) sit on a line of their own under
