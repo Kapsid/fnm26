@@ -62,8 +62,9 @@ class _InstantBaker extends PitchStadiumBaker {
   }) => Future.value();
 }
 
-/// The fast speed's band is the pacer's own (`PitchPacer.fastBand`); the
-/// moments alone may overrun it by at most 15% (a test-side cap, as in
+/// The 3x step plays the fast pacing (`PitchPacer.fastBand`, read through
+/// `pitchSpeedForStep`) at its own clock rate; the moments alone may
+/// overrun the band by at most 15% (a test-side cap, as in
 /// pitch_pacer_test).
 const double _overrun = 1.15;
 const int _fastStep = 2;
@@ -204,8 +205,10 @@ void main() {
     expect(_clock(tester).speed, pitchRateForStep(_fastStep));
     final scale = (90 + r.stoppage + 30) / 90;
     final per90 = pb.pacer.total.inMicroseconds / 1e6 / scale;
-    expect(per90, greaterThanOrEqualTo(PitchPacer.fastBand.$1 - 0.5));
-    expect(per90, lessThanOrEqualTo(PitchPacer.fastBand.$2 * _overrun));
+    final (lo, hi) = PitchPacer.bandOf(pitchSpeedForStep(_fastStep));
+    expect(pitchSpeedForStep(_fastStep), PitchSpeed.fast);
+    expect(per90, greaterThanOrEqualTo(lo - 0.5));
+    expect(per90, lessThanOrEqualTo(hi * _overrun));
 
     // The picture keeps every invariant.
     expect(PitchScriptValidator.validate(pb.script), isEmpty);
