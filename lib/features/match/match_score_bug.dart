@@ -75,6 +75,8 @@ class _ScoreBug extends StatelessWidget {
     this.awayColor,
     this.goal,
     this.goalForHome = false,
+    this.theme,
+    this.tournament,
   });
 
   final String homeCode;
@@ -88,8 +90,20 @@ class _ScoreBug extends StatelessWidget {
   final MatchEvent? goal;
   final bool goalForHome;
 
+  /// The tournament's colours (a finals match), or null for the silver bar.
+  final ScoreBugTheme? theme;
+
+  /// The tournament's name, on a small tab above a themed bar.
+  final String? tournament;
+
   /// The stripe's height: one line.
   static const double barHeight = 28;
+
+  /// The tournament tab's height, above a themed bar.
+  static const double tabHeight = 14;
+
+  /// The key of the tournament tab.
+  static const Key tabKey = Key('match.scoreBugTab');
 
   @override
   Widget build(BuildContext context) {
@@ -100,13 +114,15 @@ class _ScoreBug extends StatelessWidget {
     final goalId = goal == null
         ? null
         : (goal.minute, goal.stoppage, goal.playerId, homeScore + awayScore);
+    final theme = this.theme;
     final bar = Container(
       height: barHeight,
       decoration: BoxDecoration(
-        gradient: _kBugBody,
+        gradient: theme == null ? _kBugBody : _plates(theme),
         borderRadius: AppRadii.smAll,
         border: Border.all(
-          color: AppColors.primaryContainer.withValues(alpha: 0.6),
+          color:
+              theme?.rim ?? AppColors.primaryContainer.withValues(alpha: 0.6),
         ),
         boxShadow: const [
           BoxShadow(
@@ -134,15 +150,20 @@ class _ScoreBug extends StatelessWidget {
               pulse: goal == null ? null : (goal, goalForHome),
               sheen: goalId,
               still: still,
+              theme: theme,
             ),
             Expanded(
               child: _BugSide(code: awayCode, color: awayColor),
             ),
-            _BugClock(clock: clock, live: live),
+            _BugClock(clock: clock, live: live, theme: theme),
           ],
         ),
       ),
     );
+    final tournament = this.tournament;
+    final tab = theme == null || tournament == null
+        ? null
+        : _TournamentTab(name: tournament, theme: theme);
     return Padding(
       // Two px above and below: stripe and margin together stay the 32 px
       // the Pitch layout below was measured for.
@@ -153,10 +174,16 @@ class _ScoreBug extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          bar,
+          if (tab == null)
+            bar
+          else
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [tab, bar],
+            ),
           if (goal != null)
             Positioned(
-              top: barHeight,
+              top: barHeight + (tab == null ? 0 : tabHeight),
               left: AppSpacing.sm,
               right: AppSpacing.sm,
               child: _GoalBanner(
@@ -166,9 +193,71 @@ class _ScoreBug extends StatelessWidget {
                 color:
                     (goalForHome ? homeColor : awayColor) ?? AppColors.primary,
                 still: still,
+                theme: theme,
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// A themed bar's plates, top to bottom.
+LinearGradient _plates(ScoreBugTheme t) => LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: t.plates,
+);
+
+/// A themed bar's score block, top to bottom.
+LinearGradient _scoreBlock(ScoreBugTheme t) => LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: t.score,
+);
+
+/// The small tab on top of a themed bar naming the tournament: bold mono
+/// caps, letter-spaced, in the theme's accent on its plates.
+class _TournamentTab extends StatelessWidget {
+  const _TournamentTab({required this.name, required this.theme});
+
+  final String name;
+  final ScoreBugTheme theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final edge = theme.rim ?? theme.accent.withValues(alpha: 0.55);
+    return Container(
+      key: _ScoreBug.tabKey,
+      height: _ScoreBug.tabHeight,
+      constraints: const BoxConstraints(maxWidth: 240),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      decoration: BoxDecoration(
+        gradient: _plates(theme),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
+        border: Border(
+          top: BorderSide(color: edge, width: 0.75),
+          left: BorderSide(color: edge, width: 0.75),
+          right: BorderSide(color: edge, width: 0.75),
+        ),
+      ),
+      alignment: Alignment.center,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          name.capsIn(l.localeName),
+          maxLines: 1,
+          softWrap: false,
+          style: TextStyle(
+            fontFamily: AppFonts.mono,
+            fontSize: 9,
+            height: 1,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.4,
+            color: theme.accent,
+          ),
+        ),
       ),
     );
   }
@@ -267,8 +356,10 @@ class _BugScore extends StatelessWidget {
     required this.pulse,
     required this.sheen,
     required this.still,
+    this.theme,
   });
 
+  final ScoreBugTheme? theme;
   final int home;
   final int away;
   final (MatchEvent, bool)? pulse;
@@ -277,8 +368,9 @@ class _BugScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = this.theme;
     final style = AppTypography.labelLarge.copyWith(
-      color: AppColors.onPrimaryFixed,
+      color: theme?.scoreText ?? AppColors.onPrimaryFixed,
       fontSize: 16,
       height: 1,
       fontWeight: FontWeight.w800,
@@ -322,7 +414,10 @@ class _BugScore extends StatelessWidget {
           width: 1,
           height: 12,
           margin: const EdgeInsets.symmetric(horizontal: 5),
-          color: AppColors.onPrimaryContainer.withValues(alpha: 0.55),
+          color:
+              theme?.divider ??
+              (theme == null ? AppColors.onPrimaryContainer : theme.scoreText)
+                  .withValues(alpha: 0.55),
         ),
         SizedBox(
           width: _figureWidth,
@@ -333,10 +428,9 @@ class _BugScore extends StatelessWidget {
     final sheen = this.sheen;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-      decoration: const BoxDecoration(
-        gradient: _kSilverPlate,
-        border: _kSilverBevel,
-      ),
+      decoration: theme == null
+          ? const BoxDecoration(gradient: _kSilverPlate, border: _kSilverBevel)
+          : BoxDecoration(gradient: _scoreBlock(theme), border: _kSilverBevel),
       alignment: Alignment.center,
       child: sheen == null || still
           ? numbers
@@ -387,10 +481,11 @@ class _BugScore extends StatelessWidget {
 /// The clock's segment on the end of the bug: the minute, and stoppage time
 /// as a "+N" tab set apart beside it.
 class _BugClock extends StatelessWidget {
-  const _BugClock({required this.clock, required this.live});
+  const _BugClock({required this.clock, required this.live, this.theme});
 
   final String clock;
   final bool live;
+  final ScoreBugTheme? theme;
 
   @override
   Widget build(BuildContext context) {
@@ -404,7 +499,10 @@ class _BugClock extends StatelessWidget {
       height: 1,
       fontWeight: FontWeight.w700,
       fontFeatures: const [FontFeature.tabularFigures()],
-      color: live ? AppColors.onSurface : AppColors.onSurfaceVariant,
+      color: switch (theme) {
+        final t? => live ? t.clockText : t.clockText.withValues(alpha: 0.75),
+        null => live ? AppColors.onSurface : AppColors.onSurfaceVariant,
+      },
     );
     return Container(
       constraints: const BoxConstraints(minWidth: 44, maxWidth: 88),
@@ -461,9 +559,11 @@ class _GoalBanner extends StatelessWidget {
     required this.code,
     required this.color,
     required this.still,
+    this.theme,
     super.key,
   });
 
+  final ScoreBugTheme? theme;
   final MatchEvent event;
 
   /// The scoring side's code, for its flag.
@@ -478,13 +578,15 @@ class _GoalBanner extends StatelessWidget {
         ? '${l.matchPenalty} · ${_eventClock(event)}'
         : _eventClock(event);
     const radius = BorderRadius.vertical(bottom: Radius.circular(AppRadii.sm));
+    final theme = this.theme;
     final banner = Container(
       height: 24,
       decoration: BoxDecoration(
-        gradient: _kBugBody,
+        gradient: theme == null ? _kBugBody : _plates(theme),
         borderRadius: radius,
         border: Border.all(
-          color: AppColors.primaryContainer.withValues(alpha: 0.6),
+          color:
+              theme?.rim ?? AppColors.primaryContainer.withValues(alpha: 0.6),
         ),
       ),
       child: ClipRRect(
@@ -500,16 +602,21 @@ class _GoalBanner extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                gradient: _kSilverPlate,
-                border: _kSilverBevel,
-              ),
+              decoration: theme == null
+                  ? const BoxDecoration(
+                      gradient: _kSilverPlate,
+                      border: _kSilverBevel,
+                    )
+                  : BoxDecoration(
+                      gradient: _scoreBlock(theme),
+                      border: _kSilverBevel,
+                    ),
               child: Text(
                 l.matchGoalShout,
                 maxLines: 1,
                 softWrap: false,
                 style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.onPrimaryFixed,
+                  color: theme?.scoreText ?? AppColors.onPrimaryFixed,
                   fontWeight: FontWeight.w800,
                   height: 1,
                   letterSpacing: 1,

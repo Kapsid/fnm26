@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/country_flag.dart';
 
@@ -31,6 +32,8 @@ void main() {
     String homeCode = 'CZE',
     String awayCode = 'POR',
     String clock = '90+3',
+    ScoreBugTheme? theme,
+    String? tournament,
   }) async {
     tester.view
       ..physicalSize = Size(width, 400)
@@ -62,6 +65,8 @@ void main() {
               awayColor: Colors.green,
               goal: event,
               goalForHome: true,
+              bugTheme: theme,
+              tournament: tournament,
             ),
           ),
         ),
@@ -236,4 +241,45 @@ void main() {
     }
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('silver: no tournament tab, the bar as it always was', (
+    tester,
+  ) async {
+    await pump(tester);
+    expect(find.byKey(const Key('match.scoreBugTab')), findsNothing);
+  });
+
+  for (final kind in ScoreBugThemeKind.values) {
+    testWidgets('${kind.name}: the tab names the tournament, the score '
+        'block wears its colours, a goal banner still fits', (tester) async {
+      final theme = ScoreBugTheme.all[kind]!;
+      await pump(
+        tester,
+        theme: theme,
+        tournament: 'European Championship',
+        event: goal,
+        still: true,
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.byKey(const Key('match.scoreBugTab')), findsOneWidget);
+      expect(find.text('EUROPEAN CHAMPIONSHIP'), findsOneWidget);
+      final score = tester.widget<Text>(find.text('2'));
+      expect(score.style?.color, theme.scoreText);
+      final block = find.ancestor(
+        of: find.text('2'),
+        matching: find.byWidgetPredicate(
+          (w) =>
+              w is Container &&
+              w.decoration is BoxDecoration &&
+              (w.decoration! as BoxDecoration).gradient is LinearGradient &&
+              ((w.decoration! as BoxDecoration).gradient! as LinearGradient)
+                      .colors
+                      .first ==
+                  theme.score.first,
+        ),
+      );
+      expect(block, findsWidgets);
+      expect(find.byKey(matchGoalBannerKey), findsOneWidget);
+    });
+  }
 }

@@ -153,6 +153,8 @@ class MatchScoreboard extends StatelessWidget {
     this.awayColor,
     this.goal,
     this.goalForHome = false,
+    this.bugTheme,
+    this.tournament,
   });
 
   final String homeCode;
@@ -189,6 +191,13 @@ class MatchScoreboard extends StatelessWidget {
   /// Whether [goal] is the home side's.
   final bool goalForHome;
 
+  /// The [compact] bug's tournament colours (a finals match), or null for
+  /// silver.
+  final ScoreBugTheme? bugTheme;
+
+  /// The tournament's name, on the themed [compact] bug's tab.
+  final String? tournament;
+
   /// The Pitch / Timeline switch, in the card's top corner beside the
   /// clock (null: none). Not on the [compact] stripe: the screen puts it
   /// in the pitch's corner.
@@ -211,6 +220,8 @@ class MatchScoreboard extends StatelessWidget {
         awayColor: awayColor,
         goal: goal,
         goalForHome: goalForHome,
+        theme: bugTheme,
+        tournament: tournament,
       );
     }
     final card = AppCard(

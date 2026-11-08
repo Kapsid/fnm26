@@ -26,6 +26,7 @@ import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/app_card.dart';
@@ -79,7 +80,7 @@ const List<String> _surnames = [
 
 /// A real match between the Czech Republic (the manager's) and Portugal, in
 /// [round], with a bench each and a name for everybody.
-MatchPreview _preview({String round = 'FRIENDLY', int saveSeed = 42}) {
+MatchPreview _preview({String? round = 'FRIENDLY', int saveSeed = 42}) {
   final home = pitchNation('CZE');
   final away = pitchNation('POR');
   var k = 0;
@@ -1184,6 +1185,7 @@ void main() {
 
   _ownerFeedbackTests();
   _fullTimeSwitchTests();
+  _themeTests();
 }
 
 // Task 15c: the owner's device feedback, checked on the phone screen.
@@ -1240,6 +1242,40 @@ int _cleanSalt(MatchPreview p) => _salt(
         (e.type == MatchEventType.goal && e.minute >= 80),
   ),
 );
+
+void _themeTests() {
+  for (final (round, kind) in <(String?, ScoreBugThemeKind?)>[
+    ('FINAL', ScoreBugThemeKind.worldChampionship),
+    ('GROUP', ScoreBugThemeKind.worldChampionship),
+    (null, null), // a World Championship qualifier
+    ('CQ', null),
+    ('FRIENDLY', null),
+  ]) {
+    testWidgets('2D TV bar at round $round: ${kind?.name ?? 'silver'}', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        preview: _preview(round: round),
+        salt: 7,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+      );
+      await _until(tester, () => _ready(tester));
+      final board = tester.widget<MatchScoreboard>(
+        find.byType(MatchScoreboard),
+      );
+      expect(board.compact, isTrue);
+      expect(board.bugTheme?.kind, kind);
+      if (kind == ScoreBugThemeKind.worldChampionship) {
+        // Its name on the tab, as the game writes it (never "World Cup").
+        expect(board.tournament, enL.compWorldCup);
+        expect(find.text(enL.compWorldCup.toUpperCase()), findsOneWidget);
+      } else {
+        expect(board.tournament, isNull);
+      }
+    });
+  }
+}
 
 void _fullTimeSwitchTests() {
   for (final (label, size, ff) in [

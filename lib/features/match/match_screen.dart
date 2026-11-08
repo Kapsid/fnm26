@@ -12,6 +12,7 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/core/util/caps.dart';
+import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -43,6 +44,7 @@ import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_playback.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/shootout_stage.dart';
+import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
@@ -1875,6 +1877,20 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // The phone's Pitch mode: the score as a broadcast bug, whose
             // banner stands for the goal flash's card over the picture.
             final bug = !tablet && _onPitch;
+            // At a tournament's finals the bug wears its colours, and names
+            // it on a tab; everywhere else it stays silver.
+            final conf = preview.nations[preview.playerNationId]?.confederation;
+            final bugTheme = bug
+                ? ScoreBugTheme.forRound(preview.fixture.round, conf)
+                : null;
+            final String? tournament = switch (bugTheme?.kind) {
+              null => null,
+              ScoreBugThemeKind.worldChampionship => competitionLabel(
+                l,
+                'World Championship',
+              ),
+              _ => conf == null ? null : continentalCupLabel(l, conf),
+            };
             // Pitch or Timeline, at any time: on a phone from the corner of
             // the scoreboard (the Timeline's) or the pitch's bottom one (Pitch mode,
             // whose stripe is too thin for it); on a tablet from the stats
@@ -1932,6 +1948,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               awayColor: awayC,
               goal: bug ? _goalFlash : null,
               goalForHome: _goalFlash?.teamNationId == homeId,
+              bugTheme: bugTheme,
+              tournament: tournament,
               viewSwitch: bug ? null : phoneSwitch,
             );
             final Widget? momentum = !ft && !showingShootout
