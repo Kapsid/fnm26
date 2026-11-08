@@ -436,6 +436,15 @@ Offset2 _strikePoint(_Plan p, PitchZone zone) {
 /// A shot from open play (or a second ball after a set piece): the ball
 /// worked to the shooter (through the assister, for a goal that has one),
 /// carried into the zone it was recorded in, struck.
+/// How an open-play chance is made once the picture cuts to it: the
+/// scorer's own finish from the ball at his feet ([direct]), a run with it
+/// from well short ([carry]), a one-two with a team-mate ([oneTwo]), a
+/// ball played into the space behind for him ([through]) or one pulled
+/// back from the byline ([cutBack]). The moment's record decides who
+/// shoots, from where and how it ends; the route only shows how he got
+/// there, and the last ball is the assist's maker's when there is one.
+enum _Route { direct, carry, oneTwo, through, cutBack }
+
 class _OpenShotPlan extends _Plan {
   _OpenShotPlan(StagingContext c, this.m) : super(c, m.teamNationId) {
     shot = _Shot(this, m);
@@ -469,6 +478,13 @@ class _OpenShotPlan extends _Plan {
   bool delivered = false;
   late final double earliest;
   late final double deadline;
+
+  /// How the chance is made, once the picture cuts to it (see [_Route]),
+  /// the team-mate it uses, how far through it is and when it began.
+  _Route route = _Route.direct;
+  int? helper;
+  int stage = 0;
+  double? routeFrom;
 
   @override
   bool settled(double t, ScriptState now) => shot.settledNow(now);
@@ -596,11 +612,26 @@ class _OpenShotPlan extends _Plan {
           q.distanceTo(now.ball) < 1.3;
     }
 
-    cutWanted ??= _needCut(now);
+    if (cutWanted == null) {
+      cutWanted = _needCut(now);
+      if (cutWanted!) {
+        _chooseRoute(now);
+      } else {
+        _chooseOnTheRun(t, now);
+      }
+    }
     // A ball in the air comes down before any cut.
     if (cutWanted! && !sceneCut && settledIn(t)) {
       if (landing(now)) return null;
-      return _phaseCut(now);
+      return route == _Route.direct ? _phaseCut(now) : _routeCut(t, now);
+    }
+    // The chance being worked: until its last ball is played, only the
+    // route moves the ball; out of time, it is finished plainly.
+    if (helper != null && route != _Route.direct && !delivered) {
+      if (t < strikeBy - 0.45 && onPitch(now, helper)) {
+        return _routeBall(t, now, atFeet);
+      }
+      route = _Route.direct;
     }
     // Late: by the time it could be struck and arrive, the window is out
     // (a step's grace, and a goal half a second before its cut).
@@ -731,7 +762,7 @@ class _OpenShotPlan extends _Plan {
     }
     if (x != null && !delivered) {
       if (car == x) {
-        final a = fetch(s, t, now, needOnside: true);
+        final a = _toShooter(t, now, x) ?? fetch(s, t, now, needOnside: true);
         if (a != null) delivered = true;
         return a;
       }
@@ -748,7 +779,39 @@ class _OpenShotPlan extends _Plan {
         return _phaseCut(now);
       }
     }
+    if (car != null && car != s && now.teams[car] == side) {
+      final a = _toShooter(t, now, car);
+      if (a != null) return a;
+    }
     return fetch(s, t, now, needOnside: true);
+  }
+
+  /// The ball to the shooter from [from], his team-mate on it, played into
+  /// the space in front of him to run onto rather than to his feet, when
+  /// the window's dice say so and he is onside, a pass away and short of
+  /// where he strikes it. Null otherwise.
+  BallAction? _toShooter(double t, ScriptState now, int from) {
+    if (resumed || m.header || _unit(c.seed, 79) >= _style.through) {
+      return null;
+    }
+    final s = m.shooterId;
+    final sp = now.players[s];
+    if (sp == null || now.flight != null || !clearlyOnside(now, s)) {
+      return null;
+    }
+    final lead = _strikeFrom(now);
+    final run = sp.distanceTo(lead);
+    final d = now.ball.distanceTo(lead);
+    if (run < 3 || run > 11 || d < 10 || depthOf(lead) <= depthOf(sp)) {
+      return null;
+    }
+    return KickAction(
+      toPlayerId: s,
+      byPlayerId: from,
+      leadTo: lead,
+      arriveAt: t + math.max(math.max(d / 21, run / 7.5), 0.5),
+      pass: true,
+    );
   }
 
   /// Whether a defender stands in the shot's path, a stride or two out.
@@ -812,6 +875,251 @@ class _OpenShotPlan extends _Plan {
     return nearest(now, cands, wide);
   }
 
+  /// Picks how the chance is made, from the window's seed alone: what the
+  /// moment allows (a header is always crossed in, a block, a keeper's
+  /// assist and a resumed window are played as they come) and the time the
+  /// window leaves after the plain finish.
+  void _chooseRoute(ScriptState now) {
+    if (resumed || m.header || keeperAssist) return;
+    if (m.outcome == ShotOutcome.blocked) return;
+    final zd = depthOf(zone);
+    // The time from the cut to the latest strike the window allows.
+    final spare = len - (end - strikeBy) - 0.3;
+    final options = <_Route>[];
+    if (assister == null && spare > 1.3) options.add(_Route.carry);
+    if (spare > 1.4 && zd > 76) options.add(_Route.through);
+    if (spare > 1.8) options.add(_Route.oneTwo);
+    if (spare > 1.5 && zd > 86 && latOf(zone).abs() < 13) {
+      options.add(_Route.cutBack);
+    }
+    if (options.isEmpty) return;
+    // Weighted by how the side plays and what it plays against, the plain
+    // finish keeping a share of its own.
+    final weights = {
+      _Route.direct: 1.4,
+      for (final r in options) r: _style.weight(r),
+    };
+    var roll = _unit(c.seed, 71) * weights.values.fold(0.0, (a, b) => a + b);
+    var pick = _Route.direct;
+    for (final e in weights.entries) {
+      roll -= e.value;
+      if (roll < 0) {
+        pick = e.key;
+        break;
+      }
+    }
+    if (pick == _Route.direct || pick == _Route.carry) {
+      route = pick;
+      return;
+    }
+    // Its other man: the assist's maker, for a goal he sets up; else the
+    // team-mate nearest where the route wants him.
+    final h =
+        assister ??
+        nearest(
+          now,
+          available(
+            now,
+            side,
+            except: {m.shooterId},
+          ).where((id) => !now.keepers.contains(id)),
+          _helperSpot(pick),
+        );
+    if (h == null) return;
+    helper = h;
+    route = pick;
+  }
+
+  /// How this side makes its chances, from its tactics and its
+  /// opponent's: a direct side, or one minded to break, plays through
+  /// balls (more against a high line); a wide one goes round the outside
+  /// and pulls it back (more against a deep block, as does a run with the
+  /// ball from distance); a patient one plays one-twos, quicker at a high
+  /// tempo.
+  late final ({
+    double through,
+    double oneTwo,
+    double Function(_Route) weight,
+  })
+  _style = () {
+    final i = instr(side);
+    final o = instr(opp);
+    final direct = (i.directness - 50) / 50;
+    final deep = ((50 - o.defensiveLine) / 50).clamp(0.0, 1.0);
+    final high = ((o.defensiveLine - 50) / 50).clamp(0.0, 1.0);
+    final breaks = counterIntent(side);
+    final tempo = i.tempo / 100;
+    double weight(_Route r) => switch (r) {
+      _Route.through => 0.9 + 2 * math.max(0, direct) + 1.5 * breaks + high,
+      _Route.oneTwo => 0.6 + 2 * math.max(0, -direct) + tempo,
+      _Route.cutBack => 0.6 + 2 * i.width / 100 + 1.5 * deep,
+      _Route.carry => 0.6 + 1.5 * deep,
+      _Route.direct => 1.4,
+    };
+    return (
+      through: (0.3 + 0.4 * math.max(0, direct) + 0.2 * breaks).clamp(
+        0.0,
+        0.8,
+      ),
+      oneTwo: (0.2 + 0.35 * math.max(0, -direct) + 0.15 * tempo).clamp(
+        0.0,
+        0.7,
+      ),
+      weight: weight,
+    );
+  }();
+
+  /// In play that runs straight into the chance, the shooter already on
+  /// the ball: now and then he plays a one-two on his way in, with the
+  /// team-mate best placed for it (the assist's maker, for a goal he sets
+  /// up), when the window has the time.
+  void _chooseOnTheRun(double t, ScriptState now) {
+    if (resumed || m.header || keeperAssist) return;
+    if (m.outcome == ShotOutcome.blocked) return;
+    final s = m.shooterId;
+    final sp = now.players[s];
+    if (sp == null || now.carrierId != s) return;
+    if (strikeBy - t < 2.0 || _unit(c.seed, 83) >= _style.oneTwo) return;
+    final along = depthOf(sp);
+    final across = latOf(sp) >= 0 ? -1.0 : 1.0;
+    final spot = at(along + 6, latOf(sp) + across * 7.5);
+    final h =
+        assister ??
+        nearest(
+          now,
+          available(now, side, except: {s}).where((id) {
+            if (now.keepers.contains(id)) return false;
+            final d = now.players[id]!.distanceTo(sp);
+            return d >= 8 && d <= 18 && onside(now, id);
+          }),
+          spot,
+        );
+    if (h == null || now.players[h]!.distanceTo(sp) < 8) return;
+    helper = h;
+    route = _Route.oneTwo;
+    routeFrom = t;
+  }
+
+  /// Which way a cut-back comes from: the flank the chance is on.
+  double get _flank {
+    final l = latOf(zone);
+    if (l.abs() >= 2) return l.sign;
+    return _unit(c.seed, 73) < 0.5 ? -1.0 : 1.0;
+  }
+
+  /// Where the route's other man is cut to.
+  Offset2 _helperSpot(_Route r) {
+    final zd = depthOf(zone);
+    final zl = latOf(zone);
+    final across = zl >= 0 ? -1.0 : 1.0;
+    return switch (r) {
+      _Route.through => at(math.max(zd - 21, 50), zl * 0.3 + across * 6),
+      _Route.oneTwo => at(math.max(zd - 5, 53), zl * 0.8 + across * 7.5),
+      _Route.cutBack => at(98.2, _flank * 16.5),
+      _Route.direct || _Route.carry => zone,
+    };
+  }
+
+  /// The cut to the chance about to be made by [route].
+  CutAction _routeCut(double t, ScriptState now) {
+    routeFrom = t;
+    final s = m.shooterId;
+    final zd = depthOf(zone);
+    final zl = latOf(zone);
+    final h = helper;
+    switch (route) {
+      case _Route.carry:
+        // He picks it up well short and runs it in himself.
+        return cutToPhase(now, s, at(math.max(zd - 9, 53), zl * 0.6));
+      case _Route.through:
+        return cutToPhase(
+          now,
+          h!,
+          _helperSpot(route),
+          extra: {s: at(math.max(zd - 10, 52.5), zl)},
+          onside: {s},
+        );
+      case _Route.oneTwo:
+        return cutToPhase(
+          now,
+          s,
+          at(math.max(zd - 11, 52.5), zl * 0.8),
+          extra: {h!: _helperSpot(route)},
+          onside: {h},
+        );
+      case _Route.cutBack:
+        return cutToPhase(
+          now,
+          h!,
+          _helperSpot(route),
+          extra: {s: zone},
+          onside: {s},
+        );
+      case _Route.direct:
+        return _phaseCut(now);
+    }
+  }
+
+  /// The ball while [route] makes the chance: null while it waits.
+  BallAction? _routeBall(
+    double t,
+    ScriptState now,
+    bool Function(int) atFeet,
+  ) {
+    final s = m.shooterId;
+    final h = helper!;
+    final since = t - (routeFrom ?? t);
+    KickAction to(int from, int id, double speed, {Offset2? lead}) {
+      final q = lead ?? now.players[id]!;
+      final d = now.ball.distanceTo(q);
+      return KickAction(
+        toPlayerId: id,
+        byPlayerId: from,
+        leadTo: lead,
+        arriveAt: t + math.max(d / speed, 0.35),
+        // A ball he runs to meet may end up short: only a real length
+        // counts as a pass.
+        pass: d >= 9,
+      );
+    }
+
+    switch (route) {
+      case _Route.oneTwo:
+        if (stage == 0) {
+          // He plays it in to his team-mate...
+          if (!atFeet(s) || since < 0.3 || !clearlyOnside(now, h)) return null;
+          stage = 1;
+          return to(s, h, 17);
+        }
+        // ...and gets it back, on the run.
+        if (!atFeet(h) || !clearlyOnside(now, s)) return null;
+        delivered = true;
+        // Into his stride, toward where he strikes it.
+        final sp = now.players[s]!;
+        final ahead = _strikeFrom(now) - sp;
+        return to(
+          h,
+          s,
+          18,
+          lead: ahead.length < 1
+              ? null
+              : sp + ahead.unit * math.min(4, ahead.length),
+        );
+      case _Route.through:
+        // Played into the space behind for him to run onto.
+        if (!atFeet(h) || since < 0.35 || !clearlyOnside(now, s)) return null;
+        delivered = true;
+        return to(h, s, 21, lead: _strikeFrom(now));
+      case _Route.cutBack:
+        // Pulled back from the byline along the grass.
+        if (!atFeet(h) || since < 0.45 || !clearlyOnside(now, s)) return null;
+        delivered = true;
+        return to(h, s, 19);
+      case _Route.direct || _Route.carry:
+        return null;
+    }
+  }
+
   @override
   PlayerDrive? steer(int id, double t, ScriptState now) {
     final s = m.shooterId;
@@ -821,6 +1129,20 @@ class _OpenShotPlan extends _Plan {
     if (sd != null) return sd;
     final car = now.carrierId;
     final f = now.flight;
+    if (id == helper && route != _Route.direct && !shot.struck) {
+      if (f != null && f.toId == id) return null;
+      final p = now.players[id]!;
+      if (route == _Route.cutBack && car == id) {
+        // On to the byline before he pulls it back.
+        return (target: at(99.5, latOf(p)), maxSpeed: 3.5);
+      }
+      if (car == id) return (target: p, maxSpeed: 1.5);
+      // Stays for the return, onside.
+      return (
+        target: keepOnside(now, at(depthOf(p) + 1, latOf(p))),
+        maxSpeed: 2.5,
+      );
+    }
     if (id == s) {
       if (shot.struck) return (target: now.players[id]!, maxSpeed: 2);
       if (f != null && f.toId == s) return null;

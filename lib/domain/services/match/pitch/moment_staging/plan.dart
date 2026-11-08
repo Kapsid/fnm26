@@ -209,8 +209,23 @@ abstract class _Plan implements StagedPlan {
     final p = now.players[id];
     if (p == null) return true;
     final d = depthOf(p);
-    if (d <= PitchDims.length / 2) return true;
+    // In his own half, by a hair more than the instant of the kick moves
+    // him (on the line itself and running on, he is in theirs).
+    if (d <= PitchDims.length / 2 - 0.1) return true;
     return d <= math.max(offsideLine(now), depthOf(now.ball)) + 1e-6;
+  }
+
+  /// Whether [id] is clearly onside: by [margin] metres behind the line
+  /// (or halfway). For a ball played to a man running at speed, who on the
+  /// very frame of the kick may already be a stride on from where the
+  /// stager read him.
+  bool clearlyOnside(ScriptState now, int id, {double margin = 0.5}) {
+    if (now.teams[id] != side) return true;
+    final p = now.players[id];
+    if (p == null) return true;
+    final d = depthOf(p);
+    if (d <= PitchDims.length / 2 - margin) return true;
+    return d <= math.max(offsideLine(now), depthOf(now.ball)) - margin;
   }
 
   /// [target] pulled back to where [side]'s man stays onside.
@@ -219,7 +234,10 @@ abstract class _Plan implements StagedPlan {
     if (d <= PitchDims.length / 2) return target;
     final limit = math.max(offsideLine(now), depthOf(now.ball)) - 0.6;
     if (d <= limit) return target;
-    return at(math.max(limit, PitchDims.length / 2), latOf(target));
+    // Against a high line he waits a stride inside his own half, never on
+    // the halfway line itself: a man held there and moving on is beyond
+    // it, and offside, the instant the ball is played.
+    return at(math.max(limit, PitchDims.length / 2 - 0.6), latOf(target));
   }
 
   /// The ball to [to] by whatever means: a pass from a team-mate, a ball

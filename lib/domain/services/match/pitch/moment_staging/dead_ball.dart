@@ -1389,9 +1389,9 @@ class _ThrowPlan extends _DeadBallPlan {
     final s = shotMoment;
     final shooter = s?.shooterId;
     final atkSpots = [
-      at(99.5, sigma * 4),
+      at(98.2, sigma * 4),
       at(97, 0),
-      at(99, -sigma * 4),
+      at(98.2, -sigma * 4),
       at(92, sigma * 2),
     ];
     final atk =
@@ -1452,7 +1452,13 @@ class _ThrowPlan extends _DeadBallPlan {
         .where((q) => used.every((o) => o.distanceTo(q) > 1.8))
         .toList();
     marks.addAll(assign(e, def.take(usable.length).toList(), usable));
-    spreadMarks(e);
+    // Nobody but the man who meets it eased onto the six-yard line.
+    spreadMarks(
+      e,
+      allowed: (id, p) =>
+          id == shooter ||
+          depthOf(p) <= math.max(_offTheLine, depthOf(marks[id]!)),
+    );
   }
 
   @override

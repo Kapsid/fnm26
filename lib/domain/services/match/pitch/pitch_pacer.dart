@@ -125,16 +125,19 @@ class PitchPacer {
   static const double minQuietSeconds = 0.25;
 
   static const double _shot = 3.5;
-  static const double _corner = 6;
-  static const double _freeKick = 6;
+  static const double _corner = 3.5;
+  static const double _freeKick = 3.5;
   static const double _penalty = 7;
   static const double _card = 3;
   static const double _sub = 2.5;
   static const double _offside = 2.5;
   static const double _injurySeconds = 3;
   static const double _goalExtra = 2.5;
-  static const double _longThrow = 6;
+  static const double _longThrow = 3.5;
   static const double _mergeExtra = 1.5;
+
+  /// The least a set piece with its shot is given, at any speed.
+  static const double _setPieceFloor = 3.2;
   static const double _floor = 1.0;
 
   final int _stoppage;
@@ -264,7 +267,9 @@ class PitchPacer {
         if (_keyShot(folded)) {
           return merged + (folded.outcome == ShotOutcome.goal ? _goalExtra : 0);
         }
-        return at(merged, _Tier.standard);
+        // Never so short the delivery and its shot cannot be shown.
+        final scaled = at(merged, _Tier.standard);
+        return scaled < _setPieceFloor ? _setPieceFloor : scaled;
       case FoulMoment f:
         final idx = f.cardEventIndex;
         if (idx == null) return 0;

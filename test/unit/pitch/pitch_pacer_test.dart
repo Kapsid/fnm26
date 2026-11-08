@@ -140,12 +140,14 @@ void main() {
       origin: ShotOrigin.corner,
     );
     final q = PitchPacer(_result([corner, header, routine]), PitchSpeed.slow);
-    expect(q.momentLength(corner), const Duration(milliseconds: 7500));
+    // 3.5 s for the corner and 1.5 s for its shot (6 s until the owner's
+    // 2026-11 "too many corners").
+    expect(q.momentLength(corner), const Duration(milliseconds: 5000));
     expect(q.momentLength(header), Duration.zero);
     expect(q.momentLength(routine), Duration.zero);
     expect(
       q.screenAt(6, 0) - q.screenAt(5, 0),
-      const Duration(milliseconds: 7500),
+      const Duration(milliseconds: 5000),
     );
   });
 
@@ -251,9 +253,12 @@ void main() {
       origin: ShotOrigin.corner,
     );
     final p = PitchPacer(_result([corner, shot], stoppage: 0), PitchSpeed.fast);
-    expect(p.momentLength(corner), const Duration(milliseconds: 10000));
+    expect(p.momentLength(corner), const Duration(milliseconds: 7500));
     expect(p.momentLength(shot), Duration.zero);
-    expect(p.screenAt(6, 0) - p.screenAt(5, 0), const Duration(seconds: 10));
+    expect(
+      p.screenAt(6, 0) - p.screenAt(5, 0),
+      const Duration(milliseconds: 7500),
+    );
   });
 
   test('real engine matches fit the bands', () {

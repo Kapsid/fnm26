@@ -80,6 +80,9 @@ abstract final class LeadIn {
   static const double shooter = 6;
 }
 
+/// What a pass in the build-up is looking for (see `_pickReceiver`).
+enum _PassIntent { usual, short, long, switchPlay, giveAndGo }
+
 /// A side's plan: its shape and instructions.
 typedef MatchPlan = FieldedPlan;
 
@@ -291,10 +294,15 @@ final class KickAction extends BallAction {
     this.toHeight = 0,
     this.pass = false,
     this.shot = false,
+    this.leadTo,
   }) : assert((to == null) != (toPlayerId == null), 'a point or a player');
 
   final Offset2? to;
   final int? toPlayerId;
+
+  /// For a ball to a player: the point it is played into for him to run
+  /// onto (a through ball), when not his feet.
+  final Offset2? leadTo;
   final int? byPlayerId;
   final double arriveAt;
   final double peak;
@@ -932,6 +940,14 @@ class _Builder {
 
   SeededRng rng = SeededRng(0);
   int rngSlot = -1;
+
+  /// The men who have had the ball lately in open play, newest last (by
+  /// agent index), and the last man to pass it to a team-mate: the build-up
+  /// looks for other men than the same two or three, and now and then plays
+  /// a one-two. Cleared with each new quiet slot, so a slot's football
+  /// never depends on what came before it.
+  final List<int> recentOnBall = [];
+  int? lastPasser;
 
   StagedWindow? activeWindow;
   StagedPlan? activePlan;
@@ -2004,6 +2020,8 @@ class _Builder {
     if (slot == rngSlot) return;
     rngSlot = slot;
     rng = SeededRng((seed ^ ((slot + 1) * 0x9E3779B1)) & 0xFFFFFFFF);
+    recentOnBall.clear();
+    lastPasser = null;
   }
 
   /// Quiet time: when the carrier has had the ball long enough, he passes it
@@ -2130,16 +2148,47 @@ class _Builder {
     final breaking = t < side.counterUntil;
     var lStar = (12 + 0.2 * c + direct * 12).clamp(10.0, 38.0);
     if (breaking) lStar = math.max(lStar, 28);
-    final reach = 42 + math.max(0, direct) * 14;
+    var reach = 42 + math.max(0, direct) * 14;
     var target = spellDepth;
     double? lateralTarget;
+    // What this pass is, from the slot's own dice: mostly the side's usual
+    // ball, but a short one into feet, a long one forward, a switch to the
+    // far flank or a ball back to the man who just gave it (a one-two).
+    final roll = rng.nextDouble();
+    final mix = _passMix(s);
+    final intent = breaking
+        ? _PassIntent.usual
+        : roll < mix.short
+        ? _PassIntent.short
+        : roll < mix.short + mix.long
+        ? _PassIntent.long
+        : roll < mix.short + mix.long + mix.switchPlay
+        ? _PassIntent.switchPlay
+        : roll < mix.short + mix.long + mix.switchPlay + mix.giveAndGo
+        ? _PassIntent.giveAndGo
+        : _PassIntent.usual;
+    switch (intent) {
+      case _PassIntent.short:
+        lStar = math.max(8, lStar * 0.55);
+      case _PassIntent.long:
+        lStar = math.min(40, lStar * 1.6);
+        reach += 8;
+      case _PassIntent.switchPlay:
+        lStar = math.max(lStar, 28);
+        reach += 10;
+        final ballLat = (ball.y - PitchDims.width / 2) * dir;
+        lateralTarget = ballLat >= 0 ? -24 : 24;
+      case _PassIntent.giveAndGo || _PassIntent.usual:
+        break;
+    }
     if (leadPoint != null) {
       target = math.min(xToDepth(leadPoint.x, dir), 86);
       lateralTarget = (leadPoint.y - PitchDims.width / 2) * dir;
     }
-    final want = breaking && leadPoint == null
+    var want = breaking && leadPoint == null
         ? 30.0
         : (target - ballDepth).clamp(-12.0, 20.0 + math.max(0, direct) * 10);
+    if (intent == _PassIntent.long && leadPoint == null) want += 10;
     // The moments ahead: the man the next one turns on is looked for; the
     // men due elsewhere (a set piece's taker on his way, a man about to be
     // flagged offside) are not.
@@ -2180,12 +2229,45 @@ class _Builder {
       }
       if (keeper) score -= 1.5;
       if (m.id == wanted) score += 2.5;
+      // Other men than the last few on the ball, unless it is the one-two.
+      final k = recentOnBall.lastIndexOf(m.index);
+      if (intent == _PassIntent.giveAndGo && m.index == lastPasser) {
+        score += 3;
+      } else if (k >= 0 && !breaking) {
+        score -= 0.6 + 0.3 * (k - recentOnBall.length + 4).clamp(0, 3);
+      }
       if (score > bestScore) {
         bestScore = score;
         best = m;
       }
     }
     return best;
+  }
+
+  /// The odds of each kind of pass for side [s], read off its tactics and
+  /// its opponent's (the instructions as they stand, the AI's drift
+  /// included): a direct side, or one minded to break, goes long; a wide
+  /// one switches play; a patient one plays it short and plays one-twos,
+  /// more of them at a high tempo. A pressing opponent hurries the ball
+  /// long; a deep block is gone round, from flank to flank.
+  ({double short, double long, double switchPlay, double giveAndGo}) _passMix(
+    int s,
+  ) {
+    final i = sides[s].instr;
+    final o = sides[1 - s].instr;
+    final direct = (i.directness - 50) / 50;
+    final press = ((o.pressing - 50) / 50).clamp(0.0, 1.0);
+    final deep = ((50 - o.defensiveLine) / 50).clamp(0.0, 1.0);
+    return (
+      short: 0.10 + 0.16 * math.max(0, -direct) - 0.05 * press,
+      long:
+          0.08 +
+          0.18 * math.max(0, direct) +
+          0.10 * sides[s].counterIntent +
+          0.10 * press,
+      switchPlay: 0.04 + 0.12 * i.width / 100 + 0.06 * deep,
+      giveAndGo: 0.05 + 0.10 * math.max(0, -direct) + 0.06 * i.tempo / 100,
+    );
   }
 
   _Agent? _pickInterceptor(_Agent a, double t, {bool short = false}) {
@@ -2785,10 +2867,11 @@ class _Builder {
       }
       if (w.injury != null ||
           w.moments.isEmpty ||
-          w.moments.first is SubMoment) {
-        // Play is stopped for a change or a knock: the men walk back
-        // into their places meanwhile (off a goal line a set piece left
-        // them on).
+          w.moments.first is SubMoment ||
+          w.moments.first is FoulMoment) {
+        // A foul, a change or a knock: the men the moment does not name
+        // walk back into their places meanwhile (off a goal line a set
+        // piece left them on).
         final dist = a.pos.distanceTo(home);
         return (home, math.min(3.0, 1.0 + dist * 0.3), 1);
       }
