@@ -86,6 +86,11 @@ abstract final class AppLog {
     _append(entry.toString());
   }
 
+  /// Records one line of information, such as a timing. [tag] says what it
+  /// measures ('career-open', 'mgr-seed', …).
+  static void info(String tag, String message) =>
+      _append('--- ${DateTime.now().toIso8601String()}  [$tag] $message\n');
+
   static void _append(String entry) {
     _recent.add(entry);
     if (_recent.length > _memoryEntries) _recent.removeAt(0);

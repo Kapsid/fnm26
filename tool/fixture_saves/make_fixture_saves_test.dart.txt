@@ -1,0 +1,218 @@
+// Fixture-save maker. Not a test of anything: copy this file into a worktree
+// of the build whose saves you want as `test/story/make_fixture_saves_test.dart`
+// and run it alone. See tool/fixture_saves/README.md.
+//
+// It uses only APIs that exist at e34168ea (1.0.9 (21)) and every build since:
+// StoryDriver.start / step(stopAtRollover:), CareerBundle.export/encode,
+// WorldCupHosts.hostsFor / continentalHostsFor, VenueGenerator.forHosts,
+// venueRulesFor, hostEstatesFor and playerRepositoryProvider.byNation.
+// No `// BUILD:` switch is needed yet: the APIs are identical at e34168ea,
+// e70e731c and main. A later build that renames one adds the switch here.
+//
+// The manifest code below must stay identical to `computeManifest` in
+// test/helpers/save_fixtures.dart, which recomputes it on today's code.
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:drift/drift.dart' show Variable;
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
+import 'package:fnm/domain/services/competition/qualification_format.dart';
+import 'package:fnm/domain/services/competition/venues.dart';
+import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/national_stadium_providers.dart';
+import 'package:fnm/features/tournaments/city_providers.dart';
+
+import 'driver.dart';
+
+/// Where the files go: FIXTURE_OUT, or build/fixture_saves in the worktree.
+final String _out =
+    Platform.environment['FIXTURE_OUT'] ??
+    '${Directory.current.path}/build/fixture_saves';
+
+/// The nations whose pool names every manifest records, besides the
+/// career's own.
+const List<int> _nameNations = [1, 23, 140];
+
+final _estatesProvider = FutureProvider.autoDispose
+    .family<Map<int, List<Venue>>, (int, String)>(
+      (ref, k) => hostEstatesFor(ref, k.$1, [
+        for (final s in k.$2.split(',')) int.parse(s),
+      ]),
+    );
+
+String _venueKey(Venue v) => '${v.stadium}, ${v.city}|${v.capacity}';
+
+Future<Map<String, Object?>> _manifest(
+  ProviderContainer c,
+  int careerId,
+) async {
+  final career = (await c.read(careerRepositoryProvider).byId(careerId))!;
+  final nations = await c.read(nationRepositoryProvider).forCareer(careerId);
+  final cities = await c.read(countryCitiesProvider.future);
+  final comp = c.read(competitionRepositoryProvider);
+  final hosts = <String, List<int>>{};
+  final venues = <String, List<String>>{};
+
+  Future<void> edition(String key, int cycle, List<int> ids, int field) async {
+    if (ids.isEmpty) return;
+    hosts[key] = ids;
+    final estates = await c.read(
+      _estatesProvider((careerId, ids.join(','))).future,
+    );
+    final byHost = VenueGenerator.forHosts(
+      hostIds: ids,
+      citiesByHost: {
+        for (final h in ids)
+          if (cities[h] != null) h: cities[h]!,
+      },
+      count: VenueGenerator.countForField(field),
+      estates: estates,
+      rules: await venueRulesFor(comp, careerId, cycle),
+    );
+    venues[key] = [
+      for (final h in ids)
+        for (final v in byHost[h] ?? const <Venue>[]) '$h:${_venueKey(v)}',
+    ];
+  }
+
+  for (final cycle in [0, 1]) {
+    await edition(
+      'wc:$cycle',
+      cycle,
+      WorldCupHosts.hostsFor(
+        year: CareerService.worldCupYear(cycle),
+        nations: nations,
+        seed: career.rngSeed,
+      ),
+      QualificationFormat.totalFinalsBerths + QualificationFormat.playoffBerths,
+    );
+    for (final conf in Confederation.values) {
+      final cup = ContinentalCups.byConfederation[conf];
+      if (cup == null) continue;
+      await edition(
+        'cont:${conf.name}:$cycle',
+        cycle,
+        WorldCupHosts.continentalHostsFor(
+          confederation: conf,
+          cycle: cycle,
+          seed: career.rngSeed,
+          nations: nations,
+        ),
+        cup.size,
+      );
+    }
+  }
+
+  final names = <String, List<String>>{};
+  for (final nid in {career.nationId, ..._nameNations}) {
+    final pool = await c
+        .read(playerRepositoryProvider)
+        .byNation(
+          nid,
+          agingYears: CareerService.agingYears(career),
+          saveSeed: career.rngSeed,
+          careerId: career.id,
+        );
+    pool.sort((a, b) => a.id.compareTo(b.id));
+    names['$nid'] = [for (final p in pool) '${p.id} ${p.name}'];
+  }
+
+  return {
+    'careerId': careerId,
+    'cyclePointer': career.cyclePointer,
+    'schemaVersion': AppDatabase.currentSchemaVersion,
+    'inGameDate': career.inGameDate.toIso8601String(),
+    'hosts': hosts,
+    'venues': venues,
+    'names': names,
+  };
+}
+
+Future<void> _write(
+  ProviderContainer c,
+  AppDatabase db,
+  int careerId,
+  String name, {
+  bool bundle = false,
+}) async {
+  Directory(_out).createSync(recursive: true);
+  // VACUUM INTO, never a file copy: a file database is in WAL mode, and a
+  // copy can miss what is still in the log.
+  final raw = File('$_out/$name.db');
+  if (raw.existsSync()) raw.deleteSync();
+  await db.customStatement("VACUUM INTO '${raw.path}'");
+  File('$_out/$name.db.gz').writeAsBytesSync(
+    gzip.encode(raw.readAsBytesSync()),
+  );
+  raw.deleteSync();
+  File('$_out/$name.manifest.json').writeAsStringSync(
+    const JsonEncoder.withIndent(' ').convert(await _manifest(c, careerId)),
+  );
+  if (bundle) {
+    File('$_out/$name.fnmcareer').writeAsBytesSync(
+      CareerBundle.encode(await CareerBundle.export(db, careerId)),
+    );
+  }
+}
+
+/// How many continental finals honours [careerId] holds. A new career
+/// already holds the editions played before it began.
+Future<int> _continentalHonours(AppDatabase db, int careerId) async {
+  final names = [
+    for (final cup in ContinentalCups.byConfederation.values) cup.name,
+  ];
+  final slots = List.filled(names.length, '?').join(', ');
+  final rows = await db
+      .customSelect(
+        'SELECT COUNT(*) AS n FROM honours '
+        'WHERE career_id = ? AND competition IN ($slots)',
+        variables: [
+          Variable<int>(careerId),
+          for (final n in names) Variable<String>(n),
+        ],
+      )
+      .getSingle();
+  return rows.read<int>('n');
+}
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  test('mid_cycle: seed 4242, England, to the first continental honour', () async {
+    final db = storyDb();
+    final c = storyContainer(db);
+    addTearDown(c.dispose);
+    final d = await StoryDriver.start(c, 4242);
+    final history = await _continentalHonours(db, d.careerId);
+    var steps = 0;
+    while (await _continentalHonours(db, d.careerId) == history) {
+      if (!await d.step(stopAtRollover: true)) fail('rollover first');
+      if (++steps > 6000) fail('runaway');
+    }
+    // ignore: avoid_print
+    print('mid_cycle: $steps steps');
+    await _write(c, db, d.careerId, 'mid_cycle');
+  }, timeout: const Timeout(Duration(minutes: 50)));
+
+  test('late_cycle: seed 777, Czechia, to the rollover', () async {
+    final db = storyDb();
+    final c = storyContainer(db);
+    addTearDown(c.dispose);
+    final d = await StoryDriver.start(c, 777, nationId: 12); // Czechia
+    var steps = 0;
+    while (await d.step(stopAtRollover: true)) {
+      if (++steps > 8000) fail('runaway');
+    }
+    // ignore: avoid_print
+    print('late_cycle: $steps steps');
+    await _write(c, db, d.careerId, 'late_cycle', bundle: true);
+  }, timeout: const Timeout(Duration(minutes: 50)));
+}
