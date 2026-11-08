@@ -407,6 +407,64 @@ void main() {
     expect(_screen(tester).mode, MatchViewMode.timeline);
   });
 
+  // The owner's 2026-11 ask: a new career's first match asks how to watch,
+  // once, even on a device that remembers a choice; an older save (never
+  // marked) and every later match do not.
+  for (final form in FormFactor.values) {
+    testWidgets('a new career asks at its first match, once (${form.name})', (
+      tester,
+    ) async {
+      final tablet = form == FormFactor.tablet;
+      await _pump(
+        tester,
+        preview: _preview(),
+        salt: 7,
+        prefs: {
+          kMatchViewModePrefsKey: 'pitch',
+          MatchViewModeStore.firstMatchAskKey(1): true,
+        },
+        formFactor: form,
+        size: tablet ? const Size(1366, 1024) : const Size(400, 2000),
+      );
+      // Remembered or not, the first match waits for the answer.
+      expect(find.byType(MatchViewChooser), findsOneWidget);
+      expect(find.byType(PitchMatchView), findsNothing);
+      expect(_screen(tester).mode, isNull);
+      await tester.tap(find.byKey(MatchViewChooser.timelineKey));
+      await tester.pump();
+      await tester.pump();
+      expect(find.byType(MatchViewChooser), findsNothing);
+      expect(_screen(tester).mode, MatchViewMode.timeline);
+      final prefs = await SharedPreferences.getInstance();
+      // Kept as the default, and never asked again.
+      expect(prefs.getString(kMatchViewModePrefsKey), 'timeline');
+      expect(prefs.getBool(MatchViewModeStore.firstMatchAskKey(1)), isNull);
+
+      await tester.pumpWidget(const SizedBox());
+      await _pump(
+        tester,
+        preview: _preview(),
+        salt: 8,
+        resetPrefs: false,
+        formFactor: form,
+        size: tablet ? const Size(1366, 1024) : const Size(400, 2000),
+      );
+      expect(find.byType(MatchViewChooser), findsNothing);
+      expect(_screen(tester).mode, MatchViewMode.timeline);
+    });
+  }
+
+  testWidgets('an older save is never asked again', (tester) async {
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      prefs: {kMatchViewModePrefsKey: 'timeline'},
+    );
+    expect(find.byType(MatchViewChooser), findsNothing);
+    expect(_screen(tester).mode, MatchViewMode.timeline);
+  });
+
   testWidgets('switching mid-match keeps minute, score and visible events '
       'identical', (tester) async {
     final preview = _preview();

@@ -1175,8 +1175,27 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// way now, and remembered for the next match.
   void _chooseMode(MatchPreview preview, MatchViewMode mode) {
     unawaited(ref.read(matchViewModeProvider.notifier).choose(mode));
+    if (_firstAsk) {
+      // A new career's first match: asked once, never again.
+      _firstAsk = false;
+      unawaited(
+        ref
+            .read(matchViewModeStoreProvider)
+            .clearFirstMatchAsk(widget.careerId)
+            .then((_) {
+              if (mounted) {
+                ref.invalidate(firstMatchViewAskProvider(widget.careerId));
+              }
+            }),
+      );
+    }
     _applyMode(preview, mode);
   }
+
+  /// Whether this match is a new career's first and asks how to watch
+  /// before kick-off, whatever the device remembers (read once).
+  bool _firstAsk = false;
+  bool _firstAskRead = false;
 
   /// Plays the Pitch clock when the match should be running, its picture is
   /// in and the ground is baked, and holds it otherwise. A bake finishing
@@ -1769,6 +1788,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     // How this device watches matches: null while loading, or when the
     // manager has never chosen (he is asked before kick-off).
     final remembered = ref.watch(matchViewModeProvider);
+    // A new career's first match asks, once, even on a device that has
+    // chosen before (see MatchViewModeStore.markFirstMatchAsk).
+    final firstAsk = ref.watch(firstMatchViewAskProvider(widget.careerId));
+    if (!_firstAskRead && firstAsk.hasValue) {
+      _firstAskRead = true;
+      _firstAsk = firstAsk.value! && !_started;
+    }
+    final asking = !_firstAskRead || _firstAsk;
     // A match is played from the teamsheet it kicked off with. Once the preview
     // has landed it is PINNED — the screen stops watching the provider — so the
     // world moving underneath can never repaint this match with another
@@ -1815,12 +1842,16 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // Never having chosen, the manager is asked before kick-off, on
             // a tablet as on a phone; the match waits for him.
             final wanted = remembered.valueOrNull;
-            if (wanted != null && _mode == null) {
+            if (wanted != null && _mode == null && !asking) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) _applyMode(preview, wanted);
               });
             }
-            final choosing = _mode == null && !remembered.isLoading;
+            final choosing =
+                _mode == null &&
+                !remembered.isLoading &&
+                _firstAskRead &&
+                (_firstAsk || wanted == null);
             if (!_started && _mode != null) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted && !_started) _begin();

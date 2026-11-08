@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
@@ -92,6 +93,8 @@ class _CampaignBriefScreenState extends ConsumerState<CampaignBriefScreen> {
     final name = _controller.text;
     try {
       final career = await service.start(def, managerName: name);
+      // A new run asks how to watch at its first match, once.
+      await ref.read(matchViewModeStoreProvider).markFirstMatchAsk(career.id);
       if (router.state.uri.path == Routes.campaignBrief) {
         router.go('${Routes.hub}?careerId=${career.id}');
       }
