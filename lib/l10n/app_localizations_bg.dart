@@ -16254,4 +16254,23 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'КОМЕНТАР';
+
+  @override
+  String get matchSubShout => 'СМЯНА';
+
+  @override
+  String get matchRedCardShout => 'ЧЕРВЕН КАРТОН';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Излиза: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Влиза: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Изгонен';
 }

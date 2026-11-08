@@ -15630,4 +15630,23 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchTabCommentary => '중계';
+
+  @override
+  String get matchSubShout => '교체';
+
+  @override
+  String get matchRedCardShout => '레드카드';
+
+  @override
+  String matchSubOff(String name) {
+    return '아웃: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return '인: $name';
+  }
+
+  @override
+  String get matchSentOff => '퇴장';
 }

@@ -82,7 +82,11 @@ const List<String> _surnames = [
 
 /// A real match between the Czech Republic (the manager's) and Portugal, in
 /// [round], with a bench each and a name for everybody.
-MatchPreview _preview({String? round = 'FRIENDLY', int saveSeed = 42}) {
+MatchPreview _preview({
+  String? round = 'FRIENDLY',
+  int saveSeed = 42,
+  bool opponentSub = false,
+}) {
   final home = pitchNation('CZE');
   final away = pitchNation('POR');
   var k = 0;
@@ -137,6 +141,16 @@ MatchPreview _preview({String? round = 'FRIENDLY', int saveSeed = 42}) {
     playerNationId: home.id,
     bench: bench(home),
     opponentBench: bench(away),
+    // The AI's planned change, when a test wants a substitution to show.
+    opponentSubs: [
+      if (opponentSub)
+        Substitution(
+          teamNationId: away.id,
+          minute: 63,
+          offId: away.id * 100 + 9,
+          on: bench(away).first,
+        ),
+    ],
     saveSeed: saveSeed,
     ground: (
       stadium: 'Test Park',
@@ -763,6 +777,87 @@ void main() {
     await tester.pump();
     await _until(tester, () => _clock(tester).playing);
   });
+
+  // The owner's 2026-11 ask: a substitution gets a pop-up as a goal does:
+  // the side, who went off (red arrow), who came on (green arrow) and the
+  // minute. Under the 2D TV's score bug on a phone; as a card on a tablet.
+  for (final form in FormFactor.values) {
+    testWidgets('a substitution pops up on the 2D TV (${form.name})', (
+      tester,
+    ) async {
+      final tablet = form == FormFactor.tablet;
+      final preview = _preview(opponentSub: true);
+      bool wanted(MatchEvent e) =>
+          e.type == MatchEventType.substitution &&
+          e.secondaryName != null &&
+          e.minute > 46 &&
+          e.minute < 85;
+      final salt = _salt(preview, (r) => r.events.any(wanted));
+      await _pump(
+        tester,
+        preview: preview,
+        salt: salt,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        formFactor: form,
+        size: tablet ? const Size(1366, 1024) : const Size(400, 2000),
+      );
+      await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      final r = _result(tester);
+      final pb = _pb(tester);
+      final si = r.events.indexWhere(wanted);
+      final sub = r.events[si];
+      final key = tablet ? matchEventFlashKey : matchEventBannerKey;
+      expect(find.byKey(key), findsNothing);
+      // Through half time first (its whistle stops play).
+      await _seek(tester, pb.halfTime - const Duration(milliseconds: 300));
+      await _until(
+        tester,
+        () => find.byType(HalfTimePrompt).evaluate().isNotEmpty,
+      );
+      await tester.tap(
+        find.descendant(
+          of: find.byType(HalfTimePrompt),
+          matching: find.text(enL.matchContinue),
+        ),
+      );
+      await tester.pump();
+      await _until(tester, () => _clock(tester).playing);
+      await _seek(tester, _secs(pb.revealAt(si) - 0.4));
+      await _until(tester, () => find.byKey(key).evaluate().isNotEmpty);
+      final pop = find.byKey(key);
+      expect(
+        find.descendant(of: pop, matching: find.text(enL.matchSubShout)),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: pop, matching: find.text(sub.playerName)),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: pop, matching: find.text(sub.secondaryName!)),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: pop,
+          matching: find.byIcon(Icons.arrow_downward_rounded),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: pop,
+          matching: find.byIcon(Icons.arrow_upward_rounded),
+        ),
+        findsOneWidget,
+      );
+      // Play goes on under it, and it goes.
+      expect(_clock(tester).playing, isTrue);
+      await tester.pump(kEventFlashHold + const Duration(milliseconds: 100));
+      await tester.pump();
+      expect(find.byKey(key), findsNothing);
+    });
+  }
 
   testWidgets('a user pause survives the ground being baked again', (
     tester,

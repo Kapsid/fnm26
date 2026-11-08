@@ -16270,4 +16270,23 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'COMENTÁRIO';
+
+  @override
+  String get matchSubShout => 'SUBSTITUIÇÃO';
+
+  @override
+  String get matchRedCardShout => 'CARTÃO VERMELHO';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Sai: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Entra: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Expulso';
 }

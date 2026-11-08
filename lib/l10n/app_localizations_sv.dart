@@ -16156,4 +16156,23 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMMENTARER';
+
+  @override
+  String get matchSubShout => 'BYTE';
+
+  @override
+  String get matchRedCardShout => 'RÖTT KORT';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Ut: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'In: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Utvisad';
 }

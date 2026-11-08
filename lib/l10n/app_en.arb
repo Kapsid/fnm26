@@ -25006,5 +25006,35 @@
   "matchTabCommentary": "COMMENTARY",
   "@matchTabCommentary": {
     "description": "Tablet live match, Pitch view: title of the right-column tab that lists every commentary line so far, newest first (the other tab is the line-ups)."
+  },
+  "matchSubShout": "SUB",
+  "@matchSubShout": {
+    "description": "Live match: the substitution pop-up, its shout (like GOAL!)."
+  },
+  "matchRedCardShout": "RED CARD",
+  "@matchRedCardShout": {
+    "description": "Live match: the red-card pop-up, its shout (like GOAL!)."
+  },
+  "matchSubOff": "Off: {name}",
+  "@matchSubOff": {
+    "description": "Live match, substitution pop-up: the player going off (beside a red arrow; also read out by screen readers).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchSubOn": "On: {name}",
+  "@matchSubOn": {
+    "description": "Live match, substitution pop-up: the player coming on (beside a green arrow; also read out by screen readers).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchSentOff": "Sent off",
+  "@matchSentOff": {
+    "description": "Live match, red-card pop-up: the line under the player sent off."
   }
 }

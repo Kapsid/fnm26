@@ -16082,4 +16082,23 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'YORUM';
+
+  @override
+  String get matchSubShout => 'DEĞİŞİKLİK';
+
+  @override
+  String get matchRedCardShout => 'KIRMIZI KART';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Çıkan: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Giren: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Oyundan atıldı';
 }

@@ -4021,5 +4021,10 @@
   "ratingPlayerOfTheMatch": "Pemain terbaik perlawanan",
   "ratingSemantics": "Penarafan {rating}",
   "matchAverageRating": "Purata penarafan",
-  "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat."
+  "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat.",
+  "matchSubShout": "PERTUKARAN",
+  "matchRedCardShout": "KAD MERAH",
+  "matchSubOff": "Keluar: {name}",
+  "matchSubOn": "Masuk: {name}",
+  "matchSentOff": "Dibuang padang"
 }

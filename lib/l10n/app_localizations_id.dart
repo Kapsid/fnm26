@@ -16077,4 +16077,23 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMENTAR';
+
+  @override
+  String get matchSubShout => 'PERGANTIAN';
+
+  @override
+  String get matchRedCardShout => 'KARTU MERAH';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Keluar: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Masuk: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Diusir';
 }

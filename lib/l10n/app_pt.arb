@@ -4021,5 +4021,10 @@
   "ratingPlayerOfTheMatch": "Melhor em campo",
   "ratingSemantics": "Nota {rating}",
   "matchAverageRating": "Nota média",
-  "matchLiveRatingsNote": "As notas acompanham o jogo até agora e ficam definitivas no apito final."
+  "matchLiveRatingsNote": "As notas acompanham o jogo até agora e ficam definitivas no apito final.",
+  "matchSubShout": "SUBSTITUIÇÃO",
+  "matchRedCardShout": "CARTÃO VERMELHO",
+  "matchSubOff": "Sai: {name}",
+  "matchSubOn": "Entra: {name}",
+  "matchSentOff": "Expulso"
 }

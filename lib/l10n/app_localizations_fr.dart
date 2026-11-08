@@ -16323,4 +16323,23 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'COMMENTAIRE';
+
+  @override
+  String get matchSubShout => 'CHANGEMENT';
+
+  @override
+  String get matchRedCardShout => 'CARTON ROUGE';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Sort : $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Entre : $name';
+  }
+
+  @override
+  String get matchSentOff => 'Expulsé';
 }

@@ -4021,5 +4021,10 @@
   "ratingPlayerOfTheMatch": "Kampens spiller",
   "ratingSemantics": "Karakter {rating}",
   "matchAverageRating": "Snittkarakter",
-  "matchLiveRatingsNote": "Karakterene følger kampen så langt og er endelige ved sluttsignalet."
+  "matchLiveRatingsNote": "Karakterene følger kampen så langt og er endelige ved sluttsignalet.",
+  "matchSubShout": "BYTTE",
+  "matchRedCardShout": "RØDT KORT",
+  "matchSubOff": "Ut: {name}",
+  "matchSubOn": "Inn: {name}",
+  "matchSentOff": "Utvist"
 }

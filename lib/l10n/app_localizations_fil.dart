@@ -16177,4 +16177,23 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMENTARYO';
+
+  @override
+  String get matchSubShout => 'PALIT';
+
+  @override
+  String get matchRedCardShout => 'PULANG KARD';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Labas: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Pasok: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Pinalabas';
 }

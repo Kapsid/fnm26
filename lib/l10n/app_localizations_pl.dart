@@ -16342,4 +16342,23 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMENTARZ';
+
+  @override
+  String get matchSubShout => 'ZMIANA';
+
+  @override
+  String get matchRedCardShout => 'CZERWONA KARTKA';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Schodzi: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Wchodzi: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Wyrzucony z boiska';
 }

@@ -4021,5 +4021,10 @@
   "ratingPlayerOfTheMatch": "Matchens bäste spelare",
   "ratingSemantics": "Betyg {rating}",
   "matchAverageRating": "Snittbetyg",
-  "matchLiveRatingsNote": "Betygen följer matchen hittills och är slutgiltiga vid slutsignalen."
+  "matchLiveRatingsNote": "Betygen följer matchen hittills och är slutgiltiga vid slutsignalen.",
+  "matchSubShout": "BYTE",
+  "matchRedCardShout": "RÖTT KORT",
+  "matchSubOff": "Ut: {name}",
+  "matchSubOn": "In: {name}",
+  "matchSentOff": "Utvisad"
 }

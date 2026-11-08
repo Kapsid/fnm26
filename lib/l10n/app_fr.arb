@@ -4021,5 +4021,10 @@
   "ratingPlayerOfTheMatch": "Homme du match",
   "ratingSemantics": "Note {rating}",
   "matchAverageRating": "Note moyenne",
-  "matchLiveRatingsNote": "Les notes suivent le match en cours et deviennent définitives au coup de sifflet final."
+  "matchLiveRatingsNote": "Les notes suivent le match en cours et deviennent définitives au coup de sifflet final.",
+  "matchSubShout": "CHANGEMENT",
+  "matchRedCardShout": "CARTON ROUGE",
+  "matchSubOff": "Sort : {name}",
+  "matchSubOn": "Entre : {name}",
+  "matchSentOff": "Expulsé"
 }

@@ -15876,4 +15876,23 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'คำบรรยาย';
+
+  @override
+  String get matchSubShout => 'เปลี่ยนตัว';
+
+  @override
+  String get matchRedCardShout => 'ใบแดง';
+
+  @override
+  String matchSubOff(String name) {
+    return 'ออก: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'เข้า: $name';
+  }
+
+  @override
+  String get matchSentOff => 'ถูกไล่ออก';
 }

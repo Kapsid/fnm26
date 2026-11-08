@@ -4021,5 +4021,10 @@
   "ratingPlayerOfTheMatch": "Гравець матчу",
   "ratingSemantics": "Оцінка {rating}",
   "matchAverageRating": "Середня оцінка",
-  "matchLiveRatingsNote": "Оцінки відображають перебіг матчу досі й стають остаточними після фінального свистка."
+  "matchLiveRatingsNote": "Оцінки відображають перебіг матчу досі й стають остаточними після фінального свистка.",
+  "matchSubShout": "ЗАМІНА",
+  "matchRedCardShout": "ЧЕРВОНА КАРТКА",
+  "matchSubOff": "Залишає поле: {name}",
+  "matchSubOn": "Виходить на поле: {name}",
+  "matchSentOff": "Вилучений"
 }

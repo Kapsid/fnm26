@@ -16585,4 +16585,23 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'COMENTARIU';
+
+  @override
+  String get matchSubShout => 'SCHIMBARE';
+
+  @override
+  String get matchRedCardShout => 'CARTONAȘ ROȘU';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Iese: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Intră: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Eliminat';
 }

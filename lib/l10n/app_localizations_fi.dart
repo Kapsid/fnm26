@@ -16243,4 +16243,23 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'SELOSTUS';
+
+  @override
+  String get matchSubShout => 'VAIHTO';
+
+  @override
+  String get matchRedCardShout => 'PUNAINEN KORTTI';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Pois: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Sisään: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Ajettu ulos';
 }

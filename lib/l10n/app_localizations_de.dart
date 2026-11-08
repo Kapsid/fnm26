@@ -16293,4 +16293,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMMENTAR';
+
+  @override
+  String get matchSubShout => 'WECHSEL';
+
+  @override
+  String get matchRedCardShout => 'ROTE KARTE';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Raus: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Rein: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Platzverweis';
 }

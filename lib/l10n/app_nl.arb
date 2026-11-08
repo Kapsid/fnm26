@@ -4021,5 +4021,10 @@
   "ratingPlayerOfTheMatch": "Man van de wedstrijd",
   "ratingSemantics": "Cijfer {rating}",
   "matchAverageRating": "Gemiddeld cijfer",
-  "matchLiveRatingsNote": "De cijfers volgen de wedstrijd tot nu toe en zijn definitief bij het eindsignaal."
+  "matchLiveRatingsNote": "De cijfers volgen de wedstrijd tot nu toe en zijn definitief bij het eindsignaal.",
+  "matchSubShout": "WISSEL",
+  "matchRedCardShout": "RODE KAART",
+  "matchSubOff": "Eruit: {name}",
+  "matchSubOn": "Erin: {name}",
+  "matchSentOff": "Uit het veld gestuurd"
 }

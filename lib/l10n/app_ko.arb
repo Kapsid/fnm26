@@ -4021,5 +4021,10 @@
   "ratingPlayerOfTheMatch": "경기 최우수 선수",
   "ratingSemantics": "평점 {rating}",
   "matchAverageRating": "평균 평점",
-  "matchLiveRatingsNote": "평점은 지금까지의 경기 흐름을 따르며 종료 휘슬과 함께 확정됩니다."
+  "matchLiveRatingsNote": "평점은 지금까지의 경기 흐름을 따르며 종료 휘슬과 함께 확정됩니다.",
+  "matchSubShout": "교체",
+  "matchRedCardShout": "레드카드",
+  "matchSubOff": "아웃: {name}",
+  "matchSubOn": "인: {name}",
+  "matchSentOff": "퇴장"
 }

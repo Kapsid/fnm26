@@ -16247,4 +16247,23 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'COMMENTAAR';
+
+  @override
+  String get matchSubShout => 'WISSEL';
+
+  @override
+  String get matchRedCardShout => 'RODE KAART';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Eruit: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Erin: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Uit het veld gestuurd';
 }

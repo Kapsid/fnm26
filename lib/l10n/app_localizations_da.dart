@@ -16172,4 +16172,23 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMMENTARER';
+
+  @override
+  String get matchSubShout => 'UDSKIFTNING';
+
+  @override
+  String get matchRedCardShout => 'RØDT KORT';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Ud: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Ind: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Udvist';
 }

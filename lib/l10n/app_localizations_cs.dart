@@ -16445,4 +16445,23 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMENTÁŘ';
+
+  @override
+  String get matchSubShout => 'STŘÍDÁNÍ';
+
+  @override
+  String get matchRedCardShout => 'ČERVENÁ KARTA';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Odchází: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Přichází: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Vyloučen';
 }

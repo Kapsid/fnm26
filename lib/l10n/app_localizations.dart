@@ -24367,6 +24367,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'COMMENTARY'**
   String get matchTabCommentary;
+
+  /// Live match: the substitution pop-up, its shout (like GOAL!).
+  ///
+  /// In en, this message translates to:
+  /// **'SUB'**
+  String get matchSubShout;
+
+  /// Live match: the red-card pop-up, its shout (like GOAL!).
+  ///
+  /// In en, this message translates to:
+  /// **'RED CARD'**
+  String get matchRedCardShout;
+
+  /// Live match, substitution pop-up: the player going off (beside a red arrow; also read out by screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Off: {name}'**
+  String matchSubOff(String name);
+
+  /// Live match, substitution pop-up: the player coming on (beside a green arrow; also read out by screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'On: {name}'**
+  String matchSubOn(String name);
+
+  /// Live match, red-card pop-up: the line under the player sent off.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent off'**
+  String get matchSentOff;
 }
 
 class _AppLocalizationsDelegate

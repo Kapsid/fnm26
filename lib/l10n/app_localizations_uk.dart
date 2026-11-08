@@ -16484,4 +16484,23 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'КОМЕНТАР';
+
+  @override
+  String get matchSubShout => 'ЗАМІНА';
+
+  @override
+  String get matchRedCardShout => 'ЧЕРВОНА КАРТКА';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Залишає поле: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Виходить на поле: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Вилучений';
 }

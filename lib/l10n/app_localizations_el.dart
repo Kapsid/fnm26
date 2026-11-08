@@ -16259,4 +16259,23 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'ΣΧΟΛΙΑΣΜΟΣ';
+
+  @override
+  String get matchSubShout => 'ΑΛΛΑΓΗ';
+
+  @override
+  String get matchRedCardShout => 'ΚΟΚΚΙΝΗ ΚΑΡΤΑ';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Βγαίνει: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Μπαίνει: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Αποβλήθηκε';
 }

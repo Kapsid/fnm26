@@ -16507,4 +16507,23 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMENTAR';
+
+  @override
+  String get matchSubShout => 'IZMJENA';
+
+  @override
+  String get matchRedCardShout => 'CRVENI KARTON';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Izlazi: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Ulazi: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Isključen';
 }

@@ -59,6 +59,7 @@ import 'package:go_router/go_router.dart';
 
 part 'match_frame.dart';
 part 'match_panels.dart';
+part 'match_event_flash.dart';
 part 'match_score_bug.dart';
 part 'match_tablet_layout.dart';
 
@@ -215,6 +216,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   /// The goal currently flashed on the "GOAL!" overlay (null when hidden).
   MatchEvent? _goalFlash;
   Timer? _flashTimer;
+
+  /// The substitution or red card on its pop-up (null when hidden). Play
+  /// never waits for it.
+  MatchEvent? _eventFlash;
+  Timer? _eventTimer;
 
   /// The player's nation id (seeded with the live setup), used to spot an
   /// injury to one of the manager's own players as the clock reaches it.
@@ -467,6 +473,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _lifecycle.dispose();
     _timer?.cancel();
     _flashTimer?.cancel();
+    _eventTimer?.cancel();
     _penTimer?.cancel();
     _stage?.dispose();
     _pc.dispose();
@@ -630,15 +637,18 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         } else if (_minute < 90) {
           // Normal play.
           _minute++;
+          _flashEventsAt(_minute, 0);
           scored = _flashGoalAt(_minute, 0);
         } else if (_added < _stoppage) {
           // Second-half stoppage: the clock holds at 90 and counts +1, +2, …
           _added++;
           tickStoppage = _added;
+          _flashEventsAt(90, _added);
           scored = _flashGoalAt(90, _added);
         } else if (_minute < _fullTimeMinute) {
           // Extra time (a level knockout) resumes after stoppage.
           _minute++;
+          _flashEventsAt(_minute, 0);
           scored = _flashGoalAt(_minute, 0);
         }
         if (_clockDone) _whistleFullTime();
@@ -698,6 +708,28 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       }
     }
     return false;
+  }
+
+  /// The pop-up for a substitution or a red card [e]: shown a moment, as
+  /// the goal's is, while play goes on. Call inside `setState`.
+  void _flashEvent(MatchEvent e) {
+    _eventFlash = e;
+    _eventTimer?.cancel();
+    _eventTimer = Timer(kEventFlashHold, () {
+      if (mounted) setState(() => _eventFlash = null);
+    });
+  }
+
+  /// The pop-ups for the substitutions and red cards of [minute] (+
+  /// [stoppage]) on the Timeline's tick: the last of them shows.
+  void _flashEventsAt(int minute, int stoppage) {
+    MatchEvent? last;
+    for (final e in _result?.events ?? const <MatchEvent>[]) {
+      if (flashesAsEvent(e) && e.minute == minute && e.stoppage == stoppage) {
+        last = e;
+      }
+    }
+    if (last != null) _flashEvent(last);
   }
 
   /// Flashes the "GOAL!" overlay for [e] and holds the clock until it
@@ -1289,11 +1321,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _held = now.held;
       if (before == null) return;
       MatchEvent? goal;
+      MatchEvent? notice;
       for (final e in events) {
         if (!_reached(e) || before.contains(_keyOf(e))) continue;
         if (e.type == MatchEventType.goal) goal = e;
+        if (flashesAsEvent(e)) notice = e;
         arrived.add(e);
       }
+      if (notice != null) _flashEvent(notice);
       if (goal != null) _flashGoal(goal);
     });
     for (final e in arrived) {
@@ -1978,6 +2013,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               awayColor: awayC,
               goal: bug ? _goalFlash : null,
               goalForHome: _goalFlash?.teamNationId == homeId,
+              notice: bug ? _eventFlash : null,
+              noticeForHome: _eventFlash?.teamNationId == homeId,
               bugTheme: bugTheme,
               viewSwitch: bug ? null : phoneSwitch,
             );
@@ -2139,6 +2176,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                   )
                 : lineupList;
             final overlays = <Widget>[
+              // A substitution or a red card: under a goal's flash, never
+              // over it.
+              if (_eventFlash != null && _goalFlash == null && !bug)
+                _EventFlash(
+                  event: _eventFlash!,
+                  flagCode: code(_eventFlash!.teamNationId),
+                ),
               if (_goalFlash != null && !bug)
                 _GoalFlash(
                   event: _goalFlash!,

@@ -16116,4 +16116,23 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMMENTÁR';
+
+  @override
+  String get matchSubShout => 'CSERE';
+
+  @override
+  String get matchRedCardShout => 'PIROS LAP';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Le: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Be: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Kiállítva';
 }

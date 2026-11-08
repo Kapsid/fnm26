@@ -15591,4 +15591,23 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchTabCommentary => '実況';
+
+  @override
+  String get matchSubShout => '選手交代';
+
+  @override
+  String get matchRedCardShout => 'レッドカード';
+
+  @override
+  String matchSubOff(String name) {
+    return 'アウト: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'イン: $name';
+  }
+
+  @override
+  String get matchSentOff => '退場';
 }

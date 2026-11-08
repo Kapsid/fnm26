@@ -16166,4 +16166,23 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMMENTARER';
+
+  @override
+  String get matchSubShout => 'BYTTE';
+
+  @override
+  String get matchRedCardShout => 'RØDT KORT';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Ut: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Inn: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Utvist';
 }

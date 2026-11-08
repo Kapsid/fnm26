@@ -16017,4 +16017,23 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'BÌNH LUẬN';
+
+  @override
+  String get matchSubShout => 'THAY NGƯỜI';
+
+  @override
+  String get matchRedCardShout => 'THẺ ĐỎ';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Ra sân: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Vào sân: $name';
+  }
+
+  @override
+  String get matchSentOff => 'Bị đuổi khỏi sân';
 }

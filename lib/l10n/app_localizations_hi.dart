@@ -16084,4 +16084,23 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'कमेंट्री';
+
+  @override
+  String get matchSubShout => 'बदलाव';
+
+  @override
+  String get matchRedCardShout => 'लाल कार्ड';
+
+  @override
+  String matchSubOff(String name) {
+    return 'बाहर: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'अंदर: $name';
+  }
+
+  @override
+  String get matchSentOff => 'बाहर भेजा गया';
 }
