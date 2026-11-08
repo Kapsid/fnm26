@@ -162,7 +162,70 @@ void main() {
     expect(() => WorldPack.fromJson(json), throwsFormatException);
   });
 
-  test('migrate is identity at v2 and rejects newer or missing versions', () {
+  test('v2 migrates to v3 with empty managers', () {
+    final v2 = _v2Pack().toJson()
+      ..['formatVersion'] = 2
+      ..remove('managers');
+    final migrated = WorldPack.migrate(v2);
+    expect(migrated['formatVersion'], 3);
+    expect(migrated['managers'], <String, Object?>{});
+    final p = WorldPack.fromJson(migrated);
+    expect(p.managers, isEmpty);
+    expect(p.pools, _v2Pack().pools);
+    // The stored v2 JSON is never written.
+    expect(v2['formatVersion'], 2);
+    expect(v2.containsKey('managers'), isFalse);
+    // A v2 file already holding format 3's key is not a v2 file.
+    expect(
+      () => WorldPack.migrate({...v2, 'managers': <String, Object?>{}}),
+      throwsFormatException,
+    );
+  });
+
+  test('v3 round trip keeps managers', () {
+    final p = _v2Pack().copyWith(
+      managers: {
+        7: (name: 'Ota Brnak', nationality: 'CZE'),
+        9: (name: 'Lew Ward', nationality: 'ENG'),
+      },
+    );
+    expect(p.toJson()['formatVersion'], 3);
+    final back = WorldPack.fromJson(
+      WorldPack.migrate(
+        jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>,
+      ),
+    );
+    expect(back, p);
+    expect(back.managers[7], (name: 'Ota Brnak', nationality: 'CZE'));
+    expect(back.managers[9]!.nationality, 'ENG');
+    // A manager entry is read strictly, as every other part.
+    for (final bad in <Object?>[
+      {'name': 'X'},
+      {'name': 'X', 'nationality': 3},
+      {'name': 'X', 'nationality': 'ENG', 'age': 50},
+      'X',
+    ]) {
+      expect(
+        () => WorldPack.fromJson({
+          ...p.toJson(),
+          'managers': {'7': bad},
+        }),
+        throwsFormatException,
+        reason: '$bad',
+      );
+    }
+  });
+
+  test('migrate refuses format 4', () {
+    final json = _pack().toJson();
+    expect(kPackFormatVersion, 3);
+    expect(
+      () => WorldPack.migrate({...json, 'formatVersion': 4}),
+      throwsFormatException,
+    );
+  });
+
+  test('migrate is identity at v3 and rejects newer or missing versions', () {
     final json = _pack().toJson();
     expect(WorldPack.migrate(json), json);
     expect(
@@ -175,7 +238,7 @@ void main() {
 
   test('v2 round trip keeps every new part', () {
     final p = _v2Pack();
-    expect(p.toJson()['formatVersion'], 2);
+    expect(p.toJson()['formatVersion'], kPackFormatVersion);
     final back = WorldPack.fromJson(
       jsonDecode(jsonEncode(p.toJson())) as Map<String, Object?>,
     );
@@ -193,16 +256,17 @@ void main() {
   });
 
   test(
-    'v1 fixture migrates to v2 with empty new parts and the same 1.1.0 maps',
+    'v1 fixture migrates to v3 with empty new parts and the same 1.1.0 maps',
     () {
       final raw =
           jsonDecode(File(_v1Fixture).readAsStringSync())
               as Map<String, Object?>;
       expect(raw['formatVersion'], 1);
       final migrated = WorldPack.migrate(raw);
-      expect(migrated['formatVersion'], 2);
+      expect(migrated['formatVersion'], 3);
       final p = WorldPack.fromJson(migrated);
-      expect(p.formatVersion, 2);
+      expect(p.formatVersion, 3);
+      expect(p.managers, isEmpty);
       expect(p.pools, isEmpty);
       expect(p.addedClubs, isEmpty);
       expect(p.addedSponsors, isEmpty);
@@ -217,7 +281,7 @@ void main() {
       // The fixture is a 1.1.0 file: migrating never rewrites it.
       expect(raw['formatVersion'], 1);
       expect(raw.containsKey('pools'), isFalse);
-      // Migration is idempotent once at v2.
+      // Migration is idempotent once current.
       expect(WorldPack.migrate(migrated), migrated);
     },
   );
@@ -312,13 +376,6 @@ void main() {
     expect(
       (kept.toJson()['addedSponsors']! as List).single,
       containsPair('deal', 'charity'),
-    );
-  });
-
-  test('migrate refuses format 3', () {
-    expect(
-      () => WorldPack.migrate({..._v2Pack().toJson(), 'formatVersion': 3}),
-      throwsFormatException,
     );
   });
 

@@ -133,6 +133,19 @@ void main() {
     },
   );
 
+  test('inChargeOn breaks a same-moment start by the higher spellNo', () {
+    // The same instant written once in UTC and once in local time: `==`
+    // tells them apart, the tie-break must not.
+    final w = ManagerWorld(
+      managers: [_m(1), _m(2)],
+      spells: [
+        _s(4, 1, 10, DateTime.utc(2030)),
+        _s(7, 2, 10, DateTime.utc(2030).toLocal()),
+      ],
+    );
+    expect(w.inChargeOn(10, DateTime.utc(2031))!.spellNo, 7);
+  });
+
   test(
     'closing a spell and opening the successor on one date gives the successor from that date',
     () async {

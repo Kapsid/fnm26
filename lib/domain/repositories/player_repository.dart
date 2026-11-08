@@ -164,4 +164,15 @@ abstract interface class PlayerRepository {
     Map<int, int> careerStartsByPlayer,
     bool newCareerNames,
   });
+
+  /// The name pools career [careerId] names new people from, keyed by
+  /// upper-case FIFA code: the pools of the era the career was created in
+  /// (classic or richer, each list as that era froze it, late surnames
+  /// included), with its world's own lists in their place where it has
+  /// them. Served from the pools the repository already holds; no read per
+  /// nation.
+  Future<Map<String, NamePoolLists>> namePoolsFor(int careerId);
 }
+
+/// One nation's first names and surnames.
+typedef NamePoolLists = ({List<String> first, List<String> sur});

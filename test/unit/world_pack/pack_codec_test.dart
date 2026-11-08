@@ -223,33 +223,34 @@ void main() {
     Map<String, Object?> rawPack(WorldPack p) =>
         _raw(p)['pack']! as Map<String, Object?>;
 
-    test('v1 file imports and reads as v2', () async {
+    test('v1 file imports and reads as the current format', () async {
       final json = _pack().toJson()
         ..['formatVersion'] = 1
         ..remove('pools')
         ..remove('addedClubs')
         ..remove('addedSponsors')
         ..remove('addedYAccounts')
-        ..remove('localized');
+        ..remove('localized')
+        ..remove('managers');
       final r = await PackCodec.decode(
         _file({'format': 1, 'pack': json, 'trophies': <String, Object?>{}}),
       );
       final d = r as PackDecoded;
-      expect(d.pack.formatVersion, 2);
+      expect(d.pack.formatVersion, kPackFormatVersion);
       expect(d.pack.squads, _pack().squads);
       expect(d.pack.pools, isEmpty);
       expect(d.pack.localized, isEmpty);
     });
 
-    test('export writes format 2', () {
+    test('export writes the current format', () {
       final bytes = PackCodec.encode(
         _pack().copyWith(formatVersion: 1),
         const {},
       );
       final top =
           jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
-      expect(top['format'], 2);
-      expect((top['pack']! as Map)['formatVersion'], 2);
+      expect(top['format'], kPackFormatVersion);
+      expect((top['pack']! as Map)['formatVersion'], kPackFormatVersion);
     });
 
     test('a pack with every new part decodes whole', () async {
@@ -383,7 +384,11 @@ void main() {
         );
         expect(PackCodec.fieldsOk(p), isTrue);
         final json = utf8.encode(
-          jsonEncode({'format': 2, 'pack': p.toJson(), 'trophies': <String, Object?>{}}),
+          jsonEncode({
+            'format': 2,
+            'pack': p.toJson(),
+            'trophies': <String, Object?>{},
+          }),
         );
         final bytes = PackCodec.encode(p, const {});
         // ignore: avoid_print
@@ -717,7 +722,8 @@ void main() {
             ..remove('addedClubs')
             ..remove('addedSponsors')
             ..remove('addedYAccounts')
-            ..remove('localized')),
+            ..remove('localized')
+            ..remove('managers')),
       );
       final r = await PackCodec.decode(
         file,

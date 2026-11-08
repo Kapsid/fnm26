@@ -10,8 +10,9 @@ import '../press/y_feed.dart';
 /// Current on-disk format of a world pack. Format 2 (editor 2) adds
 /// [WorldPack.pools], the added clubs, sponsors and Y accounts,
 /// [WorldPack.localized] and [PackPlayer.traits]; [WorldPack.migrate] lifts
-/// a format-1 (1.1.0) pack to it.
-const int kPackFormatVersion = 2;
+/// a format-1 (1.1.0) pack to it. Format 3 (world managers) adds
+/// [WorldPack.managers]. Format 4 is reserved for clubs.
+const int kPackFormatVersion = 3;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
@@ -438,6 +439,7 @@ class WorldPack {
     this.addedSponsors = const [],
     this.addedYAccounts = const [],
     this.localized = const {},
+    this.managers = const {},
   });
 
   final String uuid;
@@ -482,6 +484,11 @@ class WorldPack {
   /// Path (see `PackPaths`) -> language code -> value.
   final Map<String, Map<String, String>> localized;
 
+  /// nationId -> the name and nationality (upper-case FIFA code) of the
+  /// manager in charge on day one. Renames only the seeded incumbent; every
+  /// later manager is the game's own.
+  final Map<int, ({String name, String nationality})> managers;
+
   WorldPack copyWith({
     String? uuid,
     String? name,
@@ -503,6 +510,7 @@ class WorldPack {
     List<PackSponsor>? addedSponsors,
     List<PackYAccount>? addedYAccounts,
     Map<String, Map<String, String>>? localized,
+    Map<int, ({String name, String nationality})>? managers,
   }) => WorldPack(
     uuid: uuid ?? this.uuid,
     name: name ?? this.name,
@@ -524,6 +532,7 @@ class WorldPack {
     addedSponsors: addedSponsors ?? this.addedSponsors,
     addedYAccounts: addedYAccounts ?? this.addedYAccounts,
     localized: localized ?? this.localized,
+    managers: managers ?? this.managers,
   );
 
   Map<String, Object?> toJson() => {
@@ -562,6 +571,13 @@ class WorldPack {
     'localized': {
       for (final e in localized.entries) e.key: {...e.value},
     },
+    'managers': {
+      for (final e in managers.entries)
+        '${e.key}': {
+          'name': e.value.name,
+          'nationality': e.value.nationality,
+        },
+    },
   };
 
   static const _keys = {
@@ -585,6 +601,7 @@ class WorldPack {
     'addedSponsors',
     'addedYAccounts',
     'localized',
+    'managers',
   };
 
   /// Strict reader: any wrong type or unknown key throws [FormatException].
@@ -645,10 +662,14 @@ class WorldPack {
         for (final e in _map(json['localized'], 'localized').entries)
           e.key: _strMap(e.value, 'localized'),
       },
+      managers: {
+        for (final e in _map(json['managers'], 'managers').entries)
+          _intKey(e.key): _manager(e.value),
+      },
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v2.
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v3.
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
   static Map<String, Object?> migrate(Map<String, Object?> json) {
@@ -666,6 +687,7 @@ class WorldPack {
     }
     var out = json;
     if (v == 1) out = _from1To2(out);
+    if (v <= 2) out = _from2To3(out);
     return out;
   }
 
@@ -686,6 +708,25 @@ class WorldPack {
       }
     }
     return {...json, ...added, 'formatVersion': 2};
+  }
+
+  /// Format 2 to 3: no managers, so the world's day-one managers are all the
+  /// game's own. A format-2 pack that already holds `managers` is not a
+  /// format-2 file.
+  static Map<String, Object?> _from2To3(Map<String, Object?> json) {
+    if (json.containsKey('managers')) {
+      throw const FormatException('Format 2 pack has format 3 key "managers"');
+    }
+    return {...json, 'managers': <String, Object?>{}, 'formatVersion': 3};
+  }
+
+  static ({String name, String nationality}) _manager(Object? raw) {
+    final m = _map(raw, 'manager');
+    _only(m, const {'name', 'nationality'}, 'manager');
+    return (
+      name: _str(m['name'], 'name'),
+      nationality: _str(m['nationality'], 'nationality'),
+    );
   }
 
   static ({String name, String code}) _nation(Object? raw) {

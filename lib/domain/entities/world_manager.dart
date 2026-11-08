@@ -149,7 +149,8 @@ class ManagerWorld {
       if (to != null && !d.isBefore(to)) continue;
       if (best == null ||
           s.fromDate.isAfter(best.fromDate) ||
-          (s.fromDate == best.fromDate && s.spellNo > best.spellNo)) {
+          (s.fromDate.isAtSameMomentAs(best.fromDate) &&
+              s.spellNo > best.spellNo)) {
         best = s;
       }
     }

@@ -35,6 +35,7 @@ import 'package:fnm/features/hub/objective_providers.dart'
 import 'package:fnm/features/tournaments/city_providers.dart'
     show hostVenuesV2Kind;
 import 'package:fnm/features/y/y_providers.dart' show yUnreadCountProvider;
+import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
     show
         activeWorldSyncProvider,
@@ -133,6 +134,16 @@ class CareerService {
   /// `startNextCycle`).
   static DateTime cycleOpens(int cycle) =>
       cycle == 0 ? cycleStart : DateTime(worldCupYear(cycle - 1), 9);
+
+  /// The cycle open on [d]: the largest one whose [cycleOpens] is on or
+  /// before it (0 for a date before the save's start).
+  static int cycleAt(DateTime d) {
+    var c = 0;
+    while (!cycleOpens(c + 1).isAfter(d)) {
+      c++;
+    }
+    return c;
+  }
 
   /// Whether an honour won in [year] is one THIS career could have won.
   ///
@@ -399,6 +410,9 @@ class CareerService {
     // (see hostVenuesV2Kind).
     await comp.markDrawWatched(career.id, 0, hostVenuesV2Kind);
     await comp.markDrawWatched(career.id, 0, fluidWindowsKind);
+    // Its national teams have managers of their own (see worldManagersKind),
+    // seeded the first time something asks for them, never here.
+    await comp.markDrawWatched(career.id, 0, worldManagersKind);
     // Its caps log credits a naturalised man to the nation he plays for now
     // (see capsFollowNationKind).
     await comp.markDrawWatched(career.id, 0, capsFollowNationKind);
