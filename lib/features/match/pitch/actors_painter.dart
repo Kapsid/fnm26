@@ -8,6 +8,7 @@ import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/domain/services/match/pitch/display_spacing.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
+import 'package:fnm/domain/services/match/pitch/referee_show.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
@@ -303,6 +304,10 @@ class ActorsPainter extends CustomPainter {
         cachedNumber: true,
       );
     }
+    // The referee, when a red card is being shown: over the men near him,
+    // under the ball, the card raised above his head.
+    final ref = RefereeShow.at(script, t);
+    if (ref != null) _paintReferee(canvas, ref, shadows);
     drawBall(canvas, lifted, br);
 
     // Names last, clear of every token, the ball and each other.
@@ -413,6 +418,48 @@ class ActorsPainter extends CustomPainter {
 
 /// A kit's shirt fill, trim and name accent.
 typedef ActorDress = ({Color fill, Color trim, Color accent});
+
+/// The referee's dress: a dark shirt with a bright trim, unlike any kit.
+const Color _refShirt = Color(0xFF15171A);
+const Color _refTrim = Color(0xFFD7E04A);
+const Color _cardRed = Color(0xFFE53935);
+
+extension on ActorsPainter {
+  void _paintReferee(Canvas canvas, RefereeFrame ref, TokenShadows shadows) {
+    final p = ref.at;
+    final c = projection.toScreenOpen(p.x, p.y);
+    final r = r0 * 0.9 * projection.scaleAt(p.y);
+    PlayerToken.paintShadow(canvas, c, r, shadows, _towers);
+    canvas
+      ..drawCircle(c, r, Paint()..color = _refShirt)
+      ..drawCircle(
+        c,
+        r * 0.82,
+        Paint()
+          ..color = _refTrim
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = r * 0.22,
+      );
+    if (ref.card <= 0) return;
+    // The card, held up and to the side, rising as he shows it.
+    final w = r * 0.62;
+    final h = r * 0.86;
+    final lift = r * (0.4 + 1.5 * ref.card);
+    final centre = c + Offset(r * 0.95, -lift);
+    final card = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: centre, width: w, height: h),
+      Radius.circular(w * 0.12),
+    );
+    final paint = Paint()
+      ..color = _cardRed.withValues(alpha: ref.card.clamp(0.0, 1.0));
+    canvas
+      ..drawRRect(
+        card.shift(const Offset(0.8, 0.8)),
+        Paint()..color = const Color(0x55000000),
+      )
+      ..drawRRect(card, paint);
+  }
+}
 
 class _Token {
   const _Token({
