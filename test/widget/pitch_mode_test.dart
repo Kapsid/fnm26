@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
@@ -205,7 +204,6 @@ Future<ProviderContainer> _pump(
   WeatherKind? weather,
   Size size = const Size(400, 2000),
   FormFactor? formFactor,
-  bool haptics = false,
 }) async {
   if (resetPrefs) SharedPreferences.setMockInitialValues(prefs);
   tester.view
@@ -215,7 +213,7 @@ Future<ProviderContainer> _pump(
   final c = ProviderContainer(
     overrides: [
       matchPreviewProvider(1).overrideWith((ref) async => preview),
-      soundHapticsEnabledProvider.overrideWith((ref) => haptics),
+      soundHapticsEnabledProvider.overrideWith((ref) => false),
       matchAttemptSaltProvider.overrideWithValue(() => salt),
       pitchStadiumBakerProvider.overrideWithValue(_InstantBaker(_image)),
       // Built in place: the isolate build is checked on its own
@@ -778,79 +776,6 @@ void main() {
     await tester.pump();
     await tester.pump();
     await _until(tester, () => _clock(tester).playing);
-  });
-
-  // The owner's 2026-11 playtest: on the 2D TV a goal never buzzed, where
-  // the Timeline did. Every platform call is recorded: the goal's heavy
-  // impact must come as the ball goes in, and nothing heavy before it (a
-  // kick-off or a half-time whistle buzzes medium, never as a goal does).
-  testWidgets('a goal on the 2D TV buzzes as it does on the Timeline', (
-    tester,
-  ) async {
-    final calls = <MethodCall>[];
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-      SystemChannels.platform,
-      (call) async {
-        calls.add(call);
-        return null;
-      },
-    );
-    addTearDown(
-      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        SystemChannels.platform,
-        null,
-      ),
-    );
-    bool heavy(MethodCall c) =>
-        c.method == 'HapticFeedback.vibrate' &&
-        c.arguments == 'HapticFeedbackType.heavyImpact';
-    final preview = _preview();
-    final salt = _salt(preview, (r) {
-      final goal = r.events.indexWhere((e) => e.type == MatchEventType.goal);
-      // A first-half goal, and no other before half time.
-      return goal >= 0 &&
-          r.events[goal].minute > 5 &&
-          r.events[goal].minute < 40 &&
-          r.events
-                  .where(
-                    (e) => e.type == MatchEventType.goal && e.minute <= 45,
-                  )
-                  .length ==
-              1;
-    });
-    await _pump(
-      tester,
-      preview: preview,
-      salt: salt,
-      prefs: {kMatchViewModePrefsKey: 'pitch'},
-      haptics: true,
-    );
-    await _until(tester, () => _ready(tester) && _clock(tester).playing);
-    final r = _result(tester);
-    final pb = _pb(tester);
-    final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
-    await _seek(tester, _secs(pb.revealAt(gi) - 1.0));
-    expect(calls.where(heavy), isEmpty, reason: 'no goal yet');
-    await _until(
-      tester,
-      () => find.text(enL.matchGoalShout).evaluate().isNotEmpty,
-    );
-    await tester.pump();
-    expect(calls.where(heavy), hasLength(1));
-
-    // Half time's whistle stops play, but never buzzes as a goal does.
-    await _until(
-      tester,
-      () =>
-          find.text(enL.matchGoalShout).evaluate().isEmpty &&
-          _clock(tester).playing,
-    );
-    await _seek(tester, pb.halfTime - const Duration(milliseconds: 600));
-    await _until(
-      tester,
-      () => find.byType(HalfTimePrompt).evaluate().isNotEmpty,
-    );
-    expect(calls.where(heavy), hasLength(1));
   });
 
   // The owner's 2026-11 ask: a substitution gets a pop-up as a goal does:

@@ -15,8 +15,7 @@ const Key matchEventFlashKey = Key('match.eventFlash');
 const Color _kCardRed = Color(0xFFE53935);
 
 /// Whether [e] gets a pop-up of its own: a substitution or a sending-off.
-bool flashesAsEvent(MatchEvent e) =>
-    e.type == MatchEventType.substitution || e.type == MatchEventType.redCard;
+bool flashesAsEvent(MatchEvent e) => e.type == MatchEventType.substitution;
 
 /// The referee's card, small, as a glyph.
 class _RedCardGlyph extends StatelessWidget {
