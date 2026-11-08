@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:drift/drift.dart';
@@ -35,21 +36,58 @@ class WorldPackRepository {
   final DateTime Function() _clock;
   final Random _random;
 
-  /// Every pack on the device, by name.
+  /// Every pack on the device, by name. Reads the columns it lists alone:
+  /// no pack's JSON is read.
   Future<List<({int id, String name, DateTime updatedAt})>> list() async {
-    final rows = await _db.select(_db.worldPacks).get();
+    final t = _db.worldPacks;
+    final q = _db.selectOnly(t)..addColumns([t.id, t.name, t.updatedAt]);
     return [
-      for (final r in rows) (id: r.id, name: r.name, updatedAt: r.updatedAt),
+      for (final r in await q.get())
+        (
+          id: r.read(t.id)!,
+          name: r.read(t.name)!,
+          updatedAt: r.read(t.updatedAt)!,
+        ),
     ]..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
   }
 
   /// The pack [id], or null if there is no such pack. A stored pack that
   /// cannot be read throws [FormatException] rather than reading as missing.
+  ///
+  /// A pack read before and unchanged since (same stamp and length) is
+  /// handed back as it was decoded: a big one takes a good part of a second
+  /// to decode on a phone, and the nation pick, New Game's world chip and
+  /// the editor's list all read every pack. The pack is shared, so it is
+  /// never changed in place (nothing does: every edit is a
+  /// [WorldPack.copyWith]).
   Future<WorldPack?> load(int id) async {
-    final row = await (_db.select(
-      _db.worldPacks,
-    )..where((t) => t.id.equals(id))).getSingleOrNull();
-    return row == null ? null : _decode(row.json);
+    final t = _db.worldPacks;
+    final length = t.json.length;
+    final stamp =
+        await (_db.selectOnly(t)
+              ..addColumns([t.updatedAt, length])
+              ..where(t.id.equals(id)))
+            .getSingleOrNull();
+    if (stamp == null) {
+      _cache.packs.remove(id);
+      return null;
+    }
+    final key = (
+      updatedAt: stamp.read(t.updatedAt)!,
+      length: stamp.read(length)!,
+    );
+    final hit = _cache.packs[id];
+    if (hit != null && hit.key == key) return hit.pack;
+    final json =
+        await (_db.selectOnly(t)
+              ..addColumns([t.json])
+              ..where(t.id.equals(id)))
+            .map((r) => r.read(t.json)!)
+            .getSingleOrNull();
+    if (json == null) return null;
+    final pack = await _decodeOffUi(json);
+    _cache.packs[id] = (key: key, pack: pack);
+    return pack;
   }
 
   /// The uuid of pack [id], or null if there is no such pack. Reads the
@@ -78,16 +116,18 @@ class WorldPackRepository {
   Future<Map<int, String>> careerNationNames(
     Map<int, int> nationByCareer,
   ) async {
-    final rows = await (_db.select(
-      _db.careerWorlds,
-    )..where((t) => t.careerId.isIn(nationByCareer.keys))).get();
+    final t = _db.careerWorlds;
+    final q = _db.selectOnly(t)
+      ..addColumns([t.careerId])
+      ..where(t.careerId.isIn(nationByCareer.keys));
     final out = <int, String>{};
-    for (final r in rows) {
-      final nationId = nationByCareer[r.careerId];
+    for (final r in await q.get()) {
+      final careerId = r.read(t.careerId)!;
+      final nationId = nationByCareer[careerId];
       if (nationId == null) continue;
       try {
-        final name = _decode(r.json).nations[nationId]?.name;
-        if (name != null && name.trim().isNotEmpty) out[r.careerId] = name;
+        final name = (await _careerPack(careerId))?.nations[nationId]?.name;
+        if (name != null && name.trim().isNotEmpty) out[careerId] = name;
       } on FormatException {
         // Shown under the default name; the career's own reads report it.
       }
@@ -114,6 +154,7 @@ class WorldPackRepository {
 
   /// Overwrites pack [id] with [p]. Trophy images are left as they are.
   Future<void> save(int id, WorldPack p) async {
+    _cache.packs.remove(id);
     await (_db.update(_db.worldPacks)..where((t) => t.id.equals(id))).write(
       WorldPacksCompanion(
         uuid: Value(p.uuid),
@@ -163,6 +204,7 @@ class WorldPackRepository {
 
   /// Removes pack [id] and its images. Careers started on it keep their copy.
   Future<void> delete(int id) => _db.transaction(() async {
+    _cache.packs.remove(id);
     await (_db.delete(
       _db.worldPackTrophies,
     )..where((t) => t.packId.equals(id))).go();
@@ -189,6 +231,7 @@ class WorldPackRepository {
   Future<void> copyToCareer(int packId, int careerId) async {
     final pack = await load(packId);
     if (pack == null) throw StateError('No world pack $packId');
+    _cache.careers.remove(careerId);
     await _db
         .into(_db.careerWorlds)
         .insertOnConflictUpdate(
@@ -219,17 +262,46 @@ class WorldPackRepository {
   Future<({WorldPack pack, Map<String, Uint8List> trophies})?> forCareer(
     int careerId,
   ) async {
-    final row = await (_db.select(
-      _db.careerWorlds,
-    )..where((t) => t.careerId.equals(careerId))).getSingleOrNull();
-    if (row == null) return null;
+    final pack = await _careerPack(careerId);
+    if (pack == null) return null;
     final images = await (_db.select(
       _db.careerWorldTrophies,
     )..where((t) => t.careerId.equals(careerId))).get();
-    return (
-      pack: _decode(row.json),
-      trophies: {for (final r in images) r.key: r.png},
-    );
+    return (pack: pack, trophies: {for (final r in images) r.key: r.png});
+  }
+
+  /// Career [careerId]'s copy of its world, decoded; null for a career on
+  /// the default world. A career's copy is written once, when it starts, so
+  /// a copy decoded before is handed back while the stored one still has
+  /// the same name and length (read alone: no JSON crosses for that).
+  /// Opening a save on a big world read and decoded it three times over
+  /// before the hub could show (the home card, the world the screens are
+  /// named in, the player reads), each time on the UI isolate.
+  Future<WorldPack?> _careerPack(int careerId) async {
+    final t = _db.careerWorlds;
+    final length = t.json.length;
+    final stamp =
+        await (_db.selectOnly(t)
+              ..addColumns([t.packName, length])
+              ..where(t.careerId.equals(careerId)))
+            .getSingleOrNull();
+    if (stamp == null) {
+      _cache.careers.remove(careerId);
+      return null;
+    }
+    final key = (name: stamp.read(t.packName)!, length: stamp.read(length)!);
+    final hit = _cache.careers[careerId];
+    if (hit != null && hit.key == key) return hit.pack;
+    final json =
+        await (_db.selectOnly(t)
+              ..addColumns([t.json])
+              ..where(t.careerId.equals(careerId)))
+            .map((r) => r.read(t.json)!)
+            .getSingleOrNull();
+    if (json == null) return null;
+    final pack = await _decodeOffUi(json);
+    _cache.careers[careerId] = (key: key, pack: pack);
+    return pack;
   }
 
   /// The sponsors career [careerId]'s world added, with that world's uuid;
@@ -268,27 +340,16 @@ class WorldPackRepository {
   /// last decoded, and only a different one is read and decoded again. A
   /// world that cannot be read throws.
   Future<_Added> _addedFor(int careerId) async {
-    final length = _db.careerWorlds.json.length;
-    final q = _db.selectOnly(_db.careerWorlds)
-      ..addColumns([length])
-      ..where(_db.careerWorlds.careerId.equals(careerId));
-    final n = (await q.getSingleOrNull())?.read(length);
-    if (n == null) return _none;
+    final pack = await _careerPack(careerId);
+    if (pack == null) return _none;
     final hit = _added[careerId];
-    if (hit != null && hit.length == n) return hit.value;
-    final json =
-        await (_db.selectOnly(_db.careerWorlds)
-              ..addColumns([_db.careerWorlds.json])
-              ..where(_db.careerWorlds.careerId.equals(careerId)))
-            .map((r) => r.read(_db.careerWorlds.json)!)
-            .getSingle();
-    final pack = _decode(json);
+    if (hit != null && identical(hit.pack, pack)) return hit.value;
     final value = (
       world: pack.uuid,
       sponsors: List<PackSponsor>.unmodifiable(pack.addedSponsors),
       yAccounts: List<PackYAccount>.unmodifiable(pack.addedYAccounts),
     );
-    _added[careerId] = (length: n, value: value);
+    _added[careerId] = (pack: pack, value: value);
     return value;
   }
 
@@ -298,7 +359,24 @@ class WorldPackRepository {
     yAccounts: <PackYAccount>[],
   );
 
-  final Map<int, ({int length, _Added value})> _added = {};
+  final Map<int, ({WorldPack pack, _Added value})> _added = {};
+
+  /// The decoded packs of [_db], shared by every repository over it (the
+  /// player repository makes its own).
+  _PackCache get _cache => _caches[_db] ??= _PackCache();
+  static final Expando<_PackCache> _caches = Expando('world pack cache');
+
+  /// Stored JSON from this long up is decoded on a background isolate:
+  /// a real-names world (25,000 players, about 5 MB) took 150 ms on a
+  /// desktop and far longer on a phone, every frame of it lost. A smaller
+  /// one (the game's own world as a new pack is under 1 MB) decodes in
+  /// less time than an isolate takes to start.
+  static const int offUiDecodeChars = 1 << 20;
+
+  static Future<WorldPack> _decodeOffUi(String json) =>
+      json.length < offUiDecodeChars
+      ? Future.value(_decode(json))
+      : Isolate.run(() => _decode(json), debugName: 'world pack decode');
 
   static WorldPack _decode(String json) {
     final raw = jsonDecode(json);
@@ -338,4 +416,13 @@ class WorldPackRepository {
         '${hex.sublist(6, 8).join()}-${hex.sublist(8, 10).join()}-'
         '${hex.sublist(10).join()}';
   }
+}
+
+/// See [WorldPackRepository._cache]: each pack (by id) and each career's
+/// copy (by career id) as last decoded, with what it was read under.
+class _PackCache {
+  final Map<int, ({({DateTime updatedAt, int length}) key, WorldPack pack})>
+  packs = {};
+  final Map<int, ({({String name, int length}) key, WorldPack pack})> careers =
+      {};
 }
