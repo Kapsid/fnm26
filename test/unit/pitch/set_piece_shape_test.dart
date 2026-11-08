@@ -52,7 +52,8 @@ _Shape _shape(PitchScript s, SetPieceMoment sp, double t) {
     // A man walking off, or about to (a substitution due), is out of it.
     final dep = s.departures[id];
     if (dep != null && dep <= t + 10) return;
-    final atk = s.actorList[s.actorIndexOf(id)!].teamNationId == sp.teamNationId;
+    final atk =
+        s.actorList[s.actorIndexOf(id)!].teamNationId == sp.teamNationId;
     final depth = xToDepth(p.x, dir);
     if (f.keepers.contains(id)) {
       if (atk) {
@@ -81,33 +82,40 @@ _Shape _shape(PitchScript s, SetPieceMoment sp, double t) {
 }
 
 void main() {
-  test('at a corner both sides are in the attacking third, a few kept back', () {
-    var corners = 0;
-    for (var seed = 0; seed < 40; seed++) {
-      final m = labMatch(seed);
-      final speed = PitchSpeed.values[seed % PitchSpeed.values.length];
-      final s = labScript(m, speed, seed: seed);
-      for (final w in s.windows) {
-        final sp = w.moments.firstOrNull;
-        if (sp is! SetPieceMoment || sp.kind != SetPieceKind.corner) continue;
-        final kick = _kick(s, w, sp);
-        if (kick == null) continue;
-        final at = _shape(s, sp, kick.t0);
-        final where = 'match $seed ${s.minuteLabel(kick.t0)}: $at';
-        corners++;
-        // The attackers: all in or around the area but one to three left
-        // back as cover.
-        expect(at.attackersOut, inInclusiveRange(1, 3), reason: where);
-        expect(at.attackersIn, greaterThanOrEqualTo(4), reason: where);
-        // The defenders: in their area, at most one left up as an outlet.
-        expect(at.defendersOut, lessThanOrEqualTo(2), reason: where);
-        // The keepers stay home.
-        expect(at.defendingKeeper, lessThan(6), reason: where);
-        expect(at.attackingKeeper, lessThan(PitchDims.boxDepth), reason: where);
+  test(
+    'at a corner both sides are in the attacking third, a few kept back',
+    () {
+      var corners = 0;
+      for (var seed = 0; seed < 40; seed++) {
+        final m = labMatch(seed);
+        final speed = PitchSpeed.values[seed % PitchSpeed.values.length];
+        final s = labScript(m, speed, seed: seed);
+        for (final w in s.windows) {
+          final sp = w.moments.firstOrNull;
+          if (sp is! SetPieceMoment || sp.kind != SetPieceKind.corner) continue;
+          final kick = _kick(s, w, sp);
+          if (kick == null) continue;
+          final at = _shape(s, sp, kick.t0);
+          final where = 'match $seed ${s.minuteLabel(kick.t0)}: $at';
+          corners++;
+          // The attackers: all in or around the area but one to three left
+          // back as cover.
+          expect(at.attackersOut, inInclusiveRange(1, 3), reason: where);
+          expect(at.attackersIn, greaterThanOrEqualTo(4), reason: where);
+          // The defenders: in their area, at most one left up as an outlet.
+          expect(at.defendersOut, lessThanOrEqualTo(2), reason: where);
+          // The keepers stay home.
+          expect(at.defendingKeeper, lessThan(6), reason: where);
+          expect(
+            at.attackingKeeper,
+            lessThan(PitchDims.boxDepth),
+            reason: where,
+          );
+        }
       }
-    }
-    expect(corners, greaterThan(50));
-  });
+      expect(corners, greaterThan(50));
+    },
+  );
 
   test('at a free kick near the area both sides come up for it', () {
     var kicks = 0;

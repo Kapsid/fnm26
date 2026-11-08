@@ -524,6 +524,13 @@ class DeclutterEasing {
         if (pin < (_pin[id] ?? 0)) {
           final release = releaseRate * dt;
           now = had + (now - had).clamp(-release, release);
+        } else if (pin < 1) {
+          // A hold coming up eases him toward his exact place no faster
+          // than a hold letting go does: only a full hold puts him there
+          // outright (a crowded box answering a hold could otherwise move
+          // a token a fifth of its width in a frame).
+          final take = releaseRate * dt;
+          now = had + (now - had).clamp(-take, take);
         }
       }
       _nudge[id] = now;

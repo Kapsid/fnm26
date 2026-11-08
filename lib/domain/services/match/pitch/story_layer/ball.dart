@@ -564,7 +564,27 @@ extension _BallMechanics on _Builder {
             27.0,
           );
     final dur = math.max(quick ? 0.25 : 0.4, dist / v);
-    final peak = lofted ? math.min(1.5 + 0.12 * dist, 7).toDouble() : 0.0;
+    var peak = lofted ? math.min(1.5 + 0.12 * dist, 7).toDouble() : 0.0;
+    final dur0 = math.max(quick ? 0.25 : 0.4, dist / 20);
+    // An opponent on its line, now or as he runs while it travels, short
+    // of the man it is for: the ball is chipped over him rather than
+    // rolled through his feet.
+    if (peak < 1) {
+      outer:
+      for (final o in agents) {
+        if (!o.present || o.side == from.side) continue;
+        for (var k = 1; k < 8; k++) {
+          final u = k / 8;
+          final b = Offset2.lerp(start, lead, u);
+          if (b.distanceTo(lead) < 3 || b.distanceTo(start) < 1.5) continue;
+          final q = o.pos + o.vel.capped(8) * (dur0 * u);
+          if (q.distanceTo(b) < 1.1) {
+            peak = math.min(1.4 + 0.06 * dist, 3).toDouble();
+            break outer;
+          }
+        }
+      }
+    }
     return (start, dur, peak, lead);
   }
 

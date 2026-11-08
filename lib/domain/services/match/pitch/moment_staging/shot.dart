@@ -649,9 +649,9 @@ class _OpenShotPlan extends _Plan {
     final late =
         (t >= strikeBy - 1e-9 || t + pending + flight + setUp + 0.3 >= end) &&
         settledIn(t);
-    // Never a shot from his own half: a man that far out is not where it
-    // happened.
-    final inRange = toGoal <= math.max(zone.distanceTo(goal) + 12, 32);
+    // Never a shot from far beyond where it happened: within a few strides
+    // of its zone (a 40 m strike for a 30 m long shot read as a glitch).
+    final inRange = toGoal <= math.max(zone.distanceTo(goal) + 6, 30);
     final ready =
         atFeet(s) &&
         inRange &&

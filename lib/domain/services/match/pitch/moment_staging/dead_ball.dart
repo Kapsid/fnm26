@@ -579,7 +579,8 @@ class _CornerPlan extends _DeadBallPlan {
             now.flight == null &&
             len >= 5 &&
             now.ball.distanceTo(ballSpot) > 8 &&
-            now.ball.distanceTo(out) < 35) {
+            now.ball.distanceTo(out) < 35 &&
+            _inPlay(now.ball)) {
           final r = _runOut(t, now);
           if (r != null) return r;
         }
@@ -606,7 +607,8 @@ class _CornerPlan extends _DeadBallPlan {
         if (!wentOut &&
             len >= 4 &&
             now.ball.distanceTo(ballSpot) > 8 &&
-            now.ball.distanceTo(out) < 35) {
+            now.ball.distanceTo(out) < 35 &&
+            _inPlay(now.ball)) {
           final r = _runOut(t, now);
           if (r != null) return r;
         }
@@ -698,6 +700,12 @@ class _CornerPlan extends _DeadBallPlan {
 
   /// The defender who puts it out, while he is about it.
   int? outBy;
+
+  /// Whether [b] lies on the pitch: a ball already over a line (a wide
+  /// shot lying behind the goal) is never rolled back on to be put out
+  /// again for the corner.
+  static bool _inPlay(Offset2 b) =>
+      b.x > 0 && b.x < PitchDims.length && b.y > 0 && b.y < PitchDims.width;
 
   bool _ready(ScriptState now) {
     for (final e in marks.entries) {

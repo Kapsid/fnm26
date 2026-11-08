@@ -265,10 +265,8 @@ void main() {
       'nudge change per frame: mean ${(sum / count).toStringAsFixed(4)}, '
       'worst ${worst.toStringAsFixed(3)} tokens',
     );
-    // About 2 px at phone size at worst, as a hold comes on (0.19 since
-    // the 2026-11 set pieces fill the box: one frame as a crowded box
-    // breaks up, under 3 px).
-    expect(worst, lessThan(0.2));
+    // About 2 px at phone size at worst, as a hold comes on.
+    expect(worst, lessThan(0.15));
   });
 
   test('the drawn picture never contradicts the outcome', () {

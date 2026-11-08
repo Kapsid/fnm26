@@ -92,7 +92,10 @@ abstract class _Plan implements StagedPlan {
 
     switch (m) {
       case SetPieceMoment(:final takerId) when takerId == id && !m.routine:
-        return (target: deadBallSpot(m, ndir), maxSpeed: 7);
+        // In time to get there, not long before (see the lead-in).
+        final spot = deadBallSpot(m, ndir);
+        if (n.start - now.t > p.distanceTo(spot) / 6.5 + 1.5) return null;
+        return (target: spot, maxSpeed: 7);
       case ShotMoment(:final shooterId, :final origin)
           when origin == ShotOrigin.penalty && shooterId == id:
         return (
@@ -101,7 +104,10 @@ abstract class _Plan implements StagedPlan {
         );
       case ShotMoment(:final shooterId, :final zone) when shooterId == id:
         final want = zonePoint(zone, ndir);
-        var d = xToDepth(want.x, ndir);
+        // Short of the spot by the time still to go (see the story
+        // layer's lead-in): he arrives as it opens.
+        var d =
+            xToDepth(want.x, ndir) - ((n.start - now.t) * 1.6).clamp(0.0, 8.0);
         if (d > PitchDims.length / 2) {
           d = math.min(d, math.max(line() - 0.8, PitchDims.length / 2));
         }

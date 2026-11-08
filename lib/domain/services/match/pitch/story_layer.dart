@@ -2799,6 +2799,14 @@ class _Builder {
       } else {
         final to = ballAfter - a.pos;
         want = to.length < 0.3 ? a.facing : to.angle;
+        // Running hard away from the ball he turns and runs, never
+        // sprints backwards facing it.
+        final speed = a.vel.length;
+        if (speed > 4.5 &&
+            to.length >= 0.3 &&
+            a.vel.x * to.x + a.vel.y * to.y < 0) {
+          want = a.vel.angle;
+        }
       }
       a.facing = _turn(a.facing, want, _turnRate * dt);
     }
