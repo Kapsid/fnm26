@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Urmărește meciul fază cu fază",
   "matchViewSwitchToPitch": "Privește pe teren",
   "matchViewSwitchToTimeline": "Privește desfășurarea",
-  "matchTabCommentary": "COMENTARIU"
+  "matchTabCommentary": "COMENTARIU",
+  "ratingPlayerOfTheMatch": "Omul meciului",
+  "ratingSemantics": "Notă {rating}",
+  "matchAverageRating": "Notă medie",
+  "matchLiveRatingsNote": "Notele urmăresc meciul de până acum și devin finale la fluierul de final."
 }

@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Suivre le match action par action",
   "matchViewSwitchToPitch": "Suivre sur le terrain",
   "matchViewSwitchToTimeline": "Voir la chronologie",
-  "matchTabCommentary": "COMMENTAIRE"
+  "matchTabCommentary": "COMMENTAIRE",
+  "ratingPlayerOfTheMatch": "Homme du match",
+  "ratingSemantics": "Note {rating}",
+  "matchAverageRating": "Note moyenne",
+  "matchLiveRatingsNote": "Les notes suivent le match en cours et deviennent définitives au coup de sifflet final."
 }

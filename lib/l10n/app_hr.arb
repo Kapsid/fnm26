@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Pratite utakmicu događaj po događaj",
   "matchViewSwitchToPitch": "Gledaj na terenu",
   "matchViewSwitchToTimeline": "Gledaj tijek",
-  "matchTabCommentary": "KOMENTAR"
+  "matchTabCommentary": "KOMENTAR",
+  "ratingPlayerOfTheMatch": "Igrač utakmice",
+  "ratingSemantics": "Ocjena {rating}",
+  "matchAverageRating": "Prosječna ocjena",
+  "matchLiveRatingsNote": "Ocjene prate dosadašnji tijek utakmice i konačne su nakon posljednjeg zvižduka."
 }

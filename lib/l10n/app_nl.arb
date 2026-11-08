@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Volg de wedstrijd gebeurtenis voor gebeurtenis",
   "matchViewSwitchToPitch": "Kijken op het veld",
   "matchViewSwitchToTimeline": "Het verloop bekijken",
-  "matchTabCommentary": "COMMENTAAR"
+  "matchTabCommentary": "COMMENTAAR",
+  "ratingPlayerOfTheMatch": "Man van de wedstrijd",
+  "ratingSemantics": "Cijfer {rating}",
+  "matchAverageRating": "Gemiddeld cijfer",
+  "matchLiveRatingsNote": "De cijfers volgen de wedstrijd tot nu toe en zijn definitief bij het eindsignaal."
 }

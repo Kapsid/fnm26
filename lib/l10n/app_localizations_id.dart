@@ -8076,6 +8076,21 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'PEMAIN TERBAIK LAGA';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Pemain terbaik laga';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Rating $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Rating rata-rata';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Rating mengikuti jalannya laga sejauh ini dan menjadi final saat peluit akhir.';
+
+  @override
   String get matchGoalShout => 'GOL!';
 
   @override

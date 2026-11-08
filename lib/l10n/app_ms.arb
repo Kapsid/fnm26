@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Ikuti perlawanan peristiwa demi peristiwa",
   "matchViewSwitchToPitch": "Tonton di padang",
   "matchViewSwitchToTimeline": "Lihat garis masa",
-  "matchTabCommentary": "ULASAN"
+  "matchTabCommentary": "ULASAN",
+  "ratingPlayerOfTheMatch": "Pemain terbaik perlawanan",
+  "ratingSemantics": "Penarafan {rating}",
+  "matchAverageRating": "Purata penarafan",
+  "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat."
 }

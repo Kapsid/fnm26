@@ -15,6 +15,11 @@ abstract final class PerformanceMark {
   /// [penaltiesMissed] (missed or saved kicks taken) and [penaltiesSaved]
   /// (kicks a keeper stopped) come from the tactical engine's recorded shots.
   /// The background layer records no kicks and leaves them at zero.
+  ///
+  /// [cleanSheetShare] (0–1) is how much of a defender's clean-sheet bonus
+  /// has been earned: the whole of it for a finished match, the default. Only
+  /// the live line-ups pass less, for a match still being played (see
+  /// `LiveRatings`).
   static double forPlayer({
     required PositionCategory category,
     required int goals,
@@ -25,6 +30,7 @@ abstract final class PerformanceMark {
     required int oppScore,
     int penaltiesMissed = 0,
     int penaltiesSaved = 0,
+    double cleanSheetShare = 1.0,
   }) {
     var r = 6.5;
     r += goals * 1.0 + assists * 0.6;
@@ -37,7 +43,7 @@ abstract final class PerformanceMark {
         category == PositionCategory.defender ||
         category == PositionCategory.goalkeeper;
     if (defensive) {
-      r += oppScore == 0 ? 0.5 : -0.15 * oppScore;
+      r += oppScore == 0 ? 0.5 * cleanSheetShare : -0.15 * oppScore;
     }
     if (booked) r -= 0.3;
     if (sentOff) r -= 1.2;

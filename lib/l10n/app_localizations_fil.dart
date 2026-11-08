@@ -8141,6 +8141,21 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'MANLALARO NG LARO';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Manlalaro ng laro';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Rating $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Average na rating';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Sinusundan ng mga rating ang laro sa ngayon at pinal na pagsapit ng huling pito.';
+
+  @override
   String get matchGoalShout => 'GOAL!';
 
   @override

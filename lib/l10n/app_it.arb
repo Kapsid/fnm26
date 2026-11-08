@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Segui la partita evento per evento",
   "matchViewSwitchToPitch": "Guarda sul campo",
   "matchViewSwitchToTimeline": "Guarda la cronologia",
-  "matchTabCommentary": "COMMENTO"
+  "matchTabCommentary": "COMMENTO",
+  "ratingPlayerOfTheMatch": "Migliore in campo",
+  "ratingSemantics": "Voto {rating}",
+  "matchAverageRating": "Voto medio",
+  "matchLiveRatingsNote": "I voti seguono la partita fin qui e diventano definitivi al fischio finale."
 }

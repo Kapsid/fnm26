@@ -289,13 +289,7 @@ class TeamOfTournamentCard extends StatelessWidget {
           // The mark that earned the place. Shown instead of leaving the XI
           // looking like a list of the most famous names available.
           if (s.apps > 0) ...[
-            Text(
-              s.meanRating.toStringAsFixed(2),
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.ratingColor(s.meanRating),
-                fontWeight: FontWeight.w800,
-              ),
-            ),
+            RatingBadge(s.meanRating, compact: true, decimals: 2),
             const SizedBox(width: AppSpacing.sm),
           ],
           Text(

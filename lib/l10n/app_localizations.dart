@@ -12451,6 +12451,30 @@ abstract class AppLocalizations {
   /// **'PLAYER OF THE MATCH'**
   String get matchPlayerOfTheMatch;
 
+  /// Tooltip on the star inside a player's match-rating badge, marking the best-rated player of the match.
+  ///
+  /// In en, this message translates to:
+  /// **'Player of the match'**
+  String get ratingPlayerOfTheMatch;
+
+  /// Screen-reader label of a match-rating badge, e.g. 'Rating 7.4'.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating {rating}'**
+  String ratingSemantics(String rating);
+
+  /// Live match, Lineups tab: label beside a side's average match rating badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Average rating'**
+  String get matchAverageRating;
+
+  /// Live match, Lineups tab: one-line note above the line-ups while the match is played, explaining that the rating badges are running marks.
+  ///
+  /// In en, this message translates to:
+  /// **'Ratings follow the match so far and are final at the whistle.'**
+  String get matchLiveRatingsNote;
+
   /// Live match: the goal flash.
   ///
   /// In en, this message translates to:

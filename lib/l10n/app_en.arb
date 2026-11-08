@@ -13049,6 +13049,27 @@
   "@matchPlayerOfTheMatch": {
     "description": "Live match: man-of-the-match heading."
   },
+  "ratingPlayerOfTheMatch": "Player of the match",
+  "@ratingPlayerOfTheMatch": {
+    "description": "Tooltip on the star inside a player's match-rating badge, marking the best-rated player of the match."
+  },
+  "ratingSemantics": "Rating {rating}",
+  "@ratingSemantics": {
+    "description": "Screen-reader label of a match-rating badge, e.g. 'Rating 7.4'.",
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "matchAverageRating": "Average rating",
+  "@matchAverageRating": {
+    "description": "Live match, Lineups tab: label beside a side's average match rating badge."
+  },
+  "matchLiveRatingsNote": "Ratings follow the match so far and are final at the whistle.",
+  "@matchLiveRatingsNote": {
+    "description": "Live match, Lineups tab: one-line note above the line-ups while the match is played, explaining that the rating badges are running marks."
+  },
   "matchGoalShout": "GOAL!",
   "@matchGoalShout": {
     "description": "Live match: the goal flash."

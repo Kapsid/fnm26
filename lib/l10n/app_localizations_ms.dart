@@ -8111,6 +8111,21 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'PEMAIN TERBAIK PERLAWANAN';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Pemain terbaik perlawanan';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Penarafan $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Purata penarafan';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat.';
+
+  @override
   String get matchGoalShout => 'GOL!';
 
   @override

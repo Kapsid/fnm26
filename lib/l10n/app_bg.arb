@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Следете мача събитие по събитие",
   "matchViewSwitchToPitch": "Гледай на терена",
   "matchViewSwitchToTimeline": "Гледай хода",
-  "matchTabCommentary": "КОМЕНТАР"
+  "matchTabCommentary": "КОМЕНТАР",
+  "ratingPlayerOfTheMatch": "Играч на мача",
+  "ratingSemantics": "Оценка {rating}",
+  "matchAverageRating": "Средна оценка",
+  "matchLiveRatingsNote": "Оценките следват мача досега и стават окончателни с последния сигнал."
 }

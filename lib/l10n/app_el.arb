@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Παρακολουθήστε τον αγώνα φάση προς φάση",
   "matchViewSwitchToPitch": "Παρακολούθηση στο γήπεδο",
   "matchViewSwitchToTimeline": "Προβολή εξέλιξης",
-  "matchTabCommentary": "ΣΧΟΛΙΑΣΜΟΣ"
+  "matchTabCommentary": "ΣΧΟΛΙΑΣΜΟΣ",
+  "ratingPlayerOfTheMatch": "Κορυφαίος του αγώνα",
+  "ratingSemantics": "Βαθμολογία {rating}",
+  "matchAverageRating": "Μέση βαθμολογία",
+  "matchLiveRatingsNote": "Οι βαθμολογίες ακολουθούν τον αγώνα μέχρι τώρα και οριστικοποιούνται με το τελικό σφύριγμα."
 }

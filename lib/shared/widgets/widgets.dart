@@ -21,6 +21,7 @@ export 'nation_badge.dart';
 export 'nation_tap.dart';
 export 'pager_button.dart';
 export 'primary_button.dart';
+export 'rating_badge.dart';
 export 'set_piece_badge.dart';
 export 'set_piece_taker_summary.dart';
 export 'stat_bar.dart';

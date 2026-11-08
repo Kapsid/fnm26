@@ -8264,6 +8264,21 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'ИГРАЧ НА МАЧА';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Играч на мача';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Оценка $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Средна оценка';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Оценките следват мача досега и стават окончателни с последния сигнал.';
+
+  @override
   String get matchGoalShout => 'ГОЛ!';
 
   @override

@@ -8120,6 +8120,21 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'A MÉRKŐZÉS EMBERE';
 
   @override
+  String get ratingPlayerOfTheMatch => 'A mérkőzés embere';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Értékelés $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Átlagos értékelés';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Az értékelések az eddigi játékot követik, és a lefújáskor válnak véglegessé.';
+
+  @override
   String get matchGoalShout => 'GÓL!';
 
   @override

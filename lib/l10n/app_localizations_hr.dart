@@ -8385,6 +8385,21 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'IGRAČ UTAKMICE';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Igrač utakmice';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Ocjena $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Prosječna ocjena';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Ocjene prate dosadašnji tijek utakmice i konačne su nakon posljednjeg zvižduka.';
+
+  @override
   String get matchGoalShout => 'GOL!';
 
   @override

@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Das Spiel Ereignis für Ereignis verfolgen",
   "matchViewSwitchToPitch": "Auf dem Spielfeld zuschauen",
   "matchViewSwitchToTimeline": "Den Verlauf ansehen",
-  "matchTabCommentary": "KOMMENTAR"
+  "matchTabCommentary": "KOMMENTAR",
+  "ratingPlayerOfTheMatch": "Spieler des Spiels",
+  "ratingSemantics": "Note {rating}",
+  "matchAverageRating": "Durchschnittsnote",
+  "matchLiveRatingsNote": "Die Noten folgen dem bisherigen Spielverlauf und stehen erst mit dem Schlusspfiff fest."
 }

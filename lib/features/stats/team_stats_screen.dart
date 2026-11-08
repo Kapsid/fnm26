@@ -391,12 +391,7 @@ class _RatingRow extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
-              entry.meanRating.toStringAsFixed(2),
-              style: AppTypography.titleMedium.copyWith(
-                color: AppColors.ratingColor(entry.meanRating),
-              ),
-            ),
+            RatingBadge(entry.meanRating, decimals: 2),
           ],
         ),
       ),

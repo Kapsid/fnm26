@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Ikuti pertandingan kejadian demi kejadian",
   "matchViewSwitchToPitch": "Tonton di lapangan",
   "matchViewSwitchToTimeline": "Lihat alurnya",
-  "matchTabCommentary": "KOMENTAR"
+  "matchTabCommentary": "KOMENTAR",
+  "ratingPlayerOfTheMatch": "Pemain terbaik laga",
+  "ratingSemantics": "Rating {rating}",
+  "matchAverageRating": "Rating rata-rata",
+  "matchLiveRatingsNote": "Rating mengikuti jalannya laga sejauh ini dan menjadi final saat peluit akhir."
 }

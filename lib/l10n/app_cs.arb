@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Zápas událost po události",
   "matchViewSwitchToPitch": "Sledovat na hřišti",
   "matchViewSwitchToTimeline": "Sledovat průběh",
-  "matchTabCommentary": "KOMENTÁŘ"
+  "matchTabCommentary": "KOMENTÁŘ",
+  "ratingPlayerOfTheMatch": "Hráč zápasu",
+  "ratingSemantics": "Známka {rating}",
+  "matchAverageRating": "Průměrná známka",
+  "matchLiveRatingsNote": "Známky sledují dosavadní průběh zápasu a platí až po závěrečném hvizdu."
 }

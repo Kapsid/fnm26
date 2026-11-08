@@ -8323,6 +8323,21 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'ГРАВЕЦЬ МАТЧУ';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Гравець матчу';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Оцінка $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Середня оцінка';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Оцінки відображають перебіг матчу досі й стають остаточними після фінального свистка.';
+
+  @override
   String get matchGoalShout => 'ГОЛ!';
 
   @override

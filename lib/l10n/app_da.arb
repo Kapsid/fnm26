@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Følg kampen begivenhed for begivenhed",
   "matchViewSwitchToPitch": "Se på banen",
   "matchViewSwitchToTimeline": "Se forløbet",
-  "matchTabCommentary": "KOMMENTARER"
+  "matchTabCommentary": "KOMMENTARER",
+  "ratingPlayerOfTheMatch": "Kampens spiller",
+  "ratingSemantics": "Karakter {rating}",
+  "matchAverageRating": "Gennemsnitskarakter",
+  "matchLiveRatingsNote": "Karaktererne følger kampen indtil nu og er endelige ved slutfløjtet."
 }

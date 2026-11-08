@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/theme/rating_colors.dart';
 
 /// Assembles the "Pro Pitch Executive" [ThemeData].
 ///
@@ -16,6 +17,7 @@ abstract final class AppTheme {
       scaffoldBackgroundColor: scheme.surface,
       fontFamily: AppFonts.sans,
       textTheme: AppTypography.textTheme,
+      extensions: const [RatingBandColors.dark],
       dividerTheme: DividerThemeData(
         color: AppColors.divider,
         thickness: 1,

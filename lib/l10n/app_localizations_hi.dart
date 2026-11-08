@@ -8095,6 +8095,21 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'मैन ऑफ़ द मैच';
 
   @override
+  String get ratingPlayerOfTheMatch => 'मैन ऑफ़ द मैच';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'रेटिंग $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'औसत रेटिंग';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'रेटिंग अब तक के मैच के हिसाब से बदलती है और अंतिम सीटी पर तय होती है।';
+
+  @override
   String get matchGoalShout => 'गोल!';
 
   @override

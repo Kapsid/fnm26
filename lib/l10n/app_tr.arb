@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Maçı olay olay izleyin",
   "matchViewSwitchToPitch": "Sahada izle",
   "matchViewSwitchToTimeline": "Akışı izle",
-  "matchTabCommentary": "YORUM"
+  "matchTabCommentary": "YORUM",
+  "ratingPlayerOfTheMatch": "Maçın adamı",
+  "ratingSemantics": "Puan {rating}",
+  "matchAverageRating": "Ortalama puan",
+  "matchLiveRatingsNote": "Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir."
 }

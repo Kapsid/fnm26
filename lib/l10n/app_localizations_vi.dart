@@ -8043,6 +8043,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'CẦU THỦ HAY NHẤT TRẬN';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Cầu thủ hay nhất trận';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Điểm $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Điểm trung bình';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Điểm số theo diễn biến trận đấu đến lúc này và chốt khi hết giờ.';
+
+  @override
   String get matchGoalShout => 'VÀO!';
 
   @override

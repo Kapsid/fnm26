@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "ติดตามแมตช์ทีละเหตุการณ์",
   "matchViewSwitchToPitch": "ดูบนสนาม",
   "matchViewSwitchToTimeline": "ดูลำดับเหตุการณ์",
-  "matchTabCommentary": "คำบรรยาย"
+  "matchTabCommentary": "คำบรรยาย",
+  "ratingPlayerOfTheMatch": "ผู้เล่นยอดเยี่ยมประจำเกม",
+  "ratingSemantics": "คะแนน {rating}",
+  "matchAverageRating": "คะแนนเฉลี่ย",
+  "matchLiveRatingsNote": "คะแนนเปลี่ยนตามเกมที่ผ่านมาและเป็นคะแนนสุดท้ายเมื่อหมดเวลา"
 }

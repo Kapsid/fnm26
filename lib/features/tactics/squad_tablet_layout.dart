@@ -328,7 +328,11 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
     sortKey: (r) => r.condition?.formRating ?? 0,
     cell: (r) {
       final rating = r.condition?.formRating ?? 0;
-      return Text(rating > 0 ? rating.toStringAsFixed(1) : '-');
+      if (rating <= 0) return const Text('-');
+      return Align(
+        alignment: Alignment.centerRight,
+        child: RatingBadge(rating, compact: true),
+      );
     },
   );
   final condition = GridColumn<NationSquadRow>(

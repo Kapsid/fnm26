@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Kövesse a meccset eseményről eseményre",
   "matchViewSwitchToPitch": "Nézés a pályán",
   "matchViewSwitchToTimeline": "A menet megtekintése",
-  "matchTabCommentary": "KOMMENTÁR"
+  "matchTabCommentary": "KOMMENTÁR",
+  "ratingPlayerOfTheMatch": "A mérkőzés embere",
+  "ratingSemantics": "Értékelés {rating}",
+  "matchAverageRating": "Átlagos értékelés",
+  "matchLiveRatingsNote": "Az értékelések az eddigi játékot követik, és a lefújáskor válnak véglegessé."
 }

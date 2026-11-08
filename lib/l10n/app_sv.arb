@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Följ matchen händelse för händelse",
   "matchViewSwitchToPitch": "Titta på planen",
   "matchViewSwitchToTimeline": "Titta på förloppet",
-  "matchTabCommentary": "KOMMENTARER"
+  "matchTabCommentary": "KOMMENTARER",
+  "ratingPlayerOfTheMatch": "Matchens bäste spelare",
+  "ratingSemantics": "Betyg {rating}",
+  "matchAverageRating": "Snittbetyg",
+  "matchLiveRatingsNote": "Betygen följer matchen hittills och är slutgiltiga vid slutsignalen."
 }

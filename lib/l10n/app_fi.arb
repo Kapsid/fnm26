@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Seuraa ottelua tapahtuma kerrallaan",
   "matchViewSwitchToPitch": "Katso kentältä",
   "matchViewSwitchToTimeline": "Katso ottelun kulkua",
-  "matchTabCommentary": "SELOSTUS"
+  "matchTabCommentary": "SELOSTUS",
+  "ratingPlayerOfTheMatch": "Ottelun paras pelaaja",
+  "ratingSemantics": "Arvosana {rating}",
+  "matchAverageRating": "Keskiarvosana",
+  "matchLiveRatingsNote": "Arvosanat seuraavat ottelun tähänastista kulkua ja ovat lopullisia loppuvihellyksellä."
 }

@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Sundan ang laban, bawat pangyayari",
   "matchViewSwitchToPitch": "Panoorin sa field",
   "matchViewSwitchToTimeline": "Panoorin ang daloy",
-  "matchTabCommentary": "KOMENTARYO"
+  "matchTabCommentary": "KOMENTARYO",
+  "ratingPlayerOfTheMatch": "Manlalaro ng laro",
+  "ratingSemantics": "Rating {rating}",
+  "matchAverageRating": "Average na rating",
+  "matchLiveRatingsNote": "Sinusundan ng mga rating ang laro sa ngayon at pinal na pagsapit ng huling pito."
 }

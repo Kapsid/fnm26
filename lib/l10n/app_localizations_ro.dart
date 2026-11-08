@@ -8456,6 +8456,21 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'OMUL MECIULUI';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Omul meciului';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Notă $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Notă medie';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Notele urmăresc meciul de până acum și devin finale la fluierul de final.';
+
+  @override
   String get matchGoalShout => 'GOL!';
 
   @override

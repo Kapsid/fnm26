@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Стежте за матчем подія за подією",
   "matchViewSwitchToPitch": "Дивитися на полі",
   "matchViewSwitchToTimeline": "Дивитися хронологію",
-  "matchTabCommentary": "КОМЕНТАР"
+  "matchTabCommentary": "КОМЕНТАР",
+  "ratingPlayerOfTheMatch": "Гравець матчу",
+  "ratingSemantics": "Оцінка {rating}",
+  "matchAverageRating": "Середня оцінка",
+  "matchLiveRatingsNote": "Оцінки відображають перебіг матчу досі й стають остаточними після фінального свистка."
 }

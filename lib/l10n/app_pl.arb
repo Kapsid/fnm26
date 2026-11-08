@@ -4006,5 +4006,9 @@
   "matchViewTimelineBlurb": "Śledź mecz zdarzenie po zdarzeniu",
   "matchViewSwitchToPitch": "Oglądaj na boisku",
   "matchViewSwitchToTimeline": "Oglądaj przebieg",
-  "matchTabCommentary": "KOMENTARZ"
+  "matchTabCommentary": "KOMENTARZ",
+  "ratingPlayerOfTheMatch": "Zawodnik meczu",
+  "ratingSemantics": "Ocena {rating}",
+  "matchAverageRating": "Średnia ocena",
+  "matchLiveRatingsNote": "Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku."
 }
