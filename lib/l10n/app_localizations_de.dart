@@ -12109,6 +12109,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get backupSafetyShare => 'TEILEN';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Dein Spielstand konnte nicht aktualisiert werden';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Dein Spielstand konnte nicht aktualisiert werden. Nichts wurde gelöscht, und eine Kopie von vor dem Update liegt unter Einstellungen, Backups.';
+
+  @override
   String get backupCloudNoDetails => 'Die Details sind noch unterwegs.';
 
   @override

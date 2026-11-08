@@ -12073,6 +12073,13 @@ class AppLocalizationsEl extends AppLocalizations {
   String get backupSafetyShare => 'ΚΟΙΝΟΠΟΙΗΣΗ';
 
   @override
+  String get saveUpgradeFailedTitle => 'Η αποθήκευσή σου δεν ενημερώθηκε';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Η αποθήκευσή σου δεν μπόρεσε να ενημερωθεί. Δεν διαγράφηκε τίποτα, και ένα αντίγραφο από πριν από την ενημέρωση βρίσκεται στις Ρυθμίσεις, Αντίγραφα ασφαλείας.';
+
+  @override
   String get backupCloudNoDetails => 'Οι λεπτομέρειες είναι ακόμα καθ\' οδόν.';
 
   @override

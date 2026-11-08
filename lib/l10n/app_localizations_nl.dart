@@ -12072,6 +12072,14 @@ class AppLocalizationsNl extends AppLocalizations {
   String get backupSafetyShare => 'DELEN';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Je opgeslagen spel kon niet worden bijgewerkt';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Je opgeslagen spel kon niet worden bijgewerkt. Er is niets verwijderd, en een kopie van vóór de update staat in Instellingen, Back-ups.';
+
+  @override
   String get backupCloudNoDetails => 'De details zijn nog onderweg.';
 
   @override

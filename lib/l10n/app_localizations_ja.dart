@@ -11582,6 +11582,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get backupSafetyShare => '共有';
 
   @override
+  String get saveUpgradeFailedTitle => 'セーブデータを更新できませんでした';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'セーブデータを更新できませんでした。何も削除されていません。更新前のコピーは「設定」の「バックアップ」にあります。';
+
+  @override
   String get backupCloudNoDetails => '詳細はまだ取得中です。';
 
   @override

@@ -12091,6 +12091,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get backupSafetyShare => 'СПОДЕЛИ';
 
   @override
+  String get saveUpgradeFailedTitle => 'Записът не можа да бъде обновен';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Записаната ви игра не можа да бъде обновена. Нищо не е изтрито, а копие отпреди обновяването има в Настройки, Резервни копия.';
+
+  @override
   String get backupCloudNoDetails => 'Подробностите още пристигат.';
 
   @override

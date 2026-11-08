@@ -12100,6 +12100,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get backupSafetyShare => 'COMPARTILHAR';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Não foi possível atualizar seu jogo salvo';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Não foi possível atualizar seu jogo salvo. Nada foi apagado, e uma cópia de antes da atualização está em Configurações, Cópias de segurança.';
+
+  @override
   String get backupCloudNoDetails => 'Os detalhes ainda estão a caminho.';
 
   @override

@@ -4,7 +4,10 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/save_backup.dart';
+import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
+
+import '../../helpers/save_fixtures.dart';
 
 /// Exporting and restoring a whole save file.
 ///
@@ -186,5 +189,78 @@ void main() {
       await SaveBackup.replaceLive(junk),
       BackupRejection.unreadable,
     );
+  });
+
+  group('the copy taken before an upgrade', () {
+    test(
+      'a v54 file gets a pre-upgrade copy that opens at v54 with its careers',
+      () async {
+        // A real save written by the build before schema 55. If the upgrade
+        // that follows goes wrong, this copy is how the player gets it back.
+        final live = await unpackFixture('pre55', 'mid_cycle');
+        addTearDown(() => live.parent.delete(recursive: true));
+        expect(fileSchemaVersion(live.path), 54);
+        final careersBefore = sqlite3.open(live.path, mode: OpenMode.readOnly);
+        final names = [
+          for (final r in careersBefore.select(
+            'SELECT manager_name FROM careers ORDER BY id',
+          ))
+            r['manager_name'],
+        ];
+        careersBefore.close();
+        expect(names, isNotEmpty);
+
+        final copy = await SaveBackup.writePreUpgradeCopy(
+          live,
+          fromVersion: AppDatabase.firstManagedVersion,
+          into: dir,
+        );
+
+        expect(copy, isNotNull);
+        expect(p.dirname(copy!.path), dir.path);
+        expect(p.basename(copy.path), startsWith('before-update-v54-'));
+        expect(copy.path, endsWith('.${SaveBackup.extension}'));
+        expect(SaveBackup.safetyCopiesIn(dir), [
+          isA<File>().having((f) => f.path, 'path', copy.path),
+        ], reason: 'the Settings restore list must offer it');
+        expect(SaveBackup.inspect(copy.path).rejection, isNull);
+        final read = sqlite3.open(copy.path, mode: OpenMode.readOnly);
+        addTearDown(read.close);
+        expect(read.select('PRAGMA user_version').first.values.first, 54);
+        expect([
+          for (final r in read.select(
+            'SELECT manager_name FROM careers ORDER BY id',
+          ))
+            r['manager_name'],
+        ], names);
+        expect(
+          fileSchemaVersion(live.path),
+          54,
+          reason: 'taking the copy must not touch the save itself',
+        );
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+    );
+
+    test('a current file gets none', () async {
+      final path = await aSaveWith('Current');
+      final copy = await SaveBackup.writePreUpgradeCopy(
+        File(path),
+        fromVersion: AppDatabase.firstManagedVersion,
+        into: dir,
+      );
+      expect(copy, isNull);
+      expect(SaveBackup.safetyCopiesIn(dir), isEmpty);
+    });
+
+    test('a missing file gets none', () async {
+      final copy = await SaveBackup.writePreUpgradeCopy(
+        File('${dir.path}/nothing.sqlite'),
+        fromVersion: AppDatabase.firstManagedVersion,
+        into: dir,
+      );
+      expect(copy, isNull);
+      expect(File('${dir.path}/nothing.sqlite').existsSync(), isFalse);
+    });
   });
 }

@@ -110,6 +110,69 @@ abstract final class SaveBackup {
     return out;
   }
 
+  /// The file-name start of a copy taken by [writePreUpgradeCopy].
+  static const String preUpgradePrefix = 'before-update-';
+
+  /// Copies the save at [live] into the safety folder (or [into]) BEFORE this
+  /// build opens it, when opening it will run a migration: its schema is at
+  /// least [fromVersion] (the oldest one migrated rather than rebuilt; pass
+  /// [AppDatabase.firstManagedVersion]) and below
+  /// [AppDatabase.currentSchemaVersion].
+  ///
+  /// The copy is `before-update-v<version>-<time>.fnmsave`, so the Backups
+  /// section lists it with the other safety copies. Only the newest
+  /// [safetyCopiesKept] pre-update copies are kept, so a save that fails to
+  /// upgrade at every launch cannot fill the phone. Returns null when there
+  /// is nothing to upgrade, or no file. Throws if the copy cannot be written.
+  ///
+  /// Raw `sqlite3`, not drift: drift would migrate the file on opening it.
+  static Future<File?> writePreUpgradeCopy(
+    File live, {
+    required int fromVersion,
+    Directory? into,
+  }) async {
+    if (!live.existsSync()) return null;
+    // Read-write, never create: a WAL left by the last session is read (and
+    // checkpointed) rather than refused, as a read-only open can be.
+    final db = sqlite3.open(live.path, mode: OpenMode.readWrite);
+    try {
+      final raw = db.select('PRAGMA user_version').first.values.first;
+      final version = raw is int ? raw : 0;
+      if (version < fromVersion ||
+          version >= AppDatabase.currentSchemaVersion) {
+        return null;
+      }
+      final dir = into ?? await safetyDirectory();
+      await dir.create(recursive: true);
+      final at = DateTime.now();
+      String two(int v) => v.toString().padLeft(2, '0');
+      final name =
+          '${preUpgradePrefix}v$version-${at.year}-${two(at.month)}'
+          '-${two(at.day)}-${two(at.hour)}${two(at.minute)}${two(at.second)}'
+          '.$extension';
+      final out = File(p.join(dir.path, name));
+      if (out.existsSync()) await out.delete();
+      db.execute('VACUUM INTO ?', [out.path]);
+      if (inspect(out.path).rejection != null) {
+        throw FileSystemException('pre-upgrade copy unreadable', out.path);
+      }
+      final older = [
+        for (final f in safetyCopiesIn(dir))
+          if (p.basename(f.path).startsWith(preUpgradePrefix)) f,
+      ];
+      for (final old in older.skip(safetyCopiesKept)) {
+        try {
+          await old.delete();
+        } on Object {
+          // Tried again at the next upgrade.
+        }
+      }
+      return out;
+    } finally {
+      db.close();
+    }
+  }
+
   /// The safety copies in [dir], newest first.
   static List<File> safetyCopiesIn(Directory dir) {
     if (!dir.existsSync()) return const [];

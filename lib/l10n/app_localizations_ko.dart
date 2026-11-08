@@ -11610,6 +11610,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get backupSafetyShare => '공유';
 
   @override
+  String get saveUpgradeFailedTitle => '저장 데이터를 업데이트하지 못했습니다';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      '저장 데이터를 업데이트하지 못했습니다. 삭제된 것은 없으며, 업데이트 전 사본은 설정, 백업에 있습니다.';
+
+  @override
   String get backupCloudNoDetails => '세부 정보를 아직 불러오는 중입니다.';
 
   @override

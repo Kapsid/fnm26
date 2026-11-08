@@ -12082,6 +12082,13 @@ class AppLocalizationsFi extends AppLocalizations {
   String get backupSafetyShare => 'JAA';
 
   @override
+  String get saveUpgradeFailedTitle => 'Tallennusta ei voitu päivittää';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Tallennustasi ei voitu päivittää. Mitään ei poistettu, ja kopio ajalta ennen päivitystä löytyy kohdasta Asetukset, Varmuuskopiot.';
+
+  @override
   String get backupCloudNoDetails => 'Tiedot ovat vielä tulossa.';
 
   @override

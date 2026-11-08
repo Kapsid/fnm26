@@ -18522,6 +18522,14 @@
   "@backupSafetyShare": {
     "description": "Settings Backups: shares one of those copies."
   },
+  "saveUpgradeFailedTitle": "Your save could not be updated",
+  "@saveUpgradeFailedTitle": {
+    "description": "Launch: heading shown instead of the app when the save could not be upgraded."
+  },
+  "saveUpgradeFailedBody": "Your save could not be updated. Nothing was deleted, and a copy from before the update is in Settings, Backups.",
+  "@saveUpgradeFailedBody": {
+    "description": "Launch: what happened when the save could not be upgraded, and where the copy is."
+  },
   "backupCloudNoDetails": "Details are still on their way.",
   "@backupCloudNoDetails": {
     "description": "Cloud restore list: a backup whose details have not downloaded yet."

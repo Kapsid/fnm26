@@ -12335,6 +12335,14 @@ class AppLocalizationsHr extends AppLocalizations {
   String get backupSafetyShare => 'PODIJELI';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Spremljenu igru nije bilo moguće ažurirati';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Tvoju spremljenu igru nije bilo moguće ažurirati. Ništa nije obrisano, a kopija od prije ažuriranja nalazi se u Postavke, Sigurnosne kopije.';
+
+  @override
   String get backupCloudNoDetails => 'Pojedinosti su još na putu.';
 
   @override

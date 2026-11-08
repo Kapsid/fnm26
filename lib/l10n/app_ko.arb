@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "경기 최우수 선수",
   "ratingSemantics": "평점 {rating}",
   "matchAverageRating": "평균 평점",
-  "matchLiveRatingsNote": "평점은 지금까지의 경기 흐름을 따르며 종료 휘슬과 함께 확정됩니다."
+  "matchLiveRatingsNote": "평점은 지금까지의 경기 흐름을 따르며 종료 휘슬과 함께 확정됩니다.",
+  "saveUpgradeFailedTitle": "저장 데이터를 업데이트하지 못했습니다",
+  "saveUpgradeFailedBody": "저장 데이터를 업데이트하지 못했습니다. 삭제된 것은 없으며, 업데이트 전 사본은 설정, 백업에 있습니다."
 }

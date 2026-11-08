@@ -12268,6 +12268,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String get backupSafetyShare => 'SDÍLET';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Uloženou hru se nepodařilo aktualizovat';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Uloženou hru se nepodařilo aktualizovat. Nic nebylo smazáno a kopie z doby před aktualizací je v Nastavení, Zálohy.';
+
+  @override
   String get backupCloudNoDetails => 'Podrobnosti jsou ještě na cestě.';
 
   @override

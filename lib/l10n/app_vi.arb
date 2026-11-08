@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Cầu thủ hay nhất trận",
   "ratingSemantics": "Điểm {rating}",
   "matchAverageRating": "Điểm trung bình",
-  "matchLiveRatingsNote": "Điểm số theo diễn biến trận đấu đến lúc này và chốt khi hết giờ."
+  "matchLiveRatingsNote": "Điểm số theo diễn biến trận đấu đến lúc này và chốt khi hết giờ.",
+  "saveUpgradeFailedTitle": "Không thể cập nhật bản lưu",
+  "saveUpgradeFailedBody": "Không thể cập nhật bản lưu của bạn. Không có gì bị xóa, và một bản sao từ trước khi cập nhật nằm trong Cài đặt, Sao lưu."
 }

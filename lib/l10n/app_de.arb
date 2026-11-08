@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Spieler des Spiels",
   "ratingSemantics": "Note {rating}",
   "matchAverageRating": "Durchschnittsnote",
-  "matchLiveRatingsNote": "Die Noten folgen dem bisherigen Spielverlauf und stehen erst mit dem Schlusspfiff fest."
+  "matchLiveRatingsNote": "Die Noten folgen dem bisherigen Spielverlauf und stehen erst mit dem Schlusspfiff fest.",
+  "saveUpgradeFailedTitle": "Dein Spielstand konnte nicht aktualisiert werden",
+  "saveUpgradeFailedBody": "Dein Spielstand konnte nicht aktualisiert werden. Nichts wurde gelöscht, und eine Kopie von vor dem Update liegt unter Einstellungen, Backups."
 }

@@ -12002,6 +12002,14 @@ class AppLocalizationsSv extends AppLocalizations {
   String get backupSafetyShare => 'DELA';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Ditt sparade spel kunde inte uppdateras';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Ditt sparade spel kunde inte uppdateras. Inget har raderats, och en kopia från före uppdateringen finns under Inställningar, Säkerhetskopior.';
+
+  @override
   String get backupCloudNoDetails => 'Detaljerna är fortfarande på väg.';
 
   @override

@@ -11932,6 +11932,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get backupSafetyShare => 'शेयर करें';
 
   @override
+  String get saveUpgradeFailedTitle => 'आपका सेव अपडेट नहीं हो सका';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'आपका सेव अपडेट नहीं हो सका। कुछ भी डिलीट नहीं हुआ, और अपडेट से पहले की एक कॉपी सेटिंग्स, बैकअप में है।';
+
+  @override
   String get backupCloudNoDetails => 'ब्योरा अभी आ रहा है।';
 
   @override

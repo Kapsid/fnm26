@@ -12362,6 +12362,13 @@ class AppLocalizationsRo extends AppLocalizations {
   String get backupSafetyShare => 'PARTAJAȚI';
 
   @override
+  String get saveUpgradeFailedTitle => 'Salvarea nu a putut fi actualizată';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Salvarea ta nu a putut fi actualizată. Nu s-a șters nimic, iar o copie de dinaintea actualizării se află în Setări, Backupuri.';
+
+  @override
   String get backupCloudNoDetails => 'Detaliile sunt încă pe drum.';
 
   @override

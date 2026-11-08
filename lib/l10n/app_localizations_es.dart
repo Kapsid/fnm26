@@ -12084,6 +12084,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get backupSafetyShare => 'COMPARTIR';
 
   @override
+  String get saveUpgradeFailedTitle => 'No se pudo actualizar tu partida';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'No se pudo actualizar tu partida guardada. No se ha borrado nada, y hay una copia de antes de la actualización en Ajustes, Copias de seguridad.';
+
+  @override
   String get backupCloudNoDetails => 'Los detalles aún están en camino.';
 
   @override

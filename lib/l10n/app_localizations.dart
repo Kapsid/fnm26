@@ -18303,6 +18303,18 @@ abstract class AppLocalizations {
   /// **'SHARE'**
   String get backupSafetyShare;
 
+  /// Launch: heading shown instead of the app when the save could not be upgraded.
+  ///
+  /// In en, this message translates to:
+  /// **'Your save could not be updated'**
+  String get saveUpgradeFailedTitle;
+
+  /// Launch: what happened when the save could not be upgraded, and where the copy is.
+  ///
+  /// In en, this message translates to:
+  /// **'Your save could not be updated. Nothing was deleted, and a copy from before the update is in Settings, Backups.'**
+  String get saveUpgradeFailedBody;
+
   /// Cloud restore list: a backup whose details have not downloaded yet.
   ///
   /// In en, this message translates to:

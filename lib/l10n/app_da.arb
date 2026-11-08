@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Kampens spiller",
   "ratingSemantics": "Karakter {rating}",
   "matchAverageRating": "Gennemsnitskarakter",
-  "matchLiveRatingsNote": "Karaktererne følger kampen indtil nu og er endelige ved slutfløjtet."
+  "matchLiveRatingsNote": "Karaktererne følger kampen indtil nu og er endelige ved slutfløjtet.",
+  "saveUpgradeFailedTitle": "Dit gemte spil kunne ikke opdateres",
+  "saveUpgradeFailedBody": "Dit gemte spil kunne ikke opdateres. Intet er slettet, og en kopi fra før opdateringen ligger under Indstillinger, Sikkerhedskopier."
 }

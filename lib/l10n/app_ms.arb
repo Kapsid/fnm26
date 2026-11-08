@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Pemain terbaik perlawanan",
   "ratingSemantics": "Penarafan {rating}",
   "matchAverageRating": "Purata penarafan",
-  "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat."
+  "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat.",
+  "saveUpgradeFailedTitle": "Simpanan anda tidak dapat dikemas kini",
+  "saveUpgradeFailedBody": "Simpanan anda tidak dapat dikemas kini. Tiada apa-apa dipadam, dan salinan dari sebelum kemas kini ada dalam Tetapan, Sandaran."
 }

@@ -12072,6 +12072,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get backupSafetyShare => 'CONDIVIDI';
 
   @override
+  String get saveUpgradeFailedTitle => 'Impossibile aggiornare il salvataggio';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Il salvataggio non è stato aggiornato. Non è stato eliminato nulla e una copia di prima dell\'aggiornamento è in Impostazioni, Backup.';
+
+  @override
   String get backupCloudNoDetails => 'I dettagli sono ancora in arrivo.';
 
   @override

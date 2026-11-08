@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Pemain terbaik laga",
   "ratingSemantics": "Rating {rating}",
   "matchAverageRating": "Rating rata-rata",
-  "matchLiveRatingsNote": "Rating mengikuti jalannya laga sejauh ini dan menjadi final saat peluit akhir."
+  "matchLiveRatingsNote": "Rating mengikuti jalannya laga sejauh ini dan menjadi final saat peluit akhir.",
+  "saveUpgradeFailedTitle": "Simpanan tidak bisa diperbarui",
+  "saveUpgradeFailedBody": "Simpanan permainanmu tidak bisa diperbarui. Tidak ada yang dihapus, dan salinan dari sebelum pembaruan ada di Pengaturan, Cadangan."
 }

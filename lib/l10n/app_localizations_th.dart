@@ -11784,6 +11784,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get backupSafetyShare => 'แชร์';
 
   @override
+  String get saveUpgradeFailedTitle => 'ไม่สามารถอัปเดตเซฟของคุณได้';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'ไม่สามารถอัปเดตเซฟของคุณได้ ไม่มีสิ่งใดถูกลบ และมีสำเนาจากก่อนการอัปเดตอยู่ใน การตั้งค่า, การสำรองข้อมูล';
+
+  @override
   String get backupCloudNoDetails => 'รายละเอียดกำลังตามมา';
 
   @override

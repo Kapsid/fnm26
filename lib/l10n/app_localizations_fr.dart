@@ -12128,6 +12128,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get backupSafetyShare => 'PARTAGER';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Impossible de mettre à jour votre sauvegarde';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Votre sauvegarde n\'a pas pu être mise à jour. Rien n\'a été supprimé, et une copie d\'avant la mise à jour se trouve dans Paramètres, Sauvegardes.';
+
+  @override
   String get backupCloudNoDetails => 'Les détails sont encore en route.';
 
   @override

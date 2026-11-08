@@ -11959,6 +11959,13 @@ class AppLocalizationsMs extends AppLocalizations {
   String get backupSafetyShare => 'KONGSI';
 
   @override
+  String get saveUpgradeFailedTitle => 'Simpanan anda tidak dapat dikemas kini';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Simpanan anda tidak dapat dikemas kini. Tiada apa-apa dipadam, dan salinan dari sebelum kemas kini ada dalam Tetapan, Sandaran.';
+
+  @override
   String get backupCloudNoDetails => 'Butiran masih dalam perjalanan.';
 
   @override

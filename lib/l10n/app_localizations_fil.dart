@@ -12001,6 +12001,13 @@ class AppLocalizationsFil extends AppLocalizations {
   String get backupSafetyShare => 'IBAHAGI';
 
   @override
+  String get saveUpgradeFailedTitle => 'Hindi ma-update ang save mo';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Hindi ma-update ang save mo. Walang nabura, at may kopya mula bago ang update sa Mga Setting, Mga Backup.';
+
+  @override
   String get backupCloudNoDetails => 'Paparating pa ang mga detalye.';
 
   @override

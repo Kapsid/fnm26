@@ -99,6 +99,18 @@ void main() {
               version.data.values.single,
               AppDatabase.currentSchemaVersion,
             );
+            // The world's managers are seeded lazily; an upgrade adds none.
+            for (final table in const [
+              'world_managers',
+              'manager_spells',
+              'manager_ties',
+            ]) {
+              final n = await db
+                  .customSelect('SELECT COUNT(*) AS n FROM $table')
+                  .map((r) => r.read<int>('n'))
+                  .getSingle();
+              expect(n, 0, reason: '$table after the upgrade');
+            }
             await close(db, c);
             final after = await dumpTables(file.path);
             for (final MapEntry(key: table, value: rows) in before.entries) {

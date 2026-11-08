@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Ottelun paras pelaaja",
   "ratingSemantics": "Arvosana {rating}",
   "matchAverageRating": "Keskiarvosana",
-  "matchLiveRatingsNote": "Arvosanat seuraavat ottelun tähänastista kulkua ja ovat lopullisia loppuvihellyksellä."
+  "matchLiveRatingsNote": "Arvosanat seuraavat ottelun tähänastista kulkua ja ovat lopullisia loppuvihellyksellä.",
+  "saveUpgradeFailedTitle": "Tallennusta ei voitu päivittää",
+  "saveUpgradeFailedBody": "Tallennustasi ei voitu päivittää. Mitään ei poistettu, ja kopio ajalta ennen päivitystä löytyy kohdasta Asetukset, Varmuuskopiot."
 }

@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Zawodnik meczu",
   "ratingSemantics": "Ocena {rating}",
   "matchAverageRating": "Średnia ocena",
-  "matchLiveRatingsNote": "Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku."
+  "matchLiveRatingsNote": "Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku.",
+  "saveUpgradeFailedTitle": "Nie udało się zaktualizować zapisu",
+  "saveUpgradeFailedBody": "Nie udało się zaktualizować zapisu gry. Nic nie zostało usunięte, a kopia sprzed aktualizacji jest w Ustawienia, Kopie zapasowe."
 }

@@ -12286,6 +12286,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get backupSafetyShare => 'ПОДІЛИТИСЯ';
 
   @override
+  String get saveUpgradeFailedTitle => 'Не вдалося оновити збереження';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Не вдалося оновити ваше збереження. Нічого не видалено, а копія до оновлення є в Налаштування, Резервні копії.';
+
+  @override
   String get backupCloudNoDetails => 'Подробиці ще в дорозі.';
 
   @override

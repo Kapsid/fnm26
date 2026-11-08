@@ -11950,6 +11950,13 @@ class AppLocalizationsHu extends AppLocalizations {
   String get backupSafetyShare => 'MEGOSZTÁS';
 
   @override
+  String get saveUpgradeFailedTitle => 'A mentést nem sikerült frissíteni';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'A mentésedet nem sikerült frissíteni. Semmi sem törlődött, és egy frissítés előtti másolat a Beállítások, Biztonsági mentések részben található.';
+
+  @override
   String get backupCloudNoDetails => 'A részletek még úton vannak.';
 
   @override

@@ -12132,6 +12132,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get backupSafetyShare => 'UDOSTĘPNIJ';
 
   @override
+  String get saveUpgradeFailedTitle => 'Nie udało się zaktualizować zapisu';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Nie udało się zaktualizować zapisu gry. Nic nie zostało usunięte, a kopia sprzed aktualizacji jest w Ustawienia, Kopie zapasowe.';
+
+  @override
   String get backupCloudNoDetails => 'Szczegóły są jeszcze w drodze.';
 
   @override

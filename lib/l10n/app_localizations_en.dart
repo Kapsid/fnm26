@@ -12037,6 +12037,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backupSafetyShare => 'SHARE';
 
   @override
+  String get saveUpgradeFailedTitle => 'Your save could not be updated';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Your save could not be updated. Nothing was deleted, and a copy from before the update is in Settings, Backups.';
+
+  @override
   String get backupCloudNoDetails => 'Details are still on their way.';
 
   @override

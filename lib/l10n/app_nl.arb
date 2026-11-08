@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Man van de wedstrijd",
   "ratingSemantics": "Cijfer {rating}",
   "matchAverageRating": "Gemiddeld cijfer",
-  "matchLiveRatingsNote": "De cijfers volgen de wedstrijd tot nu toe en zijn definitief bij het eindsignaal."
+  "matchLiveRatingsNote": "De cijfers volgen de wedstrijd tot nu toe en zijn definitief bij het eindsignaal.",
+  "saveUpgradeFailedTitle": "Je opgeslagen spel kon niet worden bijgewerkt",
+  "saveUpgradeFailedBody": "Je opgeslagen spel kon niet worden bijgewerkt. Er is niets verwijderd, en een kopie van vóór de update staat in Instellingen, Back-ups."
 }

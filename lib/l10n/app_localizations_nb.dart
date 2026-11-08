@@ -12011,6 +12011,14 @@ class AppLocalizationsNb extends AppLocalizations {
   String get backupSafetyShare => 'DEL';
 
   @override
+  String get saveUpgradeFailedTitle =>
+      'Det lagrede spillet kunne ikke oppdateres';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Det lagrede spillet ditt kunne ikke oppdateres. Ingenting er slettet, og en kopi fra før oppdateringen ligger under Innstillinger, Sikkerhetskopier.';
+
+  @override
   String get backupCloudNoDetails => 'Detaljene er fortsatt på vei.';
 
   @override

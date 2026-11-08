@@ -12,6 +12,7 @@ import '../../generated_migrations/schema_v47.dart' as v47;
 import '../../generated_migrations/schema_v51.dart' as v51;
 import '../../generated_migrations/schema_v52.dart' as v52;
 import '../../generated_migrations/schema_v53.dart' as v53;
+import '../../generated_migrations/schema_v54.dart' as v54;
 
 /// Guards the promise that a save survives a schema bump.
 ///
@@ -433,6 +434,45 @@ void main() {
     final careers = await db.select(db.careers).get();
     expect(careers.map((c) => c.managerName), ['Kept']);
   });
+
+  test(
+    '54 → 55 keeps every career and adds three empty manager tables',
+    () async {
+      // 55 adds the world's managers: who they are, where they coached and
+      // what they remember. Purely additive: an upgraded career has none on
+      // record and seeds them lazily the first time it needs one.
+      expect(AppDatabase.currentSchemaVersion, greaterThanOrEqualTo(55));
+      final schema = await verifier.schemaAt(54);
+      final old = v54.DatabaseAtV54(schema.newConnection());
+      for (final (id, name) in const [(1, 'First'), (2, 'Second')]) {
+        await old.customStatement(
+          'INSERT INTO careers (id, nation_id, manager_name, created_at, '
+          'in_game_date, rng_seed, cycle_pointer, budget) '
+          'VALUES (?, 1, ?, 0, 0, 7, 0, 0)',
+          [id, name],
+        );
+      }
+      await old.close();
+
+      final db = AppDatabase.forTesting(schema.newConnection());
+      addTearDown(db.close);
+      await verifier.migrateAndValidate(db, 55);
+
+      final careers = await db.select(db.careers).get();
+      expect(careers.map((c) => c.managerName), ['First', 'Second']);
+      for (final table in const [
+        'world_managers',
+        'manager_spells',
+        'manager_ties',
+      ]) {
+        final n = await db
+            .customSelect('SELECT COUNT(*) AS n FROM $table')
+            .map((r) => r.read<int>('n'))
+            .getSingle();
+        expect(n, 0, reason: '$table should start empty');
+      }
+    },
+  );
 
   for (final MapEntry(key: from, value: to) in upgrades.entries) {
     test('a save migrates from v$from to v$to with its data intact', () async {

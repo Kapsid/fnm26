@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Igrač utakmice",
   "ratingSemantics": "Ocjena {rating}",
   "matchAverageRating": "Prosječna ocjena",
-  "matchLiveRatingsNote": "Ocjene prate dosadašnji tijek utakmice i konačne su nakon posljednjeg zvižduka."
+  "matchLiveRatingsNote": "Ocjene prate dosadašnji tijek utakmice i konačne su nakon posljednjeg zvižduka.",
+  "saveUpgradeFailedTitle": "Spremljenu igru nije bilo moguće ažurirati",
+  "saveUpgradeFailedBody": "Tvoju spremljenu igru nije bilo moguće ažurirati. Ništa nije obrisano, a kopija od prije ažuriranja nalazi se u Postavke, Sigurnosne kopije."
 }

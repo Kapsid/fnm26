@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Mejor jugador del partido",
   "ratingSemantics": "Valoración {rating}",
   "matchAverageRating": "Valoración media",
-  "matchLiveRatingsNote": "Las valoraciones siguen el partido hasta ahora y son definitivas al pitido final."
+  "matchLiveRatingsNote": "Las valoraciones siguen el partido hasta ahora y son definitivas al pitido final.",
+  "saveUpgradeFailedTitle": "No se pudo actualizar tu partida",
+  "saveUpgradeFailedBody": "No se pudo actualizar tu partida guardada. No se ha borrado nada, y hay una copia de antes de la actualización en Ajustes, Copias de seguridad."
 }

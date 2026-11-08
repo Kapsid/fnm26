@@ -17596,6 +17596,1618 @@ class CareerWorldTrophiesCompanion
   }
 }
 
+class $WorldManagersTable extends WorldManagers
+    with TableInfo<$WorldManagersTable, WorldManagerRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WorldManagersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _careerIdMeta = const VerificationMeta(
+    'careerId',
+  );
+  @override
+  late final GeneratedColumn<int> careerId = GeneratedColumn<int>(
+    'career_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES careers (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _managerIdMeta = const VerificationMeta(
+    'managerId',
+  );
+  @override
+  late final GeneratedColumn<int> managerId = GeneratedColumn<int>(
+    'manager_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nationalityMeta = const VerificationMeta(
+    'nationality',
+  );
+  @override
+  late final GeneratedColumn<String> nationality = GeneratedColumn<String>(
+    'nationality',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _birthYearMeta = const VerificationMeta(
+    'birthYear',
+  );
+  @override
+  late final GeneratedColumn<int> birthYear = GeneratedColumn<int>(
+    'birth_year',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _styleMeta = const VerificationMeta('style');
+  @override
+  late final GeneratedColumn<String> style = GeneratedColumn<String>(
+    'style',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _originMeta = const VerificationMeta('origin');
+  @override
+  late final GeneratedColumn<String> origin = GeneratedColumn<String>(
+    'origin',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _enteredAtMeta = const VerificationMeta(
+    'enteredAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> enteredAt = GeneratedColumn<DateTime>(
+    'entered_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _retiredAtMeta = const VerificationMeta(
+    'retiredAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> retiredAt = GeneratedColumn<DateTime>(
+    'retired_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sourceIdMeta = const VerificationMeta(
+    'sourceId',
+  );
+  @override
+  late final GeneratedColumn<int> sourceId = GeneratedColumn<int>(
+    'source_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    careerId,
+    managerId,
+    name,
+    nationality,
+    birthYear,
+    style,
+    origin,
+    enteredAt,
+    retiredAt,
+    sourceId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'world_managers';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WorldManagerRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('career_id')) {
+      context.handle(
+        _careerIdMeta,
+        careerId.isAcceptableOrUnknown(data['career_id']!, _careerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_careerIdMeta);
+    }
+    if (data.containsKey('manager_id')) {
+      context.handle(
+        _managerIdMeta,
+        managerId.isAcceptableOrUnknown(data['manager_id']!, _managerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_managerIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('nationality')) {
+      context.handle(
+        _nationalityMeta,
+        nationality.isAcceptableOrUnknown(
+          data['nationality']!,
+          _nationalityMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_nationalityMeta);
+    }
+    if (data.containsKey('birth_year')) {
+      context.handle(
+        _birthYearMeta,
+        birthYear.isAcceptableOrUnknown(data['birth_year']!, _birthYearMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_birthYearMeta);
+    }
+    if (data.containsKey('style')) {
+      context.handle(
+        _styleMeta,
+        style.isAcceptableOrUnknown(data['style']!, _styleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_styleMeta);
+    }
+    if (data.containsKey('origin')) {
+      context.handle(
+        _originMeta,
+        origin.isAcceptableOrUnknown(data['origin']!, _originMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_originMeta);
+    }
+    if (data.containsKey('entered_at')) {
+      context.handle(
+        _enteredAtMeta,
+        enteredAt.isAcceptableOrUnknown(data['entered_at']!, _enteredAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_enteredAtMeta);
+    }
+    if (data.containsKey('retired_at')) {
+      context.handle(
+        _retiredAtMeta,
+        retiredAt.isAcceptableOrUnknown(data['retired_at']!, _retiredAtMeta),
+      );
+    }
+    if (data.containsKey('source_id')) {
+      context.handle(
+        _sourceIdMeta,
+        sourceId.isAcceptableOrUnknown(data['source_id']!, _sourceIdMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {careerId, managerId};
+  @override
+  WorldManagerRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WorldManagerRow(
+      careerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}career_id'],
+      )!,
+      managerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}manager_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      nationality: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}nationality'],
+      )!,
+      birthYear: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}birth_year'],
+      )!,
+      style: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}style'],
+      )!,
+      origin: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}origin'],
+      )!,
+      enteredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}entered_at'],
+      )!,
+      retiredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}retired_at'],
+      ),
+      sourceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}source_id'],
+      ),
+    );
+  }
+
+  @override
+  $WorldManagersTable createAlias(String alias) {
+    return $WorldManagersTable(attachedDatabase, alias);
+  }
+}
+
+class WorldManagerRow extends DataClass implements Insertable<WorldManagerRow> {
+  final int careerId;
+  final int managerId;
+  final String name;
+
+  /// FIFA code, upper case.
+  final String nationality;
+  final int birthYear;
+
+  /// A `NationStyle` name.
+  final String style;
+
+  /// A `ManagerOrigin` name.
+  final String origin;
+  final DateTime enteredAt;
+  final DateTime? retiredAt;
+
+  /// The player id of an ex-international, or the staff candidate id of an
+  /// ex-assistant; null for anybody else.
+  final int? sourceId;
+  const WorldManagerRow({
+    required this.careerId,
+    required this.managerId,
+    required this.name,
+    required this.nationality,
+    required this.birthYear,
+    required this.style,
+    required this.origin,
+    required this.enteredAt,
+    this.retiredAt,
+    this.sourceId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['career_id'] = Variable<int>(careerId);
+    map['manager_id'] = Variable<int>(managerId);
+    map['name'] = Variable<String>(name);
+    map['nationality'] = Variable<String>(nationality);
+    map['birth_year'] = Variable<int>(birthYear);
+    map['style'] = Variable<String>(style);
+    map['origin'] = Variable<String>(origin);
+    map['entered_at'] = Variable<DateTime>(enteredAt);
+    if (!nullToAbsent || retiredAt != null) {
+      map['retired_at'] = Variable<DateTime>(retiredAt);
+    }
+    if (!nullToAbsent || sourceId != null) {
+      map['source_id'] = Variable<int>(sourceId);
+    }
+    return map;
+  }
+
+  WorldManagersCompanion toCompanion(bool nullToAbsent) {
+    return WorldManagersCompanion(
+      careerId: Value(careerId),
+      managerId: Value(managerId),
+      name: Value(name),
+      nationality: Value(nationality),
+      birthYear: Value(birthYear),
+      style: Value(style),
+      origin: Value(origin),
+      enteredAt: Value(enteredAt),
+      retiredAt: retiredAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(retiredAt),
+      sourceId: sourceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sourceId),
+    );
+  }
+
+  factory WorldManagerRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WorldManagerRow(
+      careerId: serializer.fromJson<int>(json['careerId']),
+      managerId: serializer.fromJson<int>(json['managerId']),
+      name: serializer.fromJson<String>(json['name']),
+      nationality: serializer.fromJson<String>(json['nationality']),
+      birthYear: serializer.fromJson<int>(json['birthYear']),
+      style: serializer.fromJson<String>(json['style']),
+      origin: serializer.fromJson<String>(json['origin']),
+      enteredAt: serializer.fromJson<DateTime>(json['enteredAt']),
+      retiredAt: serializer.fromJson<DateTime?>(json['retiredAt']),
+      sourceId: serializer.fromJson<int?>(json['sourceId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'careerId': serializer.toJson<int>(careerId),
+      'managerId': serializer.toJson<int>(managerId),
+      'name': serializer.toJson<String>(name),
+      'nationality': serializer.toJson<String>(nationality),
+      'birthYear': serializer.toJson<int>(birthYear),
+      'style': serializer.toJson<String>(style),
+      'origin': serializer.toJson<String>(origin),
+      'enteredAt': serializer.toJson<DateTime>(enteredAt),
+      'retiredAt': serializer.toJson<DateTime?>(retiredAt),
+      'sourceId': serializer.toJson<int?>(sourceId),
+    };
+  }
+
+  WorldManagerRow copyWith({
+    int? careerId,
+    int? managerId,
+    String? name,
+    String? nationality,
+    int? birthYear,
+    String? style,
+    String? origin,
+    DateTime? enteredAt,
+    Value<DateTime?> retiredAt = const Value.absent(),
+    Value<int?> sourceId = const Value.absent(),
+  }) => WorldManagerRow(
+    careerId: careerId ?? this.careerId,
+    managerId: managerId ?? this.managerId,
+    name: name ?? this.name,
+    nationality: nationality ?? this.nationality,
+    birthYear: birthYear ?? this.birthYear,
+    style: style ?? this.style,
+    origin: origin ?? this.origin,
+    enteredAt: enteredAt ?? this.enteredAt,
+    retiredAt: retiredAt.present ? retiredAt.value : this.retiredAt,
+    sourceId: sourceId.present ? sourceId.value : this.sourceId,
+  );
+  WorldManagerRow copyWithCompanion(WorldManagersCompanion data) {
+    return WorldManagerRow(
+      careerId: data.careerId.present ? data.careerId.value : this.careerId,
+      managerId: data.managerId.present ? data.managerId.value : this.managerId,
+      name: data.name.present ? data.name.value : this.name,
+      nationality: data.nationality.present
+          ? data.nationality.value
+          : this.nationality,
+      birthYear: data.birthYear.present ? data.birthYear.value : this.birthYear,
+      style: data.style.present ? data.style.value : this.style,
+      origin: data.origin.present ? data.origin.value : this.origin,
+      enteredAt: data.enteredAt.present ? data.enteredAt.value : this.enteredAt,
+      retiredAt: data.retiredAt.present ? data.retiredAt.value : this.retiredAt,
+      sourceId: data.sourceId.present ? data.sourceId.value : this.sourceId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorldManagerRow(')
+          ..write('careerId: $careerId, ')
+          ..write('managerId: $managerId, ')
+          ..write('name: $name, ')
+          ..write('nationality: $nationality, ')
+          ..write('birthYear: $birthYear, ')
+          ..write('style: $style, ')
+          ..write('origin: $origin, ')
+          ..write('enteredAt: $enteredAt, ')
+          ..write('retiredAt: $retiredAt, ')
+          ..write('sourceId: $sourceId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    careerId,
+    managerId,
+    name,
+    nationality,
+    birthYear,
+    style,
+    origin,
+    enteredAt,
+    retiredAt,
+    sourceId,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WorldManagerRow &&
+          other.careerId == this.careerId &&
+          other.managerId == this.managerId &&
+          other.name == this.name &&
+          other.nationality == this.nationality &&
+          other.birthYear == this.birthYear &&
+          other.style == this.style &&
+          other.origin == this.origin &&
+          other.enteredAt == this.enteredAt &&
+          other.retiredAt == this.retiredAt &&
+          other.sourceId == this.sourceId);
+}
+
+class WorldManagersCompanion extends UpdateCompanion<WorldManagerRow> {
+  final Value<int> careerId;
+  final Value<int> managerId;
+  final Value<String> name;
+  final Value<String> nationality;
+  final Value<int> birthYear;
+  final Value<String> style;
+  final Value<String> origin;
+  final Value<DateTime> enteredAt;
+  final Value<DateTime?> retiredAt;
+  final Value<int?> sourceId;
+  final Value<int> rowid;
+  const WorldManagersCompanion({
+    this.careerId = const Value.absent(),
+    this.managerId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.nationality = const Value.absent(),
+    this.birthYear = const Value.absent(),
+    this.style = const Value.absent(),
+    this.origin = const Value.absent(),
+    this.enteredAt = const Value.absent(),
+    this.retiredAt = const Value.absent(),
+    this.sourceId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WorldManagersCompanion.insert({
+    required int careerId,
+    required int managerId,
+    required String name,
+    required String nationality,
+    required int birthYear,
+    required String style,
+    required String origin,
+    required DateTime enteredAt,
+    this.retiredAt = const Value.absent(),
+    this.sourceId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : careerId = Value(careerId),
+       managerId = Value(managerId),
+       name = Value(name),
+       nationality = Value(nationality),
+       birthYear = Value(birthYear),
+       style = Value(style),
+       origin = Value(origin),
+       enteredAt = Value(enteredAt);
+  static Insertable<WorldManagerRow> custom({
+    Expression<int>? careerId,
+    Expression<int>? managerId,
+    Expression<String>? name,
+    Expression<String>? nationality,
+    Expression<int>? birthYear,
+    Expression<String>? style,
+    Expression<String>? origin,
+    Expression<DateTime>? enteredAt,
+    Expression<DateTime>? retiredAt,
+    Expression<int>? sourceId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (careerId != null) 'career_id': careerId,
+      if (managerId != null) 'manager_id': managerId,
+      if (name != null) 'name': name,
+      if (nationality != null) 'nationality': nationality,
+      if (birthYear != null) 'birth_year': birthYear,
+      if (style != null) 'style': style,
+      if (origin != null) 'origin': origin,
+      if (enteredAt != null) 'entered_at': enteredAt,
+      if (retiredAt != null) 'retired_at': retiredAt,
+      if (sourceId != null) 'source_id': sourceId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WorldManagersCompanion copyWith({
+    Value<int>? careerId,
+    Value<int>? managerId,
+    Value<String>? name,
+    Value<String>? nationality,
+    Value<int>? birthYear,
+    Value<String>? style,
+    Value<String>? origin,
+    Value<DateTime>? enteredAt,
+    Value<DateTime?>? retiredAt,
+    Value<int?>? sourceId,
+    Value<int>? rowid,
+  }) {
+    return WorldManagersCompanion(
+      careerId: careerId ?? this.careerId,
+      managerId: managerId ?? this.managerId,
+      name: name ?? this.name,
+      nationality: nationality ?? this.nationality,
+      birthYear: birthYear ?? this.birthYear,
+      style: style ?? this.style,
+      origin: origin ?? this.origin,
+      enteredAt: enteredAt ?? this.enteredAt,
+      retiredAt: retiredAt ?? this.retiredAt,
+      sourceId: sourceId ?? this.sourceId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (careerId.present) {
+      map['career_id'] = Variable<int>(careerId.value);
+    }
+    if (managerId.present) {
+      map['manager_id'] = Variable<int>(managerId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (nationality.present) {
+      map['nationality'] = Variable<String>(nationality.value);
+    }
+    if (birthYear.present) {
+      map['birth_year'] = Variable<int>(birthYear.value);
+    }
+    if (style.present) {
+      map['style'] = Variable<String>(style.value);
+    }
+    if (origin.present) {
+      map['origin'] = Variable<String>(origin.value);
+    }
+    if (enteredAt.present) {
+      map['entered_at'] = Variable<DateTime>(enteredAt.value);
+    }
+    if (retiredAt.present) {
+      map['retired_at'] = Variable<DateTime>(retiredAt.value);
+    }
+    if (sourceId.present) {
+      map['source_id'] = Variable<int>(sourceId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorldManagersCompanion(')
+          ..write('careerId: $careerId, ')
+          ..write('managerId: $managerId, ')
+          ..write('name: $name, ')
+          ..write('nationality: $nationality, ')
+          ..write('birthYear: $birthYear, ')
+          ..write('style: $style, ')
+          ..write('origin: $origin, ')
+          ..write('enteredAt: $enteredAt, ')
+          ..write('retiredAt: $retiredAt, ')
+          ..write('sourceId: $sourceId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ManagerSpellsTable extends ManagerSpells
+    with TableInfo<$ManagerSpellsTable, ManagerSpellRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ManagerSpellsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _careerIdMeta = const VerificationMeta(
+    'careerId',
+  );
+  @override
+  late final GeneratedColumn<int> careerId = GeneratedColumn<int>(
+    'career_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES careers (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _spellNoMeta = const VerificationMeta(
+    'spellNo',
+  );
+  @override
+  late final GeneratedColumn<int> spellNo = GeneratedColumn<int>(
+    'spell_no',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _managerIdMeta = const VerificationMeta(
+    'managerId',
+  );
+  @override
+  late final GeneratedColumn<int> managerId = GeneratedColumn<int>(
+    'manager_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nationIdMeta = const VerificationMeta(
+    'nationId',
+  );
+  @override
+  late final GeneratedColumn<int> nationId = GeneratedColumn<int>(
+    'nation_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fromDateMeta = const VerificationMeta(
+    'fromDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> fromDate = GeneratedColumn<DateTime>(
+    'from_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _toDateMeta = const VerificationMeta('toDate');
+  @override
+  late final GeneratedColumn<DateTime> toDate = GeneratedColumn<DateTime>(
+    'to_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _endReasonMeta = const VerificationMeta(
+    'endReason',
+  );
+  @override
+  late final GeneratedColumn<String> endReason = GeneratedColumn<String>(
+    'end_reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contractUntilMeta = const VerificationMeta(
+    'contractUntil',
+  );
+  @override
+  late final GeneratedColumn<DateTime> contractUntil =
+      GeneratedColumn<DateTime>(
+        'contract_until',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _briefNetMeta = const VerificationMeta(
+    'briefNet',
+  );
+  @override
+  late final GeneratedColumn<int> briefNet = GeneratedColumn<int>(
+    'brief_net',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    careerId,
+    spellNo,
+    managerId,
+    nationId,
+    fromDate,
+    toDate,
+    endReason,
+    contractUntil,
+    briefNet,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'manager_spells';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ManagerSpellRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('career_id')) {
+      context.handle(
+        _careerIdMeta,
+        careerId.isAcceptableOrUnknown(data['career_id']!, _careerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_careerIdMeta);
+    }
+    if (data.containsKey('spell_no')) {
+      context.handle(
+        _spellNoMeta,
+        spellNo.isAcceptableOrUnknown(data['spell_no']!, _spellNoMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_spellNoMeta);
+    }
+    if (data.containsKey('manager_id')) {
+      context.handle(
+        _managerIdMeta,
+        managerId.isAcceptableOrUnknown(data['manager_id']!, _managerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_managerIdMeta);
+    }
+    if (data.containsKey('nation_id')) {
+      context.handle(
+        _nationIdMeta,
+        nationId.isAcceptableOrUnknown(data['nation_id']!, _nationIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nationIdMeta);
+    }
+    if (data.containsKey('from_date')) {
+      context.handle(
+        _fromDateMeta,
+        fromDate.isAcceptableOrUnknown(data['from_date']!, _fromDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fromDateMeta);
+    }
+    if (data.containsKey('to_date')) {
+      context.handle(
+        _toDateMeta,
+        toDate.isAcceptableOrUnknown(data['to_date']!, _toDateMeta),
+      );
+    }
+    if (data.containsKey('end_reason')) {
+      context.handle(
+        _endReasonMeta,
+        endReason.isAcceptableOrUnknown(data['end_reason']!, _endReasonMeta),
+      );
+    }
+    if (data.containsKey('contract_until')) {
+      context.handle(
+        _contractUntilMeta,
+        contractUntil.isAcceptableOrUnknown(
+          data['contract_until']!,
+          _contractUntilMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_contractUntilMeta);
+    }
+    if (data.containsKey('brief_net')) {
+      context.handle(
+        _briefNetMeta,
+        briefNet.isAcceptableOrUnknown(data['brief_net']!, _briefNetMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {careerId, spellNo};
+  @override
+  ManagerSpellRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ManagerSpellRow(
+      careerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}career_id'],
+      )!,
+      spellNo: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}spell_no'],
+      )!,
+      managerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}manager_id'],
+      )!,
+      nationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}nation_id'],
+      )!,
+      fromDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}from_date'],
+      )!,
+      toDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}to_date'],
+      ),
+      endReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_reason'],
+      ),
+      contractUntil: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}contract_until'],
+      )!,
+      briefNet: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}brief_net'],
+      )!,
+    );
+  }
+
+  @override
+  $ManagerSpellsTable createAlias(String alias) {
+    return $ManagerSpellsTable(attachedDatabase, alias);
+  }
+}
+
+class ManagerSpellRow extends DataClass implements Insertable<ManagerSpellRow> {
+  final int careerId;
+  final int spellNo;
+  final int managerId;
+  final int nationId;
+  final DateTime fromDate;
+  final DateTime? toDate;
+
+  /// A `SpellEnd` name; null while the spell runs.
+  final String? endReason;
+  final DateTime contractUntil;
+  final int briefNet;
+  const ManagerSpellRow({
+    required this.careerId,
+    required this.spellNo,
+    required this.managerId,
+    required this.nationId,
+    required this.fromDate,
+    this.toDate,
+    this.endReason,
+    required this.contractUntil,
+    required this.briefNet,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['career_id'] = Variable<int>(careerId);
+    map['spell_no'] = Variable<int>(spellNo);
+    map['manager_id'] = Variable<int>(managerId);
+    map['nation_id'] = Variable<int>(nationId);
+    map['from_date'] = Variable<DateTime>(fromDate);
+    if (!nullToAbsent || toDate != null) {
+      map['to_date'] = Variable<DateTime>(toDate);
+    }
+    if (!nullToAbsent || endReason != null) {
+      map['end_reason'] = Variable<String>(endReason);
+    }
+    map['contract_until'] = Variable<DateTime>(contractUntil);
+    map['brief_net'] = Variable<int>(briefNet);
+    return map;
+  }
+
+  ManagerSpellsCompanion toCompanion(bool nullToAbsent) {
+    return ManagerSpellsCompanion(
+      careerId: Value(careerId),
+      spellNo: Value(spellNo),
+      managerId: Value(managerId),
+      nationId: Value(nationId),
+      fromDate: Value(fromDate),
+      toDate: toDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(toDate),
+      endReason: endReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endReason),
+      contractUntil: Value(contractUntil),
+      briefNet: Value(briefNet),
+    );
+  }
+
+  factory ManagerSpellRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ManagerSpellRow(
+      careerId: serializer.fromJson<int>(json['careerId']),
+      spellNo: serializer.fromJson<int>(json['spellNo']),
+      managerId: serializer.fromJson<int>(json['managerId']),
+      nationId: serializer.fromJson<int>(json['nationId']),
+      fromDate: serializer.fromJson<DateTime>(json['fromDate']),
+      toDate: serializer.fromJson<DateTime?>(json['toDate']),
+      endReason: serializer.fromJson<String?>(json['endReason']),
+      contractUntil: serializer.fromJson<DateTime>(json['contractUntil']),
+      briefNet: serializer.fromJson<int>(json['briefNet']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'careerId': serializer.toJson<int>(careerId),
+      'spellNo': serializer.toJson<int>(spellNo),
+      'managerId': serializer.toJson<int>(managerId),
+      'nationId': serializer.toJson<int>(nationId),
+      'fromDate': serializer.toJson<DateTime>(fromDate),
+      'toDate': serializer.toJson<DateTime?>(toDate),
+      'endReason': serializer.toJson<String?>(endReason),
+      'contractUntil': serializer.toJson<DateTime>(contractUntil),
+      'briefNet': serializer.toJson<int>(briefNet),
+    };
+  }
+
+  ManagerSpellRow copyWith({
+    int? careerId,
+    int? spellNo,
+    int? managerId,
+    int? nationId,
+    DateTime? fromDate,
+    Value<DateTime?> toDate = const Value.absent(),
+    Value<String?> endReason = const Value.absent(),
+    DateTime? contractUntil,
+    int? briefNet,
+  }) => ManagerSpellRow(
+    careerId: careerId ?? this.careerId,
+    spellNo: spellNo ?? this.spellNo,
+    managerId: managerId ?? this.managerId,
+    nationId: nationId ?? this.nationId,
+    fromDate: fromDate ?? this.fromDate,
+    toDate: toDate.present ? toDate.value : this.toDate,
+    endReason: endReason.present ? endReason.value : this.endReason,
+    contractUntil: contractUntil ?? this.contractUntil,
+    briefNet: briefNet ?? this.briefNet,
+  );
+  ManagerSpellRow copyWithCompanion(ManagerSpellsCompanion data) {
+    return ManagerSpellRow(
+      careerId: data.careerId.present ? data.careerId.value : this.careerId,
+      spellNo: data.spellNo.present ? data.spellNo.value : this.spellNo,
+      managerId: data.managerId.present ? data.managerId.value : this.managerId,
+      nationId: data.nationId.present ? data.nationId.value : this.nationId,
+      fromDate: data.fromDate.present ? data.fromDate.value : this.fromDate,
+      toDate: data.toDate.present ? data.toDate.value : this.toDate,
+      endReason: data.endReason.present ? data.endReason.value : this.endReason,
+      contractUntil: data.contractUntil.present
+          ? data.contractUntil.value
+          : this.contractUntil,
+      briefNet: data.briefNet.present ? data.briefNet.value : this.briefNet,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ManagerSpellRow(')
+          ..write('careerId: $careerId, ')
+          ..write('spellNo: $spellNo, ')
+          ..write('managerId: $managerId, ')
+          ..write('nationId: $nationId, ')
+          ..write('fromDate: $fromDate, ')
+          ..write('toDate: $toDate, ')
+          ..write('endReason: $endReason, ')
+          ..write('contractUntil: $contractUntil, ')
+          ..write('briefNet: $briefNet')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    careerId,
+    spellNo,
+    managerId,
+    nationId,
+    fromDate,
+    toDate,
+    endReason,
+    contractUntil,
+    briefNet,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ManagerSpellRow &&
+          other.careerId == this.careerId &&
+          other.spellNo == this.spellNo &&
+          other.managerId == this.managerId &&
+          other.nationId == this.nationId &&
+          other.fromDate == this.fromDate &&
+          other.toDate == this.toDate &&
+          other.endReason == this.endReason &&
+          other.contractUntil == this.contractUntil &&
+          other.briefNet == this.briefNet);
+}
+
+class ManagerSpellsCompanion extends UpdateCompanion<ManagerSpellRow> {
+  final Value<int> careerId;
+  final Value<int> spellNo;
+  final Value<int> managerId;
+  final Value<int> nationId;
+  final Value<DateTime> fromDate;
+  final Value<DateTime?> toDate;
+  final Value<String?> endReason;
+  final Value<DateTime> contractUntil;
+  final Value<int> briefNet;
+  final Value<int> rowid;
+  const ManagerSpellsCompanion({
+    this.careerId = const Value.absent(),
+    this.spellNo = const Value.absent(),
+    this.managerId = const Value.absent(),
+    this.nationId = const Value.absent(),
+    this.fromDate = const Value.absent(),
+    this.toDate = const Value.absent(),
+    this.endReason = const Value.absent(),
+    this.contractUntil = const Value.absent(),
+    this.briefNet = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ManagerSpellsCompanion.insert({
+    required int careerId,
+    required int spellNo,
+    required int managerId,
+    required int nationId,
+    required DateTime fromDate,
+    this.toDate = const Value.absent(),
+    this.endReason = const Value.absent(),
+    required DateTime contractUntil,
+    this.briefNet = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : careerId = Value(careerId),
+       spellNo = Value(spellNo),
+       managerId = Value(managerId),
+       nationId = Value(nationId),
+       fromDate = Value(fromDate),
+       contractUntil = Value(contractUntil);
+  static Insertable<ManagerSpellRow> custom({
+    Expression<int>? careerId,
+    Expression<int>? spellNo,
+    Expression<int>? managerId,
+    Expression<int>? nationId,
+    Expression<DateTime>? fromDate,
+    Expression<DateTime>? toDate,
+    Expression<String>? endReason,
+    Expression<DateTime>? contractUntil,
+    Expression<int>? briefNet,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (careerId != null) 'career_id': careerId,
+      if (spellNo != null) 'spell_no': spellNo,
+      if (managerId != null) 'manager_id': managerId,
+      if (nationId != null) 'nation_id': nationId,
+      if (fromDate != null) 'from_date': fromDate,
+      if (toDate != null) 'to_date': toDate,
+      if (endReason != null) 'end_reason': endReason,
+      if (contractUntil != null) 'contract_until': contractUntil,
+      if (briefNet != null) 'brief_net': briefNet,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ManagerSpellsCompanion copyWith({
+    Value<int>? careerId,
+    Value<int>? spellNo,
+    Value<int>? managerId,
+    Value<int>? nationId,
+    Value<DateTime>? fromDate,
+    Value<DateTime?>? toDate,
+    Value<String?>? endReason,
+    Value<DateTime>? contractUntil,
+    Value<int>? briefNet,
+    Value<int>? rowid,
+  }) {
+    return ManagerSpellsCompanion(
+      careerId: careerId ?? this.careerId,
+      spellNo: spellNo ?? this.spellNo,
+      managerId: managerId ?? this.managerId,
+      nationId: nationId ?? this.nationId,
+      fromDate: fromDate ?? this.fromDate,
+      toDate: toDate ?? this.toDate,
+      endReason: endReason ?? this.endReason,
+      contractUntil: contractUntil ?? this.contractUntil,
+      briefNet: briefNet ?? this.briefNet,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (careerId.present) {
+      map['career_id'] = Variable<int>(careerId.value);
+    }
+    if (spellNo.present) {
+      map['spell_no'] = Variable<int>(spellNo.value);
+    }
+    if (managerId.present) {
+      map['manager_id'] = Variable<int>(managerId.value);
+    }
+    if (nationId.present) {
+      map['nation_id'] = Variable<int>(nationId.value);
+    }
+    if (fromDate.present) {
+      map['from_date'] = Variable<DateTime>(fromDate.value);
+    }
+    if (toDate.present) {
+      map['to_date'] = Variable<DateTime>(toDate.value);
+    }
+    if (endReason.present) {
+      map['end_reason'] = Variable<String>(endReason.value);
+    }
+    if (contractUntil.present) {
+      map['contract_until'] = Variable<DateTime>(contractUntil.value);
+    }
+    if (briefNet.present) {
+      map['brief_net'] = Variable<int>(briefNet.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ManagerSpellsCompanion(')
+          ..write('careerId: $careerId, ')
+          ..write('spellNo: $spellNo, ')
+          ..write('managerId: $managerId, ')
+          ..write('nationId: $nationId, ')
+          ..write('fromDate: $fromDate, ')
+          ..write('toDate: $toDate, ')
+          ..write('endReason: $endReason, ')
+          ..write('contractUntil: $contractUntil, ')
+          ..write('briefNet: $briefNet, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ManagerTiesTable extends ManagerTies
+    with TableInfo<$ManagerTiesTable, ManagerTieRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ManagerTiesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _careerIdMeta = const VerificationMeta(
+    'careerId',
+  );
+  @override
+  late final GeneratedColumn<int> careerId = GeneratedColumn<int>(
+    'career_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES careers (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _tieNoMeta = const VerificationMeta('tieNo');
+  @override
+  late final GeneratedColumn<int> tieNo = GeneratedColumn<int>(
+    'tie_no',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _managerIdMeta = const VerificationMeta(
+    'managerId',
+  );
+  @override
+  late final GeneratedColumn<int> managerId = GeneratedColumn<int>(
+    'manager_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deltaMeta = const VerificationMeta('delta');
+  @override
+  late final GeneratedColumn<int> delta = GeneratedColumn<int>(
+    'delta',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    careerId,
+    tieNo,
+    managerId,
+    kind,
+    delta,
+    date,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'manager_ties';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ManagerTieRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('career_id')) {
+      context.handle(
+        _careerIdMeta,
+        careerId.isAcceptableOrUnknown(data['career_id']!, _careerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_careerIdMeta);
+    }
+    if (data.containsKey('tie_no')) {
+      context.handle(
+        _tieNoMeta,
+        tieNo.isAcceptableOrUnknown(data['tie_no']!, _tieNoMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tieNoMeta);
+    }
+    if (data.containsKey('manager_id')) {
+      context.handle(
+        _managerIdMeta,
+        managerId.isAcceptableOrUnknown(data['manager_id']!, _managerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_managerIdMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('delta')) {
+      context.handle(
+        _deltaMeta,
+        delta.isAcceptableOrUnknown(data['delta']!, _deltaMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_deltaMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {careerId, tieNo};
+  @override
+  ManagerTieRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ManagerTieRow(
+      careerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}career_id'],
+      )!,
+      tieNo: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}tie_no'],
+      )!,
+      managerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}manager_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      delta: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}delta'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+    );
+  }
+
+  @override
+  $ManagerTiesTable createAlias(String alias) {
+    return $ManagerTiesTable(attachedDatabase, alias);
+  }
+}
+
+class ManagerTieRow extends DataClass implements Insertable<ManagerTieRow> {
+  final int careerId;
+  final int tieNo;
+  final int managerId;
+
+  /// A `TieKind` name.
+  final String kind;
+  final int delta;
+  final DateTime date;
+  const ManagerTieRow({
+    required this.careerId,
+    required this.tieNo,
+    required this.managerId,
+    required this.kind,
+    required this.delta,
+    required this.date,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['career_id'] = Variable<int>(careerId);
+    map['tie_no'] = Variable<int>(tieNo);
+    map['manager_id'] = Variable<int>(managerId);
+    map['kind'] = Variable<String>(kind);
+    map['delta'] = Variable<int>(delta);
+    map['date'] = Variable<DateTime>(date);
+    return map;
+  }
+
+  ManagerTiesCompanion toCompanion(bool nullToAbsent) {
+    return ManagerTiesCompanion(
+      careerId: Value(careerId),
+      tieNo: Value(tieNo),
+      managerId: Value(managerId),
+      kind: Value(kind),
+      delta: Value(delta),
+      date: Value(date),
+    );
+  }
+
+  factory ManagerTieRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ManagerTieRow(
+      careerId: serializer.fromJson<int>(json['careerId']),
+      tieNo: serializer.fromJson<int>(json['tieNo']),
+      managerId: serializer.fromJson<int>(json['managerId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      delta: serializer.fromJson<int>(json['delta']),
+      date: serializer.fromJson<DateTime>(json['date']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'careerId': serializer.toJson<int>(careerId),
+      'tieNo': serializer.toJson<int>(tieNo),
+      'managerId': serializer.toJson<int>(managerId),
+      'kind': serializer.toJson<String>(kind),
+      'delta': serializer.toJson<int>(delta),
+      'date': serializer.toJson<DateTime>(date),
+    };
+  }
+
+  ManagerTieRow copyWith({
+    int? careerId,
+    int? tieNo,
+    int? managerId,
+    String? kind,
+    int? delta,
+    DateTime? date,
+  }) => ManagerTieRow(
+    careerId: careerId ?? this.careerId,
+    tieNo: tieNo ?? this.tieNo,
+    managerId: managerId ?? this.managerId,
+    kind: kind ?? this.kind,
+    delta: delta ?? this.delta,
+    date: date ?? this.date,
+  );
+  ManagerTieRow copyWithCompanion(ManagerTiesCompanion data) {
+    return ManagerTieRow(
+      careerId: data.careerId.present ? data.careerId.value : this.careerId,
+      tieNo: data.tieNo.present ? data.tieNo.value : this.tieNo,
+      managerId: data.managerId.present ? data.managerId.value : this.managerId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      delta: data.delta.present ? data.delta.value : this.delta,
+      date: data.date.present ? data.date.value : this.date,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ManagerTieRow(')
+          ..write('careerId: $careerId, ')
+          ..write('tieNo: $tieNo, ')
+          ..write('managerId: $managerId, ')
+          ..write('kind: $kind, ')
+          ..write('delta: $delta, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(careerId, tieNo, managerId, kind, delta, date);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ManagerTieRow &&
+          other.careerId == this.careerId &&
+          other.tieNo == this.tieNo &&
+          other.managerId == this.managerId &&
+          other.kind == this.kind &&
+          other.delta == this.delta &&
+          other.date == this.date);
+}
+
+class ManagerTiesCompanion extends UpdateCompanion<ManagerTieRow> {
+  final Value<int> careerId;
+  final Value<int> tieNo;
+  final Value<int> managerId;
+  final Value<String> kind;
+  final Value<int> delta;
+  final Value<DateTime> date;
+  final Value<int> rowid;
+  const ManagerTiesCompanion({
+    this.careerId = const Value.absent(),
+    this.tieNo = const Value.absent(),
+    this.managerId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.delta = const Value.absent(),
+    this.date = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ManagerTiesCompanion.insert({
+    required int careerId,
+    required int tieNo,
+    required int managerId,
+    required String kind,
+    required int delta,
+    required DateTime date,
+    this.rowid = const Value.absent(),
+  }) : careerId = Value(careerId),
+       tieNo = Value(tieNo),
+       managerId = Value(managerId),
+       kind = Value(kind),
+       delta = Value(delta),
+       date = Value(date);
+  static Insertable<ManagerTieRow> custom({
+    Expression<int>? careerId,
+    Expression<int>? tieNo,
+    Expression<int>? managerId,
+    Expression<String>? kind,
+    Expression<int>? delta,
+    Expression<DateTime>? date,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (careerId != null) 'career_id': careerId,
+      if (tieNo != null) 'tie_no': tieNo,
+      if (managerId != null) 'manager_id': managerId,
+      if (kind != null) 'kind': kind,
+      if (delta != null) 'delta': delta,
+      if (date != null) 'date': date,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ManagerTiesCompanion copyWith({
+    Value<int>? careerId,
+    Value<int>? tieNo,
+    Value<int>? managerId,
+    Value<String>? kind,
+    Value<int>? delta,
+    Value<DateTime>? date,
+    Value<int>? rowid,
+  }) {
+    return ManagerTiesCompanion(
+      careerId: careerId ?? this.careerId,
+      tieNo: tieNo ?? this.tieNo,
+      managerId: managerId ?? this.managerId,
+      kind: kind ?? this.kind,
+      delta: delta ?? this.delta,
+      date: date ?? this.date,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (careerId.present) {
+      map['career_id'] = Variable<int>(careerId.value);
+    }
+    if (tieNo.present) {
+      map['tie_no'] = Variable<int>(tieNo.value);
+    }
+    if (managerId.present) {
+      map['manager_id'] = Variable<int>(managerId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (delta.present) {
+      map['delta'] = Variable<int>(delta.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ManagerTiesCompanion(')
+          ..write('careerId: $careerId, ')
+          ..write('tieNo: $tieNo, ')
+          ..write('managerId: $managerId, ')
+          ..write('kind: $kind, ')
+          ..write('delta: $delta, ')
+          ..write('date: $date, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -17656,6 +19268,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CareerWorldsTable careerWorlds = $CareerWorldsTable(this);
   late final $CareerWorldTrophiesTable careerWorldTrophies =
       $CareerWorldTrophiesTable(this);
+  late final $WorldManagersTable worldManagers = $WorldManagersTable(this);
+  late final $ManagerSpellsTable managerSpells = $ManagerSpellsTable(this);
+  late final $ManagerTiesTable managerTies = $ManagerTiesTable(this);
+  late final Index managerSpellsNation = Index(
+    'manager_spells_nation',
+    'CREATE INDEX manager_spells_nation ON manager_spells (career_id, nation_id)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -17701,6 +19320,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     worldPackTrophies,
     careerWorlds,
     careerWorldTrophies,
+    worldManagers,
+    managerSpells,
+    managerTies,
+    managerSpellsNation,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -17955,6 +19578,27 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('career_world_trophies', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'careers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('world_managers', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'careers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('manager_spells', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'careers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('manager_ties', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -19492,6 +21136,60 @@ final class $$CareersTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$WorldManagersTable, List<WorldManagerRow>>
+  _worldManagersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.worldManagers,
+    aliasName: 'careers__id__world_managers__career_id',
+  );
+
+  $$WorldManagersTableProcessedTableManager get worldManagersRefs {
+    final manager = $$WorldManagersTableTableManager(
+      $_db,
+      $_db.worldManagers,
+    ).filter((f) => f.careerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_worldManagersRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ManagerSpellsTable, List<ManagerSpellRow>>
+  _managerSpellsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.managerSpells,
+    aliasName: 'careers__id__manager_spells__career_id',
+  );
+
+  $$ManagerSpellsTableProcessedTableManager get managerSpellsRefs {
+    final manager = $$ManagerSpellsTableTableManager(
+      $_db,
+      $_db.managerSpells,
+    ).filter((f) => f.careerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_managerSpellsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ManagerTiesTable, List<ManagerTieRow>>
+  _managerTiesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.managerTies,
+    aliasName: 'careers__id__manager_ties__career_id',
+  );
+
+  $$ManagerTiesTableProcessedTableManager get managerTiesRefs {
+    final manager = $$ManagerTiesTableTableManager(
+      $_db,
+      $_db.managerTies,
+    ).filter((f) => f.careerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_managerTiesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CareersTableFilterComposer
@@ -20439,6 +22137,81 @@ class $$CareersTableFilterComposer
           }) => $$CareerWorldTrophiesTableFilterComposer(
             $db: $db,
             $table: $db.careerWorldTrophies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> worldManagersRefs(
+    Expression<bool> Function($$WorldManagersTableFilterComposer f) f,
+  ) {
+    final $$WorldManagersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.worldManagers,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorldManagersTableFilterComposer(
+            $db: $db,
+            $table: $db.worldManagers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> managerSpellsRefs(
+    Expression<bool> Function($$ManagerSpellsTableFilterComposer f) f,
+  ) {
+    final $$ManagerSpellsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.managerSpells,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ManagerSpellsTableFilterComposer(
+            $db: $db,
+            $table: $db.managerSpells,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> managerTiesRefs(
+    Expression<bool> Function($$ManagerTiesTableFilterComposer f) f,
+  ) {
+    final $$ManagerTiesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.managerTies,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ManagerTiesTableFilterComposer(
+            $db: $db,
+            $table: $db.managerTies,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -21549,6 +23322,81 @@ class $$CareersTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> worldManagersRefs<T extends Object>(
+    Expression<T> Function($$WorldManagersTableAnnotationComposer a) f,
+  ) {
+    final $$WorldManagersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.worldManagers,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorldManagersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.worldManagers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> managerSpellsRefs<T extends Object>(
+    Expression<T> Function($$ManagerSpellsTableAnnotationComposer a) f,
+  ) {
+    final $$ManagerSpellsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.managerSpells,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ManagerSpellsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.managerSpells,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> managerTiesRefs<T extends Object>(
+    Expression<T> Function($$ManagerTiesTableAnnotationComposer a) f,
+  ) {
+    final $$ManagerTiesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.managerTies,
+      getReferencedColumn: (t) => t.careerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ManagerTiesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.managerTies,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CareersTableTableManager
@@ -21598,6 +23446,9 @@ class $$CareersTableTableManager
             bool playerHonoursRefs,
             bool careerWorldsRefs,
             bool careerWorldTrophiesRefs,
+            bool worldManagersRefs,
+            bool managerSpellsRefs,
+            bool managerTiesRefs,
           })
         > {
   $$CareersTableTableManager(_$AppDatabase db, $CareersTable table)
@@ -21762,6 +23613,9 @@ class $$CareersTableTableManager
                 playerHonoursRefs = false,
                 careerWorldsRefs = false,
                 careerWorldTrophiesRefs = false,
+                worldManagersRefs = false,
+                managerSpellsRefs = false,
+                managerTiesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -21798,6 +23652,9 @@ class $$CareersTableTableManager
                     if (playerHonoursRefs) db.playerHonours,
                     if (careerWorldsRefs) db.careerWorlds,
                     if (careerWorldTrophiesRefs) db.careerWorldTrophies,
+                    if (worldManagersRefs) db.worldManagers,
+                    if (managerSpellsRefs) db.managerSpells,
+                    if (managerTiesRefs) db.managerTies,
                   ],
                   addJoins:
                       <
@@ -22505,6 +24362,69 @@ class $$CareersTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (worldManagersRefs)
+                        await $_getPrefetchedData<
+                          CareerRow,
+                          $CareersTable,
+                          WorldManagerRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CareersTableReferences
+                              ._worldManagersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CareersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).worldManagersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.careerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (managerSpellsRefs)
+                        await $_getPrefetchedData<
+                          CareerRow,
+                          $CareersTable,
+                          ManagerSpellRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CareersTableReferences
+                              ._managerSpellsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CareersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).managerSpellsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.careerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (managerTiesRefs)
+                        await $_getPrefetchedData<
+                          CareerRow,
+                          $CareersTable,
+                          ManagerTieRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CareersTableReferences
+                              ._managerTiesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CareersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).managerTiesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.careerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -22559,6 +24479,9 @@ typedef $$CareersTableProcessedTableManager =
         bool playerHonoursRefs,
         bool careerWorldsRefs,
         bool careerWorldTrophiesRefs,
+        bool worldManagersRefs,
+        bool managerSpellsRefs,
+        bool managerTiesRefs,
       })
     >;
 typedef $$CompetitionsTableCreateCompanionBuilder =
@@ -36409,6 +38332,1161 @@ typedef $$CareerWorldTrophiesTableProcessedTableManager =
       CareerWorldTrophyRow,
       PrefetchHooks Function({bool careerId})
     >;
+typedef $$WorldManagersTableCreateCompanionBuilder =
+    WorldManagersCompanion Function({
+      required int careerId,
+      required int managerId,
+      required String name,
+      required String nationality,
+      required int birthYear,
+      required String style,
+      required String origin,
+      required DateTime enteredAt,
+      Value<DateTime?> retiredAt,
+      Value<int?> sourceId,
+      Value<int> rowid,
+    });
+typedef $$WorldManagersTableUpdateCompanionBuilder =
+    WorldManagersCompanion Function({
+      Value<int> careerId,
+      Value<int> managerId,
+      Value<String> name,
+      Value<String> nationality,
+      Value<int> birthYear,
+      Value<String> style,
+      Value<String> origin,
+      Value<DateTime> enteredAt,
+      Value<DateTime?> retiredAt,
+      Value<int?> sourceId,
+      Value<int> rowid,
+    });
+
+final class $$WorldManagersTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $WorldManagersTable, WorldManagerRow> {
+  $$WorldManagersTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CareersTable _careerIdTable(_$AppDatabase db) =>
+      db.careers.createAlias('world_managers__career_id__careers__id');
+
+  $$CareersTableProcessedTableManager get careerId {
+    final $_column = $_itemColumn<int>('career_id')!;
+
+    final manager = $$CareersTableTableManager(
+      $_db,
+      $_db.careers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_careerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$WorldManagersTableFilterComposer
+    extends Composer<_$AppDatabase, $WorldManagersTable> {
+  $$WorldManagersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get managerId => $composableBuilder(
+    column: $table.managerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get birthYear => $composableBuilder(
+    column: $table.birthYear,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get style => $composableBuilder(
+    column: $table.style,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get origin => $composableBuilder(
+    column: $table.origin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get enteredAt => $composableBuilder(
+    column: $table.enteredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get retiredAt => $composableBuilder(
+    column: $table.retiredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sourceId => $composableBuilder(
+    column: $table.sourceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CareersTableFilterComposer get careerId {
+    final $$CareersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableFilterComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WorldManagersTableOrderingComposer
+    extends Composer<_$AppDatabase, $WorldManagersTable> {
+  $$WorldManagersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get managerId => $composableBuilder(
+    column: $table.managerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get birthYear => $composableBuilder(
+    column: $table.birthYear,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get style => $composableBuilder(
+    column: $table.style,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get origin => $composableBuilder(
+    column: $table.origin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get enteredAt => $composableBuilder(
+    column: $table.enteredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get retiredAt => $composableBuilder(
+    column: $table.retiredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sourceId => $composableBuilder(
+    column: $table.sourceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CareersTableOrderingComposer get careerId {
+    final $$CareersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableOrderingComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WorldManagersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WorldManagersTable> {
+  $$WorldManagersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get managerId =>
+      $composableBuilder(column: $table.managerId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get nationality => $composableBuilder(
+    column: $table.nationality,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get birthYear =>
+      $composableBuilder(column: $table.birthYear, builder: (column) => column);
+
+  GeneratedColumn<String> get style =>
+      $composableBuilder(column: $table.style, builder: (column) => column);
+
+  GeneratedColumn<String> get origin =>
+      $composableBuilder(column: $table.origin, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get enteredAt =>
+      $composableBuilder(column: $table.enteredAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get retiredAt =>
+      $composableBuilder(column: $table.retiredAt, builder: (column) => column);
+
+  GeneratedColumn<int> get sourceId =>
+      $composableBuilder(column: $table.sourceId, builder: (column) => column);
+
+  $$CareersTableAnnotationComposer get careerId {
+    final $$CareersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WorldManagersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WorldManagersTable,
+          WorldManagerRow,
+          $$WorldManagersTableFilterComposer,
+          $$WorldManagersTableOrderingComposer,
+          $$WorldManagersTableAnnotationComposer,
+          $$WorldManagersTableCreateCompanionBuilder,
+          $$WorldManagersTableUpdateCompanionBuilder,
+          (WorldManagerRow, $$WorldManagersTableReferences),
+          WorldManagerRow,
+          PrefetchHooks Function({bool careerId})
+        > {
+  $$WorldManagersTableTableManager(_$AppDatabase db, $WorldManagersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WorldManagersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WorldManagersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WorldManagersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> careerId = const Value.absent(),
+                Value<int> managerId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> nationality = const Value.absent(),
+                Value<int> birthYear = const Value.absent(),
+                Value<String> style = const Value.absent(),
+                Value<String> origin = const Value.absent(),
+                Value<DateTime> enteredAt = const Value.absent(),
+                Value<DateTime?> retiredAt = const Value.absent(),
+                Value<int?> sourceId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorldManagersCompanion(
+                careerId: careerId,
+                managerId: managerId,
+                name: name,
+                nationality: nationality,
+                birthYear: birthYear,
+                style: style,
+                origin: origin,
+                enteredAt: enteredAt,
+                retiredAt: retiredAt,
+                sourceId: sourceId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int careerId,
+                required int managerId,
+                required String name,
+                required String nationality,
+                required int birthYear,
+                required String style,
+                required String origin,
+                required DateTime enteredAt,
+                Value<DateTime?> retiredAt = const Value.absent(),
+                Value<int?> sourceId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorldManagersCompanion.insert(
+                careerId: careerId,
+                managerId: managerId,
+                name: name,
+                nationality: nationality,
+                birthYear: birthYear,
+                style: style,
+                origin: origin,
+                enteredAt: enteredAt,
+                retiredAt: retiredAt,
+                sourceId: sourceId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WorldManagersTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({careerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (careerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.careerId,
+                                referencedTable: $$WorldManagersTableReferences
+                                    ._careerIdTable(db),
+                                referencedColumn: $$WorldManagersTableReferences
+                                    ._careerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$WorldManagersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WorldManagersTable,
+      WorldManagerRow,
+      $$WorldManagersTableFilterComposer,
+      $$WorldManagersTableOrderingComposer,
+      $$WorldManagersTableAnnotationComposer,
+      $$WorldManagersTableCreateCompanionBuilder,
+      $$WorldManagersTableUpdateCompanionBuilder,
+      (WorldManagerRow, $$WorldManagersTableReferences),
+      WorldManagerRow,
+      PrefetchHooks Function({bool careerId})
+    >;
+typedef $$ManagerSpellsTableCreateCompanionBuilder =
+    ManagerSpellsCompanion Function({
+      required int careerId,
+      required int spellNo,
+      required int managerId,
+      required int nationId,
+      required DateTime fromDate,
+      Value<DateTime?> toDate,
+      Value<String?> endReason,
+      required DateTime contractUntil,
+      Value<int> briefNet,
+      Value<int> rowid,
+    });
+typedef $$ManagerSpellsTableUpdateCompanionBuilder =
+    ManagerSpellsCompanion Function({
+      Value<int> careerId,
+      Value<int> spellNo,
+      Value<int> managerId,
+      Value<int> nationId,
+      Value<DateTime> fromDate,
+      Value<DateTime?> toDate,
+      Value<String?> endReason,
+      Value<DateTime> contractUntil,
+      Value<int> briefNet,
+      Value<int> rowid,
+    });
+
+final class $$ManagerSpellsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $ManagerSpellsTable, ManagerSpellRow> {
+  $$ManagerSpellsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CareersTable _careerIdTable(_$AppDatabase db) =>
+      db.careers.createAlias('manager_spells__career_id__careers__id');
+
+  $$CareersTableProcessedTableManager get careerId {
+    final $_column = $_itemColumn<int>('career_id')!;
+
+    final manager = $$CareersTableTableManager(
+      $_db,
+      $_db.careers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_careerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ManagerSpellsTableFilterComposer
+    extends Composer<_$AppDatabase, $ManagerSpellsTable> {
+  $$ManagerSpellsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get spellNo => $composableBuilder(
+    column: $table.spellNo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get managerId => $composableBuilder(
+    column: $table.managerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get nationId => $composableBuilder(
+    column: $table.nationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get fromDate => $composableBuilder(
+    column: $table.fromDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get toDate => $composableBuilder(
+    column: $table.toDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get endReason => $composableBuilder(
+    column: $table.endReason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get contractUntil => $composableBuilder(
+    column: $table.contractUntil,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get briefNet => $composableBuilder(
+    column: $table.briefNet,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CareersTableFilterComposer get careerId {
+    final $$CareersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableFilterComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ManagerSpellsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ManagerSpellsTable> {
+  $$ManagerSpellsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get spellNo => $composableBuilder(
+    column: $table.spellNo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get managerId => $composableBuilder(
+    column: $table.managerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get nationId => $composableBuilder(
+    column: $table.nationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get fromDate => $composableBuilder(
+    column: $table.fromDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get toDate => $composableBuilder(
+    column: $table.toDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get endReason => $composableBuilder(
+    column: $table.endReason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get contractUntil => $composableBuilder(
+    column: $table.contractUntil,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get briefNet => $composableBuilder(
+    column: $table.briefNet,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CareersTableOrderingComposer get careerId {
+    final $$CareersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableOrderingComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ManagerSpellsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ManagerSpellsTable> {
+  $$ManagerSpellsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get spellNo =>
+      $composableBuilder(column: $table.spellNo, builder: (column) => column);
+
+  GeneratedColumn<int> get managerId =>
+      $composableBuilder(column: $table.managerId, builder: (column) => column);
+
+  GeneratedColumn<int> get nationId =>
+      $composableBuilder(column: $table.nationId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get fromDate =>
+      $composableBuilder(column: $table.fromDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get toDate =>
+      $composableBuilder(column: $table.toDate, builder: (column) => column);
+
+  GeneratedColumn<String> get endReason =>
+      $composableBuilder(column: $table.endReason, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get contractUntil => $composableBuilder(
+    column: $table.contractUntil,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get briefNet =>
+      $composableBuilder(column: $table.briefNet, builder: (column) => column);
+
+  $$CareersTableAnnotationComposer get careerId {
+    final $$CareersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ManagerSpellsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ManagerSpellsTable,
+          ManagerSpellRow,
+          $$ManagerSpellsTableFilterComposer,
+          $$ManagerSpellsTableOrderingComposer,
+          $$ManagerSpellsTableAnnotationComposer,
+          $$ManagerSpellsTableCreateCompanionBuilder,
+          $$ManagerSpellsTableUpdateCompanionBuilder,
+          (ManagerSpellRow, $$ManagerSpellsTableReferences),
+          ManagerSpellRow,
+          PrefetchHooks Function({bool careerId})
+        > {
+  $$ManagerSpellsTableTableManager(_$AppDatabase db, $ManagerSpellsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ManagerSpellsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ManagerSpellsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ManagerSpellsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> careerId = const Value.absent(),
+                Value<int> spellNo = const Value.absent(),
+                Value<int> managerId = const Value.absent(),
+                Value<int> nationId = const Value.absent(),
+                Value<DateTime> fromDate = const Value.absent(),
+                Value<DateTime?> toDate = const Value.absent(),
+                Value<String?> endReason = const Value.absent(),
+                Value<DateTime> contractUntil = const Value.absent(),
+                Value<int> briefNet = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ManagerSpellsCompanion(
+                careerId: careerId,
+                spellNo: spellNo,
+                managerId: managerId,
+                nationId: nationId,
+                fromDate: fromDate,
+                toDate: toDate,
+                endReason: endReason,
+                contractUntil: contractUntil,
+                briefNet: briefNet,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int careerId,
+                required int spellNo,
+                required int managerId,
+                required int nationId,
+                required DateTime fromDate,
+                Value<DateTime?> toDate = const Value.absent(),
+                Value<String?> endReason = const Value.absent(),
+                required DateTime contractUntil,
+                Value<int> briefNet = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ManagerSpellsCompanion.insert(
+                careerId: careerId,
+                spellNo: spellNo,
+                managerId: managerId,
+                nationId: nationId,
+                fromDate: fromDate,
+                toDate: toDate,
+                endReason: endReason,
+                contractUntil: contractUntil,
+                briefNet: briefNet,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ManagerSpellsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({careerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (careerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.careerId,
+                                referencedTable: $$ManagerSpellsTableReferences
+                                    ._careerIdTable(db),
+                                referencedColumn: $$ManagerSpellsTableReferences
+                                    ._careerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ManagerSpellsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ManagerSpellsTable,
+      ManagerSpellRow,
+      $$ManagerSpellsTableFilterComposer,
+      $$ManagerSpellsTableOrderingComposer,
+      $$ManagerSpellsTableAnnotationComposer,
+      $$ManagerSpellsTableCreateCompanionBuilder,
+      $$ManagerSpellsTableUpdateCompanionBuilder,
+      (ManagerSpellRow, $$ManagerSpellsTableReferences),
+      ManagerSpellRow,
+      PrefetchHooks Function({bool careerId})
+    >;
+typedef $$ManagerTiesTableCreateCompanionBuilder =
+    ManagerTiesCompanion Function({
+      required int careerId,
+      required int tieNo,
+      required int managerId,
+      required String kind,
+      required int delta,
+      required DateTime date,
+      Value<int> rowid,
+    });
+typedef $$ManagerTiesTableUpdateCompanionBuilder =
+    ManagerTiesCompanion Function({
+      Value<int> careerId,
+      Value<int> tieNo,
+      Value<int> managerId,
+      Value<String> kind,
+      Value<int> delta,
+      Value<DateTime> date,
+      Value<int> rowid,
+    });
+
+final class $$ManagerTiesTableReferences
+    extends BaseReferences<_$AppDatabase, $ManagerTiesTable, ManagerTieRow> {
+  $$ManagerTiesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CareersTable _careerIdTable(_$AppDatabase db) =>
+      db.careers.createAlias('manager_ties__career_id__careers__id');
+
+  $$CareersTableProcessedTableManager get careerId {
+    final $_column = $_itemColumn<int>('career_id')!;
+
+    final manager = $$CareersTableTableManager(
+      $_db,
+      $_db.careers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_careerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ManagerTiesTableFilterComposer
+    extends Composer<_$AppDatabase, $ManagerTiesTable> {
+  $$ManagerTiesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get tieNo => $composableBuilder(
+    column: $table.tieNo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get managerId => $composableBuilder(
+    column: $table.managerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get delta => $composableBuilder(
+    column: $table.delta,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CareersTableFilterComposer get careerId {
+    final $$CareersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableFilterComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ManagerTiesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ManagerTiesTable> {
+  $$ManagerTiesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get tieNo => $composableBuilder(
+    column: $table.tieNo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get managerId => $composableBuilder(
+    column: $table.managerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get delta => $composableBuilder(
+    column: $table.delta,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CareersTableOrderingComposer get careerId {
+    final $$CareersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableOrderingComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ManagerTiesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ManagerTiesTable> {
+  $$ManagerTiesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get tieNo =>
+      $composableBuilder(column: $table.tieNo, builder: (column) => column);
+
+  GeneratedColumn<int> get managerId =>
+      $composableBuilder(column: $table.managerId, builder: (column) => column);
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<int> get delta =>
+      $composableBuilder(column: $table.delta, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  $$CareersTableAnnotationComposer get careerId {
+    final $$CareersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.careerId,
+      referencedTable: $db.careers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CareersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.careers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ManagerTiesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ManagerTiesTable,
+          ManagerTieRow,
+          $$ManagerTiesTableFilterComposer,
+          $$ManagerTiesTableOrderingComposer,
+          $$ManagerTiesTableAnnotationComposer,
+          $$ManagerTiesTableCreateCompanionBuilder,
+          $$ManagerTiesTableUpdateCompanionBuilder,
+          (ManagerTieRow, $$ManagerTiesTableReferences),
+          ManagerTieRow,
+          PrefetchHooks Function({bool careerId})
+        > {
+  $$ManagerTiesTableTableManager(_$AppDatabase db, $ManagerTiesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ManagerTiesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ManagerTiesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ManagerTiesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> careerId = const Value.absent(),
+                Value<int> tieNo = const Value.absent(),
+                Value<int> managerId = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<int> delta = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ManagerTiesCompanion(
+                careerId: careerId,
+                tieNo: tieNo,
+                managerId: managerId,
+                kind: kind,
+                delta: delta,
+                date: date,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int careerId,
+                required int tieNo,
+                required int managerId,
+                required String kind,
+                required int delta,
+                required DateTime date,
+                Value<int> rowid = const Value.absent(),
+              }) => ManagerTiesCompanion.insert(
+                careerId: careerId,
+                tieNo: tieNo,
+                managerId: managerId,
+                kind: kind,
+                delta: delta,
+                date: date,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ManagerTiesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({careerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (careerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.careerId,
+                                referencedTable: $$ManagerTiesTableReferences
+                                    ._careerIdTable(db),
+                                referencedColumn: $$ManagerTiesTableReferences
+                                    ._careerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ManagerTiesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ManagerTiesTable,
+      ManagerTieRow,
+      $$ManagerTiesTableFilterComposer,
+      $$ManagerTiesTableOrderingComposer,
+      $$ManagerTiesTableAnnotationComposer,
+      $$ManagerTiesTableCreateCompanionBuilder,
+      $$ManagerTiesTableUpdateCompanionBuilder,
+      (ManagerTieRow, $$ManagerTiesTableReferences),
+      ManagerTieRow,
+      PrefetchHooks Function({bool careerId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -36493,4 +39571,10 @@ class $AppDatabaseManager {
       $$CareerWorldsTableTableManager(_db, _db.careerWorlds);
   $$CareerWorldTrophiesTableTableManager get careerWorldTrophies =>
       $$CareerWorldTrophiesTableTableManager(_db, _db.careerWorldTrophies);
+  $$WorldManagersTableTableManager get worldManagers =>
+      $$WorldManagersTableTableManager(_db, _db.worldManagers);
+  $$ManagerSpellsTableTableManager get managerSpells =>
+      $$ManagerSpellsTableTableManager(_db, _db.managerSpells);
+  $$ManagerTiesTableTableManager get managerTies =>
+      $$ManagerTiesTableTableManager(_db, _db.managerTies);
 }

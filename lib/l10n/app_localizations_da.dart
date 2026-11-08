@@ -12010,6 +12010,13 @@ class AppLocalizationsDa extends AppLocalizations {
   String get backupSafetyShare => 'DEL';
 
   @override
+  String get saveUpgradeFailedTitle => 'Dit gemte spil kunne ikke opdateres';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Dit gemte spil kunne ikke opdateres. Intet er slettet, og en kopi fra før opdateringen ligger under Indstillinger, Sikkerhedskopier.';
+
+  @override
   String get backupCloudNoDetails => 'Detaljerne er stadig på vej.';
 
   @override

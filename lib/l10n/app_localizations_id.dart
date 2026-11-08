@@ -11911,6 +11911,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get backupSafetyShare => 'BAGIKAN';
 
   @override
+  String get saveUpgradeFailedTitle => 'Simpanan tidak bisa diperbarui';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Simpanan permainanmu tidak bisa diperbarui. Tidak ada yang dihapus, dan salinan dari sebelum pembaruan ada di Pengaturan, Cadangan.';
+
+  @override
   String get backupCloudNoDetails => 'Detailnya masih dalam perjalanan.';
 
   @override

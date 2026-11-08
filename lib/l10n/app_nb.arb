@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Kampens spiller",
   "ratingSemantics": "Karakter {rating}",
   "matchAverageRating": "Snittkarakter",
-  "matchLiveRatingsNote": "Karakterene følger kampen så langt og er endelige ved sluttsignalet."
+  "matchLiveRatingsNote": "Karakterene følger kampen så langt og er endelige ved sluttsignalet.",
+  "saveUpgradeFailedTitle": "Det lagrede spillet kunne ikke oppdateres",
+  "saveUpgradeFailedBody": "Det lagrede spillet ditt kunne ikke oppdateres. Ingenting er slettet, og en kopi fra før oppdateringen ligger under Innstillinger, Sikkerhetskopier."
 }

@@ -11926,6 +11926,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get backupSafetyShare => 'PAYLAŞ';
 
   @override
+  String get saveUpgradeFailedTitle => 'Kaydın güncellenemedi';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Kaydın güncellenemedi. Hiçbir şey silinmedi; güncellemeden önceki bir kopya Ayarlar, Yedekler bölümünde.';
+
+  @override
   String get backupCloudNoDetails => 'Ayrıntılar hâlâ yolda.';
 
   @override

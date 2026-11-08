@@ -4021,5 +4021,7 @@
   "ratingPlayerOfTheMatch": "Maçın adamı",
   "ratingSemantics": "Puan {rating}",
   "matchAverageRating": "Ortalama puan",
-  "matchLiveRatingsNote": "Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir."
+  "matchLiveRatingsNote": "Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir.",
+  "saveUpgradeFailedTitle": "Kaydın güncellenemedi",
+  "saveUpgradeFailedBody": "Kaydın güncellenemedi. Hiçbir şey silinmedi; güncellemeden önceki bir kopya Ayarlar, Yedekler bölümünde."
 }

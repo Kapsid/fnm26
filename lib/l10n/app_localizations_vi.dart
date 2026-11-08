@@ -11884,6 +11884,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get backupSafetyShare => 'CHIA SẺ';
 
   @override
+  String get saveUpgradeFailedTitle => 'Không thể cập nhật bản lưu';
+
+  @override
+  String get saveUpgradeFailedBody =>
+      'Không thể cập nhật bản lưu của bạn. Không có gì bị xóa, và một bản sao từ trước khi cập nhật nằm trong Cài đặt, Sao lưu.';
+
+  @override
   String get backupCloudNoDetails => 'Thông tin chi tiết vẫn đang được tải về.';
 
   @override
