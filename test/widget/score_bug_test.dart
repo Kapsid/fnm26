@@ -5,6 +5,7 @@ import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/country_flag.dart';
 
 /// The phone's Pitch mode score bug: one bar, the clock's stoppage set
 /// apart, and on a goal a banner that slides out from under it (shown at
@@ -26,9 +27,13 @@ void main() {
     int home = 2,
     int away = 1,
     String locale = 'en',
+    double width = 320,
+    String homeCode = 'CZE',
+    String awayCode = 'POR',
+    String clock = '90+3',
   }) async {
     tester.view
-      ..physicalSize = const Size(320, 400)
+      ..physicalSize = Size(width, 400)
       ..devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
@@ -39,18 +44,18 @@ void main() {
         supportedLocales: AppLocalizations.supportedLocales,
         home: MediaQuery(
           data: MediaQueryData(
-            size: const Size(320, 400),
+            size: Size(width, 400),
             disableAnimations: still,
           ),
           child: Scaffold(
             body: MatchScoreboard(
-              homeCode: 'CZE',
-              awayCode: 'POR',
+              homeCode: homeCode,
+              awayCode: awayCode,
               homeName: 'Czechia',
               awayName: 'Portugal',
               homeScore: home,
               awayScore: away,
-              clock: '90+3',
+              clock: clock,
               live: true,
               compact: true,
               homeColor: Colors.red,
@@ -90,7 +95,9 @@ void main() {
       );
     }
     expect(find.byKey(matchGoalBannerKey), findsNothing);
-    // A 24 px stripe in 4 px of margin above and below.
+    // Each side's flag, from the app's own flag art.
+    expect(find.byType(CountryFlag), findsNWidgets(2));
+    // A 28 px stripe in 2 px of margin above and below.
     expect(tester.getSize(find.byType(MatchScoreboard)).height, 32);
     expect(tester.takeException(), isNull);
   });
@@ -134,17 +141,69 @@ void main() {
     expect(inBoard(find.byType(FractionalTranslation)), findsNothing);
     expect(inBoard(find.byType(TweenAnimationBuilder<double>)), findsNothing);
     expect(inBoard(find.byType(Transform)), findsNothing);
+    expect(find.byKey(matchScoreSheenKey), findsNothing);
+    // The banner's flag is there all the same.
+    expect(find.byType(CountryFlag), findsNWidgets(3));
   });
+
+  // Every phone width, the longest codes, a double-digit score and a long
+  // stoppage, with and without the banner: never an overflow.
+  for (final width in [320.0, 360.0, 390.0, 430.0, 820.0]) {
+    testWidgets('${width.toInt()} px: long codes and a 10-10 still fit', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        width: width,
+        home: 10,
+        away: 10,
+        homeCode: 'WWWWW',
+        awayCode: 'MMMMM',
+        clock: '90+12',
+        event: goal,
+      );
+      await tester.pump(kGoalBannerSlide);
+      expect(tester.takeException(), isNull);
+      // The text itself, not the stand-in a flag with no art draws.
+      Finder label(String t) => find.byWidgetPredicate(
+        (w) =>
+            w is Text && w.data == t && w.style?.fontWeight != FontWeight.w500,
+      );
+      for (final t in ['WWWWW', 'MMMMM', '90', '+12']) {
+        final r = tester.getRect(label(t));
+        expect(r.left, greaterThanOrEqualTo(0), reason: t);
+        expect(r.right, lessThanOrEqualTo(width), reason: t);
+      }
+      // The codes stay on their own side of the plate.
+      final plate = tester.getRect(
+        find
+            .ancestor(of: find.text('10').first, matching: find.byType(Row))
+            .first,
+      );
+      expect(
+        tester.getRect(label('WWWWW')).right,
+        lessThanOrEqualTo(plate.left + 0.01),
+      );
+      expect(
+        tester.getRect(label('MMMMM')).left,
+        greaterThanOrEqualTo(plate.right - 0.01),
+      );
+      await tester.pump(kGoalFlashHold);
+    });
+  }
 
   testWidgets('with motion: the banner slides and the scorer pulses', (
     tester,
   ) async {
     await pump(tester, event: goal);
-    // The banner's slide and the home figure's pulse.
+    // The banner's slide, the home figure's pulse and the plate's sheen.
     expect(
       inBoard(find.byType(TweenAnimationBuilder<double>)),
-      findsNWidgets(2),
+      findsNWidgets(3),
     );
+    expect(find.byKey(matchScoreSheenKey), findsOneWidget);
+    // The banner carries the scorer's flag (the stripe's two and its own).
+    expect(find.byType(CountryFlag), findsNWidgets(3));
     await tester.pump(const Duration(milliseconds: 350));
     final scale = tester
         .widget<Transform>(
