@@ -8358,6 +8358,15 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchSubstitutes => 'NÁHRADNÍCI';
 
   @override
+  String get matchLineupsViewPitch => 'Hřiště';
+
+  @override
+  String get matchLineupsViewList => 'Seznam';
+
+  @override
+  String get matchLineupsCameOn => 'Přišli z lavičky';
+
+  @override
   String get matchPlayerOfTheMatch => 'HRÁČ ZÁPASU';
 
   @override

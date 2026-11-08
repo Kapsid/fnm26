@@ -8123,6 +8123,15 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchSubstitutes => 'PEMAIN SIMPANAN';
 
   @override
+  String get matchLineupsViewPitch => 'Padang';
+
+  @override
+  String get matchLineupsViewList => 'Senarai';
+
+  @override
+  String get matchLineupsCameOn => 'Masuk padang';
+
+  @override
   String get matchPlayerOfTheMatch => 'PEMAIN TERBAIK PERLAWANAN';
 
   @override

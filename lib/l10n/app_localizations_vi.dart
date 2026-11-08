@@ -8055,6 +8055,15 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchSubstitutes => 'DỰ BỊ';
 
   @override
+  String get matchLineupsViewPitch => 'Sân';
+
+  @override
+  String get matchLineupsViewList => 'Danh sách';
+
+  @override
+  String get matchLineupsCameOn => 'Vào sân';
+
+  @override
   String get matchPlayerOfTheMatch => 'CẦU THỦ HAY NHẤT TRẬN';
 
   @override

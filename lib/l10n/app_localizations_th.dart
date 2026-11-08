@@ -8033,6 +8033,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchSubstitutes => 'ตัวสำรอง';
 
   @override
+  String get matchLineupsViewPitch => 'สนาม';
+
+  @override
+  String get matchLineupsViewList => 'รายการ';
+
+  @override
+  String get matchLineupsCameOn => 'ลงเปลี่ยนตัว';
+
+  @override
   String get matchPlayerOfTheMatch => 'ผู้เล่นยอดเยี่ยมประจำเกม';
 
   @override

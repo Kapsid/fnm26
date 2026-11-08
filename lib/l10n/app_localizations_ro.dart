@@ -8468,6 +8468,15 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchSubstitutes => 'REZERVE';
 
   @override
+  String get matchLineupsViewPitch => 'Teren';
+
+  @override
+  String get matchLineupsViewList => 'Listă';
+
+  @override
+  String get matchLineupsCameOn => 'Intrați pe teren';
+
+  @override
   String get matchPlayerOfTheMatch => 'OMUL MECIULUI';
 
   @override

@@ -8088,6 +8088,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchSubstitutes => 'PEMAIN CADANGAN';
 
   @override
+  String get matchLineupsViewPitch => 'Lapangan';
+
+  @override
+  String get matchLineupsViewList => 'Daftar';
+
+  @override
+  String get matchLineupsCameOn => 'Masuk';
+
+  @override
   String get matchPlayerOfTheMatch => 'PEMAIN TERBAIK LAGA';
 
   @override

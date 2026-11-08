@@ -378,6 +378,8 @@ class TacticsPitch extends StatelessWidget {
     this.deadSlots = const {},
     this.energyByPlayer = const {},
     this.cardsByPlayer = const {},
+    this.ratingByPlayer = const {},
+    this.motmId,
     this.teamColors,
     this.fullBacks = FullBackPushes.neutral,
     this.onCycleFullBack,
@@ -422,6 +424,13 @@ class TacticsPitch extends StatelessWidget {
   /// match so the manager can see who's tiring. Empty (the default) hides it —
   /// e.g. on the pre-match tactics screen where everyone is fresh.
   final Map<int, int> energyByPlayer;
+
+  /// Each player's match rating, shown on the bottom of his disc (in place
+  /// of the energy) after the final whistle. Empty (the default) hides it.
+  final Map<int, double> ratingByPlayer;
+
+  /// The player of the match, whose rating wears the star; null for none.
+  final int? motmId;
 
   /// The card each player is carrying in a live match — see [cardStatusFor],
   /// which the substitution lists read too, so the pitch and the lists can
@@ -678,6 +687,8 @@ class TacticsPitch extends StatelessWidget {
                         deadSlots: deadSlots,
                         keeperSlot: keeperSlot,
                         energy: energyByPlayer[lineup[slot]],
+                        rating: ratingByPlayer[lineup[slot]],
+                        motm: lineup[slot] != null && lineup[slot] == motmId,
                         card: cardsByPlayer[lineup[slot]],
                         teamColors: teamColors,
                         fullBackSide: showArrow ? side : null,
@@ -895,6 +906,8 @@ class _PlayerNode extends StatelessWidget {
     this.deadSlots = const {},
     this.keeperSlot = -1,
     this.energy,
+    this.rating,
+    this.motm = false,
     this.card,
     this.fullBackSide,
     this.push,
@@ -935,6 +948,13 @@ class _PlayerNode extends StatelessWidget {
   /// The player's live remaining energy (0–100) during a match, or null when
   /// energy isn't being tracked (pre-match) — shown as a small gauge on the node.
   final int? energy;
+
+  /// His match rating after the final whistle, shown in place of [energy];
+  /// null when there is none to show.
+  final double? rating;
+
+  /// Whether he is the player of the match (his rating wears the star).
+  final bool motm;
 
   /// The card he is carrying in a live match, or null when he has none.
   final MatchCard? card;
@@ -1239,6 +1259,12 @@ class _PlayerNode extends StatelessWidget {
                   background: absentColor.withValues(alpha: 0.18),
                   maxWidth: metrics.node,
                 ),
+              )
+            else if (p != null && rating != null)
+              Positioned(
+                key: ValueKey('pitchRating$slot'),
+                bottom: _energyLift - 2,
+                child: RatingBadge(rating!, compact: true, motm: motm),
               )
             else if (p != null && energy != null)
               Positioned(

@@ -8289,6 +8289,15 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchSubstitutes => 'REZERWOWI';
 
   @override
+  String get matchLineupsViewPitch => 'Boisko';
+
+  @override
+  String get matchLineupsViewList => 'Lista';
+
+  @override
+  String get matchLineupsCameOn => 'Weszli z ławki';
+
+  @override
   String get matchPlayerOfTheMatch => 'ZAWODNIK MECZU';
 
   @override

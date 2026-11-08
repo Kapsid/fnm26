@@ -8249,6 +8249,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchSubstitutes => 'ERSATZBANK';
 
   @override
+  String get matchLineupsViewPitch => 'Spielfeld';
+
+  @override
+  String get matchLineupsViewList => 'Liste';
+
+  @override
+  String get matchLineupsCameOn => 'Eingewechselt';
+
+  @override
   String get matchPlayerOfTheMatch => 'SPIELER DES SPIELS';
 
   @override

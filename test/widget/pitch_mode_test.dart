@@ -31,6 +31,7 @@ import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/app_card.dart';
 import 'package:fnm/shared/widgets/primary_button.dart';
+import 'package:fnm/shared/widgets/rating_badge.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/fixtures.dart';
@@ -1186,6 +1187,8 @@ void main() {
   _ownerFeedbackTests();
   _fullTimeSwitchTests();
   _themeTests();
+  _fullTimeLineupTests();
+  _cameOnTest();
 }
 
 // Task 15c: the owner's device feedback, checked on the phone screen.
@@ -1242,6 +1245,159 @@ int _cleanSalt(MatchPreview p) => _salt(
         (e.type == MatchEventType.goal && e.minute >= 80),
   ),
 );
+
+/// Plays a Pitch-mode match out to the whistle: on to half time, through
+/// its Continue, then to the end.
+Future<void> _playPitchOut(WidgetTester tester) async {
+  final pb = _pb(tester);
+  await _seek(tester, pb.halfTime - const Duration(milliseconds: 100));
+  await _until(tester, () => find.byType(HalfTimePrompt).evaluate().isNotEmpty);
+  await tester.tap(
+    find.descendant(
+      of: find.byType(HalfTimePrompt),
+      matching: find.text(enL.matchContinue),
+    ),
+  );
+  await tester.pump();
+  await _until(tester, () => _clock(tester).playing);
+  await _seek(tester, pb.pacer.total - const Duration(milliseconds: 200));
+  await _until(tester, () => _ftContinueLive(tester));
+}
+
+void _fullTimeLineupTests() {
+  for (final (label, size, ff) in [
+    ('phone', const Size(400, 2000), FormFactor.phone),
+    ('tablet', const Size(1194, 834), FormFactor.tablet),
+  ]) {
+    testWidgets('$label: after the whistle the line-ups are on the pitch '
+        'with their marks, both sides, the list a tap away', (tester) async {
+      final preview = _preview();
+      final salt = _cleanSalt(preview);
+      await _pump(
+        tester,
+        preview: preview,
+        salt: salt,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        size: size,
+        formFactor: ff,
+      );
+      await _until(tester, () => _ready(tester));
+      // Live: the plain list, no pitch.
+      expect(find.byType(MatchFullTimeLineups), findsNothing);
+      await _playPitchOut(tester);
+      await tester.pump(const Duration(seconds: 3));
+      await tester.tap(find.text(enL.matchTabLineups).first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(MatchFullTimeLineups), findsOneWidget);
+      final r = _result(tester);
+      final marks = {for (final x in r.ratings) x.playerId: x};
+      // The manager's eleven, each with his mark.
+      for (var slot = 0; slot < 11; slot++) {
+        expect(
+          find.byKey(ValueKey('pitchRating$slot')),
+          findsOneWidget,
+          reason: 'slot $slot',
+        );
+      }
+      expect(
+        marks.containsKey(preview.homeTeam.xi.first.id),
+        isTrue,
+      );
+      // The other side: its eleven, with theirs.
+      await tester.tap(
+        find.byKey(MatchFullTimeLineups.sideKey(preview.awayTeam.nationId)),
+      );
+      await tester.pump();
+      expect(find.byKey(const ValueKey('pitchRating0')), findsOneWidget);
+      // The player of the match wears the star, on whichever side he is.
+      final motm = r.manOfTheMatch?.playerId;
+      if (motm != null) {
+        final home = preview.homeTeam.xi.any((p) => p.id == motm);
+        if (home) {
+          await tester.tap(
+            find.byKey(
+              MatchFullTimeLineups.sideKey(preview.homeTeam.nationId),
+            ),
+          );
+          await tester.pump();
+        }
+        expect(
+          find.descendant(
+            of: find.byKey(MatchFullTimeLineups.pitchKey),
+            matching: find.byWidgetPredicate(
+              (w) => w is RatingBadge && w.motm,
+            ),
+          ),
+          findsOneWidget,
+        );
+      }
+      // And the list, as it was.
+      await tester.tap(find.byKey(MatchFullTimeLineups.listToggleKey));
+      await tester.pump();
+      expect(find.byType(MatchLineups), findsOneWidget);
+      expect(find.byKey(MatchFullTimeLineups.pitchKey), findsNothing);
+      await tester.pump(const Duration(seconds: 6));
+    });
+  }
+}
+
+void _cameOnTest() {
+  testWidgets('a sub who came on is in the row under the pitch, his mark '
+      'with him; the player of the match is starred', (tester) async {
+    final p = _preview();
+    final sub = p.bench.first;
+    final away = p.awayTeam;
+    FullTimeSide side(MatchTeam t, List<Player> on) => (
+      nationId: t.nationId,
+      code: t.nationId == p.homeTeam.nationId ? 'CZE' : 'POR',
+      team: t,
+      cameOn: on,
+      kit: null,
+      cards: const {},
+    );
+    final ratings = {
+      for (final x in [...p.homeTeam.xi, ...away.xi]) x.id: 6.5,
+      sub.id: 7.8,
+    };
+    tester.view
+      ..physicalSize = const Size(400, 1400)
+      ..devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.theme,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: MatchFullTimeLineups(
+            home: side(p.homeTeam, [sub]),
+            away: side(away, const []),
+            ratings: ratings,
+            motmId: sub.id,
+            playerNationId: p.homeTeam.nationId,
+            list: const SizedBox(),
+          ),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.text(enL.matchLineupsCameOn), findsOneWidget);
+    final chip = find.byKey(MatchFullTimeLineups.cameOnKey(sub.id));
+    expect(chip, findsOneWidget);
+    final badge = tester.widget<RatingBadge>(
+      find.descendant(of: chip, matching: find.byType(RatingBadge)),
+    );
+    expect(badge.rating, 7.8);
+    expect(badge.motm, isTrue);
+    expect(find.textContaining(enL.ratingPlayerOfTheMatch), findsOneWidget);
+    // The other side made no change: no row.
+    await tester.tap(find.byKey(MatchFullTimeLineups.sideKey(away.nationId)));
+    await tester.pump();
+    expect(find.text(enL.matchLineupsCameOn), findsNothing);
+  });
+}
 
 void _themeTests() {
   for (final (round, kind) in <(String?, ScoreBugThemeKind?)>[

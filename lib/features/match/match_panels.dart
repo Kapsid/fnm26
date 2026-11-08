@@ -2200,3 +2200,333 @@ class _PitchCommentaryFeedState extends State<PitchCommentaryFeed> {
     );
   }
 }
+
+/// One side for [MatchFullTimeLineups]: the team as it kicked off, who came
+/// off the bench, and how it is drawn.
+@visibleForTesting
+typedef FullTimeSide = ({
+  int nationId,
+  String code,
+  MatchTeam team,
+  List<Player> cameOn,
+  List<Color>? kit,
+  Map<int, MatchCard> cards,
+});
+
+/// The line-ups after the final whistle: one side at a time on the pitch, in
+/// the shape it kicked off in, each man's match rating on his disc (the
+/// player of the match starred), and whoever came off the bench in a row
+/// under it with theirs. A toggle swaps the two sides, another swaps the
+/// pitch for the full list ([list], the live line-ups as they stood).
+///
+/// The pitch is the tactics pitch the tablet's YOUR XI draws, read-only.
+@visibleForTesting
+class MatchFullTimeLineups extends StatefulWidget {
+  const MatchFullTimeLineups({
+    required this.home,
+    required this.away,
+    required this.ratings,
+    required this.motmId,
+    required this.playerNationId,
+    required this.list,
+    super.key,
+  });
+
+  final FullTimeSide home;
+  final FullTimeSide away;
+  final Map<int, double> ratings;
+  final int? motmId;
+
+  /// The manager's side, shown first.
+  final int playerNationId;
+
+  /// The list view, behind the toggle.
+  final Widget list;
+
+  static const Key pitchKey = Key('match.ftLineups.pitch');
+  static const Key listToggleKey = Key('match.ftLineups.list');
+  static const Key pitchToggleKey = Key('match.ftLineups.pitchToggle');
+  static Key sideKey(int nationId) => ValueKey(('ftLineupsSide', nationId));
+  static Key cameOnKey(int playerId) => ValueKey(('ftCameOn', playerId));
+
+  @override
+  State<MatchFullTimeLineups> createState() => _MatchFullTimeLineupsState();
+}
+
+class _MatchFullTimeLineupsState extends State<MatchFullTimeLineups> {
+  late int _side = widget.playerNationId == widget.away.nationId
+      ? widget.away.nationId
+      : widget.home.nationId;
+  bool _asList = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final side = _side == widget.away.nationId ? widget.away : widget.home;
+    final toggles = Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.md,
+        0,
+      ),
+      child: Row(
+        children: [
+          if (!_asList)
+            for (final s in [widget.home, widget.away]) ...[
+              _Toggle(
+                key: MatchFullTimeLineups.sideKey(s.nationId),
+                label: nationCodeLabel(s.code),
+                selected: s.nationId == _side,
+                onTap: () => setState(() => _side = s.nationId),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+            ],
+          const Spacer(),
+          _Toggle(
+            key: MatchFullTimeLineups.pitchToggleKey,
+            label: l.matchLineupsViewPitch,
+            iconOnly: true,
+            icon: Icons.sports_soccer_rounded,
+            selected: !_asList,
+            onTap: () => setState(() => _asList = false),
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          _Toggle(
+            key: MatchFullTimeLineups.listToggleKey,
+            label: l.matchLineupsViewList,
+            iconOnly: true,
+            icon: Icons.format_list_bulleted_rounded,
+            selected: _asList,
+            onTap: () => setState(() => _asList = true),
+          ),
+        ],
+      ),
+    );
+    if (_asList) {
+      return Column(
+        children: [
+          toggles,
+          Expanded(child: widget.list),
+        ],
+      );
+    }
+    final team = side.team;
+    final byId = {
+      for (final p in team.xi) p.id: p,
+      for (final p in side.cameOn) p.id: p,
+    };
+    final motm = byId[widget.motmId];
+    return ListView(
+      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+      children: [
+        toggles,
+        Padding(
+          padding: const EdgeInsets.all(AppSpacing.sm),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: AspectRatio(
+                aspectRatio: 3 / 4,
+                child: IgnorePointer(
+                  child: TacticsPitch(
+                    key: MatchFullTimeLineups.pitchKey,
+                    formation: team.formation,
+                    instructions: team.instructions,
+                    fullBacks: team.fullBacks,
+                    switches: team.switches,
+                    lineup: [for (final p in team.xi) p.id],
+                    byId: byId,
+                    teamColors: side.kit,
+                    cardsByPlayer: side.cards,
+                    ratingByPlayer: widget.ratings,
+                    motmId: widget.motmId,
+                    onTapSlot: (_) {},
+                    onSwap: (_, _) {},
+                    onBenchIn: (_, _) {},
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        if (side.cameOn.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.matchLineupsCameOn,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.xs,
+                  children: [
+                    for (final p in side.cameOn)
+                      _CameOnChip(
+                        key: MatchFullTimeLineups.cameOnKey(p.id),
+                        player: p,
+                        rating: widget.ratings[p.id],
+                        motm: p.id == widget.motmId,
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        if (motm != null && widget.ratings[motm.id] != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.md,
+              AppSpacing.md,
+              AppSpacing.md,
+              0,
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.star_rounded,
+                  size: 16,
+                  color: AppColors.warning,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Flexible(
+                  child: Text(
+                    '${l.ratingPlayerOfTheMatch}: ${motm.name}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// A small pill choice for [MatchFullTimeLineups]' two toggles.
+class _Toggle extends StatelessWidget {
+  const _Toggle({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.icon,
+    this.iconOnly = false,
+    super.key,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  final IconData? icon;
+
+  /// Just the icon, [label] as its tooltip: the narrow tablet column has
+  /// no room for the words beside the two sides' codes.
+  final bool iconOnly;
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = selected ? AppColors.onPrimary : AppColors.onSurfaceVariant;
+    final icon = this.icon;
+    if (iconOnly && icon != null) {
+      return Tooltip(
+        message: label,
+        child: Semantics(
+          button: true,
+          selected: selected,
+          label: label,
+          excludeSemantics: true,
+          child: Material(
+            color: selected
+                ? AppColors.primary
+                : AppColors.surfaceContainerHigh,
+            borderRadius: AppRadii.baseAll,
+            child: InkWell(
+              borderRadius: AppRadii.baseAll,
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.all(7),
+                child: Icon(icon, size: 16, color: fg),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return Material(
+      color: selected ? AppColors.primary : AppColors.surfaceContainerHigh,
+      borderRadius: AppRadii.baseAll,
+      child: InkWell(
+        borderRadius: AppRadii.baseAll,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: 14, color: fg),
+                const SizedBox(width: 4),
+              ],
+              Text(
+                label,
+                maxLines: 1,
+                style: AppTypography.labelMedium.copyWith(color: fg),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A substitute who came on: his place, his surname and his rating.
+class _CameOnChip extends StatelessWidget {
+  const _CameOnChip({
+    required this.player,
+    required this.rating,
+    required this.motm,
+    super.key,
+  });
+
+  final Player player;
+  final double? rating;
+  final bool motm;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = rating;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainer,
+        borderRadius: AppRadii.baseAll,
+        border: Border.all(color: AppColors.outlineVariant),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TacticalChip(player.position.label),
+          const SizedBox(width: 6),
+          Text(
+            surnameOf(player.name),
+            maxLines: 1,
+            style: AppTypography.bodySmall,
+          ),
+          if (r != null) ...[
+            const SizedBox(width: 6),
+            RatingBadge(r, compact: true, motm: motm),
+          ],
+        ],
+      ),
+    );
+  }
+}

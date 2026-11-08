@@ -8242,6 +8242,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchSubstitutes => 'SUPLENTES';
 
   @override
+  String get matchLineupsViewPitch => 'Campo';
+
+  @override
+  String get matchLineupsViewList => 'Lista';
+
+  @override
+  String get matchLineupsCameOn => 'Entraron';
+
+  @override
   String get matchPlayerOfTheMatch => 'MEJOR JUGADOR DEL PARTIDO';
 
   @override

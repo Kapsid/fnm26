@@ -8107,6 +8107,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchSubstitutes => 'स्थानापन्न';
 
   @override
+  String get matchLineupsViewPitch => 'मैदान';
+
+  @override
+  String get matchLineupsViewList => 'सूची';
+
+  @override
+  String get matchLineupsCameOn => 'मैदान में उतरे';
+
+  @override
   String get matchPlayerOfTheMatch => 'मैन ऑफ़ द मैच';
 
   @override

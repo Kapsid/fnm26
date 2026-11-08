@@ -8397,6 +8397,15 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchSubstitutes => 'KLUPA';
 
   @override
+  String get matchLineupsViewPitch => 'Teren';
+
+  @override
+  String get matchLineupsViewList => 'Popis';
+
+  @override
+  String get matchLineupsCameOn => 'Ušli s klupe';
+
+  @override
   String get matchPlayerOfTheMatch => 'IGRAČ UTAKMICE';
 
   @override

@@ -50,7 +50,7 @@ import 'package:fnm/features/tactics/in_match_tactics.dart';
 import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart'
-    show energyColor, TacticsPitch;
+    show energyColor, surnameOf, TacticsPitch;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -2036,7 +2036,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 added: _added,
               );
             }
-            final lineups = MatchLineups(
+            final lineupList = MatchLineups(
               home: preview.playerIsHome
                   ? _currentXi(preview)
                   : preview.homeTeam.xi,
@@ -2059,6 +2059,49 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               motmId: ft ? r.manOfTheMatch?.playerId : null,
               live: !ft,
             );
+            // After the whistle: each side on the pitch with its marks, the
+            // list a toggle away.
+            FullTimeSide side(MatchTeam team, List<Player> bench) {
+              final n = preview.nations[team.nationId];
+              final byId = {for (final p in bench) p.id: p};
+              return (
+                nationId: team.nationId,
+                code: code(team.nationId),
+                team: team,
+                cameOn: [
+                  for (final e in subsOf(team.nationId)) ?byId[e.playerId],
+                ],
+                kit: n == null
+                    ? null
+                    : KitColors.discFill(n.primaryColor, n.secondaryColor),
+                cards: cardStatusFor(
+                  r.events,
+                  nationId: team.nationId,
+                  upToMinute: 200,
+                ),
+              );
+            }
+
+            final Widget lineups = ft
+                ? MatchFullTimeLineups(
+                    home: side(
+                      preview.homeTeam,
+                      preview.playerIsHome
+                          ? preview.bench
+                          : preview.opponentBench,
+                    ),
+                    away: side(
+                      preview.awayTeam,
+                      preview.playerIsHome
+                          ? preview.opponentBench
+                          : preview.bench,
+                    ),
+                    ratings: lineupRatings,
+                    motmId: r.manOfTheMatch?.playerId,
+                    playerNationId: preview.playerNationId,
+                    list: lineupList,
+                  )
+                : lineupList;
             final overlays = <Widget>[
               if (_goalFlash != null && !bug)
                 _GoalFlash(

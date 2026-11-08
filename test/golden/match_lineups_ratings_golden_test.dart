@@ -4,6 +4,8 @@ import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 
 import '../helpers/lineups_fixture.dart';
 import '../helpers/seeded_save.dart';
@@ -53,6 +55,77 @@ void main() {
       expect(tester.takeException(), isNull);
       expect(find.byType(MatchLineups), findsOneWidget);
       await expectAppGolden('goldens/match_lineups_${f.name}.png');
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
+  // After the final whistle: the manager's side on the pitch with each
+  // man's mark. Played out on the 2D TV (its clock is the one a test can
+  // jump to the end of), then, on a tablet, watched back on the Timeline,
+  // whose line-ups column is the wider.
+  for (final (f, size) in [
+    (FormFactor.phone, const Size(390, 1500)),
+    (FormFactor.tablet, kTabletSize),
+  ]) {
+    testWidgets('match screen Lineups at full time (${f.name})', (
+      tester,
+    ) async {
+      final save = await seedSave(tester, formFactor: f);
+      await tester.runAsync(
+        () => const MatchViewModeStore().save(MatchViewMode.pitch),
+      );
+      final warm = save.container.listen(
+        matchPreviewProvider(save.careerId),
+        (_, _) {},
+      );
+      addTearDown(warm.close);
+      await tester.runAsync(
+        () => save.container.read(matchPreviewProvider(save.careerId).future),
+      );
+      await pumpRoute(
+        tester,
+        save,
+        '${Routes.match}?careerId=${save.careerId}',
+        size: size,
+      );
+      final screen = tester.state(find.byType(MatchScreen)) as MatchScreenProbe;
+      final continueButton = find.byWidgetPredicate(
+        (w) =>
+            w is PrimaryButton &&
+            w.label == enL.matchContinue &&
+            w.onPressed != null,
+      );
+      // On to half time and through its Continue, then to the end.
+      final half = find.descendant(
+        of: find.byType(HalfTimePrompt),
+        matching: find.text(enL.matchContinue),
+      );
+      final pb = screen.pitchMode.playback!;
+      screen.seekPitch(pb.halfTime - const Duration(milliseconds: 100));
+      for (var i = 0; i < 400 && half.evaluate().isEmpty; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await tester.tap(half);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      screen.seekPitch(pb.pacer.total - const Duration(milliseconds: 200));
+      for (var i = 0; i < 400 && continueButton.evaluate().isEmpty; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      expect(continueButton, findsOneWidget, reason: 'full time');
+      if (f == FormFactor.tablet) {
+        screen.switchMode();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+      }
+      await tester.pump(const Duration(seconds: 3));
+      await tester.tap(find.text(enL.matchTabLineups).first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(MatchFullTimeLineups), findsOneWidget);
+      expect(find.byKey(MatchFullTimeLineups.pitchKey), findsOneWidget);
+      await expectAppGolden('goldens/match_lineups_full_time_${f.name}.png');
       await tester.pumpWidget(const SizedBox());
     });
   }

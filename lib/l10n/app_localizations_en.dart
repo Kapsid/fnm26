@@ -8212,6 +8212,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchSubstitutes => 'SUBSTITUTES';
 
   @override
+  String get matchLineupsViewPitch => 'Pitch';
+
+  @override
+  String get matchLineupsViewList => 'List';
+
+  @override
+  String get matchLineupsCameOn => 'Came on';
+
+  @override
   String get matchPlayerOfTheMatch => 'PLAYER OF THE MATCH';
 
   @override

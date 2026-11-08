@@ -8106,6 +8106,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchSubstitutes => 'YEDEKLER';
 
   @override
+  String get matchLineupsViewPitch => 'Saha';
+
+  @override
+  String get matchLineupsViewList => 'Liste';
+
+  @override
+  String get matchLineupsCameOn => 'Oyuna girenler';
+
+  @override
   String get matchPlayerOfTheMatch => 'MAÇIN ADAMI';
 
   @override

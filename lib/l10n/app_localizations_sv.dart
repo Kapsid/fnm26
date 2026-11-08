@@ -8177,6 +8177,15 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchSubstitutes => 'AVBYTARE';
 
   @override
+  String get matchLineupsViewPitch => 'Plan';
+
+  @override
+  String get matchLineupsViewList => 'Lista';
+
+  @override
+  String get matchLineupsCameOn => 'Inbytta';
+
+  @override
   String get matchPlayerOfTheMatch => 'MATCHENS BÄSTE SPELARE';
 
   @override

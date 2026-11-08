@@ -8186,6 +8186,15 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchSubstitutes => 'RESERVER';
 
   @override
+  String get matchLineupsViewPitch => 'Bane';
+
+  @override
+  String get matchLineupsViewList => 'Liste';
+
+  @override
+  String get matchLineupsCameOn => 'Byttet inn';
+
+  @override
   String get matchPlayerOfTheMatch => 'KAMPENS SPILLER';
 
   @override

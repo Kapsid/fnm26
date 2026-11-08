@@ -8276,6 +8276,15 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchSubstitutes => 'РЕЗЕРВИ';
 
   @override
+  String get matchLineupsViewPitch => 'Терен';
+
+  @override
+  String get matchLineupsViewList => 'Списък';
+
+  @override
+  String get matchLineupsCameOn => 'Влезли от пейката';
+
+  @override
   String get matchPlayerOfTheMatch => 'ИГРАЧ НА МАЧА';
 
   @override

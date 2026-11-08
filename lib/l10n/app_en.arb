@@ -13075,6 +13075,18 @@
   "@matchSubstitutes": {
     "description": "Live match: bench heading."
   },
+  "matchLineupsViewPitch": "Pitch",
+  "@matchLineupsViewPitch": {
+    "description": "Full-time line-ups: toggle showing a side on the pitch with its ratings."
+  },
+  "matchLineupsViewList": "List",
+  "@matchLineupsViewList": {
+    "description": "Full-time line-ups: toggle showing the line-ups as a list."
+  },
+  "matchLineupsCameOn": "Came on",
+  "@matchLineupsCameOn": {
+    "description": "Full-time line-ups: heading over the substitutes who came on, with their ratings."
+  },
   "matchPlayerOfTheMatch": "PLAYER OF THE MATCH",
   "@matchPlayerOfTheMatch": {
     "description": "Live match: man-of-the-match heading."

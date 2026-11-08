@@ -8226,6 +8226,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchSubstitutes => 'PANCHINA';
 
   @override
+  String get matchLineupsViewPitch => 'Campo';
+
+  @override
+  String get matchLineupsViewList => 'Elenco';
+
+  @override
+  String get matchLineupsCameOn => 'Entrati';
+
+  @override
   String get matchPlayerOfTheMatch => 'MIGLIORE IN CAMPO';
 
   @override

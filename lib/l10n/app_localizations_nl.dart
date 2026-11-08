@@ -8231,6 +8231,15 @@ class AppLocalizationsNl extends AppLocalizations {
   String get matchSubstitutes => 'WISSELSPELERS';
 
   @override
+  String get matchLineupsViewPitch => 'Veld';
+
+  @override
+  String get matchLineupsViewList => 'Lijst';
+
+  @override
+  String get matchLineupsCameOn => 'Ingevallen';
+
+  @override
   String get matchPlayerOfTheMatch => 'MAN VAN DE WEDSTRIJD';
 
   @override

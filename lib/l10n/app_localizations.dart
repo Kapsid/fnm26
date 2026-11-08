@@ -12463,6 +12463,24 @@ abstract class AppLocalizations {
   /// **'SUBSTITUTES'**
   String get matchSubstitutes;
 
+  /// Full-time line-ups: toggle showing a side on the pitch with its ratings.
+  ///
+  /// In en, this message translates to:
+  /// **'Pitch'**
+  String get matchLineupsViewPitch;
+
+  /// Full-time line-ups: toggle showing the line-ups as a list.
+  ///
+  /// In en, this message translates to:
+  /// **'List'**
+  String get matchLineupsViewList;
+
+  /// Full-time line-ups: heading over the substitutes who came on, with their ratings.
+  ///
+  /// In en, this message translates to:
+  /// **'Came on'**
+  String get matchLineupsCameOn;
+
   /// Live match: man-of-the-match heading.
   ///
   /// In en, this message translates to:

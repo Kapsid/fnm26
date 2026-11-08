@@ -8153,6 +8153,15 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchSubstitutes => 'MGA PAMALIT';
 
   @override
+  String get matchLineupsViewPitch => 'Laruan';
+
+  @override
+  String get matchLineupsViewList => 'Listahan';
+
+  @override
+  String get matchLineupsCameOn => 'Pumasok';
+
+  @override
   String get matchPlayerOfTheMatch => 'MANLALARO NG LARO';
 
   @override

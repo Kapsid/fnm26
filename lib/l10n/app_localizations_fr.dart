@@ -8263,6 +8263,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get matchSubstitutes => 'REMPLAÇANTS';
 
   @override
+  String get matchLineupsViewPitch => 'Terrain';
+
+  @override
+  String get matchLineupsViewList => 'Liste';
+
+  @override
+  String get matchLineupsCameOn => 'Entrés en jeu';
+
+  @override
   String get matchPlayerOfTheMatch => 'HOMME DU MATCH';
 
   @override

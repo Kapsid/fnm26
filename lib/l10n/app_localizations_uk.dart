@@ -8335,6 +8335,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchSubstitutes => 'ЗАПАСНІ';
 
   @override
+  String get matchLineupsViewPitch => 'Поле';
+
+  @override
+  String get matchLineupsViewList => 'Список';
+
+  @override
+  String get matchLineupsCameOn => 'Вийшли на заміну';
+
+  @override
   String get matchPlayerOfTheMatch => 'ГРАВЕЦЬ МАТЧУ';
 
   @override

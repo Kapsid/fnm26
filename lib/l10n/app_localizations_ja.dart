@@ -7935,6 +7935,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchSubstitutes => '控え選手';
 
   @override
+  String get matchLineupsViewPitch => 'ピッチ';
+
+  @override
+  String get matchLineupsViewList => 'リスト';
+
+  @override
+  String get matchLineupsCameOn => '途中出場';
+
+  @override
   String get matchPlayerOfTheMatch => 'マン・オブ・ザ・マッチ';
 
   @override

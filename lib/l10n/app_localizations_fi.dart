@@ -8251,6 +8251,15 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchSubstitutes => 'VARAPELAAJAT';
 
   @override
+  String get matchLineupsViewPitch => 'Kenttä';
+
+  @override
+  String get matchLineupsViewList => 'Luettelo';
+
+  @override
+  String get matchLineupsCameOn => 'Vaihdettu sisään';
+
+  @override
   String get matchPlayerOfTheMatch => 'OTTELUN PARAS PELAAJA';
 
   @override

@@ -8132,6 +8132,15 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchSubstitutes => 'CSEREJÁTÉKOSOK';
 
   @override
+  String get matchLineupsViewPitch => 'Pálya';
+
+  @override
+  String get matchLineupsViewList => 'Lista';
+
+  @override
+  String get matchLineupsCameOn => 'Beálltak';
+
+  @override
   String get matchPlayerOfTheMatch => 'A MÉRKŐZÉS EMBERE';
 
   @override

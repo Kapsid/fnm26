@@ -8179,6 +8179,15 @@ class AppLocalizationsDa extends AppLocalizations {
   String get matchSubstitutes => 'UDSKIFTERE';
 
   @override
+  String get matchLineupsViewPitch => 'Bane';
+
+  @override
+  String get matchLineupsViewList => 'Liste';
+
+  @override
+  String get matchLineupsCameOn => 'Skiftet ind';
+
+  @override
   String get matchPlayerOfTheMatch => 'KAMPENS SPILLER';
 
   @override

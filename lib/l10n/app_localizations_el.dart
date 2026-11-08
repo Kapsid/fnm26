@@ -8225,6 +8225,15 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchSubstitutes => 'ΑΝΑΠΛΗΡΩΜΑΤΙΚΟΙ';
 
   @override
+  String get matchLineupsViewPitch => 'Γήπεδο';
+
+  @override
+  String get matchLineupsViewList => 'Λίστα';
+
+  @override
+  String get matchLineupsCameOn => 'Μπήκαν';
+
+  @override
   String get matchPlayerOfTheMatch => 'ΚΟΡΥΦΑΙΟΣ ΤΟΥ ΑΓΩΝΑ';
 
   @override

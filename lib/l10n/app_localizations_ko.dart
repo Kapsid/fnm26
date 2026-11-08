@@ -7950,6 +7950,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchSubstitutes => '교체 선수';
 
   @override
+  String get matchLineupsViewPitch => '피치';
+
+  @override
+  String get matchLineupsViewList => '목록';
+
+  @override
+  String get matchLineupsCameOn => '교체 투입';
+
+  @override
   String get matchPlayerOfTheMatch => '경기 최우수 선수';
 
   @override
