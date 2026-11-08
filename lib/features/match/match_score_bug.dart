@@ -76,7 +76,6 @@ class _ScoreBug extends StatelessWidget {
     this.goal,
     this.goalForHome = false,
     this.theme,
-    this.tournament,
   });
 
   final String homeCode;
@@ -93,17 +92,8 @@ class _ScoreBug extends StatelessWidget {
   /// The tournament's colours (a finals match), or null for the silver bar.
   final ScoreBugTheme? theme;
 
-  /// The tournament's name, on a small tab above a themed bar.
-  final String? tournament;
-
   /// The stripe's height: one line.
   static const double barHeight = 28;
-
-  /// The tournament tab's height, above a themed bar.
-  static const double tabHeight = 14;
-
-  /// The key of the tournament tab.
-  static const Key tabKey = Key('match.scoreBugTab');
 
   @override
   Widget build(BuildContext context) {
@@ -160,10 +150,6 @@ class _ScoreBug extends StatelessWidget {
         ),
       ),
     );
-    final tournament = this.tournament;
-    final tab = theme == null || tournament == null
-        ? null
-        : _TournamentTab(name: tournament, theme: theme);
     return Padding(
       // Two px above and below: stripe and margin together stay the 32 px
       // the Pitch layout below was measured for.
@@ -174,16 +160,10 @@ class _ScoreBug extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          if (tab == null)
-            bar
-          else
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [tab, bar],
-            ),
+          bar,
           if (goal != null)
             Positioned(
-              top: barHeight + (tab == null ? 0 : tabHeight),
+              top: barHeight,
               left: AppSpacing.sm,
               right: AppSpacing.sm,
               child: _GoalBanner(
@@ -215,53 +195,6 @@ LinearGradient _scoreBlock(ScoreBugTheme t) => LinearGradient(
   end: Alignment.bottomCenter,
   colors: t.score,
 );
-
-/// The small tab on top of a themed bar naming the tournament: bold mono
-/// caps, letter-spaced, in the theme's accent on its plates.
-class _TournamentTab extends StatelessWidget {
-  const _TournamentTab({required this.name, required this.theme});
-
-  final String name;
-  final ScoreBugTheme theme;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final edge = theme.rim ?? theme.accent.withValues(alpha: 0.55);
-    return Container(
-      key: _ScoreBug.tabKey,
-      height: _ScoreBug.tabHeight,
-      constraints: const BoxConstraints(maxWidth: 240),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-      decoration: BoxDecoration(
-        gradient: _plates(theme),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
-        border: Border(
-          top: BorderSide(color: edge, width: 0.75),
-          left: BorderSide(color: edge, width: 0.75),
-          right: BorderSide(color: edge, width: 0.75),
-        ),
-      ),
-      alignment: Alignment.center,
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Text(
-          name.capsIn(l.localeName),
-          maxLines: 1,
-          softWrap: false,
-          style: TextStyle(
-            fontFamily: AppFonts.mono,
-            fontSize: 9,
-            height: 1,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.4,
-            color: theme.accent,
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 /// A small rectangular flag for the stripe and its banner: the app's own
 /// flag art, cut to a soft-cornered card with a hairline edge.

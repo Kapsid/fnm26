@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/fixture.dart';
@@ -1400,16 +1401,58 @@ void _cameOnTest() {
 }
 
 void _themeTests() {
+  // A small phone at a finals: the themed strip and bar fit, nothing
+  // overflows, and full time's Continue is there to be tapped.
+  testWidgets('320x568 at a final: no overflow, Continue reachable', (
+    tester,
+  ) async {
+    final preview = _preview(round: 'FINAL');
+    // Settled in ninety minutes: no extra time, no shootout to sit through.
+    final salt = _salt(
+      preview,
+      (r) =>
+          r.extraTime == null &&
+          !r.events.any(
+            (e) =>
+                e.type == MatchEventType.injury ||
+                (e.type == MatchEventType.goal && e.minute >= 80),
+          ),
+    );
+    await _pump(
+      tester,
+      preview: preview,
+      salt: salt,
+      prefs: {kMatchViewModePrefsKey: 'pitch'},
+      size: const Size(320, 568),
+    );
+    await _until(tester, () => _ready(tester));
+    expect(tester.takeException(), isNull);
+    expect(
+      tester.widget<MatchScoreboard>(find.byType(MatchScoreboard)).bugTheme,
+      isNotNull,
+    );
+    await _playPitchOut(tester);
+    await tester.pump(const Duration(seconds: 3));
+    expect(tester.takeException(), isNull);
+    final button = _ftContinue();
+    expect(button, findsOneWidget);
+    final r = tester.getRect(button);
+    expect(r.bottom, lessThanOrEqualTo(568));
+    expect(r.top, greaterThanOrEqualTo(0));
+    await _tapContinue(tester);
+  });
+
   for (final (round, kind) in <(String?, ScoreBugThemeKind?)>[
-    ('FINAL', ScoreBugThemeKind.worldChampionship),
+    ('FINAL', ScoreBugThemeKind.finalGold),
+    ('3RD', ScoreBugThemeKind.bronze),
     ('GROUP', ScoreBugThemeKind.worldChampionship),
+    ('CQF', ScoreBugThemeKind.europe),
     (null, null), // a World Championship qualifier
     ('CQ', null),
     ('FRIENDLY', null),
   ]) {
-    testWidgets('2D TV bar at round $round: ${kind?.name ?? 'silver'}', (
-      tester,
-    ) async {
+    testWidgets('header strip and 2D TV bar at round $round: '
+        '${kind?.name ?? 'silver'}', (tester) async {
       await _pump(
         tester,
         preview: _preview(round: round),
@@ -1422,13 +1465,14 @@ void _themeTests() {
       );
       expect(board.compact, isTrue);
       expect(board.bugTheme?.kind, kind);
-      if (kind == ScoreBugThemeKind.worldChampionship) {
-        // Its name on the tab, as the game writes it (never "World Cup").
-        expect(board.tournament, enL.compWorldCup);
-        expect(find.text(enL.compWorldCup.toUpperCase()), findsOneWidget);
-      } else {
-        expect(board.tournament, isNull);
-      }
+      // The header strip's words wear the theme's accent, or stay as they
+      // were; no extra tab is added anywhere.
+      final strip = tester.widget<Text>(find.byKey(const Key('match.topBar')));
+      expect(
+        strip.style?.color,
+        kind == null ? AppColors.primary : ScoreBugTheme.all[kind]!.accent,
+      );
+      expect(find.byKey(const Key('match.scoreBugTab')), findsNothing);
     });
   }
 }

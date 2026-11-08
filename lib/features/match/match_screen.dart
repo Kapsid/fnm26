@@ -12,7 +12,6 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/theme/kit_colors.dart';
 import 'package:fnm/core/util/caps.dart';
-import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/util/match_stage.dart';
 import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -1863,7 +1862,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final showingShootout = _isShootout && _clockDone;
             final decidedByShootout = ft && (knockout?.wentToShootout ?? false);
 
+            // At a tournament's finals the header strip (and on the phone's
+            // 2D TV the score bug) wears its colours; elsewhere both stay
+            // plain.
+            final finalsTheme = ScoreBugTheme.forRound(
+              preview.fixture.round,
+              preview.nations[preview.playerNationId]?.confederation,
+            );
             final topBar = _TopBar(
+              theme: finalsTheme,
               occasion: MatchStage.label(l, preview.fixture),
             );
             // The two nations' own colours, pushed apart from each other when
@@ -1881,20 +1888,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // The phone's Pitch mode: the score as a broadcast bug, whose
             // banner stands for the goal flash's card over the picture.
             final bug = !tablet && _onPitch;
-            // At a tournament's finals the bug wears its colours, and names
-            // it on a tab; everywhere else it stays silver.
-            final conf = preview.nations[preview.playerNationId]?.confederation;
-            final bugTheme = bug
-                ? ScoreBugTheme.forRound(preview.fixture.round, conf)
-                : null;
-            final String? tournament = switch (bugTheme?.kind) {
-              null => null,
-              ScoreBugThemeKind.worldChampionship => competitionLabel(
-                l,
-                'World Championship',
-              ),
-              _ => conf == null ? null : continentalCupLabel(l, conf),
-            };
+            final bugTheme = bug ? finalsTheme : null;
             // Pitch or Timeline, at any time: on a phone from the corner of
             // the scoreboard (the Timeline's) or the pitch's bottom one (Pitch mode,
             // whose stripe is too thin for it); on a tablet from the stats
@@ -1953,7 +1947,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               goal: bug ? _goalFlash : null,
               goalForHome: _goalFlash?.teamNationId == homeId,
               bugTheme: bugTheme,
-              tournament: tournament,
               viewSwitch: bug ? null : phoneSwitch,
             );
             final Widget? momentum = !ft && !showingShootout

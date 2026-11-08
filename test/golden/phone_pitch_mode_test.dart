@@ -84,12 +84,15 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  // The 2D TV bar in a tournament's colours: the seeded save's next match
-  // moved into the World Championship finals, then the European
-  // Championship's (the seeded nation is European).
-  for (final (round, kind, file) in [
-    ('FINAL', ScoreBugThemeKind.worldChampionship, 'wc'),
-    ('CFINAL', ScoreBugThemeKind.europe, 'europe'),
+  // The header strip and the 2D TV bar in a tournament's colours: the seeded
+  // save's next match moved into a finals round (the seeded nation is
+  // European; for Africa's colours it is moved to Africa for the test).
+  for (final (round, conf, kind, file) in [
+    ('GROUP', null, ScoreBugThemeKind.worldChampionship, 'wc'),
+    ('CQF', null, ScoreBugThemeKind.europe, 'europe'),
+    ('CGROUP', 'africa', ScoreBugThemeKind.africa, 'africa'),
+    ('CFINAL', null, ScoreBugThemeKind.finalGold, 'final'),
+    ('3RD', null, ScoreBugThemeKind.bronze, 'bronze'),
   ]) {
     testWidgets('phone match in Pitch mode at a finals: $file', (tester) async {
       final save = await seedSave(tester);
@@ -101,13 +104,17 @@ void main() {
         final f = await save.container
             .read(competitionRepositoryProvider)
             .nextFixtureForNation(save.careerId, save.nationId);
-        await save.container.read(appDatabaseProvider).customStatement(
+        final db = save.container.read(appDatabaseProvider);
+        await db.customStatement(
           'UPDATE fixtures SET round = ? WHERE id = ?',
-          [
-            round,
-            f!.id,
-          ],
+          [round, f!.id],
         );
+        if (conf != null) {
+          await db.customStatement(
+            'UPDATE nations SET confederation = ? WHERE id = ?',
+            [conf, save.nationId],
+          );
+        }
       });
       final warm = save.container.listen(
         matchPreviewProvider(save.careerId),

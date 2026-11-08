@@ -6,11 +6,18 @@ part of 'match_screen.dart';
 /// A part rather than its own library so these stay private to the match
 /// screen — they are its furniture, not widgets anything else should build.
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.occasion});
+  const _TopBar({required this.occasion, this.theme});
 
   /// What the match is for ("WORLD CUP FINALS · SEMI-FINAL", from
   /// [MatchStage.label], as the hub's next-match card writes it).
   final String occasion;
+
+  /// At a tournament's finals, its colours (the score bar's): the strip on
+  /// its plates, the words in its accent. Null: the plain strip.
+  final ScoreBugTheme? theme;
+
+  /// The key of the strip itself.
+  static const Key stripKey = Key('match.topBar');
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +41,32 @@ class _TopBar extends StatelessWidget {
           horizontal: AppSpacing.md,
           vertical: 6,
         ),
-        decoration: const BoxDecoration(
-          color: AppColors.surfaceContainerHighest,
-          borderRadius: AppRadii.baseAll,
-        ),
+        decoration: switch (theme) {
+          null => const BoxDecoration(
+            color: AppColors.surfaceContainerHighest,
+            borderRadius: AppRadii.baseAll,
+          ),
+          final t => BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: t.plates,
+            ),
+            borderRadius: AppRadii.baseAll,
+            border: Border.all(
+              color: t.rim ?? t.accent.withValues(alpha: 0.55),
+            ),
+          ),
+        },
         child: Text(
           occasion,
+          key: stripKey,
           textAlign: TextAlign.center,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+          style: AppTypography.labelMedium.copyWith(
+            color: theme?.accent ?? AppColors.primary,
+          ),
         ),
       ),
     );
@@ -154,7 +177,6 @@ class MatchScoreboard extends StatelessWidget {
     this.goal,
     this.goalForHome = false,
     this.bugTheme,
-    this.tournament,
   });
 
   final String homeCode;
@@ -195,9 +217,6 @@ class MatchScoreboard extends StatelessWidget {
   /// silver.
   final ScoreBugTheme? bugTheme;
 
-  /// The tournament's name, on the themed [compact] bug's tab.
-  final String? tournament;
-
   /// The Pitch / Timeline switch, in the card's top corner beside the
   /// clock (null: none). Not on the [compact] stripe: the screen puts it
   /// in the pitch's corner.
@@ -221,7 +240,6 @@ class MatchScoreboard extends StatelessWidget {
         goal: goal,
         goalForHome: goalForHome,
         theme: bugTheme,
-        tournament: tournament,
       );
     }
     final card = AppCard(
