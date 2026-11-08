@@ -181,22 +181,25 @@ void main() {
     expect(kickCards, greaterThan(20));
   });
 
-  test('rates: 0.22-0.34 penalties and 0.7-1.2 direct free kicks a match '
+  test('rates: 0.34-0.46 penalties and 0.7-1.2 direct free kicks a match '
       'over 600 matches', () {
     final pens = shotsOf(ShotOrigin.penalty).length / matches.length;
     final kicks = shotsOf(ShotOrigin.directFreeKick).length / matches.length;
     // ignore: avoid_print
     print('per match: penalties $pens, direct free kicks $kicks');
-    expect(pens, inInclusiveRange(0.22, 0.34));
+    expect(pens, inInclusiveRange(0.34, 0.46));
     expect(kicks, inInclusiveRange(0.7, 1.2));
   });
 
   // The owner saw none in five matches (2026-11-07). Real international
   // football gives about 0.25-0.32 penalties a match and scores 75-78% of
   // them; at about 0.245 the engine sat just under that, so it was raised
-  // into it (about 0.26-0.27). Measured over 3,000 matches of mixed
-  // strengths (55-90 each side, half at neutral grounds).
-  test('penalties: 0.25-0.31 a match over 3,000 mixed-strength matches', () {
+  // into it (about 0.26-0.27). Ten more of his own matches without one
+  // (2026-11-08), and he asked for one most second or third match: about
+  // 0.40 (see `penalty_rate_test.dart` for his matches as he plays them).
+  // Measured over 3,000 matches of mixed strengths (55-90 each side, half at
+  // neutral grounds).
+  test('penalties: 0.34-0.46 a match over 3,000 mixed-strength matches', () {
     final pick = SeededRng(0x9E7A);
     const n = 3000;
     var pens = 0, scored = 0;
@@ -215,7 +218,7 @@ void main() {
     }
     // ignore: avoid_print
     print('mixed: ${pens / n} penalties a match, scored ${scored / pens}');
-    expect(pens / n, inInclusiveRange(0.25, 0.31));
+    expect(pens / n, inInclusiveRange(0.34, 0.46));
     expect(scored / pens, inInclusiveRange(0.70, 0.80));
   });
 

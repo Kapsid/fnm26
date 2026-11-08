@@ -28,6 +28,7 @@ import 'package:fnm/domain/services/match/live_rating.dart';
 import 'package:fnm/domain/services/match/stadium/kick_off.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
     show ShootoutCast, ShootoutStaging;
@@ -1907,6 +1908,29 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 return byMin != 0 ? byMin : a.stoppage.compareTo(b.stoppage);
               });
             final ft = _fullTime;
+            // Penalties given in play, for the Timeline and the stats. A
+            // scored one comes in with its goal; a saved or missed one is
+            // no event, so it comes in by its minute: the Timeline shows
+            // the minute on the clock whole, the 2D TV may not have staged
+            // it yet, so there it waits for the next.
+            final penalties = inPlayPenalties(
+              r,
+              names: {
+                for (final p in [
+                  ...preview.homeTeam.xi,
+                  ...preview.awayTeam.xi,
+                  ...preview.bench,
+                  ...preview.opponentBench,
+                ])
+                  p.id: p.name,
+              },
+              eventReached: _reached,
+              momentReached: (minute, stoppage) {
+                if (ft) return true;
+                if (minute != _minute) return minute < _minute;
+                return _onPitch ? stoppage < _added : stoppage <= _added;
+              },
+            );
             // (The Pitch view plays the 120th while it is on the clock.)
             final inExtraTime = _minute > 90 && !_clockDone;
             final inStoppage = _minute == 90 && _added > 0 && !ft;
@@ -2041,8 +2065,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         : _takerNames(preview),
                   )
                 : null;
-            final timeline = _Timeline(
+            final timeline = MatchTimeline(
               events: timelineEvents,
+              penalties: penalties,
               live: !ft,
               homeId: homeId,
             );
@@ -2068,6 +2093,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               minute: _minute,
               fullTime: ft,
               events: timelineEvents,
+              penalties: penalties,
             );
             List<MatchEvent> subsOf(int nationId) => shown
                 .where(
