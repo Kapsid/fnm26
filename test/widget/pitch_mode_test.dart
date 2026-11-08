@@ -1217,7 +1217,7 @@ void _ownerFeedbackTests() {
   });
 
   testWidgets(
-    'on a small phone the Lineups tab scrolls under the fixed pitch',
+    'on a small phone the whole page scrolls, the pitch at full size',
     (
       tester,
     ) async {
@@ -1231,32 +1231,40 @@ void _ownerFeedbackTests() {
       );
       await _until(tester, () => _ready(tester));
       expect(tester.takeException(), isNull);
-      // Stats, then Lineups.
+      // The pitch keeps its full width and its own proportions.
+      final pitchBefore = tester.getRect(find.byType(PitchMatchView));
+      expect(pitchBefore.width, 360);
+      expect(pitchBefore.height, closeTo(360 / kPitchModeAspect, 0.5));
+      final scoreBefore = tester.getRect(find.byType(MatchScoreboard));
+      // A drag that starts on the pitch scrolls the page.
+      await tester.dragFrom(pitchBefore.center, const Offset(0, -80));
+      await tester.pump();
+      final pitchAfter = tester.getRect(find.byType(PitchMatchView));
+      expect(pitchAfter.top, lessThan(pitchBefore.top - 40));
+      expect(pitchAfter.width, 360);
+      // The score stays put.
+      expect(tester.getRect(find.byType(MatchScoreboard)), scoreBefore);
+      // Lineups, and its last row reached by scrolling the page.
       await tester.tap(find.byType(Tab).last);
       for (var i = 0; i < 30; i++) {
         await tester.pump(const Duration(milliseconds: 16));
       }
-      final pitchBefore = tester.getRect(find.byType(PitchMatchView));
       final last = find.text(preview.opponentBench.last.name);
-      final list = find.descendant(
-        of: find.byType(TabBarView),
-        matching: find.byType(Scrollable),
-      );
       await tester.dragUntilVisible(
         last,
-        list.last,
+        find.byKey(PitchModeColumn.scrollKey),
         const Offset(0, -120),
         maxIteration: 40,
       );
       await tester.pump();
-      // In view: inside the screen, below the tab bar, above the bottom bar.
+      // In view: under the pinned tab bar, above the bottom bar.
       final row = tester.getRect(last);
-      final viewport = tester.getRect(list.last);
-      expect(row.bottom, lessThanOrEqualTo(viewport.bottom + 0.5));
-      expect(row.top, greaterThanOrEqualTo(viewport.top - 0.5));
-      expect(viewport.height, greaterThan(60));
-      // The pitch stayed where it was: only the tab content moved.
-      expect(tester.getRect(find.byType(PitchMatchView)), pitchBefore);
+      final tabBar = tester.getRect(find.byType(TabBar));
+      final page = tester.getRect(find.byKey(PitchModeColumn.scrollKey));
+      expect(row.top, greaterThanOrEqualTo(tabBar.bottom - 0.5));
+      expect(row.bottom, lessThanOrEqualTo(page.bottom + 0.5));
+      // The tab bar pinned right under the score once the pitch went up.
+      expect(tabBar.top, closeTo(page.top, 0.5));
       expect(tester.takeException(), isNull);
     },
   );
