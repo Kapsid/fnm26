@@ -1261,7 +1261,9 @@ void _ownerFeedbackTests() {
     },
   );
 
-  testWidgets('each speed plays faster: 1x and 2x by 1.3, 3x by 1.5', (
+  // 2x is the old 3x (fast pacing at 1.5); 3x is the same pacing a quarter
+  // faster again, 1.875 (the owner's 2026-11-07 ask).
+  testWidgets('each speed plays faster: 1x by 1.3, 2x by 1.5, 3x by 1.875', (
     tester,
   ) async {
     await _pump(
@@ -1270,7 +1272,7 @@ void _ownerFeedbackTests() {
       salt: 7,
       prefs: {kMatchViewModePrefsKey: 'pitch'},
     );
-    for (final (label, rate) in [('1×', 1.3), ('2×', 1.3), ('3×', 1.5)]) {
+    for (final (label, rate) in [('1×', 1.3), ('2×', 1.5), ('3×', 1.875)]) {
       if (label != '1×') {
         await tester.tap(find.text(label == '2×' ? '1×' : '2×'));
         await tester.pump();

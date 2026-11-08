@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_pacer.dart';
 import 'package:fnm/domain/services/match/pitch/story_layer.dart';
 import 'package:fnm/features/match/pitch/pitch_mode_controller.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 
 import '../../helpers/pitch_match_lab.dart';
 
@@ -51,7 +52,7 @@ void main() {
     final here = StoryLayer.build(
       result: m.result,
       lineups: m.lineups,
-      pacer: PitchPacer(m.result, PitchSpeed.mid),
+      pacer: PitchPacer(m.result, pitchSpeedForStep(1)),
       seed: 5,
     );
     final sw = Stopwatch()..start();

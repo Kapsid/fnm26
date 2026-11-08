@@ -71,7 +71,9 @@ void main() {
   test('the same seed plays the same match as before the log existed', () {
     // Digests captured on the engine before `instructionLog` was added
     // (feature/pitch-view at 81b69486). Recording the AI's instruction
-    // drift must change nothing the engine decides.
+    // drift must change nothing the engine decides. Re-pinned when the
+    // penalty rate rose (0.095 to 0.105 of finished chances, 2026-11-07),
+    // an intended outcome change.
     final parts = StringBuffer();
     for (var i = 0; i < 40; i++) {
       parts
@@ -103,4 +105,4 @@ void main() {
   });
 }
 
-const _before = 'cd077f92';
+const _before = 'f9374e05';

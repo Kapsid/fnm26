@@ -402,10 +402,12 @@ void main() {
         // of 2000 seeds both ways round, neutral venue. Re-pinned at 10406
         // (+0.79%) by the pitch view's play pass (2026-11-05), which plays
         // penalties and direct free kicks for real; the figures it is held
-        // to are in match_baseline_test.dart.
+        // to are in match_baseline_test.dart. Re-pinned at 10394 (-0.12%)
+        // when the penalty rate rose (2026-11-07): a penalty replaces a goal
+        // that was going in and is scored about three times in four.
         final n = _lab('neutral');
         final m = _mirror(n, n);
-        expect(m.total * 4000, closeTo(10406, 1e-6));
+        expect(m.total * 4000, closeTo(10394, 1e-6));
       },
     );
     // +0.092 on average (counter +0.127, highPress +0.020, possession +0.171,

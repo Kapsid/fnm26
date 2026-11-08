@@ -2662,8 +2662,11 @@ class MatchEngine {
   // tuned to hold.
 
   /// Of the open-play chances that were going in, the share a foul in the
-  /// box stops: a penalty, the goal denied.
-  static const double _penaltyPerFinishedChance = 0.095;
+  /// box stops: a penalty, the goal denied. 0.095 gave about 0.245
+  /// penalties a match, just under real international football (0.25-0.32);
+  /// 0.105 gives about 0.26 (2026-11-07). Higher pushes the penalty share of
+  /// goals past its band in `match_baseline_test.dart` (85 v 85 at home).
+  static const double _penaltyPerFinishedChance = 0.105;
 
   /// Of the open-play chances that were not going in, the share ended by a
   /// foul at the edge of the box: a direct free kick.
