@@ -12114,7 +12114,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Dein Spielstand konnte nicht aktualisiert werden. Nichts wurde gelöscht, und eine Kopie von vor dem Update liegt unter Einstellungen, Backups.';
+      'Dein Spielstand konnte nicht aktualisiert werden. Nichts wurde gelöscht, und eine Kopie von vor dem Update liegt auf diesem Handy.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Kopie von vor dem Update wiederherstellen';
+
+  @override
+  String get saveOpenFailedTitle =>
+      'Deine Spielstände konnten nicht geöffnet werden';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Deine Spielstände konnten nicht geöffnet werden. Nichts wurde gelöscht. Versuch es gleich noch einmal.';
 
   @override
   String get backupCloudNoDetails => 'Die Details sind noch unterwegs.';

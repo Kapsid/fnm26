@@ -12340,7 +12340,17 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Tvoju spremljenu igru nije bilo moguće ažurirati. Ništa nije obrisano, a kopija od prije ažuriranja nalazi se u Postavke, Sigurnosne kopije.';
+      'Tvoju spremljenu igru nije bilo moguće ažurirati. Ništa nije obrisano, a kopija od prije ažuriranja čuva se na ovom telefonu.';
+
+  @override
+  String get saveUpgradeRestoreButton => 'Vrati kopiju od prije ažuriranja';
+
+  @override
+  String get saveOpenFailedTitle => 'Spremljene igre nije bilo moguće otvoriti';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Tvoje spremljene igre nije bilo moguće otvoriti. Ništa nije obrisano. Pokušaj ponovno za trenutak.';
 
   @override
   String get backupCloudNoDetails => 'Pojedinosti su još na putu.';

@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Ortalama puan",
   "matchLiveRatingsNote": "Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir.",
   "saveUpgradeFailedTitle": "Kaydın güncellenemedi",
-  "saveUpgradeFailedBody": "Kaydın güncellenemedi. Hiçbir şey silinmedi; güncellemeden önceki bir kopya Ayarlar, Yedekler bölümünde."
+  "saveUpgradeFailedBody": "Kaydın güncellenemedi. Hiçbir şey silinmedi; güncellemeden önceki bir kopya bu telefonda duruyor.",
+  "saveUpgradeRestoreButton": "Güncellemeden önceki kopyayı geri yükle",
+  "saveOpenFailedTitle": "Kayıtların açılamadı",
+  "saveOpenFailedBody": "Kayıtların açılamadı. Hiçbir şey silinmedi. Birazdan tekrar dene."
 }

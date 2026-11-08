@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Purata penarafan",
   "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat.",
   "saveUpgradeFailedTitle": "Simpanan anda tidak dapat dikemas kini",
-  "saveUpgradeFailedBody": "Simpanan anda tidak dapat dikemas kini. Tiada apa-apa dipadam, dan salinan dari sebelum kemas kini ada dalam Tetapan, Sandaran."
+  "saveUpgradeFailedBody": "Simpanan anda tidak dapat dikemas kini. Tiada apa-apa dipadam, dan salinan dari sebelum kemas kini disimpan pada telefon ini.",
+  "saveUpgradeRestoreButton": "Pulihkan salinan dari sebelum kemas kini",
+  "saveOpenFailedTitle": "Simpanan anda tidak dapat dibuka",
+  "saveOpenFailedBody": "Simpanan anda tidak dapat dibuka. Tiada apa-apa dipadam. Cuba lagi sebentar nanti."
 }

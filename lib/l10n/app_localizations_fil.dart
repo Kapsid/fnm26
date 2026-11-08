@@ -12005,7 +12005,18 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Hindi ma-update ang save mo. Walang nabura, at may kopya mula bago ang update sa Mga Setting, Mga Backup.';
+      'Hindi ma-update ang save mo. Walang nabura, at may kopya mula bago ang update na nakatabi sa phone na ito.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Ibalik ang kopya mula bago ang update';
+
+  @override
+  String get saveOpenFailedTitle => 'Hindi mabuksan ang mga save mo';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Hindi mabuksan ang mga save mo. Walang nabura. Subukan ulit maya-maya.';
 
   @override
   String get backupCloudNoDetails => 'Paparating pa ang mga detalye.';

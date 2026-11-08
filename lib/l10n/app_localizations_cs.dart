@@ -12273,7 +12273,18 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Uloženou hru se nepodařilo aktualizovat. Nic nebylo smazáno a kopie z doby před aktualizací je v Nastavení, Zálohy.';
+      'Uloženou hru se nepodařilo aktualizovat. Nic nebylo smazáno a kopie z doby před aktualizací zůstala v tomto telefonu.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Obnovit kopii z doby před aktualizací';
+
+  @override
+  String get saveOpenFailedTitle => 'Uložené hry se nepodařilo otevřít';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Uložené hry se nepodařilo otevřít. Nic nebylo smazáno. Zkuste to za chvíli znovu.';
 
   @override
   String get backupCloudNoDetails => 'Podrobnosti jsou ještě na cestě.';

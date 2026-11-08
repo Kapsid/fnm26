@@ -12076,7 +12076,18 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Il salvataggio non è stato aggiornato. Non è stato eliminato nulla e una copia di prima dell\'aggiornamento è in Impostazioni, Backup.';
+      'Il salvataggio non è stato aggiornato. Non è stato eliminato nulla e una copia di prima dell\'aggiornamento è conservata su questo telefono.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Ripristina la copia di prima dell\'aggiornamento';
+
+  @override
+  String get saveOpenFailedTitle => 'Impossibile aprire i salvataggi';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Non è stato possibile aprire i salvataggi. Non è stato eliminato nulla. Riprova tra un momento.';
 
   @override
   String get backupCloudNoDetails => 'I dettagli sono ancora in arrivo.';

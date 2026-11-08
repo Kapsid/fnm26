@@ -12077,7 +12077,18 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Η αποθήκευσή σου δεν μπόρεσε να ενημερωθεί. Δεν διαγράφηκε τίποτα, και ένα αντίγραφο από πριν από την ενημέρωση βρίσκεται στις Ρυθμίσεις, Αντίγραφα ασφαλείας.';
+      'Η αποθήκευσή σου δεν μπόρεσε να ενημερωθεί. Δεν διαγράφηκε τίποτα, και ένα αντίγραφο από πριν από την ενημέρωση φυλάσσεται σε αυτό το κινητό.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Επαναφορά του αντιγράφου από πριν από την ενημέρωση';
+
+  @override
+  String get saveOpenFailedTitle => 'Οι αποθηκεύσεις σου δεν άνοιξαν';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Οι αποθηκεύσεις σου δεν μπόρεσαν να ανοίξουν. Δεν διαγράφηκε τίποτα. Δοκίμασε ξανά σε λίγο.';
 
   @override
   String get backupCloudNoDetails => 'Οι λεπτομέρειες είναι ακόμα καθ\' οδόν.';

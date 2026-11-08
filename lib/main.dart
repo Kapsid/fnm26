@@ -7,9 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/app.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/layout/form_factor.dart';
-import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/shared/widgets/app_crash_box.dart';
-import 'package:fnm/shared/widgets/save_upgrade_failed_screen.dart';
+import 'package:fnm/shared/widgets/save_open_gate.dart';
 
 void main() {
   // Everything runs inside one guarded zone so an async error with no `await`
@@ -91,34 +90,7 @@ class _FnmRootState extends State<FnmRoot> {
     builder: (_, generation, _) => ProviderScope(
       key: ValueKey(generation),
       overrides: [formFactorProvider.overrideWithValue(widget.formFactor)],
-      child: const _SaveOpenGate(),
+      child: const SaveOpenGate(onRetry: FnmRoot.restart, child: FnmApp()),
     ),
   );
-}
-
-/// Opens the save database, migrating it if this build is newer than the
-/// save. Resolves once it is open; fails if the open (in practice, an
-/// upgrade) threw.
-final _saveOpensProvider = FutureProvider<void>((ref) async {
-  try {
-    await ref.watch(appDatabaseProvider).customSelect('SELECT 1').get();
-  } on Object catch (e, stack) {
-    AppLog.error('db-open', e, stack);
-    rethrow;
-  }
-});
-
-/// The app, unless the save will not open: then [SaveUpgradeFailedScreen],
-/// never a saves list with nothing on it.
-///
-/// The app is built while the database opens, exactly as before, so a normal
-/// launch looks and times the same; only a failure swaps it out.
-class _SaveOpenGate extends ConsumerWidget {
-  const _SaveOpenGate();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      ref.watch(_saveOpensProvider).hasError
-      ? const SaveUpgradeFailedScreen(onRetry: FnmRoot.restart)
-      : const FnmApp();
 }

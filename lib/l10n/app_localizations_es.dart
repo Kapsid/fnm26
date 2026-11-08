@@ -12088,7 +12088,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'No se pudo actualizar tu partida guardada. No se ha borrado nada, y hay una copia de antes de la actualización en Ajustes, Copias de seguridad.';
+      'No se pudo actualizar tu partida guardada. No se ha borrado nada, y hay una copia de antes de la actualización en este teléfono.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Restaurar la copia de antes de la actualización';
+
+  @override
+  String get saveOpenFailedTitle => 'No se pudieron abrir tus partidas';
+
+  @override
+  String get saveOpenFailedBody =>
+      'No se pudieron abrir tus partidas guardadas. No se ha borrado nada. Vuelve a intentarlo en un momento.';
 
   @override
   String get backupCloudNoDetails => 'Los detalles aún están en camino.';

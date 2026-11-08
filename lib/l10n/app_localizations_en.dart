@@ -12041,7 +12041,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Your save could not be updated. Nothing was deleted, and a copy from before the update is in Settings, Backups.';
+      'Your save could not be updated. Nothing was deleted, and a copy from before the update is kept on this phone.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Restore the copy from before the update';
+
+  @override
+  String get saveOpenFailedTitle => 'Your saves could not be opened';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Your saves could not be opened. Nothing was deleted. Try again in a moment.';
 
   @override
   String get backupCloudNoDetails => 'Details are still on their way.';

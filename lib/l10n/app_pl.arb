@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Średnia ocena",
   "matchLiveRatingsNote": "Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku.",
   "saveUpgradeFailedTitle": "Nie udało się zaktualizować zapisu",
-  "saveUpgradeFailedBody": "Nie udało się zaktualizować zapisu gry. Nic nie zostało usunięte, a kopia sprzed aktualizacji jest w Ustawienia, Kopie zapasowe."
+  "saveUpgradeFailedBody": "Nie udało się zaktualizować zapisu gry. Nic nie zostało usunięte, a kopia sprzed aktualizacji jest zachowana na tym telefonie.",
+  "saveUpgradeRestoreButton": "Przywróć kopię sprzed aktualizacji",
+  "saveOpenFailedTitle": "Nie udało się otworzyć zapisów",
+  "saveOpenFailedBody": "Nie udało się otworzyć zapisów gry. Nic nie zostało usunięte. Spróbuj ponownie za chwilę."
 }

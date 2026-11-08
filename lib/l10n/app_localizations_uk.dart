@@ -12290,7 +12290,17 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Не вдалося оновити ваше збереження. Нічого не видалено, а копія до оновлення є в Налаштування, Резервні копії.';
+      'Не вдалося оновити ваше збереження. Нічого не видалено, а копія до оновлення зберігається на цьому телефоні.';
+
+  @override
+  String get saveUpgradeRestoreButton => 'Відновити копію до оновлення';
+
+  @override
+  String get saveOpenFailedTitle => 'Не вдалося відкрити збереження';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Не вдалося відкрити ваші збереження. Нічого не видалено. Спробуйте ще раз за хвилину.';
 
   @override
   String get backupCloudNoDetails => 'Подробиці ще в дорозі.';

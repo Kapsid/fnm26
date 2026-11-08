@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Průměrná známka",
   "matchLiveRatingsNote": "Známky sledují dosavadní průběh zápasu a platí až po závěrečném hvizdu.",
   "saveUpgradeFailedTitle": "Uloženou hru se nepodařilo aktualizovat",
-  "saveUpgradeFailedBody": "Uloženou hru se nepodařilo aktualizovat. Nic nebylo smazáno a kopie z doby před aktualizací je v Nastavení, Zálohy."
+  "saveUpgradeFailedBody": "Uloženou hru se nepodařilo aktualizovat. Nic nebylo smazáno a kopie z doby před aktualizací zůstala v tomto telefonu.",
+  "saveUpgradeRestoreButton": "Obnovit kopii z doby před aktualizací",
+  "saveOpenFailedTitle": "Uložené hry se nepodařilo otevřít",
+  "saveOpenFailedBody": "Uložené hry se nepodařilo otevřít. Nic nebylo smazáno. Zkuste to za chvíli znovu."
 }

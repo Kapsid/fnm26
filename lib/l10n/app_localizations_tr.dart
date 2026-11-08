@@ -11930,7 +11930,18 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Kaydın güncellenemedi. Hiçbir şey silinmedi; güncellemeden önceki bir kopya Ayarlar, Yedekler bölümünde.';
+      'Kaydın güncellenemedi. Hiçbir şey silinmedi; güncellemeden önceki bir kopya bu telefonda duruyor.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Güncellemeden önceki kopyayı geri yükle';
+
+  @override
+  String get saveOpenFailedTitle => 'Kayıtların açılamadı';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Kayıtların açılamadı. Hiçbir şey silinmedi. Birazdan tekrar dene.';
 
   @override
   String get backupCloudNoDetails => 'Ayrıntılar hâlâ yolda.';

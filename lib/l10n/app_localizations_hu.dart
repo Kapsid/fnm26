@@ -11954,7 +11954,18 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'A mentésedet nem sikerült frissíteni. Semmi sem törlődött, és egy frissítés előtti másolat a Beállítások, Biztonsági mentések részben található.';
+      'A mentésedet nem sikerült frissíteni. Semmi sem törlődött, és egy frissítés előtti másolat megvan ezen a telefonon.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'A frissítés előtti másolat visszaállítása';
+
+  @override
+  String get saveOpenFailedTitle => 'A mentéseket nem sikerült megnyitni';
+
+  @override
+  String get saveOpenFailedBody =>
+      'A mentéseidet nem sikerült megnyitni. Semmi sem törlődött. Próbáld újra egy kicsit később.';
 
   @override
   String get backupCloudNoDetails => 'A részletek még úton vannak.';

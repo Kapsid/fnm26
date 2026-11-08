@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Átlagos értékelés",
   "matchLiveRatingsNote": "Az értékelések az eddigi játékot követik, és a lefújáskor válnak véglegessé.",
   "saveUpgradeFailedTitle": "A mentést nem sikerült frissíteni",
-  "saveUpgradeFailedBody": "A mentésedet nem sikerült frissíteni. Semmi sem törlődött, és egy frissítés előtti másolat a Beállítások, Biztonsági mentések részben található."
+  "saveUpgradeFailedBody": "A mentésedet nem sikerült frissíteni. Semmi sem törlődött, és egy frissítés előtti másolat megvan ezen a telefonon.",
+  "saveUpgradeRestoreButton": "A frissítés előtti másolat visszaállítása",
+  "saveOpenFailedTitle": "A mentéseket nem sikerült megnyitni",
+  "saveOpenFailedBody": "A mentéseidet nem sikerült megnyitni. Semmi sem törlődött. Próbáld újra egy kicsit később."
 }

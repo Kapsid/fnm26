@@ -12014,7 +12014,17 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Dit gemte spil kunne ikke opdateres. Intet er slettet, og en kopi fra før opdateringen ligger under Indstillinger, Sikkerhedskopier.';
+      'Dit gemte spil kunne ikke opdateres. Intet er slettet, og en kopi fra før opdateringen er gemt på denne telefon.';
+
+  @override
+  String get saveUpgradeRestoreButton => 'Gendan kopien fra før opdateringen';
+
+  @override
+  String get saveOpenFailedTitle => 'Dine gemte spil kunne ikke åbnes';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Dine gemte spil kunne ikke åbnes. Intet er slettet. Prøv igen om lidt.';
 
   @override
   String get backupCloudNoDetails => 'Detaljerne er stadig på vej.';

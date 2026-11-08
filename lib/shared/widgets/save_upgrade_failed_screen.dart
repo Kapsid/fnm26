@@ -8,27 +8,60 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// which in practice means an upgrade's migration failed.
 ///
 /// The alternative is the saves list with nothing on it, which reads as "your
-/// careers are gone" when they are not: the file is untouched, and the copy
-/// taken before the upgrade (`SaveBackup.writePreUpgradeCopy`) is in the
-/// safety folder. This says so, and offers to try again.
+/// careers are gone" when they are not. With a copy from before the upgrade
+/// ([onRestore] given) it says so and offers to put it back; otherwise it
+/// says only that the saves would not open. Either way it offers to try again.
 ///
 /// It stands in for the whole app, so it brings its own [MaterialApp]: there
 /// is no router or provider behind it worth trusting.
-class SaveUpgradeFailedScreen extends StatelessWidget {
-  const SaveUpgradeFailedScreen({required this.onRetry, super.key});
+class SaveUpgradeFailedScreen extends StatefulWidget {
+  const SaveUpgradeFailedScreen({
+    required this.onRetry,
+    this.onRestore,
+    this.locale,
+    super.key,
+  });
 
   /// Tears the app down and opens the database again.
   final VoidCallback onRetry;
+
+  /// Puts the copy from before the upgrade back, then retries. Null when
+  /// there is no such copy, which also picks the neutral wording.
+  final Future<void> Function()? onRestore;
+
+  /// The language chosen in Settings; null follows the device.
+  final Locale? locale;
+
+  @override
+  State<SaveUpgradeFailedScreen> createState() =>
+      _SaveUpgradeFailedScreenState();
+}
+
+class _SaveUpgradeFailedScreenState extends State<SaveUpgradeFailedScreen> {
+  bool _busy = false;
+
+  Future<void> _restore() async {
+    setState(() => _busy = true);
+    try {
+      await widget.onRestore!();
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: AppTheme.theme,
+    locale: widget.locale,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Builder(
       builder: (context) {
         final l = AppLocalizations.of(context);
+        final hasCopy = widget.onRestore != null;
+        final retry = Text(l.commonRetry);
+        final onRetry = _busy ? null : widget.onRetry;
         return Scaffold(
           backgroundColor: AppColors.surface,
           body: SafeArea(
@@ -47,21 +80,33 @@ class SaveUpgradeFailedScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       Text(
-                        l.saveUpgradeFailedTitle,
+                        hasCopy
+                            ? l.saveUpgradeFailedTitle
+                            : l.saveOpenFailedTitle,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        l.saveUpgradeFailedBody,
+                        hasCopy
+                            ? l.saveUpgradeFailedBody
+                            : l.saveOpenFailedBody,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: AppSpacing.lg),
-                      FilledButton(
-                        onPressed: onRetry,
-                        child: Text(l.commonRetry),
-                      ),
+                      if (hasCopy) ...[
+                        FilledButton(
+                          onPressed: _busy ? null : _restore,
+                          child: Text(
+                            l.saveUpgradeRestoreButton,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        OutlinedButton(onPressed: onRetry, child: retry),
+                      ] else
+                        FilledButton(onPressed: onRetry, child: retry),
                     ],
                   ),
                 ),

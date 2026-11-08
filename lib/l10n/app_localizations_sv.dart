@@ -12007,7 +12007,18 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Ditt sparade spel kunde inte uppdateras. Inget har raderats, och en kopia från före uppdateringen finns under Inställningar, Säkerhetskopior.';
+      'Ditt sparade spel kunde inte uppdateras. Inget har raderats, och en kopia från före uppdateringen finns kvar på den här telefonen.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Återställ kopian från före uppdateringen';
+
+  @override
+  String get saveOpenFailedTitle => 'Dina sparade spel kunde inte öppnas';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Dina sparade spel kunde inte öppnas. Inget har raderats. Försök igen om en stund.';
 
   @override
   String get backupCloudNoDetails => 'Detaljerna är fortfarande på väg.';

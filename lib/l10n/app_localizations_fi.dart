@@ -12086,7 +12086,18 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Tallennustasi ei voitu päivittää. Mitään ei poistettu, ja kopio ajalta ennen päivitystä löytyy kohdasta Asetukset, Varmuuskopiot.';
+      'Tallennustasi ei voitu päivittää. Mitään ei poistettu, ja kopio ajalta ennen päivitystä on tallessa tässä puhelimessa.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Palauta kopio ajalta ennen päivitystä';
+
+  @override
+  String get saveOpenFailedTitle => 'Tallennuksia ei voitu avata';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Tallennuksiasi ei voitu avata. Mitään ei poistettu. Yritä hetken päästä uudelleen.';
 
   @override
   String get backupCloudNoDetails => 'Tiedot ovat vielä tulossa.';

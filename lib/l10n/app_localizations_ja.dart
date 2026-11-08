@@ -11586,7 +11586,17 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'セーブデータを更新できませんでした。何も削除されていません。更新前のコピーは「設定」の「バックアップ」にあります。';
+      'セーブデータを更新できませんでした。何も削除されていません。更新前のコピーがこの端末に保存されています。';
+
+  @override
+  String get saveUpgradeRestoreButton => '更新前のコピーを復元';
+
+  @override
+  String get saveOpenFailedTitle => 'セーブデータを開けませんでした';
+
+  @override
+  String get saveOpenFailedBody =>
+      'セーブデータを開けませんでした。何も削除されていません。少し待ってからもう一度お試しください。';
 
   @override
   String get backupCloudNoDetails => '詳細はまだ取得中です。';

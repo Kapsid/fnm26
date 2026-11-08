@@ -12077,7 +12077,19 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Je opgeslagen spel kon niet worden bijgewerkt. Er is niets verwijderd, en een kopie van vóór de update staat in Instellingen, Back-ups.';
+      'Je opgeslagen spel kon niet worden bijgewerkt. Er is niets verwijderd, en een kopie van vóór de update staat op deze telefoon.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'De kopie van vóór de update terugzetten';
+
+  @override
+  String get saveOpenFailedTitle =>
+      'Je opgeslagen spellen konden niet worden geopend';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Je opgeslagen spellen konden niet worden geopend. Er is niets verwijderd. Probeer het zo opnieuw.';
 
   @override
   String get backupCloudNoDetails => 'De details zijn nog onderweg.';

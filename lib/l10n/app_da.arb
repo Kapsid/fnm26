@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Gennemsnitskarakter",
   "matchLiveRatingsNote": "Karaktererne følger kampen indtil nu og er endelige ved slutfløjtet.",
   "saveUpgradeFailedTitle": "Dit gemte spil kunne ikke opdateres",
-  "saveUpgradeFailedBody": "Dit gemte spil kunne ikke opdateres. Intet er slettet, og en kopi fra før opdateringen ligger under Indstillinger, Sikkerhedskopier."
+  "saveUpgradeFailedBody": "Dit gemte spil kunne ikke opdateres. Intet er slettet, og en kopi fra før opdateringen er gemt på denne telefon.",
+  "saveUpgradeRestoreButton": "Gendan kopien fra før opdateringen",
+  "saveOpenFailedTitle": "Dine gemte spil kunne ikke åbnes",
+  "saveOpenFailedBody": "Dine gemte spil kunne ikke åbnes. Intet er slettet. Prøv igen om lidt."
 }

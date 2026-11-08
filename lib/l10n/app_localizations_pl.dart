@@ -12136,7 +12136,17 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Nie udało się zaktualizować zapisu gry. Nic nie zostało usunięte, a kopia sprzed aktualizacji jest w Ustawienia, Kopie zapasowe.';
+      'Nie udało się zaktualizować zapisu gry. Nic nie zostało usunięte, a kopia sprzed aktualizacji jest zachowana na tym telefonie.';
+
+  @override
+  String get saveUpgradeRestoreButton => 'Przywróć kopię sprzed aktualizacji';
+
+  @override
+  String get saveOpenFailedTitle => 'Nie udało się otworzyć zapisów';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Nie udało się otworzyć zapisów gry. Nic nie zostało usunięte. Spróbuj ponownie za chwilę.';
 
   @override
   String get backupCloudNoDetails => 'Szczegóły są jeszcze w drodze.';

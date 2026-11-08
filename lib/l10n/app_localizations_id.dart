@@ -11915,7 +11915,18 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Simpanan permainanmu tidak bisa diperbarui. Tidak ada yang dihapus, dan salinan dari sebelum pembaruan ada di Pengaturan, Cadangan.';
+      'Simpanan permainanmu tidak bisa diperbarui. Tidak ada yang dihapus, dan salinan dari sebelum pembaruan tersimpan di ponsel ini.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Pulihkan salinan dari sebelum pembaruan';
+
+  @override
+  String get saveOpenFailedTitle => 'Simpanan tidak bisa dibuka';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Simpanan permainanmu tidak bisa dibuka. Tidak ada yang dihapus. Coba lagi sebentar lagi.';
 
   @override
   String get backupCloudNoDetails => 'Detailnya masih dalam perjalanan.';

@@ -11936,7 +11936,17 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'आपका सेव अपडेट नहीं हो सका। कुछ भी डिलीट नहीं हुआ, और अपडेट से पहले की एक कॉपी सेटिंग्स, बैकअप में है।';
+      'आपका सेव अपडेट नहीं हो सका। कुछ भी डिलीट नहीं हुआ, और अपडेट से पहले की एक कॉपी इसी फ़ोन पर रखी है।';
+
+  @override
+  String get saveUpgradeRestoreButton => 'अपडेट से पहले की कॉपी रिस्टोर करें';
+
+  @override
+  String get saveOpenFailedTitle => 'आपके सेव खुल नहीं सके';
+
+  @override
+  String get saveOpenFailedBody =>
+      'आपके सेव खुल नहीं सके। कुछ भी डिलीट नहीं हुआ। थोड़ी देर में फिर से कोशिश करें।';
 
   @override
   String get backupCloudNoDetails => 'ब्योरा अभी आ रहा है।';

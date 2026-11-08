@@ -11888,7 +11888,18 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Không thể cập nhật bản lưu của bạn. Không có gì bị xóa, và một bản sao từ trước khi cập nhật nằm trong Cài đặt, Sao lưu.';
+      'Không thể cập nhật bản lưu của bạn. Không có gì bị xóa, và một bản sao từ trước khi cập nhật vẫn được giữ trên điện thoại này.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Khôi phục bản sao từ trước khi cập nhật';
+
+  @override
+  String get saveOpenFailedTitle => 'Không thể mở các bản lưu';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Không thể mở các bản lưu của bạn. Không có gì bị xóa. Hãy thử lại sau giây lát.';
 
   @override
   String get backupCloudNoDetails => 'Thông tin chi tiết vẫn đang được tải về.';

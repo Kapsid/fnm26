@@ -11963,7 +11963,18 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Simpanan anda tidak dapat dikemas kini. Tiada apa-apa dipadam, dan salinan dari sebelum kemas kini ada dalam Tetapan, Sandaran.';
+      'Simpanan anda tidak dapat dikemas kini. Tiada apa-apa dipadam, dan salinan dari sebelum kemas kini disimpan pada telefon ini.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Pulihkan salinan dari sebelum kemas kini';
+
+  @override
+  String get saveOpenFailedTitle => 'Simpanan anda tidak dapat dibuka';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Simpanan anda tidak dapat dibuka. Tiada apa-apa dipadam. Cuba lagi sebentar nanti.';
 
   @override
   String get backupCloudNoDetails => 'Butiran masih dalam perjalanan.';

@@ -18526,9 +18526,21 @@
   "@saveUpgradeFailedTitle": {
     "description": "Launch: heading shown instead of the app when the save could not be upgraded."
   },
-  "saveUpgradeFailedBody": "Your save could not be updated. Nothing was deleted, and a copy from before the update is in Settings, Backups.",
+  "saveUpgradeFailedBody": "Your save could not be updated. Nothing was deleted, and a copy from before the update is kept on this phone.",
   "@saveUpgradeFailedBody": {
-    "description": "Launch: what happened when the save could not be upgraded, and where the copy is."
+    "description": "Launch: shown instead of the app when the save could not be upgraded and a copy from before the update exists."
+  },
+  "saveUpgradeRestoreButton": "Restore the copy from before the update",
+  "@saveUpgradeRestoreButton": {
+    "description": "Launch: button on that screen that puts the copy from before the update back."
+  },
+  "saveOpenFailedTitle": "Your saves could not be opened",
+  "@saveOpenFailedTitle": {
+    "description": "Launch: heading shown instead of the app when the saves would not open and there is no copy from before an update."
+  },
+  "saveOpenFailedBody": "Your saves could not be opened. Nothing was deleted. Try again in a moment.",
+  "@saveOpenFailedBody": {
+    "description": "Launch: what to do when the saves would not open and there is no copy from before an update."
   },
   "backupCloudNoDetails": "Details are still on their way.",
   "@backupCloudNoDetails": {

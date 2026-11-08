@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Valoración media",
   "matchLiveRatingsNote": "Las valoraciones siguen el partido hasta ahora y son definitivas al pitido final.",
   "saveUpgradeFailedTitle": "No se pudo actualizar tu partida",
-  "saveUpgradeFailedBody": "No se pudo actualizar tu partida guardada. No se ha borrado nada, y hay una copia de antes de la actualización en Ajustes, Copias de seguridad."
+  "saveUpgradeFailedBody": "No se pudo actualizar tu partida guardada. No se ha borrado nada, y hay una copia de antes de la actualización en este teléfono.",
+  "saveUpgradeRestoreButton": "Restaurar la copia de antes de la actualización",
+  "saveOpenFailedTitle": "No se pudieron abrir tus partidas",
+  "saveOpenFailedBody": "No se pudieron abrir tus partidas guardadas. No se ha borrado nada. Vuelve a intentarlo en un momento."
 }

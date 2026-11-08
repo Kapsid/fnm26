@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Snittbetyg",
   "matchLiveRatingsNote": "Betygen följer matchen hittills och är slutgiltiga vid slutsignalen.",
   "saveUpgradeFailedTitle": "Ditt sparade spel kunde inte uppdateras",
-  "saveUpgradeFailedBody": "Ditt sparade spel kunde inte uppdateras. Inget har raderats, och en kopia från före uppdateringen finns under Inställningar, Säkerhetskopior."
+  "saveUpgradeFailedBody": "Ditt sparade spel kunde inte uppdateras. Inget har raderats, och en kopia från före uppdateringen finns kvar på den här telefonen.",
+  "saveUpgradeRestoreButton": "Återställ kopian från före uppdateringen",
+  "saveOpenFailedTitle": "Dina sparade spel kunde inte öppnas",
+  "saveOpenFailedBody": "Dina sparade spel kunde inte öppnas. Inget har raderats. Försök igen om en stund."
 }

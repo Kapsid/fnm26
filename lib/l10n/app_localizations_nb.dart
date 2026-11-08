@@ -12016,7 +12016,18 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Det lagrede spillet ditt kunne ikke oppdateres. Ingenting er slettet, og en kopi fra før oppdateringen ligger under Innstillinger, Sikkerhetskopier.';
+      'Det lagrede spillet ditt kunne ikke oppdateres. Ingenting er slettet, og en kopi fra før oppdateringen er tatt vare på på denne telefonen.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Gjenopprett kopien fra før oppdateringen';
+
+  @override
+  String get saveOpenFailedTitle => 'De lagrede spillene kunne ikke åpnes';
+
+  @override
+  String get saveOpenFailedBody =>
+      'De lagrede spillene dine kunne ikke åpnes. Ingenting er slettet. Prøv igjen om litt.';
 
   @override
   String get backupCloudNoDetails => 'Detaljene er fortsatt på vei.';

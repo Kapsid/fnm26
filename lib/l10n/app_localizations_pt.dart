@@ -12105,7 +12105,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Não foi possível atualizar seu jogo salvo. Nada foi apagado, e uma cópia de antes da atualização está em Configurações, Cópias de segurança.';
+      'Não foi possível atualizar seu jogo salvo. Nada foi apagado, e uma cópia de antes da atualização está guardada neste telefone.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Restaurar a cópia de antes da atualização';
+
+  @override
+  String get saveOpenFailedTitle => 'Não foi possível abrir seus jogos salvos';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Não foi possível abrir seus jogos salvos. Nada foi apagado. Tente de novo daqui a pouco.';
 
   @override
   String get backupCloudNoDetails => 'Os detalhes ainda estão a caminho.';

@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Nota média",
   "matchLiveRatingsNote": "As notas acompanham o jogo até agora e ficam definitivas no apito final.",
   "saveUpgradeFailedTitle": "Não foi possível atualizar seu jogo salvo",
-  "saveUpgradeFailedBody": "Não foi possível atualizar seu jogo salvo. Nada foi apagado, e uma cópia de antes da atualização está em Configurações, Cópias de segurança."
+  "saveUpgradeFailedBody": "Não foi possível atualizar seu jogo salvo. Nada foi apagado, e uma cópia de antes da atualização está guardada neste telefone.",
+  "saveUpgradeRestoreButton": "Restaurar a cópia de antes da atualização",
+  "saveOpenFailedTitle": "Não foi possível abrir seus jogos salvos",
+  "saveOpenFailedBody": "Não foi possível abrir seus jogos salvos. Nada foi apagado. Tente de novo daqui a pouco."
 }

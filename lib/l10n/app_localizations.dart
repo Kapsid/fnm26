@@ -18309,11 +18309,29 @@ abstract class AppLocalizations {
   /// **'Your save could not be updated'**
   String get saveUpgradeFailedTitle;
 
-  /// Launch: what happened when the save could not be upgraded, and where the copy is.
+  /// Launch: shown instead of the app when the save could not be upgraded and a copy from before the update exists.
   ///
   /// In en, this message translates to:
-  /// **'Your save could not be updated. Nothing was deleted, and a copy from before the update is in Settings, Backups.'**
+  /// **'Your save could not be updated. Nothing was deleted, and a copy from before the update is kept on this phone.'**
   String get saveUpgradeFailedBody;
+
+  /// Launch: button on that screen that puts the copy from before the update back.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore the copy from before the update'**
+  String get saveUpgradeRestoreButton;
+
+  /// Launch: heading shown instead of the app when the saves would not open and there is no copy from before an update.
+  ///
+  /// In en, this message translates to:
+  /// **'Your saves could not be opened'**
+  String get saveOpenFailedTitle;
+
+  /// Launch: what to do when the saves would not open and there is no copy from before an update.
+  ///
+  /// In en, this message translates to:
+  /// **'Your saves could not be opened. Nothing was deleted. Try again in a moment.'**
+  String get saveOpenFailedBody;
 
   /// Cloud restore list: a backup whose details have not downloaded yet.
   ///

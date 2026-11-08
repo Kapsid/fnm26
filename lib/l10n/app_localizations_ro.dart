@@ -12366,7 +12366,18 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Salvarea ta nu a putut fi actualizată. Nu s-a șters nimic, iar o copie de dinaintea actualizării se află în Setări, Backupuri.';
+      'Salvarea ta nu a putut fi actualizată. Nu s-a șters nimic, iar o copie de dinaintea actualizării este păstrată pe acest telefon.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Restaurează copia de dinaintea actualizării';
+
+  @override
+  String get saveOpenFailedTitle => 'Salvările nu au putut fi deschise';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Salvările tale nu au putut fi deschise. Nu s-a șters nimic. Încearcă din nou peste câteva momente.';
 
   @override
   String get backupCloudNoDetails => 'Detaliile sunt încă pe drum.';

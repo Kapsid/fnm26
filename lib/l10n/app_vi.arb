@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Điểm trung bình",
   "matchLiveRatingsNote": "Điểm số theo diễn biến trận đấu đến lúc này và chốt khi hết giờ.",
   "saveUpgradeFailedTitle": "Không thể cập nhật bản lưu",
-  "saveUpgradeFailedBody": "Không thể cập nhật bản lưu của bạn. Không có gì bị xóa, và một bản sao từ trước khi cập nhật nằm trong Cài đặt, Sao lưu."
+  "saveUpgradeFailedBody": "Không thể cập nhật bản lưu của bạn. Không có gì bị xóa, và một bản sao từ trước khi cập nhật vẫn được giữ trên điện thoại này.",
+  "saveUpgradeRestoreButton": "Khôi phục bản sao từ trước khi cập nhật",
+  "saveOpenFailedTitle": "Không thể mở các bản lưu",
+  "saveOpenFailedBody": "Không thể mở các bản lưu của bạn. Không có gì bị xóa. Hãy thử lại sau giây lát."
 }

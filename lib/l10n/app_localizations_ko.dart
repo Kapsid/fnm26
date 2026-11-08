@@ -11614,7 +11614,17 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      '저장 데이터를 업데이트하지 못했습니다. 삭제된 것은 없으며, 업데이트 전 사본은 설정, 백업에 있습니다.';
+      '저장 데이터를 업데이트하지 못했습니다. 삭제된 것은 없으며, 업데이트 전 사본이 이 휴대폰에 보관되어 있습니다.';
+
+  @override
+  String get saveUpgradeRestoreButton => '업데이트 전 사본 복원';
+
+  @override
+  String get saveOpenFailedTitle => '저장 데이터를 열지 못했습니다';
+
+  @override
+  String get saveOpenFailedBody =>
+      '저장 데이터를 열지 못했습니다. 삭제된 것은 없습니다. 잠시 후 다시 시도해 주세요.';
 
   @override
   String get backupCloudNoDetails => '세부 정보를 아직 불러오는 중입니다.';

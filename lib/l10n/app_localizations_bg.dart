@@ -12095,7 +12095,18 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Записаната ви игра не можа да бъде обновена. Нищо не е изтрито, а копие отпреди обновяването има в Настройки, Резервни копия.';
+      'Записаната ви игра не можа да бъде обновена. Нищо не е изтрито, а копие отпреди обновяването е запазено на този телефон.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Възстанови копието отпреди обновяването';
+
+  @override
+  String get saveOpenFailedTitle => 'Записите не можаха да бъдат отворени';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Записаните ви игри не можаха да бъдат отворени. Нищо не е изтрито. Опитайте отново след малко.';
 
   @override
   String get backupCloudNoDetails => 'Подробностите още пристигат.';

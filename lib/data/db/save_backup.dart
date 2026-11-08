@@ -113,17 +113,56 @@ abstract final class SaveBackup {
   /// The file-name start of a copy taken by [writePreUpgradeCopy].
   static const String preUpgradePrefix = 'before-update-';
 
+  /// The file-name start of a live file set aside by [restorePreUpgradeCopy].
+  static const String failedUpgradeInfix = '.failed-upgrade-';
+
+  /// The name of the copy taken before a save at schema [version] was first
+  /// upgraded. One per version, ever: see [writePreUpgradeCopy].
+  static String preUpgradeCopyName(int version) =>
+      '${preUpgradePrefix}v$version.$extension';
+
+  /// The schema of the database file [f] as written in it, without migrating
+  /// or writing to it; null when it cannot be read.
+  ///
+  /// Read-only first, so a save that needs nothing is never touched. Only if
+  /// that open fails (a WAL left behind with no `-shm` beside it can refuse a
+  /// read-only connection) is it read read-write, which never creates a file.
+  static int? schemaVersionOf(File f) {
+    if (!f.existsSync()) return null;
+    for (final mode in const [OpenMode.readOnly, OpenMode.readWrite]) {
+      Database? db;
+      try {
+        db = sqlite3.open(f.path, mode: mode);
+        final raw = db.select('PRAGMA user_version').first.values.first;
+        return raw is int ? raw : 0;
+      } on Object {
+        continue;
+      } finally {
+        db?.close();
+      }
+    }
+    return null;
+  }
+
   /// Copies the save at [live] into the safety folder (or [into]) BEFORE this
   /// build opens it, when opening it will run a migration: its schema is at
   /// least [fromVersion] (the oldest one migrated rather than rebuilt; pass
   /// [AppDatabase.firstManagedVersion]) and below
   /// [AppDatabase.currentSchemaVersion].
   ///
-  /// The copy is `before-update-v<version>-<time>.fnmsave`, so the Backups
-  /// section lists it with the other safety copies. Only the newest
-  /// [safetyCopiesKept] pre-update copies are kept, so a save that fails to
-  /// upgrade at every launch cannot fill the phone. Returns null when there
-  /// is nothing to upgrade, or no file. Throws if the copy cannot be written.
+  /// The copy is [preUpgradeCopyName] (`before-update-v<version>.fnmsave`),
+  /// so the Backups section lists it with the other safety copies. There is
+  /// one per version and it is written ONCE: when it already exists it is
+  /// returned untouched. Drift does not run a migration in one transaction,
+  /// so an upgrade that fails part way leaves the live file half migrated at
+  /// its old version, and the next launch (or a retry) would otherwise copy
+  /// that over the only clean copy. Nothing prunes it either (see
+  /// [pruneSafetyCopies]).
+  ///
+  /// Written under a temporary name and renamed into place, so a copy cut
+  /// short never passes for a finished one. Returns null when there is
+  /// nothing to upgrade, or no readable file. Throws if the copy cannot be
+  /// written.
   ///
   /// Raw `sqlite3`, not drift: drift would migrate the file on opening it.
   static Future<File?> writePreUpgradeCopy(
@@ -131,46 +170,80 @@ abstract final class SaveBackup {
     required int fromVersion,
     Directory? into,
   }) async {
-    if (!live.existsSync()) return null;
-    // Read-write, never create: a WAL left by the last session is read (and
-    // checkpointed) rather than refused, as a read-only open can be.
+    final version = schemaVersionOf(live);
+    if (version == null ||
+        version < fromVersion ||
+        version >= AppDatabase.currentSchemaVersion) {
+      return null;
+    }
+    final dir = into ?? await safetyDirectory();
+    final out = File(p.join(dir.path, preUpgradeCopyName(version)));
+    if (out.existsSync()) return out;
+    await dir.create(recursive: true);
+    final partial = File('${out.path}.partial');
+    if (partial.existsSync()) await partial.delete();
+    // Read-write, never create: a WAL left by the last session is read
+    // rather than refused, as a read-only open can be.
     final db = sqlite3.open(live.path, mode: OpenMode.readWrite);
     try {
-      final raw = db.select('PRAGMA user_version').first.values.first;
-      final version = raw is int ? raw : 0;
-      if (version < fromVersion ||
-          version >= AppDatabase.currentSchemaVersion) {
-        return null;
-      }
-      final dir = into ?? await safetyDirectory();
-      await dir.create(recursive: true);
-      final at = DateTime.now();
-      String two(int v) => v.toString().padLeft(2, '0');
-      final name =
-          '${preUpgradePrefix}v$version-${at.year}-${two(at.month)}'
-          '-${two(at.day)}-${two(at.hour)}${two(at.minute)}${two(at.second)}'
-          '.$extension';
-      final out = File(p.join(dir.path, name));
-      if (out.existsSync()) await out.delete();
-      db.execute('VACUUM INTO ?', [out.path]);
-      if (inspect(out.path).rejection != null) {
-        throw FileSystemException('pre-upgrade copy unreadable', out.path);
-      }
-      final older = [
-        for (final f in safetyCopiesIn(dir))
-          if (p.basename(f.path).startsWith(preUpgradePrefix)) f,
-      ];
-      for (final old in older.skip(safetyCopiesKept)) {
-        try {
-          await old.delete();
-        } on Object {
-          // Tried again at the next upgrade.
-        }
-      }
-      return out;
+      db.execute('VACUUM INTO ?', [partial.path]);
     } finally {
       db.close();
     }
+    if (inspect(partial.path).rejection != null) {
+      await partial.delete();
+      throw FileSystemException('pre-upgrade copy unreadable', out.path);
+    }
+    await partial.rename(out.path);
+    return out;
+  }
+
+  /// The copy [writePreUpgradeCopy] took of [live] at the version [live] is
+  /// still at, in [dir]: the one to go back to when the upgrade from that
+  /// version failed. Null when [live] is unreadable, already current, or has
+  /// no readable copy.
+  ///
+  /// Matched to the live file's own version rather than simply the newest
+  /// copy: a save that upgraded fine and failed to open later for another
+  /// reason must not be offered a copy from before the play since.
+  static File? preUpgradeCopyFor(File live, Directory dir) {
+    final version = schemaVersionOf(live);
+    if (version == null || version >= AppDatabase.currentSchemaVersion) {
+      return null;
+    }
+    final copy = File(p.join(dir.path, preUpgradeCopyName(version)));
+    if (!copy.existsSync() || inspect(copy.path).rejection != null) {
+      return null;
+    }
+    return copy;
+  }
+
+  /// Puts [copy] (a [writePreUpgradeCopy] copy) back in place of [live],
+  /// setting the file that failed to upgrade aside as
+  /// `fnm.sqlite.failed-upgrade-<time>` (never deleted), and returns that.
+  ///
+  /// The caller must make sure nothing has [live] open. The copy stays where
+  /// it is, so it can be restored again if the next upgrade fails too.
+  static Future<File> restorePreUpgradeCopy(
+    File live,
+    File copy, {
+    DateTime? at,
+  }) async {
+    if (inspect(copy.path).rejection != null) {
+      throw FileSystemException('pre-upgrade copy unreadable', copy.path);
+    }
+    final incoming = File('${live.path}$incomingSuffix');
+    if (incoming.existsSync()) await incoming.delete();
+    await copy.copy(incoming.path);
+    await _flush(incoming);
+    final stamp = (at ?? DateTime.now()).millisecondsSinceEpoch;
+    final aside = File('${live.path}$failedUpgradeInfix$stamp');
+    if (live.existsSync()) await _moveWithWal(live, aside);
+    for (final sidecar in _sidecarsOf(live.path)) {
+      if (sidecar.existsSync()) await sidecar.delete();
+    }
+    await incoming.rename(live.path);
+    return aside;
   }
 
   /// The safety copies in [dir], newest first.
@@ -189,13 +262,18 @@ abstract final class SaveBackup {
   }
 
   /// Removes the safety copies in [dir] beyond the newest [keep], never
-  /// [protect] (the copy being restored from, if it is one of them).
+  /// [protect] (the copy being restored from, if it is one of them), and
+  /// never a pre-upgrade copy ([preUpgradePrefix]): there is one per version,
+  /// and it is the only clean copy of a save an upgrade went wrong on.
   static Future<void> pruneSafetyCopies(
     Directory dir, {
     int keep = safetyCopiesKept,
     String? protect,
   }) async {
-    final copies = safetyCopiesIn(dir);
+    final copies = [
+      for (final f in safetyCopiesIn(dir))
+        if (!p.basename(f.path).startsWith(preUpgradePrefix)) f,
+    ];
     for (final old in copies.skip(keep)) {
       if (protect != null && p.equals(old.path, protect)) continue;
       try {

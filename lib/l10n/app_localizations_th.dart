@@ -11788,7 +11788,17 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'ไม่สามารถอัปเดตเซฟของคุณได้ ไม่มีสิ่งใดถูกลบ และมีสำเนาจากก่อนการอัปเดตอยู่ใน การตั้งค่า, การสำรองข้อมูล';
+      'ไม่สามารถอัปเดตเซฟของคุณได้ ไม่มีสิ่งใดถูกลบ และมีสำเนาจากก่อนการอัปเดตเก็บไว้ในโทรศัพท์เครื่องนี้';
+
+  @override
+  String get saveUpgradeRestoreButton => 'กู้คืนสำเนาจากก่อนการอัปเดต';
+
+  @override
+  String get saveOpenFailedTitle => 'ไม่สามารถเปิดเซฟของคุณได้';
+
+  @override
+  String get saveOpenFailedBody =>
+      'ไม่สามารถเปิดเซฟของคุณได้ ไม่มีสิ่งใดถูกลบ ลองอีกครั้งในอีกสักครู่';
 
   @override
   String get backupCloudNoDetails => 'รายละเอียดกำลังตามมา';

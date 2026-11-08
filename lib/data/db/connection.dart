@@ -27,13 +27,19 @@ LazyDatabase openConnection() {
     // that goes wrong never costs the player his careers. A copy that cannot
     // be written is logged and the save opened anyway: refusing to open it
     // would lock him out of saves that will most likely upgrade fine.
+    // It runs here, on the UI isolate, once per upgrade; the time is logged
+    // so a large save's cost can be read off a device.
     try {
+      final timer = Stopwatch()..start();
       final copy = await SaveBackup.writePreUpgradeCopy(
         file,
         fromVersion: AppDatabase.firstManagedVersion,
       );
       if (copy != null) {
-        AppLog.info('pre-upgrade-copy', p.basename(copy.path));
+        AppLog.info(
+          'pre-upgrade-copy',
+          '${p.basename(copy.path)} ready in ${timer.elapsedMilliseconds} ms',
+        );
       }
     } on Object catch (e, stack) {
       AppLog.error('pre-upgrade-copy', e, stack);

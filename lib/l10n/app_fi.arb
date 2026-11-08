@@ -4023,5 +4023,8 @@
   "matchAverageRating": "Keskiarvosana",
   "matchLiveRatingsNote": "Arvosanat seuraavat ottelun tähänastista kulkua ja ovat lopullisia loppuvihellyksellä.",
   "saveUpgradeFailedTitle": "Tallennusta ei voitu päivittää",
-  "saveUpgradeFailedBody": "Tallennustasi ei voitu päivittää. Mitään ei poistettu, ja kopio ajalta ennen päivitystä löytyy kohdasta Asetukset, Varmuuskopiot."
+  "saveUpgradeFailedBody": "Tallennustasi ei voitu päivittää. Mitään ei poistettu, ja kopio ajalta ennen päivitystä on tallessa tässä puhelimessa.",
+  "saveUpgradeRestoreButton": "Palauta kopio ajalta ennen päivitystä",
+  "saveOpenFailedTitle": "Tallennuksia ei voitu avata",
+  "saveOpenFailedBody": "Tallennuksiasi ei voitu avata. Mitään ei poistettu. Yritä hetken päästä uudelleen."
 }

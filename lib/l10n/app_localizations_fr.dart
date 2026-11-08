@@ -12133,7 +12133,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get saveUpgradeFailedBody =>
-      'Votre sauvegarde n\'a pas pu être mise à jour. Rien n\'a été supprimé, et une copie d\'avant la mise à jour se trouve dans Paramètres, Sauvegardes.';
+      'Votre sauvegarde n\'a pas pu être mise à jour. Rien n\'a été supprimé, et une copie d\'avant la mise à jour est conservée sur ce téléphone.';
+
+  @override
+  String get saveUpgradeRestoreButton =>
+      'Restaurer la copie d\'avant la mise à jour';
+
+  @override
+  String get saveOpenFailedTitle => 'Impossible d\'ouvrir vos sauvegardes';
+
+  @override
+  String get saveOpenFailedBody =>
+      'Vos sauvegardes n\'ont pas pu être ouvertes. Rien n\'a été supprimé. Réessayez dans un instant.';
 
   @override
   String get backupCloudNoDetails => 'Les détails sont encore en route.';

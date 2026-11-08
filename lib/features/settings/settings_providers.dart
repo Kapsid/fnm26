@@ -159,6 +159,14 @@ final appLocalizationsProvider = Provider<AppLocalizations>((ref) {
   return lookupAppLocalizations(Locale(ref.watch(uiLanguageCodeProvider)));
 });
 
+/// The language the player chose in Settings, as stored; null when he
+/// follows the device. Reads preferences only, never the database, so a
+/// screen shown when the saves will not open can still speak his language.
+Future<Locale?> storedLocale() async {
+  final code = (await SharedPreferences.getInstance()).getString(_kLocaleKey);
+  return code == null ? null : Locale(code);
+}
+
 /// Reads the persisted settings into their providers. Call once at app start
 /// (safe offline). Absent keys keep the provider defaults.
 Future<void> loadSettings(WidgetRef ref) async {
