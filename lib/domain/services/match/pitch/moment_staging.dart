@@ -23,6 +23,9 @@ library;
 import 'dart:math' as math;
 
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/domain/entities/enums.dart';
+import 'package:fnm/domain/entities/formation.dart';
+import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';

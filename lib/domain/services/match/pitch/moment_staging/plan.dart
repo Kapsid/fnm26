@@ -135,6 +135,37 @@ abstract class _Plan implements StagedPlan {
         e.key,
   ]..sort();
 
+  /// [nation]'s instructions as it plays them now.
+  TacticalInstructions instr(int nation) =>
+      c.instructions[nation] ?? const TacticalInstructions();
+
+  /// How much [nation] looks to break the moment it wins the ball (0-1),
+  /// as the story layer reads it: tempo and directness over mentality and
+  /// pressing.
+  double counterIntent(int nation) {
+    final i = instr(nation);
+    final k = ((i.tempo + i.directness) - (i.mentality + i.pressing)) / 100;
+    return ((k - 0.2) / 0.4).clamp(0.0, 1.0);
+  }
+
+  /// [id]'s place on the team sheet (the live changes' last say), or null
+  /// for a man who came on.
+  PlayerPosition? slotOf(int id) {
+    for (final ch in c.lineups.changes.reversed) {
+      final k = ch.xi.indexOf(id);
+      if (k < 0) continue;
+      final slot = ch.slotOf[k];
+      final pos = ch.formation.positions;
+      return slot >= 0 && slot < pos.length ? pos[slot] : null;
+    }
+    for (final side in [c.lineups.home, c.lineups.away]) {
+      for (final p in side.xi) {
+        if (p.playerId == id) return p.slot;
+      }
+    }
+    return null;
+  }
+
   bool onPitch(ScriptState now, int? id) =>
       id != null && now.players.containsKey(id) && !now.walking.contains(id);
 
@@ -407,6 +438,11 @@ abstract class _Plan implements StagedPlan {
     if (skip.contains(id) || now.keepers.contains(id)) return null;
     final p = now.players[id];
     if (p == null || p.distanceTo(now.ball) > 26) return null;
+    // A man a set piece left on the goal line steps straight out first.
+    const cap = _goalLine - _reactFloor;
+    if (depthOf(p) > cap + 0.1) {
+      return (target: at(cap - 0.5, latOf(p)), maxSpeed: 4.0);
+    }
     if (now.teams[id] == opp) {
       // Goal-side: toward the line from the ball to the goal it defends.
       final g = goal;

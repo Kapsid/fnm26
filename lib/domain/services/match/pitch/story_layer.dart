@@ -323,7 +323,12 @@ class StagingContext {
     this.events = const [],
     this.resuming = false,
     this.hardEnd = double.infinity,
+    this.instructions = const {},
   });
+
+  /// Each side's instructions as it plays them now (nation id -> dials):
+  /// the team sheet's, the manager's live changes and the AI's drift.
+  final Map<int, TacticalInstructions> instructions;
 
   /// The window: its start and end (screen seconds) and its moments.
   final StagedWindow window;
@@ -624,6 +629,14 @@ const double _handover = 1.3;
 /// has to and the side on it is owed ball time.
 const double _lateHandover = 0.75;
 const double _keeperMaxDepth = 24.5;
+
+/// The nearest his own goal line an outfield man is sent in a staged
+/// moment that does not name him.
+const double _lineFloor = 7;
+
+/// The furthest out a keeper's place in the shape goes, the ball at the
+/// far end: inside his area, at home.
+const double _keeperHome = 14;
 
 /// Where a man walking off leaves the picture: this far inside the line.
 const double _edge = 0.5;
@@ -1155,6 +1168,9 @@ class _Builder {
             if (windows[k].start - w.end <= LeadIn.taker) windows[k],
         ],
         events: result.events,
+        instructions: {
+          for (final side in sides) side.team.nationId: side.instr,
+        },
         resuming: resumeAt != null && (t - resumeAt!).abs() < 1e-9,
         hardEnd: [
           for (final r in [...resets, total])
@@ -2276,7 +2292,10 @@ class _Builder {
       if (idx == null) continue;
       final (lx, ly) = side.effective[i];
       if (i == side.gkSlot) {
-        final depth = (4 + 0.12 * ballDepth + lineAdj * 0.3).clamp(3.0, 17.0);
+        final depth = (4 + 0.12 * ballDepth + lineAdj * 0.3).clamp(
+          3.0,
+          _keeperHome,
+        );
         final lat = (ballLat * 0.15).clamp(-6.0, 6.0);
         out[idx] = Offset2(depthToX(depth, dir), lateralToY(lat, dir));
         continue;
@@ -2524,9 +2543,13 @@ class _Builder {
     final state = inWindow && plan is! _Hold ? _state(t0) : null;
 
     sprinting.clear();
+    // In an attack being staged the side it belongs to has the ball, so
+    // its men off the ball take up their places in possession.
+    final attacking = inWindow ? _attackingSide(activeWindow!) : null;
+    final owner = attacking ?? possession;
     final anchors = <int, Offset2>{
-      ..._anchors(0, minute, t0, ball, possession == 0),
-      ..._anchors(1, minute, t0, ball, possession == 1),
+      ..._anchors(0, minute, t0, ball, owner == 0),
+      ..._anchors(1, minute, t0, ball, owner == 1),
     };
 
     // Who presses: the nearest one or two of the side without the ball. A
@@ -2748,6 +2771,27 @@ class _Builder {
         return (f.lead, math.min(8, a.pos.distanceTo(f.lead) / left + 1), 2);
       }
       freeDrive = true;
+      final w = activeWindow!;
+      // Never onto his own goal line: that is the keeper's.
+      final home = xToDepth(anchor.x, dir) < _lineFloor
+          ? Offset2(depthToX(_lineFloor, dir), anchor.y)
+          : anchor;
+      if (_attackingSide(w) != null) {
+        // An attack: the men it does not name move with it, into their
+        // places in the shape (the attackers up in support, the defenders
+        // back into theirs), never standing where open play left them.
+        final dist = a.pos.distanceTo(home);
+        return (home, (2.5 + dist * 0.4).clamp(2.5, 6.0), 1);
+      }
+      if (w.injury != null ||
+          w.moments.isEmpty ||
+          w.moments.first is SubMoment) {
+        // Play is stopped for a change or a knock: the men walk back
+        // into their places meanwhile (off a goal line a set piece left
+        // them on).
+        final dist = a.pos.distanceTo(home);
+        return (home, math.min(3.0, 1.0 + dist * 0.3), 1);
+      }
       return (a.pos, 0, 2);
     }
     if (carrier == a.index) {
@@ -2812,6 +2856,15 @@ class _Builder {
         : (2.5 + dist * 0.5 + side.instr.tempo * 0.008).clamp(2.5, 6.5);
     freeDrive = true;
     return (anchor, speed, 1);
+  }
+
+  /// The side (0 home, 1 away) whose attack window [w] stages, when it is
+  /// one played in open play: a shot that is not a penalty.
+  int? _attackingSide(StagedWindow w) {
+    if (w.moments.isEmpty) return null;
+    final m = w.moments.first;
+    if (m is! ShotMoment || m.origin == ShotOrigin.penalty) return null;
+    return m.teamNationId == lineups.home.nationId ? 0 : 1;
   }
 
   /// Where a man walking off heads now: straight for the touchline, stepping
