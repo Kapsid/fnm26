@@ -4022,9 +4022,8 @@
   "ratingSemantics": "คะแนน {rating}",
   "matchAverageRating": "คะแนนเฉลี่ย",
   "matchLiveRatingsNote": "คะแนนเปลี่ยนตามเกมที่ผ่านมาและเป็นคะแนนสุดท้ายเมื่อหมดเวลา",
-  "matchSubShout": "เปลี่ยนตัว",
   "matchRedCardShout": "ใบแดง",
+  "matchSubShout": "เปลี่ยนตัว",
   "matchSubOff": "ออก: {name}",
-  "matchSubOn": "เข้า: {name}",
-  "matchSentOff": "ถูกไล่ออก"
+  "matchSubOn": "เข้า: {name}"
 }

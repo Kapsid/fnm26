@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Rating {rating}",
   "matchAverageRating": "Average na rating",
   "matchLiveRatingsNote": "Sinusundan ng mga rating ang laro sa ngayon at pinal na pagsapit ng huling pito.",
+  "matchRedCardShout": "RED CARD",
   "matchSubShout": "PALIT",
-  "matchRedCardShout": "PULANG KARD",
   "matchSubOff": "Labas: {name}",
-  "matchSubOn": "Pasok: {name}",
-  "matchSentOff": "Pinalabas"
+  "matchSubOn": "Pasok: {name}"
 }

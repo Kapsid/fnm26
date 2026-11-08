@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Оценка {rating}",
   "matchAverageRating": "Средна оценка",
   "matchLiveRatingsNote": "Оценките следват мача досега и стават окончателни с последния сигнал.",
-  "matchSubShout": "СМЯНА",
   "matchRedCardShout": "ЧЕРВЕН КАРТОН",
+  "matchSubShout": "СМЯНА",
   "matchSubOff": "Излиза: {name}",
-  "matchSubOn": "Влиза: {name}",
-  "matchSentOff": "Изгонен"
+  "matchSubOn": "Влиза: {name}"
 }

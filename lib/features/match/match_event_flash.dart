@@ -1,49 +1,19 @@
 part of 'match_screen.dart';
 
-/// How long a substitution's or a red card's pop-up stays: out, held and
-/// gone again. Play never waits for it (only a goal holds the clock).
+/// How long a substitution's pop-up stays: out, held and gone again. Play never waits for it (only a goal holds the clock).
 const Duration kEventFlashHold = Duration(milliseconds: 2600);
 
-/// The key of the score bug's substitution / red-card banner.
+/// The key of the score bug's substitution banner.
 const Key matchEventBannerKey = Key('match.eventBanner');
 
-/// The key of the Timeline's (and the tablet's) substitution / red-card
-/// pop-up.
+/// The key of the Timeline's (and the tablet's) substitution pop-up.
 const Key matchEventFlashKey = Key('match.eventFlash');
 
-/// The pure red of a referee's card, drawn as the card itself.
-const Color _kCardRed = Color(0xFFE53935);
-
-/// Whether [e] gets a pop-up of its own: a substitution or a sending-off.
+/// Whether [e] gets a pop-up of its own: a substitution only. A red card
+/// has its own banner on the 2D TV (`_RedCardBanner`) and never comes here.
 bool flashesAsEvent(MatchEvent e) => e.type == MatchEventType.substitution;
 
-/// The referee's card, small, as a glyph.
-class _RedCardGlyph extends StatelessWidget {
-  const _RedCardGlyph({this.width = 9, this.height = 12});
-
-  final double width;
-  final double height;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    width: width,
-    height: height,
-    decoration: BoxDecoration(
-      color: _kCardRed,
-      borderRadius: BorderRadius.circular(1.5),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x66000000),
-          blurRadius: 2,
-          offset: Offset(0, 1),
-        ),
-      ],
-    ),
-  );
-}
-
-/// Who went off and who came on, or who was sent off: one line for the
-/// score bug's banner, the arrows in the game's red and green.
+/// Who went off and who came on: one line for the score bug's banner, the arrows in the game's red and green.
 class _EventLine extends StatelessWidget {
   const _EventLine({required this.event, required this.style});
 
@@ -62,15 +32,6 @@ class _EventLine extends StatelessWidget {
         style: style,
       ),
     );
-    if (e.type == MatchEventType.redCard) {
-      return Row(
-        children: [
-          const _RedCardGlyph(),
-          const SizedBox(width: 6),
-          name(e.playerName),
-        ],
-      );
-    }
     final off = e.secondaryName;
     return Row(
       children: [
@@ -102,10 +63,9 @@ class _EventLine extends StatelessWidget {
   }
 }
 
-/// The 2D TV's banner for a substitution or a red card: out from under the
-/// score bug as the goal's banner comes, in the same dress (the side's kit
-/// on the edge, its flag, a plate with the shout, then who and when). A
-/// red card's plate is the card's own red.
+/// The 2D TV's banner for a substitution: out from under the score bug as
+/// the goal's banner comes, in the same dress (the side's kit on the edge,
+/// its flag, a plate with the shout, then who and when).
 class _EventBanner extends StatelessWidget {
   const _EventBanner({
     required this.event,
@@ -125,7 +85,6 @@ class _EventBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final red = event.type == MatchEventType.redCard;
     const radius = BorderRadius.vertical(bottom: Radius.circular(AppRadii.sm));
     final theme = this.theme;
     final banner = Container(
@@ -151,9 +110,7 @@ class _EventBanner extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
               alignment: Alignment.center,
-              decoration: red
-                  ? const BoxDecoration(color: _kCardRed, border: _kSilverBevel)
-                  : theme == null
+              decoration: theme == null
                   ? const BoxDecoration(
                       gradient: _kSilverPlate,
                       border: _kSilverBevel,
@@ -163,13 +120,11 @@ class _EventBanner extends StatelessWidget {
                       border: _kSilverBevel,
                     ),
               child: Text(
-                red ? l.matchRedCardShout : l.matchSubShout,
+                l.matchSubShout,
                 maxLines: 1,
                 softWrap: false,
                 style: AppTypography.labelMedium.copyWith(
-                  color: red
-                      ? Colors.white
-                      : theme?.scoreText ?? AppColors.onPrimaryFixed,
+                  color: theme?.scoreText ?? AppColors.onPrimaryFixed,
                   fontWeight: FontWeight.w800,
                   height: 1,
                   letterSpacing: 1,
@@ -240,8 +195,8 @@ class _EventBanner extends StatelessWidget {
   }
 }
 
-/// The Timeline's (and the tablet's) pop-up for a substitution or a red
-/// card, dressed as the goal's: a card with the side's flag, the shout,
+/// The Timeline's (and the tablet's) pop-up for a substitution, dressed as
+/// the goal's: a card with the side's flag, the shout,
 /// who and when. It pops in, holds and fades; play goes on under it.
 class _EventFlash extends StatelessWidget {
   const _EventFlash({required this.event, required this.flagCode});
@@ -253,14 +208,12 @@ class _EventFlash extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final e = event;
-    final red = e.type == MatchEventType.redCard;
     final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    final accent = red ? _kCardRed : AppColors.primary;
-    Widget row(IconData? icon, Color c, String text, {Widget? lead}) => Row(
+    const accent = AppColors.primary;
+    Widget row(IconData icon, Color c, String text) => Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ?lead,
-        if (icon != null) Icon(icon, size: 18, color: c),
+        Icon(icon, size: 18, color: c),
         const SizedBox(width: AppSpacing.xs),
         Flexible(
           child: Text(
@@ -291,43 +244,30 @@ class _EventFlash extends StatelessWidget {
           FlagDisc(flagCode, size: 36),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            red ? l.matchRedCardShout : l.matchSubShout,
+            l.matchSubShout,
             textAlign: TextAlign.center,
             style: AppTypography.headlineMedium.copyWith(color: accent),
           ),
           const SizedBox(height: AppSpacing.sm),
-          if (red) ...[
-            row(
-              null,
-              accent,
-              e.playerName,
-              lead: const _RedCardGlyph(width: 12, height: 16),
-            ),
-            Text(
-              l.matchSentOff,
-              style: AppTypography.labelSmall.copyWith(color: _kCardRed),
-            ),
-          ] else ...[
-            if (off != null)
-              Semantics(
-                label: l.matchSubOff(off),
-                excludeSemantics: true,
-                child: row(
-                  Icons.arrow_downward_rounded,
-                  AppColors.error,
-                  off,
-                ),
-              ),
+          if (off != null)
             Semantics(
-              label: l.matchSubOn(e.playerName),
+              label: l.matchSubOff(off),
               excludeSemantics: true,
               child: row(
-                Icons.arrow_upward_rounded,
-                AppColors.positive,
-                e.playerName,
+                Icons.arrow_downward_rounded,
+                AppColors.error,
+                off,
               ),
             ),
-          ],
+          Semantics(
+            label: l.matchSubOn(e.playerName),
+            excludeSemantics: true,
+            child: row(
+              Icons.arrow_upward_rounded,
+              AppColors.positive,
+              e.playerName,
+            ),
+          ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             _eventClock(e),

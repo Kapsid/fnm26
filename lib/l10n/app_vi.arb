@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Điểm {rating}",
   "matchAverageRating": "Điểm trung bình",
   "matchLiveRatingsNote": "Điểm số theo diễn biến trận đấu đến lúc này và chốt khi hết giờ.",
-  "matchSubShout": "THAY NGƯỜI",
   "matchRedCardShout": "THẺ ĐỎ",
+  "matchSubShout": "THAY NGƯỜI",
   "matchSubOff": "Ra sân: {name}",
-  "matchSubOn": "Vào sân: {name}",
-  "matchSentOff": "Bị đuổi khỏi sân"
+  "matchSubOn": "Vào sân: {name}"
 }

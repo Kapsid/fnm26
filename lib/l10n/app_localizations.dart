@@ -12547,6 +12547,12 @@ abstract class AppLocalizations {
   /// **'GOAL!'**
   String get matchGoalShout;
 
+  /// Live match, 2D TV: the banner under the score when a player is sent off.
+  ///
+  /// In en, this message translates to:
+  /// **'RED CARD'**
+  String get matchRedCardShout;
+
   /// Live match: the shoot-out scoreline.
   ///
   /// In en, this message translates to:
@@ -24374,12 +24380,6 @@ abstract class AppLocalizations {
   /// **'SUB'**
   String get matchSubShout;
 
-  /// Live match: the red-card pop-up, its shout (like GOAL!).
-  ///
-  /// In en, this message translates to:
-  /// **'RED CARD'**
-  String get matchRedCardShout;
-
   /// Live match, substitution pop-up: the player going off (beside a red arrow; also read out by screen readers).
   ///
   /// In en, this message translates to:
@@ -24391,12 +24391,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On: {name}'**
   String matchSubOn(String name);
-
-  /// Live match, red-card pop-up: the line under the player sent off.
-  ///
-  /// In en, this message translates to:
-  /// **'Sent off'**
-  String get matchSentOff;
 }
 
 class _AppLocalizationsDelegate

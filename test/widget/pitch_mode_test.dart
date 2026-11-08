@@ -86,6 +86,7 @@ MatchPreview _preview({
   String? round = 'FRIENDLY',
   int saveSeed = 42,
   bool opponentSub = false,
+  int opponentSubMinute = 63,
 }) {
   final home = pitchNation('CZE');
   final away = pitchNation('POR');
@@ -146,7 +147,7 @@ MatchPreview _preview({
       if (opponentSub)
         Substitution(
           teamNationId: away.id,
-          minute: 63,
+          minute: opponentSubMinute,
           offId: away.id * 100 + 9,
           on: bench(away).first,
         ),
@@ -856,6 +857,139 @@ void main() {
       await tester.pump(kEventFlashHold + const Duration(milliseconds: 100));
       await tester.pump();
       expect(find.byKey(key), findsNothing);
+    });
+  }
+
+  // A substitution and a sending-off in the same minute: the red card has
+  // its own banner and the sub's pop-up is held back while it is out (it
+  // comes back if its own time is not up). The two never show together.
+  for (final form in FormFactor.values) {
+    testWidgets('a sub and a red card in the same minute never overlap '
+        '(${form.name})', (tester) async {
+      final tablet = form == FormFactor.tablet;
+      // A red card clear of goals and of half time, with the AI's change
+      // moved into its minute.
+      MatchPreview? preview;
+      int? salt;
+      for (var s = 1; s < 4000 && preview == null; s++) {
+        final reds = _liveResim(
+          _preview(opponentSub: true),
+          s,
+        ).events.where((e) => e.type == MatchEventType.redCard);
+        if (reds.isEmpty) continue;
+        final m = reds.first.minute;
+        if (m < 10 || m > 85 || (m >= 40 && m <= 50)) continue;
+        final p = _preview(opponentSub: true, opponentSubMinute: m);
+        final r = _liveResim(p, s);
+        bool at(MatchEventType t) =>
+            r.events.any((e) => e.type == t && e.minute == m);
+        if (!at(MatchEventType.redCard) || !at(MatchEventType.substitution)) {
+          continue;
+        }
+        if (r.events.any(
+          (e) => e.type == MatchEventType.goal && (e.minute - m).abs() <= 3,
+        )) {
+          continue;
+        }
+        preview = p;
+        salt = s;
+      }
+      expect(preview, isNotNull, reason: 'no same-minute sub and red card');
+      await _pump(
+        tester,
+        preview: preview!,
+        salt: salt!,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        formFactor: form,
+        size: tablet ? const Size(1366, 1024) : const Size(400, 2000),
+      );
+      await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      final r = _result(tester);
+      final pb = _pb(tester);
+      final ri = r.events.indexWhere((e) => e.type == MatchEventType.redCard);
+      final m = r.events[ri].minute;
+      final si = r.events.indexWhere(
+        (e) => e.type == MatchEventType.substitution && e.minute == m,
+      );
+      expect(si, isNonNegative, reason: 'the screen re-sim has the same sub');
+      if (m > 45) {
+        await _seek(tester, pb.halfTime - const Duration(milliseconds: 300));
+        await _until(
+          tester,
+          () => find.byType(HalfTimePrompt).evaluate().isNotEmpty,
+        );
+        await tester.tap(
+          find.descendant(
+            of: find.byType(HalfTimePrompt),
+            matching: find.text(enL.matchContinue),
+          ),
+        );
+        await tester.pump();
+        await _until(tester, () => _clock(tester).playing);
+      }
+      final redFirst = pb.revealAt(ri) < pb.revealAt(si);
+      final redBanner = find.byKey(matchRedCardBannerKey);
+      final subPop = find.byKey(
+        tablet ? matchEventFlashKey : matchEventBannerKey,
+      );
+      var sawRed = false;
+      var sawSub = false;
+      var subAfterRed = false;
+      var overlap = 0;
+      bool redOut() => redBanner.evaluate().isNotEmpty;
+      bool subOut() => subPop.evaluate().isNotEmpty;
+      Future<void> frame() async {
+        await tester.pump(const Duration(milliseconds: 16));
+        final red = redOut();
+        final sub = subOut();
+        if (sub && sawRed && !red) subAfterRed = true;
+        sawRed |= red;
+        sawSub |= sub;
+        if (red && sub) overlap++;
+        if (sub) {
+          // The sub's pop-up is a sub's only, never a red card's too.
+          expect(
+            find.descendant(of: subPop, matching: find.text(enL.matchSubShout)),
+            findsOneWidget,
+          );
+          expect(
+            find.descendant(
+              of: subPop,
+              matching: find.text(enL.matchRedCardShout),
+            ),
+            findsNothing,
+          );
+        }
+      }
+
+      // The first of the two comes out...
+      await _seek(
+        tester,
+        _secs(pb.revealAt(redFirst ? ri : si) - 0.4),
+      );
+      for (var i = 0; i < 600 && !(redFirst ? redOut() : subOut()); i++) {
+        await frame();
+      }
+      expect(redFirst ? redOut() : subOut(), isTrue);
+      // ...and the second arrives while it is still out, as it does at the
+      // faster speeds: both timers run at once.
+      await _seek(
+        tester,
+        _secs(pb.revealAt(redFirst ? si : ri) - 0.3),
+      );
+      for (var i = 0; i < 600; i++) {
+        await frame();
+        if (sawRed && sawSub && !redOut() && !subOut()) break;
+      }
+      expect(sawRed, isTrue, reason: 'the red card banner came down');
+      expect(sawSub, isTrue, reason: 'the sub pop-up showed');
+      expect(overlap, 0, reason: 'never both at once');
+      if (redFirst) {
+        // Held back under the red, the sub comes back for the rest of its
+        // own time.
+        expect(subAfterRed, isTrue);
+      }
+      expect(redOut() || subOut(), isFalse);
     });
   }
 

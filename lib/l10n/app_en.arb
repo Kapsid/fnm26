@@ -13136,6 +13136,10 @@
   "@matchGoalShout": {
     "description": "Live match: the goal flash."
   },
+  "matchRedCardShout": "RED CARD",
+  "@matchRedCardShout": {
+    "description": "Live match, 2D TV: the banner under the score when a player is sent off."
+  },
   "matchShootoutScore": "SHOOTOUT {home}–{away}",
   "@matchShootoutScore": {
     "description": "Live match: the shoot-out scoreline.",
@@ -25011,10 +25015,6 @@
   "@matchSubShout": {
     "description": "Live match: the substitution pop-up, its shout (like GOAL!)."
   },
-  "matchRedCardShout": "RED CARD",
-  "@matchRedCardShout": {
-    "description": "Live match: the red-card pop-up, its shout (like GOAL!)."
-  },
   "matchSubOff": "Off: {name}",
   "@matchSubOff": {
     "description": "Live match, substitution pop-up: the player going off (beside a red arrow; also read out by screen readers).",
@@ -25032,9 +25032,5 @@
         "type": "String"
       }
     }
-  },
-  "matchSentOff": "Sent off",
-  "@matchSentOff": {
-    "description": "Live match, red-card pop-up: the line under the player sent off."
   }
 }

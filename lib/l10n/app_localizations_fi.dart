@@ -8296,6 +8296,9 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchGoalShout => 'MAALI!';
 
   @override
+  String get matchRedCardShout => 'PUNAINEN KORTTI';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'RANKKARIT $home–$away';
   }
@@ -16248,9 +16251,6 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchSubShout => 'VAIHTO';
 
   @override
-  String get matchRedCardShout => 'PUNAINEN KORTTI';
-
-  @override
   String matchSubOff(String name) {
     return 'Pois: $name';
   }
@@ -16259,7 +16259,4 @@ class AppLocalizationsFi extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Sisään: $name';
   }
-
-  @override
-  String get matchSentOff => 'Ajettu ulos';
 }

@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Betyg {rating}",
   "matchAverageRating": "Snittbetyg",
   "matchLiveRatingsNote": "Betygen följer matchen hittills och är slutgiltiga vid slutsignalen.",
-  "matchSubShout": "BYTE",
   "matchRedCardShout": "RÖTT KORT",
+  "matchSubShout": "BYTE",
   "matchSubOff": "Ut: {name}",
-  "matchSubOn": "In: {name}",
-  "matchSentOff": "Utvisad"
+  "matchSubOn": "In: {name}"
 }

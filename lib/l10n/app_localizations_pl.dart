@@ -8334,6 +8334,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchGoalShout => 'GOL!';
 
   @override
+  String get matchRedCardShout => 'CZERWONA KARTKA';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'KARNE $home–$away';
   }
@@ -16347,9 +16350,6 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchSubShout => 'ZMIANA';
 
   @override
-  String get matchRedCardShout => 'CZERWONA KARTKA';
-
-  @override
   String matchSubOff(String name) {
     return 'Schodzi: $name';
   }
@@ -16358,7 +16358,4 @@ class AppLocalizationsPl extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Wchodzi: $name';
   }
-
-  @override
-  String get matchSentOff => 'Wyrzucony z boiska';
 }

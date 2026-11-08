@@ -16,6 +16,7 @@ import 'package:fnm/features/match/pitch/confetti_painter.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/features/match/pitch/referee_painter.dart';
 import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
 import 'package:fnm/features/match/pitch/weather_painter.dart';
@@ -375,8 +376,29 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
   }
 
   Widget _actorsPainted(Size drawSize) => RepaintBoundary(
-    child: CustomPaint(painter: _actorsFor(drawSize)),
+    child: CustomPaint(
+      painter: _actorsFor(drawSize),
+      // A sending-off's referee, over the players.
+      foregroundPainter: _refereeFor(drawSize),
+    ),
   );
+
+  RefereePainter? _referee;
+
+  RefereePainter _refereeFor(Size size) {
+    final r = _referee;
+    if (r != null &&
+        identical(r.script, widget.script) &&
+        identical(r.clock, widget.clock) &&
+        r.projection.viewport == size) {
+      return r;
+    }
+    return _referee = RefereePainter(
+      script: widget.script,
+      clock: widget.clock,
+      projection: PitchMatchView.projectionFor(size),
+    );
+  }
 
   WeatherOverlay _weatherFor() {
     final w = _weather;

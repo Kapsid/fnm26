@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Notă {rating}",
   "matchAverageRating": "Notă medie",
   "matchLiveRatingsNote": "Notele urmăresc meciul de până acum și devin finale la fluierul de final.",
-  "matchSubShout": "SCHIMBARE",
   "matchRedCardShout": "CARTONAȘ ROȘU",
+  "matchSubShout": "SCHIMBARE",
   "matchSubOff": "Iese: {name}",
-  "matchSubOn": "Intră: {name}",
-  "matchSentOff": "Eliminat"
+  "matchSubOn": "Intră: {name}"
 }

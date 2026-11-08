@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Ocena {rating}",
   "matchAverageRating": "Średnia ocena",
   "matchLiveRatingsNote": "Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku.",
-  "matchSubShout": "ZMIANA",
   "matchRedCardShout": "CZERWONA KARTKA",
+  "matchSubShout": "ZMIANA",
   "matchSubOff": "Schodzi: {name}",
-  "matchSubOn": "Wchodzi: {name}",
-  "matchSentOff": "Wyrzucony z boiska"
+  "matchSubOn": "Wchodzi: {name}"
 }

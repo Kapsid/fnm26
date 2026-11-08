@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Puan {rating}",
   "matchAverageRating": "Ortalama puan",
   "matchLiveRatingsNote": "Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir.",
-  "matchSubShout": "DEĞİŞİKLİK",
   "matchRedCardShout": "KIRMIZI KART",
+  "matchSubShout": "DEĞİŞİKLİK",
   "matchSubOff": "Çıkan: {name}",
-  "matchSubOn": "Giren: {name}",
-  "matchSentOff": "Oyundan atıldı"
+  "matchSubOn": "Giren: {name}"
 }

@@ -7994,6 +7994,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchGoalShout => '골!';
 
   @override
+  String get matchRedCardShout => '레드카드';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return '승부차기 $home–$away';
   }
@@ -15635,9 +15638,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchSubShout => '교체';
 
   @override
-  String get matchRedCardShout => '레드카드';
-
-  @override
   String matchSubOff(String name) {
     return '아웃: $name';
   }
@@ -15646,7 +15646,4 @@ class AppLocalizationsKo extends AppLocalizations {
   String matchSubOn(String name) {
     return '인: $name';
   }
-
-  @override
-  String get matchSentOff => '퇴장';
 }

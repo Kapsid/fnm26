@@ -4022,9 +4022,8 @@
   "ratingSemantics": "評価 {rating}",
   "matchAverageRating": "平均評価",
   "matchLiveRatingsNote": "評価は試合の経過に合わせて変わり、試合終了の笛で確定します。",
-  "matchSubShout": "選手交代",
   "matchRedCardShout": "レッドカード",
+  "matchSubShout": "選手交代",
   "matchSubOff": "アウト: {name}",
-  "matchSubOn": "イン: {name}",
-  "matchSentOff": "退場"
+  "matchSubOn": "イン: {name}"
 }

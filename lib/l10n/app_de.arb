@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Note {rating}",
   "matchAverageRating": "Durchschnittsnote",
   "matchLiveRatingsNote": "Die Noten folgen dem bisherigen Spielverlauf und stehen erst mit dem Schlusspfiff fest.",
-  "matchSubShout": "WECHSEL",
   "matchRedCardShout": "ROTE KARTE",
+  "matchSubShout": "WECHSEL",
   "matchSubOff": "Raus: {name}",
-  "matchSubOn": "Rein: {name}",
-  "matchSentOff": "Platzverweis"
+  "matchSubOn": "Rein: {name}"
 }

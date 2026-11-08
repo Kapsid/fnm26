@@ -8100,6 +8100,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchGoalShout => 'VÀO!';
 
   @override
+  String get matchRedCardShout => 'THẺ ĐỎ';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'LUÂN LƯU $home–$away';
   }
@@ -16022,9 +16025,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchSubShout => 'THAY NGƯỜI';
 
   @override
-  String get matchRedCardShout => 'THẺ ĐỎ';
-
-  @override
   String matchSubOff(String name) {
     return 'Ra sân: $name';
   }
@@ -16033,7 +16033,4 @@ class AppLocalizationsVi extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Vào sân: $name';
   }
-
-  @override
-  String get matchSentOff => 'Bị đuổi khỏi sân';
 }

@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Penarafan {rating}",
   "matchAverageRating": "Purata penarafan",
   "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat.",
-  "matchSubShout": "PERTUKARAN",
   "matchRedCardShout": "KAD MERAH",
+  "matchSubShout": "PERTUKARAN",
   "matchSubOff": "Keluar: {name}",
-  "matchSubOn": "Masuk: {name}",
-  "matchSentOff": "Dibuang padang"
+  "matchSubOn": "Masuk: {name}"
 }

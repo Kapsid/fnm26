@@ -7979,6 +7979,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchGoalShout => 'ゴール！';
 
   @override
+  String get matchRedCardShout => 'レッドカード';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'PK戦 $home–$away';
   }
@@ -15596,9 +15599,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchSubShout => '選手交代';
 
   @override
-  String get matchRedCardShout => 'レッドカード';
-
-  @override
   String matchSubOff(String name) {
     return 'アウト: $name';
   }
@@ -15607,7 +15607,4 @@ class AppLocalizationsJa extends AppLocalizations {
   String matchSubOn(String name) {
     return 'イン: $name';
   }
-
-  @override
-  String get matchSentOff => '退場';
 }

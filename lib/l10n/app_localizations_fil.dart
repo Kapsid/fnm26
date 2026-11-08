@@ -8198,6 +8198,9 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchGoalShout => 'GOAL!';
 
   @override
+  String get matchRedCardShout => 'RED CARD';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'SHOOTOUT $home–$away';
   }
@@ -16182,9 +16185,6 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchSubShout => 'PALIT';
 
   @override
-  String get matchRedCardShout => 'PULANG KARD';
-
-  @override
   String matchSubOff(String name) {
     return 'Labas: $name';
   }
@@ -16193,7 +16193,4 @@ class AppLocalizationsFil extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Pasok: $name';
   }
-
-  @override
-  String get matchSentOff => 'Pinalabas';
 }

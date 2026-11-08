@@ -80,7 +80,7 @@ class _ScoreBug extends StatelessWidget {
     this.noticeForHome = false,
   });
 
-  /// A substitution or a red card being shown (see [_EventBanner]); a goal
+  /// A substitution being shown (see [_EventBanner]); a goal
   /// banner takes its place.
   final MatchEvent? notice;
   final bool noticeForHome;

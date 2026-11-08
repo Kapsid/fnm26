@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Βαθμολογία {rating}",
   "matchAverageRating": "Μέση βαθμολογία",
   "matchLiveRatingsNote": "Οι βαθμολογίες ακολουθούν τον αγώνα μέχρι τώρα και οριστικοποιούνται με το τελικό σφύριγμα.",
-  "matchSubShout": "ΑΛΛΑΓΗ",
   "matchRedCardShout": "ΚΟΚΚΙΝΗ ΚΑΡΤΑ",
+  "matchSubShout": "ΑΛΛΑΓΗ",
   "matchSubOff": "Βγαίνει: {name}",
-  "matchSubOn": "Μπαίνει: {name}",
-  "matchSentOff": "Αποβλήθηκε"
+  "matchSubOn": "Μπαίνει: {name}"
 }

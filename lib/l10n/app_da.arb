@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Karakter {rating}",
   "matchAverageRating": "Gennemsnitskarakter",
   "matchLiveRatingsNote": "Karaktererne følger kampen indtil nu og er endelige ved slutfløjtet.",
-  "matchSubShout": "UDSKIFTNING",
   "matchRedCardShout": "RØDT KORT",
+  "matchSubShout": "UDSKIFTNING",
   "matchSubOff": "Ud: {name}",
-  "matchSubOn": "Ind: {name}",
-  "matchSentOff": "Udvist"
+  "matchSubOn": "Ind: {name}"
 }

@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Értékelés {rating}",
   "matchAverageRating": "Átlagos értékelés",
   "matchLiveRatingsNote": "Az értékelések az eddigi játékot követik, és a lefújáskor válnak véglegessé.",
-  "matchSubShout": "CSERE",
   "matchRedCardShout": "PIROS LAP",
+  "matchSubShout": "CSERE",
   "matchSubOff": "Le: {name}",
-  "matchSubOn": "Be: {name}",
-  "matchSentOff": "Kiállítva"
+  "matchSubOn": "Be: {name}"
 }

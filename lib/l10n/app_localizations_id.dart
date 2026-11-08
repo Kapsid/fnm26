@@ -8133,6 +8133,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchGoalShout => 'GOL!';
 
   @override
+  String get matchRedCardShout => 'KARTU MERAH';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ADU PENALTI $home–$away';
   }
@@ -16082,9 +16085,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchSubShout => 'PERGANTIAN';
 
   @override
-  String get matchRedCardShout => 'KARTU MERAH';
-
-  @override
   String matchSubOff(String name) {
     return 'Keluar: $name';
   }
@@ -16093,7 +16093,4 @@ class AppLocalizationsId extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Masuk: $name';
   }
-
-  @override
-  String get matchSentOff => 'Diusir';
 }

@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Voto {rating}",
   "matchAverageRating": "Voto medio",
   "matchLiveRatingsNote": "I voti seguono la partita fin qui e diventano definitivi al fischio finale.",
-  "matchSubShout": "CAMBIO",
   "matchRedCardShout": "CARTELLINO ROSSO",
+  "matchSubShout": "CAMBIO",
   "matchSubOff": "Esce: {name}",
-  "matchSubOn": "Entra: {name}",
-  "matchSentOff": "Espulso"
+  "matchSubOn": "Entra: {name}"
 }

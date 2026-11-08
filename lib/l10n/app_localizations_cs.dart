@@ -8403,6 +8403,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchGoalShout => 'GÓL!';
 
   @override
+  String get matchRedCardShout => 'ČERVENÁ KARTA';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'PENALTY $home:$away';
   }
@@ -16450,9 +16453,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchSubShout => 'STŘÍDÁNÍ';
 
   @override
-  String get matchRedCardShout => 'ČERVENÁ KARTA';
-
-  @override
   String matchSubOff(String name) {
     return 'Odchází: $name';
   }
@@ -16461,7 +16461,4 @@ class AppLocalizationsCs extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Přichází: $name';
   }
-
-  @override
-  String get matchSentOff => 'Vyloučen';
 }

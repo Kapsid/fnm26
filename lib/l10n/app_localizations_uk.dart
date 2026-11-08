@@ -8380,6 +8380,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchGoalShout => 'ГОЛ!';
 
   @override
+  String get matchRedCardShout => 'ЧЕРВОНА КАРТКА';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ПЕНАЛЬТІ $home–$away';
   }
@@ -16489,9 +16492,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchSubShout => 'ЗАМІНА';
 
   @override
-  String get matchRedCardShout => 'ЧЕРВОНА КАРТКА';
-
-  @override
   String matchSubOff(String name) {
     return 'Залишає поле: $name';
   }
@@ -16500,7 +16500,4 @@ class AppLocalizationsUk extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Виходить на поле: $name';
   }
-
-  @override
-  String get matchSentOff => 'Вилучений';
 }

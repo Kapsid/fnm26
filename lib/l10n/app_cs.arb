@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Známka {rating}",
   "matchAverageRating": "Průměrná známka",
   "matchLiveRatingsNote": "Známky sledují dosavadní průběh zápasu a platí až po závěrečném hvizdu.",
-  "matchSubShout": "STŘÍDÁNÍ",
   "matchRedCardShout": "ČERVENÁ KARTA",
+  "matchSubShout": "STŘÍDÁNÍ",
   "matchSubOff": "Odchází: {name}",
-  "matchSubOn": "Přichází: {name}",
-  "matchSentOff": "Vyloučen"
+  "matchSubOn": "Přichází: {name}"
 }

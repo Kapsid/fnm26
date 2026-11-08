@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Rating {rating}",
   "matchAverageRating": "Rating rata-rata",
   "matchLiveRatingsNote": "Rating mengikuti jalannya laga sejauh ini dan menjadi final saat peluit akhir.",
-  "matchSubShout": "PERGANTIAN",
   "matchRedCardShout": "KARTU MERAH",
+  "matchSubShout": "PERGANTIAN",
   "matchSubOff": "Keluar: {name}",
-  "matchSubOn": "Masuk: {name}",
-  "matchSentOff": "Diusir"
+  "matchSubOn": "Masuk: {name}"
 }

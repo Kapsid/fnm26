@@ -8078,6 +8078,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchGoalShout => 'ประตู!';
 
   @override
+  String get matchRedCardShout => 'ใบแดง';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ดวลจุดโทษ $home–$away';
   }
@@ -15881,9 +15884,6 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchSubShout => 'เปลี่ยนตัว';
 
   @override
-  String get matchRedCardShout => 'ใบแดง';
-
-  @override
   String matchSubOff(String name) {
     return 'ออก: $name';
   }
@@ -15892,7 +15892,4 @@ class AppLocalizationsTh extends AppLocalizations {
   String matchSubOn(String name) {
     return 'เข้า: $name';
   }
-
-  @override
-  String get matchSentOff => 'ถูกไล่ออก';
 }

@@ -8270,6 +8270,9 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchGoalShout => 'ΓΚΟΛ!';
 
   @override
+  String get matchRedCardShout => 'ΚΟΚΚΙΝΗ ΚΑΡΤΑ';
+
+  @override
   String matchShootoutScore(int home, int away) {
     return 'ΠΕΝΑΛΤΙ $home–$away';
   }
@@ -16264,9 +16267,6 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchSubShout => 'ΑΛΛΑΓΗ';
 
   @override
-  String get matchRedCardShout => 'ΚΟΚΚΙΝΗ ΚΑΡΤΑ';
-
-  @override
   String matchSubOff(String name) {
     return 'Βγαίνει: $name';
   }
@@ -16275,7 +16275,4 @@ class AppLocalizationsEl extends AppLocalizations {
   String matchSubOn(String name) {
     return 'Μπαίνει: $name';
   }
-
-  @override
-  String get matchSentOff => 'Αποβλήθηκε';
 }

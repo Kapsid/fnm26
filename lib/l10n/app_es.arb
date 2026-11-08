@@ -4022,9 +4022,8 @@
   "ratingSemantics": "Valoración {rating}",
   "matchAverageRating": "Valoración media",
   "matchLiveRatingsNote": "Las valoraciones siguen el partido hasta ahora y son definitivas al pitido final.",
-  "matchSubShout": "CAMBIO",
   "matchRedCardShout": "TARJETA ROJA",
+  "matchSubShout": "CAMBIO",
   "matchSubOff": "Sale: {name}",
-  "matchSubOn": "Entra: {name}",
-  "matchSentOff": "Expulsado"
+  "matchSubOn": "Entra: {name}"
 }
