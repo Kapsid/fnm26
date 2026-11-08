@@ -15,6 +15,7 @@ import 'package:fnm/data/repositories/drift_squad_repository.dart';
 import 'package:fnm/data/repositories/drift_tactic_familiarity_repository.dart';
 import 'package:fnm/data/repositories/drift_tactic_library_repository.dart';
 import 'package:fnm/data/repositories/drift_tactics_repository.dart';
+import 'package:fnm/data/repositories/drift_world_manager_repository.dart';
 import 'package:fnm/data/seed/seed_loader.dart';
 import 'package:fnm/data/seed/seed_source.dart';
 import 'package:fnm/domain/repositories/absence_repository.dart';
@@ -30,6 +31,7 @@ import 'package:fnm/domain/repositories/squad_repository.dart';
 import 'package:fnm/domain/repositories/tactic_familiarity_repository.dart';
 import 'package:fnm/domain/repositories/tactic_library_repository.dart';
 import 'package:fnm/domain/repositories/tactics_repository.dart';
+import 'package:fnm/domain/repositories/world_manager_repository.dart';
 import 'package:fnm/domain/services/world_pack/active_world.dart';
 
 /// Data-layer dependency wiring.
@@ -134,6 +136,11 @@ final competitionRepositoryProvider = Provider<CompetitionRepository>(
 
 final tacticsRepositoryProvider = Provider<TacticsRepository>(
   (ref) => DriftTacticsRepository(ref.watch(appDatabaseProvider)),
+);
+
+/// The world's managers, spells and ties (schema 55).
+final worldManagerRepositoryProvider = Provider<WorldManagerRepository>(
+  (ref) => DriftWorldManagerRepository(ref.watch(appDatabaseProvider)),
 );
 
 final tacticFamiliarityRepositoryProvider =
