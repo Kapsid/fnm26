@@ -20,6 +20,7 @@ import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/pitch/referee_card.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
+import 'package:fnm/features/match/match_feedback.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
@@ -267,7 +268,23 @@ final List<String> _feedback = [];
 const String _heavy = 'HapticFeedback.vibrate HapticFeedbackType.heavyImpact';
 const String _medium = 'HapticFeedback.vibrate HapticFeedbackType.mediumImpact';
 
+/// `HapticFeedback.vibrate()`: on iOS the audio services' vibrate.
+const String _buzz = 'HapticFeedback.vibrate null';
+
 int _count(String kind) => _feedback.where((f) => f == kind).length;
+
+/// [goals] goals, felt: each one's buzz at once, then its heavy impact
+/// [MatchFeedback.goalImpactDelay] later.
+Future<void> _expectGoalFelt(WidgetTester tester, int goals) async {
+  expect(_count(_buzz), goals, reason: 'the buzz, at once');
+  expect(_count(_heavy), 0, reason: 'the impact follows the buzz');
+  await tester.pump(
+    MatchFeedback.goalImpactDelay + const Duration(milliseconds: 10),
+  );
+  expect(_count(_buzz), goals);
+  expect(_count(_heavy), goals);
+  expect(_feedback.indexOf(_buzz), lessThan(_feedback.indexOf(_heavy)));
+}
 
 bool _shout(WidgetTester tester) =>
     find.text(enL.matchGoalShout).evaluate().isNotEmpty;
@@ -316,7 +333,7 @@ void main() {
         prefs: {kMatchViewModePrefsKey: 'timeline'},
       );
       await _until(tester, () => _shout(tester));
-      expect(_count(_heavy), 1);
+      await _expectGoalFelt(tester, 1);
     });
 
     testWidgets('2D TV: a goal buzzes as it goes in, once', (tester) async {
@@ -331,14 +348,14 @@ void main() {
       await _until(tester, () => _ready(tester) && _clock(tester).playing);
       final r = _result(tester);
       final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
-      expect(_count(_heavy), 0, reason: 'no goal yet');
+      expect(_count(_buzz) + _count(_heavy), 0, reason: 'no goal yet');
       await _seek(tester, _secs(_pb(tester).revealAt(gi) - 0.3));
       await _until(tester, () => _shout(tester));
       await tester.pump(const Duration(milliseconds: 1));
-      expect(_count(_heavy), 1);
+      await _expectGoalFelt(tester, 1);
       // Held under the flash: no second buzz for the same goal.
       await tester.pump(const Duration(seconds: 1));
-      expect(_count(_heavy), 1);
+      expect((_count(_buzz), _count(_heavy)), (1, 1));
     });
 
     testWidgets('2D TV: played from kick-off at match pace, the first goal '
@@ -357,7 +374,7 @@ void main() {
       }
       expect(_shout(tester), isTrue);
       await tester.pump(const Duration(milliseconds: 1));
-      expect(_count(_heavy), 1);
+      await _expectGoalFelt(tester, 1);
     });
 
     testWidgets('2D TV built off the UI thread (as on a phone): the goal '
@@ -387,7 +404,7 @@ void main() {
       await _seek(tester, _secs(_pb(tester).revealAt(gi) - 0.3));
       await _until(tester, () => _shout(tester));
       await tester.pump(const Duration(milliseconds: 1));
-      expect(_count(_heavy), 1);
+      await _expectGoalFelt(tester, 1);
     });
 
     testWidgets('2D TV: the half-time whistle does not buzz like a goal', (
@@ -411,7 +428,7 @@ void main() {
       await _seek(tester, _secs(pb.halfTime.inMicroseconds / 1e6 - 0.5));
       await _until(tester, () => !_clock(tester).playing);
       await tester.pump(const Duration(seconds: 2));
-      expect(_count(_heavy), 0);
+      expect(_count(_buzz) + _count(_heavy), 0);
     });
   });
 
@@ -477,7 +494,7 @@ void main() {
       expect(referee.frameAt(t + RefereeCardShow.lift)?.card, RefereeCard.red);
       // A light buzz, not a goal's; and the clock never stopped for it.
       expect(_count(_medium), greaterThanOrEqualTo(2), reason: 'kick-off too');
-      expect(_count(_heavy), 0);
+      expect(_count(_buzz) + _count(_heavy), 0);
       expect(_clock(tester).playing, isTrue);
       expect(find.text(enL.matchGoalShout), findsNothing);
       // The man is on his way off while the card is still up.
