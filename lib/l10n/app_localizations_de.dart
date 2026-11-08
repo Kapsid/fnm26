@@ -8252,6 +8252,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'SPIELER DES SPIELS';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Spieler des Spiels';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Note $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Durchschnittsnote';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Die Noten folgen dem bisherigen Spielverlauf und stehen erst mit dem Schlusspfiff fest.';
+
+  @override
   String get matchGoalShout => 'TOR!';
 
   @override

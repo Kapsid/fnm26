@@ -8361,6 +8361,21 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'HRÁČ ZÁPASU';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Hráč zápasu';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Známka $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Průměrná známka';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Známky sledují dosavadní průběh zápasu a platí až po závěrečném hvizdu.';
+
+  @override
   String get matchGoalShout => 'GÓL!';
 
   @override

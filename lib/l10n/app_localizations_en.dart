@@ -8215,6 +8215,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'PLAYER OF THE MATCH';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Player of the match';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Rating $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Average rating';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Ratings follow the match so far and are final at the whistle.';
+
+  @override
   String get matchGoalShout => 'GOAL!';
 
   @override

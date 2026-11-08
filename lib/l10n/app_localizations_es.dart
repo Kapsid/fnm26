@@ -8245,6 +8245,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'MEJOR JUGADOR DEL PARTIDO';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Mejor jugador del partido';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Valoración $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Valoración media';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Las valoraciones siguen el partido hasta ahora y son definitivas al pitido final.';
+
+  @override
   String get matchGoalShout => '¡GOL!';
 
   @override

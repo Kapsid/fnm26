@@ -342,11 +342,9 @@ class _RatingsGrid extends StatelessWidget {
               width: 72,
               numeric: true,
               sortKey: (r) => r.meanRating,
-              cell: (r) => Text(
-                r.meanRating.toStringAsFixed(2),
-                style: TabletText.cellNumeric.copyWith(
-                  color: AppColors.ratingColor(r.meanRating),
-                ),
+              cell: (r) => Align(
+                alignment: Alignment.centerRight,
+                child: RatingBadge(r.meanRating, compact: true, decimals: 2),
               ),
             ),
           ],

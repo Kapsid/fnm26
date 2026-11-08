@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMMENTARER",
   "homeNextFixture": "Neste: {match}, {when}",
   "homeCycleComplete": "Verdensmesterskapet {year} er over. Nå venter styrets dom.",
-  "homeFollowingFinals": "Verdensmesterskapet {year} fra tribunen"
+  "homeFollowingFinals": "Verdensmesterskapet {year} fra tribunen",
+  "ratingPlayerOfTheMatch": "Kampens spiller",
+  "ratingSemantics": "Karakter {rating}",
+  "matchAverageRating": "Snittkarakter",
+  "matchLiveRatingsNote": "Karakterene følger kampen så langt og er endelige ved sluttsignalet."
 }

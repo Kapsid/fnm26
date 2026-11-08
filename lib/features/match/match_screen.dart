@@ -24,6 +24,7 @@ import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
+import 'package:fnm/domain/services/match/live_rating.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
@@ -1976,7 +1977,40 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       e.teamNationId == nationId,
                 )
                 .toList();
-            final lineups = _Lineups(
+            // The ratings: the stored marks at the whistle, and before it a
+            // running mark built from the clock's events alone, so the tab
+            // never shows a mark the match has not earned yet.
+            final Map<int, double> lineupRatings;
+            if (ft) {
+              lineupRatings = {for (final x in r.ratings) x.playerId: x.rating};
+            } else {
+              final candidates = <int, Player>{
+                for (final p in [
+                  ...preview.homeTeam.xi,
+                  ...preview.awayTeam.xi,
+                  ...preview.bench,
+                  ...preview.opponentBench,
+                  ..._currentXi(preview),
+                ])
+                  p.id: p,
+              };
+              lineupRatings = LiveRatings.asOf(
+                players: [
+                  for (final p in candidates.values)
+                    (id: p.id, nationId: p.nationId, category: p.category),
+                ],
+                starterIds: {
+                  for (final p in preview.homeTeam.xi) p.id,
+                  for (final p in preview.awayTeam.xi) p.id,
+                },
+                events: shown,
+                moments: r.moments,
+                homeNationId: homeId,
+                minute: _minute,
+                added: _added,
+              );
+            }
+            final lineups = MatchLineups(
               home: preview.playerIsHome
                   ? _currentXi(preview)
                   : preview.homeTeam.xi,
@@ -1993,10 +2027,11 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               awayBench: preview.playerIsHome
                   ? preview.opponentBench
                   : preview.bench,
-              ratings: ft
-                  ? {for (final x in r.ratings) x.playerId: x.rating}
-                  : const {},
+              ratings: lineupRatings,
               energy: _liveEnergy(r),
+              events: timelineEvents,
+              motmId: ft ? r.manOfTheMatch?.playerId : null,
+              live: !ft,
             );
             final overlays = <Widget>[
               if (_goalFlash != null && !bug)

@@ -7938,6 +7938,20 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'マン・オブ・ザ・マッチ';
 
   @override
+  String get ratingPlayerOfTheMatch => 'マン・オブ・ザ・マッチ';
+
+  @override
+  String ratingSemantics(String rating) {
+    return '評価 $rating';
+  }
+
+  @override
+  String get matchAverageRating => '平均評価';
+
+  @override
+  String get matchLiveRatingsNote => '評価は試合の経過に合わせて変わり、試合終了の笛で確定します。';
+
+  @override
   String get matchGoalShout => 'ゴール！';
 
   @override

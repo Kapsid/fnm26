@@ -8292,6 +8292,21 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'ZAWODNIK MECZU';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Zawodnik meczu';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Ocena $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Średnia ocena';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku.';
+
+  @override
   String get matchGoalShout => 'GOL!';
 
   @override

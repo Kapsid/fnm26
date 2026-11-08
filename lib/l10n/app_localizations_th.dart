@@ -8036,6 +8036,21 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'ผู้เล่นยอดเยี่ยมประจำเกม';
 
   @override
+  String get ratingPlayerOfTheMatch => 'ผู้เล่นยอดเยี่ยมประจำเกม';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'คะแนน $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'คะแนนเฉลี่ย';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'คะแนนเปลี่ยนตามเกมที่ผ่านมาและเป็นคะแนนสุดท้ายเมื่อหมดเวลา';
+
+  @override
   String get matchGoalShout => 'ประตู!';
 
   @override

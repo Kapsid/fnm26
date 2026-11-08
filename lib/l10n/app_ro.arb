@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "COMENTARIU",
   "homeNextFixture": "Următorul: {match}, {when}",
   "homeCycleComplete": "Campionatul Mondial {year} s-a încheiat. Urmează verdictul conducerii.",
-  "homeFollowingFinals": "Campionatul Mondial {year} din tribună"
+  "homeFollowingFinals": "Campionatul Mondial {year} din tribună",
+  "ratingPlayerOfTheMatch": "Omul meciului",
+  "ratingSemantics": "Notă {rating}",
+  "matchAverageRating": "Notă medie",
+  "matchLiveRatingsNote": "Notele urmăresc meciul de până acum și devin finale la fluierul de final."
 }

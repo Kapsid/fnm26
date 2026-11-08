@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "SELOSTUS",
   "homeNextFixture": "Seuraava: {match}, {when}",
   "homeCycleComplete": "Vuoden {year} MM-kisat on pelattu. Seuraavaksi johtokunnan tuomio.",
-  "homeFollowingFinals": "Vuoden {year} MM-kisat katsomosta"
+  "homeFollowingFinals": "Vuoden {year} MM-kisat katsomosta",
+  "ratingPlayerOfTheMatch": "Ottelun paras pelaaja",
+  "ratingSemantics": "Arvosana {rating}",
+  "matchAverageRating": "Keskiarvosana",
+  "matchLiveRatingsNote": "Arvosanat seuraavat ottelun tähänastista kulkua ja ovat lopullisia loppuvihellyksellä."
 }

@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMENTARZ",
   "homeNextFixture": "Następny mecz: {match}, {when}",
   "homeCycleComplete": "Mistrzostwa Świata {year} zakończone. Teraz werdykt zarządu.",
-  "homeFollowingFinals": "Mistrzostwa Świata {year} z trybun"
+  "homeFollowingFinals": "Mistrzostwa Świata {year} z trybun",
+  "ratingPlayerOfTheMatch": "Zawodnik meczu",
+  "ratingSemantics": "Ocena {rating}",
+  "matchAverageRating": "Średnia ocena",
+  "matchLiveRatingsNote": "Oceny odzwierciedlają dotychczasowy przebieg meczu i są ostateczne po końcowym gwizdku."
 }

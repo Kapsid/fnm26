@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMENTÁŘ",
   "homeNextFixture": "Další: {match}, {when}",
   "homeCycleComplete": "Mistrovství světa {year} skončilo. Na řadě je verdikt vedení.",
-  "homeFollowingFinals": "MS {year} z tribuny"
+  "homeFollowingFinals": "MS {year} z tribuny",
+  "ratingPlayerOfTheMatch": "Hráč zápasu",
+  "ratingSemantics": "Známka {rating}",
+  "matchAverageRating": "Průměrná známka",
+  "matchLiveRatingsNote": "Známky sledují dosavadní průběh zápasu a platí až po závěrečném hvizdu."
 }

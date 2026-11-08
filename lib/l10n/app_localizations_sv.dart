@@ -8180,6 +8180,21 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'MATCHENS BÄSTE SPELARE';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Matchens bäste spelare';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Betyg $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Snittbetyg';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Betygen följer matchen hittills och är slutgiltiga vid slutsignalen.';
+
+  @override
   String get matchGoalShout => 'MÅL!';
 
   @override

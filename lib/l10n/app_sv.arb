@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMMENTARER",
   "homeNextFixture": "Nästa: {match}, {when}",
   "homeCycleComplete": "Världsmästerskapet {year} är avgjort. Nu väntar styrelsens dom.",
-  "homeFollowingFinals": "Världsmästerskapet {year} från läktaren"
+  "homeFollowingFinals": "Världsmästerskapet {year} från läktaren",
+  "ratingPlayerOfTheMatch": "Matchens bäste spelare",
+  "ratingSemantics": "Betyg {rating}",
+  "matchAverageRating": "Snittbetyg",
+  "matchLiveRatingsNote": "Betygen följer matchen hittills och är slutgiltiga vid slutsignalen."
 }

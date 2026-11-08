@@ -8109,6 +8109,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'MAÇIN ADAMI';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Maçın adamı';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Puan $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Ortalama puan';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir.';
+
+  @override
   String get matchGoalShout => 'GOL!';
 
   @override

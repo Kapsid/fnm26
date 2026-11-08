@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "実況",
   "homeNextFixture": "次戦: {match}、{when}",
   "homeCycleComplete": "{year}年世界選手権は終了。次は協会の評価です。",
-  "homeFollowingFinals": "{year}年世界選手権を観戦中"
+  "homeFollowingFinals": "{year}年世界選手権を観戦中",
+  "ratingPlayerOfTheMatch": "マン・オブ・ザ・マッチ",
+  "ratingSemantics": "評価 {rating}",
+  "matchAverageRating": "平均評価",
+  "matchLiveRatingsNote": "評価は試合の経過に合わせて変わり、試合終了の笛で確定します。"
 }

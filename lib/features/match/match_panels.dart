@@ -363,7 +363,10 @@ class MatchStatsPanel extends StatelessWidget {
                       style: AppTypography.bodyMedium,
                     ),
                   ),
-                  _RatingPill(r.rating),
+                  RatingBadge(
+                    r.rating,
+                    motm: r.playerId == result.manOfTheMatch?.playerId,
+                  ),
                 ],
               ),
             ),
@@ -540,8 +543,17 @@ class _StatBar extends StatelessWidget {
   }
 }
 
-class _Lineups extends StatelessWidget {
-  const _Lineups({
+/// The two line-ups, each player with his match rating and what he has done
+/// so far: goals, assists, cards, coming on or going off.
+///
+/// PUBLIC so a widget test can pump it on its own. While the match is played
+/// [ratings] are the live marks (see `LiveRatings`): built only from the
+/// [events] the clock has reached, so they never show a mark the match has
+/// not earned yet. At full time they are the stored marks and [motmId] gets
+/// its star.
+class MatchLineups extends StatelessWidget {
+  const MatchLineups({
+    super.key,
     required this.home,
     required this.away,
     required this.homeCode,
@@ -552,6 +564,9 @@ class _Lineups extends StatelessWidget {
     this.awayBench = const [],
     this.ratings = const {},
     this.energy = const {},
+    this.events = const [],
+    this.motmId,
+    this.live = false,
   });
 
   final List<Player> home;
@@ -569,63 +584,168 @@ class _Lineups extends StatelessWidget {
   final List<Player> homeBench;
   final List<Player> awayBench;
 
-  /// Per-player match ratings, keyed by player id. Empty until full time.
+  /// Per-player match ratings, keyed by player id: the live marks while the
+  /// match is played, the stored ones at full time. A player who has not
+  /// been on the pitch has none.
   final Map<int, double> ratings;
 
   /// Per-player remaining energy (0–100) at full time, keyed by player id.
   final Map<int, int> energy;
 
+  /// The events the clock has reached, for each player's markers.
+  final List<MatchEvent> events;
+
+  /// The player of the match, starred at full time; null while it is played.
+  final int? motmId;
+
+  /// The match is still being played: the ratings are running marks.
+  final bool live;
+
+  /// Key of the line-up row for [playerId], for tests.
+  static Key rowKey(int playerId) => ValueKey(('lineupRow', playerId));
+
+  /// Below this width (the tablet's Pitch-mode column, about 256 wide) a
+  /// row drops the energy figure and puts the markers under the name, so
+  /// the name keeps about ten characters and no badge is ever cut.
+  static const double narrowWidth = 280;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, c) => _list(context, narrow: c.maxWidth < narrowWidth),
+  );
+
+  Widget _list(BuildContext context, {required bool narrow}) {
+    final l = AppLocalizations.of(context);
     return ListView(
-      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      padding: EdgeInsets.all(narrow ? AppSpacing.md : AppSpacing.marginMobile),
       children: [
-        _xi(context, homeCode, home, homeSubs, homeBench),
+        if (live && ratings.isNotEmpty) ...[
+          Text(
+            l.matchLiveRatingsNote,
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+        ],
+        _xi(context, homeCode, home, homeSubs, homeBench, narrow: narrow),
         const SizedBox(height: AppSpacing.lg),
-        _xi(context, awayCode, away, awaySubs, awayBench),
+        _xi(context, awayCode, away, awaySubs, awayBench, narrow: narrow),
       ],
     );
   }
+
+  Widget? _badge(int playerId) => switch (ratings[playerId]) {
+    final r? => RatingBadge(r, compact: true, motm: playerId == motmId),
+    null => null,
+  };
 
   Widget _xi(
     BuildContext context,
     String teamCode,
     List<Player> xi,
     List<MatchEvent> subs,
-    List<Player> bench,
-  ) {
+    List<Player> bench, {
+    required bool narrow,
+  }) {
+    final l = AppLocalizations.of(context);
     // Anyone already on the pitch is no longer a substitute.
     final onPitch = {for (final p in xi) p.id};
     final remaining = [
       for (final p in bench)
         if (!onPitch.contains(p.id)) p,
     ];
+    // The side's mean over everyone who has played, the subs it has
+    // already made included.
+    final played = {
+      ...onPitch,
+      for (final s in subs) ...[s.playerId, ?s.secondaryPlayerId],
+    };
+    final marks = [
+      for (final id in played) ?ratings[id],
+    ];
+    final average = marks.isEmpty
+        ? null
+        : marks.reduce((a, b) => a + b) / marks.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          nationCodeLabel(teamCode),
-          style: AppTypography.labelMedium.copyWith(color: AppColors.primary),
+        Row(
+          children: [
+            Text(
+              nationCodeLabel(teamCode),
+              style: AppTypography.labelMedium.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            if (average != null) ...[
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  l.matchAverageRating,
+                  textAlign: TextAlign.end,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              RatingBadge(average, compact: true),
+            ],
+          ],
         ),
         const SizedBox(height: AppSpacing.sm),
         for (final p in xi)
           Padding(
+            key: rowKey(p.id),
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: Row(
               children: [
                 SizedBox(width: 36, child: TacticalChip(p.position.label)),
                 const SizedBox(width: AppSpacing.sm),
+                // The name and his markers share what the fixed columns
+                // leave, the name first. In a narrow column the markers go
+                // under the name instead of beside it.
                 Expanded(
-                  child: Text(p.name, style: AppTypography.bodyMedium),
+                  child: narrow
+                      ? _nameOver(p, _markers(p.id))
+                      : Row(
+                          children: [
+                            Flexible(
+                              flex: 3,
+                              child: Text(
+                                p.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.bodyMedium,
+                              ),
+                            ),
+                            if (_markers(p.id) case final marks
+                                when marks.isNotEmpty)
+                              Flexible(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: marks,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                 ),
                 if (energy[p.id] case final e?) ...[
-                  _EnergyPip(e),
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.xs),
+                  _EnergyPip(e, showFigure: !narrow),
                 ],
-                if (ratings[p.id] case final r?) ...[
-                  _RatingPill(r),
+                if (_badge(p.id) case final b?) ...[
                   const SizedBox(width: AppSpacing.sm),
+                  b,
                 ],
+                const SizedBox(width: AppSpacing.sm),
                 SizedBox(
                   width: 20,
                   child: Text(
@@ -642,69 +762,18 @@ class _Lineups extends StatelessWidget {
         if (subs.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.sm),
           Text(
-            AppLocalizations.of(context).matchSubstitutions,
+            l.matchSubstitutions,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          for (final s in subs)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 36,
-                    child: Text(
-                      "${s.minute}'",
-                      style: AppTypography.labelSmall.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  const Icon(
-                    Icons.swap_horiz,
-                    size: 16,
-                    color: AppColors.onSurfaceVariant,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  // playerName is the player coming on, secondaryName the one
-                  // going off (see MatchEvent docs).
-                  Expanded(
-                    child: RichText(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        style: AppTypography.bodySmall,
-                        children: [
-                          const TextSpan(
-                            text: '▲ ',
-                            style: TextStyle(color: AppColors.positive),
-                          ),
-                          TextSpan(text: s.playerName),
-                          const TextSpan(text: '   '),
-                          const TextSpan(
-                            text: '▼ ',
-                            style: TextStyle(color: AppColors.error),
-                          ),
-                          TextSpan(
-                            text: s.secondaryName ?? '—',
-                            style: const TextStyle(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          for (final s in subs) _subRow(s, onPitch),
         ],
         if (remaining.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.sm),
           Text(
-            AppLocalizations.of(context).matchSubstitutes,
+            l.matchSubstitutes,
             style: AppTypography.labelSmall.copyWith(
               color: AppColors.onSurfaceVariant,
             ),
@@ -744,15 +813,207 @@ class _Lineups extends StatelessWidget {
       ],
     );
   }
+
+  /// A substitution: who came on (above) and who went off (below). A player
+  /// not listed in the eleven above (the man taken off, or the opponent's
+  /// newcomer) carries his rating here instead, so everyone who played has
+  /// one on the tab. The badge sits outside the name, so a long name is cut
+  /// and the badge never is.
+  Widget _subRow(MatchEvent s, Set<int> listed) {
+    // playerName is the player coming on, secondaryName the one going off
+    // (see MatchEvent docs).
+    Widget line(String arrow, Color arrowColor, String name, int? id) {
+      final badge = id == null || listed.contains(id) ? null : _badge(id);
+      return Row(
+        children: [
+          Text(
+            arrow,
+            style: AppTypography.bodySmall.copyWith(color: arrowColor),
+          ),
+          Flexible(
+            child: Text(
+              name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySmall.copyWith(
+                color: arrow == '▲ '
+                    ? AppColors.onSurface
+                    : AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          if (badge != null) ...[
+            const SizedBox(width: AppSpacing.xs),
+            badge,
+          ],
+        ],
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 36,
+            child: Text(
+              "${s.minute}'",
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const Icon(
+            Icons.swap_horiz,
+            size: 16,
+            color: AppColors.onSurfaceVariant,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                line('▲ ', AppColors.positive, s.playerName, s.playerId),
+                line(
+                  '▼ ',
+                  AppColors.error,
+                  s.secondaryName ?? '-',
+                  s.secondaryPlayerId,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// A narrow column's name cell: the name on its own line, whatever he has
+  /// done so far in small marks under it.
+  Widget _nameOver(Player p, List<Widget> marks) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text(
+        p.name,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTypography.bodyMedium,
+      ),
+      if (marks.isNotEmpty)
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            key: ValueKey(('markersUnder', p.id)),
+            mainAxisSize: MainAxisSize.min,
+            children: marks.skip(1).toList(),
+          ),
+        ),
+    ],
+  );
+
+  /// The small marks after a player's name for what the clock has shown him
+  /// do: goals (a count past one), assists, his card, a knock, and coming on
+  /// or going off.
+  List<Widget> _markers(int id) {
+    var goals = 0;
+    var assists = 0;
+    var cameOn = false;
+    var wentOff = false;
+    var injured = false;
+    MatchCard? card;
+    for (final e in events) {
+      switch (e.type) {
+        case MatchEventType.goal:
+          if (e.playerId == id) goals++;
+          if (e.assistPlayerId == id) assists++;
+        case MatchEventType.yellowCard:
+          if (e.playerId == id) card ??= MatchCard.yellow;
+        case MatchEventType.redCard:
+          if (e.playerId == id) {
+            card = e.secondYellow ? MatchCard.secondYellow : MatchCard.red;
+          }
+        case MatchEventType.substitution:
+          if (e.playerId == id) cameOn = true;
+          if (e.secondaryPlayerId == id) wentOff = true;
+        case MatchEventType.injury:
+          if (e.playerId == id) injured = true;
+      }
+    }
+    Widget counted(Widget icon, int n, Key key) => Row(
+      key: key,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        icon,
+        if (n > 1)
+          Text(
+            '$n',
+            style: AppTypography.labelSmall.copyWith(
+              fontSize: 10,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+      ],
+    );
+    final marks = <Widget>[
+      if (goals > 0)
+        counted(
+          const Icon(Icons.sports_soccer, size: 12, color: AppColors.primary),
+          goals,
+          ValueKey(('goalMark', id)),
+        ),
+      if (assists > 0)
+        counted(
+          const Icon(
+            Icons.handshake_rounded,
+            size: 12,
+            color: AppColors.onSurfaceVariant,
+          ),
+          assists,
+          ValueKey(('assistMark', id)),
+        ),
+      if (card case final c?)
+        CardMark(c, size: 10, key: ValueKey(('cardMark', id))),
+      if (injured)
+        Icon(
+          Icons.medical_services,
+          size: 12,
+          color: AppColors.warning,
+          key: ValueKey(('injuryMark', id)),
+        ),
+      if (cameOn)
+        Icon(
+          Icons.arrow_upward_rounded,
+          size: 12,
+          color: AppColors.positive,
+          key: ValueKey(('subOnMark', id)),
+        ),
+      if (wentOff)
+        Icon(
+          Icons.arrow_downward_rounded,
+          size: 12,
+          color: AppColors.error,
+          key: ValueKey(('subOffMark', id)),
+        ),
+    ];
+    return [
+      for (final m in marks) ...[const SizedBox(width: 3), m],
+    ];
+  }
 }
 
-/// A coloured match-rating badge: green for a strong game, red for a poor one.
 /// A compact battery-style energy pip: green when fresh, amber tiring, red when
 /// spent — a cue that a player is ready to be subbed.
 class _EnergyPip extends StatelessWidget {
-  const _EnergyPip(this.energy);
+  const _EnergyPip(this.energy, {this.showFigure = true});
 
   final int energy;
+
+  /// The percentage beside the battery; a narrow column shows the battery,
+  /// in its colour, alone.
+  final bool showFigure;
 
   @override
   Widget build(BuildContext context) {
@@ -761,42 +1022,17 @@ class _EnergyPip extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(Icons.battery_charging_full, size: 12, color: color),
-        const SizedBox(width: 2),
-        Text(
-          '$energy%',
-          style: AppTypography.labelSmall.copyWith(
-            color: color,
-            fontFeatures: const [FontFeature.tabularFigures()],
+        if (showFigure) ...[
+          const SizedBox(width: 2),
+          Text(
+            '$energy%',
+            style: AppTypography.labelSmall.copyWith(
+              color: color,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
           ),
-        ),
+        ],
       ],
-    );
-  }
-}
-
-class _RatingPill extends StatelessWidget {
-  const _RatingPill(this.rating);
-
-  final double rating;
-
-  static Color colorFor(double r) => AppColors.ratingColor(r);
-
-  @override
-  Widget build(BuildContext context) {
-    final color = colorFor(rating);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.16),
-        borderRadius: AppRadii.smAll,
-      ),
-      child: Text(
-        rating.toStringAsFixed(1),
-        style: AppTypography.labelMedium.copyWith(
-          color: color,
-          fontFeatures: const [FontFeature.tabularFigures()],
-        ),
-      ),
     );
   }
 }
@@ -846,7 +1082,7 @@ class _MotmCard extends StatelessWidget {
               ],
             ),
           ),
-          _RatingPill(rating),
+          RatingBadge(rating),
         ],
       ),
     );

@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "คำบรรยาย",
   "homeNextFixture": "ถัดไป: {match}, {when}",
   "homeCycleComplete": "ชิงแชมป์โลก {year} จบลงแล้ว ต่อไปคือคำตัดสินของสมาคม",
-  "homeFollowingFinals": "ชมชิงแชมป์โลก {year}"
+  "homeFollowingFinals": "ชมชิงแชมป์โลก {year}",
+  "ratingPlayerOfTheMatch": "ผู้เล่นยอดเยี่ยมประจำเกม",
+  "ratingSemantics": "คะแนน {rating}",
+  "matchAverageRating": "คะแนนเฉลี่ย",
+  "matchLiveRatingsNote": "คะแนนเปลี่ยนตามเกมที่ผ่านมาและเป็นคะแนนสุดท้ายเมื่อหมดเวลา"
 }

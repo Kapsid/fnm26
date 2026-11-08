@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "ULASAN",
   "homeNextFixture": "Seterusnya: {match}, {when}",
   "homeCycleComplete": "Kejohanan Dunia {year} telah tamat. Seterusnya keputusan lembaga.",
-  "homeFollowingFinals": "Menonton Kejohanan Dunia {year}"
+  "homeFollowingFinals": "Menonton Kejohanan Dunia {year}",
+  "ratingPlayerOfTheMatch": "Pemain terbaik perlawanan",
+  "ratingSemantics": "Penarafan {rating}",
+  "matchAverageRating": "Purata penarafan",
+  "matchLiveRatingsNote": "Penarafan mengikut perlawanan setakat ini dan menjadi muktamad pada wisel penamat."
 }

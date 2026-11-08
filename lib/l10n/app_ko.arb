@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "중계",
   "homeNextFixture": "다음: {match}, {when}",
   "homeCycleComplete": "{year} 세계 선수권이 끝났습니다. 이제 협회의 평가가 남았습니다.",
-  "homeFollowingFinals": "{year} 세계 선수권 관전 중"
+  "homeFollowingFinals": "{year} 세계 선수권 관전 중",
+  "ratingPlayerOfTheMatch": "경기 최우수 선수",
+  "ratingSemantics": "평점 {rating}",
+  "matchAverageRating": "평균 평점",
+  "matchLiveRatingsNote": "평점은 지금까지의 경기 흐름을 따르며 종료 휘슬과 함께 확정됩니다."
 }

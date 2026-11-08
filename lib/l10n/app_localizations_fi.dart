@@ -8254,6 +8254,21 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'OTTELUN PARAS PELAAJA';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Ottelun paras pelaaja';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Arvosana $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Keskiarvosana';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Arvosanat seuraavat ottelun tähänastista kulkua ja ovat lopullisia loppuvihellyksellä.';
+
+  @override
   String get matchGoalShout => 'MAALI!';
 
   @override

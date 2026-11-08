@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "COMMENTAIRE",
   "homeNextFixture": "Prochain match : {match}, {when}",
   "homeCycleComplete": "Le Championnat du monde {year} est terminé. Place au verdict de la fédération.",
-  "homeFollowingFinals": "Le Championnat du monde {year} en spectateur"
+  "homeFollowingFinals": "Le Championnat du monde {year} en spectateur",
+  "ratingPlayerOfTheMatch": "Homme du match",
+  "ratingSemantics": "Note {rating}",
+  "matchAverageRating": "Note moyenne",
+  "matchLiveRatingsNote": "Les notes suivent le match en cours et deviennent définitives au coup de sifflet final."
 }

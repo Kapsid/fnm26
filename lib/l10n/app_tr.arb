@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "YORUM",
   "homeNextFixture": "Sıradaki: {match}, {when}",
   "homeCycleComplete": "{year} Dünya Şampiyonası sona erdi. Sırada yönetimin kararı var.",
-  "homeFollowingFinals": "{year} Dünya Şampiyonası'nı izliyorsunuz"
+  "homeFollowingFinals": "{year} Dünya Şampiyonası'nı izliyorsunuz",
+  "ratingPlayerOfTheMatch": "Maçın adamı",
+  "ratingSemantics": "Puan {rating}",
+  "matchAverageRating": "Ortalama puan",
+  "matchLiveRatingsNote": "Puanlar maçın şu ana kadarki gidişatını izler ve son düdükle kesinleşir."
 }

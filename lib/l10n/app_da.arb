@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMMENTARER",
   "homeNextFixture": "Næste: {match}, {when}",
   "homeCycleComplete": "VM {year} er slut. Nu venter bestyrelsens dom.",
-  "homeFollowingFinals": "VM {year} fra tribunen"
+  "homeFollowingFinals": "VM {year} fra tribunen",
+  "ratingPlayerOfTheMatch": "Kampens spiller",
+  "ratingSemantics": "Karakter {rating}",
+  "matchAverageRating": "Gennemsnitskarakter",
+  "matchLiveRatingsNote": "Karaktererne følger kampen indtil nu og er endelige ved slutfløjtet."
 }

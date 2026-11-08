@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "COMMENTAAR",
   "homeNextFixture": "Volgende: {match}, {when}",
   "homeCycleComplete": "Het Wereldkampioenschap van {year} is voorbij. Nu volgt het oordeel van de bond.",
-  "homeFollowingFinals": "Het Wereldkampioenschap van {year} als toeschouwer"
+  "homeFollowingFinals": "Het Wereldkampioenschap van {year} als toeschouwer",
+  "ratingPlayerOfTheMatch": "Man van de wedstrijd",
+  "ratingSemantics": "Cijfer {rating}",
+  "matchAverageRating": "Gemiddeld cijfer",
+  "matchLiveRatingsNote": "De cijfers volgen de wedstrijd tot nu toe en zijn definitief bij het eindsignaal."
 }

@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMENTAR",
   "homeNextFixture": "Sljedeće: {match}, {when}",
   "homeCycleComplete": "Svjetsko prvenstvo {year} je završilo. Slijedi presuda uprave.",
-  "homeFollowingFinals": "Svjetsko prvenstvo {year} s tribina"
+  "homeFollowingFinals": "Svjetsko prvenstvo {year} s tribina",
+  "ratingPlayerOfTheMatch": "Igrač utakmice",
+  "ratingSemantics": "Ocjena {rating}",
+  "matchAverageRating": "Prosječna ocjena",
+  "matchLiveRatingsNote": "Ocjene prate dosadašnji tijek utakmice i konačne su nakon posljednjeg zvižduka."
 }

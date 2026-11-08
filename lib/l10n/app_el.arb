@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "ΣΧΟΛΙΑΣΜΟΣ",
   "homeNextFixture": "Επόμενος: {match}, {when}",
   "homeCycleComplete": "Το Παγκόσμιο Πρωτάθλημα {year} ολοκληρώθηκε. Ακολουθεί η ετυμηγορία της ομοσπονδίας.",
-  "homeFollowingFinals": "Παρακολουθώντας το Παγκόσμιο Πρωτάθλημα {year}"
+  "homeFollowingFinals": "Παρακολουθώντας το Παγκόσμιο Πρωτάθλημα {year}",
+  "ratingPlayerOfTheMatch": "Κορυφαίος του αγώνα",
+  "ratingSemantics": "Βαθμολογία {rating}",
+  "matchAverageRating": "Μέση βαθμολογία",
+  "matchLiveRatingsNote": "Οι βαθμολογίες ακολουθούν τον αγώνα μέχρι τώρα και οριστικοποιούνται με το τελικό σφύριγμα."
 }

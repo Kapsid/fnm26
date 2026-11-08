@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMENTAR",
   "homeNextFixture": "Berikutnya: {match}, {when}",
   "homeCycleComplete": "Kejuaraan Dunia {year} telah usai. Kini giliran keputusan federasi.",
-  "homeFollowingFinals": "Menyaksikan Kejuaraan Dunia {year}"
+  "homeFollowingFinals": "Menyaksikan Kejuaraan Dunia {year}",
+  "ratingPlayerOfTheMatch": "Pemain terbaik laga",
+  "ratingSemantics": "Rating {rating}",
+  "matchAverageRating": "Rating rata-rata",
+  "matchLiveRatingsNote": "Rating mengikuti jalannya laga sejauh ini dan menjadi final saat peluit akhir."
 }

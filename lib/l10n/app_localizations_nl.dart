@@ -8234,6 +8234,21 @@ class AppLocalizationsNl extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'MAN VAN DE WEDSTRIJD';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Man van de wedstrijd';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Cijfer $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Gemiddeld cijfer';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'De cijfers volgen de wedstrijd tot nu toe en zijn definitief bij het eindsignaal.';
+
+  @override
   String get matchGoalShout => 'DOELPUNT!';
 
   @override

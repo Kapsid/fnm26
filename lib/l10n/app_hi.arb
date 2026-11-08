@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "कमेंट्री",
   "homeNextFixture": "अगला: {match}, {when}",
   "homeCycleComplete": "{year} विश्व चैंपियनशिप पूरी हो गई। अब बोर्ड का फ़ैसला बाक़ी है।",
-  "homeFollowingFinals": "{year} विश्व चैंपियनशिप दर्शक बनकर"
+  "homeFollowingFinals": "{year} विश्व चैंपियनशिप दर्शक बनकर",
+  "ratingPlayerOfTheMatch": "मैन ऑफ़ द मैच",
+  "ratingSemantics": "रेटिंग {rating}",
+  "matchAverageRating": "औसत रेटिंग",
+  "matchLiveRatingsNote": "रेटिंग अब तक के मैच के हिसाब से बदलती है और अंतिम सीटी पर तय होती है।"
 }

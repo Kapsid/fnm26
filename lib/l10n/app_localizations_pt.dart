@@ -8257,6 +8257,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'MELHOR EM CAMPO';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Melhor em campo';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Nota $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Nota média';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'As notas acompanham o jogo até agora e ficam definitivas no apito final.';
+
+  @override
   String get matchGoalShout => 'GOL!';
 
   @override

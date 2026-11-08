@@ -7953,6 +7953,20 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchPlayerOfTheMatch => '경기 최우수 선수';
 
   @override
+  String get ratingPlayerOfTheMatch => '경기 최우수 선수';
+
+  @override
+  String ratingSemantics(String rating) {
+    return '평점 $rating';
+  }
+
+  @override
+  String get matchAverageRating => '평균 평점';
+
+  @override
+  String get matchLiveRatingsNote => '평점은 지금까지의 경기 흐름을 따르며 종료 휘슬과 함께 확정됩니다.';
+
+  @override
   String get matchGoalShout => '골!';
 
   @override

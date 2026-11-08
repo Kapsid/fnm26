@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMENTARYO",
   "homeNextFixture": "Susunod: {match}, {when}",
   "homeCycleComplete": "Tapos na ang Kampeonato ng Mundo {year}. Susunod ang hatol ng pamunuan.",
-  "homeFollowingFinals": "Pinapanood ang Kampeonato ng Mundo {year}"
+  "homeFollowingFinals": "Pinapanood ang Kampeonato ng Mundo {year}",
+  "ratingPlayerOfTheMatch": "Manlalaro ng laro",
+  "ratingSemantics": "Rating {rating}",
+  "matchAverageRating": "Average na rating",
+  "matchLiveRatingsNote": "Sinusundan ng mga rating ang laro sa ngayon at pinal na pagsapit ng huling pito."
 }

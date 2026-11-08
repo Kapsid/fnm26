@@ -10,6 +10,7 @@ import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
+import 'package:fnm/core/theme/rating_colors.dart';
 import 'package:fnm/core/util/squad_label.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -904,10 +905,6 @@ class _HistoryRow extends StatelessWidget {
               style: AppTypography.bodySmall,
             ),
           ),
-          if (stat.motm) ...[
-            const Icon(Icons.star_rounded, size: 13, color: AppColors.primary),
-            const SizedBox(width: AppSpacing.xs),
-          ],
           if (stat.goals > 0) ...[
             const Icon(
               Icons.sports_soccer,
@@ -947,14 +944,13 @@ class _HistoryRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
-          _RatingBadge(stat.rating),
+          RatingBadge(stat.rating, motm: stat.motm),
         ],
       ),
     );
   }
 }
 
-/// A compact coloured match-rating badge (green strong → red poor).
 /// A coarse 5-star rendering of a prospect's hidden development ceiling. Bucketed
 /// (not the raw multiplier) so it hints at potential without giving the exact
 /// number away — developing youth stays a judgement call.
@@ -970,29 +966,6 @@ String _potentialStars(
     scout: scout,
   ).stars;
   return '★' * filled + '☆' * (5 - filled);
-}
-
-class _RatingBadge extends StatelessWidget {
-  const _RatingBadge(this.rating);
-
-  final double rating;
-
-  Color get _color => AppColors.ratingColor(rating);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: _color.withValues(alpha: 0.16),
-        borderRadius: AppRadii.smAll,
-      ),
-      child: Text(
-        rating.toStringAsFixed(1),
-        style: AppTypography.labelMedium.copyWith(color: _color),
-      ),
-    );
-  }
 }
 
 /// The player's aggregated international record as a grid of stat tiles.
@@ -1063,11 +1036,11 @@ class _FormSparkline extends StatelessWidget {
 
   final List<double> ratings;
 
-  static Color _colorFor(double r) => AppColors.ratingColor(r);
-
   @override
   Widget build(BuildContext context) {
     const trackHeight = 52.0;
+    // The badge's own band colours, so a bar and the match's badge agree.
+    final bands = RatingBandColors.of(context);
     return SizedBox(
       height: trackHeight,
       child: Row(
@@ -1081,7 +1054,7 @@ class _FormSparkline extends StatelessWidget {
                   // Map the 3.0–10.0 mark onto the bar height.
                   height: (((r - 3) / 7).clamp(0.06, 1.0)) * trackHeight,
                   decoration: BoxDecoration(
-                    color: _colorFor(r),
+                    color: bands.fill(RatingBand.of(r)),
                     borderRadius: AppRadii.smAll,
                   ),
                 ),

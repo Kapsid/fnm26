@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "COMENTARIO",
   "homeNextFixture": "Próximo: {match}, {when}",
   "homeCycleComplete": "El Campeonato del Mundo {year} ha terminado. Ahora llega el veredicto de la directiva.",
-  "homeFollowingFinals": "El Campeonato del Mundo {year} desde la grada"
+  "homeFollowingFinals": "El Campeonato del Mundo {year} desde la grada",
+  "ratingPlayerOfTheMatch": "Mejor jugador del partido",
+  "ratingSemantics": "Valoración {rating}",
+  "matchAverageRating": "Valoración media",
+  "matchLiveRatingsNote": "Las valoraciones siguen el partido hasta ahora y son definitivas al pitido final."
 }

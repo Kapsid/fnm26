@@ -8229,6 +8229,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'MIGLIORE IN CAMPO';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Migliore in campo';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Voto $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Voto medio';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'I voti seguono la partita fin qui e diventano definitivi al fischio finale.';
+
+  @override
   String get matchGoalShout => 'GOL!';
 
   @override

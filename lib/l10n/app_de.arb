@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMMENTAR",
   "homeNextFixture": "Nächstes Spiel: {match}, {when}",
   "homeCycleComplete": "Die Weltmeisterschaft {year} ist vorbei. Jetzt folgt das Urteil des Verbands.",
-  "homeFollowingFinals": "Die Weltmeisterschaft {year} als Zuschauer"
+  "homeFollowingFinals": "Die Weltmeisterschaft {year} als Zuschauer",
+  "ratingPlayerOfTheMatch": "Spieler des Spiels",
+  "ratingSemantics": "Note {rating}",
+  "matchAverageRating": "Durchschnittsnote",
+  "matchLiveRatingsNote": "Die Noten folgen dem bisherigen Spielverlauf und stehen erst mit dem Schlusspfiff fest."
 }

@@ -4009,5 +4009,9 @@
   "matchTabCommentary": "KOMMENTÁR",
   "homeNextFixture": "Következő: {match}, {when}",
   "homeCycleComplete": "A {year}. évi világbajnokság véget ért. Jön a vezetőség ítélete.",
-  "homeFollowingFinals": "A {year}. évi világbajnokság a lelátóról"
+  "homeFollowingFinals": "A {year}. évi világbajnokság a lelátóról",
+  "ratingPlayerOfTheMatch": "A mérkőzés embere",
+  "ratingSemantics": "Értékelés {rating}",
+  "matchAverageRating": "Átlagos értékelés",
+  "matchLiveRatingsNote": "Az értékelések az eddigi játékot követik, és a lefújáskor válnak véglegessé."
 }

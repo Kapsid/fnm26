@@ -8189,6 +8189,21 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'KAMPENS SPILLER';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Kampens spiller';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Karakter $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Snittkarakter';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Karakterene følger kampen så langt og er endelige ved sluttsignalet.';
+
+  @override
   String get matchGoalShout => 'MÅL!';
 
   @override

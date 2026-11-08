@@ -11,7 +11,7 @@ import 'package:fnm/domain/services/match/match_conditions.dart';
 import 'package:fnm/domain/services/match/match_moments.dart';
 import 'package:fnm/domain/services/match/match_simulator.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
-import 'package:fnm/domain/services/match/performance_mark.dart';
+import 'package:fnm/domain/services/match/live_rating.dart';
 import 'package:fnm/domain/services/match/shape_profile.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
@@ -1958,40 +1958,9 @@ class MatchEngine {
     required int homeScore,
     required int awayScore,
   }) {
-    final goals = <int, int>{};
-    final assists = <int, int>{};
-    final yellows = <int>{};
-    final reds = <int>{};
-    for (final e in events) {
-      switch (e.type) {
-        case MatchEventType.goal:
-          goals.update(e.playerId, (v) => v + 1, ifAbsent: () => 1);
-          final a = e.assistPlayerId;
-          if (a != null) {
-            assists.update(a, (v) => v + 1, ifAbsent: () => 1);
-          }
-        case MatchEventType.yellowCard:
-          yellows.add(e.playerId);
-        case MatchEventType.redCard:
-          reds.add(e.playerId);
-        case MatchEventType.substitution:
-        case MatchEventType.injury:
-          break;
-      }
-    }
-    final penaltiesMissed = <int, int>{};
-    final penaltiesSaved = <int, int>{};
-    for (final s in moments.whereType<ShotMoment>()) {
-      if (s.origin != ShotOrigin.penalty || s.outcome == ShotOutcome.goal) {
-        continue;
-      }
-      penaltiesMissed.update(s.shooterId, (v) => v + 1, ifAbsent: () => 1);
-      final keeper = s.keeperId;
-      if (s.outcome == ShotOutcome.saved && keeper != null) {
-        penaltiesSaved.update(keeper, (v) => v + 1, ifAbsent: () => 1);
-      }
-    }
-
+    // The same tally the live line-ups count the match so far with, so a live
+    // mark at the whistle is this mark (see LiveRatings).
+    final tally = MatchTally.of(events, moments);
     return [
       for (final p in players)
         PlayerRating(
@@ -1999,44 +1968,15 @@ class MatchEngine {
           playerName: p.name,
           teamNationId: p.nationId,
           position: p.position,
-          rating: _mark(
-            p,
-            goals: goals[p.id] ?? 0,
-            assists: assists[p.id] ?? 0,
-            booked: yellows.contains(p.id),
-            sentOff: reds.contains(p.id),
+          rating: tally.markFor(
+            p.id,
+            category: p.category,
             teamScore: p.nationId == homeNationId ? homeScore : awayScore,
             oppScore: p.nationId == homeNationId ? awayScore : homeScore,
-            penaltiesMissed: penaltiesMissed[p.id] ?? 0,
-            penaltiesSaved: penaltiesSaved[p.id] ?? 0,
           ),
         ),
     ];
   }
-
-  /// Delegates to [PerformanceMark] so the manager's matches and the rest of
-  /// the world's are marked on exactly the same scale — see that class.
-  double _mark(
-    Player p, {
-    required int goals,
-    required int assists,
-    required bool booked,
-    required bool sentOff,
-    required int teamScore,
-    required int oppScore,
-    required int penaltiesMissed,
-    required int penaltiesSaved,
-  }) => PerformanceMark.forPlayer(
-    category: p.category,
-    goals: goals,
-    assists: assists,
-    booked: booked,
-    sentOff: sentOff,
-    teamScore: teamScore,
-    oppScore: oppScore,
-    penaltiesMissed: penaltiesMissed,
-    penaltiesSaved: penaltiesSaved,
-  );
 
   /// Swaps the incoming player in for the one going off on the pitch,
   /// returning a substitution event (or null if the player to come off isn't

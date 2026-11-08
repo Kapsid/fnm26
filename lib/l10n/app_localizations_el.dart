@@ -8228,6 +8228,21 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchPlayerOfTheMatch => 'ΚΟΡΥΦΑΙΟΣ ΤΟΥ ΑΓΩΝΑ';
 
   @override
+  String get ratingPlayerOfTheMatch => 'Κορυφαίος του αγώνα';
+
+  @override
+  String ratingSemantics(String rating) {
+    return 'Βαθμολογία $rating';
+  }
+
+  @override
+  String get matchAverageRating => 'Μέση βαθμολογία';
+
+  @override
+  String get matchLiveRatingsNote =>
+      'Οι βαθμολογίες ακολουθούν τον αγώνα μέχρι τώρα και οριστικοποιούνται με το τελικό σφύριγμα.';
+
+  @override
   String get matchGoalShout => 'ΓΚΟΛ!';
 
   @override
