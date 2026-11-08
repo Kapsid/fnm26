@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -74,12 +76,32 @@ void main() {
     return out;
   }
 
-  Future<void> fix(WidgetTester tester, SeededSave save, int slot, int id) =>
-      tester.runAsync(
-        () => save.container
-            .read(tacticServiceProvider)
-            .setSlot(save.careerId, slot, id),
+  /// Puts [id] in [slot], on the fake clock with the frames pumped. Inside
+  /// `runAsync` the write waited for ever whenever a write the screens made
+  /// on the fake clock was still queued ahead of it (the tactic service runs
+  /// its writes in turn), as the phone's could be once the hub's badges
+  /// were counted after its data.
+  Future<void> fix(
+    WidgetTester tester,
+    SeededSave save,
+    int slot,
+    int id,
+  ) async {
+    var done = false;
+    unawaited(
+      save.container
+          .read(tacticServiceProvider)
+          .setSlot(save.careerId, slot, id)
+          .whenComplete(() => done = true),
+    );
+    for (var i = 0; i < 500 && !done; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
       );
+      await tester.pump(const Duration(milliseconds: 20));
+    }
+    expect(done, isTrue, reason: 'the lineup write never finished');
+  }
 
   testWidgets('tablet: the top bar lets go of the reshape once it is fixed', (
     tester,
