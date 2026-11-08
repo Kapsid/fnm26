@@ -1438,6 +1438,44 @@ void _fullTimeSwitchTests() {
     ('phone', const Size(400, 2000), FormFactor.phone),
     ('tablet', const Size(1194, 834), FormFactor.tablet),
   ]) {
+    for (final newSpeed in [false, true]) {
+      testWidgets('$label: 2D TV mid-match, the whistle on the Timeline, '
+          'back to 2D TV${newSpeed ? ' at a new speed' : ''}: Continue', (
+        tester,
+      ) async {
+        final preview = _preview();
+        await _pump(
+          tester,
+          preview: preview,
+          salt: _cleanSalt(preview),
+          prefs: {kMatchViewModePrefsKey: 'pitch'},
+          size: size,
+          formFactor: ff,
+        );
+        await _until(tester, () => _ready(tester) && _clock(tester).playing);
+        // A while on the pitch: its clock is left part-way, not finished.
+        await _seek(tester, _pb(tester).pacer.screenAt(20, 0));
+        await tester.pump(const Duration(milliseconds: 200));
+        await _switch(tester);
+        expect(_screen(tester).mode, MatchViewMode.timeline);
+        if (newSpeed) {
+          await tester.tap(
+            find.byWidgetPredicate((w) => w is Text && w.data == '1×').first,
+          );
+          await tester.pump();
+        }
+        await _playTimelineOut(tester);
+        await tester.pump(const Duration(seconds: 3));
+        await _switch(tester);
+        expect(_screen(tester).mode, MatchViewMode.pitch);
+        for (var i = 0; i < 60; i++) {
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        expect(_ftContinueLive(tester), isTrue);
+        await _tapContinue(tester);
+      });
+    }
+
     testWidgets('$label: full time on the Timeline, then 2D TV: Continue '
         'is still there and live', (tester) async {
       final preview = _preview();

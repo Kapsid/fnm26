@@ -386,12 +386,20 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
   ///
   /// In Pitch mode the last minute is on the clock while it is still being
   /// played, so there it is over once the Pitch clock has run out.
+  ///
+  /// Once the final whistle HAS gone ([_whistled]), on either view, the
+  /// match is over whatever any Pitch clock says. A clock is only a picture
+  /// of the match: a fresh one (built after the whistle) starts at nought,
+  /// and one left from an earlier spell on the 2D TV stands wherever it was
+  /// put down. Asked of either, "over?" said no for a match the Timeline
+  /// had already whistled, the picture was placed short of the whistle and
+  /// never run again, and full time (its Continue) never came back.
   bool get _clockDone {
     final reached =
         _minute >= _fullTimeMinute &&
         (_minute > 90 || _added >= _stoppage) &&
         _held.isEmpty;
-    if (!reached || !_onPitch) return reached;
+    if (!reached || !_onPitch || _whistled) return reached;
     return _pitchClock?.finished ?? true;
   }
 
@@ -1090,13 +1098,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
         clock.value > Duration.zero &&
         !clock.finished &&
         !_clockDone;
-    // Whether the match is over, read NOW: [place] is asked once the new
-    // picture is in, and by then the controller has made its clock (at
-    // nought, not finished), so [_clockDone] asked then said "not over" for
-    // a match the Timeline had already whistled. The picture was put on the
-    // end of stoppage time instead of the whistle, the clock was never run
-    // again (play stops for good at full time), and with it full time never
-    // came: no Continue, no way out of the match.
+    // Whether the match is over, read before the controller swaps its clock
+    // (see [_clockDone]: after the whistle it is the match's state, not the
+    // clock's, that answers).
     final over = _clockDone;
     final built = _pc.build(
       result: r,
