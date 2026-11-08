@@ -23,6 +23,12 @@ MatchTeam _flatTeam(int nationId, int rating) {
         ),
     ],
     instructions: const TacticalInstructions(),
+    // A striker on penalties, as a real side has. With eleven equal players
+    // the automatic pick (best technique) ties and falls to the first
+    // outfielder, a full-back, which at about 0.4 penalties a match
+    // (2026-11-08) put a penalty's worth of goals on the back four that no
+    // real side would.
+    penaltyTakerId: nationId * 100 + 10,
   );
 }
 

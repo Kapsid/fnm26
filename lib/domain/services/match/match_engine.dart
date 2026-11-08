@@ -1247,7 +1247,15 @@ class MatchEngine {
       if (def.xi.isEmpty) return null;
       final roll = playRng.nextDouble();
       if (finished) {
-        if (roll >= _penaltyPerFinishedChance) return null;
+        // The referee leans a little to the side with the crowd behind it.
+        final atHome = identical(atk, liveHome) ? homeAdvantage : awayAdvantage;
+        final crowd = identical(def, liveHome) ? homeAdvantage : awayAdvantage;
+        final lean = atHome == crowd
+            ? 1.0
+            : atHome
+            ? 1 + _homePenaltyLean
+            : 1 - _homePenaltyLean;
+        if (roll >= _penaltyPerFinishedChance * lean) return null;
         return playPenalty(
           minute: minute,
           stoppage: stoppage,
@@ -2603,10 +2611,20 @@ class MatchEngine {
 
   /// Of the open-play chances that were going in, the share a foul in the
   /// box stops: a penalty, the goal denied. 0.095 gave about 0.245
-  /// penalties a match, just under real international football (0.25-0.32);
-  /// 0.105 gives about 0.26 (2026-11-07). Higher pushes the penalty share of
-  /// goals past its band in `match_baseline_test.dart` (85 v 85 at home).
-  static const double _penaltyPerFinishedChance = 0.105;
+  /// penalties a match; 0.105 about 0.26 (2026-11-07), and the manager's own
+  /// matches (an AI opponent managing itself) only about 0.24, so the owner
+  /// went ten matches without one. He asked for one most second or third
+  /// match, sometimes in consecutive ones (2026-11-08): about 0.40 a match,
+  /// pinned by `penalty_rate_test.dart`. A penalty scores about 76% where
+  /// the chance it replaces was going in, so this takes goals OUT of open
+  /// play rather than adding any.
+  static const double _penaltyPerFinishedChance = 0.175;
+
+  /// How much more often a side with the crowd behind it is given a penalty
+  /// (and how much less often its visitors are): x1.07 and x0.93. Real home
+  /// sides win about 55-60% of penalties; the engine's home edge in chances
+  /// alone gave them about 50-54%. Neither side leans at a neutral ground.
+  static const double _homePenaltyLean = 0.07;
 
   /// Of the open-play chances that were not going in, the share ended by a
   /// foul at the edge of the box: a direct free kick.

@@ -404,10 +404,11 @@ void main() {
         // penalties and direct free kicks for real; the figures it is held
         // to are in match_baseline_test.dart. Re-pinned at 10394 (-0.12%)
         // when the penalty rate rose (2026-11-07): a penalty replaces a goal
-        // that was going in and is scored about three times in four.
+        // that was going in and is scored about three times in four. Again
+        // at 10244 (-1.4%) when it rose to about 0.40 a match (2026-11-08).
         final n = _lab('neutral');
         final m = _mirror(n, n);
-        expect(m.total * 4000, closeTo(10394, 1e-6));
+        expect(m.total * 4000, closeTo(10244, 1e-6));
       },
     );
     // +0.092 on average (counter +0.127, highPress +0.020, possession +0.171,
