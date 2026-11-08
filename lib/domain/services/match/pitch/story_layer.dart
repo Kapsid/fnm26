@@ -2802,8 +2802,9 @@ class _Builder {
         // Running hard away from the ball he turns and runs, never
         // sprints backwards facing it.
         final speed = a.vel.length;
+        // A man at the ball (a blocker, a tackler) keeps his eyes on it.
         if (speed > 4.5 &&
-            to.length >= 0.3 &&
+            to.length >= 3.5 &&
             a.vel.x * to.x + a.vel.y * to.y < 0) {
           want = a.vel.angle;
         }

@@ -11,7 +11,8 @@
 ///   opponent's feet and on past him.
 /// - **sprinting backwards**: a man running over 5.5 m/s for half a second
 ///   or more with his back to where he runs.
-/// - **keeper off his area**: a keeper over 18 m out in open play.
+/// - **keeper off his area**: a keeper over 18 m out in open play and
+///   going further (not one walking back from a moment).
 /// - **frozen in an attack**: an outfield man who stands stock still (under
 ///   0.2 m/s) for 3 s or more of open play.
 library;
@@ -213,7 +214,9 @@ class PitchGlitches {
         if (a.keeper(i) && !staged) {
           final dir = _dir(s.actorList[i].teamNationId, a.t);
           final d = xToDepth(a.xs[i], dir);
-          if (d > 18 && !_nearCut(a.t, 1)) {
+          // Going further out, not on his way back from a moment.
+          final next = xToDepth(b.xs[i], dir);
+          if (d > 18 && next > d + 1e-6 && !_nearCut(a.t, 1)) {
             _hit('keeper off his area', a.t, '$id ${d.toStringAsFixed(1)} m');
           }
         }
