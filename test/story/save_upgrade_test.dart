@@ -50,6 +50,21 @@ void main() {
     }
   }
 
+  test('the rollover exemptions are pinned', () {
+    // No later task may grow them: a rollover that rewrites anything else
+    // must be fixed, not exempted.
+    expect(kRolloverMutableColumns, {
+      'careers': {
+        'cycle_pointer',
+        'in_game_date',
+        'budget',
+        'last_cycle_board',
+      },
+      'nations_cup_tiers': {'tier'},
+    });
+    expect(kRolloverMutableTables, kRolloverMutableColumns.keys.toSet());
+  });
+
   for (final build in kFixtureBuilds) {
     for (final save in ['mid_cycle', 'late_cycle']) {
       if (!File('$kFixtureSavesDir/$build/$save.db.gz').existsSync()) continue;
@@ -63,6 +78,18 @@ void main() {
           'changes no existing row',
           () async {
             final file = await unpackFixture(build, save);
+            // A fixture as old as the code that opens it migrates nothing,
+            // and the test would pass vacuously.
+            final written = manifestSchemaVersion(build, save);
+            expect(fileSchemaVersion(file.path), written);
+            expect(
+              written,
+              // pre55 is at today's schema until Task 2 bumps it.
+              AppDatabase.currentSchemaVersion == kPre55Schema
+                  ? lessThanOrEqualTo(kPre55Schema)
+                  : lessThan(AppDatabase.currentSchemaVersion),
+              reason: 'the fixture must be older than today',
+            );
             final before = await dumpTables(file.path);
             final (db, c) = await open(file);
             final version = await db
@@ -109,7 +136,7 @@ void main() {
 
         if (save == 'late_cycle') {
           test(
-            'a rollover keeps every existing row outside the mutable tables',
+            'a rollover keeps every existing row outside the mutable columns',
             () async {
               final file = await unpackFixture(build, save);
               final (db, c) = await open(file);
@@ -131,18 +158,35 @@ void main() {
               );
               final after = await dumpTables(file.path);
 
-              final changed = <String>{};
+              // Every existing row survives, compared on every column but
+              // the few a rollover may rewrite.
+              final changed = <String, Set<String>>{};
               for (final MapEntry(key: table, value: rows) in before.entries) {
-                if (kRolloverMutableTables.contains(table)) continue;
+                final exempt = kRolloverMutableColumns[table] ?? const {};
+                Map<String, Object?> kept(Map<String, Object?> r) => {
+                  for (final e in r.entries)
+                    if (!exempt.contains(e.key)) e.key: e.value,
+                };
                 final now = {
                   for (final r
                       in after[table] ?? const <Map<String, Object?>>[])
-                    rowKey(r),
+                    rowKey(kept(r)),
                 };
-                final lost = rows.where((r) => !now.contains(rowKey(r)));
-                if (lost.isNotEmpty) changed.add(table);
+                final lost = rows.where((r) => !now.contains(rowKey(kept(r))));
+                if (lost.isEmpty) continue;
+                // Name the columns that moved, matching rows in rowid order.
+                final then = after[table] ?? const <Map<String, Object?>>[];
+                changed[table] = {
+                  for (var i = 0; i < rows.length && i < then.length; i++)
+                    for (final k in kept(rows[i]).keys)
+                      if (rows[i][k] != then[i][k]) k,
+                };
               }
-              expect(changed, isEmpty, reason: 'tables a rollover rewrote');
+              expect(
+                changed,
+                isEmpty,
+                reason: 'columns a rollover rewrote',
+              );
 
               // The record of what was played and won before the rollover.
               final atSeconds = at.millisecondsSinceEpoch ~/ 1000;

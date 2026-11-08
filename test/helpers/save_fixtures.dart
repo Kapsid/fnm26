@@ -22,16 +22,27 @@ const String kFixtureSavesDir = 'test/fixtures/saves';
 /// before schema 55.
 const List<String> kFixtureBuilds = ['v109', 'v110_37', 'pre55'];
 
-/// The tables whose existing rows a rollover may legitimately change, each
-/// for the reason given. Fixed against the code at 1.1.0 (38); no later task
-/// may grow it.
-const Set<String> kRolloverMutableTables = {
-  // The career's own row moves on: cycle pointer, date, budget, board.
-  'careers',
+/// The columns of existing rows a rollover may legitimately rewrite, by
+/// table, each for the reason given. Every other column of every existing
+/// row (a career's `rng_seed` and `nation_id`, a tier row's key) must come
+/// through a rollover unchanged. Fixed against the code at 1.1.0 (38); no
+/// later task may grow it (save_upgrade_test pins it).
+const Map<String, Set<String>> kRolloverMutableColumns = {
+  // The career's own row moves on to the next cycle: its pointer and date,
+  // the new cycle's budget, and the board's verdict on the cycle just ended.
+  'careers': {
+    'cycle_pointer',
+    'in_game_date',
+    'budget',
+    'last_cycle_board',
+  },
   // Nations Cup promotion and relegation rewrite each nation's tier
   // (`SeasonRollover`, `setNationsCupTiers`).
-  'nations_cup_tiers',
+  'nations_cup_tiers': {'tier'},
 };
+
+/// The tables of [kRolloverMutableColumns].
+const Set<String> kRolloverMutableTables = {'careers', 'nations_cup_tiers'};
 
 /// What an old build said about one of its saves: its career, its cycle, the
 /// hosts and venues of every edition of cycles 0 and 1 it could name (keys
@@ -54,6 +65,31 @@ Future<File> unpackFixture(String build, String name) async {
   await out.writeAsBytes(gzip.decode(await src.readAsBytes()), flush: true);
   return out;
 }
+
+/// The schema the old build wrote the fixture [name] of [build] at, as its
+/// manifest records it.
+int manifestSchemaVersion(String build, String name) =>
+    (jsonDecode(
+              File(
+                '$kFixtureSavesDir/$build/$name.manifest.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, Object?>)['schemaVersion']!
+        as int;
+
+/// The schema of the database file at [dbPath], unopened by drift.
+int fileSchemaVersion(String dbPath) {
+  final db = sqlite3.open(dbPath, mode: OpenMode.readOnly);
+  try {
+    return db.select('PRAGMA user_version').single.values.single! as int;
+  } finally {
+    db.close();
+  }
+}
+
+/// The schema of main when the pre55 fixtures were written: today's until
+/// Task 2 bumps it to 55.
+const int kPre55Schema = 54;
 
 /// The manifest beside the fixture [name] of [build].
 SaveManifest readManifest(String build, String name) => manifestFromJson(
