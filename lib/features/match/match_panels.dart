@@ -1817,24 +1817,24 @@ const double kPitchModeAspect = 390 / 280;
 /// The commentary line's height under the pitch.
 const double kPitchCommentaryHeight = 44;
 
-/// The least the tab content under the pitch keeps on a phone in Pitch
-/// mode: a few rows of the Stats or Lineups, enough to scroll through.
-const double kPitchModeMinTabsHeight = 132;
-
 /// The phone's Pitch mode, top to bottom: [head] (the occasion and the
-/// score), the [pitch] at its own proportions, [under] it the commentary,
-/// momentum and the tab bar, then the [tabs]' content in all that is left.
+/// score), the [pitch] full width at its own proportions, [under] it the
+/// commentary, momentum and shootout, then the [tabBar] and the [tabs]'
+/// content.
 ///
-/// The pitch stays put and the tab content scrolls on its own. The pitch is
-/// full width wherever the screen is tall enough; on a short phone it gives
-/// way (narrower, centred, still at [kPitchModeAspect]) before the tab
-/// content drops under [kPitchModeMinTabsHeight], so the content is never
-/// squeezed out of sight and the column never overflows.
+/// The head stays put, like the bottom bar: the score is never scrolled out
+/// of sight. Everything under it scrolls as one page when it does not fit:
+/// the pitch keeps its full size, and the tab content gets the whole screen
+/// once the pitch has gone up, the tab bar pinned under the head. A drag
+/// that starts on the pitch scrolls the page (the pitch has no drags of its
+/// own). The pitch scrolled out of view is only not painted: it is still
+/// built, so its clock, pauses and goal flash run on exactly as before.
 class PitchModeColumn extends StatelessWidget {
   const PitchModeColumn({
     required this.head,
     required this.pitch,
     required this.under,
+    required this.tabBar,
     required this.tabs,
     super.key,
   });
@@ -1842,7 +1842,11 @@ class PitchModeColumn extends StatelessWidget {
   final Widget head;
   final Widget pitch;
   final Widget under;
+  final Widget tabBar;
   final Widget tabs;
+
+  /// The key of the scrolling page under the head.
+  static const Key scrollKey = Key('match.pitchModeScroll');
 
   @override
   Widget build(BuildContext context) => CustomMultiChildLayout(
@@ -1850,37 +1854,49 @@ class PitchModeColumn extends StatelessWidget {
     // The head is painted last: the score bug's goal banner slides out
     // over the top of the pitch.
     children: [
-      LayoutId(id: _PitchModePart.pitch, child: pitch),
-      LayoutId(id: _PitchModePart.under, child: under),
-      LayoutId(id: _PitchModePart.tabs, child: tabs),
+      LayoutId(
+        id: _PitchModePart.page,
+        child: NestedScrollView(
+          key: scrollKey,
+          headerSliverBuilder: (context, _) => [
+            SliverToBoxAdapter(
+              child: AspectRatio(aspectRatio: kPitchModeAspect, child: pitch),
+            ),
+            SliverToBoxAdapter(child: under),
+          ],
+          // The tab bar heads the body, so once the page has scrolled the
+          // pitch away it sits pinned at the top and the lists scroll under
+          // it (each picks up the page's inner controller as its primary).
+          body: Column(
+            children: [
+              ColoredBox(color: AppColors.surface, child: tabBar),
+              Expanded(child: tabs),
+            ],
+          ),
+        ),
+      ),
       LayoutId(id: _PitchModePart.head, child: head),
     ],
   );
 }
 
-enum _PitchModePart { head, pitch, under, tabs }
+enum _PitchModePart { head, page }
 
 class _PitchModeLayout extends MultiChildLayoutDelegate {
   @override
   void performLayout(Size size) {
     final w = size.width;
     final h = size.height;
-    final row = BoxConstraints(minWidth: w, maxWidth: w, maxHeight: h);
-    final head = layoutChild(_PitchModePart.head, row).height;
-    final under = layoutChild(_PitchModePart.under, row).height;
-    final room = h - head - under - kPitchModeMinTabsHeight;
-    final pitchH = math.max(0.0, math.min(w / kPitchModeAspect, room));
-    final pitchW = pitchH * kPitchModeAspect;
+    final head = layoutChild(
+      _PitchModePart.head,
+      BoxConstraints(minWidth: w, maxWidth: w, maxHeight: h),
+    ).height;
     layoutChild(
-      _PitchModePart.pitch,
-      BoxConstraints.tight(Size(pitchW, pitchH)),
+      _PitchModePart.page,
+      BoxConstraints.tight(Size(w, math.max(0.0, h - head))),
     );
-    final tabsH = math.max(0.0, h - head - pitchH - under);
-    layoutChild(_PitchModePart.tabs, BoxConstraints.tight(Size(w, tabsH)));
     positionChild(_PitchModePart.head, Offset.zero);
-    positionChild(_PitchModePart.pitch, Offset((w - pitchW) / 2, head));
-    positionChild(_PitchModePart.under, Offset(0, head + pitchH));
-    positionChild(_PitchModePart.tabs, Offset(0, head + pitchH + under));
+    positionChild(_PitchModePart.page, Offset(0, head));
   }
 
   @override
