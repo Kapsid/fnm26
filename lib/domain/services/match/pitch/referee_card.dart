@@ -144,9 +144,13 @@ class RefereeCardShow {
       final from = _inside(
         spot + Offset2.fromAngle(toMiddle.angle + turn, runFrom),
       );
-      // A cut or a restart before the card: he appears after it, already
-      // on his way. One after: he goes with the picture.
-      var start = _arriveFor(c, yellow) - runIn;
+      // He sets off at the whistle at the earliest. A cut or a restart
+      // before the card: he appears after it, already on his way. One
+      // after: he goes with the picture.
+      var start = math.max(
+        _arriveFor(c, yellow) - runIn,
+        foul?.t ?? double.negativeInfinity,
+      );
       var until = c + hold + lift + runOut;
       for (final b in breaks) {
         if (b > start && b <= c) start = b;
