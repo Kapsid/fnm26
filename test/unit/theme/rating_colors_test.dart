@@ -29,6 +29,13 @@ void main() {
       });
     }
 
+    test('a two-decimal mean is banded as printed', () {
+      expect(RatingBand.of(6.95, decimals: 2), RatingBand.fair);
+      expect(RatingBand.of(6.996, decimals: 2), RatingBand.good);
+      expect(RatingBand.of(7.99, decimals: 2), RatingBand.good);
+      expect(RatingBand.of(5.99, decimals: 2), RatingBand.poor);
+    });
+
     test('the extremes', () {
       expect(RatingBand.of(3.0), RatingBand.poor);
       expect(RatingBand.of(10.0), RatingBand.great);

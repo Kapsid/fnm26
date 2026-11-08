@@ -10,13 +10,15 @@ enum RatingBand {
   good,
   great;
 
-  /// The band of [rating], judged on the figure the badge prints: a 6.96 is
-  /// shown as 7.0, so it is coloured as a 7.0.
-  static RatingBand of(double rating) {
-    final tenths = (rating * 10).round();
-    if (tenths < 60) return poor;
-    if (tenths < 70) return fair;
-    if (tenths < 80) return good;
+  /// The band of [rating], judged on the figure the badge prints at
+  /// [decimals] places: a 6.96 is shown as 7.0, so it is coloured as a 7.0,
+  /// while a mean printed as 6.96 is still a 6-something.
+  static RatingBand of(double rating, {int decimals = 1}) {
+    final scale = decimals == 2 ? 100 : 10;
+    final units = (rating * scale).round();
+    if (units < 6 * scale) return poor;
+    if (units < 7 * scale) return fair;
+    if (units < 8 * scale) return good;
     return great;
   }
 }

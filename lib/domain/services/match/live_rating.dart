@@ -145,13 +145,17 @@ abstract final class LiveRatings {
         ? events
         : [
             for (final e in events)
-              if (eventReached(e, minute, added)) e,
+              if (eventReached(e, minute, minute > 90 ? 0 : added)) e,
           ];
+    // Added time belongs to the 90th minute alone. A clock past 90 may still
+    // carry the stoppage count it ran up there, and must not read it as
+    // added time in extra time.
+    final clockAdded = minute > 90 ? 0 : added;
     final shots = fullTime
         ? moments
         : [
             for (final s in moments)
-              if (shotReached(s, minute, added)) s,
+              if (shotReached(s, minute, clockAdded)) s,
           ];
     final tally = MatchTally.of(seen, shots);
     var home = 0;

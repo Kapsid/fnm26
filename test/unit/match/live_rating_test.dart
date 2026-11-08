@@ -153,6 +153,18 @@ void main() {
       );
     });
 
+    test('in extra time a missed kick also waits for the next minute, '
+        'whatever stoppage count the clock carried out of the 90th', () {
+      final etMiss = <MatchMoment>[_penMiss(100, _home, 10, 23)];
+      // The Timeline clock keeps its 90+4 count into extra time.
+      final during = _at(100, events: _early, moments: etMiss, added: 4);
+      final noShot = _at(100, events: _early, added: 4);
+      expect(during, noShot);
+      final after = _at(101, events: _early, moments: etMiss, added: 4);
+      expect(after[10]!, lessThan(noShot[10]!));
+      expect(after[23]!, greaterThan(noShot[23]!));
+    });
+
     test('a missed penalty counts only once its minute has passed', () {
       final all = [..._early, ..._late];
       final during = _at(75, events: all, moments: _lateShots);

@@ -18,7 +18,7 @@ void main() {
     // The tablet's line-ups column: Timeline mode, and Pitch mode's
     // narrower feed column.
     ('tablet_column', const Size(310, 1100), false),
-    ('tablet_pitch_column', const Size(250, 1100), true),
+    ('tablet_pitch_column', const Size(256, 1100), true),
   ]) {
     testWidgets('line-ups with badges: $name', (tester) async {
       await pumpThemed(tester, buildLineups(fullTime: fullTime), size);

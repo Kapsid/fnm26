@@ -35,7 +35,7 @@ class RatingBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final colors = RatingBandColors.of(context);
-    final band = RatingBand.of(rating);
+    final band = RatingBand.of(rating, decimals: decimals);
     final fill = colors.fill(band);
     final ink = colors.ink(band);
     final style =

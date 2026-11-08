@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -128,6 +129,64 @@ void main() {
       );
       expect(
         find.byKey(ValueKey(('subOffMark', lineupsAwayXi[7].id))),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('a narrow column keeps the names and every badge whole', (
+      tester,
+    ) async {
+      // The tablet's Pitch-mode column on an 11 inch iPad.
+      await pumpThemed(tester, buildLineups(), const Size(256, 1600));
+      expect(tester.takeException(), isNull);
+      // The markers go under the name, the energy figure is dropped.
+      expect(
+        find.byKey(ValueKey(('markersUnder', lineupsHomeXi[7].id))),
+        findsOneWidget,
+      );
+      expect(find.textContaining('%'), findsNothing);
+      // Every player's name keeps at least ten characters on screen.
+      final style = DefaultTextStyle.of(
+        tester.element(find.text(lineupsHomeXi[0].name).first),
+      ).style;
+      for (final p in [...lineupsHomeXi.take(10), lineupsHomeSubOn]) {
+        final text = tester.renderObject<RenderParagraph>(
+          find.descendant(
+            of: find.byKey(MatchLineups.rowKey(p.id)),
+            matching: find.text(p.name),
+          ),
+        );
+        final tenChars = TextPainter(
+          text: TextSpan(
+            text: p.name.substring(0, p.name.length.clamp(0, 10)),
+            style: text.text.style ?? style,
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        expect(
+          text.size.width,
+          greaterThanOrEqualTo(tenChars.width - 0.5),
+          reason: p.name,
+        );
+      }
+      // Every badge is drawn in full: none is clipped by its row.
+      for (final badge in find.byType(RatingBadge).evaluate()) {
+        final box = badge.renderObject! as RenderBox;
+        final rect = box.localToGlobal(Offset.zero) & box.size;
+        expect(rect.right, lessThanOrEqualTo(256), reason: '$rect');
+        expect(box.size.width, greaterThanOrEqualTo(30));
+      }
+      // The man taken off still shows his badge in the substitution row.
+      expect(
+        find.descendant(
+          of: find
+              .ancestor(
+                of: find.text(lineupsHomeXi[10].name),
+                matching: find.byType(Row),
+              )
+              .first,
+          matching: find.byType(RatingBadge),
+        ),
         findsOneWidget,
       );
     });

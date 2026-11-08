@@ -604,11 +604,20 @@ class MatchLineups extends StatelessWidget {
   /// Key of the line-up row for [playerId], for tests.
   static Key rowKey(int playerId) => ValueKey(('lineupRow', playerId));
 
+  /// Below this width (the tablet's Pitch-mode column, about 256 wide) a
+  /// row drops the energy figure and puts the markers under the name, so
+  /// the name keeps about ten characters and no badge is ever cut.
+  static const double narrowWidth = 280;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, c) => _list(context, narrow: c.maxWidth < narrowWidth),
+  );
+
+  Widget _list(BuildContext context, {required bool narrow}) {
     final l = AppLocalizations.of(context);
     return ListView(
-      padding: const EdgeInsets.all(AppSpacing.marginMobile),
+      padding: EdgeInsets.all(narrow ? AppSpacing.md : AppSpacing.marginMobile),
       children: [
         if (live && ratings.isNotEmpty) ...[
           Text(
@@ -619,9 +628,9 @@ class MatchLineups extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
         ],
-        _xi(context, homeCode, home, homeSubs, homeBench),
+        _xi(context, homeCode, home, homeSubs, homeBench, narrow: narrow),
         const SizedBox(height: AppSpacing.lg),
-        _xi(context, awayCode, away, awaySubs, awayBench),
+        _xi(context, awayCode, away, awaySubs, awayBench, narrow: narrow),
       ],
     );
   }
@@ -636,8 +645,9 @@ class MatchLineups extends StatelessWidget {
     String teamCode,
     List<Player> xi,
     List<MatchEvent> subs,
-    List<Player> bench,
-  ) {
+    List<Player> bench, {
+    required bool narrow,
+  }) {
     final l = AppLocalizations.of(context);
     // Anyone already on the pitch is no longer a substitute.
     final onPitch = {for (final p in xi) p.id};
@@ -696,38 +706,40 @@ class MatchLineups extends StatelessWidget {
                 SizedBox(width: 36, child: TacticalChip(p.position.label)),
                 const SizedBox(width: AppSpacing.sm),
                 // The name and his markers share what the fixed columns
-                // leave: the name gives way first, and in the narrowest
-                // column (the tablet's Pitch-mode feed) the markers shrink
-                // rather than push the row past its edge.
+                // leave, the name first. In a narrow column the markers go
+                // under the name instead of beside it.
                 Expanded(
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 3,
-                        child: Text(
-                          p.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTypography.bodyMedium,
-                        ),
-                      ),
-                      if (_markers(p.id) case final marks when marks.isNotEmpty)
-                        Flexible(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: marks,
+                  child: narrow
+                      ? _nameOver(p, _markers(p.id))
+                      : Row(
+                          children: [
+                            Flexible(
+                              flex: 3,
+                              child: Text(
+                                p.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.bodyMedium,
+                              ),
                             ),
-                          ),
+                            if (_markers(p.id) case final marks
+                                when marks.isNotEmpty)
+                              Flexible(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: marks,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                    ],
-                  ),
                 ),
                 if (energy[p.id] case final e?) ...[
                   const SizedBox(width: AppSpacing.xs),
-                  _EnergyPip(e),
+                  _EnergyPip(e, showFigure: !narrow),
                 ],
                 if (_badge(p.id) case final b?) ...[
                   const SizedBox(width: AppSpacing.sm),
@@ -802,28 +814,46 @@ class MatchLineups extends StatelessWidget {
     );
   }
 
-  /// A substitution: who came on, who went off. A player not listed in the
-  /// eleven above (the man taken off, or the opponent's newcomer) carries his
-  /// rating here instead, so everyone who played has one on the tab.
+  /// A substitution: who came on (above) and who went off (below). A player
+  /// not listed in the eleven above (the man taken off, or the opponent's
+  /// newcomer) carries his rating here instead, so everyone who played has
+  /// one on the tab. The badge sits outside the name, so a long name is cut
+  /// and the badge never is.
   Widget _subRow(MatchEvent s, Set<int> listed) {
     // playerName is the player coming on, secondaryName the one going off
     // (see MatchEvent docs).
-    WidgetSpan? badgeFor(int? id) {
-      if (id == null || listed.contains(id)) return null;
-      final b = _badge(id);
-      if (b == null) return null;
-      return WidgetSpan(
-        alignment: PlaceholderAlignment.middle,
-        child: Padding(
-          padding: const EdgeInsets.only(left: AppSpacing.xs),
-          child: b,
-        ),
+    Widget line(String arrow, Color arrowColor, String name, int? id) {
+      final badge = id == null || listed.contains(id) ? null : _badge(id);
+      return Row(
+        children: [
+          Text(
+            arrow,
+            style: AppTypography.bodySmall.copyWith(color: arrowColor),
+          ),
+          Flexible(
+            child: Text(
+              name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.bodySmall.copyWith(
+                color: arrow == '▲ '
+                    ? AppColors.onSurface
+                    : AppColors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          if (badge != null) ...[
+            const SizedBox(width: AppSpacing.xs),
+            badge,
+          ],
+        ],
       );
     }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: 36,
@@ -841,36 +871,48 @@ class MatchLineups extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
-            child: Text.rich(
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              TextSpan(
-                style: AppTypography.bodySmall,
-                children: [
-                  const TextSpan(
-                    text: '▲ ',
-                    style: TextStyle(color: AppColors.positive),
-                  ),
-                  TextSpan(text: s.playerName),
-                  ?badgeFor(s.playerId),
-                  const TextSpan(text: '   '),
-                  const TextSpan(
-                    text: '▼ ',
-                    style: TextStyle(color: AppColors.error),
-                  ),
-                  TextSpan(
-                    text: s.secondaryName ?? '—',
-                    style: const TextStyle(color: AppColors.onSurfaceVariant),
-                  ),
-                  ?badgeFor(s.secondaryPlayerId),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                line('▲ ', AppColors.positive, s.playerName, s.playerId),
+                line(
+                  '▼ ',
+                  AppColors.error,
+                  s.secondaryName ?? '-',
+                  s.secondaryPlayerId,
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
   }
+
+  /// A narrow column's name cell: the name on its own line, whatever he has
+  /// done so far in small marks under it.
+  Widget _nameOver(Player p, List<Widget> marks) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text(
+        p.name,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTypography.bodyMedium,
+      ),
+      if (marks.isNotEmpty)
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            key: ValueKey(('markersUnder', p.id)),
+            mainAxisSize: MainAxisSize.min,
+            children: marks.skip(1).toList(),
+          ),
+        ),
+    ],
+  );
 
   /// The small marks after a player's name for what the clock has shown him
   /// do: goals (a count past one), assists, his card, a knock, and coming on
@@ -965,9 +1007,13 @@ class MatchLineups extends StatelessWidget {
 /// A compact battery-style energy pip: green when fresh, amber tiring, red when
 /// spent — a cue that a player is ready to be subbed.
 class _EnergyPip extends StatelessWidget {
-  const _EnergyPip(this.energy);
+  const _EnergyPip(this.energy, {this.showFigure = true});
 
   final int energy;
+
+  /// The percentage beside the battery; a narrow column shows the battery,
+  /// in its colour, alone.
+  final bool showFigure;
 
   @override
   Widget build(BuildContext context) {
@@ -976,14 +1022,16 @@ class _EnergyPip extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(Icons.battery_charging_full, size: 12, color: color),
-        const SizedBox(width: 2),
-        Text(
-          '$energy%',
-          style: AppTypography.labelSmall.copyWith(
-            color: color,
-            fontFeatures: const [FontFeature.tabularFigures()],
+        if (showFigure) ...[
+          const SizedBox(width: 2),
+          Text(
+            '$energy%',
+            style: AppTypography.labelSmall.copyWith(
+              color: color,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
