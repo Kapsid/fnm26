@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Votre sauvegarde n'a pas pu être mise à jour. Rien n'a été supprimé, et une copie d'avant la mise à jour est conservée sur ce téléphone.",
   "saveUpgradeRestoreButton": "Restaurer la copie d'avant la mise à jour",
   "saveOpenFailedTitle": "Impossible d'ouvrir vos sauvegardes",
-  "saveOpenFailedBody": "Vos sauvegardes n'ont pas pu être ouvertes. Rien n'a été supprimé. Réessayez dans un instant."
+  "saveOpenFailedBody": "Vos sauvegardes n'ont pas pu être ouvertes. Rien n'a été supprimé. Réessayez dans un instant.",
+  "saveUpgradeRestoreFailed": "La copie n'a pas pu être restaurée. Votre sauvegarde est restée telle quelle."
 }

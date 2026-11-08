@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Tvoju spremljenu igru nije bilo moguće ažurirati. Ništa nije obrisano, a kopija od prije ažuriranja čuva se na ovom telefonu.",
   "saveUpgradeRestoreButton": "Vrati kopiju od prije ažuriranja",
   "saveOpenFailedTitle": "Spremljene igre nije bilo moguće otvoriti",
-  "saveOpenFailedBody": "Tvoje spremljene igre nije bilo moguće otvoriti. Ništa nije obrisano. Pokušaj ponovno za trenutak."
+  "saveOpenFailedBody": "Tvoje spremljene igre nije bilo moguće otvoriti. Ništa nije obrisano. Pokušaj ponovno za trenutak.",
+  "saveUpgradeRestoreFailed": "Kopiju nije bilo moguće vratiti. Tvoja spremljena igra ostala je kakva je bila."
 }

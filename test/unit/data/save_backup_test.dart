@@ -355,6 +355,91 @@ void main() {
       timeout: const Timeout(Duration(minutes: 2)),
     );
 
+    test(
+      'a restore killed between its two renames finishes at the next launch',
+      () async {
+        final live = await unpackFixture('pre55', 'mid_cycle');
+        addTearDown(() => live.parent.delete(recursive: true));
+        final clean = managersIn(live.path);
+        final copy = await SaveBackup.writePreUpgradeCopy(
+          live,
+          fromVersion: AppDatabase.firstManagedVersion,
+          into: dir,
+        );
+        halfMigrate(live.path);
+
+        // The kill: the failed file is already set aside, the staged copy
+        // not yet renamed into place.
+        await expectLater(
+          SaveBackup.restorePreUpgradeCopy(
+            live,
+            copy!,
+            interruptAfterSetAside: () async => throw StateError('killed'),
+          ),
+          throwsStateError,
+        );
+        expect(live.existsSync(), isFalse, reason: 'the window under test');
+        final incoming = File('${live.path}${SaveBackup.incomingSuffix}');
+        expect(incoming.existsSync(), isTrue);
+        expect(
+          File('${live.path}${SaveBackup.restoringSuffix}').existsSync(),
+          isTrue,
+        );
+
+        // The next launch.
+        expect(await SaveBackup.recoverAt(live), isTrue);
+
+        expect(managersIn(live.path), clean);
+        expect(fileSchemaVersion(live.path), 54);
+        expect(incoming.existsSync(), isFalse);
+        expect(
+          File('${live.path}${SaveBackup.restoringSuffix}').existsSync(),
+          isFalse,
+        );
+        final aside = live.parent.listSync().whereType<File>().where(
+          (f) => p.basename(f.path).contains(SaveBackup.failedUpgradeInfix),
+        );
+        expect(aside, hasLength(1), reason: 'the failed save is kept');
+        expect(managersIn(aside.single.path).toSet(), {'Half migrated'});
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+    );
+
+    test('a damaged copy is never swapped in', () async {
+      final live = await unpackFixture('pre55', 'mid_cycle');
+      addTearDown(() => live.parent.delete(recursive: true));
+      final copy = await SaveBackup.writePreUpgradeCopy(
+        live,
+        fromVersion: AppDatabase.firstManagedVersion,
+        into: dir,
+      );
+      halfMigrate(live.path);
+      // Damage the middle of the copy, past the schema page [inspect] reads,
+      // so only SQLite's own check can tell.
+      final raf = copy!.openSync(mode: FileMode.append);
+      final pages = raf.lengthSync() ~/ 4096;
+      raf
+        ..setPositionSync((pages ~/ 2) * 4096)
+        ..writeFromSync(List<int>.filled(4096 * 4, 0xA5))
+        ..closeSync();
+      expect(SaveBackup.inspect(copy.path).rejection, isNull);
+
+      await expectLater(
+        SaveBackup.restorePreUpgradeCopy(live, copy),
+        throwsA(isA<FileSystemException>()),
+      );
+
+      expect(managersIn(live.path).toSet(), {'Half migrated'});
+      expect(
+        File('${live.path}${SaveBackup.incomingSuffix}').existsSync(),
+        isFalse,
+      );
+      expect(
+        File('${live.path}${SaveBackup.restoringSuffix}').existsSync(),
+        isFalse,
+      );
+    }, timeout: const Timeout(Duration(minutes: 2)));
+
     test('a save that upgraded is never offered an old copy', () async {
       final live = await unpackFixture('pre55', 'mid_cycle');
       addTearDown(() => live.parent.delete(recursive: true));

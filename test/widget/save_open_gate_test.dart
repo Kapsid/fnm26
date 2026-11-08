@@ -87,6 +87,32 @@ void main() {
     expect(find.text('Retry'), findsOneWidget);
   }, timeout: const Timeout(Duration(minutes: 2)));
 
+  testWidgets('a restore that fails says so and keeps the screen', (
+    tester,
+  ) async {
+    // A copy that is not there: the restore refuses before anything moves.
+    await pumpGate(
+      tester,
+      executor: failingOpen(),
+      copy: File('/nowhere/before-update-v54.fnmsave'),
+    );
+    await tester.tap(find.text('Restore the copy from before the update'));
+    for (var i = 0; i < 3; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 50)),
+      );
+      await tester.pump(const Duration(seconds: 6));
+    }
+
+    expect(
+      find.text(
+        'The copy could not be restored. Your save was left as it was.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('CAREER LIST'), findsNothing);
+  }, timeout: const Timeout(Duration(minutes: 2)));
+
   testWidgets('the screen speaks the language chosen in Settings', (
     tester,
   ) async {

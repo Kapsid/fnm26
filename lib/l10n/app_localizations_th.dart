@@ -11794,6 +11794,10 @@ class AppLocalizationsTh extends AppLocalizations {
   String get saveUpgradeRestoreButton => 'กู้คืนสำเนาจากก่อนการอัปเดต';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'ไม่สามารถกู้คืนสำเนาได้ เซฟของคุณยังคงเหมือนเดิม';
+
+  @override
   String get saveOpenFailedTitle => 'ไม่สามารถเปิดเซฟของคุณได้';
 
   @override

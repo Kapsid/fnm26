@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Tallennustasi ei voitu päivittää. Mitään ei poistettu, ja kopio ajalta ennen päivitystä on tallessa tässä puhelimessa.",
   "saveUpgradeRestoreButton": "Palauta kopio ajalta ennen päivitystä",
   "saveOpenFailedTitle": "Tallennuksia ei voitu avata",
-  "saveOpenFailedBody": "Tallennuksiasi ei voitu avata. Mitään ei poistettu. Yritä hetken päästä uudelleen."
+  "saveOpenFailedBody": "Tallennuksiasi ei voitu avata. Mitään ei poistettu. Yritä hetken päästä uudelleen.",
+  "saveUpgradeRestoreFailed": "Kopiota ei voitu palauttaa. Tallennuksesi jäi ennalleen."
 }

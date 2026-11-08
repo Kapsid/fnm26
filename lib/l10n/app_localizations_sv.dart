@@ -12014,6 +12014,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'Återställ kopian från före uppdateringen';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopian kunde inte återställas. Ditt sparade spel lämnades som det var.';
+
+  @override
   String get saveOpenFailedTitle => 'Dina sparade spel kunde inte öppnas';
 
   @override

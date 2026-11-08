@@ -12296,6 +12296,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get saveUpgradeRestoreButton => 'Відновити копію до оновлення';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Не вдалося відновити копію. Ваше збереження залишилося без змін.';
+
+  @override
   String get saveOpenFailedTitle => 'Не вдалося відкрити збереження';
 
   @override

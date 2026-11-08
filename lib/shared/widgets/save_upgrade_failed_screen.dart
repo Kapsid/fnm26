@@ -25,9 +25,10 @@ class SaveUpgradeFailedScreen extends StatefulWidget {
   /// Tears the app down and opens the database again.
   final VoidCallback onRetry;
 
-  /// Puts the copy from before the upgrade back, then retries. Null when
-  /// there is no such copy, which also picks the neutral wording.
-  final Future<void> Function()? onRestore;
+  /// Puts the copy from before the upgrade back, then retries; resolves to
+  /// false when it could not, and the screen says so. Null when there is no
+  /// such copy, which also picks the neutral wording.
+  final Future<bool> Function()? onRestore;
 
   /// The language chosen in Settings; null follows the device.
   final Locale? locale;
@@ -40,12 +41,24 @@ class SaveUpgradeFailedScreen extends StatefulWidget {
 class _SaveUpgradeFailedScreenState extends State<SaveUpgradeFailedScreen> {
   bool _busy = false;
 
+  /// The last restore did not happen.
+  bool _restoreFailed = false;
+
   Future<void> _restore() async {
-    setState(() => _busy = true);
+    setState(() {
+      _busy = true;
+      _restoreFailed = false;
+    });
+    var ok = false;
     try {
-      await widget.onRestore!();
+      ok = await widget.onRestore!();
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _restoreFailed = !ok;
+        });
+      }
     }
   }
 
@@ -94,6 +107,17 @@ class _SaveUpgradeFailedScreenState extends State<SaveUpgradeFailedScreen> {
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
+                      if (_restoreFailed) ...[
+                        const SizedBox(height: AppSpacing.md),
+                        Text(
+                          l.saveUpgradeRestoreFailed,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                        ),
+                      ],
                       const SizedBox(height: AppSpacing.lg),
                       if (hasCopy) ...[
                         FilledButton(

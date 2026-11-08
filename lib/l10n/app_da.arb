@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Dit gemte spil kunne ikke opdateres. Intet er slettet, og en kopi fra før opdateringen er gemt på denne telefon.",
   "saveUpgradeRestoreButton": "Gendan kopien fra før opdateringen",
   "saveOpenFailedTitle": "Dine gemte spil kunne ikke åbnes",
-  "saveOpenFailedBody": "Dine gemte spil kunne ikke åbnes. Intet er slettet. Prøv igen om lidt."
+  "saveOpenFailedBody": "Dine gemte spil kunne ikke åbnes. Intet er slettet. Prøv igen om lidt.",
+  "saveUpgradeRestoreFailed": "Kopien kunne ikke gendannes. Dit gemte spil er uændret."
 }

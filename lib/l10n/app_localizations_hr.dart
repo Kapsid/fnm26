@@ -12346,6 +12346,10 @@ class AppLocalizationsHr extends AppLocalizations {
   String get saveUpgradeRestoreButton => 'Vrati kopiju od prije ažuriranja';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopiju nije bilo moguće vratiti. Tvoja spremljena igra ostala je kakva je bila.';
+
+  @override
   String get saveOpenFailedTitle => 'Spremljene igre nije bilo moguće otvoriti';
 
   @override

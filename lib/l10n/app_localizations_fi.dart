@@ -12093,6 +12093,10 @@ class AppLocalizationsFi extends AppLocalizations {
       'Palauta kopio ajalta ennen päivitystä';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopiota ei voitu palauttaa. Tallennuksesi jäi ennalleen.';
+
+  @override
   String get saveOpenFailedTitle => 'Tallennuksia ei voitu avata';
 
   @override

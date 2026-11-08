@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "A mentésedet nem sikerült frissíteni. Semmi sem törlődött, és egy frissítés előtti másolat megvan ezen a telefonon.",
   "saveUpgradeRestoreButton": "A frissítés előtti másolat visszaállítása",
   "saveOpenFailedTitle": "A mentéseket nem sikerült megnyitni",
-  "saveOpenFailedBody": "A mentéseidet nem sikerült megnyitni. Semmi sem törlődött. Próbáld újra egy kicsit később."
+  "saveOpenFailedBody": "A mentéseidet nem sikerült megnyitni. Semmi sem törlődött. Próbáld újra egy kicsit később.",
+  "saveUpgradeRestoreFailed": "A másolatot nem sikerült visszaállítani. A mentésed változatlan maradt."
 }

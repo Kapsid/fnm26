@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Simpanan anda tidak dapat dikemas kini. Tiada apa-apa dipadam, dan salinan dari sebelum kemas kini disimpan pada telefon ini.",
   "saveUpgradeRestoreButton": "Pulihkan salinan dari sebelum kemas kini",
   "saveOpenFailedTitle": "Simpanan anda tidak dapat dibuka",
-  "saveOpenFailedBody": "Simpanan anda tidak dapat dibuka. Tiada apa-apa dipadam. Cuba lagi sebentar nanti."
+  "saveOpenFailedBody": "Simpanan anda tidak dapat dibuka. Tiada apa-apa dipadam. Cuba lagi sebentar nanti.",
+  "saveUpgradeRestoreFailed": "Salinan tidak dapat dipulihkan. Simpanan anda dibiarkan seperti asal."
 }

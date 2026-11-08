@@ -12084,6 +12084,10 @@ class AppLocalizationsEl extends AppLocalizations {
       'Επαναφορά του αντιγράφου από πριν από την ενημέρωση';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Το αντίγραφο δεν μπόρεσε να επαναφερθεί. Η αποθήκευσή σου έμεινε όπως ήταν.';
+
+  @override
   String get saveOpenFailedTitle => 'Οι αποθηκεύσεις σου δεν άνοιξαν';
 
   @override

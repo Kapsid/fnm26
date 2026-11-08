@@ -11620,6 +11620,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get saveUpgradeRestoreButton => '업데이트 전 사본 복원';
 
   @override
+  String get saveUpgradeRestoreFailed => '사본을 복원하지 못했습니다. 저장 데이터는 그대로입니다.';
+
+  @override
   String get saveOpenFailedTitle => '저장 데이터를 열지 못했습니다';
 
   @override

@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Je opgeslagen spel kon niet worden bijgewerkt. Er is niets verwijderd, en een kopie van vóór de update staat op deze telefoon.",
   "saveUpgradeRestoreButton": "De kopie van vóór de update terugzetten",
   "saveOpenFailedTitle": "Je opgeslagen spellen konden niet worden geopend",
-  "saveOpenFailedBody": "Je opgeslagen spellen konden niet worden geopend. Er is niets verwijderd. Probeer het zo opnieuw."
+  "saveOpenFailedBody": "Je opgeslagen spellen konden niet worden geopend. Er is niets verwijderd. Probeer het zo opnieuw.",
+  "saveUpgradeRestoreFailed": "De kopie kon niet worden teruggezet. Je opgeslagen spel is gebleven zoals het was."
 }

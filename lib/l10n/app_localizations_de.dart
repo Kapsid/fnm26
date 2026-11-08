@@ -12121,6 +12121,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Kopie von vor dem Update wiederherstellen';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Die Kopie konnte nicht wiederhergestellt werden. Dein Spielstand ist unverändert.';
+
+  @override
   String get saveOpenFailedTitle =>
       'Deine Spielstände konnten nicht geöffnet werden';
 

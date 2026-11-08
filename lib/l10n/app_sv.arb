@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Ditt sparade spel kunde inte uppdateras. Inget har raderats, och en kopia från före uppdateringen finns kvar på den här telefonen.",
   "saveUpgradeRestoreButton": "Återställ kopian från före uppdateringen",
   "saveOpenFailedTitle": "Dina sparade spel kunde inte öppnas",
-  "saveOpenFailedBody": "Dina sparade spel kunde inte öppnas. Inget har raderats. Försök igen om en stund."
+  "saveOpenFailedBody": "Dina sparade spel kunde inte öppnas. Inget har raderats. Försök igen om en stund.",
+  "saveUpgradeRestoreFailed": "Kopian kunde inte återställas. Ditt sparade spel lämnades som det var."
 }

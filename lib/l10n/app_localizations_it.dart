@@ -12083,6 +12083,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Ripristina la copia di prima dell\'aggiornamento';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Non è stato possibile ripristinare la copia. Il salvataggio è rimasto com’era.';
+
+  @override
   String get saveOpenFailedTitle => 'Impossibile aprire i salvataggi';
 
   @override

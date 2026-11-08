@@ -12373,6 +12373,10 @@ class AppLocalizationsRo extends AppLocalizations {
       'Restaurează copia de dinaintea actualizării';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Copia nu a putut fi restaurată. Salvarea ta a rămas neschimbată.';
+
+  @override
   String get saveOpenFailedTitle => 'Salvările nu au putut fi deschise';
 
   @override

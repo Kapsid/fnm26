@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Không thể cập nhật bản lưu của bạn. Không có gì bị xóa, và một bản sao từ trước khi cập nhật vẫn được giữ trên điện thoại này.",
   "saveUpgradeRestoreButton": "Khôi phục bản sao từ trước khi cập nhật",
   "saveOpenFailedTitle": "Không thể mở các bản lưu",
-  "saveOpenFailedBody": "Không thể mở các bản lưu của bạn. Không có gì bị xóa. Hãy thử lại sau giây lát."
+  "saveOpenFailedBody": "Không thể mở các bản lưu của bạn. Không có gì bị xóa. Hãy thử lại sau giây lát.",
+  "saveUpgradeRestoreFailed": "Không thể khôi phục bản sao. Bản lưu của bạn vẫn được giữ nguyên."
 }

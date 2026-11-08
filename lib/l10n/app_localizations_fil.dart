@@ -12012,6 +12012,10 @@ class AppLocalizationsFil extends AppLocalizations {
       'Ibalik ang kopya mula bago ang update';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Hindi maibalik ang kopya. Hindi ginalaw ang save mo.';
+
+  @override
   String get saveOpenFailedTitle => 'Hindi mabuksan ang mga save mo';
 
   @override

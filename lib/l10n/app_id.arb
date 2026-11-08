@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Simpanan permainanmu tidak bisa diperbarui. Tidak ada yang dihapus, dan salinan dari sebelum pembaruan tersimpan di ponsel ini.",
   "saveUpgradeRestoreButton": "Pulihkan salinan dari sebelum pembaruan",
   "saveOpenFailedTitle": "Simpanan tidak bisa dibuka",
-  "saveOpenFailedBody": "Simpanan permainanmu tidak bisa dibuka. Tidak ada yang dihapus. Coba lagi sebentar lagi."
+  "saveOpenFailedBody": "Simpanan permainanmu tidak bisa dibuka. Tidak ada yang dihapus. Coba lagi sebentar lagi.",
+  "saveUpgradeRestoreFailed": "Salinan tidak bisa dipulihkan. Simpananmu dibiarkan seperti semula."
 }

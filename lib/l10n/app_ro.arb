@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Salvarea ta nu a putut fi actualizată. Nu s-a șters nimic, iar o copie de dinaintea actualizării este păstrată pe acest telefon.",
   "saveUpgradeRestoreButton": "Restaurează copia de dinaintea actualizării",
   "saveOpenFailedTitle": "Salvările nu au putut fi deschise",
-  "saveOpenFailedBody": "Salvările tale nu au putut fi deschise. Nu s-a șters nimic. Încearcă din nou peste câteva momente."
+  "saveOpenFailedBody": "Salvările tale nu au putut fi deschise. Nu s-a șters nimic. Încearcă din nou peste câteva momente.",
+  "saveUpgradeRestoreFailed": "Copia nu a putut fi restaurată. Salvarea ta a rămas neschimbată."
 }

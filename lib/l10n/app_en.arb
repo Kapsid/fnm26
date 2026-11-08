@@ -18534,6 +18534,10 @@
   "@saveUpgradeRestoreButton": {
     "description": "Launch: button on that screen that puts the copy from before the update back."
   },
+  "saveUpgradeRestoreFailed": "The copy could not be restored. Your save was left as it was.",
+  "@saveUpgradeRestoreFailed": {
+    "description": "Launch: shown on that screen when the copy from before the update could not be put back."
+  },
   "saveOpenFailedTitle": "Your saves could not be opened",
   "@saveOpenFailedTitle": {
     "description": "Launch: heading shown instead of the app when the saves would not open and there is no copy from before an update."

@@ -11922,6 +11922,10 @@ class AppLocalizationsId extends AppLocalizations {
       'Pulihkan salinan dari sebelum pembaruan';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Salinan tidak bisa dipulihkan. Simpananmu dibiarkan seperti semula.';
+
+  @override
   String get saveOpenFailedTitle => 'Simpanan tidak bisa dibuka';
 
   @override

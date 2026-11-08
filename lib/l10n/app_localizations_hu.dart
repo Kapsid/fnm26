@@ -11961,6 +11961,10 @@ class AppLocalizationsHu extends AppLocalizations {
       'A frissítés előtti másolat visszaállítása';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'A másolatot nem sikerült visszaállítani. A mentésed változatlan maradt.';
+
+  @override
   String get saveOpenFailedTitle => 'A mentéseket nem sikerült megnyitni';
 
   @override

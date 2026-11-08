@@ -11942,6 +11942,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get saveUpgradeRestoreButton => 'अपडेट से पहले की कॉपी रिस्टोर करें';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'कॉपी रिस्टोर नहीं हो सकी। आपका सेव जैसा था वैसा ही है।';
+
+  @override
   String get saveOpenFailedTitle => 'आपके सेव खुल नहीं सके';
 
   @override

@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Nie udało się zaktualizować zapisu gry. Nic nie zostało usunięte, a kopia sprzed aktualizacji jest zachowana na tym telefonie.",
   "saveUpgradeRestoreButton": "Przywróć kopię sprzed aktualizacji",
   "saveOpenFailedTitle": "Nie udało się otworzyć zapisów",
-  "saveOpenFailedBody": "Nie udało się otworzyć zapisów gry. Nic nie zostało usunięte. Spróbuj ponownie za chwilę."
+  "saveOpenFailedBody": "Nie udało się otworzyć zapisów gry. Nic nie zostało usunięte. Spróbuj ponownie za chwilę.",
+  "saveUpgradeRestoreFailed": "Nie udało się przywrócić kopii. Zapis gry pozostał bez zmian."
 }

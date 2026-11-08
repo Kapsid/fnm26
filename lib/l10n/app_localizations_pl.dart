@@ -12142,6 +12142,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get saveUpgradeRestoreButton => 'Przywróć kopię sprzed aktualizacji';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Nie udało się przywrócić kopii. Zapis gry pozostał bez zmian.';
+
+  @override
   String get saveOpenFailedTitle => 'Nie udało się otworzyć zapisów';
 
   @override

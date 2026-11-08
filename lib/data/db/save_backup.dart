@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:fnm/data/db/app_database.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -222,12 +223,21 @@ abstract final class SaveBackup {
   /// setting the file that failed to upgrade aside as
   /// `fnm.sqlite.failed-upgrade-<time>` (never deleted), and returns that.
   ///
+  /// Nothing moves until the copy has been staged as `.incoming` and has
+  /// passed [inspect] and SQLite's quick check; a copy that fails either
+  /// throws with [live] untouched. The swap itself runs under the
+  /// `.restoring` marker, so a kill between setting [live] aside and renaming
+  /// the staged copy into place is finished by [recoverAt] at the next
+  /// launch rather than leaving no save at all.
+  ///
   /// The caller must make sure nothing has [live] open. The copy stays where
   /// it is, so it can be restored again if the next upgrade fails too.
+  /// [interruptAfterSetAside] lets a test stop the swap where a kill would.
   static Future<File> restorePreUpgradeCopy(
     File live,
     File copy, {
     DateTime? at,
+    @visibleForTesting Future<void> Function()? interruptAfterSetAside,
   }) async {
     if (inspect(copy.path).rejection != null) {
       throw FileSystemException('pre-upgrade copy unreadable', copy.path);
@@ -236,13 +246,22 @@ abstract final class SaveBackup {
     if (incoming.existsSync()) await incoming.delete();
     await copy.copy(incoming.path);
     await _flush(incoming);
+    if (!_healthy(incoming.path)) {
+      await incoming.delete();
+      throw FileSystemException('pre-upgrade copy damaged', copy.path);
+    }
+
+    final marker = File('${live.path}$restoringSuffix');
+    await marker.writeAsString(DateTime.now().toIso8601String(), flush: true);
     final stamp = (at ?? DateTime.now()).millisecondsSinceEpoch;
     final aside = File('${live.path}$failedUpgradeInfix$stamp');
     if (live.existsSync()) await _moveWithWal(live, aside);
     for (final sidecar in _sidecarsOf(live.path)) {
       if (sidecar.existsSync()) await sidecar.delete();
     }
+    await interruptAfterSetAside?.call();
     await incoming.rename(live.path);
+    await marker.delete();
     return aside;
   }
 
@@ -426,6 +445,11 @@ abstract final class SaveBackup {
   ///  * Without one (an older build's restore, or plain damage), a missing or
   ///    unreadable live file is replaced by a good `.previous`; a live file
   ///    that passes the full check retires `.previous` instead.
+  ///  * In both cases, when there is still no live file and the staging file
+  ///    `.incoming` passes the full check, it is renamed into place: that is
+  ///    a pre-upgrade restore ([restorePreUpgradeCopy]) killed between its
+  ///    two renames. A staging file is never deleted while there is no live
+  ///    file.
   ///
   /// A broken live file is renamed `fnm.sqlite.broken-<time>`, never deleted.
   static Future<bool> recoverAt(File live) async {
@@ -436,6 +460,21 @@ abstract final class SaveBackup {
     var changed = false;
 
     bool good(File f) => f.existsSync() && _healthy(f.path);
+
+    // A swap killed after the live file was set aside and before the staged
+    // copy was renamed into place (see [restorePreUpgradeCopy]) left no live
+    // file at all: the staged copy IS the save now, so it goes into place.
+    // With a live file the staging copy is spare and goes. With neither a live
+    // file nor a good staging copy, the staging copy is kept, never deleted.
+    Future<void> settleIncoming() async {
+      if (!incoming.existsSync()) return;
+      if (live.existsSync()) {
+        await incoming.delete();
+      } else if (good(incoming)) {
+        await _moveWithWal(incoming, live);
+        changed = true;
+      }
+    }
 
     if (marker.existsSync()) {
       if (!good(live) && good(previous)) {
@@ -448,12 +487,12 @@ abstract final class SaveBackup {
       } else {
         await _deleteWithWal(older);
       }
-      if (incoming.existsSync()) await incoming.delete();
+      await settleIncoming();
       await marker.delete();
       return true;
     }
 
-    if (incoming.existsSync()) await incoming.delete();
+    await settleIncoming();
     if (!previous.existsSync()) return changed;
     final liveRejection = live.existsSync()
         ? inspect(live.path).rejection

@@ -12280,6 +12280,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Obnovit kopii z doby před aktualizací';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopii se nepodařilo obnovit. Uložená hra zůstala, jak byla.';
+
+  @override
   String get saveOpenFailedTitle => 'Uložené hry se nepodařilo otevřít';
 
   @override

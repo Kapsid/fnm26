@@ -12084,6 +12084,10 @@ class AppLocalizationsNl extends AppLocalizations {
       'De kopie van vóór de update terugzetten';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'De kopie kon niet worden teruggezet. Je opgeslagen spel is gebleven zoals het was.';
+
+  @override
   String get saveOpenFailedTitle =>
       'Je opgeslagen spellen konden niet worden geopend';
 

@@ -12020,6 +12020,10 @@ class AppLocalizationsDa extends AppLocalizations {
   String get saveUpgradeRestoreButton => 'Gendan kopien fra før opdateringen';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopien kunne ikke gendannes. Dit gemte spil er uændret.';
+
+  @override
   String get saveOpenFailedTitle => 'Dine gemte spil kunne ikke åbnes';
 
   @override

@@ -11895,6 +11895,10 @@ class AppLocalizationsVi extends AppLocalizations {
       'Khôi phục bản sao từ trước khi cập nhật';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Không thể khôi phục bản sao. Bản lưu của bạn vẫn được giữ nguyên.';
+
+  @override
   String get saveOpenFailedTitle => 'Không thể mở các bản lưu';
 
   @override

@@ -12095,6 +12095,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Restaurar la copia de antes de la actualización';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'No se pudo restaurar la copia. Tu partida se ha quedado como estaba.';
+
+  @override
   String get saveOpenFailedTitle => 'No se pudieron abrir tus partidas';
 
   @override

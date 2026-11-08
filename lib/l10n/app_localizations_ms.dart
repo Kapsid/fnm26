@@ -11970,6 +11970,10 @@ class AppLocalizationsMs extends AppLocalizations {
       'Pulihkan salinan dari sebelum kemas kini';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Salinan tidak dapat dipulihkan. Simpanan anda dibiarkan seperti asal.';
+
+  @override
   String get saveOpenFailedTitle => 'Simpanan anda tidak dapat dibuka';
 
   @override

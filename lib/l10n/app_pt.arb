@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Não foi possível atualizar seu jogo salvo. Nada foi apagado, e uma cópia de antes da atualização está guardada neste telefone.",
   "saveUpgradeRestoreButton": "Restaurar a cópia de antes da atualização",
   "saveOpenFailedTitle": "Não foi possível abrir seus jogos salvos",
-  "saveOpenFailedBody": "Não foi possível abrir seus jogos salvos. Nada foi apagado. Tente de novo daqui a pouco."
+  "saveOpenFailedBody": "Não foi possível abrir seus jogos salvos. Nada foi apagado. Tente de novo daqui a pouco.",
+  "saveUpgradeRestoreFailed": "Não foi possível restaurar a cópia. Seu jogo salvo ficou como estava."
 }

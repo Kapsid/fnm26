@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Hindi ma-update ang save mo. Walang nabura, at may kopya mula bago ang update na nakatabi sa phone na ito.",
   "saveUpgradeRestoreButton": "Ibalik ang kopya mula bago ang update",
   "saveOpenFailedTitle": "Hindi mabuksan ang mga save mo",
-  "saveOpenFailedBody": "Hindi mabuksan ang mga save mo. Walang nabura. Subukan ulit maya-maya."
+  "saveOpenFailedBody": "Hindi mabuksan ang mga save mo. Walang nabura. Subukan ulit maya-maya.",
+  "saveUpgradeRestoreFailed": "Hindi maibalik ang kopya. Hindi ginalaw ang save mo."
 }

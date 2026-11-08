@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Il salvataggio non è stato aggiornato. Non è stato eliminato nulla e una copia di prima dell'aggiornamento è conservata su questo telefono.",
   "saveUpgradeRestoreButton": "Ripristina la copia di prima dell'aggiornamento",
   "saveOpenFailedTitle": "Impossibile aprire i salvataggi",
-  "saveOpenFailedBody": "Non è stato possibile aprire i salvataggi. Non è stato eliminato nulla. Riprova tra un momento."
+  "saveOpenFailedBody": "Non è stato possibile aprire i salvataggi. Non è stato eliminato nulla. Riprova tra un momento.",
+  "saveUpgradeRestoreFailed": "Non è stato possibile ripristinare la copia. Il salvataggio è rimasto com’era."
 }

@@ -69,13 +69,15 @@ class SaveOpenGate extends ConsumerWidget {
     );
   }
 
-  /// Puts the pre-upgrade copy back and opens again.
+  /// Puts the pre-upgrade copy back and opens again. Returns false, with
+  /// the live file left as it was, when the copy could not be put back; the
+  /// screen then says so and stays.
   ///
   /// The failed database is closed first. Its open failed, but drift keeps
   /// the connection it opened, and a connection left on the moved file would
   /// remove `fnm.sqlite-wal` by NAME when it is finally closed, which by
   /// then belongs to the restored save.
-  Future<void> _restore(WidgetRef ref, File live, File copy) async {
+  Future<bool> _restore(WidgetRef ref, File live, File copy) async {
     try {
       await ref
           .read(appDatabaseProvider)
@@ -89,7 +91,9 @@ class SaveOpenGate extends ConsumerWidget {
       AppLog.info('pre-upgrade-restore', 'failed save kept as ${aside.path}');
     } on Object catch (e, stack) {
       AppLog.error('pre-upgrade-restore', e, stack);
+      return false;
     }
     onRetry();
+    return true;
   }
 }

@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Kaydın güncellenemedi. Hiçbir şey silinmedi; güncellemeden önceki bir kopya bu telefonda duruyor.",
   "saveUpgradeRestoreButton": "Güncellemeden önceki kopyayı geri yükle",
   "saveOpenFailedTitle": "Kayıtların açılamadı",
-  "saveOpenFailedBody": "Kayıtların açılamadı. Hiçbir şey silinmedi. Birazdan tekrar dene."
+  "saveOpenFailedBody": "Kayıtların açılamadı. Hiçbir şey silinmedi. Birazdan tekrar dene.",
+  "saveUpgradeRestoreFailed": "Kopya geri yüklenemedi. Kaydın olduğu gibi bırakıldı."
 }

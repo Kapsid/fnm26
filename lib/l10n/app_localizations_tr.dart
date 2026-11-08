@@ -11937,6 +11937,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Güncellemeden önceki kopyayı geri yükle';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopya geri yüklenemedi. Kaydın olduğu gibi bırakıldı.';
+
+  @override
   String get saveOpenFailedTitle => 'Kayıtların açılamadı';
 
   @override

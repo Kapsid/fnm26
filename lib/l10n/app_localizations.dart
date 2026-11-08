@@ -18321,6 +18321,12 @@ abstract class AppLocalizations {
   /// **'Restore the copy from before the update'**
   String get saveUpgradeRestoreButton;
 
+  /// Launch: shown on that screen when the copy from before the update could not be put back.
+  ///
+  /// In en, this message translates to:
+  /// **'The copy could not be restored. Your save was left as it was.'**
+  String get saveUpgradeRestoreFailed;
+
   /// Launch: heading shown instead of the app when the saves would not open and there is no copy from before an update.
   ///
   /// In en, this message translates to:

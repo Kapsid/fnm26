@@ -12102,6 +12102,10 @@ class AppLocalizationsBg extends AppLocalizations {
       'Възстанови копието отпреди обновяването';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Копието не можа да бъде възстановено. Записаната ви игра остана непроменена.';
+
+  @override
   String get saveOpenFailedTitle => 'Записите не можаха да бъдат отворени';
 
   @override

@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "저장 데이터를 업데이트하지 못했습니다. 삭제된 것은 없으며, 업데이트 전 사본이 이 휴대폰에 보관되어 있습니다.",
   "saveUpgradeRestoreButton": "업데이트 전 사본 복원",
   "saveOpenFailedTitle": "저장 데이터를 열지 못했습니다",
-  "saveOpenFailedBody": "저장 데이터를 열지 못했습니다. 삭제된 것은 없습니다. 잠시 후 다시 시도해 주세요."
+  "saveOpenFailedBody": "저장 데이터를 열지 못했습니다. 삭제된 것은 없습니다. 잠시 후 다시 시도해 주세요.",
+  "saveUpgradeRestoreFailed": "사본을 복원하지 못했습니다. 저장 데이터는 그대로입니다."
 }

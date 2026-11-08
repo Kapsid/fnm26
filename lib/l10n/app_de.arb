@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "Dein Spielstand konnte nicht aktualisiert werden. Nichts wurde gelöscht, und eine Kopie von vor dem Update liegt auf diesem Handy.",
   "saveUpgradeRestoreButton": "Kopie von vor dem Update wiederherstellen",
   "saveOpenFailedTitle": "Deine Spielstände konnten nicht geöffnet werden",
-  "saveOpenFailedBody": "Deine Spielstände konnten nicht geöffnet werden. Nichts wurde gelöscht. Versuch es gleich noch einmal."
+  "saveOpenFailedBody": "Deine Spielstände konnten nicht geöffnet werden. Nichts wurde gelöscht. Versuch es gleich noch einmal.",
+  "saveUpgradeRestoreFailed": "Die Kopie konnte nicht wiederhergestellt werden. Dein Spielstand ist unverändert."
 }

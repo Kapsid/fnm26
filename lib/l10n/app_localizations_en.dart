@@ -12048,6 +12048,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Restore the copy from before the update';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'The copy could not be restored. Your save was left as it was.';
+
+  @override
   String get saveOpenFailedTitle => 'Your saves could not be opened';
 
   @override

@@ -11592,6 +11592,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get saveUpgradeRestoreButton => '更新前のコピーを復元';
 
   @override
+  String get saveUpgradeRestoreFailed => 'コピーを復元できませんでした。セーブデータはそのままです。';
+
+  @override
   String get saveOpenFailedTitle => 'セーブデータを開けませんでした';
 
   @override

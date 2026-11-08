@@ -4026,5 +4026,6 @@
   "saveUpgradeFailedBody": "セーブデータを更新できませんでした。何も削除されていません。更新前のコピーがこの端末に保存されています。",
   "saveUpgradeRestoreButton": "更新前のコピーを復元",
   "saveOpenFailedTitle": "セーブデータを開けませんでした",
-  "saveOpenFailedBody": "セーブデータを開けませんでした。何も削除されていません。少し待ってからもう一度お試しください。"
+  "saveOpenFailedBody": "セーブデータを開けませんでした。何も削除されていません。少し待ってからもう一度お試しください。",
+  "saveUpgradeRestoreFailed": "コピーを復元できませんでした。セーブデータはそのままです。"
 }

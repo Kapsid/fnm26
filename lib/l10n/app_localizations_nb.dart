@@ -12023,6 +12023,10 @@ class AppLocalizationsNb extends AppLocalizations {
       'Gjenopprett kopien fra før oppdateringen';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'Kopien kunne ikke gjenopprettes. Det lagrede spillet ble latt være som det var.';
+
+  @override
   String get saveOpenFailedTitle => 'De lagrede spillene kunne ikke åpnes';
 
   @override

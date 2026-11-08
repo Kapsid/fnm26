@@ -12140,6 +12140,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Restaurer la copie d\'avant la mise à jour';
 
   @override
+  String get saveUpgradeRestoreFailed =>
+      'La copie n\'a pas pu être restaurée. Votre sauvegarde est restée telle quelle.';
+
+  @override
   String get saveOpenFailedTitle => 'Impossible d\'ouvrir vos sauvegardes';
 
   @override
