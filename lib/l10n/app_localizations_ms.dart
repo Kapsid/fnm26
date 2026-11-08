@@ -8132,6 +8132,21 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchLineupsCameOn => 'Masuk padang';
 
   @override
+  String get matchConditionsKickOff => 'Sepak mula';
+
+  @override
+  String get matchWeatherClear => 'Cerah';
+
+  @override
+  String get matchWeatherRain => 'Hujan';
+
+  @override
+  String get matchWeatherSnow => 'Salji';
+
+  @override
+  String get matchWeatherHaze => 'Jerebu';
+
+  @override
   String get matchPlayerOfTheMatch => 'PEMAIN TERBAIK PERLAWANAN';
 
   @override

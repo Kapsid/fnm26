@@ -8042,6 +8042,21 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchLineupsCameOn => 'ลงเปลี่ยนตัว';
 
   @override
+  String get matchConditionsKickOff => 'เริ่มเตะ';
+
+  @override
+  String get matchWeatherClear => 'ท้องฟ้าแจ่มใส';
+
+  @override
+  String get matchWeatherRain => 'ฝนตก';
+
+  @override
+  String get matchWeatherSnow => 'หิมะตก';
+
+  @override
+  String get matchWeatherHaze => 'หมอกควัน';
+
+  @override
   String get matchPlayerOfTheMatch => 'ผู้เล่นยอดเยี่ยมประจำเกม';
 
   @override

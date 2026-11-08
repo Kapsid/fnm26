@@ -8234,6 +8234,21 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchLineupsCameOn => 'Μπήκαν';
 
   @override
+  String get matchConditionsKickOff => 'Σέντρα';
+
+  @override
+  String get matchWeatherClear => 'Αίθριος';
+
+  @override
+  String get matchWeatherRain => 'Βροχή';
+
+  @override
+  String get matchWeatherSnow => 'Χιόνι';
+
+  @override
+  String get matchWeatherHaze => 'Καταχνιά';
+
+  @override
   String get matchPlayerOfTheMatch => 'ΚΟΡΥΦΑΙΟΣ ΤΟΥ ΑΓΩΝΑ';
 
   @override

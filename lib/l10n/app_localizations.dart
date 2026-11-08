@@ -12481,6 +12481,36 @@ abstract class AppLocalizations {
   /// **'Came on'**
   String get matchLineupsCameOn;
 
+  /// Venue card: label before the local kick-off time, as in: Kick-off 20:45 · Rain.
+  ///
+  /// In en, this message translates to:
+  /// **'Kick-off'**
+  String get matchConditionsKickOff;
+
+  /// Venue card: the weather the match is played in, clear skies.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get matchWeatherClear;
+
+  /// Venue card: the weather the match is played in, rain.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get matchWeatherRain;
+
+  /// Venue card: the weather the match is played in, snow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow'**
+  String get matchWeatherSnow;
+
+  /// Venue card: the weather the match is played in, haze.
+  ///
+  /// In en, this message translates to:
+  /// **'Haze'**
+  String get matchWeatherHaze;
+
   /// Live match: man-of-the-match heading.
   ///
   /// In en, this message translates to:

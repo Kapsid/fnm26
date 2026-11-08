@@ -8298,6 +8298,21 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchLineupsCameOn => 'Weszli z ławki';
 
   @override
+  String get matchConditionsKickOff => 'Początek';
+
+  @override
+  String get matchWeatherClear => 'Pogodnie';
+
+  @override
+  String get matchWeatherRain => 'Deszcz';
+
+  @override
+  String get matchWeatherSnow => 'Śnieg';
+
+  @override
+  String get matchWeatherHaze => 'Mgła';
+
+  @override
   String get matchPlayerOfTheMatch => 'ZAWODNIK MECZU';
 
   @override

@@ -8116,6 +8116,21 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchLineupsCameOn => 'मैदान में उतरे';
 
   @override
+  String get matchConditionsKickOff => 'किक-ऑफ़';
+
+  @override
+  String get matchWeatherClear => 'साफ़';
+
+  @override
+  String get matchWeatherRain => 'बारिश';
+
+  @override
+  String get matchWeatherSnow => 'बर्फ़बारी';
+
+  @override
+  String get matchWeatherHaze => 'धुंध';
+
+  @override
   String get matchPlayerOfTheMatch => 'मैन ऑफ़ द मैच';
 
   @override

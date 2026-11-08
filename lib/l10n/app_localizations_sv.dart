@@ -8186,6 +8186,21 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchLineupsCameOn => 'Inbytta';
 
   @override
+  String get matchConditionsKickOff => 'Avspark';
+
+  @override
+  String get matchWeatherClear => 'Klart';
+
+  @override
+  String get matchWeatherRain => 'Regn';
+
+  @override
+  String get matchWeatherSnow => 'Snö';
+
+  @override
+  String get matchWeatherHaze => 'Dis';
+
+  @override
   String get matchPlayerOfTheMatch => 'MATCHENS BÄSTE SPELARE';
 
   @override

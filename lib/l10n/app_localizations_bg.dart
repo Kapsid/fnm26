@@ -8285,6 +8285,21 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchLineupsCameOn => 'Влезли от пейката';
 
   @override
+  String get matchConditionsKickOff => 'Начало';
+
+  @override
+  String get matchWeatherClear => 'Ясно';
+
+  @override
+  String get matchWeatherRain => 'Дъжд';
+
+  @override
+  String get matchWeatherSnow => 'Сняг';
+
+  @override
+  String get matchWeatherHaze => 'Мъгла';
+
+  @override
   String get matchPlayerOfTheMatch => 'ИГРАЧ НА МАЧА';
 
   @override

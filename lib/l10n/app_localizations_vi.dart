@@ -8064,6 +8064,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchLineupsCameOn => 'Vào sân';
 
   @override
+  String get matchConditionsKickOff => 'Bắt đầu';
+
+  @override
+  String get matchWeatherClear => 'Quang đãng';
+
+  @override
+  String get matchWeatherRain => 'Mưa';
+
+  @override
+  String get matchWeatherSnow => 'Tuyết';
+
+  @override
+  String get matchWeatherHaze => 'Sương mù';
+
+  @override
   String get matchPlayerOfTheMatch => 'CẦU THỦ HAY NHẤT TRẬN';
 
   @override

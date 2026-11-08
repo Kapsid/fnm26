@@ -3,6 +3,8 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
+import 'package:fnm/domain/services/match/stadium/kick_off.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/press/fan_mood.dart';
 import 'package:fnm/features/y/fan_mood_text.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -21,8 +23,19 @@ class GroundCard extends StatelessWidget {
     this.neutral = false,
     this.groundNationCode,
     this.fans,
+    this.kickOff,
+    this.weather,
     super.key,
   });
+
+  /// The key of the kick-off and weather line.
+  static const Key conditionsKey = Key('ground.kickOffWeather');
+
+  /// When the match kicks off, local time at the ground, and the weather it
+  /// is played in: the 2D TV's own (see `matchConditionsShown`). Null
+  /// draws no line.
+  final KickOffTime? kickOff;
+  final WeatherKind? weather;
 
   final MatchGround ground;
 
@@ -119,6 +132,36 @@ class GroundCard extends StatelessWidget {
               ),
             ],
           );
+    final kickOff = this.kickOff;
+    final weather = this.weather;
+    final Widget? conditions = kickOff == null || weather == null
+        ? null
+        : Row(
+            key: conditionsKey,
+            children: [
+              Icon(
+                switch (weather) {
+                  WeatherKind.clear => Icons.wb_sunny_rounded,
+                  WeatherKind.rain => Icons.umbrella_rounded,
+                  WeatherKind.snow => Icons.ac_unit_rounded,
+                  WeatherKind.haze => Icons.blur_on_rounded,
+                },
+                size: 16,
+                color: AppColors.onSurfaceVariant,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: WholeText(
+                  '${l.matchConditionsKickOff} ${kickOff.label} · '
+                  '${weatherLabel(l, weather)}',
+                  maxLines: 1,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          );
     final band = fans;
     final mood = band == null
         ? null
@@ -127,14 +170,20 @@ class GroundCard extends StatelessWidget {
             label: l.matchHomeFans(fanMoodLabel(l, band)),
           );
     if (compact) {
-      if (mood == null) return crowd;
+      if (mood == null && conditions == null) return crowd;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           crowd,
-          const SizedBox(height: AppSpacing.xs),
-          mood,
+          if (conditions != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            conditions,
+          ],
+          if (mood != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            mood,
+          ],
         ],
       );
     }
@@ -143,6 +192,10 @@ class GroundCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           crowd,
+          if (conditions != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            conditions,
+          ],
           const SizedBox(height: AppSpacing.sm),
           ClipRRect(
             borderRadius: AppRadii.smAll,
@@ -173,6 +226,14 @@ class GroundCard extends StatelessWidget {
       ),
     );
   }
+
+  /// The weather, in a word.
+  static String weatherLabel(AppLocalizations l, WeatherKind w) => switch (w) {
+    WeatherKind.clear => l.matchWeatherClear,
+    WeatherKind.rain => l.matchWeatherRain,
+    WeatherKind.snow => l.matchWeatherSnow,
+    WeatherKind.haze => l.matchWeatherHaze,
+  };
 
   /// `62431` → `62,431`.
   static String _thousands(int v) {

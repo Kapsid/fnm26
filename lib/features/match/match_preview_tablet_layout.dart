@@ -59,6 +59,7 @@ class _MatchPreviewTabletLayout extends ConsumerWidget {
           }
           final p = _PreviewParts(
             preview: preview,
+            forcedWeather: ref.watch(pitchForcedWeatherProvider),
             careerId: careerId,
             l10n: l10n,
             host: host,

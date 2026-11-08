@@ -8344,6 +8344,21 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchLineupsCameOn => 'Вийшли на заміну';
 
   @override
+  String get matchConditionsKickOff => 'Початок';
+
+  @override
+  String get matchWeatherClear => 'Ясно';
+
+  @override
+  String get matchWeatherRain => 'Дощ';
+
+  @override
+  String get matchWeatherSnow => 'Сніг';
+
+  @override
+  String get matchWeatherHaze => 'Серпанок';
+
+  @override
   String get matchPlayerOfTheMatch => 'ГРАВЕЦЬ МАТЧУ';
 
   @override

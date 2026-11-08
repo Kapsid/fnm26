@@ -8272,6 +8272,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get matchLineupsCameOn => 'Entrés en jeu';
 
   @override
+  String get matchConditionsKickOff => 'Coup d’envoi';
+
+  @override
+  String get matchWeatherClear => 'Dégagé';
+
+  @override
+  String get matchWeatherRain => 'Pluie';
+
+  @override
+  String get matchWeatherSnow => 'Neige';
+
+  @override
+  String get matchWeatherHaze => 'Brume';
+
+  @override
   String get matchPlayerOfTheMatch => 'HOMME DU MATCH';
 
   @override

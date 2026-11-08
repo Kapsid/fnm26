@@ -8162,6 +8162,21 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchLineupsCameOn => 'Pumasok';
 
   @override
+  String get matchConditionsKickOff => 'Simula';
+
+  @override
+  String get matchWeatherClear => 'Maaliwalas';
+
+  @override
+  String get matchWeatherRain => 'Ulan';
+
+  @override
+  String get matchWeatherSnow => 'Niyebe';
+
+  @override
+  String get matchWeatherHaze => 'Ulap';
+
+  @override
   String get matchPlayerOfTheMatch => 'MANLALARO NG LARO';
 
   @override

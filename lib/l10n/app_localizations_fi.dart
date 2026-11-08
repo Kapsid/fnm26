@@ -8260,6 +8260,21 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchLineupsCameOn => 'Vaihdettu sisään';
 
   @override
+  String get matchConditionsKickOff => 'Aloitus';
+
+  @override
+  String get matchWeatherClear => 'Selkeää';
+
+  @override
+  String get matchWeatherRain => 'Sade';
+
+  @override
+  String get matchWeatherSnow => 'Lumisade';
+
+  @override
+  String get matchWeatherHaze => 'Utu';
+
+  @override
   String get matchPlayerOfTheMatch => 'OTTELUN PARAS PELAAJA';
 
   @override

@@ -8195,6 +8195,21 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchLineupsCameOn => 'Byttet inn';
 
   @override
+  String get matchConditionsKickOff => 'Avspark';
+
+  @override
+  String get matchWeatherClear => 'Klart';
+
+  @override
+  String get matchWeatherRain => 'Regn';
+
+  @override
+  String get matchWeatherSnow => 'Snø';
+
+  @override
+  String get matchWeatherHaze => 'Dis';
+
+  @override
   String get matchPlayerOfTheMatch => 'KAMPENS SPILLER';
 
   @override

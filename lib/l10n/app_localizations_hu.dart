@@ -8141,6 +8141,21 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchLineupsCameOn => 'Beálltak';
 
   @override
+  String get matchConditionsKickOff => 'Kezdés';
+
+  @override
+  String get matchWeatherClear => 'Derült';
+
+  @override
+  String get matchWeatherRain => 'Eső';
+
+  @override
+  String get matchWeatherSnow => 'Havazás';
+
+  @override
+  String get matchWeatherHaze => 'Pára';
+
+  @override
   String get matchPlayerOfTheMatch => 'A MÉRKŐZÉS EMBERE';
 
   @override

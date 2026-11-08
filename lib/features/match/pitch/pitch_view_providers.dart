@@ -370,16 +370,47 @@ CompetitionKind pitchCompetitionOf(String? round) => switch (round) {
 final Provider<WeatherKind?> pitchForcedWeatherProvider =
     Provider<WeatherKind?>((ref) => null);
 
-/// The ground of the match [preview] pins, for the Pitch view: its look,
-/// both kits, the dressing of the occasion, the kick-off time [seed]
-/// draws for it and the weather (by the ground's climate and the date,
-/// unless [weather] pins it).
-PitchStadium pitchStadiumForPreview(
-  MatchPreview preview,
-  int seed, {
+/// When the match [preview] pins kicks off (local time at the ground) and
+/// the weather it is played in: what the 2D TV draws, and what the venue
+/// card writes, from the same inputs, so the two can never disagree.
+///
+/// Drawn from the save's seed and the fixture alone, never from a match
+/// attempt's dice: the line is shown before kick-off, and a match played
+/// again must not move its kick-off. [weather] pins the weather (tests).
+/// Cosmetic only: no match reads either.
+({KickOffTime kickOff, WeatherKind weather}) matchConditionsShown(
+  MatchPreview preview, {
   WeatherKind? weather,
 }) {
   final f = preview.fixture;
+  final home = preview.nations[f.homeNationId];
+  final groundNation = preview.nations[preview.ground.groundNationId] ?? home;
+  return (
+    kickOff: KickOff.localTime(
+      f,
+      pitchCompetitionOf(f.round),
+      preview.saveSeed,
+    ),
+    weather:
+        weather ??
+        MatchWeather.of(
+          code: groundNation?.code ?? '',
+          confederation: groundNation?.confederation ?? Confederation.europe,
+          date: f.date,
+          fixtureId: f.id,
+        ),
+  );
+}
+
+/// The ground of the match [preview] pins, for the Pitch view: its look,
+/// both kits, the dressing of the occasion, the kick-off time and the
+/// weather ([matchConditionsShown]; [weather] pins the weather).
+PitchStadium pitchStadiumForPreview(
+  MatchPreview preview, {
+  WeatherKind? weather,
+}) {
+  final f = preview.fixture;
+  final shown = matchConditionsShown(preview, weather: weather);
   final home = preview.nations[f.homeNationId]!;
   final away = preview.nations[f.awayNationId]!;
   final groundNation = preview.nations[preview.ground.groundNationId];
@@ -397,18 +428,11 @@ PitchStadium pitchStadiumForPreview(
       distanceKm: AwayFanShare.proxyDistanceKm(home, away),
     ),
     date: f.date,
-    kickOff: KickOff.localTime(f, competition, seed),
+    kickOff: shown.kickOff,
     groundNationCode: groundNation?.code ?? home.code,
     groundConfederation: groundNation?.confederation ?? home.confederation,
     dressing: dressing,
-    weather:
-        weather ??
-        MatchWeather.of(
-          code: groundNation?.code ?? home.code,
-          confederation: groundNation?.confederation ?? home.confederation,
-          date: f.date,
-          fixtureId: f.id,
-        ),
+    weather: shown.weather,
     groundColours: groundNation == null
         ? null
         : (

@@ -15,6 +15,8 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/formation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/match/match_engine.dart' show MatchTeam;
+import 'package:fnm/domain/services/match/stadium/kick_off.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/strength_factors.dart';
 import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/rating/overall_rating.dart';
@@ -23,6 +25,7 @@ import 'package:fnm/features/federation/career_pool.dart';
 import 'package:fnm/features/match/conditions_note.dart';
 import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/match_providers.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/scout_report_view.dart';
 import 'package:fnm/features/match/setup_warning.dart';
 import 'package:fnm/features/match/strength_panel.dart';
@@ -133,6 +136,7 @@ class MatchPreviewScreen extends ConsumerWidget {
           }
           final p = _PreviewParts(
             preview: preview,
+            forcedWeather: ref.watch(pitchForcedWeatherProvider),
             careerId: careerId,
             l10n: l10n,
             host: host,
@@ -241,7 +245,12 @@ class _PreviewParts {
     required this.l10n,
     required WcHostTheme? host,
     required Set<String> themedRounds,
-  }) : hosted = host != null && themedRounds.contains(preview.fixture.round);
+    WeatherKind? forcedWeather,
+  }) : hosted = host != null && themedRounds.contains(preview.fixture.round),
+       shown = matchConditionsShown(preview, weather: forcedWeather);
+
+  /// The kick-off time and weather the 2D TV will draw.
+  final ({KickOffTime kickOff, WeatherKind weather}) shown;
 
   final MatchPreview preview;
   final int careerId;
@@ -312,6 +321,8 @@ class _PreviewParts {
         neutral: preview.neutralVenue,
         groundNationCode: code(preview.ground.groundNationId),
         fans: preview.homeFans,
+        kickOff: shown.kickOff,
+        weather: shown.weather,
       ),
       ConditionsNote(
         conditions: preview.conditions,

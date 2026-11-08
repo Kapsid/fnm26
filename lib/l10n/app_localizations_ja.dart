@@ -7944,6 +7944,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchLineupsCameOn => '途中出場';
 
   @override
+  String get matchConditionsKickOff => 'キックオフ';
+
+  @override
+  String get matchWeatherClear => '晴れ';
+
+  @override
+  String get matchWeatherRain => '雨';
+
+  @override
+  String get matchWeatherSnow => '雪';
+
+  @override
+  String get matchWeatherHaze => 'もや';
+
+  @override
   String get matchPlayerOfTheMatch => 'マン・オブ・ザ・マッチ';
 
   @override

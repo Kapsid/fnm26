@@ -8097,6 +8097,21 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchLineupsCameOn => 'Masuk';
 
   @override
+  String get matchConditionsKickOff => 'Kick-off';
+
+  @override
+  String get matchWeatherClear => 'Cerah';
+
+  @override
+  String get matchWeatherRain => 'Hujan';
+
+  @override
+  String get matchWeatherSnow => 'Salju';
+
+  @override
+  String get matchWeatherHaze => 'Kabut';
+
+  @override
   String get matchPlayerOfTheMatch => 'PEMAIN TERBAIK LAGA';
 
   @override

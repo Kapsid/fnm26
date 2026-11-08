@@ -8235,6 +8235,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchLineupsCameOn => 'Entrati';
 
   @override
+  String get matchConditionsKickOff => 'Calcio d’inizio';
+
+  @override
+  String get matchWeatherClear => 'Sereno';
+
+  @override
+  String get matchWeatherRain => 'Pioggia';
+
+  @override
+  String get matchWeatherSnow => 'Neve';
+
+  @override
+  String get matchWeatherHaze => 'Foschia';
+
+  @override
   String get matchPlayerOfTheMatch => 'MIGLIORE IN CAMPO';
 
   @override

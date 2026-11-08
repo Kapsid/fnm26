@@ -8367,6 +8367,21 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchLineupsCameOn => 'Přišli z lavičky';
 
   @override
+  String get matchConditionsKickOff => 'Výkop';
+
+  @override
+  String get matchWeatherClear => 'Jasno';
+
+  @override
+  String get matchWeatherRain => 'Déšť';
+
+  @override
+  String get matchWeatherSnow => 'Sníh';
+
+  @override
+  String get matchWeatherHaze => 'Opar';
+
+  @override
   String get matchPlayerOfTheMatch => 'HRÁČ ZÁPASU';
 
   @override

@@ -8240,6 +8240,21 @@ class AppLocalizationsNl extends AppLocalizations {
   String get matchLineupsCameOn => 'Ingevallen';
 
   @override
+  String get matchConditionsKickOff => 'Aftrap';
+
+  @override
+  String get matchWeatherClear => 'Helder';
+
+  @override
+  String get matchWeatherRain => 'Regen';
+
+  @override
+  String get matchWeatherSnow => 'Sneeuw';
+
+  @override
+  String get matchWeatherHaze => 'Nevel';
+
+  @override
   String get matchPlayerOfTheMatch => 'MAN VAN DE WEDSTRIJD';
 
   @override

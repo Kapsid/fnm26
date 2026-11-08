@@ -8188,6 +8188,21 @@ class AppLocalizationsDa extends AppLocalizations {
   String get matchLineupsCameOn => 'Skiftet ind';
 
   @override
+  String get matchConditionsKickOff => 'Kampstart';
+
+  @override
+  String get matchWeatherClear => 'Klart';
+
+  @override
+  String get matchWeatherRain => 'Regn';
+
+  @override
+  String get matchWeatherSnow => 'Sne';
+
+  @override
+  String get matchWeatherHaze => 'Dis';
+
+  @override
   String get matchPlayerOfTheMatch => 'KAMPENS SPILLER';
 
   @override

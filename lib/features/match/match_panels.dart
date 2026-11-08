@@ -182,6 +182,8 @@ class MatchStatsPanel extends StatelessWidget {
     required this.neutral,
     required this.groundCode,
     this.homeFans,
+    this.kickOff,
+    this.weather,
     required this.minute,
     required this.fullTime,
     required this.events,
@@ -193,6 +195,10 @@ class MatchStatsPanel extends StatelessWidget {
   final String awayCode;
   final int homeNationId;
   final MatchGround ground;
+
+  /// The kick-off time and weather the 2D TV draws, for the venue card.
+  final KickOffTime? kickOff;
+  final WeatherKind? weather;
 
   /// How the home supporters feel, at a home game of the manager's side.
   final FanMoodBand? homeFans;
@@ -239,6 +245,8 @@ class MatchStatsPanel extends StatelessWidget {
           neutral: neutral,
           groundNationCode: groundCode,
           fans: homeFans,
+          kickOff: kickOff,
+          weather: weather,
         ),
         const SizedBox(height: AppSpacing.lg),
         if (motm != null) ...[

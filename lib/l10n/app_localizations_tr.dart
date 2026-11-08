@@ -8115,6 +8115,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchLineupsCameOn => 'Oyuna girenler';
 
   @override
+  String get matchConditionsKickOff => 'Başlama';
+
+  @override
+  String get matchWeatherClear => 'Açık';
+
+  @override
+  String get matchWeatherRain => 'Yağmur';
+
+  @override
+  String get matchWeatherSnow => 'Kar';
+
+  @override
+  String get matchWeatherHaze => 'Pus';
+
+  @override
   String get matchPlayerOfTheMatch => 'MAÇIN ADAMI';
 
   @override

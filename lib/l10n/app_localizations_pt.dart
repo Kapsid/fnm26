@@ -8263,6 +8263,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get matchLineupsCameOn => 'Entraram';
 
   @override
+  String get matchConditionsKickOff => 'Início';
+
+  @override
+  String get matchWeatherClear => 'Céu limpo';
+
+  @override
+  String get matchWeatherRain => 'Chuva';
+
+  @override
+  String get matchWeatherSnow => 'Neve';
+
+  @override
+  String get matchWeatherHaze => 'Neblina';
+
+  @override
   String get matchPlayerOfTheMatch => 'MELHOR EM CAMPO';
 
   @override

@@ -25,6 +25,8 @@ import 'package:fnm/domain/services/competition/rounds.dart';
 import 'package:fnm/domain/services/match/attendance.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/live_rating.dart';
+import 'package:fnm/domain/services/match/stadium/kick_off.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
 import 'package:fnm/domain/services/match/penalty_takers.dart';
 import 'package:fnm/domain/services/match/pitch/moment_staging.dart'
@@ -1086,7 +1088,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     if (r == null || _pc.isCurrentFor(r, _speedIdx)) return;
     final stadium = _pc.stadium ??= pitchStadiumForPreview(
       preview,
-      _seed(preview),
       weather: ref.read(pitchForcedWeatherProvider),
     );
     if (_pc.names.isEmpty) _pc.names = pitchNamesForPreview(preview);
@@ -1977,6 +1978,10 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               live: !ft,
               homeId: homeId,
             );
+            final conditionsShown = matchConditionsShown(
+              preview,
+              weather: ref.read(pitchForcedWeatherProvider),
+            );
             final stats = MatchStatsPanel(
               result: r,
               homeCode: code(homeId),
@@ -1986,6 +1991,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               neutral: preview.neutralVenue,
               groundCode: code(preview.ground.groundNationId),
               homeFans: preview.homeFans,
+              // The 2D TV's own kick-off and weather, whichever view.
+              kickOff: conditionsShown.kickOff,
+              weather: conditionsShown.weather,
               // Read as of the clock, exactly like the timeline beside it, so
               // the box score moves through the match instead of arriving
               // whole at the whistle.

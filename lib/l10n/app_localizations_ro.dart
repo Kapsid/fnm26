@@ -8477,6 +8477,21 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchLineupsCameOn => 'Intrați pe teren';
 
   @override
+  String get matchConditionsKickOff => 'Start';
+
+  @override
+  String get matchWeatherClear => 'Senin';
+
+  @override
+  String get matchWeatherRain => 'Ploaie';
+
+  @override
+  String get matchWeatherSnow => 'Ninsoare';
+
+  @override
+  String get matchWeatherHaze => 'Ceață';
+
+  @override
   String get matchPlayerOfTheMatch => 'OMUL MECIULUI';
 
   @override

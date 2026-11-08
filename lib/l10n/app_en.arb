@@ -13087,6 +13087,26 @@
   "@matchLineupsCameOn": {
     "description": "Full-time line-ups: heading over the substitutes who came on, with their ratings."
   },
+  "matchConditionsKickOff": "Kick-off",
+  "@matchConditionsKickOff": {
+    "description": "Venue card: label before the local kick-off time, as in: Kick-off 20:45 · Rain."
+  },
+  "matchWeatherClear": "Clear",
+  "@matchWeatherClear": {
+    "description": "Venue card: the weather the match is played in, clear skies."
+  },
+  "matchWeatherRain": "Rain",
+  "@matchWeatherRain": {
+    "description": "Venue card: the weather the match is played in, rain."
+  },
+  "matchWeatherSnow": "Snow",
+  "@matchWeatherSnow": {
+    "description": "Venue card: the weather the match is played in, snow."
+  },
+  "matchWeatherHaze": "Haze",
+  "@matchWeatherHaze": {
+    "description": "Venue card: the weather the match is played in, haze."
+  },
   "matchPlayerOfTheMatch": "PLAYER OF THE MATCH",
   "@matchPlayerOfTheMatch": {
     "description": "Live match: man-of-the-match heading."

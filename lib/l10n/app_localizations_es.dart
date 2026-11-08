@@ -8251,6 +8251,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchLineupsCameOn => 'Entraron';
 
   @override
+  String get matchConditionsKickOff => 'Inicio';
+
+  @override
+  String get matchWeatherClear => 'Despejado';
+
+  @override
+  String get matchWeatherRain => 'Lluvia';
+
+  @override
+  String get matchWeatherSnow => 'Nieve';
+
+  @override
+  String get matchWeatherHaze => 'Calima';
+
+  @override
   String get matchPlayerOfTheMatch => 'MEJOR JUGADOR DEL PARTIDO';
 
   @override

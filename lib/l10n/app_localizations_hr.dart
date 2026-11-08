@@ -8406,6 +8406,21 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchLineupsCameOn => 'Ušli s klupe';
 
   @override
+  String get matchConditionsKickOff => 'Početak';
+
+  @override
+  String get matchWeatherClear => 'Vedro';
+
+  @override
+  String get matchWeatherRain => 'Kiša';
+
+  @override
+  String get matchWeatherSnow => 'Snijeg';
+
+  @override
+  String get matchWeatherHaze => 'Izmaglica';
+
+  @override
   String get matchPlayerOfTheMatch => 'IGRAČ UTAKMICE';
 
   @override

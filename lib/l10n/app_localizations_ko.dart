@@ -7959,6 +7959,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchLineupsCameOn => '교체 투입';
 
   @override
+  String get matchConditionsKickOff => '킥오프';
+
+  @override
+  String get matchWeatherClear => '맑음';
+
+  @override
+  String get matchWeatherRain => '비';
+
+  @override
+  String get matchWeatherSnow => '눈';
+
+  @override
+  String get matchWeatherHaze => '연무';
+
+  @override
   String get matchPlayerOfTheMatch => '경기 최우수 선수';
 
   @override
