@@ -16786,4 +16786,50 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Avis';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Nuværende job: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Uden job';
+
+  @override
+  String get mgrDetailMatches => 'Kampe';
+
+  @override
+  String get mgrDetailTrophies => 'Titler';
+
+  @override
+  String get mgrDetailWinRate => 'Sejrsprocent';
+
+  @override
+  String get mgrDetailRecord => 'Resultater';
+
+  @override
+  String get mgrDetailNationsLed => 'Landshold ledet';
+
+  @override
+  String get mgrDetailInCharge => 'I jobbet';
+
+  @override
+  String get mgrDetailNoSpells => 'Har endnu ikke ledet et landshold.';
+
+  @override
+  String get mgrDetailNotFound => 'Landstræneren blev ikke fundet.';
+
+  @override
+  String get mgrDetailBackground => 'Baggrund';
+
+  @override
+  String get mgrOriginFresh => 'Fagtræner';
+
+  @override
+  String get mgrOriginExAssistant => 'Tidligere assistenttræner';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profil: $name';
+  }
 }

@@ -16486,4 +16486,50 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'หนังสือพิมพ์';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'งานปัจจุบัน: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'ว่างงาน';
+
+  @override
+  String get mgrDetailMatches => 'นัด';
+
+  @override
+  String get mgrDetailTrophies => 'ถ้วยรางวัล';
+
+  @override
+  String get mgrDetailWinRate => 'อัตราชนะ';
+
+  @override
+  String get mgrDetailRecord => 'สถิติ';
+
+  @override
+  String get mgrDetailNationsLed => 'ทีมชาติที่คุม';
+
+  @override
+  String get mgrDetailInCharge => 'คุมทีมอยู่';
+
+  @override
+  String get mgrDetailNoSpells => 'ยังไม่เคยคุมทีมชาติ';
+
+  @override
+  String get mgrDetailNotFound => 'ไม่พบผู้จัดการทีม';
+
+  @override
+  String get mgrDetailBackground => 'ภูมิหลัง';
+
+  @override
+  String get mgrOriginFresh => 'โค้ชอาชีพ';
+
+  @override
+  String get mgrOriginExAssistant => 'อดีตผู้ช่วยโค้ช';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'โปรไฟล์: $name';
+  }
 }

@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Čaj",
   "sponsorIndustryExtraRealEstate": "Reality",
   "sponsorIndustryExtraFitness": "Fitness centra",
-  "sponsorIndustryExtraNewspaper": "Deník"
+  "sponsorIndustryExtraNewspaper": "Deník",
+  "mgrDetailCurrentJob": "Současné působiště: {nation}",
+  "mgrDetailFree": "Bez angažmá",
+  "mgrDetailMatches": "Zápasy",
+  "mgrDetailTrophies": "Trofeje",
+  "mgrDetailWinRate": "Úspěšnost",
+  "mgrDetailRecord": "Bilance",
+  "mgrDetailNationsLed": "Vedené reprezentace",
+  "mgrDetailInCharge": "Ve funkci",
+  "mgrDetailNoSpells": "Zatím nevedl žádnou reprezentaci.",
+  "mgrDetailNotFound": "Trenér nenalezen.",
+  "mgrDetailBackground": "Minulost",
+  "mgrOriginFresh": "Profesionální trenér",
+  "mgrOriginExAssistant": "Bývalý asistent trenéra",
+  "mgrNewsSeeManager": "Profil trenéra: {name}"
 }

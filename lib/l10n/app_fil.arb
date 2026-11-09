@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Tsaa",
   "sponsorIndustryExtraRealEstate": "Real estate",
   "sponsorIndustryExtraFitness": "Mga gym",
-  "sponsorIndustryExtraNewspaper": "Pahayagan"
+  "sponsorIndustryExtraNewspaper": "Pahayagan",
+  "mgrDetailCurrentJob": "Kasalukuyang trabaho: {nation}",
+  "mgrDetailFree": "Walang trabaho",
+  "mgrDetailMatches": "Laro",
+  "mgrDetailTrophies": "Tropeo",
+  "mgrDetailWinRate": "Porsyento ng panalo",
+  "mgrDetailRecord": "Rekord",
+  "mgrDetailNationsLed": "Mga bansang hinawakan",
+  "mgrDetailInCharge": "Nanunungkulan",
+  "mgrDetailNoSpells": "Wala pang hinawakang pambansang koponan.",
+  "mgrDetailNotFound": "Hindi nakita ang manager.",
+  "mgrDetailBackground": "Pinagmulan",
+  "mgrOriginFresh": "Propesyonal na coach",
+  "mgrOriginExAssistant": "Dating assistant coach",
+  "mgrNewsSeeManager": "Profile: {name}"
 }

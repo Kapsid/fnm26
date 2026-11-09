@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Trà",
   "sponsorIndustryExtraRealEstate": "Bất động sản",
   "sponsorIndustryExtraFitness": "Phòng tập thể hình",
-  "sponsorIndustryExtraNewspaper": "Báo chí"
+  "sponsorIndustryExtraNewspaper": "Báo chí",
+  "mgrDetailCurrentJob": "Công việc hiện tại: {nation}",
+  "mgrDetailFree": "Đang thất nghiệp",
+  "mgrDetailMatches": "Số trận",
+  "mgrDetailTrophies": "Danh hiệu",
+  "mgrDetailWinRate": "Tỷ lệ thắng",
+  "mgrDetailRecord": "Thành tích",
+  "mgrDetailNationsLed": "Số ĐT đã dẫn dắt",
+  "mgrDetailInCharge": "Đang tại vị",
+  "mgrDetailNoSpells": "Chưa từng dẫn dắt đội tuyển nào.",
+  "mgrDetailNotFound": "Không tìm thấy huấn luyện viên.",
+  "mgrDetailBackground": "Xuất thân",
+  "mgrOriginFresh": "HLV chuyên nghiệp",
+  "mgrOriginExAssistant": "Cựu trợ lý HLV",
+  "mgrNewsSeeManager": "Hồ sơ: {name}"
 }

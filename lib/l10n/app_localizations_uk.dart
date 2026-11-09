@@ -17099,4 +17099,50 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Газета';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Поточна посада: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Без роботи';
+
+  @override
+  String get mgrDetailMatches => 'Матчі';
+
+  @override
+  String get mgrDetailTrophies => 'Трофеї';
+
+  @override
+  String get mgrDetailWinRate => 'Відсоток перемог';
+
+  @override
+  String get mgrDetailRecord => 'Баланс';
+
+  @override
+  String get mgrDetailNationsLed => 'Очолювані збірні';
+
+  @override
+  String get mgrDetailInCharge => 'На посаді';
+
+  @override
+  String get mgrDetailNoSpells => 'Ще не очолював жодної збірної.';
+
+  @override
+  String get mgrDetailNotFound => 'Тренера не знайдено.';
+
+  @override
+  String get mgrDetailBackground => 'Минуле';
+
+  @override
+  String get mgrOriginFresh => 'Професійний тренер';
+
+  @override
+  String get mgrOriginExAssistant => 'Колишній помічник тренера';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Профіль: $name';
+  }
 }

@@ -4,7 +4,7 @@ import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
-import 'package:fnm/features/world_managers/manager_profile_sheet.dart';
+import 'package:fnm/features/world_managers/manager_detail_screen.dart';
 import 'package:fnm/features/world_managers/managers_list_providers.dart';
 import 'package:fnm/features/world_managers/managers_screen.dart';
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
@@ -96,12 +96,15 @@ void main() {
     expect(_firstRowName(tester), byRep.first.m.name);
   });
 
-  testWidgets('tapping a row opens the profile', (tester) async {
+  testWidgets('tapping a row opens his page', (tester) async {
     final save = await seedSave(tester);
     await _open(tester, save);
+    final name = _firstRowName(tester);
     await tester.tap(find.byKey(ManagersScreen.rowKey).first);
     await settle(tester);
-    expect(find.byType(ManagerProfileSheet), findsOneWidget);
+    expect(find.byType(ManagerDetailScreen), findsOneWidget);
+    expect(find.text(name), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('recent moves shows the last two years', (tester) async {

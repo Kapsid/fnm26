@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Чай",
   "sponsorIndustryExtraRealEstate": "Нерухомість",
   "sponsorIndustryExtraFitness": "Фітнес-клуби",
-  "sponsorIndustryExtraNewspaper": "Газета"
+  "sponsorIndustryExtraNewspaper": "Газета",
+  "mgrDetailCurrentJob": "Поточна посада: {nation}",
+  "mgrDetailFree": "Без роботи",
+  "mgrDetailMatches": "Матчі",
+  "mgrDetailTrophies": "Трофеї",
+  "mgrDetailWinRate": "Відсоток перемог",
+  "mgrDetailRecord": "Баланс",
+  "mgrDetailNationsLed": "Очолювані збірні",
+  "mgrDetailInCharge": "На посаді",
+  "mgrDetailNoSpells": "Ще не очолював жодної збірної.",
+  "mgrDetailNotFound": "Тренера не знайдено.",
+  "mgrDetailBackground": "Минуле",
+  "mgrOriginFresh": "Професійний тренер",
+  "mgrOriginExAssistant": "Колишній помічник тренера",
+  "mgrNewsSeeManager": "Профіль: {name}"
 }

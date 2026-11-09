@@ -17058,4 +17058,50 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Deník';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Současné působiště: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Bez angažmá';
+
+  @override
+  String get mgrDetailMatches => 'Zápasy';
+
+  @override
+  String get mgrDetailTrophies => 'Trofeje';
+
+  @override
+  String get mgrDetailWinRate => 'Úspěšnost';
+
+  @override
+  String get mgrDetailRecord => 'Bilance';
+
+  @override
+  String get mgrDetailNationsLed => 'Vedené reprezentace';
+
+  @override
+  String get mgrDetailInCharge => 'Ve funkci';
+
+  @override
+  String get mgrDetailNoSpells => 'Zatím nevedl žádnou reprezentaci.';
+
+  @override
+  String get mgrDetailNotFound => 'Trenér nenalezen.';
+
+  @override
+  String get mgrDetailBackground => 'Minulost';
+
+  @override
+  String get mgrOriginFresh => 'Profesionální trenér';
+
+  @override
+  String get mgrOriginExAssistant => 'Bývalý asistent trenéra';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profil trenéra: $name';
+  }
 }

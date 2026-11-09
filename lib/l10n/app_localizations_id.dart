@@ -16699,4 +16699,50 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Surat kabar';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Jabatan saat ini: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Tanpa pekerjaan';
+
+  @override
+  String get mgrDetailMatches => 'Laga';
+
+  @override
+  String get mgrDetailTrophies => 'Trofi';
+
+  @override
+  String get mgrDetailWinRate => 'Persentase menang';
+
+  @override
+  String get mgrDetailRecord => 'Rekor';
+
+  @override
+  String get mgrDetailNationsLed => 'Timnas yang dilatih';
+
+  @override
+  String get mgrDetailInCharge => 'Menjabat';
+
+  @override
+  String get mgrDetailNoSpells => 'Belum pernah melatih timnas.';
+
+  @override
+  String get mgrDetailNotFound => 'Pelatih tidak ditemukan.';
+
+  @override
+  String get mgrDetailBackground => 'Latar belakang';
+
+  @override
+  String get mgrOriginFresh => 'Pelatih karier';
+
+  @override
+  String get mgrOriginExAssistant => 'Mantan asisten pelatih';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profil: $name';
+  }
 }

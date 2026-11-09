@@ -16879,4 +16879,50 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Periódico';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Cargo actual: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Sin trabajo';
+
+  @override
+  String get mgrDetailMatches => 'Partidos';
+
+  @override
+  String get mgrDetailTrophies => 'Títulos';
+
+  @override
+  String get mgrDetailWinRate => 'Porcentaje de victorias';
+
+  @override
+  String get mgrDetailRecord => 'Balance';
+
+  @override
+  String get mgrDetailNationsLed => 'Selecciones dirigidas';
+
+  @override
+  String get mgrDetailInCharge => 'En el cargo';
+
+  @override
+  String get mgrDetailNoSpells => 'Aún no ha dirigido ninguna selección.';
+
+  @override
+  String get mgrDetailNotFound => 'Seleccionador no encontrado.';
+
+  @override
+  String get mgrDetailBackground => 'Procedencia';
+
+  @override
+  String get mgrOriginFresh => 'Entrenador de carrera';
+
+  @override
+  String get mgrOriginExAssistant => 'Exsegundo entrenador';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Perfil: $name';
+  }
 }

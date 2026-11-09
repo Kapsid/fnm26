@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Чай",
   "sponsorIndustryExtraRealEstate": "Недвижими имоти",
   "sponsorIndustryExtraFitness": "Фитнес клубове",
-  "sponsorIndustryExtraNewspaper": "Вестник"
+  "sponsorIndustryExtraNewspaper": "Вестник",
+  "mgrDetailCurrentJob": "Настоящ пост: {nation}",
+  "mgrDetailFree": "Без работа",
+  "mgrDetailMatches": "Мачове",
+  "mgrDetailTrophies": "Трофеи",
+  "mgrDetailWinRate": "Процент победи",
+  "mgrDetailRecord": "Баланс",
+  "mgrDetailNationsLed": "Водени национални отбори",
+  "mgrDetailInCharge": "На поста",
+  "mgrDetailNoSpells": "Все още не е водил национален отбор.",
+  "mgrDetailNotFound": "Селекционерът не е намерен.",
+  "mgrDetailBackground": "Минало",
+  "mgrOriginFresh": "Професионален треньор",
+  "mgrOriginExAssistant": "Бивш помощник-треньор",
+  "mgrNewsSeeManager": "Профил: {name}"
 }

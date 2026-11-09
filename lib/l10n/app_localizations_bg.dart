@@ -16871,4 +16871,50 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Вестник';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Настоящ пост: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Без работа';
+
+  @override
+  String get mgrDetailMatches => 'Мачове';
+
+  @override
+  String get mgrDetailTrophies => 'Трофеи';
+
+  @override
+  String get mgrDetailWinRate => 'Процент победи';
+
+  @override
+  String get mgrDetailRecord => 'Баланс';
+
+  @override
+  String get mgrDetailNationsLed => 'Водени национални отбори';
+
+  @override
+  String get mgrDetailInCharge => 'На поста';
+
+  @override
+  String get mgrDetailNoSpells => 'Все още не е водил национален отбор.';
+
+  @override
+  String get mgrDetailNotFound => 'Селекционерът не е намерен.';
+
+  @override
+  String get mgrDetailBackground => 'Минало';
+
+  @override
+  String get mgrOriginFresh => 'Професионален треньор';
+
+  @override
+  String get mgrOriginExAssistant => 'Бивш помощник-треньор';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Профил: $name';
+  }
 }

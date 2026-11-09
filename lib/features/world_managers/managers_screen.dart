@@ -9,7 +9,7 @@ import 'package:fnm/core/util/competition_label.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
-import 'package:fnm/features/world_managers/manager_profile_sheet.dart';
+import 'package:fnm/features/world_managers/manager_detail_screen.dart';
 import 'package:fnm/features/world_managers/manager_row.dart';
 import 'package:fnm/features/world_managers/managers_list_providers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
@@ -226,7 +226,7 @@ class _ManagersBodyState extends ConsumerState<ManagersBody>
     ),
   );
 
-  void _open(int managerId) => showManagerProfile(
+  void _open(int managerId) => openWorldManager(
     context,
     careerId: widget.careerId,
     managerId: managerId,

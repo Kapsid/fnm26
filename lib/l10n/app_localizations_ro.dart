@@ -17200,4 +17200,50 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Ziar';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Post actual: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Fără post';
+
+  @override
+  String get mgrDetailMatches => 'Meciuri';
+
+  @override
+  String get mgrDetailTrophies => 'Trofee';
+
+  @override
+  String get mgrDetailWinRate => 'Procentaj de victorii';
+
+  @override
+  String get mgrDetailRecord => 'Bilanț';
+
+  @override
+  String get mgrDetailNationsLed => 'Naționale conduse';
+
+  @override
+  String get mgrDetailInCharge => 'În funcție';
+
+  @override
+  String get mgrDetailNoSpells => 'Încă nu a condus nicio națională.';
+
+  @override
+  String get mgrDetailNotFound => 'Selecționerul nu a fost găsit.';
+
+  @override
+  String get mgrDetailBackground => 'Parcurs';
+
+  @override
+  String get mgrOriginFresh => 'Antrenor de carieră';
+
+  @override
+  String get mgrOriginExAssistant => 'Fost antrenor secund';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profil: $name';
+  }
 }

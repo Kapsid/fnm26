@@ -171,10 +171,23 @@ class _MessageCard extends StatelessWidget {
 
   /// Opens the full message in a popup.
   void _open(BuildContext context) {
+    final router = GoRouter.of(context);
     unawaited(
       showAppPopup<void>(
         context: context,
-        builder: (context) => MessageSheet(message: message),
+        builder: (popupContext) => MessageSheet(
+          message: message,
+          // Close the popup first, or the page lands underneath it.
+          onOpenManager: (careerId, managerId) {
+            Navigator.of(popupContext).pop();
+            unawaited(
+              router.push(
+                '${Routes.worldManager}?careerId=$careerId'
+                '&managerId=$managerId',
+              ),
+            );
+          },
+        ),
       ),
     );
   }

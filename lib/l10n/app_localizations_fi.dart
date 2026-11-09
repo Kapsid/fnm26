@@ -16862,4 +16862,50 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Sanomalehti';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Nykyinen pesti: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Vailla pestiä';
+
+  @override
+  String get mgrDetailMatches => 'Ottelut';
+
+  @override
+  String get mgrDetailTrophies => 'Mestaruudet';
+
+  @override
+  String get mgrDetailWinRate => 'Voittoprosentti';
+
+  @override
+  String get mgrDetailRecord => 'Tulokset';
+
+  @override
+  String get mgrDetailNationsLed => 'Valmennetut maat';
+
+  @override
+  String get mgrDetailInCharge => 'Tehtävässä';
+
+  @override
+  String get mgrDetailNoSpells => 'Ei vielä yhtään maajoukkuepestiä.';
+
+  @override
+  String get mgrDetailNotFound => 'Valmentajaa ei löytynyt.';
+
+  @override
+  String get mgrDetailBackground => 'Tausta';
+
+  @override
+  String get mgrOriginFresh => 'Ammattivalmentaja';
+
+  @override
+  String get mgrOriginExAssistant => 'Entinen apuvalmentaja';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profiili: $name';
+  }
 }

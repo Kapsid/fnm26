@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Te",
   "sponsorIndustryExtraRealEstate": "Fastigheter",
   "sponsorIndustryExtraFitness": "Gym",
-  "sponsorIndustryExtraNewspaper": "Tidning"
+  "sponsorIndustryExtraNewspaper": "Tidning",
+  "mgrDetailCurrentJob": "Nuvarande jobb: {nation}",
+  "mgrDetailFree": "Utan jobb",
+  "mgrDetailMatches": "Matcher",
+  "mgrDetailTrophies": "Titlar",
+  "mgrDetailWinRate": "Vinstandel",
+  "mgrDetailRecord": "Facit",
+  "mgrDetailNationsLed": "Landslag ledda",
+  "mgrDetailInCharge": "I tjänst",
+  "mgrDetailNoSpells": "Har inte lett något landslag än.",
+  "mgrDetailNotFound": "Förbundskaptenen hittades inte.",
+  "mgrDetailBackground": "Bakgrund",
+  "mgrOriginFresh": "Yrkestränare",
+  "mgrOriginExAssistant": "Före detta assisterande tränare",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

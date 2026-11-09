@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Thé",
   "sponsorIndustryExtraRealEstate": "Immobilier",
   "sponsorIndustryExtraFitness": "Salles de sport",
-  "sponsorIndustryExtraNewspaper": "Quotidien"
+  "sponsorIndustryExtraNewspaper": "Quotidien",
+  "mgrDetailCurrentJob": "Poste actuel : {nation}",
+  "mgrDetailFree": "Sans poste",
+  "mgrDetailMatches": "Matchs",
+  "mgrDetailTrophies": "Trophées",
+  "mgrDetailWinRate": "Taux de victoires",
+  "mgrDetailRecord": "Bilan",
+  "mgrDetailNationsLed": "Sélections dirigées",
+  "mgrDetailInCharge": "En poste",
+  "mgrDetailNoSpells": "Aucune sélection dirigée pour l’instant.",
+  "mgrDetailNotFound": "Sélectionneur introuvable.",
+  "mgrDetailBackground": "Parcours",
+  "mgrOriginFresh": "Entraîneur de métier",
+  "mgrOriginExAssistant": "Ancien entraîneur adjoint",
+  "mgrNewsSeeManager": "Profil : {name}"
 }

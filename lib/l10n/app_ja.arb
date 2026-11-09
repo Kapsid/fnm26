@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "お茶",
   "sponsorIndustryExtraRealEstate": "不動産",
   "sponsorIndustryExtraFitness": "フィットネスクラブ",
-  "sponsorIndustryExtraNewspaper": "新聞"
+  "sponsorIndustryExtraNewspaper": "新聞",
+  "mgrDetailCurrentJob": "現在の職: {nation}",
+  "mgrDetailFree": "無所属",
+  "mgrDetailMatches": "試合",
+  "mgrDetailTrophies": "タイトル",
+  "mgrDetailWinRate": "勝率",
+  "mgrDetailRecord": "通算成績",
+  "mgrDetailNationsLed": "率いた代表",
+  "mgrDetailInCharge": "在任中",
+  "mgrDetailNoSpells": "まだ代表監督の経験はありません。",
+  "mgrDetailNotFound": "監督が見つかりません。",
+  "mgrDetailBackground": "出自",
+  "mgrOriginFresh": "生え抜きの指導者",
+  "mgrOriginExAssistant": "元コーチ",
+  "mgrNewsSeeManager": "プロフィール: {name}"
 }

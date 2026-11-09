@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Tè",
   "sponsorIndustryExtraRealEstate": "Immobiliare",
   "sponsorIndustryExtraFitness": "Palestre",
-  "sponsorIndustryExtraNewspaper": "Quotidiano"
+  "sponsorIndustryExtraNewspaper": "Quotidiano",
+  "mgrDetailCurrentJob": "Incarico attuale: {nation}",
+  "mgrDetailFree": "Senza incarico",
+  "mgrDetailMatches": "Partite",
+  "mgrDetailTrophies": "Trofei",
+  "mgrDetailWinRate": "Percentuale vittorie",
+  "mgrDetailRecord": "Bilancio",
+  "mgrDetailNationsLed": "Nazionali guidate",
+  "mgrDetailInCharge": "In carica",
+  "mgrDetailNoSpells": "Ancora nessuna nazionale guidata.",
+  "mgrDetailNotFound": "CT non trovato.",
+  "mgrDetailBackground": "Trascorsi",
+  "mgrOriginFresh": "Allenatore di carriera",
+  "mgrOriginExAssistant": "Ex vice allenatore",
+  "mgrNewsSeeManager": "Profilo: {name}"
 }

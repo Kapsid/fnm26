@@ -16697,4 +16697,50 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Gazete';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Şu anki görevi: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Boşta';
+
+  @override
+  String get mgrDetailMatches => 'Maç';
+
+  @override
+  String get mgrDetailTrophies => 'Kupa';
+
+  @override
+  String get mgrDetailWinRate => 'Galibiyet oranı';
+
+  @override
+  String get mgrDetailRecord => 'Sicil';
+
+  @override
+  String get mgrDetailNationsLed => 'Çalıştırdığı milli takımlar';
+
+  @override
+  String get mgrDetailInCharge => 'Görevde';
+
+  @override
+  String get mgrDetailNoSpells => 'Henüz bir milli takım çalıştırmadı.';
+
+  @override
+  String get mgrDetailNotFound => 'Teknik direktör bulunamadı.';
+
+  @override
+  String get mgrDetailBackground => 'Geçmiş';
+
+  @override
+  String get mgrOriginFresh => 'Kariyer antrenörü';
+
+  @override
+  String get mgrOriginExAssistant => 'Eski yardımcı antrenör';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profil: $name';
+  }
 }

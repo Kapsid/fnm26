@@ -123,17 +123,40 @@ Future<NationManagerView?> _viewOf(
   if (spell == null) return null;
   final m = await repo.managerById(careerId, spell.managerId);
   if (m == null) return null;
-  var won = 0;
-  var drawn = 0;
-  var lost = 0;
+  final r = await _spellResults(ref, careerId, spell);
+  return (
+    m: m,
+    spell: spell,
+    age: date.year - m.birthYear,
+    won: r.won,
+    drawn: r.drawn,
+    lost: r.lost,
+  );
+}
+
+/// The nation's results inside [spell]: the fixtures played between its
+/// first and last day.
+Future<({int won, int drawn, int lost})> _spellResults(
+  Ref ref,
+  int careerId,
+  ManagerSpell spell,
+) async {
   final fixtures = await ref
       .read(competitionRepositoryProvider)
       .fixturesForNationBetween(
         careerId,
-        nationId,
+        spell.nationId,
         spell.fromDate,
         spell.toDate,
       );
+  return wdlOf(fixtures, spell.nationId);
+}
+
+/// [nationId]'s wins, draws and losses among the played [fixtures].
+({int won, int drawn, int lost}) wdlOf(List<Fixture> fixtures, int nationId) {
+  var won = 0;
+  var drawn = 0;
+  var lost = 0;
   for (final f in fixtures) {
     if (!f.hasResult) continue;
     final mine = f.homeNationId == nationId ? f.homeScore! : f.awayScore!;
@@ -146,14 +169,7 @@ Future<NationManagerView?> _viewOf(
       lost++;
     }
   }
-  return (
-    m: m,
-    spell: spell,
-    age: date.year - m.birthYear,
-    won: won,
-    drawn: drawn,
-    lost: lost,
-  );
+  return (won: won, drawn: drawn, lost: lost);
 }
 
 /// The manager in charge of a nation today, for the nation page. This is the
@@ -256,3 +272,84 @@ managerNationsProvider = FutureProvider.autoDispose
           n.id: n,
       },
     );
+
+/// One spell of a manager's career as his page lists it: the nation's
+/// results inside it and the titles it won.
+typedef ManagerSpellRecord = ({
+  ManagerSpell spell,
+  int won,
+  int drawn,
+  int lost,
+  int trophies,
+});
+
+/// A manager's full page: his profile ([managerProfileProvider]), every
+/// spell with its record, newest first, and the nation he is from.
+typedef ManagerDetail = ({
+  ManagerProfile profile,
+  List<ManagerSpellRecord> spells,
+  Nation? homeland,
+});
+
+/// A manager's page, derived on read from his stored spells, the fixtures
+/// inside them and the roll of honour. Null when the career has no manager
+/// of that id (an old link, or a cycle without world managers).
+final AutoDisposeFutureProviderFamily<
+  ManagerDetail?,
+  ({int careerId, int managerId})
+>
+managerDetailProvider = FutureProvider.autoDispose
+    .family<ManagerDetail?, ({int careerId, int managerId})>((ref, key) async {
+      final career = await ref
+          .read(careerRepositoryProvider)
+          .byId(key.careerId);
+      if (career == null) return null;
+      final service = ref.read(worldManagerServiceProvider);
+      if (await service.cycleHasManagers(key.careerId, career.inGameDate)) {
+        await service.ensureSeeded(key.careerId);
+      }
+      final repo = ref.read(worldManagerRepositoryProvider);
+      final m = await repo.managerById(key.careerId, key.managerId);
+      if (m == null) return null;
+      final profile = await ref.watch(managerProfileProvider(key).future);
+      final trophies = WorldManagerService.honoursBySpell(
+        await ref.read(competitionRepositoryProvider).honours(key.careerId),
+        ManagerWorld(managers: [m], spells: profile.spells),
+      );
+      final spells = [...profile.spells]
+        ..sort((a, b) {
+          final c = b.fromDate.compareTo(a.fromDate);
+          return c != 0 ? c : b.spellNo.compareTo(a.spellNo);
+        });
+      final records = <ManagerSpellRecord>[];
+      for (final s in spells) {
+        final r = await _spellResults(ref, key.careerId, s);
+        records.add((
+          spell: s,
+          won: r.won,
+          drawn: r.drawn,
+          lost: r.lost,
+          trophies: trophies[s.spellNo] ?? 0,
+        ));
+      }
+      final nations = await ref.watch(
+        managerNationsProvider(key.careerId).future,
+      );
+      Nation? homeland;
+      for (final n in nations.values) {
+        if (n.code.toUpperCase() == m.nationality.toUpperCase()) {
+          homeland = n;
+          break;
+        }
+      }
+      return (profile: profile, spells: records, homeland: homeland);
+    });
+
+/// Every manager of a career by name, for the news that names them (a
+/// manager is named once, when he is seeded, and never renamed).
+final AutoDisposeFutureProviderFamily<Map<String, int>, int>
+managerIdsByNameProvider = FutureProvider.autoDispose
+    .family<Map<String, int>, int>((ref, careerId) async {
+      final w = await ref.read(worldManagerRepositoryProvider).load(careerId);
+      return {for (final m in w.managers) m.name: m.managerId};
+    });

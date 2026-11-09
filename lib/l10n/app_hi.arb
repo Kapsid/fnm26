@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "चाय",
   "sponsorIndustryExtraRealEstate": "रियल एस्टेट",
   "sponsorIndustryExtraFitness": "फिटनेस क्लब",
-  "sponsorIndustryExtraNewspaper": "समाचार पत्र"
+  "sponsorIndustryExtraNewspaper": "समाचार पत्र",
+  "mgrDetailCurrentJob": "मौजूदा पद: {nation}",
+  "mgrDetailFree": "बेरोज़गार",
+  "mgrDetailMatches": "मैच",
+  "mgrDetailTrophies": "ट्रॉफ़ी",
+  "mgrDetailWinRate": "जीत दर",
+  "mgrDetailRecord": "रिकॉर्ड",
+  "mgrDetailNationsLed": "संभाली गई टीमें",
+  "mgrDetailInCharge": "पद पर",
+  "mgrDetailNoSpells": "अभी तक किसी राष्ट्रीय टीम को नहीं संभाला।",
+  "mgrDetailNotFound": "मैनेजर नहीं मिला।",
+  "mgrDetailBackground": "पृष्ठभूमि",
+  "mgrOriginFresh": "पेशेवर कोच",
+  "mgrOriginExAssistant": "पूर्व सहायक कोच",
+  "mgrNewsSeeManager": "प्रोफ़ाइल: {name}"
 }

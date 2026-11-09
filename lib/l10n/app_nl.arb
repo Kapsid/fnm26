@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Thee",
   "sponsorIndustryExtraRealEstate": "Vastgoed",
   "sponsorIndustryExtraFitness": "Fitnessclubs",
-  "sponsorIndustryExtraNewspaper": "Krant"
+  "sponsorIndustryExtraNewspaper": "Krant",
+  "mgrDetailCurrentJob": "Huidige baan: {nation}",
+  "mgrDetailFree": "Zonder baan",
+  "mgrDetailMatches": "Wedstrijden",
+  "mgrDetailTrophies": "Prijzen",
+  "mgrDetailWinRate": "Winstpercentage",
+  "mgrDetailRecord": "Balans",
+  "mgrDetailNationsLed": "Landen geleid",
+  "mgrDetailInCharge": "In functie",
+  "mgrDetailNoSpells": "Nog geen nationaal team geleid.",
+  "mgrDetailNotFound": "Bondscoach niet gevonden.",
+  "mgrDetailBackground": "Achtergrond",
+  "mgrOriginFresh": "Beroepstrainer",
+  "mgrOriginExAssistant": "Oud-assistent-trainer",
+  "mgrNewsSeeManager": "Profiel: {name}"
 }

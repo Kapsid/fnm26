@@ -89,6 +89,7 @@ Future<void> _sweepShell(WidgetTester tester, Size size) async {
     Routes.continentalClash: '',
     Routes.ranking: '',
     Routes.managers: '',
+    Routes.worldManager: '&managerId=1',
     Routes.trainingCamp: '',
     Routes.intercontinentalPlayoff: '',
   };

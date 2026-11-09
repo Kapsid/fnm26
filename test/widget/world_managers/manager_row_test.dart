@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
-import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/nations/nation_now_card.dart';
 import 'package:fnm/features/nations/nation_now_providers.dart';
-import 'package:fnm/features/world_managers/manager_profile_sheet.dart';
+import 'package:fnm/features/world_managers/manager_detail_screen.dart';
 import 'package:fnm/features/world_managers/manager_row.dart';
+import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
@@ -61,17 +62,25 @@ void main() {
     expect(find.byType(ManagerRow), findsNothing);
   });
 
-  testWidgets('tap opens the profile with spells, record and tie', (
+  testWidgets('tap opens his page with career, record and tie', (
     tester,
   ) async {
     final save = await seedSave(tester);
-    await _pump(tester, save, _otherNation(save));
+    final other = _otherNation(save);
+    await pumpRoute(
+      tester,
+      save,
+      '${Routes.nationVitrine}?careerId=${save.careerId}&nationId=$other',
+      size: const Size(900, 1600),
+    );
+    await tester.ensureVisible(find.byKey(ManagerRow.rowKey));
+    await tester.pump();
     await tester.tap(find.byKey(ManagerRow.rowKey));
     await settle(tester);
-    expect(find.byType(ManagerProfileSheet), findsOneWidget);
-    expect(find.byKey(ManagerProfileSheet.spellsKey), findsOneWidget);
+    expect(find.byType(ManagerDetailScreen), findsOneWidget);
+    expect(find.byKey(ManagerDetailScreen.careerKey), findsOneWidget);
     expect(find.text(enL.mgrProfileNoMeetings), findsOneWidget);
-    expect(find.byKey(ManagerProfileSheet.tieKey), findsOneWidget);
+    expect(find.byKey(ManagerDetailScreen.tieKey), findsOneWidget);
     expect(find.text(enL.mgrTieNeutral), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

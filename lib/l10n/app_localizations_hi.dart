@@ -16696,4 +16696,50 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'समाचार पत्र';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'मौजूदा पद: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'बेरोज़गार';
+
+  @override
+  String get mgrDetailMatches => 'मैच';
+
+  @override
+  String get mgrDetailTrophies => 'ट्रॉफ़ी';
+
+  @override
+  String get mgrDetailWinRate => 'जीत दर';
+
+  @override
+  String get mgrDetailRecord => 'रिकॉर्ड';
+
+  @override
+  String get mgrDetailNationsLed => 'संभाली गई टीमें';
+
+  @override
+  String get mgrDetailInCharge => 'पद पर';
+
+  @override
+  String get mgrDetailNoSpells => 'अभी तक किसी राष्ट्रीय टीम को नहीं संभाला।';
+
+  @override
+  String get mgrDetailNotFound => 'मैनेजर नहीं मिला।';
+
+  @override
+  String get mgrDetailBackground => 'पृष्ठभूमि';
+
+  @override
+  String get mgrOriginFresh => 'पेशेवर कोच';
+
+  @override
+  String get mgrOriginExAssistant => 'पूर्व सहायक कोच';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'प्रोफ़ाइल: $name';
+  }
 }

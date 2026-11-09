@@ -928,23 +928,43 @@ class WorldManagerService {
     List<Honour> honours,
     ManagerWorld w,
   ) {
+    final out = <int, int>{};
+    for (final spell in _creditedSpells(honours, w)) {
+      out[spell.managerId] = (out[spell.managerId] ?? 0) + 1;
+    }
+    return out;
+  }
+
+  /// The titles of [honoursByManager], counted per spell (by
+  /// [ManagerSpell.spellNo]) rather than per man: which job each trophy was
+  /// won in, for a manager's career history.
+  static Map<int, int> honoursBySpell(List<Honour> honours, ManagerWorld w) {
+    final out = <int, int>{};
+    for (final spell in _creditedSpells(honours, w)) {
+      out[spell.spellNo] = (out[spell.spellNo] ?? 0) + 1;
+    }
+    return out;
+  }
+
+  /// The spell credited with each title of [honours], one per champion.
+  static Iterable<ManagerSpell> _creditedSpells(
+    List<Honour> honours,
+    ManagerWorld w,
+  ) sync* {
     final month = {
       'World Championship': 6,
       for (final cup in ContinentalCups.byConfederation.values)
         cup.name: cup.month,
     };
-    final out = <int, int>{};
     for (final h in honours) {
       final m = month[h.competition];
       if (m == null || !CareerService.isOwnHonourYear(h.year)) continue;
       final on = DateTime(h.year, m, 15);
       for (final nationId in h.champions) {
         final spell = w.inChargeOn(nationId, on);
-        if (spell == null) continue;
-        out[spell.managerId] = (out[spell.managerId] ?? 0) + 1;
+        if (spell != null) yield spell;
       }
     }
-    return out;
   }
 }
 

@@ -16877,4 +16877,50 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Εφημερίδα';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Τρέχουσα θέση: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Χωρίς δουλειά';
+
+  @override
+  String get mgrDetailMatches => 'Αγώνες';
+
+  @override
+  String get mgrDetailTrophies => 'Τρόπαια';
+
+  @override
+  String get mgrDetailWinRate => 'Ποσοστό νικών';
+
+  @override
+  String get mgrDetailRecord => 'Απολογισμός';
+
+  @override
+  String get mgrDetailNationsLed => 'Εθνικές ομάδες';
+
+  @override
+  String get mgrDetailInCharge => 'Εν ενεργεία';
+
+  @override
+  String get mgrDetailNoSpells => 'Δεν έχει αναλάβει ακόμα εθνική ομάδα.';
+
+  @override
+  String get mgrDetailNotFound => 'Ο προπονητής δεν βρέθηκε.';
+
+  @override
+  String get mgrDetailBackground => 'Υπόβαθρο';
+
+  @override
+  String get mgrOriginFresh => 'Προπονητής καριέρας';
+
+  @override
+  String get mgrOriginExAssistant => 'Πρώην βοηθός προπονητή';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Προφίλ: $name';
+  }
 }
