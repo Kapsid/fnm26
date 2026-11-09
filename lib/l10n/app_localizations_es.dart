@@ -16376,4 +16376,78 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Compartir mis trofeos';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Un recorrido inesperado en el $competition y un gran resultado al final. Orgulloso de los chicos.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Nadie nos daba una oportunidad en el $competition. Llegamos más lejos de lo que nadie se atrevía a soñar. Gracias, chicos.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Fuera del $competition, pero qué viaje. Este equipo hizo creer a todo el país. Orgulloso.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'No esperaba que pasáramos de la fase de grupos en el $competition. Todo lo que vino después fue un regalo. A seguir creciendo.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Fuimos al $competition esperando un punto o dos y volvemos tras jugar las eliminatorias. Buen torneo.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Más lejos de lo que decían los pronósticos en el $competition. Es un paso adelante, sin más.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Fuera del $competition, y escuece un poco. Pero seamos sinceros: nadie nos veía llegar tan lejos.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Vale, estamos fuera del $competition. Aun así, más de lo que hemos logrado en años. Me lo quedo.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'No hay trofeo del $competition, y nunca lo iba a haber. Un buen recorrido es un buen recorrido. Ahora, a repetirlo.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Orgulloso de todos y cada uno.';
+
+  @override
+  String get yReactionPride1 => 'Qué recorrido. Gracias, chicos.';
+
+  @override
+  String get yReactionPride2 => 'Nadie esperaba esto. Recordadlo.';
+
+  @override
+  String get yReactionPride3 => 'Siempre hacia arriba.';
+
+  @override
+  String get yReactionPride4 => 'Todo esto es un regalo. Disfrutadlo.';
+
+  @override
+  String get yReactionPride5 => 'Mejor de lo que nadie predijo. Buen torneo.';
+
+  @override
+  String get yReactionPride6 => 'Fuera, pero sin vergüenza. Justo.';
+
+  @override
+  String get yReactionPride7 =>
+      'Pasó el mejor. Aun así, salimos con la cabeza alta.';
+
+  @override
+  String get yReactionPride8 =>
+      'No nos volvamos locos. Pero sí, buen recorrido.';
 }

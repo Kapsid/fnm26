@@ -167,6 +167,45 @@ abstract final class YTournaments {
   /// How high a side has to be ranked for an early exit to be heartbreak.
   static const int painfulTop = 16;
 
+  /// Whether a finals exit came BEYOND what was expected of the side, so the
+  /// country is proud of the run rather than angry that it ended.
+  ///
+  /// Out at [exitRound] (a core round, see [coreRound]) in a knockout round
+  /// short of the final, having either got out of a group in which at least
+  /// [proudGroupBetter] of the sides it met were ranked above it (nobody had
+  /// it going through), or won a knockout tie against a side ranked above
+  /// it. [meetings] are the nation's played games at that finals, with the
+  /// cycle's frozen ranks, as everything on the feed reads them.
+  ///
+  /// Tester feedback: Montenegro reached the last thirty-two of the World
+  /// Championship and the feed called for the manager's head, because the
+  /// exit was read as an exit and nothing else: the wire, the fans and the
+  /// former international all reached for "the inquest", the replies were
+  /// furious and the stands chanted for him to go.
+  static bool proudExit({
+    required String? exitRound,
+    required int nationRank,
+    required Iterable<({String? round, int opponentRank, bool won})> meetings,
+  }) {
+    if (!const {'R32', 'R16', 'QF', 'SF', '3RD'}.contains(exitRound)) {
+      return false;
+    }
+    final groupBetter = {
+      for (final m in meetings)
+        if (coreRound(m.round) == 'GROUP' && m.opponentRank < nationRank)
+          m.opponentRank,
+    };
+    if (groupBetter.length >= proudGroupBetter) return true;
+    return meetings.any(
+      (m) =>
+          coreRound(m.round) != 'GROUP' && m.won && m.opponentRank < nationRank,
+    );
+  }
+
+  /// How many better-ranked group opponents make getting out of the group
+  /// more than was asked: with two above it, a side was expected third.
+  static const int proudGroupBetter = 2;
+
   /// The qualifying campaigns [nationId] came up short in: each finished
   /// campaign whose finals tournament went ahead without it. One per finals,
   /// dated at the nation's last qualifier and keyed by that finals.

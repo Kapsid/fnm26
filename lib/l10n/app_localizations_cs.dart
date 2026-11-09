@@ -16557,4 +16557,78 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Sdílet moje trofeje';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Nečekaná jízda na turnaji $competition a nakonec skvělý výsledek. Jsem na kluky hrdý.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Na turnaji $competition nám nikdo nedával šanci. Došli jsme dál, než si kdo troufl snít. Díky, kluci.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Konec na turnaji $competition, ale jaká to byla jízda. Tenhle tým donutil celou zemi věřit. Hrdost.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Že na turnaji $competition postoupíme ze skupiny, jsem nečekal. Všechno potom byl bonus. Jedeme dál a výš.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Na turnaj $competition jsme jeli s nadějí na bod nebo dva a vracíme se z vyřazovací fáze. Povedený turnaj.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Na turnaji $competition jsme došli dál, než říkaly předpoklady. To je krok dopředu, jednoduše.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Konec na turnaji $competition trochu bolí. Ale buďme upřímní: takhle daleko nás nečekal nikdo.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Dobře, na turnaji $competition jsme skončili. Pořád víc, než se nám povedlo za poslední roky. Beru.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Z turnaje $competition trofej nevezeme a nikdy jsme ani nemohli. Dobrá jízda je dobrá jízda. Teď to zopakujte.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Jsem hrdý na každého z nich.';
+
+  @override
+  String get yReactionPride1 => 'Jaká jízda. Díky, kluci.';
+
+  @override
+  String get yReactionPride2 => 'Tohle nikdo nečekal. Na to nezapomeňte.';
+
+  @override
+  String get yReactionPride3 => 'Dál a výš.';
+
+  @override
+  String get yReactionPride4 => 'Všechno to byl bonus. Užijte si to.';
+
+  @override
+  String get yReactionPride5 =>
+      'Lepší, než kdokoli předpovídal. Povedený turnaj.';
+
+  @override
+  String get yReactionPride6 => 'Venku, ale bez ostudy. To beru.';
+
+  @override
+  String get yReactionPride7 =>
+      'Postoupil lepší tým. Stejně jsme si udělali čest.';
+
+  @override
+  String get yReactionPride8 => 'Nenechme se unést. Ale jo, povedená jízda.';
 }

@@ -16596,4 +16596,79 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Поділитися моїми трофеями';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Несподіваний шлях на турнірі $competition і зрештою чудовий результат. Пишаюся хлопцями.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Ніхто не давав нам шансів на турнірі $competition. Ми зайшли далі, ніж будь-хто смів мріяти. Дякуємо, хлопці.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Вибули з турніру $competition, але яка це була подорож. Ця команда змусила всю країну повірити. Гордість.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Не очікував, що ми вийдемо з групи на турнірі $competition. Усе, що було далі, це бонус. Тільки вперед і вгору.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Ми їхали на турнір $competition, сподіваючись на очко-два, а повертаємося після плей-оф. Добрий турнір.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'На турнірі $competition зайшли далі, ніж обіцяли прогнози. Це крок уперед, просто і ясно.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Вибули з турніру $competition, і трохи болить. Але чесно: ніхто не бачив нас так далеко.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Гаразд, ми вибули з турніру $competition. Однаково більше, ніж ми досягали роками. Приймаю.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Трофея з турніру $competition немає, і ніколи не мало бути. Добрий виступ є добрий виступ. Тепер повторіть.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Пишаюся кожним із них.';
+
+  @override
+  String get yReactionPride1 => 'Який шлях. Дякуємо, хлопці.';
+
+  @override
+  String get yReactionPride2 => 'Ніхто цього не чекав. Пам\'ятайте про це.';
+
+  @override
+  String get yReactionPride3 => 'Тільки вперед і вгору.';
+
+  @override
+  String get yReactionPride4 => 'Усе це бонус. Насолоджуйтеся.';
+
+  @override
+  String get yReactionPride5 =>
+      'Краще, ніж будь-хто прогнозував. Добрий турнір.';
+
+  @override
+  String get yReactionPride6 => 'Вибули, але без сорому. Цілком чесно.';
+
+  @override
+  String get yReactionPride7 =>
+      'Пройшла сильніша команда. Ми все одно гідно виступили.';
+
+  @override
+  String get yReactionPride8 =>
+      'Не будемо захоплюватися. Але так, добрий виступ.';
 }

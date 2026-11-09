@@ -16129,4 +16129,77 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Chia sẻ danh hiệu của tôi';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Một hành trình bất ngờ ở $competition và cuối cùng là một kết quả tuyệt vời. Tự hào về các chàng trai.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Không ai cho chúng ta cơ hội ở $competition. Chúng ta đã đi xa hơn cả những gì dám mơ. Cảm ơn các chàng trai.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Dừng bước ở $competition, nhưng thật là một hành trình. Đội bóng này đã khiến cả nước tin tưởng. Tự hào.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Không nghĩ chúng ta sẽ vượt qua vòng bảng ở $competition. Mọi thứ sau đó đều là phần thưởng. Tiến lên thôi.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Chúng ta đến $competition mong một hai điểm và trở về sau khi chơi ở vòng loại trực tiếp. Một giải đấu tốt.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Đi xa hơn những gì được dự đoán ở $competition. Đơn giản đó là một bước tiến.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Dừng bước ở $competition, có chút tiếc nuối. Nhưng thật lòng mà nói: chẳng ai nghĩ chúng ta đi xa đến thế.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Thôi được, chúng ta đã bị loại khỏi $competition. Vẫn hơn những gì làm được trong nhiều năm. Chấp nhận.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Không có danh hiệu nào ở $competition, và vốn dĩ cũng không thể có. Một hành trình đẹp vẫn là hành trình đẹp. Giờ hãy làm lại lần nữa.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Tự hào về từng người một.';
+
+  @override
+  String get yReactionPride1 => 'Hành trình tuyệt vời. Cảm ơn các chàng trai.';
+
+  @override
+  String get yReactionPride2 => 'Không ai ngờ điều này. Hãy nhớ lấy.';
+
+  @override
+  String get yReactionPride3 => 'Tiến lên và vươn cao.';
+
+  @override
+  String get yReactionPride4 => 'Tất cả đều là phần thưởng. Tận hưởng đi.';
+
+  @override
+  String get yReactionPride5 => 'Tốt hơn mọi dự đoán. Một giải đấu tốt.';
+
+  @override
+  String get yReactionPride6 => 'Bị loại, nhưng không hổ thẹn. Vậy là ổn.';
+
+  @override
+  String get yReactionPride7 =>
+      'Đội mạnh hơn đã đi tiếp. Dù sao chúng ta cũng đã chơi rất đáng tự hào.';
+
+  @override
+  String get yReactionPride8 => 'Đừng quá đà. Nhưng đúng, một hành trình tốt.';
 }

@@ -15741,4 +15741,76 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get shareCabinetBig => '내 트로피 공유';
+
+  @override
+  String yExitProud0(String competition) {
+    return '$competition에서 예상 밖의 질주, 결국 훌륭한 결과였다. 선수들이 자랑스럽다.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return '$competition에서 아무도 우리에게 기대하지 않았다. 누구도 꿈꾸지 못한 곳까지 갔다. 고마워, 선수들.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return '$competition 여정은 끝났지만 정말 대단했다. 이 팀이 온 나라를 믿게 만들었다. 자랑스럽다.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return '$competition에서 조별리그를 통과할 줄은 몰랐다. 그 뒤로는 전부 보너스였다. 앞으로, 더 위로.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return '$competition에 승점 한두 점을 바라고 갔는데 토너먼트까지 치르고 돌아왔다. 좋은 대회였다.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return '$competition에서 예상보다 더 멀리 갔다. 간단히 말해 한 걸음 전진이다.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return '$competition 탈락, 조금은 아프다. 하지만 솔직히 아무도 우리가 여기까지 올 줄 몰랐다.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return '그래, $competition에서 탈락했다. 그래도 몇 년 만에 가장 좋은 성적이다. 받아들인다.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return '$competition에서 트로피는 없다, 애초에 가능하지도 않았다. 좋은 여정은 좋은 여정이다. 이제 다시 해내자.';
+  }
+
+  @override
+  String get yReactionPride0 => '한 명 한 명 모두 자랑스럽다.';
+
+  @override
+  String get yReactionPride1 => '대단한 여정이었다. 고마워, 선수들.';
+
+  @override
+  String get yReactionPride2 => '아무도 예상하지 못했다. 그걸 기억하자.';
+
+  @override
+  String get yReactionPride3 => '앞으로, 더 위로.';
+
+  @override
+  String get yReactionPride4 => '전부 보너스다. 즐기자.';
+
+  @override
+  String get yReactionPride5 => '누구의 예상보다도 좋았다. 좋은 대회였다.';
+
+  @override
+  String get yReactionPride6 => '탈락했지만 부끄럽지 않다. 그 정도면 됐다.';
+
+  @override
+  String get yReactionPride7 => '더 강한 팀이 올라갔다. 그래도 우리는 당당했다.';
+
+  @override
+  String get yReactionPride8 => '너무 들뜨지는 말자. 그래도 좋은 여정이었다.';
 }

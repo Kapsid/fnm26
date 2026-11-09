@@ -25168,5 +25168,122 @@
   "shareCabinetBig": "Share my trophies",
   "@shareCabinetBig": {
     "description": "Big button on the My Career tab that shares the manager's trophy cabinet as an image."
+  },
+  "yExitProud0": "It was an unexpected run at the {competition} and a great result in the end. Proud of the boys.",
+  "@yExitProud0": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud1": "Nobody gave us a chance at the {competition}. We went further than anyone dared to dream. Thank you, lads.",
+  "@yExitProud1": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud2": "Out of the {competition}, but what a ride. This team made the whole country believe. Proud.",
+  "@yExitProud2": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 2. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud3": "Didn't expect us to get out of the group at the {competition}. Everything after that was a bonus. Onward and upward.",
+  "@yExitProud3": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud4": "We went to the {competition} hoping for a point or two and came home with a knockout run. Good tournament.",
+  "@yExitProud4": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 4. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud5": "Further than the form book said we would go at the {competition}. That is a step forward, plain and simple.",
+  "@yExitProud5": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 5. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud6": "Out of the {competition}, and it stings a little. But be honest: nobody had us getting this far.",
+  "@yExitProud6": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 6. Tone band: sour (mild realism, never at the manager).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud7": "Fine, we are out of the {competition}. Still more than we have managed in years. I'll take it.",
+  "@yExitProud7": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 7. Tone band: sour (mild realism, never at the manager).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud8": "No trophy from the {competition}, and there was never going to be one. A good run is a good run. Now do it again.",
+  "@yExitProud8": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 8. Tone band: sour (mild realism, never at the manager).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yReactionPride0": "Proud of every single one of them.",
+  "@yReactionPride0": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 0. Tone band: generous."
+  },
+  "yReactionPride1": "What a run. Thank you, boys.",
+  "@yReactionPride1": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 1. Tone band: generous."
+  },
+  "yReactionPride2": "Nobody expected this. Remember that.",
+  "@yReactionPride2": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 2. Tone band: generous."
+  },
+  "yReactionPride3": "Onward and upward.",
+  "@yReactionPride3": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 3. Tone band: neutral."
+  },
+  "yReactionPride4": "A bonus, all of it. Enjoy it.",
+  "@yReactionPride4": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 4. Tone band: neutral."
+  },
+  "yReactionPride5": "Better than anyone predicted. Good tournament.",
+  "@yReactionPride5": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 5. Tone band: neutral."
+  },
+  "yReactionPride6": "Out, but not embarrassed. Fair enough.",
+  "@yReactionPride6": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 6. Tone band: sour (mild realism, never at the manager)."
+  },
+  "yReactionPride7": "The better side went through. We did ourselves proud anyway.",
+  "@yReactionPride7": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 7. Tone band: sour (mild realism, never at the manager)."
+  },
+  "yReactionPride8": "Let us not get carried away. But yes, a good run.",
+  "@yReactionPride8": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 8. Tone band: sour (mild realism, never at the manager)."
   }
 }

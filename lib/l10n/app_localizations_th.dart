@@ -15988,4 +15988,77 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'แชร์ถ้วยรางวัลของฉัน';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'เส้นทางที่ไม่มีใครคาดคิดใน $competition และผลงานที่ยอดเยี่ยมในท้ายที่สุด ภูมิใจในทีมนี้';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'ไม่มีใครให้โอกาสเราใน $competition แต่เราไปได้ไกลกว่าที่ใครกล้าฝัน ขอบคุณนักเตะทุกคน';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'ตกรอบ $competition แล้ว แต่เป็นการเดินทางที่สุดยอด ทีมนี้ทำให้คนทั้งประเทศเชื่อ ภูมิใจ';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'ไม่คิดว่าเราจะผ่านรอบแบ่งกลุ่มใน $competition ได้ หลังจากนั้นคือกำไรล้วนๆ เดินหน้าต่อไป';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'เราไป $competition หวังแค่แต้มสองแต้ม แต่ได้เล่นถึงรอบน็อกเอาต์ ทัวร์นาเมนต์ที่ดี';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'ไปได้ไกลกว่าที่ทุกคนคาดไว้ใน $competition พูดง่ายๆ คือก้าวไปข้างหน้า';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'ตกรอบ $competition ก็เจ็บอยู่บ้าง แต่พูดตรงๆ ไม่มีใครคิดว่าเราจะมาได้ไกลขนาดนี้';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'โอเค เราตกรอบ $competition แล้ว แต่ก็ยังดีกว่าที่ทำได้มาหลายปี รับได้';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'ไม่มีถ้วยจาก $competition และไม่เคยมีลุ้นอยู่แล้ว แต่ผลงานดีก็คือผลงานดี ทีนี้ทำให้ได้อีกครั้ง';
+  }
+
+  @override
+  String get yReactionPride0 => 'ภูมิใจในทุกคน';
+
+  @override
+  String get yReactionPride1 => 'สุดยอดมาก ขอบคุณทุกคน';
+
+  @override
+  String get yReactionPride2 => 'ไม่มีใครคาดคิดมาก่อน จำไว้ให้ดี';
+
+  @override
+  String get yReactionPride3 => 'เดินหน้าและไปให้สูงกว่าเดิม';
+
+  @override
+  String get yReactionPride4 => 'ทั้งหมดคือกำไร สนุกไปกับมัน';
+
+  @override
+  String get yReactionPride5 => 'ดีกว่าที่ใครคาดไว้ ทัวร์นาเมนต์ที่ดี';
+
+  @override
+  String get yReactionPride6 => 'ตกรอบ แต่ไม่น่าอาย ก็โอเค';
+
+  @override
+  String get yReactionPride7 =>
+      'ทีมที่ดีกว่าได้ผ่านไป แต่เราก็ทำได้อย่างน่าภูมิใจ';
+
+  @override
+  String get yReactionPride8 => 'อย่าเพิ่งตื่นเต้นเกินไป แต่ใช่ เป็นผลงานที่ดี';
 }

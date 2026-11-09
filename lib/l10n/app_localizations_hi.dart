@@ -16196,4 +16196,76 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'मेरी ट्रॉफ़ियाँ शेयर करें';
+
+  @override
+  String yExitProud0(String competition) {
+    return '$competition में एक अप्रत्याशित सफ़र और आख़िर में शानदार नतीजा। लड़कों पर गर्व है।';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return '$competition में किसी ने हमें मौक़ा नहीं दिया था। हम उससे आगे गए जितना किसी ने सपने में सोचा था। शुक्रिया, लड़को।';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return '$competition से बाहर, लेकिन क्या सफ़र था। इस टीम ने पूरे देश को यक़ीन दिलाया। गर्व है।';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'उम्मीद नहीं थी कि $competition में हम ग्रुप से आगे निकलेंगे। उसके बाद सब बोनस था। आगे और ऊपर।';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return '$competition में हम एक-दो अंक की उम्मीद लेकर गए थे और नॉकआउट खेलकर लौटे। अच्छा टूर्नामेंट।';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return '$competition में हम अनुमानों से आगे गए। सीधी बात, यह एक क़दम आगे है।';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return '$competition से बाहर, थोड़ा चुभता है। लेकिन सच कहें तो किसी ने नहीं सोचा था कि हम इतनी दूर आएँगे।';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'ठीक है, हम $competition से बाहर हैं। फिर भी यह सालों में हमारा सबसे अच्छा प्रदर्शन है। मंज़ूर है।';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return '$competition से कोई ट्रॉफ़ी नहीं, और कभी आनी भी नहीं थी। अच्छा सफ़र अच्छा सफ़र होता है। अब इसे दोहराओ।';
+  }
+
+  @override
+  String get yReactionPride0 => 'हर एक खिलाड़ी पर गर्व है।';
+
+  @override
+  String get yReactionPride1 => 'क्या सफ़र था। शुक्रिया, लड़को।';
+
+  @override
+  String get yReactionPride2 => 'किसी ने इसकी उम्मीद नहीं की थी। यह याद रखना।';
+
+  @override
+  String get yReactionPride3 => 'आगे और ऊपर।';
+
+  @override
+  String get yReactionPride4 => 'यह सब बोनस है। मज़े लो।';
+
+  @override
+  String get yReactionPride5 => 'किसी के भी अनुमान से बेहतर। अच्छा टूर्नामेंट।';
+
+  @override
+  String get yReactionPride6 => 'बाहर, लेकिन शर्मिंदगी के बिना। ठीक है।';
+
+  @override
+  String get yReactionPride7 => 'बेहतर टीम आगे गई। फिर भी हमने इज़्ज़त कमाई।';
+
+  @override
+  String get yReactionPride8 => 'ज़्यादा बहकें नहीं। पर हाँ, अच्छा सफ़र था।';
 }

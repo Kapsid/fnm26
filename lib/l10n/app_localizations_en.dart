@@ -16307,4 +16307,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Share my trophies';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'It was an unexpected run at the $competition and a great result in the end. Proud of the boys.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Nobody gave us a chance at the $competition. We went further than anyone dared to dream. Thank you, lads.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Out of the $competition, but what a ride. This team made the whole country believe. Proud.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Didn\'t expect us to get out of the group at the $competition. Everything after that was a bonus. Onward and upward.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'We went to the $competition hoping for a point or two and came home with a knockout run. Good tournament.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Further than the form book said we would go at the $competition. That is a step forward, plain and simple.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Out of the $competition, and it stings a little. But be honest: nobody had us getting this far.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Fine, we are out of the $competition. Still more than we have managed in years. I\'ll take it.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'No trophy from the $competition, and there was never going to be one. A good run is a good run. Now do it again.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Proud of every single one of them.';
+
+  @override
+  String get yReactionPride1 => 'What a run. Thank you, boys.';
+
+  @override
+  String get yReactionPride2 => 'Nobody expected this. Remember that.';
+
+  @override
+  String get yReactionPride3 => 'Onward and upward.';
+
+  @override
+  String get yReactionPride4 => 'A bonus, all of it. Enjoy it.';
+
+  @override
+  String get yReactionPride5 =>
+      'Better than anyone predicted. Good tournament.';
+
+  @override
+  String get yReactionPride6 => 'Out, but not embarrassed. Fair enough.';
+
+  @override
+  String get yReactionPride7 =>
+      'The better side went through. We did ourselves proud anyway.';
+
+  @override
+  String get yReactionPride8 =>
+      'Let us not get carried away. But yes, a good run.';
 }

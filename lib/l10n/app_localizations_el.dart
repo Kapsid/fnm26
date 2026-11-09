@@ -16371,4 +16371,78 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Κοινοποίηση των τροπαίων μου';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Μια απρόσμενη πορεία στο τουρνουά $competition και τελικά ένα σπουδαίο αποτέλεσμα. Περήφανος για τα παιδιά.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Κανείς δεν μας έδινε ελπίδες στο τουρνουά $competition. Φτάσαμε πιο μακριά απ\' όσο τολμούσε να ονειρευτεί κανείς. Ευχαριστούμε, παιδιά.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Εκτός τουρνουά $competition, αλλά τι ταξίδι. Αυτή η ομάδα έκανε όλη τη χώρα να πιστέψει. Περηφάνια.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Δεν περίμενα να περάσουμε από τον όμιλο στο τουρνουά $competition. Ό,τι ήρθε μετά ήταν μπόνους. Μόνο μπροστά.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Πήγαμε στο τουρνουά $competition ελπίζοντας σε έναν βαθμό ή δύο και γυρίσαμε έχοντας παίξει στα νοκ άουτ. Καλό τουρνουά.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Πιο μακριά απ\' όσο έλεγαν τα προγνωστικά στο τουρνουά $competition. Είναι ένα βήμα μπροστά, απλά.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Εκτός τουρνουά $competition, και τσούζει λίγο. Αλλά ας είμαστε ειλικρινείς: κανείς δεν μας έβλεπε τόσο μακριά.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Εντάξει, αποκλειστήκαμε από το τουρνουά $competition. Και πάλι περισσότερα απ\' όσα καταφέραμε εδώ και χρόνια. Το δέχομαι.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Κανένα τρόπαιο από το τουρνουά $competition, ούτε θα υπήρχε ποτέ. Μια καλή πορεία είναι καλή πορεία. Τώρα ξανά.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Περήφανος για τον καθένα τους.';
+
+  @override
+  String get yReactionPride1 => 'Τι πορεία. Ευχαριστούμε, παιδιά.';
+
+  @override
+  String get yReactionPride2 => 'Κανείς δεν το περίμενε. Να το θυμάστε.';
+
+  @override
+  String get yReactionPride3 => 'Μόνο μπροστά και ψηλά.';
+
+  @override
+  String get yReactionPride4 => 'Όλα μπόνους. Απολαύστε το.';
+
+  @override
+  String get yReactionPride5 =>
+      'Καλύτερα απ\' ό,τι προέβλεπε κανείς. Καλό τουρνουά.';
+
+  @override
+  String get yReactionPride6 => 'Εκτός, αλλά χωρίς ντροπή. Δίκαιο.';
+
+  @override
+  String get yReactionPride7 =>
+      'Πέρασε η καλύτερη ομάδα. Εμείς πάντως φανήκαμε αντάξιοι.';
+
+  @override
+  String get yReactionPride8 => 'Ας μην παρασυρόμαστε. Αλλά ναι, καλή πορεία.';
 }

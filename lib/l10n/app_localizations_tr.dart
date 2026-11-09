@@ -16194,4 +16194,78 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Kupalarımı paylaş';
+
+  @override
+  String yExitProud0(String competition) {
+    return '$competition turnuvasında beklenmedik bir yolculuk ve sonunda harika bir sonuç. Çocuklarla gurur duyuyorum.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return '$competition turnuvasında kimse bize şans vermiyordu. Kimsenin hayal etmeye cesaret edemediği yere kadar gittik. Sağ olun çocuklar.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return '$competition bizim için bitti ama ne yolculuktu. Bu takım bütün ülkeyi inandırdı. Gurur duyuyorum.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return '$competition turnuvasında gruptan çıkmamızı beklemiyordum. Sonrası hep bonustu. Daima ileriye.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return '$competition turnuvasına bir iki puan umuduyla gittik, eleme turları oynayıp döndük. İyi bir turnuva.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return '$competition turnuvasında kâğıt üstünde beklenenden daha ileri gittik. Bu düpedüz bir adım ileri.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return '$competition turnuvasına veda etmek biraz acıtıyor. Ama dürüst olalım: kimse bizi bu kadar ileride görmüyordu.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Tamam, $competition turnuvasından elendik. Yine de yıllardır başardığımızdan fazlası. Kabulüm.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return '$competition turnuvasından kupa yok, zaten hiç olmayacaktı. İyi bir yolculuk iyi bir yolculuktur. Şimdi bunu tekrarlayın.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Her birinden gurur duyuyorum.';
+
+  @override
+  String get yReactionPride1 => 'Ne yolculuktu. Teşekkürler çocuklar.';
+
+  @override
+  String get yReactionPride2 => 'Bunu kimse beklemiyordu. Bunu unutmayın.';
+
+  @override
+  String get yReactionPride3 => 'Daima ileriye, daima yukarıya.';
+
+  @override
+  String get yReactionPride4 => 'Hepsi bonus. Tadını çıkarın.';
+
+  @override
+  String get yReactionPride5 => 'Herkesin tahmininden iyi. İyi turnuva.';
+
+  @override
+  String get yReactionPride6 => 'Elendik ama mahcup olmadık. Fena değil.';
+
+  @override
+  String get yReactionPride7 =>
+      'Daha iyi olan tur atladı. Biz yine de onurumuzla çıktık.';
+
+  @override
+  String get yReactionPride8 =>
+      'Fazla abartmayalım. Ama evet, iyi bir yolculuktu.';
 }

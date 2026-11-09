@@ -16697,4 +16697,78 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Distribuie trofeele mele';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Un parcurs neașteptat la turneul $competition și un rezultat grozav până la urmă. Mândru de băieți.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Nimeni nu ne dădea vreo șansă la turneul $competition. Am ajuns mai departe decât îndrăznea oricine să viseze. Mulțumim, băieți.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Afară de la turneul $competition, dar ce drum. Echipa asta a făcut toată țara să creadă. Mândrie.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Nu mă așteptam să trecem de grupe la turneul $competition. Tot ce a urmat a fost bonus. Tot înainte și mai sus.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Am mers la turneul $competition sperând la un punct sau două și ne întoarcem după fazele eliminatorii. Turneu bun.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Mai departe decât spuneau pronosticurile la turneul $competition. E un pas înainte, pur și simplu.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Afară de la turneul $competition, și doare puțin. Dar să fim cinstiți: nimeni nu ne vedea ajungând atât de departe.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Bine, am ieșit din turneul $competition. Tot mai mult decât am reușit în ultimii ani. Accept.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Niciun trofeu de la turneul $competition, și n-avea cum să fie. Un parcurs bun e un parcurs bun. Acum, repetați-l.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Mândru de fiecare dintre ei.';
+
+  @override
+  String get yReactionPride1 => 'Ce parcurs. Mulțumim, băieți.';
+
+  @override
+  String get yReactionPride2 => 'Nimeni nu se aștepta la asta. Țineți minte.';
+
+  @override
+  String get yReactionPride3 => 'Tot înainte și mai sus.';
+
+  @override
+  String get yReactionPride4 => 'Totul e bonus. Bucurați-vă.';
+
+  @override
+  String get yReactionPride5 => 'Mai bine decât prezicea oricine. Turneu bun.';
+
+  @override
+  String get yReactionPride6 => 'Afară, dar fără rușine. Corect.';
+
+  @override
+  String get yReactionPride7 =>
+      'A trecut echipa mai bună. Noi ne-am făcut oricum cinste.';
+
+  @override
+  String get yReactionPride8 =>
+      'Să nu ne entuziasmăm prea tare. Dar da, un parcurs bun.';
 }

@@ -16189,4 +16189,80 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Bagikan trofi saya';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Perjalanan tak terduga di $competition dan hasil yang luar biasa pada akhirnya. Bangga pada para pemain.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Tak ada yang memberi kita peluang di $competition. Kita melangkah lebih jauh dari mimpi siapa pun. Terima kasih, para pemain.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Tersingkir dari $competition, tapi sungguh perjalanan luar biasa. Tim ini membuat seluruh negeri percaya. Bangga.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Tak menyangka kita lolos dari grup di $competition. Semua setelahnya adalah bonus. Terus maju.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Kita datang ke $competition berharap satu atau dua poin dan pulang setelah bermain di babak gugur. Turnamen yang bagus.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Lebih jauh dari perkiraan di atas kertas di $competition. Itu langkah maju, sesederhana itu.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Tersingkir dari $competition, dan sedikit perih. Tapi jujur saja: tak ada yang mengira kita sampai sejauh ini.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Baiklah, kita tersingkir dari $competition. Tetap lebih baik dari capaian kita bertahun-tahun. Saya terima.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Tak ada trofi dari $competition, dan memang tak akan pernah ada. Perjalanan bagus tetap perjalanan bagus. Sekarang ulangi lagi.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Bangga pada setiap dari mereka.';
+
+  @override
+  String get yReactionPride1 =>
+      'Perjalanan yang luar biasa. Terima kasih, semua.';
+
+  @override
+  String get yReactionPride2 => 'Tak ada yang menyangka ini. Ingat itu.';
+
+  @override
+  String get yReactionPride3 => 'Terus maju dan naik.';
+
+  @override
+  String get yReactionPride4 => 'Semuanya bonus. Nikmati saja.';
+
+  @override
+  String get yReactionPride5 =>
+      'Lebih baik dari prediksi siapa pun. Turnamen yang bagus.';
+
+  @override
+  String get yReactionPride6 => 'Tersingkir, tapi tidak memalukan. Cukup adil.';
+
+  @override
+  String get yReactionPride7 =>
+      'Tim yang lebih baik lolos. Kita tetap tampil membanggakan.';
+
+  @override
+  String get yReactionPride8 =>
+      'Jangan berlebihan. Tapi ya, perjalanan yang bagus.';
 }

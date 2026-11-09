@@ -469,6 +469,17 @@ String yPostBody(AppLocalizations l, YPost p) {
         l.yExitHeartbreak4(c0),
         l.yExitHeartbreak5(c0),
       ][v],
+    (YTemplate.exitProud, final v) when v < YFeed.proudVariantCount => [
+      l.yExitProud0(c0),
+      l.yExitProud1(c0),
+      l.yExitProud2(c0),
+      l.yExitProud3(c0),
+      l.yExitProud4(c0),
+      l.yExitProud5(c0),
+      l.yExitProud6(c0),
+      l.yExitProud7(c0),
+      l.yExitProud8(c0),
+    ][v],
     (YTemplate.punditPick, final v) when v < YFeed.punditVariantCount => [
       l.yPunditPick0(c0, a1, a2),
       l.yPunditPick1(c0, a1, a2),
@@ -827,6 +838,17 @@ String _reactionBody(AppLocalizations l, YPost p) {
       l.yReactionShrug15,
       l.yReactionShrug16,
       l.yReactionShrug17,
+    ],
+    YMood.pride => [
+      l.yReactionPride0,
+      l.yReactionPride1,
+      l.yReactionPride2,
+      l.yReactionPride3,
+      l.yReactionPride4,
+      l.yReactionPride5,
+      l.yReactionPride6,
+      l.yReactionPride7,
+      l.yReactionPride8,
     ],
   };
   final mood = p.mood ?? YMood.shrug;

@@ -16284,4 +16284,78 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Del mine trofæer';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Et uventet eventyr ved $competition og et flot resultat til sidst. Stolt af drengene.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Ingen gav os en chance ved $competition. Vi nåede længere, end nogen turde drømme om. Tak, drenge.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Ude af $competition, men sikke en tur. Dette hold fik hele landet til at tro. Stolt.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Havde ikke regnet med, at vi kom ud af gruppen ved $competition. Alt derefter var bonus. Fremad og opad.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Vi tog til $competition i håb om et point eller to og kom hjem efter at have spillet knockoutkampe. God turnering.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Længere end forhåndsvurderingerne sagde ved $competition. Det er et skridt fremad, helt enkelt.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Ude af $competition, og det svider lidt. Men ærligt talt: ingen havde set os nå så langt.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Okay, vi er ude af $competition. Stadig mere, end vi har klaret i årevis. Det tager jeg.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Intet trofæ fra $competition, og det var der aldrig udsigt til. Et godt løb er et godt løb. Gør det igen nu.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Stolt af hver eneste en.';
+
+  @override
+  String get yReactionPride1 => 'Sikke et løb. Tak, drenge.';
+
+  @override
+  String get yReactionPride2 => 'Ingen havde ventet det her. Husk det.';
+
+  @override
+  String get yReactionPride3 => 'Fremad og opad.';
+
+  @override
+  String get yReactionPride4 => 'Det hele er bonus. Nyd det.';
+
+  @override
+  String get yReactionPride5 => 'Bedre end nogen forudsagde. God turnering.';
+
+  @override
+  String get yReactionPride6 => 'Ude, men uden skam. Fair nok.';
+
+  @override
+  String get yReactionPride7 =>
+      'Det bedste hold gik videre. Vi gjorde os alligevel ære.';
+
+  @override
+  String get yReactionPride8 =>
+      'Lad os ikke blive for begejstrede. Men ja, et godt løb.';
 }

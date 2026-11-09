@@ -189,6 +189,7 @@ abstract final class YLocals {
     YTemplate.runnerUp,
     YTemplate.eliminated,
     YTemplate.exitHeartbreak,
+    YTemplate.exitProud,
     YTemplate.finalLooms,
     YTemplate.rivalryLooms,
   };
@@ -209,6 +210,7 @@ abstract final class YLocals {
     YTemplate.runnerUp,
     YTemplate.eliminated,
     YTemplate.exitHeartbreak,
+    YTemplate.exitProud,
     YTemplate.finalLooms,
   };
 
@@ -219,6 +221,7 @@ abstract final class YLocals {
     YTemplate.qualifiedEuphoric,
     YTemplate.winEuphoric,
     YTemplate.exitHeartbreak,
+    YTemplate.exitProud,
   };
 
   /// The most local posts in one calendar month, which is about one
@@ -259,10 +262,20 @@ abstract final class YLocals {
       final kept = byEvent[event];
       if (kept == null ||
           (!bigMoments.contains(kept.template) &&
-              bigMoments.contains(p.template))) {
+              bigMoments.contains(p.template)) ||
+          // A proud exit is answered as one, not as the exit the wire broke.
+          (p.template == YTemplate.exitProud &&
+              kept.template != YTemplate.exitProud)) {
         byEvent[event] = p;
       }
     }
+    // The events the room is already proud of (see [YMood.pride]): the
+    // match that ended a run further on than expected reads as a defeat on
+    // its own, and a local fan must not answer it in fury.
+    final proudEvents = {
+      for (final p in posts)
+        if (p.mood == YMood.pride) eventOf(p),
+    };
     final parents = [
       for (final MapEntry(key: event, value: parent) in byEvent.entries)
         (parent: parent, event: event),
@@ -301,7 +314,9 @@ abstract final class YLocals {
       final parent = e.parent;
       final month = parent.date.year * 12 + parent.date.month;
       final want = doubleMoments.contains(parent.template) ? 2 : 1;
-      final mood = YFeed.moodOf(parent.template);
+      final mood = proudEvents.contains(e.event)
+          ? YMood.pride
+          : YFeed.moodOf(parent.template);
       final history = YFeed.standingsAsOf(dated, parent.date);
       final standing = history.isEmpty ? ResultStanding.par : history.last;
       final start = varietySeed('local|who|$seed|${e.event}') % cast.length;
