@@ -72,6 +72,12 @@ class SquadScreen extends ConsumerStatefulWidget {
   static Key poolPlayerKey(int id) => Key('editorSquad.pool.player.$id');
   static Key duplicateKey(int id) => Key('editorSquad.duplicate.$id');
 
+  /// The button on a pool row that moves the player into the squad.
+  static Key promoteKey(int id) => Key('editorSquad.promote.$id');
+
+  /// A squad player's row in the "squad is full, who goes back" dialog.
+  static Key swapKey(int id) => Key('editorSquad.swap.$id');
+
   final int packId;
   final int nationId;
 
@@ -223,6 +229,93 @@ class _SquadScreenState extends ConsumerState<SquadScreen>
     _editor.update((p) => SquadEdits.remove(p, _nation, player.id));
     if (_picked == player.id && !_pickedPool) setState(() => _picked = null);
     showRemovedSnackBar(context, l, player, _editor);
+  }
+
+  /// Moves pool player [player] into the squad (one undoable edit). A full
+  /// squad first asks which of its players goes back to the pool instead.
+  Future<void> _promote(PackPlayer player) async {
+    final l = AppLocalizations.of(context);
+    final pack = ref.read(packEditorProvider(_id)).valueOrNull;
+    if (pack == null) return;
+    final shown = shownPlayers(ref, pack, _key, pool: true, listen: false);
+    if (shown == null) return;
+    final squad = pack.squads[_nation] ?? const <PackPlayer>[];
+    int? swapOut;
+    if (squad.length >= PackRules.squadMax) {
+      swapOut = await _pickSwap(squad);
+      if (swapOut == null || !mounted) return;
+    }
+    var moved = false;
+    _editor.update((p) {
+      final now = shownPlayers(ref, p, _key, pool: true, listen: false);
+      final next = SquadEdits.promote(
+        p,
+        _nation,
+        now ?? shown,
+        player.id,
+        swapOutId: swapOut,
+      );
+      moved = next != null;
+      return next ?? p;
+    });
+    if (!moved) return;
+    if (_picked == player.id && _pickedPool) setState(() => _picked = null);
+    showUndoSnackBar(
+      context,
+      _editor,
+      l.editorPromoted(playerLabel(l, player)),
+    );
+  }
+
+  /// Asks which squad player goes back to the pool, or null when none is
+  /// picked.
+  Future<int?> _pickSwap(List<PackPlayer> squad) {
+    final l = AppLocalizations.of(context);
+    return showDialog<int>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        backgroundColor: AppColors.surfaceContainer,
+        title: Text(l.editorPromoteFullTitle),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l.editorPromoteFullBody(PackRules.squadMax)),
+              const SizedBox(height: AppSpacing.sm),
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final p in SquadEdits.sorted(squad))
+                      ListTile(
+                        key: SquadScreen.swapKey(p.id),
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        leading: PositionBadge(p.position),
+                        title: Text(
+                          playerLabel(l, p),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Text('${SquadEdits.overallOf(p)}'),
+                        onTap: () => Navigator.of(dialog).pop(p.id),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialog).pop(),
+            child: Text(l.editorCancel),
+          ),
+        ],
+      ),
+    );
   }
 
   void _removeFromPool(PackPlayer player) {
@@ -824,6 +917,7 @@ class _PoolPane extends StatelessWidget {
                   duplicateNote: l.editorPoolDuplicate,
                   picked: picked == p.id,
                   onTap: () => onTap(p),
+                  onPromote: () => unawaited(state._promote(p)),
                 ),
               );
             },
@@ -1129,9 +1223,14 @@ class _PlayerRow extends StatelessWidget {
     required this.picked,
     required this.onTap,
     this.duplicateNote,
+    this.onPromote,
   });
 
   final Key rowKey;
+
+  /// Moves the player into the squad: a pool row's button (none in the
+  /// squad's own list).
+  final VoidCallback? onPromote;
 
   /// What the shared-name badge says (the squad's wording when null).
   final String? duplicateNote;
@@ -1236,6 +1335,15 @@ class _PlayerRow extends StatelessWidget {
               ),
             ],
           ),
+          if (onPromote != null)
+            IconButton(
+              key: SquadScreen.promoteKey(p.id),
+              tooltip: l.editorPromoteTooltip,
+              icon: const Icon(Icons.arrow_circle_up_outlined),
+              color: AppColors.primary,
+              visualDensity: VisualDensity.compact,
+              onPressed: onPromote,
+            ),
         ],
       ),
     );
