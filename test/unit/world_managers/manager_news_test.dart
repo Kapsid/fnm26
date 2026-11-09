@@ -78,7 +78,7 @@ void main() {
         nation: 'Brazílie',
         outgoing: 'Jan Novák',
         incoming: 'Petr Svoboda',
-      );
+      )!;
       final spec = decodeMessageSpec(
         encodeMessageSpec(title: msg.title, body: msg.body),
       );
@@ -95,7 +95,7 @@ void main() {
       nation: 'Brazílie',
       outgoing: 'Jan Novák',
       incoming: 'Petr Svoboda',
-    );
+    )!;
     expect(
       renderMsgPart(cs, sacked.title),
       cs.mgrNewsSacked('Brazílie', 'Jan Novák'),
@@ -112,12 +112,39 @@ void main() {
       nation: 'Brazílie',
       outgoing: null,
       incoming: 'Petr Svoboda',
-    );
+    )!;
     expect(
       renderMsgPart(cs, appointed.title),
       cs.mgrNewsAppointed('Brazílie', 'Petr Svoboda'),
     );
     expect(ManagerNews.dedupKey('wc:2030', 4), 'mgr:wc:2030:4');
+    // Nobody left and nobody came: nothing to say, never "{nation} appoint ".
+    final nobody = (
+      nationId: 4,
+      outgoingId: null,
+      why: null,
+      incomingId: null,
+      date: DateTime(2030),
+    );
+    expect(
+      ManagerNews.message(
+        nobody,
+        nation: 'Brazílie',
+        outgoing: null,
+        incoming: null,
+      ),
+      isNull,
+    );
+    expect(
+      ManagerNews.newsworthy(
+        [nobody],
+        tiedManagerIds: const {},
+        myNations: const {4},
+        upcomingOpponents: const {},
+        confTop10: const {},
+      ),
+      isEmpty,
+    );
   });
 
   test('a pass files at most 3 manager items, keyed per nation', () async {
@@ -186,5 +213,24 @@ void main() {
       expect(k, startsWith('mgr:wc:2030:'));
       expect(moved, contains(int.parse(k.split(':').last)));
     }
+
+    // Run again: the point has run, so it moves nobody and files nothing
+    // twice.
+    final again = await c
+        .read(worldManagerServiceProvider)
+        .afterFinals(
+          careerId,
+          key: 'wc:2030',
+          scope: {for (final n in nations) n.id},
+          date: wcDate,
+        );
+    expect(again, isEmpty);
+    final after = await c
+        .read(competitionRepositoryProvider)
+        .messages(careerId);
+    expect(
+      after.where((m) => m.category == 'manager').length,
+      news.length,
+    );
   }, timeout: const Timeout(Duration(minutes: 5)));
 }

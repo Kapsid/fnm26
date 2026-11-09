@@ -279,6 +279,10 @@ abstract interface class CompetitionRepository {
   /// A nation's fixtures, ordered by date.
   Future<List<Fixture>> fixturesForNation(int careerId, int nationId);
 
+  /// Every fixture of any of [nationIds], ordered by date: one query, for a
+  /// reader that needs all the nations a manager has led at once.
+  Future<List<Fixture>> fixturesForNations(int careerId, Set<int> nationIds);
+
   /// A nation's fixtures **in the current cycle only**, ordered by date.
   ///
   /// A career is endless, so the all-time list above answers "every game this

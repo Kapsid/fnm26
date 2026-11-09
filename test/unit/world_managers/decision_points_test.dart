@@ -378,10 +378,38 @@ void main() {
         );
     expect(moves, isNotEmpty);
     // The decision reads the cycle's fixtures once (2 at most); the news it
-    // files then reads the player's own fixtures, once per nation he has
-    // led (one here).
-    expect(reads.reads, lessThanOrEqualTo(2 + 1));
+    // files then reads the player's own fixtures in one query.
+    expect(reads.reads, lessThanOrEqualTo(3));
   }, timeout: const Timeout(Duration(minutes: 5)));
+
+  test(
+    'a pass reads fixtures once for a man who has led two nations',
+    () async {
+      final reads = _FixtureReads();
+      final s = await start(interceptor: reads);
+      await upsets(s, _wcDate);
+      // He led another nation in an earlier cycle, and leads his own now.
+      final other = s.nations.firstWhere((n) => n.id != s.playerNationId).id;
+      await s.c
+          .read(careerRepositoryProvider)
+          .recordStint(s.careerId, -1, other);
+      await s.c
+          .read(careerRepositoryProvider)
+          .recordStint(s.careerId, 0, s.playerNationId);
+      reads.reads = 0;
+      final moves = await s.c
+          .read(worldManagerServiceProvider)
+          .afterFinals(
+            s.careerId,
+            key: 'wc:2030',
+            scope: {for (final n in s.nations) n.id},
+            date: _wcDate,
+          );
+      expect(moves, isNotEmpty);
+      expect(reads.reads, lessThanOrEqualTo(3));
+    },
+    timeout: const Timeout(Duration(minutes: 5)),
+  );
 
   test(
     'a throwing manager pass stops neither the finals nor the rollover',

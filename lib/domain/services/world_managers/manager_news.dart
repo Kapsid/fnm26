@@ -28,6 +28,8 @@ abstract final class ManagerNews {
     required Set<int> confTop10,
   }) {
     int? rankOf(ManagerMove m) {
+      // A move with nobody to name says nothing.
+      if (m.outgoingId == null && m.incomingId == null) return null;
       if (tiedManagerIds.contains(m.outgoingId) ||
           tiedManagerIds.contains(m.incomingId)) {
         return 0;
@@ -54,8 +56,9 @@ abstract final class ManagerNews {
   /// [outgoing] and [incoming] the names of the men leaving and arriving
   /// (names are never translated). The title says who left and why, or who
   /// was appointed when nobody left; the body names the new man, and is
-  /// null when nobody has been appointed yet.
-  static ({MsgPart title, MsgPart? body}) message(
+  /// null when nobody has been appointed yet. Null when the move names
+  /// nobody it can say: no one left and no one came in.
+  static ({MsgPart title, MsgPart? body})? message(
     ManagerMove m, {
     required String nation,
     required String? outgoing,
@@ -66,8 +69,9 @@ abstract final class ManagerNews {
         : MsgText(MsgKey.mgrNewsAppointedBody, [nation, incoming]);
     final why = m.why;
     if (outgoing == null || why == null) {
+      if (incoming == null) return null;
       return (
-        title: MsgText(MsgKey.mgrNewsAppointed, [nation, incoming ?? '']),
+        title: MsgText(MsgKey.mgrNewsAppointed, [nation, incoming]),
         body: body,
       );
     }

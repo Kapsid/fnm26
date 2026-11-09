@@ -6,7 +6,6 @@ import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/domain/entities/career.dart';
-import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -27,7 +26,7 @@ import 'package:fnm/features/settings/settings_providers.dart'
 import 'package:fnm/features/world_managers/manager_windows.dart';
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart'
-    show worldManagerStyleEnabledProvider;
+    show playerNationsOf, relationWithPlayer, worldManagerStyleEnabledProvider;
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
     show worldPackRepositoryProvider;
 
@@ -600,9 +599,9 @@ class WorldManagerService {
   /// [ManagerNews.maxPerPass], each stored as meaning.
   ///
   /// Reads: the managers and ties once, and the player's own fixtures (all
-  /// time) for each nation he has led, which give both his meetings and his
-  /// upcoming opponents. Relations are derived in memory from those, for
-  /// the men the moves name only.
+  /// time, every nation he has led) in one query, which give both his
+  /// meetings and his upcoming opponents. Relations are derived in memory
+  /// from those, for the men the moves name only.
   Future<void> _fileNews(
     Career career, {
     required String key,
@@ -617,47 +616,39 @@ class WorldManagerService {
     final comp = _ref.read(competitionRepositoryProvider);
     final repo = _ref.read(worldManagerRepositoryProvider);
     final stints = await _ref.read(careerRepositoryProvider).stints(careerId);
-    final mine = {...stints.values, career.nationId, ...playerNations};
+    final mine = {
+      ...playerNationsOf(stints, career.nationId),
+      ...playerNations,
+    };
     final current = playerNations.first;
 
-    // The men the moves name, and which of them the player has a tie with:
-    // a tie row, or a relation the meetings make (a rival).
+    // The men the moves name, and which of them the player has a tie with,
+    // read exactly as the press and Y read it ([relationWithPlayer]). One
+    // fixture read: every nation he has led, in one query.
     final w = await repo.load(careerId);
     final ties = await repo.ties(careerId);
-    final named = {
-      for (final m in moves) ...[?m.outgoingId, ?m.incomingId],
+    final ownFixtures = await comp.fixturesForNations(careerId, mine);
+    final tied = {
+      for (final m in moves)
+        for (final id in [?m.outgoingId, ?m.incomingId])
+          if (relationWithPlayer(
+                managerId: id,
+                spells: w.spells,
+                ties: ties,
+                playerFixtures: ownFixtures,
+                stints: stints,
+                currentNationId: career.nationId,
+                today: date,
+              ).label !=
+              TieLabel.neutral)
+            id,
     };
-    final ownFixtures = <int, Fixture>{};
-    for (final n in mine) {
-      for (final f in await comp.fixturesForNation(careerId, n)) {
-        ownFixtures[f.id] = f;
-      }
-    }
-    final tied = <int>{};
-    for (final id in named) {
-      final relation = readRelation(
-        spells: [
-          for (final sp in w.spells)
-            if (sp.managerId == id) sp,
-        ],
-        meetings: ownFixtures.values.toList(),
-        playerSideAt: (d) => {
-          stints[CareerService.cycleForYear(d.year)] ?? career.nationId,
-        },
-        ties: [
-          for (final t in ties)
-            if (t.managerId == id) t,
-        ],
-        today: date,
-      );
-      if (relation.label != TieLabel.neutral) tied.add(id);
-    }
 
     // His upcoming opponents this cycle, from the same fixtures: the list
     // is all-time, the unplayed ones are still to come.
     final cycle = CareerService.cycleAt(date);
     final ahead = [
-      for (final f in ownFixtures.values)
+      for (final f in ownFixtures)
         if (!f.hasResult && CareerService.cycleAt(f.date) == cycle) f,
     ];
     final opponents = {
@@ -696,6 +687,7 @@ class WorldManagerService {
         outgoing: names[m.outgoingId],
         incoming: names[m.incomingId],
       );
+      if (msg == null) continue;
       await comp.addTextMessage(
         l: l,
         careerId: careerId,
