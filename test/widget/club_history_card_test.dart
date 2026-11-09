@@ -81,7 +81,7 @@ void main() {
     expect(find.byType(Card), findsNothing);
   });
 
-  testWidgets('each spell wears its club\'s stars, read out of five', (
+  testWidgets('the history rows carry no stars: the current club shows them above', (
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
@@ -108,12 +108,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(ClubStars), findsNWidgets(2));
-    expect(find.bySemanticsLabel('Club strength: 5 of 5'), findsOneWidget);
-    expect(find.bySemanticsLabel('Club strength: 2 of 5'), findsOneWidget);
-    // Five stars a row: two filled for Prague, five for Man Blue.
-    expect(find.byIcon(Icons.star_rounded), findsNWidgets(7));
-    expect(find.byIcon(Icons.star_outline_rounded), findsNWidgets(3));
+    expect(find.text('Man Blue'), findsOneWidget);
+    expect(find.byType(ClubStars), findsNothing);
     semantics.dispose();
   });
 
