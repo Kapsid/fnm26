@@ -72,6 +72,9 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
   /// wherever the old offset happened to land.
   ({Confederation? region, int index})? _centredOn;
 
+  /// How much of the list's foot the floating dock covers.
+  double _navClearance = 0;
+
   /// The player's row in the currently filtered list (−1 when filtered out),
   /// so the "centre on me" action can jump back after any scrolling.
   int _playerIndex = -1;
@@ -93,7 +96,9 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
 
   void _centre(int index, {bool animate = false}) {
     if (!mounted || !_controller.hasClients || index < 0) return;
-    final viewport = _controller.position.viewportDimension;
+    // The list runs on under the floating dock: centre in the part of it
+    // that can be seen.
+    final viewport = _controller.position.viewportDimension - _navClearance;
     // Item `index` starts at listPadding + index * extent; centre its middle.
     final target =
         (AppSpacing.marginMobile +
@@ -145,6 +150,7 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
           ),
         ],
       ),
+      extendBody: true,
       bottomNavigationBar: AppBottomNav(
         careerId: careerId,
         current: AppTab.competitions,
@@ -184,28 +190,38 @@ class _WorldRankingScreenState extends ConsumerState<WorldRankingScreen> {
                     ref.read(selectedRankRegionProvider.notifier).state = r,
               ),
               Expanded(
-                child: ListView.builder(
-                  controller: _controller,
-                  padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  itemCount: filtered.length,
-                  // Fixed extent: makes the centring above exact (and keeps a
-                  // 200-row list cheap to scroll).
-                  itemExtent: _rowExtent(context),
-                  itemBuilder: (context, i) => Padding(
-                    padding: const EdgeInsets.only(bottom: _rowGap),
-                    child: RankRow(
-                      nation: filtered[i],
-                      rank: data.position[filtered[i].id] ?? (i + 1),
-                      points: data.points[filtered[i].id] ?? 0,
-                      movement: data.movement[filtered[i].id] ?? 0,
-                      isPlayer: filtered[i].id == data.playerNationId,
-                      onTap: () => openNation(
+                // A Builder for the body's own context: the dock's clearance
+                // is read from the padding the Scaffold gives its body.
+                child: Builder(
+                  builder: (context) {
+                    _navClearance = AppBottomNav.clearance(context);
+                    return ListView.builder(
+                      controller: _controller,
+                      padding: AppBottomNav.padScroll(
                         context,
-                        careerId: careerId,
-                        nationId: filtered[i].id,
+                        const EdgeInsets.all(AppSpacing.marginMobile),
                       ),
-                    ),
-                  ),
+                      itemCount: filtered.length,
+                      // Fixed extent: makes the centring above exact (and keeps a
+                      // 200-row list cheap to scroll).
+                      itemExtent: _rowExtent(context),
+                      itemBuilder: (context, i) => Padding(
+                        padding: const EdgeInsets.only(bottom: _rowGap),
+                        child: RankRow(
+                          nation: filtered[i],
+                          rank: data.position[filtered[i].id] ?? (i + 1),
+                          points: data.points[filtered[i].id] ?? 0,
+                          movement: data.movement[filtered[i].id] ?? 0,
+                          isPlayer: filtered[i].id == data.playerNationId,
+                          onTap: () => openNation(
+                            context,
+                            careerId: careerId,
+                            nationId: filtered[i].id,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

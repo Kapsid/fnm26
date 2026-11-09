@@ -144,6 +144,7 @@ void main() {
 
     await tester.pumpApp(
       const Scaffold(
+        extendBody: true,
         bottomNavigationBar: AppBottomNav(careerId: 1, current: AppTab.hub),
       ),
     );

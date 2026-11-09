@@ -252,6 +252,7 @@ class TacticsScreen extends ConsumerWidget {
             ),
           ],
         ),
+        extendBody: true,
         bottomNavigationBar: AppBottomNav(
           careerId: careerId,
           current: AppTab.squad,
@@ -280,156 +281,167 @@ class TacticsScreen extends ConsumerWidget {
             final fatigue = _fatigueOf(ref);
             final t = _resolveTakers(ref, careerId, data, takers);
 
-            return TabBarView(
-              children: [
-                // 1. LINEUP — the pitch and the formation, the everyday setup.
-                ListView(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.xl),
-                  children: [
-                    // Starters who are banned/injured block the next match: name
-                    // them (with the reason) right here, or the forced "reshape
-                    // your XI" event reads as an unexplained dead end.
-                    if (outStarters.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          AppSpacing.marginMobile,
-                          AppSpacing.sm,
-                          AppSpacing.marginMobile,
-                          0,
-                        ),
-                        child: _outStartersCard(l, data, outlooks),
-                      ),
-                    AspectRatio(
-                      aspectRatio: 3 / 4,
-                      child: _pitch(
-                        context,
-                        ref,
-                        data,
-                        service: service,
-                        teamColors: teamColors,
-                        absentIds: absentIds,
-                        injuredIds: injuredIds,
-                        fatigue: fatigue,
-                      ),
+            // A Builder for the body's own context: the dock's clearance is
+            // read from the padding the Scaffold gives its body.
+            return Builder(
+              builder: (context) => TabBarView(
+                children: [
+                  // 1. LINEUP — the pitch and the formation, the everyday setup.
+                  ListView(
+                    padding: AppBottomNav.padScroll(
+                      context,
+                      const EdgeInsets.only(bottom: AppSpacing.xl),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // The pitch scrolls, so a drag has to start with a
-                          // hold — say so, or it just reads as the page moving.
-                          Text(
-                            l.tacticsTapOrDrag,
-                            style: AppTypography.labelSmall.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
+                    children: [
+                      // Starters who are banned/injured block the next match: name
+                      // them (with the reason) right here, or the forced "reshape
+                      // your XI" event reads as an unexplained dead end.
+                      if (outStarters.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.marginMobile,
+                            AppSpacing.sm,
+                            AppSpacing.marginMobile,
+                            0,
                           ),
-                          const SizedBox(height: AppSpacing.lg),
-                          // One line, not the whole grid. Nineteen shapes at
-                          // three across is seven rows — about 981 points, a
-                          // screen and a half of formations sitting between
-                          // the manager and his own pitch. The grid is worth a
-                          // screen while he is choosing and worth a line the
-                          // rest of the time.
-                          FormationField(
-                            key: TourKeys.tacticsFormation,
-                            selected: tactic.formation,
-                            // How well the side knows each shape. The drilling
-                            // bonus was already in the engine and already
-                            // moved results, with nothing on screen to say so,
-                            // which makes a real effect read as imaginary.
-                            drilling: drilling,
-                            onSelected: (f) =>
-                                service.setFormation(careerId, f),
-                          ),
-                          const SizedBox(height: AppSpacing.lg),
-                          // The side's way of playing, stated in words, with a
-                          // tap through to change it. The shape is only half of
-                          // a tactic and the other half used to be six unnamed
-                          // sliders behind an icon.
-                          Text(
-                            l.tacticsPlaystyle,
-                            style: AppTypography.labelMedium,
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          // The Builder is load-bearing: this screen's own
-                          // context sits ABOVE the DefaultTabController it
-                          // creates, so looking the controller up from it
-                          // throws. Everything that moves tabs needs a context
-                          // from underneath.
-                          Builder(
-                            builder: (context) => AppCard(
-                              key: TourKeys.tacticsPlaystyle,
-                              // Across to the instructions tab rather than up
-                              // in a sheet: it is the next tab along, and a
-                              // sheet over a screen that is already there reads
-                              // as two different places for one decision.
-                              onTap: () =>
-                                  DefaultTabController.of(context).animateTo(1),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.auto_graph_rounded,
-                                    size: 18,
-                                    color: AppColors.primary,
-                                  ),
-                                  const SizedBox(width: AppSpacing.md),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          playstyleLabel(l, tactic.playstyle),
-                                          style: AppTypography.titleMedium,
-                                        ),
-                                        Text(
-                                          playstyleBlurb(l, tactic.playstyle),
-                                          style: AppTypography.labelSmall
-                                              .copyWith(
-                                                color:
-                                                    AppColors.onSurfaceVariant,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.chevron_right,
-                                    size: 18,
-                                    color: AppColors.onSurfaceVariant,
-                                  ),
-                                ],
+                          child: _outStartersCard(l, data, outlooks),
+                        ),
+                      AspectRatio(
+                        aspectRatio: 3 / 4,
+                        child: _pitch(
+                          context,
+                          ref,
+                          data,
+                          service: service,
+                          teamColors: teamColors,
+                          absentIds: absentIds,
+                          injuredIds: injuredIds,
+                          fatigue: fatigue,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpacing.marginMobile),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // The pitch scrolls, so a drag has to start with a
+                            // hold — say so, or it just reads as the page moving.
+                            Text(
+                              l.tacticsTapOrDrag,
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.onSurfaceVariant,
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: AppSpacing.lg),
+                            // One line, not the whole grid. Nineteen shapes at
+                            // three across is seven rows — about 981 points, a
+                            // screen and a half of formations sitting between
+                            // the manager and his own pitch. The grid is worth a
+                            // screen while he is choosing and worth a line the
+                            // rest of the time.
+                            FormationField(
+                              key: TourKeys.tacticsFormation,
+                              selected: tactic.formation,
+                              // How well the side knows each shape. The drilling
+                              // bonus was already in the engine and already
+                              // moved results, with nothing on screen to say so,
+                              // which makes a real effect read as imaginary.
+                              drilling: drilling,
+                              onSelected: (f) =>
+                                  service.setFormation(careerId, f),
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+                            // The side's way of playing, stated in words, with a
+                            // tap through to change it. The shape is only half of
+                            // a tactic and the other half used to be six unnamed
+                            // sliders behind an icon.
+                            Text(
+                              l.tacticsPlaystyle,
+                              style: AppTypography.labelMedium,
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            // The Builder is load-bearing: this screen's own
+                            // context sits ABOVE the DefaultTabController it
+                            // creates, so looking the controller up from it
+                            // throws. Everything that moves tabs needs a context
+                            // from underneath.
+                            Builder(
+                              builder: (context) => AppCard(
+                                key: TourKeys.tacticsPlaystyle,
+                                // Across to the instructions tab rather than up
+                                // in a sheet: it is the next tab along, and a
+                                // sheet over a screen that is already there reads
+                                // as two different places for one decision.
+                                onTap: () => DefaultTabController.of(
+                                  context,
+                                ).animateTo(1),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.auto_graph_rounded,
+                                      size: 18,
+                                      color: AppColors.primary,
+                                    ),
+                                    const SizedBox(width: AppSpacing.md),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            playstyleLabel(l, tactic.playstyle),
+                                            style: AppTypography.titleMedium,
+                                          ),
+                                          Text(
+                                            playstyleBlurb(l, tactic.playstyle),
+                                            style: AppTypography.labelSmall
+                                                .copyWith(
+                                                  color: AppColors
+                                                      .onSurfaceVariant,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.chevron_right,
+                                      size: 18,
+                                      color: AppColors.onSurfaceVariant,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                    ],
+                  ),
+                  // 2. INSTRUCTIONS — the playstyle and the six dials that trim
+                  //    it. Half of what a tactic is, and it used to live behind
+                  //    an icon in the app bar.
+                  _InstructionsTab(careerId: careerId, tactic: tactic),
+                  // 3. ROLES & SET PIECES — one row per starter: their job, plus
+                  //    the penalty and free-kick badges (tap to make them taker).
+                  //    The armband sits at the top of it: naming a captain is the
+                  //    same kind of decision as naming a penalty taker — one job,
+                  //    one man. It used to be an armband button on EVERY row of
+                  //    the call-up list, twenty-odd of them, which read as a
+                  //    multiple choice and buried the one name that mattered.
+                  ListView(
+                    padding: AppBottomNav.padScroll(
+                      context,
+                      const EdgeInsets.all(AppSpacing.marginMobile),
                     ),
-                  ],
-                ),
-                // 2. INSTRUCTIONS — the playstyle and the six dials that trim
-                //    it. Half of what a tactic is, and it used to live behind
-                //    an icon in the app bar.
-                _InstructionsTab(careerId: careerId, tactic: tactic),
-                // 3. ROLES & SET PIECES — one row per starter: their job, plus
-                //    the penalty and free-kick badges (tap to make them taker).
-                //    The armband sits at the top of it: naming a captain is the
-                //    same kind of decision as naming a penalty taker — one job,
-                //    one man. It used to be an armband button on EVERY row of
-                //    the call-up list, twenty-odd of them, which read as a
-                //    multiple choice and buried the one name that mattered.
-                ListView(
-                  padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                  children: _rolesChildren(context, ref, l, data, t, roles),
-                ),
-                // 4. SQUAD — the nation's whole pool: every eligible player,
-                //    their club, age, form and international record, filterable
-                //    and sortable. See [NationSquadTab] for why it is the pool
-                //    rather than the bench.
-                NationSquadTab(careerId: careerId),
-              ],
+                    children: _rolesChildren(context, ref, l, data, t, roles),
+                  ),
+                  // 4. SQUAD — the nation's whole pool: every eligible player,
+                  //    their club, age, form and international record, filterable
+                  //    and sortable. See [NationSquadTab] for why it is the pool
+                  //    rather than the bench.
+                  NationSquadTab(careerId: careerId),
+                ],
+              ),
             );
           },
         ),
@@ -1031,11 +1043,14 @@ class _InstructionsTabState extends ConsumerState<_InstructionsTab> {
     final tablet = TabletShellScope.isActive(context);
     String heading(String s) => tablet ? s.capsIn(l.localeName) : s;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.lg,
-        AppSpacing.md,
-        AppSpacing.lg,
-        AppSpacing.xl,
+      padding: AppBottomNav.padScroll(
+        context,
+        const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.md,
+          AppSpacing.lg,
+          AppSpacing.xl,
+        ),
       ),
       children: [
         Text(
