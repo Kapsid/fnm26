@@ -406,10 +406,68 @@ class MatchScoreboard extends StatelessWidget {
   }
 }
 
+/// The match's bottom bar: the controls (or full time's Share and Continue)
+/// on a plate of the navigation dock's brushed silver, held off the screen's
+/// edges and above the home indicator. Pinned below the body, never over it.
+///
+/// Public only so a widget test can find it; nothing outside the match
+/// screen builds it.
+@visibleForTesting
+class MatchBarDock extends StatelessWidget {
+  const MatchBarDock({required this.child, this.maxWidth, super.key});
+
+  final Widget child;
+
+  /// On a tablet, the widest the plate grows (centred); null: the full width.
+  final double? maxWidth;
+
+  /// Between the plate's edge and the keys on it.
+  static const double inset = 6;
+
+  @override
+  Widget build(BuildContext context) {
+    final bottom = MediaQuery.viewPaddingOf(context).bottom;
+    Widget plate = SilverDock(
+      minHeight: 0,
+      padding: const EdgeInsets.all(inset),
+      child: child,
+    );
+    final max = maxWidth;
+    if (max != null) {
+      plate = Center(
+        heightFactor: 1,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: max),
+          child: plate,
+        ),
+      );
+    }
+    return MediaQuery.removeViewPadding(
+      context: context,
+      removeBottom: true,
+      child: Padding(
+        // Over the home indicator, never on it; a phone without one gets a
+        // margin of its own.
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.md - 4,
+          AppSpacing.sm,
+          AppSpacing.md - 4,
+          bottom > 0 ? math.max(bottom - 4, 10) : 10,
+        ),
+        child: plate,
+      ),
+    );
+  }
+}
+
 /// The live match control bar pinned to the bottom of the screen: a prominent
 /// play/pause transport on the left, then speed and tactics (with the subs
 /// count) as matching pill buttons, and — only while the testing aid is on —
-/// skip-to-full-time.
+/// skip-to-full-time. On a tablet the Pitch / Timeline toggle sits between
+/// the speed and the tactics.
+///
+/// Drawn for the silver of [MatchBarDock]: dark engraved ink on frosted keys,
+/// and the transport a dark key of its own.
 ///
 /// A match the manager opened is a match he watches: but for the skip pill,
 /// there is no way from here to the final whistle but the clock. Simulating a
@@ -428,6 +486,7 @@ class MatchControlBar extends StatelessWidget {
     required this.onSpeed,
     required this.onTactics,
     this.onSkip,
+    this.viewToggle,
     this.maxSubs = kMaxSubs,
     super.key,
   });
@@ -452,72 +511,182 @@ class MatchControlBar extends StatelessWidget {
   /// testing aid; see that constant before wiring it unconditionally.
   final VoidCallback? onSkip;
 
+  /// The tablet's [MatchViewToggle]; null on a phone, whose switch is on the
+  /// scoreboard.
+  final Widget? viewToggle;
+
   static const double _height = 52;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final onSkip = this.onSkip;
+    final toggle = viewToggle;
     // Spent legs call attention to themselves: the tactics pill turns amber
     // and counts the players who have nothing left, so a fading side is
     // something the manager sees rather than something they only notice in
     // the full-time ratings.
     final tired = spent > 0 && subsUsed < maxSubs;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.marginMobile,
-        vertical: AppSpacing.sm,
+    return Row(
+      children: [
+        // The primary transport control: the one dark key on the plate.
+        SizedBox(
+          width: _height,
+          height: _height,
+          child: IconButton.filled(
+            iconSize: 30,
+            style: IconButton.styleFrom(
+              backgroundColor: SilverInk.active,
+              foregroundColor: AppColors.primaryFixed,
+            ),
+            icon: Icon(
+              playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+            ),
+            onPressed: onPlayPause,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        _PillButton(
+          onTap: onSpeed,
+          child: Text(
+            '$speed×',
+            style: AppTypography.labelMedium.copyWith(
+              color: SilverInk.active,
+              shadows: SilverInk.engraved,
+            ),
+          ),
+        ),
+        if (toggle != null) ...[
+          const SizedBox(width: AppSpacing.sm),
+          toggle,
+        ],
+        const SizedBox(width: AppSpacing.sm),
+        _PillButton(
+          expand: true,
+          onTap: onTactics,
+          alert: tired,
+          child: MatchTacticsPillContent(
+            subsUsed: subsUsed,
+            spent: spent,
+            maxSubs: maxSubs,
+          ),
+        ),
+        if (onSkip != null) ...[
+          const SizedBox(width: AppSpacing.sm),
+          _PillButton(
+            onTap: onSkip,
+            tooltip: l.matchSkipToFullTime,
+            child: const Icon(
+              Icons.skip_next_rounded,
+              color: SilverInk.active,
+              shadows: SilverInk.engraved,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// The tablet's Pitch / Timeline toggle on the match's bottom bar: both ways
+/// to watch side by side, the one on screen a frosted key in the strongest
+/// ink, the other engraved into the silver.
+@visibleForTesting
+class MatchViewToggle extends StatelessWidget {
+  const MatchViewToggle({
+    required this.current,
+    required this.onChoose,
+    super.key,
+  });
+
+  /// The way the match is being watched now.
+  final MatchViewMode current;
+
+  final ValueChanged<MatchViewMode> onChoose;
+
+  /// The key of the toggle's half for [mode].
+  static Key segmentKey(MatchViewMode mode) =>
+      ValueKey(('match.viewToggle', mode.name));
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    Widget half(MatchViewMode mode, IconData icon, String label) {
+      final on = mode == current;
+      final ink = on ? SilverInk.active : SilverInk.idle;
+      return Semantics(
+        button: true,
+        selected: on,
+        inMutuallyExclusiveGroup: true,
+        label: label,
+        excludeSemantics: true,
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            key: segmentKey(mode),
+            borderRadius: _PillButton.radius,
+            // Already watching this way: nothing to do.
+            onTap: on ? null : () => onChoose(mode),
+            child: SizedBox(
+              height: MatchControlBar._height,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (on)
+                    const Positioned.fill(
+                      child: SilverFrostedPill(radius: _PillButton.radius),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          icon,
+                          size: 18,
+                          color: ink,
+                          shadows: SilverInk.engraved,
+                        ),
+                        const SizedBox(width: AppSpacing.xs + 2),
+                        Text(
+                          label,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: AppTypography.labelMedium.copyWith(
+                            color: ink,
+                            fontWeight: on ? FontWeight.w800 : FontWeight.w600,
+                            shadows: SilverInk.engraved,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return DecoratedBox(
+      // A shallow groove the two halves sit in.
+      decoration: BoxDecoration(
+        borderRadius: _PillButton.radius,
+        color: const Color(0x1A0E1419),
+        border: Border.all(color: const Color(0x3355606B)),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // The primary transport control, sized and coloured to stand out.
-          SizedBox(
-            width: _height,
-            height: _height,
-            child: IconButton.filled(
-              iconSize: 30,
-              style: IconButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.onPrimary,
-              ),
-              icon: Icon(
-                playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-              ),
-              onPressed: onPlayPause,
-            ),
+          half(MatchViewMode.pitch, Icons.stadium_outlined, l.matchViewPitch),
+          half(
+            MatchViewMode.timeline,
+            Icons.format_list_bulleted_rounded,
+            l.matchViewTimeline,
           ),
-          const SizedBox(width: AppSpacing.sm),
-          _PillButton(
-            onTap: onSpeed,
-            child: Text(
-              '$speed×',
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          _PillButton(
-            expand: true,
-            onTap: onTactics,
-            accent: tired ? AppColors.warning : null,
-            child: MatchTacticsPillContent(
-              subsUsed: subsUsed,
-              spent: spent,
-              maxSubs: maxSubs,
-            ),
-          ),
-          if (onSkip != null) ...[
-            const SizedBox(width: AppSpacing.sm),
-            _PillButton(
-              onTap: onSkip,
-              tooltip: l.matchSkipToFullTime,
-              child: const Icon(
-                Icons.skip_next_rounded,
-                color: AppColors.primary,
-              ),
-            ),
-          ],
         ],
       ),
     );
@@ -554,7 +723,12 @@ class MatchTacticsPillContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final tired = spent > 0 && subsUsed < maxSubs;
-    final tone = tired ? AppColors.warning : AppColors.primary;
+    // Ink for the silver plate the bar sits on.
+    final tone = tired ? SilverInk.alert : SilverInk.active;
+    final style = AppTypography.labelMedium.copyWith(
+      color: tone,
+      shadows: SilverInk.engraved,
+    );
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -562,6 +736,7 @@ class MatchTacticsPillContent extends StatelessWidget {
           tired ? Icons.battery_alert_rounded : Icons.tune,
           size: 18,
           color: tone,
+          shadows: SilverInk.engraved,
         ),
         const SizedBox(width: AppSpacing.sm),
         Flexible(
@@ -569,31 +744,28 @@ class MatchTacticsPillContent extends StatelessWidget {
             tired ? l.matchTiredCount(spent) : l.matchTacticsLabel,
             overflow: TextOverflow.ellipsis,
             softWrap: false,
-            style: AppTypography.labelMedium.copyWith(color: tone),
+            style: style,
           ),
         ),
         const SizedBox(width: AppSpacing.xs),
         // Never Flexible: the count is the number the manager is actually
         // reading, so the label gives way to it rather than the other way
         // round.
-        Text(
-          '$subsUsed/$maxSubs',
-          style: AppTypography.labelMedium.copyWith(color: tone),
-        ),
+        Text('$subsUsed/$maxSubs', style: style),
       ],
     );
   }
 }
 
-/// A rounded, outlined pill button used across the match control bar so every
-/// secondary control shares one look and tap-target height.
+/// A frosted key on the silver bar, used across the match control bar so
+/// every secondary control shares one look and tap-target height.
 class _PillButton extends StatelessWidget {
   const _PillButton({
     required this.onTap,
     required this.child,
     this.expand = false,
     this.tooltip,
-    this.accent,
+    this.alert = false,
   });
 
   final VoidCallback onTap;
@@ -603,31 +775,41 @@ class _PillButton extends StatelessWidget {
   /// A long-press label, for a pill whose icon carries no words of its own.
   final String? tooltip;
 
-  /// An alert colour for the pill's fill and border (null = the neutral look).
-  final Color? accent;
+  /// Tinted amber with a deep amber rim: the tired-legs alert.
+  final bool alert;
+
+  /// A key's corners: round ends, like the plate's.
+  static const BorderRadius radius = BorderRadius.all(Radius.circular(26));
 
   @override
   Widget build(BuildContext context) {
-    final accent = this.accent;
     Widget button = Material(
-      color: accent == null
-          ? AppColors.surfaceContainerHighest
-          : accent.withValues(alpha: 0.16),
-      borderRadius: AppRadii.mdAll,
+      type: MaterialType.transparency,
       child: InkWell(
-        borderRadius: AppRadii.mdAll,
+        borderRadius: radius,
         onTap: onTap,
-        child: Container(
+        child: SizedBox(
           height: MatchControlBar._height,
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-          decoration: BoxDecoration(
-            borderRadius: AppRadii.mdAll,
-            border: Border.all(
-              color: accent ?? AppColors.outlineVariant,
-            ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              const Positioned.fill(child: SilverFrostedPill(radius: radius)),
+              if (alert)
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: radius,
+                      color: AppColors.warning.withValues(alpha: 0.28),
+                      border: Border.all(color: SilverInk.alert),
+                    ),
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: child,
+              ),
+            ],
           ),
-          child: child,
         ),
       ),
     );

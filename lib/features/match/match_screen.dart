@@ -1063,7 +1063,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
           '${preview.nations[f.awayNationId]?.code ?? 'away'}',
       flagCodes: matchShareFlags(data),
       images: matchShareImages(data),
-      height: AppSpacing.minHitArea + 8,
+      height: 52,
       card: (format) => MatchShareCard(data: data, format: format),
     );
   }
@@ -2033,8 +2033,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final bugTheme = bug ? finalsTheme : null;
             // Pitch or Timeline, at any time: on a phone from the corner of
             // the scoreboard (the Timeline's) or the pitch's bottom one (Pitch mode,
-            // whose stripe is too thin for it); on a tablet from the stats
-            // panel's header.
+            // whose stripe is too thin for it); on a tablet from the toggle
+            // on the bottom bar.
             final phoneSwitch = tablet || _mode == null
                 ? null
                 : MatchViewSwitch(
@@ -2394,9 +2394,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     ),
                   );
             if (tablet) {
-              final toMode = _onPitch
-                  ? MatchViewMode.timeline
-                  : MatchViewMode.pitch;
               return _MatchTabletLayout(
                 ft: ft,
                 topBar: topBar,
@@ -2413,12 +2410,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                 stats: stats,
                 lineups: lineups,
                 pitch: _livePitch(preview, r),
-                viewSwitch: _mode == null
-                    ? null
-                    : MatchViewSwitch(
-                        to: toMode,
-                        onTap: () => _chooseMode(preview, toMode),
-                      ),
                 pitchView: _onPitch ? pitchSurface : null,
                 feed: _onPitch && picture
                     ? PitchCommentaryFeed(
@@ -2538,26 +2529,50 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             if (preview == null) return null;
             final ft = _fullTime;
             final r = _result ?? preview.result;
+            // On a tablet, Pitch or Timeline from the bar, once chosen.
+            final mode = _mode;
+            final Widget? toggle = tablet && mode != null
+                ? MatchViewToggle(
+                    current: mode,
+                    onChoose: (m) => _chooseMode(preview, m),
+                  )
+                : null;
             final bar = ft
-                ? Padding(
-                    padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                    child: Row(
-                      children: [
-                        _shareButton(preview, r),
-                        const SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: PrimaryButton(
-                            label: _committing
-                                ? AppLocalizations.of(context).matchContinuing
-                                : AppLocalizations.of(context).matchContinue,
-                            icon: Icons.check_rounded,
-                            onPressed: _committing
-                                ? null
-                                : () => _continue(preview, r),
+                ? Row(
+                    children: [
+                      // Engraved into the silver, like the bar's other keys.
+                      Theme(
+                        data: Theme.of(context).copyWith(
+                          outlinedButtonTheme: OutlinedButtonThemeData(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: SilverInk.active,
+                              backgroundColor: const Color(0x66FFFFFF),
+                              side: const BorderSide(color: SilverInk.idle),
+                              shape: const StadiumBorder(),
+                            ),
                           ),
                         ),
+                        child: _shareButton(preview, r),
+                      ),
+                      if (toggle != null) ...[
+                        const SizedBox(width: AppSpacing.sm),
+                        toggle,
                       ],
-                    ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: PrimaryButton(
+                          label: _committing
+                              ? AppLocalizations.of(context).matchContinuing
+                              : AppLocalizations.of(context).matchContinue,
+                          icon: Icons.check_rounded,
+                          height: 52,
+                          onSilver: true,
+                          onPressed: _committing
+                              ? null
+                              : () => _continue(preview, r),
+                        ),
+                      ),
+                    ],
                   )
                 : MatchControlBar(
                     playing: _playing,
@@ -2571,27 +2586,9 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     // The only wiring of the skip aid: off here is off
                     // everywhere, and the pill is absent rather than dead.
                     onSkip: kShowSkipMatch ? _skip : null,
+                    viewToggle: toggle,
                   );
-            return DecoratedBox(
-              decoration: const BoxDecoration(
-                color: AppColors.surfaceContainerHigh,
-                border: Border(
-                  top: BorderSide(color: AppColors.outlineVariant),
-                ),
-              ),
-              child: SafeArea(
-                top: false,
-                child: tablet
-                    ? Center(
-                        heightFactor: 1,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 760),
-                          child: bar,
-                        ),
-                      )
-                    : bar,
-              ),
-            );
+            return MatchBarDock(maxWidth: tablet ? 900 : null, child: bar);
           },
         ),
       ),

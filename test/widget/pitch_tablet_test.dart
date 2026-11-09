@@ -171,8 +171,15 @@ void main() {
     expect(find.byType(PitchCommentaryFeed), findsNothing);
     expect(find.text(enL.matchTabTimeline.toUpperCase()), findsOneWidget);
     expect(find.text(enL.matchYourXi), findsOneWidget);
-    // The switch to the pitch is on offer, and takes the manager there.
-    await tester.tap(find.byKey(matchViewSwitchKey));
+    // The toggle on the bottom bar offers the pitch, and takes the manager
+    // there; the stats panel's header no longer carries a switch.
+    expect(find.byKey(matchViewSwitchKey), findsNothing);
+    final toggle = find.descendant(
+      of: find.byType(MatchBarDock),
+      matching: find.byType(MatchViewToggle),
+    );
+    expect(toggle, findsOneWidget);
+    await tester.tap(find.byKey(MatchViewToggle.segmentKey(MatchViewMode.pitch)));
     await tester.pump();
     for (
       var i = 0;

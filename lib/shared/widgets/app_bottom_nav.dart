@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet_shell_scope.dart';
+import 'package:fnm/shared/widgets/silver_dock.dart';
 import 'package:go_router/go_router.dart';
 
 /// The primary destinations reachable from the persistent bottom navigation.
@@ -120,7 +121,7 @@ class AppBottomNav extends StatelessWidget {
           14,
           bottom > 0 ? math.max(bottom - 4, 12) : 14,
         ),
-        child: _Dock(
+        child: SilverDock(
           child: Row(
             // Equal shares rather than natural widths: a long translation
             // shrinks inside its own share instead of pushing the others out.
@@ -142,94 +143,6 @@ class AppBottomNav extends StatelessWidget {
   }
 }
 
-// The brushed silver of the score bug and the primary button.
-const Color _silverHi = Color(0xFFF2F6FA);
-const Color _silverMid = Color(0xFFDCE4ED);
-const Color _silverCrease = Color(0xFFB8C2CD);
-const Color _silverLow = Color(0xFFA6B0BB);
-
-/// The selected tab's ink: past 7:1 anywhere on the plate.
-const Color _inkActive = Color(0xFF0E1419);
-
-/// The other tabs' ink: lighter, still past 4.5:1 on the darkest silver.
-const Color _inkIdle = Color(0xFF4A545E);
-
-/// One pixel of light under an engraved glyph.
-const List<Shadow> _engraved = [
-  Shadow(color: Color(0x99FFFFFF), offset: Offset(0, 1)),
-];
-
-const BorderRadius _dockRadius = BorderRadius.all(Radius.circular(34));
-const BorderRadius _pillRadius = BorderRadius.all(Radius.circular(29));
-
-/// The silver capsule itself: the plate, its brushing, a rim of light along
-/// the top and a soft shadow cast on the content beneath.
-class _Dock extends StatelessWidget {
-  const _Dock({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    constraints: const BoxConstraints(minHeight: AppBottomNav.dockHeight),
-    decoration: const BoxDecoration(
-      borderRadius: _dockRadius,
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          _silverHi,
-          _silverMid,
-          _silverCrease,
-          Color(0xFFC6CFD9),
-          _silverLow,
-        ],
-        stops: [0, 0.46, 0.54, 0.84, 1],
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: Color(0x99000000),
-          blurRadius: 30,
-          spreadRadius: -4,
-          offset: Offset(0, 10),
-        ),
-        BoxShadow(
-          color: Color(0x80000000),
-          blurRadius: 4,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    foregroundDecoration: BoxDecoration(
-      borderRadius: _dockRadius,
-      border: Border.all(color: const Color(0x8C55606B), width: 0.75),
-    ),
-    child: ClipRRect(
-      borderRadius: _dockRadius,
-      child: Stack(
-        children: [
-          const Positioned.fill(
-            child: RepaintBoundary(
-              child: CustomPaint(painter: _BrushedMetalPainter()),
-            ),
-          ),
-          // The rim catching the light along the top.
-          Positioned(
-            left: 20,
-            right: 20,
-            top: 0,
-            child: Container(height: 1, color: const Color(0xF2FFFFFF)),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-            child: child,
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
 class _NavItem extends StatelessWidget {
   const _NavItem({
     required this.icon,
@@ -245,7 +158,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ink = active ? _inkActive : _inkIdle;
+    final ink = active ? SilverInk.active : SilverInk.idle;
     return Semantics(
       button: true,
       selected: active,
@@ -256,7 +169,7 @@ class _NavItem extends StatelessWidget {
         child: InkWell(
           // The active tab is already here — tapping it is a no-op.
           onTap: active ? null : onTap,
-          borderRadius: _pillRadius,
+          borderRadius: SilverDock.pillRadius,
           splashColor: const Color(0x22000000),
           highlightColor: const Color(0x11000000),
           child: ExcludeSemantics(
@@ -271,7 +184,7 @@ class _NavItem extends StatelessWidget {
                       opacity: active ? 1 : 0,
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 1),
-                        child: _FrostedPill(),
+                        child: SilverFrostedPill(),
                       ),
                     ),
                   ),
@@ -283,7 +196,12 @@ class _NavItem extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(icon, size: 24, color: ink, shadows: _engraved),
+                        Icon(
+                          icon,
+                          size: 24,
+                          color: ink,
+                          shadows: SilverInk.engraved,
+                        ),
                         const SizedBox(height: 3),
                         // Never wraps, never overflows: a long translation
                         // ("Classificação", "Minha carreira") shrinks a little
@@ -303,7 +221,7 @@ class _NavItem extends StatelessWidget {
                                   ? FontWeight.w800
                                   : FontWeight.w700,
                               color: ink,
-                              shadows: _engraved,
+                              shadows: SilverInk.engraved,
                             ),
                           ),
                         ),
@@ -318,72 +236,4 @@ class _NavItem extends StatelessWidget {
       ),
     );
   }
-}
-
-/// The selected tab's highlight: frosted glass over the silver, translucent
-/// white with a bright rim on top fading to a hint of shade below.
-///
-/// The rim is the outer box and the fill sits inset in it, because Flutter
-/// cannot round a border whose sides differ in colour.
-class _FrostedPill extends StatelessWidget {
-  const _FrostedPill();
-
-  @override
-  Widget build(BuildContext context) => const DecoratedBox(
-    decoration: BoxDecoration(
-      borderRadius: _pillRadius,
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [Color(0xFFFFFFFF), Color(0x80FFFFFF), Color(0x4D6E7883)],
-        stops: [0, 0.5, 1],
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: Color(0x1F000000),
-          blurRadius: 6,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Padding(
-      padding: EdgeInsets.all(1),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(28)),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0x8CFFFFFF), Color(0x59FFFFFF), Color(0x33FFFFFF)],
-            stops: [0, 0.5, 1],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-/// Fine horizontal brushing, as on machined aluminium: hair strokes of light
-/// and shade at a few per cent. Seeded, so it never shimmers between frames.
-class _BrushedMetalPainter extends CustomPainter {
-  const _BrushedMetalPainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rnd = math.Random(11);
-    final paint = Paint()..strokeWidth = 0.45;
-    final strokes = (size.height * 7).round();
-    for (var i = 0; i < strokes; i++) {
-      final y = rnd.nextDouble() * size.height;
-      final x = rnd.nextDouble() * size.width;
-      final len = 60 + rnd.nextDouble() * size.width * 0.9;
-      final light = rnd.nextBool();
-      final a = 0.008 + rnd.nextDouble() * 0.022;
-      paint.color = (light ? Colors.white : Colors.black).withValues(alpha: a);
-      canvas.drawLine(Offset(x - len / 2, y), Offset(x + len / 2, y), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_BrushedMetalPainter old) => false;
 }

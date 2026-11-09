@@ -13,6 +13,7 @@ class PrimaryButton extends StatelessWidget {
     this.icon,
     this.isLoading = false,
     this.height = AppSpacing.minHitArea + 8,
+    this.onSilver = false,
     super.key,
   });
 
@@ -33,24 +34,34 @@ class PrimaryButton extends StatelessWidget {
   /// sit level instead of the primary one standing a head taller.
   final double height;
 
+  /// For a silver plate (the match's bottom dock): the call to action as a
+  /// dark key with silver words, where a silver button would vanish.
+  final bool onSilver;
+
+  static const BorderRadius _silverRadius = BorderRadius.all(
+    Radius.circular(26),
+  );
+
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null && !isLoading;
+    final ink = onSilver ? AppColors.primaryFixed : AppColors.onPrimary;
+    final radius = onSilver ? _silverRadius : AppRadii.mdAll;
 
     final child = isLoading
-        ? const SizedBox(
+        ? SizedBox(
             height: 20,
             width: 20,
             child: CircularProgressIndicator(
               strokeWidth: 2.5,
-              color: AppColors.onPrimary,
+              color: ink,
             ),
           )
         : Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 20, color: AppColors.onPrimary),
+                Icon(icon, size: 20, color: ink),
                 const SizedBox(width: AppSpacing.sm),
               ],
               Text(
@@ -58,9 +69,7 @@ class PrimaryButton extends StatelessWidget {
                 maxLines: 1,
                 softWrap: false,
                 textAlign: TextAlign.center,
-                style: AppTypography.labelLarge.copyWith(
-                  color: AppColors.onPrimary,
-                ),
+                style: AppTypography.labelLarge.copyWith(color: ink),
               ),
             ],
           );
@@ -69,21 +78,33 @@ class PrimaryButton extends StatelessWidget {
       opacity: enabled ? 1 : 0.5,
       child: Material(
         color: Colors.transparent,
-        borderRadius: AppRadii.mdAll,
+        borderRadius: radius,
         child: InkWell(
           onTap: enabled ? onPressed : null,
-          borderRadius: AppRadii.mdAll,
+          borderRadius: radius,
           child: Ink(
             height: height,
-            decoration: BoxDecoration(
-              borderRadius: AppRadii.mdAll,
-              border: Border.all(color: AppColors.primaryFixed),
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [AppColors.primaryFixed, AppColors.primaryContainer],
-              ),
-            ),
+            decoration: onSilver
+                ? const BoxDecoration(
+                    borderRadius: _silverRadius,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xFF2C343C), Color(0xFF0E1419)],
+                    ),
+                  )
+                : BoxDecoration(
+                    borderRadius: AppRadii.mdAll,
+                    border: Border.all(color: AppColors.primaryFixed),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        AppColors.primaryFixed,
+                        AppColors.primaryContainer,
+                      ],
+                    ),
+                  ),
             // The icon and the label are ONE group, centred together, and the
             // group scales down when it will not fit.
             //

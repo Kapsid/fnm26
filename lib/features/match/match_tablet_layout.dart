@@ -5,7 +5,7 @@ part of 'match_screen.dart';
 /// the line-ups (and the manager's own shape on the pitch) on the right. The
 /// same widgets the phone shows in three tabs, all on screen at once.
 /// Overlays (goal, intervals) sit on top exactly as on the phone, and the
-/// controls stay in the pinned bar below.
+/// controls (with the Pitch / Timeline toggle) stay in the pinned bar below.
 class _MatchTabletLayout extends StatelessWidget {
   const _MatchTabletLayout({
     required this.ft,
@@ -18,7 +18,6 @@ class _MatchTabletLayout extends StatelessWidget {
     required this.lineups,
     required this.pitch,
     required this.overlays,
-    this.viewSwitch,
     this.pitchView,
     this.feed,
   });
@@ -44,9 +43,6 @@ class _MatchTabletLayout extends StatelessWidget {
   final Widget lineups;
   final Widget pitch;
   final List<Widget> overlays;
-
-  /// The Pitch / Timeline switch, in the stats panel's header.
-  final Widget? viewSwitch;
 
   /// Pitch mode: the picture, filling the centre column under the score. Null
   /// in Timeline mode, which is laid out exactly as it always was.
@@ -112,7 +108,6 @@ class _MatchTabletLayout extends StatelessWidget {
   Widget _statsColumn(AppLocalizations l) {
     final panel = Panel(
       title: l.matchTabStats,
-      action: viewSwitch,
       expand: true,
       padding: EdgeInsets.zero,
       child: stats,
