@@ -10,6 +10,56 @@ const Key matchEventBannerKey = Key('match.eventBanner');
 /// has its own banner on the 2D TV (`_RedCardBanner`) and never comes here.
 bool flashesAsEvent(MatchEvent e) => e.type == MatchEventType.substitution;
 
+/// The key of the substitution's mark ([_SubMark]) on a banner.
+const Key matchSubMarkKey = Key('match.subMark');
+
+/// A substitution, said without a word: one arrow up in the game's green and
+/// one down in its red, side by side. It stands where the shout used to on
+/// the 2D TV's banners, so the two names get the room (a long shout such as
+/// the Czech one left them almost none). Screen readers still hear the
+/// shout.
+class _SubMark extends StatelessWidget {
+  const _SubMark({this.size = 14}) : super(key: matchSubMarkKey);
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Semantics(
+      label: l.matchSubShout,
+      excludeSemantics: true,
+      child: SizedBox(
+        width: size * 1.25,
+        height: size,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              left: -size * 0.15,
+              top: 0,
+              child: Icon(
+                Icons.arrow_upward_rounded,
+                size: size,
+                color: AppColors.positive,
+              ),
+            ),
+            Positioned(
+              right: -size * 0.15,
+              top: 0,
+              child: Icon(
+                Icons.arrow_downward_rounded,
+                size: size,
+                color: AppColors.error,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Who went off and who came on: one line for the score bug's banner, the arrows in the game's red and green.
 class _EventLine extends StatelessWidget {
   const _EventLine({required this.event, required this.style});
@@ -81,7 +131,6 @@ class _EventBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
     const radius = BorderRadius.vertical(bottom: Radius.circular(AppRadii.sm));
     final theme = this.theme;
     final banner = Container(
@@ -104,29 +153,9 @@ class _EventBanner extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Center(child: _BugFlag(code, width: 18, height: 12)),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-              alignment: Alignment.center,
-              decoration: theme == null
-                  ? const BoxDecoration(
-                      gradient: _kSilverPlate,
-                      border: _kSilverBevel,
-                    )
-                  : BoxDecoration(
-                      gradient: _scoreBlock(theme),
-                      border: _kSilverBevel,
-                    ),
-              child: Text(
-                l.matchSubShout,
-                maxLines: 1,
-                softWrap: false,
-                style: AppTypography.labelMedium.copyWith(
-                  color: theme?.scoreText ?? AppColors.onPrimaryFixed,
-                  fontWeight: FontWeight.w800,
-                  height: 1,
-                  letterSpacing: 1,
-                ),
-              ),
+            const Padding(
+              padding: EdgeInsets.only(left: 2),
+              child: Center(child: _SubMark()),
             ),
             Expanded(
               child: Padding(

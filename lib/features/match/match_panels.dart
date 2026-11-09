@@ -1419,7 +1419,10 @@ class _GoalFlash extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
-                  Text(event.playerName, style: AppTypography.titleMedium),
+                  Text(
+                    initialledName(event.playerName),
+                    style: AppTypography.titleMedium,
+                  ),
                   Text(
                     event.penalty
                         ? '${AppLocalizations.of(context).matchPenalty} · '
