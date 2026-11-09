@@ -8168,13 +8168,31 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchWeatherClear => 'Maaliwalas';
 
   @override
-  String get matchWeatherRain => 'Ulan';
+  String get matchWeatherRain => 'Mahinang ulan';
 
   @override
   String get matchWeatherSnow => 'Niyebe';
 
   @override
   String get matchWeatherHaze => 'Ulap';
+
+  @override
+  String get matchWeatherHeavyRain => 'Malakas na ulan';
+
+  @override
+  String get matchWeatherThunderstorm => 'Bagyong may kidlat';
+
+  @override
+  String get matchWeatherFog => 'Hamog';
+
+  @override
+  String get matchWeatherWindy => 'Mahangin';
+
+  @override
+  String get matchWeatherDustStorm => 'Bagyong alikabok';
+
+  @override
+  String get matchWeatherFrostyNight => 'Napakalamig na gabi';
 
   @override
   String get matchPlayerOfTheMatch => 'MANLALARO NG LARO';

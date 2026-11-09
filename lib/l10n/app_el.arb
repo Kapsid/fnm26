@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Μπήκαν",
   "matchConditionsKickOff": "Σέντρα",
   "matchWeatherClear": "Αίθριος",
-  "matchWeatherRain": "Βροχή",
+  "matchWeatherRain": "Ψιλή βροχή",
   "matchWeatherSnow": "Χιόνι",
   "matchWeatherHaze": "Καταχνιά",
   "matchPlayerOfTheMatch": "ΚΟΡΥΦΑΙΟΣ ΤΟΥ ΑΓΩΝΑ",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "ΚΟΚΚΙΝΗ ΚΑΡΤΑ",
   "matchSubShout": "ΑΛΛΑΓΗ",
   "matchSubOff": "Βγαίνει: {name}",
-  "matchSubOn": "Μπαίνει: {name}"
+  "matchSubOn": "Μπαίνει: {name}",
+  "matchWeatherHeavyRain": "Δυνατή βροχή",
+  "matchWeatherThunderstorm": "Καταιγίδα",
+  "matchWeatherFog": "Ομίχλη",
+  "matchWeatherWindy": "Δυνατός άνεμος",
+  "matchWeatherDustStorm": "Αμμοθύελλα",
+  "matchWeatherFrostyNight": "Παγωμένη νύχτα"
 }

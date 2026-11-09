@@ -2044,9 +2044,9 @@
   "matchLineupsCameOn": "Intrați pe teren",
   "matchConditionsKickOff": "Start",
   "matchWeatherClear": "Senin",
-  "matchWeatherRain": "Ploaie",
+  "matchWeatherRain": "Ploaie slabă",
   "matchWeatherSnow": "Ninsoare",
-  "matchWeatherHaze": "Ceață",
+  "matchWeatherHaze": "Pâclă",
   "matchPlayerOfTheMatch": "OMUL MECIULUI",
   "matchGoalShout": "GOL!",
   "matchShootoutScore": "PENALTY-URI {home}–{away}",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "CARTONAȘ ROȘU",
   "matchSubShout": "SCHIMBARE",
   "matchSubOff": "Iese: {name}",
-  "matchSubOn": "Intră: {name}"
+  "matchSubOn": "Intră: {name}",
+  "matchWeatherHeavyRain": "Ploaie torențială",
+  "matchWeatherThunderstorm": "Furtună cu fulgere",
+  "matchWeatherFog": "Ceață",
+  "matchWeatherWindy": "Vânt puternic",
+  "matchWeatherDustStorm": "Furtună de praf",
+  "matchWeatherFrostyNight": "Noapte geroasă"
 }

@@ -8103,13 +8103,31 @@ class AppLocalizationsId extends AppLocalizations {
   String get matchWeatherClear => 'Cerah';
 
   @override
-  String get matchWeatherRain => 'Hujan';
+  String get matchWeatherRain => 'Hujan ringan';
 
   @override
   String get matchWeatherSnow => 'Salju';
 
   @override
   String get matchWeatherHaze => 'Kabut';
+
+  @override
+  String get matchWeatherHeavyRain => 'Hujan lebat';
+
+  @override
+  String get matchWeatherThunderstorm => 'Badai petir';
+
+  @override
+  String get matchWeatherFog => 'Kabut tebal';
+
+  @override
+  String get matchWeatherWindy => 'Berangin';
+
+  @override
+  String get matchWeatherDustStorm => 'Badai debu';
+
+  @override
+  String get matchWeatherFrostyNight => 'Malam membeku';
 
   @override
   String get matchPlayerOfTheMatch => 'PEMAIN TERBAIK LAGA';

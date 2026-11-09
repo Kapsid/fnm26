@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Entrati",
   "matchConditionsKickOff": "Calcio d’inizio",
   "matchWeatherClear": "Sereno",
-  "matchWeatherRain": "Pioggia",
+  "matchWeatherRain": "Pioggia leggera",
   "matchWeatherSnow": "Neve",
   "matchWeatherHaze": "Foschia",
   "matchPlayerOfTheMatch": "MIGLIORE IN CAMPO",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "CARTELLINO ROSSO",
   "matchSubShout": "CAMBIO",
   "matchSubOff": "Esce: {name}",
-  "matchSubOn": "Entra: {name}"
+  "matchSubOn": "Entra: {name}",
+  "matchWeatherHeavyRain": "Pioggia battente",
+  "matchWeatherThunderstorm": "Temporale",
+  "matchWeatherFog": "Nebbia",
+  "matchWeatherWindy": "Ventoso",
+  "matchWeatherDustStorm": "Tempesta di sabbia",
+  "matchWeatherFrostyNight": "Notte gelida"
 }

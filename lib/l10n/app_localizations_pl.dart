@@ -8304,13 +8304,31 @@ class AppLocalizationsPl extends AppLocalizations {
   String get matchWeatherClear => 'Pogodnie';
 
   @override
-  String get matchWeatherRain => 'Deszcz';
+  String get matchWeatherRain => 'Lekki deszcz';
 
   @override
   String get matchWeatherSnow => 'Śnieg';
 
   @override
-  String get matchWeatherHaze => 'Mgła';
+  String get matchWeatherHaze => 'Zamglenie';
+
+  @override
+  String get matchWeatherHeavyRain => 'Ulewa';
+
+  @override
+  String get matchWeatherThunderstorm => 'Burza';
+
+  @override
+  String get matchWeatherFog => 'Mgła';
+
+  @override
+  String get matchWeatherWindy => 'Wietrznie';
+
+  @override
+  String get matchWeatherDustStorm => 'Burza piaskowa';
+
+  @override
+  String get matchWeatherFrostyNight => 'Mroźna noc';
 
   @override
   String get matchPlayerOfTheMatch => 'ZAWODNIK MECZU';

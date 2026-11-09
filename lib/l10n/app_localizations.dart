@@ -12496,7 +12496,7 @@ abstract class AppLocalizations {
   /// Venue card: the weather the match is played in, rain.
   ///
   /// In en, this message translates to:
-  /// **'Rain'**
+  /// **'Light rain'**
   String get matchWeatherRain;
 
   /// Venue card: the weather the match is played in, snow.
@@ -12510,6 +12510,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Haze'**
   String get matchWeatherHaze;
+
+  /// Venue card: the weather the match is played in, heavy rain.
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy rain'**
+  String get matchWeatherHeavyRain;
+
+  /// Venue card: the weather the match is played in, a thunderstorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderstorm'**
+  String get matchWeatherThunderstorm;
+
+  /// Venue card: the weather the match is played in, fog (cold and grey, not a heat haze).
+  ///
+  /// In en, this message translates to:
+  /// **'Fog'**
+  String get matchWeatherFog;
+
+  /// Venue card: the weather the match is played in, a gale, rain or snow driven by strong wind.
+  ///
+  /// In en, this message translates to:
+  /// **'Windy'**
+  String get matchWeatherWindy;
+
+  /// Venue card: the weather the match is played in, a dust storm.
+  ///
+  /// In en, this message translates to:
+  /// **'Dust storm'**
+  String get matchWeatherDustStorm;
+
+  /// Venue card: the weather the match is played in, a clear, frosty night.
+  ///
+  /// In en, this message translates to:
+  /// **'Frosty night'**
+  String get matchWeatherFrostyNight;
 
   /// Live match: man-of-the-match heading.
   ///

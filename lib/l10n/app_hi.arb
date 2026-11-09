@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "मैदान में उतरे",
   "matchConditionsKickOff": "किक-ऑफ़",
   "matchWeatherClear": "साफ़",
-  "matchWeatherRain": "बारिश",
+  "matchWeatherRain": "हल्की बारिश",
   "matchWeatherSnow": "बर्फ़बारी",
   "matchWeatherHaze": "धुंध",
   "matchPlayerOfTheMatch": "मैन ऑफ़ द मैच",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "रेड कार्ड",
   "matchSubShout": "बदलाव",
   "matchSubOff": "बाहर: {name}",
-  "matchSubOn": "अंदर: {name}"
+  "matchSubOn": "अंदर: {name}",
+  "matchWeatherHeavyRain": "तेज़ बारिश",
+  "matchWeatherThunderstorm": "आंधी-तूफ़ान",
+  "matchWeatherFog": "कोहरा",
+  "matchWeatherWindy": "तेज़ हवा",
+  "matchWeatherDustStorm": "धूल भरी आंधी",
+  "matchWeatherFrostyNight": "पाले वाली रात"
 }

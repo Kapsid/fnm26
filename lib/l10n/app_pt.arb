@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Entraram",
   "matchConditionsKickOff": "Início",
   "matchWeatherClear": "Céu limpo",
-  "matchWeatherRain": "Chuva",
+  "matchWeatherRain": "Chuva fraca",
   "matchWeatherSnow": "Neve",
   "matchWeatherHaze": "Neblina",
   "matchPlayerOfTheMatch": "MELHOR EM CAMPO",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "CARTÃO VERMELHO",
   "matchSubShout": "SUBSTITUIÇÃO",
   "matchSubOff": "Sai: {name}",
-  "matchSubOn": "Entra: {name}"
+  "matchSubOn": "Entra: {name}",
+  "matchWeatherHeavyRain": "Chuva forte",
+  "matchWeatherThunderstorm": "Trovoada",
+  "matchWeatherFog": "Nevoeiro",
+  "matchWeatherWindy": "Ventania",
+  "matchWeatherDustStorm": "Tempestade de areia",
+  "matchWeatherFrostyNight": "Noite gelada"
 }

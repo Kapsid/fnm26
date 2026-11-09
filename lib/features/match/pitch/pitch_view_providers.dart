@@ -419,12 +419,13 @@ final Provider<WeatherKind?> pitchForcedWeatherProvider =
   final f = preview.fixture;
   final home = preview.nations[f.homeNationId];
   final groundNation = preview.nations[preview.ground.groundNationId] ?? home;
+  final kickOff = KickOff.localTime(
+    f,
+    pitchCompetitionOf(f.round),
+    preview.saveSeed,
+  );
   return (
-    kickOff: KickOff.localTime(
-      f,
-      pitchCompetitionOf(f.round),
-      preview.saveSeed,
-    ),
+    kickOff: kickOff,
     weather:
         weather ??
         MatchWeather.of(
@@ -432,6 +433,7 @@ final Provider<WeatherKind?> pitchForcedWeatherProvider =
           confederation: groundNation?.confederation ?? Confederation.europe,
           date: f.date,
           fixtureId: f.id,
+          kickOffHours: kickOff.hours,
         ),
   );
 }

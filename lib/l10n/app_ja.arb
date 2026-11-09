@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "途中出場",
   "matchConditionsKickOff": "キックオフ",
   "matchWeatherClear": "晴れ",
-  "matchWeatherRain": "雨",
+  "matchWeatherRain": "小雨",
   "matchWeatherSnow": "雪",
   "matchWeatherHaze": "もや",
   "matchPlayerOfTheMatch": "マン・オブ・ザ・マッチ",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "レッドカード",
   "matchSubShout": "選手交代",
   "matchSubOff": "アウト: {name}",
-  "matchSubOn": "イン: {name}"
+  "matchSubOn": "イン: {name}",
+  "matchWeatherHeavyRain": "大雨",
+  "matchWeatherThunderstorm": "雷雨",
+  "matchWeatherFog": "霧",
+  "matchWeatherWindy": "強風",
+  "matchWeatherDustStorm": "砂嵐",
+  "matchWeatherFrostyNight": "凍てつく夜"
 }

@@ -7965,13 +7965,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchWeatherClear => '맑음';
 
   @override
-  String get matchWeatherRain => '비';
+  String get matchWeatherRain => '약한 비';
 
   @override
   String get matchWeatherSnow => '눈';
 
   @override
   String get matchWeatherHaze => '연무';
+
+  @override
+  String get matchWeatherHeavyRain => '폭우';
+
+  @override
+  String get matchWeatherThunderstorm => '뇌우';
+
+  @override
+  String get matchWeatherFog => '안개';
+
+  @override
+  String get matchWeatherWindy => '강풍';
+
+  @override
+  String get matchWeatherDustStorm => '모래폭풍';
+
+  @override
+  String get matchWeatherFrostyNight => '서리 내린 밤';
 
   @override
   String get matchPlayerOfTheMatch => '경기 최우수 선수';

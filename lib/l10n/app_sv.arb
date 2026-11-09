@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Inbytta",
   "matchConditionsKickOff": "Avspark",
   "matchWeatherClear": "Klart",
-  "matchWeatherRain": "Regn",
+  "matchWeatherRain": "Lätt regn",
   "matchWeatherSnow": "Snö",
   "matchWeatherHaze": "Dis",
   "matchPlayerOfTheMatch": "MATCHENS BÄSTE SPELARE",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "RÖTT KORT",
   "matchSubShout": "BYTE",
   "matchSubOff": "Ut: {name}",
-  "matchSubOn": "In: {name}"
+  "matchSubOn": "In: {name}",
+  "matchWeatherHeavyRain": "Kraftigt regn",
+  "matchWeatherThunderstorm": "Åska",
+  "matchWeatherFog": "Dimma",
+  "matchWeatherWindy": "Blåsigt",
+  "matchWeatherDustStorm": "Sandstorm",
+  "matchWeatherFrostyNight": "Frostig natt"
 }

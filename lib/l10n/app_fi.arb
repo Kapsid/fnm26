@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Vaihdettu sisään",
   "matchConditionsKickOff": "Aloitus",
   "matchWeatherClear": "Selkeää",
-  "matchWeatherRain": "Sade",
+  "matchWeatherRain": "Heikko sade",
   "matchWeatherSnow": "Lumisade",
   "matchWeatherHaze": "Utu",
   "matchPlayerOfTheMatch": "OTTELUN PARAS PELAAJA",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "PUNAINEN KORTTI",
   "matchSubShout": "VAIHTO",
   "matchSubOff": "Pois: {name}",
-  "matchSubOn": "Sisään: {name}"
+  "matchSubOn": "Sisään: {name}",
+  "matchWeatherHeavyRain": "Rankkasade",
+  "matchWeatherThunderstorm": "Ukkonen",
+  "matchWeatherFog": "Sumu",
+  "matchWeatherWindy": "Tuulista",
+  "matchWeatherDustStorm": "Hiekkamyrsky",
+  "matchWeatherFrostyNight": "Pakkasyö"
 }

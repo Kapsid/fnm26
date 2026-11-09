@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Beálltak",
   "matchConditionsKickOff": "Kezdés",
   "matchWeatherClear": "Derült",
-  "matchWeatherRain": "Eső",
+  "matchWeatherRain": "Gyenge eső",
   "matchWeatherSnow": "Havazás",
   "matchWeatherHaze": "Pára",
   "matchPlayerOfTheMatch": "A MÉRKŐZÉS EMBERE",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "PIROS LAP",
   "matchSubShout": "CSERE",
   "matchSubOff": "Le: {name}",
-  "matchSubOn": "Be: {name}"
+  "matchSubOn": "Be: {name}",
+  "matchWeatherHeavyRain": "Felhőszakadás",
+  "matchWeatherThunderstorm": "Zivatar",
+  "matchWeatherFog": "Köd",
+  "matchWeatherWindy": "Szeles",
+  "matchWeatherDustStorm": "Homokvihar",
+  "matchWeatherFrostyNight": "Fagyos éjszaka"
 }

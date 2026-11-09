@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Přišli z lavičky",
   "matchConditionsKickOff": "Výkop",
   "matchWeatherClear": "Jasno",
-  "matchWeatherRain": "Déšť",
+  "matchWeatherRain": "Slabý déšť",
   "matchWeatherSnow": "Sníh",
   "matchWeatherHaze": "Opar",
   "matchPlayerOfTheMatch": "HRÁČ ZÁPASU",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "ČERVENÁ KARTA",
   "matchSubShout": "STŘÍDÁNÍ",
   "matchSubOff": "Odchází: {name}",
-  "matchSubOn": "Přichází: {name}"
+  "matchSubOn": "Přichází: {name}",
+  "matchWeatherHeavyRain": "Silný déšť",
+  "matchWeatherThunderstorm": "Bouřka",
+  "matchWeatherFog": "Mlha",
+  "matchWeatherWindy": "Větrno",
+  "matchWeatherDustStorm": "Prachová bouře",
+  "matchWeatherFrostyNight": "Mrazivá noc"
 }

@@ -8350,13 +8350,31 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchWeatherClear => 'Ясно';
 
   @override
-  String get matchWeatherRain => 'Дощ';
+  String get matchWeatherRain => 'Невеликий дощ';
 
   @override
   String get matchWeatherSnow => 'Сніг';
 
   @override
   String get matchWeatherHaze => 'Серпанок';
+
+  @override
+  String get matchWeatherHeavyRain => 'Злива';
+
+  @override
+  String get matchWeatherThunderstorm => 'Гроза';
+
+  @override
+  String get matchWeatherFog => 'Туман';
+
+  @override
+  String get matchWeatherWindy => 'Вітряно';
+
+  @override
+  String get matchWeatherDustStorm => 'Пилова буря';
+
+  @override
+  String get matchWeatherFrostyNight => 'Морозна ніч';
 
   @override
   String get matchPlayerOfTheMatch => 'ГРАВЕЦЬ МАТЧУ';

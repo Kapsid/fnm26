@@ -8241,13 +8241,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchWeatherClear => 'Sereno';
 
   @override
-  String get matchWeatherRain => 'Pioggia';
+  String get matchWeatherRain => 'Pioggia leggera';
 
   @override
   String get matchWeatherSnow => 'Neve';
 
   @override
   String get matchWeatherHaze => 'Foschia';
+
+  @override
+  String get matchWeatherHeavyRain => 'Pioggia battente';
+
+  @override
+  String get matchWeatherThunderstorm => 'Temporale';
+
+  @override
+  String get matchWeatherFog => 'Nebbia';
+
+  @override
+  String get matchWeatherWindy => 'Ventoso';
+
+  @override
+  String get matchWeatherDustStorm => 'Tempesta di sabbia';
+
+  @override
+  String get matchWeatherFrostyNight => 'Notte gelida';
 
   @override
   String get matchPlayerOfTheMatch => 'MIGLIORE IN CAMPO';

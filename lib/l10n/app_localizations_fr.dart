@@ -8278,13 +8278,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get matchWeatherClear => 'Dégagé';
 
   @override
-  String get matchWeatherRain => 'Pluie';
+  String get matchWeatherRain => 'Pluie fine';
 
   @override
   String get matchWeatherSnow => 'Neige';
 
   @override
   String get matchWeatherHaze => 'Brume';
+
+  @override
+  String get matchWeatherHeavyRain => 'Forte pluie';
+
+  @override
+  String get matchWeatherThunderstorm => 'Orage';
+
+  @override
+  String get matchWeatherFog => 'Brouillard';
+
+  @override
+  String get matchWeatherWindy => 'Venteux';
+
+  @override
+  String get matchWeatherDustStorm => 'Tempête de sable';
+
+  @override
+  String get matchWeatherFrostyNight => 'Nuit glaciale';
 
   @override
   String get matchPlayerOfTheMatch => 'HOMME DU MATCH';

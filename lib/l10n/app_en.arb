@@ -13095,7 +13095,7 @@
   "@matchWeatherClear": {
     "description": "Venue card: the weather the match is played in, clear skies."
   },
-  "matchWeatherRain": "Rain",
+  "matchWeatherRain": "Light rain",
   "@matchWeatherRain": {
     "description": "Venue card: the weather the match is played in, rain."
   },
@@ -13106,6 +13106,30 @@
   "matchWeatherHaze": "Haze",
   "@matchWeatherHaze": {
     "description": "Venue card: the weather the match is played in, haze."
+  },
+  "matchWeatherHeavyRain": "Heavy rain",
+  "@matchWeatherHeavyRain": {
+    "description": "Venue card: the weather the match is played in, heavy rain."
+  },
+  "matchWeatherThunderstorm": "Thunderstorm",
+  "@matchWeatherThunderstorm": {
+    "description": "Venue card: the weather the match is played in, a thunderstorm."
+  },
+  "matchWeatherFog": "Fog",
+  "@matchWeatherFog": {
+    "description": "Venue card: the weather the match is played in, fog (cold and grey, not a heat haze)."
+  },
+  "matchWeatherWindy": "Windy",
+  "@matchWeatherWindy": {
+    "description": "Venue card: the weather the match is played in, a gale, rain or snow driven by strong wind."
+  },
+  "matchWeatherDustStorm": "Dust storm",
+  "@matchWeatherDustStorm": {
+    "description": "Venue card: the weather the match is played in, a dust storm."
+  },
+  "matchWeatherFrostyNight": "Frosty night",
+  "@matchWeatherFrostyNight": {
+    "description": "Venue card: the weather the match is played in, a clear, frosty night."
   },
   "matchPlayerOfTheMatch": "PLAYER OF THE MATCH",
   "@matchPlayerOfTheMatch": {

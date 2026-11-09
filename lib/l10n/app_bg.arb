@@ -2044,9 +2044,9 @@
   "matchLineupsCameOn": "Влезли от пейката",
   "matchConditionsKickOff": "Начало",
   "matchWeatherClear": "Ясно",
-  "matchWeatherRain": "Дъжд",
+  "matchWeatherRain": "Слаб дъжд",
   "matchWeatherSnow": "Сняг",
-  "matchWeatherHaze": "Мъгла",
+  "matchWeatherHaze": "Омара",
   "matchPlayerOfTheMatch": "ИГРАЧ НА МАЧА",
   "matchGoalShout": "ГОЛ!",
   "matchShootoutScore": "ДУЗПИ {home}–{away}",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "ЧЕРВЕН КАРТОН",
   "matchSubShout": "СМЯНА",
   "matchSubOff": "Излиза: {name}",
-  "matchSubOn": "Влиза: {name}"
+  "matchSubOn": "Влиза: {name}",
+  "matchWeatherHeavyRain": "Силен дъжд",
+  "matchWeatherThunderstorm": "Гръмотевична буря",
+  "matchWeatherFog": "Мъгла",
+  "matchWeatherWindy": "Силен вятър",
+  "matchWeatherDustStorm": "Пясъчна буря",
+  "matchWeatherFrostyNight": "Мразовита нощ"
 }

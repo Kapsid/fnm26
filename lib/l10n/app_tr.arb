@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Oyuna girenler",
   "matchConditionsKickOff": "Başlama",
   "matchWeatherClear": "Açık",
-  "matchWeatherRain": "Yağmur",
+  "matchWeatherRain": "Hafif yağmur",
   "matchWeatherSnow": "Kar",
   "matchWeatherHaze": "Pus",
   "matchPlayerOfTheMatch": "MAÇIN ADAMI",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "KIRMIZI KART",
   "matchSubShout": "DEĞİŞİKLİK",
   "matchSubOff": "Çıkan: {name}",
-  "matchSubOn": "Giren: {name}"
+  "matchSubOn": "Giren: {name}",
+  "matchWeatherHeavyRain": "Sağanak",
+  "matchWeatherThunderstorm": "Gök gürültülü fırtına",
+  "matchWeatherFog": "Sis",
+  "matchWeatherWindy": "Rüzgârlı",
+  "matchWeatherDustStorm": "Kum fırtınası",
+  "matchWeatherFrostyNight": "Ayazlı gece"
 }

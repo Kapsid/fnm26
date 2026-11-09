@@ -8373,13 +8373,31 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchWeatherClear => 'Jasno';
 
   @override
-  String get matchWeatherRain => 'Déšť';
+  String get matchWeatherRain => 'Slabý déšť';
 
   @override
   String get matchWeatherSnow => 'Sníh';
 
   @override
   String get matchWeatherHaze => 'Opar';
+
+  @override
+  String get matchWeatherHeavyRain => 'Silný déšť';
+
+  @override
+  String get matchWeatherThunderstorm => 'Bouřka';
+
+  @override
+  String get matchWeatherFog => 'Mlha';
+
+  @override
+  String get matchWeatherWindy => 'Větrno';
+
+  @override
+  String get matchWeatherDustStorm => 'Prachová bouře';
+
+  @override
+  String get matchWeatherFrostyNight => 'Mrazivá noc';
 
   @override
   String get matchPlayerOfTheMatch => 'HRÁČ ZÁPASU';

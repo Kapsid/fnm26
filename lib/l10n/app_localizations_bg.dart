@@ -8291,13 +8291,31 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchWeatherClear => 'Ясно';
 
   @override
-  String get matchWeatherRain => 'Дъжд';
+  String get matchWeatherRain => 'Слаб дъжд';
 
   @override
   String get matchWeatherSnow => 'Сняг';
 
   @override
-  String get matchWeatherHaze => 'Мъгла';
+  String get matchWeatherHaze => 'Омара';
+
+  @override
+  String get matchWeatherHeavyRain => 'Силен дъжд';
+
+  @override
+  String get matchWeatherThunderstorm => 'Гръмотевична буря';
+
+  @override
+  String get matchWeatherFog => 'Мъгла';
+
+  @override
+  String get matchWeatherWindy => 'Силен вятър';
+
+  @override
+  String get matchWeatherDustStorm => 'Пясъчна буря';
+
+  @override
+  String get matchWeatherFrostyNight => 'Мразовита нощ';
 
   @override
   String get matchPlayerOfTheMatch => 'ИГРАЧ НА МАЧА';

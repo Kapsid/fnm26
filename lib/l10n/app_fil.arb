@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Pumasok",
   "matchConditionsKickOff": "Simula",
   "matchWeatherClear": "Maaliwalas",
-  "matchWeatherRain": "Ulan",
+  "matchWeatherRain": "Mahinang ulan",
   "matchWeatherSnow": "Niyebe",
   "matchWeatherHaze": "Ulap",
   "matchPlayerOfTheMatch": "MANLALARO NG LARO",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "PULANG KARD",
   "matchSubShout": "PALIT",
   "matchSubOff": "Labas: {name}",
-  "matchSubOn": "Pasok: {name}"
+  "matchSubOn": "Pasok: {name}",
+  "matchWeatherHeavyRain": "Malakas na ulan",
+  "matchWeatherThunderstorm": "Bagyong may kidlat",
+  "matchWeatherFog": "Hamog",
+  "matchWeatherWindy": "Mahangin",
+  "matchWeatherDustStorm": "Bagyong alikabok",
+  "matchWeatherFrostyNight": "Napakalamig na gabi"
 }

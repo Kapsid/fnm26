@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Masuk",
   "matchConditionsKickOff": "Kick-off",
   "matchWeatherClear": "Cerah",
-  "matchWeatherRain": "Hujan",
+  "matchWeatherRain": "Hujan ringan",
   "matchWeatherSnow": "Salju",
   "matchWeatherHaze": "Kabut",
   "matchPlayerOfTheMatch": "PEMAIN TERBAIK LAGA",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "KARTU MERAH",
   "matchSubShout": "PERGANTIAN",
   "matchSubOff": "Keluar: {name}",
-  "matchSubOn": "Masuk: {name}"
+  "matchSubOn": "Masuk: {name}",
+  "matchWeatherHeavyRain": "Hujan lebat",
+  "matchWeatherThunderstorm": "Badai petir",
+  "matchWeatherFog": "Kabut tebal",
+  "matchWeatherWindy": "Berangin",
+  "matchWeatherDustStorm": "Badai debu",
+  "matchWeatherFrostyNight": "Malam membeku"
 }

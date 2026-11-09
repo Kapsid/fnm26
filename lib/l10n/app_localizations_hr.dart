@@ -8412,13 +8412,31 @@ class AppLocalizationsHr extends AppLocalizations {
   String get matchWeatherClear => 'Vedro';
 
   @override
-  String get matchWeatherRain => 'Kiša';
+  String get matchWeatherRain => 'Slaba kiša';
 
   @override
   String get matchWeatherSnow => 'Snijeg';
 
   @override
   String get matchWeatherHaze => 'Izmaglica';
+
+  @override
+  String get matchWeatherHeavyRain => 'Jaka kiša';
+
+  @override
+  String get matchWeatherThunderstorm => 'Grmljavinsko nevrijeme';
+
+  @override
+  String get matchWeatherFog => 'Magla';
+
+  @override
+  String get matchWeatherWindy => 'Vjetrovito';
+
+  @override
+  String get matchWeatherDustStorm => 'Pješčana oluja';
+
+  @override
+  String get matchWeatherFrostyNight => 'Mrazna noć';
 
   @override
   String get matchPlayerOfTheMatch => 'IGRAČ UTAKMICE';

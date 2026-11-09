@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Ušli s klupe",
   "matchConditionsKickOff": "Početak",
   "matchWeatherClear": "Vedro",
-  "matchWeatherRain": "Kiša",
+  "matchWeatherRain": "Slaba kiša",
   "matchWeatherSnow": "Snijeg",
   "matchWeatherHaze": "Izmaglica",
   "matchPlayerOfTheMatch": "IGRAČ UTAKMICE",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "CRVENI KARTON",
   "matchSubShout": "IZMJENA",
   "matchSubOff": "Izlazi: {name}",
-  "matchSubOn": "Ulazi: {name}"
+  "matchSubOn": "Ulazi: {name}",
+  "matchWeatherHeavyRain": "Jaka kiša",
+  "matchWeatherThunderstorm": "Grmljavinsko nevrijeme",
+  "matchWeatherFog": "Magla",
+  "matchWeatherWindy": "Vjetrovito",
+  "matchWeatherDustStorm": "Pješčana oluja",
+  "matchWeatherFrostyNight": "Mrazna noć"
 }

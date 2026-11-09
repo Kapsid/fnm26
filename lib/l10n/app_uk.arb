@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Вийшли на заміну",
   "matchConditionsKickOff": "Початок",
   "matchWeatherClear": "Ясно",
-  "matchWeatherRain": "Дощ",
+  "matchWeatherRain": "Невеликий дощ",
   "matchWeatherSnow": "Сніг",
   "matchWeatherHaze": "Серпанок",
   "matchPlayerOfTheMatch": "ГРАВЕЦЬ МАТЧУ",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "ЧЕРВОНА КАРТКА",
   "matchSubShout": "ЗАМІНА",
   "matchSubOff": "Залишає поле: {name}",
-  "matchSubOn": "Виходить на поле: {name}"
+  "matchSubOn": "Виходить на поле: {name}",
+  "matchWeatherHeavyRain": "Злива",
+  "matchWeatherThunderstorm": "Гроза",
+  "matchWeatherFog": "Туман",
+  "matchWeatherWindy": "Вітряно",
+  "matchWeatherDustStorm": "Пилова буря",
+  "matchWeatherFrostyNight": "Морозна ніч"
 }

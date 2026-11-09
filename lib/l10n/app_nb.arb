@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Byttet inn",
   "matchConditionsKickOff": "Avspark",
   "matchWeatherClear": "Klart",
-  "matchWeatherRain": "Regn",
+  "matchWeatherRain": "Lett regn",
   "matchWeatherSnow": "Snø",
   "matchWeatherHaze": "Dis",
   "matchPlayerOfTheMatch": "KAMPENS SPILLER",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "RØDT KORT",
   "matchSubShout": "BYTTE",
   "matchSubOff": "Ut: {name}",
-  "matchSubOn": "Inn: {name}"
+  "matchSubOn": "Inn: {name}",
+  "matchWeatherHeavyRain": "Kraftig regn",
+  "matchWeatherThunderstorm": "Tordenvær",
+  "matchWeatherFog": "Tåke",
+  "matchWeatherWindy": "Kraftig vind",
+  "matchWeatherDustStorm": "Sandstorm",
+  "matchWeatherFrostyNight": "Frostnatt"
 }

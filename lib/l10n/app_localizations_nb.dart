@@ -8201,13 +8201,31 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchWeatherClear => 'Klart';
 
   @override
-  String get matchWeatherRain => 'Regn';
+  String get matchWeatherRain => 'Lett regn';
 
   @override
   String get matchWeatherSnow => 'Snø';
 
   @override
   String get matchWeatherHaze => 'Dis';
+
+  @override
+  String get matchWeatherHeavyRain => 'Kraftig regn';
+
+  @override
+  String get matchWeatherThunderstorm => 'Tordenvær';
+
+  @override
+  String get matchWeatherFog => 'Tåke';
+
+  @override
+  String get matchWeatherWindy => 'Kraftig vind';
+
+  @override
+  String get matchWeatherDustStorm => 'Sandstorm';
+
+  @override
+  String get matchWeatherFrostyNight => 'Frostnatt';
 
   @override
   String get matchPlayerOfTheMatch => 'KAMPENS SPILLER';

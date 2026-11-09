@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Skiftet ind",
   "matchConditionsKickOff": "Kampstart",
   "matchWeatherClear": "Klart",
-  "matchWeatherRain": "Regn",
+  "matchWeatherRain": "Let regn",
   "matchWeatherSnow": "Sne",
   "matchWeatherHaze": "Dis",
   "matchPlayerOfTheMatch": "KAMPENS SPILLER",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "RØDT KORT",
   "matchSubShout": "UDSKIFTNING",
   "matchSubOff": "Ud: {name}",
-  "matchSubOn": "Ind: {name}"
+  "matchSubOn": "Ind: {name}",
+  "matchWeatherHeavyRain": "Kraftig regn",
+  "matchWeatherThunderstorm": "Tordenvejr",
+  "matchWeatherFog": "Tåge",
+  "matchWeatherWindy": "Blæsende",
+  "matchWeatherDustStorm": "Sandstorm",
+  "matchWeatherFrostyNight": "Frostklar nat"
 }

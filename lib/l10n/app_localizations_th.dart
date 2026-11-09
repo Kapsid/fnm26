@@ -8048,13 +8048,31 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchWeatherClear => 'ท้องฟ้าแจ่มใส';
 
   @override
-  String get matchWeatherRain => 'ฝนตก';
+  String get matchWeatherRain => 'ฝนตกเล็กน้อย';
 
   @override
   String get matchWeatherSnow => 'หิมะตก';
 
   @override
   String get matchWeatherHaze => 'หมอกควัน';
+
+  @override
+  String get matchWeatherHeavyRain => 'ฝนตกหนัก';
+
+  @override
+  String get matchWeatherThunderstorm => 'พายุฝนฟ้าคะนอง';
+
+  @override
+  String get matchWeatherFog => 'หมอก';
+
+  @override
+  String get matchWeatherWindy => 'ลมแรง';
+
+  @override
+  String get matchWeatherDustStorm => 'พายุฝุ่น';
+
+  @override
+  String get matchWeatherFrostyNight => 'คืนหนาวจัด';
 
   @override
   String get matchPlayerOfTheMatch => 'ผู้เล่นยอดเยี่ยมประจำเกม';

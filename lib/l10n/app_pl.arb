@@ -2044,9 +2044,9 @@
   "matchLineupsCameOn": "Weszli z ławki",
   "matchConditionsKickOff": "Początek",
   "matchWeatherClear": "Pogodnie",
-  "matchWeatherRain": "Deszcz",
+  "matchWeatherRain": "Lekki deszcz",
   "matchWeatherSnow": "Śnieg",
-  "matchWeatherHaze": "Mgła",
+  "matchWeatherHaze": "Zamglenie",
   "matchPlayerOfTheMatch": "ZAWODNIK MECZU",
   "matchGoalShout": "GOL!",
   "matchShootoutScore": "KARNE {home}–{away}",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "CZERWONA KARTKA",
   "matchSubShout": "ZMIANA",
   "matchSubOff": "Schodzi: {name}",
-  "matchSubOn": "Wchodzi: {name}"
+  "matchSubOn": "Wchodzi: {name}",
+  "matchWeatherHeavyRain": "Ulewa",
+  "matchWeatherThunderstorm": "Burza",
+  "matchWeatherFog": "Mgła",
+  "matchWeatherWindy": "Wietrznie",
+  "matchWeatherDustStorm": "Burza piaskowa",
+  "matchWeatherFrostyNight": "Mroźna noc"
 }

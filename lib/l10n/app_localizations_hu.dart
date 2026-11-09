@@ -8147,13 +8147,31 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchWeatherClear => 'Derült';
 
   @override
-  String get matchWeatherRain => 'Eső';
+  String get matchWeatherRain => 'Gyenge eső';
 
   @override
   String get matchWeatherSnow => 'Havazás';
 
   @override
   String get matchWeatherHaze => 'Pára';
+
+  @override
+  String get matchWeatherHeavyRain => 'Felhőszakadás';
+
+  @override
+  String get matchWeatherThunderstorm => 'Zivatar';
+
+  @override
+  String get matchWeatherFog => 'Köd';
+
+  @override
+  String get matchWeatherWindy => 'Szeles';
+
+  @override
+  String get matchWeatherDustStorm => 'Homokvihar';
+
+  @override
+  String get matchWeatherFrostyNight => 'Fagyos éjszaka';
 
   @override
   String get matchPlayerOfTheMatch => 'A MÉRKŐZÉS EMBERE';

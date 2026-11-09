@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "교체 투입",
   "matchConditionsKickOff": "킥오프",
   "matchWeatherClear": "맑음",
-  "matchWeatherRain": "비",
+  "matchWeatherRain": "약한 비",
   "matchWeatherSnow": "눈",
   "matchWeatherHaze": "연무",
   "matchPlayerOfTheMatch": "경기 최우수 선수",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "레드카드",
   "matchSubShout": "교체",
   "matchSubOff": "아웃: {name}",
-  "matchSubOn": "인: {name}"
+  "matchSubOn": "인: {name}",
+  "matchWeatherHeavyRain": "폭우",
+  "matchWeatherThunderstorm": "뇌우",
+  "matchWeatherFog": "안개",
+  "matchWeatherWindy": "강풍",
+  "matchWeatherDustStorm": "모래폭풍",
+  "matchWeatherFrostyNight": "서리 내린 밤"
 }

@@ -8240,13 +8240,31 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchWeatherClear => 'Αίθριος';
 
   @override
-  String get matchWeatherRain => 'Βροχή';
+  String get matchWeatherRain => 'Ψιλή βροχή';
 
   @override
   String get matchWeatherSnow => 'Χιόνι';
 
   @override
   String get matchWeatherHaze => 'Καταχνιά';
+
+  @override
+  String get matchWeatherHeavyRain => 'Δυνατή βροχή';
+
+  @override
+  String get matchWeatherThunderstorm => 'Καταιγίδα';
+
+  @override
+  String get matchWeatherFog => 'Ομίχλη';
+
+  @override
+  String get matchWeatherWindy => 'Δυνατός άνεμος';
+
+  @override
+  String get matchWeatherDustStorm => 'Αμμοθύελλα';
+
+  @override
+  String get matchWeatherFrostyNight => 'Παγωμένη νύχτα';
 
   @override
   String get matchPlayerOfTheMatch => 'ΚΟΡΥΦΑΙΟΣ ΤΟΥ ΑΓΩΝΑ';

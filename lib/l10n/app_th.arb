@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "ลงเปลี่ยนตัว",
   "matchConditionsKickOff": "เริ่มเตะ",
   "matchWeatherClear": "ท้องฟ้าแจ่มใส",
-  "matchWeatherRain": "ฝนตก",
+  "matchWeatherRain": "ฝนตกเล็กน้อย",
   "matchWeatherSnow": "หิมะตก",
   "matchWeatherHaze": "หมอกควัน",
   "matchPlayerOfTheMatch": "ผู้เล่นยอดเยี่ยมประจำเกม",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "ใบแดง",
   "matchSubShout": "เปลี่ยนตัว",
   "matchSubOff": "ออก: {name}",
-  "matchSubOn": "เข้า: {name}"
+  "matchSubOn": "เข้า: {name}",
+  "matchWeatherHeavyRain": "ฝนตกหนัก",
+  "matchWeatherThunderstorm": "พายุฝนฟ้าคะนอง",
+  "matchWeatherFog": "หมอก",
+  "matchWeatherWindy": "ลมแรง",
+  "matchWeatherDustStorm": "พายุฝุ่น",
+  "matchWeatherFrostyNight": "คืนหนาวจัด"
 }

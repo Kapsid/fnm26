@@ -10,7 +10,9 @@ import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
+import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/pitch/actors_painter.dart';
 import 'package:fnm/features/match/pitch/confetti_painter.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
@@ -31,7 +33,8 @@ import 'package:fnm/features/match/pitch/weather_painter.dart';
 /// 2. the fans' show (scarves, flares, drums, a final's tifo), one more
 ///    cached image, faded out as the match gets going;
 /// 3. the actors ([ActorsPainter]), repainted every tick;
-/// 4. the weather falling ([WeatherOverlay]): a cached tile, scrolled;
+/// 4. the weather moving ([WeatherOverlay]): a cached tile, scrolled, and
+///    a thunderstorm's lightning;
 /// 5. a final's gold confetti after the whistle.
 ///
 /// **Camera.** The view keeps the camera centred at [cameraZoom] and does
@@ -326,6 +329,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
         identical(a.clock, widget.clock) &&
         mapEquals(a.names, widget.names) &&
         a.kits == widget.stadium.kits &&
+        a.breath == (widget.stadium.weather == WeatherKind.frostyNight) &&
         a.projection.viewport == size) {
       return a;
     }
@@ -337,6 +341,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       names: widget.names,
       lightAt: widget.stadium.lightAt,
       isPlaying: () => widget.clock.playing,
+      breath: widget.stadium.weather == WeatherKind.frostyNight,
     );
   }
 
@@ -407,6 +412,8 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     w?.dispose();
     return _weather = WeatherOverlay(
       kind,
+      // A gale in a snowy winter drives snow, not rain.
+      cold: widget.stadium.spec.season == BackdropSeason.snow,
       // Stable across runs: the same match always rains the same way.
       seed: varietySeed(
         '${widget.stadium.spec.flagCode}:${widget.stadium.date}',
@@ -461,7 +468,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                           ),
                         ),
                       _actorsLayer(drawSize),
-                      if (_weatherFor().falls)
+                      if (_weatherFor().animates)
                         IgnorePointer(
                           child: RepaintBoundary(
                             child: CustomPaint(

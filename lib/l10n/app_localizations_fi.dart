@@ -8266,13 +8266,31 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchWeatherClear => 'Selkeää';
 
   @override
-  String get matchWeatherRain => 'Sade';
+  String get matchWeatherRain => 'Heikko sade';
 
   @override
   String get matchWeatherSnow => 'Lumisade';
 
   @override
   String get matchWeatherHaze => 'Utu';
+
+  @override
+  String get matchWeatherHeavyRain => 'Rankkasade';
+
+  @override
+  String get matchWeatherThunderstorm => 'Ukkonen';
+
+  @override
+  String get matchWeatherFog => 'Sumu';
+
+  @override
+  String get matchWeatherWindy => 'Tuulista';
+
+  @override
+  String get matchWeatherDustStorm => 'Hiekkamyrsky';
+
+  @override
+  String get matchWeatherFrostyNight => 'Pakkasyö';
 
   @override
   String get matchPlayerOfTheMatch => 'OTTELUN PARAS PELAAJA';

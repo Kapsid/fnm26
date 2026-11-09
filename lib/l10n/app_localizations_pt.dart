@@ -8269,13 +8269,31 @@ class AppLocalizationsPt extends AppLocalizations {
   String get matchWeatherClear => 'Céu limpo';
 
   @override
-  String get matchWeatherRain => 'Chuva';
+  String get matchWeatherRain => 'Chuva fraca';
 
   @override
   String get matchWeatherSnow => 'Neve';
 
   @override
   String get matchWeatherHaze => 'Neblina';
+
+  @override
+  String get matchWeatherHeavyRain => 'Chuva forte';
+
+  @override
+  String get matchWeatherThunderstorm => 'Trovoada';
+
+  @override
+  String get matchWeatherFog => 'Nevoeiro';
+
+  @override
+  String get matchWeatherWindy => 'Ventania';
+
+  @override
+  String get matchWeatherDustStorm => 'Tempestade de areia';
+
+  @override
+  String get matchWeatherFrostyNight => 'Noite gelada';
 
   @override
   String get matchPlayerOfTheMatch => 'MELHOR EM CAMPO';

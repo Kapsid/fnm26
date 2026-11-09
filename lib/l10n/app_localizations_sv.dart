@@ -8192,13 +8192,31 @@ class AppLocalizationsSv extends AppLocalizations {
   String get matchWeatherClear => 'Klart';
 
   @override
-  String get matchWeatherRain => 'Regn';
+  String get matchWeatherRain => 'Lätt regn';
 
   @override
   String get matchWeatherSnow => 'Snö';
 
   @override
   String get matchWeatherHaze => 'Dis';
+
+  @override
+  String get matchWeatherHeavyRain => 'Kraftigt regn';
+
+  @override
+  String get matchWeatherThunderstorm => 'Åska';
+
+  @override
+  String get matchWeatherFog => 'Dimma';
+
+  @override
+  String get matchWeatherWindy => 'Blåsigt';
+
+  @override
+  String get matchWeatherDustStorm => 'Sandstorm';
+
+  @override
+  String get matchWeatherFrostyNight => 'Frostig natt';
 
   @override
   String get matchPlayerOfTheMatch => 'MATCHENS BÄSTE SPELARE';

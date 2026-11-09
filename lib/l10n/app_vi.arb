@@ -2044,9 +2044,9 @@
   "matchLineupsCameOn": "Vào sân",
   "matchConditionsKickOff": "Bắt đầu",
   "matchWeatherClear": "Quang đãng",
-  "matchWeatherRain": "Mưa",
+  "matchWeatherRain": "Mưa nhẹ",
   "matchWeatherSnow": "Tuyết",
-  "matchWeatherHaze": "Sương mù",
+  "matchWeatherHaze": "Mù khô",
   "matchPlayerOfTheMatch": "CẦU THỦ HAY NHẤT TRẬN",
   "matchGoalShout": "VÀO!",
   "matchShootoutScore": "LUÂN LƯU {home}–{away}",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "THẺ ĐỎ",
   "matchSubShout": "THAY NGƯỜI",
   "matchSubOff": "Ra sân: {name}",
-  "matchSubOn": "Vào sân: {name}"
+  "matchSubOn": "Vào sân: {name}",
+  "matchWeatherHeavyRain": "Mưa to",
+  "matchWeatherThunderstorm": "Dông",
+  "matchWeatherFog": "Sương mù",
+  "matchWeatherWindy": "Gió mạnh",
+  "matchWeatherDustStorm": "Bão cát",
+  "matchWeatherFrostyNight": "Đêm giá rét"
 }

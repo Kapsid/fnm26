@@ -8264,13 +8264,31 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchWeatherClear => 'Klar';
 
   @override
-  String get matchWeatherRain => 'Regen';
+  String get matchWeatherRain => 'Leichter Regen';
 
   @override
   String get matchWeatherSnow => 'Schnee';
 
   @override
   String get matchWeatherHaze => 'Dunst';
+
+  @override
+  String get matchWeatherHeavyRain => 'Starkregen';
+
+  @override
+  String get matchWeatherThunderstorm => 'Gewitter';
+
+  @override
+  String get matchWeatherFog => 'Nebel';
+
+  @override
+  String get matchWeatherWindy => 'Stürmisch';
+
+  @override
+  String get matchWeatherDustStorm => 'Sandsturm';
+
+  @override
+  String get matchWeatherFrostyNight => 'Frostige Nacht';
 
   @override
   String get matchPlayerOfTheMatch => 'SPIELER DES SPIELS';

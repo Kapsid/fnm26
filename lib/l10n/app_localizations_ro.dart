@@ -8483,13 +8483,31 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchWeatherClear => 'Senin';
 
   @override
-  String get matchWeatherRain => 'Ploaie';
+  String get matchWeatherRain => 'Ploaie slabă';
 
   @override
   String get matchWeatherSnow => 'Ninsoare';
 
   @override
-  String get matchWeatherHaze => 'Ceață';
+  String get matchWeatherHaze => 'Pâclă';
+
+  @override
+  String get matchWeatherHeavyRain => 'Ploaie torențială';
+
+  @override
+  String get matchWeatherThunderstorm => 'Furtună cu fulgere';
+
+  @override
+  String get matchWeatherFog => 'Ceață';
+
+  @override
+  String get matchWeatherWindy => 'Vânt puternic';
+
+  @override
+  String get matchWeatherDustStorm => 'Furtună de praf';
+
+  @override
+  String get matchWeatherFrostyNight => 'Noapte geroasă';
 
   @override
   String get matchPlayerOfTheMatch => 'OMUL MECIULUI';

@@ -7950,13 +7950,31 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchWeatherClear => '晴れ';
 
   @override
-  String get matchWeatherRain => '雨';
+  String get matchWeatherRain => '小雨';
 
   @override
   String get matchWeatherSnow => '雪';
 
   @override
   String get matchWeatherHaze => 'もや';
+
+  @override
+  String get matchWeatherHeavyRain => '大雨';
+
+  @override
+  String get matchWeatherThunderstorm => '雷雨';
+
+  @override
+  String get matchWeatherFog => '霧';
+
+  @override
+  String get matchWeatherWindy => '強風';
+
+  @override
+  String get matchWeatherDustStorm => '砂嵐';
+
+  @override
+  String get matchWeatherFrostyNight => '凍てつく夜';
 
   @override
   String get matchPlayerOfTheMatch => 'マン・オブ・ザ・マッチ';

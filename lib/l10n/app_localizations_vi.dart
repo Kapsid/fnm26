@@ -8070,13 +8070,31 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchWeatherClear => 'Quang đãng';
 
   @override
-  String get matchWeatherRain => 'Mưa';
+  String get matchWeatherRain => 'Mưa nhẹ';
 
   @override
   String get matchWeatherSnow => 'Tuyết';
 
   @override
-  String get matchWeatherHaze => 'Sương mù';
+  String get matchWeatherHaze => 'Mù khô';
+
+  @override
+  String get matchWeatherHeavyRain => 'Mưa to';
+
+  @override
+  String get matchWeatherThunderstorm => 'Dông';
+
+  @override
+  String get matchWeatherFog => 'Sương mù';
+
+  @override
+  String get matchWeatherWindy => 'Gió mạnh';
+
+  @override
+  String get matchWeatherDustStorm => 'Bão cát';
+
+  @override
+  String get matchWeatherFrostyNight => 'Đêm giá rét';
 
   @override
   String get matchPlayerOfTheMatch => 'CẦU THỦ HAY NHẤT TRẬN';

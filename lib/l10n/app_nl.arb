@@ -2044,7 +2044,7 @@
   "matchLineupsCameOn": "Ingevallen",
   "matchConditionsKickOff": "Aftrap",
   "matchWeatherClear": "Helder",
-  "matchWeatherRain": "Regen",
+  "matchWeatherRain": "Lichte regen",
   "matchWeatherSnow": "Sneeuw",
   "matchWeatherHaze": "Nevel",
   "matchPlayerOfTheMatch": "MAN VAN DE WEDSTRIJD",
@@ -4025,5 +4025,11 @@
   "matchRedCardShout": "RODE KAART",
   "matchSubShout": "WISSEL",
   "matchSubOff": "Eruit: {name}",
-  "matchSubOn": "Erin: {name}"
+  "matchSubOn": "Erin: {name}",
+  "matchWeatherHeavyRain": "Zware regen",
+  "matchWeatherThunderstorm": "Onweer",
+  "matchWeatherFog": "Mist",
+  "matchWeatherWindy": "Harde wind",
+  "matchWeatherDustStorm": "Zandstorm",
+  "matchWeatherFrostyNight": "IJzige nacht"
 }

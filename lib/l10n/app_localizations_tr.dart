@@ -8121,13 +8121,31 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchWeatherClear => 'Açık';
 
   @override
-  String get matchWeatherRain => 'Yağmur';
+  String get matchWeatherRain => 'Hafif yağmur';
 
   @override
   String get matchWeatherSnow => 'Kar';
 
   @override
   String get matchWeatherHaze => 'Pus';
+
+  @override
+  String get matchWeatherHeavyRain => 'Sağanak';
+
+  @override
+  String get matchWeatherThunderstorm => 'Gök gürültülü fırtına';
+
+  @override
+  String get matchWeatherFog => 'Sis';
+
+  @override
+  String get matchWeatherWindy => 'Rüzgârlı';
+
+  @override
+  String get matchWeatherDustStorm => 'Kum fırtınası';
+
+  @override
+  String get matchWeatherFrostyNight => 'Ayazlı gece';
 
   @override
   String get matchPlayerOfTheMatch => 'MAÇIN ADAMI';

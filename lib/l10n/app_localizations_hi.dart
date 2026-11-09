@@ -8122,13 +8122,31 @@ class AppLocalizationsHi extends AppLocalizations {
   String get matchWeatherClear => 'साफ़';
 
   @override
-  String get matchWeatherRain => 'बारिश';
+  String get matchWeatherRain => 'हल्की बारिश';
 
   @override
   String get matchWeatherSnow => 'बर्फ़बारी';
 
   @override
   String get matchWeatherHaze => 'धुंध';
+
+  @override
+  String get matchWeatherHeavyRain => 'तेज़ बारिश';
+
+  @override
+  String get matchWeatherThunderstorm => 'आंधी-तूफ़ान';
+
+  @override
+  String get matchWeatherFog => 'कोहरा';
+
+  @override
+  String get matchWeatherWindy => 'तेज़ हवा';
+
+  @override
+  String get matchWeatherDustStorm => 'धूल भरी आंधी';
+
+  @override
+  String get matchWeatherFrostyNight => 'पाले वाली रात';
 
   @override
   String get matchPlayerOfTheMatch => 'मैन ऑफ़ द मैच';

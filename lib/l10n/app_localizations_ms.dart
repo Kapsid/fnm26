@@ -8138,13 +8138,31 @@ class AppLocalizationsMs extends AppLocalizations {
   String get matchWeatherClear => 'Cerah';
 
   @override
-  String get matchWeatherRain => 'Hujan';
+  String get matchWeatherRain => 'Hujan renyai';
 
   @override
   String get matchWeatherSnow => 'Salji';
 
   @override
   String get matchWeatherHaze => 'Jerebu';
+
+  @override
+  String get matchWeatherHeavyRain => 'Hujan lebat';
+
+  @override
+  String get matchWeatherThunderstorm => 'Ribut petir';
+
+  @override
+  String get matchWeatherFog => 'Kabus';
+
+  @override
+  String get matchWeatherWindy => 'Berangin';
+
+  @override
+  String get matchWeatherDustStorm => 'Ribut debu';
+
+  @override
+  String get matchWeatherFrostyNight => 'Malam sejuk beku';
 
   @override
   String get matchPlayerOfTheMatch => 'PEMAIN TERBAIK PERLAWANAN';
