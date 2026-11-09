@@ -12667,7 +12667,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get hostBidBelowBar =>
-      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+      'Vaši stadioni ne ispunjavaju uvjete ovog turnira.';
 
   @override
   String get hostBidRulesPending =>
@@ -16614,144 +16614,143 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String mgrNewsSacked(String nation, String name) {
-    return '$nation sack $name';
+    return '$nation otpušta $name';
   }
 
   @override
   String mgrNewsResigned(String nation, String name) {
-    return '$nation: $name resigns';
+    return '$nation: $name podnio ostavku';
   }
 
   @override
   String mgrNewsPoached(String nation, String name) {
-    return '$nation: $name leaves for another national team';
+    return '$nation: $name odlazi u drugu reprezentaciju';
   }
 
   @override
   String mgrNewsRetired(String nation, String name) {
-    return '$nation: $name retires from management';
+    return '$nation: $name završava trenersku karijeru';
   }
 
   @override
   String mgrNewsContractEnd(String nation, String name) {
-    return '$nation: $name leaves as his contract runs out';
+    return '$nation: $name odlazi kad mu istekne ugovor';
   }
 
   @override
   String mgrNewsReplacedByPlayer(String nation, String name) {
-    return '$nation: $name makes way for you';
+    return '$nation: $name ustupa mjesto vama';
   }
 
   @override
   String mgrNewsAppointed(String nation, String name) {
-    return '$nation appoint $name';
+    return '$nation imenuje $name';
   }
 
   @override
   String mgrNewsAppointedBody(String nation, String name) {
-    return '$name takes charge of $nation.';
+    return '$name preuzima $nation.';
   }
 
   @override
   String pressBeatOpposingManager(String manager) {
-    return 'You and $manager have some history. Anything to say about him?';
+    return 'Vi i $manager imate prošlost. Želite li nešto reći o njemu?';
   }
 
   @override
-  String get pressAnswerHitBackAtManager =>
-      'He should worry about his own team.';
+  String get pressAnswerHitBackAtManager => 'Neka se brine za vlastitu momčad.';
 
   @override
-  String get pressAnswerRespectManager => 'I have a lot of respect for him.';
+  String get pressAnswerRespectManager => 'Imam veliko poštovanje prema njemu.';
 
   @override
   String yMgrTie1(String manager) {
-    return '$manager in the other dugout next. History there with our boss, and I cannot wait.';
+    return 'Na suprotnoj klupi je $manager. S našim izbornikom ima prošlosti i jedva čekam.';
   }
 
   @override
   String yMgrTie2(String manager) {
-    return 'Next up, $manager in the other dugout. He and our manager go back a while.';
+    return 'Sljedeći je $manager na suprotnoj klupi. On i naš izbornik poznaju se već neko vrijeme.';
   }
 
   @override
   String yMgrTie3(String manager) {
-    return '$manager again. Our boss had better not turn this into a personal thing.';
+    return 'Opet $manager. Bolje da naš izbornik od ovoga ne pravi osobnu stvar.';
   }
 
   @override
   String yMgrTie4(String manager) {
-    return 'Here we go. $manager on the touchline, and our manager trying to win a feud instead of a match.';
+    return 'Eto nas opet. $manager uz aut-liniju, a naš izbornik pokušava dobiti svađu umjesto utakmice.';
   }
 
   @override
-  String get mgrRowLabel => 'Manager';
+  String get mgrRowLabel => 'Izbornik';
 
   @override
   String mgrRowDetail(int age, String date) {
-    return '$age years old, since $date';
+    return '$age god., od $date';
   }
 
   @override
   String mgrRecordWdl(int won, int drawn, int lost) {
-    return '$won W, $drawn D, $lost L';
+    return '$won P, $drawn N, $lost I';
   }
 
   @override
   String mgrRowRecord(String record) {
-    return 'In charge: $record';
+    return 'Pod njegovim vodstvom: $record';
   }
 
   @override
-  String get mgrTieNeutral => 'No history';
+  String get mgrTieNeutral => 'Bez prošlosti';
 
   @override
-  String get mgrTieRespect => 'Respect';
+  String get mgrTieRespect => 'Poštovanje';
 
   @override
   String get mgrTieRival => 'Rival';
 
   @override
-  String get mgrTieGrudge => 'Grudge';
+  String get mgrTieGrudge => 'Zamjerka';
 
   @override
-  String get mgrTieSuccessor => 'Successor';
+  String get mgrTieSuccessor => 'Nasljednik';
 
   @override
-  String get mgrTieProtege => 'Protege';
+  String get mgrTieProtege => 'Štićenik';
 
   @override
-  String get mgrTieFormerPlayer => 'Former player';
+  String get mgrTieFormerPlayer => 'Bivši igrač';
 
   @override
-  String get mgrEndSacked => 'Sacked';
+  String get mgrEndSacked => 'Otpušten';
 
   @override
-  String get mgrEndResigned => 'Resigned';
+  String get mgrEndResigned => 'Podnio ostavku';
 
   @override
-  String get mgrEndPoached => 'Left for another national team';
+  String get mgrEndPoached => 'Otišao u drugu reprezentaciju';
 
   @override
-  String get mgrEndRetired => 'Retired from management';
+  String get mgrEndRetired => 'Završio trenersku karijeru';
 
   @override
-  String get mgrEndContractEnd => 'Contract ran out';
+  String get mgrEndContractEnd => 'Istekao ugovor';
 
   @override
-  String get mgrEndReplacedByPlayer => 'Replaced by you';
+  String get mgrEndReplacedByPlayer => 'Zamijenili ste ga';
 
   @override
-  String get mgrProfileSpells => 'Career';
+  String get mgrProfileSpells => 'Karijera';
 
   @override
   String mgrProfileSpellNow(String nation, String from) {
-    return '$nation, since $from';
+    return '$nation, od $from';
   }
 
   @override
   String mgrProfileSpellRange(String nation, String from, String to) {
-    return '$nation, $from to $to';
+    return '$nation, od $from do $to';
   }
 
   @override
@@ -16760,89 +16759,89 @@ class AppLocalizationsHr extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Record against you';
+  String get mgrProfileRecordVsYou => 'Omjer protiv vas';
 
   @override
-  String get mgrProfileNoMeetings => 'You have not met';
+  String get mgrProfileNoMeetings => 'Još se niste susreli';
 
   @override
-  String get mgrProfileReputation => 'Reputation';
+  String get mgrProfileReputation => 'Ugled';
 
   @override
-  String get mgrProfileAge => 'Age';
+  String get mgrProfileAge => 'Dob';
 
   @override
-  String get mgrProfileAppointed => 'Appointed';
+  String get mgrProfileAppointed => 'Imenovan';
 
   @override
-  String get mgrProfileStyle => 'Style';
+  String get mgrProfileStyle => 'Stil';
 
   @override
-  String get mgrProfileTie => 'Between you';
+  String get mgrProfileTie => 'Među vama';
 
   @override
   String mgrPreviewLine(String name) {
-    return 'Their manager: $name';
+    return 'Njihov izbornik: $name';
   }
 
   @override
   String mgrDossierStyle(String style) {
-    return 'Manager\'s style: $style';
+    return 'Stil izbornika: $style';
   }
 
   @override
   String mgrDossierRecord(String record) {
-    return 'Your record against him: $record';
+    return 'Vaš omjer protiv njega: $record';
   }
 
   @override
-  String get mgrStylePossession => 'Possession';
+  String get mgrStylePossession => 'Posjed lopte';
 
   @override
-  String get mgrStyleHighPress => 'High press';
+  String get mgrStyleHighPress => 'Visoki pritisak';
 
   @override
-  String get mgrStyleDefensive => 'Defensive';
+  String get mgrStyleDefensive => 'Defanzivan';
 
   @override
-  String get mgrStyleDirect => 'Direct';
+  String get mgrStyleDirect => 'Direktan';
 
   @override
-  String get mgrStyleCounter => 'Counter-attack';
+  String get mgrStyleCounter => 'Kontranapad';
 
   @override
-  String get mgrStyleFlair => 'Flair';
+  String get mgrStyleFlair => 'Tehnički';
 
   @override
-  String get mgrStylePhysical => 'Physical';
+  String get mgrStylePhysical => 'Fizički';
 
   @override
-  String get mgrStyleBalanced => 'Balanced';
+  String get mgrStyleBalanced => 'Uravnoteženo';
 
   @override
-  String get mgrListTitle => 'Managers';
+  String get mgrListTitle => 'Izbornici';
 
   @override
-  String get mgrListCurrent => 'Current';
+  String get mgrListCurrent => 'Trenutni';
 
   @override
-  String get mgrListRecentMoves => 'Recent moves';
+  String get mgrListRecentMoves => 'Nedavne promjene';
 
   @override
-  String get mgrListFilterAll => 'All';
+  String get mgrListFilterAll => 'Sve';
 
   @override
-  String get mgrListSortReputation => 'Reputation';
+  String get mgrListSortReputation => 'Ugled';
 
   @override
-  String get mgrListSortName => 'Name';
+  String get mgrListSortName => 'Ime';
 
   @override
-  String get mgrListEmptyMoves => 'No changes in the last two years.';
+  String get mgrListEmptyMoves => 'Nema promjena u posljednje dvije godine.';
 
   @override
   String get mgrListEmptyCurrent =>
-      'Managers appear after the next season rollover.';
+      'Izbornici se pojavljuju nakon sljedećeg prijelaza u novu sezonu.';
 
   @override
   String get editorSectionManagers => 'Izbornici';

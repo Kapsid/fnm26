@@ -11928,8 +11928,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get hostBidRecentHost => '최근 3개 대회 중 하나를 개최했습니다.';
 
   @override
-  String get hostBidBelowBar =>
-      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+  String get hostBidBelowBar => '경기장이 이 대회의 요건을 충족하지 않습니다.';
 
   @override
   String get hostBidRulesPending => '유치 신청 가능 여부는 이번 주기 개최국이 발표되면 알 수 있습니다.';
@@ -15735,144 +15734,143 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String mgrNewsSacked(String nation, String name) {
-    return '$nation sack $name';
+    return '$nation, $name 감독 경질';
   }
 
   @override
   String mgrNewsResigned(String nation, String name) {
-    return '$nation: $name resigns';
+    return '$nation: $name 감독 사임';
   }
 
   @override
   String mgrNewsPoached(String nation, String name) {
-    return '$nation: $name leaves for another national team';
+    return '$nation: $name 감독, 다른 대표팀으로 이동';
   }
 
   @override
   String mgrNewsRetired(String nation, String name) {
-    return '$nation: $name retires from management';
+    return '$nation: $name 감독 은퇴';
   }
 
   @override
   String mgrNewsContractEnd(String nation, String name) {
-    return '$nation: $name leaves as his contract runs out';
+    return '$nation: $name 감독, 계약 만료로 떠남';
   }
 
   @override
   String mgrNewsReplacedByPlayer(String nation, String name) {
-    return '$nation: $name makes way for you';
+    return '$nation: $name 감독이 자리를 내어줌';
   }
 
   @override
   String mgrNewsAppointed(String nation, String name) {
-    return '$nation appoint $name';
+    return '$nation, $name 감독 선임';
   }
 
   @override
   String mgrNewsAppointedBody(String nation, String name) {
-    return '$name takes charge of $nation.';
+    return '$name 감독이 $nation을(를) 맡습니다.';
   }
 
   @override
   String pressBeatOpposingManager(String manager) {
-    return 'You and $manager have some history. Anything to say about him?';
+    return '당신과 $manager 감독 사이에는 사연이 있습니다. 그에 대해 하실 말씀이 있나요?';
   }
 
   @override
-  String get pressAnswerHitBackAtManager =>
-      'He should worry about his own team.';
+  String get pressAnswerHitBackAtManager => '자기 팀 걱정이나 하라고 하세요.';
 
   @override
-  String get pressAnswerRespectManager => 'I have a lot of respect for him.';
+  String get pressAnswerRespectManager => '그분을 매우 존경합니다.';
 
   @override
   String yMgrTie1(String manager) {
-    return '$manager in the other dugout next. History there with our boss, and I cannot wait.';
+    return '다음 상대 벤치에는 $manager 감독. 우리 감독과 사연이 있어서 정말 기대된다.';
   }
 
   @override
   String yMgrTie2(String manager) {
-    return 'Next up, $manager in the other dugout. He and our manager go back a while.';
+    return '다음은 상대 벤치의 $manager 감독. 우리 감독과는 꽤 오래된 사이다.';
   }
 
   @override
   String yMgrTie3(String manager) {
-    return '$manager again. Our boss had better not turn this into a personal thing.';
+    return '또 $manager 감독이다. 우리 감독이 이걸 개인 감정 싸움으로 만들지 않았으면.';
   }
 
   @override
   String yMgrTie4(String manager) {
-    return 'Here we go. $manager on the touchline, and our manager trying to win a feud instead of a match.';
+    return '또 시작이다. 터치라인에는 $manager 감독, 우리 감독은 경기 대신 감정싸움에서 이기려 한다.';
   }
 
   @override
-  String get mgrRowLabel => 'Manager';
+  String get mgrRowLabel => '감독';
 
   @override
   String mgrRowDetail(int age, String date) {
-    return '$age years old, since $date';
+    return '$age세, $date부터';
   }
 
   @override
   String mgrRecordWdl(int won, int drawn, int lost) {
-    return '$won W, $drawn D, $lost L';
+    return '$won승 $drawn무 $lost패';
   }
 
   @override
   String mgrRowRecord(String record) {
-    return 'In charge: $record';
+    return '재임 성적: $record';
   }
 
   @override
-  String get mgrTieNeutral => 'No history';
+  String get mgrTieNeutral => '인연 없음';
 
   @override
-  String get mgrTieRespect => 'Respect';
+  String get mgrTieRespect => '존중';
 
   @override
-  String get mgrTieRival => 'Rival';
+  String get mgrTieRival => '라이벌';
 
   @override
-  String get mgrTieGrudge => 'Grudge';
+  String get mgrTieGrudge => '앙금';
 
   @override
-  String get mgrTieSuccessor => 'Successor';
+  String get mgrTieSuccessor => '후임';
 
   @override
-  String get mgrTieProtege => 'Protege';
+  String get mgrTieProtege => '제자';
 
   @override
-  String get mgrTieFormerPlayer => 'Former player';
+  String get mgrTieFormerPlayer => '전 선수';
 
   @override
-  String get mgrEndSacked => 'Sacked';
+  String get mgrEndSacked => '경질';
 
   @override
-  String get mgrEndResigned => 'Resigned';
+  String get mgrEndResigned => '사임';
 
   @override
-  String get mgrEndPoached => 'Left for another national team';
+  String get mgrEndPoached => '다른 대표팀으로 이동';
 
   @override
-  String get mgrEndRetired => 'Retired from management';
+  String get mgrEndRetired => '지도자 은퇴';
 
   @override
-  String get mgrEndContractEnd => 'Contract ran out';
+  String get mgrEndContractEnd => '계약 만료';
 
   @override
-  String get mgrEndReplacedByPlayer => 'Replaced by you';
+  String get mgrEndReplacedByPlayer => '당신이 교체';
 
   @override
-  String get mgrProfileSpells => 'Career';
+  String get mgrProfileSpells => '경력';
 
   @override
   String mgrProfileSpellNow(String nation, String from) {
-    return '$nation, since $from';
+    return '$nation, $from부터';
   }
 
   @override
   String mgrProfileSpellRange(String nation, String from, String to) {
-    return '$nation, $from to $to';
+    return '$nation, $from부터 $to까지';
   }
 
   @override
@@ -15881,89 +15879,88 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Record against you';
+  String get mgrProfileRecordVsYou => '당신과의 전적';
 
   @override
-  String get mgrProfileNoMeetings => 'You have not met';
+  String get mgrProfileNoMeetings => '아직 만난 적 없음';
 
   @override
-  String get mgrProfileReputation => 'Reputation';
+  String get mgrProfileReputation => '평판';
 
   @override
-  String get mgrProfileAge => 'Age';
+  String get mgrProfileAge => '나이';
 
   @override
-  String get mgrProfileAppointed => 'Appointed';
+  String get mgrProfileAppointed => '선임';
 
   @override
-  String get mgrProfileStyle => 'Style';
+  String get mgrProfileStyle => '스타일';
 
   @override
-  String get mgrProfileTie => 'Between you';
+  String get mgrProfileTie => '두 사람 사이';
 
   @override
   String mgrPreviewLine(String name) {
-    return 'Their manager: $name';
+    return '상대 감독: $name';
   }
 
   @override
   String mgrDossierStyle(String style) {
-    return 'Manager\'s style: $style';
+    return '감독 스타일: $style';
   }
 
   @override
   String mgrDossierRecord(String record) {
-    return 'Your record against him: $record';
+    return '그와의 전적: $record';
   }
 
   @override
-  String get mgrStylePossession => 'Possession';
+  String get mgrStylePossession => '점유';
 
   @override
-  String get mgrStyleHighPress => 'High press';
+  String get mgrStyleHighPress => '하이 프레스';
 
   @override
-  String get mgrStyleDefensive => 'Defensive';
+  String get mgrStyleDefensive => '수비적';
 
   @override
-  String get mgrStyleDirect => 'Direct';
+  String get mgrStyleDirect => '직선적';
 
   @override
-  String get mgrStyleCounter => 'Counter-attack';
+  String get mgrStyleCounter => '역습';
 
   @override
-  String get mgrStyleFlair => 'Flair';
+  String get mgrStyleFlair => '기교파';
 
   @override
-  String get mgrStylePhysical => 'Physical';
+  String get mgrStylePhysical => '피지컬';
 
   @override
-  String get mgrStyleBalanced => 'Balanced';
+  String get mgrStyleBalanced => '균형';
 
   @override
-  String get mgrListTitle => 'Managers';
+  String get mgrListTitle => '감독';
 
   @override
-  String get mgrListCurrent => 'Current';
+  String get mgrListCurrent => '현재';
 
   @override
-  String get mgrListRecentMoves => 'Recent moves';
+  String get mgrListRecentMoves => '최근 변동';
 
   @override
-  String get mgrListFilterAll => 'All';
+  String get mgrListFilterAll => '전체';
 
   @override
-  String get mgrListSortReputation => 'Reputation';
+  String get mgrListSortReputation => '평판';
 
   @override
-  String get mgrListSortName => 'Name';
+  String get mgrListSortName => '이름';
 
   @override
-  String get mgrListEmptyMoves => 'No changes in the last two years.';
+  String get mgrListEmptyMoves => '최근 2년간 변동이 없습니다.';
 
   @override
-  String get mgrListEmptyCurrent =>
-      'Managers appear after the next season rollover.';
+  String get mgrListEmptyCurrent => '감독은 다음 시즌 전환 후에 표시됩니다.';
 
   @override
   String get editorSectionManagers => '감독';

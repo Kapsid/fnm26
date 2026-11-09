@@ -12262,7 +12262,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get hostBidBelowBar =>
-      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+      'आपके स्टेडियम इस टूर्नामेंट की शर्तें पूरी नहीं करते।';
 
   @override
   String get hostBidRulesPending =>
@@ -16190,144 +16190,144 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String mgrNewsSacked(String nation, String name) {
-    return '$nation sack $name';
+    return '$nation ने $name को हटाया';
   }
 
   @override
   String mgrNewsResigned(String nation, String name) {
-    return '$nation: $name resigns';
+    return '$nation: $name ने इस्तीफ़ा दिया';
   }
 
   @override
   String mgrNewsPoached(String nation, String name) {
-    return '$nation: $name leaves for another national team';
+    return '$nation: $name दूसरी राष्ट्रीय टीम में जा रहे हैं';
   }
 
   @override
   String mgrNewsRetired(String nation, String name) {
-    return '$nation: $name retires from management';
+    return '$nation: $name ने कोचिंग से संन्यास लिया';
   }
 
   @override
   String mgrNewsContractEnd(String nation, String name) {
-    return '$nation: $name leaves as his contract runs out';
+    return '$nation: $name का अनुबंध खत्म होने पर विदाई';
   }
 
   @override
   String mgrNewsReplacedByPlayer(String nation, String name) {
-    return '$nation: $name makes way for you';
+    return '$nation: $name आपके लिए जगह छोड़ रहे हैं';
   }
 
   @override
   String mgrNewsAppointed(String nation, String name) {
-    return '$nation appoint $name';
+    return '$nation ने $name को नियुक्त किया';
   }
 
   @override
   String mgrNewsAppointedBody(String nation, String name) {
-    return '$name takes charge of $nation.';
+    return '$name ने $nation की कमान संभाली।';
   }
 
   @override
   String pressBeatOpposingManager(String manager) {
-    return 'You and $manager have some history. Anything to say about him?';
+    return 'आपके और $manager के बीच कुछ पुराना इतिहास है। उनके बारे में कुछ कहना चाहेंगे?';
   }
 
   @override
   String get pressAnswerHitBackAtManager =>
-      'He should worry about his own team.';
+      'उन्हें अपनी टीम की चिंता करनी चाहिए।';
 
   @override
-  String get pressAnswerRespectManager => 'I have a lot of respect for him.';
+  String get pressAnswerRespectManager => 'मैं उनका बहुत सम्मान करता हूँ।';
 
   @override
   String yMgrTie1(String manager) {
-    return '$manager in the other dugout next. History there with our boss, and I cannot wait.';
+    return 'अगली बार दूसरी बेंच पर $manager हैं। हमारे कोच से उनका पुराना इतिहास है और मैं इंतज़ार नहीं कर सकता।';
   }
 
   @override
   String yMgrTie2(String manager) {
-    return 'Next up, $manager in the other dugout. He and our manager go back a while.';
+    return 'अगला मुकाबला: दूसरी बेंच पर $manager। वे और हमारे मैनेजर काफ़ी समय से एक-दूसरे को जानते हैं।';
   }
 
   @override
   String yMgrTie3(String manager) {
-    return '$manager again. Our boss had better not turn this into a personal thing.';
+    return 'फिर से $manager। उम्मीद है हमारे कोच इसे निजी लड़ाई नहीं बनाएँगे।';
   }
 
   @override
   String yMgrTie4(String manager) {
-    return 'Here we go. $manager on the touchline, and our manager trying to win a feud instead of a match.';
+    return 'चलो फिर शुरू। टचलाइन पर $manager हैं और हमारे कोच मैच की जगह निजी झगड़ा जीतने में लगे हैं।';
   }
 
   @override
-  String get mgrRowLabel => 'Manager';
+  String get mgrRowLabel => 'मैनेजर';
 
   @override
   String mgrRowDetail(int age, String date) {
-    return '$age years old, since $date';
+    return '$age वर्ष, $date से';
   }
 
   @override
   String mgrRecordWdl(int won, int drawn, int lost) {
-    return '$won W, $drawn D, $lost L';
+    return '$won जीत, $drawn ड्रॉ, $lost हार';
   }
 
   @override
   String mgrRowRecord(String record) {
-    return 'In charge: $record';
+    return 'उनके अधीन: $record';
   }
 
   @override
-  String get mgrTieNeutral => 'No history';
+  String get mgrTieNeutral => 'कोई इतिहास नहीं';
 
   @override
-  String get mgrTieRespect => 'Respect';
+  String get mgrTieRespect => 'सम्मान';
 
   @override
-  String get mgrTieRival => 'Rival';
+  String get mgrTieRival => 'विरोधी';
 
   @override
-  String get mgrTieGrudge => 'Grudge';
+  String get mgrTieGrudge => 'रंजिश';
 
   @override
-  String get mgrTieSuccessor => 'Successor';
+  String get mgrTieSuccessor => 'उत्तराधिकारी';
 
   @override
-  String get mgrTieProtege => 'Protege';
+  String get mgrTieProtege => 'शिष्य';
 
   @override
-  String get mgrTieFormerPlayer => 'Former player';
+  String get mgrTieFormerPlayer => 'पूर्व खिलाड़ी';
 
   @override
-  String get mgrEndSacked => 'Sacked';
+  String get mgrEndSacked => 'बर्खास्त';
 
   @override
-  String get mgrEndResigned => 'Resigned';
+  String get mgrEndResigned => 'इस्तीफ़ा दिया';
 
   @override
-  String get mgrEndPoached => 'Left for another national team';
+  String get mgrEndPoached => 'दूसरी राष्ट्रीय टीम में गए';
 
   @override
-  String get mgrEndRetired => 'Retired from management';
+  String get mgrEndRetired => 'कोचिंग से संन्यास लिया';
 
   @override
-  String get mgrEndContractEnd => 'Contract ran out';
+  String get mgrEndContractEnd => 'अनुबंध खत्म हुआ';
 
   @override
-  String get mgrEndReplacedByPlayer => 'Replaced by you';
+  String get mgrEndReplacedByPlayer => 'आपने उनकी जगह ली';
 
   @override
-  String get mgrProfileSpells => 'Career';
+  String get mgrProfileSpells => 'करियर';
 
   @override
   String mgrProfileSpellNow(String nation, String from) {
-    return '$nation, since $from';
+    return '$nation, $from से';
   }
 
   @override
   String mgrProfileSpellRange(String nation, String from, String to) {
-    return '$nation, $from to $to';
+    return '$nation, $from से $to तक';
   }
 
   @override
@@ -16336,89 +16336,88 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Record against you';
+  String get mgrProfileRecordVsYou => 'आपके खिलाफ़ रिकॉर्ड';
 
   @override
-  String get mgrProfileNoMeetings => 'You have not met';
+  String get mgrProfileNoMeetings => 'अभी तक आमना-सामना नहीं हुआ';
 
   @override
-  String get mgrProfileReputation => 'Reputation';
+  String get mgrProfileReputation => 'प्रतिष्ठा';
 
   @override
-  String get mgrProfileAge => 'Age';
+  String get mgrProfileAge => 'उम्र';
 
   @override
-  String get mgrProfileAppointed => 'Appointed';
+  String get mgrProfileAppointed => 'नियुक्त';
 
   @override
-  String get mgrProfileStyle => 'Style';
+  String get mgrProfileStyle => 'शैली';
 
   @override
-  String get mgrProfileTie => 'Between you';
+  String get mgrProfileTie => 'आप दोनों के बीच';
 
   @override
   String mgrPreviewLine(String name) {
-    return 'Their manager: $name';
+    return 'उनके मैनेजर: $name';
   }
 
   @override
   String mgrDossierStyle(String style) {
-    return 'Manager\'s style: $style';
+    return 'मैनेजर की शैली: $style';
   }
 
   @override
   String mgrDossierRecord(String record) {
-    return 'Your record against him: $record';
+    return 'उनके खिलाफ़ आपका रिकॉर्ड: $record';
   }
 
   @override
-  String get mgrStylePossession => 'Possession';
+  String get mgrStylePossession => 'पज़ेशन';
 
   @override
-  String get mgrStyleHighPress => 'High press';
+  String get mgrStyleHighPress => 'हाई प्रेस';
 
   @override
-  String get mgrStyleDefensive => 'Defensive';
+  String get mgrStyleDefensive => 'डिफ़ेंसिव';
 
   @override
-  String get mgrStyleDirect => 'Direct';
+  String get mgrStyleDirect => 'सीधा';
 
   @override
-  String get mgrStyleCounter => 'Counter-attack';
+  String get mgrStyleCounter => 'काउंटर अटैक';
 
   @override
-  String get mgrStyleFlair => 'Flair';
+  String get mgrStyleFlair => 'तकनीकी';
 
   @override
-  String get mgrStylePhysical => 'Physical';
+  String get mgrStylePhysical => 'फ़िज़िकल';
 
   @override
-  String get mgrStyleBalanced => 'Balanced';
+  String get mgrStyleBalanced => 'संतुलित';
 
   @override
-  String get mgrListTitle => 'Managers';
+  String get mgrListTitle => 'मैनेजर';
 
   @override
-  String get mgrListCurrent => 'Current';
+  String get mgrListCurrent => 'मौजूदा';
 
   @override
-  String get mgrListRecentMoves => 'Recent moves';
+  String get mgrListRecentMoves => 'हाल के बदलाव';
 
   @override
-  String get mgrListFilterAll => 'All';
+  String get mgrListFilterAll => 'सभी';
 
   @override
-  String get mgrListSortReputation => 'Reputation';
+  String get mgrListSortReputation => 'प्रतिष्ठा';
 
   @override
-  String get mgrListSortName => 'Name';
+  String get mgrListSortName => 'नाम';
 
   @override
-  String get mgrListEmptyMoves => 'No changes in the last two years.';
+  String get mgrListEmptyMoves => 'पिछले दो वर्षों में कोई बदलाव नहीं।';
 
   @override
-  String get mgrListEmptyCurrent =>
-      'Managers appear after the next season rollover.';
+  String get mgrListEmptyCurrent => 'मैनेजर अगले सीज़न बदलाव के बाद दिखेंगे।';
 
   @override
   String get editorSectionManagers => 'मैनेजर';

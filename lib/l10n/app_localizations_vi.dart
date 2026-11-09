@@ -12212,7 +12212,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get hostBidBelowBar =>
-      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+      'Các sân của bạn chưa đáp ứng yêu cầu của giải này.';
 
   @override
   String get hostBidRulesPending =>
@@ -16124,144 +16124,144 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String mgrNewsSacked(String nation, String name) {
-    return '$nation sack $name';
+    return '$nation sa thải $name';
   }
 
   @override
   String mgrNewsResigned(String nation, String name) {
-    return '$nation: $name resigns';
+    return '$nation: $name từ chức';
   }
 
   @override
   String mgrNewsPoached(String nation, String name) {
-    return '$nation: $name leaves for another national team';
+    return '$nation: $name sang dẫn dắt đội tuyển khác';
   }
 
   @override
   String mgrNewsRetired(String nation, String name) {
-    return '$nation: $name retires from management';
+    return '$nation: $name giải nghệ huấn luyện viên';
   }
 
   @override
   String mgrNewsContractEnd(String nation, String name) {
-    return '$nation: $name leaves as his contract runs out';
+    return '$nation: $name rời đi khi hết hợp đồng';
   }
 
   @override
   String mgrNewsReplacedByPlayer(String nation, String name) {
-    return '$nation: $name makes way for you';
+    return '$nation: $name nhường chỗ cho bạn';
   }
 
   @override
   String mgrNewsAppointed(String nation, String name) {
-    return '$nation appoint $name';
+    return '$nation bổ nhiệm $name';
   }
 
   @override
   String mgrNewsAppointedBody(String nation, String name) {
-    return '$name takes charge of $nation.';
+    return '$name nhận dẫn dắt $nation.';
   }
 
   @override
   String pressBeatOpposingManager(String manager) {
-    return 'You and $manager have some history. Anything to say about him?';
+    return 'Bạn và $manager có chút chuyện cũ. Bạn muốn nói gì về ông ấy không?';
   }
 
   @override
   String get pressAnswerHitBackAtManager =>
-      'He should worry about his own team.';
+      'Ông ấy nên lo cho đội của mình thì hơn.';
 
   @override
-  String get pressAnswerRespectManager => 'I have a lot of respect for him.';
+  String get pressAnswerRespectManager => 'Tôi rất kính trọng ông ấy.';
 
   @override
   String yMgrTie1(String manager) {
-    return '$manager in the other dugout next. History there with our boss, and I cannot wait.';
+    return 'Băng ghế đối diện lần tới là $manager. Ông ấy với thầy mình có chuyện cũ, và tôi nóng lòng chờ.';
   }
 
   @override
   String yMgrTie2(String manager) {
-    return 'Next up, $manager in the other dugout. He and our manager go back a while.';
+    return 'Tiếp theo, $manager ngồi ở băng ghế đối diện. Ông ấy và thầy ta quen nhau khá lâu rồi.';
   }
 
   @override
   String yMgrTie3(String manager) {
-    return '$manager again. Our boss had better not turn this into a personal thing.';
+    return 'Lại là $manager. Mong thầy ta đừng biến chuyện này thành chuyện cá nhân.';
   }
 
   @override
   String yMgrTie4(String manager) {
-    return 'Here we go. $manager on the touchline, and our manager trying to win a feud instead of a match.';
+    return 'Lại bắt đầu rồi. $manager bên đường biên, còn thầy ta muốn thắng một mối thù thay vì một trận đấu.';
   }
 
   @override
-  String get mgrRowLabel => 'Manager';
+  String get mgrRowLabel => 'Huấn luyện viên';
 
   @override
   String mgrRowDetail(int age, String date) {
-    return '$age years old, since $date';
+    return '$age tuổi, từ $date';
   }
 
   @override
   String mgrRecordWdl(int won, int drawn, int lost) {
-    return '$won W, $drawn D, $lost L';
+    return '$won T, $drawn H, $lost B';
   }
 
   @override
   String mgrRowRecord(String record) {
-    return 'In charge: $record';
+    return 'Dưới thời ông: $record';
   }
 
   @override
-  String get mgrTieNeutral => 'No history';
+  String get mgrTieNeutral => 'Chưa có gì';
 
   @override
-  String get mgrTieRespect => 'Respect';
+  String get mgrTieRespect => 'Kính trọng';
 
   @override
-  String get mgrTieRival => 'Rival';
+  String get mgrTieRival => 'Đối thủ';
 
   @override
-  String get mgrTieGrudge => 'Grudge';
+  String get mgrTieGrudge => 'Hiềm khích';
 
   @override
-  String get mgrTieSuccessor => 'Successor';
+  String get mgrTieSuccessor => 'Người kế nhiệm';
 
   @override
-  String get mgrTieProtege => 'Protege';
+  String get mgrTieProtege => 'Học trò';
 
   @override
-  String get mgrTieFormerPlayer => 'Former player';
+  String get mgrTieFormerPlayer => 'Cựu cầu thủ';
 
   @override
-  String get mgrEndSacked => 'Sacked';
+  String get mgrEndSacked => 'Bị sa thải';
 
   @override
-  String get mgrEndResigned => 'Resigned';
+  String get mgrEndResigned => 'Từ chức';
 
   @override
-  String get mgrEndPoached => 'Left for another national team';
+  String get mgrEndPoached => 'Sang đội tuyển khác';
 
   @override
-  String get mgrEndRetired => 'Retired from management';
+  String get mgrEndRetired => 'Giải nghệ huấn luyện';
 
   @override
-  String get mgrEndContractEnd => 'Contract ran out';
+  String get mgrEndContractEnd => 'Hết hợp đồng';
 
   @override
-  String get mgrEndReplacedByPlayer => 'Replaced by you';
+  String get mgrEndReplacedByPlayer => 'Bạn thay thế';
 
   @override
-  String get mgrProfileSpells => 'Career';
+  String get mgrProfileSpells => 'Sự nghiệp';
 
   @override
   String mgrProfileSpellNow(String nation, String from) {
-    return '$nation, since $from';
+    return '$nation, từ $from';
   }
 
   @override
   String mgrProfileSpellRange(String nation, String from, String to) {
-    return '$nation, $from to $to';
+    return '$nation, từ $from đến $to';
   }
 
   @override
@@ -16270,89 +16270,89 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Record against you';
+  String get mgrProfileRecordVsYou => 'Thành tích đối đầu với bạn';
 
   @override
-  String get mgrProfileNoMeetings => 'You have not met';
+  String get mgrProfileNoMeetings => 'Hai bên chưa gặp nhau';
 
   @override
-  String get mgrProfileReputation => 'Reputation';
+  String get mgrProfileReputation => 'Danh tiếng';
 
   @override
-  String get mgrProfileAge => 'Age';
+  String get mgrProfileAge => 'Tuổi';
 
   @override
-  String get mgrProfileAppointed => 'Appointed';
+  String get mgrProfileAppointed => 'Bổ nhiệm';
 
   @override
-  String get mgrProfileStyle => 'Style';
+  String get mgrProfileStyle => 'Phong cách';
 
   @override
-  String get mgrProfileTie => 'Between you';
+  String get mgrProfileTie => 'Giữa hai bên';
 
   @override
   String mgrPreviewLine(String name) {
-    return 'Their manager: $name';
+    return 'Huấn luyện viên đối thủ: $name';
   }
 
   @override
   String mgrDossierStyle(String style) {
-    return 'Manager\'s style: $style';
+    return 'Phong cách của huấn luyện viên: $style';
   }
 
   @override
   String mgrDossierRecord(String record) {
-    return 'Your record against him: $record';
+    return 'Thành tích của bạn khi gặp ông ấy: $record';
   }
 
   @override
-  String get mgrStylePossession => 'Possession';
+  String get mgrStylePossession => 'Kiểm soát bóng';
 
   @override
-  String get mgrStyleHighPress => 'High press';
+  String get mgrStyleHighPress => 'Pressing cao';
 
   @override
-  String get mgrStyleDefensive => 'Defensive';
+  String get mgrStyleDefensive => 'Phòng ngự';
 
   @override
-  String get mgrStyleDirect => 'Direct';
+  String get mgrStyleDirect => 'Trực diện';
 
   @override
-  String get mgrStyleCounter => 'Counter-attack';
+  String get mgrStyleCounter => 'Phản công';
 
   @override
-  String get mgrStyleFlair => 'Flair';
+  String get mgrStyleFlair => 'Kỹ thuật';
 
   @override
-  String get mgrStylePhysical => 'Physical';
+  String get mgrStylePhysical => 'Thể lực';
 
   @override
-  String get mgrStyleBalanced => 'Balanced';
+  String get mgrStyleBalanced => 'Cân bằng';
 
   @override
-  String get mgrListTitle => 'Managers';
+  String get mgrListTitle => 'Huấn luyện viên';
 
   @override
-  String get mgrListCurrent => 'Current';
+  String get mgrListCurrent => 'Hiện tại';
 
   @override
-  String get mgrListRecentMoves => 'Recent moves';
+  String get mgrListRecentMoves => 'Thay đổi gần đây';
 
   @override
-  String get mgrListFilterAll => 'All';
+  String get mgrListFilterAll => 'Tất cả';
 
   @override
-  String get mgrListSortReputation => 'Reputation';
+  String get mgrListSortReputation => 'Danh tiếng';
 
   @override
-  String get mgrListSortName => 'Name';
+  String get mgrListSortName => 'Tên';
 
   @override
-  String get mgrListEmptyMoves => 'No changes in the last two years.';
+  String get mgrListEmptyMoves => 'Không có thay đổi nào trong hai năm qua.';
 
   @override
   String get mgrListEmptyCurrent =>
-      'Managers appear after the next season rollover.';
+      'Huấn luyện viên sẽ xuất hiện sau lần chuyển mùa giải tới.';
 
   @override
   String get editorSectionManagers => 'Huấn luyện viên';

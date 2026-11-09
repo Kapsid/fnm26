@@ -12408,7 +12408,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get hostBidBelowBar =>
-      'Your grounds don\'t meet this tournament\'s stadium requirements.';
+      'Τα γήπεδά σου δεν πληρούν τις απαιτήσεις αυτής της διοργάνωσης.';
 
   @override
   String get hostBidRulesPending =>
@@ -16366,144 +16366,144 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String mgrNewsSacked(String nation, String name) {
-    return '$nation sack $name';
+    return '$nation: απόλυση του $name';
   }
 
   @override
   String mgrNewsResigned(String nation, String name) {
-    return '$nation: $name resigns';
+    return '$nation: παραίτηση του $name';
   }
 
   @override
   String mgrNewsPoached(String nation, String name) {
-    return '$nation: $name leaves for another national team';
+    return '$nation: ο $name φεύγει για άλλη εθνική ομάδα';
   }
 
   @override
   String mgrNewsRetired(String nation, String name) {
-    return '$nation: $name retires from management';
+    return '$nation: ο $name αποσύρεται από την προπονητική';
   }
 
   @override
   String mgrNewsContractEnd(String nation, String name) {
-    return '$nation: $name leaves as his contract runs out';
+    return '$nation: ο $name φεύγει με τη λήξη του συμβολαίου του';
   }
 
   @override
   String mgrNewsReplacedByPlayer(String nation, String name) {
-    return '$nation: $name makes way for you';
+    return '$nation: ο $name παραχωρεί τη θέση σε σένα';
   }
 
   @override
   String mgrNewsAppointed(String nation, String name) {
-    return '$nation appoint $name';
+    return '$nation: νέος προπονητής ο $name';
   }
 
   @override
   String mgrNewsAppointedBody(String nation, String name) {
-    return '$name takes charge of $nation.';
+    return 'Ο $name αναλαμβάνει την $nation.';
   }
 
   @override
   String pressBeatOpposingManager(String manager) {
-    return 'You and $manager have some history. Anything to say about him?';
+    return 'Εσύ και ο $manager έχετε ιστορία. Έχεις κάτι να πεις για εκείνον;';
   }
 
   @override
   String get pressAnswerHitBackAtManager =>
-      'He should worry about his own team.';
+      'Ας ανησυχεί για τη δική του ομάδα.';
 
   @override
-  String get pressAnswerRespectManager => 'I have a lot of respect for him.';
+  String get pressAnswerRespectManager => 'Τον σέβομαι πολύ.';
 
   @override
   String yMgrTie1(String manager) {
-    return '$manager in the other dugout next. History there with our boss, and I cannot wait.';
+    return 'Στον απέναντι πάγκο ο $manager. Έχει ιστορία με τον προπονητή μας και ανυπομονώ.';
   }
 
   @override
   String yMgrTie2(String manager) {
-    return 'Next up, $manager in the other dugout. He and our manager go back a while.';
+    return 'Επόμενος αντίπαλος, ο $manager στον απέναντι πάγκο. Αυτός και ο προπονητής μας γνωρίζονται καιρό.';
   }
 
   @override
   String yMgrTie3(String manager) {
-    return '$manager again. Our boss had better not turn this into a personal thing.';
+    return 'Πάλι ο $manager. Μακάρι ο προπονητής μας να μην το κάνει προσωπική υπόθεση.';
   }
 
   @override
   String yMgrTie4(String manager) {
-    return 'Here we go. $manager on the touchline, and our manager trying to win a feud instead of a match.';
+    return 'Πάμε πάλι. Ο $manager στη γραμμή και ο προπονητής μας προσπαθεί να κερδίσει μια έχθρα αντί για έναν αγώνα.';
   }
 
   @override
-  String get mgrRowLabel => 'Manager';
+  String get mgrRowLabel => 'Προπονητής';
 
   @override
   String mgrRowDetail(int age, String date) {
-    return '$age years old, since $date';
+    return '$age ετών, από $date';
   }
 
   @override
   String mgrRecordWdl(int won, int drawn, int lost) {
-    return '$won W, $drawn D, $lost L';
+    return '$won Ν, $drawn Ι, $lost Η';
   }
 
   @override
   String mgrRowRecord(String record) {
-    return 'In charge: $record';
+    return 'Υπό την ηγεσία του: $record';
   }
 
   @override
-  String get mgrTieNeutral => 'No history';
+  String get mgrTieNeutral => 'Χωρίς ιστορικό';
 
   @override
-  String get mgrTieRespect => 'Respect';
+  String get mgrTieRespect => 'Σεβασμός';
 
   @override
-  String get mgrTieRival => 'Rival';
+  String get mgrTieRival => 'Αντίπαλος';
 
   @override
-  String get mgrTieGrudge => 'Grudge';
+  String get mgrTieGrudge => 'Μνησικακία';
 
   @override
-  String get mgrTieSuccessor => 'Successor';
+  String get mgrTieSuccessor => 'Διάδοχος';
 
   @override
-  String get mgrTieProtege => 'Protege';
+  String get mgrTieProtege => 'Προστατευόμενος';
 
   @override
-  String get mgrTieFormerPlayer => 'Former player';
+  String get mgrTieFormerPlayer => 'Πρώην παίκτης';
 
   @override
-  String get mgrEndSacked => 'Sacked';
+  String get mgrEndSacked => 'Απολύθηκε';
 
   @override
-  String get mgrEndResigned => 'Resigned';
+  String get mgrEndResigned => 'Παραιτήθηκε';
 
   @override
-  String get mgrEndPoached => 'Left for another national team';
+  String get mgrEndPoached => 'Έφυγε για άλλη εθνική ομάδα';
 
   @override
-  String get mgrEndRetired => 'Retired from management';
+  String get mgrEndRetired => 'Αποσύρθηκε από την προπονητική';
 
   @override
-  String get mgrEndContractEnd => 'Contract ran out';
+  String get mgrEndContractEnd => 'Έληξε το συμβόλαιο';
 
   @override
-  String get mgrEndReplacedByPlayer => 'Replaced by you';
+  String get mgrEndReplacedByPlayer => 'Αντικαταστάθηκε από σένα';
 
   @override
-  String get mgrProfileSpells => 'Career';
+  String get mgrProfileSpells => 'Καριέρα';
 
   @override
   String mgrProfileSpellNow(String nation, String from) {
-    return '$nation, since $from';
+    return '$nation, από $from';
   }
 
   @override
   String mgrProfileSpellRange(String nation, String from, String to) {
-    return '$nation, $from to $to';
+    return '$nation, $from έως $to';
   }
 
   @override
@@ -16512,89 +16512,89 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get mgrProfileRecordVsYou => 'Record against you';
+  String get mgrProfileRecordVsYou => 'Ισολογισμός εναντίον σου';
 
   @override
-  String get mgrProfileNoMeetings => 'You have not met';
+  String get mgrProfileNoMeetings => 'Δεν έχετε συναντηθεί ακόμη';
 
   @override
-  String get mgrProfileReputation => 'Reputation';
+  String get mgrProfileReputation => 'Φήμη';
 
   @override
-  String get mgrProfileAge => 'Age';
+  String get mgrProfileAge => 'Ηλικία';
 
   @override
-  String get mgrProfileAppointed => 'Appointed';
+  String get mgrProfileAppointed => 'Διορίστηκε';
 
   @override
-  String get mgrProfileStyle => 'Style';
+  String get mgrProfileStyle => 'Στυλ';
 
   @override
-  String get mgrProfileTie => 'Between you';
+  String get mgrProfileTie => 'Ανάμεσά σας';
 
   @override
   String mgrPreviewLine(String name) {
-    return 'Their manager: $name';
+    return 'Ο προπονητής τους: $name';
   }
 
   @override
   String mgrDossierStyle(String style) {
-    return 'Manager\'s style: $style';
+    return 'Στυλ του προπονητή: $style';
   }
 
   @override
   String mgrDossierRecord(String record) {
-    return 'Your record against him: $record';
+    return 'Το ρεκόρ σου εναντίον του: $record';
   }
 
   @override
-  String get mgrStylePossession => 'Possession';
+  String get mgrStylePossession => 'Κατοχή';
 
   @override
-  String get mgrStyleHighPress => 'High press';
+  String get mgrStyleHighPress => 'Υψηλό πρέσινγκ';
 
   @override
-  String get mgrStyleDefensive => 'Defensive';
+  String get mgrStyleDefensive => 'Αμυντικό';
 
   @override
-  String get mgrStyleDirect => 'Direct';
+  String get mgrStyleDirect => 'Άμεσο';
 
   @override
-  String get mgrStyleCounter => 'Counter-attack';
+  String get mgrStyleCounter => 'Αντεπίθεση';
 
   @override
-  String get mgrStyleFlair => 'Flair';
+  String get mgrStyleFlair => 'Τεχνικό';
 
   @override
-  String get mgrStylePhysical => 'Physical';
+  String get mgrStylePhysical => 'Σωματικό';
 
   @override
-  String get mgrStyleBalanced => 'Balanced';
+  String get mgrStyleBalanced => 'Ισορροπημένο';
 
   @override
-  String get mgrListTitle => 'Managers';
+  String get mgrListTitle => 'Ομοσπονδιακοί προπονητές';
 
   @override
-  String get mgrListCurrent => 'Current';
+  String get mgrListCurrent => 'Τωρινοί';
 
   @override
-  String get mgrListRecentMoves => 'Recent moves';
+  String get mgrListRecentMoves => 'Πρόσφατες αλλαγές';
 
   @override
-  String get mgrListFilterAll => 'All';
+  String get mgrListFilterAll => 'Όλα';
 
   @override
-  String get mgrListSortReputation => 'Reputation';
+  String get mgrListSortReputation => 'Φήμη';
 
   @override
-  String get mgrListSortName => 'Name';
+  String get mgrListSortName => 'Όνομα';
 
   @override
-  String get mgrListEmptyMoves => 'No changes in the last two years.';
+  String get mgrListEmptyMoves => 'Καμία αλλαγή τα τελευταία δύο χρόνια.';
 
   @override
   String get mgrListEmptyCurrent =>
-      'Managers appear after the next season rollover.';
+      'Οι προπονητές εμφανίζονται μετά την επόμενη αλλαγή σεζόν.';
 
   @override
   String get editorSectionManagers => 'Ομοσπονδιακοί προπονητές';
