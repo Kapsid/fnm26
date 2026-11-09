@@ -16531,4 +16531,259 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get editorIssueManagerNationality =>
       'Vælg en nationalitet til træneren fra listen';
+
+  @override
+  String get shareButton => 'Del';
+
+  @override
+  String get shareSheetTitle => 'Del som billede';
+
+  @override
+  String get shareFormatSquare => 'Kvadrat';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Billedet kunne ikke oprettes.';
+
+  @override
+  String get shareSaveToPhotos => 'Gem i billeder';
+
+  @override
+  String get shareSavedToPhotos => 'Gemt i billeder';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM har ikke lov til at tilføje til dine billeder. Du kan tillade det i Indstillinger.';
+
+  @override
+  String get editorCountryAll => 'Alle lande';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtrer efter land';
+
+  @override
+  String get shareCabinetBig => 'Del mine trofæer';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Et uventet eventyr ved $competition og et flot resultat til sidst. Stolt af drengene.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Ingen gav os en chance ved $competition. Vi nåede længere, end nogen turde drømme om. Tak, drenge.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Ude af $competition, men sikke en tur. Dette hold fik hele landet til at tro. Stolt.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Havde ikke regnet med, at vi kom ud af gruppen ved $competition. Alt derefter var bonus. Fremad og opad.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Vi tog til $competition i håb om et point eller to og kom hjem efter at have spillet knockoutkampe. God turnering.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Længere end forhåndsvurderingerne sagde ved $competition. Det er et skridt fremad, helt enkelt.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Ude af $competition, og det svider lidt. Men ærligt talt: ingen havde set os nå så langt.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Okay, vi er ude af $competition. Stadig mere, end vi har klaret i årevis. Det tager jeg.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Intet trofæ fra $competition, og det var der aldrig udsigt til. Et godt løb er et godt løb. Gør det igen nu.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Stolt af hver eneste en.';
+
+  @override
+  String get yReactionPride1 => 'Sikke et løb. Tak, drenge.';
+
+  @override
+  String get yReactionPride2 => 'Ingen havde ventet det her. Husk det.';
+
+  @override
+  String get yReactionPride3 => 'Fremad og opad.';
+
+  @override
+  String get yReactionPride4 => 'Det hele er bonus. Nyd det.';
+
+  @override
+  String get yReactionPride5 => 'Bedre end nogen forudsagde. God turnering.';
+
+  @override
+  String get yReactionPride6 => 'Ude, men uden skam. Fair nok.';
+
+  @override
+  String get yReactionPride7 =>
+      'Det bedste hold gik videre. Vi gjorde os alligevel ære.';
+
+  @override
+  String get yReactionPride8 =>
+      'Lad os ikke blive for begejstrede. Men ja, et godt løb.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Ude af $competition, cirka hvor vi altid ville ende. Stolt af, at de prøvede.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition er slut for os. Vi gav de store hold kamp. Hovedet højt, drenge.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Ude af $competition. På papiret var det her altid den sandsynlige slutning. Lær af det og prøv igen.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Vores $competition slutter, hvor ranglisten sagde. Ingen skam i det.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Ude af $competition, som de fleste af os ventede. Ingen katastrofe, men heller intet chok.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition var et skridt for langt for denne trup. Forskellen er reel. Tid til at lukke den.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Gav alt. Mere kan man ikke forlange.';
+
+  @override
+  String get yReactionAcceptance1 => 'Hovedet højt. Vi kommer igen.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Det gør ondt, men de gjorde os ikke til skamme.';
+
+  @override
+  String get yReactionAcceptance3 => 'Nogenlunde som ventet, ærligt talt.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'De bedre hold gik videre. Sådan er fodbold.';
+
+  @override
+  String get yReactionAcceptance5 => 'Skuffet, ikke vred.';
+
+  @override
+  String get yReactionAcceptance6 => 'Lidt fladt, ærligt talt. Men ingen chok.';
+
+  @override
+  String get yReactionAcceptance7 => 'Vi er der ikke endnu. Det ved alle.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Samme niveau som sidst. Der skal et skridt op i næste cyklus.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Sportstøj';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Traditionelt flyselskab';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Jernbane';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Hotelkæde';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Kaffekæde';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Chokolade';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Mineralvand';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Apotekskæde';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Mode';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Urmager';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronik';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Software';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Streamingtjeneste';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Socialt netværk';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Møbler';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Dæk';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Rederi';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Lotteri';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Turistråd';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kosmetik';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Dyrefoder';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Bageri';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarked';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Sportsernæring';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Vin';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Te';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Ejendomme';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Fitnesscentre';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Avis';
 }

@@ -3,8 +3,6 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/domain/services/player/player_traits.dart';
-import 'package:fnm/domain/services/squad/condition.dart';
-import 'package:fnm/features/tactics/fatigue_tag.dart';
 import 'package:fnm/features/player/player_detail_screen.dart'
     show describeTrait;
 import 'package:fnm/l10n/app_localizations.dart';
@@ -87,15 +85,6 @@ class _SquadLegendSheet extends StatelessWidget {
               color: AppColors.error,
               label: l.squadLegendSuspended,
             ),
-            for (final f in const [
-              FatigueState.tired,
-              FatigueState.exhausted,
-            ])
-              _Entry(
-                icon: Icons.battery_alert_rounded,
-                color: fatigueColor(f),
-                label: fatigueLabel(l, f),
-              ),
 
             const SizedBox(height: AppSpacing.md),
             Text(

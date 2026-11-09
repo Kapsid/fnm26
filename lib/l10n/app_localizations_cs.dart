@@ -16805,4 +16805,257 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get editorIssueManagerNationality =>
       'Vyber trenérovi národnost ze seznamu';
+
+  @override
+  String get shareButton => 'Sdílet';
+
+  @override
+  String get shareSheetTitle => 'Sdílet jako obrázek';
+
+  @override
+  String get shareFormatSquare => 'Čtverec';
+
+  @override
+  String get shareFormatStory => 'Příběh';
+
+  @override
+  String get shareFailed => 'Obrázek se nepodařilo vytvořit.';
+
+  @override
+  String get shareSaveToPhotos => 'Uložit do fotek';
+
+  @override
+  String get shareSavedToPhotos => 'Uloženo do fotek';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM nemá povolení ukládat do fotek. Můžete ho povolit v Nastavení.';
+
+  @override
+  String get editorCountryAll => 'Všechny země';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtr podle země';
+
+  @override
+  String get shareCabinetBig => 'Sdílet moje trofeje';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Nečekaná jízda na turnaji $competition a nakonec skvělý výsledek. Jsem na kluky hrdý.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Na turnaji $competition nám nikdo nedával šanci. Došli jsme dál, než si kdo troufl snít. Díky, kluci.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Konec na turnaji $competition, ale jaká to byla jízda. Tenhle tým donutil celou zemi věřit. Hrdost.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Že na turnaji $competition postoupíme ze skupiny, jsem nečekal. Všechno potom byl bonus. Jedeme dál a výš.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Na turnaj $competition jsme jeli s nadějí na bod nebo dva a vracíme se z vyřazovací fáze. Povedený turnaj.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Na turnaji $competition jsme došli dál, než říkaly předpoklady. To je krok dopředu, jednoduše.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Konec na turnaji $competition trochu bolí. Ale buďme upřímní: takhle daleko nás nečekal nikdo.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Dobře, na turnaji $competition jsme skončili. Pořád víc, než se nám povedlo za poslední roky. Beru.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Z turnaje $competition trofej nevezeme a nikdy jsme ani nemohli. Dobrá jízda je dobrá jízda. Teď to zopakujte.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Jsem hrdý na každého z nich.';
+
+  @override
+  String get yReactionPride1 => 'Jaká jízda. Díky, kluci.';
+
+  @override
+  String get yReactionPride2 => 'Tohle nikdo nečekal. Na to nezapomeňte.';
+
+  @override
+  String get yReactionPride3 => 'Dál a výš.';
+
+  @override
+  String get yReactionPride4 => 'Všechno to byl bonus. Užijte si to.';
+
+  @override
+  String get yReactionPride5 =>
+      'Lepší, než kdokoli předpovídal. Povedený turnaj.';
+
+  @override
+  String get yReactionPride6 => 'Venku, ale bez ostudy. To beru.';
+
+  @override
+  String get yReactionPride7 =>
+      'Postoupil lepší tým. Stejně jsme si udělali čest.';
+
+  @override
+  String get yReactionPride8 => 'Nenechme se unést. Ale jo, povedená jízda.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Konec na turnaji $competition, zhruba tam, kde se to čekalo. Jsem rád, že to zkusili naplno.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turnaj $competition pro nás skončil. Velkým týmům jsme dali zabrat. Hlavy vzhůru, kluci.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Konec na turnaji $competition. Na papíře to tak dopadnout mělo. Poučit se a jít dál.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Náš turnaj $competition končí tam, kde to říkal žebříček. Žádná ostuda.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Konec na turnaji $competition, jak většina z nás čekala. Žádná katastrofa, jen ani žádné překvapení.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turnaj $competition byl na tenhle kádr zatím moc. Rozdíl je skutečný. Je čas ho dohnat.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Dali do toho všechno. Víc chtít nejde.';
+
+  @override
+  String get yReactionAcceptance1 => 'Hlavy vzhůru. Vrátíme se.';
+
+  @override
+  String get yReactionAcceptance2 => 'Bolí to, ale ostudu nám neudělali.';
+
+  @override
+  String get yReactionAcceptance3 => 'Upřímně, zhruba co jsme čekali.';
+
+  @override
+  String get yReactionAcceptance4 => 'Postoupili lepší. Takový je fotbal.';
+
+  @override
+  String get yReactionAcceptance5 => 'Zklamaný, ne naštvaný.';
+
+  @override
+  String get yReactionAcceptance6 => 'Upřímně trochu bez šťávy. Ale žádný šok.';
+
+  @override
+  String get yReactionAcceptance7 => 'Ještě na to nemáme. Ví to každý.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Stejná úroveň jako minule. Příště to chce krok nahoru.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Sportovní oblečení';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Letecká společnost';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Železnice';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Hotelový řetězec';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Kavárenský řetězec';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Čokoláda';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Minerální voda';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Řetězec lékáren';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Móda';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Hodinář';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronika';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Software';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Streamovací služba';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Sociální síť';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Nábytek';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Pneumatiky';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Námořní doprava';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Loterie';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Turistická centrála';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kosmetika';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Krmivo pro zvířata';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Pekárna';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Sportovní výživa';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Víno';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Čaj';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Reality';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Fitness centra';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Deník';
 }

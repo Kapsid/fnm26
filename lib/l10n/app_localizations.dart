@@ -24955,6 +24955,444 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a nationality for the manager from the list'**
   String get editorIssueManagerNationality;
+
+  /// Button that shares a match result or the trophy cabinet as an image (Instagram etc.).
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareButton;
+
+  /// Title of the sheet where the manager picks the image format to share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as an image'**
+  String get shareSheetTitle;
+
+  /// Share image format: a square feed post (1:1).
+  ///
+  /// In en, this message translates to:
+  /// **'Square'**
+  String get shareFormatSquare;
+
+  /// Share image format: a tall Instagram story (9:16). Use the word people know from Instagram in your language.
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get shareFormatStory;
+
+  /// Snack bar when the share image could not be made.
+  ///
+  /// In en, this message translates to:
+  /// **'The image could not be created.'**
+  String get shareFailed;
+
+  /// Button in the share sheet that saves the image straight into the phone's photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to photos'**
+  String get shareSaveToPhotos;
+
+  /// Snack bar after the share image was saved into the photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to photos'**
+  String get shareSavedToPhotos;
+
+  /// Snack bar when the phone refused the app access to save into the photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'FNM is not allowed to add to your photos. You can allow it in Settings.'**
+  String get sharePhotosDenied;
+
+  /// Editor, clubs and stadiums list: the country filter's choice that lists every country.
+  ///
+  /// In en, this message translates to:
+  /// **'All countries'**
+  String get editorCountryAll;
+
+  /// Editor, clubs and stadiums list: title of the sheet that picks a country to list.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by country'**
+  String get editorCountryFilterTitle;
+
+  /// Big button on the My Career tab that shares the manager's trophy cabinet as an image.
+  ///
+  /// In en, this message translates to:
+  /// **'Share my trophies'**
+  String get shareCabinetBig;
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'It was an unexpected run at the {competition} and a great result in the end. Proud of the boys.'**
+  String yExitProud0(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody gave us a chance at the {competition}. We went further than anyone dared to dream. Thank you, lads.'**
+  String yExitProud1(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}, but what a ride. This team made the whole country believe. Proud.'**
+  String yExitProud2(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t expect us to get out of the group at the {competition}. Everything after that was a bonus. Onward and upward.'**
+  String yExitProud3(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'We went to the {competition} hoping for a point or two and came home with a knockout run. Good tournament.'**
+  String yExitProud4(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Further than the form book said we would go at the {competition}. That is a step forward, plain and simple.'**
+  String yExitProud5(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 6. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}, and it stings a little. But be honest: nobody had us getting this far.'**
+  String yExitProud6(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 7. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Fine, we are out of the {competition}. Still more than we have managed in years. I\'ll take it.'**
+  String yExitProud7(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 8. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'No trophy from the {competition}, and there was never going to be one. A good run is a good run. Now do it again.'**
+  String yExitProud8(String competition);
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Proud of every single one of them.'**
+  String get yReactionPride0;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'What a run. Thank you, boys.'**
+  String get yReactionPride1;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody expected this. Remember that.'**
+  String get yReactionPride2;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Onward and upward.'**
+  String get yReactionPride3;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'A bonus, all of it. Enjoy it.'**
+  String get yReactionPride4;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Better than anyone predicted. Good tournament.'**
+  String get yReactionPride5;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 6. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Out, but not embarrassed. Fair enough.'**
+  String get yReactionPride6;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 7. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'The better side went through. We did ourselves proud anyway.'**
+  String get yReactionPride7;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 8. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Let us not get carried away. But yes, a good run.'**
+  String get yReactionPride8;
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}, about where we were always going to finish. Proud they gave it a go.'**
+  String yExitAccepted0(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} is over for us. We gave the big sides a game. Heads up, lads.'**
+  String yExitAccepted1(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 2. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}. On paper this was always the likely ending. Learn from it and go again.'**
+  String yExitAccepted2(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Our {competition} ends where the rankings said it would. No shame in that.'**
+  String yExitAccepted3(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 4. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}, as most of us expected. Not a disaster, just not a shock either.'**
+  String yExitAccepted4(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 5. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} was a step too far for this squad. The gap is real. Time to close it.'**
+  String yExitAccepted5(String competition);
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Gave it everything. That is all you can ask.'**
+  String get yReactionAcceptance0;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Heads up. We will be back.'**
+  String get yReactionAcceptance1;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts, but they did us no shame.'**
+  String get yReactionAcceptance2;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'About what we expected, honestly.'**
+  String get yReactionAcceptance3;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'The better sides went through. That is football.'**
+  String get yReactionAcceptance4;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Disappointed, not angry.'**
+  String get yReactionAcceptance5;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 6. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Bit flat, if I am honest. Still, no shocks.'**
+  String get yReactionAcceptance6;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 7. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'We are not there yet. Everyone knows it.'**
+  String get yReactionAcceptance7;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 8. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Same level as last time. Need a step up next cycle.'**
+  String get yReactionAcceptance8;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Sportswear'**
+  String get sponsorIndustryExtraSportswear;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Full-service airline'**
+  String get sponsorIndustryExtraAirline;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Railway'**
+  String get sponsorIndustryExtraRailway;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel chain'**
+  String get sponsorIndustryExtraHotels;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee chain'**
+  String get sponsorIndustryExtraCoffee;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Chocolate'**
+  String get sponsorIndustryExtraChocolate;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Mineral water'**
+  String get sponsorIndustryExtraMineralWater;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Pharmacy chain'**
+  String get sponsorIndustryExtraPharmacy;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Fashion'**
+  String get sponsorIndustryExtraFashion;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Watchmaker'**
+  String get sponsorIndustryExtraWatches;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronics'**
+  String get sponsorIndustryExtraElectronics;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Software'**
+  String get sponsorIndustryExtraSoftware;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaming service'**
+  String get sponsorIndustryExtraStreaming;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Social network'**
+  String get sponsorIndustryExtraSocialNetwork;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Furniture'**
+  String get sponsorIndustryExtraFurniture;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Tyres'**
+  String get sponsorIndustryExtraTyres;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping line'**
+  String get sponsorIndustryExtraShipping;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Lottery'**
+  String get sponsorIndustryExtraLottery;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Tourist board'**
+  String get sponsorIndustryExtraTourism;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Cosmetics'**
+  String get sponsorIndustryExtraCosmetics;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet food'**
+  String get sponsorIndustryExtraPetFood;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Bakery'**
+  String get sponsorIndustryExtraBakery;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Supermarket'**
+  String get sponsorIndustryExtraSupermarket;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Sports nutrition'**
+  String get sponsorIndustryExtraSportsNutrition;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Wine'**
+  String get sponsorIndustryExtraWine;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Tea'**
+  String get sponsorIndustryExtraTea;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Real estate'**
+  String get sponsorIndustryExtraRealEstate;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness clubs'**
+  String get sponsorIndustryExtraFitness;
+
+  /// A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short.
+  ///
+  /// In en, this message translates to:
+  /// **'Newspaper'**
+  String get sponsorIndustryExtraNewspaper;
 }
 
 class _AppLocalizationsDelegate

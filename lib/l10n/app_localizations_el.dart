@@ -16620,4 +16620,261 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get editorIssueManagerNationality =>
       'Διάλεξε εθνικότητα για τον προπονητή από τη λίστα';
+
+  @override
+  String get shareButton => 'Κοινοποίηση';
+
+  @override
+  String get shareSheetTitle => 'Κοινοποίηση ως εικόνα';
+
+  @override
+  String get shareFormatSquare => 'Τετράγωνο';
+
+  @override
+  String get shareFormatStory => 'Ιστορία';
+
+  @override
+  String get shareFailed => 'Δεν ήταν δυνατή η δημιουργία της εικόνας.';
+
+  @override
+  String get shareSaveToPhotos => 'Αποθήκευση στις φωτογραφίες';
+
+  @override
+  String get shareSavedToPhotos => 'Αποθηκεύτηκε στις φωτογραφίες';
+
+  @override
+  String get sharePhotosDenied =>
+      'Το FNM δεν έχει άδεια να προσθέτει στις φωτογραφίες σου. Μπορείς να το επιτρέψεις στις Ρυθμίσεις.';
+
+  @override
+  String get editorCountryAll => 'Όλες οι χώρες';
+
+  @override
+  String get editorCountryFilterTitle => 'Φιλτράρισμα ανά χώρα';
+
+  @override
+  String get shareCabinetBig => 'Κοινοποίηση των τροπαίων μου';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Μια απρόσμενη πορεία στο τουρνουά $competition και τελικά ένα σπουδαίο αποτέλεσμα. Περήφανος για τα παιδιά.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Κανείς δεν μας έδινε ελπίδες στο τουρνουά $competition. Φτάσαμε πιο μακριά απ\' όσο τολμούσε να ονειρευτεί κανείς. Ευχαριστούμε, παιδιά.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Εκτός τουρνουά $competition, αλλά τι ταξίδι. Αυτή η ομάδα έκανε όλη τη χώρα να πιστέψει. Περηφάνια.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Δεν περίμενα να περάσουμε από τον όμιλο στο τουρνουά $competition. Ό,τι ήρθε μετά ήταν μπόνους. Μόνο μπροστά.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Πήγαμε στο τουρνουά $competition ελπίζοντας σε έναν βαθμό ή δύο και γυρίσαμε έχοντας παίξει στα νοκ άουτ. Καλό τουρνουά.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Πιο μακριά απ\' όσο έλεγαν τα προγνωστικά στο τουρνουά $competition. Είναι ένα βήμα μπροστά, απλά.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Εκτός τουρνουά $competition, και τσούζει λίγο. Αλλά ας είμαστε ειλικρινείς: κανείς δεν μας έβλεπε τόσο μακριά.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Εντάξει, αποκλειστήκαμε από το τουρνουά $competition. Και πάλι περισσότερα απ\' όσα καταφέραμε εδώ και χρόνια. Το δέχομαι.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Κανένα τρόπαιο από το τουρνουά $competition, ούτε θα υπήρχε ποτέ. Μια καλή πορεία είναι καλή πορεία. Τώρα ξανά.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Περήφανος για τον καθένα τους.';
+
+  @override
+  String get yReactionPride1 => 'Τι πορεία. Ευχαριστούμε, παιδιά.';
+
+  @override
+  String get yReactionPride2 => 'Κανείς δεν το περίμενε. Να το θυμάστε.';
+
+  @override
+  String get yReactionPride3 => 'Μόνο μπροστά και ψηλά.';
+
+  @override
+  String get yReactionPride4 => 'Όλα μπόνους. Απολαύστε το.';
+
+  @override
+  String get yReactionPride5 =>
+      'Καλύτερα απ\' ό,τι προέβλεπε κανείς. Καλό τουρνουά.';
+
+  @override
+  String get yReactionPride6 => 'Εκτός, αλλά χωρίς ντροπή. Δίκαιο.';
+
+  @override
+  String get yReactionPride7 =>
+      'Πέρασε η καλύτερη ομάδα. Εμείς πάντως φανήκαμε αντάξιοι.';
+
+  @override
+  String get yReactionPride8 => 'Ας μην παρασυρόμαστε. Αλλά ναι, καλή πορεία.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Εκτός τουρνουά $competition, περίπου εκεί που αναμενόταν. Περήφανος που το προσπάθησαν.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Το τουρνουά $competition τελείωσε για εμάς. Δυσκολέψαμε τους μεγάλους. Ψηλά το κεφάλι, παιδιά.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Εκτός τουρνουά $competition. Στα χαρτιά αυτό ήταν πάντα το πιθανό τέλος. Μαθαίνουμε και ξαναπροσπαθούμε.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Το δικό μας τουρνουά $competition τελειώνει εκεί που έλεγε η κατάταξη. Καμία ντροπή.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Εκτός τουρνουά $competition, όπως περιμέναμε οι περισσότεροι. Ούτε καταστροφή, ούτε σοκ.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Το τουρνουά $competition ήταν ένα σκαλί πολύ ψηλά για αυτό το ρόστερ. Η διαφορά είναι πραγματική. Ώρα να την καλύψουμε.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Τα έδωσαν όλα. Δεν μπορείς να ζητήσεις περισσότερα.';
+
+  @override
+  String get yReactionAcceptance1 => 'Ψηλά το κεφάλι. Θα επιστρέψουμε.';
+
+  @override
+  String get yReactionAcceptance2 => 'Πονάει, αλλά δεν μας ντρόπιασαν.';
+
+  @override
+  String get yReactionAcceptance3 => 'Περίπου ό,τι περιμέναμε, ειλικρινά.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Πέρασαν οι καλύτεροι. Αυτό είναι το ποδόσφαιρο.';
+
+  @override
+  String get yReactionAcceptance5 => 'Απογοητευμένος, όχι θυμωμένος.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Λίγο άχρωμο, για να είμαι ειλικρινής. Πάντως χωρίς σοκ.';
+
+  @override
+  String get yReactionAcceptance7 => 'Δεν είμαστε ακόμα εκεί. Το ξέρουν όλοι.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Ίδιο επίπεδο με την προηγούμενη φορά. Χρειάζεται ένα βήμα παραπάνω στον επόμενο κύκλο.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Αθλητικά ρούχα';
+
+  @override
+  String get sponsorIndustryExtraAirline =>
+      'Αεροπορική εταιρεία πλήρους εξυπηρέτησης';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Σιδηρόδρομοι';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Αλυσίδα ξενοδοχείων';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Αλυσίδα καφέ';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Σοκολάτα';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Μεταλλικό νερό';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Αλυσίδα φαρμακείων';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Μόδα';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Ωρολογοποιός';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Ηλεκτρονικά';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Λογισμικό';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Υπηρεσία streaming';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Κοινωνικό δίκτυο';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Έπιπλα';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Ελαστικά';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Ναυτιλιακή εταιρεία';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Λαχείο';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Οργανισμός τουρισμού';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Καλλυντικά';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Τροφές κατοικίδιων';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Αρτοποιείο';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Σούπερ μάρκετ';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Αθλητική διατροφή';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Κρασί';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Τσάι';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Ακίνητα';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Γυμναστήρια';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Εφημερίδα';
 }

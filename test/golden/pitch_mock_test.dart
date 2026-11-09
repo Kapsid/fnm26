@@ -610,6 +610,20 @@ List<_Scene> _scenes() {
       personal: true,
       tags: ('DE GRAAF', 'PEETERS'),
     ),
+    // A light canopy on ribs (Italy's curated ground), in clear day.
+    _Scene(
+      'phone_canopy',
+      home: 'ITA',
+      away: 'CRO',
+      capacity: 60000,
+      stadium: 'Mock Canopy Stadium',
+      city: 'Roma',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(15, 0),
+      matchDay: DateTime(2026, 9, 8),
+      personal: true,
+      tags: ('ROSSETTI', 'HORVAT'),
+    ),
     _Scene(
       'phone_arch',
       home: 'ESP',

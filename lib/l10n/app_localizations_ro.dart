@@ -16946,4 +16946,258 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get editorIssueManagerNationality =>
       'Alege din listă o naționalitate pentru selecționer';
+
+  @override
+  String get shareButton => 'Distribuie';
+
+  @override
+  String get shareSheetTitle => 'Distribuie ca imagine';
+
+  @override
+  String get shareFormatSquare => 'Pătrat';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Imaginea nu a putut fi creată.';
+
+  @override
+  String get shareSaveToPhotos => 'Salvează în poze';
+
+  @override
+  String get shareSavedToPhotos => 'Salvată în poze';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM nu are voie să adauge în pozele tale. Poți permite asta din Setări.';
+
+  @override
+  String get editorCountryAll => 'Toate țările';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtrează după țară';
+
+  @override
+  String get shareCabinetBig => 'Distribuie trofeele mele';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Un parcurs neașteptat la turneul $competition și un rezultat grozav până la urmă. Mândru de băieți.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Nimeni nu ne dădea vreo șansă la turneul $competition. Am ajuns mai departe decât îndrăznea oricine să viseze. Mulțumim, băieți.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Afară de la turneul $competition, dar ce drum. Echipa asta a făcut toată țara să creadă. Mândrie.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Nu mă așteptam să trecem de grupe la turneul $competition. Tot ce a urmat a fost bonus. Tot înainte și mai sus.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Am mers la turneul $competition sperând la un punct sau două și ne întoarcem după fazele eliminatorii. Turneu bun.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Mai departe decât spuneau pronosticurile la turneul $competition. E un pas înainte, pur și simplu.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Afară de la turneul $competition, și doare puțin. Dar să fim cinstiți: nimeni nu ne vedea ajungând atât de departe.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Bine, am ieșit din turneul $competition. Tot mai mult decât am reușit în ultimii ani. Accept.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Niciun trofeu de la turneul $competition, și n-avea cum să fie. Un parcurs bun e un parcurs bun. Acum, repetați-l.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Mândru de fiecare dintre ei.';
+
+  @override
+  String get yReactionPride1 => 'Ce parcurs. Mulțumim, băieți.';
+
+  @override
+  String get yReactionPride2 => 'Nimeni nu se aștepta la asta. Țineți minte.';
+
+  @override
+  String get yReactionPride3 => 'Tot înainte și mai sus.';
+
+  @override
+  String get yReactionPride4 => 'Totul e bonus. Bucurați-vă.';
+
+  @override
+  String get yReactionPride5 => 'Mai bine decât prezicea oricine. Turneu bun.';
+
+  @override
+  String get yReactionPride6 => 'Afară, dar fără rușine. Corect.';
+
+  @override
+  String get yReactionPride7 =>
+      'A trecut echipa mai bună. Noi ne-am făcut oricum cinste.';
+
+  @override
+  String get yReactionPride8 =>
+      'Să nu ne entuziasmăm prea tare. Dar da, un parcurs bun.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Afară de la turneul $competition, cam unde ne așteptam. Mândru că au încercat.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turneul $competition s-a încheiat pentru noi. Le-am dat de furcă celor mari. Capul sus, băieți.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Afară de la turneul $competition. Pe hârtie, ăsta era finalul probabil. Învățăm și încercăm din nou.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Turneul nostru, $competition, se încheie unde spunea clasamentul. Nicio rușine.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Afară de la turneul $competition, cum se așteptau cei mai mulți dintre noi. Nu e un dezastru, dar nici un șoc.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turneul $competition a fost un pas prea mare pentru acest lot. Diferența e reală. E timpul s-o reducem.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Au dat tot. Mai mult nu poți cere.';
+
+  @override
+  String get yReactionAcceptance1 => 'Capul sus. Ne vom întoarce.';
+
+  @override
+  String get yReactionAcceptance2 => 'Doare, dar nu ne-au făcut de rușine.';
+
+  @override
+  String get yReactionAcceptance3 => 'Cam ce ne așteptam, sincer.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Au trecut echipele mai bune. Asta e fotbalul.';
+
+  @override
+  String get yReactionAcceptance5 => 'Dezamăgit, nu furios.';
+
+  @override
+  String get yReactionAcceptance6 => 'Cam fad, sincer. Dar fără șocuri.';
+
+  @override
+  String get yReactionAcceptance7 => 'Nu suntem încă acolo. Toată lumea știe.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Același nivel ca data trecută. E nevoie de un pas înainte în ciclul următor.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Îmbrăcăminte sport';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Companie aeriană full-service';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Căi ferate';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Lanț hotelier';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Lanț de cafenele';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Ciocolată';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Apă minerală';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Lanț de farmacii';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Modă';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Ceasornicar';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Electronice';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Software';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Serviciu de streaming';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Rețea socială';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Mobilier';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Anvelope';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Companie de transport maritim';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Loterie';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Oficiul de turism';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Cosmetice';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Hrană pentru animale';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Brutărie';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Nutriție sportivă';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Vin';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Ceai';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Imobiliare';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Cluburi de fitness';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Ziar';
 }

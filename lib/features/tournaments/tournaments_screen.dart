@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/features/world_pack/trophy_image.dart';
@@ -156,6 +158,7 @@ class TournamentsScreen extends ConsumerWidget {
           ),
         ],
       ),
+      extendBody: true,
       bottomNavigationBar: AppBottomNav(
         careerId: careerId,
         current: AppTab.competitions,
@@ -165,68 +168,76 @@ class TournamentsScreen extends ConsumerWidget {
         error: (_, _) =>
             Center(child: Text(l.tourSharedCouldNotLoadTournaments)),
         data: (overview) {
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
-            children: [
-              Text(
-                l.tourSharedPrestigeStage,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
+          // A Builder for the body's own context: the dock's clearance is
+          // read from the padding the Scaffold gives its body.
+          return Builder(
+            builder: (context) => ListView(
+              padding: AppBottomNav.padScroll(
+                context,
+                const EdgeInsets.all(AppSpacing.marginMobile),
+              ),
+              children: [
+                Text(
+                  l.tourSharedPrestigeStage,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                l.tourSharedOverview,
-                style: AppTypography.headlineLargeMobile,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AppCard(
-                key: TourKeys.worldRanking,
-                onTap: () => context.go('${Routes.ranking}?careerId=$careerId'),
-                child: Row(
-                  children: [
-                    const Icon(Icons.leaderboard, color: AppColors.primary),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Text(
-                        l.tourWorldRanking,
-                        style: AppTypography.titleMedium,
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l.tourSharedOverview,
+                  style: AppTypography.headlineLargeMobile,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                AppCard(
+                  key: TourKeys.worldRanking,
+                  onTap: () =>
+                      context.go('${Routes.ranking}?careerId=$careerId'),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.leaderboard, color: AppColors.primary),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Text(
+                          l.tourWorldRanking,
+                          style: AppTypography.titleMedium,
+                        ),
                       ),
-                    ),
-                    const Icon(
-                      Icons.chevron_right,
-                      color: AppColors.onSurfaceVariant,
-                      size: 20,
-                    ),
-                  ],
+                      const Icon(
+                        Icons.chevron_right,
+                        color: AppColors.onSurfaceVariant,
+                        size: 20,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                l.tourYourCompetitions,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  l.tourYourCompetitions,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _tileGrid(context, [
-                for (final s in _mineSpecs(careerId, overview))
-                  _specTile(context, s),
-              ]),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                l.tourOtherContinents,
-                style: AppTypography.labelMedium.copyWith(
-                  color: AppColors.primary,
+                const SizedBox(height: AppSpacing.sm),
+                _tileGrid(context, [
+                  for (final s in _mineSpecs(careerId, overview))
+                    _specTile(context, s),
+                ]),
+                const SizedBox(height: AppSpacing.lg),
+                Text(
+                  l.tourOtherContinents,
+                  style: AppTypography.labelMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _tileGrid(context, [
-                for (final s in _otherSpecs(careerId, overview))
-                  _specTile(context, s),
-              ]),
-              const SizedBox(height: AppSpacing.lg),
-            ],
+                const SizedBox(height: AppSpacing.sm),
+                _tileGrid(context, [
+                  for (final s in _otherSpecs(careerId, overview))
+                    _specTile(context, s),
+                ]),
+                const SizedBox(height: AppSpacing.lg),
+              ],
+            ),
           );
         },
       ),
@@ -386,14 +397,16 @@ class TournamentsScreen extends ConsumerWidget {
     return [for (final e in indexed) e.value];
   }
 
-  /// Lays [tiles] out two-per-row as square cells, without introducing a nested
-  /// scrollable (keeps the page a single scroll view).
+  /// Lays [tiles] out two-per-row, without introducing a nested scrollable
+  /// (keeps the page a single scroll view).
   ///
-  /// The cells are 1.25:1. Under a larger text size a row grows to its taller
-  /// tile instead (both tiles of a row kept the same height), so the tile's
-  /// copy never spills out of a cell sized for the normal text.
+  /// The cells are at least 1.25:1, and a row grows to its taller tile (both
+  /// tiles of a row kept the same height). A fixed 1.25:1 cell was only tall
+  /// enough for a one-line name: "World Championship" or "European
+  /// Championship" wraps to two lines on a 393-point iPhone, and a longer
+  /// translation or a larger text size does it anywhere, and the tile's copy
+  /// then spilled out of the bottom of its cell.
   static Widget _tileGrid(BuildContext context, List<Widget> tiles) {
-    final grows = MediaQuery.textScalerOf(context).scale(16) > 16;
     final rows = <Widget>[];
     for (var i = 0; i < tiles.length; i += 2) {
       final left = tiles[i];
@@ -401,39 +414,24 @@ class TournamentsScreen extends ConsumerWidget {
       rows.add(
         Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: grows
-              ? LayoutBuilder(
-                  builder: (context, box) {
-                    final cell = (box.maxWidth - AppSpacing.sm) / 2;
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: cell / 1.25),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(child: left),
-                            const SizedBox(width: AppSpacing.sm),
-                            Expanded(child: right ?? const SizedBox.shrink()),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                )
-              : Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: AspectRatio(aspectRatio: 1.25, child: left),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: right == null
-                          ? const SizedBox.shrink()
-                          : AspectRatio(aspectRatio: 1.25, child: right),
-                    ),
-                  ],
+          child: LayoutBuilder(
+            builder: (context, box) {
+              final cell = (box.maxWidth - AppSpacing.sm) / 2;
+              return ConstrainedBox(
+                constraints: BoxConstraints(minHeight: cell / 1.25),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: left),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(child: right ?? const SizedBox.shrink()),
+                    ],
+                  ),
                 ),
+              );
+            },
+          ),
         ),
       );
     }
@@ -501,17 +499,23 @@ class _ChampionshipTile extends StatelessWidget {
             );
           }(),
           const Spacer(),
-          Text(
-            // A Nations Cup tile says just that: the strap under it names the
-            // continent, and "Coupe des Nations d’Amérique du Nord" cannot
-            // fit two lines of a half-width tile in any language.
-            NationsCups.isNationsCup(c.name) &&
-                    ActiveWorld.current.competition(c.name) == null
-                ? l.compNationsCup
-                : competitionLabel(l, c.name),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.labelLarge,
+          Builder(
+            builder: (context) {
+              // A Nations Cup tile says just that: the strap under it names
+              // the continent, and "Coupe des Nations d’Amérique du Nord"
+              // cannot fit two lines of a half-width tile in any language.
+              final name =
+                  NationsCups.isNationsCup(c.name) &&
+                      ActiveWorld.current.competition(c.name) == null
+                  ? l.compNationsCup
+                  : competitionLabel(l, c.name);
+              return Text(
+                name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: _fitLongestWord(context, name, AppTypography.labelLarge),
+              );
+            },
           ),
           const SizedBox(height: 2),
           Text(
@@ -522,20 +526,34 @@ class _ChampionshipTile extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.14),
-                  borderRadius: AppRadii.smAll,
-                ),
-                child: Text(
-                  label,
-                  style: AppTypography.labelSmall.copyWith(color: accent),
+              // The status chip shrinks to its share rather than running off
+              // the tile: "VENCEDORES ANTERIORES" is wider than half a phone.
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.14),
+                    borderRadius: AppRadii.smAll,
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      softWrap: false,
+                      style: AppTypography.labelSmall.copyWith(color: accent),
+                    ),
+                  ),
                 ),
               ),
-              const Spacer(),
-              if (championName != null)
+              if (championName != null) ...[
+                const SizedBox(width: AppSpacing.xs),
                 Flexible(
                   child: Text(
                     championName!,
@@ -547,10 +565,45 @@ class _ChampionshipTile extends StatelessWidget {
                     ),
                   ),
                 ),
+              ],
             ],
           ),
         ],
       ),
     );
   }
+}
+
+/// [style], made smaller when the longest single word of [text] would not fit
+/// the width of a half-width tile: a German compound ("Europameisterschaft")
+/// otherwise breaks in the middle of the word. Two-word names still wrap at
+/// the space, at full size.
+///
+/// The width is worked out from the screen rather than measured, because the
+/// tile sits under an IntrinsicHeight, which a LayoutBuilder cannot.
+TextStyle _fitLongestWord(BuildContext context, String text, TextStyle style) {
+  final screen = MediaQuery.sizeOf(context).width;
+  // Two tiles a row between the page margins, each with the card's padding
+  // and its one-pixel border inside it.
+  final available =
+      (screen - 2 * AppSpacing.marginMobile - AppSpacing.sm) / 2 -
+      2 * AppSpacing.md -
+      2;
+  final words = text.split(RegExp(r'\s+'));
+  var widest = 0.0;
+  for (final w in words) {
+    final painter = TextPainter(
+      text: TextSpan(text: w, style: style),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    widest = math.max(widest, painter.width);
+    painter.dispose();
+  }
+  if (available <= 0 || widest <= available) return style;
+  final size = style.fontSize ?? 16;
+  return style.copyWith(
+    fontSize: math.max(size * 0.7, size * available / widest - 0.1),
+  );
 }

@@ -506,6 +506,7 @@ matchPreviewProvider = FutureProvider.autoDispose.family<MatchPreview?, int>((
     xi: oppXi,
     bench: oppBench,
     rng: SeededRng.forFixture(career.rngSeed, fixture.id ^ 0x5195),
+    friendly: fixture.round == Rounds.friendly,
   );
 
   // The nation's medical investment for the current cycle reduces its

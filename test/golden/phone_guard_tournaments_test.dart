@@ -9,14 +9,14 @@ import '../helpers/seeded_save.dart';
 /// the specs both layouts share.
 ///
 /// At 390 wide a tile whose name takes two lines ("World Championship",
-/// "African Championship", ...) already overflows its 1.25 aspect cell by a
-/// few pixels. That is the phone as it ships, so this guard pins it as it is:
-/// it lets RenderFlex overflows through, counts them, and expects the same
-/// count, so a change that adds or removes one still fails here.
+/// "African Championship", ...) used to overflow its fixed 1.25 aspect cell
+/// by a few pixels; the cells now grow to their taller tile. The guard still
+/// counts RenderFlex overflows and expects none, so one creeping back in
+/// fails here.
 void main() {
   for (final (name, size, overflows) in [
-    ('tournaments_phone', kPhoneSize, 6),
-    ('tournaments_phone_tall', const Size(390, 1600), 6),
+    ('tournaments_phone', kPhoneSize, 0),
+    ('tournaments_phone_tall', const Size(390, 1600), 0),
   ]) {
     testWidgets(name, (tester) async {
       final save = await seedSave(tester);

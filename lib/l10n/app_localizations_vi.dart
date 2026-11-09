@@ -16377,4 +16377,260 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get editorIssueManagerNationality =>
       'Chọn quốc tịch cho huấn luyện viên từ danh sách';
+
+  @override
+  String get shareButton => 'Chia sẻ';
+
+  @override
+  String get shareSheetTitle => 'Chia sẻ dưới dạng ảnh';
+
+  @override
+  String get shareFormatSquare => 'Vuông';
+
+  @override
+  String get shareFormatStory => 'Tin';
+
+  @override
+  String get shareFailed => 'Không thể tạo ảnh.';
+
+  @override
+  String get shareSaveToPhotos => 'Lưu vào ảnh';
+
+  @override
+  String get shareSavedToPhotos => 'Đã lưu vào ảnh';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM chưa được phép thêm vào ảnh của bạn. Bạn có thể cho phép trong Cài đặt.';
+
+  @override
+  String get editorCountryAll => 'Tất cả quốc gia';
+
+  @override
+  String get editorCountryFilterTitle => 'Lọc theo quốc gia';
+
+  @override
+  String get shareCabinetBig => 'Chia sẻ danh hiệu của tôi';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Một hành trình bất ngờ ở $competition và cuối cùng là một kết quả tuyệt vời. Tự hào về các chàng trai.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Không ai cho chúng ta cơ hội ở $competition. Chúng ta đã đi xa hơn cả những gì dám mơ. Cảm ơn các chàng trai.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Dừng bước ở $competition, nhưng thật là một hành trình. Đội bóng này đã khiến cả nước tin tưởng. Tự hào.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Không nghĩ chúng ta sẽ vượt qua vòng bảng ở $competition. Mọi thứ sau đó đều là phần thưởng. Tiến lên thôi.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Chúng ta đến $competition mong một hai điểm và trở về sau khi chơi ở vòng loại trực tiếp. Một giải đấu tốt.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Đi xa hơn những gì được dự đoán ở $competition. Đơn giản đó là một bước tiến.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Dừng bước ở $competition, có chút tiếc nuối. Nhưng thật lòng mà nói: chẳng ai nghĩ chúng ta đi xa đến thế.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Thôi được, chúng ta đã bị loại khỏi $competition. Vẫn hơn những gì làm được trong nhiều năm. Chấp nhận.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Không có danh hiệu nào ở $competition, và vốn dĩ cũng không thể có. Một hành trình đẹp vẫn là hành trình đẹp. Giờ hãy làm lại lần nữa.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Tự hào về từng người một.';
+
+  @override
+  String get yReactionPride1 => 'Hành trình tuyệt vời. Cảm ơn các chàng trai.';
+
+  @override
+  String get yReactionPride2 => 'Không ai ngờ điều này. Hãy nhớ lấy.';
+
+  @override
+  String get yReactionPride3 => 'Tiến lên và vươn cao.';
+
+  @override
+  String get yReactionPride4 => 'Tất cả đều là phần thưởng. Tận hưởng đi.';
+
+  @override
+  String get yReactionPride5 => 'Tốt hơn mọi dự đoán. Một giải đấu tốt.';
+
+  @override
+  String get yReactionPride6 => 'Bị loại, nhưng không hổ thẹn. Vậy là ổn.';
+
+  @override
+  String get yReactionPride7 =>
+      'Đội mạnh hơn đã đi tiếp. Dù sao chúng ta cũng đã chơi rất đáng tự hào.';
+
+  @override
+  String get yReactionPride8 => 'Đừng quá đà. Nhưng đúng, một hành trình tốt.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Dừng bước ở $competition, đúng như dự đoán. Tự hào vì các cầu thủ đã cố gắng.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition đã khép lại với chúng ta. Chúng ta đã khiến các đội lớn chật vật. Ngẩng cao đầu lên.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Dừng bước ở $competition. Trên giấy tờ, đây vốn là kết cục dễ xảy ra nhất. Rút kinh nghiệm rồi làm lại.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return '$competition của chúng ta kết thúc đúng như bảng xếp hạng. Không có gì đáng xấu hổ.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Dừng bước ở $competition, như phần lớn chúng ta đã đoán. Không phải thảm họa, nhưng cũng chẳng bất ngờ.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition vẫn là một bước quá xa với đội hình này. Khoảng cách là có thật. Đã đến lúc thu hẹp nó.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Đã cống hiến hết mình. Không thể đòi hỏi hơn.';
+
+  @override
+  String get yReactionAcceptance1 => 'Ngẩng cao đầu. Chúng ta sẽ trở lại.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Đau đấy, nhưng họ không làm chúng ta xấu hổ.';
+
+  @override
+  String get yReactionAcceptance3 => 'Thật lòng thì cũng gần như dự đoán.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Những đội mạnh hơn đã đi tiếp. Bóng đá là vậy.';
+
+  @override
+  String get yReactionAcceptance5 => 'Thất vọng, chứ không giận.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Thật lòng thì hơi nhạt. Nhưng không có cú sốc nào.';
+
+  @override
+  String get yReactionAcceptance7 => 'Chúng ta chưa tới tầm đó. Ai cũng biết.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Vẫn trình độ như lần trước. Chu kỳ tới cần tiến thêm một bước.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Quần áo thể thao';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Hãng hàng không đầy đủ dịch vụ';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Đường sắt';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Chuỗi khách sạn';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Chuỗi cà phê';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Sô cô la';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Nước khoáng';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Chuỗi nhà thuốc';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Thời trang';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Hãng đồng hồ';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Điện tử';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Phần mềm';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Dịch vụ phát trực tuyến';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Mạng xã hội';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Nội thất';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Lốp xe';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Hãng vận tải biển';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Xổ số';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Cục du lịch';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Mỹ phẩm';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Thức ăn thú cưng';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Tiệm bánh';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Siêu thị';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Dinh dưỡng thể thao';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Rượu vang';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Trà';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Bất động sản';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Phòng tập thể hình';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Báo chí';
 }

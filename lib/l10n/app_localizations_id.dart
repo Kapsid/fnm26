@@ -16439,4 +16439,264 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get editorIssueManagerNationality =>
       'Pilih kewarganegaraan pelatih dari daftar';
+
+  @override
+  String get shareButton => 'Bagikan';
+
+  @override
+  String get shareSheetTitle => 'Bagikan sebagai gambar';
+
+  @override
+  String get shareFormatSquare => 'Persegi';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Gambar tidak dapat dibuat.';
+
+  @override
+  String get shareSaveToPhotos => 'Simpan ke foto';
+
+  @override
+  String get shareSavedToPhotos => 'Tersimpan ke foto';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM tidak diizinkan menambah ke foto Anda. Anda bisa mengizinkannya di Pengaturan.';
+
+  @override
+  String get editorCountryAll => 'Semua negara';
+
+  @override
+  String get editorCountryFilterTitle => 'Filter menurut negara';
+
+  @override
+  String get shareCabinetBig => 'Bagikan trofi saya';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Perjalanan tak terduga di $competition dan hasil yang luar biasa pada akhirnya. Bangga pada para pemain.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Tak ada yang memberi kita peluang di $competition. Kita melangkah lebih jauh dari mimpi siapa pun. Terima kasih, para pemain.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Tersingkir dari $competition, tapi sungguh perjalanan luar biasa. Tim ini membuat seluruh negeri percaya. Bangga.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Tak menyangka kita lolos dari grup di $competition. Semua setelahnya adalah bonus. Terus maju.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Kita datang ke $competition berharap satu atau dua poin dan pulang setelah bermain di babak gugur. Turnamen yang bagus.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Lebih jauh dari perkiraan di atas kertas di $competition. Itu langkah maju, sesederhana itu.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Tersingkir dari $competition, dan sedikit perih. Tapi jujur saja: tak ada yang mengira kita sampai sejauh ini.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Baiklah, kita tersingkir dari $competition. Tetap lebih baik dari capaian kita bertahun-tahun. Saya terima.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Tak ada trofi dari $competition, dan memang tak akan pernah ada. Perjalanan bagus tetap perjalanan bagus. Sekarang ulangi lagi.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Bangga pada setiap dari mereka.';
+
+  @override
+  String get yReactionPride1 =>
+      'Perjalanan yang luar biasa. Terima kasih, semua.';
+
+  @override
+  String get yReactionPride2 => 'Tak ada yang menyangka ini. Ingat itu.';
+
+  @override
+  String get yReactionPride3 => 'Terus maju dan naik.';
+
+  @override
+  String get yReactionPride4 => 'Semuanya bonus. Nikmati saja.';
+
+  @override
+  String get yReactionPride5 =>
+      'Lebih baik dari prediksi siapa pun. Turnamen yang bagus.';
+
+  @override
+  String get yReactionPride6 => 'Tersingkir, tapi tidak memalukan. Cukup adil.';
+
+  @override
+  String get yReactionPride7 =>
+      'Tim yang lebih baik lolos. Kita tetap tampil membanggakan.';
+
+  @override
+  String get yReactionPride8 =>
+      'Jangan berlebihan. Tapi ya, perjalanan yang bagus.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Tersingkir dari $competition, kurang lebih sesuai perkiraan. Bangga mereka sudah berusaha.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition sudah berakhir bagi kita. Kita memberi perlawanan kepada tim besar. Angkat kepala, semua.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Tersingkir dari $competition. Di atas kertas, memang ini akhir yang paling mungkin. Belajar dan coba lagi.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return '$competition kita berakhir sesuai peringkat. Tak ada yang memalukan.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Tersingkir dari $competition, seperti dugaan kebanyakan dari kita. Bukan bencana, tapi juga bukan kejutan.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition masih terlalu jauh untuk skuad ini. Kesenjangannya nyata. Saatnya menutupnya.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Sudah memberi segalanya. Tak bisa minta lebih.';
+
+  @override
+  String get yReactionAcceptance1 => 'Angkat kepala. Kita akan kembali.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Sakit, tapi mereka tidak mempermalukan kita.';
+
+  @override
+  String get yReactionAcceptance3 => 'Jujur, kurang lebih sesuai perkiraan.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Tim yang lebih baik lolos. Itulah sepak bola.';
+
+  @override
+  String get yReactionAcceptance5 => 'Kecewa, bukan marah.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Agak hambar, jujur saja. Tapi tak ada kejutan.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'Kita belum sampai di sana. Semua orang tahu.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Level yang sama seperti terakhir kali. Perlu naik kelas di siklus berikutnya.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Pakaian olahraga';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Maskapai layanan penuh';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Kereta api';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Jaringan hotel';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Jaringan kedai kopi';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Cokelat';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Air mineral';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Jaringan apotek';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Mode';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Pembuat jam tangan';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Elektronik';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Perangkat lunak';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Layanan streaming';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Jejaring sosial';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Furnitur';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Ban';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Perusahaan pelayaran';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Lotre';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Dinas pariwisata';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Kosmetik';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Makanan hewan';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Toko roti';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermarket';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Nutrisi olahraga';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Anggur';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Teh';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Properti';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Pusat kebugaran';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Surat kabar';
 }

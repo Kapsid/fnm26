@@ -77,6 +77,10 @@ typedef ManagerResult = ({
   String? round,
 });
 
+/// One title the manager won: the trophy's key (see [Trophies]), the year
+/// and the nation he led to it.
+typedef ManagerTrophyWin = ({String key, int year, Nation? nation});
+
 /// The manager's whole journey — every cycle, and the totals across them all.
 class ManagerHistory {
   const ManagerHistory({
@@ -89,6 +93,7 @@ class ManagerHistory {
     required this.goalsFor,
     required this.goalsAgainst,
     this.trophyCounts = const {},
+    this.trophyWins = const [],
     this.biggestWin,
     this.biggestLoss,
   });
@@ -117,6 +122,11 @@ class ManagerHistory {
   /// Trophy-cabinet tallies keyed by trophy id (see [Trophies]): how many of
   /// each the manager has won, for the cabinet display.
   final Map<String, int> trophyCounts;
+
+  /// Every trophy behind [trophyCounts], one entry per title: which shelf
+  /// (its trophy key), the year, and the nation he won it with (a manager
+  /// who changed jobs has lifted trophies for more than one). Oldest first.
+  final List<ManagerTrophyWin> trophyWins;
 
   int get goalDifference => goalsFor - goalsAgainst;
 
@@ -287,6 +297,7 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
     // manager led that cycle.
     final honours = await comp.honours(careerId);
     final trophyCounts = <String, int>{};
+    final trophyWins = <ManagerTrophyWin>[];
     int cycleForYear(int year) {
       final c = ((year - CareerService.worldCupYear(0)) / 4).ceil();
       return c < 0 ? 0 : c;
@@ -297,8 +308,12 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
       final managed = stints[cycleForYear(h.year)] ?? career.nationId;
       if (h.championId != managed) continue;
       final key = Trophies.keyForCompetitionName(h.competition);
-      if (key != null) trophyCounts[key] = (trophyCounts[key] ?? 0) + 1;
+      if (key != null) {
+        trophyCounts[key] = (trophyCounts[key] ?? 0) + 1;
+        trophyWins.add((key: key, year: h.year, nation: nations[managed]));
+      }
     }
+    trophyWins.sort((a, b) => a.year.compareTo(b.year));
 
     return ManagerHistory(
       managerName: career.managerName,
@@ -310,6 +325,7 @@ managerHistoryProvider = FutureProvider.autoDispose.family<ManagerHistory?, int>
       goalsFor: gf,
       goalsAgainst: ga,
       trophyCounts: trophyCounts,
+      trophyWins: trophyWins,
       biggestWin: biggestWin,
       biggestLoss: biggestLoss,
     );

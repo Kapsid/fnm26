@@ -1,5 +1,16 @@
 part of 'stadium_painter.dart';
 
+/// Where a roof stands over a stand (see `_StadiumFeatures._roofAt`).
+typedef _RoofPlace = ({
+  double oe,
+  double ze,
+  double zf,
+  double zb,
+  double zs,
+  double o1,
+  double z1,
+});
+
 /// A ground's own features ([StadiumSignature]), its fans' show in the
 /// stands ([CrowdShow]) and what the weather does to it ([WeatherKind]).
 ///
@@ -286,84 +297,266 @@ extension _StadiumFeatures on StadiumPainter {
       );
   }
 
-  /// One roof all the way round: a deep inner edge, no gap at the corners.
-  void _ringRoof(Canvas canvas, _Seg s, double o, double z) {
-    const deep = StadiumPainter._canopy * 2.6;
-    final zr = z + StadiumPainter._roofWall;
+  /// A roof's cut, in metres: how far its leading edge reaches in over the
+  /// top tier (in plan, before the stands are drawn shallow), how high the
+  /// foot of that edge ([lift]) and the roof's back stand over the top row,
+  /// and how deep the fascia along the edge is. Null for an open bowl.
+  ///
+  /// The back stands well over the edge: the camera looks down on the
+  /// roofs, and the far stand is drawn so shallow that a flat roof would
+  /// show only its edge.
+  ({double reach, double lift, double fascia, double back})? get _roofCut =>
+      switch (_sig.roof) {
+        RoofStyle.open => null,
+        RoofStyle.cantilever => (
+          reach: 4.5,
+          lift: 3.0,
+          fascia: 1.5,
+          back: 9.5,
+        ),
+        RoofStyle.ring => (reach: 6.5, lift: 2.6, fascia: 2.4, back: 10.0),
+        RoofStyle.canopy => (reach: 5.5, lift: 3.2, fascia: 0.6, back: 9.0),
+      };
+
+  /// Where the roof over [s] stands: the leading edge `oe` metres out from
+  /// the front row, the foot `ze` and top `zf` of its fascia, and the
+  /// roof's back `zb` over the back row (`o1`, `z1`); and `zs`, how high
+  /// the seats are under the edge.
+  _RoofPlace _roofAt(
+    _Seg s,
+    ({double reach, double lift, double fascia, double back}) c,
+  ) {
+    final t = _topOf(s);
+    // Never past most of a short tier (an end wall's).
+    final reach = math.min(c.reach, (t.o1 - t.o0) * 0.7);
+    final oe = t.o1 - reach;
+    final f = ((oe - t.o0) / (t.o1 - t.o0)).clamp(0.0, 1.0);
+    final ze = t.z1 + c.lift;
+    return (
+      oe: oe,
+      ze: ze,
+      zf: ze + c.fascia,
+      zb: t.z1 + c.back,
+      zs: t.z0 + (t.z1 - t.z0) * f,
+      o1: t.o1,
+      z1: t.z1,
+    );
+  }
+
+  /// A roof over the stand on [s], seen from the camera's height: the
+  /// shade it throws on the back rows, the dark space under it, the slab
+  /// itself sloping up to the back on its trusses, and the fascia along its
+  /// leading edge. A cantilever is grey steel, a ring a pale membrane with
+  /// a deep inner edge, a canopy translucent panels on ribs.
+  void _roofOver(
+    Canvas canvas,
+    _Seg s,
+    ({double reach, double lift, double fascia, double back}) cut,
+    _RoofLayer layer,
+  ) {
+    final r = _roofAt(s, cut);
+    final canopy = _sig.roof == RoofStyle.canopy;
+    final ring = _sig.roof == RoofStyle.ring;
+    final (front, rear) = canopy
+        ? (const Color(0x99DCE6EE), const Color(0x70B4C2CE))
+        : ring
+        ? (const Color(0xFF9BA4AD), const Color(0xFF5E666F))
+        : (const Color(0xFF6E767F), const Color(0xFF454B53));
+
+    if (layer == _RoofLayer.under) {
+      _roofUnder(canvas, s, r, rear, canopy: canopy);
+    } else if (layer == _RoofLayer.slab) {
+      _roofSlab(canvas, s, r, front, rear, canopy: canopy);
+    } else {
+      _roofFascia(canvas, s, r, ring: ring, canopy: canopy);
+    }
+  }
+
+  void _roofUnder(
+    Canvas canvas,
+    _Seg s,
+    _RoofPlace r,
+    Color rear, {
+    required bool canopy,
+  }) {
+    Offset seat(double u) => _standPoint(s, u, r.oe, r.zs);
+    Offset row(double u) => _standPoint(s, u, r.o1, r.z1);
+    Offset back(double u) => _standPoint(s, u, r.o1, r.zb);
+    Offset foot(double u) => _standPoint(s, u, r.oe, r.ze);
+
+    // The shade on the seats under the roof, with a crisp line where the
+    // edge cuts the light.
     canvas
       ..drawPath(
-        StadiumPainter._band(
-          (t) => _standPoint(s, t, o, z),
-          (t) => _standPoint(s, t, o, zr),
-        ),
-        Paint()..color = AppColors.surfaceContainerLow,
+        StadiumPainter._band(seat, row),
+        Paint()
+          ..shader = ui.Gradient.linear(seat(0.5), row(0.5), [
+            Colors.black.withValues(alpha: canopy ? 0.10 : 0.2),
+            Colors.black.withValues(alpha: canopy ? 0.24 : 0.48),
+          ]),
       )
       ..drawPath(
-        StadiumPainter._band(
-          (t) => _standPoint(s, t, o - deep, zr),
-          (t) => _standPoint(s, t, o, zr + 1.4),
-        ),
-        Paint()..color = AppColors.surfaceContainerHighest,
-      )
-      ..drawPath(
-        StadiumPainter._band(
-          (t) => _standPoint(s, t, o - deep, zr - 0.9),
-          (t) => _standPoint(s, t, o - deep, zr),
-        ),
-        Paint()..color = const Color(0xFF8E979F),
-      )
-      ..drawPath(
-        StadiumPainter._line((t) => _standPoint(s, t, o - deep, zr)),
+        StadiumPainter._line(seat),
         Paint()
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.0
-          ..color = _accent.withValues(alpha: 0.55),
+          ..strokeWidth = 0.8
+          ..color = Colors.black.withValues(alpha: canopy ? 0.16 : 0.32),
+      );
+
+    // The space under the roof, above the back row: the roof's underside
+    // in shadow, or glazed under a canopy, crossed by the trusses holding
+    // the roof up.
+    canvas.drawPath(
+      StadiumPainter._band(row, back),
+      Paint()
+        ..shader = ui.Gradient.linear(row(0.5), back(0.5), [
+          canopy
+              ? const Color(0x5A1C2228)
+              : Color.lerp(rear, Colors.black, 0.6)!,
+          canopy
+              ? const Color(0x3A2A333B)
+              : Color.lerp(rear, Colors.black, 0.3)!,
+        ]),
+    );
+    final n = math.max(3, (_segLength(s) / 8).round());
+    final post = Paint()
+      ..strokeWidth = 0.8
+      ..color = canopy
+          ? const Color(0xFFB9C4CD).withValues(alpha: 0.55)
+          : const Color(0xFF59616A);
+    final strut = Paint()
+      ..strokeWidth = 0.5
+      ..color = post.color;
+    for (var i = 0; i <= n; i++) {
+      final u = i / n;
+      canvas
+        ..drawLine(row(u), back(u), post)
+        ..drawLine(row(u), foot(u), strut);
+    }
+  }
+
+  void _roofSlab(
+    Canvas canvas,
+    _Seg s,
+    _RoofPlace r,
+    Color front,
+    Color rear, {
+    required bool canopy,
+  }) {
+    Offset back(double u) => _standPoint(s, u, r.o1, r.zb);
+    Offset brow(double u) => _standPoint(s, u, r.oe, r.zf);
+
+    // The slab, sloping up from the edge to the back.
+    canvas.drawPath(
+      StadiumPainter._band(brow, back),
+      Paint()..shader = ui.Gradient.linear(brow(0.5), back(0.5), [front, rear]),
+    );
+    // Its seams, or a canopy's ribs.
+    final ribs = math.max(4, (_segLength(s) / (canopy ? 4.5 : 6)).round());
+    final rib = Paint()
+      ..strokeWidth = canopy ? 0.8 : 0.6
+      ..color = canopy
+          ? const Color(0xFFE6EDF2).withValues(alpha: 0.75)
+          : Colors.black.withValues(alpha: 0.28);
+    for (var i = 0; i <= ribs; i++) {
+      final u = i / ribs;
+      canvas.drawLine(brow(u), back(u), rib);
+    }
+    canvas.drawPath(
+      StadiumPainter._line(back),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.7
+        ..color = Colors.black.withValues(alpha: 0.4),
+    );
+  }
+
+  void _roofFascia(
+    Canvas canvas,
+    _Seg s,
+    _RoofPlace r, {
+    required bool ring,
+    required bool canopy,
+  }) {
+    Offset foot(double u) => _standPoint(s, u, r.oe, r.ze);
+    Offset brow(double u) => _standPoint(s, u, r.oe, r.zf);
+
+    // The fascia along the leading edge: the deep pale edge of a ring, a
+    // steel band, or a canopy's thin rim; lit along its top.
+    final (hi, lo) = ring
+        ? (const Color(0xFFDCE1E5), const Color(0xFFAEB6BD))
+        : canopy
+        ? (const Color(0xFFD2DBE2), const Color(0xFFA8B3BC))
+        : (const Color(0xFFA9B1B8), const Color(0xFF7D858D));
+    canvas
+      ..drawPath(
+        StadiumPainter._band(foot, brow),
+        Paint()..shader = ui.Gradient.linear(brow(0.5), foot(0.5), [hi, lo]),
+      )
+      ..drawPath(
+        StadiumPainter._line(brow),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.7
+          ..color = Colors.white.withValues(alpha: 0.55),
+      )
+      ..drawPath(
+        StadiumPainter._line(foot),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.9
+          ..color = _accent.withValues(alpha: 0.6),
       );
   }
 
-  /// A light, translucent canopy on ribs.
-  void _canopyRoof(Canvas canvas, _Seg s, double o, double z) {
-    const reach = StadiumPainter._canopy * 1.6;
-    final zr = z + StadiumPainter._roofWall;
-    final glass = Color.lerp(
-      AppColors.surfaceContainerHighest,
-      const Color(0xFFDCE6EE),
-      0.35,
-    )!;
-    canvas
-      ..drawPath(
-        StadiumPainter._band(
-          (t) => _standPoint(s, t, o, z),
-          (t) => _standPoint(s, t, o, zr),
-        ),
-        Paint()..color = AppColors.surfaceContainerLow,
-      )
-      ..drawPath(
-        StadiumPainter._band(
-          (t) => _standPoint(s, t, o - reach, zr),
-          (t) => _standPoint(s, t, o, zr + 1.6),
-        ),
-        Paint()..color = glass.withValues(alpha: 0.42),
-      );
-    final ribs = math.max(3, (_segLength(s) / 6).round());
-    final rib = Paint()
-      ..strokeWidth = 0.6
-      ..color = AppColors.outline.withValues(alpha: 0.7);
-    for (var i = 0; i <= ribs; i++) {
-      final t = i / ribs;
-      canvas.drawLine(
-        _standPoint(s, t, o, zr + 1.6),
-        _standPoint(s, t, o - reach, zr),
-        rib,
-      );
+  /// At night the roofs' leading edges catch the floodlights: the fascia
+  /// lit, and a glow spilling down under it onto the back rows.
+  void _roofEdgeLight(Canvas canvas) {
+    final cut = _roofCut;
+    final f = look.flood;
+    if (cut == null || f < 0.05) return;
+    for (final s in _order) {
+      if (_isTerraceEnd(s)) continue;
+      final r = _roofAt(s, cut);
+      Offset seat(double u) => _standPoint(s, u, r.oe, r.zs);
+      Offset foot(double u) => _standPoint(s, u, r.oe, r.ze);
+      Offset brow(double u) => _standPoint(s, u, r.oe, r.zf);
+      Offset back(double u) => _standPoint(s, u, r.o1, r.zb);
+      canvas
+        // The lamps' spill up the roof from its edge, so the slab still
+        // shows against the night sky.
+        ..drawPath(
+          StadiumPainter._band(brow, back),
+          Paint()
+            ..blendMode = BlendMode.screen
+            ..shader = ui.Gradient.linear(brow(0.5), back(0.5), [
+              const Color(0xFF7D8896).withValues(alpha: 0.3 * f),
+              const Color(0xFF7D8896).withValues(alpha: 0.06 * f),
+            ]),
+        )
+        ..drawPath(
+          StadiumPainter._band(foot, seat),
+          Paint()
+            ..blendMode = BlendMode.screen
+            ..shader = ui.Gradient.linear(foot(0.5), seat(0.5), [
+              StadiumPainter._lampLight.withValues(alpha: 0.22 * f),
+              StadiumPainter._lampLight.withValues(alpha: 0),
+            ]),
+        )
+        ..drawPath(
+          StadiumPainter._band(foot, brow),
+          Paint()
+            ..blendMode = BlendMode.screen
+            ..color = const Color(0xFF8C96A2).withValues(alpha: 0.45 * f),
+        )
+        ..drawPath(
+          StadiumPainter._line(foot),
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.0
+            ..color = StadiumPainter._lampLight.withValues(alpha: 0.5 * f),
+        );
     }
-    canvas.drawPath(
-      StadiumPainter._line((t) => _standPoint(s, t, o - reach, zr)),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 0.9
-        ..color = _accent.withValues(alpha: 0.55),
-    );
   }
 
   Color get _accent =>
@@ -372,8 +565,7 @@ extension _StadiumFeatures on StadiumPainter {
   /// The height of the far stand's roof line, metres.
   double get _farRoofTop {
     final top = _tier(spec.tiers - 1);
-    return top.z1 +
-        (_sig.roof == RoofStyle.open ? 0.9 : StadiumPainter._roofWall + 1.4);
+    return top.z1 + (_roofCut?.back ?? 0.9);
   }
 
   /// An arch over the far stand, or a crown of fins along its rim.
@@ -430,9 +622,7 @@ extension _StadiumFeatures on StadiumPainter {
         for (final s in _order) {
           if (_isTerraceEnd(s)) continue;
           final t = _topOf(s);
-          final zs =
-              t.z1 +
-              (_sig.roof == RoofStyle.open ? 0.9 : StadiumPainter._roofWall);
+          final zs = t.z1 + (_roofCut?.back ?? 0.9);
           final n = math.max(2, (_segLength(s) / 4.5).round());
           for (var i = 0; i < n; i++) {
             final u = (i + 0.5) / n;
@@ -658,19 +848,42 @@ extension _StadiumFeatures on StadiumPainter {
     if (spec.weather != WeatherKind.snow) return;
     final snow = Paint()
       ..color = const Color(0xFFDDE3E8).withValues(alpha: 0.8);
+    final cut = _roofCut;
     for (final s in _order) {
       if (_isTerraceEnd(s)) continue;
-      final t = _topOf(s);
-      final open = _sig.roof == RoofStyle.open;
-      final zr = t.z1 + (open ? 0.9 : StadiumPainter._roofWall);
-      final o0 = open ? t.o1 - 0.4 : t.o1 - StadiumPainter._canopy;
-      canvas.drawPath(
-        StadiumPainter._band(
-          (u) => _standPoint(s, u, o0, zr),
-          (u) => _standPoint(s, u, t.o1, zr + 0.7),
-        ),
-        snow,
-      );
+      if (cut == null) {
+        final t = _topOf(s);
+        final zr = t.z1 + 0.9;
+        canvas.drawPath(
+          StadiumPainter._band(
+            (u) => _standPoint(s, u, t.o1 - 0.4, zr),
+            (u) => _standPoint(s, u, t.o1, zr + 0.7),
+          ),
+          snow,
+        );
+        continue;
+      }
+      // Lying on the slab, thinner toward its steeper back, and a lip of
+      // it along the top of the fascia.
+      final r = _roofAt(s, cut);
+      Offset brow(double u) => _standPoint(s, u, r.oe, r.zf);
+      Offset back(double u) => _standPoint(s, u, r.o1, r.zb);
+      canvas
+        ..drawPath(
+          StadiumPainter._band(brow, back),
+          Paint()
+            ..shader = ui.Gradient.linear(brow(0.5), back(0.5), [
+              const Color(0xFFE6ECF0).withValues(alpha: 0.92),
+              const Color(0xFFC9D2DA).withValues(alpha: 0.7),
+            ]),
+        )
+        ..drawPath(
+          StadiumPainter._band(
+            brow,
+            (u) => _standPoint(s, u, r.oe, r.zf + 0.5),
+          ),
+          snow,
+        );
     }
   }
 

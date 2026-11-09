@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/shared/widgets/app_bottom_nav.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
@@ -104,7 +105,10 @@ class _NationSquadTabState extends ConsumerState<NationSquadTab> {
         if (data == null) return Center(child: Text(l.tacticsNoSquad));
         final rows = _visible(data);
         return ListView(
-          padding: const EdgeInsets.all(AppSpacing.marginMobile),
+          padding: AppBottomNav.padScroll(
+            context,
+            const EdgeInsets.all(AppSpacing.marginMobile),
+          ),
           children: [
             _PoolSummary(data: data, careerId: widget.careerId),
             const SizedBox(height: AppSpacing.sm),

@@ -6,6 +6,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/sponsor_label.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/club/clubs.dart';
+import 'package:fnm/domain/services/federation/sponsor_industries.dart';
 import 'package:fnm/domain/services/federation/sponsors.dart';
 import 'package:fnm/domain/services/press/y_feed.dart';
 import 'package:fnm/domain/services/world_pack/pack_rules.dart';
@@ -410,8 +411,10 @@ String yVoiceAbout(AppLocalizations l, YVoice v) => switch (v) {
   _ => '',
 };
 
-/// The industries an added sponsor can take: each label once, by the first
-/// brand that has it (whose name is stored), in label order.
+/// The industries an added sponsor can take: each built-in label once, by
+/// the first brand that has it (whose name is stored), and each picker-only
+/// trade (whose [SponsorIndustry.id] is stored), deduped by label, in label
+/// order.
 List<({String brand, String label})> industryOptions(AppLocalizations l) {
   final seen = <String>{};
   return [
@@ -419,16 +422,17 @@ List<({String brand, String label})> industryOptions(AppLocalizations l) {
       if (sponsorIndustryLabel(l, b) case final label
           when label.isNotEmpty && seen.add(label))
         (brand: b.name, label: label),
+    for (final i in SponsorIndustry.values)
+      if (extraIndustryLabel(l, i) case final label
+          when label.isNotEmpty && seen.add(label))
+        (brand: i.id, label: label),
   ]..sort((a, b) => searchFold(a.label).compareTo(searchFold(b.label)));
 }
 
-/// The label of industry [brand] (a `SponsorBrand.name`), or '' for one
-/// this build does not know.
+/// The label of industry [brand] (a `SponsorBrand.name` or a
+/// [SponsorIndustry.id]), or '' for one this build does not know.
 String industryLabel(AppLocalizations l, String brand) =>
-    switch (SponsorBrand.byName(brand)) {
-      final b? => sponsorIndustryLabel(l, b),
-      null => '',
-    };
+    addedIndustryLabel(l, brand);
 
 /// [groups] (a section's rows, as [nameGroups] has them) with the items
 /// [pack] adds to [section]: an added club at the top of its country's

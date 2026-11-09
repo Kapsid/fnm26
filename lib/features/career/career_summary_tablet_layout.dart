@@ -36,11 +36,18 @@ class _CareerSummaryTabletLayout extends ConsumerWidget {
                     _RecordCard(s),
                     _CareerStatsSection(careerId),
                     const SizedBox(height: AppSpacing.md),
-                    Text(
-                      l.careerTrophyCabinet,
-                      style: AppTypography.labelMedium.copyWith(
-                        color: AppColors.primary,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            l.careerTrophyCabinet,
+                            style: AppTypography.labelMedium.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                        ShareCabinetButtonFor(careerId: careerId),
+                      ],
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     _TrophyCabinet(s),

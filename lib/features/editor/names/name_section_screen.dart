@@ -61,6 +61,11 @@ class NameSectionScreen extends ConsumerStatefulWidget {
 
   /// The chip that shows only the rows that still need a fix.
   static const Key fixFilterKey = Key('editorNames.fixFilter');
+
+  /// The chip that opens the country filter, and its sheet's choices.
+  static const Key countryFilterKey = Key('editorNames.countryFilter');
+  static const Key countryAllKey = Key('editorNames.country.all');
+  static Key countryOptionKey(String key) => Key('editorNames.country.$key');
   static const Key undoKey = Key('editorNames.undo');
 
   /// Add a club, sponsor or Y account (the phone's button, the tablet's
@@ -94,6 +99,13 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   /// Whether only the rows that still need a fix are listed.
   bool _onlyFix = false;
 
+  /// The country listed ([_countryKey]), or null for every country.
+  String? _country;
+
+  /// The countries the section has rows for, by name: what the country
+  /// filter offers. Set on build.
+  List<({String key, String title, String? flagCode})> _countries = const [];
+
   /// The row edited beside the list (tablet).
   String? _picked;
 
@@ -114,6 +126,38 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   void _setQuery(String q) => setState(() => _query = q);
 
   void _setOnlyFix(bool on) => setState(() => _onlyFix = on);
+
+  void _setCountry(String? key) => setState(() => _country = key);
+
+  /// What identifies a country heading.
+  static String _countryKey(NameGroup g) => g.flagCode ?? g.title ?? '';
+
+  /// The countries [groups] are under, sorted by (translated) name.
+  List<({String key, String title, String? flagCode})> _countriesOf(
+    List<NameGroup> groups,
+  ) {
+    final out = [
+      for (final g in groups)
+        if (g.title != null)
+          (key: _countryKey(g), title: g.title!, flagCode: g.flagCode),
+    ]..sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+    return out;
+  }
+
+  /// Asks which country to list; null (All countries) clears it.
+  Future<void> _pickCountry() async {
+    final picked = await showAdaptiveSheet<({String? key})>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheet) => _CountrySheet(
+        countries: _countries,
+        selected: _country,
+        onPick: (k) => Navigator.of(sheet).pop((key: k)),
+      ),
+    );
+    if (picked != null) _setCountry(picked.key);
+  }
 
   _Rows? _rowsCache;
 
@@ -205,7 +249,8 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     Map<String, int> toFix,
   ) {
     final q = searchFold(_query);
-    if (q.isEmpty && !_onlyFix) return groups;
+    final country = _country;
+    if (q.isEmpty && !_onlyFix && country == null) return groups;
     bool hit(NameEntry e) {
       if (_onlyFix && (toFix[e.key] ?? 0) == 0) return false;
       if (q.isEmpty) return true;
@@ -224,9 +269,10 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
 
     return [
       for (final g in groups)
-        if (g.entries.where(hit).toList() case final entries
-            when entries.isNotEmpty)
-          (title: g.title, flagCode: g.flagCode, entries: entries),
+        if (country == null || _countryKey(g) == country)
+          if (g.entries.where(hit).toList() case final entries
+              when entries.isNotEmpty)
+            (title: g.title, flagCode: g.flagCode, entries: entries),
     ];
   }
 
@@ -413,6 +459,7 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     _jump(world);
     final rows = _withAdded(l, _rows(l, world, listsValue), pack);
     final toFix = _toFix(pack, world);
+    if (_section.grouped) _countries = _countriesOf(rows.groups);
     final view = _NameView(
       pack: pack,
       groups: _filter(rows.groups, pack, language, toFix),
@@ -543,14 +590,117 @@ class _SearchField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
-        FilterChip(
-          key: NameSectionScreen.fixFilterKey,
-          label: Text(l.editorFilterToFix),
-          avatar: const Icon(Icons.pending_outlined, size: 16),
-          selected: state._onlyFix,
-          onSelected: state._setOnlyFix,
+        Wrap(
+          spacing: AppSpacing.sm,
+          children: [
+            FilterChip(
+              key: NameSectionScreen.fixFilterKey,
+              label: Text(l.editorFilterToFix),
+              avatar: const Icon(Icons.pending_outlined, size: 16),
+              selected: state._onlyFix,
+              onSelected: state._setOnlyFix,
+            ),
+            if (state._section.grouped) _CountryChip(state: state),
+          ],
         ),
       ],
+    );
+  }
+}
+
+/// The country filter: shows the country listed, opens the sheet that picks.
+class _CountryChip extends StatelessWidget {
+  const _CountryChip({required this.state});
+
+  final _NameSectionScreenState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final key = state._country;
+    final picked = key == null
+        ? null
+        : state._countries.where((c) => c.key == key).firstOrNull;
+    return FilterChip(
+      key: NameSectionScreen.countryFilterKey,
+      label: Text(
+        picked?.title ?? l.editorCountryAll,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      avatar: picked?.flagCode == null
+          ? const Icon(Icons.public, size: 16)
+          : FlagDisc(picked!.flagCode!, size: 18),
+      selected: picked != null,
+      showCheckmark: false,
+      deleteIcon: const Icon(Icons.close, size: 16),
+      onDeleted: picked == null ? null : () => state._setCountry(null),
+      onSelected: (_) => unawaited(state._pickCountry()),
+    );
+  }
+}
+
+/// The countries to list, flag and name, All countries first.
+class _CountrySheet extends StatelessWidget {
+  const _CountrySheet({
+    required this.countries,
+    required this.selected,
+    required this.onPick,
+  });
+
+  final List<({String key, String title, String? flagCode})> countries;
+  final String? selected;
+  final ValueChanged<String?> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final height = MediaQuery.sizeOf(context).height * 0.7;
+    return SizedBox(
+      height: height,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.marginMobile,
+              0,
+              AppSpacing.marginMobile,
+              AppSpacing.sm,
+            ),
+            child: Text(
+              l.editorCountryFilterTitle,
+              style: AppTypography.titleMedium,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: countries.length + 1,
+              itemBuilder: (context, i) {
+                if (i == 0) {
+                  return ListTile(
+                    key: NameSectionScreen.countryAllKey,
+                    leading: const Icon(Icons.public),
+                    title: Text(l.editorCountryAll),
+                    selected: selected == null,
+                    onTap: () => onPick(null),
+                  );
+                }
+                final c = countries[i - 1];
+                return ListTile(
+                  key: NameSectionScreen.countryOptionKey(c.key),
+                  leading: c.flagCode == null
+                      ? null
+                      : FlagDisc(c.flagCode!, size: 28),
+                  title: Text(c.title),
+                  selected: selected == c.key,
+                  onTap: () => onPick(c.key),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -645,7 +795,8 @@ class _NameList extends StatelessWidget {
         if (view.groups.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
-            child: state._onlyFix && state._query.isEmpty
+            child:
+                state._onlyFix && state._query.isEmpty && state._country == null
                 ? EditorMessage(
                     l.editorNothingToFix,
                     icon: Icons.check_circle_outline,
@@ -825,6 +976,8 @@ class _NameTile extends StatelessWidget {
     }
     final fix = toFix > 0;
     final stars = section == NameSection.clubs ? clubStarsIn(pack, entry) : 0;
+    // A strength the database sets, against the game's: tinted.
+    final starsSet = stars > 0 && clubStarsSet(pack, entry);
     return AppCard(
       key: NameSectionScreen.rowKey(entry.key),
       onTap: onTap,
@@ -868,7 +1021,7 @@ class _NameTile extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           if (stars > 0) ...[
-            ClubStars(stars, size: 10),
+            ClubStars(stars, size: 12, accent: starsSet),
             const SizedBox(width: AppSpacing.sm),
           ],
           if (fix)

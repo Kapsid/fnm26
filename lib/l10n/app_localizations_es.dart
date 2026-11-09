@@ -16624,4 +16624,259 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get editorIssueManagerNationality =>
       'Elige de la lista una nacionalidad para el seleccionador';
+
+  @override
+  String get shareButton => 'Compartir';
+
+  @override
+  String get shareSheetTitle => 'Compartir como imagen';
+
+  @override
+  String get shareFormatSquare => 'Cuadrado';
+
+  @override
+  String get shareFormatStory => 'Historia';
+
+  @override
+  String get shareFailed => 'No se pudo crear la imagen.';
+
+  @override
+  String get shareSaveToPhotos => 'Guardar en fotos';
+
+  @override
+  String get shareSavedToPhotos => 'Guardada en fotos';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM no tiene permiso para añadir a tus fotos. Puedes permitirlo en Ajustes.';
+
+  @override
+  String get editorCountryAll => 'Todos los países';
+
+  @override
+  String get editorCountryFilterTitle => 'Filtrar por país';
+
+  @override
+  String get shareCabinetBig => 'Compartir mis trofeos';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Un recorrido inesperado en el $competition y un gran resultado al final. Orgulloso de los chicos.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Nadie nos daba una oportunidad en el $competition. Llegamos más lejos de lo que nadie se atrevía a soñar. Gracias, chicos.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Fuera del $competition, pero qué viaje. Este equipo hizo creer a todo el país. Orgulloso.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'No esperaba que pasáramos de la fase de grupos en el $competition. Todo lo que vino después fue un regalo. A seguir creciendo.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Fuimos al $competition esperando un punto o dos y volvemos tras jugar las eliminatorias. Buen torneo.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Más lejos de lo que decían los pronósticos en el $competition. Es un paso adelante, sin más.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Fuera del $competition, y escuece un poco. Pero seamos sinceros: nadie nos veía llegar tan lejos.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Vale, estamos fuera del $competition. Aun así, más de lo que hemos logrado en años. Me lo quedo.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'No hay trofeo del $competition, y nunca lo iba a haber. Un buen recorrido es un buen recorrido. Ahora, a repetirlo.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Orgulloso de todos y cada uno.';
+
+  @override
+  String get yReactionPride1 => 'Qué recorrido. Gracias, chicos.';
+
+  @override
+  String get yReactionPride2 => 'Nadie esperaba esto. Recordadlo.';
+
+  @override
+  String get yReactionPride3 => 'Siempre hacia arriba.';
+
+  @override
+  String get yReactionPride4 => 'Todo esto es un regalo. Disfrutadlo.';
+
+  @override
+  String get yReactionPride5 => 'Mejor de lo que nadie predijo. Buen torneo.';
+
+  @override
+  String get yReactionPride6 => 'Fuera, pero sin vergüenza. Justo.';
+
+  @override
+  String get yReactionPride7 =>
+      'Pasó el mejor. Aun así, salimos con la cabeza alta.';
+
+  @override
+  String get yReactionPride8 =>
+      'No nos volvamos locos. Pero sí, buen recorrido.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Fuera del $competition, más o menos donde se esperaba. Orgulloso de que lo intentaran.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'El $competition se acabó para nosotros. Les plantamos cara a los grandes. Cabeza alta, chicos.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Fuera del $competition. Sobre el papel, era el final más probable. Aprender y volver a intentarlo.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Nuestro $competition termina donde decía el ranking. Ninguna vergüenza.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Fuera del $competition, como casi todos esperábamos. No es un desastre, pero tampoco una sorpresa.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'El $competition le quedó grande a esta plantilla. La diferencia es real. Toca recortarla.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Lo dieron todo. No se puede pedir más.';
+
+  @override
+  String get yReactionAcceptance1 => 'Cabeza alta. Volveremos.';
+
+  @override
+  String get yReactionAcceptance2 => 'Duele, pero no nos han avergonzado.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Más o menos lo que esperábamos, la verdad.';
+
+  @override
+  String get yReactionAcceptance4 => 'Pasaron los mejores. Así es el fútbol.';
+
+  @override
+  String get yReactionAcceptance5 => 'Decepcionado, no enfadado.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Un poco plano, la verdad. Pero sin sobresaltos.';
+
+  @override
+  String get yReactionAcceptance7 => 'Todavía no estamos ahí. Todos lo saben.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'El mismo nivel que la última vez. Hace falta un paso más en el próximo ciclo.';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'Ropa deportiva';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'Aerolínea de servicio completo';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'Ferrocarril';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'Cadena de hoteles';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'Cadena de cafeterías';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'Chocolate';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'Agua mineral';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'Cadena de farmacias';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'Moda';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'Relojería';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'Electrónica';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'Software';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'Servicio de streaming';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'Red social';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'Muebles';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'Neumáticos';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'Naviera';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'Lotería';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'Oficina de turismo';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'Cosmética';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'Comida para mascotas';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'Panadería';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'Supermercado';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'Nutrición deportiva';
+
+  @override
+  String get sponsorIndustryExtraWine => 'Vino';
+
+  @override
+  String get sponsorIndustryExtraTea => 'Té';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'Inmobiliaria';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'Gimnasios';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'Periódico';
 }

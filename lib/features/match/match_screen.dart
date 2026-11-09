@@ -53,6 +53,10 @@ import 'package:fnm/features/tactics/set_piece_takers_providers.dart';
 import 'package:fnm/features/tactics/tactic_preset_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart'
     show energyColor, surnameOf, TacticsPitch;
+import 'package:fnm/data/data_providers.dart';
+import 'package:fnm/features/share/match_share_card.dart';
+import 'package:fnm/features/share/share_data.dart';
+import 'package:fnm/features/share/share_sheet.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -1035,6 +1039,32 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
       _currentXi(preview),
       unavailable: r == null ? const {} : _sentOff(r, _playerNationId ?? -1),
       traitsByPlayer: _playerTeam(preview).traitsByPlayer,
+    );
+  }
+
+  /// Full time's Share: the result as an image (square or story). The card
+  /// shows a shootout's LEVEL score with the kicks beside it, not the extra
+  /// goal [_finalScore] credits the winner with.
+  Widget _shareButton(MatchPreview preview, MatchResult r) {
+    final data = matchShareData(
+      context,
+      fixture: preview.fixture,
+      nations: preview.nations,
+      result: r,
+      ground: preview.ground,
+      confederation: preview.nations[preview.playerNationId]?.confederation,
+      world: ref.watch(localizedWorldProvider),
+      outcome: _knockoutOutcome(preview, r),
+    );
+    final f = preview.fixture;
+    return ShareCardButton(
+      fileStem:
+          'fnm-${preview.nations[f.homeNationId]?.code ?? 'home'}-'
+          '${preview.nations[f.awayNationId]?.code ?? 'away'}',
+      flagCodes: matchShareFlags(data),
+      images: matchShareImages(data),
+      height: AppSpacing.minHitArea + 8,
+      card: (format) => MatchShareCard(data: data, format: format),
     );
   }
 
@@ -2511,14 +2541,22 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             final bar = ft
                 ? Padding(
                     padding: const EdgeInsets.all(AppSpacing.marginMobile),
-                    child: PrimaryButton(
-                      label: _committing
-                          ? AppLocalizations.of(context).matchContinuing
-                          : AppLocalizations.of(context).matchContinue,
-                      icon: Icons.check_rounded,
-                      onPressed: _committing
-                          ? null
-                          : () => _continue(preview, r),
+                    child: Row(
+                      children: [
+                        _shareButton(preview, r),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: PrimaryButton(
+                            label: _committing
+                                ? AppLocalizations.of(context).matchContinuing
+                                : AppLocalizations.of(context).matchContinue,
+                            icon: Icons.check_rounded,
+                            onPressed: _committing
+                                ? null
+                                : () => _continue(preview, r),
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 : MatchControlBar(

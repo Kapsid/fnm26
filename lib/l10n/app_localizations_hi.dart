@@ -16443,4 +16443,257 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get editorIssueManagerNationality =>
       'सूची से मैनेजर की राष्ट्रीयता चुनें';
+
+  @override
+  String get shareButton => 'शेयर करें';
+
+  @override
+  String get shareSheetTitle => 'छवि के रूप में शेयर करें';
+
+  @override
+  String get shareFormatSquare => 'वर्गाकार';
+
+  @override
+  String get shareFormatStory => 'स्टोरी';
+
+  @override
+  String get shareFailed => 'छवि नहीं बन सकी।';
+
+  @override
+  String get shareSaveToPhotos => 'फ़ोटो में सेव करें';
+
+  @override
+  String get shareSavedToPhotos => 'फ़ोटो में सेव हो गया';
+
+  @override
+  String get sharePhotosDenied =>
+      'FNM को आपकी फ़ोटो में जोड़ने की अनुमति नहीं है। आप इसे सेटिंग्स में दे सकते हैं।';
+
+  @override
+  String get editorCountryAll => 'सभी देश';
+
+  @override
+  String get editorCountryFilterTitle => 'देश के अनुसार फ़िल्टर करें';
+
+  @override
+  String get shareCabinetBig => 'मेरी ट्रॉफ़ियाँ शेयर करें';
+
+  @override
+  String yExitProud0(String competition) {
+    return '$competition में एक अप्रत्याशित सफ़र और आख़िर में शानदार नतीजा। लड़कों पर गर्व है।';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return '$competition में किसी ने हमें मौक़ा नहीं दिया था। हम उससे आगे गए जितना किसी ने सपने में सोचा था। शुक्रिया, लड़को।';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return '$competition से बाहर, लेकिन क्या सफ़र था। इस टीम ने पूरे देश को यक़ीन दिलाया। गर्व है।';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'उम्मीद नहीं थी कि $competition में हम ग्रुप से आगे निकलेंगे। उसके बाद सब बोनस था। आगे और ऊपर।';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return '$competition में हम एक-दो अंक की उम्मीद लेकर गए थे और नॉकआउट खेलकर लौटे। अच्छा टूर्नामेंट।';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return '$competition में हम अनुमानों से आगे गए। सीधी बात, यह एक क़दम आगे है।';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return '$competition से बाहर, थोड़ा चुभता है। लेकिन सच कहें तो किसी ने नहीं सोचा था कि हम इतनी दूर आएँगे।';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'ठीक है, हम $competition से बाहर हैं। फिर भी यह सालों में हमारा सबसे अच्छा प्रदर्शन है। मंज़ूर है।';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return '$competition से कोई ट्रॉफ़ी नहीं, और कभी आनी भी नहीं थी। अच्छा सफ़र अच्छा सफ़र होता है। अब इसे दोहराओ।';
+  }
+
+  @override
+  String get yReactionPride0 => 'हर एक खिलाड़ी पर गर्व है।';
+
+  @override
+  String get yReactionPride1 => 'क्या सफ़र था। शुक्रिया, लड़को।';
+
+  @override
+  String get yReactionPride2 => 'किसी ने इसकी उम्मीद नहीं की थी। यह याद रखना।';
+
+  @override
+  String get yReactionPride3 => 'आगे और ऊपर।';
+
+  @override
+  String get yReactionPride4 => 'यह सब बोनस है। मज़े लो।';
+
+  @override
+  String get yReactionPride5 => 'किसी के भी अनुमान से बेहतर। अच्छा टूर्नामेंट।';
+
+  @override
+  String get yReactionPride6 => 'बाहर, लेकिन शर्मिंदगी के बिना। ठीक है।';
+
+  @override
+  String get yReactionPride7 => 'बेहतर टीम आगे गई। फिर भी हमने इज़्ज़त कमाई।';
+
+  @override
+  String get yReactionPride8 => 'ज़्यादा बहकें नहीं। पर हाँ, अच्छा सफ़र था।';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return '$competition से बाहर, लगभग वहीं जहाँ उम्मीद थी। गर्व है कि उन्होंने पूरी कोशिश की।';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition हमारे लिए ख़त्म हो गया। हमने बड़ी टीमों को टक्कर दी। सिर ऊँचा रखो, लड़को।';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return '$competition से बाहर। काग़ज़ पर यही सबसे संभावित अंत था। सीखो और फिर कोशिश करो।';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'हमारा $competition वहीं ख़त्म हुआ जहाँ रैंकिंग ने कहा था। इसमें कोई शर्म नहीं।';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return '$competition से बाहर, जैसा हम में से ज़्यादातर ने सोचा था। कोई आफ़त नहीं, पर कोई झटका भी नहीं।';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition इस टीम के लिए एक क़दम ज़्यादा था। फ़ासला असली है। अब इसे पाटने का समय है।';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'सब कुछ झोंक दिया। इससे ज़्यादा क्या माँगें।';
+
+  @override
+  String get yReactionAcceptance1 => 'सिर ऊँचा रखो। हम लौटेंगे।';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'दुख है, पर उन्होंने हमें शर्मिंदा नहीं किया।';
+
+  @override
+  String get yReactionAcceptance3 => 'सच कहें तो लगभग वैसा ही जैसा सोचा था।';
+
+  @override
+  String get yReactionAcceptance4 => 'बेहतर टीमें आगे गईं। यही फ़ुटबॉल है।';
+
+  @override
+  String get yReactionAcceptance5 => 'निराश हूँ, नाराज़ नहीं।';
+
+  @override
+  String get yReactionAcceptance6 => 'सच कहूँ तो थोड़ा फीका। पर कोई झटका नहीं।';
+
+  @override
+  String get yReactionAcceptance7 => 'हम अभी वहाँ नहीं पहुँचे। सब जानते हैं।';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'पिछली बार जैसा ही स्तर। अगले चक्र में एक क़दम ऊपर चाहिए।';
+
+  @override
+  String get sponsorIndustryExtraSportswear => 'खेल परिधान';
+
+  @override
+  String get sponsorIndustryExtraAirline => 'पूर्ण सेवा एयरलाइन';
+
+  @override
+  String get sponsorIndustryExtraRailway => 'रेलवे';
+
+  @override
+  String get sponsorIndustryExtraHotels => 'होटल श्रृंखला';
+
+  @override
+  String get sponsorIndustryExtraCoffee => 'कॉफ़ी श्रृंखला';
+
+  @override
+  String get sponsorIndustryExtraChocolate => 'चॉकलेट';
+
+  @override
+  String get sponsorIndustryExtraMineralWater => 'मिनरल वाटर';
+
+  @override
+  String get sponsorIndustryExtraPharmacy => 'दवा दुकान श्रृंखला';
+
+  @override
+  String get sponsorIndustryExtraFashion => 'फ़ैशन';
+
+  @override
+  String get sponsorIndustryExtraWatches => 'घड़ी निर्माता';
+
+  @override
+  String get sponsorIndustryExtraElectronics => 'इलेक्ट्रॉनिक्स';
+
+  @override
+  String get sponsorIndustryExtraSoftware => 'सॉफ़्टवेयर';
+
+  @override
+  String get sponsorIndustryExtraStreaming => 'स्ट्रीमिंग सेवा';
+
+  @override
+  String get sponsorIndustryExtraSocialNetwork => 'सोशल नेटवर्क';
+
+  @override
+  String get sponsorIndustryExtraFurniture => 'फ़र्नीचर';
+
+  @override
+  String get sponsorIndustryExtraTyres => 'टायर';
+
+  @override
+  String get sponsorIndustryExtraShipping => 'शिपिंग कंपनी';
+
+  @override
+  String get sponsorIndustryExtraLottery => 'लॉटरी';
+
+  @override
+  String get sponsorIndustryExtraTourism => 'पर्यटन बोर्ड';
+
+  @override
+  String get sponsorIndustryExtraCosmetics => 'सौंदर्य प्रसाधन';
+
+  @override
+  String get sponsorIndustryExtraPetFood => 'पालतू भोजन';
+
+  @override
+  String get sponsorIndustryExtraBakery => 'बेकरी';
+
+  @override
+  String get sponsorIndustryExtraSupermarket => 'सुपरमार्केट';
+
+  @override
+  String get sponsorIndustryExtraSportsNutrition => 'खेल पोषण';
+
+  @override
+  String get sponsorIndustryExtraWine => 'वाइन';
+
+  @override
+  String get sponsorIndustryExtraTea => 'चाय';
+
+  @override
+  String get sponsorIndustryExtraRealEstate => 'रियल एस्टेट';
+
+  @override
+  String get sponsorIndustryExtraFitness => 'फिटनेस क्लब';
+
+  @override
+  String get sponsorIndustryExtraNewspaper => 'समाचार पत्र';
 }

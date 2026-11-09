@@ -59,7 +59,6 @@ class _TacticsTabletLayout extends ConsumerWidget {
               if ((data.absences[p.id]?.injuryMatches ?? 0) > 0) p.id,
           };
           final t = _resolveTakers(ref, careerId, data, takers);
-          final fatigue = screen._fatigueOf(ref);
           final bench = [
             for (final p in data.pool)
               if (!tactic.lineup.contains(p.id)) p,
@@ -115,7 +114,6 @@ class _TacticsTabletLayout extends ConsumerWidget {
                               teamColors: teamColors,
                               absentIds: absentIds,
                               injuredIds: injuredIds,
-                              fatigue: fatigue,
                             ),
                           ),
                         ),
@@ -138,7 +136,6 @@ class _TacticsTabletLayout extends ConsumerWidget {
                                       for (final p in bench)
                                         BenchChip(
                                           player: p,
-                                          fatigue: fatigue[p.id],
                                           onTap: () => context.push(
                                             '${Routes.player}'
                                             '?careerId=$careerId'

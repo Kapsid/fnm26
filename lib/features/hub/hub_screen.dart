@@ -320,6 +320,7 @@ class _HubScreenState extends ConsumerState<HubScreen> {
           ),
         ],
       ),
+      extendBody: true,
       bottomNavigationBar: AppBottomNav(
         careerId: careerId,
         current: AppTab.hub,
@@ -345,78 +346,86 @@ class _HubScreenState extends ConsumerState<HubScreen> {
               .watch(playerRankProvider(careerId))
               .valueOrNull;
 
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.marginMobile),
-            children: [
-              HubHeader(
-                code: nation?.code ?? '??',
-                nationName: nation?.name ?? '…',
-                managerName: hub.career.managerName,
-                date: date,
-                rank: playerRank?.rank,
-                movement: playerRank?.movement ?? 0,
+          // A Builder for the body's own context: the dock's clearance is
+          // read from the padding the Scaffold gives its body.
+          return Builder(
+            builder: (context) => ListView(
+              padding: AppBottomNav.padScroll(
+                context,
+                const EdgeInsets.all(AppSpacing.marginMobile),
               ),
-              const SizedBox(height: AppSpacing.md),
-              // Host-nation strip while a finals is under way — the World Cup,
-              // or the continental championship when that's the live one.
-              if (host?.active ?? false) ...[
-                WcHostBanner(theme: host!, code: code),
-                const SizedBox(height: AppSpacing.md),
-              ] else if (contHost?.active ?? false) ...[
-                WcHostBanner(theme: contHost!, code: code),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              if (hub.championNationId != null) ...[
-                _ChampionBanner(
-                  name: name(hub.championNationId!),
-                  code: code(hub.championNationId!),
-                  onView: () => context.go('${Routes.cup}?careerId=$careerId'),
+              children: [
+                HubHeader(
+                  code: nation?.code ?? '??',
+                  nationName: nation?.name ?? '…',
+                  managerName: hub.career.managerName,
+                  date: date,
+                  rank: playerRank?.rank,
+                  movement: playerRank?.movement ?? 0,
                 ),
                 const SizedBox(height: AppSpacing.md),
-              ],
-              // The press, when they have something to ask. A card, not a
-              // forced step: it waits, and it goes away on its own if the
-              // manager would rather not talk.
-              _BoardFinanceCard(
-                key: TourKeys.hubBoard,
-                careerId: careerId,
-                onFinances: () =>
-                    context.go('${Routes.finances}?careerId=$careerId'),
-                onObjectives: () => context.go(
-                  '${Routes.boardObjectives}?careerId=$careerId',
+                // Host-nation strip while a finals is under way — the World Cup,
+                // or the continental championship when that's the live one.
+                if (host?.active ?? false) ...[
+                  WcHostBanner(theme: host!, code: code),
+                  const SizedBox(height: AppSpacing.md),
+                ] else if (contHost?.active ?? false) ...[
+                  WcHostBanner(theme: contHost!, code: code),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                if (hub.championNationId != null) ...[
+                  _ChampionBanner(
+                    name: name(hub.championNationId!),
+                    code: code(hub.championNationId!),
+                    onView: () =>
+                        context.go('${Routes.cup}?careerId=$careerId'),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                // The press, when they have something to ask. A card, not a
+                // forced step: it waits, and it goes away on its own if the
+                // manager would rather not talk.
+                _BoardFinanceCard(
+                  key: TourKeys.hubBoard,
+                  careerId: careerId,
+                  onFinances: () =>
+                      context.go('${Routes.finances}?careerId=$careerId'),
+                  onObjectives: () => context.go(
+                    '${Routes.boardObjectives}?careerId=$careerId',
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              // The primary action is whatever the next timeline event is
-              // (a draw, the next match, a tournament to follow, or rollover).
-              HubEventButton(careerId: careerId),
-              // A campaign career's goal and progress; nothing for a normal one.
-              CampaignHubCard(careerId: careerId, gapAbove: true),
-              if (hub.championNationId == null) ...[
                 const SizedBox(height: AppSpacing.md),
-                _Upcoming(careerId: careerId),
+                // The primary action is whatever the next timeline event is
+                // (a draw, the next match, a tournament to follow, or rollover).
+                HubEventButton(careerId: careerId),
+                // A campaign career's goal and progress; nothing for a normal one.
+                CampaignHubCard(careerId: careerId, gapAbove: true),
+                if (hub.championNationId == null) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  _Upcoming(careerId: careerId),
+                ],
+                const SizedBox(height: AppSpacing.md),
+                // Always show the next group — but only reveal the table once its
+                // own draw has been watched; before then it's "to be drawn".
+                if (hub.group != null)
+                  if (hub.groupDrawWatched)
+                    _GroupTable(
+                      careerId: careerId,
+                      group: hub.group!,
+                      playerNationId: hub.career.nationId,
+                      directCount: hub.groupDirectCount,
+                      contentionPos: hub.groupContentionPos,
+                      playoffNations: hub.groupPlayoffNations,
+                      relegateCount: hub.groupRelegateCount,
+                      code: code,
+                      name: name,
+                      onTap: () => _openGroup(context, hub),
+                    )
+                  else
+                    _GroupPlaceholder(competition: hub.group!.competition),
+                const SizedBox(height: AppSpacing.lg),
               ],
-              const SizedBox(height: AppSpacing.md),
-              // Always show the next group — but only reveal the table once its
-              // own draw has been watched; before then it's "to be drawn".
-              if (hub.group != null)
-                if (hub.groupDrawWatched)
-                  _GroupTable(
-                    careerId: careerId,
-                    group: hub.group!,
-                    playerNationId: hub.career.nationId,
-                    directCount: hub.groupDirectCount,
-                    contentionPos: hub.groupContentionPos,
-                    playoffNations: hub.groupPlayoffNations,
-                    relegateCount: hub.groupRelegateCount,
-                    code: code,
-                    name: name,
-                    onTap: () => _openGroup(context, hub),
-                  )
-                else
-                  _GroupPlaceholder(competition: hub.group!.competition),
-              const SizedBox(height: AppSpacing.lg),
-            ],
+            ),
           );
         },
       ),

@@ -544,6 +544,16 @@ Future<YTimeline> _feedOf(
     ref.watch(careerRepositoryProvider),
     career,
   )).since;
+  final nationFixtures = await ref
+      .watch(competitionRepositoryProvider)
+      .fixturesForNation(careerId, career.nationId);
+  // How each finals exit read against what was expected of the side: the
+  // exit posts and the match that ended it have to agree on it.
+  final exits = _exitReadings(
+    milestones,
+    judged: judged,
+    fixtures: nationFixtures,
+  );
   final posts = YFeed.forRun(
     contexts,
     nation: nation,
@@ -558,6 +568,16 @@ Future<YTimeline> _feedOf(
     familyFirst: familyFirstLanguages.contains(
       ref.watch(uiLanguageCodeProvider),
     ),
+    proudExitKeys: {
+      for (final e in exits.values)
+        if (e.proud) e.matchKey,
+    },
+    // A group exit can end on a win: only a match that was not won is read
+    // as the one that ended it.
+    acceptedExitKeys: {
+      for (final e in exits.values)
+        if (e.accepted && !e.lastWon) e.matchKey,
+    },
   )..addAll(incidentPosts);
   // The one post drawn from a match that has NOT been played. Every other
   // shape on the feed reacts to a result, so the biggest game of a cycle
@@ -605,9 +625,8 @@ Future<YTimeline> _feedOf(
       nation: nation,
       seed: career.rngSeed,
       judged: judged,
-      fixtures: await ref
-          .watch(competitionRepositoryProvider)
-          .fixturesForNation(careerId, career.nationId),
+      fixtures: nationFixtures,
+      exits: exits,
       dated: datedStandings,
     ),
   );
@@ -1029,27 +1048,16 @@ List<YPost> _tournamentPosts(
   required int seed,
   required List<YJudged> judged,
   required List<Fixture> fixtures,
+  required Map<String, _ExitReading> exits,
   required List<({DateTime date, ResultStanding standing})> dated,
 }) {
-  final byId = {for (final f in fixtures) f.id: f};
-  // The nation's played meetings in competition [id], oldest first.
-  List<(Fixture, YJudged)> meetingsIn(int id) => [
-    for (final j in judged.reversed)
-      if (byId[int.tryParse(j.key.replaceFirst('fx:', ''))] case final f?
-          when f.competitionId == id)
-        (f, j),
-  ];
-  // The competition a milestone's key names: 'qual:<id>' or 'out:cmp:<id>'.
-  int? competitionOf(String key) => int.tryParse(key.split(':').last);
   return [
     for (final m in milestones)
       ...() {
-        final id = competitionOf(m.key);
-        final meetings = id == null
-            ? const <(Fixture, YJudged)>[]
-            : meetingsIn(id);
+        final meetings = _meetingsOf(m, judged: judged, fixtures: fixtures);
         final last = meetings.lastOrNull;
         final ranks = [for (final (_, j) in meetings) j.opponentRank];
+        final exit = exits[m.key];
         return YFeed.forMilestone(
           m,
           nation: nation,
@@ -1061,18 +1069,101 @@ List<YPost> _tournamentPosts(
                 nationRank: last.$2.nationRank,
                 opponentRanks: ranks,
               ),
-          painful:
-              m.template == YTemplate.eliminated &&
-              last != null &&
-              YTournaments.painfulExit(
-                exitRound: YTournaments.coreRound(last.$1.round),
-                nationRank: last.$2.nationRank,
-                opponentRanks: ranks,
-              ),
+          painful: exit?.painful ?? false,
+          proud: exit?.proud ?? false,
+          accepted: exit?.accepted ?? false,
           history: YFeed.standingsAsOf(dated, m.date),
         );
       }(),
   ];
+}
+
+/// The nation's played meetings in the competition milestone [m] is about
+/// (`qual:<id>`, `out:cmp:<id>` and so on), oldest first.
+List<(Fixture, YJudged)> _meetingsOf(
+  YMilestone m, {
+  required List<YJudged> judged,
+  required List<Fixture> fixtures,
+}) {
+  final id = int.tryParse(m.key.split(':').last);
+  if (id == null) return const [];
+  final byId = {for (final f in fixtures) f.id: f};
+  return [
+    for (final j in judged.reversed)
+      if (byId[int.tryParse(j.key.replaceFirst('fx:', ''))] case final f?
+          when f.competitionId == id)
+        (f, j),
+  ];
+}
+
+/// How a finals exit read against what was expected of the side, and the
+/// key of the match that ended it.
+typedef _ExitReading = ({
+  bool painful,
+  bool proud,
+  bool accepted,
+  String matchKey,
+  bool lastWon,
+});
+
+/// Every exit milestone in [milestones], read: heartbreak for a favourite
+/// out early ([YTournaments.painfulExit]), pride for a side that went
+/// further than it was ever expected to ([YTournaments.proudExit]),
+/// acceptance for one out about where expected ([YTournaments.parExit]).
+/// Keyed by
+/// the milestone's key. Shared by the exit's own posts and the match that
+/// ended it, so the wire cannot be proud while the replies call for the
+/// manager's head.
+Map<String, _ExitReading> _exitReadings(
+  List<YMilestone> milestones, {
+  required List<YJudged> judged,
+  required List<Fixture> fixtures,
+}) {
+  final out = <String, _ExitReading>{};
+  for (final m in milestones) {
+    if (m.template != YTemplate.eliminated) continue;
+    final meetings = _meetingsOf(m, judged: judged, fixtures: fixtures);
+    final last = meetings.lastOrNull;
+    if (last == null) continue;
+    final exitRound = YTournaments.coreRound(last.$1.round);
+    final nationRank = last.$2.nationRank;
+    final painful = YTournaments.painfulExit(
+      exitRound: exitRound,
+      nationRank: nationRank,
+      opponentRanks: [for (final (_, j) in meetings) j.opponentRank],
+    );
+    final played = [
+      for (final (f, j) in meetings)
+        (
+          round: f.round,
+          opponentRank: j.opponentRank,
+          won: j.shootoutWon ?? j.scored > j.conceded,
+        ),
+    ];
+    final proud =
+        !painful &&
+        YTournaments.proudExit(
+          exitRound: exitRound,
+          nationRank: nationRank,
+          meetings: played,
+        );
+    final accepted =
+        !painful &&
+        !proud &&
+        YTournaments.parExit(
+          exitRound: exitRound,
+          nationRank: nationRank,
+          meetings: played,
+        );
+    out[m.key] = (
+      painful: painful,
+      proud: proud,
+      accepted: accepted,
+      matchKey: last.$2.key,
+      lastWon: played.last.won,
+    );
+  }
+  return out;
 }
 
 /// Every milestone the manager's nation's campaigns have reached in a career

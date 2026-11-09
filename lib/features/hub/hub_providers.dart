@@ -30,6 +30,7 @@ import 'package:fnm/domain/services/competition/nations_cup.dart';
 import 'package:fnm/domain/services/competition/nations_cups.dart';
 import 'package:fnm/domain/services/competition/qualification.dart';
 import 'package:fnm/domain/services/competition/rounds.dart';
+import 'package:fnm/domain/services/match/ai_substitutions.dart';
 import 'package:fnm/domain/services/competition/world_pedigree.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/domain/services/federation/federation_finance.dart';
@@ -1214,8 +1215,22 @@ class SeasonService {
     // substitute ever won a cap, scored, was booked or was marked — the rest of
     // the world had no bench at all. Strength is still read off the XI: the
     // subs change who is on the pitch, not how good the side is.
-    final homeSubs = await _fieldedSubs(f.careerId, f.homeNationId, homeXi);
-    final awaySubs = await _fieldedSubs(f.careerId, f.awayNationId, awayXi);
+    // How many each side uses varies match to match, on its own stream so
+    // the result and the goals draw exactly as before.
+    final friendly = f.round == Rounds.friendly;
+    final subsRng = SeededRng.forFixture(rngSeed, f.id ^ 0x5B5);
+    final homeSubs = await _fieldedSubs(
+      f.careerId,
+      f.homeNationId,
+      homeXi,
+      count: AiSubstitutions.drawCount(subsRng, friendly: friendly),
+    );
+    final awaySubs = await _fieldedSubs(
+      f.careerId,
+      f.awayNationId,
+      awayXi,
+      count: AiSubstitutions.drawCount(subsRng, friendly: friendly),
+    );
     // Both sides' strengths first; then, if either is the manager's, his
     // side is converted against the other (his plan, the opponent's counter
     // to it, and how open the two make the game). Every other fixture comes
@@ -1792,19 +1807,15 @@ class SeasonService {
     return xi.isEmpty ? fit : xi;
   }
 
-  /// How many substitutes a background side brings on. Three is the number that
-  /// matters: enough that a bench player is a real part of the world's records
-  /// without pretending every game empties the bench.
-  static const int _backgroundSubs = 3;
-
-  /// The substitutes a background side uses: the best available players outside
-  /// its [xi]. Deterministic — the same pool and the same absences always give
+  /// The [count] substitutes a background side uses: the best available
+  /// players outside its [xi]. Deterministic — the same pool and the same absences always give
   /// the same bench, like everything else in the derived world.
   Future<List<Player>> _fieldedSubs(
     int careerId,
     int nationId,
-    List<Player> xi,
-  ) async {
+    List<Player> xi, {
+    required int count,
+  }) async {
     if (xi.isEmpty) return const [];
     final pool = await _pool(nationId);
     final onPitch = xi.map((p) => p.id).toSet();
@@ -1822,7 +1833,7 @@ class SeasonService {
           final byOverall = b.overall.compareTo(a.overall);
           return byOverall != 0 ? byOverall : a.id.compareTo(b.id);
         });
-    return available.take(_backgroundSubs).toList();
+    return available.take(count).toList();
   }
 
   /// The men who actually took the field for [nationId] in a match the manager

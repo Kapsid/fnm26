@@ -25589,5 +25589,372 @@
   "editorIssueManagerNationality": "Pick a nationality for the manager from the list",
   "@editorIssueManagerNationality": {
     "description": "A day-one manager's nationality is not one of the game's nations."
+  },
+  "shareButton": "Share",
+  "@shareButton": {
+    "description": "Button that shares a match result or the trophy cabinet as an image (Instagram etc.)."
+  },
+  "shareSheetTitle": "Share as an image",
+  "@shareSheetTitle": {
+    "description": "Title of the sheet where the manager picks the image format to share."
+  },
+  "shareFormatSquare": "Square",
+  "@shareFormatSquare": {
+    "description": "Share image format: a square feed post (1:1)."
+  },
+  "shareFormatStory": "Story",
+  "@shareFormatStory": {
+    "description": "Share image format: a tall Instagram story (9:16). Use the word people know from Instagram in your language."
+  },
+  "shareFailed": "The image could not be created.",
+  "@shareFailed": {
+    "description": "Snack bar when the share image could not be made."
+  },
+  "shareSaveToPhotos": "Save to photos",
+  "@shareSaveToPhotos": {
+    "description": "Button in the share sheet that saves the image straight into the phone's photo gallery."
+  },
+  "shareSavedToPhotos": "Saved to photos",
+  "@shareSavedToPhotos": {
+    "description": "Snack bar after the share image was saved into the photo gallery."
+  },
+  "sharePhotosDenied": "FNM is not allowed to add to your photos. You can allow it in Settings.",
+  "@sharePhotosDenied": {
+    "description": "Snack bar when the phone refused the app access to save into the photo gallery."
+  },
+  "editorCountryAll": "All countries",
+  "@editorCountryAll": {
+    "description": "Editor, clubs and stadiums list: the country filter's choice that lists every country."
+  },
+  "editorCountryFilterTitle": "Filter by country",
+  "@editorCountryFilterTitle": {
+    "description": "Editor, clubs and stadiums list: title of the sheet that picks a country to list."
+  },
+  "shareCabinetBig": "Share my trophies",
+  "@shareCabinetBig": {
+    "description": "Big button on the My Career tab that shares the manager's trophy cabinet as an image."
+  },
+  "yExitProud0": "It was an unexpected run at the {competition} and a great result in the end. Proud of the boys.",
+  "@yExitProud0": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud1": "Nobody gave us a chance at the {competition}. We went further than anyone dared to dream. Thank you, lads.",
+  "@yExitProud1": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud2": "Out of the {competition}, but what a ride. This team made the whole country believe. Proud.",
+  "@yExitProud2": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 2. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud3": "Didn't expect us to get out of the group at the {competition}. Everything after that was a bonus. Onward and upward.",
+  "@yExitProud3": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud4": "We went to the {competition} hoping for a point or two and came home with a knockout run. Good tournament.",
+  "@yExitProud4": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 4. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud5": "Further than the form book said we would go at the {competition}. That is a step forward, plain and simple.",
+  "@yExitProud5": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 5. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud6": "Out of the {competition}, and it stings a little. But be honest: nobody had us getting this far.",
+  "@yExitProud6": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 6. Tone band: sour (mild realism, never at the manager).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud7": "Fine, we are out of the {competition}. Still more than we have managed in years. I'll take it.",
+  "@yExitProud7": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 7. Tone band: sour (mild realism, never at the manager).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitProud8": "No trophy from the {competition}, and there was never going to be one. A good run is a good run. Now do it again.",
+  "@yExitProud8": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 8. Tone band: sour (mild realism, never at the manager).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yReactionPride0": "Proud of every single one of them.",
+  "@yReactionPride0": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 0. Tone band: generous."
+  },
+  "yReactionPride1": "What a run. Thank you, boys.",
+  "@yReactionPride1": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 1. Tone band: generous."
+  },
+  "yReactionPride2": "Nobody expected this. Remember that.",
+  "@yReactionPride2": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 2. Tone band: generous."
+  },
+  "yReactionPride3": "Onward and upward.",
+  "@yReactionPride3": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 3. Tone band: neutral."
+  },
+  "yReactionPride4": "A bonus, all of it. Enjoy it.",
+  "@yReactionPride4": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 4. Tone band: neutral."
+  },
+  "yReactionPride5": "Better than anyone predicted. Good tournament.",
+  "@yReactionPride5": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 5. Tone band: neutral."
+  },
+  "yReactionPride6": "Out, but not embarrassed. Fair enough.",
+  "@yReactionPride6": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 6. Tone band: sour (mild realism, never at the manager)."
+  },
+  "yReactionPride7": "The better side went through. We did ourselves proud anyway.",
+  "@yReactionPride7": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 7. Tone band: sour (mild realism, never at the manager)."
+  },
+  "yReactionPride8": "Let us not get carried away. But yes, a good run.",
+  "@yReactionPride8": {
+    "description": "Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 8. Tone band: sour (mild realism, never at the manager)."
+  },
+  "yExitAccepted0": "Out of the {competition}, about where we were always going to finish. Proud they gave it a go.",
+  "@yExitAccepted0": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitAccepted1": "The {competition} is over for us. We gave the big sides a game. Heads up, lads.",
+  "@yExitAccepted1": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitAccepted2": "Out of the {competition}. On paper this was always the likely ending. Learn from it and go again.",
+  "@yExitAccepted2": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 2. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitAccepted3": "Our {competition} ends where the rankings said it would. No shame in that.",
+  "@yExitAccepted3": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitAccepted4": "Out of the {competition}, as most of us expected. Not a disaster, just not a shock either.",
+  "@yExitAccepted4": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 4. Tone band: sour (mild realism, never at the manager).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yExitAccepted5": "The {competition} was a step too far for this squad. The gap is real. Time to close it.",
+  "@yExitAccepted5": {
+    "description": "Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 5. Tone band: sour (mild realism, never at the manager).",
+    "placeholders": {
+      "competition": {
+        "type": "String"
+      }
+    }
+  },
+  "yReactionAcceptance0": "Gave it everything. That is all you can ask.",
+  "@yReactionAcceptance0": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 0. Tone band: generous."
+  },
+  "yReactionAcceptance1": "Heads up. We will be back.",
+  "@yReactionAcceptance1": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 1. Tone band: generous."
+  },
+  "yReactionAcceptance2": "Hurts, but they did us no shame.",
+  "@yReactionAcceptance2": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 2. Tone band: generous."
+  },
+  "yReactionAcceptance3": "About what we expected, honestly.",
+  "@yReactionAcceptance3": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 3. Tone band: neutral."
+  },
+  "yReactionAcceptance4": "The better sides went through. That is football.",
+  "@yReactionAcceptance4": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 4. Tone band: neutral."
+  },
+  "yReactionAcceptance5": "Disappointed, not angry.",
+  "@yReactionAcceptance5": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 5. Tone band: neutral."
+  },
+  "yReactionAcceptance6": "Bit flat, if I am honest. Still, no shocks.",
+  "@yReactionAcceptance6": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 6. Tone band: sour (mild realism, never at the manager)."
+  },
+  "yReactionAcceptance7": "We are not there yet. Everyone knows it.",
+  "@yReactionAcceptance7": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 7. Tone band: sour (mild realism, never at the manager)."
+  },
+  "yReactionAcceptance8": "Same level as last time. Need a step up next cycle.",
+  "@yReactionAcceptance8": {
+    "description": "Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 8. Tone band: sour (mild realism, never at the manager)."
+  },
+  "sponsorIndustryExtraSportswear": "Sportswear",
+  "@sponsorIndustryExtraSportswear": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraAirline": "Full-service airline",
+  "@sponsorIndustryExtraAirline": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraRailway": "Railway",
+  "@sponsorIndustryExtraRailway": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraHotels": "Hotel chain",
+  "@sponsorIndustryExtraHotels": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraCoffee": "Coffee chain",
+  "@sponsorIndustryExtraCoffee": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraChocolate": "Chocolate",
+  "@sponsorIndustryExtraChocolate": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraMineralWater": "Mineral water",
+  "@sponsorIndustryExtraMineralWater": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraPharmacy": "Pharmacy chain",
+  "@sponsorIndustryExtraPharmacy": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraFashion": "Fashion",
+  "@sponsorIndustryExtraFashion": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraWatches": "Watchmaker",
+  "@sponsorIndustryExtraWatches": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraElectronics": "Electronics",
+  "@sponsorIndustryExtraElectronics": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraSoftware": "Software",
+  "@sponsorIndustryExtraSoftware": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraStreaming": "Streaming service",
+  "@sponsorIndustryExtraStreaming": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraSocialNetwork": "Social network",
+  "@sponsorIndustryExtraSocialNetwork": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraFurniture": "Furniture",
+  "@sponsorIndustryExtraFurniture": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraTyres": "Tyres",
+  "@sponsorIndustryExtraTyres": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraShipping": "Shipping line",
+  "@sponsorIndustryExtraShipping": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraLottery": "Lottery",
+  "@sponsorIndustryExtraLottery": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraTourism": "Tourist board",
+  "@sponsorIndustryExtraTourism": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraCosmetics": "Cosmetics",
+  "@sponsorIndustryExtraCosmetics": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraPetFood": "Pet food",
+  "@sponsorIndustryExtraPetFood": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraBakery": "Bakery",
+  "@sponsorIndustryExtraBakery": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraSupermarket": "Supermarket",
+  "@sponsorIndustryExtraSupermarket": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraSportsNutrition": "Sports nutrition",
+  "@sponsorIndustryExtraSportsNutrition": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraWine": "Wine",
+  "@sponsorIndustryExtraWine": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraTea": "Tea",
+  "@sponsorIndustryExtraTea": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraRealEstate": "Real estate",
+  "@sponsorIndustryExtraRealEstate": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraFitness": "Fitness clubs",
+  "@sponsorIndustryExtraFitness": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "sponsorIndustryExtraNewspaper": "Newspaper",
+  "@sponsorIndustryExtraNewspaper": {
+    "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
   }
 }

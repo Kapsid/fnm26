@@ -203,10 +203,10 @@ void main() {
     () async {
       // A finals match goes through the neutral-venue branch of the skip path
       // and a level knockout through extra time and maybe penalties
-      // (`decideKnockout`); both are still ONE recording of his plan. Seed 80
-      // reaches Czechia's first continental finals match at the 9th advance
-      // and a round of 16 there settled after extra time at the 12th, on the
-      // 1.0.6 starting ranking the seed was found on.
+      // (`decideKnockout`); both are still ONE recording of his plan. Seed 135
+      // reaches both a finals match and a knockout settled after extra time
+      // by the 19th advance, on the 1.0.6 starting ranking (re-found when
+      // background sides began using a varying number of substitutes).
       final w = open();
       await w.c.read(seedLoaderProvider).ensureSeeded();
       final career =
@@ -215,7 +215,7 @@ void main() {
                   .create(
                     nationId: czechia,
                     managerName: 'M',
-                    rngSeed: 80,
+                    rngSeed: 135,
                     startingRanks: legacySeedRanking,
                   ))
               .valueOrNull!;
@@ -230,7 +230,7 @@ void main() {
                   .create(
                     nationId: czechia,
                     managerName: 'M',
-                    rngSeed: 80,
+                    rngSeed: 135,
                     startingRanks: legacySeedRanking,
                   ))
               .valueOrNull!;

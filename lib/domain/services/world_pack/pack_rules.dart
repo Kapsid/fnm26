@@ -821,8 +821,8 @@ abstract final class PackRules {
   /// [fringeRanges] (`pools.<id>.<playerId>`), an added club in a country
   /// outside [countryCodes] (lower-case), an added Y account bound to an
   /// unknown nation, an added sponsor whose industry is outside
-  /// [sponsorBrands], and a `localized` path whose key the game no longer
-  /// has (`localized.<path>`, checked as the plain maps are).
+  /// [sponsorBrands] and [sponsorIndustries] (picker-only trades), and a
+  /// `localized` path whose key the game no longer has (`localized.<path>`, checked as the plain maps are).
   ///
   /// And what this build does not know of a well-formed file: a picked
   /// trait (`<squads|pools>.<id>.<playerId>.traits`), a sponsor's deal
@@ -842,6 +842,7 @@ abstract final class PackRules {
     required Set<String> yAccounts,
     required Set<String> countryCodes,
     required Map<int, ({int first, int last})> fringeRanges,
+    Set<String> sponsorIndustries = const {},
   }) {
     final out = <PackIssue>[];
     void ids(String root, Iterable<int> keys) {
@@ -900,7 +901,8 @@ abstract final class PackRules {
       }
     }
     for (final s in p.addedSponsors) {
-      if (!sponsorBrands.contains(s.industry)) {
+      if (!sponsorBrands.contains(s.industry) &&
+          !sponsorIndustries.contains(s.industry)) {
         out.add(UnknownId('addedSponsors.${s.id}'));
       }
       if (s.unknownDeal != null) {
