@@ -157,9 +157,10 @@ void main() {
 
   test("cap keeps the worst scores' changes, trims the mildest and fills "
       'forced vacancies', () {
-    // 12 AI nations: at most 3 change at once. Nation 12 is vacant (forced),
-    // nations 1 to 4 are out of contract with small negative scores (no sack
-    // roll), so two of the four contract ends may go: the worst two.
+    // A point judging 12 of 20 AI nations: at most 2 change at once (15% of
+    // the 12, rounded up). Nation 12 is vacant (forced), nations 1 to
+    // 4 are out of contract with small negative scores (no sack roll), so
+    // one of the four contract ends may go: the worst.
     final managers = [for (var i = 1; i <= 20; i++) _m(i)];
     final expired = DateTime(_d.year - 1);
     final spells = [
@@ -175,20 +176,20 @@ void main() {
     final c = ManagerDecisions.decide(
       w,
       windows,
-      _ctx(nations: 12, ranked: 12),
+      _ctx(nations: 12, ranked: 20),
     );
-    expect(_changed(c), {12, 3, 4});
+    expect(_changed(c), {12, 4});
     expect(
       {
         for (final s in c.closed)
           if (s.endReason == SpellEnd.contractEnd) s.nationId,
       },
-      {3, 4},
+      {4},
     );
     // The trimmed contract ends are held over on the old contract, for the
     // next decision point to look at again.
     for (final s in c.renewed) {
-      expect(s.contractUntil, isNot(greaterThan(_d)));
+      expect(s.contractUntil.isAfter(_d), isFalse);
     }
 
     // Forced vacancies beyond the cap are all still filled.
@@ -272,7 +273,7 @@ void main() {
         {1, 3},
       );
       expect(_changed(c), {1});
-      // A finals point never retires anyone.
+      // The World Championship's point never retires anyone.
       final f = ManagerDecisions.decide(
         w,
         const {},
@@ -281,6 +282,102 @@ void main() {
       expect(f.updated, isEmpty);
       expect(f.closed, isEmpty);
     }
+  });
+
+  test('a continental finals point retires managers in post, not the '
+      'free', () {
+    for (var k = 0; k < 10; k++) {
+      final w = ManagerWorld(
+        managers: [_m(1, age: 75), _m(2, age: 75), _m(3)],
+        spells: [_s(1, 1, 1)],
+      );
+      final c = ManagerDecisions.decide(
+        w,
+        const {},
+        _ctx(nations: 1, key: 'cont:UEFA:$k'),
+      );
+      expect(
+        c.closed.map((s) => (s.managerId, s.endReason)),
+        [(1, SpellEnd.retired)],
+      );
+      expect({for (final m in c.updated) m.managerId}, {1});
+      expect(_changed(c), {1});
+    }
+  });
+
+  test('retirements count against the cap, oldest first; the rest stay '
+      'on', () {
+    // 12 of 20 AI nations judged: at most 2 change. Four men in post retire for
+    // certain; the two oldest go, the other two stay in post.
+    final w = ManagerWorld(
+      managers: [
+        _m(1, age: 75),
+        _m(2, age: 78),
+        _m(3, age: 76),
+        _m(4, age: 77),
+        for (var i = 5; i <= 14; i++) _m(i),
+      ],
+      spells: [for (var n = 1; n <= 12; n++) _s(n, n, n)],
+    );
+    final c = ManagerDecisions.decide(
+      w,
+      const {},
+      _ctx(nations: 12, ranked: 20, rollover: true),
+    );
+    expect(
+      {
+        for (final s in c.closed)
+          if (s.endReason == SpellEnd.retired) s.managerId,
+      },
+      {2, 4},
+    );
+    expect(_changed(c), {2, 4});
+    expect(
+      {
+        for (final m in c.updated)
+          if (m.retiredAt != null) m.managerId,
+      },
+      {2, 4},
+    );
+  });
+
+  test('the changes of the last 12 months count against the cap', () {
+    // 20 AI nations: 3 at one point (15%), 4 in any 12 months (20%).
+    // Nations 4 to 20 are out of contract with a mildly negative score.
+    final expired = DateTime(_d.year - 1);
+    ManagerWorld world(DateTime changedOn) => ManagerWorld(
+      managers: [for (var i = 1; i <= 40; i++) _m(i)],
+      spells: [
+        // Nations 1 to 3 changed manager on [changedOn].
+        for (var n = 1; n <= 3; n++) ...[
+          _s(
+            100 + n,
+            20 + n,
+            n,
+            from: _ago(years: 5),
+            to: changedOn,
+            end: SpellEnd.sacked,
+          ),
+          _s(n, n, n, from: changedOn),
+        ],
+        for (var n = 4; n <= 20; n++) _s(n, n, n, until: expired),
+      ],
+    );
+    final windows = {
+      for (var n = 4; n <= 20; n++) n: _w(0, surprise: -1.0 - n / 100),
+    };
+    final recent = ManagerDecisions.decide(
+      world(_ago(days: 30)),
+      windows,
+      _ctx(nations: 20, ranked: 20),
+    );
+    expect(_changed(recent), hasLength(1), reason: '4 a year less 3 made');
+    final older = ManagerDecisions.decide(
+      world(_ago(years: 1, days: 30)),
+      windows,
+      _ctx(nations: 20, ranked: 20),
+    );
+    expect(_changed(older), hasLength(3), reason: 'the point cap only');
   });
 
   test('free 8 years leaves', () {

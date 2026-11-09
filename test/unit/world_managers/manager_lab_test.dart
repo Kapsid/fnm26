@@ -23,6 +23,7 @@ void main() {
           'yearly ${f(s.yearlyChangeShare)} '
           'postFinals ${f(s.postFinalsShare)} '
           'maxPoint ${f(s.maxPointShare)} '
+          'wcYear ${f(s.maxWcYearShare)} '
           'changes ${s.changes} ended ${s.completedSpells}',
         );
       }
@@ -33,7 +34,8 @@ void main() {
         'MEAN: tenure ${f(mean((s) => s.meanTenureYears))}y '
         'yearly ${f(mean((s) => s.yearlyChangeShare))} '
         'postFinals ${f(mean((s) => s.postFinalsShare))} '
-        'maxPoint ${f(rows.map((s) => s.maxPointShare).reduce((a, b) => a > b ? a : b))}',
+        'maxPoint ${f(rows.map((s) => s.maxPointShare).reduce((a, b) => a > b ? a : b))} '
+        'wcYear ${f(rows.map((s) => s.maxWcYearShare).reduce((a, b) => a > b ? a : b))}',
       );
     },
     skip: Platform.environment['FNM_LAB'] == '1' ? false : 'set FNM_LAB=1',

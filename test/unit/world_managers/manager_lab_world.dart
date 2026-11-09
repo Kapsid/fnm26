@@ -16,6 +16,10 @@ typedef LabStats = ({
   double yearlyChangeShare,
   double postFinalsShare,
   double maxPointShare,
+
+  /// The most nations, as a share, that changed in one World Championship
+  /// year (its point and the rollover after it), worst cycle.
+  double maxWcYearShare,
   int changes,
   int completedSpells,
 });
@@ -98,6 +102,8 @@ LabStats runManagerLab({
   var changes = 0;
   var finalsChanges = 0;
   var maxShare = 0.0;
+  var maxWcYear = 0.0;
+  final wcYear = <int>{};
 
   void step(
     DateTime date,
@@ -158,6 +164,9 @@ LabStats runManagerLab({
       if (e.value.settledFinalsBriefMet) metOn[e.key] = date;
     }
     world = applyManagerChanges(world, c);
+    if (key.startsWith('wc:') || key.startsWith('roll:')) {
+      wcYear.addAll(c.moves.map((m) => m.nationId));
+    }
     final n = c.moves.length;
     changes += n;
     if (!rollover) finalsChanges += n;
@@ -178,6 +187,8 @@ LabStats runManagerLab({
     }
     step(DateTime(y + 4, 7, 19), 'wc:$cy', rollover: false, finalists: 48);
     step(DateTime(y + 4, 8, 20), 'roll:$cy', rollover: true);
+    maxWcYear = math.max(maxWcYear, wcYear.length / nations);
+    wcYear.clear();
   }
 
   // Every spell's time in post inside the run, ongoing spells included.
@@ -199,6 +210,7 @@ LabStats runManagerLab({
     yearlyChangeShare: changes / (nations * cycles * 4),
     postFinalsShare: changes == 0 ? 0 : finalsChanges / changes,
     maxPointShare: maxShare,
+    maxWcYearShare: maxWcYear,
     changes: changes,
     completedSpells: ended,
   );

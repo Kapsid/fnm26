@@ -34,7 +34,21 @@ abstract final class ManagerDecisions {
   static const double smallSackChance = 0.25;
   static const double bigSackBelow = -2;
   static const double smallSackBelow = -1;
-  static const double capShare = 0.30;
+
+  /// (Owner ruling 2026-11-09, second: 30% was too much) At most this share
+  /// of the AI nations a decision point judges changes manager there (of the
+  /// world at a World Championship or rollover, of the confederation at a
+  /// continental finals; never more than this share of the world)...
+  static const double capShare = 0.15;
+
+  /// ...and at most this share of the world's AI nations in any 12 months:
+  /// the nations whose manager changed (any cause) in the year before a
+  /// point count against its budget, so the rollover a month after a World
+  /// Championship cannot stack on top of it (seed 42: 37.6% of the world
+  /// changed in the World Championship's year at a 30% cap, 19.5% now).
+  /// Retirements count too; only a nation already without a manager may
+  /// take the world past it, and it is always filled.
+  static const double yearShare = 0.20;
   static const int retireFromAge = 64;
   static const int freeYearsToLeave = 8;
   static const int poachTopRank = 40;
@@ -44,8 +58,9 @@ abstract final class ManagerDecisions {
   static const int domesticBonus = 5;
 
   // Rulings, tuned in the tenure lab (manager_lab_test.dart, 5 cycles x 8
-  // seeds): with the spec's cap and 12-month guards, turnover plateaus near
-  // a 6-year tenure; these are the mildest values that keep the guard's band.
+  // seeds). With the 15% point cap and 20% year cap the caps, not these,
+  // bound the turnover: about 20% of the world in a World Championship's
+  // year and 17% in a continental one, an 11-year tenure.
   /// (Ruling) A badly beaten manager not sacked walks at this chance.
   static const double resignChance = 0.40;
 
@@ -58,10 +73,16 @@ abstract final class ManagerDecisions {
   static double attractCap(int rank) =>
       math.min(100, 40 + (ManagerReputation.unranked - rank) * 0.3);
 
-  /// The chance a manager of [age] retires at a rollover: none until 64,
-  /// certain from 75.
+  /// The chance a manager of [age] retires at a rollover or, in post, after
+  /// his continental finals: none until 64, certain from 75 (the caps may
+  /// still hold him over to the next such point).
   static double retireChance(int age) =>
       age < retireFromAge ? 0 : ((age - 63) / 12).clamp(0.0, 1.0);
+
+  /// Whether the finals decision point [key] is a continental championship's
+  /// (`cont:<CONFED>:<year>`, as `ManagerWindows.continentalKey` writes it):
+  /// managers in post may retire there as well as at the rollover.
+  static bool retiresAtContinental(String key) => key.startsWith('cont:');
 
   /// Runs one decision point.
   ///
@@ -84,12 +105,12 @@ abstract final class ManagerDecisions {
     bool inScope(int n) => ctx.scope.contains(n) && !player.contains(n);
     int rankOf(int n) => ctx.rankById[n] ?? ManagerReputation.unranked;
 
-    // The cap: 30% of the world's AI nations.
+    // The cap: [capShare] of the world's AI nations at this point, and no
+    // more than [yearShare] over the last 12 months (see below).
     final ai = {
       ...ctx.rankById.keys,
       if (ctx.rankById.isEmpty) ...{for (final s in w.spells) s.nationId},
     }..removeAll(player);
-    final budget = (ai.length * capShare).floor();
 
     // One stream per nation, its draws taken in a fixed order up front so a
     // draw used on one path never shifts another.
@@ -111,6 +132,42 @@ abstract final class ManagerDecisions {
       }
     }
     bool changedRecently(int n) => changedAt[n]?.isAfter(yearAgo) ?? false;
+
+    // The rolling budget: AI nations whose manager changed in the 12 months
+    // up to this point. A spell closing is a change; a spell opening is one
+    // unless it is the nation's first (the world's starting point).
+    bool inYear(DateTime d) => d.isAfter(yearAgo) && !d.isAfter(date);
+    final firstSpell = <int, ManagerSpell>{};
+    for (final s in w.spells) {
+      final f = firstSpell[s.nationId];
+      if (f == null ||
+          s.fromDate.isBefore(f.fromDate) ||
+          (s.fromDate.isAtSameMomentAs(f.fromDate) && s.spellNo < f.spellNo)) {
+        firstSpell[s.nationId] = s;
+      }
+    }
+    final changedThisYear = <int>{
+      for (final s in w.spells)
+        if (ai.contains(s.nationId) &&
+            ((s.toDate != null && inYear(s.toDate!)) ||
+                (inYear(s.fromDate) &&
+                    firstSpell[s.nationId]!.spellNo != s.spellNo)))
+          s.nationId,
+    };
+    // The point's own cap is [capShare] of the AI nations it judges (a
+    // continental finals judges its confederation only, so the six of one
+    // summer share the world's cap rather than the first-settled taking it).
+    final judged = ctx.scope.where(ai.contains).length;
+    final budget = math.max(
+      0,
+      math.min(
+        math.min(
+          (ai.length * capShare).floor(),
+          (judged * capShare).ceil(),
+        ),
+        (ai.length * yearShare).floor() - changedThisYear.length,
+      ),
+    );
 
     final updated = <int, WorldManager>{};
     final closed = <ManagerSpell>[];
@@ -134,12 +191,27 @@ abstract final class ManagerDecisions {
     DateTime contractFrom(int years) =>
         DateTime(date.year + years, date.month, date.day);
 
-    // 6. Retirement and the long-unhired leaving (rollover only).
+    // A nation already without a manager is a forced vacancy: it always
+    // counts against the budget and is always filled.
+    final vacant = <int>{
+      for (final n in ctx.scope)
+        if (inScope(n) && !current.containsKey(n)) n,
+    };
+    var used = vacant.length;
+
+    // 6. Retirement and the long-unhired leaving: at the rollover, and for
+    // the managers in post also after their continental finals, so the
+    // world's retirements do not all land in the World Championship's year.
+    // A manager in post who would retire counts against the budget, ahead of
+    // any sacking, oldest first; one the budget cannot take stays on to the
+    // next such point (and his age makes that roll likelier still).
     final employedAt = {for (final s in current.values) s.managerId: s};
-    if (ctx.rollover) {
+    final retiring = <({WorldManager m, ManagerSpell spell})>[];
+    if (ctx.rollover || retiresAtContinental(ctx.key)) {
       for (final m in w.managers) {
         if (m.retiredAt != null) continue;
         final spell = employedAt[m.managerId];
+        if (spell == null && !ctx.rollover) continue;
         if (spell != null && !inScope(spell.nationId)) continue;
         final roll = spell != null
             ? rollsFor(spell.nationId).retire
@@ -149,8 +221,11 @@ abstract final class ManagerDecisions {
                 ),
               ).nextDouble();
         if (roll < retireChance(date.year - m.birthYear)) {
-          retire(m);
-          if (spell != null) end(spell, SpellEnd.retired);
+          if (spell != null) {
+            retiring.add((m: m, spell: spell));
+          } else {
+            retire(m);
+          }
           continue;
         }
         if (spell == null) {
@@ -166,6 +241,17 @@ abstract final class ManagerDecisions {
           );
           if (!date.isBefore(leaveOn)) retire(m);
         }
+      }
+      retiring.sort((a, b) {
+        final c = a.m.birthYear.compareTo(b.m.birthYear);
+        return c != 0 ? c : a.spell.nationId.compareTo(b.spell.nationId);
+      });
+      for (final r in retiring) {
+        if (used >= budget) break;
+        retire(r.m);
+        end(r.spell, SpellEnd.retired);
+        vacant.add(r.spell.nationId);
+        used++;
       }
     }
 
@@ -237,14 +323,10 @@ abstract final class ManagerDecisions {
       }
     }
 
-    // 5. The cap. Forced vacancies always count and are always filled; the
-    // voluntary changes go worst score first, and those the cap trims stay
-    // on as they were (an expired contract held over to the next point).
-    final vacant = <int>{
-      for (final n in ctx.scope)
-        if (inScope(n) && !current.containsKey(n)) n,
-    };
-    var used = vacant.length;
+    // 5. The cap. Forced vacancies and retirements have taken their share
+    // (above); the voluntary changes go worst score first, and those the cap
+    // trims stay on as they were (an expired contract held over to the next
+    // point).
     voluntary.sort((a, b) {
       final c = a.score.compareTo(b.score);
       return c != 0 ? c : a.nation.compareTo(b.nation);
@@ -348,7 +430,7 @@ abstract final class ManagerDecisions {
       if (ctx.rollover &&
           !noChain.contains(v) &&
           rank <= poachTopRank &&
-          used < budget) {
+          used + 2 <= budget) {
         final bar = (free == null ? 0 : rep(free.managerId)) + poachMargin;
         ManagerSpell? target;
         for (final t in current.values) {
@@ -371,7 +453,8 @@ abstract final class ManagerDecisions {
           open(v, m);
           noChain.add(target.nationId);
           queue.add(target.nationId);
-          used++;
+          // A poach moves two nations: his old one and the new.
+          used += 2;
           continue;
         }
       }
