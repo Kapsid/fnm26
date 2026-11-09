@@ -614,7 +614,7 @@ List<(double, double)> slotLayout(
 // ---------------------------------------------------------------------------
 
 const double _hardSpeed = 8.8;
-const double _walkCap = 2.2;
+const double _walkCap = 3.7;
 const double _accel = 9;
 const double _turnRate = 7;
 const double _safeGap = 0.9;
@@ -629,6 +629,11 @@ const double _lookAhead = 0.7;
 
 /// The longest a moment's plan plays on past its window.
 const double _spill = 3;
+
+/// The longest play stays stopped past a window for a man it sends off (a
+/// red card, an injury, a substitution) to reach the line: the owner's
+/// 2026-11 "players walk off the pitch and play continues".
+const double _departureSpill = 9;
 
 /// How long before a moment the side it belongs to keeps the ball it has.
 const double _handover = 1.3;
@@ -1015,6 +1020,8 @@ class _Builder {
       for (final e in goalRestarts.entries) {
         if (!resetDone.contains(e.key) && (e.key - t).abs() < 1e-9) {
           resetDone.add(e.key);
+          // Anybody walking off left during the celebration.
+          _offAtCut();
           _processArrivals(t);
           // At the loop's own time, which may round a hair past it.
           _kickoff(t, e.value);
@@ -1200,7 +1207,9 @@ class _Builder {
   /// it: only while its moment has not played out, for at most [_spill],
   /// and never into another moment, an interval or a kick-off.
   bool _spills(StagedWindow w, StagedPlan? plan, double t) {
-    if (plan == null || t >= w.end + _spill - 1e-9) return false;
+    if (plan == null) return false;
+    final sending = _sendingOff(w, t);
+    if (t >= w.end + (sending ? _departureSpill : _spill) - 1e-9) return false;
     if (goalRestarts.containsKey(w.end)) return false;
     for (var k = wi; k < windows.length; k++) {
       final o = windows[k];
@@ -1210,7 +1219,32 @@ class _Builder {
     for (final r in resets) {
       if (r > t - 1e-9 && r < t + 0.3) return false;
     }
-    return !plan.settled(t, _state(t));
+    return sending || !plan.settled(t, _state(t));
+  }
+
+  /// Whether a man [w] sends off (a red card, an injury, a substitution),
+  /// or any other still on his way, is yet to reach the line, or due to set
+  /// off now: play stays stopped until he is off, never going on around
+  /// him.
+  bool _sendingOff(StagedWindow w, double t) {
+    // Only a window that is itself a stoppage for a man to leave: a
+    // change, a knock, a foul with a card. (A set piece after a sending
+    // off is played, not held.)
+    final first = w.moments.isEmpty ? null : w.moments.first;
+    if (w.injury == null && first is! SubMoment && first is! FoulMoment) {
+      return false;
+    }
+    for (final a in agents) {
+      if (!a.present) continue;
+      // Anybody still on his way off, his own stoppage cut short by this
+      // one (two changes in a row) included.
+      if (a.walkStart != null) return true;
+      final due = leaving[a.index];
+      if (due != null && due >= w.start - 1e-9 && due <= t + 1e-9) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /// A goal's window ends with a kick-off: the picture cuts there, the
@@ -2642,7 +2676,15 @@ class _Builder {
     final engage =
         defPress >= 35 ||
         xToDepth(ball.x, _dir(def, minute)) < 45 + defPress * 0.3;
-    if (!inWindow && engage) {
+    // Nobody presses a keeper with the ball in his hands: he cannot be
+    // challenged, so the forwards turn back into their shape rather than
+    // running on top of him.
+    final c = carrier;
+    final keeperHolds =
+        c != null &&
+        agents[c].slot == sides[agents[c].side].gkSlot &&
+        xToDepth(agents[c].pos.x, _dir(agents[c].side, minute)) <= _area;
+    if (!inWindow && engage && !keeperHolds) {
       final n = defPress >= 65 ? 2 : 1;
       final cand =
           [
@@ -2885,6 +2927,13 @@ class _Builder {
         return (home, math.min(3.0, 1.0 + dist * 0.3), 1);
       }
       return (a.pos, 0, 2);
+    }
+    if (carrier == a.index && isKeeper) {
+      // A keeper on the ball sets himself to play it on: a step or two
+      // forward at most, never a dribble out of his area.
+      final depth = xToDepth(a.pos.x, dir);
+      final to = math.max(depth, math.min(depth + 1.5, _area - 2));
+      return (Offset2(depthToX(to, dir), a.pos.y), 2, 2);
     }
     if (carrier == a.index) {
       final depth = xToDepth(a.pos.x, dir);

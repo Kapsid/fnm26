@@ -303,9 +303,12 @@ abstract final class Declutter {
     var c = 0.0;
     if (rivals) {
       // A challenge: the man the ball is with (or coming to, or leaving)
-      // and an opponent on him, as firmly as he is held at it.
+      // and an opponent on him, as firmly as he is held at it. Never a
+      // keeper's own ball (a catch, a claim, one in his hands): nobody
+      // challenges him for it, so nobody is drawn on top of him.
       final held = pins ?? Declutter.pins(s, t);
-      c = math.max(held[a] ?? 0, held[b] ?? 0);
+      double hold(int id) => f.keepers.contains(id) ? 0 : held[id] ?? 0;
+      c = math.max(hold(a), hold(b));
     }
     final w = s.windowAt(t);
     if (w == null) return c;
@@ -454,10 +457,10 @@ abstract final class Declutter {
     }
     double drawnY(int i) {
       final y = base[i].y + oy[i] * hs[i];
-      // A man on the pitch is drawn on it, or on the strip of grass just
-      // past the touchline at most.
+      // A man on the pitch is drawn on it: nudged aside along the
+      // touchline, never over it (he would read as gone off).
       final onPitch = base[i].y >= 0 && base[i].y <= PitchDims.width;
-      return onPitch ? y.clamp(-1.5, PitchDims.width + 1.5) : y;
+      return onPitch ? y.clamp(0.0, PitchDims.width) : y;
     }
 
     return {

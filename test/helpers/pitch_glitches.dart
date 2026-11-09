@@ -14,7 +14,8 @@
 /// - **keeper off his area**: a keeper over 18 m out in open play and
 ///   going further (not one walking back from a moment).
 /// - **frozen in an attack**: an outfield man who stands stock still (under
-///   0.2 m/s) for 3 s or more of open play.
+///   0.2 m/s) for 3 s or more of open play (not while play is held for a
+///   man going off).
 library;
 
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
@@ -40,6 +41,12 @@ class PitchGlitches {
   }
 
   bool _staged(double t) => s.windowAt(t) != null;
+
+  /// Play is stopped: a staged moment, or the hold after one while a man
+  /// it sends off reaches the line (the window closes, its exit state
+  /// taken, only once play goes on).
+  bool _stopped(double t) =>
+      _staged(t) || s.windows.any((w) => t >= w.start && t < w.exit.t);
 
   bool _nearCut(double t, [double within = 0.3]) =>
       [...s.cuts, ...s.resets].any((c) => (c - t).abs() < within);
@@ -189,6 +196,7 @@ class PitchGlitches {
         continue;
       }
       final staged = _staged(a.t);
+      final stopped = staged || _stopped(a.t);
       for (var i = 0; i < n; i++) {
         if (!a.present(i) || !b.present(i)) {
           back[i] = 0;
@@ -220,7 +228,7 @@ class PitchGlitches {
             _hit('keeper off his area', a.t, '$id ${d.toStringAsFixed(1)} m');
           }
         }
-        if (!a.keeper(i) && !staged && speed < 0.2) {
+        if (!a.keeper(i) && !stopped && speed < 0.2) {
           still[i] += dt;
           if (still[i] >= 3 && still[i] < 3 + dt + 1e-9) {
             _hit('frozen in open play', a.t, 'player $id');
