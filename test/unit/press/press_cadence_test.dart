@@ -170,7 +170,12 @@ _drive(int seed) async {
   final career =
       (await container
               .read(careerServiceProvider)
-              .create(nationId: player.id, managerName: 'M', rngSeed: seed))
+              .create(
+                nationId: player.id,
+                managerName: 'M',
+                rngSeed: seed,
+                stadiumHostRules: false,
+              ))
           .valueOrNull!;
 
   final season = container.read(seasonServiceProvider);

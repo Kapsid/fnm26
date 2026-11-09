@@ -76,6 +76,9 @@ Future<({ProviderContainer c, Career career})> _start(
                 // nations new careers add (Belarus) are covered by
                 // test/unit/belarus/.
                 newCareerNations: false,
+                // Hosts drawn as when this world was pinned, before the
+                // stadium bars (covered by test/story/host_rules_story_test).
+                stadiumHostRules: false,
               ))
           .valueOrNull!;
   return (c: c, career: career);
