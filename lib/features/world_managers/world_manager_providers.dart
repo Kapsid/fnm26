@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/fixture.dart';
+import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/services/world_managers/manager_relation.dart';
+import 'package:fnm/domain/services/world_managers/manager_reputation.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/world_managers/world_manager_service.dart';
 
@@ -98,3 +100,158 @@ managerRelationProvider = FutureProvider.autoDispose
         today: career.inGameDate,
       );
     });
+
+/// A nation's manager as a screen shows him: who, his spell, his age and the
+/// nation's record under him (the fixtures inside the spell).
+typedef NationManagerView = ({
+  WorldManager m,
+  ManagerSpell spell,
+  int age,
+  int won,
+  int drawn,
+  int lost,
+});
+
+Future<NationManagerView?> _viewOf(
+  Ref ref,
+  int careerId,
+  int nationId,
+  DateTime date,
+) async {
+  final repo = ref.read(worldManagerRepositoryProvider);
+  final spell = await repo.inChargeOn(careerId, nationId, date);
+  if (spell == null) return null;
+  final m = await repo.managerById(careerId, spell.managerId);
+  if (m == null) return null;
+  var won = 0;
+  var drawn = 0;
+  var lost = 0;
+  final fixtures = await ref
+      .read(competitionRepositoryProvider)
+      .fixturesForNation(careerId, nationId);
+  for (final f in fixtures) {
+    if (!f.hasResult ||
+        f.date.isBefore(spell.fromDate) ||
+        (spell.toDate != null && !f.date.isBefore(spell.toDate!))) {
+      continue;
+    }
+    final mine = f.homeNationId == nationId ? f.homeScore! : f.awayScore!;
+    final theirs = f.homeNationId == nationId ? f.awayScore! : f.homeScore!;
+    if (mine > theirs) {
+      won++;
+    } else if (mine == theirs) {
+      drawn++;
+    } else {
+      lost++;
+    }
+  }
+  return (
+    m: m,
+    spell: spell,
+    age: date.year - m.birthYear,
+    won: won,
+    drawn: drawn,
+    lost: lost,
+  );
+}
+
+/// The manager in charge of a nation today, for the nation page. This is the
+/// first thing that seeds a career's managers (lazily, see
+/// [WorldManagerService.ensureSeeded]); a cycle without world managers, or
+/// the player's own nation, has none.
+final AutoDisposeFutureProviderFamily<
+  NationManagerView?,
+  ({int careerId, int nationId})
+>
+nationManagerProvider = FutureProvider.autoDispose
+    .family<NationManagerView?, ({int careerId, int nationId})>((
+      ref,
+      key,
+    ) async {
+      final career = await ref
+          .read(careerRepositoryProvider)
+          .byId(key.careerId);
+      if (career == null || career.nationId == key.nationId) return null;
+      final service = ref.read(worldManagerServiceProvider);
+      if (!await service.cycleHasManagers(key.careerId, career.inGameDate)) {
+        return null;
+      }
+      await service.ensureSeeded(key.careerId);
+      return _viewOf(ref, key.careerId, key.nationId, career.inGameDate);
+    });
+
+/// The manager in charge of a nation on a fixture's date, for the match
+/// preview. A date in a cycle without world managers reads none and seeds
+/// nothing, so the preview is no slower there.
+final AutoDisposeFutureProviderFamily<
+  NationManagerView?,
+  ({int careerId, int nationId, DateTime date})
+>
+opponentManagerProvider = FutureProvider.autoDispose
+    .family<NationManagerView?, ({int careerId, int nationId, DateTime date})>((
+      ref,
+      key,
+    ) async {
+      final service = ref.read(worldManagerServiceProvider);
+      if (!await service.cycleHasManagers(key.careerId, key.date)) return null;
+      await service.ensureSeeded(key.careerId);
+      return _viewOf(ref, key.careerId, key.nationId, key.date);
+    });
+
+/// A manager's profile: his spells, the player's relation with him and his
+/// reputation today.
+typedef ManagerProfile = ({
+  WorldManager m,
+  List<ManagerSpell> spells,
+  ManagerRelation relation,
+  int reputation,
+  int age,
+});
+
+final AutoDisposeFutureProviderFamily<
+  ManagerProfile,
+  ({int careerId, int managerId})
+>
+managerProfileProvider = FutureProvider.autoDispose
+    .family<ManagerProfile, ({int careerId, int managerId})>((ref, key) async {
+      final repo = ref.read(worldManagerRepositoryProvider);
+      final m = await repo.managerById(key.careerId, key.managerId);
+      if (m == null) throw StateError('no manager ${key.managerId}');
+      final spells = await repo.spellsOf(key.careerId, key.managerId);
+      final career = await ref
+          .read(careerRepositoryProvider)
+          .byId(key.careerId);
+      final today = career?.inGameDate ?? DateTime.now();
+      final nations = await ref
+          .read(nationRepositoryProvider)
+          .forCareer(key.careerId);
+      final world = ManagerWorld(managers: [m], spells: spells);
+      final honours = WorldManagerService.honoursByManager(
+        await ref.read(competitionRepositoryProvider).honours(key.careerId),
+        world,
+      );
+      return (
+        m: m,
+        spells: spells,
+        relation: await ref.watch(managerRelationProvider(key).future),
+        age: today.year - m.birthYear,
+        reputation: ManagerReputation.of(
+          m.managerId,
+          world,
+          {for (final Nation n in nations) n.id: n.ranking},
+          honours,
+          asOf: today,
+        ),
+      );
+    });
+
+/// The career's nations by id, for the names a profile lists.
+final AutoDisposeFutureProviderFamily<Map<int, Nation>, int>
+managerNationsProvider = FutureProvider.autoDispose
+    .family<Map<int, Nation>, int>(
+      (ref, careerId) async => {
+        for (final n
+            in await ref.read(nationRepositoryProvider).forCareer(careerId))
+          n.id: n,
+      },
+    );

@@ -16255,4 +16255,139 @@ class AppLocalizationsHi extends AppLocalizations {
   String yMgrTie4(String manager) {
     return 'Here we go. $manager on the touchline, and our manager trying to win a feud instead of a match.';
   }
+
+  @override
+  String get mgrRowLabel => 'Manager';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age years old, since $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won W, $drawn D, $lost L';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'In charge: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'No history';
+
+  @override
+  String get mgrTieRespect => 'Respect';
+
+  @override
+  String get mgrTieRival => 'Rival';
+
+  @override
+  String get mgrTieGrudge => 'Grudge';
+
+  @override
+  String get mgrTieSuccessor => 'Successor';
+
+  @override
+  String get mgrTieProtege => 'Protege';
+
+  @override
+  String get mgrTieFormerPlayer => 'Former player';
+
+  @override
+  String get mgrEndSacked => 'Sacked';
+
+  @override
+  String get mgrEndResigned => 'Resigned';
+
+  @override
+  String get mgrEndPoached => 'Left for another national team';
+
+  @override
+  String get mgrEndRetired => 'Retired from management';
+
+  @override
+  String get mgrEndContractEnd => 'Contract ran out';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Replaced by you';
+
+  @override
+  String get mgrProfileSpells => 'Career';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, since $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from to $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Record against you';
+
+  @override
+  String get mgrProfileNoMeetings => 'You have not met';
+
+  @override
+  String get mgrProfileReputation => 'Reputation';
+
+  @override
+  String get mgrProfileAge => 'Age';
+
+  @override
+  String get mgrProfileAppointed => 'Appointed';
+
+  @override
+  String get mgrProfileStyle => 'Style';
+
+  @override
+  String get mgrProfileTie => 'Between you';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Their manager: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Manager\'s style: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Your record against him: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Possession';
+
+  @override
+  String get mgrStyleHighPress => 'High press';
+
+  @override
+  String get mgrStyleDefensive => 'Defensive';
+
+  @override
+  String get mgrStyleDirect => 'Direct';
+
+  @override
+  String get mgrStyleCounter => 'Counter-attack';
+
+  @override
+  String get mgrStyleFlair => 'Flair';
+
+  @override
+  String get mgrStylePhysical => 'Physical';
+
+  @override
+  String get mgrStyleBalanced => 'Balanced';
 }

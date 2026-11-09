@@ -24625,6 +24625,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Here we go. {manager} on the touchline, and our manager trying to win a feud instead of a match.'**
   String yMgrTie4(String manager);
+
+  /// Label of the nation page row naming the nation's national team manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager'**
+  String get mgrRowLabel;
+
+  /// Nation page manager row: his age and the date he took charge.
+  ///
+  /// In en, this message translates to:
+  /// **'{age} years old, since {date}'**
+  String mgrRowDetail(int age, String date);
+
+  /// A record in wins, draws and losses.
+  ///
+  /// In en, this message translates to:
+  /// **'{won} W, {drawn} D, {lost} L'**
+  String mgrRecordWdl(int won, int drawn, int lost);
+
+  /// Nation page manager row: the nation's record under him. {record} is already worded as wins, draws and losses.
+  ///
+  /// In en, this message translates to:
+  /// **'In charge: {record}'**
+  String mgrRowRecord(String record);
+
+  /// Tie chip: the player has no history with this manager.
+  ///
+  /// In en, this message translates to:
+  /// **'No history'**
+  String get mgrTieNeutral;
+
+  /// Tie chip: mutual respect with a manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Respect'**
+  String get mgrTieRespect;
+
+  /// Tie chip: a manager the player has knocked out or beaten repeatedly.
+  ///
+  /// In en, this message translates to:
+  /// **'Rival'**
+  String get mgrTieRival;
+
+  /// Tie chip: a manager who holds a grudge against the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Grudge'**
+  String get mgrTieGrudge;
+
+  /// Tie chip: the manager who took over from the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Successor'**
+  String get mgrTieSuccessor;
+
+  /// Tie chip: a former assistant of the player who now manages.
+  ///
+  /// In en, this message translates to:
+  /// **'Protege'**
+  String get mgrTieProtege;
+
+  /// Tie chip: a manager who once played under the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Former player'**
+  String get mgrTieFormerPlayer;
+
+  /// End of a spell: the manager was sacked.
+  ///
+  /// In en, this message translates to:
+  /// **'Sacked'**
+  String get mgrEndSacked;
+
+  /// End of a spell: the manager resigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Resigned'**
+  String get mgrEndResigned;
+
+  /// End of a spell: the manager took another national team job.
+  ///
+  /// In en, this message translates to:
+  /// **'Left for another national team'**
+  String get mgrEndPoached;
+
+  /// End of a spell: the manager retired.
+  ///
+  /// In en, this message translates to:
+  /// **'Retired from management'**
+  String get mgrEndRetired;
+
+  /// End of a spell: the contract was not renewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Contract ran out'**
+  String get mgrEndContractEnd;
+
+  /// End of a spell: the player took the job.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaced by you'**
+  String get mgrEndReplacedByPlayer;
+
+  /// Manager profile heading: his spells in charge of nations.
+  ///
+  /// In en, this message translates to:
+  /// **'Career'**
+  String get mgrProfileSpells;
+
+  /// Manager profile: a spell that is still running.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}, since {from}'**
+  String mgrProfileSpellNow(String nation, String from);
+
+  /// Manager profile: a finished spell with how it ended.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}, {from} to {to}'**
+  String mgrProfileSpellRange(String nation, String from, String to);
+
+  /// Manager profile: a finished spell line, the dates then why it ended.
+  ///
+  /// In en, this message translates to:
+  /// **'{range}, {reason}'**
+  String mgrProfileSpellEnded(String range, String reason);
+
+  /// Manager profile heading: how your sides fared against his.
+  ///
+  /// In en, this message translates to:
+  /// **'Record against you'**
+  String get mgrProfileRecordVsYou;
+
+  /// Manager profile: no meetings with the player yet.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not met'**
+  String get mgrProfileNoMeetings;
+
+  /// Manager profile heading: his standing from 0 to 100.
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation'**
+  String get mgrProfileReputation;
+
+  /// Manager profile heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get mgrProfileAge;
+
+  /// Manager profile heading: the date he took charge.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointed'**
+  String get mgrProfileAppointed;
+
+  /// Manager profile heading: how his sides play.
+  ///
+  /// In en, this message translates to:
+  /// **'Style'**
+  String get mgrProfileStyle;
+
+  /// Manager profile heading: the tie with the player.
+  ///
+  /// In en, this message translates to:
+  /// **'Between you'**
+  String get mgrProfileTie;
+
+  /// Match preview: the opposing national team manager.
+  ///
+  /// In en, this message translates to:
+  /// **'Their manager: {name}'**
+  String mgrPreviewLine(String name);
+
+  /// Scouting dossier: how the opposing manager sets his side up.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager\'s style: {style}'**
+  String mgrDossierStyle(String style);
+
+  /// Scouting dossier: the player's record against the opposing manager. {record} is wins, draws and losses.
+  ///
+  /// In en, this message translates to:
+  /// **'Your record against him: {record}'**
+  String mgrDossierRecord(String record);
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Possession'**
+  String get mgrStylePossession;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'High press'**
+  String get mgrStyleHighPress;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Defensive'**
+  String get mgrStyleDefensive;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct'**
+  String get mgrStyleDirect;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Counter-attack'**
+  String get mgrStyleCounter;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Flair'**
+  String get mgrStyleFlair;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical'**
+  String get mgrStylePhysical;
+
+  /// Manager style.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get mgrStyleBalanced;
 }
 
 class _AppLocalizationsDelegate

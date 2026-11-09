@@ -320,6 +320,7 @@ class _OppositionTab extends ConsumerWidget {
           oppCode: hub.nations[opp]?.code ?? '??',
           keyMen: keyMen,
           saveSeed: hub.career.rngSeed,
+          fixtureDate: next.date,
           capitals: true,
         ),
       ],

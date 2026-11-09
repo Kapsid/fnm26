@@ -16617,4 +16617,139 @@ class AppLocalizationsCs extends AppLocalizations {
   String yMgrTie4(String manager) {
     return 'A je to tady. U lajny $manager a náš trenér bude zase řešit osobní spor místo zápasu.';
   }
+
+  @override
+  String get mgrRowLabel => 'Trenér';
+
+  @override
+  String mgrRowDetail(int age, String date) {
+    return '$age let, od $date';
+  }
+
+  @override
+  String mgrRecordWdl(int won, int drawn, int lost) {
+    return '$won V, $drawn R, $lost P';
+  }
+
+  @override
+  String mgrRowRecord(String record) {
+    return 'Pod jeho vedením: $record';
+  }
+
+  @override
+  String get mgrTieNeutral => 'Bez společné historie';
+
+  @override
+  String get mgrTieRespect => 'Respekt';
+
+  @override
+  String get mgrTieRival => 'Rival';
+
+  @override
+  String get mgrTieGrudge => 'Zášť';
+
+  @override
+  String get mgrTieSuccessor => 'Nástupce';
+
+  @override
+  String get mgrTieProtege => 'Chráněnec';
+
+  @override
+  String get mgrTieFormerPlayer => 'Bývalý hráč';
+
+  @override
+  String get mgrEndSacked => 'Odvolán';
+
+  @override
+  String get mgrEndResigned => 'Rezignoval';
+
+  @override
+  String get mgrEndPoached => 'Odešel k jiné reprezentaci';
+
+  @override
+  String get mgrEndRetired => 'Skončil s trénováním';
+
+  @override
+  String get mgrEndContractEnd => 'Vypršela smlouva';
+
+  @override
+  String get mgrEndReplacedByPlayer => 'Nahrazen vámi';
+
+  @override
+  String get mgrProfileSpells => 'Kariéra';
+
+  @override
+  String mgrProfileSpellNow(String nation, String from) {
+    return '$nation, od $from';
+  }
+
+  @override
+  String mgrProfileSpellRange(String nation, String from, String to) {
+    return '$nation, $from až $to';
+  }
+
+  @override
+  String mgrProfileSpellEnded(String range, String reason) {
+    return '$range, $reason';
+  }
+
+  @override
+  String get mgrProfileRecordVsYou => 'Bilance proti vám';
+
+  @override
+  String get mgrProfileNoMeetings => 'Zatím jste se nepotkali';
+
+  @override
+  String get mgrProfileReputation => 'Reputace';
+
+  @override
+  String get mgrProfileAge => 'Věk';
+
+  @override
+  String get mgrProfileAppointed => 'Jmenován';
+
+  @override
+  String get mgrProfileStyle => 'Styl';
+
+  @override
+  String get mgrProfileTie => 'Mezi vámi';
+
+  @override
+  String mgrPreviewLine(String name) {
+    return 'Jejich trenér: $name';
+  }
+
+  @override
+  String mgrDossierStyle(String style) {
+    return 'Styl trenéra: $style';
+  }
+
+  @override
+  String mgrDossierRecord(String record) {
+    return 'Vaše bilance proti němu: $record';
+  }
+
+  @override
+  String get mgrStylePossession => 'Držení míče';
+
+  @override
+  String get mgrStyleHighPress => 'Vysoký presink';
+
+  @override
+  String get mgrStyleDefensive => 'Defenzivní';
+
+  @override
+  String get mgrStyleDirect => 'Přímočarý';
+
+  @override
+  String get mgrStyleCounter => 'Brejky';
+
+  @override
+  String get mgrStyleFlair => 'Technický';
+
+  @override
+  String get mgrStylePhysical => 'Fyzický';
+
+  @override
+  String get mgrStyleBalanced => 'Vyvážený';
 }

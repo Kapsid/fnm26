@@ -25297,5 +25297,227 @@
         "type": "String"
       }
     }
+  },
+  "mgrRowLabel": "Manager",
+  "@mgrRowLabel": {
+    "description": "Label of the nation page row naming the nation's national team manager."
+  },
+  "mgrRowDetail": "{age} years old, since {date}",
+  "@mgrRowDetail": {
+    "description": "Nation page manager row: his age and the date he took charge.",
+    "placeholders": {
+      "age": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrRecordWdl": "{won} W, {drawn} D, {lost} L",
+  "@mgrRecordWdl": {
+    "description": "A record in wins, draws and losses.",
+    "placeholders": {
+      "won": {
+        "type": "int"
+      },
+      "drawn": {
+        "type": "int"
+      },
+      "lost": {
+        "type": "int"
+      }
+    }
+  },
+  "mgrRowRecord": "In charge: {record}",
+  "@mgrRowRecord": {
+    "description": "Nation page manager row: the nation's record under him. {record} is already worded as wins, draws and losses.",
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrTieNeutral": "No history",
+  "@mgrTieNeutral": {
+    "description": "Tie chip: the player has no history with this manager."
+  },
+  "mgrTieRespect": "Respect",
+  "@mgrTieRespect": {
+    "description": "Tie chip: mutual respect with a manager."
+  },
+  "mgrTieRival": "Rival",
+  "@mgrTieRival": {
+    "description": "Tie chip: a manager the player has knocked out or beaten repeatedly."
+  },
+  "mgrTieGrudge": "Grudge",
+  "@mgrTieGrudge": {
+    "description": "Tie chip: a manager who holds a grudge against the player."
+  },
+  "mgrTieSuccessor": "Successor",
+  "@mgrTieSuccessor": {
+    "description": "Tie chip: the manager who took over from the player."
+  },
+  "mgrTieProtege": "Protege",
+  "@mgrTieProtege": {
+    "description": "Tie chip: a former assistant of the player who now manages."
+  },
+  "mgrTieFormerPlayer": "Former player",
+  "@mgrTieFormerPlayer": {
+    "description": "Tie chip: a manager who once played under the player."
+  },
+  "mgrEndSacked": "Sacked",
+  "@mgrEndSacked": {
+    "description": "End of a spell: the manager was sacked."
+  },
+  "mgrEndResigned": "Resigned",
+  "@mgrEndResigned": {
+    "description": "End of a spell: the manager resigned."
+  },
+  "mgrEndPoached": "Left for another national team",
+  "@mgrEndPoached": {
+    "description": "End of a spell: the manager took another national team job."
+  },
+  "mgrEndRetired": "Retired from management",
+  "@mgrEndRetired": {
+    "description": "End of a spell: the manager retired."
+  },
+  "mgrEndContractEnd": "Contract ran out",
+  "@mgrEndContractEnd": {
+    "description": "End of a spell: the contract was not renewed."
+  },
+  "mgrEndReplacedByPlayer": "Replaced by you",
+  "@mgrEndReplacedByPlayer": {
+    "description": "End of a spell: the player took the job."
+  },
+  "mgrProfileSpells": "Career",
+  "@mgrProfileSpells": {
+    "description": "Manager profile heading: his spells in charge of nations."
+  },
+  "mgrProfileSpellNow": "{nation}, since {from}",
+  "@mgrProfileSpellNow": {
+    "description": "Manager profile: a spell that is still running.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrProfileSpellRange": "{nation}, {from} to {to}",
+  "@mgrProfileSpellRange": {
+    "description": "Manager profile: a finished spell with how it ended.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrProfileSpellEnded": "{range}, {reason}",
+  "@mgrProfileSpellEnded": {
+    "description": "Manager profile: a finished spell line, the dates then why it ended.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrProfileRecordVsYou": "Record against you",
+  "@mgrProfileRecordVsYou": {
+    "description": "Manager profile heading: how your sides fared against his."
+  },
+  "mgrProfileNoMeetings": "You have not met",
+  "@mgrProfileNoMeetings": {
+    "description": "Manager profile: no meetings with the player yet."
+  },
+  "mgrProfileReputation": "Reputation",
+  "@mgrProfileReputation": {
+    "description": "Manager profile heading: his standing from 0 to 100."
+  },
+  "mgrProfileAge": "Age",
+  "@mgrProfileAge": {
+    "description": "Manager profile heading."
+  },
+  "mgrProfileAppointed": "Appointed",
+  "@mgrProfileAppointed": {
+    "description": "Manager profile heading: the date he took charge."
+  },
+  "mgrProfileStyle": "Style",
+  "@mgrProfileStyle": {
+    "description": "Manager profile heading: how his sides play."
+  },
+  "mgrProfileTie": "Between you",
+  "@mgrProfileTie": {
+    "description": "Manager profile heading: the tie with the player."
+  },
+  "mgrPreviewLine": "Their manager: {name}",
+  "@mgrPreviewLine": {
+    "description": "Match preview: the opposing national team manager.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrDossierStyle": "Manager's style: {style}",
+  "@mgrDossierStyle": {
+    "description": "Scouting dossier: how the opposing manager sets his side up.",
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrDossierRecord": "Your record against him: {record}",
+  "@mgrDossierRecord": {
+    "description": "Scouting dossier: the player's record against the opposing manager. {record} is wins, draws and losses.",
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrStylePossession": "Possession",
+  "@mgrStylePossession": {
+    "description": "Manager style."
+  },
+  "mgrStyleHighPress": "High press",
+  "@mgrStyleHighPress": {
+    "description": "Manager style."
+  },
+  "mgrStyleDefensive": "Defensive",
+  "@mgrStyleDefensive": {
+    "description": "Manager style."
+  },
+  "mgrStyleDirect": "Direct",
+  "@mgrStyleDirect": {
+    "description": "Manager style."
+  },
+  "mgrStyleCounter": "Counter-attack",
+  "@mgrStyleCounter": {
+    "description": "Manager style."
+  },
+  "mgrStyleFlair": "Flair",
+  "@mgrStyleFlair": {
+    "description": "Manager style."
+  },
+  "mgrStylePhysical": "Physical",
+  "@mgrStylePhysical": {
+    "description": "Manager style."
+  },
+  "mgrStyleBalanced": "Balanced",
+  "@mgrStyleBalanced": {
+    "description": "Manager style."
   }
 }

@@ -483,7 +483,7 @@ class WorldManagerService {
       key: key,
       rollover: rollover,
     );
-    final honours = _honoursByManager(await comp.honours(careerId), w);
+    final honours = honoursByManager(await comp.honours(careerId), w);
     final codeById = {for (final n in nations) n.id: n.code};
     ManagerChanges decide(List<WorldManager> entrants) =>
         ManagerDecisions.decide(
@@ -924,7 +924,7 @@ class WorldManagerService {
   /// An approximation: the honour row stores no final date, so a spell
   /// that began or ended between the 15th and the final (none does today,
   /// as no point of the champion's falls there) would be credited wrongly.
-  static Map<int, int> _honoursByManager(
+  static Map<int, int> honoursByManager(
     List<Honour> honours,
     ManagerWorld w,
   ) {
