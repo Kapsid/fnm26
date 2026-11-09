@@ -12,6 +12,8 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/services/match/card_status.dart';
 import 'package:fnm/domain/services/match/pitch/formation_slots.dart';
 import 'package:fnm/domain/services/tactics/position_fit.dart';
+import 'package:fnm/domain/services/squad/condition.dart';
+import 'package:fnm/features/tactics/fatigue_tag.dart';
 import 'package:fnm/features/tactics/switched_layout.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -377,6 +379,7 @@ class TacticsPitch extends StatelessWidget {
     this.injuredIds = const {},
     this.deadSlots = const {},
     this.energyByPlayer = const {},
+    this.fatigueByPlayer = const {},
     this.cardsByPlayer = const {},
     this.ratingByPlayer = const {},
     this.motmId,
@@ -424,6 +427,11 @@ class TacticsPitch extends StatelessWidget {
   /// match so the manager can see who's tiring. Empty (the default) hides it —
   /// e.g. on the pre-match tactics screen where everyone is fresh.
   final Map<int, int> energyByPlayer;
+
+  /// Between-match fatigue per player id (see [FatigueState]), drawn as a
+  /// small marker on the disc of anyone not fresh, so the manager sees who
+  /// needs a rest without opening each player. Not the match energy above.
+  final Map<int, FatigueState> fatigueByPlayer;
 
   /// Each player's match rating, shown on the bottom of his disc (in place
   /// of the energy) after the final whistle. Empty (the default) hides it.
@@ -687,6 +695,7 @@ class TacticsPitch extends StatelessWidget {
                         deadSlots: deadSlots,
                         keeperSlot: keeperSlot,
                         energy: energyByPlayer[lineup[slot]],
+                        fatigue: fatigueByPlayer[lineup[slot]],
                         rating: ratingByPlayer[lineup[slot]],
                         motm: lineup[slot] != null && lineup[slot] == motmId,
                         card: cardsByPlayer[lineup[slot]],
@@ -906,6 +915,7 @@ class _PlayerNode extends StatelessWidget {
     this.deadSlots = const {},
     this.keeperSlot = -1,
     this.energy,
+    this.fatigue,
     this.rating,
     this.motm = false,
     this.card,
@@ -948,6 +958,9 @@ class _PlayerNode extends StatelessWidget {
   /// The player's live remaining energy (0–100) during a match, or null when
   /// energy isn't being tracked (pre-match) — shown as a small gauge on the node.
   final int? energy;
+
+  /// His between-match fatigue; null or fresh draws nothing.
+  final FatigueState? fatigue;
 
   /// His match rating after the final whistle, shown in place of [energy];
   /// null when there is none to show.
@@ -1214,6 +1227,21 @@ class _PlayerNode extends StatelessWidget {
                 top: overhang + metrics.disc * 0.16,
                 right: 0,
                 child: CardMark(card!, size: metrics.disc * 0.30, onKit: true),
+              ),
+            // Between-match fatigue, low on the right shoulder (the card sits
+            // high on it): beside the rim badge, never under it.
+            if (p != null &&
+                !dead &&
+                !absent &&
+                fatigue != null &&
+                fatigue != FatigueState.fresh)
+              Positioned(
+                key: ValueKey('pitchFatigue$slot'),
+                top: overhang + metrics.disc * 0.64,
+                // The node is no wider than the ball, so the marker sits on its
+                // lower right shoulder, below the name's first line.
+                right: 0,
+                child: FatigueDot(state: fatigue!, size: metrics.disc * 0.36),
               ),
             // The full-back's arrow, on the other shoulder from the card:
             // inside his own node, so it never reaches a team-mate's ball.
@@ -1951,9 +1979,17 @@ Widget playerNameWithCard(String name, MatchCard? card, {TextStyle? style}) {
 /// Hold and drag it onto a player on the pitch to bring it on, exactly like a
 /// [SubDragRow]; a tap does [onTap].
 class BenchChip extends StatelessWidget {
-  const BenchChip({required this.player, this.onTap, super.key});
+  const BenchChip({
+    required this.player,
+    this.onTap,
+    this.fatigue,
+    super.key,
+  });
 
   final Player player;
+
+  /// His between-match fatigue; null or fresh draws nothing.
+  final FatigueState? fatigue;
   final VoidCallback? onTap;
 
   @override
@@ -1978,6 +2014,10 @@ class BenchChip extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               Text(surnameOf(player.name), style: AppTypography.labelSmall),
+              if (fatigue != null && fatigue != FatigueState.fresh) ...[
+                const SizedBox(width: 4),
+                FatigueTag(state: fatigue!, iconOnly: true),
+              ],
             ],
           ),
         ),
