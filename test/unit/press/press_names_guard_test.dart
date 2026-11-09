@@ -52,6 +52,7 @@ ConferenceFacts _facts(
           keyPlayerId: _key,
         )
       : null,
+  opposingManager: null,
 );
 
 PendingConference _pending(ConferenceFacts f, int credibility) => (

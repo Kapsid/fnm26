@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/core/rng/seeded_rng.dart';
+import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/core/util/text_variety.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/seed/real_internationals.dart';
 import 'package:fnm/domain/entities/career.dart';
+import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
@@ -14,10 +16,14 @@ import 'package:fnm/domain/services/nation/nation_identity.dart';
 import 'package:fnm/domain/services/world_managers/manager_decisions.dart';
 import 'package:fnm/domain/services/world_managers/manager_entrants.dart';
 import 'package:fnm/domain/services/world_managers/manager_names.dart';
+import 'package:fnm/domain/services/world_managers/manager_news.dart';
+import 'package:fnm/domain/services/world_managers/manager_relation.dart';
 import 'package:fnm/domain/services/world_managers/manager_seeder.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/federation/staff_providers.dart';
+import 'package:fnm/features/settings/settings_providers.dart'
+    show appLocalizationsProvider;
 import 'package:fnm/features/world_managers/manager_windows.dart';
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart'
@@ -571,7 +577,136 @@ class WorldManagerService {
       '$key: ${moves.length} moves, ${windows.length} windows, '
           '${changes.added.length} entrants',
     );
+    // The news is a reading of moves already made: a failure to file it
+    // never undoes them, nor stops the season.
+    try {
+      await _fileNews(
+        career,
+        key: key,
+        moves: moves,
+        nations: nations,
+        rankById: rankById,
+        playerNations: players,
+        date: date,
+      );
+    } on Object catch (e, st) {
+      AppLog.error('mgr-news $key', e, st);
+    }
     return moves;
+  }
+
+  /// Files the inbox news of one decision point's [moves]: only the moves
+  /// that touch the player ([ManagerNews.newsworthy]), at most
+  /// [ManagerNews.maxPerPass], each stored as meaning.
+  ///
+  /// Reads: the managers and ties once, and the player's own fixtures (all
+  /// time) for each nation he has led, which give both his meetings and his
+  /// upcoming opponents. Relations are derived in memory from those, for
+  /// the men the moves name only.
+  Future<void> _fileNews(
+    Career career, {
+    required String key,
+    required List<ManagerMove> moves,
+    required List<Nation> nations,
+    required Map<int, int> rankById,
+    required Set<int> playerNations,
+    required DateTime date,
+  }) async {
+    if (moves.isEmpty) return;
+    final careerId = career.id;
+    final comp = _ref.read(competitionRepositoryProvider);
+    final repo = _ref.read(worldManagerRepositoryProvider);
+    final stints = await _ref.read(careerRepositoryProvider).stints(careerId);
+    final mine = {...stints.values, career.nationId, ...playerNations};
+    final current = playerNations.first;
+
+    // The men the moves name, and which of them the player has a tie with:
+    // a tie row, or a relation the meetings make (a rival).
+    final w = await repo.load(careerId);
+    final ties = await repo.ties(careerId);
+    final named = {
+      for (final m in moves) ...[?m.outgoingId, ?m.incomingId],
+    };
+    final ownFixtures = <int, Fixture>{};
+    for (final n in mine) {
+      for (final f in await comp.fixturesForNation(careerId, n)) {
+        ownFixtures[f.id] = f;
+      }
+    }
+    final tied = <int>{};
+    for (final id in named) {
+      final relation = readRelation(
+        spells: [
+          for (final sp in w.spells)
+            if (sp.managerId == id) sp,
+        ],
+        meetings: ownFixtures.values.toList(),
+        playerSideAt: (d) => {
+          stints[CareerService.cycleForYear(d.year)] ?? career.nationId,
+        },
+        ties: [
+          for (final t in ties)
+            if (t.managerId == id) t,
+        ],
+        today: date,
+      );
+      if (relation.label != TieLabel.neutral) tied.add(id);
+    }
+
+    // His upcoming opponents this cycle, from the same fixtures: the list
+    // is all-time, the unplayed ones are still to come.
+    final cycle = CareerService.cycleAt(date);
+    final ahead = [
+      for (final f in ownFixtures.values)
+        if (!f.hasResult && CareerService.cycleAt(f.date) == cycle) f,
+    ];
+    final opponents = {
+      for (final f in ahead)
+        if (f.homeNationId == current)
+          f.awayNationId
+        else if (f.awayNationId == current)
+          f.homeNationId,
+    };
+    final byId = {for (final n in nations) n.id: n};
+    final conf = byId[current]?.confederation;
+    final top10 =
+        ([
+              for (final n in nations)
+                if (n.confederation == conf) n.id,
+            ]..sort(
+              (a, b) => (rankById[a] ?? 999).compareTo(rankById[b] ?? 999),
+            ))
+            .take(10)
+            .toSet();
+
+    final news = ManagerNews.newsworthy(
+      moves,
+      tiedManagerIds: tied,
+      myNations: mine,
+      upcomingOpponents: opponents,
+      confTop10: top10,
+    );
+    if (news.isEmpty) return;
+    final names = {for (final m in w.managers) m.managerId: m.name};
+    final l = _ref.read(appLocalizationsProvider);
+    for (final m in news) {
+      final msg = ManagerNews.message(
+        m,
+        nation: byId[m.nationId]?.name ?? '',
+        outgoing: names[m.outgoingId],
+        incoming: names[m.incomingId],
+      );
+      await comp.addTextMessage(
+        l: l,
+        careerId: careerId,
+        dedupKey: ManagerNews.dedupKey(key, m.nationId),
+        category: ManagerNews.category,
+        title: msg.title,
+        body: msg.body,
+        year: m.date.year,
+      );
+    }
+    AppLog.info('mgr-news', '$key: ${news.length} of ${moves.length} moves');
   }
 
   /// The free pool once [changes]' retirements and departures are counted,

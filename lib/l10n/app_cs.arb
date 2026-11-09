@@ -4049,5 +4049,20 @@
   "saveUpgradeRestoreButton": "Obnovit kopii z doby před aktualizací",
   "saveUpgradeRestoreFailed": "Kopii se nepodařilo obnovit. Uložená hra zůstala, jak byla.",
   "saveOpenFailedTitle": "Uložené hry se nepodařilo otevřít",
-  "saveOpenFailedBody": "Uložené hry se nepodařilo otevřít. Nic nebylo smazáno. Zkuste to za chvíli znovu."
+  "saveOpenFailedBody": "Uložené hry se nepodařilo otevřít. Nic nebylo smazáno. Zkuste to za chvíli znovu.",
+  "mgrNewsSacked": "{nation}: trenér {name} odvolán",
+  "mgrNewsResigned": "{nation}: trenér {name} rezignoval",
+  "mgrNewsPoached": "{nation}: trenér {name} odchází k jiné reprezentaci",
+  "mgrNewsRetired": "{nation}: trenér {name} končí s trénováním",
+  "mgrNewsContractEnd": "{nation}: trenérovi {name} vypršela smlouva",
+  "mgrNewsReplacedByPlayer": "{nation}: trenér {name} vám uvolňuje místo",
+  "mgrNewsAppointed": "{nation}: novým trenérem je {name}",
+  "mgrNewsAppointedBody": "{nation}: lavičku přebírá {name}.",
+  "pressBeatOpposingManager": "Vy a {manager} máte svou historii. Chcete k němu něco říct?",
+  "pressAnswerHitBackAtManager": "Ať se stará o svůj tým.",
+  "pressAnswerRespectManager": "Mám k němu velký respekt.",
+  "yMgrTie1": "Příště na druhé lavičce {manager}. S naším trenérem mají svou historii a já se nemůžu dočkat.",
+  "yMgrTie2": "Příště proti nám {manager}. S naším trenérem se znají už nějakou dobu.",
+  "yMgrTie3": "Zase {manager}. Ať z toho náš trenér zase nedělá osobní souboj.",
+  "yMgrTie4": "A je to tady. U lajny {manager} a náš trenér bude zase řešit osobní spor místo zápasu."
 }

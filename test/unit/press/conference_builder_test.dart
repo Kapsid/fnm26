@@ -19,6 +19,7 @@ ConferenceFacts facts(
   playersWithOpenStatement: open,
   throwback: throwback,
   preview: null,
+  opposingManager: null,
 );
 
 /// The reasons a result calls the room for; a preview has beats of its own.

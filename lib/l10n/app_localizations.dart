@@ -24535,6 +24535,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Better players join stronger clubs. Default: {stars} of 5, set by its league.'**
   String editorClubStrengthHelp(int stars);
+
+  /// Inbox news: a nation sacks its manager. {name} is the fictional manager.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} sack {name}'**
+  String mgrNewsSacked(String nation, String name);
+
+  /// Inbox news: a national team manager resigns.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} resigns'**
+  String mgrNewsResigned(String nation, String name);
+
+  /// Inbox news: another national team lures a manager away.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} leaves for another national team'**
+  String mgrNewsPoached(String nation, String name);
+
+  /// Inbox news: a national team manager retires from management.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} retires from management'**
+  String mgrNewsRetired(String nation, String name);
+
+  /// Inbox news: a national team manager leaves when his contract runs out.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} leaves as his contract runs out'**
+  String mgrNewsContractEnd(String nation, String name);
+
+  /// Inbox news: the manager of the nation the player has just taken over loses his job to the player.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation}: {name} makes way for you'**
+  String mgrNewsReplacedByPlayer(String nation, String name);
+
+  /// Inbox news title: a nation appoints a new manager.
+  ///
+  /// In en, this message translates to:
+  /// **'{nation} appoint {name}'**
+  String mgrNewsAppointed(String nation, String name);
+
+  /// Inbox news body: who takes charge of the nation now.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} takes charge of {nation}.'**
+  String mgrNewsAppointedBody(String nation, String name);
+
+  /// Press conference: a question about the opposing manager, who has a history with the player (a rival, a grudge, a former assistant...). {manager} is his fictional name.
+  ///
+  /// In en, this message translates to:
+  /// **'You and {manager} have some history. Anything to say about him?'**
+  String pressBeatOpposingManager(String manager);
+
+  /// Press conference: the manager's answer, hitting back at the opposing manager.
+  ///
+  /// In en, this message translates to:
+  /// **'He should worry about his own team.'**
+  String get pressAnswerHitBackAtManager;
+
+  /// Press conference: the manager's answer, showing respect for the opposing manager.
+  ///
+  /// In en, this message translates to:
+  /// **'I have a lot of respect for him.'**
+  String get pressAnswerRespectManager;
+
+  /// Y feed post before a match against a manager with a history with ours. Warm tone.
+  ///
+  /// In en, this message translates to:
+  /// **'{manager} in the other dugout next. History there with our boss, and I cannot wait.'**
+  String yMgrTie1(String manager);
+
+  /// Y feed post before a match against a manager with a history with ours. Neutral tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Next up, {manager} in the other dugout. He and our manager go back a while.'**
+  String yMgrTie2(String manager);
+
+  /// Y feed post before a match against a manager with a history with ours. Sour tone.
+  ///
+  /// In en, this message translates to:
+  /// **'{manager} again. Our boss had better not turn this into a personal thing.'**
+  String yMgrTie3(String manager);
+
+  /// Y feed post before a match against a manager with a history with ours. Sour tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Here we go. {manager} on the touchline, and our manager trying to win a feud instead of a match.'**
+  String yMgrTie4(String manager);
 }
 
 class _AppLocalizationsDelegate

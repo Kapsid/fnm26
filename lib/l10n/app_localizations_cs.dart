@@ -16546,4 +16546,75 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Lepší hráči chodí do silnějších klubů. Výchozí: $stars z 5 podle jeho ligy.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation: trenér $name odvolán';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: trenér $name rezignoval';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: trenér $name odchází k jiné reprezentaci';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: trenér $name končí s trénováním';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: trenérovi $name vypršela smlouva';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: trenér $name vám uvolňuje místo';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation: novým trenérem je $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$nation: lavičku přebírá $name.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'Vy a $manager máte svou historii. Chcete k němu něco říct?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager => 'Ať se stará o svůj tým.';
+
+  @override
+  String get pressAnswerRespectManager => 'Mám k němu velký respekt.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return 'Příště na druhé lavičce $manager. S naším trenérem mají svou historii a já se nemůžu dočkat.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Příště proti nám $manager. S naším trenérem se znají už nějakou dobu.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return 'Zase $manager. Ať z toho náš trenér zase nedělá osobní souboj.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'A je to tady. U lajny $manager a náš trenér bude zase řešit osobní spor místo zápasu.';
+  }
 }

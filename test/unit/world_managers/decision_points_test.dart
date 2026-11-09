@@ -377,7 +377,10 @@ void main() {
           date: _wcDate,
         );
     expect(moves, isNotEmpty);
-    expect(reads.reads, lessThanOrEqualTo(2));
+    // The decision reads the cycle's fixtures once (2 at most); the news it
+    // files then reads the player's own fixtures, once per nation he has
+    // led (one here).
+    expect(reads.reads, lessThanOrEqualTo(2 + 1));
   }, timeout: const Timeout(Duration(minutes: 5)));
 
   test(

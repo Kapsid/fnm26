@@ -25148,5 +25148,154 @@
         "type": "int"
       }
     }
+  },
+  "mgrNewsSacked": "{nation} sack {name}",
+  "@mgrNewsSacked": {
+    "description": "Inbox news: a nation sacks its manager. {name} is the fictional manager.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsResigned": "{nation}: {name} resigns",
+  "@mgrNewsResigned": {
+    "description": "Inbox news: a national team manager resigns.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsPoached": "{nation}: {name} leaves for another national team",
+  "@mgrNewsPoached": {
+    "description": "Inbox news: another national team lures a manager away.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsRetired": "{nation}: {name} retires from management",
+  "@mgrNewsRetired": {
+    "description": "Inbox news: a national team manager retires from management.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsContractEnd": "{nation}: {name} leaves as his contract runs out",
+  "@mgrNewsContractEnd": {
+    "description": "Inbox news: a national team manager leaves when his contract runs out.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsReplacedByPlayer": "{nation}: {name} makes way for you",
+  "@mgrNewsReplacedByPlayer": {
+    "description": "Inbox news: the manager of the nation the player has just taken over loses his job to the player.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsAppointed": "{nation} appoint {name}",
+  "@mgrNewsAppointed": {
+    "description": "Inbox news title: a nation appoints a new manager.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrNewsAppointedBody": "{name} takes charge of {nation}.",
+  "@mgrNewsAppointedBody": {
+    "description": "Inbox news body: who takes charge of the nation now.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pressBeatOpposingManager": "You and {manager} have some history. Anything to say about him?",
+  "@pressBeatOpposingManager": {
+    "description": "Press conference: a question about the opposing manager, who has a history with the player (a rival, a grudge, a former assistant...). {manager} is his fictional name.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "pressAnswerHitBackAtManager": "He should worry about his own team.",
+  "@pressAnswerHitBackAtManager": {
+    "description": "Press conference: the manager's answer, hitting back at the opposing manager."
+  },
+  "pressAnswerRespectManager": "I have a lot of respect for him.",
+  "@pressAnswerRespectManager": {
+    "description": "Press conference: the manager's answer, showing respect for the opposing manager."
+  },
+  "yMgrTie1": "{manager} in the other dugout next. History there with our boss, and I cannot wait.",
+  "@yMgrTie1": {
+    "description": "Y feed post before a match against a manager with a history with ours. Warm tone.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "yMgrTie2": "Next up, {manager} in the other dugout. He and our manager go back a while.",
+  "@yMgrTie2": {
+    "description": "Y feed post before a match against a manager with a history with ours. Neutral tone.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "yMgrTie3": "{manager} again. Our boss had better not turn this into a personal thing.",
+  "@yMgrTie3": {
+    "description": "Y feed post before a match against a manager with a history with ours. Sour tone.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "yMgrTie4": "Here we go. {manager} on the touchline, and our manager trying to win a feud instead of a match.",
+  "@yMgrTie4": {
+    "description": "Y feed post before a match against a manager with a history with ours. Sour tone.",
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
   }
 }

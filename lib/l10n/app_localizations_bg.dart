@@ -16354,4 +16354,76 @@ class AppLocalizationsBg extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'По-добрите играчи отиват в по-силни клубове. По подразбиране: $stars от 5 според лигата му.';
   }
+
+  @override
+  String mgrNewsSacked(String nation, String name) {
+    return '$nation sack $name';
+  }
+
+  @override
+  String mgrNewsResigned(String nation, String name) {
+    return '$nation: $name resigns';
+  }
+
+  @override
+  String mgrNewsPoached(String nation, String name) {
+    return '$nation: $name leaves for another national team';
+  }
+
+  @override
+  String mgrNewsRetired(String nation, String name) {
+    return '$nation: $name retires from management';
+  }
+
+  @override
+  String mgrNewsContractEnd(String nation, String name) {
+    return '$nation: $name leaves as his contract runs out';
+  }
+
+  @override
+  String mgrNewsReplacedByPlayer(String nation, String name) {
+    return '$nation: $name makes way for you';
+  }
+
+  @override
+  String mgrNewsAppointed(String nation, String name) {
+    return '$nation appoint $name';
+  }
+
+  @override
+  String mgrNewsAppointedBody(String nation, String name) {
+    return '$name takes charge of $nation.';
+  }
+
+  @override
+  String pressBeatOpposingManager(String manager) {
+    return 'You and $manager have some history. Anything to say about him?';
+  }
+
+  @override
+  String get pressAnswerHitBackAtManager =>
+      'He should worry about his own team.';
+
+  @override
+  String get pressAnswerRespectManager => 'I have a lot of respect for him.';
+
+  @override
+  String yMgrTie1(String manager) {
+    return '$manager in the other dugout next. History there with our boss, and I cannot wait.';
+  }
+
+  @override
+  String yMgrTie2(String manager) {
+    return 'Next up, $manager in the other dugout. He and our manager go back a while.';
+  }
+
+  @override
+  String yMgrTie3(String manager) {
+    return '$manager again. Our boss had better not turn this into a personal thing.';
+  }
+
+  @override
+  String yMgrTie4(String manager) {
+    return 'Here we go. $manager on the touchline, and our manager trying to win a feud instead of a match.';
+  }
 }

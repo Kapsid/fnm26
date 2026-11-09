@@ -18,6 +18,7 @@ import 'package:fnm/features/hub/round_popup.dart';
 import 'package:fnm/features/messages/message_popup.dart';
 import 'package:fnm/features/onboarding/tour_keys.dart';
 import 'package:fnm/features/press/press_copy.dart';
+import 'package:fnm/features/press/press_desk.dart';
 import 'package:fnm/features/press/press_providers.dart';
 import 'package:fnm/features/press/press_sheet.dart';
 import 'package:fnm/features/squad/grievance_providers.dart';
@@ -262,9 +263,19 @@ class _HubEventButtonState extends ConsumerState<HubEventButton> {
             );
           }
           if (conference == null) return;
+          // The opposing manager, when he has a history with him: read only
+          // now, when the room is opened, never on the hub's own reads. A
+          // failure costs the question, never the conference.
+          try {
+            conference = await ref
+                .read(pressDeskProvider)
+                .withOpposingManager(careerId, conference);
+          } on Object catch (e, st) {
+            AppLog.error('press-manager', e, st);
+          }
           final names = await ref
               .read(conferenceServiceProvider)
-              .playerNames(hub.career, conference);
+              .playerNames(hub.career, conference!);
           if (!context.mounted) return;
           unawaited(
             showAdaptiveSheet<void>(
