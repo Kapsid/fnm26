@@ -55,6 +55,10 @@ class _FailsOnce implements WorldManagerRepository {
       _inner.inChargeOn(careerId, nationId, d);
 
   @override
+  Future<WorldManager?> managerById(int careerId, int managerId) =>
+      _inner.managerById(careerId, managerId);
+
+  @override
   Future<List<ManagerSpell>> spellsOf(int careerId, int managerId) =>
       _inner.spellsOf(careerId, managerId);
 

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:drift/drift.dart' show Variable;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 
 import '../../story/driver.dart';
 
@@ -16,7 +17,10 @@ void main() {
 
   test('seed 42 plays the pinned world', () async {
     final db = storyDb();
-    final c = storyContainer(db);
+    // Manager style off: the world managers' one effect on play.
+    final c = storyContainer(db, 0, [
+      worldManagerStyleEnabledProvider.overrideWithValue(false),
+    ]);
     addTearDown(() async {
       c.dispose();
       await db.close();

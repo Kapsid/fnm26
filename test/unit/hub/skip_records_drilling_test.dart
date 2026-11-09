@@ -21,6 +21,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/tactics/tactics_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/test_database.dart';
@@ -62,6 +63,10 @@ void main() {
         seedSourceProvider.overrideWithValue(
           InMemorySeedSource(nationList: nations, playerList: players),
         ),
+        // The seeds here were found on the world before world managers:
+        // their style would move his results, and the extra-time knockout
+        // seed 80 was found for.
+        worldManagerStyleEnabledProvider.overrideWithValue(false),
       ],
     );
     addTearDown(() async {

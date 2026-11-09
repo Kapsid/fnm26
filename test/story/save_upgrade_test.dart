@@ -8,9 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/data/db/career_bundle.dart';
+import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/save_fixtures.dart';
@@ -142,6 +144,45 @@ void main() {
                 in manifest.names.entries) {
               expect(now.names[nation], names, reason: 'names of $nation');
             }
+          },
+          timeout: const Timeout(Duration(minutes: 5)),
+        );
+
+        test(
+          'opponents in the upgrade cycle read NationIdentity style',
+          () async {
+            final (db, c) = await open(await unpackFixture(build, save));
+            addTearDown(() => close(db, c));
+            final career = (await c
+                .read(careerRepositoryProvider)
+                .byId(manifest.careerId))!;
+            final cycle = career.cyclePointer;
+            final service = c.read(worldManagerServiceProvider);
+            var read = 0;
+            for (final f
+                in await c
+                    .read(competitionRepositoryProvider)
+                    .fixturesForNation(manifest.careerId, career.nationId)) {
+              if (CareerService.cycleAt(f.date) != cycle) continue;
+              final opponent = f.homeNationId == career.nationId
+                  ? f.awayNationId
+                  : f.homeNationId;
+              // Null: the AI reads the nation's own style, as before.
+              expect(
+                await service.styleOn(manifest.careerId, opponent, f.date),
+                isNull,
+                reason: 'fixture ${f.id}',
+              );
+              read++;
+            }
+            expect(read, greaterThan(0), reason: 'no fixture in the cycle');
+            expect(
+              await c
+                  .read(worldManagerRepositoryProvider)
+                  .hasManagers(manifest.careerId),
+              isFalse,
+              reason: 'asking seeds nothing in an unmarked cycle',
+            );
           },
           timeout: const Timeout(Duration(minutes: 5)),
         );

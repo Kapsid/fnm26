@@ -12,6 +12,9 @@ abstract interface class WorldManagerRepository {
   /// The spell in charge of [nationId] on [date], if any.
   Future<ManagerSpell?> inChargeOn(int careerId, int nationId, DateTime date);
 
+  /// One manager, by id; null if the career has none of that id.
+  Future<WorldManager?> managerById(int careerId, int managerId);
+
   Future<List<ManagerSpell>> spellsOf(int careerId, int managerId);
 
   Future<List<ManagerTie>> ties(int careerId);

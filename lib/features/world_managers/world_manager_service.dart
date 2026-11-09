@@ -8,6 +8,8 @@ import 'package:fnm/domain/services/world_managers/manager_seeder.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart'
+    show worldManagerStyleEnabledProvider;
 import 'package:fnm/features/world_pack/world_pack_providers.dart'
     show worldPackRepositoryProvider;
 
@@ -102,26 +104,33 @@ class WorldManagerService {
       .read(competitionRepositoryProvider)
       .hasWatchedDraw(careerId, CareerService.cycleAt(date), worldManagersKind);
 
-  /// The style of the manager in charge of [nationId] on [date]; null when
-  /// that date's cycle is not run by world managers or nobody was in
-  /// charge, and the nation's own style is read instead.
+  /// The style of the manager in charge of [nationId] on [date]: the style
+  /// the AI's tactics blend into the nation's own (`AiTactics.forOpponent`).
+  /// Null when that date's cycle is not run by world managers, when nobody
+  /// was in charge, or when manager style is switched off
+  /// ([worldManagerStyleEnabledProvider]); the nation's own style is read
+  /// alone then, exactly as before world managers.
+  ///
+  /// Every AI-tactics reading (the live match, the skip path, the scout's
+  /// replays) asks this with the FIXTURE's date, never today's, so all of
+  /// them meet the same manager for the same fixture.
+  ///
+  /// It sits on the match hot paths, so it reads two indexed rows (the
+  /// spell in charge, then its manager) rather than the whole manager world,
+  /// and keeps no cache that a later write could leave stale.
   Future<NationStyle?> styleOn(
     int careerId,
     int nationId,
     DateTime date,
   ) async {
+    if (!_ref.read(worldManagerStyleEnabledProvider)) return null;
     if (!await cycleHasManagers(careerId, date)) return null;
     await ensureSeeded(careerId);
-    final world = await _ref
-        .read(worldManagerRepositoryProvider)
-        .load(careerId);
-    final spell = world.inChargeOn(nationId, date);
+    final repo = _ref.read(worldManagerRepositoryProvider);
+    final spell = await repo.inChargeOn(careerId, nationId, date);
     if (spell == null) return null;
-    for (final m in world.managers) {
-      if (m.managerId == spell.managerId) {
-        return NationStyle.values.asNameMap()[m.style];
-      }
-    }
-    return null;
+    final manager = await repo.managerById(careerId, spell.managerId);
+    if (manager == null) return null;
+    return NationStyle.values.asNameMap()[manager.style];
   }
 }

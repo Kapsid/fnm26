@@ -101,6 +101,17 @@ class DriftWorldManagerRepository implements WorldManagerRepository {
   }
 
   @override
+  Future<WorldManager?> managerById(int careerId, int managerId) async {
+    final row =
+        await (_db.select(_db.worldManagers)..where(
+              (t) =>
+                  t.careerId.equals(careerId) & t.managerId.equals(managerId),
+            ))
+            .getSingleOrNull();
+    return row == null ? null : _manager(row);
+  }
+
+  @override
   Future<List<ManagerSpell>> spellsOf(int careerId, int managerId) async {
     final rows =
         await (_db.select(_db.managerSpells)
