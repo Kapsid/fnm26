@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Truppen är full",
   "editorPromoteFullBody": "En trupp har högst {max} spelare. Välj spelaren som går tillbaka till poolen i hans ställe.",
   "editorTrophyGallery": "Välj bland dina foton",
-  "editorTrophyFile": "Välj en fil"
+  "editorTrophyFile": "Välj en fil",
+  "clubStrengthOf": "Klubbens styrka: {stars} av 5",
+  "editorClubStrength": "Styrka",
+  "editorClubStrengthDefault": "Standard",
+  "editorClubStrengthHelp": "Bättre spelare går till starkare klubbar. Standard: {stars} av 5, utifrån dess liga."
 }

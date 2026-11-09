@@ -16404,4 +16404,20 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Wybierz plik';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Siła klubu: $stars z 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Siła';
+
+  @override
+  String get editorClubStrengthDefault => 'Domyślna';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Lepsi zawodnicy trafiają do silniejszych klubów. Domyślnie: $stars z 5, według jego ligi.';
+  }
 }

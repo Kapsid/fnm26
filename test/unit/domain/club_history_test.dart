@@ -2,11 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/domain/services/club/club_history.dart';
 
 void main() {
-  ({int year, String club, String country}) season(
+  ({int year, String club, String country, int stars}) season(
     int year,
     String club, [
     String country = 'eng',
-  ]) => (year: year, club: club, country: country);
+  ]) => (year: year, club: club, country: country, stars: 0);
 
   group('ClubHistory.spells', () {
     test('collapses consecutive seasons at one club into a spell', () {

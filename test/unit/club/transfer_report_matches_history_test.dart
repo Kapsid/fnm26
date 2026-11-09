@@ -104,7 +104,7 @@ void main() {
     var checked = 0;
     for (final id in ids) {
       // Exactly the walk [clubHistoryProvider] does for the card.
-      final seasons = <({int year, String club, String country})>[];
+      final seasons = <({int year, String club, String country, int stars})>[];
       for (var y = 0; y <= years; y++) {
         final p = await repo.byId(
           id,
@@ -115,7 +115,12 @@ void main() {
           careerStartsByPlayer: starts,
         );
         if (p == null) continue;
-        seasons.add((year: y, club: p.club, country: p.clubCountry));
+        seasons.add((
+          year: y,
+          club: p.club,
+          country: p.clubCountry,
+          stars: p.clubStars,
+        ));
       }
       final spells = ClubHistory.spells(seasons);
       for (var i = 1; i < spells.length; i++) {

@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Truppen er fuld",
   "editorPromoteFullBody": "En trup har højst {max} spillere. Vælg den spiller, der går tilbage til puljen i hans sted.",
   "editorTrophyGallery": "Vælg blandt dine billeder",
-  "editorTrophyFile": "Vælg en fil"
+  "editorTrophyFile": "Vælg en fil",
+  "clubStrengthOf": "Klubbens styrke: {stars} ud af 5",
+  "editorClubStrength": "Styrke",
+  "editorClubStrengthDefault": "Standard",
+  "editorClubStrengthHelp": "Bedre spillere går til stærkere klubber. Standard: {stars} ud af 5 ud fra ligaen."
 }

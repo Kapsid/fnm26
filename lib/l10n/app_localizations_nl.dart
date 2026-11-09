@@ -16309,4 +16309,20 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Kies een bestand';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Clubsterkte: $stars van 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Sterkte';
+
+  @override
+  String get editorClubStrengthDefault => 'Standaard';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Betere spelers gaan naar sterkere clubs. Standaard: $stars van 5, volgens de competitie.';
+  }
 }

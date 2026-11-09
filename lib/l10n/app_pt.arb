@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "O elenco está cheio",
   "editorPromoteFullBody": "Um elenco tem no máximo {max} jogadores. Escolha o jogador que volta para o grupo no lugar dele.",
   "editorTrophyGallery": "Escolher das suas fotos",
-  "editorTrophyFile": "Escolher um arquivo"
+  "editorTrophyFile": "Escolher um arquivo",
+  "clubStrengthOf": "Força do clube: {stars} de 5",
+  "editorClubStrength": "Força",
+  "editorClubStrengthDefault": "Padrão",
+  "editorClubStrengthHelp": "Os melhores jogadores vão para os clubes mais fortes. Padrão: {stars} de 5, conforme a sua liga."
 }

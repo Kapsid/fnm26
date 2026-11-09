@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "दस्ता भरा हुआ है",
   "editorPromoteFullBody": "एक दस्ते में अधिकतम {max} खिलाड़ी हो सकते हैं। उसकी जगह जो खिलाड़ी पूल में लौटेगा, उसे चुनें।",
   "editorTrophyGallery": "अपनी फ़ोटो में से चुनें",
-  "editorTrophyFile": "फ़ाइल चुनें"
+  "editorTrophyFile": "फ़ाइल चुनें",
+  "clubStrengthOf": "क्लब की ताकत: 5 में से {stars}",
+  "editorClubStrength": "ताकत",
+  "editorClubStrengthDefault": "डिफ़ॉल्ट",
+  "editorClubStrengthHelp": "बेहतर खिलाड़ी मज़बूत क्लबों में जाते हैं। डिफ़ॉल्ट: उसकी लीग के अनुसार 5 में से {stars}।"
 }

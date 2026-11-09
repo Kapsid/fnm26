@@ -16188,4 +16188,20 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Pilih fail';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Kekuatan kelab: $stars daripada 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Kekuatan';
+
+  @override
+  String get editorClubStrengthDefault => 'Lalai';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Pemain yang lebih baik menyertai kelab yang lebih kuat. Lalai: $stars daripada 5, mengikut liganya.';
+  }
 }

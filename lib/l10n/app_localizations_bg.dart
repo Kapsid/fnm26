@@ -16316,4 +16316,20 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Избор на файл';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Сила на клуба: $stars от 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Сила';
+
+  @override
+  String get editorClubStrengthDefault => 'По подразбиране';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'По-добрите играчи отиват в по-силни клубове. По подразбиране: $stars от 5 според лигата му.';
+  }
 }

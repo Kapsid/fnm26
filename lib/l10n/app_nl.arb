@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "De selectie zit vol",
   "editorPromoteFullBody": "Een selectie heeft maximaal {max} spelers. Kies de speler die in zijn plaats terug naar de pool gaat.",
   "editorTrophyGallery": "Kies uit je foto’s",
-  "editorTrophyFile": "Kies een bestand"
+  "editorTrophyFile": "Kies een bestand",
+  "clubStrengthOf": "Clubsterkte: {stars} van 5",
+  "editorClubStrength": "Sterkte",
+  "editorClubStrengthDefault": "Standaard",
+  "editorClubStrengthHelp": "Betere spelers gaan naar sterkere clubs. Standaard: {stars} van 5, volgens de competitie."
 }

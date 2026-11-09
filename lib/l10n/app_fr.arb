@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "L’effectif est complet",
   "editorPromoteFullBody": "Un effectif compte au plus {max} joueurs. Choisissez le joueur qui retourne dans le vivier à sa place.",
   "editorTrophyGallery": "Choisir dans vos photos",
-  "editorTrophyFile": "Choisir un fichier"
+  "editorTrophyFile": "Choisir un fichier",
+  "clubStrengthOf": "Force du club : {stars} sur 5",
+  "editorClubStrength": "Force",
+  "editorClubStrengthDefault": "Par défaut",
+  "editorClubStrengthHelp": "Les meilleurs joueurs rejoignent les clubs les plus forts. Par défaut : {stars} sur 5, selon son championnat."
 }

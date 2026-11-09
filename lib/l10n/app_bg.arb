@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Съставът е пълен",
   "editorPromoteFullBody": "Съставът може да има най-много {max} играчи. Изберете играча, който се връща в групата на негово място.",
   "editorTrophyGallery": "Избор от снимките ви",
-  "editorTrophyFile": "Избор на файл"
+  "editorTrophyFile": "Избор на файл",
+  "clubStrengthOf": "Сила на клуба: {stars} от 5",
+  "editorClubStrength": "Сила",
+  "editorClubStrengthDefault": "По подразбиране",
+  "editorClubStrengthHelp": "По-добрите играчи отиват в по-силни клубове. По подразбиране: {stars} от 5 според лигата му."
 }

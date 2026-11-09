@@ -16546,4 +16546,20 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Вибрати файл';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Сила клубу: $stars з 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Сила';
+
+  @override
+  String get editorClubStrengthDefault => 'Типово';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Кращі гравці переходять до сильніших клубів. Типово: $stars з 5 за його лігою.';
+  }
 }

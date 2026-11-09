@@ -16647,4 +16647,20 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Alege un fișier';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Forța clubului: $stars din 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Forță';
+
+  @override
+  String get editorClubStrengthDefault => 'Implicit';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Jucătorii mai buni ajung la cluburi mai puternice. Implicit: $stars din 5, după liga sa.';
+  }
 }

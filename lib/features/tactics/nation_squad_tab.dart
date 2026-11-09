@@ -595,6 +595,10 @@ class _PlayerRow extends StatelessWidget {
                           ),
                         ),
                       ),
+                      if (p.clubStars > 0) ...[
+                        const SizedBox(width: 3),
+                        ClubStars(p.clubStars, size: 9),
+                      ],
                       if (out) ...[
                         const SizedBox(width: AppSpacing.xs),
                         Icon(

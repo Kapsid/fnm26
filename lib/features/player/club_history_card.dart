@@ -98,6 +98,10 @@ class ClubHistoryCard extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      if (spells[i].stars > 0) ...[
+                        const SizedBox(width: AppSpacing.sm),
+                        ClubStars(spells[i].stars, size: 10),
+                      ],
                     ],
                   ),
                 ),

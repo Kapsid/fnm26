@@ -25098,5 +25098,31 @@
   "editorTrophyFile": "Choose a file instead",
   "@editorTrophyFile": {
     "description": "Secondary button on a trophy: pick its picture from a file instead of the photo gallery."
+  },
+  "clubStrengthOf": "Club strength: {stars} of 5",
+  "@clubStrengthOf": {
+    "description": "Spoken label for the row of stars after a club name: how strong the club is, out of five.",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "editorClubStrength": "Strength",
+  "@editorClubStrength": {
+    "description": "Editor, club form: label over the star picker that sets how strong the club is."
+  },
+  "editorClubStrengthDefault": "Default",
+  "@editorClubStrengthDefault": {
+    "description": "Editor, club form: the choice that leaves the club at the strength the game gives it."
+  },
+  "editorClubStrengthHelp": "Better players join stronger clubs. Default: {stars} of 5, set by its league.",
+  "@editorClubStrengthHelp": {
+    "description": "Editor, club form: under the star picker. What the strength does, and the stars the club has when left at Default.",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
   }
 }

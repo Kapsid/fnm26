@@ -16305,4 +16305,20 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Valitse tiedosto';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Seuran vahvuus: $stars/5';
+  }
+
+  @override
+  String get editorClubStrength => 'Vahvuus';
+
+  @override
+  String get editorClubStrengthDefault => 'Oletus';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Paremmat pelaajat siirtyvät vahvempiin seuroihin. Oletus: $stars/5 sarjan mukaan.';
+  }
 }

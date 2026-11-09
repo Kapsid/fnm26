@@ -16239,4 +16239,20 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Pumili ng file';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Lakas ng club: $stars sa 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Lakas';
+
+  @override
+  String get editorClubStrengthDefault => 'Default';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: $stars sa 5, ayon sa liga nito.';
+  }
 }

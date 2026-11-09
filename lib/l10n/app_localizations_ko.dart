@@ -15692,4 +15692,20 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorTrophyFile => '파일 선택';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return '클럽 전력: 5점 중 $stars점';
+  }
+
+  @override
+  String get editorClubStrength => '전력';
+
+  @override
+  String get editorClubStrengthDefault => '기본값';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return '더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 $stars점.';
+  }
 }

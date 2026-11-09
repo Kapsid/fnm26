@@ -16507,4 +16507,20 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Vybrat soubor';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Síla klubu: $stars z 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Síla';
+
+  @override
+  String get editorClubStrengthDefault => 'Výchozí';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Lepší hráči chodí do silnějších klubů. Výchozí: $stars z 5 podle jeho ligy.';
+  }
 }

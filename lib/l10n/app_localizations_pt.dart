@@ -16332,4 +16332,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Escolher um arquivo';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Força do clube: $stars de 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Força';
+
+  @override
+  String get editorClubStrengthDefault => 'Padrão';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Os melhores jogadores vão para os clubes mais fortes. Padrão: $stars de 5, conforme a sua liga.';
+  }
 }

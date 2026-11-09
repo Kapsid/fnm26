@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Kádr je plný",
   "editorPromoteFullBody": "Kádr může mít nejvýše {max} hráčů. Vyberte hráče, který se místo něj vrátí do širšího kádru.",
   "editorTrophyGallery": "Vybrat z fotek",
-  "editorTrophyFile": "Vybrat soubor"
+  "editorTrophyFile": "Vybrat soubor",
+  "clubStrengthOf": "Síla klubu: {stars} z 5",
+  "editorClubStrength": "Síla",
+  "editorClubStrengthDefault": "Výchozí",
+  "editorClubStrengthHelp": "Lepší hráči chodí do silnějších klubů. Výchozí: {stars} z 5 podle jeho ligy."
 }

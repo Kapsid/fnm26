@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Momčad je popunjena",
   "editorPromoteFullBody": "Momčad ima najviše {max} igrača. Odaberite igrača koji se umjesto njega vraća u zalihu.",
   "editorTrophyGallery": "Odaberi iz svojih fotografija",
-  "editorTrophyFile": "Odaberi datoteku"
+  "editorTrophyFile": "Odaberi datoteku",
+  "clubStrengthOf": "Snaga kluba: {stars} od 5",
+  "editorClubStrength": "Snaga",
+  "editorClubStrengthDefault": "Zadano",
+  "editorClubStrengthHelp": "Bolji igrači odlaze u jače klubove. Zadano: {stars} od 5, prema njegovoj ligi."
 }
