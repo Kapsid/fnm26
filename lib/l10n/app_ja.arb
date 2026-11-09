@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "チームがいっぱいです",
   "editorPromoteFullBody": "チームは最大{max}人までです。代わりにプールへ戻す選手を選んでください。",
   "editorTrophyGallery": "写真から選ぶ",
-  "editorTrophyFile": "ファイルを選ぶ"
+  "editorTrophyFile": "ファイルを選ぶ",
+  "clubStrengthOf": "クラブの強さ: 5段階中{stars}",
+  "editorClubStrength": "強さ",
+  "editorClubStrengthDefault": "デフォルト",
+  "editorClubStrengthHelp": "強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中{stars}。"
 }

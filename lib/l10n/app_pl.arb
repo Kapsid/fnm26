@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Kadra jest pełna",
   "editorPromoteFullBody": "Kadra może mieć najwyżej {max} zawodników. Wybierz zawodnika, który wróci do puli na jego miejsce.",
   "editorTrophyGallery": "Wybierz ze zdjęć",
-  "editorTrophyFile": "Wybierz plik"
+  "editorTrophyFile": "Wybierz plik",
+  "clubStrengthOf": "Siła klubu: {stars} z 5",
+  "editorClubStrength": "Siła",
+  "editorClubStrengthDefault": "Domyślna",
+  "editorClubStrengthHelp": "Lepsi zawodnicy trafiają do silniejszych klubów. Domyślnie: {stars} z 5, według jego ligi."
 }

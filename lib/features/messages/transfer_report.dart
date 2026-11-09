@@ -39,23 +39,29 @@ typedef TransferRow = ({
   /// simply shows the names — which is what it always did.
   String fromCountry,
   String toCountry,
+
+  /// How strong each club is, 1 to 5 stars (`Player.clubStars`). Zero in a
+  /// report written before v4, and then no stars are drawn.
+  int fromStars,
+  int toStars,
 });
 
 /// v1 carried name, position, from, to, fee and the abroad flag. v2 adds the
 /// player's rating, what the year did to it, and which way the move went
 /// between tiers. v3 adds the two clubs' countries, so the move can be read at
-/// a glance off a pair of flags. All three decode: older bodies are sitting in
-/// players' saves and must keep opening.
+/// a glance off a pair of flags. v4 adds each club's strength. All four
+/// decode: older bodies are sitting in players' saves and must keep opening.
 const String _tagV1 = '#transfers/v1';
 const String _tagV2 = '#transfers/v2';
 const String _tagV3 = '#transfers/v3';
+const String _tagV4 = '#transfers/v4';
 
 /// Encodes the window's moves as a message body.
 ///
 /// Line-based like the squad-development report, and for the same reason: the
 /// inbox stores plain text, so a table has to survive a round trip through it.
 String encodeTransferReport(List<TransferRow> rows) => [
-  _tagV3,
+  _tagV4,
   for (final r in rows)
     [
       r.name.replaceAll('|', ' '),
@@ -69,6 +75,8 @@ String encodeTransferReport(List<TransferRow> rows) => [
       '${r.step}',
       r.fromCountry,
       r.toCountry,
+      '${r.fromStars}',
+      '${r.toStars}',
     ].join('|'),
 ].join('\n');
 
@@ -77,7 +85,9 @@ List<TransferRow>? decodeTransferReport(String body) {
   final lines = body.split('\n');
   if (lines.isEmpty) return null;
   final tag = lines.first.trim();
-  if (tag != _tagV1 && tag != _tagV2 && tag != _tagV3) return null;
+  if (tag != _tagV1 && tag != _tagV2 && tag != _tagV3 && tag != _tagV4) {
+    return null;
+  }
   final out = <TransferRow>[];
   for (final line in lines.skip(1)) {
     if (line.trim().isEmpty) continue;
@@ -98,6 +108,8 @@ List<TransferRow>? decodeTransferReport(String body) {
       step: f.length > 8 ? (int.tryParse(f[8]) ?? 0) : 0,
       fromCountry: f.length > 9 ? f[9] : '',
       toCountry: f.length > 10 ? f[10] : '',
+      fromStars: f.length > 11 ? (int.tryParse(f[11]) ?? 0) : 0,
+      toStars: f.length > 12 ? (int.tryParse(f[12]) ?? 0) : 0,
     ));
   }
   return out;
@@ -287,7 +299,7 @@ class _MoveRow extends StatelessWidget {
   /// flags say where the move went without spending a word on it.
   Widget _move(BuildContext context) {
     final l = AppLocalizations.of(context);
-    Widget side(String club, String country) => Flexible(
+    Widget side(String club, String country, int stars) => Flexible(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -308,6 +320,10 @@ class _MoveRow extends StatelessWidget {
               ),
             ),
           ),
+          if (stars > 0) ...[
+            const SizedBox(width: 3),
+            ClubStars(stars, size: 9),
+          ],
         ],
       ),
     );
@@ -323,7 +339,7 @@ class _MoveRow extends StatelessWidget {
     // on the screen varies by it now.
     return Row(
       children: [
-        side(row.from, row.fromCountry),
+        side(row.from, row.fromCountry, row.fromStars),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
           child: Semantics(
@@ -335,7 +351,7 @@ class _MoveRow extends StatelessWidget {
             ),
           ),
         ),
-        side(row.to, row.toCountry),
+        side(row.to, row.toCountry, row.toStars),
       ],
     );
   }

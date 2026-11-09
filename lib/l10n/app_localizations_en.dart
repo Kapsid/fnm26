@@ -16257,4 +16257,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Choose a file instead';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Club strength: $stars of 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Strength';
+
+  @override
+  String get editorClubStrengthDefault => 'Default';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Better players join stronger clubs. Default: $stars of 5, set by its league.';
+  }
 }

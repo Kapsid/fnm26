@@ -16079,4 +16079,20 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Chọn một tệp';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Sức mạnh câu lạc bộ: $stars/5';
+  }
+
+  @override
+  String get editorClubStrength => 'Sức mạnh';
+
+  @override
+  String get editorClubStrengthDefault => 'Mặc định';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Cầu thủ giỏi hơn gia nhập câu lạc bộ mạnh hơn. Mặc định: $stars/5, theo giải đấu của đội.';
+  }
 }

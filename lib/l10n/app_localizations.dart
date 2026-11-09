@@ -24475,6 +24475,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a file instead'**
   String get editorTrophyFile;
+
+  /// Spoken label for the row of stars after a club name: how strong the club is, out of five.
+  ///
+  /// In en, this message translates to:
+  /// **'Club strength: {stars} of 5'**
+  String clubStrengthOf(int stars);
+
+  /// Editor, club form: label over the star picker that sets how strong the club is.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get editorClubStrength;
+
+  /// Editor, club form: the choice that leaves the club at the strength the game gives it.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get editorClubStrengthDefault;
+
+  /// Editor, club form: under the star picker. What the strength does, and the stars the club has when left at Default.
+  ///
+  /// In en, this message translates to:
+  /// **'Better players join stronger clubs. Default: {stars} of 5, set by its league.'**
+  String editorClubStrengthHelp(int stars);
 }
 
 class _AppLocalizationsDelegate

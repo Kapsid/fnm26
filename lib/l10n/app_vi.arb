@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Đội hình đã đầy",
   "editorPromoteFullBody": "Một đội hình có tối đa {max} cầu thủ. Hãy chọn cầu thủ sẽ quay về nhóm dự bị thay cho anh ấy.",
   "editorTrophyGallery": "Chọn từ ảnh của bạn",
-  "editorTrophyFile": "Chọn một tệp"
+  "editorTrophyFile": "Chọn một tệp",
+  "clubStrengthOf": "Sức mạnh câu lạc bộ: {stars}/5",
+  "editorClubStrength": "Sức mạnh",
+  "editorClubStrengthDefault": "Mặc định",
+  "editorClubStrengthHelp": "Cầu thủ giỏi hơn gia nhập câu lạc bộ mạnh hơn. Mặc định: {stars}/5, theo giải đấu của đội."
 }

@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Skuad sudah penuh",
   "editorPromoteFullBody": "Satu skuad berisi paling banyak {max} pemain. Pilih pemain yang kembali ke kolam sebagai gantinya.",
   "editorTrophyGallery": "Pilih dari foto Anda",
-  "editorTrophyFile": "Pilih berkas"
+  "editorTrophyFile": "Pilih berkas",
+  "clubStrengthOf": "Kekuatan klub: {stars} dari 5",
+  "editorClubStrength": "Kekuatan",
+  "editorClubStrengthDefault": "Bawaan",
+  "editorClubStrengthHelp": "Pemain yang lebih baik bergabung dengan klub yang lebih kuat. Bawaan: {stars} dari 5, menurut liganya."
 }

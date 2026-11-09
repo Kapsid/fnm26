@@ -15653,4 +15653,20 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'ファイルを選ぶ';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'クラブの強さ: 5段階中$stars';
+  }
+
+  @override
+  String get editorClubStrength => '強さ';
+
+  @override
+  String get editorClubStrengthDefault => 'デフォルト';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return '強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中$stars。';
+  }
 }

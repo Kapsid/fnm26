@@ -16139,4 +16139,20 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Pilih berkas';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Kekuatan klub: $stars dari 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Kekuatan';
+
+  @override
+  String get editorClubStrengthDefault => 'Bawaan';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Pemain yang lebih baik bergabung dengan klub yang lebih kuat. Bawaan: $stars dari 5, menurut liganya.';
+  }
 }

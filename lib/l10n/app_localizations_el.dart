@@ -16321,4 +16321,20 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Επιλογή αρχείου';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Δύναμη συλλόγου: $stars στα 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Δύναμη';
+
+  @override
+  String get editorClubStrengthDefault => 'Προεπιλογή';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Οι καλύτεροι παίκτες πάνε σε ισχυρότερους συλλόγους. Προεπιλογή: $stars στα 5, βάσει του πρωταθλήματός του.';
+  }
 }

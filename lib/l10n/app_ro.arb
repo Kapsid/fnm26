@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Lotul este plin",
   "editorPromoteFullBody": "Un lot are cel mult {max} jucători. Alegeți jucătorul care se întoarce în rezervă în locul lui.",
   "editorTrophyGallery": "Alege din fotografiile tale",
-  "editorTrophyFile": "Alege un fișier"
+  "editorTrophyFile": "Alege un fișier",
+  "clubStrengthOf": "Forța clubului: {stars} din 5",
+  "editorClubStrength": "Forță",
+  "editorClubStrengthDefault": "Implicit",
+  "editorClubStrengthHelp": "Jucătorii mai buni ajung la cluburi mai puternice. Implicit: {stars} din 5, după liga sa."
 }

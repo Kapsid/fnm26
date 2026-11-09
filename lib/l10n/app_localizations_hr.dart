@@ -16569,4 +16569,20 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Odaberi datoteku';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Snaga kluba: $stars od 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Snaga';
+
+  @override
+  String get editorClubStrengthDefault => 'Zadano';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Bolji igrači odlaze u jače klubove. Zadano: $stars od 5, prema njegovoj ligi.';
+  }
 }

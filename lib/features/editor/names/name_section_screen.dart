@@ -815,6 +815,7 @@ class _NameTile extends StatelessWidget {
       ];
     }
     final fix = toFix > 0;
+    final stars = section == NameSection.clubs ? clubStarsIn(pack, entry) : 0;
     return AppCard(
       key: NameSectionScreen.rowKey(entry.key),
       onTap: onTap,
@@ -857,6 +858,10 @@ class _NameTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
+          if (stars > 0) ...[
+            ClubStars(stars, size: 10),
+            const SizedBox(width: AppSpacing.sm),
+          ],
           if (fix)
             _FixMark(text: l.editorCountToFix(toFix))
           else if (changed && (lang != null || !entry.added))

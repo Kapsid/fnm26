@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Склад заповнений",
   "editorPromoteFullBody": "У складі може бути щонайбільше {max} гравців. Виберіть гравця, який повернеться до резерву замість нього.",
   "editorTrophyGallery": "Вибрати з ваших фото",
-  "editorTrophyFile": "Вибрати файл"
+  "editorTrophyFile": "Вибрати файл",
+  "clubStrengthOf": "Сила клубу: {stars} з 5",
+  "editorClubStrength": "Сила",
+  "editorClubStrengthDefault": "Типово",
+  "editorClubStrengthHelp": "Кращі гравці переходять до сильніших клубів. Типово: {stars} з 5 за його лігою."
 }

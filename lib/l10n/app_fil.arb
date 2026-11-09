@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Puno na ang squad",
   "editorPromoteFullBody": "Ang isang squad ay may pinakamarami na {max} manlalaro. Piliin ang manlalarong babalik sa pool bilang kapalit niya.",
   "editorTrophyGallery": "Pumili mula sa iyong mga larawan",
-  "editorTrophyFile": "Pumili ng file"
+  "editorTrophyFile": "Pumili ng file",
+  "clubStrengthOf": "Lakas ng club: {stars} sa 5",
+  "editorClubStrength": "Lakas",
+  "editorClubStrengthDefault": "Default",
+  "editorClubStrengthHelp": "Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: {stars} sa 5, ayon sa liga nito."
 }

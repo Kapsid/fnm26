@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "ทีมเต็มแล้ว",
   "editorPromoteFullBody": "ทีมมีผู้เล่นได้สูงสุด {max} คน เลือกผู้เล่นที่จะกลับไปอยู่ในกลุ่มสำรองแทน",
   "editorTrophyGallery": "เลือกจากรูปภาพของคุณ",
-  "editorTrophyFile": "เลือกไฟล์"
+  "editorTrophyFile": "เลือกไฟล์",
+  "clubStrengthOf": "ความแข็งแกร่งของสโมสร: {stars} จาก 5",
+  "editorClubStrength": "ความแข็งแกร่ง",
+  "editorClubStrengthDefault": "ค่าเริ่มต้น",
+  "editorClubStrengthHelp": "นักเตะที่เก่งกว่าจะย้ายไปสโมสรที่แข็งแกร่งกว่า ค่าเริ่มต้น: {stars} จาก 5 ตามลีกของสโมสร"
 }

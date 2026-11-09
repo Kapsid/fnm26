@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "La rosa è al completo",
   "editorPromoteFullBody": "Una rosa può avere al massimo {max} giocatori. Scegli il giocatore che torna nel bacino al suo posto.",
   "editorTrophyGallery": "Scegli dalle tue foto",
-  "editorTrophyFile": "Scegli un file"
+  "editorTrophyFile": "Scegli un file",
+  "clubStrengthOf": "Forza del club: {stars} su 5",
+  "editorClubStrength": "Forza",
+  "editorClubStrengthDefault": "Predefinita",
+  "editorClubStrengthHelp": "I giocatori migliori vanno nei club più forti. Predefinita: {stars} su 5, in base al suo campionato."
 }

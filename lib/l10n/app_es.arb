@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "La plantilla está completa",
   "editorPromoteFullBody": "Una plantilla tiene como máximo {max} jugadores. Elige al jugador que vuelve a los disponibles en su lugar.",
   "editorTrophyGallery": "Elegir de tus fotos",
-  "editorTrophyFile": "Elegir un archivo"
+  "editorTrophyFile": "Elegir un archivo",
+  "clubStrengthOf": "Nivel del club: {stars} de 5",
+  "editorClubStrength": "Nivel",
+  "editorClubStrengthDefault": "Predeterminado",
+  "editorClubStrengthHelp": "Los mejores jugadores fichan por los clubes más fuertes. Predeterminado: {stars} de 5, según su liga."
 }

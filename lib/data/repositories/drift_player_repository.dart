@@ -278,6 +278,10 @@ class DriftPlayerRepository implements PlayerRepository {
       newCareerNames: newCareerNames,
     );
     final home = await _home(nationId);
+    final strength = await _drawsByStrength(
+      careerId,
+      newCareer: newCareerNames,
+    );
     return [
       for (final p in selectable)
         _finish(
@@ -286,6 +290,7 @@ class DriftPlayerRepository implements PlayerRepository {
           homeCode: home.code,
           homeCities: home.cities,
           world: world,
+          strength: strength,
         ),
     ];
   }
@@ -380,6 +385,7 @@ class DriftPlayerRepository implements PlayerRepository {
     pool.sort((a, b) => b.overall.compareTo(a.overall));
     final name = await _namerFor(nationId, seeded, saveSeed, careerId);
     final home = await _home(nationId);
+    final strength = await _drawsByStrength(careerId);
     return [
       for (final p in pool)
         _finish(
@@ -388,6 +394,7 @@ class DriftPlayerRepository implements PlayerRepository {
           homeCode: home.code,
           homeCities: home.cities,
           world: world,
+          strength: strength,
         ),
     ];
   }
@@ -407,28 +414,37 @@ class DriftPlayerRepository implements PlayerRepository {
   /// carries him. Every club, his and everybody else's, then reads under the
   /// world's club names ([ClubService.renamed]). The world's added clubs
   /// join the draw ([_CareerWorld.addedClubs]).
+  ///
+  /// [strength] is the career's club rule ([clubStrengthKind]): the draw by
+  /// strength over every country's league, or (false) the draw the career
+  /// was created with before it. His club's stars are read off its own name,
+  /// before the world renames it.
   Player _finish(
     Player p,
     int saveSeed, {
     String homeCode = '',
     List<String> homeCities = const [],
     _CareerWorld? world,
+    bool strength = false,
   }) {
+    final clubs = world?.clubWorld ?? ClubWorld.none;
     var c = ClubService.clubForSeed(
       p,
       saveSeed,
       homeCode: homeCode,
       homeCities: homeCities,
-      added: world?.addedClubs ?? const {},
+      world: clubs,
+      strength: strength,
     );
     final dayOne = world?.packPlayer(p.id);
+    if (dayOne != null &&
+        dayOne.club != null &&
+        ClubService.contractAt(p.id, p.age).index ==
+            ClubService.contractAt(p.id, dayOne.age).index) {
+      c = (name: dayOne.club!, country: dayOne.clubCountry ?? '');
+    }
+    final stars = ClubService.starsOf(c, world: clubs);
     if (world != null) {
-      if (dayOne != null &&
-          dayOne.club != null &&
-          ClubService.contractAt(p.id, p.age).index ==
-              ClubService.contractAt(p.id, dayOne.age).index) {
-        c = (name: dayOne.club!, country: dayOne.clubCountry ?? '');
-      }
       c = ClubService.renamed(
         c,
         world.pack.clubs,
@@ -438,8 +454,41 @@ class DriftPlayerRepository implements PlayerRepository {
     return p.copyWith(
       club: c.name,
       clubCountry: c.country,
+      clubStars: stars,
       fixedTraits: dayOne?.traits,
     );
+  }
+
+  /// Careers known to carry [clubStrengthKind], and careers known not to
+  /// (only once [fullPoolsSettledKind] shows their creation is past the
+  /// point the mark is written; see [_poolEra]).
+  final Map<int, bool> _strengthCareers = {};
+
+  /// Whether [careerId]'s clubs are drawn by strength ([clubStrengthKind]).
+  /// No career at all reads the draw a career created now gets when
+  /// [newCareer] (the editor's and the new-career screens' reads), else the
+  /// oldest.
+  Future<bool> _drawsByStrength(int? careerId, {bool newCareer = false}) async {
+    if (careerId == null) return newCareer;
+    if (_strengthCareers[careerId] case final known?) return known;
+    final kinds =
+        await (_db.selectOnly(_db.drawsWatched)
+              ..addColumns([_db.drawsWatched.kind])
+              ..where(
+                _db.drawsWatched.careerId.equals(careerId) &
+                    _db.drawsWatched.cycle.equals(0) &
+                    _db.drawsWatched.kind.isIn(const [
+                      clubStrengthKind,
+                      fullPoolsSettledKind,
+                    ]),
+              ))
+            .map((r) => r.read(_db.drawsWatched.kind))
+            .get();
+    final yes = kinds.contains(clubStrengthKind);
+    if (yes || kinds.contains(fullPoolsSettledKind)) {
+      _strengthCareers[careerId] = yes;
+    }
+    return yes;
   }
 
   /// The FIFA code and cities of [nationId] — the "home country" context the
@@ -553,6 +602,7 @@ class DriftPlayerRepository implements PlayerRepository {
             saveSeed,
             homeCode: home.code,
             homeCities: home.cities,
+            strength: newCareerNames,
           ),
     ];
   });
@@ -587,6 +637,8 @@ class DriftPlayerRepository implements PlayerRepository {
             saveSeed,
             homeCode: home.code,
             homeCities: home.cities,
+            // As a career created now places him, like his name.
+            strength: true,
           ),
     ];
   });
@@ -678,6 +730,10 @@ class DriftPlayerRepository implements PlayerRepository {
     bool newCareerNames = false,
   }) async {
     final world = await _worldFor(careerId);
+    final strength = await _drawsByStrength(
+      careerId,
+      newCareer: newCareerNames,
+    );
     if (GoldenGeneration.isGoldenId(id)) {
       // A cohort member is resolved from his id alone, like a newgen: only a
       // marked career ever fields him, so no marker is needed to name him.
@@ -703,6 +759,7 @@ class DriftPlayerRepository implements PlayerRepository {
         homeCode: home.code,
         homeCities: home.cities,
         world: world,
+        strength: strength,
       );
     }
     if (PlayerLifecycle.isNewgenId(id)) {
@@ -731,6 +788,7 @@ class DriftPlayerRepository implements PlayerRepository {
         homeCode: home.code,
         homeCities: home.cities,
         world: world,
+        strength: strength,
       );
     }
     // A career on a custom world reads its core players from the world: an
@@ -783,6 +841,7 @@ class DriftPlayerRepository implements PlayerRepository {
       homeCode: home.code,
       homeCities: home.cities,
       world: world,
+      strength: strength,
     );
   }
 
@@ -1438,6 +1497,21 @@ class _CareerWorld {
     }
     return out;
   }();
+
+  /// The world's clubs for the club draw and their stars, indexed once.
+  late final ClubWorld clubWorld = ClubWorld(
+    added: addedClubs,
+    addedStrengths: () {
+      final out = <String, Map<String, int>>{};
+      for (final c in pack.addedClubs) {
+        if (c.strength case final s?) {
+          (out[c.country.toLowerCase()] ??= {})[c.name] = s;
+        }
+      }
+      return out;
+    }(),
+    strengths: pack.clubStrengths,
+  );
 
   /// The world's potentials, for the [WorldZone] every read runs in. One
   /// object per world, so a read already in its zone is recognised.

@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Der Kader ist voll",
   "editorPromoteFullBody": "Ein Kader hat höchstens {max} Spieler. Wählen Sie den Spieler, der dafür zurück in den Pool geht.",
   "editorTrophyGallery": "Aus deinen Fotos wählen",
-  "editorTrophyFile": "Datei wählen"
+  "editorTrophyFile": "Datei wählen",
+  "clubStrengthOf": "Vereinsstärke: {stars} von 5",
+  "editorClubStrength": "Stärke",
+  "editorClubStrengthDefault": "Standard",
+  "editorClubStrengthHelp": "Bessere Spieler wechseln zu stärkeren Vereinen. Standard: {stars} von 5, nach seiner Liga."
 }

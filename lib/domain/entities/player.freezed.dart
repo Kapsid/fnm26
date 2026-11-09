@@ -17,7 +17,11 @@ mixin _$Player {
 
  int get id; int get nationId; String get name; int get age; PlayerPosition get position; PlayerAttributes get attributes; String get club;/// FIFA code of the club's country (for its flag). Empty when unknown; set
 /// at materialisation from the deterministic club assignment.
- String get clubCountry;/// His traits as a world pack picks them, in place of the per-save roll
+ String get clubCountry;/// How strong his club is, 1 to 5 stars (`ClubService.starsOf`); 0 for
+/// none known (a free agent, or a player built outside a read). Set at
+/// materialisation beside [club], off the club's own name before a
+/// world renames it. Cosmetic.
+ int get clubStars;/// His traits as a world pack picks them, in place of the per-save roll
 /// ([PlayerTraits.of]). Null rolls them as always; an empty list is "no
 /// traits". The career read sets it from his pack entry.
 @JsonKey(includeIfNull: false) List<PlayerTrait>? get fixedTraits;
@@ -33,16 +37,16 @@ $PlayerCopyWith<Player> get copyWith => _$PlayerCopyWithImpl<Player>(this as Pla
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Player&&(identical(other.id, id) || other.id == id)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.age, age) || other.age == age)&&(identical(other.position, position) || other.position == position)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&(identical(other.club, club) || other.club == club)&&(identical(other.clubCountry, clubCountry) || other.clubCountry == clubCountry)&&const DeepCollectionEquality().equals(other.fixedTraits, fixedTraits));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Player&&(identical(other.id, id) || other.id == id)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.age, age) || other.age == age)&&(identical(other.position, position) || other.position == position)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&(identical(other.club, club) || other.club == club)&&(identical(other.clubCountry, clubCountry) || other.clubCountry == clubCountry)&&(identical(other.clubStars, clubStars) || other.clubStars == clubStars)&&const DeepCollectionEquality().equals(other.fixedTraits, fixedTraits));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nationId,name,age,position,attributes,club,clubCountry,const DeepCollectionEquality().hash(fixedTraits));
+int get hashCode => Object.hash(runtimeType,id,nationId,name,age,position,attributes,club,clubCountry,clubStars,const DeepCollectionEquality().hash(fixedTraits));
 
 @override
 String toString() {
-  return 'Player(id: $id, nationId: $nationId, name: $name, age: $age, position: $position, attributes: $attributes, club: $club, clubCountry: $clubCountry, fixedTraits: $fixedTraits)';
+  return 'Player(id: $id, nationId: $nationId, name: $name, age: $age, position: $position, attributes: $attributes, club: $club, clubCountry: $clubCountry, clubStars: $clubStars, fixedTraits: $fixedTraits)';
 }
 
 
@@ -53,7 +57,7 @@ abstract mixin class $PlayerCopyWith<$Res>  {
   factory $PlayerCopyWith(Player value, $Res Function(Player) _then) = _$PlayerCopyWithImpl;
 @useResult
 $Res call({
- int id, int nationId, String name, int age, PlayerPosition position, PlayerAttributes attributes, String club, String clubCountry,@JsonKey(includeIfNull: false) List<PlayerTrait>? fixedTraits
+ int id, int nationId, String name, int age, PlayerPosition position, PlayerAttributes attributes, String club, String clubCountry, int clubStars,@JsonKey(includeIfNull: false) List<PlayerTrait>? fixedTraits
 });
 
 
@@ -70,7 +74,7 @@ class _$PlayerCopyWithImpl<$Res>
 
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? nationId = null,Object? name = null,Object? age = null,Object? position = null,Object? attributes = null,Object? club = null,Object? clubCountry = null,Object? fixedTraits = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? nationId = null,Object? name = null,Object? age = null,Object? position = null,Object? attributes = null,Object? club = null,Object? clubCountry = null,Object? clubStars = null,Object? fixedTraits = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,nationId: null == nationId ? _self.nationId : nationId // ignore: cast_nullable_to_non_nullable
@@ -80,7 +84,8 @@ as int,position: null == position ? _self.position : position // ignore: cast_nu
 as PlayerPosition,attributes: null == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
 as PlayerAttributes,club: null == club ? _self.club : club // ignore: cast_nullable_to_non_nullable
 as String,clubCountry: null == clubCountry ? _self.clubCountry : clubCountry // ignore: cast_nullable_to_non_nullable
-as String,fixedTraits: freezed == fixedTraits ? _self.fixedTraits : fixedTraits // ignore: cast_nullable_to_non_nullable
+as String,clubStars: null == clubStars ? _self.clubStars : clubStars // ignore: cast_nullable_to_non_nullable
+as int,fixedTraits: freezed == fixedTraits ? _self.fixedTraits : fixedTraits // ignore: cast_nullable_to_non_nullable
 as List<PlayerTrait>?,
   ));
 }
@@ -175,10 +180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry, @JsonKey(includeIfNull: false)  List<PlayerTrait>? fixedTraits)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry,  int clubStars, @JsonKey(includeIfNull: false)  List<PlayerTrait>? fixedTraits)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Player() when $default != null:
-return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry,_that.fixedTraits);case _:
+return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry,_that.clubStars,_that.fixedTraits);case _:
   return orElse();
 
 }
@@ -196,10 +201,10 @@ return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry, @JsonKey(includeIfNull: false)  List<PlayerTrait>? fixedTraits)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry,  int clubStars, @JsonKey(includeIfNull: false)  List<PlayerTrait>? fixedTraits)  $default,) {final _that = this;
 switch (_that) {
 case _Player():
-return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry,_that.fixedTraits);case _:
+return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry,_that.clubStars,_that.fixedTraits);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -216,10 +221,10 @@ return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry, @JsonKey(includeIfNull: false)  List<PlayerTrait>? fixedTraits)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int nationId,  String name,  int age,  PlayerPosition position,  PlayerAttributes attributes,  String club,  String clubCountry,  int clubStars, @JsonKey(includeIfNull: false)  List<PlayerTrait>? fixedTraits)?  $default,) {final _that = this;
 switch (_that) {
 case _Player() when $default != null:
-return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry,_that.fixedTraits);case _:
+return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_that.attributes,_that.club,_that.clubCountry,_that.clubStars,_that.fixedTraits);case _:
   return null;
 
 }
@@ -231,7 +236,7 @@ return $default(_that.id,_that.nationId,_that.name,_that.age,_that.position,_tha
 @JsonSerializable()
 
 class _Player extends Player {
-  const _Player({required this.id, required this.nationId, required this.name, required this.age, required this.position, required this.attributes, this.club = 'Free agent', this.clubCountry = '', @JsonKey(includeIfNull: false) final  List<PlayerTrait>? fixedTraits}): _fixedTraits = fixedTraits,super._();
+  const _Player({required this.id, required this.nationId, required this.name, required this.age, required this.position, required this.attributes, this.club = 'Free agent', this.clubCountry = '', this.clubStars = 0, @JsonKey(includeIfNull: false) final  List<PlayerTrait>? fixedTraits}): _fixedTraits = fixedTraits,super._();
   factory _Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
 
 @override final  int id;
@@ -244,6 +249,11 @@ class _Player extends Player {
 /// FIFA code of the club's country (for its flag). Empty when unknown; set
 /// at materialisation from the deterministic club assignment.
 @override@JsonKey() final  String clubCountry;
+/// How strong his club is, 1 to 5 stars (`ClubService.starsOf`); 0 for
+/// none known (a free agent, or a player built outside a read). Set at
+/// materialisation beside [club], off the club's own name before a
+/// world renames it. Cosmetic.
+@override@JsonKey() final  int clubStars;
 /// His traits as a world pack picks them, in place of the per-save roll
 /// ([PlayerTraits.of]). Null rolls them as always; an empty list is "no
 /// traits". The career read sets it from his pack entry.
@@ -273,16 +283,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Player&&(identical(other.id, id) || other.id == id)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.age, age) || other.age == age)&&(identical(other.position, position) || other.position == position)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&(identical(other.club, club) || other.club == club)&&(identical(other.clubCountry, clubCountry) || other.clubCountry == clubCountry)&&const DeepCollectionEquality().equals(other._fixedTraits, _fixedTraits));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Player&&(identical(other.id, id) || other.id == id)&&(identical(other.nationId, nationId) || other.nationId == nationId)&&(identical(other.name, name) || other.name == name)&&(identical(other.age, age) || other.age == age)&&(identical(other.position, position) || other.position == position)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&(identical(other.club, club) || other.club == club)&&(identical(other.clubCountry, clubCountry) || other.clubCountry == clubCountry)&&(identical(other.clubStars, clubStars) || other.clubStars == clubStars)&&const DeepCollectionEquality().equals(other._fixedTraits, _fixedTraits));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nationId,name,age,position,attributes,club,clubCountry,const DeepCollectionEquality().hash(_fixedTraits));
+int get hashCode => Object.hash(runtimeType,id,nationId,name,age,position,attributes,club,clubCountry,clubStars,const DeepCollectionEquality().hash(_fixedTraits));
 
 @override
 String toString() {
-  return 'Player(id: $id, nationId: $nationId, name: $name, age: $age, position: $position, attributes: $attributes, club: $club, clubCountry: $clubCountry, fixedTraits: $fixedTraits)';
+  return 'Player(id: $id, nationId: $nationId, name: $name, age: $age, position: $position, attributes: $attributes, club: $club, clubCountry: $clubCountry, clubStars: $clubStars, fixedTraits: $fixedTraits)';
 }
 
 
@@ -293,7 +303,7 @@ abstract mixin class _$PlayerCopyWith<$Res> implements $PlayerCopyWith<$Res> {
   factory _$PlayerCopyWith(_Player value, $Res Function(_Player) _then) = __$PlayerCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int nationId, String name, int age, PlayerPosition position, PlayerAttributes attributes, String club, String clubCountry,@JsonKey(includeIfNull: false) List<PlayerTrait>? fixedTraits
+ int id, int nationId, String name, int age, PlayerPosition position, PlayerAttributes attributes, String club, String clubCountry, int clubStars,@JsonKey(includeIfNull: false) List<PlayerTrait>? fixedTraits
 });
 
 
@@ -310,7 +320,7 @@ class __$PlayerCopyWithImpl<$Res>
 
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? nationId = null,Object? name = null,Object? age = null,Object? position = null,Object? attributes = null,Object? club = null,Object? clubCountry = null,Object? fixedTraits = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? nationId = null,Object? name = null,Object? age = null,Object? position = null,Object? attributes = null,Object? club = null,Object? clubCountry = null,Object? clubStars = null,Object? fixedTraits = freezed,}) {
   return _then(_Player(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,nationId: null == nationId ? _self.nationId : nationId // ignore: cast_nullable_to_non_nullable
@@ -320,7 +330,8 @@ as int,position: null == position ? _self.position : position // ignore: cast_nu
 as PlayerPosition,attributes: null == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
 as PlayerAttributes,club: null == club ? _self.club : club // ignore: cast_nullable_to_non_nullable
 as String,clubCountry: null == clubCountry ? _self.clubCountry : clubCountry // ignore: cast_nullable_to_non_nullable
-as String,fixedTraits: freezed == fixedTraits ? _self._fixedTraits : fixedTraits // ignore: cast_nullable_to_non_nullable
+as String,clubStars: null == clubStars ? _self.clubStars : clubStars // ignore: cast_nullable_to_non_nullable
+as int,fixedTraits: freezed == fixedTraits ? _self._fixedTraits : fixedTraits // ignore: cast_nullable_to_non_nullable
 as List<PlayerTrait>?,
   ));
 }

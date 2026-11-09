@@ -13,6 +13,7 @@ export 'app_list_row.dart';
 export 'app_popup.dart';
 export 'app_text_field.dart';
 export 'card_mark.dart';
+export 'club_stars.dart';
 export 'country_flag.dart';
 export 'flag_disc.dart';
 export 'leader_row.dart';

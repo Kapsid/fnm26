@@ -111,6 +111,25 @@ Future<Map<String, Object>> _pinPlayers(
   return out;
 }
 
+/// [reads] with the club and its country taken out of every player row
+/// ([cols]: their places in a row). The pins were written before club
+/// strength, when every career drew its clubs the old way; a career created
+/// now draws them by strength (`clubStrengthKind`), so here the pin holds
+/// for names, ratings and traits, and the clubs are held to the career's own
+/// first read instead. That the old draw itself is unchanged, careers from
+/// before keep it, is pinned in `v1_world_pin_test.dart` and
+/// `player_repo_world_test.dart`.
+Object? _withoutClubs(Object? reads, Set<int> cols) => switch (reads) {
+  final Map<String, Object?> m => {
+    for (final e in m.entries) e.key: _withoutClubs(e.value, cols),
+  },
+  final List<Object?> row when row.isNotEmpty && row.first is String => [
+    for (var i = 0; i < row.length; i++)
+      if (!cols.contains(i)) row[i],
+  ],
+  _ => reads,
+};
+
 Map<String, Object> _pinSponsors() => {
   for (var s = 1; s <= 20; s++)
     for (var cycle = 0; cycle <= 3; cycle++)
@@ -196,14 +215,34 @@ void main() {
       late PackYAccount hospoda;
       final clock = Stopwatch()..start();
 
-      Future<Object?> pinReads() async => jsonDecode(
+      Future<Object?> playerReads() async => jsonDecode(
         jsonEncode({
           'default': await _pinPlayers(c, defaultCareerId),
           'v1Pack': await _pinPlayers(c, v1CareerId),
-          'sponsors': _pinSponsors(),
-          'y': _pinY(),
         }),
       );
+      // The pin's players without their clubs, and its sponsors and Y as
+      // they are (see [_withoutClubs]).
+      final pinMap = pin as Map<String, Object?>;
+      final pinNoClubs = {
+        for (final k in ['default', 'v1Pack'])
+          k: _withoutClubs(pinMap[k], const {2, 3}),
+        'sponsors': pinMap['sponsors'],
+        'y': pinMap['y'],
+      };
+      late Object? firstReads;
+      Future<Object?> pinReads() async {
+        final players = await playerReads();
+        // The clubs stand still for the whole story.
+        expect(players, firstReads);
+        return jsonDecode(
+          jsonEncode({
+            ...(_withoutClubs(players, const {2, 3})! as Map<String, Object?>),
+            'sponsors': _pinSponsors(),
+            'y': _pinY(),
+          }),
+        );
+      }
 
       // 1. A 1.1.0 file in, a career on it, then the editing.
       await tester.runAsync(() async {
@@ -251,7 +290,8 @@ void main() {
           managerName: 'M',
           rngSeed: _pinSeed,
         )).valueOrNull!.id;
-        expect(await pinReads(), pin, reason: 'before any editing');
+        firstReads = await playerReads();
+        expect(await pinReads(), pinNoClubs, reason: 'before any editing');
 
         // The editing, as the editor's screens make each change.
         final sub = c.listen(packEditorProvider(packId), (_, _) {});
@@ -375,7 +415,11 @@ void main() {
         expect(offer.brand.added?.name, _sponsor);
         expect(offer.risky, isTrue);
 
-        expect(await pinReads(), pin, reason: 'with editor 2 packs about');
+        expect(
+          await pinReads(),
+          pinNoClubs,
+          reason: 'with editor 2 packs about',
+        );
       });
 
       // 2. Play the career on the copy.
@@ -493,7 +537,11 @@ void main() {
         final now = await czechs();
         expect(now[kadlec.id]?.$1, _kadlec);
         expect(now[renamed.id]?.$1, _poolName);
-        expect(await pinReads(), pin, reason: 'after the run, packs gone');
+        expect(
+          await pinReads(),
+          pinNoClubs,
+          reason: 'after the run, packs gone',
+        );
       });
 
       // 4. The cup's Czech name in Czech, the game's in other languages.

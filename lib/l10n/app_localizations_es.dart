@@ -16326,4 +16326,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Elegir un archivo';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Nivel del club: $stars de 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Nivel';
+
+  @override
+  String get editorClubStrengthDefault => 'Predeterminado';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Los mejores jugadores fichan por los clubes más fuertes. Predeterminado: $stars de 5, según su liga.';
+  }
 }

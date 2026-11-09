@@ -376,6 +376,8 @@ extension SeasonRollover on SeasonService {
               step: from.compareTo(to),
               fromCountry: was.clubCountry,
               toCountry: p.clubCountry,
+              fromStars: was.clubStars,
+              toStars: p.clubStars,
             );
           }(),
       ];

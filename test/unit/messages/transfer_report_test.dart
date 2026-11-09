@@ -20,6 +20,8 @@ void main() {
       step: 1,
       fromCountry: 'cze',
       toCountry: 'eng',
+      fromStars: 0,
+      toStars: 0,
     ),
     (
       name: 'Petr Svoboda',
@@ -33,6 +35,8 @@ void main() {
       step: -1,
       fromCountry: 'cze',
       toCountry: 'cze',
+      fromStars: 0,
+      toStars: 0,
     ),
   ];
 
@@ -84,6 +88,38 @@ void main() {
     expect(decoded.first.toCountry, 'eng');
   });
 
+  test('v4 carries each club\'s stars; a v3 body reads as none', () {
+    final starred = [
+      for (final r in rows)
+        (
+          name: r.name,
+          position: r.position,
+          from: r.from,
+          to: r.to,
+          fee: r.fee,
+          abroad: r.abroad,
+          rating: r.rating,
+          change: r.change,
+          step: r.step,
+          fromCountry: r.fromCountry,
+          toCountry: r.toCountry,
+          fromStars: 2,
+          toStars: 5,
+        ),
+    ];
+    final body = encodeTransferReport(starred);
+    expect(body, startsWith('#transfers/v4'));
+    final decoded = decodeTransferReport(body)!;
+    expect(decoded.first.fromStars, 2);
+    expect(decoded.first.toStars, 5);
+    const v3 =
+        '#transfers/v3\n'
+        'Tomas Novak|CB|Prague Green|Man Blue|€24M|abroad|84|3|1|cze|eng';
+    final old = decodeTransferReport(v3)!.single;
+    expect(old.toCountry, 'eng');
+    expect((old.fromStars, old.toStars), (0, 0));
+  });
+
   test('every move is carried, not the top three', () {
     final many = [
       for (var i = 0; i < 14; i++)
@@ -99,6 +135,8 @@ void main() {
           step: 0,
           fromCountry: '',
           toCountry: '',
+          fromStars: 0,
+          toStars: 0,
         ),
     ];
     expect(decodeTransferReport(encodeTransferReport(many)), hasLength(14));
@@ -118,6 +156,8 @@ void main() {
         step: 0,
         fromCountry: '',
         toCountry: '',
+        fromStars: 0,
+        toStars: 0,
       ),
     ];
     final decoded = decodeTransferReport(encodeTransferReport(odd));

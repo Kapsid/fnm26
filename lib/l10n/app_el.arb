@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Η ομάδα είναι γεμάτη",
   "editorPromoteFullBody": "Μια ομάδα έχει το πολύ {max} παίκτες. Διαλέξτε τον παίκτη που θα γυρίσει στη δεξαμενή στη θέση του.",
   "editorTrophyGallery": "Επιλογή από τις φωτογραφίες σας",
-  "editorTrophyFile": "Επιλογή αρχείου"
+  "editorTrophyFile": "Επιλογή αρχείου",
+  "clubStrengthOf": "Δύναμη συλλόγου: {stars} στα 5",
+  "editorClubStrength": "Δύναμη",
+  "editorClubStrengthDefault": "Προεπιλογή",
+  "editorClubStrengthHelp": "Οι καλύτεροι παίκτες πάνε σε ισχυρότερους συλλόγους. Προεπιλογή: {stars} στα 5, βάσει του πρωταθλήματός του."
 }

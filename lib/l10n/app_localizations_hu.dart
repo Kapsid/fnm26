@@ -16178,4 +16178,20 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Fájl választása';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Klub erőssége: $stars az 5-ből';
+  }
+
+  @override
+  String get editorClubStrength => 'Erősség';
+
+  @override
+  String get editorClubStrengthDefault => 'Alapértelmezett';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'A jobb játékosok erősebb klubokba igazolnak. Alapértelmezett: $stars az 5-ből, a bajnoksága szerint.';
+  }
 }

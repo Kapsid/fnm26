@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "A keret megtelt",
   "editorPromoteFullBody": "Egy keret legfeljebb {max} játékosból állhat. Válaszd ki, ki kerüljön vissza a játékoskészletbe helyette.",
   "editorTrophyGallery": "Választás a fotóid közül",
-  "editorTrophyFile": "Fájl választása"
+  "editorTrophyFile": "Fájl választása",
+  "clubStrengthOf": "Klub erőssége: {stars} az 5-ből",
+  "editorClubStrength": "Erősség",
+  "editorClubStrengthDefault": "Alapértelmezett",
+  "editorClubStrengthHelp": "A jobb játékosok erősebb klubokba igazolnak. Alapértelmezett: {stars} az 5-ből, a bajnoksága szerint."
 }

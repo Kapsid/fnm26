@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "스쿼드가 가득 찼습니다",
   "editorPromoteFullBody": "스쿼드는 최대 {max}명까지입니다. 그 대신 풀로 돌아갈 선수를 고르세요.",
   "editorTrophyGallery": "사진에서 선택",
-  "editorTrophyFile": "파일 선택"
+  "editorTrophyFile": "파일 선택",
+  "clubStrengthOf": "클럽 전력: 5점 중 {stars}점",
+  "editorClubStrength": "전력",
+  "editorClubStrengthDefault": "기본값",
+  "editorClubStrengthHelp": "더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 {stars}점."
 }

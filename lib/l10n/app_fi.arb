@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Joukkue on täynnä",
   "editorPromoteFullBody": "Joukkueessa on enintään {max} pelaajaa. Valitse pelaaja, joka palaa varantoon hänen tilalleen.",
   "editorTrophyGallery": "Valitse omista kuvistasi",
-  "editorTrophyFile": "Valitse tiedosto"
+  "editorTrophyFile": "Valitse tiedosto",
+  "clubStrengthOf": "Seuran vahvuus: {stars}/5",
+  "editorClubStrength": "Vahvuus",
+  "editorClubStrengthDefault": "Oletus",
+  "editorClubStrengthHelp": "Paremmat pelaajat siirtyvät vahvempiin seuroihin. Oletus: {stars}/5 sarjan mukaan."
 }

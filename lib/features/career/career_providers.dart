@@ -12,7 +12,12 @@ import 'package:fnm/domain/entities/tactics.dart';
 import 'package:fnm/domain/repositories/career_repository.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
 import 'package:fnm/domain/repositories/player_repository.dart'
-    show namePoolsV2Kind, namePoolsV3Kind, namePoolsV4Kind, namePoolsV5Kind;
+    show
+        clubStrengthKind,
+        namePoolsV2Kind,
+        namePoolsV3Kind,
+        namePoolsV4Kind,
+        namePoolsV5Kind;
 import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
@@ -392,6 +397,10 @@ class CareerService {
     // And from the 1.0.9 pools (see namePoolsV5Kind), before
     // briefRulesV2Kind for the same reason.
     await comp.markDrawWatched(career.id, 0, namePoolsV5Kind);
+    // Its clubs are drawn by strength over every country's league (see
+    // clubStrengthKind), before briefRulesV2Kind for the same reason: the
+    // repository settles a career's club rule on that mark.
+    await comp.markDrawWatched(career.id, 0, clubStrengthKind);
     await comp.markDrawWatched(career.id, 0, briefRulesV2Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV3Kind);
     await comp.markDrawWatched(career.id, 0, briefRulesV4Kind);

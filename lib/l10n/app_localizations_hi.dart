@@ -16146,4 +16146,20 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'फ़ाइल चुनें';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'क्लब की ताकत: 5 में से $stars';
+  }
+
+  @override
+  String get editorClubStrength => 'ताकत';
+
+  @override
+  String get editorClubStrengthDefault => 'डिफ़ॉल्ट';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'बेहतर खिलाड़ी मज़बूत क्लबों में जाते हैं। डिफ़ॉल्ट: उसकी लीग के अनुसार 5 में से $stars।';
+  }
 }

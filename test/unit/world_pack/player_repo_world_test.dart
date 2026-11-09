@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/player_attributes.dart';
+import 'package:fnm/domain/repositories/player_repository.dart'
+    show clubStrengthKind;
 import 'package:fnm/domain/services/club/clubs.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
@@ -131,15 +134,31 @@ Future<Map<String, Object>> _snapshot(ProviderContainer c, int career) async {
 
 void main() {
   test(
-    'default career: names, attributes and clubs identical to before',
+    'default career from before club strength: names, attributes and clubs '
+    'identical to before',
     timeout: const Timeout.factor(4),
     () async {
-      final c = await _world();
+      final db = createTestDatabase();
+      addTearDown(db.close);
+      final make = greenlandContainer(db);
+      addTearDown(make.dispose);
+      await make.read(seedLoaderProvider).ensureSeeded();
       final career =
-          (await c
+          (await make
                   .read(careerServiceProvider)
                   .create(nationId: 1, managerName: 'M', rngSeed: _goldenSeed))
               .valueOrNull!;
+      // A career as every build before club strength made it: without the
+      // mark. Read by a fresh app (container), as an upgraded build opens
+      // an old save. The golden was written before club strength existed
+      // (and is never rewritten for it): every club stays where it was.
+      await (db.delete(db.drawsWatched)..where(
+            (t) =>
+                t.careerId.equals(career.id) & t.kind.equals(clubStrengthKind),
+          ))
+          .go();
+      final c = greenlandContainer(db);
+      addTearDown(c.dispose);
       // Round-trip through JSON so the comparison is like for like.
       final got = jsonDecode(jsonEncode(await _snapshot(c, career.id)));
       final file = File(_goldenFile);
@@ -149,6 +168,55 @@ void main() {
           ..writeAsStringSync(const JsonEncoder.withIndent(' ').convert(got));
       }
       expect(got, jsonDecode(file.readAsStringSync()));
+    },
+  );
+
+  test(
+    'a new career draws its clubs by strength; names and attributes are '
+    'the ones an old career has',
+    timeout: const Timeout.factor(4),
+    () async {
+      final c = await _world();
+      final career =
+          (await c
+                  .read(careerServiceProvider)
+                  .create(nationId: 1, managerName: 'M', rngSeed: _goldenSeed))
+              .valueOrNull!;
+      final got =
+          jsonDecode(jsonEncode(await _snapshot(c, career.id)))
+              as Map<String, Object?>;
+      final old =
+          jsonDecode(File(_goldenFile).readAsStringSync())
+              as Map<String, Object?>;
+      var moved = 0;
+      var andorrans = 0;
+      final andorra = ClubService.leagueClubs('and').toSet();
+      for (final key in old.keys) {
+        final was = old[key]! as Map<String, Object?>;
+        final now = got[key]! as Map<String, Object?>;
+        expect(now.keys.toSet(), was.keys.toSet(), reason: key);
+        for (final id in was.keys) {
+          final a = was[id]! as List;
+          final b = now[id]! as List;
+          // Name, age and attributes: untouched.
+          expect(b.sublist(0, 5), a.sublist(0, 5), reason: '$key/$id');
+          if (a[5] != b[5]) moved++;
+          // Andorra's own clubs now come from its league.
+          if (key.startsWith('2/') && b[6] == 'and') {
+            andorrans++;
+            expect(andorra, contains(b[5]), reason: '$key/$id');
+          }
+        }
+      }
+      expect(moved, greaterThan(0));
+      expect(andorrans, greaterThan(0));
+      // And every player read carries his club's stars.
+      final squad = await c
+          .read(playerRepositoryProvider)
+          .byNation(1, saveSeed: _goldenSeed, careerId: career.id);
+      for (final p in squad) {
+        expect(p.clubStars, inInclusiveRange(1, 5), reason: p.club);
+      }
     },
   );
 
@@ -453,10 +521,13 @@ void main() {
     },
   );
 
-  test('ClubService.leagueClubs lists a curated league and nothing else', () {
+  test('ClubService.leagueClubs lists a country\'s league, none for an '
+      'unknown country', () {
     expect(ClubService.leagueClubs('cze'), contains('Klokani Praha'));
     expect(ClubService.leagueClubs('CZE'), contains('Klokani Praha'));
-    expect(ClubService.leagueClubs('and'), isEmpty);
+    // Every country of the game has one now (Andorra's is new).
+    expect(ClubService.leagueClubs('and').length, greaterThanOrEqualTo(5));
+    expect(ClubService.leagueClubs('zzz'), isEmpty);
   });
 
   test('ClubService.renamed renames only a listed club', () {

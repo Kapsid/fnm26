@@ -16144,4 +16144,20 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get editorTrophyFile => 'Dosya seç';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Kulüp gücü: 5 üzerinden $stars';
+  }
+
+  @override
+  String get editorClubStrength => 'Güç';
+
+  @override
+  String get editorClubStrengthDefault => 'Varsayılan';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'İyi oyuncular güçlü kulüplere gider. Varsayılan: ligine göre 5 üzerinden $stars.';
+  }
 }

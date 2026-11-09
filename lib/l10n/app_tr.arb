@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Kadro dolu",
   "editorPromoteFullBody": "Bir kadroda en fazla {max} oyuncu olabilir. Onun yerine havuza geri dönecek oyuncuyu seçin.",
   "editorTrophyGallery": "Fotoğraflarından seç",
-  "editorTrophyFile": "Dosya seç"
+  "editorTrophyFile": "Dosya seç",
+  "clubStrengthOf": "Kulüp gücü: 5 üzerinden {stars}",
+  "editorClubStrength": "Güç",
+  "editorClubStrengthDefault": "Varsayılan",
+  "editorClubStrengthHelp": "İyi oyuncular güçlü kulüplere gider. Varsayılan: ligine göre 5 üzerinden {stars}."
 }

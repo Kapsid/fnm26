@@ -1,10 +1,12 @@
 /// One unbroken spell at a club: the club, the country whose league it plays
-/// in, and the first and last season the player spent there.
+/// in, the first and last season the player spent there, and the club's
+/// strength (1 to 5 stars; 0 when not known).
 typedef ClubSpell = ({
   String club,
   String country,
   int fromYear,
   int toYear,
+  int stars,
 });
 
 /// A player's club career, read off the clubs he held season by season.
@@ -22,7 +24,7 @@ abstract final class ClubHistory {
   /// simply absent from [byYear]; a gap in the years does not split a spell,
   /// because the club either changed or it did not.
   static List<ClubSpell> spells(
-    List<({int year, String club, String country})> byYear,
+    List<({int year, String club, String country, int stars})> byYear,
   ) {
     final out = <ClubSpell>[];
     for (final season in byYear) {
@@ -36,6 +38,7 @@ abstract final class ClubHistory {
           country: last.country,
           fromYear: last.fromYear,
           toYear: season.year,
+          stars: last.stars,
         );
         continue;
       }
@@ -44,6 +47,7 @@ abstract final class ClubHistory {
         country: season.country,
         fromYear: season.year,
         toYear: season.year,
+        stars: season.stars,
       ));
     }
     return out;

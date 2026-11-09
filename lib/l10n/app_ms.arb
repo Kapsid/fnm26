@@ -4039,5 +4039,9 @@
   "editorPromoteFullTitle": "Skuad sudah penuh",
   "editorPromoteFullBody": "Satu skuad memuatkan paling banyak {max} pemain. Pilih pemain yang kembali ke kolam sebagai gantinya.",
   "editorTrophyGallery": "Pilih daripada foto anda",
-  "editorTrophyFile": "Pilih fail"
+  "editorTrophyFile": "Pilih fail",
+  "clubStrengthOf": "Kekuatan kelab: {stars} daripada 5",
+  "editorClubStrength": "Kekuatan",
+  "editorClubStrengthDefault": "Lalai",
+  "editorClubStrengthHelp": "Pemain yang lebih baik menyertai kelab yang lebih kuat. Lalai: {stars} daripada 5, mengikut liganya."
 }

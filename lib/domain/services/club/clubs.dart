@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/services/player/player_aging.dart';
 import 'package:fnm/domain/services/player/player_lifecycle.dart';
+
+part 'clubs_more_leagues.dart';
 
 /// A club a player is attached to: a fictional name and the FIFA code of the
 /// country whose league it plays in (so a flag can be shown next to it).
@@ -12,12 +15,20 @@ typedef ClubSide = ({String name, String country});
 typedef ClubContract = ({int index, int since, int joined});
 
 /// One country's league: the FIFA [country] code (for the flag), a strength
-/// [tier] (1 = elite, 5 = lower), and its fictional club names.
+/// [tier] (1 = elite, 5 = lower), and its fictional club names, biggest
+/// first. [destination] leagues take players from abroad; the rest only
+/// keep their own (see [_moreLeagues]).
 class _League {
-  const _League(this.country, this.tier, this.clubs);
+  const _League(
+    this.country,
+    this.tier,
+    this.clubs, {
+    this.destination = true,
+  });
   final String country;
   final int tier;
   final List<String> clubs;
+  final bool destination;
 }
 
 /// Assigns every player a CLUB — purely cosmetic flavour, derived (never stored)
@@ -69,7 +80,11 @@ abstract final class ClubService {
     String homeCode = '',
     List<String> homeCities = const [],
     Map<String, List<String>> added = const {},
+    ClubWorld? world,
+    bool strength = false,
   }) {
+    final clubs =
+        world ?? (added.isEmpty ? ClubWorld.none : ClubWorld(added: added));
     // Which contract he is on. Every draw below is salted with it, so the club
     // is settled once and then STANDS until the deal runs out — see
     // [contractIndex].
@@ -106,13 +121,9 @@ abstract final class ClubService {
     final dealAge = p.age < _firstContractAge ? p.age : contract.since;
     if (homeCode.isNotEmpty &&
         _staysHome(levelAt(dealAge), dealAge, homeCode, stayRoll)) {
-      final home = _homeClub(
-        homeCode,
-        homeCities,
-        h,
-        band,
-        added[homeCode] ?? const [],
-      );
+      final home = strength
+          ? _strongHome(homeCode, homeCities, h, band, level, clubs)
+          : _homeClub(homeCode, homeCities, h, band, clubs);
       if (home != null) return home;
     }
     // Where an export lands. The elite leagues buy DEPTH, not just stars: a
@@ -141,9 +152,71 @@ abstract final class ClubService {
     final abroad = leagues.where((l) => l.country != homeCode).toList();
     final pool = abroad.isEmpty ? leagues : abroad;
     final league = pool[h % pool.length];
-    final clubs = _withAdded(league.clubs, added[league.country]);
-    final club = clubs[(h ~/ pool.length + band) % clubs.length];
+    if (strength) {
+      return (
+        name: clubs._pick(league.country, level, h)!,
+        country: league.country,
+      );
+    }
+    final list = clubs._legacyList(league);
+    final club = list[(h ~/ pool.length + band) % list.length];
     return (name: club, country: league.country);
+  }
+
+  /// The strength of [side]'s club, 1 to 5 stars, in a world with [world]'s
+  /// clubs and overrides (the default world without one); 0 for no club (a
+  /// free agent, or no country). Cosmetic: nothing in the game reads it but
+  /// the screens and the club draw of a career marked `clubStrengthKind`.
+  ///
+  /// A club of a league reads its pack override ([ClubWorld.strengths]),
+  /// else [ClubStrength.derived] off its place in the league. An added club
+  /// reads its own, else its league's lowest. Any other name (a side a
+  /// career from before the leagues names for a city) is its league's
+  /// lowest, or 1 in a country with none.
+  static int starsOf(ClubSide side, {ClubWorld? world}) {
+    if (side.name.isEmpty || side.name == freeAgent || side.country.isEmpty) {
+      return 0;
+    }
+    return (world ?? ClubWorld.none)._starsOf(
+      side.country.toLowerCase(),
+      side.name,
+    );
+  }
+
+  /// The club of [countryCode]'s league (or one [world] adds to it) the
+  /// strength rule draws for a player whose club level is [level], with
+  /// [hash]; null for a country with no league. The draw's last step, open
+  /// so its odds can be measured.
+  @visibleForTesting
+  static String? pickByStrength(
+    String countryCode,
+    int level,
+    int hash, {
+    ClubWorld? world,
+  }) => (world ?? ClubWorld.none)._pick(countryCode.toLowerCase(), level, hash);
+
+  /// The stars an added club of [country] has when the database gives it
+  /// none: its league's lowest, or 1 in a country with no league.
+  static int addedDefaultStars(String country) =>
+      ClubWorld.none._lowest(country.toLowerCase());
+
+  /// The home club under the strength rule (a career marked
+  /// `clubStrengthKind`): a club of his country's league (every country
+  /// has one, see [_moreLeagues]) weighted toward the clubs of his level
+  /// ([ClubStrength]). A country with no league at all (one a world pack
+  /// adds) names its sides from its cities as [_homeClub] does.
+  static ClubSide? _strongHome(
+    String code,
+    List<String> cities,
+    int hash,
+    int band,
+    int level,
+    ClubWorld clubs,
+  ) {
+    if (clubs._pick(code, level, hash) case final name?) {
+      return (name: name, country: code);
+    }
+    return _homeClub(code, cities, hash, band, clubs);
   }
 
   /// [side] under its new name when a career's world renames it (original
@@ -171,25 +244,53 @@ abstract final class ClubService {
   /// case), in the order the club draw indexes them; empty for a country
   /// with no curated league (its domestic sides are generated from cities).
   /// What the editor offers to rename.
-  static List<String> leagueClubs(String countryCode) {
-    final code = countryCode.toLowerCase();
-    for (final l in _leagues) {
-      if (l.country == code) return List.unmodifiable(l.clubs);
-    }
-    return const [];
-  }
+  ///
+  /// Every country of the game has one: the curated leagues and, from
+  /// 1.1.x, a fictional list for each of the rest ([_moreLeagues]).
+  static List<String> leagueClubs(String countryCode) =>
+      switch (_allByCountry[countryCode.toLowerCase()]) {
+        null => const [],
+        final l => List.unmodifiable(l.clubs),
+      };
 
-  /// Every curated league, in the order of the league table: each country's
-  /// FIFA code (lower case) and its club names as [leagueClubs] gives them.
+  /// Every league, in the order of the league table (the curated ones,
+  /// then [_moreLeagues]): each country's FIFA code (lower case) and its
+  /// club names as [leagueClubs] gives them.
   static List<({String country, List<String> clubs})> allLeagues() => [
-    for (final l in _leagues)
+    for (final l in _allLeagues)
       (country: l.country, clubs: List<String>.unmodifiable(l.clubs)),
   ];
+
+  /// The default strength of each of [countryCode]'s [leagueClubs], in the
+  /// same order ([ClubStrength.derived]).
+  static List<int> leagueStars(String countryCode) =>
+      switch (_allByCountry[countryCode.toLowerCase()]) {
+        null => const [],
+        final l => [
+          for (var i = 0; i < l.clubs.length; i++)
+            ClubStrength.derived(i, l.clubs.length, l.tier),
+        ],
+      };
 
   /// [clubs] followed by a world's [added] clubs of the same country, or
   /// [clubs] itself when it adds none (so the default draw is untouched).
   static List<String> _withAdded(List<String> clubs, List<String>? added) =>
       added == null || added.isEmpty ? clubs : [...clubs, ...added];
+
+  /// Every league: the curated ones the club draw has always known, then
+  /// the ones only a career marked `clubStrengthKind` reads.
+  static const List<_League> _allLeagues = [..._leagues, ..._moreLeagues];
+
+  /// [_allLeagues] by country.
+  static final Map<String, _League> _allByCountry = {
+    for (final l in _allLeagues) l.country: l,
+  };
+
+  /// The curated [_leagues] by country: all a career from before
+  /// [_moreLeagues] reads.
+  static final Map<String, _League> _legacyByCountry = {
+    for (final l in _leagues) l.country: l,
+  };
 
   /// The rating a club is picked off: the live overall with the PREDICTABLE
   /// part of the age curve taken back out (see [PlayerAging.peakOffset]).
@@ -408,7 +509,7 @@ abstract final class ClubService {
   /// country has a modelled league, otherwise a generated domestic side named
   /// for one of its cities. Null when neither is available.
   ///
-  /// [added] (a world's added clubs of [code]) join the curated list, or,
+  /// [world]'s added clubs of [code] join the curated list, or,
   /// for a country without one but with cities, take a slot each beside its
   /// cities, so its players spread over all of them rather than piling into
   /// one.
@@ -417,11 +518,11 @@ abstract final class ClubService {
     List<String> cities,
     int hash,
     int band,
-    List<String> added,
+    ClubWorld world,
   ) {
-    for (final l in _leagues) {
-      if (l.country != code) continue;
-      final clubs = _withAdded(l.clubs, added);
+    final added = world.added[code] ?? const <String>[];
+    if (_legacyByCountry[code] case final l?) {
+      final clubs = world._legacyList(l);
       return (name: clubs[(hash + band) % clubs.length], country: code);
     }
     // No cities, no home side: he goes abroad, added clubs or not. With no
@@ -450,7 +551,7 @@ abstract final class ClubService {
   /// listed here is never generated.
   static List<String> domesticClubNames(String code, List<String> cities) {
     final c = code.toLowerCase();
-    if (_leagues.any((l) => l.country == c) || cities.isEmpty) return const [];
+    if (_legacyByCountry.containsKey(c) || cities.isEmpty) return const [];
     final span = cities.length <= 3
         ? cities.length
         : (cities.length * 2 + 2) ~/ 3;
@@ -528,8 +629,8 @@ abstract final class ClubService {
   /// Leagues grouped by tier. Tier 1 = the elite five; tiers descend from there.
   static final Map<int, List<_League>> _byTier = () {
     final byTier = <int, List<_League>>{};
-    for (final l in _leagues) {
-      (byTier[l.tier] ??= []).add(l);
+    for (final l in _allLeagues) {
+      if (l.destination) (byTier[l.tier] ??= []).add(l);
     }
     return byTier;
   }();
@@ -952,4 +1053,171 @@ abstract final class ClubService {
       'Tainan Hawks FC',
     ]),
   ];
+}
+
+/// How strong a club is, 1 to 5 stars, and how a player's level leans the
+/// club draw toward the clubs of his level. Cosmetic, like the clubs
+/// themselves: no rating or result reads it.
+abstract final class ClubStrength {
+  static const int min = 1;
+  static const int max = 5;
+
+  /// The default strength of the club at [index] of a league of [count]
+  /// clubs (listed biggest first) of [tier]: the first quarter are its big
+  /// clubs, the next third its middle, the rest its smaller sides, and the
+  /// league's tier sets where that range sits. Tier 1 reads 5/4/3 stars,
+  /// tier 2 4/3/2, tier 3 3/2/1, tier 4 2/1/1, tier 5 1.
+  static int derived(int index, int count, int tier) {
+    final pos = index < count * 0.25
+        ? 0
+        : index < count * 0.6
+        ? 1
+        : 2;
+    return (6 - tier - pos).clamp(min, max);
+  }
+
+  /// The stars a player of [level] (his club level, see
+  /// [ClubService.clubLevel]) is pitched at, on the bands of
+  /// [ClubService.tierForOverall]: an elite-league player is a five-star
+  /// club's, and so on down.
+  static int targetFor(int level) {
+    if (level >= 84) return 5;
+    if (level >= 78) return 4;
+    if (level >= 72) return 3;
+    if (level >= 66) return 2;
+    return 1;
+  }
+
+  /// How likely a club [distance] stars from the player's target is drawn,
+  /// against a club on target. The best players stop turning up at the
+  /// bottom clubs, while the odd surprise move still happens.
+  static int weight(int distance) => switch (distance) {
+    0 => 100,
+    1 => 20,
+    2 => 3,
+    _ => 1,
+  };
+
+  /// Whether [stars] is a strength a database may set.
+  static bool valid(int stars) => stars >= min && stars <= max;
+}
+
+/// The clubs of one world, indexed once for the club draw: a world pack's
+/// [added] clubs and the strengths it sets ([strengths] for the game's
+/// clubs, [addedStrengths] for its own), with the per-country lists the
+/// draw reads built on first use and kept. A career reads every player
+/// through one of these, so nothing is rebuilt per player.
+class ClubWorld {
+  ClubWorld({
+    this.added = const {},
+    this.addedStrengths = const {},
+    this.strengths = const {},
+  });
+
+  /// The default world: no added clubs, no strengths set.
+  static final ClubWorld none = ClubWorld();
+
+  /// Lower-case FIFA code to its added club names, in pack order.
+  final Map<String, List<String>> added;
+
+  /// Lower-case FIFA code to an added club's name to its stars, for the
+  /// added clubs that set one.
+  final Map<String, Map<String, int>> addedStrengths;
+
+  /// A game club's original name to the stars the world gives it.
+  final Map<String, int> strengths;
+
+  final Map<String, List<String>> _legacy = {};
+  final Map<String, List<({String name, int stars})>?> _rated = {};
+  final Map<String, Map<String, int>> _starsByName = {};
+  final Map<(String, int), ({List<String> names, List<int> upTo})> _weights =
+      {};
+
+  /// [l]'s clubs then the added ones of its country, as the draw of a
+  /// career from before [ClubStrength] indexes them.
+  List<String> _legacyList(_League l) =>
+      _legacy[l.country] ??= ClubService._withAdded(l.clubs, added[l.country]);
+
+  /// [code]'s league clubs then its added ones, each with its stars; null
+  /// for a country with no league.
+  List<({String name, int stars})>? _ratedOf(String code) {
+    if (_rated.containsKey(code)) return _rated[code];
+    final l = ClubService._allByCountry[code];
+    if (l == null) return _rated[code] = null;
+    final mine = added[code] ?? const <String>[];
+    final own = mine.toSet();
+    final lowest = _lowest(code);
+    return _rated[code] = [
+      for (var i = 0; i < l.clubs.length; i++)
+        (
+          name: l.clubs[i],
+          stars: own.contains(l.clubs[i])
+              ? ClubStrength.derived(i, l.clubs.length, l.tier)
+              : _valid(strengths[l.clubs[i]]) ??
+                    ClubStrength.derived(i, l.clubs.length, l.tier),
+        ),
+      for (final name in mine)
+        (name: name, stars: _valid(addedStrengths[code]?[name]) ?? lowest),
+    ];
+  }
+
+  static int? _valid(int? stars) =>
+      stars != null && ClubStrength.valid(stars) ? stars : null;
+
+  /// The lowest default stars of [code]'s league, or 1 with no league.
+  int _lowest(String code) {
+    final l = ClubService._allByCountry[code];
+    if (l == null) return ClubStrength.min;
+    return ClubStrength.derived(l.clubs.length - 1, l.clubs.length, l.tier);
+  }
+
+  int _starsOf(String code, String name) {
+    final byName = _starsByName[code] ??= {
+      for (final c in _ratedOf(code) ?? const <({String name, int stars})>[])
+        c.name: c.stars,
+    };
+    // A pack's added club in a country with no league.
+    final addedHere = addedStrengths[code]?[name];
+    return byName[name] ?? _valid(addedHere) ?? _lowest(code);
+  }
+
+  /// A club of [code]'s league (or one added to it) for a player of
+  /// [level], drawn with [hash]: weighted by how far each club's stars are
+  /// from his ([ClubStrength.weight]). Null for a country with no league.
+  String? _pick(String code, int level, int hash) {
+    final rated = _ratedOf(code);
+    if (rated == null || rated.isEmpty) return null;
+    var lo = ClubStrength.max;
+    var hi = ClubStrength.min;
+    for (final c in rated) {
+      if (c.stars < lo) lo = c.stars;
+      if (c.stars > hi) hi = c.stars;
+    }
+    final target = ClubStrength.targetFor(level).clamp(lo, hi);
+    final table = _weights[(code, target)] ??= () {
+      final names = <String>[];
+      final upTo = <int>[];
+      var total = 0;
+      for (final c in rated) {
+        total += ClubStrength.weight((c.stars - target).abs());
+        names.add(c.name);
+        upTo.add(total);
+      }
+      return (names: names, upTo: upTo);
+    }();
+    // Its own mix of the hash: the league abroad was picked off [hash]
+    // itself, and the club must not follow it.
+    final roll = ClubService._hash(hash ^ 0x3C6EF372) % table.upTo.last;
+    var lo2 = 0;
+    var hi2 = table.upTo.length - 1;
+    while (lo2 < hi2) {
+      final mid = (lo2 + hi2) >> 1;
+      if (table.upTo[mid] > roll) {
+        hi2 = mid;
+      } else {
+        lo2 = mid + 1;
+      }
+    }
+    return table.names[lo2];
+  }
 }
