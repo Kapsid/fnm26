@@ -269,7 +269,7 @@ void main() {
     });
   }
 
-  testWidgets('a tablet shows the campaign card beside the title', (
+  testWidgets('a tablet shows the campaign card in the bento beside the logo', (
     tester,
   ) async {
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
@@ -278,8 +278,8 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.byKey(HomeScreen.tabletLayoutKey), findsOneWidget);
     expect(continueCampaign(), findsOneWidget);
-    // The tablet keeps its own cards, headed CONTINUE.
-    expect(find.text(enL.homeContinue), findsOneWidget);
+    // The tablet shows the phone's bento, campaign card included.
+    expect(find.textContaining(enL.homeContinueCampaign), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
 }
