@@ -192,7 +192,7 @@ void main() {
       moves.where((m) => m.outgoingId != null).length,
       reason: 'every departure is a closed spell, dated on the final',
     );
-    // At most 30% of the world changes at one point.
+    // At most capShare of the world changes at one point.
     expect(
       closed.length,
       lessThanOrEqualTo((s.nations.length * ManagerDecisions.capShare).floor()),

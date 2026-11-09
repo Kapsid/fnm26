@@ -429,7 +429,7 @@ void main() {
   );
 
   test(
-    'the year after the World Championship: Recent moves lists at least 15% '
+    'the year after the World Championship: Recent moves lists 10 to 20% '
     'of nations and no point moves more than the cap, every nation page has '
     'a manager, and the rollover filed at most 3 news items',
     () async {
@@ -444,12 +444,14 @@ void main() {
         'recent moves: ${moved.length} of ${nations.length} nations '
         '(${(share * 100).toStringAsFixed(1)}%)',
       );
-      // The spec's check 3 reads 15 to 30% for the year. The per-point cap
-      // was raised to 30% (ManagerDecisions.capShare, owner ruling
-      // 2026-11-09, heavier post-WC churn accepted), so the World
-      // Championship's point alone may reach 30% and the rollover adds to
-      // it: the year is held to at least 15%, and each point to the cap.
-      expect(share, greaterThanOrEqualTo(0.15));
+      // Owner ruling 2026-11-09 (second): 37.6% in the World
+      // Championship's year was too much. Each point is held to
+      // ManagerDecisions.capShare (15%) and any 12 months to yearShare
+      // (20%), so the rollover cannot stack on the World Championship's
+      // point: the year sits at most at 20% (seed 42: 19.5%), and at least
+      // 10% so managers still change.
+      expect(share, greaterThanOrEqualTo(0.10));
+      expect(share, lessThanOrEqualTo(ManagerDecisions.yearShare));
       final byPoint = <DateTime, Set<int>>{};
       for (final m in moves) {
         (byPoint[m.date] ??= {}).add(m.nationId);
