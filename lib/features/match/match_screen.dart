@@ -2016,18 +2016,14 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               theme: finalsTheme,
               occasion: MatchStage.label(l, preview.fixture),
             );
-            // The two nations' own colours, pushed apart from each other when
-            // the kits are too alike to tell which end of the bar is whose.
-            final (homeC, awayC) = KitColors.opposed(
-              (
-                preview.nations[homeId]?.primaryColor ?? '',
-                preview.nations[homeId]?.secondaryColor ?? '',
-              ),
-              (
-                preview.nations[awayId]?.primaryColor ?? '',
-                preview.nations[awayId]?.secondaryColor ?? '',
-              ),
-            );
+            // The colours each side is WEARING on the pitch: the bar reads the
+            // same clash decision the 2D view dresses the players from, so it
+            // never shows one side blue while both run out in red.
+            final homeNation = preview.nations[homeId];
+            final awayNation = preview.nations[awayId];
+            final (homeC, awayC) = homeNation != null && awayNation != null
+                ? KitClash.barColours(homeNation, awayNation)
+                : (AppColors.primary, AppColors.secondary);
             // The phone's Pitch mode: the score as a broadcast bug, whose
             // banner stands for the goal flash's card over the picture.
             final bug = !tablet && _onPitch;
