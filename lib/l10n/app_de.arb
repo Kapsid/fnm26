@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Tee",
   "sponsorIndustryExtraRealEstate": "Immobilien",
   "sponsorIndustryExtraFitness": "Fitnessstudios",
-  "sponsorIndustryExtraNewspaper": "Zeitung"
+  "sponsorIndustryExtraNewspaper": "Zeitung",
+  "mgrDetailCurrentJob": "Aktueller Posten: {nation}",
+  "mgrDetailFree": "Ohne Job",
+  "mgrDetailMatches": "Spiele",
+  "mgrDetailTrophies": "Titel",
+  "mgrDetailWinRate": "Siegquote",
+  "mgrDetailRecord": "Bilanz",
+  "mgrDetailNationsLed": "Trainierte Nationen",
+  "mgrDetailInCharge": "Im Amt",
+  "mgrDetailNoSpells": "Bisher keine Nationalmannschaft trainiert.",
+  "mgrDetailNotFound": "Trainer nicht gefunden.",
+  "mgrDetailBackground": "Werdegang",
+  "mgrOriginFresh": "Trainer von Beruf",
+  "mgrOriginExAssistant": "Ex-Co-Trainer",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

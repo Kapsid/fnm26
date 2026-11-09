@@ -7,10 +7,12 @@ import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/message_text.dart';
 import 'package:fnm/domain/repositories/competition_repository.dart';
+import 'package:fnm/domain/services/world_managers/manager_news.dart';
 import 'package:fnm/features/messages/poty_card.dart';
 import 'package:fnm/features/nations/career_nations_providers.dart';
 import 'package:fnm/features/messages/squad_dev_report.dart';
 import 'package:fnm/features/messages/transfer_report.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -78,10 +80,21 @@ int? _careerId(BuildContext context) {
 /// messages ("Next", then "Done"); the inbox leaves it off and lets the sheet
 /// be dismissed.
 class MessageSheet extends StatelessWidget {
-  const MessageSheet({required this.message, this.action, super.key});
+  const MessageSheet({
+    required this.message,
+    this.action,
+    this.onOpenManager,
+    super.key,
+  });
 
   final MessageItem message;
   final ({String label, VoidCallback onPressed})? action;
+
+  /// Opens a world manager's page. When set, manager news gets a button for
+  /// each manager it names; the caller closes any popup before navigating.
+  final void Function(int careerId, int managerId)? onOpenManager;
+
+  static const Key managerLinkKey = Key('message.managerLink');
 
   @override
   Widget build(BuildContext context) {
@@ -196,6 +209,14 @@ class MessageSheet extends StatelessWidget {
               PotyCard(rows: winners),
             ] else
               Text(words.body, style: AppTypography.bodyMedium),
+            if (onOpenManager case final open?
+                when message.category == ManagerNews.category)
+              if (_careerId(context) case final careerId?)
+                _ManagerLinks(
+                  careerId: careerId,
+                  message: message,
+                  onOpen: open,
+                ),
             if (action != null) ...[
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
@@ -226,6 +247,46 @@ class _VoteWinners extends ConsumerWidget {
         : ref.watch(careerNationsByIdProvider(id)).valueOrNull;
     return PotyCard(
       rows: potyWinnerRows(vote, nationName: (n) => nations?[n]?.name),
+    );
+  }
+}
+
+/// A button for each manager a news message names, opening his page. A name
+/// the career no longer knows (a message from before a world was reseeded)
+/// gets no button.
+class _ManagerLinks extends ConsumerWidget {
+  const _ManagerLinks({
+    required this.careerId,
+    required this.message,
+    required this.onOpen,
+  });
+
+  final int careerId;
+  final MessageItem message;
+  final void Function(int careerId, int managerId) onOpen;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final spec = decodeMessageSpec(message.spec);
+    if (spec == null) return const SizedBox.shrink();
+    final ids = ref.watch(managerIdsByNameProvider(careerId)).valueOrNull;
+    if (ids == null) return const SizedBox.shrink();
+    final l = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      child: Wrap(
+        spacing: AppSpacing.sm,
+        children: [
+          for (final name in ManagerNews.namesIn(spec))
+            if (ids[name] case final id?)
+              TextButton.icon(
+                key: MessageSheet.managerLinkKey,
+                icon: const Icon(Icons.badge_outlined, size: 18),
+                label: Text(l.mgrNewsSeeManager(name)),
+                onPressed: () => onOpen(careerId, id),
+              ),
+        ],
+      ),
     );
   }
 }

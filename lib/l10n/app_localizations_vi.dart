@@ -16633,4 +16633,50 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Báo chí';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Công việc hiện tại: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Đang thất nghiệp';
+
+  @override
+  String get mgrDetailMatches => 'Số trận';
+
+  @override
+  String get mgrDetailTrophies => 'Danh hiệu';
+
+  @override
+  String get mgrDetailWinRate => 'Tỷ lệ thắng';
+
+  @override
+  String get mgrDetailRecord => 'Thành tích';
+
+  @override
+  String get mgrDetailNationsLed => 'Số ĐT đã dẫn dắt';
+
+  @override
+  String get mgrDetailInCharge => 'Đang tại vị';
+
+  @override
+  String get mgrDetailNoSpells => 'Chưa từng dẫn dắt đội tuyển nào.';
+
+  @override
+  String get mgrDetailNotFound => 'Không tìm thấy huấn luyện viên.';
+
+  @override
+  String get mgrDetailBackground => 'Xuất thân';
+
+  @override
+  String get mgrOriginFresh => 'HLV chuyên nghiệp';
+
+  @override
+  String get mgrOriginExAssistant => 'Cựu trợ lý HLV';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Hồ sơ: $name';
+  }
 }

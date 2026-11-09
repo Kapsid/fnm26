@@ -25956,5 +25956,71 @@
   "sponsorIndustryExtraNewspaper": "Newspaper",
   "@sponsorIndustryExtraNewspaper": {
     "description": "A trade an added sponsor can be given in the world editor (generic, not a brand), shown in the industry picker and under the sponsor's name. Keep short."
+  },
+  "mgrDetailCurrentJob": "Current job: {nation}",
+  "@mgrDetailCurrentJob": {
+    "description": "Manager page: the nation the manager is in charge of now.",
+    "placeholders": {
+      "nation": {
+        "type": "String"
+      }
+    }
+  },
+  "mgrDetailFree": "Out of work",
+  "@mgrDetailFree": {
+    "description": "Manager page: the manager has no national team job right now."
+  },
+  "mgrDetailMatches": "Matches",
+  "@mgrDetailMatches": {
+    "description": "Manager page headline stat: matches in charge of national teams."
+  },
+  "mgrDetailTrophies": "Trophies",
+  "@mgrDetailTrophies": {
+    "description": "Manager page headline stat: titles won with national teams."
+  },
+  "mgrDetailWinRate": "Win rate",
+  "@mgrDetailWinRate": {
+    "description": "Manager page fact: share of matches won, shown as a percentage."
+  },
+  "mgrDetailRecord": "Record",
+  "@mgrDetailRecord": {
+    "description": "Manager page heading: his record over every national team job."
+  },
+  "mgrDetailNationsLed": "Nations led",
+  "@mgrDetailNationsLed": {
+    "description": "Manager page fact: how many national teams he has led."
+  },
+  "mgrDetailInCharge": "In charge",
+  "@mgrDetailInCharge": {
+    "description": "Manager page career row: the spell that is still running."
+  },
+  "mgrDetailNoSpells": "No national team jobs yet.",
+  "@mgrDetailNoSpells": {
+    "description": "Manager page: he has not managed a national team yet."
+  },
+  "mgrDetailNotFound": "Manager not found.",
+  "@mgrDetailNotFound": {
+    "description": "Manager page: the manager asked for does not exist in this save."
+  },
+  "mgrDetailBackground": "Background",
+  "@mgrDetailBackground": {
+    "description": "Manager page fact label: where he came from before management (former player, former assistant, career coach)."
+  },
+  "mgrOriginFresh": "Career coach",
+  "@mgrOriginFresh": {
+    "description": "Manager background: a coach who did not come through as a player or assistant."
+  },
+  "mgrOriginExAssistant": "Former assistant coach",
+  "@mgrOriginExAssistant": {
+    "description": "Manager background: he was an assistant coach before taking a national team."
+  },
+  "mgrNewsSeeManager": "Profile: {name}",
+  "@mgrNewsSeeManager": {
+    "description": "Button under a manager news message: opens the named manager's page.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

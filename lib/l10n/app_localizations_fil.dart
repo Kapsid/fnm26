@@ -16798,4 +16798,50 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Pahayagan';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Kasalukuyang trabaho: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Walang trabaho';
+
+  @override
+  String get mgrDetailMatches => 'Laro';
+
+  @override
+  String get mgrDetailTrophies => 'Tropeo';
+
+  @override
+  String get mgrDetailWinRate => 'Porsyento ng panalo';
+
+  @override
+  String get mgrDetailRecord => 'Rekord';
+
+  @override
+  String get mgrDetailNationsLed => 'Mga bansang hinawakan';
+
+  @override
+  String get mgrDetailInCharge => 'Nanunungkulan';
+
+  @override
+  String get mgrDetailNoSpells => 'Wala pang hinawakang pambansang koponan.';
+
+  @override
+  String get mgrDetailNotFound => 'Hindi nakita ang manager.';
+
+  @override
+  String get mgrDetailBackground => 'Pinagmulan';
+
+  @override
+  String get mgrOriginFresh => 'Propesyonal na coach';
+
+  @override
+  String get mgrOriginExAssistant => 'Dating assistant coach';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profile: $name';
+  }
 }

@@ -16194,4 +16194,50 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => '新聞';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return '現在の職: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => '無所属';
+
+  @override
+  String get mgrDetailMatches => '試合';
+
+  @override
+  String get mgrDetailTrophies => 'タイトル';
+
+  @override
+  String get mgrDetailWinRate => '勝率';
+
+  @override
+  String get mgrDetailRecord => '通算成績';
+
+  @override
+  String get mgrDetailNationsLed => '率いた代表';
+
+  @override
+  String get mgrDetailInCharge => '在任中';
+
+  @override
+  String get mgrDetailNoSpells => 'まだ代表監督の経験はありません。';
+
+  @override
+  String get mgrDetailNotFound => '監督が見つかりません。';
+
+  @override
+  String get mgrDetailBackground => '出自';
+
+  @override
+  String get mgrOriginFresh => '生え抜きの指導者';
+
+  @override
+  String get mgrOriginExAssistant => '元コーチ';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'プロフィール: $name';
+  }
 }

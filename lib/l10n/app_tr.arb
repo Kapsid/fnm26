@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Çay",
   "sponsorIndustryExtraRealEstate": "Gayrimenkul",
   "sponsorIndustryExtraFitness": "Spor salonları",
-  "sponsorIndustryExtraNewspaper": "Gazete"
+  "sponsorIndustryExtraNewspaper": "Gazete",
+  "mgrDetailCurrentJob": "Şu anki görevi: {nation}",
+  "mgrDetailFree": "Boşta",
+  "mgrDetailMatches": "Maç",
+  "mgrDetailTrophies": "Kupa",
+  "mgrDetailWinRate": "Galibiyet oranı",
+  "mgrDetailRecord": "Sicil",
+  "mgrDetailNationsLed": "Çalıştırdığı milli takımlar",
+  "mgrDetailInCharge": "Görevde",
+  "mgrDetailNoSpells": "Henüz bir milli takım çalıştırmadı.",
+  "mgrDetailNotFound": "Teknik direktör bulunamadı.",
+  "mgrDetailBackground": "Geçmiş",
+  "mgrOriginFresh": "Kariyer antrenörü",
+  "mgrOriginExAssistant": "Eski yardımcı antrenör",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

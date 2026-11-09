@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Te",
   "sponsorIndustryExtraRealEstate": "Eiendom",
   "sponsorIndustryExtraFitness": "Treningssentre",
-  "sponsorIndustryExtraNewspaper": "Avis"
+  "sponsorIndustryExtraNewspaper": "Avis",
+  "mgrDetailCurrentJob": "Nåværende jobb: {nation}",
+  "mgrDetailFree": "Uten jobb",
+  "mgrDetailMatches": "Kamper",
+  "mgrDetailTrophies": "Titler",
+  "mgrDetailWinRate": "Seiersprosent",
+  "mgrDetailRecord": "Resultater",
+  "mgrDetailNationsLed": "Landslag ledet",
+  "mgrDetailInCharge": "I jobben",
+  "mgrDetailNoSpells": "Har ikke ledet noe landslag ennå.",
+  "mgrDetailNotFound": "Fant ikke landslagstreneren.",
+  "mgrDetailBackground": "Bakgrunn",
+  "mgrOriginFresh": "Yrkestrener",
+  "mgrOriginExAssistant": "Tidligere assistenttrener",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Teh",
   "sponsorIndustryExtraRealEstate": "Hartanah",
   "sponsorIndustryExtraFitness": "Kelab kecergasan",
-  "sponsorIndustryExtraNewspaper": "Akhbar"
+  "sponsorIndustryExtraNewspaper": "Akhbar",
+  "mgrDetailCurrentJob": "Jawatan semasa: {nation}",
+  "mgrDetailFree": "Tiada kerja",
+  "mgrDetailMatches": "Perlawanan",
+  "mgrDetailTrophies": "Trofi",
+  "mgrDetailWinRate": "Kadar kemenangan",
+  "mgrDetailRecord": "Rekod",
+  "mgrDetailNationsLed": "Pasukan kebangsaan dikendalikan",
+  "mgrDetailInCharge": "Sedang berkhidmat",
+  "mgrDetailNoSpells": "Belum pernah mengendalikan pasukan kebangsaan.",
+  "mgrDetailNotFound": "Jurulatih tidak ditemui.",
+  "mgrDetailBackground": "Latar belakang",
+  "mgrOriginFresh": "Jurulatih kerjaya",
+  "mgrOriginExAssistant": "Bekas penolong jurulatih",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

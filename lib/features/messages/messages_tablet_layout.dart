@@ -143,6 +143,10 @@ class _MessagesTabletLayout extends StatelessWidget {
                         child: MessageSheet(
                           key: ValueKey(open.id),
                           message: open,
+                          onOpenManager: (careerId, managerId) => context.push(
+                            '${Routes.worldManager}?careerId=$careerId'
+                            '&managerId=$managerId',
+                          ),
                         ),
                       ),
                     ),

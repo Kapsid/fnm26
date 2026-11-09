@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Tea",
   "sponsorIndustryExtraRealEstate": "Ingatlan",
   "sponsorIndustryExtraFitness": "Fitneszklubok",
-  "sponsorIndustryExtraNewspaper": "Napilap"
+  "sponsorIndustryExtraNewspaper": "Napilap",
+  "mgrDetailCurrentJob": "Jelenlegi posztja: {nation}",
+  "mgrDetailFree": "Munka nélkül",
+  "mgrDetailMatches": "Meccsek",
+  "mgrDetailTrophies": "Trófeák",
+  "mgrDetailWinRate": "Győzelmi arány",
+  "mgrDetailRecord": "Mérleg",
+  "mgrDetailNationsLed": "Irányított válogatottak",
+  "mgrDetailInCharge": "Hivatalban",
+  "mgrDetailNoSpells": "Még nem irányított válogatottat.",
+  "mgrDetailNotFound": "A kapitány nem található.",
+  "mgrDetailBackground": "Háttér",
+  "mgrOriginFresh": "Hivatásos edző",
+  "mgrOriginExAssistant": "Volt pályaedző",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

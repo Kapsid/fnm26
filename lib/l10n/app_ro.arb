@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Ceai",
   "sponsorIndustryExtraRealEstate": "Imobiliare",
   "sponsorIndustryExtraFitness": "Cluburi de fitness",
-  "sponsorIndustryExtraNewspaper": "Ziar"
+  "sponsorIndustryExtraNewspaper": "Ziar",
+  "mgrDetailCurrentJob": "Post actual: {nation}",
+  "mgrDetailFree": "Fără post",
+  "mgrDetailMatches": "Meciuri",
+  "mgrDetailTrophies": "Trofee",
+  "mgrDetailWinRate": "Procentaj de victorii",
+  "mgrDetailRecord": "Bilanț",
+  "mgrDetailNationsLed": "Naționale conduse",
+  "mgrDetailInCharge": "În funcție",
+  "mgrDetailNoSpells": "Încă nu a condus nicio națională.",
+  "mgrDetailNotFound": "Selecționerul nu a fost găsit.",
+  "mgrDetailBackground": "Parcurs",
+  "mgrOriginFresh": "Antrenor de carieră",
+  "mgrOriginExAssistant": "Fost antrenor secund",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

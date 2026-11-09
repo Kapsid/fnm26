@@ -6,7 +6,7 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/core/util/app_date.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
 import 'package:fnm/domain/services/world_managers/manager_relation.dart';
-import 'package:fnm/features/world_managers/manager_profile_sheet.dart';
+import 'package:fnm/features/world_managers/manager_detail_screen.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
@@ -101,7 +101,7 @@ class ManagerRow extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     return InkWell(
       key: rowKey,
-      onTap: () => showManagerProfile(
+      onTap: () => openWorldManager(
         context,
         careerId: careerId,
         managerId: view.m.managerId,
@@ -191,21 +191,34 @@ class OpponentManagerLine extends ConsumerWidget {
     return Padding(
       key: lineKey,
       padding: const EdgeInsets.only(top: AppSpacing.sm),
-      child: Row(
-        children: [
-          Flexible(
-            child: Text(
-              l.mgrPreviewLine(view.m.name),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.labelMedium,
+      // A tap opens his page, as his name does everywhere else.
+      child: InkWell(
+        onTap: () => openWorldManager(
+          context,
+          careerId: careerId,
+          managerId: view.m.managerId,
+        ),
+        child: Row(
+          children: [
+            Flexible(
+              child: Text(
+                l.mgrPreviewLine(view.m.name),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.labelMedium,
+              ),
             ),
-          ),
-          if (tie != null && tie != TieLabel.neutral) ...[
-            const SizedBox(width: AppSpacing.sm),
-            TieChip(tie, key: chipKey),
+            if (tie != null && tie != TieLabel.neutral) ...[
+              const SizedBox(width: AppSpacing.sm),
+              TieChip(tie, key: chipKey),
+            ],
+            const Icon(
+              Icons.chevron_right_rounded,
+              size: 18,
+              color: AppColors.onSurfaceVariant,
+            ),
           ],
-        ],
+        ),
       ),
     );
   }

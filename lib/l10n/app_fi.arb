@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Tee",
   "sponsorIndustryExtraRealEstate": "Kiinteistöt",
   "sponsorIndustryExtraFitness": "Kuntosalit",
-  "sponsorIndustryExtraNewspaper": "Sanomalehti"
+  "sponsorIndustryExtraNewspaper": "Sanomalehti",
+  "mgrDetailCurrentJob": "Nykyinen pesti: {nation}",
+  "mgrDetailFree": "Vailla pestiä",
+  "mgrDetailMatches": "Ottelut",
+  "mgrDetailTrophies": "Mestaruudet",
+  "mgrDetailWinRate": "Voittoprosentti",
+  "mgrDetailRecord": "Tulokset",
+  "mgrDetailNationsLed": "Valmennetut maat",
+  "mgrDetailInCharge": "Tehtävässä",
+  "mgrDetailNoSpells": "Ei vielä yhtään maajoukkuepestiä.",
+  "mgrDetailNotFound": "Valmentajaa ei löytynyt.",
+  "mgrDetailBackground": "Tausta",
+  "mgrOriginFresh": "Ammattivalmentaja",
+  "mgrOriginExAssistant": "Entinen apuvalmentaja",
+  "mgrNewsSeeManager": "Profiili: {name}"
 }

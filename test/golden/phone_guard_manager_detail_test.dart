@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/features/nations/nation_now_card.dart';
-import 'package:fnm/features/world_managers/manager_profile_sheet.dart';
+import 'package:fnm/features/world_managers/manager_detail_screen.dart';
 import 'package:fnm/features/world_managers/manager_row.dart';
 
 import '../helpers/seeded_save.dart';
 
-/// The world manager's profile sheet on a 390 px phone, opened off another
-/// nation's page, in English and in German.
+/// A world manager's page on a 390 px phone, opened off another nation's
+/// page, in English and in German.
 void main() {
   for (final lang in ['en', 'de']) {
-    testWidgets('manager_profile_phone_$lang', (tester) async {
+    testWidgets('manager_detail_phone_$lang', (tester) async {
       final save = await seedSave(tester);
       final other = save.nations.firstWhere((n) => n.id != save.nationId).id;
       await pumpRoute(
@@ -26,9 +26,9 @@ void main() {
       await tester.pump();
       await tester.tap(find.byKey(ManagerRow.rowKey));
       await settle(tester);
-      expect(find.byType(ManagerProfileSheet), findsOneWidget);
+      expect(find.byType(ManagerDetailScreen), findsOneWidget);
       expect(tester.takeException(), isNull);
-      await expectAppGolden('goldens/manager_profile_phone_$lang.png');
+      await expectAppGolden('goldens/manager_detail_phone_$lang.png');
     });
   }
 }

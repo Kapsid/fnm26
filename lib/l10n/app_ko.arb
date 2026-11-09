@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "차",
   "sponsorIndustryExtraRealEstate": "부동산",
   "sponsorIndustryExtraFitness": "피트니스 클럽",
-  "sponsorIndustryExtraNewspaper": "신문"
+  "sponsorIndustryExtraNewspaper": "신문",
+  "mgrDetailCurrentJob": "현재 직책: {nation}",
+  "mgrDetailFree": "무직",
+  "mgrDetailMatches": "경기",
+  "mgrDetailTrophies": "트로피",
+  "mgrDetailWinRate": "승률",
+  "mgrDetailRecord": "전적",
+  "mgrDetailNationsLed": "맡은 대표팀",
+  "mgrDetailInCharge": "재임 중",
+  "mgrDetailNoSpells": "아직 대표팀을 맡은 적이 없습니다.",
+  "mgrDetailNotFound": "감독을 찾을 수 없습니다.",
+  "mgrDetailBackground": "출신",
+  "mgrOriginFresh": "지도자 출신",
+  "mgrOriginExAssistant": "전 코치",
+  "mgrNewsSeeManager": "프로필: {name}"
 }

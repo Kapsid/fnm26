@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Τσάι",
   "sponsorIndustryExtraRealEstate": "Ακίνητα",
   "sponsorIndustryExtraFitness": "Γυμναστήρια",
-  "sponsorIndustryExtraNewspaper": "Εφημερίδα"
+  "sponsorIndustryExtraNewspaper": "Εφημερίδα",
+  "mgrDetailCurrentJob": "Τρέχουσα θέση: {nation}",
+  "mgrDetailFree": "Χωρίς δουλειά",
+  "mgrDetailMatches": "Αγώνες",
+  "mgrDetailTrophies": "Τρόπαια",
+  "mgrDetailWinRate": "Ποσοστό νικών",
+  "mgrDetailRecord": "Απολογισμός",
+  "mgrDetailNationsLed": "Εθνικές ομάδες",
+  "mgrDetailInCharge": "Εν ενεργεία",
+  "mgrDetailNoSpells": "Δεν έχει αναλάβει ακόμα εθνική ομάδα.",
+  "mgrDetailNotFound": "Ο προπονητής δεν βρέθηκε.",
+  "mgrDetailBackground": "Υπόβαθρο",
+  "mgrOriginFresh": "Προπονητής καριέρας",
+  "mgrOriginExAssistant": "Πρώην βοηθός προπονητή",
+  "mgrNewsSeeManager": "Προφίλ: {name}"
 }

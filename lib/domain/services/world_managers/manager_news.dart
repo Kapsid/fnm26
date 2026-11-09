@@ -85,4 +85,31 @@ abstract final class ManagerNews {
     };
     return (title: MsgText(key, [nation, outgoing]), body: body);
   }
+
+  /// The managers a stored news [spec] names, in the order it names them
+  /// (the man who left, then the man appointed), each once. Every string
+  /// [message] writes is `[nation, name]`; anything else names nobody.
+  static List<String> namesIn(MessageSpec spec) {
+    final names = <String>[];
+    for (final part in [spec.title, spec.body]) {
+      if (part is! MsgText || part.args.length < 2) continue;
+      if (!_newsKeys.contains(part.key)) continue;
+      final name = part.args[1];
+      if (name is String && name.isNotEmpty && !names.contains(name)) {
+        names.add(name);
+      }
+    }
+    return names;
+  }
+
+  static const Set<MsgKey> _newsKeys = {
+    MsgKey.mgrNewsSacked,
+    MsgKey.mgrNewsResigned,
+    MsgKey.mgrNewsPoached,
+    MsgKey.mgrNewsRetired,
+    MsgKey.mgrNewsContractEnd,
+    MsgKey.mgrNewsReplacedByPlayer,
+    MsgKey.mgrNewsAppointed,
+    MsgKey.mgrNewsAppointedBody,
+  };
 }

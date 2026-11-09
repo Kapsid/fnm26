@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "ชา",
   "sponsorIndustryExtraRealEstate": "อสังหาริมทรัพย์",
   "sponsorIndustryExtraFitness": "ฟิตเนส",
-  "sponsorIndustryExtraNewspaper": "หนังสือพิมพ์"
+  "sponsorIndustryExtraNewspaper": "หนังสือพิมพ์",
+  "mgrDetailCurrentJob": "งานปัจจุบัน: {nation}",
+  "mgrDetailFree": "ว่างงาน",
+  "mgrDetailMatches": "นัด",
+  "mgrDetailTrophies": "ถ้วยรางวัล",
+  "mgrDetailWinRate": "อัตราชนะ",
+  "mgrDetailRecord": "สถิติ",
+  "mgrDetailNationsLed": "ทีมชาติที่คุม",
+  "mgrDetailInCharge": "คุมทีมอยู่",
+  "mgrDetailNoSpells": "ยังไม่เคยคุมทีมชาติ",
+  "mgrDetailNotFound": "ไม่พบผู้จัดการทีม",
+  "mgrDetailBackground": "ภูมิหลัง",
+  "mgrOriginFresh": "โค้ชอาชีพ",
+  "mgrOriginExAssistant": "อดีตผู้ช่วยโค้ช",
+  "mgrNewsSeeManager": "โปรไฟล์: {name}"
 }

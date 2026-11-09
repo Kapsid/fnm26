@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Herbata",
   "sponsorIndustryExtraRealEstate": "Nieruchomości",
   "sponsorIndustryExtraFitness": "Kluby fitness",
-  "sponsorIndustryExtraNewspaper": "Dziennik"
+  "sponsorIndustryExtraNewspaper": "Dziennik",
+  "mgrDetailCurrentJob": "Obecna posada: {nation}",
+  "mgrDetailFree": "Bez pracy",
+  "mgrDetailMatches": "Mecze",
+  "mgrDetailTrophies": "Trofea",
+  "mgrDetailWinRate": "Odsetek zwycięstw",
+  "mgrDetailRecord": "Bilans",
+  "mgrDetailNationsLed": "Prowadzone reprezentacje",
+  "mgrDetailInCharge": "Na stanowisku",
+  "mgrDetailNoSpells": "Jeszcze nie prowadził żadnej reprezentacji.",
+  "mgrDetailNotFound": "Nie znaleziono selekcjonera.",
+  "mgrDetailBackground": "Przeszłość",
+  "mgrOriginFresh": "Trener z zawodu",
+  "mgrOriginExAssistant": "Były asystent trenera",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

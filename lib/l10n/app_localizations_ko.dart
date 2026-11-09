@@ -16233,4 +16233,50 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => '신문';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return '현재 직책: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => '무직';
+
+  @override
+  String get mgrDetailMatches => '경기';
+
+  @override
+  String get mgrDetailTrophies => '트로피';
+
+  @override
+  String get mgrDetailWinRate => '승률';
+
+  @override
+  String get mgrDetailRecord => '전적';
+
+  @override
+  String get mgrDetailNationsLed => '맡은 대표팀';
+
+  @override
+  String get mgrDetailInCharge => '재임 중';
+
+  @override
+  String get mgrDetailNoSpells => '아직 대표팀을 맡은 적이 없습니다.';
+
+  @override
+  String get mgrDetailNotFound => '감독을 찾을 수 없습니다.';
+
+  @override
+  String get mgrDetailBackground => '출신';
+
+  @override
+  String get mgrOriginFresh => '지도자 출신';
+
+  @override
+  String get mgrOriginExAssistant => '전 코치';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return '프로필: $name';
+  }
 }

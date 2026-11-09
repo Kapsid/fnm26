@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Čaj",
   "sponsorIndustryExtraRealEstate": "Nekretnine",
   "sponsorIndustryExtraFitness": "Fitness klubovi",
-  "sponsorIndustryExtraNewspaper": "Novine"
+  "sponsorIndustryExtraNewspaper": "Novine",
+  "mgrDetailCurrentJob": "Trenutačni posao: {nation}",
+  "mgrDetailFree": "Bez posla",
+  "mgrDetailMatches": "Utakmice",
+  "mgrDetailTrophies": "Trofeji",
+  "mgrDetailWinRate": "Postotak pobjeda",
+  "mgrDetailRecord": "Omjer",
+  "mgrDetailNationsLed": "Vođene reprezentacije",
+  "mgrDetailInCharge": "Na dužnosti",
+  "mgrDetailNoSpells": "Još nije vodio nijednu reprezentaciju.",
+  "mgrDetailNotFound": "Izbornik nije pronađen.",
+  "mgrDetailBackground": "Pozadina",
+  "mgrOriginFresh": "Profesionalni trener",
+  "mgrOriginExAssistant": "Bivši pomoćni trener",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

@@ -124,7 +124,7 @@ const List<ShellDestination> shellDestinations = [
     section: ShellSection.competitions,
     icon: Icons.leaderboard,
     path: Routes.ranking,
-    alsoActiveOn: {Routes.managers},
+    alsoActiveOn: {Routes.managers, Routes.worldManager},
   ),
   ShellDestination(
     id: ShellDestinationId.results,

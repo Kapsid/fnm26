@@ -17120,4 +17120,50 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Novine';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Trenutačni posao: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Bez posla';
+
+  @override
+  String get mgrDetailMatches => 'Utakmice';
+
+  @override
+  String get mgrDetailTrophies => 'Trofeji';
+
+  @override
+  String get mgrDetailWinRate => 'Postotak pobjeda';
+
+  @override
+  String get mgrDetailRecord => 'Omjer';
+
+  @override
+  String get mgrDetailNationsLed => 'Vođene reprezentacije';
+
+  @override
+  String get mgrDetailInCharge => 'Na dužnosti';
+
+  @override
+  String get mgrDetailNoSpells => 'Još nije vodio nijednu reprezentaciju.';
+
+  @override
+  String get mgrDetailNotFound => 'Izbornik nije pronađen.';
+
+  @override
+  String get mgrDetailBackground => 'Pozadina';
+
+  @override
+  String get mgrOriginFresh => 'Profesionalni trener';
+
+  @override
+  String get mgrOriginExAssistant => 'Bivši pomoćni trener';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profil: $name';
+  }
 }

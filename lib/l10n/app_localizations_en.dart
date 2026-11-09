@@ -16813,4 +16813,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Newspaper';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Current job: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Out of work';
+
+  @override
+  String get mgrDetailMatches => 'Matches';
+
+  @override
+  String get mgrDetailTrophies => 'Trophies';
+
+  @override
+  String get mgrDetailWinRate => 'Win rate';
+
+  @override
+  String get mgrDetailRecord => 'Record';
+
+  @override
+  String get mgrDetailNationsLed => 'Nations led';
+
+  @override
+  String get mgrDetailInCharge => 'In charge';
+
+  @override
+  String get mgrDetailNoSpells => 'No national team jobs yet.';
+
+  @override
+  String get mgrDetailNotFound => 'Manager not found.';
+
+  @override
+  String get mgrDetailBackground => 'Background';
+
+  @override
+  String get mgrOriginFresh => 'Career coach';
+
+  @override
+  String get mgrOriginExAssistant => 'Former assistant coach';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profile: $name';
+  }
 }

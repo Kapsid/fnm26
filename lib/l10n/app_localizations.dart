@@ -25393,6 +25393,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Newspaper'**
   String get sponsorIndustryExtraNewspaper;
+
+  /// Manager page: the nation the manager is in charge of now.
+  ///
+  /// In en, this message translates to:
+  /// **'Current job: {nation}'**
+  String mgrDetailCurrentJob(String nation);
+
+  /// Manager page: the manager has no national team job right now.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of work'**
+  String get mgrDetailFree;
+
+  /// Manager page headline stat: matches in charge of national teams.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches'**
+  String get mgrDetailMatches;
+
+  /// Manager page headline stat: titles won with national teams.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophies'**
+  String get mgrDetailTrophies;
+
+  /// Manager page fact: share of matches won, shown as a percentage.
+  ///
+  /// In en, this message translates to:
+  /// **'Win rate'**
+  String get mgrDetailWinRate;
+
+  /// Manager page heading: his record over every national team job.
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get mgrDetailRecord;
+
+  /// Manager page fact: how many national teams he has led.
+  ///
+  /// In en, this message translates to:
+  /// **'Nations led'**
+  String get mgrDetailNationsLed;
+
+  /// Manager page career row: the spell that is still running.
+  ///
+  /// In en, this message translates to:
+  /// **'In charge'**
+  String get mgrDetailInCharge;
+
+  /// Manager page: he has not managed a national team yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No national team jobs yet.'**
+  String get mgrDetailNoSpells;
+
+  /// Manager page: the manager asked for does not exist in this save.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager not found.'**
+  String get mgrDetailNotFound;
+
+  /// Manager page fact label: where he came from before management (former player, former assistant, career coach).
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get mgrDetailBackground;
+
+  /// Manager background: a coach who did not come through as a player or assistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Career coach'**
+  String get mgrOriginFresh;
+
+  /// Manager background: he was an assistant coach before taking a national team.
+  ///
+  /// In en, this message translates to:
+  /// **'Former assistant coach'**
+  String get mgrOriginExAssistant;
+
+  /// Button under a manager news message: opens the named manager's page.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile: {name}'**
+  String mgrNewsSeeManager(String name);
 }
 
 class _AppLocalizationsDelegate

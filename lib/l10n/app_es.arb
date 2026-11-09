@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Té",
   "sponsorIndustryExtraRealEstate": "Inmobiliaria",
   "sponsorIndustryExtraFitness": "Gimnasios",
-  "sponsorIndustryExtraNewspaper": "Periódico"
+  "sponsorIndustryExtraNewspaper": "Periódico",
+  "mgrDetailCurrentJob": "Cargo actual: {nation}",
+  "mgrDetailFree": "Sin trabajo",
+  "mgrDetailMatches": "Partidos",
+  "mgrDetailTrophies": "Títulos",
+  "mgrDetailWinRate": "Porcentaje de victorias",
+  "mgrDetailRecord": "Balance",
+  "mgrDetailNationsLed": "Selecciones dirigidas",
+  "mgrDetailInCharge": "En el cargo",
+  "mgrDetailNoSpells": "Aún no ha dirigido ninguna selección.",
+  "mgrDetailNotFound": "Seleccionador no encontrado.",
+  "mgrDetailBackground": "Procedencia",
+  "mgrOriginFresh": "Entrenador de carrera",
+  "mgrOriginExAssistant": "Exsegundo entrenador",
+  "mgrNewsSeeManager": "Perfil: {name}"
 }

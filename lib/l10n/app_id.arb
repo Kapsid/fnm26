@@ -4192,5 +4192,19 @@
   "sponsorIndustryExtraTea": "Teh",
   "sponsorIndustryExtraRealEstate": "Properti",
   "sponsorIndustryExtraFitness": "Pusat kebugaran",
-  "sponsorIndustryExtraNewspaper": "Surat kabar"
+  "sponsorIndustryExtraNewspaper": "Surat kabar",
+  "mgrDetailCurrentJob": "Jabatan saat ini: {nation}",
+  "mgrDetailFree": "Tanpa pekerjaan",
+  "mgrDetailMatches": "Laga",
+  "mgrDetailTrophies": "Trofi",
+  "mgrDetailWinRate": "Persentase menang",
+  "mgrDetailRecord": "Rekor",
+  "mgrDetailNationsLed": "Timnas yang dilatih",
+  "mgrDetailInCharge": "Menjabat",
+  "mgrDetailNoSpells": "Belum pernah melatih timnas.",
+  "mgrDetailNotFound": "Pelatih tidak ditemukan.",
+  "mgrDetailBackground": "Latar belakang",
+  "mgrOriginFresh": "Pelatih karier",
+  "mgrOriginExAssistant": "Mantan asisten pelatih",
+  "mgrNewsSeeManager": "Profil: {name}"
 }

@@ -16733,4 +16733,50 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get sponsorIndustryExtraNewspaper => 'Napilap';
+
+  @override
+  String mgrDetailCurrentJob(String nation) {
+    return 'Jelenlegi posztja: $nation';
+  }
+
+  @override
+  String get mgrDetailFree => 'Munka nélkül';
+
+  @override
+  String get mgrDetailMatches => 'Meccsek';
+
+  @override
+  String get mgrDetailTrophies => 'Trófeák';
+
+  @override
+  String get mgrDetailWinRate => 'Győzelmi arány';
+
+  @override
+  String get mgrDetailRecord => 'Mérleg';
+
+  @override
+  String get mgrDetailNationsLed => 'Irányított válogatottak';
+
+  @override
+  String get mgrDetailInCharge => 'Hivatalban';
+
+  @override
+  String get mgrDetailNoSpells => 'Még nem irányított válogatottat.';
+
+  @override
+  String get mgrDetailNotFound => 'A kapitány nem található.';
+
+  @override
+  String get mgrDetailBackground => 'Háttér';
+
+  @override
+  String get mgrOriginFresh => 'Hivatásos edző';
+
+  @override
+  String get mgrOriginExAssistant => 'Volt pályaedző';
+
+  @override
+  String mgrNewsSeeManager(String name) {
+    return 'Profil: $name';
+  }
 }
