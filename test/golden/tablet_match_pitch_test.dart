@@ -46,6 +46,13 @@ Future<void> _shoot(
     );
     await tester.pump();
     await tester.pump(const Duration(seconds: 3)); // any flash clears
+    // The moments the jump passed take the header's strip in turn; then it
+    // is the figures again.
+    for (var i = 0; i < kTvEventQueueMax + 1; i++) {
+      await tester.pump(kTvEventHold);
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+    expect(find.byKey(matchTvEventStripKey), findsNothing);
   }
   await expectAppGolden(file);
   await tester.pumpWidget(const SizedBox());
@@ -86,8 +93,8 @@ void main() {
     );
   });
 
-  // The broadcast header in one row (a 12.9 inch iPad), the goal's banner
-  // centred over the picture and the moment feed down its right edge.
+  // The broadcast header on a 12.9 inch iPad, the goal on its strip and
+  // nothing over the picture.
   testWidgets('tablet match in Pitch mode, a goal', (tester) async {
     final save = await seedSave(tester, formFactor: FormFactor.tablet);
     await tester.runAsync(
@@ -118,7 +125,7 @@ void main() {
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 700));
-    expect(find.byKey(matchTvGoalBannerKey), findsOneWidget);
+    expect(find.byKey(matchTvEventStripKey), findsOneWidget);
     await expectAppGolden('goldens/match_tablet_pitch_goal.png');
     await tester.pump(const Duration(seconds: 8));
     await tester.pumpWidget(const SizedBox());

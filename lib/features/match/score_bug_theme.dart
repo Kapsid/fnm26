@@ -7,9 +7,10 @@ import 'package:fnm/domain/entities/enums.dart';
 /// Only the FINALS of a tournament dress them: the World Championship
 /// finals and each confederation's continental championship finals. The
 /// final itself of every one of them is GOLD, every third-place match
-/// BRONZE, and the other rounds wear their tournament's own colours.
-/// Qualifiers, friendlies, play-offs, Nations Cups and the Continental Clash
-/// all keep the plain silver.
+/// BRONZE, and the other rounds wear their tournament's own colours. The
+/// Continental Clash (a one-off, round `FFINAL`) wears its own violet.
+/// Qualifiers, friendlies, play-offs and Nations Cups all keep the plain
+/// silver.
 enum ScoreBugThemeKind {
   /// The final of any finals tournament.
   finalGold,
@@ -23,6 +24,9 @@ enum ScoreBugThemeKind {
   asia,
   northAmerica,
   oceania,
+
+  /// Every Continental Clash match.
+  continentalClash,
 }
 
 /// The colours of a tournament-dressed score bar. The silver bar is not one
@@ -156,7 +160,22 @@ class ScoreBugTheme {
       clockText: Color(0xFF7FE3D6),
       accent: Color(0xFF7FE3D6),
     ),
+    // Not one of the confederations': deep violet plates, a silver score
+    // block washed lilac, a soft violet clock.
+    ScoreBugThemeKind.continentalClash: ScoreBugTheme(
+      kind: ScoreBugThemeKind.continentalClash,
+      plates: [Color(0xFF2B1650), Color(0xFF12082A)],
+      score: [Color(0xFFF4F1FA), Color(0xFFCDBDEB)],
+      scoreText: Color(0xFF12082A),
+      clockText: Color(0xFFC7A8FF),
+      accent: Color(0xFFC7A8FF),
+    ),
   };
+
+  /// The Continental Clash's round (a one-off between two continental
+  /// champions; its own final and third place, if it ever has them, keep
+  /// the gold and the bronze as every finals' do).
+  static const String _clash = 'FFINAL';
 
   /// The World Championship finals' rounds.
   static const Set<String> _worldFinals = {
@@ -196,6 +215,7 @@ class ScoreBugTheme {
     if (continental && confederation == null) return null;
     if (_finals.contains(round)) return ScoreBugThemeKind.finalGold;
     if (_thirdPlace.contains(round)) return ScoreBugThemeKind.bronze;
+    if (round == _clash) return ScoreBugThemeKind.continentalClash;
     if (_worldFinals.contains(round)) {
       return ScoreBugThemeKind.worldChampionship;
     }

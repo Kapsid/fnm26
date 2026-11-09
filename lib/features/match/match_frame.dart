@@ -511,8 +511,8 @@ class MatchControlBar extends StatelessWidget {
   /// testing aid; see that constant before wiring it unconditionally.
   final VoidCallback? onSkip;
 
-  /// The tablet's [MatchViewToggle]; null on a phone, whose switch is on the
-  /// scoreboard.
+  /// The [MatchViewToggle] (compact on a phone); null before the manager
+  /// has chosen how to watch.
   final Widget? viewToggle;
 
   static const double _height = 52;
@@ -527,80 +527,97 @@ class MatchControlBar extends StatelessWidget {
     // something the manager sees rather than something they only notice in
     // the full-time ratings.
     final tired = spent > 0 && subsUsed < maxSubs;
-    return Row(
-      children: [
-        // The primary transport control: the one dark key on the plate.
-        SizedBox(
-          width: _height,
-          height: _height,
-          child: IconButton.filled(
-            iconSize: 30,
-            style: IconButton.styleFrom(
-              backgroundColor: SilverInk.active,
-              foregroundColor: AppColors.primaryFixed,
+    // A phone with the view toggle on the bar: tighter gaps, a tighter speed
+    // key and the tactics key's word without its icon, so the word (and
+    // always the count) still fits.
+    return LayoutBuilder(
+      builder: (context, c) {
+        final narrow = toggle != null && c.maxWidth < 360;
+        final gap = SizedBox(width: narrow ? AppSpacing.xs : AppSpacing.sm);
+        return Row(
+          children: [
+            // The primary transport control: the one dark key on the plate.
+            SizedBox(
+              width: _height,
+              height: _height,
+              child: IconButton.filled(
+                iconSize: 30,
+                style: IconButton.styleFrom(
+                  backgroundColor: SilverInk.active,
+                  foregroundColor: AppColors.primaryFixed,
+                ),
+                icon: Icon(
+                  playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                ),
+                onPressed: onPlayPause,
+              ),
             ),
-            icon: Icon(
-              playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+            gap,
+            _PillButton(
+              onTap: onSpeed,
+              tight: narrow,
+              child: Text(
+                '$speed×',
+                style: AppTypography.labelMedium.copyWith(
+                  color: SilverInk.active,
+                  shadows: SilverInk.engraved,
+                ),
+              ),
             ),
-            onPressed: onPlayPause,
-          ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        _PillButton(
-          onTap: onSpeed,
-          child: Text(
-            '$speed×',
-            style: AppTypography.labelMedium.copyWith(
-              color: SilverInk.active,
-              shadows: SilverInk.engraved,
+            if (toggle != null) ...[
+              gap,
+              toggle,
+            ],
+            gap,
+            _PillButton(
+              expand: true,
+              onTap: onTactics,
+              alert: tired,
+              child: MatchTacticsPillContent(
+                showIcon: !narrow,
+                subsUsed: subsUsed,
+                spent: spent,
+                maxSubs: maxSubs,
+              ),
             ),
-          ),
-        ),
-        if (toggle != null) ...[
-          const SizedBox(width: AppSpacing.sm),
-          toggle,
-        ],
-        const SizedBox(width: AppSpacing.sm),
-        _PillButton(
-          expand: true,
-          onTap: onTactics,
-          alert: tired,
-          child: MatchTacticsPillContent(
-            subsUsed: subsUsed,
-            spent: spent,
-            maxSubs: maxSubs,
-          ),
-        ),
-        if (onSkip != null) ...[
-          const SizedBox(width: AppSpacing.sm),
-          _PillButton(
-            onTap: onSkip,
-            tooltip: l.matchSkipToFullTime,
-            child: const Icon(
-              Icons.skip_next_rounded,
-              color: SilverInk.active,
-              shadows: SilverInk.engraved,
-            ),
-          ),
-        ],
-      ],
+            if (onSkip != null) ...[
+              gap,
+              _PillButton(
+                onTap: onSkip,
+                tooltip: l.matchSkipToFullTime,
+                child: const Icon(
+                  Icons.skip_next_rounded,
+                  color: SilverInk.active,
+                  shadows: SilverInk.engraved,
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
 
-/// The tablet's Pitch / Timeline toggle on the match's bottom bar: both ways
-/// to watch side by side, the one on screen a frosted key in the strongest
-/// ink, the other engraved into the silver.
+/// The Pitch / Timeline toggle on the match's bottom bar: both ways to watch
+/// side by side, the one on screen a frosted key in the strongest ink, the
+/// other engraved into the silver. On a phone it is [compact]: each half its
+/// icon alone (its name a long-press away), so the bar fits a narrow phone
+/// in every language.
 @visibleForTesting
 class MatchViewToggle extends StatelessWidget {
   const MatchViewToggle({
     required this.current,
     required this.onChoose,
+    this.compact = false,
     super.key,
   });
 
   /// The way the match is being watched now.
   final MatchViewMode current;
+
+  /// Icons only, with tighter gutters (a phone's bar).
+  final bool compact;
 
   final ValueChanged<MatchViewMode> onChoose;
 
@@ -614,7 +631,7 @@ class MatchViewToggle extends StatelessWidget {
     Widget half(MatchViewMode mode, IconData icon, String label) {
       final on = mode == current;
       final ink = on ? SilverInk.active : SilverInk.idle;
-      return Semantics(
+      final Widget key = Semantics(
         button: true,
         selected: on,
         inMutuallyExclusiveGroup: true,
@@ -637,29 +654,33 @@ class MatchViewToggle extends StatelessWidget {
                       child: SilverFrostedPill(radius: _PillButton.radius),
                     ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: compact ? 10 : AppSpacing.md,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           icon,
-                          size: 18,
+                          size: compact ? 19 : 18,
                           color: ink,
                           shadows: SilverInk.engraved,
                         ),
-                        const SizedBox(width: AppSpacing.xs + 2),
-                        Text(
-                          label,
-                          maxLines: 1,
-                          softWrap: false,
-                          style: AppTypography.labelMedium.copyWith(
-                            color: ink,
-                            fontWeight: on ? FontWeight.w800 : FontWeight.w600,
-                            shadows: SilverInk.engraved,
+                        if (!compact) ...[
+                          const SizedBox(width: AppSpacing.xs + 2),
+                          Text(
+                            label,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: AppTypography.labelMedium.copyWith(
+                              color: ink,
+                              fontWeight: on
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
+                              shadows: SilverInk.engraved,
+                            ),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ),
@@ -669,6 +690,7 @@ class MatchViewToggle extends StatelessWidget {
           ),
         ),
       );
+      return compact ? Tooltip(message: label, child: key) : key;
     }
 
     return DecoratedBox(
@@ -709,9 +731,14 @@ class MatchTacticsPillContent extends StatelessWidget {
     required this.subsUsed,
     required this.spent,
     this.maxSubs = kMaxSubs,
+    this.showIcon = true,
   });
 
   final int subsUsed;
+
+  /// Whether the icon leads the word (not on a narrow phone's bar, where
+  /// the word needs the room; the amber tint still says tired legs).
+  final bool showIcon;
 
   /// How many of the manager's players on the pitch are running on empty.
   final int spent;
@@ -732,13 +759,15 @@ class MatchTacticsPillContent extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          tired ? Icons.battery_alert_rounded : Icons.tune,
-          size: 18,
-          color: tone,
-          shadows: SilverInk.engraved,
-        ),
-        const SizedBox(width: AppSpacing.sm),
+        if (showIcon) ...[
+          Icon(
+            tired ? Icons.battery_alert_rounded : Icons.tune,
+            size: 18,
+            color: tone,
+            shadows: SilverInk.engraved,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+        ],
         Flexible(
           child: Text(
             tired ? l.matchTiredCount(spent) : l.matchTacticsLabel,
@@ -766,11 +795,15 @@ class _PillButton extends StatelessWidget {
     this.expand = false,
     this.tooltip,
     this.alert = false,
+    this.tight = false,
   });
 
   final VoidCallback onTap;
   final Widget child;
   final bool expand;
+
+  /// Tighter gutters, for a narrow phone's bar.
+  final bool tight;
 
   /// A long-press label, for a pill whose icon carries no words of its own.
   final String? tooltip;
@@ -805,7 +838,9 @@ class _PillButton extends StatelessWidget {
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: EdgeInsets.symmetric(
+                  horizontal: tight ? AppSpacing.md - 4 : AppSpacing.md,
+                ),
                 child: child,
               ),
             ],

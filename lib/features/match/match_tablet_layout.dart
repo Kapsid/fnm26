@@ -4,8 +4,10 @@ part of 'match_screen.dart';
 /// on the left; the momentum, the score and the commentary down the centre;
 /// the line-ups (and the manager's own shape on the pitch) on the right. The
 /// same widgets the phone shows in three tabs, all on screen at once.
-/// Overlays (goal, intervals) sit on top exactly as on the phone, and the
-/// controls (with the Pitch / Timeline toggle) stay in the pinned bar below.
+/// Overlays (intervals; the goal in Timeline mode) sit on top as on the
+/// phone, and the controls (with the Pitch / Timeline toggle) stay in the
+/// pinned bar below. In Pitch mode the momentum and the ground move into the
+/// TV over the picture, and the right column is the commentary and Your XI.
 class _MatchTabletLayout extends StatelessWidget {
   const _MatchTabletLayout({
     required this.ft,
@@ -21,7 +23,6 @@ class _MatchTabletLayout extends StatelessWidget {
     this.pitchView,
     this.feed,
     this.tvHeader,
-    this.tvOverlays = const [],
   });
 
   /// The share of the width each side column takes, within these bounds.
@@ -57,9 +58,9 @@ class _MatchTabletLayout extends StatelessWidget {
   /// place of the scoreboard (see [MatchTvHeader]).
   final Widget? tvHeader;
 
-  /// Pitch mode: what the TV puts over the picture (the goal's banner, the
-  /// moment feed down its right edge).
-  final List<Widget> tvOverlays;
+  /// Pitch mode: what the momentum's band under the header is reckoned to
+  /// take, for sizing the picture under it (the band sizes itself).
+  static const double _momentumBand = 56;
 
   bool get _pitchMode => pitchView != null;
 
@@ -122,29 +123,19 @@ class _MatchTabletLayout extends StatelessWidget {
     );
   }
 
-  /// The match stats; in Pitch mode the momentum sits over them.
-  Widget _statsColumn(AppLocalizations l) {
-    final panel = Panel(
-      title: l.matchTabStats,
-      expand: true,
-      padding: EdgeInsets.zero,
-      child: stats,
-    );
-    if (!_pitchMode || momentum == null) return panel;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        PanelBox(child: momentum!),
-        const SizedBox(height: AppSpacing.sm),
-        Expanded(child: panel),
-      ],
-    );
-  }
+  /// The match stats (in Pitch mode the momentum is under the TV's header,
+  /// and the ground in it).
+  Widget _statsColumn(AppLocalizations l) => Panel(
+    title: l.matchTabStats,
+    expand: true,
+    padding: EdgeInsets.zero,
+    child: stats,
+  );
 
   /// The momentum over the score, then the shootout if there is one, then
-  /// the commentary filling the rest. In Pitch mode the momentum is on the
-  /// left and the picture fills what the commentary would, under the TV's
-  /// broadcast header (which stands for the scoreboard there).
+  /// the commentary filling the rest. In Pitch mode the TV fills what the
+  /// commentary would: its broadcast header (which stands for the
+  /// scoreboard there), the momentum under it, then the picture.
   Widget _centre(AppLocalizations l) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
@@ -171,29 +162,41 @@ class _MatchTabletLayout extends StatelessWidget {
     ],
   );
 
-  /// Pitch mode: the TV as one set, the broadcast header across the top of
-  /// the picture and as wide as it, the goal's banner and the moment feed
-  /// over the picture. As big as the column allows.
+  /// Pitch mode: the TV as one set at the top of the column, the broadcast
+  /// header, the momentum under it and the picture under both, all as wide
+  /// as each other. The picture is as big as the column allows, whole, at
+  /// its own aspect; the room it does not need is left below.
   Widget _tv() => LayoutBuilder(
     builder: (context, c) {
       const header = MatchTvHeader.height;
+      final band = momentum == null ? 0.0 : _momentumBand;
       final w = math.max<double>(
         0,
-        math.min(c.maxWidth, (c.maxHeight - header) * kPitchModeAspect),
+        math.min(c.maxWidth, (c.maxHeight - header - band) * kPitchModeAspect),
       );
-      return Center(
+      return Align(
+        alignment: Alignment.topCenter,
         child: ClipRRect(
           borderRadius: AppRadii.baseAll,
           child: SizedBox(
             width: w,
-            height: header + w / kPitchModeAspect,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(height: header, child: tvHeader),
-                Expanded(
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [?pitchView, ...tvOverlays],
+                if (momentum != null)
+                  // In the header's dress, as its last band.
+                  ColoredBox(
+                    color: const Color(0xFF121416),
+                    child: momentum,
+                  ),
+                // Whole, at its aspect: should the band run taller than
+                // reckoned, the picture gives way in size, never cut off.
+                Flexible(
+                  child: AspectRatio(
+                    aspectRatio: kPitchModeAspect,
+                    child: pitchView,
                   ),
                 ),
               ],
@@ -248,12 +251,13 @@ class _MatchTabletLayout extends StatelessWidget {
           ),
         );
 
-  /// Pitch mode: the commentary so far (newest first), then the line-ups
-  /// exactly as Timeline mode shows them: both line-ups, and the manager's
-  /// own shape on the pitch (its energy, its holes; a tap opens the tactics).
+  /// Pitch mode: the commentary so far (newest first), and the manager's
+  /// own shape on the pitch a tab away (its energy, its holes; a tap opens
+  /// the tactics). After the whistle there is nothing left to change: that
+  /// tab is both line-ups on the pitch with their marks instead.
   Widget _feedColumn(AppLocalizations l) => PanelBox(
     child: DefaultTabController(
-      length: 3,
+      length: 2,
       key: ValueKey(('pitch', ft)),
       child: Column(
         children: [
@@ -263,9 +267,6 @@ class _MatchTabletLayout extends StatelessWidget {
               labelColor: AppColors.onSurface,
               unselectedLabelColor: AppColors.onSurfaceVariant,
               indicatorColor: AppColors.primary,
-              // Three tabs in the column: tighter gutters, so each label
-              // keeps its size (a long translation still scales down rather
-              // than being cut off).
               labelPadding: const EdgeInsets.symmetric(horizontal: 4),
               tabs: [
                 Tab(
@@ -277,13 +278,7 @@ class _MatchTabletLayout extends StatelessWidget {
                 Tab(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text(l.matchTabLineups),
-                  ),
-                ),
-                Tab(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(l.matchYourXi),
+                    child: Text(ft ? l.matchTabLineups : l.matchYourXi),
                   ),
                 ),
               ],
@@ -293,11 +288,13 @@ class _MatchTabletLayout extends StatelessWidget {
             child: TabBarView(
               children: [
                 feed ?? const Center(child: CircularProgressIndicator()),
-                lineups,
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  child: pitch,
-                ),
+                if (ft)
+                  lineups
+                else
+                  Padding(
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    child: pitch,
+                  ),
               ],
             ),
           ),
