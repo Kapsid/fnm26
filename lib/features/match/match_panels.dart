@@ -1,25 +1,89 @@
 part of 'match_screen.dart';
 
+/// A penalty given in play (not a shootout kick), as the Timeline and the
+/// box score read it: who took it, for which side, and whether it went in.
+typedef InPlayPenalty = ({
+  int minute,
+  int stoppage,
+  int teamNationId,
+  String takerName,
+  bool scored,
+});
+
+/// The penalties in [r] the clock has reached. A scored one is reached with
+/// its goal ([eventReached]: a goal still on its way in on the 2D TV is
+/// held back with it); one that did not go in has no event, so it is
+/// reached by its minute ([momentReached]). [names] names the takers.
+List<InPlayPenalty> inPlayPenalties(
+  MatchResult r, {
+  required Map<int, String> names,
+  required bool Function(MatchEvent e) eventReached,
+  required bool Function(int minute, int stoppage) momentReached,
+}) {
+  bool reached(ShotMoment s) {
+    if (s.outcome != ShotOutcome.goal) {
+      return momentReached(s.minute, s.stoppage);
+    }
+    final g = s.goalEventIndex;
+    return g != null && g < r.events.length && eventReached(r.events[g]);
+  }
+
+  return [
+    for (final s in r.moments.whereType<ShotMoment>())
+      if (s.origin == ShotOrigin.penalty && reached(s))
+        (
+          minute: s.minute,
+          stoppage: s.stoppage,
+          teamNationId: s.teamNationId,
+          takerName: names[s.shooterId] ?? '',
+          scored: s.outcome == ShotOutcome.goal,
+        ),
+  ];
+}
+
 /// What the manager reads while the game runs: the timeline, the box score,
 /// the two line-ups, momentum, and the moments that interrupt — a goal, a
 /// shootout, half time.
-class _Timeline extends StatelessWidget {
-  const _Timeline({
+///
+/// The Timeline lists the events and, with them, every penalty that did not
+/// go in: a miss is no event, so a penalty saved used to leave no trace here
+/// at all (a scored one is its goal, marked "(pen)").
+class MatchTimeline extends StatelessWidget {
+  const MatchTimeline({
     required this.events,
     required this.live,
     required this.homeId,
+    this.penalties = const [],
+    super.key,
   });
   final List<MatchEvent> events;
+  final List<InPlayPenalty> penalties;
   final bool live;
   final int homeId;
 
   @override
   Widget build(BuildContext context) {
     // Substitutions are shown on the Lineups tab, not in the event feed.
-    final visible = events
-        .where((e) => e.type != MatchEventType.substitution)
-        .toList();
-    if (visible.isEmpty) {
+    final rows = <({int minute, int stoppage, _TimelineRow row})>[
+      for (final e in events)
+        if (e.type != MatchEventType.substitution)
+          (
+            minute: e.minute,
+            stoppage: e.stoppage,
+            row: _TimelineRow(event: e, isHome: e.teamNationId == homeId),
+          ),
+      for (final p in penalties)
+        if (!p.scored)
+          (
+            minute: p.minute,
+            stoppage: p.stoppage,
+            row: _TimelineRow(
+              missedPenalty: p,
+              isHome: p.teamNationId == homeId,
+            ),
+          ),
+    ];
+    if (rows.isEmpty) {
       return Center(
         child: Text(
           live
@@ -31,25 +95,42 @@ class _Timeline extends StatelessWidget {
         ),
       );
     }
-    // Most recent at the top.
-    final reversed = visible.reversed.toList();
+    // In match order (the events keep their own order on a tie), then the
+    // most recent at the top.
+    final indexed = [for (var i = 0; i < rows.length; i++) (i, rows[i])]
+      ..sort((a, b) {
+        final m = a.$2.minute.compareTo(b.$2.minute);
+        if (m != 0) return m;
+        final st = a.$2.stoppage.compareTo(b.$2.stoppage);
+        return st != 0 ? st : a.$1.compareTo(b.$1);
+      });
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
-      children: [
-        for (final e in reversed)
-          _TimelineRow(event: e, isHome: e.teamNationId == homeId),
-      ],
+      children: [for (final r in indexed.reversed) r.$2.row],
     );
   }
 }
 
 /// One event on a two-sided timeline: home events sit on the left, away on the
-/// right, with the minute down the centre spine.
+/// right, with the minute down the centre spine. Either an [event] or a
+/// [missedPenalty] (a penalty saved or missed, which is no event).
 class _TimelineRow extends StatelessWidget {
-  const _TimelineRow({required this.event, required this.isHome});
+  const _TimelineRow({required this.isHome, this.event, this.missedPenalty})
+    : assert(
+        (event == null) != (missedPenalty == null),
+        'a row is an event or a missed penalty',
+      );
 
-  final MatchEvent event;
+  final MatchEvent? event;
+  final InPlayPenalty? missedPenalty;
   final bool isHome;
+
+  String get _clock {
+    final e = event;
+    if (e != null) return _eventClock(e);
+    final p = missedPenalty!;
+    return p.stoppage > 0 ? '90+${p.stoppage}' : "${p.minute}'";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +152,7 @@ class _TimelineRow extends StatelessWidget {
               borderRadius: AppRadii.smAll,
               border: Border.all(color: AppColors.outlineVariant),
             ),
-            child: Text(_eventClock(event), style: AppTypography.labelSmall),
+            child: Text(_clock, style: AppTypography.labelSmall),
           ),
           Expanded(
             child: !isHome
@@ -84,6 +165,23 @@ class _TimelineRow extends StatelessWidget {
   }
 
   Widget _entry(BuildContext context, {required bool alignEnd}) {
+    final event = this.event;
+    if (event == null) {
+      // A penalty saved or missed: the ball with a red cross, the taker's
+      // name alone. The old "NAME: MISSED" text ran off the edge in the
+      // longer languages; the icon says it in 18 px and carries the wording
+      // for screen readers.
+      final name = _abbrevName(missedPenalty!.takerName);
+      return _entryOf(
+        icon: Semantics(
+          label: AppLocalizations.of(context).matchShootoutKickMissed(name),
+          child: const ExcludeSemantics(child: MissedPenaltyMark()),
+        ),
+        label: name,
+        emphasised: false,
+        alignEnd: alignEnd,
+      );
+    }
     final isGoal = event.type == MatchEventType.goal;
     // A card is the shared [CardMark], the same one the pitch and the
     // substitution lists wear. A second booking shows both cards, the way it
@@ -122,6 +220,20 @@ class _TimelineRow extends StatelessWidget {
       // already said, and ran the row off the edge doing it.
       _ => _abbrevName(event.playerName),
     };
+    return _entryOf(
+      icon: icon,
+      label: label,
+      emphasised: isGoal,
+      alignEnd: alignEnd,
+    );
+  }
+
+  Widget _entryOf({
+    required Widget icon,
+    required String label,
+    required bool emphasised,
+    required bool alignEnd,
+  }) {
     final text = Flexible(
       child: Text(
         label,
@@ -129,7 +241,7 @@ class _TimelineRow extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: AppTypography.bodyMedium.copyWith(
-          color: isGoal ? AppColors.onSurface : AppColors.onSurfaceVariant,
+          color: emphasised ? AppColors.onSurface : AppColors.onSurfaceVariant,
         ),
       ),
     );
@@ -187,6 +299,7 @@ class MatchStatsPanel extends StatelessWidget {
     required this.minute,
     required this.fullTime,
     required this.events,
+    this.penalties = const [],
   });
   final bool neutral;
   final String groundCode;
@@ -213,6 +326,10 @@ class MatchStatsPanel extends StatelessWidget {
   /// The events the clock has REACHED, already gated for added time by the
   /// screen, so counting them here needs no minute arithmetic of its own.
   final List<MatchEvent> events;
+
+  /// The penalties given in play that the clock has reached (see
+  /// [inPlayPenalties]). Without them a penalty saved was only a shot more.
+  final List<InPlayPenalty> penalties;
 
   /// A per-minute series read as of the clock: the full-match total once the
   /// whistle has gone (the series' last point is that total), and 0 for a
@@ -299,6 +416,13 @@ class MatchStatsPanel extends StatelessWidget {
           ),
         if (homeRed + awayRed > 0)
           _StatBar(label: l.matchStatRedCards, home: homeRed, away: awayRed),
+        // Penalties given, scored or not, like the cards: once there are any.
+        if (penalties.isNotEmpty)
+          _StatBar(
+            label: l.tacticsPenalties,
+            home: penalties.where((p) => p.teamNationId == homeNationId).length,
+            away: penalties.where((p) => p.teamNationId != homeNationId).length,
+          ),
         if (!fullTime) ...[
           const SizedBox(height: AppSpacing.lg),
           Text(
@@ -2533,6 +2657,49 @@ class _CameOnChip extends StatelessWidget {
             const SizedBox(width: 6),
             RatingBadge(r, compact: true, motm: motm),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Key on the missed-penalty icon in a Timeline row.
+const Key missedPenaltyMarkKey = Key('match.missedPenaltyMark');
+
+/// A ball with a small red cross on it: a penalty that did not go in
+/// (saved, missed or off the woodwork). Replaces a "MISSED" text chip.
+class MissedPenaltyMark extends StatelessWidget {
+  const MissedPenaltyMark({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      key: missedPenaltyMarkKey,
+      width: 20,
+      height: 18,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            left: 0,
+            top: 1,
+            child: Icon(
+              Icons.sports_soccer,
+              size: 16,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: AppColors.surfaceContainerHighest,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.close, size: 11, color: AppColors.error),
+            ),
+          ),
         ],
       ),
     );

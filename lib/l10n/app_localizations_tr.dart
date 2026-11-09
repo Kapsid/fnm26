@@ -8121,13 +8121,31 @@ class AppLocalizationsTr extends AppLocalizations {
   String get matchWeatherClear => 'Açık';
 
   @override
-  String get matchWeatherRain => 'Yağmur';
+  String get matchWeatherRain => 'Hafif yağmur';
 
   @override
   String get matchWeatherSnow => 'Kar';
 
   @override
   String get matchWeatherHaze => 'Pus';
+
+  @override
+  String get matchWeatherHeavyRain => 'Sağanak';
+
+  @override
+  String get matchWeatherThunderstorm => 'Gök gürültülü fırtına';
+
+  @override
+  String get matchWeatherFog => 'Sis';
+
+  @override
+  String get matchWeatherWindy => 'Rüzgârlı';
+
+  @override
+  String get matchWeatherDustStorm => 'Kum fırtınası';
+
+  @override
+  String get matchWeatherFrostyNight => 'Ayazlı gece';
 
   @override
   String get matchPlayerOfTheMatch => 'MAÇIN ADAMI';
@@ -8149,6 +8167,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'GOL!';
+
+  @override
+  String get matchRedCardShout => 'KIRMIZI KART';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16104,4 +16125,61 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'YORUM';
+
+  @override
+  String get matchSubShout => 'DEĞİŞİKLİK';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Çıkan: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Giren: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Düzeltilecekler';
+
+  @override
+  String get editorNothingToFix => 'Burada düzeltilecek bir şey yok.';
+
+  @override
+  String get editorPromoteTooltip => 'Kadroya al';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name kadroya alındı';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Kadro dolu';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Bir kadroda en fazla $max oyuncu olabilir. Onun yerine havuza geri dönecek oyuncuyu seçin.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Fotoğraflarından seç';
+
+  @override
+  String get editorTrophyFile => 'Dosya seç';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Kulüp gücü: 5 üzerinden $stars';
+  }
+
+  @override
+  String get editorClubStrength => 'Güç';
+
+  @override
+  String get editorClubStrengthDefault => 'Varsayılan';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'İyi oyuncular güçlü kulüplere gider. Varsayılan: ligine göre 5 üzerinden $stars.';
+  }
 }

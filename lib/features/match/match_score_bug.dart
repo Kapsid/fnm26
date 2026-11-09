@@ -76,7 +76,14 @@ class _ScoreBug extends StatelessWidget {
     this.goal,
     this.goalForHome = false,
     this.theme,
+    this.notice,
+    this.noticeForHome = false,
   });
+
+  /// A substitution being shown (see [_EventBanner]); a goal
+  /// banner takes its place.
+  final MatchEvent? notice;
+  final bool noticeForHome;
 
   final String homeCode;
   final String awayCode;
@@ -161,6 +168,28 @@ class _ScoreBug extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           bar,
+          if (goal == null && notice != null)
+            Positioned(
+              top: barHeight,
+              left: AppSpacing.sm,
+              right: AppSpacing.sm,
+              child: _EventBanner(
+                key: ValueKey((
+                  'notice',
+                  notice!.minute,
+                  notice!.stoppage,
+                  notice!.playerId,
+                  notice!.type,
+                )),
+                event: notice!,
+                code: noticeForHome ? homeCode : awayCode,
+                color:
+                    (noticeForHome ? homeColor : awayColor) ??
+                    AppColors.primary,
+                still: still,
+                theme: theme,
+              ),
+            ),
           if (goal != null)
             Positioned(
               top: barHeight,

@@ -136,8 +136,8 @@ class ScheduleFixtureRow extends StatelessWidget {
                       // Own score first, like the penalties: a neutral finals
                       // row has no H/A marker to say which side is which.
                       home
-                          ? '${f.homeScore}–${f.awayScore}'
-                          : '${f.awayScore}–${f.homeScore}',
+                          ? '${f.shownHomeScore}–${f.shownAwayScore}'
+                          : '${f.shownAwayScore}–${f.shownHomeScore}',
                       maxLines: 1,
                       style: AppTypography.labelLarge,
                     ),

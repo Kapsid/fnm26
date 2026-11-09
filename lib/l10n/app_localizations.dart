@@ -12496,7 +12496,7 @@ abstract class AppLocalizations {
   /// Venue card: the weather the match is played in, rain.
   ///
   /// In en, this message translates to:
-  /// **'Rain'**
+  /// **'Light rain'**
   String get matchWeatherRain;
 
   /// Venue card: the weather the match is played in, snow.
@@ -12510,6 +12510,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Haze'**
   String get matchWeatherHaze;
+
+  /// Venue card: the weather the match is played in, heavy rain.
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy rain'**
+  String get matchWeatherHeavyRain;
+
+  /// Venue card: the weather the match is played in, a thunderstorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderstorm'**
+  String get matchWeatherThunderstorm;
+
+  /// Venue card: the weather the match is played in, fog (cold and grey, not a heat haze).
+  ///
+  /// In en, this message translates to:
+  /// **'Fog'**
+  String get matchWeatherFog;
+
+  /// Venue card: the weather the match is played in, a gale, rain or snow driven by strong wind.
+  ///
+  /// In en, this message translates to:
+  /// **'Windy'**
+  String get matchWeatherWindy;
+
+  /// Venue card: the weather the match is played in, a dust storm.
+  ///
+  /// In en, this message translates to:
+  /// **'Dust storm'**
+  String get matchWeatherDustStorm;
+
+  /// Venue card: the weather the match is played in, a clear, frosty night.
+  ///
+  /// In en, this message translates to:
+  /// **'Frosty night'**
+  String get matchWeatherFrostyNight;
 
   /// Live match: man-of-the-match heading.
   ///
@@ -12546,6 +12582,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'GOAL!'**
   String get matchGoalShout;
+
+  /// Live match, 2D TV: the banner under the score when a player is sent off.
+  ///
+  /// In en, this message translates to:
+  /// **'RED CARD'**
+  String get matchRedCardShout;
 
   /// Live match: the shoot-out scoreline.
   ///
@@ -24403,6 +24445,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'COMMENTARY'**
   String get matchTabCommentary;
+
+  /// Live match: the substitution pop-up, its shout (like GOAL!).
+  ///
+  /// In en, this message translates to:
+  /// **'SUB'**
+  String get matchSubShout;
+
+  /// Live match, substitution pop-up: the player going off (beside a red arrow; also read out by screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Off: {name}'**
+  String matchSubOff(String name);
+
+  /// Live match, substitution pop-up: the player coming on (beside a green arrow; also read out by screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'On: {name}'**
+  String matchSubOn(String name);
+
+  /// Chip that lists only the items that still need a fix.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs a fix'**
+  String get editorFilterToFix;
+
+  /// Empty list when the fix filter is on and nothing needs fixing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing needs fixing here.'**
+  String get editorNothingToFix;
+
+  /// Tooltip of the button on a pool row that moves the player into the squad.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to the squad'**
+  String get editorPromoteTooltip;
+
+  /// Snackbar after a pool player is moved into the squad; it offers Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} moved to the squad'**
+  String editorPromoted(String name);
+
+  /// Title of the dialog shown when the squad is full and a pool player is moved up: pick who goes back.
+  ///
+  /// In en, this message translates to:
+  /// **'The squad is full'**
+  String get editorPromoteFullTitle;
+
+  /// Body of the dialog shown when the squad is full and a pool player is moved up: the squad cap, then the list of squad players to send back to the pool.
+  ///
+  /// In en, this message translates to:
+  /// **'A squad holds at most {max} players. Pick the player who goes back to the pool in his place.'**
+  String editorPromoteFullBody(int max);
+
+  /// Main button on a trophy: pick its picture from the phone's photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from your photos'**
+  String get editorTrophyGallery;
+
+  /// Secondary button on a trophy: pick its picture from a file instead of the photo gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a file instead'**
+  String get editorTrophyFile;
+
+  /// Spoken label for the row of stars after a club name: how strong the club is, out of five.
+  ///
+  /// In en, this message translates to:
+  /// **'Club strength: {stars} of 5'**
+  String clubStrengthOf(int stars);
+
+  /// Editor, club form: label over the star picker that sets how strong the club is.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get editorClubStrength;
+
+  /// Editor, club form: the choice that leaves the club at the strength the game gives it.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get editorClubStrengthDefault;
+
+  /// Editor, club form: under the star picker. What the strength does, and the stars the club has when left at Default.
+  ///
+  /// In en, this message translates to:
+  /// **'Better players join stronger clubs. Default: {stars} of 5, set by its league.'**
+  String editorClubStrengthHelp(int stars);
 }
 
 class _AppLocalizationsDelegate

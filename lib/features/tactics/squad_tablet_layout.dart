@@ -299,6 +299,10 @@ List<GridColumnSet<NationSquadRow>> squadColumnSets(
           const SizedBox(width: 6),
         ],
         Flexible(child: Text(clubName(l, r.player.club))),
+        if (r.player.clubStars > 0) ...[
+          const SizedBox(width: 6),
+          ClubStars(r.player.clubStars, size: 10),
+        ],
       ],
     ),
   );

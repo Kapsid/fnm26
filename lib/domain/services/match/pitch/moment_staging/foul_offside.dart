@@ -185,9 +185,10 @@ class _FoulPlan extends _Plan {
     return need > foulLatest - start;
   }
 
-  /// The card, shown a beat after the whistle.
+  /// The card, shown a beat after the whistle; a red a beat later, once
+  /// the referee has run to the man (see `RefereeCardShow`).
   void _card(double t) => cue(
-    math.max(t, math.min(t + 0.6, end - 0.15)),
+    math.max(t, math.min(t + (red ? 1.2 : 0.6), end - 0.15)),
     red ? PitchCueKind.redCard : PitchCueKind.yellowCard,
     m.foulerId,
   );

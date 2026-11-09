@@ -226,6 +226,7 @@ void main() {
     test('v1 file imports and reads as the current format', () async {
       final json = _pack().toJson()
         ..['formatVersion'] = 1
+        ..remove('clubStrengths')
         ..remove('pools')
         ..remove('addedClubs')
         ..remove('addedSponsors')
@@ -237,34 +238,140 @@ void main() {
       );
       final d = r as PackDecoded;
       expect(d.pack.formatVersion, kPackFormatVersion);
+      expect(d.pack.clubStrengths, isEmpty);
+      expect(d.pack.managers, isEmpty);
       expect(d.pack.squads, _pack().squads);
       expect(d.pack.pools, isEmpty);
       expect(d.pack.localized, isEmpty);
     });
 
-    test('export writes format 2 while the pack names no managers', () {
+    test('export writes format 3 while the pack names no managers', () {
       final bytes = PackCodec.encode(
         _pack().copyWith(formatVersion: 1),
         const {},
       );
       final top =
           jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
-      expect(top['format'], 2);
+      expect(top['format'], 3);
       final pack = top['pack']! as Map<String, Object?>;
-      expect(pack['formatVersion'], 2);
-      // A 1.1.0 (format 2) reader refuses any key it does not know.
+      expect(pack['formatVersion'], 3);
+      // A format-3 (1.1.x clubs) reader refuses any key it does not know.
       expect(pack.containsKey('managers'), isFalse);
+      // A build that reads format 2 at most compares this number first, so
+      // it says "made with a newer version" instead of "broken file".
+      expect(top['format']! as int, greaterThan(2));
     });
 
-    test('export writes format 3 once the pack names a manager', () async {
+    test('a format-2 file (1.1.x editor 2) imports with every club at its '
+        'default strength', () async {
+      final p = _pack().copyWith(
+        addedClubs: const [
+          PackClub(id: kPackAddedIdBase, name: 'Old Added', country: 'cze'),
+        ],
+      );
+      final raw = _raw(p);
+      raw['format'] = 2;
+      raw['pack'] = (rawPack(p)
+        ..['formatVersion'] = 2
+        ..remove('clubStrengths')
+        ..remove('managers'));
+      final r = await PackCodec.decode(_file(raw));
+      final d = r as PackDecoded;
+      expect(d.pack.formatVersion, kPackFormatVersion);
+      expect(d.pack.clubStrengths, isEmpty);
+      expect(d.pack.addedClubs.single.strength, isNull);
+      expect(d.pack.managers, isEmpty);
+    });
+
+    test('a format-3 file (1.1.x clubs, no managers) imports with no '
+        'managers', () async {
+      final p = _pack().copyWith(clubStrengths: const {'Man Blue': 4});
+      final raw = _raw(p);
+      raw['format'] = 3;
+      raw['pack'] = (rawPack(p)
+        ..['formatVersion'] = 3
+        ..remove('managers'));
+      final d = await PackCodec.decode(_file(raw)) as PackDecoded;
+      expect(d.pack.formatVersion, kPackFormatVersion);
+      expect(d.pack.clubStrengths, {'Man Blue': 4});
+      expect(d.pack.managers, isEmpty);
+    });
+
+    test('a format-3 file that holds managers -> badData', () async {
+      final p = _pack().copyWith(
+        managers: {1: (name: 'Ota Brnak', nationality: 'AAA')},
+      );
+      final raw = _raw(p);
+      raw['format'] = 3;
+      raw['pack'] = (rawPack(p)..['formatVersion'] = 3);
+      expect(await reason(_file(raw)), PackRejection.badData);
+    });
+
+    test('a format-3 file with strengths round-trips', () async {
+      final p = _pack().copyWith(
+        clubStrengths: const {'Man Blue': 3},
+        addedClubs: const [
+          PackClub(
+            id: kPackAddedIdBase,
+            name: 'Strong Added',
+            country: 'cze',
+            strength: 5,
+          ),
+        ],
+      );
+      final r = await PackCodec.decode(PackCodec.encode(p, const {}));
+      final d = r as PackDecoded;
+      expect(d.pack.clubStrengths, {'Man Blue': 3});
+      expect(d.pack.addedClubs.single.strength, 5);
+    });
+
+    test('a strength out of 1 to 5 -> badData', () async {
+      for (final bad in [0, 6, -1]) {
+        expect(
+          await reason(
+            _file(_raw(_pack().copyWith(clubStrengths: {'Man Blue': bad}))),
+          ),
+          PackRejection.badData,
+          reason: '$bad',
+        );
+        expect(
+          await reason(
+            _file(
+              _raw(
+                _pack().copyWith(
+                  addedClubs: [
+                    PackClub(
+                      id: kPackAddedIdBase,
+                      name: 'Bad Added',
+                      country: 'cze',
+                      strength: bad,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          PackRejection.badData,
+          reason: 'added $bad',
+        );
+      }
+    });
+
+    test('a file from a newer format -> newerFormat, not badData', () async {
+      final raw = _raw(_pack());
+      raw['format'] = kPackFormatVersion + 1;
+      expect(await reason(_file(raw)), PackRejection.newerFormat);
+    });
+
+    test('export writes format 4 once the pack names a manager', () async {
       final p = _pack().copyWith(
         managers: {1: (name: 'Ota Brnak', nationality: 'AAA')},
       );
       final bytes = PackCodec.encode(p, const {});
       final top =
           jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, Object?>;
-      expect(top['format'], 3);
-      expect((top['pack']! as Map)['formatVersion'], 3);
+      expect(top['format'], 4);
+      expect((top['pack']! as Map)['formatVersion'], 4);
       expect((top['pack']! as Map)['managers'], {
         '1': {'name': 'Ota Brnak', 'nationality': 'AAA'},
       });
@@ -768,6 +875,7 @@ void main() {
         _raw(p)
           ..['pack'] = (rawPack(p)
             ..['formatVersion'] = 1
+            ..remove('clubStrengths')
             ..remove('pools')
             ..remove('addedClubs')
             ..remove('addedSponsors')

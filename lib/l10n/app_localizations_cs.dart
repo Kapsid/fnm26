@@ -8373,13 +8373,31 @@ class AppLocalizationsCs extends AppLocalizations {
   String get matchWeatherClear => 'Jasno';
 
   @override
-  String get matchWeatherRain => 'Déšť';
+  String get matchWeatherRain => 'Slabý déšť';
 
   @override
   String get matchWeatherSnow => 'Sníh';
 
   @override
   String get matchWeatherHaze => 'Opar';
+
+  @override
+  String get matchWeatherHeavyRain => 'Silný déšť';
+
+  @override
+  String get matchWeatherThunderstorm => 'Bouřka';
+
+  @override
+  String get matchWeatherFog => 'Mlha';
+
+  @override
+  String get matchWeatherWindy => 'Větrno';
+
+  @override
+  String get matchWeatherDustStorm => 'Prachová bouře';
+
+  @override
+  String get matchWeatherFrostyNight => 'Mrazivá noc';
 
   @override
   String get matchPlayerOfTheMatch => 'HRÁČ ZÁPASU';
@@ -8401,6 +8419,9 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'GÓL!';
+
+  @override
+  String get matchRedCardShout => 'ČERVENÁ KARTA';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16468,4 +16489,61 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMENTÁŘ';
+
+  @override
+  String get matchSubShout => 'STŘÍDÁNÍ';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Odchází: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Přichází: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'K opravě';
+
+  @override
+  String get editorNothingToFix => 'Tady není co opravovat.';
+
+  @override
+  String get editorPromoteTooltip => 'Přesunout do kádru';
+
+  @override
+  String editorPromoted(String name) {
+    return 'Hráč $name přesunut do kádru';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Kádr je plný';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Kádr může mít nejvýše $max hráčů. Vyberte hráče, který se místo něj vrátí do širšího kádru.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Vybrat z fotek';
+
+  @override
+  String get editorTrophyFile => 'Vybrat soubor';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Síla klubu: $stars z 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Síla';
+
+  @override
+  String get editorClubStrengthDefault => 'Výchozí';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Lepší hráči chodí do silnějších klubů. Výchozí: $stars z 5 podle jeho ligy.';
+  }
 }

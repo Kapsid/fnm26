@@ -46,6 +46,8 @@ void main() {
         step: i % 3 - 1,
         fromCountry: 'cze',
         toCountry: 'eng',
+        fromStars: 0,
+        toStars: 0,
       ),
   ];
 

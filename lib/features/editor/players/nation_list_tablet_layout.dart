@@ -41,7 +41,7 @@ class _NationListTabletLayout extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Expanded(
             child: rows.isEmpty
-                ? EditorMessage(l.editorNationsNone, icon: Icons.search_off)
+                ? state._nothingShown(l)
                 : GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(

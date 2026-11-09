@@ -5,15 +5,24 @@ import 'package:flutter/services.dart';
 /// dependency-free and respects the device's silent switch. Every call is a
 /// no-op when [enabled] is false (the settings toggle).
 abstract final class MatchFeedback {
-  /// A goal: a strong buzz and a short alert tone.
+  /// A goal: a single medium haptic tap (the same as the full-time
+  /// whistle's) and a short alert tone (desktop only; phones ignore it).
+  ///
+  /// A haptic tap only, never the long `vibrate` buzz.
   static void goal(bool enabled) {
     if (!enabled) return;
-    HapticFeedback.heavyImpact();
+    HapticFeedback.mediumImpact();
     SystemSound.play(SystemSoundType.alert);
   }
 
   /// Kick-off / restart: a light buzz.
   static void kickoff(bool enabled) {
+    if (!enabled) return;
+    HapticFeedback.mediumImpact();
+  }
+
+  /// A sending-off on the 2D TV: a lighter buzz than a goal's.
+  static void redCard(bool enabled) {
     if (!enabled) return;
     HapticFeedback.mediumImpact();
   }

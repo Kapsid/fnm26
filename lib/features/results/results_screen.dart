@@ -539,7 +539,7 @@ class _ResultRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final middle = fixture.hasResult
-        ? '${fixture.homeScore} - ${fixture.awayScore}'
+        ? '${fixture.shownHomeScore} - ${fixture.shownAwayScore}'
         : l.resultsVs;
 
     return Container(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/result/result.dart';
 import 'package:fnm/core/routing/app_router.dart';
@@ -96,6 +97,15 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           _creatingWorld = false;
         });
       }
+    }
+    // A new career asks how to watch at its first match, once.
+    final made = result.valueOrNull;
+    if (made != null) {
+      await container
+          .read(matchViewModeStoreProvider)
+          .markFirstMatchAsk(
+            made.id,
+          );
     }
     if (!mounted) return;
     final l = AppLocalizations.of(context);

@@ -8266,13 +8266,31 @@ class AppLocalizationsFi extends AppLocalizations {
   String get matchWeatherClear => 'Selkeää';
 
   @override
-  String get matchWeatherRain => 'Sade';
+  String get matchWeatherRain => 'Heikko sade';
 
   @override
   String get matchWeatherSnow => 'Lumisade';
 
   @override
   String get matchWeatherHaze => 'Utu';
+
+  @override
+  String get matchWeatherHeavyRain => 'Rankkasade';
+
+  @override
+  String get matchWeatherThunderstorm => 'Ukkonen';
+
+  @override
+  String get matchWeatherFog => 'Sumu';
+
+  @override
+  String get matchWeatherWindy => 'Tuulista';
+
+  @override
+  String get matchWeatherDustStorm => 'Hiekkamyrsky';
+
+  @override
+  String get matchWeatherFrostyNight => 'Pakkasyö';
 
   @override
   String get matchPlayerOfTheMatch => 'OTTELUN PARAS PELAAJA';
@@ -8294,6 +8312,9 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'MAALI!';
+
+  @override
+  String get matchRedCardShout => 'PUNAINEN KORTTI';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16265,4 +16286,61 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'SELOSTUS';
+
+  @override
+  String get matchSubShout => 'VAIHTO';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Pois: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Sisään: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Korjattavat';
+
+  @override
+  String get editorNothingToFix => 'Täällä ei ole mitään korjattavaa.';
+
+  @override
+  String get editorPromoteTooltip => 'Siirrä joukkueeseen';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name siirretty joukkueeseen';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Joukkue on täynnä';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Joukkueessa on enintään $max pelaajaa. Valitse pelaaja, joka palaa varantoon hänen tilalleen.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Valitse omista kuvistasi';
+
+  @override
+  String get editorTrophyFile => 'Valitse tiedosto';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Seuran vahvuus: $stars/5';
+  }
+
+  @override
+  String get editorClubStrength => 'Vahvuus';
+
+  @override
+  String get editorClubStrengthDefault => 'Oletus';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Paremmat pelaajat siirtyvät vahvempiin seuroihin. Oletus: $stars/5 sarjan mukaan.';
+  }
 }

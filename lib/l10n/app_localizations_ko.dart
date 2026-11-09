@@ -7965,13 +7965,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get matchWeatherClear => '맑음';
 
   @override
-  String get matchWeatherRain => '비';
+  String get matchWeatherRain => '약한 비';
 
   @override
   String get matchWeatherSnow => '눈';
 
   @override
   String get matchWeatherHaze => '연무';
+
+  @override
+  String get matchWeatherHeavyRain => '폭우';
+
+  @override
+  String get matchWeatherThunderstorm => '뇌우';
+
+  @override
+  String get matchWeatherFog => '안개';
+
+  @override
+  String get matchWeatherWindy => '강풍';
+
+  @override
+  String get matchWeatherDustStorm => '모래폭풍';
+
+  @override
+  String get matchWeatherFrostyNight => '서리 내린 밤';
 
   @override
   String get matchPlayerOfTheMatch => '경기 최우수 선수';
@@ -7992,6 +8010,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchGoalShout => '골!';
+
+  @override
+  String get matchRedCardShout => '레드카드';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -15650,4 +15671,61 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get matchTabCommentary => '중계';
+
+  @override
+  String get matchSubShout => '교체';
+
+  @override
+  String matchSubOff(String name) {
+    return '아웃: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return '인: $name';
+  }
+
+  @override
+  String get editorFilterToFix => '수정 필요';
+
+  @override
+  String get editorNothingToFix => '여기에는 수정할 항목이 없습니다.';
+
+  @override
+  String get editorPromoteTooltip => '스쿼드로 옮기기';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name 선수를 스쿼드로 옮겼습니다';
+  }
+
+  @override
+  String get editorPromoteFullTitle => '스쿼드가 가득 찼습니다';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return '스쿼드는 최대 $max명까지입니다. 그 대신 풀로 돌아갈 선수를 고르세요.';
+  }
+
+  @override
+  String get editorTrophyGallery => '사진에서 선택';
+
+  @override
+  String get editorTrophyFile => '파일 선택';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return '클럽 전력: 5점 중 $stars점';
+  }
+
+  @override
+  String get editorClubStrength => '전력';
+
+  @override
+  String get editorClubStrengthDefault => '기본값';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return '더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 $stars점.';
+  }
 }

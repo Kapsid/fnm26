@@ -25,6 +25,12 @@ abstract class Player with _$Player {
     /// at materialisation from the deterministic club assignment.
     @Default('') String clubCountry,
 
+    /// How strong his club is, 1 to 5 stars (`ClubService.starsOf`); 0 for
+    /// none known (a free agent, or a player built outside a read). Set at
+    /// materialisation beside [club], off the club's own name before a
+    /// world renames it. Cosmetic.
+    @Default(0) int clubStars,
+
     /// His traits as a world pack picks them, in place of the per-save roll
     /// ([PlayerTraits.of]). Null rolls them as always; an empty list is "no
     /// traits". The career read sets it from his pack entry.

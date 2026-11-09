@@ -73,7 +73,8 @@ void main() {
     // (feature/pitch-view at 81b69486). Recording the AI's instruction
     // drift must change nothing the engine decides. Re-pinned when the
     // penalty rate rose (0.095 to 0.105 of finished chances, 2026-11-07),
-    // an intended outcome change.
+    // an intended outcome change; again when it rose to 0.175 with a home
+    // lean (2026-11-08).
     final parts = StringBuffer();
     for (var i = 0; i < 40; i++) {
       parts
@@ -105,4 +106,4 @@ void main() {
   });
 }
 
-const _before = 'f9374e05';
+const _before = 'ed728d0c';

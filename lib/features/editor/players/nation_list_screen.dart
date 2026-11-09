@@ -30,6 +30,9 @@ class NationListScreen extends ConsumerStatefulWidget {
   static const Key tabletLayoutKey = Key('editorNations.tabletLayout');
   static const Key searchKey = Key('editorNations.search');
 
+  /// The chip that shows only the nations that still need a fix.
+  static const Key fixFilterKey = Key('editorNations.fixFilter');
+
   static Key nationKey(int id) => Key('editorNations.nation.$id');
   static Key confKey(Confederation? c) =>
       Key('editorNations.conf.${c?.name ?? 'all'}');
@@ -60,6 +63,9 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
   String _query = '';
   Confederation? _conf;
 
+  /// Whether only the nations that still need a fix are listed.
+  bool _onlyFix = false;
+
   int get _id => widget.packId;
 
   @override
@@ -73,6 +79,14 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
   void _setQuery(String q) => setState(() => _query = q);
 
   void _setConf(Confederation? c) => setState(() => _conf = c);
+
+  void _setOnlyFix(bool on) => setState(() => _onlyFix = on);
+
+  /// What an empty list says: that nothing needs fixing, or that nothing
+  /// matches the search.
+  Widget _nothingShown(AppLocalizations l) => _onlyFix && _query.isEmpty
+      ? EditorMessage(l.editorNothingToFix, icon: Icons.check_circle_outline)
+      : EditorMessage(l.editorNationsNone, icon: Icons.search_off);
 
   void _open(int nationId) =>
       unawaited(context.push(editorSquadLocation(_id, nationId)));
@@ -95,7 +109,7 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
         nation: n,
         name: name,
         players: pack.squads[n.id]?.length ?? 0,
-        toFix: editor.squadIssues(n.id).length,
+        toFix: editor.nationToFix(n.id),
         inPack: pack.squads.containsKey(n.id),
         sortKey: fold,
         searchKeys: [
@@ -117,6 +131,7 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
     return [
       for (final r in rows)
         if ((_conf == null || r.nation.confederation == _conf) &&
+            (!_onlyFix || r.toFix > 0) &&
             (q.isEmpty || r.searchKeys.any((k) => k.contains(q))))
           r,
     ];
@@ -170,7 +185,7 @@ class _NationListScreenState extends ConsumerState<NationListScreen> {
           ),
           Expanded(
             child: rows.isEmpty
-                ? EditorMessage(l.editorNationsNone, icon: Icons.search_off)
+                ? _nothingShown(l)
                 : ListView.builder(
                     padding: const EdgeInsets.fromLTRB(
                       AppSpacing.marginMobile,
@@ -239,6 +254,13 @@ class _ConfChips extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final chips = [
+      FilterChip(
+        key: NationListScreen.fixFilterKey,
+        label: Text(l.editorFilterToFix),
+        avatar: const Icon(Icons.pending_outlined, size: 16),
+        selected: state._onlyFix,
+        onSelected: state._setOnlyFix,
+      ),
       for (final c in <Confederation?>[null, ...Confederation.values])
         ChoiceChip(
           key: NationListScreen.confKey(c),

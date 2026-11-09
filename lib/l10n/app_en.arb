@@ -13095,7 +13095,7 @@
   "@matchWeatherClear": {
     "description": "Venue card: the weather the match is played in, clear skies."
   },
-  "matchWeatherRain": "Rain",
+  "matchWeatherRain": "Light rain",
   "@matchWeatherRain": {
     "description": "Venue card: the weather the match is played in, rain."
   },
@@ -13106,6 +13106,30 @@
   "matchWeatherHaze": "Haze",
   "@matchWeatherHaze": {
     "description": "Venue card: the weather the match is played in, haze."
+  },
+  "matchWeatherHeavyRain": "Heavy rain",
+  "@matchWeatherHeavyRain": {
+    "description": "Venue card: the weather the match is played in, heavy rain."
+  },
+  "matchWeatherThunderstorm": "Thunderstorm",
+  "@matchWeatherThunderstorm": {
+    "description": "Venue card: the weather the match is played in, a thunderstorm."
+  },
+  "matchWeatherFog": "Fog",
+  "@matchWeatherFog": {
+    "description": "Venue card: the weather the match is played in, fog (cold and grey, not a heat haze)."
+  },
+  "matchWeatherWindy": "Windy",
+  "@matchWeatherWindy": {
+    "description": "Venue card: the weather the match is played in, a gale, rain or snow driven by strong wind."
+  },
+  "matchWeatherDustStorm": "Dust storm",
+  "@matchWeatherDustStorm": {
+    "description": "Venue card: the weather the match is played in, a dust storm."
+  },
+  "matchWeatherFrostyNight": "Frosty night",
+  "@matchWeatherFrostyNight": {
+    "description": "Venue card: the weather the match is played in, a clear, frosty night."
   },
   "matchPlayerOfTheMatch": "PLAYER OF THE MATCH",
   "@matchPlayerOfTheMatch": {
@@ -13135,6 +13159,10 @@
   "matchGoalShout": "GOAL!",
   "@matchGoalShout": {
     "description": "Live match: the goal flash."
+  },
+  "matchRedCardShout": "RED CARD",
+  "@matchRedCardShout": {
+    "description": "Live match, 2D TV: the banner under the score when a player is sent off."
   },
   "matchShootoutScore": "SHOOTOUT {home}–{away}",
   "@matchShootoutScore": {
@@ -25030,5 +25058,95 @@
   "matchTabCommentary": "COMMENTARY",
   "@matchTabCommentary": {
     "description": "Tablet live match, Pitch view: title of the right-column tab that lists every commentary line so far, newest first (the other tab is the line-ups)."
+  },
+  "matchSubShout": "SUB",
+  "@matchSubShout": {
+    "description": "Live match: the substitution pop-up, its shout (like GOAL!)."
+  },
+  "matchSubOff": "Off: {name}",
+  "@matchSubOff": {
+    "description": "Live match, substitution pop-up: the player going off (beside a red arrow; also read out by screen readers).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "matchSubOn": "On: {name}",
+  "@matchSubOn": {
+    "description": "Live match, substitution pop-up: the player coming on (beside a green arrow; also read out by screen readers).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorFilterToFix": "Needs a fix",
+  "@editorFilterToFix": {
+    "description": "Chip that lists only the items that still need a fix."
+  },
+  "editorNothingToFix": "Nothing needs fixing here.",
+  "@editorNothingToFix": {
+    "description": "Empty list when the fix filter is on and nothing needs fixing."
+  },
+  "editorPromoteTooltip": "Move to the squad",
+  "@editorPromoteTooltip": {
+    "description": "Tooltip of the button on a pool row that moves the player into the squad."
+  },
+  "editorPromoted": "{name} moved to the squad",
+  "@editorPromoted": {
+    "description": "Snackbar after a pool player is moved into the squad; it offers Undo.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editorPromoteFullTitle": "The squad is full",
+  "@editorPromoteFullTitle": {
+    "description": "Title of the dialog shown when the squad is full and a pool player is moved up: pick who goes back."
+  },
+  "editorPromoteFullBody": "A squad holds at most {max} players. Pick the player who goes back to the pool in his place.",
+  "@editorPromoteFullBody": {
+    "description": "Body of the dialog shown when the squad is full and a pool player is moved up: the squad cap, then the list of squad players to send back to the pool.",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "editorTrophyGallery": "Choose from your photos",
+  "@editorTrophyGallery": {
+    "description": "Main button on a trophy: pick its picture from the phone's photo gallery."
+  },
+  "editorTrophyFile": "Choose a file instead",
+  "@editorTrophyFile": {
+    "description": "Secondary button on a trophy: pick its picture from a file instead of the photo gallery."
+  },
+  "clubStrengthOf": "Club strength: {stars} of 5",
+  "@clubStrengthOf": {
+    "description": "Spoken label for the row of stars after a club name: how strong the club is, out of five.",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "editorClubStrength": "Strength",
+  "@editorClubStrength": {
+    "description": "Editor, club form: label over the star picker that sets how strong the club is."
+  },
+  "editorClubStrengthDefault": "Default",
+  "@editorClubStrengthDefault": {
+    "description": "Editor, club form: the choice that leaves the club at the strength the game gives it."
+  },
+  "editorClubStrengthHelp": "Better players join stronger clubs. Default: {stars} of 5, set by its league.",
+  "@editorClubStrengthHelp": {
+    "description": "Editor, club form: under the star picker. What the strength does, and the stars the club has when left at Default.",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
   }
 }

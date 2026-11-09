@@ -90,7 +90,11 @@ extension _LeadIn on _Builder {
       final dir = _dir(side, m.minute);
       switch (m) {
         case SetPieceMoment(:final takerId) when takerId == a.id:
-          return (deadBallSpot(m, dir), 7.0, 2);
+          // He sets off in time to get there, not ten seconds early to
+          // stand by a dead ball while play goes on around him.
+          final spot = deadBallSpot(m, dir);
+          if (w.start - t > a.pos.distanceTo(spot) / 6.5 + 1.5) break;
+          return (spot, 7.0, 2);
         case ShotMoment(:final shooterId, :final origin)
             when origin == ShotOrigin.penalty && shooterId == a.id:
           final at = Offset2(depthToX(86, dir), a.pos.y.clamp(20.0, 48.0));
@@ -105,11 +109,15 @@ extension _LeadIn on _Builder {
             _secondLastDepth(a.side, dir),
             xToDepth(ball.x, dir),
           );
-          var depth = xToDepth(want.x, dir);
+          // Timed to arrive as it opens: short of the spot by the time
+          // still to go, drifting across, never parked on it for seconds.
+          final toGo = w.start - t;
+          var depth = xToDepth(want.x, dir) - (toGo * 1.6).clamp(0.0, 8.0);
           if (depth > PitchDims.length / 2) {
             depth = math.min(depth, math.max(line - 0.8, PitchDims.length / 2));
           }
-          return (Offset2(depthToX(depth, dir), want.y), 7.0, 2);
+          final sway = math.sin(1.3 * t + a.phaseA) * 1.5;
+          return (Offset2(depthToX(depth, dir), want.y + sway), 7.0, 2);
         case OffsideMoment(:final playerId)
             when playerId == a.id && w.start - t <= LeadIn.ball:
           final line = math.max(

@@ -8147,13 +8147,31 @@ class AppLocalizationsHu extends AppLocalizations {
   String get matchWeatherClear => 'Derült';
 
   @override
-  String get matchWeatherRain => 'Eső';
+  String get matchWeatherRain => 'Gyenge eső';
 
   @override
   String get matchWeatherSnow => 'Havazás';
 
   @override
   String get matchWeatherHaze => 'Pára';
+
+  @override
+  String get matchWeatherHeavyRain => 'Felhőszakadás';
+
+  @override
+  String get matchWeatherThunderstorm => 'Zivatar';
+
+  @override
+  String get matchWeatherFog => 'Köd';
+
+  @override
+  String get matchWeatherWindy => 'Szeles';
+
+  @override
+  String get matchWeatherDustStorm => 'Homokvihar';
+
+  @override
+  String get matchWeatherFrostyNight => 'Fagyos éjszaka';
 
   @override
   String get matchPlayerOfTheMatch => 'A MÉRKŐZÉS EMBERE';
@@ -8175,6 +8193,9 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'GÓL!';
+
+  @override
+  String get matchRedCardShout => 'PIROS LAP';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16138,4 +16159,61 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMMENTÁR';
+
+  @override
+  String get matchSubShout => 'CSERE';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Le: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Be: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Javítandó';
+
+  @override
+  String get editorNothingToFix => 'Itt nincs mit javítani.';
+
+  @override
+  String get editorPromoteTooltip => 'Áthelyezés a keretbe';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name átkerült a keretbe';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'A keret megtelt';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Egy keret legfeljebb $max játékosból állhat. Válaszd ki, ki kerüljön vissza a játékoskészletbe helyette.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Választás a fotóid közül';
+
+  @override
+  String get editorTrophyFile => 'Fájl választása';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Klub erőssége: $stars az 5-ből';
+  }
+
+  @override
+  String get editorClubStrength => 'Erősség';
+
+  @override
+  String get editorClubStrengthDefault => 'Alapértelmezett';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'A jobb játékosok erősebb klubokba igazolnak. Alapértelmezett: $stars az 5-ből, a bajnoksága szerint.';
+  }
 }

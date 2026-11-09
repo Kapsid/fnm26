@@ -669,11 +669,8 @@ void main() {
     'Czech player',
     (tester) async {
       final c = await editorContainer(tester);
-      final lone = realNations
-          .map((n) => n.code.toLowerCase())
-          .firstWhere(
-            (code) => code != 'cze' && ClubService.leagueClubs(code).isEmpty,
-          );
+      // A country whose league is new in 1.1.x (every country has one).
+      const lone = 'and';
       final id = await insertPack(
         tester,
         c,

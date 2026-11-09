@@ -15,6 +15,7 @@ import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/match/pitch/formation_slots.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/stadium/away_fan_share.dart';
+import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/crowd_culture.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/ground_look.dart';
@@ -129,7 +130,11 @@ void main() {
         CrowdShow.of(spec.homeCulture, isFinal: s.dressing.isFinal),
         CrowdShow.of(spec.awayCulture, isFinal: s.dressing.isFinal),
       );
-      final weather = WeatherOverlay(spec.weather, seed: 3);
+      final weather = WeatherOverlay(
+        spec.weather,
+        seed: 3,
+        cold: spec.season == BackdropSeason.snow,
+      );
 
       Widget one(int minute) {
         final light =
@@ -744,6 +749,131 @@ List<_Scene> _scenes() {
       weather: WeatherKind.haze,
       tags: ('AL HAJRI', 'AL OTAIBI'),
     ),
+    _Scene(
+      'phone_heavy_rain',
+      home: 'ENG',
+      away: 'WAL',
+      capacity: 55000,
+      stadium: 'Mock Mill Road',
+      city: 'Manchester',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(15, 0),
+      matchDay: DateTime(2026, 11, 14),
+      frames: const [30],
+      personal: true,
+      weather: WeatherKind.heavyRain,
+      tags: ('WALKER', 'JONES'),
+    ),
+    _Scene(
+      'phone_thunderstorm',
+      home: 'BRA',
+      away: 'COL',
+      capacity: 60000,
+      stadium: 'Mock Tropical Arena',
+      city: 'São Paulo',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(16, 0),
+      matchDay: DateTime(2027, 1, 20),
+      frames: const [30],
+      personal: true,
+      weather: WeatherKind.thunderstorm,
+      tags: ('SANTOS', 'RÍOS'),
+    ),
+    _Scene(
+      'phone_fog',
+      home: 'CZE',
+      away: 'SVK',
+      capacity: 15000,
+      stadium: 'Mock River Ground',
+      city: 'Ostrava',
+      light: PitchLight.night,
+      kickOff: const KickOffTime(20, 45),
+      matchDay: DateTime(2026, 11, 17),
+      frames: const [30],
+      personal: true,
+      weather: WeatherKind.fog,
+      tags: ('NOVAK', 'KOVAC'),
+    ),
+    _Scene(
+      'phone_windy',
+      home: 'SCO',
+      away: 'IRL',
+      capacity: 20000,
+      stadium: 'Mock Links Park',
+      city: 'Aberdeen',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(15, 0),
+      matchDay: DateTime(2026, 10, 10),
+      personal: true,
+      weather: WeatherKind.windy,
+      tags: ('MCKAY', 'BYRNE'),
+    ),
+    _Scene(
+      'phone_dust_storm',
+      home: 'QAT',
+      away: 'KSA',
+      capacity: 40000,
+      stadium: 'Mock Dune Stadium',
+      city: 'Al Khor',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(17, 0),
+      matchDay: DateTime(2026, 6, 10),
+      frames: const [30],
+      personal: true,
+      weather: WeatherKind.dustStorm,
+      tags: ('AL HAJRI', 'AL OTAIBI'),
+    ),
+    _Scene(
+      'phone_frosty_night',
+      home: 'POL',
+      away: 'UKR',
+      capacity: 42000,
+      stadium: 'Mock Frost Arena',
+      city: 'Poznań',
+      light: PitchLight.night,
+      kickOff: const KickOffTime(20, 45),
+      matchDay: DateTime(2026, 12, 12),
+      frames: const [30],
+      personal: true,
+      weather: WeatherKind.frostyNight,
+      tags: ('NOWAK', 'SHEVCHUK'),
+    ),
+    _Scene(
+      'phone_landmark_vienna',
+      home: 'AUT',
+      away: 'SUI',
+      capacity: 50000,
+      stadium: 'Mock Prater Ground',
+      city: 'Vienna',
+      light: PitchLight.day,
+      kickOff: const KickOffTime(18, 0),
+      matchDay: DateTime(2026, 6, 5),
+      tags: ('HUBER', 'MEIER'),
+    ),
+    _Scene(
+      'phone_landmark_brussels',
+      home: 'BEL',
+      away: 'NED',
+      capacity: 50000,
+      stadium: 'Mock Heysel Ground',
+      city: 'Brussels',
+      light: PitchLight.night,
+      kickOff: const KickOffTime(20, 45),
+      matchDay: DateTime(2026, 9, 8),
+      tags: ('PEETERS', 'DE JONG'),
+    ),
+    _Scene(
+      'phone_landmark_shanghai',
+      home: 'CHN',
+      away: 'JPN',
+      capacity: 56000,
+      stadium: 'Mock Pudong Stadium',
+      city: 'Shanghai',
+      light: PitchLight.dusk,
+      kickOff: const KickOffTime(19, 35),
+      matchDay: DateTime(2026, 9, 8),
+      tags: ('WANG', 'SATO'),
+    ),
   ];
 }
 
@@ -961,9 +1091,10 @@ class _PitchMock extends StatelessWidget {
           nameSize: tablet ? 11.5 : 9.5,
           show: show,
           showOpacity: showOpacity,
+          breath: weather.kind == WeatherKind.frostyNight,
         ),
       ),
-      if (weather.falls) CustomPaint(painter: _WeatherMock(weather)),
+      if (weather.animates) CustomPaint(painter: _WeatherMock(weather)),
       if (confetti) CustomPaint(painter: ConfettiPainter(t: 3.2, seed: 7)),
     ],
   );
@@ -982,7 +1113,10 @@ class _ActorsMock extends CustomPainter {
     required this.nameSize,
     this.show,
     this.showOpacity = 0,
+    this.breath = false,
   });
+
+  final bool breath;
 
   final ui.Image? show;
   final double showOpacity;
@@ -1042,6 +1176,16 @@ class _ActorsMock extends CustomPainter {
         number: m.number,
         facing: math.atan2(to.dy, to.dx),
       );
+      if (breath) {
+        WeatherOverlay.paintBreath(
+          canvas,
+          c,
+          r,
+          math.atan2(to.dy, to.dx),
+          0.4,
+          m.number,
+        );
+      }
     }
     for (final m in sorted) {
       final tag = m.tag;
@@ -1256,9 +1400,19 @@ class _WeatherMock extends CustomPainter {
 
   final WeatherOverlay weather;
 
+  /// A thunderstorm is shown at the height of its first flash; anything
+  /// else at the first frame.
+  double get _at {
+    if (weather.kind != WeatherKind.thunderstorm) return 0;
+    for (var t = 0.0; t < 120; t += 0.01) {
+      if (weather.flashAt(t) > 0.98) return t;
+    }
+    return 0;
+  }
+
   @override
   void paint(Canvas canvas, Size size) =>
-      weather.paint(canvas, size, 0, pixelRatio: 2);
+      weather.paint(canvas, size, _at, pixelRatio: 2);
 
   @override
   bool shouldRepaint(covariant _WeatherMock old) => false;

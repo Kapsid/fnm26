@@ -41,6 +41,18 @@ const namePoolsV4Kind = 'namePools4';
 /// `guardedNamesPoolsV5ByNation`).
 const namePoolsV5Kind = 'namePools5';
 
+/// Marks a career created from 1.1.x on, whose players' clubs are drawn by
+/// strength: every country has a league of named clubs, each club has 1 to
+/// 5 stars, and a player is drawn toward the clubs of his level
+/// (`ClubService.clubForSeed` with `strength`).
+///
+/// Clubs are not stored: every read derives them from the player and the
+/// save seed, so changing the draw would move every player of a career that
+/// already exists to another club and rewrite his club history. A career
+/// without this mark (any older save, or a bundle exported by an older
+/// version) keeps the draw it was created with, exactly.
+const clubStrengthKind = 'clubStrength1';
+
 /// Read access to the player reference data.
 ///
 /// `agingYears` ages the returned players by that many years (0 = the base seed

@@ -156,6 +156,67 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
   });
 
+  testWidgets('a phone picks the trophy picture from the photo gallery', (
+    tester,
+  ) async {
+    late Uint8List png;
+    await tester.runAsync(() async => png = await _png(900, 1200));
+    final path = await _file(tester, png, 'photo.png');
+    var galleryAsked = 0;
+    var filesAsked = 0;
+    final c = await editorContainer(
+      tester,
+      overrides: [
+        editorGalleryPickerProvider.overrideWithValue(() async {
+          galleryAsked++;
+          return path;
+        }),
+        editorFilePickerProvider.overrideWithValue(({extensions}) async {
+          filesAsked++;
+          return null;
+        }),
+      ],
+    );
+    final id = await insertPack(tester, c, testPack('Photos'));
+    await pumpEditorRoute(tester, c, _at(id));
+
+    await tester.tap(find.byKey(TrophySectionScreen.tileKey('europe')));
+    await settle(tester);
+    // The gallery is the obvious button, the file one stays beside it.
+    expect(find.byKey(TrophySectionScreen.galleryKey), findsOneWidget);
+    expect(find.text(_en.editorTrophyGallery), findsOneWidget);
+    expect(find.byKey(TrophySectionScreen.chooseKey), findsOneWidget);
+    await tester.tap(find.byKey(TrophySectionScreen.galleryKey));
+    await pumpUntilFound(tester, find.byKey(TrophyCropScreen.frameKey));
+    await tester.tap(find.byKey(TrophyCropScreen.previewKey));
+    await pumpUntilFound(tester, find.byKey(TrophyCropScreen.bannerKey));
+    await _confirm(tester, 'europe');
+
+    expect(galleryAsked, 1);
+    expect(filesAsked, 0);
+    expect((await _rows(tester, c, id)).keys, ['europe']);
+    expect(_pack(c, id).trophies, {'europe'});
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
+  testWidgets('a gallery that gives nothing changes nothing', (tester) async {
+    final c = await editorContainer(
+      tester,
+      overrides: [
+        editorGalleryPickerProvider.overrideWithValue(() async => null),
+      ],
+    );
+    final id = await insertPack(tester, c, testPack('None'));
+    await pumpEditorRoute(tester, c, _at(id));
+    await tester.tap(find.byKey(TrophySectionScreen.tileKey('europe')));
+    await settle(tester);
+    await tester.tap(find.byKey(TrophySectionScreen.galleryKey));
+    await settle(tester);
+    expect(find.byType(TrophyCropScreen), findsNothing);
+    expect(_pack(c, id).trophies, isEmpty);
+    await tester.pump(const Duration(milliseconds: 450));
+  });
+
   testWidgets('an opaque picture shows the rectangle warning', (tester) async {
     late Uint8List png;
     await tester.runAsync(() async => png = await _png(800, 800, opaque: true));

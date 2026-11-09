@@ -80,6 +80,9 @@ abstract final class LeadIn {
   static const double shooter = 6;
 }
 
+/// What a pass in the build-up is looking for (see `_pickReceiver`).
+enum _PassIntent { usual, short, long, switchPlay, giveAndGo }
+
 /// A side's plan: its shape and instructions.
 typedef MatchPlan = FieldedPlan;
 
@@ -291,10 +294,15 @@ final class KickAction extends BallAction {
     this.toHeight = 0,
     this.pass = false,
     this.shot = false,
+    this.leadTo,
   }) : assert((to == null) != (toPlayerId == null), 'a point or a player');
 
   final Offset2? to;
   final int? toPlayerId;
+
+  /// For a ball to a player: the point it is played into for him to run
+  /// onto (a through ball), when not his feet.
+  final Offset2? leadTo;
   final int? byPlayerId;
   final double arriveAt;
   final double peak;
@@ -323,7 +331,12 @@ class StagingContext {
     this.events = const [],
     this.resuming = false,
     this.hardEnd = double.infinity,
+    this.instructions = const {},
   });
+
+  /// Each side's instructions as it plays them now (nation id -> dials):
+  /// the team sheet's, the manager's live changes and the AI's drift.
+  final Map<int, TacticalInstructions> instructions;
 
   /// The window: its start and end (screen seconds) and its moments.
   final StagedWindow window;
@@ -601,7 +614,7 @@ List<(double, double)> slotLayout(
 // ---------------------------------------------------------------------------
 
 const double _hardSpeed = 8.8;
-const double _walkCap = 2.2;
+const double _walkCap = 3.7;
 const double _accel = 9;
 const double _turnRate = 7;
 const double _safeGap = 0.9;
@@ -617,6 +630,11 @@ const double _lookAhead = 0.7;
 /// The longest a moment's plan plays on past its window.
 const double _spill = 3;
 
+/// The longest play stays stopped past a window for a man it sends off (a
+/// red card, an injury, a substitution) to reach the line: the owner's
+/// 2026-11 "players walk off the pitch and play continues".
+const double _departureSpill = 9;
+
 /// How long before a moment the side it belongs to keeps the ball it has.
 const double _handover = 1.3;
 
@@ -624,6 +642,14 @@ const double _handover = 1.3;
 /// has to and the side on it is owed ball time.
 const double _lateHandover = 0.75;
 const double _keeperMaxDepth = 24.5;
+
+/// The nearest his own goal line an outfield man is sent in a staged
+/// moment that does not name him.
+const double _lineFloor = 7;
+
+/// The furthest out a keeper's place in the shape goes, the ball at the
+/// far end: inside his area, at home.
+const double _keeperHome = 14;
 
 /// Where a man walking off leaves the picture: this far inside the line.
 const double _edge = 0.5;
@@ -920,6 +946,14 @@ class _Builder {
   SeededRng rng = SeededRng(0);
   int rngSlot = -1;
 
+  /// The men who have had the ball lately in open play, newest last (by
+  /// agent index), and the last man to pass it to a team-mate: the build-up
+  /// looks for other men than the same two or three, and now and then plays
+  /// a one-two. Cleared with each new quiet slot, so a slot's football
+  /// never depends on what came before it.
+  final List<int> recentOnBall = [];
+  int? lastPasser;
+
   StagedWindow? activeWindow;
   StagedPlan? activePlan;
 
@@ -986,6 +1020,8 @@ class _Builder {
       for (final e in goalRestarts.entries) {
         if (!resetDone.contains(e.key) && (e.key - t).abs() < 1e-9) {
           resetDone.add(e.key);
+          // Anybody walking off left during the celebration.
+          _offAtCut();
           _processArrivals(t);
           // At the loop's own time, which may round a hair past it.
           _kickoff(t, e.value);
@@ -1155,6 +1191,9 @@ class _Builder {
             if (windows[k].start - w.end <= LeadIn.taker) windows[k],
         ],
         events: result.events,
+        instructions: {
+          for (final side in sides) side.team.nationId: side.instr,
+        },
         resuming: resumeAt != null && (t - resumeAt!).abs() < 1e-9,
         hardEnd: [
           for (final r in [...resets, total])
@@ -1168,7 +1207,9 @@ class _Builder {
   /// it: only while its moment has not played out, for at most [_spill],
   /// and never into another moment, an interval or a kick-off.
   bool _spills(StagedWindow w, StagedPlan? plan, double t) {
-    if (plan == null || t >= w.end + _spill - 1e-9) return false;
+    if (plan == null) return false;
+    final sending = _sendingOff(w, t);
+    if (t >= w.end + (sending ? _departureSpill : _spill) - 1e-9) return false;
     if (goalRestarts.containsKey(w.end)) return false;
     for (var k = wi; k < windows.length; k++) {
       final o = windows[k];
@@ -1178,7 +1219,32 @@ class _Builder {
     for (final r in resets) {
       if (r > t - 1e-9 && r < t + 0.3) return false;
     }
-    return !plan.settled(t, _state(t));
+    return sending || !plan.settled(t, _state(t));
+  }
+
+  /// Whether a man [w] sends off (a red card, an injury, a substitution),
+  /// or any other still on his way, is yet to reach the line, or due to set
+  /// off now: play stays stopped until he is off, never going on around
+  /// him.
+  bool _sendingOff(StagedWindow w, double t) {
+    // Only a window that is itself a stoppage for a man to leave: a
+    // change, a knock, a foul with a card. (A set piece after a sending
+    // off is played, not held.)
+    final first = w.moments.isEmpty ? null : w.moments.first;
+    if (w.injury == null && first is! SubMoment && first is! FoulMoment) {
+      return false;
+    }
+    for (final a in agents) {
+      if (!a.present) continue;
+      // Anybody still on his way off, his own stoppage cut short by this
+      // one (two changes in a row) included.
+      if (a.walkStart != null) return true;
+      final due = leaving[a.index];
+      if (due != null && due >= w.start - 1e-9 && due <= t + 1e-9) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /// A goal's window ends with a kick-off: the picture cuts there, the
@@ -1988,6 +2054,8 @@ class _Builder {
     if (slot == rngSlot) return;
     rngSlot = slot;
     rng = SeededRng((seed ^ ((slot + 1) * 0x9E3779B1)) & 0xFFFFFFFF);
+    recentOnBall.clear();
+    lastPasser = null;
   }
 
   /// Quiet time: when the carrier has had the ball long enough, he passes it
@@ -2114,16 +2182,47 @@ class _Builder {
     final breaking = t < side.counterUntil;
     var lStar = (12 + 0.2 * c + direct * 12).clamp(10.0, 38.0);
     if (breaking) lStar = math.max(lStar, 28);
-    final reach = 42 + math.max(0, direct) * 14;
+    var reach = 42 + math.max(0, direct) * 14;
     var target = spellDepth;
     double? lateralTarget;
+    // What this pass is, from the slot's own dice: mostly the side's usual
+    // ball, but a short one into feet, a long one forward, a switch to the
+    // far flank or a ball back to the man who just gave it (a one-two).
+    final roll = rng.nextDouble();
+    final mix = _passMix(s);
+    final intent = breaking
+        ? _PassIntent.usual
+        : roll < mix.short
+        ? _PassIntent.short
+        : roll < mix.short + mix.long
+        ? _PassIntent.long
+        : roll < mix.short + mix.long + mix.switchPlay
+        ? _PassIntent.switchPlay
+        : roll < mix.short + mix.long + mix.switchPlay + mix.giveAndGo
+        ? _PassIntent.giveAndGo
+        : _PassIntent.usual;
+    switch (intent) {
+      case _PassIntent.short:
+        lStar = math.max(8, lStar * 0.55);
+      case _PassIntent.long:
+        lStar = math.min(40, lStar * 1.6);
+        reach += 8;
+      case _PassIntent.switchPlay:
+        lStar = math.max(lStar, 28);
+        reach += 10;
+        final ballLat = (ball.y - PitchDims.width / 2) * dir;
+        lateralTarget = ballLat >= 0 ? -24 : 24;
+      case _PassIntent.giveAndGo || _PassIntent.usual:
+        break;
+    }
     if (leadPoint != null) {
       target = math.min(xToDepth(leadPoint.x, dir), 86);
       lateralTarget = (leadPoint.y - PitchDims.width / 2) * dir;
     }
-    final want = breaking && leadPoint == null
+    var want = breaking && leadPoint == null
         ? 30.0
         : (target - ballDepth).clamp(-12.0, 20.0 + math.max(0, direct) * 10);
+    if (intent == _PassIntent.long && leadPoint == null) want += 10;
     // The moments ahead: the man the next one turns on is looked for; the
     // men due elsewhere (a set piece's taker on his way, a man about to be
     // flagged offside) are not.
@@ -2164,12 +2263,45 @@ class _Builder {
       }
       if (keeper) score -= 1.5;
       if (m.id == wanted) score += 2.5;
+      // Other men than the last few on the ball, unless it is the one-two.
+      final k = recentOnBall.lastIndexOf(m.index);
+      if (intent == _PassIntent.giveAndGo && m.index == lastPasser) {
+        score += 3;
+      } else if (k >= 0 && !breaking) {
+        score -= 0.6 + 0.3 * (k - recentOnBall.length + 4).clamp(0, 3);
+      }
       if (score > bestScore) {
         bestScore = score;
         best = m;
       }
     }
     return best;
+  }
+
+  /// The odds of each kind of pass for side [s], read off its tactics and
+  /// its opponent's (the instructions as they stand, the AI's drift
+  /// included): a direct side, or one minded to break, goes long; a wide
+  /// one switches play; a patient one plays it short and plays one-twos,
+  /// more of them at a high tempo. A pressing opponent hurries the ball
+  /// long; a deep block is gone round, from flank to flank.
+  ({double short, double long, double switchPlay, double giveAndGo}) _passMix(
+    int s,
+  ) {
+    final i = sides[s].instr;
+    final o = sides[1 - s].instr;
+    final direct = (i.directness - 50) / 50;
+    final press = ((o.pressing - 50) / 50).clamp(0.0, 1.0);
+    final deep = ((50 - o.defensiveLine) / 50).clamp(0.0, 1.0);
+    return (
+      short: 0.10 + 0.16 * math.max(0, -direct) - 0.05 * press,
+      long:
+          0.08 +
+          0.18 * math.max(0, direct) +
+          0.10 * sides[s].counterIntent +
+          0.10 * press,
+      switchPlay: 0.04 + 0.12 * i.width / 100 + 0.06 * deep,
+      giveAndGo: 0.05 + 0.10 * math.max(0, -direct) + 0.06 * i.tempo / 100,
+    );
   }
 
   _Agent? _pickInterceptor(_Agent a, double t, {bool short = false}) {
@@ -2276,7 +2408,10 @@ class _Builder {
       if (idx == null) continue;
       final (lx, ly) = side.effective[i];
       if (i == side.gkSlot) {
-        final depth = (4 + 0.12 * ballDepth + lineAdj * 0.3).clamp(3.0, 17.0);
+        final depth = (4 + 0.12 * ballDepth + lineAdj * 0.3).clamp(
+          3.0,
+          _keeperHome,
+        );
         final lat = (ballLat * 0.15).clamp(-6.0, 6.0);
         out[idx] = Offset2(depthToX(depth, dir), lateralToY(lat, dir));
         continue;
@@ -2524,9 +2659,13 @@ class _Builder {
     final state = inWindow && plan is! _Hold ? _state(t0) : null;
 
     sprinting.clear();
+    // In an attack being staged the side it belongs to has the ball, so
+    // its men off the ball take up their places in possession.
+    final attacking = inWindow ? _attackingSide(activeWindow!) : null;
+    final owner = attacking ?? possession;
     final anchors = <int, Offset2>{
-      ..._anchors(0, minute, t0, ball, possession == 0),
-      ..._anchors(1, minute, t0, ball, possession == 1),
+      ..._anchors(0, minute, t0, ball, owner == 0),
+      ..._anchors(1, minute, t0, ball, owner == 1),
     };
 
     // Who presses: the nearest one or two of the side without the ball. A
@@ -2537,7 +2676,15 @@ class _Builder {
     final engage =
         defPress >= 35 ||
         xToDepth(ball.x, _dir(def, minute)) < 45 + defPress * 0.3;
-    if (!inWindow && engage) {
+    // Nobody presses a keeper with the ball in his hands: he cannot be
+    // challenged, so the forwards turn back into their shape rather than
+    // running on top of him.
+    final c = carrier;
+    final keeperHolds =
+        c != null &&
+        agents[c].slot == sides[agents[c].side].gkSlot &&
+        xToDepth(agents[c].pos.x, _dir(agents[c].side, minute)) <= _area;
+    if (!inWindow && engage && !keeperHolds) {
       final n = defPress >= 65 ? 2 : 1;
       final cand =
           [
@@ -2694,6 +2841,15 @@ class _Builder {
       } else {
         final to = ballAfter - a.pos;
         want = to.length < 0.3 ? a.facing : to.angle;
+        // Running hard away from the ball he turns and runs, never
+        // sprints backwards facing it.
+        final speed = a.vel.length;
+        // A man at the ball (a blocker, a tackler) keeps his eyes on it.
+        if (speed > 4.5 &&
+            to.length >= 3.5 &&
+            a.vel.x * to.x + a.vel.y * to.y < 0) {
+          want = a.vel.angle;
+        }
       }
       a.facing = _turn(a.facing, want, _turnRate * dt);
     }
@@ -2748,7 +2904,36 @@ class _Builder {
         return (f.lead, math.min(8, a.pos.distanceTo(f.lead) / left + 1), 2);
       }
       freeDrive = true;
+      final w = activeWindow!;
+      // Never onto his own goal line: that is the keeper's.
+      final home = xToDepth(anchor.x, dir) < _lineFloor
+          ? Offset2(depthToX(_lineFloor, dir), anchor.y)
+          : anchor;
+      if (_attackingSide(w) != null) {
+        // An attack: the men it does not name move with it, into their
+        // places in the shape (the attackers up in support, the defenders
+        // back into theirs), never standing where open play left them.
+        final dist = a.pos.distanceTo(home);
+        return (home, (2.5 + dist * 0.4).clamp(2.5, 6.0), 1);
+      }
+      if (w.injury != null ||
+          w.moments.isEmpty ||
+          w.moments.first is SubMoment ||
+          w.moments.first is FoulMoment) {
+        // A foul, a change or a knock: the men the moment does not name
+        // walk back into their places meanwhile (off a goal line a set
+        // piece left them on).
+        final dist = a.pos.distanceTo(home);
+        return (home, math.min(3.0, 1.0 + dist * 0.3), 1);
+      }
       return (a.pos, 0, 2);
+    }
+    if (carrier == a.index && isKeeper) {
+      // A keeper on the ball sets himself to play it on: a step or two
+      // forward at most, never a dribble out of his area.
+      final depth = xToDepth(a.pos.x, dir);
+      final to = math.max(depth, math.min(depth + 1.5, _area - 2));
+      return (Offset2(depthToX(to, dir), a.pos.y), 2, 2);
     }
     if (carrier == a.index) {
       final depth = xToDepth(a.pos.x, dir);
@@ -2812,6 +2997,15 @@ class _Builder {
         : (2.5 + dist * 0.5 + side.instr.tempo * 0.008).clamp(2.5, 6.5);
     freeDrive = true;
     return (anchor, speed, 1);
+  }
+
+  /// The side (0 home, 1 away) whose attack window [w] stages, when it is
+  /// one played in open play: a shot that is not a penalty.
+  int? _attackingSide(StagedWindow w) {
+    if (w.moments.isEmpty) return null;
+    final m = w.moments.first;
+    if (m is! ShotMoment || m.origin == ShotOrigin.penalty) return null;
+    return m.teamNationId == lineups.home.nationId ? 0 : 1;
   }
 
   /// Where a man walking off heads now: straight for the touchline, stepping

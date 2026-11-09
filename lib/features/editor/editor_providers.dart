@@ -18,6 +18,7 @@ import 'package:fnm/domain/services/world_pack/pack_status.dart';
 import 'package:fnm/domain/services/world_pack/world_pack.dart';
 import 'package:fnm/features/editor/names/added_items.dart';
 import 'package:fnm/features/world_pack/world_pack_providers.dart';
+import 'package:image_picker/image_picker.dart';
 
 export 'package:fnm/domain/services/world_pack/pack_status.dart';
 
@@ -182,6 +183,19 @@ final Provider<EditorFilePicker> editorFilePickerProvider = Provider(
         type: extensions == null ? FileType.any : FileType.custom,
         allowedExtensions: extensions,
       ))?.files.single.path,
+);
+
+/// Picks one picture from the phone's photo gallery and gives its path, or
+/// null when nothing was picked. A provider so a test can stand in a path.
+typedef EditorGalleryPicker = Future<String?> Function();
+
+final Provider<EditorGalleryPicker> editorGalleryPickerProvider = Provider(
+  (ref) =>
+      () async => (await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        // The framing screen works from the picture as it is: no recompress.
+        requestFullMetadata: false,
+      ))?.path,
 );
 
 /// The nations a database covers: the world a career created now starts in.
@@ -779,6 +793,14 @@ class PackEditor extends StateNotifier<AsyncValue<WorldPack>> {
   }
 
   final Expando<List<PackIssue>> _poolIssues = Expando('poolIssues');
+
+  /// How many things stand between nation [nationId] and a career: its
+  /// squad's ([squadIssues]) and its fixed pool's ([poolIssues]). The pack
+  /// home counts both under Players, so the nation list must too: counting
+  /// the squad alone showed "Squad ready" on a nation whose Pool tab, and
+  /// the home, still had something to fix.
+  int nationToFix(int nationId) =>
+      squadIssues(nationId).length + poolIssues(nationId).length;
 
   /// Trophy [key]'s own picture (a PNG at the trophy's size), or
   /// null while the game's is used.

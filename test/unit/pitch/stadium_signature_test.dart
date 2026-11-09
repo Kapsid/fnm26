@@ -238,7 +238,9 @@ void main() {
 
     test('follows climate and date', () {
       final engAutumn = count('ENG', DateTime(2026, 10, 10));
-      expect(engAutumn[WeatherKind.rain], greaterThan(110));
+      int wet(Map<WeatherKind, int> n) =>
+          n[WeatherKind.rain]! + n[WeatherKind.heavyRain]!;
+      expect(wet(engAutumn), greaterThan(110));
       expect(engAutumn[WeatherKind.snow], 0);
       expect(engAutumn[WeatherKind.haze], 0);
 
@@ -269,8 +271,8 @@ void main() {
       }
       // Wetter in Britain than in Spain.
       expect(
-        engAutumn[WeatherKind.rain],
-        greaterThan(count('ESP', DateTime(2026, 10, 10))[WeatherKind.rain]!),
+        wet(engAutumn),
+        greaterThan(wet(count('ESP', DateTime(2026, 10, 10)))),
       );
     });
 

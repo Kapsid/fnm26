@@ -579,6 +579,10 @@ Widget _clubFact(Player p, String clubLabel, String club) => Padding(
                 style: AppTypography.bodyLarge,
               ),
             ),
+            if (p.clubStars > 0) ...[
+              const SizedBox(width: AppSpacing.sm),
+              ClubStars(p.clubStars),
+            ],
           ],
         ),
       ),

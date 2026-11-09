@@ -13,6 +13,7 @@ import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
 import 'package:fnm/features/match/pitch/stadium_painter.dart';
 import 'package:fnm/features/match/pitch/token_painter.dart';
+import 'package:fnm/features/match/pitch/weather_painter.dart';
 
 /// One layer of the picture at a cut: the script sampled at [t] (screen
 /// seconds), drawn at [alpha].
@@ -115,6 +116,7 @@ class ActorsPainter extends CustomPainter {
     required this.names,
     required this.lightAt,
     this.isPlaying = _always,
+    this.breath = false,
   }) : r0 = tokenRadiusFor(projection.viewport),
        super(repaint: clock) {
     _towers = [
@@ -146,6 +148,9 @@ class ActorsPainter extends CustomPainter {
   final bool Function() isPlaying;
 
   static bool _always() => true;
+
+  /// Whether the men's breath shows: a frosty night (cosmetic only).
+  final bool breath;
 
   /// The token's half-width at the near touchline.
   final double r0;
@@ -302,6 +307,9 @@ class ActorsPainter extends CustomPainter {
         facing: m.facing,
         cachedNumber: true,
       );
+      if (breath) {
+        WeatherOverlay.paintBreath(canvas, m.c, m.r, m.facing, t, m.index);
+      }
     }
     drawBall(canvas, lifted, br);
 

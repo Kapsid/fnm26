@@ -9,10 +9,16 @@ import '../press/y_feed.dart';
 
 /// Current on-disk format of a world pack. Format 2 (editor 2) adds
 /// [WorldPack.pools], the added clubs, sponsors and Y accounts,
-/// [WorldPack.localized] and [PackPlayer.traits]; [WorldPack.migrate] lifts
-/// a format-1 (1.1.0) pack to it. Format 3 (world managers) adds
-/// [WorldPack.managers]. Format 4 is reserved for clubs.
-const int kPackFormatVersion = 3;
+/// [WorldPack.localized] and [PackPlayer.traits]; format 3 (clubs) adds
+/// club strength ([WorldPack.clubStrengths], [PackClub.strength]); format 4
+/// (world managers) adds [WorldPack.managers]. [WorldPack.migrate] lifts a
+/// format-1, 2 or 3 pack to it, step by step.
+///
+/// A pack is written in the oldest format that holds it ([WorldPack.asWritten]):
+/// format 3 when it names no managers, so a 1.1.x build without managers still
+/// reads it, and this format when it does. A build that reads only an older
+/// format says the file is from a newer version rather than calling it broken.
+const int kPackFormatVersion = 4;
 
 /// Ids at or above this belong to players created in a pack.
 const int kPackPlayerIdBase = 800000000;
@@ -176,24 +182,46 @@ class PackPlayer {
   );
 }
 
-/// A club a pack adds. [country] is a lower-case FIFA code.
+/// A club a pack adds. [country] is a lower-case FIFA code; [strength] its
+/// stars, 1 to 5 (format 3), or null for its league's lowest.
 @immutable
 class PackClub {
-  const PackClub({required this.id, required this.name, required this.country});
+  const PackClub({
+    required this.id,
+    required this.name,
+    required this.country,
+    this.strength,
+  });
 
   final int id;
   final String name;
   final String country;
+  final int? strength;
 
-  Map<String, Object?> toJson() => {'id': id, 'name': name, 'country': country};
+  /// This club under [name] and/or with [strength] (a [Some] of null
+  /// clears it back to the default).
+  PackClub copyWith({String? name, Some<int?>? strength}) => PackClub(
+    id: id,
+    name: name ?? this.name,
+    country: country,
+    strength: strength == null ? this.strength : strength.value,
+  );
+
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'name': name,
+    'country': country,
+    'strength': ?strength,
+  };
 
   static PackClub fromJson(Object? raw) {
     final m = _map(raw, 'club');
-    _only(m, const {'id', 'name', 'country'}, 'club');
+    _only(m, const {'id', 'name', 'country', 'strength'}, 'club');
     return PackClub(
       id: _int(m['id'], 'id'),
       name: _str(m['name'], 'name'),
       country: _str(m['country'], 'country'),
+      strength: m['strength'] == null ? null : _int(m['strength'], 'strength'),
     );
   }
 
@@ -202,10 +230,19 @@ class PackClub {
       other is PackClub &&
       other.id == id &&
       other.name == name &&
-      other.country == country;
+      other.country == country &&
+      other.strength == strength;
 
   @override
-  int get hashCode => Object.hash(id, name, country);
+  int get hashCode => Object.hash(id, name, country, strength);
+}
+
+/// A value that may itself be null, for a `copyWith` that must tell "leave
+/// it" (no [Some]) from "set it to null".
+@immutable
+class Some<T> {
+  const Some(this.value);
+  final T value;
 }
 
 /// A sponsor a pack adds. [industry] is the `SponsorBrand.name` whose
@@ -427,6 +464,7 @@ class WorldPack {
     this.squads = const {},
     this.nations = const {},
     this.clubs = const {},
+    this.clubStrengths = const {},
     this.stadiums = const {},
     this.competitions = const {},
     this.yAccounts = const {},
@@ -454,6 +492,10 @@ class WorldPack {
 
   /// Original club name -> new name.
   final Map<String, String> clubs;
+
+  /// A game club's original name -> its stars, 1 to 5 (format 3). A club
+  /// not in it has its default strength (`ClubStrength.derived`).
+  final Map<String, int> clubStrengths;
 
   /// `'$nationId:$city'` -> stadium name.
   final Map<String, String> stadiums;
@@ -490,10 +532,10 @@ class WorldPack {
   final Map<int, ({String name, String nationality})> managers;
 
   /// This pack in the oldest format that holds it, as every writer stores
-  /// and exports it: format 2 (which a 1.1.0 build reads) when it names no
-  /// managers, [kPackFormatVersion] when it does.
+  /// and exports it: format 3 (which a 1.1.x build without managers reads)
+  /// when it names no managers, [kPackFormatVersion] when it does.
   WorldPack get asWritten =>
-      copyWith(formatVersion: managers.isEmpty ? 2 : kPackFormatVersion);
+      copyWith(formatVersion: managers.isEmpty ? 3 : kPackFormatVersion);
 
   /// [managers] without the entries a game cannot use: a blank name, a
   /// nationality that is not one of [codes] (upper-case FIFA codes), or a
@@ -532,6 +574,7 @@ class WorldPack {
     Map<int, List<PackPlayer>>? squads,
     Map<int, ({String name, String code})>? nations,
     Map<String, String>? clubs,
+    Map<String, int>? clubStrengths,
     Map<String, String>? stadiums,
     Map<String, String>? competitions,
     Map<String, String>? yAccounts,
@@ -554,6 +597,7 @@ class WorldPack {
     squads: squads ?? this.squads,
     nations: nations ?? this.nations,
     clubs: clubs ?? this.clubs,
+    clubStrengths: clubStrengths ?? this.clubStrengths,
     stadiums: stadiums ?? this.stadiums,
     competitions: competitions ?? this.competitions,
     yAccounts: yAccounts ?? this.yAccounts,
@@ -584,6 +628,7 @@ class WorldPack {
         '${e.key}': {'name': e.value.name, 'code': e.value.code},
     },
     'clubs': clubs,
+    'clubStrengths': clubStrengths,
     'stadiums': stadiums,
     'competitions': competitions,
     'yAccounts': yAccounts,
@@ -605,9 +650,9 @@ class WorldPack {
     'localized': {
       for (final e in localized.entries) e.key: {...e.value},
     },
-    // Written from format 3 on (see [asWritten]): a format-2 reader knows
+    // Written from format 4 on (see [asWritten]): a format-3 reader knows
     // no such key.
-    if (formatVersion >= 3 || managers.isNotEmpty)
+    if (formatVersion >= 4 || managers.isNotEmpty)
       'managers': {
         for (final e in managers.entries)
           '${e.key}': {
@@ -626,6 +671,7 @@ class WorldPack {
     'squads',
     'nations',
     'clubs',
+    'clubStrengths',
     'stadiums',
     'competitions',
     'yAccounts',
@@ -663,6 +709,10 @@ class WorldPack {
           _intKey(e.key): _nation(e.value),
       },
       clubs: _strMap(json['clubs'], 'clubs'),
+      clubStrengths: {
+        for (final e in _map(json['clubStrengths'], 'clubStrengths').entries)
+          e.key: _int(e.value, 'clubStrengths'),
+      },
       stadiums: _strMap(json['stadiums'], 'stadiums'),
       competitions: _strMap(json['competitions'], 'competitions'),
       yAccounts: _strMap(json['yAccounts'], 'yAccounts'),
@@ -706,7 +756,7 @@ class WorldPack {
     );
   }
 
-  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v3.
+  /// Upgrades older JSON step by step to [kPackFormatVersion]. Identity at v4.
   /// Throws [FormatException] for a missing or newer version. Never changes
   /// [json] itself.
   static Map<String, Object?> migrate(Map<String, Object?> json) {
@@ -724,8 +774,28 @@ class WorldPack {
     }
     var out = json;
     if (v == 1) out = _from1To2(out);
-    if (v <= 2) out = _from2To3(out, v);
+    if (v <= 2) out = _from2To3(out);
+    if (v <= 3) out = _from3To4(out, v);
     return out;
+  }
+
+  /// Format 2 to 3: no club strengths set, so a format-2 pack reads as
+  /// "every club at its default strength". A format-2 pack that already
+  /// holds a format-3 key is not a format-2 file.
+  static Map<String, Object?> _from2To3(Map<String, Object?> json) {
+    if (json.containsKey('clubStrengths')) {
+      throw const FormatException('Format 2 pack has format 3 key');
+    }
+    final clubs = json['addedClubs'];
+    if (clubs is List &&
+        clubs.any((c) => c is Map && c.containsKey('strength'))) {
+      throw const FormatException('Format 2 pack has a club strength');
+    }
+    return {
+      ...json,
+      'clubStrengths': <String, Object?>{},
+      'formatVersion': 3,
+    };
   }
 
   /// Format 1 (1.1.0) to 2: every new part empty, so a 1.1.0 pack reads as
@@ -747,16 +817,16 @@ class WorldPack {
     return {...json, ...added, 'formatVersion': 2};
   }
 
-  /// Format 2 to 3: no managers, so the world's day-one managers are all the
-  /// game's own. A pack of format [from] (1 or 2) that already holds
+  /// Format 3 to 4: no managers, so the world's day-one managers are all the
+  /// game's own. A pack of format [from] (1, 2 or 3) that already holds
   /// `managers` is not a file of that format.
-  static Map<String, Object?> _from2To3(Map<String, Object?> json, int from) {
+  static Map<String, Object?> _from3To4(Map<String, Object?> json, int from) {
     if (json.containsKey('managers')) {
       throw FormatException(
-        'Format $from pack has the format 3 key "managers"',
+        'Format $from pack has the format 4 key "managers"',
       );
     }
-    return {...json, 'managers': <String, Object?>{}, 'formatVersion': 3};
+    return {...json, 'managers': <String, Object?>{}, 'formatVersion': 4};
   }
 
   static ({String name, String nationality}) _manager(Object? raw) {

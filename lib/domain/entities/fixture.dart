@@ -30,4 +30,23 @@ abstract class Fixture with _$Fixture {
 
   /// Whether this knockout tie was settled on penalties.
   bool get wentToShootout => homePenalties != null && awayPenalties != null;
+
+  /// The score as it stood when the shootout began: the one to SHOW.
+  ///
+  /// A tie settled on penalties is stored with the shootout winner one goal
+  /// up (1-1 won on penalties is stored 2-1), so the stored score alone still
+  /// names the winner for every reader that compares the two (the bracket,
+  /// the ranking, the records). That extra goal never happened and has no
+  /// scorer, so every screen shows these instead, beside the penalties.
+  /// Both are the stored score for every other result, and old saves hold
+  /// the same convention, so nothing needs migrating.
+  int? get shownHomeScore => _levelled(homeScore, awayScore);
+
+  /// See [shownHomeScore].
+  int? get shownAwayScore => _levelled(awayScore, homeScore);
+
+  int? _levelled(int? mine, int? theirs) {
+    if (mine == null || theirs == null || !wentToShootout) return mine;
+    return mine < theirs ? mine : theirs;
+  }
 }

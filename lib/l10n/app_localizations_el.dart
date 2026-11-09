@@ -8240,13 +8240,31 @@ class AppLocalizationsEl extends AppLocalizations {
   String get matchWeatherClear => 'Αίθριος';
 
   @override
-  String get matchWeatherRain => 'Βροχή';
+  String get matchWeatherRain => 'Ψιλή βροχή';
 
   @override
   String get matchWeatherSnow => 'Χιόνι';
 
   @override
   String get matchWeatherHaze => 'Καταχνιά';
+
+  @override
+  String get matchWeatherHeavyRain => 'Δυνατή βροχή';
+
+  @override
+  String get matchWeatherThunderstorm => 'Καταιγίδα';
+
+  @override
+  String get matchWeatherFog => 'Ομίχλη';
+
+  @override
+  String get matchWeatherWindy => 'Δυνατός άνεμος';
+
+  @override
+  String get matchWeatherDustStorm => 'Αμμοθύελλα';
+
+  @override
+  String get matchWeatherFrostyNight => 'Παγωμένη νύχτα';
 
   @override
   String get matchPlayerOfTheMatch => 'ΚΟΡΥΦΑΙΟΣ ΤΟΥ ΑΓΩΝΑ';
@@ -8268,6 +8286,9 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'ΓΚΟΛ!';
+
+  @override
+  String get matchRedCardShout => 'ΚΟΚΚΙΝΗ ΚΑΡΤΑ';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16281,4 +16302,61 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'ΣΧΟΛΙΑΣΜΟΣ';
+
+  @override
+  String get matchSubShout => 'ΑΛΛΑΓΗ';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Βγαίνει: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Μπαίνει: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Προς διόρθωση';
+
+  @override
+  String get editorNothingToFix => 'Δεν υπάρχει τίποτα προς διόρθωση εδώ.';
+
+  @override
+  String get editorPromoteTooltip => 'Μετακίνηση στην ομάδα';
+
+  @override
+  String editorPromoted(String name) {
+    return 'Ο $name μετακινήθηκε στην ομάδα';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Η ομάδα είναι γεμάτη';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Μια ομάδα έχει το πολύ $max παίκτες. Διαλέξτε τον παίκτη που θα γυρίσει στη δεξαμενή στη θέση του.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Επιλογή από τις φωτογραφίες σας';
+
+  @override
+  String get editorTrophyFile => 'Επιλογή αρχείου';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Δύναμη συλλόγου: $stars στα 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Δύναμη';
+
+  @override
+  String get editorClubStrengthDefault => 'Προεπιλογή';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Οι καλύτεροι παίκτες πάνε σε ισχυρότερους συλλόγους. Προεπιλογή: $stars στα 5, βάσει του πρωταθλήματός του.';
+  }
 }

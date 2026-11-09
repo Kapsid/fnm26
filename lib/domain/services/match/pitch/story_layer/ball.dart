@@ -89,12 +89,22 @@ extension _BallMechanics on _Builder {
     if (next is KickAction) _kick(t, next);
   }
 
+  /// Everybody walking off leaves the picture at a cut.
+  void _offAtCut() {
+    for (final a in agents) {
+      if (a.present && a.walkStart != null) _endWalk(a);
+    }
+  }
+
   /// The picture cuts to [k]'s set piece, ready.
   void _cut(double t, CutAction k) {
     _cutFlight(t);
     _closePhase(t);
     // The picture just before the cut, as it stands now.
     _record(t);
+    // A man on his way off is gone when the picture comes back: he left
+    // while the camera was away, never walking on through the play to come.
+    _offAtCut();
     final minute = pacer.matchAt(_Builder._dur(t)).minute;
     final poss = k.possession;
     if (poss != null) {
@@ -288,7 +298,7 @@ extension _BallMechanics on _Builder {
       final named = k.byPlayerId == null ? null : indexOf[k.byPlayerId];
       by = named ?? lastTouch;
     }
-    final lead = to != null ? _ballPoint(agents[to]) : k.to!;
+    final lead = to != null ? (k.leadTo ?? _ballPoint(agents[to])) : k.to!;
     // A man it is played to may move a little before it lands: room under
     // the cap.
     final fastest = t + from.distanceTo(lead) / (to != null ? 26 : 34);
@@ -448,7 +458,10 @@ extension _BallMechanics on _Builder {
         peak: f.peak,
         fromActor: f.fromActor,
         toActor: f.toActor,
-        pass: f.pass,
+        // A man who ran to meet it may have taken it short: a touch, not
+        // a pass.
+        pass:
+            f.pass && f.from.distanceTo(point) >= PitchScriptValidator.minPass,
         fromHeight: f.fromHeight,
         toHeight: f.toHeight,
       ),
@@ -457,6 +470,12 @@ extension _BallMechanics on _Builder {
     carrier = to.index;
     lastTouch = to.index;
     phaseStart = t;
+    final passer = f.fromActor;
+    lastPasser = passer != null && agents[passer].side == to.side
+        ? passer
+        : null;
+    recentOnBall.add(to.index);
+    if (recentOnBall.length > 4) recentOnBall.removeAt(0);
     final side = sides[to.side];
     if (to.side != possession) {
       sides[possession].counterUntil = -1;
@@ -476,7 +495,17 @@ extension _BallMechanics on _Builder {
       if (t < side.counterUntil) spellDepth = math.max(spellDepth, 84);
     }
     final tempo = side.instr.tempo;
-    final hold = (0.55 + rng.nextDouble() * 0.8) * (1.15 - tempo / 250);
+    var hold = (0.55 + rng.nextDouble() * 0.8) * (1.15 - tempo / 250);
+    // Now and then a man takes it on: a run with the ball before he looks
+    // for the pass. A one-two's first touch goes straight back.
+    if (activeWindow == null &&
+        t >= side.counterUntil &&
+        rng.nextDouble() < 0.14) {
+      hold *= 2.2;
+    }
+    // A pressing side gives him no time on it.
+    final press = sides[1 - to.side].instr.pressing;
+    if (press > 60) hold *= 1 - (press - 60) / 100;
     // On the break the ball moves on at once.
     nextAction = t + (t < side.counterUntil ? hold * 0.3 : hold);
   }
@@ -521,6 +550,18 @@ extension _BallMechanics on _Builder {
     var lead = intercept
         ? to.pos - away * 0.6
         : to.pos + away * 1.2 + Offset2(dir * 0.6, 0);
+    // A ball forward into the last third, now and then, is played into
+    // space for him to run onto: a through ball, not one to his feet.
+    final gain = xToDepth(to.pos.x, dir) - xToDepth(start.x, dir);
+    if (!intercept &&
+        activeWindow == null &&
+        gain > 8 &&
+        xToDepth(to.pos.x, dir) > 55 &&
+        rng.nextDouble() < _throughOdds(from.side)) {
+      final run = math.min(7.0, 0.3 * start.distanceTo(to.pos));
+      final ahead = math.min(xToDepth(to.pos.x, dir) + run, 97.0);
+      lead = Offset2(depthToX(ahead, dir), lead.y);
+    }
     lead = _Builder._clampPitch(lead, margin: 1.5);
     final dist = lead.distanceTo(start);
     final lofted = dist > 26;
@@ -533,8 +574,44 @@ extension _BallMechanics on _Builder {
             27.0,
           );
     final dur = math.max(quick ? 0.25 : 0.4, dist / v);
-    final peak = lofted ? math.min(1.5 + 0.12 * dist, 7).toDouble() : 0.0;
+    var peak = lofted ? math.min(1.5 + 0.12 * dist, 7).toDouble() : 0.0;
+    final dur0 = math.max(quick ? 0.25 : 0.4, dist / 20);
+    // An opponent on its line, now or as he runs while it travels, short
+    // of the man it is for: the ball is chipped over him rather than
+    // rolled through his feet.
+    if (peak < 1) {
+      outer:
+      for (final o in agents) {
+        if (!o.present || o.side == from.side) continue;
+        for (var k = 1; k < 8; k++) {
+          final u = k / 8;
+          final b = Offset2.lerp(start, lead, u);
+          if (b.distanceTo(lead) < 3 || b.distanceTo(start) < 1.5) continue;
+          final q = o.pos + o.vel.capped(8) * (dur0 * u);
+          if (q.distanceTo(b) < 1.1) {
+            peak = math.min(1.4 + 0.06 * dist, 3).toDouble();
+            break outer;
+          }
+        }
+      }
+    }
     return (start, dur, peak, lead);
+  }
+
+  /// How often side [s] plays a forward ball into the space behind rather
+  /// than to feet: more for a direct side or one minded to break, more
+  /// against a high line.
+  double _throughOdds(int s) {
+    final direct = (sides[s].instr.directness - 50) / 50;
+    final line = ((sides[1 - s].instr.defensiveLine - 50) / 50).clamp(
+      0.0,
+      1.0,
+    );
+    return (0.15 +
+            0.3 * math.max(0, direct) +
+            0.2 * sides[s].counterIntent +
+            0.15 * line)
+        .clamp(0.0, 0.8);
   }
 
   /// The ball's receiver has gone: it carries on along its line to where

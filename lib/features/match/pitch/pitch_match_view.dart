@@ -7,15 +7,19 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/util/text_variety.dart';
+import 'package:fnm/domain/services/match/pitch/moment_staging.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_geometry.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_script.dart';
 import 'package:fnm/domain/services/match/pitch/pitch_view_geometry.dart';
+import 'package:fnm/domain/services/match/stadium/backdrop.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
+import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/pitch/actors_painter.dart';
 import 'package:fnm/features/match/pitch/confetti_painter.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_projection.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
+import 'package:fnm/features/match/pitch/referee_painter.dart';
 import 'package:fnm/features/match/pitch/shootout_stage.dart';
 import 'package:fnm/features/match/pitch/stadium_looks.dart';
 import 'package:fnm/features/match/pitch/weather_painter.dart';
@@ -30,7 +34,8 @@ import 'package:fnm/features/match/pitch/weather_painter.dart';
 /// 2. the fans' show (scarves, flares, drums, a final's tifo), one more
 ///    cached image, faded out as the match gets going;
 /// 3. the actors ([ActorsPainter]), repainted every tick;
-/// 4. the weather falling ([WeatherOverlay]): a cached tile, scrolled;
+/// 4. the weather moving ([WeatherOverlay]): a cached tile, scrolled, and
+///    a thunderstorm's lightning;
 /// 5. a final's gold confetti after the whistle.
 ///
 /// **Camera.** The view keeps the camera centred at [cameraZoom] and does
@@ -152,9 +157,24 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       _confetti.value = t;
       if (t > 14) _confettiTicker.stop();
     });
+    _penalty = _penaltyFor(widget.script);
     widget.clock.addListener(_onClock);
     _onClock();
   }
+
+  /// The match's own penalties, shown in the shootout's close-up; null when
+  /// it has none.
+  PenaltyCloseUp? _penalty;
+  ShootoutPainter? _penaltyPainter;
+
+  static PenaltyCloseUp? _penaltyFor(PitchScript script) {
+    final all = InMatchPenalty.of(script);
+    return all.isEmpty ? null : PenaltyCloseUp(all);
+  }
+
+  /// The in-match penalty close-up (for tests).
+  @visibleForTesting
+  PenaltyCloseUp? get debugPenalty => _penalty;
 
   @override
   void didUpdateWidget(PitchMatchView oldWidget) {
@@ -163,6 +183,11 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     if (!identical(old.clock, widget.clock)) {
       old.clock.removeListener(_onClock);
       widget.clock.addListener(_onClock);
+    }
+    if (!identical(old.script, widget.script)) {
+      _penalty?.dispose();
+      _penalty = _penaltyFor(widget.script);
+      _penaltyPainter = null;
     }
     if (!identical(old.script, widget.script) ||
         !identical(old.stadium, widget.stadium)) {
@@ -184,6 +209,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     _show?.dispose();
     _showOpacity.dispose();
     _weather?.dispose();
+    _penalty?.dispose();
     super.dispose();
   }
 
@@ -206,6 +232,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     }
     final at = widget.script.confettiAt;
     final t = widget.clock.value.inMicroseconds / 1e6;
+    _penalty?.update(t);
     if (at != null && t >= at - 1e-6) {
       if (_confetti.value == null && !_confettiTicker.isActive) {
         _confettiFrom = t - at;
@@ -325,6 +352,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
         identical(a.clock, widget.clock) &&
         mapEquals(a.names, widget.names) &&
         a.kits == widget.stadium.kits &&
+        a.breath == (widget.stadium.weather == WeatherKind.frostyNight) &&
         a.projection.viewport == size) {
       return a;
     }
@@ -336,6 +364,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
       names: widget.names,
       lightAt: widget.stadium.lightAt,
       isPlaying: () => widget.clock.playing,
+      breath: widget.stadium.weather == WeatherKind.frostyNight,
     );
   }
 
@@ -360,23 +389,77 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     );
   }
 
-  /// The players of the match, or the shootout's two men and the ball.
+  ShootoutPainter _penaltyPainterFor(Size size, PenaltyCloseUp penalty) {
+    final p = _penaltyPainter;
+    final m = widget.script.pacer.matchAt(widget.clock.value);
+    if (p != null &&
+        identical(p.stage, penalty) &&
+        mapEquals(p.names, widget.names) &&
+        p.kits == widget.stadium.kits &&
+        p.minute == m.minute) {
+      return p;
+    }
+    return _penaltyPainter = ShootoutPainter(
+      stage: penalty,
+      kits: widget.stadium.kits,
+      names: widget.names,
+      lightAt: widget.stadium.lightAt,
+      minute: m.minute,
+    );
+  }
+
+  /// The players of the match, or the shootout's two men and the ball (a
+  /// shootout after the match, or a penalty in it).
   Widget _actorsLayer(Size drawSize) {
     final stage = widget.shootout;
-    if (stage == null) return _actorsPainted(drawSize);
+    final penalty = _penalty;
+    Widget match() => penalty == null
+        ? _actorsPainted(drawSize)
+        : ValueListenableBuilder<bool>(
+            valueListenable: penalty.active,
+            builder: (context, on, _) => on
+                ? RepaintBoundary(
+                    child: CustomPaint(
+                      painter: _penaltyPainterFor(drawSize, penalty),
+                    ),
+                  )
+                : _actorsPainted(drawSize),
+          );
+    if (stage == null) return match();
     return ValueListenableBuilder<bool>(
       valueListenable: stage.active,
       builder: (context, on, _) => on
           ? RepaintBoundary(
               child: CustomPaint(painter: _shootoutFor(drawSize, stage)),
             )
-          : _actorsPainted(drawSize),
+          : match(),
     );
   }
 
   Widget _actorsPainted(Size drawSize) => RepaintBoundary(
-    child: CustomPaint(painter: _actorsFor(drawSize)),
+    child: CustomPaint(
+      painter: _actorsFor(drawSize),
+      // A sending-off's referee, over the players.
+      foregroundPainter: _refereeFor(drawSize),
+    ),
   );
+
+  RefereePainter? _referee;
+
+  RefereePainter _refereeFor(Size size) {
+    final r = _referee;
+    if (r != null &&
+        identical(r.script, widget.script) &&
+        identical(r.clock, widget.clock) &&
+        r.projection.viewport == size) {
+      return r;
+    }
+    return _referee = RefereePainter(
+      script: widget.script,
+      clock: widget.clock,
+      projection: PitchMatchView.projectionFor(size),
+    );
+  }
 
   WeatherOverlay _weatherFor() {
     final w = _weather;
@@ -385,6 +468,8 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
     w?.dispose();
     return _weather = WeatherOverlay(
       kind,
+      // A gale in a snowy winter drives snow, not rain.
+      cold: widget.stadium.spec.season == BackdropSeason.snow,
       // Stable across runs: the same match always rains the same way.
       seed: varietySeed(
         '${widget.stadium.spec.flagCode}:${widget.stadium.date}',
@@ -439,7 +524,7 @@ class PitchMatchViewState extends ConsumerState<PitchMatchView>
                           ),
                         ),
                       _actorsLayer(drawSize),
-                      if (_weatherFor().falls)
+                      if (_weatherFor().animates)
                         IgnorePointer(
                           child: RepaintBoundary(
                             child: CustomPaint(

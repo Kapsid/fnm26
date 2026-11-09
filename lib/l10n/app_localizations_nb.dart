@@ -8201,13 +8201,31 @@ class AppLocalizationsNb extends AppLocalizations {
   String get matchWeatherClear => 'Klart';
 
   @override
-  String get matchWeatherRain => 'Regn';
+  String get matchWeatherRain => 'Lett regn';
 
   @override
   String get matchWeatherSnow => 'Snø';
 
   @override
   String get matchWeatherHaze => 'Dis';
+
+  @override
+  String get matchWeatherHeavyRain => 'Kraftig regn';
+
+  @override
+  String get matchWeatherThunderstorm => 'Tordenvær';
+
+  @override
+  String get matchWeatherFog => 'Tåke';
+
+  @override
+  String get matchWeatherWindy => 'Kraftig vind';
+
+  @override
+  String get matchWeatherDustStorm => 'Sandstorm';
+
+  @override
+  String get matchWeatherFrostyNight => 'Frostnatt';
 
   @override
   String get matchPlayerOfTheMatch => 'KAMPENS SPILLER';
@@ -8229,6 +8247,9 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'MÅL!';
+
+  @override
+  String get matchRedCardShout => 'RØDT KORT';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16189,4 +16210,61 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMMENTARER';
+
+  @override
+  String get matchSubShout => 'BYTTE';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Ut: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Inn: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Må rettes';
+
+  @override
+  String get editorNothingToFix => 'Ingenting må rettes her.';
+
+  @override
+  String get editorPromoteTooltip => 'Flytt til troppen';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name flyttet til troppen';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Troppen er full';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'En tropp har høyst $max spillere. Velg spilleren som går tilbake til puljen i hans sted.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Velg fra bildene dine';
+
+  @override
+  String get editorTrophyFile => 'Velg en fil';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Klubbstyrke: $stars av 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Styrke';
+
+  @override
+  String get editorClubStrengthDefault => 'Standard';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Bedre spillere går til sterkere klubber. Standard: $stars av 5, ut fra ligaen.';
+  }
 }

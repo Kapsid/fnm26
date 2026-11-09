@@ -177,7 +177,14 @@ class MatchScoreboard extends StatelessWidget {
     this.goal,
     this.goalForHome = false,
     this.bugTheme,
+    this.notice,
+    this.noticeForHome = false,
   });
+
+  /// A substitution or a red card being shown, for the [compact] bug's
+  /// banner; null when none is.
+  final MatchEvent? notice;
+  final bool noticeForHome;
 
   final String homeCode;
   final String awayCode;
@@ -240,6 +247,8 @@ class MatchScoreboard extends StatelessWidget {
         goal: goal,
         goalForHome: goalForHome,
         theme: bugTheme,
+        notice: notice,
+        noticeForHome: noticeForHome,
       );
     }
     final card = AppCard(

@@ -58,6 +58,9 @@ class NameSectionScreen extends ConsumerStatefulWidget {
 
   static const Key tabletLayoutKey = Key('editorNames.tabletLayout');
   static const Key searchKey = Key('editorNames.search');
+
+  /// The chip that shows only the rows that still need a fix.
+  static const Key fixFilterKey = Key('editorNames.fixFilter');
   static const Key undoKey = Key('editorNames.undo');
 
   /// Add a club, sponsor or Y account (the phone's button, the tablet's
@@ -88,6 +91,9 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   final _search = TextEditingController();
   String _query = '';
 
+  /// Whether only the rows that still need a fix are listed.
+  bool _onlyFix = false;
+
   /// The row edited beside the list (tablet).
   String? _picked;
 
@@ -106,6 +112,8 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
   void _back() => context.go(editorPackLocation(_id));
 
   void _setQuery(String q) => setState(() => _query = q);
+
+  void _setOnlyFix(bool on) => setState(() => _onlyFix = on);
 
   _Rows? _rowsCache;
 
@@ -194,10 +202,13 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     List<NameGroup> groups,
     WorldPack pack,
     String? language,
+    Map<String, int> toFix,
   ) {
     final q = searchFold(_query);
-    if (q.isEmpty) return groups;
+    if (q.isEmpty && !_onlyFix) return groups;
     bool hit(NameEntry e) {
+      if (_onlyFix && (toFix[e.key] ?? 0) == 0) return false;
+      if (q.isEmpty) return true;
       if (e.fold.contains(q)) return true;
       final o = nameOverride(_section, pack, e);
       if (o != null &&
@@ -401,10 +412,11 @@ class _NameSectionScreenState extends ConsumerState<NameSectionScreen> {
     final world = editor.world;
     _jump(world);
     final rows = _withAdded(l, _rows(l, world, listsValue), pack);
+    final toFix = _toFix(pack, world);
     final view = _NameView(
       pack: pack,
-      groups: _filter(rows.groups, pack, language),
-      toFix: _toFix(pack, world),
+      groups: _filter(rows.groups, pack, language, toFix),
+      toFix: toFix,
       language: language,
     );
     void undo() => editor.undo();
@@ -503,26 +515,42 @@ class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return TextField(
-      key: NameSectionScreen.searchKey,
-      controller: state._search,
-      onChanged: state._setQuery,
-      textInputAction: TextInputAction.search,
-      style: AppTypography.bodyMedium.copyWith(color: AppColors.onSurface),
-      decoration: InputDecoration(
-        hintText: state._searchHint(l),
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: state._query.isEmpty
-            ? null
-            : IconButton(
-                icon: const Icon(Icons.close),
-                tooltip: MaterialLocalizations.of(context).deleteButtonTooltip,
-                onPressed: () {
-                  state._search.clear();
-                  state._setQuery('');
-                },
-              ),
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          key: NameSectionScreen.searchKey,
+          controller: state._search,
+          onChanged: state._setQuery,
+          textInputAction: TextInputAction.search,
+          style: AppTypography.bodyMedium.copyWith(color: AppColors.onSurface),
+          decoration: InputDecoration(
+            hintText: state._searchHint(l),
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: state._query.isEmpty
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.close),
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).deleteButtonTooltip,
+                    onPressed: () {
+                      state._search.clear();
+                      state._setQuery('');
+                    },
+                  ),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        FilterChip(
+          key: NameSectionScreen.fixFilterKey,
+          label: Text(l.editorFilterToFix),
+          avatar: const Icon(Icons.pending_outlined, size: 16),
+          selected: state._onlyFix,
+          onSelected: state._setOnlyFix,
+        ),
+      ],
     );
   }
 }
@@ -617,7 +645,12 @@ class _NameList extends StatelessWidget {
         if (view.groups.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
-            child: EditorMessage(l.editorNamesNone, icon: Icons.search_off),
+            child: state._onlyFix && state._query.isEmpty
+                ? EditorMessage(
+                    l.editorNothingToFix,
+                    icon: Icons.check_circle_outline,
+                  )
+                : EditorMessage(l.editorNamesNone, icon: Icons.search_off),
           ),
         // Padded inside, not by a SliverPadding: a pinned heading in a
         // padded group mislays itself.
@@ -782,6 +815,7 @@ class _NameTile extends StatelessWidget {
       ];
     }
     final fix = toFix > 0;
+    final stars = section == NameSection.clubs ? clubStarsIn(pack, entry) : 0;
     return AppCard(
       key: NameSectionScreen.rowKey(entry.key),
       onTap: onTap,
@@ -824,6 +858,10 @@ class _NameTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
+          if (stars > 0) ...[
+            ClubStars(stars, size: 10),
+            const SizedBox(width: AppSpacing.sm),
+          ],
           if (fix)
             _FixMark(text: l.editorCountToFix(toFix))
           else if (changed && (lang != null || !entry.added))

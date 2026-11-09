@@ -33,7 +33,7 @@ clubHistoryProvider = FutureProvider.autoDispose
         careerDevBonusProvider(arg.careerId).future,
       );
 
-      final seasons = <({int year, String club, String country})>[];
+      final seasons = <({int year, String club, String country, int stars})>[];
       for (var y = 0; y <= years; y++) {
         final p = await repo.byId(
           arg.playerId,
@@ -49,6 +49,7 @@ clubHistoryProvider = FutureProvider.autoDispose
           year: CareerService.cycleStart.year + y,
           club: p.club,
           country: p.clubCountry,
+          stars: p.clubStars,
         ));
       }
       return ClubHistory.spells(seasons);

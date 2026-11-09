@@ -27,8 +27,22 @@ import 'package:fnm/features/match/pitch/stadium_painter.dart';
 import 'package:fnm/features/match/pitch/token_painter.dart';
 import 'package:fnm/domain/services/match/stadium/daylight.dart';
 
+/// What the shootout's close-up draws: one kick, how far into it, and its
+/// men. A shootout's own kicks ([ShootoutStageController]) and a penalty in
+/// the match ([PenaltyCloseUp]) are both shown through it.
+abstract interface class ShootoutView implements Listenable {
+  /// The kick on show; null shows nothing.
+  StagedShootoutKick? get kick;
+
+  /// How far into [kick], in seconds (see [ShootoutStaging.frameAt]).
+  double get seconds;
+
+  /// The two sides' keepers and every shirt number.
+  ShootoutCast get cast;
+}
+
 /// Runs a shootout's kicks on a ticker. Repaints its listeners every frame.
-class ShootoutStageController extends ChangeNotifier {
+class ShootoutStageController extends ChangeNotifier implements ShootoutView {
   ShootoutStageController({
     required TickerProvider vsync,
     required this.kicks,
@@ -40,6 +54,7 @@ class ShootoutStageController extends ChangeNotifier {
   }
 
   final List<StagedShootoutKick> kicks;
+  @override
   final ShootoutCast cast;
 
   /// A kick's result has landed (the ball is in, saved, wide or off the
@@ -63,7 +78,9 @@ class ShootoutStageController extends ChangeNotifier {
 
   /// The kick on show, and how far into it (seconds).
   int get index => _index;
+  @override
   double get seconds => _seconds;
+  @override
   StagedShootoutKick? get kick => _index < kicks.length ? kicks[_index] : null;
   bool get running => _ticker.isActive;
 
@@ -138,6 +155,57 @@ class ShootoutStageController extends ChangeNotifier {
   }
 }
 
+/// A penalty given in the match, shown in the shootout's close-up while
+/// the clock is on it ([InMatchPenalty.from] to [InMatchPenalty.to]); the
+/// pitch is drawn again either side of it. Follows the clock, so a pause,
+/// a seek or a goal's held flash hold the close-up where it is.
+class PenaltyCloseUp extends ChangeNotifier implements ShootoutView {
+  PenaltyCloseUp(this.penalties);
+
+  /// The match's penalties, from [InMatchPenalty.of].
+  final List<InMatchPenalty> penalties;
+
+  /// Whether the close-up is up: the clock is on one of the [penalties].
+  final ValueNotifier<bool> active = ValueNotifier(false);
+
+  InMatchPenalty? _on;
+  double _seconds = 0;
+
+  /// The penalty on show.
+  InMatchPenalty? get on => _on;
+
+  @override
+  StagedShootoutKick? get kick => _on?.kick;
+
+  @override
+  double get seconds => _seconds;
+
+  @override
+  ShootoutCast get cast => (_on ?? penalties.first).cast;
+
+  /// The clock is at screen second [t].
+  void update(double t) {
+    InMatchPenalty? on;
+    for (final p in penalties) {
+      if (t >= p.from - 1e-9 && t < p.to) {
+        on = p;
+        break;
+      }
+    }
+    final was = _on;
+    _on = on;
+    _seconds = on == null ? 0 : on.secondsAt(t);
+    active.value = on != null;
+    if (on != null || was != null) notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    active.dispose();
+    super.dispose();
+  }
+}
+
 /// A shootout kick seen from behind the taker: the goal mouth large and
 /// face-on with its net, the six lanes (left, centre, right, low and high)
 /// faintly marked and the one the ball goes to lit, the keeper diving into
@@ -155,7 +223,7 @@ class ShootoutPainter extends CustomPainter {
     _away = ActorsPainter.dressOf(kits.away);
   }
 
-  final ShootoutStageController stage;
+  final ShootoutView stage;
   final ({KitPair home, KitPair away}) kits;
   final Map<int, String> names;
   final PitchLight Function(int minute, {int stoppage}) lightAt;
@@ -214,7 +282,6 @@ class ShootoutPainter extends CustomPainter {
       baseY - ShootoutStaging.laneHeight(k.lane) * gp,
     );
     _net(canvas, net, scored ? hit : null, since, night);
-    _zones(canvas, net, k, s >= ShootoutStaging.strikeAt, gp);
 
     // The posts and the bar, in front of the net.
     final post = Paint()
@@ -253,6 +320,7 @@ class ShootoutPainter extends CustomPainter {
       trim: AppColors.surfaceContainerLowest,
       number: cast.shirts[keeperId] ?? 1,
       facing: math.pi / 2 * 3,
+      chevron: false,
     );
     canvas.restore();
 
@@ -287,6 +355,7 @@ class ShootoutPainter extends CustomPainter {
       trim: dress.trim,
       number: cast.shirts[takerId] ?? 0,
       facing: math.pi / 2 * 3,
+      chevron: false,
       cachedNumber: true,
     );
 
@@ -308,7 +377,8 @@ class ShootoutPainter extends CustomPainter {
     );
     ActorsPainter.drawBall(canvas, bc, br);
 
-    // The taker's name, over the stand.
+    // The taker's name, along the bottom of the close-up: the GOAL banner
+    // and the score bug sit over the top, and covered it there.
     final name = names[takerId];
     if (name != null) {
       final label = name.toUpperCase();
@@ -316,7 +386,7 @@ class ShootoutPainter extends CustomPainter {
         label,
         ActorsPainter.nameSizeFor(size) * 1.25,
       );
-      final at = Offset(cx - tp.width / 2, h * 0.05);
+      final at = Offset(cx - tp.width / 2, h * 0.94 - tp.height - 4);
       tp.paint(canvas, at);
       canvas.drawLine(
         Offset(cx - tp.width * 0.3, at.dy + tp.height + 2),
@@ -497,44 +567,6 @@ class ShootoutPainter extends CustomPainter {
         path.lineTo(node(i, j).dx, node(i, j).dy);
       }
       canvas.drawPath(path, mesh);
-    }
-  }
-
-  /// The six lanes as faint cells on the mouth; once the ball is struck, the
-  /// one it goes to lit (a ring where a miss goes past or off the post).
-  void _zones(Canvas canvas, Rect net, ShootoutKick k, bool struck, double gp) {
-    final cell = net.width / 3;
-    final low = net.bottom - 1.15 * gp;
-    Rect rect(int lane) {
-      final col = lane % 3;
-      final high = lane ~/ 3 == 1;
-      return Rect.fromLTRB(
-        net.left + col * cell,
-        high ? net.top : low,
-        net.left + (col + 1) * cell,
-        high ? low : net.bottom,
-      );
-    }
-
-    final faint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.14)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    for (var lane = 0; lane < 6; lane++) {
-      canvas.drawRect(rect(lane).deflate(1.5), faint);
-    }
-    if (!struck) return;
-    final lit = k.result == KickResult.scored || k.result == KickResult.saved;
-    if (lit) {
-      canvas.drawRect(
-        rect(k.lane).deflate(1.5),
-        Paint()
-          ..color =
-              (k.result == KickResult.scored
-                      ? const Color(0xFF6BD66B)
-                      : const Color(0xFFFFB74D))
-                  .withValues(alpha: 0.28),
-      );
     }
   }
 

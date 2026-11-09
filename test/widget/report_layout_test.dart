@@ -97,6 +97,8 @@ void main() {
           step: 0,
           fromCountry: 'cze',
           toCountry: 'eng',
+          fromStars: 0,
+          toStars: 0,
         ),
     ];
 

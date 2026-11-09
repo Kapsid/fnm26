@@ -8291,13 +8291,31 @@ class AppLocalizationsBg extends AppLocalizations {
   String get matchWeatherClear => 'Ясно';
 
   @override
-  String get matchWeatherRain => 'Дъжд';
+  String get matchWeatherRain => 'Слаб дъжд';
 
   @override
   String get matchWeatherSnow => 'Сняг';
 
   @override
-  String get matchWeatherHaze => 'Мъгла';
+  String get matchWeatherHaze => 'Омара';
+
+  @override
+  String get matchWeatherHeavyRain => 'Силен дъжд';
+
+  @override
+  String get matchWeatherThunderstorm => 'Гръмотевична буря';
+
+  @override
+  String get matchWeatherFog => 'Мъгла';
+
+  @override
+  String get matchWeatherWindy => 'Силен вятър';
+
+  @override
+  String get matchWeatherDustStorm => 'Пясъчна буря';
+
+  @override
+  String get matchWeatherFrostyNight => 'Мразовита нощ';
 
   @override
   String get matchPlayerOfTheMatch => 'ИГРАЧ НА МАЧА';
@@ -8319,6 +8337,9 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'ГОЛ!';
+
+  @override
+  String get matchRedCardShout => 'ЧЕРВЕН КАРТОН';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16276,4 +16297,61 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'КОМЕНТАР';
+
+  @override
+  String get matchSubShout => 'СМЯНА';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Излиза: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Влиза: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'За поправяне';
+
+  @override
+  String get editorNothingToFix => 'Тук няма нищо за поправяне.';
+
+  @override
+  String get editorPromoteTooltip => 'Премести в състава';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name е преместен в състава';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Съставът е пълен';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Съставът може да има най-много $max играчи. Изберете играча, който се връща в групата на негово място.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Избор от снимките ви';
+
+  @override
+  String get editorTrophyFile => 'Избор на файл';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Сила на клуба: $stars от 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Сила';
+
+  @override
+  String get editorClubStrengthDefault => 'По подразбиране';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'По-добрите играчи отиват в по-силни клубове. По подразбиране: $stars от 5 според лигата му.';
+  }
 }

@@ -297,7 +297,41 @@ class MatchViewModeStore {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(kMatchViewModePrefsKey, mode.name);
   }
+
+  /// A new career is marked as it is made: its first match asks how to
+  /// watch, once, whatever this device remembers. A save made before the
+  /// mark existed is never marked, so it is never asked again.
+  Future<void> markFirstMatchAsk(int careerId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(firstMatchAskKey(careerId), true);
+  }
+
+  /// Whether [careerId]'s first match still has to ask.
+  Future<bool> firstMatchAskPending(int careerId) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(firstMatchAskKey(careerId)) ?? false;
+  }
+
+  /// The question has been answered: the career is never asked again.
+  Future<void> clearFirstMatchAsk(int careerId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(firstMatchAskKey(careerId));
+  }
+
+  /// Prefs key for [careerId]'s first-match question (per device, outside
+  /// the save database: no schema bump).
+  static String firstMatchAskKey(int careerId) =>
+      'match_view_first_ask_v1_$careerId';
 }
+
+/// Whether [careerId]'s first match asks how to watch before kick-off (a
+/// new career, not asked yet). False for every other match and every save
+/// made before the question existed.
+final FutureProviderFamily<bool, int> firstMatchViewAskProvider =
+    FutureProvider.family<bool, int>(
+      (ref, careerId) =>
+          ref.read(matchViewModeStoreProvider).firstMatchAskPending(careerId),
+    );
 
 final Provider<MatchViewModeStore> matchViewModeStoreProvider =
     Provider<MatchViewModeStore>((ref) => const MatchViewModeStore());
@@ -385,12 +419,13 @@ final Provider<WeatherKind?> pitchForcedWeatherProvider =
   final f = preview.fixture;
   final home = preview.nations[f.homeNationId];
   final groundNation = preview.nations[preview.ground.groundNationId] ?? home;
+  final kickOff = KickOff.localTime(
+    f,
+    pitchCompetitionOf(f.round),
+    preview.saveSeed,
+  );
   return (
-    kickOff: KickOff.localTime(
-      f,
-      pitchCompetitionOf(f.round),
-      preview.saveSeed,
-    ),
+    kickOff: kickOff,
     weather:
         weather ??
         MatchWeather.of(
@@ -398,6 +433,7 @@ final Provider<WeatherKind?> pitchForcedWeatherProvider =
           confederation: groundNation?.confederation ?? Confederation.europe,
           date: f.date,
           fixtureId: f.id,
+          kickOffHours: kickOff.hours,
         ),
   );
 }

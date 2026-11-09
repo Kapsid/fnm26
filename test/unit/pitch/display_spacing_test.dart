@@ -169,7 +169,10 @@ void main() {
     // Measured 2.25% (24 matches, 273k frames) when this bound was set,
     // against 1.27% for Declutter's own target: the easing lags a nudge
     // by a few frames as two men close. Bounded here so it cannot creep.
-    expect(share, lessThan(0.025));
+    // 2.9-3.1% since set pieces fill the box and the men an attack does not
+    // name move with it (2026-11 pitch feedback): more men close together
+    // and on the move, by design; the drawn target holds under 2%.
+    expect(share, lessThan(0.032));
     expect(contact, lessThan(0.02));
   });
 

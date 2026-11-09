@@ -8168,13 +8168,31 @@ class AppLocalizationsFil extends AppLocalizations {
   String get matchWeatherClear => 'Maaliwalas';
 
   @override
-  String get matchWeatherRain => 'Ulan';
+  String get matchWeatherRain => 'Mahinang ulan';
 
   @override
   String get matchWeatherSnow => 'Niyebe';
 
   @override
   String get matchWeatherHaze => 'Ulap';
+
+  @override
+  String get matchWeatherHeavyRain => 'Malakas na ulan';
+
+  @override
+  String get matchWeatherThunderstorm => 'Bagyong may kidlat';
+
+  @override
+  String get matchWeatherFog => 'Hamog';
+
+  @override
+  String get matchWeatherWindy => 'Mahangin';
+
+  @override
+  String get matchWeatherDustStorm => 'Bagyong alikabok';
+
+  @override
+  String get matchWeatherFrostyNight => 'Napakalamig na gabi';
 
   @override
   String get matchPlayerOfTheMatch => 'MANLALARO NG LARO';
@@ -8196,6 +8214,9 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'GOAL!';
+
+  @override
+  String get matchRedCardShout => 'PULANG KARD';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16199,4 +16220,61 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'KOMENTARYO';
+
+  @override
+  String get matchSubShout => 'PALIT';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Labas: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Pasok: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Kailangang ayusin';
+
+  @override
+  String get editorNothingToFix => 'Walang kailangang ayusin dito.';
+
+  @override
+  String get editorPromoteTooltip => 'Ilipat sa squad';
+
+  @override
+  String editorPromoted(String name) {
+    return 'Inilipat si $name sa squad';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Puno na ang squad';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Ang isang squad ay may pinakamarami na $max manlalaro. Piliin ang manlalarong babalik sa pool bilang kapalit niya.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Pumili mula sa iyong mga larawan';
+
+  @override
+  String get editorTrophyFile => 'Pumili ng file';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Lakas ng club: $stars sa 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Lakas';
+
+  @override
+  String get editorClubStrengthDefault => 'Default';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: $stars sa 5, ayon sa liga nito.';
+  }
 }

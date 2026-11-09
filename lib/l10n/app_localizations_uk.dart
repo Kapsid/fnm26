@@ -8350,13 +8350,31 @@ class AppLocalizationsUk extends AppLocalizations {
   String get matchWeatherClear => 'Ясно';
 
   @override
-  String get matchWeatherRain => 'Дощ';
+  String get matchWeatherRain => 'Невеликий дощ';
 
   @override
   String get matchWeatherSnow => 'Сніг';
 
   @override
   String get matchWeatherHaze => 'Серпанок';
+
+  @override
+  String get matchWeatherHeavyRain => 'Злива';
+
+  @override
+  String get matchWeatherThunderstorm => 'Гроза';
+
+  @override
+  String get matchWeatherFog => 'Туман';
+
+  @override
+  String get matchWeatherWindy => 'Вітряно';
+
+  @override
+  String get matchWeatherDustStorm => 'Пилова буря';
+
+  @override
+  String get matchWeatherFrostyNight => 'Морозна ніч';
 
   @override
   String get matchPlayerOfTheMatch => 'ГРАВЕЦЬ МАТЧУ';
@@ -8378,6 +8396,9 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'ГОЛ!';
+
+  @override
+  String get matchRedCardShout => 'ЧЕРВОНА КАРТКА';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16505,4 +16526,61 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'КОМЕНТАР';
+
+  @override
+  String get matchSubShout => 'ЗАМІНА';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Залишає поле: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Виходить на поле: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Потребує виправлення';
+
+  @override
+  String get editorNothingToFix => 'Тут нічого виправляти.';
+
+  @override
+  String get editorPromoteTooltip => 'Перемістити до складу';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name переміщено до складу';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Склад заповнений';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'У складі може бути щонайбільше $max гравців. Виберіть гравця, який повернеться до резерву замість нього.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Вибрати з ваших фото';
+
+  @override
+  String get editorTrophyFile => 'Вибрати файл';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Сила клубу: $stars з 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Сила';
+
+  @override
+  String get editorClubStrengthDefault => 'Типово';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Кращі гравці переходять до сильніших клубів. Типово: $stars з 5 за його лігою.';
+  }
 }

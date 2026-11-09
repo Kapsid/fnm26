@@ -168,11 +168,25 @@ class _ThisCycle extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.md,
                     ),
-                    child: Text(
-                      played
-                          ? '${tie.homeScore} – ${tie.awayScore}'
-                          : l.tourContVersusShort,
-                      style: AppTypography.headlineMedium,
+                    child: Column(
+                      children: [
+                        Text(
+                          played
+                              ? '${tie.shownHomeScore} – ${tie.shownAwayScore}'
+                              : l.tourContVersusShort,
+                          style: AppTypography.headlineMedium,
+                        ),
+                        if (played && tie.wentToShootout)
+                          Text(
+                            l.recordsOnPenalties(
+                              tie.homePenalties!,
+                              tie.awayPenalties!,
+                            ),
+                            style: AppTypography.labelSmall.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   Expanded(child: _side(tie.awayNationId)),

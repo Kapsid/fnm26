@@ -592,15 +592,22 @@ extension _StadiumFeatures on StadiumPainter {
     canvas.restore();
   }
 
-  /// Rain on the grass: darker, with a wet sheen.
+  /// Rain on the grass: darker, with a wet sheen; darker and shinier still
+  /// in a downpour.
   void _wetGrass(Canvas canvas) {
-    if (spec.weather != WeatherKind.rain) return;
+    if (!spec.weather.isRain) return;
+    final heavy =
+        spec.weather == WeatherKind.heavyRain ||
+        spec.weather == WeatherKind.thunderstorm;
     final field = _field;
     final b = field.getBounds();
     canvas
       ..drawPath(
         field,
-        Paint()..color = const Color(0xFF0C1A12).withValues(alpha: 0.16),
+        Paint()
+          ..color = const Color(
+            0xFF0C1A12,
+          ).withValues(alpha: heavy ? 0.24 : 0.16),
       )
       ..drawPath(
         field,
@@ -611,12 +618,39 @@ extension _StadiumFeatures on StadiumPainter {
             b.bottomRight,
             [
               Colors.white.withValues(alpha: 0),
-              const Color(0xFFB8C8D6).withValues(alpha: 0.08),
+              const Color(0xFFB8C8D6).withValues(alpha: heavy ? 0.14 : 0.08),
               Colors.white.withValues(alpha: 0),
             ],
             const [0.2, 0.5, 0.8],
           ),
       );
+  }
+
+  /// Frost on a cold clear night: a pale rime creeping in from the pitch's
+  /// edges, the middle (where the men run) still green.
+  void _frostEdges(Canvas canvas) {
+    if (spec.weather != WeatherKind.frostyNight) return;
+    final field = _field;
+    final rime = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _ppm(PitchDims.width / 2) * 4.5
+      ..color = const Color(0xFFDDE6EE).withValues(alpha: 0.26)
+      ..maskFilter = MaskFilter.blur(
+        BlurStyle.normal,
+        _ppm(PitchDims.width / 2) * 1.6,
+      );
+    canvas
+      ..save()
+      ..clipPath(field)
+      ..drawPath(field, rime)
+      ..drawPath(
+        field,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = _ppm(PitchDims.width / 2) * 1.4
+          ..color = const Color(0xFFE8EEF3).withValues(alpha: 0.24),
+      )
+      ..restore();
   }
 
   /// Snow on every roof.
@@ -642,25 +676,46 @@ extension _StadiumFeatures on StadiumPainter {
 
   // --- Weather in the sky ----------------------------------------------------
 
-  /// The sky under the day's weather: grey cloud for rain or snow, a pale
-  /// warm haze in the Gulf heat.
+  /// The sky under the day's weather: grey cloud for rain or snow, a
+  /// near-black storm sky, a pale warm haze in the Gulf heat, a thick grey
+  /// fog, an ochre dust storm, and the crisp deep blue of a frosty night.
   void _weatherSky(Canvas canvas, Size size, double horizon) {
     final rect = Rect.fromLTRB(0, 0, size.width, horizon + 2);
+    void wash(Color c, double top, double bottom) => canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = ui.Gradient.linear(rect.topCenter, rect.bottomCenter, [
+          c.withValues(alpha: top),
+          c.withValues(alpha: bottom),
+        ]),
+    );
     switch (spec.weather) {
       case WeatherKind.clear:
         return;
       case WeatherKind.rain:
+        wash(
+          Color.lerp(look.skyMid, const Color(0xFF6E767E), 0.55)!,
+          0.72,
+          0.42,
+        );
+      case WeatherKind.heavyRain:
+      case WeatherKind.windy:
+        wash(
+          Color.lerp(look.skyMid, const Color(0xFF5A6169), 0.65)!,
+          0.82,
+          0.55,
+        );
+      case WeatherKind.thunderstorm:
+        wash(
+          Color.lerp(look.skyMid, const Color(0xFF2E3340), 0.75)!,
+          0.9,
+          0.62,
+        );
       case WeatherKind.snow:
-        final cloud = spec.weather == WeatherKind.rain
-            ? Color.lerp(look.skyMid, const Color(0xFF6E767E), 0.55)!
-            : Color.lerp(look.skyHorizon, const Color(0xFFB4BCC4), 0.5)!;
-        canvas.drawRect(
-          rect,
-          Paint()
-            ..shader = ui.Gradient.linear(rect.topCenter, rect.bottomCenter, [
-              cloud.withValues(alpha: 0.72),
-              cloud.withValues(alpha: 0.42),
-            ]),
+        wash(
+          Color.lerp(look.skyHorizon, const Color(0xFFB4BCC4), 0.5)!,
+          0.72,
+          0.42,
         );
       case WeatherKind.haze:
         final warm = Color.lerp(
@@ -668,22 +723,41 @@ extension _StadiumFeatures on StadiumPainter {
           look.skyHorizon,
           0.4 + 0.5 * look.flood,
         )!;
-        canvas.drawRect(
-          rect,
-          Paint()
-            ..shader = ui.Gradient.linear(rect.topCenter, rect.bottomCenter, [
-              warm.withValues(alpha: 0.25),
-              warm.withValues(alpha: 0.78),
-            ]),
-        );
+        wash(warm, 0.25, 0.78);
+      case WeatherKind.fog:
+        // Grey, and greyest at the horizon, where the city drowns in it.
+        wash(_fogGrey, 0.7, 0.93);
+      case WeatherKind.dustStorm:
+        wash(_dustOchre, 0.62, 0.9);
+      case WeatherKind.frostyNight:
+        wash(const Color(0xFF0E1A33), 0.28, 0.06);
     }
   }
 
+  /// The grey of a fog, darker in the floodlit night.
+  Color get _fogGrey =>
+      Color.lerp(const Color(0xFFB7BEC4), const Color(0xFF59616A), look.flood)!;
+
+  /// The ochre of a dust storm, browner in the floodlit night.
+  Color get _dustOchre =>
+      Color.lerp(const Color(0xFFC9995A), const Color(0xFF6E5233), look.flood)!;
+
   /// Heat haze over the ground: a warm shimmer, thickest at the far stand.
+  /// A fog, a cold grey veil, and a dust storm, an ochre one, are thicker:
+  /// the far stand fades into them.
   void _heatHaze(Canvas canvas, Size size, double horizon) {
-    if (spec.weather != WeatherKind.haze) return;
-    final a = 1 - 0.6 * look.flood;
-    const warm = Color(0xFFE8D2A6);
+    final (Color c, double a0, double a1, double a2) = switch (spec.weather) {
+      WeatherKind.haze => (
+        const Color(0xFFE8D2A6),
+        0.3 * (1 - 0.6 * look.flood),
+        0.1 * (1 - 0.6 * look.flood),
+        0.0,
+      ),
+      WeatherKind.fog => (_fogGrey, 0.82, 0.38, 0.12),
+      WeatherKind.dustStorm => (_dustOchre, 0.66, 0.36, 0.2),
+      _ => (const Color(0x00000000), 0.0, 0.0, 0.0),
+    };
+    if (a0 <= 0) return;
     canvas.drawRect(
       Rect.fromLTRB(0, horizon - 20, size.width, size.height),
       Paint()
@@ -691,9 +765,9 @@ extension _StadiumFeatures on StadiumPainter {
           Offset(0, horizon - 20),
           Offset(0, size.height),
           [
-            warm.withValues(alpha: 0.3 * a),
-            warm.withValues(alpha: 0.1 * a),
-            warm.withValues(alpha: 0),
+            c.withValues(alpha: a0),
+            c.withValues(alpha: a1),
+            c.withValues(alpha: a2),
           ],
           const [0, 0.35, 1],
         ),
@@ -803,6 +877,21 @@ extension _StadiumFeatures on StadiumPainter {
         final c = seat(u, v, 2);
         final w = ppm * 1.7;
         final h = math.max(1.2, ppm * 0.45);
+        if (spec.weather == WeatherKind.windy) {
+          // In a gale, held up by one end and streaming off downwind.
+          for (var b = 0; b < 5; b++) {
+            canvas.drawRect(
+              Rect.fromLTWH(
+                c.dx - w * 0.3 + b * w * 0.26,
+                c.dy - h / 2 + math.sin(b * 1.3 + u * 40) * h * 0.45,
+                w * 0.27,
+                h * 0.85,
+              ),
+              Paint()..color = b.isEven ? CrowdPainter.shirtTone(c1) : c2,
+            );
+          }
+          continue;
+        }
         // Held taut between two hands: five bars, the colours in turn.
         for (var b = 0; b < 5; b++) {
           canvas.drawRect(

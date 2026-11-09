@@ -7950,13 +7950,31 @@ class AppLocalizationsJa extends AppLocalizations {
   String get matchWeatherClear => '晴れ';
 
   @override
-  String get matchWeatherRain => '雨';
+  String get matchWeatherRain => '小雨';
 
   @override
   String get matchWeatherSnow => '雪';
 
   @override
   String get matchWeatherHaze => 'もや';
+
+  @override
+  String get matchWeatherHeavyRain => '大雨';
+
+  @override
+  String get matchWeatherThunderstorm => '雷雨';
+
+  @override
+  String get matchWeatherFog => '霧';
+
+  @override
+  String get matchWeatherWindy => '強風';
+
+  @override
+  String get matchWeatherDustStorm => '砂嵐';
+
+  @override
+  String get matchWeatherFrostyNight => '凍てつく夜';
 
   @override
   String get matchPlayerOfTheMatch => 'マン・オブ・ザ・マッチ';
@@ -7977,6 +7995,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'ゴール！';
+
+  @override
+  String get matchRedCardShout => 'レッドカード';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -15611,4 +15632,61 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get matchTabCommentary => '実況';
+
+  @override
+  String get matchSubShout => '選手交代';
+
+  @override
+  String matchSubOff(String name) {
+    return 'アウト: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'イン: $name';
+  }
+
+  @override
+  String get editorFilterToFix => '要修正';
+
+  @override
+  String get editorNothingToFix => 'ここで修正が必要なものはありません。';
+
+  @override
+  String get editorPromoteTooltip => 'チームに入れる';
+
+  @override
+  String editorPromoted(String name) {
+    return '$nameをチームに入れました';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'チームがいっぱいです';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'チームは最大$max人までです。代わりにプールへ戻す選手を選んでください。';
+  }
+
+  @override
+  String get editorTrophyGallery => '写真から選ぶ';
+
+  @override
+  String get editorTrophyFile => 'ファイルを選ぶ';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'クラブの強さ: 5段階中$stars';
+  }
+
+  @override
+  String get editorClubStrength => '強さ';
+
+  @override
+  String get editorClubStrengthDefault => 'デフォルト';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return '強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中$stars。';
+  }
 }

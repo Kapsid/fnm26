@@ -8257,13 +8257,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchWeatherClear => 'Despejado';
 
   @override
-  String get matchWeatherRain => 'Lluvia';
+  String get matchWeatherRain => 'Lluvia ligera';
 
   @override
   String get matchWeatherSnow => 'Nieve';
 
   @override
   String get matchWeatherHaze => 'Calima';
+
+  @override
+  String get matchWeatherHeavyRain => 'Lluvia intensa';
+
+  @override
+  String get matchWeatherThunderstorm => 'Tormenta';
+
+  @override
+  String get matchWeatherFog => 'Niebla';
+
+  @override
+  String get matchWeatherWindy => 'Viento fuerte';
+
+  @override
+  String get matchWeatherDustStorm => 'Tormenta de arena';
+
+  @override
+  String get matchWeatherFrostyNight => 'Noche helada';
 
   @override
   String get matchPlayerOfTheMatch => 'MEJOR JUGADOR DEL PARTIDO';
@@ -8285,6 +8303,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchGoalShout => '¡GOL!';
+
+  @override
+  String get matchRedCardShout => 'TARJETA ROJA';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16286,4 +16307,61 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'COMENTARIO';
+
+  @override
+  String get matchSubShout => 'CAMBIO';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Sale: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Entra: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Por arreglar';
+
+  @override
+  String get editorNothingToFix => 'Aquí no hay nada que arreglar.';
+
+  @override
+  String get editorPromoteTooltip => 'Pasar a la plantilla';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name pasa a la plantilla';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'La plantilla está completa';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Una plantilla tiene como máximo $max jugadores. Elige al jugador que vuelve a los disponibles en su lugar.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Elegir de tus fotos';
+
+  @override
+  String get editorTrophyFile => 'Elegir un archivo';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Nivel del club: $stars de 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Nivel';
+
+  @override
+  String get editorClubStrengthDefault => 'Predeterminado';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Los mejores jugadores fichan por los clubes más fuertes. Predeterminado: $stars de 5, según su liga.';
+  }
 }

@@ -922,21 +922,29 @@ void main() {
   });
 
   test('resuming mid walk-off keeps him heading for the nearest boundary', () {
-    _Match? m;
-    MatchEvent? injury;
-    for (var seed = 0; seed < 200 && m == null; seed++) {
+    _Match? found;
+    MatchEvent? hurt;
+    late PitchScript first;
+    late double start;
+    // A walk long enough to resume a second into it (one cut short by the
+    // next cut is no use here).
+    for (var seed = 0; seed < 200 && found == null; seed++) {
       final c = _match(seed);
       final e = c.result.events
           .where((e) => e.type == MatchEventType.injury && e.minute < 80)
           .firstOrNull;
-      if (e != null) {
-        m = c;
-        injury = e;
-      }
+      if (e == null) continue;
+      final s = _script(c, PitchSpeed.mid);
+      final at = s.departures[e.playerId]!;
+      if (_lastSeen(s, e.playerId, at) < at + 2) continue;
+      found = c;
+      hurt = e;
+      first = s;
+      start = at;
     }
-    expect(m, isNotNull);
-    final first = _script(m!, PitchSpeed.mid);
-    final start = first.departures[injury!.playerId]!;
+    expect(found, isNotNull);
+    final m = found!;
+    final injury = hurt!;
     final state = first.stateAt(_at(start + 1));
     expect(state.walking, contains(injury.playerId));
     final second = StoryLayer.build(
@@ -958,10 +966,14 @@ void main() {
       expect(now, lessThan(last), reason: 't $t');
       last = now;
     }
-    expect(
-      _toBoundary(second.sample(_at(gone - 1e-5)).players[injury.playerId]!),
-      lessThanOrEqualTo(1),
-    );
+    // Off at the line, or at a cut (he left while the camera was away).
+    final atCut = second.cuts.any((c) => (c - gone).abs() < 1e-6);
+    if (!atCut) {
+      expect(
+        _toBoundary(second.sample(_at(gone - 1e-5)).players[injury.playerId]!),
+        lessThanOrEqualTo(1),
+      );
+    }
   });
 
   test('a substitute named in a moment soon after is on the pitch for it', () {

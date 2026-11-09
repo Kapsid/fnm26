@@ -8070,13 +8070,31 @@ class AppLocalizationsVi extends AppLocalizations {
   String get matchWeatherClear => 'Quang đãng';
 
   @override
-  String get matchWeatherRain => 'Mưa';
+  String get matchWeatherRain => 'Mưa nhẹ';
 
   @override
   String get matchWeatherSnow => 'Tuyết';
 
   @override
-  String get matchWeatherHaze => 'Sương mù';
+  String get matchWeatherHaze => 'Mù khô';
+
+  @override
+  String get matchWeatherHeavyRain => 'Mưa to';
+
+  @override
+  String get matchWeatherThunderstorm => 'Dông';
+
+  @override
+  String get matchWeatherFog => 'Sương mù';
+
+  @override
+  String get matchWeatherWindy => 'Gió mạnh';
+
+  @override
+  String get matchWeatherDustStorm => 'Bão cát';
+
+  @override
+  String get matchWeatherFrostyNight => 'Đêm giá rét';
 
   @override
   String get matchPlayerOfTheMatch => 'CẦU THỦ HAY NHẤT TRẬN';
@@ -8098,6 +8116,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'VÀO!';
+
+  @override
+  String get matchRedCardShout => 'THẺ ĐỎ';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16039,4 +16060,61 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'BÌNH LUẬN';
+
+  @override
+  String get matchSubShout => 'THAY NGƯỜI';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Ra sân: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Vào sân: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Cần sửa';
+
+  @override
+  String get editorNothingToFix => 'Ở đây không có gì cần sửa.';
+
+  @override
+  String get editorPromoteTooltip => 'Chuyển vào đội hình';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name đã chuyển vào đội hình';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Đội hình đã đầy';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Một đội hình có tối đa $max cầu thủ. Hãy chọn cầu thủ sẽ quay về nhóm dự bị thay cho anh ấy.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Chọn từ ảnh của bạn';
+
+  @override
+  String get editorTrophyFile => 'Chọn một tệp';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Sức mạnh câu lạc bộ: $stars/5';
+  }
+
+  @override
+  String get editorClubStrength => 'Sức mạnh';
+
+  @override
+  String get editorClubStrengthDefault => 'Mặc định';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Cầu thủ giỏi hơn gia nhập câu lạc bộ mạnh hơn. Mặc định: $stars/5, theo giải đấu của đội.';
+  }
 }

@@ -109,6 +109,25 @@ Future<Map<String, Object>> _goldenSnapshot(
   return out;
 }
 
+/// [reads] with the club and its country taken out of every player row
+/// ([cols]: their places in a row). The pins were written before club
+/// strength, when every career drew its clubs the old way; a career created
+/// now draws them by strength (`clubStrengthKind`), so here the pin holds
+/// for names, ratings and traits, and the clubs are held to the career's own
+/// first read instead. That the old draw itself is unchanged, careers from
+/// before keep it, is pinned in `v1_world_pin_test.dart` and
+/// `player_repo_world_test.dart`.
+Object? _withoutClubs(Object? reads, Set<int> cols) => switch (reads) {
+  final Map<String, Object?> m => {
+    for (final e in m.entries) e.key: _withoutClubs(e.value, cols),
+  },
+  final List<Object?> row when row.isNotEmpty && row.first is String => [
+    for (var i = 0; i < row.length; i++)
+      if (!cols.contains(i)) row[i],
+  ],
+  _ => reads,
+};
+
 /// [storyContainer], but over the deep pool the app stores (the seed's
 /// players expanded with their fringe), which the default golden was taken
 /// on: the story world, as a phone player has it.
@@ -306,9 +325,20 @@ void main() {
                 .id;
       });
 
-      final golden = jsonDecode(File(_goldenFile).readAsStringSync());
-      Future<Object?> defaultReads() async =>
+      final golden = _withoutClubs(
+        jsonDecode(File(_goldenFile).readAsStringSync()),
+        const {5, 6},
+      );
+      late Object? firstReads;
+      Future<Object?> fullReads() async =>
           jsonDecode(jsonEncode(await _goldenSnapshot(c, defaultCareerId)));
+      // The default career as the golden pins it, its clubs aside (see
+      // [_withoutClubs]); its clubs stand still for the whole story.
+      Future<Object?> defaultReads() async {
+        final reads = await fullReads();
+        expect(reads, firstReads);
+        return _withoutClubs(reads, const {5, 6});
+      }
 
       // 2. Play the career on the copy.
       final players = c.read(playerRepositoryProvider);
@@ -325,6 +355,7 @@ void main() {
       String? europeYear;
       var steps = 0;
       await tester.runAsync(() async {
+        firstReads = await fullReads();
         expect(await defaultReads(), golden);
 
         final d = StoryDriver(c, careerId)

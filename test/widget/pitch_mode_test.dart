@@ -20,6 +20,7 @@ import 'package:fnm/domain/services/match/stadium/daylight.dart';
 import 'package:fnm/domain/services/match/stadium/match_weather.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
+import 'package:fnm/features/tactics/tactics_pitch.dart' show surnameOf;
 import 'package:fnm/features/match/penalty_order_sheet.dart';
 import 'package:fnm/features/match/pitch/pitch_clock.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
@@ -82,7 +83,12 @@ const List<String> _surnames = [
 
 /// A real match between the Czech Republic (the manager's) and Portugal, in
 /// [round], with a bench each and a name for everybody.
-MatchPreview _preview({String? round = 'FRIENDLY', int saveSeed = 42}) {
+MatchPreview _preview({
+  String? round = 'FRIENDLY',
+  int saveSeed = 42,
+  bool opponentSub = false,
+  int opponentSubMinute = 63,
+}) {
   final home = pitchNation('CZE');
   final away = pitchNation('POR');
   var k = 0;
@@ -137,6 +143,16 @@ MatchPreview _preview({String? round = 'FRIENDLY', int saveSeed = 42}) {
     playerNationId: home.id,
     bench: bench(home),
     opponentBench: bench(away),
+    // The AI's planned change, when a test wants a substitution to show.
+    opponentSubs: [
+      if (opponentSub)
+        Substitution(
+          teamNationId: away.id,
+          minute: opponentSubMinute,
+          offId: away.id * 100 + 9,
+          on: bench(away).first,
+        ),
+    ],
     saveSeed: saveSeed,
     ground: (
       stadium: 'Test Park',
@@ -403,6 +419,64 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await _pump(tester, preview: _preview(), salt: 9, resetPrefs: false);
     expect(find.byType(PitchMatchView), findsNothing);
+    expect(find.byType(MatchViewChooser), findsNothing);
+    expect(_screen(tester).mode, MatchViewMode.timeline);
+  });
+
+  // The owner's 2026-11 ask: a new career's first match asks how to watch,
+  // once, even on a device that remembers a choice; an older save (never
+  // marked) and every later match do not.
+  for (final form in FormFactor.values) {
+    testWidgets('a new career asks at its first match, once (${form.name})', (
+      tester,
+    ) async {
+      final tablet = form == FormFactor.tablet;
+      await _pump(
+        tester,
+        preview: _preview(),
+        salt: 7,
+        prefs: {
+          kMatchViewModePrefsKey: 'pitch',
+          MatchViewModeStore.firstMatchAskKey(1): true,
+        },
+        formFactor: form,
+        size: tablet ? const Size(1366, 1024) : const Size(400, 2000),
+      );
+      // Remembered or not, the first match waits for the answer.
+      expect(find.byType(MatchViewChooser), findsOneWidget);
+      expect(find.byType(PitchMatchView), findsNothing);
+      expect(_screen(tester).mode, isNull);
+      await tester.tap(find.byKey(MatchViewChooser.timelineKey));
+      await tester.pump();
+      await tester.pump();
+      expect(find.byType(MatchViewChooser), findsNothing);
+      expect(_screen(tester).mode, MatchViewMode.timeline);
+      final prefs = await SharedPreferences.getInstance();
+      // Kept as the default, and never asked again.
+      expect(prefs.getString(kMatchViewModePrefsKey), 'timeline');
+      expect(prefs.getBool(MatchViewModeStore.firstMatchAskKey(1)), isNull);
+
+      await tester.pumpWidget(const SizedBox());
+      await _pump(
+        tester,
+        preview: _preview(),
+        salt: 8,
+        resetPrefs: false,
+        formFactor: form,
+        size: tablet ? const Size(1366, 1024) : const Size(400, 2000),
+      );
+      expect(find.byType(MatchViewChooser), findsNothing);
+      expect(_screen(tester).mode, MatchViewMode.timeline);
+    });
+  }
+
+  testWidgets('an older save is never asked again', (tester) async {
+    await _pump(
+      tester,
+      preview: _preview(),
+      salt: 7,
+      prefs: {kMatchViewModePrefsKey: 'timeline'},
+    );
     expect(find.byType(MatchViewChooser), findsNothing);
     expect(_screen(tester).mode, MatchViewMode.timeline);
   });
@@ -705,6 +779,226 @@ void main() {
     await tester.pump();
     await _until(tester, () => _clock(tester).playing);
   });
+
+  // The owner's 2026-11 ask: a substitution gets a pop-up as a goal does:
+  // the side, who went off (red arrow), who came on (green arrow) and the
+  // minute. Under the 2D TV's score bug on a phone; as a card on a tablet.
+  for (final form in FormFactor.values) {
+    testWidgets('a substitution pops up on the 2D TV (${form.name})', (
+      tester,
+    ) async {
+      final tablet = form == FormFactor.tablet;
+      final preview = _preview(opponentSub: true);
+      bool wanted(MatchEvent e) =>
+          e.type == MatchEventType.substitution &&
+          e.secondaryName != null &&
+          e.minute > 46 &&
+          e.minute < 85;
+      final salt = _salt(preview, (r) => r.events.any(wanted));
+      await _pump(
+        tester,
+        preview: preview,
+        salt: salt,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        formFactor: form,
+        size: tablet ? const Size(1366, 1024) : const Size(400, 2000),
+      );
+      await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      final r = _result(tester);
+      final pb = _pb(tester);
+      final si = r.events.indexWhere(wanted);
+      final sub = r.events[si];
+      final key = tablet ? matchEventFlashKey : matchEventBannerKey;
+      expect(find.byKey(key), findsNothing);
+      // Through half time first (its whistle stops play).
+      await _seek(tester, pb.halfTime - const Duration(milliseconds: 300));
+      await _until(
+        tester,
+        () => find.byType(HalfTimePrompt).evaluate().isNotEmpty,
+      );
+      await tester.tap(
+        find.descendant(
+          of: find.byType(HalfTimePrompt),
+          matching: find.text(enL.matchContinue),
+        ),
+      );
+      await tester.pump();
+      await _until(tester, () => _clock(tester).playing);
+      await _seek(tester, _secs(pb.revealAt(si) - 0.4));
+      await _until(tester, () => find.byKey(key).evaluate().isNotEmpty);
+      final pop = find.byKey(key);
+      expect(
+        find.descendant(of: pop, matching: find.text(enL.matchSubShout)),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: pop,
+          matching: find.text(surnameOf(sub.playerName)),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: pop,
+          matching: find.text(surnameOf(sub.secondaryName!)),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: pop,
+          matching: find.byIcon(Icons.arrow_downward_rounded),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: pop,
+          matching: find.byIcon(Icons.arrow_upward_rounded),
+        ),
+        findsOneWidget,
+      );
+      // Play goes on under it, and it goes.
+      expect(_clock(tester).playing, isTrue);
+      await tester.pump(kEventFlashHold + const Duration(milliseconds: 100));
+      await tester.pump();
+      expect(find.byKey(key), findsNothing);
+    });
+  }
+
+  // A substitution and a sending-off in the same minute: the red card has
+  // its own banner and the sub's pop-up is held back while it is out (it
+  // comes back if its own time is not up). The two never show together.
+  for (final form in FormFactor.values) {
+    testWidgets('a sub and a red card in the same minute never overlap '
+        '(${form.name})', (tester) async {
+      final tablet = form == FormFactor.tablet;
+      // A red card clear of goals and of half time, with the AI's change
+      // moved into its minute.
+      MatchPreview? preview;
+      int? salt;
+      for (var s = 1; s < 4000 && preview == null; s++) {
+        final reds = _liveResim(
+          _preview(opponentSub: true),
+          s,
+        ).events.where((e) => e.type == MatchEventType.redCard);
+        if (reds.isEmpty) continue;
+        final m = reds.first.minute;
+        if (m < 10 || m > 85 || (m >= 40 && m <= 50)) continue;
+        final p = _preview(opponentSub: true, opponentSubMinute: m);
+        final r = _liveResim(p, s);
+        bool at(MatchEventType t) =>
+            r.events.any((e) => e.type == t && e.minute == m);
+        if (!at(MatchEventType.redCard) || !at(MatchEventType.substitution)) {
+          continue;
+        }
+        if (r.events.any(
+          (e) => e.type == MatchEventType.goal && (e.minute - m).abs() <= 3,
+        )) {
+          continue;
+        }
+        preview = p;
+        salt = s;
+      }
+      expect(preview, isNotNull, reason: 'no same-minute sub and red card');
+      await _pump(
+        tester,
+        preview: preview!,
+        salt: salt!,
+        prefs: {kMatchViewModePrefsKey: 'pitch'},
+        formFactor: form,
+        size: tablet ? const Size(1366, 1024) : const Size(400, 2000),
+      );
+      await _until(tester, () => _ready(tester) && _clock(tester).playing);
+      final r = _result(tester);
+      final pb = _pb(tester);
+      final ri = r.events.indexWhere((e) => e.type == MatchEventType.redCard);
+      final m = r.events[ri].minute;
+      final si = r.events.indexWhere(
+        (e) => e.type == MatchEventType.substitution && e.minute == m,
+      );
+      expect(si, isNonNegative, reason: 'the screen re-sim has the same sub');
+      if (m > 45) {
+        await _seek(tester, pb.halfTime - const Duration(milliseconds: 300));
+        await _until(
+          tester,
+          () => find.byType(HalfTimePrompt).evaluate().isNotEmpty,
+        );
+        await tester.tap(
+          find.descendant(
+            of: find.byType(HalfTimePrompt),
+            matching: find.text(enL.matchContinue),
+          ),
+        );
+        await tester.pump();
+        await _until(tester, () => _clock(tester).playing);
+      }
+      final redFirst = pb.revealAt(ri) < pb.revealAt(si);
+      final redBanner = find.byKey(matchRedCardBannerKey);
+      final subPop = find.byKey(
+        tablet ? matchEventFlashKey : matchEventBannerKey,
+      );
+      var sawRed = false;
+      var sawSub = false;
+      var subAfterRed = false;
+      var overlap = 0;
+      bool redOut() => redBanner.evaluate().isNotEmpty;
+      bool subOut() => subPop.evaluate().isNotEmpty;
+      Future<void> frame() async {
+        await tester.pump(const Duration(milliseconds: 16));
+        final red = redOut();
+        final sub = subOut();
+        if (sub && sawRed && !red) subAfterRed = true;
+        sawRed |= red;
+        sawSub |= sub;
+        if (red && sub) overlap++;
+        if (sub) {
+          // The sub's pop-up is a sub's only, never a red card's too.
+          expect(
+            find.descendant(of: subPop, matching: find.text(enL.matchSubShout)),
+            findsOneWidget,
+          );
+          expect(
+            find.descendant(
+              of: subPop,
+              matching: find.text(enL.matchRedCardShout),
+            ),
+            findsNothing,
+          );
+        }
+      }
+
+      // The first of the two comes out...
+      await _seek(
+        tester,
+        _secs(pb.revealAt(redFirst ? ri : si) - 0.4),
+      );
+      for (var i = 0; i < 600 && !(redFirst ? redOut() : subOut()); i++) {
+        await frame();
+      }
+      expect(redFirst ? redOut() : subOut(), isTrue);
+      // ...and the second arrives while it is still out, as it does at the
+      // faster speeds: both timers run at once.
+      await _seek(
+        tester,
+        _secs(pb.revealAt(redFirst ? si : ri) - 0.3),
+      );
+      for (var i = 0; i < 600; i++) {
+        await frame();
+        if (sawRed && sawSub && !redOut() && !subOut()) break;
+      }
+      expect(sawRed, isTrue, reason: 'the red card banner came down');
+      expect(sawSub, isTrue, reason: 'the sub pop-up showed');
+      expect(overlap, 0, reason: 'never both at once');
+      if (redFirst) {
+        // Held back under the red, the sub comes back for the rest of its
+        // own time.
+        expect(subAfterRed, isTrue);
+      }
+      expect(redOut() || subOut(), isFalse);
+    });
+  }
 
   testWidgets('a user pause survives the ground being baked again', (
     tester,

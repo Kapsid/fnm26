@@ -8227,13 +8227,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get matchWeatherClear => 'Clear';
 
   @override
-  String get matchWeatherRain => 'Rain';
+  String get matchWeatherRain => 'Light rain';
 
   @override
   String get matchWeatherSnow => 'Snow';
 
   @override
   String get matchWeatherHaze => 'Haze';
+
+  @override
+  String get matchWeatherHeavyRain => 'Heavy rain';
+
+  @override
+  String get matchWeatherThunderstorm => 'Thunderstorm';
+
+  @override
+  String get matchWeatherFog => 'Fog';
+
+  @override
+  String get matchWeatherWindy => 'Windy';
+
+  @override
+  String get matchWeatherDustStorm => 'Dust storm';
+
+  @override
+  String get matchWeatherFrostyNight => 'Frosty night';
 
   @override
   String get matchPlayerOfTheMatch => 'PLAYER OF THE MATCH';
@@ -8255,6 +8273,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'GOAL!';
+
+  @override
+  String get matchRedCardShout => 'RED CARD';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16217,4 +16238,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'COMMENTARY';
+
+  @override
+  String get matchSubShout => 'SUB';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Off: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'On: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Needs a fix';
+
+  @override
+  String get editorNothingToFix => 'Nothing needs fixing here.';
+
+  @override
+  String get editorPromoteTooltip => 'Move to the squad';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name moved to the squad';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'The squad is full';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'A squad holds at most $max players. Pick the player who goes back to the pool in his place.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Choose from your photos';
+
+  @override
+  String get editorTrophyFile => 'Choose a file instead';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Club strength: $stars of 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Strength';
+
+  @override
+  String get editorClubStrengthDefault => 'Default';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Better players join stronger clubs. Default: $stars of 5, set by its league.';
+  }
 }

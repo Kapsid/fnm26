@@ -149,8 +149,16 @@ abstract final class PackRules {
   /// The most players a nation's fixed pool holds.
   static const poolMax = 150;
 
-  /// The most clubs, sponsors and Y accounts a pack adds.
-  static const addedClubsMax = 500, addedSponsorsMax = 50, addedYMax = 100;
+  /// The most clubs, sponsors and Y accounts a pack adds. Clubs: about 24
+  /// a nation, room for a whole league in every country, and still a bound
+  /// on a hostile file (1.1.x raised it from 500; an older build refuses a
+  /// file over its cap, and says the file is from a newer version first:
+  /// see `kPackFormatVersion`).
+  static const addedClubsMax = 5000, addedSponsorsMax = 50, addedYMax = 100;
+
+  /// The most game clubs a pack sets a strength for. The game has about
+  /// 1 600 clubs; this only bounds a hostile file.
+  static const clubStrengthsMax = 5000;
 
   /// Longest added sponsor description.
   static const descriptionMax = 120;
@@ -243,38 +251,12 @@ abstract final class PackRules {
     Map<String, List<String>> countryCities, {
     int? addedId,
     String? renamedFrom,
-  }) {
-    final to = _foldName(name);
-    if (renamedFrom != null && _foldName(renamedFrom) == to) return null;
-    final code = country.toLowerCase();
-    if (p.addedClubs.any(
-      (c) => c.country == code && c.id != addedId && _foldName(c.name) == to,
-    )) {
-      return ClubNameClash.added;
-    }
-    var game = false;
-    for (final original in ClubService.leagueClubs(code)) {
-      if (original == renamedFrom) continue;
-      switch (p.clubs[original]) {
-        case final renamed? when renamed.trim().isNotEmpty:
-          if (_foldName(renamed) == to) return ClubNameClash.renamed;
-        case _:
-          if (_foldName(original) == to) game = true;
-      }
-    }
-    if (game ||
-        ClubService.domesticClubNames(
-          code,
-          countryCities[code] ?? const [],
-        ).any((c) => _foldName(c) == to)) {
-      return ClubNameClash.game;
-    }
-    if (p.clubs.keys.any((k) => k != renamedFrom && _foldName(k) == to)) {
-      return ClubNameClash.renameKey;
-    }
-    if (_allGameClubs.contains(to)) return ClubNameClash.gameElsewhere;
-    return null;
-  }
+  }) => ClubNameIndex(p, countryCities).clash(
+    name,
+    country,
+    addedId: addedId,
+    renamedFrom: renamedFrom,
+  );
 
   static FieldReason? checkCode(String s) =>
       _code.hasMatch(s) ? null : FieldReason.badCharacters;
@@ -418,6 +400,14 @@ abstract final class PackRules {
     }
 
     values('clubs', p.clubs);
+    if (p.clubStrengths.length > clubStrengthsMax) {
+      out.add(const BadField('clubStrengths', FieldReason.outOfRange));
+    }
+    for (final e in p.clubStrengths.entries) {
+      if (!ClubStrength.valid(e.value)) {
+        out.add(BadField('clubStrengths.${e.key}', FieldReason.outOfRange));
+      }
+    }
     values('stadiums', p.stadiums);
     values('competitions', p.competitions);
     values('sponsors', p.sponsors);
@@ -505,20 +495,20 @@ abstract final class PackRules {
     }
 
     cap('addedClubs', p.addedClubs.length, addedClubsMax);
+    // Every name folded once, so checking every club is linear in them,
+    // not quadratic: thousands of clubs are checked on every edit.
+    final names = ClubNameIndex(p, countryCities);
     for (final c in p.addedClubs) {
       final path = 'addedClubs.${c.id}';
       id('addedClubs', c.id);
       final r = checkName(c.name);
+      if (c.strength case final s? when !ClubStrength.valid(s)) {
+        out.add(BadField('$path.strength', FieldReason.outOfRange));
+      }
       if (r != null) {
         out.add(BadField(path, r));
       } else {
-        switch (clubNameClash(
-          p,
-          c.name,
-          c.country,
-          countryCities,
-          addedId: c.id,
-        )) {
+        switch (names.clash(c.name, c.country, addedId: c.id)) {
           // Two added clubs under one name: the pack's own duplicate.
           case ClubNameClash.added:
             out.add(BadField(path, FieldReason.duplicate));
@@ -934,3 +924,99 @@ abstract final class PackRules {
     countryCities: countryCities,
   ).isEmpty;
 }
+
+/// Every club name a pack's club checks compare against, folded once: the
+/// index behind [PackRules.clubNameClash]. Built for one pack and kept for
+/// all of its clubs, so checking n clubs costs n lookups rather than n
+/// scans of every name (which at the 5 000-club cap was 25 million
+/// comparisons on every edit). A country's part is built the first time a
+/// club of it is asked about.
+class ClubNameIndex {
+  ClubNameIndex(this._p, this._countryCities);
+
+  final WorldPack _p;
+  final Map<String, List<String>> _countryCities;
+
+  static String _fold(String s) => s.trim().toLowerCase();
+
+  /// Lower-case code -> folded name -> the ids of the added clubs under it.
+  late final Map<String, Map<String, List<int>>> _added = () {
+    final out = <String, Map<String, List<int>>>{};
+    for (final c in _p.addedClubs) {
+      ((out[c.country] ??= {})[_fold(c.name)] ??= []).add(c.id);
+    }
+    return out;
+  }();
+
+  /// Folded rename key -> the keys (game names) folding to it.
+  late final Map<String, List<String>> _renameKeys = () {
+    final out = <String, List<String>>{};
+    for (final k in _p.clubs.keys) {
+      (out[_fold(k)] ??= []).add(k);
+    }
+    return out;
+  }();
+
+  final Map<String, _CountryNames> _countries = {};
+
+  _CountryNames _country(String code) => _countries[code] ??= () {
+    final renamed = <String, List<String>>{};
+    final game = <String, List<String>>{};
+    for (final original in ClubService.leagueClubs(code)) {
+      switch (_p.clubs[original]) {
+        case final to? when to.trim().isNotEmpty:
+          (renamed[_fold(to)] ??= []).add(original);
+        case _:
+          (game[_fold(original)] ??= []).add(original);
+      }
+    }
+    return (
+      renamed: renamed,
+      game: game,
+      domestic: {
+        for (final c in ClubService.domesticClubNames(
+          code,
+          _countryCities[code] ?? const [],
+        ))
+          _fold(c),
+      },
+    );
+  }();
+
+  /// [PackRules.clubNameClash] for [name] in [country], off this index.
+  ClubNameClash? clash(
+    String name,
+    String country, {
+    int? addedId,
+    String? renamedFrom,
+  }) {
+    final to = _fold(name);
+    if (renamedFrom != null && _fold(renamedFrom) == to) return null;
+    final code = country.toLowerCase();
+    if (_added[code]?[to]?.any((id) => id != addedId) ?? false) {
+      return ClubNameClash.added;
+    }
+    final here = _country(code);
+    bool other(List<String>? names) =>
+        names?.any((n) => n != renamedFrom) ?? false;
+    if (other(here.renamed[to])) return ClubNameClash.renamed;
+    if (other(here.game[to]) || here.domestic.contains(to)) {
+      return ClubNameClash.game;
+    }
+    if (other(_renameKeys[to])) return ClubNameClash.renameKey;
+    if (PackRules._allGameClubs.contains(to)) {
+      return ClubNameClash.gameElsewhere;
+    }
+    return null;
+  }
+}
+
+/// One country's part of a [ClubNameIndex]: its league clubs under the
+/// names the pack gives them ([renamed]) and under their own ([game]),
+/// each folded name to the game names behind it, and the folded names of
+/// the sides the game names for its cities ([domestic]).
+typedef _CountryNames = ({
+  Map<String, List<String>> renamed,
+  Map<String, List<String>> game,
+  Set<String> domestic,
+});

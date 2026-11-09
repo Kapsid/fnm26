@@ -102,13 +102,18 @@ class GroundCard extends StatelessWidget {
             style: AppTypography.labelMedium,
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
-        Text(
-          _thousands(ground.attendance),
-          style: AppTypography.labelMedium.copyWith(
-            fontWeight: FontWeight.w700,
+        // The full card says "X of Y seats filled" under the bar, so the
+        // crowd figure beside the name only repeated it and squeezed the
+        // stadium name. Only the compact line, which has no bar, keeps it.
+        if (compact) ...[
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            _thousands(ground.attendance),
+            style: AppTypography.labelMedium.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ),
+        ],
       ],
     );
     // The badges (neutral ground, sold out) sit on a line of their own under
@@ -145,6 +150,12 @@ class GroundCard extends StatelessWidget {
                   WeatherKind.rain => Icons.umbrella_rounded,
                   WeatherKind.snow => Icons.ac_unit_rounded,
                   WeatherKind.haze => Icons.blur_on_rounded,
+                  WeatherKind.heavyRain => Icons.water_drop_rounded,
+                  WeatherKind.thunderstorm => Icons.thunderstorm_rounded,
+                  WeatherKind.fog => Icons.foggy,
+                  WeatherKind.windy => Icons.air_rounded,
+                  WeatherKind.dustStorm => Icons.grain_rounded,
+                  WeatherKind.frostyNight => Icons.severe_cold_rounded,
                 },
                 size: 16,
                 color: AppColors.onSurfaceVariant,
@@ -233,6 +244,12 @@ class GroundCard extends StatelessWidget {
     WeatherKind.rain => l.matchWeatherRain,
     WeatherKind.snow => l.matchWeatherSnow,
     WeatherKind.haze => l.matchWeatherHaze,
+    WeatherKind.heavyRain => l.matchWeatherHeavyRain,
+    WeatherKind.thunderstorm => l.matchWeatherThunderstorm,
+    WeatherKind.fog => l.matchWeatherFog,
+    WeatherKind.windy => l.matchWeatherWindy,
+    WeatherKind.dustStorm => l.matchWeatherDustStorm,
+    WeatherKind.frostyNight => l.matchWeatherFrostyNight,
   };
 
   /// `62431` → `62,431`.

@@ -198,6 +198,9 @@ class StadiumPainter extends CustomPainter {
     _goal(canvas, left: false);
     canvas.restore();
 
+    // Frost under the floodlights: pale whatever the grade.
+    _frostEdges(canvas);
+
     // What gives off its own light, over the grade.
     _crowdGlow(canvas);
     _pools(canvas);
@@ -892,6 +895,26 @@ class StadiumPainter extends CustomPainter {
         look.grade,
         0.6 * (1 - look.flood),
       )!;
+      final flagPaint = Paint()
+        ..filterQuality = FilterQuality.medium
+        ..colorFilter = ColorFilter.mode(shade, BlendMode.modulate);
+      if (spec.weather == WeatherKind.windy) {
+        // Streaming straight out downwind, rippling: drawn in strips, each
+        // a little higher or lower than the last.
+        const n = 6;
+        final sw = img.width / n;
+        final dw = w * 1.35 / n;
+        for (var i = 0; i < n; i++) {
+          final ripple = math.sin(i * 1.4 + t * 9) * h * 0.16 + i * h * 0.05;
+          canvas.drawImageRect(
+            img,
+            Rect.fromLTWH(i * sw, 0, sw + 0.5, img.height.toDouble()),
+            Rect.fromLTWH(tip.dx + i * dw, tip.dy + ripple, dw + 0.4, h * 0.75),
+            flagPaint,
+          );
+        }
+        continue;
+      }
       canvas
         ..drawRect(
           dst.shift(const Offset(0.6, 0.8)),
@@ -901,9 +924,7 @@ class StadiumPainter extends CustomPainter {
           img,
           Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
           dst,
-          Paint()
-            ..filterQuality = FilterQuality.medium
-            ..colorFilter = ColorFilter.mode(shade, BlendMode.modulate),
+          flagPaint,
         );
     }
   }

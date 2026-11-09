@@ -8048,13 +8048,31 @@ class AppLocalizationsTh extends AppLocalizations {
   String get matchWeatherClear => 'ท้องฟ้าแจ่มใส';
 
   @override
-  String get matchWeatherRain => 'ฝนตก';
+  String get matchWeatherRain => 'ฝนตกเล็กน้อย';
 
   @override
   String get matchWeatherSnow => 'หิมะตก';
 
   @override
   String get matchWeatherHaze => 'หมอกควัน';
+
+  @override
+  String get matchWeatherHeavyRain => 'ฝนตกหนัก';
+
+  @override
+  String get matchWeatherThunderstorm => 'พายุฝนฟ้าคะนอง';
+
+  @override
+  String get matchWeatherFog => 'หมอก';
+
+  @override
+  String get matchWeatherWindy => 'ลมแรง';
+
+  @override
+  String get matchWeatherDustStorm => 'พายุฝุ่น';
+
+  @override
+  String get matchWeatherFrostyNight => 'คืนหนาวจัด';
 
   @override
   String get matchPlayerOfTheMatch => 'ผู้เล่นยอดเยี่ยมประจำเกม';
@@ -8076,6 +8094,9 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'ประตู!';
+
+  @override
+  String get matchRedCardShout => 'ใบแดง';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -15897,4 +15918,61 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'คำบรรยาย';
+
+  @override
+  String get matchSubShout => 'เปลี่ยนตัว';
+
+  @override
+  String matchSubOff(String name) {
+    return 'ออก: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'เข้า: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'ต้องแก้ไข';
+
+  @override
+  String get editorNothingToFix => 'ไม่มีอะไรต้องแก้ไขที่นี่';
+
+  @override
+  String get editorPromoteTooltip => 'ย้ายเข้าทีม';
+
+  @override
+  String editorPromoted(String name) {
+    return 'ย้าย $name เข้าทีมแล้ว';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'ทีมเต็มแล้ว';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'ทีมมีผู้เล่นได้สูงสุด $max คน เลือกผู้เล่นที่จะกลับไปอยู่ในกลุ่มสำรองแทน';
+  }
+
+  @override
+  String get editorTrophyGallery => 'เลือกจากรูปภาพของคุณ';
+
+  @override
+  String get editorTrophyFile => 'เลือกไฟล์';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'ความแข็งแกร่งของสโมสร: $stars จาก 5';
+  }
+
+  @override
+  String get editorClubStrength => 'ความแข็งแกร่ง';
+
+  @override
+  String get editorClubStrengthDefault => 'ค่าเริ่มต้น';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'นักเตะที่เก่งกว่าจะย้ายไปสโมสรที่แข็งแกร่งกว่า ค่าเริ่มต้น: $stars จาก 5 ตามลีกของสโมสร';
+  }
 }

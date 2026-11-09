@@ -8483,13 +8483,31 @@ class AppLocalizationsRo extends AppLocalizations {
   String get matchWeatherClear => 'Senin';
 
   @override
-  String get matchWeatherRain => 'Ploaie';
+  String get matchWeatherRain => 'Ploaie slabă';
 
   @override
   String get matchWeatherSnow => 'Ninsoare';
 
   @override
-  String get matchWeatherHaze => 'Ceață';
+  String get matchWeatherHaze => 'Pâclă';
+
+  @override
+  String get matchWeatherHeavyRain => 'Ploaie torențială';
+
+  @override
+  String get matchWeatherThunderstorm => 'Furtună cu fulgere';
+
+  @override
+  String get matchWeatherFog => 'Ceață';
+
+  @override
+  String get matchWeatherWindy => 'Vânt puternic';
+
+  @override
+  String get matchWeatherDustStorm => 'Furtună de praf';
+
+  @override
+  String get matchWeatherFrostyNight => 'Noapte geroasă';
 
   @override
   String get matchPlayerOfTheMatch => 'OMUL MECIULUI';
@@ -8511,6 +8529,9 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'GOL!';
+
+  @override
+  String get matchRedCardShout => 'CARTONAȘ ROȘU';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16607,4 +16628,61 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'COMENTARIU';
+
+  @override
+  String get matchSubShout => 'SCHIMBARE';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Iese: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Intră: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'De corectat';
+
+  @override
+  String get editorNothingToFix => 'Aici nu e nimic de corectat.';
+
+  @override
+  String get editorPromoteTooltip => 'Mută în lot';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name a fost mutat în lot';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'Lotul este plin';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Un lot are cel mult $max jucători. Alegeți jucătorul care se întoarce în rezervă în locul lui.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Alege din fotografiile tale';
+
+  @override
+  String get editorTrophyFile => 'Alege un fișier';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Forța clubului: $stars din 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Forță';
+
+  @override
+  String get editorClubStrengthDefault => 'Implicit';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'Jucătorii mai buni ajung la cluburi mai puternice. Implicit: $stars din 5, după liga sa.';
+  }
 }

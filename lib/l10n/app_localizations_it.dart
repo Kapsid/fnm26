@@ -8241,13 +8241,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchWeatherClear => 'Sereno';
 
   @override
-  String get matchWeatherRain => 'Pioggia';
+  String get matchWeatherRain => 'Pioggia leggera';
 
   @override
   String get matchWeatherSnow => 'Neve';
 
   @override
   String get matchWeatherHaze => 'Foschia';
+
+  @override
+  String get matchWeatherHeavyRain => 'Pioggia battente';
+
+  @override
+  String get matchWeatherThunderstorm => 'Temporale';
+
+  @override
+  String get matchWeatherFog => 'Nebbia';
+
+  @override
+  String get matchWeatherWindy => 'Ventoso';
+
+  @override
+  String get matchWeatherDustStorm => 'Tempesta di sabbia';
+
+  @override
+  String get matchWeatherFrostyNight => 'Notte gelida';
 
   @override
   String get matchPlayerOfTheMatch => 'MIGLIORE IN CAMPO';
@@ -8269,6 +8287,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get matchGoalShout => 'GOL!';
+
+  @override
+  String get matchRedCardShout => 'CARTELLINO ROSSO';
 
   @override
   String matchShootoutScore(int home, int away) {
@@ -16268,4 +16289,61 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get matchTabCommentary => 'COMMENTO';
+
+  @override
+  String get matchSubShout => 'CAMBIO';
+
+  @override
+  String matchSubOff(String name) {
+    return 'Esce: $name';
+  }
+
+  @override
+  String matchSubOn(String name) {
+    return 'Entra: $name';
+  }
+
+  @override
+  String get editorFilterToFix => 'Da sistemare';
+
+  @override
+  String get editorNothingToFix => 'Qui non c’è niente da sistemare.';
+
+  @override
+  String get editorPromoteTooltip => 'Sposta in rosa';
+
+  @override
+  String editorPromoted(String name) {
+    return '$name spostato in rosa';
+  }
+
+  @override
+  String get editorPromoteFullTitle => 'La rosa è al completo';
+
+  @override
+  String editorPromoteFullBody(int max) {
+    return 'Una rosa può avere al massimo $max giocatori. Scegli il giocatore che torna nel bacino al suo posto.';
+  }
+
+  @override
+  String get editorTrophyGallery => 'Scegli dalle tue foto';
+
+  @override
+  String get editorTrophyFile => 'Scegli un file';
+
+  @override
+  String clubStrengthOf(int stars) {
+    return 'Forza del club: $stars su 5';
+  }
+
+  @override
+  String get editorClubStrength => 'Forza';
+
+  @override
+  String get editorClubStrengthDefault => 'Predefinita';
+
+  @override
+  String editorClubStrengthHelp(int stars) {
+    return 'I giocatori migliori vanno nei club più forti. Predefinita: $stars su 5, in base al suo campionato.';
+  }
 }

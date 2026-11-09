@@ -275,7 +275,9 @@ class _TabletResultRow extends StatelessWidget {
           SizedBox(
             width: 64,
             child: Text(
-              f.hasResult ? '${f.homeScore} - ${f.awayScore}' : l.resultsVs,
+              f.hasResult
+                  ? '${f.shownHomeScore} - ${f.shownAwayScore}'
+                  : l.resultsVs,
               textAlign: TextAlign.center,
               style: f.hasResult
                   ? TabletText.cellNumeric.copyWith(fontWeight: FontWeight.w700)

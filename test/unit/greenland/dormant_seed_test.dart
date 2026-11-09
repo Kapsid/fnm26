@@ -45,7 +45,11 @@ String _fingerprint(List<Player> players) {
   // ignore: avoid_js_rounded_ints
   var h = 0xcbf29ce484222325;
   for (final c in utf8.encode(
-    jsonEncode([for (final p in players) p.toJson()]),
+    // Without clubStars (1.1.x): a display field read at materialisation,
+    // never part of the generated pool, so the pinned hashes stay valid.
+    jsonEncode([
+      for (final p in players) {...p.toJson()}..remove('clubStars'),
+    ]),
   )) {
     h = (h ^ c) * 0x100000001b3;
   }
