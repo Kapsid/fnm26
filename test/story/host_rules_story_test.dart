@@ -119,7 +119,9 @@ void main() {
       ];
       expect(HostStadiumRules.meets(seats, e.bar), isTrue, reason: w);
 
-      // Every ground the cup screen lists is at least the bar.
+      // Every ground the cup screen lists is at least the bar. The call
+      // mirrors TournamentSummaryTab's (tournament_summary.dart): keep the
+      // two in step.
       final byHost = VenueGenerator.forHosts(
         hostIds: e.hostIds,
         citiesByHost: e.hostCities,

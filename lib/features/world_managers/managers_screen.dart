@@ -276,14 +276,16 @@ class _ManagersBodyState extends ConsumerState<ManagersBody>
     Map<int, Nation> nations,
   ) {
     final async = ref.watch(recentMovesProvider(widget.careerId));
-    final names = ref
-        .watch(recentMoveManagersProvider(widget.careerId))
-        .valueOrNull;
+    final namesAsync = ref.watch(recentMoveManagersProvider(widget.careerId));
+    final names = namesAsync.valueOrNull;
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text(l.commonSomethingWentWrong)),
       data: (moves) {
         if (moves.isEmpty) return _empty(l.mgrListEmptyMoves);
+        if (namesAsync.hasError && names == null) {
+          return Center(child: Text(l.commonSomethingWentWrong));
+        }
         if (names == null) {
           return const Center(child: CircularProgressIndicator());
         }

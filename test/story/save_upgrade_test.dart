@@ -605,7 +605,8 @@ void main() {
             final careersBefore = _careers(file.path);
             expect(careersBefore, isNotEmpty);
 
-            // As the app's connection does: the copy first, then the open.
+            // The call connection.dart makes before it opens the file, with
+            // its arguments; this pins the copy, not that wiring.
             final copy = await SaveBackup.writePreUpgradeCopy(
               file,
               fromVersion: AppDatabase.firstManagedVersion,

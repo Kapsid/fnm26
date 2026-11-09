@@ -193,6 +193,37 @@ void main() {
       isFalse,
     );
     expect(find.text(enL.mgrListEmptyMoves), findsNothing);
+    // The names come from the one world read.
+    expect(find.textContaining('Test Mover'), findsWidgets);
+  });
+
+  testWidgets('recent moves says so when the names cannot be read', (
+    tester,
+  ) async {
+    final save = await seedSave(
+      tester,
+      overrides: [
+        recentMovesProvider.overrideWith(
+          (ref, careerId) async => [
+            (
+              nationId: 1,
+              outgoingId: 1,
+              why: SpellEnd.sacked,
+              incomingId: 2,
+              date: DateTime(2027),
+            ),
+          ],
+        ),
+        recentMoveManagersProvider.overrideWith(
+          (ref, careerId) async => throw StateError('no names'),
+        ),
+      ],
+    );
+    await _open(tester, save);
+    await tester.tap(find.byKey(ManagersScreen.movesTabKey));
+    await settle(tester);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.text(enL.commonSomethingWentWrong), findsOneWidget);
   });
 
   testWidgets('recent moves is empty when nothing has happened', (

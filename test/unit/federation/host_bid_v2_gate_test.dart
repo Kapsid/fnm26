@@ -9,6 +9,7 @@ import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/host_bidding.dart';
 import 'package:fnm/domain/services/competition/host_stadium_rules.dart';
+import 'package:fnm/domain/services/competition/hosts.dart';
 import 'package:fnm/domain/services/competition/venues.dart';
 import 'package:fnm/domain/services/entitlement/entitlement.dart';
 import 'package:fnm/features/career/career_providers.dart';
@@ -249,4 +250,93 @@ void main() {
       expect(kinds.any((k) => HostBidMarker.decode(k) != null), isFalse);
     },
   );
+
+  test('turning a bid down under the bars: no pledge, and the edition is '
+      'still stamped', () async {
+    final ger = _code('GER');
+    final w = await _world(ger);
+    await _finishCycle(w);
+    final offer = (await _contStatus(w)).offer;
+    expect(offer, isNotNull);
+    final careers = w.c.read(careerRepositoryProvider);
+    final before = (await careers.byId(w.careerId))!.budget;
+    await w.c.read(hostBidServiceProvider).decline(offer!);
+    final comp = w.c.read(competitionRepositoryProvider);
+    var kinds = await hostBidKinds(comp, w.careerId);
+    expect(
+      kinds.where((k) => k.startsWith('hostBidDeclined:')),
+      isNotEmpty,
+    );
+    expect(
+      kinds,
+      isNot(
+        contains(HostBidding.newBuildKind(HostBidComp.continental, 1, ger.id)),
+      ),
+    );
+    // A decline is never read as an older build's bid.
+    expect(HostBidding.hasLegacyBid(kinds, 1), isFalse);
+    expect((await careers.byId(w.careerId))!.budget, before);
+
+    await w.c.read(seasonServiceProvider).startNextCycle(w.careerId);
+    expect(await _stamped(w, 1), isTrue);
+    kinds = await hostBidKinds(comp, w.careerId);
+    expect(kinds.any((k) => HostBidMarker.decode(k) != null), isFalse);
+  });
+
+  for (final seed in [11, 12, 13, 14]) {
+    test('a bid paid under the bars is decided, and a win stages the EURO in '
+        'qualifying grounds only (seed $seed)', () async {
+      final ger = _code('GER');
+      final w = await _world(ger, seed: seed);
+      await _finishCycle(w);
+      final offer = (await _contStatus(w)).offer!;
+      expect(
+        await w.c.read(hostBidServiceProvider).place(offer, offer.maxLevels),
+        isTrue,
+      );
+      await w.c.read(seasonServiceProvider).startNextCycle(w.careerId);
+      expect(await _stamped(w, 1), isTrue);
+      final comp = w.c.read(competitionRepositoryProvider);
+      final kinds = await hostBidKinds(comp, w.careerId);
+      final results = [
+        for (final k in kinds) ?HostBidding.decodeResult(k),
+      ];
+      expect(results, hasLength(1), reason: 'decided once');
+      final won = results.single.won;
+      final world = await w.c
+          .read(nationRepositoryProvider)
+          .forCareer(w.careerId);
+      final hosts = WorldCupHosts.continentalHostsFor(
+        confederation: Confederation.europe,
+        cycle: 1,
+        seed: seed,
+        nations: world,
+      );
+      expect(hosts.contains(ger.id), won);
+      final plan = WorldCupHosts.continentalGroundPlan(
+        confederation: Confederation.europe,
+        cycle: 1,
+        seed: seed,
+        nations: world,
+      );
+      expect(plan, isNotNull, reason: 'decided under the bars');
+      final venues = VenueGenerator.forHosts(
+        hostIds: hosts,
+        citiesByHost: {
+          for (final h in hosts)
+            if (_cities[h] != null) h: _cities[h]!,
+        },
+        count: VenueGenerator.countForField(24),
+        rules: VenueRules.scaled,
+        qualifyingOnly: true,
+        minSeats: plan!.minSeats,
+        planned: plan.planned,
+      );
+      final grounds = [for (final v in venues.values) ...v];
+      expect(grounds, isNotEmpty);
+      for (final v in grounds) {
+        expect(v.capacity, greaterThanOrEqualTo(_euro.otherSeats));
+      }
+    });
+  }
 }

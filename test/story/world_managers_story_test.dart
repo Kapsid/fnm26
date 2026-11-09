@@ -72,6 +72,7 @@ void main() {
     ]);
     service = c.read(worldManagerServiceProvider) as _Recording;
     d = await StoryDriver.start(c, _seed, nationId: _czechia);
+    twin = await StoryDriver.start(c, _seed, nationId: _czechia);
   });
   tearDownAll(() async {
     c.dispose();
@@ -141,7 +142,6 @@ void main() {
   test(
     'a second career at the same seed has identical managers',
     () async {
-      twin = await StoryDriver.start(c, _seed, nationId: _czechia);
       await service.ensureSeeded(d.careerId);
       await service.ensureSeeded(twin.careerId);
       final a = await world(d.careerId);

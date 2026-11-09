@@ -147,14 +147,16 @@ final AutoDisposeFutureProviderFamily<Map<int, WorldManager>, int>
 recentMoveManagersProvider = FutureProvider.autoDispose
     .family<Map<int, WorldManager>, int>((ref, careerId) async {
       final moves = await ref.watch(recentMovesProvider(careerId).future);
-      final repo = ref.read(worldManagerRepositoryProvider);
-      final out = <int, WorldManager>{};
-      for (final mv in moves) {
-        for (final id in [mv.outgoingId, mv.incomingId]) {
-          if (id == null || out.containsKey(id)) continue;
-          final m = await repo.managerById(careerId, id);
-          if (m != null) out[id] = m;
-        }
-      }
-      return out;
+      if (moves.isEmpty) return const {};
+      // One read of the whole world, not one query per name.
+      final world = await ref
+          .read(worldManagerRepositoryProvider)
+          .load(careerId);
+      final named = {
+        for (final mv in moves) ...[?mv.outgoingId, ?mv.incomingId],
+      };
+      return {
+        for (final m in world.managers)
+          if (named.contains(m.managerId)) m.managerId: m,
+      };
     });

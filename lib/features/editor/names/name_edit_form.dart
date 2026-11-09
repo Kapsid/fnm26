@@ -260,6 +260,9 @@ class _NameEditFormState extends ConsumerState<NameEditForm> {
     }
     if (_section == NameSection.managers) {
       if (_managerNameProblem(l) != null) return;
+      // A nation with no code has no nationality to give him; an empty one
+      // would flag the whole pack.
+      if (_nationality.isEmpty) return;
       _write(
         (p) => NameEdits.withManager(p, _e, _name.text, _nationality),
         group: _group,
