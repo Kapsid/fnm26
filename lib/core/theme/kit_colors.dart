@@ -98,27 +98,6 @@ abstract final class KitColors {
     return out;
   }
 
-  /// Two nations' colours, guaranteed to read as DIFFERENT from each other.
-  ///
-  /// A two-sided bar showing which way a match is going is only worth painting
-  /// in the teams' own colours if the two sides can be told apart — and two of
-  /// the reds in this game are all but identical. When the leads collide the
-  /// second kit's colour is tried, and failing that one side is pushed lighter
-  /// and the other darker, which separates any pair without either losing its
-  /// identity.
-  static (Color, Color) opposed(
-    (String, String) homeKit,
-    (String, String) awayKit,
-  ) {
-    final home = accent(homeKit.$1, homeKit.$2);
-    var away = accent(awayKit.$1, awayKit.$2);
-    if (!tooClose(home, away)) return (home, away);
-    // Their second colour, if that is genuinely a different colour.
-    final alt = legible(parse(awayKit.$2));
-    if (!tooClose(home, alt)) return (home, alt);
-    return (shade(home, 0.16), shade(away, -0.16));
-  }
-
   /// A two-stop fill for a small surface (a player disc, a chip) in a single
   /// nation's colours. Uses the second kit colour when it reads as genuinely
   /// different, otherwise a darker shade of the first — so every nation gets a
@@ -142,9 +121,10 @@ typedef KitPair = ({Color primary, Color secondary});
 ///
 /// The home side always wears its own colours. The away side keeps its own
 /// unless the two shirts clash (a CIE76 colour difference under [minDeltaE],
-/// or both near-white or both near-black, which the difference alone can
-/// under-rate). It then wears a change kit built from its secondary colour,
-/// and failing that the neutral [AppColors] change kit.
+/// both near-white or both near-black, which the difference alone can
+/// under-rate, or two shades of one colour once lifted for the screen). It
+/// then wears a change kit built from its secondary colour, and failing that
+/// the neutral [AppColors] change kit.
 abstract final class KitClash {
   static const double minDeltaE = 25;
 
@@ -166,6 +146,32 @@ abstract final class KitClash {
     return (home: h, away: neutral);
   }
 
+  /// The two sides' colours for everything AROUND the pitch (the TV bar, the
+  /// possession bar, the moment strip): each is the shirt [resolve] dressed
+  /// that side in, lifted for the dark UI, so the bar never shows a side in a
+  /// colour it is not wearing.
+  ///
+  /// The bar used to run its own clash rule (a hue test on each nation's lead
+  /// colour) beside [resolve]'s colour-difference test. Two reds the bar called
+  /// alike but [resolve] called different (a scarlet and a crimson) left the
+  /// bar showing one side blue while both teams ran out in red. One rule now
+  /// decides, and the bar reads its answer.
+  static (Color, Color) barColours(Nation home, Nation away) {
+    final kits = resolve(home, away);
+    final h = _lifted(kits.home.primary);
+    final a = _lifted(kits.away.primary);
+    // Lifting into the legible band can still bring two resolved shirts
+    // together; push them apart rather than paint the bar in one colour.
+    if (!KitColors.tooClose(h, a)) return (h, a);
+    return (KitColors.shade(h, 0.16), KitColors.shade(a, -0.16));
+  }
+
+  static Color _lifted(Color c) {
+    final hex =
+        '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
+    return KitColors.accent(hex, hex);
+  }
+
   static KitPair _kit(Nation n) => (
     primary: KitColors.parse(n.primaryColor),
     secondary: KitColors.parse(n.secondaryColor),
@@ -177,8 +183,14 @@ abstract final class KitClash {
     final lb = _lab(b);
     final dl = la.$1 - lb.$1, da = la.$2 - lb.$2, db = la.$3 - lb.$3;
     if (math.sqrt(dl * dl + da * da + db * db) < minDeltaE) return true;
-    return (_nearWhite(la) && _nearWhite(lb)) ||
-        (_nearBlack(la) && _nearBlack(lb));
+    if ((_nearWhite(la) && _nearWhite(lb)) ||
+        (_nearBlack(la) && _nearBlack(lb))) {
+      return true;
+    }
+    // Two shades of one colour (a scarlet and a crimson) can sit just past
+    // [minDeltaE] and still read as the same shirt once lifted for the dark
+    // screen. Judged as painted, they clash.
+    return KitColors.tooClose(KitColors.legible(a), KitColors.legible(b));
   }
 
   static bool _nearWhite((double, double, double) l) =>

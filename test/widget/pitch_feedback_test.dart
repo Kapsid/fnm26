@@ -31,6 +31,7 @@ import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/pitch/referee_painter.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
+import 'package:fnm/shared/widgets/whole_text.dart' show initialledName;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/fixtures.dart';
@@ -496,7 +497,7 @@ void main() {
       Finder inBanner(String s) =>
           find.descendant(of: banner, matching: find.text(s));
       expect(inBanner(enL.matchRedCardShout), findsOneWidget);
-      expect(inBanner(red.playerName), findsOneWidget);
+      expect(inBanner(initialledName(red.playerName)), findsOneWidget);
       expect(inBanner("${red.minute}'"), findsOneWidget);
       // The referee has the red up.
       final t = _clock(tester).value.inMicroseconds / 1e6;

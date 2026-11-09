@@ -1245,7 +1245,7 @@ class _MomentumBar extends StatelessWidget {
   final String awayCode;
 
   /// The two nations' own colours, already separated from each other so a bar
-  /// between two red teams still reads as two sides — see [KitColors.opposed].
+  /// between two red teams still reads as two sides; see [KitClash.barColours].
   /// The bar used to be the app's blue against the app's green, which said
   /// nothing about who was who.
   final Color homeColor;
@@ -1419,7 +1419,10 @@ class _GoalFlash extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
-                  Text(event.playerName, style: AppTypography.titleMedium),
+                  Text(
+                    initialledName(event.playerName),
+                    style: AppTypography.titleMedium,
+                  ),
                   Text(
                     event.penalty
                         ? '${AppLocalizations.of(context).matchPenalty} · '

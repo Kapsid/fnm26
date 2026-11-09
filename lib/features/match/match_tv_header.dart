@@ -137,11 +137,18 @@ class MatchTvHeader extends StatefulWidget {
     this.theme,
     this.ground,
     this.moments = const [],
+    this.homeName,
+    this.awayName,
     super.key,
   });
 
   final String homeCode;
   final String awayCode;
+
+  /// The nations' full names: the bar prints each in place of its code
+  /// wherever it fits (see [_BugSide]).
+  final String? homeName;
+  final String? awayName;
   final int homeScore;
   final int awayScore;
   final String clock;
@@ -279,6 +286,8 @@ class _MatchTvHeaderState extends State<MatchTvHeader> {
             child: _ScoreBugBar(
               homeCode: w.homeCode,
               awayCode: w.awayCode,
+              homeName: w.homeName,
+              awayName: w.awayName,
               homeScore: w.homeScore,
               awayScore: w.awayScore,
               clock: w.clock,
@@ -483,7 +492,7 @@ class _TvEventStrip extends StatelessWidget {
               ? capsFor(l.matchGoalAssist(_abbrevName(assist)), lang)
               : null;
           lead = plate(l.matchGoalShout);
-          body = who(e.playerName, how: how);
+          body = who(initialledName(e.playerName), how: how);
         case MatchEventType.yellowCard:
           lead = mark(const CardMark(MatchCard.yellow, size: 16));
           body = who(e.playerName);
@@ -494,7 +503,7 @@ class _TvEventStrip extends StatelessWidget {
               size: 16,
             ),
           );
-          body = who(e.playerName);
+          body = who(initialledName(e.playerName));
         case MatchEventType.injury:
           lead = mark(
             const Icon(
@@ -505,7 +514,7 @@ class _TvEventStrip extends StatelessWidget {
           );
           body = who(e.playerName);
         case MatchEventType.substitution:
-          lead = plate(l.matchSubShout);
+          lead = mark(const _SubMark(size: 16));
           body = _EventLine(event: e, style: strong);
       }
     }

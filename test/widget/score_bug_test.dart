@@ -112,7 +112,7 @@ void main() {
       final l = await AppLocalizations.delegate.load(Locale(locale));
       await pump(tester, event: goal, locale: locale);
       expect(find.text(l.matchGoalShout), findsOneWidget);
-      expect(find.text('Jan Novak'), findsOneWidget);
+      expect(find.text('J. Novak'), findsOneWidget);
       expect(find.text('90+3'), findsOneWidget);
       // Tucked under the stripe at first, out after the slide, held, and
       // back in by the end of the flash.

@@ -10,6 +10,7 @@ import 'package:fnm/features/match/pitch/pitch_match_view.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/tactics/tactics_pitch.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
+import 'package:fnm/shared/widgets/whole_text.dart' show initialledName;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -164,7 +165,10 @@ void main() {
         expect(tester.takeException(), isNull);
         expect(strip, findsOneWidget);
         expect(
-          find.descendant(of: strip, matching: find.text(goal.playerName)),
+          find.descendant(
+            of: strip,
+            matching: find.text(initialledName(goal.playerName)),
+          ),
           findsOneWidget,
         );
         final pitch = tester.getRect(find.byType(PitchMatchView));
@@ -183,7 +187,10 @@ void main() {
         await tester.pump(kGoalFlashHold);
         await tester.pump(const Duration(milliseconds: 300));
         expect(
-          find.descendant(of: strip, matching: find.text(goal.playerName)),
+          find.descendant(
+            of: strip,
+            matching: find.text(initialledName(goal.playerName)),
+          ),
           findsNothing,
         );
         for (var i = 0; i < kTvEventQueueMax + 1; i++) {

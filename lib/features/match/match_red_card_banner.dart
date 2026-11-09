@@ -103,7 +103,7 @@ class _RedCardBanner extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    event.playerName,
+                    initialledName(event.playerName),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.labelMedium.copyWith(

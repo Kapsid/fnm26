@@ -841,10 +841,14 @@ void main() {
       await _seek(tester, _secs(pb.revealAt(si) - 0.4));
       await _until(tester, subOut);
       final pop = find.byKey(key);
-      // Both shout it.
+      // Both mark it: the arrows, not a word, so the names get the room.
+      expect(
+        find.descendant(of: pop, matching: find.byKey(matchSubMarkKey)),
+        findsOneWidget,
+      );
       expect(
         find.descendant(of: pop, matching: find.text(enL.matchSubShout)),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.descendant(
@@ -860,7 +864,8 @@ void main() {
         ),
         findsOneWidget,
       );
-      const arrows = findsOneWidget;
+      // One pair beside the names, one pair in the mark.
+      final arrows = findsNWidgets(2);
       expect(
         find.descendant(
           of: pop,
@@ -1003,7 +1008,7 @@ void main() {
         if (sub) {
           // The sub's pop-up is a sub's only, never a red card's too.
           expect(
-            find.descendant(of: subPop, matching: find.text(enL.matchSubShout)),
+            find.descendant(of: subPop, matching: find.byKey(matchSubMarkKey)),
             findsOneWidget,
           );
           expect(
