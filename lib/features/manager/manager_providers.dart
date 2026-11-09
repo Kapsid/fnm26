@@ -1,12 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/career.dart';
 import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
+import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart';
 
 /// Everything the manager's own page shows: what he is good at, what he has
 /// left to spend, who he employs and what the side is working on.
@@ -109,10 +112,57 @@ class ManagerService {
   }
 
   Future<void> hire(int careerId, StaffRole role, int? candidateId) async {
+    // The assistant he had, if this hire lets him go: read before the post
+    // changes, while the staff room still has him.
+    final left = role == StaffRole.assistant
+        ? await _departingAssistant(careerId, candidateId)
+        : null;
     await _ref
         .read(careerRepositoryProvider)
         .setStaff(careerId, role, candidateId);
+    if (left != null) {
+      // He enters the world managers' free pool. Never allowed to stop a
+      // hire: the post has changed whatever happens here.
+      try {
+        await _ref
+            .read(worldManagerServiceProvider)
+            .assistantLeft(
+              careerId,
+              candidateId: left.id,
+              name: left.name,
+              country: left.country,
+              date: left.date,
+            );
+      } on Object catch (e, st) {
+        AppLog.error('mgr-assistant hire', e, st);
+      }
+    }
     _invalidate(careerId);
+  }
+
+  /// The assistant in post, when hiring [candidateId] (null for nobody)
+  /// would let him go; null when the post is empty or he stays. His name
+  /// is the staff room's, empty for a man hired in an earlier cycle (the
+  /// world managers derive it again then, and his country with it).
+  Future<({int id, String name, String? country, DateTime date})?>
+  _departingAssistant(int careerId, int? candidateId) async {
+    try {
+      final career = await _ref.read(careerRepositoryProvider).byId(careerId);
+      final id = career?.staffAssistantId;
+      if (career == null || id == null || id == candidateId) return null;
+      final room = await _ref.read(staffRoomProvider(careerId).future);
+      final known = room?.hired[StaffRole.assistant];
+      final named = known != null && known.id == id && known.name.isNotEmpty;
+      return (
+        id: id,
+        name: named ? known.name : '',
+        country: named ? known.country : null,
+        date: career.inGameDate,
+      );
+    } on Object catch (e, st) {
+      AppLog.error('mgr-assistant hire', e, st);
+      return null;
+    }
   }
 
   /// Everything a manager change touches. The skills feed morale, the academy

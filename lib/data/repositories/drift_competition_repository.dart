@@ -191,6 +191,42 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<int> capsUnder(
+    int careerId,
+    int playerId,
+    int nationId,
+    DateTime from,
+    DateTime to,
+  ) async {
+    // The ratings table holds a row per player per fixture of the whole
+    // world, so it is never scanned: CROSS JOIN keeps the career's fixtures
+    // of [nationId] in the range as the outer loop, and each one's rating
+    // row is then a primary-key lookup (career, fixture, player).
+    final row = await _db
+        .customSelect(
+          'SELECT COUNT(*) AS n FROM fixtures f '
+          'CROSS JOIN player_ratings r '
+          'ON r.career_id = f.career_id AND r.fixture_id = f.id '
+          'AND r.player_id = ? '
+          'WHERE f.career_id = ? '
+          'AND (f.home_nation_id = ? OR f.away_nation_id = ?) '
+          'AND f.date >= ? AND f.date < ? AND r.nation_id = ?',
+          variables: [
+            Variable<int>(playerId),
+            Variable<int>(careerId),
+            Variable<int>(nationId),
+            Variable<int>(nationId),
+            Variable<DateTime>(from),
+            Variable<DateTime>(to),
+            Variable<int>(nationId),
+          ],
+          readsFrom: {_db.fixtures, _db.playerRatings},
+        )
+        .getSingle();
+    return row.read<int>('n');
+  }
+
+  @override
   Future<List<Fixture>> fixturesBetween(
     int careerId,
     DateTime from,

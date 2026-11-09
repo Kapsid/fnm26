@@ -106,49 +106,17 @@ abstract final class ManagerSeeder {
         if (!playerNationIds.contains(e.key)) e.value.name.trim(),
     };
 
-    bool usable(NamePoolLists? p) =>
-        p != null && p.first.isNotEmpty && p.sur.isNotEmpty;
+    String nameFor(String code) => drawName(
+      code,
+      rng,
+      pools: pools,
+      defaultPools: defaultPools,
+      realNames: realNames,
+      used: used,
+    );
 
-    String nameFor(String code) {
-      final key = code.toUpperCase();
-      final stages = <NamePoolLists>[];
-      for (final p in [
-        pools[key],
-        defaultPools[key],
-        defaultPools['ENG'],
-        pools['ENG'],
-      ]) {
-        if (usable(p) && !stages.any((q) => identical(q, p))) stages.add(p!);
-      }
-      if (stages.isEmpty) {
-        throw StateError('No name pool for $key and none for ENG');
-      }
-      // A real person's name is always drawn again, from the next pool once
-      // one runs dry. A clash with a name already given is drawn again a
-      // few times, then kept: a tiny pool is better repeated than unnamed.
-      late String name;
-      for (final pool in stages) {
-        for (var i = 0; i < 64; i++) {
-          name = ManagerNames.build(pool, rng);
-          if (realNames.contains(name)) continue;
-          if (i < 8 && used.contains(name)) continue;
-          used.add(name);
-          return name;
-        }
-      }
-      // Every pool gave only real names: unreachable with England's.
-      used.add(name);
-      return name;
-    }
-
-    NationStyle styleFor(String home, String nationality) {
-      final domestic = home.toUpperCase() == nationality.toUpperCase();
-      final base = NationIdentity.styleOf(nationality);
-      // Both drawn every time, so the stream does not hang on the answer.
-      final keep = rng.chance(domestic ? 0.70 : 0.60);
-      final drift = rng.pick(kNeighbourStyles[base]!);
-      return keep ? base : drift;
-    }
+    NationStyle styleFor(String home, String nationality) =>
+        drawStyle(home, nationality, rng);
 
     String foreignFor(int nationId) {
       final top = rng.chance(foreignFromTopShare);
@@ -365,6 +333,68 @@ abstract final class ManagerSeeder {
       ],
     );
   }
+
+  /// A fictional name for a manager of nationality [code], drawn on [rng]
+  /// and added to [used]: from [pools], then [defaultPools] (the game's own
+  /// lists), then England's. A real person's name (in [realNames]) is always
+  /// drawn again, from the next pool once one runs dry; a clash with a name
+  /// in [used] is drawn again a few times, then kept: a tiny pool is better
+  /// repeated than unnamed.
+  static String drawName(
+    String code,
+    SeededRng rng, {
+    required Map<String, NamePoolLists> pools,
+    required Map<String, NamePoolLists> defaultPools,
+    required Set<String> realNames,
+    required Set<String> used,
+  }) {
+    bool usable(NamePoolLists? p) =>
+        p != null && p.first.isNotEmpty && p.sur.isNotEmpty;
+    final key = code.toUpperCase();
+    final stages = <NamePoolLists>[];
+    for (final p in [
+      pools[key],
+      defaultPools[key],
+      defaultPools['ENG'],
+      pools['ENG'],
+    ]) {
+      if (usable(p) && !stages.any((q) => identical(q, p))) stages.add(p!);
+    }
+    if (stages.isEmpty) {
+      throw StateError('No name pool for $key and none for ENG');
+    }
+    late String name;
+    for (final pool in stages) {
+      for (var i = 0; i < 64; i++) {
+        name = ManagerNames.build(pool, rng);
+        if (realNames.contains(name)) continue;
+        if (i < 8 && used.contains(name)) continue;
+        used.add(name);
+        return name;
+      }
+    }
+    // Every pool gave only real names: unreachable with England's.
+    used.add(name);
+    return name;
+  }
+
+  /// A style for a manager of [nationality] at a nation coded [home] (empty
+  /// for none): his country's own 70% of the time at home, 60% abroad,
+  /// otherwise a neighbouring one. Both draws are taken every time.
+  static NationStyle drawStyle(
+    String home,
+    String nationality,
+    SeededRng rng,
+  ) {
+    final domestic = home.toUpperCase() == nationality.toUpperCase();
+    final base = NationIdentity.styleOf(nationality);
+    final keep = rng.chance(domestic ? 0.70 : 0.60);
+    final drift = rng.pick(kNeighbourStyles[base]!);
+    return keep ? base : drift;
+  }
+
+  /// The weight a nation of [pedigree] has when a manager's country is drawn.
+  static int weight(int pedigree) => _weight(pedigree);
 
   static int _weight(int pedigree) => (6 - pedigree) * (6 - pedigree);
 

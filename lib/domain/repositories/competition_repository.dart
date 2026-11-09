@@ -306,6 +306,18 @@ abstract interface class CompetitionRepository {
   >
   cycleFixtures(int careerId, int cycle);
 
+  /// How many games [playerId] played for [nationId] in fixtures dated on
+  /// or after [from] and before [to]: his `player_ratings` rows for that
+  /// nation, joined to their fixtures. Walks the career's fixtures in the
+  /// range and looks each one's row up by its primary key.
+  Future<int> capsUnder(
+    int careerId,
+    int playerId,
+    int nationId,
+    DateTime from,
+    DateTime to,
+  );
+
   /// The fixtures in the save dated on or after [from] and before [until]
   /// (played or not), e.g. one international window's matches.
   Future<List<Fixture>> fixturesBetween(

@@ -21,57 +21,14 @@ typedef StaffRoom = ({
 /// his job.
 final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
     FutureProvider.autoDispose.family<StaffRoom?, int>((ref, careerId) async {
-      // A custom world's name lists name the coaches of the nations it has
-      // them for.
-      final packLists = ref.watch(localizedWorldProvider).pack?.nameLists;
+      final namePool = await staffNamePool(ref.watch, careerId);
       final career = await ref.watch(careerRepositoryProvider).byId(careerId);
       if (career == null) return null;
-      final squad = await ref.watch(squadDataProvider(careerId).future);
       final nations = await ref
           .watch(nationRepositoryProvider)
           .forCareer(careerId);
       final me = nations.where((n) => n.id == career.nationId).firstOrNull;
       final home = me?.code.toLowerCase() ?? '';
-
-      // Where the candidates come from: home, plus a handful of the game's
-      // strongest football nations. Coaching is an international trade, so a
-      // staff room drawn entirely from one country reads like a village.
-      final playerRepo = ref.watch(playerRepositoryProvider);
-      final sources = <int>{
-        career.nationId,
-        // Deterministic per save and per cycle, so the room is stable while
-        // the manager looks at it and different next time round.
-        for (final n
-            in (nations.toList()
-                  ..sort((a, b) => a.ranking.compareTo(b.ranking)))
-                .take(20))
-          n.id,
-      }.take(8).toList();
-
-      final namePool = <String, List<String>>{};
-      for (final id in sources) {
-        final nation = nations.where((n) => n.id == id).firstOrNull;
-        if (nation == null) continue;
-        final code = nation.code.toLowerCase();
-        // A list the pack left empty falls back to the default names.
-        final packNames = switch (packLists?[id]) {
-          final lists? => staffNamesFrom(lists),
-          null => const <String>[],
-        };
-        if (packNames.isNotEmpty) {
-          namePool[code] = packNames;
-          continue;
-        }
-        if (id == career.nationId) {
-          namePool[code] = [
-            for (final p in squad?.pool ?? const <Player>[]) p.name,
-          ];
-          continue;
-        }
-        final pool = await playerRepo.byNation(id);
-        namePool[code] = [for (final p in pool) p.name];
-      }
-      namePool.removeWhere((_, names) => names.isEmpty);
 
       final ids = {
         StaffRole.assistant: career.staffAssistantId,
@@ -131,6 +88,65 @@ final AutoDisposeFutureProviderFamily<StaffRoom?, int> staffRoomProvider =
         wagesPerCycle: Staff.totalCost(tiers),
       );
     });
+
+/// The names the staff market draws its coaches from for a save, keyed by
+/// lower-case flag code (see [StaffMarket.forRole]): home, plus a handful of
+/// the game's strongest football nations. Empty for a missing career.
+///
+/// [read] is how it reads providers: a provider's `ref.watch`, so the room
+/// follows what it is built from, or a one-off read.
+Future<Map<String, List<String>>> staffNamePool(
+  T Function<T>(ProviderListenable<T>) read,
+  int careerId,
+) async {
+  // A custom world's name lists name the coaches of the nations it has
+  // them for.
+  final packLists = read(localizedWorldProvider).pack?.nameLists;
+  final career = await read(careerRepositoryProvider).byId(careerId);
+  if (career == null) return const {};
+  final squad = await read(squadDataProvider(careerId).future);
+  final nations = await read(nationRepositoryProvider).forCareer(careerId);
+
+  // Where the candidates come from: home, plus a handful of the game's
+  // strongest football nations. Coaching is an international trade, so a
+  // staff room drawn entirely from one country reads like a village.
+  final playerRepo = read(playerRepositoryProvider);
+  final sources = <int>{
+    career.nationId,
+    // Deterministic per save and per cycle, so the room is stable while
+    // the manager looks at it and different next time round.
+    for (final n
+        in (nations.toList()..sort((a, b) => a.ranking.compareTo(b.ranking)))
+            .take(20))
+      n.id,
+  }.take(8).toList();
+
+  final namePool = <String, List<String>>{};
+  for (final id in sources) {
+    final nation = nations.where((n) => n.id == id).firstOrNull;
+    if (nation == null) continue;
+    final code = nation.code.toLowerCase();
+    // A list the pack left empty falls back to the default names.
+    final packNames = switch (packLists?[id]) {
+      final lists? => staffNamesFrom(lists),
+      null => const <String>[],
+    };
+    if (packNames.isNotEmpty) {
+      namePool[code] = packNames;
+      continue;
+    }
+    if (id == career.nationId) {
+      namePool[code] = [
+        for (final p in squad?.pool ?? const <Player>[]) p.name,
+      ];
+      continue;
+    }
+    final pool = await playerRepo.byNation(id);
+    namePool[code] = [for (final p in pool) p.name];
+  }
+  namePool.removeWhere((_, names) => names.isEmpty);
+  return namePool;
+}
 
 /// A staff name pool from a custom world's [lists]: first names and surnames
 /// paired in turn, which [StaffMarket.forRole] splits and recombines the way

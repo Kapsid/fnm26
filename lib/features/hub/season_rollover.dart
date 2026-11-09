@@ -216,6 +216,21 @@ extension SeasonRollover on SeasonService {
     }
 
     final switching = moveTo != null && moveTo != career.nationId;
+    // Staff do not follow him: an assistant left behind enters the world
+    // managers' pool once the new cycle is marked below. His name is read
+    // now, while the staff room is still drawn around the nation he ran.
+    ({int id, String name, String? country})? leftBehind;
+    final assistantId = career.staffAssistantId;
+    if (switching && assistantId != null) {
+      try {
+        final who = await _ref
+            .read(worldManagerServiceProvider)
+            .assistantNamed(careerId, assistantId);
+        leftBehind = (id: assistantId, name: who.name, country: who.country);
+      } on Object catch (e, st) {
+        AppLog.error('mgr-assistant rollover', e, st);
+      }
+    }
     if (switching) {
       await _careers.switchNation(careerId, moveTo);
       await _resetSquadForNewNation(careerId, moveTo, career);
@@ -286,12 +301,35 @@ extension SeasonRollover on SeasonService {
     );
 
     // The managers' rollover: retirements, contracts, poaching and hiring,
-    // read off the ranking frozen above. Last, and caught: a failed pass
-    // leaves its marker unset and nobody moved, never a cycle half built.
+    // read off the ranking frozen above, and (when he took a new job) the
+    // man he replaced out and a successor named where he left. Last, and
+    // caught: a failed pass leaves its marker unset and nobody moved, never
+    // a cycle half built.
+    final managers = _ref.read(worldManagerServiceProvider);
+    if (leftBehind case final left?) {
+      try {
+        await managers.assistantLeft(
+          careerId,
+          candidateId: left.id,
+          name: left.name,
+          country: left.country,
+          date: nextStart,
+        );
+      } on Object catch (e, st) {
+        AppLog.error('mgr-assistant rollover', e, st);
+      }
+    }
     try {
-      await _ref
-          .read(worldManagerServiceProvider)
-          .atRollover(careerId, nextCycle: nextCycle);
+      if (switching) {
+        await managers.playerMoved(
+          careerId,
+          from: career.nationId,
+          to: moveTo,
+          date: nextStart,
+        );
+      } else {
+        await managers.atRollover(careerId, nextCycle: nextCycle);
+      }
     } on Object catch (e, st) {
       AppLog.error('mgr-pass rollover', e, st);
     }

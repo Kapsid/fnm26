@@ -191,6 +191,9 @@ abstract final class StaffMarket {
   static StaffRole roleOf(int id) =>
       StaffRole.values[((id - idBase) ~/ _roleStride) % 10];
 
+  /// The cycle whose market the person with this [id] applied in.
+  static int cycleOf(int id) => (id - idBase) ~/ _cycleStride;
+
   /// The people applying for [role] this [cycle].
   ///
   /// [namePool] is a map of flag code to the names that country produces —
