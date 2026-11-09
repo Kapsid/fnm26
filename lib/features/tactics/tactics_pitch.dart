@@ -1237,10 +1237,10 @@ class _PlayerNode extends StatelessWidget {
                 fatigue != FatigueState.fresh)
               Positioned(
                 key: ValueKey('pitchFatigue$slot'),
-                top: overhang + metrics.disc * 0.64,
-                // The node is no wider than the ball, so the marker sits on its
-                // lower right shoulder, below the name's first line.
-                right: 0,
+                top: overhang + metrics.disc * 0.02,
+                // On the ball's upper left shoulder, clear of the name and of
+                // the rim badge at the top centre.
+                left: 0,
                 child: FatigueDot(state: fatigue!, size: metrics.disc * 0.36),
               ),
             // The full-back's arrow, on the other shoulder from the card:
