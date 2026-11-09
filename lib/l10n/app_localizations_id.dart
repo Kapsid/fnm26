@@ -16265,4 +16265,67 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Jangan berlebihan. Tapi ya, perjalanan yang bagus.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Tersingkir dari $competition, kurang lebih sesuai perkiraan. Bangga mereka sudah berusaha.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition sudah berakhir bagi kita. Kita memberi perlawanan kepada tim besar. Angkat kepala, semua.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Tersingkir dari $competition. Di atas kertas, memang ini akhir yang paling mungkin. Belajar dan coba lagi.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return '$competition kita berakhir sesuai peringkat. Tak ada yang memalukan.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Tersingkir dari $competition, seperti dugaan kebanyakan dari kita. Bukan bencana, tapi juga bukan kejutan.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition masih terlalu jauh untuk skuad ini. Kesenjangannya nyata. Saatnya menutupnya.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Sudah memberi segalanya. Tak bisa minta lebih.';
+
+  @override
+  String get yReactionAcceptance1 => 'Angkat kepala. Kita akan kembali.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Sakit, tapi mereka tidak mempermalukan kita.';
+
+  @override
+  String get yReactionAcceptance3 => 'Jujur, kurang lebih sesuai perkiraan.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Tim yang lebih baik lolos. Itulah sepak bola.';
+
+  @override
+  String get yReactionAcceptance5 => 'Kecewa, bukan marah.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Agak hambar, jujur saja. Tapi tak ada kejutan.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'Kita belum sampai di sana. Semua orang tahu.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Level yang sama seperti terakhir kali. Perlu naik kelas di siklus berikutnya.';
 }

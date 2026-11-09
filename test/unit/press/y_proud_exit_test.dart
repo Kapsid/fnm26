@@ -352,4 +352,192 @@ void main() {
       expect(protestAtExit({'fx:40'}), isFalse);
     });
   });
+
+  group('an exit about where it was expected', () {
+    ({String? round, int opponentRank, bool won}) g(
+      int rank, {
+      bool won = false,
+    }) => (round: 'GROUP', opponentRank: rank, won: won);
+
+    test('is a minnow out in its group, or out to a better side', () {
+      expect(
+        YTournaments.parExit(
+          exitRound: 'GROUP',
+          nationRank: 70,
+          meetings: [g(10), g(30), g(90, won: true)],
+        ),
+        isTrue,
+      );
+      expect(
+        YTournaments.parExit(
+          exitRound: 'R32',
+          nationRank: 20,
+          meetings: [
+            g(5),
+            g(40, won: true),
+            g(60),
+            (round: 'R32', opponentRank: 8, won: false),
+          ],
+        ),
+        isTrue,
+      );
+      expect(
+        YTournaments.parExit(
+          exitRound: 'GROUP',
+          nationRank: 20,
+          meetings: [g(5), g(40), g(60)],
+        ),
+        isFalse,
+        reason: 'it should have got out of that group: a let-down',
+      );
+      expect(
+        YTournaments.parExit(
+          exitRound: 'R16',
+          nationRank: 20,
+          meetings: [
+            g(5, won: true),
+            g(40, won: true),
+            g(60, won: true),
+            (round: 'R16', opponentRank: 50, won: false),
+          ],
+        ),
+        isFalse,
+        reason: 'out to a weaker side: a let-down',
+      );
+    });
+
+    test('draws no inquest and no fury, whoever is posting', () {
+      for (var seed = 0; seed < 150; seed++) {
+        for (final history in [
+          const <ResultStanding>[],
+          List.filled(8, ResultStanding.humiliating),
+        ]) {
+          final posts = YFeed.forMilestone(
+            exit(key: 'out:cmp:$seed'),
+            nation: nation,
+            seed: seed,
+            accepted: true,
+            history: history,
+          );
+          expectNothingHostile(posts, reason: 'seed $seed');
+          final accepted = posts.where(
+            (p) => p.template == YTemplate.exitAccepted,
+          );
+          expect(accepted.map((p) => p.voice).toSet(), {
+            YVoice.fan,
+            YVoice.expro,
+          });
+          for (final p in accepted) {
+            expect(yPostBody(en, p), contains('World Championship'));
+          }
+          final wire = posts.singleWhere(
+            (p) => p.template == YTemplate.eliminated,
+          );
+          expect(
+            yPostBody(en, wire),
+            'Out at World Championship. That one will hurt for a while.',
+          );
+          expect(
+            posts.where((p) => p.replyTo != null).map((p) => p.mood).toSet(),
+            {YMood.acceptance},
+          );
+        }
+      }
+    });
+
+    test('heartbreak and pride still win over it', () {
+      final painful = YFeed.forMilestone(
+        exit(),
+        nation: nation,
+        seed: 5,
+        painful: true,
+        accepted: true,
+      );
+      expect(
+        painful.map((p) => p.template),
+        contains(YTemplate.exitHeartbreak),
+      );
+      final proud = YFeed.forMilestone(
+        exit(),
+        nation: nation,
+        seed: 5,
+        proud: true,
+        accepted: true,
+      );
+      expect(proud.map((p) => p.template), contains(YTemplate.exitProud));
+      expect(
+        proud.map((p) => p.template),
+        isNot(contains(YTemplate.exitAccepted)),
+      );
+    });
+
+    test('the match that ended it is answered with acceptance', () {
+      for (var seed = 0; seed < 150; seed++) {
+        final posts = YFeed.forMatch(
+          (
+            match: exitMatch(key: 'fx:$seed'),
+            scorerName: null,
+            scorerGoals: null,
+            winStreak: 0,
+            lossStreak: 4,
+            isRivalry: false,
+            injuredNames: const [],
+            boardMood: 5,
+          ),
+          nation: nation,
+          seed: seed,
+          memory: (
+            standings: [
+              ...List.filled(4, ResultStanding.heroic),
+              ResultStanding.poor,
+              ResultStanding.poor,
+            ],
+            metBefore: 4,
+            sameRecently: 4,
+            beatenBefore: 0,
+          ),
+          acceptedExit: true,
+        );
+        expectNothingHostile(posts, reason: 'seed $seed');
+        expect(
+          posts.where((p) => p.replyTo != null).map((p) => p.mood),
+          everyElement(YMood.acceptance),
+        );
+      }
+    });
+
+    test('the stands do not chant for him that night', () {
+      final run = [
+        for (var i = 0; i < 5; i++)
+          plainContext((
+            opponent: 'Minnow $i',
+            nationRank: 70,
+            opponentRank: 160,
+            scored: 0,
+            conceded: 4,
+            date: DateTime(2030, 1 + i, 3),
+            key: 'fx:$i',
+            competitive: true,
+            stakes: YStakes.qualifier,
+            shootoutWon: null,
+            away: false,
+          )),
+        plainContext(exitMatch()),
+      ];
+      bool protest({Set<String> accepted = const {}}) =>
+          YFeed.forRun(
+            run,
+            nation: nation,
+            seed: 11,
+            manager: 'Ivo Brankov',
+            acceptedExitKeys: accepted,
+          ).any(
+            (p) =>
+                p.template == YTemplate.fansProtest &&
+                p.key.startsWith('fans:fx:40'),
+          );
+      expect(protest(), isTrue, reason: 'the control');
+      expect(protest(accepted: {'fx:40'}), isFalse);
+    });
+  });
 }

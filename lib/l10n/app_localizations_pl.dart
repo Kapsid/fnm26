@@ -16529,4 +16529,66 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Nie dajmy się ponieść. Ale tak, dobry występ.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Koniec turnieju $competition, mniej więcej tam, gdzie się spodziewano. Dumny, że spróbowali.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turniej $competition się dla nas skończył. Postawiliśmy się mocnym. Głowy do góry, chłopaki.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Koniec turnieju $competition. Na papierze tak to miało się skończyć. Wyciągnąć wnioski i dalej.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Nasz turniej $competition kończy się tam, gdzie wskazywał ranking. Żaden wstyd.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Koniec turnieju $competition, jak większość z nas się spodziewała. Nie katastrofa, ale i nie szok.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turniej $competition okazał się za wysokim progiem dla tej kadry. Różnica jest realna. Czas ją zniwelować.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Dali z siebie wszystko. Więcej nie można wymagać.';
+
+  @override
+  String get yReactionAcceptance1 => 'Głowy do góry. Wrócimy.';
+
+  @override
+  String get yReactionAcceptance2 => 'Boli, ale wstydu nam nie przynieśli.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Szczerze, mniej więcej tego się spodziewaliśmy.';
+
+  @override
+  String get yReactionAcceptance4 => 'Przeszli lepsi. Taka jest piłka.';
+
+  @override
+  String get yReactionAcceptance5 => 'Rozczarowany, nie wściekły.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Szczerze, trochę bez wyrazu. Ale bez szoku.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'Jeszcze nie jesteśmy na tym poziomie. Wszyscy to wiedzą.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Ten sam poziom co ostatnio. W następnym cyklu trzeba wejść wyżej.';
 }

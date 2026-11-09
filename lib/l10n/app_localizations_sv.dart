@@ -16341,4 +16341,66 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Låt oss inte rusa iväg. Men ja, en bra resa.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Ute ur $competition, ungefär där vi alltid skulle hamna. Stolt att de gav det ett försök.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition är över för oss. Vi gav de stora lagen en match. Huvudet högt, grabbar.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Ute ur $competition. På papperet var det här alltid det troliga slutet. Lär av det och kör igen.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Vårt $competition slutar där rankingen sa att det skulle. Ingen skam i det.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Ute ur $competition, som de flesta av oss väntade. Ingen katastrof, men ingen chock heller.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition var ett steg för långt för den här truppen. Avståndet är verkligt. Dags att knappa in.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Gav allt. Mer kan man inte begära.';
+
+  @override
+  String get yReactionAcceptance1 => 'Huvudet högt. Vi kommer tillbaka.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Gör ont, men de drog ingen skam över oss.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Ungefär vad vi väntade oss, ärligt talat.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'De bättre lagen gick vidare. Det är fotboll.';
+
+  @override
+  String get yReactionAcceptance5 => 'Besviken, inte arg.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Lite platt, om jag ska vara ärlig. Men inga chocker.';
+
+  @override
+  String get yReactionAcceptance7 => 'Vi är inte där än. Det vet alla.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Samma nivå som förra gången. Det behövs ett kliv nästa cykel.';
 }

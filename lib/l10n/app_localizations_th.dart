@@ -16061,4 +16061,62 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'อย่าเพิ่งตื่นเต้นเกินไป แต่ใช่ เป็นผลงานที่ดี';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'ตกรอบ $competition ตามที่คาดไว้ ภูมิใจที่พวกเขาสู้เต็มที่';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition จบลงแล้วสำหรับเรา เราสู้กับทีมใหญ่ได้สูสี เชิดหน้าไว้';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'ตกรอบ $competition ตามหน้ากระดาษนี่คือตอนจบที่น่าจะเป็นอยู่แล้ว เรียนรู้แล้วลุยใหม่';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return '$competition ของเราจบลงตรงที่อันดับโลกบอกไว้ ไม่มีอะไรต้องอาย';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'ตกรอบ $competition อย่างที่หลายคนคาดไว้ ไม่ใช่หายนะ แต่ก็ไม่ใช่เรื่องช็อก';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition ยังไกลเกินไปสำหรับทีมชุดนี้ ช่องว่างมีอยู่จริง ถึงเวลาไล่ตามให้ทัน';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'ทุ่มสุดตัวแล้ว ขออะไรมากกว่านี้ไม่ได้';
+
+  @override
+  String get yReactionAcceptance1 => 'เชิดหน้าไว้ เราจะกลับมา';
+
+  @override
+  String get yReactionAcceptance2 => 'เจ็บ แต่พวกเขาไม่ได้ทำให้เราอับอาย';
+
+  @override
+  String get yReactionAcceptance3 => 'พูดตรงๆ ก็ประมาณที่คาดไว้';
+
+  @override
+  String get yReactionAcceptance4 => 'ทีมที่ดีกว่าผ่านไป นี่แหละฟุตบอล';
+
+  @override
+  String get yReactionAcceptance5 => 'ผิดหวัง แต่ไม่โกรธ';
+
+  @override
+  String get yReactionAcceptance6 => 'พูดตรงๆ ก็จืดไปหน่อย แต่ไม่มีอะไรช็อก';
+
+  @override
+  String get yReactionAcceptance7 => 'เรายังไปไม่ถึงตรงนั้น ทุกคนรู้ดี';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'ระดับเดิมเหมือนครั้งก่อน รอบหน้าต้องก้าวขึ้นอีกขั้น';
 }

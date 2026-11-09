@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Melhor do que qualquer previsão. Bom torneio.",
   "yReactionPride6": "Fora, mas sem vergonha. Justo.",
   "yReactionPride7": "Passou a melhor equipa. Mesmo assim, saímos de cabeça erguida.",
-  "yReactionPride8": "Não exageremos. Mas sim, boa campanha."
+  "yReactionPride8": "Não exageremos. Mas sim, boa campanha.",
+  "yExitAccepted0": "Fora do {competition}, mais ou menos onde se esperava. Orgulhoso por terem tentado.",
+  "yExitAccepted1": "O {competition} acabou para nós. Demos luta aos grandes. Cabeça erguida, rapazes.",
+  "yExitAccepted2": "Fora do {competition}. No papel, era o desfecho mais provável. Aprender e voltar a tentar.",
+  "yExitAccepted3": "O nosso {competition} acaba onde o ranking dizia. Nenhuma vergonha nisso.",
+  "yExitAccepted4": "Fora do {competition}, como a maioria de nós esperava. Não é um desastre, mas também não é choque.",
+  "yExitAccepted5": "O {competition} foi um passo grande demais para este grupo. A diferença é real. Hora de a encurtar.",
+  "yReactionAcceptance0": "Deram tudo. Não se pode pedir mais.",
+  "yReactionAcceptance1": "Cabeça erguida. Vamos voltar.",
+  "yReactionAcceptance2": "Dói, mas não nos envergonharam.",
+  "yReactionAcceptance3": "Mais ou menos o que esperávamos, sinceramente.",
+  "yReactionAcceptance4": "Passaram os melhores. É o futebol.",
+  "yReactionAcceptance5": "Desiludido, não zangado.",
+  "yReactionAcceptance6": "Um pouco apagado, para ser sincero. Mas sem choques.",
+  "yReactionAcceptance7": "Ainda não estamos lá. Toda a gente sabe.",
+  "yReactionAcceptance8": "O mesmo nível da última vez. É preciso subir no próximo ciclo."
 }

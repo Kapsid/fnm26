@@ -16478,4 +16478,68 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Nicht übertreiben. Aber ja, ein guter Lauf.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Raus aus der $competition, ungefähr da, wo man uns erwartet hatte. Stolz, dass sie es versucht haben.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Die $competition ist für uns vorbei. Den Großen haben wir es schwer gemacht. Kopf hoch, Jungs.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Raus aus der $competition. Auf dem Papier war das immer das wahrscheinliche Ende. Daraus lernen und weitermachen.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Unsere $competition endet da, wo die Weltrangliste es vorhergesagt hat. Keine Schande.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Raus aus der $competition, wie die meisten von uns erwartet haben. Keine Katastrophe, aber auch keine Überraschung.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Die $competition war für diesen Kader eine Nummer zu groß. Der Abstand ist real. Zeit, ihn zu verkleinern.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Alles gegeben. Mehr kann man nicht verlangen.';
+
+  @override
+  String get yReactionAcceptance1 => 'Kopf hoch. Wir kommen wieder.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Tut weh, aber blamiert haben sie uns nicht.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Ehrlich gesagt ungefähr das, was wir erwartet haben.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Die Besseren sind weiter. So ist Fußball.';
+
+  @override
+  String get yReactionAcceptance5 => 'Enttäuscht, nicht wütend.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Ehrlich gesagt etwas blass. Aber keine Schocks.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'So weit sind wir noch nicht. Das weiß jeder.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Dasselbe Niveau wie beim letzten Mal. Im nächsten Zyklus muss mehr kommen.';
 }

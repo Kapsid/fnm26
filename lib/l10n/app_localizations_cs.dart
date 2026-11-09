@@ -16631,4 +16631,62 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Nenechme se unést. Ale jo, povedená jízda.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Konec na turnaji $competition, zhruba tam, kde se to čekalo. Jsem rád, že to zkusili naplno.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turnaj $competition pro nás skončil. Velkým týmům jsme dali zabrat. Hlavy vzhůru, kluci.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Konec na turnaji $competition. Na papíře to tak dopadnout mělo. Poučit se a jít dál.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Náš turnaj $competition končí tam, kde to říkal žebříček. Žádná ostuda.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Konec na turnaji $competition, jak většina z nás čekala. Žádná katastrofa, jen ani žádné překvapení.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turnaj $competition byl na tenhle kádr zatím moc. Rozdíl je skutečný. Je čas ho dohnat.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Dali do toho všechno. Víc chtít nejde.';
+
+  @override
+  String get yReactionAcceptance1 => 'Hlavy vzhůru. Vrátíme se.';
+
+  @override
+  String get yReactionAcceptance2 => 'Bolí to, ale ostudu nám neudělali.';
+
+  @override
+  String get yReactionAcceptance3 => 'Upřímně, zhruba co jsme čekali.';
+
+  @override
+  String get yReactionAcceptance4 => 'Postoupili lepší. Takový je fotbal.';
+
+  @override
+  String get yReactionAcceptance5 => 'Zklamaný, ne naštvaný.';
+
+  @override
+  String get yReactionAcceptance6 => 'Upřímně trochu bez šťávy. Ale žádný šok.';
+
+  @override
+  String get yReactionAcceptance7 => 'Ještě na to nemáme. Ví to každý.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Stejná úroveň jako minule. Příště to chce krok nahoru.';
 }

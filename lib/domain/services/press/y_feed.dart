@@ -90,6 +90,10 @@ enum YMood {
   /// further on than the side was ever expected to go (see
   /// `YTournaments.proudExit`). Grateful, not angry.
   pride,
+
+  /// It is over, about where everybody expected it to be (see
+  /// `YTournaments.parExit`). Disappointed, not angry.
+  acceptance,
 }
 
 /// What a post is ABOUT. The words themselves are chosen at render, because
@@ -342,6 +346,13 @@ enum YTemplate {
   /// thirty-two of the World Championship and the feed called for the
   /// manager's head.
   exitProud,
+
+  /// Out of a finals about where the side was expected to go (see
+  /// `YTournaments.parExit`): a minnow out in its group, a side beaten by a
+  /// better one. Accepting, not angry. A plain [eliminated] posted three
+  /// times over was being pushed onto "Now the inquest." and "Somebody
+  /// explain that to me." for an exit nobody could have been surprised by.
+  exitAccepted,
 }
 
 /// What the feed remembers when it writes about a match.
@@ -547,12 +558,12 @@ abstract final class YFeed {
   /// How many phrasings a reply in [mood] has.
   static int reactionVariantsFor(YMood mood) => deepReactionMoods.contains(mood)
       ? deepReactionVariantCount
-      : mood == YMood.pride
+      : mood == YMood.pride || mood == YMood.acceptance
       ? prideReactionVariantCount
       : reactionVariantCount;
 
-  /// The depth of a [YMood.pride] reply: three a band. It answers one thing
-  /// only, an overachieving exit, a handful of times a career.
+  /// The depth of a [YMood.pride] or [YMood.acceptance] reply: three a band.
+  /// Each answers one thing only, a finals exit, a handful of times a career.
   static const int prideReactionVariantCount = 9;
 
   /// The depth of a [deepReactionMoods] reply.
@@ -632,6 +643,7 @@ abstract final class YFeed {
     YTemplate.trophyEuphoric => euphoricVariantCount,
     YTemplate.exitHeartbreak => heartbreakVariantCount,
     YTemplate.exitProud => proudVariantCount,
+    YTemplate.exitAccepted => acceptedVariantCount,
     YTemplate.punditPick => punditVariantCount,
     YTemplate.winShootout ||
     YTemplate.upsetGap ||
@@ -701,6 +713,9 @@ abstract final class YFeed {
   /// And a proud one: three per band, so even the cynic has a line that is
   /// grudging about the football rather than about the manager.
   static const int proudVariantCount = 9;
+
+  /// And an accepting one: two per band.
+  static const int acceptedVariantCount = 6;
 
   /// And a pundit's call before a tournament: two per band.
   static const int punditVariantCount = 6;
@@ -960,8 +975,9 @@ abstract final class YFeed {
   /// those may a protest describe the ground ([protestVenueVariants]).
   /// [familyFirst] says the manager's name is written family name first (see
   /// [hashtagOf]). [proudExitKeys] are the keys of the defeats that ended a
-  /// finals run further on than expected (see [forMatch]): the stands do not
-  /// put the manager's name on a banner the night of one.
+  /// finals run further on than expected, [acceptedExitKeys] those that
+  /// ended one about where expected (see [forMatch]): the stands do not put
+  /// the manager's name on a banner the night of either.
   static List<YPost> forRun(
     List<YContext> contexts, {
     required String nation,
@@ -972,6 +988,7 @@ abstract final class YFeed {
     Set<String> homeKeys = const {},
     bool familyFirst = false,
     Set<String> proudExitKeys = const {},
+    Set<String> acceptedExitKeys = const {},
   }) {
     final out = <YPost>[];
     final recent = <String>[];
@@ -1006,6 +1023,7 @@ abstract final class YFeed {
           beatenBefore: beaten[context.match.opponent] ?? 0,
         ),
         proudExit: proudExitKeys.contains(context.match.key),
+        acceptedExit: acceptedExitKeys.contains(context.match.key),
       )) {
         // A wording is the SENTENCE, not the subject: template and variant,
         // whatever the names in it.
@@ -1051,6 +1069,7 @@ abstract final class YFeed {
       YTemplate? cue;
       if (named &&
           !proudExitKeys.contains(m.key) &&
+          !acceptedExitKeys.contains(m.key) &&
           FanMood.protests(mood, standing, won: won) &&
           (lastProtest == null || index - lastProtest >= FanMood.postGap)) {
         cue = YTemplate.fansProtest;
@@ -1337,15 +1356,20 @@ abstract final class YFeed {
   /// every one of ours words it generously, the replies are proud, and the
   /// posts that exist to put a bad afternoon on somebody (the board's
   /// patience, the pattern, the told-you-so, the humiliation in the ranking)
-  /// stay away.
+  /// stay away. [acceptedExit] is the same for a run that ended about where
+  /// it was expected to (see `YTournaments.parExit`), answered with
+  /// acceptance rather than pride.
   static List<YPost> forMatch(
     YContext context, {
     required String nation,
     required int seed,
     YMemory memory = blankMemory,
     bool proudExit = false,
+    bool acceptedExit = false,
   }) {
     final m = context.match;
+    // An exit at or beyond what was expected: nobody turns on the manager.
+    final graceful = proudExit || acceptedExit;
     final template = classify(m);
     final standing = standingOf(m);
     final magnitude = magnitudeOf(m);
@@ -1406,7 +1430,7 @@ abstract final class YFeed {
     if (heat >= 3 && decisive) {
       candidates
         ..addAll([
-          if (won || !proudExit)
+          if (won || !graceful)
             (
               YVoice.neutral,
               won ? YTemplate.neutralWin : YTemplate.neutralLoss,
@@ -1426,7 +1450,7 @@ abstract final class YFeed {
         decisive &&
         magnitude.defied &&
         magnitude.gap >= gapWorthNoting &&
-        (won || !proudExit)) {
+        (won || !graceful)) {
       candidates.add((
         YVoice.stats,
         won ? YTemplate.upsetGap : YTemplate.downGap,
@@ -1449,7 +1473,7 @@ abstract final class YFeed {
         ['${context.winStreak}'],
       ));
     }
-    if (context.lossStreak >= streakThreshold && !proudExit) {
+    if (context.lossStreak >= streakThreshold && !graceful) {
       candidates.add((
         YVoice.pundit,
         YTemplate.lossStreak,
@@ -1463,7 +1487,7 @@ abstract final class YFeed {
         [context.injuredNames.first],
       ));
     }
-    if (context.boardMood <= boardPressureBelow && !proudExit) {
+    if (context.boardMood <= boardPressureBelow && !graceful) {
       candidates.add((YVoice.pundit, YTemplate.boardPressure, const ['']));
     }
     // What the country REMEMBERS, which is the half a feed with no history
@@ -1472,7 +1496,7 @@ abstract final class YFeed {
     if (memory.metBefore >= callbackMeetings &&
         memory.beatenBefore == 0 &&
         Expectation.weight(standing) < 0 &&
-        !proudExit) {
+        !graceful) {
       candidates.add((
         YVoice.fan,
         YTemplate.againstThemAgain,
@@ -1484,7 +1508,7 @@ abstract final class YFeed {
     if (memory.sameRecently >= callbackRepeats &&
         Expectation.weight(standing) < 0 &&
         context.lossStreak < streakThreshold &&
-        !proudExit) {
+        !graceful) {
       candidates.add((
         YVoice.pundit,
         YTemplate.sameOldStory,
@@ -1495,7 +1519,7 @@ abstract final class YFeed {
     // enjoy it: a bad afternoon straight after everyone was told it was fine.
     if (Expectation.weight(standing) < 0 &&
         _wasHyped(memory.standings) &&
-        !proudExit) {
+        !graceful) {
       candidates.add((YVoice.expro, YTemplate.toldYouSo, const ['']));
     }
 
@@ -1522,7 +1546,7 @@ abstract final class YFeed {
             YVoice.rival => YTone.sour,
             // A run that went further than anybody asked: ours are proud of
             // it, whoever they are.
-            _ when proudExit && voice != YVoice.away => YTone.generous,
+            _ when graceful && voice != YVoice.away => YTone.generous,
             // The other lot read the afternoon the other way round, and our
             // run of results is none of their business.
             YVoice.away => YCast.toneFor(
@@ -1557,10 +1581,18 @@ abstract final class YFeed {
       ...posts,
       ...repliesTo(
         posts.first,
-        mood: proudExit ? YMood.pride : moodOf(template),
+        mood: proudExit
+            ? YMood.pride
+            : acceptedExit
+            ? YMood.acceptance
+            : moodOf(template),
         nation: nation,
         seed: seed,
-        standing: proudExit ? ResultStanding.heroic : standing,
+        standing: proudExit
+            ? ResultStanding.heroic
+            : acceptedExit && Expectation.weight(standing) < 0
+            ? ResultStanding.par
+            : standing,
         history: memory.standings,
         heat: heat,
       ),
@@ -1736,16 +1768,19 @@ abstract final class YFeed {
     bool againstTheOdds = false,
     bool painful = false,
     bool proud = false,
+    bool accepted = false,
     List<ResultStanding> history = const [],
   }) {
-    if (m.template == YTemplate.eliminated && proud && !painful) {
+    // An exit at ([accepted], see `YTournaments.parExit`) or beyond
+    // ([proud]) what was expected: the wire breaks it gently, and the fan
+    // and the former international say it in their own family of words.
+    final graceful = !painful && (proud || accepted);
+    if (m.template == YTemplate.eliminated && graceful) {
+      final reading = proud ? ResultStanding.heroic : ResultStanding.par;
+      final family = proud ? YTemplate.exitProud : YTemplate.exitAccepted;
       YTone toneOf(YVoice voice) {
         final p = personaFor(voice, nation, seed, m.key);
-        return YCast.toneFor(
-          p,
-          ResultStanding.heroic,
-          YCast.stance(p, history),
-        );
+        return YCast.toneFor(p, reading, YCast.stance(p, history));
       }
 
       return forEvent(
@@ -1755,12 +1790,12 @@ abstract final class YFeed {
         key: m.key,
         nation: nation,
         seed: seed,
-        fanTemplate: YTemplate.exitProud,
+        fanTemplate: family,
         fanTone: toneOf(YVoice.fan),
-        exproTemplate: YTemplate.exitProud,
+        exproTemplate: family,
         exproTone: toneOf(YVoice.expro),
         wireTone: YTone.generous,
-        mood: YMood.pride,
+        mood: moodOf(family),
       );
     }
     final (fanTemplate, standing) = switch (m.template) {
@@ -2299,6 +2334,7 @@ abstract final class YFeed {
     YTemplate.trophyEuphoric,
     YTemplate.exitHeartbreak,
     YTemplate.exitProud,
+    YTemplate.exitAccepted,
     YTemplate.punditPick,
     YTemplate.groupDrawn,
     YTemplate.hostNamed,
@@ -2469,7 +2505,8 @@ abstract final class YFeed {
       YMood.shrug => const [YVoice.meme],
       // Nobody is enjoying this one: the rival has nothing to gloat about in
       // a run that went further than ours were ever meant to.
-      YMood.pride => const [YVoice.fan, YVoice.meme, YVoice.expro],
+      YMood.pride ||
+      YMood.acceptance => const [YVoice.fan, YVoice.meme, YVoice.expro],
     };
     // How many of them actually bother, drawn from the parent so the same post
     // always draws the same thread. A big afternoon brings every one of them.
@@ -2528,6 +2565,7 @@ abstract final class YFeed {
     YTemplate.trophyEuphoric => YMood.elation,
     YTemplate.exitHeartbreak => YMood.despair,
     YTemplate.exitProud => YMood.pride,
+    YTemplate.exitAccepted => YMood.acceptance,
     // A prediction is anticipation, like a final looming: nerves.
     YTemplate.punditPick => YMood.relief,
     // Our supporters are not sorry for theirs, and enjoy a critic being wrong.

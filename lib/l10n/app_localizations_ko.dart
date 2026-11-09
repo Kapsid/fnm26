@@ -15813,4 +15813,61 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get yReactionPride8 => '너무 들뜨지는 말자. 그래도 좋은 여정이었다.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return '$competition 탈락, 거의 예상했던 그대로다. 도전해 준 것이 자랑스럽다.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition 여정은 여기까지다. 강팀들을 상대로 잘 버텼다. 고개 들어, 선수들.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return '$competition 탈락. 전력상 늘 예상됐던 결말이다. 배우고 다시 도전하자.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return '우리의 $competition 여정은 랭킹대로 끝났다. 부끄러울 것 없다.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return '$competition 탈락, 대부분이 예상한 대로다. 재앙은 아니지만 충격도 아니다.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition 무대는 이 선수단에게 아직 한 걸음 멀었다. 격차는 분명하다. 이제 좁혀야 한다.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => '모든 걸 쏟아부었다. 더 바랄 건 없다.';
+
+  @override
+  String get yReactionAcceptance1 => '고개 들자. 우리는 돌아온다.';
+
+  @override
+  String get yReactionAcceptance2 => '아프지만 부끄러운 경기는 아니었다.';
+
+  @override
+  String get yReactionAcceptance3 => '솔직히 거의 예상한 대로다.';
+
+  @override
+  String get yReactionAcceptance4 => '더 강한 팀들이 올라갔다. 그게 축구다.';
+
+  @override
+  String get yReactionAcceptance5 => '실망스럽지만 화나진 않는다.';
+
+  @override
+  String get yReactionAcceptance6 => '솔직히 좀 밋밋했다. 그래도 충격은 없었다.';
+
+  @override
+  String get yReactionAcceptance7 => '아직 그 수준은 아니다. 다들 안다.';
+
+  @override
+  String get yReactionAcceptance8 => '지난번과 같은 수준이다. 다음 주기엔 한 단계 올라서야 한다.';
 }

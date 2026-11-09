@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Herkesin tahmininden iyi. İyi turnuva.",
   "yReactionPride6": "Elendik ama mahcup olmadık. Fena değil.",
   "yReactionPride7": "Daha iyi olan tur atladı. Biz yine de onurumuzla çıktık.",
-  "yReactionPride8": "Fazla abartmayalım. Ama evet, iyi bir yolculuktu."
+  "yReactionPride8": "Fazla abartmayalım. Ama evet, iyi bir yolculuktu.",
+  "yExitAccepted0": "{competition} bizim için beklenen yerde bitti. Denedikleri için gurur duyuyorum.",
+  "yExitAccepted1": "{competition} bizim için bitti. Büyüklere kafa tuttuk. Başınızı dik tutun çocuklar.",
+  "yExitAccepted2": "{competition} bizim için bitti. Kâğıt üstünde zaten en olası son buydu. Ders çıkarıp yeniden deneyeceğiz.",
+  "yExitAccepted3": "{competition} maceramız sıralamanın söylediği yerde bitti. Bunda utanılacak bir şey yok.",
+  "yExitAccepted4": "{competition} turnuvasından çoğumuzun beklediği gibi elendik. Felaket değil, ama şok da değil.",
+  "yExitAccepted5": "{competition} bu kadro için bir adım fazlaydı. Aradaki fark gerçek. Kapatma zamanı.",
+  "yReactionAcceptance0": "Ellerinden geleni yaptılar. Daha fazlası istenemez.",
+  "yReactionAcceptance1": "Başınızı dik tutun. Geri döneceğiz.",
+  "yReactionAcceptance2": "Acıtıyor ama bizi utandırmadılar.",
+  "yReactionAcceptance3": "Açıkçası aşağı yukarı beklediğimiz buydu.",
+  "yReactionAcceptance4": "Daha iyi olanlar tur atladı. Futbol bu.",
+  "yReactionAcceptance5": "Hayal kırıklığı var, öfke yok.",
+  "yReactionAcceptance6": "Açıkçası biraz sönük. Yine de şok yok.",
+  "yReactionAcceptance7": "Henüz o seviyede değiliz. Herkes biliyor.",
+  "yReactionAcceptance8": "Geçen seferle aynı seviye. Gelecek dönemde bir adım öne çıkmak lazım."
 }

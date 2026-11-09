@@ -16428,4 +16428,68 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Ei innostuta liikaa. Mutta kyllä, hyvä kisa.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Turnaus $competition päättyi suunnilleen siihen, mihin odotettiinkin. Ylpeä, että he yrittivät.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turnaus $competition on meidän osaltamme ohi. Annoimme isoille vastusta. Pää pystyyn, pojat.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Turnaus $competition päättyi. Paperilla tämä oli aina todennäköisin loppu. Opitaan ja yritetään uudestaan.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Turnauksemme $competition päättyy sinne, minne ranking ennusti. Ei mitään hävettävää.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Turnaus $competition päättyi, kuten useimmat meistä odottivat. Ei katastrofi, mutta ei shokkikaan.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turnaus $competition oli tälle joukkueelle vielä liian kova. Ero on todellinen. Aika kuroa se umpeen.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Antoivat kaikkensa. Enempää ei voi pyytää.';
+
+  @override
+  String get yReactionAcceptance1 => 'Pää pystyyn. Me palaamme.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Sattuu, mutta he eivät tuottaneet meille häpeää.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Suunnilleen mitä odotimmekin, rehellisesti.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Paremmat menivät jatkoon. Sellaista on jalkapallo.';
+
+  @override
+  String get yReactionAcceptance5 => 'Pettynyt, ei vihainen.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Vähän vaisua, rehellisesti. Mutta ei shokkeja.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'Emme ole vielä siellä. Kaikki tietävät sen.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Sama taso kuin viimeksi. Seuraavalla kierroksella pitää ottaa askel ylöspäin.';
 }

@@ -4072,5 +4072,20 @@
   "yReactionPride5": "誰の予想よりも上だった。いい大会だった。",
   "yReactionPride6": "敗退、でも恥じることはない。妥当だ。",
   "yReactionPride7": "強い方が勝ち上がった。それでも胸を張れる戦いだった。",
-  "yReactionPride8": "浮かれすぎないように。でも、いい戦いだった。"
+  "yReactionPride8": "浮かれすぎないように。でも、いい戦いだった。",
+  "yExitAccepted0": "{competition}敗退、ほぼ予想どおりの結果だ。挑んでくれたことを誇りに思う。",
+  "yExitAccepted1": "{competition}は終わった。強豪相手にも食らいついた。胸を張れ、みんな。",
+  "yExitAccepted2": "{competition}敗退。下馬評どおりの結末だった。学んで、また挑もう。",
+  "yExitAccepted3": "我々の{competition}はランキングどおりの場所で終わった。恥じることはない。",
+  "yExitAccepted4": "{competition}敗退、多くの人の予想どおりだ。大失敗ではないが、衝撃もない。",
+  "yExitAccepted5": "{competition}はこのチームにはまだ一歩遠かった。差は現実だ。埋めていく時だ。",
+  "yReactionAcceptance0": "全力を出し切った。それ以上は求められない。",
+  "yReactionAcceptance1": "顔を上げよう。また戻ってくる。",
+  "yReactionAcceptance2": "悔しいが、恥ずかしい戦いではなかった。",
+  "yReactionAcceptance3": "正直、だいたい予想どおりだ。",
+  "yReactionAcceptance4": "強いチームが勝ち上がった。それがサッカーだ。",
+  "yReactionAcceptance5": "残念だが、怒ってはいない。",
+  "yReactionAcceptance6": "正直、少し物足りない。でも番狂わせもない。",
+  "yReactionAcceptance7": "まだその域には達していない。皆わかっている。",
+  "yReactionAcceptance8": "前回と同じレベル。次のサイクルでは一段上が必要だ。"
 }

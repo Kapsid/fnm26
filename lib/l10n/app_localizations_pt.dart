@@ -16455,4 +16455,64 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Não exageremos. Mas sim, boa campanha.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Fora do $competition, mais ou menos onde se esperava. Orgulhoso por terem tentado.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'O $competition acabou para nós. Demos luta aos grandes. Cabeça erguida, rapazes.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Fora do $competition. No papel, era o desfecho mais provável. Aprender e voltar a tentar.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'O nosso $competition acaba onde o ranking dizia. Nenhuma vergonha nisso.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Fora do $competition, como a maioria de nós esperava. Não é um desastre, mas também não é choque.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'O $competition foi um passo grande demais para este grupo. A diferença é real. Hora de a encurtar.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Deram tudo. Não se pode pedir mais.';
+
+  @override
+  String get yReactionAcceptance1 => 'Cabeça erguida. Vamos voltar.';
+
+  @override
+  String get yReactionAcceptance2 => 'Dói, mas não nos envergonharam.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Mais ou menos o que esperávamos, sinceramente.';
+
+  @override
+  String get yReactionAcceptance4 => 'Passaram os melhores. É o futebol.';
+
+  @override
+  String get yReactionAcceptance5 => 'Desiludido, não zangado.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Um pouco apagado, para ser sincero. Mas sem choques.';
+
+  @override
+  String get yReactionAcceptance7 => 'Ainda não estamos lá. Toda a gente sabe.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'O mesmo nível da última vez. É preciso subir no próximo ciclo.';
 }

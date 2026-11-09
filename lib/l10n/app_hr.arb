@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Bolje nego što je itko predviđao. Dobar turnir.",
   "yReactionPride6": "Ispali, ali bez srama. Pošteno.",
   "yReactionPride7": "Prošla je bolja momčad. Mi smo se ipak ponijeli časno.",
-  "yReactionPride8": "Ne zanosimo se. Ali da, dobar pohod."
+  "yReactionPride8": "Ne zanosimo se. Ali da, dobar pohod.",
+  "yExitAccepted0": "Ispali smo s turnira {competition}, otprilike gdje se i očekivalo. Ponosan što su pokušali.",
+  "yExitAccepted1": "Turnir {competition} za nas je gotov. Velikima smo zadali muke. Glave gore, dečki.",
+  "yExitAccepted2": "Ispali smo s turnira {competition}. Na papiru je to uvijek bio vjerojatan kraj. Učimo i idemo dalje.",
+  "yExitAccepted3": "Naš turnir {competition} završava gdje je ljestvica i rekla. Nema srama u tome.",
+  "yExitAccepted4": "Ispali smo s turnira {competition}, kako je većina i očekivala. Nije katastrofa, ali nije ni šok.",
+  "yExitAccepted5": "Turnir {competition} bio je korak predaleko za ovu momčad. Razlika je stvarna. Vrijeme je da se smanji.",
+  "yReactionAcceptance0": "Dali su sve. Više se ne može tražiti.",
+  "yReactionAcceptance1": "Glave gore. Vratit ćemo se.",
+  "yReactionAcceptance2": "Boli, ali nisu nas osramotili.",
+  "yReactionAcceptance3": "Iskreno, otprilike ono što smo očekivali.",
+  "yReactionAcceptance4": "Prošli su bolji. To je nogomet.",
+  "yReactionAcceptance5": "Razočaran, ne ljut.",
+  "yReactionAcceptance6": "Malo bezlično, iskreno. Ali bez šokova.",
+  "yReactionAcceptance7": "Još nismo tamo. Svi to znaju.",
+  "yReactionAcceptance8": "Ista razina kao prošli put. Sljedeći ciklus treba korak naprijed."
 }

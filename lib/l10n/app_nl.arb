@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Beter dan wie dan ook voorspelde. Goed toernooi.",
   "yReactionPride6": "Eruit, maar niet voor schut. Prima.",
   "yReactionPride7": "Het betere team ging door. We hebben ons toch prima laten zien.",
-  "yReactionPride8": "Laten we niet doordraven. Maar ja, een goede run."
+  "yReactionPride8": "Laten we niet doordraven. Maar ja, een goede run.",
+  "yExitAccepted0": "Uitgeschakeld op het {competition}, ongeveer waar we altijd zouden eindigen. Trots dat ze het geprobeerd hebben.",
+  "yExitAccepted1": "Het {competition} zit erop voor ons. We hebben de groten het lastig gemaakt. Kop op, mannen.",
+  "yExitAccepted2": "Uitgeschakeld op het {competition}. Op papier was dit altijd het waarschijnlijke einde. Leren en opnieuw.",
+  "yExitAccepted3": "Ons {competition} eindigt waar de ranking het voorspelde. Geen schande.",
+  "yExitAccepted4": "Uitgeschakeld op het {competition}, zoals de meesten verwachtten. Geen ramp, maar ook geen schok.",
+  "yExitAccepted5": "Het {competition} was een brug te ver voor deze selectie. Het verschil is echt. Tijd om het te dichten.",
+  "yReactionAcceptance0": "Alles gegeven. Meer kun je niet vragen.",
+  "yReactionAcceptance1": "Kop op. We komen terug.",
+  "yReactionAcceptance2": "Het doet pijn, maar ze hebben ons niet te schande gezet.",
+  "yReactionAcceptance3": "Eerlijk gezegd ongeveer wat we verwachtten.",
+  "yReactionAcceptance4": "De betere ploegen gingen door. Dat is voetbal.",
+  "yReactionAcceptance5": "Teleurgesteld, niet boos.",
+  "yReactionAcceptance6": "Een beetje vlak, eerlijk gezegd. Maar geen schokken.",
+  "yReactionAcceptance7": "We zijn er nog niet. Dat weet iedereen.",
+  "yReactionAcceptance8": "Hetzelfde niveau als de vorige keer. Volgende cyclus moet het een stap beter."
 }

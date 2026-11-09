@@ -16358,4 +16358,64 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Lad os ikke blive for begejstrede. Men ja, et godt løb.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Ude af $competition, cirka hvor vi altid ville ende. Stolt af, at de prøvede.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition er slut for os. Vi gav de store hold kamp. Hovedet højt, drenge.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Ude af $competition. På papiret var det her altid den sandsynlige slutning. Lær af det og prøv igen.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Vores $competition slutter, hvor ranglisten sagde. Ingen skam i det.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Ude af $competition, som de fleste af os ventede. Ingen katastrofe, men heller intet chok.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition var et skridt for langt for denne trup. Forskellen er reel. Tid til at lukke den.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Gav alt. Mere kan man ikke forlange.';
+
+  @override
+  String get yReactionAcceptance1 => 'Hovedet højt. Vi kommer igen.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Det gør ondt, men de gjorde os ikke til skamme.';
+
+  @override
+  String get yReactionAcceptance3 => 'Nogenlunde som ventet, ærligt talt.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'De bedre hold gik videre. Sådan er fodbold.';
+
+  @override
+  String get yReactionAcceptance5 => 'Skuffet, ikke vred.';
+
+  @override
+  String get yReactionAcceptance6 => 'Lidt fladt, ærligt talt. Men ingen chok.';
+
+  @override
+  String get yReactionAcceptance7 => 'Vi er der ikke endnu. Det ved alle.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Samme niveau som sidst. Der skal et skridt op i næste cyklus.';
 }

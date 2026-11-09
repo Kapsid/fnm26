@@ -16431,4 +16431,67 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Non esageriamo. Ma sì, un bel cammino.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Fuori dal $competition, più o meno dove era previsto. Orgoglioso che ci abbiano provato.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Il $competition per noi è finito. Abbiamo messo in difficoltà le grandi. Testa alta, ragazzi.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Fuori dal $competition. Sulla carta era il finale più probabile. Impariamo e ripartiamo.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Il nostro $competition finisce dove diceva il ranking. Nessuna vergogna.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Fuori dal $competition, come quasi tutti ci aspettavamo. Non è un disastro, ma nemmeno uno shock.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Il $competition era un passo troppo lungo per questa rosa. Il divario è reale. Ora bisogna colmarlo.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Hanno dato tutto. Non si può chiedere di più.';
+
+  @override
+  String get yReactionAcceptance1 => 'Testa alta. Torneremo.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Fa male, ma non ci hanno fatto vergognare.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Più o meno quello che ci aspettavamo, onestamente.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Sono passate le squadre migliori. È il calcio.';
+
+  @override
+  String get yReactionAcceptance5 => 'Deluso, non arrabbiato.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Un po\' piatto, a dire il vero. Ma nessuno shock.';
+
+  @override
+  String get yReactionAcceptance7 => 'Non ci siamo ancora. Lo sanno tutti.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Stesso livello dell\'ultima volta. Serve un passo avanti nel prossimo ciclo.';
 }

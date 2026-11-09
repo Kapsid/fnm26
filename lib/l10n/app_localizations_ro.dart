@@ -16771,4 +16771,63 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Să nu ne entuziasmăm prea tare. Dar da, un parcurs bun.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Afară de la turneul $competition, cam unde ne așteptam. Mândru că au încercat.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turneul $competition s-a încheiat pentru noi. Le-am dat de furcă celor mari. Capul sus, băieți.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Afară de la turneul $competition. Pe hârtie, ăsta era finalul probabil. Învățăm și încercăm din nou.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Turneul nostru, $competition, se încheie unde spunea clasamentul. Nicio rușine.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Afară de la turneul $competition, cum se așteptau cei mai mulți dintre noi. Nu e un dezastru, dar nici un șoc.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turneul $competition a fost un pas prea mare pentru acest lot. Diferența e reală. E timpul s-o reducem.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Au dat tot. Mai mult nu poți cere.';
+
+  @override
+  String get yReactionAcceptance1 => 'Capul sus. Ne vom întoarce.';
+
+  @override
+  String get yReactionAcceptance2 => 'Doare, dar nu ne-au făcut de rușine.';
+
+  @override
+  String get yReactionAcceptance3 => 'Cam ce ne așteptam, sincer.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Au trecut echipele mai bune. Asta e fotbalul.';
+
+  @override
+  String get yReactionAcceptance5 => 'Dezamăgit, nu furios.';
+
+  @override
+  String get yReactionAcceptance6 => 'Cam fad, sincer. Dar fără șocuri.';
+
+  @override
+  String get yReactionAcceptance7 => 'Nu suntem încă acolo. Toată lumea știe.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Același nivel ca data trecută. E nevoie de un pas înainte în ciclul următor.';
 }

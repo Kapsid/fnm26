@@ -16364,4 +16364,67 @@ class AppLocalizationsFil extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Huwag tayong madala. Pero oo, magandang takbo.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Laglag sa $competition, halos kung saan talaga inaasahan. Proud na sinubukan nila.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Tapos na ang $competition para sa atin. Nilabanan natin ang malalaking koponan. Taas-noo, mga bata.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Laglag sa $competition. Sa papel, ito talaga ang malamang na katapusan. Matuto at sumubok muli.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Natapos ang ating $competition kung saan sinabi ng ranking. Walang nakakahiya roon.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Laglag sa $competition, gaya ng inasahan ng karamihan. Hindi sakuna, pero hindi rin nakakagulat.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Masyado pang malayo ang $competition para sa koponang ito. Totoo ang agwat. Panahon nang paliitin ito.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Ibinigay nila ang lahat. Wala nang mahihiling pa.';
+
+  @override
+  String get yReactionAcceptance1 => 'Taas-noo. Babalik tayo.';
+
+  @override
+  String get yReactionAcceptance2 => 'Masakit, pero hindi nila tayo ipinahiya.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Sa totoo lang, halos ganito ang inasahan natin.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Ang mas magagaling ang umusad. Ganyan ang football.';
+
+  @override
+  String get yReactionAcceptance5 => 'Dismayado, hindi galit.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Medyo matamlay, sa totoo lang. Pero walang gulat.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'Hindi pa tayo naroon. Alam ng lahat iyan.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Parehong antas noong nakaraan. Kailangang umangat sa susunod na cycle.';
 }

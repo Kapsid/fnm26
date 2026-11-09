@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Meglio di ogni pronostico. Buon torneo.",
   "yReactionPride6": "Fuori, ma senza vergogna. Ci sta.",
   "yReactionPride7": "È passata la squadra migliore. Ci siamo fatti onore lo stesso.",
-  "yReactionPride8": "Non esageriamo. Ma sì, un bel cammino."
+  "yReactionPride8": "Non esageriamo. Ma sì, un bel cammino.",
+  "yExitAccepted0": "Fuori dal {competition}, più o meno dove era previsto. Orgoglioso che ci abbiano provato.",
+  "yExitAccepted1": "Il {competition} per noi è finito. Abbiamo messo in difficoltà le grandi. Testa alta, ragazzi.",
+  "yExitAccepted2": "Fuori dal {competition}. Sulla carta era il finale più probabile. Impariamo e ripartiamo.",
+  "yExitAccepted3": "Il nostro {competition} finisce dove diceva il ranking. Nessuna vergogna.",
+  "yExitAccepted4": "Fuori dal {competition}, come quasi tutti ci aspettavamo. Non è un disastro, ma nemmeno uno shock.",
+  "yExitAccepted5": "Il {competition} era un passo troppo lungo per questa rosa. Il divario è reale. Ora bisogna colmarlo.",
+  "yReactionAcceptance0": "Hanno dato tutto. Non si può chiedere di più.",
+  "yReactionAcceptance1": "Testa alta. Torneremo.",
+  "yReactionAcceptance2": "Fa male, ma non ci hanno fatto vergognare.",
+  "yReactionAcceptance3": "Più o meno quello che ci aspettavamo, onestamente.",
+  "yReactionAcceptance4": "Sono passate le squadre migliori. È il calcio.",
+  "yReactionAcceptance5": "Deluso, non arrabbiato.",
+  "yReactionAcceptance6": "Un po' piatto, a dire il vero. Ma nessuno shock.",
+  "yReactionAcceptance7": "Non ci siamo ancora. Lo sanno tutti.",
+  "yReactionAcceptance8": "Stesso livello dell'ultima volta. Serve un passo avanti nel prossimo ciclo."
 }

@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Lepiej, niż ktokolwiek przewidywał. Dobry turniej.",
   "yReactionPride6": "Odpadliśmy, ale bez wstydu. W porządku.",
   "yReactionPride7": "Przeszła lepsza drużyna. I tak wypadliśmy z honorem.",
-  "yReactionPride8": "Nie dajmy się ponieść. Ale tak, dobry występ."
+  "yReactionPride8": "Nie dajmy się ponieść. Ale tak, dobry występ.",
+  "yExitAccepted0": "Koniec turnieju {competition}, mniej więcej tam, gdzie się spodziewano. Dumny, że spróbowali.",
+  "yExitAccepted1": "Turniej {competition} się dla nas skończył. Postawiliśmy się mocnym. Głowy do góry, chłopaki.",
+  "yExitAccepted2": "Koniec turnieju {competition}. Na papierze tak to miało się skończyć. Wyciągnąć wnioski i dalej.",
+  "yExitAccepted3": "Nasz turniej {competition} kończy się tam, gdzie wskazywał ranking. Żaden wstyd.",
+  "yExitAccepted4": "Koniec turnieju {competition}, jak większość z nas się spodziewała. Nie katastrofa, ale i nie szok.",
+  "yExitAccepted5": "Turniej {competition} okazał się za wysokim progiem dla tej kadry. Różnica jest realna. Czas ją zniwelować.",
+  "yReactionAcceptance0": "Dali z siebie wszystko. Więcej nie można wymagać.",
+  "yReactionAcceptance1": "Głowy do góry. Wrócimy.",
+  "yReactionAcceptance2": "Boli, ale wstydu nam nie przynieśli.",
+  "yReactionAcceptance3": "Szczerze, mniej więcej tego się spodziewaliśmy.",
+  "yReactionAcceptance4": "Przeszli lepsi. Taka jest piłka.",
+  "yReactionAcceptance5": "Rozczarowany, nie wściekły.",
+  "yReactionAcceptance6": "Szczerze, trochę bez wyrazu. Ale bez szoku.",
+  "yReactionAcceptance7": "Jeszcze nie jesteśmy na tym poziomie. Wszyscy to wiedzą.",
+  "yReactionAcceptance8": "Ten sam poziom co ostatnio. W następnym cyklu trzeba wejść wyżej."
 }

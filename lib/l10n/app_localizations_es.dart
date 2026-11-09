@@ -16450,4 +16450,64 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'No nos volvamos locos. Pero sí, buen recorrido.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Fuera del $competition, más o menos donde se esperaba. Orgulloso de que lo intentaran.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'El $competition se acabó para nosotros. Les plantamos cara a los grandes. Cabeza alta, chicos.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Fuera del $competition. Sobre el papel, era el final más probable. Aprender y volver a intentarlo.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Nuestro $competition termina donde decía el ranking. Ninguna vergüenza.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Fuera del $competition, como casi todos esperábamos. No es un desastre, pero tampoco una sorpresa.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'El $competition le quedó grande a esta plantilla. La diferencia es real. Toca recortarla.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Lo dieron todo. No se puede pedir más.';
+
+  @override
+  String get yReactionAcceptance1 => 'Cabeza alta. Volveremos.';
+
+  @override
+  String get yReactionAcceptance2 => 'Duele, pero no nos han avergonzado.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Más o menos lo que esperábamos, la verdad.';
+
+  @override
+  String get yReactionAcceptance4 => 'Pasaron los mejores. Así es el fútbol.';
+
+  @override
+  String get yReactionAcceptance5 => 'Decepcionado, no enfadado.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Un poco plano, la verdad. Pero sin sobresaltos.';
+
+  @override
+  String get yReactionAcceptance7 => 'Todavía no estamos ahí. Todos lo saben.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'El mismo nivel que la última vez. Hace falta un paso más en el próximo ciclo.';
 }

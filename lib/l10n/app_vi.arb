@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Tốt hơn mọi dự đoán. Một giải đấu tốt.",
   "yReactionPride6": "Bị loại, nhưng không hổ thẹn. Vậy là ổn.",
   "yReactionPride7": "Đội mạnh hơn đã đi tiếp. Dù sao chúng ta cũng đã chơi rất đáng tự hào.",
-  "yReactionPride8": "Đừng quá đà. Nhưng đúng, một hành trình tốt."
+  "yReactionPride8": "Đừng quá đà. Nhưng đúng, một hành trình tốt.",
+  "yExitAccepted0": "Dừng bước ở {competition}, đúng như dự đoán. Tự hào vì các cầu thủ đã cố gắng.",
+  "yExitAccepted1": "{competition} đã khép lại với chúng ta. Chúng ta đã khiến các đội lớn chật vật. Ngẩng cao đầu lên.",
+  "yExitAccepted2": "Dừng bước ở {competition}. Trên giấy tờ, đây vốn là kết cục dễ xảy ra nhất. Rút kinh nghiệm rồi làm lại.",
+  "yExitAccepted3": "{competition} của chúng ta kết thúc đúng như bảng xếp hạng. Không có gì đáng xấu hổ.",
+  "yExitAccepted4": "Dừng bước ở {competition}, như phần lớn chúng ta đã đoán. Không phải thảm họa, nhưng cũng chẳng bất ngờ.",
+  "yExitAccepted5": "{competition} vẫn là một bước quá xa với đội hình này. Khoảng cách là có thật. Đã đến lúc thu hẹp nó.",
+  "yReactionAcceptance0": "Đã cống hiến hết mình. Không thể đòi hỏi hơn.",
+  "yReactionAcceptance1": "Ngẩng cao đầu. Chúng ta sẽ trở lại.",
+  "yReactionAcceptance2": "Đau đấy, nhưng họ không làm chúng ta xấu hổ.",
+  "yReactionAcceptance3": "Thật lòng thì cũng gần như dự đoán.",
+  "yReactionAcceptance4": "Những đội mạnh hơn đã đi tiếp. Bóng đá là vậy.",
+  "yReactionAcceptance5": "Thất vọng, chứ không giận.",
+  "yReactionAcceptance6": "Thật lòng thì hơi nhạt. Nhưng không có cú sốc nào.",
+  "yReactionAcceptance7": "Chúng ta chưa tới tầm đó. Ai cũng biết.",
+  "yReactionAcceptance8": "Vẫn trình độ như lần trước. Chu kỳ tới cần tiến thêm một bước."
 }

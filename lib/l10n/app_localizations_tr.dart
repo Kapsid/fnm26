@@ -16268,4 +16268,65 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Fazla abartmayalım. Ama evet, iyi bir yolculuktu.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return '$competition bizim için beklenen yerde bitti. Denedikleri için gurur duyuyorum.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition bizim için bitti. Büyüklere kafa tuttuk. Başınızı dik tutun çocuklar.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return '$competition bizim için bitti. Kâğıt üstünde zaten en olası son buydu. Ders çıkarıp yeniden deneyeceğiz.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return '$competition maceramız sıralamanın söylediği yerde bitti. Bunda utanılacak bir şey yok.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return '$competition turnuvasından çoğumuzun beklediği gibi elendik. Felaket değil, ama şok da değil.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition bu kadro için bir adım fazlaydı. Aradaki fark gerçek. Kapatma zamanı.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Ellerinden geleni yaptılar. Daha fazlası istenemez.';
+
+  @override
+  String get yReactionAcceptance1 => 'Başınızı dik tutun. Geri döneceğiz.';
+
+  @override
+  String get yReactionAcceptance2 => 'Acıtıyor ama bizi utandırmadılar.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Açıkçası aşağı yukarı beklediğimiz buydu.';
+
+  @override
+  String get yReactionAcceptance4 => 'Daha iyi olanlar tur atladı. Futbol bu.';
+
+  @override
+  String get yReactionAcceptance5 => 'Hayal kırıklığı var, öfke yok.';
+
+  @override
+  String get yReactionAcceptance6 => 'Açıkçası biraz sönük. Yine de şok yok.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'Henüz o seviyede değiliz. Herkes biliyor.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Geçen seferle aynı seviye. Gelecek dönemde bir adım öne çıkmak lazım.';
 }

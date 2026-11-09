@@ -190,6 +190,7 @@ abstract final class YLocals {
     YTemplate.eliminated,
     YTemplate.exitHeartbreak,
     YTemplate.exitProud,
+    YTemplate.exitAccepted,
     YTemplate.finalLooms,
     YTemplate.rivalryLooms,
   };
@@ -211,7 +212,15 @@ abstract final class YLocals {
     YTemplate.eliminated,
     YTemplate.exitHeartbreak,
     YTemplate.exitProud,
+    YTemplate.exitAccepted,
     YTemplate.finalLooms,
+  };
+
+  /// The exits the country takes well, which a local answers in their own
+  /// words rather than the wire's.
+  static const Set<YTemplate> _gracefulExits = {
+    YTemplate.exitProud,
+    YTemplate.exitAccepted,
   };
 
   /// The nights two local fans answer instead of one.
@@ -222,6 +231,7 @@ abstract final class YLocals {
     YTemplate.winEuphoric,
     YTemplate.exitHeartbreak,
     YTemplate.exitProud,
+    YTemplate.exitAccepted,
   };
 
   /// The most local posts in one calendar month, which is about one
@@ -263,18 +273,20 @@ abstract final class YLocals {
       if (kept == null ||
           (!bigMoments.contains(kept.template) &&
               bigMoments.contains(p.template)) ||
-          // A proud exit is answered as one, not as the exit the wire broke.
-          (p.template == YTemplate.exitProud &&
-              kept.template != YTemplate.exitProud)) {
+          // A proud or accepted exit is answered as one, not as the exit
+          // the wire broke.
+          (_gracefulExits.contains(p.template) &&
+              !_gracefulExits.contains(kept.template))) {
         byEvent[event] = p;
       }
     }
-    // The events the room is already proud of (see [YMood.pride]): the
-    // match that ended a run further on than expected reads as a defeat on
-    // its own, and a local fan must not answer it in fury.
-    final proudEvents = {
+    // The events the room already reads as a proud or accepted exit (see
+    // [YMood.pride], [YMood.acceptance]): the match that ended the run reads
+    // as a defeat on its own, and a local fan must not answer it in fury.
+    final exitMood = <String, YMood>{
       for (final p in posts)
-        if (p.mood == YMood.pride) eventOf(p),
+        if (p.mood == YMood.pride || p.mood == YMood.acceptance)
+          eventOf(p): p.mood!,
     };
     final parents = [
       for (final MapEntry(key: event, value: parent) in byEvent.entries)
@@ -314,9 +326,7 @@ abstract final class YLocals {
       final parent = e.parent;
       final month = parent.date.year * 12 + parent.date.month;
       final want = doubleMoments.contains(parent.template) ? 2 : 1;
-      final mood = proudEvents.contains(e.event)
-          ? YMood.pride
-          : YFeed.moodOf(parent.template);
+      final mood = exitMood[e.event] ?? YFeed.moodOf(parent.template);
       final history = YFeed.standingsAsOf(dated, parent.date);
       final standing = history.isEmpty ? ResultStanding.par : history.last;
       final start = varietySeed('local|who|$seed|${e.event}') % cast.length;

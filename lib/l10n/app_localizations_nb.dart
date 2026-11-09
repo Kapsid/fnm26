@@ -16352,4 +16352,64 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'La oss ikke bli for ivrige. Men ja, et godt løp.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Ute av $competition, omtrent der vi alltid skulle ende. Stolt av at de prøvde.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition er over for oss. Vi ga de store lagene kamp. Hodet høyt, gutter.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Ute av $competition. På papiret var dette alltid den sannsynlige slutten. Lær av det og prøv igjen.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Vårt $competition slutter der rankingen sa det ville. Ingen skam i det.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Ute av $competition, som de fleste av oss ventet. Ingen katastrofe, men intet sjokk heller.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition var et steg for langt for denne troppen. Avstanden er reell. På tide å tette den.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Ga alt. Mer kan man ikke be om.';
+
+  @override
+  String get yReactionAcceptance1 => 'Hodet høyt. Vi kommer tilbake.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Det gjør vondt, men de gjorde oss ikke til skamme.';
+
+  @override
+  String get yReactionAcceptance3 => 'Omtrent som ventet, ærlig talt.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'De bedre lagene gikk videre. Sånn er fotball.';
+
+  @override
+  String get yReactionAcceptance5 => 'Skuffet, ikke sint.';
+
+  @override
+  String get yReactionAcceptance6 => 'Litt flatt, ærlig talt. Men ingen sjokk.';
+
+  @override
+  String get yReactionAcceptance7 => 'Vi er ikke der ennå. Det vet alle.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Samme nivå som sist. Trenger et steg opp neste syklus.';
 }

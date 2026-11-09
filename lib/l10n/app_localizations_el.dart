@@ -16445,4 +16445,65 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Ας μην παρασυρόμαστε. Αλλά ναι, καλή πορεία.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Εκτός τουρνουά $competition, περίπου εκεί που αναμενόταν. Περήφανος που το προσπάθησαν.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Το τουρνουά $competition τελείωσε για εμάς. Δυσκολέψαμε τους μεγάλους. Ψηλά το κεφάλι, παιδιά.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Εκτός τουρνουά $competition. Στα χαρτιά αυτό ήταν πάντα το πιθανό τέλος. Μαθαίνουμε και ξαναπροσπαθούμε.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Το δικό μας τουρνουά $competition τελειώνει εκεί που έλεγε η κατάταξη. Καμία ντροπή.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Εκτός τουρνουά $competition, όπως περιμέναμε οι περισσότεροι. Ούτε καταστροφή, ούτε σοκ.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Το τουρνουά $competition ήταν ένα σκαλί πολύ ψηλά για αυτό το ρόστερ. Η διαφορά είναι πραγματική. Ώρα να την καλύψουμε.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Τα έδωσαν όλα. Δεν μπορείς να ζητήσεις περισσότερα.';
+
+  @override
+  String get yReactionAcceptance1 => 'Ψηλά το κεφάλι. Θα επιστρέψουμε.';
+
+  @override
+  String get yReactionAcceptance2 => 'Πονάει, αλλά δεν μας ντρόπιασαν.';
+
+  @override
+  String get yReactionAcceptance3 => 'Περίπου ό,τι περιμέναμε, ειλικρινά.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Πέρασαν οι καλύτεροι. Αυτό είναι το ποδόσφαιρο.';
+
+  @override
+  String get yReactionAcceptance5 => 'Απογοητευμένος, όχι θυμωμένος.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Λίγο άχρωμο, για να είμαι ειλικρινής. Πάντως χωρίς σοκ.';
+
+  @override
+  String get yReactionAcceptance7 => 'Δεν είμαστε ακόμα εκεί. Το ξέρουν όλοι.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Ίδιο επίπεδο με την προηγούμενη φορά. Χρειάζεται ένα βήμα παραπάνω στον επόμενο κύκλο.';
 }

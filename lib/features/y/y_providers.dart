@@ -460,6 +460,12 @@ Future<YTimeline> _feedOf(
       for (final e in exits.values)
         if (e.proud) e.matchKey,
     },
+    // A group exit can end on a win: only a match that was not won is read
+    // as the one that ended it.
+    acceptedExitKeys: {
+      for (final e in exits.values)
+        if (e.accepted && !e.lastWon) e.matchKey,
+    },
   )..addAll(incidentPosts);
   // The one post drawn from a match that has NOT been played. Every other
   // shape on the feed reacts to a result, so the biggest game of a cycle
@@ -953,6 +959,7 @@ List<YPost> _tournamentPosts(
               ),
           painful: exit?.painful ?? false,
           proud: exit?.proud ?? false,
+          accepted: exit?.accepted ?? false,
           history: YFeed.standingsAsOf(dated, m.date),
         );
       }(),
@@ -979,11 +986,19 @@ List<(Fixture, YJudged)> _meetingsOf(
 
 /// How a finals exit read against what was expected of the side, and the
 /// key of the match that ended it.
-typedef _ExitReading = ({bool painful, bool proud, String matchKey});
+typedef _ExitReading = ({
+  bool painful,
+  bool proud,
+  bool accepted,
+  String matchKey,
+  bool lastWon,
+});
 
 /// Every exit milestone in [milestones], read: heartbreak for a favourite
 /// out early ([YTournaments.painfulExit]), pride for a side that went
-/// further than it was ever expected to ([YTournaments.proudExit]). Keyed by
+/// further than it was ever expected to ([YTournaments.proudExit]),
+/// acceptance for one out about where expected ([YTournaments.parExit]).
+/// Keyed by
 /// the milestone's key. Shared by the exit's own posts and the match that
 /// ended it, so the wire cannot be proud while the replies call for the
 /// manager's head.
@@ -1005,21 +1020,36 @@ Map<String, _ExitReading> _exitReadings(
       nationRank: nationRank,
       opponentRanks: [for (final (_, j) in meetings) j.opponentRank],
     );
+    final played = [
+      for (final (f, j) in meetings)
+        (
+          round: f.round,
+          opponentRank: j.opponentRank,
+          won: j.shootoutWon ?? j.scored > j.conceded,
+        ),
+    ];
     final proud =
         !painful &&
         YTournaments.proudExit(
           exitRound: exitRound,
           nationRank: nationRank,
-          meetings: [
-            for (final (f, j) in meetings)
-              (
-                round: f.round,
-                opponentRank: j.opponentRank,
-                won: j.shootoutWon ?? j.scored > j.conceded,
-              ),
-          ],
+          meetings: played,
         );
-    out[m.key] = (painful: painful, proud: proud, matchKey: last.$2.key);
+    final accepted =
+        !painful &&
+        !proud &&
+        YTournaments.parExit(
+          exitRound: exitRound,
+          nationRank: nationRank,
+          meetings: played,
+        );
+    out[m.key] = (
+      painful: painful,
+      proud: proud,
+      accepted: accepted,
+      matchKey: last.$2.key,
+      lastWon: played.last.won,
+    );
   }
   return out;
 }

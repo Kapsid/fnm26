@@ -16382,4 +16382,65 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Let us not get carried away. But yes, a good run.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Out of the $competition, about where we were always going to finish. Proud they gave it a go.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'The $competition is over for us. We gave the big sides a game. Heads up, lads.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Out of the $competition. On paper this was always the likely ending. Learn from it and go again.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Our $competition ends where the rankings said it would. No shame in that.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Out of the $competition, as most of us expected. Not a disaster, just not a shock either.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'The $competition was a step too far for this squad. The gap is real. Time to close it.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Gave it everything. That is all you can ask.';
+
+  @override
+  String get yReactionAcceptance1 => 'Heads up. We will be back.';
+
+  @override
+  String get yReactionAcceptance2 => 'Hurts, but they did us no shame.';
+
+  @override
+  String get yReactionAcceptance3 => 'About what we expected, honestly.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'The better sides went through. That is football.';
+
+  @override
+  String get yReactionAcceptance5 => 'Disappointed, not angry.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Bit flat, if I am honest. Still, no shocks.';
+
+  @override
+  String get yReactionAcceptance7 => 'We are not there yet. Everyone knows it.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Same level as last time. Need a step up next cycle.';
 }

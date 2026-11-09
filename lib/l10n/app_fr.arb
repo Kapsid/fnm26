@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Mieux que tous les pronostics. Bon tournoi.",
   "yReactionPride6": "Éliminés, mais sans honte. C'est correct.",
   "yReactionPride7": "Le meilleur est passé. On s'est fait honneur quand même.",
-  "yReactionPride8": "Ne nous emballons pas. Mais oui, beau parcours."
+  "yReactionPride8": "Ne nous emballons pas. Mais oui, beau parcours.",
+  "yExitAccepted0": "Éliminés du {competition}, à peu près là où on nous attendait. Fier qu'ils aient tout tenté.",
+  "yExitAccepted1": "Le {competition}, c'est fini pour nous. On a donné du fil à retordre aux gros. Tête haute, les gars.",
+  "yExitAccepted2": "Éliminés du {competition}. Sur le papier, c'était la fin probable. On apprend et on repart.",
+  "yExitAccepted3": "Notre {competition} s'arrête là où le classement le prévoyait. Aucune honte à ça.",
+  "yExitAccepted4": "Éliminés du {competition}, comme la plupart d'entre nous s'y attendaient. Pas une catastrophe, pas un choc non plus.",
+  "yExitAccepted5": "Le {competition} était une marche trop haute pour ce groupe. L'écart est réel. À nous de le combler.",
+  "yReactionAcceptance0": "Ils ont tout donné. On ne peut pas demander plus.",
+  "yReactionAcceptance1": "Tête haute. On reviendra.",
+  "yReactionAcceptance2": "Ça fait mal, mais ils ne nous ont pas fait honte.",
+  "yReactionAcceptance3": "À peu près ce qu'on attendait, honnêtement.",
+  "yReactionAcceptance4": "Les meilleures équipes sont passées. C'est le football.",
+  "yReactionAcceptance5": "Déçu, pas en colère.",
+  "yReactionAcceptance6": "Un peu terne, pour être honnête. Mais pas de choc.",
+  "yReactionAcceptance7": "On n'y est pas encore. Tout le monde le sait.",
+  "yReactionAcceptance8": "Même niveau que la dernière fois. Il faudra un cran de plus au prochain cycle."
 }

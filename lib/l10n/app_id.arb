@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Lebih baik dari prediksi siapa pun. Turnamen yang bagus.",
   "yReactionPride6": "Tersingkir, tapi tidak memalukan. Cukup adil.",
   "yReactionPride7": "Tim yang lebih baik lolos. Kita tetap tampil membanggakan.",
-  "yReactionPride8": "Jangan berlebihan. Tapi ya, perjalanan yang bagus."
+  "yReactionPride8": "Jangan berlebihan. Tapi ya, perjalanan yang bagus.",
+  "yExitAccepted0": "Tersingkir dari {competition}, kurang lebih sesuai perkiraan. Bangga mereka sudah berusaha.",
+  "yExitAccepted1": "{competition} sudah berakhir bagi kita. Kita memberi perlawanan kepada tim besar. Angkat kepala, semua.",
+  "yExitAccepted2": "Tersingkir dari {competition}. Di atas kertas, memang ini akhir yang paling mungkin. Belajar dan coba lagi.",
+  "yExitAccepted3": "{competition} kita berakhir sesuai peringkat. Tak ada yang memalukan.",
+  "yExitAccepted4": "Tersingkir dari {competition}, seperti dugaan kebanyakan dari kita. Bukan bencana, tapi juga bukan kejutan.",
+  "yExitAccepted5": "{competition} masih terlalu jauh untuk skuad ini. Kesenjangannya nyata. Saatnya menutupnya.",
+  "yReactionAcceptance0": "Sudah memberi segalanya. Tak bisa minta lebih.",
+  "yReactionAcceptance1": "Angkat kepala. Kita akan kembali.",
+  "yReactionAcceptance2": "Sakit, tapi mereka tidak mempermalukan kita.",
+  "yReactionAcceptance3": "Jujur, kurang lebih sesuai perkiraan.",
+  "yReactionAcceptance4": "Tim yang lebih baik lolos. Itulah sepak bola.",
+  "yReactionAcceptance5": "Kecewa, bukan marah.",
+  "yReactionAcceptance6": "Agak hambar, jujur saja. Tapi tak ada kejutan.",
+  "yReactionAcceptance7": "Kita belum sampai di sana. Semua orang tahu.",
+  "yReactionAcceptance8": "Level yang sama seperti terakhir kali. Perlu naik kelas di siklus berikutnya."
 }

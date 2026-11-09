@@ -16302,4 +16302,65 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Ne essünk túlzásba. De igen, jó menetelés volt.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Kiestünk a tornáról ($competition), nagyjából ott, ahol várható volt. Büszke vagyok, hogy megpróbálták.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Számunkra véget ért a torna ($competition). Megnehezítettük a nagyok dolgát. Fel a fejjel, srácok.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Kiestünk a tornáról ($competition). Papíron mindig is ez volt a valószínű vég. Tanulunk belőle, és újra próbáljuk.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'A tornánk ($competition) ott ér véget, ahol a világranglista szerint várható volt. Ebben nincs szégyen.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Kiestünk a tornáról ($competition), ahogy a legtöbben vártuk. Nem katasztrófa, de nem is meglepetés.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'A torna ($competition) egy lépéssel túl sok volt ennek a keretnek. A különbség valós. Ideje ledolgozni.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Mindent beleadtak. Többet nem lehet kérni.';
+
+  @override
+  String get yReactionAcceptance1 => 'Fel a fejjel. Visszajövünk.';
+
+  @override
+  String get yReactionAcceptance2 => 'Fáj, de nem hoztak ránk szégyent.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Őszintén szólva nagyjából erre számítottunk.';
+
+  @override
+  String get yReactionAcceptance4 => 'A jobbak jutottak tovább. Ez a foci.';
+
+  @override
+  String get yReactionAcceptance5 => 'Csalódott vagyok, nem dühös.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Őszintén szólva kicsit fakó. De sokk nélkül.';
+
+  @override
+  String get yReactionAcceptance7 => 'Még nem tartunk ott. Ezt mindenki tudja.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Ugyanaz a szint, mint legutóbb. A következő ciklusban előre kell lépni.';
 }

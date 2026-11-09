@@ -16693,4 +16693,63 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Ne zanosimo se. Ali da, dobar pohod.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Ispali smo s turnira $competition, otprilike gdje se i očekivalo. Ponosan što su pokušali.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turnir $competition za nas je gotov. Velikima smo zadali muke. Glave gore, dečki.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Ispali smo s turnira $competition. Na papiru je to uvijek bio vjerojatan kraj. Učimo i idemo dalje.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Naš turnir $competition završava gdje je ljestvica i rekla. Nema srama u tome.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Ispali smo s turnira $competition, kako je većina i očekivala. Nije katastrofa, ali nije ni šok.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turnir $competition bio je korak predaleko za ovu momčad. Razlika je stvarna. Vrijeme je da se smanji.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Dali su sve. Više se ne može tražiti.';
+
+  @override
+  String get yReactionAcceptance1 => 'Glave gore. Vratit ćemo se.';
+
+  @override
+  String get yReactionAcceptance2 => 'Boli, ali nisu nas osramotili.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Iskreno, otprilike ono što smo očekivali.';
+
+  @override
+  String get yReactionAcceptance4 => 'Prošli su bolji. To je nogomet.';
+
+  @override
+  String get yReactionAcceptance5 => 'Razočaran, ne ljut.';
+
+  @override
+  String get yReactionAcceptance6 => 'Malo bezlično, iskreno. Ali bez šokova.';
+
+  @override
+  String get yReactionAcceptance7 => 'Još nismo tamo. Svi to znaju.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Ista razina kao prošli put. Sljedeći ciklus treba korak naprijed.';
 }

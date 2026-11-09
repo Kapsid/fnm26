@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Lepší, než kdokoli předpovídal. Povedený turnaj.",
   "yReactionPride6": "Venku, ale bez ostudy. To beru.",
   "yReactionPride7": "Postoupil lepší tým. Stejně jsme si udělali čest.",
-  "yReactionPride8": "Nenechme se unést. Ale jo, povedená jízda."
+  "yReactionPride8": "Nenechme se unést. Ale jo, povedená jízda.",
+  "yExitAccepted0": "Konec na turnaji {competition}, zhruba tam, kde se to čekalo. Jsem rád, že to zkusili naplno.",
+  "yExitAccepted1": "Turnaj {competition} pro nás skončil. Velkým týmům jsme dali zabrat. Hlavy vzhůru, kluci.",
+  "yExitAccepted2": "Konec na turnaji {competition}. Na papíře to tak dopadnout mělo. Poučit se a jít dál.",
+  "yExitAccepted3": "Náš turnaj {competition} končí tam, kde to říkal žebříček. Žádná ostuda.",
+  "yExitAccepted4": "Konec na turnaji {competition}, jak většina z nás čekala. Žádná katastrofa, jen ani žádné překvapení.",
+  "yExitAccepted5": "Turnaj {competition} byl na tenhle kádr zatím moc. Rozdíl je skutečný. Je čas ho dohnat.",
+  "yReactionAcceptance0": "Dali do toho všechno. Víc chtít nejde.",
+  "yReactionAcceptance1": "Hlavy vzhůru. Vrátíme se.",
+  "yReactionAcceptance2": "Bolí to, ale ostudu nám neudělali.",
+  "yReactionAcceptance3": "Upřímně, zhruba co jsme čekali.",
+  "yReactionAcceptance4": "Postoupili lepší. Takový je fotbal.",
+  "yReactionAcceptance5": "Zklamaný, ne naštvaný.",
+  "yReactionAcceptance6": "Upřímně trochu bez šťávy. Ale žádný šok.",
+  "yReactionAcceptance7": "Ještě na to nemáme. Ví to každý.",
+  "yReactionAcceptance8": "Stejná úroveň jako minule. Příště to chce krok nahoru."
 }

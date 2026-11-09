@@ -16440,4 +16440,65 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Да не се увличаме. Но да, добро представяне.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Отпаднахме от турнира $competition, горе-долу където се очакваше. Горд съм, че опитаха.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Турнирът $competition приключи за нас. Затруднихме големите. Глави горе, момчета.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Отпаднахме от турнира $competition. На хартия това винаги беше вероятният край. Учим се и продължаваме.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Нашият турнир $competition свършва там, където показваше класацията. Няма срам в това.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Отпаднахме от турнира $competition, както повечето от нас очакваха. Не е катастрофа, но не е и шок.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Турнирът $competition се оказа твърде висока летва за този състав. Разликата е реална. Време е да я стопим.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Дадоха всичко. Повече не може да се иска.';
+
+  @override
+  String get yReactionAcceptance1 => 'Глави горе. Ще се върнем.';
+
+  @override
+  String get yReactionAcceptance2 => 'Боли, но не ни посрамиха.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Горе-долу каквото очаквахме, честно казано.';
+
+  @override
+  String get yReactionAcceptance4 => 'Продължиха по-добрите. Такъв е футболът.';
+
+  @override
+  String get yReactionAcceptance5 => 'Разочарован, не ядосан.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Малко безлично, честно казано. Но без шокове.';
+
+  @override
+  String get yReactionAcceptance7 => 'Още не сме там. Всички го знаят.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Същото ниво като миналия път. Следващия цикъл трябва крачка нагоре.';
 }

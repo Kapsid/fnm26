@@ -16434,4 +16434,66 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Laten we niet doordraven. Maar ja, een goede run.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Uitgeschakeld op het $competition, ongeveer waar we altijd zouden eindigen. Trots dat ze het geprobeerd hebben.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Het $competition zit erop voor ons. We hebben de groten het lastig gemaakt. Kop op, mannen.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Uitgeschakeld op het $competition. Op papier was dit altijd het waarschijnlijke einde. Leren en opnieuw.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Ons $competition eindigt waar de ranking het voorspelde. Geen schande.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Uitgeschakeld op het $competition, zoals de meesten verwachtten. Geen ramp, maar ook geen schok.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Het $competition was een brug te ver voor deze selectie. Het verschil is echt. Tijd om het te dichten.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Alles gegeven. Meer kun je niet vragen.';
+
+  @override
+  String get yReactionAcceptance1 => 'Kop op. We komen terug.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Het doet pijn, maar ze hebben ons niet te schande gezet.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Eerlijk gezegd ongeveer wat we verwachtten.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'De betere ploegen gingen door. Dat is voetbal.';
+
+  @override
+  String get yReactionAcceptance5 => 'Teleurgesteld, niet boos.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Een beetje vlak, eerlijk gezegd. Maar geen schokken.';
+
+  @override
+  String get yReactionAcceptance7 => 'We zijn er nog niet. Dat weet iedereen.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Hetzelfde niveau als de vorige keer. Volgende cyclus moet het een stap beter.';
 }

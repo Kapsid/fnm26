@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Bättre än någon trodde. Bra turnering.",
   "yReactionPride6": "Ute, men inte förnedrade. Rimligt.",
   "yReactionPride7": "Det bättre laget gick vidare. Vi gjorde oss ändå heder.",
-  "yReactionPride8": "Låt oss inte rusa iväg. Men ja, en bra resa."
+  "yReactionPride8": "Låt oss inte rusa iväg. Men ja, en bra resa.",
+  "yExitAccepted0": "Ute ur {competition}, ungefär där vi alltid skulle hamna. Stolt att de gav det ett försök.",
+  "yExitAccepted1": "{competition} är över för oss. Vi gav de stora lagen en match. Huvudet högt, grabbar.",
+  "yExitAccepted2": "Ute ur {competition}. På papperet var det här alltid det troliga slutet. Lär av det och kör igen.",
+  "yExitAccepted3": "Vårt {competition} slutar där rankingen sa att det skulle. Ingen skam i det.",
+  "yExitAccepted4": "Ute ur {competition}, som de flesta av oss väntade. Ingen katastrof, men ingen chock heller.",
+  "yExitAccepted5": "{competition} var ett steg för långt för den här truppen. Avståndet är verkligt. Dags att knappa in.",
+  "yReactionAcceptance0": "Gav allt. Mer kan man inte begära.",
+  "yReactionAcceptance1": "Huvudet högt. Vi kommer tillbaka.",
+  "yReactionAcceptance2": "Gör ont, men de drog ingen skam över oss.",
+  "yReactionAcceptance3": "Ungefär vad vi väntade oss, ärligt talat.",
+  "yReactionAcceptance4": "De bättre lagen gick vidare. Det är fotboll.",
+  "yReactionAcceptance5": "Besviken, inte arg.",
+  "yReactionAcceptance6": "Lite platt, om jag ska vara ärlig. Men inga chocker.",
+  "yReactionAcceptance7": "Vi är inte där än. Det vet alla.",
+  "yReactionAcceptance8": "Samma nivå som förra gången. Det behövs ett kliv nästa cykel."
 }

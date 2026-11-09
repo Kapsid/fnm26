@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Mas maganda kaysa sa hula ng sinuman. Magandang torneo.",
   "yReactionPride6": "Laglag, pero hindi nakakahiya. Ayos lang.",
   "yReactionPride7": "Ang mas magaling na koponan ang umusad. Pero naging karangalan pa rin natin ito.",
-  "yReactionPride8": "Huwag tayong madala. Pero oo, magandang takbo."
+  "yReactionPride8": "Huwag tayong madala. Pero oo, magandang takbo.",
+  "yExitAccepted0": "Laglag sa {competition}, halos kung saan talaga inaasahan. Proud na sinubukan nila.",
+  "yExitAccepted1": "Tapos na ang {competition} para sa atin. Nilabanan natin ang malalaking koponan. Taas-noo, mga bata.",
+  "yExitAccepted2": "Laglag sa {competition}. Sa papel, ito talaga ang malamang na katapusan. Matuto at sumubok muli.",
+  "yExitAccepted3": "Natapos ang ating {competition} kung saan sinabi ng ranking. Walang nakakahiya roon.",
+  "yExitAccepted4": "Laglag sa {competition}, gaya ng inasahan ng karamihan. Hindi sakuna, pero hindi rin nakakagulat.",
+  "yExitAccepted5": "Masyado pang malayo ang {competition} para sa koponang ito. Totoo ang agwat. Panahon nang paliitin ito.",
+  "yReactionAcceptance0": "Ibinigay nila ang lahat. Wala nang mahihiling pa.",
+  "yReactionAcceptance1": "Taas-noo. Babalik tayo.",
+  "yReactionAcceptance2": "Masakit, pero hindi nila tayo ipinahiya.",
+  "yReactionAcceptance3": "Sa totoo lang, halos ganito ang inasahan natin.",
+  "yReactionAcceptance4": "Ang mas magagaling ang umusad. Ganyan ang football.",
+  "yReactionAcceptance5": "Dismayado, hindi galit.",
+  "yReactionAcceptance6": "Medyo matamlay, sa totoo lang. Pero walang gulat.",
+  "yReactionAcceptance7": "Hindi pa tayo naroon. Alam ng lahat iyan.",
+  "yReactionAcceptance8": "Parehong antas noong nakaraan. Kailangang umangat sa susunod na cycle."
 }

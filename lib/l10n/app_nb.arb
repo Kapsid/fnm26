@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Bedre enn noen spådde. God turnering.",
   "yReactionPride6": "Ute, men ikke ydmyket. Greit nok.",
   "yReactionPride7": "Det beste laget gikk videre. Vi gjorde oss ære likevel.",
-  "yReactionPride8": "La oss ikke bli for ivrige. Men ja, et godt løp."
+  "yReactionPride8": "La oss ikke bli for ivrige. Men ja, et godt løp.",
+  "yExitAccepted0": "Ute av {competition}, omtrent der vi alltid skulle ende. Stolt av at de prøvde.",
+  "yExitAccepted1": "{competition} er over for oss. Vi ga de store lagene kamp. Hodet høyt, gutter.",
+  "yExitAccepted2": "Ute av {competition}. På papiret var dette alltid den sannsynlige slutten. Lær av det og prøv igjen.",
+  "yExitAccepted3": "Vårt {competition} slutter der rankingen sa det ville. Ingen skam i det.",
+  "yExitAccepted4": "Ute av {competition}, som de fleste av oss ventet. Ingen katastrofe, men intet sjokk heller.",
+  "yExitAccepted5": "{competition} var et steg for langt for denne troppen. Avstanden er reell. På tide å tette den.",
+  "yReactionAcceptance0": "Ga alt. Mer kan man ikke be om.",
+  "yReactionAcceptance1": "Hodet høyt. Vi kommer tilbake.",
+  "yReactionAcceptance2": "Det gjør vondt, men de gjorde oss ikke til skamme.",
+  "yReactionAcceptance3": "Omtrent som ventet, ærlig talt.",
+  "yReactionAcceptance4": "De bedre lagene gikk videre. Sånn er fotball.",
+  "yReactionAcceptance5": "Skuffet, ikke sint.",
+  "yReactionAcceptance6": "Litt flatt, ærlig talt. Men ingen sjokk.",
+  "yReactionAcceptance7": "Vi er ikke der ennå. Det vet alle.",
+  "yReactionAcceptance8": "Samme nivå som sist. Trenger et steg opp neste syklus."
 }

@@ -16671,4 +16671,64 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Не будемо захоплюватися. Але так, добрий виступ.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Вибули з турніру $competition приблизно там, де й очікували. Пишаюся, що вони спробували.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Турнір $competition для нас завершився. Ми дали бій великим. Голови вгору, хлопці.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Вибули з турніру $competition. На папері це завжди був імовірний фінал. Робимо висновки й пробуємо знову.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Наш турнір $competition закінчується там, де й казав рейтинг. Соромитися нічого.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Вибули з турніру $competition, як більшість із нас і чекала. Не катастрофа, але й не шок.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Турнір $competition виявився кроком задалеко для цього складу. Різниця реальна. Час її скорочувати.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Віддали все. Більшого й не попросиш.';
+
+  @override
+  String get yReactionAcceptance1 => 'Голови вгору. Ми повернемося.';
+
+  @override
+  String get yReactionAcceptance2 => 'Боляче, але вони нас не осоромили.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Чесно кажучи, приблизно цього ми й чекали.';
+
+  @override
+  String get yReactionAcceptance4 => 'Пройшли сильніші. Такий футбол.';
+
+  @override
+  String get yReactionAcceptance5 => 'Розчарований, не злий.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Чесно кажучи, трохи блідо. Але без шоків.';
+
+  @override
+  String get yReactionAcceptance7 => 'Ми ще не на тому рівні. Усі це знають.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Той самий рівень, що й минулого разу. Наступного циклу потрібен крок угору.';
 }

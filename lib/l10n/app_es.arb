@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Mejor de lo que nadie predijo. Buen torneo.",
   "yReactionPride6": "Fuera, pero sin vergüenza. Justo.",
   "yReactionPride7": "Pasó el mejor. Aun así, salimos con la cabeza alta.",
-  "yReactionPride8": "No nos volvamos locos. Pero sí, buen recorrido."
+  "yReactionPride8": "No nos volvamos locos. Pero sí, buen recorrido.",
+  "yExitAccepted0": "Fuera del {competition}, más o menos donde se esperaba. Orgulloso de que lo intentaran.",
+  "yExitAccepted1": "El {competition} se acabó para nosotros. Les plantamos cara a los grandes. Cabeza alta, chicos.",
+  "yExitAccepted2": "Fuera del {competition}. Sobre el papel, era el final más probable. Aprender y volver a intentarlo.",
+  "yExitAccepted3": "Nuestro {competition} termina donde decía el ranking. Ninguna vergüenza.",
+  "yExitAccepted4": "Fuera del {competition}, como casi todos esperábamos. No es un desastre, pero tampoco una sorpresa.",
+  "yExitAccepted5": "El {competition} le quedó grande a esta plantilla. La diferencia es real. Toca recortarla.",
+  "yReactionAcceptance0": "Lo dieron todo. No se puede pedir más.",
+  "yReactionAcceptance1": "Cabeza alta. Volveremos.",
+  "yReactionAcceptance2": "Duele, pero no nos han avergonzado.",
+  "yReactionAcceptance3": "Más o menos lo que esperábamos, la verdad.",
+  "yReactionAcceptance4": "Pasaron los mejores. Así es el fútbol.",
+  "yReactionAcceptance5": "Decepcionado, no enfadado.",
+  "yReactionAcceptance6": "Un poco plano, la verdad. Pero sin sobresaltos.",
+  "yReactionAcceptance7": "Todavía no estamos ahí. Todos lo saben.",
+  "yReactionAcceptance8": "El mismo nivel que la última vez. Hace falta un paso más en el próximo ciclo."
 }

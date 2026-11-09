@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Besser als jede Prognose. Gutes Turnier.",
   "yReactionPride6": "Raus, aber ohne Blamage. Geht in Ordnung.",
   "yReactionPride7": "Die bessere Mannschaft ist weiter. Wir haben uns trotzdem achtbar verkauft.",
-  "yReactionPride8": "Nicht übertreiben. Aber ja, ein guter Lauf."
+  "yReactionPride8": "Nicht übertreiben. Aber ja, ein guter Lauf.",
+  "yExitAccepted0": "Raus aus der {competition}, ungefähr da, wo man uns erwartet hatte. Stolz, dass sie es versucht haben.",
+  "yExitAccepted1": "Die {competition} ist für uns vorbei. Den Großen haben wir es schwer gemacht. Kopf hoch, Jungs.",
+  "yExitAccepted2": "Raus aus der {competition}. Auf dem Papier war das immer das wahrscheinliche Ende. Daraus lernen und weitermachen.",
+  "yExitAccepted3": "Unsere {competition} endet da, wo die Weltrangliste es vorhergesagt hat. Keine Schande.",
+  "yExitAccepted4": "Raus aus der {competition}, wie die meisten von uns erwartet haben. Keine Katastrophe, aber auch keine Überraschung.",
+  "yExitAccepted5": "Die {competition} war für diesen Kader eine Nummer zu groß. Der Abstand ist real. Zeit, ihn zu verkleinern.",
+  "yReactionAcceptance0": "Alles gegeben. Mehr kann man nicht verlangen.",
+  "yReactionAcceptance1": "Kopf hoch. Wir kommen wieder.",
+  "yReactionAcceptance2": "Tut weh, aber blamiert haben sie uns nicht.",
+  "yReactionAcceptance3": "Ehrlich gesagt ungefähr das, was wir erwartet haben.",
+  "yReactionAcceptance4": "Die Besseren sind weiter. So ist Fußball.",
+  "yReactionAcceptance5": "Enttäuscht, nicht wütend.",
+  "yReactionAcceptance6": "Ehrlich gesagt etwas blass. Aber keine Schocks.",
+  "yReactionAcceptance7": "So weit sind wir noch nicht. Das weiß jeder.",
+  "yReactionAcceptance8": "Dasselbe Niveau wie beim letzten Mal. Im nächsten Zyklus muss mehr kommen."
 }

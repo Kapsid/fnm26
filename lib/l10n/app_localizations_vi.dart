@@ -16202,4 +16202,66 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'Đừng quá đà. Nhưng đúng, một hành trình tốt.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Dừng bước ở $competition, đúng như dự đoán. Tự hào vì các cầu thủ đã cố gắng.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition đã khép lại với chúng ta. Chúng ta đã khiến các đội lớn chật vật. Ngẩng cao đầu lên.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Dừng bước ở $competition. Trên giấy tờ, đây vốn là kết cục dễ xảy ra nhất. Rút kinh nghiệm rồi làm lại.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return '$competition của chúng ta kết thúc đúng như bảng xếp hạng. Không có gì đáng xấu hổ.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Dừng bước ở $competition, như phần lớn chúng ta đã đoán. Không phải thảm họa, nhưng cũng chẳng bất ngờ.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition vẫn là một bước quá xa với đội hình này. Khoảng cách là có thật. Đã đến lúc thu hẹp nó.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Đã cống hiến hết mình. Không thể đòi hỏi hơn.';
+
+  @override
+  String get yReactionAcceptance1 => 'Ngẩng cao đầu. Chúng ta sẽ trở lại.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Đau đấy, nhưng họ không làm chúng ta xấu hổ.';
+
+  @override
+  String get yReactionAcceptance3 => 'Thật lòng thì cũng gần như dự đoán.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Những đội mạnh hơn đã đi tiếp. Bóng đá là vậy.';
+
+  @override
+  String get yReactionAcceptance5 => 'Thất vọng, chứ không giận.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Thật lòng thì hơi nhạt. Nhưng không có cú sốc nào.';
+
+  @override
+  String get yReactionAcceptance7 => 'Chúng ta chưa tới tầm đó. Ai cũng biết.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Vẫn trình độ như lần trước. Chu kỳ tới cần tiến thêm một bước.';
 }

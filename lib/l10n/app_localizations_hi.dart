@@ -16268,4 +16268,64 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get yReactionPride8 => 'ज़्यादा बहकें नहीं। पर हाँ, अच्छा सफ़र था।';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return '$competition से बाहर, लगभग वहीं जहाँ उम्मीद थी। गर्व है कि उन्होंने पूरी कोशिश की।';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition हमारे लिए ख़त्म हो गया। हमने बड़ी टीमों को टक्कर दी। सिर ऊँचा रखो, लड़को।';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return '$competition से बाहर। काग़ज़ पर यही सबसे संभावित अंत था। सीखो और फिर कोशिश करो।';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'हमारा $competition वहीं ख़त्म हुआ जहाँ रैंकिंग ने कहा था। इसमें कोई शर्म नहीं।';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return '$competition से बाहर, जैसा हम में से ज़्यादातर ने सोचा था। कोई आफ़त नहीं, पर कोई झटका भी नहीं।';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition इस टीम के लिए एक क़दम ज़्यादा था। फ़ासला असली है। अब इसे पाटने का समय है।';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'सब कुछ झोंक दिया। इससे ज़्यादा क्या माँगें।';
+
+  @override
+  String get yReactionAcceptance1 => 'सिर ऊँचा रखो। हम लौटेंगे।';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'दुख है, पर उन्होंने हमें शर्मिंदा नहीं किया।';
+
+  @override
+  String get yReactionAcceptance3 => 'सच कहें तो लगभग वैसा ही जैसा सोचा था।';
+
+  @override
+  String get yReactionAcceptance4 => 'बेहतर टीमें आगे गईं। यही फ़ुटबॉल है।';
+
+  @override
+  String get yReactionAcceptance5 => 'निराश हूँ, नाराज़ नहीं।';
+
+  @override
+  String get yReactionAcceptance6 => 'सच कहूँ तो थोड़ा फीका। पर कोई झटका नहीं।';
+
+  @override
+  String get yReactionAcceptance7 => 'हम अभी वहाँ नहीं पहुँचे। सब जानते हैं।';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'पिछली बार जैसा ही स्तर। अगले चक्र में एक क़दम ऊपर चाहिए।';
 }

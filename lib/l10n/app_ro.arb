@@ -4072,5 +4072,20 @@
   "yReactionPride5": "Mai bine decât prezicea oricine. Turneu bun.",
   "yReactionPride6": "Afară, dar fără rușine. Corect.",
   "yReactionPride7": "A trecut echipa mai bună. Noi ne-am făcut oricum cinste.",
-  "yReactionPride8": "Să nu ne entuziasmăm prea tare. Dar da, un parcurs bun."
+  "yReactionPride8": "Să nu ne entuziasmăm prea tare. Dar da, un parcurs bun.",
+  "yExitAccepted0": "Afară de la turneul {competition}, cam unde ne așteptam. Mândru că au încercat.",
+  "yExitAccepted1": "Turneul {competition} s-a încheiat pentru noi. Le-am dat de furcă celor mari. Capul sus, băieți.",
+  "yExitAccepted2": "Afară de la turneul {competition}. Pe hârtie, ăsta era finalul probabil. Învățăm și încercăm din nou.",
+  "yExitAccepted3": "Turneul nostru, {competition}, se încheie unde spunea clasamentul. Nicio rușine.",
+  "yExitAccepted4": "Afară de la turneul {competition}, cum se așteptau cei mai mulți dintre noi. Nu e un dezastru, dar nici un șoc.",
+  "yExitAccepted5": "Turneul {competition} a fost un pas prea mare pentru acest lot. Diferența e reală. E timpul s-o reducem.",
+  "yReactionAcceptance0": "Au dat tot. Mai mult nu poți cere.",
+  "yReactionAcceptance1": "Capul sus. Ne vom întoarce.",
+  "yReactionAcceptance2": "Doare, dar nu ne-au făcut de rușine.",
+  "yReactionAcceptance3": "Cam ce ne așteptam, sincer.",
+  "yReactionAcceptance4": "Au trecut echipele mai bune. Asta e fotbalul.",
+  "yReactionAcceptance5": "Dezamăgit, nu furios.",
+  "yReactionAcceptance6": "Cam fad, sincer. Dar fără șocuri.",
+  "yReactionAcceptance7": "Nu suntem încă acolo. Toată lumea știe.",
+  "yReactionAcceptance8": "Același nivel ca data trecută. E nevoie de un pas înainte în ciclul următor."
 }

@@ -16510,4 +16510,68 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get yReactionPride8 =>
       'Ne nous emballons pas. Mais oui, beau parcours.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Éliminés du $competition, à peu près là où on nous attendait. Fier qu\'ils aient tout tenté.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Le $competition, c\'est fini pour nous. On a donné du fil à retordre aux gros. Tête haute, les gars.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Éliminés du $competition. Sur le papier, c\'était la fin probable. On apprend et on repart.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Notre $competition s\'arrête là où le classement le prévoyait. Aucune honte à ça.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Éliminés du $competition, comme la plupart d\'entre nous s\'y attendaient. Pas une catastrophe, pas un choc non plus.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Le $competition était une marche trop haute pour ce groupe. L\'écart est réel. À nous de le combler.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Ils ont tout donné. On ne peut pas demander plus.';
+
+  @override
+  String get yReactionAcceptance1 => 'Tête haute. On reviendra.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Ça fait mal, mais ils ne nous ont pas fait honte.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'À peu près ce qu\'on attendait, honnêtement.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Les meilleures équipes sont passées. C\'est le football.';
+
+  @override
+  String get yReactionAcceptance5 => 'Déçu, pas en colère.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Un peu terne, pour être honnête. Mais pas de choc.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'On n\'y est pas encore. Tout le monde le sait.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Même niveau que la dernière fois. Il faudra un cran de plus au prochain cycle.';
 }
