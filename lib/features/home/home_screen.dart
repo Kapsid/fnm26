@@ -18,6 +18,7 @@ import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+part 'home_bento.dart';
 part 'home_phone_layout.dart';
 part 'home_tablet_layout.dart';
 
@@ -82,7 +83,6 @@ class HomeScreen extends ConsumerWidget {
     final campaignNation = campaign == null
         ? null
         : ref.watch(nationByIdProvider(campaign.def.nationId)).valueOrNull;
-    final tablet = useTabletLayout(context, ref);
     // A card for a Pro-locked save still shows, padlocked, and opens the gate.
     final lockedIds = watchLockedCareerIds(ref);
     // Whichever was played last leads; the other sits under it.
@@ -90,35 +90,6 @@ class HomeScreen extends ConsumerWidget {
         campaign != null &&
         (lastSave == null ||
             _playedAt(campaign.run).isAfter(_playedAt(lastSave)));
-    if (tablet) {
-      final cards = <Widget>[
-        if (lastSave != null)
-          _ContinueCard(
-            nationName: lastWorldNation ?? lastNation?.name ?? l.homeYourNation,
-            nationCode: lastNation?.code,
-            worldName: lastWorld,
-            inGameDate: lastSave.inGameDate,
-            cyclePointer: lastSave.cyclePointer,
-            nextLine: _careerNextLine(context, lastSave, lastLine),
-            locked: lockedIds.contains(lastSave.id),
-            onResume: () => _resume(context, ref, lastSave),
-          ),
-        if (campaign != null)
-          _CampaignContinueCard(
-            def: campaign.def,
-            run: campaign.run,
-            nationCode: campaignNation?.code,
-            compact: false,
-            locked: lockedIds.contains(campaign.run.id),
-            onResume: () => _resume(context, ref, campaign.run),
-          ),
-      ];
-      if (campaignFirst && cards.length > 1) {
-        cards.insert(0, cards.removeLast());
-      }
-      return _HomeTabletLayout(hasSave: lastSave != null, cards: cards);
-    }
-
     final careerNation =
         lastWorldNation ?? lastNation?.name ?? l.homeYourNation;
     final career = lastSave == null
@@ -151,6 +122,18 @@ class HomeScreen extends ConsumerWidget {
             onResume: () => _resume(context, ref, campaign.run),
           );
     final (hero, second) = campaignFirst ? (run, career) : (career, run);
+    // A tablet started as one gets the tablet layout in any tablet-sized
+    // window, portrait included: it stacks the logo over the grid there.
+    final tablet =
+        ref.watch(formFactorProvider) == FormFactor.tablet &&
+        context.isTabletWindow;
+    if (tablet) {
+      return _HomeTabletLayout(
+        hasSave: lastSave != null,
+        hero: hero,
+        second: second,
+      );
+    }
     return _HomePhoneLayout(
       hasSave: lastSave != null,
       hero: hero,
@@ -219,188 +202,3 @@ DateTime _playedAt(Career c) => c.lastPlayedAt ?? c.createdAt;
 /// A Pro-locked save opens its gate instead, untouched (see [openSave]).
 void _resume(BuildContext context, WidgetRef ref, Career save) =>
     openSave(context, ref, save.id);
-
-/// The highlighted "continue your last save" card — a flag, the nation, and a
-/// bright resume button.
-class _ContinueCard extends StatelessWidget {
-  const _ContinueCard({
-    required this.nationName,
-    required this.nationCode,
-    required this.inGameDate,
-    required this.cyclePointer,
-    required this.onResume,
-    this.locked = false,
-    this.worldName,
-    this.nextLine,
-  });
-
-  /// What comes next for the save (see [_careerNextLine]); null shows the
-  /// road to the cycle's World Championship.
-  final String? nextLine;
-
-  final String nationName;
-  final String? nationCode;
-
-  /// The database the save runs on; null for the game's own world.
-  final String? worldName;
-  final DateTime inGameDate;
-  final int cyclePointer;
-  final VoidCallback onResume;
-  final bool locked;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return GestureDetector(
-      onTap: onResume,
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.secondaryContainer,
-          borderRadius: AppRadii.baseAll,
-          border: Border.all(color: AppColors.primary, width: 1.5),
-        ),
-        child: Row(
-          children: [
-            if (nationCode != null) ...[
-              FlagDisc(nationCode!, size: 40, highlighted: true),
-              const SizedBox(width: AppSpacing.md),
-            ],
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l.homeContinue,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  Text(nationName, style: AppTypography.titleMedium),
-                  if (worldName case final world?)
-                    SaveWorldLine(
-                      key: HomeScreen.continueWorldKey,
-                      name: world,
-                    ),
-                  if (locked) const SaveLockedNote(),
-                  const SizedBox(height: 2),
-                  Text(
-                    switch (nextLine) {
-                      final line? =>
-                        '${AppDate.monthYear(context, inGameDate)} · $line',
-                      null => l.homeRoadToWorldCup(
-                        AppDate.monthYear(context, inGameDate),
-                        CareerService.worldCupYear(cyclePointer),
-                      ),
-                    },
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              locked ? Icons.lock_rounded : Icons.play_circle_fill_rounded,
-              color: locked ? AppColors.warning : AppColors.primary,
-              size: 36,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// The "continue your campaign" card: the same family as [_ContinueCard], a
-/// shade smaller so two of them do not crowd a small phone. Flag of the
-/// campaign's nation, its title, and the month plus the cycle it is on.
-class _CampaignContinueCard extends StatelessWidget {
-  const _CampaignContinueCard({
-    required this.def,
-    required this.run,
-    required this.nationCode,
-    required this.compact,
-    required this.onResume,
-    this.locked = false,
-  });
-
-  final CampaignDef def;
-  final Career run;
-  final String? nationCode;
-  final bool compact;
-  final VoidCallback onResume;
-  final bool locked;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final date = AppDate.monthYear(context, run.inGameDate);
-    // A one-cycle campaign has no progress worth stating.
-    final subtitle = def.cycles > 1
-        ? l.homeCampaignCycle(
-            date,
-            (run.cyclePointer + 1).clamp(1, def.cycles),
-            def.cycles,
-          )
-        : date;
-    return GestureDetector(
-      key: HomeScreen.campaignContinueKey,
-      onTap: onResume,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: compact ? AppSpacing.sm : AppSpacing.md,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.secondaryContainer,
-          borderRadius: AppRadii.baseAll,
-          border: Border.all(color: AppColors.primary, width: 1.5),
-        ),
-        child: Row(
-          children: [
-            if (nationCode != null) ...[
-              FlagDisc(nationCode!, size: compact ? 32 : 40, highlighted: true),
-              const SizedBox(width: AppSpacing.md),
-            ],
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l.homeContinueCampaign,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  Text(
-                    campaignWords(l, def).title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.titleMedium,
-                  ),
-                  if (locked) const SaveLockedNote(),
-                  Text(
-                    subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              locked ? Icons.lock_rounded : Icons.play_circle_fill_rounded,
-              color: locked ? AppColors.warning : AppColors.primary,
-              size: compact ? 30 : 36,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
