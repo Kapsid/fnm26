@@ -3,17 +3,16 @@ part of 'match_screen.dart';
 /// The key of the tablet 2D TV's broadcast header.
 const Key matchTvHeaderKey = Key('match.tvHeader');
 
-/// The key of the tablet 2D TV's centred goal banner.
-const Key matchTvGoalBannerKey = Key('match.tvGoalBanner');
+/// The key of the header's moment strip (a goal, a card, a substitution, an
+/// injury, a missed penalty), which stands in for the figures while it is on.
+const Key matchTvEventStripKey = Key('match.tvEventStrip');
 
-/// The key of the tablet 2D TV's moment feed down the pitch's right edge.
-const Key matchMomentFeedKey = Key('match.momentFeed');
+/// How long a moment other than a goal holds the header's strip. A goal
+/// holds it for the goal's own pause ([kGoalFlashHold]).
+const Duration kTvEventHold = Duration(milliseconds: 2400);
 
-/// How long a moment stays in the feed: in, held, faded out.
-const Duration kMomentFeedLife = Duration(milliseconds: 7000);
-
-/// The most moments the feed shows at once.
-const int kMomentFeedMax = 4;
+/// The most moments waiting their turn on the strip; older ones give way.
+const int kTvEventQueueMax = 3;
 
 /// A per-minute series read as of [minute]: the full-match [total] once the
 /// whistle has gone, and [zero] for a result that never recorded it (as the
@@ -113,10 +112,15 @@ TvStats tvStatsOf(
   );
 }
 
-/// The tablet 2D TV's broadcast header, across the top of the picture: the
-/// score bug (the phone's bar, drawn larger), a strip of live figures under
-/// it and a hairline of momentum under both.
-class MatchTvHeader extends StatelessWidget {
+/// The tablet 2D TV's broadcast header, over the picture and as wide as it:
+/// the ground on a line of its own, the score bug (the phone's bar, drawn
+/// larger) across the full width, and a strip of live figures under it.
+///
+/// Nothing is drawn over the picture: while a moment is on (a goal, a card,
+/// a substitution, an injury, a missed penalty) the stat strip turns into
+/// that moment's strip for a few seconds, then back. A goal comes first and
+/// holds it for the goal's pause; the rest queue, each in its turn.
+class MatchTvHeader extends StatefulWidget {
   const MatchTvHeader({
     required this.homeCode,
     required this.awayCode,
@@ -125,12 +129,14 @@ class MatchTvHeader extends StatelessWidget {
     required this.clock,
     required this.live,
     required this.stats,
+    required this.homeNationId,
     this.homeColor,
     this.awayColor,
     this.goal,
     this.goalForHome = false,
     this.theme,
-    this.momentum,
+    this.ground,
+    this.moments = const [],
     super.key,
   });
 
@@ -141,114 +147,406 @@ class MatchTvHeader extends StatelessWidget {
   final String clock;
   final bool live;
   final TvStats stats;
+  final int homeNationId;
   final Color? homeColor;
   final Color? awayColor;
 
-  /// The goal being celebrated (its scorer's figure pulses).
+  /// The goal being celebrated: its scorer's figure pulses, and the strip
+  /// is its own for as long.
   final MatchEvent? goal;
   final bool goalForHome;
   final ScoreBugTheme? theme;
 
-  /// The home side's share of the momentum, 0 to 100; null once it no longer
-  /// moves (full time, a shootout).
-  final double? momentum;
+  /// The ground's line over the bug (see [GroundStrip]); null leaves the
+  /// line empty.
+  final Widget? ground;
+
+  /// Every moment the clock has reached, in match order. Those already past
+  /// when the header comes on screen are not replayed.
+  final List<TvMoment> moments;
 
   static const double _pad = AppSpacing.sm + 2;
+  static const double _groundHeight = 16;
   static const double _bugHeight = 40;
   static const double _stripHeight = 34;
-  static const double _hairline = 4;
 
   /// The header's height.
   static const double height =
-      _pad * 2 + _bugHeight + AppSpacing.sm + _stripHeight + _hairline;
+      _pad * 2 +
+      _groundHeight +
+      AppSpacing.sm +
+      _bugHeight +
+      AppSpacing.sm +
+      _stripHeight;
+
+  @override
+  State<MatchTvHeader> createState() => _MatchTvHeaderState();
+}
+
+class _MatchTvHeaderState extends State<MatchTvHeader> {
+  final Set<Object> _seen = {};
+  final List<TvMoment> _queue = [];
+  TvMoment? _current;
+  Timer? _timer;
+
+  /// Goals have the strip through [MatchTvHeader.goal]; the queue is the
+  /// rest.
+  static bool _queued(TvMoment m) => m.event?.type != MatchEventType.goal;
+
+  @override
+  void initState() {
+    super.initState();
+    for (final m in widget.moments) {
+      _seen.add(m.id);
+    }
+  }
+
+  @override
+  void didUpdateWidget(MatchTvHeader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    for (final m in widget.moments) {
+      if (!_seen.add(m.id) || !_queued(m)) continue;
+      _queue.add(m);
+      while (_queue.length > kTvEventQueueMax) {
+        _queue.removeAt(0);
+      }
+    }
+    _advance();
+  }
+
+  /// Puts the next moment on the strip when it is free. A goal holds the
+  /// queue, and the moment it interrupted starts its time again after.
+  void _advance() {
+    if (widget.goal != null) {
+      _timer?.cancel();
+      _timer = null;
+      return;
+    }
+    if (_timer != null) return;
+    if (_current == null) {
+      if (_queue.isEmpty) return;
+      _current = _queue.removeAt(0);
+    }
+    _timer = Timer(kTvEventHold, () {
+      if (!mounted) return;
+      setState(() {
+        _current = null;
+        _timer = null;
+        _advance();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Color _sideColor(int nationId) => nationId == widget.homeNationId
+      ? widget.homeColor ?? AppColors.primary
+      : widget.awayColor ?? AppColors.secondary;
+
+  String _sideCode(int nationId) =>
+      nationId == widget.homeNationId ? widget.homeCode : widget.awayCode;
 
   @override
   Widget build(BuildContext context) {
+    final w = widget;
     final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    final goal = this.goal;
+    final goal = w.goal;
     final goalId = goal == null
         ? null
-        : (goal.minute, goal.stoppage, goal.playerId, homeScore + awayScore);
+        : (
+            goal.minute,
+            goal.stoppage,
+            goal.playerId,
+            w.homeScore + w.awayScore,
+          );
     // The phone's bar, laid out at its own height and scaled up to the
-    // header's: the same bug, every detail in proportion.
+    // header's: the same bug, every detail in proportion, across the
+    // header's full width (its sides take the room, the score and the clock
+    // keep their size).
     Widget bug(double width) {
-      const scale = _bugHeight / _ScoreBug.barHeight;
+      const scale = MatchTvHeader._bugHeight / _ScoreBug.barHeight;
       return SizedBox(
         width: width,
-        height: _bugHeight,
+        height: MatchTvHeader._bugHeight,
         child: FittedBox(
           child: SizedBox(
             width: width / scale,
             height: _ScoreBug.barHeight,
             child: _ScoreBugBar(
-              homeCode: homeCode,
-              awayCode: awayCode,
-              homeScore: homeScore,
-              awayScore: awayScore,
-              clock: clock,
-              live: live,
+              homeCode: w.homeCode,
+              awayCode: w.awayCode,
+              homeScore: w.homeScore,
+              awayScore: w.awayScore,
+              clock: w.clock,
+              live: w.live,
               still: still,
-              homeColor: homeColor,
-              awayColor: awayColor,
+              homeColor: w.homeColor,
+              awayColor: w.awayColor,
               goal: goal,
-              goalForHome: goalForHome,
+              goalForHome: w.goalForHome,
               goalId: goalId,
-              theme: theme,
+              theme: w.theme,
               // The minute alone needs little; the whistle's wording more.
-              clockMaxWidth: live ? 52 : 80,
+              clockMaxWidth: w.live ? 52 : 80,
             ),
           ),
         ),
       );
     }
 
+    final current = _current;
+    final Object stripId;
+    final Widget strip;
+    if (goal != null) {
+      stripId = ('goal', goalId);
+      strip = _TvEventStrip(
+        moment: TvMoment.event(goal),
+        code: _sideCode(goal.teamNationId),
+        color: _sideColor(goal.teamNationId),
+        theme: w.theme,
+      );
+    } else if (current != null) {
+      stripId = current.id;
+      strip = _TvEventStrip(
+        moment: current,
+        code: _sideCode(current.teamNationId),
+        color: _sideColor(current.teamNationId),
+        theme: w.theme,
+      );
+    } else {
+      stripId = 'stats';
+      strip = LayoutBuilder(
+        builder: (context, c) =>
+            _TvStatStrip(stats: w.stats, width: c.maxWidth),
+      );
+    }
     return KeyedSubtree(
       key: matchTvHeaderKey,
-      child: LayoutBuilder(
-        builder: (context, c) {
-          final inner = c.maxWidth - _pad * 2;
-          // The bug over the strip: the column is narrower than the
-          // broadcast's full width, and two rows keep every figure legible.
-          final body = Column(
-            children: [
-              bug(math.min(inner, 440)),
-              const SizedBox(height: AppSpacing.sm),
-              SizedBox(
-                width: inner,
-                height: _stripHeight,
-                child: _TvStatStrip(stats: stats, width: inner),
-              ),
-            ],
-          );
-          return DecoratedBox(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF1E2022), Color(0xFF121416)],
-              ),
-            ),
-            child: Column(
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF1E2022), Color(0xFF121416)],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(MatchTvHeader._pad),
+          child: LayoutBuilder(
+            builder: (context, c) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(_pad),
-                    child: Center(child: body),
-                  ),
-                ),
+                SizedBox(height: MatchTvHeader._groundHeight, child: w.ground),
+                const SizedBox(height: AppSpacing.sm),
+                bug(c.maxWidth),
+                const SizedBox(height: AppSpacing.sm),
                 SizedBox(
-                  height: _hairline,
-                  child: _TvMomentumLine(
-                    homePercent: momentum,
-                    homeColor: homeColor ?? AppColors.primary,
-                    awayColor: awayColor ?? AppColors.secondary,
-                    still: still,
+                  height: MatchTvHeader._stripHeight,
+                  child: AnimatedSwitcher(
+                    duration: still
+                        ? Duration.zero
+                        : const Duration(milliseconds: 220),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeInCubic,
+                    layoutBuilder: (shown, gone) => Stack(
+                      fit: StackFit.expand,
+                      children: [...gone, ?shown],
+                    ),
+                    child: KeyedSubtree(key: ValueKey(stripId), child: strip),
                   ),
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The box the header's strip sits in, figures or a moment alike.
+BoxDecoration _tvStripBox() => BoxDecoration(
+  color: const Color(0xB30C0E10),
+  borderRadius: const BorderRadius.all(Radius.circular(7)),
+  border: Border.all(color: const Color(0xFF33363A)),
+);
+
+/// A moment on the header's strip, in the bug's dress: the side's kit on
+/// the edge, its flag, then what happened (a goal's shout or a sub's on the
+/// silver plate; a card's colour; an injury's or a missed penalty's mark),
+/// who, how a goal came, and the minute.
+class _TvEventStrip extends StatelessWidget {
+  const _TvEventStrip({
+    required this.moment,
+    required this.code,
+    required this.color,
+    this.theme,
+  });
+
+  final TvMoment moment;
+  final String code;
+  final Color color;
+  final ScoreBugTheme? theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final lang = Localizations.localeOf(context).languageCode;
+    final theme = this.theme;
+    final strong = AppTypography.labelLarge.copyWith(
+      color: AppColors.onSurface,
+      fontSize: 15,
+      fontWeight: FontWeight.w800,
+      height: 1,
+      letterSpacing: 0,
+    );
+    final muted = AppTypography.labelSmall.copyWith(
+      fontFamily: AppFonts.mono,
+      fontSize: 10,
+      height: 1,
+      letterSpacing: 0.6,
+      color: AppColors.onSurfaceVariant,
+    );
+    Widget plate(String shout) => Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      alignment: Alignment.center,
+      decoration: theme == null
+          ? const BoxDecoration(gradient: _kSilverPlate, border: _kSilverBevel)
+          : BoxDecoration(gradient: _scoreBlock(theme), border: _kSilverBevel),
+      child: Text(
+        shout,
+        maxLines: 1,
+        softWrap: false,
+        style: AppTypography.titleMedium.copyWith(
+          fontFamily: AppFonts.mono,
+          color: theme?.scoreText ?? AppColors.onPrimaryFixed,
+          fontSize: 15,
+          height: 1,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+    Widget mark(Widget m) => SizedBox(width: 34, child: Center(child: m));
+    Widget who(String name, {String? how}) => Row(
+      children: [
+        Flexible(
+          child: Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: strong,
+          ),
+        ),
+        if (how != null) ...[
+          const SizedBox(width: AppSpacing.sm),
+          Flexible(
+            child: Text(
+              how,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: muted,
+            ),
+          ),
+        ],
+      ],
+    );
+    final e = moment.event;
+    final p = moment.penalty;
+    final Widget lead;
+    final Widget body;
+    final String when;
+    if (e == null) {
+      final taker = p!.takerName;
+      lead = mark(
+        Semantics(
+          label: l.matchShootoutKickMissed(taker),
+          child: const ExcludeSemantics(child: MissedPenaltyMark()),
+        ),
+      );
+      body = who(taker);
+      when = p.stoppage > 0 ? '90+${p.stoppage}' : "${p.minute}'";
+    } else {
+      when = _eventClock(e);
+      switch (e.type) {
+        case MatchEventType.goal:
+          final assist = e.assistName;
+          final how = e.penalty
+              ? l.matchPenalty
+              : e.longThrow
+              ? l.matchGoalLongThrow
+              : assist != null && assist.isNotEmpty
+              ? capsFor(l.matchGoalAssist(_abbrevName(assist)), lang)
+              : null;
+          lead = plate(l.matchGoalShout);
+          body = who(e.playerName, how: how);
+        case MatchEventType.yellowCard:
+          lead = mark(const CardMark(MatchCard.yellow, size: 16));
+          body = who(e.playerName);
+        case MatchEventType.redCard:
+          lead = mark(
+            CardMark(
+              e.secondYellow ? MatchCard.secondYellow : MatchCard.red,
+              size: 16,
+            ),
           );
-        },
+          body = who(e.playerName);
+        case MatchEventType.injury:
+          lead = mark(
+            const Icon(
+              Icons.medical_services,
+              size: 16,
+              color: AppColors.error,
+            ),
+          );
+          body = who(e.playerName);
+        case MatchEventType.substitution:
+          lead = plate(l.matchSubShout);
+          body = _EventLine(event: e, style: strong);
+      }
+    }
+    return Container(
+      key: matchTvEventStripKey,
+      decoration: _tvStripBox(),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(6)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(width: 4, color: color),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Center(child: _BugFlag(code, width: 24, height: 16)),
+            ),
+            lead,
+            const SizedBox(width: AppSpacing.md - 4),
+            Expanded(
+              child: Align(alignment: Alignment.centerLeft, child: body),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Center(
+              child: Text(
+                when,
+                maxLines: 1,
+                softWrap: false,
+                style: AppTypography.labelLarge.copyWith(
+                  fontFamily: AppFonts.mono,
+                  fontSize: 14,
+                  height: 1,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0,
+                  color: theme?.clockText ?? AppColors.onSurface,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md - 4),
+          ],
+        ),
       ),
     );
   }
@@ -329,11 +627,7 @@ class _TvStatStrip extends StatelessWidget {
         );
     }
     return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xB30C0E10),
-        borderRadius: const BorderRadius.all(Radius.circular(7)),
-        border: Border.all(color: const Color(0xFF33363A)),
-      ),
+      decoration: _tvStripBox(),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(6)),
         child: Row(
@@ -406,241 +700,7 @@ class _TvSegment extends StatelessWidget {
   }
 }
 
-/// The momentum as a hairline under the header: the home side's colour from
-/// the left for its share, the away side's for the rest. Once the momentum
-/// stops moving it is a plain rule.
-class _TvMomentumLine extends StatelessWidget {
-  const _TvMomentumLine({
-    required this.homePercent,
-    required this.homeColor,
-    required this.awayColor,
-    required this.still,
-  });
-
-  final double? homePercent;
-  final Color homeColor;
-  final Color awayColor;
-  final bool still;
-
-  @override
-  Widget build(BuildContext context) {
-    final p = homePercent;
-    if (p == null) return const ColoredBox(color: Color(0xFF2A2D31));
-    final share = (p / 100).clamp(0.0, 1.0);
-    return ColoredBox(
-      color: awayColor,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: AnimatedFractionallySizedBox(
-          duration: still ? Duration.zero : const Duration(milliseconds: 450),
-          curve: Curves.easeOutCubic,
-          widthFactor: share,
-          heightFactor: 1,
-          child: ColoredBox(color: homeColor),
-        ),
-      ),
-    );
-  }
-}
-
-/// The tablet 2D TV's goal: a banner centred at the top of the picture, in
-/// the bug's dress (the scorer's kit on the edge, the flag, the shout on
-/// silver, the scorer with how it came, the minute). It drops in, holds for
-/// the goal's flash and lifts away; with reduced motion it is simply there
-/// for as long.
-class MatchTvGoalBanner extends StatelessWidget {
-  const MatchTvGoalBanner({
-    required this.event,
-    required this.code,
-    required this.color,
-    required this.goalNumber,
-    this.theme,
-    super.key,
-  });
-
-  final MatchEvent event;
-
-  /// The scoring side's code, for its flag.
-  final String code;
-  final Color color;
-
-  /// Goals so far: tells two goals by one player in one minute apart.
-  final int goalNumber;
-  final ScoreBugTheme? theme;
-
-  /// The banner's height.
-  static const double height = 46;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final lang = Localizations.localeOf(context).languageCode;
-    final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    final theme = this.theme;
-    final e = event;
-    final assist = e.assistName;
-    final how = e.penalty
-        ? l.matchPenalty
-        : e.longThrow
-        ? l.matchGoalLongThrow
-        : assist != null && assist.isNotEmpty
-        ? capsFor(l.matchGoalAssist(_abbrevName(assist)), lang)
-        : null;
-    const dark = BoxDecoration(gradient: _kBugBody);
-    final banner = Container(
-      height: height,
-      decoration: BoxDecoration(
-        borderRadius: AppRadii.smAll,
-        border: Border.all(color: theme?.rim ?? const Color(0xFF5C6670)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x99000000),
-            blurRadius: 24,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(AppRadii.sm - 1)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(width: 6, color: color),
-            DecoratedBox(
-              decoration: theme == null
-                  ? dark
-                  : BoxDecoration(gradient: _plates(theme)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Center(child: _BugFlag(code, width: 28, height: 19)),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              alignment: Alignment.center,
-              decoration: theme == null
-                  ? const BoxDecoration(
-                      gradient: _kSilverPlate,
-                      border: _kSilverBevel,
-                    )
-                  : BoxDecoration(
-                      gradient: _scoreBlock(theme),
-                      border: _kSilverBevel,
-                    ),
-              child: Text(
-                l.matchGoalShout,
-                maxLines: 1,
-                softWrap: false,
-                style: AppTypography.titleMedium.copyWith(
-                  fontFamily: AppFonts.mono,
-                  color: theme?.scoreText ?? AppColors.onPrimaryFixed,
-                  fontSize: 19,
-                  height: 1,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.5,
-                ),
-              ),
-            ),
-            Flexible(
-              child: DecoratedBox(
-                decoration: theme == null
-                    ? dark
-                    : BoxDecoration(gradient: _plates(theme)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        e.playerName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.titleMedium.copyWith(
-                          color: AppColors.onSurface,
-                          fontSize: 17,
-                          height: 1.1,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      if (how != null)
-                        Text(
-                          how,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTypography.labelSmall.copyWith(
-                            fontFamily: AppFonts.mono,
-                            fontSize: 10,
-                            height: 1.3,
-                            letterSpacing: 0.4,
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFF3B3E42), Color(0xFF25282B)],
-                ),
-              ),
-              child: Text(
-                _eventClock(e),
-                maxLines: 1,
-                softWrap: false,
-                style: AppTypography.labelLarge.copyWith(
-                  fontFamily: AppFonts.mono,
-                  fontSize: 15,
-                  height: 1,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0,
-                  color: theme?.clockText ?? AppColors.onSurface,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    final shown = KeyedSubtree(key: matchTvGoalBannerKey, child: banner);
-    if (still) return IgnorePointer(child: shown);
-    final total = kGoalFlashHold.inMicroseconds;
-    final slide = kGoalBannerSlide.inMicroseconds / total;
-    return IgnorePointer(
-      child: TweenAnimationBuilder<double>(
-        key: ValueKey(('tvGoal', e.minute, e.stoppage, e.playerId, goalNumber)),
-        tween: Tween(begin: 0, end: 1),
-        duration: kGoalFlashHold,
-        builder: (context, u, child) {
-          final out = u < slide
-              ? Curves.easeOutBack.transform(u / slide)
-              : u > 1 - slide
-              ? Curves.easeInCubic.transform((1 - u) / slide)
-              : 1.0;
-          return Opacity(
-            opacity: out.clamp(0.0, 1.0),
-            child: Transform.translate(
-              offset: Offset(0, (out - 1) * 24),
-              child: child,
-            ),
-          );
-        },
-        child: shown,
-      ),
-    );
-  }
-}
-
-/// One key moment for the tablet 2D TV's feed: a goal, a card, a
+/// One key moment for the tablet 2D TV's header strip: a goal, a card, a
 /// substitution, an injury, or a penalty that did not go in.
 @immutable
 class TvMoment {
@@ -683,249 +743,5 @@ class TvMoment {
         return s != 0 ? s : a.$1.compareTo(b.$1);
       });
     return [for (final (_, m) in indexed) m];
-  }
-}
-
-/// The tablet 2D TV's moment feed down the right edge of the picture: each
-/// moment slides in as the clock reaches it, newest on top, and fades away
-/// a few seconds later; at most [kMomentFeedMax] at a time. Moments already
-/// past when the feed comes on screen are not replayed.
-class MatchMomentFeed extends StatefulWidget {
-  const MatchMomentFeed({
-    required this.moments,
-    required this.homeNationId,
-    required this.homeCode,
-    required this.awayCode,
-    required this.homeColor,
-    required this.awayColor,
-    super.key,
-  });
-
-  /// Every moment reached so far, in match order.
-  final List<TvMoment> moments;
-  final int homeNationId;
-  final String homeCode;
-  final String awayCode;
-  final Color homeColor;
-  final Color awayColor;
-
-  @override
-  State<MatchMomentFeed> createState() => _MatchMomentFeedState();
-}
-
-class _MatchMomentFeedState extends State<MatchMomentFeed> {
-  /// Every moment seen, shown or not.
-  final Set<Object> _seen = {};
-
-  /// The moments in the feed now, by id, with the timer that takes each
-  /// one out.
-  final Map<Object, Timer> _alive = {};
-
-  @override
-  void initState() {
-    super.initState();
-    for (final m in widget.moments) {
-      _seen.add(m.id);
-    }
-  }
-
-  @override
-  void didUpdateWidget(MatchMomentFeed oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    for (final m in widget.moments) {
-      final id = m.id;
-      if (!_seen.add(id)) continue;
-      _alive[id] = Timer(kMomentFeedLife, () {
-        if (mounted) setState(() => _alive.remove(id));
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    for (final t in _alive.values) {
-      t.cancel();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final still = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    final showing = [
-      for (final m in widget.moments.reversed)
-        if (_alive.containsKey(m.id)) m,
-    ].take(kMomentFeedMax).toList();
-    if (showing.isEmpty) return const SizedBox.shrink();
-    return IgnorePointer(
-      child: Column(
-        key: matchMomentFeedKey,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final m in showing)
-            Padding(
-              key: ValueKey(m.id),
-              padding: const EdgeInsets.only(bottom: 6),
-              child: _MomentToast(
-                moment: m,
-                code: m.teamNationId == widget.homeNationId
-                    ? widget.homeCode
-                    : widget.awayCode,
-                color: m.teamNationId == widget.homeNationId
-                    ? widget.homeColor
-                    : widget.awayColor,
-                still: still,
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// One moment in the feed: the side's kit as an edge, what happened as a
-/// mark, who, and the minute.
-class _MomentToast extends StatelessWidget {
-  const _MomentToast({
-    required this.moment,
-    required this.code,
-    required this.color,
-    required this.still,
-  });
-
-  final TvMoment moment;
-  final String code;
-  final Color color;
-  final bool still;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final strong = AppTypography.labelMedium.copyWith(
-      color: AppColors.onSurface,
-      fontWeight: FontWeight.w700,
-      height: 1.1,
-    );
-    final muted = strong.copyWith(
-      color: AppColors.onSurfaceVariant,
-      fontWeight: FontWeight.w500,
-    );
-    Widget name(String n, {String? tag}) => Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(text: surnameOf(n), style: strong),
-          if (tag != null) TextSpan(text: '  $tag', style: muted),
-        ],
-      ),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
-    final e = moment.event;
-    final p = moment.penalty;
-    final Widget mark;
-    final Widget what;
-    final String when;
-    if (e == null) {
-      final taker = p!.takerName;
-      mark = Semantics(
-        label: l.matchShootoutKickMissed(taker),
-        child: const ExcludeSemantics(child: MissedPenaltyMark()),
-      );
-      what = name(taker);
-      when = p.stoppage > 0 ? '90+${p.stoppage}' : "${p.minute}'";
-    } else {
-      when = _eventClock(e);
-      switch (e.type) {
-        case MatchEventType.goal:
-          mark = const Icon(
-            Icons.sports_soccer,
-            size: 16,
-            color: AppColors.onSurface,
-          );
-          what = name(e.playerName, tag: e.penalty ? l.matchGoalPenalty : null);
-        case MatchEventType.yellowCard:
-          mark = const CardMark(MatchCard.yellow, size: 14);
-          what = name(e.playerName);
-        case MatchEventType.redCard:
-          mark = CardMark(
-            e.secondYellow ? MatchCard.secondYellow : MatchCard.red,
-            size: 14,
-          );
-          what = name(e.playerName);
-        case MatchEventType.injury:
-          mark = const Icon(
-            Icons.medical_services,
-            size: 15,
-            color: AppColors.error,
-          );
-          what = name(e.playerName);
-        case MatchEventType.substitution:
-          mark = const Icon(
-            Icons.swap_vert_rounded,
-            size: 16,
-            color: AppColors.positive,
-          );
-          what = _EventLine(event: e, style: strong);
-      }
-    }
-    final goal = e?.type == MatchEventType.goal;
-    final toast = Container(
-      height: 30,
-      decoration: BoxDecoration(
-        color: goal ? const Color(0xE6202326) : const Color(0xD10E1012),
-        borderRadius: AppRadii.smAll,
-        border: Border.all(
-          color: goal ? const Color(0xFF6E7883) : const Color(0xFF3A3F45),
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(AppRadii.sm - 1)),
-        child: Row(
-          children: [
-            Container(width: 3, color: color),
-            const SizedBox(width: 6),
-            _BugFlag(code, width: 15, height: 10),
-            const SizedBox(width: 6),
-            SizedBox(width: 22, child: Center(child: mark)),
-            const SizedBox(width: 4),
-            Expanded(child: what),
-            const SizedBox(width: 6),
-            Text(
-              when,
-              maxLines: 1,
-              softWrap: false,
-              style: AppTypography.labelSmall.copyWith(
-                fontFamily: AppFonts.mono,
-                letterSpacing: 0,
-                height: 1,
-                fontWeight: FontWeight.w700,
-                color: AppColors.onSurfaceVariant,
-                fontFeatures: const [FontFeature.tabularFigures()],
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-          ],
-        ),
-      ),
-    );
-    if (still) return toast;
-    // In from the edge, held, then faded as it ages.
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: kMomentFeedLife,
-      builder: (context, u, child) {
-        final inT = Curves.easeOutCubic.transform((u / 0.05).clamp(0.0, 1.0));
-        final fade = u < 0.6 ? 1.0 : (1 - (u - 0.6) / 0.4).clamp(0.0, 1.0);
-        return Opacity(
-          opacity: (inT * fade).clamp(0.0, 1.0),
-          child: Transform.translate(
-            offset: Offset((1 - inT) * 24, 0),
-            child: child,
-          ),
-        );
-      },
-      child: toast,
-    );
   }
 }

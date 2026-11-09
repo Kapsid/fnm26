@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/layout/form_factor.dart';
 import 'package:fnm/core/routing/app_router.dart';
 import 'package:fnm/domain/services/match/match_engine.dart';
+import 'package:fnm/features/match/ground_card.dart';
 import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/match/match_screen.dart';
 import 'package:fnm/features/match/pitch/pitch_match_view.dart';
@@ -14,9 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helpers/seeded_save.dart';
 
-/// The tablet match screen in Pitch mode: the big pitch down the centre, the
-/// stats and the momentum on the left, the commentary and the line-ups on
-/// the right.
+/// The tablet match screen in Pitch mode: the TV down the centre (the
+/// broadcast header with the ground in it, the momentum under it, then the
+/// big pitch), the stats on the left, the commentary and Your XI on the
+/// right. Nothing is drawn over the picture: every moment takes the
+/// header's strip in its turn.
 
 Future<SeededSave> _open(
   WidgetTester tester,
@@ -63,14 +66,47 @@ void main() {
       expect(find.byType(PitchMatchView), findsOneWidget);
       expect(find.byType(PitchCommentaryFeed), findsOneWidget);
       // The picture is the big thing in the middle, under the TV's
-      // broadcast header (which stands for the scoreboard), as wide as it.
+      // broadcast header (which stands for the scoreboard) and the
+      // momentum, all three as wide as each other, at the column's top.
       final pitch = tester.getRect(find.byType(PitchMatchView));
       expect(find.byType(MatchScoreboard), findsNothing);
       final header = tester.getRect(find.byType(MatchTvHeader));
-      expect(pitch.top, closeTo(header.bottom, 0.5));
+      final momentum = tester.getRect(
+        find
+            .ancestor(
+              of: find.text(enL.matchMomentum.toUpperCase()),
+              matching: find.byType(ColoredBox),
+            )
+            .first,
+      );
+      expect(momentum.top, closeTo(header.bottom, 0.5));
+      expect(pitch.top, closeTo(momentum.bottom, 0.5));
       expect(pitch.width, closeTo(header.width, 0.5));
+      expect(momentum.width, closeTo(header.width, 0.5));
       expect(pitch.width, greaterThan(size.width * 0.4));
-      // Stats and momentum on the left, the feed and line-ups on the right.
+      // Whole: nothing of it under the bar.
+      expect(
+        pitch.bottom,
+        lessThanOrEqualTo(tester.getRect(find.byType(MatchBarDock)).top),
+      );
+      // Top-aligned with the side columns.
+      final stats = tester.getRect(
+        find.ancestor(
+          of: find.byType(MatchStatsPanel),
+          matching: find.byType(Panel),
+        ),
+      );
+      expect(header.top, closeTo(stats.top, 0.5));
+      // The ground is in the header now, not over the stats.
+      expect(
+        find.descendant(
+          of: find.byType(MatchTvHeader),
+          matching: find.byKey(GroundStrip.stripKey),
+        ),
+        findsOneWidget,
+      );
+      expect(find.byType(GroundCard), findsNothing);
+      // Stats on the left, the feed and Your XI on the right.
       expect(
         tester.getCenter(find.byType(MatchStatsPanel)).dx,
         lessThan(pitch.left),
@@ -79,13 +115,8 @@ void main() {
         tester.getCenter(find.byType(PitchCommentaryFeed)).dx,
         greaterThan(pitch.right),
       );
-      expect(
-        tester.getCenter(find.text(enL.matchMomentum.toUpperCase())).dx,
-        lessThan(pitch.left),
-      );
       expect(find.text(enL.matchTabCommentary), findsOneWidget);
-      expect(find.text(enL.matchTabLineups), findsOneWidget);
-      // The line-ups as Timeline mode has them: Your XI a tab away too.
+      expect(find.text(enL.matchTabLineups), findsNothing);
       expect(find.text(enL.matchYourXi), findsOneWidget);
       // The phone's one-line commentary is not used here.
       expect(find.byType(PitchCommentaryLine), findsNothing);
@@ -93,12 +124,13 @@ void main() {
     });
   }
 
-  // The 2D TV's broadcast dress: the header over the picture, a goal's
-  // banner centred on it and the moment feed down its right edge, none of
-  // it overflowing, in a short language and a long one.
+  // The 2D TV's broadcast dress: the header over the picture, a goal on its
+  // strip for the goal's pause and the other moments after it in their
+  // turn, nothing drawn over the picture, none of it overflowing, in a short
+  // language and a long one.
   for (final size in const [Size(1366, 1024), Size(1180, 820)]) {
     for (final lang in const ['en', 'de']) {
-      testWidgets('the 2D TV header, goal banner and moment feed fit at '
+      testWidgets('the 2D TV header and its moment strip fit at '
           '${size.width.toInt()}x${size.height.toInt()} ($lang)', (
         tester,
       ) async {
@@ -113,9 +145,14 @@ void main() {
         final screen = _screen(tester);
         final pb = screen.pitchMode.playback!;
         final r = screen.result!;
-        expect(find.byKey(matchTvHeaderKey), findsOneWidget);
-        expect(find.byKey(matchMomentFeedKey), findsNothing);
-        // The first goal goes in: its banner, over the picture.
+        final header = find.byKey(matchTvHeaderKey);
+        expect(header, findsOneWidget);
+        final strip = find.descendant(
+          of: header,
+          matching: find.byKey(matchTvEventStripKey),
+        );
+        expect(strip, findsNothing);
+        // The first goal goes in: its strip, in the header.
         final gi = r.events.indexWhere((e) => e.type == MatchEventType.goal);
         expect(gi, isNonNegative, reason: 'the seeded match has a goal');
         final goal = r.events[gi];
@@ -125,46 +162,90 @@ void main() {
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 600));
         expect(tester.takeException(), isNull);
-        final pitch = tester.getRect(find.byType(PitchMatchView));
-        final banner = find.byKey(matchTvGoalBannerKey);
-        expect(banner, findsOneWidget);
+        expect(strip, findsOneWidget);
         expect(
-          find.descendant(of: banner, matching: find.text(goal.playerName)),
+          find.descendant(of: strip, matching: find.text(goal.playerName)),
           findsOneWidget,
         );
-        final b = tester.getRect(banner);
-        expect(b.top, greaterThanOrEqualTo(pitch.top));
-        expect(b.left, greaterThanOrEqualTo(pitch.left));
-        expect(b.right, lessThanOrEqualTo(pitch.right));
-        expect((b.center.dx - pitch.center.dx).abs(), lessThan(1));
-        // The moments so far down the right edge, newest on top, under the
-        // banner.
-        final feed = find.byKey(matchMomentFeedKey);
-        expect(feed, findsOneWidget);
-        final f = tester.getRect(feed);
-        expect(f.right, lessThanOrEqualTo(pitch.right));
-        expect(f.left, greaterThan(pitch.center.dx));
-        expect(f.top, greaterThan(b.bottom));
-        expect(
-          find.descendant(
-            of: feed,
-            matching: find.textContaining(surnameOf(goal.playerName)),
+        final pitch = tester.getRect(find.byType(PitchMatchView));
+        expect(tester.getRect(strip).bottom, lessThan(pitch.top));
+        // Nothing over the picture but the game.
+        final over = find.descendant(
+          of: find.ancestor(
+            of: find.byType(PitchMatchView),
+            matching: find.byType(AspectRatio),
           ),
-          findsWidgets,
+          matching: find.byType(Positioned),
         );
-        // The banner goes with the goal's flash; the feed fades a few
-        // seconds later.
+        expect(over, findsNothing);
+        // The goal's pause over, the strip is the figures again (or the
+        // next moment's, each gone in its turn).
         await tester.pump(kGoalFlashHold);
-        await tester.pump();
-        expect(banner, findsNothing);
-        await tester.pump(kMomentFeedLife);
-        await tester.pump();
-        expect(find.byKey(matchMomentFeedKey), findsNothing);
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(
+          find.descendant(of: strip, matching: find.text(goal.playerName)),
+          findsNothing,
+        );
+        for (var i = 0; i < kTvEventQueueMax + 1; i++) {
+          await tester.pump(kTvEventHold);
+          await tester.pump(const Duration(milliseconds: 300));
+        }
+        expect(strip, findsNothing);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
       });
     }
   }
+
+  testWidgets('a card or a substitution takes the strip in its turn', (
+    tester,
+  ) async {
+    await _open(tester, MatchViewMode.pitch, const Size(1180, 820));
+    await tester.tap(find.byIcon(Icons.pause_rounded));
+    await tester.pump();
+    final screen = _screen(tester);
+    final pb = screen.pitchMode.playback!;
+    final r = screen.result!;
+    final ei = r.events.indexWhere(
+      (e) =>
+          e.type == MatchEventType.substitution ||
+          e.type == MatchEventType.yellowCard,
+    );
+    expect(ei, isNonNegative, reason: 'the seeded match has a sub or a card');
+    final e = r.events[ei];
+    // Just before it, and the moments so far through the strip first.
+    screen.seekPitch(
+      Duration(microseconds: ((pb.revealAt(ei) - 0.3) * 1e6).round()),
+    );
+    await tester.pump();
+    for (var i = 0; i < kTvEventQueueMax + 2; i++) {
+      await tester.pump(kTvEventHold);
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+    screen.seekPitch(
+      Duration(microseconds: ((pb.revealAt(ei) + 0.05) * 1e6).round()),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    final strip = find.descendant(
+      of: find.byKey(matchTvHeaderKey),
+      matching: find.byKey(matchTvEventStripKey),
+    );
+    expect(strip, findsOneWidget);
+    expect(
+      find.descendant(
+        of: strip,
+        matching: find.textContaining(surnameOf(e.playerName)),
+      ),
+      findsWidgets,
+    );
+    for (var i = 0; i < kTvEventQueueMax + 2; i++) {
+      await tester.pump(kTvEventHold);
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+    expect(strip, findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
 
   testWidgets('commentary feed lists lines in order, newest first', (
     tester,
@@ -234,13 +315,6 @@ void main() {
       await dragged(find.byKey(const Key('match.pitchFeed'))),
       greaterThan(0),
     );
-    await tester.tap(find.text(enL.matchTabLineups));
-    await tester.pumpAndSettle();
-    final lineups = find.descendant(
-      of: find.byType(TabBarView).last,
-      matching: find.byType(ListView),
-    );
-    expect(await dragged(lineups.last), greaterThan(0));
     expect(tester.getRect(find.byType(PitchMatchView)), pitch);
     await tester.pumpWidget(const SizedBox());
   });
@@ -306,45 +380,31 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('the line-ups column is the same in Pitch and Timeline mode', (
-    tester,
-  ) async {
-    Future<(Rect, List<String>)> column(MatchViewMode mode) async {
+  testWidgets('the right column is as wide in Pitch and Timeline mode, Your '
+      'XI in both', (tester) async {
+    Future<Rect> column(MatchViewMode mode) async {
       await _open(tester, mode, kTabletSize);
       // Held still: settling with the match running would play it on to
       // half time, whose card covers the column.
       await tester.tap(find.byIcon(Icons.pause_rounded));
       await tester.pump();
-      await tester.tap(find.text(enL.matchTabLineups));
-      await tester.pumpAndSettle();
-      final panel = find.ancestor(
-        of: find.byType(MatchLineups),
-        matching: find.byType(PanelBox),
-      );
-      final rect = tester.getRect(panel);
-      final names = [
-        for (final t in tester.widgetList<Text>(
-          find.descendant(
-            of: find.byType(MatchLineups),
-            matching: find.byType(Text),
-          ),
-        ))
-          ?t.data,
-      ];
       expect(find.text(enL.matchYourXi), findsOneWidget);
       await tester.tap(find.text(enL.matchYourXi));
       await tester.pumpAndSettle();
       expect(find.byType(TacticsPitch), findsOneWidget);
+      final rect = tester.getRect(
+        find.ancestor(
+          of: find.byType(TacticsPitch),
+          matching: find.byType(PanelBox),
+        ),
+      );
       await tester.pumpWidget(const SizedBox());
-      return (rect, names);
+      return rect;
     }
 
-    final (timelineRect, timelineNames) = await column(MatchViewMode.timeline);
-    final (pitchRect, pitchNames) = await column(MatchViewMode.pitch);
+    final timelineRect = await column(MatchViewMode.timeline);
+    final pitchRect = await column(MatchViewMode.pitch);
     expect(pitchRect.width, timelineRect.width);
     expect(pitchRect.right, timelineRect.right);
-    // The same list: the manager's side's names, in the same order.
-    final names = timelineNames.where((n) => n.contains(' ')).take(5);
-    expect(pitchNames.where((n) => n.contains(' ')).take(5), names);
   });
 }

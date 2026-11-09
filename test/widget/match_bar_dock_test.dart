@@ -12,15 +12,16 @@ import 'package:fnm/shared/widgets/widgets.dart';
 import '../helpers/seeded_save.dart';
 
 /// The match's bottom bar on the silver of the navigation dock, on a phone
-/// and a tablet; on a tablet it also carries the Pitch / Timeline toggle,
-/// and at full time Share beside Continue.
+/// and a tablet: it carries the Pitch / Timeline toggle (compact on a
+/// phone), and at full time Share beside Continue.
 
 Future<SeededSave> _open(
   WidgetTester tester,
   FormFactor f,
   MatchViewMode mode,
-  Size size,
-) async {
+  Size size, {
+  Locale locale = const Locale('en'),
+}) async {
   final save = await seedSave(tester, formFactor: f);
   await tester.runAsync(() => const MatchViewModeStore().save(mode));
   final warm = save.container.listen(
@@ -36,6 +37,7 @@ Future<SeededSave> _open(
     save,
     '${Routes.match}?careerId=${save.careerId}',
     size: size,
+    locale: locale,
   );
   return save;
 }
@@ -143,42 +145,91 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('phone: the same silver bar, no toggle on it', (tester) async {
+  testWidgets('phone: the same silver bar, the toggle on it', (tester) async {
     await _open(tester, FormFactor.phone, MatchViewMode.timeline, kPhoneSize);
     expect(tester.takeException(), isNull);
     expect(_inDock(find.byType(SilverDock)), findsOneWidget);
     expect(_inDock(find.byType(MatchControlBar)), findsOneWidget);
-    expect(find.byType(MatchViewToggle), findsNothing);
-    // The phone's switch stays on the scoreboard.
+    expect(_inDock(find.byType(MatchViewToggle)), findsOneWidget);
     expect(
-      find.descendant(
-        of: find.byType(MatchScoreboard),
-        matching: find.byKey(matchViewSwitchKey),
-      ),
-      findsOneWidget,
+      tester.widget<MatchViewToggle>(find.byType(MatchViewToggle)).compact,
+      isTrue,
+    );
+    // One control for it: the scoreboard carries no switch now.
+    expect(find.byKey(matchViewSwitchKey), findsNothing);
+    // The toggle sits between the speed and the tactics.
+    final toggle = tester.getRect(find.byType(MatchViewToggle));
+    expect(tester.getCenter(find.text('1×')).dx, lessThan(toggle.left));
+    expect(
+      tester.getCenter(find.byType(MatchTacticsPillContent)).dx,
+      greaterThan(toggle.right),
     );
     // Held off the edges, above the foot of the screen.
     final plate = tester.getRect(_inDock(find.byType(SilverDock)));
     expect(plate.left, greaterThan(0));
     expect(plate.right, lessThan(kPhoneSize.width));
     expect(plate.bottom, lessThan(kPhoneSize.height));
+    // Pressing the other half takes the match to the pitch.
+    await tester.tap(
+      find.byKey(MatchViewToggle.segmentKey(MatchViewMode.pitch)),
+    );
+    await tester.pump();
+    for (
+      var i = 0;
+      i < 100 && find.byType(PitchMatchView).evaluate().isEmpty;
+      i++
+    ) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 50)),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(find.byType(PitchMatchView), findsOneWidget);
+    expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('phone: Share and Continue on the silver at full time', (
-    tester,
-  ) async {
+  for (final width in const [360.0, 390.0, 430.0]) {
+    for (final lang in const ['en', 'de', 'cs']) {
+      testWidgets('phone: the bar fits at $width ($lang)', (tester) async {
+        await _open(
+          tester,
+          FormFactor.phone,
+          MatchViewMode.pitch,
+          Size(width, 800),
+          locale: Locale(lang),
+        );
+        expect(tester.takeException(), isNull);
+        final plate = tester.getRect(_inDock(find.byType(SilverDock)));
+        final toggle = tester.getRect(find.byType(MatchViewToggle));
+        final tactics = tester.getRect(find.byType(MatchTacticsPillContent));
+        expect(toggle.left, greaterThan(plate.left));
+        expect(tactics.right, lessThan(plate.right));
+        expect(tactics.left, greaterThan(toggle.right));
+        // The tactics key keeps room for its count.
+        expect(tactics.width, greaterThan(64));
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
+  }
+
+  testWidgets('phone: Share, the toggle and Continue on the silver at full '
+      'time', (tester) async {
     await _open(
       tester,
       FormFactor.phone,
       MatchViewMode.pitch,
-      const Size(390, 1500),
+      const Size(360, 1500),
     );
     await _toFullTime(tester);
     expect(tester.takeException(), isNull);
     expect(_inDock(_continue), findsOneWidget);
     expect(_inDock(find.byKey(ShareKeys.button)), findsOneWidget);
-    expect(find.byType(MatchViewToggle), findsNothing);
+    expect(_inDock(find.byType(MatchViewToggle)), findsOneWidget);
+    final share = tester.getRect(find.byKey(ShareKeys.button));
+    final toggle = tester.getRect(find.byType(MatchViewToggle));
+    expect(share.right, lessThan(toggle.left));
+    expect(toggle.right, lessThan(tester.getRect(_continue).left));
     await tester.pumpWidget(const SizedBox());
   });
 }

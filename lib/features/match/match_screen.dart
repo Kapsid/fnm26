@@ -2032,19 +2032,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             // banner stands for the goal flash's card over the picture.
             final bug = !tablet && _onPitch;
             final bugTheme = bug ? finalsTheme : null;
-            // Pitch or Timeline, at any time: on a phone from the corner of
-            // the scoreboard (the Timeline's) or the pitch's bottom one (Pitch mode,
-            // whose stripe is too thin for it); on a tablet from the toggle
-            // on the bottom bar.
-            final phoneSwitch = tablet || _mode == null
-                ? null
-                : MatchViewSwitch(
-                    to: _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
-                    onTap: () => _chooseMode(
-                      preview,
-                      _onPitch ? MatchViewMode.timeline : MatchViewMode.pitch,
-                    ),
-                  );
             final clockLabel = ft
                 ? (decidedByShootout
                       ? l.matchClockFullTimePenalties
@@ -2093,7 +2080,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               notice: bug && _redFlash == null ? _eventFlash : null,
               noticeForHome: _eventFlash?.teamNationId == homeId,
               bugTheme: bugTheme,
-              viewSwitch: bug ? null : phoneSwitch,
             );
             final Widget? momentum = !ft && !showingShootout
                 ? _MomentumBar(
@@ -2147,6 +2133,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
               fullTime: ft,
               events: timelineEvents,
               penalties: penalties,
+              // The tablet's 2D TV has the ground in its header band.
+              showGround: !(tablet && _onPitch),
             );
             List<MatchEvent> subsOf(int nationId) => shown
                 .where(
@@ -2254,13 +2242,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     list: lineupList,
                   )
                 : lineupList;
-            // The tablet's 2D TV: its goal banner and moment feed sit on the
-            // picture itself (see [MatchTvHeader]).
+            // The tablet's 2D TV: its goal and every other moment take the
+            // header's strip in turn, never the picture (see [MatchTvHeader]).
             final tabletTv = tablet && _onPitch;
             final overlays = <Widget>[
               // A substitution pops up on the 2D TV only: the phone shows it
-              // as the banner under the score bug, the tablet in its moment
-              // feed. The Timeline never pops it up.
+              // as the banner under the score bug, the tablet on its TV
+              // header's strip. The Timeline never pops it up.
               if (_goalFlash != null && !bug && !tabletTv)
                 _GoalFlash(
                   event: _goalFlash!,
@@ -2355,7 +2343,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                       ),
                       // A sending-off: its banner down from under the
                       // score, unless a goal's is out.
-                      // (The tablet's TV has it in its moment feed.)
+                      // (The tablet's TV has it on its header's strip.)
                       if (red != null && _goalFlash == null && !tablet)
                         Positioned(
                           top: 0,
@@ -2427,9 +2415,18 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         goal: _goalFlash,
                         goalForHome: _goalFlash?.teamNationId == homeId,
                         theme: finalsTheme,
-                        momentum: momentum == null
-                            ? null
-                            : _homeMomentum(preview, homeId),
+                        homeNationId: homeId,
+                        ground: GroundStrip(
+                          ground: preview.ground,
+                          neutral: preview.neutralVenue,
+                          groundNationCode: code(
+                            preview.ground.groundNationId,
+                          ),
+                          fans: preview.homeFans,
+                          kickOff: conditionsShown.kickOff,
+                          weather: conditionsShown.weather,
+                        ),
+                        moments: TvMoment.of(timelineEvents, penalties),
                         stats: tvStatsOf(
                           r,
                           homeNationId: homeId,
@@ -2439,40 +2436,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                         ),
                       )
                     : null,
-                tvOverlays: [
-                  if (tabletTv)
-                    // Down the right edge, clear of the goal's banner.
-                    Positioned(
-                      top: AppSpacing.md + MatchTvGoalBanner.height + 10,
-                      right: AppSpacing.sm + 2,
-                      width: 236,
-                      child: MatchMomentFeed(
-                        moments: TvMoment.of(timelineEvents, penalties),
-                        homeNationId: homeId,
-                        homeCode: code(homeId),
-                        awayCode: code(awayId),
-                        homeColor: homeC,
-                        awayColor: awayC,
-                      ),
-                    ),
-                  if (tabletTv && _goalFlash != null)
-                    Positioned(
-                      top: AppSpacing.md,
-                      left: AppSpacing.md,
-                      right: AppSpacing.md,
-                      child: Center(
-                        child: MatchTvGoalBanner(
-                          event: _goalFlash!,
-                          code: code(_goalFlash!.teamNationId),
-                          color: _goalFlash!.teamNationId == homeId
-                              ? homeC
-                              : awayC,
-                          goalNumber: homeScore + awayScore,
-                          theme: finalsTheme,
-                        ),
-                      ),
-                    ),
-                ],
               );
             }
             if (_onPitch) {
@@ -2490,21 +2453,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                           mainAxisSize: MainAxisSize.min,
                           children: [topBar, scoreboard],
                         ),
-                        pitch: phoneSwitch == null
-                            ? pitchSurface
-                            : Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  pitchSurface,
-                                  // The bottom corner: clear of the goal
-                                  // banner, which comes down over the top.
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: phoneSwitch,
-                                  ),
-                                ],
-                              ),
+                        pitch: pitchSurface,
                         under: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -2582,11 +2531,13 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
             if (preview == null) return null;
             final ft = _fullTime;
             final r = _result ?? preview.result;
-            // On a tablet, Pitch or Timeline from the bar, once chosen.
+            // Pitch or Timeline from the bar, once chosen: the one control
+            // for it, on a phone (compact) as on a tablet.
             final mode = _mode;
-            final Widget? toggle = tablet && mode != null
+            final Widget? toggle = mode != null
                 ? MatchViewToggle(
                     current: mode,
+                    compact: !tablet,
                     onChoose: (m) => _chooseMode(preview, m),
                   )
                 : null;

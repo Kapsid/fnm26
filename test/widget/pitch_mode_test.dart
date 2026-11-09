@@ -32,7 +32,6 @@ import 'package:fnm/features/match/pitch/pitch_view_providers.dart';
 import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/features/settings/settings_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
-import 'package:fnm/shared/widgets/app_card.dart';
 import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:fnm/shared/widgets/rating_badge.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -276,16 +275,11 @@ MatchResult _result(WidgetTester tester) => _screen(tester).result!;
 }
 
 Future<void> _switch(WidgetTester tester) async {
-  // A phone's switch on the score; a tablet's toggle on the bottom bar.
-  final phone = find.byKey(const Key('match.viewSwitch'));
+  // The toggle on the bottom bar, on a phone as on a tablet.
   final to = _screen(tester).mode == MatchViewMode.pitch
       ? MatchViewMode.timeline
       : MatchViewMode.pitch;
-  await tester.tap(
-    phone.evaluate().isNotEmpty
-        ? phone
-        : find.byKey(MatchViewToggle.segmentKey(to)),
-  );
+  await tester.tap(find.byKey(MatchViewToggle.segmentKey(to)));
   await tester.pump();
   await tester.pump();
 }
@@ -792,7 +786,8 @@ void main() {
 
   // The owner's 2026-11 ask: a substitution gets a pop-up as a goal does:
   // the side, who went off (red arrow), who came on (green arrow) and the
-  // minute. Under the 2D TV's score bug on a phone; as a card on a tablet.
+  // minute. Under the 2D TV's score bug on a phone; on the TV header's strip
+  // on a tablet.
   for (final form in FormFactor.values) {
     testWidgets('a substitution pops up on the 2D TV (${form.name})', (
       tester,
@@ -818,9 +813,9 @@ void main() {
       final pb = _pb(tester);
       final si = r.events.indexWhere(wanted);
       final sub = r.events[si];
-      // A phone's banner under the bug; a tablet's line in the TV's moment
-      // feed (with whatever else has happened lately).
-      final key = tablet ? matchMomentFeedKey : matchEventBannerKey;
+      // A phone's banner under the bug; the tablet's TV header strip (in
+      // its turn, after whatever else has happened just before).
+      final key = tablet ? matchTvEventStripKey : matchEventBannerKey;
       bool subOut() => find
           .descendant(
             of: find.byKey(key),
@@ -846,11 +841,10 @@ void main() {
       await _seek(tester, _secs(pb.revealAt(si) - 0.4));
       await _until(tester, subOut);
       final pop = find.byKey(key);
-      // The phone's banner shouts it; the tablet's feed line says it with
-      // its mark alone.
+      // Both shout it.
       expect(
         find.descendant(of: pop, matching: find.text(enL.matchSubShout)),
-        tablet ? findsNothing : findsOneWidget,
+        findsOneWidget,
       );
       expect(
         find.descendant(
@@ -866,8 +860,7 @@ void main() {
         ),
         findsOneWidget,
       );
-      // (The feed may hold other changes too, each with its arrows.)
-      final arrows = tablet ? findsWidgets : findsOneWidget;
+      const arrows = findsOneWidget;
       expect(
         find.descendant(
           of: pop,
@@ -885,10 +878,11 @@ void main() {
       // Play goes on under it, and it goes.
       expect(_clock(tester).playing, isTrue);
       await tester.pump(
-        (tablet ? kMomentFeedLife : kEventFlashHold) +
+        (tablet ? kTvEventHold : kEventFlashHold) +
             const Duration(milliseconds: 100),
       );
-      await tester.pump();
+      // (The tablet's strip fades across to what comes next.)
+      await tester.pump(const Duration(milliseconds: 300));
       expect(subOut(), isFalse);
     });
   }
@@ -963,24 +957,32 @@ void main() {
       final redFirst = pb.revealAt(ri) < pb.revealAt(si);
       final redBanner = find.byKey(matchRedCardBannerKey);
       if (tablet) {
-        // The tablet's TV has no banners to collide: both are lines in its
-        // moment feed, one over the other.
+        // The tablet's TV has no banners to collide: each takes the
+        // header's one strip in its turn.
         await _seek(
           tester,
-          _secs(math.max(pb.revealAt(ri), pb.revealAt(si)) + 0.05),
+          _secs(math.min(pb.revealAt(ri), pb.revealAt(si)) - 0.4),
         );
-        await tester.pump(const Duration(milliseconds: 300));
-        final feed = find.byKey(matchMomentFeedKey);
-        expect(redBanner, findsNothing);
-        for (final e in [r.events[ri], r.events[si]]) {
-          expect(
-            find.descendant(
-              of: feed,
-              matching: find.text(surnameOf(e.playerName)),
-            ),
-            findsWidgets,
-          );
+        final strip = find.byKey(matchTvEventStripKey);
+        final seen = <String>{};
+        // (After whatever the jump passed on the way, each in its turn.)
+        for (var i = 0; i < 320; i++) {
+          await tester.pump(const Duration(milliseconds: 50));
+          expect(redBanner, findsNothing);
+          expect(strip.evaluate().length, lessThanOrEqualTo(2));
+          for (final e in [r.events[ri], r.events[si]]) {
+            if (find
+                .descendant(
+                  of: strip,
+                  matching: find.textContaining(surnameOf(e.playerName)),
+                )
+                .evaluate()
+                .isNotEmpty) {
+              seen.add(e.type.name);
+            }
+          }
         }
+        expect(seen, {'redCard', 'substitution'});
         return;
       }
       final subPop = find.byKey(matchEventBannerKey);
@@ -1935,18 +1937,6 @@ void _fullTimeSwitchTests() {
 }
 
 void _ownerFeedbackTests() {
-  /// What the switch must sit inside: the Timeline board's card, or (the
-  /// Pitch mode's stripe being too thin for it) the pitch.
-  Rect boardCard(WidgetTester tester) {
-    final card = find.descendant(
-      of: find.byType(MatchScoreboard),
-      matching: find.byType(AppCard),
-    );
-    return tester.getRect(
-      card.evaluate().isEmpty ? find.byType(PitchMatchView) : card.first,
-    );
-  }
-
   testWidgets('the Pitch score is a thin stripe, a fifth of the board', (
     tester,
   ) async {
@@ -2059,7 +2049,7 @@ void _ownerFeedbackTests() {
   });
 
   for (final width in [320.0, 360.0, 390.0, 430.0]) {
-    testWidgets('the view switch sits inside its board or pitch at $width', (
+    testWidgets('the view toggle is on the bar, not the board, at $width', (
       tester,
     ) async {
       await _pump(
@@ -2071,24 +2061,15 @@ void _ownerFeedbackTests() {
       );
       for (final mode in ['pitch', 'timeline']) {
         if (mode == 'pitch') await _until(tester, () => _ready(tester));
-        final card = boardCard(tester);
-        final button = tester.getRect(find.byKey(matchViewSwitchKey));
-        // The tap target: at least 40 px each way.
-        expect(button.width, greaterThanOrEqualTo(40), reason: mode);
-        expect(button.height, greaterThanOrEqualTo(40), reason: mode);
-        // The silver face it draws inside the card.
-        final face = tester.getRect(
-          find.descendant(
-            of: find.byKey(matchViewSwitchKey),
-            matching: find.byKey(matchViewSwitchFaceKey),
-          ),
+        expect(find.byKey(matchViewSwitchKey), findsNothing, reason: mode);
+        final toggle = find.descendant(
+          of: find.byType(MatchBarDock),
+          matching: find.byType(MatchViewToggle),
         );
-        expect(card.contains(face.topLeft), isTrue, reason: '$mode $face');
-        expect(
-          card.contains(face.bottomRight - const Offset(0.01, 0.01)),
-          isTrue,
-          reason: '$mode $face in $card',
-        );
+        expect(toggle, findsOneWidget, reason: mode);
+        final r = tester.getRect(toggle);
+        expect(r.left, greaterThanOrEqualTo(0), reason: mode);
+        expect(r.right, lessThanOrEqualTo(width), reason: mode);
         expect(tester.takeException(), isNull, reason: mode);
         await _switch(tester);
       }

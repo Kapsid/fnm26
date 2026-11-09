@@ -300,7 +300,12 @@ class MatchStatsPanel extends StatelessWidget {
     required this.fullTime,
     required this.events,
     this.penalties = const [],
+    this.showGround = true,
   });
+
+  /// Whether the ground's card heads the panel. The tablet 2D TV carries
+  /// the ground in its header band instead.
+  final bool showGround;
   final bool neutral;
   final String groundCode;
   final MatchResult result;
@@ -357,15 +362,17 @@ class MatchStatsPanel extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.marginMobile),
       children: [
-        GroundCard(
-          ground: ground,
-          neutral: neutral,
-          groundNationCode: groundCode,
-          fans: homeFans,
-          kickOff: kickOff,
-          weather: weather,
-        ),
-        const SizedBox(height: AppSpacing.lg),
+        if (showGround) ...[
+          GroundCard(
+            ground: ground,
+            neutral: neutral,
+            groundNationCode: groundCode,
+            fans: homeFans,
+            kickOff: kickOff,
+            weather: weather,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+        ],
         if (motm != null) ...[
           _MotmCard(
             name: motm.playerName,

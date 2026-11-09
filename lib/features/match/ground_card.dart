@@ -263,3 +263,107 @@ class GroundCard extends StatelessWidget {
     return out.toString();
   }
 }
+
+/// The ground as one line for the tablet 2D TV's header band: the flag, the
+/// stadium and its city, the kick-off and the weather, the crowd against the
+/// capacity with a small fill bar, and the home fans' mood. The same facts
+/// as [GroundCard], at the width of the picture.
+class GroundStrip extends StatelessWidget {
+  const GroundStrip({
+    required this.ground,
+    this.neutral = false,
+    this.groundNationCode,
+    this.fans,
+    this.kickOff,
+    this.weather,
+    super.key,
+  });
+
+  /// The key of the strip.
+  static const Key stripKey = Key('ground.strip');
+
+  final MatchGround ground;
+  final bool neutral;
+  final String? groundNationCode;
+  final FanMoodBand? fans;
+  final KickOffTime? kickOff;
+  final WeatherKind? weather;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final fill = ground.capacity <= 0
+        ? 0.0
+        : (ground.attendance / ground.capacity).clamp(0.0, 1.0);
+    final kickOff = this.kickOff;
+    final weather = this.weather;
+    final place = [
+      '${ground.stadium} · ${ground.city}',
+      if (neutral) l.matchNeutralGround,
+      if (kickOff != null) '${l.matchConditionsKickOff} ${kickOff.label}',
+      if (weather != null) GroundCard.weatherLabel(l, weather),
+    ].join(' · ');
+    // The sans, not the mono: a whole line of facts in the header's width.
+    final style = AppTypography.bodySmall.copyWith(
+      color: AppColors.onSurfaceVariant,
+      fontSize: 12,
+      height: 1,
+    );
+    final code = groundNationCode;
+    final band = fans;
+    return Row(
+      key: stripKey,
+      children: [
+        if (code != null)
+          FlagDisc(code, size: 14)
+        else
+          const Icon(
+            Icons.stadium_outlined,
+            size: 14,
+            color: AppColors.onSurfaceVariant,
+          ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: WholeText(place, maxLines: 1, style: style),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        SizedBox(
+          width: 44,
+          height: 4,
+          child: ClipRRect(
+            borderRadius: AppRadii.smAll,
+            child: LinearProgressIndicator(
+              value: fill,
+              minHeight: 4,
+              backgroundColor: AppColors.surfaceContainerHighest,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                fill >= 0.95 ? AppColors.positive : AppColors.primary,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          '${GroundCard._thousands(ground.attendance)} / '
+          '${GroundCard._thousands(ground.capacity)}',
+          maxLines: 1,
+          softWrap: false,
+          style: style.copyWith(
+            color: AppColors.onSurface,
+            fontWeight: FontWeight.w700,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+        ),
+        if (band != null) ...[
+          Text(' · ', style: style),
+          Text(
+            l.matchHomeFans(fanMoodLabel(l, band)),
+            maxLines: 1,
+            softWrap: false,
+            style: style,
+          ),
+        ],
+      ],
+    );
+  }
+}

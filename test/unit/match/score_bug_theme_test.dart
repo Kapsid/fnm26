@@ -57,8 +57,20 @@ void main() {
     }
   });
 
-  test('qualifiers, friendlies, play-offs, Nations Cups and the Clash stay '
-      'silver', () {
+  test('every Continental Clash match wears the Clash violet', () {
+    for (final c in <Confederation?>[null, ...Confederation.values]) {
+      expect(
+        ScoreBugTheme.kindFor('FFINAL', c),
+        ScoreBugThemeKind.continentalClash,
+      );
+      expect(
+        ScoreBugTheme.forRound('FFINAL', c)?.accent.toARGB32(),
+        0xFFC7A8FF,
+      );
+    }
+  });
+
+  test('qualifiers, friendlies, play-offs and Nations Cups stay silver', () {
     for (final r in <String?>[
       null,
       'CQ',
@@ -71,7 +83,6 @@ void main() {
       'NQF',
       'NSF',
       'NFINAL',
-      'FFINAL',
     ]) {
       for (final c in Confederation.values) {
         expect(ScoreBugTheme.kindFor(r, c), isNull, reason: '$r $c');

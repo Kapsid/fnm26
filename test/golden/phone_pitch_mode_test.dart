@@ -93,6 +93,7 @@ void main() {
     ('CGROUP', 'africa', ScoreBugThemeKind.africa, 'africa'),
     ('CFINAL', null, ScoreBugThemeKind.finalGold, 'final'),
     ('3RD', null, ScoreBugThemeKind.bronze, 'bronze'),
+    ('FFINAL', null, ScoreBugThemeKind.continentalClash, 'continental_clash'),
   ]) {
     testWidgets('phone match in Pitch mode at a finals: $file', (tester) async {
       final save = await seedSave(tester);
