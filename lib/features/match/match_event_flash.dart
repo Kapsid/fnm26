@@ -146,24 +146,6 @@ class _EventBanner extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.sm),
-              child: Center(
-                child: Text(
-                  _eventClock(event),
-                  maxLines: 1,
-                  softWrap: false,
-                  style: AppTypography.labelSmall.copyWith(
-                    fontFamily: AppFonts.mono,
-                    letterSpacing: 0,
-                    height: 1,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.onSurfaceVariant,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -266,13 +248,6 @@ class _EventFlash extends StatelessWidget {
               Icons.arrow_upward_rounded,
               AppColors.positive,
               surnameOf(e.playerName),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            _eventClock(e),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
             ),
           ),
         ],
