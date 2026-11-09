@@ -199,9 +199,12 @@ class DriftCompetitionRepository implements CompetitionRepository {
     DateTime to,
   ) async {
     // The ratings table holds a row per player per fixture of the whole
-    // world, so it is never scanned: CROSS JOIN keeps the career's fixtures
-    // of [nationId] in the range as the outer loop, and each one's rating
-    // row is then a primary-key lookup (career, fixture, player).
+    // world, so it is never scanned: CROSS JOIN keeps `fixtures` as the
+    // outer loop, and each matching fixture's rating row is then a
+    // primary-key probe (career, fixture, player). `fixtures` has no index
+    // but its rowid, so every call is one full scan of it (every career in
+    // the database). Affordable because a rollover makes only a handful of
+    // calls; an index would be a schema change.
     final row = await _db
         .customSelect(
           'SELECT COUNT(*) AS n FROM fixtures f '

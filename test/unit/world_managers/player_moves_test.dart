@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/data/db/app_database.dart';
+import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/player.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
@@ -56,6 +57,27 @@ void main() {
       nations: await c.read(nationRepositoryProvider).forCareer(d.careerId),
       playerNationId: career.nationId,
     );
+  }
+
+  /// Stubs every fixture before [upTo]: the better-ranked side loses 0-4.
+  Future<void> upsets(_Save s, DateTime upTo) async {
+    final rank = {for (final n in s.nations) n.id: n.ranking};
+    final fixtures = await s.c
+        .read(competitionRepositoryProvider)
+        .allFixtures(s.careerId);
+    await s.db.transaction(() async {
+      for (final f in fixtures) {
+        if (!f.date.isBefore(upTo)) continue;
+        final homeBetter =
+            (rank[f.homeNationId] ?? 999) < (rank[f.awayNationId] ?? 999);
+        final home = homeBetter ? 0 : 4;
+        await s.db.customStatement(
+          'UPDATE fixtures SET played = 1, home_score = ?, away_score = ? '
+          'WHERE id = ?',
+          [home, 4 - home, f.id],
+        );
+      }
+    });
   }
 
   Future<ManagerWorld> world(_Save s) =>
@@ -204,6 +226,7 @@ void main() {
       final inPost = (await room(s)).hired[StaffRole.assistant]!;
       expect(inPost.id, first.id);
       await manager.hire(s.careerId, StaffRole.assistant, second.id);
+      await manager.assistantWorkDone;
 
       var w = await world(s);
       final left = w.managers
@@ -222,6 +245,7 @@ void main() {
 
       // Leaving the post empty lets the second one go too.
       await manager.hire(s.careerId, StaffRole.assistant, null);
+      await manager.assistantWorkDone;
       w = await world(s);
       expect(
         {
@@ -264,9 +288,9 @@ void main() {
       );
       expect(StaffMarket.cycleOf(hired.id), 0);
 
-      await s.c
-          .read(managerServiceProvider)
-          .hire(s.careerId, StaffRole.assistant, null);
+      final manager = s.c.read(managerServiceProvider);
+      await manager.hire(s.careerId, StaffRole.assistant, null);
+      await manager.assistantWorkDone;
 
       final m = (await world(
         s,
@@ -343,14 +367,14 @@ void main() {
         ))
           if (p.age >= 36 && p.age <= 45) p,
       ];
-      expect(veterans, isNotEmpty, reason: 'a veteran to retire');
-      final capped = veterans.first;
-      final uncapped = veterans.length > 1 ? veterans[1] : null;
+      expect(veterans.length, greaterThanOrEqualTo(2), reason: 'two veterans');
+      final capped = veterans[0];
+      final uncapped = veterans[1];
       await s.c.read(internationalRetirementRepositoryProvider).addMarkers(
         s.careerId,
         0,
         [
-          for (final p in [capped, ?uncapped])
+          for (final p in [capped, uncapped])
             InternationalRetirement.retiredKind(
               p.id,
               2,
@@ -406,20 +430,18 @@ void main() {
       final tie = allTies.where((t) => t.managerId == ex.managerId).single;
       expect(tie.kind, TieKind.formerPlayer);
       expect(tie.delta, 20);
-      if (uncapped != null) {
-        final other = w.managers
-            .where((m) => m.sourceId == uncapped.id)
-            .firstOrNull;
-        if (other != null) {
-          expect(allTies.where((t) => t.managerId == other.managerId), isEmpty);
-        }
-      }
+      // The other veteran enters too (the two are the only candidates and
+      // the share wants more), but never played under the player.
+      final other = w.managers.singleWhere((m) => m.sourceId == uncapped.id);
+      expect(other.origin, ManagerOrigin.exPlayer);
+      expect(allTies.where((t) => t.managerId == other.managerId), isEmpty);
     },
     timeout: const Timeout(Duration(minutes: 5)),
   );
 
   test(
-    'the pool is back to 60 after a rollover',
+    'a rollover tops the pool up to 60 before hiring '
+    '(free after + hired from it = 60)',
     () async {
       final s = await start();
       await ready(s);
@@ -520,4 +542,88 @@ void main() {
     },
     timeout: const Timeout(Duration(minutes: 15)),
   );
+
+  test(
+    'an assistant taken back is never hired by a nation, and is free again '
+    'once let go',
+    () async {
+      final s = await start();
+      final applicants = (await room(s)).applicants[StaffRole.assistant]!;
+      final a = applicants[0];
+      final b = applicants[1];
+      final manager = s.c.read(managerServiceProvider);
+      for (final id in [a.id, b.id, a.id]) {
+        await manager.hire(s.careerId, StaffRole.assistant, id);
+      }
+      await manager.assistantWorkDone;
+      final repo = s.c.read(worldManagerRepositoryProvider);
+      final service = s.c.read(worldManagerServiceProvider);
+      int managerOf(ManagerWorld w, int sourceId) => w.managers
+          .singleWhere(
+            (m) =>
+                m.origin == ManagerOrigin.exAssistant && m.sourceId == sourceId,
+          )
+          .managerId;
+      final aId = managerOf(await world(s), a.id);
+
+      /// Retires every free man but [keep], so he is the whole pool.
+      Future<void> onlyFree(int keep) async {
+        final w = await world(s);
+        await repo.apply(
+          s.careerId,
+          ManagerChanges(
+            updated: [
+              for (final m in w.free(_wcDate))
+                if (m.managerId != keep) m.copyWith(retiredAt: DateTime(2028)),
+            ],
+          ),
+        );
+      }
+
+      // Europe's favourites all lose: vacancies, and A the only free man.
+      await upsets(s, _wcDate);
+      await onlyFree(aId);
+      final europe = {
+        for (final n in s.nations)
+          if (n.confederation == Confederation.europe) n.id,
+      };
+      final euro = await service.afterFinals(
+        s.careerId,
+        key: 'cont:EUROPE:2028',
+        scope: europe,
+        date: _euroDate,
+      );
+      expect(euro.where((m) => m.incomingId != null), isNotEmpty);
+      expect(euro.map((m) => m.incomingId), isNot(contains(aId)));
+      var w = await world(s);
+      expect(w.spells.where((sp) => sp.managerId == aId), isEmpty);
+      expect(
+        w.managers.firstWhere((m) => m.managerId == aId).retiredAt,
+        isNull,
+      );
+
+      // Let go again: not added twice, and a nation can now hire him.
+      await manager.hire(s.careerId, StaffRole.assistant, null);
+      await manager.assistantWorkDone;
+      w = await world(s);
+      expect(
+        w.managers.where(
+          (m) => m.origin == ManagerOrigin.exAssistant && m.sourceId == a.id,
+        ),
+        hasLength(1),
+      );
+      await onlyFree(aId);
+      final wc = await service.afterFinals(
+        s.careerId,
+        key: 'wc:2030',
+        scope: {for (final n in s.nations) n.id},
+        date: _wcDate,
+      );
+      expect(wc.map((m) => m.incomingId), contains(aId));
+    },
+    timeout: const Timeout(Duration(minutes: 5)),
+  );
 }
+
+final _wcDate = DateTime(2030, 7, 19);
+final _euroDate = DateTime(2028, 7, 10);

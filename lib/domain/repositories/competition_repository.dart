@@ -308,8 +308,9 @@ abstract interface class CompetitionRepository {
 
   /// How many games [playerId] played for [nationId] in fixtures dated on
   /// or after [from] and before [to]: his `player_ratings` rows for that
-  /// nation, joined to their fixtures. Walks the career's fixtures in the
-  /// range and looks each one's row up by its primary key.
+  /// nation, joined to their fixtures. Each call scans the fixtures table
+  /// once (it has no index but its rowid) and probes each match's rating
+  /// row by primary key: for a few calls per rollover, not a hot path.
   Future<int> capsUnder(
     int careerId,
     int playerId,

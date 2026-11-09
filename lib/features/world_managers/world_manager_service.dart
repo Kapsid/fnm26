@@ -388,8 +388,26 @@ class WorldManagerService {
     final replaced = move == null
         ? null
         : loaded.currentAt(move.to)?.close(date, SpellEnd.replacedByPlayer);
+    // A former assistant the player has taken back is his again, not out
+    // of work: held out of this point (as if retired, in memory only), so
+    // no nation hires him and he neither retires nor counts in the pool.
+    final busy = {
+      for (final sp in loaded.spells)
+        if (sp.current) sp.managerId,
+    };
+    final rehired = career.staffAssistantId;
     final w = ManagerWorld(
-      managers: loaded.managers,
+      managers: [
+        for (final m in loaded.managers)
+          if (rehired != null &&
+              m.origin == ManagerOrigin.exAssistant &&
+              m.sourceId == rehired &&
+              m.retiredAt == null &&
+              !busy.contains(m.managerId))
+            m.copyWith(retiredAt: date)
+          else
+            m,
+      ],
       spells: [
         for (final sp in loaded.spells)
           if (replaced != null && sp.spellNo == replaced.spellNo)

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fnm/core/diagnostics/app_log.dart';
 import 'package:fnm/data/data_providers.dart';
@@ -6,7 +7,6 @@ import 'package:fnm/domain/services/manager/manager_skills.dart';
 import 'package:fnm/domain/services/manager/staff.dart';
 import 'package:fnm/features/federation/federation_providers.dart';
 import 'package:fnm/features/career/career_providers.dart';
-import 'package:fnm/features/federation/staff_providers.dart';
 import 'package:fnm/features/hub/hub_providers.dart';
 import 'package:fnm/features/tactics/condition_providers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
@@ -113,7 +113,7 @@ class ManagerService {
 
   Future<void> hire(int careerId, StaffRole role, int? candidateId) async {
     // The assistant he had, if this hire lets him go: read before the post
-    // changes, while the staff room still has him.
+    // changes.
     final left = role == StaffRole.assistant
         ? await _departingAssistant(careerId, candidateId)
         : null;
@@ -121,44 +121,54 @@ class ManagerService {
         .read(careerRepositoryProvider)
         .setStaff(careerId, role, candidateId);
     if (left != null) {
-      // He enters the world managers' free pool. Never allowed to stop a
-      // hire: the post has changed whatever happens here.
-      try {
-        await _ref
-            .read(worldManagerServiceProvider)
-            .assistantLeft(
-              careerId,
-              candidateId: left.id,
-              name: left.name,
-              country: left.country,
-              date: left.date,
-            );
-      } on Object catch (e, st) {
-        AppLog.error('mgr-assistant hire', e, st);
-      }
+      // He enters the world managers' free pool, off the tap's path (it may
+      // seed a career's managers first), one departure after another.
+      // Never allowed to stop a hire: the post has changed whatever happens.
+      _assistantWork = _assistantWork.then(
+        (_) => _assistantLeft(careerId, left.id, left.date),
+      );
     }
     _invalidate(careerId);
   }
 
-  /// The assistant in post, when hiring [candidateId] (null for nobody)
-  /// would let him go; null when the post is empty or he stays. His name
-  /// is the staff room's, empty for a man hired in an earlier cycle (the
-  /// world managers derive it again then, and his country with it).
-  Future<({int id, String name, String? country, DateTime date})?>
-  _departingAssistant(int careerId, int? candidateId) async {
+  /// The world-manager work of the assistants let go so far, done once it
+  /// completes; a test awaits it.
+  @visibleForTesting
+  Future<void> get assistantWorkDone => _assistantWork;
+  Future<void> _assistantWork = Future<void>.value();
+
+  /// Puts assistant [id] in the world managers' pool. His name and flag are
+  /// derived again from his id (`WorldManagerService.assistantNamed`): the
+  /// staff room's own market and name pool, so the very name the room
+  /// showed him under while he was in post.
+  Future<void> _assistantLeft(int careerId, int id, DateTime date) async {
+    try {
+      await _ref
+          .read(worldManagerServiceProvider)
+          .assistantLeft(
+            careerId,
+            candidateId: id,
+            name: '',
+            country: null,
+            date: date,
+          );
+    } on Object catch (e, st) {
+      AppLog.error('mgr-assistant hire', e, st);
+    }
+  }
+
+  /// The assistant in post and the day, when hiring [candidateId] (null
+  /// for nobody) would let him go; null when the post is empty or he stays.
+  /// One row read.
+  Future<({int id, DateTime date})?> _departingAssistant(
+    int careerId,
+    int? candidateId,
+  ) async {
     try {
       final career = await _ref.read(careerRepositoryProvider).byId(careerId);
       final id = career?.staffAssistantId;
       if (career == null || id == null || id == candidateId) return null;
-      final room = await _ref.read(staffRoomProvider(careerId).future);
-      final known = room?.hired[StaffRole.assistant];
-      final named = known != null && known.id == id && known.name.isNotEmpty;
-      return (
-        id: id,
-        name: named ? known.name : '',
-        country: named ? known.country : null,
-        date: career.inGameDate,
-      );
+      return (id: id, date: career.inGameDate);
     } on Object catch (e, st) {
       AppLog.error('mgr-assistant hire', e, st);
       return null;
