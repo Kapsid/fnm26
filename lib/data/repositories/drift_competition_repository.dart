@@ -246,6 +246,28 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<List<Fixture>> fixturesForNationBetween(
+    int careerId,
+    int nationId,
+    DateTime from,
+    DateTime? until,
+  ) async {
+    final query = _db.select(_db.fixtures)
+      ..where(
+        (t) =>
+            t.careerId.equals(careerId) &
+            (t.homeNationId.equals(nationId) |
+                t.awayNationId.equals(nationId)) &
+            t.date.isBiggerOrEqualValue(from) &
+            (until == null
+                ? const Constant(true)
+                : t.date.isSmallerThanValue(until)),
+      )
+      ..orderBy([(t) => OrderingTerm(expression: t.date)]);
+    return (await query.get()).map((r) => r.toDomain()).toList();
+  }
+
+  @override
   Future<List<Fixture>> fixturesBetween(
     int careerId,
     DateTime from,

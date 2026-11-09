@@ -128,13 +128,14 @@ Future<NationManagerView?> _viewOf(
   var lost = 0;
   final fixtures = await ref
       .read(competitionRepositoryProvider)
-      .fixturesForNation(careerId, nationId);
+      .fixturesForNationBetween(
+        careerId,
+        nationId,
+        spell.fromDate,
+        spell.toDate,
+      );
   for (final f in fixtures) {
-    if (!f.hasResult ||
-        f.date.isBefore(spell.fromDate) ||
-        (spell.toDate != null && !f.date.isBefore(spell.toDate!))) {
-      continue;
-    }
+    if (!f.hasResult) continue;
     final mine = f.homeNationId == nationId ? f.homeScore! : f.awayScore!;
     final theirs = f.homeNationId == nationId ? f.awayScore! : f.homeScore!;
     if (mine > theirs) {

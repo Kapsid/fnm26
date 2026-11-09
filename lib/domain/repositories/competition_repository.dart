@@ -331,6 +331,15 @@ abstract interface class CompetitionRepository {
     DateTime until,
   );
 
+  /// [nationId]'s fixtures dated on or after [from] and before [until]
+  /// ([until] null: no end), oldest first.
+  Future<List<Fixture>> fixturesForNationBetween(
+    int careerId,
+    int nationId,
+    DateTime from,
+    DateTime? until,
+  );
+
   /// All unplayed fixtures in the save due on or before [date]. When
   /// [excludeNationId] is given, fixtures involving that nation are left out —
   /// used so background simulation never plays the human manager's own matches.

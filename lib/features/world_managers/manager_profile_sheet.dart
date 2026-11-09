@@ -43,8 +43,32 @@ class ManagerProfileSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final key = (careerId: careerId, managerId: managerId);
-    final p = ref.watch(managerProfileProvider(key)).valueOrNull;
-    if (p == null) return const SizedBox(height: 160);
+    final async = ref.watch(managerProfileProvider(key));
+    final p = async.valueOrNull;
+    if (p == null) {
+      if (async.hasError) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(l.commonSomethingWentWrong),
+                const SizedBox(height: AppSpacing.md),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+      return const SizedBox(
+        height: 160,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
     final nations =
         ref.watch(managerNationsProvider(careerId)).valueOrNull ?? const {};
     final label = AppTypography.labelSmall.copyWith(

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fnm/core/theme/app_theme.dart';
+import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/nation.dart';
+import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/nations/nation_now_card.dart';
 import 'package:fnm/features/nations/nation_now_providers.dart';
 import 'package:fnm/features/world_managers/manager_profile_sheet.dart';
@@ -89,5 +91,26 @@ void main() {
       isTrue,
     );
     expect(find.byKey(NationNowCard.managerKey), findsOneWidget);
+  });
+
+  testWidgets('a cycle without world managers shows no row and seeds none', (
+    tester,
+  ) async {
+    final save = await seedSave(tester);
+    await tester.runAsync(
+      () => save.container.read(appDatabaseProvider).customStatement(
+        'DELETE FROM draws_watched WHERE career_id = ? AND kind = ?',
+        [save.careerId, worldManagersKind],
+      ),
+    );
+    await _pump(tester, save, _otherNation(save));
+    expect(find.byKey(NationNowCard.managerKey), findsNothing);
+    expect(find.byType(ManagerRow), findsNothing);
+    final seeded = await tester.runAsync(
+      () => save.container
+          .read(worldManagerRepositoryProvider)
+          .hasManagers(save.careerId),
+    );
+    expect(seeded, isFalse);
   });
 }
