@@ -128,6 +128,8 @@ import 'package:fnm/features/tournaments/tournaments_providers.dart';
 import 'package:fnm/features/tournaments/playoff_paths.dart';
 import 'package:fnm/features/tournaments/wc_host_theme.dart';
 import 'package:fnm/features/tournaments/wc_host_berths.dart';
+import 'package:fnm/features/world_managers/manager_windows.dart';
+import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:fnm/features/y/y_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';

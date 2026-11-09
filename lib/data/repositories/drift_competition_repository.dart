@@ -156,6 +156,41 @@ class DriftCompetitionRepository implements CompetitionRepository {
   }
 
   @override
+  Future<
+    ({
+      Map<int, ({CompetitionKind kind, Confederation confederation})>
+      competitions,
+      List<Fixture> fixtures,
+    })
+  >
+  cycleFixtures(int careerId, int cycle) async {
+    final comps = await (_db.select(
+      _db.competitions,
+    )..where((t) => t.careerId.equals(careerId) & t.cycle.equals(cycle))).get();
+    if (comps.isEmpty) {
+      return (
+        competitions:
+            <int, ({CompetitionKind kind, Confederation confederation})>{},
+        fixtures: <Fixture>[],
+      );
+    }
+    final rows =
+        await (_db.select(_db.fixtures)..where(
+              (t) =>
+                  t.careerId.equals(careerId) &
+                  t.competitionId.isIn([for (final c in comps) c.id]),
+            ))
+            .get();
+    return (
+      competitions: {
+        for (final c in comps)
+          c.id: (kind: c.kind, confederation: c.confederation),
+      },
+      fixtures: [for (final r in rows) r.toDomain()],
+    );
+  }
+
+  @override
   Future<List<Fixture>> fixturesBetween(
     int careerId,
     DateTime from,

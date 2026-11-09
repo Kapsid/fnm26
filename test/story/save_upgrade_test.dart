@@ -12,6 +12,7 @@ import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/hub/hub_event.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
+import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -271,6 +272,119 @@ void main() {
 
               final now = await computeManifest(c, manifest.careerId);
               expectHosts(now, manifest, only: (k) => k.endsWith(':0'));
+            },
+            timeout: const Timeout(Duration(minutes: 10)),
+          );
+
+          // One rollover of the upgraded save, shared by the three manager
+          // checks below and closed after the last of them.
+          Future<({AppDatabase db, ProviderContainer c, int from})>? rolled;
+          Future<({AppDatabase db, ProviderContainer c, int from})>
+          rollOnce() => rolled ??= () async {
+            final (db, c) = await open(await unpackFixture(build, save));
+            final d = StoryDriver(c, manifest.careerId);
+            expect((await d.nextEvent()).kind, HubEventKind.cycleRollover);
+            await d.step();
+            return (db: db, c: c, from: manifest.cyclePointer);
+          }();
+          tearDownAll(() async {
+            final r = await rolled;
+            rolled = null;
+            if (r != null) await close(r.db, r.c);
+          });
+
+          test(
+            'the rollover stamps worldManagers1 on the new cycle only',
+            () async {
+              final r = await rollOnce();
+              final comp = r.c.read(competitionRepositoryProvider);
+              expect(
+                await comp.hasWatchedDraw(
+                  manifest.careerId,
+                  r.from,
+                  worldManagersKind,
+                ),
+                isFalse,
+                reason: 'the upgrade cycle stays unmarked',
+              );
+              expect(
+                await comp.hasWatchedDraw(
+                  manifest.careerId,
+                  r.from + 1,
+                  worldManagersKind,
+                ),
+                isTrue,
+              );
+              expect(
+                await comp.hasWatchedDraw(
+                  manifest.careerId,
+                  r.from + 1,
+                  mgrRolloverKind,
+                ),
+                isTrue,
+              );
+            },
+            timeout: const Timeout(Duration(minutes: 10)),
+          );
+
+          test(
+            "the upgrade cycle's World Championship ran no pass",
+            () async {
+              final r = await rollOnce();
+              final year = CareerService.worldCupYear(r.from);
+              expect(
+                await r.c
+                    .read(competitionRepositoryProvider)
+                    .hasWatchedDraw(
+                      manifest.careerId,
+                      r.from,
+                      mgrDecidedKind('wc:$year'),
+                    ),
+                isFalse,
+              );
+              // Nobody left a job inside the upgrade cycle: its managers
+              // were seeded as of its opening, and none moved before the
+              // rollover (the seeded past spells all end by that opening).
+              final began = CareerService.cycleOpens(r.from);
+              final opens = CareerService.cycleOpens(r.from + 1);
+              final w = await r.c
+                  .read(worldManagerRepositoryProvider)
+                  .load(manifest.careerId);
+              expect(w.spells, isNotEmpty);
+              for (final s in w.spells) {
+                final to = s.toDate;
+                if (to == null) continue;
+                expect(
+                  to.isAfter(began) && to.isBefore(opens),
+                  isFalse,
+                  reason: 'spell ${s.spellNo} closed on $to',
+                );
+              }
+            },
+            timeout: const Timeout(Duration(minutes: 10)),
+          );
+
+          test(
+            'after the rollover every AI nation has a manager',
+            () async {
+              final r = await rollOnce();
+              final career = (await r.c
+                  .read(careerRepositoryProvider)
+                  .byId(manifest.careerId))!;
+              final opens = CareerService.cycleOpens(r.from + 1);
+              final repo = r.c.read(worldManagerRepositoryProvider);
+              final nations = await r.c
+                  .read(nationRepositoryProvider)
+                  .forCareer(manifest.careerId);
+              expect(nations, isNotEmpty);
+              for (final n in nations) {
+                if (n.id == career.nationId) continue;
+                expect(
+                  await repo.inChargeOn(manifest.careerId, n.id, opens),
+                  isNotNull,
+                  reason: n.name,
+                );
+              }
             },
             timeout: const Timeout(Duration(minutes: 10)),
           );

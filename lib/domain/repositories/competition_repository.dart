@@ -294,6 +294,18 @@ abstract interface class CompetitionRepository {
   /// Every fixture in the save, ordered by matchday then date.
   Future<List<Fixture>> allFixtures(int careerId);
 
+  /// Every fixture of [cycle]'s competitions, with each competition's kind
+  /// and confederation keyed by its id: one read of the competitions and one
+  /// of the fixtures (the world managers' decision points read a cycle so).
+  Future<
+    ({
+      Map<int, ({CompetitionKind kind, Confederation confederation})>
+      competitions,
+      List<Fixture> fixtures,
+    })
+  >
+  cycleFixtures(int careerId, int cycle);
+
   /// The fixtures in the save dated on or after [from] and before [until]
   /// (played or not), e.g. one international window's matches.
   Future<List<Fixture>> fixturesBetween(

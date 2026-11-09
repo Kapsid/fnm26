@@ -1177,6 +1177,7 @@ extension SeasonCycle on SeasonService {
       topScorerName: bootName,
       topScorerGoals: bootGoals,
     );
+    await _managersAfterContinentalFinal(careerId, conf, f);
 
     // Every other confederation's championship is decided in the same window,
     // so record them now rather than two years later after the World Cup.
@@ -1192,7 +1193,14 @@ extension SeasonCycle on SeasonService {
     if (finals.isEmpty || !finals.first.hasResult) return;
     final f = finals.first;
     final year = f.date.year;
-    if (await _comp.hasHonour(careerId, 'World Championship', year)) return;
+    if (await _comp.hasHonour(careerId, 'World Championship', year)) {
+      // The managers' decision still runs, once: a run cut short between
+      // the honour and the managers picks it up here. (A continental point
+      // missed that way is caught up by this one: its window takes in every
+      // final whose own point never ran.)
+      await _managersAfterWorldFinal(careerId, f);
+      return;
+    }
 
     final thirds = await _comp.fixturesByRound(careerId, WorldCupFinals.third);
     final nations = await _nationsById(careerId);
@@ -1247,6 +1255,7 @@ extension SeasonCycle on SeasonService {
       topScorerName: bootName,
       topScorerGoals: bootGoals,
     );
+    await _managersAfterWorldFinal(careerId, f);
 
     // The finals didn't move the ranking live; settle the whole tournament now,
     // heavier than any qualifier, so the champion's run is the cycle's biggest
@@ -1254,6 +1263,40 @@ extension SeasonCycle on SeasonService {
     await _settleWorldCupRanking(careerId);
 
     await _simulateContinentalCups(careerId, year);
+  }
+
+  /// The world managers' decision point after the World Championship
+  /// [final_]: every nation's brief has settled. A no-op in a cycle not run
+  /// by world managers, and once it has run.
+  Future<void> _managersAfterWorldFinal(int careerId, Fixture final_) async {
+    await _ref
+        .read(worldManagerServiceProvider)
+        .afterFinals(
+          careerId,
+          key: ManagerWindows.worldKey(final_.date.year),
+          scope: (await _nationsById(careerId)).keys.toSet(),
+          date: final_.date,
+        );
+  }
+
+  /// [conf]'s twin of [_managersAfterWorldFinal]: only that confederation's
+  /// briefs settle at its championship's [final_].
+  Future<void> _managersAfterContinentalFinal(
+    int careerId,
+    Confederation conf,
+    Fixture final_,
+  ) async {
+    await _ref
+        .read(worldManagerServiceProvider)
+        .afterFinals(
+          careerId,
+          key: ManagerWindows.continentalKey(conf, final_.date.year),
+          scope: {
+            for (final n in (await _nationsById(careerId)).values)
+              if (n.confederation == conf) n.id,
+          },
+          date: final_.date,
+        );
   }
 
   /// A BACKSTOP for any confederation whose championship never got played.

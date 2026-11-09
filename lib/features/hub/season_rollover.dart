@@ -205,6 +205,11 @@ extension SeasonRollover on SeasonService {
     _ref.invalidate(satisfactionProvider(careerId));
     final closingBoard = await _ref.read(satisfactionProvider(careerId).future);
 
+    // The world's managers, seeded (if they never were) before anything
+    // moves: as of the closing cycle's opening, with the nation the player
+    // ran through it. The rollover's own decision point runs below.
+    await _ref.read(worldManagerServiceProvider).ensureSeeded(careerId);
+
     final switching = moveTo != null && moveTo != career.nationId;
     if (switching) {
       await _careers.switchNation(careerId, moveTo);
@@ -246,6 +251,8 @@ extension SeasonRollover on SeasonService {
     await _comp.markDrawWatched(careerId, nextCycle, briefRulesV4Kind);
     await _comp.markDrawWatched(careerId, nextCycle, hostVenuesV2Kind);
     await _comp.markDrawWatched(careerId, nextCycle, fluidWindowsKind);
+    // Its national teams are run by world managers (see worldManagersKind).
+    await _comp.markDrawWatched(careerId, nextCycle, worldManagersKind);
 
     // Freeze the current standings as the seeding ranking for the new cycle, so
     // its draws reflect how nations have actually performed — and stay in step
@@ -256,6 +263,12 @@ extension SeasonRollover on SeasonService {
     await _ref
         .read(seedRankingRepositoryProvider)
         .snapshot(careerId, nextCycle, seedRank);
+
+    // The managers' rollover: retirements, contracts, poaching and hiring,
+    // read off the ranking just frozen.
+    await _ref
+        .read(worldManagerServiceProvider)
+        .atRollover(careerId, nextCycle: nextCycle);
 
     // Build the whole next cycle in real-world order (continental qualifying →
     // continental finals → World Cup qualifying → World Cup finals) plus
