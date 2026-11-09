@@ -16234,4 +16234,19 @@ class AppLocalizationsSv extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bättre spelare går till starkare klubbar. Standard: $stars av 5, utifrån dess liga.';
   }
+
+  @override
+  String get shareButton => 'Dela';
+
+  @override
+  String get shareSheetTitle => 'Dela som bild';
+
+  @override
+  String get shareFormatSquare => 'Kvadrat';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Bilden kunde inte skapas.';
 }

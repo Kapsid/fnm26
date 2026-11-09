@@ -16194,4 +16194,19 @@ class AppLocalizationsHu extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'A jobb játékosok erősebb klubokba igazolnak. Alapértelmezett: $stars az 5-ből, a bajnoksága szerint.';
   }
+
+  @override
+  String get shareButton => 'Megosztás';
+
+  @override
+  String get shareSheetTitle => 'Megosztás képként';
+
+  @override
+  String get shareFormatSquare => 'Négyzet';
+
+  @override
+  String get shareFormatStory => 'Történet';
+
+  @override
+  String get shareFailed => 'A kép nem hozható létre.';
 }

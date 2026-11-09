@@ -16250,4 +16250,19 @@ class AppLocalizationsDa extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bedre spillere går til stærkere klubber. Standard: $stars ud af 5 ud fra ligaen.';
   }
+
+  @override
+  String get shareButton => 'Del';
+
+  @override
+  String get shareSheetTitle => 'Del som billede';
+
+  @override
+  String get shareFormatSquare => 'Kvadrat';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Billedet kunne ikke oprettes.';
 }

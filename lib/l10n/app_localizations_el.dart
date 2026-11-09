@@ -16337,4 +16337,19 @@ class AppLocalizationsEl extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Οι καλύτεροι παίκτες πάνε σε ισχυρότερους συλλόγους. Προεπιλογή: $stars στα 5, βάσει του πρωταθλήματός του.';
   }
+
+  @override
+  String get shareButton => 'Κοινοποίηση';
+
+  @override
+  String get shareSheetTitle => 'Κοινοποίηση ως εικόνα';
+
+  @override
+  String get shareFormatSquare => 'Τετράγωνο';
+
+  @override
+  String get shareFormatStory => 'Ιστορία';
+
+  @override
+  String get shareFailed => 'Δεν ήταν δυνατή η δημιουργία της εικόνας.';
 }

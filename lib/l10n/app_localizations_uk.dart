@@ -16562,4 +16562,19 @@ class AppLocalizationsUk extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Кращі гравці переходять до сильніших клубів. Типово: $stars з 5 за його лігою.';
   }
+
+  @override
+  String get shareButton => 'Поділитися';
+
+  @override
+  String get shareSheetTitle => 'Поділитися як зображенням';
+
+  @override
+  String get shareFormatSquare => 'Квадрат';
+
+  @override
+  String get shareFormatStory => 'Історія';
+
+  @override
+  String get shareFailed => 'Не вдалося створити зображення.';
 }

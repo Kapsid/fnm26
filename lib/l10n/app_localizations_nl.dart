@@ -16325,4 +16325,19 @@ class AppLocalizationsNl extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Betere spelers gaan naar sterkere clubs. Standaard: $stars van 5, volgens de competitie.';
   }
+
+  @override
+  String get shareButton => 'Delen';
+
+  @override
+  String get shareSheetTitle => 'Delen als afbeelding';
+
+  @override
+  String get shareFormatSquare => 'Vierkant';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'De afbeelding kon niet worden gemaakt.';
 }

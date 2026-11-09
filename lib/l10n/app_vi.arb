@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Sức mạnh câu lạc bộ: {stars}/5",
   "editorClubStrength": "Sức mạnh",
   "editorClubStrengthDefault": "Mặc định",
-  "editorClubStrengthHelp": "Cầu thủ giỏi hơn gia nhập câu lạc bộ mạnh hơn. Mặc định: {stars}/5, theo giải đấu của đội."
+  "editorClubStrengthHelp": "Cầu thủ giỏi hơn gia nhập câu lạc bộ mạnh hơn. Mặc định: {stars}/5, theo giải đấu của đội.",
+  "shareButton": "Chia sẻ",
+  "shareSheetTitle": "Chia sẻ dưới dạng ảnh",
+  "shareFormatSquare": "Vuông",
+  "shareFormatStory": "Tin",
+  "shareFailed": "Không thể tạo ảnh."
 }

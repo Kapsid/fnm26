@@ -16348,4 +16348,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Os melhores jogadores vão para os clubes mais fortes. Padrão: $stars de 5, conforme a sua liga.';
   }
+
+  @override
+  String get shareButton => 'Compartilhar';
+
+  @override
+  String get shareSheetTitle => 'Compartilhar como imagem';
+
+  @override
+  String get shareFormatSquare => 'Quadrado';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Não foi possível criar a imagem.';
 }

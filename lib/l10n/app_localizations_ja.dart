@@ -15669,4 +15669,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return '強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中$stars。';
   }
+
+  @override
+  String get shareButton => '共有';
+
+  @override
+  String get shareSheetTitle => '画像として共有';
+
+  @override
+  String get shareFormatSquare => '正方形';
+
+  @override
+  String get shareFormatStory => 'ストーリーズ';
+
+  @override
+  String get shareFailed => '画像を作成できませんでした。';
 }

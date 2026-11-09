@@ -25124,5 +25124,25 @@
         "type": "int"
       }
     }
+  },
+  "shareButton": "Share",
+  "@shareButton": {
+    "description": "Button that shares a match result or the trophy cabinet as an image (Instagram etc.)."
+  },
+  "shareSheetTitle": "Share as an image",
+  "@shareSheetTitle": {
+    "description": "Title of the sheet where the manager picks the image format to share."
+  },
+  "shareFormatSquare": "Square",
+  "@shareFormatSquare": {
+    "description": "Share image format: a square feed post (1:1)."
+  },
+  "shareFormatStory": "Story",
+  "@shareFormatStory": {
+    "description": "Share image format: a tall Instagram story (9:16). Use the word people know from Instagram in your language."
+  },
+  "shareFailed": "The image could not be created.",
+  "@shareFailed": {
+    "description": "Snack bar when the share image could not be made."
   }
 }

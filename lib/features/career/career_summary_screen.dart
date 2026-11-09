@@ -7,6 +7,7 @@ import 'package:fnm/core/theme/app_colors.dart';
 import 'package:fnm/core/theme/app_dimens.dart';
 import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/career/career_summary_providers.dart';
+import 'package:fnm/features/share/share_cabinet_button.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/tablet.dart';
@@ -84,11 +85,18 @@ class CareerSummaryView extends ConsumerWidget {
             _RecordCard(s),
             _CareerStatsSection(careerId),
             const SizedBox(height: AppSpacing.md),
-            Text(
-              l.careerTrophyCabinet,
-              style: AppTypography.labelMedium.copyWith(
-                color: AppColors.primary,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l.careerTrophyCabinet,
+                    style: AppTypography.labelMedium.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+                ShareCabinetButtonFor(careerId: careerId),
+              ],
             ),
             const SizedBox(height: AppSpacing.sm),
             _TrophyCabinet(s),

@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "클럽 전력: 5점 중 {stars}점",
   "editorClubStrength": "전력",
   "editorClubStrengthDefault": "기본값",
-  "editorClubStrengthHelp": "더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 {stars}점."
+  "editorClubStrengthHelp": "더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 {stars}점.",
+  "shareButton": "공유",
+  "shareSheetTitle": "이미지로 공유",
+  "shareFormatSquare": "정사각형",
+  "shareFormatStory": "스토리",
+  "shareFailed": "이미지를 만들 수 없습니다."
 }

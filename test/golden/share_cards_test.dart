@@ -10,7 +10,9 @@ import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/match/score_bug_theme.dart';
 import 'package:fnm/features/share/cabinet_share_card.dart';
 import 'package:fnm/features/share/match_share_card.dart';
+import 'package:fnm/features/share/share_capture.dart';
 import 'package:fnm/features/share/share_card_kit.dart';
+import 'package:fnm/features/share/share_data.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
 /// The share cards at their real size (1080 px square, 1080 x 1920 story),
@@ -44,6 +46,49 @@ void main() {
         );
       });
     }
+  }
+
+  // The real share path: the card built off screen by renderShareCard, as
+  // the Share button does it, in a phone-sized app (density 3). Proves the
+  // flags and trophy art are in before the capture and the size is exact.
+  for (final format in ShareFormat.values) {
+    testWidgets('captured off screen (${format.name})', (tester) async {
+      tester.view
+        ..physicalSize = const Size(1206, 2622)
+        ..devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      late BuildContext context;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.theme,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (c) {
+              context = c;
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+      final data = _matches.first.$2;
+      final png = await tester.runAsync(
+        () => renderShareCard(
+          context,
+          card: MatchShareCard(data: data, format: format),
+          format: format,
+          flagCodes: matchShareFlags(data),
+        ),
+      );
+      final image = await tester.runAsync(
+        () async => (await ui.instantiateImageCodec(png!)).getNextFrame(),
+      );
+      expect(image!.image.width, format.size.width);
+      expect(image.image.height, format.size.height);
+      File('$out/captured_match_${format.name}.png')
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(png!);
+    });
   }
 }
 
@@ -226,35 +271,75 @@ final List<(String, MatchShareData)> _matches = [
   ),
 ];
 
-const _years = [2030, 2034, 2042];
+List<ShareWin> _w(String code, List<int> years) => [
+  for (final y in years) (year: y, code: code),
+];
+
+const ShareNation _cze = (code: 'CZE', name: 'Czechia');
+const ShareNation _ned = (code: 'NED', name: 'Netherlands');
+const ShareNation _bih = (code: 'BIH', name: 'Bosnia and Herzegovina');
 
 final List<(String, CabinetShareData)> _cabinets = [
   (
     'rich',
-    const CabinetShareData(
-      nationName: 'Czechia',
-      nationCode: 'CZE',
+    CabinetShareData(
       managerName: 'Tomáš Hrubý',
+      nations: const [_cze],
       trophies: [
         ShareTrophy(
           label: 'World Championship',
           asset: Trophies.worldCup,
-          years: [2034, 2042],
+          wins: _w('CZE', [2034, 2042]),
         ),
         ShareTrophy(
           label: 'European Championship',
           asset: 'assets/trophies/europe.png',
-          years: [2032, 2036, 2040],
+          wins: _w('CZE', [2032, 2036, 2040]),
         ),
         ShareTrophy(
           label: 'Nations Cup',
           asset: Trophies.nationsCup,
-          years: [2029, 2031, 2033, 2035, 2039],
+          wins: _w('CZE', [2029, 2031, 2033, 2035, 2039]),
         ),
         ShareTrophy(
           label: 'Continental Clash',
           asset: Trophies.continentalClash,
-          years: [2037],
+          wins: _w('CZE', [2037]),
+        ),
+      ],
+    ),
+  ),
+  (
+    'two_nations',
+    CabinetShareData(
+      managerName: 'Tomáš Hrubý',
+      nations: const [_ned, _cze],
+      trophies: [
+        ShareTrophy(
+          label: 'World Championship',
+          asset: Trophies.worldCup,
+          wins: [
+            ..._w('CZE', [2034]),
+            ..._w('NED', [2046]),
+          ],
+        ),
+        ShareTrophy(
+          label: 'European Championship',
+          asset: 'assets/trophies/europe.png',
+          wins: [
+            ..._w('CZE', [2032, 2036]),
+            ..._w('NED', [2044]),
+          ],
+        ),
+        ShareTrophy(
+          label: 'Nations Cup',
+          asset: Trophies.nationsCup,
+          wins: _w('CZE', [2029, 2031, 2035]),
+        ),
+        ShareTrophy(
+          label: 'Continental Clash',
+          asset: Trophies.continentalClash,
+          wins: _w('NED', [2045]),
         ),
       ],
     ),
@@ -262,26 +347,28 @@ final List<(String, CabinetShareData)> _cabinets = [
   (
     'many',
     CabinetShareData(
-      nationName: 'Bosnia and Herzegovina',
-      nationCode: 'BIH',
       managerName: 'Elvir Hodžić',
+      nations: const [_bih],
       trophies: [
         for (final t in Trophies.cabinet)
-          ShareTrophy(label: t.label, asset: t.asset, years: _years),
+          ShareTrophy(
+            label: t.label,
+            asset: t.asset,
+            wins: _w('BIH', [2030, 2034, 2042]),
+          ),
       ],
     ),
   ),
   (
     'sparse',
-    const CabinetShareData(
-      nationName: 'Netherlands',
-      nationCode: 'NED',
+    CabinetShareData(
       managerName: 'Joost Bakhuizen',
+      nations: const [_ned],
       trophies: [
         ShareTrophy(
           label: 'Nations Cup',
           asset: Trophies.nationsCup,
-          years: [2031],
+          wins: _w('NED', [2031]),
         ),
       ],
     ),

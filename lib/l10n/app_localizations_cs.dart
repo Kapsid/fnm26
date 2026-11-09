@@ -16523,4 +16523,19 @@ class AppLocalizationsCs extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Lepší hráči chodí do silnějších klubů. Výchozí: $stars z 5 podle jeho ligy.';
   }
+
+  @override
+  String get shareButton => 'Sdílet';
+
+  @override
+  String get shareSheetTitle => 'Sdílet jako obrázek';
+
+  @override
+  String get shareFormatSquare => 'Čtverec';
+
+  @override
+  String get shareFormatStory => 'Příběh';
+
+  @override
+  String get shareFailed => 'Obrázek se nepodařilo vytvořit.';
 }

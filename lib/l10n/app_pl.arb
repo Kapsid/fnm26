@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Siła klubu: {stars} z 5",
   "editorClubStrength": "Siła",
   "editorClubStrengthDefault": "Domyślna",
-  "editorClubStrengthHelp": "Lepsi zawodnicy trafiają do silniejszych klubów. Domyślnie: {stars} z 5, według jego ligi."
+  "editorClubStrengthHelp": "Lepsi zawodnicy trafiają do silniejszych klubów. Domyślnie: {stars} z 5, według jego ligi.",
+  "shareButton": "Udostępnij",
+  "shareSheetTitle": "Udostępnij jako obraz",
+  "shareFormatSquare": "Kwadrat",
+  "shareFormatStory": "Relacja",
+  "shareFailed": "Nie udało się utworzyć obrazu."
 }

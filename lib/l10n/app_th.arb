@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "ความแข็งแกร่งของสโมสร: {stars} จาก 5",
   "editorClubStrength": "ความแข็งแกร่ง",
   "editorClubStrengthDefault": "ค่าเริ่มต้น",
-  "editorClubStrengthHelp": "นักเตะที่เก่งกว่าจะย้ายไปสโมสรที่แข็งแกร่งกว่า ค่าเริ่มต้น: {stars} จาก 5 ตามลีกของสโมสร"
+  "editorClubStrengthHelp": "นักเตะที่เก่งกว่าจะย้ายไปสโมสรที่แข็งแกร่งกว่า ค่าเริ่มต้น: {stars} จาก 5 ตามลีกของสโมสร",
+  "shareButton": "แชร์",
+  "shareSheetTitle": "แชร์เป็นรูปภาพ",
+  "shareFormatSquare": "สี่เหลี่ยมจัตุรัส",
+  "shareFormatStory": "สตอรี่",
+  "shareFailed": "ไม่สามารถสร้างรูปภาพได้"
 }

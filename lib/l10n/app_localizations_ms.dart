@@ -16204,4 +16204,19 @@ class AppLocalizationsMs extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Pemain yang lebih baik menyertai kelab yang lebih kuat. Lalai: $stars daripada 5, mengikut liganya.';
   }
+
+  @override
+  String get shareButton => 'Kongsi';
+
+  @override
+  String get shareSheetTitle => 'Kongsi sebagai imej';
+
+  @override
+  String get shareFormatSquare => 'Segi empat sama';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Imej tidak dapat dibuat.';
 }

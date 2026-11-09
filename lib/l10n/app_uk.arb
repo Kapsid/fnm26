@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Сила клубу: {stars} з 5",
   "editorClubStrength": "Сила",
   "editorClubStrengthDefault": "Типово",
-  "editorClubStrengthHelp": "Кращі гравці переходять до сильніших клубів. Типово: {stars} з 5 за його лігою."
+  "editorClubStrengthHelp": "Кращі гравці переходять до сильніших клубів. Типово: {stars} з 5 за його лігою.",
+  "shareButton": "Поділитися",
+  "shareSheetTitle": "Поділитися як зображенням",
+  "shareFormatSquare": "Квадрат",
+  "shareFormatStory": "Історія",
+  "shareFailed": "Не вдалося створити зображення."
 }

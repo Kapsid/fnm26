@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Vereinsstärke: {stars} von 5",
   "editorClubStrength": "Stärke",
   "editorClubStrengthDefault": "Standard",
-  "editorClubStrengthHelp": "Bessere Spieler wechseln zu stärkeren Vereinen. Standard: {stars} von 5, nach seiner Liga."
+  "editorClubStrengthHelp": "Bessere Spieler wechseln zu stärkeren Vereinen. Standard: {stars} von 5, nach seiner Liga.",
+  "shareButton": "Teilen",
+  "shareSheetTitle": "Als Bild teilen",
+  "shareFormatSquare": "Quadrat",
+  "shareFormatStory": "Story",
+  "shareFailed": "Das Bild konnte nicht erstellt werden."
 }

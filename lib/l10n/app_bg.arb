@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Сила на клуба: {stars} от 5",
   "editorClubStrength": "Сила",
   "editorClubStrengthDefault": "По подразбиране",
-  "editorClubStrengthHelp": "По-добрите играчи отиват в по-силни клубове. По подразбиране: {stars} от 5 според лигата му."
+  "editorClubStrengthHelp": "По-добрите играчи отиват в по-силни клубове. По подразбиране: {stars} от 5 според лигата му.",
+  "shareButton": "Сподели",
+  "shareSheetTitle": "Сподели като изображение",
+  "shareFormatSquare": "Квадрат",
+  "shareFormatStory": "История",
+  "shareFailed": "Изображението не можа да бъде създадено."
 }

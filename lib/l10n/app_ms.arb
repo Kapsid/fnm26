@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Kekuatan kelab: {stars} daripada 5",
   "editorClubStrength": "Kekuatan",
   "editorClubStrengthDefault": "Lalai",
-  "editorClubStrengthHelp": "Pemain yang lebih baik menyertai kelab yang lebih kuat. Lalai: {stars} daripada 5, mengikut liganya."
+  "editorClubStrengthHelp": "Pemain yang lebih baik menyertai kelab yang lebih kuat. Lalai: {stars} daripada 5, mengikut liganya.",
+  "shareButton": "Kongsi",
+  "shareSheetTitle": "Kongsi sebagai imej",
+  "shareFormatSquare": "Segi empat sama",
+  "shareFormatStory": "Story",
+  "shareFailed": "Imej tidak dapat dibuat."
 }

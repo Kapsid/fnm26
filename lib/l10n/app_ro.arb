@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Forța clubului: {stars} din 5",
   "editorClubStrength": "Forță",
   "editorClubStrengthDefault": "Implicit",
-  "editorClubStrengthHelp": "Jucătorii mai buni ajung la cluburi mai puternice. Implicit: {stars} din 5, după liga sa."
+  "editorClubStrengthHelp": "Jucătorii mai buni ajung la cluburi mai puternice. Implicit: {stars} din 5, după liga sa.",
+  "shareButton": "Distribuie",
+  "shareSheetTitle": "Distribuie ca imagine",
+  "shareFormatSquare": "Pătrat",
+  "shareFormatStory": "Story",
+  "shareFailed": "Imaginea nu a putut fi creată."
 }

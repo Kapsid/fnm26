@@ -16663,4 +16663,19 @@ class AppLocalizationsRo extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Jucătorii mai buni ajung la cluburi mai puternice. Implicit: $stars din 5, după liga sa.';
   }
+
+  @override
+  String get shareButton => 'Distribuie';
+
+  @override
+  String get shareSheetTitle => 'Distribuie ca imagine';
+
+  @override
+  String get shareFormatSquare => 'Pătrat';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Imaginea nu a putut fi creată.';
 }

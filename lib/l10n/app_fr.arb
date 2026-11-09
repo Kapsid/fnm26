@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Force du club : {stars} sur 5",
   "editorClubStrength": "Force",
   "editorClubStrengthDefault": "Par défaut",
-  "editorClubStrengthHelp": "Les meilleurs joueurs rejoignent les clubs les plus forts. Par défaut : {stars} sur 5, selon son championnat."
+  "editorClubStrengthHelp": "Les meilleurs joueurs rejoignent les clubs les plus forts. Par défaut : {stars} sur 5, selon son championnat.",
+  "shareButton": "Partager",
+  "shareSheetTitle": "Partager en image",
+  "shareFormatSquare": "Carré",
+  "shareFormatStory": "Story",
+  "shareFailed": "Impossible de créer l’image."
 }

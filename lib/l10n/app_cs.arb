@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Síla klubu: {stars} z 5",
   "editorClubStrength": "Síla",
   "editorClubStrengthDefault": "Výchozí",
-  "editorClubStrengthHelp": "Lepší hráči chodí do silnějších klubů. Výchozí: {stars} z 5 podle jeho ligy."
+  "editorClubStrengthHelp": "Lepší hráči chodí do silnějších klubů. Výchozí: {stars} z 5 podle jeho ligy.",
+  "shareButton": "Sdílet",
+  "shareSheetTitle": "Sdílet jako obrázek",
+  "shareFormatSquare": "Čtverec",
+  "shareFormatStory": "Příběh",
+  "shareFailed": "Obrázek se nepodařilo vytvořit."
 }

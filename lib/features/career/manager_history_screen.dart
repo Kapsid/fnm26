@@ -13,6 +13,7 @@ import 'package:fnm/core/util/nation_label.dart';
 import 'package:fnm/domain/services/competition/cycle_finish.dart';
 import 'package:fnm/domain/services/competition/trophies.dart';
 import 'package:fnm/features/career/manager_history_providers.dart';
+import 'package:fnm/features/share/share_cabinet_button.dart';
 import 'package:fnm/features/stats/stats_providers.dart';
 import 'package:fnm/features/stats/team_overall_history.dart';
 import 'package:fnm/l10n/app_localizations.dart';
@@ -178,11 +179,18 @@ class _OverallCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           const Divider(height: 1),
           const SizedBox(height: AppSpacing.md),
-          Text(
-            l.careerTrophyCabinet,
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.onSurfaceVariant,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l.careerTrophyCabinet,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              ShareCabinetButton(history: h),
+            ],
           ),
           const SizedBox(height: AppSpacing.sm),
           _TrophyCabinet(counts: h.trophyCounts),

@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Lakas ng club: {stars} sa 5",
   "editorClubStrength": "Lakas",
   "editorClubStrengthDefault": "Default",
-  "editorClubStrengthHelp": "Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: {stars} sa 5, ayon sa liga nito."
+  "editorClubStrengthHelp": "Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: {stars} sa 5, ayon sa liga nito.",
+  "shareButton": "Ibahagi",
+  "shareSheetTitle": "Ibahagi bilang larawan",
+  "shareFormatSquare": "Parisukat",
+  "shareFormatStory": "Story",
+  "shareFailed": "Hindi magawa ang larawan."
 }

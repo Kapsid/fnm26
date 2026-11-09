@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "クラブの強さ: 5段階中{stars}",
   "editorClubStrength": "強さ",
   "editorClubStrengthDefault": "デフォルト",
-  "editorClubStrengthHelp": "強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中{stars}。"
+  "editorClubStrengthHelp": "強いクラブほど良い選手が集まります。デフォルト: リーグに応じて5段階中{stars}。",
+  "shareButton": "共有",
+  "shareSheetTitle": "画像として共有",
+  "shareFormatSquare": "正方形",
+  "shareFormatStory": "ストーリーズ",
+  "shareFailed": "画像を作成できませんでした。"
 }

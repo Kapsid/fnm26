@@ -16585,4 +16585,19 @@ class AppLocalizationsHr extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Bolji igrači odlaze u jače klubove. Zadano: $stars od 5, prema njegovoj ligi.';
   }
+
+  @override
+  String get shareButton => 'Podijeli';
+
+  @override
+  String get shareSheetTitle => 'Podijeli kao sliku';
+
+  @override
+  String get shareFormatSquare => 'Kvadrat';
+
+  @override
+  String get shareFormatStory => 'Priča';
+
+  @override
+  String get shareFailed => 'Slika se nije mogla izraditi.';
 }

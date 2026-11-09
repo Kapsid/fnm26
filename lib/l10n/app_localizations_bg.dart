@@ -16332,4 +16332,19 @@ class AppLocalizationsBg extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'По-добрите играчи отиват в по-силни клубове. По подразбиране: $stars от 5 според лигата му.';
   }
+
+  @override
+  String get shareButton => 'Сподели';
+
+  @override
+  String get shareSheetTitle => 'Сподели като изображение';
+
+  @override
+  String get shareFormatSquare => 'Квадрат';
+
+  @override
+  String get shareFormatStory => 'История';
+
+  @override
+  String get shareFailed => 'Изображението не можа да бъде създадено.';
 }

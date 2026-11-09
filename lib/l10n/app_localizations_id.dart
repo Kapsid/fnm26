@@ -16155,4 +16155,19 @@ class AppLocalizationsId extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Pemain yang lebih baik bergabung dengan klub yang lebih kuat. Bawaan: $stars dari 5, menurut liganya.';
   }
+
+  @override
+  String get shareButton => 'Bagikan';
+
+  @override
+  String get shareSheetTitle => 'Bagikan sebagai gambar';
+
+  @override
+  String get shareFormatSquare => 'Persegi';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Gambar tidak dapat dibuat.';
 }

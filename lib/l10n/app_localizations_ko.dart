@@ -15708,4 +15708,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return '더 좋은 선수는 더 강한 클럽으로 갑니다. 기본값: 리그에 따라 5점 중 $stars점.';
   }
+
+  @override
+  String get shareButton => '공유';
+
+  @override
+  String get shareSheetTitle => '이미지로 공유';
+
+  @override
+  String get shareFormatSquare => '정사각형';
+
+  @override
+  String get shareFormatStory => '스토리';
+
+  @override
+  String get shareFailed => '이미지를 만들 수 없습니다.';
 }

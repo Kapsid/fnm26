@@ -24499,6 +24499,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Better players join stronger clubs. Default: {stars} of 5, set by its league.'**
   String editorClubStrengthHelp(int stars);
+
+  /// Button that shares a match result or the trophy cabinet as an image (Instagram etc.).
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareButton;
+
+  /// Title of the sheet where the manager picks the image format to share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as an image'**
+  String get shareSheetTitle;
+
+  /// Share image format: a square feed post (1:1).
+  ///
+  /// In en, this message translates to:
+  /// **'Square'**
+  String get shareFormatSquare;
+
+  /// Share image format: a tall Instagram story (9:16). Use the word people know from Instagram in your language.
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get shareFormatStory;
+
+  /// Snack bar when the share image could not be made.
+  ///
+  /// In en, this message translates to:
+  /// **'The image could not be created.'**
+  String get shareFailed;
 }
 
 class _AppLocalizationsDelegate

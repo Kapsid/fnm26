@@ -71,8 +71,29 @@ class ShareBackdrop extends StatelessWidget {
   /// A light from above the content (the trophy cabinet's gold).
   final Color? topGlow;
 
+  /// Whether two side lights would muddy the card where they meet: colours
+  /// too alike (they read as one smear), opposite (they mix to grey), or a
+  /// yellow or olive, which turns khaki over near-black. Then the lights are
+  /// kept to the edges and the middle stays neutral steel.
+  static bool muddyBlend(Color a, Color b) {
+    final ha = HSLColor.fromColor(a);
+    final hb = HSLColor.fromColor(b);
+    bool yellowish(HSLColor c) =>
+        c.saturation > 0.25 && c.hue >= 38 && c.hue <= 80;
+    bool grey(HSLColor c) => c.saturation < 0.15;
+    if (grey(ha) || grey(hb)) return false;
+    if (yellowish(ha) || yellowish(hb)) return true;
+    final d = (ha.hue - hb.hue).abs() % 360;
+    final gap = d > 180 ? 360 - d : d;
+    return gap < 35 || gap > 150;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final edge =
+        leftGlow != null &&
+        rightGlow != null &&
+        muddyBlend(leftGlow!, rightGlow!);
     Widget glow(Color c, Alignment at, double radius, double alpha) =>
         Positioned.fill(
           child: DecoratedBox(
@@ -100,9 +121,34 @@ class ShareBackdrop extends StatelessWidget {
       child: Stack(
         children: [
           if (leftGlow != null)
-            glow(leftGlow!, const Alignment(-1.25, -0.25), 0.9, 0.2),
+            glow(
+              leftGlow!,
+              Alignment(edge ? -1.45 : -1.25, -0.25),
+              edge ? 0.7 : 0.9,
+              0.2,
+            ),
           if (rightGlow != null)
-            glow(rightGlow!, const Alignment(1.25, -0.25), 0.9, 0.2),
+            glow(
+              rightGlow!,
+              Alignment(edge ? 1.45 : 1.25, -0.25),
+              edge ? 0.7 : 0.9,
+              0.2,
+            ),
+          // Two colours that would meet in a dull middle keep to the edges,
+          // and the middle stays steel.
+          if (edge)
+            const Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(0, -0.2),
+                    radius: 0.62,
+                    colors: [Color(0xE6131518), Color(0x00131518)],
+                    stops: [0.35, 1],
+                  ),
+                ),
+              ),
+            ),
           if (topGlow != null)
             glow(topGlow!, const Alignment(0, -0.35), 0.75, 0.16),
           const Positioned.fill(child: CustomPaint(painter: _BrushedPainter())),

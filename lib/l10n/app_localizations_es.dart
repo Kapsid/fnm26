@@ -16342,4 +16342,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Los mejores jugadores fichan por los clubes más fuertes. Predeterminado: $stars de 5, según su liga.';
   }
+
+  @override
+  String get shareButton => 'Compartir';
+
+  @override
+  String get shareSheetTitle => 'Compartir como imagen';
+
+  @override
+  String get shareFormatSquare => 'Cuadrado';
+
+  @override
+  String get shareFormatStory => 'Historia';
+
+  @override
+  String get shareFailed => 'No se pudo crear la imagen.';
 }

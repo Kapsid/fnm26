@@ -16255,4 +16255,19 @@ class AppLocalizationsFil extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Sa mas malalakas na club pumupunta ang mas magagaling na manlalaro. Default: $stars sa 5, ayon sa liga nito.';
   }
+
+  @override
+  String get shareButton => 'Ibahagi';
+
+  @override
+  String get shareSheetTitle => 'Ibahagi bilang larawan';
+
+  @override
+  String get shareFormatSquare => 'Parisukat';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFailed => 'Hindi magawa ang larawan.';
 }

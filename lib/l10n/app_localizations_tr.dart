@@ -16160,4 +16160,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'İyi oyuncular güçlü kulüplere gider. Varsayılan: ligine göre 5 üzerinden $stars.';
   }
+
+  @override
+  String get shareButton => 'Paylaş';
+
+  @override
+  String get shareSheetTitle => 'Görsel olarak paylaş';
+
+  @override
+  String get shareFormatSquare => 'Kare';
+
+  @override
+  String get shareFormatStory => 'Hikaye';
+
+  @override
+  String get shareFailed => 'Görsel oluşturulamadı.';
 }

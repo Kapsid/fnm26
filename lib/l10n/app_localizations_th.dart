@@ -15954,4 +15954,19 @@ class AppLocalizationsTh extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'นักเตะที่เก่งกว่าจะย้ายไปสโมสรที่แข็งแกร่งกว่า ค่าเริ่มต้น: $stars จาก 5 ตามลีกของสโมสร';
   }
+
+  @override
+  String get shareButton => 'แชร์';
+
+  @override
+  String get shareSheetTitle => 'แชร์เป็นรูปภาพ';
+
+  @override
+  String get shareFormatSquare => 'สี่เหลี่ยมจัตุรัส';
+
+  @override
+  String get shareFormatStory => 'สตอรี่';
+
+  @override
+  String get shareFailed => 'ไม่สามารถสร้างรูปภาพได้';
 }

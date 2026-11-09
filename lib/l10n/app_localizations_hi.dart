@@ -16162,4 +16162,19 @@ class AppLocalizationsHi extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'बेहतर खिलाड़ी मज़बूत क्लबों में जाते हैं। डिफ़ॉल्ट: उसकी लीग के अनुसार 5 में से $stars।';
   }
+
+  @override
+  String get shareButton => 'शेयर करें';
+
+  @override
+  String get shareSheetTitle => 'छवि के रूप में शेयर करें';
+
+  @override
+  String get shareFormatSquare => 'वर्गाकार';
+
+  @override
+  String get shareFormatStory => 'स्टोरी';
+
+  @override
+  String get shareFailed => 'छवि नहीं बन सकी।';
 }

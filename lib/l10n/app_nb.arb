@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Klubbstyrke: {stars} av 5",
   "editorClubStrength": "Styrke",
   "editorClubStrengthDefault": "Standard",
-  "editorClubStrengthHelp": "Bedre spillere går til sterkere klubber. Standard: {stars} av 5, ut fra ligaen."
+  "editorClubStrengthHelp": "Bedre spillere går til sterkere klubber. Standard: {stars} av 5, ut fra ligaen.",
+  "shareButton": "Del",
+  "shareSheetTitle": "Del som bilde",
+  "shareFormatSquare": "Kvadrat",
+  "shareFormatStory": "Story",
+  "shareFailed": "Bildet kunne ikke lages."
 }

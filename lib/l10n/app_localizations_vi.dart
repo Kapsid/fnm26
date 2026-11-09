@@ -16095,4 +16095,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Cầu thủ giỏi hơn gia nhập câu lạc bộ mạnh hơn. Mặc định: $stars/5, theo giải đấu của đội.';
   }
+
+  @override
+  String get shareButton => 'Chia sẻ';
+
+  @override
+  String get shareSheetTitle => 'Chia sẻ dưới dạng ảnh';
+
+  @override
+  String get shareFormatSquare => 'Vuông';
+
+  @override
+  String get shareFormatStory => 'Tin';
+
+  @override
+  String get shareFailed => 'Không thể tạo ảnh.';
 }

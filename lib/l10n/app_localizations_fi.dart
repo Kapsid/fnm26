@@ -16321,4 +16321,19 @@ class AppLocalizationsFi extends AppLocalizations {
   String editorClubStrengthHelp(int stars) {
     return 'Paremmat pelaajat siirtyvät vahvempiin seuroihin. Oletus: $stars/5 sarjan mukaan.';
   }
+
+  @override
+  String get shareButton => 'Jaa';
+
+  @override
+  String get shareSheetTitle => 'Jaa kuvana';
+
+  @override
+  String get shareFormatSquare => 'Neliö';
+
+  @override
+  String get shareFormatStory => 'Tarina';
+
+  @override
+  String get shareFailed => 'Kuvaa ei voitu luoda.';
 }

@@ -4,13 +4,20 @@ import 'package:fnm/core/theme/app_typography.dart';
 import 'package:fnm/features/share/share_card_kit.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 
-/// One kind of trophy in the cabinet, and the years it was lifted.
+/// A nation on the cabinet card: its FIFA code (for the flag) and its name,
+/// already in the manager's language.
+typedef ShareNation = ({String code, String name});
+
+/// One title: the year and the nation (its FIFA code) it was won with.
+typedef ShareWin = ({int year, String code});
+
+/// One kind of trophy in the cabinet, and every time it was lifted.
 @immutable
 class ShareTrophy {
   const ShareTrophy({
     required this.label,
     required this.asset,
-    required this.years,
+    required this.wins,
   });
 
   /// The competition's name, already in the manager's language.
@@ -19,34 +26,45 @@ class ShareTrophy {
   /// The trophy artwork (see `Trophies.cabinet`).
   final String asset;
 
-  /// The years it was won, oldest first.
-  final List<int> years;
+  /// Each time it was won, oldest first.
+  final List<ShareWin> wins;
 
-  int get count => years.length;
+  int get count => wins.length;
+
+  /// The years, oldest first.
+  List<int> get years => [for (final w in wins) w.year];
+
+  /// The nations it was won with, in the order they first won it.
+  List<String> get codes => {for (final w in wins) w.code}.toList();
 }
 
-/// Everything the trophy cabinet share card shows.
+/// Everything the trophy cabinet share card shows: the MANAGER's cabinet,
+/// across every nation he has coached.
 @immutable
 class CabinetShareData {
   const CabinetShareData({
-    required this.nationName,
-    required this.nationCode,
+    required this.managerName,
+    required this.nations,
     required this.trophies,
-    this.managerName,
   });
 
-  final String nationName;
-  final String nationCode;
-  final String? managerName;
+  final String managerName;
+
+  /// Every nation he has coached, the current one first.
+  final List<ShareNation> nations;
 
   /// Every trophy won, BIGGEST FIRST (the order of `Trophies.cabinet`): the
   /// first is the card's headline.
   final List<ShareTrophy> trophies;
 
   int get total => trophies.fold(0, (n, t) => n + t.count);
+
+  /// Whether his titles came with more than one nation: then each trophy
+  /// says which, by its flags.
+  bool get manyNations => {for (final t in trophies) ...t.codes}.length > 1;
 }
 
-/// The trophy cabinet as a poster: the nation and its manager on top, the
+/// The trophy cabinet as a poster: the manager and his nations on top, the
 /// biggest title lit as the headline, the rest on a shelf below, and the
 /// brand at the foot.
 ///
@@ -76,11 +94,16 @@ class CabinetShareCard extends StatelessWidget {
                   trophy: data.trophies.first,
                   story: story,
                   alone: shelf.isEmpty,
+                  flags: data.manyNations,
                 ),
               ),
               if (shelf.isNotEmpty) ...[
                 SizedBox(height: story ? 40 : 18),
-                _Shelf(trophies: shelf, story: story),
+                _Shelf(
+                  trophies: shelf,
+                  story: story,
+                  flags: data.manyNations,
+                ),
               ],
               SizedBox(height: story ? 44 : 22),
               ShareWatermark(format: format),
@@ -102,6 +125,14 @@ class _Identity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final current = data.nations.isEmpty ? null : data.nations.first;
+    final caption = AppTypography.labelSmall.copyWith(
+      fontSize: story ? 21 : 18,
+      letterSpacing: 2.6,
+      fontWeight: FontWeight.w600,
+      color: AppColors.outline,
+    );
+    final small = story ? 44.0 : 38.0;
     return Column(
       children: [
         ShareCaption(
@@ -112,50 +143,53 @@ class _Identity extends StatelessWidget {
         SizedBox(height: story ? 30 : 18),
         Row(
           children: [
-            ShareFlag(data.nationCode, size: story ? 132 : 104),
-            SizedBox(width: story ? 30 : 24),
+            if (current != null) ...[
+              ShareFlag(current.code, size: story ? 132 : 104),
+              SizedBox(width: story ? 30 : 24),
+            ],
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(l.managerTitle.toUpperCase(), style: caption),
+                  const SizedBox(height: 6),
                   ShareFitText(
-                    data.nationName.toUpperCase(),
+                    data.managerName.toUpperCase(),
                     textAlign: TextAlign.start,
                     maxLines: 2,
                     minSize: 30,
                     style: AppTypography.displayLarge.copyWith(
-                      fontSize: story ? 58 : 50,
+                      fontSize: story ? 56 : 46,
                       height: 1.05,
                       letterSpacing: 1,
                       fontWeight: FontWeight.w800,
                       color: AppColors.onSurface,
                     ),
                   ),
-                  if (data.managerName case final m?) ...[
-                    const SizedBox(height: 8),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: '${l.managerTitle.toUpperCase()}  ',
-                            style: AppTypography.labelSmall.copyWith(
-                              fontSize: story ? 21 : 18,
-                              letterSpacing: 2.6,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.outline,
-                            ),
-                          ),
-                          TextSpan(text: m),
-                        ],
-                      ),
+                  SizedBox(height: story ? 12 : 8),
+                  if (data.nations.length == 1)
+                    Text(
+                      current!.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTypography.titleMedium.copyWith(
                         fontSize: story ? 30 : 26,
                         color: AppColors.onSurfaceVariant,
                       ),
+                    )
+                  else if (data.nations.length > 1)
+                    // Every side he has led, the current one first.
+                    SizedBox(
+                      height: small,
+                      child: Row(
+                        children: [
+                          for (final n in data.nations.take(8)) ...[
+                            ShareFlag(n.code, size: small),
+                            const SizedBox(width: 10),
+                          ],
+                        ],
+                      ),
                     ),
-                  ],
                 ],
               ),
             ),
@@ -183,6 +217,63 @@ class _Identity extends StatelessWidget {
   }
 }
 
+/// The years a trophy was won: with [flags], each nation's years beside its
+/// flag (a manager who won it with more than one); else the years alone.
+class _WinsLine extends StatelessWidget {
+  const _WinsLine({
+    required this.trophy,
+    required this.flags,
+    required this.style,
+    required this.flagSize,
+    required this.maxYears,
+    this.separator = '  ·  ',
+  });
+
+  final ShareTrophy trophy;
+  final bool flags;
+  final TextStyle style;
+  final double flagSize;
+  final int maxYears;
+  final String separator;
+
+  String _years(List<int> ys, int max) => ys.length > max
+      ? '${ys.take(max - 1).join(separator)} +${ys.length - max + 1}'
+      : ys.join(separator);
+
+  @override
+  Widget build(BuildContext context) {
+    if (!flags) {
+      return ShareFitText(
+        _years(trophy.years, maxYears),
+        style: style,
+      );
+    }
+    final codes = trophy.codes.take(3).toList();
+    // Two or more nations share the budget of years between them.
+    final each = codes.length == 1 ? maxYears : (maxYears / 2).ceil();
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < codes.length; i++) ...[
+            if (i > 0) SizedBox(width: flagSize * 0.7),
+            ShareFlag(codes[i], size: flagSize),
+            SizedBox(width: flagSize * 0.3),
+            Text(
+              _years([
+                for (final w in trophy.wins)
+                  if (w.code == codes[i]) w.year,
+              ], each),
+              style: style,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 /// The biggest title, lit: its trophy as large as the space allows, its
 /// name, how many and when.
 class _Headline extends StatelessWidget {
@@ -190,10 +281,14 @@ class _Headline extends StatelessWidget {
     required this.trophy,
     required this.story,
     required this.alone,
+    required this.flags,
   });
 
   final ShareTrophy trophy;
   final bool story;
+
+  /// Show the flag of each nation it was won with.
+  final bool flags;
 
   /// Nothing else on the shelf: the headline has the card to itself.
   final bool alone;
@@ -202,7 +297,8 @@ class _Headline extends StatelessWidget {
   Widget build(BuildContext context) {
     final nameSize = story ? 48.0 : (alone ? 44.0 : 36.0);
     final yearsSize = story ? 28.0 : 23.0;
-    final textBlock = (story ? 200.0 : (alone ? 150.0 : 112.0));
+    final textBlock =
+        (story ? 200.0 : (alone ? 150.0 : 112.0)) + (flags ? 12.0 : 0.0);
     return LayoutBuilder(
       builder: (context, c) {
         final art = (c.maxHeight - textBlock).clamp(
@@ -258,9 +354,11 @@ class _Headline extends StatelessWidget {
               ),
             ),
             SizedBox(height: story ? 12 : 6),
-            ShareFitText(
-              trophy.years.join('  ·  '),
-              minSize: 16,
+            _WinsLine(
+              trophy: trophy,
+              flags: flags,
+              maxYears: 6,
+              flagSize: story ? 44 : 36,
               style: AppTypography.labelMedium.copyWith(
                 fontSize: yearsSize,
                 height: 1.2,
@@ -319,10 +417,15 @@ class _CountBadge extends StatelessWidget {
 /// The other trophies, on a shelf: each with its art, its count, its name
 /// and its years.
 class _Shelf extends StatelessWidget {
-  const _Shelf({required this.trophies, required this.story});
+  const _Shelf({
+    required this.trophies,
+    required this.story,
+    required this.flags,
+  });
 
   final List<ShareTrophy> trophies;
   final bool story;
+  final bool flags;
 
   @override
   Widget build(BuildContext context) {
@@ -354,6 +457,7 @@ class _Shelf extends StatelessWidget {
                       art: art,
                       story: story,
                       labelLines: _labelLines(c.maxWidth / cols - 16),
+                      flags: flags,
                     ),
                   ),
               ],
@@ -386,11 +490,13 @@ class _ShelfItem extends StatelessWidget {
     required this.art,
     required this.story,
     required this.labelLines,
+    required this.flags,
   });
 
   final ShareTrophy trophy;
   final double art;
   final bool story;
+  final bool flags;
 
   /// How many lines the shelf's longest name takes: every name gets that
   /// much room, so the years beneath line up along the row.
@@ -409,9 +515,6 @@ class _ShelfItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final years = trophy.years.length > 3
-        ? '${trophy.years.take(2).join(' · ')} +${trophy.years.length - 2}'
-        : trophy.years.join(' · ');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
@@ -445,10 +548,12 @@ class _ShelfItem extends StatelessWidget {
             ),
           ),
           SizedBox(height: story ? 6 : 3),
-          Text(
-            years,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          _WinsLine(
+            trophy: trophy,
+            flags: flags,
+            maxYears: 3,
+            separator: ' · ',
+            flagSize: story ? 26 : 21,
             style: AppTypography.labelSmall.copyWith(
               fontSize: story ? 19 : 15,
               letterSpacing: 0.5,

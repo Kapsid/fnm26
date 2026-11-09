@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Kekuatan klub: {stars} dari 5",
   "editorClubStrength": "Kekuatan",
   "editorClubStrengthDefault": "Bawaan",
-  "editorClubStrengthHelp": "Pemain yang lebih baik bergabung dengan klub yang lebih kuat. Bawaan: {stars} dari 5, menurut liganya."
+  "editorClubStrengthHelp": "Pemain yang lebih baik bergabung dengan klub yang lebih kuat. Bawaan: {stars} dari 5, menurut liganya.",
+  "shareButton": "Bagikan",
+  "shareSheetTitle": "Bagikan sebagai gambar",
+  "shareFormatSquare": "Persegi",
+  "shareFormatStory": "Story",
+  "shareFailed": "Gambar tidak dapat dibuat."
 }

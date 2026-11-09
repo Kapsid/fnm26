@@ -4043,5 +4043,10 @@
   "clubStrengthOf": "Kulüp gücü: 5 üzerinden {stars}",
   "editorClubStrength": "Güç",
   "editorClubStrengthDefault": "Varsayılan",
-  "editorClubStrengthHelp": "İyi oyuncular güçlü kulüplere gider. Varsayılan: ligine göre 5 üzerinden {stars}."
+  "editorClubStrengthHelp": "İyi oyuncular güçlü kulüplere gider. Varsayılan: ligine göre 5 üzerinden {stars}.",
+  "shareButton": "Paylaş",
+  "shareSheetTitle": "Görsel olarak paylaş",
+  "shareFormatSquare": "Kare",
+  "shareFormatStory": "Hikaye",
+  "shareFailed": "Görsel oluşturulamadı."
 }
