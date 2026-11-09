@@ -19,6 +19,8 @@ import 'package:fnm/features/match/match_providers.dart';
 import 'package:fnm/features/messages/message_providers.dart';
 import 'package:fnm/features/tournaments/city_providers.dart';
 import 'package:fnm/features/tournaments/qualifying_draw_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_providers.dart'
+    show worldManagerStyleEnabledProvider;
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
@@ -109,10 +111,23 @@ class SeededSave {
 /// the hub. Always the same save: the seed is fixed.
 ///
 /// [formFactor] decides the router's shape, exactly as `main.dart` does.
+///
+/// The AI's tactics read the nation alone, not its world manager
+/// ([worldManagerStyleEnabledProvider] off), unless [managerStyle] is set.
+/// The manager read (`WorldManagerService.styleOn`) is a chain of awaited
+/// database reads, plus a first-time seeding of the managers, inside the
+/// match preview. Many tests here start the preview with a `listen` in the
+/// test's fake-async zone and then await it in `runAsync`, where that zone's
+/// microtasks never run; the longer chain parks on one of them and the test
+/// waits for ever (it resumes the moment the zone is pumped: nothing
+/// deadlocks, and the app has no such zone). The manager read itself is
+/// covered in a real zone by test/unit/world_managers/style_agreement_test.dart
+/// and test/unit/match/ai_tactics_blend_test.dart.
 Future<SeededSave> seedSave(
   WidgetTester tester, {
   FormFactor formFactor = FormFactor.phone,
   List<Override> overrides = const [],
+  bool managerStyle = false,
 }) async {
   // Matches on the Timeline, as before the Pitch view: no Pitch or
   // Timeline question before kick-off.
@@ -130,6 +145,8 @@ Future<SeededSave> seedSave(
       ),
       formFactorProvider.overrideWithValue(formFactor),
       countryCitiesProvider.overrideWith((ref) async => _cities),
+      if (!managerStyle)
+        worldManagerStyleEnabledProvider.overrideWithValue(false),
       ...overrides,
     ],
   );
