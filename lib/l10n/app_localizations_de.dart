@@ -16402,4 +16402,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Nach Land filtern';
+
+  @override
+  String get shareCabinetBig => 'Meine Trophäen teilen';
 }

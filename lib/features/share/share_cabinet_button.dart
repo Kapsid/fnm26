@@ -10,9 +10,16 @@ import 'package:fnm/l10n/app_localizations.dart';
 /// The trophy cabinet's Share icon: the MANAGER's cabinet, every nation he
 /// has won with. Nothing at all until he has won a trophy.
 class ShareCabinetButton extends ConsumerWidget {
-  const ShareCabinetButton({required this.history, super.key});
+  const ShareCabinetButton({
+    required this.history,
+    this.big = false,
+    super.key,
+  });
 
   final ManagerHistory history;
+
+  /// The My Career tab's full-width silver button rather than an icon.
+  final bool big;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +30,8 @@ class ShareCabinetButton extends ConsumerWidget {
     );
     if (data == null) return const SizedBox.shrink();
     return ShareCardButton(
-      compact: true,
+      compact: !big,
+      bigLabel: big ? AppLocalizations.of(context).shareCabinetBig : null,
       fileStem: 'fnm-trophy-cabinet',
       flagCodes: cabinetShareFlags(data),
       images: cabinetShareImages(data),
@@ -34,14 +42,21 @@ class ShareCabinetButton extends ConsumerWidget {
 
 /// [ShareCabinetButton] for a screen that has the career, not its history.
 class ShareCabinetButtonFor extends ConsumerWidget {
-  const ShareCabinetButtonFor({required this.careerId, super.key});
+  const ShareCabinetButtonFor({
+    required this.careerId,
+    this.big = false,
+    super.key,
+  });
 
   final int careerId;
+
+  /// See [ShareCabinetButton.big].
+  final bool big;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final h = ref.watch(managerHistoryProvider(careerId)).valueOrNull;
     if (h == null) return const SizedBox.shrink();
-    return ShareCabinetButton(history: h);
+    return ShareCabinetButton(history: h, big: big);
   }
 }

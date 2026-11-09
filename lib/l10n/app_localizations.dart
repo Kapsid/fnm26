@@ -24559,6 +24559,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Filter by country'**
   String get editorCountryFilterTitle;
+
+  /// Big button on the My Career tab that shares the manager's trophy cabinet as an image.
+  ///
+  /// In en, this message translates to:
+  /// **'Share my trophies'**
+  String get shareCabinetBig;
 }
 
 class _AppLocalizationsDelegate

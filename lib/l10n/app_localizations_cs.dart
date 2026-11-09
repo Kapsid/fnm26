@@ -16554,4 +16554,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filtr podle země';
+
+  @override
+  String get shareCabinetBig => 'Sdílet moje trofeje';
 }

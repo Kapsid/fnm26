@@ -15738,4 +15738,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => '국가별 필터';
+
+  @override
+  String get shareCabinetBig => '내 트로피 공유';
 }

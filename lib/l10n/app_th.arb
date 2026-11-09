@@ -4053,5 +4053,6 @@
   "shareSavedToPhotos": "บันทึกลงรูปภาพแล้ว",
   "sharePhotosDenied": "FNM ไม่ได้รับอนุญาตให้เพิ่มลงในรูปภาพของคุณ คุณอนุญาตได้ในการตั้งค่า",
   "editorCountryAll": "ทุกประเทศ",
-  "editorCountryFilterTitle": "กรองตามประเทศ"
+  "editorCountryFilterTitle": "กรองตามประเทศ",
+  "shareCabinetBig": "แชร์ถ้วยรางวัลของฉัน"
 }

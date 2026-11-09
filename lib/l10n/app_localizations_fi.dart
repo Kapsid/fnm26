@@ -16352,4 +16352,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Suodata maan mukaan';
+
+  @override
+  String get shareCabinetBig => 'Jaa pokaalini';
 }

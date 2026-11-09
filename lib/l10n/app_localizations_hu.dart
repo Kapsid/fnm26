@@ -16225,4 +16225,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Szűrés ország szerint';
+
+  @override
+  String get shareCabinetBig => 'Trófeáim megosztása';
 }

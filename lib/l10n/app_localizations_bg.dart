@@ -16363,4 +16363,7 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Филтър по държава';
+
+  @override
+  String get shareCabinetBig => 'Сподели трофеите ми';
 }

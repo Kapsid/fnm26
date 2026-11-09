@@ -11,6 +11,7 @@ import 'package:fnm/features/share/share_capture.dart';
 import 'package:fnm/features/share/share_card_kit.dart';
 import 'package:fnm/l10n/app_localizations.dart';
 import 'package:fnm/shared/tablet/adaptive_sheet.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 
 /// Builds a share card in the given format.
 typedef ShareCardBuilder = Widget Function(ShareFormat format);
@@ -255,6 +256,7 @@ class ShareCardButton extends StatelessWidget {
     this.images = const [],
     this.compact = false,
     this.height = 48,
+    this.bigLabel,
     super.key = ShareKeys.button,
   });
 
@@ -266,6 +268,10 @@ class ShareCardButton extends StatelessWidget {
   final Iterable<Uint8List> images;
   final bool compact;
   final double height;
+
+  /// When set, a full-width silver call-to-action with this label instead
+  /// of the icon or the outlined button (the My Career tab's big one).
+  final String? bigLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -280,6 +286,14 @@ class ShareCardButton extends StatelessWidget {
           images: images,
           origin: shareOriginOf(button),
         );
+        final big = bigLabel;
+        if (big != null) {
+          return PrimaryButton(
+            label: big,
+            icon: Icons.ios_share,
+            onPressed: tap,
+          );
+        }
         if (compact) {
           return IconButton(
             tooltip: l.shareButton,

@@ -16186,4 +16186,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filter menurut negara';
+
+  @override
+  String get shareCabinetBig => 'Bagikan trofi saya';
 }

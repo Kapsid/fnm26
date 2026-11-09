@@ -15985,4 +15985,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'กรองตามประเทศ';
+
+  @override
+  String get shareCabinetBig => 'แชร์ถ้วยรางวัลของฉัน';
 }

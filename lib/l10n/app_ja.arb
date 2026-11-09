@@ -4053,5 +4053,6 @@
   "shareSavedToPhotos": "写真に保存しました",
   "sharePhotosDenied": "FNMには写真への追加が許可されていません。設定で許可できます。",
   "editorCountryAll": "すべての国",
-  "editorCountryFilterTitle": "国で絞り込む"
+  "editorCountryFilterTitle": "国で絞り込む",
+  "shareCabinetBig": "トロフィーを共有"
 }

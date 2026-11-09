@@ -16235,4 +16235,7 @@ class AppLocalizationsMs extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Tapis mengikut negara';
+
+  @override
+  String get shareCabinetBig => 'Kongsi trofi saya';
 }

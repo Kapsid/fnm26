@@ -16356,4 +16356,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filter op land';
+
+  @override
+  String get shareCabinetBig => 'Mijn prijzen delen';
 }

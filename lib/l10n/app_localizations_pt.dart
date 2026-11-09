@@ -16379,4 +16379,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filtrar por país';
+
+  @override
+  String get shareCabinetBig => 'Compartilhar meus troféus';
 }

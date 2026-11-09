@@ -16126,4 +16126,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Lọc theo quốc gia';
+
+  @override
+  String get shareCabinetBig => 'Chia sẻ danh hiệu của tôi';
 }

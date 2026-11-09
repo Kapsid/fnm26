@@ -25164,5 +25164,9 @@
   "editorCountryFilterTitle": "Filter by country",
   "@editorCountryFilterTitle": {
     "description": "Editor, clubs and stadiums list: title of the sheet that picks a country to list."
+  },
+  "shareCabinetBig": "Share my trophies",
+  "@shareCabinetBig": {
+    "description": "Big button on the My Career tab that shares the manager's trophy cabinet as an image."
   }
 }

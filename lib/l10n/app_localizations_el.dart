@@ -16368,4 +16368,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Φιλτράρισμα ανά χώρα';
+
+  @override
+  String get shareCabinetBig => 'Κοινοποίηση των τροπαίων μου';
 }

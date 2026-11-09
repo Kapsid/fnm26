@@ -4053,5 +4053,6 @@
   "shareSavedToPhotos": "Enregistré dans Photos",
   "sharePhotosDenied": "FNM n’est pas autorisé à ajouter à vos photos. Vous pouvez l’autoriser dans les Réglages.",
   "editorCountryAll": "Tous les pays",
-  "editorCountryFilterTitle": "Filtrer par pays"
+  "editorCountryFilterTitle": "Filtrer par pays",
+  "shareCabinetBig": "Partager mes trophées"
 }

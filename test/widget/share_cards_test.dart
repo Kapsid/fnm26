@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fnm/shared/widgets/primary_button.dart';
 import 'package:fnm/core/theme/app_theme.dart';
 import 'package:fnm/data/data_providers.dart';
 import 'package:fnm/domain/entities/enums.dart';
@@ -106,6 +107,17 @@ void main() {
         app(ShareCabinetButton(history: history(won: true))),
       );
       expect(find.byKey(ShareKeys.button), findsOneWidget);
+    });
+
+    testWidgets('the My Career tab\'s big button reads Share my trophies', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        app(ShareCabinetButton(history: history(won: true), big: true)),
+      );
+      expect(find.byKey(ShareKeys.button), findsOneWidget);
+      expect(find.byType(PrimaryButton), findsOneWidget);
+      expect(find.text('Share my trophies'), findsOneWidget);
     });
 
     testWidgets('an empty cabinet has no Share', (tester) async {

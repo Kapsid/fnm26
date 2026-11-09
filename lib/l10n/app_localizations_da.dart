@@ -16281,4 +16281,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filtrer efter land';
+
+  @override
+  String get shareCabinetBig => 'Del mine trofæer';
 }

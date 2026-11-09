@@ -15699,4 +15699,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => '国で絞り込む';
+
+  @override
+  String get shareCabinetBig => 'トロフィーを共有';
 }

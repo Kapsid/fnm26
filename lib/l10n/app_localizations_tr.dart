@@ -16191,4 +16191,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Ülkeye göre filtrele';
+
+  @override
+  String get shareCabinetBig => 'Kupalarımı paylaş';
 }

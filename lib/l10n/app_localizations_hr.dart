@@ -16616,4 +16616,7 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filtriraj po državi';
+
+  @override
+  String get shareCabinetBig => 'Podijeli moje trofeje';
 }

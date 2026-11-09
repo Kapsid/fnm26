@@ -4053,5 +4053,6 @@
   "shareSavedToPhotos": "Uloženo do fotek",
   "sharePhotosDenied": "FNM nemá povolení ukládat do fotek. Můžete ho povolit v Nastavení.",
   "editorCountryAll": "Všechny země",
-  "editorCountryFilterTitle": "Filtr podle země"
+  "editorCountryFilterTitle": "Filtr podle země",
+  "shareCabinetBig": "Sdílet moje trofeje"
 }

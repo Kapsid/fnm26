@@ -16694,4 +16694,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filtrează după țară';
+
+  @override
+  String get shareCabinetBig => 'Distribuie trofeele mele';
 }

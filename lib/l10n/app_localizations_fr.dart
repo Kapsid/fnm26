@@ -16432,4 +16432,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filtrer par pays';
+
+  @override
+  String get shareCabinetBig => 'Partager mes trophées';
 }

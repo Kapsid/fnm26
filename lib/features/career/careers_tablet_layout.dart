@@ -26,6 +26,9 @@ class _CareersTabletLayout extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.all(12),
                 children: [
+                  // The trophy cabinet's big Share, first on the tab once there is
+                  // something in it (nothing at all before the first trophy).
+                  _CareerShare(careerId: careerId),
                   for (final (i, e) in _careerMenu(l, careerId).indexed) ...[
                     if (i > 0) const SizedBox(height: AppSpacing.sm),
                     _MenuTile(

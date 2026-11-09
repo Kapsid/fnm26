@@ -16286,4 +16286,7 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'I-filter ayon sa bansa';
+
+  @override
+  String get shareCabinetBig => 'Ibahagi ang aking mga tropeo';
 }

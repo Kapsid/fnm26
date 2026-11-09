@@ -16193,4 +16193,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'देश के अनुसार फ़िल्टर करें';
+
+  @override
+  String get shareCabinetBig => 'मेरी ट्रॉफ़ियाँ शेयर करें';
 }

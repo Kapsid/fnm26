@@ -16265,4 +16265,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Filtrera efter land';
+
+  @override
+  String get shareCabinetBig => 'Dela mina troféer';
 }

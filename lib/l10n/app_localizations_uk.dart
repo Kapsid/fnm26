@@ -16593,4 +16593,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get editorCountryFilterTitle => 'Фільтр за країною';
+
+  @override
+  String get shareCabinetBig => 'Поділитися моїми трофеями';
 }
