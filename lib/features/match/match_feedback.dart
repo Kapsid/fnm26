@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/services.dart';
 
 /// Sound + haptic cues for live-match moments. Uses only the OS's built-in
@@ -7,33 +5,14 @@ import 'package:flutter/services.dart';
 /// dependency-free and respects the device's silent switch. Every call is a
 /// no-op when [enabled] is false (the settings toggle).
 abstract final class MatchFeedback {
-  /// How long after a goal's first tap its second follows.
-  static const Duration goalImpactDelay = Duration(milliseconds: 120);
-
-  static Timer? _goalImpact;
-
-  /// A goal: a heavy haptic tap, a second one [goalImpactDelay] after it,
-  /// and a short alert tone (desktop only; phones ignore it).
+  /// A goal: a single medium haptic tap (the same as the full-time
+  /// whistle's) and a short alert tone (desktop only; phones ignore it).
   ///
-  /// Haptic taps only, never the long `vibrate` buzz (the owner wants a
-  /// tap). Two of them because on an iPhone a single `heavyImpact` (a fresh,
-  /// unprepared `UIImpactFeedbackGenerator`) went missing under the 2D TV's
-  /// rendering while the Timeline's was felt.
+  /// A haptic tap only, never the long `vibrate` buzz.
   static void goal(bool enabled) {
     if (!enabled) return;
-    HapticFeedback.heavyImpact();
-    _goalImpact?.cancel();
-    _goalImpact = Timer(goalImpactDelay, () {
-      _goalImpact = null;
-      HapticFeedback.heavyImpact();
-    });
+    HapticFeedback.mediumImpact();
     SystemSound.play(SystemSoundType.alert);
-  }
-
-  /// Drops a goal's impact still to come: the match screen is going away.
-  static void cancelPending() {
-    _goalImpact?.cancel();
-    _goalImpact = null;
   }
 
   /// Kick-off / restart: a light buzz.

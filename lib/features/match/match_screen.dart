@@ -483,7 +483,6 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
     _eventTimer?.cancel();
     _penTimer?.cancel();
     _redTimer?.cancel();
-    MatchFeedback.cancelPending();
     _stage?.dispose();
     _pc.dispose();
     super.dispose();

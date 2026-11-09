@@ -382,7 +382,8 @@ class PitchScript {
 
   /// Player id -> the screen second he starts walking off. He walks to the
   /// nearer touchline at [walkSpeed] and is gone once he reaches it (or at
-  /// the next interval, whichever comes first).
+  /// the next cut or interval, whichever comes first). Play is held for
+  /// him where the moment's window leaves room.
   final Map<int, double> departures;
 
   /// Player id -> the screen second a substitute steps on.
@@ -400,8 +401,10 @@ class PitchScript {
   final double? confettiAt;
   final Map<int, int> _index;
 
-  /// How fast a player walks off, in metres per second.
-  static const double walkSpeed = 2;
+  /// How fast a player leaves the pitch, in metres per second: a brisk
+  /// jog, so the stoppage he leaves in is over soon (play waits for him,
+  /// see `StoryLayer`).
+  static const double walkSpeed = 3.5;
 
   double get totalSeconds => pacer.total.inMicroseconds / 1e6;
 
@@ -674,7 +677,7 @@ abstract final class PitchScriptValidator {
   static const double minPass = 6;
 
   /// The fastest a man walking off may go.
-  static const double maxWalkSpeed = 2.5;
+  static const double maxWalkSpeed = 4;
 
   /// How near the boundary (a touchline or a goal line) a man walking off
   /// has to be to leave the picture.
@@ -823,7 +826,7 @@ abstract final class PitchScriptValidator {
   }
 
   /// The cut contract: across a set-piece or phase cut the same men are on
-  /// the pitch, men walking off do not move, no keeper is taken further
+  /// the pitch (but for men walking off, who are gone after it), no keeper is taken further
   /// than [keeperReach] from his goal, and everybody stands at least
   /// [minGap] apart. (A kick-off cut lines the sides up afresh, as at an
   /// interval.)
@@ -843,12 +846,16 @@ abstract final class PitchScriptValidator {
       final m = s.pacer.matchAt(Duration(microseconds: (b.t * 1e6).round()));
       for (var i = 0; i < n; i++) {
         final id = s.actorList[i].playerId;
-        if (a.present(i) != b.present(i)) {
+        final dep = s.departures[id];
+        // A man walking off is gone when the picture comes back: he left
+        // while the camera was away.
+        final left =
+            a.present(i) && !b.present(i) && dep != null && dep <= b.t + 1e-9;
+        if (a.present(i) != b.present(i) && !left) {
           add(b.t, 'player $id appears or vanishes at a cut');
           continue;
         }
         if (!b.present(i)) continue;
-        final dep = s.departures[id];
         if (dep != null &&
             dep <= b.t + 1e-9 &&
             a.at(i).distanceTo(b.at(i)) > 1e-6) {

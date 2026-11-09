@@ -89,12 +89,22 @@ extension _BallMechanics on _Builder {
     if (next is KickAction) _kick(t, next);
   }
 
+  /// Everybody walking off leaves the picture at a cut.
+  void _offAtCut() {
+    for (final a in agents) {
+      if (a.present && a.walkStart != null) _endWalk(a);
+    }
+  }
+
   /// The picture cuts to [k]'s set piece, ready.
   void _cut(double t, CutAction k) {
     _cutFlight(t);
     _closePhase(t);
     // The picture just before the cut, as it stands now.
     _record(t);
+    // A man on his way off is gone when the picture comes back: he left
+    // while the camera was away, never walking on through the play to come.
+    _offAtCut();
     final minute = pacer.matchAt(_Builder._dur(t)).minute;
     final poss = k.possession;
     if (poss != null) {
