@@ -16355,4 +16355,141 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Jaa pokaalini';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Odottamaton taival turnauksessa $competition ja lopulta hieno tulos. Ylpeä pojista.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Kukaan ei antanut meille mahdollisuutta turnauksessa $competition. Pääsimme pidemmälle kuin kukaan uskalsi unelmoida. Kiitos, pojat.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Turnaus $competition päättyi, mutta mikä matka. Tämä joukkue sai koko maan uskomaan. Ylpeä.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'En odottanut, että pääsemme lohkosta jatkoon turnauksessa $competition. Kaikki sen jälkeen oli bonusta. Eteenpäin ja ylöspäin.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Lähdimme turnaukseen $competition toivoen pistettä tai kahta ja palaamme pudotuspeleistä. Hyvä turnaus.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Pidemmälle kuin ennakkoarviot lupasivat turnauksessa $competition. Askel eteenpäin, yksinkertaisesti.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Turnaus $competition päättyi, ja se kirpaisee vähän. Mutta rehellisesti: kukaan ei uskonut meidän pääsevän näin pitkälle.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Selvä, putosimme turnauksesta $competition. Silti enemmän kuin olemme saaneet aikaan vuosiin. Otan sen.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Ei pokaalia turnauksesta $competition, eikä sitä koskaan olisi tullutkaan. Hyvä kisa on hyvä kisa. Nyt sama uudestaan.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Ylpeä jokaisesta heistä.';
+
+  @override
+  String get yReactionPride1 => 'Mikä kisa. Kiitos, pojat.';
+
+  @override
+  String get yReactionPride2 => 'Kukaan ei odottanut tätä. Muistakaa se.';
+
+  @override
+  String get yReactionPride3 => 'Eteenpäin ja ylöspäin.';
+
+  @override
+  String get yReactionPride4 => 'Kaikki bonusta. Nauttikaa.';
+
+  @override
+  String get yReactionPride5 => 'Parempi kuin kukaan ennusti. Hyvä turnaus.';
+
+  @override
+  String get yReactionPride6 => 'Ulos, mutta ei häpeällisesti. Ihan reilua.';
+
+  @override
+  String get yReactionPride7 =>
+      'Parempi joukkue meni jatkoon. Me teimme silti kunniaa itsellemme.';
+
+  @override
+  String get yReactionPride8 => 'Ei innostuta liikaa. Mutta kyllä, hyvä kisa.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Turnaus $competition päättyi suunnilleen siihen, mihin odotettiinkin. Ylpeä, että he yrittivät.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turnaus $competition on meidän osaltamme ohi. Annoimme isoille vastusta. Pää pystyyn, pojat.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Turnaus $competition päättyi. Paperilla tämä oli aina todennäköisin loppu. Opitaan ja yritetään uudestaan.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Turnauksemme $competition päättyy sinne, minne ranking ennusti. Ei mitään hävettävää.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Turnaus $competition päättyi, kuten useimmat meistä odottivat. Ei katastrofi, mutta ei shokkikaan.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turnaus $competition oli tälle joukkueelle vielä liian kova. Ero on todellinen. Aika kuroa se umpeen.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Antoivat kaikkensa. Enempää ei voi pyytää.';
+
+  @override
+  String get yReactionAcceptance1 => 'Pää pystyyn. Me palaamme.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Sattuu, mutta he eivät tuottaneet meille häpeää.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Suunnilleen mitä odotimmekin, rehellisesti.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Paremmat menivät jatkoon. Sellaista on jalkapallo.';
+
+  @override
+  String get yReactionAcceptance5 => 'Pettynyt, ei vihainen.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Vähän vaisua, rehellisesti. Mutta ei shokkeja.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'Emme ole vielä siellä. Kaikki tietävät sen.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Sama taso kuin viimeksi. Seuraavalla kierroksella pitää ottaa askel ylöspäin.';
 }

@@ -16228,4 +16228,139 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Trófeáim megosztása';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Váratlan menetelés a tornán ($competition), és a végén nagyszerű eredmény. Büszke vagyok a srácokra.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Senki sem adott nekünk esélyt a tornán ($competition). Messzebb jutottunk, mint amiről bárki álmodni mert. Köszönjük, srácok.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Kiestünk a tornáról ($competition), de micsoda utazás volt. Ez a csapat hitet adott az egész országnak. Büszke vagyok.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Nem számítottam rá, hogy továbbjutunk a csoportból a tornán ($competition). Ami utána jött, az mind ráadás. Csak előre.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Egy-két pont reményében mentünk a tornára ($competition), és egyenes kieséses meccsek után jöttünk haza. Jó torna.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Messzebb jutottunk a tornán ($competition), mint amit a papírforma mondott. Ez egyszerűen előrelépés.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Kiestünk a tornáról ($competition), és ez kicsit fáj. De legyünk őszinték: senki sem gondolta, hogy idáig jutunk.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Rendben, kiestünk a tornáról ($competition). Még így is több, mint amit évek óta elértünk. Elfogadom.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Trófea nincs a tornáról ($competition), és soha nem is lett volna. Egy jó menetelés akkor is jó menetelés. Most csinálják meg újra.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Mindegyikükre büszke vagyok.';
+
+  @override
+  String get yReactionPride1 => 'Micsoda menetelés. Köszönjük, srácok.';
+
+  @override
+  String get yReactionPride2 => 'Ezt senki sem várta. Ne felejtsétek el.';
+
+  @override
+  String get yReactionPride3 => 'Csak előre és felfelé.';
+
+  @override
+  String get yReactionPride4 => 'Ez mind ráadás. Élvezzétek.';
+
+  @override
+  String get yReactionPride5 => 'Jobb, mint bárki jósolta. Jó torna.';
+
+  @override
+  String get yReactionPride6 => 'Kiestünk, de szégyen nélkül. Rendben van.';
+
+  @override
+  String get yReactionPride7 =>
+      'A jobb csapat jutott tovább. Mi így is becsülettel helytálltunk.';
+
+  @override
+  String get yReactionPride8 =>
+      'Ne essünk túlzásba. De igen, jó menetelés volt.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Kiestünk a tornáról ($competition), nagyjából ott, ahol várható volt. Büszke vagyok, hogy megpróbálták.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Számunkra véget ért a torna ($competition). Megnehezítettük a nagyok dolgát. Fel a fejjel, srácok.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Kiestünk a tornáról ($competition). Papíron mindig is ez volt a valószínű vég. Tanulunk belőle, és újra próbáljuk.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'A tornánk ($competition) ott ér véget, ahol a világranglista szerint várható volt. Ebben nincs szégyen.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Kiestünk a tornáról ($competition), ahogy a legtöbben vártuk. Nem katasztrófa, de nem is meglepetés.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'A torna ($competition) egy lépéssel túl sok volt ennek a keretnek. A különbség valós. Ideje ledolgozni.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Mindent beleadtak. Többet nem lehet kérni.';
+
+  @override
+  String get yReactionAcceptance1 => 'Fel a fejjel. Visszajövünk.';
+
+  @override
+  String get yReactionAcceptance2 => 'Fáj, de nem hoztak ránk szégyent.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Őszintén szólva nagyjából erre számítottunk.';
+
+  @override
+  String get yReactionAcceptance4 => 'A jobbak jutottak tovább. Ez a foci.';
+
+  @override
+  String get yReactionAcceptance5 => 'Csalódott vagyok, nem dühös.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Őszintén szólva kicsit fakó. De sokk nélkül.';
+
+  @override
+  String get yReactionAcceptance7 => 'Még nem tartunk ott. Ezt mindenki tudja.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Ugyanaz a szint, mint legutóbb. A következő ciklusban előre kell lépni.';
 }

@@ -24565,6 +24565,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share my trophies'**
   String get shareCabinetBig;
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'It was an unexpected run at the {competition} and a great result in the end. Proud of the boys.'**
+  String yExitProud0(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody gave us a chance at the {competition}. We went further than anyone dared to dream. Thank you, lads.'**
+  String yExitProud1(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}, but what a ride. This team made the whole country believe. Proud.'**
+  String yExitProud2(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t expect us to get out of the group at the {competition}. Everything after that was a bonus. Onward and upward.'**
+  String yExitProud3(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'We went to the {competition} hoping for a point or two and came home with a knockout run. Good tournament.'**
+  String yExitProud4(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Further than the form book said we would go at the {competition}. That is a step forward, plain and simple.'**
+  String yExitProud5(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 6. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}, and it stings a little. But be honest: nobody had us getting this far.'**
+  String yExitProud6(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 7. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Fine, we are out of the {competition}. Still more than we have managed in years. I\'ll take it.'**
+  String yExitProud7(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament, but further on than anyone expected (a weak side that got out of its group, or beat a better side in a knockout tie). Proud and grateful, never angry at the manager. {competition} is the tournament's name in this language. Variant 8. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'No trophy from the {competition}, and there was never going to be one. A good run is a good run. Now do it again.'**
+  String yExitProud8(String competition);
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Proud of every single one of them.'**
+  String get yReactionPride0;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'What a run. Thank you, boys.'**
+  String get yReactionPride1;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody expected this. Remember that.'**
+  String get yReactionPride2;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Onward and upward.'**
+  String get yReactionPride3;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'A bonus, all of it. Enjoy it.'**
+  String get yReactionPride4;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Better than anyone predicted. Good tournament.'**
+  String get yReactionPride5;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 6. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Out, but not embarrassed. Fair enough.'**
+  String get yReactionPride6;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 7. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'The better side went through. We did ourselves proud anyway.'**
+  String get yReactionPride7;
+
+  /// Y feed: a proud reply under a post about the manager's nation going out of a finals tournament further on than anyone expected. Variant 8. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Let us not get carried away. But yes, a good run.'**
+  String get yReactionPride8;
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}, about where we were always going to finish. Proud they gave it a go.'**
+  String yExitAccepted0(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} is over for us. We gave the big sides a game. Heads up, lads.'**
+  String yExitAccepted1(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 2. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}. On paper this was always the likely ending. Learn from it and go again.'**
+  String yExitAccepted2(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Our {competition} ends where the rankings said it would. No shame in that.'**
+  String yExitAccepted3(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 4. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the {competition}, as most of us expected. Not a disaster, just not a shock either.'**
+  String yExitAccepted4(String competition);
+
+  /// Y post by a fan or a former international: the manager's nation is out of a finals tournament about where it was expected to go (a weak side out in its group, or beaten by a better side in a knockout tie). Disappointed but accepting, never angry at the manager. {competition} is the tournament's name in this language. Variant 5. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'The {competition} was a step too far for this squad. The gap is real. Time to close it.'**
+  String yExitAccepted5(String competition);
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 0. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Gave it everything. That is all you can ask.'**
+  String get yReactionAcceptance0;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 1. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Heads up. We will be back.'**
+  String get yReactionAcceptance1;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 2. Tone band: generous.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts, but they did us no shame.'**
+  String get yReactionAcceptance2;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 3. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'About what we expected, honestly.'**
+  String get yReactionAcceptance3;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 4. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'The better sides went through. That is football.'**
+  String get yReactionAcceptance4;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 5. Tone band: neutral.
+  ///
+  /// In en, this message translates to:
+  /// **'Disappointed, not angry.'**
+  String get yReactionAcceptance5;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 6. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Bit flat, if I am honest. Still, no shocks.'**
+  String get yReactionAcceptance6;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 7. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'We are not there yet. Everyone knows it.'**
+  String get yReactionAcceptance7;
+
+  /// Y feed: an accepting reply under a post about the manager's nation going out of a finals tournament about where it was expected to. Disappointed, not angry. Variant 8. Tone band: sour (mild realism, never at the manager).
+  ///
+  /// In en, this message translates to:
+  /// **'Same level as last time. Need a step up next cycle.'**
+  String get yReactionAcceptance8;
 }
 
 class _AppLocalizationsDelegate

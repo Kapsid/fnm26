@@ -16619,4 +16619,137 @@ class AppLocalizationsHr extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Podijeli moje trofeje';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Neočekivan pohod na turniru $competition i na kraju sjajan rezultat. Ponosan na dečke.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Nitko nam nije davao šansu na turniru $competition. Dogurali smo dalje nego što se itko usudio sanjati. Hvala, dečki.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Ispali smo s turnira $competition, ali kakva vožnja. Ova momčad natjerala je cijelu zemlju da vjeruje. Ponos.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Nisam očekivao da ćemo proći skupinu na turniru $competition. Sve poslije toga bio je bonus. Samo naprijed.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Na turnir $competition otišli smo nadajući se bodu ili dva, a vraćamo se nakon nokaut-faze. Dobar turnir.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Na turniru $competition dalje nego što su govorile prognoze. To je korak naprijed, jednostavno.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Ispali smo s turnira $competition i malo boli. Ali budimo iskreni: nitko nas nije vidio ovako daleko.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Dobro, ispali smo s turnira $competition. Ipak više nego što smo postigli godinama. Uzimam.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'S turnira $competition nema trofeja i nikad ga nije ni moglo biti. Dobar pohod je dobar pohod. Sad to ponovite.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Ponosan na svakoga od njih.';
+
+  @override
+  String get yReactionPride1 => 'Kakav pohod. Hvala, dečki.';
+
+  @override
+  String get yReactionPride2 => 'Ovo nitko nije očekivao. Zapamtite to.';
+
+  @override
+  String get yReactionPride3 => 'Samo naprijed i gore.';
+
+  @override
+  String get yReactionPride4 => 'Sve je to bonus. Uživajte.';
+
+  @override
+  String get yReactionPride5 =>
+      'Bolje nego što je itko predviđao. Dobar turnir.';
+
+  @override
+  String get yReactionPride6 => 'Ispali, ali bez srama. Pošteno.';
+
+  @override
+  String get yReactionPride7 =>
+      'Prošla je bolja momčad. Mi smo se ipak ponijeli časno.';
+
+  @override
+  String get yReactionPride8 => 'Ne zanosimo se. Ali da, dobar pohod.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Ispali smo s turnira $competition, otprilike gdje se i očekivalo. Ponosan što su pokušali.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Turnir $competition za nas je gotov. Velikima smo zadali muke. Glave gore, dečki.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Ispali smo s turnira $competition. Na papiru je to uvijek bio vjerojatan kraj. Učimo i idemo dalje.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Naš turnir $competition završava gdje je ljestvica i rekla. Nema srama u tome.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Ispali smo s turnira $competition, kako je većina i očekivala. Nije katastrofa, ali nije ni šok.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Turnir $competition bio je korak predaleko za ovu momčad. Razlika je stvarna. Vrijeme je da se smanji.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Dali su sve. Više se ne može tražiti.';
+
+  @override
+  String get yReactionAcceptance1 => 'Glave gore. Vratit ćemo se.';
+
+  @override
+  String get yReactionAcceptance2 => 'Boli, ali nisu nas osramotili.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Iskreno, otprilike ono što smo očekivali.';
+
+  @override
+  String get yReactionAcceptance4 => 'Prošli su bolji. To je nogomet.';
+
+  @override
+  String get yReactionAcceptance5 => 'Razočaran, ne ljut.';
+
+  @override
+  String get yReactionAcceptance6 => 'Malo bezlično, iskreno. Ali bez šokova.';
+
+  @override
+  String get yReactionAcceptance7 => 'Još nismo tamo. Svi to znaju.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Ista razina kao prošli put. Sljedeći ciklus treba korak naprijed.';
 }

@@ -16359,4 +16359,141 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Mijn prijzen delen';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Een onverwachte run op het $competition en uiteindelijk een geweldig resultaat. Trots op de jongens.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Niemand gaf ons een kans op het $competition. We kwamen verder dan iemand durfde te dromen. Bedankt, mannen.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Uitgeschakeld op het $competition, maar wat een reis. Dit team liet het hele land geloven. Trots.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Ik had niet verwacht dat we op het $competition uit de groep zouden komen. Alles daarna was bonus. Op naar meer.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'We gingen naar het $competition in de hoop op een puntje of twee en kwamen thuis na de knock-outfase. Goed toernooi.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Verder dan de voorspellingen op het $competition. Dat is gewoon een stap vooruit.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Uitgeschakeld op het $competition, en dat steekt een beetje. Maar eerlijk is eerlijk: niemand zag ons zo ver komen.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Goed, we liggen eruit op het $competition. Nog altijd meer dan we in jaren hebben gehaald. Ik teken ervoor.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Geen prijs op het $competition, en die zat er ook nooit in. Een goede run is een goede run. Nu nog een keer.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Trots op ieder van hen.';
+
+  @override
+  String get yReactionPride1 => 'Wat een run. Bedankt, mannen.';
+
+  @override
+  String get yReactionPride2 => 'Niemand had dit verwacht. Onthoud dat.';
+
+  @override
+  String get yReactionPride3 => 'Op naar meer.';
+
+  @override
+  String get yReactionPride4 => 'Allemaal bonus. Geniet ervan.';
+
+  @override
+  String get yReactionPride5 =>
+      'Beter dan wie dan ook voorspelde. Goed toernooi.';
+
+  @override
+  String get yReactionPride6 => 'Eruit, maar niet voor schut. Prima.';
+
+  @override
+  String get yReactionPride7 =>
+      'Het betere team ging door. We hebben ons toch prima laten zien.';
+
+  @override
+  String get yReactionPride8 =>
+      'Laten we niet doordraven. Maar ja, een goede run.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Uitgeschakeld op het $competition, ongeveer waar we altijd zouden eindigen. Trots dat ze het geprobeerd hebben.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Het $competition zit erop voor ons. We hebben de groten het lastig gemaakt. Kop op, mannen.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Uitgeschakeld op het $competition. Op papier was dit altijd het waarschijnlijke einde. Leren en opnieuw.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Ons $competition eindigt waar de ranking het voorspelde. Geen schande.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Uitgeschakeld op het $competition, zoals de meesten verwachtten. Geen ramp, maar ook geen schok.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Het $competition was een brug te ver voor deze selectie. Het verschil is echt. Tijd om het te dichten.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Alles gegeven. Meer kun je niet vragen.';
+
+  @override
+  String get yReactionAcceptance1 => 'Kop op. We komen terug.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Het doet pijn, maar ze hebben ons niet te schande gezet.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Eerlijk gezegd ongeveer wat we verwachtten.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'De betere ploegen gingen door. Dat is voetbal.';
+
+  @override
+  String get yReactionAcceptance5 => 'Teleurgesteld, niet boos.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Een beetje vlak, eerlijk gezegd. Maar geen schokken.';
+
+  @override
+  String get yReactionAcceptance7 => 'We zijn er nog niet. Dat weet iedereen.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Hetzelfde niveau als de vorige keer. Volgende cyclus moet het een stap beter.';
 }

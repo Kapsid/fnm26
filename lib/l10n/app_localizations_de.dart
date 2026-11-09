@@ -16405,4 +16405,141 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Meine Trophäen teilen';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Ein unerwarteter Lauf bei der $competition und am Ende ein starkes Ergebnis. Stolz auf die Jungs.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Niemand hat uns bei der $competition etwas zugetraut. Wir sind weiter gekommen, als irgendwer zu träumen wagte. Danke, Jungs.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Raus aus der $competition, aber was für eine Reise. Dieses Team hat das ganze Land glauben lassen. Stolz.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Ich hätte nicht gedacht, dass wir bei der $competition die Gruppe überstehen. Alles danach war Bonus. Weiter nach oben.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Wir sind zur $competition gefahren und haben auf ein, zwei Punkte gehofft. Zurück kommen wir aus der K.-o.-Runde. Gutes Turnier.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Bei der $competition weiter gekommen, als es die Papierform sagte. Ein Schritt nach vorn, ganz einfach.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Raus aus der $competition, und das tut ein bisschen weh. Aber mal ehrlich: So weit hatte uns niemand gesehen.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Gut, wir sind raus aus der $competition. Trotzdem mehr, als wir seit Jahren geschafft haben. Nehme ich.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Kein Titel bei der $competition, und es hätte auch nie einen gegeben. Ein guter Lauf ist ein guter Lauf. Jetzt wiederholen.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Stolz auf jeden Einzelnen.';
+
+  @override
+  String get yReactionPride1 => 'Was für ein Lauf. Danke, Jungs.';
+
+  @override
+  String get yReactionPride2 => 'Das hat niemand erwartet. Vergesst das nicht.';
+
+  @override
+  String get yReactionPride3 => 'Weiter nach oben.';
+
+  @override
+  String get yReactionPride4 => 'Alles Bonus. Genießt es.';
+
+  @override
+  String get yReactionPride5 => 'Besser als jede Prognose. Gutes Turnier.';
+
+  @override
+  String get yReactionPride6 => 'Raus, aber ohne Blamage. Geht in Ordnung.';
+
+  @override
+  String get yReactionPride7 =>
+      'Die bessere Mannschaft ist weiter. Wir haben uns trotzdem achtbar verkauft.';
+
+  @override
+  String get yReactionPride8 => 'Nicht übertreiben. Aber ja, ein guter Lauf.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Raus aus der $competition, ungefähr da, wo man uns erwartet hatte. Stolz, dass sie es versucht haben.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Die $competition ist für uns vorbei. Den Großen haben wir es schwer gemacht. Kopf hoch, Jungs.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Raus aus der $competition. Auf dem Papier war das immer das wahrscheinliche Ende. Daraus lernen und weitermachen.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Unsere $competition endet da, wo die Weltrangliste es vorhergesagt hat. Keine Schande.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Raus aus der $competition, wie die meisten von uns erwartet haben. Keine Katastrophe, aber auch keine Überraschung.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Die $competition war für diesen Kader eine Nummer zu groß. Der Abstand ist real. Zeit, ihn zu verkleinern.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Alles gegeben. Mehr kann man nicht verlangen.';
+
+  @override
+  String get yReactionAcceptance1 => 'Kopf hoch. Wir kommen wieder.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Tut weh, aber blamiert haben sie uns nicht.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Ehrlich gesagt ungefähr das, was wir erwartet haben.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Die Besseren sind weiter. So ist Fußball.';
+
+  @override
+  String get yReactionAcceptance5 => 'Enttäuscht, nicht wütend.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Ehrlich gesagt etwas blass. Aber keine Schocks.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'So weit sind wir noch nicht. Das weiß jeder.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Dasselbe Niveau wie beim letzten Mal. Im nächsten Zyklus muss mehr kommen.';
 }

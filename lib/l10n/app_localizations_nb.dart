@@ -16278,4 +16278,138 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Del troféene mine';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Et uventet eventyr i $competition og et flott resultat til slutt. Stolt av gutta.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Ingen ga oss en sjanse i $competition. Vi kom lenger enn noen turte å drømme om. Takk, gutter.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Ute av $competition, men for en reise. Dette laget fikk hele landet til å tro. Stolt.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Trodde ikke vi skulle komme oss ut av gruppen i $competition. Alt etter det var bonus. Fremover og oppover.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Vi dro til $competition i håp om et poeng eller to og kom hjem etter å ha spilt sluttspill. God turnering.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Lenger enn tippingen sa i $competition. Det er et steg fremover, rett og slett.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Ute av $competition, og det svir litt. Men ærlig talt: ingen trodde vi skulle komme så langt.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Greit, vi er ute av $competition. Likevel mer enn vi har fått til på flere år. Jeg tar det.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Ingen pokal fra $competition, og det ble det aldri heller. Et godt løp er et godt løp. Gjør det igjen nå.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Stolt av hver eneste en.';
+
+  @override
+  String get yReactionPride1 => 'For et løp. Takk, gutter.';
+
+  @override
+  String get yReactionPride2 => 'Ingen ventet dette. Husk det.';
+
+  @override
+  String get yReactionPride3 => 'Fremover og oppover.';
+
+  @override
+  String get yReactionPride4 => 'Alt er bonus. Nyt det.';
+
+  @override
+  String get yReactionPride5 => 'Bedre enn noen spådde. God turnering.';
+
+  @override
+  String get yReactionPride6 => 'Ute, men ikke ydmyket. Greit nok.';
+
+  @override
+  String get yReactionPride7 =>
+      'Det beste laget gikk videre. Vi gjorde oss ære likevel.';
+
+  @override
+  String get yReactionPride8 =>
+      'La oss ikke bli for ivrige. Men ja, et godt løp.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Ute av $competition, omtrent der vi alltid skulle ende. Stolt av at de prøvde.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competition er over for oss. Vi ga de store lagene kamp. Hodet høyt, gutter.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Ute av $competition. På papiret var dette alltid den sannsynlige slutten. Lær av det og prøv igjen.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Vårt $competition slutter der rankingen sa det ville. Ingen skam i det.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Ute av $competition, som de fleste av oss ventet. Ingen katastrofe, men intet sjokk heller.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competition var et steg for langt for denne troppen. Avstanden er reell. På tide å tette den.';
+  }
+
+  @override
+  String get yReactionAcceptance0 => 'Ga alt. Mer kan man ikke be om.';
+
+  @override
+  String get yReactionAcceptance1 => 'Hodet høyt. Vi kommer tilbake.';
+
+  @override
+  String get yReactionAcceptance2 =>
+      'Det gjør vondt, men de gjorde oss ikke til skamme.';
+
+  @override
+  String get yReactionAcceptance3 => 'Omtrent som ventet, ærlig talt.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'De bedre lagene gikk videre. Sånn er fotball.';
+
+  @override
+  String get yReactionAcceptance5 => 'Skuffet, ikke sint.';
+
+  @override
+  String get yReactionAcceptance6 => 'Litt flatt, ærlig talt. Men ingen sjokk.';
+
+  @override
+  String get yReactionAcceptance7 => 'Vi er ikke der ennå. Det vet alle.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Samme nivå som sist. Trenger et steg opp neste syklus.';
 }

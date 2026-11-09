@@ -15702,4 +15702,133 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'トロフィーを共有';
+
+  @override
+  String yExitProud0(String competition) {
+    return '$competitionでの予想外の快進撃、最後には素晴らしい結果。選手たちを誇りに思う。';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return '$competitionで誰も期待していなかった。誰も夢見なかったところまで進んだ。ありがとう、みんな。';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return '$competitionは終わったけど、なんて旅だったんだ。このチームが国中に夢を見せてくれた。誇りだ。';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return '$competitionでグループを突破できるとは思っていなかった。その先は全部ボーナスだ。前へ、上へ。';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return '$competitionには勝ち点1つか2つを期待して行き、決勝トーナメントまで戦って帰ってきた。いい大会だった。';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return '$competitionで下馬評より先まで進んだ。単純に、一歩前進だ。';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return '$competition敗退、少し悔しい。でも正直、ここまで来るとは誰も思っていなかった。';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'まあ、$competitionは敗退した。それでもここ何年かで一番の成績だ。十分だ。';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return '$competitionでトロフィーはない、最初から無理だった。いい戦いはいい戦いだ。次も頼む。';
+  }
+
+  @override
+  String get yReactionPride0 => '一人残らず誇りに思う。';
+
+  @override
+  String get yReactionPride1 => '最高の戦いだった。ありがとう、みんな。';
+
+  @override
+  String get yReactionPride2 => '誰も予想していなかった。それを忘れるな。';
+
+  @override
+  String get yReactionPride3 => '前へ、そして上へ。';
+
+  @override
+  String get yReactionPride4 => '全部ボーナスだ。楽しもう。';
+
+  @override
+  String get yReactionPride5 => '誰の予想よりも上だった。いい大会だった。';
+
+  @override
+  String get yReactionPride6 => '敗退、でも恥じることはない。妥当だ。';
+
+  @override
+  String get yReactionPride7 => '強い方が勝ち上がった。それでも胸を張れる戦いだった。';
+
+  @override
+  String get yReactionPride8 => '浮かれすぎないように。でも、いい戦いだった。';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return '$competition敗退、ほぼ予想どおりの結果だ。挑んでくれたことを誇りに思う。';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return '$competitionは終わった。強豪相手にも食らいついた。胸を張れ、みんな。';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return '$competition敗退。下馬評どおりの結末だった。学んで、また挑もう。';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return '我々の$competitionはランキングどおりの場所で終わった。恥じることはない。';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return '$competition敗退、多くの人の予想どおりだ。大失敗ではないが、衝撃もない。';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return '$competitionはこのチームにはまだ一歩遠かった。差は現実だ。埋めていく時だ。';
+  }
+
+  @override
+  String get yReactionAcceptance0 => '全力を出し切った。それ以上は求められない。';
+
+  @override
+  String get yReactionAcceptance1 => '顔を上げよう。また戻ってくる。';
+
+  @override
+  String get yReactionAcceptance2 => '悔しいが、恥ずかしい戦いではなかった。';
+
+  @override
+  String get yReactionAcceptance3 => '正直、だいたい予想どおりだ。';
+
+  @override
+  String get yReactionAcceptance4 => '強いチームが勝ち上がった。それがサッカーだ。';
+
+  @override
+  String get yReactionAcceptance5 => '残念だが、怒ってはいない。';
+
+  @override
+  String get yReactionAcceptance6 => '正直、少し物足りない。でも番狂わせもない。';
+
+  @override
+  String get yReactionAcceptance7 => 'まだその域には達していない。皆わかっている。';
+
+  @override
+  String get yReactionAcceptance8 => '前回と同じレベル。次のサイクルでは一段上が必要だ。';
 }

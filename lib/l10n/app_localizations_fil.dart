@@ -16289,4 +16289,142 @@ class AppLocalizationsFil extends AppLocalizations {
 
   @override
   String get shareCabinetBig => 'Ibahagi ang aking mga tropeo';
+
+  @override
+  String yExitProud0(String competition) {
+    return 'Hindi inaasahang takbo sa $competition at magandang resulta sa huli. Proud sa mga bata.';
+  }
+
+  @override
+  String yExitProud1(String competition) {
+    return 'Walang nagbigay sa atin ng pagkakataon sa $competition. Mas malayo ang narating natin kaysa sa pinangarap ng sinuman. Salamat, mga bata.';
+  }
+
+  @override
+  String yExitProud2(String competition) {
+    return 'Laglag na sa $competition, pero ang ganda ng biyahe. Pinaniwala ng koponang ito ang buong bansa. Proud.';
+  }
+
+  @override
+  String yExitProud3(String competition) {
+    return 'Hindi ko inasahang lalampas tayo sa group stage ng $competition. Bonus na lahat ng sumunod. Pasulong at pataas.';
+  }
+
+  @override
+  String yExitProud4(String competition) {
+    return 'Pumunta tayo sa $competition na umaasa ng isa o dalawang puntos, at umuwi pagkatapos maglaro sa knockout. Magandang torneo.';
+  }
+
+  @override
+  String yExitProud5(String competition) {
+    return 'Mas malayo kaysa sa sinabi ng mga hula sa $competition. Hakbang pasulong iyon, simple lang.';
+  }
+
+  @override
+  String yExitProud6(String competition) {
+    return 'Laglag na sa $competition, at medyo masakit. Pero aminin natin: walang nag-akalang aabot tayo rito.';
+  }
+
+  @override
+  String yExitProud7(String competition) {
+    return 'Sige, laglag na tayo sa $competition. Mas marami pa rin kaysa nagawa natin sa loob ng ilang taon. Tanggap ko.';
+  }
+
+  @override
+  String yExitProud8(String competition) {
+    return 'Walang tropeo mula sa $competition, at hindi naman talaga magkakaroon. Magandang takbo pa rin ang magandang takbo. Ulitin ninyo ngayon.';
+  }
+
+  @override
+  String get yReactionPride0 => 'Proud sa bawat isa sa kanila.';
+
+  @override
+  String get yReactionPride1 => 'Ang galing ng takbo. Salamat, mga bata.';
+
+  @override
+  String get yReactionPride2 => 'Walang umasa nito. Tandaan ninyo iyan.';
+
+  @override
+  String get yReactionPride3 => 'Pasulong at pataas.';
+
+  @override
+  String get yReactionPride4 => 'Bonus lahat iyan. Sulitin ninyo.';
+
+  @override
+  String get yReactionPride5 =>
+      'Mas maganda kaysa sa hula ng sinuman. Magandang torneo.';
+
+  @override
+  String get yReactionPride6 => 'Laglag, pero hindi nakakahiya. Ayos lang.';
+
+  @override
+  String get yReactionPride7 =>
+      'Ang mas magaling na koponan ang umusad. Pero naging karangalan pa rin natin ito.';
+
+  @override
+  String get yReactionPride8 =>
+      'Huwag tayong madala. Pero oo, magandang takbo.';
+
+  @override
+  String yExitAccepted0(String competition) {
+    return 'Laglag sa $competition, halos kung saan talaga inaasahan. Proud na sinubukan nila.';
+  }
+
+  @override
+  String yExitAccepted1(String competition) {
+    return 'Tapos na ang $competition para sa atin. Nilabanan natin ang malalaking koponan. Taas-noo, mga bata.';
+  }
+
+  @override
+  String yExitAccepted2(String competition) {
+    return 'Laglag sa $competition. Sa papel, ito talaga ang malamang na katapusan. Matuto at sumubok muli.';
+  }
+
+  @override
+  String yExitAccepted3(String competition) {
+    return 'Natapos ang ating $competition kung saan sinabi ng ranking. Walang nakakahiya roon.';
+  }
+
+  @override
+  String yExitAccepted4(String competition) {
+    return 'Laglag sa $competition, gaya ng inasahan ng karamihan. Hindi sakuna, pero hindi rin nakakagulat.';
+  }
+
+  @override
+  String yExitAccepted5(String competition) {
+    return 'Masyado pang malayo ang $competition para sa koponang ito. Totoo ang agwat. Panahon nang paliitin ito.';
+  }
+
+  @override
+  String get yReactionAcceptance0 =>
+      'Ibinigay nila ang lahat. Wala nang mahihiling pa.';
+
+  @override
+  String get yReactionAcceptance1 => 'Taas-noo. Babalik tayo.';
+
+  @override
+  String get yReactionAcceptance2 => 'Masakit, pero hindi nila tayo ipinahiya.';
+
+  @override
+  String get yReactionAcceptance3 =>
+      'Sa totoo lang, halos ganito ang inasahan natin.';
+
+  @override
+  String get yReactionAcceptance4 =>
+      'Ang mas magagaling ang umusad. Ganyan ang football.';
+
+  @override
+  String get yReactionAcceptance5 => 'Dismayado, hindi galit.';
+
+  @override
+  String get yReactionAcceptance6 =>
+      'Medyo matamlay, sa totoo lang. Pero walang gulat.';
+
+  @override
+  String get yReactionAcceptance7 =>
+      'Hindi pa tayo naroon. Alam ng lahat iyan.';
+
+  @override
+  String get yReactionAcceptance8 =>
+      'Parehong antas noong nakaraan. Kailangang umangat sa susunod na cycle.';
 }
