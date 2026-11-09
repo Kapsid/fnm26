@@ -14380,6 +14380,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get editorSquadReady => 'このメンバーはプレイ可能です。';
 
   @override
+  String get editorSquadFill => '不足している選手を補う';
+
+  @override
+  String get editorSquadFillAbout =>
+      'その国の生成済みの選手を、強い順に、キャリアに必要な人数とポジションが揃うまで追加します。';
+
+  @override
+  String editorSquadFilled(int count) {
+    return '追加した選手: $count';
+  }
+
+  @override
+  String get editorCommunityTitle => 'ファンが作ったデータベースを公式Discordで共有しています';
+
+  @override
+  String get editorCommunityAbout => 'コミュニティによる共有です。これらのデータベースの提供や確認は行っていません。';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min〜$max人。GK$gk人、DF$def人、MF$mid人、FW$fwd人以上が必要です。';
   }

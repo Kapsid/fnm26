@@ -22556,6 +22556,36 @@ abstract class AppLocalizations {
   /// **'This squad is ready to play.'**
   String get editorSquadReady;
 
+  /// Button on a nation's squad summary that adds the players the squad still lacks.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill missing players'**
+  String get editorSquadFill;
+
+  /// One line under the Fill missing players button.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds the nation\'s own generated players, strongest first, until the squad has the size and positions a career needs.'**
+  String get editorSquadFillAbout;
+
+  /// Snackbar after Fill missing players, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Players added: {count}'**
+  String editorSquadFilled(int count);
+
+  /// Line on a database's home: fans share their databases on the Discord.
+  ///
+  /// In en, this message translates to:
+  /// **'Fans share their databases on our Discord'**
+  String get editorCommunityTitle;
+
+  /// Under it: community sharing only, not official content.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared by the community. We do not host or check these databases.'**
+  String get editorCommunityAbout;
+
   /// What a squad needs to be ready.
   ///
   /// In en, this message translates to:

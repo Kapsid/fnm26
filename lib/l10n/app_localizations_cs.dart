@@ -15196,6 +15196,26 @@ class AppLocalizationsCs extends AppLocalizations {
   String get editorSquadReady => 'Kádr je připraven ke hře.';
 
   @override
+  String get editorSquadFill => 'Doplnit chybějící hráče';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Přidá vygenerované hráče tohoto národa, od nejsilnějších, dokud kádr nemá počet a posty potřebné pro kariéru.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Přidáno hráčů: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Fanoušci sdílejí své databáze na našem Discordu';
+
+  @override
+  String get editorCommunityAbout =>
+      'Sdílí komunita. Tyto databáze nehostujeme ani nekontrolujeme.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min až $max hráčů, z toho alespoň brankáři: $gk, obránci: $def, záložníci: $mid, útočníci: $fwd.';
   }

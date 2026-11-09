@@ -14417,6 +14417,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get editorSquadReady => '이 스쿼드는 플레이할 준비가 되었습니다.';
 
   @override
+  String get editorSquadFill => '부족한 선수 채우기';
+
+  @override
+  String get editorSquadFillAbout =>
+      '해당 국가의 생성된 선수를 강한 순서대로, 커리어에 필요한 인원과 포지션을 갖출 때까지 추가합니다.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return '추가된 선수: $count';
+  }
+
+  @override
+  String get editorCommunityTitle => '팬들이 우리 Discord에서 데이터베이스를 공유합니다';
+
+  @override
+  String get editorCommunityAbout =>
+      '커뮤니티가 공유한 것입니다. 이 데이터베이스는 우리가 호스팅하거나 검수하지 않습니다.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min~$max명, 골키퍼 $gk명, 수비수 $def명, 미드필더 $mid명, 공격수 $fwd명 이상이 필요합니다.';
   }

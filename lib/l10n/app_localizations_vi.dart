@@ -14778,6 +14778,26 @@ class AppLocalizationsVi extends AppLocalizations {
   String get editorSquadReady => 'Đội hình này đã sẵn sàng.';
 
   @override
+  String get editorSquadFill => 'Bổ sung cầu thủ còn thiếu';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Thêm các cầu thủ do game tạo cho quốc gia này, từ mạnh nhất, cho đến khi đội hình đủ số lượng và vị trí mà một sự nghiệp cần.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Đã thêm cầu thủ: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Người hâm mộ chia sẻ cơ sở dữ liệu của họ trên Discord của chúng tôi';
+
+  @override
+  String get editorCommunityAbout =>
+      'Do cộng đồng chia sẻ. Chúng tôi không lưu trữ hay kiểm duyệt các cơ sở dữ liệu này.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min đến $max cầu thủ, trong đó ít nhất $gk thủ môn, $def hậu vệ, $mid tiền vệ và $fwd tiền đạo.';
   }

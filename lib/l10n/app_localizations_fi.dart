@@ -15003,6 +15003,26 @@ class AppLocalizationsFi extends AppLocalizations {
   String get editorSquadReady => 'Tämä joukkue on valmis pelaamaan.';
 
   @override
+  String get editorSquadFill => 'Täydennä puuttuvat pelaajat';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Lisää maan omia luotuja pelaajia vahvimmasta alkaen, kunnes joukkueella on uralle tarvittava koko ja pelipaikat.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Pelaajia lisätty: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'Fanit jakavat tietokantansa Discordissamme';
+
+  @override
+  String get editorCommunityAbout =>
+      'Yhteisön jakamia. Emme isännöi emmekä tarkista näitä tietokantoja.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min–$max pelaajaa, joista vähintään maalivahteja $gk, puolustajia $def, keskikenttäpelaajia $mid ja hyökkääjiä $fwd.';
   }

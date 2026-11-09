@@ -28,7 +28,10 @@ void main() {
     fail('no match with a penalty');
   });
 
-  Future<PitchMatchViewState> pump(WidgetTester tester, PitchClock clock) async {
+  Future<PitchMatchViewState> pump(
+    WidgetTester tester,
+    PitchClock clock,
+  ) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(780, 560);
     addTearDown(tester.view.reset);

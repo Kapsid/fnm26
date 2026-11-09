@@ -116,6 +116,71 @@ abstract final class SquadEdits {
     );
   }
 
+  /// How many players [squad] still lacks to be ready: whichever is more,
+  /// the places up to [PackRules.squadMin] or the sum of what each position
+  /// group is short of its minimum. Zero for a complete (or over-full)
+  /// squad.
+  static int missingCount(List<PackPlayer> squad) {
+    final have = counts(squad);
+    var short = 0;
+    for (final c in PositionCategory.values) {
+      short += math.max(0, minimums[c]! - have[c]!);
+    }
+    final room = PackRules.squadMax - squad.length;
+    return math.min(math.max(PackRules.squadMin - squad.length, short), room);
+  }
+
+  /// [pack] with the missing players of nation [nationId] filled in, or null
+  /// when the squad lacks none (or [shown], the pool the editor shows, is
+  /// not read yet).
+  ///
+  /// The game's own fictional players do it: each is the strongest pool
+  /// player of the position group the squad most lacks, moved into the
+  /// squad ([promote]), so names, ages and ratings are those the game
+  /// generates for the nation. A pool with no one of the group lends a
+  /// player of another group, re-positioned at his overall; an empty pool
+  /// gives a new, still unnamed player ([newPlayer]), which the editor asks
+  /// a name for. One pack, so one edit and one undo.
+  static WorldPack? fillMissing(
+    WorldPack pack,
+    int nationId,
+    List<PackPlayer>? shown,
+  ) {
+    var squad = pack.squads[nationId] ?? const <PackPlayer>[];
+    if (missingCount(squad) <= 0) return null;
+    if (shown == null) return null;
+    var out = pack;
+    for (var guard = 0; guard < PackRules.squadMax; guard++) {
+      if (missingCount(squad) <= 0) break;
+      final want = neededPosition(squad);
+      final pool = out.pools[nationId] ?? shown;
+      final ranked = [...pool]..sort((a, b) => overallOf(b) - overallOf(a));
+      final pick =
+          ranked
+              .where((p) => p.position.category == want.category)
+              .firstOrNull ??
+          ranked.firstOrNull;
+      WorldPack? next;
+      if (pick != null) {
+        next = promote(out, nationId, shown, pick.id);
+        if (next != null && pick.position.category != want.category) {
+          final him = next.squads[nationId]!.last;
+          next = replace(
+            next,
+            nationId,
+            moved(him, want, PlayerType.balanced),
+          );
+        }
+      } else {
+        next = add(out, nationId)?.pack;
+      }
+      if (next == null) break;
+      out = next;
+      squad = out.squads[nationId] ?? const <PackPlayer>[];
+    }
+    return identical(out, pack) ? null : out;
+  }
+
   /// [pack] without player [playerId] of nation [nationId].
   static WorldPack remove(WorldPack pack, int nationId, int playerId) {
     final squad = pack.squads[nationId];

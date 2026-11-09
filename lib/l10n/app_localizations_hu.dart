@@ -14871,6 +14871,26 @@ class AppLocalizationsHu extends AppLocalizations {
   String get editorSquadReady => 'Ez a keret játékra kész.';
 
   @override
+  String get editorSquadFill => 'Hiányzó játékosok pótlása';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Hozzáadja az ország saját, generált játékosait, a legerősebbekkel kezdve, amíg a keret eléri a karrierhez szükséges létszámot és posztokat.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Hozzáadott játékosok: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'A rajongók a Discordunkon osztják meg adatbázisaikat';
+
+  @override
+  String get editorCommunityAbout =>
+      'A közösség osztja meg. Ezeket az adatbázisokat nem mi tároljuk, és nem ellenőrizzük.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min-$max játékos, köztük legalább kapus: $gk, védő: $def, középpályás: $mid, támadó: $fwd.';
   }

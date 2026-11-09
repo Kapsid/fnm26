@@ -14920,6 +14920,25 @@ class AppLocalizationsSv extends AppLocalizations {
   String get editorSquadReady => 'Truppen är redo att spela.';
 
   @override
+  String get editorSquadFill => 'Fyll i saknade spelare';
+
+  @override
+  String get editorSquadFillAbout =>
+      'Lägger till nationens egna genererade spelare, de starkaste först, tills truppen har den storlek och de positioner en karriär kräver.';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'Spelare tillagda: $count';
+  }
+
+  @override
+  String get editorCommunityTitle => 'Fans delar sina databaser på vår Discord';
+
+  @override
+  String get editorCommunityAbout =>
+      'Delade av communityn. Vi hostar eller granskar inte dessa databaser.';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min till $max spelare, varav minst $gk målvakter, $def försvarare, $mid mittfältare och $fwd anfallare.';
   }

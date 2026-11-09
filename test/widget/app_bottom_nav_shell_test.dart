@@ -9,7 +9,9 @@ void main() {
   const nav = AppBottomNav(careerId: 1, current: AppTab.hub);
 
   testWidgets('on a phone the bottom nav is drawn as before', (tester) async {
-    await tester.pumpApp(const Scaffold(extendBody: true, bottomNavigationBar: nav));
+    await tester.pumpApp(
+      const Scaffold(extendBody: true, bottomNavigationBar: nav),
+    );
     expect(find.text('Hub'), findsOneWidget);
     expect(find.text('Squad'), findsOneWidget);
   });

@@ -14843,6 +14843,26 @@ class AppLocalizationsHi extends AppLocalizations {
   String get editorSquadReady => 'यह स्क्वॉड खेलने के लिए तैयार है।';
 
   @override
+  String get editorSquadFill => 'कमी वाले खिलाड़ी भरें';
+
+  @override
+  String get editorSquadFillAbout =>
+      'देश के अपने बनाए गए खिलाड़ियों को, सबसे मज़बूत पहले, तब तक जोड़ता है जब तक टीम में करियर के लिए ज़रूरी संख्या और पोज़िशन पूरी न हो जाएँ।';
+
+  @override
+  String editorSquadFilled(int count) {
+    return 'जोड़े गए खिलाड़ी: $count';
+  }
+
+  @override
+  String get editorCommunityTitle =>
+      'फ़ैन अपने डेटाबेस हमारे Discord पर साझा करते हैं';
+
+  @override
+  String get editorCommunityAbout =>
+      'समुदाय द्वारा साझा किए गए। हम इन डेटाबेस को न होस्ट करते हैं और न जाँचते हैं।';
+
+  @override
   String editorSquadRules(int min, int max, int gk, int def, int mid, int fwd) {
     return '$min से $max खिलाड़ी, जिनमें कम से कम $gk गोलकीपर, $def डिफ़ेंडर, $mid मिडफ़ील्डर और $fwd फ़ॉरवर्ड हों।';
   }
