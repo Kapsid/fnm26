@@ -10,12 +10,14 @@ import 'package:fnm/data/db/app_database.dart';
 import 'package:fnm/domain/entities/enums.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/entities/world_manager.dart';
+import 'package:fnm/domain/services/competition/continental_cups.dart';
 import 'package:fnm/domain/services/world_managers/manager_decisions.dart';
 import 'package:fnm/features/career/career_providers.dart';
 import 'package:fnm/features/match/pitch/pitch_view_providers.dart'
     show kMatchViewModePrefsKey;
 import 'package:fnm/features/world_managers/world_manager_markers.dart';
 import 'package:fnm/features/world_managers/world_manager_providers.dart';
+import 'package:fnm/features/world_managers/world_manager_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../story/driver.dart';
@@ -36,6 +38,48 @@ class _FixtureReads extends QueryInterceptor {
   }
 }
 
+/// The real service, except that every manager pass throws, as a bug in
+/// one would. Notes, at each finals call, whether the continental honours
+/// were already on the roll (the finals' own work runs first).
+class _Throwing extends WorldManagerService {
+  // ignore: matching_super_parameters, the service keeps its ref private.
+  _Throwing(super.ref) : _r = ref;
+
+  final Ref _r;
+  final calls = <String>[];
+  bool continentalsFirst = true;
+
+  @override
+  Future<List<ManagerMove>> afterFinals(
+    int careerId, {
+    required String key,
+    required Set<int> scope,
+    required DateTime date,
+  }) async {
+    calls.add(key);
+    if (key.startsWith('wc:')) {
+      final names = {
+        for (final h
+            in await _r.read(competitionRepositoryProvider).honours(careerId))
+          if (h.year == date.year - 2) h.competition,
+      };
+      for (final cup in ContinentalCups.byConfederation.values) {
+        if (!names.contains(cup.name)) continentalsFirst = false;
+      }
+    }
+    throw StateError('manager pass bug');
+  }
+
+  @override
+  Future<List<ManagerMove>> atRollover(
+    int careerId, {
+    required int nextCycle,
+  }) async {
+    calls.add('rollover:$nextCycle');
+    throw StateError('manager pass bug');
+  }
+}
+
 typedef _Save = ({
   AppDatabase db,
   ProviderContainer c,
@@ -52,7 +96,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setUp(() => AppLog.debugUse(null));
 
-  Future<_Save> start({QueryInterceptor? interceptor}) async {
+  Future<_Save> start({
+    QueryInterceptor? interceptor,
+    List<Override> overrides = const [],
+  }) async {
     SharedPreferences.setMockInitialValues(<String, Object>{
       kMatchViewModePrefsKey: 'timeline',
     });
@@ -60,7 +107,7 @@ void main() {
     final db = AppDatabase.forTesting(
       interceptor == null ? native : native.interceptWith(interceptor),
     );
-    final c = storyContainer(db);
+    final c = storyContainer(db, 0, overrides);
     addTearDown(() async {
       c.dispose();
       await db.close();
@@ -332,6 +379,39 @@ void main() {
     expect(moves, isNotEmpty);
     expect(reads.reads, lessThanOrEqualTo(2));
   }, timeout: const Timeout(Duration(minutes: 5)));
+
+  test(
+    'a throwing manager pass stops neither the finals nor the rollover',
+    () async {
+      final s = await start(
+        overrides: [worldManagerServiceProvider.overrideWith(_Throwing.new)],
+      );
+      final spy = s.c.read(worldManagerServiceProvider) as _Throwing;
+      final d = StoryDriver(s.c, s.careerId);
+      // The whole cycle plays to its rollover, every pass throwing.
+      while (await d.step(stopAtRollover: true)) {}
+      final comp = s.c.read(competitionRepositoryProvider);
+      expect(await comp.worldChampion(s.careerId), isNotNull);
+      expect(spy.calls, contains('wc:2030'));
+      expect(
+        spy.continentalsFirst,
+        isTrue,
+        reason: 'the pass runs after the backstop, after the ranking settles',
+      );
+      // The rollover builds the next cycle's calendar regardless.
+      await d.step();
+      final career = (await s.c
+          .read(careerRepositoryProvider)
+          .byId(s.careerId))!;
+      expect(career.cyclePointer, 1);
+      expect(spy.calls, contains('rollover:1'));
+      expect((await comp.cycleFixtures(s.careerId, 1)).fixtures, isNotEmpty);
+      // No pass succeeded, so none is marked as run.
+      expect(await marked(s, 0, mgrDecidedKind('wc:2030')), isFalse);
+      expect(await marked(s, 1, mgrRolloverKind), isFalse);
+    },
+    timeout: const Timeout(Duration(minutes: 15)),
+  );
 }
 
 /// [m], born in [year].

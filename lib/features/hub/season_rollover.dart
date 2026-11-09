@@ -207,8 +207,13 @@ extension SeasonRollover on SeasonService {
 
     // The world's managers, seeded (if they never were) before anything
     // moves: as of the closing cycle's opening, with the nation the player
-    // ran through it. The rollover's own decision point runs below.
-    await _ref.read(worldManagerServiceProvider).ensureSeeded(careerId);
+    // ran through it. The rollover's own decision point runs below. Never
+    // allowed to stop the rollover: a failed seeding is retried later.
+    try {
+      await _ref.read(worldManagerServiceProvider).ensureSeeded(careerId);
+    } on Object catch (e, st) {
+      AppLog.error('mgr-seed rollover', e, st);
+    }
 
     final switching = moveTo != null && moveTo != career.nationId;
     if (switching) {
@@ -264,12 +269,6 @@ extension SeasonRollover on SeasonService {
         .read(seedRankingRepositoryProvider)
         .snapshot(careerId, nextCycle, seedRank);
 
-    // The managers' rollover: retirements, contracts, poaching and hiring,
-    // read off the ranking just frozen.
-    await _ref
-        .read(worldManagerServiceProvider)
-        .atRollover(careerId, nextCycle: nextCycle);
-
     // Build the whole next cycle in real-world order (continental qualifying →
     // continental finals → World Cup qualifying → World Cup finals) plus
     // friendlies, mirroring a fresh save.
@@ -285,6 +284,17 @@ extension SeasonRollover on SeasonService {
       rankById: seedRank,
       nationsCupTiers: ncTiers,
     );
+
+    // The managers' rollover: retirements, contracts, poaching and hiring,
+    // read off the ranking frozen above. Last, and caught: a failed pass
+    // leaves its marker unset and nobody moved, never a cycle half built.
+    try {
+      await _ref
+          .read(worldManagerServiceProvider)
+          .atRollover(careerId, nextCycle: nextCycle);
+    } on Object catch (e, st) {
+      AppLog.error('mgr-pass rollover', e, st);
+    }
 
     // The naturalisation roll is NOT done here: the cycle's naturalisation
     // budget isn't allocated until the forced budget-setup event that opens the

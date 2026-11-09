@@ -138,6 +138,20 @@ class WorldManagerService {
     return NationStyle.values.asNameMap()[manager.style];
   }
 
+  /// Whether the finals decision point [key] on [date] is still to run:
+  /// its cycle is run by world managers and the point has not run yet. Two
+  /// marker reads; lets a hook skip building its scope.
+  Future<bool> finalsPending(
+    int careerId, {
+    required String key,
+    required DateTime date,
+  }) async {
+    final comp = _ref.read(competitionRepositoryProvider);
+    final cycle = CareerService.cycleAt(date);
+    return await comp.hasWatchedDraw(careerId, cycle, worldManagersKind) &&
+        !await comp.hasWatchedDraw(careerId, cycle, mgrDecidedKind(key));
+  }
+
   /// The decision point after a finals tournament settles: [key] is the
   /// tournament's ([ManagerWindows.worldKey] or
   /// [ManagerWindows.continentalKey]), [scope] the nations whose brief it
@@ -356,6 +370,10 @@ class WorldManagerService {
   /// charge of the champion mid-tournament, the 15th of the month it is
   /// played in. No decision point falls inside a nation's own tournament,
   /// so that is the man who took it to the final.
+  ///
+  /// An approximation: the honour row stores no final date, so a spell
+  /// that began or ended between the 15th and the final (none does today,
+  /// as no point of the champion's falls there) would be credited wrongly.
   static Map<int, int> _honoursByManager(
     List<Honour> honours,
     ManagerWorld w,

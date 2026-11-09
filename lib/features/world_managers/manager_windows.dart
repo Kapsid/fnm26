@@ -3,6 +3,7 @@ import 'package:fnm/domain/entities/fixture.dart';
 import 'package:fnm/domain/entities/group_standing.dart';
 import 'package:fnm/domain/entities/nation.dart';
 import 'package:fnm/domain/services/competition/continental_cups.dart';
+import 'package:fnm/domain/services/competition/finals.dart';
 import 'package:fnm/domain/services/competition/qualification_format.dart';
 import 'package:fnm/domain/services/press/expectation.dart';
 import 'package:fnm/domain/services/world_managers/manager_decisions.dart';
@@ -40,7 +41,7 @@ class ManagerWindows {
       final comp = competitions[f.competitionId];
       if (comp == null || !f.hasResult) continue;
       final finalRound = switch (comp.kind) {
-        CompetitionKind.worldCupFinals => 'FINAL',
+        CompetitionKind.worldCupFinals => WorldCupFinals.finalRound,
         CompetitionKind.continentalFinals => 'CFINAL',
         _ => null,
       };
