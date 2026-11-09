@@ -204,10 +204,17 @@ class _ScoreBugBar extends StatelessWidget {
     this.goalId,
     this.theme,
     this.clockMaxWidth = 88,
+    this.homeName,
+    this.awayName,
   });
 
   final String homeCode;
   final String awayCode;
+
+  /// The sides' full names, shown in place of the codes wherever a name fits
+  /// its side of the bar (the tablet's 2D TV); null keeps the codes.
+  final String? homeName;
+  final String? awayName;
   final int homeScore;
   final int awayScore;
   final String clock;
@@ -254,6 +261,7 @@ class _ScoreBugBar extends StatelessWidget {
             Expanded(
               child: _BugSide(
                 code: homeCode,
+                name: homeName,
                 color: homeColor,
                 alignEnd: true,
               ),
@@ -267,7 +275,11 @@ class _ScoreBugBar extends StatelessWidget {
               theme: theme,
             ),
             Expanded(
-              child: _BugSide(code: awayCode, color: awayColor),
+              child: _BugSide(
+                code: awayCode,
+                name: awayName,
+                color: awayColor,
+              ),
             ),
             _BugClock(
               clock: clock,
@@ -325,37 +337,82 @@ class _BugFlag extends StatelessWidget {
   }
 }
 
+/// The key of a score bug side's label that shows a nation's full name
+/// (rather than its code).
+const Key matchBugSideNameKey = Key('match.bugSide.name');
+
 /// One side of the bug: the kit accent on the outside, then the flag and
 /// the code, gathered against the score.
+///
+/// Given a [name], the side prints the nation's full name instead whenever
+/// it fits at the bar's own size, measured against the room the side really
+/// has; a name that would not fit falls back to the code rather than shrink
+/// or be cut.
 class _BugSide extends StatelessWidget {
-  const _BugSide({required this.code, this.color, this.alignEnd = false});
+  const _BugSide({
+    required this.code,
+    this.name,
+    this.color,
+    this.alignEnd = false,
+  });
 
   final String code;
+  final String? name;
   final Color? color;
   final bool alignEnd;
+
+  static final TextStyle _style = AppTypography.labelMedium.copyWith(
+    color: AppColors.onSurface,
+    fontSize: 13,
+    height: 1,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 1,
+  );
 
   @override
   Widget build(BuildContext context) {
     final accent = Container(width: 3, color: color ?? AppColors.primary);
     final flag = _BugFlag(code);
+    final align = alignEnd ? Alignment.centerRight : Alignment.centerLeft;
     // The code scales down before it is ever cut: a long one still fits.
+    final codeLabel = FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: align,
+      child: Text(code, maxLines: 1, softWrap: false, style: _style),
+    );
+    final name = this.name;
     final text = Flexible(
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: alignEnd ? Alignment.centerRight : Alignment.centerLeft,
-        child: Text(
-          code,
-          maxLines: 1,
-          softWrap: false,
-          style: AppTypography.labelMedium.copyWith(
-            color: AppColors.onSurface,
-            fontSize: 13,
-            height: 1,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1,
-          ),
-        ),
-      ),
+      child: name == null || name.isEmpty
+          ? codeLabel
+          : LayoutBuilder(
+              builder: (context, constraints) {
+                final full = capsFor(
+                  name,
+                  Localizations.localeOf(context).languageCode,
+                );
+                final painter = TextPainter(
+                  text: TextSpan(text: full, style: _style),
+                  textDirection: Directionality.of(context),
+                  textScaler: MediaQuery.textScalerOf(context),
+                  maxLines: 1,
+                )..layout();
+                final fits = painter.width <= constraints.maxWidth;
+                painter.dispose();
+                if (!fits) return codeLabel;
+                // Shrink-wrapped, so the flag stays beside the name.
+                return Align(
+                  alignment: align,
+                  widthFactor: 1,
+                  child: Text(
+                    full,
+                    key: matchBugSideNameKey,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: _style,
+                  ),
+                );
+              },
+            ),
     );
     const gap = SizedBox(width: 6);
     final cluster = Padding(

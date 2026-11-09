@@ -137,11 +137,18 @@ class MatchTvHeader extends StatefulWidget {
     this.theme,
     this.ground,
     this.moments = const [],
+    this.homeName,
+    this.awayName,
     super.key,
   });
 
   final String homeCode;
   final String awayCode;
+
+  /// The nations' full names: the bar prints each in place of its code
+  /// wherever it fits (see [_BugSide]).
+  final String? homeName;
+  final String? awayName;
   final int homeScore;
   final int awayScore;
   final String clock;
@@ -279,6 +286,8 @@ class _MatchTvHeaderState extends State<MatchTvHeader> {
             child: _ScoreBugBar(
               homeCode: w.homeCode,
               awayCode: w.awayCode,
+              homeName: w.homeName,
+              awayName: w.awayName,
               homeScore: w.homeScore,
               awayScore: w.awayScore,
               clock: w.clock,

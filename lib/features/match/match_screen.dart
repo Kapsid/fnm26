@@ -2402,6 +2402,8 @@ class _MatchScreenState extends ConsumerState<MatchScreen>
                     ? MatchTvHeader(
                         homeCode: code(homeId),
                         awayCode: code(awayId),
+                        homeName: name(homeId),
+                        awayName: name(awayId),
                         homeScore: homeScore,
                         awayScore: awayScore,
                         clock: clockLabel,
